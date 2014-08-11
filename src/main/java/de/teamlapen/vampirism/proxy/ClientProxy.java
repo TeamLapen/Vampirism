@@ -1,5 +1,5 @@
 package de.teamlapen.vampirism.proxy;
 
-public class ClientProxy implements IProxy{
+public class ClientProxy extends CommonProxy{
 
 }
