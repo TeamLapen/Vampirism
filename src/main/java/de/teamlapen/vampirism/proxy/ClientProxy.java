@@ -2,4 +2,16 @@ package de.teamlapen.vampirism.proxy;
 
 public class ClientProxy extends CommonProxy{
 
+	@Override
+	public void registerRenderer() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void registerSounds() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
