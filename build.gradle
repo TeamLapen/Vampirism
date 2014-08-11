@@ -1,0 +1,89 @@
+buildscript {
+    repositories
+    {
+        mavenCentral()
+        maven {
+            name = "forge"
+            url = "http://files.minecraftforge.net/maven"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+    }
+    dependencies
+    {
+        classpath "net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT"
+    }
+}
+
+apply plugin: "forge"
+
+ext.configFile = file "build.properties"
+
+configFile.withReader {
+    def prop = new Properties()
+    prop.load(it)
+    project.ext.config = new ConfigSlurper().parse prop
+}
+
+version = config.mod_version
+group = "de.teamlapen.vampirism"
+archiveBaseName= "VampirismMod"
+
+sourceSets
+{
+    main
+    {
+        java { srcDirs = ["$projectDir/src/main/java"] }		resources { srcDirs = ["$projectDir/src/main/resources"] }
+    }
+}
+
+minecraft {
+    version = config.minecraft_version + "-" + config.forge_version
+
+    replaceIn "util/Constants.java"
+    replace "@VERSION@", "${config.mod_version}.${System.getenv("DRONE_BUILD_NUMBER") ?: 0}"
+    replace "@MVERSION@", "${config.mod_version}"
+}
+
+version = "${config.minecraft_version}-${config.mod_version}.${System.getenv("DRONE_BUILD_NUMBER") ?: 0}"
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.11'
+}
+
+processResources {
+    // exclude xcf files, as they are for development only
+    //exclude '**/*.xcf'
+
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include '*.info'
+
+        // replace version and mcversion
+        expand 'mod_version': project.version, 'minecraft_version': project.config.minecraft_version
+    }
+
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude '**/*.info'
+    }
+}
+
+task devJar(type: Jar, dependsOn: 'classes') {
+    from(sourceSets.main.output) {
+        include '**'
+    }
+
+    extension = 'jar'
+    classifier = 'dev'
+}
+
+artifacts {
+    archives devJar
+}
+
+
+
+

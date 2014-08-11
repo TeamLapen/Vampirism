@@ -1,0 +1,22 @@
+[
+{
+  "modid": "vampirism",
+  "name": "Vampirism",
+  "description": "Adds vampirism feature",
+  "version": "${mod_version}",
+  "mcversion": "${minecraft_version}",
+  "url": "http://teamlapen.de/vampirism",
+  "updateUrl": "",
+  "authors": [
+    "maxanier",
+	"Mistadon
+  ],
+  "credits": "By maxanier and Mistadon",
+  "logoFile": "",
+  "screenshots": [
+  ],
+  "parent":"",
+  "dependencies": [
+  ]
+}
+]
