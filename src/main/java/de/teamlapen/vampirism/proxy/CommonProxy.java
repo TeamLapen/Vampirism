@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.proxy;
 
 
+import java.util.Random;
+
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterators;
 
@@ -14,44 +16,31 @@ import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.util.Logger;
 
 public abstract class CommonProxy implements IProxy{
-	private static int startEntityId=10;
 	
 	public void registerEntitys(){
-		int id=0;
-		
 		BiomeGenBase[] allBiomes = Iterators.toArray(Iterators.filter(Iterators.forArray(BiomeGenBase.getBiomeGenArray()),
 				Predicates.notNull()), BiomeGenBase.class);
 		
 		//Registration of vampire hunter
-		EntityRegistry.registerModEntity(EntityVampireHunter.class, "VampireHunter", id, VampirismMod.instance, 80, 1, true);
+		registerEntity(EntityVampireHunter.class,"VampireHunter");
 		EntityRegistry.addSpawn(EntityVampireHunter.class, 2, 0, 1, EnumCreatureType.monster, allBiomes);	
-		addEntityMapping(EntityVampireHunter.class, "VampireHunter");
-		id++;
 		
 		//Registration of vampire
-		EntityRegistry.registerModEntity(EntityVampire.class, "Vampire", id, VampirismMod.instance,80, 1, true);
+		registerEntity(EntityVampire.class,"Vampire");
 		EntityRegistry.addSpawn(EntityVampire.class, 2, 0, 1, EnumCreatureType.monster, allBiomes);
-		addEntityMapping(EntityVampire.class,"Vampire");
-		id++;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static void addEntityMapping(Class<? extends Entity> entity,String name){
-		Logger.i("RegisterEntitys", "Adding Mapping for "+entity.getName());
-		int id = getUniqueEntityId();
-	    EntityList.addMapping(entity, name, id);
-	    EntityList.entityEggs.put(id, new EntityList.EntityEggInfo(id, 0, 50));
+	public static void registerEntity(Class<? extends Entity> entityClass,String name){
+		int entityID = EntityRegistry.findGlobalUniqueEntityId();
+		long seed = name.hashCode();
+		Random rand = new Random(seed);
+		int primaryColor = rand.nextInt() * 16777215;
+		int secondaryColor = rand.nextInt() * 16777215;
+
+		EntityRegistry.registerGlobalEntityID(entityClass, name, entityID);
+		EntityRegistry.registerModEntity(entityClass, name, entityID, VampirismMod.instance, 64, 1, true);
+		EntityList.entityEggs.put(Integer.valueOf(entityID), new EntityList.EntityEggInfo(entityID, primaryColor, secondaryColor));
 	}
-	
-	public static int getUniqueEntityId()
-	   {
-	      do
-	      {
-	         startEntityId++;
-	      }
-	      while(EntityList.getStringFromID(startEntityId) !=null);
-	      
-	      return startEntityId;
-	   }
 
 }

@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.vampirism.util.MobProperties;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAIHurtByTarget;
+import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.item.Item;
 import net.minecraft.world.World;
@@ -14,6 +16,8 @@ public class EntityVampireHunter extends BasicMob {
 		
 		
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this,EntityVampire.class,2*MobProperties.vampireHunter_movementSpeed,false));
+		this.targetTasks.addTask(0, new EntityAIHurtByTarget(this,false));
+		this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this,EntityVampire.class,0,true));
 	}
 	
 	@Override
