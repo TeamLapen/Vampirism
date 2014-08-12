@@ -15,11 +15,6 @@ public class EntityVampire extends BasicMob {
 	public EntityVampire(World par1World) {
               super(par1World);
               
-              super.applyEntityAttributes();
-              this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(MobProperties.vampire_maxHealth);
-              this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(MobProperties.vampire_attackDamage);
-              this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(MobProperties.vampire_movementSpeed);
-              
               //TODO Texture
               //this.texture = "/co/uk/silvania/Remula/resources/mobglog.png";
               
@@ -29,7 +24,13 @@ public class EntityVampire extends BasicMob {
               this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, MobProperties.vampire_movementSpeed*2, true));
               //Avoids sun
               this.tasks.addTask(10, new EntityAIFleeSun(this, MobProperties.vampire_movementSpeed*1.5));
-              
+	}
+	
+	protected void applyEntityAttributes() {
+		 super.applyEntityAttributes();
+         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(MobProperties.vampire_maxHealth);
+         this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(MobProperties.vampire_attackDamage);
+         this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(MobProperties.vampire_movementSpeed);
 	}
       
       //TODO Sounds
