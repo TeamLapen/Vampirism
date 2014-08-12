@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.util.MobProperties;
 import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIFollowParent;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIMate;
@@ -19,6 +21,10 @@ public class EntityVampire extends EntityMob {
 
 	public EntityVampire(World par1World) {
               super(par1World);
+              
+              this.applyEntityAttributes();
+              this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(MobProperties.vampire_maxHealth);
+              
               //TODO Texture
               //this.texture = "/co/uk/silvania/Remula/resources/mobglog.png";
               //The below means if possible, it wont walk into water
