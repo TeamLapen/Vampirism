@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.MathHelper;
 
 public class BasicModel extends ModelBase{
 
@@ -73,9 +74,82 @@ public class BasicModel extends ModelBase{
 			model.rotateAngleY = y;
 			model.rotateAngleZ = z;
 		}
+		
+		public void setRotationAngles(float p_78087_1_, float p_78087_2_,
+				float p_78087_3_, float p_78087_4_, float p_78087_5_,
+				float p_78087_6_, Entity p_78087_7_) {
+			this.head.rotateAngleY = p_78087_4_ / (180F / (float) Math.PI);
+			this.head.rotateAngleX = p_78087_5_ / (180F / (float) Math.PI);
+			this.rightarm.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F
+					+ (float) Math.PI)
+					* 2.0F * p_78087_2_ * 0.5F;
+			this.leftarm.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F) * 2.0F
+					* p_78087_2_ * 0.5F;
+			this.rightarm.rotateAngleZ = 0.0F;
+			this.leftarm.rotateAngleZ = 0.0F;
+			this.rightleg.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F)
+					* 1.4F * p_78087_2_;
+			this.leftleg.rotateAngleX = MathHelper.cos(p_78087_1_ * 0.6662F
+					+ (float) Math.PI)
+					* 1.4F * p_78087_2_;
+			this.rightleg.rotateAngleY = 0.0F;
+			this.leftleg.rotateAngleY = 0.0F;
 
-		public void setRotationAngles(float f, float f1, float f2, float f3,
-				float f4, float f5, Entity entity) {
-			super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+			if (this.isRiding) {
+				this.rightarm.rotateAngleX += -((float) Math.PI / 5F);
+				this.leftarm.rotateAngleX += -((float) Math.PI / 5F);
+				this.rightleg.rotateAngleX = -((float) Math.PI * 2F / 5F);
+				this.leftleg.rotateAngleX = -((float) Math.PI * 2F / 5F);
+				this.rightleg.rotateAngleY = ((float) Math.PI / 10F);
+				this.leftleg.rotateAngleY = -((float) Math.PI / 10F);
+			}
+
+
+			this.rightarm.rotateAngleY = 0.0F;
+			this.leftarm.rotateAngleY = 0.0F;
+			float f6;
+			float f7;
+
+			if (this.onGround > -9990.0F) {
+				f6 = this.onGround;
+				this.body.rotateAngleY = MathHelper.sin(MathHelper.sqrt_float(f6)
+						* (float) Math.PI * 2.0F) * 0.2F;
+				this.rightarm.rotationPointZ = MathHelper
+						.sin(this.body.rotateAngleY) * 5.0F;
+				this.rightarm.rotationPointX = -MathHelper
+						.cos(this.body.rotateAngleY) * 5.0F;
+				this.leftarm.rotationPointZ = -MathHelper
+						.sin(this.body.rotateAngleY) * 5.0F;
+				this.leftarm.rotationPointX = MathHelper
+						.cos(this.body.rotateAngleY) * 5.0F;
+				this.rightarm.rotateAngleY += this.body.rotateAngleY;
+				this.leftarm.rotateAngleY += this.body.rotateAngleY;
+				this.leftarm.rotateAngleX += this.body.rotateAngleY;
+				f6 = 1.0F - this.onGround;
+				f6 *= f6;
+				f6 *= f6;
+				f6 = 1.0F - f6;
+				f7 = MathHelper.sin(f6 * (float) Math.PI);
+				float f8 = MathHelper.sin(this.onGround * (float) Math.PI)
+						* -(this.head.rotateAngleX - 0.7F) * 0.75F;
+				this.rightarm.rotateAngleX = (float) ((double) this.rightarm.rotateAngleX - ((double) f7 * 1.2D + (double) f8));
+				this.rightarm.rotateAngleY += this.body.rotateAngleY * 2.0F;
+				this.rightarm.rotateAngleZ = MathHelper.sin(this.onGround
+						* (float) Math.PI)
+						* -0.4F;
+			}
+
+			this.body.rotateAngleX = 0.0F;
+			this.rightleg.rotationPointZ = 0.1F;
+			this.leftleg.rotationPointZ = 0.1F;
+			this.rightleg.rotationPointY = 12.0F;
+			this.leftleg.rotationPointY = 12.0F;
+			this.head.rotationPointY = 0.0F;
+
+			this.rightarm.rotateAngleZ += MathHelper.cos(p_78087_3_ * 0.09F) * 0.05F + 0.05F;
+			this.leftarm.rotateAngleZ -= MathHelper.cos(p_78087_3_ * 0.09F) * 0.05F + 0.05F;
+			this.rightarm.rotateAngleX += MathHelper.sin(p_78087_3_ * 0.067F) * 0.05F;
+			this.leftarm.rotateAngleX -= MathHelper.sin(p_78087_3_ * 0.067F) * 0.05F;
+
 		}
 }
