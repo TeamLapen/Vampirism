@@ -12,7 +12,7 @@ public abstract class CommonProxy implements IProxy{
 		int id=0;
 		
 		//Registration of vampire hunter
-		EntityRegistry.registerModEntity(EntityVampireHunter.class, "Vampire Hunter", id, VampirismMod.instance, 80, 1, true);
+		EntityRegistry.registerModEntity(EntityVampireHunter.class, "VampireHunter", id, VampirismMod.instance, 80, 1, true);
 		EntityRegistry.addSpawn(EntityVampireHunter.class, 2, 0, 1, EnumCreatureType.monster, BiomeGenBase.getBiomeGenArray());
 		id++;
 		
