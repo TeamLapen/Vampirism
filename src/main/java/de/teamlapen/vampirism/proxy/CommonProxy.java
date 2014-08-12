@@ -25,21 +25,21 @@ public abstract class CommonProxy implements IProxy{
 		//Registration of vampire hunter
 		EntityRegistry.registerModEntity(EntityVampireHunter.class, "VampireHunter", id, VampirismMod.instance, 80, 1, true);
 		EntityRegistry.addSpawn(EntityVampireHunter.class, 2, 0, 1, EnumCreatureType.monster, allBiomes);	
-		addEntityMapping(EntityVampireHunter.class);
+		addEntityMapping(EntityVampireHunter.class, "VampireHunter");
 		id++;
 		
 		//Registration of vampire
 		EntityRegistry.registerModEntity(EntityVampire.class, "Vampire", id, VampirismMod.instance,80, 1, true);
 		EntityRegistry.addSpawn(EntityVampire.class, 2, 0, 1, EnumCreatureType.monster, allBiomes);
-		addEntityMapping(EntityVampire.class);
+		addEntityMapping(EntityVampire.class,"Vampire");
 		id++;
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static void addEntityMapping(Class<? extends Entity> entity){
+	public static void addEntityMapping(Class<? extends Entity> entity,String name){
 		Logger.i("RegisterEntitys", "Adding Mapping for "+entity.getName());
 		int id = getUniqueEntityId();
-	    EntityList.addMapping(EntityVampireHunter.class, "VampireHunter", id);
+	    EntityList.addMapping(entity, name, id);
 	    EntityList.entityEggs.put(id, new EntityList.EntityEggInfo(id, 0, 50));
 	}
 	
