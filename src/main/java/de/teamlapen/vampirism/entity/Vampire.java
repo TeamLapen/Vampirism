@@ -8,37 +8,8 @@ public class Vampire extends EntityMob {
 
 	public Vampire(World p_i1738_1_) {
 		super(p_i1738_1_);
-		// TODO Auto-generated constructor stub
+		
+        this.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(20.0D);
 	}
-	
-	@Override
-    protected void applyEntityAttributes()
-    {
-        super.applyEntityAttributes();
-    }
-
-    @Override
-    protected String getLivingSound()
-    {
-        return "yourmod:YourSound";//this refers to:yourmod/sound/YourSound
-    }
-
-    @Override
-    protected String getHurtSound()
-    {
-        return "yourmod:optionalFile.YourSound";//this refers to:yourmod/sound/optionalFile/YourSound
-    }
-
-    @Override
-    protected String getDeathSound()
-    {
-        return "yourmod:optionalFile.optionalFile2.YourSound";//etc.
-    }
-
-    @Override
-    protected float getSoundVolume()
-    {
-        return 0.4F;
-    }
-
 }
