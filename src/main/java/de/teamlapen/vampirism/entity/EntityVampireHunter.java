@@ -12,11 +12,11 @@ public class EntityVampireHunter extends BasicMob {
 	public EntityVampireHunter(World p_i1738_1_) {
 		super(p_i1738_1_);
 		
-		this.applyEntityAttributes();
 		
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this,EntityVampire.class,2*MobProperties.vampireHunter_movementSpeed,false));
 	}
 	
+	@Override
 	protected void applyEntityAttributes(){
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(MobProperties.vampire_maxHealth);
