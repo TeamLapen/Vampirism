@@ -21,8 +21,7 @@ public abstract class BasicMob extends EntityMob{
             
 
             this.getNavigator().setAvoidsWater(true);
-            //This is the hitbox size. I believe it starts in the center and grows outwards
-            this.setSize(1.5F, 0.9F);
+            this.setSize(0.6F, 1.8F);
             
             this.isImmuneToFire = false;
 
@@ -41,7 +40,7 @@ public abstract class BasicMob extends EntityMob{
             this.tasks.addTask(101, new EntityAIWatchClosest(this, EntityPlayer.class, WATCH_DISTANCE));
 
             //Finally, this makes it look around when it's not looking at a player or wandering.
-            this.tasks.addTask(102, new EntityAILookIdle(this));
+            this.tasks.addTask(101, new EntityAILookIdle(this));
     }
 
     //This is required. If it's false, none of the above takes effect.
