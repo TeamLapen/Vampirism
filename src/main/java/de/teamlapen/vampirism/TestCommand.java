@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.util.Logger;
 
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 
 /**
@@ -45,8 +46,11 @@ public class TestCommand implements ICommand {
 	}
 
 	@Override
-	public void processCommand(ICommandSender p_71515_1_, String[] p_71515_2_) {
+	public void processCommand(ICommandSender sender, String[] p_71515_2_) {
 		Logger.i("TEST","test");
+		if(sender instanceof EntityPlayer){
+			EntityPlayer p = (EntityPlayer)sender;
+		}
 		
 	}
 

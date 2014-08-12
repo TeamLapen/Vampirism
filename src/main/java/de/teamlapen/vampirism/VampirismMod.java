@@ -8,6 +8,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import de.teamlapen.vampirism.proxy.IProxy;
+import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 
