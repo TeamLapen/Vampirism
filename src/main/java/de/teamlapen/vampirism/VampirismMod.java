@@ -7,7 +7,6 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.REFERENCE;
 
@@ -30,7 +29,6 @@ public class VampirismMod {
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-    	
         proxy.registerEntitys();
         proxy.registerRenderer();
         proxy.registerSounds();
@@ -40,11 +38,6 @@ public class VampirismMod {
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-    }
-    
-    @EventHandler
-	public void serverStarting(FMLServerStartingEvent e) {
-    	e.registerServerCommand(new TestCommand());
     }
 
 }
