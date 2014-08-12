@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.util.Logger;
 
 public abstract class CommonProxy implements IProxy{
+	private static int startEntityId=10;
 	
 	public void registerEntitys(){
 		int id=0;
@@ -44,7 +45,6 @@ public abstract class CommonProxy implements IProxy{
 	
 	public static int getUniqueEntityId()
 	   {
-		   int startEntityId=10;
 	      do
 	      {
 	         startEntityId++;
