@@ -15,7 +15,7 @@ public class EntityVampire extends BasicMob {
 	public EntityVampire(World par1World) {
               super(par1World);
               
-              this.applyEntityAttributes();
+              super.applyEntityAttributes();
               this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(MobProperties.vampire_maxHealth);
               this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(MobProperties.vampire_attackDamage);
               this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(MobProperties.vampire_movementSpeed);
