@@ -60,39 +60,19 @@ public class EntityVampire extends EntityMob {
               return true;
       }
       
-      //TODO Health
-      //Pretty obvious, set it's health!
-//      public int getMaxHealth() {
-//              return 10;
-//      }
-      
       //TODO Sounds
-      //The sound effect played when it's just living, like a cow mooing.
       protected String getLivingSound() {
               return "mob.glog.say";
       }
       
-      //The sound made when it's attacked. Often it's the same as the normal say sound, but sometimes different (such as in the ender dragon)
       protected String getHurtSound() {
               return "mob.glog.say";
       }
       
-      //The sound made when it actually dies.
       protected String getDeathSound() {
               return "mob.glog.death";
       }
 
-      //The sound the mob plays when walking around.  
-      protected void playStepSound(int par1, int par2, int par3, int par4) {
-              this.worldObj.playSoundAtEntity(this, "mob.glog.step", 0.15F,  1.0F);
-      }
-      
-      //A basic example of what a mob should drop on death. For more advanced examples, look at code for chicken or squid.
-      protected int getDropItemId() {
-    	  //TODO Vampire blood drop
-              //return Remula.rawGlogMeat.itemID;
-    	  return 0;
-      }
       
       //This is required regardless of if your animal can breed or not. Set to null if it can't breed - I wont cover breeding here.
       public EntityAgeable createChild(EntityAgeable var1) {
