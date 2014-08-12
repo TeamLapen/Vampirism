@@ -16,7 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 //Your declaration. If your mob swims, change EntityAnimal to EntityWaterMob.
-public class EntityVampire extends EntityMob {
+public class EntityVampire extends BasicMob {
       
 
 	public EntityVampire(World par1World) {
