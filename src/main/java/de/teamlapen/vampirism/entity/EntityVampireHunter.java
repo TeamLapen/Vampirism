@@ -1,13 +1,14 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.MobProperties;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 public class EntityVampireHunter extends BasicMob {
@@ -33,7 +34,15 @@ public class EntityVampireHunter extends BasicMob {
 	@Override
 	protected Item getDropItem(){
 		return null;
-		
+	}
+	@Override
+	public void onDeath(DamageSource s){
+		Logger.i("Test", "Died vbeacuse of "+s.getDamageType());
+	}
+	
+	@Override
+	protected boolean canDespawn(){
+		return true;
 	}
 
 }

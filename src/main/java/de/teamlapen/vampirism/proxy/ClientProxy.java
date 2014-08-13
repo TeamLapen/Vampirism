@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.proxy;
 
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import de.teamlapen.vampirism.client.model.ModelVampire;
+import de.teamlapen.vampirism.client.model.ModelVampireHunter;
 import de.teamlapen.vampirism.client.render.VampireHunterRenderer;
 import de.teamlapen.vampirism.client.render.VampireRenderer;
 import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
-import de.teamlapen.vampirism.entity.ModelVampire;
-import de.teamlapen.vampirism.entity.ModelVampireHunter;
 
 public class ClientProxy extends CommonProxy{
 
