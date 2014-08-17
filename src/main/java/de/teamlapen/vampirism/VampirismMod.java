@@ -10,6 +10,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.GameRegistry;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.ModItems;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.WorldGenVampirism;
 
@@ -27,6 +28,7 @@ public class VampirismMod {
 	@EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+		ModItems.init();
     }
 
     @EventHandler
