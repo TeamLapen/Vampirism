@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.util;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import item.ItemVampiresFear;
+import de.teamlapen.vampirism.item.ItemVampiresFear;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemSword;
 
