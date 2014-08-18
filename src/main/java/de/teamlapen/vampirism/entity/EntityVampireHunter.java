@@ -22,6 +22,7 @@ public class EntityVampireHunter extends BasicMob {
 		
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this,false));
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this,EntityVampire.class,0,true));
+		
 	}
 	
 	@Override
@@ -37,12 +38,19 @@ public class EntityVampireHunter extends BasicMob {
 	}
 	@Override
 	public void onDeath(DamageSource s){
-		Logger.i("Test", "Died vbeacuse of "+s.getDamageType());
 	}
 	
 	@Override
 	protected boolean canDespawn(){
 		return true;
+	}
+	
+	@Override
+	protected void onDeathUpdate(){
+		this.setInvisible(true);
+		this.worldObj.spawnParticle("depthsuspend", posX, posY, posZ, 0.5F, 0.5F, 0.5F);
+		this.worldObj.spawnParticle("mobSpellAmbient", posX, posY, posZ, 0.5F, 0.5F, 0.5F);
+		super.onDeathUpdate();
 	}
 
 }

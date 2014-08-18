@@ -7,10 +7,11 @@ import net.minecraft.item.ItemSword;
 
 public class ModItems {
 	
-	public static ItemSword vampiresFear = new ItemVampiresFear(Item.ToolMaterial.EMERALD);
+	public static ItemSword vampiresFear = new ItemVampiresFear();
 	
 	public static void init() {
-		GameRegistry.registerItem(vampiresFear, REFERENCE.vampiresFearName);
+		GameRegistry.registerItem(vampiresFear, ItemVampiresFear.name);
 	}
+	
 
 }
