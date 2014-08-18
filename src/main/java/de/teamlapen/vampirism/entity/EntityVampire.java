@@ -69,26 +69,22 @@ public class EntityVampire extends BasicMob {
 				.setBaseValue(MobProperties.vampire_movementSpeed);
 	}
 
-//	public void onKillEntity(EntityLivingBase p_70074_1_) {
-//		super.onKillEntity(p_70074_1_);
-//
-//		if ((this.worldObj.difficultySetting == EnumDifficulty.NORMAL || this.worldObj.difficultySetting == EnumDifficulty.HARD)
-//				&& p_70074_1_ instanceof EntityVillager) {
-//			if (this.worldObj.difficultySetting != EnumDifficulty.HARD
-//					&& this.rand.nextBoolean()) {
-//				return;
-//			}
-//
-//			EntityVampire entityvampire = new EntityVampire(this.worldObj);
-//			entityvampire.copyLocationAndAnglesFrom(p_70074_1_);
-//			this.worldObj.removeEntity(p_70074_1_);
-//			entityvampire.onSpawnWithEgg((IEntityLivingData) null);
-//
-//			this.worldObj.spawnEntityInWorld(entityvampire);
-//			this.worldObj.playAuxSFXAtEntity((EntityPlayer) null, 1016,
-//					(int) this.posX, (int) this.posY, (int) this.posZ, 0);
-//		}
-//	}
+	public void onKillEntity(EntityLivingBase p_70074_1_) {
+		super.onKillEntity(p_70074_1_);
+
+		if ((this.worldObj.difficultySetting == EnumDifficulty.NORMAL || this.worldObj.difficultySetting == EnumDifficulty.HARD)
+				&& p_70074_1_ instanceof EntityVillager) {
+
+			EntityVampire entityvampire = new EntityVampire(this.worldObj);
+			entityvampire.copyLocationAndAnglesFrom(p_70074_1_);
+			this.worldObj.removeEntity(p_70074_1_);
+			entityvampire.onSpawnWithEgg((IEntityLivingData) null);
+
+			this.worldObj.spawnEntityInWorld(entityvampire);
+			this.worldObj.playAuxSFXAtEntity((EntityPlayer) null, 1016,
+					(int) this.posX, (int) this.posY, (int) this.posZ, 0);
+		}
+	}
 
 	public void onLivingUpdate() {
 		if (!this.worldObj.isRemote) {
