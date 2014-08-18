@@ -3,9 +3,12 @@ package de.teamlapen.vampirism.item;
 import java.util.List;
 import java.util.Random;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,6 +28,12 @@ public class ItemVampiresFear extends ItemSword {
 		this.setNoRepair();
 		setUnlocalizedName(REFERENCE.MODID+"_"+name);
 		this.maxStackSize=1;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IIconRegister iconRegister) {
+		//TODO Register texture
 	}
 	
 	@Override
