@@ -14,4 +14,9 @@ public interface IProxy {
 	 * Registeres all sounds
 	 */
 	public void registerSounds();
+	
+	/**
+	 * Registers all important subscriptions, which should be registered at startup (postinit)
+	 */
+	public void registerSubscriptions();
 }

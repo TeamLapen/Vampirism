@@ -31,7 +31,7 @@ public abstract class CommonProxy implements IProxy{
 	}
 	
 	@SuppressWarnings("unchecked")
-	public static void registerEntity(Class<? extends Entity> entityClass,String name){
+	private void registerEntity(Class<? extends Entity> entityClass,String name){
 		int entityID = EntityRegistry.findGlobalUniqueEntityId();
 		long seed = name.hashCode();
 		Random rand = new Random(seed);
@@ -41,6 +41,11 @@ public abstract class CommonProxy implements IProxy{
 		EntityRegistry.registerGlobalEntityID(entityClass, name, entityID);
 		EntityRegistry.registerModEntity(entityClass, name, entityID, VampirismMod.instance, 64, 1, true);
 		EntityList.entityEggs.put(Integer.valueOf(entityID), new EntityList.EntityEggInfo(entityID, primaryColor, secondaryColor));
+	}
+	
+	
+	public void registerSubscriptions(){
+		
 	}
 
 }
