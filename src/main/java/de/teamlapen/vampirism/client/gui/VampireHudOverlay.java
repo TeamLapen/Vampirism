@@ -5,7 +5,7 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
-import de.teamlapen.vampirism.playervampire.PlayerVampire;
+import de.teamlapen.vampirism.playervampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Logger;
 
 import net.minecraft.client.Minecraft;
@@ -35,7 +35,7 @@ public class VampireHudOverlay extends Gui{
 	      return;
 	    }
 
-	    int level=PlayerVampire.getVampireLevel(mc.thePlayer);
+	    int level=VampirePlayer.get(mc.thePlayer).getLevel();
 	    
 	    Logger.i("test", ""+level);
 	    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
