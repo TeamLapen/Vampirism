@@ -17,42 +17,12 @@ import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import de.teamlapen.vampirism.VampireEventHandler;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.entity.*;
 import de.teamlapen.vampirism.util.Logger;
-tHandler;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.*;
-import de.teamlapen.vampirism.util.Logger;
-tHandler;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.entity.*;
-import de.teamlapen.vampirism.util.Logger;
-
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.entity.*;
-import de.teamlapen.vampirism.util.Logger;
-tHandler;
-import de.teamlapen.vampirism.entity.*;
-import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.VampireEventHandler;
-d;
-import de.teamlapen.vampirism.entity.*;
-import de.teamlapen.vampirism.util.Logger;tHandler;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.entity.*;
-import de.teamlapen.vampirism.util.Logger;
-tHandler;
-import de.teamlapen.vampirism.VampireEventHandler;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.entity.*;
-import de.teamlapen.vampirism.util.Logger;
-ventHandler;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.entity.*;
-import de.teamlapen.vampirism.util.Logger;
 
 public abstract class CommonProxy implements IProxy{
 	
+	@Override
 	public void registerEntitys(){
 		BiomeGenBase[] allBiomes = Iterators.toArray(Iterators.filter(Iterators.forArray(BiomeGenBase.getBiomeGenArray()),
 				Predicates.notNull()), BiomeGenBase.class);
