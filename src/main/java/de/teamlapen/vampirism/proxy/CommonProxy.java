@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.proxy;
 
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import com.google.common.base.Predicates;
@@ -9,9 +11,42 @@ import com.google.common.collect.Iterators;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.biome.BiomeGenBase;
-import cpw.mods.fml.client.registry.ClientRegistry;
+import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.registry.EntityRegistry;
+import de.teamlapen.vampirism.VampireEventHandler;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.entity.*;
+import de.teamlapen.vampirism.util.Logger;
+tHandler;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.*;
+import de.teamlapen.vampirism.util.Logger;
+tHandler;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.*;
+import de.teamlapen.vampirism.util.Logger;
+
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.*;
+import de.teamlapen.vampirism.util.Logger;
+tHandler;
+import de.teamlapen.vampirism.entity.*;
+import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.VampireEventHandler;
+d;
+import de.teamlapen.vampirism.entity.*;
+import de.teamlapen.vampirism.util.Logger;tHandler;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.*;
+import de.teamlapen.vampirism.util.Logger;
+tHandler;
+import de.teamlapen.vampirism.VampireEventHandler;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.*;
+import de.teamlapen.vampirism.util.Logger;
+ventHandler;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.util.Logger;

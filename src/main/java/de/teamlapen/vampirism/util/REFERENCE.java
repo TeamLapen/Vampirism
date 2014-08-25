@@ -7,4 +7,6 @@ public class REFERENCE {
 	
 	public static final int neededBlood=20;
 	
+	public static final String VAMPIRE_LEVEL_NBT_KEY="vampirelevel";
+	
 }

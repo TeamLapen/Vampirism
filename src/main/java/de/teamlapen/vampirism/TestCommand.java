@@ -3,6 +3,7 @@ package de.teamlapen.vampirism;
 import java.util.List;
 
 import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
 
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -47,9 +48,10 @@ public class TestCommand implements ICommand {
 
 	@Override
 	public void processCommand(ICommandSender sender, String[] p_71515_2_) {
-		Logger.i("TEST","test");
 		if(sender instanceof EntityPlayer){
 			EntityPlayer p = (EntityPlayer)sender;
+			p.getEntityData().setInteger(REFERENCE.VAMPIRE_LEVEL_NBT_KEY, 5);
+			sendMessage(sender,"You are a vampire now");
 		}
 		
 	}
