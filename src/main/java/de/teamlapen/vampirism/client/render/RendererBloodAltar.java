@@ -21,9 +21,8 @@ import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
 
 public class RendererBloodAltar extends TileEntitySpecialRenderer {
 
-	//TODO Model and texture
 	private ModelBloodAltar bloodAltarModel = new ModelBloodAltar();
-	private String texture = "";
+	private ResourceLocation texture = new ResourceLocation("");
 
 	public RendererBloodAltar() {
 		//TODO Constructor
