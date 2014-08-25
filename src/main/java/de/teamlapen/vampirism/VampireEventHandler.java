@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 
 public class VampireEventHandler {
 
@@ -31,4 +32,5 @@ public class VampireEventHandler {
 			VampirePlayer.loadProxyData((EntityPlayer)event.entity);
 		}
 	}
+	
 }
