@@ -19,21 +19,21 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 
-public class ItemVampiresFear extends ItemSword {
+public class ItemVampiresFear extends SwordVampirism {
 	
 	public static final String name="vampiresFear";
 
 	public ItemVampiresFear() {
 		super(Item.ToolMaterial.WOOD);
 		this.setNoRepair();
-		setUnlocalizedName(REFERENCE.MODID+"_"+name);
+		setUnlocalizedName(name);
 		this.maxStackSize=1;
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister iconRegister) {
-		//TODO Register texture
+		itemIcon = iconRegister.registerIcon(this.getUnlocalizedName());
 	}
 	
 	@Override
