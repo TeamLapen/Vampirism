@@ -2,6 +2,7 @@ package de.teamlapen.vampirism;
 
 import java.util.List;
 
+import de.teamlapen.vampirism.playervampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
@@ -50,7 +51,7 @@ public class TestCommand implements ICommand {
 	public void processCommand(ICommandSender sender, String[] p_71515_2_) {
 		if(sender instanceof EntityPlayer){
 			EntityPlayer p = (EntityPlayer)sender;
-			p.getEntityData().setInteger(REFERENCE.VAMPIRE_LEVEL_NBT_KEY, 5);
+			VampirePlayer.get(p).levelUp();
 			sendMessage(sender,"You are a vampire now");
 		}
 		

@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
+import java.awt.Color;
+
 import org.lwjgl.opengl.GL11;
 
 
@@ -22,7 +24,7 @@ public class VampireHudOverlay extends Gui{
 	}
 	
 	@SubscribeEvent
-	public void onRenderExperienceBar(RenderGameOverlayEvent.Pre event)
+	public void onRenderExperienceBar(RenderGameOverlayEvent.Post event)
 	{
 	    //
 	    // We draw after the ExperienceBar has drawn.  The event raised by GuiIngameForge.pre()
@@ -37,7 +39,6 @@ public class VampireHudOverlay extends Gui{
 
 	    int level=VampirePlayer.get(mc.thePlayer).getLevel();
 	    
-	    Logger.i("test", ""+level);
 	    GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 	    GL11.glDisable(GL11.GL_LIGHTING);
 	    
@@ -45,10 +46,10 @@ public class VampireHudOverlay extends Gui{
         {
             mc.mcProfiler.startSection("vampireLevel");
             boolean flag1 = false;
-            int color = flag1 ? 16777215 : 8453920;
+            int color = Color.MAGENTA.getRGB();
             String text = "" + level;
             int x = (event.resolution.getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2;
-            int y = event.resolution.getScaledHeight() - 31 - 4;
+            int y = event.resolution.getScaledHeight() - 31 - 4 - 12;
             mc.fontRenderer.drawString(text, x + 1, y, 0);
             mc.fontRenderer.drawString(text, x - 1, y, 0);
             mc.fontRenderer.drawString(text, x, y + 1, 0);

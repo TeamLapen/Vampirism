@@ -1,24 +1,34 @@
 package de.teamlapen.vampirism.playervampire;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.nbt.NBTTagCompound;
 import io.netty.buffer.ByteBuf;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import de.teamlapen.vampirism.util.Logger;
 
 public class VampirePlayerPacket implements IMessage{
-	private String text;
+	NBTTagCompound nbt;
 
+	public VampirePlayerPacket(){
+		
+	}
+	public VampirePlayerPacket(NBTTagCompound nbt){
+		this.nbt=nbt;
+	}
+	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		text = ByteBufUtils.readUTF8String(buf); // this class is very useful in general for writing more complex objects
+		nbt=ByteBufUtils.readTag(buf);
 		
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		ByteBufUtils.writeUTF8String(buf, text);
+		
+		ByteBufUtils.writeTag(buf, nbt);
 		
 	}
 	
@@ -26,7 +36,9 @@ public class VampirePlayerPacket implements IMessage{
 
 		@Override
 		public IMessage onMessage(VampirePlayerPacket message, MessageContext ctx) {
-			Minecraft.getMinecraft().thePlayer
+			Logger.i("test",message.nbt.toString());
+			VampirePlayer.get(Minecraft.getMinecraft().thePlayer).loadNBTData(message.nbt);
+			return null;
 		}
 		
 	}

@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.playervampire;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.proxy.CommonProxy;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
@@ -29,7 +31,10 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		NBTTagCompound savedData = CommonProxy.getEntityData(getSaveKey(player));
 		if(savedData!=null){
 			playerData.loadNBTData(savedData);
+			
 		}
+		playerData.sync();
+		
 	}
 	
 	public static void saveProxyData(EntityPlayer player){
@@ -81,10 +86,21 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	
 	public void levelUp(){
 		level++;
+		this.sync();
 	}
 	
 	public int getLevel(){
 		return level;
+	}
+	
+	private void sync(){
+		NBTTagCompound nbt=new NBTTagCompound();
+		nbt.setDouble("posx", player.posX);
+		nbt.setDouble("posy", player.posY);
+		nbt.setDouble("posZ", player.posZ);
+		this.saveNBTData(nbt);
+		VampirismMod.modChannel.sendTo(new VampirePlayerPacket(nbt), (EntityPlayerMP)player);
+		
 	}
 
 }
