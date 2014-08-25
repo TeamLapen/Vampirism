@@ -19,4 +19,8 @@ public class BlockVampirism extends Block {
 	protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
 		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
 	}
+
+	public boolean shouldRenderBlock() {
+		return false;
+	}
 }

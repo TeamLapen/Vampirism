@@ -13,7 +13,6 @@ public class BlockBloodAltar extends BlockVampirism {
 	public BlockBloodAltar() {
 		super(Material.rock);
 		this.setBlockName("bloodAltar");
-		this.setBlockTextureName("bloodAltar");
 		this.setCreativeTab(CreativeTabs.tabBlock);
 	}
 	
@@ -32,5 +31,4 @@ public class BlockBloodAltar extends BlockVampirism {
 	{
 	   return false;
 	}
-
 }
