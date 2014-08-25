@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.client.render.VampireRenderer;
 import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.util.Logger;
-til.Logger;
 
 public class ClientProxy extends CommonProxy{
 	private final static String TAG="ClientProxy";
