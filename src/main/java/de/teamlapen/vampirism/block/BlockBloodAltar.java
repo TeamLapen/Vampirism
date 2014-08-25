@@ -7,10 +7,10 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
-public class BlockBloodAltar extends Block {
+public class BlockBloodAltar extends BlockVampirism {
 
-	public BlockBloodAltar(Material material) {
-		super(material);
+	public BlockBloodAltar() {
+		super(Material.rock);
 		this.setBlockName("bloodAltar");
 		this.setBlockTextureName("bloodAltar");
 	}
