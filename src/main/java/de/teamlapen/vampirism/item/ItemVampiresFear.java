@@ -31,12 +31,6 @@ public class ItemVampiresFear extends SwordVampirism {
 	}
 	
 	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister iconRegister) {
-		itemIcon = iconRegister.registerIcon(this.getUnlocalizedName());
-	}
-	
-	@Override
 	public void onCreated(ItemStack itemStack,World world,EntityPlayer player){
 		itemStack.stackTagCompound=new NBTTagCompound();
 		itemStack.stackTagCompound.setInteger("blood", 0);
