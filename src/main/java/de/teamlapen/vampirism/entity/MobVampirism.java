@@ -11,12 +11,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import de.teamlapen.vampirism.util.MobProperties;
 
-public abstract class BasicMob extends EntityMob{
+public abstract class MobVampirism extends EntityMob{
 	private final float WATCH_DISTANCE=6.0F;
 	private final float WANDER_SPEED=0.25F;
     
 
-	public BasicMob(World par1World) {
+	public MobVampirism(World par1World) {
             super(par1World);
             
 
@@ -47,10 +47,4 @@ public abstract class BasicMob extends EntityMob{
     public boolean isAIEnabled() {
             return true;
     }
-    
-    
-    
-    
-
-
 }

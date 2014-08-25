@@ -11,7 +11,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
-public class EntityVampireHunter extends BasicMob {
+public class EntityVampireHunter extends MobVampirism {
 
 	public EntityVampireHunter(World p_i1738_1_) {
 		super(p_i1738_1_);

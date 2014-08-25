@@ -23,7 +23,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
-public class EntityVampire extends BasicMob {
+public class EntityVampire extends MobVampirism {
 	// TODO Sounds
 
 	public EntityVampire(World par1World) {

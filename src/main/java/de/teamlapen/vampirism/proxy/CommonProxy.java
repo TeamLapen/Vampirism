@@ -30,11 +30,11 @@ public abstract class CommonProxy implements IProxy{
 				Predicates.notNull()), BiomeGenBase.class);
 		
 		//Registration of vampire hunter
-		registerEntity(EntityVampireHunter.class,"VampireHunter");
+		registerEntity(EntityVampireHunter.class,"vampirism:vampireHunter");
 		EntityRegistry.addSpawn(EntityVampireHunter.class, 2, 0, 1, EnumCreatureType.monster, allBiomes);	
 		
 		//Registration of vampire
-		registerEntity(EntityVampire.class,"Vampire");
+		registerEntity(EntityVampire.class,"vampirism:vampire");
 		EntityRegistry.addSpawn(EntityVampire.class, 2, 0, 1, EnumCreatureType.monster, allBiomes);
 	}
 	

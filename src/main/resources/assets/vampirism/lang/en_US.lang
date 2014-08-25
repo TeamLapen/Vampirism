@@ -1,3 +1,6 @@
-entity.VampireHunter.name=VampireHunter
-entity.Vampire.name=Vampire
-item.vampirism.vampiresFear.name=Vampire's fear
+entity.vampirism:vampireHunter.name=Vampire Hunter
+entity.vampirism:vampire.name=Vampire
+
+item.vampirism:vampiresFear.name=Vampire's fear
+
+block.vampirism:bloodAltar.name=Blood Altar
