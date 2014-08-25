@@ -22,6 +22,8 @@ import de.teamlapen.vampirism.entity.*;
 
 public abstract class CommonProxy implements IProxy{
 	
+	private static final Map<String,NBTTagCompound> extendedEntityData = new HashMap<String,NBTTagCompound>();
+	
 	@Override
 	public void registerEntitys(){
 		BiomeGenBase[] allBiomes = Iterators.toArray(Iterators.filter(Iterators.forArray(BiomeGenBase.getBiomeGenArray()),
@@ -47,6 +49,29 @@ public abstract class CommonProxy implements IProxy{
 		EntityRegistry.registerGlobalEntityID(entityClass, name, entityID);
 		EntityRegistry.registerModEntity(entityClass, name, entityID, VampirismMod.instance, 64, 1, true);
 		EntityList.entityEggs.put(Integer.valueOf(entityID), new EntityList.EntityEggInfo(entityID, primaryColor, secondaryColor));
+	}
+	
+	
+	public void registerSubscriptions(){
+		MinecraftForge.EVENT_BUS.register(new VampireEventHandler());
+	}
+	
+	/**
+	 * Stores entity data
+	 * @param name
+	 * @param compound
+	 */
+	public static void storeEntityData(String name,NBTTagCompound compound){
+		extendedEntityData.put(name, compound);
+	}
+	
+	/**
+	 * Removes the stored data from map and returns it
+	 * @param name
+	 * @return
+	 */
+	public static NBTTagCompound getEntityData(String name){
+		return extendedEntityData.remove(name);
 	}
 
 }
