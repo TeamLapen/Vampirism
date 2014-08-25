@@ -1,6 +1,12 @@
 package de.teamlapen.vampirism.playervampire;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import scala.reflect.internal.Trees.This;
+
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.playervampire.PlayerModifiers.Modifier;
 import de.teamlapen.vampirism.proxy.CommonProxy;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,10 +21,12 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	private final EntityPlayer player;
 	private int level;
 	private final String KEY_LEVEL="level";
+	private List<Modifier> modifiers;
 	
 	public VampirePlayer(EntityPlayer player){
 		this.player=player;
 		level=0;
+		modifiers=new ArrayList<Modifier>();
 	}
 	
 	private static final String getSaveKey(EntityPlayer player) {
@@ -34,7 +42,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 			
 		}
 		playerData.sync();
-		
+		playerData.applyModifiers();
 	}
 	
 	public static void saveProxyData(EntityPlayer player){
@@ -87,6 +95,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	public void levelUp(){
 		level++;
 		this.sync();
+		this.applyModifiers();
 	}
 	
 	public int getLevel(){
@@ -100,6 +109,12 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		nbt.setDouble("posZ", player.posZ);
 		this.saveNBTData(nbt);
 		VampirismMod.modChannel.sendTo(new VampirePlayerPacket(nbt), (EntityPlayerMP)player);
+		
+	}
+	
+
+	private void applyModifiers() {
+		PlayerModifiers.applyModifiers(this, modifiers,player);
 		
 	}
 

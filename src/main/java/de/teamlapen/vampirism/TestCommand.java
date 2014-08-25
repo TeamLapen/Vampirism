@@ -52,7 +52,9 @@ public class TestCommand implements ICommand {
 		if(sender instanceof EntityPlayer){
 			EntityPlayer p = (EntityPlayer)sender;
 			VampirePlayer.get(p).levelUp();
+			if(VampirePlayer.get(p).getLevel()==1){
 			sendMessage(sender,"You are a vampire now");
+			}
 		}
 		
 	}
