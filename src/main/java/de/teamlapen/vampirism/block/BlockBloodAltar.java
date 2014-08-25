@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.block;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -13,6 +14,7 @@ public class BlockBloodAltar extends BlockVampirism {
 		super(Material.rock);
 		this.setBlockName("bloodAltar");
 		this.setBlockTextureName("bloodAltar");
+		this.setCreativeTab(CreativeTabs.tabBlock);
 	}
 	
 	public TileEntity createTileEntity(World world, int metadata) {

@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.block.BlockVampirism;
 
 public class ModBlocks {
 
-public static BlockVampirism bloodAltar = new BlockBloodAltar();
+public final static BlockVampirism bloodAltar = new BlockBloodAltar();
 	
 	public static void init() {
 		GameRegistry.registerBlock(bloodAltar, "bloodAltar");
