@@ -23,4 +23,9 @@ public class BlockVampirism extends Block {
 	public boolean shouldRenderBlock() {
 		return false;
 	}
+	
+	@Override
+	public boolean renderAsNormalBlock() {
+		return false;
+	}
 }

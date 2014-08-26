@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import de.teamlapen.vampirism.client.model.ModelBloodAltar;
+import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 public class RendererBloodAltar extends TileEntitySpecialRenderer {
@@ -35,6 +36,7 @@ public class RendererBloodAltar extends TileEntitySpecialRenderer {
         
         @Override
         public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale) {
+        	Logger.i("RendererBloodAltar", "Called renderTileEntityAt");
         //The PushMatrix tells the renderer to "start" doing something.
                 GL11.glPushMatrix();
         //This is setting the initial location.

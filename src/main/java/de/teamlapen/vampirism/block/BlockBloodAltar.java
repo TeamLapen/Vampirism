@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.block;
 
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
+import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -16,16 +17,13 @@ public class BlockBloodAltar extends BlockVampirism {
 		this.setCreativeTab(CreativeTabs.tabBlock);
 	}
 	
+	@Override
 	public TileEntity createTileEntity(World world, int metadata) {
+		Logger.i("BlockBloodAltar", "createTileEntity called");
 	   return new TileEntityBloodAltar();
 	}
-	
-	//This will tell minecraft not to render any side of our cube.
-	public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int i, int j, int k, int l)
-	{
-	   return false;
-	}
 
+	@Override
 	//And this tell it that you can see through this block, and neighbor blocks should be rendered.
 	public boolean isOpaqueCube()
 	{
