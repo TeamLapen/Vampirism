@@ -27,7 +27,7 @@ configFile.withReader {
     project.ext.config = new ConfigSlurper().parse prop
 }
 
-version = ${System.genv("VERSION")}
+version = System.genv("MODVERSION")
 group = "de.teamlapen.vampirism"
 archiveBaseName= "VampirismMod"
 

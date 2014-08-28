@@ -33,7 +33,7 @@ if [[ $commsg == *"$v"* ]]; then
 	echo "${commsg##*VERSION:}"
 	IFS=. read major minor <<<"${commsg##*VERSION:}"
 	echo "New Mainversion:"$major"."$minor
-	export VERSION=$major"."$minor
+	export MODVERSION=$major"."$minor
 fi
 
 #Generate Changelog
@@ -51,7 +51,7 @@ then
 fi
 
 #Create release
-fversion=$(printenv VERSION)"."$(printenv DRONE_BUILD_NUMBER)
+fversion=$(printenv MODERSION)"."$(printenv DRONE_BUILD_NUMBER)
 echo "Creating release for v"$fversion
 
 API_JSON=$(printf '{"tag_name": "v%s","target_commitish": "master","name": "v%s","body": "Release of version %s","draft": false,"prerelease": false}' $fversion $fversion $fversion)
