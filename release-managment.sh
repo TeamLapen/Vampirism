@@ -23,40 +23,44 @@ export MODVERSION=$major"."$minor
 r="#release"
 if [[ $commsg != *"$r"* ]]; then
 	echo "Commit does not include #release"
-    exit
+else
+
+	export RECOMMEND=1
+
+	#Extract new version
+	v="VERSION:"
+	if [[ $commsg == *"$v"* ]]; then
+		echo "Found new Mainversion"
+		echo "${commsg##*VERSION:}"
+		IFS=. read major minor <<<"${commsg##*VERSION:}"
+		echo "New Mainversion:"$major"."$minor
+		export MODVERSION=$major"."$minor
+	fi
+
+	#Generate Changelog
+	origin=https://github.com/${1}/${2}
+	echo "Origin url: " $origin
+	changelog=$(git log ${lasttag}..  --pretty=format:'<li> <a href="'${origin}'/commit/%H">view commit </a> &bull; %s</li> ' --reverse | grep "#changelog")
+	changelogfile=changelog.html
+	echo $changelog > $changelogfile
+
+	chpass=$(printenv PASS)
+	if [ $3 ]
+	then
+		echo "Uploading changelog"
+		curl --data "major=${major}&minor=${minor}&change=${changelog}&pass=${chpass}&build=$(printenv DRONE_BUILD_NUMBER)" ${3}
+	fi
+
+	#Create release
+	fversion=$(printenv MODVERSION)"."$(printenv DRONE_BUILD_NUMBER)
+	echo "Creating release for v"$fversion
+
+	API_JSON=$(printf '{"tag_name": "v%s","target_commitish": "master","name": "v%s","body": "Release of version %s","draft": false,"prerelease": false}' $fversion $fversion $fversion)
+	token=$(printenv TOKEN)
+	curl --data "$API_JSON" https://api.github.com/repos/${1}/${2}/releases?access_token=${token}
 fi
 
+./gradlew setupCIWorkspace
+./gradlew build
 
-export RECOMMEND=1
-
-#Extract new version
-v="VERSION:"
-if [[ $commsg == *"$v"* ]]; then
-	echo "Found new Mainversion"
-	echo "${commsg##*VERSION:}"
-	IFS=. read major minor <<<"${commsg##*VERSION:}"
-	echo "New Mainversion:"$major"."$minor
-	export MODVERSION=$major"."$minor
-fi
-
-#Generate Changelog
-origin=https://github.com/${1}/${2}
-echo "Origin url: " $origin
-changelog=$(git log ${lasttag}..  --pretty=format:'<li> <a href="'${origin}'/commit/%H">view commit </a> &bull; %s</li> ' --reverse | grep "#changelog")
-changelogfile=changelog.html
-echo $changelog > $changelogfile
-
-chpass=$(printenv PASS)
-if [ $3 ]
-then
-	echo "Uploading changelog"
-	curl --data "major=${major}&minor=${minor}&change=${changelog}&pass=${chpass}&build=$(printenv DRONE_BUILD_NUMBER)" ${3}
-fi
-
-#Create release
-fversion=$(printenv MODVERSION)"."$(printenv DRONE_BUILD_NUMBER)
-echo "Creating release for v"$fversion
-
-API_JSON=$(printf '{"tag_name": "v%s","target_commitish": "master","name": "v%s","body": "Release of version %s","draft": false,"prerelease": false}' $fversion $fversion $fversion)
-token=$(printenv TOKEN)
-curl --data "$API_JSON" https://api.github.com/repos/${1}/${2}/releases?access_token=${token}
+java -jar Autoupload.jar "build/libs" "VampirismMod" "http://teamlapen.de/vampirism/files/add.php"
