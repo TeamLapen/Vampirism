@@ -26,6 +26,9 @@ if [[ $commsg != *"$r"* ]]; then
     exit
 fi
 
+
+export RECOMMEND="true"
+
 #Extract new version
 v="VERSION:"
 if [[ $commsg == *"$v"* ]]; then
