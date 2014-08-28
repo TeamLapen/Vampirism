@@ -27,7 +27,7 @@ configFile.withReader {
     project.ext.config = new ConfigSlurper().parse prop
 }
 
-version = config.mod_version
+version = ${System.genv("VERSION")}
 group = "de.teamlapen.vampirism"
 archiveBaseName= "VampirismMod"
 
@@ -43,11 +43,11 @@ minecraft {
     version = config.minecraft_version + "-" + config.forge_version
 
     replaceIn "util/Constants.java"
-    replace "@VERSION@", "${config.mod_version}.${System.getenv("DRONE_BUILD_NUMBER") ?: 0}"
-    replace "@MVERSION@", "${config.mod_version}"
+    replace "@VERSION@", "${System.genv("VERSION")}.${System.getenv("DRONE_BUILD_NUMBER") ?: 0}"
+    replace "@MVERSION@", "${config.minecraft_version}"
 }
 
-version = "${config.minecraft_version}-${config.mod_version}.${System.getenv("DRONE_BUILD_NUMBER") ?: 0}"
+version = "${config.minecraft_version}-${System.genv("VERSION")}.${System.getenv("DRONE_BUILD_NUMBER") ?: 0}"
 
 task wrapper(type: Wrapper) {
     gradleVersion = '1.11'
