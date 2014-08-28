@@ -54,7 +54,7 @@ then
 fi
 
 #Create release
-fversion=$(printenv MODERSION)"."$(printenv DRONE_BUILD_NUMBER)
+fversion=$(printenv MODVERSION)"."$(printenv DRONE_BUILD_NUMBER)
 echo "Creating release for v"$fversion
 
 API_JSON=$(printf '{"tag_name": "v%s","target_commitish": "master","name": "v%s","body": "Release of version %s","draft": false,"prerelease": false}' $fversion $fversion $fversion)
