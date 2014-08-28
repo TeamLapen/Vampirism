@@ -42,7 +42,7 @@ sourceSets
 minecraft {
     version = config.minecraft_version + "-" + config.forge_version
 
-    replaceIn "util/Constants.java"
+    replaceIn "util/REFERENCE.java"
     replace "@VERSION@", "${System.genv("VERSION")}.${System.getenv("DRONE_BUILD_NUMBER") ?: 0}"
     replace "@MVERSION@", "${config.minecraft_version}"
 }
