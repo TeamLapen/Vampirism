@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.tileEntity;
 
+import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.tileentity.TileEntity;
@@ -7,6 +8,7 @@ import net.minecraft.tileentity.TileEntity;
 public class TileEntityBloodAltar extends TileEntity {
 	public TileEntityBloodAltar() {
 		super();
+		Logger.i("TileEntityBloodAltar", "Constructor called");
 	}
 
 	@Override
