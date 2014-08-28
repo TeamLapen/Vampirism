@@ -27,7 +27,7 @@ configFile.withReader {
     project.ext.config = new ConfigSlurper().parse prop
 }
 
-version = System.genv("MODVERSION")
+version = System.getenv("MODVERSION")
 group = "de.teamlapen.vampirism"
 archiveBaseName= "VampirismMod"
 
@@ -43,7 +43,7 @@ minecraft {
     version = config.minecraft_version + "-" + config.forge_version
 
     replaceIn "util/REFERENCE.java"
-    replace "@VERSION@", "${System.genv("VERSION")}.${System.getenv("DRONE_BUILD_NUMBER") ?: 0}"
+    replace "@VERSION@", "${System.getenv("VERSION")}.${System.getenv("DRONE_BUILD_NUMBER") ?: 0}"
     replace "@MVERSION@", "${config.minecraft_version}"
 }
 
