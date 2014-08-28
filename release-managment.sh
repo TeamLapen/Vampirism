@@ -17,7 +17,7 @@ echo "Last tag: " $lasttag
 IFS=. read major minor build <<<"${lasttag##*v}"
 echo "MainVersion: "$major"."$minor
 echo "Shell: "$SHELL
-export VERSION=$major"."$minor
+export MODVERSION=$major"."$minor
 
 #Check if release
 r="#release"
@@ -27,7 +27,7 @@ if [[ $commsg != *"$r"* ]]; then
 fi
 
 
-export RECOMMEND="true"
+export RECOMMEND=1
 
 #Extract new version
 v="VERSION:"
