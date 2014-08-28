@@ -47,7 +47,7 @@ minecraft {
     replace "@MVERSION@", "${config.minecraft_version}"
 }
 
-version = "${config.minecraft_version}-${System.genv("VERSION")}.${System.getenv("DRONE_BUILD_NUMBER") ?: 0}"
+version = "${config.minecraft_version}-${System.getenv("VERSION")}.${System.getenv("DRONE_BUILD_NUMBER") ?: 0}"
 
 task wrapper(type: Wrapper) {
     gradleVersion = '1.11'
