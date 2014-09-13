@@ -1,12 +1,6 @@
 package de.teamlapen.vampirism.playervampire;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import scala.reflect.internal.Trees.This;
-
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.playervampire.PlayerModifiers.Modifier;
 import de.teamlapen.vampirism.proxy.CommonProxy;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,13 +14,14 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	public final static String EXT_PROP_NAME = "VampirePlayer";
 	private final EntityPlayer player;
 	private int level;
+	private int blood;
 	private final String KEY_LEVEL="level";
-	private List<Modifier> modifiers;
+	private final String KEY_BLOOD="blood";
 	
 	public VampirePlayer(EntityPlayer player){
 		this.player=player;
 		level=0;
-		modifiers=new ArrayList<Modifier>();
+		blood=20;
 	}
 	
 	private static final String getSaveKey(EntityPlayer player) {
@@ -74,7 +69,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	public void saveNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = new NBTTagCompound();
 		properties.setInteger(KEY_LEVEL, this.level);
-		
+		properties.setInteger(KEY_BLOOD, blood);
 		compound.setTag(EXT_PROP_NAME, properties);
 		
 	}
@@ -83,6 +78,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	public void loadNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
 		this.level=properties.getInteger(KEY_LEVEL);
+		this.level=properties.getInteger(KEY_BLOOD);
 		
 	}
 
@@ -93,9 +89,24 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	}
 	
 	public void levelUp(){
+		if(level==0){
+			blood=20;
+		}
 		level++;
 		this.sync();
 		this.applyModifiers();
+	}
+	
+	/**
+	 * For testing only
+	 * @param l
+	 */
+	public void setLevel(int l){
+		if(l>=0){
+			level=l;
+			this.sync();
+			this.applyModifiers();
+		}
 	}
 	
 	public int getLevel(){
@@ -114,7 +125,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	
 
 	private void applyModifiers() {
-		PlayerModifiers.applyModifiers(this, modifiers,player);
+		PlayerModifiers.applyModifiers(this,player);
 		
 	}
 
