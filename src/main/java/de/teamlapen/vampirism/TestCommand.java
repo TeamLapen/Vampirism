@@ -48,10 +48,21 @@ public class TestCommand implements ICommand {
 	}
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] p_71515_2_) {
+	public void processCommand(ICommandSender sender, String[] param) {
 		if(sender instanceof EntityPlayer){
 			EntityPlayer p = (EntityPlayer)sender;
-			VampirePlayer.get(p).levelUp();
+			
+			if(param.length>0){
+				try {
+					VampirePlayer.get(p).setLevel(Integer.parseInt(param[0]));
+				} catch (NumberFormatException e) {
+					Logger.e("Testcommand", param[0] +" is no Integer");
+				}
+			}
+			else{
+				VampirePlayer.get(p).levelUp();
+			}
+			
 			if(VampirePlayer.get(p).getLevel()==1){
 			sendMessage(sender,"You are a vampire now");
 			}
