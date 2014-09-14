@@ -1,6 +1,14 @@
+# Entitys
 entity.vampirism:vampireHunter.name=Vampire Hunter
 entity.vampirism:vampire.name=Vampire
 
+# Items
 item.vampirism:vampiresFear.name=Vampire's fear
 
+# Blocks
 block.vampirism:bloodAltar.name=Blood Altar
+
+# Keys
+
+keys.vampirism.category=Vampirism
+keys.vampirism.suck=Suck blood

@@ -4,19 +4,25 @@ public class ServerProxy extends CommonProxy{
 
 	@Override
 	public void registerRenderer() {
-		// TODO Auto-generated method stub
+		//Client side only
 		
 	}
 
 	@Override
 	public void registerSounds() {
-		// TODO Auto-generated method stub
+		//Client side only
 		
 	}
 
 	@Override
 	public void registerSubscriptions() {
-		// TODO Auto-generated method stub
+		//Client side only
+		
+	}
+
+	@Override
+	public void registerKeyBindings() {
+		//Client side only
 		
 	}
 

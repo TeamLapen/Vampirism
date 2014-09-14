@@ -11,4 +11,18 @@ public class REFERENCE {
 	public static final String VAMPIRE_LEVEL_NBT_KEY="vampirelevel";
 	public static final String TE_BLOODALTAR_NBT_KEY="tebloodaltar";
 	
+	public static final class ENTITY{
+		public static final String VAMPIRE_HUNTER_NAME="vampirism:vampireHunter";
+		public static final String VAMPIRE_NAME="vampirism:vampire";
+	}
+	
+	public static final class KEYS{
+		public static final String CATEGORY="keys.vampirism.category";
+		public static final String SUCK_BLOOD="keys.vampirism.suck";
+	}
+	
+	public static enum KEY{
+		UNKNOWN,SUCK
+	}
+	
 }

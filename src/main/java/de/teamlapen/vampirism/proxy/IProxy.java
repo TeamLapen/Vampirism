@@ -16,7 +16,12 @@ public interface IProxy {
 	public void registerSounds();
 	
 	/**
-	 * Registers all important subscriptions, which should be registered at startup (postinit)
+	 * Registers all important subscriptions, which should be registered at startup (init)
 	 */
 	public void registerSubscriptions();
+	
+	/**
+	 * Register keybindings
+	 */
+	public void registerKeyBindings();
 }

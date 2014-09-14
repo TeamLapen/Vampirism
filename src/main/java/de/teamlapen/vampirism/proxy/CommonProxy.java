@@ -15,9 +15,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.registry.EntityRegistry;
-import de.teamlapen.vampirism.VampireEventHandler;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.playervampire.VampirePlayerEventHandler;
 import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.entity.*;
 
 public abstract class CommonProxy implements IProxy{
@@ -30,11 +31,11 @@ public abstract class CommonProxy implements IProxy{
 				Predicates.notNull()), BiomeGenBase.class);
 		
 		//Registration of vampire hunter
-		registerEntity(EntityVampireHunter.class,"vampirism:vampireHunter");
+		registerEntity(EntityVampireHunter.class,REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME);
 		EntityRegistry.addSpawn(EntityVampireHunter.class, 2, 0, 1, EnumCreatureType.monster, allBiomes);	
 		
 		//Registration of vampire
-		registerEntity(EntityVampire.class,"vampirism:vampire");
+		registerEntity(EntityVampire.class,REFERENCE.ENTITY.VAMPIRE_NAME);
 		EntityRegistry.addSpawn(EntityVampire.class, 2, 0, 1, EnumCreatureType.monster, allBiomes);
 	}
 	
@@ -53,7 +54,7 @@ public abstract class CommonProxy implements IProxy{
 	
 	
 	public void registerSubscriptions(){
-		MinecraftForge.EVENT_BUS.register(new VampireEventHandler());
+		MinecraftForge.EVENT_BUS.register(new VampirePlayerEventHandler());
 	}
 	
 	/**

@@ -1,15 +1,14 @@
-package de.teamlapen.vampirism;
+package de.teamlapen.vampirism.playervampire;
 
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import de.teamlapen.vampirism.playervampire.VampirePlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 
-public class VampireEventHandler {
+public class VampirePlayerEventHandler {
 
 	@SubscribeEvent
 	public void onEntityConstructing(EntityConstructing event){

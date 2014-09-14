@@ -55,7 +55,7 @@ public class WorldGenVampirism implements IWorldGenerator {
             if (v.isInRange(l1, i2, j2) && this.isValidVampireHunterSpawningLocation(world, l1, i2, j2))
             {
                 Vec3 pos=Vec3.createVectorHelper((double)l1, (double)i2, (double)j2);
-                Entity e=EntityList.createEntityByName("vampirism:vampireHunter", world);
+                Entity e=EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world);
                 e.setLocationAndAngles(pos.xCoord, pos.yCoord, pos.zCoord, 0.0F, 0.0F);
                 world.spawnEntityInWorld(e);
                 Logger.i("HunterSpawn", "Spawned Hunter");

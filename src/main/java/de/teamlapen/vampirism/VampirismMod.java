@@ -41,6 +41,7 @@ public class VampirismMod {
     {
 		ModItems.init();
 		ModBlocks.init();
+		proxy.registerKeyBindings();
 		setupNetwork();
     }
 
@@ -51,13 +52,14 @@ public class VampirismMod {
         proxy.registerRenderer();
         proxy.registerSounds();
         GameRegistry.registerWorldGenerator(new WorldGenVampirism(), 1000);
+        proxy.registerSubscriptions();
        
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent event)
     {
-    	proxy.registerSubscriptions();
+    	
     	
     }
     
