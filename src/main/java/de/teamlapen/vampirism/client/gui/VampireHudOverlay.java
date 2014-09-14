@@ -9,15 +9,20 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 import de.teamlapen.vampirism.playervampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
 public class VampireHudOverlay extends Gui{
 	
 	private Minecraft mc;
+	private int prevBlood=20;
+	private final ResourceLocation icons = new ResourceLocation(REFERENCE.MODID+":textures/gui/icons.png");
 	
 	public VampireHudOverlay(Minecraft mc){
 		this.mc=mc;
@@ -57,6 +62,51 @@ public class VampireHudOverlay extends Gui{
             mc.fontRenderer.drawString(text, x, y, color);
             mc.mcProfiler.endSection();
         }
+	}
+	
+	@SubscribeEvent
+	public void onRenderFoodBar(RenderGameOverlayEvent.Pre event){
+		if( event.type!=ElementType.FOOD){
+			return;
+		}
+		
+		VampirePlayer p = VampirePlayer.get(mc.thePlayer);
+		if(p.getLevel()>0){
+			event.setCanceled(true);
+			
+			if(mc.playerController.gameIsSurvivalOrAdventure()){
+				
+				mc.mcProfiler.startSection("vampireBlood");
+				
+				GL11.glEnable(GL11.GL_BLEND);
+				
+				this.mc.getTextureManager().bindTexture(icons);
+		        int left = event.resolution.getScaledWidth() / 2 + 91;
+		        int top = event.resolution.getScaledHeight() - GuiIngameForge.right_height;
+		        
+		        for (int i = 0; i < 10; ++i)
+		        {
+		            int idx = i * 2 + 1;
+		            int x = left - i * 8 - 9;
+		            int y = top;
+		            
+		            //Draw Background
+		            drawTexturedModalRect(x,y,0,0,9,9);
+		            
+		            if(idx<p.getBlood()){
+		            	drawTexturedModalRect(x,y,9,0,9,9);
+		            }
+		            else if(idx==p.getBlood()){
+		            	drawTexturedModalRect(x,y,18,0,9,9);
+		            }
+		        }
+		        GL11.glDisable(GL11.GL_BLEND);
+		        mc.mcProfiler.endSection();
+			}
+			
+		}
+		
+		prevBlood=p.getBlood();
 	}
 
 }

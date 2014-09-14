@@ -113,11 +113,15 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		return level;
 	}
 	
+	public int getBlood(){
+		return blood;
+	}
+	
 	private void sync(){
 		NBTTagCompound nbt=new NBTTagCompound();
-		nbt.setDouble("posx", player.posX);
-		nbt.setDouble("posy", player.posY);
-		nbt.setDouble("posZ", player.posZ);
+//		nbt.setDouble("posx", player.posX);
+//		nbt.setDouble("posy", player.posY);
+//		nbt.setDouble("posZ", player.posZ);
 		this.saveNBTData(nbt);
 		VampirismMod.modChannel.sendTo(new VampirePlayerPacket(nbt), (EntityPlayerMP)player);
 		
