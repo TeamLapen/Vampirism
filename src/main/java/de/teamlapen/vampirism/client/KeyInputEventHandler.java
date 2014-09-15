@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.client;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.util.MovingObjectPosition;
 
 import org.lwjgl.input.Keyboard;
 
@@ -19,7 +21,11 @@ public class KeyInputEventHandler {
 	@SubscribeEvent
 	public void handleKeyInput(InputEvent.KeyInputEvent event){
 		if(getPressedKeyBinding()==KEY.SUCK){
-			VampirismMod.modChannel.sendToServer(new SuckBloodPacket());
+			MovingObjectPosition mouseOver=Minecraft.getMinecraft().objectMouseOver;
+			if(mouseOver!=null&&mouseOver.entityHit!=null){
+				VampirismMod.modChannel.sendToServer(new SuckBloodPacket(mouseOver.entityHit.getEntityId()));
+			}
+			
 		}
 	}
 	

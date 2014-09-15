@@ -2,7 +2,10 @@ package de.teamlapen.vampirism.playervampire;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.proxy.CommonProxy;
+import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -131,6 +134,17 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	private void applyModifiers() {
 		PlayerModifiers.applyModifiers(this,player);
 		
+	}
+	
+	public void suckBlood(EntityLiving e){
+		
+		if(e.getHealth()/e.getMaxHealth()<= REFERENCE.suckBloodHealthRequirement){
+			Logger.i("VampirePlayer", "Sucking blood from: "+e);
+			
+		}
+		else{
+			Logger.i("SuckBlood", "Health level to high");
+		}
 	}
 
 }
