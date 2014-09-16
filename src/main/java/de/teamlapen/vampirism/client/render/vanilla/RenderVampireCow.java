@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.render.vanilla;
 
+import de.teamlapen.vampirism.entity.VampireMob;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderCow;
 import net.minecraft.entity.Entity;
@@ -21,7 +22,7 @@ public class RenderVampireCow extends RenderCow{
      */
     protected ResourceLocation getEntityTexture(EntityCow cow)
     {
-    	if(cow.getHealth()<10.0f){
+    	if(VampireMob.get(cow).isBitten()){
     		return vampireCowTextures;
     	}
         return cowTextures;
@@ -37,7 +38,6 @@ public class RenderVampireCow extends RenderCow{
     
     public void doRender(EntityLiving cow, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_){
 
-    	this.bindEntityTexture(cow);
     	super.doRender(cow, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
     }
 

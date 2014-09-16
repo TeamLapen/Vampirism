@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.playervampire;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.proxy.CommonProxy;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -137,10 +138,9 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	}
 	
 	public void suckBlood(EntityLiving e){
-		
 		if(e.getHealth()/e.getMaxHealth()<= REFERENCE.suckBloodHealthRequirement){
 			Logger.i("VampirePlayer", "Sucking blood from: "+e);
-			
+			VampireMob.get(e).bite();
 		}
 		else{
 			Logger.i("SuckBlood", "Health level to high");

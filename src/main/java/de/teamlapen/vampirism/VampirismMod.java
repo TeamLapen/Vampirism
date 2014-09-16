@@ -15,6 +15,7 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import de.teamlapen.vampirism.client.gui.VampireHudOverlay;
+import de.teamlapen.vampirism.entity.VampireMobPacket;
 import de.teamlapen.vampirism.playervampire.SuckBloodPacket;
 import de.teamlapen.vampirism.playervampire.VampirePlayerPacket;
 import de.teamlapen.vampirism.proxy.IProxy;
@@ -76,6 +77,7 @@ public class VampirismMod {
     	int id=0;
     	modChannel.registerMessage(VampirePlayerPacket.Handler.class, VampirePlayerPacket.class, id++, Side.CLIENT);
     	modChannel.registerMessage(SuckBloodPacket.Handler.class, SuckBloodPacket.class, id++, Side.SERVER);
+    	modChannel.registerMessage(VampireMobPacket.Handler.class, VampireMobPacket.class, id++, Side.CLIENT);
     }
 
 }

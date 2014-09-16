@@ -55,6 +55,7 @@ public abstract class CommonProxy implements IProxy{
 	
 	public void registerSubscriptions(){
 		MinecraftForge.EVENT_BUS.register(new VampirePlayerEventHandler());
+		MinecraftForge.EVENT_BUS.register(new VampireEntityEventHandler());
 	}
 	
 	/**
