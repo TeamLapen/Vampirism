@@ -18,23 +18,13 @@ public class RenderVampireCow extends RenderCow{
 	}
 	
     
+	@Override
     protected ResourceLocation getEntityTexture(EntityCow cow)
     {
     	if(VampireMob.get(cow).isBitten()){
     		return vampireCowTextures;
     	}
-        return cowTextures;
-    }
-
-    
-    protected ResourceLocation getEntityTexture(Entity p_110775_1_)
-    {
-        return this.getEntityTexture((EntityCow)p_110775_1_);
-    }
-    
-    public void doRender(EntityLiving cow, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_){
-
-    	super.doRender(cow, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
+        return super.getEntityTexture(cow);
     }
 
 }

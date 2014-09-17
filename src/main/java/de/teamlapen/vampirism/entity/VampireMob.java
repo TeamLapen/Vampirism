@@ -101,7 +101,7 @@ public class VampireMob implements IExtendedEntityProperties{
 		if(e instanceof EntityCow || e instanceof EntityHorse || e instanceof EntityPigZombie || e instanceof EntityZombie){
 			return REFERENCE.normalBloodAmount;
 		}
-		if(e instanceof EntityVillager || e instanceof EntityGiantZombie || e instanceof EntityWitch){
+		if(e instanceof EntityVillager || e instanceof EntityWitch){
 			return REFERENCE.bigBloodAmount;
 		}
 		return -1;
