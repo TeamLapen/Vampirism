@@ -1,11 +1,18 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.network.VampireMobPacket;
+import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.monster.*;
+import net.minecraft.entity.passive.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
+import net.minecraftforge.common.MinecraftForge;
 
 public class VampireMob implements IExtendedEntityProperties{
 
@@ -39,9 +46,11 @@ public class VampireMob implements IExtendedEntityProperties{
 	@Override
 	public void loadNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
-		
 		if(properties!=null){
 			this.bitten=properties.getBoolean(KEY_BITTEN);
+			if(bitten){
+				Logger.i("test", "Entity is bitten "+entity);
+			}
 		}
 		
 	}
@@ -52,11 +61,10 @@ public class VampireMob implements IExtendedEntityProperties{
 		
 	}
 	
-	private void sync(){
+	public void sync(){
 		NBTTagCompound nbt= new NBTTagCompound();
 		this.saveNBTData(nbt);
-		nbt.setInteger(VampireMobPacket.KEY_ID,entity.getEntityId());
-		VampirismMod.modChannel.sendToAll(new VampireMobPacket(nbt));
+		VampirismMod.modChannel.sendToAll(new VampireMobPacket(nbt,entity.getEntityId()));
 		
 	}
 	
@@ -67,6 +75,24 @@ public class VampireMob implements IExtendedEntityProperties{
 	public void bite(){
 		bitten=true;
 		sync();
+	}
+	
+	/**
+	 * Returns how much blood can be collected by biting this entity. Zero if not biteable
+	 * @param e
+	 * @return
+	 */
+	public static int getBiteBloodAmount(EntityLiving e){
+		if(e instanceof EntityPig || e instanceof EntitySheep || e instanceof EntityOcelot || e instanceof EntityWolf){
+			return REFERENCE.smallBloodAmount;
+		}
+		if(e instanceof EntityCow || e instanceof EntityHorse || e instanceof EntityPigZombie || e instanceof EntityZombie){
+			return REFERENCE.normalBloodAmount;
+		}
+		if(e instanceof EntityVillager || e instanceof EntityGiantZombie || e instanceof EntityWitch){
+			return REFERENCE.bigBloodAmount;
+		}
+		return 0;
 	}
 
 }

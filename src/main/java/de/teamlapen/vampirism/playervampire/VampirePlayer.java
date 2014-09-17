@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.playervampire;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.VampireMob;
+import de.teamlapen.vampirism.network.VampireMobPacket;
 import de.teamlapen.vampirism.proxy.CommonProxy;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -21,11 +22,12 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	private int blood;
 	private final String KEY_LEVEL="level";
 	private final String KEY_BLOOD="blood";
+	private final int MAXBLOOD=20;
 	
 	public VampirePlayer(EntityPlayer player){
 		this.player=player;
 		level=0;
-		blood=20;
+		blood=MAXBLOOD;
 	}
 	
 	private static final String getSaveKey(EntityPlayer player) {
@@ -121,13 +123,20 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		return blood;
 	}
 	
+	private void addBlood(int a){
+		blood+=a;
+		if(blood>MAXBLOOD){
+			blood=MAXBLOOD;
+		}
+	}
+	
 	private void sync(){
 		NBTTagCompound nbt=new NBTTagCompound();
 //		nbt.setDouble("posx", player.posX);
 //		nbt.setDouble("posy", player.posY);
 //		nbt.setDouble("posZ", player.posZ);
 		this.saveNBTData(nbt);
-		VampirismMod.modChannel.sendTo(new VampirePlayerPacket(nbt), (EntityPlayerMP)player);
+		VampirismMod.modChannel.sendTo(new VampireMobPacket(nbt,player.getEntityId()), (EntityPlayerMP)player);
 		
 	}
 	
@@ -137,10 +146,38 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		
 	}
 	
+	
+	/**
+	 * Suck blood from an EntityLiving belonging to the given id.
+	 * Only sucks blood if health is low enough and if the entity has blood
+	 * @param e Id of Entity to suck blood from
+	 */
+	public void suckBlood(int entityId){
+		Entity e=player.worldObj.getEntityByID(entityId);
+		if(e!=null&&e instanceof EntityLiving){
+			suckBlood((EntityLiving)e);
+		}
+	}
+	
+	/**
+	 * Suck blood from an EntityLiving.
+	 * Only sucks blood if health is low enough and if the entity has blood
+	 * @param e Entity to suck blood from
+	 */
 	public void suckBlood(EntityLiving e){
 		if(e.getHealth()/e.getMaxHealth()<= REFERENCE.suckBloodHealthRequirement){
-			Logger.i("VampirePlayer", "Sucking blood from: "+e);
-			VampireMob.get(e).bite();
+			
+			VampireMob mob = VampireMob.get(e);
+			if(!mob.isBitten()){
+				int amount= VampireMob.getBiteBloodAmount(e);
+				if(amount>0){
+					addBlood(amount);
+					mob.bite();
+					Logger.i("VampirePlayer", "Sucking blood from: "+e);
+					return;
+				}
+			}
+			Logger.i("SuckBlood","Not all requirements were met");
 		}
 		else{
 			Logger.i("SuckBlood", "Health level to high");

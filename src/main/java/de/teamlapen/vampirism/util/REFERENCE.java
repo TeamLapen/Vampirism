@@ -8,6 +8,9 @@ public class REFERENCE {
 	
 	public static final int neededBlood=20;
 	public static final float suckBloodHealthRequirement=0.3f;
+	public static final int smallBloodAmount=5;
+	public static final int normalBloodAmount=10;
+	public static final int bigBloodAmount=15;
 	
 	public static final String VAMPIRE_LEVEL_NBT_KEY="vampirelevel";
 	public static final String TE_BLOODALTAR_NBT_KEY="tebloodaltar";

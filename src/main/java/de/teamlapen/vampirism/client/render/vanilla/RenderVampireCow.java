@@ -17,9 +17,7 @@ public class RenderVampireCow extends RenderCow{
 		super(p_i1253_1_, p_i1253_2_);
 	}
 	
-    /**
-     * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
-     */
+    
     protected ResourceLocation getEntityTexture(EntityCow cow)
     {
     	if(VampireMob.get(cow).isBitten()){
@@ -28,9 +26,7 @@ public class RenderVampireCow extends RenderCow{
         return cowTextures;
     }
 
-    /**
-     * Returns the location of an entity's texture. Doesn't seem to be called unless you call Render.bindEntityTexture.
-     */
+    
     protected ResourceLocation getEntityTexture(Entity p_110775_1_)
     {
         return this.getEntityTexture((EntityCow)p_110775_1_);
