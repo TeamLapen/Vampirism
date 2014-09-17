@@ -1,12 +1,19 @@
 package de.teamlapen.vampirism.entity.player;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.VampireMob;
+import de.teamlapen.vampirism.network.SpawnParticlePacket;
 import de.teamlapen.vampirism.proxy.CommonProxy;
 
 public class VampirePlayer implements IExtendedEntityProperties {
@@ -141,11 +148,23 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	 *            Entity to suck blood from
 	 */
 	public void suckBlood(EntityLiving e) {
-
+		if(e.worldObj.isRemote){
+			return;
+		}
 		VampireMob mob = VampireMob.get(e);
 		int amount = mob.bite();
 		if (amount > 0) {
 			addBlood(amount);
+			
+			VampirismMod.modChannel.sendToAll(new SpawnParticlePacket("magicCrit",e.posX,e.posY,e.posZ,player.posX-e.posX,player.posY-e.posY,player.posZ-e.posZ,10));
+			VampirismMod.modChannel.sendTo(new SpawnParticlePacket("blood_eat",0,0,0,0,0,0,10), (EntityPlayerMP)player);
+		}
+		else if(amount==-1){
+			player.attackEntityFrom(DamageSource.outOfWorld, 1);
+		}
+		else if(amount==-2){
+			player.addPotionEffect(new PotionEffect(19,80,1));
+			player.addPotionEffect(new PotionEffect(9,120,0));
 		}
 	}
 

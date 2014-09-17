@@ -66,15 +66,17 @@ public class VampireMob implements IExtendedEntityProperties {
 	 *         not biteable
 	 */
 	public int bite() {
-		if (entity.getHealth() / entity.getMaxHealth() > REFERENCE.suckBloodHealthRequirement) {
-			// Cannot be bitten yet
-			return -1;
-		}
+		
 		int amount = getBlood();
 		if (amount == -1) {
 			// Cannot be bitten at all
 			return -2;
 		}
+		if (entity.getHealth() / entity.getMaxHealth() > REFERENCE.suckBloodHealthRequirement) {
+			// Cannot be bitten yet
+			return -1;
+		}
+		
 
 		setBlood(0);
 		return amount;
