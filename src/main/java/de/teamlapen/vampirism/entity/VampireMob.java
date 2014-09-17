@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.network.VampireMobPacket;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
@@ -16,15 +15,17 @@ import net.minecraftforge.common.MinecraftForge;
 
 public class VampireMob implements IExtendedEntityProperties{
 
-	private boolean bitten;
 	private final EntityLiving entity;
 	public final static String EXT_PROP_NAME="VampireMob";
-	private final String KEY_BITTEN="bitten";
+	private final String KEY_BLOOD="blood";
+	private static final int BLOOD_WATCHER=20;
+	private final int maxBlood;
 	
 	
 	public VampireMob(EntityLiving mob){
-		bitten=false;
 		entity=mob;
+		maxBlood=getMaxBloodAmount(mob);
+		entity.getDataWatcher().addObject(BLOOD_WATCHER, maxBlood);
 	}
 	
 	public static final void register(EntityLiving mob){
@@ -38,7 +39,7 @@ public class VampireMob implements IExtendedEntityProperties{
 	@Override
 	public void saveNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = new NBTTagCompound();
-		properties.setBoolean(KEY_BITTEN, this.bitten);
+		properties.setInteger(KEY_BLOOD, this.entity.getDataWatcher().getWatchableObjectInt(BLOOD_WATCHER));
 		compound.setTag(EXT_PROP_NAME, properties);
 		
 	}
@@ -47,10 +48,7 @@ public class VampireMob implements IExtendedEntityProperties{
 	public void loadNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
 		if(properties!=null){
-			this.bitten=properties.getBoolean(KEY_BITTEN);
-			if(bitten){
-				Logger.i("test", "Entity is bitten "+entity);
-			}
+			this.entity.getDataWatcher().updateObject(BLOOD_WATCHER, properties.getInteger(KEY_BLOOD));
 		}
 		
 	}
@@ -61,20 +59,34 @@ public class VampireMob implements IExtendedEntityProperties{
 		
 	}
 	
-	public void sync(){
-		NBTTagCompound nbt= new NBTTagCompound();
-		this.saveNBTData(nbt);
-		VampirismMod.modChannel.sendToAll(new VampireMobPacket(nbt,entity.getEntityId()));
-		
+	private int getBlood(){
+		return this.entity.getDataWatcher().getWatchableObjectInt(BLOOD_WATCHER);
 	}
-	
+	private void setBlood(int b){
+		this.entity.getDataWatcher().updateObject(BLOOD_WATCHER,b);
+	}
 	public boolean isBitten(){
-		return bitten;
+		return getBlood()==0;
 	}
 	
-	public void bite(){
-		bitten=true;
-		sync();
+	/**
+	 * Bite the entity. Returns the retrieved blood
+	 * @return Retrieved blood, 0 if already empty, -1 if health too high, -2 if not biteable
+	 */
+	public int bite(){
+		if(entity.getHealth()/entity.getMaxHealth()> REFERENCE.suckBloodHealthRequirement){
+			//Cannot be bitten yet
+			return -1;
+		}
+		int amount=getBlood();
+		if(amount==-1){
+			//Cannot be bitten at all
+			return -2;
+		}
+		
+		setBlood(0);
+		return amount;
+		
 	}
 	
 	/**
@@ -82,7 +94,7 @@ public class VampireMob implements IExtendedEntityProperties{
 	 * @param e
 	 * @return
 	 */
-	public static int getBiteBloodAmount(EntityLiving e){
+	public static int getMaxBloodAmount(EntityLiving e){
 		if(e instanceof EntityPig || e instanceof EntitySheep || e instanceof EntityOcelot || e instanceof EntityWolf){
 			return REFERENCE.smallBloodAmount;
 		}
@@ -92,7 +104,7 @@ public class VampireMob implements IExtendedEntityProperties{
 		if(e instanceof EntityVillager || e instanceof EntityGiantZombie || e instanceof EntityWitch){
 			return REFERENCE.bigBloodAmount;
 		}
-		return 0;
+		return -1;
 	}
 
 }

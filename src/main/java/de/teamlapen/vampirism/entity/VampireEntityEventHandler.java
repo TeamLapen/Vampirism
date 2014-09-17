@@ -12,14 +12,7 @@ public class VampireEntityEventHandler {
 	public void onEntityConstructing(EntityConstructing event){
 		if(event.entity instanceof EntityLiving && VampireMob.get((EntityLiving)event.entity)==null){
 			VampireMob.register((EntityLiving)event.entity);
-			Logger.i("test", "REgisterng new mob "+event.entity);
 		}
 	}
 	
-	@SubscribeEvent
-	public void onEntityJoinWorld(EntityJoinWorldEvent event){
-		if(!event.world.isRemote && event.entity instanceof EntityLiving){
-			VampireMob.get((EntityLiving)event.entity).sync();
-		}
-	}
 }

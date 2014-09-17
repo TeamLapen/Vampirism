@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.playervampire;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.VampireMob;
-import de.teamlapen.vampirism.network.VampireMobPacket;
 import de.teamlapen.vampirism.proxy.CommonProxy;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -18,16 +17,16 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	
 	public final static String EXT_PROP_NAME = "VampirePlayer";
 	private final EntityPlayer player;
-	private int level;
-	private int blood;
 	private final String KEY_LEVEL="level";
 	private final String KEY_BLOOD="blood";
 	private final int MAXBLOOD=20;
+	private final static int BLOOD_WATCHER=20;
+	private final static int LEVEL_WATCHER=21;
 	
 	public VampirePlayer(EntityPlayer player){
 		this.player=player;
-		level=0;
-		blood=MAXBLOOD;
+		this.player.getDataWatcher().addObject(BLOOD_WATCHER, MAXBLOOD);
+		this.player.getDataWatcher().addObject(LEVEL_WATCHER, 0);
 	}
 	
 	private static final String getSaveKey(EntityPlayer player) {
@@ -42,8 +41,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 			playerData.loadNBTData(savedData);
 			
 		}
-		playerData.sync();
-		playerData.applyModifiers();
+		playerData.applyModifiers(playerData.getLevel());
 	}
 	
 	public static void saveProxyData(EntityPlayer player){
@@ -74,8 +72,8 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	@Override
 	public void saveNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = new NBTTagCompound();
-		properties.setInteger(KEY_LEVEL, this.level);
-		properties.setInteger(KEY_BLOOD, blood);
+		properties.setInteger(KEY_LEVEL, getLevel());
+		properties.setInteger(KEY_BLOOD, getBlood());
 		compound.setTag(EXT_PROP_NAME, properties);
 		
 	}
@@ -83,8 +81,8 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	@Override
 	public void loadNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
-		this.level=properties.getInteger(KEY_LEVEL);
-		this.level=properties.getInteger(KEY_BLOOD);
+		setBlood(properties.getInteger(KEY_LEVEL));
+		setLevel(properties.getInteger(KEY_BLOOD));
 		
 	}
 
@@ -95,54 +93,48 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	}
 	
 	public void levelUp(){
-		if(level==0){
-			blood=20;
-		}
+		int level=getLevel();
 		level++;
-		this.sync();
-		this.applyModifiers();
+		this.applyModifiers(level);
+		setLevel(level);
 	}
 	
 	/**
-	 * For testing only
+	 * For testing only, make private later
 	 * @param l
 	 */
 	public void setLevel(int l){
 		if(l>=0){
-			level=l;
-			this.sync();
-			this.applyModifiers();
+			this.player.getDataWatcher().updateObject(LEVEL_WATCHER,l);
+			this.applyModifiers(l);
 		}
 	}
 	
+	private void setBlood(int b){
+		this.player.getDataWatcher().updateObject(LEVEL_WATCHER,b);
+	}
+	
 	public int getLevel(){
-		return level;
+		return this.player.getDataWatcher().getWatchableObjectInt(LEVEL_WATCHER);
 	}
 	
 	public int getBlood(){
-		return blood;
+		return this.player.getDataWatcher().getWatchableObjectInt(BLOOD_WATCHER);
 	}
 	
 	private void addBlood(int a){
+		int blood=getBlood();
 		blood+=a;
 		if(blood>MAXBLOOD){
 			blood=MAXBLOOD;
 		}
+		setBlood(blood);
 	}
 	
-	private void sync(){
-		NBTTagCompound nbt=new NBTTagCompound();
-//		nbt.setDouble("posx", player.posX);
-//		nbt.setDouble("posy", player.posY);
-//		nbt.setDouble("posZ", player.posZ);
-		this.saveNBTData(nbt);
-		VampirismMod.modChannel.sendTo(new VampireMobPacket(nbt,player.getEntityId()), (EntityPlayerMP)player);
-		
-	}
 	
 
-	private void applyModifiers() {
-		PlayerModifiers.applyModifiers(this,player);
+	private void applyModifiers(int level) {
+		PlayerModifiers.applyModifiers(level,player);
 		
 	}
 	
@@ -165,22 +157,11 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	 * @param e Entity to suck blood from
 	 */
 	public void suckBlood(EntityLiving e){
-		if(e.getHealth()/e.getMaxHealth()<= REFERENCE.suckBloodHealthRequirement){
-			
-			VampireMob mob = VampireMob.get(e);
-			if(!mob.isBitten()){
-				int amount= VampireMob.getBiteBloodAmount(e);
-				if(amount>0){
-					addBlood(amount);
-					mob.bite();
-					Logger.i("VampirePlayer", "Sucking blood from: "+e);
-					return;
-				}
-			}
-			Logger.i("SuckBlood","Not all requirements were met");
-		}
-		else{
-			Logger.i("SuckBlood", "Health level to high");
+		
+		VampireMob mob = VampireMob.get(e);
+		int amount=mob.bite();
+		if(amount>0){
+			addBlood(amount);
 		}
 	}
 

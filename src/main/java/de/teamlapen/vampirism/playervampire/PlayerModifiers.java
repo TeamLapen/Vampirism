@@ -17,28 +17,28 @@ public abstract class PlayerModifiers {
 	public static final UUID healthModifierUUID=UUID.fromString("56C17EFE-E3EC-4E27-A12F-99D2FE927B70");
 	public static final UUID damageModifierUUID=UUID.fromString("7600D8C4-3517-40BE-8CB1-359D46705A0F");
 	
-	public static void applyModifiers(VampirePlayer vampire,EntityPlayer p){
+	public static void applyModifiers(int level,EntityPlayer p){
 		
 		double m=0;
 		//Speed modifier
 		IAttributeInstance movement = p.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
 		rmMod(movement,speedModifierUUID);
 		
-		m=calculateSqrtMod(vampire.getLevel(),30,0.3D,5);
+		m=calculateSqrtMod(level,30,0.3D,5);
 		movement.applyModifier(new AttributeModifier(speedModifierUUID,"Vampire Speed Bonus",m,2).setSaved(false));
 		
 		//Health modifier
 		IAttributeInstance health = p.getEntityAttribute(SharedMonsterAttributes.maxHealth);
 		rmMod(health,healthModifierUUID);
 		
-		m=calculateSqrtMod(vampire.getLevel(),50,1,1);
+		m=calculateSqrtMod(level,50,1,1);
 		health.applyModifier(new AttributeModifier(healthModifierUUID,"Vampire Health Bonus",m,2).setSaved(false));
 		
 		//Strength modifier
 		IAttributeInstance damage = p.getEntityAttribute(SharedMonsterAttributes.attackDamage);
 		rmMod(damage,damageModifierUUID);
 		
-		m=calculateSqrtMod(vampire.getLevel(),50,1,1);
+		m=calculateSqrtMod(level,50,1,1);
 		damage.applyModifier(new AttributeModifier(damageModifierUUID,"Vampire Strength Bonus",m,2).setSaved(false));
 		
 		
