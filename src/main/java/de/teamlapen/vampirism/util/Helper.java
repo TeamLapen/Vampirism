@@ -36,8 +36,7 @@ public class Helper {
 		if (player instanceof EntityPlayerMP && restrict) {
 			distance = ((EntityPlayerMP) player).theItemInWorldManager.getBlockReachDistance();
 		}
-		Vec3 vector2 = vector1.addVector(pitchAdjustedSinYaw * distance, sinPitch * distance, pitchAdjustedCosYaw
-				* distance);
+		Vec3 vector2 = vector1.addVector(pitchAdjustedSinYaw * distance, sinPitch * distance, pitchAdjustedCosYaw * distance);
 		return player.worldObj.rayTraceBlocks(vector1, vector2);
 	}
 }

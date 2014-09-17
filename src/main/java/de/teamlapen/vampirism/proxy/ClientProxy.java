@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.proxy;
 
-import org.lwjgl.input.Keyboard;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelCow;
 import net.minecraft.client.model.ModelHorse;
@@ -10,15 +8,6 @@ import net.minecraft.client.model.ModelPig;
 import net.minecraft.client.model.ModelSheep1;
 import net.minecraft.client.model.ModelSheep2;
 import net.minecraft.client.model.ModelWolf;
-import net.minecraft.client.renderer.entity.RenderHorse;
-import net.minecraft.client.renderer.entity.RenderOcelot;
-import net.minecraft.client.renderer.entity.RenderPig;
-import net.minecraft.client.renderer.entity.RenderSheep;
-import net.minecraft.client.renderer.entity.RenderVillager;
-import net.minecraft.client.renderer.entity.RenderWitch;
-import net.minecraft.client.renderer.entity.RenderWolf;
-import net.minecraft.client.renderer.entity.RenderZombie;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.monster.EntityWitch;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityCow;
@@ -36,24 +25,38 @@ import de.teamlapen.vampirism.client.KeyInputEventHandler;
 import de.teamlapen.vampirism.client.gui.VampireHudOverlay;
 import de.teamlapen.vampirism.client.model.ModelVampire;
 import de.teamlapen.vampirism.client.model.ModelVampireHunter;
-import de.teamlapen.vampirism.client.render.*;
-import de.teamlapen.vampirism.client.render.vanilla.*;
+import de.teamlapen.vampirism.client.render.RendererBloodAltar;
+import de.teamlapen.vampirism.client.render.VampireHunterRenderer;
+import de.teamlapen.vampirism.client.render.VampireRenderer;
+import de.teamlapen.vampirism.client.render.vanilla.RenderVampireCow;
+import de.teamlapen.vampirism.client.render.vanilla.RenderVampireHorse;
+import de.teamlapen.vampirism.client.render.vanilla.RenderVampireOcelot;
+import de.teamlapen.vampirism.client.render.vanilla.RenderVampirePig;
+import de.teamlapen.vampirism.client.render.vanilla.RenderVampireSheep;
+import de.teamlapen.vampirism.client.render.vanilla.RenderVampireVillager;
+import de.teamlapen.vampirism.client.render.vanilla.RenderVampireWitch;
+import de.teamlapen.vampirism.client.render.vanilla.RenderVampireWolf;
+import de.teamlapen.vampirism.client.render.vanilla.RenderVampireZombie;
 import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
 import de.teamlapen.vampirism.util.Logger;
 
-public class ClientProxy extends CommonProxy{
-	private final static String TAG="ClientProxy";
-	
-	
+public class ClientProxy extends CommonProxy {
+	private final static String TAG = "ClientProxy";
+
+	@Override
+	public void registerKeyBindings() {
+		ClientRegistry.registerKeyBinding(KeyInputEventHandler.SUCK);
+
+	}
 
 	@Override
 	public void registerRenderer() {
-		RenderingRegistry.registerEntityRenderingHandler(EntityVampireHunter.class,new VampireHunterRenderer(new ModelVampireHunter(),0.5F));
-		RenderingRegistry.registerEntityRenderingHandler(EntityVampire.class,new VampireRenderer(new ModelVampire(),0.5F));
-		
-		//Vampire vanilla renderers
+		RenderingRegistry.registerEntityRenderingHandler(EntityVampireHunter.class, new VampireHunterRenderer(new ModelVampireHunter(), 0.5F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityVampire.class, new VampireRenderer(new ModelVampire(), 0.5F));
+
+		// Vampire vanilla renderers
 		RenderingRegistry.registerEntityRenderingHandler(EntityCow.class, new RenderVampireCow(new ModelCow(), 0.7F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityPig.class, new RenderVampirePig(new ModelPig(), new ModelPig(0.5F), 0.7F));
 		RenderingRegistry.registerEntityRenderingHandler(EntitySheep.class, new RenderVampireSheep(new ModelSheep2(), new ModelSheep1(), 0.7F));
@@ -63,29 +66,23 @@ public class ClientProxy extends CommonProxy{
 		RenderingRegistry.registerEntityRenderingHandler(EntityWitch.class, new RenderVampireWitch());
 		RenderingRegistry.registerEntityRenderingHandler(EntityZombie.class, new RenderVampireZombie());
 		RenderingRegistry.registerEntityRenderingHandler(EntityHorse.class, new RenderVampireHorse(new ModelHorse(), 0.75F));
-		
+
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltar.class, new RendererBloodAltar());
-		
+
 	}
 
 	@Override
 	public void registerSounds() {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
-	public void registerSubscriptions(){
+	public void registerSubscriptions() {
 		Logger.i(TAG, "Registering client subscriptions");
 		super.registerSubscriptions();
 		MinecraftForge.EVENT_BUS.register(new VampireHudOverlay(Minecraft.getMinecraft()));
 		FMLCommonHandler.instance().bus().register(new KeyInputEventHandler());
-	}
-
-	@Override
-	public void registerKeyBindings() {
-		ClientRegistry.registerKeyBinding(KeyInputEventHandler.SUCK);
-		
 	}
 
 }

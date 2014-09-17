@@ -8,9 +8,11 @@ import org.apache.logging.log4j.Level;
 import cpw.mods.fml.common.FMLLog;
 
 /**
- * Logging class, which provides different methods for different log levels and always adds a tag which states to what the log is related
+ * Logging class, which provides different methods for different log levels and
+ * always adds a tag which states to what the log is related
+ * 
  * @author Max
- *
+ * 
  */
 public class Logger {
 
@@ -37,7 +39,6 @@ public class Logger {
 	public static void i(String tag, String msg) {
 		log(Level.INFO, "[" + tag + "]" + msg);
 	}
-
 
 	private static void log(Level level, String msg) {
 		FMLLog.log(REFERENCE.MODID, level, msg);
