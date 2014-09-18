@@ -18,7 +18,6 @@ import de.teamlapen.vampirism.util.REFERENCE;
 public class VampireHudOverlay extends Gui {
 
 	private Minecraft mc;
-	private int prevBlood = 20;
 	private final ResourceLocation icons = new ResourceLocation(REFERENCE.MODID + ":textures/gui/icons.png");
 
 	public VampireHudOverlay(Minecraft mc) {
@@ -73,7 +72,7 @@ public class VampireHudOverlay extends Gui {
 			event.setCanceled(true);
 
 			if (mc.playerController.gameIsSurvivalOrAdventure()) {
-
+				VampirePlayer.BloodStats stats=p.getBloodStats();
 				mc.mcProfiler.startSection("vampireBlood");
 
 				GL11.glEnable(GL11.GL_BLEND);
@@ -90,9 +89,9 @@ public class VampireHudOverlay extends Gui {
 					// Draw Background
 					drawTexturedModalRect(x, y, 0, 0, 9, 9);
 
-					if (idx < p.getBlood()) {
+					if (idx < stats.getBloodLevel()) {
 						drawTexturedModalRect(x, y, 9, 0, 9, 9);
-					} else if (idx == p.getBlood()) {
+					} else if (idx == stats.getBloodLevel()) {
 						drawTexturedModalRect(x, y, 18, 0, 9, 9);
 					}
 				}
@@ -101,8 +100,6 @@ public class VampireHudOverlay extends Gui {
 			}
 
 		}
-
-		prevBlood = p.getBlood();
 	}
 
 }

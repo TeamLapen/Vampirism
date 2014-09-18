@@ -6,6 +6,6 @@ import de.teamlapen.vampirism.util.Logger;
 
 public class CoreHandler {
 	public static void addExhaustion(float a,EntityPlayer p){
-		VampirePlayer.get(p).addExhaustion(a);
+		VampirePlayer.get(p).getBloodStats().addExhaustion(a);
 	}
 }
