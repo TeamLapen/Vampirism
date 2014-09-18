@@ -5,10 +5,11 @@ import net.minecraft.client.renderer.entity.RenderPig;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.util.ResourceLocation;
 import de.teamlapen.vampirism.entity.VampireMob;
+import de.teamlapen.vampirism.util.REFERENCE;
 
 public class RenderVampirePig extends RenderPig {
 
-	private static final ResourceLocation vampirePigTextures = new ResourceLocation("textures/entity/cow/cow.png");
+	private static final ResourceLocation vampirePigTextures = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vanilla/vampirePig.png");
 
 	public RenderVampirePig(ModelBase p_i1265_1_, ModelBase p_i1265_2_, float p_i1265_3_) {
 		super(p_i1265_1_, p_i1265_2_, p_i1265_3_);
