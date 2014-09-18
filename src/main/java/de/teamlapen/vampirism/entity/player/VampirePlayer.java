@@ -74,11 +74,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 
 	private void addBlood(int a) {
 		int blood = getBlood();
-		blood += a;
-		if (blood > MAXBLOOD) {
-			blood = MAXBLOOD;
-		}
-		setBlood(blood);
+		setBlood(Math.min(blood+a, MAXBLOOD));
 	}
 
 	private void applyModifiers(int level) {
@@ -180,6 +176,10 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		if (e != null && e instanceof EntityLiving) {
 			suckBlood((EntityLiving) e);
 		}
+	}
+	
+	public void addExhaustion(float a){
+		
 	}
 
 }
