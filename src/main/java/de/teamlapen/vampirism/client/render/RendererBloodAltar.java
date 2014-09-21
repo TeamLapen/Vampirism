@@ -48,7 +48,6 @@ public class RendererBloodAltar extends TileEntitySpecialRenderer {
 
 	@Override
 	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale) {
-		Logger.i("RendererBloodAltar", "Called renderTileEntityAt");
 		// The PushMatrix tells the renderer to "start" doing something.
 		GL11.glPushMatrix();
 		// This is setting the initial location.

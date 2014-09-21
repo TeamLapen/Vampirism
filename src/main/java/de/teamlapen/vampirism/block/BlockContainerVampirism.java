@@ -1,12 +1,15 @@
 package de.teamlapen.vampirism.block;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import de.teamlapen.vampirism.util.REFERENCE;
 
-public class BlockVampirism extends Block {
+public abstract class BlockContainerVampirism extends BlockContainer {
 
-	public BlockVampirism(Material material) {
+	public BlockContainerVampirism(Material material) {
 		super(material);
 	}
 
@@ -23,8 +26,19 @@ public class BlockVampirism extends Block {
 	public boolean renderAsNormalBlock() {
 		return false;
 	}
-
-	public boolean shouldRenderBlock() {
+	
+	@Override
+	public boolean isOpaqueCube() {
 		return false;
 	}
+	
+	@Override 
+	public boolean hasTileEntity() {
+		return true;
+	}
+	
+	 @Override
+     public int getRenderType() {
+             return -1;
+     }
 }

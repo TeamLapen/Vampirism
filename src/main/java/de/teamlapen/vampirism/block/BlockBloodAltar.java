@@ -7,7 +7,7 @@ import net.minecraft.world.World;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
 import de.teamlapen.vampirism.util.Logger;
 
-public class BlockBloodAltar extends BlockVampirism {
+public class BlockBloodAltar extends BlockContainerVampirism {
 
 	public BlockBloodAltar() {
 		super(Material.rock);
@@ -16,15 +16,10 @@ public class BlockBloodAltar extends BlockVampirism {
 	}
 
 	@Override
-	public TileEntity createTileEntity(World world, int metadata) {
+	public TileEntity createNewTileEntity(World world, int metadata) {
 		Logger.i("BlockBloodAltar", "createTileEntity called");
 		return new TileEntityBloodAltar();
 	}
 
-	@Override
-	// And this tell it that you can see through this block, and neighbor blocks
-	// should be rendered.
-	public boolean isOpaqueCube() {
-		return false;
-	}
+
 }
