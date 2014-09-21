@@ -11,6 +11,6 @@ public class ModBlocks {
 
 	public static void init() {
 		GameRegistry.registerBlock(bloodAltar, "bloodAltar");
-		GameRegistry.registerTileEntity(TileEntityBloodAltar.class, REFERENCE.TE_BLOODALTAR_NBT_KEY);
+		GameRegistry.registerTileEntity(TileEntityBloodAltar.class, "TileEntityBloodAltar");
 	}
 }

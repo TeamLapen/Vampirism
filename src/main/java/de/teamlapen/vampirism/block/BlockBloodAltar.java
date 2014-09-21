@@ -46,10 +46,10 @@ public class BlockBloodAltar extends BlockContainerVampirism {
 	}
 
 	@Override
-	public boolean onBlockActivated(World par1World, int par2, int par3,
+	public boolean onBlockActivated(World world, int par2, int par3,
 			int par4, EntityPlayer player, int par6, float par7,
 			float par8, float par9) {
-		if (!par1World.isRemote) {
+		if (!world.isRemote) {
 			Item item = null;
 			try {
 				item = player.inventory.getCurrentItem().getItem();
@@ -62,9 +62,21 @@ public class BlockBloodAltar extends BlockContainerVampirism {
 			if(item != null && ItemVampiresFear.class.isInstance(item)) {
 				Logger.i(TAG, "Block activated");
 				//TODO Become a vampire
+				TileEntityBloodAltar te = (TileEntityBloodAltar) world.getTileEntity(par2, par3, par4);
+				activateAltar(world, player, (ItemVampiresFear) item, te);
 			}
 			return true;
 		}
 		return false;
+	}
+	
+	private void activateAltar(World world, EntityPlayer player, ItemVampiresFear item, TileEntityBloodAltar te) {
+		if(!te.hasSword) {
+			Logger.i(TAG, "Consuming sword");
+			player.inventory.consumeInventoryItem(item);
+			te.hasSword = true;
+		} else {
+			Logger.i(TAG, "Altar already used");
+		}
 	}
 }

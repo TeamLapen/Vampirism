@@ -10,7 +10,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class ModelBloodAltar extends ModelBase {
+public class ModelBloodAltarEmpty extends ModelBase {
 	// fields
 	ModelRenderer base;
 	ModelRenderer level1;
@@ -29,7 +29,7 @@ public class ModelBloodAltar extends ModelBase {
 	ModelRenderer swordBayRight;
 	ModelRenderer swordBayLeft;
 
-	public ModelBloodAltar() {
+	public ModelBloodAltarEmpty() {
 		textureWidth = 128;
 		textureHeight = 64;
 

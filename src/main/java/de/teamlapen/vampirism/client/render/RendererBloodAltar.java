@@ -8,19 +8,25 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
-import de.teamlapen.vampirism.client.model.ModelBloodAltar;
+import de.teamlapen.vampirism.client.model.ModelBloodAltarEmpty;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
+import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 public class RendererBloodAltar extends TileEntitySpecialRenderer {
 
 	// The model of your block
-	private final ModelBloodAltar model;
-	private final ResourceLocation texture;
+	private final ModelBloodAltarEmpty modelEmpty, modelFull;
+	private final ResourceLocation textureEmpty, textureFull;
 
 	public RendererBloodAltar() {
-		this.model = new ModelBloodAltar();
-		texture = new ResourceLocation(REFERENCE.MODID
-				+ ":textures/blocks/bloodAltar.png");
+		modelEmpty = new ModelBloodAltarEmpty();
+		textureEmpty = new ResourceLocation(REFERENCE.MODID
+				+ ":textures/blocks/bloodAltarEmpty.png");
+		
+		modelFull = null;
+		textureFull = new ResourceLocation(REFERENCE.MODID
+				+ ":textures/blocks/bloodAltarEmpty.png");
 	}
 
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z) {
@@ -31,14 +37,22 @@ public class RendererBloodAltar extends TileEntitySpecialRenderer {
 	@Override
 	public void renderTileEntityAt(TileEntity te, double x, double y, double z,
 			float scale) {
+		TileEntityBloodAltar teBloodAltar = null;
+		boolean hasSword = teBloodAltar.hasSword;
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
-		bindTexture(texture);
+		if(hasSword)
+			bindTexture(textureFull);
+		else
+			bindTexture(textureEmpty);
 		GL11.glPushMatrix();
 		adjustRotatePivotViaMeta(te.getWorldObj(), te.xCoord, te.yCoord,
 				te.zCoord);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-		model.render((Entity) null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
+		if(hasSword)
+			modelFull.render((Entity) null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
+		else
+			modelEmpty.render((Entity) null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		GL11.glPopMatrix();
 		GL11.glPopMatrix();
 	}
