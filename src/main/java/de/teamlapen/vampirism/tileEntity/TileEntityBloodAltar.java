@@ -5,9 +5,9 @@ import net.minecraft.tileentity.TileEntity;
 import de.teamlapen.vampirism.util.Logger;
 
 public class TileEntityBloodAltar extends TileEntity {
+	
 	public TileEntityBloodAltar() {
 		super();
-		Logger.i("TileEntityBloodAltar", "Constructor called");
 	}
 
 	@Override
