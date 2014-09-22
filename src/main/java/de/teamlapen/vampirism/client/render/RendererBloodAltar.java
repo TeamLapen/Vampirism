@@ -8,12 +8,16 @@ import net.minecraft.world.World;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.client.model.ModelBloodAltarEmpty;
 import de.teamlapen.vampirism.client.model.ModelBloodAltarFull;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
+
+@SideOnly(Side.CLIENT)
 public class RendererBloodAltar extends TileEntitySpecialRenderer {
 
 	// The model of your block
@@ -28,7 +32,7 @@ public class RendererBloodAltar extends TileEntitySpecialRenderer {
 		
 		modelFull = new ModelBloodAltarFull();
 		textureFull = new ResourceLocation(REFERENCE.MODID
-				+ ":textures/blocks/bloodAltarEmpty.png");
+				+ ":textures/blocks/bloodAltarFull.png");
 	}
 
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z) {
@@ -51,9 +55,9 @@ public class RendererBloodAltar extends TileEntitySpecialRenderer {
 				te.zCoord);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 		if(hasSword)
-			modelFull.render((Entity) null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
+			modelFull.render(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		else
-			modelEmpty.render((Entity) null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
+			modelEmpty.render(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		GL11.glPopMatrix();
 		GL11.glPopMatrix();
 	}

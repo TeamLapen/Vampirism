@@ -36,6 +36,7 @@ public class TileEntityBloodAltar extends TileEntity {
 		super.writeToNBT(nbt);
 		nbt.setBoolean(BLOODALTAR_OCCUPIED_NBTKEY, occupied);
 	}
+	
 
 	public boolean isOccupied() {
 		return occupied;

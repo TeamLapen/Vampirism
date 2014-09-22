@@ -10,7 +10,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.item.ItemVampiresFear;
+import de.teamlapen.vampirism.network.BloodAltarPacket;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
 import de.teamlapen.vampirism.util.Logger;
 
@@ -28,7 +30,7 @@ public class BlockBloodAltar extends BlockContainerVampirism {
 		Logger.i("BlockBloodAltar", "createNewTileEntity called");
 		return new TileEntityBloodAltar();
 	}
-
+	
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z,
 			EntityLivingBase entity, ItemStack stack) {

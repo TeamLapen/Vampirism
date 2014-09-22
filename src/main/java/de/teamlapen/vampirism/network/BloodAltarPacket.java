@@ -7,12 +7,13 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
 
 public class BloodAltarPacket implements IMessage {
+	private String type;
 	private boolean hasSword;
 	private int x,y,z;
-
 	public BloodAltarPacket() {}
 	
 	public BloodAltarPacket(boolean pHasSword, int px, int py, int pz) {
