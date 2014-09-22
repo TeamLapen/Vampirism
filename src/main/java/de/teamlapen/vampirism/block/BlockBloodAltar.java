@@ -61,7 +61,6 @@ public class BlockBloodAltar extends BlockContainerVampirism {
 			
 			if(item != null && ItemVampiresFear.class.isInstance(item)) {
 				Logger.i(TAG, "Block activated");
-				//TODO Become a vampire
 				TileEntityBloodAltar te = (TileEntityBloodAltar) world.getTileEntity(par2, par3, par4);
 				activateAltar(world, player, (ItemVampiresFear) item, te);
 			}
@@ -74,7 +73,7 @@ public class BlockBloodAltar extends BlockContainerVampirism {
 		if(!te.isOccupied()) {
 			Logger.i(TAG, "Consuming sword");
 			player.inventory.consumeInventoryItem(item);
-			te.setOccupied(true);
+			te.setOccupied(true, player);
 		} else {
 			Logger.i(TAG, "Altar already used");
 		}
