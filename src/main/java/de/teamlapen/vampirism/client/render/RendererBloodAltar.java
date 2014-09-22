@@ -9,6 +9,7 @@ import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
 import de.teamlapen.vampirism.client.model.ModelBloodAltarEmpty;
+import de.teamlapen.vampirism.client.model.ModelBloodAltarFull;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -16,7 +17,8 @@ import de.teamlapen.vampirism.util.REFERENCE;
 public class RendererBloodAltar extends TileEntitySpecialRenderer {
 
 	// The model of your block
-	private final ModelBloodAltarEmpty modelEmpty, modelFull;
+	private final ModelBloodAltarEmpty modelEmpty;
+	private final ModelBloodAltarFull modelFull;
 	private final ResourceLocation textureEmpty, textureFull;
 
 	public RendererBloodAltar() {
@@ -24,7 +26,7 @@ public class RendererBloodAltar extends TileEntitySpecialRenderer {
 		textureEmpty = new ResourceLocation(REFERENCE.MODID
 				+ ":textures/blocks/bloodAltarEmpty.png");
 		
-		modelFull = null;
+		modelFull = new ModelBloodAltarFull();
 		textureFull = new ResourceLocation(REFERENCE.MODID
 				+ ":textures/blocks/bloodAltarEmpty.png");
 	}
@@ -37,8 +39,7 @@ public class RendererBloodAltar extends TileEntitySpecialRenderer {
 	@Override
 	public void renderTileEntityAt(TileEntity te, double x, double y, double z,
 			float scale) {
-		TileEntityBloodAltar teBloodAltar = null;
-		boolean hasSword = teBloodAltar.hasSword;
+		boolean hasSword = ((TileEntityBloodAltar) te).isOccupied();
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		if(hasSword)

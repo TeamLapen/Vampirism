@@ -71,10 +71,10 @@ public class BlockBloodAltar extends BlockContainerVampirism {
 	}
 	
 	private void activateAltar(World world, EntityPlayer player, ItemVampiresFear item, TileEntityBloodAltar te) {
-		if(!te.hasSword) {
+		if(!te.isOccupied()) {
 			Logger.i(TAG, "Consuming sword");
 			player.inventory.consumeInventoryItem(item);
-			te.hasSword = true;
+			te.setOccupied(true);
 		} else {
 			Logger.i(TAG, "Altar already used");
 		}

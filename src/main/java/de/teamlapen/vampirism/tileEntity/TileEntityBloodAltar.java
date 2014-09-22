@@ -2,12 +2,14 @@ package de.teamlapen.vampirism.tileEntity;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.network.BloodAltarPacket;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 public class TileEntityBloodAltar extends TileEntity {
-	public boolean hasSword = false;
-	public final String teID = "" + Math.random();
+	private boolean occupied = false;
+	public String BLOODALTAR_OCCUPIED_NBTKEY = "bloodaltaroccupied";
 	
 	public TileEntityBloodAltar() {
 		super();
@@ -16,12 +18,21 @@ public class TileEntityBloodAltar extends TileEntity {
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		this.hasSword = nbt.getBoolean(REFERENCE.BLOODALTAR_HASSWORD_NBT_KEY);
+		this.occupied = nbt.getBoolean(BLOODALTAR_OCCUPIED_NBTKEY);
 	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setBoolean(REFERENCE.BLOODALTAR_HASSWORD_NBT_KEY, hasSword);
+		nbt.setBoolean(BLOODALTAR_OCCUPIED_NBTKEY, occupied);
+	}
+	
+	public boolean isOccupied() {
+		return occupied;
+	}
+	public void setOccupied(boolean flag) {
+		if(flag!=occupied) 
+			VampirismMod.modChannel.sendToAll(new BloodAltarPacket(flag, this.xCoord, this.yCoord, this.zCoord));
+		occupied = flag;
 	}
 }

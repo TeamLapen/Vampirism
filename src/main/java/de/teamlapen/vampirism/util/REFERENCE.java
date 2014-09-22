@@ -27,6 +27,5 @@ public class REFERENCE {
 
 	public static final String VAMPIRE_LEVEL_NBT_KEY = "vampirelevel";
 
-	public static final String BLOODALTAR_HASSWORD_NBT_KEY = "bloodaltarhassword";
 
 }
