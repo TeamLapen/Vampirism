@@ -64,7 +64,10 @@ public class ItemVampiresFear extends SwordVampirism {
 	public void onCreated(ItemStack itemStack, World world, EntityPlayer player) {
 		itemStack.stackTagCompound = new NBTTagCompound();
 		itemStack.stackTagCompound.setInteger("blood", 0);
-
 	}
-
+	
+	
+	public int getBlood(ItemStack itemStack) {
+		return itemStack.stackTagCompound.getInteger("blood");
+	}
 }

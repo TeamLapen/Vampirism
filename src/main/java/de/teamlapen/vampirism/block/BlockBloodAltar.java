@@ -51,9 +51,9 @@ public class BlockBloodAltar extends BlockContainerVampirism {
 			int par4, EntityPlayer player, int par6, float par7,
 			float par8, float par9) {
 		if (!world.isRemote) {
-			Item item = null;
+			ItemStack item = null;
 			try {
-				item = player.inventory.getCurrentItem().getItem();
+				item = player.inventory.getCurrentItem();
 			} catch (NullPointerException e) {
 				Logger.i(TAG, "No item in hand");
 				//e.printStackTrace();
@@ -63,14 +63,14 @@ public class BlockBloodAltar extends BlockContainerVampirism {
 			if(item != null && ItemVampiresFear.class.isInstance(item)) {
 				Logger.i(TAG, "Block activated");
 				TileEntityBloodAltar te = (TileEntityBloodAltar) world.getTileEntity(par2, par3, par4);
-				activateAltar(world, player, (ItemVampiresFear) item, te);
+				activateAltar(player, item, te);
 			}
 			return true;
 		}
 		return false;
 	}
 	
-	private void activateAltar(World world, EntityPlayer player, ItemVampiresFear item, TileEntityBloodAltar te) {
+	private void activateAltar(EntityPlayer player, ItemStack item, TileEntityBloodAltar te) {
 		if(!te.isOccupied()) {
 			te.startVampirismRitual(player, item);
 		} else {

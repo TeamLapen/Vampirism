@@ -3,10 +3,12 @@ package de.teamlapen.vampirism.tileEntity;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -53,9 +55,17 @@ public class TileEntityBloodAltar extends TileEntity {
 		occupied = flag;
 	}
 
-	public void startVampirismRitual(EntityPlayer player, ItemVampiresFear item) {
+	/**
+	 * Code for the vampirism ritual to start
+	 * 
+	 * @param player
+	 *            Player who started the ritual and will become a vampire
+	 * @param itemStack
+	 *            The sword's ItemStack that is going to be consumed
+	 **/
+	public void startVampirismRitual(EntityPlayer player, ItemStack itemStack) {
 		Logger.i(TAG, "Starting Vampirism-Ritual");
-		player.inventory.consumeInventoryItem(item);
+		player.inventory.consumeInventoryItem(itemStack.getItem());
 		setOccupied(true, player);
 		List entityList = getWorldObj().loadedEntityList;
 		ArrayList<EntityVillager> list = getVillagersInRadius(entityList,
@@ -66,10 +76,25 @@ public class TileEntityBloodAltar extends TileEntity {
 						new EntityLightningBolt(getWorldObj(), v.posX, v.posY,
 								v.posZ));
 		}
-		VampirePlayer.get(player).setLevel((int) Math.floor(list.size()/2));
-		Logger.i(TAG, "Ritual ended, level: " + (int) Math.floor(list.size()/2));
+		//Check the needed conditions
+		if (!Minecraft.getMinecraft().theWorld.isDaytime()
+				&& ((ItemVampiresFear) itemStack.getItem()).getBlood(itemStack) >= REFERENCE.neededBlood) {
+			VampirePlayer.get(player).setLevel(
+					(int) Math.floor(list.size() / 2));
+			Logger.i(TAG,
+					"Ritual ended, level: " + (int) Math.floor(list.size() / 2));
+		} else {
+			Logger.i(TAG, "Not daytime or not enough blood, ritual will fail");
+			// TODO explosions and stuff
+		}
 	}
 
+	/**
+	 * Gets a list of all the villagers in entityList that are near this TileEntity
+	 * @param entityList A list of all the entities to check
+	 * @param distance The maximum distance from this TileEntity
+	 * @return List with with all the villagers that are found around this TileEntity
+	 */
 	private ArrayList<EntityVillager> getVillagersInRadius(List entityList,
 			double distance) {
 		ArrayList<EntityVillager> list = new ArrayList<EntityVillager>();
