@@ -14,6 +14,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.item.ItemVampiresFear;
 import de.teamlapen.vampirism.network.BloodAltarPacket;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -21,9 +22,10 @@ import de.teamlapen.vampirism.util.REFERENCE;
 public class TileEntityBloodAltar extends TileEntity {
 	private boolean occupied = false;
 	public final String BLOODALTAR_OCCUPIED_NBTKEY = "bloodaltaroccupied";
-	private final double DISTANCE_AROUND_ALTAR = 10.0;
+	private final double DISTANCE_AROUND_ALTAR = 5.0;
 	private final int LIGHTNINGBOLT_AMOUNT = 10;
-	
+	private final String TAG = "TEBloodAltar";
+
 	public TileEntityBloodAltar() {
 		super();
 	}
@@ -39,7 +41,6 @@ public class TileEntityBloodAltar extends TileEntity {
 		super.writeToNBT(nbt);
 		nbt.setBoolean(BLOODALTAR_OCCUPIED_NBTKEY, occupied);
 	}
-	
 
 	public boolean isOccupied() {
 		return occupied;
@@ -50,13 +51,12 @@ public class TileEntityBloodAltar extends TileEntity {
 			VampirismMod.modChannel.sendToAll(new BloodAltarPacket(flag,
 					this.xCoord, this.yCoord, this.zCoord));
 		occupied = flag;
-		if (occupied && player != null) {
-			startVampirismRitual(player);
-		}
 	}
 
-	private void startVampirismRitual(EntityPlayer player) {
-		Logger.i("TEBloodAltar", "Starting Vampirism-Ritual");
+	public void startVampirismRitual(EntityPlayer player, ItemVampiresFear item) {
+		Logger.i(TAG, "Starting Vampirism-Ritual");
+		player.inventory.consumeInventoryItem(item);
+		setOccupied(true, player);
 		List entityList = getWorldObj().loadedEntityList;
 		ArrayList<EntityVillager> list = getVillagersInRadius(entityList,
 				DISTANCE_AROUND_ALTAR);
@@ -66,8 +66,8 @@ public class TileEntityBloodAltar extends TileEntity {
 						new EntityLightningBolt(getWorldObj(), v.posX, v.posY,
 								v.posZ));
 		}
-		VampirePlayer.get(player).setLevel(list.size());
-		Logger.i("TEBloodAltar", "Ritual ended, level: " + list.size());
+		VampirePlayer.get(player).setLevel((int) Math.floor(list.size()/2));
+		Logger.i(TAG, "Ritual ended, level: " + (int) Math.floor(list.size()/2));
 	}
 
 	private ArrayList<EntityVillager> getVillagersInRadius(List entityList,
@@ -82,18 +82,22 @@ public class TileEntityBloodAltar extends TileEntity {
 					list.add((EntityVillager) entity);
 			}
 		}
+		Logger.i(TAG, list.size() + "villagers found in a " + distance
+				+ " block radius around the altar");
 		return list;
 	}
-	
-	@Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
-        readFromNBT(packet.func_148857_g());
-    }
 
-    @Override
-    public Packet getDescriptionPacket() {
-        NBTTagCompound nbtTag = new NBTTagCompound();
-        this.writeToNBT(nbtTag);
-        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
-    }
+	@Override
+	public void onDataPacket(NetworkManager net,
+			S35PacketUpdateTileEntity packet) {
+		readFromNBT(packet.func_148857_g());
+	}
+
+	@Override
+	public Packet getDescriptionPacket() {
+		NBTTagCompound nbtTag = new NBTTagCompound();
+		this.writeToNBT(nbtTag);
+		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord,
+				this.zCoord, 1, nbtTag);
+	}
 }

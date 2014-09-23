@@ -27,7 +27,6 @@ public class BlockBloodAltar extends BlockContainerVampirism {
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata) {
-		Logger.i("BlockBloodAltar", "createNewTileEntity called");
 		return new TileEntityBloodAltar();
 	}
 	
@@ -73,9 +72,7 @@ public class BlockBloodAltar extends BlockContainerVampirism {
 	
 	private void activateAltar(World world, EntityPlayer player, ItemVampiresFear item, TileEntityBloodAltar te) {
 		if(!te.isOccupied()) {
-			Logger.i(TAG, "Consuming sword");
-			player.inventory.consumeInventoryItem(item);
-			te.setOccupied(true, player);
+			te.startVampirismRitual(player, item);
 		} else {
 			Logger.i(TAG, "Altar already used");
 		}
