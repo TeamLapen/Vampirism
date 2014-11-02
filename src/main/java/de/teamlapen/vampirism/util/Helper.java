@@ -60,7 +60,7 @@ public class Helper {
 				method.setAccessible(true);
 				return method.invoke(obj, param);
 				
-			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			} catch (Exception e) {
 				Logger.e("ReflectCallMethod", "Failed to invoke method");
 				e.printStackTrace();
 				return null;
