@@ -1,8 +1,5 @@
 package de.teamlapen.vampirism.entity.player;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,6 +12,9 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.network.SpawnParticlePacket;
@@ -23,7 +23,87 @@ import de.teamlapen.vampirism.util.Logger;
 
 public class VampirePlayer implements IExtendedEntityProperties {
 
-	public final static String EXT_PROP_NAME = "VampirePlayer";
+	public class BloodStats {
+		private float bloodExhaustionLevel;
+		private float bloodSaturationLevel;
+		private int bloodTimer;
+		private int prevBloodLevel;
+
+		private final float maxExhaustion = 40F;
+
+		public void addExhaustion(float amount) {
+			this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount, maxExhaustion);
+		}
+
+		private void addStats(int blood, float saturationModifier) {
+			addBlood(blood);
+			this.bloodSaturationLevel = Math.min(bloodSaturationLevel + blood * saturationModifier * 2.0F, getBlood());
+		}
+
+		public int getBloodLevel() {
+			return getBlood();
+		}
+
+		@SideOnly(Side.CLIENT)
+		public int getPrevBloodLevel() {
+			return prevBloodLevel;
+		}
+
+		/**
+		 * Updates players bloodlevel. Working similar to player foodstats
+		 */
+		private void onUpdate() {
+			player.getFoodStats().setFoodLevel(10);
+			EnumDifficulty enumdifficulty = player.worldObj.difficultySetting;
+			prevBloodLevel = getBlood();
+
+			if (this.bloodExhaustionLevel > 4.0F) {
+				this.bloodExhaustionLevel -= 4.0F;
+
+				if (this.bloodSaturationLevel > 0.0F) {
+					this.bloodSaturationLevel = Math.max(bloodSaturationLevel - 1.0F, 0F);
+				} else if (enumdifficulty != EnumDifficulty.PEACEFUL) {
+					setBlood(Math.max(getBlood() - 1, 0));
+				}
+			}
+
+			if (player.worldObj.getGameRules().getGameRuleBooleanValue("naturalRegeneration") && getBlood() >= 0.9 * MAXBLOOD && player.shouldHeal()) {
+				++this.bloodTimer;
+				if (this.bloodTimer >= 80) {
+					player.heal(1.0F);
+					this.addExhaustion(3.0F);
+					this.bloodTimer = 0;
+				}
+			} else if (getBlood() <= 0) {
+				++this.bloodTimer;
+				if (this.bloodTimer >= 80) {
+					if (player.getHealth() > 10.0F || enumdifficulty == EnumDifficulty.HARD || player.getHealth() > 1.0F
+							&& enumdifficulty == EnumDifficulty.NORMAL) {
+						player.attackEntityFrom(DamageSource.starve, 1.0F);
+					}
+					this.bloodTimer = 0;
+				}
+			} else {
+				this.bloodTimer = 0;
+			}
+		}
+
+		private void readNBT(NBTTagCompound nbt) {
+			if (nbt.hasKey("bloodTimer")) {
+				bloodTimer = nbt.getInteger("bloodTimer");
+				bloodExhaustionLevel = nbt.getFloat("bloodExhaustionLevel");
+				bloodSaturationLevel = nbt.getFloat("bloodSaturationLevel");
+			}
+		}
+
+		private void writeNBT(NBTTagCompound nbt) {
+			nbt.setInteger("bloodTimer", bloodTimer);
+			nbt.setFloat("bloodExhaustionLevel", bloodExhaustionLevel);
+			nbt.setFloat("bloodSaturationlevel", bloodSaturationLevel);
+		}
+
+	}
+
 	/**
 	 * 
 	 * @param player
@@ -32,10 +112,12 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	public static final VampirePlayer get(EntityPlayer player) {
 		return (VampirePlayer) player.getExtendedProperties(VampirePlayer.EXT_PROP_NAME);
 	}
+
 	private static final String getSaveKey(EntityPlayer player) {
 		// no longer a username field, so use the command sender name instead:
 		return player.getCommandSenderName() + ":" + EXT_PROP_NAME;
 	}
+
 	public static final void loadProxyData(EntityPlayer player) {
 		VampirePlayer playerData = VampirePlayer.get(player);
 		NBTTagCompound savedData = CommonProxy.getEntityData(getSaveKey(player));
@@ -45,6 +127,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		}
 		playerData.applyModifiers(playerData.getLevel());
 	}
+
 	/**
 	 * Registers vampire property to player
 	 * 
@@ -53,12 +136,16 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	public static final void register(EntityPlayer player) {
 		player.registerExtendedProperties(VampirePlayer.EXT_PROP_NAME, new VampirePlayer(player));
 	}
+
 	public static void saveProxyData(EntityPlayer player) {
 		VampirePlayer playerData = VampirePlayer.get(player);
 		NBTTagCompound savedData = new NBTTagCompound();
 		playerData.saveNBTData(savedData);
 		CommonProxy.storeEntityData(getSaveKey(player), savedData);
 	}
+
+	public final static String EXT_PROP_NAME = "VampirePlayer";
+
 	private final EntityPlayer player;
 
 	private final String KEY_LEVEL = "level";
@@ -70,21 +157,20 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	private final static int BLOOD_WATCHER = 20;
 
 	private final static int LEVEL_WATCHER = 21;
-	
+
 	private BloodStats bloodStats;
-	
 
 	public VampirePlayer(EntityPlayer player) {
 		this.player = player;
 		this.player.getDataWatcher().addObject(BLOOD_WATCHER, MAXBLOOD);
 		this.player.getDataWatcher().addObject(LEVEL_WATCHER, 0);
-		bloodStats=new BloodStats();
+		bloodStats = new BloodStats();
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	private void addBlood(int a) {
 		int blood = getBlood();
-		setBlood(Math.min(blood+a, MAXBLOOD));
+		setBlood(Math.min(blood + a, MAXBLOOD));
 	}
 
 	private void applyModifiers(int level) {
@@ -96,32 +182,17 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		return this.player.getDataWatcher().getWatchableObjectInt(BLOOD_WATCHER);
 	}
 
+	public BloodStats getBloodStats() {
+		return bloodStats;
+	}
+
 	public int getLevel() {
 		return this.player.getDataWatcher().getWatchableObjectInt(LEVEL_WATCHER);
 	}
-	
-	public BloodStats getBloodStats(){
-		return bloodStats;
-	}
-	
 
 	@Override
 	public void init(Entity entity, World world) {
 
-	}
-	
-	@SubscribeEvent
-	public void onLivingUpdate(LivingUpdateEvent e){
-		if(e.entity==player){
-			onUpdate();
-		}
-	}
-	
-	private void onUpdate(){
-		if(getLevel()>0){
-			this.bloodStats.onUpdate();
-		}
-		
 	}
 
 	public void levelUp() {
@@ -134,9 +205,23 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	@Override
 	public void loadNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
-		setBlood(properties.getInteger(KEY_LEVEL));
-		setLevel(properties.getInteger(KEY_BLOOD));
+		setBlood(properties.getInteger(KEY_BLOOD));
+		setLevel(properties.getInteger(KEY_LEVEL));
 		this.bloodStats.readNBT(properties);
+
+	}
+
+	@SubscribeEvent
+	public void onLivingUpdate(LivingUpdateEvent e) {
+		if (e.entity.equals(player)) {
+			onUpdate();
+		}
+	}
+
+	private void onUpdate() {
+		if (getLevel() > 0) {
+			this.bloodStats.onUpdate();
+		}
 
 	}
 
@@ -151,8 +236,8 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	}
 
 	private void setBlood(int b) {
-			this.player.getDataWatcher().updateObject(BLOOD_WATCHER, b);
-		
+		this.player.getDataWatcher().updateObject(BLOOD_WATCHER, b);
+
 	}
 
 	/**
@@ -175,27 +260,27 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	 *            Entity to suck blood from
 	 */
 	public void suckBlood(EntityLiving e) {
-		if(e.worldObj.isRemote){
+		if (e.worldObj.isRemote) {
 			return;
 		}
-		if(getLevel()==0){
+		if (getLevel() == 0) {
 			return;
 		}
 		VampireMob mob = VampireMob.get(e);
 		int amount = mob.bite();
 		if (amount > 0) {
 			this.bloodStats.addStats(amount, 1F);
-			
-			VampirismMod.modChannel.sendToAll(new SpawnParticlePacket("magicCrit",e.posX,e.posY,e.posZ,player.posX-e.posX,player.posY-e.posY,player.posZ-e.posZ,10));
-			VampirismMod.modChannel.sendTo(new SpawnParticlePacket("blood_eat",0,0,0,0,0,0,10), (EntityPlayerMP)player);
-		}
-		else if(amount==-1){
+
+			VampirismMod.modChannel.sendToAll(new SpawnParticlePacket("magicCrit", e.posX, e.posY, e.posZ, player.posX - e.posX,
+					player.posY - e.posY, player.posZ - e.posZ, 10));
+			VampirismMod.modChannel.sendTo(new SpawnParticlePacket("blood_eat", 0, 0, 0, 0, 0, 0, 10), (EntityPlayerMP) player);
+		} else if (amount == -1) {
 			player.attackEntityFrom(DamageSource.outOfWorld, 1);
-			VampirismMod.modChannel.sendToAll(new SpawnParticlePacket("crit",e.posX,e.posY,e.posZ,player.posX-e.posX,player.posY-e.posY,player.posZ-e.posZ,10));
-		}
-		else if(amount==-2){
-			player.addPotionEffect(new PotionEffect(19,80,1));
-			player.addPotionEffect(new PotionEffect(9,120,0));
+			VampirismMod.modChannel.sendToAll(new SpawnParticlePacket("crit", e.posX, e.posY, e.posZ, player.posX - e.posX, player.posY - e.posY,
+					player.posZ - e.posZ, 10));
+		} else if (amount == -2) {
+			player.addPotionEffect(new PotionEffect(19, 80, 1));
+			player.addPotionEffect(new PotionEffect(9, 120, 0));
 		}
 	}
 
@@ -211,91 +296,6 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		if (e != null && e instanceof EntityLiving) {
 			suckBlood((EntityLiving) e);
 		}
-	}
-	
-	
-	public class BloodStats{
-		private float bloodExhaustionLevel;
-		private float bloodSaturationLevel;
-		private int bloodTimer;
-		private int prevBloodLevel;
-		
-		private final float maxExhaustion=40F;
-		
-		
-		private void writeNBT(NBTTagCompound nbt){
-			nbt.setInteger("bloodTimer", bloodTimer);
-			nbt.setFloat("bloodExhaustionLevel", bloodExhaustionLevel);
-			nbt.setFloat("bloodSaturationlevel", bloodSaturationLevel);
-		}
-		
-		private void readNBT(NBTTagCompound nbt){
-			if(nbt.hasKey("bloodTimer")){
-				bloodTimer=nbt.getInteger("bloodTimer");
-				bloodExhaustionLevel=nbt.getFloat("bloodExhaustionLevel");
-				bloodSaturationLevel=nbt.getFloat("bloodSaturationLevel");
-			}
-		}
-		
-		public void addExhaustion(float amount){
-			this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel+amount, maxExhaustion);
-		}
-		
-		private void addStats(int blood,float saturationModifier){
-			addBlood(blood);
-			this.bloodSaturationLevel= Math.min(bloodSaturationLevel+blood*saturationModifier*2.0F, getBlood());
-		}
-		
-		/**
-		 * Updates players bloodlevel. Working similar to player foodstats
-		 */
-		private void onUpdate(){
-			player.getFoodStats().setFoodLevel(10);
-			EnumDifficulty enumdifficulty = player.worldObj.difficultySetting;
-			prevBloodLevel=getBlood();
-			
-			if(this.bloodExhaustionLevel > 4.0F){
-				this.bloodExhaustionLevel-=4.0F;
-				
-				if(this.bloodSaturationLevel>0.0F){
-					this.bloodSaturationLevel=Math.max(bloodSaturationLevel - 1.0F,0F);
-				}
-				else if(enumdifficulty != EnumDifficulty.PEACEFUL){
-					setBlood(Math.max(getBlood()-1, 0));
-				}
-			}
-			
-			if(player.worldObj.getGameRules().getGameRuleBooleanValue("naturalRegeneration") && getBlood() >= 0.9*MAXBLOOD && player.shouldHeal()){
-				++this.bloodTimer;
-				if(this.bloodTimer>=80){
-					player.heal(1.0F);
-					this.addExhaustion(3.0F);
-					this.bloodTimer=0;
-				}
-			}
-			else if(getBlood() <=0){
-				++this.bloodTimer;
-				if(this.bloodTimer>=80){
-					if(player.getHealth()>10.0F|| enumdifficulty == EnumDifficulty.HARD || player.getHealth() > 1.0F && enumdifficulty == EnumDifficulty.NORMAL){
-						player.attackEntityFrom(DamageSource.starve, 1.0F);
-					}
-					this.bloodTimer=0;
-				}
-			}
-			else{
-				this.bloodTimer=0;
-			}
-		}
-		
-		public int getBloodLevel(){
-			return getBlood();
-		}
-		
-		@SideOnly(Side.CLIENT)
-		public int getPrevBloodLevel(){
-			return prevBloodLevel;
-		}
-		
 	}
 
 }
