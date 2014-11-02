@@ -8,7 +8,10 @@ import de.teamlapen.vampirism.util.Logger;
 
 public class CoreHandler {
 	public static void addExhaustion(float a,EntityPlayer p){
-		VampirePlayer.get(p).getBloodStats().addExhaustion(a);
+		VampirePlayer pl=VampirePlayer.get(p);
+		if(pl.getLevel()>0){
+			pl.getBloodStats().addExhaustion(a);
+		}
 	}
 	
 	public static float getNightVisionLevel(EntityPlayer p){

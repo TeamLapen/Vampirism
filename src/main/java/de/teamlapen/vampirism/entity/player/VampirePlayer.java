@@ -178,6 +178,9 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		if(e.worldObj.isRemote){
 			return;
 		}
+		if(getLevel()==0){
+			return;
+		}
 		VampireMob mob = VampireMob.get(e);
 		int amount = mob.bite();
 		if (amount > 0) {
@@ -188,6 +191,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		}
 		else if(amount==-1){
 			player.attackEntityFrom(DamageSource.outOfWorld, 1);
+			VampirismMod.modChannel.sendToAll(new SpawnParticlePacket("crit",e.posX,e.posY,e.posZ,player.posX-e.posX,player.posY-e.posY,player.posZ-e.posZ,10));
 		}
 		else if(amount==-2){
 			player.addPotionEffect(new PotionEffect(19,80,1));
