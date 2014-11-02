@@ -71,6 +71,13 @@ processResources {
     }
 }
 
+jar {
+        manifest {
+        attributes 'FMLCorePlugin': 'de.teamlapen.vampirism.coremod.VampirismFMLLoadingPlugin',
+                        'FMLCorePluginContainsFMLMod': 'true'
+    }
+}
+
 task devJar(type: Jar, dependsOn: 'classes') {
     from(sourceSets.main.output) {
         include '**'
