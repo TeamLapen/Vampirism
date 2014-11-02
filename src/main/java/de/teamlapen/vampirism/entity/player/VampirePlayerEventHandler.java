@@ -5,6 +5,7 @@ import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import de.teamlapen.vampirism.util.Logger;
 
 public class VampirePlayerEventHandler {
 
@@ -25,7 +26,7 @@ public class VampirePlayerEventHandler {
 	@SubscribeEvent
 	public void onLivingDeathEvent(LivingDeathEvent event) {
 		if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayer) {
-			VampirePlayer.saveProxyData((EntityPlayer) event.entity);
+			VampirePlayer.saveProxyData((EntityPlayer) event.entity,true);
 		}
 	}
 

@@ -137,8 +137,11 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		player.registerExtendedProperties(VampirePlayer.EXT_PROP_NAME, new VampirePlayer(player));
 	}
 
-	public static void saveProxyData(EntityPlayer player) {
+	public static void saveProxyData(EntityPlayer player,boolean resetBlood) {
 		VampirePlayer playerData = VampirePlayer.get(player);
+		if(resetBlood){
+			playerData.setBlood(MAXBLOOD);
+		}
 		NBTTagCompound savedData = new NBTTagCompound();
 		playerData.saveNBTData(savedData);
 		CommonProxy.storeEntityData(getSaveKey(player), savedData);
@@ -152,7 +155,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 
 	private final String KEY_BLOOD = "blood";
 
-	private final int MAXBLOOD = 20;
+	private final static int MAXBLOOD = 20;
 
 	private final static int BLOOD_WATCHER = 20;
 
