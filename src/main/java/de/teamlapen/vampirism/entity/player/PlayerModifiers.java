@@ -16,7 +16,7 @@ public abstract class PlayerModifiers {
 	public static final UUID damageModifierUUID = UUID.fromString("7600D8C4-3517-40BE-8CB1-359D46705A0F");
 
 	public static void applyModifiers(int level, EntityPlayer p) {
-
+		
 		double m = 0;
 		// Speed modifier
 		IAttributeInstance movement = p.getEntityAttribute(SharedMonsterAttributes.movementSpeed);

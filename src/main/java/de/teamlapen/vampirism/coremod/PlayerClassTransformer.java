@@ -32,13 +32,14 @@ public class PlayerClassTransformer implements IClassTransformer {
 	}
 	
 	public byte[] applyPatch(String name,byte[] basicClass,boolean obfuscated){
-		String targetMethodName="";
+		String exhaustionMethodName="";
 		if(obfuscated){
-			targetMethodName="func_71020_j";
+			exhaustionMethodName="func_71020_j";
 		}
 		else{
-			targetMethodName="addExhaustion";
+			exhaustionMethodName="addExhaustion";
 		}
+		
 		
 		ClassNode classNode = new ClassNode();
 		ClassReader classReader=new ClassReader(basicClass);
@@ -48,8 +49,8 @@ public class PlayerClassTransformer implements IClassTransformer {
 		while(methods.hasNext()){
 			MethodNode m = methods.next();
 			
-			if(m.name.equals(targetMethodName)){
-				Logger.i(TAG, "INSIDE TARGET METHOD");
+			if(m.name.equals(exhaustionMethodName)){
+				Logger.i(TAG, "INSIDE EXHAUSTION METHOD");
 				
 				//Inject Method call
 				InsnList toInject = new InsnList();
@@ -60,7 +61,11 @@ public class PlayerClassTransformer implements IClassTransformer {
 				Logger.i(TAG, "PATCH COMPLETE");
 				break;
 			}
+			
+			
 		}
+		
+		
 		
 		//ASM specific for cleaning up and returning the final bytes for JVM processing.
 		ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);

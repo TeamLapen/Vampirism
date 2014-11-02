@@ -5,11 +5,11 @@ import java.util.Map;
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import de.teamlapen.vampirism.util.Logger;
 
-public class PlayerFMLLoadingPlugin implements IFMLLoadingPlugin {
+public class VampirismFMLLoadingPlugin implements IFMLLoadingPlugin {
 
 	@Override
 	public String[] getASMTransformerClass() {
-		return new String[]{PlayerClassTransformer.class.getName()};
+		return new String[]{EntityLivingBaseClassTransformer.class.getName(),PlayerClassTransformer.class.getName(),EntityRendererClassTransformer.class.getName()};
 	}
 
 	@Override

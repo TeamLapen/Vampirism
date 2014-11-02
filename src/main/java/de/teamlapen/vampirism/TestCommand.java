@@ -1,11 +1,15 @@
 package de.teamlapen.vampirism;
 
+import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.MathHelper;
+import de.teamlapen.vampirism.coremod.CoreHandler;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Logger;
 
@@ -23,6 +27,8 @@ public class TestCommand implements ICommand {
 		}
 
 	}
+
+	private HashMap activePotionsMap;
 
 	@Override
 	public List addTabCompletionOptions(ICommandSender p_71516_1_, String[] p_71516_2_) {
@@ -84,5 +90,13 @@ public class TestCommand implements ICommand {
 		}
 
 	}
+	
+	public boolean isPotionActive(Potion p_70644_1_)
+    {
+		if(CoreHandler.shouldOverrideNightVision(this, p_70644_1_)){
+			return true;
+		}
+        return this.activePotionsMap.containsKey(Integer.valueOf(p_70644_1_.id));
+    }
 
 }

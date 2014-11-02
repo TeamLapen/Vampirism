@@ -72,6 +72,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	private final static int LEVEL_WATCHER = 21;
 	
 	private BloodStats bloodStats;
+	
 
 	public VampirePlayer(EntityPlayer player) {
 		this.player = player;
@@ -102,6 +103,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	public BloodStats getBloodStats(){
 		return bloodStats;
 	}
+	
 
 	@Override
 	public void init(Entity entity, World world) {
@@ -249,7 +251,6 @@ public class VampirePlayer implements IExtendedEntityProperties {
 			prevBloodLevel=getBlood();
 			
 			if(this.bloodExhaustionLevel > 4.0F){
-				Logger.i("testexhautsion", bloodExhaustionLevel+":"+bloodSaturationLevel+":"+getBloodLevel());
 				this.bloodExhaustionLevel-=4.0F;
 				
 				if(this.bloodSaturationLevel>0.0F){
