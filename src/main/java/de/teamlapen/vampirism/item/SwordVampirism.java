@@ -7,7 +7,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.util.REFERENCE;
 
-public class SwordVampirism extends ItemSword {
+public abstract class SwordVampirism extends ItemSword {
 
 	public SwordVampirism(ToolMaterial material) {
 		super(material);
