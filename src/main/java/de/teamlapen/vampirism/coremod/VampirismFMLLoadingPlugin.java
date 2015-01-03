@@ -6,6 +6,11 @@ import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
+/**
+ * Coremod loader plugin
+ * @author Max
+ *
+ */
 @IFMLLoadingPlugin.Name(value = REFERENCE.NAME) // The readable mod name
 @IFMLLoadingPlugin.MCVersion(value = "1.7.10") // The MC version it is designed for (Remember? Upwards/Downwards compatibility lost!)
 @IFMLLoadingPlugin.TransformerExclusions(value = "de.teamlapen.vampirism") // Your whole core mod package - Whatever you don't want the transformers to run over to prevent circularity Exceptions

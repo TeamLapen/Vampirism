@@ -18,6 +18,11 @@ import org.objectweb.asm.tree.VarInsnNode;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.launchwrapper.IClassTransformer;
 
+/**
+ * EntityLivingBase class transformer, which inserts a few hooks 
+ * @author Max
+ *
+ */
 public class EntityLivingBaseClassTransformer implements IClassTransformer {
 
 	private final static String TAG="EntityLivingBaseTransformer";

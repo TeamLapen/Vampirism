@@ -17,6 +17,11 @@ import org.objectweb.asm.tree.VarInsnNode;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.launchwrapper.IClassTransformer;
 
+/**
+ * EntityRenderer class transformer, which modifies the render algorithm for a custom night vision effect
+ * @author Max
+ *
+ */
 public class EntityRendererClassTransformer implements IClassTransformer{
 
 	private final static String TAG="EntityRendererTransformer";

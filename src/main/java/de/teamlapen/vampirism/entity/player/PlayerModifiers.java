@@ -7,6 +7,11 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 
+/**
+ * Calculates and applies player modifiers depending on the VampireLevel
+ * @author Max
+ *
+ */
 public abstract class PlayerModifiers {
 
 	public static final String TAG = "PlayerModifier";

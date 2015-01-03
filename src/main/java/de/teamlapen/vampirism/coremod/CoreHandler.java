@@ -6,6 +6,11 @@ import de.teamlapen.vampirism.entity.player.PlayerAbilities;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Logger;
 
+/**
+ * Class for static communication between modified/transformed classes and the mod
+ * @author Max
+ *
+ */
 public class CoreHandler {
 	public static void addExhaustion(float a,EntityPlayer p){
 		VampirePlayer pl=VampirePlayer.get(p);

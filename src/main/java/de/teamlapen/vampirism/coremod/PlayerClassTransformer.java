@@ -14,6 +14,12 @@ import org.objectweb.asm.tree.VarInsnNode;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.launchwrapper.IClassTransformer;
 
+
+/**
+ * EntityPlayer class transformer, which adds a few hooks
+ * @author Max
+ *
+ */
 public class PlayerClassTransformer implements IClassTransformer {
 
 	private final static String TAG="PlayerTransformer";
