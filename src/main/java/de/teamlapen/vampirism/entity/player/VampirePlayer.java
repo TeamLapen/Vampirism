@@ -155,7 +155,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 
 	private final String KEY_BLOOD = "blood";
 
-	private final static int MAXBLOOD = 20;
+	public final static int MAXBLOOD = 20;
 
 	private final static int BLOOD_WATCHER = 20;
 
@@ -171,9 +171,30 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
-	private void addBlood(int a) {
+	/**
+	 * Adds blood to the vampires blood level
+	 * @param a amount
+	 */
+	public void addBlood(int a) {
 		int blood = getBlood();
 		setBlood(Math.min(blood + a, MAXBLOOD));
+	}
+	
+	/**
+	 * Removes blood from the vampires blood level
+	 * @param a amount
+	 * @return whether the vampire had enough blood or not
+	 */
+	public boolean consumeBlood(int a){
+		int blood=getBlood();
+		if(a>blood){
+			setBlood(0);
+			return false;
+		}
+		else{
+			setBlood(blood-a);
+			return true;
+		}
 	}
 
 	private void applyModifiers(int level) {
@@ -181,7 +202,10 @@ public class VampirePlayer implements IExtendedEntityProperties {
 
 	}
 
-	private int getBlood() {
+	/**
+	 * @return The current blood level
+	 */
+	public int getBlood() {
 		return this.player.getDataWatcher().getWatchableObjectInt(BLOOD_WATCHER);
 	}
 
@@ -189,6 +213,10 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		return bloodStats;
 	}
 
+	/**
+	 * 
+	 * @return Vampire level of the player
+	 */
 	public int getLevel() {
 		return this.player.getDataWatcher().getWatchableObjectInt(LEVEL_WATCHER);
 	}
