@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.entity;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.command.IEntitySelector;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
@@ -13,6 +15,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.MobProperties;
 
 public class EntityVampire extends MobVampirism {
@@ -28,7 +32,17 @@ public class EntityVampire extends MobVampirism {
 		// Attack villager
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityVillager.class, 1.0D, true));
 		// Search for players
-		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
+		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true,false,new IEntitySelector(){
+
+			@Override
+			public boolean isEntityApplicable(Entity entity) {
+				if(entity instanceof EntityPlayer){
+					return VampirePlayer.get((EntityPlayer)entity).getLevel()<=BALANCE.VAMPIRE_FRIENDLY_LEVEL;
+				}
+				return false;
+			}
+			
+		}));
 		// Search for vampire hunters
 		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVampireHunter.class, 0, true));
 		// Search for villagers

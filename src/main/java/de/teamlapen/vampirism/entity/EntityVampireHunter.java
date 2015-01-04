@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
+import net.minecraft.command.IEntitySelector;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
@@ -8,6 +10,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.MobProperties;
 
 public class EntityVampireHunter extends MobVampirism {
@@ -19,7 +23,19 @@ public class EntityVampireHunter extends MobVampirism {
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 2 * MobProperties.vampireHunter_movementSpeed, false));
 
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityVampire.class, 0, true));
+		
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true,false, new IEntitySelector(){
+
+			@Override
+			public boolean isEntityApplicable(Entity entity) {
+				if(entity instanceof EntityPlayer){
+					return VampirePlayer.get((EntityPlayer) entity).getLevel()>BALANCE.VAMPIRE_HUNTER_ATTACK_LEVEL;
+				}
+				return false;
+			}
+
+		}));
+		this.targetTasks.addTask(3,new EntityAINearestAttackableTarget(this,EntityVampire.class,0,true));
 
 	}
 
