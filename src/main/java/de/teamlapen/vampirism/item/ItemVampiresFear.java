@@ -11,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
 import de.teamlapen.vampirism.entity.EntityVampire;
+import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 public class ItemVampiresFear extends SwordVampirism {
@@ -28,7 +29,7 @@ public class ItemVampiresFear extends SwordVampirism {
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
 		if (itemStack.stackTagCompound != null) {
 			int blood = itemStack.stackTagCompound.getInteger("blood");
-			list.add(EnumChatFormatting.RED + "Blood: " + blood + "/" + REFERENCE.neededBlood);
+			list.add(EnumChatFormatting.RED + "Blood: " + blood + "/" + BALANCE.NEEDED_BLOOD);
 		}
 	}
 

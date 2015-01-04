@@ -18,6 +18,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.item.ItemVampiresFear;
 import de.teamlapen.vampirism.network.BloodAltarPacket;
+import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
@@ -78,7 +79,7 @@ public class TileEntityBloodAltar extends TileEntity {
 		}
 		//Check the needed conditions
 		if (!Minecraft.getMinecraft().theWorld.isDaytime()
-				&& ((ItemVampiresFear) itemStack.getItem()).getBlood(itemStack) >= REFERENCE.neededBlood) {
+				&& ((ItemVampiresFear) itemStack.getItem()).getBlood(itemStack) >= BALANCE.NEEDED_BLOOD) {
 			VampirePlayer.get(player).setLevel(
 					(int) Math.floor(list.size() / 2));
 			Logger.i(TAG,
