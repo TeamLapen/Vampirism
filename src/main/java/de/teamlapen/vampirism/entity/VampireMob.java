@@ -15,6 +15,7 @@ import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
+import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 public class VampireMob implements IExtendedEntityProperties {
@@ -36,13 +37,13 @@ public class VampireMob implements IExtendedEntityProperties {
 	 */
 	public static int getMaxBloodAmount(EntityLiving e) {
 		if (e instanceof EntityPig || e instanceof EntitySheep || e instanceof EntityOcelot || e instanceof EntityWolf) {
-			return REFERENCE.smallBloodAmount;
+			return BALANCE.SMALL_BLOOD_AMOUNT;
 		}
 		if (e instanceof EntityCow || e instanceof EntityHorse || e instanceof EntityPigZombie || e instanceof EntityZombie) {
-			return REFERENCE.normalBloodAmount;
+			return BALANCE.NORMAL_BLOOD_AMOUNT;
 		}
 		if (e instanceof EntityVillager || e instanceof EntityWitch) {
-			return REFERENCE.bigBloodAmount;
+			return BALANCE.BIG_BLOOD_AMOUNT;
 		}
 		return -1;
 	}
@@ -72,7 +73,7 @@ public class VampireMob implements IExtendedEntityProperties {
 			// Cannot be bitten at all
 			return -2;
 		}
-		if (entity.getHealth() / entity.getMaxHealth() > REFERENCE.suckBloodHealthRequirement) {
+		if (entity.getHealth() / entity.getMaxHealth() > BALANCE.SUCK_BLOOD_HEALTH_REQUIREMENT) {
 			// Cannot be bitten yet
 			return -1;
 		}
