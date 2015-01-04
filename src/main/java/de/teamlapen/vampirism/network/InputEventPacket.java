@@ -25,7 +25,10 @@ public class InputEventPacket implements IMessage {
 					EntityPlayer player = ctx.getServerHandler().playerEntity;
 					VampirePlayer.get(player).suckBlood(id);
 				}
-
+			}
+			else if (message.action.equals(TOGGLEAUTOFILLBLOOD)) {
+				EntityPlayer player = ctx.getServerHandler().playerEntity;
+				VampirePlayer.get(player).toggleAutoFillBlood();
 			}
 
 			return null;
@@ -33,6 +36,7 @@ public class InputEventPacket implements IMessage {
 
 	}
 	public static String SUCKBLOOD = "sb";
+	public static String TOGGLEAUTOFILLBLOOD = "ta";
 	private String param;
 	private String action;
 	private final String SPLIT = "-";

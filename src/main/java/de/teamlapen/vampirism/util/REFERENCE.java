@@ -6,11 +6,12 @@ public class REFERENCE {
 		public static final String VAMPIRE_NAME = "vampirism:vampire";
 	}
 	public static enum KEY {
-		UNKNOWN, SUCK
+		UNKNOWN, SUCK, AUTO
 	}
 	public static final class KEYS {
 		public static final String CATEGORY = "keys.vampirism.category";
 		public static final String SUCK_BLOOD = "keys.vampirism.suck";
+		public static final String AUTO_BLOOD = "keys.vampirism.auto";
 	}
 	public static final String MODID = "vampirism";
 

@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 public class VampireHudOverlay extends Gui {
@@ -40,7 +41,10 @@ public class VampireHudOverlay extends Gui {
 			return;
 		}
 
-		int level = VampirePlayer.get(mc.thePlayer).getLevel();
+		VampirePlayer player = VampirePlayer.get(mc.thePlayer);
+		int level = player.getLevel();
+		// BUG: This always returns true (the initial value never changes)
+		boolean isAutoBlood = player.isAutoFillBlood();
 
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GL11.glDisable(GL11.GL_LIGHTING);
@@ -57,6 +61,26 @@ public class VampireHudOverlay extends Gui {
 			mc.fontRenderer.drawString(text, x, y + 1, 0);
 			mc.fontRenderer.drawString(text, x, y - 1, 0);
 			mc.fontRenderer.drawString(text, x, y, color);
+			
+			x = x + 16;
+			y = y - 8;
+			if (isAutoBlood) {
+				// TODO: localize the status text
+				String status = "auto fill on";
+				mc.fontRenderer.drawString(status, x + 1, y, 0);
+				mc.fontRenderer.drawString(status, x - 1, y, 0);
+				mc.fontRenderer.drawString(status, x, y + 1, 0);
+				mc.fontRenderer.drawString(status, x, y - 1, 0);
+				mc.fontRenderer.drawString(status, x, y, Color.GREEN.getRGB());
+			} else {
+				String status = "auto fill off";
+//				mc.fontRenderer.drawString(status, x + 1, y, 0);
+//				mc.fontRenderer.drawString(status, x - 1, y, 0);
+//				mc.fontRenderer.drawString(status, x, y + 1, 0);
+//				mc.fontRenderer.drawString(status, x, y - 1, 0);
+//				mc.fontRenderer.drawString(status, x, y, color);
+				mc.fontRenderer.drawStringWithShadow(status, x, y, Color.YELLOW.getRGB());
+			}
 			mc.mcProfiler.endSection();
 		}
 	}

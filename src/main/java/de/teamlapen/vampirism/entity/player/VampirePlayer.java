@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
@@ -17,9 +18,12 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.VampireMob;
+import de.teamlapen.vampirism.item.ItemBloodBottle;
 import de.teamlapen.vampirism.network.SpawnParticlePacket;
 import de.teamlapen.vampirism.proxy.CommonProxy;
 import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.ModItems;
+import de.teamlapen.vampirism.util.REFERENCE;
 
 public class VampirePlayer implements IExtendedEntityProperties {
 
@@ -163,11 +167,14 @@ public class VampirePlayer implements IExtendedEntityProperties {
 
 	private BloodStats bloodStats;
 
+	private boolean autoFillBlood;
+
 	public VampirePlayer(EntityPlayer player) {
 		this.player = player;
 		this.player.getDataWatcher().addObject(BLOOD_WATCHER, MAXBLOOD);
 		this.player.getDataWatcher().addObject(LEVEL_WATCHER, 0);
 		bloodStats = new BloodStats();
+		autoFillBlood = false;
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
@@ -176,8 +183,24 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	 * @param a amount
 	 */
 	public void addBlood(int a) {
-		int blood = getBlood();
-		setBlood(Math.min(blood + a, MAXBLOOD));
+		Logger.i(REFERENCE.MODID, "Sucked " + a + " blood!");
+		int bloodBar = getBlood();
+		ItemStack stack;
+		int bloodToAdd = 0;
+		
+		if (isAutoFillBlood()) {
+			stack = ItemBloodBottle.getBloodBottleInInventory(player.inventory);
+			if (stack != null) {
+				int bottleBlood = stack.getItemDamage();
+				bloodToAdd = Math.min(a, ItemBloodBottle.MAX_BLOOD - bottleBlood);
+				stack.setItemDamage(bottleBlood + bloodToAdd);
+				Logger.i(REFERENCE.MODID, "Added " + bloodToAdd + " blood to bottle (AUTO)!");
+			}
+			setBlood(Math.min(bloodBar + (a - bloodToAdd), MAXBLOOD));
+			Logger.i(REFERENCE.MODID, "Added " + (a - bloodToAdd) + " blood to bar (AUTO)!");
+		} else {
+			setBlood(Math.min(bloodBar + a, MAXBLOOD));
+		}
 	}
 	
 	/**
@@ -221,6 +244,23 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		return this.player.getDataWatcher().getWatchableObjectInt(LEVEL_WATCHER);
 	}
 
+	/**
+	 * @return true if auto fill of blood bottle enabled
+	 */
+	public boolean isAutoFillBlood() {
+		return autoFillBlood;
+	}
+	
+	public void toggleAutoFillBlood() {
+		if (autoFillBlood) {
+			Logger.i(REFERENCE.MODID, "Disabling Auto Fill Blood!");
+			autoFillBlood = false;
+		} else {
+			Logger.i(REFERENCE.MODID, "Enabling Auto Fill Blood!");
+			autoFillBlood = true;
+		}
+	}
+	
 	@Override
 	public void init(Entity entity, World world) {
 
@@ -266,7 +306,8 @@ public class VampirePlayer implements IExtendedEntityProperties {
 
 	}
 
-	private void setBlood(int b) {
+	// I changed this to public to make the right click bottle commands work!
+	public void setBlood(int b) {
 		this.player.getDataWatcher().updateObject(BLOOD_WATCHER, b);
 
 	}
