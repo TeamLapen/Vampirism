@@ -33,6 +33,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		private float bloodSaturationLevel;
 		private int bloodTimer;
 		private int prevBloodLevel;
+		private int bloodToAdd;
 
 		private final float maxExhaustion = 40F;
 
@@ -48,6 +49,15 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		public int getBloodLevel() {
 			return getBlood();
 		}
+		
+		/**
+		 * Changes the blood amount on next update
+		 * @param amount Amount to add or remove (+/-)
+		 * @return
+		 */
+		protected void changeBlood(int amount){
+			bloodToAdd+=amount;
+		}
 
 		@SideOnly(Side.CLIENT)
 		public int getPrevBloodLevel() {
@@ -57,10 +67,17 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		/**
 		 * Updates players bloodlevel. Working similar to player foodstats
 		 */
-		private void onUpdate() {
+		private synchronized void onUpdate() {
+			if(player.worldObj.isRemote){
+				return;
+			}
 			player.getFoodStats().setFoodLevel(10);
 			EnumDifficulty enumdifficulty = player.worldObj.difficultySetting;
-			prevBloodLevel = getBlood();
+			
+			int newBloodLevel=getBlood();
+			newBloodLevel=Math.min(newBloodLevel+bloodToAdd, MAXBLOOD);
+			if(newBloodLevel<0)newBloodLevel=0;
+			bloodToAdd=0;
 
 			if (this.bloodExhaustionLevel > 4.0F) {
 				this.bloodExhaustionLevel -= 4.0F;
@@ -68,18 +85,19 @@ public class VampirePlayer implements IExtendedEntityProperties {
 				if (this.bloodSaturationLevel > 0.0F) {
 					this.bloodSaturationLevel = Math.max(bloodSaturationLevel - 1.0F, 0F);
 				} else if (enumdifficulty != EnumDifficulty.PEACEFUL) {
-					setBlood(Math.max(getBlood() - 1, 0));
+					
+					newBloodLevel = (Math.max(newBloodLevel - 1, 0));
 				}
 			}
 
-			if (player.worldObj.getGameRules().getGameRuleBooleanValue("naturalRegeneration") && getBlood() >= 0.9 * MAXBLOOD && player.shouldHeal()) {
+			if (player.worldObj.getGameRules().getGameRuleBooleanValue("naturalRegeneration") && newBloodLevel >= 0.9 * MAXBLOOD && player.shouldHeal()) {
 				++this.bloodTimer;
 				if (this.bloodTimer >= 80) {
 					player.heal(1.0F);
 					this.addExhaustion(3.0F);
 					this.bloodTimer = 0;
 				}
-			} else if (getBlood() <= 0) {
+			} else if (newBloodLevel <= 0) {
 				++this.bloodTimer;
 				if (this.bloodTimer >= 80) {
 					if (player.getHealth() > 10.0F || enumdifficulty == EnumDifficulty.HARD || player.getHealth() > 1.0F
@@ -91,6 +109,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 			} else {
 				this.bloodTimer = 0;
 			}
+			setBloodData(newBloodLevel);
 		}
 
 		private void readNBT(NBTTagCompound nbt) {
@@ -145,7 +164,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	public static void saveProxyData(EntityPlayer player,boolean resetBlood) {
 		VampirePlayer playerData = VampirePlayer.get(player);
 		if(resetBlood){
-			playerData.setBlood(MAXBLOOD);
+			playerData.setBloodData(MAXBLOOD);
 		}
 		NBTTagCompound savedData = new NBTTagCompound();
 		playerData.saveNBTData(savedData);
@@ -189,7 +208,6 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	 */
 	public void addBlood(int a) {
 		Logger.i(REFERENCE.MODID, "Sucked " + a + " blood!");
-		int bloodBar = getBlood();
 		ItemStack stack;
 		int bloodToAdd = 0;
 		
@@ -199,12 +217,12 @@ public class VampirePlayer implements IExtendedEntityProperties {
 				int bottleBlood = stack.getItemDamage();
 				bloodToAdd = Math.min(a, ItemBloodBottle.MAX_BLOOD - bottleBlood);
 				stack.setItemDamage(bottleBlood + bloodToAdd);
-				Logger.i(REFERENCE.MODID, "Added " + bloodToAdd + " blood to bottle (AUTO)!");
+				Logger.i("VampirePlayer", "Added " + bloodToAdd + " blood to bottle (AUTO)!");
 			}
-			setBlood(Math.min(bloodBar + (a - bloodToAdd), MAXBLOOD));
-			Logger.i(REFERENCE.MODID, "Added " + (a - bloodToAdd) + " blood to bar (AUTO)!");
+			bloodStats.changeBlood(a-bloodToAdd);
+			Logger.i("VampirePlayer", "Added " + (a - bloodToAdd) + " blood to bar (AUTO)!");
 		} else {
-			setBlood(Math.min(bloodBar + a, MAXBLOOD));
+			bloodStats.changeBlood(a);
 		}
 	}
 	
@@ -216,11 +234,11 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	public boolean consumeBlood(int a){
 		int blood=getBlood();
 		if(a>blood){
-			setBlood(0);
+			bloodStats.changeBlood(-a);
 			return false;
 		}
 		else{
-			setBlood(blood-a);
+			bloodStats.changeBlood(-a);
 			return true;
 		}
 	}
@@ -291,7 +309,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	@Override
 	public void loadNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
-		setBlood(properties.getInteger(KEY_BLOOD));
+		setBloodData(properties.getInteger(KEY_BLOOD));
 		setLevel(properties.getInteger(KEY_LEVEL));
 		setAutoFillBlood(properties.getBoolean(KEY_AUTOFILL));
 		this.bloodStats.readNBT(properties);
@@ -323,8 +341,12 @@ public class VampirePlayer implements IExtendedEntityProperties {
 
 	}
 
-	// I changed this to public to make the right click bottle commands work!
-	public void setBlood(int b) {
+	/**
+	 * DONT USE, only designed to be used at startup and by Bloodstats
+	 * Try to use addBlood(int amount) or consumeBlood(int amount) instead
+	 * @param b
+	 */
+	private synchronized void  setBloodData(int b) {
 		this.player.getDataWatcher().updateObject(BLOOD_WATCHER, b);
 
 	}
