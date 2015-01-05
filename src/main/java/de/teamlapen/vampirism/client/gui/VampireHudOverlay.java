@@ -41,17 +41,13 @@ public class VampireHudOverlay extends Gui {
 			return;
 		}
 
-		VampirePlayer player = VampirePlayer.get(mc.thePlayer);
-		int level = player.getLevel();
-		// BUG: This always returns true (the initial value never changes)
-		boolean isAutoBlood = player.isAutoFillBlood();
-
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GL11.glDisable(GL11.GL_LIGHTING);
 
+		int level = VampirePlayer.get(mc.thePlayer).getLevel();
 		if (mc.playerController.gameIsSurvivalOrAdventure() && level > 0) {
 			mc.mcProfiler.startSection("vampireLevel");
-			boolean flag1 = false;
+//			boolean flag1 = false;
 			int color = Color.MAGENTA.getRGB();
 			String text = "" + level;
 			int x = (event.resolution.getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2;
@@ -61,27 +57,7 @@ public class VampireHudOverlay extends Gui {
 			mc.fontRenderer.drawString(text, x, y + 1, 0);
 			mc.fontRenderer.drawString(text, x, y - 1, 0);
 			mc.fontRenderer.drawString(text, x, y, color);
-			
-			x = x + 16;
-			y = y - 8;
-			if (isAutoBlood) {
-				// TODO: localize the status text
-				String status = "auto fill on";
-				mc.fontRenderer.drawString(status, x + 1, y, 0);
-				mc.fontRenderer.drawString(status, x - 1, y, 0);
-				mc.fontRenderer.drawString(status, x, y + 1, 0);
-				mc.fontRenderer.drawString(status, x, y - 1, 0);
-				mc.fontRenderer.drawString(status, x, y, Color.GREEN.getRGB());
-			} else {
-				String status = "auto fill off";
-//				mc.fontRenderer.drawString(status, x + 1, y, 0);
-//				mc.fontRenderer.drawString(status, x - 1, y, 0);
-//				mc.fontRenderer.drawString(status, x, y + 1, 0);
-//				mc.fontRenderer.drawString(status, x, y - 1, 0);
-//				mc.fontRenderer.drawString(status, x, y, color);
-				mc.fontRenderer.drawStringWithShadow(status, x, y, Color.YELLOW.getRGB());
-			}
-			mc.mcProfiler.endSection();
+			mc.mcProfiler.endSection();			
 		}
 	}
 
@@ -122,8 +98,6 @@ public class VampireHudOverlay extends Gui {
 				GL11.glDisable(GL11.GL_BLEND);
 				mc.mcProfiler.endSection();
 			}
-
 		}
 	}
-
 }

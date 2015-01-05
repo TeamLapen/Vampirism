@@ -49,7 +49,7 @@ public class EntityVampireHunter extends MobVampirism {
 
 	@Override
 	protected boolean canDespawn() {
-		return true;
+		return false; // was true
 	}
 
 	@Override

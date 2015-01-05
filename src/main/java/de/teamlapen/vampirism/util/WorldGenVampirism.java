@@ -28,16 +28,20 @@ public class WorldGenVampirism implements IWorldGenerator {
 
 	}
 
-	private void generateEnd(World world, Random random, int i, int j) {
+	private void generateEnd(World world, Random random, int x, int z) {
 
 	}
 
-	private void generateNether(World world, Random random, int i, int j) {
+	private void generateNether(World world, Random random, int x, int z) {
 
 	}
 
-	private void generateSurface(World world, Random random, int i, int j) {
-		Village v = world.villageCollectionObj.findNearestVillage(i, j, 90, 40);
+	private void generateSurface(World world, Random random, int x, int z) {
+		// parameters are x, y, z, r (radius)
+		// returns village if the distance from center to the x, y, z coordinates is < the village radius + r
+//		Village v = world.villageCollectionObj.findNearestVillage(x, z, 90, 40);
+		int y = world.getHeightValue(x, z); 
+		Village v = world.villageCollectionObj.findNearestVillage(x, y, z, 40);
 		if (v == null) {
 			return;
 		}
@@ -48,7 +52,8 @@ public class WorldGenVampirism implements IWorldGenerator {
 
 		// Spawn hunters in villages
 		int spawnedHunter = world.getEntitiesWithinAABB(EntityVampireHunter.class, box).size();
-		Logger.i("Test", "Found village with " + spawnedHunter);
+		Logger.i("Test", "Found village at: " + v.getCenter().posX + " " + v.getCenter().posY 
+				+ " " + v.getCenter().posZ + " with " + spawnedHunter + " Hunters");
 		for (int k1 = 1; k1 < 100 && spawnedHunter < MobProperties.vampireHunter_maxPerVillage; k1++) {
 			int l1 = v.getCenter().posX + world.rand.nextInt(16) - 8;
 			int i2 = v.getCenter().posY + world.rand.nextInt(6) - 3;
@@ -59,13 +64,11 @@ public class WorldGenVampirism implements IWorldGenerator {
 				Entity e = EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world);
 				e.setLocationAndAngles(pos.xCoord, pos.yCoord, pos.zCoord, 0.0F, 0.0F);
 				world.spawnEntityInWorld(e);
-				Logger.i("HunterSpawn", "Spawned Hunter");
+				Logger.i("HunterSpawn", "Spawned Hunter at: " + pos.xCoord + " " + pos.yCoord + " " + pos.zCoord);
 
 				spawnedHunter++;
-
 			}
 		}
-
 	}
 
 	private boolean isValidVampireHunterSpawningLocation(World world, int x, int y, int z) {
@@ -78,9 +81,7 @@ public class WorldGenVampirism implements IWorldGenerator {
 			if (world.getBlock(x, y + 1, z).isNormalCube()) {
 				return false;
 			}
-
 			return true;
 		}
 	}
-
 }

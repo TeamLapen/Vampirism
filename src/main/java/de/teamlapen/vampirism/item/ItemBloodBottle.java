@@ -18,6 +18,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGlassBottle;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
@@ -31,7 +32,7 @@ public class ItemBloodBottle extends ItemGlassBottle {
     private IIcon[] icons;
 	
 	public ItemBloodBottle() {
-		setUnlocalizedName(REFERENCE.MODID + "_" + name);
+		setUnlocalizedName(REFERENCE.MODID + ":" + name);
 		setHasSubtypes(true);
 		setCreativeTab(CreativeTabs.tabMisc);
 		this.maxStackSize = 1; // TODO: I want this to not stack when blood is in bottle, but stack when empty

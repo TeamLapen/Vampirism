@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
@@ -158,12 +159,16 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	private final String KEY_LEVEL = "level";
 
 	private final String KEY_BLOOD = "blood";
+	
+	private final String KEY_AUTOFILL = "autofill";
 
 	public final static int MAXBLOOD = 20;
 
 	private final static int BLOOD_WATCHER = 20;
 
 	private final static int LEVEL_WATCHER = 21;
+	
+//	private final static int AUTOFILL_WATCHER = 22;
 
 	private BloodStats bloodStats;
 
@@ -251,13 +256,23 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		return autoFillBlood;
 	}
 	
+	private void setAutoFillBlood(boolean value) {
+		autoFillBlood = value;
+	}
+	
+	private boolean getAutoFillBlood() {
+		return autoFillBlood;
+	}
+	
 	public void toggleAutoFillBlood() {
 		if (autoFillBlood) {
 			Logger.i(REFERENCE.MODID, "Disabling Auto Fill Blood!");
 			autoFillBlood = false;
+			this.player.addChatMessage(new ChatComponentText("Auto Fill Blood Disabled"));
 		} else {
 			Logger.i(REFERENCE.MODID, "Enabling Auto Fill Blood!");
 			autoFillBlood = true;
+			this.player.addChatMessage(new ChatComponentText("Auto Fill Blood Enabled"));
 		}
 	}
 	
@@ -278,6 +293,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
 		setBlood(properties.getInteger(KEY_BLOOD));
 		setLevel(properties.getInteger(KEY_LEVEL));
+		setAutoFillBlood(properties.getBoolean(KEY_AUTOFILL));
 		this.bloodStats.readNBT(properties);
 
 	}
@@ -301,6 +317,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		NBTTagCompound properties = new NBTTagCompound();
 		properties.setInteger(KEY_LEVEL, getLevel());
 		properties.setInteger(KEY_BLOOD, getBlood());
+		properties.setBoolean(KEY_AUTOFILL, getAutoFillBlood());
 		this.bloodStats.writeNBT(properties);
 		compound.setTag(EXT_PROP_NAME, properties);
 
