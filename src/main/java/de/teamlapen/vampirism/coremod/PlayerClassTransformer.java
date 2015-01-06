@@ -23,27 +23,33 @@ import net.minecraft.launchwrapper.IClassTransformer;
 public class PlayerClassTransformer implements IClassTransformer {
 
 	private final static String TAG="PlayerTransformer";
+	private final static String CLASS_ENTITYPLAYER="net.minecraft.entity.player.EntityPlayer";
+	public final static String CLASS_ENTITYPLAYER_SRG="net/minecraft/entity/player/EntityPlayer";
+	private final static String CLASS_ENTITYPLAYER_NOTCH="yz";
+	private final static String METHOD_EXHAUSTION="addExhaustion";
+	private final static String METHOD_EXHAUSTION_SRG="func_71020_j";
 	
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass) {
-		if(name.equals("yz")){
-			Logger.i(TAG, "INSIDE OBFUSCATED PLAYER CLASS - ABOUT TO PATCH: "+name);
+		if(name.equals(CLASS_ENTITYPLAYER_NOTCH)){
+			Logger.i(TAG, "INSIDE OBFUSCATED PLAYER CLASS - ABOUT TO PATCH: "+name+" transforned: "+transformedName);
 			return applyPatch(name, basicClass,true);
 		}
-		else if(name.equals("net.minecraft.entity.player.EntityPlayer")){
+		else if(name.equals(CLASS_ENTITYPLAYER)){
 			Logger.i(TAG, "INSIDE PLAYER CLASS - ABOUT TO PATCH: "+name);
 			return applyPatch(name, basicClass,false);
 		}
+		if(name.equals(CLASS_ENTITYPLAYER_SRG))Logger.e(TAG, "SRG CLASS NAME");
 		return basicClass;
 	}
 	
 	public byte[] applyPatch(String name,byte[] basicClass,boolean obfuscated){
 		String exhaustionMethodName="";
 		if(obfuscated){
-			exhaustionMethodName="func_71020_j";
+			exhaustionMethodName=METHOD_EXHAUSTION_SRG;
 		}
 		else{
-			exhaustionMethodName="addExhaustion";
+			exhaustionMethodName=METHOD_EXHAUSTION;
 		}
 		
 		
@@ -55,6 +61,7 @@ public class PlayerClassTransformer implements IClassTransformer {
 		while(methods.hasNext()){
 			MethodNode m = methods.next();
 			
+			
 			if(m.name.equals(exhaustionMethodName)){
 				Logger.i(TAG, "INSIDE EXHAUSTION METHOD");
 				
@@ -62,11 +69,15 @@ public class PlayerClassTransformer implements IClassTransformer {
 				InsnList toInject = new InsnList();
 				toInject.add(new VarInsnNode(Opcodes.FLOAD,1));
 				toInject.add(new VarInsnNode(Opcodes.ALOAD,0));
-				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "de/teamlapen/vampirism/coremod/CoreHandler","addExhaustion","(FLnet/minecraft/entity/player/EntityPlayer;)V",false));
+				
+				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "de/teamlapen/vampirism/coremod/CoreHandler","addExhaustion","(FL"+CLASS_ENTITYPLAYER_SRG+";)V",false));
+				
+				
 				m.instructions.insert(toInject);
 				Logger.i(TAG, "PATCH COMPLETE");
 				break;
 			}
+			
 			
 			
 		}
@@ -74,9 +85,10 @@ public class PlayerClassTransformer implements IClassTransformer {
 		
 		
 		//ASM specific for cleaning up and returning the final bytes for JVM processing.
-		ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
+		ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_MAXS );
 		classNode.accept(writer);
 		return writer.toByteArray();
 	}
+	
 
 }

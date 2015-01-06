@@ -26,17 +26,22 @@ import net.minecraft.launchwrapper.IClassTransformer;
 public class EntityLivingBaseClassTransformer implements IClassTransformer {
 
 	private final static String TAG="EntityLivingBaseTransformer";
+	private final static String CLASS_ENTITYLIVINGBASE="net.minecraft.entity.EntityLivingBase";
+	private final static String CLASS_ENTITYLIVINGBASE_NOTCH="sv";
+	private final static String METHOD_IPA="isPotionActive";
+	private final static String METHOD_IPA_NOTCH="func_70644_a";
+	//private final static String OB_METHOD_IPA="func_82165_m";
+	private final static String CLASS_POTION_SRG="net/minecraft/potion/Potion";
 	
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass) {
 		
 		
-		//Obfuscated name: sv
-		if(name.equals("sv")){
-			Logger.i(TAG, "INSIDE OBFUSCATED ENTITYLIVINGBASE CLASS - ABOUT TO PATCH: "+name);
+		if(name.equals(CLASS_ENTITYLIVINGBASE_NOTCH)){
+			Logger.i(TAG, "INSIDE OBFUSCATED ENTITYLIVINGBASE CLASS - ABOUT TO PATCH: "+name+" "+transformedName);
 			return applyPatch(name, basicClass,true);
 		}
-		else if(name.equals("net.minecraft.entity.EntityLivingBase")){
+		else if(name.equals(CLASS_ENTITYLIVINGBASE)){
 			Logger.i(TAG, "INSIDE ENTITYLIVINGBASE CLASS - ABOUT TO PATCH: "+name);
 			return applyPatch(name, basicClass,false);
 		}
@@ -48,10 +53,10 @@ public class EntityLivingBaseClassTransformer implements IClassTransformer {
 		
 		String iPAMethodName="";
 		if(obfuscated){
-			iPAMethodName="func_82165_m";
+			iPAMethodName=METHOD_IPA_NOTCH;
 		}
 		else{
-			iPAMethodName="isPotionActive";
+			iPAMethodName=METHOD_IPA;
 		}
 		
 		ClassNode classNode = new ClassNode();
@@ -61,15 +66,14 @@ public class EntityLivingBaseClassTransformer implements IClassTransformer {
 		Iterator<MethodNode> methods = classNode.methods.iterator();
 		while(methods.hasNext()){
 			MethodNode m = methods.next();
-			
-			if(m.name.equals(iPAMethodName)&&m.desc.equals("(Lnet/minecraft/potion/Potion;)Z")){
+			if(m.name.equals(iPAMethodName)&&m.desc.equals("(L"+CLASS_POTION_SRG+";)Z")){
 				Logger.i(TAG, "INSIDE isPotionActive METHOD");
 				
 				//Inject if clause
 				InsnList toIn = new InsnList();
 				toIn.add(new VarInsnNode(Opcodes.ALOAD,0));
 				toIn.add(new VarInsnNode(Opcodes.ALOAD,1));
-				toIn.add(new MethodInsnNode(Opcodes.INVOKESTATIC,"de/teamlapen/vampirism/coremod/CoreHandler", "shouldOverrideNightVision", "(Ljava/lang/Object;Lnet/minecraft/potion/Potion;)Z", false));
+				toIn.add(new MethodInsnNode(Opcodes.INVOKESTATIC,"de/teamlapen/vampirism/coremod/CoreHandler", "shouldOverrideNightVision", "(Ljava/lang/Object;L"+CLASS_POTION_SRG+";)Z", false));
 				LabelNode l1=new LabelNode();
 				toIn.add(new JumpInsnNode(Opcodes.IFEQ,l1));
 				LabelNode l2=new LabelNode();
@@ -79,21 +83,7 @@ public class EntityLivingBaseClassTransformer implements IClassTransformer {
 				toIn.add(l1);
 				toIn.add(new FrameNode(Opcodes.F_SAME,0,null,0,null));
 				
-				/*
-				 
-				 mv.visitVarInsn(ALOAD, 0);
-				mv.visitVarInsn(ALOAD, 1);
-				mv.visitMethodInsn(INVOKESTATIC, "de/teamlapen/vampirism/coremod/CoreHandler", "shouldOverrideNightVision", "(Ljava/lang/Object;Lnet/minecraft/potion/Potion;)Z", false);
-				Label l1 = new Label();
-				mv.visitJumpInsn(IFEQ, l1);
-				Label l2 = new Label();
-				mv.visitLabel(l2);
-				mv.visitLineNumber(97, l2);
-				mv.visitInsn(ICONST_1);
-				mv.visitInsn(IRETURN);
-				mv.visitLabel(l1);
-				mv.visitFrame(Opcodes.F_SAME, 0, null, 0, null);
-				 */
+				
 				m.instructions.insert(toIn);
 				Logger.i(TAG, "PATCH COMPLETE");
 				break;

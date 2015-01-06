@@ -25,17 +25,22 @@ import net.minecraft.launchwrapper.IClassTransformer;
 public class EntityRendererClassTransformer implements IClassTransformer{
 
 	private final static String TAG="EntityRendererTransformer";
+	private final static String CLASS_ENTITYRENDERER="net.minecraft.client.renderer.EntityRenderer";
+	private final static String CLASS_ENTITYRENDERER_NOTCH="blt";
+	private final static String METHOD_GETNVB="getNightVisionBrightness";
+	private final static String METHOD_GETNVB_SRG="func_82830_a";
+	
 	
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass) {
 		
 		
 		//Obfuscated name: blt (or maybe: blu,blv,blw)
-		if(name.equals("blt")){
+		if(name.equals(CLASS_ENTITYRENDERER_NOTCH)){
 			Logger.i(TAG, "INSIDE OBFUSCATED RENDERER CLASS - ABOUT TO PATCH: "+name);
 			return applyPatch(name, basicClass,true);
 		}
-		else if(name.equals("net.minecraft.client.renderer.EntityRenderer")){
+		else if(name.equals(CLASS_ENTITYRENDERER)){
 			Logger.i(TAG, "INSIDE RENDERER CLASS - ABOUT TO PATCH: "+name);
 			return applyPatch(name, basicClass,false);
 		}
@@ -46,10 +51,12 @@ public class EntityRendererClassTransformer implements IClassTransformer{
 	public byte[] applyPatch(String name,byte[] basicClass,boolean obfuscated){
 		String gNVBMethodName="";
 		if(obfuscated){
-			gNVBMethodName="func_82830_a";
+			gNVBMethodName=METHOD_GETNVB_SRG;
+			
 		}
 		else{
-			gNVBMethodName="getNightVisionBrightness";
+			gNVBMethodName=METHOD_GETNVB;
+
 		}
 		
 		ClassNode classNode = new ClassNode();
@@ -70,7 +77,7 @@ public class EntityRendererClassTransformer implements IClassTransformer{
 				toIn.add(l0);
 				
 				toIn.add(new VarInsnNode(Opcodes.ALOAD,1));
-				toIn.add(new MethodInsnNode(Opcodes.INVOKESTATIC,"de/teamlapen/vampirism/coremod/CoreHandler", "getNightVisionLevel", "(Lnet/minecraft/entity/player/EntityPlayer;)F", false));
+				toIn.add(new MethodInsnNode(Opcodes.INVOKESTATIC,"de/teamlapen/vampirism/coremod/CoreHandler", "getNightVisionLevel", "(L"+PlayerClassTransformer.CLASS_ENTITYPLAYER_SRG+";)F", false));
 				toIn.add(new InsnNode(Opcodes.FCONST_0));
 				toIn.add(new InsnNode(Opcodes.FCMPL));
 				LabelNode l1=new LabelNode();
@@ -78,7 +85,7 @@ public class EntityRendererClassTransformer implements IClassTransformer{
 				LabelNode l2=new LabelNode();
 				toIn.add(l2);
 				toIn.add(new VarInsnNode(Opcodes.ALOAD,1));
-				toIn.add(new MethodInsnNode(Opcodes.INVOKESTATIC,"de/teamlapen/vampirism/coremod/CoreHandler", "getNightVisionLevel", "(Lnet/minecraft/entity/player/EntityPlayer;)F", false));
+				toIn.add(new MethodInsnNode(Opcodes.INVOKESTATIC,"de/teamlapen/vampirism/coremod/CoreHandler", "getNightVisionLevel", "(L"+PlayerClassTransformer.CLASS_ENTITYPLAYER_SRG+";)F", false));
 				toIn.add(new InsnNode(Opcodes.FRETURN));
 				toIn.add(l1);
 				
