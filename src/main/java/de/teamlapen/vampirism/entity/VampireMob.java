@@ -94,8 +94,12 @@ public class VampireMob implements IExtendedEntityProperties {
 
 	}
 
-	public boolean isBitten() {
-		return getBlood() == 0;
+	public boolean canBeBitten() {
+		return getBlood() > 0;
+	}
+	
+	public boolean isBitten(){
+		return getBlood()==0;
 	}
 
 	@Override

@@ -1,9 +1,13 @@
 package de.teamlapen.vampirism.client.gui;
 
+
 import java.awt.Color;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -12,7 +16,9 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
@@ -97,6 +103,35 @@ public class VampireHudOverlay extends Gui {
 				}
 				GL11.glDisable(GL11.GL_BLEND);
 				mc.mcProfiler.endSection();
+			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onRenderCrosshair(RenderGameOverlayEvent.Pre event){
+		if(event.type!=ElementType.CROSSHAIRS){
+			return;
+		}
+		
+		MovingObjectPosition p=Minecraft.getMinecraft().objectMouseOver;
+
+		if(p!=null&&p.typeOfHit==MovingObjectPosition.MovingObjectType.ENTITY&&p.entityHit !=null && p.entityHit instanceof EntityLiving){
+			VampireMob mob=VampireMob.get((EntityLiving)p.entityHit);
+			if(mob.canBeBitten()){
+				/*
+				 * Seems to change nothing
+				GL11.glPushMatrix();
+				GL11.glEnable(GL11.GL_BLEND);
+				OpenGlHelper.glBlendFunc(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR, 1, 0);
+				*/
+				int width=event.resolution.getScaledWidth();
+				int height=event.resolution.getScaledHeight();
+				drawRect(width / 2 - 2, height / 2 -2, width / 2 +3, height / 2 +3, Color.RED.getRGB());
+				/*
+				 OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+				GL11.glDisable(GL11.GL_BLEND);
+				GL11.glPopMatrix();
+				*/
 			}
 		}
 	}
