@@ -19,7 +19,7 @@ import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.ModBlocks;
 import de.teamlapen.vampirism.util.ModItems;
 import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.util.WorldGenVampirism;
+import de.teamlapen.vampirism.generation.WorldGenVampirism;
 
 @Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION)
 public class VampirismMod {
