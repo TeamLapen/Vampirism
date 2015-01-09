@@ -67,7 +67,7 @@ public class ItemBloodBottle extends ItemGlassBottle {
 			int bloodBar = vampire.getBlood();
 			if (bottleBlood > 0 && bloodBar < VampirePlayer.MAXBLOOD) {
 				this.setDamage(stack, bottleBlood - 1);
-				vampire.addBlood(1);;
+				vampire.addFoodBlood(1);;
 			}
 		}
 		return stack;

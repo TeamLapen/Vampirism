@@ -203,10 +203,10 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	}
 
 	/**
-	 * Adds blood to the vampires blood level
+	 * Adds blood to the vampires blood level without increasing the saturation level
 	 * @param a amount
 	 */
-	public void addBlood(int a) {
+	private void addBlood(int a) {
 		Logger.i(REFERENCE.MODID, "Sucked " + a + " blood!");
 		ItemStack stack;
 		int bloodToAdd = 0;
@@ -225,6 +225,27 @@ public class VampirePlayer implements IExtendedEntityProperties {
 			bloodStats.changeBlood(a);
 		}
 	}
+	
+	/**
+	 * Feeds the Vampire with the given blood amount and increases his saturation
+	 * @param amount
+	 * @param saturation
+	 */
+	public void addBlood(int amount,float saturation){
+		if(amount>0&&saturation>0){
+			this.bloodStats.addStats(amount, saturation);
+		}
+	}
+	
+	/**
+	 * Feeds the Vampire with the given blood amount and increases his saturation with a standard factor
+	 * @param amount
+	 */
+	public void addFoodBlood(int amount){
+		this.addBlood(amount, 1F);
+	}
+	
+	
 	
 	/**
 	 * Removes blood from the vampires blood level
