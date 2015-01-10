@@ -46,32 +46,46 @@ public class ItemBloodBottle extends ItemGlassBottle {
      * 3) TODO: Fill blood bottle from any other blood containers (if made)
      */
 	@Override
-    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player)
-    {
-		VampirePlayer vampire = VampirePlayer.get(player);
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player){
 		
-		// Remove blood from blood bar and add to bottle on shift + right click
-		if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-			Logger.i(REFERENCE.MODID, "Shift + Right click pressed!");
-			int bottleBlood = stack.getItemDamage();
-			int bloodBar = vampire.getBlood();
-			if (bottleBlood < MAX_BLOOD && bloodBar > 0) {
-				this.setDamage(stack, bottleBlood + 1);
-				vampire.consumeBlood(1);
+		if (!world.isRemote) {
+			VampirePlayer vampire = VampirePlayer.get(player);
+			
+			// Remove blood from blood bar and add to bottle on shift + right click
+			if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+				Logger.i(REFERENCE.MODID, "Shift + Right click pressed!");
+				int bloodBottle = getBlood(stack);
+				int bloodBar = vampire.getBlood();
+				if (bloodBottle < MAX_BLOOD && bloodBar > 0) {
+					addBlood(stack, 1);
+					vampire.consumeBlood(1);
+				}
 			}
-		}
-		// Add blood to blood bar from bottle on right click
-		else {
-			Logger.i(REFERENCE.MODID, "Right click pressed!");
-			int bottleBlood = stack.getItemDamage();
-			int bloodBar = vampire.getBlood();
-			if (bottleBlood > 0 && bloodBar < VampirePlayer.MAXBLOOD) {
-				this.setDamage(stack, bottleBlood - 1);
-				vampire.addFoodBlood(1);;
+			// Add blood to blood bar from bottle on right click
+			else {
+				Logger.i(REFERENCE.MODID, "Right click pressed!");
+				int bloodBottle = getBlood(stack);
+				int bloodBar = vampire.getBlood();
+				if (bloodBottle > 0 && bloodBar < VampirePlayer.MAXBLOOD) {
+					removeBlood(stack, 1);
+					vampire.addFoodBlood(1);
+				}
 			}
 		}
 		return stack;
     }
+	
+	public static int getBlood(ItemStack stack) {
+		return stack.getItemDamage();
+	}
+	
+	public static void addBlood(ItemStack stack, int a) {
+		stack.setItemDamage(Math.min(stack.getItemDamage() + a, ItemBloodBottle.MAX_BLOOD));
+	}
+	
+	public static void removeBlood(ItemStack stack, int a) {
+		stack.setItemDamage(Math.max(stack.getItemDamage() - a, 0));		
+	}
 	
     @SideOnly(Side.CLIENT)
 	@Override

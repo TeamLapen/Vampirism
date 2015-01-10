@@ -203,49 +203,27 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	}
 
 	/**
-	 * Adds blood to the vampires blood level without increasing the saturation level
+	 * Adds blood to the vampires blood level level without increasing the saturation level
 	 * @param a amount
 	 */
 	private void addBlood(int a) {
-		Logger.i(REFERENCE.MODID, "Sucked " + a + " blood!");
 		ItemStack stack;
-		int bloodToAdd = 0;
+		int bloodBar = getBlood();
+		int bloodToAddToBar = Math.min(a, MAXBLOOD - bloodBar);
 		
 		if (isAutoFillBlood()) {
 			stack = ItemBloodBottle.getBloodBottleInInventory(player.inventory);
 			if (stack != null) {
-				int bottleBlood = stack.getItemDamage();
-				bloodToAdd = Math.min(a, ItemBloodBottle.MAX_BLOOD - bottleBlood);
-				stack.setItemDamage(bottleBlood + bloodToAdd);
-				Logger.i("VampirePlayer", "Added " + bloodToAdd + " blood to bottle (AUTO)!");
+				ItemBloodBottle.addBlood(stack, a - bloodToAddToBar);
+				Logger.i("VampirePlayer", "Added " + (a - bloodToAddToBar) + " blood to bottle (AUTO)!");
 			}
-			bloodStats.changeBlood(a-bloodToAdd);
-			Logger.i("VampirePlayer", "Added " + (a - bloodToAdd) + " blood to bar (AUTO)!");
+			bloodStats.changeBlood(bloodToAddToBar);
+			Logger.i("VampirePlayer", "Added " + bloodToAddToBar + " blood to bar (AUTO)!");
 		} else {
-			bloodStats.changeBlood(a);
+			bloodStats.changeBlood(bloodToAddToBar);
+			Logger.i("VampirePlayer", "Added " + bloodToAddToBar + " blood to bar (MANUAL)!");
 		}
 	}
-	
-	/**
-	 * Feeds the Vampire with the given blood amount and increases his saturation
-	 * @param amount
-	 * @param saturation
-	 */
-	public void addBlood(int amount,float saturation){
-		if(amount>0&&saturation>0){
-			this.bloodStats.addStats(amount, saturation);
-		}
-	}
-	
-	/**
-	 * Feeds the Vampire with the given blood amount and increases his saturation with a standard factor
-	 * @param amount
-	 */
-	public void addFoodBlood(int amount){
-		this.addBlood(amount, 1F);
-	}
-	
-	
 	
 	/**
 	 * Removes blood from the vampires blood level
@@ -254,6 +232,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	 */
 	public boolean consumeBlood(int a){
 		int blood=getBlood();
+		Logger.i("VampirePlayer", "Removed " + a + " blood from bar (MANUAL)!");
 		if(a>blood){
 			bloodStats.changeBlood(-a);
 			return false;
