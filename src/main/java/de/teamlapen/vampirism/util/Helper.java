@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.util;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -44,6 +45,8 @@ public class Helper {
 	}
 	
 	public static class Reflection{
+		
+		
 		public static Object callMethod(Object obj,String methodName,Class[] paramtype,Object[] param){
 			return Reflection.callMethod(obj.getClass(), obj, methodName, paramtype, param);
 		}
@@ -63,6 +66,20 @@ public class Helper {
 			} catch (Exception e) {
 				Logger.e("ReflectCallMethod", "Failed to invoke method");
 				e.printStackTrace();
+				return null;
+			}
+		}
+		
+		public static Object getPrivateFinalField(Class cls,Object obj,String fieldname){
+			try {
+				Field privateStringField = cls.
+				        getDeclaredField(fieldname);
+
+				privateStringField.setAccessible(true);
+
+				return privateStringField.get(obj);
+			} catch (Exception e){
+				Logger.e("Reflection", "Trying to get "+fieldname+" from "+obj.toString()+" of class "+cls.getCanonicalName(),e);
 				return null;
 			}
 		}

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
@@ -34,7 +35,7 @@ public class EntityVampireHunter extends MobVampirism {
 
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityVampire.class, 2 * MobProperties.vampireHunter_movementSpeed, false));
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 2 * MobProperties.vampireHunter_movementSpeed, false));
-		this.tasks.addTask(2, new EntityAIAttackOnCollide(this,EntityLivingBase.class,1*MobProperties.vampireHunter_movementSpeed,false));
+		this.tasks.addTask(2, new EntityAIAttackOnCollide(this,EntityCreature.class,1*MobProperties.vampireHunter_movementSpeed,false));
 
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 		
@@ -50,12 +51,12 @@ public class EntityVampireHunter extends MobVampirism {
 
 		}));
 		this.targetTasks.addTask(3,new EntityAINearestAttackableTarget(this,EntityVampire.class,0,true));
-		this.targetTasks.addTask(4, new EntityAINearestAttackableTarget(this, EntityLiving.class,0,true,false,new IEntitySelector(){
+		this.targetTasks.addTask(4, new EntityAINearestAttackableTarget(this, EntityCreature.class,0,true,false,new IEntitySelector(){
 
 			@Override
 			public boolean isEntityApplicable(Entity entity) {
-				if(entity instanceof EntityLiving){
-					return VampireMob.get((EntityLiving)entity).isVampire();
+				if(entity instanceof EntityCreature){
+					return VampireMob.get((EntityCreature)entity).isVampire();
 				}
 				return false;
 			}
