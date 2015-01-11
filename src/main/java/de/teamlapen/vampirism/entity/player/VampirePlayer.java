@@ -149,7 +149,6 @@ public class VampirePlayer implements IExtendedEntityProperties {
 			playerData.loadNBTData(savedData);
 
 		}
-		playerData.applyModifiers(playerData.getLevel());
 	}
 
 	/**
@@ -243,10 +242,6 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		}
 	}
 
-	private void applyModifiers(int level) {
-		PlayerModifiers.applyModifiers(level, player);
-
-	}
 
 	/**
 	 * @return The current blood level
@@ -298,12 +293,19 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	public void init(Entity entity, World world) {
 
 	}
+	
 
 	public void levelUp() {
 		int level = getLevel();
 		level++;
-		this.applyModifiers(level);
 		setLevel(level);
+	}
+	
+	public void looseLevel(){
+		int level=getLevel();
+		if(level>1){
+			setLevel(level-1);
+		}
 	}
 
 	@Override
@@ -353,13 +355,14 @@ public class VampirePlayer implements IExtendedEntityProperties {
 
 	/**
 	 * For testing only, make private later
-	 * 
+	 * This is the only method which should change the LEVEL watcher
+	 * This method should execute all level related changes e.g. player modifiers
 	 * @param l
 	 */
 	public void setLevel(int l) {
 		if (l >= 0) {
 			this.player.getDataWatcher().updateObject(LEVEL_WATCHER, l);
-			this.applyModifiers(l);
+			PlayerModifiers.applyModifiers(l, player);
 		}
 	}
 

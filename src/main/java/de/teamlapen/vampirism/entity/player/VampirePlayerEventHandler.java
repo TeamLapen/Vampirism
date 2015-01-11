@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.entity.player;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.util.Logger;
 
 public class VampirePlayerEventHandler {
@@ -26,6 +28,12 @@ public class VampirePlayerEventHandler {
 	@SubscribeEvent
 	public void onLivingDeathEvent(LivingDeathEvent event) {
 		if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayer) {
+			
+			if(event.source.damageType.equals("mob")&&event.source instanceof EntityDamageSource){
+				if(event.source.getEntity() instanceof EntityVampireHunter){
+					VampirePlayer.get((EntityPlayer)event.entity).looseLevel();
+				}
+			}
 			VampirePlayer.saveProxyData((EntityPlayer) event.entity,true);
 		}
 	}
