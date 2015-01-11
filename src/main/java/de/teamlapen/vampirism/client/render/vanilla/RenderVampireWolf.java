@@ -17,7 +17,7 @@ public class RenderVampireWolf extends RenderWolf {
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityWolf wolf) {
-		if (VampireMob.get(wolf).isBitten()) {
+		if (VampireMob.get(wolf).isVampire()) {
 			return angryWolfTextures;
 		}
 		return super.getEntityTexture(wolf);

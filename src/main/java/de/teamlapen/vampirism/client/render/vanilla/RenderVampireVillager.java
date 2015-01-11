@@ -16,7 +16,7 @@ public class RenderVampireVillager extends RenderVillager {
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityVillager v) {
-		if (VampireMob.get(v).isBitten()) {
+		if (VampireMob.get(v).isVampire()) {
 			return texture;
 		}
 		return super.getEntityTexture(v);

@@ -22,8 +22,9 @@ public class VampireMob implements IExtendedEntityProperties {
 
 	private final EntityLiving entity;
 	public final static String EXT_PROP_NAME = "VampireMob";
-	private final String KEY_BLOOD = "blood";
-	private static final int BLOOD_WATCHER = 25;
+	private final String KEY_VAMPIRE = "vampire";
+	private static final int VAMPIRE_WATCHER = 25;
+	private final int blood;
 	public static final VampireMob get(EntityLiving mob) {
 		return (VampireMob) mob.getExtendedProperties(VampireMob.EXT_PROP_NAME);
 	}
@@ -52,12 +53,12 @@ public class VampireMob implements IExtendedEntityProperties {
 		mob.registerExtendedProperties(VampireMob.EXT_PROP_NAME, new VampireMob(mob));
 	}
 
-	private final int maxBlood;
+	
 
 	public VampireMob(EntityLiving mob) {
 		entity = mob;
-		maxBlood = getMaxBloodAmount(mob);
-		entity.getDataWatcher().addObject(BLOOD_WATCHER, maxBlood);
+		blood = getMaxBloodAmount(mob);
+		entity.getDataWatcher().addObject(VAMPIRE_WATCHER, (short)0);
 	}
 
 	/**
@@ -68,25 +69,33 @@ public class VampireMob implements IExtendedEntityProperties {
 	 */
 	public int bite() {
 		
-		int amount = getBlood();
-		if (amount == -1) {
-			// Cannot be bitten at all
+		if(blood==-1){
 			return -2;
+		}
+		if(isVampire()){
+			return 0;
 		}
 		if (entity.getHealth() / entity.getMaxHealth() > BALANCE.SUCK_BLOOD_HEALTH_REQUIREMENT) {
 			// Cannot be bitten yet
 			return -1;
 		}
-		
-
-		setBlood(0);
-		return amount;
+		makeVampire();
+		return blood;
 
 	}
-
-	private int getBlood() {
-		return this.entity.getDataWatcher().getWatchableObjectInt(BLOOD_WATCHER);
+	
+	public boolean isVampire(){
+		return this.entity.getDataWatcher().getWatchableObjectShort(VAMPIRE_WATCHER)==(short)1;
 	}
+	
+	private boolean makeVampire(){
+		if(blood==-1){
+			return false;
+		}
+		entity.getDataWatcher().updateObject(VAMPIRE_WATCHER, (short)1);
+		return true;
+	}
+
 
 	@Override
 	public void init(Entity entity, World world) {
@@ -95,18 +104,14 @@ public class VampireMob implements IExtendedEntityProperties {
 	}
 
 	public boolean canBeBitten() {
-		return getBlood() > 0;
-	}
-	
-	public boolean isBitten(){
-		return getBlood()==0;
+		return blood!=-1&&!isVampire();
 	}
 
 	@Override
 	public void loadNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
 		if (properties != null) {
-			this.entity.getDataWatcher().updateObject(BLOOD_WATCHER, properties.getInteger(KEY_BLOOD));
+			this.entity.getDataWatcher().updateObject(VAMPIRE_WATCHER, properties.getShort(KEY_VAMPIRE));
 		}
 
 	}
@@ -114,13 +119,10 @@ public class VampireMob implements IExtendedEntityProperties {
 	@Override
 	public void saveNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = new NBTTagCompound();
-		properties.setInteger(KEY_BLOOD, this.entity.getDataWatcher().getWatchableObjectInt(BLOOD_WATCHER));
+		properties.setShort(KEY_VAMPIRE, this.entity.getDataWatcher().getWatchableObjectShort(VAMPIRE_WATCHER));
 		compound.setTag(EXT_PROP_NAME, properties);
 
 	}
 
-	private void setBlood(int b) {
-		this.entity.getDataWatcher().updateObject(BLOOD_WATCHER, b);
-	}
 
 }

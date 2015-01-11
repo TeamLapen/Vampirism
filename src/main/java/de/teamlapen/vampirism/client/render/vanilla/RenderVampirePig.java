@@ -17,7 +17,7 @@ public class RenderVampirePig extends RenderPig {
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityPig pig) {
-		if (VampireMob.get(pig).isBitten()) {
+		if (VampireMob.get(pig).isVampire()) {
 			return vampirePigTextures;
 		}
 		return super.getEntityTexture(pig);

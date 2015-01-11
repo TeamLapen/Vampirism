@@ -15,7 +15,7 @@ public class RenderVampireZombie extends RenderZombie {
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityZombie z) {
-		if (VampireMob.get(z).isBitten()) {
+		if (VampireMob.get(z).isVampire()) {
 			return z instanceof EntityPigZombie ? vampireZombiePigmanTextures : (z.isVillager() ? vampireZombieVillagerTextures
 					: vampireZombieTextures);
 		}

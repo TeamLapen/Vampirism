@@ -16,7 +16,7 @@ public class RenderVampireOcelot extends RenderOcelot {
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityOcelot o) {
-		if (VampireMob.get(o).isBitten()) {
+		if (VampireMob.get(o).isVampire()) {
 			return vampireOcelotTextures;
 		}
 		return super.getEntityTexture(o);

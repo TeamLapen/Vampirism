@@ -18,7 +18,7 @@ public class RenderVampireSheep extends RenderSheep {
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntitySheep sheep) {
-		if (VampireMob.get(sheep).isBitten()) {
+		if (VampireMob.get(sheep).isVampire()) {
 			return vampireShearedSheepTextures;
 		}
 		return super.getEntityTexture(sheep);

@@ -17,7 +17,7 @@ public class RenderVampireCow extends RenderCow {
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityCow cow) {
-		if (VampireMob.get(cow).isBitten()) {
+		if (VampireMob.get(cow).isVampire()) {
 			return vampireCowTextures;
 		}
 		return super.getEntityTexture(cow);

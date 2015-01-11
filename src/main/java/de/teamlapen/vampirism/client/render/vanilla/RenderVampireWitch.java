@@ -12,7 +12,7 @@ public class RenderVampireWitch extends RenderWitch {
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityWitch w) {
-		if (VampireMob.get(w).isBitten()) {
+		if (VampireMob.get(w).isVampire()) {
 			return vampireWitchTextures;
 		}
 		return super.getEntityTexture(w);

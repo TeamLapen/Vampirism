@@ -19,7 +19,7 @@ public class RenderVampireHorse extends RenderHorse {
 
 	@Override
 	protected ResourceLocation getEntityTexture(EntityHorse horse) {
-		if (VampireMob.get(horse).isBitten()) {
+		if (VampireMob.get(horse).isVampire()) {
 			return vampireHorseTextures;
 		}
 		return super.getEntityTexture(horse);
