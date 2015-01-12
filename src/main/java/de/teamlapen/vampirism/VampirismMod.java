@@ -12,6 +12,8 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
+import de.teamlapen.vampirism.generation.VampirismWorldType;
+import de.teamlapen.vampirism.generation.WorldGenVampirism;
 import de.teamlapen.vampirism.network.BloodAltarPacket;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.SpawnParticlePacket;
@@ -19,7 +21,7 @@ import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.ModBlocks;
 import de.teamlapen.vampirism.util.ModItems;
 import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.generation.WorldGenVampirism;
+import de.teamlapen.vampirism.villages.VillageDensity;
 
 @Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION)
 public class VampirismMod {
@@ -39,7 +41,7 @@ public class VampirismMod {
 		proxy.registerSounds();
 		GameRegistry.registerWorldGenerator(new WorldGenVampirism(), 1000);
 		proxy.registerSubscriptions();
-
+		VillageDensity.init();
 	}
 
 	@EventHandler
@@ -59,6 +61,7 @@ public class VampirismMod {
 		ModBlocks.init();
 		proxy.registerKeyBindings();
 		setupNetwork();
+		VillageDensity.preInit(event);
 	}
 
 	private void setupNetwork() {
