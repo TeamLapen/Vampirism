@@ -48,7 +48,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerKeyBindings() {
 		ClientRegistry.registerKeyBinding(KeyInputEventHandler.SUCK);
-
+		ClientRegistry.registerKeyBinding(KeyInputEventHandler.AUTO);
 	}
 
 	@Override

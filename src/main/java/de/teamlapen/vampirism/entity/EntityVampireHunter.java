@@ -63,9 +63,7 @@ public class EntityVampireHunter extends MobVampirism {
 			
 		}));
 
-		// Spawn in village biomes only
-		EntityRegistry.addSpawn(EntityVampireHunter.class, 2, 1, 3, EnumCreatureType.monster, 
-				new BiomeGenBase[] { BiomeGenBase.desert, BiomeGenBase.plains, BiomeGenBase.savanna });
+		// Default to not in a village, will be set to false in WorldGenVampirism when generated on the surface in a village
 		isLookingForHome = true;
 	}
 
@@ -109,30 +107,37 @@ public class EntityVampireHunter extends MobVampirism {
 		if (this.posY < 60 || this.worldObj.difficultySetting == EnumDifficulty.PEACEFUL || !super.getCanSpawnHere())
 			return false;
 		
-		// Will be set false if spawned by WorldGenVampirism
+		// Will be set false if spawned by WorldGenVampirism, (in a village)
 		if (!this.isLookingForHome)
 			return true;
 		
-		Village v = this.worldObj.villageCollectionObj.findNearestVillage(MathHelper.floor_double(this.posX), 
-		MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ), 40);
-		if (v == null) {
-		//	Logger.i("Test", "No village found at: " + this.posX + " " + this.posY + " " + this.posZ); 
-			return false;
+		// Only look for a village in biomes that have them
+		BiomeGenBase biome = this.worldObj.getBiomeGenForCoords(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posZ));
+		if (biome == BiomeGenBase.desert || biome == BiomeGenBase.plains || biome == BiomeGenBase.savanna) {
+			Village v = this.worldObj.villageCollectionObj.findNearestVillage(MathHelper.floor_double(this.posX), 
+			MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ), 40);
+			if (v != null) {
+				int r = v.getVillageRadius();
+				AxisAlignedBB box = AxisAlignedBB.getBoundingBox(v.getCenter().posX - r, 0, v.getCenter().posZ - r, v.getCenter().posX + r,
+						this.worldObj.getActualHeight(), v.getCenter().posZ + r);
+				int spawnedHunter = this.worldObj.getEntitiesWithinAABB(EntityVampireHunter.class, box).size();
+				if (spawnedHunter < MobProperties.vampireHunter_maxPerVillage) {
+					Logger.i("Test", "Vampire Hunter trying to spawn, found village at: " + v.getCenter().posX + " " + v.getCenter().posY 
+							+ " " + v.getCenter().posZ + " with " + spawnedHunter + " Hunters");
+				    ChunkCoordinates chunkcoordinates = v.getCenter();
+				    this.setHomeArea(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, r);
+				    this.isLookingForHome = false;
+					Logger.i("Test", "Spawning Vampire Hunter in village at: " + this.posX + " " + this.posY + " " + this.posZ);
+					return true;
+				}
+			}
 		}
-		int r = v.getVillageRadius();
-		AxisAlignedBB box = AxisAlignedBB.getBoundingBox(v.getCenter().posX - r, 0, v.getCenter().posZ - r, v.getCenter().posX + r,
-				this.worldObj.getActualHeight(), v.getCenter().posZ + r);
-		int spawnedHunter = this.worldObj.getEntitiesWithinAABB(EntityVampireHunter.class, box).size();
-		if (spawnedHunter < MobProperties.vampireHunter_maxPerVillage) {
-			Logger.i("Test", "Vampire Hunter trying to spawn, found village at: " + v.getCenter().posX + " " + v.getCenter().posY 
-					+ " " + v.getCenter().posZ + " with " + spawnedHunter + " Hunters");
-		    ChunkCoordinates chunkcoordinates = v.getCenter();
-		    this.setHomeArea(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, r);
-		    this.isLookingForHome = false;
-			Logger.i("Test", "Spawning Vampire Hunter at: " + this.posX + " " + this.posY + " " + this.posZ);
+		// Don't spawn as many outside of villages as in villages
+		if (this.rand.nextInt(10) < 5) {
+			Logger.i("Test", "Spawning Vampire Hunter outside of village at: " + this.posX + " " + this.posY + " " + this.posZ);
 			return true;
 		}
 		else
-			return false;				
+			return false;
     }	
 }
