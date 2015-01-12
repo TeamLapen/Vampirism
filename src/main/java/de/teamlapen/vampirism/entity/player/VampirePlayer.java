@@ -26,6 +26,11 @@ import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
+/**
+ * IExtendedEntityPropertiesClass which extends the EntityPlayer with vampire properties
+ * @author Maxanier
+ *
+ */
 public class VampirePlayer implements IExtendedEntityProperties {
 
 	public class BloodStats {
@@ -91,7 +96,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 			int blood=getBlood();
 			int bloodToRemove=Math.min(a, blood);
 			
-			changeBlood(bloodToRemove);
+			changeBlood(-bloodToRemove);
 			if(bloodToRemove>blood){
 				return false;
 			}
