@@ -23,4 +23,5 @@ public class BALANCE {
 	
 	//Other
 	public static final int NEEDED_BLOOD = 20; //Blood amount needed for blood altar ritual
+	public static final float BLOOD_SATURATION=1.0F;//Saturation  of blood
 }

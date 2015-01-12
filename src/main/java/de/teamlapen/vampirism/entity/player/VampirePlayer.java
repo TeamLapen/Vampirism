@@ -22,8 +22,8 @@ import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
 import de.teamlapen.vampirism.network.SpawnParticlePacket;
 import de.teamlapen.vampirism.proxy.CommonProxy;
+import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.ModItems;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 public class VampirePlayer implements IExtendedEntityProperties {
@@ -41,11 +41,6 @@ public class VampirePlayer implements IExtendedEntityProperties {
 			this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount, maxExhaustion);
 		}
 
-		private void addStats(int blood, float saturationModifier) {
-			addBlood(blood);
-			this.bloodSaturationLevel = Math.min(bloodSaturationLevel + blood * saturationModifier * 2.0F, getBlood());
-		}
-
 		public int getBloodLevel() {
 			return getBlood();
 		}
@@ -55,9 +50,56 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		 * @param amount Amount to add or remove (+/-)
 		 * @return
 		 */
-		protected void changeBlood(int amount){
+		private void changeBlood(int amount){
 			bloodToAdd+=amount;
 		}
+		
+		
+		/**
+		 * Adds blood to the players bar, if the bar is full it tries to add the rest to a blood bottle
+		 * @param amount
+		 * @return
+		 */
+		public int addBlood(int amount){
+			int oldBlood=getBlood();
+			
+			//Adds the blood
+			int bloodToAdd = Math.min(amount, MAXBLOOD - oldBlood);
+			changeBlood(bloodToAdd);
+			//Add saturation effect
+			this.bloodSaturationLevel = Math.min(bloodSaturationLevel + bloodToAdd * BALANCE.BLOOD_SATURATION * 2.0F, oldBlood+bloodToAdd);
+			
+			//Calculate the amount of left blood and handles it
+			int bloodLeft = amount-bloodToAdd;
+
+			if (isAutoFillBlood()) {
+				ItemStack stack = ItemBloodBottle.getBloodBottleInInventory(player.inventory);
+				if (stack != null) {
+					ItemBloodBottle.addBlood(stack, bloodLeft);
+					return 0;
+				}
+			} 
+			return bloodLeft;
+		}
+		
+		/**
+		 * Removes blood from the vampires blood level
+		 * @param a amount
+		 * @return whether the vampire had enough blood or not
+		 */
+		public boolean consumeBlood(int a){
+			int blood=getBlood();
+			int bloodToRemove=Math.min(a, blood);
+			
+			changeBlood(bloodToRemove);
+			if(bloodToRemove>blood){
+				return false;
+			}
+			return true;
+		}
+		
+		
+
 
 		@SideOnly(Side.CLIENT)
 		public int getPrevBloodLevel() {
@@ -186,7 +228,6 @@ public class VampirePlayer implements IExtendedEntityProperties {
 
 	private final static int LEVEL_WATCHER = 21;
 	
-//	private final static int AUTOFILL_WATCHER = 22;
 
 	private BloodStats bloodStats;
 
@@ -205,42 +246,9 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	 * Adds blood to the vampires blood level level without increasing the saturation level
 	 * @param a amount
 	 */
-	private void addBlood(int a) {
-		ItemStack stack;
-		int bloodBar = getBlood();
-		int bloodToAddToBar = Math.min(a, MAXBLOOD - bloodBar);
-		
-		if (isAutoFillBlood()) {
-			stack = ItemBloodBottle.getBloodBottleInInventory(player.inventory);
-			if (stack != null) {
-				ItemBloodBottle.addBlood(stack, a - bloodToAddToBar);
-				Logger.i("VampirePlayer", "Added " + (a - bloodToAddToBar) + " blood to bottle (AUTO)!");
-			}
-			bloodStats.changeBlood(bloodToAddToBar);
-			Logger.i("VampirePlayer", "Added " + bloodToAddToBar + " blood to bar (AUTO)!");
-		} else {
-			bloodStats.changeBlood(bloodToAddToBar);
-			Logger.i("VampirePlayer", "Added " + bloodToAddToBar + " blood to bar (MANUAL)!");
-		}
-	}
+
 	
-	/**
-	 * Removes blood from the vampires blood level
-	 * @param a amount
-	 * @return whether the vampire had enough blood or not
-	 */
-	public boolean consumeBlood(int a){
-		int blood=getBlood();
-		Logger.i("VampirePlayer", "Removed " + a + " blood from bar (MANUAL)!");
-		if(a>blood){
-			bloodStats.changeBlood(-a);
-			return false;
-		}
-		else{
-			bloodStats.changeBlood(-a);
-			return true;
-		}
-	}
+	
 
 
 	/**
@@ -383,7 +391,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		VampireMob mob = VampireMob.get(e);
 		int amount = mob.bite();
 		if (amount > 0) {
-			this.bloodStats.addStats(amount, 1F);
+			this.bloodStats.addBlood(amount);
 
 			VampirismMod.modChannel.sendToAll(new SpawnParticlePacket("magicCrit", e.posX, e.posY, e.posZ, player.posX - e.posX,
 					player.posY - e.posY, player.posZ - e.posZ, 10));
