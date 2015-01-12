@@ -22,6 +22,10 @@ import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
+/**
+ * TileEntity BloodAltar: Initial vampire ritual
+ * @author Mistadon
+ */
 public class TileEntityBloodAltar extends TileEntity {
 	private boolean occupied = false;
 	public final String BLOODALTAR_OCCUPIED_NBTKEY = "bloodaltaroccupied";
@@ -79,13 +83,16 @@ public class TileEntityBloodAltar extends TileEntity {
 		}
 		//Check the needed conditions
 		if (!Minecraft.getMinecraft().theWorld.isDaytime()
-				&& ((ItemVampiresFear) itemStack.getItem()).getBlood(itemStack) >= BALANCE.NEEDED_BLOOD) {
-			VampirePlayer.get(player).setLevel(
-					(int) Math.floor(list.size() / 2));
+				&& ((ItemVampiresFear) itemStack.getItem()).getBlood(itemStack) >= BALANCE.NEEDED_BLOOD && list.size()>=BALANCE.R1_VILLAGERS) {
+			VampirePlayer vp=VampirePlayer.get(player);
+			if(vp.getLevel()==0){
+				vp.levelUp();
+			}
+			
 			Logger.i(TAG,
-					"Ritual ended, level: " + (int) Math.floor(list.size() / 2));
+					"Ritual ended, player is now a vampire: ");
 		} else {
-			Logger.i(TAG, "Not daytime or not enough blood, ritual will fail");
+			Logger.i(TAG, "Not daytime or not enough blood or not enough villagers, ritual will fail");
 			// TODO explosions and stuff
 		}
 	}

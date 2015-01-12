@@ -13,7 +13,9 @@ public class BALANCE {
 	//Vampireplayer
 
 
+	//RITUALS
 	
+	public static final int R1_VILLAGERS=5;//Required villagers for ritual 1
 	//Vampiremob
 	public static final int SMALL_BLOOD_AMOUNT = 5; //Blood amount a small mob gives
 	public static final int NORMAL_BLOOD_AMOUNT = 10; // "" normal mob
