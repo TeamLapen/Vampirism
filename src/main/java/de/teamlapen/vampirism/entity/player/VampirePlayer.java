@@ -29,7 +29,6 @@ import de.teamlapen.vampirism.util.REFERENCE;
 /**
  * IExtendedEntityPropertiesClass which extends the EntityPlayer with vampire properties
  * @author Maxanier
- *
  */
 public class VampirePlayer implements IExtendedEntityProperties {
 

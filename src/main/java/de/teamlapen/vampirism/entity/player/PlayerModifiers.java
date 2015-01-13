@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.player;
 
 import java.util.UUID;
 
+import de.teamlapen.vampirism.util.BALANCE;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -27,21 +28,21 @@ public abstract class PlayerModifiers {
 		IAttributeInstance movement = p.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
 		rmMod(movement, speedModifierUUID);
 
-		m = calculateSqrtMod(level, 30, 0.3D, 5);
+		m = calculateModifierValue(level, BALANCE.VP_MODIFIERS.SPEED_LCAP, BALANCE.VP_MODIFIERS.SPEED_MAX_MOD, BALANCE.VP_MODIFIERS.SPEED_TYPE);
 		movement.applyModifier(new AttributeModifier(speedModifierUUID, "Vampire Speed Bonus", m, 2).setSaved(false));
 
 		// Health modifier
 		IAttributeInstance health = p.getEntityAttribute(SharedMonsterAttributes.maxHealth);
 		rmMod(health, healthModifierUUID);
 
-		m = calculateSqrtMod(level, 50, 1, 1);
+		m = calculateModifierValue(level, BALANCE.VP_MODIFIERS.HEALTH_LCAP, BALANCE.VP_MODIFIERS.HEALTH_MAX_MOD, BALANCE.VP_MODIFIERS.HEALTH_TYPE);
 		health.applyModifier(new AttributeModifier(healthModifierUUID, "Vampire Health Bonus", m, 2).setSaved(false));
 
 		// Strength modifier
 		IAttributeInstance damage = p.getEntityAttribute(SharedMonsterAttributes.attackDamage);
 		rmMod(damage, damageModifierUUID);
 
-		m = calculateSqrtMod(level, 50, 1, 1);
+		m = calculateModifierValue(level, BALANCE.VP_MODIFIERS.STRENGTH_LCAP,BALANCE.VP_MODIFIERS.STRENGTH_MAX_MOD, BALANCE.VP_MODIFIERS.STRENGTH_TYPE);
 		damage.applyModifier(new AttributeModifier(damageModifierUUID, "Vampire Strength Bonus", m, 2).setSaved(false));
 
 		// Nightvision after 1.8 maybe see
@@ -49,21 +50,18 @@ public abstract class PlayerModifiers {
 
 	}
 
+	
 	/**
-	 * Calculates the modifier effect. In lower levels the effect changes
-	 * greater.
-	 * 
-	 * @param level
-	 *            Vampire level
-	 * @param lcap
-	 *            Level the modifier does not get any stronger
-	 * @param maxMod
-	 *            Max modifier effect
-	 * @param slope
-	 * @return modifier effect
+	 * Calculates the modifier effect.
+	 * You can decide how the modifier changes with higher levels, by using different types. Suggested values are 1/2 for a square root like behavior or 1 for a linear change
+	 * @param level Vampire level
+	 * @param lcap Level the modifier does not get any stronger
+	 * @param maxMod Maximal modifier effect
+	 * @param type modifier type
+	 * @return value between 0 and maxMod
 	 */
-	private static double calculateSqrtMod(int level, int lcap, double maxMod, int slope) {
-		return Math.sqrt(slope * (level > lcap ? lcap : level)) / (Math.sqrt(slope * lcap)) * maxMod;
+	private static double calculateModifierValue(int level,int lcap, double maxMod,double type){
+		return Math.pow((level > lcap ? lcap : level), type)/Math.pow(lcap, type)*maxMod;
 	}
 
 	/**

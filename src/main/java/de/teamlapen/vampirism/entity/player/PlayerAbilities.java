@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.entity.player;
 
+import de.teamlapen.vampirism.util.BALANCE;
+
 
 /**
  * Class to determine which special abilities a VampirePlayer should have and store them
@@ -19,8 +21,6 @@ public class PlayerAbilities {
 	 * @return 
 	 */
 	public static PlayerAbilities getPlayerAbilities(float level){
-		float nv= (level==0.0F ? 0 : 1.0F-(3/level));
-		nv=(nv<0.0F?0.0F:nv);
-		return new PlayerAbilities(nv);
+		return new PlayerAbilities(BALANCE.getVampirePlayerNightVision(level));
 	}
 }

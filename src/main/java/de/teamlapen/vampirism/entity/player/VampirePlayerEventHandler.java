@@ -7,6 +7,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
+import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
 
 public class VampirePlayerEventHandler {
@@ -29,7 +30,7 @@ public class VampirePlayerEventHandler {
 	public void onLivingDeathEvent(LivingDeathEvent event) {
 		if (!event.entity.worldObj.isRemote && event.entity instanceof EntityPlayer) {
 			
-			if(event.source.damageType.equals("mob")&&event.source instanceof EntityDamageSource){
+			if(BALANCE.VAMPIRE_PLAYER_LOOSE_LEVEL&&event.source.damageType.equals("mob")&&event.source instanceof EntityDamageSource){
 				if(event.source.getEntity() instanceof EntityVampireHunter){
 					VampirePlayer.get((EntityPlayer)event.entity).looseLevel();
 				}
