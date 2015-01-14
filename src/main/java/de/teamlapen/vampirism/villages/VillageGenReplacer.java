@@ -10,6 +10,12 @@ import java.lang.reflect.Field;
 
 import de.teamlapen.vampirism.util.Logger;
 
+/**
+ * VillageGenReplacer class updates fields (through Java reflection) to change how
+ * villages are generated.
+ * @author WILLIAM
+ *
+ */
 public class VillageGenReplacer implements IEventListener {
 
     @Override

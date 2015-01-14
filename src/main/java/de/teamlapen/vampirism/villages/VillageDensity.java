@@ -6,6 +6,12 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
+/**
+ * VillageDensity class that reads the settings from the configuration file, and are
+ *  used by the VillageReplacer class
+ * @author WILLIAM
+ *
+ */
 public class VillageDensity {
     // Settings
     public static Property enabled, density, minDist, size;
