@@ -22,6 +22,11 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
+/**
+ * 
+ * @author WILLIAM
+ *
+ */
 public class ItemBloodBottle extends ItemGlassBottle {
 
 	public static final String name = "bloodBottle";
@@ -58,7 +63,7 @@ public class ItemBloodBottle extends ItemGlassBottle {
 				int bloodBar = vampire.getBlood();
 				if (bloodBottle < MAX_BLOOD && bloodBar > 0) {
 					addBlood(stack, 1);
-					vampire.consumeBlood(1);
+					vampire.getBloodStats().consumeBlood(1);
 				}
 			}
 			// Add blood to blood bar from bottle on right click
@@ -68,7 +73,7 @@ public class ItemBloodBottle extends ItemGlassBottle {
 				int bloodBar = vampire.getBlood();
 				if (bloodBottle > 0 && bloodBar < VampirePlayer.MAXBLOOD) {
 					removeBlood(stack, 1);
-					vampire.addFoodBlood(1);
+					vampire.getBloodStats().addBlood(1);
 				}
 			}
 		}
@@ -119,12 +124,13 @@ public class ItemBloodBottle extends ItemGlassBottle {
 		list.add(new ItemStack(this, 1, MAX_BLOOD)); 
 	}
 
-	// TODO: Improve to pick a bottle anywhere in inventory, not just the held one
+	// Returns the first bottle found in the player's hotbar (doesn't need to be held)
 	public static ItemStack getBloodBottleInInventory(InventoryPlayer inventory) {
-		ItemStack stack = inventory.getCurrentItem();
-		if (stack != null) {
-			if (stack.getUnlocalizedName().compareTo(ModItems.bloodBottle.getUnlocalizedName()) == 0) {
-				return stack;
+		int hotbarSize = InventoryPlayer.getHotbarSize();
+		for (int i = 0; i < hotbarSize; i++) {
+			ItemStack itemStack = inventory.getStackInSlot(i);
+			if (itemStack != null && itemStack.getUnlocalizedName().compareTo(ModItems.bloodBottle.getUnlocalizedName()) == 0) {
+				return itemStack;
 			}
 		}
 		return null;
