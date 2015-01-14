@@ -1,5 +1,8 @@
 package de.teamlapen.vampirism.util;
 
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import cpw.mods.fml.common.registry.GameRegistry;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
@@ -13,6 +16,13 @@ public class ModItems {
 	public static void init() {
 		GameRegistry.registerItem(vampiresFear, ItemVampiresFear.name);
 		GameRegistry.registerItem(bloodBottle, ItemBloodBottle.name);
+		
+		// Recipe for empty blood bottle
+		GameRegistry.addRecipe(new ItemStack(bloodBottle, 1, 0), 
+			"   ",
+			"XYX",
+			" X ",
+			'X', Blocks.glass, 'Y', Items.rotten_flesh);
 	}
 
 }
