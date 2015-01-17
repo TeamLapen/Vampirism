@@ -9,9 +9,10 @@ import de.teamlapen.vampirism.util.REFERENCE;
 
 public abstract class BasicBlockContainer extends BlockContainer {
 
-	public BasicBlockContainer(Material material) {
+	public BasicBlockContainer(Material material,String name) {
 		super(material);
 		setCreativeTab(VampirismMod.tabVampirism);
+		this.setBlockName("name");
 	}
 
 	@Override

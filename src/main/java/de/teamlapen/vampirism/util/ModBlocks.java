@@ -11,13 +11,13 @@ import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
 
 public class ModBlocks {
 
-	public final static BasicBlockContainer bloodAltar = new BlockBloodAltar();
+	public final static BlockBloodAltar bloodAltar = new BlockBloodAltar();
 	public final static MaterialLiquid blood = new MaterialLiquidBlood(MapColor.netherrackColor);
 	public final static BlockBloodAltarTier2 bloodAltarTier2 = new BlockBloodAltarTier2();
 
 	public static void init() {
-		GameRegistry.registerBlock(bloodAltar, "bloodAltar");
-		GameRegistry.registerBlock(bloodAltarTier2, "bloodAltarTier2");
+		GameRegistry.registerBlock(bloodAltar, BlockBloodAltar.name);
+		GameRegistry.registerBlock(bloodAltarTier2, BlockBloodAltarTier2.name);
 		GameRegistry.registerTileEntity(TileEntityBloodAltar.class, "TileEntityBloodAltar");
 	}
 }

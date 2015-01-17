@@ -10,9 +10,10 @@ import net.minecraft.item.ItemStack;
 
 public abstract class BasicItem extends Item {
 	
-	public BasicItem(){
+	public BasicItem(String name){
 		super();
 		setCreativeTab(VampirismMod.tabVampirism);
+		this.setUnlocalizedName(name);
 	}
 	@Override
 	public String getUnlocalizedName() {

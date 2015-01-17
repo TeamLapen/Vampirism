@@ -18,10 +18,11 @@ import de.teamlapen.vampirism.util.Logger;
 
 public class BlockBloodAltar extends BasicBlockContainer {
 	private final String TAG = "BlockBloodAltar";
+	public static final String name="bloodAltar";
 
 	public BlockBloodAltar() {
-		super(Material.rock);
-		this.setBlockName("bloodAltar");
+		super(Material.rock,name);
+		
 	}
 
 	@Override
