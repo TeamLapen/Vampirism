@@ -36,6 +36,7 @@ public class BlockBloodAltar extends BasicBlockContainer {
 	public boolean onBlockActivated(World world, int par2, int par3,
 			int par4, EntityPlayer player, int par6, float par7,
 			float par8, float par9) {
+		Logger.i(TAG, "Altar right-click detected");
 		if (!world.isRemote) {
 			ItemStack item = null;
 			try {
@@ -47,12 +48,13 @@ public class BlockBloodAltar extends BasicBlockContainer {
 			}
 			
 			if(item != null && ItemVampiresFear.class.isInstance(item)) {
-				Logger.i(TAG, "Block activated");
+				Logger.i(TAG, "Activating Altar");
 				TileEntityBloodAltar te = (TileEntityBloodAltar) world.getTileEntity(par2, par3, par4);
 				activateAltar(player, item, te);
 			}
 			return true;
-		}
+		} else
+			Logger.e(TAG, "World remote!");
 		return false;
 	}
 	
