@@ -2,12 +2,14 @@ package de.teamlapen.vampirism.util;
 
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.MaterialLiquid;
+import net.minecraft.item.ItemBlock;
 import cpw.mods.fml.common.registry.GameRegistry;
 import de.teamlapen.vampirism.block.BlockBloodAltar;
 import de.teamlapen.vampirism.block.BlockBloodAltarTier2;
 import de.teamlapen.vampirism.block.BasicBlockContainer;
 import de.teamlapen.vampirism.block.MaterialLiquidBlood;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier2;
 
 public class ModBlocks {
 
@@ -17,7 +19,8 @@ public class ModBlocks {
 
 	public static void init() {
 		GameRegistry.registerBlock(bloodAltar, BlockBloodAltar.name);
-		GameRegistry.registerBlock(bloodAltarTier2, BlockBloodAltarTier2.name);
+		GameRegistry.registerBlock(bloodAltarTier2, ItemBlock.class,BlockBloodAltarTier2.name);
 		GameRegistry.registerTileEntity(TileEntityBloodAltar.class, "TileEntityBloodAltar");
+		GameRegistry.registerTileEntity(TileEntityBloodAltarTier2.class, "TileEntityBloodAltarTier2");
 	}
 }

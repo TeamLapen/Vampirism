@@ -37,6 +37,21 @@ public final class BALANCE {
 		public static final int SPEED_LCAP=15;
 		public static final double SPEED_TYPE=1/2;
 	}
+	
+	public static final class LEVELING{
+		public static final int ALTAR_2_MIN_LEVEL=1;
+		public static final int ALTAR_2_MAX_LEVEL=3;
+		public static final int A2_getRequiredBlood(int level){
+			switch(level){
+			case 1:
+				return 50;
+			case 2:
+				return 70;
+			default:
+				return 90;
+			}
+		}
+	}
 
 	//RITUALS
 	
