@@ -16,13 +16,12 @@ import de.teamlapen.vampirism.network.BloodAltarPacket;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
 import de.teamlapen.vampirism.util.Logger;
 
-public class BlockBloodAltar extends BlockContainerVampirism {
+public class BlockBloodAltar extends BasicBlockContainer {
 	private final String TAG = "BlockBloodAltar";
 
 	public BlockBloodAltar() {
 		super(Material.rock);
 		this.setBlockName("bloodAltar");
-		this.setCreativeTab(CreativeTabs.tabBlock);
 	}
 
 	@Override

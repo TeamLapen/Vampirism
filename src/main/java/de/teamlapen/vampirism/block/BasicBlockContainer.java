@@ -4,12 +4,14 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.REFERENCE;
 
-public abstract class BlockContainerVampirism extends BlockContainer {
+public abstract class BasicBlockContainer extends BlockContainer {
 
-	public BlockContainerVampirism(Material material) {
+	public BasicBlockContainer(Material material) {
 		super(material);
+		setCreativeTab(VampirismMod.tabVampirism);
 	}
 
 	@Override

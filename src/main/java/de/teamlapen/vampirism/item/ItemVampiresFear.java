@@ -2,19 +2,24 @@ package de.teamlapen.vampirism.item;
 
 import java.util.List;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.world.World;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.REFERENCE;
 
-public class ItemVampiresFear extends SwordVampirism {
+public class ItemVampiresFear extends ItemSword {
 
 	public static final String name = "vampiresFear";
 
@@ -23,6 +28,7 @@ public class ItemVampiresFear extends SwordVampirism {
 		this.setNoRepair();
 		setUnlocalizedName(name);
 		this.maxStackSize = 1;
+		setCreativeTab(VampirismMod.tabVampirism);
 	}
 
 	@Override
@@ -70,5 +76,25 @@ public class ItemVampiresFear extends SwordVampirism {
 	
 	public int getBlood(ItemStack itemStack) {
 		return itemStack.stackTagCompound.getInteger("blood");
+	}
+	
+	@Override
+	public String getUnlocalizedName() {
+		return String.format("item.%s%s", REFERENCE.MODID.toLowerCase() + ":", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+	}
+
+	@Override
+	public String getUnlocalizedName(ItemStack itemstack) {
+		return String.format("item.%s%s", REFERENCE.MODID.toLowerCase() + ":", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+	}
+
+	protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
+		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IIconRegister iconRegister) {
+		itemIcon = iconRegister.registerIcon(this.getUnlocalizedName().substring(this.getUnlocalizedName().indexOf(".") + 1));
 	}
 }

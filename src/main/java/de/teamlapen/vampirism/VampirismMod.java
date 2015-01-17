@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism;
 
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -12,6 +14,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.generation.WorldGenVampirism;
 import de.teamlapen.vampirism.network.BloodAltarPacket;
 import de.teamlapen.vampirism.network.InputEventPacket;
@@ -32,6 +35,14 @@ public class VampirismMod {
 	public static IProxy proxy;
 
 	public static SimpleNetworkWrapper modChannel;
+	
+	public static CreativeTabs tabVampirism = new CreativeTabs("vampirism") {
+	    @Override
+	    @SideOnly(Side.CLIENT)
+	    public Item getTabIconItem() {
+	        return ModItems.vampiresFear;
+	    }
+	};
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
