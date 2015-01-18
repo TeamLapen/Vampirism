@@ -47,7 +47,7 @@ public class BlockBloodAltar extends BasicBlockContainer {
 				return false;
 			}
 			
-			if(item != null && ItemVampiresFear.class.isInstance(item)) {
+			if(item != null && item.getItem() instanceof ItemVampiresFear) {
 				Logger.i(TAG, "Activating Altar");
 				TileEntityBloodAltar te = (TileEntityBloodAltar) world.getTileEntity(par2, par3, par4);
 				activateAltar(player, item, te);
