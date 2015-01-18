@@ -21,9 +21,9 @@ public class VillageDensity {
         final String cat = Configuration.CATEGORY_GENERAL;
 
         config.load();
-        enabled = config.get(cat, "enabled", false, "Should the custom generator be injected? (Enables/Disables the mod)");
-        density = config.get(cat, "density", 32, "Minecraft will try to generate 1 village per NxN chunk area. \nDefault: 32");
-        minDist = config.get(cat, "minimumDistance", 8, "Village centers will be at least N chunks apart. Must be smaller than density. \nDefault: 8");
+        enabled = config.get(cat, "enabled", true, "Should the custom generator be injected? (Enables/Disables the mod)");
+        density = config.get(cat, "density", 10, "Minecraft will try to generate 1 village per NxN chunk area. \nDefault: 32");
+        minDist = config.get(cat, "minimumDistance", 4, "Village centers will be at least N chunks apart. Must be smaller than density. \nDefault: 8");
         size = config.get(cat, "size", 0, "A higher size increases the overall spawn weight of buildings. (Don't ask, I have no idea) \nDefault: 0");
         config.save();
 
