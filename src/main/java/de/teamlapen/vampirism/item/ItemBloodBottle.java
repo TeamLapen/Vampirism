@@ -6,6 +6,7 @@ import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.ModItems;
@@ -39,7 +40,7 @@ public class ItemBloodBottle extends ItemGlassBottle {
 	public ItemBloodBottle() {
 		setUnlocalizedName(REFERENCE.MODID + ":" + name);
 		setHasSubtypes(true);
-		setCreativeTab(CreativeTabs.tabMisc);
+		setCreativeTab(VampirismMod.tabVampirism);
 		this.maxStackSize = 1; // TODO: I want this to not stack when blood is in bottle, but stack when empty
 	}
 	
