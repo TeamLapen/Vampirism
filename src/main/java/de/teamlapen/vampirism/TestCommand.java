@@ -6,11 +6,14 @@ import java.util.List;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MathHelper;
 import de.teamlapen.vampirism.coremod.CoreHandler;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
+import de.teamlapen.vampirism.network.SpawnParticlePacket;
 import de.teamlapen.vampirism.util.Logger;
 
 /**
@@ -73,7 +76,14 @@ public class TestCommand implements ICommand {
 	public void processCommand(ICommandSender sender, String[] param) {
 		if (sender instanceof EntityPlayer) {
 			EntityPlayer p = (EntityPlayer) sender;
-
+			
+			//TEST stuff
+			NBTTagCompound data=new NBTTagCompound();
+			data.setInteger("player_id", p.getEntityId());
+			VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(0,p.posX+2,p.posY-1,p.posZ+2,40,data));
+			
+			
+			//-----------------
 			if (param.length > 0) {
 				try {
 					VampirePlayer.get(p).setLevel(Integer.parseInt(param[0]));

@@ -18,6 +18,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.generation.WorldGenVampirism;
 import de.teamlapen.vampirism.network.BloodAltarPacket;
 import de.teamlapen.vampirism.network.InputEventPacket;
+import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
 import de.teamlapen.vampirism.network.SpawnParticlePacket;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.ModBlocks;
@@ -80,6 +81,7 @@ public class VampirismMod {
 		modChannel.registerMessage(InputEventPacket.Handler.class, InputEventPacket.class, id++, Side.SERVER);
 		modChannel.registerMessage(SpawnParticlePacket.Handler.class, SpawnParticlePacket.class, id++, Side.CLIENT);
 		modChannel.registerMessage(BloodAltarPacket.Handler.class, BloodAltarPacket.class, id++, Side.CLIENT);
+		modChannel.registerMessage(SpawnCustomParticlePacket.Handler.class, SpawnCustomParticlePacket.class, id++, Side.CLIENT);
 	}
 
 }
