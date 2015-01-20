@@ -80,7 +80,7 @@ public class TestCommand implements ICommand {
 			//TEST stuff
 			NBTTagCompound data=new NBTTagCompound();
 			data.setInteger("player_id", p.getEntityId());
-			VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(0,p.posX+2,p.posY-1,p.posZ+2,40,data));
+			VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(0,p.posX+1,p.posY-1,p.posZ+1,40,data));
 			
 			
 			//-----------------

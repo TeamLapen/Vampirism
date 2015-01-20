@@ -15,7 +15,7 @@ import net.minecraft.world.World;
  */
 @SideOnly(Side.CLIENT)
 public class FlyingBloodParticle extends EntityFX{
-	private final int MAX_AGE=50;
+	private final int MAX_AGE=60;
 	private final String TAG="FlyingBloodParticle";
 	private final Entity entity;
 	
@@ -32,6 +32,9 @@ public class FlyingBloodParticle extends EntityFX{
         this.noClip = true;
         this.particleMaxAge=MAX_AGE;
         this.setParticleTextureIndex(65);
+        this.motionX=(this.worldObj.rand.nextDouble()-0.5);
+        this.motionY=(this.worldObj.rand.nextDouble()+0.2);
+        this.motionZ=(this.worldObj.rand.nextDouble()-0.5);
         this.onUpdate();
 	}
 	
@@ -54,9 +57,16 @@ public class FlyingBloodParticle extends EntityFX{
         double wayZ=entity.posZ-this.posZ;
         
         int tleft=this.particleMaxAge-this.particleAge;
-        this.motionX=wayX/tleft;
-        this.motionY=wayY/tleft+this.worldObj.rand.nextDouble()/2;
-        this.motionZ=wayZ/tleft;
+        if(tleft<MAX_AGE/2){
+            this.motionX=wayX/tleft;
+            this.motionY=wayY/tleft;
+            this.motionZ=wayZ/tleft;
+        }
+        else{
+        	
+           
+        }
+
         
         this.moveEntity(this.motionX, this.motionY, this.motionZ);
     }
