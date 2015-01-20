@@ -17,6 +17,10 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 
+/**
+ * TileEntity for Tier2 BloodAltar
+ * @author Maxanier
+ */
 public class TileEntityBloodAltarTier2 extends TileEntity {
 	
 	private int bloodAmount=0;

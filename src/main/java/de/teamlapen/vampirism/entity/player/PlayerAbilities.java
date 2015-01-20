@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.util.BALANCE;
 
 /**
  * Class to determine which special abilities a VampirePlayer should have and store them
- * @author Max
+ * @author Maxanier
  *
  */
 public class PlayerAbilities {

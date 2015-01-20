@@ -28,6 +28,11 @@ import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier2;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
+/**
+ * Block for Blood Altar Tier 2
+ * @author Maxanier
+ *
+ */
 public class BlockBloodAltarTier2 extends BasicBlockContainer{
 	private final static String TAG="BlockBloodAltarTier2";
 	public final static String name="bloodAltarTier2";

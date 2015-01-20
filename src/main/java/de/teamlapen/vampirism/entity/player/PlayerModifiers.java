@@ -10,7 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * Calculates and applies player modifiers depending on the VampireLevel
- * @author Max
+ * @author Maxanier
  *
  */
 public abstract class PlayerModifiers {

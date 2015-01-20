@@ -27,7 +27,9 @@ import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 /**
- * IExtendedEntityPropertiesClass which extends the EntityPlayer with vampire properties
+ * IExtendedEntityPropertiesClass which extends the EntityPlayer with vampire
+ * properties
+ * 
  * @author Maxanier
  */
 public class VampirePlayer implements IExtendedEntityProperties {
@@ -41,40 +43,24 @@ public class VampirePlayer implements IExtendedEntityProperties {
 
 		private final float maxExhaustion = 40F;
 
-		public void addExhaustion(float amount) {
-			this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount, maxExhaustion);
-		}
-
-		public int getBloodLevel() {
-			return getBlood();
-		}
-		
 		/**
-		 * Changes the blood amount on next update
-		 * @param amount Amount to add or remove (+/-)
-		 * @return
-		 */
-		private void changeBlood(int amount){
-			bloodToAdd+=amount;
-		}
-		
-		
-		/**
-		 * Adds blood to the players bar, if the bar is full it tries to add the rest to a blood bottle
+		 * Adds blood to the players bar, if the bar is full it tries to add the
+		 * rest to a blood bottle
+		 * 
 		 * @param amount
 		 * @return
 		 */
-		public int addBlood(int amount){
-			int oldBlood=getBlood();
-			
-			//Adds the blood
+		public int addBlood(int amount) {
+			int oldBlood = getBlood();
+
+			// Adds the blood
 			int bloodToAdd = Math.min(amount, MAXBLOOD - oldBlood);
 			changeBlood(bloodToAdd);
-			//Add saturation effect
-			this.bloodSaturationLevel = Math.min(bloodSaturationLevel + bloodToAdd * BALANCE.BLOOD_SATURATION * 2.0F, oldBlood+bloodToAdd);
-			
-			//Calculate the amount of left blood and handles it
-			int bloodLeft = amount-bloodToAdd;
+			// Add saturation effect
+			this.bloodSaturationLevel = Math.min(bloodSaturationLevel + bloodToAdd * BALANCE.BLOOD_SATURATION * 2.0F, oldBlood + bloodToAdd);
+
+			// Calculate the amount of left blood and handles it
+			int bloodLeft = amount - bloodToAdd;
 
 			if (isAutoFillBlood()) {
 				ItemStack stack = ItemBloodBottle.getBloodBottleInInventory(player.inventory);
@@ -82,28 +68,46 @@ public class VampirePlayer implements IExtendedEntityProperties {
 					ItemBloodBottle.addBlood(stack, bloodLeft);
 					return 0;
 				}
-			} 
+			}
 			return bloodLeft;
 		}
-		
+
+		public void addExhaustion(float amount) {
+			this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount, maxExhaustion);
+		}
+
+		/**
+		 * Changes the blood amount on next update
+		 * 
+		 * @param amount
+		 *            Amount to add or remove (+/-)
+		 * @return
+		 */
+		private void changeBlood(int amount) {
+			bloodToAdd += amount;
+		}
+
 		/**
 		 * Removes blood from the vampires blood level
-		 * @param a amount
+		 * 
+		 * @param a
+		 *            amount
 		 * @return whether the vampire had enough blood or not
 		 */
-		public boolean consumeBlood(int a){
-			int blood=getBlood();
-			int bloodToRemove=Math.min(a, blood);
-			
+		public boolean consumeBlood(int a) {
+			int blood = getBlood();
+			int bloodToRemove = Math.min(a, blood);
+
 			changeBlood(-bloodToRemove);
-			if(bloodToRemove>blood){
+			if (bloodToRemove > blood) {
 				return false;
 			}
 			return true;
 		}
-		
-		
 
+		public int getBloodLevel() {
+			return getBlood();
+		}
 
 		@SideOnly(Side.CLIENT)
 		public int getPrevBloodLevel() {
@@ -114,16 +118,17 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		 * Updates players bloodlevel. Working similar to player foodstats
 		 */
 		private synchronized void onUpdate() {
-			if(player.worldObj.isRemote){
+			if (player.worldObj.isRemote) {
 				return;
 			}
 			player.getFoodStats().setFoodLevel(10);
 			EnumDifficulty enumdifficulty = player.worldObj.difficultySetting;
-			
-			int newBloodLevel=getBlood();
-			newBloodLevel=Math.min(newBloodLevel+bloodToAdd, MAXBLOOD);
-			if(newBloodLevel<0)newBloodLevel=0;
-			bloodToAdd=0;
+
+			int newBloodLevel = getBlood();
+			newBloodLevel = Math.min(newBloodLevel + bloodToAdd, MAXBLOOD);
+			if (newBloodLevel < 0)
+				newBloodLevel = 0;
+			bloodToAdd = 0;
 
 			if (this.bloodExhaustionLevel > 4.0F) {
 				this.bloodExhaustionLevel -= 4.0F;
@@ -131,12 +136,13 @@ public class VampirePlayer implements IExtendedEntityProperties {
 				if (this.bloodSaturationLevel > 0.0F) {
 					this.bloodSaturationLevel = Math.max(bloodSaturationLevel - 1.0F, 0F);
 				} else if (enumdifficulty != EnumDifficulty.PEACEFUL) {
-					
+
 					newBloodLevel = (Math.max(newBloodLevel - 1, 0));
 				}
 			}
 
-			if (player.worldObj.getGameRules().getGameRuleBooleanValue("naturalRegeneration") && newBloodLevel >= 0.9 * MAXBLOOD && player.shouldHeal()) {
+			if (player.worldObj.getGameRules().getGameRuleBooleanValue("naturalRegeneration") && newBloodLevel >= 0.9 * MAXBLOOD
+					&& player.shouldHeal()) {
 				++this.bloodTimer;
 				if (this.bloodTimer >= 80) {
 					player.heal(1.0F);
@@ -206,9 +212,9 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		player.registerExtendedProperties(VampirePlayer.EXT_PROP_NAME, new VampirePlayer(player));
 	}
 
-	public static void saveProxyData(EntityPlayer player,boolean resetBlood) {
+	public static void saveProxyData(EntityPlayer player, boolean resetBlood) {
 		VampirePlayer playerData = VampirePlayer.get(player);
-		if(resetBlood){
+		if (resetBlood) {
 			playerData.setBloodData(MAXBLOOD);
 		}
 		NBTTagCompound savedData = new NBTTagCompound();
@@ -223,7 +229,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	private final String KEY_LEVEL = "level";
 
 	private final String KEY_BLOOD = "blood";
-	
+
 	private final String KEY_AUTOFILL = "autofill";
 
 	public final static int MAXBLOOD = 20;
@@ -231,7 +237,6 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	private final static int BLOOD_WATCHER = 20;
 
 	private final static int LEVEL_WATCHER = 21;
-	
 
 	private BloodStats bloodStats;
 
@@ -247,13 +252,16 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	}
 
 	/**
-	 * Adds blood to the vampires blood level level without increasing the saturation level
-	 * @param a amount
+	 * Adds blood to the vampires blood level level without increasing the
+	 * saturation level
+	 * 
+	 * @param a
+	 *            amount
 	 */
 
-	
-	
-
+	private boolean getAutoFillBlood() {
+		return autoFillBlood;
+	}
 
 	/**
 	 * @return The current blood level
@@ -274,50 +282,22 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		return this.player.getDataWatcher().getWatchableObjectInt(LEVEL_WATCHER);
 	}
 
+	@Override
+	public void init(Entity entity, World world) {
+
+	}
+
 	/**
 	 * @return true if auto fill of blood bottle enabled
 	 */
 	public boolean isAutoFillBlood() {
 		return autoFillBlood;
 	}
-	
-	private void setAutoFillBlood(boolean value) {
-		autoFillBlood = value;
-	}
-	
-	private boolean getAutoFillBlood() {
-		return autoFillBlood;
-	}
-	
-	public void toggleAutoFillBlood() {
-		if (autoFillBlood) {
-			Logger.i(REFERENCE.MODID, "Disabling Auto Fill Blood!");
-			autoFillBlood = false;
-			this.player.addChatMessage(new ChatComponentText("Auto Fill Blood Disabled"));
-		} else {
-			Logger.i(REFERENCE.MODID, "Enabling Auto Fill Blood!");
-			autoFillBlood = true;
-			this.player.addChatMessage(new ChatComponentText("Auto Fill Blood Enabled"));
-		}
-	}
-	
-	@Override
-	public void init(Entity entity, World world) {
-
-	}
-	
 
 	public void levelUp() {
 		int level = getLevel();
 		level++;
 		setLevel(level);
-	}
-	
-	public void looseLevel(){
-		int level=getLevel();
-		if(level>1){
-			setLevel(level-1);
-		}
 	}
 
 	@Override
@@ -328,6 +308,13 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		setAutoFillBlood(properties.getBoolean(KEY_AUTOFILL));
 		this.bloodStats.readNBT(properties);
 
+	}
+
+	public void looseLevel() {
+		int level = getLevel();
+		if (level > 1) {
+			setLevel(level - 1);
+		}
 	}
 
 	@SubscribeEvent
@@ -355,20 +342,26 @@ public class VampirePlayer implements IExtendedEntityProperties {
 
 	}
 
+	private void setAutoFillBlood(boolean value) {
+		autoFillBlood = value;
+	}
+
 	/**
-	 * DONT USE, only designed to be used at startup and by Bloodstats
-	 * Try to use addBlood(int amount) or consumeBlood(int amount) instead
+	 * DONT USE, only designed to be used at startup and by Bloodstats Try to
+	 * use addBlood(int amount) or consumeBlood(int amount) instead
+	 * 
 	 * @param b
 	 */
-	private synchronized void  setBloodData(int b) {
+	private synchronized void setBloodData(int b) {
 		this.player.getDataWatcher().updateObject(BLOOD_WATCHER, b);
 
 	}
 
 	/**
-	 * For testing only, make private later
-	 * This is the only method which should change the LEVEL watcher
-	 * This method should execute all level related changes e.g. player modifiers
+	 * For testing only, make private later This is the only method which should
+	 * change the LEVEL watcher This method should execute all level related
+	 * changes e.g. player modifiers
+	 * 
 	 * @param l
 	 */
 	public void setLevel(int l) {
@@ -421,6 +414,18 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		Entity e = player.worldObj.getEntityByID(entityId);
 		if (e != null && e instanceof EntityLiving) {
 			suckBlood((EntityLiving) e);
+		}
+	}
+
+	public void toggleAutoFillBlood() {
+		if (autoFillBlood) {
+			Logger.i(REFERENCE.MODID, "Disabling Auto Fill Blood!");
+			autoFillBlood = false;
+			this.player.addChatMessage(new ChatComponentText("Auto Fill Blood Disabled"));
+		} else {
+			Logger.i(REFERENCE.MODID, "Enabling Auto Fill Blood!");
+			autoFillBlood = true;
+			this.player.addChatMessage(new ChatComponentText("Auto Fill Blood Enabled"));
 		}
 	}
 
