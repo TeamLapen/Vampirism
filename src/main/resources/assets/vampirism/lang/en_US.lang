@@ -5,6 +5,8 @@ entity.vampirism:vampire.name=Vampire
 # Items
 item.vampirism:vampiresFear.name=Vampire's fear
 item.vampirism:bloodBottle.name=Blood Bottle
+item.vampirism:spawnBloodAltar.name=Blood Altar
+item.vampirism:spawnBloodAltarTier2.name=Blood Altar Tier2
 
 # Blocks
 block.vampirism:bloodAltar.name=Blood Altar
