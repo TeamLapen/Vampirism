@@ -20,6 +20,7 @@ import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.entity.VampireEntityEventHandler;
 import de.teamlapen.vampirism.entity.player.VampirePlayerEventHandler;
+import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 public abstract class CommonProxy implements IProxy {
@@ -34,19 +35,6 @@ public abstract class CommonProxy implements IProxy {
 	 */
 	public static NBTTagCompound getEntityData(String name) {
 		return extendedEntityData.remove(name);
-	}
-
-	@SuppressWarnings("unchecked")
-	public static void registerEntity(Class<? extends Entity> entityClass, String name) {
-		int entityID = EntityRegistry.findGlobalUniqueEntityId();
-		long seed = name.hashCode();
-		Random rand = new Random(seed);
-		int primaryColor = rand.nextInt() * 16777215;
-		int secondaryColor = rand.nextInt() * 16777215;
-
-		EntityRegistry.registerGlobalEntityID(entityClass, name, entityID);
-		EntityRegistry.registerModEntity(entityClass, name, entityID, VampirismMod.instance, 64, 1, true);
-		EntityList.entityEggs.put(Integer.valueOf(entityID), new EntityList.EntityEggInfo(entityID, primaryColor, secondaryColor));
 	}
 
 	/**
@@ -65,12 +53,12 @@ public abstract class CommonProxy implements IProxy {
 				BiomeGenBase.class);
 
 		// Registration of vampire hunter
-		registerEntity(EntityVampireHunter.class, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME);
-		EntityRegistry.addSpawn(EntityVampireHunter.class, 2, 0, 1, EnumCreatureType.monster, allBiomes);
+		EntityRegistry.registerGlobalEntityID(EntityVampireHunter.class, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, EntityRegistry.findGlobalUniqueEntityId(),0x666D68,0x52E9E9);
+		EntityRegistry.addSpawn(EntityVampireHunter.class, BALANCE.VAMPIRE_HUNTER_SPAWN_PROBE, 1, 2, EnumCreatureType.creature, allBiomes);
 
 		// Registration of vampire
-		registerEntity(EntityVampire.class, REFERENCE.ENTITY.VAMPIRE_NAME);
-		EntityRegistry.addSpawn(EntityVampire.class, 2, 0, 1, EnumCreatureType.monster, allBiomes);
+		EntityRegistry.registerGlobalEntityID(EntityVampire.class, REFERENCE.ENTITY.VAMPIRE_NAME, EntityRegistry.findGlobalUniqueEntityId(),0x54B8DD,0x34898D);
+		EntityRegistry.addSpawn(EntityVampire.class, BALANCE.VAMPIRE_SPAWN_PROBE, 1, 3, EnumCreatureType.monster, allBiomes);
 	}
 
 	@Override

@@ -8,6 +8,8 @@ public final class BALANCE {
 	//Mob behavior
 	public final static int VAMPIRE_HUNTER_ATTACK_LEVEL=3;//Vampirehunters attack players with a vampire level higher than this
 	public final static int VAMPIRE_FRIENDLY_LEVEL=3;//Vampires attack players unless their vampirelevel is higher than this
+	public final static int VAMPIRE_HUNTER_SPAWN_PROBE=20;//Spawn probe for random spawns. n/unknown
+	public final static int VAMPIRE_SPAWN_PROBE=30;//Spawn probe for random spawns. n/unknown
 	
 	//Vampireplayer
 	public static final boolean VAMPIRE_PLAYER_LOOSE_LEVEL=true;//Whether vampireplayers should loose level if killed by a hunter
