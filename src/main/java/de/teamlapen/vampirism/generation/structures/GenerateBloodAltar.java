@@ -16,7 +16,7 @@ import net.minecraft.world.gen.feature.WorldGenerator;
  *
  */
 public class GenerateBloodAltar extends WorldGenerator {
-	public static int spawnChance = 200;           // chance n/1000
+	public static int spawnChance = 25;           // chance n/1000
 
 	protected Block[] GetValidSpawnBlocks()	{
 			return new Block[] { Blocks.grass, Blocks.dirt, Blocks.sand, Blocks.cobblestone, Blocks.gravel };

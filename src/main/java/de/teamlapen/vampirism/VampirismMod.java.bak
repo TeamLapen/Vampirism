@@ -24,7 +24,6 @@ import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.ModBlocks;
 import de.teamlapen.vampirism.util.ModItems;
 import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.villages.VillageBiomes;
 import de.teamlapen.vampirism.villages.VillageDensity;
 
 @Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION)
@@ -64,7 +63,7 @@ public class VampirismMod {
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
-		VillageBiomes.postInit(event);
+
 	}
 
 	@EventHandler
@@ -74,7 +73,6 @@ public class VampirismMod {
 		proxy.registerKeyBindings();
 		setupNetwork();
 		VillageDensity.preInit(event);
-		VillageBiomes.preInit(event);
 	}
 
 	private void setupNetwork() {

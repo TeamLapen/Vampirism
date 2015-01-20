@@ -7,7 +7,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
 /**
- * VillageDensity class that reads the settings from the configuration file, and are
+ * VillageDensity class that reads the settings from the configuration file, and is
  *  used by the VillageReplacer class
  * @author WILLIAM
  *
