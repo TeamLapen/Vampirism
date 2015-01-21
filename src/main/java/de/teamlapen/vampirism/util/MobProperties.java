@@ -11,5 +11,5 @@ public class MobProperties {
 	public static final double vampireHunter_maxHealth = 20.0;
 	public static final double vampireHunter_attackDamage = 5.0;
 	public static final double vampireHunter_movementSpeed = 0.4;
-	public static final double vampireHunter_maxPerVillage = 5;
+	public static final int vampireHunter_maxPerVillage = 5;
 }

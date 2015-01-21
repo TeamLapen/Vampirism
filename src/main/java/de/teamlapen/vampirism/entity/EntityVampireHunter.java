@@ -101,16 +101,20 @@ public class EntityVampireHunter extends MobVampirism {
      * From EntityMob
      * Checks if the entity's current position is a valid location to spawn this entity.
      */
+	@Override
     public boolean getCanSpawnHere()
     {
-		// don't spawn underground or on peaceful mode, also normal checks, allows spawn in daylight
-		if (this.posY < 60 || this.worldObj.difficultySetting == EnumDifficulty.PEACEFUL || !super.getCanSpawnHere())
+		// don't spawn underground or on peaceful mode
+		if (this.posY < 60 || this.worldObj.difficultySetting == EnumDifficulty.PEACEFUL){
 			return false;
+		}
 		
 		// Will be set false if spawned by WorldGenVampirism, (in a village)
 		if (!this.isLookingForHome)
 			return true;
 		
+		//Does not seem to be called
+		Logger.i("EntityHunter", "Normal spawn method called");
 		// Only look for a village in biomes that have them
 		BiomeGenBase biome = this.worldObj.getBiomeGenForCoords(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posZ));
 		if (biome == BiomeGenBase.desert || biome == BiomeGenBase.plains || biome == BiomeGenBase.savanna) {
