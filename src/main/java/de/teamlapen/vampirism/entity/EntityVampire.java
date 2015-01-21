@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
@@ -12,12 +13,14 @@ import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.MobProperties;
+import de.teamlapen.vampirism.util.REFERENCE;
 
 public class EntityVampire extends MobVampirism {
 	// TODO Sounds
@@ -65,19 +68,17 @@ public class EntityVampire extends MobVampirism {
 
 	@Override
 	public void onKillEntity(EntityLivingBase p_70074_1_) {
-		super.onKillEntity(p_70074_1_);
+
 
 		if ((this.worldObj.difficultySetting == EnumDifficulty.NORMAL || this.worldObj.difficultySetting == EnumDifficulty.HARD)
 				&& p_70074_1_ instanceof EntityVillager) {
 
-			EntityVampire entityvampire = new EntityVampire(this.worldObj);
-			entityvampire.copyLocationAndAnglesFrom(p_70074_1_);
-			this.worldObj.removeEntity(p_70074_1_);
-			entityvampire.onSpawnWithEgg((IEntityLivingData) null);
+			Entity e = EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_NAME, this.worldObj);
+			e.copyLocationAndAnglesFrom(p_70074_1_);
 
-			this.worldObj.spawnEntityInWorld(entityvampire);
-			this.worldObj.playAuxSFXAtEntity((EntityPlayer) null, 1016, (int) this.posX, (int) this.posY, (int) this.posZ, 0);
+			this.worldObj.spawnEntityInWorld(e);
 		}
+		super.onKillEntity(p_70074_1_);
 	}
 
 	@Override
@@ -88,7 +89,7 @@ public class EntityVampire extends MobVampirism {
 					MathHelper.floor_double(this.posZ));
 			if (brightness > 0.5F) {
 				if (this.worldObj.isDaytime() && canSeeSky) {
-					this.setDead();
+					this.attackEntityFrom(DamageSource.magic, 0.5F);
 				} else {
 					this.setFire(2);
 				}
