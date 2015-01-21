@@ -75,27 +75,27 @@ public class WorldGenVampirism implements IWorldGenerator {
 		//		+ " " + v.getCenter().posZ + " with " + spawnedHunter + " Hunters");
 		
 		// All hunters are currently spawning at the center of the village
-		for (int i = 1; i < 10 && spawnedHunter < MobProperties.vampireHunter_maxPerVillage; i++) {
-			int x1 = v.getCenter().posX+ world.rand.nextInt(8)-4;
-			int z1 = v.getCenter().posZ+ world.rand.nextInt(8)-4;
+		for (int i = 1; i < 20 && spawnedHunter < MobProperties.vampireHunter_maxPerVillage; i++) {
+			int x1 = v.getCenter().posX+ world.rand.nextInt((int)(1.2*r))-(int)(0.6*r);
+			int z1 = v.getCenter().posZ+ world.rand.nextInt((int)(1.2*r))-(int)(0.6*r);
 			
 			int y1 = world.getHeightValue(x1, z1);
-			if (v.isInRange(x1, y1, z1) && this.isValidVampireHunterSpawningLocation(world, x1, y1, z1)) {
+			if (v.isInRange(x1, y1, z1)) {
 				//Logger.i("test", "going to spawn hunter!");
 				Entity e = EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world);
 				e.setLocationAndAngles(x1, y1, z1, 0.0F, 0.0F);
 				((EntityVampireHunter) e).isLookingForHome = false;
-				if (!((EntityVampireHunter) e).getCanSpawnHere()){
-					Logger.i("<asdf", "Cant spawn hunet");
-					return;
+				if (((EntityVampireHunter) e).getCanSpawnHere()){
+					((EntityVampireHunter) e).setHomeArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, r);
+					world.spawnEntityInWorld(e);
+					//Logger.i("HunterSpawn", "Spawned Hunter at: " + x1 + " " + y1 + " " + z1);
+
+					spawnedHunter++;
 				}
-					
-
-				((EntityVampireHunter) e).setHomeArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, r);
-				world.spawnEntityInWorld(e);
-				//Logger.i("HunterSpawn", "Spawned Hunter at: " + x1 + " " + y1 + " " + z1);
-
-				spawnedHunter++;
+				else{
+					e.setDead();
+				}
+				
 			}
 		}
 	}
@@ -117,31 +117,6 @@ public class WorldGenVampirism implements IWorldGenerator {
 				int posY = world.getHeightValue(posX + 1, posZ + 1); 
 				generatedStructure = new GenerateBloodAltar().generate(world, random, posX, posY, posZ);
 			}
-		}
-	}
-
-	/**
-	 * Test if a vampire hunter can spawn at that location
-	 * @param world
-	 * @param x
-	 * @param y
-	 * @param z
-	 * @return
-	 */
-	private boolean isValidVampireHunterSpawningLocation(World world, int x, int y, int z) {
-		if (!World.doesBlockHaveSolidTopSurface(world, x, y - 1, z)) {
-			Logger.i("test", "No solid");
-			return false;
-		} else {
-			if (world.getBlock(x, y, z).isNormalCube()) {
-				Logger.i("test", "No cube");
-				return false;
-			}
-			if (world.getBlock(x, y + 1, z).isNormalCube()) {
-				Logger.i("test", "No cube2");
-				return false;
-			}
-			return true;
 		}
 	}
 }

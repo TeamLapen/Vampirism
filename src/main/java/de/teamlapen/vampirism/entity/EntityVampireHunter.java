@@ -96,11 +96,11 @@ public class EntityVampireHunter extends MobVampirism {
 		this.worldObj.spawnParticle("mobSpellAmbient", posX, posY, posZ, 0.5F, 0.5F, 0.5F);
 		super.onDeathUpdate();
 	}
+	
 
-    /**
-     * From EntityMob
-     * Checks if the entity's current position is a valid location to spawn this entity.
-     */
+    /*
+     * Not necessary since the second part of this function is not called, probably has to be moved to a EntityJoinWorld event or so
+     * 
 	@Override
     public boolean getCanSpawnHere()
     {
@@ -144,4 +144,20 @@ public class EntityVampireHunter extends MobVampirism {
 		else
 			return false;
     }	
+    */
+	
+	/**
+	 * Ignore light level
+	 */
+	protected boolean isValidLightLevel(){
+		return true;
+	}
+	
+	/**
+	 * Ignoew light level
+	 */
+	public float getBlockPathWeight(int p_70783_1_, int p_70783_2_, int p_70783_3_)
+    {
+        return 0.5F;
+    }
 }

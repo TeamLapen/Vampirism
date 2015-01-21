@@ -97,4 +97,6 @@ public class EntityVampire extends MobVampirism {
 		}
 		super.onLivingUpdate();
 	}
+	
+
 }

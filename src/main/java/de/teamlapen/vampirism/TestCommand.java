@@ -76,7 +76,7 @@ public class TestCommand implements ICommand {
 	public void processCommand(ICommandSender sender, String[] param) {
 		if (sender instanceof EntityPlayer) {
 			EntityPlayer p = (EntityPlayer) sender;
-			
+			sendMessage(sender,"Village: "+p.worldObj.villageCollectionObj.findNearestVillage((int)p.posX,(int) p.posY, (int)p.posZ, 0).getCenter().toString());
 			//TEST stuff
 			NBTTagCompound data=new NBTTagCompound();
 			data.setInteger("player_id", p.getEntityId());
