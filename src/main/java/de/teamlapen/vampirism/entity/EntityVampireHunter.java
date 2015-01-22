@@ -127,12 +127,23 @@ public class EntityVampireHunter extends MobVampirism {
     }
     
     /**
+     * Returns the home village if the hunter has a home
+     * @return village or null
+     */
+    public Village getHomeVillage(){
+    	if(isLookingForHome)return null;
+    	ChunkCoordinates cc=this.getHomePosition();
+    	return this.worldObj.villageCollectionObj.findNearestVillage(cc.posX, cc.posY,cc.posZ, 10);
+    }
+    
+    /**
      * Makes the hunter not look for a new home anymore and adds village specific AI tasks
      */
     public void setFoundHome(){
     	isLookingForHome=false;
 		this.tasks.addTask(3, new EntityAIMoveTowardsRestriction(this,MobProperties.vampireHunter_movementSpeed));
 		this.tasks.addTask(4, new EntityAIMoveThroughVillage(this, 0.9*MobProperties.vampireHunter_movementSpeed, false));
+		this.targetTasks.addTask(2, new EntityAIDefendVillage(this));
     }
     
     /**
