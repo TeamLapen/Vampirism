@@ -38,10 +38,10 @@ public class EntityVampireHunter extends MobVampirism {
 		super(p_i1738_1_);
 
 		//Tasks (more tasks may be added in setLookingForHome()
-		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityVampire.class, MobProperties.vampireHunter_attackSpeed, false));
-		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, MobProperties.vampireHunter_attackSpeed, false));
-		this.tasks.addTask(2, new EntityAIAttackOnCollide(this,EntityCreature.class,MobProperties.vampireHunter_movementSpeed,false));
-		this.tasks.addTask(6, new EntityAIWander(this, MobProperties.vampireHunter_movementSpeed));
+		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityVampire.class, 1.1, false));
+		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.1, false));
+		this.tasks.addTask(2, new EntityAIAttackOnCollide(this,EntityCreature.class,0.9,false));
+		this.tasks.addTask(6, new EntityAIWander(this, 0.7));
 		this.tasks.addTask(9, new EntityAILookIdle(this));
 
 		//TargetTasks (more tasks may be added in setLookingForHome()

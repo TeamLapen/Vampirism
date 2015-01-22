@@ -8,9 +8,12 @@ import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
+import net.minecraft.entity.ai.EntityAIHurtByTarget;
+import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
 import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
@@ -29,13 +32,23 @@ public class EntityVampire extends MobVampirism {
 		super(par1World);
 
 		// Attack player
-		this.tasks.addTask(1, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0D, false));
+		this.tasks.addTask(1, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.1, false));
 		// Attack vampire hunter
-		this.tasks.addTask(1, new EntityAIAttackOnCollide(this, EntityVampireHunter.class, 1.0D, true));
+		this.tasks.addTask(1, new EntityAIAttackOnCollide(this, EntityVampireHunter.class, 1.0, true));
 		// Attack villager
-		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityVillager.class, 1.0D, true));
+		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityVillager.class, 0.9, true));
+		// Avoids Vampire Hunters 
+		this.tasks.addTask(2, new EntityAIAvoidEntity(this, EntityVampireHunter.class, MobProperties.vampire_hunterDistance, 1.0,
+				1.2));
+		//Low priority tasks
+		this.tasks.addTask(6, new EntityAIMoveThroughVillage(this, 0.6, false));
+		this.tasks.addTask(6, new EntityAIWander(this, 0.7));
+		this.tasks.addTask(9, new EntityAILookIdle(this));
+		
+		
 		// Search for players
-		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true,false,new IEntitySelector(){
+		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true,false,new IEntitySelector(){
 
 			@Override
 			public boolean isEntityApplicable(Entity entity) {
@@ -46,15 +59,10 @@ public class EntityVampire extends MobVampirism {
 			}
 			
 		}));
-		// Search for vampire hunters
-		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVampireHunter.class, 0, true));
 		// Search for villagers
-		this.targetTasks.addTask(4, new EntityAINearestAttackableTarget(this, EntityVillager.class, 0, true));
-		this.tasks.addTask(4, new EntityAIMoveTowardsRestriction(this, 1.0D));
-		// Avoids Vampire Hunters TODO Distance (3rd argument)
-		this.tasks.addTask(5, new EntityAIAvoidEntity(this, EntityVampireHunter.class, 10.0F, MobProperties.vampire_movementSpeed,
-				MobProperties.vampire_movementSpeed * 1.5));
-		this.tasks.addTask(6, new EntityAIMoveThroughVillage(this, 1.0D, false));
+		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVillager.class, 0, true));
+		
+
 
 	}
 

@@ -32,14 +32,13 @@ public class EntityAIDefendVillage extends EntityAITarget{
 		this.villageAgressorTarget=v.findNearestVillageAggressor(hunter);
 		
 		if(this.isSuitableTarget(villageAgressorTarget, false)){
-			return true;
-		}
-		else if(villageAgressorTarget !=null){
-			Logger.i("test", villageAgressorTarget.toString());
 			if(villageAgressorTarget instanceof EntityPlayer){
 				if(VampirePlayer.get((EntityPlayer)(villageAgressorTarget)).getLevel()>BALANCE.VAMPIRE_HUNTER_ATTACK_LEVEL){
 					return true;
 				}
+			}
+			else if(villageAgressorTarget instanceof EntityVampire){
+				return true;
 			}
 		}
 		return false;
@@ -48,6 +47,7 @@ public class EntityAIDefendVillage extends EntityAITarget{
 	@Override
    public void startExecuting()
    {
+		Logger.i("test", "Starting to attack "+this.villageAgressorTarget.toString());
        this.hunter.setAttackTarget(this.villageAgressorTarget);
        super.startExecuting();
    }
