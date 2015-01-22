@@ -84,7 +84,7 @@ public class WorldGenVampirism implements IWorldGenerator {
 				//Logger.i("test", "going to spawn hunter!");
 				Entity e = EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world);
 				e.setLocationAndAngles(x1, y1, z1, 0.0F, 0.0F);
-				((EntityVampireHunter) e).isLookingForHome = false;
+				((EntityVampireHunter) e).setFoundHome();
 				if (((EntityVampireHunter) e).getCanSpawnHere()){
 					((EntityVampireHunter) e).setHomeArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, r);
 					world.spawnEntityInWorld(e);
