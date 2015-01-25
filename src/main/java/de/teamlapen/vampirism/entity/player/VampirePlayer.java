@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.entity.player;
 
+import java.util.Random;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,6 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
@@ -327,6 +330,12 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	private void onUpdate() {
 		if (getLevel() > 0) {
 			this.bloodStats.onUpdate();
+		}
+		if(!player.worldObj.isRemote&& player.worldObj.canBlockSeeTheSky(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ))){
+			if(player.worldObj.isDaytime()&& player.getBrightness(1.0F)>0.5F&&player.worldObj.rand.nextInt(40)==10){
+				player.attackEntityFrom(VampirismMod.sunDamage, BALANCE.getVampireSunDamage(getLevel()));
+			}
+					
 		}
 
 	}

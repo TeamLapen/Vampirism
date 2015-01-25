@@ -15,6 +15,7 @@ import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
 import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.util.AxisAlignedBB;
@@ -30,13 +31,16 @@ import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.MobProperties;
 
-public class EntityVampireHunter extends MobVampirism {
+public class EntityVampireHunter extends EntityMob {
 
 	private boolean isLookingForHome;
 
 	public EntityVampireHunter(World p_i1738_1_) {
 		super(p_i1738_1_);
 
+		this.getNavigator().setAvoidsWater(true);
+		this.setSize(0.6F, 1.8F);
+		
 		//Tasks (more tasks may be added in setLookingForHome()
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityVampire.class, 1.1, false));
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.1, false));

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.util.DamageSource;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -45,6 +46,8 @@ public class VampirismMod {
 	        return ModItems.vampiresFear;
 	    }
 	};
+	
+	public static DamageSource sunDamage = (new DamageSource("sun")).setDamageBypassesArmor().setMagicDamage();
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {

@@ -20,7 +20,7 @@ public class PlayerAbilities {
 	 * @param level Vampire level
 	 * @return 
 	 */
-	public static PlayerAbilities getPlayerAbilities(float level){
+	public static PlayerAbilities getPlayerAbilities(int level){
 		return new PlayerAbilities(BALANCE.getVampirePlayerNightVision(level));
 	}
 }

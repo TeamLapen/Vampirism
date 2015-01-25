@@ -14,23 +14,28 @@ import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
 import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.MobProperties;
 import de.teamlapen.vampirism.util.REFERENCE;
 
-public class EntityVampire extends MobVampirism {
+public class EntityVampire extends EntityMob {
 	// TODO Sounds
 
 	public EntityVampire(World par1World) {
 		super(par1World);
-
+		
+		this.getNavigator().setAvoidsWater(true);
+		this.setSize(0.6F, 1.8F);
+		
 		// Attack player
 		this.tasks.addTask(1, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.1, false));
 		// Attack vampire hunter
@@ -97,13 +102,18 @@ public class EntityVampire extends MobVampirism {
 					MathHelper.floor_double(this.posZ));
 			if (brightness > 0.5F) {
 				if (this.worldObj.isDaytime() && canSeeSky) {
-					this.attackEntityFrom(DamageSource.magic, 0.5F);
+					this.attackEntityFrom(VampirismMod.sunDamage, 0.5F);
 				} else {
 					this.setFire(2);
 				}
 			}
 		}
 		super.onLivingUpdate();
+	}
+	
+	@Override
+	public boolean isAIEnabled(){
+		return true;
 	}
 	
 
