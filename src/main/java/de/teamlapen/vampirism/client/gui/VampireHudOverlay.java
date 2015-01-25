@@ -118,20 +118,18 @@ public class VampireHudOverlay extends Gui {
 		if(p!=null&&p.typeOfHit==MovingObjectPosition.MovingObjectType.ENTITY&&p.entityHit !=null && p.entityHit instanceof EntityLiving){
 			VampireMob mob=VampireMob.get((EntityLiving)p.entityHit);
 			if(mob.canBeBitten()&&VampirePlayer.get(Minecraft.getMinecraft().thePlayer).getLevel()>0){
-				/*
-				 * Seems to change nothing
-				GL11.glPushMatrix();
+				mc.mcProfiler.startSection("vampireFang");
+
 				GL11.glEnable(GL11.GL_BLEND);
-				OpenGlHelper.glBlendFunc(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR, 1, 0);
-				*/
-				int width=event.resolution.getScaledWidth();
-				int height=event.resolution.getScaledHeight();
-				drawRect(width / 2 - 2, height / 2 -2, width / 2 +3, height / 2 +3, Color.RED.getRGB());
-				/*
-				 OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
+
+				this.mc.getTextureManager().bindTexture(icons);
+				int left = event.resolution.getScaledWidth() / 2-8;
+				int top = event.resolution.getScaledHeight()/2-4;
+
+				drawTexturedModalRect(left,top,27,0,16,16);
 				GL11.glDisable(GL11.GL_BLEND);
-				GL11.glPopMatrix();
-				*/
+				mc.mcProfiler.endSection();
+				event.setCanceled(true);
 			}
 		}
 	}
