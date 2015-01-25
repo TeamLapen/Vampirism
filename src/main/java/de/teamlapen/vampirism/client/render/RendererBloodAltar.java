@@ -26,7 +26,7 @@ public class RendererBloodAltar extends TileEntitySpecialRenderer {
 	public RendererBloodAltar() {	
 		model = new ModelBloodAltar();
 		texture = new ResourceLocation(REFERENCE.MODID
-				+ ":textures/blocks/bloodAltarFull.png");
+				+ ":textures/blocks/bloodAltar.png");
 	}
 
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z) {
