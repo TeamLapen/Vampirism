@@ -13,12 +13,18 @@ public final class BALANCE {
 	
 	//Vampireplayer
 	public static final boolean VAMPIRE_PLAYER_LOOSE_LEVEL=true;//Whether vampireplayers should loose level if killed by a hunter
+	public static final float getVampireSunDamage(int level){
+		if(level<5){
+			return 0;
+		}
+		return 1.5F;
+	}
 	/**
 	 * Calculates the players night vision effect
 	 * @param level
 	 * @return value between 0 and 1
 	 */
-	public static final float getVampirePlayerNightVision(float level){
+	public static final float getVampirePlayerNightVision(int level){
 		float nv= (level==0.0F ? 0 : 1.0F-(3/level));
 		return (nv<0.0F?0.0F:nv);
 	}

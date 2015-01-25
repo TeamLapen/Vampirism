@@ -21,6 +21,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.MobProperties;
@@ -101,7 +102,7 @@ public class EntityVampire extends EntityMob {
 					MathHelper.floor_double(this.posZ));
 			if (brightness > 0.5F) {
 				if (this.worldObj.isDaytime() && canSeeSky) {
-					this.attackEntityFrom(DamageSource.magic, 0.5F);
+					this.attackEntityFrom(VampirismMod.sunDamage, 0.5F);
 				} else {
 					this.setFire(2);
 				}
