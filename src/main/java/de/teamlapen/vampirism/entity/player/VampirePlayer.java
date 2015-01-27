@@ -60,7 +60,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 			int bloodToAdd = Math.min(amount, MAXBLOOD - oldBlood);
 			changeBlood(bloodToAdd);
 			// Add saturation effect
-			this.bloodSaturationLevel = Math.min(bloodSaturationLevel + bloodToAdd * BALANCE.BLOOD_SATURATION * 2.0F, oldBlood + bloodToAdd);
+			this.bloodSaturationLevel = (float) Math.min(bloodSaturationLevel + bloodToAdd * BALANCE.BLOOD_SATURATION * 2.0F, oldBlood + bloodToAdd);
 
 			// Calculate the amount of left blood and handles it
 			int bloodLeft = amount - bloodToAdd;

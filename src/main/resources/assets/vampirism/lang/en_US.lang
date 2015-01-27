@@ -22,3 +22,4 @@ keys.vampirism.auto=Auto Fill Blood Bottle
 #General
 itemGroup.vampirism=Vampirism
 death.attack.sun=%1$s did not like the sun
+category.vampirism.balance=Balance settings

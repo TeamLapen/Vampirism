@@ -3,6 +3,8 @@ package de.teamlapen.vampirism;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
+import net.minecraftforge.common.MinecraftForge;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -16,19 +18,22 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import de.teamlapen.vampirism.client.gui.ModGuiFactory;
 import de.teamlapen.vampirism.generation.WorldGenVampirism;
 import de.teamlapen.vampirism.network.BloodAltarPacket;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
 import de.teamlapen.vampirism.network.SpawnParticlePacket;
 import de.teamlapen.vampirism.proxy.IProxy;
+import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.ModBlocks;
 import de.teamlapen.vampirism.util.ModItems;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.villages.VillageBiomes;
 import de.teamlapen.vampirism.villages.VillageDensity;
+import de.teamlapen.vampirism.villages.VillageGenReplacer;
 
-@Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION)
+@Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION,guiFactory="de.teamlapen.vampirism.client.gui.ModGuiFactory")
 public class VampirismMod {
 
 	@Instance(value = REFERENCE.MODID)
@@ -56,7 +61,11 @@ public class VampirismMod {
 		proxy.registerSounds();
 		GameRegistry.registerWorldGenerator(new WorldGenVampirism(), 1000);
 		proxy.registerSubscriptions();
-		VillageDensity.init();
+		FMLCommonHandler.instance().bus().register(new Configs());
+		if(Configs.village_gen_enabled){
+			Logger.i("VillageDensity", "Registering replacer for village generation.");
+	        MinecraftForge.TERRAIN_GEN_BUS.register(new VillageGenReplacer());
+		}
 	}
 
 	@EventHandler
@@ -72,11 +81,13 @@ public class VampirismMod {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		Configs.init(event.getSuggestedConfigurationFile());//Keep first
+		
 		ModItems.init();
 		ModBlocks.init();
 		proxy.registerKeyBindings();
 		setupNetwork();
-		VillageDensity.preInit(event);
+
 		VillageBiomes.preInit(event);
 	}
 
