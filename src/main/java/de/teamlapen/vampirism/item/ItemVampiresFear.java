@@ -13,18 +13,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 public class ItemVampiresFear extends ItemSword {
 
 	public static final String name = "vampiresFear";
+	private IIcon unusedIcon;
 
 	public ItemVampiresFear() {
-		super(Item.ToolMaterial.WOOD);
+		super(Item.ToolMaterial.IRON);
 		this.setNoRepair();
 		setUnlocalizedName(name);
 		this.maxStackSize = 1;
@@ -74,7 +77,10 @@ public class ItemVampiresFear extends ItemSword {
 	}
 	
 	
-	public int getBlood(ItemStack itemStack) {
+	public static int getBlood(ItemStack itemStack) {
+		if(itemStack==null||itemStack.stackTagCompound==null){
+			return 0;
+		}
 		return itemStack.stackTagCompound.getInteger("blood");
 	}
 	
@@ -91,10 +97,28 @@ public class ItemVampiresFear extends ItemSword {
 	protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
 		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
 	}
+	
+    @SideOnly(Side.CLIENT)
+    @Override
+    public IIcon getIcon(ItemStack stack, int pass)
+    {
+    	return getIconIndex(stack);
+    }
+    
+    @SideOnly(Side.CLIENT)
+    @Override
+    public IIcon getIconIndex(ItemStack stack)
+    {
+    	if(getBlood(stack)>0){
+    		return itemIcon;
+    	}
+        return unusedIcon;
+    }
 
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister iconRegister) {
 		itemIcon = iconRegister.registerIcon(this.getUnlocalizedName().substring(this.getUnlocalizedName().indexOf(".") + 1));
+		unusedIcon = iconRegister.registerIcon("vampirism:vampiresFearUnused");
 	}
 }
