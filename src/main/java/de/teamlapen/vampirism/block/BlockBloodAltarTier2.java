@@ -78,4 +78,12 @@ public class BlockBloodAltarTier2 extends BasicBlockContainer{
 	private void startRitual(TileEntityBloodAltarTier2 te,EntityPlayer p){
 		te.startRitual(p);
 	}
+	
+	@SideOnly(Side.CLIENT)
+	@Override
+	public String getItemIconName(){
+		return "vampirism:spawnBloodAltar";
+		
+	}
+	
 }

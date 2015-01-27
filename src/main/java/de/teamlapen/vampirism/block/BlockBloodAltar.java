@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.block;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.java.games.input.Keyboard;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -64,5 +66,11 @@ public class BlockBloodAltar extends BasicBlockContainer {
 		} else {
 			Logger.i(TAG, "Altar already used");
 		}
+	}
+	@SideOnly(Side.CLIENT)
+	@Override
+	public String getItemIconName(){
+		return "vampirism:spawnBloodAltar";
+		
 	}
 }
