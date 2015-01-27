@@ -5,6 +5,7 @@ entity.vampirism:vampire.name=Vampire
 # Items
 item.vampirism:vampiresFear.name=Vampire's fear
 item.vampirism:bloodBottle.name=Blood Bottle
+item.vampirism:vampireFang.name=Vampire Fang
 item.vampirism:spawnBloodAltar.name=Blood Altar
 item.vampirism:spawnBloodAltarTier2.name=Blood Altar Tier2
 

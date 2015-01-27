@@ -17,6 +17,7 @@ import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
@@ -25,6 +26,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.MobProperties;
+import de.teamlapen.vampirism.util.ModItems;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 public class EntityVampire extends EntityMob {
@@ -92,6 +94,13 @@ public class EntityVampire extends EntityMob {
 			this.worldObj.spawnEntityInWorld(e);
 		}
 		super.onKillEntity(p_70074_1_);
+	}
+	
+	@Override
+	public void onDeath(DamageSource s){
+		if(s.getEntity()!=null&&s.getEntity() instanceof EntityPlayer){
+			this.dropItem(ModItems.vampireFang, 1);
+		}
 	}
 
 	@Override
