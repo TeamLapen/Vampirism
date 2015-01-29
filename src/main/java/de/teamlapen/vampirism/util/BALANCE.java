@@ -18,11 +18,13 @@ public final class BALANCE {
 	//Vampireplayer
 	@DefaultBoolean(value=true,comment="Whether vampireplayers should loose level if killed by a hunter")
 	public static boolean VAMPIRE_PLAYER_LOOSE_LEVEL;
+	@DefaultDouble(1.5D)
+	public static double VAMPIRE_PLAYER_SUN_DAMAGE;
 	public static float getVampireSunDamage(int level){
 		if(level<5){
 			return 0;
 		}
-		return 1.5F;
+		return (float)VAMPIRE_PLAYER_SUN_DAMAGE;
 	}
 	/**
 	 * Calculates the players night vision effect
@@ -30,7 +32,7 @@ public final class BALANCE {
 	 * @return value between 0 and 1
 	 */
 	public static float getVampirePlayerNightVision(int level){
-		float nv= (level==0.0F ? 0 : 1.0F-(3/level));
+		float nv= (level==0.0F ? 0 : 1.0F-(2/level));
 		return (nv<0.0F?0.0F:nv);
 	}
 	
@@ -65,21 +67,19 @@ public final class BALANCE {
 		public static int ALTAR_2_MIN_LEVEL;
 		@DefaultInt(3)
 		public static int ALTAR_2_MAX_LEVEL;
+		@DefaultInt(0)
+		public static int R1_VILLAGERS;//Required villagers for ritual 1
+		@DefaultInt(value=50,comment="Blood required for the first level up with altar 2")
+		public static int ALTAR_2_MIN_BLOOD;
+		@DefaultInt(value=20,comment="Extra blood per level required")
+		public static int ALTAR_2_ADD_BLOOD_PER_LEVEL;
 		public static int A2_getRequiredBlood(int level){
-			switch(level){
-			case 1:
-				return 50;
-			case 2:
-				return 70;
-			default:
-				return 90;
-			}
+			return ALTAR_2_MIN_BLOOD+(level-ALTAR_2_MIN_LEVEL)*ALTAR_2_ADD_BLOOD_PER_LEVEL;
 		}
 	}
 
 	//RITUALS
-	@DefaultInt(5)
-	public static int R1_VILLAGERS;//Required villagers for ritual 1
+	
 	//Vampiremob
 	@DefaultInt(5)
 	public static int SMALL_BLOOD_AMOUNT; //Blood amount a small mob gives

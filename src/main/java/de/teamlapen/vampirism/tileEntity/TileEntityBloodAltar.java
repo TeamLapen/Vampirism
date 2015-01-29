@@ -83,7 +83,7 @@ public class TileEntityBloodAltar extends TileEntity {
 		}
 		//Check the needed conditions
 		if (!Minecraft.getMinecraft().theWorld.isDaytime()
-				&& ((ItemVampiresFear) itemStack.getItem()).getBlood(itemStack) >= BALANCE.NEEDED_BLOOD && list.size()>=BALANCE.R1_VILLAGERS) {
+				&& ((ItemVampiresFear) itemStack.getItem()).getBlood(itemStack) >= BALANCE.NEEDED_BLOOD && list.size()>=BALANCE.LEVELING.R1_VILLAGERS) {
 			VampirePlayer vp=VampirePlayer.get(player);
 			if(vp.getLevel()==0){
 				vp.levelUp();
