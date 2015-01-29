@@ -103,7 +103,6 @@ public class EntityVampireHunter extends EntityMob {
 
 	@Override
 	protected void onDeathUpdate() {
-		this.setInvisible(true);
 		this.worldObj.spawnParticle("depthsuspend", posX, posY, posZ, 0.5F, 0.5F, 0.5F);
 		this.worldObj.spawnParticle("mobSpellAmbient", posX, posY, posZ, 0.5F, 0.5F, 0.5F);
 		super.onDeathUpdate();
