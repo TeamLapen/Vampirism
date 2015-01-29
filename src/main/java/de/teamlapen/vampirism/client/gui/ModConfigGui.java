@@ -37,9 +37,43 @@ public class ModConfigGui extends GuiConfig{
 		
 		@Override
 		protected GuiScreen buildChildScreen(){
-			return new GuiConfig(this.owningScreen,(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_BALANCE))).getChildElements(),this.owningScreen.modID,Configs.CATEGORY_BALANCE,false,false,REFERENCE.NAME+" Balance");
+			return new GuiConfig(this.owningScreen,getConfigElements(),this.owningScreen.modID,Configs.CATEGORY_BALANCE,false,false,REFERENCE.NAME+" Balance");
 		}
 		
+		@SuppressWarnings("rawtypes")
+		private static List<IConfigElement> getConfigElements() {
+			List<IConfigElement> list = new ArrayList<IConfigElement>();
+			list.add(new DummyConfigElement.DummyCategoryElement("balance_level","category.vampirism.balance_level",BalanceLevelEntry.class));
+			list.add(new DummyConfigElement.DummyCategoryElement("balance_player_mod","category.vampirism.balance_player_mod",BalancePlayerModEntry.class));
+			list.addAll(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_BALANCE)).getChildElements());
+
+			return list;
+			
+		}
+		
+	}
+	
+	public static class BalanceLevelEntry extends CategoryEntry{
+
+		public BalanceLevelEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement configElement) {
+			super(owningScreen, owningEntryList, configElement);
+		}
+		@Override
+		protected GuiScreen buildChildScreen(){
+			return new GuiConfig(this.owningScreen,(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_BALANCE_LEVELING))).getChildElements(),this.owningScreen.modID,Configs.CATEGORY_BALANCE_LEVELING,false,false,REFERENCE.NAME+" Balance");
+		}
+		
+	}
+	
+	public static class BalancePlayerModEntry extends CategoryEntry{
+
+		public BalancePlayerModEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement configElement) {
+			super(owningScreen, owningEntryList, configElement);
+		}
+		@Override
+		protected GuiScreen buildChildScreen(){
+			return new GuiConfig(this.owningScreen,(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_BALANCE_PLAYER_MOD))).getChildElements(),this.owningScreen.modID,Configs.CATEGORY_BALANCE_PLAYER_MOD,false,false,REFERENCE.NAME+" Balance");
+		}
 	}
 
 }
