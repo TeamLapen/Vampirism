@@ -30,7 +30,7 @@ public class RendererBloodAltarTier2 extends TileEntitySpecialRenderer {
 	public RendererBloodAltarTier2() {	
 		model = new ModelBloodAltarTier2();
 		texture = new ResourceLocation(REFERENCE.MODID
-				+ ":textures/blocks/bloodAltarTier2_0.png");
+				+ ":textures/blocks/bloodAltarTier2.png");
 	}
 
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z) {
