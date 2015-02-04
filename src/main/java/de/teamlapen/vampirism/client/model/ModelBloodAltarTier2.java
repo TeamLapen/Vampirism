@@ -22,7 +22,7 @@ public class ModelBloodAltarTier2 extends ModelBase {
 	ModelRenderer[][] liquid;
 
 	private int bloodLevel = 15;
-	// Texture offsets for blood
+
 	private final int bloodOffsetX = 24;
 	private final int bloodOffsetY = 0;
 	

@@ -25,6 +25,7 @@ import net.minecraft.world.World;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.MobProperties;
 import de.teamlapen.vampirism.util.ModItems;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -68,8 +69,6 @@ public class EntityVampire extends EntityMob {
 		}));
 		// Search for villagers
 		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVillager.class, 0, true));
-		
-
 
 	}
 

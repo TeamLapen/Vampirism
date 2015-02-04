@@ -8,6 +8,7 @@ import net.minecraftforge.event.terraingen.InitMapGenEvent.EventType;
 
 import java.lang.reflect.Field;
 
+import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.util.Logger;
 
 /**
@@ -49,15 +50,15 @@ public class VillageGenReplacer implements IEventListener {
 
                     if(type != null) {
                         type.setAccessible(true);
-                        type.setInt(e.newGen, VillageDensity.size.getInt(0));
+                        type.setInt(e.newGen, Configs.village_size);
                     }
                     if(density != null) {
                         density.setAccessible(true);
-                        density.setInt(e.newGen, VillageDensity.density.getInt(32));
+                        density.setInt(e.newGen, Configs.village_density);
                     }
                     if(minDist!= null) {
                         minDist.setAccessible(true);
-                        minDist.setInt(e.newGen, VillageDensity.minDist.getInt(8));
+                        minDist.setInt(e.newGen, Configs.village_minDist);
                     }
                     Logger.i("VillageGenReplacer", "Modified MapGenVillage fields.");
                 }
