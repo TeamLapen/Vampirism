@@ -30,7 +30,6 @@ import de.teamlapen.vampirism.util.ModBlocks;
 import de.teamlapen.vampirism.util.ModItems;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.villages.VillageBiomes;
-import de.teamlapen.vampirism.villages.VillageDensity;
 import de.teamlapen.vampirism.villages.VillageGenReplacer;
 
 @Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION,guiFactory="de.teamlapen.vampirism.client.gui.ModGuiFactory")
