@@ -20,6 +20,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
  * 
  * @author Moritz
  *
+ *
  */
 @SideOnly(Side.CLIENT)
 public class RendererBloodAltarTier2 extends TileEntitySpecialRenderer {
