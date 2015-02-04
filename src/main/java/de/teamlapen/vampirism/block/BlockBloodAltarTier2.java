@@ -79,6 +79,14 @@ public class BlockBloodAltarTier2 extends BasicBlockContainer{
 		te.startRitual(p);
 	}
 	
+	
+	@SideOnly(Side.CLIENT)
+	@Override
+    public int getRenderBlockPass()
+    {
+        return 1;
+    }
+	
 	@SideOnly(Side.CLIENT)
 	@Override
 	public String getItemIconName(){

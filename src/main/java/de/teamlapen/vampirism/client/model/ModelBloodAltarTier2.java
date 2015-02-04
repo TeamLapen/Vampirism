@@ -21,13 +21,11 @@ public class ModelBloodAltarTier2 extends ModelBase {
 	ModelRenderer[][] sphere;
 	ModelRenderer[][] liquid;
 
-	// Texture offsets for blood
 	private int bloodLevel = 15;
+	// Texture offsets for blood
 	private final int bloodOffsetX = 24;
 	private final int bloodOffsetY = 0;
 	
-	//For testing purposes only!
-	private final int bloodLevelTesting = 5;
 
 	public ModelBloodAltarTier2() {
 		textureWidth = 64;
@@ -1351,6 +1349,7 @@ public class ModelBloodAltarTier2 extends ModelBase {
 
 	public void setBloodLevel(int level) {
 		bloodLevel = level;
+		//Logger.i(TAG, "SetBloodLevel called, level: " + level);
 	}
 
 }

@@ -75,6 +75,10 @@ public class TileEntityBloodAltarTier2 extends TileEntity {
 		return amount;
 	}
 	
+	public void setBlood(int amount)  {
+		bloodAmount = amount;
+	}
+	
 	public void startRitual(EntityPlayer p){
 		if(ritualTicksLeft>0)return;
 		
@@ -120,6 +124,10 @@ public class TileEntityBloodAltarTier2 extends TileEntity {
 		}
 		
 		ritualTicksLeft--;
+	}
+	
+	public int getMaxBlood() {
+		return MAX_BLOOD;
 	}
 	
 }
