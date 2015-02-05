@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.villages;
+package de.teamlapen.vampirism.generation.villages;
 
 import net.minecraft.block.Block;
 

@@ -20,6 +20,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.client.gui.ModGuiFactory;
 import de.teamlapen.vampirism.generation.WorldGenVampirism;
+import de.teamlapen.vampirism.generation.villages.VillageBiomes;
+import de.teamlapen.vampirism.generation.villages.VillageGenReplacer;
 import de.teamlapen.vampirism.network.BloodAltarPacket;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
@@ -29,8 +31,6 @@ import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.ModBlocks;
 import de.teamlapen.vampirism.util.ModItems;
 import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.villages.VillageBiomes;
-import de.teamlapen.vampirism.villages.VillageGenReplacer;
 
 @Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION,guiFactory="de.teamlapen.vampirism.client.gui.ModGuiFactory")
 public class VampirismMod {

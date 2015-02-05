@@ -80,6 +80,26 @@ public final class BALANCE {
 			return ALTAR_2_MIN_BLOOD+(level-ALTAR_2_MIN_LEVEL)*ALTAR_2_ADD_BLOOD_PER_LEVEL;
 		}
 	}
+	
+	public static class MOBPROP{
+		@DefaultDouble(20.0D)
+		public static double VAMPIRE_MAX_HEALTH;
+		@DefaultDouble(5.0D)
+		public static double VAMPIRE_ATTACK_DAMAGE;
+		@DefaultDouble(0.3D)
+		public static double VAMPIRE_MOVEMENT_SPEED;
+		@DefaultInt(10)
+		public static int VAMPIRE_DISTANCE_HUNTER;
+		
+		@DefaultDouble(25.0D)
+		public static double VAMPIRE_HUNTER_MAX_HEALTH;
+		@DefaultDouble(5.0D)
+		public static double VAMPIRE_HUNTER_ATTACK_DAMAGE;
+		@DefaultDouble(0.4F)
+		public static double VAMPIRE_HUNTER_MOVEMENT_SPEED;
+		@DefaultInt(5)
+		public static int VAMPIRE_HUNTER_MAX_PER_VILLAGE;
+	}
 
 	//Vampiremob
 	@DefaultInt(5)

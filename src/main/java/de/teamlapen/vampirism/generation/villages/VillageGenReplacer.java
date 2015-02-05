@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.villages;
+package de.teamlapen.vampirism.generation.villages;
 
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.IEventListener;

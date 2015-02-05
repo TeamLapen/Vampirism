@@ -13,8 +13,8 @@ import net.minecraft.world.chunk.IChunkProvider;
 import cpw.mods.fml.common.IWorldGenerator;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.generation.structures.GenerateBloodAltar;
+import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.MobProperties;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 /**
@@ -75,7 +75,7 @@ public class WorldGenVampirism implements IWorldGenerator {
 		//		+ " " + v.getCenter().posZ + " with " + spawnedHunter + " Hunters");
 		
 		// All hunters are currently spawning at the center of the village
-		for (int i = 1; i < 20 && spawnedHunter < MobProperties.vampireHunter_maxPerVillage; i++) {
+		for (int i = 1; i < 20 && spawnedHunter < BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE; i++) {
 			int x1 = v.getCenter().posX+ world.rand.nextInt((int)(1.2*r))-(int)(0.6*r);
 			int z1 = v.getCenter().posZ+ world.rand.nextInt((int)(1.2*r))-(int)(0.6*r);
 			

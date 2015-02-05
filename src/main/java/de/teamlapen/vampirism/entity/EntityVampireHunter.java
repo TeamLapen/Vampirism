@@ -29,7 +29,6 @@ import net.minecraft.world.biome.BiomeGenBase;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.MobProperties;
 
 public class EntityVampireHunter extends EntityMob {
 
@@ -82,9 +81,9 @@ public class EntityVampireHunter extends EntityMob {
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(MobProperties.vampireHunter_maxHealth);
-		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(MobProperties.vampireHunter_attackDamage);
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(MobProperties.vampireHunter_movementSpeed);
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_HEALTH);
+		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_ATTACK_DAMAGE);
+		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_MOVEMENT_SPEED);
 	}
 
 	@Override
@@ -144,8 +143,8 @@ public class EntityVampireHunter extends EntityMob {
      */
     public void setFoundHome(){
     	isLookingForHome=false;
-		this.tasks.addTask(3, new EntityAIMoveTowardsRestriction(this,MobProperties.vampireHunter_movementSpeed));
-		this.tasks.addTask(4, new EntityAIMoveThroughVillage(this, 0.9*MobProperties.vampireHunter_movementSpeed, false));
+		this.tasks.addTask(3, new EntityAIMoveTowardsRestriction(this,1.0F));
+		this.tasks.addTask(4, new EntityAIMoveThroughVillage(this, 0.9F, false));
 		this.targetTasks.addTask(2, new EntityAIDefendVillage(this));
     }
     

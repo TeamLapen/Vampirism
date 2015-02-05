@@ -22,6 +22,7 @@ public class Configs {
 	public static final String CATEGORY_BALANCE = "balance";
 	public static final String CATEGORY_BALANCE_PLAYER_MOD= "balance_player_mod";
 	public static final String CATEGORY_BALANCE_LEVELING="balance_leveling";
+	public static final String CATEGORY_BALANCE_MOBPROP="balance_mob_properties";
 	
 	public static boolean village_gen_enabled;
 	public static int village_density;
@@ -51,6 +52,8 @@ public class Configs {
 		cat_balance_player_mod.setComment("You can adjust these values to change the vampire player modifiers");
 		ConfigCategory cat_balance_leveling=config.getCategory(CATEGORY_BALANCE_LEVELING);
 		cat_balance_leveling.setComment("You can adjust these values to change the level up requirements");
+		ConfigCategory cat_balance_mobprop=config.getCategory(CATEGORY_BALANCE_MOBPROP);
+		cat_balance_leveling.setComment("You can adjust the properties of the added mobs");
 		
 		//Village
 		village_gen_enabled=config.get(cat_village.getQualifiedName(), "enabled", true, "Should the custom generator be injected? (Enables/Disables the village mod)").getBoolean();
@@ -76,6 +79,7 @@ public class Configs {
         loadFields(cat_balance,BALANCE.class);
         loadFields(cat_balance_player_mod,BALANCE.VP_MODIFIERS.class);
         loadFields(cat_balance_leveling,BALANCE.LEVELING.class);
+        loadFields(cat_balance_mobprop,BALANCE.MOBPROP.class);
         
         
 		if (config.hasChanged()) {

@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.villages;
+package de.teamlapen.vampirism.generation.villages;
 
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.Pair;

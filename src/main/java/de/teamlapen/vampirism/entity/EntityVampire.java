@@ -26,7 +26,6 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.MobProperties;
 import de.teamlapen.vampirism.util.ModItems;
 import de.teamlapen.vampirism.util.REFERENCE;
 
@@ -46,7 +45,7 @@ public class EntityVampire extends EntityMob {
 		// Attack villager
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityVillager.class, 0.9, true));
 		// Avoids Vampire Hunters 
-		this.tasks.addTask(2, new EntityAIAvoidEntity(this, EntityVampireHunter.class, MobProperties.vampire_hunterDistance, 1.0,
+		this.tasks.addTask(2, new EntityAIAvoidEntity(this, EntityVampireHunter.class,BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0,
 				1.2));
 		//Low priority tasks
 		this.tasks.addTask(6, new EntityAIMoveThroughVillage(this, 0.6, false));
@@ -75,9 +74,9 @@ public class EntityVampire extends EntityMob {
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(MobProperties.vampire_maxHealth);
-		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(MobProperties.vampire_attackDamage);
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(MobProperties.vampire_movementSpeed);
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(BALANCE.MOBPROP.VAMPIRE_MAX_HEALTH);
+		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(BALANCE.MOBPROP.VAMPIRE_ATTACK_DAMAGE);
+		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_MOVEMENT_SPEED);
 	}
 
 	@Override

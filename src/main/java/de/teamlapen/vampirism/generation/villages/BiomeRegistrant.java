@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.villages;
+package de.teamlapen.vampirism.generation.villages;
 
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
