@@ -22,11 +22,11 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.ModItems;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 public class EntityVampire extends EntityMob {

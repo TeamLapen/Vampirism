@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.util;
+package de.teamlapen.vampirism;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;

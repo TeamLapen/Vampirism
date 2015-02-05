@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.util;
+package de.teamlapen.vampirism;
 
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.MaterialLiquid;

@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.generation.structures;
 
 import java.util.Random;
 
+import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;

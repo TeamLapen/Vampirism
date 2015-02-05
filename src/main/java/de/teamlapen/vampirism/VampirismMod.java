@@ -28,8 +28,6 @@ import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
 import de.teamlapen.vampirism.network.SpawnParticlePacket;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.ModBlocks;
-import de.teamlapen.vampirism.util.ModItems;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 @Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION,guiFactory="de.teamlapen.vampirism.client.gui.ModGuiFactory")
