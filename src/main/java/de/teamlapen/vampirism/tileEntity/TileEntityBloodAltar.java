@@ -14,6 +14,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
@@ -71,9 +73,12 @@ public class TileEntityBloodAltar extends TileEntity {
 	 **/
 	public void startVampirismRitual(EntityPlayer player, ItemStack itemStack) {
 		Logger.i(TAG, "Starting Vampirism-Ritual");
-		Logger.i("tasdf", itemStack.toString());
+		
+		//Put sword into altar
 		player.inventory.consumeInventoryItem(itemStack.getItem());
 		setOccupied(true, player);
+		
+		//Load villagers and spawn lighting bolts on them, not really used atm
 		List entityList = getWorldObj().loadedEntityList;
 		ArrayList<EntityVillager> list = getVillagersInRadius(entityList,
 				DISTANCE_AROUND_ALTAR);
@@ -86,23 +91,23 @@ public class TileEntityBloodAltar extends TileEntity {
 		//Check the needed conditions
 		if (!(this.worldObj.isDaytime())
 				&& ItemVampiresFear.getBlood(itemStack) >= BALANCE.NEEDED_BLOOD && list.size()>=BALANCE.LEVELING.R1_VILLAGERS) {
+			//Conditions met, level up +effect
 			VampirePlayer vp=VampirePlayer.get(player);
 			if(vp.getLevel()==0){
 				vp.levelUp();
 			}
-			
+			player.addPotionEffect(new PotionEffect(Potion.resistance.id,30,2));
+			this.worldObj.createExplosion(null, xCoord, yCoord, zCoord, 5.0F,false);
 			Logger.i(TAG,
 					"Ritual ended, player is now a vampire: ");
 		} else {
+			//Drop sword
 			itemStack.stackSize=1;
-			Logger.i("tasdf", itemStack.toString());
             EntityItem entityitem = new EntityItem(this.worldObj, this.xCoord,this.yCoord+1, this.zCoord, itemStack);
             entityitem.delayBeforeCanPickup = 10;
-            Logger.i("asdf", entityitem.toString());
 			this.worldObj.spawnEntityInWorld(entityitem);
 			this.setOccupied(false, player);
 			Logger.i(TAG, "Not daytime or not enough blood or not enough villagers, ritual will fail: "+(!this.worldObj.isDaytime())+":"+ItemVampiresFear.getBlood(itemStack)+":"+list.size());
-			// TODO explosions and stuff
 		}
 	}
 
