@@ -90,7 +90,7 @@ public class TileEntityBloodAltar extends TileEntity {
 		}
 		//Check the needed conditions
 		if (!(this.worldObj.isDaytime())
-				&& ItemVampiresFear.getBlood(itemStack) >= BALANCE.NEEDED_BLOOD && list.size()>=BALANCE.LEVELING.R1_VILLAGERS) {
+				&& ItemVampiresFear.getBlood(itemStack) >= BALANCE.LEVELING.ALTAR_1_BLOOD && list.size()>=BALANCE.LEVELING.R1_VILLAGERS) {
 			//Conditions met, level up +effect
 			VampirePlayer vp=VampirePlayer.get(player);
 			if(vp.getLevel()==0){

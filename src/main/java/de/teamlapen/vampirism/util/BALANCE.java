@@ -73,13 +73,14 @@ public final class BALANCE {
 		public static int ALTAR_2_MIN_BLOOD;
 		@DefaultInt(value=20,comment="Extra blood per level required")
 		public static int ALTAR_2_ADD_BLOOD_PER_LEVEL;
+		@DefaultInt(value=20,comment="Blood amount needed for inital ritual")
+		public static int ALTAR_1_BLOOD;
+		
 		public static int A2_getRequiredBlood(int level){
 			return ALTAR_2_MIN_BLOOD+(level-ALTAR_2_MIN_LEVEL)*ALTAR_2_ADD_BLOOD_PER_LEVEL;
 		}
 	}
 
-	//RITUALS
-	
 	//Vampiremob
 	@DefaultInt(5)
 	public static int SMALL_BLOOD_AMOUNT; //Blood amount a small mob gives
@@ -91,8 +92,8 @@ public final class BALANCE {
 	public static double SUCK_BLOOD_HEALTH_REQUIREMENT; //Percentage of his max health a mob can maximal have to be bitten
 	
 	//Other
-	@DefaultInt(20)
-	public static int NEEDED_BLOOD; //Blood amount needed for blood altar ritual
 	@DefaultDouble(1.0D)
 	public static double BLOOD_SATURATION;//Saturation  of blood
+	@DefaultDouble(value=4.0d,comment="Amount of exhaustion, which has to be reached to loose one blood")
+	public static int BLOOD_EXH_PER_BL;
 }

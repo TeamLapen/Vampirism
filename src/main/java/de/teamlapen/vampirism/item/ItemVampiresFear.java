@@ -38,7 +38,7 @@ public class ItemVampiresFear extends ItemSword {
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
 		if (itemStack.stackTagCompound != null) {
 			int blood = itemStack.stackTagCompound.getInteger("blood");
-			list.add(EnumChatFormatting.RED + "Blood: " + blood + "/" + BALANCE.NEEDED_BLOOD);
+			list.add(EnumChatFormatting.RED + "Blood: " + blood + "/" + BALANCE.LEVELING.ALTAR_1_BLOOD);
 		}
 	}
 

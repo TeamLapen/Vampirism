@@ -124,7 +124,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 			if (player.worldObj.isRemote) {
 				return;
 			}
-			player.getFoodStats().setFoodLevel(10);
+			player.getFoodStats().addStats(10, 1.0F);
 			EnumDifficulty enumdifficulty = player.worldObj.difficultySetting;
 
 			int newBloodLevel = getBlood();
@@ -133,8 +133,8 @@ public class VampirePlayer implements IExtendedEntityProperties {
 				newBloodLevel = 0;
 			bloodToAdd = 0;
 
-			if (this.bloodExhaustionLevel > 4.0F) {
-				this.bloodExhaustionLevel -= 4.0F;
+			if (this.bloodExhaustionLevel > BALANCE.BLOOD_EXH_PER_BL) {
+				this.bloodExhaustionLevel -= BALANCE.BLOOD_EXH_PER_BL;
 
 				if (this.bloodSaturationLevel > 0.0F) {
 					this.bloodSaturationLevel = Math.max(bloodSaturationLevel - 1.0F, 0F);
