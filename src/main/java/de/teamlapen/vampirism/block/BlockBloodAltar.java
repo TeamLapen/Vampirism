@@ -24,7 +24,8 @@ public class BlockBloodAltar extends BasicBlockContainer {
 
 	public BlockBloodAltar() {
 		super(Material.rock,name);
-		
+		this.setHardness(70.0F);
+		this.setResistance(4000.0F);
 	}
 
 	@Override
