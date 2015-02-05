@@ -36,7 +36,7 @@ public class SpawnCustomParticlePacket implements IMessage {
 	public SpawnCustomParticlePacket(int type,double posX,double posY,double posZ,int amount,NBTTagCompound data){
 		this.data=data;
 		this.data.setInteger("type", type);
-		this.data.setDouble("poxX",posX);
+		this.data.setDouble("posX",posX);
 		this.data.setDouble("posY", posY);
 		this.data.setDouble("posZ", posZ);
 		this.data.setInteger("amount", amount);
