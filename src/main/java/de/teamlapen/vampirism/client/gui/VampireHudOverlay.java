@@ -117,6 +117,7 @@ public class VampireHudOverlay extends Gui {
 
 		if(p!=null&&p.typeOfHit==MovingObjectPosition.MovingObjectType.ENTITY&&p.entityHit !=null && p.entityHit instanceof EntityLiving){
 			VampireMob mob=VampireMob.get((EntityLiving)p.entityHit);
+			if(mob==null)return;
 			if(mob.canBeBitten()&&VampirePlayer.get(Minecraft.getMinecraft().thePlayer).getLevel()>0){
 				mc.mcProfiler.startSection("vampireFang");
 
