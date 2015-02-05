@@ -24,7 +24,7 @@ import net.minecraft.util.ChatComponentText;
 public class TileEntityBloodAltarTier2 extends TileEntity {
 	
 	private int bloodAmount=0;
-	private final int MAX_BLOOD=100;
+	public static final int MAX_BLOOD=100;
 	private final String KEY_BLOOD_AMOUNT="blood_amount";
 	private int ritualTicksLeft=0;
 	private EntityPlayer ritualPlayer;
@@ -47,6 +47,7 @@ public class TileEntityBloodAltarTier2 extends TileEntity {
 	public void onDataPacket(NetworkManager net,
 			S35PacketUpdateTileEntity packet) {
 		readFromNBT(packet.func_148857_g());
+		Logger.i("test", "Receiving update from Server");
 	}
 
 	@Override
@@ -67,16 +68,15 @@ public class TileEntityBloodAltarTier2 extends TileEntity {
 	 * @return amount that has actually been added
 	 */
 	public int addBlood(int amount){
+		int old=bloodAmount;
 		bloodAmount+=amount;
 		if(bloodAmount>MAX_BLOOD){
-			amount=bloodAmount-MAX_BLOOD;
 			bloodAmount=MAX_BLOOD;
 		}
-		return amount;
-	}
-	
-	public void setBlood(int amount)  {
-		bloodAmount = amount;
+		markDirty();
+		this.worldObj.markBlockForUpdate(this.xCoord, yCoord, zCoord);
+		Logger.i("testa", "asdf:"+(bloodAmount-old)+" "+bloodAmount);
+		return bloodAmount-old;
 	}
 	
 	public void startRitual(EntityPlayer p){
@@ -120,6 +120,8 @@ public class TileEntityBloodAltarTier2 extends TileEntity {
 			bloodAmount-=BALANCE.LEVELING.A2_getRequiredBlood(player.getLevel());
 			ritualPlayer.addPotionEffect(new PotionEffect(Potion.regeneration.id,player.getLevel()*5));
 			player.levelUp();
+			markDirty();
+			this.worldObj.markBlockForUpdate(this.xCoord, yCoord, zCoord);
 			break;
 		}
 		
