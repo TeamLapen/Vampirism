@@ -44,7 +44,7 @@ public class RendererBloodAltarTier2 extends TileEntitySpecialRenderer {
 	public void renderTileEntityAt(TileEntity te, double x, double y, double z,
 			float scale) {
 		TileEntityBloodAltarTier2 te2 = (TileEntityBloodAltarTier2) te;
-		model.setBloodLevel((int) StrictMath.ceil(te2.getBloodAmount()/te2.getMaxBlood()*15));
+		model.setBloodLevel((int) StrictMath.ceil(((float)te2.getBloodAmount())/te2.getMaxBlood()*15));
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		bindTexture(texture);
