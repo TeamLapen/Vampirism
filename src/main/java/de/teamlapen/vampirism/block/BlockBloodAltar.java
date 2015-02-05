@@ -1,44 +1,48 @@
 package de.teamlapen.vampirism.block;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.java.games.input.Keyboard;
 import net.minecraft.block.material.Material;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import de.teamlapen.vampirism.VampirismMod;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.item.ItemVampiresFear;
-import de.teamlapen.vampirism.network.BloodAltarPacket;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
 import de.teamlapen.vampirism.util.Logger;
 
 public class BlockBloodAltar extends BasicBlockContainer {
 	private final String TAG = "BlockBloodAltar";
-	public static final String name="bloodAltar";
+	public static final String name = "bloodAltar";
 
 	public BlockBloodAltar() {
-		super(Material.rock,name);
+		super(Material.rock, name);
 		this.setHardness(70.0F);
 		this.setResistance(4000.0F);
+	}
+
+	private void activateAltar(EntityPlayer player, ItemStack item, TileEntityBloodAltar te) {
+		if (!te.isOccupied()) {
+			te.startVampirismRitual(player, item);
+		} else {
+			Logger.i(TAG, "Altar already used");
+		}
 	}
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata) {
 		return new TileEntityBloodAltar();
 	}
-	
-	
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public String getItemIconName() {
+		return "vampirism:spawnBloodAltar";
+
+	}
 
 	@Override
-	public boolean onBlockActivated(World world, int par2, int par3,
-			int par4, EntityPlayer player, int par6, float par7,
-			float par8, float par9) {
+	public boolean onBlockActivated(World world, int par2, int par3, int par4, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		Logger.i(TAG, "Altar right-click detected");
 		if (!world.isRemote) {
 			ItemStack item = null;
@@ -46,11 +50,11 @@ public class BlockBloodAltar extends BasicBlockContainer {
 				item = player.inventory.getCurrentItem();
 			} catch (NullPointerException e) {
 				Logger.i(TAG, "No item in hand");
-				//e.printStackTrace();
+				// e.printStackTrace();
 				return false;
 			}
-			
-			if(item != null && item.getItem() instanceof ItemVampiresFear) {
+
+			if (item != null && item.getItem() instanceof ItemVampiresFear) {
 				Logger.i(TAG, "Activating Altar");
 				TileEntityBloodAltar te = (TileEntityBloodAltar) world.getTileEntity(par2, par3, par4);
 				activateAltar(player, item, te);
@@ -59,19 +63,5 @@ public class BlockBloodAltar extends BasicBlockContainer {
 		} else
 			Logger.e(TAG, "World remote!");
 		return false;
-	}
-	
-	private void activateAltar(EntityPlayer player, ItemStack item, TileEntityBloodAltar te) {
-		if(!te.isOccupied()) {
-			te.startVampirismRitual(player, item);
-		} else {
-			Logger.i(TAG, "Altar already used");
-		}
-	}
-	@SideOnly(Side.CLIENT)
-	@Override
-	public String getItemIconName(){
-		return "vampirism:spawnBloodAltar";
-		
 	}
 }

@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.client.model;
 
-import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import de.teamlapen.vampirism.util.Logger;
 
 /**
  * 
@@ -25,7 +25,6 @@ public class ModelBloodAltarTier2 extends ModelBase {
 
 	private final int bloodOffsetX = 24;
 	private final int bloodOffsetY = 0;
-	
 
 	public ModelBloodAltarTier2() {
 		textureWidth = 64;
@@ -98,29 +97,336 @@ public class ModelBloodAltarTier2 extends ModelBase {
 		addBloodRing(0, 15, -15);
 	}
 
-	public void render(Entity entity, float f, float f1, float f2, float f3,
-			float f4, float f5) {
-		super.render(entity, f, f1, f2, f3, f4, f5);
-		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-		PillarFL.render(f5);
-		PillarFR.render(f5);
-		PillarBL.render(f5);
-		PillarBR.render(f5);
-		Base.render(f5);
-		for (ModelRenderer[] i : sphere)
-			if (i != null)
-				for (ModelRenderer j : i)
-					if (j != null)
-						j.render(f5);
-		if (bloodLevel > liquid.length)
-			Logger.e(TAG,
-					"Invalid blood level! Not rendering blood in blood altar!");
-		else
-			for (int i = 0; i <= bloodLevel; i++)
-				if (liquid[i] != null)
-					for (ModelRenderer r : liquid[i])
-						if(r!=null)
-							r.render(f5);
+	private void addBloodRing(int index, int arrayIndex, int offset) {
+		switch (index) {
+		case 1:
+			liquid[arrayIndex] = new ModelRenderer[5];
+			liquid[arrayIndex][0] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][0].addBox(-3F, 22F + offset, -1F, 6, 1, 2);
+			liquid[arrayIndex][0].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][0].setTextureSize(64, 128);
+			liquid[arrayIndex][0].mirror = true;
+			setRotation(liquid[arrayIndex][0], 0F, 0F, 0F);
+			liquid[arrayIndex][1] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][1].addBox(-2F, 22F + offset, -2F, 4, 1, 1);
+			liquid[arrayIndex][1].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][1].setTextureSize(64, 128);
+			liquid[arrayIndex][1].mirror = true;
+			setRotation(liquid[arrayIndex][1], 0F, 0F, 0F);
+			liquid[arrayIndex][2] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][2].addBox(-2F, 22F + offset, 1F, 4, 1, 1);
+			liquid[arrayIndex][2].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][2].setTextureSize(64, 128);
+			liquid[arrayIndex][2].mirror = true;
+			setRotation(liquid[arrayIndex][2], 0F, 0F, 0F);
+			liquid[arrayIndex][3] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][3].addBox(-1F, 22F + offset, 2F, 2, 1, 1);
+			liquid[arrayIndex][3].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][3].setTextureSize(64, 128);
+			liquid[arrayIndex][3].mirror = true;
+			setRotation(liquid[arrayIndex][3], 0F, 0F, 0F);
+			liquid[arrayIndex][4] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][4].addBox(-1F, 22F + offset, -3F, 2, 1, 1);
+			liquid[arrayIndex][4].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][4].setTextureSize(64, 128);
+			liquid[arrayIndex][4].mirror = true;
+			setRotation(liquid[arrayIndex][4], 0F, 0F, 0F);
+			break;
+		case 2:
+			liquid[arrayIndex] = new ModelRenderer[8];
+			liquid[arrayIndex][0] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][0].addBox(-5F, 21F + offset, -1F, 10, 1, 2);
+			liquid[arrayIndex][0].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][0].setTextureSize(64, 128);
+			liquid[arrayIndex][0].mirror = true;
+			setRotation(liquid[arrayIndex][0], 0F, 0F, 0F);
+			liquid[arrayIndex][1] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][1].addBox(-4F, 21F + offset, 1F, 8, 1, 2);
+			liquid[arrayIndex][1].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][1].setTextureSize(64, 128);
+			liquid[arrayIndex][1].mirror = true;
+			setRotation(liquid[arrayIndex][1], 0F, 0F, 0F);
+			liquid[arrayIndex][2] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][2].addBox(-4F, 21F + offset, -3F, 8, 1, 2);
+			liquid[arrayIndex][2].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][2].setTextureSize(64, 128);
+			liquid[arrayIndex][2].mirror = true;
+			setRotation(liquid[arrayIndex][2], 0F, 0F, 0F);
+			liquid[arrayIndex][3] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][3].addBox(-3F, 21F + offset, -4F, 6, 1, 1);
+			liquid[arrayIndex][3].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][3].setTextureSize(64, 128);
+			liquid[arrayIndex][3].mirror = true;
+			setRotation(liquid[arrayIndex][3], 0F, 0F, 0F);
+			liquid[arrayIndex][4] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][4].addBox(-3F, 21F + offset, 3F, 6, 1, 1);
+			liquid[arrayIndex][4].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][4].setTextureSize(64, 128);
+			liquid[arrayIndex][4].mirror = true;
+			setRotation(liquid[arrayIndex][4], 0F, 0F, 0F);
+			liquid[arrayIndex][5] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][5].addBox(-1F, 21F + offset, 4F, 2, 1, 1);
+			liquid[arrayIndex][5].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][5].setTextureSize(64, 128);
+			liquid[arrayIndex][5].mirror = true;
+			setRotation(liquid[arrayIndex][5], 0F, 0F, 0F);
+			liquid[arrayIndex][6] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][6].addBox(-1F, 21F + offset, -5F, 2, 1, 1);
+			liquid[arrayIndex][6].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][6].setTextureSize(64, 128);
+			liquid[arrayIndex][6].mirror = true;
+			setRotation(liquid[arrayIndex][6], 0F, 0F, 0F);
+			break;
+		case 3:
+			liquid[arrayIndex] = new ModelRenderer[8];
+			liquid[arrayIndex][0] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][0].addBox(-6F, 20F + offset, -1F, 12, 1, 2);
+			liquid[arrayIndex][0].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][0].setTextureSize(64, 128);
+			liquid[arrayIndex][0].mirror = true;
+			setRotation(liquid[arrayIndex][0], 0F, 0F, 0F);
+			liquid[arrayIndex][1] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][1].addBox(-5F, 20F + offset, 1F, 10, 1, 3);
+			liquid[arrayIndex][1].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][1].setTextureSize(64, 128);
+			liquid[arrayIndex][1].mirror = true;
+			setRotation(liquid[arrayIndex][1], 0F, 0F, 0F);
+			liquid[arrayIndex][2] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][2].addBox(-5F, 20F + offset, -4F, 10, 1, 3);
+			liquid[arrayIndex][2].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][2].setTextureSize(64, 128);
+			liquid[arrayIndex][2].mirror = true;
+			setRotation(liquid[arrayIndex][2], 0F, 0F, 0F);
+			liquid[arrayIndex][3] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][3].addBox(-4F, 20F + offset, -5F, 8, 1, 1);
+			liquid[arrayIndex][3].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][3].setTextureSize(64, 128);
+			liquid[arrayIndex][3].mirror = true;
+			setRotation(liquid[arrayIndex][3], 0F, 0F, 0F);
+			liquid[arrayIndex][4] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][4].addBox(-4F, 20F + offset, 4F, 8, 1, 1);
+			liquid[arrayIndex][4].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][4].setTextureSize(64, 128);
+			liquid[arrayIndex][4].mirror = true;
+			setRotation(liquid[arrayIndex][4], 0F, 0F, 0F);
+			liquid[arrayIndex][5] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][5].addBox(-1F, 20F + offset, 5F, 2, 1, 1);
+			liquid[arrayIndex][5].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][5].setTextureSize(64, 128);
+			liquid[arrayIndex][5].mirror = true;
+			setRotation(liquid[arrayIndex][5], 0F, 0F, 0F);
+			liquid[arrayIndex][6] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][6].addBox(-1F, 20F + offset, -6F, 2, 1, 1);
+			liquid[arrayIndex][6].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][6].setTextureSize(64, 128);
+			liquid[arrayIndex][6].mirror = true;
+			setRotation(liquid[arrayIndex][6], 0F, 0F, 0F);
+			break;
+		case 4:
+			liquid[arrayIndex] = new ModelRenderer[6];
+			liquid[arrayIndex][0] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][0].addBox(-6F, 19F + offset, -3F, 12, 1, 6);
+			liquid[arrayIndex][0].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][0].setTextureSize(64, 128);
+			liquid[arrayIndex][0].mirror = true;
+			setRotation(liquid[arrayIndex][0], 0F, 0F, 0F);
+			liquid[arrayIndex][1] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][1].addBox(-5F, 19F + offset, -5F, 10, 1, 2);
+			liquid[arrayIndex][1].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][1].setTextureSize(64, 128);
+			liquid[arrayIndex][1].mirror = true;
+			setRotation(liquid[arrayIndex][1], 0F, 0F, 0F);
+			liquid[arrayIndex][2] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][2].addBox(-5F, 19F + offset, 3F, 10, 1, 2);
+			liquid[arrayIndex][2].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][2].setTextureSize(64, 128);
+			liquid[arrayIndex][2].mirror = true;
+			setRotation(liquid[arrayIndex][2], 0F, 0F, 0F);
+			liquid[arrayIndex][3] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][3].addBox(-3F, 19F + offset, 5F, 6, 1, 1);
+			liquid[arrayIndex][3].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][3].setTextureSize(64, 128);
+			liquid[arrayIndex][3].mirror = true;
+			setRotation(liquid[arrayIndex][3], 0F, 0F, 0F);
+			liquid[arrayIndex][4] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][4].addBox(-3F, 19F + offset, -6F, 6, 1, 1);
+			liquid[arrayIndex][4].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][4].setTextureSize(64, 128);
+			liquid[arrayIndex][4].mirror = true;
+			setRotation(liquid[arrayIndex][4], 0F, 0F, 0F);
+			break;
+		case 5:
+			liquid[arrayIndex] = new ModelRenderer[10];
+			liquid[arrayIndex][0] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][0].addBox(-5F, 18F + offset, -5F, 10, 1, 10);
+			liquid[arrayIndex][0].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][0].setTextureSize(64, 128);
+			liquid[arrayIndex][0].mirror = true;
+			setRotation(liquid[arrayIndex][0], 0F, 0F, 0F);
+			liquid[arrayIndex][1] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][1].addBox(-7F, 18F + offset, -1F, 1, 1, 2);
+			liquid[arrayIndex][1].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][1].setTextureSize(64, 128);
+			liquid[arrayIndex][1].mirror = true;
+			setRotation(liquid[arrayIndex][1], 0F, 0F, 0F);
+			liquid[arrayIndex][2] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][2].addBox(6F, 18F + offset, -1F, 1, 1, 2);
+			liquid[arrayIndex][2].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][2].setTextureSize(64, 128);
+			liquid[arrayIndex][2].mirror = true;
+			setRotation(liquid[arrayIndex][2], 0F, 0F, 0F);
+			liquid[arrayIndex][3] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][3].addBox(-1F, 18F + offset, -7F, 2, 1, 1);
+			liquid[arrayIndex][3].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][3].setTextureSize(64, 128);
+			liquid[arrayIndex][3].mirror = true;
+			setRotation(liquid[arrayIndex][3], 0F, 0F, 0F);
+			liquid[arrayIndex][4] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][4].addBox(-1F, 18F + offset, 6F, 2, 1, 1);
+			liquid[arrayIndex][4].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][4].setTextureSize(64, 128);
+			liquid[arrayIndex][4].mirror = true;
+			setRotation(liquid[arrayIndex][4], 0F, 0F, 0F);
+			liquid[arrayIndex][5] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][5].addBox(-4F, 18F + offset, 5F, 8, 1, 1);
+			liquid[arrayIndex][5].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][5].setTextureSize(64, 128);
+			liquid[arrayIndex][5].mirror = true;
+			setRotation(liquid[arrayIndex][5], 0F, 0F, 0F);
+			liquid[arrayIndex][6] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][6].addBox(-4F, 18F + offset, -6F, 8, 1, 1);
+			liquid[arrayIndex][6].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][6].setTextureSize(64, 128);
+			liquid[arrayIndex][6].mirror = true;
+			setRotation(liquid[arrayIndex][6], 0F, 0F, 0F);
+			liquid[arrayIndex][7] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][7].addBox(-6F, 18F + offset, -4F, 1, 1, 8);
+			liquid[arrayIndex][7].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][7].setTextureSize(64, 128);
+			liquid[arrayIndex][7].mirror = true;
+			setRotation(liquid[arrayIndex][7], 0F, 0F, 0F);
+			liquid[arrayIndex][8] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][8].addBox(5F, 18F + offset, -4F, 1, 1, 8);
+			liquid[arrayIndex][8].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][8].setTextureSize(64, 128);
+			liquid[arrayIndex][8].mirror = true;
+			setRotation(liquid[arrayIndex][8], 0F, 0F, 0F);
+			break;
+		case 6:
+			liquid[arrayIndex] = new ModelRenderer[10];
+			liquid[arrayIndex][0] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][0].addBox(-5F, 17F + offset, -5F, 10, 1, 10);
+			liquid[arrayIndex][0].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][0].setTextureSize(64, 128);
+			liquid[arrayIndex][0].mirror = true;
+			setRotation(liquid[arrayIndex][0], 0F, 0F, 0F);
+			liquid[arrayIndex][1] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][1].addBox(-7F, 17F + offset, -2F, 1, 1, 4);
+			liquid[arrayIndex][1].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][1].setTextureSize(64, 128);
+			liquid[arrayIndex][1].mirror = true;
+			setRotation(liquid[arrayIndex][1], 0F, 0F, 0F);
+			liquid[arrayIndex][2] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][2].addBox(6F, 17F + offset, -2F, 1, 1, 4);
+			liquid[arrayIndex][2].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][2].setTextureSize(64, 128);
+			liquid[arrayIndex][2].mirror = true;
+			setRotation(liquid[arrayIndex][2], 0F, 0F, 0F);
+			liquid[arrayIndex][3] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][3].addBox(-2F, 17F + offset, -7F, 4, 1, 1);
+			liquid[arrayIndex][3].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][3].setTextureSize(64, 128);
+			liquid[arrayIndex][3].mirror = true;
+			setRotation(liquid[arrayIndex][3], 0F, 0F, 0F);
+			liquid[arrayIndex][4] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][4].addBox(-2F, 17F + offset, 6F, 4, 1, 1);
+			liquid[arrayIndex][4].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][4].setTextureSize(64, 128);
+			liquid[arrayIndex][4].mirror = true;
+			setRotation(liquid[arrayIndex][4], 0F, 0F, 0F);
+			liquid[arrayIndex][5] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][5].addBox(-4F, 17F + offset, 5F, 8, 1, 1);
+			liquid[arrayIndex][5].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][5].setTextureSize(64, 128);
+			liquid[arrayIndex][5].mirror = true;
+			setRotation(liquid[arrayIndex][5], 0F, 0F, 0F);
+			liquid[arrayIndex][6] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][6].addBox(-4F, 17F + offset, -6F, 8, 1, 1);
+			liquid[arrayIndex][6].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][6].setTextureSize(64, 128);
+			liquid[arrayIndex][6].mirror = true;
+			setRotation(liquid[arrayIndex][6], 0F, 0F, 0F);
+			liquid[arrayIndex][7] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][7].addBox(-6F, 17F + offset, -4F, 1, 1, 8);
+			liquid[arrayIndex][7].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][7].setTextureSize(64, 128);
+			liquid[arrayIndex][7].mirror = true;
+			setRotation(liquid[arrayIndex][7], 0F, 0F, 0F);
+			liquid[arrayIndex][8] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][8].addBox(5F, 17F + offset, -4F, 1, 1, 8);
+			liquid[arrayIndex][8].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][8].setTextureSize(64, 128);
+			liquid[arrayIndex][8].mirror = true;
+			setRotation(liquid[arrayIndex][8], 0F, 0F, 0F);
+			break;
+		case 7:
+			liquid[arrayIndex] = new ModelRenderer[10];
+			liquid[arrayIndex][0] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][0].addBox(-5F, 16F + offset, -5F, 10, 1, 10);
+			liquid[arrayIndex][0].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][0].setTextureSize(64, 128);
+			liquid[arrayIndex][0].mirror = true;
+			setRotation(liquid[arrayIndex][0], 0F, 0F, 0F);
+			liquid[arrayIndex][1] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][1].addBox(-7F, 16F + offset, -3F, 1, 1, 6);
+			liquid[arrayIndex][1].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][1].setTextureSize(64, 128);
+			liquid[arrayIndex][1].mirror = true;
+			setRotation(liquid[arrayIndex][1], 0F, 0F, 0F);
+			liquid[arrayIndex][2] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][2].addBox(6F, 16F + offset, -3F, 1, 1, 6);
+			liquid[arrayIndex][2].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][2].setTextureSize(64, 128);
+			liquid[arrayIndex][2].mirror = true;
+			setRotation(liquid[arrayIndex][2], 0F, 0F, 0F);
+			liquid[arrayIndex][3] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][3].addBox(-3F, 16F + offset, -7F, 6, 1, 1);
+			liquid[arrayIndex][3].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][3].setTextureSize(64, 128);
+			liquid[arrayIndex][3].mirror = true;
+			setRotation(liquid[arrayIndex][3], 0F, 0F, 0F);
+			liquid[arrayIndex][4] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][4].addBox(-3F, 16F + offset, 6F, 6, 1, 1);
+			liquid[arrayIndex][4].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][4].setTextureSize(64, 128);
+			liquid[arrayIndex][4].mirror = true;
+			setRotation(liquid[arrayIndex][4], 0F, 0F, 0F);
+			liquid[arrayIndex][5] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][5].addBox(-5F, 16F + offset, 5F, 10, 1, 1);
+			liquid[arrayIndex][5].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][5].setTextureSize(64, 128);
+			liquid[arrayIndex][5].mirror = true;
+			setRotation(liquid[arrayIndex][5], 0F, 0F, 0F);
+			liquid[arrayIndex][6] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][6].addBox(-5F, 16F + offset, -6F, 10, 1, 1);
+			liquid[arrayIndex][6].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][6].setTextureSize(64, 128);
+			liquid[arrayIndex][6].mirror = true;
+			setRotation(liquid[arrayIndex][6], 0F, 0F, 0F);
+			liquid[arrayIndex][7] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][7].addBox(-6F, 16F + offset, -5F, 1, 1, 10);
+			liquid[arrayIndex][7].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][7].setTextureSize(64, 128);
+			liquid[arrayIndex][7].mirror = true;
+			setRotation(liquid[arrayIndex][7], 0F, 0F, 0F);
+			liquid[arrayIndex][8] = new ModelRenderer(this, bloodOffsetX, bloodOffsetY);
+			liquid[arrayIndex][8].addBox(5F, 16F + offset, -5F, 1, 1, 10);
+			liquid[arrayIndex][8].setRotationPoint(0F, 0F, 0F);
+			liquid[arrayIndex][8].setTextureSize(64, 128);
+			liquid[arrayIndex][8].mirror = true;
+			setRotation(liquid[arrayIndex][8], 0F, 0F, 0F);
+			break;
+		}
 	}
 
 	private void addGlassRing(int index, int arrayIndex, int offset) {
@@ -953,387 +1259,33 @@ public class ModelBloodAltarTier2 extends ModelBase {
 		}
 	}
 
-	private void addBloodRing(int index, int arrayIndex, int offset) {
-		switch (index) {
-		case 1:
-			liquid[arrayIndex] = new ModelRenderer[5];
-			liquid[arrayIndex][0] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][0].addBox(-3F, 22F + offset, -1F, 6, 1, 2);
-			liquid[arrayIndex][0].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][0].setTextureSize(64, 128);
-			liquid[arrayIndex][0].mirror = true;
-			setRotation(liquid[arrayIndex][0], 0F, 0F, 0F);
-			liquid[arrayIndex][1] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][1].addBox(-2F, 22F + offset, -2F, 4, 1, 1);
-			liquid[arrayIndex][1].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][1].setTextureSize(64, 128);
-			liquid[arrayIndex][1].mirror = true;
-			setRotation(liquid[arrayIndex][1], 0F, 0F, 0F);
-			liquid[arrayIndex][2] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][2].addBox(-2F, 22F + offset, 1F, 4, 1, 1);
-			liquid[arrayIndex][2].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][2].setTextureSize(64, 128);
-			liquid[arrayIndex][2].mirror = true;
-			setRotation(liquid[arrayIndex][2], 0F, 0F, 0F);
-			liquid[arrayIndex][3] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][3].addBox(-1F, 22F + offset, 2F, 2, 1, 1);
-			liquid[arrayIndex][3].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][3].setTextureSize(64, 128);
-			liquid[arrayIndex][3].mirror = true;
-			setRotation(liquid[arrayIndex][3], 0F, 0F, 0F);
-			liquid[arrayIndex][4] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][4].addBox(-1F, 22F + offset, -3F, 2, 1, 1);
-			liquid[arrayIndex][4].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][4].setTextureSize(64, 128);
-			liquid[arrayIndex][4].mirror = true;
-			setRotation(liquid[arrayIndex][4], 0F, 0F, 0F);
-			break;
-		case 2:
-			liquid[arrayIndex] = new ModelRenderer[8];
-			liquid[arrayIndex][0] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][0].addBox(-5F, 21F + offset, -1F, 10, 1, 2);
-			liquid[arrayIndex][0].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][0].setTextureSize(64, 128);
-			liquid[arrayIndex][0].mirror = true;
-			setRotation(liquid[arrayIndex][0], 0F, 0F, 0F);
-			liquid[arrayIndex][1] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][1].addBox(-4F, 21F + offset, 1F, 8, 1, 2);
-			liquid[arrayIndex][1].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][1].setTextureSize(64, 128);
-			liquid[arrayIndex][1].mirror = true;
-			setRotation(liquid[arrayIndex][1], 0F, 0F, 0F);
-			liquid[arrayIndex][2] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][2].addBox(-4F, 21F + offset, -3F, 8, 1, 2);
-			liquid[arrayIndex][2].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][2].setTextureSize(64, 128);
-			liquid[arrayIndex][2].mirror = true;
-			setRotation(liquid[arrayIndex][2], 0F, 0F, 0F);
-			liquid[arrayIndex][3] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][3].addBox(-3F, 21F + offset, -4F, 6, 1, 1);
-			liquid[arrayIndex][3].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][3].setTextureSize(64, 128);
-			liquid[arrayIndex][3].mirror = true;
-			setRotation(liquid[arrayIndex][3], 0F, 0F, 0F);
-			liquid[arrayIndex][4] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][4].addBox(-3F, 21F + offset, 3F, 6, 1, 1);
-			liquid[arrayIndex][4].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][4].setTextureSize(64, 128);
-			liquid[arrayIndex][4].mirror = true;
-			setRotation(liquid[arrayIndex][4], 0F, 0F, 0F);
-			liquid[arrayIndex][5] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][5].addBox(-1F, 21F + offset, 4F, 2, 1, 1);
-			liquid[arrayIndex][5].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][5].setTextureSize(64, 128);
-			liquid[arrayIndex][5].mirror = true;
-			setRotation(liquid[arrayIndex][5], 0F, 0F, 0F);
-			liquid[arrayIndex][6] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][6].addBox(-1F, 21F + offset, -5F, 2, 1, 1);
-			liquid[arrayIndex][6].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][6].setTextureSize(64, 128);
-			liquid[arrayIndex][6].mirror = true;
-			setRotation(liquid[arrayIndex][6], 0F, 0F, 0F);
-			break;
-		case 3:
-			liquid[arrayIndex] = new ModelRenderer[8];
-			liquid[arrayIndex][0] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][0].addBox(-6F, 20F + offset, -1F, 12, 1, 2);
-			liquid[arrayIndex][0].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][0].setTextureSize(64, 128);
-			liquid[arrayIndex][0].mirror = true;
-			setRotation(liquid[arrayIndex][0], 0F, 0F, 0F);
-			liquid[arrayIndex][1] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][1].addBox(-5F, 20F + offset, 1F, 10, 1, 3);
-			liquid[arrayIndex][1].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][1].setTextureSize(64, 128);
-			liquid[arrayIndex][1].mirror = true;
-			setRotation(liquid[arrayIndex][1], 0F, 0F, 0F);
-			liquid[arrayIndex][2] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][2].addBox(-5F, 20F + offset, -4F, 10, 1, 3);
-			liquid[arrayIndex][2].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][2].setTextureSize(64, 128);
-			liquid[arrayIndex][2].mirror = true;
-			setRotation(liquid[arrayIndex][2], 0F, 0F, 0F);
-			liquid[arrayIndex][3] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][3].addBox(-4F, 20F + offset, -5F, 8, 1, 1);
-			liquid[arrayIndex][3].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][3].setTextureSize(64, 128);
-			liquid[arrayIndex][3].mirror = true;
-			setRotation(liquid[arrayIndex][3], 0F, 0F, 0F);
-			liquid[arrayIndex][4] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][4].addBox(-4F, 20F + offset, 4F, 8, 1, 1);
-			liquid[arrayIndex][4].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][4].setTextureSize(64, 128);
-			liquid[arrayIndex][4].mirror = true;
-			setRotation(liquid[arrayIndex][4], 0F, 0F, 0F);
-			liquid[arrayIndex][5] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][5].addBox(-1F, 20F + offset, 5F, 2, 1, 1);
-			liquid[arrayIndex][5].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][5].setTextureSize(64, 128);
-			liquid[arrayIndex][5].mirror = true;
-			setRotation(liquid[arrayIndex][5], 0F, 0F, 0F);
-			liquid[arrayIndex][6] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][6].addBox(-1F, 20F + offset, -6F, 2, 1, 1);
-			liquid[arrayIndex][6].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][6].setTextureSize(64, 128);
-			liquid[arrayIndex][6].mirror = true;
-			setRotation(liquid[arrayIndex][6], 0F, 0F, 0F);
-			break;
-		case 4:
-			liquid[arrayIndex] = new ModelRenderer[6];
-			liquid[arrayIndex][0] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][0].addBox(-6F, 19F + offset, -3F, 12, 1, 6);
-			liquid[arrayIndex][0].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][0].setTextureSize(64, 128);
-			liquid[arrayIndex][0].mirror = true;
-			setRotation(liquid[arrayIndex][0], 0F, 0F, 0F);
-			liquid[arrayIndex][1] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][1].addBox(-5F, 19F + offset, -5F, 10, 1, 2);
-			liquid[arrayIndex][1].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][1].setTextureSize(64, 128);
-			liquid[arrayIndex][1].mirror = true;
-			setRotation(liquid[arrayIndex][1], 0F, 0F, 0F);
-			liquid[arrayIndex][2] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][2].addBox(-5F, 19F + offset, 3F, 10, 1, 2);
-			liquid[arrayIndex][2].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][2].setTextureSize(64, 128);
-			liquid[arrayIndex][2].mirror = true;
-			setRotation(liquid[arrayIndex][2], 0F, 0F, 0F);
-			liquid[arrayIndex][3] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][3].addBox(-3F, 19F + offset, 5F, 6, 1, 1);
-			liquid[arrayIndex][3].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][3].setTextureSize(64, 128);
-			liquid[arrayIndex][3].mirror = true;
-			setRotation(liquid[arrayIndex][3], 0F, 0F, 0F);
-			liquid[arrayIndex][4] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][4].addBox(-3F, 19F + offset, -6F, 6, 1, 1);
-			liquid[arrayIndex][4].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][4].setTextureSize(64, 128);
-			liquid[arrayIndex][4].mirror = true;
-			setRotation(liquid[arrayIndex][4], 0F, 0F, 0F);
-			break;
-		case 5:
-			liquid[arrayIndex] = new ModelRenderer[10];
-			liquid[arrayIndex][0] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][0].addBox(-5F, 18F + offset, -5F, 10, 1, 10);
-			liquid[arrayIndex][0].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][0].setTextureSize(64, 128);
-			liquid[arrayIndex][0].mirror = true;
-			setRotation(liquid[arrayIndex][0], 0F, 0F, 0F);
-			liquid[arrayIndex][1] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][1].addBox(-7F, 18F + offset, -1F, 1, 1, 2);
-			liquid[arrayIndex][1].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][1].setTextureSize(64, 128);
-			liquid[arrayIndex][1].mirror = true;
-			setRotation(liquid[arrayIndex][1], 0F, 0F, 0F);
-			liquid[arrayIndex][2] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][2].addBox(6F, 18F + offset, -1F, 1, 1, 2);
-			liquid[arrayIndex][2].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][2].setTextureSize(64, 128);
-			liquid[arrayIndex][2].mirror = true;
-			setRotation(liquid[arrayIndex][2], 0F, 0F, 0F);
-			liquid[arrayIndex][3] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][3].addBox(-1F, 18F + offset, -7F, 2, 1, 1);
-			liquid[arrayIndex][3].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][3].setTextureSize(64, 128);
-			liquid[arrayIndex][3].mirror = true;
-			setRotation(liquid[arrayIndex][3], 0F, 0F, 0F);
-			liquid[arrayIndex][4] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][4].addBox(-1F, 18F + offset, 6F, 2, 1, 1);
-			liquid[arrayIndex][4].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][4].setTextureSize(64, 128);
-			liquid[arrayIndex][4].mirror = true;
-			setRotation(liquid[arrayIndex][4], 0F, 0F, 0F);
-			liquid[arrayIndex][5] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][5].addBox(-4F, 18F + offset, 5F, 8, 1, 1);
-			liquid[arrayIndex][5].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][5].setTextureSize(64, 128);
-			liquid[arrayIndex][5].mirror = true;
-			setRotation(liquid[arrayIndex][5], 0F, 0F, 0F);
-			liquid[arrayIndex][6] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][6].addBox(-4F, 18F + offset, -6F, 8, 1, 1);
-			liquid[arrayIndex][6].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][6].setTextureSize(64, 128);
-			liquid[arrayIndex][6].mirror = true;
-			setRotation(liquid[arrayIndex][6], 0F, 0F, 0F);
-			liquid[arrayIndex][7] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][7].addBox(-6F, 18F + offset, -4F, 1, 1, 8);
-			liquid[arrayIndex][7].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][7].setTextureSize(64, 128);
-			liquid[arrayIndex][7].mirror = true;
-			setRotation(liquid[arrayIndex][7], 0F, 0F, 0F);
-			liquid[arrayIndex][8] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][8].addBox(5F, 18F + offset, -4F, 1, 1, 8);
-			liquid[arrayIndex][8].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][8].setTextureSize(64, 128);
-			liquid[arrayIndex][8].mirror = true;
-			setRotation(liquid[arrayIndex][8], 0F, 0F, 0F);
-			break;
-		case 6:
-			liquid[arrayIndex] = new ModelRenderer[10];
-			liquid[arrayIndex][0] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][0].addBox(-5F, 17F + offset, -5F, 10, 1, 10);
-			liquid[arrayIndex][0].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][0].setTextureSize(64, 128);
-			liquid[arrayIndex][0].mirror = true;
-			setRotation(liquid[arrayIndex][0], 0F, 0F, 0F);
-			liquid[arrayIndex][1] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][1].addBox(-7F, 17F + offset, -2F, 1, 1, 4);
-			liquid[arrayIndex][1].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][1].setTextureSize(64, 128);
-			liquid[arrayIndex][1].mirror = true;
-			setRotation(liquid[arrayIndex][1], 0F, 0F, 0F);
-			liquid[arrayIndex][2] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][2].addBox(6F, 17F + offset, -2F, 1, 1, 4);
-			liquid[arrayIndex][2].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][2].setTextureSize(64, 128);
-			liquid[arrayIndex][2].mirror = true;
-			setRotation(liquid[arrayIndex][2], 0F, 0F, 0F);
-			liquid[arrayIndex][3] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][3].addBox(-2F, 17F + offset, -7F, 4, 1, 1);
-			liquid[arrayIndex][3].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][3].setTextureSize(64, 128);
-			liquid[arrayIndex][3].mirror = true;
-			setRotation(liquid[arrayIndex][3], 0F, 0F, 0F);
-			liquid[arrayIndex][4] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][4].addBox(-2F, 17F + offset, 6F, 4, 1, 1);
-			liquid[arrayIndex][4].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][4].setTextureSize(64, 128);
-			liquid[arrayIndex][4].mirror = true;
-			setRotation(liquid[arrayIndex][4], 0F, 0F, 0F);
-			liquid[arrayIndex][5] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][5].addBox(-4F, 17F + offset, 5F, 8, 1, 1);
-			liquid[arrayIndex][5].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][5].setTextureSize(64, 128);
-			liquid[arrayIndex][5].mirror = true;
-			setRotation(liquid[arrayIndex][5], 0F, 0F, 0F);
-			liquid[arrayIndex][6] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][6].addBox(-4F, 17F + offset, -6F, 8, 1, 1);
-			liquid[arrayIndex][6].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][6].setTextureSize(64, 128);
-			liquid[arrayIndex][6].mirror = true;
-			setRotation(liquid[arrayIndex][6], 0F, 0F, 0F);
-			liquid[arrayIndex][7] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][7].addBox(-6F, 17F + offset, -4F, 1, 1, 8);
-			liquid[arrayIndex][7].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][7].setTextureSize(64, 128);
-			liquid[arrayIndex][7].mirror = true;
-			setRotation(liquid[arrayIndex][7], 0F, 0F, 0F);
-			liquid[arrayIndex][8] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][8].addBox(5F, 17F + offset, -4F, 1, 1, 8);
-			liquid[arrayIndex][8].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][8].setTextureSize(64, 128);
-			liquid[arrayIndex][8].mirror = true;
-			setRotation(liquid[arrayIndex][8], 0F, 0F, 0F);
-			break;
-		case 7:
-			liquid[arrayIndex] = new ModelRenderer[10];
-			liquid[arrayIndex][0] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][0].addBox(-5F, 16F + offset, -5F, 10, 1, 10);
-			liquid[arrayIndex][0].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][0].setTextureSize(64, 128);
-			liquid[arrayIndex][0].mirror = true;
-			setRotation(liquid[arrayIndex][0], 0F, 0F, 0F);
-			liquid[arrayIndex][1] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][1].addBox(-7F, 16F + offset, -3F, 1, 1, 6);
-			liquid[arrayIndex][1].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][1].setTextureSize(64, 128);
-			liquid[arrayIndex][1].mirror = true;
-			setRotation(liquid[arrayIndex][1], 0F, 0F, 0F);
-			liquid[arrayIndex][2] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][2].addBox(6F, 16F + offset, -3F, 1, 1, 6);
-			liquid[arrayIndex][2].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][2].setTextureSize(64, 128);
-			liquid[arrayIndex][2].mirror = true;
-			setRotation(liquid[arrayIndex][2], 0F, 0F, 0F);
-			liquid[arrayIndex][3] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][3].addBox(-3F, 16F + offset, -7F, 6, 1, 1);
-			liquid[arrayIndex][3].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][3].setTextureSize(64, 128);
-			liquid[arrayIndex][3].mirror = true;
-			setRotation(liquid[arrayIndex][3], 0F, 0F, 0F);
-			liquid[arrayIndex][4] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][4].addBox(-3F, 16F + offset, 6F, 6, 1, 1);
-			liquid[arrayIndex][4].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][4].setTextureSize(64, 128);
-			liquid[arrayIndex][4].mirror = true;
-			setRotation(liquid[arrayIndex][4], 0F, 0F, 0F);
-			liquid[arrayIndex][5] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][5].addBox(-5F, 16F + offset, 5F, 10, 1, 1);
-			liquid[arrayIndex][5].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][5].setTextureSize(64, 128);
-			liquid[arrayIndex][5].mirror = true;
-			setRotation(liquid[arrayIndex][5], 0F, 0F, 0F);
-			liquid[arrayIndex][6] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][6].addBox(-5F, 16F + offset, -6F, 10, 1, 1);
-			liquid[arrayIndex][6].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][6].setTextureSize(64, 128);
-			liquid[arrayIndex][6].mirror = true;
-			setRotation(liquid[arrayIndex][6], 0F, 0F, 0F);
-			liquid[arrayIndex][7] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][7].addBox(-6F, 16F + offset, -5F, 1, 1, 10);
-			liquid[arrayIndex][7].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][7].setTextureSize(64, 128);
-			liquid[arrayIndex][7].mirror = true;
-			setRotation(liquid[arrayIndex][7], 0F, 0F, 0F);
-			liquid[arrayIndex][8] = new ModelRenderer(this, bloodOffsetX,
-					bloodOffsetY);
-			liquid[arrayIndex][8].addBox(5F, 16F + offset, -5F, 1, 1, 10);
-			liquid[arrayIndex][8].setRotationPoint(0F, 0F, 0F);
-			liquid[arrayIndex][8].setTextureSize(64, 128);
-			liquid[arrayIndex][8].mirror = true;
-			setRotation(liquid[arrayIndex][8], 0F, 0F, 0F);
-			break;
-		}
+	@Override
+	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+		super.render(entity, f, f1, f2, f3, f4, f5);
+		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+		PillarFL.render(f5);
+		PillarFR.render(f5);
+		PillarBL.render(f5);
+		PillarBR.render(f5);
+		Base.render(f5);
+		for (ModelRenderer[] i : sphere)
+			if (i != null)
+				for (ModelRenderer j : i)
+					if (j != null)
+						j.render(f5);
+		if (bloodLevel > liquid.length)
+			Logger.e(TAG, "Invalid blood level! Not rendering blood in blood altar!");
+		else
+			for (int i = 0; i <= bloodLevel; i++)
+				if (liquid[i] != null)
+					for (ModelRenderer r : liquid[i])
+						if (r != null)
+							r.render(f5);
+	}
+
+	public void setBloodLevel(int level) {
+		bloodLevel = level;
+		// Logger.i(TAG, "SetBloodLevel called, level: " + level);
 	}
 
 	private void setRotation(ModelRenderer model, float x, float y, float z) {
@@ -1342,14 +1294,9 @@ public class ModelBloodAltarTier2 extends ModelBase {
 		model.rotateAngleZ = z;
 	}
 
-	public void setRotationAngles(float f, float f1, float f2, float f3,
-			float f4, float f5, Entity entity) {
+	@Override
+	public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
 		super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-	}
-
-	public void setBloodLevel(int level) {
-		bloodLevel = level;
-		//Logger.i(TAG, "SetBloodLevel called, level: " + level);
 	}
 
 }

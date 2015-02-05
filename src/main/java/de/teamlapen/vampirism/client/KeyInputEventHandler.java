@@ -5,7 +5,6 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.MovingObjectPosition;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
@@ -17,22 +16,22 @@ import de.teamlapen.vampirism.util.REFERENCE.KEY;
 
 public class KeyInputEventHandler {
 
-	public static KeyBinding SUCK = new KeyBinding(REFERENCE.KEYS.SUCK_BLOOD, Keyboard.KEY_F, REFERENCE.KEYS.CATEGORY);
-	public static KeyBinding AUTO = new KeyBinding(REFERENCE.KEYS.AUTO_BLOOD, Keyboard.KEY_B, REFERENCE.KEYS.CATEGORY);
-
 	private static KEY getPressedKeyBinding() {
 		if (SUCK.isPressed()) {
 			return KEY.SUCK;
-		}
-		else if (AUTO.isPressed()) {
+		} else if (AUTO.isPressed()) {
 			return KEY.AUTO;
 		}
 		return KEY.UNKNOWN;
 	}
+	public static KeyBinding SUCK = new KeyBinding(REFERENCE.KEYS.SUCK_BLOOD, Keyboard.KEY_F, REFERENCE.KEYS.CATEGORY);
+
+	public static KeyBinding AUTO = new KeyBinding(REFERENCE.KEYS.AUTO_BLOOD, Keyboard.KEY_B, REFERENCE.KEYS.CATEGORY);
 
 	@SubscribeEvent
 	public void handleKeyInput(InputEvent.KeyInputEvent event) {
-		KEY keyPressed = getPressedKeyBinding(); // Only call isPressed once, so get value here!
+		KEY keyPressed = getPressedKeyBinding(); // Only call isPressed once, so
+													// get value here!
 		if (keyPressed == KEY.SUCK) {
 			MovingObjectPosition mouseOver = Minecraft.getMinecraft().objectMouseOver;
 			if (mouseOver != null && mouseOver.entityHit != null) {

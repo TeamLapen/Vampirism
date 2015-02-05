@@ -7,9 +7,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAITasks;
-import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntityWitch;
-import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityOcelot;
@@ -24,19 +22,12 @@ import net.minecraftforge.common.IExtendedEntityProperties;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.REFERENCE;
 
 public class VampireMob implements IExtendedEntityProperties {
 
-	private final EntityCreature entity;
-	public final static String EXT_PROP_NAME = "VampireMob";
-	private final String KEY_VAMPIRE = "vampire";
-	private static final int VAMPIRE_WATCHER = 25;
-	private final int blood;
 	public static final VampireMob get(EntityLiving mob) {
 		return (VampireMob) mob.getExtendedProperties(VampireMob.EXT_PROP_NAME);
 	}
-
 	/**
 	 * Returns how much blood can be collected by biting this entity. Zero if
 	 * not biteable
@@ -48,7 +39,7 @@ public class VampireMob implements IExtendedEntityProperties {
 		if (e instanceof EntityPig || e instanceof EntitySheep || e instanceof EntityOcelot || e instanceof EntityWolf) {
 			return BALANCE.SMALL_BLOOD_AMOUNT;
 		}
-		if (e instanceof EntityCow || e instanceof EntityHorse ) {
+		if (e instanceof EntityCow || e instanceof EntityHorse) {
 			return BALANCE.NORMAL_BLOOD_AMOUNT;
 		}
 		if (e instanceof EntityVillager || e instanceof EntityWitch) {
@@ -56,17 +47,45 @@ public class VampireMob implements IExtendedEntityProperties {
 		}
 		return -1;
 	}
-
 	public static final void register(EntityCreature mob) {
 		mob.registerExtendedProperties(VampireMob.EXT_PROP_NAME, new VampireMob(mob));
 	}
+	private final EntityCreature entity;
+	public final static String EXT_PROP_NAME = "VampireMob";
 
-	
+	private final String KEY_VAMPIRE = "vampire";
+
+	private static final int VAMPIRE_WATCHER = 25;
+
+	private final int blood;
 
 	public VampireMob(EntityCreature mob) {
 		entity = mob;
 		blood = getMaxBloodAmount(mob);
-		entity.getDataWatcher().addObject(VAMPIRE_WATCHER, (short)0);
+		entity.getDataWatcher().addObject(VAMPIRE_WATCHER, (short) 0);
+	}
+
+	private void addAITasks() {
+		EntityAITasks tasks = (EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class, entity, "tasks");
+		// Attack player
+		tasks.addTask(1, new EntityAIAttackOnCollide(entity, EntityPlayer.class, 1.0D, false));
+		// Attack vampire hunter
+		tasks.addTask(1, new EntityAIAttackOnCollide(entity, EntityVampireHunter.class, 1.0D, true));
+
+		EntityAITasks targetTasks = (EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class, entity, "targetTasks");
+		targetTasks.addTask(3, new EntityAINearestAttackableTarget(entity, EntityPlayer.class, 0, true, false, new IEntitySelector() {
+
+			@Override
+			public boolean isEntityApplicable(Entity entity) {
+				if (entity instanceof EntityPlayer) {
+					return VampirePlayer.get((EntityPlayer) entity).getLevel() <= 0;
+				}
+				return false;
+			}
+
+		}));
+		// Search for vampire hunters
+		targetTasks.addTask(3, new EntityAINearestAttackableTarget(entity, EntityVampireHunter.class, 0, true));
 	}
 
 	/**
@@ -76,11 +95,11 @@ public class VampireMob implements IExtendedEntityProperties {
 	 *         not biteable
 	 */
 	public int bite() {
-		
-		if(blood==-1){
+
+		if (blood == -1) {
 			return -2;
 		}
-		if(isVampire()){
+		if (isVampire()) {
 			return 0;
 		}
 		if (entity.getHealth() / entity.getMaxHealth() > BALANCE.SUCK_BLOOD_HEALTH_REQUIREMENT) {
@@ -91,43 +110,10 @@ public class VampireMob implements IExtendedEntityProperties {
 		return blood;
 
 	}
-	
-	public boolean isVampire(){
-		return this.entity.getDataWatcher().getWatchableObjectShort(VAMPIRE_WATCHER)==(short)1;
-	}
-	
-	private boolean makeVampire(){
-		if(blood==-1){
-			return false;
-		}
-		entity.getDataWatcher().updateObject(VAMPIRE_WATCHER, (short)1);
-		addAITasks();
-		return true;
-	}
-	
-	private void addAITasks(){
-		EntityAITasks tasks=(EntityAITasks)Helper.Reflection.getPrivateFinalField(EntityLiving.class, entity, "tasks");
-		// Attack player
-		tasks.addTask(1, new EntityAIAttackOnCollide(entity, EntityPlayer.class, 1.0D, false));
-		// Attack vampire hunter
-		tasks.addTask(1, new EntityAIAttackOnCollide(entity, EntityVampireHunter.class, 1.0D, true));
-		
-		EntityAITasks targetTasks=(EntityAITasks)Helper.Reflection.getPrivateFinalField(EntityLiving.class, entity, "targetTasks");
-		targetTasks.addTask(3, new EntityAINearestAttackableTarget(entity, EntityPlayer.class, 0, true,false,new IEntitySelector(){
 
-			@Override
-			public boolean isEntityApplicable(Entity entity) {
-				if(entity instanceof EntityPlayer){
-					return VampirePlayer.get((EntityPlayer)entity).getLevel()<=0;
-				}
-				return false;
-			}
-			
-		}));
-		// Search for vampire hunters
-		targetTasks.addTask(3, new EntityAINearestAttackableTarget(entity, EntityVampireHunter.class, 0, true));
+	public boolean canBeBitten() {
+		return blood != -1 && !isVampire();
 	}
-
 
 	@Override
 	public void init(Entity entity, World world) {
@@ -135,19 +121,28 @@ public class VampireMob implements IExtendedEntityProperties {
 
 	}
 
-	public boolean canBeBitten() {
-		return blood!=-1&&!isVampire();
+	public boolean isVampire() {
+		return this.entity.getDataWatcher().getWatchableObjectShort(VAMPIRE_WATCHER) == (short) 1;
 	}
 
 	@Override
 	public void loadNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
 		if (properties != null) {
-			if(properties.getShort(KEY_VAMPIRE)==1){
+			if (properties.getShort(KEY_VAMPIRE) == 1) {
 				makeVampire();
 			}
 		}
 
+	}
+
+	private boolean makeVampire() {
+		if (blood == -1) {
+			return false;
+		}
+		entity.getDataWatcher().updateObject(VAMPIRE_WATCHER, (short) 1);
+		addAITasks();
+		return true;
 	}
 
 	@Override
@@ -157,6 +152,5 @@ public class VampireMob implements IExtendedEntityProperties {
 		compound.setTag(EXT_PROP_NAME, properties);
 
 	}
-
 
 }

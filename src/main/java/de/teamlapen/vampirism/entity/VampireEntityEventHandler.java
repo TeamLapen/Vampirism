@@ -7,7 +7,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAITasks;
-import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.util.AxisAlignedBB;
@@ -28,47 +27,48 @@ public class VampireEntityEventHandler {
 			VampireMob.register((EntityCreature) event.entity);
 		}
 	}
-	
+
 	@SubscribeEvent
-	public void onEntityJoinWorld(EntityJoinWorldEvent event){
-		if(event.entity instanceof EntityVampireHunter){
-			//Set the home position of VampireHunters to a near village if one is found
-			EntityVampireHunter e=(EntityVampireHunter)event.entity;
-			if(e.isLookingForHome()==false)return;
-			
-			Village v = event.world.villageCollectionObj.findNearestVillage(MathHelper.floor_double(e.posX), 
-			MathHelper.floor_double(e.posY), MathHelper.floor_double(e.posZ), 20);
+	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
+		if (event.entity instanceof EntityVampireHunter) {
+			// Set the home position of VampireHunters to a near village if one
+			// is found
+			EntityVampireHunter e = (EntityVampireHunter) event.entity;
+			if (e.isLookingForHome() == false)
+				return;
+
+			Village v = event.world.villageCollectionObj.findNearestVillage(MathHelper.floor_double(e.posX), MathHelper.floor_double(e.posY),
+					MathHelper.floor_double(e.posZ), 20);
 			if (v != null) {
-					int r = v.getVillageRadius();
-					AxisAlignedBB box = AxisAlignedBB.getBoundingBox(v.getCenter().posX - r, 0, v.getCenter().posZ - r, v.getCenter().posX + r,
-								event.world.getActualHeight(), v.getCenter().posZ + r);
-						ChunkCoordinates cc = v.getCenter();
-						e.setHomeArea(cc.posX, cc.posY, cc.posZ, r);
-						e.setFoundHome();
+				int r = v.getVillageRadius();
+				AxisAlignedBB box = AxisAlignedBB.getBoundingBox(v.getCenter().posX - r, 0, v.getCenter().posZ - r, v.getCenter().posX + r,
+						event.world.getActualHeight(), v.getCenter().posZ + r);
+				ChunkCoordinates cc = v.getCenter();
+				e.setHomeArea(cc.posX, cc.posY, cc.posZ, r);
+				e.setFoundHome();
 			}
-		}
-		else if(event.entity instanceof EntityIronGolem){
-			//Replace the EntityAINearestAttackableTarget of Irongolems, so they do not attack VampireHunters
-			EntityIronGolem golem=(EntityIronGolem)event.entity;
-			EntityAITasks targetTasks=(EntityAITasks)Helper.Reflection.getPrivateFinalField(EntityLiving.class, golem, "targetTasks");
-			if(targetTasks==null){
+		} else if (event.entity instanceof EntityIronGolem) {
+			// Replace the EntityAINearestAttackableTarget of Irongolems, so
+			// they do not attack VampireHunters
+			EntityIronGolem golem = (EntityIronGolem) event.entity;
+			EntityAITasks targetTasks = (EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class, golem, "targetTasks");
+			if (targetTasks == null) {
 				Logger.w("VampireEntityEventHandler", "Cannot change the target tasks of irongolem");
-			}
-			else{
-				for(Object o:targetTasks.taskEntries){
-					EntityAIBase t=((EntityAITasks.EntityAITaskEntry)o).action;
-					if(t instanceof EntityAINearestAttackableTarget){
+			} else {
+				for (Object o : targetTasks.taskEntries) {
+					EntityAIBase t = ((EntityAITasks.EntityAITaskEntry) o).action;
+					if (t instanceof EntityAINearestAttackableTarget) {
 						targetTasks.removeTask(t);
-						targetTasks.addTask(3,new EntityAINearestAttackableTarget(golem,EntityLiving.class, 0, false, true, new IEntitySelector(){
+						targetTasks.addTask(3, new EntityAINearestAttackableTarget(golem, EntityLiving.class, 0, false, true, new IEntitySelector() {
 
 							@Override
 							public boolean isEntityApplicable(Entity entity) {
-								if(entity instanceof IMob&&!(entity instanceof EntityVampireHunter)){
+								if (entity instanceof IMob && !(entity instanceof EntityVampireHunter)) {
 									return true;
 								}
 								return false;
 							}
-							
+
 						}));
 						break;
 					}

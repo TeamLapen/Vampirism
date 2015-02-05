@@ -1,11 +1,9 @@
 package de.teamlapen.vampirism.client.gui;
 
-
 import java.awt.Color;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
@@ -18,8 +16,6 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 public class VampireHudOverlay extends Gui {
@@ -29,6 +25,35 @@ public class VampireHudOverlay extends Gui {
 
 	public VampireHudOverlay(Minecraft mc) {
 		this.mc = mc;
+	}
+
+	@SubscribeEvent
+	public void onRenderCrosshair(RenderGameOverlayEvent.Pre event) {
+		if (event.type != ElementType.CROSSHAIRS) {
+			return;
+		}
+
+		MovingObjectPosition p = Minecraft.getMinecraft().objectMouseOver;
+
+		if (p != null && p.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && p.entityHit != null && p.entityHit instanceof EntityLiving) {
+			VampireMob mob = VampireMob.get((EntityLiving) p.entityHit);
+			if (mob == null)
+				return;
+			if (mob.canBeBitten() && VampirePlayer.get(Minecraft.getMinecraft().thePlayer).getLevel() > 0) {
+				mc.mcProfiler.startSection("vampireFang");
+
+				GL11.glEnable(GL11.GL_BLEND);
+
+				this.mc.getTextureManager().bindTexture(icons);
+				int left = event.resolution.getScaledWidth() / 2 - 8;
+				int top = event.resolution.getScaledHeight() / 2 - 4;
+
+				drawTexturedModalRect(left, top, 27, 0, 16, 16);
+				GL11.glDisable(GL11.GL_BLEND);
+				mc.mcProfiler.endSection();
+				event.setCanceled(true);
+			}
+		}
 	}
 
 	@SubscribeEvent
@@ -53,7 +78,7 @@ public class VampireHudOverlay extends Gui {
 		int level = VampirePlayer.get(mc.thePlayer).getLevel();
 		if (mc.playerController.gameIsSurvivalOrAdventure() && level > 0) {
 			mc.mcProfiler.startSection("vampireLevel");
-//			boolean flag1 = false;
+			// boolean flag1 = false;
 			int color = Color.MAGENTA.getRGB();
 			String text = "" + level;
 			int x = (event.resolution.getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2;
@@ -63,7 +88,7 @@ public class VampireHudOverlay extends Gui {
 			mc.fontRenderer.drawString(text, x, y + 1, 0);
 			mc.fontRenderer.drawString(text, x, y - 1, 0);
 			mc.fontRenderer.drawString(text, x, y, color);
-			mc.mcProfiler.endSection();			
+			mc.mcProfiler.endSection();
 		}
 	}
 
@@ -78,7 +103,7 @@ public class VampireHudOverlay extends Gui {
 			event.setCanceled(true);
 
 			if (mc.playerController.gameIsSurvivalOrAdventure()) {
-				VampirePlayer.BloodStats stats=p.getBloodStats();
+				VampirePlayer.BloodStats stats = p.getBloodStats();
 				mc.mcProfiler.startSection("vampireBlood");
 
 				GL11.glEnable(GL11.GL_BLEND);
@@ -103,34 +128,6 @@ public class VampireHudOverlay extends Gui {
 				}
 				GL11.glDisable(GL11.GL_BLEND);
 				mc.mcProfiler.endSection();
-			}
-		}
-	}
-	
-	@SubscribeEvent
-	public void onRenderCrosshair(RenderGameOverlayEvent.Pre event){
-		if(event.type!=ElementType.CROSSHAIRS){
-			return;
-		}
-		
-		MovingObjectPosition p=Minecraft.getMinecraft().objectMouseOver;
-
-		if(p!=null&&p.typeOfHit==MovingObjectPosition.MovingObjectType.ENTITY&&p.entityHit !=null && p.entityHit instanceof EntityLiving){
-			VampireMob mob=VampireMob.get((EntityLiving)p.entityHit);
-			if(mob==null)return;
-			if(mob.canBeBitten()&&VampirePlayer.get(Minecraft.getMinecraft().thePlayer).getLevel()>0){
-				mc.mcProfiler.startSection("vampireFang");
-
-				GL11.glEnable(GL11.GL_BLEND);
-
-				this.mc.getTextureManager().bindTexture(icons);
-				int left = event.resolution.getScaledWidth() / 2-8;
-				int top = event.resolution.getScaledHeight()/2-4;
-
-				drawTexturedModalRect(left,top,27,0,16,16);
-				GL11.glDisable(GL11.GL_BLEND);
-				mc.mcProfiler.endSection();
-				event.setCanceled(true);
 			}
 		}
 	}

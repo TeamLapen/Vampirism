@@ -11,21 +11,17 @@ import de.teamlapen.vampirism.item.ItemVampiresFear;
 
 public class ModItems {
 
-	public static ItemSword vampiresFear = new ItemVampiresFear();
-	public static ItemBloodBottle bloodBottle = new ItemBloodBottle();
-	public static ItemVampireFang vampireFang = new ItemVampireFang();
-
 	public static void init() {
 		GameRegistry.registerItem(vampiresFear, ItemVampiresFear.name);
 		GameRegistry.registerItem(bloodBottle, ItemBloodBottle.name);
 		GameRegistry.registerItem(vampireFang, ItemVampireFang.NAME);
-		
+
 		// Recipe for empty blood bottle
-		GameRegistry.addRecipe(new ItemStack(bloodBottle, 1, 0), 
-			"   ",
-			"XYX",
-			" X ",
-			'X', Blocks.glass, 'Y', Items.rotten_flesh);
-		GameRegistry.addRecipe(new ItemStack(vampiresFear,1), "XYX","XYX"," Z ",'X',vampireFang,'Y',Items.iron_ingot,'Z',Items.stick);
+		GameRegistry.addRecipe(new ItemStack(bloodBottle, 1, 0), "   ", "XYX", " X ", 'X', Blocks.glass, 'Y', Items.rotten_flesh);
+		GameRegistry.addRecipe(new ItemStack(vampiresFear, 1), "XYX", "XYX", " Z ", 'X', vampireFang, 'Y', Items.iron_ingot, 'Z', Items.stick);
 	}
+	public static ItemSword vampiresFear = new ItemVampiresFear();
+	public static ItemBloodBottle bloodBottle = new ItemBloodBottle();
+
+	public static ItemVampireFang vampireFang = new ItemVampireFang();
 }

@@ -233,8 +233,12 @@ public class ModelBloodAltar extends ModelBase {
 		setRotation(handle1, 0F, 0F, swordRotation);
 	}
 
-	public void render(Entity entity, float f, float f1, float f2, float f3,
-			float f4, float f5) {
+	public boolean isOccupied() {
+		return isOccupied;
+	}
+
+	@Override
+	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		super.render(entity, f, f1, f2, f3, f4, f5);
 		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
 		base.render(f5);
@@ -271,23 +275,19 @@ public class ModelBloodAltar extends ModelBase {
 		}
 	}
 
+	public void setOccupied(boolean flag) {
+		isOccupied = flag;
+	}
+
 	private void setRotation(ModelRenderer model, float x, float y, float z) {
 		model.rotateAngleX = x;
 		model.rotateAngleY = y;
 		model.rotateAngleZ = z;
 	}
 
-	public void setRotationAngles(float f, float f1, float f2, float f3,
-			float f4, float f5, Entity entity) {
+	@Override
+	public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
 		super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-	}
-
-	public void setOccupied(boolean flag) {
-		isOccupied = flag;
-	}
-
-	public boolean isOccupied() {
-		return isOccupied;
 	}
 
 }

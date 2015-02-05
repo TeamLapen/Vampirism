@@ -2,27 +2,22 @@ package de.teamlapen.vampirism.entity.player;
 
 import java.util.UUID;
 
-import de.teamlapen.vampirism.util.BALANCE;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
+import de.teamlapen.vampirism.util.BALANCE;
 
 /**
  * Calculates and applies player modifiers depending on the VampireLevel
+ * 
  * @author Maxanier
  *
  */
 public abstract class PlayerModifiers {
 
-	public static final String TAG = "PlayerModifier";
-
-	public static final UUID speedModifierUUID = UUID.fromString("0FCBF922-DBEC-492A-82F5-99F73AFF5065");
-	public static final UUID healthModifierUUID = UUID.fromString("56C17EFE-E3EC-4E27-A12F-99D2FE927B70");
-	public static final UUID damageModifierUUID = UUID.fromString("7600D8C4-3517-40BE-8CB1-359D46705A0F");
-
 	public static void applyModifiers(int level, EntityPlayer p) {
-		
+
 		double m = 0;
 		// Speed modifier
 		IAttributeInstance movement = p.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
@@ -42,7 +37,8 @@ public abstract class PlayerModifiers {
 		IAttributeInstance damage = p.getEntityAttribute(SharedMonsterAttributes.attackDamage);
 		rmMod(damage, damageModifierUUID);
 
-		m = calculateModifierValue(level, BALANCE.VP_MODIFIERS.STRENGTH_LCAP,BALANCE.VP_MODIFIERS.STRENGTH_MAX_MOD, BALANCE.VP_MODIFIERS.STRENGTH_TYPE);
+		m = calculateModifierValue(level, BALANCE.VP_MODIFIERS.STRENGTH_LCAP, BALANCE.VP_MODIFIERS.STRENGTH_MAX_MOD,
+				BALANCE.VP_MODIFIERS.STRENGTH_TYPE);
 		damage.applyModifier(new AttributeModifier(damageModifierUUID, "Vampire Strength Bonus", m, 2).setSaved(false));
 
 		// Nightvision after 1.8 maybe see
@@ -50,20 +46,24 @@ public abstract class PlayerModifiers {
 
 	}
 
-	
 	/**
-	 * Calculates the modifier effect.
-	 * You can decide how the modifier changes with higher levels, by using different types. Suggested values are 1/2 for a square root like behavior or 1 for a linear change
-	 * @param level Vampire level
-	 * @param lcap Level the modifier does not get any stronger
-	 * @param maxMod Maximal modifier effect
-	 * @param type modifier type
+	 * Calculates the modifier effect. You can decide how the modifier changes
+	 * with higher levels, by using different types. Suggested values are 1/2
+	 * for a square root like behavior or 1 for a linear change
+	 * 
+	 * @param level
+	 *            Vampire level
+	 * @param lcap
+	 *            Level the modifier does not get any stronger
+	 * @param maxMod
+	 *            Maximal modifier effect
+	 * @param type
+	 *            modifier type
 	 * @return value between 0 and maxMod
 	 */
-	private static double calculateModifierValue(int level,int lcap, double maxMod,double type){
-		return Math.pow((level > lcap ? lcap : level), type)/Math.pow(lcap, type)*maxMod;
+	private static double calculateModifierValue(int level, int lcap, double maxMod, double type) {
+		return Math.pow((level > lcap ? lcap : level), type) / Math.pow(lcap, type) * maxMod;
 	}
-
 	/**
 	 * Removes existing modifiers
 	 * 
@@ -78,5 +78,12 @@ public abstract class PlayerModifiers {
 			att.removeModifier(m);
 		}
 	}
+	public static final String TAG = "PlayerModifier";
+
+	public static final UUID speedModifierUUID = UUID.fromString("0FCBF922-DBEC-492A-82F5-99F73AFF5065");
+
+	public static final UUID healthModifierUUID = UUID.fromString("56C17EFE-E3EC-4E27-A12F-99D2FE927B70");
+
+	public static final UUID damageModifierUUID = UUID.fromString("7600D8C4-3517-40BE-8CB1-359D46705A0F");
 
 }

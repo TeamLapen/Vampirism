@@ -18,7 +18,6 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.client.gui.ModGuiFactory;
 import de.teamlapen.vampirism.generation.WorldGenVampirism;
 import de.teamlapen.vampirism.generation.villages.VillageBiomes;
 import de.teamlapen.vampirism.generation.villages.VillageGenReplacer;
@@ -30,7 +29,7 @@ import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
-@Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION,guiFactory="de.teamlapen.vampirism.client.gui.ModGuiFactory")
+@Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION, guiFactory = "de.teamlapen.vampirism.client.gui.ModGuiFactory")
 public class VampirismMod {
 
 	@Instance(value = REFERENCE.MODID)
@@ -40,15 +39,15 @@ public class VampirismMod {
 	public static IProxy proxy;
 
 	public static SimpleNetworkWrapper modChannel;
-	
+
 	public static CreativeTabs tabVampirism = new CreativeTabs("vampirism") {
-	    @Override
-	    @SideOnly(Side.CLIENT)
-	    public Item getTabIconItem() {
-	        return ModItems.vampiresFear;
-	    }
+		@Override
+		@SideOnly(Side.CLIENT)
+		public Item getTabIconItem() {
+			return ModItems.vampiresFear;
+		}
 	};
-	
+
 	public static DamageSource sunDamage = (new DamageSource("sun")).setDamageBypassesArmor().setMagicDamage();
 
 	@EventHandler
@@ -59,9 +58,9 @@ public class VampirismMod {
 		GameRegistry.registerWorldGenerator(new WorldGenVampirism(), 1000);
 		proxy.registerSubscriptions();
 		FMLCommonHandler.instance().bus().register(new Configs());
-		if(Configs.village_gen_enabled){
+		if (Configs.village_gen_enabled) {
 			Logger.i("VillageDensity", "Registering replacer for village generation.");
-	        MinecraftForge.TERRAIN_GEN_BUS.register(new VillageGenReplacer());
+			MinecraftForge.TERRAIN_GEN_BUS.register(new VillageGenReplacer());
 		}
 	}
 
@@ -78,8 +77,8 @@ public class VampirismMod {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		Configs.init(event.getSuggestedConfigurationFile());//Keep first
-		
+		Configs.init(event.getSuggestedConfigurationFile());// Keep first
+
 		ModItems.init();
 		ModBlocks.init();
 		proxy.registerKeyBindings();

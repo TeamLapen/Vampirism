@@ -6,14 +6,10 @@ import java.util.List;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.MathHelper;
 import de.teamlapen.vampirism.coremod.CoreHandler;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
-import de.teamlapen.vampirism.network.SpawnParticlePacket;
 import de.teamlapen.vampirism.util.Logger;
 
 /**
@@ -66,6 +62,13 @@ public class TestCommand implements ICommand {
 		return "/test";
 	}
 
+	public boolean isPotionActive(Potion p_70644_1_) {
+		if (CoreHandler.shouldOverrideNightVision(this, p_70644_1_)) {
+			return true;
+		}
+		return this.activePotionsMap.containsKey(Integer.valueOf(p_70644_1_.id));
+	}
+
 	@Override
 	public boolean isUsernameIndex(String[] p_82358_1_, int p_82358_2_) {
 		// TODO Auto-generated method stub
@@ -76,8 +79,8 @@ public class TestCommand implements ICommand {
 	public void processCommand(ICommandSender sender, String[] param) {
 		if (sender instanceof EntityPlayer) {
 			EntityPlayer p = (EntityPlayer) sender;
-			sendMessage(sender," "+p.worldObj.isDaytime());
-			//-----------------
+			sendMessage(sender, " " + p.worldObj.isDaytime());
+			// -----------------
 			if (param.length > 0) {
 				try {
 					VampirePlayer.get(p).setLevel(Integer.parseInt(param[0]));
@@ -94,13 +97,5 @@ public class TestCommand implements ICommand {
 		}
 
 	}
-	
-	public boolean isPotionActive(Potion p_70644_1_)
-    {
-		if(CoreHandler.shouldOverrideNightVision(this, p_70644_1_)){
-			return true;
-		}
-        return this.activePotionsMap.containsKey(Integer.valueOf(p_70644_1_.id));
-    }
 
 }

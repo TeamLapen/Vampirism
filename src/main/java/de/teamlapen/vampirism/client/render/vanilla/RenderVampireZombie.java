@@ -9,7 +9,8 @@ import de.teamlapen.vampirism.util.REFERENCE;
 
 public class RenderVampireZombie extends RenderZombie {
 
-	private static final ResourceLocation vampireZombiePigmanTextures = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vanilla/vampirePigman.png");
+	private static final ResourceLocation vampireZombiePigmanTextures = new ResourceLocation(REFERENCE.MODID
+			+ ":textures/entity/vanilla/vampirePigman.png");
 	private static final ResourceLocation vampireZombieTextures = new ResourceLocation("textures/entity/pig/pig.png");
 	private static final ResourceLocation vampireZombieVillagerTextures = new ResourceLocation("textures/entity/pig/pig.png");
 

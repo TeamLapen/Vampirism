@@ -2,8 +2,6 @@ package de.teamlapen.vampirism.item;
 
 import java.util.List;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityLivingBase;
@@ -15,15 +13,23 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 public class ItemVampiresFear extends ItemSword {
 
+	public static int getBlood(ItemStack itemStack) {
+		if (itemStack == null || itemStack.stackTagCompound == null) {
+			return 0;
+		}
+		return itemStack.stackTagCompound.getInteger("blood");
+	}
 	public static final String name = "vampiresFear";
+
 	private IIcon unusedIcon;
 
 	public ItemVampiresFear() {
@@ -40,6 +46,35 @@ public class ItemVampiresFear extends ItemSword {
 			int blood = itemStack.stackTagCompound.getInteger("blood");
 			list.add(EnumChatFormatting.RED + "Blood: " + blood + "/" + BALANCE.LEVELING.ALTAR_1_BLOOD);
 		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public IIcon getIcon(ItemStack stack, int pass) {
+		return getIconIndex(stack);
+	}
+
+	@SideOnly(Side.CLIENT)
+	@Override
+	public IIcon getIconIndex(ItemStack stack) {
+		if (getBlood(stack) > 0) {
+			return itemIcon;
+		}
+		return unusedIcon;
+	}
+
+	@Override
+	public String getUnlocalizedName() {
+		return String.format("item.%s%s", REFERENCE.MODID.toLowerCase() + ":", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+	}
+
+	@Override
+	public String getUnlocalizedName(ItemStack itemstack) {
+		return String.format("item.%s%s", REFERENCE.MODID.toLowerCase() + ":", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+	}
+
+	protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
+		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
 	}
 
 	// TODO change the following two classes
@@ -75,45 +110,6 @@ public class ItemVampiresFear extends ItemSword {
 		itemStack.stackTagCompound = new NBTTagCompound();
 		itemStack.stackTagCompound.setInteger("blood", 0);
 	}
-	
-	
-	public static int getBlood(ItemStack itemStack) {
-		if(itemStack==null||itemStack.stackTagCompound==null){
-			return 0;
-		}
-		return itemStack.stackTagCompound.getInteger("blood");
-	}
-	
-	@Override
-	public String getUnlocalizedName() {
-		return String.format("item.%s%s", REFERENCE.MODID.toLowerCase() + ":", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
-	}
-
-	@Override
-	public String getUnlocalizedName(ItemStack itemstack) {
-		return String.format("item.%s%s", REFERENCE.MODID.toLowerCase() + ":", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
-	}
-
-	protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
-		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
-	}
-	
-    @SideOnly(Side.CLIENT)
-    @Override
-    public IIcon getIcon(ItemStack stack, int pass)
-    {
-    	return getIconIndex(stack);
-    }
-    
-    @SideOnly(Side.CLIENT)
-    @Override
-    public IIcon getIconIndex(ItemStack stack)
-    {
-    	if(getBlood(stack)>0){
-    		return itemIcon;
-    	}
-        return unusedIcon;
-    }
 
 	@Override
 	@SideOnly(Side.CLIENT)

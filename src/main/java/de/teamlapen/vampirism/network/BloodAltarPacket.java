@@ -1,31 +1,42 @@
 package de.teamlapen.vampirism.network;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.NBTTagCompound;
-import io.netty.buffer.ByteBuf;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
 
 public class BloodAltarPacket implements IMessage {
+	public static class Handler implements IMessageHandler<BloodAltarPacket, IMessage> {
+
+		@Override
+		public IMessage onMessage(BloodAltarPacket message, MessageContext ctx) {
+			((TileEntityBloodAltar) Minecraft.getMinecraft().theWorld.getTileEntity(message.x, message.y, message.z)).setOccupied(message.hasSword,
+					null);
+			return null;
+		}
+	}
 	private String type;
 	private boolean hasSword;
-	private int x,y,z;
-	public BloodAltarPacket() {}
-	
+
+	private int x, y, z;
+
+	public BloodAltarPacket() {
+	}
+
 	public BloodAltarPacket(boolean pHasSword, int px, int py, int pz) {
 		hasSword = pHasSword;
-		x=px;
-		y=py;
-		z=pz;
+		x = px;
+		y = py;
+		z = pz;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		NBTTagCompound tag=ByteBufUtils.readTag(buf);
+		NBTTagCompound tag = ByteBufUtils.readTag(buf);
 		hasSword = tag.getBoolean("hasSword");
 		x = tag.getInteger("x");
 		y = tag.getInteger("y");
@@ -34,22 +45,12 @@ public class BloodAltarPacket implements IMessage {
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-		NBTTagCompound tag=new NBTTagCompound();
+		NBTTagCompound tag = new NBTTagCompound();
 		tag.setBoolean("hasSword", hasSword);
 		tag.setInteger("x", x);
 		tag.setInteger("y", y);
 		tag.setInteger("z", z);
 		ByteBufUtils.writeTag(buf, tag);
 	}
-	
-	
-	public static class Handler implements IMessageHandler<BloodAltarPacket, IMessage> {
 
-		@Override
-		public IMessage onMessage(BloodAltarPacket message, MessageContext ctx) {
-			((TileEntityBloodAltar) Minecraft.getMinecraft().theWorld.getTileEntity(message.x, message.y, message.z)).setOccupied(message.hasSword, null);
-			return null;
-		}
-	}
-	
 }

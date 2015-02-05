@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.util;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,6 +10,45 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 
 public class Helper {
+	public static class Reflection {
+
+		@SuppressWarnings("unchecked")
+		public static Object callMethod(Class cls, Object obj, String methodName, Class[] paramtype, Object[] param) {
+			if (param != null && paramtype.length != param.length) {
+				Logger.w("ReflectCallMethod", "Param count doesnt fit paramtype count");
+				return null;
+			}
+
+			try {
+				Method method = cls.getDeclaredMethod(methodName, paramtype);
+				method.setAccessible(true);
+				return method.invoke(obj, param);
+
+			} catch (Exception e) {
+				Logger.e("ReflectCallMethod", "Failed to invoke method");
+				e.printStackTrace();
+				return null;
+			}
+		}
+
+		public static Object callMethod(Object obj, String methodName, Class[] paramtype, Object[] param) {
+			return Reflection.callMethod(obj.getClass(), obj, methodName, paramtype, param);
+		}
+
+		public static Object getPrivateFinalField(Class cls, Object obj, String fieldname) {
+			try {
+				Field privateStringField = cls.getDeclaredField(fieldname);
+
+				privateStringField.setAccessible(true);
+
+				return privateStringField.get(obj);
+			} catch (Exception e) {
+				Logger.e("Reflection", "Trying to get " + fieldname + " from " + obj.toString() + " of class " + cls.getCanonicalName(), e);
+				return null;
+			}
+		}
+	}
+
 	/**
 	 * Gets players looking spot.
 	 * 
@@ -42,46 +80,5 @@ public class Helper {
 		}
 		Vec3 vector2 = vector1.addVector(pitchAdjustedSinYaw * distance, sinPitch * distance, pitchAdjustedCosYaw * distance);
 		return player.worldObj.rayTraceBlocks(vector1, vector2);
-	}
-	
-	public static class Reflection{
-		
-		
-		public static Object callMethod(Object obj,String methodName,Class[] paramtype,Object[] param){
-			return Reflection.callMethod(obj.getClass(), obj, methodName, paramtype, param);
-		}
-		
-		@SuppressWarnings("unchecked")
-		public static Object callMethod(Class cls,Object obj,String methodName,Class[] paramtype,Object[] param){
-			if(param!=null && paramtype.length!=param.length){
-				Logger.w("ReflectCallMethod", "Param count doesnt fit paramtype count");
-				return null;
-			}
-			
-			try {
-				Method method=cls.getDeclaredMethod(methodName, paramtype);
-				method.setAccessible(true);
-				return method.invoke(obj, param);
-				
-			} catch (Exception e) {
-				Logger.e("ReflectCallMethod", "Failed to invoke method");
-				e.printStackTrace();
-				return null;
-			}
-		}
-		
-		public static Object getPrivateFinalField(Class cls,Object obj,String fieldname){
-			try {
-				Field privateStringField = cls.
-				        getDeclaredField(fieldname);
-
-				privateStringField.setAccessible(true);
-
-				return privateStringField.get(obj);
-			} catch (Exception e){
-				Logger.e("Reflection", "Trying to get "+fieldname+" from "+obj.toString()+" of class "+cls.getCanonicalName(),e);
-				return null;
-			}
-		}
 	}
 }
