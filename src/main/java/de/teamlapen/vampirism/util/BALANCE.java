@@ -121,6 +121,6 @@ public final class BALANCE {
 	// Other
 	@DefaultDouble(1.0D)
 	public static double BLOOD_SATURATION;// Saturation of blood
-	@DefaultDouble(value = 4.0d, comment = "Amount of exhaustion, which has to be reached to loose one blood")
+	@DefaultInt(value = 4, comment = "Amount of exhaustion, which has to be reached to loose one blood")
 	public static int BLOOD_EXH_PER_BL;
 }
