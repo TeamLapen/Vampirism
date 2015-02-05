@@ -6,6 +6,7 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -70,6 +71,7 @@ public class TileEntityBloodAltar extends TileEntity {
 	 **/
 	public void startVampirismRitual(EntityPlayer player, ItemStack itemStack) {
 		Logger.i(TAG, "Starting Vampirism-Ritual");
+		Logger.i("tasdf", itemStack.toString());
 		player.inventory.consumeInventoryItem(itemStack.getItem());
 		setOccupied(true, player);
 		List entityList = getWorldObj().loadedEntityList;
@@ -82,8 +84,8 @@ public class TileEntityBloodAltar extends TileEntity {
 								v.posZ));
 		}
 		//Check the needed conditions
-		if (!Minecraft.getMinecraft().theWorld.isDaytime()
-				&& ((ItemVampiresFear) itemStack.getItem()).getBlood(itemStack) >= BALANCE.NEEDED_BLOOD && list.size()>=BALANCE.LEVELING.R1_VILLAGERS) {
+		if (!(this.worldObj.isDaytime())
+				&& ItemVampiresFear.getBlood(itemStack) >= BALANCE.NEEDED_BLOOD && list.size()>=BALANCE.LEVELING.R1_VILLAGERS) {
 			VampirePlayer vp=VampirePlayer.get(player);
 			if(vp.getLevel()==0){
 				vp.levelUp();
@@ -92,7 +94,14 @@ public class TileEntityBloodAltar extends TileEntity {
 			Logger.i(TAG,
 					"Ritual ended, player is now a vampire: ");
 		} else {
-			Logger.i(TAG, "Not daytime or not enough blood or not enough villagers, ritual will fail");
+			itemStack.stackSize=1;
+			Logger.i("tasdf", itemStack.toString());
+            EntityItem entityitem = new EntityItem(this.worldObj, this.xCoord,this.yCoord+1, this.zCoord, itemStack);
+            entityitem.delayBeforeCanPickup = 10;
+            Logger.i("asdf", entityitem.toString());
+			this.worldObj.spawnEntityInWorld(entityitem);
+			this.setOccupied(false, player);
+			Logger.i(TAG, "Not daytime or not enough blood or not enough villagers, ritual will fail: "+(!this.worldObj.isDaytime())+":"+ItemVampiresFear.getBlood(itemStack)+":"+list.size());
 			// TODO explosions and stuff
 		}
 	}

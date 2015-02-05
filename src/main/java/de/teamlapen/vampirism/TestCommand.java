@@ -76,7 +76,7 @@ public class TestCommand implements ICommand {
 	public void processCommand(ICommandSender sender, String[] param) {
 		if (sender instanceof EntityPlayer) {
 			EntityPlayer p = (EntityPlayer) sender;
-
+			sendMessage(sender," "+p.worldObj.isDaytime());
 			//-----------------
 			if (param.length > 0) {
 				try {
