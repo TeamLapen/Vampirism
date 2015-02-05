@@ -10,9 +10,9 @@ public final class BALANCE {
 	public static int VAMPIRE_HUNTER_ATTACK_LEVEL;
 	@DefaultInt(value=3,comment="Vampires attack players unless their vampirelevel is higher than this")
 	public static int VAMPIRE_FRIENDLY_LEVEL;
-	@DefaultInt(10)
-	public static int VAMPIRE_HUNTER_SPAWN_PROBE;
 	@DefaultInt(20)
+	public static int VAMPIRE_HUNTER_SPAWN_PROBE;
+	@DefaultInt(30)
 	public static int VAMPIRE_SPAWN_PROBE;
 	
 	//Vampireplayer
