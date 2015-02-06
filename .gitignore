@@ -5,3 +5,5 @@ build/
 bin/
 build.bat
 /bin
+Thumbs.db
+*.bak
