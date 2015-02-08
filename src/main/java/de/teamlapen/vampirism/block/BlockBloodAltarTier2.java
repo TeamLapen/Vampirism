@@ -48,6 +48,11 @@ public class BlockBloodAltarTier2 extends BasicBlockContainer {
 	public int getRenderBlockPass() {
 		return 1;
 	}
+	@SideOnly(Side.CLIENT)
+	@Override
+	public boolean isOpaqueCube() {
+		return false;
+	}
 
 	@Override
 	public boolean onBlockActivated(World world, int par2, int par3, int par4, EntityPlayer player, int par6, float par7, float par8, float par9) {
