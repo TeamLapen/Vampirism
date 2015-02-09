@@ -12,8 +12,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 
-import org.lwjgl.input.Keyboard;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.ModItems;
@@ -91,11 +89,14 @@ public class ItemBloodBottle extends ItemGlassBottle {
 	}
 
 	/**
-	 * Called whenever this item is equipped and the right mouse button is
-	 * pressed. Args: itemStack, world, entityPlayer Add code here to: 1) Shift
-	 * + right click adds blood from blood bar 2) Right click removes blood and
-	 * puts it in blood bar 3) TODO: Fill blood bottle from any other blood
-	 * containers (if made)
+	 * Called whenever this item is equipped and the right mouse button is pressed. 
+	 * @param itemStack
+	 * @param world
+	 * @param entityPlayer
+	 * This method does: 
+	 * 1) Shift + right click adds blood from blood bar 
+	 * 2) Right click removes blood and puts it in blood bar 
+	 * 3) TODO: Fill blood bottle from any other blood containers (if made)
 	 */
 	@Override
 	public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
@@ -103,9 +104,8 @@ public class ItemBloodBottle extends ItemGlassBottle {
 		if (!world.isRemote) {
 			VampirePlayer vampire = VampirePlayer.get(player);
 
-			// Remove blood from blood bar and add to bottle on shift + right
-			// click
-			if (Keyboard.isKeyDown(Keyboard.KEY_RSHIFT) || Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+			// Remove blood from blood bar and add to bottle on shift + right click
+			if (player.isSneaking()){
 				Logger.i(REFERENCE.MODID, "Shift + Right click pressed!");
 				int bloodBottle = getBlood(stack);
 				int bloodBar = vampire.getBlood();
