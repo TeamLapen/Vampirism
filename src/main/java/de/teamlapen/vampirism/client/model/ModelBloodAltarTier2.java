@@ -1263,16 +1263,25 @@ public class ModelBloodAltarTier2 extends ModelBase {
 	public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		super.render(entity, f, f1, f2, f3, f4, f5);
 		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
-		PillarFL.render(f5);
-		PillarFR.render(f5);
-		PillarBL.render(f5);
-		PillarBR.render(f5);
+	}
+	
+	public void renderSphere(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		Base.render(f5);
 		for (ModelRenderer[] i : sphere)
 			if (i != null)
 				for (ModelRenderer j : i)
 					if (j != null)
 						j.render(f5);
+	}
+	
+	public void renderBase(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
+		PillarFL.render(f5);
+		PillarFR.render(f5);
+		PillarBL.render(f5);
+		PillarBR.render(f5);
+	}
+	
+	public void renderBlood(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		if (bloodLevel > liquid.length)
 			Logger.e(TAG, "Invalid blood level! Not rendering blood in blood altar!");
 		else
