@@ -1,9 +1,11 @@
 package de.teamlapen.vampirism.block;
 
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -23,7 +25,7 @@ public class BlockBloodAltarTier2 extends BasicBlockContainer {
 
 	public BlockBloodAltarTier2() {
 		super(Material.iron, name);
-
+		// super.registerBlockIcons(this.getBlockTextureFromSide(1));
 	}
 
 	private void addBlood(TileEntityBloodAltarTier2 te, ItemStack item) {
@@ -48,6 +50,7 @@ public class BlockBloodAltarTier2 extends BasicBlockContainer {
 	public int getRenderBlockPass() {
 		return 1;
 	}
+
 	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean isOpaqueCube() {
@@ -55,7 +58,8 @@ public class BlockBloodAltarTier2 extends BasicBlockContainer {
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int par2, int par3, int par4, EntityPlayer player, int par6, float par7, float par8, float par9) {
+	public boolean onBlockActivated(World world, int par2, int par3, int par4,
+			EntityPlayer player, int par6, float par7, float par8, float par9) {
 		if (!world.isRemote) {
 			ItemStack item = null;
 			try {
@@ -63,7 +67,8 @@ public class BlockBloodAltarTier2 extends BasicBlockContainer {
 			} catch (NullPointerException e) {
 				Logger.i(TAG, "No item in hand");
 			}
-			TileEntityBloodAltarTier2 te = (TileEntityBloodAltarTier2) world.getTileEntity(par2, par3, par4);
+			TileEntityBloodAltarTier2 te = (TileEntityBloodAltarTier2) world
+					.getTileEntity(par2, par3, par4);
 			if (item != null && item.getItem() instanceof ItemBloodBottle) {
 				Logger.i(TAG, "Blood is being added");
 				addBlood(te, item);
@@ -79,5 +84,21 @@ public class BlockBloodAltarTier2 extends BasicBlockContainer {
 	private void startRitual(TileEntityBloodAltarTier2 te, EntityPlayer p) {
 		te.startRitual(p);
 	}
+
+//	public IIcon getIcon(int p_149691_1_, int p_149691_2_) {
+//		return p_149691_1_ == 1 ? this.field_149935_N
+//				: (p_149691_1_ == 0 ? this.field_149935_N
+//						: (p_149691_1_ != p_149691_2_ ? this.blockIcon
+//								: this.field_149936_O));
+//	}
+//
+//	@SideOnly(Side.CLIENT)
+//	public void registerBlockIcons(IIconRegister p_149651_1_) {
+//		this.blockIcon = p_149651_1_.registerIcon("furnace_side");
+//		this.field_149936_O = p_149651_1_
+//				.registerIcon(this.field_149932_b ? "furnace_front_on"
+//						: "furnace_front_off");
+//		this.field_149935_N = p_149651_1_.registerIcon("furnace_top");
+//	}
 
 }
