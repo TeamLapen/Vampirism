@@ -102,13 +102,18 @@ public class VampireMob implements IExtendedEntityProperties {
 		if (isVampire()) {
 			return 0;
 		}
-		if (entity.getHealth() / entity.getMaxHealth() > BALANCE.SUCK_BLOOD_HEALTH_REQUIREMENT) {
+		
+		if (!lowEnoughHealth()) {
 			// Cannot be bitten yet
 			return -1;
 		}
 		makeVampire();
 		return blood;
 
+	}
+	
+	public boolean lowEnoughHealth(){
+		return (entity.getHealth() / entity.getMaxHealth()) <= BALANCE.SUCK_BLOOD_HEALTH_REQUIREMENT;
 	}
 
 	public boolean canBeBitten() {

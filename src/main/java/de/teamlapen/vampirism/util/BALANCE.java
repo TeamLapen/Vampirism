@@ -112,11 +112,8 @@ public final class BALANCE {
 	public static int NORMAL_BLOOD_AMOUNT; // "" normal mob
 	@DefaultInt(15)
 	public static int BIG_BLOOD_AMOUNT; // "" big mob
-	@DefaultDouble(0.3d)
-	public static double SUCK_BLOOD_HEALTH_REQUIREMENT; // Percentage of his max
-														// health a mob can
-														// maximal have to be
-														// bitten
+	@DefaultDouble(value=1.0D,comment="Percentage of his max health a mob can maximal have to be bitten (Disabled by default)")
+	public static double SUCK_BLOOD_HEALTH_REQUIREMENT;
 
 	// Other
 	@DefaultDouble(1.0D)
