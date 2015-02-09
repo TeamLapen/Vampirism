@@ -35,7 +35,7 @@ public class VampirismMod {
 	@Instance(value = REFERENCE.MODID)
 	public static VampirismMod instance;
 
-	@SidedProxy(clientSide = "de.teamlapen.vampirism.proxy.ClientProxy", serverSide = "de.teamlapen.vampirism.ServerProxy")
+	@SidedProxy(clientSide = "de.teamlapen.vampirism.proxy.ClientProxy", serverSide = "de.teamlapen.vampirism.proxy.ServerProxy")
 	public static IProxy proxy;
 
 	public static SimpleNetworkWrapper modChannel;

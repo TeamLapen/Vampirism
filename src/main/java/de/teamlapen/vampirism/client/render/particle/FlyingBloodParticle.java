@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.render.particle;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
@@ -20,11 +21,14 @@ public class FlyingBloodParticle extends EntityFX {
 	private final String TAG = "FlyingBloodParticle";
 	private final Entity entity;
 
-	public FlyingBloodParticle(World world, double posX, double posY, double posZ, NBTTagCompound data) {
+	public static void addParticle(FlyingBloodParticle p){
+		Minecraft.getMinecraft().effectRenderer.addEffect(p);
+	}
+	public FlyingBloodParticle(double posX, double posY, double posZ, NBTTagCompound data) {
 
-		super(world, posX, posY, posZ, 0D, 0D, 0D);
+		super(Minecraft.getMinecraft().theWorld, posX, posY, posZ, 0D, 0D, 0D);
 		Logger.i("test", "spawning at" + posX + "_" + posY + "_" + posZ);
-		entity = world.getEntityByID(data.getInteger("player_id"));
+		entity = this.worldObj.getEntityByID(data.getInteger("player_id"));
 		if (entity == null) {
 			Logger.e(TAG, "Entity with id " + data.getInteger("player_id") + " cannot be found");
 			throw new NullPointerException("Entity not found");

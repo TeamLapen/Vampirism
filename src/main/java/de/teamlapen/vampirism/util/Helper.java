@@ -43,7 +43,7 @@ public class Helper {
 
 				return privateStringField.get(obj);
 			} catch (Exception e) {
-				Logger.e("Reflection", "Trying to get " + fieldname + " from " + obj.toString() + " of class " + cls.getCanonicalName(), e);
+				Logger.e("Reflection", "Failed to get " + fieldname + " from " + obj.toString() + " of class " + cls.getCanonicalName(), e);
 				return null;
 			}
 		}

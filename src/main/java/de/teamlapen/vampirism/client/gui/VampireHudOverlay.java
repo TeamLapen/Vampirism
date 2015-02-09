@@ -47,7 +47,9 @@ public class VampireHudOverlay extends Gui {
 				this.mc.getTextureManager().bindTexture(icons);
 				int left = event.resolution.getScaledWidth() / 2 - 8;
 				int top = event.resolution.getScaledHeight() / 2 - 4;
-
+				if(mob.lowEnoughHealth()){
+					GL11.glColor4f(1F, 0F, 0F, 0.8F);
+				}
 				drawTexturedModalRect(left, top, 27, 0, 16, 16);
 				GL11.glDisable(GL11.GL_BLEND);
 				mc.mcProfiler.endSection();
