@@ -41,13 +41,17 @@ public class RendererBloodAltarTier2 extends TileEntitySpecialRenderer {
 		TileEntityBloodAltarTier2 te2 = (TileEntityBloodAltarTier2) te;
 		model.setBloodLevel((int) StrictMath.ceil(((float) te2.getBloodAmount()) / te2.getMaxBlood() * 15));
 		GL11.glPushMatrix();
-		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		bindTexture(texture);
 		GL11.glPushMatrix();
 		adjustRotatePivotViaMeta(te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 		model.render(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
+		GL11.glDisable(GL11.GL_BLEND);
+		model.renderBase(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
+		model.renderBlood(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
+		GL11.glEnable(GL11.GL_BLEND);
+		model.renderSphere(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		GL11.glPopMatrix();
 		GL11.glPopMatrix();
 	}
