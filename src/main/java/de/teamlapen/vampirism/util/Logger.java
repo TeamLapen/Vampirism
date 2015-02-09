@@ -26,6 +26,7 @@ public class Logger {
 
 	public static void e(String tag, String msg, Throwable t) {
 		String stacktrace = "";
+		
 		PrintStream p;
 		try {
 			p = new PrintStream(stacktrace);
@@ -33,7 +34,7 @@ public class Logger {
 		} catch (FileNotFoundException e1) {
 			stacktrace = t.getMessage();
 		}
-		log(Level.ERROR, "[" + tag + "]" + msg + "\nStacktrace: " + stacktrace);
+		log(Level.ERROR, "[" + tag + "]" + msg + "\nThrowable: "+t.getClass().getCanonicalName()+"\nStacktrace: " + stacktrace+"\nMessage: "+t.getMessage());
 	}
 
 	public static void i(String tag, String msg) {
