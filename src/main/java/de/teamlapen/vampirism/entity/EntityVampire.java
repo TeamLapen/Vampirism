@@ -11,6 +11,7 @@ import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityVillager;
@@ -35,6 +36,7 @@ public class EntityVampire extends EntityMob {
 		this.setSize(0.6F, 1.8F);
 
 		// Attack player
+		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(1, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.1, false));
 		// Attack vampire hunter
 		this.tasks.addTask(1, new EntityAIAttackOnCollide(this, EntityVampireHunter.class, 1.0, true));
