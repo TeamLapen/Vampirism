@@ -95,7 +95,7 @@ public final class BALANCE {
 	@DefaultInt(20)
 	public static int VAMPIRE_HUNTER_SPAWN_PROBE;
 
-	@DefaultInt(30)
+	@DefaultInt(50)
 	public static int VAMPIRE_SPAWN_PROBE;
 
 	// Vampireplayer
