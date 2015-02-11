@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAITasks;
+import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.util.AxisAlignedBB;
@@ -16,6 +17,7 @@ import net.minecraft.village.Village;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
 
@@ -73,6 +75,16 @@ public class VampireEntityEventHandler {
 						break;
 					}
 				}
+			}
+		}
+		else if(event.entity instanceof EntityCreeper){
+			EntityCreeper creeper=(EntityCreeper)event.entity;
+			EntityAITasks tasks=(EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class,creeper,"tasks");
+			if(tasks==null){
+				Logger.w("VampireEntityEventHandler","Cannot change the target tasks of creeper");
+			}
+			else{
+				tasks.addTask(3, new EntityAIAvoidVampirePlayer(creeper,12.0F,1.0D,1.2D,BALANCE.VAMPIRE_PLAYER_CREEPER_AVOID_LEVEL));
 			}
 		}
 	}

@@ -111,6 +111,9 @@ public final class BALANCE {
 
 	@DefaultDouble(1.5D)
 	public static double VAMPIRE_PLAYER_SUN_DAMAGE;
+	
+	@DefaultInt(2)
+	public static int VAMPIRE_PLAYER_CREEPER_AVOID_LEVEL;
 
 	// Vampiremob
 	@DefaultInt(5)
