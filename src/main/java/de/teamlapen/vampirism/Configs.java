@@ -42,7 +42,7 @@ public class Configs {
 		// Village
 		village_gen_enabled = config.get(cat_village.getQualifiedName(), "enabled", true,
 				"Should the custom generator be injected? (Enables/Disables the village mod)").getBoolean();
-		village_density = config.get(cat_village.getQualifiedName(), "density", 10,
+		village_density = config.get(cat_village.getQualifiedName(), "density", 15,
 				"Minecraft will try to generate 1 village per NxN chunk area. Vanilla: 32").getInt();
 		village_minDist = config.get(cat_village.getQualifiedName(), "minimumDistance", 4,
 				"Village centers will be at least N chunks apart. Must be smaller than density. Vanilla: 8").getInt();
