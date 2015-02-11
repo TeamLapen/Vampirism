@@ -67,6 +67,12 @@ public final class BALANCE {
 		public static int SPEED_LCAP;
 		@DefaultDouble(0.5D)
 		public static double SPEED_TYPE;
+		@DefaultDouble(0.2D)
+		public static double JUMP_MAX_BOOST;
+		@DefaultInt(6)
+		public static int JUMP_LCAP;
+		@DefaultDouble(0.5D)
+		public static double JUMP_TYPE;
 	}
 	/**
 	 * Calculates the players night vision effect
@@ -85,6 +91,7 @@ public final class BALANCE {
 		}
 		return (float) VAMPIRE_PLAYER_SUN_DAMAGE;
 	}
+	
 	// Mob behavior
 	@DefaultInt(value = 2, comment = "Vampirehunters attack players with a vampire level higher than this")
 	public static int VAMPIRE_HUNTER_ATTACK_LEVEL;

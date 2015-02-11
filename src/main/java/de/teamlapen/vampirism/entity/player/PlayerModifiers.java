@@ -41,9 +41,11 @@ public abstract class PlayerModifiers {
 				BALANCE.VP_MODIFIERS.STRENGTH_TYPE);
 		damage.applyModifier(new AttributeModifier(damageModifierUUID, "Vampire Strength Bonus", m, 2).setSaved(false));
 
-		// Nightvision after 1.8 maybe see
-		// net.minecraft.client.renderer.EntityRenderer.updateLightmap(float)
 
+	}
+	
+	public static void addJumpBoost(int level, EntityPlayer p){
+		p.motionY+=calculateModifierValue(level,BALANCE.VP_MODIFIERS.JUMP_LCAP,BALANCE.VP_MODIFIERS.JUMP_MAX_BOOST, BALANCE.VP_MODIFIERS.JUMP_TYPE);
 	}
 
 	/**

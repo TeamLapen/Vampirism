@@ -5,6 +5,7 @@ import net.minecraft.util.EntityDamageSource;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.util.BALANCE;
@@ -35,6 +36,15 @@ public class VampirePlayerEventHandler {
 				}
 			}
 			VampirePlayer.saveProxyData((EntityPlayer) event.entity, true);
+		}
+	}
+	
+	@SubscribeEvent
+	public void onLivingJump(LivingJumpEvent event){
+		if(event.entity instanceof EntityPlayer){
+			EntityPlayer p=(EntityPlayer)event.entity;
+			PlayerModifiers.addJumpBoost(VampirePlayer.get(p).getLevel(),p);
+			
 		}
 	}
 
