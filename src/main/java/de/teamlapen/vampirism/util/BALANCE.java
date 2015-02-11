@@ -33,7 +33,7 @@ public final class BALANCE {
 		@DefaultInt(10)
 		public static int VAMPIRE_DISTANCE_HUNTER;
 
-		@DefaultDouble(25.0D)
+		@DefaultDouble(35.0D)
 		public static double VAMPIRE_HUNTER_MAX_HEALTH;
 		@DefaultDouble(5.0D)
 		public static double VAMPIRE_HUNTER_ATTACK_DAMAGE;
@@ -86,10 +86,10 @@ public final class BALANCE {
 		return (float) VAMPIRE_PLAYER_SUN_DAMAGE;
 	}
 	// Mob behavior
-	@DefaultInt(value = 3, comment = "Vampirehunters attack players with a vampire level higher than this")
+	@DefaultInt(value = 2, comment = "Vampirehunters attack players with a vampire level higher than this")
 	public static int VAMPIRE_HUNTER_ATTACK_LEVEL;
 
-	@DefaultInt(value = 3, comment = "Vampires attack players unless their vampirelevel is higher than this")
+	@DefaultInt(value = 2, comment = "Vampires attack players unless their vampirelevel is higher than this")
 	public static int VAMPIRE_FRIENDLY_LEVEL;
 
 	@DefaultInt(20)
