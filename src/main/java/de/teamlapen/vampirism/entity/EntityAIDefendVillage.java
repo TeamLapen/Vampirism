@@ -45,7 +45,6 @@ public class EntityAIDefendVillage extends EntityAITarget {
 
 	@Override
 	public void startExecuting() {
-		Logger.i("test", "Starting to attack " + this.villageAgressorTarget.toString());
 		this.hunter.setAttackTarget(this.villageAgressorTarget);
 		super.startExecuting();
 	}

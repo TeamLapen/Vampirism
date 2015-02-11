@@ -44,7 +44,6 @@ public class TileEntityBloodAltarTier2 extends TileEntity {
 		}
 		markDirty();
 		this.worldObj.markBlockForUpdate(this.xCoord, yCoord, zCoord);
-		Logger.i("testa", "asdf:" + (bloodAmount - old) + " " + bloodAmount);
 		return bloodAmount - old;
 	}
 
@@ -66,7 +65,6 @@ public class TileEntityBloodAltarTier2 extends TileEntity {
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
 		readFromNBT(packet.func_148857_g());
-		Logger.i("test", "Receiving update from Server");
 	}
 
 	@Override

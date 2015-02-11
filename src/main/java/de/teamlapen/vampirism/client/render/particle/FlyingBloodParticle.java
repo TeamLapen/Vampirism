@@ -27,7 +27,6 @@ public class FlyingBloodParticle extends EntityFX {
 	public FlyingBloodParticle(double posX, double posY, double posZ, NBTTagCompound data) {
 
 		super(Minecraft.getMinecraft().theWorld, posX, posY, posZ, 0D, 0D, 0D);
-		Logger.i("test", "spawning at" + posX + "_" + posY + "_" + posZ);
 		entity = this.worldObj.getEntityByID(data.getInteger("player_id"));
 		if (entity == null) {
 			Logger.e(TAG, "Entity with id " + data.getInteger("player_id") + " cannot be found");
