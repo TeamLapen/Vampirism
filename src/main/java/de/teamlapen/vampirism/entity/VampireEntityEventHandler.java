@@ -79,7 +79,7 @@ public class VampireEntityEventHandler {
 		}
 		else if(event.entity instanceof EntityCreeper){
 			EntityCreeper creeper=(EntityCreeper)event.entity;
-			EntityAITasks tasks=(EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class,creeper,"tasks");
+			EntityAITasks tasks=(EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class,(EntityLiving)creeper,"tasks");
 			if(tasks==null){
 				Logger.w("VampireEntityEventHandler","Cannot change the target tasks of creeper");
 			}

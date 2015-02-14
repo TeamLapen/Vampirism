@@ -66,7 +66,7 @@ public class VampireMob implements IExtendedEntityProperties {
 	}
 
 	private void addAITasks() {
-		EntityAITasks tasks = (EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class, entity, "tasks");
+		EntityAITasks tasks = (EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class, (EntityLiving)entity, "tasks");
 		// Attack player
 		tasks.addTask(1, new EntityAIAttackOnCollide(entity, EntityPlayer.class, 1.0D, false));
 		// Attack vampire hunter

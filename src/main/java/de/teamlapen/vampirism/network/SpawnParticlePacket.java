@@ -26,7 +26,7 @@ public class SpawnParticlePacket implements IMessage {
 			if (message.type.equals("blood_eat")) {
 				Class[] paramtype = new Class[] { ItemStack.class, Integer.TYPE };
 				ItemStack is = new ItemStack(Item.getItemById(260));
-				Helper.Reflection.callMethod(EntityPlayer.class, Minecraft.getMinecraft().thePlayer, "updateItemUse", paramtype, new Object[] { is,
+				Helper.Reflection.callMethod(EntityPlayer.class, (EntityPlayer)Minecraft.getMinecraft().thePlayer, "updateItemUse", paramtype, new Object[] { is,
 						message.amount });
 				return null;
 			}
