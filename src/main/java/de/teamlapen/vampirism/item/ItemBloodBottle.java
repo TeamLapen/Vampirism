@@ -54,7 +54,7 @@ public class ItemBloodBottle extends ItemGlassBottle {
 
 	public static final int NUM_ICONS = 10;
 
-	public static final int MAX_BLOOD = NUM_ICONS - 1;
+	public static final int MAX_BLOOD = (NUM_ICONS * 2) - 1;
 
 	@SideOnly(Side.CLIENT)
 	private IIcon[] icons;
@@ -72,6 +72,8 @@ public class ItemBloodBottle extends ItemGlassBottle {
 	 */
 	@Override
 	public IIcon getIconFromDamage(int index) {
+		if (index != 0)
+			index = index / 2;
 		return icons[index];
 	}
 
@@ -85,7 +87,7 @@ public class ItemBloodBottle extends ItemGlassBottle {
 		// }
 
 		// OR just have a full bottle in creative inventory
-		list.add(new ItemStack(this, 1, MAX_BLOOD));
+		list.add(new ItemStack(this, 1, NUM_ICONS - 1));
 	}
 
 	/**
