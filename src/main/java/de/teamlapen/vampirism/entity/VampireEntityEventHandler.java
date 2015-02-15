@@ -53,7 +53,7 @@ public class VampireEntityEventHandler {
 			// Replace the EntityAINearestAttackableTarget of Irongolems, so
 			// they do not attack VampireHunters
 			EntityIronGolem golem = (EntityIronGolem) event.entity;
-			EntityAITasks targetTasks = (EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class, golem, "targetTasks");
+			EntityAITasks targetTasks = (EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class, golem, Helper.Obfuscation.getPosNames("EntityLiving/targetTasks"));
 			if (targetTasks == null) {
 				Logger.w("VampireEntityEventHandler", "Cannot change the target tasks of irongolem");
 			} else {
@@ -79,7 +79,7 @@ public class VampireEntityEventHandler {
 		}
 		else if(event.entity instanceof EntityCreeper){
 			EntityCreeper creeper=(EntityCreeper)event.entity;
-			EntityAITasks tasks=(EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class,(EntityLiving)creeper,"tasks");
+			EntityAITasks tasks=(EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class,(EntityLiving)creeper,Helper.Obfuscation.getPosNames("EntityLiving/tasks"));
 			if(tasks==null){
 				Logger.w("VampireEntityEventHandler","Cannot change the target tasks of creeper");
 			}

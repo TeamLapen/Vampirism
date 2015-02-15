@@ -2,7 +2,9 @@ package de.teamlapen.vampirism.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.HashMap;
 
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.MathHelper;
@@ -13,15 +15,14 @@ public class Helper {
 	public static class Reflection {
 
 		@SuppressWarnings("unchecked")
-		public static Object callMethod(Class cls, Object obj, String methodName, Class[] paramtype, Object[] param) {
+		public static Object callMethod(Class cls, Object obj, String[] methodName, Class[] paramtype, Object[] param) {
 			if (param != null && paramtype.length != param.length) {
 				Logger.w("ReflectCallMethod", "Param count doesnt fit paramtype count");
 				return null;
 			}
 
 			try {
-				Method method = cls.getDeclaredMethod(methodName, paramtype);
-				method.setAccessible(true);
+				Method method = ReflectionHelper.findMethod(cls, obj, methodName, paramtype);
 				return method.invoke(obj, param);
 
 			} catch (Exception e) {
@@ -31,21 +32,36 @@ public class Helper {
 			}
 		}
 
-		public static Object callMethod(Object obj, String methodName, Class[] paramtype, Object[] param) {
+		public static Object callMethod(Object obj, String[] methodName, Class[] paramtype, Object[] param) {
 			return Reflection.callMethod(obj.getClass(), obj, methodName, paramtype, param);
 		}
 
-		public static Object getPrivateFinalField(Class cls, Object obj, String fieldname) {
+		public static Object getPrivateFinalField(Class cls, Object obj, String... fieldname) {
 			try {
-				Field privateStringField = cls.getDeclaredField(fieldname);
-
-				privateStringField.setAccessible(true);
-
+				Field privateStringField = ReflectionHelper.findField(cls, fieldname);
 				return privateStringField.get(obj);
 			} catch (Exception e) {
 				Logger.e("Reflection", "Failed to get " + fieldname + " from " + obj.toString() + " of class " + cls.getCanonicalName(), e);
 				return null;
 			}
+		}
+	}
+	
+	public static class Obfuscation{
+		private static final HashMap<String,String[]> posNames=new HashMap<String,String[]>();
+		
+		private static final void add(String key,String... value){
+			posNames.put(key, value);
+		}
+		public static final void fillMap(){
+			
+			add("EntityLiving/tasks","tasks","field_70714_bg");
+			add("EntityLiving/targetTasks","targetTasks","field_70715_bh");
+			add("EntityPlayer/updateItemUse","updateItemUse","func_71010_c");
+		}
+		
+		public static String[] getPosNames(String key){
+			return posNames.get(key);
 		}
 	}
 

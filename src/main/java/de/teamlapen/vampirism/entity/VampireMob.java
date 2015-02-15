@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -66,13 +67,13 @@ public class VampireMob implements IExtendedEntityProperties {
 	}
 
 	private void addAITasks() {
-		EntityAITasks tasks = (EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class, (EntityLiving)entity, "tasks");
+		EntityAITasks tasks = (EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class, (EntityLiving)entity, Helper.Obfuscation.getPosNames("EntityLiving/tasks"));
 		// Attack player
 		tasks.addTask(1, new EntityAIAttackOnCollide(entity, EntityPlayer.class, 1.0D, false));
 		// Attack vampire hunter
 		tasks.addTask(1, new EntityAIAttackOnCollide(entity, EntityVampireHunter.class, 1.0D, true));
 
-		EntityAITasks targetTasks = (EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class, entity, "targetTasks");
+		EntityAITasks targetTasks = (EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class, entity, Helper.Obfuscation.getPosNames("EntityLiving/targetTasks"));
 		targetTasks.addTask(3, new EntityAINearestAttackableTarget(entity, EntityPlayer.class, 0, true, false, new IEntitySelector() {
 
 			@Override

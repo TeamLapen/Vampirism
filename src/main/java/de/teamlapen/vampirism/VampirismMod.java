@@ -26,6 +26,7 @@ import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
 import de.teamlapen.vampirism.network.SpawnParticlePacket;
 import de.teamlapen.vampirism.proxy.IProxy;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
@@ -78,7 +79,8 @@ public class VampirismMod {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		Configs.init(event.getSuggestedConfigurationFile());// Keep first
-
+		Helper.Obfuscation.fillMap();
+		
 		ModItems.init();
 		ModBlocks.init();
 		proxy.registerKeyBindings();
