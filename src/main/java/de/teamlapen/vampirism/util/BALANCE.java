@@ -86,7 +86,7 @@ public final class BALANCE {
 	}
 
 	public static float getVampireSunDamage(int level) {
-		if (level < 5) {
+		if (level < 4) {
 			return 0;
 		}
 		return (float) VAMPIRE_PLAYER_SUN_DAMAGE;
