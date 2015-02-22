@@ -110,8 +110,6 @@ public class EntityVampire extends EntityMob {
 			if (brightness > 0.5F) {
 				if (this.worldObj.isDaytime() && canSeeSky) {
 					this.attackEntityFrom(VampirismMod.sunDamage, 0.5F);
-				} else {
-					this.setFire(2);
 				}
 			}
 		}
