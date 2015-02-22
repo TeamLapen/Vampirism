@@ -35,7 +35,7 @@ public class ModConfigGui extends GuiConfig {
 
 		@Override
 		protected GuiScreen buildChildScreen() {
-			return new GuiConfig(this.owningScreen, getConfigElements(), this.owningScreen.modID, Configs.CATEGORY_BALANCE, false, false,
+			return new GuiConfig(this.owningScreen, getConfigElements(), this.owningScreen.modID, Configs.CATEGORY_BALANCE, true, true,
 					REFERENCE.NAME + " Balance");
 		}
 
@@ -51,7 +51,7 @@ public class ModConfigGui extends GuiConfig {
 		protected GuiScreen buildChildScreen() {
 			return new GuiConfig(this.owningScreen,
 					(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_BALANCE_LEVELING))).getChildElements(), this.owningScreen.modID,
-					Configs.CATEGORY_BALANCE_LEVELING, false, false, REFERENCE.NAME + " Balance");
+					Configs.CATEGORY_BALANCE_LEVELING, true, false, REFERENCE.NAME + " Balance");
 		}
 
 	}
@@ -66,7 +66,7 @@ public class ModConfigGui extends GuiConfig {
 		protected GuiScreen buildChildScreen() {
 			return new GuiConfig(this.owningScreen,
 					(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_BALANCE_PLAYER_MOD))).getChildElements(), this.owningScreen.modID,
-					Configs.CATEGORY_BALANCE_PLAYER_MOD, false, false, REFERENCE.NAME + " Balance");
+					Configs.CATEGORY_BALANCE_PLAYER_MOD, true, false, REFERENCE.NAME + " Balance");
 		}
 	}
 
@@ -81,7 +81,7 @@ public class ModConfigGui extends GuiConfig {
 	}
 
 	public ModConfigGui(GuiScreen parentScreen) {
-		super(parentScreen, getConfigElements(), REFERENCE.MODID, true, false, REFERENCE.NAME + " Config");
+		super(parentScreen, getConfigElements(), REFERENCE.MODID, true, true, REFERENCE.NAME + " Config");
 	}
 
 }

@@ -17,6 +17,7 @@ import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.entity.VampireEntityEventHandler;
 import de.teamlapen.vampirism.entity.player.VampirePlayerEventHandler;
 import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 public abstract class CommonProxy implements IProxy {
@@ -49,11 +50,13 @@ public abstract class CommonProxy implements IProxy {
 				BiomeGenBase.class);
 
 		// Registration of vampire hunter
+		Logger.i("EntityRegister", "Adding "+REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME+" with spawn probe of "+BALANCE.VAMPIRE_HUNTER_SPAWN_PROBE);
 		EntityRegistry.registerGlobalEntityID(EntityVampireHunter.class, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME,
 				EntityRegistry.findGlobalUniqueEntityId(), 0x666D68, 0x52E9E9);
 		EntityRegistry.addSpawn(EntityVampireHunter.class, BALANCE.VAMPIRE_HUNTER_SPAWN_PROBE, 1, 2, EnumCreatureType.creature, allBiomes);
 
 		// Registration of vampire
+		Logger.i("EntityRegister", "Adding "+REFERENCE.ENTITY.VAMPIRE_NAME+" with spawn probe of "+BALANCE.VAMPIRE_SPAWN_PROBE);
 		EntityRegistry.registerGlobalEntityID(EntityVampire.class, REFERENCE.ENTITY.VAMPIRE_NAME, EntityRegistry.findGlobalUniqueEntityId(),
 				0x54B8DD, 0x34898D);
 		EntityRegistry.addSpawn(EntityVampire.class, BALANCE.VAMPIRE_SPAWN_PROBE, 1, 3, EnumCreatureType.monster, allBiomes);
