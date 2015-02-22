@@ -1,0 +1,27 @@
+# Entitys
+entity.vampirism:vampireHunter.name=Chasseur de vampire
+entity.vampirism:vampire.name=Vampire
+
+# Items
+item.vampirism:vampiresFear.name=Frayeur de vampire
+item.vampirism:bloodBottle.name=Bouteille de sang
+item.vampirism:vampireFang.name=Canine de vampire
+item.vampirism:spawnBloodAltar.name=Autel de sang
+item.vampirism:spawnBloodAltarTier2.name=Autel de sang Niv2
+
+# Blocks
+block.vampirism:bloodAltar.name=Autel de sang
+block.vampirism:bloodAltarTier2.name=Autel de sang Niv2
+
+# Keys
+
+keys.vampirism.category=Vampirisme
+keys.vampirism.suck=Suce le sang
+keys.vampirism.auto=Auto remplissage de bouteille de sang
+
+#General
+itemGroup.vampirism=Vampirisme
+death.attack.sun=%1$s n'a pas aimé le soleil
+category.vampirism.balance=Options de balance
+category.vampirism.balance_level=Options de balance de montée de niveau
+category.vampirism.balance_player_mod=Options des modificateurs du joueur vampire
