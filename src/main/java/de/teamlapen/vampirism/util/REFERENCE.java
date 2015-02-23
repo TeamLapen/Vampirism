@@ -19,9 +19,9 @@ public class REFERENCE {
 	public static final String MODID = "vampirism";
 
 	public static final String NAME = "Vampirism";
-	public static final String VERSION = "0.2";
-	public static final String MINECRAFT_VERSION = "1.7.10";
-	public static final boolean RESET_CONFIG_IN_DEV=true;
+	public static final String VERSION = "@VERSION@";
+	public static final String MINECRAFT_VERSION = "@MVERSION@";
+	public static final boolean RESET_CONFIG_IN_DEV=false;
 
 	public static final String VAMPIRE_LEVEL_NBT_KEY = "vampirelevel";
 
