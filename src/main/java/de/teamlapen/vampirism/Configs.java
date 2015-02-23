@@ -42,6 +42,8 @@ public class Configs {
 		ConfigCategory cat_balance_mobprop = config.getCategory(CATEGORY_BALANCE_MOBPROP);
 		cat_balance_leveling.setComment("You can adjust the properties of the added mobs");
 
+		//General
+		String conf_version=config.get(CATEGORY_GENERAL, "config_mod_version", REFERENCE.VERSION).getString();
 		// Village
 		village_gen_enabled = config.get(cat_village.getQualifiedName(), "enabled", true,
 				"Should the custom generator be injected? (Enables/Disables the village mod)").getBoolean();
@@ -70,10 +72,17 @@ public class Configs {
 		loadFields(cat_balance_player_mod, BALANCE.VP_MODIFIERS.class);
 		loadFields(cat_balance_leveling, BALANCE.LEVELING.class);
 		loadFields(cat_balance_mobprop, BALANCE.MOBPROP.class);
+		
 
 		if (config.hasChanged()) {
 			config.save();
 		}
+		if(!conf_version.equals(REFERENCE.VERSION)){
+			Logger.i("Config", "Resetting config to default because a update was found");
+			setConfigToDefault();
+		}
+		
+		
 	}
 	/**
 	 * This methods makes variables from a class available in the config file.
@@ -156,6 +165,10 @@ public class Configs {
 		}
 		Logger.i("Config", "Reset config to default");
 		config.save();
+	}
+	
+	private static void handleModUpdated(){
+		
 	}
 	public static final String CATEGORY_GENERAL = Configuration.CATEGORY_GENERAL;
 	public static final String CATEGORY_VILLAGE = "village_settings";
