@@ -17,14 +17,17 @@ import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.EntityWolf;
+import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
+import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.client.KeyInputEventHandler;
 import de.teamlapen.vampirism.client.gui.VampireHudOverlay;
 import de.teamlapen.vampirism.client.model.ModelVampire;
 import de.teamlapen.vampirism.client.model.ModelVampireHunter;
+import de.teamlapen.vampirism.client.render.PitchforkRenderer;
 import de.teamlapen.vampirism.client.render.RendererBloodAltar;
 import de.teamlapen.vampirism.client.render.RendererBloodAltarTier2;
 import de.teamlapen.vampirism.client.render.VampireHunterRenderer;
@@ -57,7 +60,8 @@ public class ClientProxy extends CommonProxy {
 	public void registerRenderer() {
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampireHunter.class, new VampireHunterRenderer(new ModelVampireHunter(), 0.5F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampire.class, new VampireRenderer(new ModelVampire(), 0.5F));
-
+		MinecraftForgeClient.registerItemRenderer(ModItems.pitchfork, new PitchforkRenderer());
+		
 		// Vampire vanilla renderers
 		RenderingRegistry.registerEntityRenderingHandler(EntityCow.class, new RenderVampireCow(new ModelCow(), 0.7F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityPig.class, new RenderVampirePig(new ModelPig(), new ModelPig(0.5F), 0.7F));

@@ -5,11 +5,15 @@ import java.util.List;
 
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import de.teamlapen.vampirism.coremod.CoreHandler;
+import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
 
 /**
@@ -79,7 +83,13 @@ public class TestCommand implements ICommand {
 	public void processCommand(ICommandSender sender, String[] param) {
 		if (sender instanceof EntityPlayer) {
 			EntityPlayer p = (EntityPlayer) sender;
-			sendMessage(sender, " " + p.worldObj.isDaytime());
+			List t=p.worldObj.getEntitiesWithinAABB(EntityVampireHunter.class, AxisAlignedBB.getBoundingBox(p.posX-10,p.posY-5,p.posZ-10,p.posX+10,p.posY+5,p.posZ+10));
+			if(t!=null){
+				for(Object o:t){
+					EntityVampireHunter eh=(EntityVampireHunter)o;
+					eh.setAgressive(!eh.isAgressive());
+				}
+			}
 			// -----------------
 			if (param.length > 0) {
 				try {

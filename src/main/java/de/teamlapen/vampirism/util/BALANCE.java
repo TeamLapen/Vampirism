@@ -37,10 +37,12 @@ public final class BALANCE {
 		public static double VAMPIRE_HUNTER_MAX_HEALTH;
 		@DefaultDouble(5.0D)
 		public static double VAMPIRE_HUNTER_ATTACK_DAMAGE;
-		@DefaultDouble(0.4F)
+		@DefaultDouble(0.28F)
 		public static double VAMPIRE_HUNTER_MOVEMENT_SPEED;
 		@DefaultInt(5)
 		public static int VAMPIRE_HUNTER_MAX_PER_VILLAGE;
+		@DefaultDouble(1.4D)
+		public static double VAMPIRE_HUNTER_AGRESSIVE_MULT;
 	}
 	/**
 	 * Class to store all constants related to the player modifiers See {@link:

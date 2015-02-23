@@ -15,16 +15,20 @@ import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.DamageSource;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
+import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.Logger;
 
 public class EntityVampireHunter extends EntityMob {
 
 	private boolean isLookingForHome;
+	private boolean agressive;
 
 	public EntityVampireHunter(World p_i1738_1_) {
 		super(p_i1738_1_);
@@ -70,6 +74,9 @@ public class EntityVampireHunter extends EntityMob {
 		// Default to not in a village, will be set to false in
 		// WorldGenVampirism when generated on the surface in a village
 		isLookingForHome = true;
+		agressive=false;
+		
+		this.setEquipmentDropChance(0, 0);
 	}
 
 	@Override
@@ -151,5 +158,24 @@ public class EntityVampireHunter extends EntityMob {
 		this.tasks.addTask(3, new EntityAIMoveTowardsRestriction(this, 1.0F));
 		this.tasks.addTask(4, new EntityAIMoveThroughVillage(this, 0.9F, false));
 		this.targetTasks.addTask(2, new EntityAIDefendVillage(this));
+	}
+	
+	public void setAgressive(boolean flag){
+		if(flag){
+			agressive=true;
+			Logger.i("test", "aggro");
+			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_MOVEMENT_SPEED*BALANCE.MOBPROP.VAMPIRE_HUNTER_AGRESSIVE_MULT);
+			this.setCurrentItemOrArmor(0, new ItemStack(ModItems.pitchfork));
+		}
+		else{
+			agressive=false;
+			Logger.i("test", "no more aggro");
+			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_MOVEMENT_SPEED);
+			this.setCurrentItemOrArmor(0,null);
+		}
+	}
+	
+	public boolean isAgressive(){
+		return agressive;
 	}
 }
