@@ -154,10 +154,8 @@ public class Configs {
 				e.getValue().setToDefault();
 			}
 		}
-		if (config.hasChanged()) {
-			Logger.i("Config", "Reset config to default");
-			config.save();
-		}
+		Logger.i("Config", "Reset config to default");
+		config.save();
 	}
 	public static final String CATEGORY_GENERAL = Configuration.CATEGORY_GENERAL;
 	public static final String CATEGORY_VILLAGE = "village_settings";
