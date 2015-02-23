@@ -2,9 +2,11 @@ package de.teamlapen.vampirism;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.util.Map.Entry;
 
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import de.teamlapen.vampirism.util.BALANCE;
@@ -21,6 +23,7 @@ public class Configs {
 			config = new Configuration(configFile);
 		}
 		loadConfiguration();
+		Logger.i("Config", "Loaded configuration");
 	}
 	/**
 	 * Loads/refreshes the configuration and adds comments if there aren't any
@@ -142,6 +145,18 @@ public class Configs {
 				Logger.e("Configs", "Cant set " + cls.getName() + " values", e);
 				throw new Error("Please check your vampirism config file");
 			}
+		}
+	}
+	
+	public static void setConfigToDefault(){
+		for(String cat:config.getCategoryNames()){
+			for(Entry<String, Property> e:config.getCategory(cat).entrySet()){
+				e.getValue().setToDefault();
+			}
+		}
+		if (config.hasChanged()) {
+			Logger.i("Config", "Reset config to default");
+			config.save();
 		}
 	}
 	public static final String CATEGORY_GENERAL = Configuration.CATEGORY_GENERAL;

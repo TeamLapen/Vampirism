@@ -2,6 +2,7 @@ package de.teamlapen.vampirism;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -79,6 +80,9 @@ public class VampirismMod {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		Configs.init(event.getSuggestedConfigurationFile());// Keep first
+		if(REFERENCE.RESET_CONFIG_IN_DEV&&(Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment")){
+			Configs.setConfigToDefault();
+		}
 		Helper.Obfuscation.fillMap();
 		
 		ModItems.init();
