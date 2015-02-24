@@ -7,6 +7,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
+import net.minecraft.entity.ai.EntityAIBreakDoor;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
@@ -25,6 +26,8 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.villages.VillageVampire;
+import de.teamlapen.vampirism.villages.VillageVampireData;
 
 public class EntityVampire extends EntityMob {
 	// TODO Sounds
@@ -33,17 +36,19 @@ public class EntityVampire extends EntityMob {
 		super(par1World);
 
 		this.getNavigator().setAvoidsWater(true);
+		this.getNavigator().setBreakDoors(true);
 		this.setSize(0.6F, 1.8F);
 
 		// Attack player
 		this.tasks.addTask(0, new EntityAISwimming(this));
-		this.tasks.addTask(1, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.1, false));
+		this.tasks.addTask(1, new EntityAIBreakDoor(this));
+		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.1, false));
 		// Attack vampire hunter
-		this.tasks.addTask(1, new EntityAIAttackOnCollide(this, EntityVampireHunter.class, 1.0, true));
+		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityVampireHunter.class, 1.0, true));
 		// Attack villager
-		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityVillager.class, 0.9, true));
+		this.tasks.addTask(3, new EntityAIAttackOnCollide(this, EntityVillager.class, 0.9, true));
 		// Avoids Vampire Hunters
-		this.tasks.addTask(2, new EntityAIAvoidEntity(this, EntityVampireHunter.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.2));
+		this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityVampireHunter.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.2));
 		// Low priority tasks
 		this.tasks.addTask(6, new EntityAIMoveThroughVillage(this, 0.6, false));
 		this.tasks.addTask(6, new EntityAIWander(this, 0.7));
@@ -63,7 +68,17 @@ public class EntityVampire extends EntityMob {
 
 		}));
 		// Search for villagers
-		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVillager.class, 0, true));
+		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVillager.class, 0, true, false, new IEntitySelector() {
+
+			@Override
+			public boolean isEntityApplicable(Entity entity) {
+				if (entity instanceof EntityVillager) {
+					return !VampireMob.get((EntityVillager) entity).isVampire();
+				}
+				return false;
+			}
+
+		}));
 
 	}
 
@@ -88,17 +103,19 @@ public class EntityVampire extends EntityMob {
 	}
 
 	@Override
-	public void onKillEntity(EntityLivingBase p_70074_1_) {
+	public void onKillEntity(EntityLivingBase entity) {
 
-		if ((this.worldObj.difficultySetting == EnumDifficulty.NORMAL || this.worldObj.difficultySetting == EnumDifficulty.HARD)
-				&& p_70074_1_ instanceof EntityVillager) {
+		if (entity instanceof EntityVillager) {
 
 			Entity e = EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_NAME, this.worldObj);
-			e.copyLocationAndAnglesFrom(p_70074_1_);
-
+			e.copyLocationAndAnglesFrom(entity);
+			VillageVampire v=VillageVampireData.get(entity.worldObj).findNearestVillage(entity);
+			if(v!=null){
+				v.villagerConvertedByVampire();
+			}
 			this.worldObj.spawnEntityInWorld(e);
 		}
-		super.onKillEntity(p_70074_1_);
+		super.onKillEntity(entity);
 	}
 
 	@Override

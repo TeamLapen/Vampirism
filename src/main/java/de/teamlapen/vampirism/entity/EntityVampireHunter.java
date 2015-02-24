@@ -10,6 +10,7 @@ import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
 import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.ai.EntityAIOpenDoor;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.monster.EntityMob;
@@ -34,17 +35,20 @@ public class EntityVampireHunter extends EntityMob {
 		super(p_i1738_1_);
 
 		this.getNavigator().setAvoidsWater(true);
+		this.getNavigator().setBreakDoors(true);
 		this.setSize(0.6F, 1.8F);
 
 		// Tasks (more tasks may be added in setLookingForHome()
 		this.tasks.addTask(0, new EntityAISwimming(this));
+		this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityVampire.class, 1.1, false));
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.1, false));
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityCreature.class, 0.9, false));
+		
 		this.tasks.addTask(6, new EntityAIWander(this, 0.7));
 		this.tasks.addTask(9, new EntityAILookIdle(this));
 
-		// TargetTasks (more tasks may be added in setLookingForHome()
+		// TargetTasks (more tasks may be added in setHomeArea)
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true, false, new IEntitySelector() {
@@ -168,13 +172,11 @@ public class EntityVampireHunter extends EntityMob {
 	public void setAgressive(boolean flag){
 		if(flag){
 			agressive=true;
-			Logger.i("test", "aggro");
 			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_MOVEMENT_SPEED*BALANCE.MOBPROP.VAMPIRE_HUNTER_AGRESSIVE_MULT);
 			this.setCurrentItemOrArmor(0, new ItemStack(ModItems.pitchfork));
 		}
 		else{
 			agressive=false;
-			Logger.i("test", "no more aggro");
 			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_MOVEMENT_SPEED);
 			this.setCurrentItemOrArmor(0,null);
 		}
