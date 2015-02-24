@@ -25,7 +25,7 @@ public class BlockBloodAltarTier2 extends BasicBlockContainer {
 
 	public BlockBloodAltarTier2() {
 		super(Material.iron, name);
-		// super.registerBlockIcons(this.getBlockTextureFromSide(1));
+		this.setBlockTextureName("vampirism:iconBloodAltarTier2");
 	}
 
 	private void addBlood(TileEntityBloodAltarTier2 te, ItemStack item) {
@@ -37,14 +37,14 @@ public class BlockBloodAltarTier2 extends BasicBlockContainer {
 	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
 		return new TileEntityBloodAltarTier2();
 	}
-
+	/* Not needed anymore
 	@SideOnly(Side.CLIENT)
 	@Override
 	public String getItemIconName() {
 		return "vampirism:spawnBloodAltar";
 
 	}
-
+	*/
 	@SideOnly(Side.CLIENT)
 	@Override
 	public int getRenderBlockPass() {

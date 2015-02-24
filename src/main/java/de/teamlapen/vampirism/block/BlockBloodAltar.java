@@ -19,6 +19,7 @@ public class BlockBloodAltar extends BasicBlockContainer {
 		super(Material.rock, name);
 		this.setHardness(70.0F);
 		this.setResistance(4000.0F);
+		this.setBlockTextureName("vampirism:iconBloodAltarTier");
 	}
 
 	private void activateAltar(EntityPlayer player, ItemStack item, TileEntityBloodAltar te) {
@@ -34,12 +35,6 @@ public class BlockBloodAltar extends BasicBlockContainer {
 		return new TileEntityBloodAltar();
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public String getItemIconName() {
-		return "vampirism:spawnBloodAltar";
-
-	}
 
 	@Override
 	public boolean onBlockActivated(World world, int par2, int par3, int par4, EntityPlayer player, int par6, float par7, float par8, float par9) {
