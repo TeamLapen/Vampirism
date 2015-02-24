@@ -6,6 +6,7 @@ entity.vampirism:vampire.name=Vampire
 item.vampirism:vampiresFear.name=Frayeur de vampire
 item.vampirism:bloodBottle.name=Bouteille de sang
 item.vampirism:vampireFang.name=Canine de vampire
+item.vampirism:pitchfork.name=Fourche à foin
 item.vampirism:spawnBloodAltar.name=Autel de sang
 item.vampirism:spawnBloodAltarTier2.name=Autel de sang Niv2
 
