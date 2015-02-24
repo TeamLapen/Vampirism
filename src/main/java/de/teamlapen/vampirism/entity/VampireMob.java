@@ -23,6 +23,8 @@ import net.minecraftforge.common.IExtendedEntityProperties;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.villages.VillageVampire;
+import de.teamlapen.vampirism.villages.VillageVampireData;
 
 public class VampireMob implements IExtendedEntityProperties {
 
@@ -96,7 +98,6 @@ public class VampireMob implements IExtendedEntityProperties {
 	 *         not biteable
 	 */
 	public int bite() {
-
 		if (blood == -1) {
 			return -2;
 		}
@@ -109,6 +110,12 @@ public class VampireMob implements IExtendedEntityProperties {
 			return -1;
 		}
 		makeVampire();
+		if(entity instanceof EntityVillager){
+			VillageVampire v=VillageVampireData.get(entity.worldObj).findNearestVillage(entity);
+			if(v!=null){
+				v.villagerBitten();
+			}
+		}
 		return blood;
 
 	}

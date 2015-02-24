@@ -2,14 +2,22 @@ package de.teamlapen.vampirism.util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import cpw.mods.fml.relauncher.ReflectionHelper;
+import de.teamlapen.vampirism.entity.EntityVampireHunter;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
+import net.minecraft.village.Village;
+import net.minecraft.world.World;
 
 public class Helper {
 	public static class Reflection {
@@ -96,5 +104,30 @@ public class Helper {
 		}
 		Vec3 vector2 = vector1.addVector(pitchAdjustedSinYaw * distance, sinPitch * distance, pitchAdjustedCosYaw * distance);
 		return player.worldObj.rayTraceBlocks(vector1, vector2);
+	}
+	
+	public static List<EntityCreature> spawnEntityCreatureInVillage(Village v,int max,String name,World world){
+		int spawned=0;
+		List<EntityCreature> list=new ArrayList<EntityCreature>();
+		int r=v.getVillageRadius();
+		for (int i = 1; i < 20 && spawned < max; i++) {
+			int x1 = v.getCenter().posX + world.rand.nextInt((int) (1.2 * r)) - (int) (0.6 * r);
+			int z1 = v.getCenter().posZ + world.rand.nextInt((int) (1.2 * r)) - (int) (0.6 * r);
+
+			int y1 = world.getHeightValue(x1, z1);
+			if (v.isInRange(x1, y1, z1)) {
+				EntityCreature e = (EntityCreature) EntityList.createEntityByName(name, world);
+				e.setLocationAndAngles(x1, y1, z1, 0.0F, 0.0F);			
+				if (e.getCanSpawnHere()) {
+					world.spawnEntityInWorld(e);
+					list.add(e);
+					spawned++;
+				} else {
+					e.setDead();
+				}
+
+			}
+		}
+		return list;
 	}
 }

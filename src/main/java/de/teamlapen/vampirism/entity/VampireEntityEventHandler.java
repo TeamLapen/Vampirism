@@ -47,7 +47,6 @@ public class VampireEntityEventHandler {
 						event.world.getActualHeight(), v.getCenter().posZ + r);
 				ChunkCoordinates cc = v.getCenter();
 				e.setHomeArea(cc.posX, cc.posY, cc.posZ, r);
-				e.setFoundHome();
 			}
 		} else if (event.entity instanceof EntityIronGolem) {
 			// Replace the EntityAINearestAttackableTarget of Irongolems, so

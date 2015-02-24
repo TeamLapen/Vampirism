@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.generation;
 import java.util.Random;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.village.Village;
@@ -13,6 +14,7 @@ import cpw.mods.fml.common.IWorldGenerator;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.generation.structures.GenerateBloodAltar;
 import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 /**
@@ -47,34 +49,10 @@ public class WorldGenVampirism implements IWorldGenerator {
 				world.getActualHeight(), v.getCenter().posZ + r);
 
 		int spawnedHunter = world.getEntitiesWithinAABB(EntityVampireHunter.class, box).size();
-		// Logger.i("Test", "Found village at: " + v.getCenter().posX + " " +
-		// v.getCenter().posY
-		// + " " + v.getCenter().posZ + " with " + spawnedHunter + " Hunters");
-
-		// All hunters are currently spawning at the center of the village
-		for (int i = 1; i < 20 && spawnedHunter < BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE; i++) {
-			int x1 = v.getCenter().posX + world.rand.nextInt((int) (1.2 * r)) - (int) (0.6 * r);
-			int z1 = v.getCenter().posZ + world.rand.nextInt((int) (1.2 * r)) - (int) (0.6 * r);
-
-			int y1 = world.getHeightValue(x1, z1);
-			if (v.isInRange(x1, y1, z1)) {
-				// Logger.i("test", "going to spawn hunter!");
-				Entity e = EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world);
-				e.setLocationAndAngles(x1, y1, z1, 0.0F, 0.0F);
-				((EntityVampireHunter) e).setFoundHome();
-				if (((EntityVampireHunter) e).getCanSpawnHere()) {
-					((EntityVampireHunter) e).setHomeArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, r);
-					world.spawnEntityInWorld(e);
-					// Logger.i("HunterSpawn", "Spawned Hunter at: " + x1 + " "
-					// + y1 + " " + z1);
-
-					spawnedHunter++;
-				} else {
-					e.setDead();
-				}
-
-			}
+		for(EntityCreature e:Helper.spawnEntityCreatureInVillage(v, BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE-spawnedHunter, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world)){
+				((EntityVampireHunter) e).setHomeArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, r);
 		}
+		
 	}
 
 	private void addStructures(World world, Random random, int x, int z) {

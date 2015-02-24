@@ -7,10 +7,13 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.WorldEvent;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterators;
 
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
@@ -19,6 +22,7 @@ import de.teamlapen.vampirism.entity.player.VampirePlayerEventHandler;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.villages.VillageVampireData;
 
 public abstract class CommonProxy implements IProxy {
 
@@ -66,6 +70,15 @@ public abstract class CommonProxy implements IProxy {
 	public void registerSubscriptions() {
 		MinecraftForge.EVENT_BUS.register(new VampirePlayerEventHandler());
 		MinecraftForge.EVENT_BUS.register(new VampireEntityEventHandler());
+		MinecraftForge.EVENT_BUS.register(this);
 	}
+	
+	@SubscribeEvent
+	public void onWorldLoad(WorldEvent.Load event){
+		//Loading VillageVampireData
+		FMLCommonHandler.instance().bus().register(VillageVampireData.get(event.world));//Not sure if this is the right position or if it could lead to a memory leak
+	}
+	
+	
 
 }

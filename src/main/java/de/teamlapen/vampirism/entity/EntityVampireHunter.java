@@ -149,15 +149,20 @@ public class EntityVampireHunter extends EntityMob {
 		super.onDeathUpdate();
 	}
 
+
 	/**
-	 * Makes the hunter not look for a new home anymore and adds village
+	 * Makes the hunter not look for a new home anymore, sets the home area and adds village
 	 * specific AI tasks
 	 */
-	public void setFoundHome() {
-		isLookingForHome = false;
-		this.tasks.addTask(3, new EntityAIMoveTowardsRestriction(this, 1.0F));
-		this.tasks.addTask(4, new EntityAIMoveThroughVillage(this, 0.9F, false));
-		this.targetTasks.addTask(2, new EntityAIDefendVillage(this));
+	@Override
+	public void setHomeArea(int p_110171_1_, int p_110171_2_, int p_110171_3_, int p_110171_4_){
+		super.setHomeArea(p_110171_1_, p_110171_2_, p_110171_3_, p_110171_4_);
+		if(isLookingForHome){
+			isLookingForHome = false;
+			this.tasks.addTask(3, new EntityAIMoveTowardsRestriction(this, 1.0F));
+			this.tasks.addTask(4, new EntityAIMoveThroughVillage(this, 0.9F, false));
+			this.targetTasks.addTask(2, new EntityAIDefendVillage(this));
+		}
 	}
 	
 	public void setAgressive(boolean flag){
