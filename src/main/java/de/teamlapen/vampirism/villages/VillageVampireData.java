@@ -42,8 +42,6 @@ public class VillageVampireData extends WorldSavedData {
             village.readFromNBT(nbttagcompound1);
             this.villageList.add(village);
         }
-        Logger.i("test", "Loaded villagedata :"+villageList.size());
-
 	}
 
 	@Override
@@ -61,8 +59,6 @@ public class VillageVampireData extends WorldSavedData {
         }
 
         p_76187_1_.setTag("Villages", nbttaglist);
-        Logger.i("test", "wrote villagedata :"+villageList.size());
-
 	}
 	
 	public static VillageVampireData get(World world) {

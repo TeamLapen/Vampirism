@@ -23,6 +23,10 @@ public class ModConfigGui extends GuiConfig {
 			list.add(new DummyConfigElement.DummyCategoryElement("balance_level", "category.vampirism.balance_level", BalanceLevelEntry.class));
 			list.add(new DummyConfigElement.DummyCategoryElement("balance_player_mod", "category.vampirism.balance_player_mod",
 					BalancePlayerModEntry.class));
+			list.add(new DummyConfigElement.DummyCategoryElement("balance_mob_prop", "category.vampirism.balance_mob_prop",
+					BalanceMobPropEntry.class));
+			list.add(new DummyConfigElement.DummyCategoryElement("balance_vv_prop", "category.vampirism.balance_vv_prop",
+					BalanceVillagePropEntry.class));
 			list.addAll(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_BALANCE)).getChildElements());
 
 			return list;
@@ -67,6 +71,34 @@ public class ModConfigGui extends GuiConfig {
 			return new GuiConfig(this.owningScreen,
 					(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_BALANCE_PLAYER_MOD))).getChildElements(), this.owningScreen.modID,
 					Configs.CATEGORY_BALANCE_PLAYER_MOD, true, false, REFERENCE.NAME + " Balance");
+		}
+	}
+	
+	public static class BalanceMobPropEntry extends CategoryEntry {
+
+		public BalanceMobPropEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement configElement) {
+			super(owningScreen, owningEntryList, configElement);
+		}
+
+		@Override
+		protected GuiScreen buildChildScreen() {
+			return new GuiConfig(this.owningScreen,
+					(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_BALANCE_MOBPROP))).getChildElements(), this.owningScreen.modID,
+					Configs.CATEGORY_BALANCE_MOBPROP, true, false, REFERENCE.NAME + " Balance");
+		}
+	}
+	
+	public static class BalanceVillagePropEntry extends CategoryEntry {
+
+		public BalanceVillagePropEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement configElement) {
+			super(owningScreen, owningEntryList, configElement);
+		}
+
+		@Override
+		protected GuiScreen buildChildScreen() {
+			return new GuiConfig(this.owningScreen,
+					(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_BALANCE_VVPROP))).getChildElements(), this.owningScreen.modID,
+					Configs.CATEGORY_BALANCE_VVPROP, true, false, REFERENCE.NAME + " Balance");
 		}
 	}
 

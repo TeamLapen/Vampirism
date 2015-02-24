@@ -40,7 +40,9 @@ public class Configs {
 		ConfigCategory cat_balance_leveling = config.getCategory(CATEGORY_BALANCE_LEVELING);
 		cat_balance_leveling.setComment("You can adjust these values to change the level up requirements");
 		ConfigCategory cat_balance_mobprop = config.getCategory(CATEGORY_BALANCE_MOBPROP);
-		cat_balance_leveling.setComment("You can adjust the properties of the added mobs");
+		cat_balance_mobprop.setComment("You can adjust the properties of the added mobs");
+		ConfigCategory cat_balance_vvprop = config.getCategory(CATEGORY_BALANCE_VVPROP);
+		cat_balance_vvprop.setComment("You can adjust the configuration of village managment (Agressive hunters, etc.)");
 
 		//General
 		String conf_version=config.get(CATEGORY_GENERAL, "config_mod_version", REFERENCE.VERSION).getString();
@@ -72,6 +74,7 @@ public class Configs {
 		loadFields(cat_balance_player_mod, BALANCE.VP_MODIFIERS.class);
 		loadFields(cat_balance_leveling, BALANCE.LEVELING.class);
 		loadFields(cat_balance_mobprop, BALANCE.MOBPROP.class);
+		loadFields(cat_balance_vvprop,BALANCE.VV_PROP.class);
 		
 
 		if (config.hasChanged()) {
@@ -177,6 +180,7 @@ public class Configs {
 	public static final String CATEGORY_BALANCE_PLAYER_MOD = "balance_player_mod";
 	public static final String CATEGORY_BALANCE_LEVELING = "balance_leveling";
 	public static final String CATEGORY_BALANCE_MOBPROP = "balance_mob_properties";
+	public static final String CATEGORY_BALANCE_VVPROP = "balance_vv_properties";
 	public static boolean village_gen_enabled;
 
 	public static int village_density;

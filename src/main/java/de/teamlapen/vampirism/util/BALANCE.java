@@ -37,7 +37,7 @@ public final class BALANCE {
 		public static double VAMPIRE_HUNTER_MAX_HEALTH;
 		@DefaultDouble(5.0D)
 		public static double VAMPIRE_HUNTER_ATTACK_DAMAGE;
-		@DefaultDouble(0.28F)
+		@DefaultDouble(0.28D)
 		public static double VAMPIRE_HUNTER_MOVEMENT_SPEED;
 		@DefaultInt(5)
 		public static int VAMPIRE_HUNTER_MAX_PER_VILLAGE;
@@ -75,6 +75,15 @@ public final class BALANCE {
 		public static int JUMP_LCAP;
 		@DefaultDouble(0.5D)
 		public static double JUMP_TYPE;
+	}
+	
+	public static class VV_PROP{
+		@DefaultInt(value=2,comment="How many villagers can be bitten until the hunters get agressive")//TODO increase
+		public static int BITTEN_UNTIL_AGRESSIVE;
+		@DefaultInt(value=2,comment="How many villagers have to be killed by Vampires until the hunters get agressive")//TODO increase
+		public static int CONVERTED_UNTIL_AGRESSIVE;
+		@DefaultInt(value=50,comment="Determines how fast the villages forget about their fallen citizens.")
+		public static int REDUCE_RATE;
 	}
 	/**
 	 * Calculates the players night vision effect

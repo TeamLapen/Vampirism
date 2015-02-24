@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
@@ -114,6 +115,12 @@ public class VampireMob implements IExtendedEntityProperties {
 			VillageVampire v=VillageVampireData.get(entity.worldObj).findNearestVillage(entity);
 			if(v!=null){
 				v.villagerBitten();
+			}
+		}
+		//If entity is a child only give 1/3 blood
+		if(entity instanceof EntityAgeable){
+			if(((EntityAgeable)entity).getGrowingAge()<0){
+				return Math.round((float)blood/3);
 			}
 		}
 		return blood;

@@ -22,6 +22,7 @@ public class VillageVampire {
 	private World world;
 	private final ChunkCoordinates center = new ChunkCoordinates(0, 0, 0);
 	private int recentlyBitten;
+	private int recentlyConverted;
 	private boolean agressive;
 	private boolean dirty;
 	
@@ -35,6 +36,7 @@ public class VillageVampire {
 		nbt.setInteger("CZ",center.posZ);
 		nbt.setBoolean("AGR", agressive);
 		nbt.setInteger("BITTEN", recentlyBitten);
+		nbt.setInteger("CONVERTED", recentlyConverted);
 	}
 	
 	public void readFromNBT(NBTTagCompound nbt){
@@ -43,6 +45,7 @@ public class VillageVampire {
 		center.posZ=nbt.getInteger("CZ");
 		agressive=nbt.getBoolean("AGR");
 		recentlyBitten=nbt.getInteger("BITTEN");
+		recentlyConverted=nbt.getInteger("CONVERTED");
 	}
 	
 	public Village getVillage(){
@@ -86,26 +89,31 @@ public class VillageVampire {
 		if(tickCounter%20==0){
 			Village v=getVillage();
 			if(v!=null){
-				if(tickCounter%(20*50)==0){
+				if((tickCounter%(20*BALANCE.VV_PROP.REDUCE_RATE))==0){
 					if(recentlyBitten>0){
 						recentlyBitten--;
-						Logger.i(TAG, "Reducing recently bitten");
 						dirty=true;
 						if(world.rand.nextInt(3)>0){
 							spawnVillager(v);
 						}
 					}
-
+					if(recentlyConverted>0){
+						recentlyConverted--;
+						dirty=true;
+						if(world.rand.nextInt(3)>0){
+							spawnVillager(v);
+						}
+					}
 				}
 				if(tickCounter%(20*45)==0){
 					checkHunterCount(v);
 				}
-				if(recentlyBitten>2){
+				if(recentlyBitten>BALANCE.VV_PROP.BITTEN_UNTIL_AGRESSIVE||recentlyConverted>BALANCE.VV_PROP.CONVERTED_UNTIL_AGRESSIVE){
 					if(!agressive){
 						makeAgressive(v);
 					}
 				}
-				else if(agressive){
+				else if(agressive&&(recentlyBitten==0||recentlyBitten<BALANCE.VV_PROP.BITTEN_UNTIL_AGRESSIVE-1)&&(recentlyConverted==0||recentlyConverted<BALANCE.VV_PROP.CONVERTED_UNTIL_AGRESSIVE-1)){
 					makeCalm(v);
 				}
 				
@@ -152,7 +160,6 @@ public class VillageVampire {
 	private void checkHunterCount(Village v){
 		int count=getHunter(v).size();
 		if(count <BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE||(agressive&&count < BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE*1.4)){
-			Logger.i(TAG, "Spawning new hunters");
 			for(EntityCreature e:Helper.spawnEntityCreatureInVillage(v, 2, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME,world)){
 					((EntityVampireHunter) e).setHomeArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, v.getVillageRadius());
 					((EntityVampireHunter) e).setAgressive(agressive);
@@ -163,7 +170,6 @@ public class VillageVampire {
 
 		List l=world.getEntitiesWithinAABB(EntityVillager.class, getBoundingBox(v));
 		if(l.size()>0){
-			Logger.i(TAG, "Spawning villager");
 			EntityVillager ev=(EntityVillager)l.get(world.rand.nextInt(l.size()));
 			EntityVillager entityvillager = ev.createChild(ev);
 	        ev.setGrowingAge(6000);
@@ -172,6 +178,11 @@ public class VillageVampire {
 	        world.spawnEntityInWorld(entityvillager);
 	        world.setEntityState(entityvillager, (byte)12);
 		}
+	}
+	
+	public void villagerConvertedByVampire(){
+		recentlyConverted++;
+		dirty=true;
 	}
 	
 
