@@ -4,8 +4,8 @@ entity.vampirism:vampire.name=Vampir
 
 # Items
 item.vampirism:vampiresFear.name=Vampir's Angst
-item.vampirism:bloodBottle.name=Blut Flashe
-item.vampirism:vampireFang.name=Vampir Zahn
+item.vampirism:bloodBottle.name=Blut Flasche
+item.vampirism:vampireFang.name=Vampirzahn
 item.vampirism:pitchfork.name=Mistgabel
 item.vampirism:spawnBloodAltar.name=Blut Altar
 item.vampirism:spawnBloodAltarTier2.name=Blut Altar Stufe 2
@@ -17,19 +17,19 @@ block.vampirism:bloodAltarTier2.name=Blut Altar Stufe 2
 # Keys
 keys.vampirism.category=Vampirismus
 keys.vampirism.suck=Blut Saugen
-keys.vampirism.auto=Automatish Blut Flashe Füllen
+keys.vampirism.auto=Automatisches füllen der Blut Flaschen
 
 #General
 itemGroup.vampirism=Vampirismus
-death.attack.sun=%1$s mochte die sonne nicht
+death.attack.sun=%1$s mochte die Sonne nicht
 
 #Config
 category.vampirism.balance=Balance Einstellungen
-category.vampirism.balance.tooltip=Änder fast jede balance relevante eigenshaft
-category.vampirism.balance_level=Balance Einstellungen auf ein höheres niveau bringen
-category.vampirism.balance_player_mod=Vampir spieler modifikator einstellungen
-category.vampirism.balance_mob_prop=Vampirismus mob eigenschaften
-category.vampirism.balance_mob_prop.tooltip=Die eigenschaften von den mobs hinzugefügt von Vampirismus ändern 
-category.vampirism.balance_vv_prop=Dorf eigenshaften
-category.vampirism.balance_vv_prop.tooltip=Verändern wie Jäger im Dorf sich behalten und andere dorf sachen verändern
+category.vampirism.balance.tooltip=Konfiguriere fast jede Balance relevante Einstellung
+category.vampirism.balance_level=Levelup Einstellungen
+category.vampirism.balance_player_mod=Vampir Spieler Eigenschaften
+category.vampirism.balance_mob_prop=Vampirism Mob Einstellungen
+category.vampirism.balance_mob_prop.tooltip=Die Eigenschaften von hinzugefügten Mobs anpassen 
+category.vampirism.balance_vv_prop=Dorf Eigenschaften
+category.vampirism.balance_vv_prop.tooltip=Konfiguriere wie sich Jäger im Dorf verhalten und andere Dorf Eigenschaften verändern
 
