@@ -15,6 +15,11 @@ import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 
+/**
+ * VillageVampire data handler, implemented similar to VillageCollection
+ * @author Maxanier
+ *
+ */
 public class VillageVampireData extends WorldSavedData {
 	
 	private static final String IDENTIFIER = "vampirism_village";

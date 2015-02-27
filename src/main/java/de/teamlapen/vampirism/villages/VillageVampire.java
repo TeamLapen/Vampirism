@@ -17,6 +17,11 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 
+/**
+ * Saveable class which handle and stores vampirism related data for villages
+ * @author Maxanier
+ *
+ */
 public class VillageVampire {
 	private final String TAG="VillageVampire";
 	private World world;
