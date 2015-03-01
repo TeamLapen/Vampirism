@@ -31,6 +31,7 @@ import de.teamlapen.vampirism.client.render.PitchforkRenderer;
 import de.teamlapen.vampirism.client.render.RendererBloodAltar;
 import de.teamlapen.vampirism.client.render.RendererBloodAltarTier2;
 import de.teamlapen.vampirism.client.render.RendererBloodAltarTier3;
+import de.teamlapen.vampirism.client.render.RendererBloodAltarTier4;
 import de.teamlapen.vampirism.client.render.VampireHunterRenderer;
 import de.teamlapen.vampirism.client.render.VampireRenderer;
 import de.teamlapen.vampirism.client.render.vanilla.RenderVampireCow;
@@ -41,12 +42,12 @@ import de.teamlapen.vampirism.client.render.vanilla.RenderVampireSheep;
 import de.teamlapen.vampirism.client.render.vanilla.RenderVampireVillager;
 import de.teamlapen.vampirism.client.render.vanilla.RenderVampireWitch;
 import de.teamlapen.vampirism.client.render.vanilla.RenderVampireWolf;
-import de.teamlapen.vampirism.client.render.vanilla.RenderVampireZombie;
 import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier2;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier3;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier4;
 import de.teamlapen.vampirism.util.Logger;
 
 public class ClientProxy extends CommonProxy {
@@ -72,12 +73,12 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityWolf.class, new RenderVampireWolf(new ModelWolf(), new ModelWolf(), 0.5F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityOcelot.class, new RenderVampireOcelot(new ModelOcelot(), 0.4F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityWitch.class, new RenderVampireWitch());
-		RenderingRegistry.registerEntityRenderingHandler(EntityZombie.class, new RenderVampireZombie());
 		RenderingRegistry.registerEntityRenderingHandler(EntityHorse.class, new RenderVampireHorse(new ModelHorse(), 0.75F));
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltar.class, new RendererBloodAltar());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier2.class, new RendererBloodAltarTier2());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier3.class, new RendererBloodAltarTier3());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier4.class, new RendererBloodAltarTier4());
 	}
 
 	@Override
