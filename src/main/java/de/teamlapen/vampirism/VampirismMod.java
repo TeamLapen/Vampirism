@@ -98,6 +98,8 @@ public class VampirismMod {
 	}
 
 	private void setupNetwork() {
+		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
+		
 		modChannel = NetworkRegistry.INSTANCE.newSimpleChannel(REFERENCE.MODID);
 		int id = 0;
 		modChannel.registerMessage(InputEventPacket.Handler.class, InputEventPacket.class, id++, Side.SERVER);
