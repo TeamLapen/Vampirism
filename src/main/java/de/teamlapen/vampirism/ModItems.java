@@ -18,7 +18,6 @@ public class ModItems {
 		GameRegistry.registerItem(bloodBottle, ItemBloodBottle.name);
 		GameRegistry.registerItem(vampireFang, ItemVampireFang.NAME);
 		GameRegistry.registerItem(pitchfork, ItemPitchfork.name);
-		GameRegistry.registerItem(altarTier4Bed, ItemAltarTier4Bed.name);
 
 		// Recipe for empty blood bottle
 		GameRegistry.addRecipe(new ItemStack(bloodBottle, 1, 0), "   ", "XYX", " X ", 'X', Blocks.glass, 'Y', Items.rotten_flesh);
@@ -29,5 +28,4 @@ public class ModItems {
 
 	public static ItemVampireFang vampireFang = new ItemVampireFang();
 	public static ItemPitchfork pitchfork=new ItemPitchfork();
-	public static ItemAltarTier4Bed altarTier4Bed=new ItemAltarTier4Bed();
 }

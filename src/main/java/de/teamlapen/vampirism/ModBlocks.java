@@ -27,7 +27,6 @@ public class ModBlocks {
 		GameRegistry.registerBlock(bloodAltarTier3, ItemBlock.class,BlockBloodAltarTier3.name);
 		GameRegistry.registerBlock(bloodAltarTier4, ItemBlock.class,BlockBloodAltarTier4.name);
 		GameRegistry.registerBlock(bloodAltarTier4Tip, ItemBlock.class,BlockBloodAltarTier4Tip.name);
-		GameRegistry.registerBlock(bloodAltarTier4Bed, BlockBloodAltarTier4Bed.name);
 		GameRegistry.registerTileEntity(TileEntityBloodAltar.class, "TileEntityBloodAltar");
 		GameRegistry.registerTileEntity(TileEntityBloodAltarTier2.class, "TileEntityBloodAltarTier2");
 		GameRegistry.registerTileEntity(TileEntityBloodAltarTier3.class, "TileEntityBloodAltarTier3");
@@ -43,5 +42,4 @@ public class ModBlocks {
 	public final static BlockBloodAltarTier3 bloodAltarTier3= new BlockBloodAltarTier3();
 	public final static BlockBloodAltarTier4 bloodAltarTier4=new BlockBloodAltarTier4();
 	public final static BlockBloodAltarTier4Tip bloodAltarTier4Tip=new BlockBloodAltarTier4Tip();
-	public final static BlockBloodAltarTier4Bed bloodAltarTier4Bed=new BlockBloodAltarTier4Bed();
 }
