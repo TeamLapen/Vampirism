@@ -8,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import de.teamlapen.vampirism.client.model.ModelTest;
 import de.teamlapen.vampirism.client.model.ModelVampireHunter;
 import de.teamlapen.vampirism.util.REFERENCE;
 
@@ -17,7 +18,7 @@ public class VampireHunterRenderer extends RenderBiped {
 	private static final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vampireHunter.png");
 
 	public VampireHunterRenderer() {
-		super(new ModelVampireHunter(), 0.5F);
+		super(new ModelTest(), 0.5F);
 	}
 
 	@Override
