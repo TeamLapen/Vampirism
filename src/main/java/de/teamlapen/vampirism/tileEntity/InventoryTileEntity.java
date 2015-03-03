@@ -26,6 +26,22 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 		 */
 		public boolean isItemAllowed(ItemStack item);
 	}
+	
+	public static class FilterSlot extends net.minecraft.inventory.Slot{
+		IItemSelector selector;
+		public FilterSlot(IInventory p_i1824_1_, int p_i1824_2_, int p_i1824_3_, int p_i1824_4_,IItemSelector selector) {
+			super(p_i1824_1_, p_i1824_2_, p_i1824_3_, p_i1824_4_);
+			this.selector=selector;
+		}
+		@Override
+		public boolean isItemValid(ItemStack stack){
+			if(selector!=null){
+				return selector.isItemAllowed(stack);
+			}
+			return true;
+		}
+		
+	}
 
 	/**
 	 * Used for handling the item exchange between player and block inventory. Should be created with InventoryTileEntity.getNewInventoryContainer()
@@ -41,7 +57,7 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 			tile = te;
 
 			for (int i = 0; i < tile.slots.length; i++) {
-				this.addSlotToContainer(new net.minecraft.inventory.Slot(tile, i, tile.slots[i].xDisplay, tile.slots[i].yDisplay));
+				this.addSlotToContainer(new FilterSlot(tile, i, tile.slots[i].xDisplay, tile.slots[i].yDisplay,tile.slots[i].itemSelector));
 			}
 
 			int i;
@@ -200,8 +216,10 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		if (slots[slot].itemSelector != null)
+		Logger.i("test", "testing if valid "+stack+" "+slots[slot].itemSelector.isItemAllowed(stack));
+		if (slots[slot].itemSelector != null){
 			return slots[slot].itemSelector.isItemAllowed(stack);
+		}
 		return true;
 	}
 
@@ -233,7 +251,6 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 
 	@Override
 	public void setInventorySlotContents(int slot, ItemStack stack) {
-		Logger.i("test", "settings " + slot + " " + stack);
 		slots[slot].stack = stack;
 		if (stack != null && stack.stackSize > getInventoryStackLimit()) {
 			stack.stackSize = getInventoryStackLimit();
@@ -257,5 +274,6 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 		}
 		tagCompound.setTag("Inventory", itemList);
 	}
+	
 
 }
