@@ -17,6 +17,7 @@ import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.EntityWolf;
+import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -64,6 +65,7 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampireHunter.class, new VampireHunterRenderer());
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampire.class, new VampireRenderer(new ModelVampire(), 0.5F));
 		MinecraftForgeClient.registerItemRenderer(ModItems.pitchfork, new PitchforkRenderer());
+		//MinecraftForgeClient.registerItemRenderer(ModItems.torch, (IItemRenderer) new Render3DItem());
 		
 		// Vampire vanilla renderers
 		RenderingRegistry.registerEntityRenderingHandler(EntityCow.class, new RenderVampireCow(new ModelCow(), 0.7F));

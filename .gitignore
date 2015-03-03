@@ -10,3 +10,5 @@ Thumbs.db
 config/
 saves/
 logs/
+options.txt
+usernamecache.json
