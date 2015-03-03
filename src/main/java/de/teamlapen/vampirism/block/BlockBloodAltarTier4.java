@@ -28,6 +28,7 @@ public class BlockBloodAltarTier4 extends BasicBlockContainer {
 
 	public BlockBloodAltarTier4() {
 		super(Material.rock, name);
+		this.setBlockTextureName("glowstone");//TODO change
 	}
 
 	@Override
