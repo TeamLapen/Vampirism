@@ -5,6 +5,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import cpw.mods.fml.common.registry.GameRegistry;
+import de.teamlapen.vampirism.item.ItemAltarTier4Bed;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
 import de.teamlapen.vampirism.item.ItemPitchfork;
 import de.teamlapen.vampirism.item.ItemVampireFang;

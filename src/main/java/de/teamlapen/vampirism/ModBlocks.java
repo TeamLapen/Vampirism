@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.block.BlockBloodAltar;
 import de.teamlapen.vampirism.block.BlockBloodAltarTier2;
 import de.teamlapen.vampirism.block.BlockBloodAltarTier3;
 import de.teamlapen.vampirism.block.BlockBloodAltarTier4;
+import de.teamlapen.vampirism.block.BlockBloodAltarTier4Bed;
 import de.teamlapen.vampirism.block.BlockBloodAltarTier4Tip;
 import de.teamlapen.vampirism.block.MaterialLiquidBlood;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
