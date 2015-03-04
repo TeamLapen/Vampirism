@@ -22,7 +22,7 @@ public class ServerProxy extends CommonProxy {
 
 	@Override
 	public void registerSubscriptions() {
-		// Client side only
+		super.registerSubscriptions();
 
 	}
 
