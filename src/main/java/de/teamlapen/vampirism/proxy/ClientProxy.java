@@ -96,6 +96,7 @@ public class ClientProxy extends CommonProxy {
 		super.registerSubscriptions();
 		MinecraftForge.EVENT_BUS.register(new VampireHudOverlay(Minecraft.getMinecraft()));
 		FMLCommonHandler.instance().bus().register(new KeyInputEventHandler());
+		MinecraftForge.EVENT_BUS.register(new RendererTorch());
 	}
 
 }

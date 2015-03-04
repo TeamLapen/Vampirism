@@ -5,9 +5,14 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.client.event.RenderLivingEvent;
+import net.minecraftforge.client.event.RenderPlayerEvent;
+
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import de.teamlapen.vampirism.client.model.ModelTorch;
+import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 
@@ -48,12 +53,14 @@ public class RendererTorch implements IItemRenderer
 				GL11.glRotatef(140.0F, 0.0F, 0.0F, -1.0F);
 				GL11.glTranslatef(-0.9F, 0.3F, -0.07F);
 				GL11.glScalef(2.0F, 2.0F, 2.0F);
-				
 				model.render((Entity) data[1], 0.0F, 0.0F, 0.0F, 0.0F, 0.0F, 0.0625F);
 				break;
 			}
 			GL11.glPopMatrix();
 		}
-        
-        
+		
+		@SubscribeEvent
+		public void onRenderEntity(RenderPlayerEvent.Post event) {
+			//Logger.i("RendererTorch", "Rendering entity");
+		}
 }
