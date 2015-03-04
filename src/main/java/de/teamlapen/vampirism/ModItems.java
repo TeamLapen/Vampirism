@@ -19,7 +19,7 @@ public class ModItems {
 		GameRegistry.registerItem(bloodBottle, ItemBloodBottle.name);
 		GameRegistry.registerItem(vampireFang, ItemVampireFang.NAME);
 		GameRegistry.registerItem(pitchfork, ItemPitchfork.name);
-		//GameRegistry.registerItem(torch, ItemTorch.name);
+		GameRegistry.registerItem(torch, ItemTorch.name);
 
 		// Recipe for empty blood bottle
 		GameRegistry.addRecipe(new ItemStack(bloodBottle, 1, 0), "   ", "XYX", " X ", 'X', Blocks.glass, 'Y', Items.rotten_flesh);
