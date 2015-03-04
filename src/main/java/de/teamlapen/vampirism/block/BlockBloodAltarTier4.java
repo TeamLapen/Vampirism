@@ -77,9 +77,11 @@ public class BlockBloodAltarTier4 extends BasicBlockContainer {
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
-		Logger.i(name, "Block activated");
+		if(player.isSneaking()&&player.inventory.getCurrentItem()==null){
+			TileEntityBloodAltarTier4 te = (TileEntityBloodAltarTier4) world.getTileEntity(x, y, z);
+			te.onBlockActivated(player);
+		}
 		if (!player.isSneaking()) {
-			// TileEntityBloodAltarTier4 te = (TileEntityBloodAltarTier4) world.getTileEntity(x, y, z);
 			player.openGui(VampirismMod.instance, GuiHandler.ID_ALTAR_4, world, x, y, z);
 			return true;
 		}

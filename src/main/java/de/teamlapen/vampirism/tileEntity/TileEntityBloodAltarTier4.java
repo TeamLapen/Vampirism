@@ -1,15 +1,28 @@
 package de.teamlapen.vampirism.tileEntity;
 
+import java.util.ArrayList;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockCompressed;
 import net.minecraft.block.BlockStoneBrick;
 import net.minecraft.block.material.MapColor;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChunkCoordinates;
+import net.minecraftforge.common.MinecraftForge;
 import de.teamlapen.vampirism.ModBlocks;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.block.BlockBloodAltarTier4;
 import de.teamlapen.vampirism.block.BlockBloodAltarTier4Tip;
+import de.teamlapen.vampirism.client.gui.VampireHudOverlay;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.item.ItemBloodBottle;
+import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
 import de.teamlapen.vampirism.util.Logger;
 
 /**
@@ -29,8 +42,18 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 			{ { 0, 1, 0, 0, 0, 1, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 1, 0, 0, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 1, 0, 0, 0, 1, 0 } },
 			{ { 0, 2, 0, 0, 0, 2, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 2, 0, 0, 0, 0, 0, 2 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 2, 0, 0, 0, 2, 0 } } };
 
+	private int runningTick;
+	private final int DURATION_TICK=450;
+	/**
+	 * Only available when running ({@link #runningTick}>0
+	 */
+	private EntityPlayer player;
+	/**
+	 * Only available when running ({@link #runningTick}>0
+	 */
+	private ChunkCoordinates[] tips;
 	public TileEntityBloodAltarTier4() {
-		super(new Slot[] { new Slot(56, 17), new Slot(56, 53) });
+		super(new Slot[] { new Slot(ItemBloodBottle.class,56, 17), new Slot(Items.diamond,56, 53), new Slot(116, 35)});
 	}
 
 	/**
@@ -59,7 +82,7 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 				for (int y = ly; y <= hy; y++) {
 					int type = structure[y - ly][z - lz][x - lx];
 					Block b = worldObj.getBlock(x, y, z);
-					Logger.i("TEst", "T:" + x + ":" + y + ":" + z + ";" + (x - lx) + ":" + (y - ly) + ":" + (z - lz) + ";" + type + ";" + b.getUnlocalizedName());
+					//Logger.i("Test", "T:" + x + ":" + y + ":" + z + ";" + (x - lx) + ":" + (y - ly) + ":" + (z - lz) + ";" + type + ";" + b.getUnlocalizedName());
 					if (type == 0) {
 						if (!(b instanceof BlockAir)) {
 							Logger.i(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
@@ -189,4 +212,210 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 			}
 		}
 	}
+	
+	public void onBlockActivated(EntityPlayer player){
+		Logger.i("test", "RitualActivated");
+		if(runningTick>0){
+			Logger.i("test", "still running");
+			return;
+		}
+		int sl=this.determineLevel();
+		
+		/* TODO enable egain
+		LevReq result=checkLevelRequirement(player,sl);
+		Logger.i(TAG, "SL: "+sl+" Result: "+result);//TODO user feedback
+		if(result!=LevReq.OK)return;
+		*/
+		runningTick=DURATION_TICK;
+		this.player=player;
+		tips=getTips(sl);
+		for(int i=0;i<tips.length;i++){
+			NBTTagCompound data = new NBTTagCompound();
+			data.setInteger("destX", tips[i].posX);
+			data.setInteger("destY", tips[i].posY);
+			data.setInteger("destZ", tips[i].posZ);
+			data.setInteger("age", 100);
+			VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(1, this.xCoord, this.yCoord, this.zCoord, 5, data));
+		}
+		
+		
+		
+		
+	}
+	
+	@Override
+	public void updateEntity(){
+		runningTick--;
+		if(runningTick<=0)return;
+		if(player.isDead){
+			runningTick=1;
+		}
+		PHASE phase=getPhase();
+		if(this.worldObj.isRemote){
+			if(phase.equals(PHASE.PARTICLE_SPREAD)){
+				if(runningTick%15==0){
+					for(int i=0;i<tips.length;i++){
+						NBTTagCompound data = new NBTTagCompound();
+						data.setInteger("destX", tips[i].posX);
+						data.setInteger("destY", tips[i].posY);
+						data.setInteger("destZ", tips[i].posZ);
+						data.setInteger("age", 60);
+						VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(1, this.xCoord, this.yCoord, this.zCoord, 5, data));
+					}
+				}
+			}
+		}
+		else{
+			if(phase.equals(PHASE.BEAM2)){
+				VampireHudOverlay.setRenderRed(1F-((float)runningTick-50)/((float)(DURATION_TICK-250))*1F);
+			}
+			if(phase.equals(PHASE.ENDING)){
+				VampireHudOverlay.setRenderRed((float)runningTick/50.0F);
+			}
+			if(phase.equals(PHASE.CLEAN_UP)){
+				VampireHudOverlay.setRenderRed(0F);
+			}
+		}
+		if(phase.equals(PHASE.CLEAN_UP)){
+			player=null;
+			tips=null;
+		}
+		if(phase.equals(PHASE.LEVELUP)){
+			VampirePlayer.get(player).levelUp();
+			if(this.worldObj.isRemote){
+				this.worldObj.spawnParticle("hugeexplosion", player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);
+			}
+		}
+	}
+	
+	private LevReq checkLevelRequirement(EntityPlayer player,int sl){
+		if(sl==0)return LevReq.STRUCTURE_WRONG;
+		int slot=1;
+		ItemStack stack=this.getStackInSlot(slot);
+		if(stack==null)return LevReq.ITEM_MISSING;
+		int amt=stack.stackSize;
+		int pl=VampirePlayer.get(player).getLevel();
+		if(pl<4||pl>10)return LevReq.LEVEL_WRONG;
+		if(pl==4){
+			if(sl!=1)return LevReq.STRUCTURE_WRONG;
+			if(amt<5)return LevReq.ITEM_MISSING;
+			amt=5;
+		}
+		else if(pl==5){
+			if(sl!=1)return LevReq.STRUCTURE_WRONG;
+			if(amt<10)return LevReq.ITEM_MISSING;
+			amt=10;
+		}
+		else if(pl==6){
+			if(sl!=2)return LevReq.STRUCTURE_WRONG;
+			if(amt<10)return LevReq.ITEM_MISSING;
+			amt=10;
+		}
+		else if(pl==7){
+			if(sl!=2)return LevReq.STRUCTURE_WRONG;
+			if(amt<15)return LevReq.ITEM_MISSING;
+			amt=15;
+		}
+		else if(pl==8){
+			if(sl!=3)return LevReq.STRUCTURE_WRONG;
+			if(amt<15)return LevReq.ITEM_MISSING;
+			amt=15;
+		}
+		else if(pl==9){
+			if(sl!=3)return LevReq.STRUCTURE_WRONG;
+			if(amt<20)return LevReq.ITEM_MISSING;
+			amt=20;
+		}
+		else if(pl==10){
+			if(sl!=4)return LevReq.STRUCTURE_WRONG;
+			if(amt<20)return LevReq.ITEM_MISSING;
+			amt=20;
+		}
+		this.decrStackSize(slot, amt);
+		return LevReq.OK;
+
+	}
+	
+	private static enum LevReq{
+		OK,STRUCTURE_WRONG,ITEM_MISSING,LEVEL_WRONG;
+	}
+	
+	/**
+	 * Searchs for the tips and returns their position
+	 * @param level
+	 * @return
+	 */
+	private ChunkCoordinates[] getTips(int level){
+		ArrayList<ChunkCoordinates> coord=new ArrayList<ChunkCoordinates>();
+		int lx = this.xCoord-3;
+		int ly = this.yCoord;
+		int lz = this.zCoord-3;
+		int hx=lx+6;
+		int hy=ly+4;
+		int hz=lz+6;
+		
+		for (int x = lx; x <= hx; x++) {
+			for (int z = lz; z <= hz; z++) {
+				for (int y = ly; y <= hy; y++) {
+					if(worldObj.getBlock(x, y, z).equals(ModBlocks.bloodAltarTier4Tip)){
+						coord.add(new ChunkCoordinates(x,y,z));
+					}
+				}
+			}
+		}
+		Logger.i("test", "found "+coord.size());
+		return coord.toArray(new ChunkCoordinates[coord.size()]);
+	}
+	
+	/**
+	 * Returns the position of the tips. If the ritual isn't running it returns null
+	 * @return
+	 */
+	public ChunkCoordinates[] getTips(){
+		if(this.runningTick<=1)return null;
+		return this.tips;
+	}
+	
+	/**
+	 * Returns the affected player. If the ritual isn't running it returns null
+	 * @return
+	 */
+	public EntityPlayer getPlayer(){
+		if(this.runningTick<=1)return null;
+		return this.player;
+	}
+	
+	public PHASE getPhase(){
+		if(runningTick<1){
+			return PHASE.NOT_RUNNING;
+		}
+		if(runningTick==1){
+			return PHASE.CLEAN_UP;
+		}
+		if(runningTick>(DURATION_TICK-100)){
+			return PHASE.PARTICLE_SPREAD;
+		}
+		if(runningTick<DURATION_TICK-160&&runningTick>=(DURATION_TICK-200)){
+			return PHASE.BEAM1;
+		}
+		if(runningTick<(DURATION_TICK-200)&&(runningTick>50)){
+			return PHASE.BEAM2;
+		}
+		if(runningTick==50){
+			return PHASE.LEVELUP;
+		}
+		if(runningTick<50){
+			return PHASE.ENDING;
+		}
+		return PHASE.WAITING;
+	}
+	
+	public static enum PHASE{
+		NOT_RUNNING,PARTICLE_SPREAD,BEAM1,BEAM2,WAITING,LEVELUP,ENDING,CLEAN_UP;
+	}
+	
+	public int getRunningTick(){
+		return runningTick;
+	}
+	
 }

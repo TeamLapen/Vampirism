@@ -4,24 +4,28 @@ import java.awt.Color;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 public class VampireHudOverlay extends Gui {
 
 	private Minecraft mc;
 	private final ResourceLocation icons = new ResourceLocation(REFERENCE.MODID + ":textures/gui/icons.png");
+	private static float renderRed;
 
 	public VampireHudOverlay(Minecraft mc) {
 		this.mc = mc;
@@ -55,6 +59,40 @@ public class VampireHudOverlay extends Gui {
 				mc.mcProfiler.endSection();
 				event.setCanceled(true);
 			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onRenderWorldLast(RenderWorldLastEvent event){
+		
+		if(renderRed>0){
+
+			ScaledResolution scaledresolution = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
+		    GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
+		    GL11.glMatrixMode(GL11.GL_PROJECTION);
+		    GL11.glLoadIdentity();
+		    GL11.glOrtho(0.0D, scaledresolution.getScaledWidth_double(), scaledresolution.getScaledHeight_double(), 0.0D, 1D, -1D);
+		    GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		    GL11.glLoadIdentity();
+		    GL11.glPushMatrix();
+			GL11.glDisable(GL11.GL_DEPTH_TEST);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glColor4f(1F, 0F,0F,renderRed);
+			GL11.glBegin(GL11.GL_QUADS);
+			GL11.glVertex3f(0.0f,  scaledresolution.getScaledHeight(), 0.0f);
+		    GL11.glVertex3f( scaledresolution.getScaledWidth(),  scaledresolution.getScaledHeight(), 0.0f); 
+		    GL11.glVertex3f( scaledresolution.getScaledWidth(),0.0f, 0.0f); 
+		    GL11.glVertex3f(0.0f,0.0f, 0.0f); 
+		    /*
+			GL11.glVertex3f(0.0f,  scaledresolution.getScaledHeight(), 0.0f);
+		    GL11.glVertex3f( scaledresolution.getScaledWidth(),  scaledresolution.getScaledHeight(), 0.0f); 
+		    GL11.glVertex3f( scaledresolution.getScaledWidth(),0.0f, 0.0f); 
+		    GL11.glVertex3f(0.0f,0.0f, 0.0f); 
+		    */
+		    GL11.glEnd();
+		    GL11.glDisable(GL11.GL_BLEND);
+			GL11.glEnable(GL11.GL_DEPTH_TEST);
+			GL11.glPopMatrix();
 		}
 	}
 
@@ -132,5 +170,13 @@ public class VampireHudOverlay extends Gui {
 				mc.mcProfiler.endSection();
 			}
 		}
+	}
+	
+	public static void setRenderRed(float value){
+		if(value<0||value>1){
+			Logger.i("Overlay", "Can't render screen red with value: "+value);
+			return;
+		}
+		renderRed=value;
 	}
 }

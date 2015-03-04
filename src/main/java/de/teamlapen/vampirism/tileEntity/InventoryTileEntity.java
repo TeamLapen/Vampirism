@@ -134,6 +134,16 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 
 			}, xDisplay, yDisplay);
 		}
+		
+		public Slot(final Item item, int xDisplay, int yDisplay) {
+			this(new IItemSelector() {
+				@Override
+				public boolean isItemAllowed(ItemStack stack) {
+					return item.equals(stack.getItem());
+				}
+
+			}, xDisplay, yDisplay);
+		}
 
 		public Slot(IItemSelector selector, int xDisplay, int yDisplay) {
 			itemSelector = selector;
