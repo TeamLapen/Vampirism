@@ -17,6 +17,7 @@ import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.EntityWolf;
+import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -32,6 +33,7 @@ import de.teamlapen.vampirism.client.render.RendererBloodAltar;
 import de.teamlapen.vampirism.client.render.RendererBloodAltarTier2;
 import de.teamlapen.vampirism.client.render.RendererBloodAltarTier3;
 import de.teamlapen.vampirism.client.render.RendererBloodAltarTier4;
+import de.teamlapen.vampirism.client.render.RendererTorch;
 import de.teamlapen.vampirism.client.render.VampireHunterRenderer;
 import de.teamlapen.vampirism.client.render.VampireRenderer;
 import de.teamlapen.vampirism.client.render.vanilla.RenderVampireCow;
@@ -64,6 +66,7 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampireHunter.class, new VampireHunterRenderer());
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampire.class, new VampireRenderer(new ModelVampire(), 0.5F));
 		MinecraftForgeClient.registerItemRenderer(ModItems.pitchfork, new PitchforkRenderer());
+		MinecraftForgeClient.registerItemRenderer(ModItems.torch, new RendererTorch());
 		
 		// Vampire vanilla renderers
 		RenderingRegistry.registerEntityRenderingHandler(EntityCow.class, new RenderVampireCow(new ModelCow(), 0.7F));
@@ -93,6 +96,7 @@ public class ClientProxy extends CommonProxy {
 		super.registerSubscriptions();
 		MinecraftForge.EVENT_BUS.register(new VampireHudOverlay(Minecraft.getMinecraft()));
 		FMLCommonHandler.instance().bus().register(new KeyInputEventHandler());
+		MinecraftForge.EVENT_BUS.register(new RendererTorch());
 	}
 
 }

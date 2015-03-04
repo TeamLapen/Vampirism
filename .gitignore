@@ -7,3 +7,8 @@ build.bat
 /bin
 Thumbs.db
 *.bak
+config/
+saves/
+logs/
+options.txt
+usernamecache.json
