@@ -62,11 +62,16 @@ public class VampireHudOverlay extends Gui {
 		}
 	}
 	
+	
+	/**
+	 * Used to render the screen reddish
+	 * @param event
+	 */
 	@SubscribeEvent
 	public void onRenderWorldLast(RenderWorldLastEvent event){
 		
 		if(renderRed>0){
-
+			//Set the working matrix/layer to a layer directly on the screen/in front of the player
 			ScaledResolution scaledresolution = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
 		    GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 		    GL11.glMatrixMode(GL11.GL_PROJECTION);
@@ -75,6 +80,8 @@ public class VampireHudOverlay extends Gui {
 		    GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		    GL11.glLoadIdentity();
 		    GL11.glPushMatrix();
+		    
+		    //Render a see through red square over the whole screen
 			GL11.glDisable(GL11.GL_DEPTH_TEST);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glColor4f(1F, 0F,0F,renderRed);
@@ -83,12 +90,6 @@ public class VampireHudOverlay extends Gui {
 		    GL11.glVertex3f( scaledresolution.getScaledWidth(),  scaledresolution.getScaledHeight(), 0.0f); 
 		    GL11.glVertex3f( scaledresolution.getScaledWidth(),0.0f, 0.0f); 
 		    GL11.glVertex3f(0.0f,0.0f, 0.0f); 
-		    /*
-			GL11.glVertex3f(0.0f,  scaledresolution.getScaledHeight(), 0.0f);
-		    GL11.glVertex3f( scaledresolution.getScaledWidth(),  scaledresolution.getScaledHeight(), 0.0f); 
-		    GL11.glVertex3f( scaledresolution.getScaledWidth(),0.0f, 0.0f); 
-		    GL11.glVertex3f(0.0f,0.0f, 0.0f); 
-		    */
 		    GL11.glEnd();
 		    GL11.glDisable(GL11.GL_BLEND);
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
@@ -98,16 +99,6 @@ public class VampireHudOverlay extends Gui {
 
 	@SubscribeEvent
 	public void onRenderExperienceBar(RenderGameOverlayEvent.Post event) {
-		//
-		// We draw after the ExperienceBar has drawn. The event raised by
-		// GuiIngameForge.pre()
-		// will return true from isCancelable. If you call
-		// event.setCanceled(true) in
-		// that case, the portion of rendering which this event represents will
-		// be canceled.
-		// We want to draw *after* the experience bar is drawn, so we make sure
-		// isCancelable() returns
-		// false and that the eventType represents the ExperienceBar event.
 		if (event.type != ElementType.EXPERIENCE) {
 			return;
 		}
