@@ -25,11 +25,13 @@ import de.teamlapen.vampirism.util.Logger;
  */
 public class BlockBloodAltarTier4 extends BasicBlockContainer {
 
-	public final static String name = "blockAltarTier4";
+	public final static String name = "bloodAltarTier4";
 
 	public BlockBloodAltarTier4() {
 		super(Material.rock, name);
 		this.setBlockTextureName("glowstone");//TODO change
+		this.setHardness(5.0F);
+		this.setHarvestLevel("pickaxe", 2);
 	}
 
 	@Override

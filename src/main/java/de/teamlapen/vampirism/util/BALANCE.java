@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.util;
 
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier2;
+
 /**
  * All constants which could be used to balance the mod should be stored here
  *
@@ -7,17 +9,13 @@ package de.teamlapen.vampirism.util;
 public final class BALANCE {
 	public static class LEVELING {
 		public static int A2_getRequiredBlood(int level) {
-			return ALTAR_2_MIN_BLOOD + (level - ALTAR_2_MIN_LEVEL) * ALTAR_2_ADD_BLOOD_PER_LEVEL;
+			return ALTAR_2_MIN_BLOOD + (level - TileEntityBloodAltarTier2.MIN_LEVEL) * ALTAR_2_ADD_BLOOD_PER_LEVEL;
 		}
-		@DefaultInt(1)
-		public static int ALTAR_2_MIN_LEVEL;
-		@DefaultInt(3)
-		public static int ALTAR_2_MAX_LEVEL;
 		@DefaultInt(0)
 		public static int R1_VILLAGERS;// Required villagers for ritual 1
-		@DefaultInt(value = 50, comment = "Blood required for the first level up with altar 2")
+		@DefaultInt(value = 40, comment = "Blood required for the first level up with altar 2")
 		public static int ALTAR_2_MIN_BLOOD;
-		@DefaultInt(value = 20, comment = "Extra blood per level required")
+		@DefaultInt(value = 30, comment = "Extra blood per level required")
 		public static int ALTAR_2_ADD_BLOOD_PER_LEVEL;
 
 		@DefaultInt(value = 20, comment = "Blood amount needed for inital ritual")

@@ -29,6 +29,8 @@ public class TileEntityBloodAltarTier2 extends TileEntity {
 	private int ritualTicksLeft = 0;
 	private EntityPlayer ritualPlayer;
 	private final int RITUAL_TIME = 60;
+	public final static int MIN_LEVEL=1;
+	private final static int MAX_LEVEL=3;
 
 	/**
 	 * Adds blood to the altar
@@ -80,7 +82,7 @@ public class TileEntityBloodAltarTier2 extends TileEntity {
 
 		VampirePlayer player = VampirePlayer.get(p);
 		int level = player.getLevel();
-		if (level < BALANCE.LEVELING.ALTAR_2_MIN_LEVEL || level > BALANCE.LEVELING.ALTAR_2_MAX_LEVEL) {
+		if (level < MIN_LEVEL || level > MAX_LEVEL) {
 			p.addChatMessage(new ChatComponentText("You can't use this altar on this level"));
 			return;
 		}

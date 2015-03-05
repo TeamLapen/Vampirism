@@ -14,6 +14,8 @@ public class BlockBloodAltarTier4Tip extends BasicBlock{
 	public BlockBloodAltarTier4Tip() {
 		super(Material.rock, name);
 		this.setBlockTextureName("bookshelf");//TODO change
+		this.setHardness(3.0F);
+		this.setHarvestLevel("pickaxe", 1);
 	}
 
 }
