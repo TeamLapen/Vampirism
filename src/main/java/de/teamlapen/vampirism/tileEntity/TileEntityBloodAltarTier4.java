@@ -17,6 +17,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ChunkCoordinates;
 import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.VampirismMod;
@@ -368,6 +370,7 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 			}
 			this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
 		}
+		player.addPotionEffect(new PotionEffect(Potion.resistance.id,DURATION_TICK,10));
 		this.markDirty();
 
 	}
@@ -441,6 +444,12 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 		if (player == null || player.isDead) {
 			runningTick = 1;
 		}
+		else{
+			player.motionX=0;
+			player.motionY=0;
+			player.motionZ=0;
+		}
+		
 		PHASE phase = getPhase();
 		if (!this.worldObj.isRemote) {
 			if (phase.equals(PHASE.PARTICLE_SPREAD)) {
@@ -470,6 +479,8 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 			if (this.worldObj.isRemote) {
 				this.worldObj.spawnParticle("hugeexplosion", player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);
 			}
+			player.addPotionEffect(new PotionEffect(Potion.regeneration.id,400,2));
+			player.addPotionEffect(new PotionEffect(Potion.damageBoost.id,400,2));
 		}
 	}
 
