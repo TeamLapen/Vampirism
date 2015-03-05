@@ -4,7 +4,7 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class ModelVampireHunter extends ModelBiped {
+public class ModelVampireHunter extends ModelBipedCloaked {
 	ModelRenderer hatTop, hatRim;
 
 	public ModelVampireHunter() {
@@ -17,7 +17,7 @@ public class ModelVampireHunter extends ModelBiped {
 		hatTop.rotationPointZ = super.bipedHead.rotationPointZ;
 		hatTop.setTextureSize(128, 64);
 		hatTop.mirror = true;
-		setRotation(hatTop, 0F, 0F, 0F);
+		setRotationPoints(hatTop, 0F, 0F, 0F);
 
 		hatRim = new ModelRenderer(this, 0, 32);
 		hatRim.addBox(-6F, -9F, -6F, 12, 1, 12);
@@ -26,30 +26,21 @@ public class ModelVampireHunter extends ModelBiped {
 		hatRim.rotationPointZ = super.bipedHead.rotationPointZ;
 		hatRim.setTextureSize(128, 64);
 		hatRim.mirror = true;
-		setRotation(hatRim, 0F, 0F, 0F);
+		setRotationPoints(hatRim, 0F, 0F, 0F);
 
 		super.bipedEars = null;
-
-		super.bipedCloak = new ModelRenderer(this, 65, 0);
-		super.bipedCloak.addBox(-7.0F, 0.0F, 0.0F, 14, 20, 1);
-		super.bipedCloak.setRotationPoint(0, 0, 2);
 	}
 
+	@Override
 	public void render(Entity entity, float f, float f1, float f2, float f3,
 			float f4, float f5) {
 		super.render(entity, f, f1, f2, f3, f4, f5);
 		setRotationAngles(f, f1, f2, f3, f4, f5, entity);
 		hatTop.render(f5);
 		hatRim.render(f5);
-		super.bipedCloak.render(f5);
 	}
 
-	private void setRotation(ModelRenderer model, float x, float y, float z) {
-		model.rotateAngleX = x;
-		model.rotateAngleY = y;
-		model.rotateAngleZ = z;
-	}
-
+	@Override
 	public void setRotationAngles(float f1, float f2, float f3, float f4,
 			float f5, float f6, Entity e) {
 		super.setRotationAngles(f1, f2, f3, f4, f5, f6, e);
@@ -59,7 +50,5 @@ public class ModelVampireHunter extends ModelBiped {
 		hatTop.rotateAngleX = super.bipedHead.rotateAngleX;
 		hatTop.rotateAngleY = super.bipedHead.rotateAngleY;
 		hatTop.rotateAngleZ = super.bipedHead.rotateAngleZ;
-		
-		super.bipedCloak.rotateAngleX = f2;
 	}
 }

@@ -15,6 +15,7 @@ import com.google.common.collect.Iterators;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
+import de.teamlapen.vampirism.entity.EntityDracula;
 import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.entity.VampireEntityEventHandler;
@@ -64,6 +65,10 @@ public abstract class CommonProxy implements IProxy {
 		EntityRegistry.registerGlobalEntityID(EntityVampire.class, REFERENCE.ENTITY.VAMPIRE_NAME, EntityRegistry.findGlobalUniqueEntityId(),
 				0x54B8DD, 0x34898D);
 		EntityRegistry.addSpawn(EntityVampire.class, BALANCE.VAMPIRE_SPAWN_PROBE, 1, 3, EnumCreatureType.monster, allBiomes);
+		
+		//Registration of dracula
+		Logger.i("EntityRegister", "Adding "+REFERENCE.ENTITY.DRACULA_NAME+" with spawn probe of " + "none");
+		EntityRegistry.registerGlobalEntityID(EntityDracula.class,  REFERENCE.ENTITY.DRACULA_NAME,  EntityRegistry.findGlobalUniqueEntityId(), 0x54B8DD, 0x34898D);
 	}
 
 	@Override
