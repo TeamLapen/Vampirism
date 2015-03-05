@@ -26,6 +26,8 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.client.KeyInputEventHandler;
 import de.teamlapen.vampirism.client.gui.VampireHudOverlay;
+import de.teamlapen.vampirism.client.model.ModelDracula;
+import de.teamlapen.vampirism.client.model.ModelDracula;
 import de.teamlapen.vampirism.client.model.ModelVampire;
 import de.teamlapen.vampirism.client.model.ModelVampireHunter;
 import de.teamlapen.vampirism.client.render.PitchforkRenderer;
@@ -33,6 +35,7 @@ import de.teamlapen.vampirism.client.render.RendererBloodAltar;
 import de.teamlapen.vampirism.client.render.RendererBloodAltarTier2;
 import de.teamlapen.vampirism.client.render.RendererBloodAltarTier3;
 import de.teamlapen.vampirism.client.render.RendererBloodAltarTier4;
+import de.teamlapen.vampirism.client.render.RendererDracula;
 import de.teamlapen.vampirism.client.render.RendererTorch;
 import de.teamlapen.vampirism.client.render.VampireHunterRenderer;
 import de.teamlapen.vampirism.client.render.VampireRenderer;
@@ -44,6 +47,7 @@ import de.teamlapen.vampirism.client.render.vanilla.RenderVampireSheep;
 import de.teamlapen.vampirism.client.render.vanilla.RenderVampireVillager;
 import de.teamlapen.vampirism.client.render.vanilla.RenderVampireWitch;
 import de.teamlapen.vampirism.client.render.vanilla.RenderVampireWolf;
+import de.teamlapen.vampirism.entity.EntityDracula;
 import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
@@ -65,6 +69,7 @@ public class ClientProxy extends CommonProxy {
 	public void registerRenderer() {
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampireHunter.class, new VampireHunterRenderer());
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampire.class, new VampireRenderer(new ModelVampire(), 0.5F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityDracula.class, new RendererDracula(new ModelDracula(), 0.5F));
 		MinecraftForgeClient.registerItemRenderer(ModItems.pitchfork, new PitchforkRenderer());
 		MinecraftForgeClient.registerItemRenderer(ModItems.torch, new RendererTorch());
 		
