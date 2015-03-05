@@ -252,7 +252,7 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 
 	@Override
 	public String getInventoryName() {
-		return "Items-test-inventory-name";
+		return "tile.vampirism:bloodAltarTier4.name";
 	}
 
 	/**
@@ -338,10 +338,6 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 		return coord.toArray(new ChunkCoordinates[coord.size()]);
 	}
 
-	@Override
-	public boolean hasCustomInventoryName() {
-		return true;
-	}
 
 	/**
 	 * Called when the ritual should start
@@ -383,13 +379,14 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 	@Override
 	public void readFromNBT(NBTTagCompound tagCompound) {
 		super.readFromNBT(tagCompound);
-		Logger.i("test", "reading from nbt");
 		int tick = tagCompound.getInteger("tick");
 		if (tick > 0 && player == null) {
-			Logger.i("test", "loading player");
-			this.player = (EntityPlayer) this.worldObj.getEntityByID(tagCompound.getInteger("playerId"));
-			this.tips = getTips(this.determineLevel());
-			this.runningTick = tick;
+			try {
+				this.player = (EntityPlayer) this.worldObj.getEntityByID(tagCompound.getInteger("playerId"));
+				this.tips = getTips(this.determineLevel());
+				this.runningTick = tick;
+			} catch (NullPointerException e) {
+			}
 		}
 		if (player == null) {
 			this.runningTick = 0;

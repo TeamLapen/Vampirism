@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import de.teamlapen.vampirism.GuiHandler;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier4;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier4.PHASE;
 import de.teamlapen.vampirism.util.Logger;
 
 /**
@@ -77,11 +78,15 @@ public class BlockBloodAltarTier4 extends BasicBlockContainer {
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
+		TileEntityBloodAltarTier4 te = (TileEntityBloodAltarTier4) world.getTileEntity(x, y, z);
 		if(player.isSneaking()&&player.inventory.getCurrentItem()==null){
-			TileEntityBloodAltarTier4 te = (TileEntityBloodAltarTier4) world.getTileEntity(x, y, z);
 			te.onBlockActivated(player);
+			return true;
 		}
 		if (!player.isSneaking()) {
+			if(!te.getPhase().equals(PHASE.NOT_RUNNING)){
+				return false; //TODO maybe userfeedback
+			}
 			player.openGui(VampirismMod.instance, GuiHandler.ID_ALTAR_4, world, x, y, z);
 			return true;
 		}

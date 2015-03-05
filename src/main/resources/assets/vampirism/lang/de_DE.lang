@@ -7,12 +7,17 @@ item.vampirism:vampiresFear.name=Vampir's Angst
 item.vampirism:bloodBottle.name=Blut Flasche
 item.vampirism:vampireFang.name=Vampirzahn
 item.vampirism:pitchfork.name=Mistgabel
-item.vampirism:spawnBloodAltar.name=Blut Altar
-item.vampirism:spawnBloodAltarTier2.name=Blut Altar Stufe 2
+item.vampirism:humanHearth.name=Menschliches Herz
 
 # Blocks
 block.vampirism:bloodAltar.name=Blut Altar
-block.vampirism:bloodAltarTier2.name=Blut Altar Stufe 2
+block.vampirism:bloodAltarTier2.name=Altar Stufe 2
+block.vampirism:bloodAltarTier3.name=Altar Stufe 3
+block.vampirism:bloodAltarTier4.name=Altar Stufe 4
+block.vampirism:bloodAltarTier4Tip.name=Altar Stufe 4 Spitze
+
+#Tiles
+tile.vampirism:bloodAltarTier4.name=Blut Altar Stufe 4
 
 # Keys
 keys.vampirism.category=Vampirismus

@@ -7,15 +7,19 @@ item.vampirism:vampiresFear.name=Vampire's fear
 item.vampirism:bloodBottle.name=Blood Bottle
 item.vampirism:vampireFang.name=Vampire Fang
 item.vampirism:pitchfork.name=Pitchfork
-item.vampirism:spawnBloodAltar.name=Blood Altar
-item.vampirism:spawnBloodAltarTier2.name=Blood Altar Tier2
+item.vampirism:humanHearth.name=Human Hearth
 
 # Blocks
 block.vampirism:bloodAltar.name=Blood Altar
 block.vampirism:bloodAltarTier2.name=Blood Altar Tier 2
+block.vampirism:bloodAltarTier3.name=Blood Altar Tier 3
+block.vampirism:bloodAltarTier4.name=Blood Altar Tier 4
+block.vampirism:bloodAltarTier4Tip.name=Blood Altar Tier 4 Tip
+
+#Tiles
+tile.vampirism:bloodAltarTier4.name=Blood Altar Tier 4
 
 # Keys
-
 keys.vampirism.category=Vampirism
 keys.vampirism.suck=Suck blood
 keys.vampirism.auto=Auto Fill Blood Bottle

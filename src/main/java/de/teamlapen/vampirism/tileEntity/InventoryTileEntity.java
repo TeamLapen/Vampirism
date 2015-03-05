@@ -203,6 +203,11 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 	public Container getNewInventoryContainer(InventoryPlayer inv) {
 		return new InventoryContainer(inv, this);
 	}
+	
+	@Override
+	public boolean hasCustomInventoryName() {
+		return false;
+	}
 
 	@Override
 	public int getSizeInventory() {
