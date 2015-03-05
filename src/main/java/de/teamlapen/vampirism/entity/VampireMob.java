@@ -19,6 +19,7 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
@@ -110,7 +111,13 @@ public class VampireMob implements IExtendedEntityProperties {
 			// Cannot be bitten yet
 			return -1;
 		}
-		makeVampire();
+		if(entity.worldObj.rand.nextInt(2)==0){
+			makeVampire();
+		}
+		else{
+			entity.attackEntityFrom(DamageSource.magic, 100);
+		}
+		
 		if(entity instanceof EntityVillager){
 			VillageVampire v=VillageVampireData.get(entity.worldObj).findNearestVillage(entity);
 			if(v!=null){
