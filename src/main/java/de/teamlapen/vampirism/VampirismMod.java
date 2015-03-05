@@ -28,6 +28,7 @@ import de.teamlapen.vampirism.generation.villages.VillageGenReplacer;
 import de.teamlapen.vampirism.network.BloodAltarPacket;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.RenderScreenRedPacket;
+import de.teamlapen.vampirism.network.ShaderPacket;
 import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
 import de.teamlapen.vampirism.network.SpawnParticlePacket;
 import de.teamlapen.vampirism.proxy.IProxy;
@@ -108,6 +109,7 @@ public class VampirismMod {
 		modChannel.registerMessage(BloodAltarPacket.Handler.class, BloodAltarPacket.class, id++, Side.CLIENT);
 		modChannel.registerMessage(SpawnCustomParticlePacket.Handler.class, SpawnCustomParticlePacket.class, id++, Side.CLIENT);
 		modChannel.registerMessage(RenderScreenRedPacket.Handler.class, RenderScreenRedPacket.class, id++, Side.CLIENT);
+		modChannel.registerMessage(ShaderPacket.Handler.class, ShaderPacket.class, id++, Side.CLIENT);
 	}
 
 }
