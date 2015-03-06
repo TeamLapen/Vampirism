@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
 import net.minecraft.block.Block;
-import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
@@ -9,11 +8,9 @@ import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.ai.EntityAIBreakDoor;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.boss.BossStatus;
 import net.minecraft.entity.boss.IBossDisplayData;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityVillager;
@@ -23,7 +20,6 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.BALANCE;
 
 public class EntityDracula extends EntityMob implements IBossDisplayData {
@@ -60,7 +56,8 @@ public class EntityDracula extends EntityMob implements IBossDisplayData {
 				BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.2));
 
 		// Low priority tasks
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this,
+				EntityPlayer.class, 0, true));
 		this.tasks.addTask(6, new EntityAIWander(this, 0.7));
 		this.tasks.addTask(9, new EntityAILookIdle(this));
 
@@ -86,27 +83,36 @@ public class EntityDracula extends EntityMob implements IBossDisplayData {
 
 	@Override
 	public void onLivingUpdate() {
-		if (!this.worldObj.isRemote) {
-			float brightness = this.getBrightness(1.0F);
-			boolean canSeeSky = this.worldObj.canBlockSeeTheSky(
-					MathHelper.floor_double(this.posX),
-					MathHelper.floor_double(this.posY),
-					MathHelper.floor_double(this.posZ));
-			if (brightness > 0.5F) {
-				if (this.worldObj.isDaytime() && canSeeSky) {
-					this.attackEntityFrom(VampirismMod.sunDamage, 0.5F);
-				}
+		if (this.worldObj.isDaytime() && !this.worldObj.isRemote) {
+			float f = this.getBrightness(1.0F);
+
+			if (f > 0.5F
+					&& this.worldObj.canBlockSeeTheSky(
+							MathHelper.floor_double(this.posX),
+							MathHelper.floor_double(this.posY),
+							MathHelper.floor_double(this.posZ))
+					&& this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F) {
+				this.entityToAttack = null;
+				this.teleportRandomly();
 			}
 		}
-		if (this.worldObj.isRemote)
-			BossStatus.setBossStatus(this, true);
+
+		if (this.isWet() || this.isBurning()) {
+			this.entityToAttack = null;
+			this.teleportRandomly();
+		}
+
+		this.isJumping = false;
+
+		if (this.entityToAttack != null)
+			this.faceEntity(this.entityToAttack, 100.0F, 100.0F);
 
 		if (!this.worldObj.isRemote && this.isEntityAlive()) {
 			if (this.entityToAttack != null) {
-				if (this.entityToAttack instanceof EntityPlayer) {
-					if (this.entityToAttack.getDistanceSqToEntity(this) < 16.0D) {
+				if (this.entityToAttack instanceof EntityPlayer
+						&& this.shouldAttackPlayer((EntityPlayer) this.entityToAttack)) {
+					if (this.entityToAttack.getDistanceSqToEntity(this) < 16.0D)
 						this.teleportRandomly();
-					}
 
 					this.teleportDelay = 0;
 				} else if (this.entityToAttack.getDistanceSqToEntity(this) > 256.0D
@@ -114,9 +120,8 @@ public class EntityDracula extends EntityMob implements IBossDisplayData {
 						&& this.teleportToEntity(this.entityToAttack)) {
 					this.teleportDelay = 0;
 				}
-			} else {
+			} else
 				this.teleportDelay = 0;
-			}
 		}
 
 		super.onLivingUpdate();
@@ -124,15 +129,15 @@ public class EntityDracula extends EntityMob implements IBossDisplayData {
 
 	/** Teleports dracula to the given entity */
 	private boolean teleportToEntity(Entity e) {
-		Vec3 vec3 = Vec3.createVectorHelper(this.posX - e.posX,
-				this.boundingBox.minY + (double) (this.height / 2.0F) - e.posY
-						+ (double) e.getEyeHeight(), this.posZ - e.posZ);
+		Vec3 vec3 = Vec3.createVectorHelper(
+				this.posX - e.posX,
+				this.boundingBox.minY + this.height / 2.0F - e.posY
+						+ e.getEyeHeight(), this.posZ - e.posZ);
 		vec3 = vec3.normalize();
 		double d0 = 16.0D;
 		double d1 = this.posX + (this.rand.nextDouble() - 0.5D) * 8.0D
 				- vec3.xCoord * d0;
-		double d2 = this.posY + (double) (this.rand.nextInt(16) - 8)
-				- vec3.yCoord * d0;
+		double d2 = this.posY + (this.rand.nextInt(16) - 8) - vec3.yCoord * d0;
 		double d3 = this.posZ + (this.rand.nextDouble() - 0.5D) * 8.0D
 				- vec3.zCoord * d0;
 		return this.teleportTo(d1, d2, d3);
@@ -140,9 +145,12 @@ public class EntityDracula extends EntityMob implements IBossDisplayData {
 
 	/** Teleports dracula randomly */
 	private boolean teleportRandomly() {
-		double d0 = this.posX + (this.rand.nextDouble() - 0.5D) * maxTeleportDistanceX;
-		double d1 = this.posY + (double) (this.rand.nextInt(maxTeleportDistanceY) - maxTeleportDistanceY * 0.5D);
-		double d2 = this.posZ + (this.rand.nextDouble() - 0.5D) * maxTeleportDistanceZ;
+		double d0 = this.posX + (this.rand.nextDouble() - 0.5D)
+				* maxTeleportDistanceX;
+		double d1 = this.posY
+				+ (this.rand.nextInt(maxTeleportDistanceY) - maxTeleportDistanceY * 0.5D);
+		double d2 = this.posZ + (this.rand.nextDouble() - 0.5D)
+				* maxTeleportDistanceZ;
 		return this.teleportTo(d0, d1, d2);
 	}
 
@@ -195,20 +203,17 @@ public class EntityDracula extends EntityMob implements IBossDisplayData {
 			short short1 = 128;
 
 			for (int l = 0; l < short1; ++l) {
-				double d6 = (double) l / ((double) short1 - 1.0D);
+				double d6 = l / (short1 - 1.0D);
 				float f = (this.rand.nextFloat() - 0.5F) * 0.2F;
 				float f1 = (this.rand.nextFloat() - 0.5F) * 0.2F;
 				float f2 = (this.rand.nextFloat() - 0.5F) * 0.2F;
 				double d7 = d3 + (this.posX - d3) * d6
-						+ (this.rand.nextDouble() - 0.5D) * (double) this.width
-						* 2.0D;
+						+ (this.rand.nextDouble() - 0.5D) * this.width * 2.0D;
 				double d8 = d4 + (this.posY - d4) * d6 + this.rand.nextDouble()
-						* (double) this.height;
+						* this.height;
 				double d9 = d5 + (this.posZ - d5) * d6
-						+ (this.rand.nextDouble() - 0.5D) * (double) this.width
-						* 2.0D;
-				this.worldObj.spawnParticle("portal", d7, d8, d9, (double) f,
-						(double) f1, (double) f2);
+						+ (this.rand.nextDouble() - 0.5D) * this.width * 2.0D;
+				this.worldObj.spawnParticle("portal", d7, d8, d9, f, f1, f2);
 			}
 
 			// TODO different sound (bang?)
@@ -219,4 +224,18 @@ public class EntityDracula extends EntityMob implements IBossDisplayData {
 		}
 	}
 
+	/**
+	 * Checks to see if dracula should be attacking this player
+	 */
+	private boolean shouldAttackPlayer(EntityPlayer p_70821_1_) {
+		Vec3 vec3 = p_70821_1_.getLook(1.0F).normalize();
+		Vec3 vec31 = Vec3.createVectorHelper(this.posX - p_70821_1_.posX,
+				this.boundingBox.minY + this.height / 2.0F
+						- (p_70821_1_.posY + p_70821_1_.getEyeHeight()),
+				this.posZ - p_70821_1_.posZ);
+		double d0 = vec31.lengthVector();
+		vec31 = vec31.normalize();
+		double d1 = vec3.dotProduct(vec31);
+		return d1 > 1.0D - 0.025D / d0 && p_70821_1_.canEntityBeSeen(this);
+	}
 }
