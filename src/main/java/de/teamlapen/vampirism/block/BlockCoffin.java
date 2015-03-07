@@ -4,20 +4,13 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 import java.util.Iterator;
-import java.util.Random;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
-import net.minecraft.item.Item;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.Direction;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -35,12 +28,13 @@ public class BlockCoffin extends BlockDirectional {
 
 	public BlockCoffin() {
 		super(Material.rock);
-		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5625F, 1.0F);
+		this.func_149978_e();
 	}
 
 	/**
 	 * Called upon block activation (right click on the block.)
 	 */
+	@Override
 	public boolean onBlockActivated(World p_149727_1_, int p_149727_2_,
 			int p_149727_3_, int p_149727_4_, EntityPlayer p_149727_5_,
 			int p_149727_6_, float p_149727_7_, float p_149727_8_,
@@ -118,9 +112,9 @@ public class BlockCoffin extends BlockDirectional {
 					return true;
 				}
 			} else {
-				double d2 = (double) p_149727_2_ + 0.5D;
-				double d0 = (double) p_149727_3_ + 0.5D;
-				double d1 = (double) p_149727_4_ + 0.5D;
+				double d2 = p_149727_2_ + 0.5D;
+				double d0 = p_149727_3_ + 0.5D;
+				double d1 = p_149727_4_ + 0.5D;
 				p_149727_1_
 						.setBlockToAir(p_149727_2_, p_149727_3_, p_149727_4_);
 				int k1 = getDirection(i1);
@@ -130,64 +124,32 @@ public class BlockCoffin extends BlockDirectional {
 				if (p_149727_1_.getBlock(p_149727_2_, p_149727_3_, p_149727_4_) == this) {
 					p_149727_1_.setBlockToAir(p_149727_2_, p_149727_3_,
 							p_149727_4_);
-					d2 = (d2 + (double) p_149727_2_ + 0.5D) / 2.0D;
-					d0 = (d0 + (double) p_149727_3_ + 0.5D) / 2.0D;
-					d1 = (d1 + (double) p_149727_4_ + 0.5D) / 2.0D;
+					d2 = (d2 + p_149727_2_ + 0.5D) / 2.0D;
+					d0 = (d0 + p_149727_3_ + 0.5D) / 2.0D;
+					d1 = (d1 + p_149727_4_ + 0.5D) / 2.0D;
 				}
 
-				p_149727_1_
-						.newExplosion((Entity) null,
-								(double) ((float) p_149727_2_ + 0.5F),
-								(double) ((float) p_149727_3_ + 0.5F),
-								(double) ((float) p_149727_4_ + 0.5F), 5.0F,
-								true, true);
+				p_149727_1_.newExplosion((Entity) null, p_149727_2_ + 0.5F,
+						p_149727_3_ + 0.5F, p_149727_4_ + 0.5F, 5.0F, true,
+						true);
 				return true;
 			}
 		}
 	}
 
 	/**
-	 * Gets the block's texture. Args: side, meta
-	 */
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int p_149691_1_, int p_149691_2_) {
-		if (p_149691_1_ == 0) {
-			return Blocks.planks.getBlockTextureFromSide(p_149691_1_);
-		} else {
-			int k = getDirection(p_149691_2_);
-			int l = Direction.bedDirection[k][p_149691_1_];
-			int i1 = isBlockHeadOfBed(p_149691_2_) ? 1 : 0;
-			return (i1 != 1 || l != 2) && (i1 != 0 || l != 3) ? (l != 5
-					&& l != 4 ? this.field_149983_N[i1]
-					: this.field_149982_M[i1]) : this.field_149980_b[i1];
-		}
-	}
-
-	//TODO Icon
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister p_149651_1_) {
-		this.field_149983_N = new IIcon[] {
-				p_149651_1_.registerIcon(this.getTextureName() + "_feet_top"),
-				p_149651_1_.registerIcon(this.getTextureName() + "_head_top") };
-		this.field_149980_b = new IIcon[] {
-				p_149651_1_.registerIcon(this.getTextureName() + "_feet_end"),
-				p_149651_1_.registerIcon(this.getTextureName() + "_head_end") };
-		this.field_149982_M = new IIcon[] {
-				p_149651_1_.registerIcon(this.getTextureName() + "_feet_side"),
-				p_149651_1_.registerIcon(this.getTextureName() + "_head_side") };
-	}
-
-	/**
 	 * The type of render function that is called for this block
 	 */
+	@Override
 	public int getRenderType() {
-		return 14;
+		return -1;
 	}
 
 	/**
 	 * If this block doesn't render as an ordinary block it will return False
 	 * (examples: signs, buttons, stairs, etc)
 	 */
+	@Override
 	public boolean renderAsNormalBlock() {
 		return false;
 	}
@@ -197,6 +159,7 @@ public class BlockCoffin extends BlockDirectional {
 	 * or not to render the shared face of two adjacent blocks and also whether
 	 * the player can attach torches, redstone wire, etc to this block.
 	 */
+	@Override
 	public boolean isOpaqueCube() {
 		return false;
 	}
@@ -205,9 +168,10 @@ public class BlockCoffin extends BlockDirectional {
 	 * Updates the blocks bounds based on its current state. Args: world, x, y,
 	 * z
 	 */
+	@Override
 	public void setBlockBoundsBasedOnState(IBlockAccess p_149719_1_,
 			int p_149719_2_, int p_149719_3_, int p_149719_4_) {
-		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5625F, 1.0F);
+		this.func_149978_e();
 	}
 
 	/**
@@ -215,6 +179,7 @@ public class BlockCoffin extends BlockDirectional {
 	 * neighbor changed (coordinates passed are their own) Args: x, y, z,
 	 * neighbor Block
 	 */
+	@Override
 	public void onNeighborBlockChange(World p_149695_1_, int p_149695_2_,
 			int p_149695_3_, int p_149695_4_, Block p_149695_5_) {
 		int l = p_149695_1_.getBlockMetadata(p_149695_2_, p_149695_3_,
@@ -238,12 +203,8 @@ public class BlockCoffin extends BlockDirectional {
 		}
 	}
 
-	public Item getItemDropped(int p_149650_1_, Random p_149650_2_,
-			int p_149650_3_) {
-		/**
-		 * Returns whether or not this bed block is the head of the bed.
-		 */
-		return isBlockHeadOfBed(p_149650_1_) ? Item.getItemById(0) : Items.bed;
+	private void func_149978_e() {
+		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5625F, 1.0F);
 	}
 
 	/**
@@ -306,22 +267,10 @@ public class BlockCoffin extends BlockDirectional {
 	}
 
 	/**
-	 * Drops the block items with a specified chance of dropping the specified
-	 * items
-	 */
-	public void dropBlockAsItemWithChance(World p_149690_1_, int p_149690_2_,
-			int p_149690_3_, int p_149690_4_, int p_149690_5_,
-			float p_149690_6_, int p_149690_7_) {
-		if (!isBlockHeadOfBed(p_149690_5_)) {
-			super.dropBlockAsItemWithChance(p_149690_1_, p_149690_2_,
-					p_149690_3_, p_149690_4_, p_149690_5_, p_149690_6_, 0);
-		}
-	}
-
-	/**
 	 * Returns the mobility information of the block, 0 = free, 1 = can't push
 	 * but can move over, 2 = total immobility and stop pistons
 	 */
+	@Override
 	public int getMobilityFlag() {
 		return 2;
 	}
@@ -329,6 +278,7 @@ public class BlockCoffin extends BlockDirectional {
 	/**
 	 * Called when the block is attempted to be harvested
 	 */
+	@Override
 	public void onBlockHarvested(World p_149681_1_, int p_149681_2_,
 			int p_149681_3_, int p_149681_4_, int p_149681_5_,
 			EntityPlayer p_149681_6_) {
