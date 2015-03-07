@@ -13,3 +13,4 @@ logs/
 options.txt
 usernamecache.json
 screenshots/
+crash-reports/*

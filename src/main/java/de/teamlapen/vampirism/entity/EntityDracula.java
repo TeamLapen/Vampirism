@@ -21,11 +21,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 import de.teamlapen.vampirism.util.BALANCE;
-
+/**@author Mistadon */
 public class EntityDracula extends EntityMob implements IBossDisplayData {
 	// TODO Sounds
 
 	private int teleportDelay;
+	private final int maxTeleportDelay = 30;
 	private final int maxTeleportDistanceX = 16;
 	private final int maxTeleportDistanceY = 16;
 	private final int maxTeleportDistanceZ = 16;
@@ -97,7 +98,7 @@ public class EntityDracula extends EntityMob implements IBossDisplayData {
 			}
 		}
 
-		if (this.isWet() || this.isBurning()) {
+		if (this.isBurning()) {
 			this.entityToAttack = null;
 			this.teleportRandomly();
 		}
@@ -113,10 +114,10 @@ public class EntityDracula extends EntityMob implements IBossDisplayData {
 						&& this.shouldAttackPlayer((EntityPlayer) this.entityToAttack)) {
 					if (this.entityToAttack.getDistanceSqToEntity(this) < 16.0D)
 						this.teleportRandomly();
-
 					this.teleportDelay = 0;
+					
 				} else if (this.entityToAttack.getDistanceSqToEntity(this) > 256.0D
-						&& this.teleportDelay++ >= 30
+						&& this.teleportDelay++ >= maxTeleportDelay
 						&& this.teleportToEntity(this.entityToAttack)) {
 					this.teleportDelay = 0;
 				}
