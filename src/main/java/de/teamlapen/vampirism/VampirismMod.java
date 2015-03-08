@@ -93,6 +93,7 @@ public class VampirismMod {
 		
 		ModItems.init();
 		ModBlocks.init();
+		ModBiomes.init();
 		proxy.registerKeyBindings();
 		setupNetwork();
 

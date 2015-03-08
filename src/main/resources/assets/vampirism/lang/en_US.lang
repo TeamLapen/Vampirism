@@ -1,6 +1,7 @@
 # Entitys
 entity.vampirism:vampireHunter.name=Vampire Hunter
 entity.vampirism:vampire.name=Vampire
+entity.vampirism:ghost.name=Ghost
 
 # Items
 item.vampirism:vampiresFear.name=Vampire's fear
@@ -8,6 +9,7 @@ item.vampirism:bloodBottle.name=Blood Bottle
 item.vampirism:vampireFang.name=Vampire Fang
 item.vampirism:pitchfork.name=Pitchfork
 item.vampirism:humanHearth.name=Human Hearth
+item.vampirism:torch.name=Torch
 
 # Blocks
 block.vampirism:bloodAltar.name=Blood Altar
@@ -15,6 +17,7 @@ block.vampirism:bloodAltarTier2.name=Blood Altar Tier 2
 block.vampirism:bloodAltarTier3.name=Blood Altar Tier 3
 block.vampirism:bloodAltarTier4.name=Blood Altar Tier 4
 block.vampirism:bloodAltarTier4Tip.name=Blood Altar Tier 4 Tip
+block.vampirism:cursedEarth.name=Cursed Earth
 
 #Tiles
 tile.vampirism:bloodAltarTier4.name=Blood Altar Tier 4

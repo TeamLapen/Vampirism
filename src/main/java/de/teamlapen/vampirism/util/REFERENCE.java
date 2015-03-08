@@ -5,6 +5,7 @@ public class REFERENCE {
 		public static final String VAMPIRE_HUNTER_NAME = "vampirism:vampireHunter";
 		public static final String VAMPIRE_NAME = "vampirism:vampire";
 		public static final String DRACULA_NAME = "vampirism:dracula";
+		public static final String GHOST_NAME = "vampirism:ghost";
 	}
 
 	public static enum KEY {
