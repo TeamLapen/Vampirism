@@ -46,6 +46,8 @@ public class Configs {
 
 		//General
 		String conf_version=config.get(CATEGORY_GENERAL, "config_mod_version", REFERENCE.VERSION).getString();
+		player_blood_watcher = config.get(CATEGORY_GENERAL, "player_data_watcher_id", 21,"ID for datawatcher. HAS TO BE THE SAME ON CLIENT AND SERVER").getInt();
+				
 		// Village
 		village_gen_enabled = config.get(cat_village.getQualifiedName(), "enabled", true,
 				"Should the custom generator be injected? (Enables/Disables the village mod)").getBoolean();
@@ -188,6 +190,8 @@ public class Configs {
 	public static int village_minDist;
 
 	public static int village_size;
+	
+	public static int player_blood_watcher;
 
 	public static Configuration config;
 

@@ -31,6 +31,7 @@ import de.teamlapen.vampirism.network.RenderScreenRedPacket;
 import de.teamlapen.vampirism.network.ShaderPacket;
 import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
 import de.teamlapen.vampirism.network.SpawnParticlePacket;
+import de.teamlapen.vampirism.network.UpdateVampirePlayerPacket;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
@@ -111,6 +112,7 @@ public class VampirismMod {
 		modChannel.registerMessage(SpawnCustomParticlePacket.Handler.class, SpawnCustomParticlePacket.class, id++, Side.CLIENT);
 		modChannel.registerMessage(RenderScreenRedPacket.Handler.class, RenderScreenRedPacket.class, id++, Side.CLIENT);
 		modChannel.registerMessage(ShaderPacket.Handler.class, ShaderPacket.class, id++, Side.CLIENT);
+		modChannel.registerMessage(UpdateVampirePlayerPacket.Handler.class, UpdateVampirePlayerPacket.class, id++, Side.CLIENT);
 	}
 
 }

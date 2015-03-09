@@ -18,10 +18,12 @@ import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
 import de.teamlapen.vampirism.network.SpawnParticlePacket;
+import de.teamlapen.vampirism.network.UpdateVampirePlayerPacket;
 import de.teamlapen.vampirism.proxy.CommonProxy;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
@@ -202,6 +204,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 			playerData.loadNBTData(savedData);
 
 		}
+		playerData.sync();
 	}
 
 	/**
@@ -235,18 +238,15 @@ public class VampirePlayer implements IExtendedEntityProperties {
 
 	public final static int MAXBLOOD = 20;
 
-	private final static int BLOOD_WATCHER = 20;
-
-	private final static int LEVEL_WATCHER = 21;
-
 	private BloodStats bloodStats;
+	
+	private int level;
 
 	private boolean autoFillBlood;
 
 	public VampirePlayer(EntityPlayer player) {
 		this.player = player;
-		this.player.getDataWatcher().addObject(BLOOD_WATCHER, MAXBLOOD);
-		this.player.getDataWatcher().addObject(LEVEL_WATCHER, 0);
+		this.player.getDataWatcher().addObject(Configs.player_blood_watcher, MAXBLOOD);
 		bloodStats = new BloodStats();
 		autoFillBlood = false;
 		MinecraftForge.EVENT_BUS.register(this);
@@ -268,7 +268,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	 * @return The current blood level
 	 */
 	public int getBlood() {
-		return this.player.getDataWatcher().getWatchableObjectInt(BLOOD_WATCHER);
+		return this.player.getDataWatcher().getWatchableObjectInt(Configs.player_blood_watcher);
 	}
 
 	public BloodStats getBloodStats() {
@@ -280,7 +280,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	 * @return Vampire level of the player
 	 */
 	public int getLevel() {
-		return this.player.getDataWatcher().getWatchableObjectInt(LEVEL_WATCHER);
+		return this.level;
 	}
 
 	@Override
@@ -305,7 +305,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	public void loadNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
 		setBloodData(properties.getInteger(KEY_BLOOD));
-		setLevel(properties.getInteger(KEY_LEVEL));
+		level=properties.getInteger(KEY_LEVEL);
 		setAutoFillBlood(properties.getBoolean(KEY_AUTOFILL));
 		this.bloodStats.readNBT(properties);
 
@@ -362,7 +362,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	 * @param b
 	 */
 	private synchronized void setBloodData(int b) {
-		this.player.getDataWatcher().updateObject(BLOOD_WATCHER, b);
+		this.player.getDataWatcher().updateObject(Configs.player_blood_watcher, b);
 
 	}
 
@@ -375,8 +375,9 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	 */
 	public void setLevel(int l) {
 		if (l >= 0) {
-			this.player.getDataWatcher().updateObject(LEVEL_WATCHER, l);
+			level=l;
 			PlayerModifiers.applyModifiers(l, player);
+			sync();
 		}
 	}
 
@@ -435,6 +436,12 @@ public class VampirePlayer implements IExtendedEntityProperties {
 			Logger.i(REFERENCE.MODID, "Enabling Auto Fill Blood!");
 			autoFillBlood = true;
 			this.player.addChatMessage(new ChatComponentText("Auto Fill Blood Enabled"));
+		}
+	}
+	
+	public void sync(){
+		if(!player.worldObj.isRemote){
+			VampirismMod.modChannel.sendTo(new UpdateVampirePlayerPacket(getLevel()), (EntityPlayerMP)player);
 		}
 	}
 
