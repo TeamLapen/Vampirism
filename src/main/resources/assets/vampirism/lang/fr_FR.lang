@@ -1,6 +1,7 @@
 # Entitys
 entity.vampirism:vampireHunter.name=Chasseur de vampire
 entity.vampirism:vampire.name=Vampire
+entity.vampirism:ghost.name=Fantôme
 
 # Items
 item.vampirism:vampiresFear.name=Frayeur de vampire
@@ -13,9 +14,15 @@ item.vampirism:spawnBloodAltarTier2.name=Autel de sang Niv2
 # Blocks
 block.vampirism:bloodAltar.name=Autel de sang
 block.vampirism:bloodAltarTier2.name=Autel de sang Niv2
+block.vampirism:bloodAltarTier3.name=Autel de sang Niv3
+block.vampirism:bloodAltarTier4.name=Autel de sang Niv4
+block.vampirism:bloodAltarTier4Tip.name=Autel de sang Niv4 astuce
+block.vampirism:cursedEarth.name=Terre maudite
+
+#Tiles
+tile.vampirism:bloodAltarTier4.name=Autel de sang Niv4
 
 # Keys
-
 keys.vampirism.category=Vampirisme
 keys.vampirism.suck=Suce le sang
 keys.vampirism.auto=Auto remplissage de bouteille de sang
@@ -23,6 +30,13 @@ keys.vampirism.auto=Auto remplissage de bouteille de sang
 #General
 itemGroup.vampirism=Vampirisme
 death.attack.sun=%1$s n'a pas aimé le soleil
-category.vampirism.balance=Options de balance
-category.vampirism.balance_level=Options de balance de montée de niveau
+
+#Config
+category.vampirism.balance=Propriétés d'équilibrage
+category.vampirism.balance.tooltip=Changement presque n'importe quel équilibre de propriété appropriée
+category.vampirism.balance_level=Options d'équilibrage de montée de niveau
 category.vampirism.balance_player_mod=Options des modificateurs du joueur vampire
+category.vampirism.balance_mob_prop=Propriété de vampirisme des créatures
+category.vampirism.balance_mob_prop.tooltip=Change les propriétés des créatures ajouté par Vampirism
+category.vampirism.balance_vv_prop=Propriétés des village
+category.vampirism.balance_vv_prop.tooltip=Change la manière d'agir des chasseur des villages et adjuste les options de balance des autres villages
