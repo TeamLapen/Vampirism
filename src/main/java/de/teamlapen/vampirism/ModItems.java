@@ -5,11 +5,11 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import cpw.mods.fml.common.registry.GameRegistry;
-import de.teamlapen.vampirism.item.ItemAltarTier4Bed;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
 import de.teamlapen.vampirism.item.ItemHumanHearth;
 import de.teamlapen.vampirism.item.ItemPitchfork;
 import de.teamlapen.vampirism.item.ItemPureBlood;
+import de.teamlapen.vampirism.item.ItemSunscreen;
 import de.teamlapen.vampirism.item.ItemTorch;
 import de.teamlapen.vampirism.item.ItemVampireFang;
 import de.teamlapen.vampirism.item.ItemVampiresFear;
@@ -24,6 +24,7 @@ public class ModItems {
 		GameRegistry.registerItem(torch, ItemTorch.name);
 		GameRegistry.registerItem(humanHearth, ItemHumanHearth.name);
 		GameRegistry.registerItem(pureBlood,ItemPureBlood.name);
+		GameRegistry.registerItem(sunscreen, ItemSunscreen.name);
 
 		// Recipe for empty blood bottle
 		GameRegistry.addRecipe(new ItemStack(bloodBottle, 1, 0), "   ", "XYX", " X ", 'X', Blocks.glass, 'Y', Items.rotten_flesh);
@@ -37,4 +38,5 @@ public class ModItems {
 	public static ItemTorch torch = new ItemTorch();
 	public static ItemHumanHearth humanHearth=new ItemHumanHearth();
 	public static ItemPureBlood pureBlood=new ItemPureBlood();
+	public static ItemSunscreen sunscreen=new ItemSunscreen();
 }

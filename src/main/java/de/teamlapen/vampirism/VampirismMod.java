@@ -99,6 +99,7 @@ public class VampirismMod {
 		}
 		Helper.Obfuscation.fillMap();
 		
+		ModPotion.init();
 		ModItems.init();
 		ModBlocks.init();
 		ModBiomes.init();

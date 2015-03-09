@@ -19,6 +19,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.Configs;
+import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
@@ -333,7 +334,11 @@ public class VampirePlayer implements IExtendedEntityProperties {
 				&& player.worldObj.canBlockSeeTheSky(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY),
 						MathHelper.floor_double(player.posZ))) {
 			if (player.worldObj.isDaytime() && player.getBrightness(1.0F) > 0.5F && player.worldObj.rand.nextInt(40) == 10) {
-				player.attackEntityFrom(VampirismMod.sunDamage, BALANCE.getVampireSunDamage(getLevel()));
+				float dmg=BALANCE.getVampireSunDamage(getLevel());
+				if(player.isPotionActive(ModPotion.sunscreen)){
+					dmg=dmg/2;
+				}
+				player.attackEntityFrom(VampirismMod.sunDamage, dmg);
 			}
 
 		}

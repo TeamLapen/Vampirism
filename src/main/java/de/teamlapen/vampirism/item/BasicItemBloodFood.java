@@ -27,10 +27,10 @@ public abstract class BasicItemBloodFood extends ItemFood {
 	@Override
 	public ItemStack onEaten(ItemStack stack, World world, EntityPlayer player)
     {
-		Logger.i("test", "test");
         --stack.stackSize;
         VampirePlayer.get(player).getBloodStats().addBlood(bloodAmount);
         world.playSoundAtEntity(player, "random.burp", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
+        this.onFoodEaten(stack, world, player);
         return stack;
     }
 
