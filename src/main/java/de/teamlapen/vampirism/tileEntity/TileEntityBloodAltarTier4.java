@@ -21,6 +21,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ChunkCoordinates;
 import de.teamlapen.vampirism.ModBlocks;
+import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.block.BlockBloodAltarTier4;
 import de.teamlapen.vampirism.block.BlockBloodAltarTier4Tip;
@@ -68,7 +69,7 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 	private ChunkCoordinates[] tips;
 
 	public TileEntityBloodAltarTier4() {
-		super(new Slot[] { new Slot(ItemBloodBottle.class, 56, 17), new Slot(Items.diamond, 56, 53), new Slot(116, 35) });
+		super(new Slot[] { new Slot(ModItems.pureBlood, 56, 17), new Slot(Items.diamond, 56, 53), new Slot(116, 35) });
 	}
 
 	/**
