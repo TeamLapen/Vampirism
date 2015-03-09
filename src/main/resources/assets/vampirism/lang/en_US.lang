@@ -22,6 +22,10 @@ block.vampirism:cursedEarth.name=Cursed Earth
 #Tiles
 tile.vampirism:bloodAltarTier4.name=Blood Altar Tier 4
 
+#GUI
+gui.vampirism:revertback.head=Revert back to normal human
+gui.vampirism:revertback.desc=You will loose all your levels and die
+
 # Keys
 keys.vampirism.category=Vampirism
 keys.vampirism.suck=Suck blood

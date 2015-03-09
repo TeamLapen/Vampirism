@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
 import de.teamlapen.vampirism.client.gui.GUIBloodAltarTier4;
+import de.teamlapen.vampirism.client.gui.GUIConvertBack;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier4;
 import de.teamlapen.vampirism.util.Logger;
 
@@ -12,6 +13,7 @@ import de.teamlapen.vampirism.util.Logger;
  */
 public class GuiHandler implements IGuiHandler {
 	public final static int ID_ALTAR_4=0;
+	public final static int ID_CONVERT_BACK=1;
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
@@ -27,6 +29,9 @@ public class GuiHandler implements IGuiHandler {
 		if(ID==ID_ALTAR_4){
 			TileEntityBloodAltarTier4 tile=(TileEntityBloodAltarTier4)world.getTileEntity(x, y, z);
 			return new GUIBloodAltarTier4(player.inventory,tile);
+		}
+		if(ID==ID_CONVERT_BACK){
+			return new GUIConvertBack();
 		}
 		return null;
 	}

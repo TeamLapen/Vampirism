@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.DamageSource;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -29,6 +30,11 @@ public class InputEventPacket implements IMessage {
 				EntityPlayer player = ctx.getServerHandler().playerEntity;
 				VampirePlayer.get(player).toggleAutoFillBlood();
 			}
+			else if(message.action.equals(REVERTBACK)){
+				EntityPlayer player = ctx.getServerHandler().playerEntity;
+				VampirePlayer.get(player).setLevel(0);
+				player.attackEntityFrom(DamageSource.magic, 1000);
+			}
 
 			return null;
 		}
@@ -37,6 +43,7 @@ public class InputEventPacket implements IMessage {
 
 	public static String SUCKBLOOD = "sb";
 	public static String TOGGLEAUTOFILLBLOOD = "ta";
+	public static String REVERTBACK="rb";
 	private String param;
 	private String action;
 	private final String SPLIT = "-";

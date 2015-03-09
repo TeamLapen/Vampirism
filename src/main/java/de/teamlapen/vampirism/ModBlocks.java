@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.block.BlockBloodAltarTier3;
 import de.teamlapen.vampirism.block.BlockBloodAltarTier4;
 import de.teamlapen.vampirism.block.BlockBloodAltarTier4Bed;
 import de.teamlapen.vampirism.block.BlockBloodAltarTier4Tip;
+import de.teamlapen.vampirism.block.BlockChurchAltar;
 import de.teamlapen.vampirism.block.BlockCursedEarth;
 import de.teamlapen.vampirism.block.MaterialLiquidBlood;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
@@ -29,6 +30,7 @@ public class ModBlocks {
 		GameRegistry.registerBlock(bloodAltarTier4, ItemBlock.class,BlockBloodAltarTier4.name);
 		GameRegistry.registerBlock(bloodAltarTier4Tip, ItemBlock.class,BlockBloodAltarTier4Tip.name);
 		GameRegistry.registerBlock(cursedEarth, BlockCursedEarth.name);
+		GameRegistry.registerBlock(churchAltar, BlockChurchAltar.name);
 		GameRegistry.registerTileEntity(TileEntityBloodAltar.class, "TileEntityBloodAltar");
 		GameRegistry.registerTileEntity(TileEntityBloodAltarTier2.class, "TileEntityBloodAltarTier2");
 		GameRegistry.registerTileEntity(TileEntityBloodAltarTier3.class, "TileEntityBloodAltarTier3");
@@ -45,4 +47,5 @@ public class ModBlocks {
 	public final static BlockBloodAltarTier4 bloodAltarTier4=new BlockBloodAltarTier4();
 	public final static BlockBloodAltarTier4Tip bloodAltarTier4Tip=new BlockBloodAltarTier4Tip();
 	public final static BlockCursedEarth cursedEarth = new BlockCursedEarth();
+	public final static BlockChurchAltar churchAltar= new BlockChurchAltar();
 }
