@@ -6,7 +6,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.world.biome.BiomeGenBase;
 
 public class BiomeVampireForest extends BiomeGenBase {
-
 	public final static String name = "vampireForest";
 
 	@SuppressWarnings("unchecked")
@@ -20,7 +19,7 @@ public class BiomeVampireForest extends BiomeGenBase {
         
         this.topBlock = Blocks.grass;
         this.fillerBlock = ModBlocks.cursedEarth;
-    	this.theBiomeDecorator.treesPerChunk = 5;
+    	this.theBiomeDecorator.treesPerChunk = 6;
 		this.theBiomeDecorator.grassPerChunk = 5;
 		this.theBiomeDecorator.deadBushPerChunk = 1;
 		this.theBiomeDecorator.bigMushroomsPerChunk = 1;
@@ -28,6 +27,6 @@ public class BiomeVampireForest extends BiomeGenBase {
         this.canSpawnLightningBolt();
         this.waterColorMultiplier = 14745518;  // same as swamp
         this.setDisableRain();
-        this.setColor(14745518);
+//        this.setColor(14745518);
 	}
 }
