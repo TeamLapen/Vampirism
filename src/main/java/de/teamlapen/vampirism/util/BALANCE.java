@@ -59,7 +59,7 @@ public final class BALANCE {
 		@DefaultDouble(1.0D)
 		public static double HEALTH_MAX_MOD;
 		@DefaultInt(20)
-		public static int HEALTH_LCAP = 20;
+		public static int HEALTH_LCAP;
 		@DefaultDouble(0.5D)
 		public static double HEALTH_TYPE;
 		@DefaultDouble(1.0D)
@@ -108,6 +108,13 @@ public final class BALANCE {
 		return (float) VAMPIRE_PLAYER_SUN_DAMAGE;
 	}
 	
+	public static int getVampireLordDuration(int level){
+		if(level<VAMPIRE_PLAYER_LORD_MIN_LEVEL){
+			return 0;
+		}
+		return 20 *(VAMPIRE_PLAYER_LORD_MIN_DURATION+(level-VAMPIRE_PLAYER_LORD_MIN_LEVEL)*VAMPIRE_PLAYER_LORD_DUR_PL);
+	}
+	
 	// Mob behavior
 	@DefaultInt(value = 2, comment = "Vampirehunters attack players with a vampire level higher than this")
 	public static int VAMPIRE_HUNTER_ATTACK_LEVEL;
@@ -130,7 +137,22 @@ public final class BALANCE {
 	
 	@DefaultInt(2)
 	public static int VAMPIRE_PLAYER_CREEPER_AVOID_LEVEL;
+	
+	/**
+	 * Has to be multiplied with 20 to get the duration in ticks
+	 */
+	@DefaultInt(value=20,comment="Vampire Lord cooldown duration")
+	public static int VAMPIRE_PLAYER_LORD_COOLDOWN;
+	
+	@DefaultInt(value=10,comment="Standard Vampire Lord duration")
+	public static int VAMPIRE_PLAYER_LORD_MIN_DURATION;
+	
+	@DefaultInt(value=5,comment="Vampire Lord duration increase per level")
+	public static int VAMPIRE_PLAYER_LORD_DUR_PL;
 
+	@DefaultInt(value=8,comment="Minimum level for Vampire Lord transformation")
+	public static int VAMPIRE_PLAYER_LORD_MIN_LEVEL;
+	
 	// Vampiremob
 	@DefaultInt(5)
 	public static int SMALL_BLOOD_AMOUNT; // Blood amount a small mob gives

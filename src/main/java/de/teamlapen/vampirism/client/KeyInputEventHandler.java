@@ -22,11 +22,16 @@ public class KeyInputEventHandler {
 		} else if (AUTO.isPressed()) {
 			return KEY.AUTO;
 		}
+		else if(VLORD.isPressed()){
+			return KEY.VLORD;
+		}
 		return KEY.UNKNOWN;
 	}
 	public static KeyBinding SUCK = new KeyBinding(REFERENCE.KEYS.SUCK_BLOOD, Keyboard.KEY_F, REFERENCE.KEYS.CATEGORY);
 
 	public static KeyBinding AUTO = new KeyBinding(REFERENCE.KEYS.AUTO_BLOOD, Keyboard.KEY_B, REFERENCE.KEYS.CATEGORY);
+	
+	public static KeyBinding VLORD = new KeyBinding(REFERENCE.KEYS.VLORD_BLOOD, Keyboard.KEY_G, REFERENCE.KEYS.CATEGORY);
 
 	@SubscribeEvent
 	public void handleKeyInput(InputEvent.KeyInputEvent event) {
@@ -37,10 +42,11 @@ public class KeyInputEventHandler {
 			if (mouseOver != null && mouseOver.entityHit != null) {
 				VampirismMod.modChannel.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + mouseOver.entityHit.getEntityId()));
 			}
-			Logger.i(REFERENCE.MODID, "SUCK Key Pressed!");
 		} else if (keyPressed == KEY.AUTO) {
 			VampirismMod.modChannel.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEAUTOFILLBLOOD, "0"));
-			Logger.i(REFERENCE.MODID, "AUTO Key Pressed!");
+		}
+		else if(keyPressed==KEY.VLORD){
+			VampirismMod.modChannel.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEVLORD,"0"));
 		}
 	}
 }

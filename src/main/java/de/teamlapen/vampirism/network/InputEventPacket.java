@@ -28,12 +28,16 @@ public class InputEventPacket implements IMessage {
 				}
 			} else if (message.action.equals(TOGGLEAUTOFILLBLOOD)) {
 				EntityPlayer player = ctx.getServerHandler().playerEntity;
-				VampirePlayer.get(player).toggleAutoFillBlood();
+				VampirePlayer.get(player).onToggleAutoFillBlood();
 			}
 			else if(message.action.equals(REVERTBACK)){
 				EntityPlayer player = ctx.getServerHandler().playerEntity;
 				VampirePlayer.get(player).setLevel(0);
 				player.attackEntityFrom(DamageSource.magic, 1000);
+			}
+			else if(message.action.equals(TOGGLEVLORD)){
+				EntityPlayer player = ctx.getServerHandler().playerEntity;
+				VampirePlayer.get(player).onToggleVampireLord();
 			}
 
 			return null;
@@ -44,6 +48,7 @@ public class InputEventPacket implements IMessage {
 	public static String SUCKBLOOD = "sb";
 	public static String TOGGLEAUTOFILLBLOOD = "ta";
 	public static String REVERTBACK="rb";
+	public static String TOGGLEVLORD="tl";
 	private String param;
 	private String action;
 	private final String SPLIT = "-";

@@ -35,13 +35,15 @@ public class UpdateVampirePlayerPacket implements IMessage {
 
 		@Override
 		public IMessage onMessage(UpdateVampirePlayerPacket message, MessageContext ctx) {
-			VampirePlayer.get(Minecraft.getMinecraft().thePlayer).setLevel(message.level);
+			VampirePlayer.get(Minecraft.getMinecraft().thePlayer).loadSyncUpdate(message.level,message.vLordTimer);
 			return null;
 		}
 
 	}
 
 	private int level;
+	
+	private int vLordTimer;
 	/**
 	 * Dont use
 	 */
@@ -55,14 +57,16 @@ public class UpdateVampirePlayerPacket implements IMessage {
 	 * @param durationOn duration(in ticks) which should it take to turn full red
 	 * @param durationOff duration(in ticks) which should it take to turn normal again
 	 */
-	public UpdateVampirePlayerPacket(int level) {
+	public UpdateVampirePlayerPacket(int level,int vLordTimer) {
 		this.level=level;
+		this.vLordTimer=vLordTimer;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		NBTTagCompound tag = ByteBufUtils.readTag(buf);
 		level=tag.getInteger("level");
+		vLordTimer=tag.getInteger("vlord");
 
 	}
 
@@ -70,6 +74,7 @@ public class UpdateVampirePlayerPacket implements IMessage {
 	public void toBytes(ByteBuf buf) {
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setInteger("level", level);
+		tag.setInteger("vlord", vLordTimer);
 		ByteBufUtils.writeTag(buf, tag);
 
 	}

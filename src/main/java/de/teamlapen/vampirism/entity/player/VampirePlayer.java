@@ -9,6 +9,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
@@ -21,6 +22,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
 import de.teamlapen.vampirism.network.SpawnParticlePacket;
@@ -77,6 +79,9 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		}
 
 		public void addExhaustion(float amount) {
+			if(isVampireLord()){
+				amount=amount*1.5F;
+			}
 			this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount, maxExhaustion);
 		}
 
@@ -228,6 +233,8 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	}
 
 	public final static String EXT_PROP_NAME = "VampirePlayer";
+	
+	public final static String TAG="VampirePlayer";
 
 	private final EntityPlayer player;
 
@@ -236,12 +243,19 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	private final String KEY_BLOOD = "blood";
 
 	private final String KEY_AUTOFILL = "autofill";
+	
+	private final String KEY_VLORD = "vlord";
 
 	public final static int MAXBLOOD = 20;
 
 	private BloodStats bloodStats;
 	
 	private int level;
+	
+	/**
+	 * Timer for the vampire lord form, if >0 the player is a lord, if <0 its in cooldown phase
+	 */
+	private int vampireLordTimer;
 
 	private boolean autoFillBlood;
 
@@ -250,7 +264,6 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		this.player.getDataWatcher().addObject(Configs.player_blood_watcher, MAXBLOOD);
 		bloodStats = new BloodStats();
 		autoFillBlood = false;
-		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	/**
@@ -307,26 +320,33 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
 		setBloodData(properties.getInteger(KEY_BLOOD));
 		level=properties.getInteger(KEY_LEVEL);
+		setLordTimer(properties.getInteger(KEY_VLORD),false);
 		setAutoFillBlood(properties.getBoolean(KEY_AUTOFILL));
 		this.bloodStats.readNBT(properties);
+		this.updateVampireLordAbilites();
+		PlayerModifiers.applyModifiers(level, player);
 
 	}
 
-	public void looseLevel() {
+	private void looseLevel() {
 		int level = getLevel();
 		if (level > 1) {
 			setLevel(level - 1);
 		}
 	}
-
-	@SubscribeEvent
-	public void onLivingUpdate(LivingUpdateEvent e) {
-		if (e.entity.equals(player)) {
-			onUpdate();
+	
+	public void onDeath(DamageSource source){
+		if (BALANCE.VAMPIRE_PLAYER_LOOSE_LEVEL && source.damageType.equals("mob") && source instanceof EntityDamageSource) {
+			if (source.getEntity() instanceof EntityVampireHunter) {
+				looseLevel();
+			}
+		}
+		if(isVampireLord()){
+			setLordTimer(-BALANCE.VAMPIRE_PLAYER_LORD_COOLDOWN*20);
 		}
 	}
 
-	private void onUpdate() {
+	public void onUpdate() {
 		if (getLevel() > 0) {
 			this.bloodStats.onUpdate();
 		}
@@ -335,12 +355,32 @@ public class VampirePlayer implements IExtendedEntityProperties {
 						MathHelper.floor_double(player.posZ))) {
 			if (player.worldObj.isDaytime() && player.getBrightness(1.0F) > 0.5F && player.worldObj.rand.nextInt(40) == 10) {
 				float dmg=BALANCE.getVampireSunDamage(getLevel());
+				if(isVampireLord()){
+					dmg=dmg*2;
+				}
 				if(player.isPotionActive(ModPotion.sunscreen)){
 					dmg=dmg/2;
 				}
 				player.attackEntityFrom(VampirismMod.sunDamage, dmg);
 			}
 
+		}
+		if(this.vampireLordTimer!=0){
+			boolean before=vampireLordTimer>0;
+			if(vampireLordTimer<0){
+				vampireLordTimer++;
+			}
+			else{
+				vampireLordTimer--;
+			}
+			if(vampireLordTimer==0&&before){
+				this.setLordTimer(-BALANCE.VAMPIRE_PLAYER_LORD_COOLDOWN*20);
+				updateVampireLordAbilites();
+			}
+			if(vampireLordTimer%20==0){
+				this.sync();
+			}
+			
 		}
 
 	}
@@ -350,6 +390,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		NBTTagCompound properties = new NBTTagCompound();
 		properties.setInteger(KEY_LEVEL, getLevel());
 		properties.setInteger(KEY_BLOOD, getBlood());
+		properties.setInteger(KEY_VLORD, vampireLordTimer);
 		properties.setBoolean(KEY_AUTOFILL, getAutoFillBlood());
 		this.bloodStats.writeNBT(properties);
 		compound.setTag(EXT_PROP_NAME, properties);
@@ -372,10 +413,10 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	}
 
 	/**
-	 * For testing only, make private later This is the only method which should
-	 * change the LEVEL watcher This method should execute all level related
+	 * For testing only, make private later. This is the only method which should
+	 * change the level. This method should execute all level related
 	 * changes e.g. player modifiers
-	 * 
+	 * Its syncs it with the client
 	 * @param l
 	 */
 	public void setLevel(int l) {
@@ -432,22 +473,102 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		}
 	}
 
-	public void toggleAutoFillBlood() {
+	public void onToggleAutoFillBlood() {
 		if (autoFillBlood) {
-			Logger.i(REFERENCE.MODID, "Disabling Auto Fill Blood!");
+			Logger.i(TAG, "Disabling Auto Fill Blood!");
 			autoFillBlood = false;
 			this.player.addChatMessage(new ChatComponentText("Auto Fill Blood Disabled"));
 		} else {
-			Logger.i(REFERENCE.MODID, "Enabling Auto Fill Blood!");
+			Logger.i(TAG, "Enabling Auto Fill Blood!");
 			autoFillBlood = true;
 			this.player.addChatMessage(new ChatComponentText("Auto Fill Blood Enabled"));
 		}
 	}
 	
+	public int getVampireLordTimer(){
+		return this.vampireLordTimer;
+	}
+	
+	public boolean isVampireLord(){
+		return this.vampireLordTimer>0;
+	}
+	
+	/**
+	 * Sends updates to the client
+	 */
 	public void sync(){
 		if(!player.worldObj.isRemote){
-			VampirismMod.modChannel.sendTo(new UpdateVampirePlayerPacket(getLevel()), (EntityPlayerMP)player);
+			VampirismMod.modChannel.sendTo(new UpdateVampirePlayerPacket(getLevel(),getVampireLordTimer()), (EntityPlayerMP)player);
 		}
+	}
+	
+	/**
+	 * Ment to be used by UpdateVampirePlayerPacket on client side, to load updates.
+	 * @param level
+	 * @param vLordTimer
+	 */
+	@SideOnly(Side.CLIENT)
+	public void loadSyncUpdate(int level,int vLordTimer){
+		this.setLevel(level);
+		this.setLordTimer(vLordTimer,false);
+	}
+	
+	/**
+	 * Called when the player presses the vampire lord key
+	 */
+	public void onToggleVampireLord(){
+		//TODO add userfeedback
+		Logger.i(TAG, "Trying to toggle vampire lord");
+		if(this.vampireLordTimer>0){
+			Logger.i(TAG, "Deactivated vampire lord");
+			setLordTimer(-BALANCE.VAMPIRE_PLAYER_LORD_COOLDOWN*20+this.vampireLordTimer);
+		}
+		else if(this.vampireLordTimer==0){
+			int dur=BALANCE.getVampireLordDuration(getLevel());
+			if(dur==0){
+				Logger.i(TAG, "Level to low for vlord");
+			}
+			else{
+				setLordTimer(dur);
+				Logger.i(TAG, "Activated vampire lord");
+			}
+
+		}
+		else{
+			Logger.i(TAG, "Still cant activate it: "+this.vampireLordTimer);
+		}
+	}
+	
+	/**
+	 * Sets the lord timer and notifys the client
+	 * @param t
+	 */
+	private void setLordTimer(int t){
+		this.setLordTimer(t, true);
+	}
+	
+	/**
+	 * Sets the lord timer
+	 * @param t
+	 * @param sync whether to notify the client or not
+	 */
+	private void setLordTimer(int t,boolean sync){
+		this.vampireLordTimer=t;
+		this.updateVampireLordAbilites();
+		if(sync&&!player.worldObj.isRemote){
+			this.sync();
+		}
+	}
+	
+	private void updateVampireLordAbilites(){
+		int l=getLevel();
+		if(this.vampireLordTimer>0){
+			PlayerModifiers.applyModifiers(l+3, player); 
+		}
+		else{
+			PlayerModifiers.applyModifiers(l, player);
+		}
+
 	}
 
 }
