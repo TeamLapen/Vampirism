@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.player;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -526,7 +527,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		else if(this.vampireLordTimer==0){
 			int dur=BALANCE.getVampireLordDuration(getLevel());
 			if(dur==0){
-				Logger.i(TAG, "Level to low for vlord");
+				player.addChatMessage(new ChatComponentText(I18n.format("text.vampirism:vp.level_to_low", new Object[0])));
 			}
 			else{
 				setLordTimer(dur);
@@ -535,6 +536,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 
 		}
 		else{
+			player.addChatMessage(new ChatComponentText(I18n.format("text.vampirism:vp.cooldown_not_over", new Object[0])));
 			Logger.i(TAG, "Still cant activate it: "+this.vampireLordTimer);
 		}
 	}
@@ -569,6 +571,10 @@ public class VampirePlayer implements IExtendedEntityProperties {
 			PlayerModifiers.applyModifiers(l, player);
 		}
 
+	}
+	
+	private boolean isRemote(){
+		return player.worldObj.isRemote;
 	}
 
 }

@@ -21,6 +21,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
@@ -181,6 +182,8 @@ public class VampireHudOverlay extends Gui {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GL11.glDisable(GL11.GL_LIGHTING);
 
+
+		
 		int level = VampirePlayer.get(mc.thePlayer).getLevel();
 		if (mc.playerController.gameIsSurvivalOrAdventure() && level > 0) {
 			mc.mcProfiler.startSection("vampireLevel");
@@ -195,6 +198,18 @@ public class VampireHudOverlay extends Gui {
 			mc.fontRenderer.drawString(text, x, y - 1, 0);
 			mc.fontRenderer.drawString(text, x, y, color);
 			mc.mcProfiler.endSection();
+			
+			if(level>=BALANCE.VAMPIRE_PLAYER_LORD_MIN_LEVEL){
+				mc.mcProfiler.startSection("vampire_lord_indicator");
+				this.mc.getTextureManager().bindTexture(icons);
+				if(VampirePlayer.get(mc.thePlayer).getVampireLordTimer()==0){
+					drawTexturedModalRect(x-4, y+10, 60, 0, 16, 16);
+				}
+				else{
+					drawTexturedModalRect(x-4, y+10, 44, 0, 16, 16);
+				}
+				mc.mcProfiler.endSection();
+			}
 		}
 	}
 
