@@ -38,21 +38,27 @@ public class WorldGenVampirism implements IWorldGenerator {
 	 */
 	private void addEntities(World world, Random random, int x, int z) {
 
-		int y = world.getHeightValue(x, z);
-		Village v = world.villageCollectionObj.findNearestVillage(x, y, z, 0);
-		if (v == null) {
+		// Added try/catch block to resolve issue #15
+		try {
+			int y = world.getHeightValue(x, z);
+			Village v = world.villageCollectionObj.findNearestVillage(x, y, z, 0);
+			if (v == null) {
+				return;
+			}
+	
+			int r = v.getVillageRadius();
+			AxisAlignedBB box = AxisAlignedBB.getBoundingBox(v.getCenter().posX - r, 0, v.getCenter().posZ - r, v.getCenter().posX + r,
+					world.getActualHeight(), v.getCenter().posZ + r);
+	
+			int spawnedHunter = world.getEntitiesWithinAABB(EntityVampireHunter.class, box).size();
+			for(EntityCreature e:Helper.spawnEntityCreatureInVillage(v, BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE-spawnedHunter, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world)){
+					((EntityVampireHunter) e).setHomeArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, r);
+			}
+		}
+		catch (Exception e) {
+			// If an exception occurs, it is likely a bug in minecraft, but we don't need to crash so we will return
 			return;
 		}
-
-		int r = v.getVillageRadius();
-		AxisAlignedBB box = AxisAlignedBB.getBoundingBox(v.getCenter().posX - r, 0, v.getCenter().posZ - r, v.getCenter().posX + r,
-				world.getActualHeight(), v.getCenter().posZ + r);
-
-		int spawnedHunter = world.getEntitiesWithinAABB(EntityVampireHunter.class, box).size();
-		for(EntityCreature e:Helper.spawnEntityCreatureInVillage(v, BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE-spawnedHunter, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world)){
-				((EntityVampireHunter) e).setHomeArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, r);
-		}
-		
 	}
 
 	private void addStructures(World world, Random random, int x, int z) {
