@@ -25,6 +25,10 @@ import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.entity.VampireMob;
+import de.teamlapen.vampirism.entity.player.skills.ILastingSkill;
+import de.teamlapen.vampirism.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.entity.player.skills.Skills;
+import de.teamlapen.vampirism.entity.player.skills.VampireLordSkill;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
 import de.teamlapen.vampirism.network.SpawnParticlePacket;
 import de.teamlapen.vampirism.network.UpdateVampirePlayerPacket;
@@ -80,7 +84,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		}
 
 		public void addExhaustion(float amount) {
-			if(isVampireLord()){
+			if(isSkillActive(VampireLordSkill.ID)){
 				amount=amount*1.5F;
 			}
 			this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount, maxExhaustion);
@@ -245,7 +249,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 
 	private final String KEY_AUTOFILL = "autofill";
 	
-	private final String KEY_VLORD = "vlord";
+	private final String KEY_SKILLS="skills";
 
 	public final static int MAXBLOOD = 20;
 
@@ -253,10 +257,9 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	
 	private int level;
 	
-	/**
-	 * Timer for the vampire lord form, if >0 the player is a lord, if <0 its in cooldown phase
-	 */
-	private int vampireLordTimer;
+	private int[] skillTimer;
+	
+	private boolean dirty=false;
 
 	private boolean autoFillBlood;
 
@@ -265,6 +268,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		this.player.getDataWatcher().addObject(Configs.player_blood_watcher, MAXBLOOD);
 		bloodStats = new BloodStats();
 		autoFillBlood = false;
+		skillTimer=new int[Skills.getSkillCount()];
 	}
 
 	/**
@@ -321,10 +325,16 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
 		setBloodData(properties.getInteger(KEY_BLOOD));
 		level=properties.getInteger(KEY_LEVEL);
-		setLordTimer(properties.getInteger(KEY_VLORD),false);
+		int[] temp=properties.getIntArray(KEY_SKILLS);
+		if(temp.length==Skills.getSkillCount()){
+			skillTimer=temp;
+		}
+		else{
+			Logger.w(TAG, "Loaded skill timers have a different size than the existing skills");
+			skillTimer=new int[Skills.getSkillCount()];
+		}
 		setAutoFillBlood(properties.getBoolean(KEY_AUTOFILL));
 		this.bloodStats.readNBT(properties);
-		this.updateVampireLordAbilites();
 		PlayerModifiers.applyModifiers(level, player);
 
 	}
@@ -342,23 +352,22 @@ public class VampirePlayer implements IExtendedEntityProperties {
 				looseLevel();
 			}
 		}
-		if(isVampireLord()){
-			setLordTimer(-BALANCE.VAMPIRE_PLAYER_LORD_COOLDOWN*20);
-		}
+		Skills.resetOnDeath(skillTimer);
 	}
 
+	/**
+	 * Called every LivingEntityUpdate, returns immediately if level =0;
+	 */
 	public void onUpdate() {
-		if (getLevel() > 0) {
-			this.bloodStats.onUpdate();
+		if (getLevel() <= 0) {
+			return;
 		}
+		this.bloodStats.onUpdate();
 		if (!player.worldObj.isRemote
 				&& player.worldObj.canBlockSeeTheSky(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY),
 						MathHelper.floor_double(player.posZ))) {
 			if (player.worldObj.isDaytime() && player.getBrightness(1.0F) > 0.5F && player.worldObj.rand.nextInt(40) == 10) {
 				float dmg=BALANCE.getVampireSunDamage(getLevel());
-				if(isVampireLord()){
-					dmg=dmg*2;
-				}
 				if(player.isPotionActive(ModPotion.sunscreen)){
 					dmg=dmg/2;
 				}
@@ -366,24 +375,37 @@ public class VampirePlayer implements IExtendedEntityProperties {
 			}
 
 		}
-		if(this.vampireLordTimer!=0){
-			boolean before=vampireLordTimer>0;
-			if(vampireLordTimer<0){
-				vampireLordTimer++;
+		
+		/**
+		 * Loop through all skill timers and update them and their tick time
+		 */
+		for(int i=0;i<skillTimer.length;i++){
+			int t=skillTimer[i];
+			if(t!=0){//If timer equals 0, there is nothing to do
+				if(t<0){
+					skillTimer[i]=++t;
+				}
+				else{
+					skillTimer[i]=--t;
+					ILastingSkill s=(ILastingSkill)Skills.getSkill(i);
+					if(t==0){
+						skillTimer[i]=-s.getCooldown();
+						if(!isRemote()){
+							s.onDeactivated(this,player);
+							dirty=true;
+						}
+					}
+					else{
+						s.onUpdate(this,player);
+					}
+				}
+				
 			}
-			else{
-				vampireLordTimer--;
-			}
-			if(vampireLordTimer==0&&before){
-				this.setLordTimer(-BALANCE.VAMPIRE_PLAYER_LORD_COOLDOWN*20);
-				updateVampireLordAbilites();
-			}
-			if(vampireLordTimer%20==0){
-				this.sync();
-			}
-			
 		}
-
+		if(dirty==true){
+			this.sync();
+			dirty=false;
+		}
 	}
 
 	@Override
@@ -391,7 +413,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		NBTTagCompound properties = new NBTTagCompound();
 		properties.setInteger(KEY_LEVEL, getLevel());
 		properties.setInteger(KEY_BLOOD, getBlood());
-		properties.setInteger(KEY_VLORD, vampireLordTimer);
+		properties.setIntArray(KEY_SKILLS, skillTimer);
 		properties.setBoolean(KEY_AUTOFILL, getAutoFillBlood());
 		this.bloodStats.writeNBT(properties);
 		compound.setTag(EXT_PROP_NAME, properties);
@@ -424,7 +446,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		if (l >= 0) {
 			level=l;
 			PlayerModifiers.applyModifiers(l, player);
-			sync();
+			this.sync();
 		}
 	}
 
@@ -486,20 +508,12 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		}
 	}
 	
-	public int getVampireLordTimer(){
-		return this.vampireLordTimer;
-	}
-	
-	public boolean isVampireLord(){
-		return this.vampireLordTimer>0;
-	}
-	
 	/**
 	 * Sends updates to the client
 	 */
 	public void sync(){
 		if(!player.worldObj.isRemote){
-			VampirismMod.modChannel.sendTo(new UpdateVampirePlayerPacket(getLevel(),getVampireLordTimer()), (EntityPlayerMP)player);
+			VampirismMod.modChannel.sendTo(new UpdateVampirePlayerPacket(getLevel(),skillTimer), (EntityPlayerMP)player);
 		}
 	}
 	
@@ -509,68 +523,52 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	 * @param vLordTimer
 	 */
 	@SideOnly(Side.CLIENT)
-	public void loadSyncUpdate(int level,int vLordTimer){
+	public void loadSyncUpdate(int level,int[] timers){
 		this.setLevel(level);
-		this.setLordTimer(vLordTimer,false);
+		this.skillTimer=timers;
 	}
 	
-	/**
-	 * Called when the player presses the vampire lord key
-	 */
-	public void onToggleVampireLord(){
-		//TODO add userfeedback
-		Logger.i(TAG, "Trying to toggle vampire lord");
-		if(this.vampireLordTimer>0){
-			Logger.i(TAG, "Deactivated vampire lord");
-			setLordTimer(-BALANCE.VAMPIRE_PLAYER_LORD_COOLDOWN*20+this.vampireLordTimer);
+	public void onSkillToggled(int i){
+		ISkill s=Skills.getSkill(i);
+		Logger.i(TAG, "Toggling Skill: "+s);
+		if(s==null)return;
+		int t=skillTimer[i];
+		if(t>0){//Running, only for lasting skills
+			Logger.i(TAG, "Deactivating");
+			skillTimer[i]=(-s.getCooldown())+t;
+			((ILastingSkill)s).onDeactivated(this,player);
+			Logger.i("test", skillTimer[i]+"");
 		}
-		else if(this.vampireLordTimer==0){
-			int dur=BALANCE.getVampireLordDuration(getLevel());
-			if(dur==0){
-				player.addChatMessage(new ChatComponentText(I18n.format("text.vampirism:vp.level_to_low", new Object[0])));
+		else if(t==0){//Ready
+			if(getLevel()>=s.getMinLevel()){
+				Logger.i(TAG, "Activating Skill");
+				if(s instanceof ILastingSkill){
+					ILastingSkill ls=(ILastingSkill)s;
+					skillTimer[i]=ls.getDuration(getLevel());
+					ls.onActivated(this,player);
+				}
+				else{
+					s.onActivated(this, player);
+					skillTimer[i]=-s.getCooldown();
+				}
 			}
 			else{
-				setLordTimer(dur);
-				Logger.i(TAG, "Activated vampire lord");
+				player.addChatMessage(new ChatComponentText(I18n.format("text.vampirism:skill.level_to_low", new Object[0])));
 			}
-
 		}
-		else{
-			player.addChatMessage(new ChatComponentText(I18n.format("text.vampirism:vp.cooldown_not_over", new Object[0])));
-			Logger.i(TAG, "Still cant activate it: "+this.vampireLordTimer);
+		else{//In cooldown
+			player.addChatMessage(new ChatComponentText(I18n.format("text.vampirism:skill.cooldown_not_over", new Object[0])));
+			Logger.i(TAG, "Still cant activate it: "+t);
 		}
+		dirty=true;
 	}
 	
-	/**
-	 * Sets the lord timer and notifys the client
-	 * @param t
-	 */
-	private void setLordTimer(int t){
-		this.setLordTimer(t, true);
-	}
-	
-	/**
-	 * Sets the lord timer
-	 * @param t
-	 * @param sync whether to notify the client or not
-	 */
-	private void setLordTimer(int t,boolean sync){
-		this.vampireLordTimer=t;
-		this.updateVampireLordAbilites();
-		if(sync&&!player.worldObj.isRemote){
-			this.sync();
+	public boolean isSkillActive(int id){
+		if(id>=skillTimer.length){
+			Logger.w(TAG, "The skill with id "+id+" doesn't exist");
+			return false;
 		}
-	}
-	
-	private void updateVampireLordAbilites(){
-		int l=getLevel();
-		if(this.vampireLordTimer>0){
-			PlayerModifiers.applyModifiers(l+3, player); 
-		}
-		else{
-			PlayerModifiers.applyModifiers(l, player);
-		}
-
+		return (skillTimer[id]>0);
 	}
 	
 	private boolean isRemote(){

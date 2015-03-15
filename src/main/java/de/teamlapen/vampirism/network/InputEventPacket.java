@@ -35,9 +35,15 @@ public class InputEventPacket implements IMessage {
 				VampirePlayer.get(player).setLevel(0);
 				player.attackEntityFrom(DamageSource.magic, 1000);
 			}
-			else if(message.action.equals(TOGGLEVLORD)){
-				EntityPlayer player = ctx.getServerHandler().playerEntity;
-				VampirePlayer.get(player).onToggleVampireLord();
+			else if(message.action.equals(TOGGLESKILL)){
+				try {
+					int id = Integer.parseInt(message.param);
+					EntityPlayer player = ctx.getServerHandler().playerEntity;
+					VampirePlayer.get(player).onSkillToggled(id);
+				} catch (NumberFormatException e) {
+					Logger.e(TAG, "Receiving invalid param", e);
+				}
+				
 			}
 
 			return null;
@@ -48,7 +54,7 @@ public class InputEventPacket implements IMessage {
 	public static String SUCKBLOOD = "sb";
 	public static String TOGGLEAUTOFILLBLOOD = "ta";
 	public static String REVERTBACK="rb";
-	public static String TOGGLEVLORD="tl";
+	public static String TOGGLESKILL="ts";
 	private String param;
 	private String action;
 	private final String SPLIT = "-";

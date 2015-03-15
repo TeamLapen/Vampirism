@@ -9,6 +9,7 @@ import org.lwjgl.input.Keyboard;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.player.skills.VampireLordSkill;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -46,7 +47,7 @@ public class KeyInputEventHandler {
 			VampirismMod.modChannel.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEAUTOFILLBLOOD, "0"));
 		}
 		else if(keyPressed==KEY.VLORD){
-			VampirismMod.modChannel.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEVLORD,"0"));
+			VampirismMod.modChannel.sendToServer(new InputEventPacket(InputEventPacket.TOGGLESKILL,""+VampireLordSkill.ID));
 		}
 	}
 }

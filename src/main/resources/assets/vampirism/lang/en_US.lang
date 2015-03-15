@@ -35,8 +35,8 @@ keys.vampirism.auto=Auto Fill Blood Bottle
 itemGroup.vampirism=Vampirism
 death.attack.sun=%1$s did not like the sun
 potion.vampirism:sunscreen=Sunscreen
-text.vampirism:vp.level_to_low=Your vampire level is too low to become a Vampire Lord
-text.vampirism:vp.cooldown_not_over=Please wait until the cooldown is over
+text.vampirism:skill.level_to_low=Your vampire level is too low for that
+text.vampirism:skill.cooldown_not_over=Please wait until the cooldown is over
 
 #Config
 category.vampirism.balance=Balance settings
