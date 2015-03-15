@@ -131,7 +131,10 @@ public class VampirePlayer implements IExtendedEntityProperties {
 			if (player.worldObj.isRemote) {
 				return;
 			}
-			player.getFoodStats().addStats(10, 1.0F);
+			if(player.getFoodStats().getFoodLevel()<10){
+				player.getFoodStats().addStats(5, 1);
+			}
+
 			EnumDifficulty enumdifficulty = player.worldObj.difficultySetting;
 
 			int newBloodLevel = getBlood();
