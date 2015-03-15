@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.block.BlockBloodAltarTier4Tip;
 import de.teamlapen.vampirism.block.BlockChurchAltar;
 import de.teamlapen.vampirism.block.BlockCursedEarth;
 import de.teamlapen.vampirism.block.MaterialLiquidBlood;
+import de.teamlapen.vampirism.block.BlockFlower.VampireFlower;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier2;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier3;
@@ -36,6 +37,9 @@ public class ModBlocks {
 		GameRegistry.registerTileEntity(TileEntityBloodAltarTier3.class, "TileEntityBloodAltarTier3");
 		GameRegistry.registerTileEntity(TileEntityBloodAltarTier4.class, "TileEntityBloodAltarTier4");
 
+		// Flowers
+		GameRegistry.registerBlock(vampireFlower, VampireFlower.name);
+		
 		GameRegistry.addRecipe(new ItemStack(bloodAltarTier2, 1), " X ", "XYX", "ZZZ", 'X', Blocks.glass, 'Y', Items.gold_ingot, 'Z',
 				Items.iron_ingot);
 	}
@@ -48,4 +52,7 @@ public class ModBlocks {
 	public final static BlockBloodAltarTier4Tip bloodAltarTier4Tip=new BlockBloodAltarTier4Tip();
 	public final static BlockCursedEarth cursedEarth = new BlockCursedEarth();
 	public final static BlockChurchAltar churchAltar= new BlockChurchAltar();
+	
+	// Flowers
+	public final static VampireFlower vampireFlower = new VampireFlower();
 }

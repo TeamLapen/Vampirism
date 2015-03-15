@@ -18,6 +18,7 @@ block.vampirism:bloodAltarTier3.name=Blood Altar Tier 3
 block.vampirism:bloodAltarTier4.name=Blood Altar Tier 4
 block.vampirism:bloodAltarTier4Tip.name=Blood Altar Tier 4 Tip
 block.vampirism:cursedEarth.name=Cursed Earth
+block.vampirism:vampireOrchid.name=Vampire Orchid
 
 #Tiles
 tile.vampirism:bloodAltarTier4.name=Blood Altar Tier 4
