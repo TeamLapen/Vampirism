@@ -37,6 +37,7 @@ public class Skills {
 	 */
 	public static void registerDefaultSkills() {
 		VampireLordSkill.ID = Skills.registerSkill(new VampireLordSkill());
+		Skills.registerSkill(new RegenSkill());
 	}
 
 	/**

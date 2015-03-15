@@ -23,6 +23,8 @@ public class ModConfigGui extends GuiConfig {
 			list.add(new DummyConfigElement.DummyCategoryElement("balance_level", "category.vampirism.balance_level", BalanceLevelEntry.class));
 			list.add(new DummyConfigElement.DummyCategoryElement("balance_player_mod", "category.vampirism.balance_player_mod",
 					BalancePlayerModEntry.class));
+			list.add(new DummyConfigElement.DummyCategoryElement("balance_player_skills", "category.vampirism.balance_player_skills",
+					BalancePlayerSkillsEntry.class));
 			list.add(new DummyConfigElement.DummyCategoryElement("balance_mob_prop", "category.vampirism.balance_mob_prop",
 					BalanceMobPropEntry.class));
 			list.add(new DummyConfigElement.DummyCategoryElement("balance_vv_prop", "category.vampirism.balance_vv_prop",
@@ -71,6 +73,20 @@ public class ModConfigGui extends GuiConfig {
 			return new GuiConfig(this.owningScreen,
 					(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_BALANCE_PLAYER_MOD))).getChildElements(), this.owningScreen.modID,
 					Configs.CATEGORY_BALANCE_PLAYER_MOD, true, false, REFERENCE.NAME + " Balance");
+		}
+	}
+	
+	public static class BalancePlayerSkillsEntry extends CategoryEntry {
+
+		public BalancePlayerSkillsEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement configElement) {
+			super(owningScreen, owningEntryList, configElement);
+		}
+
+		@Override
+		protected GuiScreen buildChildScreen() {
+			return new GuiConfig(this.owningScreen,
+					(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_BALANCE_PLAYER_SKILLS))).getChildElements(), this.owningScreen.modID,
+					Configs.CATEGORY_BALANCE_PLAYER_SKILLS, true, false, REFERENCE.NAME + " Balance");
 		}
 	}
 	

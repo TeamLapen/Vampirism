@@ -47,7 +47,7 @@ public class KeyInputEventHandler {
 			VampirismMod.modChannel.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEAUTOFILLBLOOD, "0"));
 		}
 		else if(keyPressed==KEY.VLORD){
-			VampirismMod.modChannel.sendToServer(new InputEventPacket(InputEventPacket.TOGGLESKILL,""+VampireLordSkill.ID));
+			VampirismMod.modChannel.sendToServer(new InputEventPacket(InputEventPacket.TOGGLESKILL,""+1));
 		}
 	}
 }

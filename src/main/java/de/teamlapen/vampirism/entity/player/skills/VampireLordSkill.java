@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
 
@@ -13,34 +15,33 @@ public class VampireLordSkill implements ILastingSkill {
 
 	@Override
 	public int getCooldown() {
-		return BALANCE.VAMPIRE_PLAYER_LORD_COOLDOWN * 20;
+		return BALANCE.VP_SKILLS.LORD_COOLDOWN * 20;
 	}
 
 	@Override
 	public int getDuration(int level) {
-		return BALANCE.getVampireLordDuration(level);
+		return BALANCE.VP_SKILLS.getVampireLordDuration(level);
 	}
 
 	@Override
 	public int getMinLevel() {
-		return BALANCE.VAMPIRE_PLAYER_LORD_MIN_LEVEL;
+		return BALANCE.VP_SKILLS.LORD_MIN_LEVEL;
 	}
 
 	@Override
 	public void onActivated(VampirePlayer vampire, EntityPlayer player) {
-		// TODO Auto-generated method stub
+		player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id,getDuration(vampire.getLevel()),2));
 
 	}
 
 	@Override
 	public void onDeactivated(VampirePlayer vampire, EntityPlayer player) {
-		// TODO Auto-generated method stub
+		player.removePotionEffect(Potion.moveSpeed.id);
 
 	}
 
 	@Override
 	public void onUpdate(VampirePlayer vampire, EntityPlayer player) {
-		// TODO Auto-generated method stub
 
 	}
 
