@@ -6,7 +6,7 @@ import net.minecraft.potion.PotionEffect;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
 
-public class VampireLordSkill implements ILastingSkill {
+public class VampireLordSkill extends DefaultSkill implements ILastingSkill {
 
 	/**
 	 * Skill ID, has to be set when this is registered
@@ -29,8 +29,20 @@ public class VampireLordSkill implements ILastingSkill {
 	}
 
 	@Override
+	public int getMinU() {
+		// TODO Auto-generated method stub
+		return 27 + 16;
+	}
+
+	@Override
+	public int getMinV() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
 	public void onActivated(VampirePlayer vampire, EntityPlayer player) {
-		player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id,getDuration(vampire.getLevel()),2));
+		player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, getDuration(vampire.getLevel()), 2));
 
 	}
 
