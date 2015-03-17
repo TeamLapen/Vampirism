@@ -11,10 +11,25 @@ import de.teamlapen.vampirism.util.REFERENCE;
  */
 public abstract class DefaultSkill implements ISkill {
 	private final static ResourceLocation defaultIcons = new ResourceLocation(REFERENCE.MODID + ":textures/gui/skills.png");
-
+	private int id;
+	
+	@Override
+	public void setId(int id){
+		this.id=id;
+	}
+	
+	@Override
+	public int getId(){
+		return this.id;
+	}
+	
 	@Override
 	public ResourceLocation getIconLoc() {
 		return defaultIcons;
+	}
+	
+	public String toString(){
+		return this.getClass().getName()+":"+id;
 	}
 
 }

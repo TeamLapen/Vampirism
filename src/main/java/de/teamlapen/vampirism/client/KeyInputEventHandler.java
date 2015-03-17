@@ -55,7 +55,6 @@ public class KeyInputEventHandler {
 		} else if (keyPressed == KEY.AUTO) {
 			VampirismMod.modChannel.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEAUTOFILLBLOOD, "0"));
 		} else if (keyPressed == KEY.SKILL) {
-			VampirismMod.modChannel.sendToServer(new InputEventPacket(InputEventPacket.TOGGLESKILL, "0"));
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 			player.openGui(VampirismMod.instance, GuiHandler.ID_SKILL, player.worldObj, player.chunkCoordX, player.chunkCoordY, player.chunkCoordZ);
 		}

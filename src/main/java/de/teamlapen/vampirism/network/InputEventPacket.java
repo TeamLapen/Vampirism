@@ -36,8 +36,19 @@ public class InputEventPacket implements IMessage {
 				VampirePlayer.get(player).setLevel(0);
 				player.attackEntityFrom(DamageSource.magic, 1000);
 			} else if (message.action.equals(TOGGLESKILL)) {
-				EntityPlayer player = ctx.getServerHandler().playerEntity;
-				player.openGui(VampirismMod.instance, GuiHandler.ID_SKILL, player.worldObj, player.chunkCoordX, player.chunkCoordY, player.chunkCoordZ);
+				int id =-1;
+				try {
+					id = Integer.parseInt(message.param);
+				} catch (NumberFormatException e) {
+					Logger.e(TAG, "Receiving invalid param", e);
+				}
+				if (id >= 0) {
+					EntityPlayer player = ctx.getServerHandler().playerEntity;
+					VampirePlayer.get(player).onSkillToggled(id);
+				}
+				else{
+					Logger.w(TAG, "Skill with id "+id+" does not exist");
+				}
 			}
 
 			return null;

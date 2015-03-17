@@ -30,13 +30,11 @@ public class VampireLordSkill extends DefaultSkill implements ILastingSkill {
 
 	@Override
 	public int getMinU() {
-		// TODO Auto-generated method stub
-		return 27 + 16;
+		return 32;
 	}
 
 	@Override
 	public int getMinV() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

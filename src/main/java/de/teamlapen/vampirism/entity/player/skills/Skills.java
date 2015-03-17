@@ -62,7 +62,9 @@ public class Skills {
 	 * @return The assigned id
 	 */
 	public static int registerSkill(ISkill s) {
+		int id=skills.size();
+		s.setId(id);
 		skills.add(s);
-		return skills.size() - 1;
+		return id;
 	}
 }

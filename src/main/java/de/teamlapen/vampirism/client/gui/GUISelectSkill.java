@@ -14,10 +14,13 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.KeyInputEventHandler;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.skills.FakeSkill;
 import de.teamlapen.vampirism.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.entity.player.skills.Skills;
+import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
@@ -31,7 +34,8 @@ import de.teamlapen.vampirism.util.REFERENCE;
 @SideOnly(Side.CLIENT)
 public class GUISelectSkill extends GuiScreen {
 
-	private final static ResourceLocation background = new ResourceLocation(REFERENCE.MODID + ":textures/gui/skill-bg.png");
+	private final static ResourceLocation backgroundTex = new ResourceLocation(REFERENCE.MODID + ":textures/gui/skill-bg.png");
+	private final static ResourceLocation centerTex = new ResourceLocation(REFERENCE.MODID + ":textures/gui/skill-center.png");
 	private static final ResourceLocation WIDGETS = new ResourceLocation("textures/gui/widgets.png");
 	private ArrayList<ISkill> skills;
 	private int skillCount;
@@ -50,11 +54,16 @@ public class GUISelectSkill extends GuiScreen {
 	 */
 	private final int RR = 60;
 	/**
+	 * Size of the images for the center
+	 */
+	private final int CS=100;
+	/**
 	 * Angle between each skill in rad
 	 */
 	private double radDiff;
 
 	public GUISelectSkill() {
+		this.allowUserInput=true;
 	}
 
 	@Override
@@ -79,7 +88,7 @@ public class GUISelectSkill extends GuiScreen {
 		GL11.glScalef(scale, scale, 1);
 
 		// Draw the cicle image
-		this.mc.getTextureManager().bindTexture(background);
+		this.mc.getTextureManager().bindTexture(backgroundTex);
 		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glTexCoord2f(1F, 1F);
 		GL11.glVertex3f(cX + BGS / 2, cY + BGS / 2, this.zLevel);
@@ -161,11 +170,16 @@ public class GUISelectSkill extends GuiScreen {
 			if (selected) {
 				drawTexturedModalRect(x - 3, y - 3, 1, 23, 22, 22);
 				selectedSkill = i;
+				drawSelectedCenter(cX,cY,rad);
+				
 			}
 			// Draw Icon
 			this.mc.getTextureManager().bindTexture(s.getIconLoc());
 			this.drawTexturedModalRect(x, y, s.getMinU(), s.getMinV(), IS, IS);
 
+		}
+		if(selectedSkill==-1){
+			this.drawUnselectedCenter(cX, cY);
 		}
 		this.mc.mcProfiler.endSection();
 		super.drawScreen(mouseX, mouseY, partialTicks);
@@ -175,6 +189,7 @@ public class GUISelectSkill extends GuiScreen {
 	public void initGui() {
 		player = VampirePlayer.get(this.mc.thePlayer);
 		skills = Skills.getAvailableSkills(player.getLevel());
+		skills.add(new FakeSkill());
 		skillCount = skills.size();
 		radDiff = 2D * Math.PI / skillCount;// gap in rad
 		// Disable cursor
@@ -238,13 +253,70 @@ public class GUISelectSkill extends GuiScreen {
 	@Override
 	public void updateScreen() {
 		super.updateScreen();
+		this.mc.thePlayer.movementInput.updatePlayerMoveState();
 		if (!KeyInputEventHandler.isKeyDown(KeyInputEventHandler.SKILL.getKeyCode())) {
 			if (selectedSkill >= 0) {
-				Logger.i("test", "Selected skill: " + skills.get(selectedSkill));
+				int id=skills.get(selectedSkill).getId();
+				if(id>=0){
+					VampirismMod.modChannel.sendToServer(new InputEventPacket(InputEventPacket.TOGGLESKILL,""+id));
+				}
 			}
 
 			this.mc.displayGuiScreen(null);
 		}
+	}
+	
+	private void drawSelectedCenter(double cX,double cY,double rad){
+		
+		//Caluculate rotation and scale
+		double deg=Math.toDegrees(-rad);
+		float scale = ((float)this.height) / 4F / (float)CS;
+		
+		GL11.glPushMatrix();
+		//Move origin to center, scale and rotate
+		GL11.glTranslated(cX, cY, this.zLevel);
+		GL11.glScalef(scale, scale, 1);
+		GL11.glRotated(deg, 0, 0, 1);
+		
+		//Draw
+		this.mc.getTextureManager().bindTexture(centerTex);
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(0.5F, 1F);
+		GL11.glVertex3d(CS / 2, CS/2, this.zLevel);
+		GL11.glTexCoord2f(0.5F, 0F);
+		GL11.glVertex3d(CS / 2, - CS/2, this.zLevel);
+		GL11.glTexCoord2f(0F, 0F);
+		GL11.glVertex3d(- CS / 2, - CS/2, this.zLevel);
+		GL11.glTexCoord2f(0F, 1F);
+		GL11.glVertex3d(- CS/2, CS/2, this.zLevel);
+		GL11.glEnd();
+		
+		GL11.glPopMatrix();
+	}
+	
+	private void drawUnselectedCenter(double cX,double cY){
+
+				float scale = ((float)this.height) / 4F / (float)CS;
+				
+				GL11.glPushMatrix();
+				//Move origin to center, scale and rotate
+				GL11.glTranslated(cX, cY, this.zLevel);
+				GL11.glScalef(scale, scale, 1);
+				
+				//Draw
+				this.mc.getTextureManager().bindTexture(centerTex);
+				GL11.glBegin(GL11.GL_QUADS);
+				GL11.glTexCoord2f(1F, 1F);
+				GL11.glVertex3d(CS / 2, CS/2, this.zLevel);
+				GL11.glTexCoord2f(1F, 0F);
+				GL11.glVertex3d(CS / 2, - CS/2, this.zLevel);
+				GL11.glTexCoord2f(0.5F, 0F);
+				GL11.glVertex3d(- CS / 2, - CS/2, this.zLevel);
+				GL11.glTexCoord2f(0.5F, 1F);
+				GL11.glVertex3d(- CS/2, CS/2, this.zLevel);
+				GL11.glEnd();
+				
+				GL11.glPopMatrix();
 	}
 
 }
