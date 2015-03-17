@@ -18,6 +18,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.KeyInputEventHandler;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.skills.FakeSkill;
+import de.teamlapen.vampirism.entity.player.skills.ILastingSkill;
 import de.teamlapen.vampirism.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.entity.player.skills.Skills;
 import de.teamlapen.vampirism.network.InputEventPacket;
@@ -176,6 +177,19 @@ public class GUISelectSkill extends GuiScreen {
 			// Draw Icon
 			this.mc.getTextureManager().bindTexture(s.getIconLoc());
 			this.drawTexturedModalRect(x, y, s.getMinU(), s.getMinV(), IS, IS);
+			
+			// Draw usage indicator
+			int t=player.getSkillTime(s.getId());
+			if(t>0){
+
+				float h=((t/(float)((ILastingSkill)s).getDuration(player.getLevel())))*IS;
+				this.drawGradientRect(x, (int)(y+h), x+IS, y+IS, 0xDDE0E000, 0x88E0E000);
+			}
+			else if(t<0){
+
+				float h=(1F-(-t/(float)s.getCooldown()))*(float)IS;
+				this.drawGradientRect(x, (int)(y+h), x+IS, y+IS, 0x880E0E0E, 0xEE0E0E0E);
+			}
 
 		}
 		if (selectedSkill == -1) {
@@ -266,6 +280,12 @@ public class GUISelectSkill extends GuiScreen {
 		}
 	}
 
+	/**
+	 * Draws a circle with an arrow at the given coords
+	 * @param cX
+	 * @param cY
+	 * @param rad The direction the arrow should point in radiant
+	 */
 	private void drawSelectedCenter(double cX, double cY, double rad) {
 
 		// Caluculate rotation and scale

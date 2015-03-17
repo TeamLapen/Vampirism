@@ -292,6 +292,19 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	public int getLevel() {
 		return this.level;
 	}
+	
+	/**
+	 * Returns the skill time for rendering
+	 * @param id
+	 * @return
+	 */
+	@SideOnly(Side.CLIENT)
+	public int getSkillTime(int id){
+		if(id>=0){
+			return this.skillTimer[id];
+		}
+		return 0;
+	}
 
 	@Override
 	public void init(Entity entity, World world) {
