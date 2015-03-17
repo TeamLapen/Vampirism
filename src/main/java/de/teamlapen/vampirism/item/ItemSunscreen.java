@@ -8,7 +8,7 @@ public class ItemSunscreen extends BasicItemBloodFood{
 	
 	public ItemSunscreen(){
 		super(name,5);
-		this.setPotionEffect(ModPotion.sunscreen.id,120, 1, 1F);
+		this.setPotionEffect(ModPotion.sunscreen.id,120, 0, 1F);
 	}
 	
 }

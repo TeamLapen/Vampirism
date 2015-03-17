@@ -90,6 +90,38 @@ public final class BALANCE {
 		@DefaultInt(value=50,comment="Determines how fast the villages forget about their fallen citizens.")
 		public static int REDUCE_RATE;
 	}
+	
+	/**
+	 * Duration, cooldown etc for vampire player skills.
+	 * Time values should be in seconds
+	 */
+	public static class VP_SKILLS{
+		@DefaultInt(value=60)
+		public static int REGEN_COOLDOWN;
+		@DefaultInt(20)
+		public static int REGEN_DURATION;
+		@DefaultInt(4)
+		public static int REGEN_MIN_LEVEL;
+		
+		@DefaultInt(value=20,comment="Vampire Lord cooldown duration")
+		public static int LORD_COOLDOWN;
+		
+		@DefaultInt(value=10,comment="Standard Vampire Lord duration")
+		public static int LORD_MIN_DURATION;
+		
+		@DefaultInt(value=5,comment="Vampire Lord duration increase per level")
+		public static int LORD_DUR_PL;
+
+		@DefaultInt(value=8,comment="Minimum level for Vampire Lord transformation")
+		public static int LORD_MIN_LEVEL;
+		
+		public static int getVampireLordDuration(int level){
+			if(level<LORD_MIN_LEVEL){
+				return 0;
+			}
+			return 20 *(LORD_MIN_DURATION+(level-LORD_MIN_LEVEL)*LORD_DUR_PL);
+		}
+	}
 	/**
 	 * Calculates the players night vision effect
 	 * 
@@ -106,13 +138,6 @@ public final class BALANCE {
 			return 0;
 		}
 		return (float) VAMPIRE_PLAYER_SUN_DAMAGE;
-	}
-	
-	public static int getVampireLordDuration(int level){
-		if(level<VAMPIRE_PLAYER_LORD_MIN_LEVEL){
-			return 0;
-		}
-		return 20 *(VAMPIRE_PLAYER_LORD_MIN_DURATION+(level-VAMPIRE_PLAYER_LORD_MIN_LEVEL)*VAMPIRE_PLAYER_LORD_DUR_PL);
 	}
 	
 	// Mob behavior
@@ -137,21 +162,6 @@ public final class BALANCE {
 	
 	@DefaultInt(2)
 	public static int VAMPIRE_PLAYER_CREEPER_AVOID_LEVEL;
-	
-	/**
-	 * Has to be multiplied with 20 to get the duration in ticks
-	 */
-	@DefaultInt(value=20,comment="Vampire Lord cooldown duration")
-	public static int VAMPIRE_PLAYER_LORD_COOLDOWN;
-	
-	@DefaultInt(value=10,comment="Standard Vampire Lord duration")
-	public static int VAMPIRE_PLAYER_LORD_MIN_DURATION;
-	
-	@DefaultInt(value=5,comment="Vampire Lord duration increase per level")
-	public static int VAMPIRE_PLAYER_LORD_DUR_PL;
-
-	@DefaultInt(value=8,comment="Minimum level for Vampire Lord transformation")
-	public static int VAMPIRE_PLAYER_LORD_MIN_LEVEL;
 	
 	// Vampiremob
 	@DefaultInt(5)

@@ -37,6 +37,8 @@ public class Configs {
 		cat_village.setComment("Here you can configure the village generation");
 		ConfigCategory cat_balance_player_mod = config.getCategory(CATEGORY_BALANCE_PLAYER_MOD);
 		cat_balance_player_mod.setComment("You can adjust these values to change the vampire player modifiers");
+		ConfigCategory cat_balance_player_skills = config.getCategory(CATEGORY_BALANCE_PLAYER_SKILLS);
+		cat_balance_player_skills.setComment("You can adjust these values to change the vampire player skills");
 		ConfigCategory cat_balance_leveling = config.getCategory(CATEGORY_BALANCE_LEVELING);
 		cat_balance_leveling.setComment("You can adjust these values to change the level up requirements");
 		ConfigCategory cat_balance_mobprop = config.getCategory(CATEGORY_BALANCE_MOBPROP);
@@ -74,6 +76,7 @@ public class Configs {
 		// Balance
 		loadFields(cat_balance, BALANCE.class);
 		loadFields(cat_balance_player_mod, BALANCE.VP_MODIFIERS.class);
+		loadFields(cat_balance_player_skills,BALANCE.VP_SKILLS.class);
 		loadFields(cat_balance_leveling, BALANCE.LEVELING.class);
 		loadFields(cat_balance_mobprop, BALANCE.MOBPROP.class);
 		loadFields(cat_balance_vvprop,BALANCE.VV_PROP.class);
@@ -180,6 +183,7 @@ public class Configs {
 	public static final String CATEGORY_BALANCE = "balance";
 
 	public static final String CATEGORY_BALANCE_PLAYER_MOD = "balance_player_mod";
+	public static final String CATEGORY_BALANCE_PLAYER_SKILLS="balance_player_skills";
 	public static final String CATEGORY_BALANCE_LEVELING = "balance_leveling";
 	public static final String CATEGORY_BALANCE_MOBPROP = "balance_mob_properties";
 	public static final String CATEGORY_BALANCE_VVPROP = "balance_vv_properties";

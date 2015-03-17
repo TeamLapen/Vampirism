@@ -31,19 +31,22 @@ gui.vampirism:revertback.desc=You will loose all your levels and die
 keys.vampirism.category=Vampirism
 keys.vampirism.suck=Suck blood
 keys.vampirism.auto=Auto Fill Blood Bottle
+keys.vampirism.skill=Activate vampire skills
 
 #General
 itemGroup.vampirism=Vampirism
 death.attack.sun=%1$s did not like the sun
 potion.vampirism:sunscreen=Sunscreen
-text.vampirism:vp.level_to_low=Your vampire level is too low to become a Vampire Lord
-text.vampirism:vp.cooldown_not_over=Please wait until the cooldown is over
+potion.vampirism:thirst=Thirst
+text.vampirism:skill.level_to_low=Your vampire level is too low for that
+text.vampirism:skill.cooldown_not_over=Please wait until the cooldown is over
 
 #Config
 category.vampirism.balance=Balance settings
 category.vampirism.balance.tooltip=Change almost any balance relevant property
 category.vampirism.balance_level=Levelup balance settings
 category.vampirism.balance_player_mod=Vampire player modifier settings
+category.vampirism.balance_player_skills=Vampire player skills settings
 category.vampirism.balance_mob_prop=Vampirism mob properties
 category.vampirism.balance_mob_prop.tooltip=Change properties of the mobs added by Vampirism
 category.vampirism.balance_vv_prop=Village properties

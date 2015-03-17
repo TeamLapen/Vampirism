@@ -7,6 +7,8 @@ import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
+import de.teamlapen.vampirism.GuiHandler;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Logger;
 
@@ -29,15 +31,24 @@ public class InputEventPacket implements IMessage {
 			} else if (message.action.equals(TOGGLEAUTOFILLBLOOD)) {
 				EntityPlayer player = ctx.getServerHandler().playerEntity;
 				VampirePlayer.get(player).onToggleAutoFillBlood();
-			}
-			else if(message.action.equals(REVERTBACK)){
+			} else if (message.action.equals(REVERTBACK)) {
 				EntityPlayer player = ctx.getServerHandler().playerEntity;
 				VampirePlayer.get(player).setLevel(0);
 				player.attackEntityFrom(DamageSource.magic, 1000);
-			}
-			else if(message.action.equals(TOGGLEVLORD)){
-				EntityPlayer player = ctx.getServerHandler().playerEntity;
-				VampirePlayer.get(player).onToggleVampireLord();
+			} else if (message.action.equals(TOGGLESKILL)) {
+				int id =-1;
+				try {
+					id = Integer.parseInt(message.param);
+				} catch (NumberFormatException e) {
+					Logger.e(TAG, "Receiving invalid param", e);
+				}
+				if (id >= 0) {
+					EntityPlayer player = ctx.getServerHandler().playerEntity;
+					VampirePlayer.get(player).onSkillToggled(id);
+				}
+				else{
+					Logger.w(TAG, "Skill with id "+id+" does not exist");
+				}
 			}
 
 			return null;
@@ -47,13 +58,13 @@ public class InputEventPacket implements IMessage {
 
 	public static String SUCKBLOOD = "sb";
 	public static String TOGGLEAUTOFILLBLOOD = "ta";
-	public static String REVERTBACK="rb";
-	public static String TOGGLEVLORD="tl";
+	public static String REVERTBACK = "rb";
+	public static String TOGGLESKILL = "ts";
+	private final static String TAG = "InputEventPacket";
 	private String param;
 	private String action;
-	private final String SPLIT = "-";
 
-	private final static String TAG = "InputEventPacket";
+	private final String SPLIT = "-";
 
 	public InputEventPacket() {
 

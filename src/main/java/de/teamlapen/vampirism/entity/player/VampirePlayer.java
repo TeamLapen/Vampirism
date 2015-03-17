@@ -15,9 +15,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.Configs;
@@ -25,17 +22,19 @@ import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.entity.VampireMob;
+import de.teamlapen.vampirism.entity.player.skills.ILastingSkill;
+import de.teamlapen.vampirism.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.entity.player.skills.Skills;
+import de.teamlapen.vampirism.entity.player.skills.VampireLordSkill;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
 import de.teamlapen.vampirism.network.SpawnParticlePacket;
 import de.teamlapen.vampirism.network.UpdateVampirePlayerPacket;
 import de.teamlapen.vampirism.proxy.CommonProxy;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.REFERENCE;
 
 /**
- * IExtendedEntityPropertiesClass which extends the EntityPlayer with vampire
- * properties
+ * IExtendedEntityPropertiesClass which extends the EntityPlayer with vampire properties
  * 
  * @author Maxanier
  */
@@ -51,8 +50,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		private final float maxExhaustion = 40F;
 
 		/**
-		 * Adds blood to the players bar, if the bar is full it tries to add the
-		 * rest to a blood bottle
+		 * Adds blood to the players bar, if the bar is full it tries to add the rest to a blood bottle
 		 * 
 		 * @param amount
 		 * @return
@@ -80,8 +78,8 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		}
 
 		public void addExhaustion(float amount) {
-			if(isVampireLord()){
-				amount=amount*1.5F;
+			if (isSkillActive(VampireLordSkill.ID)) {
+				amount = amount * 1.5F;
 			}
 			this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount, maxExhaustion);
 		}
@@ -154,8 +152,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 				}
 			}
 
-			if (player.worldObj.getGameRules().getGameRuleBooleanValue("naturalRegeneration") && newBloodLevel >= 0.9 * MAXBLOOD
-					&& player.shouldHeal()) {
+			if (player.worldObj.getGameRules().getGameRuleBooleanValue("naturalRegeneration") && newBloodLevel >= 0.9 * MAXBLOOD && player.shouldHeal()) {
 				++this.bloodTimer;
 				if (this.bloodTimer >= 80) {
 					player.heal(1.0F);
@@ -165,8 +162,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 			} else if (newBloodLevel <= 0) {
 				++this.bloodTimer;
 				if (this.bloodTimer >= 80) {
-					if (player.getHealth() > 10.0F || enumdifficulty == EnumDifficulty.HARD || player.getHealth() > 1.0F
-							&& enumdifficulty == EnumDifficulty.NORMAL) {
+					if (player.getHealth() > 10.0F || enumdifficulty == EnumDifficulty.HARD || player.getHealth() > 1.0F && enumdifficulty == EnumDifficulty.NORMAL) {
 						player.attackEntityFrom(DamageSource.starve, 1.0F);
 					}
 					this.bloodTimer = 0;
@@ -192,6 +188,12 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		}
 
 	}
+
+	public final static String EXT_PROP_NAME = "VampirePlayer";
+
+	public final static String TAG = "VampirePlayer";
+
+	public final static int MAXBLOOD = 20;
 
 	/**
 	 * 
@@ -236,10 +238,6 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		CommonProxy.storeEntityData(getSaveKey(player), savedData);
 	}
 
-	public final static String EXT_PROP_NAME = "VampirePlayer";
-	
-	public final static String TAG="VampirePlayer";
-
 	private final EntityPlayer player;
 
 	private final String KEY_LEVEL = "level";
@@ -247,19 +245,16 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	private final String KEY_BLOOD = "blood";
 
 	private final String KEY_AUTOFILL = "autofill";
-	
-	private final String KEY_VLORD = "vlord";
 
-	public final static int MAXBLOOD = 20;
+	private final String KEY_SKILLS = "skills";
 
 	private BloodStats bloodStats;
-	
+
 	private int level;
-	
-	/**
-	 * Timer for the vampire lord form, if >0 the player is a lord, if <0 its in cooldown phase
-	 */
-	private int vampireLordTimer;
+
+	private int[] skillTimer;
+
+	private boolean dirty = false;
 
 	private boolean autoFillBlood;
 
@@ -268,11 +263,11 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		this.player.getDataWatcher().addObject(Configs.player_blood_watcher, MAXBLOOD);
 		bloodStats = new BloodStats();
 		autoFillBlood = false;
+		skillTimer = new int[Skills.getSkillCount()];
 	}
 
 	/**
-	 * Adds blood to the vampires blood level level without increasing the
-	 * saturation level
+	 * Adds blood to the vampires blood level level without increasing the saturation level
 	 * 
 	 * @param a
 	 *            amount
@@ -300,6 +295,19 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	public int getLevel() {
 		return this.level;
 	}
+	
+	/**
+	 * Returns the skill time for rendering
+	 * @param id
+	 * @return
+	 */
+	@SideOnly(Side.CLIENT)
+	public int getSkillTime(int id){
+		if(id>=0){
+			return this.skillTimer[id];
+		}
+		return 0;
+	}
 
 	@Override
 	public void init(Entity entity, World world) {
@@ -313,6 +321,18 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		return autoFillBlood;
 	}
 
+	private boolean isRemote() {
+		return player.worldObj.isRemote;
+	}
+
+	public boolean isSkillActive(int id) {
+		if (id >= skillTimer.length) {
+			Logger.w(TAG, "The skill with id " + id + " doesn't exist");
+			return false;
+		}
+		return (skillTimer[id] > 0);
+	}
+
 	public void levelUp() {
 		int level = getLevel();
 		level++;
@@ -323,13 +343,31 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	public void loadNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
 		setBloodData(properties.getInteger(KEY_BLOOD));
-		level=properties.getInteger(KEY_LEVEL);
-		setLordTimer(properties.getInteger(KEY_VLORD),false);
+		level = properties.getInteger(KEY_LEVEL);
+		Logger.i(TAG + " test", "Loading nbt");// TODO remove and make sure onActivated is called for loaded skills
+		int[] temp = properties.getIntArray(KEY_SKILLS);
+		if (temp.length == Skills.getSkillCount()) {
+			skillTimer = temp;
+		} else {
+			Logger.w(TAG, "Loaded skill timers have a different size than the existing skills");
+			skillTimer = new int[Skills.getSkillCount()];
+		}
 		setAutoFillBlood(properties.getBoolean(KEY_AUTOFILL));
 		this.bloodStats.readNBT(properties);
-		this.updateVampireLordAbilites();
 		PlayerModifiers.applyModifiers(level, player);
 
+	}
+
+	/**
+	 * Ment to be used by UpdateVampirePlayerPacket on client side, to load updates.
+	 * 
+	 * @param level
+	 * @param vLordTimer
+	 */
+	@SideOnly(Side.CLIENT)
+	public void loadSyncUpdate(int level, int[] timers) {
+		this.setLevel(level);
+		this.skillTimer = timers;
 	}
 
 	private void looseLevel() {
@@ -338,55 +376,113 @@ public class VampirePlayer implements IExtendedEntityProperties {
 			setLevel(level - 1);
 		}
 	}
-	
-	public void onDeath(DamageSource source){
+
+	public void onDeath(DamageSource source) {
 		if (BALANCE.VAMPIRE_PLAYER_LOOSE_LEVEL && source.damageType.equals("mob") && source instanceof EntityDamageSource) {
 			if (source.getEntity() instanceof EntityVampireHunter) {
 				looseLevel();
 			}
 		}
-		if(isVampireLord()){
-			setLordTimer(-BALANCE.VAMPIRE_PLAYER_LORD_COOLDOWN*20);
+		for (int i = 0; i < skillTimer.length; i++) {
+			if (skillTimer[i] > 0) {
+				skillTimer[i] = -Skills.getSkill(i).getCooldown();
+				((ILastingSkill) Skills.getSkill(i)).onDeactivated(this, player);
+
+			}
 		}
 	}
 
-	public void onUpdate() {
-		if (getLevel() > 0) {
-			this.bloodStats.onUpdate();
-		}
-		if (!player.worldObj.isRemote
-				&& player.worldObj.canBlockSeeTheSky(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY),
-						MathHelper.floor_double(player.posZ))) {
-			if (player.worldObj.isDaytime() && player.getBrightness(1.0F) > 0.5F && player.worldObj.rand.nextInt(40) == 10) {
-				float dmg=BALANCE.getVampireSunDamage(getLevel());
-				if(isVampireLord()){
-					dmg=dmg*2;
+	public void onSkillToggled(int i) {
+		ISkill s = Skills.getSkill(i);
+		Logger.i(TAG, "Toggling Skill: " + s);
+		if (s == null)
+			return;
+		int t = skillTimer[i];
+		if (t > 0) {// Running, only for lasting skills
+			Logger.i(TAG, "Deactivating");
+			skillTimer[i] = (-s.getCooldown()) + t;
+			((ILastingSkill) s).onDeactivated(this, player);
+			Logger.i("test", skillTimer[i] + "");
+		} else if (t == 0) {// Ready
+			if (getLevel() >= s.getMinLevel()) {
+				Logger.i(TAG, "Activating Skill");
+				if (s instanceof ILastingSkill) {
+					ILastingSkill ls = (ILastingSkill) s;
+					skillTimer[i] = ls.getDuration(getLevel());
+					ls.onActivated(this, player);
+				} else {
+					s.onActivated(this, player);
+					skillTimer[i] = -s.getCooldown();
 				}
-				if(player.isPotionActive(ModPotion.sunscreen)){
-					dmg=dmg/2;
+			} else {
+				player.addChatMessage(new ChatComponentText(I18n.format("text.vampirism:skill.level_to_low", new Object[0])));
+			}
+		} else {// In cooldown
+			player.addChatMessage(new ChatComponentText(I18n.format("text.vampirism:skill.cooldown_not_over", new Object[0])));
+			Logger.i(TAG, "Still cant activate it: " + t);
+		}
+		dirty = true;
+	}
+
+	public void onToggleAutoFillBlood() {
+		if (autoFillBlood) {
+			Logger.i(TAG, "Disabling Auto Fill Blood!");
+			autoFillBlood = false;
+			this.player.addChatMessage(new ChatComponentText("Auto Fill Blood Disabled"));
+		} else {
+			Logger.i(TAG, "Enabling Auto Fill Blood!");
+			autoFillBlood = true;
+			this.player.addChatMessage(new ChatComponentText("Auto Fill Blood Enabled"));
+		}
+	}
+
+	/**
+	 * Called every LivingEntityUpdate, returns immediately if level =0;
+	 */
+	public void onUpdate() {
+		if (getLevel() <= 0) {
+			return;
+		}
+		this.bloodStats.onUpdate();
+		if (!player.worldObj.isRemote && player.worldObj.canBlockSeeTheSky(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ))) {
+			if (player.worldObj.isDaytime() && player.getBrightness(1.0F) > 0.5F && player.worldObj.rand.nextInt(40) == 10) {
+				float dmg = BALANCE.getVampireSunDamage(getLevel());
+				if (player.isPotionActive(ModPotion.sunscreen)) {
+					dmg = dmg / 2;
 				}
 				player.attackEntityFrom(VampirismMod.sunDamage, dmg);
 			}
 
 		}
-		if(this.vampireLordTimer!=0){
-			boolean before=vampireLordTimer>0;
-			if(vampireLordTimer<0){
-				vampireLordTimer++;
-			}
-			else{
-				vampireLordTimer--;
-			}
-			if(vampireLordTimer==0&&before){
-				this.setLordTimer(-BALANCE.VAMPIRE_PLAYER_LORD_COOLDOWN*20);
-				updateVampireLordAbilites();
-			}
-			if(vampireLordTimer%20==0){
-				this.sync();
-			}
-			
-		}
 
+		/**
+		 * Loop through all skill timers and update them and their tick time
+		 */
+		for (int i = 0; i < skillTimer.length; i++) {
+			int t = skillTimer[i];
+			if (t != 0) {// If timer equals 0, there is nothing to do
+				if (t < 0) {
+					skillTimer[i] = ++t;
+				} else {
+					skillTimer[i] = --t;
+					ILastingSkill s = (ILastingSkill) Skills.getSkill(i);
+					if (t == 0) {
+						skillTimer[i] = -s.getCooldown();
+						if (!isRemote()) {
+							s.onDeactivated(this, player);
+							dirty = true;
+						}
+					} else {
+						s.onUpdate(this, player);
+					}
+				}
+
+			}
+		}
+		if (dirty == true) {
+			this.sync();
+			dirty = false;
+		}
 	}
 
 	@Override
@@ -394,7 +490,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		NBTTagCompound properties = new NBTTagCompound();
 		properties.setInteger(KEY_LEVEL, getLevel());
 		properties.setInteger(KEY_BLOOD, getBlood());
-		properties.setInteger(KEY_VLORD, vampireLordTimer);
+		properties.setIntArray(KEY_SKILLS, skillTimer);
 		properties.setBoolean(KEY_AUTOFILL, getAutoFillBlood());
 		this.bloodStats.writeNBT(properties);
 		compound.setTag(EXT_PROP_NAME, properties);
@@ -406,8 +502,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	}
 
 	/**
-	 * DONT USE, only designed to be used at startup and by Bloodstats Try to
-	 * use addBlood(int amount) or consumeBlood(int amount) instead
+	 * DONT USE, only designed to be used at startup and by Bloodstats Try to use addBlood(int amount) or consumeBlood(int amount) instead
 	 * 
 	 * @param b
 	 */
@@ -417,23 +512,21 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	}
 
 	/**
-	 * For testing only, make private later. This is the only method which should
-	 * change the level. This method should execute all level related
-	 * changes e.g. player modifiers
-	 * Its syncs it with the client
+	 * For testing only, make private later. This is the only method which should change the level. This method should execute all level related changes e.g. player modifiers Its syncs it with the
+	 * client
+	 * 
 	 * @param l
 	 */
 	public void setLevel(int l) {
 		if (l >= 0) {
-			level=l;
+			level = l;
 			PlayerModifiers.applyModifiers(l, player);
-			sync();
+			this.sync();
 		}
 	}
 
 	/**
-	 * Suck blood from an EntityLiving. Only sucks blood if health is low enough
-	 * and if the entity has blood
+	 * Suck blood from an EntityLiving. Only sucks blood if health is low enough and if the entity has blood
 	 * 
 	 * @param e
 	 *            Entity to suck blood from
@@ -450,13 +543,11 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		if (amount > 0) {
 			this.bloodStats.addBlood(amount);
 
-			VampirismMod.modChannel.sendToAll(new SpawnParticlePacket("magicCrit", e.posX, e.posY, e.posZ, player.posX - e.posX,
-					player.posY - e.posY, player.posZ - e.posZ, 10));
+			VampirismMod.modChannel.sendToAll(new SpawnParticlePacket("magicCrit", e.posX, e.posY, e.posZ, player.posX - e.posX, player.posY - e.posY, player.posZ - e.posZ, 10));
 			VampirismMod.modChannel.sendTo(new SpawnParticlePacket("blood_eat", 0, 0, 0, 0, 0, 0, 10), (EntityPlayerMP) player);
 		} else if (amount == -1) {
 			player.attackEntityFrom(DamageSource.outOfWorld, 1);
-			VampirismMod.modChannel.sendToAll(new SpawnParticlePacket("crit", e.posX, e.posY, e.posZ, player.posX - e.posX, player.posY - e.posY,
-					player.posZ - e.posZ, 10));
+			VampirismMod.modChannel.sendToAll(new SpawnParticlePacket("crit", e.posX, e.posY, e.posZ, player.posX - e.posX, player.posY - e.posY, player.posZ - e.posZ, 10));
 		} else if (amount == -2) {
 			player.addPotionEffect(new PotionEffect(19, 80, 1));
 			player.addPotionEffect(new PotionEffect(9, 120, 0));
@@ -464,8 +555,7 @@ public class VampirePlayer implements IExtendedEntityProperties {
 	}
 
 	/**
-	 * Suck blood from an EntityLiving belonging to the given id. Only sucks
-	 * blood if health is low enough and if the entity has blood
+	 * Suck blood from an EntityLiving belonging to the given id. Only sucks blood if health is low enough and if the entity has blood
 	 * 
 	 * @param e
 	 *            Id of Entity to suck blood from
@@ -477,107 +567,13 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		}
 	}
 
-	public void onToggleAutoFillBlood() {
-		if (autoFillBlood) {
-			Logger.i(TAG, "Disabling Auto Fill Blood!");
-			autoFillBlood = false;
-			this.player.addChatMessage(new ChatComponentText("Auto Fill Blood Disabled"));
-		} else {
-			Logger.i(TAG, "Enabling Auto Fill Blood!");
-			autoFillBlood = true;
-			this.player.addChatMessage(new ChatComponentText("Auto Fill Blood Enabled"));
-		}
-	}
-	
-	public int getVampireLordTimer(){
-		return this.vampireLordTimer;
-	}
-	
-	public boolean isVampireLord(){
-		return this.vampireLordTimer>0;
-	}
-	
 	/**
 	 * Sends updates to the client
 	 */
-	public void sync(){
-		if(!player.worldObj.isRemote){
-			VampirismMod.modChannel.sendTo(new UpdateVampirePlayerPacket(getLevel(),getVampireLordTimer()), (EntityPlayerMP)player);
+	public void sync() {
+		if (!player.worldObj.isRemote) {
+			VampirismMod.modChannel.sendTo(new UpdateVampirePlayerPacket(getLevel(), skillTimer), (EntityPlayerMP) player);
 		}
-	}
-	
-	/**
-	 * Ment to be used by UpdateVampirePlayerPacket on client side, to load updates.
-	 * @param level
-	 * @param vLordTimer
-	 */
-	@SideOnly(Side.CLIENT)
-	public void loadSyncUpdate(int level,int vLordTimer){
-		this.setLevel(level);
-		this.setLordTimer(vLordTimer,false);
-	}
-	
-	/**
-	 * Called when the player presses the vampire lord key
-	 */
-	public void onToggleVampireLord(){
-		//TODO add userfeedback
-		Logger.i(TAG, "Trying to toggle vampire lord");
-		if(this.vampireLordTimer>0){
-			Logger.i(TAG, "Deactivated vampire lord");
-			setLordTimer(-BALANCE.VAMPIRE_PLAYER_LORD_COOLDOWN*20+this.vampireLordTimer);
-		}
-		else if(this.vampireLordTimer==0){
-			int dur=BALANCE.getVampireLordDuration(getLevel());
-			if(dur==0){
-				player.addChatMessage(new ChatComponentText(I18n.format("text.vampirism:vp.level_to_low", new Object[0])));
-			}
-			else{
-				setLordTimer(dur);
-				Logger.i(TAG, "Activated vampire lord");
-			}
-
-		}
-		else{
-			player.addChatMessage(new ChatComponentText(I18n.format("text.vampirism:vp.cooldown_not_over", new Object[0])));
-			Logger.i(TAG, "Still cant activate it: "+this.vampireLordTimer);
-		}
-	}
-	
-	/**
-	 * Sets the lord timer and notifys the client
-	 * @param t
-	 */
-	private void setLordTimer(int t){
-		this.setLordTimer(t, true);
-	}
-	
-	/**
-	 * Sets the lord timer
-	 * @param t
-	 * @param sync whether to notify the client or not
-	 */
-	private void setLordTimer(int t,boolean sync){
-		this.vampireLordTimer=t;
-		this.updateVampireLordAbilites();
-		if(sync&&!player.worldObj.isRemote){
-			this.sync();
-		}
-	}
-	
-	private void updateVampireLordAbilites(){
-		int l=getLevel();
-		if(this.vampireLordTimer>0){
-			PlayerModifiers.applyModifiers(l+3, player); 
-		}
-		else{
-			PlayerModifiers.applyModifiers(l, player);
-		}
-
-	}
-	
-	private boolean isRemote(){
-		return player.worldObj.isRemote;
 	}
 
 }
