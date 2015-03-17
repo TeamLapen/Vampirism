@@ -56,14 +56,14 @@ public class GUISelectSkill extends GuiScreen {
 	/**
 	 * Size of the images for the center
 	 */
-	private final int CS=100;
+	private final int CS = 100;
 	/**
 	 * Angle between each skill in rad
 	 */
 	private double radDiff;
 
 	public GUISelectSkill() {
-		this.allowUserInput=true;
+		this.allowUserInput = true;
 	}
 
 	@Override
@@ -79,25 +79,25 @@ public class GUISelectSkill extends GuiScreen {
 	 * @param cY
 	 *            CenterY
 	 */
-	protected void drawBackground(float cX, float cY) {
+	private void drawBackground(float cX, float cY) {
 		// Calculate the scale which has to be applied for the image to fit
 		float scale = (this.height / 2F + IS + IS) / BGS;
-		cX = cX / scale;
-		cY = cY / scale;
+
 		GL11.glPushMatrix();
+		GL11.glTranslatef(cX, cY, this.zLevel);
 		GL11.glScalef(scale, scale, 1);
 
 		// Draw the cicle image
 		this.mc.getTextureManager().bindTexture(backgroundTex);
 		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glTexCoord2f(1F, 1F);
-		GL11.glVertex3f(cX + BGS / 2, cY + BGS / 2, this.zLevel);
+		GL11.glVertex3f(BGS / 2, BGS / 2, this.zLevel);
 		GL11.glTexCoord2f(1F, 0F);
-		GL11.glVertex3f(cX + BGS / 2, cY - BGS / 2, this.zLevel);
+		GL11.glVertex3f(BGS / 2, -BGS / 2, this.zLevel);
 		GL11.glTexCoord2f(0F, 0F);
-		GL11.glVertex3f(cX - BGS / 2, cY - BGS / 2, this.zLevel);
+		GL11.glVertex3f(-BGS / 2, -BGS / 2, this.zLevel);
 		GL11.glTexCoord2f(0F, 1F);
-		GL11.glVertex3f(cX - BGS / 2, cY + BGS / 2, this.zLevel);
+		GL11.glVertex3f(-BGS / 2, BGS / 2, this.zLevel);
 		GL11.glEnd();
 
 		// Draw the lines
@@ -106,7 +106,7 @@ public class GUISelectSkill extends GuiScreen {
 				double rad = i * radDiff + radDiff / 2;
 				double cos = Math.cos(rad);
 				double sin = Math.sin(rad);
-				this.drawLine(cX + cos * RR, cY + sin * RR, cX + cos * BGS / 2, cY + sin * BGS / 2);
+				this.drawLine(cos * RR, sin * RR, +cos * BGS / 2, sin * BGS / 2);
 			}
 		}
 		GL11.glPopMatrix();
@@ -170,15 +170,15 @@ public class GUISelectSkill extends GuiScreen {
 			if (selected) {
 				drawTexturedModalRect(x - 3, y - 3, 1, 23, 22, 22);
 				selectedSkill = i;
-				drawSelectedCenter(cX,cY,rad);
-				
+				drawSelectedCenter(cX, cY, rad);
+
 			}
 			// Draw Icon
 			this.mc.getTextureManager().bindTexture(s.getIconLoc());
 			this.drawTexturedModalRect(x, y, s.getMinU(), s.getMinV(), IS, IS);
 
 		}
-		if(selectedSkill==-1){
+		if (selectedSkill == -1) {
 			this.drawUnselectedCenter(cX, cY);
 		}
 		this.mc.mcProfiler.endSection();
@@ -256,67 +256,67 @@ public class GUISelectSkill extends GuiScreen {
 		this.mc.thePlayer.movementInput.updatePlayerMoveState();
 		if (!KeyInputEventHandler.isKeyDown(KeyInputEventHandler.SKILL.getKeyCode())) {
 			if (selectedSkill >= 0) {
-				int id=skills.get(selectedSkill).getId();
-				if(id>=0){
-					VampirismMod.modChannel.sendToServer(new InputEventPacket(InputEventPacket.TOGGLESKILL,""+id));
+				int id = skills.get(selectedSkill).getId();
+				if (id >= 0) {
+					VampirismMod.modChannel.sendToServer(new InputEventPacket(InputEventPacket.TOGGLESKILL, "" + id));
 				}
 			}
 
 			this.mc.displayGuiScreen(null);
 		}
 	}
-	
-	private void drawSelectedCenter(double cX,double cY,double rad){
-		
-		//Caluculate rotation and scale
-		double deg=Math.toDegrees(-rad);
-		float scale = ((float)this.height) / 4F / (float)CS;
-		
+
+	private void drawSelectedCenter(double cX, double cY, double rad) {
+
+		// Caluculate rotation and scale
+		double deg = Math.toDegrees(-rad);
+		float scale = (this.height) / 4F / CS;
+
 		GL11.glPushMatrix();
-		//Move origin to center, scale and rotate
+		// Move origin to center, scale and rotate
 		GL11.glTranslated(cX, cY, this.zLevel);
 		GL11.glScalef(scale, scale, 1);
 		GL11.glRotated(deg, 0, 0, 1);
-		
-		//Draw
+
+		// Draw
 		this.mc.getTextureManager().bindTexture(centerTex);
 		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glTexCoord2f(0.5F, 1F);
-		GL11.glVertex3d(CS / 2, CS/2, this.zLevel);
+		GL11.glVertex3d(CS / 2, CS / 2, this.zLevel);
 		GL11.glTexCoord2f(0.5F, 0F);
-		GL11.glVertex3d(CS / 2, - CS/2, this.zLevel);
+		GL11.glVertex3d(CS / 2, -CS / 2, this.zLevel);
 		GL11.glTexCoord2f(0F, 0F);
-		GL11.glVertex3d(- CS / 2, - CS/2, this.zLevel);
+		GL11.glVertex3d(-CS / 2, -CS / 2, this.zLevel);
 		GL11.glTexCoord2f(0F, 1F);
-		GL11.glVertex3d(- CS/2, CS/2, this.zLevel);
+		GL11.glVertex3d(-CS / 2, CS / 2, this.zLevel);
 		GL11.glEnd();
-		
+
 		GL11.glPopMatrix();
 	}
-	
-	private void drawUnselectedCenter(double cX,double cY){
 
-				float scale = ((float)this.height) / 4F / (float)CS;
-				
-				GL11.glPushMatrix();
-				//Move origin to center, scale and rotate
-				GL11.glTranslated(cX, cY, this.zLevel);
-				GL11.glScalef(scale, scale, 1);
-				
-				//Draw
-				this.mc.getTextureManager().bindTexture(centerTex);
-				GL11.glBegin(GL11.GL_QUADS);
-				GL11.glTexCoord2f(1F, 1F);
-				GL11.glVertex3d(CS / 2, CS/2, this.zLevel);
-				GL11.glTexCoord2f(1F, 0F);
-				GL11.glVertex3d(CS / 2, - CS/2, this.zLevel);
-				GL11.glTexCoord2f(0.5F, 0F);
-				GL11.glVertex3d(- CS / 2, - CS/2, this.zLevel);
-				GL11.glTexCoord2f(0.5F, 1F);
-				GL11.glVertex3d(- CS/2, CS/2, this.zLevel);
-				GL11.glEnd();
-				
-				GL11.glPopMatrix();
+	private void drawUnselectedCenter(double cX, double cY) {
+
+		float scale = (this.height) / 4F / CS;
+
+		GL11.glPushMatrix();
+		// Move origin to center, scale and rotate
+		GL11.glTranslated(cX, cY, this.zLevel);
+		GL11.glScalef(scale, scale, 1);
+
+		// Draw
+		this.mc.getTextureManager().bindTexture(centerTex);
+		GL11.glBegin(GL11.GL_QUADS);
+		GL11.glTexCoord2f(1F, 1F);
+		GL11.glVertex3d(CS / 2, CS / 2, this.zLevel);
+		GL11.glTexCoord2f(1F, 0F);
+		GL11.glVertex3d(CS / 2, -CS / 2, this.zLevel);
+		GL11.glTexCoord2f(0.5F, 0F);
+		GL11.glVertex3d(-CS / 2, -CS / 2, this.zLevel);
+		GL11.glTexCoord2f(0.5F, 1F);
+		GL11.glVertex3d(-CS / 2, CS / 2, this.zLevel);
+		GL11.glEnd();
+
+		GL11.glPopMatrix();
 	}
 
 }
