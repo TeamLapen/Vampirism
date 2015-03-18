@@ -15,6 +15,7 @@ public interface ISyncable {
 	
 	/**
 	 * This method is called when the entity joins a world and notifies the client
+	 * Can return null, if nothing has to be synced
 	 * @return
 	 */
 	public NBTTagCompound getJoinWorldSyncData();

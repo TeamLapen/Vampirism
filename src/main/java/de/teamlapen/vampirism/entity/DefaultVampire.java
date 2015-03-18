@@ -2,14 +2,18 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.villages.VillageVampire;
 import de.teamlapen.vampirism.villages.VillageVampireData;
+import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAIBreakDoor;
+import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityVillager;
@@ -82,6 +86,37 @@ public abstract class DefaultVampire extends EntityMob {
 			}
 		}
 		super.onLivingUpdate();
+	}
+	
+	/**
+	 * Adds standard attacking target tasks for player and villager
+	 * @param start Starting priority
+	 */
+	protected void addAttackingTargetTasks(int start){
+		this.targetTasks.addTask(start, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true, false, new IEntitySelector() {
+
+			@Override
+			public boolean isEntityApplicable(Entity entity) {
+				if (entity instanceof EntityPlayer) {
+					return VampirePlayer.get((EntityPlayer) entity).getLevel() <= BALANCE.VAMPIRE_FRIENDLY_LEVEL;
+				}
+				return false;
+			}
+
+		}));
+		// Search for villagers
+		this.targetTasks.addTask(start+1, new EntityAINearestAttackableTarget(this, EntityVillager.class, 0, true, false, new IEntitySelector() {
+
+			@Override
+			public boolean isEntityApplicable(Entity entity) {
+				if (entity instanceof EntityVillager) {
+					return !VampireMob.get((EntityVillager) entity).isVampire();
+				}
+				return false;
+			}
+
+		}));
+
 	}
 
 }

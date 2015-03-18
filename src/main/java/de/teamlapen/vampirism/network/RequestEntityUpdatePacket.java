@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.network;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import cpw.mods.fml.common.network.ByteBufUtils;
@@ -26,7 +27,11 @@ public class RequestEntityUpdatePacket implements IMessage {
 					return null;
 				}
 				else{
-					return new UpdateEntityPacket(e,((ISyncable)e).getJoinWorldSyncData());
+					NBTTagCompound nbt=((ISyncable)e).getJoinWorldSyncData();
+					if(nbt!=null){
+						return new UpdateEntityPacket(e,nbt);
+					}
+
 					
 				}
 			}
@@ -52,14 +57,15 @@ public class RequestEntityUpdatePacket implements IMessage {
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		id = ByteBufUtils.readVarInt(buf, Integer.MAX_VALUE);
+		id = ByteBufUtils.readTag(buf).getInteger("id");
 		
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
-
-		ByteBufUtils.writeVarInt(buf, id, Integer.MAX_VALUE);
+		NBTTagCompound tag=new NBTTagCompound();
+		tag.setInteger("id", id);
+		ByteBufUtils.writeTag(buf, tag);
 
 	}
 
