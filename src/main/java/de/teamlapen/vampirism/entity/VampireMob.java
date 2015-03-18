@@ -115,7 +115,13 @@ public class VampireMob implements IExtendedEntityProperties {
 			makeVampire();
 		}
 		else{
-			entity.attackEntityFrom(DamageSource.magic, 100);
+			if(entity instanceof EntityVampireHunter){
+				entity.attackEntityFrom(DamageSource.magic, 1);
+			}
+			else{
+				entity.attackEntityFrom(DamageSource.magic, 100);
+			}
+
 		}
 		
 		if(entity instanceof EntityVillager){

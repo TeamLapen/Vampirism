@@ -63,7 +63,7 @@ public class EntityVampireHunter extends EntityMob {
 			}
 
 		}));
-		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVampire.class, 0, true));
+		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, DefaultVampire.class, 0, true));
 		this.targetTasks.addTask(4, new EntityAINearestAttackableTarget(this, EntityCreature.class, 0, true, false, new IEntitySelector() {
 
 			@Override

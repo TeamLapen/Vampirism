@@ -17,10 +17,7 @@ import de.teamlapen.vampirism.util.Logger;
 public class EntityAIDefendVillage extends EntityAITarget {
 
 	EntityVampireHunter hunter;
-	/**
-	 * The aggressor of the iron golem's village which is now the golem's attack
-	 * target.
-	 */
+
 	EntityLivingBase villageAgressorTarget;
 
 	public EntityAIDefendVillage(EntityVampireHunter h) {
