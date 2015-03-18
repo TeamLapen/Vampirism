@@ -2,20 +2,18 @@ package de.teamlapen.vampirism.villages;
 
 import java.util.List;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import de.teamlapen.vampirism.entity.EntityVampireHunter;
-import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
+import de.teamlapen.vampirism.entity.EntityVampireHunter;
+import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
 
 /**
  * Saveable class which handle and stores vampirism related data for villages
@@ -151,7 +149,10 @@ public class VillageVampire {
 		return world.getEntitiesWithinAABB(EntityVampireHunter.class, getBoundingBox(v));
 	}
 	
-	private AxisAlignedBB getBoundingBox(Village v){
+	public AxisAlignedBB getBoundingBox(){
+		return getBoundingBox(this.getVillage());
+	}
+	public static AxisAlignedBB getBoundingBox(Village v){
 		int r=v.getVillageRadius();
 		ChunkCoordinates cc=v.getCenter();
 		return AxisAlignedBB.getBoundingBox((double)(cc.posX - r), (double)(cc.posY - 10), (double)(cc.posZ - r), (double)(cc.posX + r), (double)(cc.posY + 10), (double)(cc.posZ + r));
@@ -165,7 +166,7 @@ public class VillageVampire {
 	private void checkHunterCount(Village v){
 		int count=getHunter(v).size();
 		if(count <BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE||(agressive&&count < BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE*1.4)){
-			for(EntityCreature e:Helper.spawnEntityCreatureInVillage(v, 2, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME,world)){
+			for(Entity e:Helper.spawnEntityInVillage(v, 2, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME,world)){
 					((EntityVampireHunter) e).setHomeArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, v.getVillageRadius());
 					((EntityVampireHunter) e).setAgressive(agressive);
 			}
