@@ -30,7 +30,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.villages.VillageVampire;
 import de.teamlapen.vampirism.villages.VillageVampireData;
 
-public class EntityVampire extends EntityMob {
+public class EntityVampire extends DefaultVampire {
 	// TODO Sounds
 
 	public EntityVampire(World par1World) {
@@ -92,50 +92,10 @@ public class EntityVampire extends EntityMob {
 	}
 
 	@Override
-	public boolean isAIEnabled() {
-		return true;
-	}
-
-	@Override
 	public void onDeath(DamageSource s) {
 		if (s.getEntity() != null && s.getEntity() instanceof EntityPlayer) {
 			this.dropItem(ModItems.vampireFang, 1);
 		}
-	}
-
-	@Override
-	public void onKillEntity(EntityLivingBase entity) {
-
-		if (entity instanceof EntityVillager) {
-
-			Entity e = EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_NAME, this.worldObj);
-			e.copyLocationAndAnglesFrom(entity);
-			VillageVampire v=VillageVampireData.get(entity.worldObj).findNearestVillage(entity);
-			if(v!=null){
-				v.villagerConvertedByVampire();
-			}
-			this.worldObj.spawnEntityInWorld(e);
-		}
-		super.onKillEntity(entity);
-	}
-
-	@Override
-	public void onLivingUpdate() {
-		if (!this.worldObj.isRemote) {
-			float brightness = this.getBrightness(1.0F);
-			boolean canSeeSky = this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY),
-					MathHelper.floor_double(this.posZ));
-			if (brightness > 0.5F) {
-				if (this.worldObj.isDaytime() && canSeeSky) {
-					float dmg=0.5F;
-					if(this.isPotionActive(ModPotion.sunscreen)){
-						dmg=dmg/2;
-					}
-					this.attackEntityFrom(VampirismMod.sunDamage, dmg);
-				}
-			}
-		}
-		super.onLivingUpdate();
 	}
 
 }

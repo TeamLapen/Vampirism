@@ -17,6 +17,10 @@ import net.minecraft.village.Village;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.ai.EntityAIAvoidVampirePlayer;
+import de.teamlapen.vampirism.network.ISyncable;
+import de.teamlapen.vampirism.network.RequestEntityUpdatePacket;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
@@ -32,6 +36,11 @@ public class VampireEntityEventHandler {
 
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
+		if(event.entity instanceof ISyncable){
+			if(event.world.isRemote){
+				VampirismMod.modChannel.sendToServer(new RequestEntityUpdatePacket(event.entity));
+			}
+		}
 		if (event.entity instanceof EntityVampireHunter) {
 			// Set the home position of VampireHunters to a near village if one
 			// is found

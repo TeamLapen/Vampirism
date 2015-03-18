@@ -22,6 +22,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import de.teamlapen.vampirism.ModItems;
+import de.teamlapen.vampirism.entity.ai.EntityAIDefendVillage;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
