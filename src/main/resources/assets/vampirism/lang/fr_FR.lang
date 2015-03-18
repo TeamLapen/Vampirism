@@ -1,4 +1,4 @@
-# Entitys
+# Entities
 entity.vampirism:vampireHunter.name=Chasseur de vampire
 entity.vampirism:vampire.name=Vampire
 entity.vampirism:ghost.name=Fantôme
@@ -18,24 +18,35 @@ block.vampirism:bloodAltarTier3.name=Autel de sang Niv3
 block.vampirism:bloodAltarTier4.name=Autel de sang Niv4
 block.vampirism:bloodAltarTier4Tip.name=Autel de sang Niv4 astuce
 block.vampirism:cursedEarth.name=Terre maudite
+block.vampirism:vampireOrchid.name=Orchidé vampire
 
 #Tiles
 tile.vampirism:bloodAltarTier4.name=Autel de sang Niv4
+
+#GUI
+gui.vampirism:revertback.head=Retransformation en humain normal
+gui.vampirism:revertback.desc=Vous perdrez tous vos niveaux et mourerez
 
 # Keys
 keys.vampirism.category=Vampirisme
 keys.vampirism.suck=Suce le sang
 keys.vampirism.auto=Auto remplissage de bouteille de sang
+keys.vampirism.skill=Active les compétence de vampire
 
 #General
 itemGroup.vampirism=Vampirisme
 death.attack.sun=%1$s n'a pas aimé le soleil
+potion.vampirism:sunscreen=Crème solaire
+potion.vampirism:thirst=Soif
+text.vampirism:skill.level_to_low=Votre niveau de vampire est trop bas pour celà
+text.vampirism:skill.cooldown_not_over=Veuillez attendre jusqu'à la fin de votre récupération
 
 #Config
 category.vampirism.balance=Propriétés d'équilibrage
 category.vampirism.balance.tooltip=Changement presque n'importe quel équilibre de propriété appropriée
 category.vampirism.balance_level=Options d'équilibrage de montée de niveau
 category.vampirism.balance_player_mod=Options des modificateurs du joueur vampire
+category.vampirism.balance_player_skills=Options des compétence vampire du joueur
 category.vampirism.balance_mob_prop=Propriété de vampirisme des créatures
 category.vampirism.balance_mob_prop.tooltip=Change les propriétés des créatures ajouté par Vampirism
 category.vampirism.balance_vv_prop=Propriétés des village
