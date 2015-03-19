@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.proxy;
 
+import net.minecraft.entity.player.EntityPlayer;
+
 public class ServerProxy extends CommonProxy {
 
 	@Override
@@ -24,6 +26,11 @@ public class ServerProxy extends CommonProxy {
 	public void registerSubscriptions() {
 		super.registerSubscriptions();
 
+	}
+
+	@Override
+	public EntityPlayer getSPPlayer() {
+		return null;
 	}
 
 }

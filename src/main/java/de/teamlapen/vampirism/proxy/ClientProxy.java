@@ -16,6 +16,7 @@ import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.EntityWolf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -109,6 +110,11 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForge.EVENT_BUS.register(new VampireHudOverlay(Minecraft.getMinecraft()));
 		FMLCommonHandler.instance().bus().register(new KeyInputEventHandler());
 		MinecraftForge.EVENT_BUS.register(new RendererTorch());
+	}
+
+	@Override
+	public EntityPlayer getSPPlayer() {
+		return (EntityPlayer)Minecraft.getMinecraft().thePlayer;
 	}
 
 }
