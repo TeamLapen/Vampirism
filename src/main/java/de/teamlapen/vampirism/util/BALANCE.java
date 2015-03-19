@@ -119,6 +119,11 @@ public final class BALANCE {
 		@DefaultInt(4)
 		public static int REGEN_MIN_LEVEL;
 		
+		@DefaultInt(value=60)
+		public static int WEATHER_COOLDOWN;
+		@DefaultInt(4)
+		public static int WEATHER_MIN_LEVEL;
+		
 		@DefaultInt(value=20,comment="Vampire Lord cooldown duration")
 		public static int LORD_COOLDOWN;
 		

@@ -53,7 +53,7 @@ public class Skills {
 	public static void registerDefaultSkills() {
 		VampireLordSkill.ID = Skills.registerSkill(new VampireLordSkill());
 		Skills.registerSkill(new RegenSkill());
-		Skills.registerSkill(new RegenSkill());// TODO remove
+		Skills.registerSkill(new ChangeWeatherSkill());
 	}
 
 	/**
