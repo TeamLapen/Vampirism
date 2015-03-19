@@ -22,7 +22,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 import de.teamlapen.vampirism.util.BALANCE;
 /**@author Mistadon */
-public class EntityDracula extends EntityMob implements IBossDisplayData {
+public class EntityDracula extends EntityVampire implements IBossDisplayData {
 	// TODO Sounds
 
 	private int teleportDelay;
@@ -34,36 +34,16 @@ public class EntityDracula extends EntityMob implements IBossDisplayData {
 	public EntityDracula(World par1World) {
 		super(par1World);
 
-		this.getNavigator().setAvoidsWater(true);
-		this.setSize(0.6F, 1.8F);
-
-		// Attack player
-		this.tasks.addTask(0, new EntityAISwimming(this));
-		this.tasks.addTask(1, new EntityAIBreakDoor(this));
-		this.tasks.addTask(2, new EntityAIAttackOnCollide(this,
-				EntityPlayer.class, 1.1, true));
-
-		// Attack vampire hunter
-		this.tasks.addTask(2, new EntityAIAttackOnCollide(this,
-				EntityVampireHunter.class, 1.0, true));
-
-		// Attack villager
-		this.tasks.addTask(3, new EntityAIAttackOnCollide(this,
-				EntityVillager.class, 0.9, true));
-
-		// Avoids Vampire Hunters
 		this.tasks.addTask(3, new EntityAIAvoidEntity(this,
 				EntityVampireHunter.class,
 				BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.2));
 
-		// Low priority tasks
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this,
-				EntityPlayer.class, 0, true));
 		this.tasks.addTask(6, new EntityAIWander(this, 0.7));
 		this.tasks.addTask(9, new EntityAILookIdle(this));
-
-		// Search for players
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this,
+				EntityPlayer.class, 0, true));
+
 	}
 
 	@Override
@@ -75,11 +55,6 @@ public class EntityDracula extends EntityMob implements IBossDisplayData {
 				.setBaseValue(BALANCE.MOBPROP.DRACULA_ATTACK_DAMAGE);
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed)
 				.setBaseValue(BALANCE.MOBPROP.DRACULA_MOVEMENT_SPEED);
-	}
-
-	@Override
-	public boolean isAIEnabled() {
-		return true;
 	}
 
 	@Override

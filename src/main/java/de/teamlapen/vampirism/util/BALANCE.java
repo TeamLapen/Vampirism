@@ -30,6 +30,15 @@ public final class BALANCE {
 		public static double VAMPIRE_MOVEMENT_SPEED;
 		@DefaultInt(10)
 		public static int VAMPIRE_DISTANCE_HUNTER;
+		
+		@DefaultDouble(50.0D)
+		public static double VAMPIRE_LORD_MAX_HEALTH;
+		@DefaultDouble(7.0D)
+		public static double VAMPIRE_LORD_ATTACK_DAMAGE;
+		@DefaultDouble(0.3D)
+		public static double VAMPIRE_LORD_MOVEMENT_SPEED;
+		@DefaultDouble(value=1.3D,comment="For each higher level the stats are multiplied with this factor")
+		public static double VAMPIRE_LORD_IMPROVEMENT_PER_LEVEL;
 
 		@DefaultDouble(35.0D)
 		public static double VAMPIRE_HUNTER_MAX_HEALTH;
@@ -41,6 +50,13 @@ public final class BALANCE {
 		public static int VAMPIRE_HUNTER_MAX_PER_VILLAGE;
 		@DefaultDouble(1.4D)
 		public static double VAMPIRE_HUNTER_AGRESSIVE_MULT;
+		
+		@DefaultDouble(10.0D)
+		public static double VAMPIRE_MINION_MAX_HEALTH;
+		@DefaultDouble(3.0D)
+		public static double VAMPIRE_MINION_ATTACK_DAMAGE;
+		@DefaultDouble(0.25D)
+		public static double VAMPIRE_MINION_MOVEMENT_SPEED;
 		
 		@DefaultDouble(100.0D)
 		public static double DRACULA_MAX_HEALTH;
@@ -152,6 +168,9 @@ public final class BALANCE {
 
 	@DefaultInt(100)
 	public static int VAMPIRE_SPAWN_PROBE;
+	
+	@DefaultInt(30)
+	public static int VAMPIRE_LORD_SPAWN_PROBE;
 
 	// Vampireplayer
 	@DefaultBoolean(value = true, comment = "Whether vampireplayers should loose level if killed by a hunter")

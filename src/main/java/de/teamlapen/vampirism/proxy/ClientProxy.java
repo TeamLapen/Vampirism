@@ -8,8 +8,8 @@ import net.minecraft.client.model.ModelPig;
 import net.minecraft.client.model.ModelSheep1;
 import net.minecraft.client.model.ModelSheep2;
 import net.minecraft.client.model.ModelWolf;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.monster.EntityWitch;
-import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityOcelot;
@@ -17,7 +17,7 @@ import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.EntityWolf;
-import net.minecraftforge.client.IItemRenderer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -27,10 +27,8 @@ import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.client.KeyInputEventHandler;
 import de.teamlapen.vampirism.client.gui.VampireHudOverlay;
 import de.teamlapen.vampirism.client.model.ModelDracula;
-import de.teamlapen.vampirism.client.model.ModelDracula;
 import de.teamlapen.vampirism.client.model.ModelGhost;
 import de.teamlapen.vampirism.client.model.ModelVampire;
-import de.teamlapen.vampirism.client.model.ModelVampireHunter;
 import de.teamlapen.vampirism.client.render.PitchforkRenderer;
 import de.teamlapen.vampirism.client.render.RendererBloodAltar;
 import de.teamlapen.vampirism.client.render.RendererBloodAltarTier2;
@@ -39,6 +37,8 @@ import de.teamlapen.vampirism.client.render.RendererBloodAltarTier4;
 import de.teamlapen.vampirism.client.render.RendererDracula;
 import de.teamlapen.vampirism.client.render.RendererGhost;
 import de.teamlapen.vampirism.client.render.RendererTorch;
+import de.teamlapen.vampirism.client.render.RendererVampireLord;
+import de.teamlapen.vampirism.client.render.RendererVampireMinion;
 import de.teamlapen.vampirism.client.render.VampireHunterRenderer;
 import de.teamlapen.vampirism.client.render.VampireRenderer;
 import de.teamlapen.vampirism.client.render.vanilla.RenderVampireCow;
@@ -53,6 +53,8 @@ import de.teamlapen.vampirism.entity.EntityDracula;
 import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
+import de.teamlapen.vampirism.entity.EntityVampireLord;
+import de.teamlapen.vampirism.entity.EntityVampireMinion;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier2;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier3;
@@ -75,6 +77,8 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampire.class, new VampireRenderer(new ModelVampire(), 0.5F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityDracula.class, new RendererDracula(new ModelDracula(), 0.5F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityGhost.class, new RendererGhost(new ModelGhost(), 0.5F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityVampireLord.class, new RendererVampireLord(new ModelVampire(),0.5F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityVampireMinion.class, new RendererVampireMinion(new ModelVampire(),0.5F));
 		MinecraftForgeClient.registerItemRenderer(ModItems.pitchfork, new PitchforkRenderer());
 		MinecraftForgeClient.registerItemRenderer(ModItems.torch, new RendererTorch());
 		
@@ -107,6 +111,16 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForge.EVENT_BUS.register(new VampireHudOverlay(Minecraft.getMinecraft()));
 		FMLCommonHandler.instance().bus().register(new KeyInputEventHandler());
 		MinecraftForge.EVENT_BUS.register(new RendererTorch());
+	}
+
+	@Override
+	public EntityPlayer getSPPlayer() {
+		return (EntityPlayer)Minecraft.getMinecraft().thePlayer;
+	}
+
+	@Override
+	public String translateToLocal(String s) {
+		return I18n.format(s, new Object[0]);
 	}
 
 }

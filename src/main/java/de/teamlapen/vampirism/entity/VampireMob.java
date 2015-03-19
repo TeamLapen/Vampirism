@@ -34,7 +34,7 @@ public class VampireMob implements IExtendedEntityProperties {
 		return (VampireMob) mob.getExtendedProperties(VampireMob.EXT_PROP_NAME);
 	}
 	/**
-	 * Returns how much blood can be collected by biting this entity. Zero if
+	 * Returns how much blood can be collected by biting this entity. -1 if
 	 * not biteable
 	 * 
 	 * @param e
@@ -44,7 +44,7 @@ public class VampireMob implements IExtendedEntityProperties {
 		if (e instanceof EntityPig || e instanceof EntitySheep || e instanceof EntityOcelot || e instanceof EntityWolf) {
 			return BALANCE.SMALL_BLOOD_AMOUNT;
 		}
-		if (e instanceof EntityCow || e instanceof EntityHorse) {
+		if (e instanceof EntityCow || e instanceof EntityHorse || e instanceof EntityVampireHunter) {
 			return BALANCE.NORMAL_BLOOD_AMOUNT;
 		}
 		if (e instanceof EntityVillager || e instanceof EntityWitch) {
@@ -115,7 +115,13 @@ public class VampireMob implements IExtendedEntityProperties {
 			makeVampire();
 		}
 		else{
-			entity.attackEntityFrom(DamageSource.magic, 100);
+			if(entity instanceof EntityVampireHunter){
+				entity.attackEntityFrom(DamageSource.magic, 1);
+			}
+			else{
+				entity.attackEntityFrom(DamageSource.magic, 100);
+			}
+
 		}
 		
 		if(entity instanceof EntityVillager){

@@ -2,6 +2,9 @@
 entity.vampirism:vampireHunter.name=Vampire Hunter
 entity.vampirism:vampire.name=Vampire
 entity.vampirism:ghost.name=Ghost
+entity.vampirism:vampireLord.name=Vampire Lord
+entity.vampirism:vampireMinion.name=Vampire Minion
+entity.vampirism:dracula.name=Dracula
 
 # Items
 item.vampirism:vampiresFear.name=Vampire's fear
@@ -40,6 +43,7 @@ potion.vampirism:sunscreen=Sunscreen
 potion.vampirism:thirst=Thirst
 text.vampirism:skill.level_to_low=Your vampire level is too low for that
 text.vampirism:skill.cooldown_not_over=Please wait until the cooldown is over
+text.vampirism:entity_level=Level
 
 #Config
 category.vampirism.balance=Balance settings

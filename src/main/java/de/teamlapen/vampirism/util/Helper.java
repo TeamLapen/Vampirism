@@ -6,18 +6,28 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import cpw.mods.fml.relauncher.ReflectionHelper;
-import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.relauncher.ReflectionHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.villages.VillageVampire;
+import de.teamlapen.vampirism.villages.VillageVampireData;
 
 public class Helper {
 	public static class Reflection {
@@ -106,28 +116,69 @@ public class Helper {
 		return player.worldObj.rayTraceBlocks(vector1, vector2);
 	}
 	
-	public static List<EntityCreature> spawnEntityCreatureInVillage(Village v,int max,String name,World world){
-		int spawned=0;
-		List<EntityCreature> list=new ArrayList<EntityCreature>();
-		int r=v.getVillageRadius();
-		for (int i = 1; i < 20 && spawned < max; i++) {
-			int x1 = v.getCenter().posX + world.rand.nextInt((int) (1.2 * r)) - (int) (0.6 * r);
-			int z1 = v.getCenter().posZ + world.rand.nextInt((int) (1.2 * r)) - (int) (0.6 * r);
-
-			int y1 = world.getHeightValue(x1, z1);
-			if (v.isInRange(x1, y1, z1)) {
-				EntityCreature e = (EntityCreature) EntityList.createEntityByName(name, world);
-				e.setLocationAndAngles(x1, y1, z1, 0.0F, 0.0F);			
-				if (e.getCanSpawnHere()) {
-					world.spawnEntityInWorld(e);
-					list.add(e);
-					spawned++;
-				} else {
-					e.setDead();
-				}
-
+	public static List<Entity> spawnEntityInVillage(Village v,int max,String name,World world){
+		//VillageVampire vv=VillageVampireData.get(world).getVillageVampire(v);
+		List<Entity> list=new ArrayList<Entity>();
+		Entity e=null;
+		for (int i = 0; i < max; i++) {
+			if(e==null){
+				e=EntityList.createEntityByName(name, world);
 			}
+			if(spawnEntityInWorld(world,VillageVampire.getBoundingBox(v),e,5)){
+				list.add(e);
+				e=null;
+			}
+	
+		}
+		if(e!=null){
+			e.setDead();
 		}
 		return list;
+	}
+	
+	public static boolean spawnEntityInWorld(World world,AxisAlignedBB box,Entity e, int maxTry){
+		boolean flag=false;
+		int i=0;
+		while(!flag&&i++<maxTry){
+			ChunkCoordinates c=getRandomPosInBox(world,box);
+			e.setPosition(c.posX,c.posY,c.posZ);
+			if(!(e instanceof EntityLiving)||((EntityLiving)e).getCanSpawnHere() ){
+				flag=true;
+			}
+		}
+		if(flag){
+			Logger.i("test", "Found spawn for "+e);
+			world.spawnEntityInWorld(e);
+			return true;
+		}
+		else{
+			Logger.i("test", "Did not find a spawn for "+e);
+		}
+		return false;
+	}
+	public static Entity spawnEntityInWorld(World world, AxisAlignedBB box,String name,int maxTry){
+		Entity e=EntityList.createEntityByName(name, world);
+		if(spawnEntityInWorld(world,box,e,maxTry)){
+			return e;
+		}
+		else{
+			e.setDead();
+			return null;
+		}
+	}
+	
+	public static ChunkCoordinates getRandomPosInBox(World w,AxisAlignedBB box){
+		int x=(int)box.minX+w.rand.nextInt((int)(box.maxX-box.minX)+1);
+		int z=(int)box.minZ+w.rand.nextInt((int)(box.maxZ-box.minZ)+1);
+		int y=w.getHeightValue(x, z)+1;
+		if(y<box.minX||y>box.maxY){
+			y=(int)box.minY+w.rand.nextInt((int)(box.maxY-box.minY)+1);
+		}
+		return new ChunkCoordinates(x,y,z);
+	}
+	
+	@SideOnly(Side.SERVER)
+	public static void sendPacketToPlayersAround(IMessage message,Entity e){
+		VampirismMod.modChannel.sendToAllAround(message, new TargetPoint(e.dimension,e.posX,e.posY,e.posZ,100));
 	}
 }

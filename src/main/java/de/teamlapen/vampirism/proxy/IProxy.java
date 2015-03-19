@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.proxy;
 
+import net.minecraft.entity.player.EntityPlayer;
+
 public interface IProxy {
 
 	/**
@@ -27,4 +29,16 @@ public interface IProxy {
 	 * startup (init)
 	 */
 	public void registerSubscriptions();
+	
+	/**
+	 * @return Clientside: thePlayer, Serverside: null
+	 */
+	public EntityPlayer getSPPlayer();
+	
+	/**
+	 * Translate the string to local language if on clientS
+	 * @param s
+	 * @return
+	 */
+	public String translateToLocal(String s);
 }

@@ -3,9 +3,6 @@ package de.teamlapen.vampirism.generation;
 import java.util.Random;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityList;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -16,6 +13,8 @@ import de.teamlapen.vampirism.generation.structures.GenerateBloodAltar;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.villages.VillageVampire;
+import de.teamlapen.vampirism.villages.VillageVampireData;
 
 /**
  * 
@@ -45,14 +44,11 @@ public class WorldGenVampirism implements IWorldGenerator {
 			if (v == null) {
 				return;
 			}
+			VillageVampire vv=VillageVampireData.get(world).getVillageVampire(v);
 	
-			int r = v.getVillageRadius();
-			AxisAlignedBB box = AxisAlignedBB.getBoundingBox(v.getCenter().posX - r, 0, v.getCenter().posZ - r, v.getCenter().posX + r,
-					world.getActualHeight(), v.getCenter().posZ + r);
-	
-			int spawnedHunter = world.getEntitiesWithinAABB(EntityVampireHunter.class, box).size();
-			for(EntityCreature e:Helper.spawnEntityCreatureInVillage(v, BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE-spawnedHunter, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world)){
-					((EntityVampireHunter) e).setHomeArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, r);
+			int spawnedHunter = world.getEntitiesWithinAABB(EntityVampireHunter.class, vv.getBoundingBox()).size();
+			for(Entity e:Helper.spawnEntityInVillage(v, BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE-spawnedHunter, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world)){
+					((EntityVampireHunter) e).setHomeArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, v.getVillageRadius());
 			}
 		}
 		catch (Exception e) {
