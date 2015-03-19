@@ -34,4 +34,11 @@ public interface IProxy {
 	 * @return Clientside: thePlayer, Serverside: null
 	 */
 	public EntityPlayer getSPPlayer();
+	
+	/**
+	 * Translate the string to local language if on clientS
+	 * @param s
+	 * @return
+	 */
+	public String translateToLocal(String s);
 }

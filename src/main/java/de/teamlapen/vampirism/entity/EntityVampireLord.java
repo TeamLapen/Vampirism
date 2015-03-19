@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.entity;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
@@ -11,15 +9,17 @@ import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import de.teamlapen.vampirism.ModItems;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.ai.IMinion;
 import de.teamlapen.vampirism.entity.ai.IMinionLord;
 import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.network.UpdateEntityPacket;
 import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.DifficultyCalculator;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 
@@ -88,11 +88,6 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	}
 
 	@Override
-	public boolean hasCustomNameTag() {
-		return true;
-	}
-
-	@Override
 	public void loadPartialUpdate(NBTTagCompound nbt) {
 		if (nbt.hasKey("level")) {
 			this.level = nbt.getInteger("level");
@@ -149,7 +144,6 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	public void setLevel(int l, boolean sync) {
 		if (l > 0 && l != level) {
 			this.level = l;
-			this.setCustomNameTag(I18n.format("entity."+REFERENCE.ENTITY.VAMPIRE_LORD_NAME+".name", new Object[0])+" "+I18n.format("text.vampirism:entity_level", new Object[0])+" "+level);
 			if (sync && !this.worldObj.isRemote) {
 				NBTTagCompound nbt = new NBTTagCompound();
 				nbt.setInteger("level", level);
@@ -204,6 +198,11 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("level", level);
+	}
+	
+	@Override
+	public String getCommandSenderName(){
+		return super.getCommandSenderName()+" "+VampirismMod.proxy.translateToLocal("text.vampirism:entity_level")+" "+level;
 	}
 	
 

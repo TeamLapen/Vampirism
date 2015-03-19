@@ -8,6 +8,7 @@ import net.minecraft.client.model.ModelPig;
 import net.minecraft.client.model.ModelSheep1;
 import net.minecraft.client.model.ModelSheep2;
 import net.minecraft.client.model.ModelWolf;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.monster.EntityWitch;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityHorse;
@@ -115,6 +116,11 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public EntityPlayer getSPPlayer() {
 		return (EntityPlayer)Minecraft.getMinecraft().thePlayer;
+	}
+
+	@Override
+	public String translateToLocal(String s) {
+		return I18n.format(s, new Object[0]);
 	}
 
 }

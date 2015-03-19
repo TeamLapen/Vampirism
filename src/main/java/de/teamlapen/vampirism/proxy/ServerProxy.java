@@ -33,4 +33,9 @@ public class ServerProxy extends CommonProxy {
 		return null;
 	}
 
+	@Override
+	public String translateToLocal(String s) {
+		return s;
+	}
+
 }
