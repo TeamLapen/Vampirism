@@ -22,6 +22,9 @@ import de.teamlapen.vampirism.entity.ai.EntityAIAvoidVampirePlayer;
 import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.network.RequestEntityUpdatePacket;
 import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.DifficultyCalculator;
+import de.teamlapen.vampirism.util.DifficultyCalculator.Difficulty;
+import de.teamlapen.vampirism.util.DifficultyCalculator.IAdjustableLevel;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
 
@@ -36,6 +39,26 @@ public class VampireEntityEventHandler {
 
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
+		if(!event.entity.worldObj.isRemote&&event.entity instanceof IAdjustableLevel){
+			IAdjustableLevel e=(IAdjustableLevel)event.entity;
+			if(e.getLevel()==0){
+				Difficulty d=DifficultyCalculator.getLocalDifficulty(event.world, event.entity.posX, event.entity.posZ, 70);
+				if(d.isZero()){
+					d=DifficultyCalculator.getWorldDifficulty(event.entity.worldObj);
+				}
+				int l=e.suggestLevel(d);
+				if(l>e.getMaxLevel()){
+					l=e.getMaxLevel();
+				}
+				else if(l<1){
+					if(event.entity.worldObj.rand.nextBoolean()){
+						event.setCanceled(true);
+					}
+					l=1;
+				}
+				e.setLevel(l);
+			}
+		}
 		if(event.entity instanceof ISyncable){
 			if(event.world.isRemote){
 				VampirismMod.modChannel.sendToServer(new RequestEntityUpdatePacket(event.entity));

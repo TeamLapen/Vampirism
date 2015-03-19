@@ -5,7 +5,9 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -20,14 +22,19 @@ import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.network.UpdateEntityPacket;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
+import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.DifficultyCalculator.Difficulty;
+import de.teamlapen.vampirism.util.DifficultyCalculator.IAdjustableLevel;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 
-public class EntityVampireLord extends DefaultVampire implements ISyncable, IMinionLord {
+public class EntityVampireLord extends DefaultVampire implements ISyncable, IMinionLord, IAdjustableLevel {
 
 	private final static int MIN_MINION = 2;
+	
+	private final static int MAX_LEVEL=5;
 
-	protected int level = 1;
+	protected int level = 0;
 	
 	private boolean prevAttacking=false;
 
@@ -38,10 +45,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 		this.tasks.addTask(6, new EntityAIWander(this, 0.2));
 		this.tasks.addTask(9, new EntityAILookIdle(this));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-		this.addAttackingTargetTasks(2);
-		if (!par1World.isRemote) {
-			this.setLevel(4, false);
-		}
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this,EntityPlayer.class,0,false));
 
 	}
 
@@ -54,14 +58,14 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	protected void applyEntityAttributes(boolean aggressive){
 		if(aggressive){
 			this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(20D);
-			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_MOVEMENT_SPEED);
+			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_LORD_MOVEMENT_SPEED*Math.pow(BALANCE.MOBPROP.VAMPIRE_LORD_IMPROVEMENT_PER_LEVEL, level-1));
 		}
 		else{
 			this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(5D);
-			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_MOVEMENT_SPEED/2);
+			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_LORD_MOVEMENT_SPEED*Math.pow(BALANCE.MOBPROP.VAMPIRE_LORD_IMPROVEMENT_PER_LEVEL, level-1)/3);
 		}
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(BALANCE.MOBPROP.VAMPIRE_MAX_HEALTH);
-		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(BALANCE.MOBPROP.VAMPIRE_ATTACK_DAMAGE);
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(BALANCE.MOBPROP.VAMPIRE_LORD_MAX_HEALTH*Math.pow(BALANCE.MOBPROP.VAMPIRE_LORD_IMPROVEMENT_PER_LEVEL, level-1));
+		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(BALANCE.MOBPROP.VAMPIRE_LORD_ATTACK_DAMAGE*Math.pow(BALANCE.MOBPROP.VAMPIRE_LORD_IMPROVEMENT_PER_LEVEL, level-1));
 	}
 
 	@Override
@@ -116,8 +120,8 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 			prevAttacking=false;
 			this.applyEntityAttributes(false);
 		}
-		if (shouldSpawnMinion()) {
-			IMinion m = (IMinion) Helper.spawnEntityInWorld(worldObj, this.boundingBox.expand(19, 14, 19), REFERENCE.ENTITY.VAMPIRE_MINION_NAME, 1);
+		if (!worldObj.isRemote&&shouldSpawnMinion()) {
+			IMinion m = (IMinion) Helper.spawnEntityInWorld(worldObj, this.boundingBox.expand(19, 14, 19), REFERENCE.ENTITY.VAMPIRE_MINION_NAME, 2);
 			if (m != null) {
 				m.setLord(this);
 			}
@@ -203,6 +207,38 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	@Override
 	public String getCommandSenderName(){
 		return super.getCommandSenderName()+" "+VampirismMod.proxy.translateToLocal("text.vampirism:entity_level")+" "+level;
+	}
+	
+	@Override
+	public boolean getAlwaysRenderNameTagForRender(){
+		return true;
+	}
+
+	@Override
+	public void setLevel(int level) {
+		this.setLevel(level, false);
+		
+	}
+
+	@Override
+	public int suggestLevel(Difficulty d) {
+		Logger.i("test", d.toString());
+		int avg=(d.avgLevel-4);
+		int max=(d.maxLevel-4);
+		int min=(d.minLevel-4);
+		
+		switch(rand.nextInt(6)){
+		case 0: return min;
+		case 1: return max;
+		case 2: return avg;
+		case 3: return avg+1;
+		default: return rand.nextInt(max+2-min)+min-1;
+		}
+	}
+
+	@Override
+	public int getMaxLevel() {
+		return MAX_LEVEL;
 	}
 	
 
