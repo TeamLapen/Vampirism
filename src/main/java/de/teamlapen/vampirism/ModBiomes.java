@@ -20,14 +20,11 @@ public class ModBiomes {
 		biomeVampireForest = new BiomeVampireForest(biomeID).setBiomeName(BiomeVampireForest.name);
 
 		// like swamp
-//		biomeVampireForest.setColor(522674);
-		// like Roofed forest
-//		biomeVampireForest.setColor(4215066);
 		biomeVampireForest.setColor(0xCC00CC);
 		
 		BiomeDictionary.registerBiomeType(biomeVampireForest, Type.FOREST, Type.DENSE, Type.MAGICAL, Type.SPOOKY);
-//		int weight = (100 / biomeID) + 1;
-		int weight = 50;  // Testing only		
+		int weight = (100 / biomeID) + 1;
+//		int weight = 50;  // Testing only		
 		Logger.i("ModBiomes", "VampireForest created with weight: " + weight);
 		biomeEntryVampireForest = new BiomeEntry(biomeVampireForest, weight); // Change weight to 100 to see more of these
 		BiomeManager.addBiome(BiomeType.WARM, biomeEntryVampireForest);

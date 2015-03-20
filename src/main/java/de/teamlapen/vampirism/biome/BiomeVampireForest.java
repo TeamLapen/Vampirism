@@ -64,7 +64,7 @@ public class BiomeVampireForest extends BiomeGenBase {
             int y = world.getHeightValue(x, z);
             if (world.getBlock(x, y - 1, z) == ModBlocks.cursedEarth && world.getBlock(x, y, z) == Blocks.air) {
         		world.setBlock(x, y, z, ModBlocks.vampireFlower, 0, 3);
-            	Logger.i("BiomeVampireForest", "placed a vampire flower at: " + x + "," + y + "," + z);
+//            	Logger.i("BiomeVampireForest", "placed a vampire flower at: " + x + "," + y + "," + z);
             }
         }
     }
