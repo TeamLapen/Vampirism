@@ -23,12 +23,11 @@ public class BiomeVampireForest extends BiomeGenBase {
         this.spawnableMonsterList.clear();
         this.spawnableWaterCreatureList.clear();
         
-        this.topBlock = Blocks.grass;
-        this.fillerBlock = ModBlocks.cursedEarth;
+        this.topBlock = ModBlocks.cursedEarth;
+        this.fillerBlock = Blocks.dirt;
     	this.theBiomeDecorator.treesPerChunk = 6;
 		this.theBiomeDecorator.grassPerChunk = 5;
 		this.theBiomeDecorator.deadBushPerChunk = 1;
-		this.theBiomeDecorator.bigMushroomsPerChunk = 1;
         this.theBiomeDecorator.mushroomsPerChunk = 4;
 
         // Add the vampire forest flower here
@@ -63,7 +62,7 @@ public class BiomeVampireForest extends BiomeGenBase {
             int x = chunk_X + rand.nextInt(16);
             int z = chunk_Z + rand.nextInt(16);
             int y = world.getHeightValue(x, z);
-            if (world.getBlock(x, y - 1, z) == Blocks.grass && world.getBlock(x, y, z) == Blocks.air) {
+            if (world.getBlock(x, y - 1, z) == ModBlocks.cursedEarth && world.getBlock(x, y, z) == Blocks.air) {
         		world.setBlock(x, y, z, ModBlocks.vampireFlower, 0, 3);
             	Logger.i("BiomeVampireForest", "placed a vampire flower at: " + x + "," + y + "," + z);
             }
