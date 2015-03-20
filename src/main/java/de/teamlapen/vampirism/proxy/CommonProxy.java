@@ -79,7 +79,7 @@ public abstract class CommonProxy implements IProxy {
 				0x54B8DD, 0x34898D);
 		
 		//Registration of vampire lord
-		Logger.i("EntityRegister", "Adding "+REFERENCE.ENTITY.VAMPIRE_LORD_NAME+" with spawn probe of " + "none");
+		Logger.i("EntityRegister", "Adding "+REFERENCE.ENTITY.VAMPIRE_LORD_NAME+" with spawn probe of " + BALANCE.VAMPIRE_HUNTER_SPAWN_PROBE);
 		EntityRegistry.registerGlobalEntityID(EntityVampireLord.class,  REFERENCE.ENTITY.VAMPIRE_LORD_NAME,  EntityRegistry.findGlobalUniqueEntityId(), 
 				0x54B8DD, 0x34898D);
 		EntityRegistry.addSpawn(EntityVampireLord.class, BALANCE.VAMPIRE_HUNTER_SPAWN_PROBE, 1, 1, EnumCreatureType.creature, ModBiomes.biomeVampireForest);

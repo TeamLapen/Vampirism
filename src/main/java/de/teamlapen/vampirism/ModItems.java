@@ -25,10 +25,12 @@ public class ModItems {
 		GameRegistry.registerItem(humanHearth, ItemHumanHearth.name);
 		GameRegistry.registerItem(pureBlood,ItemPureBlood.name);
 		GameRegistry.registerItem(sunscreen, ItemSunscreen.name);
-
-		// Recipe for empty blood bottle
+	}
+	
+	public static void registerRecipes(){
 		GameRegistry.addRecipe(new ItemStack(bloodBottle, 1, 0), "   ", "XYX", " X ", 'X', Blocks.glass, 'Y', Items.rotten_flesh);
 		GameRegistry.addRecipe(new ItemStack(vampiresFear, 1), "XYX", "XYX", " Z ", 'X', vampireFang, 'Y', Items.iron_ingot, 'Z', Items.stick);
+		GameRegistry.addRecipe(new ItemStack(sunscreen,1),"XYX","YZY","XYX",'X',ModBlocks.vampireFlower,'Y',Items.gold_nugget,'Z',humanHearth);
 	}
 	public static ItemSword vampiresFear = new ItemVampiresFear();
 	public static ItemBloodBottle bloodBottle = new ItemBloodBottle();

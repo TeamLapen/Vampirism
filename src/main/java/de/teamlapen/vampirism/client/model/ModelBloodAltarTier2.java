@@ -430,7 +430,6 @@ public class ModelBloodAltarTier2 extends ModelBase {
 	}
 
 	private void addGlassRing(int index, int arrayIndex, int offset) {
-		Logger.i(TAG, "AddGlassRing called, index=" + index);
 		switch (index) {
 		case 0:
 			sphere[arrayIndex] = new ModelRenderer[5];

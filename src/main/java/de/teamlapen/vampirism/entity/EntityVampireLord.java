@@ -222,7 +222,6 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 
 	@Override
 	public int suggestLevel(Difficulty d) {
-		Logger.i("test", d.toString());
 		int avg=(d.avgLevel-4);
 		int max=(d.maxLevel-4);
 		int min=(d.minLevel-4);

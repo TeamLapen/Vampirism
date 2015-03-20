@@ -40,6 +40,10 @@ public class ModBlocks {
 		// Flowers
 		GameRegistry.registerBlock(vampireFlower, VampireFlower.name);
 		
+
+	}
+	
+	public static void registerRecipes(){
 		GameRegistry.addRecipe(new ItemStack(bloodAltarTier2, 1), " X ", "XYX", "ZZZ", 'X', Blocks.glass, 'Y', Items.gold_ingot, 'Z',
 				Items.iron_ingot);
 	}

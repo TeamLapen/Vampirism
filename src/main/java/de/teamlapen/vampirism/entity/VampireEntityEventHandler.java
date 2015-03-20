@@ -42,7 +42,7 @@ public class VampireEntityEventHandler {
 		if(!event.entity.worldObj.isRemote&&event.entity instanceof IAdjustableLevel){
 			IAdjustableLevel e=(IAdjustableLevel)event.entity;
 			if(e.getLevel()==0){
-				Difficulty d=DifficultyCalculator.getLocalDifficulty(event.world, event.entity.posX, event.entity.posZ, 70);
+				Difficulty d=DifficultyCalculator.getLocalDifficulty(event.world, event.entity.posX, event.entity.posZ, 10);
 				if(d.isZero()){
 					d=DifficultyCalculator.getWorldDifficulty(event.entity.worldObj);
 				}

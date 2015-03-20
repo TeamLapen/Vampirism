@@ -103,9 +103,11 @@ public class VampirismMod {
 		Helper.Obfuscation.fillMap();
 		
 		ModPotion.init();
-		ModItems.init();
 		ModBlocks.init();
+		ModItems.init();
 		ModBiomes.init();
+		ModBlocks.registerRecipes();
+		ModItems.registerRecipes();
 		proxy.registerKeyBindings();
 		setupNetwork();
 

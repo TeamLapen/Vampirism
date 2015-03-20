@@ -147,12 +147,10 @@ public class Helper {
 			}
 		}
 		if(flag){
-			Logger.i("test", "Found spawn for "+e);
 			world.spawnEntityInWorld(e);
 			return true;
 		}
 		else{
-			Logger.i("test", "Did not find a spawn for "+e);
 		}
 		return false;
 	}
