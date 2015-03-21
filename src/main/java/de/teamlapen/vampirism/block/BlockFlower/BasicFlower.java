@@ -14,6 +14,11 @@ import net.minecraft.util.IIcon;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.REFERENCE;
 
+/**
+ * 
+ * @author WILLIAM
+ *
+ */
 public abstract class BasicFlower extends BlockFlower {
 	@SideOnly(Side.CLIENT)
     protected IIcon[] iIcon;

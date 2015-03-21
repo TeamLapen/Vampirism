@@ -9,6 +9,11 @@ import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.common.BiomeManager.BiomeType;
 
+/**
+ * 
+ * @author WILLIAM
+ *
+ */
 public class ModBiomes {
 	public static BiomeGenBase biomeVampireForest;
 	public static BiomeEntry biomeEntryVampireForest;

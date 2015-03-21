@@ -8,6 +8,11 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.ForgeDirection;
 
+/**
+ * 
+ * @author WILLIAM
+ *
+ */
 public class BlockCursedEarth extends BasicBlock {
 
 	public final static String name = "cursedEarth";

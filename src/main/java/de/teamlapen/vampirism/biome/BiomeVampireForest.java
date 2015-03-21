@@ -11,6 +11,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
+/**
+ * 
+ * @author WILLIAM
+ *
+ */
 public class BiomeVampireForest extends BiomeGenBase {
 	public final static String name = "vampireForest";
 
