@@ -12,6 +12,7 @@ import net.minecraft.potion.Potion;
 public class ModPotion extends Potion{
 	public static Potion sunscreen;
 	public static Potion thirst;
+	public static Potion saturation;
 	
 	public ModPotion(int id, boolean full_effectiv, int color) {
 		super(id, full_effectiv, color);
@@ -68,5 +69,6 @@ public class ModPotion extends Potion{
 		increasePotionArraySize();
 		sunscreen=new ModPotion(40,false,345345).setIconIndex(0, 0).setPotionName("potion.vampirism:sunscreen");
 		thirst=new ModPotion(41,false,859494).setIconIndex(0, 0).setPotionName("potion.vampirism:thirst");
+		saturation=new ModPotion(42,false,850484).setIconIndex(0, 0).setPotionName("potion.vampirism:saturation");
 	}
 }

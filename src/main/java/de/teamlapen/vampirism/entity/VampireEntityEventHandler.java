@@ -30,7 +30,7 @@ import de.teamlapen.vampirism.util.Logger;
 
 public class VampireEntityEventHandler {
 
-	@SubscribeEvent
+	@SubscribeEvent(receiveCanceled=true)
 	public void onEntityConstructing(EntityConstructing event) {
 		if (event.entity instanceof EntityCreature && VampireMob.get((EntityCreature) event.entity) == null) {
 			VampireMob.register((EntityCreature) event.entity);

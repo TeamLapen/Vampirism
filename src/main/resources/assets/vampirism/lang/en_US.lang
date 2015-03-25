@@ -41,6 +41,7 @@ itemGroup.vampirism=Vampirism
 death.attack.sun=%1$s did not like the sun
 potion.vampirism:sunscreen=Sunscreen
 potion.vampirism:thirst=Thirst
+potion.vampirism:saturation=Saturation
 text.vampirism:skill.level_to_low=Your vampire level is too low for that
 text.vampirism:skill.cooldown_not_over=Please wait until the cooldown is over
 text.vampirism:entity_level=Level

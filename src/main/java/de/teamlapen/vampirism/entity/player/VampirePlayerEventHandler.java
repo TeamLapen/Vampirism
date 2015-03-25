@@ -13,7 +13,7 @@ import de.teamlapen.vampirism.util.BALANCE;
 
 public class VampirePlayerEventHandler {
 
-	@SubscribeEvent
+	@SubscribeEvent(receiveCanceled=true)
 	public void onEntityConstructing(EntityConstructing event) {
 		if (event.entity instanceof EntityPlayer && VampirePlayer.get((EntityPlayer) event.entity) == null) {
 			VampirePlayer.register((EntityPlayer) event.entity);

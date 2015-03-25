@@ -11,7 +11,6 @@ import net.minecraft.block.material.MapColor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -23,13 +22,12 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChunkCoordinates;
 import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.ModItems;
+import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.block.BlockBloodAltarTier4;
 import de.teamlapen.vampirism.block.BlockBloodAltarTier4Tip;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.item.ItemBloodBottle;
 import de.teamlapen.vampirism.network.RenderScreenRedPacket;
-import de.teamlapen.vampirism.network.ShaderPacket;
 import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
 import de.teamlapen.vampirism.util.Logger;
 
@@ -532,9 +530,6 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 		}
 
 		if (phase.equals(PHASE.CLEAN_UP)) {
-			if (!this.worldObj.isRemote) {
-				VampirismMod.modChannel.sendTo(new ShaderPacket(0),(EntityPlayerMP) player);
-			}
 			player = null;
 			tips = null;
 			this.markDirty();
@@ -545,7 +540,7 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 				this.worldObj.spawnParticle("hugeexplosion", player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);
 			}
 			else{
-				VampirismMod.modChannel.sendTo(new ShaderPacket(ShaderPacket.SATURATION1),(EntityPlayerMP) player);
+				player.addPotionEffect(new PotionEffect(ModPotion.saturation.id,400));
 			}
 			player.addPotionEffect(new PotionEffect(Potion.regeneration.id,400,2));
 			player.addPotionEffect(new PotionEffect(Potion.damageBoost.id,400,2));

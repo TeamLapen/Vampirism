@@ -100,6 +100,7 @@ public abstract class CommonProxy implements IProxy {
 		MinecraftForge.EVENT_BUS.register(new VampirePlayerEventHandler());
 		MinecraftForge.EVENT_BUS.register(new VampireEntityEventHandler());
 		MinecraftForge.EVENT_BUS.register(this);
+		FMLCommonHandler.instance().bus().register(this);
 	}
 	
 	@SubscribeEvent
