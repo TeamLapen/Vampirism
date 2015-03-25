@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.villages;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
@@ -75,7 +76,7 @@ public class VillageVampire {
 	 */
 	public int isAnnihilated(){
 		Village v=world.villageCollectionObj.findNearestVillage(center.posX, center.posY, center.posZ, 0);
-		if(v==null||v.isAnnihilated())return -1;
+		if(v==null)return -1;
 		if(!this.getCenter().equals(v.getCenter())){
 			this.setCenter(v.getCenter());
 			return 0;
@@ -130,16 +131,30 @@ public class VillageVampire {
 	}
 	
 	private void makeAgressive(Village v){
+		Logger.i(TAG, "Making agrressive");
 		agressive=true;
-		for(EntityVampireHunter e:getHunter(v)){
-			e.setAgressive(true);
+		for(EntityVillager e:getVillager(v)){
+			if(world.rand.nextInt(4)==0){
+				EntityVampireHunter h =(EntityVampireHunter) EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world);
+				h.copyLocationAndAnglesFrom(e);
+				world.spawnEntityInWorld(h);
+				h.setLevel(1, true);
+				e.setDead();
+			}
+
 		}
 		dirty=true;
 	}
 	private void makeCalm(Village v){
+		Logger.i(TAG, "Making calm");
 		agressive=false;
 		for(EntityVampireHunter e:getHunter(v)){
-			e.setAgressive(false);
+			if(e.getLevel()==1){
+				Entity ev=EntityList.createEntityByName("Villager", world);
+				ev.copyLocationAndAnglesFrom(e);
+				world.spawnEntityInWorld(ev);
+				e.setDead();
+			}
 		}
 		dirty=true;
 	}
@@ -147,6 +162,11 @@ public class VillageVampire {
 	@SuppressWarnings("unchecked")
 	private List<EntityVampireHunter> getHunter(Village v){
 		return world.getEntitiesWithinAABB(EntityVampireHunter.class, getBoundingBox(v));
+	}
+	
+	@SuppressWarnings("unchecked")
+	private List<EntityVillager> getVillager(Village v){
+		return world.getEntitiesWithinAABB(EntityVillager.class, getBoundingBox(v));
 	}
 	
 	public AxisAlignedBB getBoundingBox(){
@@ -168,7 +188,9 @@ public class VillageVampire {
 		if(count <BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE||(agressive&&count < BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE*1.4)){
 			for(Entity e:Helper.spawnEntityInVillage(v, 2, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME,world)){
 					((EntityVampireHunter) e).setHomeArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, v.getVillageRadius());
-					((EntityVampireHunter) e).setAgressive(agressive);
+					if(agressive){
+						((EntityVampireHunter) e).setLevel(3);
+					}
 			}
 		}
 	}

@@ -83,13 +83,6 @@ public class TestCommand implements ICommand {
 	public void processCommand(ICommandSender sender, String[] param) {
 		if (sender instanceof EntityPlayer) {
 			EntityPlayer p = (EntityPlayer) sender;
-			List t=p.worldObj.getEntitiesWithinAABB(EntityVampireHunter.class, AxisAlignedBB.getBoundingBox(p.posX-10,p.posY-5,p.posZ-10,p.posX+10,p.posY+5,p.posZ+10));
-			if(t!=null){
-				for(Object o:t){
-					EntityVampireHunter eh=(EntityVampireHunter)o;
-					eh.setAgressive(!eh.isAgressive());
-				}
-			}
 			// -----------------
 			if (param.length > 0) {
 				try {

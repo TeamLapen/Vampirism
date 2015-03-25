@@ -42,7 +42,7 @@ public final class BALANCE {
 
 		@DefaultDouble(35.0D)
 		public static double VAMPIRE_HUNTER_MAX_HEALTH;
-		@DefaultDouble(5.0D)
+		@DefaultDouble(2.5D)
 		public static double VAMPIRE_HUNTER_ATTACK_DAMAGE;
 		@DefaultDouble(0.28D)
 		public static double VAMPIRE_HUNTER_MOVEMENT_SPEED;

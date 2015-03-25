@@ -148,6 +148,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	public void setLevel(int l, boolean sync) {
 		if (l > 0 && l != level) {
 			this.level = l;
+			this.applyEntityAttributes(false);
 			if (sync && !this.worldObj.isRemote) {
 				NBTTagCompound nbt = new NBTTagCompound();
 				nbt.setInteger("level", level);

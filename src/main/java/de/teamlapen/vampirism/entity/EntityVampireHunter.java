@@ -17,20 +17,30 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.DamageSource;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.entity.ai.EntityAIDefendVillage;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.network.ISyncable;
+import de.teamlapen.vampirism.network.UpdateEntityPacket;
 import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.DifficultyCalculator.Difficulty;
+import de.teamlapen.vampirism.util.DifficultyCalculator.IAdjustableLevel;
 
-public class EntityVampireHunter extends EntityMob {
+/**
+ * Vampire Hunter with three levels: Level 1: Agressive villager, Level 2: Professional hunter, Level 3: Professional hunter with axe and stake
+ * @author Maxanier
+ *
+ */
+public class EntityVampireHunter extends EntityMob  implements ISyncable,IAdjustableLevel{
 
 	private boolean isLookingForHome;
-	private boolean agressive;
+	protected int level=0;
+	private final static int MAX_LEVEL=3;
 
 	public EntityVampireHunter(World p_i1738_1_) {
 		super(p_i1738_1_);
@@ -79,7 +89,6 @@ public class EntityVampireHunter extends EntityMob {
 		// Default to not in a village, will be set to false in
 		// WorldGenVampirism when generated on the surface in a village
 		isLookingForHome = true;
-		agressive=false;
 		
 		this.setEquipmentDropChance(0, 0);
 	}
@@ -87,8 +96,13 @@ public class EntityVampireHunter extends EntityMob {
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
+		this.updateEntityAttributes();
+
+	}
+	
+	protected void updateEntityAttributes(){
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_HEALTH);
-		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_ATTACK_DAMAGE);
+		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_ATTACK_DAMAGE*level);
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_MOVEMENT_SPEED);
 	}
 
@@ -175,20 +189,75 @@ public class EntityVampireHunter extends EntityMob {
 		}
 	}
 	
-	public void setAgressive(boolean flag){
-		if(flag){
-			agressive=true;
-			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_MOVEMENT_SPEED*BALANCE.MOBPROP.VAMPIRE_HUNTER_AGRESSIVE_MULT);
-			this.setCurrentItemOrArmor(0, new ItemStack(ModItems.pitchfork));
-		}
-		else{
-			agressive=false;
-			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_MOVEMENT_SPEED);
-			this.setCurrentItemOrArmor(0,null);
-		}
+
+	@Override
+	public int getLevel() {
+		return level;
+	}
+
+	@Override
+	public int getMaxLevel() {
+		return MAX_LEVEL;
+	}
+
+	@Override
+	public void setLevel(int level) {
+		this.setLevel(level, false);
+		
 	}
 	
-	public boolean isAgressive(){
-		return agressive;
+	/**
+	 * Sets the vampire hunters level
+	 * @param l
+	 * @param sync whether to sync the level with the client or not
+	 */
+	public void setLevel(int l, boolean sync) {
+		if (l > 0 && l != level) {
+			this.level = l;
+			this.updateEntityAttributes();
+			if(level==1){
+				this.setCurrentItemOrArmor(0, new ItemStack(ModItems.pitchfork));
+			}
+			else{
+				this.setCurrentItemOrArmor(0, null);
+			}
+			if (sync && !this.worldObj.isRemote) {
+				NBTTagCompound nbt = new NBTTagCompound();
+				nbt.setInteger("level", level);
+				Helper.sendPacketToPlayersAround(new UpdateEntityPacket(this, nbt), this);
+			}
+
+		}
+	}
+
+	@Override
+	public int suggestLevel(Difficulty d) {
+		return this.rand.nextInt(3)+1;
+	}
+
+	@Override
+	public void loadPartialUpdate(NBTTagCompound nbt) {
+		if (nbt.hasKey("level")) {
+			this.level = nbt.getInteger("level");
+		}
+
+	}
+	@Override
+	public NBTTagCompound getJoinWorldSyncData() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		this.writeEntityToNBT(nbt);
+		return nbt;
+	}
+	
+	@Override
+	public void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+		nbt.setInteger("level", level);
+	}
+	
+	@Override
+	public void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+		this.loadPartialUpdate(nbt);
 	}
 }
