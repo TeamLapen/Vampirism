@@ -11,6 +11,7 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
+import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
@@ -76,7 +77,10 @@ public class VillageVampire {
 	 */
 	public int isAnnihilated(){
 		Village v=world.villageCollectionObj.findNearestVillage(center.posX, center.posY, center.posZ, 0);
-		if(v==null)return -1;
+		if(v==null){
+			Logger.i(TAG, "Can't find village at "+center.toString());
+			return -1;
+		}
 		if(!this.getCenter().equals(v.getCenter())){
 			this.setCenter(v.getCenter());
 			return 0;
@@ -134,7 +138,7 @@ public class VillageVampire {
 		Logger.i(TAG, "Making agrressive");
 		agressive=true;
 		for(EntityVillager e:getVillager(v)){
-			if(world.rand.nextInt(4)==0){
+			if(!VampireMob.get(e).isVampire()&&world.rand.nextInt(4)==0){
 				EntityVampireHunter h =(EntityVampireHunter) EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world);
 				h.copyLocationAndAnglesFrom(e);
 				world.spawnEntityInWorld(h);
@@ -189,7 +193,7 @@ public class VillageVampire {
 			for(Entity e:Helper.spawnEntityInVillage(v, 2, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME,world)){
 					((EntityVampireHunter) e).setHomeArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, v.getVillageRadius());
 					if(agressive){
-						((EntityVampireHunter) e).setLevel(3);
+						((EntityVampireHunter) e).setLevel(3,true);
 					}
 			}
 		}

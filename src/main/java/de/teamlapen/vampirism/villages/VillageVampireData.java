@@ -103,6 +103,7 @@ public class VillageVampireData extends WorldSavedData {
 	    	VillageVampire vv=new VillageVampire();
 	    	vv.setWorld(worldObj);
 	    	vv.setCenter(v.getCenter());
+	    	Logger.i("test", "Created village at "+v.getCenter());
 	    	villageList.add(vv);
 	    	this.markDirty();
 	    	return vv;

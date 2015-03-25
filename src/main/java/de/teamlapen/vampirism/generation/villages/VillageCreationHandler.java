@@ -19,7 +19,7 @@ public class VillageCreationHandler implements IVillageCreationHandler {
 
 	@Override
 	public PieceWeight getVillagePieceWeight(Random random, int i) {
-		return new StructureVillagePieces.PieceWeight(VillageModChurchPiece.class, 20, MathHelper.getRandomIntegerInRange(random, 0 + i, 3 + i * 2));
+		return new StructureVillagePieces.PieceWeight(VillageModChurchPiece.class, 20, MathHelper.getRandomIntegerInRange(random, 0 + i, 1 + i));
 	}
 
 	@Override
