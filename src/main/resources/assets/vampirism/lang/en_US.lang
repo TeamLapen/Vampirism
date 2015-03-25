@@ -11,7 +11,7 @@ item.vampirism:vampiresFear.name=Vampire's fear
 item.vampirism:bloodBottle.name=Blood Bottle
 item.vampirism:vampireFang.name=Vampire Fang
 item.vampirism:pitchfork.name=Pitchfork
-item.vampirism:humanHearth.name=Human Hearth
+item.vampirism:humanHeart.name=Human Heart
 item.vampirism:torch.name=Torch
 
 # Blocks
@@ -44,6 +44,9 @@ potion.vampirism:thirst=Thirst
 text.vampirism:skill.level_to_low=Your vampire level is too low for that
 text.vampirism:skill.cooldown_not_over=Please wait until the cooldown is over
 text.vampirism:entity_level=Level
+text.vampirism:ritual_missing_times=You are items missing for this ritual
+text.vampirism:ritual_structure_wrong=The structure is wrong for this ritual
+text.vampirism:ritual_level_wrong=You cannot use this altar at this level
 
 #Config
 category.vampirism.balance=Balance settings

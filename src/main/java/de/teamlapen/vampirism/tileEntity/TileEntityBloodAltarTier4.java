@@ -19,6 +19,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChunkCoordinates;
 import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.ModItems;
@@ -48,10 +49,10 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 	}
 	private final static String TAG = "TEBAltar4";
 
-	private final static int[][][] structure1 = new int[][][] { { { 1, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0 }, { 0, 0, 3, 0, 0 }, { 0, 0, 4, 0, 0 }, { 1, 0, 4, 0, 1 } },
+	private final static int[][][] structure1 = new int[][][] { { { 1, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0 }, { 0, 0, 3, 0, 0 }, { 0, 0, 0/*Bed*/, 0, 0 }, { 1, 0, 0/*Bed*/, 0, 1 } },
 			{ { 1, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 }, { 1, 0, 0, 0, 1 } },
 			{ { 2, 0, 0, 0, 2 }, { 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 }, { 2, 0, 0, 0, 2 } } };
-	private final static int[][][] structure2 = new int[][][] { { { 0, 1, 0, 0, 0, 1, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 1, 0, 0, 3, 0, 0, 1 }, { 0, 0, 0, 4, 0, 0, 0 }, { 0, 1, 0, 4, 0, 1, 0 } },
+	private final static int[][][] structure2 = new int[][][] { { { 0, 1, 0, 0, 0, 1, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 1, 0, 0, 3, 0, 0, 1 }, { 0, 0, 0, 0/*Bed*/, 0, 0, 0 }, { 0, 1, 0, 0/*Bed*/, 0, 1, 0 } },
 			{ { 0, 1, 0, 0, 0, 1, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 1, 0, 0, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 1, 0, 0, 0, 1, 0 } },
 			{ { 0, 1, 0, 0, 0, 1, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 1, 0, 0, 0, 0, 0, 1 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 1, 0, 0, 0, 1, 0 } },
 			{ { 0, 2, 0, 0, 0, 2, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 2, 0, 0, 0, 0, 0, 2 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 2, 0, 0, 0, 2, 0 } } };
@@ -69,7 +70,14 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 	private ChunkCoordinates[] tips;
 
 	public TileEntityBloodAltarTier4() {
-		super(new Slot[] { new Slot(ModItems.pureBlood, 56, 17), new Slot(Items.diamond, 56, 53), new Slot(116, 35) });
+		super(new Slot[] { new Slot(ModItems.pureBlood, 56, 17), new Slot(ModItems.humanHeart, 56, 53), new Slot(new InventoryTileEntity.IItemSelector() {
+			
+			@Override
+			public boolean isItemAllowed(ItemStack item) {
+				//Placeholder
+				return false;
+			}
+		},56, 35) });
 	}
 
 	/**
@@ -146,60 +154,108 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 	private LevReq checkLevelRequirement(EntityPlayer player, int sl) {
 		if (sl == 0)
 			return LevReq.STRUCTURE_WRONG;
-		int slot = 1;
-		ItemStack stack = this.getStackInSlot(slot);
-		if (stack == null)
-			return LevReq.ITEM_MISSING;
-		int amt = stack.stackSize;
+
+
 		int pl = VampirePlayer.get(player).getLevel();
-		if (pl < 4 || pl > 10)
+		if (pl < 4 || pl > 13)
 			return LevReq.LEVEL_WRONG;
 		if (pl == 4) {
 			if (sl != 1)
 				return LevReq.STRUCTURE_WRONG;
-			if (amt < 5)
+			if (!checkAndRemoveItems(0,0,5,0))
 				return LevReq.ITEM_MISSING;
-			amt = 5;
 		} else if (pl == 5) {
 			if (sl != 1)
 				return LevReq.STRUCTURE_WRONG;
-			if (amt < 10)
+			if (!checkAndRemoveItems(0,1,0,0))
 				return LevReq.ITEM_MISSING;
-			amt = 10;
 		} else if (pl == 6) {
-			if (sl != 2)
+			if (sl != 1)
 				return LevReq.STRUCTURE_WRONG;
-			if (amt < 10)
+			if (!checkAndRemoveItems(0,1,5,0))
 				return LevReq.ITEM_MISSING;
-			amt = 10;
 		} else if (pl == 7) {
 			if (sl != 2)
 				return LevReq.STRUCTURE_WRONG;
-			if (amt < 15)
+			if (!checkAndRemoveItems(1,1,0,0))
 				return LevReq.ITEM_MISSING;
-			amt = 15;
 		} else if (pl == 8) {
-			if (sl != 3)
+			if (sl != 2)
 				return LevReq.STRUCTURE_WRONG;
-			if (amt < 15)
+			if (!checkAndRemoveItems(1,1,5,0))
 				return LevReq.ITEM_MISSING;
-			amt = 15;
 		} else if (pl == 9) {
 			if (sl != 3)
 				return LevReq.STRUCTURE_WRONG;
-			if (amt < 20)
+			if (!checkAndRemoveItems(2,1,5,0))
 				return LevReq.ITEM_MISSING;
-			amt = 20;
 		} else if (pl == 10) {
+			if (sl != 3)
+				return LevReq.STRUCTURE_WRONG;
+			if (!checkAndRemoveItems(2,1,5,0))
+				return LevReq.ITEM_MISSING;
+		}
+		else if (pl == 11) {
 			if (sl != 4)
 				return LevReq.STRUCTURE_WRONG;
-			if (amt < 20)
+			if (!checkAndRemoveItems(3,1,10,0))
 				return LevReq.ITEM_MISSING;
-			amt = 20;
 		}
-		this.decrStackSize(slot, amt);
+		else if (pl == 12) {
+			if (sl != 4)
+				return LevReq.STRUCTURE_WRONG;
+			if (!checkAndRemoveItems(3,1,5,0))
+				return LevReq.ITEM_MISSING;
+		}
+		else if (pl == 13) {
+			if (sl != 4)
+				return LevReq.STRUCTURE_WRONG;
+			if (!checkAndRemoveItems(4,2,0,0))
+				return LevReq.ITEM_MISSING;
+		}
 		return LevReq.OK;
 
+	}
+	
+	/**
+	 * Checks if the given amount of items is present and if that's the case removes them
+	 * @param bloodMeta The meta value of the pure blood bottles which is required
+	 * @param blood
+	 * @param heart
+	 * @param par3
+	 * @return
+	 */
+	private boolean checkAndRemoveItems(int bloodMeta,int blood,int heart,int par3){
+			ItemStack stackPureBlood = this.getStackInSlot(0);
+			ItemStack stackHeart=this.getStackInSlot(1);
+			ItemStack stack3=this.getStackInSlot(2);
+			
+			if(blood>0){
+				if(stackPureBlood==null||stackPureBlood.stackSize<blood){
+					Logger.i(TAG, "Pure blood bottles are not present");
+					return false;
+				}
+				if(stackPureBlood.getItemDamage()<bloodMeta){
+					Logger.i(TAG, "Pure blood is of the wrong level ("+stackPureBlood.getItemDamage()+"/"+bloodMeta+")");
+					return false;
+				}
+			}
+			if(heart>0){
+				if(stackHeart==null||stackHeart.stackSize<heart){
+					Logger.i(TAG, "Hearts are not present");
+					return false;
+				}
+			}
+			if(par3>0){
+				if(stack3==null||stack3.stackSize<par3){
+					Logger.i(TAG, "Item 3 is not present");
+					return false;
+				}
+			}
+			this.decrStackSize(0, blood);
+			this.decrStackSize(1, heart);
+			this.decrStackSize(2, par3);
+			return true;
 	}
 
 	/**
@@ -209,7 +265,6 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 	 */
 	private int determineLevel() {
 
-		int level = 0;
 		int x = this.xCoord;
 		int y = this.yCoord;
 		int z = this.zCoord;
@@ -351,9 +406,17 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 		}
 		int sl = this.determineLevel();
 
-		/*
-		 * TODO enable egain LevReq result=checkLevelRequirement(player,sl); Logger.i(TAG, "SL: "+sl+" Result: "+result);//TODO user feedback if(result!=LevReq.OK)return;
-		 */
+		LevReq result=checkLevelRequirement(player,sl);
+		Logger.i(TAG, "SL: "+sl+" Result: "+result);
+		if(result!=LevReq.OK){
+			if(result==LevReq.ITEM_MISSING)
+				player.addChatMessage(new ChatComponentTranslation("text.vampirism:ritual_missing_times"));
+			if(result==LevReq.STRUCTURE_WRONG)
+				player.addChatMessage(new ChatComponentTranslation("text.vampirism:ritual_structure_wrong"));
+			if(result==LevReq.LEVEL_WRONG)
+				player.addChatMessage(new ChatComponentTranslation("text.vampirism:ritual_level_wrong"));
+			return;
+		}
 		runningTick = DURATION_TICK;
 		this.player = player;
 		tips = getTips(sl);

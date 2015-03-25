@@ -6,7 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import cpw.mods.fml.common.registry.GameRegistry;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
-import de.teamlapen.vampirism.item.ItemHumanHearth;
+import de.teamlapen.vampirism.item.ItemHumanHeart;
 import de.teamlapen.vampirism.item.ItemPitchfork;
 import de.teamlapen.vampirism.item.ItemPureBlood;
 import de.teamlapen.vampirism.item.ItemSunscreen;
@@ -22,7 +22,7 @@ public class ModItems {
 		GameRegistry.registerItem(vampireFang, ItemVampireFang.NAME);
 		GameRegistry.registerItem(pitchfork, ItemPitchfork.name);
 		GameRegistry.registerItem(torch, ItemTorch.name);
-		GameRegistry.registerItem(humanHearth, ItemHumanHearth.name);
+		GameRegistry.registerItem(humanHeart, ItemHumanHeart.name);
 		GameRegistry.registerItem(pureBlood,ItemPureBlood.name);
 		GameRegistry.registerItem(sunscreen, ItemSunscreen.name);
 	}
@@ -30,7 +30,7 @@ public class ModItems {
 	public static void registerRecipes(){
 		GameRegistry.addRecipe(new ItemStack(bloodBottle, 1, 0), "   ", "XYX", " X ", 'X', Blocks.glass, 'Y', Items.rotten_flesh);
 		GameRegistry.addRecipe(new ItemStack(vampiresFear, 1), "XYX", "XYX", " Z ", 'X', vampireFang, 'Y', Items.iron_ingot, 'Z', Items.stick);
-		GameRegistry.addRecipe(new ItemStack(sunscreen,1),"XYX","YZY","XYX",'X',ModBlocks.vampireFlower,'Y',Items.gold_nugget,'Z',humanHearth);
+		GameRegistry.addRecipe(new ItemStack(sunscreen,1),"XYX","YZY","XYX",'X',ModBlocks.vampireFlower,'Y',Items.gold_nugget,'Z',humanHeart);
 	}
 	public static ItemSword vampiresFear = new ItemVampiresFear();
 	public static ItemBloodBottle bloodBottle = new ItemBloodBottle();
@@ -38,7 +38,7 @@ public class ModItems {
 	public static ItemVampireFang vampireFang = new ItemVampireFang();
 	public static ItemPitchfork pitchfork=new ItemPitchfork();
 	public static ItemTorch torch = new ItemTorch();
-	public static ItemHumanHearth humanHearth=new ItemHumanHearth();
+	public static ItemHumanHeart humanHeart=new ItemHumanHeart();
 	public static ItemPureBlood pureBlood=new ItemPureBlood();
 	public static ItemSunscreen sunscreen=new ItemSunscreen();
 }

@@ -147,7 +147,7 @@ public class EntityVampireHunter extends EntityMob {
 	protected void dropFewItems(boolean recentlyHit,int lootingLevel){
 		if(recentlyHit){
 			if(this.rand.nextInt(3)==0){
-				this.dropItem(ModItems.humanHearth, 1);
+				this.dropItem(ModItems.humanHeart, 1);
 			}
 		}
 	}

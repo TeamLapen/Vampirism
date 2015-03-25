@@ -116,7 +116,7 @@ public class EntityGhost extends EntityMob
 		int dropChance2 = this.rand.nextInt(5);
 		if (dropChance2 == 0)
 		{
-			this.dropItem(ModItems.humanHearth, 1);
+			this.dropItem(ModItems.humanHeart, 1);
 		}		
     }
  
