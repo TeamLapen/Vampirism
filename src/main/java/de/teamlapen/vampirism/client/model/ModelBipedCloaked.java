@@ -23,12 +23,6 @@ public class ModelBipedCloaked extends ModelBiped {
 		super.bipedCloak.render(f5);
 	}
 
-	protected void setRotationPoints(ModelRenderer model, float x, float y, float z) {
-		model.rotateAngleX = x;
-		model.rotateAngleY = y;
-		model.rotateAngleZ = z;
-	}
-
 	
 	@Override
 	public void setRotationAngles(float f1, float f2, float f3, float f4,

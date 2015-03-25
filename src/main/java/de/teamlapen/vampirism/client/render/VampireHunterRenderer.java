@@ -28,7 +28,7 @@ public class VampireHunterRenderer extends RenderBiped {
 
 
 		public VampireHunterRenderer2() {
-			super(new ModelVampireHunter(), 0.5F);
+			super(new ModelVampireHunter(true), 0.5F);
 		}
 		
 
@@ -72,7 +72,7 @@ public class VampireHunterRenderer extends RenderBiped {
 	private final RenderBiped rendererLevel3;
 
 	public VampireHunterRenderer() {
-		super(new ModelVampireHunter(), 0.5F);
+		super(new ModelVampireHunter(false), 0.5F);
 		rendererLevel3=new VampireHunterRenderer2();
 		rendererVillager=new RendererCustomVillager(new ModelVillager(0.0F),0.0F);
 	}
