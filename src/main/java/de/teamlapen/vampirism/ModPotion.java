@@ -67,8 +67,8 @@ public class ModPotion extends Potion{
 	
 	public static void init(){
 		increasePotionArraySize();
-		sunscreen=new ModPotion(40,false,345345).setIconIndex(0, 0).setPotionName("potion.vampirism:sunscreen");
-		thirst=new ModPotion(41,false,859494).setIconIndex(0, 0).setPotionName("potion.vampirism:thirst");
-		saturation=new ModPotion(42,false,850484).setIconIndex(0, 0).setPotionName("potion.vampirism:saturation");
+		sunscreen=new ModPotion(40,false,345345).setIconIndex(7, 1).setPotionName("potion.vampirism:sunscreen");
+		thirst=new ModPotion(41,false,859494).setIconIndex(1, 1).setPotionName("potion.vampirism:thirst");
+		saturation=new ModPotion(42,false,850484).setIconIndex(2, 2).setPotionName("potion.vampirism:saturation");
 	}
 }

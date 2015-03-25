@@ -4,12 +4,14 @@ import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.villages.VillageVampire;
 import de.teamlapen.vampirism.villages.VillageVampireData;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAIBreakDoor;
@@ -18,6 +20,8 @@ import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
@@ -117,6 +121,16 @@ public abstract class DefaultVampire extends EntityMob {
 
 		}));
 
+	}
+	
+	@Override
+	public boolean attackEntityAsMob(Entity entity){
+		boolean flag=super.attackEntityAsMob(entity);
+		if(flag&&entity instanceof EntityLivingBase&&this.rand.nextInt(3)==0){
+			((EntityLivingBase)entity).addPotionEffect(new PotionEffect(Potion.weakness.id,200));
+			((EntityLivingBase)entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id,100));
+		}
+		return flag;
 	}
 
 }

@@ -4,10 +4,14 @@ import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.util.BALANCE;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 
 public class ItemPureBlood extends BasicItem{
@@ -45,8 +49,8 @@ public class ItemPureBlood extends BasicItem{
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack stack) {
-	        return this.getUnlocalizedName()+"_"+stack.getItemDamage();
+	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
+		list.add(EnumChatFormatting.RED+ VampirismMod.proxy.translateToLocal("text.vampirism:purity")+": "+(itemStack.getItemDamage()+1)+"/"+COUNT);
 	}
 
 }

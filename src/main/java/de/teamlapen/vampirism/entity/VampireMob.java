@@ -19,6 +19,8 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.EntityWolf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
@@ -35,7 +37,7 @@ public class VampireMob implements IExtendedEntityProperties {
 	}
 	/**
 	 * Returns how much blood can be collected by biting this entity. -1 if
-	 * not biteable
+	 * poisonous, -2 if defending
 	 * 
 	 * @param e
 	 * @return
@@ -49,6 +51,9 @@ public class VampireMob implements IExtendedEntityProperties {
 		}
 		if (e instanceof EntityVillager || e instanceof EntityWitch) {
 			return BALANCE.BIG_BLOOD_AMOUNT;
+		}
+		if(e instanceof EntityVampireHunter){
+			return -2;
 		}
 		return -1;
 	}
@@ -103,6 +108,9 @@ public class VampireMob implements IExtendedEntityProperties {
 		if (blood == -1) {
 			return -2;
 		}
+		if(blood ==-2){
+			return -1;
+		}
 		if (isVampire()) {
 			return 0;
 		}
@@ -145,7 +153,7 @@ public class VampireMob implements IExtendedEntityProperties {
 	}
 
 	public boolean canBeBitten() {
-		return blood != -1 && !isVampire();
+		return blood > 0 && !isVampire();
 	}
 
 	@Override
@@ -170,11 +178,13 @@ public class VampireMob implements IExtendedEntityProperties {
 	}
 
 	private boolean makeVampire() {
-		if (blood == -1) {
+		if (blood < 0) {
 			return false;
 		}
 		entity.getDataWatcher().updateObject(VAMPIRE_WATCHER, (short) 1);
 		addAITasks();
+		entity.addPotionEffect(new PotionEffect(Potion.weakness.id,200));
+		entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id,100));
 		return true;
 	}
 
