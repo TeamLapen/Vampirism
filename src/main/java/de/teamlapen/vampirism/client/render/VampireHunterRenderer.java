@@ -23,7 +23,7 @@ public class VampireHunterRenderer extends RenderBiped {
 	
 	protected static class VampireHunterRenderer2 extends RenderBiped {
 
-		private static final ResourceLocation texture3 = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vampireHunter2.png");
+		private static final ResourceLocation texture3 = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vampireHunter.png");
 
 
 

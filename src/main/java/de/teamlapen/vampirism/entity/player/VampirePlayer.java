@@ -1,8 +1,11 @@
 package de.teamlapen.vampirism.entity.player;
 
+import java.util.UUID;
+
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -22,6 +25,7 @@ import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.entity.VampireMob;
+import de.teamlapen.vampirism.entity.ai.IMinionLord;
 import de.teamlapen.vampirism.entity.player.skills.ILastingSkill;
 import de.teamlapen.vampirism.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.entity.player.skills.Skills;
@@ -38,7 +42,7 @@ import de.teamlapen.vampirism.util.Logger;
  * 
  * @author Maxanier
  */
-public class VampirePlayer implements IExtendedEntityProperties {
+public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 
 	public class BloodStats {
 		private float bloodExhaustionLevel;
@@ -574,6 +578,32 @@ public class VampirePlayer implements IExtendedEntityProperties {
 		if (!player.worldObj.isRemote) {
 			VampirismMod.modChannel.sendTo(new UpdateVampirePlayerPacket(getLevel(), skillTimer), (EntityPlayerMP) player);
 		}
+	}
+
+	@Override
+	public EntityLivingBase getMinionTarget() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public UUID getPersistentID() {
+		return player.getPersistentID();
+	}
+
+	@Override
+	public boolean isEntityAlive() {
+		return player.isEntityAlive();
+	}
+
+	@Override
+	public double getDistanceSquared(Entity e) {
+		return player.getDistanceSqToEntity(e);
+	}
+
+	@Override
+	public Entity getRepresentingEntity() {
+		return player;
 	}
 
 }

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.entity.ai;
 
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 
 public interface IMinion {
 
@@ -9,7 +9,7 @@ public interface IMinion {
 	 * 
 	 * @return The boss or null if none exist
 	 */
-	public EntityLiving getLord();
+	public IMinionLord getLord();
 
 	/**
 	 * Sets the boss
@@ -17,5 +17,5 @@ public interface IMinion {
 	 * @param b
 	 *            Has to implement {@link IMinionLord}
 	 */
-	public void setLord(EntityLiving b);
+	public void setLord(IMinionLord b);
 }
