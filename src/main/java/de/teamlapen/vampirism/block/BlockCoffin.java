@@ -1,19 +1,18 @@
 package de.teamlapen.vampirism.block;
 
 import java.util.Iterator;
-import java.util.List;
 
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
+import de.teamlapen.vampirism.tileEntity.TileEntityCoffinSec;
 import de.teamlapen.vampirism.util.Logger;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 
@@ -30,7 +29,37 @@ public class BlockCoffin extends BasicBlockContainer {
 		super(Material.rock, name);
 	}
 
+	/**
+	 * Checks if the secondary block still exists
+	 */
+	@Override
+	public void onNeighborBlockChange(World world, int x, int y, int z,
+			Block block) {
+		TileEntityCoffin tileEntity = (TileEntityCoffin) world
+				.getTileEntity(x, y, z);
+		if (tileEntity != null) {
+			if (!(world.getBlock(tileEntity.secondary_x, tileEntity.secondary_y,
+					tileEntity.secondary_z) instanceof BlockCoffinSec)) {
+				Logger.i(TAG, "Removing primary coffin block");
+				world.setBlockToAir(x, y, z);
+				world.removeTileEntity(x, y, z);
+			}
+		}
+	}
+	
+	@Override
+	public void breakBlock(World world, int x, int y, int z, Block block,
+			int par) {
+		TileEntityCoffin te = (TileEntityCoffin) world.getTileEntity(x,
+				y, z);
+		if (te == null) 
+			return;
+		world.setBlockToAir(te.secondary_x, te.secondary_y, te.secondary_z);
+		world.removeTileEntity(te.secondary_x, te.secondary_y, te.secondary_z);
+		world.removeTileEntity(x, y, z);
+	}
 
+	
 	@Override
 	public boolean onBlockActivated(World world, int blockX, int blockY,
 			int blockZ, EntityPlayer player, int par4, float f1, float f2,
@@ -168,15 +197,6 @@ public class BlockCoffin extends BasicBlockContainer {
 		return 2;
 	}
 
-	private void setTheseBlockBounds() {
-		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-	}
-
-	@Override
-	public void setBlockBoundsBasedOnState(IBlockAccess p_149719_1_,
-			int p_149719_2_, int p_149719_3_, int p_149719_4_) {
-		this.setTheseBlockBounds();
-	}
 
 	@Override
 	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {

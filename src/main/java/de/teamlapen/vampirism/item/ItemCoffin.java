@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.item;
 import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.block.BlockCoffin;
 import de.teamlapen.vampirism.block.BlockCoffinSec;
+import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffinSec;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,7 +33,6 @@ public class ItemCoffin extends BasicItem {
 			float zOffset) {
 		if (world.isRemote || side > 1)
 			return false;
-		Logger.i(TAG, "onItemUse called at x=" + x + ", y=" + y + ", z=" + z);
 		y++;
 		int direction = MathHelper
 				.floor_double((double) ((player.rotationYaw * 4F) / 360F) + 0.5D) & 3;
@@ -53,14 +53,20 @@ public class ItemCoffin extends BasicItem {
 				Logger.i(TAG, "Secondary block placement successfull");
 			else
 				Logger.e(TAG, "Secondary block placement failed");
-			TileEntityCoffinSec te = ((TileEntityCoffinSec) world
+			TileEntityCoffin te = (TileEntityCoffin) world.getTileEntity(x,  y,  z);
+			if(te != null) {
+				te.secondary_x = x + shiftArray[direction][0];
+				te.secondary_y = y + shiftArray[direction][1];
+				te.secondary_z = z + shiftArray[direction][2];
+			}
+			TileEntityCoffinSec teSec = ((TileEntityCoffinSec) world
 					.getTileEntity(x + shiftArray[direction][0], y
 							+ shiftArray[direction][1], z
 							+ shiftArray[direction][2]));
-			if (te != null) {
-				te.primary_x = x;
-				te.primary_y = y;
-				te.primary_z = z;
+			if (teSec != null) {
+				teSec.primary_x = x;
+				teSec.primary_y = y;
+				teSec.primary_z = z;
 			}
 		}
 		return true;

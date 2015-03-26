@@ -30,6 +30,8 @@ public class RendererCoffin extends TileEntitySpecialRenderer
 		bindTexture(texture);
 		GL11.glPushMatrix();
 		adjustRotatePivotViaMeta(te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord);
+		if(te.getBlockMetadata() == 1 || te.getBlockMetadata() == 3)
+			GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 		model.render(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		GL11.glPopMatrix();

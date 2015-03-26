@@ -28,11 +28,8 @@ public class BlockCoffinSec extends BasicBlockContainer {
 			int par) {
 		TileEntityCoffinSec te = (TileEntityCoffinSec) world.getTileEntity(x,
 				y, z);
-		if (te == null) {
-			Logger.e(TAG,
-					"No tile entity found when trying to break a coffin, mayor bug!!!");
+		if (te == null)
 			return;
-		}
 		world.setBlockToAir(te.primary_x, te.primary_y, te.primary_z);
 		world.removeTileEntity(te.primary_x, te.primary_y, te.primary_z);
 		world.removeTileEntity(x, y, z);
@@ -49,6 +46,7 @@ public class BlockCoffinSec extends BasicBlockContainer {
 		if (tileEntity != null) {
 			if (!(world.getBlock(tileEntity.primary_x, tileEntity.primary_y,
 					tileEntity.primary_z) instanceof BlockCoffin)) {
+				Logger.i(TAG, "Removing secondary coffin block");
 				world.setBlockToAir(x, y, z);
 				world.removeTileEntity(x, y, z);
 			}
