@@ -61,29 +61,23 @@ public class BlockCoffin extends BasicBlockContainer {
 
 	
 	@Override
-	public boolean onBlockActivated(World world, int blockX, int blockY,
-			int blockZ, EntityPlayer player, int par4, float f1, float f2,
+	public boolean onBlockActivated(World world, int x, int y,
+			int z, EntityPlayer player, int par4, float f1, float f2,
 			float f3) {
 		if (world.isRemote) {
 			return true;
 		} else {
-			// Checks the direction of the coffin, searches for the head of the
-			// bed (weird code, I know) and gets the metadata of the bed's head
-			int meta = world.getBlockMetadata(blockX, blockY, blockZ);
-
-			if (!isBlockHeadOfBed(meta)) {
-				// int direction = getDirection(meta);
-				// blockX += directionalArray[direction][0];
-				// blockZ += directionalArray[direction][1];
-
-				if (world.getBlock(blockX, blockY, blockZ) != this)
-					return true;
-
-				meta = world.getBlockMetadata(blockX, blockY, blockZ);
+			//Gets the coordinates of the secondary block
+			if(world.getTileEntity(x, y, z) instanceof TileEntityCoffin) {
+				TileEntityCoffin te = (TileEntityCoffin) world.getTileEntity(x, y, z);
+				x = te.secondary_x;
+				y = te.secondary_y;
+				z = te.secondary_z;
 			}
+			int meta = world.getBlockMetadata(x, y, z);
 
 			if (world.provider.canRespawnHere()
-					&& world.getBiomeGenForCoords(blockX, blockZ) != BiomeGenBase.hell) {
+					&& world.getBiomeGenForCoords(x, z) != BiomeGenBase.hell) {
 				if (func_149976_c(meta)) {
 					EntityPlayer playerSleepingHere = null;
 					Iterator iterator = world.playerEntities.iterator();
@@ -95,9 +89,9 @@ public class BlockCoffin extends BasicBlockContainer {
 						if (tempPlayer.isPlayerSleeping()) {
 							ChunkCoordinates chunkcoordinates = tempPlayer.playerLocation;
 
-							if (chunkcoordinates.posX == blockX
-									&& chunkcoordinates.posY == blockY
-									&& chunkcoordinates.posZ == blockZ) {
+							if (chunkcoordinates.posX == x
+									&& chunkcoordinates.posY == y
+									&& chunkcoordinates.posZ == z) {
 								playerSleepingHere = tempPlayer;
 							}
 						}
@@ -109,15 +103,15 @@ public class BlockCoffin extends BasicBlockContainer {
 						return true;
 					}
 
-					setMetaBasedOnWeirdness(world, blockX, blockY, blockZ,
-							false);
+//					setMetaBasedOnWeirdness(world, x, y, z,
+//							false);
 				}
 
 				EntityPlayer.EnumStatus enumstatus = VampirePlayer.get(player)
-						.sleepInCoffinAt(blockX, blockY, blockZ);
+						.sleepInCoffinAt(x, y, z);
 
 				if (enumstatus == EntityPlayer.EnumStatus.OK) {
-					setMetaBasedOnWeirdness(world, blockX, blockY, blockZ, true);
+//					setMetaBasedOnWeirdness(world, x, y, z, true);
 					return true;
 				} else {
 					if (enumstatus == EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW) {
@@ -131,23 +125,20 @@ public class BlockCoffin extends BasicBlockContainer {
 					return true;
 				}
 			} else {
-				double d2 = blockX + 0.5D;
-				double d0 = blockY + 0.5D;
-				double d1 = blockZ + 0.5D;
-				world.setBlockToAir(blockX, blockY, blockZ);
-				// int k1 = getDirection(meta);
-				// blockX += directionalArray[k1][0];
-				// blockZ += directionalArray[k1][1];
+				double d2 = x + 0.5D;
+				double d0 = y + 0.5D;
+				double d1 = z + 0.5D;
+				world.setBlockToAir(x, y, z);
 
-				if (world.getBlock(blockX, blockY, blockZ) == this) {
-					world.setBlockToAir(blockX, blockY, blockZ);
-					d2 = (d2 + blockX + 0.5D) / 2.0D;
-					d0 = (d0 + blockY + 0.5D) / 2.0D;
-					d1 = (d1 + blockZ + 0.5D) / 2.0D;
+				if (world.getBlock(x, y, z) == this) {
+					world.setBlockToAir(x, y, z);
+					d2 = (d2 + x + 0.5D) / 2.0D;
+					d0 = (d0 + y + 0.5D) / 2.0D;
+					d1 = (d1 + z + 0.5D) / 2.0D;
 				}
 
-				world.newExplosion((Entity) null, blockX + 0.5F, blockY + 0.5F,
-						blockZ + 0.5F, 5.0F, true, true);
+				world.newExplosion((Entity) null, x + 0.5F, y + 0.5F,
+						z + 0.5F, 5.0F, true, true);
 				return true;
 			}
 		}
@@ -164,18 +155,18 @@ public class BlockCoffin extends BasicBlockContainer {
 		return (meta & 4) != 0;
 	}
 
-	public static void setMetaBasedOnWeirdness(World world, int x, int y,
-			int z, boolean flag) {
-		int meta = world.getBlockMetadata(x, y, z);
-
-		if (flag) {
-			meta |= 4;
-		} else {
-			meta &= -5;
-		}
-
-		world.setBlockMetadataWithNotify(x, y, z, meta, 4);
-	}
+//	public static void setMetaBasedOnWeirdness(World world, int x, int y,
+//			int z, boolean flag) {
+//		int meta = world.getBlockMetadata(x, y, z);
+//
+//		if (flag) {
+//			meta |= 4;
+//		} else {
+//			meta &= -5;
+//		}
+//
+//		world.setBlockMetadataWithNotify(x, y, z, meta, 4);
+//	}
 
 	@Override
 	public void onBlockHarvested(World world, int par1, int par2, int par3,
