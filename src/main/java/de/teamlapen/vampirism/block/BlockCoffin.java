@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.block;
 
 import java.util.Iterator;
+
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
@@ -78,7 +80,7 @@ public class BlockCoffin extends BlockDirectional {
 					setMetaBasedOnWeirdness(world, blockX, blockY, blockZ, false);
 				}
 
-				EntityPlayer.EnumStatus enumstatus = player.sleepInBedAt(
+				EntityPlayer.EnumStatus enumstatus = VampirePlayer.get(player).sleepInCoffinAt(
 						blockX, blockY, blockZ);
 
 				if (enumstatus == EntityPlayer.EnumStatus.OK) {

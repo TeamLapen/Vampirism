@@ -63,6 +63,15 @@ public class Helper {
 				return null;
 			}
 		}
+		public static void setPrivateField(Class cls, Object obj, Object value, String... fieldname) {
+			try {
+				Field privateStringField = ReflectionHelper.findField(cls, fieldname);
+				privateStringField.set(obj, value);
+			} catch (Exception e) {
+				Logger.e("Reflection", "Failed to get " + fieldname + " from " + obj.toString() + " of class " + cls.getCanonicalName(), e);
+				return;
+			}
+		}
 	}
 	
 	public static class Obfuscation{
