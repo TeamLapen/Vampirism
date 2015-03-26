@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.client.render;
 import org.lwjgl.opengl.GL11;
 
 import de.teamlapen.vampirism.client.model.ModelCoffin;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;

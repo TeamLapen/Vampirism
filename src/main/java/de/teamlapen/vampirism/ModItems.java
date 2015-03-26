@@ -6,6 +6,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import cpw.mods.fml.common.registry.GameRegistry;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
+import de.teamlapen.vampirism.item.ItemCoffin;
 import de.teamlapen.vampirism.item.ItemHumanHeart;
 import de.teamlapen.vampirism.item.ItemPitchfork;
 import de.teamlapen.vampirism.item.ItemPureBlood;
@@ -25,6 +26,7 @@ public class ModItems {
 		GameRegistry.registerItem(humanHeart, ItemHumanHeart.name);
 		GameRegistry.registerItem(pureBlood,ItemPureBlood.name);
 		GameRegistry.registerItem(sunscreen, ItemSunscreen.name);
+		GameRegistry.registerItem(coffin, ItemCoffin.name);
 	}
 	
 	public static void registerRecipes(){
@@ -41,4 +43,5 @@ public class ModItems {
 	public static ItemHumanHeart humanHeart=new ItemHumanHeart();
 	public static ItemPureBlood pureBlood=new ItemPureBlood();
 	public static ItemSunscreen sunscreen=new ItemSunscreen();
+	public static ItemCoffin coffin = new ItemCoffin();
 }

@@ -24,7 +24,8 @@ public abstract class BasicBlockContainer extends BlockContainer {
 
 	@Override
 	public String getUnlocalizedName() {
-		return String.format("block.%s%s", REFERENCE.MODID.toLowerCase() + ":", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return String.format("block.%s%s", REFERENCE.MODID.toLowerCase() + ":",
+				getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 
 	protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
@@ -42,8 +43,10 @@ public abstract class BasicBlockContainer extends BlockContainer {
 	}
 
 	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack stack) {
-		int l = MathHelper.floor_double(entity.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+	public void onBlockPlacedBy(World world, int x, int y, int z,
+			EntityLivingBase entity, ItemStack stack) {
+		int l = MathHelper
+				.floor_double(entity.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 
 		if (l == 0)
 			world.setBlockMetadataWithNotify(x, y, z, 0, 2);

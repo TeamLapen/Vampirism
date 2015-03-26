@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.block.BlockBloodAltarTier4Bed;
 import de.teamlapen.vampirism.block.BlockBloodAltarTier4Tip;
 import de.teamlapen.vampirism.block.BlockChurchAltar;
 import de.teamlapen.vampirism.block.BlockCoffin;
+import de.teamlapen.vampirism.block.BlockCoffinSec;
 import de.teamlapen.vampirism.block.BlockCursedEarth;
 import de.teamlapen.vampirism.block.MaterialLiquidBlood;
 import de.teamlapen.vampirism.block.BlockFlower.VampireFlower;
@@ -35,6 +36,7 @@ public class ModBlocks {
 		GameRegistry.registerBlock(cursedEarth, BlockCursedEarth.name);
 		GameRegistry.registerBlock(churchAltar, BlockChurchAltar.name);
 		GameRegistry.registerBlock(coffin, BlockCoffin.name);
+		GameRegistry.registerBlock(coffinSec, BlockCoffinSec.name);
 		GameRegistry.registerTileEntity(TileEntityBloodAltar.class, "TileEntityBloodAltar");
 		GameRegistry.registerTileEntity(TileEntityBloodAltarTier2.class, "TileEntityBloodAltarTier2");
 		GameRegistry.registerTileEntity(TileEntityBloodAltarTier3.class, "TileEntityBloodAltarTier3");
@@ -61,6 +63,7 @@ public class ModBlocks {
 	public final static BlockCursedEarth cursedEarth = new BlockCursedEarth();
 	public final static BlockChurchAltar churchAltar= new BlockChurchAltar();
 	public final static BlockCoffin coffin = new BlockCoffin();
+	public final static BlockCoffinSec coffinSec = new BlockCoffinSec();
 	
 	// Flowers
 	public final static VampireFlower vampireFlower = new VampireFlower();

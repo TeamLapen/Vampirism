@@ -1,16 +1,16 @@
 package de.teamlapen.vampirism.block;
 
 import java.util.Iterator;
+import java.util.List;
 
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import de.teamlapen.vampirism.util.Logger;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.IBlockAccess;
@@ -23,14 +23,11 @@ import net.minecraft.world.biome.BiomeGenBase;
  *
  */
 public class BlockCoffin extends BasicBlockContainer {
-	public static final int[][] directionalArray = new int[][] { { 0, 1 },
-			{ -1, 0 }, { 0, -1 }, { 1, 0 } };
 	private final String TAG = "BlockCoffin";
-	public static final String name = "coffin";
+	public static final String name = "blockCoffin";
 
 	public BlockCoffin() {
 		super(Material.rock, name);
-		this.setTheseBlockBounds();
 	}
 
 
@@ -46,9 +43,9 @@ public class BlockCoffin extends BasicBlockContainer {
 			int meta = world.getBlockMetadata(blockX, blockY, blockZ);
 
 			if (!isBlockHeadOfBed(meta)) {
-//				int direction = getDirection(meta);
-//				blockX += directionalArray[direction][0];
-//				blockZ += directionalArray[direction][1];
+				// int direction = getDirection(meta);
+				// blockX += directionalArray[direction][0];
+				// blockZ += directionalArray[direction][1];
 
 				if (world.getBlock(blockX, blockY, blockZ) != this)
 					return true;
@@ -83,11 +80,12 @@ public class BlockCoffin extends BasicBlockContainer {
 						return true;
 					}
 
-					setMetaBasedOnWeirdness(world, blockX, blockY, blockZ, false);
+					setMetaBasedOnWeirdness(world, blockX, blockY, blockZ,
+							false);
 				}
 
-				EntityPlayer.EnumStatus enumstatus = VampirePlayer.get(player).sleepInCoffinAt(
-						blockX, blockY, blockZ);
+				EntityPlayer.EnumStatus enumstatus = VampirePlayer.get(player)
+						.sleepInCoffinAt(blockX, blockY, blockZ);
 
 				if (enumstatus == EntityPlayer.EnumStatus.OK) {
 					setMetaBasedOnWeirdness(world, blockX, blockY, blockZ, true);
@@ -108,9 +106,9 @@ public class BlockCoffin extends BasicBlockContainer {
 				double d0 = blockY + 0.5D;
 				double d1 = blockZ + 0.5D;
 				world.setBlockToAir(blockX, blockY, blockZ);
-//				int k1 = getDirection(meta);
-//				blockX += directionalArray[k1][0];
-//				blockZ += directionalArray[k1][1];
+				// int k1 = getDirection(meta);
+				// blockX += directionalArray[k1][0];
+				// blockZ += directionalArray[k1][1];
 
 				if (world.getBlock(blockX, blockY, blockZ) == this) {
 					world.setBlockToAir(blockX, blockY, blockZ);
@@ -127,35 +125,6 @@ public class BlockCoffin extends BasicBlockContainer {
 	}
 
 	/**
-	 * Lets the block know when one of its neighbor changes. Doesn't know which
-	 * neighbor changed (coordinates passed are their own) Args: x, y, z,
-	 * neighbor Block
-	 */
-	@Override
-	public void onNeighborBlockChange(World p_149695_1_, int p_149695_2_,
-			int p_149695_3_, int p_149695_4_, Block p_149695_5_) {
-		int l = p_149695_1_.getBlockMetadata(p_149695_2_, p_149695_3_,
-				p_149695_4_);
-		//int i1 = getDirection(l);
-
-//		if (isBlockHeadOfBed(l)) {
-//			if (p_149695_1_.getBlock(p_149695_2_ - directionalArray[i1][0],
-//					p_149695_3_, p_149695_4_ - directionalArray[i1][1]) != this) {
-//				p_149695_1_
-//						.setBlockToAir(p_149695_2_, p_149695_3_, p_149695_4_);
-//			}
-//		} else if (p_149695_1_.getBlock(p_149695_2_ + directionalArray[i1][0],
-//				p_149695_3_, p_149695_4_ + directionalArray[i1][1]) != this) {
-//			p_149695_1_.setBlockToAir(p_149695_2_, p_149695_3_, p_149695_4_);
-//
-//			if (!p_149695_1_.isRemote) {
-//				this.dropBlockAsItem(p_149695_1_, p_149695_2_, p_149695_3_,
-//						p_149695_4_, l, 0);
-//			}
-//		}
-	}
-
-	/**
 	 * Returns whether or not this bed block is the head of the bed.
 	 */
 	public static boolean isBlockHeadOfBed(int p_149975_0_) {
@@ -166,8 +135,8 @@ public class BlockCoffin extends BasicBlockContainer {
 		return (meta & 4) != 0;
 	}
 
-	public static void setMetaBasedOnWeirdness(World world, int x, int y, int z,
-			boolean flag) {
+	public static void setMetaBasedOnWeirdness(World world, int x, int y,
+			int z, boolean flag) {
 		int meta = world.getBlockMetadata(x, y, z);
 
 		if (flag) {
@@ -179,35 +148,13 @@ public class BlockCoffin extends BasicBlockContainer {
 		world.setBlockMetadataWithNotify(x, y, z, meta, 4);
 	}
 
-	/**
-	 * public static ChunkCoordinates func_149977_a(World p_149977_0_, int
-	 * p_149977_1_, int p_149977_2_, int p_149977_3_, int p_149977_4_) { int i1
-	 * = p_149977_0_.getBlockMetadata(p_149977_1_, p_149977_2_, p_149977_3_);
-	 * int j1 = BlockDirectional.getDirection(i1);
-	 * 
-	 * for (int k1 = 0; k1 <= 1; ++k1) { int l1 = p_149977_1_ -
-	 * field_149981_a[j1][0] * k1 - 1; int i2 = p_149977_3_ -
-	 * field_149981_a[j1][1] * k1 - 1; int j2 = l1 + 2; int k2 = i2 + 2;
-	 * 
-	 * for (int l2 = l1; l2 <= j2; ++l2) { for (int i3 = i2; i3 <= k2; ++i3) {
-	 * if (World.doesBlockHaveSolidTopSurface(p_149977_0_, l2, p_149977_2_ - 1,
-	 * i3) && !p_149977_0_.getBlock(l2, p_149977_2_, i3)
-	 * .getMaterial().isOpaque() && !p_149977_0_.getBlock(l2, p_149977_2_ + 1,
-	 * i3) .getMaterial().isOpaque()) { if (p_149977_4_ <= 0) { return new
-	 * ChunkCoordinates(l2, p_149977_2_, i3); }
-	 * 
-	 * --p_149977_4_; } } } }
-	 * 
-	 * return null; }
-	 **/
-
 	@Override
 	public void onBlockHarvested(World world, int par1, int par2, int par3,
 			int par4, EntityPlayer player) {
 		if (player.capabilities.isCreativeMode && isBlockHeadOfBed(par4)) {
-			//int i1 = getDirection(par4);
-			//par1 -= directionalArray[i1][0];
-			//par3 -= directionalArray[i1][1];
+			// int i1 = getDirection(par4);
+			// par1 -= directionalArray[i1][0];
+			// par3 -= directionalArray[i1][1];
 
 			if (world.getBlock(par1, par2, par3) == this) {
 				world.setBlockToAir(par1, par2, par3);
@@ -217,33 +164,12 @@ public class BlockCoffin extends BasicBlockContainer {
 
 	// Miscellaneous methods (rendertype etc.)
 	@Override
-	public int getRenderType() {
-		return -1;
-	}
-
-	@Override
-	public boolean renderAsNormalBlock() {
-		return false;
-	}
-
-	@Override
-	public boolean isOpaqueCube() {
-		return false;
-	}
-	
-	@Override
-	public boolean hasTileEntity() {
-		return true;
-	}
-
-
-	@Override
 	public int getMobilityFlag() {
 		return 2;
 	}
 
 	private void setTheseBlockBounds() {
-		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.5625F, 1.0F);
+		this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
 	}
 
 	@Override
@@ -252,10 +178,8 @@ public class BlockCoffin extends BasicBlockContainer {
 		this.setTheseBlockBounds();
 	}
 
-
 	@Override
 	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
-		Logger.i(TAG, "createNewTileEntity called");
 		return new TileEntityCoffin();
 	}
 }
