@@ -3,11 +3,14 @@ package de.teamlapen.vampirism.block;
 import java.util.Iterator;
 
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
+import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
+import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.world.IBlockAccess;
@@ -19,14 +22,17 @@ import net.minecraft.world.biome.BiomeGenBase;
  * @author Moritz
  *
  */
-public class BlockCoffin extends BlockDirectional {
+public class BlockCoffin extends BasicBlockContainer {
 	public static final int[][] directionalArray = new int[][] { { 0, 1 },
 			{ -1, 0 }, { 0, -1 }, { 1, 0 } };
+	private final String TAG = "BlockCoffin";
+	public static final String name = "coffin";
 
 	public BlockCoffin() {
-		super(Material.rock);
+		super(Material.rock, name);
 		this.setTheseBlockBounds();
 	}
+
 
 	@Override
 	public boolean onBlockActivated(World world, int blockX, int blockY,
@@ -40,9 +46,9 @@ public class BlockCoffin extends BlockDirectional {
 			int meta = world.getBlockMetadata(blockX, blockY, blockZ);
 
 			if (!isBlockHeadOfBed(meta)) {
-				int direction = getDirection(meta);
-				blockX += directionalArray[direction][0];
-				blockZ += directionalArray[direction][1];
+//				int direction = getDirection(meta);
+//				blockX += directionalArray[direction][0];
+//				blockZ += directionalArray[direction][1];
 
 				if (world.getBlock(blockX, blockY, blockZ) != this)
 					return true;
@@ -102,9 +108,9 @@ public class BlockCoffin extends BlockDirectional {
 				double d0 = blockY + 0.5D;
 				double d1 = blockZ + 0.5D;
 				world.setBlockToAir(blockX, blockY, blockZ);
-				int k1 = getDirection(meta);
-				blockX += directionalArray[k1][0];
-				blockZ += directionalArray[k1][1];
+//				int k1 = getDirection(meta);
+//				blockX += directionalArray[k1][0];
+//				blockZ += directionalArray[k1][1];
 
 				if (world.getBlock(blockX, blockY, blockZ) == this) {
 					world.setBlockToAir(blockX, blockY, blockZ);
@@ -130,23 +136,23 @@ public class BlockCoffin extends BlockDirectional {
 			int p_149695_3_, int p_149695_4_, Block p_149695_5_) {
 		int l = p_149695_1_.getBlockMetadata(p_149695_2_, p_149695_3_,
 				p_149695_4_);
-		int i1 = getDirection(l);
+		//int i1 = getDirection(l);
 
-		if (isBlockHeadOfBed(l)) {
-			if (p_149695_1_.getBlock(p_149695_2_ - directionalArray[i1][0],
-					p_149695_3_, p_149695_4_ - directionalArray[i1][1]) != this) {
-				p_149695_1_
-						.setBlockToAir(p_149695_2_, p_149695_3_, p_149695_4_);
-			}
-		} else if (p_149695_1_.getBlock(p_149695_2_ + directionalArray[i1][0],
-				p_149695_3_, p_149695_4_ + directionalArray[i1][1]) != this) {
-			p_149695_1_.setBlockToAir(p_149695_2_, p_149695_3_, p_149695_4_);
-
-			if (!p_149695_1_.isRemote) {
-				this.dropBlockAsItem(p_149695_1_, p_149695_2_, p_149695_3_,
-						p_149695_4_, l, 0);
-			}
-		}
+//		if (isBlockHeadOfBed(l)) {
+//			if (p_149695_1_.getBlock(p_149695_2_ - directionalArray[i1][0],
+//					p_149695_3_, p_149695_4_ - directionalArray[i1][1]) != this) {
+//				p_149695_1_
+//						.setBlockToAir(p_149695_2_, p_149695_3_, p_149695_4_);
+//			}
+//		} else if (p_149695_1_.getBlock(p_149695_2_ + directionalArray[i1][0],
+//				p_149695_3_, p_149695_4_ + directionalArray[i1][1]) != this) {
+//			p_149695_1_.setBlockToAir(p_149695_2_, p_149695_3_, p_149695_4_);
+//
+//			if (!p_149695_1_.isRemote) {
+//				this.dropBlockAsItem(p_149695_1_, p_149695_2_, p_149695_3_,
+//						p_149695_4_, l, 0);
+//			}
+//		}
 	}
 
 	/**
@@ -199,9 +205,9 @@ public class BlockCoffin extends BlockDirectional {
 	public void onBlockHarvested(World world, int par1, int par2, int par3,
 			int par4, EntityPlayer player) {
 		if (player.capabilities.isCreativeMode && isBlockHeadOfBed(par4)) {
-			int i1 = getDirection(par4);
-			par1 -= directionalArray[i1][0];
-			par3 -= directionalArray[i1][1];
+			//int i1 = getDirection(par4);
+			//par1 -= directionalArray[i1][0];
+			//par3 -= directionalArray[i1][1];
 
 			if (world.getBlock(par1, par2, par3) == this) {
 				world.setBlockToAir(par1, par2, par3);
@@ -224,6 +230,12 @@ public class BlockCoffin extends BlockDirectional {
 	public boolean isOpaqueCube() {
 		return false;
 	}
+	
+	@Override
+	public boolean hasTileEntity() {
+		return true;
+	}
+
 
 	@Override
 	public int getMobilityFlag() {
@@ -238,5 +250,12 @@ public class BlockCoffin extends BlockDirectional {
 	public void setBlockBoundsBasedOnState(IBlockAccess p_149719_1_,
 			int p_149719_2_, int p_149719_3_, int p_149719_4_) {
 		this.setTheseBlockBounds();
+	}
+
+
+	@Override
+	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
+		Logger.i(TAG, "createNewTileEntity called");
+		return new TileEntityCoffin();
 	}
 }

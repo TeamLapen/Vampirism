@@ -43,6 +43,7 @@ import de.teamlapen.vampirism.client.render.RendererBloodAltar;
 import de.teamlapen.vampirism.client.render.RendererBloodAltarTier2;
 import de.teamlapen.vampirism.client.render.RendererBloodAltarTier3;
 import de.teamlapen.vampirism.client.render.RendererBloodAltarTier4;
+import de.teamlapen.vampirism.client.render.RendererCoffin;
 import de.teamlapen.vampirism.client.render.RendererDracula;
 import de.teamlapen.vampirism.client.render.RendererGhost;
 import de.teamlapen.vampirism.client.render.RendererTorch;
@@ -68,6 +69,7 @@ import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier2;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier3;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier4;
+import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
@@ -107,6 +109,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier2.class, new RendererBloodAltarTier2());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier3.class, new RendererBloodAltarTier3());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier4.class, new RendererBloodAltarTier4());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoffin.class, new RendererCoffin());
 	}
 
 	@Override
