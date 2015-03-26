@@ -1,12 +1,13 @@
 package de.teamlapen.vampirism.entity.ai;
 
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 
 public class EntityAIFollowBoss extends EntityAIBase {
 	/** The child that is following its parent. */
 	EntityLiving entity;
-	EntityLiving boss;
+	IMinionLord boss;
 	double speed;
 	private int timer;
 	/**
@@ -36,7 +37,7 @@ public class EntityAIFollowBoss extends EntityAIBase {
 			boss = null;
 			return false;
 		} else {
-			double d0 = this.entity.getDistanceSqToEntity(this.boss);
+			double d0 = this.boss.getDistanceSquared(entity);
 			return d0 >= MINDIST && d0 <= MAXDIST;
 		}
 	}
@@ -58,7 +59,7 @@ public class EntityAIFollowBoss extends EntityAIBase {
 		if (boss == null) {
 			return false;
 		} else {
-			double d0 = this.entity.getDistanceSqToEntity(this.boss);
+			double d0 = this.boss.getDistanceSquared(entity);
 			return d0 >= MINDIST && d0 <= MAXDIST;
 		}
 	}
@@ -78,7 +79,7 @@ public class EntityAIFollowBoss extends EntityAIBase {
 	public void updateTask() {
 		if (--this.timer <= 0) {
 			this.timer = 10;
-			this.entity.getNavigator().tryMoveToEntityLiving(this.boss, this.speed);
+			this.entity.getNavigator().tryMoveToEntityLiving(this.boss.getRepresentingEntity(), this.speed);
 		}
 	}
 }

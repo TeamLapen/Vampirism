@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
@@ -58,7 +59,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	protected void applyEntityAttributes(boolean aggressive){
 		if(aggressive){
 			this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(20D);
-			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_LORD_MOVEMENT_SPEED*Math.pow(BALANCE.MOBPROP.VAMPIRE_LORD_IMPROVEMENT_PER_LEVEL, level-1));
+			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(Math.max(0.6D,BALANCE.MOBPROP.VAMPIRE_LORD_MOVEMENT_SPEED*Math.pow(BALANCE.MOBPROP.VAMPIRE_LORD_IMPROVEMENT_PER_LEVEL, level-1)));
 		}
 		else{
 			this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(5D);
@@ -239,6 +240,16 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	@Override
 	public int getMaxLevel() {
 		return MAX_LEVEL;
+	}
+
+	@Override
+	public double getDistanceSquared(Entity e) {
+		return this.getDistanceSqToEntity(e);
+	}
+
+	@Override
+	public Entity getRepresentingEntity() {
+		return this;
 	}
 	
 
