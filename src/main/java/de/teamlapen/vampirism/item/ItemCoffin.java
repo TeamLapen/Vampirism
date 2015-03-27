@@ -2,9 +2,7 @@ package de.teamlapen.vampirism.item;
 
 import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.block.BlockCoffin;
-import de.teamlapen.vampirism.block.BlockCoffinSec;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
-import de.teamlapen.vampirism.tileEntity.TileEntityCoffinSec;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -33,14 +31,33 @@ public class ItemCoffin extends BasicItem {
 			float zOffset) {
 		if (world.isRemote || side > 1)
 			return false;
+		//Increasing y, so the coffin is placed on top of the block that was clicked at
 		y++;
+		//Direction the player is facing
 		int direction = MathHelper
 				.floor_double((double) ((player.rotationYaw * 4F) / 360F) + 0.5D) & 3;
+
 		Logger.i(TAG, "Direction = " + direction);
+		if(world.isAirBlock(x, y, z) && world.isAirBlock(x + shiftArray[direction][0], y
+				+ shiftArray[direction][1], z + shiftArray[direction][2])) {
+			if(!world.setBlock(x, y, z, ModBlocks.coffin, direction, 3))
+				Logger.e(TAG, "Primary coffin block placement failed");
+			else {
+				Logger.i(TAG, "Primary coffin block placed");
+				if(!world.setBlock(x + shiftArray[direction][0], y
+					+ shiftArray[direction][1], z + shiftArray[direction][2],
+					ModBlocks.coffin, 0, 3))
+					Logger.e(TAG, "Secondary coffin block placement failed");
+				else {
+					Logger.i(TAG, "Secondary block placed");
+				}
+			}
+				
+		}
 		if (world.isAirBlock(x, y, z)) {
 			Logger.i(TAG, "Is air block, placing primary coffin block");
 			if(world.setBlock(x, y, z, ModBlocks.coffin, direction, 3))
-				Logger.i(TAG, "Primary block placement successfull");
+				Logger.i(TAG, "Primary block placement successful");
 			else
 				Logger.e(TAG, "Primary block placement failed");
 		}

@@ -58,6 +58,8 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 		private int bloodTimer;
 		private int prevBloodLevel;
 		private int bloodToAdd;
+		public boolean sleepingCoffin = false;
+		public int sleeptimerCoffin = 0;
 
 		private final float maxExhaustion = 40F;
 
