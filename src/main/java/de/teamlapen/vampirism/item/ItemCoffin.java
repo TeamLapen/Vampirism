@@ -31,59 +31,51 @@ public class ItemCoffin extends BasicItem {
 			float zOffset) {
 		if (world.isRemote || side > 1)
 			return false;
-		//Increasing y, so the coffin is placed on top of the block that was clicked at
+		// Increasing y, so the coffin is placed on top of the block that was
+		// clicked at
 		y++;
-		//Direction the player is facing
+		// Direction the player is facing
 		int direction = MathHelper
 				.floor_double((double) ((player.rotationYaw * 4F) / 360F) + 0.5D) & 3;
 
 		Logger.i(TAG, "Direction = " + direction);
-		if(world.isAirBlock(x, y, z) && world.isAirBlock(x + shiftArray[direction][0], y
-				+ shiftArray[direction][1], z + shiftArray[direction][2])) {
-			if(!world.setBlock(x, y, z, ModBlocks.coffin, direction, 3))
+		if (world.isAirBlock(x, y, z)
+				&& world.isAirBlock(x + shiftArray[direction][0], y
+						+ shiftArray[direction][1], z
+						+ shiftArray[direction][2])) {
+			if (!world.setBlock(x, y, z, ModBlocks.coffin, direction, 3))
 				Logger.e(TAG, "Primary coffin block placement failed");
 			else {
 				Logger.i(TAG, "Primary coffin block placed");
-				if(!world.setBlock(x + shiftArray[direction][0], y
-					+ shiftArray[direction][1], z + shiftArray[direction][2],
-					ModBlocks.coffin, 0, 3))
+				if (!world.setBlock(x + shiftArray[direction][0], y
+						+ shiftArray[direction][1], z
+						+ shiftArray[direction][2], ModBlocks.coffin, 6, 3))
 					Logger.e(TAG, "Secondary coffin block placement failed");
 				else {
 					Logger.i(TAG, "Secondary block placed");
 				}
-			}
-				
-		}
-		if (world.isAirBlock(x, y, z)) {
-			Logger.i(TAG, "Is air block, placing primary coffin block");
-			if(world.setBlock(x, y, z, ModBlocks.coffin, direction, 3))
-				Logger.i(TAG, "Primary block placement successful");
-			else
-				Logger.e(TAG, "Primary block placement failed");
-		}
-		if (world.isAirBlock(x + shiftArray[direction][0], y
-				+ shiftArray[direction][1], z + shiftArray[direction][2])) {
-			Logger.i(TAG, "Secondary block air too, placing secondary block");
-			if(world.setBlock(x + shiftArray[direction][0], y
-					+ shiftArray[direction][1], z + shiftArray[direction][2],
-					ModBlocks.coffinSec))
-				Logger.i(TAG, "Secondary block placement successfull");
-			else
-				Logger.e(TAG, "Secondary block placement failed");
-			TileEntityCoffin te = (TileEntityCoffin) world.getTileEntity(x,  y,  z);
-			if(te != null) {
-				te.secondary_x = x + shiftArray[direction][0];
-				te.secondary_y = y + shiftArray[direction][1];
-				te.secondary_z = z + shiftArray[direction][2];
-			}
-			TileEntityCoffinSec teSec = ((TileEntityCoffinSec) world
-					.getTileEntity(x + shiftArray[direction][0], y
-							+ shiftArray[direction][1], z
-							+ shiftArray[direction][2]));
-			if (teSec != null) {
-				teSec.primary_x = x;
-				teSec.primary_y = y;
-				teSec.primary_z = z;
+				TileEntityCoffin tePrim = (TileEntityCoffin) world
+						.getTileEntity(x, y, z);
+				TileEntityCoffin teSec = (TileEntityCoffin) world
+						.getTileEntity(x + shiftArray[direction][0], y
+								+ shiftArray[direction][1], z
+								+ shiftArray[direction][2]);
+				if (tePrim != null) {
+					tePrim.otherX = x + shiftArray[direction][0];
+					tePrim.otherY = y + shiftArray[direction][1];
+					tePrim.otherZ = z + shiftArray[direction][2];
+				} else
+					Logger.e(TAG, "No (primary) coffin tile entity found at x="
+							+ x + ", y=" + y + ", z=" + z);
+
+				if (teSec != null) {
+					teSec.otherX = x;
+					teSec.otherY = y;
+					teSec.otherZ = z;
+				} else
+					Logger.e(TAG,
+							"No (secondary) coffin tile entity found at x=" + x
+									+ ", y=" + y + ", z=" + z);
 			}
 		}
 		return true;

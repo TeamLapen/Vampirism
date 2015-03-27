@@ -67,9 +67,9 @@ public class BlockCoffin extends BasicBlockContainer {
 			return true;
 		} else {
 			// Gets the coordinates of the primary block
-			TileEntityCoffin te = (TileEntityCoffin) world.getTileEntity(x,
-					y, z);
-			if (!te.isPrimary) {
+			if (world.getBlockMetadata(x, y, z) == 6) {
+				TileEntityCoffin te = (TileEntityCoffin) world.getTileEntity(x,
+						y, z);
 				x = te.otherX;
 				y = te.otherY;
 				z = te.otherZ;
@@ -157,11 +157,5 @@ public class BlockCoffin extends BasicBlockContainer {
 	@Override
 	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
 		return new TileEntityCoffin();
-	}
-	
-	@Override
-	public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int x,
-			int y, int z, int l) {
-		return ((TileEntityCoffin) iblockaccess.getTileEntity(x, y, z)).isPrimary;
 	}
 }
