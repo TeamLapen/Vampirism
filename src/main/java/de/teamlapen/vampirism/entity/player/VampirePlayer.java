@@ -711,9 +711,9 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 			this.player.mountEntity((Entity) null);
 		}
 
-		Helper.Reflection.callMethod(this.player,
+		Helper.Reflection.callMethod(Entity.class, this.player,
 				Helper.Obfuscation.getPosNames("EntityPlayer/setSize"),
-				new Class[] { Float.class, Float.class }, new Object[] { 0.2F,
+				new Class[] { float.class, float.class }, new Object[] { 0.2F,
 						0.2F });
 		// this.player.setSize(0.2F, 0.2F);
 		this.player.yOffset = 0.2F;

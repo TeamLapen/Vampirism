@@ -85,6 +85,9 @@ public class Helper {
 			add("EntityLiving/tasks","tasks","field_70714_bg");
 			add("EntityLiving/targetTasks","targetTasks","field_70715_bh");
 			add("EntityPlayer/updateItemUse","updateItemUse","func_71010_c");
+			add("EntityPlayer/setSize", "setSize", "func_70105_a");
+			add("EntityPlayer/sleeping", "sleeping", "field_71083_bS");
+			add("EntityPlayer/sleepTimer", "sleepTimer", "field_71076_b");
 		}
 		
 		public static String[] getPosNames(String key){
