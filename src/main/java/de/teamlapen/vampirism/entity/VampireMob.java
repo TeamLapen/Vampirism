@@ -32,7 +32,7 @@ import de.teamlapen.vampirism.villages.VillageVampireData;
 
 public class VampireMob implements IExtendedEntityProperties {
 
-	public static final VampireMob get(EntityLiving mob) {
+	public static final VampireMob get(EntityCreature mob) {
 		return (VampireMob) mob.getExtendedProperties(VampireMob.EXT_PROP_NAME);
 	}
 	/**

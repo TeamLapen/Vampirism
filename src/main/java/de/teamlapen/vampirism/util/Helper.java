@@ -85,6 +85,7 @@ public class Helper {
 			add("EntityLiving/tasks","tasks","field_70714_bg");
 			add("EntityLiving/targetTasks","targetTasks","field_70715_bh");
 			add("EntityPlayer/updateItemUse","updateItemUse","func_71010_c");
+			add("Minecraft/fileAssets","fileAssets","field_110446_Y");
 		}
 		
 		public static String[] getPosNames(String key){

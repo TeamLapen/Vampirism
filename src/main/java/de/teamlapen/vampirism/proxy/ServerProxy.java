@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.proxy;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 
 public class ServerProxy extends CommonProxy {
 
@@ -36,6 +38,11 @@ public class ServerProxy extends CommonProxy {
 	@Override
 	public String translateToLocal(String s) {
 		return s;
+	}
+
+	@Override
+	public ResourceLocation checkVampireTexture(Entity entity, ResourceLocation loc) {
+		return loc;
 	}
 
 }

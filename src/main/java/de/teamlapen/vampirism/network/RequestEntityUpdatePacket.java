@@ -15,6 +15,11 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Logger;
 
+/**
+ * Send by the client to request an update for the entity with the included id
+ * @author Maxanier
+ *
+ */
 public class RequestEntityUpdatePacket implements IMessage {
 	public static class Handler implements IMessageHandler<RequestEntityUpdatePacket, IMessage> {
 
@@ -22,17 +27,18 @@ public class RequestEntityUpdatePacket implements IMessage {
 		public IMessage onMessage(RequestEntityUpdatePacket message, MessageContext ctx) {
 			Entity e=ctx.getServerHandler().playerEntity.worldObj.getEntityByID(message.id);
 			if(e!=null){
-				if(!(e instanceof ISyncable)){
-					Logger.w("EntityUpdatePacket","Can't get an update packet for "+e);
-					return null;
-				}
-				else{
+				if(e instanceof ISyncable){
 					NBTTagCompound nbt=((ISyncable)e).getJoinWorldSyncData();
 					if(nbt!=null){
 						return new UpdateEntityPacket(e,nbt);
 					}
-
-					
+				}
+				else if(e instanceof EntityPlayer){
+					return VampirePlayer.get((EntityPlayer) e).createUpdatePacket();
+				}
+				else{
+					Logger.w("EntityUpdatePacket","Can't get an update packet for "+e);
+					return null;
 				}
 			}
 			return null;
@@ -48,9 +54,13 @@ public class RequestEntityUpdatePacket implements IMessage {
 
 	}
 
+	/**
+	 * Only accepts Players or entitys which implement ISyncable
+	 * @param entity
+	 */
 	public RequestEntityUpdatePacket(Entity entity) {
-		if(!(entity instanceof ISyncable)){
-			throw new IllegalArgumentException("You cannot request an update for this entity. The entity has to implement ISyncable");
+		if(!(entity instanceof ISyncable)&&!(entity instanceof EntityPlayer)){
+			throw new IllegalArgumentException("You cannot request an update for this entity. The entity has to implement ISyncable or be a Player");
 		}
 		this.id=entity.getEntityId();
 	}
