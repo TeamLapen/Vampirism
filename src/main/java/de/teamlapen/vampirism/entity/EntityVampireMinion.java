@@ -20,10 +20,11 @@ import de.teamlapen.vampirism.entity.ai.EntityAIFollowBoss;
 import de.teamlapen.vampirism.entity.ai.IMinion;
 import de.teamlapen.vampirism.entity.ai.IMinionLord;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
 
-public class EntityVampireMinion extends DefaultVampire implements IMinion {
+public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyncable {
 
 	private final static int MAX_SEARCH_TIME = 100;
 	private UUID bossId = null;
@@ -85,27 +86,7 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion {
 		if (!this.worldObj.isRemote) {
 			if (boss == null) {
 				if(bossId!=null){
-					List<EntityLivingBase> list = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand(15, 10, 15));
-					for (EntityLivingBase e : list) {
-						if (e.getPersistentID().equals(bossId)) {
-							if(e instanceof IMinionLord){
-								boss = (IMinionLord)e;
-								lookForBossTimer = 0;
-							}
-							else if(e instanceof EntityPlayer){
-								boss=VampirePlayer.get((EntityPlayer)e);
-								lookForBossTimer=0;
-							}
-							else{
-								Logger.w("VampireMinion", "Found boss with UUID "+bossId+" but it isn't a Minion Lord");
-								bossId=null;
-								boss=null;
-								lookForBossTimer=0;
-							}
-
-							break;
-						}
-					}
+					lookForBoss();
 				}
 				
 				if (boss == null) {
@@ -127,13 +108,40 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion {
 		super.onLivingUpdate();
 	}
 
+
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		if (nbt.hasKey("BossUUIDMost")) {
-			this.bossId = new UUID(nbt.getLong("BossUUIDMost"), nbt.getLong("BossUUIDLeast"));
+				this.bossId = new UUID(nbt.getLong("BossUUIDMost"), nbt.getLong("BossUUIDLeast"));
 		}
+	}
+	
+	protected void lookForBoss(){
+		List<EntityLivingBase> list = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand(15, 10, 15));
+		for (EntityLivingBase e : list) {
+			if(worldObj.isRemote){
+				Logger.i("test","found "+e+" : "+e.getPersistentID()+" looks "+bossId);
+			}
+			if (e.getPersistentID().equals(bossId)) {
+				if(e instanceof IMinionLord){
+					boss = (IMinionLord)e;
+					lookForBossTimer = 0;
+				}
+				else if(e instanceof EntityPlayer){
+					boss=VampirePlayer.get((EntityPlayer)e);
+					lookForBossTimer=0;
+				}
+				else{
+					Logger.w("VampireMinion", "Found boss with UUID "+bossId+" but it isn't a Minion Lord");
+					bossId=null;
+					boss=null;
+					lookForBossTimer=0;
+				}
 
+				break;
+			}
+		}
 	}
 
 	private void setBossId(UUID id) {
@@ -160,6 +168,39 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion {
 			nbt.setLong("BossUUIDLeast", this.bossId.getLeastSignificantBits());
 		}
 
+	}
+
+	@Override
+	public void loadPartialUpdate(NBTTagCompound nbt) {
+		if (nbt.hasKey("eid")) {
+			Entity e=worldObj.getEntityByID(nbt.getInteger("eid"));
+			if(e instanceof EntityPlayer){
+				this.boss=VampirePlayer.get((EntityPlayer) e);
+			}
+			else if(e instanceof IMinionLord){
+				this.boss=(IMinionLord) e;
+			}
+			else{
+				Logger.w("EntityVampireMinion", "PartialUpdate: The given id("+nbt.getInteger("eid")+")["+e+"] is no Minion Lord");
+				return;
+			}
+			this.bossId=this.boss.getPersistentID();
+		}
+		
+	}
+
+	@Override
+	public NBTTagCompound getJoinWorldSyncData() {
+		NBTTagCompound nbt=new NBTTagCompound();
+		if(boss!=null){
+			nbt.setInteger("eid", boss.getRepresentingEntity().getEntityId());
+		}
+		return nbt;
+	}
+	
+	@Override
+	public boolean isChild(){
+		return true;
 	}
 
 }
