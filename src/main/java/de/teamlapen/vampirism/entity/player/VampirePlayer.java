@@ -285,6 +285,8 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 	private boolean dirty = false;
 
 	private boolean autoFillBlood;
+	
+	private EntityLivingBase minionTarget;
 
 	public VampirePlayer(EntityPlayer player) {
 		this.player = player;
@@ -413,6 +415,12 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 			setLevel(level - 1);
 		}
 	}
+	
+	public void onEntityAttacked(DamageSource source){
+			if(source.getEntity() instanceof EntityLivingBase &&getLevel()>0){
+				this.minionTarget=(EntityLivingBase) source.getEntity();
+			}
+	}
 
 	public void onDeath(DamageSource source) {
 		if (BALANCE.VAMPIRE_PLAYER_LOOSE_LEVEL
@@ -528,6 +536,13 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 				}
 
 			}
+		}
+		
+		/**
+		 * Check minion target
+		 */
+		if(minionTarget!=null&&!minionTarget.isEntityAlive()){
+			minionTarget=null;
 		}
 		if (dirty == true) {
 			this.sync(true);
@@ -649,8 +664,7 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 
 	@Override
 	public EntityLivingBase getMinionTarget() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.minionTarget;
 	}
 
 	@Override

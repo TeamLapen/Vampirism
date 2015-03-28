@@ -8,6 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.passive.EntityVillager;
@@ -35,6 +36,7 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 		super(world);
 
 		this.tasks.addTask(4, new EntityAIFollowBoss(this, 1.0D));
+		this.tasks.addTask(5, new EntityAIAttackOnCollide(this,EntityLivingBase.class,1.0,false));
 		this.targetTasks.addTask(2, new EntityAIDefendLord(this));
 		
 		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true, false, new IEntitySelector() {
@@ -71,9 +73,9 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(30D);
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(BALANCE.MOBPROP.VAMPIRE_MAX_HEALTH);
-		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(BALANCE.MOBPROP.VAMPIRE_ATTACK_DAMAGE);
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_MOVEMENT_SPEED);
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(BALANCE.MOBPROP.VAMPIRE_MAX_HEALTH/2D);
+		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(BALANCE.MOBPROP.VAMPIRE_ATTACK_DAMAGE/2D);
+		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_MOVEMENT_SPEED/1.5D);
 	}
 
 	@Override
@@ -202,5 +204,6 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 	public boolean isChild(){
 		return true;
 	}
+	
 
 }

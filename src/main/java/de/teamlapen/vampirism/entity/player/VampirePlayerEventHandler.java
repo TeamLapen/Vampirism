@@ -4,6 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
@@ -58,6 +59,13 @@ public class VampirePlayerEventHandler {
 			EntityPlayer p=(EntityPlayer)event.entity;
 			PlayerModifiers.addJumpBoost(VampirePlayer.get(p).getLevel(),p);
 			
+		}
+	}
+	
+	@SubscribeEvent
+	public void onLivingAttack(LivingAttackEvent event){
+		if(event.entityLiving instanceof EntityPlayer){
+			VampirePlayer.get((EntityPlayer) event.entityLiving).onEntityAttacked(event.source);
 		}
 	}
 
