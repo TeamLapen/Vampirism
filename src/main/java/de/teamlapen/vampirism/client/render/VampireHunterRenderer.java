@@ -14,6 +14,7 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import de.teamlapen.vampirism.client.model.ModelVHVillager;
 import de.teamlapen.vampirism.client.model.ModelVampireHunter;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -74,7 +75,7 @@ public class VampireHunterRenderer extends RenderBiped {
 	public VampireHunterRenderer() {
 		super(new ModelVampireHunter(false), 0.5F);
 		rendererLevel3=new VampireHunterRenderer2();
-		rendererVillager=new RendererCustomVillager(new ModelVillager(0.0F),0.0F);
+		rendererVillager=new RendererCustomVillager(new ModelVHVillager(0.0F),0.0F);
 	}
 	
 
