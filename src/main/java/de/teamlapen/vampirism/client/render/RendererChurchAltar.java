@@ -26,6 +26,9 @@ public class RendererChurchAltar extends TileEntitySpecialRenderer{
 			int meta = world.getBlockMetadata(x, y, z);
 			GL11.glRotatef(meta * 90, 0.0F, 1.0F, 0.0F);
 		}
+		else{
+			GL11.glRotatef(180, 0.0F, 1.0F, 0.0F);
+		}
 
 	}
 	
