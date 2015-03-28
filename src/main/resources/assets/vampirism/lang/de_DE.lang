@@ -1,6 +1,10 @@
 # Entitys
-entity.vampirism:vampireHunter.name=Vampir Jäger
+entity.vampirism:vampireHunter.name=Vampire Jäger
 entity.vampirism:vampire.name=Vampir
+entity.vampirism:ghost.name=Geist
+entity.vampirism:vampireLord.name=Vampir Lord
+entity.vampirism:vampireMinion.name=Vampir Sklave
+entity.vampirism:dracula.name=Dracula
 
 # Items
 item.vampirism:vampiresFear.name=Vampir's Angst
@@ -8,6 +12,9 @@ item.vampirism:bloodBottle.name=Blut Flasche
 item.vampirism:vampireFang.name=Vampirzahn
 item.vampirism:pitchfork.name=Mistgabel
 item.vampirism:humanHearth.name=Menschliches Herz
+item.vampirism:torch.name=Fackel
+item.vampirism:pureBlood.name=Reines Blut
+item.vampirism:sunscreen.name=Sonnenschutz
 
 # Blocks
 block.vampirism:bloodAltar.name=Blut Altar
@@ -15,18 +22,41 @@ block.vampirism:bloodAltarTier2.name=Altar Stufe 2
 block.vampirism:bloodAltarTier3.name=Altar Stufe 3
 block.vampirism:bloodAltarTier4.name=Altar Stufe 4
 block.vampirism:bloodAltarTier4Tip.name=Altar Stufe 4 Spitze
+block.vampirism:churchAltar.name=Altar der Reinigung
+block.vampirism:cursedEarth.name=Verfluchte Erde
+block.vampirism:vampireOrchid.name=Vampir Orchidee
 
 #Tiles
 tile.vampirism:bloodAltarTier4.name=Blut Altar Stufe 4
 
+#GUI
+gui.vampirism:revertback.head=Verwandle dich zurück in einen normalen Menschen
+gui.vampirism:revertback.desc=Du verlierst alle Level und stirbst
+
 # Keys
 keys.vampirism.category=Vampirismus
 keys.vampirism.suck=Blut Saugen
-keys.vampirism.auto=Automatisches füllen der Blut Flaschen
+keys.vampirism.auto=Automatisches Füllen der Blut Flaschen
+keys.vampirism.skill=Aktiviere Vampir Fähigkeiten
+
 
 #General
 itemGroup.vampirism=Vampirismus
 death.attack.sun=%1$s mochte die Sonne nicht
+potion.vampirism:sunscreen=Sonnenschutz
+potion.vampirism:thirst=Durst
+potion.vampirism:saturation=Sättigung
+text.vampirism:skill.level_to_low=Dein Vampire Level ist zu niedrig dafür
+text.vampirism:skill.cooldown_not_over=Bitte warte bis die Abklingzeit vorbei ist
+text.vampirism:entity_level=Level
+text.vampirism:ritual_missing_times=Dir fehlen Items für das Ritual
+text.vampirism:ritual_structure_wrong=Die Struktur ist falsch für dieses Ritual
+text.vampirism:ritual_level_wrong=Du kannst den Altar auf diesem Level nicht verwenden
+text.vampirism:not_enough_blood=Da ist nicht genügend Blut im Altar
+text.vampirism:ritual_requirements_not_met=Nicht alle Vorraussetzungen wurden erfüllt
+text.vampirism:purity=Reinheit
+text.vampirism:auto_fill_enabled=Automatisches Füllen aktiviert
+text.vampirism:auto_fill_disabled=Automatisches Füllen deaktiviert
 
 #Config
 category.vampirism.balance=Balance Einstellungen

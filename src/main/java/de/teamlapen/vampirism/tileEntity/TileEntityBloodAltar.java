@@ -15,6 +15,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentTranslation;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.item.ItemVampiresFear;
@@ -100,7 +101,11 @@ public class TileEntityBloodAltar extends TileEntity {
 	 **/
 	public void startVampirismRitual(EntityPlayer player, ItemStack itemStack) {
 		Logger.i(TAG, "Starting Vampirism-Ritual");
-
+		VampirePlayer vp = VampirePlayer.get(player);
+		if(vp.getLevel()!=0){
+			player.addChatMessage(new ChatComponentTranslation("text.vampirism:ritual_level_wrong"));
+			return;
+		}
 		// Put sword into altar
 		player.inventory.consumeInventoryItem(itemStack.getItem());
 		setOccupied(true, player);
@@ -116,7 +121,7 @@ public class TileEntityBloodAltar extends TileEntity {
 		if (!(this.worldObj.isDaytime()) && ItemVampiresFear.getBlood(itemStack) >= BALANCE.LEVELING.ALTAR_1_BLOOD
 				&& list.size() >= BALANCE.LEVELING.R1_VILLAGERS) {
 			// Conditions met, level up +effect
-			VampirePlayer vp = VampirePlayer.get(player);
+			
 			if (vp.getLevel() == 0) {
 				vp.levelUp();
 			}
@@ -130,6 +135,7 @@ public class TileEntityBloodAltar extends TileEntity {
 			entityitem.delayBeforeCanPickup = 10;
 			this.worldObj.spawnEntityInWorld(entityitem);
 			this.setOccupied(false, player);
+			player.addChatComponentMessage(new ChatComponentTranslation("text.vampirism:ritual_requirements_not_met"));
 			Logger.i(TAG, "Not daytime or not enough blood or not enough villagers, ritual will fail: " + (!this.worldObj.isDaytime()) + ":"
 					+ ItemVampiresFear.getBlood(itemStack) + ":" + list.size());
 		}

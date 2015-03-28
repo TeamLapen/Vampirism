@@ -31,7 +31,7 @@ public final class BALANCE {
 		@DefaultInt(10)
 		public static int VAMPIRE_DISTANCE_HUNTER;
 		
-		@DefaultDouble(50.0D)
+		@DefaultDouble(90.0D)
 		public static double VAMPIRE_LORD_MAX_HEALTH;
 		@DefaultDouble(7.0D)
 		public static double VAMPIRE_LORD_ATTACK_DAMAGE;

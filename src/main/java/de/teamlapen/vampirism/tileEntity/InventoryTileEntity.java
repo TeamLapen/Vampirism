@@ -86,7 +86,6 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 			if (slotObject != null && slotObject.getHasStack()) {
 				ItemStack stackInSlot = slotObject.getStack();
 				stack = stackInSlot.copy();
-
 				// merges the item into player inventory since its in the tileEntity
 				if (slot < tile.slots.length) {
 					if (!this.mergeItemStack(stackInSlot, tile.slots.length, tile.slots.length + 36, true)) {

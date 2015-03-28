@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.entity;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
@@ -11,6 +13,8 @@ import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
@@ -31,7 +35,6 @@ import de.teamlapen.vampirism.util.REFERENCE;
 
 public class EntityVampireLord extends DefaultVampire implements ISyncable, IMinionLord, IAdjustableLevel {
 
-	private final static int MIN_MINION = 2;
 	
 	private final static int MAX_LEVEL=5;
 
@@ -59,7 +62,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	protected void applyEntityAttributes(boolean aggressive){
 		if(aggressive){
 			this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(20D);
-			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(Math.max(0.6D,BALANCE.MOBPROP.VAMPIRE_LORD_MOVEMENT_SPEED*Math.pow(BALANCE.MOBPROP.VAMPIRE_LORD_IMPROVEMENT_PER_LEVEL, level-1)));
+			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(Math.min(4.5D,BALANCE.MOBPROP.VAMPIRE_LORD_MOVEMENT_SPEED*Math.pow(BALANCE.MOBPROP.VAMPIRE_LORD_IMPROVEMENT_PER_LEVEL, level-1)));
 		}
 		else{
 			this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(5D);
@@ -99,6 +102,16 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 		}
 
 	}
+	
+	@Override
+	public boolean attackEntityAsMob(Entity entity){
+		boolean flag=super.attackEntityAsMob(entity);
+		if(flag&&entity instanceof EntityLivingBase){
+			((EntityLivingBase)entity).addPotionEffect(new PotionEffect(Potion.weakness.id,200,rand.nextInt(1)+1));
+			((EntityLivingBase)entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id,100,rand.nextInt(1)+1));
+		}
+		return flag;
+	}
 
 	@Override
 	public void onDeath(DamageSource s) {
@@ -122,7 +135,24 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 			this.applyEntityAttributes(false);
 		}
 		if (!worldObj.isRemote&&shouldSpawnMinion()) {
-			IMinion m = (IMinion) Helper.spawnEntityInWorld(worldObj, this.boundingBox.expand(19, 14, 19), REFERENCE.ENTITY.VAMPIRE_MINION_NAME, 2);
+			int i=0;
+			if(this.recentlyHit>0){
+				i=this.rand.nextInt(3);
+			}
+			IMinion m=null;
+			
+			if(i==1){
+				EntityLiving e=(EntityLiving) EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_MINION_NAME,this.worldObj);
+				e.copyLocationAndAnglesFrom(this);
+				worldObj.spawnEntityInWorld(e);
+				m=(IMinion) e;
+			}
+			else if(i==2&&this.getAttackTarget()!=null){
+				m=(IMinion) Helper.spawnEntityBehindEntity(this.getAttackTarget(),REFERENCE.ENTITY.VAMPIRE_MINION_NAME);
+			}
+			if(m==null){
+				m= (IMinion) Helper.spawnEntityInWorld(worldObj, this.boundingBox.expand(19, 14, 19), REFERENCE.ENTITY.VAMPIRE_MINION_NAME, 3);
+			}
 			if (m != null) {
 				m.setLord(this);
 			}
@@ -149,7 +179,9 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	public void setLevel(int l, boolean sync) {
 		if (l > 0 && l != level) {
 			this.level = l;
+			float hp=this.getHealth()/this.getMaxHealth();
 			this.applyEntityAttributes(false);
+			this.setHealth(this.getMaxHealth()*hp);
 			if (sync && !this.worldObj.isRemote) {
 				NBTTagCompound nbt = new NBTTagCompound();
 				nbt.setInteger("level", level);
@@ -165,12 +197,12 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	 * @return
 	 */
 	protected boolean shouldSpawnMinion() {
-		if (this.rand.nextInt(80) == 0) {
+		if (this.ticksExisted%40 == 0) {
 			int count = getMinionCount();
-			if (count < MIN_MINION) {
+			if (count < level+1) {
 				return true;
 			}
-			if (recentlyHit > 0 && count < 2 + 3 * level) {
+			if (recentlyHit > 0 && count < 2+level) {
 				return true;
 			}
 		}
@@ -233,7 +265,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 		case 1: return max+1;
 		case 2: return avg;
 		case 3: return avg+1;
-		default: return rand.nextInt(max+2-min)+min-1;
+		default: return rand.nextInt(max+2-min)+min;
 		}
 	}
 

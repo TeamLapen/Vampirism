@@ -102,7 +102,7 @@ public class BlockBloodAltarTier4 extends BasicBlockContainer {
 	
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister iconRegister) {
-		this.blockIcon = iconRegister.registerIcon(RendererBloodAltarTier4.textureLoc);
+		this.blockIcon = iconRegister.registerIcon("bloodAltarTier4");
 	}
 
 }

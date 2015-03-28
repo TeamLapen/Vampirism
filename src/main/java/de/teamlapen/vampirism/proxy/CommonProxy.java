@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.proxy;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import net.minecraft.entity.EnumCreatureType;
@@ -16,7 +18,6 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import de.teamlapen.vampirism.ModBiomes;
-import de.teamlapen.vampirism.entity.EntityDracula;
 import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
@@ -56,6 +57,8 @@ public abstract class CommonProxy implements IProxy {
 	@Override
 	public void registerEntitys() {
 		//Create a array of all biomes except hell and end
+
+		
 		BiomeGenBase[] allBiomes =BiomeGenBase.getBiomeGenArray();
 		allBiomes[9]=null;
 		allBiomes[8]=null;
@@ -73,16 +76,16 @@ public abstract class CommonProxy implements IProxy {
 				0x54B8DD, 0x34898D);
 		EntityRegistry.addSpawn(EntityVampire.class, BALANCE.VAMPIRE_SPAWN_PROBE, 1, 3, EnumCreatureType.monster, biomes);
 		
-		//Registration of dracula
-		Logger.i("EntityRegister", "Adding "+REFERENCE.ENTITY.DRACULA_NAME+" with spawn probe of " + "none");
-		EntityRegistry.registerGlobalEntityID(EntityDracula.class,  REFERENCE.ENTITY.DRACULA_NAME,  EntityRegistry.findGlobalUniqueEntityId(), 
-				0x54B8DD, 0x34898D);
+//		//Registration of dracula
+//		Logger.i("EntityRegister", "Adding "+REFERENCE.ENTITY.DRACULA_NAME+" with spawn probe of " + "none");
+//		EntityRegistry.registerGlobalEntityID(EntityDracula.class,  REFERENCE.ENTITY.DRACULA_NAME,  EntityRegistry.findGlobalUniqueEntityId(), 
+//				0x54B8DD, 0x34898D);
 		
 		//Registration of vampire lord
 		Logger.i("EntityRegister", "Adding "+REFERENCE.ENTITY.VAMPIRE_LORD_NAME+" with spawn probe of " + BALANCE.VAMPIRE_HUNTER_SPAWN_PROBE);
 		EntityRegistry.registerGlobalEntityID(EntityVampireLord.class,  REFERENCE.ENTITY.VAMPIRE_LORD_NAME,  EntityRegistry.findGlobalUniqueEntityId(), 
 				0x54B8DD, 0x34898D);
-		EntityRegistry.addSpawn(EntityVampireLord.class, BALANCE.VAMPIRE_HUNTER_SPAWN_PROBE, 1, 1, EnumCreatureType.creature, ModBiomes.biomeVampireForest);
+		EntityRegistry.addSpawn(EntityVampireLord.class, BALANCE.VAMPIRE_LORD_SPAWN_PROBE, 1, 1, EnumCreatureType.monster, ModBiomes.biomeVampireForest);
 		
 		//Registration of vampire minion
 		Logger.i("EntityRegister", "Adding "+REFERENCE.ENTITY.VAMPIRE_MINION_NAME+" with spawn probe of " + "none");
@@ -90,7 +93,7 @@ public abstract class CommonProxy implements IProxy {
 				0x54B8DD, 0x34898D);
 		
 		// Registration of ghost
-		Logger.i("EntityRegister", "Adding "+REFERENCE.ENTITY.DRACULA_NAME+" with spawn probe of " + "none");
+		Logger.i("EntityRegister", "Adding "+REFERENCE.ENTITY.GHOST_NAME+" with spawn probe of " + "none");
 		EntityRegistry.registerGlobalEntityID(EntityGhost.class,  REFERENCE.ENTITY.GHOST_NAME,  EntityRegistry.findGlobalUniqueEntityId(), 
 				0x54B8DD, 0x34898D);
 	}

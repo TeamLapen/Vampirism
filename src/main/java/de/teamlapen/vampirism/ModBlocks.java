@@ -53,6 +53,8 @@ public class ModBlocks {
 	public static void registerRecipes(){
 		GameRegistry.addRecipe(new ItemStack(bloodAltarTier2, 1), " X ", "XYX", "ZZZ", 'X', Blocks.glass, 'Y', Items.gold_ingot, 'Z',
 				Items.iron_ingot);
+		GameRegistry.addRecipe(new ItemStack(bloodAltarTier4,1), "   ","YZY","ZZZ",'Y',Items.gold_ingot,'Z',Blocks.obsidian);
+		GameRegistry.addRecipe(new ItemStack(bloodAltarTier4Tip,1),"   "," X ","XYX",'X',Items.iron_ingot,'Y',Blocks.iron_block);
 	}
 	public final static BlockBloodAltar bloodAltar = new BlockBloodAltar();
 	public final static MaterialLiquid blood = new MaterialLiquidBlood(MapColor.netherrackColor);

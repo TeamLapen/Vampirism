@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
@@ -292,6 +293,8 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 	private boolean autoFillBlood;
 	
 	private EntityLivingBase minionTarget;
+	
+	private boolean skipFallDamageReduction=false;
 
 	public VampirePlayer(EntityPlayer player) {
 		this.player = player;
@@ -384,9 +387,6 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 				.getTag(EXT_PROP_NAME);
 		setBloodData(properties.getInteger(KEY_BLOOD));
 		level = properties.getInteger(KEY_LEVEL);
-		Logger.i(TAG + " test", "Loading nbt");// TODO remove and make sure
-												// onActivated is called for
-												// loaded skills
 		int[] temp = properties.getIntArray(KEY_SKILLS);
 		if (temp.length == Skills.getSkillCount()) {
 			skillTimer = temp;
@@ -421,10 +421,23 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 		}
 	}
 	
-	public void onEntityAttacked(DamageSource source){
+	public boolean onEntityAttacked(DamageSource source, float amount){
 			if(source.getEntity() instanceof EntityLivingBase &&getLevel()>0){
 				this.minionTarget=(EntityLivingBase) source.getEntity();
+				return false;
 			}
+			if(DamageSource.fall.equals(source)&&!this.skipFallDamageReduction){
+
+				float i=amount-(getLevel()/3)-1;
+				if(i>0){
+					this.skipFallDamageReduction=true;
+					player.attackEntityFrom(DamageSource.fall, i);
+					this.skipFallDamageReduction=false;
+				}
+				return true;
+				
+			}
+			return false;
 	}
 
 	public void onDeath(DamageSource source) {
@@ -447,18 +460,14 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 
 	public void onSkillToggled(int i) {
 		ISkill s = Skills.getSkill(i);
-		Logger.i(TAG, "Toggling Skill: " + s);
 		if (s == null)
 			return;
 		int t = skillTimer[i];
 		if (t > 0) {// Running, only for lasting skills
-			Logger.i(TAG, "Deactivating");
 			skillTimer[i] = (-s.getCooldown()) + t;
 			((ILastingSkill) s).onDeactivated(this, player);
-			Logger.i("test", skillTimer[i] + "");
 		} else if (t == 0) {// Ready
 			if (getLevel() >= s.getMinLevel()) {
-				Logger.i(TAG, "Activating Skill");
 				if (s instanceof ILastingSkill) {
 					ILastingSkill ls = (ILastingSkill) s;
 					skillTimer[i] = ls.getDuration(getLevel());
@@ -468,28 +477,24 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 					skillTimer[i] = -s.getCooldown();
 				}
 			} else {
-				player.addChatMessage(new ChatComponentText(I18n.format(
-						"text.vampirism:skill.level_to_low", new Object[0])));
+				player.addChatMessage(new ChatComponentTranslation("text.vampirism:skill.level_to_low"));
 			}
 		} else {// In cooldown
-			player.addChatMessage(new ChatComponentText(I18n.format(
-					"text.vampirism:skill.cooldown_not_over", new Object[0])));
-			Logger.i(TAG, "Still cant activate it: " + t);
+			player.addChatMessage(new ChatComponentTranslation(
+					"text.vampirism:skill.cooldown_not_over"));
 		}
 		dirty = true;
 	}
 
 	public void onToggleAutoFillBlood() {
 		if (autoFillBlood) {
-			Logger.i(TAG, "Disabling Auto Fill Blood!");
 			autoFillBlood = false;
-			this.player.addChatMessage(new ChatComponentText(
-					"Auto Fill Blood Disabled"));
+			this.player.addChatMessage(new ChatComponentTranslation(
+					"text.vampirism:auto_fill_disabled"));
 		} else {
-			Logger.i(TAG, "Enabling Auto Fill Blood!");
 			autoFillBlood = true;
-			this.player.addChatMessage(new ChatComponentText(
-					"Auto Fill Blood Enabled"));
+			this.player.addChatMessage(new ChatComponentTranslation(
+					"text.vampirism:auto_fill_enabled"));
 		}
 	}
 

@@ -52,7 +52,7 @@ public class ModPotion extends Potion{
     {
 		if(this.id==thirst.id){
 			if(entity instanceof EntityPlayer){
-				VampirePlayer.get((EntityPlayer)entity).getBloodStats().addExhaustion(0.025F*(float)(amplifier+1));
+				VampirePlayer.get((EntityPlayer)entity).getBloodStats().addExhaustion(0.010F*(float)(amplifier+1));
 			}
 		}
     }

@@ -36,7 +36,7 @@ public class BlockChurchAltar extends BasicBlockContainer {
 	
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister iconRegister) {
-		this.blockIcon = iconRegister.registerIcon(RendererChurchAltar.textureLoc);
+		this.blockIcon = iconRegister.registerIcon("churchAltar");
 	}
 
 }

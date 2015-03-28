@@ -67,12 +67,10 @@ public class BlockBloodAltarTier2 extends BasicBlockContainer {
 			try {
 				item = player.inventory.getCurrentItem();
 			} catch (NullPointerException e) {
-				Logger.i(TAG, "No item in hand");
 			}
 			TileEntityBloodAltarTier2 te = (TileEntityBloodAltarTier2) world
 					.getTileEntity(par2, par3, par4);
 			if (item != null && item.getItem() instanceof ItemBloodBottle) {
-				Logger.i(TAG, "Blood is being added");
 				addBlood(te, item);
 				return true;
 			} else if (item == null) {

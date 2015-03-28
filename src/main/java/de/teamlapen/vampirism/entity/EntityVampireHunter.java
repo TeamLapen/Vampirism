@@ -111,9 +111,6 @@ public class EntityVampireHunter extends EntityMob  implements ISyncable,IAdjust
 		return false; // keeps it from despawning when player is far away
 	}
 
-	/**
-	 * Ignoew light level
-	 */
 	@Override
 	public float getBlockPathWeight(int p_70783_1_, int p_70783_2_, int p_70783_3_) {
 		return 0.5F;
@@ -232,7 +229,7 @@ public class EntityVampireHunter extends EntityMob  implements ISyncable,IAdjust
 
 	@Override
 	public int suggestLevel(Difficulty d) {
-		return this.rand.nextInt(3)+1;
+		return this.rand.nextInt(2)+2;
 	}
 
 	@Override

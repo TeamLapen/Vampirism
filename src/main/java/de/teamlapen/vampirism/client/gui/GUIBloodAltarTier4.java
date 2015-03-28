@@ -8,6 +8,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier4;
+import de.teamlapen.vampirism.util.REFERENCE;
 
 /**
  * GUI for the BloodAltarTier4, currently just a placeholer
@@ -17,7 +18,7 @@ import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier4;
  */
 public class GUIBloodAltarTier4 extends GuiContainer {
 
-	private static final ResourceLocation altarGuiTextures = new ResourceLocation("textures/gui/container/furnace.png");
+	private static final ResourceLocation altarGuiTextures = new ResourceLocation(REFERENCE.MODID + ":textures/gui/altarTier4.png");
 
 	private TileEntityBloodAltarTier4 tileAltar;
 	public GUIBloodAltarTier4(InventoryPlayer inv, TileEntityBloodAltarTier4 tile) {

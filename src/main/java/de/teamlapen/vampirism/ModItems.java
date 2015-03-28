@@ -22,7 +22,7 @@ public class ModItems {
 		GameRegistry.registerItem(bloodBottle, ItemBloodBottle.name);
 		GameRegistry.registerItem(vampireFang, ItemVampireFang.NAME);
 		GameRegistry.registerItem(pitchfork, ItemPitchfork.name);
-		GameRegistry.registerItem(torch, ItemTorch.name);
+		//GameRegistry.registerItem(torch, ItemTorch.name);
 		GameRegistry.registerItem(humanHeart, ItemHumanHeart.name);
 		GameRegistry.registerItem(pureBlood,ItemPureBlood.name);
 		GameRegistry.registerItem(sunscreen, ItemSunscreen.name);

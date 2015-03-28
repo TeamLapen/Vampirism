@@ -73,9 +73,9 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(30D);
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(BALANCE.MOBPROP.VAMPIRE_MAX_HEALTH/2D);
-		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(BALANCE.MOBPROP.VAMPIRE_ATTACK_DAMAGE/2D);
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_MOVEMENT_SPEED/1.5D);
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(BALANCE.MOBPROP.VAMPIRE_MAX_HEALTH/1.5D);
+		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(BALANCE.MOBPROP.VAMPIRE_ATTACK_DAMAGE/1.5D);
+		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_MOVEMENT_SPEED/1.2D);
 	}
 
 	@Override
@@ -204,6 +204,22 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 	public boolean isChild(){
 		return true;
 	}
+	
+	/**
+	 * Vampire minions have no right to complain about sun damage ;)
+	 */
+	@Override
+	public boolean isValidLightLevel(){
+		return true;
+	}
+	
+	@Override
+	public float getBlockPathWeight(int p_70783_1_, int p_70783_2_, int p_70783_3_)
+    {
+		float i=0.5F - this.worldObj.getLightBrightness(p_70783_1_, p_70783_2_, p_70783_3_);
+        if(i>0)return i;
+		return 0.01F;
+    }
 	
 
 }

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.player;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -31,6 +32,7 @@ public class VampirePlayerEventHandler {
 			}
 			else{
 				VampirePlayer.loadProxyData((EntityPlayer) event.entity);
+				VampirismMod.modChannel.sendTo(VampirePlayer.get((EntityPlayer) event.entity).createUpdatePacket(),(EntityPlayerMP) event.entity);
 			}
 
 		}
@@ -65,7 +67,10 @@ public class VampirePlayerEventHandler {
 	@SubscribeEvent
 	public void onLivingAttack(LivingAttackEvent event){
 		if(event.entityLiving instanceof EntityPlayer){
-			VampirePlayer.get((EntityPlayer) event.entityLiving).onEntityAttacked(event.source);
+			if(VampirePlayer.get((EntityPlayer) event.entityLiving).onEntityAttacked(event.source,event.ammount)){
+				event.setCanceled(true);
+			}
+			
 		}
 	}
 

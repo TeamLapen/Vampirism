@@ -108,7 +108,6 @@ public class ItemBloodBottle extends ItemGlassBottle {
 
 			// Remove blood from blood bar and add to bottle on shift + right click
 			if (player.isSneaking()){
-				Logger.i(REFERENCE.MODID, "Shift + Right click pressed!");
 				int bloodBottle = getBlood(stack);
 				int bloodBar = vampire.getBlood();
 				if (bloodBottle < MAX_BLOOD && bloodBar > 0) {
@@ -118,7 +117,6 @@ public class ItemBloodBottle extends ItemGlassBottle {
 			}
 			// Add blood to blood bar from bottle on right click
 			else {
-				Logger.i(REFERENCE.MODID, "Right click pressed!");
 				int bloodBottle = getBlood(stack);
 				int bloodBar = vampire.getBlood();
 				if (bloodBottle > 0 && bloodBar < VampirePlayer.MAXBLOOD) {

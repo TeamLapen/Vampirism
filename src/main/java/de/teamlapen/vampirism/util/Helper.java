@@ -192,4 +192,30 @@ public class Helper {
 	public static void sendPacketToPlayersAround(IMessage message,Entity e){
 		VampirismMod.modChannel.sendToAllAround(message, new TargetPoint(e.dimension,e.posX,e.posY,e.posZ,100));
 	}
+	
+	public static Entity spawnEntityBehindEntity(EntityLivingBase p,String name){
+		EntityLiving e=(EntityLiving) EntityList.createEntityByName(name, p.worldObj);
+		float yaw=p.rotationYawHead;
+		float cosYaw = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
+		float sinYaw = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
+		int distance= 2;
+		double x=p.posX+sinYaw*distance;
+		double z=p.posZ+cosYaw*distance;
+		
+		e.setPosition(x, p.posY, z);
+		
+		if(e.getCanSpawnHere()){
+			p.worldObj.spawnEntityInWorld(e);
+			return e;
+		}
+		else{
+			e.setPosition(x, p.worldObj.getHeightValue((int)Math.round(x),(int)Math.round(z)), z);
+			if(e.getCanSpawnHere()){
+				p.worldObj.spawnEntityInWorld(e);
+				return e;
+			}
+		}
+		e.setDead();
+		return null;
+	}
 }

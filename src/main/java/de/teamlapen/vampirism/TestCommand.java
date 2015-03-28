@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
 
 /**
  * Basic command on which all other commands should depend on
@@ -83,9 +84,11 @@ public class TestCommand implements ICommand {
 	public void processCommand(ICommandSender sender, String[] param) {
 		if (sender instanceof EntityPlayer) {
 			EntityPlayer p = (EntityPlayer) sender;
+			
 			// -----------------
 			if (param.length > 0) {
 				try {
+					sendMessage(sender,"CHEATER! Shame on you");
 					VampirePlayer.get(p).setLevel(Integer.parseInt(param[0]));
 				} catch (NumberFormatException e) {
 					Logger.e("Testcommand", param[0] + " is no Integer");

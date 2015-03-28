@@ -10,6 +10,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
@@ -83,12 +84,12 @@ public class TileEntityBloodAltarTier2 extends TileEntity {
 		VampirePlayer player = VampirePlayer.get(p);
 		int level = player.getLevel();
 		if (level < MIN_LEVEL || level > MAX_LEVEL) {
-			p.addChatMessage(new ChatComponentText("You can't use this altar on this level"));
+			p.addChatMessage(new ChatComponentTranslation("text.vampirism:ritual_level_wrong"));
 			return;
 		}
 		int neededBlood = BALANCE.LEVELING.A2_getRequiredBlood(level);
 		if (bloodAmount < neededBlood) {
-			p.addChatComponentMessage(new ChatComponentText("There is not enough blood in the altar"));
+			p.addChatComponentMessage(new ChatComponentTranslation("text.vampirism:not_enough_blood"));
 			return;
 		}
 

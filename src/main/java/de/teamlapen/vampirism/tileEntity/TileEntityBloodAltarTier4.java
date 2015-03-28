@@ -68,14 +68,14 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 	private ChunkCoordinates[] tips;
 
 	public TileEntityBloodAltarTier4() {
-		super(new Slot[] { new Slot(ModItems.pureBlood, 56, 17), new Slot(ModItems.humanHeart, 56, 53), new Slot(new InventoryTileEntity.IItemSelector() {
+		super(new Slot[] { new Slot(ModItems.pureBlood, 44, 34), new Slot(ModItems.humanHeart, 80, 34), new Slot(new InventoryTileEntity.IItemSelector() {
 			
 			@Override
 			public boolean isItemAllowed(ItemStack item) {
 				//Placeholder
 				return false;
 			}
-		},56, 35) });
+		},116, 34) });
 	}
 
 	/**
@@ -506,7 +506,12 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 		}
 		else{
 			player.motionX=0;
-			player.motionY=0;
+			if(player.motionY>=0){
+				player.motionY=0;
+			}
+			else{
+				player.motionY=player.motionY/2;
+			}
 			player.motionZ=0;
 		}
 		
@@ -537,6 +542,7 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 		if (phase.equals(PHASE.LEVELUP)) {
 			VampirePlayer.get(player).levelUp();
 			if (this.worldObj.isRemote) {
+				this.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, "random.explode", 4.0F, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
 				this.worldObj.spawnParticle("hugeexplosion", player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);
 			}
 			else{

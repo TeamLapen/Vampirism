@@ -84,12 +84,12 @@ public class ClientProxy extends CommonProxy {
 	public void registerRenderer() {
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampireHunter.class, new VampireHunterRenderer());
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampire.class, new VampireRenderer(new ModelVampire(), 0.5F));
-		RenderingRegistry.registerEntityRenderingHandler(EntityDracula.class, new RendererDracula(new ModelDracula(), 0.5F));
+		//RenderingRegistry.registerEntityRenderingHandler(EntityDracula.class, new RendererDracula(new ModelDracula(), 0.5F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityGhost.class, new RendererGhost(new ModelGhost(), 0.5F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampireLord.class, new RendererVampireLord(0.5F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampireMinion.class, new RendererVampireMinion(new ModelVampire(),0.5F));
 		MinecraftForgeClient.registerItemRenderer(ModItems.pitchfork, new PitchforkRenderer());
-		MinecraftForgeClient.registerItemRenderer(ModItems.torch, new RendererTorch());
+		//MinecraftForgeClient.registerItemRenderer(ModItems.torch, new RendererTorch());
 		
 		
 

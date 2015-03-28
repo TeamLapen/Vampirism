@@ -101,16 +101,16 @@ public class VillageVampire {
 					if(recentlyBitten>0){
 						recentlyBitten--;
 						dirty=true;
-						if(world.rand.nextInt(3)>0){
+						//if(world.rand.nextInt(3)>0){
 							spawnVillager(v);
-						}
+						//}
 					}
 					if(recentlyConverted>0){
 						recentlyConverted--;
 						dirty=true;
-						if(world.rand.nextInt(3)>0){
+						//if(world.rand.nextInt(3)>0){
 							spawnVillager(v);
-						}
+						//}
 					}
 				}
 				if(tickCounter%(20*45)==0){
