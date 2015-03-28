@@ -15,8 +15,7 @@ public class ServerProxy extends CommonProxy {
 
 	private boolean allPlayersSleepingInCoffin;
 	private List playerEntities;
-	private WorldServer server = MinecraftServer.getServer()
-	.worldServerForDimension(0);
+	//private WorldServer server = MinecraftServer.getServer().worldServerForDimension(0);
 
 	@Override
 	public void registerKeyBindings() {
@@ -52,63 +51,63 @@ public class ServerProxy extends CommonProxy {
 		return s;
 	}
 
-	public void updateAllPlayersSleepingFlagCoffin() {
-		this.playerEntities = server.playerEntities;
-		
-		this.allPlayersSleepingInCoffin = !this.playerEntities.isEmpty();
-		Iterator iterator = this.playerEntities.iterator();
-
-		while (iterator.hasNext()) {
-			EntityPlayer entityplayer = (EntityPlayer) iterator.next();
-
-			if (!entityplayer.isPlayerSleeping()) {
-				this.allPlayersSleepingInCoffin = false;
-				break;
-			}
-		}
-	}
-	
-    public boolean areAllPlayersAsleepCoffin()
-    {
-        if (this.allPlayersSleepingInCoffin) //&& !this.isRemote()
-        {
-            Iterator iterator = this.playerEntities.iterator();
-            EntityPlayer entityplayer;
-
-            do
-            {
-                if (!iterator.hasNext())
-                {
-                    return true;
-                }
-
-                entityplayer = (EntityPlayer)iterator.next();
-            }
-            while (VampirePlayer.get(entityplayer).isPlayerFullyAsleepCoffin());
-
-            return false;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public void wakeAllPlayers() {
-        this.allPlayersSleepingInCoffin = false;
-        Iterator iterator = this.playerEntities.iterator();
-
-        while (iterator.hasNext())
-        {
-            EntityPlayer entityplayer = (EntityPlayer)iterator.next();
-
-            if (VampirePlayer.get(entityplayer).sleepingCoffin)
-            {
-                entityplayer.wakeUpPlayer(false, false, true);
-            }
-        }
-        server.provider.resetRainAndThunder();
-        }
+//	public void updateAllPlayersSleepingFlagCoffin() {
+//		this.playerEntities = server.playerEntities;
+//		
+//		this.allPlayersSleepingInCoffin = !this.playerEntities.isEmpty();
+//		Iterator iterator = this.playerEntities.iterator();
+//
+//		while (iterator.hasNext()) {
+//			EntityPlayer entityplayer = (EntityPlayer) iterator.next();
+//
+//			if (!entityplayer.isPlayerSleeping()) {
+//				this.allPlayersSleepingInCoffin = false;
+//				break;
+//			}
+//		}
+//	}
+//	
+//    public boolean areAllPlayersAsleepCoffin()
+//    {
+//        if (this.allPlayersSleepingInCoffin) //&& !this.isRemote()
+//        {
+//            Iterator iterator = this.playerEntities.iterator();
+//            EntityPlayer entityplayer;
+//
+//            do
+//            {
+//                if (!iterator.hasNext())
+//                {
+//                    return true;
+//                }
+//
+//                entityplayer = (EntityPlayer)iterator.next();
+//            }
+//            while (VampirePlayer.get(entityplayer).isPlayerFullyAsleepCoffin());
+//
+//            return false;
+//        }
+//        else
+//        {
+//            return false;
+//        }
+//    }
+//
+//    public void wakeAllPlayers() {
+//        this.allPlayersSleepingInCoffin = false;
+//        Iterator iterator = this.playerEntities.iterator();
+//
+//        while (iterator.hasNext())
+//        {
+//            EntityPlayer entityplayer = (EntityPlayer)iterator.next();
+//
+//            if (VampirePlayer.get(entityplayer).sleepingCoffin)
+//            {
+//                entityplayer.wakeUpPlayer(false, false, true);
+//            }
+//        }
+//        server.provider.resetRainAndThunder();
+//        }
 	@Override
 	public ResourceLocation checkVampireTexture(Entity entity, ResourceLocation loc) {
 		return loc;

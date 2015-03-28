@@ -184,21 +184,21 @@ public class ClientProxy extends CommonProxy {
 		return loc;
 	}
 
-	@Override
-	public void wakeAllPlayers() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public boolean areAllPlayersAsleepCoffin() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public void updateAllPlayersSleepingFlagCoffin() {
-		// TODO Auto-generated method stub
-		
-	}
+//	@Override
+//	public void wakeAllPlayers() {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	@Override
+//	public boolean areAllPlayersAsleepCoffin() {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
+//
+//	@Override
+//	public void updateAllPlayersSleepingFlagCoffin() {
+//		// TODO Auto-generated method stub
+//		
+//	}
 }

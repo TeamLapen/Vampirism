@@ -829,55 +829,55 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 	}
 	
 	
-    public void wakeUpPlayer(boolean par1, boolean par2, boolean par3)
-    {
-        MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerWakeUpEvent(this.player, par1, par2, par3));
-        Helper.Reflection.callMethod(Entity.class, this.player,
-				Helper.Obfuscation.getPosNames("EntityPlayer/setSize"),
-				new Class[] { float.class, float.class }, new Object[] { 0.6F,
-						1.8F });
-        //this.setSize(0.6F, 1.8F);
-        this.player.yOffset = 1.62F;  //this.player.resetHeight();
-        
-        ChunkCoordinates chunkcoordinates = this.player.playerLocation;
-        ChunkCoordinates chunkcoordinates1 = this.player.playerLocation;
-        Block block = (chunkcoordinates == null ? null : player.worldObj.getBlock(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ));
-        //Convert the block to type coffin
-        BlockCoffin coffin = (block instanceof BlockCoffin) ? (BlockCoffin) block : null;
-
-        if (chunkcoordinates != null && coffin != null) //block.isBed(player.worldObj, chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, this.player)
-        {
-            coffin.setCoffinOccupied(this.player.worldObj, chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, this.player, false);
-            chunkcoordinates1 = block.getBedSpawnPosition(this.player.worldObj, chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, this.player);
-
-            if (chunkcoordinates1 == null)
-            {
-                chunkcoordinates1 = new ChunkCoordinates(chunkcoordinates.posX, chunkcoordinates.posY + 1, chunkcoordinates.posZ);
-            }
-
-            this.player.setPosition((double)((float)chunkcoordinates1.posX + 0.5F), (double)((float)chunkcoordinates1.posY + this.player.yOffset + 0.1F), (double)((float)chunkcoordinates1.posZ + 0.5F));
-        }
-
-        this.sleepingCoffin = false;
-
-        if (!this.player.worldObj.isRemote && par2)
-        {
-        	VampirismMod.proxy.updateAllPlayersSleepingFlagCoffin();
-            //this.player.worldObj.updateAllPlayersSleepingFlagCoffin();
-        }
-
-        if (par1)
-        {
-            this.sleeptimerCoffin = 0;
-        }
-        else
-        {
-            this.sleeptimerCoffin = 100;
-        }
-
-        if (par3)
-        {
-            this.player.setSpawnChunk(this.player.playerLocation, false);
-        }
-    }
+//    public void wakeUpPlayer(boolean par1, boolean par2, boolean par3)
+//    {
+//        MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerWakeUpEvent(this.player, par1, par2, par3));
+//        Helper.Reflection.callMethod(Entity.class, this.player,
+//				Helper.Obfuscation.getPosNames("EntityPlayer/setSize"),
+//				new Class[] { float.class, float.class }, new Object[] { 0.6F,
+//						1.8F });
+//        //this.setSize(0.6F, 1.8F);
+//        this.player.yOffset = 1.62F;  //this.player.resetHeight();
+//        
+//        ChunkCoordinates chunkcoordinates = this.player.playerLocation;
+//        ChunkCoordinates chunkcoordinates1 = this.player.playerLocation;
+//        Block block = (chunkcoordinates == null ? null : player.worldObj.getBlock(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ));
+//        //Convert the block to type coffin
+//        BlockCoffin coffin = (block instanceof BlockCoffin) ? (BlockCoffin) block : null;
+//
+//        if (chunkcoordinates != null && coffin != null) //block.isBed(player.worldObj, chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, this.player)
+//        {
+//            coffin.setCoffinOccupied(this.player.worldObj, chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, this.player, false);
+//            chunkcoordinates1 = block.getBedSpawnPosition(this.player.worldObj, chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, this.player);
+//
+//            if (chunkcoordinates1 == null)
+//            {
+//                chunkcoordinates1 = new ChunkCoordinates(chunkcoordinates.posX, chunkcoordinates.posY + 1, chunkcoordinates.posZ);
+//            }
+//
+//            this.player.setPosition((double)((float)chunkcoordinates1.posX + 0.5F), (double)((float)chunkcoordinates1.posY + this.player.yOffset + 0.1F), (double)((float)chunkcoordinates1.posZ + 0.5F));
+//        }
+//
+//        this.sleepingCoffin = false;
+//
+//        if (!this.player.worldObj.isRemote && par2)
+//        {
+//        	VampirismMod.proxy.updateAllPlayersSleepingFlagCoffin();
+//            //this.player.worldObj.updateAllPlayersSleepingFlagCoffin();
+//        }
+//
+//        if (par1)
+//        {
+//            this.sleeptimerCoffin = 0;
+//        }
+//        else
+//        {
+//            this.sleeptimerCoffin = 100;
+//        }
+//
+//        if (par3)
+//        {
+//            this.player.setSpawnChunk(this.player.playerLocation, false);
+//        }
+//    }
 }
