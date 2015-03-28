@@ -31,7 +31,7 @@ public class RendererCoffin extends TileEntitySpecialRenderer {
 	public void renderTileEntityAt(TileEntity te, double x, double y, double z,
 			float scale) {
 		if (te instanceof TileEntityCoffin)
-			if (Minecraft.getMinecraft().theWorld.getBlockMetadata(te.xCoord, te.yCoord, te.zCoord) == 6) {
+			if ((Minecraft.getMinecraft().theWorld.getBlockMetadata(te.xCoord, te.yCoord, te.zCoord) & 4) != 0) {
 //				Logger.i("RendererCoffin", String.format("Not rendering coffin at x=%d, y=%d, z=%d", te.xCoord, te.yCoord, te.zCoord));
 				return;
 			}

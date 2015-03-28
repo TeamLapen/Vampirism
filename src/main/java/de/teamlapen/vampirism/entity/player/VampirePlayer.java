@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.player;
 import java.util.List;
 import java.util.UUID;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -27,8 +28,10 @@ import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.Configs;
+import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.block.BlockCoffin;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.ai.IMinionLord;
@@ -51,6 +54,8 @@ import de.teamlapen.vampirism.util.Logger;
  * @author Maxanier
  */
 public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
+	public boolean sleepingCoffin = false;
+	public int sleeptimerCoffin = 0;
 
 	public class BloodStats {
 		private float bloodExhaustionLevel;
@@ -58,8 +63,6 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 		private int bloodTimer;
 		private int prevBloodLevel;
 		private int bloodToAdd;
-		public boolean sleepingCoffin = false;
-		public int sleeptimerCoffin = 0;
 
 		private final float maxExhaustion = 40F;
 
@@ -664,18 +667,21 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 	}
 
 	/**
-	 * puts player to sleep on specified bed if possible
+	 * puts player to sleep on specified coffin if possible
 	 */
-	public EntityPlayer.EnumStatus sleepInCoffinAt(int p_71018_1_,
-			int p_71018_2_, int p_71018_3_) {
+	public EntityPlayer.EnumStatus sleepInCoffinAt(int x,
+			int y, int z) {
+		//TODO Understand the event stuff
 		PlayerSleepInBedEvent event = new PlayerSleepInBedEvent(this.player,
-				p_71018_1_, p_71018_2_, p_71018_3_);
+				x, y, z);
 		MinecraftForge.EVENT_BUS.post(event);
 		if (event.result != null) {
 			return event.result;
 		}
+		
+		
 		if (!this.player.worldObj.isRemote) {
-			if (this.player.isPlayerSleeping() || !this.isEntityAlive()) {
+			if (this.sleepingCoffin || !this.isEntityAlive()) {
 				return EntityPlayer.EnumStatus.OTHER_PROBLEM;
 			}
 
@@ -687,9 +693,9 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 				return EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW;
 			}
 
-			if (Math.abs(this.player.posX - (double) p_71018_1_) > 3.0D
-					|| Math.abs(this.player.posY - (double) p_71018_2_) > 2.0D
-					|| Math.abs(this.player.posZ - (double) p_71018_3_) > 3.0D) {
+			if (Math.abs(this.player.posX - (double) x) > 3.0D
+					|| Math.abs(this.player.posY - (double) y) > 2.0D
+					|| Math.abs(this.player.posZ - (double) z) > 3.0D) {
 				return EntityPlayer.EnumStatus.TOO_FAR_AWAY;
 			}
 
@@ -697,12 +703,12 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 			double d1 = 5.0D;
 			List list = this.player.worldObj
 					.getEntitiesWithinAABB(EntityMob.class, AxisAlignedBB
-							.getBoundingBox((double) p_71018_1_ - d0,
-									(double) p_71018_2_ - d1,
-									(double) p_71018_3_ - d0,
-									(double) p_71018_1_ + d0,
-									(double) p_71018_2_ + d1,
-									(double) p_71018_3_ + d0));
+							.getBoundingBox((double) x - d0,
+									(double) y - d1,
+									(double) z - d0,
+									(double) x + d0,
+									(double) y + d1,
+									(double) z + d0));
 
 			if (!list.isEmpty()) {
 				return EntityPlayer.EnumStatus.NOT_SAFE;
@@ -721,15 +727,15 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 		this.player.yOffset = 0.2F;
 
 		if (this.player.worldObj
-				.blockExists(p_71018_1_, p_71018_2_, p_71018_3_)) {
-			int l = player.worldObj
-					.getBlock(p_71018_1_, p_71018_2_, p_71018_3_)
-					.getBedDirection(player.worldObj, p_71018_1_, p_71018_2_,
-							p_71018_3_);
+				.blockExists(x, y, z)) {
+			int direction = ((BlockCoffin) player.worldObj
+					.getBlock(x, y, z))
+					.getDirection(player.worldObj, x, y,
+							z);
 			float f1 = 0.5F;
 			float f = 0.5F;
 
-			switch (l) {
+			switch (direction) {
 			case 0:
 				f = 0.9F;
 				break;
@@ -743,39 +749,41 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 				f1 = 0.9F;
 			}
 
-			this.func_71013_b(l);
-			this.player.setPosition((double) ((float) p_71018_1_ + f1),
-					(double) ((float) p_71018_2_ + 0.9375F),
-					(double) ((float) p_71018_3_ + f));
+			this.func_71013_b(direction);
+			this.player.setPosition((double) ((float) x + f1),
+					(double) ((float) y + 0.9375F),
+					(double) ((float) z + f));
 		} else {
-			this.player.setPosition((double) ((float) p_71018_1_ + 0.5F),
-					(double) ((float) p_71018_2_ + 0.9375F),
-					(double) ((float) p_71018_3_ + 0.5F));
+			this.player.setPosition((double) ((float) x + 0.5F),
+					(double) ((float) y + 0.9375F),
+					(double) ((float) z + 0.5F));
 		}
 
 		//Following method will replace: this.player.sleeping = true;
-		Helper.Reflection.setPrivateField(EntityPlayer.class, this.player,
-				true, Helper.Obfuscation.getPosNames("EntityPlayer/sleeping"));
+//		Helper.Reflection.setPrivateField(EntityPlayer.class, this.player,
+//				true, Helper.Obfuscation.getPosNames("EntityPlayer/sleeping"));
+		this.sleepingCoffin = true;
 		//Following method will replace: this.player.sleepTimer = 0;
-		Helper.Reflection.setPrivateField(EntityPlayer.class, this.player, 0,
-				Helper.Obfuscation.getPosNames("EntityPlayer/sleepTimer"));
+//		Helper.Reflection.setPrivateField(EntityPlayer.class, this.player, 0,
+//				Helper.Obfuscation.getPosNames("EntityPlayer/sleepTimer"));
+		this.sleeptimerCoffin = 0;
 
-		this.player.playerLocation = new ChunkCoordinates(p_71018_1_,
-				p_71018_2_, p_71018_3_);
+		this.player.playerLocation = new ChunkCoordinates(x,
+				y, z);
 		this.player.motionX = this.player.motionZ = this.player.motionY = 0.0D;
 
 		if (!this.player.worldObj.isRemote) {
-			this.player.worldObj.updateAllPlayersSleepingFlag();
+			//TODO this.player.worldObj.updateAllPlayersSleepingFlag();
 		}
 
 		return EntityPlayer.EnumStatus.OK;
 	}
 
-	private void func_71013_b(int p_71013_1_) {
+	private void func_71013_b(int direction) {
 		this.player.field_71079_bU = 0.0F;
 		this.player.field_71089_bV = 0.0F;
 
-		switch (p_71013_1_) {
+		switch (direction) {
 		case 0:
 			this.player.field_71089_bV = -1.8F;
 			break;
@@ -790,4 +798,60 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 		}
 	}
 
+	public boolean isPlayerFullyAsleepCoffin() {
+		return this.sleepingCoffin && this.sleeptimerCoffin >= 100;
+	}
+	
+	
+    public void wakeUpPlayer(boolean par1, boolean par2, boolean par3)
+    {
+        MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerWakeUpEvent(this.player, par1, par2, par3));
+        Helper.Reflection.callMethod(Entity.class, this.player,
+				Helper.Obfuscation.getPosNames("EntityPlayer/setSize"),
+				new Class[] { float.class, float.class }, new Object[] { 0.6F,
+						1.8F });
+        //this.setSize(0.6F, 1.8F);
+        this.player.yOffset = 1.62F;  //this.player.resetHeight();
+        
+        ChunkCoordinates chunkcoordinates = this.player.playerLocation;
+        ChunkCoordinates chunkcoordinates1 = this.player.playerLocation;
+        Block block = (chunkcoordinates == null ? null : player.worldObj.getBlock(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ));
+        //Convert the block to type coffin
+        BlockCoffin coffin = (block instanceof BlockCoffin) ? (BlockCoffin) block : null;
+
+        if (chunkcoordinates != null && coffin != null) //block.isBed(player.worldObj, chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, this.player)
+        {
+            coffin.setCoffinOccupied(this.player.worldObj, chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, this.player, false);
+            chunkcoordinates1 = block.getBedSpawnPosition(this.player.worldObj, chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, this.player);
+
+            if (chunkcoordinates1 == null)
+            {
+                chunkcoordinates1 = new ChunkCoordinates(chunkcoordinates.posX, chunkcoordinates.posY + 1, chunkcoordinates.posZ);
+            }
+
+            this.player.setPosition((double)((float)chunkcoordinates1.posX + 0.5F), (double)((float)chunkcoordinates1.posY + this.player.yOffset + 0.1F), (double)((float)chunkcoordinates1.posZ + 0.5F));
+        }
+
+        this.sleepingCoffin = false;
+
+        if (!this.player.worldObj.isRemote && par2)
+        {
+        	VampirismMod.proxy.updateAllPlayersSleepingFlagCoffin();
+            //this.player.worldObj.updateAllPlayersSleepingFlagCoffin();
+        }
+
+        if (par1)
+        {
+            this.sleeptimerCoffin = 0;
+        }
+        else
+        {
+            this.sleeptimerCoffin = 100;
+        }
+
+        if (par3)
+        {
+            this.player.setSpawnChunk(this.player.playerLocation, false);
+        }
+    }
 }

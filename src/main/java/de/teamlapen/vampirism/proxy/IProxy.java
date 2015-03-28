@@ -41,4 +41,11 @@ public interface IProxy {
 	 * @return
 	 */
 	public String translateToLocal(String s);
+	
+	//Coffin methods
+    public void wakeAllPlayers();
+    
+    public boolean areAllPlayersAsleepCoffin();
+    
+	public void updateAllPlayersSleepingFlagCoffin();
 }

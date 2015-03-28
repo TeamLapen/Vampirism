@@ -48,7 +48,7 @@ public class ItemCoffin extends BasicItem {
 				Logger.i(TAG, "Primary coffin block placed");
 				if (!world.setBlock(x + shiftArray[direction][0], y
 						+ shiftArray[direction][1], z
-						+ shiftArray[direction][2], ModBlocks.coffin, 6, 3))
+						+ shiftArray[direction][2], ModBlocks.coffin, 4, 3))
 					Logger.e(TAG, "Secondary coffin block placement failed");
 				else {
 					Logger.i(TAG, "Secondary block placed");

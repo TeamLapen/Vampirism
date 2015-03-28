@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.block;
 
 import java.util.Iterator;
+import java.util.Random;
 
+import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import de.teamlapen.vampirism.util.Logger;
@@ -9,6 +11,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChunkCoordinates;
@@ -20,6 +24,11 @@ import net.minecraft.world.biome.BiomeGenBase;
  * 
  * @author Moritz
  *
+ * Metadata: 	first two bits are the direction
+ * 				third bit determines whether it is the primary block or not (true means it's secondary)
+ * 					therefore if secondary: meta & 4 != 0
+ * 				fourth bit determines whether it is occupied (true means it's occupied)
+ * 					therefore if occupied: meta & 8 != 0
  */
 public class BlockCoffin extends BasicBlockContainer {
 	private final String TAG = "BlockCoffin";
@@ -67,7 +76,7 @@ public class BlockCoffin extends BasicBlockContainer {
 			return true;
 		} else {
 			// Gets the coordinates of the primary block
-			if (world.getBlockMetadata(x, y, z) == 6) {
+			if ((world.getBlockMetadata(x, y, z) & 4) == 0) {
 				TileEntityCoffin te = (TileEntityCoffin) world.getTileEntity(x,
 						y, z);
 				x = te.otherX;
@@ -77,37 +86,18 @@ public class BlockCoffin extends BasicBlockContainer {
 
 			if (world.provider.canRespawnHere()
 					&& world.getBiomeGenForCoords(x, z) != BiomeGenBase.hell) {
-				EntityPlayer playerSleepingHere = null;
-				Iterator iterator = world.playerEntities.iterator();
-
-				while (iterator.hasNext()) {
-					EntityPlayer tempPlayer = (EntityPlayer) iterator.next();
-
-					if (tempPlayer.isPlayerSleeping()) {
-						ChunkCoordinates chunkcoordinates = tempPlayer.playerLocation;
-
-						if (chunkcoordinates.posX == x
-								&& chunkcoordinates.posY == y
-								&& chunkcoordinates.posZ == z) {
-							playerSleepingHere = tempPlayer;
-						}
-					}
-				}
-
-				if (playerSleepingHere != null) {
+				if((world.getBlockMetadata(x, y, z) & 8) != 0) {
 					player.addChatComponentMessage(new ChatComponentTranslation(
 							"tile.bed.occupied", new Object[0]));
 					return true;
 				}
 
-				// setMetaBasedOnWeirdness(world, x, y, z,
-				// false);
 
 				EntityPlayer.EnumStatus enumstatus = VampirePlayer.get(player)
 						.sleepInCoffinAt(x, y, z);
 
 				if (enumstatus == EntityPlayer.EnumStatus.OK) {
-					// setMetaBasedOnWeirdness(world, x, y, z, true);
+					setCoffinOccupied(world, x, y, z, player, true);
 					return true;
 				} else {
 					if (enumstatus == EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW) {
@@ -117,7 +107,6 @@ public class BlockCoffin extends BasicBlockContainer {
 						player.addChatComponentMessage(new ChatComponentTranslation(
 								"tile.bed.notSafe", new Object[0]));
 					}
-
 					return true;
 				}
 			} else {
@@ -140,13 +129,28 @@ public class BlockCoffin extends BasicBlockContainer {
 		}
 	}
 
+	public void setCoffinOccupied(World world, int x, int y, int z, EntityPlayer player, boolean flag) {
+		int newMeta = world.getBlockMetadata(x, y, z);
+		if(flag)
+			newMeta = newMeta & 7 + 8;
+		else
+			newMeta = newMeta & 7;
+		world.setBlockMetadataWithNotify(x, y, z, newMeta, 3);
+	}
+
 	@Override
 	public void onBlockHarvested(World world, int par1, int par2, int par3,
 			int par4, EntityPlayer player) {
 		this.breakBlock(world, par1, par2, par3, this, 0);
-
-		// TODO Drop item
 	}
+	
+    public Item getItemDropped(int meta, Random rand, int par)
+    {
+        return  (meta & 4) == 0 ? Item.getItemById(0) : ModItems.coffin;
+    }
+    public int getDirection(World world, int x, int y, int z) {
+    	return world.getBlockMetadata(x, y, z) & 3;
+    }
 
 	// Miscellaneous methods (rendertype etc.)
 	@Override
