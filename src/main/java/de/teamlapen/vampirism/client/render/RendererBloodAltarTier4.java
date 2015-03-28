@@ -15,6 +15,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.client.model.ModelBloodAltar;
+import de.teamlapen.vampirism.client.model.ModelBloodAltarTier4;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier4;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier4.PHASE;
 import de.teamlapen.vampirism.util.Logger;
@@ -29,14 +30,14 @@ import de.teamlapen.vampirism.util.REFERENCE;
 @SideOnly(Side.CLIENT)
 public class RendererBloodAltarTier4 extends TileEntitySpecialRenderer {
 
-	private final ModelBloodAltar model;
+	private final ModelBloodAltarTier4 model;
 	private final ResourceLocation texture;
 	private static final ResourceLocation enderDragonCrystalBeamTextures = new ResourceLocation("textures/entity/endercrystal/endercrystal_beam.png");
 	private static final ResourceLocation beaconBeamTexture = new ResourceLocation("textures/entity/beacon_beam.png");
 
 	public RendererBloodAltarTier4() {
-		model = new ModelBloodAltar();
-		texture = new ResourceLocation(REFERENCE.MODID + ":textures/blocks/bloodAltar.png");
+		model = new ModelBloodAltarTier4();
+		texture = new ResourceLocation(REFERENCE.MODID + ":textures/blocks/bloodAltarTier4.png");
 	}
 
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z) {
@@ -108,9 +109,8 @@ public class RendererBloodAltarTier4 extends TileEntitySpecialRenderer {
 	
 	@Override
 	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float par5) {
-		//Render the altar itseld
+		//Render the altar itself
 		TileEntityBloodAltarTier4 te4 = (TileEntityBloodAltarTier4) te;
-		model.setOccupied(false);
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		bindTexture(texture);
