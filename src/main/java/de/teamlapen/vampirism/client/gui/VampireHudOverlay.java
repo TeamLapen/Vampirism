@@ -7,11 +7,10 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -44,8 +43,8 @@ public class VampireHudOverlay extends Gui {
 
 		MovingObjectPosition p = Minecraft.getMinecraft().objectMouseOver;
 
-		if (p != null && p.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && p.entityHit != null && p.entityHit instanceof EntityLiving) {
-			VampireMob mob = VampireMob.get((EntityLiving) p.entityHit);
+		if (p != null && p.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && p.entityHit != null && p.entityHit instanceof EntityCreature) {
+			VampireMob mob = VampireMob.get((EntityCreature) p.entityHit);
 			if (mob == null)
 				return;
 			if (mob.canBeBitten() && VampirePlayer.get(Minecraft.getMinecraft().thePlayer).getLevel() > 0) {

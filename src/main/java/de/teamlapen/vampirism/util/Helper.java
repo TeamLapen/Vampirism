@@ -88,6 +88,7 @@ public class Helper {
 			add("EntityPlayer/setSize", "setSize", "func_70105_a");
 			add("EntityPlayer/sleeping", "sleeping", "field_71083_bS");
 			add("EntityPlayer/sleepTimer", "sleepTimer", "field_71076_b");
+			add("Minecraft/fileAssets","fileAssets","field_110446_Y");
 		}
 		
 		public static String[] getPosNames(String key){

@@ -1,27 +1,19 @@
 package de.teamlapen.vampirism.proxy;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.model.ModelCow;
-import net.minecraft.client.model.ModelHorse;
-import net.minecraft.client.model.ModelOcelot;
-import net.minecraft.client.model.ModelPig;
-import net.minecraft.client.model.ModelSheep1;
-import net.minecraft.client.model.ModelSheep2;
-import net.minecraft.client.model.ModelWolf;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.shader.ShaderGroup;
 import net.minecraft.client.util.JsonException;
-import net.minecraft.entity.monster.EntityWitch;
-import net.minecraft.entity.passive.EntityCow;
-import net.minecraft.entity.passive.EntityHorse;
-import net.minecraft.entity.passive.EntityOcelot;
-import net.minecraft.entity.passive.EntityPig;
-import net.minecraft.entity.passive.EntitySheep;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.passive.EntityWolf;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
@@ -31,40 +23,42 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
+import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.ModPotion;
+import de.teamlapen.vampirism.block.BlockBloodAltarTier4Tip.TileEntityBloodAltarTier4Tip;
+import de.teamlapen.vampirism.block.BlockChurchAltar.TileEntityChurchAltar;
 import de.teamlapen.vampirism.client.KeyInputEventHandler;
 import de.teamlapen.vampirism.client.gui.VampireHudOverlay;
+import de.teamlapen.vampirism.client.model.ModelBipedCloaked;
 import de.teamlapen.vampirism.client.model.ModelDracula;
 import de.teamlapen.vampirism.client.model.ModelGhost;
 import de.teamlapen.vampirism.client.model.ModelVampire;
 import de.teamlapen.vampirism.client.render.PitchforkRenderer;
+import de.teamlapen.vampirism.client.render.RenderTileEntityItem;
 import de.teamlapen.vampirism.client.render.RendererBloodAltar;
 import de.teamlapen.vampirism.client.render.RendererBloodAltarTier2;
 import de.teamlapen.vampirism.client.render.RendererBloodAltarTier3;
 import de.teamlapen.vampirism.client.render.RendererBloodAltarTier4;
+import de.teamlapen.vampirism.client.render.RendererBloodAltarTier4Tip;
+import de.teamlapen.vampirism.client.render.RendererChurchAltar;
 import de.teamlapen.vampirism.client.render.RendererCoffin;
 import de.teamlapen.vampirism.client.render.RendererDracula;
 import de.teamlapen.vampirism.client.render.RendererGhost;
 import de.teamlapen.vampirism.client.render.RendererTorch;
 import de.teamlapen.vampirism.client.render.RendererVampireLord;
 import de.teamlapen.vampirism.client.render.RendererVampireMinion;
+import de.teamlapen.vampirism.client.render.TextureHelper;
 import de.teamlapen.vampirism.client.render.VampireHunterRenderer;
 import de.teamlapen.vampirism.client.render.VampireRenderer;
-import de.teamlapen.vampirism.client.render.vanilla.RenderVampireCow;
-import de.teamlapen.vampirism.client.render.vanilla.RenderVampireHorse;
-import de.teamlapen.vampirism.client.render.vanilla.RenderVampireOcelot;
-import de.teamlapen.vampirism.client.render.vanilla.RenderVampirePig;
-import de.teamlapen.vampirism.client.render.vanilla.RenderVampireSheep;
-import de.teamlapen.vampirism.client.render.vanilla.RenderVampireVillager;
-import de.teamlapen.vampirism.client.render.vanilla.RenderVampireWitch;
-import de.teamlapen.vampirism.client.render.vanilla.RenderVampireWolf;
 import de.teamlapen.vampirism.entity.EntityDracula;
 import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.entity.EntityVampireLord;
 import de.teamlapen.vampirism.entity.EntityVampireMinion;
+import de.teamlapen.vampirism.entity.VampireMob;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier2;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier3;
@@ -76,6 +70,8 @@ import de.teamlapen.vampirism.util.REFERENCE;
 public class ClientProxy extends CommonProxy {
 	private final static String TAG = "ClientProxy";
 	private static final ResourceLocation saturation1 = new ResourceLocation(REFERENCE.MODID + ":shaders/saturation1.json");
+	private final ResourceLocation vampire_overlay = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vampire_cover.png");
+	public static final ResourceLocation steveTextures = new ResourceLocation("textures/entity/steve.png");
 
 	@Override
 	public void registerKeyBindings() {
@@ -90,25 +86,26 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampire.class, new VampireRenderer(new ModelVampire(), 0.5F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityDracula.class, new RendererDracula(new ModelDracula(), 0.5F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityGhost.class, new RendererGhost(new ModelGhost(), 0.5F));
-		RenderingRegistry.registerEntityRenderingHandler(EntityVampireLord.class, new RendererVampireLord(new ModelVampire(),0.5F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityVampireLord.class, new RendererVampireLord(0.5F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampireMinion.class, new RendererVampireMinion(new ModelVampire(),0.5F));
 		MinecraftForgeClient.registerItemRenderer(ModItems.pitchfork, new PitchforkRenderer());
 		MinecraftForgeClient.registerItemRenderer(ModItems.torch, new RendererTorch());
 		
-		// Vampire vanilla renderers
-		RenderingRegistry.registerEntityRenderingHandler(EntityCow.class, new RenderVampireCow(new ModelCow(), 0.7F));
-		RenderingRegistry.registerEntityRenderingHandler(EntityPig.class, new RenderVampirePig(new ModelPig(), new ModelPig(0.5F), 0.7F));
-		RenderingRegistry.registerEntityRenderingHandler(EntitySheep.class, new RenderVampireSheep(new ModelSheep2(), new ModelSheep1(), 0.7F));
-		RenderingRegistry.registerEntityRenderingHandler(EntityVillager.class, new RenderVampireVillager());
-		RenderingRegistry.registerEntityRenderingHandler(EntityWolf.class, new RenderVampireWolf(new ModelWolf(), new ModelWolf(), 0.5F));
-		RenderingRegistry.registerEntityRenderingHandler(EntityOcelot.class, new RenderVampireOcelot(new ModelOcelot(), 0.4F));
-		RenderingRegistry.registerEntityRenderingHandler(EntityWitch.class, new RenderVampireWitch());
-		RenderingRegistry.registerEntityRenderingHandler(EntityHorse.class, new RenderVampireHorse(new ModelHorse(), 0.75F));
+		
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltar.class, new RendererBloodAltar());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier2.class, new RendererBloodAltarTier2());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier3.class, new RendererBloodAltarTier3());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier4.class, new RendererBloodAltarTier4());
+		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier3.class, new RendererBloodAltarTier3());
+		TileEntitySpecialRenderer tier4=new RendererBloodAltarTier4();
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier4.class, tier4);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.bloodAltarTier4), new RenderTileEntityItem(tier4,new TileEntityBloodAltarTier4()));
+		TileEntitySpecialRenderer churchAltar=new RendererChurchAltar();
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChurchAltar.class, churchAltar);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.churchAltar), new RenderTileEntityItem(churchAltar,new TileEntityChurchAltar()));
+		TileEntitySpecialRenderer tier4Tip=new RendererBloodAltarTier4Tip();
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier4Tip.class,tier4Tip);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.bloodAltarTier4Tip), new RenderTileEntityItem(tier4Tip,new TileEntityBloodAltarTier4Tip()));
+
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoffin.class, new RendererCoffin());
 	}
 
@@ -136,6 +133,7 @@ public class ClientProxy extends CommonProxy {
 	public String translateToLocal(String s) {
 		return I18n.format(s, new Object[0]);
 	}
+	
 	
 	@SubscribeEvent
 	public void onClientTick(ClientTickEvent event){
@@ -165,6 +163,25 @@ public class ClientProxy extends CommonProxy {
 			}
 		}
 
+	}
+
+	@Override
+	public ResourceLocation checkVampireTexture(Entity entity, ResourceLocation loc) {
+		if(entity instanceof AbstractClientPlayer){
+			if(VampirePlayer.get((EntityPlayer)entity).getLevel()>0){
+				ResourceLocation vamp=new ResourceLocation("vampirism/temp/"+loc.hashCode());
+				TextureHelper.createVampireTexture((EntityLivingBase)entity,loc,vamp);
+				return vamp;
+			}
+		}
+		else if(entity instanceof EntityCreature){
+			if(VampireMob.get((EntityCreature) entity).isVampire()){
+				ResourceLocation vamp=new ResourceLocation("vampirism/temp/"+loc.hashCode());
+				TextureHelper.createVampireTexture((EntityLiving)entity,loc,vamp);
+				return vamp;
+			}
+		}
+		return loc;
 	}
 
 	@Override

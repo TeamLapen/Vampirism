@@ -31,7 +31,8 @@ public class VillageModChurchPiece extends StructureVillagePieces.Church {
     public boolean addComponentParts(World p_74875_1_, Random p_74875_2_, StructureBoundingBox p_74875_3_)
     {
     	super.addComponentParts(p_74875_1_, p_74875_2_, p_74875_3_);
-        this.placeBlockAtCurrentPosition(p_74875_1_, ModBlocks.churchAltar, 0, 2, 2, 7, p_74875_3_);
+    	int i = this.getMetadataWithOffset(ModBlocks.churchAltar, 1);
+        this.placeBlockAtCurrentPosition(p_74875_1_, ModBlocks.churchAltar, i, 2, 2, 7, p_74875_3_);
     	return true;
     }
 	

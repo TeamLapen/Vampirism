@@ -1,9 +1,13 @@
 package de.teamlapen.vampirism.coremod;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
+import net.minecraft.util.ResourceLocation;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.PlayerAbilities;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.Logger;
 
 /**
  * Class for static communication between modified/transformed classes and the
@@ -29,5 +33,9 @@ public class CoreHandler {
 			return (PlayerAbilities.getPlayerAbilities(VampirePlayer.get((EntityPlayer) o).getLevel()).nightVision > 0.0F);
 		}
 		return false;
+	}
+	
+	public static ResourceLocation checkVampireTexture(Entity entity,ResourceLocation loc){
+		return VampirismMod.proxy.checkVampireTexture(entity, loc);
 	}
 }

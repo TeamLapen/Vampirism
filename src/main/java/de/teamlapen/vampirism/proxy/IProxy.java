@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.proxy;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 
 public interface IProxy {
 
@@ -48,4 +50,12 @@ public interface IProxy {
     public boolean areAllPlayersAsleepCoffin();
     
 	public void updateAllPlayersSleepingFlagCoffin();
+	
+	/**
+	 * Called on client to replace the texture location of vampire entitys by the fake vampire version
+	 * @param entity
+	 * @param loc
+	 * @return
+	 */
+	public ResourceLocation checkVampireTexture(Entity entity,ResourceLocation loc);
 }

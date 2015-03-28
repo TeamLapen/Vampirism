@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import cpw.mods.fml.common.network.ByteBufUtils;
@@ -12,9 +13,10 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.Logger;
 
 /**
- * Used to tell the client it should render the screen reddish
+ * Used to update the clients vampire information
  * @author Maxanier
  *
  */
@@ -25,13 +27,22 @@ public class UpdateVampirePlayerPacket implements IMessage {
 		
 		@Override
 		public IMessage onMessage(UpdateVampirePlayerPacket message, MessageContext ctx) {
-			VampirePlayer.get(VampirismMod.proxy.getSPPlayer()).loadSyncUpdate(message.level,message.timers);
+			Entity e=Minecraft.getMinecraft().theWorld.getEntityByID(message.id);
+			if(e!=null){
+				if(e instanceof EntityPlayer){
+					VampirePlayer.get((EntityPlayer) e).loadSyncUpdate(message.level, message.timers);
+				}
+				else{
+					Logger.w("UpdaVampirePlayer", "Entity with id "+message.id+" is not a player");
+				}
+			}
 			return null;
 		}
 
 	}
 
 	private int level;
+	private int id;
 	
 	private int[] timers;
 	/**
@@ -44,10 +55,12 @@ public class UpdateVampirePlayerPacket implements IMessage {
 
 	/**
 	 * 
-	 * @param durationOn duration(in ticks) which should it take to turn full red
-	 * @param durationOff duration(in ticks) which should it take to turn normal again
+	 * @param id Entity id
+	 * @param level Vampire level
+	 * @param timers Skill timer
 	 */
-	public UpdateVampirePlayerPacket(int level,int[] timers) {
+	public UpdateVampirePlayerPacket(int id,int level,int[] timers) {
+		this.id=id;
 		this.level=level;
 		this.timers=timers;
 	}
@@ -57,6 +70,7 @@ public class UpdateVampirePlayerPacket implements IMessage {
 		NBTTagCompound tag = ByteBufUtils.readTag(buf);
 		level=tag.getInteger("level");
 		timers=tag.getIntArray("timers");
+		id=tag.getInteger("id");
 
 	}
 
@@ -65,6 +79,7 @@ public class UpdateVampirePlayerPacket implements IMessage {
 		NBTTagCompound tag = new NBTTagCompound();
 		tag.setInteger("level", level);
 		tag.setIntArray("timers", timers);;
+		tag.setInteger("id", id);
 		ByteBufUtils.writeTag(buf, tag);
 
 	}

@@ -11,12 +11,13 @@ import de.teamlapen.vampirism.block.BlockBloodAltar;
 import de.teamlapen.vampirism.block.BlockBloodAltarTier2;
 import de.teamlapen.vampirism.block.BlockBloodAltarTier3;
 import de.teamlapen.vampirism.block.BlockBloodAltarTier4;
-import de.teamlapen.vampirism.block.BlockBloodAltarTier4Bed;
 import de.teamlapen.vampirism.block.BlockBloodAltarTier4Tip;
 import de.teamlapen.vampirism.block.BlockChurchAltar;
 import de.teamlapen.vampirism.block.BlockCoffin;
 import de.teamlapen.vampirism.block.BlockCursedEarth;
 import de.teamlapen.vampirism.block.MaterialLiquidBlood;
+import de.teamlapen.vampirism.block.BlockBloodAltarTier4Tip.TileEntityBloodAltarTier4Tip;
+import de.teamlapen.vampirism.block.BlockChurchAltar.TileEntityChurchAltar;
 import de.teamlapen.vampirism.block.BlockFlower.VampireFlower;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier2;
@@ -29,7 +30,7 @@ public class ModBlocks {
 	public static void init() {
 		GameRegistry.registerBlock(bloodAltar, BlockBloodAltar.name);
 		GameRegistry.registerBlock(bloodAltarTier2, ItemBlock.class, BlockBloodAltarTier2.name);
-		GameRegistry.registerBlock(bloodAltarTier3, ItemBlock.class,BlockBloodAltarTier3.name);
+		//GameRegistry.registerBlock(bloodAltarTier3, ItemBlock.class,BlockBloodAltarTier3.name);
 		GameRegistry.registerBlock(bloodAltarTier4, ItemBlock.class,BlockBloodAltarTier4.name);
 		GameRegistry.registerBlock(bloodAltarTier4Tip, ItemBlock.class,BlockBloodAltarTier4Tip.name);
 		GameRegistry.registerBlock(cursedEarth, BlockCursedEarth.name);
@@ -37,8 +38,10 @@ public class ModBlocks {
 		//GameRegistry.registerBlock(coffin, BlockCoffin.name);
 		GameRegistry.registerTileEntity(TileEntityBloodAltar.class, "TileEntityBloodAltar");
 		GameRegistry.registerTileEntity(TileEntityBloodAltarTier2.class, "TileEntityBloodAltarTier2");
-		GameRegistry.registerTileEntity(TileEntityBloodAltarTier3.class, "TileEntityBloodAltarTier3");
+		//GameRegistry.registerTileEntity(TileEntityBloodAltarTier3.class, "TileEntityBloodAltarTier3");
 		GameRegistry.registerTileEntity(TileEntityBloodAltarTier4.class, "TileEntityBloodAltarTier4");
+		GameRegistry.registerTileEntity(TileEntityChurchAltar.class, "TileEntityChurchAltar");
+		GameRegistry.registerTileEntity(TileEntityBloodAltarTier4Tip.class, "TileEntityBloodAltarTier4Tip");
 		//GameRegistry.registerTileEntity(TileEntityCoffin.class, "TileEntityCoffin");
 
 		// Flowers

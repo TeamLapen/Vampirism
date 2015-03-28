@@ -5,8 +5,10 @@ import java.util.List;
 
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldServer;
 
 public class ServerProxy extends CommonProxy {
@@ -107,4 +109,9 @@ public class ServerProxy extends CommonProxy {
         }
         server.provider.resetRainAndThunder();
         }
+	@Override
+	public ResourceLocation checkVampireTexture(Entity entity, ResourceLocation loc) {
+		return loc;
+	}
+
 }

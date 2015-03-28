@@ -6,6 +6,7 @@ import java.util.UUID;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
@@ -25,6 +26,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.Configs;
@@ -246,7 +248,7 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 			playerData.loadNBTData(savedData);
 
 		}
-		playerData.sync();
+		playerData.sync(true);
 	}
 
 	/**
@@ -288,6 +290,8 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 	private boolean dirty = false;
 
 	private boolean autoFillBlood;
+	
+	private EntityLivingBase minionTarget;
 
 	public VampirePlayer(EntityPlayer player) {
 		this.player = player;
@@ -416,6 +420,12 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 			setLevel(level - 1);
 		}
 	}
+	
+	public void onEntityAttacked(DamageSource source){
+			if(source.getEntity() instanceof EntityLivingBase &&getLevel()>0){
+				this.minionTarget=(EntityLivingBase) source.getEntity();
+			}
+	}
 
 	public void onDeath(DamageSource source) {
 		if (BALANCE.VAMPIRE_PLAYER_LOOSE_LEVEL
@@ -532,8 +542,15 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 
 			}
 		}
+		
+		/**
+		 * Check minion target
+		 */
+		if(minionTarget!=null&&!minionTarget.isEntityAlive()){
+			minionTarget=null;
+		}
 		if (dirty == true) {
-			this.sync();
+			this.sync(true);
 			dirty = false;
 		}
 	}
@@ -577,7 +594,7 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 		if (l >= 0) {
 			level = l;
 			PlayerModifiers.applyModifiers(l, player);
-			this.sync();
+			this.sync(true);
 		}
 	}
 
@@ -588,7 +605,7 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 	 * @param e
 	 *            Entity to suck blood from
 	 */
-	public void suckBlood(EntityLiving e) {
+	public void suckBlood(EntityCreature e) {
 		if (e.worldObj.isRemote) {
 			return;
 		}
@@ -625,25 +642,34 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 	 */
 	public void suckBlood(int entityId) {
 		Entity e = player.worldObj.getEntityByID(entityId);
-		if (e != null && e instanceof EntityLiving) {
-			suckBlood((EntityLiving) e);
+		if (e != null && e instanceof EntityCreature) {
+			suckBlood((EntityCreature) e);
 		}
 	}
 
 	/**
 	 * Sends updates to the client
 	 */
-	public void sync() {
+	public void sync(boolean all) {
 		if (!player.worldObj.isRemote) {
-			VampirismMod.modChannel.sendTo(new UpdateVampirePlayerPacket(
-					getLevel(), skillTimer), (EntityPlayerMP) player);
+			if(all){
+				Helper.sendPacketToPlayersAround(createUpdatePacket(), player);
+			}
+			else{
+				VampirismMod.modChannel.sendTo(createUpdatePacket(), (EntityPlayerMP) player);
+			}
+			
 		}
+	}
+	
+	public IMessage createUpdatePacket(){
+		return new UpdateVampirePlayerPacket(player.getEntityId(),
+				getLevel(), skillTimer);
 	}
 
 	@Override
 	public EntityLivingBase getMinionTarget() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.minionTarget;
 	}
 
 	@Override
