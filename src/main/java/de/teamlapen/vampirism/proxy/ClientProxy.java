@@ -99,13 +99,14 @@ public class ClientProxy extends CommonProxy {
 		TileEntitySpecialRenderer tier4=new RendererBloodAltarTier4();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier4.class, tier4);
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.bloodAltarTier4), new RenderTileEntityItem(tier4,new TileEntityBloodAltarTier4()));
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoffin.class, new RendererCoffin());
 		TileEntitySpecialRenderer churchAltar=new RendererChurchAltar();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChurchAltar.class, churchAltar);
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.churchAltar), new RenderTileEntityItem(churchAltar,new TileEntityChurchAltar()));
 		TileEntitySpecialRenderer tier4Tip=new RendererBloodAltarTier4Tip();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier4Tip.class,tier4Tip);
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.bloodAltarTier4Tip), new RenderTileEntityItem(tier4Tip,new TileEntityBloodAltarTier4Tip()));
+
+		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoffin.class, new RendererCoffin());
 	}
 
 	@Override
@@ -163,7 +164,6 @@ public class ClientProxy extends CommonProxy {
 		}
 
 	}
-	
 
 	@Override
 	public ResourceLocation checkVampireTexture(Entity entity, ResourceLocation loc) {
@@ -182,5 +182,23 @@ public class ClientProxy extends CommonProxy {
 			}
 		}
 		return loc;
+	}
+
+	@Override
+	public void wakeAllPlayers() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public boolean areAllPlayersAsleepCoffin() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void updateAllPlayersSleepingFlagCoffin() {
+		// TODO Auto-generated method stub
+		
 	}
 }

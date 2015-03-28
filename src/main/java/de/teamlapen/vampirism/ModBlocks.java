@@ -14,7 +14,6 @@ import de.teamlapen.vampirism.block.BlockBloodAltarTier4;
 import de.teamlapen.vampirism.block.BlockBloodAltarTier4Tip;
 import de.teamlapen.vampirism.block.BlockChurchAltar;
 import de.teamlapen.vampirism.block.BlockCoffin;
-import de.teamlapen.vampirism.block.BlockCoffinSec;
 import de.teamlapen.vampirism.block.BlockCursedEarth;
 import de.teamlapen.vampirism.block.MaterialLiquidBlood;
 import de.teamlapen.vampirism.block.BlockBloodAltarTier4Tip.TileEntityBloodAltarTier4Tip;
@@ -36,15 +35,14 @@ public class ModBlocks {
 		GameRegistry.registerBlock(bloodAltarTier4Tip, ItemBlock.class,BlockBloodAltarTier4Tip.name);
 		GameRegistry.registerBlock(cursedEarth, BlockCursedEarth.name);
 		GameRegistry.registerBlock(churchAltar, BlockChurchAltar.name);
-		GameRegistry.registerBlock(coffin, BlockCoffin.name);
-		GameRegistry.registerBlock(coffinSec, BlockCoffinSec.name);
+		//GameRegistry.registerBlock(coffin, BlockCoffin.name);
 		GameRegistry.registerTileEntity(TileEntityBloodAltar.class, "TileEntityBloodAltar");
 		GameRegistry.registerTileEntity(TileEntityBloodAltarTier2.class, "TileEntityBloodAltarTier2");
 		//GameRegistry.registerTileEntity(TileEntityBloodAltarTier3.class, "TileEntityBloodAltarTier3");
 		GameRegistry.registerTileEntity(TileEntityBloodAltarTier4.class, "TileEntityBloodAltarTier4");
-		GameRegistry.registerTileEntity(TileEntityCoffin.class, "TileEntityCoffin");
 		GameRegistry.registerTileEntity(TileEntityChurchAltar.class, "TileEntityChurchAltar");
 		GameRegistry.registerTileEntity(TileEntityBloodAltarTier4Tip.class, "TileEntityBloodAltarTier4Tip");
+		//GameRegistry.registerTileEntity(TileEntityCoffin.class, "TileEntityCoffin");
 
 		// Flowers
 		GameRegistry.registerBlock(vampireFlower, VampireFlower.name);
@@ -66,7 +64,6 @@ public class ModBlocks {
 	public final static BlockCursedEarth cursedEarth = new BlockCursedEarth();
 	public final static BlockChurchAltar churchAltar= new BlockChurchAltar();
 	public final static BlockCoffin coffin = new BlockCoffin();
-	public final static BlockCoffinSec coffinSec = new BlockCoffinSec();
 	
 	// Flowers
 	public final static VampireFlower vampireFlower = new VampireFlower();
