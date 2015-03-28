@@ -34,12 +34,12 @@ public class ModBlocks {
 		GameRegistry.registerBlock(bloodAltarTier4Tip, ItemBlock.class,BlockBloodAltarTier4Tip.name);
 		GameRegistry.registerBlock(cursedEarth, BlockCursedEarth.name);
 		GameRegistry.registerBlock(churchAltar, BlockChurchAltar.name);
-		GameRegistry.registerBlock(coffin, BlockCoffin.name);
+		//GameRegistry.registerBlock(coffin, BlockCoffin.name);
 		GameRegistry.registerTileEntity(TileEntityBloodAltar.class, "TileEntityBloodAltar");
 		GameRegistry.registerTileEntity(TileEntityBloodAltarTier2.class, "TileEntityBloodAltarTier2");
 		GameRegistry.registerTileEntity(TileEntityBloodAltarTier3.class, "TileEntityBloodAltarTier3");
 		GameRegistry.registerTileEntity(TileEntityBloodAltarTier4.class, "TileEntityBloodAltarTier4");
-		GameRegistry.registerTileEntity(TileEntityCoffin.class, "TileEntityCoffin");
+		//GameRegistry.registerTileEntity(TileEntityCoffin.class, "TileEntityCoffin");
 
 		// Flowers
 		GameRegistry.registerBlock(vampireFlower, VampireFlower.name);

@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.item;
 
 import de.teamlapen.vampirism.ModBlocks;
-import de.teamlapen.vampirism.block.BlockCoffin;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.player.EntityPlayer;

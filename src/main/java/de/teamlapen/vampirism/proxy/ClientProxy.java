@@ -109,7 +109,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier2.class, new RendererBloodAltarTier2());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier3.class, new RendererBloodAltarTier3());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier4.class, new RendererBloodAltarTier4());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoffin.class, new RendererCoffin());
+		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoffin.class, new RendererCoffin());
 	}
 
 	@Override
