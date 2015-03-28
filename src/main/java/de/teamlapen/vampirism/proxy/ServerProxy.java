@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.proxy;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 
 public class ServerProxy extends CommonProxy {

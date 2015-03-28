@@ -32,17 +32,21 @@ public class RendererBloodAltarTier4 extends TileEntitySpecialRenderer {
 
 	private final ModelBloodAltarTier4 model;
 	private final ResourceLocation texture;
-	private static final ResourceLocation enderDragonCrystalBeamTextures = new ResourceLocation("textures/entity/endercrystal/endercrystal_beam.png");
-	private static final ResourceLocation beaconBeamTexture = new ResourceLocation("textures/entity/beacon_beam.png");
+	public static final String textureLoc=REFERENCE.MODID + ":textures/blocks/bloodAltarTier4.png";
+	private final ResourceLocation enderDragonCrystalBeamTextures = new ResourceLocation("textures/entity/endercrystal/endercrystal_beam.png");
+	private final ResourceLocation beaconBeamTexture = new ResourceLocation("textures/entity/beacon_beam.png");
 
 	public RendererBloodAltarTier4() {
 		model = new ModelBloodAltarTier4();
-		texture = new ResourceLocation(REFERENCE.MODID + ":textures/blocks/bloodAltarTier4.png");
+		texture = new ResourceLocation(textureLoc);
 	}
 
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z) {
-		int meta = world.getBlockMetadata(x, y, z);
-		GL11.glRotatef(meta * 90, 0.0F, 1.0F, 0.0F);
+		if(world!=null){
+			int meta = world.getBlockMetadata(x, y, z);
+			GL11.glRotatef(meta * 90, 0.0F, 1.0F, 0.0F);
+		}
+
 	}
 
 	/**

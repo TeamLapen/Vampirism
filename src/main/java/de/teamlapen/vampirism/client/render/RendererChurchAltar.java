@@ -13,7 +13,8 @@ import net.minecraft.world.World;
 
 public class RendererChurchAltar extends TileEntitySpecialRenderer{
 
-	private final ResourceLocation texture=new ResourceLocation(REFERENCE.MODID + ":textures/blocks/churchAltar.png");
+	public static final String textureLoc=REFERENCE.MODID + ":textures/blocks/churchAltar.png";
+	private final ResourceLocation texture=new ResourceLocation(textureLoc);
 	ModelBase model;
 	
 	public RendererChurchAltar(){
@@ -21,8 +22,11 @@ public class RendererChurchAltar extends TileEntitySpecialRenderer{
 	}
 	
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z) {
-		int meta = world.getBlockMetadata(x, y, z);
-		GL11.glRotatef(meta * 90, 0.0F, 1.0F, 0.0F);
+		if(world!=null){
+			int meta = world.getBlockMetadata(x, y, z);
+			GL11.glRotatef(meta * 90, 0.0F, 1.0F, 0.0F);
+		}
+
 	}
 	
 	@Override
