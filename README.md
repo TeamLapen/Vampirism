@@ -18,7 +18,8 @@ As a vampire you don't need to eat all that dry bread or eat these strange fruit
 
 ## Thanks ##
 - Cheaterpaul _Textures_
-- Mazdallier, evernife _Translation_
+- Mazdallier _Translation_
+- evernife _Translation_
 
 ## Licence ##
 This mod is licenced under [LGPLv3](https://raw.githubusercontent.com/TeamLapen/Vampirism/master/LICENCE)
