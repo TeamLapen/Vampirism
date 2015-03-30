@@ -407,12 +407,15 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 		LevReq result=checkLevelRequirement(player,sl);
 		Logger.i(TAG, "SL: "+sl+" Result: "+result);
 		if(result!=LevReq.OK){
-			if(result==LevReq.ITEM_MISSING)
-				player.addChatMessage(new ChatComponentTranslation("text.vampirism:ritual_missing_times"));
-			if(result==LevReq.STRUCTURE_WRONG)
-				player.addChatMessage(new ChatComponentTranslation("text.vampirism:ritual_structure_wrong"));
-			if(result==LevReq.LEVEL_WRONG)
-				player.addChatMessage(new ChatComponentTranslation("text.vampirism:ritual_level_wrong"));
+			if(!this.worldObj.isRemote){
+				if(result==LevReq.ITEM_MISSING)
+					player.addChatMessage(new ChatComponentTranslation("text.vampirism:ritual_missing_times"));
+				if(result==LevReq.STRUCTURE_WRONG)
+					player.addChatMessage(new ChatComponentTranslation("text.vampirism:ritual_structure_wrong"));
+				if(result==LevReq.LEVEL_WRONG)
+					player.addChatMessage(new ChatComponentTranslation("text.vampirism:ritual_level_wrong"));
+			}
+			
 			return;
 		}
 		runningTick = DURATION_TICK;
