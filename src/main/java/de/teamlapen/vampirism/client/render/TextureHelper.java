@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 
@@ -14,6 +15,7 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.ITextureObject;
+import net.minecraft.client.renderer.texture.LayeredTexture;
 import net.minecraft.client.renderer.texture.SimpleTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureUtil;
@@ -158,10 +160,21 @@ public class TextureHelper {
 		if (manager.getTexture(newLoc) == null) {
 			ResourceLocation overlay = getOverlay(e);
 			ITextureObject texture = null;
-			if (overlay == null) {
-				texture = new SimpleTexture(old);
-			} else {
-				texture = new VampireTexture(old, overlay);
+			try {
+				if(e instanceof EntityHorse){
+					LayeredTexture horseTex=(LayeredTexture) manager.getTexture(old);
+					List l=horseTex.layeredTextureNames;
+					l.add(overlay.toString());
+					texture=new LayeredTexture(toStringArraySafe(l));
+				}
+				else if (overlay == null) {
+					texture = new SimpleTexture(old);
+				} else {
+					texture = new VampireTexture(old, overlay);
+				}
+			} catch (Exception e1) {
+				Logger.e(TAG, "Failed to create overlayed texture object",e1);
+				texture=manager.getTexture(old);
 			}
 
 			manager.loadTexture(newLoc, texture);
@@ -224,6 +237,13 @@ public class TextureHelper {
 		File sdir = new File(dir, "skins");
 		File mdir = new File(sdir, hash.substring(0, 2));
 		return new File(mdir, hash);
+	}
+	
+	private static String[] toStringArraySafe(List list){
+		while(list.contains(null)){
+			list.remove(null);
+		}
+		return ((List<String>)list).toArray(new String[list.size()]);
 	}
 
 	private static final String TAG = "TextureHelper";

@@ -50,7 +50,7 @@ else
 	echo "Creating release for v"$fversion
 	API_JSON=$(printf '{"tag_name": "v%s","target_commitish": "master","name": "v%s","body": "Release of version %s","draft": false,"prerelease": false}' $fversion $fversion $fversion)
 	token=$(printenv TOKEN)
-	#curl --data "$API_JSON" https://api.github.com/repos/${1}/${2}/releases?access_token=${token}
+	curl --data "$API_JSON" https://api.github.com/repos/${1}/${2}/releases?access_token=${token}
 fi
 ./gradlew setupCIWorkspace
 ./gradlew build
