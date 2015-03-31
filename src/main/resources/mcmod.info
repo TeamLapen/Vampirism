@@ -3,16 +3,16 @@
   "modid": "vampirism",
   "name": "Vampirism",
   "description": "Adds vampirism feature",
-  "version": "${mod_version}",
-  "mcversion": "${minecraft_version}",
-  "url": "http://teamlapen.de/vampirism",
+  "version": "${m_version}",
+  "mcversion": "${mc_version}",
+  "url": "http://teamlapen.de/projects/vampirism",
   "updateUrl": "",
   "authors": [
     "maxanier",
 	"Mistadon",
 	"wildbill22"
   ],
-  "credits": "By maxanier, Mistadon, wildbill22",
+  "credits": "By maxanier, Mistadon, wildbill22, LRA_10",
   "logoFile": "",
   "screenshots": [
   ],

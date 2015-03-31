@@ -19,17 +19,33 @@ buildscript {
 
 apply plugin: "forge"
 
-ext.configFile = file "build.properties"
+loadProperties()
 
-configFile.withReader {
-    def prop = new Properties()
-    prop.load(it)
-    project.ext.config = new ConfigSlurper().parse prop
-}
-
-version = config.mod_version
+version=project.mod_version
 group = "de.teamlapen.vampirism"
-archiveBaseName= "VampirismMod"
+archivesBaseName= "Vampirism"
+
+//Make sure mcmod info is updated, otherwise the version number seems to be not updated
+processResources.outputs.upToDateWhen{ false }
+
+def loadProperties(){
+	ext.configFile = file "build.properties"
+
+	configFile.withReader {
+		def prop = new Properties()
+		prop.load(it)
+		project.ext.config = new ConfigSlurper().parse prop
+	}
+	
+	ext.mod_version="LocalTest"
+	if(System.getenv().CI){
+		project.mod_version = System.getenv("MODVERSION")
+		logger.lifecycle "In CI. Version: ${project.mod_version}"
+	}
+	else{
+		logger.lifecycle "Local build"
+	}
+}
 
 sourceSets
 {
@@ -43,33 +59,31 @@ minecraft {
     version = config.minecraft_version + "-" + config.forge_version
 
     replaceIn "util/REFERENCE.java"
-    replace "@VERSION@", "${config.mod_version}"
+    replace "@VERSION@", "${project.mod_version}"
     replace "@MVERSION@", "${config.minecraft_version}"
 }
 
-version = "${config.minecraft_version}-${config.mod_version}"
+version = "${config.minecraft_version}-${project.mod_version}"
 
 task wrapper(type: Wrapper) {
     gradleVersion = '1.11'
 }
 
 processResources {
-    // exclude xcf files, as they are for development only
-    //exclude '**/*.xcf'
-
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include '*.info'
-
-        // replace version and mcversion
-        expand 'mod_version': project.version, 'minecraft_version': project.config.minecraft_version
-    }
-
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude '**/*.info'
-    }
+	// exclude xcf files, as they are for development only
+	//exclude '**/*.xcf'
+	// replace stuff in mcmod.info, nothing else
+	from(sourceSets.main.resources.srcDirs) {
+		include '*.info'
+		// replace version and mcversion
+		expand 'm_version': project.mod_version, 'mc_version': project.config.minecraft_version
+	}
+	// copy everything else, thats not the mcmod.info
+	from(sourceSets.main.resources.srcDirs) {
+		exclude '**/*.info'
+	}
 }
+
 
 jar {
         manifest {
