@@ -2,14 +2,19 @@
 entity.vampirism:vampireHunter.name=Chasseur de vampire
 entity.vampirism:vampire.name=Vampire
 entity.vampirism:ghost.name=Fantôme
+entity.vampirism:vampireLord.name=Seigneur vampire
+entity.vampirism:vampireMinion.name=Favori de vampire
+entity.vampirism:dracula.name=Dracula
 
 # Items
 item.vampirism:vampiresFear.name=Frayeur de vampire
 item.vampirism:bloodBottle.name=Bouteille de sang
 item.vampirism:vampireFang.name=Canine de vampire
 item.vampirism:pitchfork.name=Fourche à foin
-item.vampirism:spawnBloodAltar.name=Autel de sang
-item.vampirism:spawnBloodAltarTier2.name=Autel de sang Niv2
+item.vampirism:humanHeart.name=Coeur humain
+item.vampirism:torch.name=Torche
+item.vampirism:pureBlood.name=Sang pur
+item.vampirism:sunscreen.name=Crème solaire
 
 # Blocks
 block.vampirism:bloodAltar.name=Autel de sang
@@ -17,6 +22,7 @@ block.vampirism:bloodAltarTier2.name=Autel de sang Niv2
 block.vampirism:bloodAltarTier3.name=Autel de sang Niv3
 block.vampirism:bloodAltarTier4.name=Autel de sang Niv4
 block.vampirism:bloodAltarTier4Tip.name=Autel de sang Niv4 astuce
+block.vampirism:churchAltar.name=Autel de nettoyage
 block.vampirism:cursedEarth.name=Terre maudite
 block.vampirism:vampireOrchid.name=Orchidé vampire
 
@@ -38,8 +44,18 @@ itemGroup.vampirism=Vampirisme
 death.attack.sun=%1$s n'a pas aimé le soleil
 potion.vampirism:sunscreen=Crème solaire
 potion.vampirism:thirst=Soif
+potion.vampirism:saturation=Saturation
 text.vampirism:skill.level_to_low=Votre niveau de vampire est trop bas pour celà
 text.vampirism:skill.cooldown_not_over=Veuillez attendre jusqu'à la fin de votre récupération
+text.vampirism:entity_level=Niveau
+text.vampirism:ritual_missing_times=Vous avez oublié des éléments pour ce rituel
+text.vampirism:ritual_structure_wrong=La structure est mauvaise pour ce rituel
+text.vampirism:ritual_level_wrong=Vous ne pouvez pas utiliser cet autel à ce niveau
+text.vampirism:not_enough_blood=Il n'y a pas assez de sang dans l'autel
+text.vampirism:ritual_requirements_not_met=Les exigences pour ce rituel n'ont pas toutes été respectées
+text.vampirism:purity=Pureté
+text.vampirism:auto_fill_enabled=Remplissage auto activé
+text.vampirism:auto_fill_disabled=Remplissage auto désactivé
 
 #Config
 category.vampirism.balance=Propriétés d'équilibrage
