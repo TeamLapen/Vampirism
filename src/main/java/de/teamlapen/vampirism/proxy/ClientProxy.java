@@ -93,15 +93,30 @@ public class ClientProxy extends CommonProxy {
 		
 		
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltar.class, new RendererBloodAltar());
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier2.class, new RendererBloodAltarTier2());
+		//BloodAltar
+		TileEntitySpecialRenderer bloodAltar = new RendererBloodAltar();
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltar.class, bloodAltar);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.bloodAltar), new RenderTileEntityItem(bloodAltar, new TileEntityBloodAltar()));
+		
+		//BloodAltarTier2
+		TileEntitySpecialRenderer bloodAltarTier2 = new RendererBloodAltarTier2();
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier2.class, bloodAltarTier2);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.bloodAltarTier2), new RenderTileEntityItem(bloodAltarTier2, new TileEntityBloodAltarTier2()));
+		
+		
+		//BloodAltarTier3
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier3.class, new RendererBloodAltarTier3());
 		TileEntitySpecialRenderer tier4=new RendererBloodAltarTier4();
+		
+		//BloodAltarTier4
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier4.class, tier4);
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.bloodAltarTier4), new RenderTileEntityItem(tier4,new TileEntityBloodAltarTier4()));
+		//ChurchAltar
 		TileEntitySpecialRenderer churchAltar=new RendererChurchAltar();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChurchAltar.class, churchAltar);
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.churchAltar), new RenderTileEntityItem(churchAltar,new TileEntityChurchAltar()));
+		
+		//BloodAltarTier4Tip
 		TileEntitySpecialRenderer tier4Tip=new RendererBloodAltarTier4Tip();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier4Tip.class,tier4Tip);
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.bloodAltarTier4Tip), new RenderTileEntityItem(tier4Tip,new TileEntityBloodAltarTier4Tip()));

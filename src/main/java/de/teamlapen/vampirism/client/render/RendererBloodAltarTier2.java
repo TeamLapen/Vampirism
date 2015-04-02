@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.render;
 
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -32,7 +33,9 @@ public class RendererBloodAltarTier2 extends TileEntitySpecialRenderer {
 	}
 
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z) {
-		int meta = world.getBlockMetadata(x, y, z);
+		int meta = 2;
+		if(world != null)
+			meta = world.getBlockMetadata(x, y, z);
 		GL11.glRotatef(meta * 90, 0.0F, 1.0F, 0.0F);
 	}
 
@@ -48,6 +51,8 @@ public class RendererBloodAltarTier2 extends TileEntitySpecialRenderer {
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 		model.render(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		GL11.glDisable(GL11.GL_BLEND);
+		Tessellator.instance.setBrightness(5);
+		Tessellator.instance.setColorOpaque(0, 0, 0);
 		model.renderBase(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		model.renderBlood(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		GL11.glEnable(GL11.GL_BLEND);
