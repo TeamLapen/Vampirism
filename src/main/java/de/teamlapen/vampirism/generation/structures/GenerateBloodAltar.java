@@ -16,12 +16,12 @@ import de.teamlapen.vampirism.util.Logger;
  *
  */
 public class GenerateBloodAltar extends WorldGenerator {
-	public static int spawnChance = 25; // chance n/1000
+	public static int spawnChance = 50; // chance n/1000
 
 	@Override
 	public boolean generate(World world, Random rand, int x, int y, int z) {
-		if (!LocationIsValidSpawn(world, x, y, z) || !LocationIsValidSpawn(world, x + 2, y, z) || !LocationIsValidSpawn(world, x + 2, y, z + 2)
-				|| !LocationIsValidSpawn(world, x, y, z + 2))
+		if (!locationIsValidSpawn(world, x, y, z) || !locationIsValidSpawn(world, x + 2, y, z) || !locationIsValidSpawn(world, x + 2, y, z + 2)
+				|| !locationIsValidSpawn(world, x, y, z + 2))
 			return false;
 
 		Logger.i("GenerateBloodAltar", "Spawned Blood Altar at: " + x + " " + y + " " + z);
@@ -51,7 +51,7 @@ public class GenerateBloodAltar extends WorldGenerator {
 		return new Block[] { Blocks.grass, Blocks.dirt, Blocks.sand, Blocks.cobblestone, Blocks.gravel };
 	}
 
-	public boolean LocationIsValidSpawn(World world, int x, int y, int z) {
+	public boolean locationIsValidSpawn(World world, int x, int y, int z) {
 
 		Block checkBlock = world.getBlock(x, y - 1, z);
 		Block blockAbove = world.getBlock(x, y, z);

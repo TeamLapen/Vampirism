@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.client.render;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChunkCoordinates;
@@ -143,7 +145,20 @@ public class RendererBloodAltarTier4 extends TileEntitySpecialRenderer {
 				if (phase == PHASE.BEAM2) {
 					EntityPlayer p = te4.getPlayer();
 					if (p != null) {
-						this.renderBeam(0, -0.5, 0, p.posX, p.posY, p.posZ, cX, cY + 0.2, cZ, -(te4.getRunningTick() + par5), true);
+						double rX=0,rZ=0;
+						double rY=-0.3;
+						double playerY=p.posY;
+						/**
+						 * Work around for other players seeing the ritual
+						 */
+						if(!p.equals(Minecraft.getMinecraft().thePlayer)){
+							Entity e=Minecraft.getMinecraft().thePlayer;
+							rX+=p.posX-e.posX;
+							rY+=p.posY-e.posY+1.5D;
+							rZ+=p.posZ-e.posZ;
+							playerY+=1.5D;
+						}
+						this.renderBeam(rX, rY, rZ, p.posX, playerY, p.posZ, cX, cY + 0.2, cZ, -(te4.getRunningTick() + par5), true);
 					}
 				}
 			} catch (NullPointerException e) {
