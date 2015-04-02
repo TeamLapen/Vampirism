@@ -40,9 +40,9 @@ else
 		echo "New Version:"$major"."$minor"."$build
 		export MODVERSION=$major"."$minor"."$build
 	else
-		build=$(($build+1))
-		echo "New Version:"$major"."$minor"."$build
-		export MODVERSION=$major"."$minor"."$build
+		nbuild=$(($build+1))
+		echo "New Version:"$major"."$minor"."$nbuild
+		export MODVERSION=$major"."$minor"."$nbuild
 	fi
 
 	#Create release
