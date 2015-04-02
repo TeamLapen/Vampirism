@@ -220,7 +220,8 @@ public class VampireHudOverlay extends Gui {
 				this.mc.getTextureManager().bindTexture(icons);
 				int left = event.resolution.getScaledWidth() / 2 + 91;
 				int top = event.resolution.getScaledHeight() - GuiIngameForge.right_height;
-
+				GuiIngameForge.right_height+=10;
+				
 				for (int i = 0; i < 10; ++i) {
 					int idx = i * 2 + 1;
 					int x = left - i * 8 - 9;
@@ -235,6 +236,7 @@ public class VampireHudOverlay extends Gui {
 						drawTexturedModalRect(x, y, 18, 0, 9, 9);
 					}
 				}
+				this.mc.getTextureManager().bindTexture(Gui.icons);
 				GL11.glDisable(GL11.GL_BLEND);
 				mc.mcProfiler.endSection();
 			}
