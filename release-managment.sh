@@ -21,7 +21,7 @@ echo "Last tag: " $lasttag
 #Get mainversion:
 IFS=. read major minor build <<<"${lasttag##*v}"
 echo "Old Version: "$major"."$minor"."$build
-if [[ -z "$var" ]]; then
+if [[ -z "$build" ]]; then
 	build=0
 fi
 #Check if release
@@ -40,9 +40,9 @@ else
 		echo "New Version:"$major"."$minor"."$build
 		export MODVERSION=$major"."$minor"."$build
 	else
-		nbuild=$(($build+1))
-		echo "New Version:"$major"."$minor"."$nbuild
-		export MODVERSION=$major"."$minor"."$nbuild
+		build=$(($build+1))
+		echo "New Version:"$major"."$minor"."$build
+		export MODVERSION=$major"."$minor"."$build
 	fi
 
 	#Create release
