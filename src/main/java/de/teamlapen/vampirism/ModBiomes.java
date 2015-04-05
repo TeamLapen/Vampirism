@@ -19,9 +19,13 @@ public class ModBiomes {
 	public static BiomeEntry biomeEntryVampireForest;
 	
 	public static void init() {
-		int biomeID = 10;
-		while (BiomeDictionary.isBiomeRegistered(biomeID))
-			biomeID++;
+		int biomeID = Configs.vampire_biome_id;
+		if(biomeID==-1){
+			biomeID=10;
+			while (BiomeDictionary.isBiomeRegistered(biomeID))
+				biomeID++;
+		}
+
 		biomeVampireForest = new BiomeVampireForest(biomeID).setBiomeName(BiomeVampireForest.name);
 
 		// like swamp
@@ -30,7 +34,7 @@ public class ModBiomes {
 		BiomeDictionary.registerBiomeType(biomeVampireForest, Type.FOREST, Type.DENSE, Type.MAGICAL, Type.SPOOKY);
 		int weight = 10;
 //		int weight = 50;  // Testing only		
-		Logger.i("ModBiomes", "VampireForest created with weight: " + weight);
+		Logger.i("ModBiomes", "VampireForest created with id "+biomeID+" and weight: " + weight);
 		biomeEntryVampireForest = new BiomeEntry(biomeVampireForest, weight); // Change weight to 100 to see more of these
 		BiomeManager.addBiome(BiomeType.WARM, biomeEntryVampireForest);
 	}	

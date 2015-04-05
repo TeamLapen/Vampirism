@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
 import java.util.Map.Entry;
 
@@ -19,9 +21,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
 public class Configs {
 
 	public static void init(File configFile) {
-		if (config == null) {
-			config = new Configuration(configFile);
-		}
+		config = new Configuration(configFile);
 		loadConfiguration();
 		Logger.i("Config", "Loaded configuration");
 	}
@@ -49,7 +49,8 @@ public class Configs {
 		//General
 		String conf_version=config.get(CATEGORY_GENERAL, "config_mod_version", REFERENCE.VERSION).getString();
 		player_blood_watcher = config.get(CATEGORY_GENERAL, "player_data_watcher_id", 21,"ID for datawatcher. HAS TO BE THE SAME ON CLIENT AND SERVER").getInt();
-				
+		vampire_biome_id = config.getInt("vampirism_biome_id", CATEGORY_GENERAL, -1,-1, 1000, "If you set this to -1 the mod will try to find a free biome id");
+		
 		// Village
 		village_gen_enabled = config.get(cat_village.getQualifiedName(), "enabled", true,
 				"Should the custom generator be injected? (Enables/Disables the village mod)").getBoolean();
@@ -87,7 +88,19 @@ public class Configs {
 		}
 		if(!conf_version.equals(REFERENCE.VERSION)){
 			Logger.i("Config", "Resetting config to default because a update was found");
-			setConfigToDefault();
+			handleModUpdated(conf_version);
+			
+				Logger.i("Configs", "Resetting config file");
+				try {
+					PrintWriter writer = new PrintWriter(config.getConfigFile());
+					writer.print("");
+					writer.close();
+					init(config.getConfigFile());
+				} catch (Exception e) {
+					Logger.e("Configs", "Failed to reset config file");
+				}
+
+
 		}
 		
 		
@@ -133,6 +146,10 @@ public class Configs {
 		}
 	}
 	
+	/**
+	 * Sets each prop to default, not used anymore, now the whole file is just deleted
+	 */
+	@Deprecated
 	public static void setConfigToDefault(){
 		for(String cat:config.getCategoryNames()){
 			for(Entry<String, Property> e:config.getCategory(cat).entrySet()){
@@ -143,7 +160,11 @@ public class Configs {
 		config.save();
 	}
 	
-	private static void handleModUpdated(){
+	/**
+	 * Called when the mod was updated, before the config values are reset
+	 * @param oldVersion
+	 */
+	private static void handleModUpdated(String oldVersion){
 		
 	}
 	public static final String CATEGORY_GENERAL = Configuration.CATEGORY_GENERAL;
@@ -162,6 +183,8 @@ public class Configs {
 	public static int village_minDist;
 
 	public static int village_size;
+	
+	public static int vampire_biome_id;
 	
 	public static int player_blood_watcher;
 
