@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
+import java.util.UUID;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -254,13 +256,23 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	}
 
 	@Override
-	public double getDistanceSquared(Entity e) {
+	public double getTheDistanceSquared(Entity e) {
 		return this.getDistanceSqToEntity(e);
 	}
 
 	@Override
 	public Entity getRepresentingEntity() {
 		return this;
+	}
+
+	@Override
+	public boolean isTheEntityAlive() {
+		return this.isEntityAlive();
+	}
+
+	@Override
+	public UUID getThePersistentID() {
+		return this.getPersistentID();
 	}
 	
 

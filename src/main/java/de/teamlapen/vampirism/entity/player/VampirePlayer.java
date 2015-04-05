@@ -755,17 +755,17 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 	}
 
 	@Override
-	public UUID getPersistentID() {
+	public UUID getThePersistentID() {
 		return player.getPersistentID();
 	}
 
 	@Override
-	public boolean isEntityAlive() {
+	public boolean isTheEntityAlive() {
 		return player.isEntityAlive();
 	}
 
 	@Override
-	public double getDistanceSquared(Entity e) {
+	public double getTheDistanceSquared(Entity e) {
 		return player.getDistanceSqToEntity(e);
 	}
 
@@ -789,7 +789,7 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 		
 		
 		if (!this.player.worldObj.isRemote) {
-			if (this.sleepingCoffin || !this.isEntityAlive()) {
+			if (this.sleepingCoffin || !this.isTheEntityAlive()) {
 				return EntityPlayer.EnumStatus.OTHER_PROBLEM;
 			}
 

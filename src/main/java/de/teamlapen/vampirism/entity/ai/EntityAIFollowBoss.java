@@ -33,11 +33,11 @@ public class EntityAIFollowBoss extends EntityAIBase {
 	 */
 	@Override
 	public boolean continueExecuting() {
-		if (!this.boss.isEntityAlive()) {
+		if (!this.boss.isTheEntityAlive()) {
 			boss = null;
 			return false;
 		} else {
-			double d0 = this.boss.getDistanceSquared(entity);
+			double d0 = this.boss.getTheDistanceSquared(entity);
 			return d0 >= MINDIST && d0 <= MAXDIST;
 		}
 	}
@@ -59,7 +59,7 @@ public class EntityAIFollowBoss extends EntityAIBase {
 		if (boss == null) {
 			return false;
 		} else {
-			double d0 = this.boss.getDistanceSquared(entity);
+			double d0 = this.boss.getTheDistanceSquared(entity);
 			return d0 >= MINDIST && d0 <= MAXDIST;
 		}
 	}

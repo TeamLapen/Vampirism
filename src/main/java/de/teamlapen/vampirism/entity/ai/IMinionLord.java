@@ -16,11 +16,11 @@ public interface IMinionLord {
 	 * Entity's uuid
 	 * @return
 	 */
-	public UUID getPersistentID();
+	public UUID getThePersistentID();
 	
-	public boolean isEntityAlive();
+	public boolean isTheEntityAlive();
 	
-	public double getDistanceSquared(Entity e);
+	public double getTheDistanceSquared(Entity e);
 	
 	/**
 	 * The Entity representing this lord. Can be the same as this object (e.g. VampireLord) or something else (e.g. VampirePlayer)

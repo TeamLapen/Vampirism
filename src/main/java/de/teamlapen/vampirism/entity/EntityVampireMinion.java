@@ -97,10 +97,10 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 				if (lookForBossTimer > MAX_SEARCH_TIME) {
 					this.attackEntityFrom(DamageSource.generic, 5);
 				}
-			} else if (!boss.isEntityAlive()) {
+			} else if (!boss.isTheEntityAlive()) {
 				boss = null;
 				bossId = null;
-			} else if (boss.getDistanceSquared(this)> 1000) {
+			} else if (boss.getTheDistanceSquared(this)> 1000) {
 				if (this.rand.nextInt(80) == 0) {
 					this.attackEntityFrom(DamageSource.generic, 3);
 				}
@@ -157,7 +157,7 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 	@Override
 	public void setLord(IMinionLord b) {
 		if (!b.equals(boss)) {
-			this.setBossId(b.getPersistentID());
+			this.setBossId(b.getThePersistentID());
 			boss = b;
 		}
 	}
@@ -186,7 +186,7 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 				Logger.w("EntityVampireMinion", "PartialUpdate: The given id("+nbt.getInteger("eid")+")["+e+"] is no Minion Lord");
 				return;
 			}
-			this.bossId=this.boss.getPersistentID();
+			this.bossId=this.boss.getThePersistentID();
 		}
 		
 	}
