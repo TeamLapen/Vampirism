@@ -21,7 +21,7 @@ public class Skills {
 	public static ArrayList<ISkill> getAvailableSkills(int level) {
 		ArrayList<ISkill> sl = new ArrayList<ISkill>();
 		for (ISkill s : skills) {
-			if (level >= s.getMinLevel()) {
+			if (level >= s.getMinLevel()&&s.getMinLevel()!=-1) {
 				sl.add(s);
 			}
 		}

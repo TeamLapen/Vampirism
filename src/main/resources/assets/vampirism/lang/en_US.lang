@@ -57,6 +57,7 @@ text.vampirism:ritual_requirements_not_met=Not all requirements for this ritual 
 text.vampirism:purity=Purity
 text.vampirism:auto_fill_enabled=Auto Fill Enabled
 text.vampirism:auto_fill_disabled=Auto Fill Disabled
+text.vampirism:skill.deactivated_by_serveradmin=This skill is deactivated by your serveradmin
 
 #Config
 category.vampirism.balance=Balance settings

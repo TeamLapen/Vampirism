@@ -86,6 +86,7 @@ public final class BALANCE {
 		public static double SPEED_MAX_MOD;
 		@DefaultInt(value=15,minValue=7,maxValue=100,name = "Speed Level Cap",comment = "")
 		public static int SPEED_LCAP;
+		@DefaultDouble(value=0.5D,minValue=0.1D,maxValue=1.0D,name="Speed Type",comment = "")
 		public static double SPEED_TYPE;
 		@DefaultDouble(value=0.2D,minValue=0.1D,maxValue=0.4D,name="Jump Max Boost",comment = "")
 		public static double JUMP_MAX_BOOST;
@@ -116,12 +117,12 @@ public final class BALANCE {
 		public static int REGEN_COOLDOWN;
 		@DefaultInt(value=20,minValue=0,name="Regeneration Duration",comment = "In seconds")
 		public static int REGEN_DURATION;
-		@DefaultInt(value=4,minValue=1,name="Regeneration Min Level",comment = "In seconds")
+		@DefaultInt(value=4,minValue=-1,name="Regeneration Min Level",comment = "Set to -1 to deactivate this skill")
 		public static int REGEN_MIN_LEVEL;
 		
 		@DefaultInt(value=60,minValue=0,name="Weather Cool Down",comment = "In seconds")
 		public static int WEATHER_COOLDOWN;
-		@DefaultInt(value=4,minValue=1,name="Weather Min Level",comment = "In seconds")
+		@DefaultInt(value=4,minValue=-1,name="Weather Min Level",comment = "Set to -1 to deactivate this skill")
 		public static int WEATHER_MIN_LEVEL;
 		
 		@DefaultInt(value=20,minValue=0,name="Vampire Rage Cool Down",
@@ -133,8 +134,8 @@ public final class BALANCE {
 		@DefaultInt(value=5,minValue=0,name="Vampire Rage Duration Increase",
 				comment="Vampire Rage duration increase per level")
 		public static int LORD_DUR_PL;
-		@DefaultInt(value=8,minValue=1,name="Vampire Rage Min Level",
-				comment="Minimum Level for Vampire Rage")
+		@DefaultInt(value=8,minValue=-1,name="Vampire Rage Min Level",
+				comment="Set to -1 to deactivate this skill")
 		public static int LORD_MIN_LEVEL;
 		
 		public static int getVampireLordDuration(int level){

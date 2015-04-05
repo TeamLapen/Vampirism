@@ -481,7 +481,13 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 			skillTimer[i] = (-s.getCooldown()) + t;
 			((ILastingSkill) s).onDeactivated(this, player);
 		} else if (t == 0) {// Ready
-			if (getLevel() >= s.getMinLevel()) {
+			if(s.getMinLevel()==-1){
+				player.addChatMessage(new ChatComponentTranslation("text.vampirism:skill.deactivated_by_serveradmin"));
+			}
+			else if(getLevel() < s.getMinLevel()){
+				player.addChatMessage(new ChatComponentTranslation("text.vampirism:skill.level_to_low"));
+			}
+			else{
 				if (s instanceof ILastingSkill) {
 					ILastingSkill ls = (ILastingSkill) s;
 					skillTimer[i] = ls.getDuration(getLevel());
@@ -490,8 +496,6 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 					s.onActivated(this, player);
 					skillTimer[i] = -s.getCooldown();
 				}
-			} else {
-				player.addChatMessage(new ChatComponentTranslation("text.vampirism:skill.level_to_low"));
 			}
 		} else {// In cooldown
 			player.addChatMessage(new ChatComponentTranslation(
