@@ -11,58 +11,62 @@ public final class BALANCE {
 		public static int A2_getRequiredBlood(int level) {
 			return ALTAR_2_MIN_BLOOD + (level - TileEntityBloodAltarTier2.MIN_LEVEL) * ALTAR_2_ADD_BLOOD_PER_LEVEL;
 		}
-		@DefaultInt(0)
+		@DefaultInt(value=0,minValue=0,maxValue=2,name="Villagers Required for Ritual",comment = "")
 		public static int R1_VILLAGERS;// Required villagers for ritual 1
-		@DefaultInt(value = 40, comment = "Blood required for the first level up with altar 2")
+		@DefaultInt(value=40,minValue=20,maxValue=80,name="Minimum Blood for Altar 2",
+				comment="Blood required for the first level up with altar 2")
 		public static int ALTAR_2_MIN_BLOOD;
-		@DefaultInt(value = 30, comment = "Extra blood per level required")
+		@DefaultInt(value=30,minValue=15,maxValue=60,name="Extra Blood per Level",
+				comment="Extra blood per level required")
 		public static int ALTAR_2_ADD_BLOOD_PER_LEVEL;
 
-		@DefaultInt(value = 20, comment = "Blood amount needed for inital ritual")
+		@DefaultInt(value=20,minValue=10,maxValue=40,name="Blood Needed for Initial Ritual",
+				comment="Blood amount needed for inital ritual")
 		public static int ALTAR_1_BLOOD;
 	}
 	public static class MOBPROP {
-		@DefaultDouble(20.0D)
+		@DefaultDouble(value=20.0D,minValue=10.0D,maxValue=40.0D,name="Vampire Max Health",comment = "")
 		public static double VAMPIRE_MAX_HEALTH;
-		@DefaultDouble(5.0D)
+		@DefaultDouble(value=5.0D,minValue=2.5D,maxValue=10.0D,name="Vampire Attack Damage",comment = "")
 		public static double VAMPIRE_ATTACK_DAMAGE;
-		@DefaultDouble(0.3D)
+		@DefaultDouble(value=0.3D,minValue=0.1D,maxValue=0.6D,name="Vampire Movement Speed",comment = "")
 		public static double VAMPIRE_MOVEMENT_SPEED;
-		@DefaultInt(10)
+		@DefaultInt(value=10,minValue=5,maxValue=20,name = "Distance where Hunter Attacks Vampire",comment = "")
 		public static int VAMPIRE_DISTANCE_HUNTER;
-		
-		@DefaultDouble(90.0D)
+
+		@DefaultDouble(value = 90.0D,minValue=20.0D,maxValue=150.0D,name="Vampire Lord Max Health",comment = "")
 		public static double VAMPIRE_LORD_MAX_HEALTH;
-		@DefaultDouble(7.0D)
+		@DefaultDouble(value=7.0D,minValue=1.0D,maxValue=14.0D,name="Vampire Lord Attack Damage",comment = "")
 		public static double VAMPIRE_LORD_ATTACK_DAMAGE;
-		@DefaultDouble(0.3D)
+		@DefaultDouble(value=0.3D,minValue=0.1D,maxValue=0.6D,name="Vampire Lord Movement Speed",comment = "")
 		public static double VAMPIRE_LORD_MOVEMENT_SPEED;
-		@DefaultDouble(value=1.3D,comment="For each higher level the stats are multiplied with this factor")
+		@DefaultDouble(value=1.3D,minValue=1.0D,maxValue=2.0D,name="Vampire Lord Improvement per Level",
+				comment="For each higher level the stats are multiplied with this factor")
 		public static double VAMPIRE_LORD_IMPROVEMENT_PER_LEVEL;
 
-		@DefaultDouble(35.0D)
+		@DefaultDouble(value=35.0D,minValue=15.0D,maxValue=70.0D,name="Vampire Hunter Max Health",comment = "")
 		public static double VAMPIRE_HUNTER_MAX_HEALTH;
-		@DefaultDouble(2.5D)
+		@DefaultDouble(value=2.5D,minValue=1.0D,maxValue=5.0D,name="Vampire Hunter Attack Damage",comment = "")
 		public static double VAMPIRE_HUNTER_ATTACK_DAMAGE;
-		@DefaultDouble(0.28D)
+		@DefaultDouble(value=0.28D,minValue=0.1D,maxValue=0.6D,name="Vampire Hunter Movement Speed",comment = "")
 		public static double VAMPIRE_HUNTER_MOVEMENT_SPEED;
-		@DefaultInt(5)
+		@DefaultInt(value=5,minValue=0,maxValue=20,name="Maximum Vampire Hunters per Village",comment="")
 		public static int VAMPIRE_HUNTER_MAX_PER_VILLAGE;
-		@DefaultDouble(1.4D)
+		@DefaultDouble(value=1.4D,minValue=1.0D,maxValue=3.0D,name="Vampire Hunter Agressive Multiplier",comment = "")
 		public static double VAMPIRE_HUNTER_AGRESSIVE_MULT;
 		
-		@DefaultDouble(10.0D)
+		@DefaultDouble(value=10.0D,minValue=5.0D,maxValue=20.0D,name="Vampire Minion Max Health",comment = "")
 		public static double VAMPIRE_MINION_MAX_HEALTH;
-		@DefaultDouble(3.0D)
+		@DefaultDouble(value=3.0D,minValue=1.5D,maxValue=6.0D,name="Vampire Minion Attack Damage",comment = "")
 		public static double VAMPIRE_MINION_ATTACK_DAMAGE;
-		@DefaultDouble(0.25D)
+		@DefaultDouble(value=0.25D,minValue=0.1D,maxValue=0.5D,name="Vampire Minion Movement Speed",comment = "")
 		public static double VAMPIRE_MINION_MOVEMENT_SPEED;
 		
-		@DefaultDouble(100.0D)
+		@DefaultDouble(value=100.0D,minValue=50.0D,maxValue=150.0D,name="Dracula Max Health",comment = "")
 		public static double DRACULA_MAX_HEALTH;
-		@DefaultDouble(10.0D)
+		@DefaultDouble(value=10.0D,minValue=5.0D,maxValue=20.0D,name="Dracula Attack Damage",comment = "")
 		public static double DRACULA_ATTACK_DAMAGE;
-		@DefaultDouble(0.4D)
+		@DefaultDouble(value=0.4D,minValue=0.2D,maxValue=0.8D,name="Dracula Movement Speed",comment = "")
 		public static double DRACULA_MOVEMENT_SPEED;
 	}
 	/**
@@ -72,38 +76,40 @@ public final class BALANCE {
 	 *
 	 */
 	public static class VP_MODIFIERS {
-		@DefaultDouble(1.0D)
+		@DefaultDouble(value=1.0D,minValue=0.5D,maxValue=2.0D,name="Health Max Modifier",comment = "")
 		public static double HEALTH_MAX_MOD;
-		@DefaultInt(20)
+		@DefaultInt(value=20,minValue=10,maxValue=40,name = "Health Level Cap",comment = "")
 		public static int HEALTH_LCAP;
-		@DefaultDouble(0.5D)
+		@DefaultDouble(value=0.5D,minValue=0.5D,maxValue=1.0D,name="Health Type",comment="0.5 for square root, 1 for linear")
 		public static double HEALTH_TYPE;
-		@DefaultDouble(1.0D)
+		@DefaultDouble(value=1.0D,minValue=0.5D,maxValue=2.0D,name="Strength Max Modifier",comment = "")
 		public static double STRENGTH_MAX_MOD;
-		@DefaultInt(20)
+		@DefaultInt(value=20,minValue=10,maxValue=40,name = "Strength Level Cap",comment = "")
 		public static int STRENGTH_LCAP;
-		@DefaultDouble(0.5D)
+		@DefaultDouble(value=0.5D,minValue=0.5D,maxValue=1.0D,name="Strength Modifier Type",comment="0.5 for square root, 1 for linear")
 		public static double STRENGTH_TYPE;
-		@DefaultDouble(0.3D)
+		@DefaultDouble(value=0.3D,minValue=0.15D,maxValue=0.6D,name="Speed Max Modifier",comment = "")
 		public static double SPEED_MAX_MOD;
-		@DefaultInt(15)
+		@DefaultInt(value=15,minValue=7,maxValue=30,name = "Speed Level Cap",comment = "")
 		public static int SPEED_LCAP;
-		@DefaultDouble(0.5D)
 		public static double SPEED_TYPE;
-		@DefaultDouble(0.2D)
+		@DefaultDouble(value=0.2D,minValue=0.1D,maxValue=0.4D,name="Jump Max Boost",comment = "")
 		public static double JUMP_MAX_BOOST;
-		@DefaultInt(6)
+		@DefaultInt(value=6,minValue=3,maxValue=12,name = "Jump Level Cap",comment = "")
 		public static int JUMP_LCAP;
-		@DefaultDouble(0.5D)
+		@DefaultDouble(value=0.5D,minValue=0.25D,maxValue=1.0D,name="Jump Type",comment = "")
 		public static double JUMP_TYPE;
 	}
 	
 	public static class VV_PROP{
-		@DefaultInt(value=2,comment="How many villagers can be bitten until the hunters get agressive")//TODO increase
+		@DefaultInt(value=2,minValue=1,maxValue=50,name="Hunter's Tolerance for Biting Villagers",
+				comment="How many villagers can be bitten until the hunters get agressive")//TODO increase
 		public static int BITTEN_UNTIL_AGRESSIVE;
-		@DefaultInt(value=2,comment="How many villagers have to be killed by Vampires until the hunters get agressive")//TODO increase
+		@DefaultInt(value=2,minValue=1,maxValue=50,name="Hunter's Tolerance for Killing Villagers",
+				comment="How many villagers have to be killed by Vampires until the hunters get agressive")//TODO increase
 		public static int CONVERTED_UNTIL_AGRESSIVE;
-		@DefaultInt(value=50,comment="Determines how fast the villages forget about their fallen citizens.")
+		@DefaultInt(value=50,minValue=25,maxValue=100,name="Villagers Forgiveness Rate",
+				comment="Determines how fast the villages forget about their fallen citizens.")
 		public static int REDUCE_RATE;
 	}
 	
@@ -112,28 +118,29 @@ public final class BALANCE {
 	 * Time values should be in seconds
 	 */
 	public static class VP_SKILLS{
-		@DefaultInt(value=60)
+		@DefaultInt(value=60,minValue=30,maxValue=120,name="Regeneration Cool Down",comment = "")
 		public static int REGEN_COOLDOWN;
-		@DefaultInt(20)
+		@DefaultInt(value=20,minValue=10,maxValue=40,name="Regeneration Duration",comment = "")
 		public static int REGEN_DURATION;
-		@DefaultInt(4)
+		@DefaultInt(value=4,minValue=2,maxValue=8,name="Regeneration Min Level",comment = "")
 		public static int REGEN_MIN_LEVEL;
 		
-		@DefaultInt(value=60)
+		@DefaultInt(value=60,minValue=30,maxValue=120,name="Weather Cool Down",comment = "")
 		public static int WEATHER_COOLDOWN;
-		@DefaultInt(4)
+		@DefaultInt(value=4,minValue=2,maxValue=8,name="Weather Min Level",comment = "")
 		public static int WEATHER_MIN_LEVEL;
 		
-		@DefaultInt(value=20,comment="Vampire Lord cooldown duration")
+		@DefaultInt(value=20,minValue=10,maxValue=40,name="Vampire Lord Cool Down",
+				comment="Vampire Lord cooldown duration")
 		public static int LORD_COOLDOWN;
-		
-		@DefaultInt(value=10,comment="Standard Vampire Lord duration")
+		@DefaultInt(value=10,minValue=5,maxValue=20,name="Vampire Lord Duration",
+				comment="Standard Vampire Lord duration")
 		public static int LORD_MIN_DURATION;
-		
-		@DefaultInt(value=5,comment="Vampire Lord duration increase per level")
+		@DefaultInt(value=5,minValue=2,maxValue=10,name="Vampire Lord Duration Increase",
+				comment="Vampire Lord duration increase per level")
 		public static int LORD_DUR_PL;
-
-		@DefaultInt(value=8,comment="Minimum level for Vampire Lord transformation")
+		@DefaultInt(value=8,minValue=4,maxValue=16,name="Vampire Lord Min Level to Transform",
+				comment="Minimum level for Vampire Lord transformation")
 		public static int LORD_MIN_LEVEL;
 		
 		public static int getVampireLordDuration(int level){
@@ -162,29 +169,31 @@ public final class BALANCE {
 	}
 	
 	// Mob behavior
-	@DefaultInt(value = 2, comment = "Vampirehunters attack players with a vampire level higher than this")
+	@DefaultInt(value=2,minValue=1,maxValue=20,name="Player Level for Vampire Hunter Attack",
+			comment="Vampirehunters attack players with a vampire level higher than this")
 	public static int VAMPIRE_HUNTER_ATTACK_LEVEL;
 
-	@DefaultInt(value = 2, comment = "Vampires attack players unless their vampirelevel is higher than this")
+	@DefaultInt(value=2,minValue=1,maxValue=10,name="Player Level for Vampire Attack",
+			comment="Vampires attack players unless their vampire level is higher than this")
 	public static int VAMPIRE_FRIENDLY_LEVEL;
 
-	@DefaultInt(15)
+	@DefaultInt(value=15,minValue=0,maxValue=100,name="Vampire Hunter Spawn %",comment = "")
 	public static int VAMPIRE_HUNTER_SPAWN_PROBE;
 
-	@DefaultInt(100)
+	@DefaultInt(value=100,minValue=0,maxValue=100,name="Vampire Spawn %",comment = "")
 	public static int VAMPIRE_SPAWN_PROBE;
 	
-	@DefaultInt(30)
+	@DefaultInt(value=30,minValue=0,maxValue=100,name="Vampire Lord Spawn %",comment = "")
 	public static int VAMPIRE_LORD_SPAWN_PROBE;
 
 	// Vampireplayer
-	@DefaultBoolean(value = true, comment = "Whether vampireplayers should loose level if killed by a hunter")
+	@DefaultBoolean(value=true,name="Vampire Player Loose Level",comment="Whether vampireplayers should loose level if killed by a hunter")
 	public static boolean VAMPIRE_PLAYER_LOOSE_LEVEL;
 
-	@DefaultDouble(1.5D)
+	@DefaultDouble(value=1.5D,minValue=0.7D,maxValue=3.0D,name="Vampire Player Sun Damage",comment = "")
 	public static double VAMPIRE_PLAYER_SUN_DAMAGE;
 	
-	@DefaultInt(2)
+	@DefaultInt(value=2,minValue=1,maxValue=4,name="Vampire Player Creeper Avoidance Level",comment = "")
 	public static int VAMPIRE_PLAYER_CREEPER_AVOID_LEVEL;
 	
 	@DefaultInt(value=40,comment="Probability that a vampire gives you sanguinare (1/n)")
@@ -194,18 +203,20 @@ public final class BALANCE {
 	public static int VAMPIRE_PLAYER_SANGUINARE_DURATION;
 	
 	// Vampiremob
-	@DefaultInt(5)
+	@DefaultInt(value=5,minValue=2,maxValue=30,name="Small Mob Blood Amount",comment = "")
 	public static int SMALL_BLOOD_AMOUNT; // Blood amount a small mob gives
-	@DefaultInt(10)
+	@DefaultInt(value=10,minValue=2,maxValue=30,name="Medium Mob Blood Amount",comment = "")
 	public static int NORMAL_BLOOD_AMOUNT; // "" normal mob
-	@DefaultInt(15)
+	@DefaultInt(value=15,minValue=2,maxValue=30,name="Big Mob Blood Amount",comment = "")
 	public static int BIG_BLOOD_AMOUNT; // "" big mob
-	@DefaultDouble(value=1.0D,comment="Percentage of his max health a mob can maximal have to be bitten (Disabled by default)")
+	@DefaultDouble(value=1.0D,minValue=0.5D,maxValue=2.0D,name="Mob Health to Suck Blood",
+			comment="Percentage of his max health a mob can maximal have to be bitten (Disabled by default)")
 	public static double SUCK_BLOOD_HEALTH_REQUIREMENT;
 
 	// Other
-	@DefaultDouble(1.0D)
+	@DefaultDouble(value=1.0D,minValue=0.5D,maxValue=2.0D,name="Blood Saturation",comment = "")
 	public static double BLOOD_SATURATION;// Saturation of blood
-	@DefaultInt(value = 4, comment = "Amount of exhaustion, which has to be reached to loose one blood")
+	@DefaultInt(value=4,minValue=2,maxValue=8,name="Blood Exhaustion per Level",
+			comment = "Amount of exhaustion, which has to be reached to loose one blood")
 	public static int BLOOD_EXH_PER_BL;
 }

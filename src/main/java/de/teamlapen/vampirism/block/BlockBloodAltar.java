@@ -19,7 +19,6 @@ public class BlockBloodAltar extends BasicBlockContainer {
 		super(Material.rock, name);
 		this.setHardness(70.0F);
 		this.setResistance(4000.0F);
-		this.setBlockTextureName("vampirism:iconBloodAltarTier");
 	}
 
 	private void activateAltar(EntityPlayer player, ItemStack item, TileEntityBloodAltar te) {

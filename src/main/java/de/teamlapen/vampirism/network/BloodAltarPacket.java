@@ -15,7 +15,7 @@ public class BloodAltarPacket implements IMessage {
 		@Override
 		public IMessage onMessage(BloodAltarPacket message, MessageContext ctx) {
 			((TileEntityBloodAltar) Minecraft.getMinecraft().theWorld.getTileEntity(message.x, message.y, message.z)).setOccupied(message.hasSword,
-					null);
+					false);
 			return null;
 		}
 	}

@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -17,6 +18,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.EntityVampire;
+import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.REFERENCE;
 
@@ -77,23 +79,20 @@ public class ItemVampiresFear extends ItemSword {
 		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
 	}
 
-	// TODO change the following two classes
 	@Override
-	public boolean hitEntity(ItemStack itemStack, EntityLivingBase e1, EntityLivingBase e2) {
-
-		if (e1 instanceof EntityVampire) {
-			if (e1.getHealth() <= 3) {
-
-				e1.worldObj.spawnParticle("hugeexplosion", e1.posX, e1.posY + 1, e1.posZ, 0.0D, 0.1D, 0.0D);
-				e1.setHealth(0.0F);
-
-				if (itemStack.stackTagCompound == null) {
-					itemStack.stackTagCompound = new NBTTagCompound();
-					itemStack.stackTagCompound.setInteger("blood", 0);
-				}
-				itemStack.stackTagCompound.setInteger("blood", itemStack.stackTagCompound.getInteger("blood") + 1);
+	public boolean hitEntity(ItemStack itemStack, EntityLivingBase entityTarget, EntityLivingBase e2) {
+		if(entityTarget.worldObj.isRemote)
+			return false;
+		if(entityTarget.getHealth() <= 0) {
+			if(itemStack.stackTagCompound == null) {
+				itemStack.stackTagCompound = new NBTTagCompound();
+				itemStack.stackTagCompound.setInteger("blood", 0);
 			}
-
+			itemStack.stackTagCompound.setInteger("blood",  itemStack.stackTagCompound.getInteger("blood") + VampireMob.getMaxBloodAmount((EntityCreature) entityTarget));
+			if(itemStack.stackTagCompound.getInteger("blood") > 20)
+				itemStack.stackTagCompound.setInteger("blood", 20);
+			else if (itemStack.stackTagCompound.getInteger("blood") < 0)
+				itemStack.stackTagCompound.setInteger("blood", 0);
 		}
 		return false;
 	}

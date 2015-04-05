@@ -25,7 +25,6 @@ public class BlockBloodAltarTier2 extends BasicBlockContainer {
 
 	public BlockBloodAltarTier2() {
 		super(Material.iron, name);
-		this.setBlockTextureName("vampirism:iconBloodAltarTier2");
 		this.setHardness(4.0F);
 		this.setHarvestLevel("pickaxe", 1);
 	}

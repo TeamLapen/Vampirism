@@ -110,50 +110,18 @@ public class Configs {
 			Class type = f.getType();
 			try {
 				if (type == int.class) {
-					DefaultInt a = f.getAnnotation(DefaultInt.class); // Possible
-																					// exception
-																					// should
-																					// not
-																					// be
-																					// caught
-																					// so
-																					// you
-																					// cant
-																					// forget
-																					// a
-																					// default
-																					// value
-					f.set(null, config.get(cat.getQualifiedName(), name, a.value(), a.comment()).getInt());
+					// Possible exception should not be caught so you can't forget a default value					
+					DefaultInt a = f.getAnnotation(DefaultInt.class); 
+					f.set(null, config.get(cat.getQualifiedName(), a.name(), a.value(), 
+							a.comment(), a.minValue(), a.maxValue()).getInt());
 				} else if (type == double.class) {
-					DefaultDouble a = f.getAnnotation(DefaultDouble.class); // Possible
-																							// exception
-																							// should
-																							// not
-																							// be
-																							// caught
-																							// so
-																							// you
-																							// cant
-																							// forget
-																							// a
-																							// default
-																							// value
-					f.set(null, config.get(cat.getQualifiedName(), name, a.value(), a.comment()).getDouble());
+					// Possible exception should not be caught so you can't forget a default value					
+					DefaultDouble a = f.getAnnotation(DefaultDouble.class); 
+					f.set(null, config.get(cat.getQualifiedName(), a.name(), a.value(), 
+							a.comment(), a.minValue(), a.maxValue()).getDouble());
 				} else if (type == boolean.class) {
-					DefaultBoolean a = f.getAnnotation(DefaultBoolean.class); // Possible
-																								// exception
-																								// should
-																								// not
-																								// be
-																								// caught
-																								// so
-																								// you
-																								// cant
-																								// forget
-																								// a
-																								// default
-																								// value
-					f.set(null, config.get(cat.getQualifiedName(), name, a.value(), a.comment()).getBoolean());
+					DefaultBoolean a = f.getAnnotation(DefaultBoolean.class); 
+					f.set(null, config.get(cat.getQualifiedName(), a.name(), a.value(), a.comment()).getBoolean());
 				}
 			} catch (NullPointerException e1) {
 				Logger.e("Configs", "Author probably forgot to specify a default value for " + name + " in " + cls.getCanonicalName(), e1);
