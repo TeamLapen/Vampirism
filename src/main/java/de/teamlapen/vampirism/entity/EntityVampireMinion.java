@@ -47,7 +47,7 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 					return false;
 				}
 				if (entity instanceof EntityPlayer) {
-					return VampirePlayer.get((EntityPlayer) entity).getLevel() <= BALANCE.VAMPIRE_FRIENDLY_LEVEL;
+					return VampirePlayer.get((EntityPlayer) entity).getLevel() <= BALANCE.VAMPIRE_FRIENDLY_LEVEL||VampirePlayer.get((EntityPlayer) entity).isVampireLord();
 				}
 				return false;
 			}

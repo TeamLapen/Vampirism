@@ -15,6 +15,7 @@ import net.minecraft.entity.boss.IBossDisplayData;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -25,7 +26,9 @@ import de.teamlapen.vampirism.util.BALANCE;
 public class EntityDracula extends EntityVampire implements IBossDisplayData {
 	// TODO Sounds
 
+	private static final int DISAPPEAR_DELAY = 200;
 	private int teleportDelay;
+	private int disappearDelay;
 	private final int maxTeleportDelay = 30;
 	private final int maxTeleportDistanceX = 16;
 	private final int maxTeleportDistanceY = 16;
@@ -84,6 +87,11 @@ public class EntityDracula extends EntityVampire implements IBossDisplayData {
 			this.faceEntity(this.entityToAttack, 100.0F, 100.0F);
 
 		if (!this.worldObj.isRemote && this.isEntityAlive()) {
+			if(disappearDelay>0){
+				if(--disappearDelay==1){
+					this.teleportAway();
+				}
+			}
 			if (this.entityToAttack != null) {
 				if (this.entityToAttack instanceof EntityPlayer
 						&& this.shouldAttackPlayer((EntityPlayer) this.entityToAttack)) {
@@ -199,6 +207,18 @@ public class EntityDracula extends EntityVampire implements IBossDisplayData {
 			return true;
 		}
 	}
+	
+	@Override
+	public void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+		nbt.setInteger("ddelay", disappearDelay);
+	}
+	
+	@Override
+	public void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+		this.disappearDelay=nbt.getInteger("ddelay");
+	}
 
 	/**
 	 * Checks to see if dracula should be attacking this player
@@ -213,5 +233,14 @@ public class EntityDracula extends EntityVampire implements IBossDisplayData {
 		vec31 = vec31.normalize();
 		double d1 = vec3.dotProduct(vec31);
 		return d1 > 1.0D - 0.025D / d0 && p_70821_1_.canEntityBeSeen(this);
+	}
+	
+	/**
+	 * Starts a countdown at whichs end the entity will be fake teleported and killed
+	 */
+	public void makeDisappear(){
+		if(this.disappearDelay==0){
+			this.disappearDelay=DISAPPEAR_DELAY;
+		}
 	}
 }

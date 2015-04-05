@@ -127,22 +127,22 @@ public final class BALANCE {
 		
 		@DefaultInt(value=20,minValue=0,name="Vampire Rage Cool Down",
 				comment="Vampire Rage cooldown duration")
-		public static int LORD_COOLDOWN;
+		public static int RAGE_COOLDOWN;
 		@DefaultInt(value=10,minValue=1,name="Vampire Rage Duration",
 				comment="Standard Vampire Rage duration")
-		public static int LORD_MIN_DURATION;
+		public static int RAGE_MIN_DURATION;
 		@DefaultInt(value=5,minValue=0,name="Vampire Rage Duration Increase",
 				comment="Vampire Rage duration increase per level")
-		public static int LORD_DUR_PL;
+		public static int RAGE_DUR_PL;
 		@DefaultInt(value=8,minValue=-1,name="Vampire Rage Min Level",
 				comment="Set to -1 to deactivate this skill")
-		public static int LORD_MIN_LEVEL;
+		public static int RAGE_MIN_LEVEL;
 		
 		public static int getVampireLordDuration(int level){
-			if(level<LORD_MIN_LEVEL){
+			if(level<RAGE_MIN_LEVEL){
 				return 0;
 			}
-			return 20 *(LORD_MIN_DURATION+(level-LORD_MIN_LEVEL)*LORD_DUR_PL);
+			return 20 *(RAGE_MIN_DURATION+(level-RAGE_MIN_LEVEL)*RAGE_DUR_PL);
 		}
 	}
 	/**

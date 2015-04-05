@@ -51,7 +51,7 @@ public class Skills {
 	 * Register all default skills
 	 */
 	public static void registerDefaultSkills() {
-		VampireLordSkill.ID = Skills.registerSkill(new VampireLordSkill());
+		VampireRageSkill.ID = Skills.registerSkill(new VampireRageSkill());
 		Skills.registerSkill(new RegenSkill());
 		Skills.registerSkill(new ChangeWeatherSkill());
 	}

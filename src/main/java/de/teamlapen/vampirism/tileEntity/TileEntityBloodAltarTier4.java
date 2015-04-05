@@ -30,6 +30,7 @@ import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.RenderScreenRedPacket;
 import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
 import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
 
 /**
  * Tileentity used for BloodAltarTier4
@@ -155,7 +156,7 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 
 
 		int pl = VampirePlayer.get(player).getLevel();
-		if (pl < 4 || pl > 13)
+		if (pl < 4 || pl > REFERENCE.HIGHEST_REACHABLE_LEVEL)
 			return LevReq.LEVEL_WRONG;
 		if (pl == 4) {
 			if (sl != 1)

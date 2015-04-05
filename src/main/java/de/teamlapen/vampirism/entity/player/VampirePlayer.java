@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
@@ -37,13 +38,16 @@ import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.block.BlockCoffin;
 import de.teamlapen.vampirism.entity.DefaultVampire;
+import de.teamlapen.vampirism.entity.EntityDracula;
+import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.entity.VampireMob;
+import de.teamlapen.vampirism.entity.ai.IMinion;
 import de.teamlapen.vampirism.entity.ai.IMinionLord;
 import de.teamlapen.vampirism.entity.player.skills.ILastingSkill;
 import de.teamlapen.vampirism.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.entity.player.skills.Skills;
-import de.teamlapen.vampirism.entity.player.skills.VampireLordSkill;
+import de.teamlapen.vampirism.entity.player.skills.VampireRageSkill;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
 import de.teamlapen.vampirism.network.SpawnParticlePacket;
 import de.teamlapen.vampirism.network.UpdateVampirePlayerPacket;
@@ -51,6 +55,7 @@ import de.teamlapen.vampirism.proxy.CommonProxy;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
 
 /**
  * IExtendedEntityPropertiesClass which extends the EntityPlayer with vampire
@@ -104,7 +109,7 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 		}
 
 		public void addExhaustion(float amount) {
-			if (isSkillActive(VampireLordSkill.ID)) {
+			if (isSkillActive(VampireRageSkill.ID)) {
 				amount = amount * 1.5F;
 			}
 			this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount,
@@ -227,6 +232,7 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 	public final static String TAG = "VampirePlayer";
 
 	public final static int MAXBLOOD = 20;
+	private static final String KEY_VAMPIRE_LORD = "vampire_lord";
 
 	/**
 	 * 
@@ -297,6 +303,8 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 	private EntityLivingBase minionTarget;
 	
 	private boolean skipFallDamageReduction=false;
+	
+	private boolean vampireLord=false;
 
 	public VampirePlayer(EntityPlayer player) {
 		this.player = player;
@@ -397,6 +405,7 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 					"Loaded skill timers have a different size than the existing skills");
 			skillTimer = new int[Skills.getSkillCount()];
 		}
+		vampireLord=properties.getBoolean(KEY_VAMPIRE_LORD);
 		setAutoFillBlood(properties.getBoolean(KEY_AUTOFILL));
 		this.bloodStats.readNBT(properties);
 		PlayerModifiers.applyModifiers(level, player);
@@ -408,12 +417,14 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 	 * updates.
 	 * 
 	 * @param level
-	 * @param vLordTimer
+	 * @param skill timer
+	 * @param Whether the player is a vampire lord or not
 	 */
 	@SideOnly(Side.CLIENT)
-	public void loadSyncUpdate(int level, int[] timers) {
+	public void loadSyncUpdate(int level, int[] timers,boolean lord) {
 		this.setLevel(level);
 		this.skillTimer = timers;
+		this.vampireLord=lord;
 	}
 
 	private void looseLevel() {
@@ -458,8 +469,27 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 		if (BALANCE.VAMPIRE_PLAYER_LOOSE_LEVEL
 				&& source.damageType.equals("mob")
 				&& source instanceof EntityDamageSource) {
-			if (source.getEntity() instanceof EntityVampireHunter) {
+			Entity src=source.getEntity();
+			if (src instanceof EntityVampireHunter) {
 				looseLevel();
+				this.setVampireLord(false);
+			}
+			
+			if(src instanceof EntityVampire||(src instanceof IMinion && ((IMinion)src).getLord() instanceof EntityLiving)){
+				EntityLiving old;
+				if(src instanceof IMinion){
+					old=(EntityLiving) ((IMinion)src).getLord();
+				}
+				else{
+					old=(EntityLiving) src;
+				}
+				EntityDracula dracula=(EntityDracula) EntityList.createEntityByName(REFERENCE.ENTITY.DRACULA_NAME, old.worldObj);
+				dracula.copyLocationAndAnglesFrom(old);
+				dracula.makeDisappear();
+				old.worldObj.spawnEntityInWorld(dracula);
+				old.setDead();
+				this.setVampireLord(false);
+				//TODO if other player is the killer he can become the lord
 			}
 		}
 		for (int i = 0; i < skillTimer.length; i++) {
@@ -595,9 +625,14 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 		properties.setInteger(KEY_BLOOD, getBlood());
 		properties.setIntArray(KEY_SKILLS, skillTimer);
 		properties.setBoolean(KEY_AUTOFILL, getAutoFillBlood());
+		properties.setBoolean(KEY_VAMPIRE_LORD, isVampireLord());
 		this.bloodStats.writeNBT(properties);
 		compound.setTag(EXT_PROP_NAME, properties);
 
+	}
+
+	public boolean isVampireLord() {
+		return vampireLord;
 	}
 
 	private void setAutoFillBlood(boolean value) {
@@ -629,6 +664,20 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 			PlayerModifiers.applyModifiers(l, player);
 			this.sync(true);
 		}
+	}
+	
+	/**
+	 * Sets if the player is a vampire lord or not
+	 * @param state
+	 * @return will return false if the player cannot become a vampire lord
+	 */
+	public boolean setVampireLord(boolean state){
+		if(state&&getLevel()<REFERENCE.HIGHEST_REACHABLE_LEVEL){
+			Logger.w(TAG, "Cannot become a vampire lord since the player has not reached the highest level");
+			return false;
+		}
+		this.vampireLord=state;
+		return true;
 	}
 
 	/**
@@ -697,7 +746,7 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 	
 	public IMessage createUpdatePacket(){
 		return new UpdateVampirePlayerPacket(player.getEntityId(),
-				getLevel(), skillTimer);
+				getLevel(), skillTimer,isVampireLord());
 	}
 
 	@Override

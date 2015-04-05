@@ -29,5 +29,7 @@ public class REFERENCE {
 	public static final boolean RESET_CONFIG_IN_DEV=false;
 
 	public static final String VAMPIRE_LEVEL_NBT_KEY = "vampirelevel";
+	
+	public static final int HIGHEST_REACHABLE_LEVEL=13;
 
 }

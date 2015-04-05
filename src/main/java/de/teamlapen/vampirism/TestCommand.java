@@ -59,12 +59,12 @@ public class TestCommand implements ICommand {
 
 	@Override
 	public String getCommandName() {
-		return "test";
+		return "vtest";
 	}
 
 	@Override
 	public String getCommandUsage(ICommandSender p_71518_1_) {
-		return "/test";
+		return "/vtest";
 	}
 
 	public boolean isPotionActive(Potion p_70644_1_) {

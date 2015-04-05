@@ -20,7 +20,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.entity.player.skills.VampireLordSkill;
+import de.teamlapen.vampirism.entity.player.skills.VampireRageSkill;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -73,7 +73,7 @@ public class VampireHudOverlay extends Gui {
 	 */
 	@SubscribeEvent
 	public void onRenderWorldLast(RenderWorldLastEvent event){
-		boolean lord=VampirePlayer.get(this.mc.thePlayer).isSkillActive(VampireLordSkill.ID);
+		boolean lord=VampirePlayer.get(this.mc.thePlayer).isSkillActive(VampireRageSkill.ID);
 		if(renderRed>0||lord){
 			//Set the working matrix/layer to a layer directly on the screen/in front of the player
 			ScaledResolution scaledresolution = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);

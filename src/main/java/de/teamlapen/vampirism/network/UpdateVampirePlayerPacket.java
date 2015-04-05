@@ -30,7 +30,7 @@ public class UpdateVampirePlayerPacket implements IMessage {
 			Entity e=Minecraft.getMinecraft().theWorld.getEntityByID(message.id);
 			if(e!=null){
 				if(e instanceof EntityPlayer){
-					VampirePlayer.get((EntityPlayer) e).loadSyncUpdate(message.level, message.timers);
+					VampirePlayer.get((EntityPlayer) e).loadSyncUpdate(message.level, message.timers,message.lord);
 				}
 				else{
 					Logger.w("UpdaVampirePlayer", "Entity with id "+message.id+" is not a player");
@@ -43,6 +43,7 @@ public class UpdateVampirePlayerPacket implements IMessage {
 
 	private int level;
 	private int id;
+	private boolean lord;
 	
 	private int[] timers;
 	/**
@@ -58,11 +59,13 @@ public class UpdateVampirePlayerPacket implements IMessage {
 	 * @param id Entity id
 	 * @param level Vampire level
 	 * @param timers Skill timer
+	 * @param lord if the player is a vampire lord
 	 */
-	public UpdateVampirePlayerPacket(int id,int level,int[] timers) {
+	public UpdateVampirePlayerPacket(int id,int level,int[] timers,boolean lord) {
 		this.id=id;
 		this.level=level;
 		this.timers=timers;
+		this.lord=lord;
 	}
 
 	@Override
@@ -71,6 +74,7 @@ public class UpdateVampirePlayerPacket implements IMessage {
 		level=tag.getInteger("level");
 		timers=tag.getIntArray("timers");
 		id=tag.getInteger("id");
+		lord=tag.getBoolean("lord");
 
 	}
 
@@ -80,6 +84,7 @@ public class UpdateVampirePlayerPacket implements IMessage {
 		tag.setInteger("level", level);
 		tag.setIntArray("timers", timers);;
 		tag.setInteger("id", id);
+		tag.setBoolean("lord", lord);
 		ByteBufUtils.writeTag(buf, tag);
 
 	}
