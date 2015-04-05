@@ -187,6 +187,12 @@ public final class BALANCE {
 	@DefaultInt(2)
 	public static int VAMPIRE_PLAYER_CREEPER_AVOID_LEVEL;
 	
+	@DefaultInt(value=40,comment="Probability that a vampire gives you sanguinare (1/n)")
+	public static int VAMPIRE_PLAYER_SANGUINARE_PROB;
+	
+	@DefaultInt(value=1200,comment="Duration of the sanguinare vampiris effect in seconds")
+	public static int VAMPIRE_PLAYER_SANGUINARE_DURATION;
+	
 	// Vampiremob
 	@DefaultInt(5)
 	public static int SMALL_BLOOD_AMOUNT; // Blood amount a small mob gives

@@ -6,6 +6,7 @@ import java.lang.reflect.Modifier;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 
@@ -13,6 +14,7 @@ public class ModPotion extends Potion{
 	public static Potion sunscreen;
 	public static Potion thirst;
 	public static Potion saturation;
+	public static Potion sanguinare;
 	
 	public ModPotion(int id, boolean full_effectiv, int color) {
 		super(id, full_effectiv, color);
@@ -70,5 +72,6 @@ public class ModPotion extends Potion{
 		sunscreen=new ModPotion(40,false,345345).setIconIndex(7, 1).setPotionName("potion.vampirism:sunscreen");
 		thirst=new ModPotion(41,false,859494).setIconIndex(1, 1).setPotionName("potion.vampirism:thirst");
 		saturation=new ModPotion(42,false,850484).setIconIndex(2, 2).setPotionName("potion.vampirism:saturation");
+		sanguinare=new ModPotion(43,false,0x6A0888).setIconIndex(7, 1).setPotionName("potion.vampirism:sanguinare").func_111184_a(SharedMonsterAttributes.attackDamage, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, 0);
 	}
 }

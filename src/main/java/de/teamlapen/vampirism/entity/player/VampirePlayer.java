@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
@@ -35,6 +36,7 @@ import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.block.BlockCoffin;
+import de.teamlapen.vampirism.entity.DefaultVampire;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.ai.IMinionLord;
@@ -422,6 +424,18 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 	}
 	
 	public boolean onEntityAttacked(DamageSource source, float amount){
+		if(source.getEntity() instanceof DefaultVampire && getLevel()==0){
+			//Since the method seems to be called 4 times probability is decreased by the factor 4
+			if(player.worldObj.rand.nextInt(BALANCE.VAMPIRE_PLAYER_SANGUINARE_PROB*4)==0){
+				if(!player.isPotionActive(ModPotion.sanguinare)){
+					player.addPotionEffect(new PotionEffect(ModPotion.sanguinare.id,BALANCE.VAMPIRE_PLAYER_SANGUINARE_DURATION*20));
+				}
+
+			}
+			else{
+				Logger.i("tes", "no");
+			}
+		}
 			if(source.getEntity() instanceof EntityLivingBase &&getLevel()>0){
 				this.minionTarget=(EntityLivingBase) source.getEntity();
 				return false;
@@ -503,6 +517,14 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 	 */
 	public void onUpdate() {
 		if (getLevel() <= 0) {
+			PotionEffect sang=player.getActivePotionEffect(ModPotion.sanguinare);
+			if(sang!=null){
+				if(sang.getDuration()==1){
+					this.levelUp();
+					player.addPotionEffect(new PotionEffect(ModPotion.saturation.id,300));
+					player.addPotionEffect(new PotionEffect(Potion.resistance.id,300));
+				}
+			}
 			return;
 		}
 		this.bloodStats.onUpdate();
