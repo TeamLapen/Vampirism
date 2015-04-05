@@ -11,6 +11,6 @@ public @interface DefaultDouble {
 	String comment() default "";
 	String name();
 	double value();
-	double  minValue();
-	double  maxValue();
+	double  minValue() default Double.MIN_VALUE;
+	double  maxValue() default Double.MAX_VALUE;
 }

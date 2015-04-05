@@ -11,6 +11,6 @@ public @interface DefaultInt {
 	String comment() default "";
 	String name();
 	int value();
-	int minValue();
-	int maxValue();
+	int minValue() default Integer.MIN_VALUE;
+	int maxValue() default Integer.MAX_VALUE;
 }

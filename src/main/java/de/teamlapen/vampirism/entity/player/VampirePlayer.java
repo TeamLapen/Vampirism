@@ -542,7 +542,9 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 				}
 				player.attackEntityFrom(VampirismMod.sunDamage, dmg);
 			}
-
+			if(player.isPotionActive(ModPotion.sanguinare.id)){
+				player.removePotionEffect(ModPotion.sanguinare.id);
+			}
 		}
 
 		/**
