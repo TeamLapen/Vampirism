@@ -46,7 +46,6 @@ public class VampireHunterRenderer extends RenderBiped {
 		
 		public RendererCustomVillager(ModelBase p_i1262_1_, float p_i1262_2_) {
 			super(p_i1262_1_, p_i1262_2_);
-			// TODO Auto-generated constructor stub
 		}
 
 		@Override

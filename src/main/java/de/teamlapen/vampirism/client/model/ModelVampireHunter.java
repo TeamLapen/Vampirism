@@ -16,9 +16,7 @@ public class ModelVampireHunter extends ModelBipedCloaked {
 	public ModelVampireHunter(boolean hasWeapons) {
 		super(0.0F, 0.0F, 128, 64);
 
-		renderWeapons = hasWeapons; // TODO Just for testing, supposed to be
-									// parameter
-		// in constructor or settable by method
+		renderWeapons = hasWeapons;
 
 		hatTop = new ModelRenderer(this, 0, 45);
 		hatTop.addBox(-4F, -14F, -4F, 8, 5, 8);

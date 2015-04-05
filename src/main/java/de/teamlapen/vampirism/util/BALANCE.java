@@ -97,11 +97,11 @@ public final class BALANCE {
 	}
 	
 	public static class VV_PROP{
-		@DefaultInt(value=2,minValue=1,name="Hunter's Tolerance for Biting Villagers",
-				comment="How many villagers can be bitten until the hunters get agressive")//TODO increase
+		@DefaultInt(value=4,minValue=1,name="Hunter's Tolerance for Biting Villagers",
+				comment="How many villagers can be bitten until the hunters get agressive")
 		public static int BITTEN_UNTIL_AGRESSIVE;
-		@DefaultInt(value=2,minValue=1,name="Hunter's Tolerance for Killing Villagers",
-				comment="How many villagers have to be killed by Vampires until the hunters get agressive")//TODO increase
+		@DefaultInt(value=4,minValue=1,name="Hunter's Tolerance for Killing Villagers",
+				comment="How many villagers have to be killed by Vampires until the hunters get agressive")
 		public static int CONVERTED_UNTIL_AGRESSIVE;
 		@DefaultInt(value=50,minValue=1,name="Villagers Forgiveness Rate",
 				comment="Determines how fast the villages forget about their fallen citizens.")

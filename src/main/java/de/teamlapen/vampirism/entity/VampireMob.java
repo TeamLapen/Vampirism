@@ -158,8 +158,6 @@ public class VampireMob implements IExtendedEntityProperties {
 
 	@Override
 	public void init(Entity entity, World world) {
-		// TODO Auto-generated method stub
-
 	}
 
 	public boolean isVampire() {

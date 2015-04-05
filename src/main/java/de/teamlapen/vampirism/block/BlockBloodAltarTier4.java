@@ -13,6 +13,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 import de.teamlapen.vampirism.GuiHandler;
 import de.teamlapen.vampirism.VampirismMod;
@@ -34,7 +35,6 @@ public class BlockBloodAltarTier4 extends BasicBlockContainer {
 
 	public BlockBloodAltarTier4() {
 		super(Material.rock, name);
-		this.setBlockTextureName("glowstone");//TODO change
 		this.setHardness(5.0F);
 		this.setHarvestLevel("pickaxe", 2);
 	}
@@ -92,7 +92,8 @@ public class BlockBloodAltarTier4 extends BasicBlockContainer {
 		}
 		if (!player.isSneaking()) {
 			if(!te.getPhase().equals(PHASE.NOT_RUNNING)){
-				return false; //TODO maybe userfeedback
+				player.addChatMessage(new ChatComponentTranslation("text.vampirism:ritual_still_running"));
+				return false;
 			}
 			player.openGui(VampirismMod.instance, GuiHandler.ID_ALTAR_4, world, x, y, z);
 			return true;

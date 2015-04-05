@@ -52,6 +52,7 @@ text.vampirism:entity_level=Level
 text.vampirism:ritual_missing_times=You are missing items for this ritual
 text.vampirism:ritual_structure_wrong=The structure is wrong for this ritual
 text.vampirism:ritual_level_wrong=You cannot use this altar at this level
+text.vampirism:ritual_still_running=The ritual is still running
 text.vampirism:not_enough_blood=There is not enough blood in the altar
 text.vampirism:ritual_requirements_not_met=Not all requirements for this ritual were met
 text.vampirism:purity=Purity
