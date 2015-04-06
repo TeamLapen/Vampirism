@@ -6,12 +6,12 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGlassBottle;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.ModItems;
@@ -27,24 +27,59 @@ import de.teamlapen.vampirism.util.REFERENCE;
  */
 public class ItemBloodBottle extends ItemGlassBottle {
 
-	public static void addBlood(ItemStack stack, int a) {
-		stack.setItemDamage(Math.min(stack.getItemDamage() + a, ItemBloodBottle.MAX_BLOOD));
+	/**
+	 * Adds the given amount of blood to the bottle
+	 * @param stack
+	 * @param a amount
+	 * @return The amount which could not be added
+	 */
+	public static int addBlood(ItemStack stack, int a) {
+		int amt=stack.getItemDamage() + a;
+		int left=0;
+		if(amt>MAX_BLOOD){
+			left=amt-MAX_BLOOD;
+			amt=MAX_BLOOD;
+		}
+		stack.setItemDamage(amt);
+		return left;
 	}
 	public static int getBlood(ItemStack stack) {
 		return stack.getItemDamage();
 	}
-	// Returns the first bottle found in the player's hotbar (doesn't need to be
-	// held)
-	public static ItemStack getBloodBottleInInventory(InventoryPlayer inventory) {
+	
+	/**
+	 * Returns the first blood bottle found on the hotbar
+	 * @param inventory
+	 * @param onlyNonFull If true only bottles with space left will be returned
+	 * @return
+	 */
+	public static ItemStack getBloodBottleInInventory(InventoryPlayer inventory,boolean onlyNonFull) {
 		int hotbarSize = InventoryPlayer.getHotbarSize();
 		for (int i = 0; i < hotbarSize; i++) {
 			ItemStack itemStack = inventory.getStackInSlot(i);
-			if (itemStack != null && itemStack.getUnlocalizedName().compareTo(ModItems.bloodBottle.getUnlocalizedName()) == 0) {
+			if (itemStack != null && itemStack.getItem().equals(ModItems.bloodBottle)&&(!onlyNonFull||(getBlood(itemStack)<MAX_BLOOD))) {
 				return itemStack;
 			}
 		}
 		return null;
 	}
+	
+	/**
+	 * Returns the first itemstack of normal glas bottles
+	 * @param inventory
+	 * @return
+	 */
+	public static ItemStack getGlasBottleInInventory(InventoryPlayer inventory) {
+		int hotbarSize = InventoryPlayer.getHotbarSize();
+		for (int i = 0; i < hotbarSize; i++) {
+			ItemStack itemStack = inventory.getStackInSlot(i);
+			if (itemStack != null && itemStack.getItem().equals(Items.glass_bottle)) {
+				return itemStack;
+			}
+		}
+		return null;
+	}
+	
 	public static void removeBlood(ItemStack stack, int a) {
 		stack.setItemDamage(Math.max(stack.getItemDamage() - a, 0));
 	}
@@ -81,13 +116,8 @@ public class ItemBloodBottle extends ItemGlassBottle {
 	@SideOnly(Side.CLIENT)
 	@Override
 	public void getSubItems(Item item, CreativeTabs tab, List list) {
-		// Put all the different levels of filled bottles in creative inventory
-		// for (int i = 0; i < NUM_ICONS; i++) {
-		// list.add(new ItemStack(this, 1, i));
-		// }
-
-		// OR just have a full bottle in creative inventory
-		list.add(new ItemStack(this, 1, NUM_ICONS - 1));
+		list.add(new ItemStack(this,1,0));
+		list.add(new ItemStack(this, 1, MAX_BLOOD));
 	}
 
 	/**

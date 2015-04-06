@@ -13,6 +13,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
@@ -34,6 +37,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.ModBlocks;
+import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.block.BlockCoffin;
@@ -77,11 +81,10 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 		private final float maxExhaustion = 40F;
 
 		/**
-		 * Adds blood to the players bar, if the bar is full it tries to add the
-		 * rest to a blood bottle
+		 * Adds blood to the players bar
 		 * 
 		 * @param amount
-		 * @return
+		 * @return The amount which could not be added
 		 */
 		public int addBlood(int amount) {
 			int oldBlood = getBlood();
@@ -97,14 +100,6 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 			// Calculate the amount of left blood and handles it
 			int bloodLeft = amount - bloodToAdd;
 
-			if (isAutoFillBlood()) {
-				ItemStack stack = ItemBloodBottle
-						.getBloodBottleInInventory(player.inventory);
-				if (stack != null) {
-					ItemBloodBottle.addBlood(stack, bloodLeft);
-					return 0;
-				}
-			}
 			return bloodLeft;
 		}
 
@@ -311,7 +306,7 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 		this.player.getDataWatcher().addObject(Configs.player_blood_watcher,
 				MAXBLOOD);
 		bloodStats = new BloodStats();
-		autoFillBlood = false;
+		autoFillBlood = true;
 		skillTimer = new int[Skills.getSkillCount()];
 	}
 
@@ -406,7 +401,10 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 			skillTimer = new int[Skills.getSkillCount()];
 		}
 		vampireLord=properties.getBoolean(KEY_VAMPIRE_LORD);
-		setAutoFillBlood(properties.getBoolean(KEY_AUTOFILL));
+		if(properties.hasKey(KEY_AUTOFILL)){
+			setAutoFillBlood(properties.getBoolean(KEY_AUTOFILL));
+		}
+
 		this.bloodStats.readNBT(properties);
 		PlayerModifiers.applyModifiers(level, player);
 
@@ -697,8 +695,10 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 		VampireMob mob = VampireMob.get(e);
 		int amount = mob.bite();
 		if (amount > 0) {
-			this.bloodStats.addBlood(amount);
-
+			int amt=this.bloodStats.addBlood(amount);
+			if(amt>0&&isAutoFillBlood()){
+				fillBloodIntoInventory(amt);
+			}
 			VampirismMod.modChannel.sendToAll(new SpawnParticlePacket(
 					"magicCrit", e.posX, e.posY, e.posZ, player.posX - e.posX,
 					player.posY - e.posY, player.posZ - e.posZ, 10));
@@ -772,6 +772,32 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 	@Override
 	public Entity getRepresentingEntity() {
 		return player;
+	}
+	
+	/**
+	 * Tries to fill blood into blood bottles in the hotbar or tries to convert glas bottles from the hotbar to blood bottles
+	 * @param amt
+	 */
+	protected void fillBloodIntoInventory(int amt){
+		if(amt<=0)return;
+		ItemStack stack = ItemBloodBottle
+				.getBloodBottleInInventory(player.inventory,true);
+		if (stack != null) {
+			fillBloodIntoInventory(ItemBloodBottle.addBlood(stack, amt));
+		}
+		else{
+			ItemStack glas=ItemBloodBottle.getGlasBottleInInventory(player.inventory);
+			if(glas!=null){
+				ItemStack bloodBottle=new ItemStack(ModItems.bloodBottle,1,0);
+				amt=ItemBloodBottle.addBlood(bloodBottle, amt);
+				player.inventory.consumeInventoryItem(Items.glass_bottle);
+				if (!player.inventory.addItemStackToInventory(bloodBottle))
+                {
+                    player.dropPlayerItemWithRandomChoice(bloodBottle, false);
+                }
+				if(amt>0)fillBloodIntoInventory(amt);
+			}
+		}
 	}
 
 	/**
