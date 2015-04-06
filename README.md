@@ -23,3 +23,7 @@ As a vampire you don't need to eat all that dry bread or eat these strange fruit
 
 ## Licence ##
 This mod is licenced under [LGPLv3](https://raw.githubusercontent.com/TeamLapen/Vampirism/master/LICENCE)
+
+This mod uses these sounds from freesound:
+DST-VampireMonk.mp3 by Striderjapan -- http://www.freesound.org/people/Striderjapan/sounds/141368/ -- License: CC Attribution
+vampire bites by Bernuy -- http://www.freesound.org/people/Bernuy/sounds/268501/ -- License: CC Attribution
