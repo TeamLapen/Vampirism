@@ -1,0 +1,28 @@
+{
+    "entity.vampire.scream":
+    {
+        "category": "hostile",
+        "sounds":
+        [
+          "entity/vampire/scream"
+        ]
+    },
+    "player.bite":
+    {
+        "category": "player",
+        "sounds":
+        [
+          "entity/vampire/bite",
+          "entity/vampire/bite_long"
+        ]
+    },
+     "scary_ambient": {
+    	"category": "ambient",
+        "sounds": [
+            {
+                "name": "ambient/scary",
+                "stream":true
+            }
+        ]
+    }
+}

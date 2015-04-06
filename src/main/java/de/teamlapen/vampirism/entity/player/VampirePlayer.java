@@ -704,6 +704,7 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 					player.posY - e.posY, player.posZ - e.posZ, 10));
 			VampirismMod.modChannel.sendTo(new SpawnParticlePacket("blood_eat",
 					0, 0, 0, 0, 0, 0, 10), (EntityPlayerMP) player);
+			
 		} else if (amount == -1) {
 			player.attackEntityFrom(DamageSource.outOfWorld, 1);
 			VampirismMod.modChannel.sendToAll(new SpawnParticlePacket("crit",

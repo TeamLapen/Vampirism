@@ -155,5 +155,16 @@ public abstract class DefaultVampire extends EntityMob {
 
 		this.setDead();
 	}
+	
+	@Override
+    protected String getLivingSound()
+    {
+        return REFERENCE.MODID+":entity.vampire.scream";
+    }
+    
+    @Override
+    public int getTalkInterval(){
+    	return 400;
+    }
 
 }
