@@ -16,18 +16,9 @@ import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 
 public class EntityAIModifier {
-	
-	@Deprecated
-	private static EntityAITasks getTasks(EntityLiving entity){
-		return (EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class, (EntityLiving)entity, Helper.Obfuscation.getPosNames("EntityLiving/tasks"));
-	}
-	@Deprecated
-	private static EntityAITasks getTargetTasks(EntityLiving entity){
-		return (EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class, (EntityLiving)entity, Helper.Obfuscation.getPosNames("EntityLiving/targetTasks"));
-	}
-	
+
 	public static void addVampireMobTasks(EntityCreature entity) {
-		EntityAITasks tasks =entity.tasks;
+		EntityAITasks tasks = entity.tasks;
 		// Attack player
 		tasks.addTask(1, new EntityAIAttackOnCollide(entity, EntityPlayer.class, 1.0D, false));
 		// Attack vampire hunter
@@ -48,18 +39,28 @@ public class EntityAIModifier {
 		// Search for vampire hunters
 		targetTasks.addTask(3, new EntityAINearestAttackableTarget(entity, EntityVampireHunter.class, 0, true));
 	}
-	
-	public static void makeMinion(IMinion minion,EntityCreature entity){
+
+	@Deprecated
+	private static EntityAITasks getTargetTasks(EntityLiving entity) {
+		return (EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class, entity, Helper.Obfuscation.getPosNames("EntityLiving/targetTasks"));
+	}
+
+	@Deprecated
+	private static EntityAITasks getTasks(EntityLiving entity) {
+		return (EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class, entity, Helper.Obfuscation.getPosNames("EntityLiving/tasks"));
+	}
+
+	public static void makeMinion(IMinion minion, EntityCreature entity) {
 		EntityAITasks tasks = entity.tasks;
 		tasks.taskEntries.clear();
-        tasks.addTask(0, new EntityAISwimming(entity));
-        tasks.addTask(2, new EntityAIAttackOnCollide(entity, EntityLivingBase.class, 1.0D, false));
-        tasks.addTask(4, new EntityAIFollowBoss(minion,1.0D));
-        
+		tasks.addTask(0, new EntityAISwimming(entity));
+		tasks.addTask(2, new EntityAIAttackOnCollide(entity, EntityLivingBase.class, 1.0D, false));
+		tasks.addTask(4, new EntityAIFollowBoss(minion, 1.0D));
+
 		EntityAITasks targetTasks = entity.targetTasks;
 		targetTasks.taskEntries.clear();
 		targetTasks.addTask(2, new EntityAIDefendLord(minion));
-        targetTasks.addTask(8, new EntityAIHurtByTarget(entity, false));
+		targetTasks.addTask(8, new EntityAIHurtByTarget(entity, false));
 	}
 
 }

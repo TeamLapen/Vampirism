@@ -9,7 +9,7 @@ public class ChangeWeatherSkill extends DefaultSkill {
 
 	@Override
 	public int getCooldown() {
-		return BALANCE.VP_SKILLS.WEATHER_COOLDOWN*20;
+		return BALANCE.VP_SKILLS.WEATHER_COOLDOWN * 20;
 	}
 
 	@Override
@@ -29,7 +29,7 @@ public class ChangeWeatherSkill extends DefaultSkill {
 
 	@Override
 	public void onActivated(VampirePlayer vampire, EntityPlayer player) {
-		WorldInfo info=player.worldObj.getWorldInfo();
+		WorldInfo info = player.worldObj.getWorldInfo();
 		info.setRaining(!info.isRaining());
 
 	}

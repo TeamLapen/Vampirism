@@ -11,8 +11,6 @@ import de.teamlapen.vampirism.util.Logger;
  *
  */
 public class Skills {
-	private final static ArrayList<ISkill> skills = new ArrayList<ISkill>();
-
 	/**
 	 * Used by {@link de.teamlapen.vampirism.client.gui.GUISelectSkill}
 	 * 
@@ -21,7 +19,7 @@ public class Skills {
 	public static ArrayList<ISkill> getAvailableSkills(int level) {
 		ArrayList<ISkill> sl = new ArrayList<ISkill>();
 		for (ISkill s : skills) {
-			if (level >= s.getMinLevel()&&s.getMinLevel()!=-1) {
+			if (level >= s.getMinLevel() && s.getMinLevel() != -1) {
 				sl.add(s);
 			}
 		}
@@ -63,9 +61,11 @@ public class Skills {
 	 * @return The assigned id
 	 */
 	public static int registerSkill(ISkill s) {
-		int id=skills.size();
+		int id = skills.size();
 		s.setId(id);
 		skills.add(s);
 		return id;
 	}
+
+	private final static ArrayList<ISkill> skills = new ArrayList<ISkill>();
 }

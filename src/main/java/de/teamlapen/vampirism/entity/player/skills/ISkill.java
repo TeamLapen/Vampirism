@@ -27,6 +27,11 @@ public interface ISkill {
 	public ResourceLocation getIconLoc();
 
 	/**
+	 * @return The assigned Id
+	 */
+	public int getId();
+
+	/**
 	 * @return The minimum level which is required to use this skill
 	 */
 	public int getMinLevel();
@@ -54,14 +59,11 @@ public interface ISkill {
 	 * @param player
 	 */
 	public void onActivated(VampirePlayer vampire, EntityPlayer player);
-	
+
 	/**
 	 * Should only be called when being registered
+	 * 
 	 * @param id
 	 */
 	public void setId(int id);
-	/**
-	 * @return The assigned Id
-	 */
-	public int getId();
 }

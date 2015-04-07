@@ -27,20 +27,21 @@ import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.network.UpdateEntityPacket;
 import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.DifficultyCalculator.Difficulty;
 import de.teamlapen.vampirism.util.DifficultyCalculator.IAdjustableLevel;
+import de.teamlapen.vampirism.util.Helper;
 
 /**
  * Vampire Hunter with three levels: Level 1: Agressive villager, Level 2: Professional hunter, Level 3: Professional hunter with axe and stake
+ * 
  * @author Maxanier
  *
  */
-public class EntityVampireHunter extends EntityMob  implements ISyncable,IAdjustableLevel{
+public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjustableLevel {
 
 	private boolean isLookingForHome;
-	protected int level=0;
-	private final static int MAX_LEVEL=3;
+	protected int level = 0;
+	private final static int MAX_LEVEL = 3;
 
 	public EntityVampireHunter(World p_i1738_1_) {
 		super(p_i1738_1_);
@@ -55,7 +56,7 @@ public class EntityVampireHunter extends EntityMob  implements ISyncable,IAdjust
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityVampire.class, 1.1, false));
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.1, false));
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityCreature.class, 0.9, false));
-		
+
 		this.tasks.addTask(6, new EntityAIWander(this, 0.7));
 		this.tasks.addTask(9, new EntityAILookIdle(this));
 
@@ -89,7 +90,7 @@ public class EntityVampireHunter extends EntityMob  implements ISyncable,IAdjust
 		// Default to not in a village, will be set to false in
 		// WorldGenVampirism when generated on the surface in a village
 		isLookingForHome = true;
-		
+
 		this.setEquipmentDropChance(0, 0);
 	}
 
@@ -99,16 +100,19 @@ public class EntityVampireHunter extends EntityMob  implements ISyncable,IAdjust
 		this.updateEntityAttributes();
 
 	}
-	
-	protected void updateEntityAttributes(){
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_HEALTH);
-		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_ATTACK_DAMAGE*level);
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_MOVEMENT_SPEED);
-	}
 
 	@Override
 	protected boolean canDespawn() {
 		return false; // keeps it from despawning when player is far away
+	}
+
+	@Override
+	protected void dropFewItems(boolean recentlyHit, int lootingLevel) {
+		if (recentlyHit) {
+			if (this.rand.nextInt(3) == 0) {
+				this.dropItem(ModItems.humanHeart, 1);
+			}
+		}
 	}
 
 	@Override
@@ -134,6 +138,23 @@ public class EntityVampireHunter extends EntityMob  implements ISyncable,IAdjust
 	}
 
 	@Override
+	public NBTTagCompound getJoinWorldSyncData() {
+		NBTTagCompound nbt = new NBTTagCompound();
+		this.writeEntityToNBT(nbt);
+		return nbt;
+	}
+
+	@Override
+	public int getLevel() {
+		return level;
+	}
+
+	@Override
+	public int getMaxLevel() {
+		return MAX_LEVEL;
+	}
+
+	@Override
 	public boolean isAIEnabled() {
 		return true;
 	}
@@ -155,12 +176,11 @@ public class EntityVampireHunter extends EntityMob  implements ISyncable,IAdjust
 	}
 
 	@Override
-	protected void dropFewItems(boolean recentlyHit,int lootingLevel){
-		if(recentlyHit){
-			if(this.rand.nextInt(3)==0){
-				this.dropItem(ModItems.humanHeart, 1);
-			}
+	public void loadPartialUpdate(NBTTagCompound nbt) {
+		if (nbt.hasKey("level")) {
+			this.level = nbt.getInteger("level");
 		}
+
 	}
 
 	@Override
@@ -170,52 +190,46 @@ public class EntityVampireHunter extends EntityMob  implements ISyncable,IAdjust
 		super.onDeathUpdate();
 	}
 
+	@Override
+	public void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+		this.loadPartialUpdate(nbt);
+	}
 
 	/**
-	 * Makes the hunter not look for a new home anymore, sets the home area and adds village
-	 * specific AI tasks
+	 * Makes the hunter not look for a new home anymore, sets the home area and adds village specific AI tasks
 	 */
 	@Override
-	public void setHomeArea(int p_110171_1_, int p_110171_2_, int p_110171_3_, int p_110171_4_){
+	public void setHomeArea(int p_110171_1_, int p_110171_2_, int p_110171_3_, int p_110171_4_) {
 		super.setHomeArea(p_110171_1_, p_110171_2_, p_110171_3_, p_110171_4_);
-		if(isLookingForHome){
+		if (isLookingForHome) {
 			isLookingForHome = false;
 			this.tasks.addTask(3, new EntityAIMoveTowardsRestriction(this, 1.0F));
 			this.tasks.addTask(4, new EntityAIMoveThroughVillage(this, 0.9F, false));
 			this.targetTasks.addTask(2, new EntityAIDefendVillage(this));
 		}
 	}
-	
-
-	@Override
-	public int getLevel() {
-		return level;
-	}
-
-	@Override
-	public int getMaxLevel() {
-		return MAX_LEVEL;
-	}
 
 	@Override
 	public void setLevel(int level) {
 		this.setLevel(level, false);
-		
+
 	}
-	
+
 	/**
 	 * Sets the vampire hunters level
+	 * 
 	 * @param l
-	 * @param sync whether to sync the level with the client or not
+	 * @param sync
+	 *            whether to sync the level with the client or not
 	 */
 	public void setLevel(int l, boolean sync) {
 		if (l > 0 && l != level) {
 			this.level = l;
 			this.updateEntityAttributes();
-			if(level==1){
+			if (level == 1) {
 				this.setCurrentItemOrArmor(0, new ItemStack(ModItems.pitchfork));
-			}
-			else{
+			} else {
 				this.setCurrentItemOrArmor(0, null);
 			}
 			if (sync && !this.worldObj.isRemote) {
@@ -229,32 +243,18 @@ public class EntityVampireHunter extends EntityMob  implements ISyncable,IAdjust
 
 	@Override
 	public int suggestLevel(Difficulty d) {
-		return this.rand.nextInt(2)+2;
+		return this.rand.nextInt(2) + 2;
 	}
 
-	@Override
-	public void loadPartialUpdate(NBTTagCompound nbt) {
-		if (nbt.hasKey("level")) {
-			this.level = nbt.getInteger("level");
-		}
+	protected void updateEntityAttributes() {
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_HEALTH);
+		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_ATTACK_DAMAGE * level);
+		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_MOVEMENT_SPEED);
+	}
 
-	}
-	@Override
-	public NBTTagCompound getJoinWorldSyncData() {
-		NBTTagCompound nbt = new NBTTagCompound();
-		this.writeEntityToNBT(nbt);
-		return nbt;
-	}
-	
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("level", level);
-	}
-	
-	@Override
-	public void readEntityFromNBT(NBTTagCompound nbt) {
-		super.readEntityFromNBT(nbt);
-		this.loadPartialUpdate(nbt);
 	}
 }

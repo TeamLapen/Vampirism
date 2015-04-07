@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.entity;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
@@ -11,32 +10,28 @@ import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
 import net.minecraft.village.Village;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.ai.EntityAIAvoidVampirePlayer;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.network.RequestEntityUpdatePacket;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
-import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.DifficultyCalculator.Difficulty;
 import de.teamlapen.vampirism.util.DifficultyCalculator.IAdjustableLevel;
-import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
 
 public class VampireEntityEventHandler {
 
-	@SubscribeEvent(receiveCanceled=true)
+	@SubscribeEvent(receiveCanceled = true)
 	public void onEntityConstructing(EntityConstructing event) {
 		if (event.entity instanceof EntityCreature && VampireMob.get((EntityCreature) event.entity) == null) {
 			VampireMob.register((EntityCreature) event.entity);
@@ -45,28 +40,27 @@ public class VampireEntityEventHandler {
 
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-		if(!event.entity.worldObj.isRemote&&event.entity instanceof IAdjustableLevel){
-			IAdjustableLevel e=(IAdjustableLevel)event.entity;
-			if(e.getLevel()==0){
-				Difficulty d=DifficultyCalculator.getLocalDifficulty(event.world, event.entity.posX, event.entity.posZ, 10);
-				if(d.isZero()){
-					d=DifficultyCalculator.getWorldDifficulty(event.entity.worldObj);
+		if (!event.entity.worldObj.isRemote && event.entity instanceof IAdjustableLevel) {
+			IAdjustableLevel e = (IAdjustableLevel) event.entity;
+			if (e.getLevel() == 0) {
+				Difficulty d = DifficultyCalculator.getLocalDifficulty(event.world, event.entity.posX, event.entity.posZ, 10);
+				if (d.isZero()) {
+					d = DifficultyCalculator.getWorldDifficulty(event.entity.worldObj);
 				}
-				int l=e.suggestLevel(d);
-				if(l>e.getMaxLevel()){
-					l=e.getMaxLevel();
-				}
-				else if(l<1){
-					if(event.entity.worldObj.rand.nextBoolean()){
+				int l = e.suggestLevel(d);
+				if (l > e.getMaxLevel()) {
+					l = e.getMaxLevel();
+				} else if (l < 1) {
+					if (event.entity.worldObj.rand.nextBoolean()) {
 						event.setCanceled(true);
 					}
-					l=1;
+					l = 1;
 				}
 				e.setLevel(l);
 			}
 		}
-		if(event.entity instanceof ISyncable){
-			if(event.world.isRemote){
+		if (event.entity instanceof ISyncable) {
+			if (event.world.isRemote) {
 				VampirismMod.modChannel.sendToServer(new RequestEntityUpdatePacket(event.entity));
 			}
 		}
@@ -77,12 +71,10 @@ public class VampireEntityEventHandler {
 			if (e.isLookingForHome() == false)
 				return;
 
-			Village v = event.world.villageCollectionObj.findNearestVillage(MathHelper.floor_double(e.posX), MathHelper.floor_double(e.posY),
-					MathHelper.floor_double(e.posZ), 20);
+			Village v = event.world.villageCollectionObj.findNearestVillage(MathHelper.floor_double(e.posX), MathHelper.floor_double(e.posY), MathHelper.floor_double(e.posZ), 20);
 			if (v != null) {
 				int r = v.getVillageRadius();
-				AxisAlignedBB box = AxisAlignedBB.getBoundingBox(v.getCenter().posX - r, 0, v.getCenter().posZ - r, v.getCenter().posX + r,
-						event.world.getActualHeight(), v.getCenter().posZ + r);
+				AxisAlignedBB box = AxisAlignedBB.getBoundingBox(v.getCenter().posX - r, 0, v.getCenter().posZ - r, v.getCenter().posX + r, event.world.getActualHeight(), v.getCenter().posZ + r);
 				ChunkCoordinates cc = v.getCenter();
 				e.setHomeArea(cc.posX, cc.posY, cc.posZ, r);
 			}
@@ -113,29 +105,27 @@ public class VampireEntityEventHandler {
 					}
 				}
 			}
-		}
-		else if(event.entity instanceof EntityCreeper){
-			EntityCreeper creeper=(EntityCreeper)event.entity;
-			EntityAITasks tasks=creeper.tasks;
-			if(tasks==null){
-				Logger.w("VampireEntityEventHandler","Cannot change the target tasks of creeper");
-			}
-			else{
-				tasks.addTask(3, new EntityAIAvoidVampirePlayer(creeper,12.0F,1.0D,1.2D,BALANCE.VAMPIRE_PLAYER_CREEPER_AVOID_LEVEL));
+		} else if (event.entity instanceof EntityCreeper) {
+			EntityCreeper creeper = (EntityCreeper) event.entity;
+			EntityAITasks tasks = creeper.tasks;
+			if (tasks == null) {
+				Logger.w("VampireEntityEventHandler", "Cannot change the target tasks of creeper");
+			} else {
+				tasks.addTask(3, new EntityAIAvoidVampirePlayer(creeper, 12.0F, 1.0D, 1.2D, BALANCE.VAMPIRE_PLAYER_CREEPER_AVOID_LEVEL));
 			}
 		}
 	}
-	
+
 	@SubscribeEvent
 	public void onLivingDeathEvent(LivingDeathEvent event) {
-		if (event.entity instanceof EntityCreature&&!event.entity.worldObj.isRemote&&EntityDeadMob.canBecomeDeadMob((EntityCreature) event.entity)&&event.entity.worldObj.rand.nextInt(3)==0) {
+		if (event.entity instanceof EntityCreature && !event.entity.worldObj.isRemote && EntityDeadMob.canBecomeDeadMob((EntityCreature) event.entity) && event.entity.worldObj.rand.nextInt(3) == 0) {
 			event.entity.worldObj.spawnEntityInWorld(EntityDeadMob.createFromEntity((EntityCreature) event.entity));
 		}
 	}
-	
+
 	@SubscribeEvent
-	public void onLivingUpdate(LivingUpdateEvent event){
-		if(event.entity instanceof EntityCreature){
+	public void onLivingUpdate(LivingUpdateEvent event) {
+		if (event.entity instanceof EntityCreature) {
 			VampireMob.get((EntityCreature) event.entity).onUpdate();
 		}
 	}

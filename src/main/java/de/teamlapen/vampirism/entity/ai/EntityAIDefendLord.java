@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.entity.ai;
 
-import de.teamlapen.vampirism.util.Logger;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITarget;
+import de.teamlapen.vampirism.util.Logger;
 
 /**
  * TargetTask for minions which fight for their bosses
+ * 
  * @author maxanier
  *
  */
@@ -18,7 +18,7 @@ public class EntityAIDefendLord extends EntityAITarget {
 
 	public EntityAIDefendLord(IMinion minion) {
 		super(minion.getRepresentingEntity(), false, false);
-		this.minion=minion;
+		this.minion = minion;
 		this.setMutexBits(1);
 	}
 
@@ -40,7 +40,7 @@ public class EntityAIDefendLord extends EntityAITarget {
 	@Override
 	public void startExecuting() {
 		minion.getRepresentingEntity().setAttackTarget(target);
-		Logger.i("defen", "attack "+target);
+		Logger.i("defen", "attack " + target);
 		super.startExecuting();
 	}
 }

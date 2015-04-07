@@ -3,8 +3,7 @@ package de.teamlapen.vampirism.entity.player;
 import de.teamlapen.vampirism.util.BALANCE;
 
 /**
- * Class to determine which special abilities a VampirePlayer should have and
- * store them
+ * Class to determine which special abilities a VampirePlayer should have and store them
  * 
  * @author Maxanier
  *

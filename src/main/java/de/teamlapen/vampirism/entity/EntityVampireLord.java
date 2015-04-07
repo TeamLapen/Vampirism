@@ -18,7 +18,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import de.teamlapen.vampirism.ModItems;
@@ -28,8 +27,6 @@ import de.teamlapen.vampirism.entity.ai.IMinionLord;
 import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.network.UpdateEntityPacket;
 import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.DifficultyCalculator;
-import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.DifficultyCalculator.Difficulty;
 import de.teamlapen.vampirism.util.DifficultyCalculator.IAdjustableLevel;
 import de.teamlapen.vampirism.util.Helper;
@@ -37,12 +34,11 @@ import de.teamlapen.vampirism.util.REFERENCE;
 
 public class EntityVampireLord extends DefaultVampire implements ISyncable, IMinionLord, IAdjustableLevel {
 
-	
-	private final static int MAX_LEVEL=5;
+	private final static int MAX_LEVEL = 5;
 
 	protected int level = 0;
-	
-	private boolean prevAttacking=false;
+
+	private boolean prevAttacking = false;
 
 	public EntityVampireLord(World par1World) {
 		super(par1World);
@@ -51,7 +47,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 		this.tasks.addTask(6, new EntityAIWander(this, 0.2));
 		this.tasks.addTask(9, new EntityAILookIdle(this));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this,EntityPlayer.class,0,false));
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
 
 	}
 
@@ -60,18 +56,40 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 		super.applyEntityAttributes();
 		this.applyEntityAttributes(false);
 	}
-	
-	protected void applyEntityAttributes(boolean aggressive){
-		if(aggressive){
+
+	protected void applyEntityAttributes(boolean aggressive) {
+		if (aggressive) {
 			this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(20D);
-			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(Math.min(4.5D,BALANCE.MOBPROP.VAMPIRE_LORD_MOVEMENT_SPEED*Math.pow(BALANCE.MOBPROP.VAMPIRE_LORD_IMPROVEMENT_PER_LEVEL, level-1)));
-		}
-		else{
+			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(
+					Math.min(4.5D, BALANCE.MOBPROP.VAMPIRE_LORD_MOVEMENT_SPEED * Math.pow(BALANCE.MOBPROP.VAMPIRE_LORD_IMPROVEMENT_PER_LEVEL, level - 1)));
+		} else {
 			this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(5D);
-			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_LORD_MOVEMENT_SPEED*Math.pow(BALANCE.MOBPROP.VAMPIRE_LORD_IMPROVEMENT_PER_LEVEL, level-1)/3);
+			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(
+					BALANCE.MOBPROP.VAMPIRE_LORD_MOVEMENT_SPEED * Math.pow(BALANCE.MOBPROP.VAMPIRE_LORD_IMPROVEMENT_PER_LEVEL, level - 1) / 3);
 		}
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(BALANCE.MOBPROP.VAMPIRE_LORD_MAX_HEALTH*Math.pow(BALANCE.MOBPROP.VAMPIRE_LORD_IMPROVEMENT_PER_LEVEL, level-1));
-		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(BALANCE.MOBPROP.VAMPIRE_LORD_ATTACK_DAMAGE*Math.pow(BALANCE.MOBPROP.VAMPIRE_LORD_IMPROVEMENT_PER_LEVEL, level-1));
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(BALANCE.MOBPROP.VAMPIRE_LORD_MAX_HEALTH * Math.pow(BALANCE.MOBPROP.VAMPIRE_LORD_IMPROVEMENT_PER_LEVEL, level - 1));
+		this.getEntityAttribute(SharedMonsterAttributes.attackDamage)
+				.setBaseValue(BALANCE.MOBPROP.VAMPIRE_LORD_ATTACK_DAMAGE * Math.pow(BALANCE.MOBPROP.VAMPIRE_LORD_IMPROVEMENT_PER_LEVEL, level - 1));
+	}
+
+	@Override
+	public boolean attackEntityAsMob(Entity entity) {
+		boolean flag = super.attackEntityAsMob(entity);
+		if (flag && entity instanceof EntityLivingBase) {
+			((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.weakness.id, 200, rand.nextInt(1) + 1));
+			((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100, rand.nextInt(1) + 1));
+		}
+		return flag;
+	}
+
+	@Override
+	public boolean getAlwaysRenderNameTagForRender() {
+		return true;
+	}
+
+	@Override
+	public String getCommandSenderName() {
+		return super.getCommandSenderName() + " " + VampirismMod.proxy.translateToLocal("text.vampirism:entity_level") + " " + level;
 	}
 
 	@Override
@@ -81,8 +99,14 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 		return nbt;
 	}
 
+	@Override
 	public int getLevel() {
 		return this.level;
+	}
+
+	@Override
+	public int getMaxLevel() {
+		return MAX_LEVEL;
 	}
 
 	/**
@@ -98,21 +122,31 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	}
 
 	@Override
+	public Entity getRepresentingEntity() {
+		return this;
+	}
+
+	@Override
+	public double getTheDistanceSquared(Entity e) {
+		return this.getDistanceSqToEntity(e);
+	}
+
+	@Override
+	public UUID getThePersistentID() {
+		return this.getPersistentID();
+	}
+
+	@Override
+	public boolean isTheEntityAlive() {
+		return this.isEntityAlive();
+	}
+
+	@Override
 	public void loadPartialUpdate(NBTTagCompound nbt) {
 		if (nbt.hasKey("level")) {
 			this.level = nbt.getInteger("level");
 		}
 
-	}
-	
-	@Override
-	public boolean attackEntityAsMob(Entity entity){
-		boolean flag=super.attackEntityAsMob(entity);
-		if(flag&&entity instanceof EntityLivingBase){
-			((EntityLivingBase)entity).addPotionEffect(new PotionEffect(Potion.weakness.id,200,rand.nextInt(1)+1));
-			((EntityLivingBase)entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id,100,rand.nextInt(1)+1));
-		}
-		return flag;
 	}
 
 	@Override
@@ -128,32 +162,31 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 
 	@Override
 	public void onLivingUpdate() {
-		if(!prevAttacking &&this.getAttackTarget()!=null){
-			prevAttacking=true;
+		if (!prevAttacking && this.getAttackTarget() != null) {
+			prevAttacking = true;
 			this.applyEntityAttributes(true);
 		}
-		if(prevAttacking &&this.getAttackTarget()==null){
-			prevAttacking=false;
+		if (prevAttacking && this.getAttackTarget() == null) {
+			prevAttacking = false;
 			this.applyEntityAttributes(false);
 		}
-		if (!worldObj.isRemote&&shouldSpawnMinion()) {
-			int i=0;
-			if(this.recentlyHit>0){
-				i=this.rand.nextInt(3);
+		if (!worldObj.isRemote && shouldSpawnMinion()) {
+			int i = 0;
+			if (this.recentlyHit > 0) {
+				i = this.rand.nextInt(3);
 			}
-			IMinion m=null;
-			
-			if(i==1){
-				EntityLiving e=(EntityLiving) EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_MINION_NAME,this.worldObj);
+			IMinion m = null;
+
+			if (i == 1) {
+				EntityLiving e = (EntityLiving) EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_MINION_NAME, this.worldObj);
 				e.copyLocationAndAnglesFrom(this);
 				worldObj.spawnEntityInWorld(e);
-				m=(IMinion) e;
+				m = (IMinion) e;
+			} else if (i == 2 && this.getAttackTarget() != null) {
+				m = (IMinion) Helper.spawnEntityBehindEntity(this.getAttackTarget(), REFERENCE.ENTITY.VAMPIRE_MINION_NAME);
 			}
-			else if(i==2&&this.getAttackTarget()!=null){
-				m=(IMinion) Helper.spawnEntityBehindEntity(this.getAttackTarget(),REFERENCE.ENTITY.VAMPIRE_MINION_NAME);
-			}
-			if(m==null){
-				m= (IMinion) Helper.spawnEntityInWorld(worldObj, this.boundingBox.expand(19, 14, 19), REFERENCE.ENTITY.VAMPIRE_MINION_NAME, 3);
+			if (m == null) {
+				m = (IMinion) Helper.spawnEntityInWorld(worldObj, this.boundingBox.expand(19, 14, 19), REFERENCE.ENTITY.VAMPIRE_MINION_NAME, 3);
 			}
 			if (m != null) {
 				m.setLord(this);
@@ -173,17 +206,25 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 		this.loadPartialUpdate(nbt);
 	}
 
+	@Override
+	public void setLevel(int level) {
+		this.setLevel(level, false);
+
+	}
+
 	/**
 	 * Sets the vampire lords level and updates his nametag
+	 * 
 	 * @param l
-	 * @param sync whether to sync the level with the client or not
+	 * @param sync
+	 *            whether to sync the level with the client or not
 	 */
 	public void setLevel(int l, boolean sync) {
 		if (l > 0 && l != level) {
 			this.level = l;
-			float hp=this.getHealth()/this.getMaxHealth();
+			float hp = this.getHealth() / this.getMaxHealth();
 			this.applyEntityAttributes(false);
-			this.setHealth(this.getMaxHealth()*hp);
+			this.setHealth(this.getMaxHealth() * hp);
 			if (sync && !this.worldObj.isRemote) {
 				NBTTagCompound nbt = new NBTTagCompound();
 				nbt.setInteger("level", level);
@@ -194,86 +235,47 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	}
 
 	/**
-	 * Decides if a new minion should be spawned.
-	 * Therefore randomly checks the existing minion count
+	 * Decides if a new minion should be spawned. Therefore randomly checks the existing minion count
+	 * 
 	 * @return
 	 */
 	protected boolean shouldSpawnMinion() {
-		if (this.ticksExisted%40 == 0) {
+		if (this.ticksExisted % 40 == 0) {
 			int count = getMinionCount();
-			if (count < level+1) {
+			if (count < level + 1) {
 				return true;
 			}
-			if (recentlyHit > 0 && count < 2+level) {
+			if (recentlyHit > 0 && count < 2 + level) {
 				return true;
 			}
 		}
 		return false;
 	}
 
-	
+	@Override
+	public int suggestLevel(Difficulty d) {
+		int avg = Math.round((d.avgLevel - 4) / 2);
+		int max = Math.round((d.maxLevel - 4) / 2);
+		int min = Math.round((d.minLevel - 4) / 2);
+
+		switch (rand.nextInt(6)) {
+		case 0:
+			return min;
+		case 1:
+			return max + 1;
+		case 2:
+			return avg;
+		case 3:
+			return avg + 1;
+		default:
+			return rand.nextInt(max + 2 - min) + min;
+		}
+	}
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("level", level);
 	}
-	
-	@Override
-	public String getCommandSenderName(){
-		return super.getCommandSenderName()+" "+VampirismMod.proxy.translateToLocal("text.vampirism:entity_level")+" "+level;
-	}
-	
-	@Override
-	public boolean getAlwaysRenderNameTagForRender(){
-		return true;
-	}
-
-	@Override
-	public void setLevel(int level) {
-		this.setLevel(level, false);
-		
-	}
-
-	@Override
-	public int suggestLevel(Difficulty d) {
-		int avg=Math.round((d.avgLevel-4)/2);
-		int max=Math.round((d.maxLevel-4)/2);
-		int min=Math.round((d.minLevel-4)/2);
-		
-		switch(rand.nextInt(6)){
-		case 0: return min;
-		case 1: return max+1;
-		case 2: return avg;
-		case 3: return avg+1;
-		default: return rand.nextInt(max+2-min)+min;
-		}
-	}
-
-	@Override
-	public int getMaxLevel() {
-		return MAX_LEVEL;
-	}
-
-	@Override
-	public double getTheDistanceSquared(Entity e) {
-		return this.getDistanceSqToEntity(e);
-	}
-
-	@Override
-	public Entity getRepresentingEntity() {
-		return this;
-	}
-
-	@Override
-	public boolean isTheEntityAlive() {
-		return this.isEntityAlive();
-	}
-
-	@Override
-	public UUID getThePersistentID() {
-		return this.getPersistentID();
-	}
-	
 
 }

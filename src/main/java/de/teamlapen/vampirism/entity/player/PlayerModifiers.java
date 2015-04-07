@@ -16,6 +16,10 @@ import de.teamlapen.vampirism.util.BALANCE;
  */
 public abstract class PlayerModifiers {
 
+	public static void addJumpBoost(int level, EntityPlayer p) {
+		p.motionY += calculateModifierValue(level, BALANCE.VP_MODIFIERS.JUMP_LCAP, BALANCE.VP_MODIFIERS.JUMP_MAX_BOOST, BALANCE.VP_MODIFIERS.JUMP_TYPE);
+	}
+
 	public static void applyModifiers(int level, EntityPlayer p) {
 
 		double m = 0;
@@ -37,21 +41,14 @@ public abstract class PlayerModifiers {
 		IAttributeInstance damage = p.getEntityAttribute(SharedMonsterAttributes.attackDamage);
 		rmMod(damage, damageModifierUUID);
 
-		m = calculateModifierValue(level, BALANCE.VP_MODIFIERS.STRENGTH_LCAP, BALANCE.VP_MODIFIERS.STRENGTH_MAX_MOD,
-				BALANCE.VP_MODIFIERS.STRENGTH_TYPE);
+		m = calculateModifierValue(level, BALANCE.VP_MODIFIERS.STRENGTH_LCAP, BALANCE.VP_MODIFIERS.STRENGTH_MAX_MOD, BALANCE.VP_MODIFIERS.STRENGTH_TYPE);
 		damage.applyModifier(new AttributeModifier(damageModifierUUID, "Vampire Strength Bonus", m, 2).setSaved(false));
 
-
-	}
-	
-	public static void addJumpBoost(int level, EntityPlayer p){
-		p.motionY+=calculateModifierValue(level,BALANCE.VP_MODIFIERS.JUMP_LCAP,BALANCE.VP_MODIFIERS.JUMP_MAX_BOOST, BALANCE.VP_MODIFIERS.JUMP_TYPE);
 	}
 
 	/**
-	 * Calculates the modifier effect. You can decide how the modifier changes
-	 * with higher levels, by using different types. Suggested values are 1/2
-	 * for a square root like behavior or 1 for a linear change
+	 * Calculates the modifier effect. You can decide how the modifier changes with higher levels, by using different types. Suggested values are 1/2 for a square root like behavior or 1 for a linear
+	 * change
 	 * 
 	 * @param level
 	 *            Vampire level
@@ -66,6 +63,7 @@ public abstract class PlayerModifiers {
 	private static double calculateModifierValue(int level, int lcap, double maxMod, double type) {
 		return Math.pow((level > lcap ? lcap : level), type) / Math.pow(lcap, type) * maxMod;
 	}
+
 	/**
 	 * Removes existing modifiers
 	 * 
@@ -80,6 +78,7 @@ public abstract class PlayerModifiers {
 			att.removeModifier(m);
 		}
 	}
+
 	public static final String TAG = "PlayerModifier";
 
 	public static final UUID speedModifierUUID = UUID.fromString("0FCBF922-DBEC-492A-82F5-99F73AFF5065");

@@ -12,7 +12,6 @@ import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.Logger;
 
 public class EntityAIDefendVillage extends EntityAITarget {
 
@@ -38,31 +37,24 @@ public class EntityAIDefendVillage extends EntityAITarget {
 				if (VampirePlayer.get((EntityPlayer) (villageAgressorTarget)).getLevel() > BALANCE.VAMPIRE_HUNTER_ATTACK_LEVEL) {
 					return true;
 				}
-			} else if(villageAgressorTarget instanceof EntityZombie){
-				//Only attack Zombies if they can easily be reached, see EntityAITarget#canEasilyReach 
+			} else if (villageAgressorTarget instanceof EntityZombie) {
+				// Only attack Zombies if they can easily be reached, see EntityAITarget#canEasilyReach
 				PathEntity pathentity = this.taskOwner.getNavigator().getPathToEntityLiving(villageAgressorTarget);
 
-		        if (pathentity == null)
-		        {
-		            return false;
-		        }
-		        else
-		        {
-		            PathPoint pathpoint = pathentity.getFinalPathPoint();
+				if (pathentity == null) {
+					return false;
+				} else {
+					PathPoint pathpoint = pathentity.getFinalPathPoint();
 
-		            if (pathpoint == null)
-		            {
-		                return false;
-		            }
-		            else
-		            {
-		                int i = pathpoint.xCoord - MathHelper.floor_double(villageAgressorTarget.posX);
-		                int j = pathpoint.zCoord - MathHelper.floor_double(villageAgressorTarget.posZ);
-		                return (double)(i * i + j * j) <= 2.25D;
-		            }
-		        }
-			}
-			else if (villageAgressorTarget instanceof EntityVampire) {
+					if (pathpoint == null) {
+						return false;
+					} else {
+						int i = pathpoint.xCoord - MathHelper.floor_double(villageAgressorTarget.posX);
+						int j = pathpoint.zCoord - MathHelper.floor_double(villageAgressorTarget.posZ);
+						return i * i + j * j <= 2.25D;
+					}
+				}
+			} else if (villageAgressorTarget instanceof EntityVampire) {
 				return true;
 			}
 		}

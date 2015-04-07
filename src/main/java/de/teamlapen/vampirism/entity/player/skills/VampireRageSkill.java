@@ -1,16 +1,10 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
-import java.util.List;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import de.teamlapen.vampirism.entity.EntityVampireMinion;
-import de.teamlapen.vampirism.entity.ai.IMinion;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.REFERENCE;
 
 public class VampireRageSkill extends DefaultSkill implements ILastingSkill {
 
@@ -47,7 +41,7 @@ public class VampireRageSkill extends DefaultSkill implements ILastingSkill {
 	@Override
 	public void onActivated(VampirePlayer vampire, EntityPlayer player) {
 		player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, getDuration(vampire.getLevel()), 2));
-		
+
 	}
 
 	@Override

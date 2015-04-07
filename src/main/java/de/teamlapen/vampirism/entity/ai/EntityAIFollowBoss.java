@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.entity.ai;
 
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 
 public class EntityAIFollowBoss extends EntityAIBase {
@@ -20,7 +18,7 @@ public class EntityAIFollowBoss extends EntityAIBase {
 	private final int MAXDIST = 600;
 
 	public EntityAIFollowBoss(IMinion minion, double speed) {
-		this.minion=minion;
+		this.minion = minion;
 		this.speed = speed;
 		this.setMutexBits(1);
 	}
