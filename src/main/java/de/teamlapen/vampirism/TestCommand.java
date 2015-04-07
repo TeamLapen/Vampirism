@@ -59,6 +59,9 @@ public class TestCommand implements ICommand {
 
 	@Override
 	public String getCommandName() {
+		if(VampirismMod.inDev){
+			return "test";
+		}
 		return "vtest";
 	}
 
