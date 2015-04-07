@@ -3,14 +3,17 @@ package de.teamlapen.vampirism;
 import java.util.HashMap;
 import java.util.List;
 
+import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import de.teamlapen.vampirism.coremod.CoreHandler;
+import de.teamlapen.vampirism.entity.EntityDeadMob;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
@@ -81,6 +84,10 @@ public class TestCommand implements ICommand {
 		if (sender instanceof EntityPlayer) {
 			EntityPlayer p = (EntityPlayer) sender;
 			
+			Entity e1=EntityList.createEntityByName(REFERENCE.MODID+"."+REFERENCE.ENTITY.DEAD_MOB_NAME, p.worldObj);
+			e1.copyLocationAndAnglesFrom(p);
+			p.worldObj.spawnEntityInWorld(e1);
+			Logger.i("test", "ad"+EntityRegistry.instance().lookupModSpawn(EntityDeadMob.class, true));
 			// -----------------
 			if (param.length > 0) {
 				try {

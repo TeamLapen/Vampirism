@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -18,6 +20,8 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import de.teamlapen.vampirism.ModBiomes;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.EntityDeadMob;
 import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
@@ -53,51 +57,64 @@ public abstract class CommonProxy implements IProxy {
 	}
 
 	private static final Map<String, NBTTagCompound> extendedEntityData = new HashMap<String, NBTTagCompound>();
+	
+	private int modEntityId=0;
 
 	@Override
 	public void registerEntitys() {
 		//Create a array of all biomes except hell and end
-
+		int entityId=0;
 		
 		BiomeGenBase[] allBiomes =BiomeGenBase.getBiomeGenArray();
 		allBiomes[9]=null;
 		allBiomes[8]=null;
 		BiomeGenBase[] biomes = Iterators.toArray(Iterators.filter(Iterators.forArray(allBiomes), Predicates.notNull()),
 				BiomeGenBase.class);
-		// Registration of vampire hunter
-		Logger.i("EntityRegister", "Adding "+REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME+" with spawn probe of "+BALANCE.VAMPIRE_HUNTER_SPAWN_PROBE);
-		EntityRegistry.registerGlobalEntityID(EntityVampireHunter.class, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME,
-				EntityRegistry.findGlobalUniqueEntityId(), 0x666D68, 0x52E9E9);
-		EntityRegistry.addSpawn(EntityVampireHunter.class, BALANCE.VAMPIRE_HUNTER_SPAWN_PROBE, 1, 2, EnumCreatureType.creature, biomes);
+		
+		registerEntity(EntityVampireHunter.class,REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME,BALANCE.VAMPIRE_HUNTER_SPAWN_PROBE,1,2,EnumCreatureType.creature,biomes);
+		registerEntity(EntityVampire.class,REFERENCE.ENTITY.VAMPIRE_NAME,BALANCE.VAMPIRE_SPAWN_PROBE,1,3,EnumCreatureType.monster,biomes);
+		registerEntity(EntityVampireLord.class,REFERENCE.ENTITY.VAMPIRE_LORD_NAME,BALANCE.VAMPIRE_LORD_SPAWN_PROBE,1,1,EnumCreatureType.monster,ModBiomes.biomeVampireForest);
+		registerEntity(EntityVampireMinion.class,REFERENCE.ENTITY.VAMPIRE_MINION_NAME,false);
+		registerEntity(EntityDeadMob.class,REFERENCE.ENTITY.DEAD_MOB_NAME,false);
+		registerEntity(EntityGhost.class,REFERENCE.ENTITY.GHOST_NAME,5,1,2,EnumCreatureType.monster,ModBiomes.biomeVampireForest);
 
-		// Registration of vampire
-		Logger.i("EntityRegister", "Adding "+REFERENCE.ENTITY.VAMPIRE_NAME+" with spawn probe of "+BALANCE.VAMPIRE_SPAWN_PROBE);
-		EntityRegistry.registerGlobalEntityID(EntityVampire.class, REFERENCE.ENTITY.VAMPIRE_NAME, EntityRegistry.findGlobalUniqueEntityId(),
-				0x54B8DD, 0x34898D);
-		EntityRegistry.addSpawn(EntityVampire.class, BALANCE.VAMPIRE_SPAWN_PROBE, 1, 3, EnumCreatureType.monster, biomes);
-		
-//		//Registration of dracula
-//		Logger.i("EntityRegister", "Adding "+REFERENCE.ENTITY.DRACULA_NAME+" with spawn probe of " + "none");
-//		EntityRegistry.registerGlobalEntityID(EntityDracula.class,  REFERENCE.ENTITY.DRACULA_NAME,  EntityRegistry.findGlobalUniqueEntityId(), 
-//				0x54B8DD, 0x34898D);
-		
-		//Registration of vampire lord
-		Logger.i("EntityRegister", "Adding "+REFERENCE.ENTITY.VAMPIRE_LORD_NAME+" with spawn probe of " + BALANCE.VAMPIRE_HUNTER_SPAWN_PROBE);
-		EntityRegistry.registerGlobalEntityID(EntityVampireLord.class,  REFERENCE.ENTITY.VAMPIRE_LORD_NAME,  EntityRegistry.findGlobalUniqueEntityId(), 
-				0x54B8DD, 0x34898D);
-		EntityRegistry.addSpawn(EntityVampireLord.class, BALANCE.VAMPIRE_LORD_SPAWN_PROBE, 1, 1, EnumCreatureType.monster, ModBiomes.biomeVampireForest);
-		
-		//Registration of vampire minion
-		Logger.i("EntityRegister", "Adding "+REFERENCE.ENTITY.VAMPIRE_MINION_NAME+" with spawn probe of " + "none");
-		EntityRegistry.registerGlobalEntityID(EntityVampireMinion.class,  REFERENCE.ENTITY.VAMPIRE_MINION_NAME,  EntityRegistry.findGlobalUniqueEntityId(), 
-				0x54B8DD, 0x34898D);
-		
-		// Registration of ghost
-		Logger.i("EntityRegister", "Adding "+REFERENCE.ENTITY.GHOST_NAME+" with spawn probe of " + "none");
-		EntityRegistry.registerGlobalEntityID(EntityGhost.class,  REFERENCE.ENTITY.GHOST_NAME,  EntityRegistry.findGlobalUniqueEntityId(), 
-				0x54B8DD, 0x34898D);
 	}
+	private void registerEntity(Class<? extends Entity> clazz,String name,boolean useGlobal){
 
+		Logger.i("EntityRegister", "Adding "+name+"("+clazz.getSimpleName()+")"+(useGlobal?" with global id":"with mod id"));
+		if(useGlobal){
+			EntityRegistry.registerGlobalEntityID(clazz, name, EntityRegistry.findGlobalUniqueEntityId(),calculateColor(name) ,calculateColor(name+"2"));
+		}
+		else{
+			name=name.replace("vampirism.", "");
+			EntityRegistry.registerModEntity(clazz, name, modEntityId++, VampirismMod.instance, 80, 1, true);
+		}
+
+	}
+	
+	private int calculateColor(String n){
+		int hash=n.hashCode();
+		while(hash>0xFFFFFF){
+			hash=(int)((float)hash/50F);
+		}
+		return hash;
+	}
+	
+	/**
+	 * Registers the Entity and it's spawn
+	 * @param clazz Class
+	 * @param name Name
+	 * @param probe WeightedProbe
+	 * @param min Min group size
+	 * @param max Max group size
+	 * @param type CreatureType
+	 * @param biomes Biomes
+	 */
+	private void registerEntity(Class<? extends EntityLiving> clazz,String name,int probe,int min,int max,EnumCreatureType type,BiomeGenBase... biomes){
+		this.registerEntity(clazz, name,true);
+		Logger.i("EntityRegister", "Adding spawn with probe of "+probe);
+		EntityRegistry.addSpawn(clazz, probe, min, max, type, biomes);
+	}
 	@Override
 	public void registerSubscriptions() {
 		MinecraftForge.EVENT_BUS.register(new VampirePlayerEventHandler());
