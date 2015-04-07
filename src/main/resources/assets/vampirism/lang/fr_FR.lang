@@ -45,6 +45,7 @@ death.attack.sun=%1$s n'a pas aimé le soleil
 potion.vampirism:sunscreen=Crème solaire
 potion.vampirism:thirst=Soif
 potion.vampirism:saturation=Saturation
+potion.vampirism:sanguinare=Sanguinare Vampiris
 text.vampirism:skill.level_to_low=Votre niveau de vampire est trop bas pour celà
 text.vampirism:skill.cooldown_not_over=Veuillez attendre jusqu'à la fin de votre récupération
 text.vampirism:entity_level=Niveau
@@ -52,10 +53,12 @@ text.vampirism:ritual_missing_times=Vous avez oublié des éléments pour ce rit
 text.vampirism:ritual_structure_wrong=La structure est mauvaise pour ce rituel
 text.vampirism:ritual_level_wrong=Vous ne pouvez pas utiliser cet autel à ce niveau
 text.vampirism:not_enough_blood=Il n'y a pas assez de sang dans l'autel
+text.vampirism:ritual_still_running=Le rituel est toujours en cours
 text.vampirism:ritual_requirements_not_met=Les exigences pour ce rituel n'ont pas toutes été respectées
 text.vampirism:purity=Pureté
 text.vampirism:auto_fill_enabled=Remplissage auto activé
 text.vampirism:auto_fill_disabled=Remplissage auto désactivé
+text.vampirism:skill.deactivated_by_serveradmin=Cette capacité est désactivée par votre administrateur serveur
 
 #Config
 category.vampirism.balance=Propriétés d'équilibrage
