@@ -57,6 +57,7 @@ text.vampirism:ritual_requirements_not_met=Nicht alle Vorraussetzungen wurden er
 text.vampirism:purity=Reinheit
 text.vampirism:auto_fill_enabled=Automatisches Füllen aktiviert
 text.vampirism:auto_fill_disabled=Automatisches Füllen deaktiviert
+text.vampirism:ritual_no_vampire=F�r dieses Ritual musst du ein Vampir sein
 
 #Config
 category.vampirism.balance=Balance Einstellungen

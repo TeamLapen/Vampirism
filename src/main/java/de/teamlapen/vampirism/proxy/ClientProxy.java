@@ -125,7 +125,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier4Tip.class,tier4Tip);
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.bloodAltarTier4Tip), new RenderTileEntityItem(tier4Tip,new TileEntityBloodAltarTier4Tip()));
 
-		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoffin.class, new RendererCoffin());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoffin.class, new RendererCoffin());
 	}
 
 	@Override
@@ -203,21 +203,21 @@ public class ClientProxy extends CommonProxy {
 		return loc;
 	}
 
-//	@Override
-//	public void wakeAllPlayers() {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
-//	@Override
-//	public boolean areAllPlayersAsleepCoffin() {
-//		// TODO Auto-generated method stub
-//		return false;
-//	}
-//
-//	@Override
-//	public void updateAllPlayersSleepingFlagCoffin() {
-//		// TODO Auto-generated method stub
-//		
-//	}
+
+	public void wakeAllPlayers() {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	public boolean areAllPlayersAsleepCoffin() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	public void updateAllPlayersSleepingFlagCoffin() {
+		// TODO Auto-generated method stub
+		
+	}
 }

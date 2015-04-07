@@ -49,34 +49,6 @@ public class TileEntityBloodAltar extends TileEntity {
 				this.zCoord, 1, nbtTag);
 	}
 
-	/**
-	 * Gets a list of all the villagers in entityList that are near this
-	 * TileEntity
-	 * 
-	 * @param entityList
-	 *            A list of all the entities to check
-	 * @param distance
-	 *            The maximum distance from this TileEntity
-	 * @return List with with all the villagers that are found around this
-	 *         TileEntity
-	 */
-	private ArrayList<EntityVillager> getVillagersInRadius(List entityList,
-			double distance) {
-		ArrayList<EntityVillager> list = new ArrayList<EntityVillager>();
-		for (Object entity : entityList) {
-			if (EntityVillager.class.isInstance(entity)) {
-				EntityVillager v = (EntityVillager) entity;
-				if (Math.sqrt(Math.pow(v.posX - xCoord, 2)
-						+ Math.pow(v.posY - yCoord, 2)
-						+ Math.pow(v.posZ - zCoord, 2)) <= distance)
-					list.add((EntityVillager) entity);
-			}
-		}
-		Logger.i(TAG, list.size() + "villagers found in a " + distance
-				+ " block radius around the altar");
-		return list;
-	}
-
 	public boolean isOccupied() {
 		return occupied;
 	}
@@ -106,7 +78,7 @@ public class TileEntityBloodAltar extends TileEntity {
 		Logger.i(TAG, "Starting Vampirism-Ritual");
 		if (VampirePlayer.get(player).getLevel() == 0) {
 			player.addChatMessage(new ChatComponentTranslation(
-					"text.vampirism:ritual_level_wrong"));
+					"text.vampirism:ritual_no_vampire"));
 			return;
 		}
 		// Put sword into altar
@@ -116,7 +88,7 @@ public class TileEntityBloodAltar extends TileEntity {
 		// TODO small animation
 		this.worldObj.spawnEntityInWorld(new EntityLightningBolt(worldObj, player.posX, player.posY, player.posZ));
 
-		if(itemStack.stackTagCompound != null && itemStack.stackTagCompound.getInteger("blood") <= ItemVampiresFear.getBlood(itemStack))
+		if(ItemVampiresFear.MAX_BLOOD <= ItemVampiresFear.getBlood(itemStack))
 			player.addPotionEffect(new PotionEffect(Potion.regeneration.id,
 					20 * 60, 1));
 	}
