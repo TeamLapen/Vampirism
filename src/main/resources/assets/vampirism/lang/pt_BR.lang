@@ -1,10 +1,10 @@
 # Entitys
-entity.vampirism:vampireHunter.name=Caçador de Vampiro
-entity.vampirism:vampire.name=Vampiro
-entity.vampirism:ghost.name=Fantasma
-entity.vampirism:vampireLord.name=Lorde Vampiro
-entity.vampirism:vampireMinion.name=Vampiro Bebê
-entity.vampirism:dracula.name=Dracula
+entity.vampirism.vampireHunter.name=Caçador de Vampiro
+entity.vampirism.vampire.name=Vampiro
+entity.vampirism.ghost.name=Fantasma
+entity.vampirism.vampireLord.name=Lorde Vampiro
+entity.vampirism.vampireMinion.name=Vampiro Bebê
+entity.vampirism.dracula.name=Dracula
 
 # Items
 item.vampirism:vampiresFear.name=Terror do Vampiro

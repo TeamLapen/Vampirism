@@ -1,10 +1,10 @@
 # Entities
-entity.vampirism:vampireHunter.name=Chasseur de vampire
-entity.vampirism:vampire.name=Vampire
-entity.vampirism:ghost.name=Fantôme
-entity.vampirism:vampireLord.name=Seigneur vampire
-entity.vampirism:vampireMinion.name=Favori de vampire
-entity.vampirism:dracula.name=Dracula
+entity.vampirism.vampireHunter.name=Chasseur de vampire
+entity.vampirism.vampire.name=Vampire
+entity.vampirism.ghost.name=Fantôme
+entity.vampirism.vampireLord.name=Seigneur vampire
+entity.vampirism.vampireMinion.name=Favori de vampire
+entity.vampirism.dracula.name=Dracula
 
 # Items
 item.vampirism:vampiresFear.name=Frayeur de vampire
