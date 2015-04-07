@@ -26,7 +26,7 @@ public class ModItems {
 		GameRegistry.registerItem(humanHeart, ItemHumanHeart.name);
 		GameRegistry.registerItem(pureBlood,ItemPureBlood.name);
 		GameRegistry.registerItem(sunscreen, ItemSunscreen.name);
-		//GameRegistry.registerItem(coffin, ItemCoffin.name);
+		GameRegistry.registerItem(coffin, ItemCoffin.name);
 	}
 	
 	public static void registerRecipes(){

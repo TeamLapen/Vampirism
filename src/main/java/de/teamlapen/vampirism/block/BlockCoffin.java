@@ -132,7 +132,7 @@ public class BlockCoffin extends BasicBlockContainer {
 	public void setCoffinOccupied(World world, int x, int y, int z, EntityPlayer player, boolean flag) {
 		int newMeta = world.getBlockMetadata(x, y, z);
 		if(flag)
-			newMeta = newMeta & 7 + 8;
+			newMeta = newMeta | 8;
 		else
 			newMeta = newMeta & 7;
 		world.setBlockMetadataWithNotify(x, y, z, newMeta, 3);

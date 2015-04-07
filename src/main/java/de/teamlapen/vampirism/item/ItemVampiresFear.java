@@ -23,6 +23,7 @@ import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 public class ItemVampiresFear extends ItemSword {
+	public static final int MAX_BLOOD = 100;
 
 	public static int getBlood(ItemStack itemStack) {
 		if (itemStack == null || itemStack.stackTagCompound == null) {
@@ -46,7 +47,7 @@ public class ItemVampiresFear extends ItemSword {
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
 		if (itemStack.stackTagCompound != null) {
 			int blood = itemStack.stackTagCompound.getInteger("blood");
-			list.add(EnumChatFormatting.RED + "Blood: " + blood + "/" + 1);//TODO adjust
+			list.add(EnumChatFormatting.RED + "Blood: " + blood + "/" + MAX_BLOOD);
 		}
 	}
 
@@ -89,8 +90,8 @@ public class ItemVampiresFear extends ItemSword {
 				itemStack.stackTagCompound.setInteger("blood", 0);
 			}
 			itemStack.stackTagCompound.setInteger("blood",  itemStack.stackTagCompound.getInteger("blood") + VampireMob.getMaxBloodAmount((EntityCreature) entityTarget));
-			if(itemStack.stackTagCompound.getInteger("blood") > 20)
-				itemStack.stackTagCompound.setInteger("blood", 20);
+			if(itemStack.stackTagCompound.getInteger("blood") > MAX_BLOOD)
+				itemStack.stackTagCompound.setInteger("blood", MAX_BLOOD);
 			else if (itemStack.stackTagCompound.getInteger("blood") < 0)
 				itemStack.stackTagCompound.setInteger("blood", 0);
 		}

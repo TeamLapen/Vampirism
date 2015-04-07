@@ -806,13 +806,13 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 	 */
 	public EntityPlayer.EnumStatus sleepInCoffinAt(int x,
 			int y, int z) {
-		//TODO Understand the event stuff
+		//TODO Workaround for event stuff
 		PlayerSleepInBedEvent event = new PlayerSleepInBedEvent(this.player,
 				x, y, z);
 		MinecraftForge.EVENT_BUS.post(event);
-		if (event.result != null) {
-			return event.result;
-		}
+//		if (event.result != null) {
+//			return event.result;
+//		}
 		
 		
 		if (!this.player.worldObj.isRemote) {
@@ -894,13 +894,13 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 					(double) ((float) z + 0.5F));
 		}
 
-		//Following method will replace: this.player.sleeping = true;
-//		Helper.Reflection.setPrivateField(EntityPlayer.class, this.player,
-//				true, Helper.Obfuscation.getPosNames("EntityPlayer/sleeping"));
+//		Following method will replace: this.player.sleeping = true;
+		Helper.Reflection.setPrivateField(EntityPlayer.class, this.player,
+				true, Helper.Obfuscation.getPosNames("EntityPlayer/sleeping"));
 		this.sleepingCoffin = true;
-		//Following method will replace: this.player.sleepTimer = 0;
-//		Helper.Reflection.setPrivateField(EntityPlayer.class, this.player, 0,
-//				Helper.Obfuscation.getPosNames("EntityPlayer/sleepTimer"));
+//		Following method will replace: this.player.sleepTimer = 0;
+		Helper.Reflection.setPrivateField(EntityPlayer.class, this.player, 0,
+				Helper.Obfuscation.getPosNames("EntityPlayer/sleepTimer"));
 		this.sleeptimerCoffin = 0;
 
 		this.player.playerLocation = new ChunkCoordinates(x,
@@ -908,7 +908,7 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 		this.player.motionX = this.player.motionZ = this.player.motionY = 0.0D;
 
 		if (!this.player.worldObj.isRemote) {
-			//TODO this.player.worldObj.updateAllPlayersSleepingFlag();
+			this.player.worldObj.updateAllPlayersSleepingFlag();
 		}
 
 		return EntityPlayer.EnumStatus.OK;
