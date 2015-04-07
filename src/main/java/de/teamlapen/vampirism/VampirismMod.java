@@ -12,6 +12,7 @@ import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
@@ -108,6 +109,10 @@ public class VampirismMod {
 		VillageBiomes.preInit(event);
 		
 		Skills.registerDefaultSkills();
+		
+		//Sends message to VersionChecker if installed
+		FMLInterModComms.sendRuntimeMessage(REFERENCE.MODID, "VersionChecker", "addVersionCheck",
+				REFERENCE.UPDATE_FILE_LINK);
 	}
 
 	private void setupNetwork() {

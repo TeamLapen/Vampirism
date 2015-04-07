@@ -8,6 +8,7 @@ public class REFERENCE {
 		public static final String GHOST_NAME = "vampirism:ghost";
 		public static final String VAMPIRE_LORD_NAME ="vampirism:vampireLord";
 		public static final String VAMPIRE_MINION_NAME="vampirism:vampireMinion";
+		public static final String DEAD_MOB_NAME="vampirism:dead_mob";
 	}
 
 	public static enum KEY {
@@ -31,5 +32,7 @@ public class REFERENCE {
 	public static final String VAMPIRE_LEVEL_NBT_KEY = "vampirelevel";
 	
 	public static final int HIGHEST_REACHABLE_LEVEL=13;
+	
+	public static final String UPDATE_FILE_LINK="http://teamlapen.de/projects/vampirism/files/modversion.json";
 
 }
