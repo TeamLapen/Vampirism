@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -122,9 +123,6 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 	protected void lookForBoss(){
 		List<EntityLivingBase> list = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand(15, 10, 15));
 		for (EntityLivingBase e : list) {
-			if(worldObj.isRemote){
-				Logger.i("test","found "+e+" : "+e.getPersistentID()+" looks "+bossId);
-			}
 			if (e.getPersistentID().equals(bossId)) {
 				if(e instanceof IMinionLord){
 					boss = (IMinionLord)e;
@@ -220,6 +218,11 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
         if(i>0)return i;
 		return 0.01F;
     }
+
+	@Override
+	public EntityCreature getRepresentingEntity() {
+		return this;
+	}
 	
 
 }

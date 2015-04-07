@@ -84,10 +84,6 @@ public class TestCommand implements ICommand {
 		if (sender instanceof EntityPlayer) {
 			EntityPlayer p = (EntityPlayer) sender;
 			
-			Entity e1=EntityList.createEntityByName(REFERENCE.MODID+"."+REFERENCE.ENTITY.DEAD_MOB_NAME, p.worldObj);
-			e1.copyLocationAndAnglesFrom(p);
-			p.worldObj.spawnEntityInWorld(e1);
-			Logger.i("test", "ad"+EntityRegistry.instance().lookupModSpawn(EntityDeadMob.class, true));
 			// -----------------
 			if (param.length > 0) {
 				try {

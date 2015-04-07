@@ -1,14 +1,12 @@
 package de.teamlapen.vampirism.entity;
 
-import cpw.mods.fml.relauncher.ReflectionHelper;
-import net.minecraft.command.IEntitySelector;
+import java.util.List;
+import java.util.UUID;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAITasks;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityWitch;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityHorse;
@@ -24,13 +22,16 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
+import de.teamlapen.vampirism.entity.ai.EntityAIModifier;
+import de.teamlapen.vampirism.entity.ai.IMinion;
+import de.teamlapen.vampirism.entity.ai.IMinionLord;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.villages.VillageVampire;
 import de.teamlapen.vampirism.villages.VillageVampireData;
 
-public class VampireMob implements IExtendedEntityProperties {
+public class VampireMob implements IExtendedEntityProperties, IMinion {
 
 	public static final VampireMob get(EntityCreature mob) {
 		return (VampireMob) mob.getExtendedProperties(VampireMob.EXT_PROP_NAME);
@@ -63,40 +64,24 @@ public class VampireMob implements IExtendedEntityProperties {
 	private final EntityCreature entity;
 	public final static String EXT_PROP_NAME = "VampireMob";
 
-	private final String KEY_VAMPIRE = "vampire";
+	private final String KEY_TYPE = "type";
 
-	private static final int VAMPIRE_WATCHER = 25;
+	private static final int TYPE_WATCHER = 25;
 
 	private final int blood;
+	
+	private final static int MAX_SEARCH_TIME = 100;
+	private UUID bossId = null;
+	protected IMinionLord boss;
+	private int lookForBossTimer = 0;
 
 	public VampireMob(EntityCreature mob) {
 		entity = mob;
 		blood = getMaxBloodAmount(mob);
-		entity.getDataWatcher().addObject(VAMPIRE_WATCHER, (short) 0);
+		entity.getDataWatcher().addObject(TYPE_WATCHER, (byte) 0);
 	}
 
-	private void addAITasks() {
-		EntityAITasks tasks = (EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class, (EntityLiving)entity, Helper.Obfuscation.getPosNames("EntityLiving/tasks"));
-		// Attack player
-		tasks.addTask(1, new EntityAIAttackOnCollide(entity, EntityPlayer.class, 1.0D, false));
-		// Attack vampire hunter
-		tasks.addTask(1, new EntityAIAttackOnCollide(entity, EntityVampireHunter.class, 1.0D, true));
-
-		EntityAITasks targetTasks = (EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class, entity, Helper.Obfuscation.getPosNames("EntityLiving/targetTasks"));
-		targetTasks.addTask(3, new EntityAINearestAttackableTarget(entity, EntityPlayer.class, 0, true, false, new IEntitySelector() {
-
-			@Override
-			public boolean isEntityApplicable(Entity entity) {
-				if (entity instanceof EntityPlayer) {
-					return VampirePlayer.get((EntityPlayer) entity).getLevel() <= 0;
-				}
-				return false;
-			}
-
-		}));
-		// Search for vampire hunters
-		targetTasks.addTask(3, new EntityAINearestAttackableTarget(entity, EntityVampireHunter.class, 0, true));
-	}
+	
 
 	/**
 	 * Bite the entity. Returns the retrieved blood
@@ -148,6 +133,59 @@ public class VampireMob implements IExtendedEntityProperties {
 
 	}
 	
+	public void onUpdate(){
+		if(isMinion()&&!entity.worldObj.isRemote){
+			if (boss == null) {
+				if(bossId!=null){
+					lookForBoss();
+				}
+					if (boss == null) {
+						lookForBossTimer++;
+					}
+					if (lookForBossTimer > MAX_SEARCH_TIME) {
+						entity.attackEntityFrom(DamageSource.generic, 5);
+					}
+				
+			} else if (!boss.isTheEntityAlive()) {
+				boss = null;
+				bossId = null;
+			} else if (boss.getTheDistanceSquared(entity)> 1000&&!entity.worldObj.isRemote) {
+				if (entity.worldObj.rand.nextInt(80) == 0) {
+					entity.attackEntityFrom(DamageSource.generic, 3);
+				}
+			}
+			if(boss!=null){
+				if(boss.getRepresentingEntity().equals(entity.getAttackTarget())){
+					entity.setAttackTarget(boss.getMinionTarget());
+				}
+			}
+		}
+	}
+	
+	protected void lookForBoss(){
+		List<EntityLivingBase> list = entity.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, entity.boundingBox.expand(15, 10, 15));
+		for (EntityLivingBase e : list) {
+			if (e.getPersistentID().equals(bossId)) {
+				if(e instanceof IMinionLord){
+					boss = (IMinionLord)e;
+					lookForBossTimer = 0;
+				}
+				else if(e instanceof EntityPlayer){
+					boss=VampirePlayer.get((EntityPlayer)e);
+					lookForBossTimer=0;
+				}
+				else{
+					Logger.w("VampireMob", "Found boss with UUID "+bossId+" but it isn't a Minion Lord");
+					bossId=null;
+					boss=null;
+					lookForBossTimer=0;
+				}
+
+				break;
+			}
+		}
+	}
+	
 	public boolean lowEnoughHealth(){
 		return (entity.getHealth() / entity.getMaxHealth()) <= BALANCE.SUCK_BLOOD_HEALTH_REQUIREMENT;
 	}
@@ -161,15 +199,22 @@ public class VampireMob implements IExtendedEntityProperties {
 	}
 
 	public boolean isVampire() {
-		return this.entity.getDataWatcher().getWatchableObjectShort(VAMPIRE_WATCHER) == (short) 1;
+		return ((this.entity.getDataWatcher().getWatchableObjectByte(TYPE_WATCHER)&1)==1);
+	}
+	
+	public boolean isMinion() {
+		return ((this.entity.getDataWatcher().getWatchableObjectByte(TYPE_WATCHER)&2)==2);
 	}
 
 	@Override
 	public void loadNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
 		if (properties != null) {
-			if (properties.getShort(KEY_VAMPIRE) == 1) {
-				makeVampire();
+			entity.getDataWatcher().updateObject(TYPE_WATCHER, properties.getByte(KEY_TYPE));
+			if(isMinion()){
+				if (properties.hasKey("BossUUIDMost")) {
+					this.bossId = new UUID(properties.getLong("BossUUIDMost"), properties.getLong("BossUUIDLeast"));
+			}
 			}
 		}
 
@@ -179,19 +224,70 @@ public class VampireMob implements IExtendedEntityProperties {
 		if (blood < 0) {
 			return false;
 		}
-		entity.getDataWatcher().updateObject(VAMPIRE_WATCHER, (short) 1);
-		addAITasks();
+		setVampire();
+
 		entity.addPotionEffect(new PotionEffect(Potion.weakness.id,200));
 		entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id,100));
 		return true;
+	}
+	
+	public void makeMinion(IMinionLord lord){
+		setMinion();
+		this.setLord(lord);
 	}
 
 	@Override
 	public void saveNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = new NBTTagCompound();
-		properties.setShort(KEY_VAMPIRE, this.entity.getDataWatcher().getWatchableObjectShort(VAMPIRE_WATCHER));
+		properties.setByte(KEY_TYPE, entity.getDataWatcher().getWatchableObjectByte(TYPE_WATCHER));
+		if(isMinion()){
+			if (this.bossId != null) {
+				properties.setLong("BossUUIDMost", this.bossId.getMostSignificantBits());
+				properties.setLong("BossUUIDLeast", this.bossId.getLeastSignificantBits());
+			}
+		}
 		compound.setTag(EXT_PROP_NAME, properties);
 
 	}
+	@Override
+	public IMinionLord getLord() {
+		if(!isMinion()){
+			Logger.w("VampireMob", "Trying to get lord, but mob is no minion");
+		}
+		return boss;
+	}
+	@Override
+	public void setLord(IMinionLord b) {
+		if(!b.equals(boss)){
+			this.setLordId(b.getThePersistentID());
+			boss=b;
+		}
+		
+	}
+	private void setLordId(UUID id) {
+		if (!id.equals(bossId)) {
+			bossId = id;
+			boss = null;
+			lookForBossTimer = 0;
+		}
+		
+	}
+	
+	private void setVampire(){
+		Byte b=(byte) (entity.getDataWatcher().getWatchableObjectByte(TYPE_WATCHER)|1);
+		entity.getDataWatcher().updateObject(TYPE_WATCHER, b);
+		EntityAIModifier.addVampireMobTasks(entity);
+	}
+	
+	private void setMinion(){
+		Byte b=(byte) (entity.getDataWatcher().getWatchableObjectByte(TYPE_WATCHER)|2);
+		entity.getDataWatcher().updateObject(TYPE_WATCHER, b);
+		EntityAIModifier.makeMinion(this,entity);
+	}
+
+	@Override
+	public EntityCreature getRepresentingEntity() {
+		return entity;
+	}	
 
 }

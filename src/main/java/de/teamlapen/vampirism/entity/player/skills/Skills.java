@@ -54,6 +54,7 @@ public class Skills {
 		VampireRageSkill.ID = Skills.registerSkill(new VampireRageSkill());
 		Skills.registerSkill(new RegenSkill());
 		Skills.registerSkill(new ChangeWeatherSkill());
+		Skills.registerSkill(new ReviveFallenSkill());
 	}
 
 	/**

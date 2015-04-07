@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
@@ -10,19 +11,24 @@ import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
 import net.minecraft.village.Village;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.ai.EntityAIAvoidVampirePlayer;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.network.RequestEntityUpdatePacket;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
+import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.DifficultyCalculator.Difficulty;
 import de.teamlapen.vampirism.util.DifficultyCalculator.IAdjustableLevel;
 import de.teamlapen.vampirism.util.Helper;
@@ -84,7 +90,7 @@ public class VampireEntityEventHandler {
 			// Replace the EntityAINearestAttackableTarget of Irongolems, so
 			// they do not attack VampireHunters
 			EntityIronGolem golem = (EntityIronGolem) event.entity;
-			EntityAITasks targetTasks = (EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class, golem, Helper.Obfuscation.getPosNames("EntityLiving/targetTasks"));
+			EntityAITasks targetTasks = golem.targetTasks;
 			if (targetTasks == null) {
 				Logger.w("VampireEntityEventHandler", "Cannot change the target tasks of irongolem");
 			} else {
@@ -110,13 +116,27 @@ public class VampireEntityEventHandler {
 		}
 		else if(event.entity instanceof EntityCreeper){
 			EntityCreeper creeper=(EntityCreeper)event.entity;
-			EntityAITasks tasks=(EntityAITasks) Helper.Reflection.getPrivateFinalField(EntityLiving.class,(EntityLiving)creeper,Helper.Obfuscation.getPosNames("EntityLiving/tasks"));
+			EntityAITasks tasks=creeper.tasks;
 			if(tasks==null){
 				Logger.w("VampireEntityEventHandler","Cannot change the target tasks of creeper");
 			}
 			else{
 				tasks.addTask(3, new EntityAIAvoidVampirePlayer(creeper,12.0F,1.0D,1.2D,BALANCE.VAMPIRE_PLAYER_CREEPER_AVOID_LEVEL));
 			}
+		}
+	}
+	
+	@SubscribeEvent
+	public void onLivingDeathEvent(LivingDeathEvent event) {
+		if (event.entity instanceof EntityCreature&&!event.entity.worldObj.isRemote&&EntityDeadMob.canBecomeDeadMob((EntityCreature) event.entity)&&event.entity.worldObj.rand.nextInt(3)==0) {
+			event.entity.worldObj.spawnEntityInWorld(EntityDeadMob.createFromEntity((EntityCreature) event.entity));
+		}
+	}
+	
+	@SubscribeEvent
+	public void onLivingUpdate(LivingUpdateEvent event){
+		if(event.entity instanceof EntityCreature){
+			VampireMob.get((EntityCreature) event.entity).onUpdate();
 		}
 	}
 

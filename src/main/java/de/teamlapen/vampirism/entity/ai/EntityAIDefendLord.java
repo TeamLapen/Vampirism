@@ -12,22 +12,19 @@ import net.minecraft.entity.ai.EntityAITarget;
  */
 public class EntityAIDefendLord extends EntityAITarget {
 
-	EntityCreature entity;
+	IMinion minion;
 
 	EntityLivingBase target;
 
-	public EntityAIDefendLord(EntityCreature e) {
-		super(e, false, false);
-		if(!(e instanceof IMinion)){
-			throw new IllegalArgumentException("This Task can only be used by IMinion");
-		}
-		entity = e;
+	public EntityAIDefendLord(IMinion minion) {
+		super(minion.getRepresentingEntity(), false, false);
+		this.minion=minion;
 		this.setMutexBits(1);
 	}
 
 	@Override
 	public boolean shouldExecute() {
-		IMinionLord l = ((IMinionLord) ((IMinion) entity).getLord());
+		IMinionLord l = minion.getLord();
 		if (l != null) {
 			target = l.getMinionTarget();
 		} else {
@@ -42,7 +39,8 @@ public class EntityAIDefendLord extends EntityAITarget {
 
 	@Override
 	public void startExecuting() {
-		this.entity.setAttackTarget(target);
+		minion.getRepresentingEntity().setAttackTarget(target);
+		Logger.i("defen", "attack "+target);
 		super.startExecuting();
 	}
 }

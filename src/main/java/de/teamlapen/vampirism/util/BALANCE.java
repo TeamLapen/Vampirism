@@ -125,6 +125,11 @@ public final class BALANCE {
 		@DefaultInt(value=4,minValue=-1,name="Weather Min Level",comment = "Set to -1 to deactivate this skill")
 		public static int WEATHER_MIN_LEVEL;
 		
+		@DefaultInt(value=60,minValue=0,name="Revive Fallen Cool Down",comment = "In seconds")
+		public static int REVIVE_FALLEN_COOLDOWN;
+		@DefaultInt(value=7,minValue=-1,name="Revive Fallen Min Level",comment = "Set to -1 to deactivate this skill")
+		public static int REVIVE_FALLEN_MIN_LEVEL;
+		
 		@DefaultInt(value=20,minValue=0,name="Vampire Rage Cool Down",
 				comment="Vampire Rage cooldown duration")
 		public static int RAGE_COOLDOWN;

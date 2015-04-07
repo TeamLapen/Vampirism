@@ -6,7 +6,7 @@ import net.minecraft.entity.ai.EntityAIBase;
 
 public class EntityAIFollowBoss extends EntityAIBase {
 	/** The child that is following its parent. */
-	EntityLiving entity;
+	IMinion minion;
 	IMinionLord boss;
 	double speed;
 	private int timer;
@@ -19,11 +19,8 @@ public class EntityAIFollowBoss extends EntityAIBase {
 	 */
 	private final int MAXDIST = 600;
 
-	public EntityAIFollowBoss(EntityLiving entity, double speed) {
-		if (!(entity instanceof IMinion)) {
-			throw new IllegalArgumentException("This task can only be used by entitys which implement IMinion");
-		}
-		this.entity = entity;
+	public EntityAIFollowBoss(IMinion minion, double speed) {
+		this.minion=minion;
 		this.speed = speed;
 		this.setMutexBits(1);
 	}
@@ -37,7 +34,7 @@ public class EntityAIFollowBoss extends EntityAIBase {
 			boss = null;
 			return false;
 		} else {
-			double d0 = this.boss.getTheDistanceSquared(entity);
+			double d0 = this.boss.getTheDistanceSquared(minion.getRepresentingEntity());
 			return d0 >= MINDIST && d0 <= MAXDIST;
 		}
 	}
@@ -55,11 +52,11 @@ public class EntityAIFollowBoss extends EntityAIBase {
 	 */
 	@Override
 	public boolean shouldExecute() {
-		boss = ((IMinion) entity).getLord();
+		boss = minion.getLord();
 		if (boss == null) {
 			return false;
 		} else {
-			double d0 = this.boss.getTheDistanceSquared(entity);
+			double d0 = this.boss.getTheDistanceSquared(minion.getRepresentingEntity());
 			return d0 >= MINDIST && d0 <= MAXDIST;
 		}
 	}
@@ -79,7 +76,7 @@ public class EntityAIFollowBoss extends EntityAIBase {
 	public void updateTask() {
 		if (--this.timer <= 0) {
 			this.timer = 10;
-			this.entity.getNavigator().tryMoveToEntityLiving(this.boss.getRepresentingEntity(), this.speed);
+			minion.getRepresentingEntity().getNavigator().tryMoveToEntityLiving(this.boss.getRepresentingEntity(), this.speed);
 		}
 	}
 }

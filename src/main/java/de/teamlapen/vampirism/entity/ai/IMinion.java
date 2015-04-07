@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.ai;
 
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 
 public interface IMinion {
@@ -18,4 +19,6 @@ public interface IMinion {
 	 *            Has to implement {@link IMinionLord}
 	 */
 	public void setLord(IMinionLord b);
+	
+	public EntityCreature getRepresentingEntity();
 }
