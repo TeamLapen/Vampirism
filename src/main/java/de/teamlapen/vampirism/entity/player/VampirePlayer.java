@@ -154,9 +154,12 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 			if (newBloodLevel < 0)
 				newBloodLevel = 0;
 			bloodToAdd = 0;
-
-			if (this.bloodExhaustionLevel > BALANCE.BLOOD_EXH_PER_BL) {
-				this.bloodExhaustionLevel -= BALANCE.BLOOD_EXH_PER_BL;
+			int playerSaturation=1;
+			if(player.isPotionActive(ModPotion.saturation.id)){
+				playerSaturation=player.getActivePotionEffect(ModPotion.saturation).getAmplifier()+2;
+			}
+			if (this.bloodExhaustionLevel > BALANCE.BLOOD_EXH_PER_BL*playerSaturation) {
+				this.bloodExhaustionLevel -= BALANCE.BLOOD_EXH_PER_BL*playerSaturation;
 
 				if (this.bloodSaturationLevel > 0.0F) {
 					this.bloodSaturationLevel = Math.max(bloodSaturationLevel - 1.0F, 0F);
@@ -602,7 +605,7 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 			if (sang != null) {
 				if (sang.getDuration() == 1) {
 					this.levelUp();
-					player.addPotionEffect(new PotionEffect(ModPotion.saturation.id, 300));
+					player.addPotionEffect(new PotionEffect(ModPotion.saturation.id, 300,2));
 					player.addPotionEffect(new PotionEffect(Potion.resistance.id, 300));
 				}
 			}

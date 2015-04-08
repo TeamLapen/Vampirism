@@ -31,6 +31,18 @@ public class ItemVampiresFear extends ItemSword {
 		}
 		return itemStack.stackTagCompound.getInteger("blood");
 	}
+	
+	public static void setBlood(ItemStack itemStack,int amount) {
+		if (itemStack == null ||amount<0) {
+			return;
+		}
+		if(itemStack.stackTagCompound == null) {
+			itemStack.stackTagCompound = new NBTTagCompound();
+			itemStack.stackTagCompound.setInteger("blood", 0);
+		}
+		if(amount>MAX_BLOOD)amount=MAX_BLOOD;
+		itemStack.stackTagCompound.setInteger("blood", amount);;
+	}
 	public static final String name = "vampiresFear";
 
 	private IIcon unusedIcon;

@@ -1,13 +1,12 @@
 package de.teamlapen.vampirism.tileEntity;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.effect.EntityLightningBolt;
+import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -16,26 +15,33 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityBeacon;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.world.World;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.ModItems;
-import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.item.ItemVampiresFear;
-import de.teamlapen.vampirism.network.BloodAltarPacket;
-import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.Helper;
 
 /**
- * TileEntity BloodAltar: Initial vampire ritual
+ * Beacon style blood altar
  * 
- * @author Mistadon
+ * @author maxanier @author Mistadon
  */
 public class TileEntityBloodAltar extends TileEntity {
 	private boolean occupied = false;
-	public final String BLOODALTAR_OCCUPIED_NBTKEY = "bloodaltaroccupied";
-	private int tickCounter = 0;
-	private final int TICK_DURATION = 40;
+	private int bloodAmount;
+	public final String OCCUPIED_NBTKEY = "occupied";
+	public final String BLOOD_NBTKEY = "blood";
+	public final String TICK_NBTKEY="tick";
 	private final String TAG = "TEBloodAltar";
+	public int distance=25;
+	private int tickCounter=0;
+	private TileEntityBeacon fakeBeacon;
 
 	public TileEntityBloodAltar() {
 		super();
@@ -52,6 +58,13 @@ public class TileEntityBloodAltar extends TileEntity {
 	public boolean isOccupied() {
 		return occupied;
 	}
+	
+	private ItemStack getSwordToEject(){
+		ItemStack s=new ItemStack(ModItems.vampiresFear,1);
+		ItemVampiresFear.setBlood(s, bloodAmount);
+		bloodAmount=0;
+		return s;
+	}
 
 	@Override
 	public void onDataPacket(NetworkManager net,
@@ -59,23 +72,26 @@ public class TileEntityBloodAltar extends TileEntity {
 		readFromNBT(packet.func_148857_g());
 	}
 
-	public void setOccupied(boolean flag, boolean sendPacket) {
-		if (sendPacket)
-			VampirismMod.modChannel.sendToAll(new BloodAltarPacket(flag,
-					this.xCoord, this.yCoord, this.zCoord));
-		occupied = flag;
+	public void onActivated(EntityPlayer player,ItemStack itemStack){
+		if(occupied){
+			if(itemStack==null){
+				player.inventory.setInventorySlotContents(player.inventory.currentItem, getSwordToEject());
+			}
+			else{
+				EntityItem sword = new EntityItem(this.worldObj, this.xCoord, this.yCoord + 1, this.zCoord, getSwordToEject());
+				this.worldObj.spawnEntityInWorld(sword);
+			}
+			occupied=false;
+			markDirty();
+		}
+		else{
+			if(ModItems.vampiresFear.equals(itemStack.getItem())){
+				this.startRitual(player, itemStack);
+			}
+		}
 	}
-
-	/**
-	 * Code for the vampirism ritual to start
-	 * 
-	 * @param player
-	 *            Player who started the ritual and will become a vampire
-	 * @param itemStack
-	 *            The sword's ItemStack that is going to be consumed
-	 **/
-	public void startVampirismRitual(EntityPlayer player, ItemStack itemStack) {
-		Logger.i(TAG, "Starting Vampirism-Ritual");
+	
+	public void startRitual(EntityPlayer player, ItemStack itemStack) {
 		if (VampirePlayer.get(player).getLevel() == 0) {
 			player.addChatMessage(new ChatComponentTranslation(
 					"text.vampirism:ritual_no_vampire"));
@@ -83,44 +99,90 @@ public class TileEntityBloodAltar extends TileEntity {
 		}
 		// Put sword into altar
 		player.inventory.consumeInventoryItem(itemStack.getItem());
-		setOccupied(true, true);
+		occupied=true;
+		this.bloodAmount=ItemVampiresFear.getBlood(itemStack);
 		
-		// TODO small animation
-		this.worldObj.spawnEntityInWorld(new EntityLightningBolt(worldObj, player.posX, player.posY, player.posZ));
-
-		if(ItemVampiresFear.MAX_BLOOD <= ItemVampiresFear.getBlood(itemStack))
-			player.addPotionEffect(new PotionEffect(Potion.regeneration.id,
-					20 * 60, 1));
+		markDirty();
 	}
 
-	public void ejectSword() {
-		if(!this.worldObj.isRemote) {
-			EntityItem sword = new EntityItem(this.worldObj, this.xCoord, this.yCoord + 1, this.zCoord, new ItemStack(ModItems.vampiresFear, 1));
-			sword.delayBeforeCanPickup = 10;
-			this.worldObj.spawnEntityInWorld(sword);
-		}
-		this.setOccupied(false, true);
-	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
 		super.writeToNBT(nbt);
-		nbt.setBoolean(BLOODALTAR_OCCUPIED_NBTKEY, occupied);
+		nbt.setBoolean(OCCUPIED_NBTKEY, occupied);
+		nbt.setInteger(BLOOD_NBTKEY, bloodAmount);
+		nbt.setInteger(TICK_NBTKEY, tickCounter);
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
-		this.occupied = nbt.getBoolean(BLOODALTAR_OCCUPIED_NBTKEY);
+		this.occupied = nbt.getBoolean(OCCUPIED_NBTKEY);
+		this.bloodAmount=nbt.getInteger(BLOOD_NBTKEY);
+		this.tickCounter=nbt.getInteger(TICK_NBTKEY);
 	}
 
 	@Override
 	public void updateEntity() {
-		if (this.occupied)
-			tickCounter++;
-		if (tickCounter > TICK_DURATION && occupied) {
-			ejectSword();
-			tickCounter = 0;
+		if(this.worldObj.getTotalWorldTime() % 100L==0L&&!this.worldObj.isRemote){
+			if(bloodAmount>0){
+				bloodAmount--;
+				if(bloodAmount==0){
+					this.markDirty();
+				}
+				 AxisAlignedBB axisalignedbb = AxisAlignedBB.getBoundingBox((double)this.xCoord, (double)this.yCoord, (double)this.zCoord, (double)(this.xCoord + 1), (double)(this.yCoord + 1), (double)(this.zCoord + 1)).expand(distance, distance, distance);
+		            axisalignedbb.maxY = (double)this.worldObj.getHeight();
+		            List list = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, axisalignedbb);
+		            Iterator iterator = list.iterator();
+		            EntityPlayer entityplayer;
+
+		            while (iterator.hasNext())
+		            {
+		                entityplayer = (EntityPlayer)iterator.next();
+		                VampirePlayer vampire=VampirePlayer.get(entityplayer);
+		                if(vampire.getLevel()>0){
+		                	entityplayer.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 120,0, true));
+		                	entityplayer.addPotionEffect(new PotionEffect(ModPotion.saturation.id,120,1,true));
+		                }
+		            }
+			}
+           
+		}
+		
+	}
+	
+	/**
+	 * Marks the block dirty and ready for update
+	 */
+	@Override
+	public void markDirty(){
+		super.markDirty();
+		this.worldObj.markBlockForUpdate(this.xCoord, yCoord, zCoord);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public TileEntityBeacon getFakeBeacon(){
+		return fakeBeacon;
+	}
+	
+	public boolean isActive(){
+		return bloodAmount>0;
+	}
+	
+	@Override
+	public void setWorldObj(World world){
+		super.setWorldObj(world);
+		if(world.isRemote){
+			fakeBeacon=new TileEntityBeacon();
+			Helper.Reflection.setPrivateField(TileEntityBeacon.class, fakeBeacon, true, Helper.Obfuscation.getPosNames("TileEntityBeacon/field_146015_k"));
+			fakeBeacon.setWorldObj(world);
 		}
 	}
+	
+	@SideOnly(Side.CLIENT)
+	@Override
+    public AxisAlignedBB getRenderBoundingBox()
+    {
+        return INFINITE_EXTENT_AABB;
+    }
 }

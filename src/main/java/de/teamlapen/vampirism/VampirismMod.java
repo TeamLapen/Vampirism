@@ -28,7 +28,6 @@ import de.teamlapen.vampirism.generation.villages.VillageBiomes;
 import de.teamlapen.vampirism.generation.villages.VillageCreationHandler;
 import de.teamlapen.vampirism.generation.villages.VillageGenReplacer;
 import de.teamlapen.vampirism.generation.villages.VillageModChurchPiece;
-import de.teamlapen.vampirism.network.BloodAltarPacket;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.RenderScreenRedPacket;
 import de.teamlapen.vampirism.network.RequestEntityUpdatePacket;
@@ -51,6 +50,8 @@ public class VampirismMod {
 	public static IProxy proxy;
 
 	public static SimpleNetworkWrapper modChannel;
+	
+	public static boolean inDev=false;
 
 	public static CreativeTabs tabVampirism = new CreativeTabs("vampirism") {
 		@Override
@@ -94,6 +95,7 @@ public class VampirismMod {
 		Configs.init(event.getSuggestedConfigurationFile());// Keep first
 		if(REFERENCE.RESET_CONFIG_IN_DEV&&(Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment")){
 			Configs.setConfigToDefault();
+			inDev=true;
 		}
 		Helper.Obfuscation.fillMap();
 		
@@ -122,7 +124,6 @@ public class VampirismMod {
 		int id = 0;
 		modChannel.registerMessage(InputEventPacket.Handler.class, InputEventPacket.class, id++, Side.SERVER);
 		modChannel.registerMessage(SpawnParticlePacket.Handler.class, SpawnParticlePacket.class, id++, Side.CLIENT);
-		modChannel.registerMessage(BloodAltarPacket.Handler.class, BloodAltarPacket.class, id++, Side.CLIENT);
 		modChannel.registerMessage(SpawnCustomParticlePacket.Handler.class, SpawnCustomParticlePacket.class, id++, Side.CLIENT);
 		modChannel.registerMessage(RenderScreenRedPacket.Handler.class, RenderScreenRedPacket.class, id++, Side.CLIENT);
 		modChannel.registerMessage(UpdateVampirePlayerPacket.Handler.class, UpdateVampirePlayerPacket.class, id++, Side.CLIENT);

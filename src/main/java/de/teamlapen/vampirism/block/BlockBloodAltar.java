@@ -21,14 +21,6 @@ public class BlockBloodAltar extends BasicBlockContainer {
 		this.setResistance(4000.0F);
 	}
 
-	private void activateAltar(EntityPlayer player, ItemStack item, TileEntityBloodAltar te) {
-		if (!te.isOccupied()) {
-			te.startVampirismRitual(player, item);
-		} else {
-			Logger.i(TAG, "Altar already used");
-		}
-	}
-
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata) {
 		return new TileEntityBloodAltar();
@@ -37,25 +29,18 @@ public class BlockBloodAltar extends BasicBlockContainer {
 
 	@Override
 	public boolean onBlockActivated(World world, int par2, int par3, int par4, EntityPlayer player, int par6, float par7, float par8, float par9) {
-		Logger.i(TAG, "Altar right-click detected");
 		if (!world.isRemote) {
 			ItemStack item = null;
 			try {
 				item = player.inventory.getCurrentItem();
 			} catch (NullPointerException e) {
-				Logger.i(TAG, "No item in hand");
-				// e.printStackTrace();
-				return false;
 			}
 
-			if (item != null && item.getItem() instanceof ItemVampiresFear) {
-				Logger.i(TAG, "Activating Altar");
-				TileEntityBloodAltar te = (TileEntityBloodAltar) world.getTileEntity(par2, par3, par4);
-				activateAltar(player, item, te);
-			}
-			return true;
-		} else
-			Logger.e(TAG, "World remote!");
-		return false;
+			TileEntityBloodAltar te = (TileEntityBloodAltar) world.getTileEntity(par2, par3, par4);
+			te.onActivated(player, item);
+		} 
+		return true;
 	}
+	
+	
 }

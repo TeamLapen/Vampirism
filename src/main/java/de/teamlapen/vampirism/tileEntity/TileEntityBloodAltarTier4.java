@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.tileEntity;
 
 import java.util.ArrayList;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockBed;
@@ -18,6 +20,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChunkCoordinates;
 import de.teamlapen.vampirism.ModBlocks;
@@ -550,7 +553,7 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 				this.worldObj.spawnParticle("hugeexplosion", player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);
 			}
 			else{
-				player.addPotionEffect(new PotionEffect(ModPotion.saturation.id,400));
+				player.addPotionEffect(new PotionEffect(ModPotion.saturation.id,400,2));
 			}
 			player.addPotionEffect(new PotionEffect(Potion.regeneration.id,400,2));
 			player.addPotionEffect(new PotionEffect(Potion.damageBoost.id,400,2));
@@ -565,5 +568,12 @@ public class TileEntityBloodAltarTier4 extends InventoryTileEntity {
 			tagCompound.setInteger("playerId", player.getEntityId());
 		}
 	}
+	
+	@SideOnly(Side.CLIENT)
+	@Override
+    public AxisAlignedBB getRenderBoundingBox()
+    {
+        return INFINITE_EXTENT_AABB;
+    }
 
 }

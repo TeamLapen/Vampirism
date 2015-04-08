@@ -15,6 +15,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
@@ -161,14 +162,18 @@ public class ClientProxy extends CommonProxy {
 			try {
 				Minecraft mc=Minecraft.getMinecraft();
 				if(mc.thePlayer==null)return;
-				boolean active=mc.thePlayer.isPotionActive(ModPotion.saturation);
+				boolean active=false;
+				PotionEffect pe=mc.thePlayer.getActivePotionEffect(ModPotion.saturation);
+				if(pe!=null&&pe.getAmplifier()>=2){
+					active=true;
+				}
 				EntityRenderer renderer=mc.entityRenderer;
 				if(active&&renderer.theShaderGroup==null){
 					try {
 						renderer.theShaderGroup = new ShaderGroup(mc.getTextureManager(), mc.getResourceManager(), mc.getFramebuffer(), saturation1);
 						renderer.theShaderGroup.createBindFramebuffers(mc.displayWidth, mc.displayHeight);
 					} catch (JsonException e) {
-						e.printStackTrace();
+						
 					}
 				}
 				else if(!active&&renderer.theShaderGroup!=null&&renderer.theShaderGroup.getShaderGroupName().equals(saturation1.toString())){
