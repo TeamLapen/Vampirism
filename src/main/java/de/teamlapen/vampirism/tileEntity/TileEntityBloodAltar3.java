@@ -7,6 +7,6 @@ import net.minecraft.tileentity.TileEntity;
  * @author Max
  *
  */
-public class TileEntityBloodAltarTier3 extends TileEntity{
+public class TileEntityBloodAltar3 extends TileEntity {
 
 }

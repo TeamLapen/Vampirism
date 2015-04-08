@@ -17,17 +17,14 @@ item.vampirism:pureBlood.name=Reines Blut
 item.vampirism:sunscreen.name=Sonnenschutz
 
 # Blocks
-block.vampirism:bloodAltar.name=Blut Altar
-block.vampirism:bloodAltarTier2.name=Altar Stufe 2
-block.vampirism:bloodAltarTier3.name=Altar Stufe 3
-block.vampirism:bloodAltarTier4.name=Altar Stufe 4
-block.vampirism:bloodAltarTier4Tip.name=Altar Stufe 4 Spitze
+block.vampirism:bloodAltar.name=Blood Altar der S‰ttigung
+block.vampirism:bloodAltarTier2.name=Blood Altar der Inspiration
+block.vampirism:bloodAltarTier3.name=Blood Altar 3
+block.vampirism:bloodAltarTier4.name=Blood Altar der Infusion
+block.vampirism:bloodAltarTier4Tip.name=Blood Altar der Infusion Tip
 block.vampirism:churchAltar.name=Altar der Reinigung
 block.vampirism:cursedEarth.name=Verfluchte Erde
 block.vampirism:vampireOrchid.name=Vampir Orchidee
-
-#Tiles
-tile.vampirism:bloodAltarTier4.name=Blut Altar Stufe 4
 
 #GUI
 gui.vampirism:revertback.head=Verwandle dich zur√ºck in einen normalen Menschen

@@ -17,37 +17,38 @@ import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.VampireMob;
-import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.REFERENCE;
 
-public class ItemVampiresFear extends ItemSword {
-	public static final int MAX_BLOOD = 100;
-
+public class ItemLeechSword extends ItemSword {
 	public static int getBlood(ItemStack itemStack) {
 		if (itemStack == null || itemStack.stackTagCompound == null) {
 			return 0;
 		}
 		return itemStack.stackTagCompound.getInteger("blood");
 	}
-	
-	public static void setBlood(ItemStack itemStack,int amount) {
-		if (itemStack == null ||amount<0) {
+
+	public static void setBlood(ItemStack itemStack, int amount) {
+		if (itemStack == null || amount < 0) {
 			return;
 		}
-		if(itemStack.stackTagCompound == null) {
+		if (itemStack.stackTagCompound == null) {
 			itemStack.stackTagCompound = new NBTTagCompound();
 			itemStack.stackTagCompound.setInteger("blood", 0);
 		}
-		if(amount>MAX_BLOOD)amount=MAX_BLOOD;
-		itemStack.stackTagCompound.setInteger("blood", amount);;
+		if (amount > MAX_BLOOD)
+			amount = MAX_BLOOD;
+		itemStack.stackTagCompound.setInteger("blood", amount);
+		;
 	}
-	public static final String name = "vampiresFear";
+
+	public static final int MAX_BLOOD = 100;
+
+	public static final String name = "leechSword";
 
 	private IIcon unusedIcon;
 
-	public ItemVampiresFear() {
+	public ItemLeechSword() {
 		super(Item.ToolMaterial.IRON);
 		this.setNoRepair();
 		setUnlocalizedName(name);
@@ -94,15 +95,15 @@ public class ItemVampiresFear extends ItemSword {
 
 	@Override
 	public boolean hitEntity(ItemStack itemStack, EntityLivingBase entityTarget, EntityLivingBase e2) {
-		if(entityTarget.worldObj.isRemote)
+		if (entityTarget.worldObj.isRemote)
 			return false;
-		if(entityTarget.getHealth() <= 0) {
-			if(itemStack.stackTagCompound == null) {
+		if (entityTarget.getHealth() <= 0) {
+			if (itemStack.stackTagCompound == null) {
 				itemStack.stackTagCompound = new NBTTagCompound();
 				itemStack.stackTagCompound.setInteger("blood", 0);
 			}
-			itemStack.stackTagCompound.setInteger("blood",  itemStack.stackTagCompound.getInteger("blood") + VampireMob.getMaxBloodAmount((EntityCreature) entityTarget));
-			if(itemStack.stackTagCompound.getInteger("blood") > MAX_BLOOD)
+			itemStack.stackTagCompound.setInteger("blood", itemStack.stackTagCompound.getInteger("blood") + VampireMob.getMaxBloodAmount((EntityCreature) entityTarget));
+			if (itemStack.stackTagCompound.getInteger("blood") > MAX_BLOOD)
 				itemStack.stackTagCompound.setInteger("blood", MAX_BLOOD);
 			else if (itemStack.stackTagCompound.getInteger("blood") < 0)
 				itemStack.stackTagCompound.setInteger("blood", 0);
@@ -111,8 +112,7 @@ public class ItemVampiresFear extends ItemSword {
 	}
 
 	@Override
-	public boolean onBlockDestroyed(ItemStack p_150894_1_, World p_150894_2_, Block p_150894_3_, int p_150894_4_, int p_150894_5_, int p_150894_6_,
-			EntityLivingBase p_150894_7_) {
+	public boolean onBlockDestroyed(ItemStack p_150894_1_, World p_150894_2_, Block p_150894_3_, int p_150894_4_, int p_150894_5_, int p_150894_6_, EntityLivingBase p_150894_7_) {
 
 		return true;
 	}
@@ -127,6 +127,6 @@ public class ItemVampiresFear extends ItemSword {
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister iconRegister) {
 		itemIcon = iconRegister.registerIcon(this.getUnlocalizedName().substring(this.getUnlocalizedName().indexOf(".") + 1));
-		unusedIcon = iconRegister.registerIcon("vampirism:vampiresFearUnused");
+		unusedIcon = iconRegister.registerIcon("vampirism:leechSwordUnused");
 	}
 }

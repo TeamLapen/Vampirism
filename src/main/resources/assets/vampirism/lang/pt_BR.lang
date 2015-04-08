@@ -17,17 +17,15 @@ item.vampirism:pureBlood.name=Sangue Puro
 item.vampirism:sunscreen.name=Protetor Solar
 
 # Blocks
-block.vampirism:bloodAltar.name=Altar de Sangue
-block.vampirism:bloodAltarTier2.name=Altar de Sangue Nível 2
-block.vampirism:bloodAltarTier3.name=Altar de Sangue Nível 3
-block.vampirism:bloodAltarTier4.name=Altar de Sangue Nível 4
-block.vampirism:bloodAltarTier4Tip.name=Altar de Sangue Nível 4 Piramidal
+block.vampirism:bloodAltar.name=Blood Altar of Saturation
+block.vampirism:bloodAltarTier2.name=Blood Altar of Inspiration
+block.vampirism:bloodAltarTier3.name=Blood Altar 3
+block.vampirism:bloodAltarTier4.name=Blood Altar of Infusion
+block.vampirism:bloodAltarTier4Tip.name=Blood Altar of Infusion Tip
 block.vampirism:churchAltar.name=Altar da Purificação
 block.vampirism:cursedEarth.name=Terra Amaldiçoada
 block.vampirism:vampireOrchid.name=Orquídea Vampirica
 
-#Tiles
-tile.vampirism:bloodAltarTier4.name=BAltar de Sangue Nível 4
 
 #GUI
 gui.vampirism:revertback.head=Voltar a ser um humano normal

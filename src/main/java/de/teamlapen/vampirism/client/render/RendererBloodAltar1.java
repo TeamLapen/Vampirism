@@ -12,22 +12,22 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.client.model.ModelBloodAltar;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
+import de.teamlapen.vampirism.client.model.ModelBloodAltar1;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 @SideOnly(Side.CLIENT)
-public class RendererBloodAltar extends TileEntitySpecialRenderer {
+public class RendererBloodAltar1 extends TileEntitySpecialRenderer {
 
 	// The model of your block
-	private final ModelBloodAltar model;
+	private final ModelBloodAltar1 model;
 	private final ResourceLocation texture;
 	private final TileEntityBeaconRenderer fakeBeaconRenderer;
 
-	public RendererBloodAltar() {
-		model = new ModelBloodAltar();
-		texture = new ResourceLocation(REFERENCE.MODID + ":textures/blocks/bloodAltar.png");
-		fakeBeaconRenderer=new TileEntityBeaconRenderer();
+	public RendererBloodAltar1() {
+		model = new ModelBloodAltar1();
+		texture = new ResourceLocation(REFERENCE.MODID + ":textures/blocks/bloodAltar1.png");
+		fakeBeaconRenderer = new TileEntityBeaconRenderer();
 	}
 
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z) {
@@ -38,8 +38,19 @@ public class RendererBloodAltar extends TileEntitySpecialRenderer {
 	}
 
 	@Override
+	public void func_147497_a(TileEntityRendererDispatcher dispatcher) {
+		super.func_147497_a(dispatcher);
+		this.fakeBeaconRenderer.func_147497_a(dispatcher);
+	}
+
+	@SideOnly(Side.CLIENT)
+	public double getMaxRenderDistanceSquared() {
+		return 65536.0D;
+	}
+
+	@Override
 	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale) {
-		TileEntityBloodAltar te1=((TileEntityBloodAltar) te);
+		TileEntityBloodAltar1 te1 = ((TileEntityBloodAltar1) te);
 		model.setOccupied(te1.isOccupied());
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
@@ -52,22 +63,9 @@ public class RendererBloodAltar extends TileEntitySpecialRenderer {
 		model.render(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		GL11.glPopMatrix();
 		GL11.glPopMatrix();
-		
-		if(te1.isActive()){
+
+		if (te1.isActive()) {
 			this.fakeBeaconRenderer.renderTileEntityAt(te1.getFakeBeacon(), x, y, z, scale);
 		}
 	}
-	
-	@Override
-    public void func_147497_a(TileEntityRendererDispatcher dispatcher)
-    {
-        super.func_147497_a(dispatcher);
-        this.fakeBeaconRenderer.func_147497_a(dispatcher);
-    }
-	
-    @SideOnly(Side.CLIENT)
-    public double getMaxRenderDistanceSquared()
-    {
-        return 65536.0D;
-    }
 }

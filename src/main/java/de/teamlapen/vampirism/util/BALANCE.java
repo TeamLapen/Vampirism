@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.util;
 
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier2;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
 
 /**
  * All constants which could be used to balance the mod should be stored here
@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier2;
 public final class BALANCE {
 	public static class LEVELING {
 		public static int A2_getRequiredBlood(int level) {
-			return ALTAR_2_MIN_BLOOD + (level - TileEntityBloodAltarTier2.MIN_LEVEL) * ALTAR_2_ADD_BLOOD_PER_LEVEL;
+			return ALTAR_2_MIN_BLOOD + (level - TileEntityBloodAltar2.MIN_LEVEL) * ALTAR_2_ADD_BLOOD_PER_LEVEL;
 		}
 		@DefaultInt(value=40,minValue=20,maxValue=800,name="Minimum Blood for Altar 2",
 				comment="Blood required for the first level up with altar 2")

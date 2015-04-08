@@ -7,21 +7,22 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier4;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar4;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 /**
- * GUI for the BloodAltarTier4, currently just a placeholer
+ * GUI for the BloodAltar4, currently just a placeholer
  * 
  * @author Maxanier
  *
  */
-public class GUIBloodAltarTier4 extends GuiContainer {
+public class GUIBloodAltar4 extends GuiContainer {
 
-	private static final ResourceLocation altarGuiTextures = new ResourceLocation(REFERENCE.MODID + ":textures/gui/altarTier4.png");
+	private static final ResourceLocation altarGuiTextures = new ResourceLocation(REFERENCE.MODID + ":textures/gui/altar4.png");
 
-	private TileEntityBloodAltarTier4 tileAltar;
-	public GUIBloodAltarTier4(InventoryPlayer inv, TileEntityBloodAltarTier4 tile) {
+	private TileEntityBloodAltar4 tileAltar;
+
+	public GUIBloodAltar4(InventoryPlayer inv, TileEntityBloodAltar4 tile) {
 		super(tile.getNewInventoryContainer(inv));
 		tileAltar = tile;
 	}
@@ -39,7 +40,7 @@ public class GUIBloodAltarTier4 extends GuiContainer {
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
 		String string = this.tileAltar.hasCustomInventoryName() ? this.tileAltar.getInventoryName() : I18n.format(this.tileAltar.getInventoryName(), new Object[0]);
-		this.fontRendererObj.drawString(string, this.xSize / 2 - this.fontRendererObj.getStringWidth(string)+6, 6, 4210752);
+		this.fontRendererObj.drawString(string, this.xSize / 2 - this.fontRendererObj.getStringWidth(string) + 6, 6, 4210752);
 		this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 94, 4210752);
 	}
 

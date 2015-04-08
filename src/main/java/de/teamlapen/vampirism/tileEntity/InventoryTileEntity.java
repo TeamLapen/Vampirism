@@ -166,7 +166,7 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 	 * @param slots
 	 *            A slot 'description'. The array should contain one Slot instance for each inventory slot which should be created. The slots must each contain the position where they should be
 	 *            displayed in the GUI, they can also contain a filter for which items are allowed. Make sure that these Slot instance are unique on server and client.
-	 * @see de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier4
+	 * @see de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar4
 	 */
 	public InventoryTileEntity(Slot[] slots) {
 		this.slots = slots;

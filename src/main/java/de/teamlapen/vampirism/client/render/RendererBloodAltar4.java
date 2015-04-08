@@ -16,11 +16,9 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.client.model.ModelBloodAltar;
-import de.teamlapen.vampirism.client.model.ModelBloodAltarTier4;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier4;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier4.PHASE;
-import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.client.model.ModelBloodAltar4;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar4;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar4.PHASE;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 /**
@@ -30,21 +28,21 @@ import de.teamlapen.vampirism.util.REFERENCE;
  *
  */
 @SideOnly(Side.CLIENT)
-public class RendererBloodAltarTier4 extends TileEntitySpecialRenderer {
+public class RendererBloodAltar4 extends TileEntitySpecialRenderer {
 
-	private final ModelBloodAltarTier4 model;
+	private final ModelBloodAltar4 model;
 	private final ResourceLocation texture;
-	public static final String textureLoc=REFERENCE.MODID + ":textures/blocks/bloodAltarTier4.png";
+	public static final String textureLoc = REFERENCE.MODID + ":textures/blocks/bloodAltar4.png";
 	private final ResourceLocation enderDragonCrystalBeamTextures = new ResourceLocation("textures/entity/endercrystal/endercrystal_beam.png");
 	private final ResourceLocation beaconBeamTexture = new ResourceLocation("textures/entity/beacon_beam.png");
 
-	public RendererBloodAltarTier4() {
-		model = new ModelBloodAltarTier4();
+	public RendererBloodAltar4() {
+		model = new ModelBloodAltar4();
 		texture = new ResourceLocation(textureLoc);
 	}
 
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z) {
-		if(world!=null){
+		if (world != null) {
 			int meta = world.getBlockMetadata(x, y, z);
 			GL11.glRotatef(meta * 90, 0.0F, 1.0F, 0.0F);
 		}
@@ -53,17 +51,23 @@ public class RendererBloodAltarTier4 extends TileEntitySpecialRenderer {
 
 	/**
 	 * Renders a beam in the world, similar to the dragon healing beam
-	 * @param relX startX relative to the player
+	 * 
+	 * @param relX
+	 *            startX relative to the player
 	 * @param relY
 	 * @param relZ
-	 * @param centerX startX in world
+	 * @param centerX
+	 *            startX in world
 	 * @param centerY
 	 * @param centerZ
-	 * @param targetX targetX in world
+	 * @param targetX
+	 *            targetX in world
 	 * @param targetY
 	 * @param targetZ
-	 * @param tickStuff used to move the beam, use the last param of {@link #renderTileEntityAt(TileEntity, double, double, double, float)} for that
-	 * @param beacon whether it should be a beacon or a dragon style beam
+	 * @param tickStuff
+	 *            used to move the beam, use the last param of {@link #renderTileEntityAt(TileEntity, double, double, double, float)} for that
+	 * @param beacon
+	 *            whether it should be a beacon or a dragon style beam
 	 */
 	private void renderBeam(double relX, double relY, double relZ, double centerX, double centerY, double centerZ, double targetX, double targetY, double targetZ, float tickStuff, boolean beacon) {
 		float f2 = 50000;
@@ -91,7 +95,7 @@ public class RendererBloodAltarTier4 extends TileEntitySpecialRenderer {
 		float f9 = -(tickStuff * 0.005F);
 		float f10 = MathHelper.sqrt_float(wayX * wayX + wayY * wayY + wayZ * wayZ) / 32.0F + f9;
 		tessellator.startDrawing(5);
-		//Add all 2*8 vertex/corners
+		// Add all 2*8 vertex/corners
 		byte b0 = 8;
 		for (int i = 0; i <= b0; ++i) {
 			float f11 = 0.2F * (MathHelper.sin(i % b0 * (float) Math.PI * 2.0F / b0) * 0.75F);
@@ -112,11 +116,11 @@ public class RendererBloodAltarTier4 extends TileEntitySpecialRenderer {
 		RenderHelper.enableStandardItemLighting();
 		GL11.glPopMatrix();
 	}
-	
+
 	@Override
 	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float par5) {
-		//Render the altar itself
-		TileEntityBloodAltarTier4 te4 = (TileEntityBloodAltarTier4) te;
+		// Render the altar itself
+		TileEntityBloodAltar4 te4 = (TileEntityBloodAltar4) te;
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		bindTexture(texture);
@@ -126,14 +130,14 @@ public class RendererBloodAltarTier4 extends TileEntitySpecialRenderer {
 		model.render(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		GL11.glPopMatrix();
 		GL11.glPopMatrix();
-		
-		//Render the beams if the ritual is running
+
+		// Render the beams if the ritual is running
 		PHASE phase = te4.getPhase();
 		if (phase == PHASE.BEAM1 || phase == PHASE.BEAM2) {
 			x += 0.5;
 			y += 3;
 			z += 0.5;
-			//Calculate center coordinates
+			// Calculate center coordinates
 			double cX = te.xCoord + 0.5;
 			double cY = te.yCoord + 3;
 			double cZ = te.zCoord + 0.5;
@@ -145,18 +149,18 @@ public class RendererBloodAltarTier4 extends TileEntitySpecialRenderer {
 				if (phase == PHASE.BEAM2) {
 					EntityPlayer p = te4.getPlayer();
 					if (p != null) {
-						double rX=0,rZ=0;
-						double rY=-0.3;
-						double playerY=p.posY;
+						double rX = 0, rZ = 0;
+						double rY = -0.3;
+						double playerY = p.posY;
 						/**
 						 * Work around for other players seeing the ritual
 						 */
-						if(!p.equals(Minecraft.getMinecraft().thePlayer)){
-							Entity e=Minecraft.getMinecraft().thePlayer;
-							rX+=p.posX-e.posX;
-							rY+=p.posY-e.posY+1.5D;
-							rZ+=p.posZ-e.posZ;
-							playerY+=1.5D;
+						if (!p.equals(Minecraft.getMinecraft().thePlayer)) {
+							Entity e = Minecraft.getMinecraft().thePlayer;
+							rX += p.posX - e.posX;
+							rY += p.posY - e.posY + 1.5D;
+							rZ += p.posZ - e.posZ;
+							playerY += 1.5D;
 						}
 						this.renderBeam(rX, rY, rZ, p.posX, playerY, p.posZ, cX, cY + 0.2, cZ, -(te4.getRunningTick() + par5), true);
 					}

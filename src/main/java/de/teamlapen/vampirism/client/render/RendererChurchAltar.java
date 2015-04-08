@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.render;
 import org.lwjgl.opengl.GL11;
 
 import de.teamlapen.vampirism.client.model.ModelChurchAltar;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;

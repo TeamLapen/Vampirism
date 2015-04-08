@@ -10,7 +10,7 @@ import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
-public class ModelBloodAltar extends ModelBase {
+public class ModelBloodAltar1 extends ModelBase {
 	// fields
 	ModelRenderer base;
 	ModelRenderer level1;
@@ -47,7 +47,7 @@ public class ModelBloodAltar extends ModelBase {
 
 	private final float swordRotation = 2.356194F;
 
-	public ModelBloodAltar() {
+	public ModelBloodAltar1() {
 		textureWidth = 128;
 		textureHeight = 64;
 

@@ -4,7 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.GuiHandler;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.client.render.RendererBloodAltarTier4Tip;
+import de.teamlapen.vampirism.client.render.RendererBloodAltar4Tip;
 import de.teamlapen.vampirism.client.render.RendererChurchAltar;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;

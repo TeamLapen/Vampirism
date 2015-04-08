@@ -9,20 +9,18 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
 import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.Logger;
 
 /**
- * TileEntity for Tier2 BloodAltar
+ * TileEntity for BloodAltar 2
  * 
  * @author Maxanier
  */
-public class TileEntityBloodAltarTier2 extends TileEntity {
+public class TileEntityBloodAltar2 extends TileEntity {
 
 	private int bloodAmount = 0;
 	public static final int MAX_BLOOD = 100;
@@ -30,8 +28,8 @@ public class TileEntityBloodAltarTier2 extends TileEntity {
 	private int ritualTicksLeft = 0;
 	private EntityPlayer ritualPlayer;
 	private final int RITUAL_TIME = 60;
-	public final static int MIN_LEVEL=1;
-	private final static int MAX_LEVEL=3;
+	public final static int MIN_LEVEL = 1;
+	private final static int MAX_LEVEL = 3;
 
 	/**
 	 * Adds blood to the altar

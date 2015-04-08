@@ -38,7 +38,7 @@ public class GenerateBloodAltar extends WorldGenerator {
 		world.setBlock(x + 1, y + 1, z + 0, Blocks.air, 0, 3);
 		world.setBlock(x + 2, y + 1, z + 0, Blocks.air, 0, 3);
 		world.setBlock(x + 0, y + 1, z + 1, Blocks.air, 0, 3);
-		world.setBlock(x + 1, y + 1, z + 1, ModBlocks.bloodAltar, 1, 3);
+		world.setBlock(x + 1, y + 1, z + 1, ModBlocks.bloodAltar1, 1, 3);
 		world.setBlock(x + 2, y + 1, z + 1, Blocks.air, 0, 3);
 		world.setBlock(x + 0, y + 1, z + 2, Blocks.air, 0, 3);
 		world.setBlock(x + 1, y + 1, z + 2, Blocks.air, 0, 3);

@@ -17,17 +17,15 @@ item.vampirism:pureBlood.name=Sang pur
 item.vampirism:sunscreen.name=Crème solaire
 
 # Blocks
-block.vampirism:bloodAltar.name=Autel de sang
-block.vampirism:bloodAltarTier2.name=Autel de sang Niv2
-block.vampirism:bloodAltarTier3.name=Autel de sang Niv3
-block.vampirism:bloodAltarTier4.name=Autel de sang Niv4
-block.vampirism:bloodAltarTier4Tip.name=Autel de sang Niv4 astuce
+block.vampirism:bloodAltar.name=Blood Altar of Saturation
+block.vampirism:bloodAltarTier2.name=Blood Altar of Inspiration
+block.vampirism:bloodAltarTier3.name=Blood Altar 3
+block.vampirism:bloodAltarTier4.name=Blood Altar of Infusion
+block.vampirism:bloodAltarTier4Tip.name=Blood Altar of Infusion Tip
 block.vampirism:churchAltar.name=Autel de nettoyage
 block.vampirism:cursedEarth.name=Terre maudite
 block.vampirism:vampireOrchid.name=Orchidé vampire
 
-#Tiles
-tile.vampirism:bloodAltarTier4.name=Autel de sang Niv4
 
 #GUI
 gui.vampirism:revertback.head=Retransformation en humain normal

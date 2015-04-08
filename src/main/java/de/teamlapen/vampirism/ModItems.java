@@ -13,12 +13,12 @@ import de.teamlapen.vampirism.item.ItemPureBlood;
 import de.teamlapen.vampirism.item.ItemSunscreen;
 import de.teamlapen.vampirism.item.ItemTorch;
 import de.teamlapen.vampirism.item.ItemVampireFang;
-import de.teamlapen.vampirism.item.ItemVampiresFear;
+import de.teamlapen.vampirism.item.ItemLeechSword;
 
 public class ModItems {
 
 	public static void init() {
-		GameRegistry.registerItem(vampiresFear, ItemVampiresFear.name);
+		GameRegistry.registerItem(leechSword, ItemLeechSword.name);
 		GameRegistry.registerItem(bloodBottle, ItemBloodBottle.name);
 		GameRegistry.registerItem(vampireFang, ItemVampireFang.NAME);
 		GameRegistry.registerItem(pitchfork, ItemPitchfork.name);
@@ -31,10 +31,10 @@ public class ModItems {
 	
 	public static void registerRecipes(){
 		GameRegistry.addRecipe(new ItemStack(bloodBottle, 1, 0), "   ", "XYX", " X ", 'X', Blocks.glass, 'Y', Items.rotten_flesh);
-		GameRegistry.addRecipe(new ItemStack(vampiresFear, 1), "XYX", "XYX", " Z ", 'X', vampireFang, 'Y', Items.iron_ingot, 'Z', Items.stick);
+		GameRegistry.addRecipe(new ItemStack(leechSword, 1), "XYX", "XYX", " Z ", 'X', vampireFang, 'Y', Items.iron_ingot, 'Z', Items.stick);
 		GameRegistry.addRecipe(new ItemStack(sunscreen,1),"XYX","YZY","XYX",'X',ModBlocks.vampireFlower,'Y',Items.gold_nugget,'Z',humanHeart);
 	}
-	public static ItemSword vampiresFear = new ItemVampiresFear();
+	public static ItemSword leechSword = new ItemLeechSword();
 	public static ItemBloodBottle bloodBottle = new ItemBloodBottle();
 
 	public static ItemVampireFang vampireFang = new ItemVampireFang();

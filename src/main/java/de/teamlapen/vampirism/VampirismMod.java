@@ -57,7 +57,7 @@ public class VampirismMod {
 		@Override
 		@SideOnly(Side.CLIENT)
 		public Item getTabIconItem() {
-			return ModItems.vampiresFear;
+			return ModItems.leechSword;
 		}
 	};
 

@@ -28,7 +28,7 @@ import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.ModPotion;
-import de.teamlapen.vampirism.block.BlockBloodAltarTier4Tip.TileEntityBloodAltarTier4Tip;
+import de.teamlapen.vampirism.block.BlockBloodAltar4Tip.TileEntityBloodAltar4Tip;
 import de.teamlapen.vampirism.block.BlockChurchAltar.TileEntityChurchAltar;
 import de.teamlapen.vampirism.client.KeyInputEventHandler;
 import de.teamlapen.vampirism.client.gui.VampireHudOverlay;
@@ -38,11 +38,11 @@ import de.teamlapen.vampirism.client.model.ModelGhost;
 import de.teamlapen.vampirism.client.model.ModelVampire;
 import de.teamlapen.vampirism.client.render.PitchforkRenderer;
 import de.teamlapen.vampirism.client.render.RenderTileEntityItem;
-import de.teamlapen.vampirism.client.render.RendererBloodAltar;
-import de.teamlapen.vampirism.client.render.RendererBloodAltarTier2;
-import de.teamlapen.vampirism.client.render.RendererBloodAltarTier3;
-import de.teamlapen.vampirism.client.render.RendererBloodAltarTier4;
-import de.teamlapen.vampirism.client.render.RendererBloodAltarTier4Tip;
+import de.teamlapen.vampirism.client.render.RendererBloodAltar1;
+import de.teamlapen.vampirism.client.render.RendererBloodAltar2;
+import de.teamlapen.vampirism.client.render.RendererBloodAltar3;
+import de.teamlapen.vampirism.client.render.RendererBloodAltar4;
+import de.teamlapen.vampirism.client.render.RendererBloodAltar4Tip;
 import de.teamlapen.vampirism.client.render.RendererChurchAltar;
 import de.teamlapen.vampirism.client.render.RendererCoffin;
 import de.teamlapen.vampirism.client.render.RendererDeadMob;
@@ -63,10 +63,10 @@ import de.teamlapen.vampirism.entity.EntityVampireLord;
 import de.teamlapen.vampirism.entity.EntityVampireMinion;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier2;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier3;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltarTier4;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar3;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar4;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -99,32 +99,32 @@ public class ClientProxy extends CommonProxy {
 		
 
 		//BloodAltar
-		TileEntitySpecialRenderer bloodAltar = new RendererBloodAltar();
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltar.class, bloodAltar);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.bloodAltar), new RenderTileEntityItem(bloodAltar, new TileEntityBloodAltar()));
+		TileEntitySpecialRenderer bloodAltar = new RendererBloodAltar1();
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltar1.class, bloodAltar);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.bloodAltar1), new RenderTileEntityItem(bloodAltar, new TileEntityBloodAltar1()));
 		
-		//BloodAltarTier2
-		TileEntitySpecialRenderer bloodAltarTier2 = new RendererBloodAltarTier2();
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier2.class, bloodAltarTier2);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.bloodAltarTier2), new RenderTileEntityItem(bloodAltarTier2, new TileEntityBloodAltarTier2()));
+		//BloodAltar2
+		TileEntitySpecialRenderer bloodAltar2 = new RendererBloodAltar2();
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltar2.class, bloodAltar2);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.bloodAltar2), new RenderTileEntityItem(bloodAltar2, new TileEntityBloodAltar2()));
 		
 		
-		//BloodAltarTier3
+		//BloodAltar3
 		//ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier3.class, new RendererBloodAltarTier3());
-		TileEntitySpecialRenderer tier4=new RendererBloodAltarTier4();
+		TileEntitySpecialRenderer tileAltar4=new RendererBloodAltar4();
 		
-		//BloodAltarTier4
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier4.class, tier4);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.bloodAltarTier4), new RenderTileEntityItem(tier4,new TileEntityBloodAltarTier4()));
+		//BloodAltar4
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltar4.class, tileAltar4);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.bloodAltar4), new RenderTileEntityItem(tileAltar4,new TileEntityBloodAltar4()));
 		//ChurchAltar
 		TileEntitySpecialRenderer churchAltar=new RendererChurchAltar();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityChurchAltar.class, churchAltar);
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.churchAltar), new RenderTileEntityItem(churchAltar,new TileEntityChurchAltar()));
 		
-		//BloodAltarTier4Tip
-		TileEntitySpecialRenderer tier4Tip=new RendererBloodAltarTier4Tip();
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltarTier4Tip.class,tier4Tip);
-		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.bloodAltarTier4Tip), new RenderTileEntityItem(tier4Tip,new TileEntityBloodAltarTier4Tip()));
+		//BloodAltar4Tip
+		TileEntitySpecialRenderer altar4Tip=new RendererBloodAltar4Tip();
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltar4Tip.class,altar4Tip);
+		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.bloodAltar4Tip), new RenderTileEntityItem(altar4Tip,new TileEntityBloodAltar4Tip()));
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoffin.class, new RendererCoffin());
 	}
