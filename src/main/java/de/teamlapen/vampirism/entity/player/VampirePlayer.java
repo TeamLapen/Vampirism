@@ -502,7 +502,7 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 				this.setVampireLord(false);
 			}
 
-			if (src instanceof EntityVampire || (src instanceof IMinion && ((IMinion) src).getLord() instanceof EntityLiving)) {
+			if (isVampireLord()&&src instanceof EntityVampire || (src instanceof IMinion && ((IMinion) src).getLord() instanceof EntityLiving)) {
 				EntityLiving old;
 				if (src instanceof IMinion) {
 					old = (EntityLiving) ((IMinion) src).getLord();
