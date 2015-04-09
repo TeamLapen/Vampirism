@@ -59,11 +59,12 @@ public class VampireEntityEventHandler {
 				e.setLevel(l);
 			}
 		}
-		if (event.entity instanceof ISyncable) {
-			if (event.world.isRemote) {
+		if(event.world.isRemote){
+			if (event.entity instanceof ISyncable||event.entity instanceof EntityCreature) {
 				VampirismMod.modChannel.sendToServer(new RequestEntityUpdatePacket(event.entity));
 			}
 		}
+
 		if (event.entity instanceof EntityVampireHunter) {
 			// Set the home position of VampireHunters to a near village if one
 			// is found

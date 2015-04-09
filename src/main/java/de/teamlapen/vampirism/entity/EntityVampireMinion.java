@@ -87,12 +87,10 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 	}
 
 	@Override
-	public NBTTagCompound getJoinWorldSyncData() {
-		NBTTagCompound nbt = new NBTTagCompound();
+	public void writeFullUpdateToNBT(NBTTagCompound nbt) {
 		if (boss != null) {
 			nbt.setInteger("eid", boss.getRepresentingEntity().getEntityId());
 		}
-		return nbt;
 	}
 
 	@Override
@@ -119,7 +117,7 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 	}
 
 	@Override
-	public void loadPartialUpdate(NBTTagCompound nbt) {
+	public void loadUpdateFromNBT(NBTTagCompound nbt) {
 		if (nbt.hasKey("eid")) {
 			Entity e = worldObj.getEntityByID(nbt.getInteger("eid"));
 			if (e instanceof EntityPlayer) {

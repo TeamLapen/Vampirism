@@ -24,10 +24,8 @@ import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerSleepInBedEvent;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.Configs;
@@ -48,7 +46,8 @@ import de.teamlapen.vampirism.entity.player.skills.Skills;
 import de.teamlapen.vampirism.entity.player.skills.VampireRageSkill;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
 import de.teamlapen.vampirism.network.SpawnParticlePacket;
-import de.teamlapen.vampirism.network.UpdateVampirePlayerPacket;
+import de.teamlapen.vampirism.network.UpdateEntityPacket;
+import de.teamlapen.vampirism.network.UpdateEntityPacket.ISyncableExtendedProperties;
 import de.teamlapen.vampirism.proxy.CommonProxy;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Helper;
@@ -60,7 +59,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
  * 
  * @author Maxanier
  */
-public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
+public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	public class BloodStats {
 		private float bloodExhaustionLevel;
 		private float bloodSaturationLevel;
@@ -293,9 +292,7 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 		skillTimer = new int[Skills.getSkillCount()];
 	}
 
-	public IMessage createUpdatePacket() {
-		return new UpdateVampirePlayerPacket(player.getEntityId(), getLevel(), skillTimer, isVampireLord());
-	}
+
 
 	/**
 	 * Tries to fill blood into blood bottles in the hotbar or tries to convert glas bottles from the hotbar to blood bottles
@@ -471,21 +468,7 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 
 	}
 
-	/**
-	 * Ment to be used by UpdateVampirePlayerPacket on client side, to load updates.
-	 * 
-	 * @param level
-	 * @param skill
-	 *            timer
-	 * @param Whether
-	 *            the player is a vampire lord or not
-	 */
-	@SideOnly(Side.CLIENT)
-	public void loadSyncUpdate(int level, int[] timers, boolean lord) {
-		this.setLevel(level);
-		this.skillTimer = timers;
-		this.vampireLord = lord;
-	}
+
 
 	private void looseLevel() {
 		int level = getLevel();
@@ -857,12 +840,39 @@ public class VampirePlayer implements IExtendedEntityProperties, IMinionLord {
 	public void sync(boolean all) {
 		if (!player.worldObj.isRemote) {
 			if (all) {
-				Helper.sendPacketToPlayersAround(createUpdatePacket(), player);
+				Helper.sendPacketToPlayersAround(new UpdateEntityPacket(this), player);
 			} else {
-				VampirismMod.modChannel.sendTo(createUpdatePacket(), (EntityPlayerMP) player);
+				VampirismMod.modChannel.sendTo(new UpdateEntityPacket(this), (EntityPlayerMP) player);
 			}
 
 		}
+	}
+
+	@Override
+	public void loadUpdateFromNBT(NBTTagCompound nbt) {
+		
+		if(nbt.hasKey("level")){
+			this.setLevel(nbt.getInteger("level"));
+		}
+		if(nbt.hasKey("timers")){
+			this.skillTimer=nbt.getIntArray("timers");
+		}
+		if(nbt.hasKey("lord")){
+			this.vampireLord=nbt.getBoolean("lord");
+		}
+		
+	}
+
+	@Override
+	public void writeFullUpdateToNBT(NBTTagCompound tag) {
+		tag.setInteger("level", getLevel());
+		tag.setIntArray("timers", skillTimer);;
+		tag.setBoolean("lord", isVampireLord());
+	}
+
+	@Override
+	public int getTheEntityID() {
+		return player.getEntityId();
 	}
 
 	// public void wakeUpPlayer(boolean par1, boolean par2, boolean par3)

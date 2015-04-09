@@ -93,10 +93,8 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	}
 
 	@Override
-	public NBTTagCompound getJoinWorldSyncData() {
-		NBTTagCompound nbt = new NBTTagCompound();
+	public void writeFullUpdateToNBT(NBTTagCompound nbt) {
 		this.writeEntityToNBT(nbt);
-		return nbt;
 	}
 
 	@Override
@@ -142,7 +140,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	}
 
 	@Override
-	public void loadPartialUpdate(NBTTagCompound nbt) {
+	public void loadUpdateFromNBT(NBTTagCompound nbt) {
 		if (nbt.hasKey("level")) {
 			this.level = nbt.getInteger("level");
 		}
@@ -203,7 +201,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		this.loadPartialUpdate(nbt);
+		this.loadUpdateFromNBT(nbt);
 	}
 
 	@Override

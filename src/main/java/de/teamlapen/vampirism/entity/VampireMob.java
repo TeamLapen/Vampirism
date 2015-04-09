@@ -22,16 +22,20 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.ai.EntityAIModifier;
 import de.teamlapen.vampirism.entity.ai.IMinion;
 import de.teamlapen.vampirism.entity.ai.IMinionLord;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.network.UpdateEntityPacket;
+import de.teamlapen.vampirism.network.UpdateEntityPacket.ISyncableExtendedProperties;
 import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.villages.VillageVampire;
 import de.teamlapen.vampirism.villages.VillageVampireData;
 
-public class VampireMob implements IExtendedEntityProperties, IMinion {
+public class VampireMob implements ISyncableExtendedProperties, IMinion {
 
 	public static final VampireMob get(EntityCreature mob) {
 		return (VampireMob) mob.getExtendedProperties(VampireMob.EXT_PROP_NAME);
@@ -68,9 +72,9 @@ public class VampireMob implements IExtendedEntityProperties, IMinion {
 
 	private final String KEY_TYPE = "type";
 
-	private static final int TYPE_WATCHER = 25;
 
 	private final int blood;
+	private byte type;
 
 	private final static int MAX_SEARCH_TIME = 100;
 	private UUID bossId = null;
@@ -80,7 +84,7 @@ public class VampireMob implements IExtendedEntityProperties, IMinion {
 	public VampireMob(EntityCreature mob) {
 		entity = mob;
 		blood = getMaxBloodAmount(mob);
-		entity.getDataWatcher().addObject(TYPE_WATCHER, (byte) 0);
+		type=(byte)0;
 	}
 
 	/**
@@ -152,18 +156,18 @@ public class VampireMob implements IExtendedEntityProperties, IMinion {
 	}
 
 	public boolean isMinion() {
-		return ((this.entity.getDataWatcher().getWatchableObjectByte(TYPE_WATCHER) & 2) == 2);
+		return ((type & 2) == 2);
 	}
 
 	public boolean isVampire() {
-		return ((this.entity.getDataWatcher().getWatchableObjectByte(TYPE_WATCHER) & 1) == 1);
+		return ((type & 1) == 1);
 	}
 
 	@Override
 	public void loadNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
 		if (properties != null) {
-			entity.getDataWatcher().updateObject(TYPE_WATCHER, properties.getByte(KEY_TYPE));
+			this.loadUpdateFromNBT(properties);
 			if (isMinion()) {
 				if (properties.hasKey("BossUUIDMost")) {
 					this.bossId = new UUID(properties.getLong("BossUUIDMost"), properties.getLong("BossUUIDLeast"));
@@ -247,7 +251,7 @@ public class VampireMob implements IExtendedEntityProperties, IMinion {
 	@Override
 	public void saveNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = new NBTTagCompound();
-		properties.setByte(KEY_TYPE, entity.getDataWatcher().getWatchableObjectByte(TYPE_WATCHER));
+		this.writeFullUpdateToNBT(properties);
 		if (isMinion()) {
 			if (this.bossId != null) {
 				properties.setLong("BossUUIDMost", this.bossId.getMostSignificantBits());
@@ -277,15 +281,40 @@ public class VampireMob implements IExtendedEntityProperties, IMinion {
 	}
 
 	private void setMinion() {
-		Byte b = (byte) (entity.getDataWatcher().getWatchableObjectByte(TYPE_WATCHER) | 2);
-		entity.getDataWatcher().updateObject(TYPE_WATCHER, b);
+		type = (byte) (type | 2);
 		EntityAIModifier.makeMinion(this, entity);
+		this.sync();
 	}
 
 	private void setVampire() {
-		Byte b = (byte) (entity.getDataWatcher().getWatchableObjectByte(TYPE_WATCHER) | 1);
-		entity.getDataWatcher().updateObject(TYPE_WATCHER, b);
+		type = (byte) (type | 1);
 		EntityAIModifier.addVampireMobTasks(entity);
+		this.sync();
+	}
+
+	@Override
+	public void loadUpdateFromNBT(NBTTagCompound nbt) {
+		if(nbt.hasKey(KEY_TYPE)){
+			type=nbt.getByte(KEY_TYPE);
+		}
+		
+	}
+
+	@Override
+	public void writeFullUpdateToNBT(NBTTagCompound nbt) {
+		nbt.setByte(KEY_TYPE, type);
+	}
+
+	@Override
+	public int getTheEntityID() {
+		return entity.getEntityId();
+	}
+
+	public void sync() {
+		if(!entity.worldObj.isRemote){
+			Helper.sendPacketToPlayersAround(new UpdateEntityPacket(this), entity);
+		}
+		
 	}
 
 }

@@ -28,7 +28,7 @@ public class VampirePlayerEventHandler {
 				VampirismMod.modChannel.sendToServer(new RequestEntityUpdatePacket(event.entity));
 			} else {
 				VampirePlayer.loadProxyData((EntityPlayer) event.entity);
-				VampirismMod.modChannel.sendTo(VampirePlayer.get((EntityPlayer) event.entity).createUpdatePacket(), (EntityPlayerMP) event.entity);
+				VampirePlayer.get((EntityPlayer) event.entity).sync(true);
 			}
 
 		}

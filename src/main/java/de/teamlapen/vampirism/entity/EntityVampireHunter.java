@@ -138,10 +138,8 @@ public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjust
 	}
 
 	@Override
-	public NBTTagCompound getJoinWorldSyncData() {
-		NBTTagCompound nbt = new NBTTagCompound();
+	public void writeFullUpdateToNBT(NBTTagCompound nbt) {
 		this.writeEntityToNBT(nbt);
-		return nbt;
 	}
 
 	@Override
@@ -176,7 +174,7 @@ public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjust
 	}
 
 	@Override
-	public void loadPartialUpdate(NBTTagCompound nbt) {
+	public void loadUpdateFromNBT(NBTTagCompound nbt) {
 		if (nbt.hasKey("level")) {
 			this.level = nbt.getInteger("level");
 		}
@@ -193,7 +191,7 @@ public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjust
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		this.loadPartialUpdate(nbt);
+		this.loadUpdateFromNBT(nbt);
 	}
 
 	/**

@@ -11,13 +11,12 @@ public interface ISyncable {
 	 * @param nbt
 	 */
 	@SideOnly(Side.CLIENT)
-	public void loadPartialUpdate(NBTTagCompound nbt);
-	
+	public void loadUpdateFromNBT(NBTTagCompound nbt);
+
 	/**
-	 * This method is called when the entity joins a world and notifies the client
-	 * Can return null, if nothing has to be synced
-	 * @return
+	 * This method is called to get update informations which should be send to the client
+	 * @param worldJoin if the entity just joined the world
 	 */
-	public NBTTagCompound getJoinWorldSyncData();
+	public void writeFullUpdateToNBT(NBTTagCompound nbt);
 	
 }
