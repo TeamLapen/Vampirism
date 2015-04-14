@@ -11,6 +11,9 @@ import de.teamlapen.vampirism.util.Logger;
  *
  */
 public class Skills {
+	
+	public static ISkill vampireRage;
+	public static ISkill batMode;
 	/**
 	 * Used by {@link de.teamlapen.vampirism.client.gui.GUISelectSkill}
 	 * 
@@ -49,10 +52,11 @@ public class Skills {
 	 * Register all default skills
 	 */
 	public static void registerDefaultSkills() {
-		VampireRageSkill.ID = Skills.registerSkill(new VampireRageSkill());
+		vampireRage= Skills.registerSkill(new VampireRageSkill());
 		Skills.registerSkill(new RegenSkill());
 		Skills.registerSkill(new ChangeWeatherSkill());
 		Skills.registerSkill(new ReviveFallenSkill());
+		batMode=Skills.registerSkill(new BatSkill());
 	}
 
 	/**
@@ -60,11 +64,11 @@ public class Skills {
 	 * @param s
 	 * @return The assigned id
 	 */
-	public static int registerSkill(ISkill s) {
+	public static ISkill registerSkill(ISkill s) {
 		int id = skills.size();
 		s.setId(id);
 		skills.add(s);
-		return id;
+		return s;
 	}
 
 	private final static ArrayList<ISkill> skills = new ArrayList<ISkill>();

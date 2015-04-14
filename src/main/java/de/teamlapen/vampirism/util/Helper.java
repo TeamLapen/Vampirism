@@ -33,7 +33,7 @@ public class Helper {
 	public static class Reflection {
 
 		@SuppressWarnings("unchecked")
-		public static Object callMethod(Class cls, Object obj, String[] methodName, Class[] paramtype, Object[] param) {
+		public static Object callMethod(Class cls, Object obj, String[] methodName, Class[] paramtype, Object... param) {
 			if (param != null && paramtype.length != param.length) {
 				Logger.w("ReflectCallMethod", "Param count doesnt fit paramtype count");
 				return null;
@@ -50,7 +50,7 @@ public class Helper {
 			}
 		}
 
-		public static Object callMethod(Object obj, String[] methodName, Class[] paramtype, Object[] param) {
+		public static Object callMethod(Object obj, String[] methodName, Class[] paramtype, Object... param) {
 			return Reflection.callMethod(obj.getClass(), obj, methodName, paramtype, param);
 		}
 
@@ -72,6 +72,16 @@ public class Helper {
 				return;
 			}
 		}
+		
+		/**
+		 * Create Class Array
+		 * @param objects
+		 * @return
+		 */
+		@SuppressWarnings("rawtypes")
+		public static Class[] createArray(Class... objects){
+			return objects;
+		}
 	}
 	
 	public static class Obfuscation{
@@ -90,6 +100,7 @@ public class Helper {
 			add("EntityPlayer/sleepTimer", "sleepTimer", "field_71076_b");
 			add("Minecraft/fileAssets","fileAssets","field_110446_Y");
 			add("TileEntityBeacon/field_146015_k","field_146015_k");
+			add("Entity/setSize","setSize");
 		}
 		
 		public static String[] getPosNames(String key){

@@ -5,14 +5,20 @@ import java.awt.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.model.ModelBat;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderBat;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 import org.lwjgl.opengl.GL11;
@@ -20,6 +26,7 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.skills.Skills;
 import de.teamlapen.vampirism.entity.player.skills.VampireRageSkill;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
@@ -27,7 +34,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
 
 public class VampireHudOverlay extends Gui {
 
-	private Minecraft mc;
+	private final Minecraft mc;
 	private final ResourceLocation icons = new ResourceLocation(REFERENCE.MODID + ":textures/gui/icons.png");
 	private static float renderRed;
 
@@ -73,7 +80,7 @@ public class VampireHudOverlay extends Gui {
 	 */
 	@SubscribeEvent
 	public void onRenderWorldLast(RenderWorldLastEvent event){
-		boolean lord=VampirePlayer.get(this.mc.thePlayer).isSkillActive(VampireRageSkill.ID);
+		boolean lord=VampirePlayer.get(this.mc.thePlayer).isSkillActive(Skills.vampireRage);
 		if(renderRed>0||lord){
 			//Set the working matrix/layer to a layer directly on the screen/in front of the player
 			ScaledResolution scaledresolution = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);

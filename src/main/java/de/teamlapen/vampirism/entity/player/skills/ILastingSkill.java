@@ -29,6 +29,7 @@ public interface ILastingSkill extends ISkill {
 	 * 
 	 * @param vampire
 	 * @param player
+	 * @return if true the skill is cancelled
 	 */
-	public void onUpdate(VampirePlayer vampire, EntityPlayer player);
+	public boolean onUpdate(VampirePlayer vampire, EntityPlayer player);
 }

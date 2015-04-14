@@ -8,10 +8,6 @@ import de.teamlapen.vampirism.util.BALANCE;
 
 public class VampireRageSkill extends DefaultSkill implements ILastingSkill {
 
-	/**
-	 * Skill ID, has to be set when this is registered
-	 */
-	public static int ID;
 
 	@Override
 	public int getCooldown() {
@@ -51,12 +47,8 @@ public class VampireRageSkill extends DefaultSkill implements ILastingSkill {
 	}
 
 	@Override
-	public void onUpdate(VampirePlayer vampire, EntityPlayer player) {
-	}
-
-	@Override
-	public String toString() {
-		return "VampireRageSkill ID: " + VampireRageSkill.ID;
+	public boolean onUpdate(VampirePlayer vampire, EntityPlayer player) {
+		return false;
 	}
 
 }

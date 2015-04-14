@@ -58,4 +58,6 @@ public interface IProxy {
 	 * @return
 	 */
 	public ResourceLocation checkVampireTexture(Entity entity,ResourceLocation loc);
+	
+	public void setPlayerBat(EntityPlayer player,boolean bat);
 }

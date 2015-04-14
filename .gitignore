@@ -2,6 +2,7 @@ build/
 .classpath
 .project
 .gradle/
+.settings/
 bin/
 build.bat
 /bin

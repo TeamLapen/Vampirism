@@ -37,6 +37,7 @@ import de.teamlapen.vampirism.client.model.ModelDracula;
 import de.teamlapen.vampirism.client.model.ModelGhost;
 import de.teamlapen.vampirism.client.model.ModelVampire;
 import de.teamlapen.vampirism.client.render.PitchforkRenderer;
+import de.teamlapen.vampirism.client.render.RenderHandler;
 import de.teamlapen.vampirism.client.render.RenderTileEntityItem;
 import de.teamlapen.vampirism.client.render.RendererBloodAltar1;
 import de.teamlapen.vampirism.client.render.RendererBloodAltar2;
@@ -63,11 +64,13 @@ import de.teamlapen.vampirism.entity.EntityVampireLord;
 import de.teamlapen.vampirism.entity.EntityVampireMinion;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.skills.BatSkill;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar3;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar4;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
@@ -140,6 +143,9 @@ public class ClientProxy extends CommonProxy {
 		Logger.i(TAG, "Registering client subscriptions");
 		super.registerSubscriptions();
 		MinecraftForge.EVENT_BUS.register(new VampireHudOverlay(Minecraft.getMinecraft()));
+		Object renderHandler=new RenderHandler(Minecraft.getMinecraft());
+		MinecraftForge.EVENT_BUS.register(renderHandler);
+		FMLCommonHandler.instance().bus().register(renderHandler);
 		FMLCommonHandler.instance().bus().register(new KeyInputEventHandler());
 		MinecraftForge.EVENT_BUS.register(new RendererTorch());
 	}
@@ -224,5 +230,16 @@ public class ClientProxy extends CommonProxy {
 	public void updateAllPlayersSleepingFlagCoffin() {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void setPlayerBat(EntityPlayer player, boolean bat) {
+		float width=bat?BatSkill.BAT_WIDTH:BatSkill.PLAYER_WIDTH;
+		float height=bat?BatSkill.BAT_HEIGHT:BatSkill.PLAYER_HEIGHT;
+		Helper.Reflection.callMethod(Entity.class, player, Helper.Obfuscation.getPosNames("Entity/setSize"),Helper.Reflection.createArray(float.class,float.class),width,height);
+		player.setPosition(player.posX,player.posY+(bat?1F:-1F)*(BatSkill.PLAYER_HEIGHT-BatSkill.BAT_HEIGHT),player.posZ);
+        //Logger.i("test3", BatSkill.BAT_EYE_HEIGHT+": p "+player.getDefaultEyeHeight()+ ": y "+player.yOffset+" :e1 "+player.eyeHeight);
+		player.eyeHeight = (bat ?BatSkill.BAT_EYE_HEIGHT - player.yOffset: player.getDefaultEyeHeight());//Different from Server side
+		//Logger.i("test4", BatSkill.BAT_EYE_HEIGHT+": p "+player.getDefaultEyeHeight()+ ": y "+player.yOffset+" :e2 "+player.eyeHeight);
 	}
 }

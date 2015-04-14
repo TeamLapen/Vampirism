@@ -91,7 +91,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		}
 
 		public void addExhaustion(float amount) {
-			if (isSkillActive(VampireRageSkill.ID)) {
+			if (isSkillActive(Skills.vampireRage)) {
 				amount = amount * 1.5F;
 			}
 			this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount, maxExhaustion);
@@ -283,6 +283,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	private boolean skipFallDamageReduction = false;
 
 	private boolean vampireLord = false;
+	
+	private boolean batTransformed=false;
 
 	public VampirePlayer(EntityPlayer player) {
 		this.player = player;
@@ -430,6 +432,11 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		}
 		return (skillTimer[id] > 0);
 	}
+	
+	public boolean isSkillActive(ISkill s){
+		if(s==null)return false;
+		return isSkillActive(s.getId());
+	}
 
 	@Override
 	public boolean isTheEntityAlive() {
@@ -546,7 +553,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			return;
 		int t = skillTimer[i];
 		if (t > 0) {// Running, only for lasting skills
-			skillTimer[i] = (-s.getCooldown()) + t;
+			skillTimer[i] = Math.min((-s.getCooldown()) + t,0);
 			((ILastingSkill) s).onDeactivated(this, player);
 		} else if (t == 0) {// Ready
 			if (s.getMinLevel() == -1) {
@@ -631,6 +638,11 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 				}
 
 			}
+		}
+		
+		if(batTransformed!=this.isSkillActive(Skills.batMode)){
+			batTransformed=!batTransformed;
+			VampirismMod.proxy.setPlayerBat(player, batTransformed);
 		}
 
 		/**
