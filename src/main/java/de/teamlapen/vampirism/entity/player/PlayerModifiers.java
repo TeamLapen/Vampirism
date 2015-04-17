@@ -72,7 +72,7 @@ public abstract class PlayerModifiers {
 	 * @param uuid
 	 *            UUID of modifier to remove
 	 */
-	private static void rmMod(IAttributeInstance att, UUID uuid) {
+	public static void rmMod(IAttributeInstance att, UUID uuid) {
 		AttributeModifier m = att.getModifier(uuid);
 		if (m != null) {
 			att.removeModifier(m);

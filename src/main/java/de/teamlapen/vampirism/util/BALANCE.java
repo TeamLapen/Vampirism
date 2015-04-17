@@ -143,6 +143,9 @@ public final class BALANCE {
 				comment="Set to -1 to deactivate this skill")
 		public static int RAGE_MIN_LEVEL;
 		
+		@DefaultInt(value=2,minValue=1,name="Bat Speed Modifier")
+		public static int BAT_SPEED_MOD;
+		
 		public static int getVampireLordDuration(int level){
 			if(level<RAGE_MIN_LEVEL){
 				return 0;

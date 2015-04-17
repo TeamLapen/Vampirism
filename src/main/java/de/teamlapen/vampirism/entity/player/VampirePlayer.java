@@ -225,7 +225,6 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			playerData.loadNBTData(savedData);
 
 		}
-		playerData.sync(true);
 	}
 
 	/**
@@ -245,6 +244,21 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		NBTTagCompound savedData = new NBTTagCompound();
 		playerData.saveNBTData(savedData);
 		CommonProxy.storeEntityData(getSaveKey(player), savedData);
+	}
+	
+	/**
+	 * Handles player loading and syncing on world join. Only called server side
+	 * @param player
+	 */
+	public static void onPlayerJoinWorld(EntityPlayer player){
+		loadProxyData(player);
+		VampirePlayer p=VampirePlayer.get(player);
+		for(int i=0;i<p.skillTimer.length;i++){
+			if(p.skillTimer[i]>0){
+				((ILastingSkill) Skills.getSkill(i)).onReActivated(p, player);
+			}
+		}
+		p.sync(false);
 	}
 	public boolean sleepingCoffin = false;
 
@@ -267,6 +281,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	private final String KEY_AUTOFILL = "autofill";
 
 	private final String KEY_SKILLS = "skills";
+	
+	private final String KEY_EXTRADATA = "extra";
 
 	private BloodStats bloodStats;
 
@@ -285,6 +301,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	private boolean vampireLord = false;
 	
 	private boolean batTransformed=false;
+	
+	private NBTTagCompound extraData;
 
 	public VampirePlayer(EntityPlayer player) {
 		this.player = player;
@@ -292,6 +310,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		bloodStats = new BloodStats();
 		autoFillBlood = true;
 		skillTimer = new int[Skills.getSkillCount()];
+		extraData=new NBTTagCompound();
 	}
 
 
@@ -452,6 +471,10 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		level++;
 		setLevel(level);
 	}
+	
+	public NBTTagCompound getExtraDataTag(){
+		return extraData;
+	}
 
 	@Override
 	public void loadNBTData(NBTTagCompound compound) {
@@ -468,6 +491,9 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		vampireLord = properties.getBoolean(KEY_VAMPIRE_LORD);
 		if (properties.hasKey(KEY_AUTOFILL)) {
 			setAutoFillBlood(properties.getBoolean(KEY_AUTOFILL));
+		}
+		if( properties.hasKey(KEY_EXTRADATA)){
+			extraData=properties.getCompoundTag(KEY_EXTRADATA);
 		}
 
 		this.bloodStats.readNBT(properties);
@@ -585,6 +611,13 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			this.player.addChatMessage(new ChatComponentTranslation("text.vampirism:auto_fill_enabled"));
 		}
 	}
+	
+	public boolean gettingSundamage(){
+		if(player.worldObj!=null&&player.worldObj.canBlockSeeTheSky(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ))&&player.worldObj.isDaytime() && player.getBrightness(1.0F) > 0.5F){
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Called every LivingEntityUpdate, returns immediately if level =0;
@@ -602,8 +635,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			return;
 		}
 		this.bloodStats.onUpdate();
-		if (!player.worldObj.isRemote && player.worldObj.canBlockSeeTheSky(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ))) {
-			if (player.worldObj.isDaytime() && player.getBrightness(1.0F) > 0.5F && player.worldObj.rand.nextInt(40) == 10) {
+		if(!player.worldObj.isRemote){
+			if (gettingSundamage()&&player.worldObj.rand.nextInt(40) == 10) {
 				float dmg = BALANCE.getVampireSunDamage(getLevel());
 				if (player.isPotionActive(ModPotion.sunscreen)) {
 					dmg = dmg / 2;
@@ -633,7 +666,9 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 							dirty = true;
 						}
 					} else {
-						s.onUpdate(this, player);
+						if(s.onUpdate(this, player)){
+							skillTimer[i]=1;
+						}
 					}
 				}
 
@@ -665,6 +700,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		properties.setIntArray(KEY_SKILLS, skillTimer);
 		properties.setBoolean(KEY_AUTOFILL, getAutoFillBlood());
 		properties.setBoolean(KEY_VAMPIRE_LORD, isVampireLord());
+		properties.setTag(KEY_EXTRADATA, extraData);
 		this.bloodStats.writeNBT(properties);
 		compound.setTag(EXT_PROP_NAME, properties);
 

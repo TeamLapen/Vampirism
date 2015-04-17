@@ -1,8 +1,18 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
+import java.util.UUID;
+
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ChatComponentTranslation;
+import de.teamlapen.vampirism.entity.player.PlayerModifiers;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
 
@@ -12,6 +22,11 @@ public class BatSkill extends DefaultSkill implements ILastingSkill {
 	public final static float BAT_EYE_HEIGHT=0.85F*BAT_HEIGHT;
 	public final static float PLAYER_WIDTH=0.8F;
 	public final static float PLAYER_HEIGHT=1.8F;
+	
+	public final UUID speedModifierUUID = UUID.fromString("eb7a2e48-ce60-4629-b5f5-7a196d1035af");
+
+	public final UUID healthModifierUUID = UUID.fromString("4392fccb-4bfd-4290-b2e6-5cc91429053c");
+	
 	@Override
 	public int getCooldown() {
 		return 1;
@@ -36,6 +51,13 @@ public class BatSkill extends DefaultSkill implements ILastingSkill {
 
 	@Override
 	public void onActivated(VampirePlayer vampire, EntityPlayer player) {
+		setModifier(player,true);
+		double reduc=player.getHealth()-player.getMaxHealth();
+		if(reduc<0){
+			reduc=0;
+		}
+		player.setHealth((float) (player.getHealth()-reduc));
+		vampire.getExtraDataTag().setDouble("bat_skill_health",reduc);
 	}
 
 	@Override
@@ -45,12 +67,59 @@ public class BatSkill extends DefaultSkill implements ILastingSkill {
 
 	@Override
 	public void onDeactivated(VampirePlayer vampire, EntityPlayer player) {
+
+		setModifier(player,false);
+		if(player.getHealth()>0){
+			player.setHealth((float) (vampire.getExtraDataTag().getDouble("bat_skill_health")+player.getHealth()));
+			if(player.onGround){
+				player.addPotionEffect(new PotionEffect(Potion.resistance.id,20,100));
+			}
+			player.addPotionEffect(new PotionEffect(Potion.resistance.id,60,100));
+			
+		}
+
 	}
 
 	@Override
 	public boolean onUpdate(VampirePlayer vampire, EntityPlayer player) {
-		// TODO Auto-generated method stub
+		if(vampire.gettingSundamage()&&!player.worldObj.isRemote){
+			player.addChatMessage(new ChatComponentTranslation("text.vampirism:cant_fly_day"));
+			return true;
+		}
 		return false;
+	}
+
+	@Override
+	public void onReActivated(VampirePlayer vampire, EntityPlayer player) {
+		setModifier(player,true);
+	}
+	
+	private void setModifier(EntityPlayer player,boolean enabled){
+		if(enabled){
+//			IAttributeInstance movement = player.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
+//			//PlayerModifiers.rmMod(movement, speedModifierUUID);
+//			movement.applyModifier(new AttributeModifier(speedModifierUUID, "Bat Speed Bonus", BALANCE.VP_SKILLS.BAT_SPEED_MOD, 2).setSaved(false));
+			IAttributeInstance health = player.getEntityAttribute(SharedMonsterAttributes.maxHealth);
+			//PlayerModifiers.rmMod(health, healthModifierUUID);
+			health.applyModifier(new AttributeModifier(healthModifierUUID, "Bat Health Reduction", -0.9, 2).setSaved(false));
+			player.capabilities.allowFlying=true;
+			player.capabilities.isFlying=true;
+			player.sendPlayerAbilities();
+		}
+		else{
+//			//Movement speed
+//			IAttributeInstance movement = player.getEntityAttribute(SharedMonsterAttributes.movementSpeed);
+//			PlayerModifiers.rmMod(movement, speedModifierUUID);
+			
+			// Health modifier
+			IAttributeInstance health = player.getEntityAttribute(SharedMonsterAttributes.maxHealth);
+			PlayerModifiers.rmMod(health, healthModifierUUID);
+			
+			player.capabilities.allowFlying=false;
+			player.capabilities.isFlying=false;
+			player.sendPlayerAbilities();
+		}
+
 	}
 
 }

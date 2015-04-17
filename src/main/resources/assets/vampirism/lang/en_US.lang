@@ -58,6 +58,7 @@ text.vampirism:auto_fill_enabled=Auto Fill Enabled
 text.vampirism:auto_fill_disabled=Auto Fill Disabled
 text.vampirism:skill.deactivated_by_serveradmin=This skill is deactivated by your serveradmin
 text.vampirism:ritual_no_vampire=You need to be a vampire for this ritual
+text.vampirism:cant_fly_day=You cannot fly at daytime
 
 #Config
 category.vampirism.balance=Balance settings

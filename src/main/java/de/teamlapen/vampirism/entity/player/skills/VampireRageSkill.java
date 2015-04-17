@@ -51,4 +51,9 @@ public class VampireRageSkill extends DefaultSkill implements ILastingSkill {
 		return false;
 	}
 
+	@Override
+	public void onReActivated(VampirePlayer vampire, EntityPlayer player) {
+		
+	}
+
 }

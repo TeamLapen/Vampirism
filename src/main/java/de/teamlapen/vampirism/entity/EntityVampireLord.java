@@ -252,9 +252,9 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 
 	@Override
 	public int suggestLevel(Difficulty d) {
-		int avg = Math.round((d.avgLevel - 4) / 2);
-		int max = Math.round((d.maxLevel - 4) / 2);
-		int min = Math.round((d.minLevel - 4) / 2);
+		int avg = Math.round((d.avgLevel - 4) / 2F);
+		int max = Math.round((d.maxLevel - 4) / 2F);
+		int min = Math.round((d.minLevel - 4) / 2F);
 
 		switch (rand.nextInt(6)) {
 		case 0:
