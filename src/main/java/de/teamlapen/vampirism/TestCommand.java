@@ -35,7 +35,6 @@ public class TestCommand implements ICommand {
 
 	}
 
-	private HashMap activePotionsMap;
 
 	@Override
 	public List addTabCompletionOptions(ICommandSender p_71516_1_, String[] p_71516_2_) {
@@ -70,18 +69,12 @@ public class TestCommand implements ICommand {
 		return "/vtest";
 	}
 
-	public boolean isPotionActive(Potion p_70644_1_) {
-		if (CoreHandler.shouldOverrideNightVision(this, p_70644_1_)) {
-			return true;
-		}
-		return this.activePotionsMap.containsKey(Integer.valueOf(p_70644_1_.id));
-	}
-
 	@Override
 	public boolean isUsernameIndex(String[] p_82358_1_, int p_82358_2_) {
 		return false;
 	}
 
+	
 	@Override
 	public void processCommand(ICommandSender sender, String[] param) {
 		if (sender instanceof EntityPlayer) {

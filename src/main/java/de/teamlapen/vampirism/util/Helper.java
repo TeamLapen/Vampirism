@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import scala.actors.threadpool.Arrays;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
@@ -59,7 +60,7 @@ public class Helper {
 				Field privateStringField = ReflectionHelper.findField(cls, fieldname);
 				return privateStringField.get(obj);
 			} catch (Exception e) {
-				Logger.e("Reflection", "Failed to get " + fieldname + " from " + obj.toString() + " of class " + cls.getCanonicalName(), e);
+				Logger.e("Reflection", "Failed to get " + Arrays.toString(fieldname) + " from " + obj.toString() + " of class " + cls.getCanonicalName(), e);
 				return null;
 			}
 		}
@@ -68,7 +69,7 @@ public class Helper {
 				Field privateStringField = ReflectionHelper.findField(cls, fieldname);
 				privateStringField.set(obj, value);
 			} catch (Exception e) {
-				Logger.e("Reflection", "Failed to get " + fieldname + " from " + obj.toString() + " of class " + cls.getCanonicalName(), e);
+				Logger.e("Reflection", "Failed to get " + Arrays.toString(fieldname) + " from " + obj.toString() + " of class " + cls.getCanonicalName(), e);
 				return;
 			}
 		}
