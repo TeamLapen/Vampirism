@@ -146,6 +146,9 @@ public final class BALANCE {
 		@DefaultInt(value=2,minValue=1,name="Bat Speed Modifier")
 		public static int BAT_SPEED_MOD;
 		
+		@DefaultInt(value=3,minValue=-1,name="Bat Transformation Min Level")
+		public static int BAT_MIN_LEVEL;
+		
 		public static int getVampireLordDuration(int level){
 			if(level<RAGE_MIN_LEVEL){
 				return 0;
