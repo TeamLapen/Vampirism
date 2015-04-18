@@ -9,6 +9,7 @@ public class REFERENCE {
 		public static final String VAMPIRE_LORD_NAME ="vampirism.vampireLord";
 		public static final String VAMPIRE_MINION_NAME="vampirism.vampireMinion";
 		public static final String DEAD_MOB_NAME="vampirism.dead_mob";
+		public static final String BLINDING_BAT_NAME="vampirism.blinding_bat";
 	}
 
 	public static enum KEY {

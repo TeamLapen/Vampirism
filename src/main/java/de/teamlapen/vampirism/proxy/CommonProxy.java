@@ -21,6 +21,7 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import de.teamlapen.vampirism.ModBiomes;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityDeadMob;
 import de.teamlapen.vampirism.entity.EntityDracula;
 import de.teamlapen.vampirism.entity.EntityGhost;
@@ -79,6 +80,7 @@ public abstract class CommonProxy implements IProxy {
 		registerEntity(EntityDeadMob.class,REFERENCE.ENTITY.DEAD_MOB_NAME,false);
 		registerEntity(EntityDracula.class,REFERENCE.ENTITY.DRACULA_NAME,false);
 		registerEntity(EntityGhost.class,REFERENCE.ENTITY.GHOST_NAME,5,1,2,EnumCreatureType.monster,ModBiomes.biomeVampireForest);
+		registerEntity(EntityBlindingBat.class,REFERENCE.ENTITY.BLINDING_BAT_NAME,false);
 
 	}
 	private void registerEntity(Class<? extends Entity> clazz,String name,boolean useGlobal){

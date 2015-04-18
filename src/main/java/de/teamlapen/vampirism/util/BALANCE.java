@@ -149,6 +149,12 @@ public final class BALANCE {
 		@DefaultInt(value=3,minValue=-1,name="Bat Transformation Min Level")
 		public static int BAT_MIN_LEVEL;
 		
+		@DefaultInt(value=5,minValue=-1,name="Summon blinding bats Min Level")
+		public static int SUMMON_BAT_MIN_LEVEL;
+		
+		@DefaultInt(value=300,minValue=1,name="Summon blinding bats cooldown")
+		public static int SUMMON_BAT_COOLDOWN;
+		
 		public static int getVampireLordDuration(int level){
 			if(level<RAGE_MIN_LEVEL){
 				return 0;

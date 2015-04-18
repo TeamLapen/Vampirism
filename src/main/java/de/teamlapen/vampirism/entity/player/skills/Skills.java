@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.entity.player.skills;
 
 import java.util.ArrayList;
 
+import net.minecraft.entity.player.EntityPlayer;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Logger;
 
 /**
@@ -19,10 +21,10 @@ public class Skills {
 	 * 
 	 * @return
 	 */
-	public static ArrayList<ISkill> getAvailableSkills(int level) {
+	public static ArrayList<ISkill> getAvailableSkills(VampirePlayer player) {
 		ArrayList<ISkill> sl = new ArrayList<ISkill>();
 		for (ISkill s : skills) {
-			if (level >= s.getMinLevel() && s.getMinLevel() != -1) {
+			if (1==s.canUse(player, (EntityPlayer) player.getRepresentingEntity())) {
 				sl.add(s);
 			}
 		}
@@ -57,6 +59,7 @@ public class Skills {
 		Skills.registerSkill(new ChangeWeatherSkill());
 		Skills.registerSkill(new ReviveFallenSkill());
 		batMode=Skills.registerSkill(new BatSkill());
+		Skills.registerSkill(new SummonBatSkill());
 	}
 
 	/**

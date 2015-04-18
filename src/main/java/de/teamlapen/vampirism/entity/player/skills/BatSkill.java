@@ -119,5 +119,10 @@ public class BatSkill extends DefaultSkill implements ILastingSkill {
 		}
 
 	}
+	
+	@Override
+	public boolean canBeUsedBy(VampirePlayer vampire,EntityPlayer player){
+		return !vampire.gettingSundamage()&&!vampire.isSkillActive(Skills.vampireRage);
+	}
 
 }

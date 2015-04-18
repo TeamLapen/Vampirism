@@ -31,10 +31,11 @@ public interface ISkill {
 	 */
 	public int getId();
 
+	
 	/**
-	 * @return The minimum level which is required to use this skill
+	 * @return -1 disabled, 0 level to low, -2 other reason, 1 can be used
 	 */
-	public int getMinLevel();
+	public int canUse(VampirePlayer vampire,EntityPlayer player);
 
 	/**
 	 * Should return the min U texture coordinate within the icon map

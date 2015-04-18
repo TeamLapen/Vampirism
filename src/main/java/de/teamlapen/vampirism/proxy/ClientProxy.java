@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
+import net.minecraft.client.renderer.entity.RenderBat;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.client.shader.ShaderGroup;
@@ -55,6 +56,7 @@ import de.teamlapen.vampirism.client.render.RendererVampireMinion;
 import de.teamlapen.vampirism.client.render.TextureHelper;
 import de.teamlapen.vampirism.client.render.VampireHunterRenderer;
 import de.teamlapen.vampirism.client.render.VampireRenderer;
+import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityDeadMob;
 import de.teamlapen.vampirism.entity.EntityDracula;
 import de.teamlapen.vampirism.entity.EntityGhost;
@@ -96,6 +98,7 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampireLord.class, new RendererVampireLord(0.5F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampireMinion.class, new RendererVampireMinion(new ModelVampire(),0.5F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityDeadMob.class, new RendererDeadMob());
+		RenderingRegistry.registerEntityRenderingHandler(EntityBlindingBat.class, new RenderBat());
 		MinecraftForgeClient.registerItemRenderer(ModItems.pitchfork, new PitchforkRenderer());
 		//MinecraftForgeClient.registerItemRenderer(ModItems.torch, new RendererTorch());
 		

@@ -55,5 +55,10 @@ public class VampireRageSkill extends DefaultSkill implements ILastingSkill {
 	public void onReActivated(VampirePlayer vampire, EntityPlayer player) {
 		
 	}
+	
+	@Override
+	public boolean canBeUsedBy(VampirePlayer vampire,EntityPlayer player){
+		return !vampire.isSkillActive(Skills.batMode);
+	}
 
 }

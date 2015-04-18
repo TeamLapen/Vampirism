@@ -40,6 +40,7 @@ import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.ai.IMinion;
 import de.teamlapen.vampirism.entity.ai.IMinionLord;
+import de.teamlapen.vampirism.entity.player.skills.DefaultSkill;
 import de.teamlapen.vampirism.entity.player.skills.ILastingSkill;
 import de.teamlapen.vampirism.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.entity.player.skills.Skills;
@@ -582,11 +583,12 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			skillTimer[i] = Math.min((-s.getCooldown()) + t,0);
 			((ILastingSkill) s).onDeactivated(this, player);
 		} else if (t == 0) {// Ready
-			if (s.getMinLevel() == -1) {
+			int r=s.canUse(this, player);
+			if (r == -1) {
 				player.addChatMessage(new ChatComponentTranslation("text.vampirism:skill.deactivated_by_serveradmin"));
-			} else if (getLevel() < s.getMinLevel()) {
+			} else if (r==0) {
 				player.addChatMessage(new ChatComponentTranslation("text.vampirism:skill.level_to_low"));
-			} else {
+			} else if(r==1) {
 				if (s instanceof ILastingSkill) {
 					ILastingSkill ls = (ILastingSkill) s;
 					skillTimer[i] = ls.getDuration(getLevel());
@@ -613,7 +615,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	}
 	
 	public boolean gettingSundamage(){
-		if(player.worldObj!=null&&player.worldObj.canBlockSeeTheSky(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ))&&player.worldObj.isDaytime() && player.getBrightness(1.0F) > 0.5F){
+		if(player.worldObj!=null&&player.worldObj.canBlockSeeTheSky(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ))&&(player.worldObj.getWorldTime()>1000&&player.worldObj.getWorldTime()<12000)){
 			return true;
 		}
 		return false;

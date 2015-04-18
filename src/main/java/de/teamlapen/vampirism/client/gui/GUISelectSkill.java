@@ -202,7 +202,7 @@ public class GUISelectSkill extends GuiScreen {
 	@Override
 	public void initGui() {
 		player = VampirePlayer.get(this.mc.thePlayer);
-		skills = Skills.getAvailableSkills(player.getLevel());
+		skills = Skills.getAvailableSkills(player);
 		skills.add(new FakeSkill());
 		skillCount = skills.size();
 		radDiff = 2D * Math.PI / skillCount;// gap in rad
