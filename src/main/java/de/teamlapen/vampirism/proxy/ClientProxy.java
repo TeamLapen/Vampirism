@@ -218,23 +218,6 @@ public class ClientProxy extends CommonProxy {
 	}
 
 
-	public void wakeAllPlayers() {
-		// TODO Auto-generated method stub
-		
-	}
-
-
-	public boolean areAllPlayersAsleepCoffin() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-
-	public void updateAllPlayersSleepingFlagCoffin() {
-		// TODO Auto-generated method stub
-		
-	}
-
 	@Override
 	public void setPlayerBat(EntityPlayer player, boolean bat) {
 		float width=bat?BatSkill.BAT_WIDTH:BatSkill.PLAYER_WIDTH;
