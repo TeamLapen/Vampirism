@@ -69,48 +69,6 @@ public class ServerProxy extends CommonProxy {
 			}
 		}
 	}
-	
-    public boolean areAllPlayersAsleepCoffin()
-    {
-        if (this.allPlayersSleepingInCoffin) //&& !this.isRemote()
-        {
-            Iterator iterator = this.playerEntities.iterator();
-            EntityPlayer entityplayer;
-
-            do
-            {
-                if (!iterator.hasNext())
-                {
-                    return true;
-                }
-
-                entityplayer = (EntityPlayer)iterator.next();
-            }
-            while (VampirePlayer.get(entityplayer).isPlayerFullyAsleepCoffin());
-
-            return false;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public void wakeAllPlayers() {
-        this.allPlayersSleepingInCoffin = false;
-        Iterator iterator = this.playerEntities.iterator();
-
-        while (iterator.hasNext())
-        {
-            EntityPlayer entityplayer = (EntityPlayer)iterator.next();
-
-            if (VampirePlayer.get(entityplayer).sleepingCoffin)
-            {
-                entityplayer.wakeUpPlayer(false, false, true);
-            }
-        }
-        server.provider.resetRainAndThunder();
-        }
     
 	@Override
 	public ResourceLocation checkVampireTexture(Entity entity, ResourceLocation loc) {

@@ -263,8 +263,6 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	}
 	public boolean sleepingCoffin = false;
 
-	public int sleeptimerCoffin = 0;
-
 	public final static String EXT_PROP_NAME = "VampirePlayer";
 
 	public final static String TAG = "VampirePlayer";
@@ -435,10 +433,6 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 */
 	public boolean isAutoFillBlood() {
 		return autoFillBlood;
-	}
-
-	public boolean isPlayerFullyAsleepCoffin() {
-		return this.sleepingCoffin && this.sleeptimerCoffin >= 100;
 	}
 
 	private boolean isRemote() {
@@ -755,7 +749,6 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 * puts player to sleep on specified coffin if possible
 	 */
 	public EntityPlayer.EnumStatus sleepInCoffinAt(int x, int y, int z) {
-		// TODO Workaround for event stuff
 		PlayerSleepInBedEvent event = new PlayerSleepInBedEvent(this.player, x, y, z);
 		MinecraftForge.EVENT_BUS.post(event);
 		// if (event.result != null) {
@@ -827,7 +820,6 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		this.sleepingCoffin = true;
 		// Following method will replace: this.player.sleepTimer = 0;
 		Helper.Reflection.setPrivateField(EntityPlayer.class, this.player, 0, Helper.Obfuscation.getPosNames("EntityPlayer/sleepTimer"));
-		this.sleeptimerCoffin = 0;
 
 		this.player.playerLocation = new ChunkCoordinates(x, y, z);
 		this.player.motionX = this.player.motionZ = this.player.motionY = 0.0D;

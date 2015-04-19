@@ -10,7 +10,9 @@ import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntity;
@@ -162,4 +164,10 @@ public class BlockCoffin extends BasicBlockContainer {
 	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
 		return new TileEntityCoffin();
 	}
+	
+	@Override
+	public boolean isBed(IBlockAccess world, int x, int y, int z, EntityLivingBase player)
+    {
+        return true;
+    }
 }
