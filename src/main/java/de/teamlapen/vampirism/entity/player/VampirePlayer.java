@@ -56,7 +56,8 @@ import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 /**
- * IExtendedEntityPropertiesClass which extends the EntityPlayer with vampire properties
+ * IExtendedEntityPropertiesClass which extends the EntityPlayer with vampire
+ * properties
  * 
  * @author Maxanier
  */
@@ -83,7 +84,9 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			int bloodToAdd = Math.min(amount, MAXBLOOD - oldBlood);
 			changeBlood(bloodToAdd);
 			// Add saturation effect
-			this.bloodSaturationLevel = (float) Math.min(bloodSaturationLevel + bloodToAdd * BALANCE.BLOOD_SATURATION * 2.0F, oldBlood + bloodToAdd);
+			this.bloodSaturationLevel = (float) Math.min(bloodSaturationLevel
+					+ bloodToAdd * BALANCE.BLOOD_SATURATION * 2.0F, oldBlood
+					+ bloodToAdd);
 
 			// Calculate the amount of left blood and handles it
 			int bloodLeft = amount - bloodToAdd;
@@ -95,7 +98,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			if (isSkillActive(Skills.vampireRage)) {
 				amount = amount * 1.5F;
 			}
-			this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount, maxExhaustion);
+			this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount,
+					maxExhaustion);
 		}
 
 		/**
@@ -154,22 +158,28 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			if (newBloodLevel < 0)
 				newBloodLevel = 0;
 			bloodToAdd = 0;
-			int playerSaturation=1;
-			if(player.isPotionActive(ModPotion.saturation.id)){
-				playerSaturation=player.getActivePotionEffect(ModPotion.saturation).getAmplifier()+2;
+			int playerSaturation = 1;
+			if (player.isPotionActive(ModPotion.saturation.id)) {
+				playerSaturation = player.getActivePotionEffect(
+						ModPotion.saturation).getAmplifier() + 2;
 			}
-			if (this.bloodExhaustionLevel > BALANCE.BLOOD_EXH_PER_BL*playerSaturation) {
-				this.bloodExhaustionLevel -= BALANCE.BLOOD_EXH_PER_BL*playerSaturation;
+			if (this.bloodExhaustionLevel > BALANCE.BLOOD_EXH_PER_BL
+					* playerSaturation) {
+				this.bloodExhaustionLevel -= BALANCE.BLOOD_EXH_PER_BL
+						* playerSaturation;
 
 				if (this.bloodSaturationLevel > 0.0F) {
-					this.bloodSaturationLevel = Math.max(bloodSaturationLevel - 1.0F, 0F);
+					this.bloodSaturationLevel = Math.max(
+							bloodSaturationLevel - 1.0F, 0F);
 				} else if (enumdifficulty != EnumDifficulty.PEACEFUL) {
 
 					newBloodLevel = (Math.max(newBloodLevel - 1, 0));
 				}
 			}
 
-			if (player.worldObj.getGameRules().getGameRuleBooleanValue("naturalRegeneration") && newBloodLevel >= 0.9 * MAXBLOOD && player.shouldHeal()) {
+			if (player.worldObj.getGameRules().getGameRuleBooleanValue(
+					"naturalRegeneration")
+					&& newBloodLevel >= 0.9 * MAXBLOOD && player.shouldHeal()) {
 				++this.bloodTimer;
 				if (this.bloodTimer >= 80) {
 					player.heal(1.0F);
@@ -179,7 +189,10 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			} else if (newBloodLevel <= 0) {
 				++this.bloodTimer;
 				if (this.bloodTimer >= 80) {
-					if (player.getHealth() > 10.0F || enumdifficulty == EnumDifficulty.HARD || player.getHealth() > 1.0F && enumdifficulty == EnumDifficulty.NORMAL) {
+					if (player.getHealth() > 10.0F
+							|| enumdifficulty == EnumDifficulty.HARD
+							|| player.getHealth() > 1.0F
+							&& enumdifficulty == EnumDifficulty.NORMAL) {
 						player.attackEntityFrom(DamageSource.starve, 1.0F);
 					}
 					this.bloodTimer = 0;
@@ -205,13 +218,15 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		}
 
 	}
+
 	/**
 	 * 
 	 * @param player
 	 * @return VampirePlayer property of player
 	 */
 	public static final VampirePlayer get(EntityPlayer player) {
-		return (VampirePlayer) player.getExtendedProperties(VampirePlayer.EXT_PROP_NAME);
+		return (VampirePlayer) player
+				.getExtendedProperties(VampirePlayer.EXT_PROP_NAME);
 	}
 
 	private static final String getSaveKey(EntityPlayer player) {
@@ -221,7 +236,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 	public static final void loadProxyData(EntityPlayer player) {
 		VampirePlayer playerData = VampirePlayer.get(player);
-		NBTTagCompound savedData = CommonProxy.getEntityData(getSaveKey(player));
+		NBTTagCompound savedData = CommonProxy
+				.getEntityData(getSaveKey(player));
 		if (savedData != null) {
 			playerData.loadNBTData(savedData);
 
@@ -234,7 +250,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 * @param player
 	 */
 	public static final void register(EntityPlayer player) {
-		player.registerExtendedProperties(VampirePlayer.EXT_PROP_NAME, new VampirePlayer(player));
+		player.registerExtendedProperties(VampirePlayer.EXT_PROP_NAME,
+				new VampirePlayer(player));
 	}
 
 	public static void saveProxyData(EntityPlayer player, boolean resetBlood) {
@@ -246,21 +263,23 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		playerData.saveNBTData(savedData);
 		CommonProxy.storeEntityData(getSaveKey(player), savedData);
 	}
-	
+
 	/**
 	 * Handles player loading and syncing on world join. Only called server side
+	 * 
 	 * @param player
 	 */
-	public static void onPlayerJoinWorld(EntityPlayer player){
+	public static void onPlayerJoinWorld(EntityPlayer player) {
 		loadProxyData(player);
-		VampirePlayer p=VampirePlayer.get(player);
-		for(int i=0;i<p.skillTimer.length;i++){
-			if(p.skillTimer[i]>0){
+		VampirePlayer p = VampirePlayer.get(player);
+		for (int i = 0; i < p.skillTimer.length; i++) {
+			if (p.skillTimer[i] > 0) {
 				((ILastingSkill) Skills.getSkill(i)).onReActivated(p, player);
 			}
 		}
 		p.sync(false);
 	}
+
 	public boolean sleepingCoffin = false;
 
 	public final static String EXT_PROP_NAME = "VampirePlayer";
@@ -280,7 +299,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	private final String KEY_AUTOFILL = "autofill";
 
 	private final String KEY_SKILLS = "skills";
-	
+
 	private final String KEY_EXTRADATA = "extra";
 
 	private BloodStats bloodStats;
@@ -298,37 +317,40 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	private boolean skipFallDamageReduction = false;
 
 	private boolean vampireLord = false;
-	
-	private boolean batTransformed=false;
-	
+
+	private boolean batTransformed = false;
+
 	private NBTTagCompound extraData;
 
 	public VampirePlayer(EntityPlayer player) {
 		this.player = player;
-		this.player.getDataWatcher().addObject(Configs.player_blood_watcher, MAXBLOOD);
+		this.player.getDataWatcher().addObject(Configs.player_blood_watcher,
+				MAXBLOOD);
 		bloodStats = new BloodStats();
 		autoFillBlood = true;
 		skillTimer = new int[Skills.getSkillCount()];
-		extraData=new NBTTagCompound();
+		extraData = new NBTTagCompound();
 	}
 
-
-
 	/**
-	 * Tries to fill blood into blood bottles in the hotbar or tries to convert glas bottles from the hotbar to blood bottles
+	 * Tries to fill blood into blood bottles in the hotbar or tries to convert
+	 * glas bottles from the hotbar to blood bottles
 	 * 
 	 * @param amt
 	 */
 	protected void fillBloodIntoInventory(int amt) {
 		if (amt <= 0)
 			return;
-		ItemStack stack = ItemBloodBottle.getBloodBottleInInventory(player.inventory, true);
+		ItemStack stack = ItemBloodBottle.getBloodBottleInInventory(
+				player.inventory, true);
 		if (stack != null) {
 			fillBloodIntoInventory(ItemBloodBottle.addBlood(stack, amt));
 		} else {
-			ItemStack glas = ItemBloodBottle.getGlasBottleInInventory(player.inventory);
+			ItemStack glas = ItemBloodBottle
+					.getGlasBottleInInventory(player.inventory);
 			if (glas != null) {
-				ItemStack bloodBottle = new ItemStack(ModItems.bloodBottle, 1, 0);
+				ItemStack bloodBottle = new ItemStack(ModItems.bloodBottle, 1,
+						0);
 				amt = ItemBloodBottle.addBlood(bloodBottle, amt);
 				player.inventory.consumeInventoryItem(Items.glass_bottle);
 				if (!player.inventory.addItemStackToInventory(bloodBottle)) {
@@ -360,7 +382,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	}
 
 	/**
-	 * Adds blood to the vampires blood level level without increasing the saturation level
+	 * Adds blood to the vampires blood level level without increasing the
+	 * saturation level
 	 * 
 	 * @param a
 	 *            amount
@@ -374,7 +397,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 * @return The current blood level
 	 */
 	public int getBlood() {
-		return this.player.getDataWatcher().getWatchableObjectInt(Configs.player_blood_watcher);
+		return this.player.getDataWatcher().getWatchableObjectInt(
+				Configs.player_blood_watcher);
 	}
 
 	public BloodStats getBloodStats() {
@@ -446,9 +470,10 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		}
 		return (skillTimer[id] > 0);
 	}
-	
-	public boolean isSkillActive(ISkill s){
-		if(s==null)return false;
+
+	public boolean isSkillActive(ISkill s) {
+		if (s == null)
+			return false;
 		return isSkillActive(s.getId());
 	}
 
@@ -466,37 +491,37 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		level++;
 		setLevel(level);
 	}
-	
-	public NBTTagCompound getExtraDataTag(){
+
+	public NBTTagCompound getExtraDataTag() {
 		return extraData;
 	}
 
 	@Override
 	public void loadNBTData(NBTTagCompound compound) {
-		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
+		NBTTagCompound properties = (NBTTagCompound) compound
+				.getTag(EXT_PROP_NAME);
 		setBloodData(properties.getInteger(KEY_BLOOD));
 		level = properties.getInteger(KEY_LEVEL);
 		int[] temp = properties.getIntArray(KEY_SKILLS);
 		if (temp.length == Skills.getSkillCount()) {
 			skillTimer = temp;
 		} else {
-			Logger.w(TAG, "Loaded skill timers have a different size than the existing skills");
+			Logger.w(TAG,
+					"Loaded skill timers have a different size than the existing skills");
 			skillTimer = new int[Skills.getSkillCount()];
 		}
 		vampireLord = properties.getBoolean(KEY_VAMPIRE_LORD);
 		if (properties.hasKey(KEY_AUTOFILL)) {
 			setAutoFillBlood(properties.getBoolean(KEY_AUTOFILL));
 		}
-		if( properties.hasKey(KEY_EXTRADATA)){
-			extraData=properties.getCompoundTag(KEY_EXTRADATA);
+		if (properties.hasKey(KEY_EXTRADATA)) {
+			extraData = properties.getCompoundTag(KEY_EXTRADATA);
 		}
 
 		this.bloodStats.readNBT(properties);
 		PlayerModifiers.applyModifiers(level, player);
 
 	}
-
-
 
 	private void looseLevel() {
 		int level = getLevel();
@@ -506,21 +531,27 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	}
 
 	public void onDeath(DamageSource source) {
-		if (BALANCE.VAMPIRE_PLAYER_LOOSE_LEVEL && source.damageType.equals("mob") && source instanceof EntityDamageSource) {
+		if (BALANCE.VAMPIRE_PLAYER_LOOSE_LEVEL
+				&& source.damageType.equals("mob")
+				&& source instanceof EntityDamageSource) {
 			Entity src = source.getEntity();
 			if (src instanceof EntityVampireHunter) {
 				looseLevel();
 				this.setVampireLord(false);
 			}
 
-			if (isVampireLord()&&src instanceof EntityVampire || (src instanceof IMinion && ((IMinion) src).getLord() instanceof EntityLiving)) {
+			if (isVampireLord()
+					&& src instanceof EntityVampire
+					|| (src instanceof IMinion && ((IMinion) src).getLord() instanceof EntityLiving)) {
 				EntityLiving old;
 				if (src instanceof IMinion) {
 					old = (EntityLiving) ((IMinion) src).getLord();
 				} else {
 					old = (EntityLiving) src;
 				}
-				EntityDracula dracula = (EntityDracula) EntityList.createEntityByName(REFERENCE.ENTITY.DRACULA_NAME, old.worldObj);
+				EntityDracula dracula = (EntityDracula) EntityList
+						.createEntityByName(REFERENCE.ENTITY.DRACULA_NAME,
+								old.worldObj);
 				dracula.copyLocationAndAnglesFrom(old);
 				dracula.makeDisappear();
 				old.worldObj.spawnEntityInWorld(dracula);
@@ -532,7 +563,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		for (int i = 0; i < skillTimer.length; i++) {
 			if (skillTimer[i] > 0) {
 				skillTimer[i] = -Skills.getSkill(i).getCooldown();
-				((ILastingSkill) Skills.getSkill(i)).onDeactivated(this, player);
+				((ILastingSkill) Skills.getSkill(i))
+						.onDeactivated(this, player);
 
 			}
 		}
@@ -540,10 +572,14 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 	public boolean onEntityAttacked(DamageSource source, float amount) {
 		if (source.getEntity() instanceof DefaultVampire && getLevel() == 0) {
-			// Since the method seems to be called 4 times probability is decreased by the factor 4
-			if (player.worldObj.rand.nextInt(BALANCE.VAMPIRE_PLAYER_SANGUINARE_PROB * 4) == 0) {
+			// Since the method seems to be called 4 times probability is
+			// decreased by the factor 4
+			if (player.worldObj.rand
+					.nextInt(BALANCE.VAMPIRE_PLAYER_SANGUINARE_PROB * 4) == 0) {
 				if (!player.isPotionActive(ModPotion.sanguinare)) {
-					player.addPotionEffect(new PotionEffect(ModPotion.sanguinare.id, BALANCE.VAMPIRE_PLAYER_SANGUINARE_DURATION * 20));
+					player.addPotionEffect(new PotionEffect(
+							ModPotion.sanguinare.id,
+							BALANCE.VAMPIRE_PLAYER_SANGUINARE_DURATION * 20));
 				}
 
 			} else {
@@ -574,15 +610,17 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			return;
 		int t = skillTimer[i];
 		if (t > 0) {// Running, only for lasting skills
-			skillTimer[i] = Math.min((-s.getCooldown()) + t,0);
+			skillTimer[i] = Math.min((-s.getCooldown()) + t, 0);
 			((ILastingSkill) s).onDeactivated(this, player);
 		} else if (t == 0) {// Ready
-			int r=s.canUse(this, player);
+			int r = s.canUse(this, player);
 			if (r == -1) {
-				player.addChatMessage(new ChatComponentTranslation("text.vampirism:skill.deactivated_by_serveradmin"));
-			} else if (r==0) {
-				player.addChatMessage(new ChatComponentTranslation("text.vampirism:skill.level_to_low"));
-			} else if(r==1) {
+				player.addChatMessage(new ChatComponentTranslation(
+						"text.vampirism:skill.deactivated_by_serveradmin"));
+			} else if (r == 0) {
+				player.addChatMessage(new ChatComponentTranslation(
+						"text.vampirism:skill.level_to_low"));
+			} else if (r == 1) {
 				if (s instanceof ILastingSkill) {
 					ILastingSkill ls = (ILastingSkill) s;
 					skillTimer[i] = ls.getDuration(getLevel());
@@ -593,7 +631,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 				}
 			}
 		} else {// In cooldown
-			player.addChatMessage(new ChatComponentTranslation("text.vampirism:skill.cooldown_not_over"));
+			player.addChatMessage(new ChatComponentTranslation(
+					"text.vampirism:skill.cooldown_not_over"));
 		}
 		dirty = true;
 	}
@@ -601,15 +640,23 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	public void onToggleAutoFillBlood() {
 		if (autoFillBlood) {
 			autoFillBlood = false;
-			this.player.addChatMessage(new ChatComponentTranslation("text.vampirism:auto_fill_disabled"));
+			this.player.addChatMessage(new ChatComponentTranslation(
+					"text.vampirism:auto_fill_disabled"));
 		} else {
 			autoFillBlood = true;
-			this.player.addChatMessage(new ChatComponentTranslation("text.vampirism:auto_fill_enabled"));
+			this.player.addChatMessage(new ChatComponentTranslation(
+					"text.vampirism:auto_fill_enabled"));
 		}
 	}
-	
-	public boolean gettingSundamage(){
-		if(player.worldObj!=null&&player.worldObj.canBlockSeeTheSky(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ))&&(player.worldObj.getWorldTime()>1000&&player.worldObj.getWorldTime()<12000)){
+
+	public boolean gettingSundamage() {
+		if (player.worldObj != null
+				&& player.worldObj.canBlockSeeTheSky(
+						MathHelper.floor_double(player.posX),
+						MathHelper.floor_double(player.posY),
+						MathHelper.floor_double(player.posZ))
+				&& (player.worldObj.getWorldTime() > 1000 && player.worldObj
+						.getWorldTime() < 12000)) {
 			return true;
 		}
 		return false;
@@ -620,19 +667,22 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 */
 	public void onUpdate() {
 		if (getLevel() <= 0) {
-			PotionEffect sang = player.getActivePotionEffect(ModPotion.sanguinare);
+			PotionEffect sang = player
+					.getActivePotionEffect(ModPotion.sanguinare);
 			if (sang != null) {
 				if (sang.getDuration() == 1) {
 					this.levelUp();
-					player.addPotionEffect(new PotionEffect(ModPotion.saturation.id, 300,2));
-					player.addPotionEffect(new PotionEffect(Potion.resistance.id, 300));
+					player.addPotionEffect(new PotionEffect(
+							ModPotion.saturation.id, 300, 2));
+					player.addPotionEffect(new PotionEffect(
+							Potion.resistance.id, 300));
 				}
 			}
 			return;
 		}
 		this.bloodStats.onUpdate();
-		if(!player.worldObj.isRemote){
-			if (gettingSundamage()&&player.worldObj.rand.nextInt(40) == 10) {
+		if (!player.worldObj.isRemote) {
+			if (gettingSundamage() && player.worldObj.rand.nextInt(40) == 10) {
 				float dmg = BALANCE.getVampireSunDamage(getLevel());
 				if (player.isPotionActive(ModPotion.sunscreen)) {
 					dmg = dmg / 2;
@@ -641,6 +691,30 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			}
 			if (player.isPotionActive(ModPotion.sanguinare.id)) {
 				player.removePotionEffect(ModPotion.sanguinare.id);
+			}
+
+			if (this.player.isPlayerSleeping()) {
+				Helper.Reflection.setPrivateField(EntityPlayer.class,
+						this.player, this.player.getSleepTimer() + 1,
+						Helper.Obfuscation
+								.getPosNames("EntityPlayer/sleepTimer"));
+			}
+
+			if (this.player.getSleepTimer() > 100) {
+				Helper.Reflection.setPrivateField(EntityPlayer.class,
+						this.player, 100, Helper.Obfuscation
+								.getPosNames("EntityPlayer/sleepTimer"));
+			}
+
+			if (!this.player.worldObj.isRemote) {
+				// if (!this.player.isInBed())
+				// {
+				// this.player.wakeUpPlayer(true, true, false);
+				// }
+				if (!this.player.worldObj.isDaytime()) {
+					//sleepingCoffin = false;
+					this.player.wakeUpPlayer(false, true, true);
+				}
 			}
 		}
 
@@ -662,17 +736,17 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 							dirty = true;
 						}
 					} else {
-						if(s.onUpdate(this, player)){
-							skillTimer[i]=1;
+						if (s.onUpdate(this, player)) {
+							skillTimer[i] = 1;
 						}
 					}
 				}
 
 			}
 		}
-		
-		if(batTransformed!=this.isSkillActive(Skills.batMode)){
-			batTransformed=!batTransformed;
+
+		if (batTransformed != this.isSkillActive(Skills.batMode)) {
+			batTransformed = !batTransformed;
 			VampirismMod.proxy.setPlayerBat(player, batTransformed);
 		}
 
@@ -707,18 +781,21 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	}
 
 	/**
-	 * DONT USE, only designed to be used at startup and by Bloodstats Try to use addBlood(int amount) or consumeBlood(int amount) instead
+	 * DONT USE, only designed to be used at startup and by Bloodstats Try to
+	 * use addBlood(int amount) or consumeBlood(int amount) instead
 	 * 
 	 * @param b
 	 */
 	private synchronized void setBloodData(int b) {
-		this.player.getDataWatcher().updateObject(Configs.player_blood_watcher, b);
+		this.player.getDataWatcher().updateObject(Configs.player_blood_watcher,
+				b);
 
 	}
 
 	/**
-	 * For testing only, make private later. This is the only method which should change the level. This method should execute all level related changes e.g. player modifiers Its syncs it with the
-	 * client
+	 * For testing only, make private later. This is the only method which
+	 * should change the level. This method should execute all level related
+	 * changes e.g. player modifiers Its syncs it with the client
 	 * 
 	 * @param l
 	 */
@@ -738,7 +815,9 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 */
 	public boolean setVampireLord(boolean state) {
 		if (state && getLevel() < REFERENCE.HIGHEST_REACHABLE_LEVEL) {
-			Logger.w(TAG, "Cannot become a vampire lord since the player has not reached the highest level");
+			Logger.w(
+					TAG,
+					"Cannot become a vampire lord since the player has not reached the highest level");
 			return false;
 		}
 		this.vampireLord = state;
@@ -749,7 +828,9 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 * puts player to sleep on specified coffin if possible
 	 */
 	public EntityPlayer.EnumStatus sleepInCoffinAt(int x, int y, int z) {
-		PlayerSleepInBedEvent event = new PlayerSleepInBedEvent(this.player, x, y, z);
+		Logger.i("VampirePlayer", String.format("sleepInCoffinAt called, x=%s, y=%s, z=%s", x, y, z));
+		PlayerSleepInBedEvent event = new PlayerSleepInBedEvent(this.player, x,
+				y, z);
 		MinecraftForge.EVENT_BUS.post(event);
 		// if (event.result != null) {
 		// return event.result;
@@ -768,14 +849,17 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 				return EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW;
 			}
 
-			if (Math.abs(this.player.posX - x) > 3.0D || Math.abs(this.player.posY - y) > 2.0D || Math.abs(this.player.posZ - z) > 3.0D) {
+			if (Math.abs(this.player.posX - x) > 3.0D
+					|| Math.abs(this.player.posY - y) > 2.0D
+					|| Math.abs(this.player.posZ - z) > 3.0D) {
 				return EntityPlayer.EnumStatus.TOO_FAR_AWAY;
 			}
 
 			double d0 = 8.0D;
 			double d1 = 5.0D;
-			List list = this.player.worldObj.getEntitiesWithinAABB(EntityMob.class,
-					AxisAlignedBB.getBoundingBox(x - d0, y - d1, z - d0, x + d0, y + d1, z + d0));
+			List list = this.player.worldObj.getEntitiesWithinAABB(
+					EntityMob.class, AxisAlignedBB.getBoundingBox(x - d0, y
+							- d1, z - d0, x + d0, y + d1, z + d0));
 
 			if (!list.isEmpty()) {
 				return EntityPlayer.EnumStatus.NOT_SAFE;
@@ -786,12 +870,16 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			this.player.mountEntity((Entity) null);
 		}
 
-		Helper.Reflection.callMethod(Entity.class, this.player, Helper.Obfuscation.getPosNames("EntityPlayer/setSize"), new Class[] { float.class, float.class }, new Object[] { 0.2F, 0.2F });
+		Helper.Reflection.callMethod(Entity.class, this.player,
+				Helper.Obfuscation.getPosNames("EntityPlayer/setSize"),
+				new Class[] { float.class, float.class }, new Object[] { 0.2F,
+						0.2F });
 		// this.player.setSize(0.2F, 0.2F);
 		this.player.yOffset = 0.2F;
 
 		if (this.player.worldObj.blockExists(x, y, z)) {
-			int direction = ((BlockCoffin) player.worldObj.getBlock(x, y, z)).getDirection(player.worldObj, x, y, z);
+			int direction = ((BlockCoffin) player.worldObj.getBlock(x, y, z))
+					.getDirection(player.worldObj, x, y, z);
 			float f1 = 0.5F;
 			float f = 0.5F;
 
@@ -816,10 +904,13 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		}
 
 		// Following method will replace: this.player.sleeping = true;
-		Helper.Reflection.setPrivateField(EntityPlayer.class, this.player, true, Helper.Obfuscation.getPosNames("EntityPlayer/sleeping"));
+		Helper.Reflection.setPrivateField(EntityPlayer.class, this.player,
+				true, Helper.Obfuscation.getPosNames("EntityPlayer/sleeping"));
 		this.sleepingCoffin = true;
+		Logger.i("VampirePlayer", "sleepingCoffin="+this.sleepingCoffin);
 		// Following method will replace: this.player.sleepTimer = 0;
-		Helper.Reflection.setPrivateField(EntityPlayer.class, this.player, 0, Helper.Obfuscation.getPosNames("EntityPlayer/sleepTimer"));
+		// Helper.Reflection.setPrivateField(EntityPlayer.class, this.player, 0,
+		// Helper.Obfuscation.getPosNames("EntityPlayer/sleepTimer"));
 
 		this.player.playerLocation = new ChunkCoordinates(x, y, z);
 		this.player.motionX = this.player.motionZ = this.player.motionY = 0.0D;
@@ -832,7 +923,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	}
 
 	/**
-	 * Suck blood from an EntityLiving. Only sucks blood if health is low enough and if the entity has blood
+	 * Suck blood from an EntityLiving. Only sucks blood if health is low enough
+	 * and if the entity has blood
 	 * 
 	 * @param e
 	 *            Entity to suck blood from
@@ -851,12 +943,17 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			if (amt > 0 && isAutoFillBlood()) {
 				fillBloodIntoInventory(amt);
 			}
-			VampirismMod.modChannel.sendToAll(new SpawnParticlePacket("magicCrit", e.posX, e.posY, e.posZ, player.posX - e.posX, player.posY - e.posY, player.posZ - e.posZ, 10));
-			VampirismMod.modChannel.sendTo(new SpawnParticlePacket("blood_eat", 0, 0, 0, 0, 0, 0, 10), (EntityPlayerMP) player);
+			VampirismMod.modChannel.sendToAll(new SpawnParticlePacket(
+					"magicCrit", e.posX, e.posY, e.posZ, player.posX - e.posX,
+					player.posY - e.posY, player.posZ - e.posZ, 10));
+			VampirismMod.modChannel.sendTo(new SpawnParticlePacket("blood_eat",
+					0, 0, 0, 0, 0, 0, 10), (EntityPlayerMP) player);
 
 		} else if (amount == -1) {
 			player.attackEntityFrom(DamageSource.outOfWorld, 1);
-			VampirismMod.modChannel.sendToAll(new SpawnParticlePacket("crit", e.posX, e.posY, e.posZ, player.posX - e.posX, player.posY - e.posY, player.posZ - e.posZ, 10));
+			VampirismMod.modChannel.sendToAll(new SpawnParticlePacket("crit",
+					e.posX, e.posY, e.posZ, player.posX - e.posX, player.posY
+							- e.posY, player.posZ - e.posZ, 10));
 		} else if (amount == -2) {
 			player.addPotionEffect(new PotionEffect(19, 80, 1));
 			player.addPotionEffect(new PotionEffect(9, 120, 0));
@@ -864,7 +961,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	}
 
 	/**
-	 * Suck blood from an EntityLiving belonging to the given id. Only sucks blood if health is low enough and if the entity has blood
+	 * Suck blood from an EntityLiving belonging to the given id. Only sucks
+	 * blood if health is low enough and if the entity has blood
 	 * 
 	 * @param e
 	 *            Id of Entity to suck blood from
@@ -882,9 +980,11 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	public void sync(boolean all) {
 		if (!player.worldObj.isRemote) {
 			if (all) {
-				Helper.sendPacketToPlayersAround(new UpdateEntityPacket(this), player);
+				Helper.sendPacketToPlayersAround(new UpdateEntityPacket(this),
+						player);
 			} else {
-				VampirismMod.modChannel.sendTo(new UpdateEntityPacket(this), (EntityPlayerMP) player);
+				VampirismMod.modChannel.sendTo(new UpdateEntityPacket(this),
+						(EntityPlayerMP) player);
 			}
 
 		}
@@ -892,23 +992,24 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 	@Override
 	public void loadUpdateFromNBT(NBTTagCompound nbt) {
-		
-		if(nbt.hasKey("level")){
+
+		if (nbt.hasKey("level")) {
 			this.setLevel(nbt.getInteger("level"));
 		}
-		if(nbt.hasKey("timers")){
-			this.skillTimer=nbt.getIntArray("timers");
+		if (nbt.hasKey("timers")) {
+			this.skillTimer = nbt.getIntArray("timers");
 		}
-		if(nbt.hasKey("lord")){
-			this.vampireLord=nbt.getBoolean("lord");
+		if (nbt.hasKey("lord")) {
+			this.vampireLord = nbt.getBoolean("lord");
 		}
-		
+
 	}
 
 	@Override
 	public void writeFullUpdateToNBT(NBTTagCompound tag) {
 		tag.setInteger("level", getLevel());
-		tag.setIntArray("timers", skillTimer);;
+		tag.setIntArray("timers", skillTimer);
+		;
 		tag.setBoolean("lord", isVampireLord());
 	}
 
@@ -919,7 +1020,9 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 	// public void wakeUpPlayer(boolean par1, boolean par2, boolean par3)
 	// {
-	// MinecraftForge.EVENT_BUS.post(new net.minecraftforge.event.entity.player.PlayerWakeUpEvent(this.player, par1, par2, par3));
+	// MinecraftForge.EVENT_BUS.post(new
+	// net.minecraftforge.event.entity.player.PlayerWakeUpEvent(this.player,
+	// par1, par2, par3));
 	// Helper.Reflection.callMethod(Entity.class, this.player,
 	// Helper.Obfuscation.getPosNames("EntityPlayer/setSize"),
 	// new Class[] { float.class, float.class }, new Object[] { 0.6F,
@@ -929,21 +1032,32 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	//
 	// ChunkCoordinates chunkcoordinates = this.player.playerLocation;
 	// ChunkCoordinates chunkcoordinates1 = this.player.playerLocation;
-	// Block block = (chunkcoordinates == null ? null : player.worldObj.getBlock(chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ));
+	// Block block = (chunkcoordinates == null ? null :
+	// player.worldObj.getBlock(chunkcoordinates.posX, chunkcoordinates.posY,
+	// chunkcoordinates.posZ));
 	// //Convert the block to type coffin
-	// BlockCoffin coffin = (block instanceof BlockCoffin) ? (BlockCoffin) block : null;
+	// BlockCoffin coffin = (block instanceof BlockCoffin) ? (BlockCoffin) block
+	// : null;
 	//
-	// if (chunkcoordinates != null && coffin != null) //block.isBed(player.worldObj, chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, this.player)
+	// if (chunkcoordinates != null && coffin != null)
+	// //block.isBed(player.worldObj, chunkcoordinates.posX,
+	// chunkcoordinates.posY, chunkcoordinates.posZ, this.player)
 	// {
-	// coffin.setCoffinOccupied(this.player.worldObj, chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, this.player, false);
-	// chunkcoordinates1 = block.getBedSpawnPosition(this.player.worldObj, chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ, this.player);
+	// coffin.setCoffinOccupied(this.player.worldObj, chunkcoordinates.posX,
+	// chunkcoordinates.posY, chunkcoordinates.posZ, this.player, false);
+	// chunkcoordinates1 = block.getBedSpawnPosition(this.player.worldObj,
+	// chunkcoordinates.posX, chunkcoordinates.posY, chunkcoordinates.posZ,
+	// this.player);
 	//
 	// if (chunkcoordinates1 == null)
 	// {
-	// chunkcoordinates1 = new ChunkCoordinates(chunkcoordinates.posX, chunkcoordinates.posY + 1, chunkcoordinates.posZ);
+	// chunkcoordinates1 = new ChunkCoordinates(chunkcoordinates.posX,
+	// chunkcoordinates.posY + 1, chunkcoordinates.posZ);
 	// }
 	//
-	// this.player.setPosition((double)((float)chunkcoordinates1.posX + 0.5F), (double)((float)chunkcoordinates1.posY + this.player.yOffset + 0.1F), (double)((float)chunkcoordinates1.posZ + 0.5F));
+	// this.player.setPosition((double)((float)chunkcoordinates1.posX + 0.5F),
+	// (double)((float)chunkcoordinates1.posY + this.player.yOffset + 0.1F),
+	// (double)((float)chunkcoordinates1.posZ + 0.5F));
 	// }
 	//
 	// this.sleepingCoffin = false;

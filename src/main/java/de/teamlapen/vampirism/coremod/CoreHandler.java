@@ -41,10 +41,11 @@ public class CoreHandler {
 	}
 	
 	public static boolean shouldWakePlayer(EntityPlayer p){
-		Logger.i("tes", "adsf");
+		//Logger.i("tes", "adsf");
 		if(VampirePlayer.get(p) != null && VampirePlayer.get(p).sleepingCoffin) {
 			return false;
 		}
+		Logger.i("CoreHandler", String.format("sleepingCoffin=%s, remote=foo", VampirePlayer.get(p).sleepingCoffin));
 		return true;
 	}
 }
