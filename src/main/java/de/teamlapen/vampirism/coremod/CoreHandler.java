@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.coremod;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
@@ -37,5 +38,13 @@ public class CoreHandler {
 	
 	public static ResourceLocation checkVampireTexture(Entity entity,ResourceLocation loc){
 		return VampirismMod.proxy.checkVampireTexture(entity, loc);
+	}
+	
+	public static boolean shouldWakePlayer(EntityPlayer p){
+		Logger.i("tes", "adsf");
+		if(VampirePlayer.get(p) != null && VampirePlayer.get(p).sleepingCoffin) {
+			return false;
+		}
+		return true;
 	}
 }
