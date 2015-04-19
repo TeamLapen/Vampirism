@@ -90,6 +90,7 @@ public class GUISelectSkill extends GuiScreen {
 
 		// Draw the cicle image
 		this.mc.getTextureManager().bindTexture(backgroundTex);
+		GL11.glColor4f(1F, 1F, 1F, 0.5F);
 		GL11.glBegin(GL11.GL_QUADS);
 		GL11.glTexCoord2f(1F, 1F);
 		GL11.glVertex3f(BGS / 2, BGS / 2, this.zLevel);
