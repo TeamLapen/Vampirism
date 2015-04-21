@@ -692,31 +692,15 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			if (player.isPotionActive(ModPotion.sanguinare.id)) {
 				player.removePotionEffect(ModPotion.sanguinare.id);
 			}
-
-			if (this.player.isPlayerSleeping()) {
-				Helper.Reflection.setPrivateField(EntityPlayer.class,
-						this.player, this.player.getSleepTimer() + 1,
-						Helper.Obfuscation
-								.getPosNames("EntityPlayer/sleepTimer"));
-			}
-
-			if (this.player.getSleepTimer() > 100) {
-				Helper.Reflection.setPrivateField(EntityPlayer.class,
-						this.player, 100, Helper.Obfuscation
-								.getPosNames("EntityPlayer/sleepTimer"));
-			}
-
-			if (!this.player.worldObj.isRemote) {
 				// if (!this.player.isInBed())
 				// {
 				// this.player.wakeUpPlayer(true, true, false);
 				// }
 				if (!this.player.worldObj.isDaytime()) {
-					//sleepingCoffin = false;
-					this.player.wakeUpPlayer(false, true, true);
+					sleepingCoffin = false;
+					//this.player.wakeUpPlayer(false, true, true);
 				}
 			}
-		}
 
 		/**
 		 * Loop through all skill timers and update them and their tick time
