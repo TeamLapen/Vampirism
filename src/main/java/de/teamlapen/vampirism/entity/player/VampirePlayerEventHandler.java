@@ -53,9 +53,6 @@ public class VampirePlayerEventHandler {
 	public void onLivingDeathEvent(LivingDeathEvent event) {
 		if (event.entity instanceof EntityPlayer) {
 			VampirePlayer.get((EntityPlayer) event.entity).onDeath(event.source);
-			if (!event.entity.worldObj.isRemote) {
-				VampirePlayer.saveProxyData((EntityPlayer) event.entity, true);
-			}
 		}
 	}
 
@@ -80,7 +77,6 @@ public class VampirePlayerEventHandler {
 	public void onItemUse(PlayerUseItemEvent.Start event){
 		if(VampirePlayer.get(event.entityPlayer).isSkillActive(Skills.batMode)){
 			event.setCanceled(true);
-			Logger.i("tes", "a");
 		}
 	}
 	
@@ -100,6 +96,11 @@ public class VampirePlayerEventHandler {
 		} catch (Exception e) {
 			//Added try catch to prevent any exception in case some other mod uses auto placers or so
 		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerClone(PlayerEvent.Clone event){
+		VampirePlayer.get(event.entityPlayer).copyFrom(event.original);
 	}
 
 }

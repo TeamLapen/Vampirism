@@ -37,28 +37,6 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.villages.VillageVampireData;
 
 public abstract class CommonProxy implements IProxy {
-
-	/**
-	 * Removes the stored data from map and returns it
-	 * 
-	 * @param name
-	 * @return
-	 */
-	public static NBTTagCompound getEntityData(String name) {
-		return extendedEntityData.remove(name);
-	}
-
-	/**
-	 * Stores entity data
-	 * 
-	 * @param name
-	 * @param compound
-	 */
-	public static void storeEntityData(String name, NBTTagCompound compound) {
-		extendedEntityData.put(name, compound);
-	}
-
-	private static final Map<String, NBTTagCompound> extendedEntityData = new HashMap<String, NBTTagCompound>();
 	
 	private int modEntityId=0;
 

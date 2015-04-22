@@ -229,21 +229,6 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 				.getExtendedProperties(VampirePlayer.EXT_PROP_NAME);
 	}
 
-	private static final String getSaveKey(EntityPlayer player) {
-		// no longer a username field, so use the command sender name instead:
-		return player.getCommandSenderName() + ":" + EXT_PROP_NAME;
-	}
-
-	public static final void loadProxyData(EntityPlayer player) {
-		VampirePlayer playerData = VampirePlayer.get(player);
-		NBTTagCompound savedData = CommonProxy
-				.getEntityData(getSaveKey(player));
-		if (savedData != null) {
-			playerData.loadNBTData(savedData);
-
-		}
-	}
-
 	/**
 	 * Registers vampire property to player
 	 * 
@@ -254,23 +239,12 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 				new VampirePlayer(player));
 	}
 
-	public static void saveProxyData(EntityPlayer player, boolean resetBlood) {
-		VampirePlayer playerData = VampirePlayer.get(player);
-		if (resetBlood) {
-			playerData.setBloodData(MAXBLOOD);
-		}
-		NBTTagCompound savedData = new NBTTagCompound();
-		playerData.saveNBTData(savedData);
-		CommonProxy.storeEntityData(getSaveKey(player), savedData);
-	}
-
 	/**
 	 * Handles player loading and syncing on world join. Only called server side
 	 * 
 	 * @param player
 	 */
 	public static void onPlayerJoinWorld(EntityPlayer player) {
-		loadProxyData(player);
 		VampirePlayer p = VampirePlayer.get(player);
 		for (int i = 0; i < p.skillTimer.length; i++) {
 			if (p.skillTimer[i] > 0) {
@@ -568,6 +542,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 			}
 		}
+		this.bloodStats.addBlood(MAXBLOOD);
 	}
 
 	public boolean onEntityAttacked(DamageSource source, float amount) {
@@ -1000,6 +975,12 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	@Override
 	public int getTheEntityID() {
 		return player.getEntityId();
+	}
+	
+	public void copyFrom(EntityPlayer original) {
+		NBTTagCompound nbt=new NBTTagCompound();
+		VampirePlayer.get(original).saveNBTData(nbt);
+		this.loadNBTData(nbt);
 	}
 
 	// public void wakeUpPlayer(boolean par1, boolean par2, boolean par3)
