@@ -172,13 +172,6 @@ public final class BALANCE {
 		float nv = (level == 0.0F ? 0 : 1.0F - (2 / level));
 		return (nv < 0.0F ? 0.0F : nv);
 	}
-
-	public static float getVampireSunDamage(int level) {
-		if (level < 4) {
-			return 0;
-		}
-		return (float) VAMPIRE_PLAYER_SUN_DAMAGE;
-	}
 	
 	// Mob behavior
 	@DefaultInt(value=2,minValue=1,name="Player Level for Vampire Hunter Attack",
@@ -202,7 +195,7 @@ public final class BALANCE {
 	@DefaultBoolean(value=true,name="Vampire Player Loose Level",comment="Whether vampireplayers should loose level if killed by a hunter")
 	public static boolean VAMPIRE_PLAYER_LOOSE_LEVEL;
 
-	@DefaultDouble(value=1.5D,minValue=0D,name="Vampire Player Sun Damage",comment = "")
+	@DefaultDouble(value=4.0D,minValue=0D,name="Vampire Player Sun Damage",comment = "")
 	public static double VAMPIRE_PLAYER_SUN_DAMAGE;
 	
 	@DefaultInt(value=2,minValue=1,name="Vampire Player Creeper Avoidance Level",comment = "")

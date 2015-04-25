@@ -93,7 +93,7 @@ public class VampirismMod {
 	public void preInit(FMLPreInitializationEvent event) {
 		Configs.init(event.getSuggestedConfigurationFile());// Keep first
 		if(REFERENCE.RESET_CONFIG_IN_DEV&&(Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment")){
-			Configs.setConfigToDefault();
+			Configs.reset();
 			inDev=true;
 		}
 		Helper.Obfuscation.fillMap();

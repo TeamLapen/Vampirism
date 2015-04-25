@@ -87,20 +87,10 @@ public class Configs {
 			config.save();
 		}
 		if(!conf_version.equals(REFERENCE.VERSION)){
-			Logger.i("Config", "Resetting config to default because a update was found");
+			Logger.i("Config", "Detected Modupdate");
 			handleModUpdated(conf_version);
 			
-				Logger.i("Configs", "Resetting config file");
-				try {
-					PrintWriter writer = new PrintWriter(config.getConfigFile());
-					writer.print("");
-					writer.close();
-					init(config.getConfigFile());
-				} catch (Exception e) {
-					Logger.e("Configs", "Failed to reset config file");
-				}
-
-
+				
 		}
 		
 		
@@ -146,19 +136,6 @@ public class Configs {
 		}
 	}
 	
-	/**
-	 * Sets each prop to default, not used anymore, now the whole file is just deleted
-	 */
-	@Deprecated
-	public static void setConfigToDefault(){
-		for(String cat:config.getCategoryNames()){
-			for(Entry<String, Property> e:config.getCategory(cat).entrySet()){
-				e.getValue().setToDefault();
-			}
-		}
-		Logger.i("Config", "Reset config to default");
-		config.save();
-	}
 	
 	/**
 	 * Called when the mod was updated, before the config values are reset
@@ -197,6 +174,20 @@ public class Configs {
 			Logger.i("Configs", "Configuration has changed");
 			Configs.loadConfiguration();
 		}
+	}
+	
+	public static void reset(){
+		Logger.i("Configs", "Resetting config file");
+		try {
+			PrintWriter writer = new PrintWriter(config.getConfigFile());
+			writer.print("");
+			writer.close();
+			init(config.getConfigFile());
+		} catch (Exception e) {
+			Logger.e("Configs", "Failed to reset config file");
+		}
+
+
 	}
 
 }

@@ -293,6 +293,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	private boolean vampireLord = false;
 
 	private boolean batTransformed = false;
+	
+	private int ticksInSun=0;
 
 	private NBTTagCompound extraData;
 
@@ -636,6 +638,31 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		}
 		return false;
 	}
+	
+	private void handleSunDamage(){
+		ticksInSun++;
+		int type=Math.min(3, Math.round(getLevel()/2F-0.51F));
+		if(player.isPotionActive(ModPotion.sunscreen)&&type>0)
+			type--;
+		
+		if(type>0){
+			if(player.worldObj.getTotalWorldTime()%250==0||ticksInSun==1){
+				player.addPotionEffect(new PotionEffect(Potion.confusion.id,180));
+			}
+			if(type>1){
+				if(player.worldObj.getTotalWorldTime()%30==0){
+					player.addPotionEffect(new PotionEffect(ModPotion.weakness.id,30,1));
+				}
+				
+				if(type>2&&ticksInSun>100){
+					if(player.worldObj.getWorldTime()%40==0){
+						player.attackEntityFrom(VampirismMod.sunDamage, (float) BALANCE.VAMPIRE_PLAYER_SUN_DAMAGE);
+					}
+				}
+
+			}
+		}
+	}
 
 	/**
 	 * Called every LivingEntityUpdate, returns immediately if level =0;
@@ -657,12 +684,15 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		}
 		this.bloodStats.onUpdate();
 		if (!player.worldObj.isRemote) {
-			if (gettingSundamage() && player.worldObj.rand.nextInt(40) == 10) {
-				float dmg = BALANCE.getVampireSunDamage(getLevel());
-				if (player.isPotionActive(ModPotion.sunscreen)) {
-					dmg = dmg / 2;
+			if(gettingSundamage()){
+				handleSunDamage();
+				Logger.i("te", BALANCE.VAMPIRE_PLAYER_SUN_DAMAGE+"");
+			}
+			else{
+				if(ticksInSun>0){
+					ticksInSun--;
 				}
-				player.attackEntityFrom(VampirismMod.sunDamage, dmg);
+
 			}
 			if (player.isPotionActive(ModPotion.sanguinare.id)) {
 				player.removePotionEffect(ModPotion.sanguinare.id);
