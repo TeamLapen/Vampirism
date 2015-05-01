@@ -72,12 +72,14 @@ public class VampireEntityEventHandler {
 			if (e.isLookingForHome() == false)
 				return;
 
-			Village v = event.world.villageCollectionObj.findNearestVillage(MathHelper.floor_double(e.posX), MathHelper.floor_double(e.posY), MathHelper.floor_double(e.posZ), 20);
-			if (v != null) {
-				int r = v.getVillageRadius();
-				AxisAlignedBB box = AxisAlignedBB.getBoundingBox(v.getCenter().posX - r, 0, v.getCenter().posZ - r, v.getCenter().posX + r, event.world.getActualHeight(), v.getCenter().posZ + r);
-				ChunkCoordinates cc = v.getCenter();
-				e.setHomeArea(cc.posX, cc.posY, cc.posZ, r);
+			if(event.world.villageCollectionObj!=null){
+				Village v = event.world.villageCollectionObj.findNearestVillage(MathHelper.floor_double(e.posX), MathHelper.floor_double(e.posY), MathHelper.floor_double(e.posZ), 20);
+				if (v != null) {
+					int r = v.getVillageRadius();
+					AxisAlignedBB box = AxisAlignedBB.getBoundingBox(v.getCenter().posX - r, 0, v.getCenter().posZ - r, v.getCenter().posX + r, event.world.getActualHeight(), v.getCenter().posZ + r);
+					ChunkCoordinates cc = v.getCenter();
+					e.setHomeArea(cc.posX, cc.posY, cc.posZ, r);
+				}
 			}
 		} else if (event.entity instanceof EntityIronGolem) {
 			// Replace the EntityAINearestAttackableTarget of Irongolems, so
