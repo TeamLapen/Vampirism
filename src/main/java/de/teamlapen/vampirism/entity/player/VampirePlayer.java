@@ -686,7 +686,6 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		if (!player.worldObj.isRemote) {
 			if(gettingSundamage()){
 				handleSunDamage();
-				Logger.i("te", BALANCE.VAMPIRE_PLAYER_SUN_DAMAGE+"");
 			}
 			else{
 				if(ticksInSun>0){

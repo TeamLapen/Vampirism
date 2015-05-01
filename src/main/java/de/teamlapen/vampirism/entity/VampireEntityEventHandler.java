@@ -119,7 +119,7 @@ public class VampireEntityEventHandler {
 
 	@SubscribeEvent
 	public void onLivingDeathEvent(LivingDeathEvent event) {
-		if (event.entity instanceof EntityCreature && !event.entity.worldObj.isRemote && EntityDeadMob.canBecomeDeadMob((EntityCreature) event.entity) && event.entity.worldObj.rand.nextInt(3) == 0) {
+		if (event.entity instanceof EntityCreature && !event.entity.worldObj.isRemote && BALANCE.DEAD_MOB_PROP>0&& EntityDeadMob.canBecomeDeadMob((EntityCreature) event.entity) && (BALANCE.DEAD_MOB_PROP==0||event.entity.worldObj.rand.nextInt(BALANCE.DEAD_MOB_PROP) == 0)) {
 			event.entity.worldObj.spawnEntityInWorld(EntityDeadMob.createFromEntity((EntityCreature) event.entity));
 		}
 	}

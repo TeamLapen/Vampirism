@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -15,24 +16,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
 
 public class EntityDeadMob extends Entity {
 
-	public static boolean canBecomeDeadMob(EntityCreature entity) {
-		if (entity != null && VampireMob.get(entity).isMinion())
-			return false;
-		return mobs.contains(EntityList.getEntityString(entity));
-	}
-
-	public static Entity createFromEntity(EntityCreature entity) {
-		EntityDeadMob e = (EntityDeadMob) EntityList.createEntityByName(REFERENCE.ENTITY.DEAD_MOB_NAME, entity.worldObj);
-		e.copyLocationAndAnglesFrom(entity);
-		e.setDeadMobId(EntityList.getEntityString(entity));
-		return e;
-	}
-
 	private static final int MAX_TICKS = 1200;
-
-	protected String entityId = "Zombie";
-
-	private String TAG = "EntityDeadMob";
 
 	public static List<String> mobs;
 
@@ -43,10 +27,48 @@ public class EntityDeadMob extends Entity {
 		mobs.add(REFERENCE.ENTITY.GHOST_NAME);
 	}
 
+	public static boolean canBecomeDeadMob(EntityCreature entity) {
+		if (entity != null && VampireMob.get(entity).isMinion())
+			return false;
+		return mobs.contains(EntityList.getEntityString(entity));
+	}
+
+	public static Entity createFromEntity(EntityCreature entity) {
+		EntityDeadMob e = (EntityDeadMob) EntityList.createEntityByName(REFERENCE.ENTITY.DEAD_MOB_NAME, entity.worldObj);
+		e.copyLocationAndAnglesFrom(entity);
+		e.setDeadMob(EntityList.getEntityString(entity));
+		return e;
+	}
+
+	private int health;
+
+	private String TAG = "EntityDeadMob";
+
+	private final int WATCHER_TYPE_ID = 10;
+
 	public EntityDeadMob(World p_i1582_1_) {
 		super(p_i1582_1_);
 		this.setSize(0.98F, 0.4F);
 		// this.yOffset = this.height / 2.0F;
+		this.dataWatcher.addObject(WATCHER_TYPE_ID, 0);
+		health = 5;
+	}
+
+	@Override
+	public boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_) {
+		if (this.isEntityInvulnerable()) {
+			return false;
+		} else {
+			if (!this.isDead && !this.worldObj.isRemote) {
+				this.health -= Math.round(p_70097_2_);
+
+				if (this.health <= 0) {
+					this.setDead();
+				}
+			}
+
+			return true;
+		}
 	}
 
 	@Override
@@ -55,12 +77,12 @@ public class EntityDeadMob extends Entity {
 	}
 
 	public EntityCreature convertToMob() {
-		EntityCreature e = (EntityCreature) EntityList.createEntityByName(entityId, worldObj);
+		EntityCreature e = (EntityCreature) EntityList.createEntityByName(getDeadMob(), worldObj);
 		if (e != null) {
 			e.copyLocationAndAnglesFrom(this);
 			worldObj.spawnEntityInWorld(e);
 		} else {
-			Logger.w(TAG, "Could not create entity: " + entityId);
+			Logger.w(TAG, "Could not create entity: " + getDeadMob());
 		}
 		this.setDead();
 		return e;
@@ -69,6 +91,20 @@ public class EntityDeadMob extends Entity {
 	@Override
 	protected void entityInit() {
 
+	}
+
+	public String getDeadMob() {
+		int i = getDeadMobId();
+		if (i >= mobs.size() || i < 0) {
+			Logger.w(TAG, "Invalid Mob ID " + i);
+			this.setDeadMobId(0);
+			return "Zombie";
+		}
+		return mobs.get(i);
+	}
+
+	public int getDeadMobId() {
+		return this.dataWatcher.getWatchableObjectInt(WATCHER_TYPE_ID);
 	}
 
 	@Override
@@ -102,16 +138,33 @@ public class EntityDeadMob extends Entity {
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {
-		entityId = nbt.getString("entity_id");
+		setDeadMobId(nbt.getInteger("entity_id"));
 	}
 
-	public void setDeadMobId(String id) {
-		entityId = id;
+	public void setDeadMob(String s) {
+		for (int i = 0; i < mobs.size(); i++) {
+			if (mobs.get(i).equals(s)) {
+				this.setDeadMobId(i);
+				return;
+			}
+		}
+		Logger.w(TAG, "Did not find an id for " + s);
+	}
+
+	public void setDeadMobId(int id) {
+		if (id >= 0 && id < mobs.size()) {
+			this.dataWatcher.updateObject(WATCHER_TYPE_ID, id);
+		}
+	}
+
+	@SideOnly(Side.CLIENT)
+	public boolean shouldRenderSkull() {
+		return getDeadMobId() == 0 || getDeadMobId() == 1;
 	}
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbt) {
-		nbt.setString("entity_id", entityId);
+		nbt.setInteger("entity_id", getDeadMobId());
 	}
 
 }

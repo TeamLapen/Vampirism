@@ -224,4 +224,6 @@ public final class BALANCE {
 	@DefaultInt(value=4,minValue=1,maxValue=100,name="Blood Exhaustion per Level",
 			comment = "Amount of exhaustion, which has to be reached to loose one blood")
 	public static int BLOOD_EXH_PER_BL;
+	@DefaultInt(value=3,minValue=-1,name="Create dead mob probability",comment="1/n Propability to create a dead mob entity. -1 to disable, 0 to always")
+	public static int DEAD_MOB_PROP;
 }
