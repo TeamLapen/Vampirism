@@ -16,13 +16,11 @@ public class SummonBatSkill extends DefaultSkill {
 
 	@Override
 	public int getMinU() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 96;
 	}
 
 	@Override
 	public int getMinV() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

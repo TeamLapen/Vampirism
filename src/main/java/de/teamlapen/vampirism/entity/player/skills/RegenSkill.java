@@ -21,7 +21,7 @@ public class RegenSkill extends DefaultSkill {
 
 	@Override
 	public int getMinU() {
-		return 0;
+		return 80;
 	}
 
 	@Override
