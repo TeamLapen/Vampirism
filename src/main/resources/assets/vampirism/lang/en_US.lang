@@ -16,6 +16,7 @@ item.vampirism:torch.name=Torch
 item.vampirism:pureBlood.name=Pure Blood
 item.vampirism:sunscreen.name=Sunscreen
 item.vampirism:leechSword.name=Leech
+item.vampirism:nightClock.name=Night Clock
 
 # Blocks
 block.vampirism:bloodAltar.name=Blood Altar of Saturation
@@ -59,6 +60,8 @@ text.vampirism:auto_fill_disabled=Auto Fill Disabled
 text.vampirism:skill.deactivated_by_serveradmin=This skill is deactivated by your serveradmin
 text.vampirism:ritual_no_vampire=You need to be a vampire for this ritual
 text.vampirism:cant_fly_day=You cannot fly at daytime
+text.vampirism:cant_use_at_night=You cannot use this at night
+text.vampirism:other_players_preventing=Other players in this world are preventing you from using this item
 
 #Config
 category.vampirism.balance=Balance settings

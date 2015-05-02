@@ -8,6 +8,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
 import de.teamlapen.vampirism.item.ItemCoffin;
 import de.teamlapen.vampirism.item.ItemHumanHeart;
+import de.teamlapen.vampirism.item.ItemNightClock;
 import de.teamlapen.vampirism.item.ItemPitchfork;
 import de.teamlapen.vampirism.item.ItemPureBlood;
 import de.teamlapen.vampirism.item.ItemSunscreen;
@@ -27,12 +28,14 @@ public class ModItems {
 		GameRegistry.registerItem(pureBlood,ItemPureBlood.name);
 		GameRegistry.registerItem(sunscreen, ItemSunscreen.name);
 		GameRegistry.registerItem(coffin, ItemCoffin.name);
+		GameRegistry.registerItem(nightClock, ItemNightClock.name);
 	}
 	
 	public static void registerRecipes(){
 		GameRegistry.addRecipe(new ItemStack(bloodBottle, 1, 0), "   ", "XYX", " X ", 'X', Blocks.glass, 'Y', Items.rotten_flesh);
 		GameRegistry.addRecipe(new ItemStack(leechSword, 1), "XYX", "XYX", " Z ", 'X', vampireFang, 'Y', Items.iron_ingot, 'Z', Items.stick);
 		GameRegistry.addRecipe(new ItemStack(sunscreen,1),"XYX","YZY","XYX",'X',ModBlocks.vampireFlower,'Y',Items.gold_nugget,'Z',humanHeart);
+		GameRegistry.addRecipe(new ItemStack(nightClock,1)," X ","YZY"," X ",'X',bloodBottle,'Y',Items.gold_ingot,'Z',Items.clock);
 	}
 	public static ItemSword leechSword = new ItemLeechSword();
 	public static ItemBloodBottle bloodBottle = new ItemBloodBottle();
@@ -44,4 +47,5 @@ public class ModItems {
 	public static ItemPureBlood pureBlood=new ItemPureBlood();
 	public static ItemSunscreen sunscreen=new ItemSunscreen();
 	public static ItemCoffin coffin = new ItemCoffin();
+	public static ItemNightClock nightClock = new ItemNightClock();
 }
