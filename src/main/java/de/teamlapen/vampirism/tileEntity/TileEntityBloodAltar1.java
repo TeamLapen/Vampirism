@@ -102,7 +102,7 @@ public class TileEntityBloodAltar1 extends TileEntity {
 			}
 			occupied = false;
 			markDirty();
-		} else {
+		} else if(itemStack!=null){
 			if (ModItems.leechSword.equals(itemStack.getItem())) {
 				this.startRitual(player, itemStack);
 			}
