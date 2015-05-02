@@ -35,7 +35,7 @@ public class ModBlocks {
 		GameRegistry.registerBlock(bloodAltar4Tip, ItemBlock.class,BlockBloodAltar4Tip.name);
 		GameRegistry.registerBlock(cursedEarth, BlockCursedEarth.name);
 		GameRegistry.registerBlock(churchAltar, BlockChurchAltar.name);
-		GameRegistry.registerBlock(coffin, BlockCoffin.name);
+		//GameRegistry.registerBlock(coffin, BlockCoffin.name);
 		GameRegistry.registerTileEntity(TileEntityBloodAltar1.class, "TileEntityBloodAltar");
 		GameRegistry.registerTileEntity(TileEntityBloodAltar2.class, "TileEntityBloodAltarTier2");
 		//GameRegistry.registerTileEntity(TileEntityBloodAltarTier3.class, "TileEntityBloodAltarTier3");
@@ -65,7 +65,7 @@ public class ModBlocks {
 	public final static BlockBloodAltar4Tip bloodAltar4Tip=new BlockBloodAltar4Tip();
 	public final static BlockCursedEarth cursedEarth = new BlockCursedEarth();
 	public final static BlockChurchAltar churchAltar= new BlockChurchAltar();
-	public final static BlockCoffin coffin = new BlockCoffin();
+	//public final static BlockCoffin coffin = new BlockCoffin();
 	
 	// Flowers
 	public final static VampireFlower vampireFlower = new VampireFlower();

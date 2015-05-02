@@ -812,103 +812,103 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		return true;
 	}
 
-	/**
-	 * puts player to sleep on specified coffin if possible
-	 */
-	public EntityPlayer.EnumStatus sleepInCoffinAt(int x, int y, int z) {
-		Logger.i("VampirePlayer", String.format("sleepInCoffinAt called, x=%s, y=%s, z=%s", x, y, z));
-		PlayerSleepInBedEvent event = new PlayerSleepInBedEvent(this.player, x,
-				y, z);
-		MinecraftForge.EVENT_BUS.post(event);
-		// if (event.result != null) {
-		// return event.result;
-		// }
-
-		if (!this.player.worldObj.isRemote) {
-			if (this.sleepingCoffin || !this.isTheEntityAlive()) {
-				return EntityPlayer.EnumStatus.OTHER_PROBLEM;
-			}
-
-			if (!this.player.worldObj.provider.isSurfaceWorld()) {
-				return EntityPlayer.EnumStatus.NOT_POSSIBLE_HERE;
-			}
-
-			if (!this.player.worldObj.isDaytime()) {
-				return EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW;
-			}
-
-			if (Math.abs(this.player.posX - x) > 3.0D
-					|| Math.abs(this.player.posY - y) > 2.0D
-					|| Math.abs(this.player.posZ - z) > 3.0D) {
-				return EntityPlayer.EnumStatus.TOO_FAR_AWAY;
-			}
-
-			double d0 = 8.0D;
-			double d1 = 5.0D;
-			List list = this.player.worldObj.getEntitiesWithinAABB(
-					EntityMob.class, AxisAlignedBB.getBoundingBox(x - d0, y
-							- d1, z - d0, x + d0, y + d1, z + d0));
-
-			if (!list.isEmpty()) {
-				return EntityPlayer.EnumStatus.NOT_SAFE;
-			}
-		}
-
-		if (this.player.isRiding()) {
-			this.player.mountEntity((Entity) null);
-		}
-
-		Helper.Reflection.callMethod(Entity.class, this.player,
-				Helper.Obfuscation.getPosNames("EntityPlayer/setSize"),
-				new Class[] { float.class, float.class }, new Object[] { 0.2F,
-						0.2F });
-		// this.player.setSize(0.2F, 0.2F);
-		this.player.yOffset = 0.2F;
-
-		if (this.player.worldObj.blockExists(x, y, z)) {
-			int direction = ((BlockCoffin) player.worldObj.getBlock(x, y, z))
-					.getDirection(player.worldObj, x, y, z);
-			float f1 = 0.5F;
-			float f = 0.5F;
-
-			switch (direction) {
-			case 0:
-				f = 0.9F;
-				break;
-			case 1:
-				f1 = 0.1F;
-				break;
-			case 2:
-				f = 0.1F;
-				break;
-			case 3:
-				f1 = 0.9F;
-			}
-
-			this.func_71013_b(direction);
-			this.player.setPosition(x + f1, y + 0.9375F, z + f);
-		} else {
-			this.player.setPosition(x + 0.5F, y + 0.9375F, z + 0.5F);
-		}
-
-		// Following method will replace: this.player.sleeping = true;
-		Helper.Reflection.setPrivateField(EntityPlayer.class, this.player,
-				true, Helper.Obfuscation.getPosNames("EntityPlayer/sleeping"));
-		this.sleepingCoffin = true;
-		Logger.i("VampirePlayer", "sleepingCoffin="+this.sleepingCoffin);
-		// Following method will replace: this.player.sleepTimer = 0;
-		// Helper.Reflection.setPrivateField(EntityPlayer.class, this.player, 0,
-		// Helper.Obfuscation.getPosNames("EntityPlayer/sleepTimer"));
-
-		this.player.playerLocation = new ChunkCoordinates(x, y, z);
-		this.player.motionX = this.player.motionZ = this.player.motionY = 0.0D;
-
-		if (!this.player.worldObj.isRemote) {
-			this.player.worldObj.updateAllPlayersSleepingFlag();
-		}
-
-		return EntityPlayer.EnumStatus.OK;
-	}
+//	/**
+//	 * puts player to sleep on specified coffin if possible
+//	 */
+//	public EntityPlayer.EnumStatus sleepInCoffinAt(int x, int y, int z) {
+//		Logger.i("VampirePlayer", String.format("sleepInCoffinAt called, x=%s, y=%s, z=%s", x, y, z));
+//		PlayerSleepInBedEvent event = new PlayerSleepInBedEvent(this.player, x,
+//				y, z);
+//		MinecraftForge.EVENT_BUS.post(event);
+//		// if (event.result != null) {
+//		// return event.result;
+//		// }
+//
+//		if (!this.player.worldObj.isRemote) {
+//			if (this.sleepingCoffin || !this.isTheEntityAlive()) {
+//				return EntityPlayer.EnumStatus.OTHER_PROBLEM;
+//			}
+//
+//			if (!this.player.worldObj.provider.isSurfaceWorld()) {
+//				return EntityPlayer.EnumStatus.NOT_POSSIBLE_HERE;
+//			}
+//
+//			if (!this.player.worldObj.isDaytime()) {
+//				return EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW;
+//			}
+//
+//			if (Math.abs(this.player.posX - x) > 3.0D
+//					|| Math.abs(this.player.posY - y) > 2.0D
+//					|| Math.abs(this.player.posZ - z) > 3.0D) {
+//				return EntityPlayer.EnumStatus.TOO_FAR_AWAY;
+//			}
+//
+//			double d0 = 8.0D;
+//			double d1 = 5.0D;
+//			List list = this.player.worldObj.getEntitiesWithinAABB(
+//					EntityMob.class, AxisAlignedBB.getBoundingBox(x - d0, y
+//							- d1, z - d0, x + d0, y + d1, z + d0));
+//
+//			if (!list.isEmpty()) {
+//				return EntityPlayer.EnumStatus.NOT_SAFE;
+//			}
+//		}
+//
+//		if (this.player.isRiding()) {
+//			this.player.mountEntity((Entity) null);
+//		}
+//
+//		Helper.Reflection.callMethod(Entity.class, this.player,
+//				Helper.Obfuscation.getPosNames("EntityPlayer/setSize"),
+//				new Class[] { float.class, float.class }, new Object[] { 0.2F,
+//						0.2F });
+//		// this.player.setSize(0.2F, 0.2F);
+//		this.player.yOffset = 0.2F;
+//
+//		if (this.player.worldObj.blockExists(x, y, z)) {
+//			int direction = ((BlockCoffin) player.worldObj.getBlock(x, y, z))
+//					.getDirection(player.worldObj, x, y, z);
+//			float f1 = 0.5F;
+//			float f = 0.5F;
+//
+//			switch (direction) {
+//			case 0:
+//				f = 0.9F;
+//				break;
+//			case 1:
+//				f1 = 0.1F;
+//				break;
+//			case 2:
+//				f = 0.1F;
+//				break;
+//			case 3:
+//				f1 = 0.9F;
+//			}
+//
+//			this.func_71013_b(direction);
+//			this.player.setPosition(x + f1, y + 0.9375F, z + f);
+//		} else {
+//			this.player.setPosition(x + 0.5F, y + 0.9375F, z + 0.5F);
+//		}
+//
+//		// Following method will replace: this.player.sleeping = true;
+//		Helper.Reflection.setPrivateField(EntityPlayer.class, this.player,
+//				true, Helper.Obfuscation.getPosNames("EntityPlayer/sleeping"));
+//		this.sleepingCoffin = true;
+//		Logger.i("VampirePlayer", "sleepingCoffin="+this.sleepingCoffin);
+//		// Following method will replace: this.player.sleepTimer = 0;
+//		// Helper.Reflection.setPrivateField(EntityPlayer.class, this.player, 0,
+//		// Helper.Obfuscation.getPosNames("EntityPlayer/sleepTimer"));
+//
+//		this.player.playerLocation = new ChunkCoordinates(x, y, z);
+//		this.player.motionX = this.player.motionZ = this.player.motionY = 0.0D;
+//
+//		if (!this.player.worldObj.isRemote) {
+//			this.player.worldObj.updateAllPlayersSleepingFlag();
+//		}
+//
+//		return EntityPlayer.EnumStatus.OK;
+//	}
 
 	/**
 	 * Suck blood from an EntityLiving. Only sucks blood if health is low enough

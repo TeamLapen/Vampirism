@@ -27,7 +27,7 @@ public class ModItems {
 		GameRegistry.registerItem(humanHeart, ItemHumanHeart.name);
 		GameRegistry.registerItem(pureBlood,ItemPureBlood.name);
 		GameRegistry.registerItem(sunscreen, ItemSunscreen.name);
-		GameRegistry.registerItem(coffin, ItemCoffin.name);
+		//GameRegistry.registerItem(coffin, ItemCoffin.name);
 		GameRegistry.registerItem(nightClock, ItemNightClock.name);
 	}
 	
@@ -46,6 +46,6 @@ public class ModItems {
 	public static ItemHumanHeart humanHeart=new ItemHumanHeart();
 	public static ItemPureBlood pureBlood=new ItemPureBlood();
 	public static ItemSunscreen sunscreen=new ItemSunscreen();
-	public static ItemCoffin coffin = new ItemCoffin();
+	//public static ItemCoffin coffin = new ItemCoffin();
 	public static ItemNightClock nightClock = new ItemNightClock();
 }
