@@ -1,4 +1,4 @@
-#!/bin/bash
+﻿#!/bin/bash
 #Arguments: 1:Githubowner 2:Github repository name. Same as in url
 #Environment variable token:Github api token, pass:add password
 echo ""

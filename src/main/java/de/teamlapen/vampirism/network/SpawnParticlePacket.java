@@ -7,15 +7,13 @@ import java.util.Random;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.Vec3;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 public class SpawnParticlePacket implements IMessage {
@@ -26,7 +24,7 @@ public class SpawnParticlePacket implements IMessage {
 		public IMessage onMessage(SpawnParticlePacket message, MessageContext ctx) {
 
 			if (message.type.equals("blood_eat")) {
-				spawnEatParticle(Minecraft.getMinecraft().thePlayer);
+				spawnEatParticle(VampirismMod.proxy.getSPPlayer());
 				Minecraft.getMinecraft().thePlayer.playSound(REFERENCE.MODID+":player.bite", 1.0F, 1.0F);
 				return null;
 			}

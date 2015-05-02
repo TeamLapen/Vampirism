@@ -17,8 +17,6 @@ import net.minecraft.world.WorldServer;
 public class ServerProxy extends CommonProxy {
 
 	private boolean allPlayersSleepingInCoffin;
-	private List playerEntities;
-	private WorldServer server = MinecraftServer.getServer().worldServerForDimension(0);
 
 	@Override
 	public void registerKeyBindings() {
@@ -55,10 +53,10 @@ public class ServerProxy extends CommonProxy {
 	}
 
 	public void updateAllPlayersSleepingFlagCoffin() {
-		this.playerEntities = server.playerEntities;
+		List playerEntities =  MinecraftServer.getServer().worldServerForDimension(0).playerEntities;
 		
-		this.allPlayersSleepingInCoffin = !this.playerEntities.isEmpty();
-		Iterator iterator = this.playerEntities.iterator();
+		this.allPlayersSleepingInCoffin = !playerEntities.isEmpty();
+		Iterator iterator = playerEntities.iterator();
 
 		while (iterator.hasNext()) {
 			EntityPlayer entityplayer = (EntityPlayer) iterator.next();
