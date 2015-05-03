@@ -36,10 +36,4 @@ public class BlockBloodAltar4Tip extends BasicBlockContainer {
 		return new TileEntityBloodAltar4Tip();
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister iconRegister) {
-		this.blockIcon = iconRegister.registerIcon("bloodAltar4");
-	}
-
 }

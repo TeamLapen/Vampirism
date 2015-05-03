@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import scala.actors.threadpool.Arrays;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
@@ -46,6 +47,7 @@ public abstract class CommonProxy implements IProxy {
 		int entityId=0;
 		
 		BiomeGenBase[] allBiomes =BiomeGenBase.getBiomeGenArray();
+		allBiomes=allBiomes.clone();
 		allBiomes[9]=null;
 		allBiomes[8]=null;
 		BiomeGenBase[] biomes = Iterators.toArray(Iterators.filter(Iterators.forArray(allBiomes), Predicates.notNull()),

@@ -98,10 +98,4 @@ public class BlockBloodAltar4 extends BasicBlockContainer {
 		return false;
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister iconRegister) {
-		this.blockIcon = iconRegister.registerIcon("bloodAltar4");
-	}
-
 }
