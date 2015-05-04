@@ -47,8 +47,9 @@ else
 
 	#Create release
 	fversion=$(printenv MODVERSION)
+	branch=$(printenv DRONE_BRANCH)
 	echo "Creating release for v"$fversion
-	API_JSON=$(printf '{"tag_name": "v%s","target_commitish": "%s","name": "v%s","body": "Release of version %s","draft": false,"prerelease": false}' $fversion $(printenv DRONE_BRANCH) $fversion $fversion)
+	API_JSON=$(printf '{"tag_name": "v%s","target_commitish": "%s","name": "v%s","body": "Release of version %s","draft": false,"prerelease": false}' $fversion $branch $fversion $fversion)
 	token=$(printenv TOKEN)
 	curl --data "$API_JSON" https://api.github.com/repos/${1}/${2}/releases?access_token=${token}
 fi
