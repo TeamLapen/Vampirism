@@ -78,7 +78,7 @@ public class BlockCoffin extends BasicBlockContainer {
 			return true;
 		} else {
 			// Gets the coordinates of the primary block
-			if ((world.getBlockMetadata(x, y, z) & 4) == 0) {
+			if ((world.getBlockMetadata(x, y, z) & -8) == 0) {
 				TileEntityCoffin te = (TileEntityCoffin) world.getTileEntity(x,
 						y, z);
 				x = te.otherX;
@@ -88,7 +88,7 @@ public class BlockCoffin extends BasicBlockContainer {
 
 			if (world.provider.canRespawnHere()
 					&& world.getBiomeGenForCoords(x, z) != BiomeGenBase.hell) {
-				if((world.getBlockMetadata(x, y, z) & 8) != 0) {
+				if((world.getBlockMetadata(x, y, z) & 4) != 0) {
 					player.addChatComponentMessage(new ChatComponentTranslation(
 							"tile.bed.occupied", new Object[0]));
 					return true;
@@ -99,7 +99,7 @@ public class BlockCoffin extends BasicBlockContainer {
 						.sleepInCoffinAt(x, y, z);
 
 				if (enumstatus == EntityPlayer.EnumStatus.OK) {
-					setCoffinOccupied(world, x, y, z, player, true);
+					setBedOccupied(world, x, y, z, player, true);
 					return true;
 				} else {
 					if (enumstatus == EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW) {
@@ -131,14 +131,14 @@ public class BlockCoffin extends BasicBlockContainer {
 		}
 	}
 
-	public void setCoffinOccupied(World world, int x, int y, int z, EntityPlayer player, boolean flag) {
-		int newMeta = world.getBlockMetadata(x, y, z);
-		if(flag)
-			newMeta = newMeta | 8;
-		else
-			newMeta = newMeta & 7;
-		world.setBlockMetadataWithNotify(x, y, z, newMeta, 3);
-	}
+//	public void setCoffinOccupied(World world, int x, int y, int z, EntityPlayer player, boolean flag) {
+//		int newMeta = world.getBlockMetadata(x, y, z);
+//		if(flag)
+//			newMeta |= 4;
+//		else
+//			newMeta &=-5;
+//		world.setBlockMetadataWithNotify(x, y, z, newMeta, 3);
+//	}
 
 	@Override
 	public void onBlockHarvested(World world, int par1, int par2, int par3,
@@ -148,8 +148,9 @@ public class BlockCoffin extends BasicBlockContainer {
 	
     public Item getItemDropped(int meta, Random rand, int par)
     {
-        return  (meta & 4) == 0 ? Item.getItemById(0) : ModItems.coffin;
+        return  (meta & -8) == 0 ? Item.getItemById(0) : ModItems.coffin;
     }
+    
     public int getDirection(World world, int x, int y, int z) {
     	return world.getBlockMetadata(x, y, z) & 3;
     }

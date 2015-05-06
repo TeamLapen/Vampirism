@@ -293,8 +293,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	private boolean vampireLord = false;
 
 	private boolean batTransformed = false;
-	
-	private int ticksInSun=0;
+
+	private int ticksInSun = 0;
 
 	private NBTTagCompound extraData;
 
@@ -638,25 +638,29 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		}
 		return false;
 	}
-	
-	private void handleSunDamage(){
+
+	private void handleSunDamage() {
 		ticksInSun++;
-		int type=Math.min(3, Math.round(getLevel()/2F-0.51F));
-		if(player.isPotionActive(ModPotion.sunscreen)&&type>0)
+		int type = Math.min(3, Math.round(getLevel() / 2F - 0.51F));
+		if (player.isPotionActive(ModPotion.sunscreen) && type > 0)
 			type--;
-		
-		if(type>0){
-			if(player.worldObj.getTotalWorldTime()%250==0||ticksInSun==1){
-				player.addPotionEffect(new PotionEffect(Potion.confusion.id,180));
+
+		if (type > 0) {
+			if (player.worldObj.getTotalWorldTime() % 250 == 0
+					|| ticksInSun == 1) {
+				player.addPotionEffect(new PotionEffect(Potion.confusion.id,
+						180));
 			}
-			if(type>1){
-				if(player.worldObj.getTotalWorldTime()%30==0){
-					player.addPotionEffect(new PotionEffect(ModPotion.weakness.id,30,1));
+			if (type > 1) {
+				if (player.worldObj.getTotalWorldTime() % 30 == 0) {
+					player.addPotionEffect(new PotionEffect(
+							ModPotion.weakness.id, 30, 1));
 				}
-				
-				if(type>2&&ticksInSun>100){
-					if(player.worldObj.getWorldTime()%40==0){
-						player.attackEntityFrom(VampirismMod.sunDamage, (float) BALANCE.VAMPIRE_PLAYER_SUN_DAMAGE);
+
+				if (type > 2 && ticksInSun > 100) {
+					if (player.worldObj.getWorldTime() % 40 == 0) {
+						player.attackEntityFrom(VampirismMod.sunDamage,
+								(float) BALANCE.VAMPIRE_PLAYER_SUN_DAMAGE);
 					}
 				}
 
@@ -684,11 +688,10 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		}
 		this.bloodStats.onUpdate();
 		if (!player.worldObj.isRemote) {
-			if(gettingSundamage()){
+			if (gettingSundamage()) {
 				handleSunDamage();
-			}
-			else{
-				if(ticksInSun>0){
+			} else {
+				if (ticksInSun > 0) {
 					ticksInSun--;
 				}
 
@@ -696,15 +699,12 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			if (player.isPotionActive(ModPotion.sanguinare.id)) {
 				player.removePotionEffect(ModPotion.sanguinare.id);
 			}
-				// if (!this.player.isInBed())
-				// {
-				// this.player.wakeUpPlayer(true, true, false);
-				// }
-				if (!this.player.worldObj.isDaytime()) {
-					sleepingCoffin = false;
-					//this.player.wakeUpPlayer(false, true, true);
-				}
+			if (sleepingCoffin && !this.player.worldObj.isDaytime()) {
+				Logger.i("VampirePlayer", "sleepingCoffin="+sleepingCoffin);
+				sleepingCoffin = false;
+				this.player.wakeUpPlayer(false, true, true);
 			}
+		}
 
 		/**
 		 * Loop through all skill timers and update them and their tick time
@@ -816,10 +816,11 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 * puts player to sleep on specified coffin if possible
 	 */
 	public EntityPlayer.EnumStatus sleepInCoffinAt(int x, int y, int z) {
-		Logger.i("VampirePlayer", String.format("sleepInCoffinAt called, x=%s, y=%s, z=%s", x, y, z));
-		PlayerSleepInBedEvent event = new PlayerSleepInBedEvent(this.player, x,
-				y, z);
-		MinecraftForge.EVENT_BUS.post(event);
+		Logger.i("VampirePlayer", String.format(
+				"sleepInCoffinAt called, x=%s, y=%s, z=%s", x, y, z));
+//		PlayerSleepInBedEvent event = new PlayerSleepInBedEvent(this.player, x,
+//				y, z);
+//		MinecraftForge.EVENT_BUS.post(event);
 		// if (event.result != null) {
 		// return event.result;
 		// }
@@ -895,7 +896,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		Helper.Reflection.setPrivateField(EntityPlayer.class, this.player,
 				true, Helper.Obfuscation.getPosNames("EntityPlayer/sleeping"));
 		this.sleepingCoffin = true;
-		Logger.i("VampirePlayer", "sleepingCoffin="+this.sleepingCoffin);
+		Logger.i("VampirePlayer", "sleepingCoffin=" + this.sleepingCoffin);
 		// Following method will replace: this.player.sleepTimer = 0;
 		// Helper.Reflection.setPrivateField(EntityPlayer.class, this.player, 0,
 		// Helper.Obfuscation.getPosNames("EntityPlayer/sleepTimer"));
@@ -1005,9 +1006,9 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	public int getTheEntityID() {
 		return player.getEntityId();
 	}
-	
+
 	public void copyFrom(EntityPlayer original) {
-		NBTTagCompound nbt=new NBTTagCompound();
+		NBTTagCompound nbt = new NBTTagCompound();
 		VampirePlayer.get(original).saveNBTData(nbt);
 		this.loadNBTData(nbt);
 	}
