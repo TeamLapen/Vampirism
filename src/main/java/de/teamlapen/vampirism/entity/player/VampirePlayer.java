@@ -209,12 +209,15 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 				bloodExhaustionLevel = nbt.getFloat("bloodExhaustionLevel");
 				bloodSaturationLevel = nbt.getFloat("bloodSaturationLevel");
 			}
+			if(nbt.hasKey("sleepingCoffin"))
+				sleepingCoffin = nbt.getBoolean("sleepingCoffin");
 		}
 
 		private void writeNBT(NBTTagCompound nbt) {
 			nbt.setInteger("bloodTimer", bloodTimer);
 			nbt.setFloat("bloodExhaustionLevel", bloodExhaustionLevel);
 			nbt.setFloat("bloodSaturationlevel", bloodSaturationLevel);
+			nbt.setBoolean("sleepingCoffin", sleepingCoffin);
 		}
 
 	}
@@ -702,6 +705,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			if (sleepingCoffin && !this.player.worldObj.isDaytime()) {
 				Logger.i("VampirePlayer", "sleepingCoffin="+sleepingCoffin);
 				sleepingCoffin = false;
+				this.sync(true);
 				this.player.wakeUpPlayer(false, true, true);
 			}
 		}
@@ -817,7 +821,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 */
 	public EntityPlayer.EnumStatus sleepInCoffinAt(int x, int y, int z) {
 		Logger.i("VampirePlayer", String.format(
-				"sleepInCoffinAt called, x=%s, y=%s, z=%s", x, y, z));
+				"sleepInCoffinAt called, x=%s, y=%s, z=%s, remote=%s", x, y, z, this.isRemote()));
 //		PlayerSleepInBedEvent event = new PlayerSleepInBedEvent(this.player, x,
 //				y, z);
 //		MinecraftForge.EVENT_BUS.post(event);
@@ -907,7 +911,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		if (!this.player.worldObj.isRemote) {
 			this.player.worldObj.updateAllPlayersSleepingFlag();
 		}
-
+		
+		VampirePlayer.get(player).sync(true);
 		return EntityPlayer.EnumStatus.OK;
 	}
 
@@ -991,6 +996,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		if (nbt.hasKey("lord")) {
 			this.vampireLord = nbt.getBoolean("lord");
 		}
+		if(nbt.hasKey("sleepingCoffin"))
+			this.sleepingCoffin = nbt.getBoolean("sleepingCoffin");
 
 	}
 
@@ -1000,6 +1007,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		tag.setIntArray("timers", skillTimer);
 		;
 		tag.setBoolean("lord", isVampireLord());
+		tag.setBoolean("sleepingCoffin", sleepingCoffin);
 	}
 
 	@Override

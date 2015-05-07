@@ -27,10 +27,10 @@ import net.minecraft.world.biome.BiomeGenBase;
  * @author Moritz
  *
  * Metadata: 	first two bits are the direction
- * 				third bit determines whether it is the primary block or not (true means it's secondary)
- * 					therefore if secondary: meta & 4 != 0
- * 				fourth bit determines whether it is occupied (true means it's occupied)
- * 					therefore if occupied: meta & 8 != 0
+ * 				third bit determines whether it is occupied or not (true means it's occupied)
+ * 					therefore if occupied: meta & 4 != 0
+ * 				fourth bit determines whether it is the primary block (true means it's primary)
+ * 					therefore if primary: meta & -8 != 0
  */
 public class BlockCoffin extends BasicBlockContainer {
 	private final String TAG = "BlockCoffin";

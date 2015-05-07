@@ -31,16 +31,17 @@ public class RendererCoffin extends TileEntitySpecialRenderer {
 	public void renderTileEntityAt(TileEntity te, double x, double y, double z,
 			float scale) {
 		if (te instanceof TileEntityCoffin)
-			if ((Minecraft.getMinecraft().theWorld.getBlockMetadata(te.xCoord, te.yCoord, te.zCoord) & 4) != 0) {
-//				Logger.i("RendererCoffin", String.format("Not rendering coffin at x=%d, y=%d, z=%d", te.xCoord, te.yCoord, te.zCoord));
+			if ((te.getWorldObj().getBlockMetadata(te.xCoord, te.yCoord, te.zCoord) & (-8)) == 0) {
+				// Logger.i("RendererCoffin",
+				// String.format("Not rendering coffin at x=%d, y=%d, z=%d",
+				// te.xCoord, te.yCoord, te.zCoord));
 				return;
 			}
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		bindTexture(texture);
 		GL11.glPushMatrix();
-		adjustRotatePivotViaMeta(te.getWorldObj(), te.xCoord, te.yCoord,
-				te.zCoord);
+		adjustRotatePivotViaMeta(te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 		model.render(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		GL11.glPopMatrix();
