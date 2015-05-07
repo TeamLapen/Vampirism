@@ -3,22 +3,16 @@ package de.teamlapen.vampirism.proxy;
 import java.util.Iterator;
 import java.util.List;
 
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.entity.player.skills.BatSkill;
-import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.Logger;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.WorldServer;
+import de.teamlapen.vampirism.entity.player.skills.BatSkill;
+import de.teamlapen.vampirism.util.Helper;
 
 public class ServerProxy extends CommonProxy {
 
 	private boolean allPlayersSleepingInCoffin;
-	private List playerEntities;
-	private WorldServer server = MinecraftServer.getServer().worldServerForDimension(0);
 
 	@Override
 	public void registerKeyBindings() {
@@ -55,10 +49,10 @@ public class ServerProxy extends CommonProxy {
 	}
 
 	public void updateAllPlayersSleepingFlagCoffin() {
-		this.playerEntities = server.playerEntities;
+		List playerEntities = MinecraftServer.getServer().worldServerForDimension(0).playerEntities;
 		
-		this.allPlayersSleepingInCoffin = !this.playerEntities.isEmpty();
-		Iterator iterator = this.playerEntities.iterator();
+		this.allPlayersSleepingInCoffin = !playerEntities.isEmpty();
+		Iterator iterator = playerEntities.iterator();
 
 		while (iterator.hasNext()) {
 			EntityPlayer entityplayer = (EntityPlayer) iterator.next();

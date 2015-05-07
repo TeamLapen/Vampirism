@@ -87,8 +87,8 @@ public class ConfigHandler {
 				Block replacement = Block.getBlockFromName(m.group(2));
 
 				String condition = m.group(3);
-				Logger.i("ConfigHandler", "Will replace " + b.getUnlocalizedName() + " with " + replacement.getUnlocalizedName() + " where "
-						+ condition);
+//				Logger.i("ConfigHandler", "Will replace " + b.getUnlocalizedName() + " with " + replacement.getUnlocalizedName() + " where "
+//						+ condition);
 				if (b.equals(replacement))
 					continue;
 

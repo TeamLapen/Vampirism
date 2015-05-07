@@ -33,10 +33,5 @@ public class BlockChurchAltar extends BasicBlockContainer {
 	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
 		return new TileEntityChurchAltar();
 	}
-	
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister iconRegister) {
-		this.blockIcon = iconRegister.registerIcon("churchAltar");
-	}
 
 }

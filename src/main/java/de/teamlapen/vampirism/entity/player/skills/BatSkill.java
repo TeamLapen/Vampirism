@@ -34,7 +34,7 @@ public class BatSkill extends DefaultSkill implements ILastingSkill {
 
 	@Override
 	public int getMinLevel() {
-		return 0;
+		return 4;
 	}
 
 	@Override
@@ -113,7 +113,9 @@ public class BatSkill extends DefaultSkill implements ILastingSkill {
 			IAttributeInstance health = player.getEntityAttribute(SharedMonsterAttributes.maxHealth);
 			PlayerModifiers.rmMod(health, healthModifierUUID);
 			
-			player.capabilities.allowFlying=false;
+			if(!player.capabilities.isCreativeMode){
+				player.capabilities.allowFlying=false;
+			}
 			player.capabilities.isFlying=false;
 			player.sendPlayerAbilities();
 		}

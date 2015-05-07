@@ -15,6 +15,7 @@ public abstract class BasicBlockContainer extends BlockContainer {
 		super(material);
 		setCreativeTab(VampirismMod.tabVampirism);
 		this.setBlockName(name);
+		this.setBlockTextureName("stone");
 	}
 
 	@Override
