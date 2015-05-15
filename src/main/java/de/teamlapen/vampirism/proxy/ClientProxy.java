@@ -228,4 +228,10 @@ public class ClientProxy extends CommonProxy {
 		player.eyeHeight = (bat ?BatSkill.BAT_EYE_HEIGHT - player.yOffset: player.getDefaultEyeHeight());//Different from Server side
 		//Logger.i("test4", BatSkill.BAT_EYE_HEIGHT+": p "+player.getDefaultEyeHeight()+ ": y "+player.yOffset+" :e2 "+player.eyeHeight);
 	}
+
+	@Override
+	public void enableMaxPotionDuration(PotionEffect p) {
+		p.setPotionDurationMax(true);
+		
+	}
 }

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.proxy;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 
 public interface IProxy {
@@ -60,4 +61,6 @@ public interface IProxy {
 	public ResourceLocation checkVampireTexture(Entity entity,ResourceLocation loc);
 	
 	public void setPlayerBat(EntityPlayer player,boolean bat);
+	
+	public void enableMaxPotionDuration(PotionEffect p);
 }

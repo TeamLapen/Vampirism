@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.WorldServer;
@@ -82,6 +83,12 @@ public class ServerProxy extends CommonProxy {
         //Logger.i("test", BatSkill.BAT_EYE_HEIGHT+": p "+player.getDefaultEyeHeight()+ ": y "+player.yOffset+" :e1 "+player.eyeHeight);
 		player.eyeHeight = (bat ?BatSkill.BAT_EYE_HEIGHT: player.getDefaultEyeHeight()) - player.yOffset;// Different from Client side
 		//Logger.i("test2", BatSkill.BAT_EYE_HEIGHT+": p "+player.getDefaultEyeHeight()+ ": y "+player.yOffset+" :e2 "+player.eyeHeight);
+	}
+
+	@Override
+	public void enableMaxPotionDuration(PotionEffect p) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
