@@ -2,8 +2,6 @@ package de.teamlapen.vampirism.coremod;
 
 import java.util.Iterator;
 
-import net.minecraft.launchwrapper.IClassTransformer;
-
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Opcodes;
@@ -17,32 +15,23 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
 import de.teamlapen.vampirism.util.Logger;
+import net.minecraft.launchwrapper.IClassTransformer;
 
-/**
- * EntityPlayer class transformer, which adds a few hooks
- * 
- * @author Maxanier
- *
- */
-public class PlayerClassTransformer implements IClassTransformer {
-
-	private final static String TAG = "PlayerTransformer";
-	private final static String CLASS_ENTITYPLAYER = "net.minecraft.entity.player.EntityPlayer";
+public class PlayerMPClassTransformer implements IClassTransformer{
+	
+	private final static String TAG = "PlayerMPTransformer";
+	private final static String CLASS_ENTITYPLAYERMP = "net.minecraft.entity.player.EntityPlayerMP";
+	public final static String CLASS_ENTITYPLAYERMP_SRG = "net/minecraft/entity/player/EntityPlayerMP";
 	public final static String CLASS_ENTITYPLAYER_SRG = "net/minecraft/entity/player/EntityPlayer";
-	private final static String CLASS_ENTITYPLAYER_NOTCH = "yz";
-	private final static String METHOD_EXHAUSTION = "addExhaustion";
-	private final static String METHOD_EXHAUSTION_SRG = "func_71020_j";
+	private final static String CLASS_ENTITYPLAYERMP_NOTCH = "mw";
 	private static final String METHOD_WAKE_SRG = "func_70999_a";
 	private static final String METHOD_WAKE = "wakeUpPlayer";
 
 	public byte[] applyPatch(String name, byte[] basicClass, boolean obfuscated) {
-		String exhaustionMethodName = "";
 		String wakeMethodName="";
 		if (obfuscated) {
-			exhaustionMethodName = METHOD_EXHAUSTION_SRG;
 			wakeMethodName=METHOD_WAKE_SRG;
 		} else {
-			exhaustionMethodName = METHOD_EXHAUSTION;
 			wakeMethodName=METHOD_WAKE;
 		}
 
@@ -54,20 +43,6 @@ public class PlayerClassTransformer implements IClassTransformer {
 		while (methods.hasNext()) {
 			MethodNode m = methods.next();
 
-			if (m.name.equals(exhaustionMethodName)) {
-				Logger.i(TAG, "INSIDE EXHAUSTION METHOD");
-
-				// Inject Method call
-				InsnList toInject = new InsnList();
-				toInject.add(new VarInsnNode(Opcodes.FLOAD, 1));
-				toInject.add(new VarInsnNode(Opcodes.ALOAD, 0));
-
-				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "de/teamlapen/vampirism/coremod/CoreHandler", "addExhaustion", "(FL"
-						+ CLASS_ENTITYPLAYER_SRG + ";)V", false));
-
-				m.instructions.insert(toInject);
-				Logger.i(TAG, "PATCH COMPLETE");
-			}
 			if(m.name.equals(wakeMethodName)){
 				Logger.i(TAG, "INSIDE WAKE METHOD");
 				
@@ -101,9 +76,9 @@ public class PlayerClassTransformer implements IClassTransformer {
 //				if(!CoreHandler.shouldWakePlayer(this)){
 //					return;
 //				}
-				
 				m.instructions.insert(toInject);
 				Logger.i(TAG, "PATCH COMPLETE");
+				break;
 			}
 
 		}
@@ -117,16 +92,15 @@ public class PlayerClassTransformer implements IClassTransformer {
 
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass) {
-		if (name.equals(CLASS_ENTITYPLAYER_NOTCH)) {
+		if (name.equals(CLASS_ENTITYPLAYERMP_NOTCH)) {
 			Logger.i(TAG, "INSIDE OBFUSCATED PLAYER CLASS - ABOUT TO PATCH: " + name + " transforned: " + transformedName);
 			return applyPatch(name, basicClass, true);
-		} else if (name.equals(CLASS_ENTITYPLAYER)) {
+		} else if (name.equals(CLASS_ENTITYPLAYERMP)) {
 			Logger.i(TAG, "INSIDE PLAYER CLASS - ABOUT TO PATCH: " + name);
 			return applyPatch(name, basicClass, false);
 		}
-		if (name.equals(CLASS_ENTITYPLAYER_SRG))
+		if (name.equals(CLASS_ENTITYPLAYERMP_SRG))
 			Logger.e(TAG, "SRG CLASS NAME");
 		return basicClass;
 	}
-
 }
