@@ -85,7 +85,6 @@ public class RenderScreenRedPacket implements IMessage {
 			on=durationOn;
 			off=durationOff;
 			tick=on;
-			Logger.i("teset", "created :"+on+":"+off);
 		}
 		
 		@SubscribeEvent

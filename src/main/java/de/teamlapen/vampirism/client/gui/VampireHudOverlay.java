@@ -81,10 +81,12 @@ public class VampireHudOverlay extends Gui {
 	@SubscribeEvent
 	public void onRenderWorldLast(RenderWorldLastEvent event){
 		boolean lord=VampirePlayer.get(this.mc.thePlayer).isSkillActive(Skills.vampireRage);
-		if(renderRed>0||lord){
+		int sunTicks=VampirePlayer.get(this.mc.thePlayer).getTicksInSun();
+		Logger.i("test", "a"+sunTicks);
+		if(renderRed>0||lord||sunTicks>0){
 			//Set the working matrix/layer to a layer directly on the screen/in front of the player
 			ScaledResolution scaledresolution = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);
-		    int factor=scaledresolution.getScaleFactor();
+//		    int factor=scaledresolution.getScaleFactor();
 			GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
 		    GL11.glMatrixMode(GL11.GL_PROJECTION);
 		    GL11.glLoadIdentity();
@@ -119,10 +121,25 @@ public class VampireHudOverlay extends Gui {
 				*/
 		    }
 		    else{
-				this.drawGradientRect(0, 0, w, h/4, 0xfff00000, 0x000000);
-				this.drawGradientRect(0, h-h/4, w, h, 0x00000000, 0xfff00000);
-				this.drawGradientRect2(0, 0, w/8, h, 0x000000, 0xfff00000);
-				this.drawGradientRect2(w-w/8, 0, w, h, 0xfff00000, 0x000000);
+		    	int color;
+		    	
+		    	int bw=0;
+		    	int bh=0;
+		    	
+		    	if(lord){
+		    		color=0xfff00000;
+		    		bh=h/4;
+		    		bw=w/8;
+		    	}
+		    	else{
+		    		color=0xffffe700;
+		    		bh=Math.round(h/(float)4*sunTicks/(float)100);
+		    		bw=Math.round(w/(float)8*sunTicks/(float)100);
+		    	}
+				this.drawGradientRect(0, 0, w, bh, color, 0x000000);
+				this.drawGradientRect(0, h-bh, w, h, 0x00000000, color);
+				this.drawGradientRect2(0, 0, bw, h, 0x000000, color);
+				this.drawGradientRect2(w-bw, 0, w, h, color, 0x000000);
 		    }
 		    GL11.glDisable(GL11.GL_BLEND);
 			GL11.glEnable(GL11.GL_DEPTH_TEST);

@@ -641,6 +641,14 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		}
 		return false;
 	}
+	
+	/**
+	 * The TicksInSun value is increased every tick in the sun and decreased every tick if not in sun. It always stays >=0
+	 * @return TicksInSun
+	 */
+	public int getTicksInSun(){
+		return this.ticksInSun;
+	}
 
 	private void handleSunDamage() {
 		ticksInSun++;
@@ -707,6 +715,15 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 				sleepingCoffin = false;
 				this.sync(true);
 				this.player.wakeUpPlayer(false, true, true);
+			}
+		}
+		else{
+			if (gettingSundamage()) {
+				ticksInSun++;
+			} else {
+				if (ticksInSun > 0) {
+					ticksInSun--;
+				}
 			}
 		}
 
