@@ -3,17 +3,22 @@ package de.teamlapen.vampirism.proxy;
 import java.util.Iterator;
 import java.util.List;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.WorldServer;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.skills.BatSkill;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.Logger;
 
 public class ServerProxy extends CommonProxy {
 
-	private boolean allPlayersSleepingInCoffin;
+	private boolean allPlayersSleepingCoffin;
 
 	@Override
 	public void registerKeyBindings() {
@@ -49,21 +54,49 @@ public class ServerProxy extends CommonProxy {
 		return s;
 	}
 
-	public void updateAllPlayersSleepingFlagCoffin() {
+	public boolean updateAllPlayersSleepingFlagCoffin() {
 		List playerEntities = MinecraftServer.getServer().worldServerForDimension(0).playerEntities;
 		
-		this.allPlayersSleepingInCoffin = !playerEntities.isEmpty();
+		this.allPlayersSleepingCoffin = !playerEntities.isEmpty();
 		Iterator iterator = playerEntities.iterator();
 
 		while (iterator.hasNext()) {
-			EntityPlayer entityplayer = (EntityPlayer) iterator.next();
+			VampirePlayer player = VampirePlayer.get((EntityPlayer) iterator.next());
 
-			if (!entityplayer.isPlayerSleeping()) {
-				this.allPlayersSleepingInCoffin = false;
+			if (!player.sleepingCoffin) {
+				this.allPlayersSleepingCoffin = false;
 				break;
 			}
 		}
+		return this.allPlayersSleepingCoffin;
 	}
+	
+	private void wakeAllPlayers(WorldServer server)  {
+		this.allPlayersSleepingCoffin = false;
+		Iterator iterator = server.playerEntities.iterator();
+		
+		while(iterator.hasNext()) {
+			EntityPlayer p = (EntityPlayer) iterator.next();
+			VampirePlayer.get(p).sleepingCoffin = false;
+			p.wakeUpPlayer(false, false, true);
+		}
+	}
+	
+	@SubscribeEvent
+	public void onServerTick(ServerTickEvent event) {
+		Logger.i("ServerProxy", "onServerTick called");
+		WorldServer server = MinecraftServer.getServer().worldServerForDimension(0);
+		
+		if(server.areAllPlayersAsleep()) {
+			Logger.i("ServerProxy", "All players are asleep, waking them up...");
+			//Set time to next night
+			long i = server.getWorldTime() + 24000L;
+			server.setWorldTime(i - i % 24000L + 12000L);
+			
+			wakeAllPlayers(server);
+		}
+	}
+	
     
 	@Override
 	public ResourceLocation checkVampireTexture(Entity entity, ResourceLocation loc) {
