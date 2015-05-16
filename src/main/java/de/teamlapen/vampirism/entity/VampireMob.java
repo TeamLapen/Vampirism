@@ -113,6 +113,8 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 			if (entity instanceof EntityVampireHunter) {
 				entity.attackEntityFrom(DamageSource.magic, 1);
 			} else {
+				//Type should be only changed by the dedicated methods, but since the mob will die instantly it should not cause any problems
+				type = (byte) (type | 1);
 				entity.attackEntityFrom(DamageSource.magic, 100);
 			}
 

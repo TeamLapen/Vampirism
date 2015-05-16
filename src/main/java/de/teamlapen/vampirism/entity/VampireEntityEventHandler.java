@@ -7,9 +7,12 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAITasks;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.IMob;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
@@ -17,6 +20,7 @@ import net.minecraft.village.Village;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import de.teamlapen.vampirism.VampirismMod;
@@ -130,6 +134,20 @@ public class VampireEntityEventHandler {
 	public void onLivingUpdate(LivingUpdateEvent event) {
 		if (event.entity instanceof EntityCreature) {
 			VampireMob.get((EntityCreature) event.entity).onUpdate();
+		}
+	}
+	
+	@SubscribeEvent
+	public void onLivingDrops(LivingDropsEvent e){
+		if(e.entityLiving instanceof EntityCreature){
+			if(VampireMob.get((EntityCreature) e.entityLiving).isVampire()){
+				for(EntityItem i:e.drops){
+					ItemStack s=i.getEntityItem();
+					if(s.getItem().equals(Items.porkchop)||s.getItem().equals(Items.beef)){
+						i.setEntityItemStack(new ItemStack(Items.rotten_flesh,s.stackSize));
+					}
+				}
+			}
 		}
 	}
 
