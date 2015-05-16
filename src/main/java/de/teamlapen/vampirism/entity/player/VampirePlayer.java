@@ -14,6 +14,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.play.server.S0APacketUseBed;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
@@ -683,6 +684,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 * Called every LivingEntityUpdate, returns immediately if level =0;
 	 */
 	public void onUpdate() {
+		Logger.i("VampirePlayer", String.format("Remote=%s, sleeping=%s, fullyAsleep=%s", player.worldObj.isRemote, player.isPlayerSleeping(), player.isPlayerFullyAsleep()));
 		if (getLevel() <= 0) {
 			PotionEffect sang = player
 					.getActivePotionEffect(ModPotion.sanguinare);
@@ -886,6 +888,12 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 						0.2F });
 		// this.player.setSize(0.2F, 0.2F);
 		this.player.yOffset = 0.2F;
+		
+		
+		 S0APacketUseBed s0apacketusebed = new S0APacketUseBed(((EntityPlayerMP) this.player), x, y, z);
+		 ((EntityPlayerMP) this.player).getServerForPlayer().getEntityTracker().func_151247_a(((EntityPlayerMP) this.player), s0apacketusebed);
+		 ((EntityPlayerMP) this.player).playerNetServerHandler.setPlayerLocation(((EntityPlayerMP) this.player).posX, ((EntityPlayerMP) this.player).posY, ((EntityPlayerMP) this.player).posZ, ((EntityPlayerMP) this.player).rotationYaw, ((EntityPlayerMP) this.player).rotationPitch);
+		 ((EntityPlayerMP) this.player).playerNetServerHandler.sendPacket(s0apacketusebed);
 
 		if (this.player.worldObj.blockExists(x, y, z)) {
 			int direction = ((BlockCoffin) player.worldObj.getBlock(x, y, z))
@@ -919,8 +927,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		this.sleepingCoffin = true;
 		Logger.i("VampirePlayer", "sleepingCoffin=" + this.sleepingCoffin);
 		// Following method will replace: this.player.sleepTimer = 0;
-		// Helper.Reflection.setPrivateField(EntityPlayer.class, this.player, 0,
-		// Helper.Obfuscation.getPosNames("EntityPlayer/sleepTimer"));
+		Helper.Reflection.setPrivateField(EntityPlayer.class, this.player, 0,
+				Helper.Obfuscation.getPosNames("EntityPlayer/sleepTimer"));
 
 		this.player.playerLocation = new ChunkCoordinates(x, y, z);
 		this.player.motionX = this.player.motionZ = this.player.motionY = 0.0D;
