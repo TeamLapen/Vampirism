@@ -684,7 +684,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 * Called every LivingEntityUpdate, returns immediately if level =0;
 	 */
 	public void onUpdate() {
-		Logger.i("VampirePlayer", String.format("Remote=%s, sleeping=%s, fullyAsleep=%s", player.worldObj.isRemote, player.isPlayerSleeping(), player.isPlayerFullyAsleep()));
+		//Logger.i("VampirePlayer", String.format("Remote=%s, sleeping=%s, fullyAsleep=%s", player.worldObj.isRemote, player.isPlayerSleeping(), player.isPlayerFullyAsleep()));
 		if (getLevel() <= 0) {
 			PotionEffect sang = player
 					.getActivePotionEffect(ModPotion.sanguinare);

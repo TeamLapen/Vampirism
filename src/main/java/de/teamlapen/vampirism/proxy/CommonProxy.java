@@ -12,6 +12,7 @@ import com.google.common.collect.Iterators;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import de.teamlapen.vampirism.ModBiomes;
 import de.teamlapen.vampirism.VampirismMod;
@@ -105,7 +106,5 @@ public abstract class CommonProxy implements IProxy {
 		//Loading VillageVampireData
 		FMLCommonHandler.instance().bus().register(VillageVampireData.get(event.world));//Not sure if this is the right position or if it could lead to a memory leak
 	}
-	
-	
 
 }
