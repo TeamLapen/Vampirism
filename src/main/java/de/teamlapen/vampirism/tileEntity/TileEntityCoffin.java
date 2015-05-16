@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.tileEntity;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 
 public class TileEntityCoffin extends TileEntity {
 	public int otherX;
@@ -20,5 +21,10 @@ public class TileEntityCoffin extends TileEntity {
 		this.otherX = par1NBTTagCompound.getInteger("px");
 		this.otherY = par1NBTTagCompound.getInteger("py");
 		this.otherZ = par1NBTTagCompound.getInteger("pz");
+	}
+	
+	@Override
+	public AxisAlignedBB getRenderBoundingBox() {
+		return AxisAlignedBB.getBoundingBox(this.xCoord-4, this.yCoord, this.zCoord-4, this.xCoord + 4, this.yCoord + 2, this.zCoord + 4);
 	}
 }

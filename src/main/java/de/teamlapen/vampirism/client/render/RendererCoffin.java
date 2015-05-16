@@ -18,6 +18,7 @@ public class RendererCoffin extends TileEntitySpecialRenderer {
 
 	public RendererCoffin() {
 		model = new ModelCoffin();
+		model.setLid(true);
 		texture = new ResourceLocation(REFERENCE.MODID
 				+ ":textures/blocks/coffin.png");
 	}
