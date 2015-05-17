@@ -5,6 +5,7 @@ import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
 
 public class ModelCoffin extends ModelBase {
+	
 	// fields
 	ModelRenderer leftPlate;
 	ModelRenderer rightPlate;
@@ -97,19 +98,15 @@ public class ModelCoffin extends ModelBase {
 		model.rotateAngleZ = z;
 	}
 	
-	public void setLid(boolean open) {
-		if(open) {
-			leftLid.rotateAngleZ = leftHandle.rotateAngleZ = (float) (-Math.PI*0.75F);
-			rightLid.rotateAngleZ = rightHandle.rotateAngleZ = (float) (Math.PI*0.75F);
-		} else {
-			leftLid.rotateAngleZ = leftHandle.rotateAngleZ = 0.0F;
-			rightLid.rotateAngleZ = rightHandle.rotateAngleZ = 0.0F;
-		}
+	public void rotateLid(float angle) {
+		leftLid.rotateAngleZ = leftHandle.rotateAngleZ = angle;
+		rightLid.rotateAngleZ = rightHandle.rotateAngleZ = -angle;
 	}
 
 	public void setRotationAngles(float f, float f1, float f2, float f3,
 			float f4, float f5, Entity e) {
 		super.setRotationAngles(f, f1, f2, f3, f4, f5, e);
 	}
+
 
 }

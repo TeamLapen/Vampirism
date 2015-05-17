@@ -15,10 +15,12 @@ import net.minecraft.world.World;
 public class RendererCoffin extends TileEntitySpecialRenderer {
 	private ModelCoffin model;
 	private ResourceLocation texture;
+	
+	private int lidPosition = 0;
+	boolean occupied = false;
 
 	public RendererCoffin() {
 		model = new ModelCoffin();
-		model.setLid(true);
 		texture = new ResourceLocation(REFERENCE.MODID
 				+ ":textures/blocks/coffin.png");
 	}
@@ -38,14 +40,31 @@ public class RendererCoffin extends TileEntitySpecialRenderer {
 				// te.xCoord, te.yCoord, te.zCoord));
 				return;
 			}
+		//Calculate lid position
+		occupied = (te.getWorldObj().getBlockMetadata(te.xCoord, te.yCoord, te.zCoord) & 4) != 0;
+		if(occupied && lidPosition < 25)
+			lidPosition++;
+		else if(!occupied && lidPosition > 0)
+			lidPosition--;
+		Logger.i("RendererCoffin", "Lid position=" + lidPosition + " occupied=" + occupied);
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		bindTexture(texture);
 		GL11.glPushMatrix();
 		adjustRotatePivotViaMeta(te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
+		model.rotateLid(calcLidAngle(lidPosition));
 		model.render(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		GL11.glPopMatrix();
 		GL11.glPopMatrix();
+	}
+	
+	private float calcLidAngle(int pos) {
+		//1.16^(x/3) + 1 + 0.75*pi
+		if(pos==25)
+			return 0.0F;
+		else if(pos==0)
+			return (float) (1.4F * Math.PI);
+		return (float) (Math.pow(1.16, pos/3) + 3.36);
 	}
 }
