@@ -99,8 +99,8 @@ public class ModelCoffin extends ModelBase {
 	}
 	
 	public void rotateLid(float angle) {
-		leftLid.rotateAngleZ = leftHandle.rotateAngleZ = angle;
-		rightLid.rotateAngleZ = rightHandle.rotateAngleZ = -angle;
+		leftLid.rotateAngleZ = leftHandle.rotateAngleZ = -angle;
+		rightLid.rotateAngleZ = rightHandle.rotateAngleZ = angle;
 	}
 
 	public void setRotationAngles(float f, float f1, float f2, float f3,

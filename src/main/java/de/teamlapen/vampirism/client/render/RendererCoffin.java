@@ -17,6 +17,7 @@ public class RendererCoffin extends TileEntitySpecialRenderer {
 	private ResourceLocation texture;
 	
 	private int lidPosition = 0;
+	private final int maxLidPos = 61;
 	boolean occupied = false;
 
 	public RendererCoffin() {
@@ -42,11 +43,11 @@ public class RendererCoffin extends TileEntitySpecialRenderer {
 			}
 		//Calculate lid position
 		occupied = (te.getWorldObj().getBlockMetadata(te.xCoord, te.yCoord, te.zCoord) & 4) != 0;
-		if(occupied && lidPosition < 25)
-			lidPosition++;
-		else if(!occupied && lidPosition > 0)
+		if(!occupied && lidPosition > 0)
 			lidPosition--;
-		Logger.i("RendererCoffin", "Lid position=" + lidPosition + " occupied=" + occupied);
+		else if(occupied && lidPosition < maxLidPos)
+			lidPosition++;
+		//Logger.i("RendererCoffin", "Lid position=" + lidPosition + " occupied=" + occupied);
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		bindTexture(texture);
@@ -60,11 +61,10 @@ public class RendererCoffin extends TileEntitySpecialRenderer {
 	}
 	
 	private float calcLidAngle(int pos) {
-		//1.16^(x/3) + 1 + 0.75*pi
-		if(pos==25)
+		if(pos==maxLidPos)
 			return 0.0F;
 		else if(pos==0)
-			return (float) (1.4F * Math.PI);
-		return (float) (Math.pow(1.16, pos/3) + 3.36);
+			return (float) (0.75F * Math.PI);
+		return (float) (-Math.pow(1.02, pos) + 1 + 0.75*Math.PI);
 	}
 }
