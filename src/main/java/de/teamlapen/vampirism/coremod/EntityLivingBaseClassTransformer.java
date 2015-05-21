@@ -17,8 +17,6 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 
-import com.sun.xml.internal.ws.org.objectweb.asm.Label;
-
 import de.teamlapen.vampirism.util.Logger;
 
 /**
