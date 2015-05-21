@@ -20,11 +20,16 @@ import de.teamlapen.vampirism.util.REFERENCE;
 
 public class Configs {
 
-	public static void init(File configFile) {
+	public static void init(File configFile, boolean inDev) {
 		config = new Configuration(configFile);
 		loadConfiguration();
+		if(inDev&&shouldResetInDev()){
+			reset();
+			setResetInDev(true);
+		}
 		Logger.i("Config", "Loaded configuration");
 	}
+	
 	/**
 	 * Loads/refreshes the configuration and adds comments if there aren't any
 	 * {@link #init(File) init} has to be called once before using this
@@ -45,11 +50,15 @@ public class Configs {
 		cat_balance_mobprop.setComment("You can adjust the properties of the added mobs");
 		ConfigCategory cat_balance_vvprop = config.getCategory(CATEGORY_BALANCE_VVPROP);
 		cat_balance_vvprop.setComment("You can adjust the configuration of village managment (Agressive hunters, etc.)");
+		ConfigCategory cat_general=config.getCategory(CATEGORY_GENERAL);
+		cat_general.setComment("General settings");
+		ConfigCategory cat_disabled=config.getCategory(CATEGORY_DISABLE);
+		cat_disabled.setComment("You can disable some features here, but it is not recommend and might cause problems (e.g. you can't get certain items");
 
 		//General
 		String conf_version=config.get(CATEGORY_GENERAL, "config_mod_version", REFERENCE.VERSION).getString();
 		player_blood_watcher = config.get(CATEGORY_GENERAL, "player_data_watcher_id", 21,"ID for datawatcher. HAS TO BE THE SAME ON CLIENT AND SERVER").getInt();
-		vampire_biome_id = config.getInt("vampirism_biome_id", CATEGORY_GENERAL, -1,-1, 1000, "If you set this to -1 the mod will try to find a free biome id");
+		getVampireBiomeId();
 		
 		// Village
 		village_gen_enabled = config.get(cat_village.getQualifiedName(), "enabled", true,
@@ -74,6 +83,10 @@ public class Configs {
 			Logger.e("VillageDensity", "Invalid config: Size must be non-negative.");
 		}
 
+		// Disable
+		
+		disable_vampire_biome = config.getBoolean("disable_vampire_biome", cat_disabled.getQualifiedName(), false, "Disable the generation of the vampire biome");
+		
 		// Balance
 		loadFields(cat_balance, BALANCE.class);
 		loadFields(cat_balance_player_mod, BALANCE.VP_MODIFIERS.class);
@@ -82,15 +95,15 @@ public class Configs {
 		loadFields(cat_balance_mobprop, BALANCE.MOBPROP.class);
 		loadFields(cat_balance_vvprop,BALANCE.VV_PROP.class);
 		
-
+		//Create option if not existent
+		shouldResetInDev();
+		
 		if (config.hasChanged()) {
 			config.save();
 		}
 		if(!conf_version.equals(REFERENCE.VERSION)){
 			Logger.i("Config", "Detected Modupdate");
-			handleModUpdated(conf_version);
-			
-				
+			handleModUpdated(conf_version);	
 		}
 		
 		
@@ -147,6 +160,7 @@ public class Configs {
 	public static final String CATEGORY_GENERAL = Configuration.CATEGORY_GENERAL;
 	public static final String CATEGORY_VILLAGE = "village_settings";
 	public static final String CATEGORY_BALANCE = "balance";
+	public static final String CATEGORY_DISABLE = "disabled";
 
 	public static final String CATEGORY_BALANCE_PLAYER_MOD = "balance_player_mod";
 	public static final String CATEGORY_BALANCE_PLAYER_SKILLS="balance_player_skills";
@@ -161,9 +175,9 @@ public class Configs {
 
 	public static int village_size;
 	
-	public static int vampire_biome_id;
-	
 	public static int player_blood_watcher;
+	
+	public static boolean disable_vampire_biome;
 
 	public static Configuration config;
 
@@ -182,12 +196,30 @@ public class Configs {
 			PrintWriter writer = new PrintWriter(config.getConfigFile());
 			writer.print("");
 			writer.close();
-			init(config.getConfigFile());
+			init(config.getConfigFile(),false);
 		} catch (Exception e) {
 			Logger.e("Configs", "Failed to reset config file");
 		}
 
 
+	}
+	
+	private static boolean shouldResetInDev(){
+		return config.get(CATEGORY_GENERAL, "reset_config_in_dev_env", true).getBoolean();
+	}
+	
+	private static void setResetInDev(boolean v){
+		config.get(CATEGORY_GENERAL, "reset_config_in_dev_env", v).set(v);
+		config.save();
+	}
+	
+	public static int getVampireBiomeId(){
+		return config.getInt("vampirism_biome_id", CATEGORY_GENERAL, -1,-1, 1000, "If you set this to -1 the mod will try to find a free biome id");
+	}
+	
+	public static void setVampireBiomeId(int i){
+		config.get(CATEGORY_GENERAL, "vampirism_biome_id", -1).set(i);
+		config.save();
 	}
 
 }

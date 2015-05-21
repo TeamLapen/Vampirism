@@ -28,8 +28,6 @@ public class REFERENCE {
 	public static final String NAME = "Vampirism";
 	public static final String VERSION = "@VERSION@";
 	public static final String MINECRAFT_VERSION = "@MVERSION@";
-	public static final boolean RESET_CONFIG_IN_DEV=true;
-
 	public static final String VAMPIRE_LEVEL_NBT_KEY = "vampirelevel";
 	
 	public static final int HIGHEST_REACHABLE_LEVEL=13;

@@ -15,6 +15,7 @@ import net.minecraft.world.biome.BiomeGenBase;
  * 
  * @author WILLIAM
  *
+ * For vampirism versions around 0.5 you can find the biome at -1050,88,677 at seed -8086880447615324958
  */
 public class BiomeVampireForest extends BiomeGenBase {
 	public final static String name = "vampireForest";

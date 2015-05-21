@@ -91,11 +91,11 @@ public class VampirismMod {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		Configs.init(event.getSuggestedConfigurationFile());// Keep first
-		if(REFERENCE.RESET_CONFIG_IN_DEV&&(Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment")){
-			Configs.reset();
+		//Make sure the Config initialisation is the first mod relating call
+		if((Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment")){
 			inDev=true;
 		}
+		Configs.init(event.getSuggestedConfigurationFile(),inDev);
 		Helper.Obfuscation.fillMap();
 		
 		ModPotion.init();
