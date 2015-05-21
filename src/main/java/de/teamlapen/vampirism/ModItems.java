@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.item.ItemPitchfork;
 import de.teamlapen.vampirism.item.ItemPureBlood;
 import de.teamlapen.vampirism.item.ItemSunscreen;
 import de.teamlapen.vampirism.item.ItemTorch;
+import de.teamlapen.vampirism.item.ItemVampireArmor;
 import de.teamlapen.vampirism.item.ItemVampireFang;
 import de.teamlapen.vampirism.item.ItemLeechSword;
 
@@ -29,6 +30,10 @@ public class ModItems {
 		GameRegistry.registerItem(sunscreen, ItemSunscreen.name);
 		GameRegistry.registerItem(coffin, ItemCoffin.name);
 		GameRegistry.registerItem(nightClock, ItemNightClock.name);
+		GameRegistry.registerItem(vampireHelmet, vampireHelmet.getRegisterItemName());
+		GameRegistry.registerItem(vampireChestplate, vampireChestplate.getRegisterItemName());
+		GameRegistry.registerItem(vampireLeggings, vampireLeggings.getRegisterItemName());
+		GameRegistry.registerItem(vampireBoots, vampireBoots.getRegisterItemName());
 	}
 	
 	public static void registerRecipes(){
@@ -48,4 +53,8 @@ public class ModItems {
 	public static ItemSunscreen sunscreen=new ItemSunscreen();
 	public static ItemCoffin coffin = new ItemCoffin();
 	public static ItemNightClock nightClock = new ItemNightClock();
+	public static ItemVampireArmor vampireHelmet =new ItemVampireArmor(0);
+	public static ItemVampireArmor vampireChestplate=new ItemVampireArmor(1);
+	public static ItemVampireArmor vampireLeggings = new ItemVampireArmor(2);
+	public static ItemVampireArmor vampireBoots = new ItemVampireArmor(3);
 }

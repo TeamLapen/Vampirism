@@ -648,6 +648,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 * @return TicksInSun
 	 */
 	public int getTicksInSun(){
+		if(getLevel()==0)return 0;
 		return this.ticksInSun;
 	}
 

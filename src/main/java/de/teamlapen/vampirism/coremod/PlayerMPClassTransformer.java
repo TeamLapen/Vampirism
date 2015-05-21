@@ -93,10 +93,10 @@ public class PlayerMPClassTransformer implements IClassTransformer{
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass) {
 		if (name.equals(CLASS_ENTITYPLAYERMP_NOTCH)) {
-			Logger.i(TAG, "INSIDE OBFUSCATED PLAYER CLASS - ABOUT TO PATCH: " + name + " transforned: " + transformedName);
+			Logger.i(TAG, "INSIDE OBFUSCATED PLAYER MP CLASS - ABOUT TO PATCH: " + name + " transforned: " + transformedName);
 			return applyPatch(name, basicClass, true);
 		} else if (name.equals(CLASS_ENTITYPLAYERMP)) {
-			Logger.i(TAG, "INSIDE PLAYER CLASS - ABOUT TO PATCH: " + name);
+			Logger.i(TAG, "INSIDE PLAYER MP CLASS - ABOUT TO PATCH: " + name);
 			return applyPatch(name, basicClass, false);
 		}
 		if (name.equals(CLASS_ENTITYPLAYERMP_SRG))
