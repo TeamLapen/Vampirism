@@ -186,5 +186,10 @@ public class Configs {
 
 
 	}
+	
+	public static void setVampireBiomeId(int i){
+		config.get(CATEGORY_GENERAL, "vampirism_biome_id",-1).set(i);
+		config.save();
+	}
 
 }

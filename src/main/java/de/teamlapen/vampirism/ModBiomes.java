@@ -24,7 +24,10 @@ public class ModBiomes {
 			biomeID=10;
 			while (BiomeDictionary.isBiomeRegistered(biomeID))
 				biomeID++;
+			
+			Configs.setVampireBiomeId(biomeID);
 		}
+		
 
 		biomeVampireForest = new BiomeVampireForest(biomeID).setBiomeName(BiomeVampireForest.name);
 
@@ -36,6 +39,6 @@ public class ModBiomes {
 //		int weight = 50;  // Testing only		
 		Logger.i("ModBiomes", "VampireForest created with id "+biomeID+" and weight: " + weight);
 		biomeEntryVampireForest = new BiomeEntry(biomeVampireForest, weight); // Change weight to 100 to see more of these
-		BiomeManager.addBiome(BiomeType.WARM, biomeEntryVampireForest);
+		//BiomeManager.addBiome(BiomeType.WARM, biomeEntryVampireForest);
 	}	
 }
