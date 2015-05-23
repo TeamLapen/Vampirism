@@ -10,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
 import de.teamlapen.vampirism.coremod.CoreHandler;
@@ -42,8 +43,9 @@ public class TestCommand implements ICommand {
 	}
 
 	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender p_71519_1_) {
-		return true;
+	public boolean canCommandSenderUseCommand(ICommandSender sender) {
+		if(VampirismMod.inDev)return true;
+		return sender.canCommandSenderUseCommand(2, this.getCommandName());
 	}
 
 	@Override
@@ -79,11 +81,20 @@ public class TestCommand implements ICommand {
 	public void processCommand(ICommandSender sender, String[] param) {
 		if (sender instanceof EntityPlayer) {
 			EntityPlayer p = (EntityPlayer) sender;
-			
+			sendMessage(sender,"Lord: "+VampirePlayer.get(p).isVampireLord());
 			// -----------------
 			if (param.length > 0) {
+				if("lord".equals(param[0])){
+					if(VampirePlayer.get(p).setVampireLord(true)){
+						sendMessage(sender,"You are now a vampire lord");
+					}
+					else{
+						sendMessage(sender,"You cannot become a vampire lord before level "+REFERENCE.HIGHEST_REACHABLE_LEVEL);
+					}
+
+					return;
+				}
 				try {
-					sendMessage(sender,"CHEATER! Shame on you");
 					VampirePlayer.get(p).setLevel(Integer.parseInt(param[0]));
 				} catch (NumberFormatException e) {
 					Logger.e("Testcommand", param[0] + " is no Integer");
