@@ -672,8 +672,10 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 				if (type > 2 && ticksInSun > 100) {
 					if (player.worldObj.getWorldTime() % 40 == 0) {
+						float damage=(float) BALANCE.VAMPIRE_PLAYER_SUN_DAMAGE;
+						if(isVampireLord())damage*=1.8F;
 						player.attackEntityFrom(VampirismMod.sunDamage,
-								(float) BALANCE.VAMPIRE_PLAYER_SUN_DAMAGE);
+								damage);
 					}
 				}
 

@@ -11,11 +11,13 @@ import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.boss.IBossDisplayData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.EnderTeleportEvent;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
 
 /** @author Mistadon */
@@ -101,6 +103,14 @@ public class EntityDracula extends EntityVampire implements IBossDisplayData {
 		}
 
 		super.onLivingUpdate();
+	}
+	
+	@Override
+	public void onDeath(DamageSource src){
+		if(src.getSourceOfDamage() instanceof EntityPlayer){
+			VampirePlayer p=VampirePlayer.get((EntityPlayer) src.getSourceOfDamage());
+			p.setVampireLord(true);
+		}
 	}
 
 	@Override

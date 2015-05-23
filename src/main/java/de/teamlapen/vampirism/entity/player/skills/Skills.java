@@ -60,6 +60,7 @@ public class Skills {
 		Skills.registerSkill(new ReviveFallenSkill());
 		batMode=Skills.registerSkill(new BatSkill());
 		Skills.registerSkill(new SummonBatSkill());
+		Skills.registerSkill(new InvisibilitySkill());
 	}
 
 	/**

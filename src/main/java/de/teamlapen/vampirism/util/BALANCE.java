@@ -143,6 +143,11 @@ public final class BALANCE {
 				comment="Set to -1 to deactivate this skill")
 		public static int RAGE_MIN_LEVEL;
 		
+		@DefaultInt(value=60, name = "Invisibility (Vampire Lord) Duration")
+		public static int INVISIBILITY_DURATION;
+		@DefaultInt(value=120, name = "Invisibility Cooldown")
+		public static int INVISIBILITY_COOLDOWN;
+		
 		@DefaultInt(value=2,minValue=1,name="Bat Speed Modifier")
 		public static int BAT_SPEED_MOD;
 		
