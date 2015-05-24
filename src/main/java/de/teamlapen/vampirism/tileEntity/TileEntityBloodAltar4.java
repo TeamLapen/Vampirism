@@ -156,10 +156,11 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 					Block b = worldObj.getBlock(x, y, z);
 					// Logger.i("Test", "T:" + x + ":" + y + ":" + z + ";" + (x - lx) + ":" + (y - ly) + ":" + (z - lz) + ";" + type + ";" + b.getUnlocalizedName());
 					if (type == 0) {
-						if (!(b instanceof BlockAir)) {
-							Logger.i(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
-							return null;
-						}
+// Disabled for now to prevent grass or so blocking and stop some mod conflicts, can probably be enabled again sometim TODO
+//						if (!(b.isAir(worldObj, x, y, z))) {
+//							Logger.i(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
+//							return null;
+//						}
 					}
 					if (type == 2) {
 						if (!(b instanceof BlockBloodAltar4Tip)) {
