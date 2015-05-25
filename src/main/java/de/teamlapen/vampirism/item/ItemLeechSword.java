@@ -97,7 +97,7 @@ public class ItemLeechSword extends ItemSword {
 	public boolean hitEntity(ItemStack itemStack, EntityLivingBase entityTarget, EntityLivingBase e2) {
 		if (entityTarget.worldObj.isRemote)
 			return false;
-		if (entityTarget.getHealth() <= 0) {
+		if (entityTarget.getHealth() <= 0 && entityTarget instanceof EntityCreature) {
 			if (itemStack.stackTagCompound == null) {
 				itemStack.stackTagCompound = new NBTTagCompound();
 				itemStack.stackTagCompound.setInteger("blood", 0);
