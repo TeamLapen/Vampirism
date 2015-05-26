@@ -40,7 +40,6 @@ public class EntityAIDefendLord extends EntityAITarget {
 	@Override
 	public void startExecuting() {
 		minion.getRepresentingEntity().setAttackTarget(target);
-		Logger.i("defen", "attack " + target);
 		super.startExecuting();
 	}
 }
