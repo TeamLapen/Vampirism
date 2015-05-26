@@ -246,6 +246,9 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 				if (boss.getRepresentingEntity().equals(entity.getAttackTarget())) {
 					entity.setAttackTarget(boss.getMinionTarget());
 				}
+				if(entity.equals(entity.getAttackTarget())){
+					entity.setAttackTarget(null);
+				}
 			}
 		}
 	}

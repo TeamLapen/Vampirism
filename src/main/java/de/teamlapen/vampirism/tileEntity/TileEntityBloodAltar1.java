@@ -71,8 +71,10 @@ public class TileEntityBloodAltar1 extends TileEntity {
 	}
 	
 	public void dropSword(){
-		EntityItem sword = new EntityItem(this.worldObj, this.xCoord, this.yCoord + 1, this.zCoord, getSwordToEject());
-		this.worldObj.spawnEntityInWorld(sword);
+		if(this.isOccupied()){
+			EntityItem sword = new EntityItem(this.worldObj, this.xCoord, this.yCoord + 1, this.zCoord, getSwordToEject());
+			this.worldObj.spawnEntityInWorld(sword);
+		}
 	}
 	
 
