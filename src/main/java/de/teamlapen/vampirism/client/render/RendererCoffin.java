@@ -18,7 +18,6 @@ public class RendererCoffin extends TileEntitySpecialRenderer {
 	
 	private int lidPosition = 0;
 	private final int maxLidPos = 61;
-	boolean occupied = false;
 
 	public RendererCoffin() {
 		model = new ModelCoffin();
@@ -42,7 +41,7 @@ public class RendererCoffin extends TileEntitySpecialRenderer {
 				return;
 			}
 		//Calculate lid position
-		occupied = (te.getWorldObj().getBlockMetadata(te.xCoord, te.yCoord, te.zCoord) & 4) != 0;
+		boolean occupied = (te.getWorldObj().getBlockMetadata(te.xCoord, te.yCoord, te.zCoord) & 4) != 0;
 		if(!occupied && lidPosition > 0)
 			lidPosition--;
 		else if(occupied && lidPosition < maxLidPos)

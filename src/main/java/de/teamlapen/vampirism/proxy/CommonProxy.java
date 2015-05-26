@@ -1,8 +1,13 @@
 package de.teamlapen.vampirism.proxy;
 
+import java.util.Iterator;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
@@ -25,6 +30,7 @@ import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.entity.EntityVampireLord;
 import de.teamlapen.vampirism.entity.EntityVampireMinion;
 import de.teamlapen.vampirism.entity.VampireEntityEventHandler;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.VampirePlayerEventHandler;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
@@ -34,6 +40,7 @@ import de.teamlapen.vampirism.villages.VillageVampireData;
 public abstract class CommonProxy implements IProxy {
 	
 	private int modEntityId=0;
+	private boolean allPlayersSleepingCoffin;
 
 	@Override
 	public void registerEntitys() {
@@ -106,5 +113,49 @@ public abstract class CommonProxy implements IProxy {
 		//Loading VillageVampireData
 		FMLCommonHandler.instance().bus().register(VillageVampireData.get(event.world));//Not sure if this is the right position or if it could lead to a memory leak
 	}
+	
+//	public boolean updateAllPlayersSleepingFlagCoffin() {
+//	List playerEntities = MinecraftServer.getServer().worldServerForDimension(0).playerEntities;
+//	
+//	this.allPlayersSleepingCoffin = !playerEntities.isEmpty();
+//	Iterator iterator = playerEntities.iterator();
+//
+//	while (iterator.hasNext()) {
+//		VampirePlayer player = VampirePlayer.get((EntityPlayer) iterator.next());
+//
+//		if (!player.sleepingCoffin) {
+//			this.allPlayersSleepingCoffin = false;
+//			break;
+//		}
+//	}
+//	return this.allPlayersSleepingCoffin;
+//}
 
+	private void wakeAllPlayers(WorldServer server)  {
+		this.allPlayersSleepingCoffin = false;
+		Iterator iterator = server.playerEntities.iterator();
+		
+		while(iterator.hasNext()) {
+			EntityPlayerMP p = (EntityPlayerMP) iterator.next();
+			VampirePlayer.get(p).sleepingCoffin = false;
+			VampirePlayer.get(p).sync(true);
+			p.wakeUpPlayer(false, false, true);
+			
+		}
+	}
+	
+	@SubscribeEvent
+	public void onServerTick(TickEvent.ServerTickEvent event) {
+		//Logger.i("ServerProxy", "onServerTick called");
+		WorldServer server = MinecraftServer.getServer().worldServerForDimension(0);
+		
+		if(server.areAllPlayersAsleep()) {
+			Logger.i("ServerProxy", "All players are asleep, waking them up...");
+			//Set time to next night
+			long i = server.getWorldTime() + 24000L;
+			server.setWorldTime(i - i % 24000L - 12000L);
+			
+			wakeAllPlayers(server);
+		}
+	}
 }

@@ -137,7 +137,7 @@ public class BlockCoffin extends BasicBlockContainer {
 //			newMeta |= 4;
 //		else
 //			newMeta &=-5;
-//		world.setBlockMetadataWithNotify(x, y, z, newMeta, 3);
+//		world.setBlockMetadataWithNotify(x, y, z, newMeta, 4);
 //	}
 
 	@Override
