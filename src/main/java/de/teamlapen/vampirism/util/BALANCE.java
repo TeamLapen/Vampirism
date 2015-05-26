@@ -206,7 +206,7 @@ public final class BALANCE {
 	@DefaultInt(value=2,minValue=1,name="Vampire Player Creeper Avoidance Level",comment = "")
 	public static int VAMPIRE_PLAYER_CREEPER_AVOID_LEVEL;
 	
-	@DefaultInt(value=20,comment="Probability that a vampire gives you sanguinare (1/n)",name="Sanguinare Probability",minValue=1)
+	@DefaultInt(value=10,comment="Probability that a vampire gives you sanguinare (1/n)",name="Sanguinare Probability",minValue=1)
 	public static int VAMPIRE_PLAYER_SANGUINARE_PROB;
 	
 	@DefaultInt(value=1200,comment="Duration of the sanguinare vampiris effect in seconds",name="Sanguinare Duration",minValue=1)

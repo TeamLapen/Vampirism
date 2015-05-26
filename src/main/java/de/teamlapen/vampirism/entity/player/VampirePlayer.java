@@ -563,8 +563,6 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 							BALANCE.VAMPIRE_PLAYER_SANGUINARE_DURATION * 20));
 				}
 
-			} else {
-				Logger.i("tes", "no");
 			}
 		}
 		if (source.getEntity() instanceof EntityLivingBase && getLevel() > 0) {
