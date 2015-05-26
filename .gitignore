@@ -15,3 +15,11 @@ options.txt
 usernamecache.json
 screenshots/
 crash-reports/*
+banned-ips.json
+banned-players.json
+eula.txt
+ops.json
+server.properties
+usercache.json
+whitelist.json
+world*
