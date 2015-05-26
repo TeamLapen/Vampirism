@@ -631,7 +631,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	}
 
 	public boolean gettingSundamage() {
-		if (player.worldObj != null){
+		if (player.worldObj != null  &&player.worldObj.provider.dimensionId==0){
 			int time=(int) (player.worldObj.getWorldTime()%24000);
 			if(player.worldObj.canBlockSeeTheSky(
 					MathHelper.floor_double(player.posX),
