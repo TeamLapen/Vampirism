@@ -46,7 +46,7 @@ public class RendererCoffin extends TileEntitySpecialRenderer {
 			lidPosition--;
 		else if(occupied && lidPosition < maxLidPos)
 			lidPosition++;
-		//Logger.i("RendererCoffin", "Lid position=" + lidPosition + " occupied=" + occupied);
+		Logger.i("RendererCoffin", "Lid position=" + lidPosition + " occupied=" + occupied);
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		bindTexture(texture);

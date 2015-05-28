@@ -100,6 +100,7 @@ public class BlockCoffin extends BasicBlockContainer {
 
 				if (enumstatus == EntityPlayer.EnumStatus.OK) {
 					setBedOccupied(world, x, y, z, player, true);
+					((TileEntityCoffin) world.getTileEntity(x, y, z)).markDirty();
 					return true;
 				} else {
 					if (enumstatus == EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW) {

@@ -27,4 +27,10 @@ public class TileEntityCoffin extends TileEntity {
 	public AxisAlignedBB getRenderBoundingBox() {
 		return AxisAlignedBB.getBoundingBox(this.xCoord-4, this.yCoord, this.zCoord-4, this.xCoord + 4, this.yCoord + 2, this.zCoord + 4);
 	}
+	
+	@Override
+	public void markDirty() {
+		super.markDirty();
+		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+	}
 }
