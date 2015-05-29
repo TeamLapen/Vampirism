@@ -898,6 +898,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		 ((EntityPlayerMP) this.player).playerNetServerHandler.setPlayerLocation(((EntityPlayerMP) this.player).posX, ((EntityPlayerMP) this.player).posY, ((EntityPlayerMP) this.player).posZ, ((EntityPlayerMP) this.player).rotationYaw, ((EntityPlayerMP) this.player).rotationPitch);
 		 ((EntityPlayerMP) this.player).playerNetServerHandler.sendPacket(s0apacketusebed);
 
+		 //TODO Set player position correctly
 		if (this.player.worldObj.blockExists(x, y, z)) {
 			int direction = ((BlockCoffin) player.worldObj.getBlock(x, y, z))
 					.getDirection(player.worldObj, x, y, z);

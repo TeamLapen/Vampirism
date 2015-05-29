@@ -9,9 +9,11 @@ import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
@@ -74,6 +76,7 @@ public class BlockCoffin extends BasicBlockContainer {
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z,
 			EntityPlayer player, int par4, float f1, float f2, float f3) {
+		Logger.i("BlockCoffin", String.format("onBlockActivated called, x=%s, y=%s, z=%s, remote=%s, meta=%s", x, y, z, world.isRemote, world.getBlockMetadata(x, y, z)));
 		if (world.isRemote) {
 			return true;
 		} else {
@@ -99,8 +102,9 @@ public class BlockCoffin extends BasicBlockContainer {
 						.sleepInCoffinAt(x, y, z);
 
 				if (enumstatus == EntityPlayer.EnumStatus.OK) {
-					setBedOccupied(world, x, y, z, player, true);
-					((TileEntityCoffin) world.getTileEntity(x, y, z)).markDirty();
+					setCoffinOccupied(world, x, y, z, player, true);
+//					((TileEntityCoffin) world.getTileEntity(x, y, z)).markDirty();
+					Logger.i("BlockCoffin", String.format("Letting player sleep in coffin, x=%s, y=%s, z=%s, remote=%s, meta=%s", x, y, z, world.isRemote, world.getBlockMetadata(x, y, z)));
 					return true;
 				} else {
 					if (enumstatus == EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW) {
@@ -131,15 +135,13 @@ public class BlockCoffin extends BasicBlockContainer {
 			}
 		}
 	}
-
-//	public void setCoffinOccupied(World world, int x, int y, int z, EntityPlayer player, boolean flag) {
-//		int newMeta = world.getBlockMetadata(x, y, z);
-//		if(flag)
-//			newMeta |= 4;
-//		else
-//			newMeta &=-5;
-//		world.setBlockMetadataWithNotify(x, y, z, newMeta, 4);
-//	}
+	
+	public void setCoffinOccupied(World world, int x, int y, int z, EntityPlayer player, boolean flag) {
+		setBedOccupied(world, x, y, z, player, flag);
+		((TileEntityCoffin) world.getTileEntity(x, y, z)).occupied = flag;
+		if(!world.isRemote)
+			((EntityPlayerMP) player).playerNetServerHandler.sendPacket(world.getTileEntity(x, y, z).getDescriptionPacket());
+	}
 
 	@Override
 	public void onBlockHarvested(World world, int par1, int par2, int par3,

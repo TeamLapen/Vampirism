@@ -1,6 +1,11 @@
 package de.teamlapen.vampirism.tileEntity;
 
+import de.teamlapen.vampirism.block.BlockCoffin;
+import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 
@@ -8,12 +13,15 @@ public class TileEntityCoffin extends TileEntity {
 	public int otherX;
 	public int otherY;
 	public int otherZ;
+	public boolean occupied;
+	public int lidPos = 0;
 
 	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
 		super.writeToNBT(par1NBTTagCompound);
 		par1NBTTagCompound.setInteger("px", otherX);
 		par1NBTTagCompound.setInteger("py", otherY);
 		par1NBTTagCompound.setInteger("pz", otherZ);
+		par1NBTTagCompound.setBoolean("occ", occupied);
 	}
 
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
@@ -21,16 +29,47 @@ public class TileEntityCoffin extends TileEntity {
 		this.otherX = par1NBTTagCompound.getInteger("px");
 		this.otherY = par1NBTTagCompound.getInteger("py");
 		this.otherZ = par1NBTTagCompound.getInteger("pz");
+		this.occupied = par1NBTTagCompound.getBoolean("occ");
 	}
-	
+
+	@Override
+	public Packet getDescriptionPacket() {
+		NBTTagCompound nbtTag = new NBTTagCompound();
+		this.writeToNBT(nbtTag);
+		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord,
+				this.zCoord, 1, nbtTag);
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net,
+			S35PacketUpdateTileEntity packet) {
+		readFromNBT(packet.func_148857_g());
+		((BlockCoffin) this.worldObj.getBlock(this.xCoord, this.yCoord,
+				this.zCoord)).setCoffinOccupied(this.worldObj, this.xCoord,
+				this.yCoord, this.zCoord, null, this.occupied);
+		Logger.i("TECoffin", String.format("onDataPacket called, occupied=%s, remote=%s", this.occupied, this.worldObj.isRemote));
+	}
+
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		return AxisAlignedBB.getBoundingBox(this.xCoord-4, this.yCoord, this.zCoord-4, this.xCoord + 4, this.yCoord + 2, this.zCoord + 4);
+		return AxisAlignedBB.getBoundingBox(this.xCoord - 4, this.yCoord,
+				this.zCoord - 4, this.xCoord + 4, this.yCoord + 2,
+				this.zCoord + 4);
 	}
-	
+
 	@Override
 	public void markDirty() {
 		super.markDirty();
 		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+	}
+
+	@Override
+	public void updateEntity() {
+		if((this.getBlockMetadata() & 8) == 0)
+			return;
+		occupied = (this.getBlockMetadata() & 4) != 0;
+//		Logger.i("TECoffin",
+//		String.format("updateEntity called, now: occupied=%s, remote=%s",
+//		occupied, this.worldObj.isRemote));
 	}
 }
