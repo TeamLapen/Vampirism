@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.tileEntity;
 
 import de.teamlapen.vampirism.block.BlockCoffin;
 import de.teamlapen.vampirism.util.Logger;
+import net.minecraft.block.BlockBed;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
@@ -14,7 +15,11 @@ public class TileEntityCoffin extends TileEntity {
 	public int otherY;
 	public int otherZ;
 	public boolean occupied;
-	public int lidPos = 0;
+	public int lidPos;
+	
+	public TileEntityCoffin() {
+		
+	}
 
 	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
 		super.writeToNBT(par1NBTTagCompound);
@@ -30,6 +35,10 @@ public class TileEntityCoffin extends TileEntity {
 		this.otherY = par1NBTTagCompound.getInteger("py");
 		this.otherZ = par1NBTTagCompound.getInteger("pz");
 		this.occupied = par1NBTTagCompound.getBoolean("occ");
+		if(occupied)
+			this.lidPos = 0;
+		else
+			this.lidPos = 61;
 	}
 
 	@Override
@@ -67,7 +76,13 @@ public class TileEntityCoffin extends TileEntity {
 	public void updateEntity() {
 		if((this.getBlockMetadata() & 8) == 0)
 			return;
-		occupied = (this.getBlockMetadata() & 4) != 0;
+		//On the server, metadata has priority over tile entity. On the client, tile entity has priority over metadata
+		if(!this.worldObj.isRemote && (occupied != ((this.getBlockMetadata() & 4) != 0))) {
+			occupied = !occupied;
+			markDirty();
+		}
+		else
+			BlockBed.func_149979_a(worldObj, xCoord, yCoord, zCoord, occupied);
 //		Logger.i("TECoffin",
 //		String.format("updateEntity called, now: occupied=%s, remote=%s",
 //		occupied, this.worldObj.isRemote));

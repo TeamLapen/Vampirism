@@ -103,7 +103,7 @@ public class BlockCoffin extends BasicBlockContainer {
 
 				if (enumstatus == EntityPlayer.EnumStatus.OK) {
 					setCoffinOccupied(world, x, y, z, player, true);
-//					((TileEntityCoffin) world.getTileEntity(x, y, z)).markDirty();
+					((TileEntityCoffin) world.getTileEntity(x, y, z)).markDirty();
 					Logger.i("BlockCoffin", String.format("Letting player sleep in coffin, x=%s, y=%s, z=%s, remote=%s, meta=%s", x, y, z, world.isRemote, world.getBlockMetadata(x, y, z)));
 					return true;
 				} else {
@@ -139,8 +139,8 @@ public class BlockCoffin extends BasicBlockContainer {
 	public void setCoffinOccupied(World world, int x, int y, int z, EntityPlayer player, boolean flag) {
 		setBedOccupied(world, x, y, z, player, flag);
 		((TileEntityCoffin) world.getTileEntity(x, y, z)).occupied = flag;
-		if(!world.isRemote)
-			((EntityPlayerMP) player).playerNetServerHandler.sendPacket(world.getTileEntity(x, y, z).getDescriptionPacket());
+//		if(!world.isRemote)
+//			((EntityPlayerMP) player).playerNetServerHandler.sendPacket(world.getTileEntity(x, y, z).getDescriptionPacket());
 	}
 
 	@Override

@@ -907,7 +907,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 			switch (direction) {
 			case 0:
-				f = 0.9F;
+				f = -0.9F;
 				break;
 			case 1:
 				f1 = 0.1F;
@@ -921,9 +921,12 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 			this.func_71013_b(direction);
 			this.player.setPosition(x + f1, y + 0.9375F, z + f);
+			Logger.i("VampirePlayer", String.format("Setting player position, xOffset=%.3f, zOffset=%.3f", f1, f));
 		} else {
 			this.player.setPosition(x + 0.5F, y + 0.9375F, z + 0.5F);
+			Logger.i("VampirePlayer", "blockExists(x,y,z) was false, standard offsets");
 		}
+		
 
 		// Following method will replace: this.player.sleeping = true;
 		Helper.Reflection.setPrivateField(EntityPlayer.class, this.player,
