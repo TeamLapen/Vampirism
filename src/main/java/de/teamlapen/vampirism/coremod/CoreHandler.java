@@ -1,7 +1,10 @@
 package de.teamlapen.vampirism.coremod;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -11,6 +14,8 @@ import net.minecraft.util.ResourceLocation;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.PlayerAbilities;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.network.UpdateEntityPacket;
+import de.teamlapen.vampirism.network.UpdateVampirePlayerPacket;
 import de.teamlapen.vampirism.util.Logger;
 
 /**
@@ -51,10 +56,17 @@ public class CoreHandler {
 	}
 	
 	public static boolean shouldWakePlayer(EntityPlayer p){
+		//Logger.i("CoreHandler", String.format("Attempt to wake up player, remote=%s", p.worldObj.isRemote));
+		if(p.worldObj.isRemote) {
+			//TODO Wake player up on server
+			//Logger.i("CoreHandler", "Wakeup on client called, sending UpdateVampirePacket to server now");
+			//VampirePlayer.get(p).sleepingCoffin = false;
+			//VampirismMod.modChannel.sendToServer(new UpdateEntityPacket(VampirePlayer.get(p)));
+		}
 		if(VampirePlayer.get(p) != null && VampirePlayer.get(p).sleepingCoffin) {
 			return false;
 		}
-		Logger.i("CoreHandler", String.format("sleepingCoffin=%s, remote=%s", VampirePlayer.get(p).sleepingCoffin, p.worldObj.isRemote));
+		Logger.i("CoreHandler", String.format("Player will be woken up, remote=%s", p.worldObj.isRemote));
 		return true;
 	}
 }
