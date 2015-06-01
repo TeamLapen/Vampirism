@@ -77,6 +77,7 @@ public class ItemCoffin extends BasicItem {
 									+ ", y=" + y + ", z=" + z);
 			}
 		}
+		item.stackSize--;
 		return true;
 	}
 }

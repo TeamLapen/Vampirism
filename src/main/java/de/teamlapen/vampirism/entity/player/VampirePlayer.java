@@ -688,6 +688,17 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 */
 	public void onUpdate() {
 		//Logger.i("VampirePlayer", String.format("Remote=%s, sleeping=%s, fullyAsleep=%s", player.worldObj.isRemote, player.isPlayerSleeping(), player.isPlayerFullyAsleep()));
+		if(this.sleepingCoffin && player.isPlayerSleeping()) {
+			if(player.worldObj.isRemote)
+				Logger.i("VP", "playerpos:" + player.posY);
+			if(!player.worldObj.isRemote)
+				player.motionY = 0;
+			else if(player.posY > Math.floor(player.posY) + 0.2) 
+				player.motionY = -0.05;
+			else
+				player.motionY = 0;
+			
+		}
 		if (getLevel() <= 0) {
 			PotionEffect sang = player
 					.getActivePotionEffect(ModPotion.sanguinare);
@@ -891,41 +902,41 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 						0.2F });
 		// this.player.setSize(0.2F, 0.2F);
 		this.player.yOffset = 0.2F;
-		
-		
-		 S0APacketUseBed s0apacketusebed = new S0APacketUseBed(((EntityPlayerMP) this.player), x, y, z);
-		 ((EntityPlayerMP) this.player).getServerForPlayer().getEntityTracker().func_151247_a(((EntityPlayerMP) this.player), s0apacketusebed);
-		 ((EntityPlayerMP) this.player).playerNetServerHandler.setPlayerLocation(((EntityPlayerMP) this.player).posX, ((EntityPlayerMP) this.player).posY, ((EntityPlayerMP) this.player).posZ, ((EntityPlayerMP) this.player).rotationYaw, ((EntityPlayerMP) this.player).rotationPitch);
-		 ((EntityPlayerMP) this.player).playerNetServerHandler.sendPacket(s0apacketusebed);
 
 		 //TODO Set player position correctly
 		if (this.player.worldObj.blockExists(x, y, z)) {
 			int direction = ((BlockCoffin) player.worldObj.getBlock(x, y, z))
 					.getDirection(player.worldObj, x, y, z);
-			float f1 = 0.5F;
-			float f = 0.5F;
+			float xOffset = 0.5F;
+			float zOffset = 0.5F;
+			float yOffset = 0.5F;
 
 			switch (direction) {
 			case 0:
-				f = -0.9F;
-				break;
-			case 1:
-				f1 = 0.1F;
-				break;
-			case 2:
-				f = 0.1F;
+				zOffset = 1.8F;
 				break;
 			case 3:
-				f1 = 0.9F;
+				xOffset = 1.8F;
+				break;
+			case 2:
+				zOffset = -0.8F;
+				break;
+			case 1:
+				xOffset = -0.8F;
 			}
 
 			this.func_71013_b(direction);
-			this.player.setPosition(x + f1, y + 0.9375F, z + f);
-			Logger.i("VampirePlayer", String.format("Setting player position, xOffset=%.3f, zOffset=%.3f", f1, f));
+			this.player.setPosition(x + xOffset, y + yOffset, z + zOffset);
+			Logger.i("VampirePlayer", String.format("Setting player position, xOffset=%.3f, yOffset=%.3f, zOffset=%.3f", xOffset, yOffset, zOffset));
 		} else {
 			this.player.setPosition(x + 0.5F, y + 0.9375F, z + 0.5F);
 			Logger.i("VampirePlayer", "blockExists(x,y,z) was false, standard offsets");
 		}
+		
+		 S0APacketUseBed s0apacketusebed = new S0APacketUseBed(((EntityPlayerMP) this.player), x, y, z);
+		 ((EntityPlayerMP) this.player).getServerForPlayer().getEntityTracker().func_151247_a(((EntityPlayerMP) this.player), s0apacketusebed);
+		 ((EntityPlayerMP) this.player).playerNetServerHandler.setPlayerLocation(((EntityPlayerMP) this.player).posX, ((EntityPlayerMP) this.player).posY, ((EntityPlayerMP) this.player).posZ, ((EntityPlayerMP) this.player).rotationYaw, ((EntityPlayerMP) this.player).rotationPitch);
+		 ((EntityPlayerMP) this.player).playerNetServerHandler.sendPacket(s0apacketusebed);
 		
 
 		// Following method will replace: this.player.sleeping = true;

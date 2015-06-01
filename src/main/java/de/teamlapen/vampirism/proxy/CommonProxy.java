@@ -153,7 +153,7 @@ public abstract class CommonProxy implements IProxy {
 			Logger.i("ServerProxy", "All players are asleep, waking them up...");
 			//Set time to next night
 			long i = server.getWorldTime() + 24000L;
-			server.setWorldTime(i - i % 24000L - 12000L);
+			server.setWorldTime(i - i % 24000L - 11000L);
 			
 			wakeAllPlayers(server);
 		}
