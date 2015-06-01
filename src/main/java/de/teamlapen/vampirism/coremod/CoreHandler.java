@@ -55,7 +55,7 @@ public class CoreHandler {
 		return VampirismMod.proxy.checkVampireTexture(entity, loc);
 	}
 	
-	public static boolean shouldWakePlayer(EntityPlayer p){
+	public static boolean shouldWakePlayer(EntityPlayer p,boolean p1,boolean p2,boolean p3){
 		//Logger.i("CoreHandler", String.format("Attempt to wake up player, remote=%s", p.worldObj.isRemote));
 		if(p.worldObj.isRemote) {
 			//TODO Wake player up on server

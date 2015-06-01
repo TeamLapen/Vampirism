@@ -76,8 +76,11 @@ public class PlayerClassTransformer implements IClassTransformer {
 				LabelNode l0 = new LabelNode();
 				toInject.add(l0);
 				toInject.add(new VarInsnNode(Opcodes.ALOAD,0));
+				toInject.add(new VarInsnNode(Opcodes.ILOAD,1));
+				toInject.add(new VarInsnNode(Opcodes.ILOAD,2));
+				toInject.add(new VarInsnNode(Opcodes.ILOAD,3));
 				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC,"de/teamlapen/vampirism/coremod/CoreHandler","shouldWakePlayer","(L"
-						+ CLASS_ENTITYPLAYER_SRG + ";)Z",false));
+						+ CLASS_ENTITYPLAYER_SRG + ";ZZZ)Z",false));
 				LabelNode l1= new LabelNode();
 				toInject.add(new JumpInsnNode(Opcodes.IFNE,l1));
 				LabelNode l2=new LabelNode();
