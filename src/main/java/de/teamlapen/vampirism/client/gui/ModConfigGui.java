@@ -29,7 +29,7 @@ public class ModConfigGui extends GuiConfig {
 					BalanceMobPropEntry.class));
 			list.add(new DummyConfigElement.DummyCategoryElement("balance_vv_prop", "category.vampirism.balance_vv_prop",
 					BalanceVillagePropEntry.class));
-			list.addAll(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_BALANCE)).getChildElements());
+			list.addAll(new ConfigElement(Configs.balance.getCategory(Configs.CATEGORY_BALANCE)).getChildElements());
 
 			return list;
 
@@ -46,6 +46,7 @@ public class ModConfigGui extends GuiConfig {
 		}
 
 	}
+	
 
 	public static class BalanceLevelEntry extends CategoryEntry {
 
@@ -56,7 +57,7 @@ public class ModConfigGui extends GuiConfig {
 		@Override
 		protected GuiScreen buildChildScreen() {
 			return new GuiConfig(this.owningScreen,
-					(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_BALANCE_LEVELING))).getChildElements(), this.owningScreen.modID,
+					(new ConfigElement(Configs.balance.getCategory(Configs.CATEGORY_BALANCE_LEVELING))).getChildElements(), this.owningScreen.modID,
 					Configs.CATEGORY_BALANCE_LEVELING, true, false, REFERENCE.NAME + " Balance");
 		}
 
@@ -71,7 +72,7 @@ public class ModConfigGui extends GuiConfig {
 		@Override
 		protected GuiScreen buildChildScreen() {
 			return new GuiConfig(this.owningScreen,
-					(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_BALANCE_PLAYER_MOD))).getChildElements(), this.owningScreen.modID,
+					(new ConfigElement(Configs.balance.getCategory(Configs.CATEGORY_BALANCE_PLAYER_MOD))).getChildElements(), this.owningScreen.modID,
 					Configs.CATEGORY_BALANCE_PLAYER_MOD, true, false, REFERENCE.NAME + " Balance");
 		}
 	}
@@ -85,7 +86,7 @@ public class ModConfigGui extends GuiConfig {
 		@Override
 		protected GuiScreen buildChildScreen() {
 			return new GuiConfig(this.owningScreen,
-					(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_BALANCE_PLAYER_SKILLS))).getChildElements(), this.owningScreen.modID,
+					(new ConfigElement(Configs.balance.getCategory(Configs.CATEGORY_BALANCE_PLAYER_SKILLS))).getChildElements(), this.owningScreen.modID,
 					Configs.CATEGORY_BALANCE_PLAYER_SKILLS, true, false, REFERENCE.NAME + " Balance");
 		}
 	}
@@ -99,7 +100,7 @@ public class ModConfigGui extends GuiConfig {
 		@Override
 		protected GuiScreen buildChildScreen() {
 			return new GuiConfig(this.owningScreen,
-					(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_BALANCE_MOBPROP))).getChildElements(), this.owningScreen.modID,
+					(new ConfigElement(Configs.balance.getCategory(Configs.CATEGORY_BALANCE_MOBPROP))).getChildElements(), this.owningScreen.modID,
 					Configs.CATEGORY_BALANCE_MOBPROP, true, false, REFERENCE.NAME + " Balance");
 		}
 	}
@@ -113,7 +114,7 @@ public class ModConfigGui extends GuiConfig {
 		@Override
 		protected GuiScreen buildChildScreen() {
 			return new GuiConfig(this.owningScreen,
-					(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_BALANCE_VVPROP))).getChildElements(), this.owningScreen.modID,
+					(new ConfigElement(Configs.balance.getCategory(Configs.CATEGORY_BALANCE_VVPROP))).getChildElements(), this.owningScreen.modID,
 					Configs.CATEGORY_BALANCE_VVPROP, true, false, REFERENCE.NAME + " Balance");
 		}
 	}
@@ -123,6 +124,7 @@ public class ModConfigGui extends GuiConfig {
 		List<IConfigElement> list = new ArrayList<IConfigElement>();
 		list.addAll(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_GENERAL)).getChildElements());
 		list.addAll(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_VILLAGE)).getChildElements());
+		list.addAll(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_DISABLE)).getChildElements());
 		list.add(new DummyConfigElement.DummyCategoryElement("balance", "category.vampirism.balance", BalanceEntry.class));
 		return list;
 

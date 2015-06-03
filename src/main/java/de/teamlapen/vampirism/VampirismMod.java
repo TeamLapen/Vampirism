@@ -95,7 +95,7 @@ public class VampirismMod {
 		if((Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment")){
 			inDev=true;
 		}
-		Configs.init(event.getSuggestedConfigurationFile(),inDev);
+		Configs.init(event.getModConfigurationDirectory(),inDev);
 		Helper.Obfuscation.fillMap();
 		
 		ModPotion.init();

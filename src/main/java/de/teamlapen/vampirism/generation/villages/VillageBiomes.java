@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.util.Logger;
 
 /**
@@ -17,6 +18,8 @@ import de.teamlapen.vampirism.util.Logger;
 public class VillageBiomes {
 
 	public static void postInit(FMLPostInitializationEvent ev) {
+		if(Configs.disable_vampire_biome)return;
+		
 		// All other mods should be done registering by now.
 		BiomeRegistrant.init();
 
@@ -47,8 +50,9 @@ public class VillageBiomes {
 	}
 
 	public static void preInit(FMLPreInitializationEvent event) {
+		if(Configs.disable_vampire_biome)return;
 		// Load Config
-		File ConfigFile = new File(event.getModConfigurationDirectory(), "VillageBiomes.cfg");
+		File ConfigFile = new File(event.getModConfigurationDirectory(), "vampirism_village_biomes.cfg");
 		ConfigHandler.loadConfig(ConfigFile);
 	}
 }

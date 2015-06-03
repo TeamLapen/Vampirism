@@ -71,5 +71,5 @@ category.vampirism.balance_player_mod=Vampire player modifier settings
 category.vampirism.balance_player_skills=Vampire player skills settings
 category.vampirism.balance_mob_prop=Vampirism mob properties
 category.vampirism.balance_mob_prop.tooltip=Change properties of the mobs added by Vampirism
-category.vampirism.balance_vv_prop=Village properties
+category.vampirism.balance_vv_prop=Village Vampire properties
 category.vampirism.balance_vv_prop.tooltip=Change the way hunters in villages act and adjust other village related stuff
