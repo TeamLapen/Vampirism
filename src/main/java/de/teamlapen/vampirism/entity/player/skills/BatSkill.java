@@ -48,7 +48,7 @@ public class BatSkill extends DefaultSkill implements ILastingSkill {
 	}
 
 	@Override
-	public void onActivated(VampirePlayer vampire, EntityPlayer player) {
+	public boolean onActivated(VampirePlayer vampire, EntityPlayer player) {
 		setModifier(player,true);
 		double reduc=player.getHealth()-player.getMaxHealth();
 		if(reduc<0){
@@ -56,6 +56,7 @@ public class BatSkill extends DefaultSkill implements ILastingSkill {
 		}
 		player.setHealth((float) (player.getHealth()-reduc));
 		vampire.getExtraDataTag().setDouble("bat_skill_health",reduc);
+		return true;
 	}
 
 	@Override

@@ -38,7 +38,7 @@ public class ReviveFallenSkill extends DefaultSkill {
 	}
 
 	@Override
-	public void onActivated(VampirePlayer vampire, EntityPlayer player) {
+	public boolean onActivated(VampirePlayer vampire, EntityPlayer player) {
 		int max = getCount(vampire.getLevel());
 		for (EntityDeadMob mob : (List<EntityDeadMob>) player.worldObj.getEntitiesWithinAABB(EntityDeadMob.class, player.boundingBox.expand(10, 10, 10))) {
 			EntityCreature e = mob.convertToMob();
@@ -50,7 +50,7 @@ public class ReviveFallenSkill extends DefaultSkill {
 			}
 
 		}
-
+		return true;
 	}
 
 }

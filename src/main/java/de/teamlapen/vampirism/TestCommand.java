@@ -85,11 +85,9 @@ public class TestCommand implements ICommand {
 			// -----------------
 			if (param.length > 0) {
 				if("lord".equals(param[0])){
+					VampirePlayer.get(p).setLevel(REFERENCE.HIGHEST_REACHABLE_LEVEL);
 					if(VampirePlayer.get(p).setVampireLord(true)){
 						sendMessage(sender,"You are now a vampire lord");
-					}
-					else{
-						sendMessage(sender,"You cannot become a vampire lord before level "+REFERENCE.HIGHEST_REACHABLE_LEVEL);
 					}
 
 					return;

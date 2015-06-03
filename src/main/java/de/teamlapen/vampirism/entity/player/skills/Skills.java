@@ -61,6 +61,7 @@ public class Skills {
 		batMode=Skills.registerSkill(new BatSkill());
 		Skills.registerSkill(new SummonBatSkill());
 		Skills.registerSkill(new InvisibilitySkill());
+		Skills.registerSkill(new TeleportSkill());
 	}
 
 	/**

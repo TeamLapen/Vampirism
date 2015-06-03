@@ -30,15 +30,21 @@ public class RegenSkill extends DefaultSkill {
 	}
 
 	@Override
-	public void onActivated(VampirePlayer vampire, EntityPlayer player) {
+	public boolean onActivated(VampirePlayer vampire, EntityPlayer player) {
 		int dur = BALANCE.VP_SKILLS.REGEN_DURATION * 20;
 		player.addPotionEffect(new PotionEffect(Potion.regeneration.id, dur, 0));
 		player.addPotionEffect(new PotionEffect(ModPotion.thirst.id, dur, 2));
+		return true;
 	}
 
 	@Override
 	public String toString() {
 		return "RegenSkill";
+	}
+	
+	@Override
+	public boolean canBeUsedBy(VampirePlayer vampire,EntityPlayer player){
+		return !vampire.isVampireLord();
 	}
 
 }

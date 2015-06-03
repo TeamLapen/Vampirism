@@ -28,10 +28,10 @@ public class ChangeWeatherSkill extends DefaultSkill {
 	}
 
 	@Override
-	public void onActivated(VampirePlayer vampire, EntityPlayer player) {
+	public boolean onActivated(VampirePlayer vampire, EntityPlayer player) {
 		WorldInfo info = player.worldObj.getWorldInfo();
 		info.setRaining(!info.isRaining());
-
+		return true;
 	}
 
 }

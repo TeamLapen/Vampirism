@@ -25,13 +25,13 @@ public class SummonBatSkill extends DefaultSkill {
 	}
 
 	@Override
-	public void onActivated(VampirePlayer vampire, EntityPlayer player) {
+	public boolean onActivated(VampirePlayer vampire, EntityPlayer player) {
 		for(int i=0;i<10+vampire.getLevel();i++){
 			Entity e=EntityList.createEntityByName(REFERENCE.ENTITY.BLINDING_BAT_NAME, player.worldObj);
 			e.copyLocationAndAnglesFrom(player);
 			player.worldObj.spawnEntityInWorld(e);
 		}
-
+		return true;
 	}
 
 	@Override

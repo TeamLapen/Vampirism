@@ -600,14 +600,15 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 				player.addChatMessage(new ChatComponentTranslation(
 						"text.vampirism:skill.level_to_low"));
 			} else if (r == 1) {
-				if (s instanceof ILastingSkill) {
-					ILastingSkill ls = (ILastingSkill) s;
-					skillTimer[i] = ls.getDuration(getLevel());
-					ls.onActivated(this, player);
-				} else {
-					s.onActivated(this, player);
-					skillTimer[i] = -s.getCooldown();
+				if(s.onActivated(this, player)){
+					if (s instanceof ILastingSkill) {
+						ILastingSkill ls = (ILastingSkill) s;
+						skillTimer[i] = ls.getDuration(getLevel());
+					} else {
+						skillTimer[i] = -s.getCooldown();
+					}
 				}
+
 			}
 		} else {// In cooldown
 			player.addChatMessage(new ChatComponentTranslation(
@@ -828,6 +829,10 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		if (l >= 0) {
 			level = l;
 			PlayerModifiers.applyModifiers(l, player);
+			
+			if(l<REFERENCE.HIGHEST_REACHABLE_LEVEL){
+				this.vampireLord=false;
+			}
 			this.sync(true);
 		}
 	}
@@ -846,6 +851,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			return false;
 		}
 		this.vampireLord = state;
+		this.sync(true);
 		return true;
 	}
 

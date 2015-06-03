@@ -140,17 +140,13 @@ public class EntityDracula extends EntityVampire implements IBossDisplayData {
 	}
 
 	/** Teleports dracula to the given coordinates */
-	protected boolean teleportTo(double p_70825_1_, double p_70825_3_, double p_70825_5_) {
-		EnderTeleportEvent event = new EnderTeleportEvent(this, p_70825_1_, p_70825_3_, p_70825_5_, 0);
-		if (MinecraftForge.EVENT_BUS.post(event)) {
-			return false;
-		}
+	protected boolean teleportTo(double x, double y, double z) {
 		double d3 = this.posX;
 		double d4 = this.posY;
 		double d5 = this.posZ;
-		this.posX = event.targetX;
-		this.posY = event.targetY;
-		this.posZ = event.targetZ;
+		this.posX = x;
+		this.posY = y;
+		this.posZ = z;
 		boolean flag = false;
 		int i = MathHelper.floor_double(this.posX);
 		int j = MathHelper.floor_double(this.posY);

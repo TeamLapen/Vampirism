@@ -24,9 +24,9 @@ public class InvisibilitySkill extends DefaultSkill implements ILastingSkill {
 	}
 
 	@Override
-	public void onActivated(VampirePlayer vampire, EntityPlayer player) {
+	public boolean onActivated(VampirePlayer vampire, EntityPlayer player) {
 		player.setInvisible(true);
-
+		return true;
 	}
 
 	@Override

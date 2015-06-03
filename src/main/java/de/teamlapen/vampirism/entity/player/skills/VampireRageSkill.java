@@ -35,9 +35,9 @@ public class VampireRageSkill extends DefaultSkill implements ILastingSkill {
 	}
 
 	@Override
-	public void onActivated(VampirePlayer vampire, EntityPlayer player) {
+	public boolean onActivated(VampirePlayer vampire, EntityPlayer player) {
 		player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, getDuration(vampire.getLevel()), 2));
-
+		return true;
 	}
 
 	@Override
@@ -58,7 +58,7 @@ public class VampireRageSkill extends DefaultSkill implements ILastingSkill {
 	
 	@Override
 	public boolean canBeUsedBy(VampirePlayer vampire,EntityPlayer player){
-		return !vampire.isSkillActive(Skills.batMode);
+		return !vampire.isSkillActive(Skills.batMode)&&!vampire.isVampireLord();
 	}
 
 }

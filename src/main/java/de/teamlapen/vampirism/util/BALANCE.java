@@ -143,9 +143,9 @@ public final class BALANCE {
 				comment="Set to -1 to deactivate this skill")
 		public static int RAGE_MIN_LEVEL;
 		
-		@DefaultInt(value=60, name = "Invisibility (Vampire Lord) Duration")
+		@DefaultInt(value=10, name = "Invisibility (Vampire Lord) Duration")
 		public static int INVISIBILITY_DURATION;
-		@DefaultInt(value=120, name = "Invisibility Cooldown")
+		@DefaultInt(value=45, name = "Invisibility Cooldown")
 		public static int INVISIBILITY_COOLDOWN;
 		
 		@DefaultInt(value=2,minValue=1,name="Bat Speed Modifier")
@@ -159,6 +159,12 @@ public final class BALANCE {
 		
 		@DefaultInt(value=300,minValue=1,name="Summon blinding bats cooldown")
 		public static int SUMMON_BAT_COOLDOWN;
+		
+		@DefaultInt(value=50,minValue=1,name="Lord teleport max distance")
+		public static int TELEPORT_MAX_DISTANCE;
+		
+		@DefaultInt(value=30,minValue=1,name="Lord teleport cooldown")
+		public static int TELEPORT_COOLDOWN;
 		
 		public static int getVampireLordDuration(int level){
 			if(level<RAGE_MIN_LEVEL){

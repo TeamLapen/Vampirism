@@ -58,8 +58,9 @@ public interface ISkill {
 	 * 
 	 * @param vampire
 	 * @param player
+	 * @return Whether the skill was successfully activated. !Does not give any feedback to the user!
 	 */
-	public void onActivated(VampirePlayer vampire, EntityPlayer player);
+	public boolean onActivated(VampirePlayer vampire, EntityPlayer player);
 
 	/**
 	 * Should only be called when being registered

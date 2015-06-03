@@ -113,14 +113,14 @@ public class Helper {
 	 * Gets players looking spot.
 	 * 
 	 * @param player
-	 * @param restricts
-	 *            Keeps distance to players block reach distance
+	 * @param restriction
+	 *            Max distance or 0 for player reach distance or -1 for not restricted
 	 * @return The position as a MovingObjectPosition, null if not existent cf:
 	 *         https
 	 *         ://github.com/bspkrs/bspkrsCore/blob/master/src/main/java/bspkrs
 	 *         /util/CommonUtils.java
 	 */
-	public static MovingObjectPosition getPlayerLookingSpot(EntityPlayer player, boolean restrict) {
+	public static MovingObjectPosition getPlayerLookingSpot(EntityPlayer player, double restriction) {
 		float scale = 1.0F;
 		float pitch = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * scale;
 		float yaw = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * scale;
@@ -135,9 +135,13 @@ public class Helper {
 		float pitchAdjustedSinYaw = sinYaw * cosPitch;
 		float pitchAdjustedCosYaw = cosYaw * cosPitch;
 		double distance = 500D;
-		if (player instanceof EntityPlayerMP && restrict) {
+		if(restriction==0&&player instanceof EntityPlayerMP){
 			distance = ((EntityPlayerMP) player).theItemInWorldManager.getBlockReachDistance();
 		}
+		else if(restriction>0){
+			distance=restriction;
+		}
+
 		Vec3 vector2 = vector1.addVector(pitchAdjustedSinYaw * distance, sinPitch * distance, pitchAdjustedCosYaw * distance);
 		return player.worldObj.rayTraceBlocks(vector1, vector2);
 	}

@@ -208,11 +208,12 @@ public class VampireHudOverlay extends Gui {
 
 		
 		int level = VampirePlayer.get(mc.thePlayer).getLevel();
+		boolean lord= VampirePlayer.get(mc.thePlayer).isVampireLord();
 		if (mc.playerController.gameIsSurvivalOrAdventure() && level > 0) {
 			mc.mcProfiler.startSection("vampireLevel");
 			// boolean flag1 = false;
 			int color = Color.MAGENTA.getRGB();
-			String text = "" + level;
+			String text = lord?"Lord":("" + level);
 			int x = (event.resolution.getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2;
 			int y = event.resolution.getScaledHeight() - 31 - 4 - 12;
 			mc.fontRenderer.drawString(text, x + 1, y, 0);

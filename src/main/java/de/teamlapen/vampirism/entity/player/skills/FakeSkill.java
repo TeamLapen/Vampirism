@@ -37,8 +37,8 @@ public class FakeSkill extends DefaultSkill {
 	}
 
 	@Override
-	public void onActivated(VampirePlayer vampire, EntityPlayer player) {
-
+	public boolean onActivated(VampirePlayer vampire, EntityPlayer player) {
+		return true;
 	}
 
 }
