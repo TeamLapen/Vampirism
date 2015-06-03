@@ -22,8 +22,6 @@ public class Configs {
 		File balanceConfig = new File(configDir, REFERENCE.MODID + "_balance.cfg");
 		config = new Configuration(mainConfig);
 		balance = new Configuration(balanceConfig);
-		Logger.i("t", config.getConfigFile().getAbsolutePath());
-		Logger.i("t", balance.getConfigFile().getAbsolutePath());
 		String old = loadConfiguration();
 		if (old != null || (inDev && reset_balance_in_dev)) {
 			balance = reset(balance);
