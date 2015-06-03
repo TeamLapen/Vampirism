@@ -16,7 +16,8 @@ if [[ $commsg != *"$rt"* ]] && [[ $commsg != *"$vt"* ]] ; then
 	exit 0
 fi
 #Get lasttag
-lasttag=$(git describe --abbrev=0 --tags)
+# Does not work over multiple branches lasttag=$(git describe --abbrev=0 --tags)
+lasttag=$(git describe --tags `git rev-list --tags --max-count=1`)
 echo "Last tag: " $lasttag
 #Get mainversion:
 IFS=. read major minor build <<<"${lasttag##*v}"
