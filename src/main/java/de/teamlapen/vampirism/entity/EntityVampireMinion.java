@@ -202,6 +202,7 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 	public void setLord(IMinionLord b) {
 		if (!b.equals(boss)) {
 			this.setBossId(b.getThePersistentID());
+			b.getMinionHandler().registerMinion(this, true);
 			boss = b;
 		}
 	}

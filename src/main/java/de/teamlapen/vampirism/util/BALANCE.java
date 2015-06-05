@@ -166,6 +166,18 @@ public final class BALANCE {
 		@DefaultInt(value=30,minValue=1,name="Lord teleport cooldown")
 		public static int TELEPORT_COOLDOWN;
 		
+		@DefaultInt(value=0,minValue=-1,maxValue=0,name="Teleport min level",comment="Can only be -1 (disabled) or 0 (enabled")
+		public static int TELEPORT_MIN_LEVEL;
+		
+		@DefaultInt(value=60,minValue=1,name="Freeze cooldown")
+		public static int FREEZE_COOLDOWN;
+		
+		@DefaultInt(value=0,minValue=-1,maxValue=0,name="Freeze min level",comment="Can only be -1 (disabled) or 0 (enabled")
+		public static int FREEZE_MIN_LEVEL;
+		
+		@DefaultInt(value=6,minValue=1,maxValue=30,name="Freeze duration")
+		public static int FREEZE_DURATION;
+		
 		public static int getVampireLordDuration(int level){
 			if(level<RAGE_MIN_LEVEL){
 				return 0;
@@ -217,6 +229,9 @@ public final class BALANCE {
 	
 	@DefaultInt(value=1200,comment="Duration of the sanguinare vampiris effect in seconds",name="Sanguinare Duration",minValue=1)
 	public static int VAMPIRE_PLAYER_SANGUINARE_DURATION;
+	
+	@DefaultInt(value=5,comment="Vampire lord's minion count",name="Vampire lord minion count",minValue=0)
+	public static int VAMPIRE_PLAYER_LORD_MINIONS;
 	
 	// Vampiremob
 	@DefaultInt(value=5,minValue=2,maxValue=30,name="Small Mob Blood Amount",comment = "The amount of blood you get when you bite a 'small' mob")

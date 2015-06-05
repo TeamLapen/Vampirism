@@ -19,6 +19,7 @@ import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.villages.VillageVampire;
 import de.teamlapen.vampirism.villages.VillageVampireData;
@@ -149,17 +150,7 @@ public abstract class DefaultVampire extends EntityMob {
 	 */
 	protected void teleportAway() {
 		this.setInvisible(true);
-		short short1 = 128;
-		for (int l = 0; l < short1; ++l) {
-			double d6 = l / (short1 - 1.0D);
-			float f = (this.rand.nextFloat() - 0.5F) * 0.2F;
-			float f1 = (this.rand.nextFloat() - 0.5F) * 0.2F;
-			float f2 = (this.rand.nextFloat() - 0.5F) * 0.2F;
-			double d7 = this.posX + (50) * d6 + (this.rand.nextDouble() - 0.5D) * this.width * 2.0D;
-			double d8 = this.posY + (10) * d6 + this.rand.nextDouble() * this.height;
-			double d9 = this.posZ + (50) * d6 + (this.rand.nextDouble() - 0.5D) * this.width * 2.0D;
-			this.worldObj.spawnParticle("portal", d7, d8, d9, f, f1, f2);
-		}
+		Helper.spawnParticlesAroundEntity(this, "portal",5,64);
 
 		this.worldObj.playSoundEffect(this.posX, this.posY, this.posZ, "mob.endermen.portal", 1.0F, 1.0F);
 		this.playSound("mob.endermen.portal", 1.0F, 1.0F);

@@ -62,6 +62,7 @@ text.vampirism:ritual_no_vampire=You need to be a vampire for this ritual
 text.vampirism:cant_fly_day=You cannot fly at daytime
 text.vampirism:cant_use_at_night=You cannot use this at night
 text.vampirism:other_players_preventing=Other players in this world are preventing you from using this item
+text.vampirism:no_more_minions=You are not able to controll any more minions
 
 #Config
 category.vampirism.balance=Balance settings

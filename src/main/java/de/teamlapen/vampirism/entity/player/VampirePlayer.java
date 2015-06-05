@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.player;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,9 +39,11 @@ import de.teamlapen.vampirism.entity.DefaultVampire;
 import de.teamlapen.vampirism.entity.EntityDracula;
 import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
+import de.teamlapen.vampirism.entity.EntityVampireMinion;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.ai.IMinion;
 import de.teamlapen.vampirism.entity.ai.IMinionLord;
+import de.teamlapen.vampirism.entity.ai.MinionHandler;
 import de.teamlapen.vampirism.entity.player.skills.DefaultSkill;
 import de.teamlapen.vampirism.entity.player.skills.ILastingSkill;
 import de.teamlapen.vampirism.entity.player.skills.ISkill;
@@ -280,7 +283,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 	private final String KEY_EXTRADATA = "extra";
 
-	private BloodStats bloodStats;
+	private final BloodStats bloodStats;
 
 	private int level;
 
@@ -291,6 +294,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	private boolean autoFillBlood;
 
 	private EntityLivingBase minionTarget;
+	
+	private final MinionHandler<VampirePlayer> minionHandler;
 
 	private boolean skipFallDamageReduction = false;
 
@@ -310,6 +315,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		autoFillBlood = true;
 		skillTimer = new int[Skills.getSkillCount()];
 		extraData = new NBTTagCompound();
+		minionHandler=new MinionHandler<VampirePlayer>(this);
 	}
 
 	/**
@@ -715,6 +721,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			return;
 		}
 		this.bloodStats.onUpdate();
+		this.minionHandler.checkMinions();
 		if (!player.worldObj.isRemote) {
 			if (gettingSundamage()) {
 				handleSunDamage();
@@ -979,6 +986,11 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		if (getLevel() == 0) {
 			return;
 		}
+		
+		if(e instanceof EntityVampire && this.isVampireLord()){
+			this.makeVampireToMinion((EntityVampire) e);
+			return;
+		}
 		VampireMob mob = VampireMob.get(e);
 		int amount = mob.bite();
 		if (amount > 0) {
@@ -1013,8 +1025,22 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	public void suckBlood(int entityId) {
 		Entity e = player.worldObj.getEntityByID(entityId);
 		if (e != null && e instanceof EntityCreature) {
-			suckBlood((EntityCreature) e);
+			if(e.getDistanceToEntity(player)<=((EntityPlayerMP)player).theItemInWorldManager.getBlockReachDistance()+2){
+				suckBlood((EntityCreature) e);
+			}
+			else{
+				Logger.w(TAG, "Entity sent by client is not in reach "+entityId);
+			}
 		}
+	}
+	
+	private void makeVampireToMinion(EntityVampire e){
+		if(getMinionsLeft(true)==0)return;
+		EntityVampireMinion m=(EntityVampireMinion) EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_MINION_NAME, e.worldObj);
+		m.copyLocationAndAnglesFrom(e);
+		m.setLord(this);
+		e.setDead();
+		e.worldObj.spawnEntityInWorld(m);
 	}
 
 	/**
@@ -1068,5 +1094,28 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		NBTTagCompound nbt = new NBTTagCompound();
 		VampirePlayer.get(original).saveNBTData(nbt);
 		this.loadNBTData(nbt);
+	}
+	
+	@Override
+	public int getMaxMinionCount(){
+		return Math.round(getLevel()/3F)+(this.isVampireLord()?4:1);
+	}
+	
+	/**
+	 * Returns the number of minions which can be recruited
+	 * @param notify If true the player is notified, if he cannot controll any more minions
+	 * @return
+	 */
+	public int getMinionsLeft(boolean notify){
+		int left=minionHandler.getMinionsLeft();
+		if(notify&&left==0){
+			player.addChatMessage(new ChatComponentTranslation("text.vampirism:no_more_minions"));
+		}
+		return left;
+	}
+
+	@Override
+	public MinionHandler<VampirePlayer> getMinionHandler() {
+		return this.minionHandler;
 	}
 }

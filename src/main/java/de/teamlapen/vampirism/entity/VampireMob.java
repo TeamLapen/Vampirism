@@ -271,6 +271,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	public void setLord(IMinionLord b) {
 		if (!b.equals(boss)) {
 			this.setLordId(b.getThePersistentID());
+			b.getMinionHandler().registerMinion(this, true);
 			boss = b;
 		}
 

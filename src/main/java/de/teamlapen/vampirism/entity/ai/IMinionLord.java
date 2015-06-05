@@ -29,4 +29,8 @@ public interface IMinionLord {
 	public UUID getThePersistentID();
 
 	public boolean isTheEntityAlive();
+	
+	public int getMaxMinionCount();
+	
+	public MinionHandler getMinionHandler();
 }

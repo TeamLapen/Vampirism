@@ -62,6 +62,7 @@ public class Skills {
 		Skills.registerSkill(new SummonBatSkill());
 		Skills.registerSkill(new InvisibilitySkill());
 		Skills.registerSkill(new TeleportSkill());
+		Skills.registerSkill(new FreezeSkill());
 	}
 
 	/**

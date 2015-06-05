@@ -2,16 +2,17 @@ package de.teamlapen.vampirism.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityFX;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.client.render.particle.FlyingBloodParticle;
 import de.teamlapen.vampirism.client.render.particle.FlyingBloodPlayerParticle;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
 
 /**
@@ -41,6 +42,14 @@ public class SpawnCustomParticlePacket implements IMessage {
 						FlyingBloodParticle.addParticle(new FlyingBloodParticle(message.posX,message.posY,message.posZ,message.data));
 					}
 					break;
+				case 2:
+					World w=Minecraft.getMinecraft().theWorld;
+					Entity e=w.getEntityByID(message.data.getInteger("id"));
+					if(e!=null&&e instanceof EntityLivingBase){
+						Helper.spawnParticlesAroundEntity((EntityLivingBase) e, message.data.getString("particle"), message.data.getDouble("distance"),message.amount);
+					}
+					break;
+					
 				default:
 					Logger.w("CustomParticlePacket", "Particle of type " + message.data.getInteger("type") + " is unknown");
 					return null;

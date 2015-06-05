@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.UUID;
 
 import net.minecraft.entity.Entity;
@@ -24,6 +26,7 @@ import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.ai.IMinion;
 import de.teamlapen.vampirism.entity.ai.IMinionLord;
+import de.teamlapen.vampirism.entity.ai.MinionHandler;
 import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.network.UpdateEntityPacket;
 import de.teamlapen.vampirism.util.BALANCE;
@@ -39,6 +42,8 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	protected int level = 0;
 
 	private boolean prevAttacking = false;
+	
+	private final MinionHandler<EntityVampireLord> minionHandler;
 
 	public EntityVampireLord(World par1World) {
 		super(par1World);
@@ -48,6 +53,8 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 		this.tasks.addTask(9, new EntityAILookIdle(this));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
+		
+		minionHandler=new MinionHandler<EntityVampireLord>(this);
 
 	}
 
@@ -107,12 +114,6 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 		return MAX_LEVEL;
 	}
 
-	/**
-	 * @return The number of near minions
-	 */
-	protected int getMinionCount() {
-		return this.worldObj.getEntitiesWithinAABB(EntityVampireMinion.class, this.boundingBox.expand(22, 17, 22)).size();
-	}
 
 	@Override
 	public EntityLivingBase getMinionTarget() {
@@ -168,6 +169,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 			prevAttacking = false;
 			this.applyEntityAttributes(false);
 		}
+		this.minionHandler.checkMinions();
 		if (!worldObj.isRemote && shouldSpawnMinion()) {
 			int i = 0;
 			if (this.recentlyHit > 0) {
@@ -239,7 +241,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	 */
 	protected boolean shouldSpawnMinion() {
 		if (this.ticksExisted % 40 == 0) {
-			int count = getMinionCount();
+			int count = minionHandler.getMinionCount();
 			if (count < level + 1) {
 				return true;
 			}
@@ -274,6 +276,16 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("level", level);
+	}
+
+	@Override
+	public int getMaxMinionCount() {
+		return 100;
+	}
+
+	@Override
+	public MinionHandler<EntityVampireLord> getMinionHandler() {
+		return minionHandler;
 	}
 
 }

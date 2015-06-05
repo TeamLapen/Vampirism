@@ -8,6 +8,7 @@ import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.server.MinecraftServer;
@@ -16,6 +17,7 @@ import net.minecraft.util.ChatComponentText;
 import de.teamlapen.vampirism.coremod.CoreHandler;
 import de.teamlapen.vampirism.entity.EntityDeadMob;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
+import de.teamlapen.vampirism.entity.ai.IMinion;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
@@ -81,16 +83,27 @@ public class TestCommand implements ICommand {
 	public void processCommand(ICommandSender sender, String[] param) {
 		if (sender instanceof EntityPlayer) {
 			EntityPlayer p = (EntityPlayer) sender;
-			sendMessage(sender,"Lord: "+VampirePlayer.get(p).isVampireLord());
+			VampirePlayer vampire=VampirePlayer.get(p);
 			// -----------------
 			if (param.length > 0) {
 				if("lord".equals(param[0])){
-					VampirePlayer.get(p).setLevel(REFERENCE.HIGHEST_REACHABLE_LEVEL);
-					if(VampirePlayer.get(p).setVampireLord(true)){
+					vampire.setLevel(REFERENCE.HIGHEST_REACHABLE_LEVEL);
+					if(vampire.setVampireLord(true)){
 						sendMessage(sender,"You are now a vampire lord");
 					}
 
 					return;
+				}
+				if("minions".equals(param[0])){
+					for(IMinion m:vampire.getMinionHandler().getMinionListForDebug()){
+						sendMessage(sender,m.getRepresentingEntity().toString());
+					}
+					sendMessage(sender,vampire.getMinionHandler().getMinionCount()+"/"+vampire.getMaxMinionCount());
+					return;
+				}
+				if("target".equals(param[0])){
+						sendMessage(sender,Helper.entityToString(vampire.getMinionTarget()));
+					
 				}
 				try {
 					VampirePlayer.get(p).setLevel(Integer.parseInt(param[0]));

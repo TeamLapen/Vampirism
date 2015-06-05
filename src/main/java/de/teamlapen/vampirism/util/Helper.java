@@ -14,6 +14,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
@@ -27,6 +28,8 @@ import cpw.mods.fml.relauncher.ReflectionHelper;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
+import de.teamlapen.vampirism.network.SpawnParticlePacket;
 import de.teamlapen.vampirism.villages.VillageVampire;
 import de.teamlapen.vampirism.villages.VillageVampireData;
 
@@ -110,7 +113,7 @@ public class Helper {
 	}
 
 	/**
-	 * Gets players looking spot.
+	 * Gets players looking spot (blocks only).
 	 * 
 	 * @param player
 	 * @param restriction
@@ -234,5 +237,34 @@ public class Helper {
 		}
 		e.setDead();
 		return null;
+	}
+	
+	public static String entityToString(Entity e){
+		if(e==null){
+			return "Entity is null";
+		}
+		return e.toString();//+" at "+e.posX+" "+e.posY+" "+e.posZ+" Id "+e.getEntityId();
+	}
+	
+	public static void spawnParticlesAroundEntity(EntityLivingBase e,String particle,double maxDistance,int amount){
+		if(!e.worldObj.isRemote){
+			NBTTagCompound nbt=new NBTTagCompound();
+			nbt.setString("particle",particle);
+			nbt.setInteger("id", e.getEntityId());
+			nbt.setDouble("distance", maxDistance);
+			Helper.sendPacketToPlayersAround(new SpawnCustomParticlePacket(2,0,0,0,amount,nbt), e);
+			return;
+		}
+		short short1 = (short) amount;
+		for (int l = 0; l < short1; ++l) {
+			double d6 = l / (short1 - 1.0D)-0.5D;
+			float f = (e.getRNG().nextFloat() - 0.5F) * 0.2F;
+			float f1 = (e.getRNG().nextFloat() - 0.5F) * 0.2F;
+			float f2 = (e.getRNG().nextFloat() - 0.5F) * 0.2F;
+			double d7 = e.posX + (maxDistance) * d6 + (e.getRNG().nextDouble() - 0.5D) * e.width * 2.0D;
+			double d8 = e.posY + (maxDistance/2) * d6 + e.getRNG().nextDouble() * e.height;
+			double d9 = e.posZ + (maxDistance) * d6 + (e.getRNG().nextDouble() - 0.5D) * e.width * 2.0D;
+			e.worldObj.spawnParticle(particle, d7, d8, d9, f, f1, f2);
+		}
 	}
 }

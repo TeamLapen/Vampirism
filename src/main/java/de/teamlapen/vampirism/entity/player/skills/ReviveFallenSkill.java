@@ -16,10 +16,6 @@ public class ReviveFallenSkill extends DefaultSkill {
 		return BALANCE.VP_SKILLS.REVIVE_FALLEN_COOLDOWN * 20;
 	}
 
-	private int getCount(int level) {
-		return level - getMinLevel() + 1;
-	}
-
 	@Override
 	public int getMinLevel() {
 		return BALANCE.VP_SKILLS.REVIVE_FALLEN_MIN_LEVEL;
@@ -39,7 +35,8 @@ public class ReviveFallenSkill extends DefaultSkill {
 
 	@Override
 	public boolean onActivated(VampirePlayer vampire, EntityPlayer player) {
-		int max = getCount(vampire.getLevel());
+		int max = vampire.getMinionsLeft(true);
+		if(max==0)return false;
 		for (EntityDeadMob mob : (List<EntityDeadMob>) player.worldObj.getEntitiesWithinAABB(EntityDeadMob.class, player.boundingBox.expand(10, 10, 10))) {
 			EntityCreature e = mob.convertToMob();
 			if (e != null) {

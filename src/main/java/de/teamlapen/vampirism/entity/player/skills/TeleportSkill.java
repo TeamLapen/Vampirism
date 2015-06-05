@@ -93,7 +93,7 @@ public class TeleportSkill extends DefaultSkill {
 
 	@Override
 	public int getMinLevel() {
-		return 1;
+		return BALANCE.VP_SKILLS.TELEPORT_MIN_LEVEL;
 	}
 	
 	@Override
