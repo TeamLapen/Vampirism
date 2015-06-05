@@ -60,5 +60,10 @@ public class VampireRageSkill extends DefaultSkill implements ILastingSkill {
 	public boolean canBeUsedBy(VampirePlayer vampire,EntityPlayer player){
 		return !vampire.isSkillActive(Skills.batMode)&&!vampire.isVampireLord();
 	}
+	
+	@Override
+	public String getUnlocalizedName() {
+		return "skill.vampirism.vampire_rage";
+	}
 
 }

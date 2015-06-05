@@ -100,5 +100,10 @@ public class TeleportSkill extends DefaultSkill {
 	public boolean canBeUsedBy(VampirePlayer vampire,EntityPlayer player){
 		return vampire.isVampireLord();
 	}
+	
+	@Override
+	public String getUnlocalizedName() {
+		return "skill.vampirism.teleport";
+	}
 
 }

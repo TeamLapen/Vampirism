@@ -55,5 +55,10 @@ public class FreezeSkill extends DefaultSkill {
 	public boolean canBeUsedBy(VampirePlayer vampire,EntityPlayer player){
 		return vampire.isVampireLord();
 	}
+	
+	@Override
+	public String getUnlocalizedName() {
+		return "skill.vampirism.freeze";
+	}
 
 }

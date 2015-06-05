@@ -63,5 +63,10 @@ public class InvisibilitySkill extends DefaultSkill implements ILastingSkill {
 	public int getMinLevel() {
 		return 0;
 	}
+	
+	@Override
+	public String getUnlocalizedName() {
+		return "skill.vampirism.invisibility";
+	}
 
 }

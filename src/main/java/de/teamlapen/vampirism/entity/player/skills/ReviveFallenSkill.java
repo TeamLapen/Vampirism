@@ -49,5 +49,10 @@ public class ReviveFallenSkill extends DefaultSkill {
 		}
 		return true;
 	}
+	
+	@Override
+	public String getUnlocalizedName() {
+		return "skill.vampirism.revive_fallen";
+	}
 
 }

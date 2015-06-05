@@ -128,4 +128,9 @@ public class BatSkill extends DefaultSkill implements ILastingSkill {
 		return !vampire.gettingSundamage()&&!vampire.isSkillActive(Skills.vampireRage);
 	}
 
+	@Override
+	public String getUnlocalizedName() {
+		return "skill.vampirism.bat_skill";
+	}
+
 }

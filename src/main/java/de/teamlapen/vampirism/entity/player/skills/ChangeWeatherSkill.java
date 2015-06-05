@@ -33,5 +33,10 @@ public class ChangeWeatherSkill extends DefaultSkill {
 		info.setRaining(!info.isRaining());
 		return true;
 	}
+	
+	@Override
+	public String getUnlocalizedName() {
+		return "skill.vampirism.change_weather";
+	}
 
 }

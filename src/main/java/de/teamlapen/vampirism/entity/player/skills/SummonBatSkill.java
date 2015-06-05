@@ -43,5 +43,10 @@ public class SummonBatSkill extends DefaultSkill {
 	public boolean canBeUsedBy(VampirePlayer vampire,EntityPlayer player){
 		return vampire.isSkillActive(Skills.batMode);
 	}
+	
+	@Override
+	public String getUnlocalizedName() {
+		return "skill.vampirism.summon_bats";
+	}
 
 }

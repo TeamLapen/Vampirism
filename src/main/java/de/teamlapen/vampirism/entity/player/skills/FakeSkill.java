@@ -40,5 +40,10 @@ public class FakeSkill extends DefaultSkill {
 	public boolean onActivated(VampirePlayer vampire, EntityPlayer player) {
 		return true;
 	}
+	
+	@Override
+	public String getUnlocalizedName() {
+		return "skill.vampirism.cancel";
+	}
 
 }
