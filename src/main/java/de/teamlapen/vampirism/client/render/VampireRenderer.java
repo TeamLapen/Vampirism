@@ -20,13 +20,17 @@ public class VampireRenderer extends RenderBiped{
 	private static final ResourceLocation texture2 = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vampire2.png");
 	private static final ResourceLocation texture3 = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vampire3.png");
 
-	public VampireRenderer(ModelBiped p_i1261_1_, float p_i1261_2_) {
-		super(p_i1261_1_, p_i1261_2_);
+	public VampireRenderer(float p_i1261_2_) {
+		super(new ModelBiped(), p_i1261_2_);
 	}
 
 	@Override
 	protected ResourceLocation getEntityTexture(Entity entity) {
 		int i=entity.getEntityId()%4;
+		return getTexture(i);
+	}
+	
+	public static ResourceLocation getTexture(int i){
 		switch(i){
 		case 0:
 			return texture1;

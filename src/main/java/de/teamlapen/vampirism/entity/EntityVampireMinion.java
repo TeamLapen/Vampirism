@@ -23,6 +23,7 @@ import de.teamlapen.vampirism.entity.ai.IMinionLord;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
 
 public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyncable {
@@ -31,6 +32,18 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 	private UUID bossId = null;
 	protected IMinionLord boss;
 	private int lookForBossTimer = 0;
+	/**
+	 * Used for the visual transition from normal vampire to players minion
+	 */
+	private int oldVampireTexture=-1;
+
+	public int getOldVampireTexture() {
+		return oldVampireTexture;
+	}
+
+	public void setOldVampireTexture(int oldVampireTexture) {
+		this.oldVampireTexture = oldVampireTexture;
+	}
 
 	public EntityVampireMinion(World world) {
 		super(world);
@@ -91,6 +104,7 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 		if (boss != null) {
 			nbt.setInteger("eid", boss.getRepresentingEntity().getEntityId());
 		}
+		nbt.setInteger("oldvampire", oldVampireTexture);
 	}
 
 	@Override
@@ -130,6 +144,9 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 			}
 			this.bossId = this.boss.getThePersistentID();
 		}
+		if(nbt.hasKey("oldvampire")){
+			this.oldVampireTexture=nbt.getInteger("oldvampire");
+		}
 
 	}
 
@@ -138,10 +155,10 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 		for (EntityLivingBase e : list) {
 			if (e.getPersistentID().equals(bossId)) {
 				if (e instanceof IMinionLord) {
-					boss = (IMinionLord) e;
+					this.setLord((IMinionLord) e);
 					lookForBossTimer = 0;
 				} else if (e instanceof EntityPlayer) {
-					boss = VampirePlayer.get((EntityPlayer) e);
+					this.setLord(VampirePlayer.get((EntityPlayer) e));
 					lookForBossTimer = 0;
 				} else {
 					Logger.w("VampireMinion", "Found boss with UUID " + bossId + " but it isn't a Minion Lord");
@@ -178,6 +195,12 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 				}
 			}
 
+		}
+		if(oldVampireTexture!=-1&&this.ticksExisted>50){
+			oldVampireTexture=-1;
+		}
+		if(oldVampireTexture!=-1&&worldObj.isRemote){
+			Helper.spawnParticlesAroundEntity(this, "witchMagic", 1.0F, 3);
 		}
 		super.onLivingUpdate();
 	}

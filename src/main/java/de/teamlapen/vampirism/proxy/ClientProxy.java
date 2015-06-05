@@ -1,8 +1,5 @@
 package de.teamlapen.vampirism.proxy;
 
-import java.util.Iterator;
-import java.util.List;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.EntityRenderer;
@@ -14,16 +11,12 @@ import net.minecraft.client.shader.ShaderGroup;
 import net.minecraft.client.util.JsonException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.registry.ClientRegistry;
@@ -39,22 +32,17 @@ import de.teamlapen.vampirism.block.BlockBloodAltar4Tip.TileEntityBloodAltar4Tip
 import de.teamlapen.vampirism.block.BlockChurchAltar.TileEntityChurchAltar;
 import de.teamlapen.vampirism.client.KeyInputEventHandler;
 import de.teamlapen.vampirism.client.gui.VampireHudOverlay;
-import de.teamlapen.vampirism.client.model.ModelBipedCloaked;
-import de.teamlapen.vampirism.client.model.ModelDracula;
 import de.teamlapen.vampirism.client.model.ModelGhost;
-import de.teamlapen.vampirism.client.model.ModelVampire;
 import de.teamlapen.vampirism.client.render.PitchforkRenderer;
 import de.teamlapen.vampirism.client.render.RenderHandler;
 import de.teamlapen.vampirism.client.render.RenderTileEntityItem;
 import de.teamlapen.vampirism.client.render.RendererBloodAltar1;
 import de.teamlapen.vampirism.client.render.RendererBloodAltar2;
-import de.teamlapen.vampirism.client.render.RendererBloodAltar3;
 import de.teamlapen.vampirism.client.render.RendererBloodAltar4;
 import de.teamlapen.vampirism.client.render.RendererBloodAltar4Tip;
 import de.teamlapen.vampirism.client.render.RendererChurchAltar;
 import de.teamlapen.vampirism.client.render.RendererCoffin;
 import de.teamlapen.vampirism.client.render.RendererDeadMob;
-import de.teamlapen.vampirism.client.render.RendererDracula;
 import de.teamlapen.vampirism.client.render.RendererGhost;
 import de.teamlapen.vampirism.client.render.RendererTorch;
 import de.teamlapen.vampirism.client.render.RendererVampireLord;
@@ -64,7 +52,6 @@ import de.teamlapen.vampirism.client.render.VampireHunterRenderer;
 import de.teamlapen.vampirism.client.render.VampireRenderer;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityDeadMob;
-import de.teamlapen.vampirism.entity.EntityDracula;
 import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
@@ -75,7 +62,6 @@ import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.skills.BatSkill;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar3;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar4;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import de.teamlapen.vampirism.util.Helper;
@@ -100,11 +86,11 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public void registerRenderer() {
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampireHunter.class, new VampireHunterRenderer());
-		RenderingRegistry.registerEntityRenderingHandler(EntityVampire.class, new VampireRenderer(new ModelVampire(), 0.5F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityVampire.class, new VampireRenderer(0.5F));
 		//RenderingRegistry.registerEntityRenderingHandler(EntityDracula.class, new RendererDracula(new ModelDracula(), 0.5F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityGhost.class, new RendererGhost(new ModelGhost(), 0.5F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampireLord.class, new RendererVampireLord(0.5F));
-		RenderingRegistry.registerEntityRenderingHandler(EntityVampireMinion.class, new RendererVampireMinion(new ModelVampire(),0.5F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityVampireMinion.class, new RendererVampireMinion(0.5F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityDeadMob.class, new RendererDeadMob());
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlindingBat.class, new RenderBat());
 		MinecraftForgeClient.registerItemRenderer(ModItems.pitchfork, new PitchforkRenderer());

@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.network;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -43,7 +43,7 @@ public class SpawnCustomParticlePacket implements IMessage {
 					}
 					break;
 				case 2:
-					World w=Minecraft.getMinecraft().theWorld;
+					WorldClient w=Minecraft.getMinecraft().theWorld;
 					Entity e=w.getEntityByID(message.data.getInteger("id"));
 					if(e!=null&&e instanceof EntityLivingBase){
 						Helper.spawnParticlesAroundEntity((EntityLivingBase) e, message.data.getString("particle"), message.data.getDouble("distance"),message.amount);

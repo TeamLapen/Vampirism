@@ -1039,6 +1039,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		EntityVampireMinion m=(EntityVampireMinion) EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_MINION_NAME, e.worldObj);
 		m.copyLocationAndAnglesFrom(e);
 		m.setLord(this);
+		m.setOldVampireTexture(e.getEntityId()%4);
 		e.setDead();
 		e.worldObj.spawnEntityInWorld(m);
 	}

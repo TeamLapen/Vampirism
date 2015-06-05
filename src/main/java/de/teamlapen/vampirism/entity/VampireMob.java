@@ -184,10 +184,10 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		for (EntityLivingBase e : list) {
 			if (e.getPersistentID().equals(bossId)) {
 				if (e instanceof IMinionLord) {
-					boss = (IMinionLord) e;
+					this.setLord((IMinionLord) e);
 					lookForBossTimer = 0;
 				} else if (e instanceof EntityPlayer) {
-					boss = VampirePlayer.get((EntityPlayer) e);
+					this.setLord(VampirePlayer.get((EntityPlayer) e));
 					lookForBossTimer = 0;
 				} else {
 					Logger.w("VampireMob", "Found boss with UUID " + bossId + " but it isn't a Minion Lord");
