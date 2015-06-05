@@ -29,9 +29,9 @@ import de.teamlapen.vampirism.util.Logger;
 public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyncable {
 
 	private final static int MAX_SEARCH_TIME = 100;
-	private UUID bossId = null;
-	protected IMinionLord boss;
-	private int lookForBossTimer = 0;
+	private UUID lordId = null;
+	protected IMinionLord lord;
+	private int lookForLordTimer = 0;
 	/**
 	 * Used for the visual transition from normal vampire to players minion
 	 */
@@ -56,7 +56,7 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 
 			@Override
 			public boolean isEntityApplicable(Entity entity) {
-				if (boss != null && boss.getRepresentingEntity().equals(entity)) {
+				if (lord != null && lord.getRepresentingEntity().equals(entity)) {
 					return false;
 				}
 				if (entity instanceof EntityPlayer) {
@@ -101,15 +101,15 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 
 	@Override
 	public void writeFullUpdateToNBT(NBTTagCompound nbt) {
-		if (boss != null) {
-			nbt.setInteger("eid", boss.getRepresentingEntity().getEntityId());
+		if (lord != null) {
+			nbt.setInteger("eid", lord.getRepresentingEntity().getEntityId());
 		}
 		nbt.setInteger("oldvampire", oldVampireTexture);
 	}
 
 	@Override
 	public IMinionLord getLord() {
-		return boss;
+		return lord;
 	}
 
 	@Override
@@ -135,14 +135,14 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 		if (nbt.hasKey("eid")) {
 			Entity e = worldObj.getEntityByID(nbt.getInteger("eid"));
 			if (e instanceof EntityPlayer) {
-				this.boss = VampirePlayer.get((EntityPlayer) e);
+				this.lord = VampirePlayer.get((EntityPlayer) e);
 			} else if (e instanceof IMinionLord) {
-				this.boss = (IMinionLord) e;
+				this.lord = (IMinionLord) e;
 			} else {
 				Logger.w("EntityVampireMinion", "PartialUpdate: The given id(" + nbt.getInteger("eid") + ")[" + e + "] is no Minion Lord");
 				return;
 			}
-			this.bossId = this.boss.getThePersistentID();
+			this.lordId = this.lord.getThePersistentID();
 		}
 		if(nbt.hasKey("oldvampire")){
 			this.oldVampireTexture=nbt.getInteger("oldvampire");
@@ -150,21 +150,21 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 
 	}
 
-	protected void lookForBoss() {
+	protected void lookForLord() {
 		List<EntityLivingBase> list = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand(15, 10, 15));
 		for (EntityLivingBase e : list) {
-			if (e.getPersistentID().equals(bossId)) {
+			if (e.getPersistentID().equals(lordId)) {
 				if (e instanceof IMinionLord) {
 					this.setLord((IMinionLord) e);
-					lookForBossTimer = 0;
+					lookForLordTimer = 0;
 				} else if (e instanceof EntityPlayer) {
 					this.setLord(VampirePlayer.get((EntityPlayer) e));
-					lookForBossTimer = 0;
+					lookForLordTimer = 0;
 				} else {
-					Logger.w("VampireMinion", "Found boss with UUID " + bossId + " but it isn't a Minion Lord");
-					bossId = null;
-					boss = null;
-					lookForBossTimer = 0;
+					Logger.w("VampireMinion", "Found lord with UUID " + lordId + " but it isn't a Minion Lord");
+					lordId = null;
+					lord = null;
+					lookForLordTimer = 0;
 				}
 
 				break;
@@ -175,21 +175,21 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 	@Override
 	public void onLivingUpdate() {
 		if (!this.worldObj.isRemote) {
-			if (boss == null) {
-				if (bossId != null) {
-					lookForBoss();
+			if (lord == null) {
+				if (lordId != null) {
+					lookForLord();
 				}
 
-				if (boss == null) {
-					lookForBossTimer++;
+				if (lord == null) {
+					lookForLordTimer++;
 				}
-				if (lookForBossTimer > MAX_SEARCH_TIME) {
+				if (lookForLordTimer > MAX_SEARCH_TIME) {
 					this.attackEntityFrom(DamageSource.generic, 5);
 				}
-			} else if (!boss.isTheEntityAlive()) {
-				boss = null;
-				bossId = null;
-			} else if (boss.getTheDistanceSquared(this) > 1000) {
+			} else if (!lord.isTheEntityAlive()) {
+				lord = null;
+				lordId = null;
+			} else if (lord.getTheDistanceSquared(this) > 1000) {
 				if (this.rand.nextInt(80) == 0) {
 					this.attackEntityFrom(DamageSource.generic, 3);
 				}
@@ -209,33 +209,33 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		if (nbt.hasKey("BossUUIDMost")) {
-			this.bossId = new UUID(nbt.getLong("BossUUIDMost"), nbt.getLong("BossUUIDLeast"));
+			this.lordId = new UUID(nbt.getLong("BossUUIDMost"), nbt.getLong("BossUUIDLeast"));
 		}
 	}
 
-	private void setBossId(UUID id) {
-		if (!id.equals(bossId)) {
-			bossId = id;
-			boss = null;
-			lookForBossTimer = 0;
+	private void setLordId(UUID id) {
+		if (!id.equals(lordId)) {
+			lordId = id;
+			lord = null;
+			lookForLordTimer = 0;
 		}
 	}
 
 	@Override
 	public void setLord(IMinionLord b) {
-		if (!b.equals(boss)) {
-			this.setBossId(b.getThePersistentID());
+		if (!b.equals(lord)) {
+			this.setLordId(b.getThePersistentID());
 			b.getMinionHandler().registerMinion(this, true);
-			boss = b;
+			lord = b;
 		}
 	}
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		if (this.bossId != null) {
-			nbt.setLong("BossUUIDMost", this.bossId.getMostSignificantBits());
-			nbt.setLong("BossUUIDLeast", this.bossId.getLeastSignificantBits());
+		if (this.lordId != null) {
+			nbt.setLong("BossUUIDMost", this.lordId.getMostSignificantBits());
+			nbt.setLong("BossUUIDLeast", this.lordId.getLeastSignificantBits());
 		}
 
 	}

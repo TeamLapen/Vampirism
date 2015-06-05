@@ -77,7 +77,7 @@ public class SpawnCustomParticlePacket implements IMessage {
 
 	/**
 	 * @param type
-	 *            0:Flying_Blood
+	 *            0:Flying_Blood_Player,1:Flying_Blood,2:{@link Helper#spawnParticlesAroundEntity(EntityLivingBase, String, double, int)}
 	 * @param data
 	 *            CustomData
 	 */

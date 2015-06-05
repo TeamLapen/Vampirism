@@ -9,6 +9,12 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 
+/**
+ * Used in IMinionLord classes to manage their minions
+ * @author Maxanier
+ *
+ * @param <T>Lord class 
+ */
 public class MinionHandler<T extends IMinionLord> {
 
 	private final ArrayList<IMinion> minions;
@@ -57,6 +63,9 @@ public class MinionHandler<T extends IMinionLord> {
 		minions.remove(m);
 	}
 	
+	/**
+	 * Removes all minions are either dead or have found another lord
+	 */
 	public void checkMinions(){
 		Iterator<IMinion> it=minions.iterator();
 		while(it.hasNext()){

@@ -5,6 +5,11 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 
+/**
+ * ModelBiped which can grow/shrink between mature and child size
+ * @author Maxanier
+ *
+ */
 public class ModelBipedShrinkable extends ModelBiped {
 	
 	private float size=1F;

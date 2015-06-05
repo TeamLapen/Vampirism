@@ -77,9 +77,9 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	private byte type;
 
 	private final static int MAX_SEARCH_TIME = 100;
-	private UUID bossId = null;
-	protected IMinionLord boss;
-	private int lookForBossTimer = 0;
+	private UUID lordId = null;
+	protected IMinionLord lord;
+	private int lookForLordTimer = 0;
 
 	public VampireMob(EntityCreature mob) {
 		entity = mob;
@@ -145,7 +145,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		if (!isMinion()) {
 			Logger.w("VampireMob", "Trying to get lord, but mob is no minion");
 		}
-		return boss;
+		return lord;
 	}
 
 	@Override
@@ -172,28 +172,28 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 			this.loadUpdateFromNBT(properties);
 			if (isMinion()) {
 				if (properties.hasKey("BossUUIDMost")) {
-					this.bossId = new UUID(properties.getLong("BossUUIDMost"), properties.getLong("BossUUIDLeast"));
+					this.lordId = new UUID(properties.getLong("BossUUIDMost"), properties.getLong("BossUUIDLeast"));
 				}
 			}
 		}
 
 	}
 
-	protected void lookForBoss() {
+	protected void lookForLord() {
 		List<EntityLivingBase> list = entity.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, entity.boundingBox.expand(15, 10, 15));
 		for (EntityLivingBase e : list) {
-			if (e.getPersistentID().equals(bossId)) {
+			if (e.getPersistentID().equals(lordId)) {
 				if (e instanceof IMinionLord) {
 					this.setLord((IMinionLord) e);
-					lookForBossTimer = 0;
+					lookForLordTimer = 0;
 				} else if (e instanceof EntityPlayer) {
 					this.setLord(VampirePlayer.get((EntityPlayer) e));
-					lookForBossTimer = 0;
+					lookForLordTimer = 0;
 				} else {
-					Logger.w("VampireMob", "Found boss with UUID " + bossId + " but it isn't a Minion Lord");
-					bossId = null;
-					boss = null;
-					lookForBossTimer = 0;
+					Logger.w("VampireMob", "Found lord with UUID " + lordId + " but it isn't a Minion Lord");
+					lordId = null;
+					lord = null;
+					lookForLordTimer = 0;
 				}
 
 				break;
@@ -223,28 +223,28 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 
 	public void onUpdate() {
 		if (isMinion() && !entity.worldObj.isRemote) {
-			if (boss == null) {
-				if (bossId != null) {
-					lookForBoss();
+			if (lord == null) {
+				if (lordId != null) {
+					lookForLord();
 				}
-				if (boss == null) {
-					lookForBossTimer++;
+				if (lord == null) {
+					lookForLordTimer++;
 				}
-				if (lookForBossTimer > MAX_SEARCH_TIME) {
+				if (lookForLordTimer > MAX_SEARCH_TIME) {
 					entity.attackEntityFrom(DamageSource.generic, 5);
 				}
 
-			} else if (!boss.isTheEntityAlive()) {
-				boss = null;
-				bossId = null;
-			} else if (boss.getTheDistanceSquared(entity) > 1000 && !entity.worldObj.isRemote) {
+			} else if (!lord.isTheEntityAlive()) {
+				lord = null;
+				lordId = null;
+			} else if (lord.getTheDistanceSquared(entity) > 1000 && !entity.worldObj.isRemote) {
 				if (entity.worldObj.rand.nextInt(80) == 0) {
 					entity.attackEntityFrom(DamageSource.generic, 3);
 				}
 			}
-			if (boss != null) {
-				if (boss.getRepresentingEntity().equals(entity.getAttackTarget())) {
-					entity.setAttackTarget(boss.getMinionTarget());
+			if (lord != null) {
+				if (lord.getRepresentingEntity().equals(entity.getAttackTarget())) {
+					entity.setAttackTarget(lord.getMinionTarget());
 				}
 				if(entity.equals(entity.getAttackTarget())){
 					entity.setAttackTarget(null);
@@ -258,9 +258,9 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		NBTTagCompound properties = new NBTTagCompound();
 		this.writeFullUpdateToNBT(properties);
 		if (isMinion()) {
-			if (this.bossId != null) {
-				properties.setLong("BossUUIDMost", this.bossId.getMostSignificantBits());
-				properties.setLong("BossUUIDLeast", this.bossId.getLeastSignificantBits());
+			if (this.lordId != null) {
+				properties.setLong("BossUUIDMost", this.lordId.getMostSignificantBits());
+				properties.setLong("BossUUIDLeast", this.lordId.getLeastSignificantBits());
 			}
 		}
 		compound.setTag(EXT_PROP_NAME, properties);
@@ -269,19 +269,19 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 
 	@Override
 	public void setLord(IMinionLord b) {
-		if (!b.equals(boss)) {
+		if (!b.equals(lord)) {
 			this.setLordId(b.getThePersistentID());
 			b.getMinionHandler().registerMinion(this, true);
-			boss = b;
+			lord = b;
 		}
 
 	}
 
 	private void setLordId(UUID id) {
-		if (!id.equals(bossId)) {
-			bossId = id;
-			boss = null;
-			lookForBossTimer = 0;
+		if (!id.equals(lordId)) {
+			lordId = id;
+			lord = null;
+			lookForLordTimer = 0;
 		}
 
 	}

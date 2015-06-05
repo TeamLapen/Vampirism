@@ -56,10 +56,12 @@ public class RendererVampireMinion extends RenderBiped{
 		}
 		((ModelBipedShrinkable)this.mainModel).setSize(size);
 		
+		//If either invisible or already small ->use parent method
 		if(p_77036_1_.isInvisible()||m.getOldVampireTexture()==-1){
 			super.renderModel(p_77036_1_, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
 		}
 		else{
+			//firstly render own texture secondly blend old vampire texture in
 			this.bindEntityTexture(p_77036_1_);
             this.mainModel.render(p_77036_1_, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
             GL11.glEnable(GL11.GL_BLEND);
