@@ -100,7 +100,7 @@ public class BlockCoffin extends BasicBlockContainer {
 					&& world.getBiomeGenForCoords(x, z) != BiomeGenBase.hell) {
 				if ((world.getBlockMetadata(x, y, z) & 4) != 0) {
 					player.addChatComponentMessage(new ChatComponentTranslation(
-							"tile.bed.occupied", new Object[0]));
+							"text.vampirism:coffin.occupied", new Object[0]));
 					return true;
 				}
 
@@ -121,7 +121,7 @@ public class BlockCoffin extends BasicBlockContainer {
 				} else {
 					if (enumstatus == EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW) {
 						player.addChatComponentMessage(new ChatComponentTranslation(
-								"tile.bed.noSleep", new Object[0]));
+								"text.vampirism:coffin.noSleep", new Object[0]));
 					} else if (enumstatus == EntityPlayer.EnumStatus.NOT_SAFE) {
 						player.addChatComponentMessage(new ChatComponentTranslation(
 								"tile.bed.notSafe", new Object[0]));

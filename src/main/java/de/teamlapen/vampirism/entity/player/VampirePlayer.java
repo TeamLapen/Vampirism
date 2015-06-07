@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
@@ -589,7 +590,6 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			return true;
 
 		}
-		Logger.i(TAG, "V"+this.sleepingCoffin+" vanill "+player.isPlayerSleeping());
 		
 		if (sleepingCoffin&&!player.isEntityInvulnerable()&&!(player.capabilities.disableDamage && !source.canHarmInCreative()))
         {
@@ -900,15 +900,33 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			if (Math.abs(this.player.posX - x) > 3.0D
 					|| Math.abs(this.player.posY - y) > 2.0D
 					|| Math.abs(this.player.posZ - z) > 3.0D) {
-				Logger.w(TAG, "Player is to far away to use this coffin");
 				return EntityPlayer.EnumStatus.TOO_FAR_AWAY;
 			}
 
 			double d0 = 8.0D;
 			double d1 = 5.0D;
-			List list = this.player.worldObj.getEntitiesWithinAABB(
+			List list = this.player.worldObj.selectEntitiesWithinAABB(
 					EntityMob.class, AxisAlignedBB.getBoundingBox(x - d0, y
-							- d1, z - d0, x + d0, y + d1, z + d0));
+							- d1, z - d0, x + d0, y + d1, z + d0), new IEntitySelector(){
+
+								@Override
+								public boolean isEntityApplicable(Entity entity) {
+									if(!(entity instanceof EntityMob))return false;
+									if(entity instanceof IMinion){
+										return !(((IMinion)entity).getLord() instanceof EntityPlayer);
+									}
+									if(VampireMob.get((EntityMob)entity).isMinion()){
+										return !(VampireMob.get((EntityMob)entity).getLord() instanceof EntityPlayer);
+									}
+									if(entity instanceof EntityVampire){
+										return getLevel() <= BALANCE.VAMPIRE_FRIENDLY_LEVEL ||isVampireLord();
+									}
+									if(entity instanceof EntityVampireHunter){
+										return getLevel() >= BALANCE.VAMPIRE_HUNTER_ATTACK_LEVEL;
+									}
+									return true;
+								}
+					});
 
 			if (!list.isEmpty()) {
 				return EntityPlayer.EnumStatus.NOT_SAFE;
