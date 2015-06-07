@@ -5,6 +5,7 @@ import java.util.Iterator;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
@@ -40,7 +41,6 @@ import de.teamlapen.vampirism.villages.VillageVampireData;
 public abstract class CommonProxy implements IProxy {
 	
 	private int modEntityId=0;
-	private boolean allPlayersSleepingCoffin;
 
 	@Override
 	public void registerEntitys() {
@@ -132,15 +132,12 @@ public abstract class CommonProxy implements IProxy {
 //}
 
 	private void wakeAllPlayers(WorldServer server)  {
-		this.allPlayersSleepingCoffin = false;
 		Iterator iterator = server.playerEntities.iterator();
 		
 		while(iterator.hasNext()) {
 			EntityPlayerMP p = (EntityPlayerMP) iterator.next();
-			VampirePlayer.get(p).sleepingCoffin = false;
-			VampirePlayer.get(p).sync(true);
-			p.wakeUpPlayer(false, false, true);
-			
+			VampirePlayer.get(p).wakeUpPlayer(true,false,false,true);
+
 		}
 	}
 	
@@ -150,12 +147,21 @@ public abstract class CommonProxy implements IProxy {
 		WorldServer server = MinecraftServer.getServer().worldServerForDimension(0);
 		
 		if(server.areAllPlayersAsleep()) {
-			Logger.i("ServerProxy", "All players are asleep, waking them up...");
-			//Set time to next night
-			long i = server.getWorldTime() + 24000L;
-			server.setWorldTime(i - i % 24000L - 11000L);
+			Logger.i("ServerProxy", "All players are asleep");
+			if(server.playerEntities.size()>0){//Should always be the case, but better check
+				if(VampirePlayer.get(((EntityPlayer)server.playerEntities.get(0))).sleepingCoffin){
+					Logger.i("CommonProxy", "All players are sleeping in a coffin ->waking them up");
+					//Set time to next night
+					long i = server.getWorldTime() + 24000L;
+					server.setWorldTime(i - i % 24000L - 11000L);
+					
+					wakeAllPlayers(server);
+				}
+				else{
+					Logger.i("CommonProxy", "All players are sleeping in a bed");
+				}
+			}
 			
-			wakeAllPlayers(server);
 		}
 	}
 }

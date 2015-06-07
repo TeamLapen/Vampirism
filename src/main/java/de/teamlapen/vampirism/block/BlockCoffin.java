@@ -198,7 +198,7 @@ public class BlockCoffin extends BasicBlockContainer {
 						p.playerLocation.posZ));
 				if (p.playerLocation.posX == x && p.playerLocation.posY == y
 						&& p.playerLocation.posZ == z) {
-					VampirePlayer.get(p).sleepingCoffin = false;
+					VampirePlayer.get(p).wakeUpPlayer(false,true,false,false);
 				}
 			}
 		}

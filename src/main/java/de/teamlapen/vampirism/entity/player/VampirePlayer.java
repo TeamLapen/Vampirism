@@ -213,15 +213,12 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 				bloodExhaustionLevel = nbt.getFloat("bloodExhaustionLevel");
 				bloodSaturationLevel = nbt.getFloat("bloodSaturationLevel");
 			}
-			if(nbt.hasKey("sleepingCoffin"))
-				sleepingCoffin = nbt.getBoolean("sleepingCoffin");
 		}
 
 		private void writeNBT(NBTTagCompound nbt) {
 			nbt.setInteger("bloodTimer", bloodTimer);
 			nbt.setFloat("bloodExhaustionLevel", bloodExhaustionLevel);
 			nbt.setFloat("bloodSaturationlevel", bloodSaturationLevel);
-			nbt.setBoolean("sleepingCoffin", sleepingCoffin);
 		}
 
 	}
@@ -557,6 +554,12 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		this.bloodStats.addBlood(MAXBLOOD);
 	}
 
+	/**
+	 * If this returns true, the damage is skipped
+	 * @param source
+	 * @param amount
+	 * @return
+	 */
 	public boolean onEntityAttacked(DamageSource source, float amount) {
 		if (source.getEntity() instanceof DefaultVampire && getLevel() == 0) {
 			// Since the method seems to be called 4 times probability is
@@ -586,6 +589,12 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			return true;
 
 		}
+		Logger.i(TAG, "V"+this.sleepingCoffin+" vanill "+player.isPlayerSleeping());
+		
+		if (sleepingCoffin&&!player.isEntityInvulnerable()&&!(player.capabilities.disableDamage && !source.canHarmInCreative()))
+        {
+            this.wakeUpPlayer(false, true, false, false);
+        }
 		return false;
 	}
 
@@ -736,9 +745,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			}
 			if (sleepingCoffin && !this.player.worldObj.isDaytime()) {
 				Logger.i("VampirePlayer", "sleepingCoffin="+sleepingCoffin);
-				sleepingCoffin = false;
-				this.sync(true);
-				this.player.wakeUpPlayer(false, true, true);
+				this.wakeUpPlayer(true, false, true, true);
 			}
 		}
 		else{
@@ -877,10 +884,12 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 		if (!this.player.worldObj.isRemote) {
 			if (this.sleepingCoffin || !this.isTheEntityAlive()) {
+				Logger.w(TAG, "Player seems to be either already sleeping or dead");
 				return EntityPlayer.EnumStatus.OTHER_PROBLEM;
 			}
 
 			if (!this.player.worldObj.provider.isSurfaceWorld()) {
+				Logger.w(TAG, "Not possible here");
 				return EntityPlayer.EnumStatus.NOT_POSSIBLE_HERE;
 			}
 
@@ -891,6 +900,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			if (Math.abs(this.player.posX - x) > 3.0D
 					|| Math.abs(this.player.posY - y) > 2.0D
 					|| Math.abs(this.player.posZ - z) > 3.0D) {
+				Logger.w(TAG, "Player is to far away to use this coffin");
 				return EntityPlayer.EnumStatus.TOO_FAR_AWAY;
 			}
 
@@ -1118,5 +1128,18 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	@Override
 	public MinionHandler<VampirePlayer> getMinionHandler() {
 		return this.minionHandler;
+	}
+	
+	/**
+	 * Wakes the player up if he is sleeping in a coffin
+	 * The last three variables are currently only used when vanilla is true
+	 * @param vanilla Whether the vanilla wakeUp should be called as well  
+	 */
+	public void wakeUpPlayer(boolean vanilla, boolean immediately,boolean updateWorld,boolean setSpawn){
+		this.sleepingCoffin=false;
+		this.sync(true);
+		if(vanilla){
+			player.wakeUpPlayer(immediately, updateWorld, setSpawn);
+		}
 	}
 }

@@ -61,8 +61,7 @@ public class CoreHandler {
 		Throwable t = new Throwable();
 		if(t.getStackTrace()[2].toString().startsWith("net.minecraft.network.NetHandlerPlayServer.processEntityAction")) {
 			Logger.i("CoreHandler", String.format("wakeUpPlayer called by client action, will wake up: %s, %s", VampirePlayer.get(p).toString(), p.isPlayerSleeping()));
-			VampirePlayer.get(p).sleepingCoffin = false;
-			((EntityPlayerMP) p).wakeUpPlayer(p1, p2, p3);
+			VampirePlayer.get(p).wakeUpPlayer(false, p1, p2, p3);
 			return true;
 		}
 		if(VampirePlayer.get(p) != null && VampirePlayer.get(p).sleepingCoffin) {
