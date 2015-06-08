@@ -706,7 +706,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		//Logger.i("VampirePlayer", String.format("Remote=%s, sleeping=%s, fullyAsleep=%s", player.worldObj.isRemote, player.isPlayerSleeping(), player.isPlayerFullyAsleep()));
 		if(this.sleepingCoffin && player.isPlayerSleeping()) {
 			if(player.worldObj.isRemote)
-				Logger.i("VP", "playerpos:" + player.posY);
+//				Logger.i("VP", "playerpos:" + player.posY);
 			if(!player.worldObj.isRemote)
 				player.motionY = 0;
 			else if(player.posY > Math.floor(player.posY) + 0.2) 
