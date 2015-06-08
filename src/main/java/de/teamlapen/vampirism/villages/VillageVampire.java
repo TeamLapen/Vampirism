@@ -135,7 +135,7 @@ public class VillageVampire {
 	}
 	
 	private void makeAgressive(Village v){
-		Logger.i(TAG, "Making agrressive");
+		Logger.d(TAG, "Making agrressive");
 		agressive=true;
 		for(EntityVillager e:getVillager(v)){
 			if(!VampireMob.get(e).isVampire()&&world.rand.nextInt(4)==0){
@@ -150,7 +150,7 @@ public class VillageVampire {
 		dirty=true;
 	}
 	private void makeCalm(Village v){
-		Logger.i(TAG, "Making calm");
+		Logger.d(TAG, "Making calm");
 		agressive=false;
 		for(EntityVampireHunter e:getHunter(v)){
 			if(e.getLevel()==1){

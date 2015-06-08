@@ -30,7 +30,7 @@ public class VillageBiomes {
 				BiomeRegistrant.addBiomeByName(name);
 		}
 		for (String name : ConfigHandler.getAddTypes()) {
-			Logger.i("VillageBiomes", String.format("Adding all %s biomes as village biomes.", name));
+			Logger.d("VillageBiomes", "Adding all %s biomes as village biomes.", name);
 			BiomeRegistrant.addBiomesByTypeName(name);
 		}
 
@@ -41,7 +41,7 @@ public class VillageBiomes {
 				BiomeRegistrant.removeBiomeByName(name);
 		}
 		for (String name : ConfigHandler.getRemoveTypes()) {
-			Logger.i("VillageBiomes", "Removing all " + name + " biomes from village biomes.");
+			Logger.d("VillageBiomes", "Removing all " + name + " biomes from village biomes.");
 			BiomeRegistrant.removeBiomesByTypeName(name);
 		}
 

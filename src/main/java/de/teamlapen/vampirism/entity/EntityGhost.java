@@ -110,7 +110,6 @@ public class EntityGhost extends EntityMob {
 
 	@Override
 	protected boolean isValidLightLevel() {
-		Logger.i("EntityGhost", "Lighting is OK for a ghost");
 		return true;
 	}
 }

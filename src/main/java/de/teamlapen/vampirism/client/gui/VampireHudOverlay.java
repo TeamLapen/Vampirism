@@ -269,7 +269,7 @@ public class VampireHudOverlay extends Gui {
 	
 	public static void setRenderRed(float value){
 		if(value<0||value>1){
-			Logger.i("Overlay", "Can't render screen red with value: "+value);
+			Logger.d("Overlay", "Can't render screen red with value: "+value);
 			return;
 		}
 		renderRed=value;

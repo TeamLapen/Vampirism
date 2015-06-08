@@ -24,7 +24,7 @@ public class GenerateBloodAltar extends WorldGenerator {
 				|| !locationIsValidSpawn(world, x, y, z + 2))
 			return false;
 
-		Logger.i("GenerateBloodAltar", "Spawned Blood Altar at: " + x + " " + y + " " + z);
+		Logger.d("GenerateBloodAltar", "Spawned Blood Altar at: %d,%d,%d" , x ,y ,z);
 		world.setBlock(x + 0, y + 0, z + 0, Blocks.obsidian, 0, 3);
 		world.setBlock(x + 1, y + 0, z + 0, Blocks.obsidian, 0, 3);
 		world.setBlock(x + 2, y + 0, z + 0, Blocks.obsidian, 0, 3);

@@ -58,7 +58,7 @@ public class RenderClassTransformer implements IClassTransformer {
 			MethodNode m = methods.next();
 
 			if (m.name.equals(betMethodName)) {
-				Logger.i(TAG, "INSIDE bindEntityTexture METHOD");
+				Logger.d(TAG, "INSIDE bindEntityTexture METHOD");
 
 				InsnList toIn = new InsnList();
 
@@ -75,7 +75,7 @@ public class RenderClassTransformer implements IClassTransformer {
 				toIn.add(l1);
 				toIn.add(new InsnNode(Opcodes.RETURN));
 				m.instructions.insert(toIn);
-				Logger.i(TAG, "PATCH COMPLETE");
+				Logger.d(TAG, "PATCH COMPLETE");
 				
 //				Label l0 = new Label();
 //				mv.visitLabel(l0);
@@ -108,10 +108,10 @@ public class RenderClassTransformer implements IClassTransformer {
 	public byte[] transform(String name, String transformedName, byte[] basicClass) {
 
 		if (name.equals(CLASS_RENDER_NOTCH)) {
-			Logger.i(TAG, "INSIDE OBFUSCATED RENDER CLASS - ABOUT TO PATCH: " + name);
+			Logger.i(TAG, "INSIDE OBFUSCATED RENDER CLASS - ABOUT TO PATCH: %s" , name);
 			return applyPatch(name, basicClass, true);
 		} else if (name.equals(CLASS_RENDER)) {
-			Logger.i(TAG, "INSIDE RENDER CLASS - ABOUT TO PATCH: " + name);
+			Logger.i(TAG, "INSIDE RENDER CLASS - ABOUT TO PATCH: %s" , name);
 			return applyPatch(name, basicClass, false);
 		}
 		return basicClass;

@@ -103,7 +103,7 @@ public class VillageVampireData extends WorldSavedData {
 	    	VillageVampire vv=new VillageVampire();
 	    	vv.setWorld(worldObj);
 	    	vv.setCenter(v.getCenter());
-	    	Logger.i("test", "Created village at "+v.getCenter());
+	    	Logger.d("VampireVillage", "Created village at "+v.getCenter());
 	    	villageList.add(vv);
 	    	this.markDirty();
 	    	return vv;
@@ -122,7 +122,7 @@ public class VillageVampireData extends WorldSavedData {
                 
                 switch(v.isAnnihilated()){
 	    		case -1:
-	    			Logger.i("VillageVampireData", "Removing annihilated village");
+	    			Logger.d("VillageVampireData", "Removing annihilated village");
 	    			iterator.remove();
 	    			markDirty();
 	    			break;

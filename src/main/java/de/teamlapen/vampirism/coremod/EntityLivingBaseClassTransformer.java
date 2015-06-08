@@ -64,7 +64,7 @@ public class EntityLivingBaseClassTransformer implements IClassTransformer {
 		while (methods.hasNext()) {
 			MethodNode m = methods.next();
 			if (m.name.equals(iPAMethodName) && m.desc.equals("(L" + CLASS_POTION_SRG + ";)Z")) {
-				Logger.i(TAG, "INSIDE isPotionActive METHOD");
+				Logger.d(TAG, "INSIDE isPotionActive METHOD");
 
 				// Inject if clause
 				InsnList toIn = new InsnList();
@@ -82,10 +82,10 @@ public class EntityLivingBaseClassTransformer implements IClassTransformer {
 				toIn.add(new FrameNode(Opcodes.F_SAME, 0, null, 0, null));
 
 				m.instructions.insert(toIn);
-				Logger.i(TAG, "PATCH COMPLETE");
+				Logger.d(TAG, "PATCH COMPLETE");
 			}
 			else if(m.name.equals(gAPMethodName)){
-				Logger.i(TAG, "INSIDE getActivePotionEffect METHOD");
+				Logger.d(TAG, "INSIDE getActivePotionEffect METHOD");
 				
 				InsnList toIn=new InsnList();
 				LabelNode l0=new LabelNode();
@@ -120,7 +120,7 @@ public class EntityLivingBaseClassTransformer implements IClassTransformer {
 //				mv.visitInsn(ARETURN);
 //				mv.visitLabel(l1);
 				
-				Logger.i(TAG, "PATCH COMPLETE");
+				Logger.d(TAG, "PATCH COMPLETE");
 			}
 		}
 
@@ -136,10 +136,10 @@ public class EntityLivingBaseClassTransformer implements IClassTransformer {
 	public byte[] transform(String name, String transformedName, byte[] basicClass) {
 
 		if (name.equals(CLASS_ENTITYLIVINGBASE_NOTCH)) {
-			Logger.i(TAG, "INSIDE OBFUSCATED ENTITYLIVINGBASE CLASS - ABOUT TO PATCH: " + name + " " + transformedName);
+			Logger.i(TAG, "INSIDE OBFUSCATED ENTITYLIVINGBASE CLASS - ABOUT TO PATCH: %s (%s)" , name , transformedName);
 			return applyPatch(name, basicClass, true);
 		} else if (name.equals(CLASS_ENTITYLIVINGBASE)) {
-			Logger.i(TAG, "INSIDE ENTITYLIVINGBASE CLASS - ABOUT TO PATCH: " + name);
+			Logger.i(TAG, "INSIDE ENTITYLIVINGBASE CLASS - ABOUT TO PATCH: %s" , name);
 			return applyPatch(name, basicClass, false);
 		}
 		return basicClass;

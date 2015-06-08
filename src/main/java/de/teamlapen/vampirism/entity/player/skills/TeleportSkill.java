@@ -64,12 +64,11 @@ public class TeleportSkill extends DefaultSkill {
 					flag = true;
 				}
 				else{
-					Logger.i("debug", "CollidingBox not empty or liquid");
+					Logger.d("debug", "CollidingBox not empty or liquid");
 				}
 
 			}
 			else{
-				Logger.i("debug", "No groundblock found");
 			}
 		}
 		else{

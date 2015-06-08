@@ -19,7 +19,7 @@ public class BiomeRegistrant {
 
 	public static void addBiome(BiomeGenBase biome) {
 		BiomeManager.addVillageBiome(biome, true);
-		Logger.i("BiomeRegistrant", String.format("Added %s (ID:%d) as a village biome.", biome.biomeName, biome.biomeID));
+		Logger.d("BiomeRegistrant", "Added %s (ID:%d) as a village biome.", biome.biomeName, biome.biomeID);
 	}
 
 	public static void addBiomeById(int id) {
@@ -32,7 +32,7 @@ public class BiomeRegistrant {
 		if (biomeForId != null)
 			addBiome(biomeForId);
 		else
-			Logger.w("BiomeRegistrant", "Can't find biome with ID " + id);
+			Logger.w("BiomeRegistrant", "Can't find biome with ID %d", id);
 	}
 
 	public static void addBiomeByName(String name) {
@@ -45,7 +45,7 @@ public class BiomeRegistrant {
 		if (biomeForId != null)
 			addBiome(biomeForId);
 		else
-			Logger.w("BiomeRegistrant", "Can't find biome with name " + name);
+			Logger.w("BiomeRegistrant", "Can't find biome with name %s", name);
 	}
 
 	public static void addBiomesByType(Type type) {
@@ -59,7 +59,7 @@ public class BiomeRegistrant {
 		if (type != null)
 			addBiomesByType(type);
 		else
-			Logger.w("BiomeRegistrant", "Can't find type with name " + name);
+			Logger.w("BiomeRegistrant", "Can't find type with name %s", name);
 	}
 
 	private static Set<BiomeGenBase> fetchAllBiomes() {
@@ -80,7 +80,7 @@ public class BiomeRegistrant {
 
 	public static void removeBiome(BiomeGenBase biome) {
 		BiomeManager.removeVillageBiome(biome);
-		Logger.i("BiomeRegistrant", String.format("Removed %s (ID:%d) from village biomes.", biome.biomeName, biome.biomeID));
+		Logger.d("BiomeRegistrant", "Removed %s (ID:%d) from village biomes.", biome.biomeName, biome.biomeID);
 	}
 
 	public static void removeBiomeById(int id) {
@@ -93,7 +93,7 @@ public class BiomeRegistrant {
 		if (biomeForId != null)
 			removeBiome(biomeForId);
 		else
-			Logger.w("BiomeRegistrant", "Can't find biome with ID " + id);
+			Logger.w("BiomeRegistrant", "Can't find biome with ID %d" , id);
 	}
 
 	public static void removeBiomeByName(String name) {
@@ -106,7 +106,7 @@ public class BiomeRegistrant {
 		if (biomeForId != null)
 			removeBiome(biomeForId);
 		else
-			Logger.w("BiomeRegistrant", "Can't find biome with name " + name);
+			Logger.w("BiomeRegistrant", "Can't find biome with name %s" , name);
 	}
 
 	public static void removeBiomesByType(BiomeDictionary.Type type) {
@@ -120,7 +120,7 @@ public class BiomeRegistrant {
 		if (type != null)
 			removeBiomesByType(type);
 		else
-			Logger.w("BiomeRegistrant", "Can't find type with name " + name);
+			Logger.w("BiomeRegistrant", "Can't find type with name %s" , name);
 	}
 
 	private static Set<BiomeGenBase> biomeSet;

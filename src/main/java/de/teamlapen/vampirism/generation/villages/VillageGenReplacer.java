@@ -60,7 +60,7 @@ public class VillageGenReplacer implements IEventListener {
 						minDist.setAccessible(true);
 						minDist.setInt(e.newGen, Configs.village_minDist);
 					}
-					Logger.i("VillageGenReplacer", "Modified MapGenVillage fields.");
+					Logger.d("VillageGenReplacer", "Modified MapGenVillage fields.");
 				} catch (Exception exc) {
 					Logger.e("VillageGenReplacer", "Could not modify MapGenVillage, consider disabling Village Density in VillageDensity.cfg");
 					exc.printStackTrace();

@@ -44,7 +44,7 @@ public class PlayerMPClassTransformer implements IClassTransformer{
 			MethodNode m = methods.next();
 
 			if(m.name.equals(wakeMethodName)){
-				Logger.i(TAG, "INSIDE WAKE METHOD");
+				Logger.d(TAG, "INSIDE wakeUpPlayer METHOD");
 				
 				// Inject Method call
 				InsnList toInject = new InsnList();
@@ -80,7 +80,7 @@ public class PlayerMPClassTransformer implements IClassTransformer{
 //					return;
 //				}
 				m.instructions.insert(toInject);
-				Logger.i(TAG, "PATCH COMPLETE");
+				Logger.d(TAG, "PATCH COMPLETE");
 				break;
 			}
 
@@ -96,10 +96,10 @@ public class PlayerMPClassTransformer implements IClassTransformer{
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass) {
 		if (name.equals(CLASS_ENTITYPLAYERMP_NOTCH)) {
-			Logger.i(TAG, "INSIDE OBFUSCATED PLAYER MP CLASS - ABOUT TO PATCH: " + name + " transforned: " + transformedName);
+			Logger.i(TAG, "INSIDE OBFUSCATED PLAYER MP CLASS - ABOUT TO PATCH: %s (%s)" , name , transformedName);
 			return applyPatch(name, basicClass, true);
 		} else if (name.equals(CLASS_ENTITYPLAYERMP)) {
-			Logger.i(TAG, "INSIDE PLAYER MP CLASS - ABOUT TO PATCH: " + name);
+			Logger.i(TAG, "INSIDE PLAYER MP CLASS - ABOUT TO PATCH: %s" , name);
 			return applyPatch(name, basicClass, false);
 		}
 		if (name.equals(CLASS_ENTITYPLAYERMP_SRG))

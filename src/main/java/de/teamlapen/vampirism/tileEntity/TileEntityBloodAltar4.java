@@ -276,7 +276,7 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 		int z = this.zCoord;
 		// setBlocks(x-2,y,z-2,x+2,y+2,z+2,structure1);
 		int meta = worldObj.getBlockMetadata(x, y, z);
-		Logger.i(TAG, "Meta: " + meta);
+		Logger.d(TAG, "Meta: " + meta);
 		Block type = null;
 		Logger.i(TAG, "Testing structure 2");
 		type = checkBlocks(x - 3, y, z - 2, x + 3, y + 3, z + 2, structure2);
@@ -404,7 +404,6 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 				}
 			}
 		}
-		Logger.i("test", "found " + coord.size());
 		return coord.toArray(new ChunkCoordinates[coord.size()]);
 	}
 
@@ -420,7 +419,7 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 		int sl = this.determineLevel();
 
 		LevReq result = checkLevelRequirement(player, sl);
-		Logger.i(TAG, "SL: " + sl + " Result: " + result);
+		Logger.d(TAG, "SL: " + sl + " Result: " + result);
 		if (result != LevReq.OK) {
 			if (!this.worldObj.isRemote) {
 				if (result == LevReq.ITEM_MISSING)

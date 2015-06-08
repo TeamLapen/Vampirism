@@ -67,7 +67,7 @@ public abstract class CommonProxy implements IProxy {
 	}
 	private void registerEntity(Class<? extends Entity> clazz,String name,boolean useGlobal){
 
-		Logger.i("EntityRegister", "Adding "+name+"("+clazz.getSimpleName()+")"+(useGlobal?" with global id":"with mod id"));
+		Logger.d("EntityRegister", "Adding "+name+"("+clazz.getSimpleName()+")"+(useGlobal?" with global id":"with mod id"));
 		if(useGlobal){
 			EntityRegistry.registerGlobalEntityID(clazz, name, EntityRegistry.findGlobalUniqueEntityId(),calculateColor(name) ,calculateColor(name+"2"));
 		}
@@ -98,7 +98,7 @@ public abstract class CommonProxy implements IProxy {
 	 */
 	private void registerEntity(Class<? extends EntityLiving> clazz,String name,int probe,int min,int max,EnumCreatureType type,BiomeGenBase... biomes){
 		this.registerEntity(clazz, name,true);
-		Logger.i("EntityRegister", "Adding spawn with probe of "+probe);
+		Logger.d("EntityRegister", "Adding spawn with probe of "+probe);
 		EntityRegistry.addSpawn(clazz, probe, min, max, type, biomes);
 	}
 	@Override

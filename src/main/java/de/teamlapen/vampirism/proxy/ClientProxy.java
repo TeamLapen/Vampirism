@@ -137,7 +137,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void registerSubscriptions() {
-		Logger.i(TAG, "Registering client subscriptions");
+		Logger.d(TAG, "Registering client subscriptions");
 		super.registerSubscriptions();
 		MinecraftForge.EVENT_BUS.register(new VampireHudOverlay(Minecraft.getMinecraft()));
 		Object renderHandler=new RenderHandler(Minecraft.getMinecraft());

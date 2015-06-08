@@ -52,7 +52,7 @@ public class EntityRendererClassTransformer implements IClassTransformer {
 			MethodNode m = methods.next();
 
 			if (m.name.equals(gNVBMethodName)) {
-				Logger.i(TAG, "INSIDE getNightVisionBrightness METHOD");
+				Logger.d(TAG, "INSIDE getNightVisionBrightness METHOD");
 
 				// Inject if clause
 				InsnList toIn = new InsnList();
@@ -91,7 +91,7 @@ public class EntityRendererClassTransformer implements IClassTransformer {
 				 * mv.visitInsn(FRETURN); mv.visitLabel(l1);
 				 */
 				m.instructions.insert(toIn);
-				Logger.i(TAG, "PATCH COMPLETE");
+				Logger.d(TAG, "PATCH COMPLETE");
 				break;
 			}
 		}
@@ -108,10 +108,10 @@ public class EntityRendererClassTransformer implements IClassTransformer {
 
 		// Obfuscated name: blt (or maybe: blu,blv,blw)
 		if (name.equals(CLASS_ENTITYRENDERER_NOTCH)) {
-			Logger.i(TAG, "INSIDE OBFUSCATED RENDERER CLASS - ABOUT TO PATCH: " + name);
+			Logger.i(TAG, "INSIDE OBFUSCATED RENDERER CLASS - ABOUT TO PATCH: %s" , name);
 			return applyPatch(name, basicClass, true);
 		} else if (name.equals(CLASS_ENTITYRENDERER)) {
-			Logger.i(TAG, "INSIDE RENDERER CLASS - ABOUT TO PATCH: " + name);
+			Logger.i(TAG, "INSIDE RENDERER CLASS - ABOUT TO PATCH: %s" , name);
 			return applyPatch(name, basicClass, false);
 		}
 		return basicClass;
