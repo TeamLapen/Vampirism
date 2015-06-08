@@ -35,6 +35,7 @@ public class BlockCoffin extends BasicBlockContainer {
 
 	public BlockCoffin() {
 		super(material, name);
+		this.setCreativeTab(null);
 	}
 
 	/**

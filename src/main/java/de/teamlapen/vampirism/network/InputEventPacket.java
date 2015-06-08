@@ -17,6 +17,7 @@ public class InputEventPacket implements IMessage {
 
 		@Override
 		public IMessage onMessage(InputEventPacket message, MessageContext ctx) {
+			if(message.action==null)return null;
 			if (message.action.equals(SUCKBLOOD)) {
 				int id = 0;
 				try {
@@ -50,6 +51,9 @@ public class InputEventPacket implements IMessage {
 					Logger.w(TAG, "Skill with id "+id+" does not exist");
 				}
 			}
+			else if(message.action.equals(LEAVE_COFFIN)){
+				VampirePlayer.get(ctx.getServerHandler().playerEntity).wakeUpPlayer(true,false,true,true);
+			}
 
 			return null;
 		}
@@ -60,6 +64,7 @@ public class InputEventPacket implements IMessage {
 	public static String TOGGLEAUTOFILLBLOOD = "ta";
 	public static String REVERTBACK = "rb";
 	public static String TOGGLESKILL = "ts";
+	public static String LEAVE_COFFIN = "lc";
 	private final static String TAG = "InputEventPacket";
 	private String param;
 	private String action;
@@ -79,7 +84,13 @@ public class InputEventPacket implements IMessage {
 	public void fromBytes(ByteBuf buf) {
 		String[] s = ByteBufUtils.readUTF8String(buf).split(SPLIT);
 		action = s[0];
-		param = s[1];
+		if(s.length>1){
+			param = s[1];
+		}
+		else{
+			param="";
+		}
+
 	}
 
 	@Override

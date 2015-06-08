@@ -59,11 +59,11 @@ public class CoreHandler {
 		if(p.worldObj.isRemote)
 			return true;
 		Throwable t = new Throwable();
-		if(t.getStackTrace()[2].toString().startsWith("net.minecraft.network.NetHandlerPlayServer.processEntityAction")) {
-			Logger.i("CoreHandler", String.format("wakeUpPlayer called by client action, will wake up: %s, %s", VampirePlayer.get(p).toString(), p.isPlayerSleeping()));
-			VampirePlayer.get(p).wakeUpPlayer(false, p1, p2, p3);
-			return true;
-		}
+//		if(t.getStackTrace()[2].toString().startsWith("net.minecraft.network.NetHandlerPlayServer.processEntityAction")) {
+//			Logger.i("CoreHandler", String.format("wakeUpPlayer called by client action, will wake up: %s, %s", VampirePlayer.get(p).toString(), p.isPlayerSleeping()));
+//			VampirePlayer.get(p).wakeUpPlayer(false, p1, p2, p3);
+//			return true;
+//		}
 		if(VampirePlayer.get(p) != null && VampirePlayer.get(p).sleepingCoffin) {
 			return false;
 		}

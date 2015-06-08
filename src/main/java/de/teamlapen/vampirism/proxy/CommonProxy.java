@@ -18,6 +18,7 @@ import com.google.common.collect.Iterators;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import de.teamlapen.vampirism.ModBiomes;
@@ -162,6 +163,13 @@ public abstract class CommonProxy implements IProxy {
 				}
 			}
 			
+		}
+	}
+	
+	@SubscribeEvent
+	public void onPlayerLoggedOut(PlayerLoggedOutEvent e){
+		if(VampirePlayer.get(e.player).sleepingCoffin){
+			VampirePlayer.get(e.player).wakeUpPlayer(true, true, false, false);
 		}
 	}
 }

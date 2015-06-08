@@ -1,12 +1,14 @@
 package de.teamlapen.vampirism.client.render;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiSleepMP;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 
@@ -14,9 +16,11 @@ import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import de.teamlapen.vampirism.client.gui.GUISleepCoffin;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.skills.BatSkill;
 import de.teamlapen.vampirism.entity.player.skills.Skills;
+import de.teamlapen.vampirism.util.Logger;
 
 /**
  * Rendering handler used for rendering and render transformation e.g. bat transformation
@@ -32,6 +36,13 @@ public class RenderHandler {
 
 	public RenderHandler(Minecraft mc) {
 		this.mc = mc;
+	}
+	
+	@SubscribeEvent
+	public void onGuiOpen(GuiOpenEvent event){
+		if(event.gui instanceof GuiSleepMP&&VampirePlayer.get(mc.thePlayer).sleepingCoffin){
+			event.gui=new GUISleepCoffin();
+		}
 	}
 
 	@SubscribeEvent
