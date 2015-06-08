@@ -94,6 +94,7 @@ public class VampirismMod {
 		//Make sure the Config initialisation is the first mod relating call
 		if((Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment")){
 			inDev=true;
+			Logger.inDev=true;
 		}
 		Configs.init(event.getModConfigurationDirectory(),inDev);
 		Helper.Obfuscation.fillMap();
