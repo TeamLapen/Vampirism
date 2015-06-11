@@ -115,23 +115,6 @@ public abstract class CommonProxy implements IProxy {
 		//Loading VillageVampireData
 		FMLCommonHandler.instance().bus().register(VillageVampireData.get(event.world));//Not sure if this is the right position or if it could lead to a memory leak
 	}
-	
-//	public boolean updateAllPlayersSleepingFlagCoffin() {
-//	List playerEntities = MinecraftServer.getServer().worldServerForDimension(0).playerEntities;
-//	
-//	this.allPlayersSleepingCoffin = !playerEntities.isEmpty();
-//	Iterator iterator = playerEntities.iterator();
-//
-//	while (iterator.hasNext()) {
-//		VampirePlayer player = VampirePlayer.get((EntityPlayer) iterator.next());
-//
-//		if (!player.sleepingCoffin) {
-//			this.allPlayersSleepingCoffin = false;
-//			break;
-//		}
-//	}
-//	return this.allPlayersSleepingCoffin;
-//}
 
 	private void wakeAllPlayers(WorldServer server)  {
 		Iterator iterator = server.playerEntities.iterator();

@@ -62,7 +62,7 @@ public class TileEntityCoffin extends TileEntity {
 		((BlockCoffin) this.worldObj.getBlock(this.xCoord, this.yCoord,
 				this.zCoord)).setCoffinOccupied(this.worldObj, this.xCoord,
 				this.yCoord, this.zCoord, null, this.occupied);
-		Logger.i("TECoffin", String.format("onDataPacket called, occupied=%s, remote=%s", this.occupied, this.worldObj.isRemote));
+		//Logger.i("TECoffin", String.format("onDataPacket called, occupied=%s, remote=%s", this.occupied, this.worldObj.isRemote));
 	}
 
 	@Override

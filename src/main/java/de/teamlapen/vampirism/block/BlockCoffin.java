@@ -56,7 +56,7 @@ public class BlockCoffin extends BasicBlockContainer {
 		if (tileEntity != null) {
 			if (!(world.getBlock(tileEntity.otherX, tileEntity.otherY,
 					tileEntity.otherZ) instanceof BlockCoffin)) {
-				Logger.i(TAG, "Other coffin block destroyed, removing this one");
+				//Logger.d(TAG, "Other coffin block destroyed, removing this one");
 				this.breakBlock(world, x, y, z, block,
 						world.getBlockMetadata(x, y, z));
 				// world.setBlockToAir(x, y, z);
@@ -68,8 +68,6 @@ public class BlockCoffin extends BasicBlockContainer {
 	@Override
 	public void breakBlock(World world, int x, int y, int z, Block block,
 			int par) {
-		Logger.i(TAG,
-				String.format("breakBlock called at x=%d, y%d, z=%d", x, y, z));
 		TileEntityCoffin te = (TileEntityCoffin) world.getTileEntity(x, y, z);
 		if (te == null)
 			return;
@@ -86,10 +84,10 @@ public class BlockCoffin extends BasicBlockContainer {
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z,
 			EntityPlayer player, int par4, float f1, float f2, float f3) {
-		Logger.i(
+		Logger.d(
 				"BlockCoffin",
 				String.format(
-						"onBlockActivated called, x=%s, y=%s, z=%s, remote=%s, meta=%s",
+						"Coffin activated, x=%s, y=%s, z=%s, remote=%s, meta=%s",
 						x, y, z, world.isRemote,
 						world.getBlockMetadata(x, y, z)));
 		if (world.isRemote) {
@@ -220,10 +218,10 @@ public class BlockCoffin extends BasicBlockContainer {
 		for (int i = 0; i < w.playerEntities.size(); i++) {
 			EntityPlayer p = ((EntityPlayer) w.playerEntities.get(i));
 			if (p.isPlayerSleeping()) {
-				Logger.i("BlockCoffin", String.format(
-						"Found sleeping player: x=%s, y=%s, z=%s",
-						p.playerLocation.posX, p.playerLocation.posY,
-						p.playerLocation.posZ));
+//				Logger.d("BlockCoffin", String.format(
+//						"Found sleeping player: x=%s, y=%s, z=%s",
+//						p.playerLocation.posX, p.playerLocation.posY,
+//						p.playerLocation.posZ));
 				if (p.playerLocation.posX == x && p.playerLocation.posY == y
 						&& p.playerLocation.posZ == z) {
 					VampirePlayer.get(p)

@@ -56,7 +56,7 @@ public class CoreHandler {
 		if(VampirePlayer.get(p) != null && VampirePlayer.get(p).sleepingCoffin) {
 			return false;
 		}
-		Logger.i("CoreHandler", String.format("Player will be woken up, remote=%s", p.worldObj.isRemote));
+		//Logger.d("CoreHandler", String.format("Player will be woken up, remote=%s", p.worldObj.isRemote));
 		return true;
 	}
 }

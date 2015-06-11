@@ -37,7 +37,6 @@ public class ItemCoffin extends BasicItem {
 		int direction = MathHelper
 				.floor_double((double) ((player.rotationYaw * 4F) / 360F) + 0.5D) & 3;
 
-		Logger.i(TAG, "Direction = " + direction);
 		if (world.isAirBlock(x, y, z)
 				&& world.isAirBlock(x + shiftArray[direction][0], y
 						+ shiftArray[direction][1], z

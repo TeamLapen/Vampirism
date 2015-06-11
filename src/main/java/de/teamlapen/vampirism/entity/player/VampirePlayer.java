@@ -705,8 +705,6 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	public void onUpdate() {
 		//Logger.i("VampirePlayer", String.format("Remote=%s, sleeping=%s, fullyAsleep=%s", player.worldObj.isRemote, player.isPlayerSleeping(), player.isPlayerFullyAsleep()));
 		if(this.sleepingCoffin && player.isPlayerSleeping()) {
-			if(player.worldObj.isRemote)
-//				Logger.i("VP", "playerpos:" + player.posY);
 			if(!player.worldObj.isRemote)
 				player.motionY = 0;
 			else if(player.posY > Math.floor(player.posY) + 0.2) 
@@ -744,7 +742,6 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 				player.removePotionEffect(ModPotion.sanguinare.id);
 			}
 			if (sleepingCoffin && !this.player.worldObj.isDaytime()) {
-				Logger.i("VampirePlayer", "sleepingCoffin="+sleepingCoffin);
 				this.wakeUpPlayer(true, false, true, true);
 			}
 		}
@@ -873,14 +870,9 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 * puts player to sleep on specified coffin if possible
 	 */
 	public EntityPlayer.EnumStatus sleepInCoffinAt(int x, int y, int z) {
-		Logger.i("VampirePlayer", String.format(
-				"sleepInCoffinAt called, x=%s, y=%s, z=%s, remote=%s", x, y, z, this.isRemote()));
-//		PlayerSleepInBedEvent event = new PlayerSleepInBedEvent(this.player, x,
-//				y, z);
-//		MinecraftForge.EVENT_BUS.post(event);
-		// if (event.result != null) {
-		// return event.result;
-		// }
+		//Logger.d("VampirePlayer", String.format(
+		//		"sleepInCoffinAt called, x=%s, y=%s, z=%s, remote=%s", x, y, z, this.isRemote()));
+
 
 		if (!this.player.worldObj.isRemote) {
 			if (this.sleepingCoffin || !this.isTheEntityAlive()) {
