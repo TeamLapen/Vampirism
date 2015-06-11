@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.block;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
@@ -10,6 +12,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
@@ -17,6 +21,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.event.entity.player.BonemealEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 
 /**
  * 
@@ -96,6 +103,13 @@ public class BlockCoffin extends BasicBlockContainer {
 				y = te.otherY;
 				z = te.otherZ;
 			}
+			if (player.isSneaking()) {
+				Logger.i("BlockCoffin", String.format(
+						"Shift right click at x=%s, y=%s, z=%s", x, y, z));
+				Logger.i("BlockCoffin", String.format("itemInUse: %s",
+						player.getItemInUse() == null));
+				return false;
+			}
 
 			if (world.provider.canRespawnHere()
 					&& world.getBiomeGenForCoords(x, z) != BiomeGenBase.hell) {
@@ -169,6 +183,19 @@ public class BlockCoffin extends BasicBlockContainer {
 		return world.getBlockMetadata(x, y, z) & 3;
 	}
 
+	@SubscribeEvent
+	public void dye(PlayerInteractEvent e) {
+		ItemStack i = null;
+		if (e.entity instanceof EntityPlayer
+				&& e.entity.isSneaking()
+				&& e.action == Action.RIGHT_CLICK_BLOCK
+				&& (i = ((EntityPlayer) e.entity).inventory.getCurrentItem()) != null
+				&& i.getItem() instanceof ItemDye) {
+			//TODO Color coffin
+			((TileEntityCoffin) e.world.getTileEntity(e.x, e.y, e.z)).changeColor(i.getItemDamage());
+		}
+	}
+
 	// Miscellaneous methods (rendertype etc.)
 	@Override
 	public int getMobilityFlag() {
@@ -199,7 +226,8 @@ public class BlockCoffin extends BasicBlockContainer {
 						p.playerLocation.posZ));
 				if (p.playerLocation.posX == x && p.playerLocation.posY == y
 						&& p.playerLocation.posZ == z) {
-					VampirePlayer.get(p).wakeUpPlayer(false,true,false,false);
+					VampirePlayer.get(p)
+							.wakeUpPlayer(false, true, false, false);
 				}
 			}
 		}
