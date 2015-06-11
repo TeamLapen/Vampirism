@@ -18,6 +18,8 @@ public class TileEntityCoffin extends TileEntity {
 	public int lidPos;
 	public int color;
 	
+	 public static final String[] colors = new String[] {"black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"};
+	
 	
 	public TileEntityCoffin() {
 		
