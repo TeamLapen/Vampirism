@@ -16,6 +16,10 @@ public class TileEntityCoffin extends TileEntity {
 	public int otherZ;
 	public boolean occupied;
 	public int lidPos;
+	public int color;
+	
+	 public static final String[] colors = new String[] {"black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"};
+	
 	
 	public TileEntityCoffin() {
 		
@@ -27,6 +31,7 @@ public class TileEntityCoffin extends TileEntity {
 		par1NBTTagCompound.setInteger("py", otherY);
 		par1NBTTagCompound.setInteger("pz", otherZ);
 		par1NBTTagCompound.setBoolean("occ", occupied);
+		par1NBTTagCompound.setInteger("color", color);
 	}
 
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
@@ -35,6 +40,7 @@ public class TileEntityCoffin extends TileEntity {
 		this.otherY = par1NBTTagCompound.getInteger("py");
 		this.otherZ = par1NBTTagCompound.getInteger("pz");
 		this.occupied = par1NBTTagCompound.getBoolean("occ");
+		this.color = par1NBTTagCompound.getInteger("color");
 		if(occupied)
 			this.lidPos = 0;
 		else
@@ -86,5 +92,9 @@ public class TileEntityCoffin extends TileEntity {
 //		Logger.i("TECoffin",
 //		String.format("updateEntity called, now: occupied=%s, remote=%s",
 //		occupied, this.worldObj.isRemote));
+	}
+
+	public void changeColor(int color) {
+		this.color = color;
 	}
 }
