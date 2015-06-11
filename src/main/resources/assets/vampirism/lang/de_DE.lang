@@ -1,5 +1,5 @@
 # Entitys
-entity.vampirism:vampireHunter.name=Vampire Jäger
+entity.vampirism:vampireHunter.name=Vampir Jäger
 entity.vampirism:vampire.name=Vampir
 entity.vampirism:ghost.name=Geist
 entity.vampirism:vampireLord.name=Vampir Lord
@@ -16,6 +16,10 @@ item.vampirism:torch.name=Fackel
 item.vampirism:pureBlood.name=Reines Blut
 item.vampirism:sunscreen.name=Sonnenschutz
 item.vampirism:coffin.name=Sarg
+item.vampirism:vampireArmor_helmet.name=Vampir Helm
+item.vampirism:vampireArmor_leggings.name=Vampir Hose
+item.vampirism:vampireArmor_boots.name=Vampir Schuhe
+item.vampirism:vampireArmor_chestplate.name=Vampir Brustplatte
 
 # Blocks
 block.vampirism:bloodAltar.name=Blood Altar der Sättigung

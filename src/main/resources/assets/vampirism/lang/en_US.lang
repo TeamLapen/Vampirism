@@ -18,6 +18,10 @@ item.vampirism:sunscreen.name=Sunscreen
 item.vampirism:leechSword.name=Leech
 item.vampirism:nightClock.name=Night Clock
 item.vampirism:coffin.name=Coffin
+item.vampirism:vampireArmor_helmet.name=Vampire's helmet
+item.vampirism:vampireArmor_leggings.name=Vampire's leggings
+item.vampirism:vampireArmor_boots.name=Vampire's boots
+item.vampirism:vampireArmor_chestplate.name=Vampire's chestplate
 
 # Blocks
 block.vampirism:bloodAltar.name=Blood Altar of Saturation
