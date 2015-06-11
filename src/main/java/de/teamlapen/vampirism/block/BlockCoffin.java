@@ -190,7 +190,7 @@ public class BlockCoffin extends BasicBlockContainer {
 				&& (i = ((EntityPlayer) e.entity).inventory.getCurrentItem()) != null
 				&& i.getItem() instanceof ItemDye) {
 			//TODO Color coffin
-			((TileEntityCoffin) e.world.getTileEntity(e.x, e.y, e.z)).changeColor(i.getItemDamage());
+			((TileEntityCoffin) e.world.getTileEntity(e.x, e.y, e.z)).getPrimaryTileEntity().changeColor(i.getItemDamage());
 		}
 	}
 

@@ -101,4 +101,10 @@ public class TileEntityCoffin extends TileEntity {
 		needsAnimation = false;
 		markDirty();
 	}
+	
+	public TileEntityCoffin getPrimaryTileEntity() {
+		if((this.worldObj.getBlockMetadata(this.otherX, this.yCoord, this.zCoord) & -8) == 0)
+			return (TileEntityCoffin) worldObj.getTileEntity(otherX, otherY, otherZ);
+		return this;
+	}
 }
