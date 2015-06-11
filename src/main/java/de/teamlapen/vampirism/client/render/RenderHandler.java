@@ -78,7 +78,7 @@ public class RenderHandler {
 			// Translate and render
 			GL11.glPushMatrix();
 			GL11.glTranslated(1 * (d0 - RenderManager.renderPosX),1* (d1 - RenderManager.renderPosY)
-							+ (event.entityPlayer == Minecraft.getMinecraft().thePlayer&& !((Minecraft.getMinecraft().currentScreen instanceof GuiInventory || Minecraft.getMinecraft().currentScreen instanceof GuiContainerCreative) && RenderManager.instance.playerViewY == 180.0F) ? (BatSkill.BAT_HEIGHT - event.entityPlayer.yOffset): 0D),
+							+ (event.entityPlayer == Minecraft.getMinecraft().thePlayer&& !((Minecraft.getMinecraft().currentScreen instanceof GuiInventory || Minecraft.getMinecraft().currentScreen instanceof GuiContainerCreative) && RenderManager.instance.playerViewY == 180.0F) ? (BatSkill.BAT_HEIGHT+0.2 - event.entityPlayer.yOffset): 0D),
 							1 * (d2 - RenderManager.renderPosZ));
 			renderer.doRender(entityBat, 0, 0, 0, f1, event.partialRenderTick);
 			GL11.glPopMatrix();

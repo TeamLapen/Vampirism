@@ -8,6 +8,7 @@ import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingJumpEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.world.BlockEvent;
@@ -96,6 +97,11 @@ public class VampirePlayerEventHandler {
 		} catch (Exception e) {
 			//Added try catch to prevent any exception in case some other mod uses auto placers or so
 		}
+	}
+	
+	@SubscribeEvent
+	public void onAttackEntity(AttackEntityEvent event){
+		if(VampirePlayer.get(event.entityPlayer).isSkillActive(Skills.batMode))event.setCanceled(true);
 	}
 	
 	@SubscribeEvent
