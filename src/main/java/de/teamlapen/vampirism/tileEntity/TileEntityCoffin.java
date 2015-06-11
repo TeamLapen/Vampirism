@@ -103,7 +103,7 @@ public class TileEntityCoffin extends TileEntity {
 	}
 	
 	public TileEntityCoffin getPrimaryTileEntity() {
-		if((this.worldObj.getBlockMetadata(this.otherX, this.yCoord, this.zCoord) & -8) != 0)
+		if((this.worldObj.getBlockMetadata(this.otherX, this.yCoord, this.zCoord) & -8) == 0)
 			return (TileEntityCoffin) worldObj.getTileEntity(otherX, otherY, otherZ);
 		return this;
 	}
