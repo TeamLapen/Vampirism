@@ -4,6 +4,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import de.teamlapen.vampirism.VampirismMod;
@@ -15,7 +16,7 @@ public class ItemVampireArmor extends ItemArmor {
 	private static final String name = "vampireArmor";
 
 	public ItemVampireArmor(int armorIndex) {
-		super(ItemArmor.ArmorMaterial.IRON, 2, armorIndex);
+		super(ItemArmor.ArmorMaterial.CHAIN, 2, armorIndex);
 
 		setCreativeTab(VampirismMod.tabVampirism);
 		this.setUnlocalizedName(name + "_" + getSuffixFromId(armorIndex));
@@ -61,6 +62,16 @@ public class ItemVampireArmor extends ItemArmor {
 
 	public String getRegisterItemName() {
 		return name + "_" + getSuffixFromId(this.armorType);
+	}
+	
+	public static boolean isFullyWorn(EntityPlayer player){
+		for(int i=0;i<4;i++){
+			ItemStack s=player.getCurrentArmor(i);
+			if(s==null||!(s.getItem() instanceof ItemVampireArmor)){
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

@@ -218,7 +218,7 @@ public final class BALANCE {
 	@DefaultBoolean(value=true,name="Vampire Player Loose Level",comment="Whether vampireplayers should loose level if killed by a hunter")
 	public static boolean VAMPIRE_PLAYER_LOOSE_LEVEL;
 
-	@DefaultDouble(value=4.0D,minValue=0D,name="Vampire Player Sun Damage",comment = "")
+	@DefaultDouble(value=7.0D,minValue=0D,name="Vampire Player Sun Damage",comment = "")
 	public static double VAMPIRE_PLAYER_SUN_DAMAGE;
 	
 	@DefaultInt(value=2,minValue=1,name="Vampire Player Creeper Avoidance Level",comment = "")

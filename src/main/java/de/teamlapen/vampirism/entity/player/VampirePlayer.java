@@ -51,6 +51,7 @@ import de.teamlapen.vampirism.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.entity.player.skills.Skills;
 import de.teamlapen.vampirism.entity.player.skills.VampireRageSkill;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
+import de.teamlapen.vampirism.item.ItemVampireArmor;
 import de.teamlapen.vampirism.network.SpawnParticlePacket;
 import de.teamlapen.vampirism.network.UpdateEntityPacket;
 import de.teamlapen.vampirism.network.UpdateEntityPacket.ISyncableExtendedProperties;
@@ -675,21 +676,24 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			type--;
 
 		if (type > 0) {
-			if (player.worldObj.getTotalWorldTime() % 250 == 0
-					|| ticksInSun == 1) {
+			long t=player.worldObj.getTotalWorldTime();
+			boolean armor=ItemVampireArmor.isFullyWorn(player);
+			if ((t % 250 == 0
+					|| ticksInSun == 1 )&&!armor) {
 				player.addPotionEffect(new PotionEffect(Potion.confusion.id,
 						180));
 			}
 			if (type > 1) {
-				if (player.worldObj.getTotalWorldTime() % 30 == 0) {
+				if (t % 30 == 0) {
 					player.addPotionEffect(new PotionEffect(
-							ModPotion.weakness.id, 30, 1));
+							Potion.weakness.id, 30, 1));
 				}
 
 				if (type > 2 && ticksInSun > 100) {
-					if (player.worldObj.getWorldTime() % 40 == 0) {
+					if (t % 40 == 0) {
 						float damage=(float) BALANCE.VAMPIRE_PLAYER_SUN_DAMAGE;
 						if(isVampireLord())damage*=1.8F;
+						if(armor)damage*=0.6F;
 						player.attackEntityFrom(VampirismMod.sunDamage,
 								damage);
 					}
