@@ -16,9 +16,8 @@ public class TileEntityCoffin extends TileEntity {
 	public int otherZ;
 	public boolean occupied;
 	public int lidPos;
-	public int color;
-	
-	 public static final String[] colors = new String[] {"black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"};
+	public int color = 15;
+	public boolean needsAnimation = false;
 	
 	
 	public TileEntityCoffin() {
@@ -32,6 +31,7 @@ public class TileEntityCoffin extends TileEntity {
 		par1NBTTagCompound.setInteger("pz", otherZ);
 		par1NBTTagCompound.setBoolean("occ", occupied);
 		par1NBTTagCompound.setInteger("color", color);
+		par1NBTTagCompound.setBoolean("needsAnim", needsAnimation);
 	}
 
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
@@ -41,10 +41,11 @@ public class TileEntityCoffin extends TileEntity {
 		this.otherZ = par1NBTTagCompound.getInteger("pz");
 		this.occupied = par1NBTTagCompound.getBoolean("occ");
 		this.color = par1NBTTagCompound.getInteger("color");
-		if(occupied)
-			this.lidPos = 0;
-		else
+		this.needsAnimation = par1NBTTagCompound.getBoolean("needsAnim");
+		if(!occupied && needsAnimation)
 			this.lidPos = 61;
+		else
+			this.lidPos = 0;
 	}
 
 	@Override
@@ -85,6 +86,7 @@ public class TileEntityCoffin extends TileEntity {
 		//On the server, metadata has priority over tile entity. On the client, tile entity has priority over metadata
 		if(!this.worldObj.isRemote && (occupied != ((this.getBlockMetadata() & 4) != 0))) {
 			occupied = !occupied;
+			needsAnimation = true;
 			markDirty();
 		}
 		else
@@ -96,5 +98,7 @@ public class TileEntityCoffin extends TileEntity {
 
 	public void changeColor(int color) {
 		this.color = color;
+		needsAnimation = false;
+		markDirty();
 	}
 }

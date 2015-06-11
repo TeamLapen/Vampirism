@@ -14,14 +14,18 @@ import net.minecraft.world.World;
 
 public class RendererCoffin extends TileEntitySpecialRenderer {
 	private ModelCoffin model;
-	private ResourceLocation texture;
+	private ResourceLocation[] textures = new ResourceLocation[16];
+	
+	 public static final String[] colors = new String[] {"black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange", "white"};
 	
 	private final int maxLidPos = 61;
 
 	public RendererCoffin() {
 		model = new ModelCoffin();
-		texture = new ResourceLocation(REFERENCE.MODID
-				+ ":textures/blocks/coffin.png");
+		for(int i = 0; i < colors.length; i++) {
+			Logger.i("RendererCoffin", String.format("Adding coffin texture %s to textures[%s]", colors[i], i));
+			textures[i] = new ResourceLocation(REFERENCE.MODID + ":textures/blocks/coffin/coffin_" + colors[i] + ".png");
+		}
 	}
 
 	private void adjustRotatePivotViaMeta(World world, int x, int y, int z) {
@@ -50,7 +54,7 @@ public class RendererCoffin extends TileEntitySpecialRenderer {
 //		Logger.i("RendererCoffin", String.format("Rendering at x=%s, y=%s, z=%s, occupied=%s, lidpos=%s", te.xCoord, te.yCoord, te.zCoord, occupied, tile.lidPos));
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
-		bindTexture(texture);
+		bindTexture(textures[((TileEntityCoffin) te).color]);
 		GL11.glPushMatrix();
 		adjustRotatePivotViaMeta(te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
