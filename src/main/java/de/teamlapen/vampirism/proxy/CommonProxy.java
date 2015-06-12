@@ -165,6 +165,7 @@ public abstract class CommonProxy implements IProxy {
 	
 	@SubscribeEvent
 	public void dye(PlayerInteractEvent e) {
+		if(e.world.isRemote) return;
 		ItemStack i = null;
 		if (e.entityPlayer.isSneaking()
 				&& e.action == Action.RIGHT_CLICK_BLOCK && e.world.getBlock(e.x, e.y, e.z).equals(ModBlocks.coffin)

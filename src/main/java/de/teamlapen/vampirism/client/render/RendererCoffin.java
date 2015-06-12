@@ -37,15 +37,11 @@ public class RendererCoffin extends TileEntitySpecialRenderer {
 	public void renderTileEntityAt(TileEntity te, double x, double y, double z,
 			float scale) {
 		TileEntityCoffin tile = (TileEntityCoffin) te;
-			if ((te.getBlockMetadata() & (-8)) == 0) {
-				// Logger.i("RendererCoffin",
-				// String.format("Not rendering coffin at x=%d, y=%d, z=%d",
-				// te.xCoord, te.yCoord, te.zCoord));
+			if ((te.getBlockMetadata() & (-8)) == 0) 
 				return;
-			}
 		//Calculate lid position
 		boolean occupied = (te.getBlockMetadata() & 4) != 0;
-		Logger.i("test", "%s", tile.getPrimaryTileEntity()==tile);
+//		Logger.i("test", "%s", tile.getPrimaryTileEntity()==tile);
 		if(!occupied && tile.lidPos > 0)
 			tile.lidPos--;
 		else if(occupied && tile.lidPos < maxLidPos)

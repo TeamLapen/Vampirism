@@ -47,6 +47,15 @@ public class TileEntityCoffin extends TileEntity {
 		else
 			this.lidPos = 0;
 	}
+	
+	public void readFromNBTPartial(NBTTagCompound nbt) {
+		super.readFromNBT(nbt);
+		this.otherX = nbt.getInteger("px");
+		this.otherY = nbt.getInteger("py");
+		this.otherZ = nbt.getInteger("pz");
+		this.occupied = nbt.getBoolean("occ");
+		this.color = nbt.getInteger("color");
+	}
 
 	@Override
 	public Packet getDescriptionPacket() {
@@ -81,7 +90,7 @@ public class TileEntityCoffin extends TileEntity {
 
 	@Override
 	public void updateEntity() {
-		if((this.getBlockMetadata() & 8) == 0)
+		if((this.getBlockMetadata() & -8) == 0)
 			return;
 		//On the server, metadata has priority over tile entity. On the client, tile entity has priority over metadata
 		if(!this.worldObj.isRemote && (occupied != ((this.getBlockMetadata() & 4) != 0))) {
@@ -97,13 +106,14 @@ public class TileEntityCoffin extends TileEntity {
 	}
 
 	public void changeColor(int color) {
+		Logger.i("TECoffin", "Changecolor called, prev=%s, new=%s\nTile=%s", this.color, color, this.toString());
 		this.color = color;
 		needsAnimation = false;
 		markDirty();
 	}
 	
 	public TileEntityCoffin getPrimaryTileEntity() {
-		if((this.worldObj.getBlockMetadata(this.otherX, this.yCoord, this.zCoord) & -8) == 0)
+		if((this.getBlockMetadata() & -8) == 0)
 			return (TileEntityCoffin) worldObj.getTileEntity(otherX, otherY, otherZ);
 		return this;
 	}
