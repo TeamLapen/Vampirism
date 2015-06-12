@@ -104,7 +104,7 @@ public class Helper {
 			add("EntityPlayer/sleepTimer", "sleepTimer", "field_71076_b");
 			add("Minecraft/fileAssets","fileAssets","field_110446_Y");
 			add("TileEntityBeacon/field_146015_k","field_146015_k");
-			add("Entity/setSize","setSize");
+			add("Entity/setSize","setSize","func_70105_a");
 		}
 		
 		public static String[] getPosNames(String key){
