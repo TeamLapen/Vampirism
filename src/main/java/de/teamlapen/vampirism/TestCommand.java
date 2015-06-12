@@ -94,6 +94,9 @@ public class TestCommand implements ICommand {
 
 					return;
 				}
+				if("info".equals(param[0])){
+					//TODO add entity string output
+				}
 				if("minions".equals(param[0])){
 					for(IMinion m:vampire.getMinionHandler().getMinionListForDebug()){
 						sendMessage(sender,m.getRepresentingEntity().toString());
