@@ -485,6 +485,10 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	public void loadNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = (NBTTagCompound) compound
 				.getTag(EXT_PROP_NAME);
+		if(properties==null){
+			Logger.i(TAG, "VampirePlayer data for %s cannot be loaded. It probably does not exist", player);
+			return;
+		}
 		setBloodData(properties.getInteger(KEY_BLOOD));
 		level = properties.getInteger(KEY_LEVEL);
 		int[] temp = properties.getIntArray(KEY_SKILLS);
@@ -662,15 +666,18 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	
 	/**
 	 * The TicksInSun value is increased every tick in the sun and decreased every tick if not in sun. It always stays >=0
-	 * @return TicksInSun
+	 * @return TicksInSun, if the player wont receive damage returns 0
 	 */
-	public int getTicksInSun(){
-		if(getLevel()==0)return 0;
+	public int getSunDamageTicksInSun(){
+		if(getLevel()<3)return 0;
 		return this.ticksInSun;
 	}
 
 	private void handleSunDamage() {
-		ticksInSun++;
+		if(ticksInSun<101){
+			ticksInSun++;
+		}
+		/**Non programmatically reference to #getSunDamageTicksInSun */
 		int type = Math.min(3, Math.round(getLevel() / 2F - 0.51F));
 		if (player.isPotionActive(ModPotion.sunscreen) && type > 0)
 			type--;
@@ -689,7 +696,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 							Potion.weakness.id, 30, 1));
 				}
 
-				if (type > 2 && ticksInSun > 100) {
+				if (type > 2 && ticksInSun >= 100) {
 					if (t % 40 == 0) {
 						float damage=(float) BALANCE.VAMPIRE_PLAYER_SUN_DAMAGE;
 						if(isVampireLord())damage*=1.8F;
@@ -751,7 +758,9 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		}
 		else{
 			if (gettingSundamage()) {
-				ticksInSun++;
+				if(ticksInSun<101){
+					ticksInSun++;
+				}
 			} else {
 				if (ticksInSun > 0) {
 					ticksInSun--;
