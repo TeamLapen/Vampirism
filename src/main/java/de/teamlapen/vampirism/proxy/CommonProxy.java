@@ -7,10 +7,14 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemDye;
+import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.world.WorldEvent;
 
 import com.google.common.base.Predicates;
@@ -18,10 +22,12 @@ import com.google.common.collect.Iterators;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import de.teamlapen.vampirism.ModBiomes;
+import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityDeadMob;
@@ -34,6 +40,7 @@ import de.teamlapen.vampirism.entity.EntityVampireMinion;
 import de.teamlapen.vampirism.entity.VampireEntityEventHandler;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.VampirePlayerEventHandler;
+import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -105,7 +112,6 @@ public abstract class CommonProxy implements IProxy {
 	public void registerSubscriptions() {
 		MinecraftForge.EVENT_BUS.register(new VampirePlayerEventHandler());
 		MinecraftForge.EVENT_BUS.register(new VampireEntityEventHandler());
-		MinecraftForge.EVENT_BUS.register(new de.teamlapen.vampirism.block.BlockCoffin());
 		MinecraftForge.EVENT_BUS.register(this);
 		FMLCommonHandler.instance().bus().register(this);
 	}
@@ -154,6 +160,27 @@ public abstract class CommonProxy implements IProxy {
 	public void onPlayerLoggedOut(PlayerLoggedOutEvent e){
 		if(VampirePlayer.get(e.player).sleepingCoffin){
 			VampirePlayer.get(e.player).wakeUpPlayer(true, true, false, false);
+		}
+	}
+	
+	@SubscribeEvent
+	public void dye(PlayerInteractEvent e) {
+		ItemStack i = null;
+		if (e.entityPlayer.isSneaking()
+				&& e.action == Action.RIGHT_CLICK_BLOCK && e.world.getBlock(e.x, e.y, e.z).equals(ModBlocks.coffin)
+				&& (i = (e.entityPlayer).inventory.getCurrentItem()) != null
+				&& i.getItem() instanceof ItemDye) {
+			int color=i.getItemDamage();
+			TileEntityCoffin t= (TileEntityCoffin) e.world.getTileEntity(e.x, e.y, e.z);
+			if(t==null)return;
+			t=t.getPrimaryTileEntity();
+			if(t==null)return;
+			t.changeColor(color);
+			e.useBlock=Result.DENY;
+			e.useItem=Result.DENY;
+			if(!e.entityPlayer.capabilities.isCreativeMode){
+				i.stackSize--;
+			}
 		}
 	}
 }

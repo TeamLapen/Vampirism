@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.block;
 
+import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.ModItems;
@@ -179,19 +180,6 @@ public class BlockCoffin extends BasicBlockContainer {
 
 	public int getDirection(World world, int x, int y, int z) {
 		return world.getBlockMetadata(x, y, z) & 3;
-	}
-
-	@SubscribeEvent
-	public void dye(PlayerInteractEvent e) {
-		ItemStack i = null;
-		if (e.entity instanceof EntityPlayer
-				&& e.entity.isSneaking()
-				&& e.action == Action.RIGHT_CLICK_BLOCK
-				&& (i = ((EntityPlayer) e.entity).inventory.getCurrentItem()) != null
-				&& i.getItem() instanceof ItemDye) {
-			//TODO Color coffin
-			((TileEntityCoffin) e.world.getTileEntity(e.x, e.y, e.z)).getPrimaryTileEntity().changeColor(i.getItemDamage());
-		}
 	}
 
 	// Miscellaneous methods (rendertype etc.)

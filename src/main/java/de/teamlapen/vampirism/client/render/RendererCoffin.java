@@ -23,7 +23,7 @@ public class RendererCoffin extends TileEntitySpecialRenderer {
 	public RendererCoffin() {
 		model = new ModelCoffin();
 		for(int i = 0; i < colors.length; i++) {
-			Logger.i("RendererCoffin", String.format("Adding coffin texture %s to textures[%s]", colors[i], i));
+			//Logger.d("RendererCoffin", String.format("Adding coffin texture %s to textures[%s]", colors[i], i));
 			textures[i] = new ResourceLocation(REFERENCE.MODID + ":textures/blocks/coffin/coffin_" + colors[i] + ".png");
 		}
 	}
@@ -37,7 +37,6 @@ public class RendererCoffin extends TileEntitySpecialRenderer {
 	public void renderTileEntityAt(TileEntity te, double x, double y, double z,
 			float scale) {
 		TileEntityCoffin tile = (TileEntityCoffin) te;
-		if (te instanceof TileEntityCoffin)
 			if ((te.getBlockMetadata() & (-8)) == 0) {
 				// Logger.i("RendererCoffin",
 				// String.format("Not rendering coffin at x=%d, y=%d, z=%d",
@@ -46,7 +45,7 @@ public class RendererCoffin extends TileEntitySpecialRenderer {
 			}
 		//Calculate lid position
 		boolean occupied = (te.getBlockMetadata() & 4) != 0;
-		
+		Logger.i("test", "%s", tile.getPrimaryTileEntity()==tile);
 		if(!occupied && tile.lidPos > 0)
 			tile.lidPos--;
 		else if(occupied && tile.lidPos < maxLidPos)
@@ -54,7 +53,8 @@ public class RendererCoffin extends TileEntitySpecialRenderer {
 //		Logger.i("RendererCoffin", String.format("Rendering at x=%s, y=%s, z=%s, occupied=%s, lidpos=%s", te.xCoord, te.yCoord, te.zCoord, occupied, tile.lidPos));
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
-		bindTexture(textures[((TileEntityCoffin) te).color]);
+		int color=Math.min(tile.color, 15);
+		bindTexture(textures[color]);
 		GL11.glPushMatrix();
 		adjustRotatePivotViaMeta(te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
