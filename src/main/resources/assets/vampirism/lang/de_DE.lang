@@ -47,7 +47,7 @@ itemGroup.vampirism=Vampirismus
 death.attack.sun=%1$s mochte die Sonne nicht
 potion.vampirism:sunscreen=Sonnenschutz
 potion.vampirism:thirst=Durst
-potion.vampirism:saturation=SÃ¤ttigung
+potion.vampirism:saturation=Sättigung
 text.vampirism:skill.level_to_low=Dein Vampire Level ist zu niedrig dafür
 text.vampirism:skill.cooldown_not_over=Bitte warte bis die Abklingzeit vorbei ist
 text.vampirism:entity_level=Level
@@ -67,6 +67,12 @@ text.vampirism:no_more_minions=Du kannst nicht noch mehr Minions kontrollieren
 text.vampirism:coffin.noSleep=Du kannst nur am Tag schlafen
 text.vampirism:coffin.occupied=Dieser Sarg ist besetzt
 text.vampirism:coffin.stopsleeping=Verlasse Sarg
+text.vampirism:blood_left=Blut übrig
+text.vampirism:blood=Blut
+text.vampirism:vampirelevel=Vampirlevel
+text.vampirism:entitysblood=Entity's blood
+text.vampirism:minion=Minion
+text.vampirism:lord=Sklave
 
 #Skill
 skill.vampirism.bat_skill=Aktiviere Fledermaus

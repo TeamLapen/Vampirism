@@ -183,4 +183,8 @@ public class TileEntityBloodAltar1 extends TileEntity {
 		nbt.setInteger(BLOOD_NBTKEY, bloodAmount);
 		nbt.setInteger(TICK_NBTKEY, tickCounter);
 	}
+	
+	public int getBloodLeft(){
+		return bloodAmount;
+	}
 }

@@ -76,6 +76,7 @@ public class VampirismMod {
 			Logger.i("VillageDensity", "Registering replacer for village generation.");
 			MinecraftForge.TERRAIN_GEN_BUS.register(new VillageGenReplacer());
 		}
+		FMLInterModComms.sendMessage("Waila", "register", "de.teamlapen.vampirism.WailaDataProvider.callbackRegister");
 	}
 
 	@EventHandler

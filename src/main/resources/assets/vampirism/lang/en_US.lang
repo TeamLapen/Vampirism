@@ -69,6 +69,12 @@ text.vampirism:no_more_minions=You are not able to control any more minions
 text.vampirism:coffin.noSleep=You can only sleep at day
 text.vampirism:coffin.occupied=This coffin is occupied
 text.vampirism:coffin.stopsleeping=Leave coffin
+text.vampirism:blood_left=Blood left
+text.vampirism:blood=blood
+text.vampirism:vampirelevel=Vampirelevel
+text.vampirism:entitysblood=Entity's blood
+text.vampirism:minion=Minion
+text.vampirism:lord=Lord
 
 #Skill
 skill.vampirism.bat_skill=Toggle Batmode

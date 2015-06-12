@@ -322,5 +322,16 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		}
 		
 	}
+	
+	/**
+	 * If the mob can be bitten, returns its blood amount, otherwise returns -1
+	 * @return
+	 */
+	public int getBlood(){
+		if(canBeBitten()){
+			return blood;
+		}
+		return -1;
+	}
 
 }
