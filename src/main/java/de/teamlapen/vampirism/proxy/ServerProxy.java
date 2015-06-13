@@ -5,6 +5,7 @@ import java.util.List;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
 import net.minecraft.entity.Entity;
@@ -76,6 +77,12 @@ public class ServerProxy extends CommonProxy {
 
 	@Override
 	public void enableMaxPotionDuration(PotionEffect p) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onClientTick(ClientTickEvent event) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -4,6 +4,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.DamageSource;
+import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -129,6 +130,12 @@ public class VampirismMod {
 		modChannel.registerMessage(RenderScreenRedPacket.Handler.class, RenderScreenRedPacket.class, id++, Side.CLIENT);
 		modChannel.registerMessage(UpdateEntityPacket.Handler.class, UpdateEntityPacket.class, id++, Side.CLIENT);
 		modChannel.registerMessage(RequestEntityUpdatePacket.Handler.class, RequestEntityUpdatePacket.class, id++, Side.SERVER);
+	}
+	
+	public static boolean isSunDamageTime(World world){
+		if(world==null)return false;
+		int t=(int) (world.getWorldTime()%24000);
+		return (t>0&&t<12500);
 	}
 
 }

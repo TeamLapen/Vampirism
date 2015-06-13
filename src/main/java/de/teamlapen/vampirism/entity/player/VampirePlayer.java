@@ -291,6 +291,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	private boolean dirty = false;
 
 	private boolean autoFillBlood;
+	
+	private boolean nightVision;
 
 	private EntityLivingBase minionTarget;
 	
@@ -651,13 +653,11 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 	public boolean gettingSundamage() {
 		if (player.worldObj != null  &&player.worldObj.provider.dimensionId==0){
-			int time=(int) (player.worldObj.getWorldTime()%24000);
 			if(player.worldObj.canBlockSeeTheSky(
 					MathHelper.floor_double(player.posX),
 					MathHelper.floor_double(player.posY),
-					MathHelper.floor_double(player.posZ))
-			&& (time > 1000 && time < 12000)) {
-				return true;
+					MathHelper.floor_double(player.posZ))) {
+				return VampirismMod.isSunDamageTime(player.worldObj);
 			}
 		}
 				

@@ -21,7 +21,7 @@ public class BlockCursedEarth extends BasicBlock {
 		super(Material.ground, name);
 		this.setHardness(0.5F);
 		this.setResistance(2.0F);
-		this.setHarvestLevel("pickaxe", 2);
+		this.setHarvestLevel("shovel", 0);
 		this.setStepSound(soundTypeGravel);
 		this.setBlockTextureName(REFERENCE.MODID + ":" + name);
 	}

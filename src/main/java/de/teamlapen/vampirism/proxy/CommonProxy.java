@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
@@ -28,6 +29,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import de.teamlapen.vampirism.ModBiomes;
 import de.teamlapen.vampirism.ModBlocks;
+import de.teamlapen.vampirism.VampirismEventHandler;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityDeadMob;
@@ -112,15 +114,12 @@ public abstract class CommonProxy implements IProxy {
 	public void registerSubscriptions() {
 		MinecraftForge.EVENT_BUS.register(new VampirePlayerEventHandler());
 		MinecraftForge.EVENT_BUS.register(new VampireEntityEventHandler());
-		MinecraftForge.EVENT_BUS.register(this);
-		FMLCommonHandler.instance().bus().register(this);
+		Object handler=new VampirismEventHandler();
+		MinecraftForge.EVENT_BUS.register(handler);
+		FMLCommonHandler.instance().bus().register(handler);
 	}
 	
-	@SubscribeEvent
-	public void onWorldLoad(WorldEvent.Load event){
-		//Loading VillageVampireData
-		FMLCommonHandler.instance().bus().register(VillageVampireData.get(event.world));//Not sure if this is the right position or if it could lead to a memory leak
-	}
+	
 
 	private void wakeAllPlayers(WorldServer server)  {
 		Iterator iterator = server.playerEntities.iterator();
@@ -132,9 +131,7 @@ public abstract class CommonProxy implements IProxy {
 		}
 	}
 	
-	@SubscribeEvent
 	public void onServerTick(TickEvent.ServerTickEvent event) {
-		//Logger.i("ServerProxy", "onServerTick called");
 		WorldServer server = MinecraftServer.getServer().worldServerForDimension(0);
 		
 		if(server.areAllPlayersAsleep()) {
@@ -153,35 +150,6 @@ public abstract class CommonProxy implements IProxy {
 				}
 			}
 			
-		}
-	}
-	
-	@SubscribeEvent
-	public void onPlayerLoggedOut(PlayerLoggedOutEvent e){
-		if(VampirePlayer.get(e.player).sleepingCoffin){
-			VampirePlayer.get(e.player).wakeUpPlayer(true, true, false, false);
-		}
-	}
-	
-	@SubscribeEvent
-	public void dye(PlayerInteractEvent e) {
-		if(e.world.isRemote) return;
-		ItemStack i = null;
-		if (e.entityPlayer.isSneaking()
-				&& e.action == Action.RIGHT_CLICK_BLOCK && e.world.getBlock(e.x, e.y, e.z).equals(ModBlocks.coffin)
-				&& (i = (e.entityPlayer).inventory.getCurrentItem()) != null
-				&& i.getItem() instanceof ItemDye) {
-			int color=i.getItemDamage();
-			TileEntityCoffin t= (TileEntityCoffin) e.world.getTileEntity(e.x, e.y, e.z);
-			if(t==null)return;
-			t=t.getPrimaryTileEntity();
-			if(t==null)return;
-			t.changeColor(color);
-			e.useBlock=Result.DENY;
-			e.useItem=Result.DENY;
-			if(!e.entityPlayer.capabilities.isCreativeMode){
-				i.stackSize--;
-			}
 		}
 	}
 }

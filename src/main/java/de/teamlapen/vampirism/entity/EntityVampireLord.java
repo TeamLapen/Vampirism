@@ -192,7 +192,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 				m.setLord(this);
 			}
 		}
-		if (!this.worldObj.isRemote && this.worldObj.isDaytime()) {
+		if (!this.worldObj.isRemote && VampirismMod.isSunDamageTime(this.worldObj)) {
 			if (this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ))) {
 				this.teleportAway();
 			}

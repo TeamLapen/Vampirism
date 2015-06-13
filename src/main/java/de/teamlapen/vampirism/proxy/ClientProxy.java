@@ -71,10 +71,8 @@ import de.teamlapen.vampirism.util.REFERENCE;
 public class ClientProxy extends CommonProxy {
 	private final static String TAG = "ClientProxy";
 	private static final ResourceLocation saturation1 = new ResourceLocation(REFERENCE.MODID + ":shaders/saturation1.json");
-	private final ResourceLocation vampire_overlay = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vampire_cover.png");
 	public static final ResourceLocation steveTextures = new ResourceLocation("textures/entity/steve.png");
 	
-	private boolean allPlayersSleepingCoffin;
 
 	@Override
 	public void registerKeyBindings() {
@@ -137,14 +135,12 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void registerSubscriptions() {
-		Logger.d(TAG, "Registering client subscriptions");
 		super.registerSubscriptions();
 		MinecraftForge.EVENT_BUS.register(new VampireHudOverlay(Minecraft.getMinecraft()));
 		Object renderHandler=new RenderHandler(Minecraft.getMinecraft());
 		MinecraftForge.EVENT_BUS.register(renderHandler);
 		FMLCommonHandler.instance().bus().register(renderHandler);
 		FMLCommonHandler.instance().bus().register(new KeyInputEventHandler());
-		MinecraftForge.EVENT_BUS.register(new RendererTorch());
 	}
 
 	@Override
@@ -158,7 +154,6 @@ public class ClientProxy extends CommonProxy {
 	}
 	
 	
-	@SubscribeEvent
 	public void onClientTick(ClientTickEvent event){
 		if(!event.phase.equals(TickEvent.Phase.START))return;
 		if(OpenGlHelper.shadersSupported){

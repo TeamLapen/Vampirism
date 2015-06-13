@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.proxy;
 
+import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
@@ -63,4 +65,8 @@ public interface IProxy {
 	public void setPlayerBat(EntityPlayer player,boolean bat);
 	
 	public void enableMaxPotionDuration(PotionEffect p);
+	
+	public void onClientTick(ClientTickEvent event);
+	
+	public void onServerTick(ServerTickEvent event);
 }

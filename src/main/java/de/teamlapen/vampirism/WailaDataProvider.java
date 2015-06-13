@@ -26,6 +26,7 @@ import de.teamlapen.vampirism.entity.ai.IMinionLord;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
+import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 @Optional.Interface(iface = "mcp.mobius.waila.api.IWailaDataProvider", modid = "Waila")
@@ -39,6 +40,7 @@ public class WailaDataProvider implements IWailaDataProvider, IWailaEntityProvid
 		register.addConfig(REFERENCE.MODID, "option.vampirism.showEntityInfo",true);
 		register.registerBodyProvider((IWailaDataProvider)instance, TileEntityBloodAltar1.class);
 		register.registerBodyProvider((IWailaDataProvider)instance, TileEntityBloodAltar2.class);
+		register.registerNBTProvider((IWailaDataProvider)instance, TileEntityBloodAltar1.class);
 		register.registerBodyProvider((IWailaEntityProvider)instance, EntityPlayer.class);
 		register.registerBodyProvider((IWailaEntityProvider)instance, EntityCreature.class);
 	}
@@ -58,8 +60,17 @@ public class WailaDataProvider implements IWailaDataProvider, IWailaEntityProvid
 			TileEntity tile=accessor.getTileEntity();
 			if( tile instanceof TileEntityBloodAltar1){
 				TileEntityBloodAltar1 altar1=(TileEntityBloodAltar1) tile;
+
 				if(altar1.isOccupied()){
-					currenttip.add(String.format("%s%s: %d",SpecialChars.RED,StatCollector.translateToLocal("text.vampirism:blood_left"),altar1.getBloodLeft()));
+					int blood;
+					if(accessor.getNBTData().hasKey("vampirism:bloodLeft")){
+						blood=accessor.getNBTData().getInteger("vampirism:bloodLeft");
+					}
+					else{
+						blood=altar1.getBloodLeft();
+					}
+						
+					currenttip.add(String.format("%s%s: %d",SpecialChars.RED,StatCollector.translateToLocal("text.vampirism:blood_left"),blood));
 				}
 			}
 			else if(tile instanceof TileEntityBloodAltar2){
@@ -78,7 +89,10 @@ public class WailaDataProvider implements IWailaDataProvider, IWailaEntityProvid
 
 	@Override
 	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
-		return null;
+		if(te instanceof TileEntityBloodAltar1){
+			tag.setInteger("vampirism:bloodLeft", ((TileEntityBloodAltar1)te).getBloodLeft());
+		}
+		return tag;
 	}
 	@Override
 	public Entity getWailaOverride(IWailaEntityAccessor accessor, IWailaConfigHandler config) {

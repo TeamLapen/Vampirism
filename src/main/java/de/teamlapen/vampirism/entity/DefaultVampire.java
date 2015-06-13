@@ -133,7 +133,7 @@ public abstract class DefaultVampire extends EntityMob {
 			float brightness = this.getBrightness(1.0F);
 			boolean canSeeSky = this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
 			if (brightness > 0.5F) {
-				if (this.worldObj.isDaytime() && canSeeSky) {
+				if (VampirismMod.isSunDamageTime(this.worldObj) && canSeeSky) {
 					float dmg = sundamage;
 					if (this.isPotionActive(ModPotion.sunscreen)) {
 						dmg = dmg / 2;

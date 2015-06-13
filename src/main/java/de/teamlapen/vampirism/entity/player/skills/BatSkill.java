@@ -20,7 +20,7 @@ public class BatSkill extends DefaultSkill implements ILastingSkill {
 	public final static float BAT_WIDTH=0.5F;
 	public final static float BAT_HEIGHT=0.8F;
 	public final static float BAT_EYE_HEIGHT=0.85F*BAT_HEIGHT;
-	public final static float PLAYER_WIDTH=0.8F;
+	public final static float PLAYER_WIDTH=0.6F;
 	public final static float PLAYER_HEIGHT=1.8F;
 	
 	public final UUID speedModifierUUID = UUID.fromString("eb7a2e48-ce60-4629-b5f5-7a196d1035af");

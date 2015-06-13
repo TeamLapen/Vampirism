@@ -59,8 +59,4 @@ public class RendererTorch implements IItemRenderer
 			GL11.glPopMatrix();
 		}
 		
-		@SubscribeEvent
-		public void onRenderEntity(RenderPlayerEvent.Post event) {
-			//Logger.i("RendererTorch", "Rendering entity");
-		}
 }

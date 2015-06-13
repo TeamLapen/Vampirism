@@ -43,6 +43,7 @@ public class ModItems {
 		GameRegistry.addRecipe(new ItemStack(vampireBoots,1),"YZY","Y Y",'Y',Items.iron_ingot,'Z',new ItemStack(bloodBottle,1,ItemBloodBottle.MAX_BLOOD));
 		GameRegistry.addRecipe(new ItemStack(vampireLeggings,1),"YYY","YZY","Y Y",'Y',Items.iron_ingot,'Z',new ItemStack(bloodBottle,1,ItemBloodBottle.MAX_BLOOD));
 		GameRegistry.addRecipe(new ItemStack(vampireChestplate,1),"YZY","YYY","YYY",'Y',Items.iron_ingot,'Z',new ItemStack(bloodBottle,1,ItemBloodBottle.MAX_BLOOD));
+		GameRegistry.addShapelessRecipe(new ItemStack(Items.glass_bottle),new ItemStack(bloodBottle,1,0));
 	}
 	public static ItemSword leechSword = new ItemLeechSword();
 	public static ItemBloodBottle bloodBottle = new ItemBloodBottle();
