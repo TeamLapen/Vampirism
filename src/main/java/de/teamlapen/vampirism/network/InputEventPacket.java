@@ -36,7 +36,11 @@ public class InputEventPacket implements IMessage {
 				EntityPlayer player = ctx.getServerHandler().playerEntity;
 				VampirePlayer.get(player).setLevel(0);
 				player.attackEntityFrom(DamageSource.magic, 1000);
-			} else if (message.action.equals(TOGGLESKILL)) {
+			} else if(message.action.equals(SWITCHVISION)){
+				EntityPlayer player = ctx.getServerHandler().playerEntity;
+				VampirePlayer.get(player).onToggleVision();
+			}
+			else if (message.action.equals(TOGGLESKILL)) {
 				int id =-1;
 				try {
 					id = Integer.parseInt(message.param);
@@ -66,6 +70,7 @@ public class InputEventPacket implements IMessage {
 	public static String TOGGLESKILL = "ts";
 	public static String LEAVE_COFFIN = "lc";
 	private final static String TAG = "InputEventPacket";
+	public static final String SWITCHVISION = "sw";
 	private String param;
 	private String action;
 

@@ -9,9 +9,8 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.entity.player.PlayerAbilities;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.BALANCE;
 
 /**
  * Class for static communication between modified/transformed classes and the
@@ -28,13 +27,13 @@ public class CoreHandler {
 	}
 
 	public static float getNightVisionLevel(EntityPlayer p) {
-		return PlayerAbilities.getPlayerAbilities(VampirePlayer.get(p).getLevel()).nightVision;
+		return BALANCE.getVampirePlayerNightVision(VampirePlayer.get(p).getLevel());
 	}
 
 	public static boolean shouldOverrideNightVision(Object o, Potion p) {
 
 		if (o instanceof EntityPlayer && p.equals(Potion.nightVision)) {
-			return (PlayerAbilities.getPlayerAbilities(VampirePlayer.get((EntityPlayer) o).getLevel()).nightVision > 0.0F);
+			return (VampirePlayer.get((EntityPlayer) o).getVision()==1&&getNightVisionLevel((EntityPlayer) o)>0F);
 		}
 		return false;
 	}

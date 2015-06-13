@@ -13,7 +13,7 @@ public class REFERENCE {
 	}
 
 	public static enum KEY {
-		UNKNOWN, SUCK, AUTO, SKILL
+		UNKNOWN, SUCK, AUTO, SKILL, VISION
 	}
 
 	public static final class KEYS {
@@ -21,6 +21,7 @@ public class REFERENCE {
 		public static final String SUCK_BLOOD = "keys.vampirism.suck";
 		public static final String AUTO_BLOOD = "keys.vampirism.auto";
 		public static final String TOGGLE_SKILLS = "keys.vampirism.skill";
+		public static final String SWITCH_VISION = "key.vampirism.vision";
 	}
 
 	public static final String MODID = "vampirism";

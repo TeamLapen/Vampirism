@@ -75,6 +75,8 @@ text.vampirism:vampirelevel=Vampirlevel
 text.vampirism:entitysblood=Entity's blood
 text.vampirism:minion=Minion
 text.vampirism:lord=Sklave
+text.vampirism:normal_vision=Normale Sicht
+text.vampirism:night_vision=Nachtsicht
 
 #Skill
 skill.vampirism.bat_skill=Aktiviere Fledermaus

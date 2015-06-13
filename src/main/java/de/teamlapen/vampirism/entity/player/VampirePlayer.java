@@ -270,6 +270,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 	private static final String KEY_VAMPIRE_LORD = "vampire_lord";
 
+	private static final String KEY_VISION = "vision";
+
 	private final EntityPlayer player;
 
 	private final String KEY_LEVEL = "level";
@@ -292,7 +294,15 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 	private boolean autoFillBlood;
 	
-	private boolean nightVision;
+	private int vision;
+
+	public int getVision() {
+		return vision;
+	}
+
+	private void setVision(int vision) {
+		this.vision = vision;
+	}
 
 	private EntityLivingBase minionTarget;
 	
@@ -314,6 +324,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 				MAXBLOOD);
 		bloodStats = new BloodStats();
 		autoFillBlood = true;
+		vision=1;
 		skillTimer = new int[Skills.getSkillCount()];
 		extraData = new NBTTagCompound();
 		minionHandler=new MinionHandler<VampirePlayer>(this);
@@ -368,17 +379,6 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		}
 	}
 
-	/**
-	 * Adds blood to the vampires blood level level without increasing the
-	 * saturation level
-	 * 
-	 * @param a
-	 *            amount
-	 */
-
-	private boolean getAutoFillBlood() {
-		return autoFillBlood;
-	}
 
 	/**
 	 * @return The current blood level
@@ -445,6 +445,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	public boolean isAutoFillBlood() {
 		return autoFillBlood;
 	}
+	
 
 	private boolean isRemote() {
 		return player.worldObj.isRemote;
@@ -504,6 +505,9 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		vampireLord = properties.getBoolean(KEY_VAMPIRE_LORD);
 		if (properties.hasKey(KEY_AUTOFILL)) {
 			setAutoFillBlood(properties.getBoolean(KEY_AUTOFILL));
+		}
+		if(properties.hasKey(KEY_VISION)){
+			setVision(properties.getInteger(KEY_VISION));
 		}
 		if (properties.hasKey(KEY_EXTRADATA)) {
 			extraData = properties.getCompoundTag(KEY_EXTRADATA);
@@ -714,7 +718,6 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 * Called every LivingEntityUpdate, returns immediately if level =0;
 	 */
 	public void onUpdate() {
-		//Logger.i("VampirePlayer", String.format("Remote=%s, sleeping=%s, fullyAsleep=%s", player.worldObj.isRemote, player.isPlayerSleeping(), player.isPlayerFullyAsleep()));
 		if(this.sleepingCoffin && player.isPlayerSleeping()) {
 			if(!player.worldObj.isRemote)
 				player.motionY = 0;
@@ -818,7 +821,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		properties.setInteger(KEY_LEVEL, getLevel());
 		properties.setInteger(KEY_BLOOD, getBlood());
 		properties.setIntArray(KEY_SKILLS, skillTimer);
-		properties.setBoolean(KEY_AUTOFILL, getAutoFillBlood());
+		properties.setBoolean(KEY_AUTOFILL, isAutoFillBlood());
+		properties.setInteger(KEY_VISION, getVision());
 		properties.setBoolean(KEY_VAMPIRE_LORD, isVampireLord());
 		properties.setTag(KEY_EXTRADATA, extraData);
 		this.bloodStats.writeNBT(properties);
@@ -829,6 +833,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	private void setAutoFillBlood(boolean value) {
 		autoFillBlood = value;
 	}
+	
 
 	/**
 	 * DONT USE, only designed to be used at startup and by Bloodstats Try to
@@ -1107,6 +1112,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		}
 		if(nbt.hasKey("sleepingCoffin"))
 			this.sleepingCoffin = nbt.getBoolean("sleepingCoffin");
+		if(nbt.hasKey("vision"))
+			this.setVision(nbt.getInteger("vision"));
 
 	}
 
@@ -1114,9 +1121,9 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	public void writeFullUpdateToNBT(NBTTagCompound tag) {
 		tag.setInteger("level", getLevel());
 		tag.setIntArray("timers", skillTimer);
-		;
 		tag.setBoolean("lord", isVampireLord());
 		tag.setBoolean("sleepingCoffin", sleepingCoffin);
+		tag.setInteger("vision", getVision());
 	}
 
 	@Override
@@ -1164,5 +1171,24 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		if(vanilla){
 			player.wakeUpPlayer(immediately, updateWorld, setSpawn);
 		}
+	}
+
+	public void onToggleVision() {
+		if(getLevel()==0){
+			player.addChatMessage(new ChatComponentTranslation("text.vampirism:skill.level_to_low"));
+			return;
+		}
+		int v=getVision()+1;
+		if(v>1)v=0;
+		this.setVision(v);
+		this.sync(false);
+		if(v==0){
+			player.addChatMessage(new ChatComponentTranslation("text.vampirism:normal_vision"));
+		}
+		else if(v==1){
+			player.addChatMessage(new ChatComponentTranslation("text.vampirism:night_vision"));
+		}
+		
+		
 	}
 }

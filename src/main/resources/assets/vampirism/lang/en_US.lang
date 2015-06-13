@@ -77,6 +77,8 @@ text.vampirism:vampirelevel=Vampirelevel
 text.vampirism:entitysblood=Entity's blood
 text.vampirism:minion=Minion
 text.vampirism:lord=Lord
+text.vampirism:normal_vision=Normal Vision
+text.vampirism:night_vision=Night Vision
 
 #Skill
 skill.vampirism.bat_skill=Toggle Batmode

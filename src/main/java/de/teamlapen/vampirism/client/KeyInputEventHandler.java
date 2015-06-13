@@ -23,6 +23,8 @@ public class KeyInputEventHandler {
 	public static KeyBinding AUTO = new KeyBinding(REFERENCE.KEYS.AUTO_BLOOD, Keyboard.KEY_B, REFERENCE.KEYS.CATEGORY);
 
 	public static KeyBinding SKILL = new KeyBinding(REFERENCE.KEYS.TOGGLE_SKILLS, -98, REFERENCE.KEYS.CATEGORY);
+	
+	public static KeyBinding VISION = new KeyBinding(REFERENCE.KEYS.SWITCH_VISION,Keyboard.KEY_N,REFERENCE.KEYS.CATEGORY);
 
 	private static KEY getPressedKeyBinding() {
 		if (SUCK.isPressed()) {
@@ -31,6 +33,9 @@ public class KeyInputEventHandler {
 			return KEY.AUTO;
 		} else if (SKILL.isPressed()) {
 			return KEY.SKILL;
+		}
+		else if(VISION.isPressed()){
+			return KEY.VISION;
 		}
 		return KEY.UNKNOWN;
 	}
@@ -57,6 +62,9 @@ public class KeyInputEventHandler {
 		} else if (keyPressed == KEY.SKILL) {
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 			player.openGui(VampirismMod.instance, GuiHandler.ID_SKILL, player.worldObj, player.chunkCoordX, player.chunkCoordY, player.chunkCoordZ);
+		}
+		else if(keyPressed == KEY.VISION){
+			VampirismMod.modChannel.sendToServer(new InputEventPacket(InputEventPacket.SWITCHVISION,"0"));
 		}
 	}
 }
