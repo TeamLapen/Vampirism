@@ -44,6 +44,7 @@ keys.vampirism.category=Vampirism
 keys.vampirism.suck=Suck blood
 keys.vampirism.auto=Auto Fill Blood Bottle
 keys.vampirism.skill=Activate vampire skills
+key.vampirism.vision=Switch vision
 
 #General
 itemGroup.vampirism=Vampirism
