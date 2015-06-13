@@ -58,7 +58,9 @@ public class WailaDataProvider implements IWailaDataProvider, IWailaEntityProvid
 			TileEntity tile=accessor.getTileEntity();
 			if( tile instanceof TileEntityBloodAltar1){
 				TileEntityBloodAltar1 altar1=(TileEntityBloodAltar1) tile;
-				currenttip.add(String.format("%s%s: %d",SpecialChars.RED,StatCollector.translateToLocal("text.vampirism:blood_left"),altar1.getBloodLeft()));
+				if(altar1.isOccupied()){
+					currenttip.add(String.format("%s%s: %d",SpecialChars.RED,StatCollector.translateToLocal("text.vampirism:blood_left"),altar1.getBloodLeft()));
+				}
 			}
 			else if(tile instanceof TileEntityBloodAltar2){
 				TileEntityBloodAltar2 altar2=(TileEntityBloodAltar2) tile;
@@ -91,14 +93,16 @@ public class WailaDataProvider implements IWailaDataProvider, IWailaEntityProvid
 		if(config.getConfig("option.vampirism.showPlayerInfo", true)){
 			if(entity instanceof EntityPlayer){
 				VampirePlayer vampire=VampirePlayer.get((EntityPlayer) entity);
-				currenttip.add(String.format("%s: %d", StatCollector.translateToLocal("text.vampirism:vampirelevel"), vampire.getLevel()));
-				if(vampire.isVampireLord()){
-					currenttip.add(SpecialChars.WHITE+StatCollector.translateToLocal("entity.vampirism.vampireLord.name"));
+				if(vampire.getLevel()>0){
+					currenttip.add(String.format("%s: %d", StatCollector.translateToLocal("text.vampirism:vampirelevel"), vampire.getLevel()));
+					if(vampire.isVampireLord()){
+						currenttip.add(SpecialChars.WHITE+StatCollector.translateToLocal("entity.vampirism.vampireLord.name"));
+					}
 				}
 			}
 		}
 		if(config.getConfig("option.vampirism.showEntityInfo", true)){
-			if(entity instanceof EntityCreature){
+			if(entity instanceof EntityCreature&&VampirePlayer.get(accessor.getPlayer()).getLevel()>0){
 				VampireMob vampire=VampireMob.get((EntityCreature) entity);
 				IMinion minion=null;
 				if(vampire.isMinion()){

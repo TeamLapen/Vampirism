@@ -5,6 +5,7 @@ entity.vampirism.ghost.name=Ghost
 entity.vampirism.vampireLord.name=Vampire Lord
 entity.vampirism.vampireMinion.name=Vampire Minion
 entity.vampirism.dracula.name=Dracula
+entity.vampirism.dead_mob.name=Dead mob
 
 # Items
 item.vampirism:vampiresFear.name=Vampire's fear
@@ -32,6 +33,7 @@ block.vampirism:bloodAltarTier4Tip.name=Blood Altar of Infusion Tip
 block.vampirism:churchAltar.name=Altar of Cleansing
 block.vampirism:cursedEarth.name=Cursed Earth
 block.vampirism:vampireOrchid.name=Vampire Orchid
+block.vampirism:blockCoffin.name=Coffin
 
 #GUI
 gui.vampirism:revertback.head=Revert back to normal human
