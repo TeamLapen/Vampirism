@@ -160,6 +160,11 @@ public final class BALANCE {
 		@DefaultInt(value=300,minValue=1,name="Summon blinding bats cooldown")
 		public static int SUMMON_BAT_COOLDOWN;
 		
+		@DefaultInt(value=16,minValue=1,name="Summon blinding bats count")
+		public static int SUMMON_BAT_COUNT;
+		
+		
+		
 		@DefaultInt(value=50,minValue=1,name="Lord teleport max distance")
 		public static int TELEPORT_MAX_DISTANCE;
 		
