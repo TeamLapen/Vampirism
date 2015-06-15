@@ -2,7 +2,7 @@
 {
   "modid": "vampirism",
   "name": "Vampirism",
-  "description": "Adds vampirism feature",
+  "description": "Adds vampirism features",
   "version": "${m_version}",
   "mcversion": "${mc_version}",
   "url": "http://teamlapen.de/projects/vampirism",
@@ -13,7 +13,7 @@
 	"wildbill22"
   ],
   "credits": "By maxanier, Mistadon, wildbill22, LRA_10",
-  "logoFile": "",
+  "logoFile": "logo.png",
   "screenshots": [
   ],
   "parent":"",
