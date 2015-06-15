@@ -238,6 +238,13 @@ public final class BALANCE {
 	@DefaultInt(value=5,comment="Vampire lord's minion count",name="Vampire lord minion count",minValue=0)
 	public static int VAMPIRE_PLAYER_LORD_MINIONS;
 	
+	@DefaultInt(value=40,name="Blood vision max distance",minValue=5)
+	public static int VAMPIRE_PLAYER_BLOOD_VISION_DISTANCE;
+	
+	@DefaultInt(value=5,name="Blood vision mix distance",minValue=0)
+	public static int VAMPIRE_PLAYER_BLOOD_VISION_MIN_DISTANCE;
+	
+	
 	// Vampiremob
 	@DefaultInt(value=5,minValue=2,maxValue=30,name="Small Mob Blood Amount",comment = "The amount of blood you get when you bite a 'small' mob")
 	public static int SMALL_BLOOD_AMOUNT;

@@ -1,47 +1,78 @@
 package de.teamlapen.vampirism.client.render;
 
+import java.util.List;
+
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiSleepMP;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.GLU;
+import org.lwjgl.util.glu.Sphere;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
+import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.client.gui.GUISleepCoffin;
+import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.skills.BatSkill;
 import de.teamlapen.vampirism.entity.player.skills.Skills;
+import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
 
 /**
  * Rendering handler used for rendering and render transformation e.g. bat transformation
+ * 
  * @author Maxanier
  *
  */
 public class RenderHandler {
+	private static final int ENTITY_NEAR_SQ_DISTANCE = 100;
 	private EntityBat entityBat;
 	private final Minecraft mc;
 	private float eyeHeight;
 	private float ySize;
 	private boolean shiftedPosY;
+	private int entityCooldownTicks;
+	private int entityDisplayListId = 0;
+	private int nearEntityDisplayListId = 0;
+	private int entitySphereListId = 0;
+	private final int COMPILE_ENTITY_COOLDOWN;
+	private final int COMPILE_NEAR_ENTITY_TICK;
+	private final int ENTITY_RADIUS;
+	private final int ENTITY_MIN_SQ_RADIUS;
 
 	public RenderHandler(Minecraft mc) {
 		this.mc = mc;
+		ENTITY_RADIUS=BALANCE.VAMPIRE_PLAYER_BLOOD_VISION_DISTANCE;
+		ENTITY_MIN_SQ_RADIUS=BALANCE.VAMPIRE_PLAYER_BLOOD_VISION_MIN_DISTANCE*BALANCE.VAMPIRE_PLAYER_BLOOD_VISION_MIN_DISTANCE;
+		COMPILE_ENTITY_COOLDOWN=Configs.blood_vision_recompile_ticks;
+		COMPILE_NEAR_ENTITY_TICK=Math.round(Configs.blood_vision_recompile_ticks/2F);
+		entityDisplayListId = GL11.glGenLists(3);
+		nearEntityDisplayListId = entityDisplayListId + 1;
+		entitySphereListId = entityDisplayListId + 2;
+		this.buildEntitySphere();
 	}
-	
+
 	@SubscribeEvent
-	public void onGuiOpen(GuiOpenEvent event){
-		if(event.gui instanceof GuiSleepMP&&VampirePlayer.get(mc.thePlayer).sleepingCoffin){
-			event.gui=new GUISleepCoffin();
+	public void onGuiOpen(GuiOpenEvent event) {
+		if (event.gui instanceof GuiSleepMP && VampirePlayer.get(mc.thePlayer).sleepingCoffin) {
+			event.gui = new GUISleepCoffin();
 		}
 	}
 
@@ -54,7 +85,7 @@ public class RenderHandler {
 				entityBat.setIsBatHanging(false);
 			}
 			EntityPlayer player = event.entityPlayer;
-			
+
 			float parTick = event.partialRenderTick;
 			Render renderer = RenderManager.instance.getEntityRenderObject(entityBat);
 
@@ -77,19 +108,141 @@ public class RenderHandler {
 			double d2 = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * parTick;
 			// Translate and render
 			GL11.glPushMatrix();
-			GL11.glTranslated(1 * (d0 - RenderManager.renderPosX),1* (d1 - RenderManager.renderPosY)
-							+ (event.entityPlayer == Minecraft.getMinecraft().thePlayer&& !((Minecraft.getMinecraft().currentScreen instanceof GuiInventory || Minecraft.getMinecraft().currentScreen instanceof GuiContainerCreative) && RenderManager.instance.playerViewY == 180.0F) ? (BatSkill.BAT_HEIGHT+0.2 - event.entityPlayer.yOffset): 0D),
-							1 * (d2 - RenderManager.renderPosZ));
+			GL11.glTranslated(
+					1 * (d0 - RenderManager.renderPosX),
+					1
+							* (d1 - RenderManager.renderPosY)
+							+ (event.entityPlayer == Minecraft.getMinecraft().thePlayer
+									&& !((Minecraft.getMinecraft().currentScreen instanceof GuiInventory || Minecraft.getMinecraft().currentScreen instanceof GuiContainerCreative) && RenderManager.instance.playerViewY == 180.0F) ? (BatSkill.BAT_HEIGHT + 0.2 - event.entityPlayer.yOffset)
+									: 0D), 1 * (d2 - RenderManager.renderPosZ));
 			renderer.doRender(entityBat, 0, 0, 0, f1, event.partialRenderTick);
 			GL11.glPopMatrix();
 		}
 	}
-	
+
 	@SubscribeEvent
-	public void onRenderHand(RenderHandEvent event){
-		if(VampirePlayer.get(mc.thePlayer).isSkillActive(Skills.batMode)){
+	public void onRenderHand(RenderHandEvent event) {
+		if (VampirePlayer.get(mc.thePlayer).isSkillActive(Skills.batMode)) {
 			event.setCanceled(true);
 		}
+	}
+
+	@SubscribeEvent
+	public void onClientTick(TickEvent.ClientTickEvent event) {
+		if (mc.theWorld == null)
+			return;
+		if (VampirePlayer.get(mc.thePlayer).getVision() != 2 && !VampirePlayer.get(mc.thePlayer).gettingSundamage())
+			return;
+		entityCooldownTicks--;
+		if (entityCooldownTicks== COMPILE_NEAR_ENTITY_TICK) {
+			this.compileEntitys(true);
+		}
+		if (entityCooldownTicks < 1) {
+			this.compileEntitys(false);
+			this.compileEntitys(true);
+			entityCooldownTicks = COMPILE_ENTITY_COOLDOWN;
+		}
+
+	}
+
+	/**
+	 * Compiles a render list of the entitys nearby
+	 */
+	private void compileEntitys(boolean near) {
+		int i = near ? nearEntityDisplayListId : entityDisplayListId;
+		GL11.glNewList(i, GL11.GL_COMPILE);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+		GL11.glEnable(GL11.GL_BLEND);
+
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GL11.glShadeModel(GL11.GL_SMOOTH);
+
+		WorldClient world = this.mc.theWorld;
+
+		EntityClientPlayerMP player = this.mc.thePlayer;
+		if ((world == null) || (player == null))
+			return;
+
+		List list = world.getEntitiesWithinAABBExcludingEntity(player, player.boundingBox.expand(ENTITY_RADIUS, ENTITY_RADIUS, ENTITY_RADIUS));
+		for (Object o : list) {
+			if (o instanceof EntityCreature || o instanceof EntityPlayer) {
+				EntityLivingBase e = (EntityLivingBase) o;
+				int distance = (int) e.getDistanceSqToEntity(player);
+				if (near && distance <= ENTITY_NEAR_SQ_DISTANCE && (distance >= ENTITY_MIN_SQ_RADIUS)) {
+					// ||!player.canEntityBeSeen(e)
+					renderEntity(e, (((float) distance - ENTITY_MIN_SQ_RADIUS) / (float) (ENTITY_NEAR_SQ_DISTANCE - ENTITY_MIN_SQ_RADIUS)));
+				}
+				if (!near && distance > ENTITY_NEAR_SQ_DISTANCE) {
+					renderEntity(e, 1F);
+				}
+
+			}
+		}
+
+		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glEndList();
+	}
+
+	@SubscribeEvent
+	public void onRenderWorldLast(RenderWorldLastEvent event) {
+		if (mc.theWorld == null)
+			return;
+
+		if (VampirePlayer.get(mc.thePlayer).getVision() == 2 && !VampirePlayer.get(mc.thePlayer).gettingSundamage()) {
+			double doubleX = this.mc.thePlayer.lastTickPosX + (this.mc.thePlayer.posX - this.mc.thePlayer.lastTickPosX) * event.partialTicks;
+
+			double doubleY = this.mc.thePlayer.lastTickPosY + (this.mc.thePlayer.posY - this.mc.thePlayer.lastTickPosY) * event.partialTicks;
+
+			double doubleZ = this.mc.thePlayer.lastTickPosZ + (this.mc.thePlayer.posZ - this.mc.thePlayer.lastTickPosZ) * event.partialTicks;
+
+			GL11.glPushMatrix();
+			GL11.glTranslated(-doubleX, -doubleY, -doubleZ);
+			GL11.glCallList(entityDisplayListId);
+			GL11.glCallList(nearEntityDisplayListId);
+			GL11.glPopMatrix();
+		}
+
+	}
+
+	/**
+	 * Renders the sphere around the give entity
+	 * 
+	 * @param entity
+	 * @param f
+	 */
+	private void renderEntity(EntityLivingBase entity, float f) {
+		float red = 1.0F;
+		float green = 0.0F;
+		float blue = 0.0F;
+
+		if (entity instanceof EntityCreature) {
+			if (VampireMob.get((EntityCreature) entity).isVampire()) {
+				red = 0.23127F;
+				green = 0.04313F;
+				blue = 0.04313F;
+
+			} else if (!VampireMob.get((EntityCreature) entity).canBeBitten()) {
+				red = 0.039215F;
+				green = 0.0745F;
+				blue = 0.1647F;
+			}
+		} else if (entity instanceof EntityPlayer) {
+			if (VampirePlayer.get((EntityPlayer) entity).getLevel() > 0) {
+				red = 0.039215F;
+				green = 0.0745F;
+				blue = 0.1647F;
+			}
+		}
+		GL11.glPushMatrix();
+		GL11.glTranslated(entity.posX, entity.posY + entity.height / 2, entity.posZ);
+		GL11.glScalef(entity.width * 1.5F, entity.height * 1.5F, entity.width * 1.5F);
+		GL11.glColor4f(red, green, blue, 0.5F * f);
+		GL11.glCallList(entitySphereListId);
+		GL11.glPopMatrix();
+
 	}
 
 	@SubscribeEvent
@@ -117,5 +270,26 @@ public class RenderHandler {
 				}
 			}
 		}
+	}
+
+	/**
+	 * Builds and saves a sphere for entitys
+	 */
+	private void buildEntitySphere() {
+		Sphere sphere = new Sphere();
+		sphere.setDrawStyle(GLU.GLU_FILL);
+		// GLU_SMOOTH will try to smoothly apply lighting
+		sphere.setNormals(GLU.GLU_SMOOTH);
+		sphere.setOrientation(GLU.GLU_OUTSIDE);
+
+		// Create a new list to hold our sphere data.
+		GL11.glNewList(entitySphereListId, GL11.GL_COMPILE);
+		// binds the texture
+		// ResourceLocation rL = new ResourceLocation(MagicBeans.MODID+":textures/entities/sphere.png");
+		// Minecraft.getMinecraft().getTextureManager().bindTexture(rL);
+
+		sphere.draw(0.5F, 32, 32);
+		GL11.glEndList();
+
 	}
 }

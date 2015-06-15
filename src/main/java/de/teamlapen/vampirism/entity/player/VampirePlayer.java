@@ -1179,7 +1179,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			return;
 		}
 		int v=getVision()+1;
-		if(v>1)v=0;
+		if(v>2)v=0;
 		this.setVision(v);
 		this.sync(false);
 		if(v==0){
@@ -1187,6 +1187,9 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		}
 		else if(v==1){
 			player.addChatMessage(new ChatComponentTranslation("text.vampirism:night_vision"));
+		}
+		else{
+			player.addChatMessage(new ChatComponentTranslation("text.vampirism:blood_vision"));
 		}
 		
 		
