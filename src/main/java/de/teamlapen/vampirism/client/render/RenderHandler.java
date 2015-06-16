@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.render;
 
+import java.nio.FloatBuffer;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
@@ -8,6 +9,7 @@ import net.minecraft.client.gui.GuiSleepMP;
 import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.EntityCreature;
@@ -15,12 +17,14 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GLContext;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.glu.Sphere;
 
@@ -50,23 +54,23 @@ public class RenderHandler {
 	private boolean shiftedPosY;
 	private int entityCooldownTicks;
 	private int entityDisplayListId = 0;
-	private int nearEntityDisplayListId = 0;
 	private int entitySphereListId = 0;
 	private final int COMPILE_ENTITY_COOLDOWN;
-	private final int COMPILE_NEAR_ENTITY_TICK;
 	private final int ENTITY_RADIUS;
 	private final int ENTITY_MIN_SQ_RADIUS;
+	private final int BLOOD_VISION_FADE_TICKS = 80;
+	private FloatBuffer fogColorBuffer;
+	private int bloodVisionTicks = 0;
 
 	public RenderHandler(Minecraft mc) {
 		this.mc = mc;
-		ENTITY_RADIUS=BALANCE.VAMPIRE_PLAYER_BLOOD_VISION_DISTANCE;
-		ENTITY_MIN_SQ_RADIUS=BALANCE.VAMPIRE_PLAYER_BLOOD_VISION_MIN_DISTANCE*BALANCE.VAMPIRE_PLAYER_BLOOD_VISION_MIN_DISTANCE;
-		COMPILE_ENTITY_COOLDOWN=Configs.blood_vision_recompile_ticks;
-		COMPILE_NEAR_ENTITY_TICK=Math.round(Configs.blood_vision_recompile_ticks/2F);
-		entityDisplayListId = GL11.glGenLists(3);
-		nearEntityDisplayListId = entityDisplayListId + 1;
-		entitySphereListId = entityDisplayListId + 2;
+		ENTITY_RADIUS = BALANCE.VAMPIRE_PLAYER_BLOOD_VISION_DISTANCE;
+		ENTITY_MIN_SQ_RADIUS = BALANCE.VAMPIRE_PLAYER_BLOOD_VISION_MIN_DISTANCE * BALANCE.VAMPIRE_PLAYER_BLOOD_VISION_MIN_DISTANCE;
+		COMPILE_ENTITY_COOLDOWN = Configs.blood_vision_recompile_ticks;
+		entityDisplayListId = GL11.glGenLists(2);
+		entitySphereListId = entityDisplayListId + 1;
 		this.buildEntitySphere();
+		this.fogColorBuffer = GLAllocation.createDirectFloatBuffer(16);
 	}
 
 	@SubscribeEvent
@@ -131,15 +135,20 @@ public class RenderHandler {
 	public void onClientTick(TickEvent.ClientTickEvent event) {
 		if (mc.theWorld == null)
 			return;
-		if (VampirePlayer.get(mc.thePlayer).getVision() != 2 && !VampirePlayer.get(mc.thePlayer).gettingSundamage())
+		if (VampirePlayer.get(mc.thePlayer).getVision() != 2 && !VampirePlayer.get(mc.thePlayer).gettingSundamage()) {
+			if (bloodVisionTicks > 0) {
+				bloodVisionTicks--;
+			}
 			return;
-		entityCooldownTicks--;
-		if (entityCooldownTicks== COMPILE_NEAR_ENTITY_TICK) {
-			this.compileEntitys(true);
 		}
+
+		if (bloodVisionTicks < BLOOD_VISION_FADE_TICKS) {
+			bloodVisionTicks++;
+		}
+		entityCooldownTicks--;
+
 		if (entityCooldownTicks < 1) {
-			this.compileEntitys(false);
-			this.compileEntitys(true);
+			this.compileEntitys();
 			entityCooldownTicks = COMPILE_ENTITY_COOLDOWN;
 		}
 
@@ -148,9 +157,8 @@ public class RenderHandler {
 	/**
 	 * Compiles a render list of the entitys nearby
 	 */
-	private void compileEntitys(boolean near) {
-		int i = near ? nearEntityDisplayListId : entityDisplayListId;
-		GL11.glNewList(i, GL11.GL_COMPILE);
+	private void compileEntitys() {
+		GL11.glNewList(entityDisplayListId, GL11.GL_COMPILE);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_BLEND);
@@ -169,11 +177,10 @@ public class RenderHandler {
 			if (o instanceof EntityCreature || o instanceof EntityPlayer) {
 				EntityLivingBase e = (EntityLivingBase) o;
 				int distance = (int) e.getDistanceSqToEntity(player);
-				if (near && distance <= ENTITY_NEAR_SQ_DISTANCE && (distance >= ENTITY_MIN_SQ_RADIUS)) {
+				if (distance <= ENTITY_NEAR_SQ_DISTANCE && (distance >= ENTITY_MIN_SQ_RADIUS)) {
 					// ||!player.canEntityBeSeen(e)
 					renderEntity(e, (((float) distance - ENTITY_MIN_SQ_RADIUS) / (float) (ENTITY_NEAR_SQ_DISTANCE - ENTITY_MIN_SQ_RADIUS)));
-				}
-				if (!near && distance > ENTITY_NEAR_SQ_DISTANCE) {
+				} else if (distance > ENTITY_NEAR_SQ_DISTANCE) {
 					renderEntity(e, 1F);
 				}
 
@@ -201,10 +208,37 @@ public class RenderHandler {
 			GL11.glPushMatrix();
 			GL11.glTranslated(-doubleX, -doubleY, -doubleZ);
 			GL11.glCallList(entityDisplayListId);
-			GL11.glCallList(nearEntityDisplayListId);
 			GL11.glPopMatrix();
-		}
 
+		}
+		renderBloodVisionFog(bloodVisionTicks);
+
+	}
+
+	private void renderBloodVisionFog(int ticks) {
+		if (ticks < 1 || ticks > BLOOD_VISION_FADE_TICKS)
+			return;
+		float f = ((float) BLOOD_VISION_FADE_TICKS) / (float) ticks;
+		GL11.glPushMatrix();
+
+		GL11.glFog(GL11.GL_FOG_COLOR, this.setFogColorBuffer(0, 1, 0, 1.0F));
+		GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
+		GL11.glFogf(GL11.GL_FOG_START, 4.0F * f);
+		GL11.glFogf(GL11.GL_FOG_END, 5.5F * f);
+		GL11.glNormal3f(0.0F, -1.0F, 0.0F);
+		GL11.glColor4f(1F, 1F, 1F, 1.0F);
+		GL11.glFogf(GL11.GL_FOG_DENSITY, 1.0F);
+		GL11.glPopMatrix();
+	}
+
+	/**
+	 * Update and return fogColorBuffer with the RGBA values passed as arguments
+	 */
+	private FloatBuffer setFogColorBuffer(float p_78469_1_, float p_78469_2_, float p_78469_3_, float p_78469_4_) {
+		this.fogColorBuffer.clear();
+		this.fogColorBuffer.put(p_78469_1_).put(p_78469_2_).put(p_78469_3_).put(p_78469_4_);
+		this.fogColorBuffer.flip();
+		return this.fogColorBuffer;
 	}
 
 	/**
@@ -290,6 +324,17 @@ public class RenderHandler {
 
 		sphere.draw(0.5F, 32, 32);
 		GL11.glEndList();
+
+	}
+
+	@SubscribeEvent
+	public void onFogDensity(EntityViewRenderEvent.FogDensity event) {
+		if (event.entity instanceof EntityPlayer) {
+			if (VampirePlayer.get((EntityPlayer) event.entity).getVision() == 2) {
+				event.density = 1.0F;
+				event.setCanceled(true);
+			}
+		}
 
 	}
 }
