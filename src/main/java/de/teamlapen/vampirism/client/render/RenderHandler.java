@@ -215,12 +215,15 @@ public class RenderHandler {
 
 	}
 
-	private void renderBloodVisionFog(int ticks) {
+	private void renderBloodVisionFog(int ticks){
+		
 		if (ticks < 1 || ticks > BLOOD_VISION_FADE_TICKS)
 			return;
+		
 		float f = ((float) BLOOD_VISION_FADE_TICKS) / (float) ticks;
 		GL11.glPushMatrix();
-
+		boolean fog=GL11.glIsEnabled(GL11.GL_FOG);
+		if(!fog)GL11.glEnable(GL11.GL_FOG);
 		GL11.glFog(GL11.GL_FOG_COLOR, this.setFogColorBuffer(0, 1, 0, 1.0F));
 		GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
 		GL11.glFogf(GL11.GL_FOG_START, 4.0F * f);
@@ -228,6 +231,7 @@ public class RenderHandler {
 		GL11.glNormal3f(0.0F, -1.0F, 0.0F);
 		GL11.glColor4f(1F, 1F, 1F, 1.0F);
 		GL11.glFogf(GL11.GL_FOG_DENSITY, 1.0F);
+		if(!fog)GL11.glDisable(GL11.GL_FOG);
 		GL11.glPopMatrix();
 	}
 
