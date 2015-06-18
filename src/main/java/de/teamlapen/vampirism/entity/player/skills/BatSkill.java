@@ -100,7 +100,10 @@ public class BatSkill extends DefaultSkill implements ILastingSkill {
 //			movement.applyModifier(new AttributeModifier(speedModifierUUID, "Bat Speed Bonus", BALANCE.VP_SKILLS.BAT_SPEED_MOD, 2).setSaved(false));
 			IAttributeInstance health = player.getEntityAttribute(SharedMonsterAttributes.maxHealth);
 			//PlayerModifiers.rmMod(health, healthModifierUUID);
-			health.applyModifier(new AttributeModifier(healthModifierUUID, "Bat Health Reduction", -0.9, 2).setSaved(false));
+			if(health.getModifier(healthModifierUUID)==null){
+				health.applyModifier(new AttributeModifier(healthModifierUUID, "Bat Health Reduction", -0.9, 2).setSaved(false));
+			}
+			
 			player.capabilities.allowFlying=true;
 			player.capabilities.isFlying=true;
 			player.sendPlayerAbilities();
