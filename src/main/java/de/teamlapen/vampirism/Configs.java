@@ -53,6 +53,8 @@ public class Configs {
 		reset_balance_in_dev = config.getBoolean("reset_balance_in_dev", CATEGORY_GENERAL, true, "For developers: Should the balance values be reset on start in dev environment");
 		String conf_version = config.get(CATEGORY_GENERAL, "config_mod_version", REFERENCE.VERSION).getString();
 		config.get(CATEGORY_GENERAL, "config_mod_version", REFERENCE.VERSION).set(REFERENCE.VERSION);
+		blood_vision_recompile_ticks= config.getInt("blood_vision_recompile", CATEGORY_GENERAL, 2,1 , 100, "Every n tick the blood vision entitys are recompiled - Might hava a performance impact");
+		
 		// Village
 		village_gen_enabled = config.get(cat_village.getQualifiedName(), "change_village_gen_enabled", true, "Should the custom generator be injected? (Enables/Disables the village mod)")
 				.getBoolean();
@@ -200,6 +202,8 @@ public class Configs {
 	public static boolean disable_village_biome;
 
 	public static boolean reset_balance_in_dev;
+	
+	public static int blood_vision_recompile_ticks;
 
 	public static Configuration config;
 
