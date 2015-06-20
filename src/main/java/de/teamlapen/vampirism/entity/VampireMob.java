@@ -76,10 +76,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	private final int blood;
 	private byte type;
 
-	private final static int MAX_SEARCH_TIME = 100;
 	private UUID lordId = null;
-	protected IMinionLord lord;
-	private int lookForLordTimer = 0;
 
 	public VampireMob(EntityCreature mob) {
 		entity = mob;
@@ -145,7 +142,8 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		if (!isMinion()) {
 			Logger.w("VampireMob", "Trying to get lord, but mob is no minion");
 		}
-		return lord;
+		EntityPlayer player=(lordId == null ? null : entity.worldObj.func_152378_a(lordId));
+		return (player==null?null:VampirePlayer.get(player));
 	}
 
 	@Override
@@ -179,27 +177,6 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 
 	}
 
-	protected void lookForLord() {
-		List<EntityLivingBase> list = entity.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, entity.boundingBox.expand(15, 10, 15));
-		for (EntityLivingBase e : list) {
-			if (e.getPersistentID().equals(lordId)) {
-				if (e instanceof IMinionLord) {
-					this.setLord((IMinionLord) e);
-					lookForLordTimer = 0;
-				} else if (e instanceof EntityPlayer) {
-					this.setLord(VampirePlayer.get((EntityPlayer) e));
-					lookForLordTimer = 0;
-				} else {
-					Logger.w("VampireMob", "Found lord with UUID " + lordId + " but it isn't a Minion Lord");
-					lordId = null;
-					lord = null;
-					lookForLordTimer = 0;
-				}
-
-				break;
-			}
-		}
-	}
 
 	public boolean lowEnoughHealth() {
 		return (entity.getHealth() / entity.getMaxHealth()) <= BALANCE.SUCK_BLOOD_HEALTH_REQUIREMENT;
@@ -223,25 +200,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 
 	public void onUpdate() {
 		if (isMinion() && !entity.worldObj.isRemote) {
-			if (lord == null) {
-				if (lordId != null) {
-					lookForLord();
-				}
-				if (lord == null) {
-					lookForLordTimer++;
-				}
-				if (lookForLordTimer > MAX_SEARCH_TIME) {
-					entity.attackEntityFrom(DamageSource.generic, 5);
-				}
-
-			} else if (!lord.isTheEntityAlive()) {
-				lord = null;
-				lordId = null;
-			} else if (lord.getTheDistanceSquared(entity) > 1000 && !entity.worldObj.isRemote) {
-				if (entity.worldObj.rand.nextInt(80) == 0) {
-					entity.attackEntityFrom(DamageSource.generic, 3);
-				}
-			}
+			IMinionLord lord=getLord();
 			if (lord != null) {
 				if (lord.getRepresentingEntity().equals(entity.getAttackTarget())) {
 					entity.setAttackTarget(lord.getMinionTarget());
@@ -269,10 +228,14 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 
 	@Override
 	public void setLord(IMinionLord b) {
-		if (!b.equals(lord)) {
-			this.setLordId(b.getThePersistentID());
-			b.getMinionHandler().registerMinion(this, true);
-			lord = b;
+		if(b!=null){
+			if(b.getRepresentingEntity() instanceof EntityPlayer){
+				this.setLordId(b.getThePersistentID());
+			}
+			else{
+				Logger.w("VampireMob", "Only players can have non saveable minion. This(%s) cannot be controlled by %s", this,b);
+			}
+
 		}
 
 	}
@@ -280,8 +243,6 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	private void setLordId(UUID id) {
 		if (!id.equals(lordId)) {
 			lordId = id;
-			lord = null;
-			lookForLordTimer = 0;
 		}
 
 	}
@@ -332,6 +293,11 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 			return blood;
 		}
 		return -1;
+	}
+
+	@Override
+	public boolean shouldBeSavedWithLord() {
+		return false;
 	}
 
 }

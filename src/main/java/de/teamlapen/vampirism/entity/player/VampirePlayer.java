@@ -279,6 +279,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	private final String KEY_BLOOD = "blood";
 
 	private final String KEY_AUTOFILL = "autofill";
+	
+	private static final String KEY_MINIONS = "minions";
 
 	private final String KEY_SKILLS = "skills";
 
@@ -515,6 +517,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 		this.bloodStats.readNBT(properties);
 		PlayerModifiers.applyModifiers(level, player);
+		
+		minionHandler.loadMinions(properties.getTagList(KEY_MINIONS, 10));
 
 	}
 
@@ -563,6 +567,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 			}
 		}
+		minionHandler.killMinions(false,false);
 		this.bloodStats.addBlood(MAXBLOOD);
 	}
 
@@ -825,6 +830,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		properties.setInteger(KEY_VISION, getVision());
 		properties.setBoolean(KEY_VAMPIRE_LORD, isVampireLord());
 		properties.setTag(KEY_EXTRADATA, extraData);
+		properties.setTag(KEY_MINIONS, minionHandler.getMinionsToSave());
 		this.bloodStats.writeNBT(properties);
 		compound.setTag(EXT_PROP_NAME, properties);
 
@@ -1193,5 +1199,20 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		}
 		
 		
+	}
+	
+	public void onPlayerLoggedIn(){
+				Logger.d(TAG, "LoggedIn");
+				minionHandler.addLoadedMinions();
+	}
+			
+	public void onPlayerLoggedOut(){
+				Logger.d(TAG, "LoggedOut");
+				minionHandler.killMinions(true,true);
+	}
+			
+	public void onChangedDimension(int from,int to){
+				Logger.d(TAG, "Changed from "+from+" to "+to);
+				minionHandler.teleportMinionsToLord();
 	}
 }

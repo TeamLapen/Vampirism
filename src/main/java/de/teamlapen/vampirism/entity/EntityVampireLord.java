@@ -197,6 +197,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 				this.teleportAway();
 			}
 		}
+		minionHandler.addLoadedMinions();
 		super.onLivingUpdate();
 	}
 
@@ -204,6 +205,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		this.loadUpdateFromNBT(nbt);
+		minionHandler.loadMinions(nbt.getTagList("minions", 10));
 	}
 
 	@Override
@@ -276,6 +278,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("level", level);
+		nbt.setTag("minions", minionHandler.getMinionsToSave());
 	}
 
 	@Override
@@ -286,6 +289,12 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	@Override
 	public MinionHandler<EntityVampireLord> getMinionHandler() {
 		return minionHandler;
+	}
+	
+	@Override
+	 public int getMaxInPortalTime()
+	    {
+	        return 500;
 	}
 
 }

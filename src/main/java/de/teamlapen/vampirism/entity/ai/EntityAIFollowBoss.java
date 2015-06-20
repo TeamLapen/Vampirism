@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.ai;
 
+import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.ai.EntityAIBase;
 
 public class EntityAIFollowBoss extends EntityAIBase {

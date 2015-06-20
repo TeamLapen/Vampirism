@@ -20,4 +20,6 @@ public interface IMinion {
 	 *            Has to implement {@link IMinionLord}
 	 */
 	public void setLord(IMinionLord b);
+	
+	public boolean shouldBeSavedWithLord();
 }

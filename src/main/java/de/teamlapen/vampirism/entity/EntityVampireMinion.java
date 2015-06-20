@@ -11,6 +11,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -28,10 +29,7 @@ import de.teamlapen.vampirism.util.Logger;
 
 public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyncable {
 
-	private final static int MAX_SEARCH_TIME = 100;
-	private UUID lordId = null;
 	protected IMinionLord lord;
-	private int lookForLordTimer = 0;
 	/**
 	 * Used for the visual transition from normal vampire to players minion
 	 */
@@ -47,7 +45,7 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 
 	public EntityVampireMinion(World world) {
 		super(world);
-
+		this.setSize(0.3F, 0.6F);
 		this.tasks.addTask(4, new EntityAIFollowBoss(this, 1.0D));
 		this.tasks.addTask(5, new EntityAIAttackOnCollide(this, EntityLivingBase.class, 1.0, false));
 		this.targetTasks.addTask(2, new EntityAIDefendLord(this));
@@ -86,9 +84,9 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(30D);
-		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(BALANCE.MOBPROP.VAMPIRE_MAX_HEALTH / 1.5D);
-		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(BALANCE.MOBPROP.VAMPIRE_ATTACK_DAMAGE / 1.5D);
-		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_MOVEMENT_SPEED / 1.2D);
+		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(BALANCE.MOBPROP.VAMPIRE_MINION_MAX_HEALTH);
+		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(BALANCE.MOBPROP.VAMPIRE_MINION_ATTACK_DAMAGE);
+		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_MINION_MOVEMENT_SPEED);
 	}
 
 	@Override
@@ -142,7 +140,6 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 				Logger.w("EntityVampireMinion", "PartialUpdate: The given id(" + nbt.getInteger("eid") + ")[" + e + "] is no Minion Lord");
 				return;
 			}
-			this.lordId = this.lord.getThePersistentID();
 		}
 		if(nbt.hasKey("oldvampire")){
 			this.oldVampireTexture=nbt.getInteger("oldvampire");
@@ -150,45 +147,13 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 
 	}
 
-	protected void lookForLord() {
-		List<EntityLivingBase> list = this.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.boundingBox.expand(15, 10, 15));
-		for (EntityLivingBase e : list) {
-			if (e.getPersistentID().equals(lordId)) {
-				if (e instanceof IMinionLord) {
-					this.setLord((IMinionLord) e);
-					lookForLordTimer = 0;
-				} else if (e instanceof EntityPlayer) {
-					this.setLord(VampirePlayer.get((EntityPlayer) e));
-					lookForLordTimer = 0;
-				} else {
-					Logger.w("VampireMinion", "Found lord with UUID " + lordId + " but it isn't a Minion Lord");
-					lordId = null;
-					lord = null;
-					lookForLordTimer = 0;
-				}
-
-				break;
-			}
-		}
-	}
-
 	@Override
 	public void onLivingUpdate() {
 		if (!this.worldObj.isRemote) {
 			if (lord == null) {
-				if (lordId != null) {
-					lookForLord();
-				}
 
-				if (lord == null) {
-					lookForLordTimer++;
-				}
-				if (lookForLordTimer > MAX_SEARCH_TIME) {
-					this.attackEntityFrom(DamageSource.generic, 5);
-				}
 			} else if (!lord.isTheEntityAlive()) {
 				lord = null;
-				lordId = null;
 			} else if (lord.getTheDistanceSquared(this) > 1000) {
 				if (this.rand.nextInt(80) == 0) {
 					this.attackEntityFrom(DamageSource.generic, 3);
@@ -208,23 +173,11 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		if (nbt.hasKey("BossUUIDMost")) {
-			this.lordId = new UUID(nbt.getLong("BossUUIDMost"), nbt.getLong("BossUUIDLeast"));
-		}
-	}
-
-	private void setLordId(UUID id) {
-		if (!id.equals(lordId)) {
-			lordId = id;
-			lord = null;
-			lookForLordTimer = 0;
-		}
 	}
 
 	@Override
 	public void setLord(IMinionLord b) {
 		if (!b.equals(lord)) {
-			this.setLordId(b.getThePersistentID());
 			b.getMinionHandler().registerMinion(this, true);
 			lord = b;
 		}
@@ -233,11 +186,51 @@ public class EntityVampireMinion extends DefaultVampire implements IMinion, ISyn
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
-		if (this.lordId != null) {
-			nbt.setLong("BossUUIDMost", this.lordId.getMostSignificantBits());
-			nbt.setLong("BossUUIDLeast", this.lordId.getLeastSignificantBits());
-		}
 
+	}
+
+	@Override
+	public boolean shouldBeSavedWithLord() {
+		return true;
+	}
+	
+	@Override
+	public boolean writeToNBTOptional(NBTTagCompound nbt){
+		if(shouldBeSavedWithLord()){
+			return false;
+		}
+		return super.writeToNBTOptional(nbt);
+	}
+	
+	@Override
+	public void copyDataFrom(Entity from,boolean p){
+		super.copyDataFrom(from, p);
+		if(from instanceof EntityVampireMinion){
+			EntityVampireMinion m = (EntityVampireMinion) from;
+			this.setLord(m.getLord());
+			this.setOldVampireTexture(m.getOldVampireTexture());
+		}
+		
+	}
+	
+	/**
+	 * Makes sure minions which are saved with their lord do not interact with portals
+	 */
+	@Override
+	public void setInPortal(){
+		if(!this.shouldBeSavedWithLord()){
+			super.setInPortal();
+		}
+	}
+	
+	@Override
+	public boolean attackEntityFrom(DamageSource src,float value){
+		if(DamageSource.inWall.equals(src)&&this.shouldBeSavedWithLord()){
+			return false;
+		}
+		else{
+			return super.attackEntityFrom(src, value);
+		}
 	}
 
 }
