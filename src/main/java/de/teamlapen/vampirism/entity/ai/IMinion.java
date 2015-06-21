@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.entity.ai;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.entity.EntityCreature;
 
 public interface IMinion {
@@ -9,7 +11,7 @@ public interface IMinion {
 	 * 
 	 * @return The boss or null if none exist
 	 */
-	public IMinionLord getLord();
+	public @Nullable IMinionLord getLord();
 
 	public EntityCreature getRepresentingEntity();
 

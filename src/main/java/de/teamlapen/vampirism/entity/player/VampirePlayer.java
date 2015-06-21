@@ -567,7 +567,6 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 			}
 		}
-		minionHandler.killMinions(false,false);
 		this.bloodStats.addBlood(MAXBLOOD);
 	}
 
@@ -1080,7 +1079,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	
 	private void makeVampireToMinion(EntityVampire e){
 		if(getMinionsLeft(true)==0)return;
-		EntityVampireMinion m=(EntityVampireMinion) EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_MINION_NAME, e.worldObj);
+		EntityVampireMinion m=(EntityVampireMinion) EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME, e.worldObj);
 		m.copyLocationAndAnglesFrom(e);
 		m.setLord(this);
 		m.setOldVampireTexture(e.getEntityId()%4);

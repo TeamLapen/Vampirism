@@ -3,7 +3,9 @@ entity.vampirism.vampireHunter.name=Vampire Hunter
 entity.vampirism.vampire.name=Vampire
 entity.vampirism.ghost.name=Ghost
 entity.vampirism.vampireLord.name=Vampire Lord
-entity.vampirism.vampireMinion.name=Vampire Minion
+entity.vampirism.vampireMinionR.name=Vampire Minion
+entity.vampirism.vampireMinionS.name=Vampire Minion
+entity.vampirism.blinding_bat.name=Bat
 entity.vampirism.dracula.name=Dracula
 entity.vampirism.dead_mob.name=Dead mob
 
