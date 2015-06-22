@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.entity.minions;
 
 import java.util.UUID;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -31,6 +33,9 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 	private int oldVampireTexture = -1;
 	
 	private IMinionCommand activeCommand;
+	
+	@SideOnly(Side.CLIENT)
+	private int activeCommandId;
 
 	public EntityVampireMinion(World world) {
 		super(world);
@@ -143,11 +148,13 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public void loadUpdateFromNBT(NBTTagCompound nbt) {
 		if (nbt.hasKey("oldvampire")) {
 			this.oldVampireTexture = nbt.getInteger("oldvampire");
 		}
+		this.activeCommandId=nbt.getInteger("active_command_id");
 		loadPartialUpdateFromNBT(nbt);
 	}
 
@@ -169,6 +176,7 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 	@Override
 	public void writeFullUpdateToNBT(NBTTagCompound nbt) {
 		nbt.setInteger("oldvampire", oldVampireTexture);
+		nbt.setInteger("active_command_id", activeCommand.getId());
 		writeUpdateToNBT(nbt);
 	}
 

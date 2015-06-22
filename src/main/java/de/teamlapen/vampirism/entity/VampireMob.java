@@ -6,6 +6,8 @@ import java.util.UUID;
 
 import org.eclipse.jdt.annotation.NonNull;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
@@ -86,6 +88,9 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	private UUID lordId = null;
 	
 	private IMinionCommand activeCommand = null;
+	
+	@SideOnly(Side.CLIENT)
+	private int activeCommandId;
 	
 	private final static ArrayList<IMinionCommand> commands;
 	
@@ -197,7 +202,9 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	public void loadNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
 		if (properties != null) {
-			this.loadUpdateFromNBT(properties);
+			if(properties.hasKey(KEY_TYPE)){
+				type=properties.getByte(KEY_TYPE);
+			}
 			if (isMinion()) {
 				if (properties.hasKey("BossUUIDMost")) {
 					this.lordId = new UUID(properties.getLong("BossUUIDMost"), properties.getLong("BossUUIDLeast"));
@@ -250,7 +257,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	@Override
 	public void saveNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = new NBTTagCompound();
-		this.writeFullUpdateToNBT(properties);
+		properties.setByte(KEY_TYPE, type);
 		if (isMinion()) {
 			if (this.lordId != null) {
 				properties.setLong("BossUUIDMost", this.lordId.getMostSignificantBits());
@@ -297,10 +304,14 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		this.sync();
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public void loadUpdateFromNBT(NBTTagCompound nbt) {
 		if(nbt.hasKey(KEY_TYPE)){
 			type=nbt.getByte(KEY_TYPE);
+		}
+		if(nbt.hasKey("active_command_id")){
+			this.activeCommandId=nbt.getInteger("active_command_id");
 		}
 		
 	}
@@ -308,6 +319,9 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	@Override
 	public void writeFullUpdateToNBT(NBTTagCompound nbt) {
 		nbt.setByte(KEY_TYPE, type);
+		if(activeCommand!=null){
+			nbt.setInteger("active_command_id", activeCommand.getId());
+		}
 	}
 
 	@Override
