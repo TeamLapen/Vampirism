@@ -308,7 +308,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 	private EntityLivingBase minionTarget;
 	
-	private final MinionHandler<VampirePlayer> minionHandler;
+	private final MinionHandler minionHandler;
 
 	private boolean skipFallDamageReduction = false;
 
@@ -329,7 +329,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		vision=1;
 		skillTimer = new int[Skills.getSkillCount()];
 		extraData = new NBTTagCompound();
-		minionHandler=new MinionHandler<VampirePlayer>(this);
+		minionHandler=new MinionHandler(this);
 	}
 
 	/**
@@ -530,33 +530,50 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	}
 
 	public void onDeath(DamageSource source) {
-		if (BALANCE.VAMPIRE_PLAYER_LOOSE_LEVEL
-				&& source.damageType.equals("mob")
+		if (source.damageType.equals("mob")
 				&& source instanceof EntityDamageSource) {
 			Entity src = source.getEntity();
-			if (src instanceof EntityVampireHunter) {
+			if (src instanceof EntityVampireHunter && BALANCE.VAMPIRE_PLAYER_LOOSE_LEVEL) {
 				looseLevel();
 				this.setVampireLord(false);
 			}
 
-			if (isVampireLord()
-					&& src instanceof EntityVampire
-					|| (src instanceof IMinion && ((IMinion) src).getLord() instanceof EntityLiving)) {
-				EntityLiving old;
-				if (src instanceof IMinion) {
-					old = (EntityLiving) ((IMinion) src).getLord();
-				} else {
-					old = (EntityLiving) src;
+			if (isVampireLord()){
+				EntityLivingBase old=null;
+				if(src instanceof EntityVampire){
+					old=(EntityLivingBase) src;
 				}
-				EntityDracula dracula = (EntityDracula) EntityList
-						.createEntityByName(REFERENCE.ENTITY.DRACULA_NAME,
-								old.worldObj);
-				dracula.copyLocationAndAnglesFrom(old);
-				dracula.makeDisappear();
-				old.worldObj.spawnEntityInWorld(dracula);
-				old.setDead();
-				this.setVampireLord(false);
-				// TODO if other player is the killer he can become the lord
+				else if(src instanceof IMinion){
+					IMinionLord l=((IMinion)src).getLord();
+					if(l !=null){
+						old=(EntityLivingBase) l.getRepresentingEntity();
+					}
+				}
+				else if(src instanceof EntityCreature && VampireMob.get((EntityCreature) src).isMinion()){
+					IMinionLord l=(VampireMob.get((EntityCreature) src)).getLord();
+					if(l !=null){
+						old=(EntityLivingBase) l.getRepresentingEntity();
+					}
+				}
+				if(old!=null){
+					if(old instanceof EntityPlayer){
+						// TODO if other player is the killer he can become the lord
+
+					}
+					else{
+						EntityDracula dracula = (EntityDracula) EntityList
+								.createEntityByName(REFERENCE.ENTITY.DRACULA_NAME,
+										old.worldObj);
+						dracula.copyLocationAndAnglesFrom(old);
+						dracula.makeDisappear();
+						old.worldObj.spawnEntityInWorld(dracula);
+						old.setDead();
+					}
+					this.setVampireLord(false);
+					
+					
+				}
+					
 			}
 		}
 		for (int i = 0; i < skillTimer.length; i++) {
@@ -1161,7 +1178,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	}
 
 	@Override
-	public MinionHandler<VampirePlayer> getMinionHandler() {
+	public MinionHandler getMinionHandler() {
 		return this.minionHandler;
 	}
 	

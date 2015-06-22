@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import de.teamlapen.vampirism.entity.ai.EntityAIDefendLord;
 import de.teamlapen.vampirism.entity.ai.EntityAIFollowBoss;
 import de.teamlapen.vampirism.entity.ai.IMinion;
+import de.teamlapen.vampirism.entity.ai.IMinionLord;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.util.BALANCE;
@@ -38,7 +39,8 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 
 			@Override
 			public boolean isEntityApplicable(Entity entity) {
-				if (getLord() != null && getLord().getRepresentingEntity().equals(entity)) {
+				IMinionLord lord=getLord();
+				if (lord != null && lord.getRepresentingEntity().equals(entity)) {
 					return false;
 				}
 				if (entity instanceof EntityPlayer) {

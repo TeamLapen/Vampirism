@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.ai;
 
-import javax.annotation.Nullable;
+
+import org.eclipse.jdt.annotation.Nullable;
 
 import net.minecraft.entity.EntityCreature;
 

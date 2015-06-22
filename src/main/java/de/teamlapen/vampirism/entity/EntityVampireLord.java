@@ -43,7 +43,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 
 	private boolean prevAttacking = false;
 	
-	private final MinionHandler<EntityVampireLord> minionHandler;
+	private final MinionHandler minionHandler;
 
 	public EntityVampireLord(World par1World) {
 		super(par1World);
@@ -54,7 +54,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
 		
-		minionHandler=new MinionHandler<EntityVampireLord>(this);
+		minionHandler=new MinionHandler(this);
 
 	}
 
@@ -287,7 +287,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	}
 
 	@Override
-	public MinionHandler<EntityVampireLord> getMinionHandler() {
+	public MinionHandler getMinionHandler() {
 		return minionHandler;
 	}
 	

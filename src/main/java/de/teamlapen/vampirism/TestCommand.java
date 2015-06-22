@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.entity.EntityRemoteVampireMinion;
 import de.teamlapen.vampirism.entity.EntitySaveableVampireMinion;
 import de.teamlapen.vampirism.entity.EntityVampireMinion;
 import de.teamlapen.vampirism.entity.ai.IMinion;
+import de.teamlapen.vampirism.entity.ai.MinionHandler;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;

@@ -3,6 +3,11 @@ package de.teamlapen.vampirism.entity.ai;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+
+
+
+import org.eclipse.jdt.annotation.NonNull;
+
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.command.IEntitySelector;
@@ -17,26 +22,22 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 /**
- * Used in IMinionLord classes to manage their minions
+ * Used in IMinionLord classes to manage their saveable minions
  * @author Maxanier
  *
- * @param <T>Lord class 
  */
-public class MinionHandler<T extends IMinionLord> {
+public class MinionHandler{
 
 	private final ArrayList<IMinion> minions;
 	private ArrayList<IMinion> loadedMinions;
-	private final T lord;
+	private final IMinionLord lord;
 	private final static String TAG="MinionHandler";
 	
 	private final IEntitySelector livingBaseSelector;
 	
-	public MinionHandler(final T lord){
+	public MinionHandler(@NonNull final IMinionLord lord){
 		minions=new ArrayList<IMinion>();
 		this.lord=lord;
-		if(lord==null){
-			throw new IllegalArgumentException("Lord cannot be null");
-		}
 		
 		livingBaseSelector=new IEntitySelector(){
 

@@ -26,12 +26,14 @@ repositories {
         name "Mobius Repo"
         url "http://mobiusstrip.eu/maven"
     }
+    mavenCentral()
 }
 
 dependencies {
     compile('mcp.mobius.waila:Waila:1.5.11-RC2-NONEI_1.7.10') {
         exclude group: 'mcp.mobius.waila'
     }
+    compile group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.annotation', version: '1.1.0'
  }
  
 loadProperties()
