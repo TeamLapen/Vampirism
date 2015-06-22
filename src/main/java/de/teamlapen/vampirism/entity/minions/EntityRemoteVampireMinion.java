@@ -22,16 +22,14 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 	private final static String TAG = "RVampireMinion";
 	private UUID lordId;
 	
-	private final static ArrayList<IMinionCommand> commands;
+	private final ArrayList<IMinionCommand> commands;
 	
-	static{
-		commands=new ArrayList<IMinionCommand>();
-		commands.add(new StayHereCommand(0));
-		commands.add(new ConvertToSaveableCommand(1));
-	}
 
 	public EntityRemoteVampireMinion(World world) {
 		super(world);
+		commands=new ArrayList<IMinionCommand>();
+		commands.add(getActiveCommand());
+		commands.add(new ConvertToSaveableCommand(1));
 	}
 
 	/**
@@ -56,7 +54,7 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 		if (from instanceof EntityRemoteVampireMinion) {
 			EntityRemoteVampireMinion m = (EntityRemoteVampireMinion) from;
 			lordId = m.lordId;
-			this.activateCommand(m.getActiveCommand());
+			this.activateMinionCommand(m.getActiveCommand());
 
 		}
 	}
@@ -160,6 +158,11 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 			return 0;
 		}
 		
+	}
+
+	@Override
+	protected IMinionCommand getDefaultCommand() {
+		return new StayHereCommand(0);
 	}
 
 }

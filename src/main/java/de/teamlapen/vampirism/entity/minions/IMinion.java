@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.minions;
 
 import java.util.ArrayList;
 
+import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import net.minecraft.entity.EntityCreature;
@@ -16,7 +17,7 @@ public interface IMinion {
 	 */
 	public @Nullable IMinionLord getLord();
 
-	public EntityCreature getRepresentingEntity();
+	public @NonNull EntityCreature getRepresentingEntity();
 
 	/**
 	 * Sets the boss
@@ -31,4 +32,6 @@ public interface IMinion {
 	public ArrayList<IMinionCommand> getAvailableCommands();
 	
 	public IMinionCommand getCommand(int id);
+	
+	public void activateMinionCommand(IMinionCommand command);
 }

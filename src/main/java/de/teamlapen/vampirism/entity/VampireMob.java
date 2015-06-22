@@ -92,21 +92,19 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	@SideOnly(Side.CLIENT)
 	private int activeCommandId;
 	
-	private final static ArrayList<IMinionCommand> commands;
-	
-	static{
-		commands=new ArrayList<IMinionCommand>();
-		commands.add(new DefendLordCommand(0));
-		commands.add(new StayHereCommand(1));
-	}
+	private final ArrayList<IMinionCommand> commands;
 
 	public VampireMob(EntityCreature mob) {
 		entity = mob;
 		blood = getMaxBloodAmount(mob);
 		type=(byte)0;
+		commands=new ArrayList<IMinionCommand>();
+		commands.add(new DefendLordCommand(0));
+		commands.add(new StayHereCommand(1));
 	}
 	
-	public void activateMinionCommand(@NonNull IMinionCommand command){
+	public void activateMinionCommand(IMinionCommand command){
+		if(command==null)return;
 		if(!this.isMinion()){
 			Logger.w(TAG, "%s is no minions and can therby not execute this %s minion command", this,command);
 			return;

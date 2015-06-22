@@ -20,16 +20,14 @@ public class EntitySaveableVampireMinion extends EntityVampireMinion {
 
 	protected IMinionLord lord;
 	
-	private final static ArrayList<IMinionCommand> commands;
+	private final ArrayList<IMinionCommand> commands;
 	
-	static{
-		commands=new ArrayList<IMinionCommand>();
-		commands.add(new DefendLordCommand(0));
-		commands.add(new StayHereCommand(1));
-	}
 
 	public EntitySaveableVampireMinion(World world) {
 		super(world);
+		commands=new ArrayList<IMinionCommand>();
+		commands.add(getActiveCommand());
+		commands.add(new StayHereCommand(1));
 	}
 
 	@Override
@@ -69,7 +67,7 @@ public class EntitySaveableVampireMinion extends EntityVampireMinion {
 		if (from instanceof EntitySaveableVampireMinion) {
 			EntitySaveableVampireMinion m = (EntitySaveableVampireMinion) from;
 			this.setLord(m.getLord());
-			this.activateCommand(m.getActiveCommand());
+			this.activateMinionCommand(m.getActiveCommand());
 		}
 
 	}
@@ -151,6 +149,11 @@ public class EntitySaveableVampireMinion extends EntityVampireMinion {
 	public IMinionCommand getCommand(int id) {
 		if(id<commands.size())return commands.get(id);
 		return null;
+	}
+
+	@Override
+	protected IMinionCommand getDefaultCommand() {
+		return new DefendLordCommand(0);
 	}
 
 }

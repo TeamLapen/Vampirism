@@ -80,6 +80,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.registerKeyBinding(KeyInputEventHandler.AUTO);
 		ClientRegistry.registerKeyBinding(KeyInputEventHandler.SKILL);
 		ClientRegistry.registerKeyBinding(KeyInputEventHandler.VISION);
+		ClientRegistry.registerKeyBinding(KeyInputEventHandler.MINION_CONTROL);
 	}
 
 	@Override

@@ -74,11 +74,12 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 
 		this.targetTasks.addTask(8, new EntityAIHurtByTarget(this, false));
 		
-		activeCommand=this.getCommand(0);
+		activeCommand=this.getDefaultCommand();
 		activeCommand.onActivated(this);
 	}
 
-	public void activateCommand(IMinionCommand command){
+	public void activateMinionCommand(IMinionCommand command){
+		if(command==null)return;
 		this.activeCommand.onDeactivated(this);
 		this.activeCommand=command;
 		this.activeCommand.onActivated(this);
@@ -209,8 +210,10 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 		super.readEntityFromNBT(nbt);
 		IMinionCommand command=this.getCommand(nbt.getInteger("command_id"));
 		if(command!=null){
-			this.activateCommand(command);
+			this.activateMinionCommand(command);
 		}
 	}
+	
+	protected abstract IMinionCommand getDefaultCommand();
 
 }
