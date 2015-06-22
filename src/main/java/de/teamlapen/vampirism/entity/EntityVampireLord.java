@@ -24,9 +24,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.entity.ai.IMinion;
-import de.teamlapen.vampirism.entity.ai.IMinionLord;
-import de.teamlapen.vampirism.entity.ai.MinionHandler;
+import de.teamlapen.vampirism.entity.minions.IMinion;
+import de.teamlapen.vampirism.entity.minions.IMinionLord;
+import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler;
 import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.network.UpdateEntityPacket;
 import de.teamlapen.vampirism.util.BALANCE;
@@ -43,7 +43,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 
 	private boolean prevAttacking = false;
 	
-	private final MinionHandler minionHandler;
+	private final SaveableMinionHandler minionHandler;
 
 	public EntityVampireLord(World par1World) {
 		super(par1World);
@@ -54,7 +54,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
 		
-		minionHandler=new MinionHandler(this);
+		minionHandler=new SaveableMinionHandler(this);
 
 	}
 
@@ -287,7 +287,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	}
 
 	@Override
-	public MinionHandler getMinionHandler() {
+	public SaveableMinionHandler getMinionHandler() {
 		return minionHandler;
 	}
 	

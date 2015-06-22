@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.entity.ai;
 
+import de.teamlapen.vampirism.entity.minions.IMinion;
+import de.teamlapen.vampirism.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.ai.EntityAIBase;
 

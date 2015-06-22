@@ -1,7 +1,10 @@
 package de.teamlapen.vampirism.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import org.eclipse.jdt.annotation.NonNull;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
@@ -24,8 +27,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.ai.EntityAIModifier;
-import de.teamlapen.vampirism.entity.ai.IMinion;
-import de.teamlapen.vampirism.entity.ai.IMinionLord;
+import de.teamlapen.vampirism.entity.minions.DefendLordCommand;
+import de.teamlapen.vampirism.entity.minions.IMinion;
+import de.teamlapen.vampirism.entity.minions.IMinionCommand;
+import de.teamlapen.vampirism.entity.minions.IMinionLord;
+import de.teamlapen.vampirism.entity.minions.StayHereCommand;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.UpdateEntityPacket;
 import de.teamlapen.vampirism.network.UpdateEntityPacket.ISyncableExtendedProperties;
@@ -69,6 +75,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 
 	private final EntityCreature entity;
 	public final static String EXT_PROP_NAME = "VampireMob";
+	private final static String TAG = "VampireMob";
 
 	private final String KEY_TYPE = "type";
 
@@ -77,11 +84,34 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	private byte type;
 
 	private UUID lordId = null;
+	
+	private IMinionCommand activeCommand = null;
+	
+	private final static ArrayList<IMinionCommand> commands;
+	
+	static{
+		commands=new ArrayList<IMinionCommand>();
+		commands.add(new DefendLordCommand(0));
+		commands.add(new StayHereCommand(1));
+	}
 
 	public VampireMob(EntityCreature mob) {
 		entity = mob;
 		blood = getMaxBloodAmount(mob);
 		type=(byte)0;
+	}
+	
+	public void activateMinionCommand(@NonNull IMinionCommand command){
+		if(!this.isMinion()){
+			Logger.w(TAG, "%s is no minions and can therby not execute this %s minion command", this,command);
+			return;
+		}
+		if(activeCommand!=null){
+			activeCommand.onDeactivated(this);
+		}
+		activeCommand=command;
+		activeCommand.onActivated(this);
+		
 	}
 
 	/**
@@ -172,6 +202,10 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 				if (properties.hasKey("BossUUIDMost")) {
 					this.lordId = new UUID(properties.getLong("BossUUIDMost"), properties.getLong("BossUUIDLeast"));
 				}
+				IMinionCommand command=this.getCommand(properties.getInteger("command_id"));
+				if(command!=null){
+					this.activateMinionCommand(command);
+				}
 			}
 		}
 
@@ -185,6 +219,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	public void makeMinion(IMinionLord lord) {
 		setMinion();
 		this.setLord(lord);
+		this.activateMinionCommand(this.getCommand(0));
 	}
 
 	private boolean makeVampire() {
@@ -220,6 +255,9 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 			if (this.lordId != null) {
 				properties.setLong("BossUUIDMost", this.lordId.getMostSignificantBits());
 				properties.setLong("BossUUIDLeast", this.lordId.getLeastSignificantBits());
+			}
+			if(activeCommand!=null){
+				properties.setInteger("command_id", activeCommand.getId());
 			}
 		}
 		compound.setTag(EXT_PROP_NAME, properties);
@@ -298,6 +336,22 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	@Override
 	public boolean shouldBeSavedWithLord() {
 		return false;
+	}
+	
+	@Override
+	public String toString(){
+		return String.format(TAG+" of %s minion(%b) vampire(%b)", entity,isMinion(),isVampire());
+	}
+
+	@Override
+	public ArrayList<IMinionCommand> getAvailableCommands() {
+		return commands;
+	}
+
+	@Override
+	public IMinionCommand getCommand(int id) {
+		if(id<commands.size())return commands.get(id);
+		return null;
 	}
 
 }

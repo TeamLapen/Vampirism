@@ -1,5 +1,7 @@
-package de.teamlapen.vampirism.entity.ai;
+package de.teamlapen.vampirism.entity.minions;
 
+
+import java.util.ArrayList;
 
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -25,4 +27,8 @@ public interface IMinion {
 	public void setLord(IMinionLord b);
 	
 	public boolean shouldBeSavedWithLord();
+	
+	public ArrayList<IMinionCommand> getAvailableCommands();
+	
+	public IMinionCommand getCommand(int id);
 }

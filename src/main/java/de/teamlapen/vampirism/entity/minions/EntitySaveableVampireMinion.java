@@ -1,4 +1,6 @@
-package de.teamlapen.vampirism.entity;
+package de.teamlapen.vampirism.entity.minions;
+
+import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
@@ -8,7 +10,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
-import de.teamlapen.vampirism.entity.ai.IMinionLord;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -18,6 +19,14 @@ public class EntitySaveableVampireMinion extends EntityVampireMinion {
 	private final static String TAG = "SVampireMinion";
 
 	protected IMinionLord lord;
+	
+	private final static ArrayList<IMinionCommand> commands;
+	
+	static{
+		commands=new ArrayList<IMinionCommand>();
+		commands.add(new DefendLordCommand(0));
+		commands.add(new StayHereCommand(1));
+	}
 
 	public EntitySaveableVampireMinion(World world) {
 		super(world);
@@ -60,7 +69,7 @@ public class EntitySaveableVampireMinion extends EntityVampireMinion {
 		if (from instanceof EntitySaveableVampireMinion) {
 			EntitySaveableVampireMinion m = (EntitySaveableVampireMinion) from;
 			this.setLord(m.getLord());
-
+			this.activateCommand(m.getActiveCommand());
 		}
 
 	}
@@ -131,6 +140,17 @@ public class EntitySaveableVampireMinion extends EntityVampireMinion {
 			nbt.setInteger("eid", lord.getRepresentingEntity().getEntityId());
 		}
 
+	}
+
+	@Override
+	public ArrayList<IMinionCommand> getAvailableCommands() {
+		return commands;
+	}
+
+	@Override
+	public IMinionCommand getCommand(int id) {
+		if(id<commands.size())return commands.get(id);
+		return null;
 	}
 
 }

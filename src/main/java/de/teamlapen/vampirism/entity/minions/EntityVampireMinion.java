@@ -1,4 +1,6 @@
-package de.teamlapen.vampirism.entity;
+package de.teamlapen.vampirism.entity.minions;
+
+import java.util.UUID;
 
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
@@ -12,10 +14,10 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+import de.teamlapen.vampirism.entity.DefaultVampire;
+import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.ai.EntityAIDefendLord;
 import de.teamlapen.vampirism.entity.ai.EntityAIFollowBoss;
-import de.teamlapen.vampirism.entity.ai.IMinion;
-import de.teamlapen.vampirism.entity.ai.IMinionLord;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.util.BALANCE;
@@ -27,6 +29,8 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 	 * Used for the visual transition from normal vampire to players minion
 	 */
 	private int oldVampireTexture = -1;
+	
+	private IMinionCommand activeCommand;
 
 	public EntityVampireMinion(World world) {
 		super(world);
@@ -64,8 +68,20 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 		}));
 
 		this.targetTasks.addTask(8, new EntityAIHurtByTarget(this, false));
+		
+		activeCommand=this.getCommand(0);
+		activeCommand.onActivated(this);
 	}
 
+	public void activateCommand(IMinionCommand command){
+		this.activeCommand.onDeactivated(this);
+		this.activeCommand=command;
+		this.activeCommand.onActivated(this);
+	}
+	
+	public IMinionCommand getActiveCommand(){
+		return this.activeCommand;
+	}
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
@@ -171,6 +187,22 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 	 */
 	protected void writeUpdateToNBT(NBTTagCompound nbt) {
 
+	}
+	
+	@Override
+	public void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+		nbt.setInteger("command_id", getActiveCommand().getId());
+	}
+	
+	@Override
+	public void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+		super.readEntityFromNBT(nbt);
+		IMinionCommand command=this.getCommand(nbt.getInteger("command_id"));
+		if(command!=null){
+			this.activateCommand(command);
+		}
 	}
 
 }

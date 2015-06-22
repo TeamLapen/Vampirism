@@ -40,11 +40,11 @@ import de.teamlapen.vampirism.entity.DefaultVampire;
 import de.teamlapen.vampirism.entity.EntityDracula;
 import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
-import de.teamlapen.vampirism.entity.EntityVampireMinion;
 import de.teamlapen.vampirism.entity.VampireMob;
-import de.teamlapen.vampirism.entity.ai.IMinion;
-import de.teamlapen.vampirism.entity.ai.IMinionLord;
-import de.teamlapen.vampirism.entity.ai.MinionHandler;
+import de.teamlapen.vampirism.entity.minions.EntityVampireMinion;
+import de.teamlapen.vampirism.entity.minions.IMinion;
+import de.teamlapen.vampirism.entity.minions.IMinionLord;
+import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler;
 import de.teamlapen.vampirism.entity.player.skills.DefaultSkill;
 import de.teamlapen.vampirism.entity.player.skills.ILastingSkill;
 import de.teamlapen.vampirism.entity.player.skills.ISkill;
@@ -308,7 +308,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 	private EntityLivingBase minionTarget;
 	
-	private final MinionHandler minionHandler;
+	private final SaveableMinionHandler minionHandler;
 
 	private boolean skipFallDamageReduction = false;
 
@@ -329,7 +329,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		vision=1;
 		skillTimer = new int[Skills.getSkillCount()];
 		extraData = new NBTTagCompound();
-		minionHandler=new MinionHandler(this);
+		minionHandler=new SaveableMinionHandler(this);
 	}
 
 	/**
@@ -1178,7 +1178,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	}
 
 	@Override
-	public MinionHandler getMinionHandler() {
+	public SaveableMinionHandler getMinionHandler() {
 		return this.minionHandler;
 	}
 	
@@ -1224,7 +1224,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			
 	public void onPlayerLoggedOut(){
 				Logger.d(TAG, "LoggedOut");
-				minionHandler.killMinions(true,true);
+				minionHandler.killMinions(true);
 	}
 			
 	public void onChangedDimension(int from,int to){

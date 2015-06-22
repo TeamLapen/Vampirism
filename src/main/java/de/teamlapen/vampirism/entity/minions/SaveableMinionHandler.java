@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.entity.ai;
+package de.teamlapen.vampirism.entity.minions;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -26,7 +26,7 @@ import net.minecraft.world.World;
  * @author Maxanier
  *
  */
-public class MinionHandler{
+public class SaveableMinionHandler{
 
 	private final ArrayList<IMinion> minions;
 	private ArrayList<IMinion> loadedMinions;
@@ -35,7 +35,7 @@ public class MinionHandler{
 	
 	private final IEntitySelector livingBaseSelector;
 	
-	public MinionHandler(@NonNull final IMinionLord lord){
+	public SaveableMinionHandler(@NonNull final IMinionLord lord){
 		minions=new ArrayList<IMinion>();
 		this.lord=lord;
 		
@@ -64,10 +64,14 @@ public class MinionHandler{
 	}
 	
 	
-	public boolean registerMinion(IMinion m, boolean force){
-		minions.add(m);
-		Logger.i("test", "register minion %s", m);
-		return true;
+	public void registerMinion(IMinion m, boolean force){
+		if(!m.shouldBeSavedWithLord()){
+			Logger.e(TAG, "Trying to register a non saveable minion %s at minion handler %s. This SHOULD NOT happen", m,this);
+		}
+		else{
+			minions.add(m);
+			Logger.i("test", "register minion %s", m);
+		}
 	}
 	
 	public void unregisterMinion(IMinion m){
@@ -109,16 +113,14 @@ public class MinionHandler{
 		return livingBaseSelector;
 	}
 	
-	public void killMinions(boolean instant,boolean onlySaveable){
+	public void killMinions(boolean instant){
 		for(IMinion m:minions){
-			if(!onlySaveable||m.shouldBeSavedWithLord()){
-				EntityCreature e=m.getRepresentingEntity();
-				if(instant){
-					e.setDead();
-				}
-				else{
-					e.attackEntityFrom(DamageSource.magic, 100);
-				}
+			EntityCreature e=m.getRepresentingEntity();
+			if(instant){
+				e.setDead();
+			}
+			else{
+				e.attackEntityFrom(DamageSource.magic, 100);
 			}
 		}
 	}
@@ -209,5 +211,10 @@ public class MinionHandler{
 				
 		}
 
+	}
+	
+	@Override
+	public String toString(){
+		return TAG+" for "+lord.toString()+" with "+getMinionCount()+" minions";
 	}
 }

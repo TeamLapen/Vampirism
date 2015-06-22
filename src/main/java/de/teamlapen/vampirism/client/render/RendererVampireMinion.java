@@ -11,9 +11,9 @@ import org.lwjgl.opengl.GL11;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.client.model.ModelBipedShrinkable;
-import de.teamlapen.vampirism.entity.EntityVampireMinion;
-import de.teamlapen.vampirism.entity.ai.IMinion;
-import de.teamlapen.vampirism.entity.ai.IMinionLord;
+import de.teamlapen.vampirism.entity.minions.EntityVampireMinion;
+import de.teamlapen.vampirism.entity.minions.IMinion;
+import de.teamlapen.vampirism.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 
