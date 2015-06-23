@@ -99,8 +99,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		blood = getMaxBloodAmount(mob);
 		type=(byte)0;
 		commands=new ArrayList<IMinionCommand>();
-		commands.add(new DefendLordCommand(0));
-		commands.add(new StayHereCommand(1));
+		commands.add(new DefendLordCommand(0,this));
 	}
 	
 	public void activateMinionCommand(IMinionCommand command){
@@ -110,10 +109,10 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 			return;
 		}
 		if(activeCommand!=null){
-			activeCommand.onDeactivated(this);
+			activeCommand.onDeactivated();
 		}
 		activeCommand=command;
-		activeCommand.onActivated(this);
+		activeCommand.onActivated();
 		
 	}
 
@@ -225,6 +224,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		setMinion();
 		this.setLord(lord);
 		this.activateMinionCommand(this.getCommand(0));
+		entity.func_110163_bv();
 	}
 
 	private boolean makeVampire() {

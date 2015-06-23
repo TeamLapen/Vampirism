@@ -29,7 +29,8 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 		super(world);
 		commands=new ArrayList<IMinionCommand>();
 		commands.add(getActiveCommand());
-		commands.add(new ConvertToSaveableCommand(1));
+		commands.add(new ConvertToSaveableCommand(1,this));
+		commands.add(new CollectBloodCommand(2,this));
 	}
 
 	/**
@@ -125,8 +126,10 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 	
 	private static class ConvertToSaveableCommand extends DefaultMinionCommand{
 
-		public ConvertToSaveableCommand(int id) {
+		private final EntityRemoteVampireMinion entity;
+		public ConvertToSaveableCommand(int id,EntityRemoteVampireMinion minion) {
 			super(id);
+			this.entity=minion;
 		}
 
 		@Override
@@ -135,15 +138,14 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 		}
 
 		@Override
-		public void onActivated(IMinion m) {
-			EntityRemoteVampireMinion entity=(EntityRemoteVampireMinion) m;
+		public void onActivated() {
 			entity.convertToSaveable();
 			EntityItem gem = new EntityItem(entity.worldObj, entity.posX,entity.posY,entity.posZ,new ItemStack(ModItems.gemOfBinding,1));
 			entity.worldObj.spawnEntityInWorld(gem);
 		}
 
 		@Override
-		public void onDeactivated(IMinion m) {		
+		public void onDeactivated() {		
 		}
 
 		@Override
@@ -162,7 +164,7 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 
 	@Override
 	protected IMinionCommand getDefaultCommand() {
-		return new StayHereCommand(0);
+		return new StayHereCommand(0,this);
 	}
 
 }

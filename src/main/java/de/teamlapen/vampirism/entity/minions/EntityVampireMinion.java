@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.entity.minions;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.UUID;
 
 import cpw.mods.fml.relauncher.Side;
@@ -12,8 +14,12 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import de.teamlapen.vampirism.entity.DefaultVampire;
@@ -40,49 +46,22 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 	public EntityVampireMinion(World world) {
 		super(world);
 		this.setSize(0.3F, 0.6F);
-		this.tasks.addTask(4, new EntityAIFollowBoss(this, 1.0D));
+		this.func_110163_bv();
 		this.tasks.addTask(5, new EntityAIAttackOnCollide(this, EntityLivingBase.class, 1.0, false));
-		this.targetTasks.addTask(2, new EntityAIDefendLord(this));
-
-		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true, false, new IEntitySelector() {
-
-			@Override
-			public boolean isEntityApplicable(Entity entity) {
-				IMinionLord lord=getLord();
-				if (lord != null && lord.getRepresentingEntity().equals(entity)) {
-					return false;
-				}
-				if (entity instanceof EntityPlayer) {
-					return VampirePlayer.get((EntityPlayer) entity).getLevel() <= BALANCE.VAMPIRE_FRIENDLY_LEVEL || VampirePlayer.get((EntityPlayer) entity).isVampireLord();
-				}
-				return false;
-			}
-
-		}));
-		// Search for villagers
-		this.targetTasks.addTask(4, new EntityAINearestAttackableTarget(this, EntityVillager.class, 0, true, false, new IEntitySelector() {
-
-			@Override
-			public boolean isEntityApplicable(Entity entity) {
-				if (entity instanceof EntityVillager) {
-					return !VampireMob.get((EntityVillager) entity).isVampire();
-				}
-				return false;
-			}
-
-		}));
+		this.tasks.addTask(10, new EntityAIWander(this,0.7));
+		this.tasks.addTask(11, new EntityAIWatchClosest(this,EntityPlayer.class,10));
 
 		this.targetTasks.addTask(8, new EntityAIHurtByTarget(this, false));
 		
 		activeCommand=this.getDefaultCommand();
-		activeCommand.onActivated(this);
+		activeCommand.onActivated();
 	}
 
 	public void activateMinionCommand(IMinionCommand command){
 		if(command==null)return;
-		this.activeCommand.onDeactivated(this);
+		this.activeCommand.onDeactivated();
 		this.activeCommand=command;
-		this.activeCommand.onActivated(this);
+		this.activeCommand.onActivated();
 	}
 	
 	public IMinionCommand getActiveCommand(){
@@ -166,6 +145,29 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 		}
 		if (oldVampireTexture != -1 && worldObj.isRemote) {
 			Helper.spawnParticlesAroundEntity(this, "witchMagic", 1.0F, 3);
+		}
+		if(!this.worldObj.isRemote&&!this.dead){
+			List list = this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.boundingBox.expand(1.0D, 0.0D, 1.0D));
+            Iterator iterator = list.iterator();
+
+            while (iterator.hasNext())
+            {
+                EntityItem entityitem = (EntityItem)iterator.next();
+
+                if (!entityitem.isDead && entityitem.getEntityItem() != null)
+                {
+                    ItemStack itemstack = entityitem.getEntityItem();
+                    if(activeCommand.shouldPickupItem(itemstack)){
+                    	ItemStack stack1=this.getEquipmentInSlot(0);
+                    	if(stack1!=null){
+                    		this.entityDropItem(stack1, 0.0F);
+                    	}
+                    	this.setCurrentItemOrArmor(0, itemstack);
+                        entityitem.setDead();
+                    }
+
+                }
+            }
 		}
 		super.onLivingUpdate();
 	}

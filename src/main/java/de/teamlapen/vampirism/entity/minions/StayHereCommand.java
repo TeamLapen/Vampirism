@@ -1,9 +1,10 @@
 package de.teamlapen.vampirism.entity.minions;
 
 public class StayHereCommand extends DefaultMinionCommand {
-
-	public StayHereCommand(int id) {
+	protected final EntityRemoteVampireMinion minion;
+	public StayHereCommand(int id,EntityRemoteVampireMinion minion) {
 		super(id);
+		this.minion=minion;
 	}
 
 	@Override
@@ -12,13 +13,13 @@ public class StayHereCommand extends DefaultMinionCommand {
 	}
 
 	@Override
-	public void onActivated(IMinion m) {
+	public void onActivated() {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void onDeactivated(IMinion m) {
+	public void onDeactivated() {
 		// TODO Auto-generated method stub
 
 	}

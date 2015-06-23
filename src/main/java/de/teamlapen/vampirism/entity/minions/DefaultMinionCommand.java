@@ -1,6 +1,9 @@
 package de.teamlapen.vampirism.entity.minions;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 public abstract class DefaultMinionCommand implements IMinionCommand {
@@ -29,8 +32,13 @@ public abstract class DefaultMinionCommand implements IMinionCommand {
 	}
 	
 	@Override
-	public boolean canBeActivated(IMinion minion){
+	public boolean canBeActivated(){
 		return true;
+	}
+	
+	@Override
+	public boolean shouldPickupItem(@NonNull ItemStack item){
+		return false;
 	}
 
 }

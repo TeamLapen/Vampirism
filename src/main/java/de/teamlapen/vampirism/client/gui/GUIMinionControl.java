@@ -91,15 +91,14 @@ public class GUIMinionControl extends GUIPieMenu {
 		}
 
 		@Override
-		public void onActivated(IMinion m) {
+		public void onActivated() {
 			
 		}
 
 		@Override
-		public void onDeactivated(IMinion m) {
+		public void onDeactivated() {
 			
-		}
-		
+		}		
 	}
 
 }

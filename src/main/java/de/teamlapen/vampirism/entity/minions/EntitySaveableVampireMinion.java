@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+import de.teamlapen.vampirism.entity.ai.EntityAIFollowBoss;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -25,9 +26,11 @@ public class EntitySaveableVampireMinion extends EntityVampireMinion {
 
 	public EntitySaveableVampireMinion(World world) {
 		super(world);
+		this.tasks.addTask(4, new EntityAIFollowBoss(this, 1.0D));
 		commands=new ArrayList<IMinionCommand>();
 		commands.add(getActiveCommand());
-		commands.add(new StayHereCommand(1));
+		commands.add(new AttackHostileExceptPlayer(1,this));
+		commands.add(new AttackHostileIncludingPlayer(2,this));
 	}
 
 	@Override
@@ -153,7 +156,7 @@ public class EntitySaveableVampireMinion extends EntityVampireMinion {
 
 	@Override
 	protected IMinionCommand getDefaultCommand() {
-		return new DefendLordCommand(0);
+		return new DefendLordCommand(0,this);
 	}
 
 }

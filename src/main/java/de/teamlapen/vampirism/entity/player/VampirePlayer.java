@@ -404,7 +404,10 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 	@Override
 	public EntityLivingBase getMinionTarget() {
-		return this.minionTarget;
+		if(this.minionTarget!=null){
+			return minionTarget;
+		}
+		return player.getLastAttacker();
 	}
 
 	@Override

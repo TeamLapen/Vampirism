@@ -18,7 +18,7 @@ public class ItemGemOfBinding extends BasicItem {
      */
     public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity)
     {
-    	if(entity instanceof EntitySaveableVampireMinion){
+    	if(!player.worldObj.isRemote&&entity instanceof EntitySaveableVampireMinion){
     		EntitySaveableVampireMinion m=(EntitySaveableVampireMinion) entity;
     		if(VampirePlayer.get(player).equals(m.getLord())){
     			m.convertToRemote();

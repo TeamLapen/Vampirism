@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.item;
 
 import java.util.List;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,7 +45,8 @@ public class ItemBloodBottle extends ItemGlassBottle {
 		stack.setItemDamage(amt);
 		return left;
 	}
-	public static int getBlood(ItemStack stack) {
+	public static int getBlood(@NonNull ItemStack stack) {
+		if(stack.getItem().equals(Items.glass_bottle))return 0;
 		return stack.getItemDamage();
 	}
 	
