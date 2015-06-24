@@ -68,13 +68,11 @@ public class CollectBloodCommand extends DefaultMinionCommand {
 
 	@Override
 	public int getMinU() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 48;
 	}
 
 	@Override
 	public int getMinV() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 	

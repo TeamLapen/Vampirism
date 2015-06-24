@@ -66,13 +66,11 @@ public class AttackHostileExceptPlayer extends DefaultMinionCommand {
 
 	@Override
 	public int getMinU() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public int getMinV() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

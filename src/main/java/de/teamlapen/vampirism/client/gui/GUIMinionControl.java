@@ -80,13 +80,11 @@ public class GUIMinionControl extends GUIPieMenu {
 
 		@Override
 		public int getMinU() {
-			// TODO Auto-generated method stub
-			return 0;
+			return 16;
 		}
 
 		@Override
 		public int getMinV() {
-			// TODO Auto-generated method stub
 			return 0;
 		}
 

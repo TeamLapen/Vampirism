@@ -98,6 +98,13 @@ skill.vampirism.summon_bats=Summon Bats
 skill.vampirism.teleport=Teleport
 skill.vampirism.vampire_rage=Vampire Rage
 
+#Minion command
+minioncommand.vampirism.attackhostilenoplayers=Attack hostile
+minioncommand.vampirism.attackhostile=Attack hostile including player
+minioncommand.vampirism.collectblood=Collect blood
+minioncommand.vampirism.defendlord=Defend lord
+minioncommand.vampirism.stayhere=Stay here
+
 #Config
 category.vampirism.balance=Balance settings
 category.vampirism.balance.tooltip=Change almost any balance relevant property
