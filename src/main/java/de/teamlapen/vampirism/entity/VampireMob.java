@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -102,7 +103,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		commands.add(new DefendLordCommand(0,this));
 	}
 	
-	public void activateMinionCommand(IMinionCommand command){
+	public void activateMinionCommand(@Nullable IMinionCommand command){
 		if(command==null)return;
 		if(!this.isMinion()){
 			Logger.w(TAG, "%s is no minions and can therby not execute this %s minion command", this,command);
@@ -202,14 +203,33 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 			if(properties.hasKey(KEY_TYPE)){
 				type=properties.getByte(KEY_TYPE);
 			}
+			IMinionCommand command=null;
 			if (isMinion()) {
 				if (properties.hasKey("BossUUIDMost")) {
 					this.lordId = new UUID(properties.getLong("BossUUIDMost"), properties.getLong("BossUUIDLeast"));
+					Logger.d(TAG, "Mob %s is minion with lord %s", entity,lordId);
+					command=this.getCommand(properties.getInteger("command_id"));
+					if(command==null){
+						command=this.getCommand(0);
+					}
 				}
-				IMinionCommand command=this.getCommand(properties.getInteger("command_id"));
-				if(command!=null){
-					this.activateMinionCommand(command);
+				else{
+					Logger.w(TAG, "Mob %s is a minion but does not have a lord uuid saved (%s). This should only happen once", entity,properties);
+					if(isVampire()){
+						type=2;
+					}
+					else{
+						type=0;
+					}
 				}
+			}
+			
+			if(isMinion()){
+				this.setMinion();
+				this.activateMinionCommand(command);
+			}
+			if(isVampire()){
+				this.setVampire();
 			}
 		}
 
@@ -221,10 +241,11 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	}
 
 	public void makeMinion(IMinionLord lord) {
-		setMinion();
 		this.setLord(lord);
+		setMinion();
 		this.activateMinionCommand(this.getCommand(0));
 		entity.func_110163_bv();
+		this.sync();
 	}
 
 	private boolean makeVampire() {
@@ -235,6 +256,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 
 		entity.addPotionEffect(new PotionEffect(Potion.weakness.id, 200));
 		entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100));
+		this.sync();
 		return true;
 	}
 
@@ -257,10 +279,8 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		NBTTagCompound properties = new NBTTagCompound();
 		properties.setByte(KEY_TYPE, type);
 		if (isMinion()) {
-			if (this.lordId != null) {
-				properties.setLong("BossUUIDMost", this.lordId.getMostSignificantBits());
-				properties.setLong("BossUUIDLeast", this.lordId.getLeastSignificantBits());
-			}
+			properties.setLong("BossUUIDMost", this.lordId.getMostSignificantBits());
+			properties.setLong("BossUUIDLeast", this.lordId.getLeastSignificantBits());
 			if(activeCommand!=null){
 				properties.setInteger("command_id", activeCommand.getId());
 			}
@@ -290,16 +310,21 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 
 	}
 
+	/**
+	 * Sets the minion bit and adds minion specific tasks. Does not sync.
+	 * This clears all AI tasks, so make sure to add any new tasks after this.
+	 */
 	private void setMinion() {
 		type = (byte) (type | 2);
 		EntityAIModifier.makeMinion(this, entity);
-		this.sync();
 	}
 
+	/**
+	 * Sets the vampire bit and adds vampire specific tasks. Does not sync.
+	 */
 	private void setVampire() {
 		type = (byte) (type | 1);
 		EntityAIModifier.addVampireMobTasks(entity);
-		this.sync();
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -308,10 +333,12 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		if(nbt.hasKey(KEY_TYPE)){
 			type=nbt.getByte(KEY_TYPE);
 		}
+		if (nbt.hasKey("BossUUIDMost")) {
+			this.lordId = new UUID(nbt.getLong("BossUUIDMost"), nbt.getLong("BossUUIDLeast"));
+		}
 		if(nbt.hasKey("active_command_id")){
 			this.activeCommandId=nbt.getInteger("active_command_id");
-		}
-		
+		}		
 	}
 
 	@Override
@@ -319,6 +346,10 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		nbt.setByte(KEY_TYPE, type);
 		if(activeCommand!=null){
 			nbt.setInteger("active_command_id", activeCommand.getId());
+		}
+		if(isMinion()){
+			nbt.setLong("BossUUIDMost", this.lordId.getMostSignificantBits());
+			nbt.setLong("BossUUIDLeast", this.lordId.getLeastSignificantBits());
 		}
 	}
 

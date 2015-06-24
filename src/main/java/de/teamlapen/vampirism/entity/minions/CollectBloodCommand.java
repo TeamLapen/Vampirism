@@ -45,11 +45,11 @@ public class CollectBloodCommand extends DefaultMinionCommand {
 
 	@Override
 	public void onActivated() {
-		minion.tasks.addTask(7, runToPlayer);
-		minion.tasks.addTask(8, waitForBottle);
-		minion.tasks.addTask(9, bite);
-		minion.tasks.addTask(9, moveToBiteable);
-		minion.tasks.addTask(10, runAround);
+		minion.tasks.addTask(9, runToPlayer);
+		minion.tasks.addTask(10, waitForBottle);
+		minion.tasks.addTask(11, bite);
+		minion.tasks.addTask(11, moveToBiteable);
+		minion.tasks.addTask(12, runAround);
 
 	}
 

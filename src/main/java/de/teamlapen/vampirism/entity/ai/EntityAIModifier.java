@@ -10,6 +10,8 @@ import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAITasks;
+import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.entity.minions.IMinion;
@@ -56,11 +58,11 @@ public class EntityAIModifier {
 		tasks.taskEntries.clear();
 		tasks.addTask(0, new EntityAISwimming(entity));
 		tasks.addTask(2, new EntityAIAttackOnCollide(entity, EntityLivingBase.class, 1.0D, false));
-		tasks.addTask(4, new EntityAIFollowBoss(minion, 1.0D));
+		tasks.addTask(7, new EntityAIFollowBoss(minion, 1.0D));
+		tasks.addTask(16, new EntityAIWatchClosest(entity,EntityPlayer.class,10));
 
 		EntityAITasks targetTasks = entity.targetTasks;
 		targetTasks.taskEntries.clear();
-		targetTasks.addTask(2, new EntityAIDefendLord(minion));
 		targetTasks.addTask(8, new EntityAIHurtByTarget(entity, false));
 	}
 

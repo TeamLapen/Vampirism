@@ -34,7 +34,7 @@ public class EntitySaveableVampireMinion extends EntityVampireMinion {
 
 	public EntitySaveableVampireMinion(World world) {
 		super(world);
-		this.tasks.addTask(4, new EntityAIFollowBoss(this, 1.0D));
+		this.tasks.addTask(7, new EntityAIFollowBoss(this, 1.0D));
 		this.tasks.addTask(14, new EntityAIFleeSun(this,0.9F));
 		commands=new ArrayList<IMinionCommand>();
 		commands.add(getActiveCommand());

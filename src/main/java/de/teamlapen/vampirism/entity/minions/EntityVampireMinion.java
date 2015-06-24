@@ -54,7 +54,7 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 		super(world);
 		this.setSize(0.3F, 0.6F);
 		this.func_110163_bv();
-		this.tasks.addTask(5, new EntityAIAttackOnCollide(this, EntityLivingBase.class, 1.0, false));
+		this.tasks.addTask(6, new EntityAIAttackOnCollide(this, EntityLivingBase.class, 1.0, false));
 		this.tasks.addTask(15, new EntityAIWander(this,0.7));
 		this.tasks.addTask(16, new EntityAIWatchClosest(this,EntityPlayer.class,10));
 

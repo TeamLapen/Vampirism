@@ -1,10 +1,14 @@
 package de.teamlapen.vampirism.entity.minions;
 
+import de.teamlapen.vampirism.entity.ai.EntityAIStayHere;
+
 public class StayHereCommand extends DefaultMinionCommand {
 	protected final EntityRemoteVampireMinion minion;
+	protected final EntityAIStayHere stay;
 	public StayHereCommand(int id,EntityRemoteVampireMinion minion) {
 		super(id);
 		this.minion=minion;
+		stay=new EntityAIStayHere(minion);
 	}
 
 	@Override
