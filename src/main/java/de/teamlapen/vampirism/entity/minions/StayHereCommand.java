@@ -18,13 +18,13 @@ public class StayHereCommand extends DefaultMinionCommand {
 
 	@Override
 	public void onActivated() {
-		// TODO Auto-generated method stub
+		minion.tasks.addTask(3, stay);
 
 	}
 
 	@Override
 	public void onDeactivated() {
-		// TODO Auto-generated method stub
+		minion.tasks.removeTask(stay);
 
 	}
 
