@@ -5,18 +5,31 @@ import java.util.UUID;
 
 import javax.annotation.Nullable;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.ai.EntityAIAvoidEntity;
+import net.minecraft.entity.ai.EntityAIFleeSun;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import de.teamlapen.vampirism.ModItems;
+import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
+/**
+ * Remote vampire minion, which acts independent from the lord, but can try to find him via his UUID
+ * Not designed to fight for the player
+ * @author Maxanier
+ *
+ */
 public class EntityRemoteVampireMinion extends EntityVampireMinion {
 
 	private final static String TAG = "RVampireMinion";
@@ -27,6 +40,8 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 
 	public EntityRemoteVampireMinion(World world) {
 		super(world);
+		this.tasks.addTask(2, new EntityAIAvoidEntity(this,EntityVampireHunter.class,MathHelper.floor_float(BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER*1.5F),1.1,1.4));
+		this.tasks.addTask(6, new EntityAIFleeSun(this, 1.1F));
 		commands=new ArrayList<IMinionCommand>();
 		commands.add(getActiveCommand());
 		commands.add(new ConvertToSaveableCommand(1,this));
@@ -124,6 +139,11 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 		return null;
 	}
 	
+	/**
+	 * Command which converts this remote minion into a saveable one
+	 * @author Maxanier
+	 *
+	 */
 	private static class ConvertToSaveableCommand extends DefaultMinionCommand{
 
 		private final EntityRemoteVampireMinion entity;
@@ -163,7 +183,7 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 	}
 
 	@Override
-	protected IMinionCommand getDefaultCommand() {
+	protected @NonNull IMinionCommand getDefaultCommand() {
 		return new StayHereCommand(0,this);
 	}
 

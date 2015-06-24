@@ -10,6 +10,13 @@ import net.minecraft.entity.ai.EntityAITarget;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 
+/**
+ * Makes the minion attack EntityMobs.
+ * Does not attack minions of other players.
+ * Only attacks vampires if the minions lord is a vampire lord.
+ * @author Maxanier
+ *
+ */
 public class AttackHostileExceptPlayer extends DefaultMinionCommand {
 
 	protected final IMinion minion;

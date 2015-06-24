@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import scala.actors.threadpool.Arrays;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
@@ -267,4 +268,74 @@ public class Helper {
 			e.worldObj.spawnParticle(particle, d7, d8, d9, f, f1, f2);
 		}
 	}
+	
+	/**
+	 * Teleports the entity
+	 * @param entity
+	 * @param x
+	 * @param y
+	 * @param z
+	 * @param sound If a teleport sound should be played
+	 * @return Wether the teleport was successful or not
+	 */
+	public static boolean teleportTo(EntityLiving entity,double x, double y, double z,boolean sound) {
+		double d3 = entity.posX;
+		double d4 = entity.posY;
+		double d5 = entity.posZ;
+		entity.posX = x;
+		entity.posY = y;
+		entity.posZ = z;
+		boolean flag = false;
+		int i = MathHelper.floor_double(entity.posX);
+		int j = MathHelper.floor_double(entity.posY);
+		int k = MathHelper.floor_double(entity.posZ);
+
+		if (entity.worldObj.blockExists(i, j, k)) {
+			boolean flag1 = false;
+
+			while (!flag1 && j > 0) {
+				Block block = entity.worldObj.getBlock(i, j - 1, k);
+				if (block.getMaterial().blocksMovement())
+					flag1 = true;
+				else {
+					--entity.posY;
+					--j;
+				}
+			}
+
+			if (flag1) {
+				entity.setPosition(entity.posX, entity.posY, entity.posZ);
+
+				if (entity.worldObj.getCollidingBoundingBoxes(entity,entity.boundingBox).isEmpty() && !entity.worldObj.isAnyLiquid(entity.boundingBox))
+					flag = true;
+			}
+		}
+
+		if (!flag) {
+			entity.setPosition(d3, d4, d5);
+			return false;
+		} else {
+			short short1 = 128;
+
+			for (int l = 0; l < short1; ++l) {
+				double d6 = l / (short1 - 1.0D);
+				float f = (entity.getRNG().nextFloat() - 0.5F) * 0.2F;
+				float f1 = (entity.getRNG().nextFloat() - 0.5F) * 0.2F;
+				float f2 = (entity.getRNG().nextFloat() - 0.5F) * 0.2F;
+				double d7 = d3 + (entity.posX - d3) * d6 + (entity.getRNG().nextDouble() - 0.5D) * entity.width * 2.0D;
+				double d8 = d4 + (entity.posY - d4) * d6 + entity.getRNG().nextDouble() * entity.height;
+				double d9 = d5 + (entity.posZ - d5) * d6 + (entity.getRNG().nextDouble() - 0.5D) * entity.width * 2.0D;
+				entity.worldObj.spawnParticle("portal", d7, d8, d9, f, f1, f2);
+			}
+
+			if(sound){
+				// TODO different sound (bang?)
+				entity.worldObj.playSoundEffect(d3, d4, d5, "mob.endermen.portal", 1.0F, 1.0F);
+				entity.playSound("mob.endermen.portal", 1.0F, 1.0F);
+			}
+
+			return true;
+		}
+	}
+
 }

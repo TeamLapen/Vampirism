@@ -17,7 +17,7 @@ public interface IMinionLord {
 	 * 
 	 * @return
 	 */
-	public Entity getRepresentingEntity();
+	public EntityLivingBase getRepresentingEntity();
 
 	public double getTheDistanceSquared(Entity e);
 

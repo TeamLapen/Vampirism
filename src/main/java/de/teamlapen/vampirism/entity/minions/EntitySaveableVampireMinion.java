@@ -4,8 +4,11 @@ import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.ai.EntityAIFleeSun;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -15,6 +18,11 @@ import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
+/**
+ * Vampire minion which is saved with it's lord and is designed to protect the lord
+ * @author Maxanier
+ *
+ */
 public class EntitySaveableVampireMinion extends EntityVampireMinion {
 
 	private final static String TAG = "SVampireMinion";
@@ -27,6 +35,7 @@ public class EntitySaveableVampireMinion extends EntityVampireMinion {
 	public EntitySaveableVampireMinion(World world) {
 		super(world);
 		this.tasks.addTask(4, new EntityAIFollowBoss(this, 1.0D));
+		this.tasks.addTask(14, new EntityAIFleeSun(this,0.9F));
 		commands=new ArrayList<IMinionCommand>();
 		commands.add(getActiveCommand());
 		commands.add(new AttackHostileExceptPlayer(1,this));
@@ -155,7 +164,7 @@ public class EntitySaveableVampireMinion extends EntityVampireMinion {
 	}
 
 	@Override
-	protected IMinionCommand getDefaultCommand() {
+	protected @NonNull IMinionCommand getDefaultCommand() {
 		return new DefendLordCommand(0,this);
 	}
 

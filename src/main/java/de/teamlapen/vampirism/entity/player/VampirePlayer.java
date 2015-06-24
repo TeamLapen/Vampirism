@@ -411,7 +411,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	}
 
 	@Override
-	public Entity getRepresentingEntity() {
+	public EntityLivingBase getRepresentingEntity() {
 		return player;
 	}
 

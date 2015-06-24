@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import net.minecraft.block.Block;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -157,5 +158,5 @@ public abstract class DefaultVampire extends EntityMob {
 
 		this.setDead();
 	}
-
+	
 }

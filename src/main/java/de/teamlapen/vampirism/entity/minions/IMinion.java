@@ -27,11 +27,27 @@ public interface IMinion {
 	 */
 	public void setLord(IMinionLord b);
 	
+	/**
+	 * 
+	 * @return Whether the minion should be saved in the lords NBT data or not
+	 */
 	public boolean shouldBeSavedWithLord();
 	
+	/**
+	 * @return The list of available minion commands
+	 */
 	public ArrayList<IMinionCommand> getAvailableCommands();
 	
+	/**
+	 * 
+	 * @param id
+	 * @return The minion command represented by the given id
+	 */
 	public IMinionCommand getCommand(int id);
 	
+	/**
+	 * Activates the given command
+	 * @param command
+	 */
 	public void activateMinionCommand(IMinionCommand command);
 }

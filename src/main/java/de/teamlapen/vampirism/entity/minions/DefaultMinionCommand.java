@@ -6,6 +6,11 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
+/**
+ * Default implementation of IMinionCommand
+ * @author Maxanier
+ *
+ */
 public abstract class DefaultMinionCommand implements IMinionCommand {
 
 	private final static ResourceLocation defaultIcons = new ResourceLocation(REFERENCE.MODID+":textures/gui/minion_commands.png");

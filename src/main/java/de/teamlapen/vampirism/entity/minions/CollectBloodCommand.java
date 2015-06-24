@@ -1,22 +1,41 @@
 package de.teamlapen.vampirism.entity.minions;
 
-import org.eclipse.jdt.annotation.NonNull;
-
-import de.teamlapen.vampirism.ModItems;
-import de.teamlapen.vampirism.item.ItemBloodBottle;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
+import org.eclipse.jdt.annotation.NonNull;
+
+import de.teamlapen.vampirism.ModItems;
+import de.teamlapen.vampirism.entity.ai.EntityAIBiteNearbyEntity;
+import de.teamlapen.vampirism.entity.ai.EntityAIMoveAround;
+import de.teamlapen.vampirism.entity.ai.EntityAIMoveToBiteable;
+import de.teamlapen.vampirism.entity.ai.EntityAIMoveToLord;
+import de.teamlapen.vampirism.entity.ai.EntityAIWaitForBottle;
+import de.teamlapen.vampirism.item.ItemBloodBottle;
+
+/**
+ * Makes the minion collect blood and therefore picks up bottles
+ * @author Maxanier
+ *
+ */
 public class CollectBloodCommand extends DefaultMinionCommand {
 
 	protected final EntityRemoteVampireMinion minion;
-	protected final EntityAIBase task;
+	protected final EntityAIBase runAround;
+	protected final EntityAIBase runToPlayer;
+	protected final EntityAIBase bite;
+	protected final EntityAIBase moveToBiteable;
+	protected final EntityAIBase waitForBottle;
 	
 	public CollectBloodCommand(int id,EntityRemoteVampireMinion m) {
 		super(id);
 		minion=m;
-		task=null;
+		runAround=new EntityAIMoveAround(m.getRepresentingEntity(),1.0);
+		runToPlayer=new EntityAIMoveToLord.EntityAIMinionBringBottle(m);
+		bite=new EntityAIBiteNearbyEntity.EntityAIMinionCollectFromNearby(m);
+		moveToBiteable=new EntityAIMoveToBiteable(m);
+		waitForBottle=new EntityAIWaitForBottle(m);
 	}
 
 	@Override
@@ -26,7 +45,11 @@ public class CollectBloodCommand extends DefaultMinionCommand {
 
 	@Override
 	public void onActivated() {
-		// TODO Auto-generated method stub
+		minion.tasks.addTask(7, runToPlayer);
+		minion.tasks.addTask(8, waitForBottle);
+		minion.tasks.addTask(9, bite);
+		minion.tasks.addTask(9, moveToBiteable);
+		minion.tasks.addTask(10, runAround);
 
 	}
 
@@ -37,6 +60,10 @@ public class CollectBloodCommand extends DefaultMinionCommand {
 			minion.getRepresentingEntity().entityDropItem(item, 0.1F);
 			minion.getRepresentingEntity().setCurrentItemOrArmor(0, null);
 		}
+		minion.tasks.removeTask(runToPlayer);
+		minion.tasks.removeTask(bite);
+		minion.tasks.removeTask(runAround);
+		minion.tasks.removeTask(runToPlayer);
 	}
 
 	@Override

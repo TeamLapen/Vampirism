@@ -121,7 +121,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	}
 
 	@Override
-	public Entity getRepresentingEntity() {
+	public EntityLivingBase getRepresentingEntity() {
 		return this;
 	}
 

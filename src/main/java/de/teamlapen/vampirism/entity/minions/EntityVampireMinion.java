@@ -4,6 +4,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
+import org.eclipse.jdt.annotation.NonNull;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.command.IEntitySelector;
@@ -31,6 +33,11 @@ import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Helper;
 
+/**
+ * Base class for all vampire minions. Handles conversion and commands
+ * @author Max
+ *
+ */
 public abstract class EntityVampireMinion extends DefaultVampire implements IMinion, ISyncable {
 
 	/**
@@ -48,8 +55,8 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 		this.setSize(0.3F, 0.6F);
 		this.func_110163_bv();
 		this.tasks.addTask(5, new EntityAIAttackOnCollide(this, EntityLivingBase.class, 1.0, false));
-		this.tasks.addTask(10, new EntityAIWander(this,0.7));
-		this.tasks.addTask(11, new EntityAIWatchClosest(this,EntityPlayer.class,10));
+		this.tasks.addTask(15, new EntityAIWander(this,0.7));
+		this.tasks.addTask(16, new EntityAIWatchClosest(this,EntityPlayer.class,10));
 
 		this.targetTasks.addTask(8, new EntityAIHurtByTarget(this, false));
 		
@@ -85,6 +92,10 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 		}
 	}
 
+	/**
+	 * Copies vampire minion data
+	 * @param from
+	 */
 	protected void copyDataFromMinion(EntityVampireMinion from) {
 		this.setOldVampireTexture(from.getOldVampireTexture());
 	}
@@ -102,7 +113,7 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 	}
 
 	@Override
-	public EntityCreature getRepresentingEntity() {
+	public @NonNull EntityCreature getRepresentingEntity() {
 		return this;
 	}
 
@@ -216,6 +227,10 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 		}
 	}
 	
-	protected abstract IMinionCommand getDefaultCommand();
+	/**
+	 * Has to return the command which is activated on default
+	 * @return
+	 */
+	protected abstract @NonNull IMinionCommand getDefaultCommand();
 
 }

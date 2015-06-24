@@ -10,6 +10,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 
+/**
+ * Attacks EntityMobs and EntityPlayers.
+ * Only attacks vampires, if his lord is a vampire lord
+ * @author Maxanier
+ *
+ */
 public class AttackHostileIncludingPlayer extends DefaultMinionCommand {
 
 	protected final IMinion minion;
@@ -22,6 +28,8 @@ public class AttackHostileIncludingPlayer extends DefaultMinionCommand {
 
 			@Override
 			public boolean isEntityApplicable(Entity entity) {
+				IMinion m=MinionHelper.getMinionFromEntity(entity);
+				if(MinionHelper.isLordSafe(m, AttackHostileIncludingPlayer.this.minion.getLord()))return false;
 				if(entity instanceof EntityVampire){
 					IMinionLord l=AttackHostileIncludingPlayer.this.minion.getLord();
 					if(l!=null&&l instanceof VampirePlayer&&((VampirePlayer)l).isVampireLord()){
