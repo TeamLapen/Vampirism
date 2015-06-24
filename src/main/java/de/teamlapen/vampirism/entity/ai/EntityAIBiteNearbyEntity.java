@@ -31,7 +31,7 @@ public class EntityAIBiteNearbyEntity extends EntityAIBase {
 	@Override
 	public boolean shouldExecute() {
 		if(vampire.getRNG().nextInt(10)==0){
-			List list=vampire.worldObj.getEntitiesWithinAABB(EntityCreature.class, vampire.boundingBox.expand(1, 1, 1));
+			List list=vampire.worldObj.getEntitiesWithinAABB(EntityCreature.class, vampire.boundingBox.expand(2, 2, 2));
 			for(Object o:list){
 				mob=VampireMob.get((EntityCreature) o);
 				if(mob.canBeBitten())return true;

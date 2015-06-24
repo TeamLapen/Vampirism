@@ -37,13 +37,15 @@ public class EntityAIWaitForBottle extends EntityAIBase {
 	}
 	
 	public void resetTask(){
-		MinionHelper.sendMessageToLord(minion, "stop beg bottle to "+lord);
 		lord=null;
+		if(!checkBottle()){
+			MinionHelper.sendMessageToLord(minion, "text.vampirism:thanks");
+		}
 	}
 	
 	@Override
 	public void startExecuting(){
-		MinionHelper.sendMessageToLord(minion, "start beg bottle to "+lord);
+		MinionHelper.sendMessageToLord(minion, "text.vampirism:need_empty_bottle");
 	}
 	
 	@Override

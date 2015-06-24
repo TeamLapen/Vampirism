@@ -31,7 +31,7 @@ public class CollectBloodCommand extends DefaultMinionCommand {
 	public CollectBloodCommand(int id,EntityRemoteVampireMinion m) {
 		super(id);
 		minion=m;
-		runAround=new EntityAIMoveAround(m.getRepresentingEntity(),1.0);
+		runAround=new EntityAIMoveAround(m.getRepresentingEntity(),1.0,false);
 		runToPlayer=new EntityAIMoveToLord.EntityAIMinionBringBottle(m);
 		bite=new EntityAIBiteNearbyEntity.EntityAIMinionCollectFromNearby(m);
 		moveToBiteable=new EntityAIMoveToBiteable(m);

@@ -2,15 +2,16 @@ package de.teamlapen.vampirism.entity;
 
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
-import net.minecraft.entity.ai.EntityAIFleeSun;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAILookIdle;
 import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
+import net.minecraft.entity.ai.EntityAIRestrictSun;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import de.teamlapen.vampirism.ModItems;
+import de.teamlapen.vampirism.entity.ai.EntityAIFleeSun;
 import de.teamlapen.vampirism.util.BALANCE;
 
 public class EntityVampire extends DefaultVampire {
@@ -20,6 +21,7 @@ public class EntityVampire extends DefaultVampire {
 		super(par1World);
 		// Avoids Vampire Hunters
 		this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityVampireHunter.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.2));
+		this.tasks.addTask(3, new EntityAIRestrictSun(this));
 		this.tasks.addTask(4, new EntityAIFleeSun(this,0.9F));
 		// Low priority tasks
 		this.tasks.addTask(6, new EntityAIMoveThroughVillage(this, 0.6, false));

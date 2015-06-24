@@ -44,7 +44,6 @@ public abstract class EntityAIMoveToLord extends EntityAIBase {
 	
 	@Override
 	public void startExecuting(){
-		MinionHelper.sendMessageToLord(minion, "move to "+lord);
 		minion.getRepresentingEntity().getNavigator().tryMoveToEntityLiving(lord, 1.0);
 		avoidWater=minion.getRepresentingEntity().getNavigator().getAvoidsWater();
 		minion.getRepresentingEntity().getNavigator().setAvoidsWater(false);
@@ -52,7 +51,6 @@ public abstract class EntityAIMoveToLord extends EntityAIBase {
 	
 	@Override
 	public void resetTask(){
-		MinionHelper.sendMessageToLord(minion, "stop move to "+lord);
 		lord=null;
 		minion.getRepresentingEntity().getNavigator().setAvoidsWater(avoidWater);
 	}

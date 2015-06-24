@@ -10,7 +10,7 @@ import org.eclipse.jdt.annotation.NonNull;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
-import net.minecraft.entity.ai.EntityAIFleeSun;
+import net.minecraft.entity.ai.EntityAIRestrictSun;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -19,6 +19,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
+import de.teamlapen.vampirism.entity.ai.EntityAIFleeSun;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
@@ -41,6 +42,7 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 	public EntityRemoteVampireMinion(World world) {
 		super(world);
 		this.tasks.addTask(2, new EntityAIAvoidEntity(this,EntityVampireHunter.class,MathHelper.floor_float(BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER*1.5F),1.1,1.4));
+		this.tasks.addTask(2, new EntityAIRestrictSun(this));
 		this.tasks.addTask(6, new EntityAIFleeSun(this, 1.1F));
 		commands=new ArrayList<IMinionCommand>();
 		commands.add(getActiveCommand());

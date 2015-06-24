@@ -131,16 +131,12 @@ public abstract class DefaultVampire extends EntityMob {
 	@Override
 	public void onLivingUpdate() {
 		if (!this.worldObj.isRemote) {
-			float brightness = this.getBrightness(1.0F);
-			boolean canSeeSky = this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
-			if (brightness > 0.5F) {
-				if (VampirismMod.isSunDamageTime(this.worldObj) && canSeeSky) {
+			if(isGettingSundamage()){
 					float dmg = sundamage;
 					if (this.isPotionActive(ModPotion.sunscreen)) {
 						dmg = dmg / 2;
 					}
 					this.attackEntityFrom(VampirismMod.sunDamage, dmg);
-				}
 			}
 		}
 		super.onLivingUpdate();
@@ -157,6 +153,17 @@ public abstract class DefaultVampire extends EntityMob {
 		this.playSound("mob.endermen.portal", 1.0F, 1.0F);
 
 		this.setDead();
+	}
+	
+	public boolean isGettingSundamage(){
+		float brightness = this.getBrightness(1.0F);
+		boolean canSeeSky = this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
+		if (brightness > 0.5F) {
+			if (VampirismMod.isSunDamageTime(this.worldObj) && canSeeSky) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 }

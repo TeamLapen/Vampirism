@@ -4,13 +4,17 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentStyle;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
 
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.Logger;
 
 public class MinionHelper {
 	
@@ -72,7 +76,13 @@ public class MinionHelper {
 	public static void sendMessageToLord(IMinion m,String message){
 		IMinionLord l=m.getLord();
 		if(l!=null&&l.getRepresentingEntity() instanceof EntityPlayer){
-			((EntityPlayer)l.getRepresentingEntity()).addChatComponentMessage(new ChatComponentTranslation(message));
+			ChatComponentTranslation c1=new ChatComponentTranslation("text.vampirism:minion");
+			c1.appendText(": ");
+			c1.getChatStyle().setColor((EnumChatFormatting.GREEN));
+			ChatComponentTranslation c2=new ChatComponentTranslation(message);
+			c1.appendSibling(c2);
+			c2.getChatStyle().setColor(EnumChatFormatting.WHITE);
+			((EntityPlayer)l.getRepresentingEntity()).addChatComponentMessage(c1);
 		}
 	}
 }

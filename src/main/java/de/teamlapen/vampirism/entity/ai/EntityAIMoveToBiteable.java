@@ -45,7 +45,6 @@ public class EntityAIMoveToBiteable extends EntityAIBase {
 	}
 	
 	public void startExecuting(){
-		testNotify("start "+target);
 		vampire.getNavigator().tryMoveToEntityLiving(target, 1.0);
 	}
 	
@@ -55,15 +54,7 @@ public class EntityAIMoveToBiteable extends EntityAIBase {
 	
 	public void resetTask(){
 		target=null;
-		timeout=80;
-		testNotify("stopped");
+		timeout=(vampire.getRNG().nextInt(5)==0?80:3);
 	}
-	
-    private void testNotify(String s){
-    	IMinion m=MinionHelper.getMinionFromEntity(vampire);
-    	if(m!=null){
-    		MinionHelper.sendMessageToLord(m,"MoveBiteable "+s);
-    	}
-    }
 
 }

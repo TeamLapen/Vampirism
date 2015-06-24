@@ -83,6 +83,8 @@ text.vampirism:lord=Lord
 text.vampirism:normal_vision=Normal Vision
 text.vampirism:night_vision=Night Vision
 text.vampirism:no_control_minion=You have no control over this minion
+text.vampirism:need_empty_bottle=My lord, I need an empty bottle to collect blood
+text.vampirism:thanks=Thanks
 
 #Skill
 skill.vampirism.bat_skill=Toggle Batmode

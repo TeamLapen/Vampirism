@@ -25,13 +25,22 @@ public class EntityAIMoveAround extends EntityAIBase {
 	private Vec3 oldStopPosition;
 	private double speed;
 	private int shortTrys;
+	private final boolean teleportAtDay;
 	
-	public EntityAIMoveAround(EntityCreature creature,double speed){
+	/**
+	 * MoveAroundAI
+	 * teleportAtDay Should be false for entities with restrictSunAI, otherwise it will teleport from tree to tree
+	 * @param creature
+	 * @param speed
+	 * @param teleportAtDay Determines if the entity is allowed to teleport at daytime. 
+	 */
+	public EntityAIMoveAround(EntityCreature creature,double speed,boolean teleportAtDay){
 		this.creature=creature;
 		this.setMutexBits(1);
 		this.speed=speed;
 		oldPosition=Vec3.createVectorHelper(creature.posX, creature.posY, creature.posZ);
 		oldStopPosition=oldPosition;
+		this.teleportAtDay=teleportAtDay;
 	}
 	
 	@Override
@@ -66,9 +75,7 @@ public class EntityAIMoveAround extends EntityAIBase {
      */
     public void startExecuting()
     {
-    	testNotify("start");
     	if(shortTrys>10){
-    		testNotify("stuck");
     		double d0 = creature.posX + (creature.getRNG().nextDouble() - 0.5D) * 15;
     		double d1 = creature.posY + (creature.getRNG().nextInt(15) - 15 * 0.5D);
     		double d2 = creature.posZ + (creature.getRNG().nextDouble() - 0.5D) * 15;
@@ -82,22 +89,14 @@ public class EntityAIMoveAround extends EntityAIBase {
     
     @Override
     public void resetTask(){
-    	testNotify("stop");
     	Vec3 s=Vec3.createVectorHelper(creature.posX, creature.posY, creature.posZ);
-    	if(oldStopPosition.squareDistanceTo(s)<36){
+    	if(oldStopPosition.squareDistanceTo(s)<42&&(teleportAtDay||!creature.worldObj.isDaytime())){
         	shortTrys++;
         }
         else if(shortTrys>0){
         	shortTrys--;
         }
     	oldStopPosition=s;
-    }
-    
-    private void testNotify(String s){
-    	IMinion m=MinionHelper.getMinionFromEntity(creature);
-    	if(m!=null){
-    		MinionHelper.sendMessageToLord(m,"MoveAround "+s);
-    	}
     }
 
 }
