@@ -26,25 +26,7 @@ public class AttackHostileExceptPlayer extends DefaultMinionCommand {
 		super(id);
 		minion=m;
 		
-		attack=new EntityAINearestAttackableTarget(m.getRepresentingEntity(),EntityMob.class,0,true,false,new IEntitySelector(){
-
-			@Override
-			public boolean isEntityApplicable(Entity entity) {
-				if(MinionHelper.isLordPlayer(MinionHelper.getMinionFromEntity(entity))){
-					return false;
-				}
-				if(entity instanceof EntityVampire){
-					IMinionLord l=minion.getLord();
-					if(l!=null&&l instanceof VampirePlayer&&((VampirePlayer)l).isVampireLord()){
-						return true;
-					}
-					return false;
-				}
-				
-				return true;
-			}
-			
-		});
+		attack=new EntityAINearestAttackableTarget(m.getRepresentingEntity(),EntityMob.class,0,true,false,MinionHelper.getEntitySelectorForMinion(minion, EntityMob.class, false, true));
 	}
 
 	@Override

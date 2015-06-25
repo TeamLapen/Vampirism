@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.UUID;
 
 import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -52,7 +53,7 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 
 	public EntityVampireMinion(World world) {
 		super(world);
-		this.setSize(0.3F, 0.6F);
+		this.setSize(0.5F, 1.1F);
 		this.func_110163_bv();
 		this.tasks.addTask(6, new EntityAIAttackOnCollide(this, EntityLivingBase.class, 1.0, false));
 		this.tasks.addTask(15, new EntityAIWander(this,0.7));
@@ -220,11 +221,36 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
-		super.readEntityFromNBT(nbt);
 		IMinionCommand command=this.getCommand(nbt.getInteger("command_id"));
 		if(command!=null){
 			this.activateMinionCommand(command);
 		}
+        if (nbt.hasKey("CustomName", 8) && nbt.getString("CustomName").length() > 0)
+        {
+            this.tryToSetName(nbt.getString("CustomName"),null);
+        }
+	}
+	
+	/**
+	 * Does not nothing, since minions should not be named normaly. Use {@link #tryToSetName(String, EntityPlayer)} instead
+	 */
+	@Override
+	public void setCustomNameTag(String s){
+		
+	}
+	
+	/**
+	 * Replaces {@link #setCustomNameTag(String)}.
+	 * @param name
+	 * @param player If this isn't null, checks if the player is the minions lord
+	 * @return success
+	 */
+	public boolean tryToSetName(String name,@Nullable EntityPlayer player){
+		if(player==null||MinionHelper.isLordSafe(this, player)){
+			super.setCustomNameTag(name);
+			return true;
+		}
+		return false;
 	}
 	
 	/**

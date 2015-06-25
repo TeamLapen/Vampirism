@@ -43,11 +43,12 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 		super(world);
 		this.tasks.addTask(2, new EntityAIAvoidEntity(this,EntityVampireHunter.class,MathHelper.floor_float(BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER*1.5F),1.1,1.4));
 		this.tasks.addTask(2, new EntityAIRestrictSun(this));
-		this.tasks.addTask(7, new EntityAIFleeSun(this, 1.1F));
+		this.tasks.addTask(7, new EntityAIFleeSun(this, 1.1F,true));
 		commands=new ArrayList<IMinionCommand>();
 		commands.add(getActiveCommand());
 		commands.add(new ConvertToSaveableCommand(1,this));
 		commands.add(new CollectBloodCommand(2,this));
+		commands.add(new DefendAreaCommand(3,this));
 	}
 
 	/**

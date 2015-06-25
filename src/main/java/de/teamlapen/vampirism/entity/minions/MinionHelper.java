@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.minions;
 
+import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -76,7 +77,14 @@ public class MinionHelper {
 	public static void sendMessageToLord(IMinion m,String message){
 		IMinionLord l=m.getLord();
 		if(l!=null&&l.getRepresentingEntity() instanceof EntityPlayer){
-			ChatComponentTranslation c1=new ChatComponentTranslation("text.vampirism:minion");
+			ChatComponentStyle c1;
+			if(m.getRepresentingEntity().hasCustomNameTag()){
+				c1=new ChatComponentText(m.getRepresentingEntity().getCustomNameTag());
+			}
+			else{
+				c1=new ChatComponentTranslation("text.vampirism:minion");
+			}
+
 			c1.appendText(": ");
 			c1.getChatStyle().setColor((EnumChatFormatting.GREEN));
 			ChatComponentTranslation c2=new ChatComponentTranslation(message);
@@ -84,5 +92,43 @@ public class MinionHelper {
 			c2.getChatStyle().setColor(EnumChatFormatting.WHITE);
 			((EntityPlayer)l.getRepresentingEntity()).addChatComponentMessage(c1);
 		}
+	}
+	
+	/**
+	 * Returns a new IEntitySelector for minion AI target tasks
+	 * @param minion The minion which the selector will be given
+	 * @param targetClass Class the target should have or extend.
+	 * @param selectPlayer If players and their minions should be selected as well. You do not need to set targetClass to EntityPlayer or any subclass of it.
+	 * @param excludeVampires If vampire npc should be excluded. Does not exclude vampires if the minions lord is a vampire lord
+	 * @return
+	 */
+	public static IEntitySelector getEntitySelectorForMinion(final IMinion minion,final Class<? extends Entity> targetClass,final boolean selectPlayer,final boolean excludeVampires){
+		return new IEntitySelector(){
+
+			@Override
+			public boolean isEntityApplicable(Entity entity) {
+				IMinion m=MinionHelper.getMinionFromEntity(entity);
+				if(selectPlayer){
+					if(entity instanceof EntityPlayer)return true;
+					if(MinionHelper.isLordSafe(m, minion.getLord())){
+						return false;
+					}
+
+				}
+				else{
+					if(entity instanceof EntityPlayer)return false;
+					if(MinionHelper.isLordPlayer(m))return false;
+				}
+				if(excludeVampires){
+					IMinionLord l=minion.getLord();
+					if(l!=null&&l instanceof VampirePlayer&&((VampirePlayer)l).isVampireLord()){
+						return true;
+					}
+					return false;
+				}
+				return targetClass.isAssignableFrom(entity.getClass());
+			}
+			
+		};
 	}
 }

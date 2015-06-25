@@ -24,26 +24,7 @@ public class AttackHostileIncludingPlayer extends DefaultMinionCommand {
 	public AttackHostileIncludingPlayer(int id,IMinion minion) {
 		super(id);
 		this.minion=minion;
-		attack=new EntityAINearestAttackableTarget(minion.getRepresentingEntity(),EntityLivingBase.class,0,true,false,new IEntitySelector(){
-
-			@Override
-			public boolean isEntityApplicable(Entity entity) {
-				IMinion m=MinionHelper.getMinionFromEntity(entity);
-				if(MinionHelper.isLordSafe(m, AttackHostileIncludingPlayer.this.minion.getLord()))return false;
-				if(entity instanceof EntityVampire){
-					IMinionLord l=AttackHostileIncludingPlayer.this.minion.getLord();
-					if(l!=null&&l instanceof VampirePlayer&&((VampirePlayer)l).isVampireLord()){
-						return true;
-					}
-					return false;
-				}
-				if(entity instanceof EntityMob||entity instanceof EntityPlayer){
-					return true;
-				}
-				return false;
-			}
-			
-		});
+		attack=new EntityAINearestAttackableTarget(minion.getRepresentingEntity(),EntityLivingBase.class,0,true,false,MinionHelper.getEntitySelectorForMinion(minion, EntityMob.class, true, true));
 	}
 
 	@Override

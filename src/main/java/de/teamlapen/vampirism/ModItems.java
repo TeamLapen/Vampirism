@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.item.ItemCoffin;
 import de.teamlapen.vampirism.item.ItemGemOfBinding;
 import de.teamlapen.vampirism.item.ItemHumanHeart;
 import de.teamlapen.vampirism.item.ItemLeechSword;
+import de.teamlapen.vampirism.item.ItemMinionNameTag;
 import de.teamlapen.vampirism.item.ItemPitchfork;
 import de.teamlapen.vampirism.item.ItemPureBlood;
 import de.teamlapen.vampirism.item.ItemSunscreen;
@@ -34,6 +35,7 @@ public class ModItems {
 		GameRegistry.registerItem(vampireLeggings, vampireLeggings.getRegisterItemName());
 		GameRegistry.registerItem(vampireBoots, vampireBoots.getRegisterItemName());
 		GameRegistry.registerItem(gemOfBinding, ItemGemOfBinding.name);
+		GameRegistry.registerItem(minionNameTag, ItemMinionNameTag.name);
 	}
 	
 	public static void registerRecipes(){
@@ -47,6 +49,7 @@ public class ModItems {
 		GameRegistry.addRecipe(new ItemStack(vampireChestplate,1),"YZY","YYY","YYY",'Y',Items.iron_ingot,'Z',new ItemStack(bloodBottle,1,ItemBloodBottle.MAX_BLOOD));
 		GameRegistry.addShapelessRecipe(new ItemStack(Items.glass_bottle),new ItemStack(bloodBottle,1,0));
 		GameRegistry.addRecipe(new ItemStack(gemOfBinding,1)," X ","YZY"," V ",'X',ModItems.humanHeart,'Y',new ItemStack(bloodBottle,1,ItemBloodBottle.MAX_BLOOD),'Z',Items.diamond,'V',ModBlocks.vampireFlower);
+		GameRegistry.addShapelessRecipe(new ItemStack(minionNameTag), Items.paper,ModBlocks.vampireFlower);
 	}
 	public static ItemSword leechSword = new ItemLeechSword();
 	public static ItemBloodBottle bloodBottle = new ItemBloodBottle();
@@ -63,4 +66,5 @@ public class ModItems {
 	public static ItemVampireArmor vampireLeggings = new ItemVampireArmor(2);
 	public static ItemVampireArmor vampireBoots = new ItemVampireArmor(3);
 	public static ItemGemOfBinding gemOfBinding = new ItemGemOfBinding();
+	public static ItemMinionNameTag minionNameTag = new ItemMinionNameTag();
 }

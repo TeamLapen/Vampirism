@@ -17,11 +17,25 @@ public class EntityAIFleeSun extends EntityAIBase {
 	private double shelterX;
 	private double shelterY;
 	private double shelterZ;
+	
+	private boolean restrictToHome;
+	
 	public EntityAIFleeSun(DefaultVampire vampire, double speed) {
+		this(vampire,speed,false);
+	}
+	
+	/**
+	 * 
+	 * @param vampire
+	 * @param speed
+	 * @param restrictToHome If the entitys home should be respected, if there is one.
+	 */
+	public EntityAIFleeSun(DefaultVampire vampire, double speed,boolean restrictToHome) {
 		this.vampire=vampire;
 		this.speed=speed;
 		this.world=vampire.worldObj;
 		this.setMutexBits(1);
+		this.restrictToHome=restrictToHome;
 	}
 	
 	public boolean shouldExecute()
@@ -66,6 +80,11 @@ public class EntityAIFleeSun extends EntityAIBase {
 
             if (!this.world.canBlockSeeTheSky(x, y, z))
             {
+            	if(restrictToHome&&vampire.hasHome()){
+            		if(!vampire.isWithinHomeDistance(x, y, z)){
+            			continue;
+            		}
+            	}
                 return Vec3.createVectorHelper((double)x, (double)y, (double)z);
             }
         }

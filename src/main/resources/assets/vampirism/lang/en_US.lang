@@ -25,6 +25,7 @@ item.vampirism:vampireArmor_helmet.name=Vampire's helmet
 item.vampirism:vampireArmor_leggings.name=Vampire's leggings
 item.vampirism:vampireArmor_boots.name=Vampire's boots
 item.vampirism:vampireArmor_chestplate.name=Vampire's chestplate
+item.vampirism:minionNameTag.name=Minion name tag
 
 # Blocks
 block.vampirism:bloodAltar.name=Blood Altar of Saturation
