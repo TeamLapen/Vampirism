@@ -108,6 +108,7 @@ minioncommand.vampirism.collectblood=Collect blood
 minioncommand.vampirism.defendlord=Defend lord
 minioncommand.vampirism.stayhere=Stay here
 minioncommand.vampirism.comeback=Come back (Remote minions)
+minioncommand.vampirism.justfollow=Just follow me
 
 #Config
 category.vampirism.balance=Balance settings

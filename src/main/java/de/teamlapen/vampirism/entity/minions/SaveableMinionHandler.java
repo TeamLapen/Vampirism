@@ -213,8 +213,24 @@ public class SaveableMinionHandler{
 
 	}
 	
+	/**
+	 * Notifies all SaveableVampireMinions
+	 * @param c
+	 */
+	public void notifyCall(Call c){
+		for(IMinion m:minions){
+			if(m instanceof EntitySaveableVampireMinion){
+				((EntitySaveableVampireMinion)m).onCall(c);
+			}
+		}
+	}
+	
 	@Override
 	public String toString(){
 		return TAG+" for "+lord.toString()+" with "+getMinionCount()+" minions";
+	}
+	
+	public static enum Call{
+		DEFEND_LORD,ATTACK_NON_PLAYER,ATTACK,FOLLOW;
 	}
 }

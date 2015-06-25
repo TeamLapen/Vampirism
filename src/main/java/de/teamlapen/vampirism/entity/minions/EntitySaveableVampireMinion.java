@@ -40,6 +40,7 @@ public class EntitySaveableVampireMinion extends EntityVampireMinion {
 		commands.add(getActiveCommand());
 		commands.add(new AttackHostileExceptPlayer(1,this));
 		commands.add(new AttackHostileIncludingPlayer(2,this));
+		commands.add(new JustFollowCommand(3));
 	}
 
 	@Override
@@ -166,6 +167,19 @@ public class EntitySaveableVampireMinion extends EntityVampireMinion {
 	@Override
 	protected @NonNull IMinionCommand getDefaultCommand() {
 		return new DefendLordCommand(0,this);
+	}
+	
+	public void onCall(SaveableMinionHandler.Call c){
+		switch(c){
+		case DEFEND_LORD:this.activateMinionCommand(this.getCommand(0));
+		break;
+		case ATTACK:this.activateMinionCommand(this.getCommand(2));
+		break;
+		case ATTACK_NON_PLAYER:this.activateMinionCommand(this.getCommand(1));
+		break;
+		case FOLLOW:this.activateMinionCommand(this.getCommand(3));
+		break;
+		}
 	}
 
 }

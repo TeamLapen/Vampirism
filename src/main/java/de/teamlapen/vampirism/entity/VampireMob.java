@@ -34,6 +34,7 @@ import de.teamlapen.vampirism.entity.minions.DefendLordCommand;
 import de.teamlapen.vampirism.entity.minions.IMinion;
 import de.teamlapen.vampirism.entity.minions.IMinionCommand;
 import de.teamlapen.vampirism.entity.minions.IMinionLord;
+import de.teamlapen.vampirism.entity.minions.JustFollowCommand;
 import de.teamlapen.vampirism.entity.minions.StayHereCommand;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.UpdateEntityPacket;
@@ -101,6 +102,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		type=(byte)0;
 		commands=new ArrayList<IMinionCommand>();
 		commands.add(new DefendLordCommand(0,this));
+		commands.add(new JustFollowCommand(1));
 	}
 	
 	public void activateMinionCommand(@Nullable IMinionCommand command){

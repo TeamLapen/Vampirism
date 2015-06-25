@@ -46,6 +46,7 @@ import de.teamlapen.vampirism.entity.minions.EntityVampireMinion;
 import de.teamlapen.vampirism.entity.minions.IMinion;
 import de.teamlapen.vampirism.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler;
+import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler.Call;
 import de.teamlapen.vampirism.entity.player.skills.DefaultSkill;
 import de.teamlapen.vampirism.entity.player.skills.ILastingSkill;
 import de.teamlapen.vampirism.entity.player.skills.ISkill;
@@ -279,6 +280,9 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	
 	@SideOnly(Side.CLIENT)
 	private final static ResourceLocation minionCallIconLoc = new ResourceLocation(REFERENCE.MODID + ":textures/gui/minion_call.png");
+	
+	@SideOnly(Side.CLIENT)
+	private final static ResourceLocation minionCommandIconLoc = new ResourceLocation(REFERENCE.MODID + ":textures/gui/minion_commands.png");
 
 	private final EntityPlayer player;
 
@@ -1252,6 +1256,10 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		List<IPieElement> list=new ArrayList<IPieElement>();
 		if(this.isVampireLord()){
 			list.add(new DefaultPieElement(1,"minioncommand.vampirism.comeback",0,0,minionCallIconLoc));
+			list.add(new DefaultPieElement(2,"minioncommand.vampirism.defendlord",64,0,minionCommandIconLoc));
+			list.add(new DefaultPieElement(3,"minioncommand.vampirism.attackhostilenoplayers",0,0,minionCommandIconLoc));
+			list.add(new DefaultPieElement(4,"minioncommand.vampirism.attackhostile",32,0,minionCommandIconLoc));
+			list.add(new DefaultPieElement(5,"minioncommand.vampirism.justfollow",32,0,minionCommandIconLoc));
 		}
 		return list;
 	}
@@ -1260,6 +1268,14 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		Logger.d(TAG, "Minion call %d received",i);
 		switch(i){
 		case 1:this.lastRemoteMinionComebackCall=System.currentTimeMillis();
+		break;
+		case 2:minionHandler.notifyCall(Call.DEFEND_LORD);
+		break;
+		case 3:minionHandler.notifyCall(Call.ATTACK_NON_PLAYER);
+		break;
+		case 4:minionHandler.notifyCall(Call.ATTACK);
+		break;
+		case 5:minionHandler.notifyCall(Call.FOLLOW);
 		break;
 		default:
 		}
