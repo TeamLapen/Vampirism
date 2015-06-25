@@ -19,7 +19,7 @@ import net.minecraft.world.World;
  * @author Maxanier
  *
  */
-public abstract class EntityAIMoveToLord extends EntityAIBase {
+public class EntityAIMoveToLord extends EntityAIBase {
 
 	private final IMinion minion;
 	private EntityLivingBase lord;
@@ -92,7 +92,9 @@ public abstract class EntityAIMoveToLord extends EntityAIBase {
 		return (!lord.isDead&&MinionHelper.isLordSafe(minion, lord));
 	}
 	
-	protected abstract boolean shouldMove(IMinion m);
+	protected boolean shouldMove(IMinion m){
+		return true;
+	}
 	
 	protected boolean canTeleport(){
 		return false;

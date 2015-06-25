@@ -73,11 +73,12 @@ public class InputEventPacket implements IMessage {
 							m.activateMinionCommand(m.getCommand(cid));
 						}
 						else{
-							//TODO do stuff
+							Logger.w(TAG, "Trying to activate command %s for enityid %s. But the entity cannot be found", cid,eid);
 						}
 					}
 					else{
-						
+						int id=Integer.parseInt(message.param);
+						VampirePlayer.get(ctx.getServerHandler().playerEntity).onCallActivated(id);
 					}
 				} catch (NumberFormatException e) {
 					Logger.e(TAG, "Receiving invalid param", e);

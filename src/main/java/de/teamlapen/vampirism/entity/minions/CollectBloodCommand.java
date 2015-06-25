@@ -55,11 +55,16 @@ public class CollectBloodCommand extends DefaultMinionCommand {
 
 	@Override
 	public void onDeactivated() {
-		ItemStack item=minion.getRepresentingEntity().getEquipmentInSlot(0);
-		if(item!=null&&(item.getItem().equals(ModItems.bloodBottle)||item.getItem().equals(Items.glass_bottle))){
-			minion.getRepresentingEntity().entityDropItem(item, 0.1F);
-			minion.getRepresentingEntity().setCurrentItemOrArmor(0, null);
+		IMinionLord l=minion.getLord();
+		
+		if(l!=null&&l.getRepresentingEntity().getDistanceSqToEntity(minion)<16){
+			ItemStack item=minion.getRepresentingEntity().getEquipmentInSlot(0);
+			if(item!=null&&(item.getItem().equals(ModItems.bloodBottle)||item.getItem().equals(Items.glass_bottle))){
+				minion.getRepresentingEntity().entityDropItem(item, 0.1F);
+				minion.getRepresentingEntity().setCurrentItemOrArmor(0, null);
+			}
 		}
+		
 		minion.tasks.removeTask(runToPlayer);
 		minion.tasks.removeTask(bite);
 		minion.tasks.removeTask(runAround);

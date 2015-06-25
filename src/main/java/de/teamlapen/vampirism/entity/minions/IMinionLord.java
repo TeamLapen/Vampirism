@@ -33,4 +33,6 @@ public interface IMinionLord {
 	public int getMaxMinionCount();
 	
 	public SaveableMinionHandler getMinionHandler();
+	
+	public long getLastComebackCall();
 }

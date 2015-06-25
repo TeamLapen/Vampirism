@@ -297,4 +297,9 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	        return 500;
 	}
 
+	@Override
+	public long getLastComebackCall() {
+		return 0;
+	}
+
 }

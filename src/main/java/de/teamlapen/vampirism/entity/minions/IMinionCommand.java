@@ -11,11 +11,6 @@ import de.teamlapen.vampirism.util.IPieElement;
  *
  */
 public interface IMinionCommand extends IPieElement{
-	/**
-	 * 
-	 * @return The assigned id, should be unique for one type of mob
-	 */
-	public int getId();
 	
 	public String getUnlocalizedName();
 	

@@ -15,6 +15,8 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import de.teamlapen.vampirism.ModItems;
@@ -37,6 +39,9 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 	private UUID lordId;
 	
 	private final ArrayList<IMinionCommand> commands;
+	private final static String KEY_COMEBACK="l_cbc";
+	private final IMinionCommand comeBack;
+	private long lastComeBackCall;
 	
 
 	public EntityRemoteVampireMinion(World world) {
@@ -49,6 +54,7 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 		commands.add(new ConvertToSaveableCommand(1,this));
 		commands.add(new CollectBloodCommand(2,this));
 		commands.add(new DefendAreaCommand(3,this));
+		comeBack=new ComeBackToPlayerCommand(-1,this);
 	}
 
 	/**
@@ -64,6 +70,7 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 			save.setLord(lord);
 		}
 		worldObj.spawnEntityInWorld(save);
+		this.dropEquipment(true,100);
 		this.setDead();
 	}
 
@@ -97,11 +104,13 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 		if (nbt.hasKey("LordUUIDMost")) {
 			this.lordId = new UUID(nbt.getLong("LordUUIDMost"), nbt.getLong("LordUUIDLeast"));
 		}
+		this.lastComeBackCall=nbt.getLong(KEY_COMEBACK);
 	}
 
 	@Override
 	public void setLord(IMinionLord lord) {
-		if (lord != null && lord.getRepresentingEntity() instanceof EntityPlayer) {
+		if (lord != null && lord instanceof VampirePlayer) {
+			this.lastComeBackCall=((VampirePlayer)lord).getLastComebackCall();
 			this.lordId = lord.getThePersistentID();
 		} else {
 			Logger.w(TAG, "Only players can have non saveable minion. This(%s) cannot be controlled by %s", this, lord);
@@ -121,6 +130,7 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 			nbt.setLong("LordUUIDMost", this.lordId.getMostSignificantBits());
 			nbt.setLong("LordUUIDLeast", this.lordId.getLeastSignificantBits());
 		}
+		nbt.setLong(KEY_COMEBACK, lastComeBackCall);
 	}
 
 	@Override
@@ -140,6 +150,20 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 	public IMinionCommand getCommand(int id) {
 		if(id<commands.size())return commands.get(id);
 		return null;
+	}
+	
+	@Override
+	public void onLivingUpdate(){
+		super.onLivingUpdate();
+		IMinionLord l=this.getLord();
+		if(l!=null&&l instanceof VampirePlayer){
+			long lc=((VampirePlayer)l).getLastComebackCall();
+			if(lc>lastComeBackCall){
+				this.activateMinionCommand(comeBack);
+				this.lastComeBackCall=lc;
+				MinionHelper.sendMessageToLord(this, "text.vampirism.coming_back");
+			}
+		}
 	}
 	
 	/**
@@ -188,6 +212,11 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 	@Override
 	protected @NonNull IMinionCommand getDefaultCommand() {
 		return new StayHereCommand(0,this);
+	}
+	
+	@Override
+	public void onDeath(DamageSource src){
+		MinionHelper.sendMessageToLord(this, "text.vampirism.sorry_i_died_while_doing","\\: ",getActiveCommand().getUnlocalizedName());
 	}
 
 }

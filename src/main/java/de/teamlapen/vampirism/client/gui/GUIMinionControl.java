@@ -25,7 +25,6 @@ public class GUIMinionControl extends GUIPieMenu {
 
 	public GUIMinionControl() {
 		super(2298478591L, "minionControl");
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
@@ -35,7 +34,7 @@ public class GUIMinionControl extends GUIPieMenu {
 	
 	@Override
 	protected void onElementSelected(int i) {
-		int id = ((IMinionCommand) elements.get(i)).getId();
+		int id = (elements.get(i)).getId();
 		if (id >= 0) {
 			VampirismMod.modChannel.sendToServer(new InputEventPacket(InputEventPacket.MINION_CONTROL, id+(minion==null?"":","+minion.getRepresentingEntity().getEntityId())));
 		}
@@ -51,12 +50,11 @@ public class GUIMinionControl extends GUIPieMenu {
 		
 		if(minion!=null){
 			elements.addAll(minion.getAvailableCommands());
-			elements.add(new FakeCommand());
 		}
 		else{
-			//TODO add general commands
+			elements.addAll(player.getAvailableMinionCalls());
 		}
-		
+		elements.add(new FakeCommand());
 
 	}
 	

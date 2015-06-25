@@ -72,9 +72,10 @@ public class MinionHelper {
 	/**
 	 * Sends a translated message to the lord if he exists and is a player
 	 * @param m
-	 * @param message
+	 * @param message Each message is handled as ChatComponentTranslation unless it starts with '\'
 	 */
-	public static void sendMessageToLord(IMinion m,String message){
+	public static void sendMessageToLord(IMinion m,String... message){
+		if(message==null||message.length<1)return;
 		IMinionLord l=m.getLord();
 		if(l!=null&&l.getRepresentingEntity() instanceof EntityPlayer){
 			ChatComponentStyle c1;
@@ -87,7 +88,22 @@ public class MinionHelper {
 
 			c1.appendText(": ");
 			c1.getChatStyle().setColor((EnumChatFormatting.GREEN));
-			ChatComponentTranslation c2=new ChatComponentTranslation(message);
+			ChatComponentStyle c2;
+			if(message[0].startsWith("\\")){
+				c2=new ChatComponentText(message[0].replace("\\", ""));
+			}
+			else{
+				c2=new ChatComponentTranslation(message[0]);
+			}
+			for(int i=1;i<message.length;i++){
+				if(message[i].startsWith("\\")){
+					c2.appendSibling(new ChatComponentText(message[i].replace("\\", "")));
+				}
+				else{
+					c2.appendSibling(new ChatComponentTranslation(message[i]));
+				}
+				
+			}
 			c1.appendSibling(c2);
 			c2.getChatStyle().setColor(EnumChatFormatting.WHITE);
 			((EntityPlayer)l.getRepresentingEntity()).addChatComponentMessage(c1);

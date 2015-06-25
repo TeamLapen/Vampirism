@@ -25,6 +25,7 @@ import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -57,7 +58,9 @@ import de.teamlapen.vampirism.network.UpdateEntityPacket;
 import de.teamlapen.vampirism.network.UpdateEntityPacket.ISyncableExtendedProperties;
 import de.teamlapen.vampirism.proxy.CommonProxy;
 import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.DefaultPieElement;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.IPieElement;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
@@ -269,8 +272,13 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	public final static int MAXBLOOD = 20;
 
 	private static final String KEY_VAMPIRE_LORD = "vampire_lord";
+	
+	private static final String KEY_COMEBACK_CALL = "l_cbc";
 
 	private static final String KEY_VISION = "vision";
+	
+	@SideOnly(Side.CLIENT)
+	private final static ResourceLocation minionCallIconLoc = new ResourceLocation(REFERENCE.MODID + ":textures/gui/minion_call.png");
 
 	private final EntityPlayer player;
 
@@ -317,6 +325,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	private boolean batTransformed = false;
 
 	private int ticksInSun = 0;
+	
+	private long lastRemoteMinionComebackCall=0;
 
 	private NBTTagCompound extraData;
 
@@ -517,6 +527,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		if (properties.hasKey(KEY_EXTRADATA)) {
 			extraData = properties.getCompoundTag(KEY_EXTRADATA);
 		}
+		this.lastRemoteMinionComebackCall=properties.getLong(KEY_COMEBACK_CALL);
 
 		this.bloodStats.readNBT(properties);
 		PlayerModifiers.applyModifiers(level, player);
@@ -850,6 +861,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		properties.setBoolean(KEY_VAMPIRE_LORD, isVampireLord());
 		properties.setTag(KEY_EXTRADATA, extraData);
 		properties.setTag(KEY_MINIONS, minionHandler.getMinionsToSave());
+		properties.setLong(KEY_COMEBACK_CALL, lastRemoteMinionComebackCall);
 		this.bloodStats.writeNBT(properties);
 		compound.setTag(EXT_PROP_NAME, properties);
 
@@ -1233,5 +1245,28 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	public void onChangedDimension(int from,int to){
 				Logger.d(TAG, "Changed from "+from+" to "+to);
 				minionHandler.teleportMinionsToLord();
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public List<IPieElement> getAvailableMinionCalls(){
+		List<IPieElement> list=new ArrayList<IPieElement>();
+		if(this.isVampireLord()){
+			list.add(new DefaultPieElement(1,"minioncommand.vampirism.comeback",0,0,minionCallIconLoc));
+		}
+		return list;
+	}
+	
+	public void onCallActivated(int i){
+		Logger.d(TAG, "Minion call %d received",i);
+		switch(i){
+		case 1:this.lastRemoteMinionComebackCall=System.currentTimeMillis();
+		break;
+		default:
+		}
+	}
+
+	@Override
+	public long getLastComebackCall() {
+		return this.lastRemoteMinionComebackCall;
 	}
 }

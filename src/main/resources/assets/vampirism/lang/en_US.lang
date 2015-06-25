@@ -86,6 +86,8 @@ text.vampirism:night_vision=Night Vision
 text.vampirism:no_control_minion=You have no control over this minion
 text.vampirism:need_empty_bottle=My lord, I need an empty bottle to collect blood
 text.vampirism:thanks=Thanks
+text.vampirism.coming_back=I'm coming back, my lord
+text.vampirism.sorry_i_died_while_doing=My lord, I'm sorry but I died while fulfilling your task
 
 #Skill
 skill.vampirism.bat_skill=Toggle Batmode
@@ -105,6 +107,7 @@ minioncommand.vampirism.attackhostile=Attack hostile including player
 minioncommand.vampirism.collectblood=Collect blood
 minioncommand.vampirism.defendlord=Defend lord
 minioncommand.vampirism.stayhere=Stay here
+minioncommand.vampirism.comeback=Come back (Remote minions)
 
 #Config
 category.vampirism.balance=Balance settings
