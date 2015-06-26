@@ -45,6 +45,7 @@ import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.minions.EntityVampireMinion;
 import de.teamlapen.vampirism.entity.minions.IMinion;
 import de.teamlapen.vampirism.entity.minions.IMinionLord;
+import de.teamlapen.vampirism.entity.minions.MinionHelper;
 import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler;
 import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler.Call;
 import de.teamlapen.vampirism.entity.player.skills.DefaultSkill;
@@ -421,7 +422,10 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		if(this.minionTarget!=null){
 			return minionTarget;
 		}
-		return player.getLastAttacker();
+		if(player.getLastAttackerTime()<player.ticksExisted+200){
+			return player.getLastAttacker();
+		}
+		return null;
 	}
 
 	@Override
@@ -1270,12 +1274,18 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		case 1:this.lastRemoteMinionComebackCall=System.currentTimeMillis();
 		break;
 		case 2:minionHandler.notifyCall(Call.DEFEND_LORD);
+		for(VampireMob m:MinionHelper.getNearMobMinions(this, 20)){
+			m.activateMinionCommand(m.getCommand(0));
+		}
 		break;
 		case 3:minionHandler.notifyCall(Call.ATTACK_NON_PLAYER);
 		break;
 		case 4:minionHandler.notifyCall(Call.ATTACK);
 		break;
 		case 5:minionHandler.notifyCall(Call.FOLLOW);
+		for(VampireMob m:MinionHelper.getNearMobMinions(this, 20)){
+			m.activateMinionCommand(m.getCommand(1));
+		}
 		break;
 		default:
 		}

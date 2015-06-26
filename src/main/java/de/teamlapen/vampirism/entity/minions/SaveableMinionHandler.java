@@ -152,7 +152,6 @@ public class SaveableMinionHandler{
 			Logger.d(TAG, "Empty minion list to load");
 			return;
 		}
-		Logger.d(TAG, "Loading "+list.tagCount()+" minions");
 		loadedMinions = new ArrayList<IMinion>();
 		for(int i=0;i<list.tagCount();i++){
 			NBTTagCompound nbttagcompound = list.getCompoundTagAt(i);

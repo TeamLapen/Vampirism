@@ -1,5 +1,8 @@
 package de.teamlapen.vampirism.entity.minions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -13,6 +16,7 @@ import net.minecraft.util.EnumChatFormatting;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
+import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Logger;
@@ -125,10 +129,10 @@ public class MinionHelper {
 			public boolean isEntityApplicable(Entity entity) {
 				IMinion m=MinionHelper.getMinionFromEntity(entity);
 				if(selectPlayer){
-					if(entity instanceof EntityPlayer)return true;
 					if(MinionHelper.isLordSafe(m, minion.getLord())){
 						return false;
 					}
+					if(entity instanceof EntityPlayer)return true;
 
 				}
 				else{
@@ -136,15 +140,36 @@ public class MinionHelper {
 					if(MinionHelper.isLordPlayer(m))return false;
 				}
 				if(excludeVampires){
-					IMinionLord l=minion.getLord();
-					if(l!=null&&l instanceof VampirePlayer&&((VampirePlayer)l).isVampireLord()){
-						return true;
+					if(entity instanceof EntityVampire){
+						IMinionLord l=minion.getLord();
+						if(l!=null&&l instanceof VampirePlayer&&((VampirePlayer)l).isVampireLord()){
+							return true;
+						}
+						return false;
 					}
-					return false;
+					
 				}
 				return targetClass.isAssignableFrom(entity.getClass());
 			}
 			
 		};
+	}
+	
+	/**
+	 * Returns a list of VampireMobs which are minions of the given lord
+	 * @param lord
+	 * @param distance
+	 * @return
+	 */
+	public static List<VampireMob> getNearMobMinions(IMinionLord lord, int distance){
+		List<VampireMob> list= new ArrayList<VampireMob>();
+		List list2=lord.getRepresentingEntity().worldObj.getEntitiesWithinAABB(EntityCreature.class, lord.getRepresentingEntity().boundingBox.expand(distance, distance, distance));
+		for(Object o:list2){
+			VampireMob m=VampireMob.get((EntityCreature) o);
+			if(m.isMinion()&&isLordSafe(m,lord)){
+				list.add(m);
+			}
+		}
+		return list;
 	}
 }

@@ -18,10 +18,6 @@ public class EntityAIFollowBoss extends EntityAIBase {
 	 * Min dist for execution
 	 */
 	private final int MINDIST = 200;
-	/**
-	 * Max dist for execution
-	 */
-	private final int MAXDIST = 600;
 	
 	/**
 	 * Min dist for teleport
@@ -44,7 +40,7 @@ public class EntityAIFollowBoss extends EntityAIBase {
 			return false;
 		} else {
 			double d0 = this.boss.getTheDistanceSquared(minion.getRepresentingEntity());
-			return d0 >= MINDIST && d0 <= MAXDIST;
+			return d0 >= MINDIST;
 		}
 	}
 
@@ -66,7 +62,7 @@ public class EntityAIFollowBoss extends EntityAIBase {
 			return false;
 		} else {
 			double d0 = this.boss.getTheDistanceSquared(minion.getRepresentingEntity());
-			return d0 >= MINDIST && d0 <= MAXDIST;
+			return d0 >= MINDIST;
 		}
 	}
 
