@@ -3,7 +3,9 @@ entity.vampirism.vampireHunter.name=Vampire Hunter
 entity.vampirism.vampire.name=Vampire
 entity.vampirism.ghost.name=Ghost
 entity.vampirism.vampireLord.name=Vampire Lord
-entity.vampirism.vampireMinion.name=Vampire Minion
+entity.vampirism.vampireMinionR.name=Vampire Minion
+entity.vampirism.vampireMinionS.name=Vampire Minion
+entity.vampirism.blinding_bat.name=Bat
 entity.vampirism.dracula.name=Dracula
 entity.vampirism.dead_mob.name=Dead mob
 
@@ -23,6 +25,7 @@ item.vampirism:vampireArmor_helmet.name=Vampire's helmet
 item.vampirism:vampireArmor_leggings.name=Vampire's leggings
 item.vampirism:vampireArmor_boots.name=Vampire's boots
 item.vampirism:vampireArmor_chestplate.name=Vampire's chestplate
+item.vampirism:minionNameTag.name=Minion name tag
 
 # Blocks
 block.vampirism:bloodAltar.name=Blood Altar of Saturation
@@ -80,6 +83,11 @@ text.vampirism:minion=Minion
 text.vampirism:lord=Lord
 text.vampirism:normal_vision=Normal Vision
 text.vampirism:night_vision=Night Vision
+text.vampirism:no_control_minion=You have no control over this minion
+text.vampirism:need_empty_bottle=My lord, I need an empty bottle to collect blood
+text.vampirism:thanks=Thanks
+text.vampirism.coming_back=I'm coming back, my lord
+text.vampirism.sorry_i_died_while_doing=My lord, I'm sorry but I died while fulfilling your task
 
 #Skill
 skill.vampirism.bat_skill=Toggle Batmode
@@ -92,6 +100,15 @@ skill.vampirism.revive_fallen=Revive Fallen
 skill.vampirism.summon_bats=Summon Bats
 skill.vampirism.teleport=Teleport
 skill.vampirism.vampire_rage=Vampire Rage
+
+#Minion command
+minioncommand.vampirism.attackhostilenoplayers=Attack hostile
+minioncommand.vampirism.attackhostile=Attack hostile including player
+minioncommand.vampirism.collectblood=Collect blood
+minioncommand.vampirism.defendlord=Defend lord
+minioncommand.vampirism.stayhere=Stay here
+minioncommand.vampirism.comeback=Come back (Remote minions)
+minioncommand.vampirism.justfollow=Just follow me
 
 #Config
 category.vampirism.balance=Balance settings

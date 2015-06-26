@@ -1,23 +1,17 @@
 package de.teamlapen.vampirism;
 
-import java.util.HashMap;
 import java.util.List;
 
-import cpw.mods.fml.common.registry.EntityRegistry;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.Potion;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentText;
-import de.teamlapen.vampirism.coremod.CoreHandler;
-import de.teamlapen.vampirism.entity.EntityDeadMob;
-import de.teamlapen.vampirism.entity.EntityVampireHunter;
-import de.teamlapen.vampirism.entity.ai.IMinion;
+import de.teamlapen.vampirism.entity.minions.EntityRemoteVampireMinion;
+import de.teamlapen.vampirism.entity.minions.EntitySaveableVampireMinion;
+import de.teamlapen.vampirism.entity.minions.EntityVampireMinion;
+import de.teamlapen.vampirism.entity.minions.IMinion;
+import de.teamlapen.vampirism.entity.minions.MinionHelper;
+import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
@@ -103,6 +97,19 @@ public class TestCommand implements ICommand {
 					}
 					sendMessage(sender,vampire.getMinionHandler().getMinionCount()+"/"+vampire.getMaxMinionCount());
 					return;
+				}
+				if("cminions".equals(param[0])){
+					List<IMinion> list=(List<IMinion>) vampire.getMinionHandler().getMinionListForDebug().clone();
+					for(IMinion m:list){
+						if(m instanceof EntityVampireMinion){
+							if(m instanceof EntitySaveableVampireMinion){
+								((EntitySaveableVampireMinion)m).convertToRemote();
+							}
+							else if(m instanceof EntityRemoteVampireMinion){
+								((EntityRemoteVampireMinion)m).convertToSaveable();
+							}
+						}
+					}
 				}
 				if("target".equals(param[0])){
 						sendMessage(sender,Helper.entityToString(vampire.getMinionTarget()));

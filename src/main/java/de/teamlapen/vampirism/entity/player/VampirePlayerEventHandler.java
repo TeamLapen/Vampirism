@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity.player;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -14,10 +13,12 @@ import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.skills.Skills;
 import de.teamlapen.vampirism.network.RequestEntityUpdatePacket;
-import de.teamlapen.vampirism.util.Logger;
 
 public class VampirePlayerEventHandler {
 
@@ -107,6 +108,21 @@ public class VampirePlayerEventHandler {
 	@SubscribeEvent
 	public void onPlayerClone(PlayerEvent.Clone event){
 		VampirePlayer.get(event.entityPlayer).copyFrom(event.original);
+	}
+	
+	@SubscribeEvent
+	public void onPlayerLoggedIn(PlayerLoggedInEvent e){
+			VampirePlayer.get(e.player).onPlayerLoggedIn();
+	}
+		
+	@SubscribeEvent
+	public void onPlayerLoggedOut(PlayerLoggedOutEvent e){
+			VampirePlayer.get(e.player).onPlayerLoggedOut();
+	}
+		
+	@SubscribeEvent
+	public void onPlayerChangedDimension(PlayerChangedDimensionEvent e){
+			VampirePlayer.get(e.player).onChangedDimension(e.fromDim, e.toDim);
 	}
 
 }

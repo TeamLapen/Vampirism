@@ -19,11 +19,6 @@ public interface ISkill extends IPieElement {
 	 */
 	public int getCooldown();
 
-	/**
-	 * @return The assigned Id
-	 */
-	public int getId();
-
 	
 	/**
 	 * @return -1 disabled, 0 level to low, -2 other reason, 1 can be used

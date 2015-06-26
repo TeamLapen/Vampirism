@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.entity.ai;
+package de.teamlapen.vampirism.entity.minions;
 
 import java.util.UUID;
 
@@ -17,7 +17,7 @@ public interface IMinionLord {
 	 * 
 	 * @return
 	 */
-	public Entity getRepresentingEntity();
+	public EntityLivingBase getRepresentingEntity();
 
 	public double getTheDistanceSquared(Entity e);
 
@@ -32,5 +32,7 @@ public interface IMinionLord {
 	
 	public int getMaxMinionCount();
 	
-	public MinionHandler getMinionHandler();
+	public SaveableMinionHandler getMinionHandler();
+	
+	public long getLastComebackCall();
 }

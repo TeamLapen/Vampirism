@@ -1,8 +1,14 @@
 package de.teamlapen.vampirism.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
@@ -24,8 +30,12 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.ai.EntityAIModifier;
-import de.teamlapen.vampirism.entity.ai.IMinion;
-import de.teamlapen.vampirism.entity.ai.IMinionLord;
+import de.teamlapen.vampirism.entity.minions.DefendLordCommand;
+import de.teamlapen.vampirism.entity.minions.IMinion;
+import de.teamlapen.vampirism.entity.minions.IMinionCommand;
+import de.teamlapen.vampirism.entity.minions.IMinionLord;
+import de.teamlapen.vampirism.entity.minions.JustFollowCommand;
+import de.teamlapen.vampirism.entity.minions.StayHereCommand;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.UpdateEntityPacket;
 import de.teamlapen.vampirism.network.UpdateEntityPacket.ISyncableExtendedProperties;
@@ -69,6 +79,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 
 	private final EntityCreature entity;
 	public final static String EXT_PROP_NAME = "VampireMob";
+	private final static String TAG = "VampireMob";
 
 	private final String KEY_TYPE = "type";
 
@@ -76,15 +87,36 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	private final int blood;
 	private byte type;
 
-	private final static int MAX_SEARCH_TIME = 100;
 	private UUID lordId = null;
-	protected IMinionLord lord;
-	private int lookForLordTimer = 0;
+	
+	private IMinionCommand activeCommand = null;
+	
+	@SideOnly(Side.CLIENT)
+	private int activeCommandId;
+	
+	private final ArrayList<IMinionCommand> commands;
 
 	public VampireMob(EntityCreature mob) {
 		entity = mob;
 		blood = getMaxBloodAmount(mob);
 		type=(byte)0;
+		commands=new ArrayList<IMinionCommand>();
+		commands.add(new DefendLordCommand(0,this));
+		commands.add(new JustFollowCommand(1));
+	}
+	
+	public void activateMinionCommand(@Nullable IMinionCommand command){
+		if(command==null)return;
+		if(!this.isMinion()){
+			Logger.w(TAG, "%s is no minions and can therby not execute this %s minion command", this,command);
+			return;
+		}
+		if(activeCommand!=null){
+			activeCommand.onDeactivated();
+		}
+		activeCommand=command;
+		activeCommand.onActivated();
+		
 	}
 
 	/**
@@ -145,7 +177,8 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		if (!isMinion()) {
 			Logger.w("VampireMob", "Trying to get lord, but mob is no minion");
 		}
-		return lord;
+		EntityPlayer player=(lordId == null ? null : entity.worldObj.func_152378_a(lordId));
+		return (player==null?null:VampirePlayer.get(player));
 	}
 
 	@Override
@@ -169,45 +202,52 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	public void loadNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
 		if (properties != null) {
-			this.loadUpdateFromNBT(properties);
+			if(properties.hasKey(KEY_TYPE)){
+				type=properties.getByte(KEY_TYPE);
+			}
+			IMinionCommand command=null;
 			if (isMinion()) {
 				if (properties.hasKey("BossUUIDMost")) {
 					this.lordId = new UUID(properties.getLong("BossUUIDMost"), properties.getLong("BossUUIDLeast"));
+					Logger.d(TAG, "Mob %s is minion with lord %s", entity,lordId);
+					command=this.getCommand(properties.getInteger("command_id"));
+					if(command==null){
+						command=this.getCommand(0);
+					}
 				}
+				else{
+					Logger.w(TAG, "Mob %s is a minion but does not have a lord uuid saved (%s). This should only happen once", entity,properties);
+					if(isVampire()){
+						type=2;
+					}
+					else{
+						type=0;
+					}
+				}
+			}
+			
+			if(isMinion()){
+				this.setMinion();
+				this.activateMinionCommand(command);
+			}
+			if(isVampire()){
+				this.setVampire();
 			}
 		}
 
 	}
 
-	protected void lookForLord() {
-		List<EntityLivingBase> list = entity.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, entity.boundingBox.expand(15, 10, 15));
-		for (EntityLivingBase e : list) {
-			if (e.getPersistentID().equals(lordId)) {
-				if (e instanceof IMinionLord) {
-					this.setLord((IMinionLord) e);
-					lookForLordTimer = 0;
-				} else if (e instanceof EntityPlayer) {
-					this.setLord(VampirePlayer.get((EntityPlayer) e));
-					lookForLordTimer = 0;
-				} else {
-					Logger.w("VampireMob", "Found lord with UUID " + lordId + " but it isn't a Minion Lord");
-					lordId = null;
-					lord = null;
-					lookForLordTimer = 0;
-				}
-
-				break;
-			}
-		}
-	}
 
 	public boolean lowEnoughHealth() {
 		return (entity.getHealth() / entity.getMaxHealth()) <= BALANCE.SUCK_BLOOD_HEALTH_REQUIREMENT;
 	}
 
 	public void makeMinion(IMinionLord lord) {
-		setMinion();
 		this.setLord(lord);
+		setMinion();
+		this.activateMinionCommand(this.getCommand(0));
+		entity.func_110163_bv();
+		this.sync();
 	}
 
 	private boolean makeVampire() {
@@ -218,30 +258,13 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 
 		entity.addPotionEffect(new PotionEffect(Potion.weakness.id, 200));
 		entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100));
+		this.sync();
 		return true;
 	}
 
 	public void onUpdate() {
 		if (isMinion() && !entity.worldObj.isRemote) {
-			if (lord == null) {
-				if (lordId != null) {
-					lookForLord();
-				}
-				if (lord == null) {
-					lookForLordTimer++;
-				}
-				if (lookForLordTimer > MAX_SEARCH_TIME) {
-					entity.attackEntityFrom(DamageSource.generic, 5);
-				}
-
-			} else if (!lord.isTheEntityAlive()) {
-				lord = null;
-				lordId = null;
-			} else if (lord.getTheDistanceSquared(entity) > 1000 && !entity.worldObj.isRemote) {
-				if (entity.worldObj.rand.nextInt(80) == 0) {
-					entity.attackEntityFrom(DamageSource.generic, 3);
-				}
-			}
+			IMinionLord lord=getLord();
 			if (lord != null) {
 				if (lord.getRepresentingEntity().equals(entity.getAttackTarget())) {
 					entity.setAttackTarget(lord.getMinionTarget());
@@ -256,11 +279,12 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	@Override
 	public void saveNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = new NBTTagCompound();
-		this.writeFullUpdateToNBT(properties);
+		properties.setByte(KEY_TYPE, type);
 		if (isMinion()) {
-			if (this.lordId != null) {
-				properties.setLong("BossUUIDMost", this.lordId.getMostSignificantBits());
-				properties.setLong("BossUUIDLeast", this.lordId.getLeastSignificantBits());
+			properties.setLong("BossUUIDMost", this.lordId.getMostSignificantBits());
+			properties.setLong("BossUUIDLeast", this.lordId.getLeastSignificantBits());
+			if(activeCommand!=null){
+				properties.setInteger("command_id", activeCommand.getId());
 			}
 		}
 		compound.setTag(EXT_PROP_NAME, properties);
@@ -269,10 +293,14 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 
 	@Override
 	public void setLord(IMinionLord b) {
-		if (!b.equals(lord)) {
-			this.setLordId(b.getThePersistentID());
-			b.getMinionHandler().registerMinion(this, true);
-			lord = b;
+		if(b!=null){
+			if(b.getRepresentingEntity() instanceof EntityPlayer){
+				this.setLordId(b.getThePersistentID());
+			}
+			else{
+				Logger.w("VampireMob", "Only players can have non saveable minion. This(%s) cannot be controlled by %s", this,b);
+			}
+
 		}
 
 	}
@@ -280,35 +308,51 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	private void setLordId(UUID id) {
 		if (!id.equals(lordId)) {
 			lordId = id;
-			lord = null;
-			lookForLordTimer = 0;
 		}
 
 	}
 
+	/**
+	 * Sets the minion bit and adds minion specific tasks. Does not sync.
+	 * This clears all AI tasks, so make sure to add any new tasks after this.
+	 */
 	private void setMinion() {
 		type = (byte) (type | 2);
 		EntityAIModifier.makeMinion(this, entity);
-		this.sync();
 	}
 
+	/**
+	 * Sets the vampire bit and adds vampire specific tasks. Does not sync.
+	 */
 	private void setVampire() {
 		type = (byte) (type | 1);
 		EntityAIModifier.addVampireMobTasks(entity);
-		this.sync();
 	}
 
+	@SideOnly(Side.CLIENT)
 	@Override
 	public void loadUpdateFromNBT(NBTTagCompound nbt) {
 		if(nbt.hasKey(KEY_TYPE)){
 			type=nbt.getByte(KEY_TYPE);
 		}
-		
+		if (nbt.hasKey("BossUUIDMost")) {
+			this.lordId = new UUID(nbt.getLong("BossUUIDMost"), nbt.getLong("BossUUIDLeast"));
+		}
+		if(nbt.hasKey("active_command_id")){
+			this.activeCommandId=nbt.getInteger("active_command_id");
+		}		
 	}
 
 	@Override
 	public void writeFullUpdateToNBT(NBTTagCompound nbt) {
 		nbt.setByte(KEY_TYPE, type);
+		if(activeCommand!=null){
+			nbt.setInteger("active_command_id", activeCommand.getId());
+		}
+		if(isMinion()){
+			nbt.setLong("BossUUIDMost", this.lordId.getMostSignificantBits());
+			nbt.setLong("BossUUIDLeast", this.lordId.getLeastSignificantBits());
+		}
 	}
 
 	@Override
@@ -332,6 +376,27 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 			return blood;
 		}
 		return -1;
+	}
+
+	@Override
+	public boolean shouldBeSavedWithLord() {
+		return false;
+	}
+	
+	@Override
+	public String toString(){
+		return String.format(TAG+" of %s minion(%b) vampire(%b)", entity,isMinion(),isVampire());
+	}
+
+	@Override
+	public ArrayList<IMinionCommand> getAvailableCommands() {
+		return commands;
+	}
+
+	@Override
+	public IMinionCommand getCommand(int id) {
+		if(id<commands.size())return commands.get(id);
+		return null;
 	}
 
 }

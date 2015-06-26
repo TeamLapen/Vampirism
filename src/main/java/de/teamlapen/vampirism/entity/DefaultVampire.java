@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import net.minecraft.block.Block;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -48,9 +49,9 @@ public abstract class DefaultVampire extends EntityMob {
 
 		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(1, new EntityAIBreakDoor(this));
-		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.1, false));
-		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityVampireHunter.class, 1.0, true));
-		this.tasks.addTask(3, new EntityAIAttackOnCollide(this, EntityVillager.class, 0.9, true));
+		this.tasks.addTask(5, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.1, false));
+		this.tasks.addTask(5, new EntityAIAttackOnCollide(this, EntityVampireHunter.class, 1.0, true));
+		this.tasks.addTask(6, new EntityAIAttackOnCollide(this, EntityVillager.class, 0.9, true));
 	}
 
 	/**
@@ -130,16 +131,12 @@ public abstract class DefaultVampire extends EntityMob {
 	@Override
 	public void onLivingUpdate() {
 		if (!this.worldObj.isRemote) {
-			float brightness = this.getBrightness(1.0F);
-			boolean canSeeSky = this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
-			if (brightness > 0.5F) {
-				if (VampirismMod.isSunDamageTime(this.worldObj) && canSeeSky) {
+			if(isGettingSundamage()){
 					float dmg = sundamage;
 					if (this.isPotionActive(ModPotion.sunscreen)) {
 						dmg = dmg / 2;
 					}
 					this.attackEntityFrom(VampirismMod.sunDamage, dmg);
-				}
 			}
 		}
 		super.onLivingUpdate();
@@ -157,5 +154,16 @@ public abstract class DefaultVampire extends EntityMob {
 
 		this.setDead();
 	}
-
+	
+	public boolean isGettingSundamage(){
+		float brightness = this.getBrightness(1.0F);
+		boolean canSeeSky = this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
+		if (brightness > 0.5F) {
+			if (VampirismMod.isSunDamageTime(this.worldObj) && canSeeSky) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 }

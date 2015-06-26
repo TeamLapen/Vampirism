@@ -56,8 +56,8 @@ import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.entity.EntityVampireLord;
-import de.teamlapen.vampirism.entity.EntityVampireMinion;
 import de.teamlapen.vampirism.entity.VampireMob;
+import de.teamlapen.vampirism.entity.minions.EntityVampireMinion;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.skills.BatSkill;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
@@ -80,6 +80,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.registerKeyBinding(KeyInputEventHandler.AUTO);
 		ClientRegistry.registerKeyBinding(KeyInputEventHandler.SKILL);
 		ClientRegistry.registerKeyBinding(KeyInputEventHandler.VISION);
+		ClientRegistry.registerKeyBinding(KeyInputEventHandler.MINION_CONTROL);
 	}
 
 	@Override

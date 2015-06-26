@@ -34,4 +34,10 @@ public interface IPieElement {
 	 */
 	@SideOnly(Side.CLIENT)
 	public ResourceLocation getIconLoc();
+	
+
+	/**
+	 * @return The assigned Id
+	 */
+	public int getId();
 }

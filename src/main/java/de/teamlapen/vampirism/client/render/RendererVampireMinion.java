@@ -1,23 +1,20 @@
 package de.teamlapen.vampirism.client.render;
 
-import org.lwjgl.opengl.GL11;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
-import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.client.model.ModelBipedShrinkable;
-import de.teamlapen.vampirism.entity.EntityVampireMinion;
-import de.teamlapen.vampirism.entity.ai.IMinion;
+import de.teamlapen.vampirism.entity.minions.EntityVampireMinion;
+import de.teamlapen.vampirism.entity.minions.IMinion;
+import de.teamlapen.vampirism.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 @SideOnly(Side.CLIENT)
@@ -32,8 +29,9 @@ public class RendererVampireMinion extends RenderBiped{
 	protected ResourceLocation getEntityTexture(Entity entity) {
 		IMinion minion=(IMinion) entity;
 		//Logger.i("test", ""+minion.getLord());
-		if(minion.getLord() instanceof VampirePlayer){
-			AbstractClientPlayer player=((AbstractClientPlayer)((VampirePlayer) minion.getLord()).getRepresentingEntity());
+		IMinionLord lord=minion.getLord();
+		if( lord instanceof VampirePlayer){
+			AbstractClientPlayer player=((AbstractClientPlayer)((VampirePlayer) lord).getRepresentingEntity());
 			ResourceLocation skin=player.getLocationSkin();
 			ResourceLocation newSkin=new ResourceLocation("vampirism/temp/"+skin.hashCode());
 			TextureHelper.createVampireTexture(player,skin,newSkin);

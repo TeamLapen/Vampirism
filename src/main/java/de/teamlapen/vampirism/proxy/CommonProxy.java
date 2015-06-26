@@ -38,8 +38,10 @@ import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.entity.EntityVampireLord;
-import de.teamlapen.vampirism.entity.EntityVampireMinion;
 import de.teamlapen.vampirism.entity.VampireEntityEventHandler;
+import de.teamlapen.vampirism.entity.minions.EntityRemoteVampireMinion;
+import de.teamlapen.vampirism.entity.minions.EntitySaveableVampireMinion;
+import de.teamlapen.vampirism.entity.minions.EntityVampireMinion;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.VampirePlayerEventHandler;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
@@ -67,7 +69,8 @@ public abstract class CommonProxy implements IProxy {
 		registerEntity(EntityVampireHunter.class,REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME,BALANCE.VAMPIRE_HUNTER_SPAWN_PROBE,1,2,EnumCreatureType.creature,biomes);
 		registerEntity(EntityVampire.class,REFERENCE.ENTITY.VAMPIRE_NAME,BALANCE.VAMPIRE_SPAWN_PROBE,1,3,EnumCreatureType.monster,biomes);
 		registerEntity(EntityVampireLord.class,REFERENCE.ENTITY.VAMPIRE_LORD_NAME,BALANCE.VAMPIRE_LORD_SPAWN_PROBE,1,1,EnumCreatureType.monster,ModBiomes.biomeVampireForest);
-		registerEntity(EntityVampireMinion.class,REFERENCE.ENTITY.VAMPIRE_MINION_NAME,false);
+		registerEntity(EntitySaveableVampireMinion.class,REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME,false);
+		registerEntity(EntityRemoteVampireMinion.class,REFERENCE.ENTITY.VAMPIRE_MINION_REMOTE_NAME,false);
 		registerEntity(EntityDeadMob.class,REFERENCE.ENTITY.DEAD_MOB_NAME,false);
 		registerEntity(EntityDracula.class,REFERENCE.ENTITY.DRACULA_NAME,false);
 		registerEntity(EntityGhost.class,REFERENCE.ENTITY.GHOST_NAME,5,1,2,EnumCreatureType.monster,ModBiomes.biomeVampireForest);
@@ -112,7 +115,9 @@ public abstract class CommonProxy implements IProxy {
 	}
 	@Override
 	public void registerSubscriptions() {
-		MinecraftForge.EVENT_BUS.register(new VampirePlayerEventHandler());
+		Object playerHandler=new VampirePlayerEventHandler();
+		MinecraftForge.EVENT_BUS.register(playerHandler);
+		FMLCommonHandler.instance().bus().register(playerHandler);
 		MinecraftForge.EVENT_BUS.register(new VampireEntityEventHandler());
 		Object handler=new VampirismEventHandler();
 		MinecraftForge.EVENT_BUS.register(handler);

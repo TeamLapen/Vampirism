@@ -25,7 +25,6 @@ public class GUISelectSkill extends GUIPieMenu {
 
 	public GUISelectSkill() {
 		super(2298478591L, "selectSkill");
-		this.allowUserInput = true;
 	}
 
 	@Override

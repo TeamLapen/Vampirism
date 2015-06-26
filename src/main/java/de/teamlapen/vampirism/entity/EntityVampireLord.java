@@ -24,9 +24,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.entity.ai.IMinion;
-import de.teamlapen.vampirism.entity.ai.IMinionLord;
-import de.teamlapen.vampirism.entity.ai.MinionHandler;
+import de.teamlapen.vampirism.entity.minions.IMinion;
+import de.teamlapen.vampirism.entity.minions.IMinionLord;
+import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler;
 import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.network.UpdateEntityPacket;
 import de.teamlapen.vampirism.util.BALANCE;
@@ -43,7 +43,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 
 	private boolean prevAttacking = false;
 	
-	private final MinionHandler<EntityVampireLord> minionHandler;
+	private final SaveableMinionHandler minionHandler;
 
 	public EntityVampireLord(World par1World) {
 		super(par1World);
@@ -54,7 +54,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
 		
-		minionHandler=new MinionHandler<EntityVampireLord>(this);
+		minionHandler=new SaveableMinionHandler(this);
 
 	}
 
@@ -121,7 +121,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	}
 
 	@Override
-	public Entity getRepresentingEntity() {
+	public EntityLivingBase getRepresentingEntity() {
 		return this;
 	}
 
@@ -178,15 +178,15 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 			IMinion m = null;
 
 			if (i == 1) {
-				EntityLiving e = (EntityLiving) EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_MINION_NAME, this.worldObj);
+				EntityLiving e = (EntityLiving) EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME, this.worldObj);
 				e.copyLocationAndAnglesFrom(this);
 				worldObj.spawnEntityInWorld(e);
 				m = (IMinion) e;
 			} else if (i == 2 && this.getAttackTarget() != null) {
-				m = (IMinion) Helper.spawnEntityBehindEntity(this.getAttackTarget(), REFERENCE.ENTITY.VAMPIRE_MINION_NAME);
+				m = (IMinion) Helper.spawnEntityBehindEntity(this.getAttackTarget(), REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME);
 			}
 			if (m == null) {
-				m = (IMinion) Helper.spawnEntityInWorld(worldObj, this.boundingBox.expand(19, 14, 19), REFERENCE.ENTITY.VAMPIRE_MINION_NAME, 3);
+				m = (IMinion) Helper.spawnEntityInWorld(worldObj, this.boundingBox.expand(19, 14, 19), REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME, 3);
 			}
 			if (m != null) {
 				m.setLord(this);
@@ -197,6 +197,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 				this.teleportAway();
 			}
 		}
+		minionHandler.addLoadedMinions();
 		super.onLivingUpdate();
 	}
 
@@ -204,6 +205,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		this.loadUpdateFromNBT(nbt);
+		minionHandler.loadMinions(nbt.getTagList("minions", 10));
 	}
 
 	@Override
@@ -276,6 +278,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("level", level);
+		nbt.setTag("minions", minionHandler.getMinionsToSave());
 	}
 
 	@Override
@@ -284,8 +287,19 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	}
 
 	@Override
-	public MinionHandler<EntityVampireLord> getMinionHandler() {
+	public SaveableMinionHandler getMinionHandler() {
 		return minionHandler;
+	}
+	
+	@Override
+	 public int getMaxInPortalTime()
+	    {
+	        return 500;
+	}
+
+	@Override
+	public long getLastComebackCall() {
+		return 0;
 	}
 
 }

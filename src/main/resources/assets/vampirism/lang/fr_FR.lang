@@ -3,7 +3,8 @@ entity.vampirism.vampireHunter.name=Chasseur de vampire
 entity.vampirism.vampire.name=Vampire
 entity.vampirism.ghost.name=Fantôme
 entity.vampirism.vampireLord.name=Seigneur vampire
-entity.vampirism.vampireMinion.name=Favori de vampire
+entity.vampirism.vampireMinionS.name=Favori de vampire
+entity.vampirism.vampireMinionR.name=Favori de vampire
 entity.vampirism.dracula.name=Dracula
 
 # Items

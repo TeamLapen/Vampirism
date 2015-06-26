@@ -9,6 +9,8 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import de.teamlapen.vampirism.GuiHandler;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.minions.IMinion;
+import de.teamlapen.vampirism.entity.minions.MinionHelper;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Logger;
 
@@ -58,8 +60,33 @@ public class InputEventPacket implements IMessage {
 			else if(message.action.equals(LEAVE_COFFIN)){
 				VampirePlayer.get(ctx.getServerHandler().playerEntity).wakeUpPlayer(true,false,true,true);
 			}
+			else if(message.action.equals(MINION_CONTROL)){
+				
+				try {
+					if(message.param.contains(",")){
+						String[] p=message.param.split(",");
+						int cid = Integer.parseInt(p[0]);
+						int eid = Integer.parseInt(p[1]);
+						IMinion m=MinionHelper.getMinionFromEntity(ctx.getServerHandler().playerEntity.worldObj.getEntityByID(eid));
+						if(m!=null){
+							Logger.i(TAG, "Activated command %s", m.getCommand(cid));
+							m.activateMinionCommand(m.getCommand(cid));
+						}
+						else{
+							Logger.w(TAG, "Trying to activate command %s for enityid %s. But the entity cannot be found", cid,eid);
+						}
+					}
+					else{
+						int id=Integer.parseInt(message.param);
+						VampirePlayer.get(ctx.getServerHandler().playerEntity).onCallActivated(id);
+					}
+				} catch (NumberFormatException e) {
+					Logger.e(TAG, "Receiving invalid param", e);
+				}
+			}
 
 			return null;
+			
 		}
 
 	}
@@ -69,6 +96,7 @@ public class InputEventPacket implements IMessage {
 	public static String REVERTBACK = "rb";
 	public static String TOGGLESKILL = "ts";
 	public static String LEAVE_COFFIN = "lc";
+	public static String MINION_CONTROL = "mc";
 	private final static String TAG = "InputEventPacket";
 	public static final String SWITCHVISION = "sw";
 	private String param;

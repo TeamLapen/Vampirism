@@ -3,7 +3,9 @@ entity.vampirism:vampireHunter.name=Vampir Jäger
 entity.vampirism:vampire.name=Vampir
 entity.vampirism:ghost.name=Geist
 entity.vampirism:vampireLord.name=Vampir Lord
-entity.vampirism:vampireMinion.name=Vampir Sklave
+entity.vampirism:vampireMinionR.name=Vampir Sklave
+entity.vampirism:vampireMinionS.name=Vampir Sklave
+entity.vampirism.blinding_bat.name=Fledermaus
 entity.vampirism:dracula.name=Dracula
 entity.vampirism.dead_mob.name=Toter mob
 

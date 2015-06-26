@@ -7,13 +7,14 @@ public class REFERENCE {
 		public static final String DRACULA_NAME = "vampirism.dracula";
 		public static final String GHOST_NAME = "vampirism.ghost";
 		public static final String VAMPIRE_LORD_NAME ="vampirism.vampireLord";
-		public static final String VAMPIRE_MINION_NAME="vampirism.vampireMinion";
+		public static final String VAMPIRE_MINION_REMOTE_NAME="vampirism.vampireMinionR";
+		public static final String VAMPIRE_MINION_SAVEABLE_NAME="vampirism.vampireMinionS";
 		public static final String DEAD_MOB_NAME="vampirism.dead_mob";
 		public static final String BLINDING_BAT_NAME="vampirism.blinding_bat";
 	}
 
 	public static enum KEY {
-		UNKNOWN, SUCK, AUTO, SKILL, VISION
+		UNKNOWN, SUCK, AUTO, SKILL, VISION, MINION_CONTROL
 	}
 
 	public static final class KEYS {
@@ -22,6 +23,7 @@ public class REFERENCE {
 		public static final String AUTO_BLOOD = "keys.vampirism.auto";
 		public static final String TOGGLE_SKILLS = "keys.vampirism.skill";
 		public static final String SWITCH_VISION = "key.vampirism.vision";
+		public static final String MINION_CONTROL = "key.vampirism.minion_control";
 	}
 
 	public static final String MODID = "vampirism";
