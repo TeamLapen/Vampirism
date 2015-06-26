@@ -88,6 +88,7 @@ text.vampirism:need_empty_bottle=My lord, I need an empty bottle to collect bloo
 text.vampirism:thanks=Thanks
 text.vampirism.coming_back=I'm coming back, my lord
 text.vampirism.sorry_i_died_while_doing=My lord, I'm sorry but I died while fulfilling your task
+text.vampirism:current_task=Current task
 
 #Skill
 skill.vampirism.bat_skill=Toggle Batmode

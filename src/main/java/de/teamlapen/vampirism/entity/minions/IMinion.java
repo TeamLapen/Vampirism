@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.EntityCreature;
 
 public interface IMinion {
@@ -50,4 +52,10 @@ public interface IMinion {
 	 * @param command
 	 */
 	public void activateMinionCommand(IMinionCommand command);
+	
+	/**
+	 * Returns the id of the active command. Can be -1 if none is active
+	 */
+	@SideOnly(Side.CLIENT)
+	public int getActiveCommandId();
 }

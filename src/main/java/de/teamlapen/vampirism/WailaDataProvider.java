@@ -22,7 +22,9 @@ import cpw.mods.fml.common.Optional;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.minions.EntityVampireMinion;
 import de.teamlapen.vampirism.entity.minions.IMinion;
+import de.teamlapen.vampirism.entity.minions.IMinionCommand;
 import de.teamlapen.vampirism.entity.minions.IMinionLord;
+import de.teamlapen.vampirism.entity.minions.MinionHelper;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
@@ -118,13 +120,8 @@ public class WailaDataProvider implements IWailaDataProvider, IWailaEntityProvid
 		if(config.getConfig("option.vampirism.showEntityInfo", true)){
 			if(entity instanceof EntityCreature&&VampirePlayer.get(accessor.getPlayer()).getLevel()>0){
 				VampireMob vampire=VampireMob.get((EntityCreature) entity);
-				IMinion minion=null;
-				if(vampire.isMinion()){
-					minion=vampire;
-				}
-				else if(entity instanceof EntityVampireMinion){
-					minion=(EntityVampireMinion)entity;
-				}
+				IMinion minion=MinionHelper.getMinionFromEntity(entity);
+				
 				int blood=vampire.getBlood();
 				if(blood>0){
 					currenttip.add(String.format("%s%s: %d", SpecialChars.RED,StatCollector.translateToLocal("text.vampirism:entitysblood"),blood));
@@ -134,6 +131,11 @@ public class WailaDataProvider implements IWailaDataProvider, IWailaEntityProvid
 					IMinionLord lord=minion.getLord();
 					if(lord!=null){
 						currenttip.add(String.format("%s%s: %s", SpecialChars.WHITE,StatCollector.translateToLocal("text.vampirism:lord"),lord.getRepresentingEntity().getCommandSenderName()));
+						IMinionCommand c=minion.getCommand(minion.getActiveCommandId());
+						if(c!=null){
+							currenttip.add(String.format("%s%s: %s", SpecialChars.WHITE,StatCollector.translateToLocal("text.vampirism:curret_task"),StatCollector.translateToLocal(c.getUnlocalizedName())));
+						}
+						
 					}
 				}
 			}

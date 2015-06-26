@@ -31,6 +31,7 @@ import de.teamlapen.vampirism.entity.ai.EntityAIDefendLord;
 import de.teamlapen.vampirism.entity.ai.EntityAIFollowBoss;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.ISyncable;
+import de.teamlapen.vampirism.network.UpdateEntityPacket;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Helper;
 
@@ -70,6 +71,7 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 		this.activeCommand.onDeactivated();
 		this.activeCommand=command;
 		this.activeCommand.onActivated();
+		this.sync();
 	}
 	
 	public IMinionCommand getActiveCommand(){
@@ -258,5 +260,17 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 	 * @return
 	 */
 	protected abstract @NonNull IMinionCommand getDefaultCommand();
+	
+	@SideOnly(Side.CLIENT)
+	public int getActiveCommandId(){
+		return this.activeCommandId;
+	}
+	
+	public void sync() {
+		if(!worldObj.isRemote){
+			Helper.sendPacketToPlayersAround(new UpdateEntityPacket(this), this);
+		}
+		
+	}
 
 }

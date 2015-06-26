@@ -17,11 +17,15 @@ import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.skills.DefaultSkill;
 import de.teamlapen.vampirism.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.network.InputEventPacket;
+import de.teamlapen.vampirism.util.DefaultPieElement;
+import de.teamlapen.vampirism.util.IPieElement;
 
 public class GUIMinionControl extends GUIPieMenu {
 	
 	VampirePlayer player;
 	IMinion minion;
+	int active=-1;
+	final float[] green=new float[]{0,1,0};
 
 	public GUIMinionControl() {
 		super(2298478591L, "minionControl");
@@ -50,6 +54,7 @@ public class GUIMinionControl extends GUIPieMenu {
 		
 		if(minion!=null){
 			elements.addAll(minion.getAvailableCommands());
+			active=minion.getActiveCommandId();
 		}
 		else{
 			elements.addAll(player.getAvailableMinionCalls());
@@ -64,6 +69,18 @@ public class GUIMinionControl extends GUIPieMenu {
 		if(minion!=null&&minion.getRepresentingEntity().isDead){
 			this.mc.displayGuiScreen(null);
 		}
+	}
+	
+	
+	@Override
+	public float[] getColor(IPieElement e){
+		if(minion!=null&&e.getId()==this.active){
+			return green;
+		}
+		if(e instanceof DefaultPieElement){
+			return ((DefaultPieElement)e).getColor();
+		}
+		return super.getColor(e);
 	}
 	
 	private class FakeCommand extends DefaultMinionCommand{

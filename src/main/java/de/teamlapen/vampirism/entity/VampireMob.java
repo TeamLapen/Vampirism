@@ -92,7 +92,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	private IMinionCommand activeCommand = null;
 	
 	@SideOnly(Side.CLIENT)
-	private int activeCommandId;
+	private int activeCommandId=-1;
 	
 	private final ArrayList<IMinionCommand> commands;
 
@@ -116,7 +116,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		}
 		activeCommand=command;
 		activeCommand.onActivated();
-		
+		this.sync();
 	}
 
 	/**
@@ -397,6 +397,11 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	public IMinionCommand getCommand(int id) {
 		if(id<commands.size())return commands.get(id);
 		return null;
+	}
+
+	@Override
+	public int getActiveCommandId() {
+		return this.activeCommandId;
 	}
 
 }

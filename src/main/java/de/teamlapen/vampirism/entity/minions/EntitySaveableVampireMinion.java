@@ -96,8 +96,10 @@ public class EntitySaveableVampireMinion extends EntityVampireMinion {
 			Entity e = worldObj.getEntityByID(nbt.getInteger("eid"));
 			if (e instanceof EntityPlayer) {
 				this.lord = VampirePlayer.get((EntityPlayer) e);
+				this.lord.getMinionHandler().registerMinion(this, true);
 			} else if (e instanceof IMinionLord) {
 				this.lord = (IMinionLord) e;
+				this.lord.getMinionHandler().registerMinion(this, true);
 			} else {
 				Logger.w("EntityVampireMinion", "PartialUpdate: The given id(" + nbt.getInteger("eid") + ")[" + e + "] is no Minion Lord");
 				return;

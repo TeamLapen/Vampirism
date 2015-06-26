@@ -1259,11 +1259,15 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	public List<IPieElement> getAvailableMinionCalls(){
 		List<IPieElement> list=new ArrayList<IPieElement>();
 		if(this.isVampireLord()){
-			list.add(new DefaultPieElement(1,"minioncommand.vampirism.comeback",0,0,minionCallIconLoc));
-			list.add(new DefaultPieElement(2,"minioncommand.vampirism.defendlord",64,0,minionCommandIconLoc));
-			list.add(new DefaultPieElement(3,"minioncommand.vampirism.attackhostilenoplayers",0,0,minionCommandIconLoc));
-			list.add(new DefaultPieElement(4,"minioncommand.vampirism.attackhostile",32,0,minionCommandIconLoc));
-			list.add(new DefaultPieElement(5,"minioncommand.vampirism.justfollow",32,0,minionCommandIconLoc));
+			list.add(new DefaultPieElement(1,"minioncommand.vampirism.comeback",0,0,minionCallIconLoc,new float[]{1,1,0.05F}));
+			list.add(new DefaultPieElement(2,"minioncommand.vampirism.defendlord",64,0,minionCommandIconLoc,new float[]{0.88F,0.45F,0}));
+			list.add(new DefaultPieElement(5,"minioncommand.vampirism.justfollow",32,0,minionCommandIconLoc,new float[]{0.88F,0.45F,0}));
+			if(this.getMinionHandler().getMinionCount()>0){
+				list.add(new DefaultPieElement(3,"minioncommand.vampirism.attackhostilenoplayers",0,0,minionCommandIconLoc,new float[]{0.6F,0.3F,0.01F}));
+				list.add(new DefaultPieElement(4,"minioncommand.vampirism.attackhostile",32,0,minionCommandIconLoc,new float[]{0.6F,0.3F,0.01F}));
+			}
+			
+
 		}
 		return list;
 	}

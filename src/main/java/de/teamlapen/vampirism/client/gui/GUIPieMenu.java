@@ -174,10 +174,17 @@ public abstract class GUIPieMenu extends GuiScreen {
 			int y = (int) (cY - Math.sin(rad) * radius) - IS / 2;
 
 			// Draw box and, if selected, highlight
+			float[] col=this.getColor(s);
+			if(col!=null){
+				GL11.glColor4f(col[0], col[1], col[2], 0.5F);
+			}
 			this.mc.getTextureManager().bindTexture(WIDGETS);
 			drawTexturedModalRect(x - 2, y - 2, 1, 1, 20, 20);
 			if (selected) {
 				drawTexturedModalRect(x - 3, y - 3, 1, 23, 22, 22);
+			}
+			GL11.glColor4f(1F,1F,1F,1F);
+			if(selected){
 				selectedElement = i;
 				drawSelectedCenter(cX, cY, rad);
 			}
@@ -199,6 +206,16 @@ public abstract class GUIPieMenu extends GuiScreen {
 		this.mc.mcProfiler.endSection();
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
+
+	/**
+	 * This method is called to retrieve the color for the elements border 
+	 * @param s
+	 * @return Can be null (-> 255,255,255)
+	 */
+	protected float[] getColor(IPieElement s) {
+		return null;
+	}
+
 
 	/**
 	 * Draws a circle with an arrow at the given coords
