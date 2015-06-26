@@ -31,25 +31,24 @@ public class SpawnCustomParticlePacket implements IMessage {
 				switch (message.data.getInteger("type")) {
 				case 0:
 					for (int i = 0; i < message.amount; i++) {
-						
-						FlyingBloodPlayerParticle.addParticle(new FlyingBloodPlayerParticle(message.posX, message.posY, message.posZ,
-								message.data));
+
+						FlyingBloodPlayerParticle.addParticle(new FlyingBloodPlayerParticle(message.posX, message.posY, message.posZ, message.data));
 
 					}
 					break;
 				case 1:
-					for(int i=0;i<message.amount;i++){
-						FlyingBloodParticle.addParticle(new FlyingBloodParticle(message.posX,message.posY,message.posZ,message.data));
+					for (int i = 0; i < message.amount; i++) {
+						FlyingBloodParticle.addParticle(new FlyingBloodParticle(message.posX, message.posY, message.posZ, message.data));
 					}
 					break;
 				case 2:
-					WorldClient w=Minecraft.getMinecraft().theWorld;
-					Entity e=w.getEntityByID(message.data.getInteger("id"));
-					if(e!=null&&e instanceof EntityLivingBase){
-						Helper.spawnParticlesAroundEntity((EntityLivingBase) e, message.data.getString("particle"), message.data.getDouble("distance"),message.amount);
+					WorldClient w = Minecraft.getMinecraft().theWorld;
+					Entity e = w.getEntityByID(message.data.getInteger("id"));
+					if (e != null && e instanceof EntityLivingBase) {
+						Helper.spawnParticlesAroundEntity((EntityLivingBase) e, message.data.getString("particle"), message.data.getDouble("distance"), message.amount);
 					}
 					break;
-					
+
 				default:
 					Logger.w("CustomParticlePacket", "Particle of type " + message.data.getInteger("type") + " is unknown");
 					return null;
@@ -63,6 +62,7 @@ public class SpawnCustomParticlePacket implements IMessage {
 		}
 
 	}
+
 	private NBTTagCompound data;
 	private double posX, posY, posZ;
 

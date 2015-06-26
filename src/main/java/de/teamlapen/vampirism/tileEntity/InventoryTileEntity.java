@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import de.teamlapen.vampirism.util.Logger;
 
 /**
  * Basic abstract class for TileEntitys which need a small inventory (with an gui)
@@ -19,28 +18,30 @@ import de.teamlapen.vampirism.util.Logger;
  */
 public abstract class InventoryTileEntity extends TileEntity implements IInventory {
 
+	public static class FilterSlot extends net.minecraft.inventory.Slot {
+		IItemSelector selector;
+
+		public FilterSlot(IInventory p_i1824_1_, int p_i1824_2_, int p_i1824_3_, int p_i1824_4_, IItemSelector selector) {
+			super(p_i1824_1_, p_i1824_2_, p_i1824_3_, p_i1824_4_);
+			this.selector = selector;
+		}
+
+		@Override
+		public boolean isItemValid(ItemStack stack) {
+			if (selector != null) {
+				return selector.isItemAllowed(stack);
+			}
+			return true;
+		}
+
+	}
+
 	public static interface IItemSelector {
 		/**
 		 * @param item
 		 * @return whether the item is allowed or not
 		 */
 		public boolean isItemAllowed(ItemStack item);
-	}
-	
-	public static class FilterSlot extends net.minecraft.inventory.Slot{
-		IItemSelector selector;
-		public FilterSlot(IInventory p_i1824_1_, int p_i1824_2_, int p_i1824_3_, int p_i1824_4_,IItemSelector selector) {
-			super(p_i1824_1_, p_i1824_2_, p_i1824_3_, p_i1824_4_);
-			this.selector=selector;
-		}
-		@Override
-		public boolean isItemValid(ItemStack stack){
-			if(selector!=null){
-				return selector.isItemAllowed(stack);
-			}
-			return true;
-		}
-		
 	}
 
 	/**
@@ -57,7 +58,7 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 			tile = te;
 
 			for (int i = 0; i < tile.slots.length; i++) {
-				this.addSlotToContainer(new FilterSlot(tile, i, tile.slots[i].xDisplay, tile.slots[i].yDisplay,tile.slots[i].itemSelector));
+				this.addSlotToContainer(new FilterSlot(tile, i, tile.slots[i].xDisplay, tile.slots[i].yDisplay, tile.slots[i].itemSelector));
 			}
 
 			int i;
@@ -133,16 +134,6 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 
 			}, xDisplay, yDisplay);
 		}
-		
-		public Slot(final Item item, int xDisplay, int yDisplay) {
-			this(new IItemSelector() {
-				@Override
-				public boolean isItemAllowed(ItemStack stack) {
-					return item.equals(stack.getItem());
-				}
-
-			}, xDisplay, yDisplay);
-		}
 
 		public Slot(IItemSelector selector, int xDisplay, int yDisplay) {
 			itemSelector = selector;
@@ -152,6 +143,16 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 
 		public Slot(int xDisplay, int yDisplay) {
 			this((IItemSelector) null, xDisplay, yDisplay);
+		}
+
+		public Slot(final Item item, int xDisplay, int yDisplay) {
+			this(new IItemSelector() {
+				@Override
+				public boolean isItemAllowed(ItemStack stack) {
+					return item.equals(stack.getItem());
+				}
+
+			}, xDisplay, yDisplay);
 		}
 	}
 
@@ -202,11 +203,6 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 	public Container getNewInventoryContainer(InventoryPlayer inv) {
 		return new InventoryContainer(inv, this);
 	}
-	
-	@Override
-	public boolean hasCustomInventoryName() {
-		return false;
-	}
 
 	@Override
 	public int getSizeInventory() {
@@ -229,8 +225,13 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 	}
 
 	@Override
+	public boolean hasCustomInventoryName() {
+		return false;
+	}
+
+	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
-		if (slots[slot].itemSelector != null){
+		if (slots[slot].itemSelector != null) {
 			return slots[slot].itemSelector.isItemAllowed(stack);
 		}
 		return true;
@@ -287,6 +288,5 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 		}
 		tagCompound.setTag("Inventory", itemList);
 	}
-	
 
 }

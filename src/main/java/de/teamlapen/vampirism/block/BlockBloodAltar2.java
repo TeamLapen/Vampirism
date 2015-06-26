@@ -27,6 +27,7 @@ public class BlockBloodAltar2 extends BasicBlockContainer {
 	}
 
 	private void addBlood(TileEntityBloodAltar2 te, ItemStack item) {
+		if(item==null)return;
 		int amount = ItemBloodBottle.getBlood(item);
 		ItemBloodBottle.removeBlood(item, te.addBlood(amount));
 	}

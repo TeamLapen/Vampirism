@@ -45,6 +45,17 @@ public class TileEntityBloodAltar1 extends TileEntity {
 		super();
 	}
 
+	public void dropSword() {
+		if (this.isOccupied()) {
+			EntityItem sword = new EntityItem(this.worldObj, this.xCoord, this.yCoord + 1, this.zCoord, getSwordToEject());
+			this.worldObj.spawnEntityInWorld(sword);
+		}
+	}
+
+	public int getBloodLeft() {
+		return bloodAmount;
+	}
+
 	@Override
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbtTag = new NBTTagCompound();
@@ -69,14 +80,6 @@ public class TileEntityBloodAltar1 extends TileEntity {
 		bloodAmount = 0;
 		return s;
 	}
-	
-	public void dropSword(){
-		if(this.isOccupied()){
-			EntityItem sword = new EntityItem(this.worldObj, this.xCoord, this.yCoord + 1, this.zCoord, getSwordToEject());
-			this.worldObj.spawnEntityInWorld(sword);
-		}
-	}
-	
 
 	public boolean isActive() {
 		return bloodAmount > 0;
@@ -104,7 +107,7 @@ public class TileEntityBloodAltar1 extends TileEntity {
 			}
 			occupied = false;
 			markDirty();
-		} else if(itemStack!=null){
+		} else if (itemStack != null) {
 			if (ModItems.leechSword.equals(itemStack.getItem())) {
 				this.startRitual(player, itemStack);
 			}
@@ -155,8 +158,8 @@ public class TileEntityBloodAltar1 extends TileEntity {
 				if (bloodAmount == 0) {
 					this.markDirty();
 				}
-				AxisAlignedBB axisalignedbb = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1,
-						this.zCoord + 1).expand(distance, distance, distance);
+				AxisAlignedBB axisalignedbb = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1).expand(distance, distance,
+						distance);
 				axisalignedbb.maxY = this.worldObj.getHeight();
 				List list = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, axisalignedbb);
 				Iterator iterator = list.iterator();
@@ -182,9 +185,5 @@ public class TileEntityBloodAltar1 extends TileEntity {
 		nbt.setBoolean(OCCUPIED_NBTKEY, occupied);
 		nbt.setInteger(BLOOD_NBTKEY, bloodAmount);
 		nbt.setInteger(TICK_NBTKEY, tickCounter);
-	}
-	
-	public int getBloodLeft(){
-		return bloodAmount;
 	}
 }

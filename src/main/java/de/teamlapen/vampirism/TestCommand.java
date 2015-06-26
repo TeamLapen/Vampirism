@@ -10,8 +10,6 @@ import de.teamlapen.vampirism.entity.minions.EntityRemoteVampireMinion;
 import de.teamlapen.vampirism.entity.minions.EntitySaveableVampireMinion;
 import de.teamlapen.vampirism.entity.minions.EntityVampireMinion;
 import de.teamlapen.vampirism.entity.minions.IMinion;
-import de.teamlapen.vampirism.entity.minions.MinionHelper;
-import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
@@ -32,7 +30,6 @@ public class TestCommand implements ICommand {
 
 	}
 
-
 	@Override
 	public List addTabCompletionOptions(ICommandSender p_71516_1_, String[] p_71516_2_) {
 		return null;
@@ -40,7 +37,8 @@ public class TestCommand implements ICommand {
 
 	@Override
 	public boolean canCommandSenderUseCommand(ICommandSender sender) {
-		if(VampirismMod.inDev)return true;
+		if (VampirismMod.inDev)
+			return true;
 		return sender.canCommandSenderUseCommand(2, this.getCommandName());
 	}
 
@@ -56,7 +54,7 @@ public class TestCommand implements ICommand {
 
 	@Override
 	public String getCommandName() {
-		if(VampirismMod.inDev){
+		if (VampirismMod.inDev) {
 			return "test";
 		}
 		return "vtest";
@@ -72,48 +70,43 @@ public class TestCommand implements ICommand {
 		return false;
 	}
 
-	
 	@Override
 	public void processCommand(ICommandSender sender, String[] param) {
 		if (sender instanceof EntityPlayer) {
 			EntityPlayer p = (EntityPlayer) sender;
-			VampirePlayer vampire=VampirePlayer.get(p);
+			VampirePlayer vampire = VampirePlayer.get(p);
 			// -----------------
 			if (param.length > 0) {
-				if("lord".equals(param[0])){
+				if ("lord".equals(param[0])) {
 					vampire.setLevel(REFERENCE.HIGHEST_REACHABLE_LEVEL);
-					if(vampire.setVampireLord(true)){
-						sendMessage(sender,"You are now a vampire lord");
+					if (vampire.setVampireLord(true)) {
+						sendMessage(sender, "You are now a vampire lord");
 					}
 
 					return;
 				}
-				if("info".equals(param[0])){
-					//TODO add entity string output
-				}
-				if("minions".equals(param[0])){
-					for(IMinion m:vampire.getMinionHandler().getMinionListForDebug()){
-						sendMessage(sender,m.getRepresentingEntity().toString());
+				if ("minions".equals(param[0])) {
+					for (IMinion m : vampire.getMinionHandler().getMinionListForDebug()) {
+						sendMessage(sender, m.getRepresentingEntity().toString());
 					}
-					sendMessage(sender,vampire.getMinionHandler().getMinionCount()+"/"+vampire.getMaxMinionCount());
+					sendMessage(sender, vampire.getMinionHandler().getMinionCount() + "/" + vampire.getMaxMinionCount());
 					return;
 				}
-				if("cminions".equals(param[0])){
-					List<IMinion> list=(List<IMinion>) vampire.getMinionHandler().getMinionListForDebug().clone();
-					for(IMinion m:list){
-						if(m instanceof EntityVampireMinion){
-							if(m instanceof EntitySaveableVampireMinion){
-								((EntitySaveableVampireMinion)m).convertToRemote();
-							}
-							else if(m instanceof EntityRemoteVampireMinion){
-								((EntityRemoteVampireMinion)m).convertToSaveable();
+				if ("cminions".equals(param[0])) {
+					List<IMinion> list = (List<IMinion>) vampire.getMinionHandler().getMinionListForDebug().clone();
+					for (IMinion m : list) {
+						if (m instanceof EntityVampireMinion) {
+							if (m instanceof EntitySaveableVampireMinion) {
+								((EntitySaveableVampireMinion) m).convertToRemote();
+							} else if (m instanceof EntityRemoteVampireMinion) {
+								((EntityRemoteVampireMinion) m).convertToSaveable();
 							}
 						}
 					}
 				}
-				if("target".equals(param[0])){
-						sendMessage(sender,Helper.entityToString(vampire.getMinionTarget()));
-					
+				if ("target".equals(param[0])) {
+					sendMessage(sender, Helper.entityToString(vampire.getMinionTarget()));
+
 				}
 				try {
 					VampirePlayer.get(p).setLevel(Integer.parseInt(param[0]));

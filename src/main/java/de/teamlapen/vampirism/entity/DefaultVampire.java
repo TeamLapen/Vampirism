@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity;
 
-import net.minecraft.block.Block;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -112,6 +111,17 @@ public abstract class DefaultVampire extends EntityMob {
 		return true;
 	}
 
+	public boolean isGettingSundamage() {
+		float brightness = this.getBrightness(1.0F);
+		boolean canSeeSky = this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
+		if (brightness > 0.5F) {
+			if (VampirismMod.isSunDamageTime(this.worldObj) && canSeeSky) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	@Override
 	public void onKillEntity(EntityLivingBase entity) {
 
@@ -131,12 +141,12 @@ public abstract class DefaultVampire extends EntityMob {
 	@Override
 	public void onLivingUpdate() {
 		if (!this.worldObj.isRemote) {
-			if(isGettingSundamage()){
-					float dmg = sundamage;
-					if (this.isPotionActive(ModPotion.sunscreen)) {
-						dmg = dmg / 2;
-					}
-					this.attackEntityFrom(VampirismMod.sunDamage, dmg);
+			if (isGettingSundamage()) {
+				float dmg = sundamage;
+				if (this.isPotionActive(ModPotion.sunscreen)) {
+					dmg = dmg / 2;
+				}
+				this.attackEntityFrom(VampirismMod.sunDamage, dmg);
 			}
 		}
 		super.onLivingUpdate();
@@ -147,23 +157,12 @@ public abstract class DefaultVampire extends EntityMob {
 	 */
 	protected void teleportAway() {
 		this.setInvisible(true);
-		Helper.spawnParticlesAroundEntity(this, "portal",5,64);
+		Helper.spawnParticlesAroundEntity(this, "portal", 5, 64);
 
 		this.worldObj.playSoundEffect(this.posX, this.posY, this.posZ, "mob.endermen.portal", 1.0F, 1.0F);
 		this.playSound("mob.endermen.portal", 1.0F, 1.0F);
 
 		this.setDead();
 	}
-	
-	public boolean isGettingSundamage(){
-		float brightness = this.getBrightness(1.0F);
-		boolean canSeeSky = this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
-		if (brightness > 0.5F) {
-			if (VampirismMod.isSunDamageTime(this.worldObj) && canSeeSky) {
-				return true;
-			}
-		}
-		return false;
-	}
-	
+
 }

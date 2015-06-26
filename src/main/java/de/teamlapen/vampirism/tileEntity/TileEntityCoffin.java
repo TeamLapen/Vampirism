@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.tileEntity;
 
-import de.teamlapen.vampirism.block.BlockCoffin;
-import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.block.BlockBed;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -9,6 +7,8 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import de.teamlapen.vampirism.block.BlockCoffin;
+import de.teamlapen.vampirism.util.Logger;
 
 public class TileEntityCoffin extends TileEntity {
 	public int otherX;
@@ -18,22 +18,50 @@ public class TileEntityCoffin extends TileEntity {
 	public int lidPos;
 	public int color = 15;
 	public boolean needsAnimation = false;
-	
-	
+
 	public TileEntityCoffin() {
-		
+
 	}
 
-	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
-		super.writeToNBT(par1NBTTagCompound);
-		par1NBTTagCompound.setInteger("px", otherX);
-		par1NBTTagCompound.setInteger("py", otherY);
-		par1NBTTagCompound.setInteger("pz", otherZ);
-		par1NBTTagCompound.setBoolean("occ", occupied);
-		par1NBTTagCompound.setInteger("color", color);
-		par1NBTTagCompound.setBoolean("needsAnim", needsAnimation);
+	public void changeColor(int color) {
+		Logger.i("TECoffin", "Changecolor called, prev=%s, new=%s\nTile=%s", this.color, color, this.toString());
+		this.color = color;
+		needsAnimation = false;
+		markDirty();
 	}
 
+	@Override
+	public Packet getDescriptionPacket() {
+		NBTTagCompound nbtTag = new NBTTagCompound();
+		this.writeToNBT(nbtTag);
+		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
+	}
+
+	public TileEntityCoffin getPrimaryTileEntity() {
+		if ((this.getBlockMetadata() & -8) == 0)
+			return (TileEntityCoffin) worldObj.getTileEntity(otherX, otherY, otherZ);
+		return this;
+	}
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox() {
+		return AxisAlignedBB.getBoundingBox(this.xCoord - 4, this.yCoord, this.zCoord - 4, this.xCoord + 4, this.yCoord + 2, this.zCoord + 4);
+	}
+
+	@Override
+	public void markDirty() {
+		super.markDirty();
+		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+	}
+
+	@Override
+	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
+		readFromNBT(packet.func_148857_g());
+		((BlockCoffin) this.worldObj.getBlock(this.xCoord, this.yCoord, this.zCoord)).setCoffinOccupied(this.worldObj, this.xCoord, this.yCoord, this.zCoord, null, this.occupied);
+		// Logger.i("TECoffin", String.format("onDataPacket called, occupied=%s, remote=%s", this.occupied, this.worldObj.isRemote));
+	}
+
+	@Override
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
 		super.readFromNBT(par1NBTTagCompound);
 		this.otherX = par1NBTTagCompound.getInteger("px");
@@ -42,12 +70,12 @@ public class TileEntityCoffin extends TileEntity {
 		this.occupied = par1NBTTagCompound.getBoolean("occ");
 		this.color = par1NBTTagCompound.getInteger("color");
 		this.needsAnimation = par1NBTTagCompound.getBoolean("needsAnim");
-		if(!occupied && needsAnimation)
+		if (!occupied && needsAnimation)
 			this.lidPos = 61;
 		else
 			this.lidPos = 0;
 	}
-	
+
 	public void readFromNBTPartial(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
 		this.otherX = nbt.getInteger("px");
@@ -58,63 +86,29 @@ public class TileEntityCoffin extends TileEntity {
 	}
 
 	@Override
-	public Packet getDescriptionPacket() {
-		NBTTagCompound nbtTag = new NBTTagCompound();
-		this.writeToNBT(nbtTag);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord,
-				this.zCoord, 1, nbtTag);
-	}
-
-	@Override
-	public void onDataPacket(NetworkManager net,
-			S35PacketUpdateTileEntity packet) {
-		readFromNBT(packet.func_148857_g());
-		((BlockCoffin) this.worldObj.getBlock(this.xCoord, this.yCoord,
-				this.zCoord)).setCoffinOccupied(this.worldObj, this.xCoord,
-				this.yCoord, this.zCoord, null, this.occupied);
-		//Logger.i("TECoffin", String.format("onDataPacket called, occupied=%s, remote=%s", this.occupied, this.worldObj.isRemote));
-	}
-
-	@Override
-	public AxisAlignedBB getRenderBoundingBox() {
-		return AxisAlignedBB.getBoundingBox(this.xCoord - 4, this.yCoord,
-				this.zCoord - 4, this.xCoord + 4, this.yCoord + 2,
-				this.zCoord + 4);
-	}
-
-	@Override
-	public void markDirty() {
-		super.markDirty();
-		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
-	}
-
-	@Override
 	public void updateEntity() {
-		if((this.getBlockMetadata() & -8) == 0)
+		if ((this.getBlockMetadata() & -8) == 0)
 			return;
-		//On the server, metadata has priority over tile entity. On the client, tile entity has priority over metadata
-		if(!this.worldObj.isRemote && (occupied != ((this.getBlockMetadata() & 4) != 0))) {
+		// On the server, metadata has priority over tile entity. On the client, tile entity has priority over metadata
+		if (!this.worldObj.isRemote && (occupied != ((this.getBlockMetadata() & 4) != 0))) {
 			occupied = !occupied;
 			needsAnimation = true;
 			markDirty();
-		}
-		else
+		} else
 			BlockBed.func_149979_a(worldObj, xCoord, yCoord, zCoord, occupied);
-//		Logger.i("TECoffin",
-//		String.format("updateEntity called, now: occupied=%s, remote=%s",
-//		occupied, this.worldObj.isRemote));
+		// Logger.i("TECoffin",
+		// String.format("updateEntity called, now: occupied=%s, remote=%s",
+		// occupied, this.worldObj.isRemote));
 	}
 
-	public void changeColor(int color) {
-		Logger.i("TECoffin", "Changecolor called, prev=%s, new=%s\nTile=%s", this.color, color, this.toString());
-		this.color = color;
-		needsAnimation = false;
-		markDirty();
-	}
-	
-	public TileEntityCoffin getPrimaryTileEntity() {
-		if((this.getBlockMetadata() & -8) == 0)
-			return (TileEntityCoffin) worldObj.getTileEntity(otherX, otherY, otherZ);
-		return this;
+	@Override
+	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
+		super.writeToNBT(par1NBTTagCompound);
+		par1NBTTagCompound.setInteger("px", otherX);
+		par1NBTTagCompound.setInteger("py", otherY);
+		par1NBTTagCompound.setInteger("pz", otherZ);
+		par1NBTTagCompound.setBoolean("occ", occupied);
+		par1NBTTagCompound.setInteger("color", color);
+		par1NBTTagCompound.setBoolean("needsAnim", needsAnimation);
 	}
 }

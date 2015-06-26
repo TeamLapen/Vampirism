@@ -37,13 +37,13 @@ public class PlayerClassTransformer implements IClassTransformer {
 
 	public byte[] applyPatch(String name, byte[] basicClass, boolean obfuscated) {
 		String exhaustionMethodName = "";
-		String wakeMethodName="";
+		String wakeMethodName = "";
 		if (obfuscated) {
 			exhaustionMethodName = METHOD_EXHAUSTION_SRG;
-			wakeMethodName=METHOD_WAKE_SRG;
+			wakeMethodName = METHOD_WAKE_SRG;
 		} else {
 			exhaustionMethodName = METHOD_EXHAUSTION;
-			wakeMethodName=METHOD_WAKE;
+			wakeMethodName = METHOD_WAKE;
 		}
 
 		ClassNode classNode = new ClassNode();
@@ -62,49 +62,47 @@ public class PlayerClassTransformer implements IClassTransformer {
 				toInject.add(new VarInsnNode(Opcodes.FLOAD, 1));
 				toInject.add(new VarInsnNode(Opcodes.ALOAD, 0));
 
-				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "de/teamlapen/vampirism/coremod/CoreHandler", "addExhaustion", "(FL"
-						+ CLASS_ENTITYPLAYER_SRG + ";)V", false));
+				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "de/teamlapen/vampirism/coremod/CoreHandler", "addExhaustion", "(FL" + CLASS_ENTITYPLAYER_SRG + ";)V", false));
 
 				m.instructions.insert(toInject);
 				Logger.d(TAG, "PATCH COMPLETE");
 			}
-			if(m.name.equals(wakeMethodName)){
+			if (m.name.equals(wakeMethodName)) {
 				Logger.d(TAG, "INSIDE wakeUpPlayer METHOD");
-				
+
 				// Inject Method call
 				InsnList toInject = new InsnList();
 				LabelNode l0 = new LabelNode();
 				toInject.add(l0);
-				toInject.add(new VarInsnNode(Opcodes.ALOAD,0));
-				toInject.add(new VarInsnNode(Opcodes.ILOAD,1));
-				toInject.add(new VarInsnNode(Opcodes.ILOAD,2));
-				toInject.add(new VarInsnNode(Opcodes.ILOAD,3));
-				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC,"de/teamlapen/vampirism/coremod/CoreHandler","shouldWakePlayer","(L"
-						+ CLASS_ENTITYPLAYER_SRG + ";ZZZ)Z",false));
-				LabelNode l1= new LabelNode();
-				toInject.add(new JumpInsnNode(Opcodes.IFNE,l1));
-				LabelNode l2=new LabelNode();
+				toInject.add(new VarInsnNode(Opcodes.ALOAD, 0));
+				toInject.add(new VarInsnNode(Opcodes.ILOAD, 1));
+				toInject.add(new VarInsnNode(Opcodes.ILOAD, 2));
+				toInject.add(new VarInsnNode(Opcodes.ILOAD, 3));
+				toInject.add(new MethodInsnNode(Opcodes.INVOKESTATIC, "de/teamlapen/vampirism/coremod/CoreHandler", "shouldWakePlayer", "(L" + CLASS_ENTITYPLAYER_SRG + ";ZZZ)Z", false));
+				LabelNode l1 = new LabelNode();
+				toInject.add(new JumpInsnNode(Opcodes.IFNE, l1));
+				LabelNode l2 = new LabelNode();
 				toInject.add(l2);
 				toInject.add(new InsnNode(Opcodes.RETURN));
 				toInject.add(l1);
-				
-//				Label l0 = new Label();
-//				mv.visitLabel(l0);
-//				mv.visitLineNumber(27, l0);
-//				mv.visitVarInsn(ALOAD, 0);
-//				mv.visitMethodInsn(INVOKESTATIC, "de/teamlapen/vampirism/coremod/CoreHandler", "shouldWakePlayer", "(Lnet/minecraft/block/Block;)Z", false);
-//				Label l1 = new Label();
-//				mv.visitJumpInsn(IFNE, l1);
-//				Label l2 = new Label();
-//				mv.visitLabel(l2);
-//				mv.visitLineNumber(28, l2);
-//				mv.visitInsn(RETURN);
-//				mv.visitLabel(l1);
-				
-//				if(!CoreHandler.shouldWakePlayer(this)){
-//					return;
-//				}
-				
+
+				// Label l0 = new Label();
+				// mv.visitLabel(l0);
+				// mv.visitLineNumber(27, l0);
+				// mv.visitVarInsn(ALOAD, 0);
+				// mv.visitMethodInsn(INVOKESTATIC, "de/teamlapen/vampirism/coremod/CoreHandler", "shouldWakePlayer", "(Lnet/minecraft/block/Block;)Z", false);
+				// Label l1 = new Label();
+				// mv.visitJumpInsn(IFNE, l1);
+				// Label l2 = new Label();
+				// mv.visitLabel(l2);
+				// mv.visitLineNumber(28, l2);
+				// mv.visitInsn(RETURN);
+				// mv.visitLabel(l1);
+
+				// if(!CoreHandler.shouldWakePlayer(this)){
+				// return;
+				// }
+
 				m.instructions.insert(toInject);
 				Logger.d(TAG, "PATCH COMPLETE");
 			}
@@ -121,10 +119,10 @@ public class PlayerClassTransformer implements IClassTransformer {
 	@Override
 	public byte[] transform(String name, String transformedName, byte[] basicClass) {
 		if (name.equals(CLASS_ENTITYPLAYER_NOTCH)) {
-			Logger.i(TAG, "INSIDE OBFUSCATED PLAYER CLASS - ABOUT TO PATCH: %s (%s)" , name , transformedName);
+			Logger.i(TAG, "INSIDE OBFUSCATED PLAYER CLASS - ABOUT TO PATCH: %s (%s)", name, transformedName);
 			return applyPatch(name, basicClass, true);
 		} else if (name.equals(CLASS_ENTITYPLAYER)) {
-			Logger.i(TAG, "INSIDE PLAYER CLASS - ABOUT TO PATCH: %s" , name);
+			Logger.i(TAG, "INSIDE PLAYER CLASS - ABOUT TO PATCH: %s", name);
 			return applyPatch(name, basicClass, false);
 		}
 		if (name.equals(CLASS_ENTITYPLAYER_SRG))

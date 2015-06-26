@@ -22,14 +22,14 @@ import de.teamlapen.vampirism.util.BALANCE;
  */
 public class TileEntityBloodAltar2 extends TileEntity {
 
-	private int bloodAmount = 0;
 	public static final int MAX_BLOOD = 100;
+	public final static int MIN_LEVEL = 1;
+	private final static int MAX_LEVEL = 3;
+	private int bloodAmount = 0;
 	private final String KEY_BLOOD_AMOUNT = "blood_amount";
 	private int ritualTicksLeft = 0;
 	private EntityPlayer ritualPlayer;
 	private final int RITUAL_TIME = 60;
-	public final static int MIN_LEVEL = 1;
-	private final static int MAX_LEVEL = 3;
 
 	/**
 	 * Adds blood to the altar

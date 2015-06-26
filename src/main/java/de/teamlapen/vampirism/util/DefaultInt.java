@@ -9,8 +9,12 @@ import java.lang.annotation.Target;
 @Target({ ElementType.FIELD })
 public @interface DefaultInt {
 	String comment() default "";
-	String name();
-	int value();
-	int minValue() default Integer.MIN_VALUE;
+
 	int maxValue() default Integer.MAX_VALUE;
+
+	int minValue() default Integer.MIN_VALUE;
+
+	String name();
+
+	int value();
 }

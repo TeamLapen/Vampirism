@@ -11,8 +11,7 @@ import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.util.Logger;
 
 /**
- * VillageGenReplacer class updates fields (through Java reflection) to change
- * how villages are generated.
+ * VillageGenReplacer class updates fields (through Java reflection) to change how villages are generated.
  * 
  * @author WILLIAM
  *
@@ -26,9 +25,7 @@ public class VillageGenReplacer implements IEventListener {
 			InitMapGenEvent e = (InitMapGenEvent) event;
 			if (e.type == EventType.VILLAGE) {
 				if (!(e.newGen == e.originalGen)) {
-					Logger.e("VillageGenReplacer",
-							"The village map generator was overwritten by another mod. There might be crashes! \n The new generator class is "
-									+ e.getClass().getCanonicalName());
+					Logger.e("VillageGenReplacer", "The village map generator was overwritten by another mod. There might be crashes! \n The new generator class is " + e.getClass().getCanonicalName());
 				}
 
 				try { // Here be reflections.

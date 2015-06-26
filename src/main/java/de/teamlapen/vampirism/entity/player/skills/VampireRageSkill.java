@@ -8,6 +8,10 @@ import de.teamlapen.vampirism.util.BALANCE;
 
 public class VampireRageSkill extends DefaultSkill implements ILastingSkill {
 
+	@Override
+	public boolean canBeUsedBy(VampirePlayer vampire, EntityPlayer player) {
+		return !vampire.isSkillActive(Skills.batMode) && !vampire.isVampireLord();
+	}
 
 	@Override
 	public int getCooldown() {
@@ -35,6 +39,11 @@ public class VampireRageSkill extends DefaultSkill implements ILastingSkill {
 	}
 
 	@Override
+	public String getUnlocalizedName() {
+		return "skill.vampirism.vampire_rage";
+	}
+
+	@Override
 	public boolean onActivated(VampirePlayer vampire, EntityPlayer player) {
 		player.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, getDuration(vampire.getLevel()), 2));
 		return true;
@@ -47,23 +56,13 @@ public class VampireRageSkill extends DefaultSkill implements ILastingSkill {
 	}
 
 	@Override
-	public boolean onUpdate(VampirePlayer vampire, EntityPlayer player) {
-		return false;
+	public void onReActivated(VampirePlayer vampire, EntityPlayer player) {
+
 	}
 
 	@Override
-	public void onReActivated(VampirePlayer vampire, EntityPlayer player) {
-		
-	}
-	
-	@Override
-	public boolean canBeUsedBy(VampirePlayer vampire,EntityPlayer player){
-		return !vampire.isSkillActive(Skills.batMode)&&!vampire.isVampireLord();
-	}
-	
-	@Override
-	public String getUnlocalizedName() {
-		return "skill.vampirism.vampire_rage";
+	public boolean onUpdate(VampirePlayer vampire, EntityPlayer player) {
+		return false;
 	}
 
 }

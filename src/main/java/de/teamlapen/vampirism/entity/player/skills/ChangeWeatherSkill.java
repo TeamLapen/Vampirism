@@ -28,15 +28,15 @@ public class ChangeWeatherSkill extends DefaultSkill {
 	}
 
 	@Override
+	public String getUnlocalizedName() {
+		return "skill.vampirism.change_weather";
+	}
+
+	@Override
 	public boolean onActivated(VampirePlayer vampire, EntityPlayer player) {
 		WorldInfo info = player.worldObj.getWorldInfo();
 		info.setRaining(!info.isRaining());
 		return true;
-	}
-	
-	@Override
-	public String getUnlocalizedName() {
-		return "skill.vampirism.change_weather";
 	}
 
 }

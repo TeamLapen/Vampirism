@@ -15,8 +15,7 @@ import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.Pair;
 
 /**
- * Replaces blocks used to build village with blocks defined in the
- * VillageBiomes.cfg
+ * Replaces blocks used to build village with blocks defined in the VillageBiomes.cfg
  * 
  * @author WILLIAM
  *
@@ -45,6 +44,7 @@ public class BiomeBlockReplacer implements IEventListener {
 			return false;
 		}
 	}
+
 	private Map<Block, List<Pair<String, Block>>> replacements;
 
 	private Map<Block, List<Pair<String, Integer>>> metadata;

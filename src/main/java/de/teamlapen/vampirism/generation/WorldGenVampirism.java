@@ -44,14 +44,13 @@ public class WorldGenVampirism implements IWorldGenerator {
 			if (v == null) {
 				return;
 			}
-			VillageVampire vv=VillageVampireData.get(world).getVillageVampire(v);
-	
+			VillageVampire vv = VillageVampireData.get(world).getVillageVampire(v);
+
 			int spawnedHunter = world.getEntitiesWithinAABB(EntityVampireHunter.class, vv.getBoundingBox()).size();
-			for(Entity e:Helper.spawnEntityInVillage(v, BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE-spawnedHunter, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world)){
-					((EntityVampireHunter) e).setHomeArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, v.getVillageRadius());
+			for (Entity e : Helper.spawnEntityInVillage(v, BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE - spawnedHunter, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world)) {
+				((EntityVampireHunter) e).setHomeArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, v.getVillageRadius());
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			// If an exception occurs, it is likely a bug in minecraft, but we don't need to crash so we will return
 			return;
 		}

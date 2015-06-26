@@ -7,6 +7,12 @@ import net.minecraft.entity.EntityLivingBase;
 
 public interface IMinionLord {
 
+	public long getLastComebackCall();
+
+	public int getMaxMinionCount();
+
+	public SaveableMinionHandler getMinionHandler();
+
 	/**
 	 * @return The target the lord's minions should attack, can be null
 	 */
@@ -29,10 +35,4 @@ public interface IMinionLord {
 	public UUID getThePersistentID();
 
 	public boolean isTheEntityAlive();
-	
-	public int getMaxMinionCount();
-	
-	public SaveableMinionHandler getMinionHandler();
-	
-	public long getLastComebackCall();
 }

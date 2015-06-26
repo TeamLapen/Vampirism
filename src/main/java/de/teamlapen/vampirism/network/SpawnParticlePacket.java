@@ -25,7 +25,7 @@ public class SpawnParticlePacket implements IMessage {
 
 			if (message.type.equals("blood_eat")) {
 				spawnEatParticle(VampirismMod.proxy.getSPPlayer());
-				Minecraft.getMinecraft().thePlayer.playSound(REFERENCE.MODID+":player.bite", 1.0F, 1.0F);
+				Minecraft.getMinecraft().thePlayer.playSound(REFERENCE.MODID + ":player.bite", 1.0F, 1.0F);
 				return null;
 			}
 			WorldClient world = Minecraft.getMinecraft().theWorld;
@@ -41,7 +41,28 @@ public class SpawnParticlePacket implements IMessage {
 		}
 
 	}
+
+	private static void spawnEatParticle(EntityPlayer p) {
+		for (int j = 0; j < 16; ++j) {
+			Vec3 vec3 = Vec3.createVectorHelper((p.worldObj.rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
+			vec3.rotateAroundX(-p.rotationPitch * (float) Math.PI / 180.0F);
+			vec3.rotateAroundY(-p.rotationYaw * (float) Math.PI / 180.0F);
+			Vec3 vec31 = Vec3.createVectorHelper((p.worldObj.rand.nextFloat() - 0.5D) * 0.3D, (-p.worldObj.rand.nextFloat()) * 0.6D - 0.3D, 0.6D);
+			vec31.rotateAroundX(-p.rotationPitch * (float) Math.PI / 180.0F);
+			vec31.rotateAroundY(-p.rotationYaw * (float) Math.PI / 180.0F);
+			vec31 = vec31.addVector(p.posX, p.posY + p.getEyeHeight(), p.posZ);
+			String s = "iconcrack_260";
+
+			// if (p_71010_1_.getHasSubtypes())
+			// {
+			// s = s + "_" + p_71010_1_.getItemDamage();
+			// }
+
+			p.worldObj.spawnParticle(s, vec31.xCoord, vec31.yCoord, vec31.zCoord, vec3.xCoord, vec3.yCoord + 0.05D, vec3.zCoord);
+		}
+	}
 	private String type;
+
 	private double x, y, z, velX, velY, velZ;
 
 	private int amount;
@@ -54,8 +75,7 @@ public class SpawnParticlePacket implements IMessage {
 	}
 
 	/**
-	 * Tells the client to spawn a particle. Arguments are the same as in
-	 * {@link net.minecraft.world.World#spawnParticle}, only pamount is added
+	 * Tells the client to spawn a particle. Arguments are the same as in {@link net.minecraft.world.World#spawnParticle}, only pamount is added
 	 * 
 	 * @param ptype
 	 * @param px
@@ -105,27 +125,6 @@ public class SpawnParticlePacket implements IMessage {
 		tag.setInteger("amount", amount);
 		ByteBufUtils.writeTag(buf, tag);
 
-	}
-	
-	private static void spawnEatParticle(EntityPlayer p){
-		 for (int j = 0; j < 16; ++j)
-         {
-             Vec3 vec3 = Vec3.createVectorHelper(((double)p.worldObj.rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
-             vec3.rotateAroundX(-p.rotationPitch * (float)Math.PI / 180.0F);
-             vec3.rotateAroundY(-p.rotationYaw * (float)Math.PI / 180.0F);
-             Vec3 vec31 = Vec3.createVectorHelper(((double)p.worldObj.rand.nextFloat() - 0.5D) * 0.3D, (double)(-p.worldObj.rand.nextFloat()) * 0.6D - 0.3D, 0.6D);
-             vec31.rotateAroundX(-p.rotationPitch * (float)Math.PI / 180.0F);
-             vec31.rotateAroundY(-p.rotationYaw * (float)Math.PI / 180.0F);
-             vec31 = vec31.addVector(p.posX, p.posY + (double)p.getEyeHeight(), p.posZ);
-             String s = "iconcrack_260";
-
-//             if (p_71010_1_.getHasSubtypes())
-//             {
-//                 s = s + "_" + p_71010_1_.getItemDamage();
-//             }
-
-             p.worldObj.spawnParticle(s, vec31.xCoord, vec31.yCoord, vec31.zCoord, vec3.xCoord, vec3.yCoord + 0.05D, vec3.zCoord);
-         }
 	}
 
 }

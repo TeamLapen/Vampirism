@@ -5,10 +5,21 @@ import de.teamlapen.vampirism.entity.ai.EntityAIStayHere;
 public class StayHereCommand extends DefaultMinionCommand {
 	protected final EntityRemoteVampireMinion minion;
 	protected final EntityAIStayHere stay;
-	public StayHereCommand(int id,EntityRemoteVampireMinion minion) {
+
+	public StayHereCommand(int id, EntityRemoteVampireMinion minion) {
 		super(id);
-		this.minion=minion;
-		stay=new EntityAIStayHere(minion);
+		this.minion = minion;
+		stay = new EntityAIStayHere(minion);
+	}
+
+	@Override
+	public int getMinU() {
+		return 80;
+	}
+
+	@Override
+	public int getMinV() {
+		return 0;
 	}
 
 	@Override
@@ -26,16 +37,6 @@ public class StayHereCommand extends DefaultMinionCommand {
 	public void onDeactivated() {
 		minion.tasks.removeTask(stay);
 
-	}
-
-	@Override
-	public int getMinU() {
-		return 80;
-	}
-
-	@Override
-	public int getMinV() {
-		return 0;
 	}
 
 }

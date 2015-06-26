@@ -39,9 +39,9 @@ import de.teamlapen.vampirism.util.Helper;
  */
 public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjustableLevel {
 
+	private final static int MAX_LEVEL = 3;
 	private boolean isLookingForHome;
 	protected int level = 0;
-	private final static int MAX_LEVEL = 3;
 
 	public EntityVampireHunter(World p_i1738_1_) {
 		super(p_i1738_1_);
@@ -135,11 +135,6 @@ public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjust
 			return null;
 		ChunkCoordinates cc = this.getHomePosition();
 		return this.worldObj.villageCollectionObj.findNearestVillage(cc.posX, cc.posY, cc.posZ, 10);
-	}
-
-	@Override
-	public void writeFullUpdateToNBT(NBTTagCompound nbt) {
-		this.writeEntityToNBT(nbt);
 	}
 
 	@Override
@@ -254,5 +249,10 @@ public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjust
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("level", level);
+	}
+
+	@Override
+	public void writeFullUpdateToNBT(NBTTagCompound nbt) {
+		this.writeEntityToNBT(nbt);
 	}
 }

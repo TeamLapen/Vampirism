@@ -4,7 +4,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.util.Logger;
@@ -17,13 +16,14 @@ import de.teamlapen.vampirism.util.Logger;
  */
 @SideOnly(Side.CLIENT)
 public class FlyingBloodPlayerParticle extends EntityFX {
-	private final int MAX_AGE = 60;
-	private final String TAG = "FlyingBloodParticle";
-	private final Entity entity;
-
-	public static void addParticle(FlyingBloodPlayerParticle p){
+	public static void addParticle(FlyingBloodPlayerParticle p) {
 		Minecraft.getMinecraft().effectRenderer.addEffect(p);
 	}
+	private final int MAX_AGE = 60;
+	private final String TAG = "FlyingBloodParticle";
+
+	private final Entity entity;
+
 	public FlyingBloodPlayerParticle(double posX, double posY, double posZ, NBTTagCompound data) {
 
 		super(Minecraft.getMinecraft().theWorld, posX, posY, posZ, 0D, 0D, 0D);

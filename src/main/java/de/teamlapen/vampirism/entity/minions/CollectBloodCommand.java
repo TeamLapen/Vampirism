@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.item.ItemBloodBottle;
 
 /**
  * Makes the minion collect blood and therefore picks up bottles
+ * 
  * @author Maxanier
  *
  */
@@ -27,15 +28,25 @@ public class CollectBloodCommand extends DefaultMinionCommand {
 	protected final EntityAIBase bite;
 	protected final EntityAIBase moveToBiteable;
 	protected final EntityAIBase waitForBottle;
-	
-	public CollectBloodCommand(int id,EntityRemoteVampireMinion m) {
+
+	public CollectBloodCommand(int id, EntityRemoteVampireMinion m) {
 		super(id);
-		minion=m;
-		runAround=new EntityAIMoveAround(m.getRepresentingEntity(),1.0,false);
-		runToPlayer=new EntityAIMoveToLord.EntityAIMinionBringBottle(m);
-		bite=new EntityAIBiteNearbyEntity.EntityAIMinionCollectFromNearby(m);
-		moveToBiteable=new EntityAIMoveToBiteable(m);
-		waitForBottle=new EntityAIWaitForBottle(m);
+		minion = m;
+		runAround = new EntityAIMoveAround(m.getRepresentingEntity(), 1.0, false);
+		runToPlayer = new EntityAIMoveToLord.EntityAIMinionBringBottle(m);
+		bite = new EntityAIBiteNearbyEntity.EntityAIMinionCollectFromNearby(m);
+		moveToBiteable = new EntityAIMoveToBiteable(m);
+		waitForBottle = new EntityAIWaitForBottle(m);
+	}
+
+	@Override
+	public int getMinU() {
+		return 48;
+	}
+
+	@Override
+	public int getMinV() {
+		return 0;
 	}
 
 	@Override
@@ -55,16 +66,16 @@ public class CollectBloodCommand extends DefaultMinionCommand {
 
 	@Override
 	public void onDeactivated() {
-		IMinionLord l=minion.getLord();
-		
-		if(l!=null&&l.getRepresentingEntity().getDistanceSqToEntity(minion)<16){
-			ItemStack item=minion.getRepresentingEntity().getEquipmentInSlot(0);
-			if(item!=null&&(item.getItem().equals(ModItems.bloodBottle)||item.getItem().equals(Items.glass_bottle))){
+		IMinionLord l = minion.getLord();
+
+		if (l != null && l.getRepresentingEntity().getDistanceSqToEntity(minion) < 16) {
+			ItemStack item = minion.getRepresentingEntity().getEquipmentInSlot(0);
+			if (item != null && (item.getItem().equals(ModItems.bloodBottle) || item.getItem().equals(Items.glass_bottle))) {
 				minion.getRepresentingEntity().entityDropItem(item, 0.1F);
 				minion.getRepresentingEntity().setCurrentItemOrArmor(0, null);
 			}
 		}
-		
+
 		minion.tasks.removeTask(runToPlayer);
 		minion.tasks.removeTask(bite);
 		minion.tasks.removeTask(runAround);
@@ -72,22 +83,13 @@ public class CollectBloodCommand extends DefaultMinionCommand {
 	}
 
 	@Override
-	public int getMinU() {
-		return 48;
-	}
+	public boolean shouldPickupItem(@NonNull ItemStack item) {
 
-	@Override
-	public int getMinV() {
-		return 0;
-	}
-	
-	@Override
-	public boolean shouldPickupItem(@NonNull ItemStack item){
-		
-		if(item.getItem().equals(ModItems.bloodBottle)||item.getItem().equals(Items.glass_bottle)){
-			ItemStack old=minion.getRepresentingEntity().getEquipmentInSlot(0);
-			if(old==null)return true;
-			if(ItemBloodBottle.getBlood(item)<ItemBloodBottle.getBlood(old)){
+		if (item.getItem().equals(ModItems.bloodBottle) || item.getItem().equals(Items.glass_bottle)) {
+			ItemStack old = minion.getRepresentingEntity().getEquipmentInSlot(0);
+			if (old == null)
+				return true;
+			if (ItemBloodBottle.getBlood(item) < ItemBloodBottle.getBlood(old)) {
 				return true;
 			}
 		}

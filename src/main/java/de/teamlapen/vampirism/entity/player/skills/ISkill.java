@@ -1,9 +1,6 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.IPieElement;
 
@@ -15,18 +12,18 @@ import de.teamlapen.vampirism.util.IPieElement;
  */
 public interface ISkill extends IPieElement {
 	/**
+	 * @return -1 disabled, 0 level to low, -2 other reason, 1 can be used
+	 */
+	public int canUse(VampirePlayer vampire, EntityPlayer player);
+
+	/**
 	 * @return Cooldown time in ticks until the skill can be used again
 	 */
 	public int getCooldown();
 
-	
-	/**
-	 * @return -1 disabled, 0 level to low, -2 other reason, 1 can be used
-	 */
-	public int canUse(VampirePlayer vampire,EntityPlayer player);
-
+	@Override
 	public String getUnlocalizedName();
-	
+
 	/**
 	 * Called when the skill is activated SERVER SIDE ONLY
 	 * 

@@ -19,9 +19,9 @@ import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 /**
- * Radial/pie menu which can be used as screen overlay to select stuff
- * The angles (in radiant) used in this class are used to describe the direction from the screen center. 0/2Pi shows right, Pi/2 up (!negative Y), Pi left
- * ... (similar to the visualization of complex numbers.
+ * Radial/pie menu which can be used as screen overlay to select stuff The angles (in radiant) used in this class are used to describe the direction from the screen center. 0/2Pi shows right, Pi/2 up
+ * (!negative Y), Pi left ... (similar to the visualization of complex numbers.
+ * 
  * @author maxanier
  *
  */
@@ -174,8 +174,8 @@ public abstract class GUIPieMenu extends GuiScreen {
 			int y = (int) (cY - Math.sin(rad) * radius) - IS / 2;
 
 			// Draw box and, if selected, highlight
-			float[] col=this.getColor(s);
-			if(col!=null){
+			float[] col = this.getColor(s);
+			if (col != null) {
 				GL11.glColor4f(col[0], col[1], col[2], 0.5F);
 			}
 			this.mc.getTextureManager().bindTexture(WIDGETS);
@@ -183,8 +183,8 @@ public abstract class GUIPieMenu extends GuiScreen {
 			if (selected) {
 				drawTexturedModalRect(x - 3, y - 3, 1, 23, 22, 22);
 			}
-			GL11.glColor4f(1F,1F,1F,1F);
-			if(selected){
+			GL11.glColor4f(1F, 1F, 1F, 1F);
+			if (selected) {
 				selectedElement = i;
 				drawSelectedCenter(cX, cY, rad);
 			}
@@ -206,16 +206,6 @@ public abstract class GUIPieMenu extends GuiScreen {
 		this.mc.mcProfiler.endSection();
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
-
-	/**
-	 * This method is called to retrieve the color for the elements border 
-	 * @param s
-	 * @return Can be null (-> 255,255,255)
-	 */
-	protected float[] getColor(IPieElement s) {
-		return null;
-	}
-
 
 	/**
 	 * Draws a circle with an arrow at the given coords
@@ -276,6 +266,16 @@ public abstract class GUIPieMenu extends GuiScreen {
 		GL11.glEnd();
 
 		GL11.glPopMatrix();
+	}
+
+	/**
+	 * This method is called to retrieve the color for the elements border
+	 * 
+	 * @param s
+	 * @return Can be null (-> 255,255,255)
+	 */
+	protected float[] getColor(IPieElement s) {
+		return null;
 	}
 
 	protected abstract int getMenuKeyCode();

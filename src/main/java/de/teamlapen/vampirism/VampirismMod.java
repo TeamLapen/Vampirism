@@ -50,8 +50,8 @@ public class VampirismMod {
 	public static IProxy proxy;
 
 	public static SimpleNetworkWrapper modChannel;
-	
-	public static boolean inDev=false;
+
+	public static boolean inDev = false;
 
 	public static CreativeTabs tabVampirism = new CreativeTabs("vampirism") {
 		@Override
@@ -62,6 +62,13 @@ public class VampirismMod {
 	};
 
 	public static DamageSource sunDamage = (new DamageSource("sun")).setDamageBypassesArmor().setMagicDamage();
+
+	public static boolean isSunDamageTime(World world) {
+		if (world == null)
+			return false;
+		int t = (int) (world.getWorldTime() % 24000);
+		return (t > 0 && t < 12500);
+	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
@@ -93,14 +100,14 @@ public class VampirismMod {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		//Make sure the Config initialisation is the first mod relating call
-		if((Boolean)Launch.blackboard.get("fml.deobfuscatedEnvironment")){
-			inDev=true;
-			Logger.inDev=true;
+		// Make sure the Config initialisation is the first mod relating call
+		if ((Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment")) {
+			inDev = true;
+			Logger.inDev = true;
 		}
-		Configs.init(event.getModConfigurationDirectory(),inDev);
+		Configs.init(event.getModConfigurationDirectory(), inDev);
 		Helper.Obfuscation.fillMap();
-		
+
 		ModPotion.init();
 		ModBlocks.init();
 		ModItems.init();
@@ -111,17 +118,16 @@ public class VampirismMod {
 		setupNetwork();
 
 		VillageBiomes.preInit(event);
-		
+
 		Skills.registerDefaultSkills();
-		
-		//Sends message to VersionChecker if installed
-		FMLInterModComms.sendRuntimeMessage(REFERENCE.MODID, "VersionChecker", "addVersionCheck",
-				REFERENCE.UPDATE_FILE_LINK);
+
+		// Sends message to VersionChecker if installed
+		FMLInterModComms.sendRuntimeMessage(REFERENCE.MODID, "VersionChecker", "addVersionCheck", REFERENCE.UPDATE_FILE_LINK);
 	}
 
 	private void setupNetwork() {
 		NetworkRegistry.INSTANCE.registerGuiHandler(instance, new GuiHandler());
-		
+
 		modChannel = NetworkRegistry.INSTANCE.newSimpleChannel(REFERENCE.MODID);
 		int id = 0;
 		modChannel.registerMessage(InputEventPacket.Handler.class, InputEventPacket.class, id++, Side.SERVER);
@@ -130,12 +136,6 @@ public class VampirismMod {
 		modChannel.registerMessage(RenderScreenRedPacket.Handler.class, RenderScreenRedPacket.class, id++, Side.CLIENT);
 		modChannel.registerMessage(UpdateEntityPacket.Handler.class, UpdateEntityPacket.class, id++, Side.CLIENT);
 		modChannel.registerMessage(RequestEntityUpdatePacket.Handler.class, RequestEntityUpdatePacket.class, id++, Side.SERVER);
-	}
-	
-	public static boolean isSunDamageTime(World world){
-		if(world==null)return false;
-		int t=(int) (world.getWorldTime()%24000);
-		return (t>0&&t<12500);
 	}
 
 }

@@ -30,9 +30,9 @@ import de.teamlapen.vampirism.util.REFERENCE;
 @SideOnly(Side.CLIENT)
 public class RendererBloodAltar4 extends TileEntitySpecialRenderer {
 
+	public static final String textureLoc = REFERENCE.MODID + ":textures/blocks/bloodAltar4.png";
 	private final ModelBloodAltar4 model;
 	private final ResourceLocation texture;
-	public static final String textureLoc = REFERENCE.MODID + ":textures/blocks/bloodAltar4.png";
 	private final ResourceLocation enderDragonCrystalBeamTextures = new ResourceLocation("textures/entity/endercrystal/endercrystal_beam.png");
 	private final ResourceLocation beaconBeamTexture = new ResourceLocation("textures/entity/beacon_beam.png");
 

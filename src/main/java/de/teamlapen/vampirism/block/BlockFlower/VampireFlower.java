@@ -11,5 +11,5 @@ public class VampireFlower extends BasicFlower {
 
 	public VampireFlower() {
 		super(name, name);
-	}	
+	}
 }

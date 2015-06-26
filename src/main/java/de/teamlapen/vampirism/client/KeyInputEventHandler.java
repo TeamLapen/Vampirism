@@ -28,10 +28,10 @@ public class KeyInputEventHandler {
 	public static KeyBinding AUTO = new KeyBinding(REFERENCE.KEYS.AUTO_BLOOD, Keyboard.KEY_B, REFERENCE.KEYS.CATEGORY);
 
 	public static KeyBinding SKILL = new KeyBinding(REFERENCE.KEYS.TOGGLE_SKILLS, -98, REFERENCE.KEYS.CATEGORY);
-	
-	public static KeyBinding MINION_CONTROL = new KeyBinding(REFERENCE.KEYS.MINION_CONTROL, Keyboard.KEY_R,REFERENCE.KEYS.CATEGORY);
-	
-	public static KeyBinding VISION = new KeyBinding(REFERENCE.KEYS.SWITCH_VISION,Keyboard.KEY_N,REFERENCE.KEYS.CATEGORY);
+
+	public static KeyBinding MINION_CONTROL = new KeyBinding(REFERENCE.KEYS.MINION_CONTROL, Keyboard.KEY_R, REFERENCE.KEYS.CATEGORY);
+
+	public static KeyBinding VISION = new KeyBinding(REFERENCE.KEYS.SWITCH_VISION, Keyboard.KEY_N, REFERENCE.KEYS.CATEGORY);
 
 	private static KEY getPressedKeyBinding() {
 		if (SUCK.isPressed()) {
@@ -40,11 +40,9 @@ public class KeyInputEventHandler {
 			return KEY.AUTO;
 		} else if (SKILL.isPressed()) {
 			return KEY.SKILL;
-		}
-		else if(VISION.isPressed()){
+		} else if (VISION.isPressed()) {
 			return KEY.VISION;
-		}
-		else if(MINION_CONTROL.isPressed()){
+		} else if (MINION_CONTROL.isPressed()) {
 			return KEY.MINION_CONTROL;
 		}
 		return KEY.UNKNOWN;
@@ -72,22 +70,19 @@ public class KeyInputEventHandler {
 		} else if (keyPressed == KEY.SKILL) {
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 			player.openGui(VampirismMod.instance, GuiHandler.ID_SKILL, player.worldObj, player.chunkCoordX, player.chunkCoordY, player.chunkCoordZ);
-		}
-		else if(keyPressed == KEY.VISION){
-			VampirismMod.modChannel.sendToServer(new InputEventPacket(InputEventPacket.SWITCHVISION,"0"));
-		}
-		else if(keyPressed == KEY.MINION_CONTROL){
+		} else if (keyPressed == KEY.VISION) {
+			VampirismMod.modChannel.sendToServer(new InputEventPacket(InputEventPacket.SWITCHVISION, "0"));
+		} else if (keyPressed == KEY.MINION_CONTROL) {
 			MovingObjectPosition mouseOver = Minecraft.getMinecraft().objectMouseOver;
 			EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-			if(mouseOver!=null&&mouseOver.entityHit!=null){
-				IMinion m=null;
-				if(mouseOver.entityHit instanceof IMinion){
-					m=(IMinion) mouseOver.entityHit;
+			if (mouseOver != null && mouseOver.entityHit != null) {
+				IMinion m = null;
+				if (mouseOver.entityHit instanceof IMinion) {
+					m = (IMinion) mouseOver.entityHit;
+				} else if (mouseOver.entityHit instanceof EntityCreature && VampireMob.get((EntityCreature) mouseOver.entityHit).isMinion()) {
+					m = VampireMob.get((EntityCreature) mouseOver.entityHit);
 				}
-				else if(mouseOver.entityHit instanceof EntityCreature &&VampireMob.get((EntityCreature) mouseOver.entityHit).isMinion()){
-					m=VampireMob.get((EntityCreature) mouseOver.entityHit);
-				}
-				if(m!=null&&!VampirePlayer.get(player).equals(m.getLord())){
+				if (m != null && !VampirePlayer.get(player).equals(m.getLord())) {
 					player.addChatComponentMessage(new ChatComponentTranslation("text.vampirism:no_control_minion"));
 					return;
 				}

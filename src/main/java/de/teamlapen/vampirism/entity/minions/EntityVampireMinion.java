@@ -2,34 +2,27 @@ package de.teamlapen.vampirism.entity.minions;
 
 import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
 
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
-import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
+
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.entity.DefaultVampire;
-import de.teamlapen.vampirism.entity.VampireMob;
-import de.teamlapen.vampirism.entity.ai.EntityAIDefendLord;
-import de.teamlapen.vampirism.entity.ai.EntityAIFollowBoss;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.network.UpdateEntityPacket;
 import de.teamlapen.vampirism.util.BALANCE;
@@ -37,6 +30,7 @@ import de.teamlapen.vampirism.util.Helper;
 
 /**
  * Base class for all vampire minions. Handles conversion and commands
+ * 
  * @author Max
  *
  */
@@ -46,37 +40,36 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 	 * Used for the visual transition from normal vampire to players minion
 	 */
 	private int oldVampireTexture = -1;
-	
+
 	private IMinionCommand activeCommand;
-	
+
 	@SideOnly(Side.CLIENT)
 	private int activeCommandId;
 
 	public EntityVampireMinion(World world) {
 		super(world);
-		//this.setSize(0.5F, 1.1F);
+		// this.setSize(0.5F, 1.1F);
 		this.func_110163_bv();
 		this.tasks.addTask(6, new EntityAIAttackOnCollide(this, EntityLivingBase.class, 1.0, false));
-		this.tasks.addTask(15, new EntityAIWander(this,0.7));
-		this.tasks.addTask(16, new EntityAIWatchClosest(this,EntityPlayer.class,10));
+		this.tasks.addTask(15, new EntityAIWander(this, 0.7));
+		this.tasks.addTask(16, new EntityAIWatchClosest(this, EntityPlayer.class, 10));
 
 		this.targetTasks.addTask(8, new EntityAIHurtByTarget(this, false));
-		
-		activeCommand=this.getDefaultCommand();
+
+		activeCommand = this.getDefaultCommand();
 		activeCommand.onActivated();
 	}
 
-	public void activateMinionCommand(IMinionCommand command){
-		if(command==null)return;
+	@Override
+	public void activateMinionCommand(IMinionCommand command) {
+		if (command == null)
+			return;
 		this.activeCommand.onDeactivated();
-		this.activeCommand=command;
+		this.activeCommand = command;
 		this.activeCommand.onActivated();
 		this.sync();
 	}
-	
-	public IMinionCommand getActiveCommand(){
-		return this.activeCommand;
-	}
+
 	@Override
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
@@ -97,10 +90,21 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 
 	/**
 	 * Copies vampire minion data
+	 * 
 	 * @param from
 	 */
 	protected void copyDataFromMinion(EntityVampireMinion from) {
 		this.setOldVampireTexture(from.getOldVampireTexture());
+	}
+
+	public IMinionCommand getActiveCommand() {
+		return this.activeCommand;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public int getActiveCommandId() {
+		return this.activeCommandId;
 	}
 
 	@Override
@@ -110,6 +114,13 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 			return i;
 		return 0.01F;
 	}
+
+	/**
+	 * Has to return the command which is activated on default
+	 * 
+	 * @return
+	 */
+	protected abstract @NonNull IMinionCommand getDefaultCommand();
 
 	public int getOldVampireTexture() {
 		return oldVampireTexture;
@@ -148,7 +159,7 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 		if (nbt.hasKey("oldvampire")) {
 			this.oldVampireTexture = nbt.getInteger("oldvampire");
 		}
-		this.activeCommandId=nbt.getInteger("active_command_id");
+		this.activeCommandId = nbt.getInteger("active_command_id");
 		loadPartialUpdateFromNBT(nbt);
 	}
 
@@ -160,34 +171,83 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 		if (oldVampireTexture != -1 && worldObj.isRemote) {
 			Helper.spawnParticlesAroundEntity(this, "witchMagic", 1.0F, 3);
 		}
-		if(!this.worldObj.isRemote&&!this.dead){
+		if (!this.worldObj.isRemote && !this.dead) {
+			@SuppressWarnings("rawtypes")
 			List list = this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.boundingBox.expand(1.0D, 0.0D, 1.0D));
-            Iterator iterator = list.iterator();
+			@SuppressWarnings("rawtypes")
+			Iterator iterator = list.iterator();
 
-            while (iterator.hasNext())
-            {
-                EntityItem entityitem = (EntityItem)iterator.next();
+			while (iterator.hasNext()) {
+				EntityItem entityitem = (EntityItem) iterator.next();
 
-                if (!entityitem.isDead && entityitem.getEntityItem() != null)
-                {
-                    ItemStack itemstack = entityitem.getEntityItem();
-                    if(activeCommand.shouldPickupItem(itemstack)){
-                    	ItemStack stack1=this.getEquipmentInSlot(0);
-                    	if(stack1!=null){
-                    		this.entityDropItem(stack1, 0.0F);
-                    	}
-                    	this.setCurrentItemOrArmor(0, itemstack);
-                        entityitem.setDead();
-                    }
+				if (!entityitem.isDead && entityitem.getEntityItem() != null) {
+					ItemStack itemstack = entityitem.getEntityItem();
+					if (activeCommand.shouldPickupItem(itemstack)) {
+						ItemStack stack1 = this.getEquipmentInSlot(0);
+						if (stack1 != null) {
+							this.entityDropItem(stack1, 0.0F);
+						}
+						this.setCurrentItemOrArmor(0, itemstack);
+						entityitem.setDead();
+					}
 
-                }
-            }
+				}
+			}
 		}
 		super.onLivingUpdate();
 	}
 
+	@Override
+	public void readEntityFromNBT(NBTTagCompound nbt) {
+		super.readEntityFromNBT(nbt);
+		IMinionCommand command = this.getCommand(nbt.getInteger("command_id"));
+		if (command != null) {
+			this.activateMinionCommand(command);
+		}
+		if (nbt.hasKey("CustomName", 8) && nbt.getString("CustomName").length() > 0) {
+			this.tryToSetName(nbt.getString("CustomName"), null);
+		}
+	}
+
+	/**
+	 * Does not nothing, since minions should not be named normaly. Use {@link #tryToSetName(String, EntityPlayer)} instead
+	 */
+	@Override
+	public void setCustomNameTag(String s) {
+
+	}
+
 	public void setOldVampireTexture(int oldVampireTexture) {
 		this.oldVampireTexture = oldVampireTexture;
+	}
+
+	public void sync() {
+		if (!worldObj.isRemote) {
+			Helper.sendPacketToPlayersAround(new UpdateEntityPacket(this), this);
+		}
+
+	}
+
+	/**
+	 * Replaces {@link #setCustomNameTag(String)}.
+	 * 
+	 * @param name
+	 * @param player
+	 *            If this isn't null, checks if the player is the minions lord
+	 * @return success
+	 */
+	public boolean tryToSetName(String name, @Nullable EntityPlayer player) {
+		if (player == null || MinionHelper.isLordSafe(this, player)) {
+			super.setCustomNameTag(name);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void writeEntityToNBT(NBTTagCompound nbt) {
+		super.writeEntityToNBT(nbt);
+		nbt.setInteger("command_id", getActiveCommand().getId());
 	}
 
 	@Override
@@ -212,65 +272,6 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 	 */
 	protected void writeUpdateToNBT(NBTTagCompound nbt) {
 
-	}
-	
-	@Override
-	public void writeEntityToNBT(NBTTagCompound nbt) {
-		super.writeEntityToNBT(nbt);
-		nbt.setInteger("command_id", getActiveCommand().getId());
-	}
-	
-	@Override
-	public void readEntityFromNBT(NBTTagCompound nbt) {
-		super.readEntityFromNBT(nbt);
-		IMinionCommand command=this.getCommand(nbt.getInteger("command_id"));
-		if(command!=null){
-			this.activateMinionCommand(command);
-		}
-        if (nbt.hasKey("CustomName", 8) && nbt.getString("CustomName").length() > 0)
-        {
-            this.tryToSetName(nbt.getString("CustomName"),null);
-        }
-	}
-	
-	/**
-	 * Does not nothing, since minions should not be named normaly. Use {@link #tryToSetName(String, EntityPlayer)} instead
-	 */
-	@Override
-	public void setCustomNameTag(String s){
-		
-	}
-	
-	/**
-	 * Replaces {@link #setCustomNameTag(String)}.
-	 * @param name
-	 * @param player If this isn't null, checks if the player is the minions lord
-	 * @return success
-	 */
-	public boolean tryToSetName(String name,@Nullable EntityPlayer player){
-		if(player==null||MinionHelper.isLordSafe(this, player)){
-			super.setCustomNameTag(name);
-			return true;
-		}
-		return false;
-	}
-	
-	/**
-	 * Has to return the command which is activated on default
-	 * @return
-	 */
-	protected abstract @NonNull IMinionCommand getDefaultCommand();
-	
-	@SideOnly(Side.CLIENT)
-	public int getActiveCommandId(){
-		return this.activeCommandId;
-	}
-	
-	public void sync() {
-		if(!worldObj.isRemote){
-			Helper.sendPacketToPlayersAround(new UpdateEntityPacket(this), this);
-		}
-		
 	}
 
 }

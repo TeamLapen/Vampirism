@@ -1,18 +1,11 @@
 package de.teamlapen.vampirism.entity;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityWitch;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityHorse;
@@ -27,15 +20,18 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
-import net.minecraftforge.common.IExtendedEntityProperties;
-import de.teamlapen.vampirism.VampirismMod;
+
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.entity.ai.EntityAIModifier;
 import de.teamlapen.vampirism.entity.minions.DefendLordCommand;
 import de.teamlapen.vampirism.entity.minions.IMinion;
 import de.teamlapen.vampirism.entity.minions.IMinionCommand;
 import de.teamlapen.vampirism.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.entity.minions.JustFollowCommand;
-import de.teamlapen.vampirism.entity.minions.StayHereCommand;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.UpdateEntityPacket;
 import de.teamlapen.vampirism.network.UpdateEntityPacket.ISyncableExtendedProperties;
@@ -46,6 +42,10 @@ import de.teamlapen.vampirism.villages.VillageVampire;
 import de.teamlapen.vampirism.villages.VillageVampireData;
 
 public class VampireMob implements ISyncableExtendedProperties, IMinion {
+
+	public final static String EXT_PROP_NAME = "VampireMob";
+
+	private final static String TAG = "VampireMob";
 
 	public static final VampireMob get(EntityCreature mob) {
 		return (VampireMob) mob.getExtendedProperties(VampireMob.EXT_PROP_NAME);
@@ -72,49 +72,46 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		}
 		return -1;
 	}
-
 	public static final void register(EntityCreature mob) {
 		mob.registerExtendedProperties(VampireMob.EXT_PROP_NAME, new VampireMob(mob));
 	}
-
 	private final EntityCreature entity;
-	public final static String EXT_PROP_NAME = "VampireMob";
-	private final static String TAG = "VampireMob";
 
 	private final String KEY_TYPE = "type";
-
 
 	private final int blood;
 	private byte type;
 
 	private UUID lordId = null;
-	
+
 	private IMinionCommand activeCommand = null;
-	
+
 	@SideOnly(Side.CLIENT)
-	private int activeCommandId=-1;
-	
+	private int activeCommandId = -1;
+
 	private final ArrayList<IMinionCommand> commands;
 
 	public VampireMob(EntityCreature mob) {
 		entity = mob;
 		blood = getMaxBloodAmount(mob);
-		type=(byte)0;
-		commands=new ArrayList<IMinionCommand>();
-		commands.add(new DefendLordCommand(0,this));
+		type = (byte) 0;
+		commands = new ArrayList<IMinionCommand>();
+		commands.add(new DefendLordCommand(0, this));
 		commands.add(new JustFollowCommand(1));
 	}
-	
-	public void activateMinionCommand(@Nullable IMinionCommand command){
-		if(command==null)return;
-		if(!this.isMinion()){
-			Logger.w(TAG, "%s is no minions and can therby not execute this %s minion command", this,command);
+
+	@Override
+	public void activateMinionCommand(@Nullable IMinionCommand command) {
+		if (command == null)
+			return;
+		if (!this.isMinion()) {
+			Logger.w(TAG, "%s is no minions and can therby not execute this %s minion command", this, command);
 			return;
 		}
-		if(activeCommand!=null){
+		if (activeCommand != null) {
 			activeCommand.onDeactivated();
 		}
-		activeCommand=command;
+		activeCommand = command;
 		activeCommand.onActivated();
 		this.sync();
 	}
@@ -145,7 +142,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 			if (entity instanceof EntityVampireHunter) {
 				entity.attackEntityFrom(DamageSource.magic, 1);
 			} else {
-				//Type should be only changed by the dedicated methods, but since the mob will die instantly it should not cause any problems
+				// Type should be only changed by the dedicated methods, but since the mob will die instantly it should not cause any problems
 				type = (byte) (type | 1);
 				entity.attackEntityFrom(DamageSource.magic, 100);
 			}
@@ -173,17 +170,51 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	}
 
 	@Override
+	public int getActiveCommandId() {
+		return this.activeCommandId;
+	}
+
+	@Override
+	public ArrayList<IMinionCommand> getAvailableCommands() {
+		return commands;
+	}
+
+	/**
+	 * If the mob can be bitten, returns its blood amount, otherwise returns -1
+	 * 
+	 * @return
+	 */
+	public int getBlood() {
+		if (canBeBitten()) {
+			return blood;
+		}
+		return -1;
+	}
+
+	@Override
+	public IMinionCommand getCommand(int id) {
+		if (id < commands.size())
+			return commands.get(id);
+		return null;
+	}
+
+	@Override
 	public IMinionLord getLord() {
 		if (!isMinion()) {
 			Logger.w("VampireMob", "Trying to get lord, but mob is no minion");
 		}
-		EntityPlayer player=(lordId == null ? null : entity.worldObj.func_152378_a(lordId));
-		return (player==null?null:VampirePlayer.get(player));
+		EntityPlayer player = (lordId == null ? null : entity.worldObj.func_152378_a(lordId));
+		return (player == null ? null : VampirePlayer.get(player));
 	}
 
 	@Override
-	public EntityCreature getRepresentingEntity() {
+	public @NonNull EntityCreature getRepresentingEntity() {
 		return entity;
+	}
+
+	@Override
+	public int getTheEntityID() {
+		return entity.getEntityId();
 	}
 
 	@Override
@@ -202,41 +233,52 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	public void loadNBTData(NBTTagCompound compound) {
 		NBTTagCompound properties = (NBTTagCompound) compound.getTag(EXT_PROP_NAME);
 		if (properties != null) {
-			if(properties.hasKey(KEY_TYPE)){
-				type=properties.getByte(KEY_TYPE);
+			if (properties.hasKey(KEY_TYPE)) {
+				type = properties.getByte(KEY_TYPE);
 			}
-			IMinionCommand command=null;
+			IMinionCommand command = null;
 			if (isMinion()) {
 				if (properties.hasKey("BossUUIDMost")) {
 					this.lordId = new UUID(properties.getLong("BossUUIDMost"), properties.getLong("BossUUIDLeast"));
-					Logger.d(TAG, "Mob %s is minion with lord %s", entity,lordId);
-					command=this.getCommand(properties.getInteger("command_id"));
-					if(command==null){
-						command=this.getCommand(0);
+					Logger.d(TAG, "Mob %s is minion with lord %s", entity, lordId);
+					command = this.getCommand(properties.getInteger("command_id"));
+					if (command == null) {
+						command = this.getCommand(0);
 					}
-				}
-				else{
-					Logger.w(TAG, "Mob %s is a minion but does not have a lord uuid saved (%s). This should only happen once", entity,properties);
-					if(isVampire()){
-						type=2;
-					}
-					else{
-						type=0;
+				} else {
+					Logger.w(TAG, "Mob %s is a minion but does not have a lord uuid saved (%s). This should only happen once", entity, properties);
+					if (isVampire()) {
+						type = 2;
+					} else {
+						type = 0;
 					}
 				}
 			}
-			
-			if(isMinion()){
+
+			if (isMinion()) {
 				this.setMinion();
 				this.activateMinionCommand(command);
 			}
-			if(isVampire()){
+			if (isVampire()) {
 				this.setVampire();
 			}
 		}
 
 	}
 
+	@SideOnly(Side.CLIENT)
+	@Override
+	public void loadUpdateFromNBT(NBTTagCompound nbt) {
+		if (nbt.hasKey(KEY_TYPE)) {
+			type = nbt.getByte(KEY_TYPE);
+		}
+		if (nbt.hasKey("BossUUIDMost")) {
+			this.lordId = new UUID(nbt.getLong("BossUUIDMost"), nbt.getLong("BossUUIDLeast"));
+		}
+		if (nbt.hasKey("active_command_id")) {
+			this.activeCommandId = nbt.getInteger("active_command_id");
+		}
+	}
 
 	public boolean lowEnoughHealth() {
 		return (entity.getHealth() / entity.getMaxHealth()) <= BALANCE.SUCK_BLOOD_HEALTH_REQUIREMENT;
@@ -264,12 +306,12 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 
 	public void onUpdate() {
 		if (isMinion() && !entity.worldObj.isRemote) {
-			IMinionLord lord=getLord();
+			IMinionLord lord = getLord();
 			if (lord != null) {
 				if (lord.getRepresentingEntity().equals(entity.getAttackTarget())) {
 					entity.setAttackTarget(lord.getMinionTarget());
 				}
-				if(entity.equals(entity.getAttackTarget())){
+				if (entity.equals(entity.getAttackTarget())) {
 					entity.setAttackTarget(null);
 				}
 			}
@@ -283,7 +325,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		if (isMinion()) {
 			properties.setLong("BossUUIDMost", this.lordId.getMostSignificantBits());
 			properties.setLong("BossUUIDLeast", this.lordId.getLeastSignificantBits());
-			if(activeCommand!=null){
+			if (activeCommand != null) {
 				properties.setInteger("command_id", activeCommand.getId());
 			}
 		}
@@ -293,12 +335,11 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 
 	@Override
 	public void setLord(IMinionLord b) {
-		if(b!=null){
-			if(b.getRepresentingEntity() instanceof EntityPlayer){
+		if (b != null) {
+			if (b.getRepresentingEntity() instanceof EntityPlayer) {
 				this.setLordId(b.getThePersistentID());
-			}
-			else{
-				Logger.w("VampireMob", "Only players can have non saveable minion. This(%s) cannot be controlled by %s", this,b);
+			} else {
+				Logger.w("VampireMob", "Only players can have non saveable minion. This(%s) cannot be controlled by %s", this, b);
 			}
 
 		}
@@ -313,8 +354,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	}
 
 	/**
-	 * Sets the minion bit and adds minion specific tasks. Does not sync.
-	 * This clears all AI tasks, so make sure to add any new tasks after this.
+	 * Sets the minion bit and adds minion specific tasks. Does not sync. This clears all AI tasks, so make sure to add any new tasks after this.
 	 */
 	private void setMinion() {
 		type = (byte) (type | 2);
@@ -329,79 +369,33 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		EntityAIModifier.addVampireMobTasks(entity);
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
-	public void loadUpdateFromNBT(NBTTagCompound nbt) {
-		if(nbt.hasKey(KEY_TYPE)){
-			type=nbt.getByte(KEY_TYPE);
+	public boolean shouldBeSavedWithLord() {
+		return false;
+	}
+
+	public void sync() {
+		if (!entity.worldObj.isRemote) {
+			Helper.sendPacketToPlayersAround(new UpdateEntityPacket(this), entity);
 		}
-		if (nbt.hasKey("BossUUIDMost")) {
-			this.lordId = new UUID(nbt.getLong("BossUUIDMost"), nbt.getLong("BossUUIDLeast"));
-		}
-		if(nbt.hasKey("active_command_id")){
-			this.activeCommandId=nbt.getInteger("active_command_id");
-		}		
+
+	}
+
+	@Override
+	public String toString() {
+		return String.format(TAG + " of %s minion(%b) vampire(%b)", entity, isMinion(), isVampire());
 	}
 
 	@Override
 	public void writeFullUpdateToNBT(NBTTagCompound nbt) {
 		nbt.setByte(KEY_TYPE, type);
-		if(activeCommand!=null){
+		if (activeCommand != null) {
 			nbt.setInteger("active_command_id", activeCommand.getId());
 		}
-		if(isMinion()){
+		if (isMinion()) {
 			nbt.setLong("BossUUIDMost", this.lordId.getMostSignificantBits());
 			nbt.setLong("BossUUIDLeast", this.lordId.getLeastSignificantBits());
 		}
-	}
-
-	@Override
-	public int getTheEntityID() {
-		return entity.getEntityId();
-	}
-
-	public void sync() {
-		if(!entity.worldObj.isRemote){
-			Helper.sendPacketToPlayersAround(new UpdateEntityPacket(this), entity);
-		}
-		
-	}
-	
-	/**
-	 * If the mob can be bitten, returns its blood amount, otherwise returns -1
-	 * @return
-	 */
-	public int getBlood(){
-		if(canBeBitten()){
-			return blood;
-		}
-		return -1;
-	}
-
-	@Override
-	public boolean shouldBeSavedWithLord() {
-		return false;
-	}
-	
-	@Override
-	public String toString(){
-		return String.format(TAG+" of %s minion(%b) vampire(%b)", entity,isMinion(),isVampire());
-	}
-
-	@Override
-	public ArrayList<IMinionCommand> getAvailableCommands() {
-		return commands;
-	}
-
-	@Override
-	public IMinionCommand getCommand(int id) {
-		if(id<commands.size())return commands.get(id);
-		return null;
-	}
-
-	@Override
-	public int getActiveCommandId() {
-		return this.activeCommandId;
 	}
 
 }

@@ -10,8 +10,18 @@ import de.teamlapen.vampirism.util.REFERENCE;
 public class SummonBatSkill extends DefaultSkill {
 
 	@Override
+	public boolean canBeUsedBy(VampirePlayer vampire, EntityPlayer player) {
+		return vampire.isSkillActive(Skills.batMode);
+	}
+
+	@Override
 	public int getCooldown() {
-		return BALANCE.VP_SKILLS.SUMMON_BAT_COOLDOWN*20;
+		return BALANCE.VP_SKILLS.SUMMON_BAT_COOLDOWN * 20;
+	}
+
+	@Override
+	public int getMinLevel() {
+		return BALANCE.VP_SKILLS.SUMMON_BAT_MIN_LEVEL;
 	}
 
 	@Override
@@ -25,28 +35,18 @@ public class SummonBatSkill extends DefaultSkill {
 	}
 
 	@Override
+	public String getUnlocalizedName() {
+		return "skill.vampirism.summon_bats";
+	}
+
+	@Override
 	public boolean onActivated(VampirePlayer vampire, EntityPlayer player) {
-		for(int i=0;i<BALANCE.VP_SKILLS.SUMMON_BAT_COUNT;i++){
-			Entity e=EntityList.createEntityByName(REFERENCE.ENTITY.BLINDING_BAT_NAME, player.worldObj);
+		for (int i = 0; i < BALANCE.VP_SKILLS.SUMMON_BAT_COUNT; i++) {
+			Entity e = EntityList.createEntityByName(REFERENCE.ENTITY.BLINDING_BAT_NAME, player.worldObj);
 			e.copyLocationAndAnglesFrom(player);
 			player.worldObj.spawnEntityInWorld(e);
 		}
 		return true;
-	}
-
-	@Override
-	public int getMinLevel() {
-		return BALANCE.VP_SKILLS.SUMMON_BAT_MIN_LEVEL;
-	}
-	
-	@Override
-	public boolean canBeUsedBy(VampirePlayer vampire,EntityPlayer player){
-		return vampire.isSkillActive(Skills.batMode);
-	}
-	
-	@Override
-	public String getUnlocalizedName() {
-		return "skill.vampirism.summon_bats";
 	}
 
 }

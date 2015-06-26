@@ -146,6 +146,11 @@ public class TextureHelper {
 		}
 
 	}
+
+	private static final String TAG = "TextureHelper";
+
+	private final static ResourceLocation playerOverlay = new ResourceLocation(REFERENCE.MODID + ":textures/entity/playerOverlay.png");
+
 	/**
 	 * Makes sure that the texture manager has a vampire version texture at the newLoc index
 	 * 
@@ -161,20 +166,19 @@ public class TextureHelper {
 			ResourceLocation overlay = getOverlay(e);
 			ITextureObject texture = null;
 			try {
-				if(e instanceof EntityHorse){
-					LayeredTexture horseTex=(LayeredTexture) manager.getTexture(old);
-					List l=horseTex.layeredTextureNames;
+				if (e instanceof EntityHorse) {
+					LayeredTexture horseTex = (LayeredTexture) manager.getTexture(old);
+					List l = horseTex.layeredTextureNames;
 					l.add(overlay.toString());
-					texture=new LayeredTexture(toStringArraySafe(l));
-				}
-				else if (overlay == null) {
+					texture = new LayeredTexture(toStringArraySafe(l));
+				} else if (overlay == null) {
 					texture = new SimpleTexture(old);
 				} else {
 					texture = new VampireTexture(old, overlay);
 				}
 			} catch (Exception e1) {
-				Logger.e(TAG, "Failed to create overlayed texture object",e1);
-				texture=manager.getTexture(old);
+				Logger.e(TAG, "Failed to create overlayed texture object", e1);
+				texture = manager.getTexture(old);
 			}
 
 			manager.loadTexture(newLoc, texture);
@@ -238,16 +242,12 @@ public class TextureHelper {
 		File mdir = new File(sdir, hash.substring(0, 2));
 		return new File(mdir, hash);
 	}
-	
-	private static String[] toStringArraySafe(List list){
-		while(list.contains(null)){
+
+	private static String[] toStringArraySafe(List list) {
+		while (list.contains(null)) {
 			list.remove(null);
 		}
-		return ((List<String>)list).toArray(new String[list.size()]);
+		return ((List<String>) list).toArray(new String[list.size()]);
 	}
-
-	private static final String TAG = "TextureHelper";
-
-	private final static ResourceLocation playerOverlay = new ResourceLocation(REFERENCE.MODID + ":textures/entity/playerOverlay.png");
 
 }

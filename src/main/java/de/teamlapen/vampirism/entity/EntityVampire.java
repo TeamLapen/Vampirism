@@ -22,7 +22,7 @@ public class EntityVampire extends DefaultVampire {
 		// Avoids Vampire Hunters
 		this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityVampireHunter.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.2));
 		this.tasks.addTask(3, new EntityAIRestrictSun(this));
-		this.tasks.addTask(4, new EntityAIFleeSun(this,0.9F));
+		this.tasks.addTask(4, new EntityAIFleeSun(this, 0.9F));
 		// Low priority tasks
 		this.tasks.addTask(6, new EntityAIMoveThroughVillage(this, 0.6, false));
 		this.tasks.addTask(6, new EntityAIWander(this, 0.7));

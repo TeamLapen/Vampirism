@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.tileEntity;
 import java.util.ArrayList;
 
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockCompressed;
 import net.minecraft.block.BlockStoneBrick;
@@ -156,11 +155,11 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 					Block b = worldObj.getBlock(x, y, z);
 					// Logger.i("Test", "T:" + x + ":" + y + ":" + z + ";" + (x - lx) + ":" + (y - ly) + ":" + (z - lz) + ";" + type + ";" + b.getUnlocalizedName());
 					if (type == 0) {
-// Disabled for now to prevent grass or so blocking and stop some mod conflicts, can probably be enabled again sometim TODO
-//						if (!(b.isAir(worldObj, x, y, z))) {
-//							Logger.i(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
-//							return null;
-//						}
+						// Disabled for now to prevent grass or so blocking and stop some mod conflicts, can probably be enabled again sometim TODO
+						// if (!(b.isAir(worldObj, x, y, z))) {
+						// Logger.i(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
+						// return null;
+						// }
 					}
 					if (type == 2) {
 						if (!(b instanceof BlockBloodAltar4Tip)) {
@@ -485,9 +484,9 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 	 * @param hz
 	 * @param structure
 	 */
+	@SuppressWarnings("unused")
 	private void setBlocks(int lx, int ly, int lz, int hx, int hy, int hz, int[][][] structure) {
 
-		Block blocktype = null;
 		for (int x = lx; x <= hx; x++) {
 			for (int z = lz; z <= hz; z++) {
 				for (int y = ly; y < hy; y++) {

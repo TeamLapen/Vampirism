@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
@@ -15,8 +14,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.EnderTeleportEvent;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Helper;
@@ -63,6 +60,14 @@ public class EntityDracula extends EntityVampire implements IBossDisplayData {
 	}
 
 	@Override
+	public void onDeath(DamageSource src) {
+		if (src.getSourceOfDamage() instanceof EntityPlayer) {
+			VampirePlayer p = VampirePlayer.get((EntityPlayer) src.getSourceOfDamage());
+			p.setVampireLord(true);
+		}
+	}
+
+	@Override
 	public void onLivingUpdate() {
 		if (this.worldObj.isDaytime() && !this.worldObj.isRemote) {
 			float f = this.getBrightness(1.0F);
@@ -105,14 +110,6 @@ public class EntityDracula extends EntityVampire implements IBossDisplayData {
 
 		super.onLivingUpdate();
 	}
-	
-	@Override
-	public void onDeath(DamageSource src){
-		if(src.getSourceOfDamage() instanceof EntityPlayer){
-			VampirePlayer p=VampirePlayer.get((EntityPlayer) src.getSourceOfDamage());
-			p.setVampireLord(true);
-		}
-	}
 
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
@@ -137,9 +134,8 @@ public class EntityDracula extends EntityVampire implements IBossDisplayData {
 		double d0 = this.posX + (this.rand.nextDouble() - 0.5D) * maxTeleportDistanceX;
 		double d1 = this.posY + (this.rand.nextInt(maxTeleportDistanceY) - maxTeleportDistanceY * 0.5D);
 		double d2 = this.posZ + (this.rand.nextDouble() - 0.5D) * maxTeleportDistanceZ;
-		return Helper.teleportTo(this,d0, d1, d2,true);
+		return Helper.teleportTo(this, d0, d1, d2, true);
 	}
-
 
 	/** Teleports dracula to the given entity */
 	private boolean teleportToEntity(Entity e) {
@@ -149,7 +145,7 @@ public class EntityDracula extends EntityVampire implements IBossDisplayData {
 		double d1 = this.posX + (this.rand.nextDouble() - 0.5D) * 8.0D - vec3.xCoord * d0;
 		double d2 = this.posY + (this.rand.nextInt(16) - 8) - vec3.yCoord * d0;
 		double d3 = this.posZ + (this.rand.nextDouble() - 0.5D) * 8.0D - vec3.zCoord * d0;
-		return Helper.teleportTo(this,d1, d2, d3,true);
+		return Helper.teleportTo(this, d1, d2, d3, true);
 	}
 
 	@Override

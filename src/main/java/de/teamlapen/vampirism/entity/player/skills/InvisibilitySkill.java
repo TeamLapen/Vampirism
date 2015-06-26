@@ -7,8 +7,23 @@ import de.teamlapen.vampirism.util.BALANCE;
 public class InvisibilitySkill extends DefaultSkill implements ILastingSkill {
 
 	@Override
+	public boolean canBeUsedBy(VampirePlayer vampire, EntityPlayer player) {
+		return vampire.isVampireLord();
+	}
+
+	@Override
 	public int getCooldown() {
-		return BALANCE.VP_SKILLS.INVISIBILITY_COOLDOWN*20;
+		return BALANCE.VP_SKILLS.INVISIBILITY_COOLDOWN * 20;
+	}
+
+	@Override
+	public int getDuration(int level) {
+		return BALANCE.VP_SKILLS.INVISIBILITY_DURATION * 20;
+	}
+
+	@Override
+	public int getMinLevel() {
+		return 0;
 	}
 
 	@Override
@@ -24,14 +39,14 @@ public class InvisibilitySkill extends DefaultSkill implements ILastingSkill {
 	}
 
 	@Override
-	public boolean onActivated(VampirePlayer vampire, EntityPlayer player) {
-		player.setInvisible(true);
-		return true;
+	public String getUnlocalizedName() {
+		return "skill.vampirism.invisibility";
 	}
 
 	@Override
-	public int getDuration(int level) {
-		return BALANCE.VP_SKILLS.INVISIBILITY_DURATION*20;
+	public boolean onActivated(VampirePlayer vampire, EntityPlayer player) {
+		player.setInvisible(true);
+		return true;
 	}
 
 	@Override
@@ -41,32 +56,17 @@ public class InvisibilitySkill extends DefaultSkill implements ILastingSkill {
 	}
 
 	@Override
-	public boolean onUpdate(VampirePlayer vampire, EntityPlayer player) {
-		if(!player.isInvisible()){
-			player.setInvisible(true);
-		}
-		return false;
-	}
-
-	@Override
 	public void onReActivated(VampirePlayer vampire, EntityPlayer player) {
 		player.setInvisible(true);
 
 	}
-	
-	@Override
-	public boolean canBeUsedBy(VampirePlayer vampire,EntityPlayer player){
-		return vampire.isVampireLord();
-	}
 
 	@Override
-	public int getMinLevel() {
-		return 0;
-	}
-	
-	@Override
-	public String getUnlocalizedName() {
-		return "skill.vampirism.invisibility";
+	public boolean onUpdate(VampirePlayer vampire, EntityPlayer player) {
+		if (!player.isInvisible()) {
+			player.setInvisible(true);
+		}
+		return false;
 	}
 
 }

@@ -9,8 +9,12 @@ import java.lang.annotation.Target;
 @Target({ ElementType.FIELD })
 public @interface DefaultDouble {
 	String comment() default "";
+
+	double maxValue() default Double.MAX_VALUE;
+
+	double minValue() default Double.MIN_VALUE;
+
 	String name();
+
 	double value();
-	double  minValue() default Double.MIN_VALUE;
-	double  maxValue() default Double.MAX_VALUE;
 }

@@ -16,6 +16,14 @@ import de.teamlapen.vampirism.util.BALANCE;
  */
 public abstract class PlayerModifiers {
 
+	public static final String TAG = "PlayerModifier";
+
+	public static final UUID speedModifierUUID = UUID.fromString("0FCBF922-DBEC-492A-82F5-99F73AFF5065");
+
+	public static final UUID healthModifierUUID = UUID.fromString("56C17EFE-E3EC-4E27-A12F-99D2FE927B70");
+
+	public static final UUID damageModifierUUID = UUID.fromString("7600D8C4-3517-40BE-8CB1-359D46705A0F");
+
 	public static void addJumpBoost(int level, EntityPlayer p) {
 		p.motionY += calculateModifierValue(level, BALANCE.VP_MODIFIERS.JUMP_LCAP, BALANCE.VP_MODIFIERS.JUMP_MAX_BOOST, BALANCE.VP_MODIFIERS.JUMP_TYPE);
 	}
@@ -78,13 +86,5 @@ public abstract class PlayerModifiers {
 			att.removeModifier(m);
 		}
 	}
-
-	public static final String TAG = "PlayerModifier";
-
-	public static final UUID speedModifierUUID = UUID.fromString("0FCBF922-DBEC-492A-82F5-99F73AFF5065");
-
-	public static final UUID healthModifierUUID = UUID.fromString("56C17EFE-E3EC-4E27-A12F-99D2FE927B70");
-
-	public static final UUID damageModifierUUID = UUID.fromString("7600D8C4-3517-40BE-8CB1-359D46705A0F");
 
 }

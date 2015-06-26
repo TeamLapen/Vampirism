@@ -21,6 +21,10 @@ import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 public class ItemLeechSword extends ItemSword {
+	public static final int MAX_BLOOD = 100;
+
+	public static final String name = "leechSword";
+
 	public static int getBlood(ItemStack itemStack) {
 		if (itemStack == null || itemStack.stackTagCompound == null) {
 			return 0;
@@ -42,10 +46,6 @@ public class ItemLeechSword extends ItemSword {
 		;
 	}
 
-	public static final int MAX_BLOOD = 100;
-
-	public static final String name = "leechSword";
-
 	private IIcon unusedIcon;
 
 	public ItemLeechSword() {
@@ -56,6 +56,7 @@ public class ItemLeechSword extends ItemSword {
 		setCreativeTab(VampirismMod.tabVampirism);
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
 		if (itemStack.stackTagCompound != null) {

@@ -1,17 +1,27 @@
 package de.teamlapen.vampirism.entity.minions;
 
-import de.teamlapen.vampirism.entity.ai.EntityAIDefendLord;
 import net.minecraft.entity.ai.EntityAITarget;
+import de.teamlapen.vampirism.entity.ai.EntityAIDefendLord;
 
 public class DefendLordCommand extends DefaultMinionCommand {
-	
+
 	protected final IMinion m;
 	protected final EntityAITarget defend;
-	
-	public DefendLordCommand(int id,IMinion m) {
+
+	public DefendLordCommand(int id, IMinion m) {
 		super(id);
-		this.m=m;
-		defend=new EntityAIDefendLord(m);
+		this.m = m;
+		defend = new EntityAIDefendLord(m);
+	}
+
+	@Override
+	public int getMinU() {
+		return 64;
+	}
+
+	@Override
+	public int getMinV() {
+		return 0;
 	}
 
 	@Override
@@ -29,16 +39,6 @@ public class DefendLordCommand extends DefaultMinionCommand {
 	public void onDeactivated() {
 		m.getRepresentingEntity().targetTasks.removeTask(defend);
 
-	}
-
-	@Override
-	public int getMinU() {
-		return 64;
-	}
-
-	@Override
-	public int getMinV() {
-		return 0;
 	}
 
 }

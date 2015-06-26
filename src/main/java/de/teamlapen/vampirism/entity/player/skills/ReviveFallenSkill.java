@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
-import java.util.List;
-
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import de.teamlapen.vampirism.entity.EntityDeadMob;
@@ -34,11 +32,17 @@ public class ReviveFallenSkill extends DefaultSkill {
 	}
 
 	@Override
+	public String getUnlocalizedName() {
+		return "skill.vampirism.revive_fallen";
+	}
+
+	@Override
 	public boolean onActivated(VampirePlayer vampire, EntityPlayer player) {
 		int max = vampire.getMinionsLeft(true);
-		if(max==0)return false;
-		for (EntityDeadMob mob : (List<EntityDeadMob>) player.worldObj.getEntitiesWithinAABB(EntityDeadMob.class, player.boundingBox.expand(10, 10, 10))) {
-			EntityCreature e = mob.convertToMob();
+		if (max == 0)
+			return false;
+		for (Object o : player.worldObj.getEntitiesWithinAABB(EntityDeadMob.class, player.boundingBox.expand(10, 10, 10))) {
+			EntityCreature e = ((EntityDeadMob)o).convertToMob();
 			if (e != null) {
 				VampireMob.get(e).makeMinion(vampire);
 				if (--max == 0)
@@ -48,11 +52,6 @@ public class ReviveFallenSkill extends DefaultSkill {
 
 		}
 		return true;
-	}
-	
-	@Override
-	public String getUnlocalizedName() {
-		return "skill.vampirism.revive_fallen";
 	}
 
 }

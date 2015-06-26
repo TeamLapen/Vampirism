@@ -75,7 +75,7 @@ public class DifficultyCalculator {
 			}
 			sum += l;
 		}
-		return new Difficulty(min, max, Math.round(((float)sum) / (float)list.size()));
+		return new Difficulty(min, max, Math.round(((float) sum) / (float) list.size()));
 	}
 
 	public static Difficulty getGlobalDifficulty() {

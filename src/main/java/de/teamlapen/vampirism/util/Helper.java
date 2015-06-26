@@ -6,10 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import scala.actors.threadpool.Arrays;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -23,6 +21,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
+import scala.actors.threadpool.Arrays;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.relauncher.ReflectionHelper;
@@ -30,14 +29,37 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
-import de.teamlapen.vampirism.network.SpawnParticlePacket;
 import de.teamlapen.vampirism.villages.VillageVampire;
-import de.teamlapen.vampirism.villages.VillageVampireData;
 
 public class Helper {
+	public static class Obfuscation {
+		private static final HashMap<String, String[]> posNames = new HashMap<String, String[]>();
+
+		private static final void add(String key, String... value) {
+			posNames.put(key, value);
+		}
+
+		public static final void fillMap() {
+
+			add("EntityLiving/tasks", "tasks", "field_70714_bg");
+			add("EntityLiving/targetTasks", "targetTasks", "field_70715_bh");
+			add("EntityPlayer/updateItemUse", "updateItemUse", "func_71010_c");
+			add("EntityPlayer/setSize", "setSize", "func_70105_a");
+			add("EntityPlayer/sleeping", "sleeping", "field_71083_bS");
+			add("EntityPlayer/sleepTimer", "sleepTimer", "field_71076_b");
+			add("Minecraft/fileAssets", "fileAssets", "field_110446_Y");
+			add("TileEntityBeacon/field_146015_k", "field_146015_k");
+			add("Entity/setSize", "setSize", "func_70105_a");
+		}
+
+		public static String[] getPosNames(String key) {
+			return posNames.get(key);
+		}
+	}
+
 	public static class Reflection {
 
-		@SuppressWarnings("unchecked")
+		@SuppressWarnings({ "unchecked", "rawtypes" })
 		public static Object callMethod(Class cls, Object obj, String[] methodName, Class[] paramtype, Object... param) {
 			if (param != null && paramtype.length != param.length) {
 				Logger.w("ReflectCallMethod", "Param count doesnt fit paramtype count");
@@ -55,10 +77,23 @@ public class Helper {
 			}
 		}
 
+		@SuppressWarnings("rawtypes")
 		public static Object callMethod(Object obj, String[] methodName, Class[] paramtype, Object... param) {
 			return Reflection.callMethod(obj.getClass(), obj, methodName, paramtype, param);
 		}
 
+		/**
+		 * Create Class Array
+		 * 
+		 * @param objects
+		 * @return
+		 */
+		@SuppressWarnings("rawtypes")
+		public static Class[] createArray(Class... objects) {
+			return objects;
+		}
+
+		@SuppressWarnings("rawtypes")
 		public static Object getPrivateFinalField(Class cls, Object obj, String... fieldname) {
 			try {
 				Field privateStringField = ReflectionHelper.findField(cls, fieldname);
@@ -68,6 +103,8 @@ public class Helper {
 				return null;
 			}
 		}
+
+		@SuppressWarnings("rawtypes")
 		public static void setPrivateField(Class cls, Object obj, Object value, String... fieldname) {
 			try {
 				Field privateStringField = ReflectionHelper.findField(cls, fieldname);
@@ -77,40 +114,13 @@ public class Helper {
 				return;
 			}
 		}
-		
-		/**
-		 * Create Class Array
-		 * @param objects
-		 * @return
-		 */
-		@SuppressWarnings("rawtypes")
-		public static Class[] createArray(Class... objects){
-			return objects;
-		}
 	}
-	
-	public static class Obfuscation{
-		private static final HashMap<String,String[]> posNames=new HashMap<String,String[]>();
-		
-		private static final void add(String key,String... value){
-			posNames.put(key, value);
+
+	public static String entityToString(Entity e) {
+		if (e == null) {
+			return "Entity is null";
 		}
-		public static final void fillMap(){
-			
-			add("EntityLiving/tasks","tasks","field_70714_bg");
-			add("EntityLiving/targetTasks","targetTasks","field_70715_bh");
-			add("EntityPlayer/updateItemUse","updateItemUse","func_71010_c");
-			add("EntityPlayer/setSize", "setSize", "func_70105_a");
-			add("EntityPlayer/sleeping", "sleeping", "field_71083_bS");
-			add("EntityPlayer/sleepTimer", "sleepTimer", "field_71076_b");
-			add("Minecraft/fileAssets","fileAssets","field_110446_Y");
-			add("TileEntityBeacon/field_146015_k","field_146015_k");
-			add("Entity/setSize","setSize","func_70105_a");
-		}
-		
-		public static String[] getPosNames(String key){
-			return posNames.get(key);
-		}
+		return e.toString();// +" at "+e.posX+" "+e.posY+" "+e.posZ+" Id "+e.getEntityId();
 	}
 
 	/**
@@ -119,10 +129,7 @@ public class Helper {
 	 * @param player
 	 * @param restriction
 	 *            Max distance or 0 for player reach distance or -1 for not restricted
-	 * @return The position as a MovingObjectPosition, null if not existent cf:
-	 *         https
-	 *         ://github.com/bspkrs/bspkrsCore/blob/master/src/main/java/bspkrs
-	 *         /util/CommonUtils.java
+	 * @return The position as a MovingObjectPosition, null if not existent cf: https ://github.com/bspkrs/bspkrsCore/blob/master/src/main/java/bspkrs /util/CommonUtils.java
 	 */
 	public static MovingObjectPosition getPlayerLookingSpot(EntityPlayer player, double restriction) {
 		float scale = 1.0F;
@@ -139,99 +146,48 @@ public class Helper {
 		float pitchAdjustedSinYaw = sinYaw * cosPitch;
 		float pitchAdjustedCosYaw = cosYaw * cosPitch;
 		double distance = 500D;
-		if(restriction==0&&player instanceof EntityPlayerMP){
+		if (restriction == 0 && player instanceof EntityPlayerMP) {
 			distance = ((EntityPlayerMP) player).theItemInWorldManager.getBlockReachDistance();
-		}
-		else if(restriction>0){
-			distance=restriction;
+		} else if (restriction > 0) {
+			distance = restriction;
 		}
 
 		Vec3 vector2 = vector1.addVector(pitchAdjustedSinYaw * distance, sinPitch * distance, pitchAdjustedCosYaw * distance);
 		return player.worldObj.rayTraceBlocks(vector1, vector2);
 	}
-	
-	public static List<Entity> spawnEntityInVillage(Village v,int max,String name,World world){
-		//VillageVampire vv=VillageVampireData.get(world).getVillageVampire(v);
-		List<Entity> list=new ArrayList<Entity>();
-		Entity e=null;
-		for (int i = 0; i < max; i++) {
-			if(e==null){
-				e=EntityList.createEntityByName(name, world);
-			}
-			if(spawnEntityInWorld(world,VillageVampire.getBoundingBox(v),e,5)){
-				list.add(e);
-				e=null;
-			}
-	
+
+	public static ChunkCoordinates getRandomPosInBox(World w, AxisAlignedBB box) {
+		int x = (int) box.minX + w.rand.nextInt((int) (box.maxX - box.minX) + 1);
+		int z = (int) box.minZ + w.rand.nextInt((int) (box.maxZ - box.minZ) + 1);
+		int y = w.getHeightValue(x, z) + 1;
+		if (y < box.minX || y > box.maxY) {
+			y = (int) box.minY + w.rand.nextInt((int) (box.maxY - box.minY) + 1);
 		}
-		if(e!=null){
-			e.setDead();
-		}
-		return list;
+		return new ChunkCoordinates(x, y, z);
 	}
-	
-	public static boolean spawnEntityInWorld(World world,AxisAlignedBB box,Entity e, int maxTry){
-		boolean flag=false;
-		int i=0;
-		while(!flag&&i++<maxTry){
-			ChunkCoordinates c=getRandomPosInBox(world,box);
-			e.setPosition(c.posX,c.posY,c.posZ);
-			if(!(e instanceof EntityLiving)||((EntityLiving)e).getCanSpawnHere() ){
-				flag=true;
-			}
-		}
-		if(flag){
-			world.spawnEntityInWorld(e);
-			return true;
-		}
-		else{
-		}
-		return false;
-	}
-	public static Entity spawnEntityInWorld(World world, AxisAlignedBB box,String name,int maxTry){
-		Entity e=EntityList.createEntityByName(name, world);
-		if(spawnEntityInWorld(world,box,e,maxTry)){
-			return e;
-		}
-		else{
-			e.setDead();
-			return null;
-		}
-	}
-	
-	public static ChunkCoordinates getRandomPosInBox(World w,AxisAlignedBB box){
-		int x=(int)box.minX+w.rand.nextInt((int)(box.maxX-box.minX)+1);
-		int z=(int)box.minZ+w.rand.nextInt((int)(box.maxZ-box.minZ)+1);
-		int y=w.getHeightValue(x, z)+1;
-		if(y<box.minX||y>box.maxY){
-			y=(int)box.minY+w.rand.nextInt((int)(box.maxY-box.minY)+1);
-		}
-		return new ChunkCoordinates(x,y,z);
-	}
-	
+
 	@SideOnly(Side.SERVER)
-	public static void sendPacketToPlayersAround(IMessage message,Entity e){
-		VampirismMod.modChannel.sendToAllAround(message, new TargetPoint(e.dimension,e.posX,e.posY,e.posZ,100));
+	public static void sendPacketToPlayersAround(IMessage message, Entity e) {
+		VampirismMod.modChannel.sendToAllAround(message, new TargetPoint(e.dimension, e.posX, e.posY, e.posZ, 100));
 	}
-	
-	public static Entity spawnEntityBehindEntity(EntityLivingBase p,String name){
-		EntityLiving e=(EntityLiving) EntityList.createEntityByName(name, p.worldObj);
-		float yaw=p.rotationYawHead;
+
+	public static Entity spawnEntityBehindEntity(EntityLivingBase p, String name) {
+		EntityLiving e = (EntityLiving) EntityList.createEntityByName(name, p.worldObj);
+		float yaw = p.rotationYawHead;
 		float cosYaw = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
 		float sinYaw = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
-		int distance= 2;
-		double x=p.posX+sinYaw*distance;
-		double z=p.posZ+cosYaw*distance;
-		
+		int distance = 2;
+		double x = p.posX + sinYaw * distance;
+		double z = p.posZ + cosYaw * distance;
+
 		e.setPosition(x, p.posY, z);
-		
-		if(e.getCanSpawnHere()){
+
+		if (e.getCanSpawnHere()) {
 			p.worldObj.spawnEntityInWorld(e);
 			return e;
-		}
-		else{
-			e.setPosition(x, p.worldObj.getHeightValue((int)Math.round(x),(int)Math.round(z)), z);
-			if(e.getCanSpawnHere()){
+		} else {
+			e.setPosition(x, p.worldObj.getHeightValue((int) Math.round(x), (int) Math.round(z)), z);
+			if (e.getCanSpawnHere()) {
 				p.worldObj.spawnEntityInWorld(e);
 				return e;
 			}
@@ -239,46 +195,89 @@ public class Helper {
 		e.setDead();
 		return null;
 	}
-	
-	public static String entityToString(Entity e){
-		if(e==null){
-			return "Entity is null";
+
+	public static List<Entity> spawnEntityInVillage(Village v, int max, String name, World world) {
+		// VillageVampire vv=VillageVampireData.get(world).getVillageVampire(v);
+		List<Entity> list = new ArrayList<Entity>();
+		Entity e = null;
+		for (int i = 0; i < max; i++) {
+			if (e == null) {
+				e = EntityList.createEntityByName(name, world);
+			}
+			if (spawnEntityInWorld(world, VillageVampire.getBoundingBox(v), e, 5)) {
+				list.add(e);
+				e = null;
+			}
+
 		}
-		return e.toString();//+" at "+e.posX+" "+e.posY+" "+e.posZ+" Id "+e.getEntityId();
+		if (e != null) {
+			e.setDead();
+		}
+		return list;
 	}
-	
-	public static void spawnParticlesAroundEntity(EntityLivingBase e,String particle,double maxDistance,int amount){
-		if(!e.worldObj.isRemote){
-			NBTTagCompound nbt=new NBTTagCompound();
-			nbt.setString("particle",particle);
+
+	public static boolean spawnEntityInWorld(World world, AxisAlignedBB box, Entity e, int maxTry) {
+		boolean flag = false;
+		int i = 0;
+		while (!flag && i++ < maxTry) {
+			ChunkCoordinates c = getRandomPosInBox(world, box);
+			e.setPosition(c.posX, c.posY, c.posZ);
+			if (!(e instanceof EntityLiving) || ((EntityLiving) e).getCanSpawnHere()) {
+				flag = true;
+			}
+		}
+		if (flag) {
+			world.spawnEntityInWorld(e);
+			return true;
+		} else {
+		}
+		return false;
+	}
+
+	public static Entity spawnEntityInWorld(World world, AxisAlignedBB box, String name, int maxTry) {
+		Entity e = EntityList.createEntityByName(name, world);
+		if (spawnEntityInWorld(world, box, e, maxTry)) {
+			return e;
+		} else {
+			e.setDead();
+			return null;
+		}
+	}
+
+	public static void spawnParticlesAroundEntity(EntityLivingBase e, String particle, double maxDistance, int amount) {
+		if (!e.worldObj.isRemote) {
+			NBTTagCompound nbt = new NBTTagCompound();
+			nbt.setString("particle", particle);
 			nbt.setInteger("id", e.getEntityId());
 			nbt.setDouble("distance", maxDistance);
-			Helper.sendPacketToPlayersAround(new SpawnCustomParticlePacket(2,0,0,0,amount,nbt), e);
+			Helper.sendPacketToPlayersAround(new SpawnCustomParticlePacket(2, 0, 0, 0, amount, nbt), e);
 			return;
 		}
 		short short1 = (short) amount;
 		for (int l = 0; l < short1; ++l) {
-			double d6 = l / (short1 - 1.0D)-0.5D;
+			double d6 = l / (short1 - 1.0D) - 0.5D;
 			float f = (e.getRNG().nextFloat() - 0.5F) * 0.2F;
 			float f1 = (e.getRNG().nextFloat() - 0.5F) * 0.2F;
 			float f2 = (e.getRNG().nextFloat() - 0.5F) * 0.2F;
 			double d7 = e.posX + (maxDistance) * d6 + (e.getRNG().nextDouble() - 0.5D) * e.width * 2.0D;
-			double d8 = e.posY + (maxDistance/2) * d6 + e.getRNG().nextDouble() * e.height;
+			double d8 = e.posY + (maxDistance / 2) * d6 + e.getRNG().nextDouble() * e.height;
 			double d9 = e.posZ + (maxDistance) * d6 + (e.getRNG().nextDouble() - 0.5D) * e.width * 2.0D;
 			e.worldObj.spawnParticle(particle, d7, d8, d9, f, f1, f2);
 		}
 	}
-	
+
 	/**
 	 * Teleports the entity
+	 * 
 	 * @param entity
 	 * @param x
 	 * @param y
 	 * @param z
-	 * @param sound If a teleport sound should be played
+	 * @param sound
+	 *            If a teleport sound should be played
 	 * @return Wether the teleport was successful or not
 	 */
-	public static boolean teleportTo(EntityLiving entity,double x, double y, double z,boolean sound) {
+	public static boolean teleportTo(EntityLiving entity, double x, double y, double z, boolean sound) {
 		double d3 = entity.posX;
 		double d4 = entity.posY;
 		double d5 = entity.posZ;
@@ -306,7 +305,7 @@ public class Helper {
 			if (flag1) {
 				entity.setPosition(entity.posX, entity.posY, entity.posZ);
 
-				if (entity.worldObj.getCollidingBoundingBoxes(entity,entity.boundingBox).isEmpty() && !entity.worldObj.isAnyLiquid(entity.boundingBox))
+				if (entity.worldObj.getCollidingBoundingBoxes(entity, entity.boundingBox).isEmpty() && !entity.worldObj.isAnyLiquid(entity.boundingBox))
 					flag = true;
 			}
 		}
@@ -328,7 +327,7 @@ public class Helper {
 				entity.worldObj.spawnParticle("portal", d7, d8, d9, f, f1, f2);
 			}
 
-			if(sound){
+			if (sound) {
 				// TODO different sound (bang?)
 				entity.worldObj.playSoundEffect(d3, d4, d5, "mob.endermen.portal", 1.0F, 1.0F);
 				entity.playSound("mob.endermen.portal", 1.0F, 1.0F);

@@ -9,6 +9,8 @@ import java.lang.annotation.Target;
 @Target({ ElementType.FIELD })
 public @interface DefaultBoolean {
 	String comment() default "";
+
 	String name();
+
 	boolean value();
 }

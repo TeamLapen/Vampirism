@@ -30,8 +30,8 @@ public class VampirismFMLLoadingPlugin implements IFMLLoadingPlugin {
 
 	@Override
 	public String[] getASMTransformerClass() {
-		return new String[] { EntityLivingBaseClassTransformer.class.getName(), PlayerClassTransformer.class.getName(),
-				EntityRendererClassTransformer.class.getName(),RenderClassTransformer.class.getName(),PlayerMPClassTransformer.class.getName() };
+		return new String[] { EntityLivingBaseClassTransformer.class.getName(), PlayerClassTransformer.class.getName(), EntityRendererClassTransformer.class.getName(),
+				RenderClassTransformer.class.getName(), PlayerMPClassTransformer.class.getName() };
 	}
 
 	@Override

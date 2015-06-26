@@ -6,11 +6,11 @@ public class REFERENCE {
 		public static final String VAMPIRE_NAME = "vampirism.vampire";
 		public static final String DRACULA_NAME = "vampirism.dracula";
 		public static final String GHOST_NAME = "vampirism.ghost";
-		public static final String VAMPIRE_LORD_NAME ="vampirism.vampireLord";
-		public static final String VAMPIRE_MINION_REMOTE_NAME="vampirism.vampireMinionR";
-		public static final String VAMPIRE_MINION_SAVEABLE_NAME="vampirism.vampireMinionS";
-		public static final String DEAD_MOB_NAME="vampirism.dead_mob";
-		public static final String BLINDING_BAT_NAME="vampirism.blinding_bat";
+		public static final String VAMPIRE_LORD_NAME = "vampirism.vampireLord";
+		public static final String VAMPIRE_MINION_REMOTE_NAME = "vampirism.vampireMinionR";
+		public static final String VAMPIRE_MINION_SAVEABLE_NAME = "vampirism.vampireMinionS";
+		public static final String DEAD_MOB_NAME = "vampirism.dead_mob";
+		public static final String BLINDING_BAT_NAME = "vampirism.blinding_bat";
 	}
 
 	public static enum KEY {
@@ -32,9 +32,9 @@ public class REFERENCE {
 	public static final String VERSION = "@VERSION@";
 	public static final String MINECRAFT_VERSION = "@MVERSION@";
 	public static final String VAMPIRE_LEVEL_NBT_KEY = "vampirelevel";
-	
-	public static final int HIGHEST_REACHABLE_LEVEL=13;
-	
-	public static final String UPDATE_FILE_LINK="http://teamlapen.de/projects/vampirism/files/modversion.json";
+
+	public static final int HIGHEST_REACHABLE_LEVEL = 13;
+
+	public static final String UPDATE_FILE_LINK = "http://teamlapen.de/projects/vampirism/files/modversion.json";
 
 }

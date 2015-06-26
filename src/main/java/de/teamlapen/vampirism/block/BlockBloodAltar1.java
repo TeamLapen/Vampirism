@@ -9,13 +9,20 @@ import net.minecraft.world.World;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
 
 public class BlockBloodAltar1 extends BasicBlockContainer {
-	private final String TAG = "BlockBloodAltar";
 	public static final String name = "bloodAltar";
+	private final String TAG = "BlockBloodAltar";
 
 	public BlockBloodAltar1() {
 		super(Material.rock, name);
 		this.setHardness(8.0F);
 		this.setHarvestLevel("pickaxe", 3);
+	}
+
+	@Override
+	public void breakBlock(World world, int x, int y, int z, Block par5, int par6) {
+		TileEntityBloodAltar1 te = (TileEntityBloodAltar1) world.getTileEntity(x, y, z);
+		te.dropSword();
+		super.breakBlock(world, x, y, z, par5, par6);
 	}
 
 	@Override
@@ -36,13 +43,6 @@ public class BlockBloodAltar1 extends BasicBlockContainer {
 			te.onActivated(player, item);
 		}
 		return true;
-	}
-	
-	@Override
-	public void breakBlock(World world, int x, int y, int z, Block par5, int par6) {
-		TileEntityBloodAltar1 te = (TileEntityBloodAltar1) world.getTileEntity(x, y, z);
-		te.dropSword();
-		super.breakBlock(world, x, y, z, par5, par6);
 	}
 
 }

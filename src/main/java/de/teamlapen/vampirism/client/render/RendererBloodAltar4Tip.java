@@ -21,8 +21,8 @@ import de.teamlapen.vampirism.util.REFERENCE;
 @SideOnly(Side.CLIENT)
 public class RendererBloodAltar4Tip extends TileEntitySpecialRenderer {
 
-	private final ModelBloodAltar4Tip model;
 	public static final String textureLoc = REFERENCE.MODID + ":textures/blocks/bloodAltar4Tip.png";
+	private final ModelBloodAltar4Tip model;
 	private final ResourceLocation texture;
 
 	public RendererBloodAltar4Tip() {

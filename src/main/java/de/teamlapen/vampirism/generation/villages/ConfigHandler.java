@@ -21,15 +21,15 @@ import de.teamlapen.vampirism.util.Pair;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 /**
- * Reads the VillageBiomes.cfg (this is not a standard config file) Has methods
- * to retrieve specific config lines based on codes at the beginning of each
- * line Will copy VillageBiomesDefault.cfg from resources to the config folder
- * as VillageBiomes.cfg if it doesn't already exist
+ * Reads the VillageBiomes.cfg (this is not a standard config file) Has methods to retrieve specific config lines based on codes at the beginning of each line Will copy VillageBiomesDefault.cfg from
+ * resources to the config folder as VillageBiomes.cfg if it doesn't already exist
  * 
  * @author WILLIAM
  *
  */
 public class ConfigHandler {
+
+	private static List<String> configLines = new ArrayList<String>();
 
 	public static List<String> getAddBiomes() {
 		return getAfterPrefix("+b:");
@@ -87,8 +87,8 @@ public class ConfigHandler {
 				Block replacement = Block.getBlockFromName(m.group(2));
 
 				String condition = m.group(3);
-//				Logger.i("ConfigHandler", "Will replace " + b.getUnlocalizedName() + " with " + replacement.getUnlocalizedName() + " where "
-//						+ condition);
+				// Logger.i("ConfigHandler", "Will replace " + b.getUnlocalizedName() + " with " + replacement.getUnlocalizedName() + " where "
+				// + condition);
 				if (b.equals(replacement))
 					continue;
 
@@ -124,6 +124,4 @@ public class ConfigHandler {
 			Logger.e("ConfigHandler", String.format("[%s] Can't load or create its config in %s.", REFERENCE.MODID, file.getAbsolutePath()));
 		}
 	}
-
-	private static List<String> configLines = new ArrayList<String>();
 }

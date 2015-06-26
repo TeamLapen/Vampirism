@@ -4,8 +4,6 @@ import java.util.ArrayList;
 
 import javax.annotation.Nullable;
 
-import org.eclipse.jdt.annotation.NonNull;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.ai.EntityAIFleeSun;
@@ -13,6 +11,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
+
+import org.eclipse.jdt.annotation.NonNull;
+
 import de.teamlapen.vampirism.entity.ai.EntityAIFollowBoss;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Logger;
@@ -20,6 +21,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
 
 /**
  * Vampire minion which is saved with it's lord and is designed to protect the lord
+ * 
  * @author Maxanier
  *
  */
@@ -28,18 +30,17 @@ public class EntitySaveableVampireMinion extends EntityVampireMinion {
 	private final static String TAG = "SVampireMinion";
 
 	protected IMinionLord lord;
-	
+
 	private final ArrayList<IMinionCommand> commands;
-	
 
 	public EntitySaveableVampireMinion(World world) {
 		super(world);
 		this.tasks.addTask(7, new EntityAIFollowBoss(this, 1.0D));
-		this.tasks.addTask(14, new EntityAIFleeSun(this,0.9F));
-		commands=new ArrayList<IMinionCommand>();
+		this.tasks.addTask(14, new EntityAIFleeSun(this, 0.9F));
+		commands = new ArrayList<IMinionCommand>();
 		commands.add(getActiveCommand());
-		commands.add(new AttackHostileExceptPlayer(1,this));
-		commands.add(new AttackHostileIncludingPlayer(2,this));
+		commands.add(new AttackHostileExceptPlayer(1, this));
+		commands.add(new AttackHostileIncludingPlayer(2, this));
 		commands.add(new JustFollowCommand(3));
 	}
 
@@ -86,6 +87,23 @@ public class EntitySaveableVampireMinion extends EntityVampireMinion {
 	}
 
 	@Override
+	public ArrayList<IMinionCommand> getAvailableCommands() {
+		return commands;
+	}
+
+	@Override
+	public IMinionCommand getCommand(int id) {
+		if (id < commands.size())
+			return commands.get(id);
+		return null;
+	}
+
+	@Override
+	protected @NonNull IMinionCommand getDefaultCommand() {
+		return new DefendLordCommand(0, this);
+	}
+
+	@Override
 	public @Nullable IMinionLord getLord() {
 		return lord;
 	}
@@ -106,6 +124,23 @@ public class EntitySaveableVampireMinion extends EntityVampireMinion {
 			}
 		}
 
+	}
+
+	public void onCall(SaveableMinionHandler.Call c) {
+		switch (c) {
+		case DEFEND_LORD:
+			this.activateMinionCommand(this.getCommand(0));
+			break;
+		case ATTACK:
+			this.activateMinionCommand(this.getCommand(2));
+			break;
+		case ATTACK_NON_PLAYER:
+			this.activateMinionCommand(this.getCommand(1));
+			break;
+		case FOLLOW:
+			this.activateMinionCommand(this.getCommand(3));
+			break;
+		}
 	}
 
 	@Override
@@ -153,35 +188,6 @@ public class EntitySaveableVampireMinion extends EntityVampireMinion {
 			nbt.setInteger("eid", lord.getRepresentingEntity().getEntityId());
 		}
 
-	}
-
-	@Override
-	public ArrayList<IMinionCommand> getAvailableCommands() {
-		return commands;
-	}
-
-	@Override
-	public IMinionCommand getCommand(int id) {
-		if(id<commands.size())return commands.get(id);
-		return null;
-	}
-
-	@Override
-	protected @NonNull IMinionCommand getDefaultCommand() {
-		return new DefendLordCommand(0,this);
-	}
-	
-	public void onCall(SaveableMinionHandler.Call c){
-		switch(c){
-		case DEFEND_LORD:this.activateMinionCommand(this.getCommand(0));
-		break;
-		case ATTACK:this.activateMinionCommand(this.getCommand(2));
-		break;
-		case ATTACK_NON_PLAYER:this.activateMinionCommand(this.getCommand(1));
-		break;
-		case FOLLOW:this.activateMinionCommand(this.getCommand(3));
-		break;
-		}
 	}
 
 }

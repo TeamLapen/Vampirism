@@ -13,7 +13,6 @@ import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
 import net.minecraft.village.Village;
@@ -63,8 +62,8 @@ public class VampireEntityEventHandler {
 				e.setLevel(l);
 			}
 		}
-		if(event.world.isRemote){
-			if (event.entity instanceof ISyncable||event.entity instanceof EntityCreature) {
+		if (event.world.isRemote) {
+			if (event.entity instanceof ISyncable || event.entity instanceof EntityCreature) {
 				VampirismMod.modChannel.sendToServer(new RequestEntityUpdatePacket(event.entity));
 			}
 		}
@@ -76,11 +75,11 @@ public class VampireEntityEventHandler {
 			if (e.isLookingForHome() == false)
 				return;
 
-			if(event.world.villageCollectionObj!=null){
+			if (event.world.villageCollectionObj != null) {
 				Village v = event.world.villageCollectionObj.findNearestVillage(MathHelper.floor_double(e.posX), MathHelper.floor_double(e.posY), MathHelper.floor_double(e.posZ), 20);
 				if (v != null) {
 					int r = v.getVillageRadius();
-					AxisAlignedBB box = AxisAlignedBB.getBoundingBox(v.getCenter().posX - r, 0, v.getCenter().posZ - r, v.getCenter().posX + r, event.world.getActualHeight(), v.getCenter().posZ + r);
+					//AxisAlignedBB box = AxisAlignedBB.getBoundingBox(v.getCenter().posX - r, 0, v.getCenter().posZ - r, v.getCenter().posX + r, event.world.getActualHeight(), v.getCenter().posZ + r);
 					ChunkCoordinates cc = v.getCenter();
 					e.setHomeArea(cc.posX, cc.posY, cc.posZ, r);
 				}
@@ -125,8 +124,23 @@ public class VampireEntityEventHandler {
 
 	@SubscribeEvent
 	public void onLivingDeathEvent(LivingDeathEvent event) {
-		if (event.entity instanceof EntityCreature && !event.entity.worldObj.isRemote && BALANCE.DEAD_MOB_PROP>0&& EntityDeadMob.canBecomeDeadMob((EntityCreature) event.entity) && (BALANCE.DEAD_MOB_PROP==0||event.entity.worldObj.rand.nextInt(BALANCE.DEAD_MOB_PROP) == 0)) {
+		if (event.entity instanceof EntityCreature && !event.entity.worldObj.isRemote && BALANCE.DEAD_MOB_PROP > 0 && EntityDeadMob.canBecomeDeadMob((EntityCreature) event.entity)
+				&& (BALANCE.DEAD_MOB_PROP == 0 || event.entity.worldObj.rand.nextInt(BALANCE.DEAD_MOB_PROP) == 0)) {
 			event.entity.worldObj.spawnEntityInWorld(EntityDeadMob.createFromEntity((EntityCreature) event.entity));
+		}
+	}
+
+	@SubscribeEvent
+	public void onLivingDrops(LivingDropsEvent e) {
+		if (e.entityLiving instanceof EntityCreature) {
+			if (VampireMob.get((EntityCreature) e.entityLiving).isVampire()) {
+				for (EntityItem i : e.drops) {
+					ItemStack s = i.getEntityItem();
+					if (s.getItem().equals(Items.porkchop) || s.getItem().equals(Items.beef)) {
+						i.setEntityItemStack(new ItemStack(Items.rotten_flesh, s.stackSize));
+					}
+				}
+			}
 		}
 	}
 
@@ -134,20 +148,6 @@ public class VampireEntityEventHandler {
 	public void onLivingUpdate(LivingUpdateEvent event) {
 		if (event.entity instanceof EntityCreature) {
 			VampireMob.get((EntityCreature) event.entity).onUpdate();
-		}
-	}
-	
-	@SubscribeEvent
-	public void onLivingDrops(LivingDropsEvent e){
-		if(e.entityLiving instanceof EntityCreature){
-			if(VampireMob.get((EntityCreature) e.entityLiving).isVampire()){
-				for(EntityItem i:e.drops){
-					ItemStack s=i.getEntityItem();
-					if(s.getItem().equals(Items.porkchop)||s.getItem().equals(Items.beef)){
-						i.setEntityItemStack(new ItemStack(Items.rotten_flesh,s.stackSize));
-					}
-				}
-			}
 		}
 	}
 

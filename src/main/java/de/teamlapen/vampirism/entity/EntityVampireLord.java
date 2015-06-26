@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.entity;
 
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.UUID;
 
 import net.minecraft.entity.Entity;
@@ -42,7 +40,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	protected int level = 0;
 
 	private boolean prevAttacking = false;
-	
+
 	private final SaveableMinionHandler minionHandler;
 
 	public EntityVampireLord(World par1World) {
@@ -53,8 +51,8 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 		this.tasks.addTask(9, new EntityAILookIdle(this));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
-		
-		minionHandler=new SaveableMinionHandler(this);
+
+		minionHandler = new SaveableMinionHandler(this);
 
 	}
 
@@ -100,8 +98,8 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	}
 
 	@Override
-	public void writeFullUpdateToNBT(NBTTagCompound nbt) {
-		this.writeEntityToNBT(nbt);
+	public long getLastComebackCall() {
+		return 0;
 	}
 
 	@Override
@@ -110,10 +108,24 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	}
 
 	@Override
+	public int getMaxInPortalTime() {
+		return 500;
+	}
+
+	@Override
 	public int getMaxLevel() {
 		return MAX_LEVEL;
 	}
 
+	@Override
+	public int getMaxMinionCount() {
+		return 100;
+	}
+
+	@Override
+	public SaveableMinionHandler getMinionHandler() {
+		return minionHandler;
+	}
 
 	@Override
 	public EntityLivingBase getMinionTarget() {
@@ -282,24 +294,8 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	}
 
 	@Override
-	public int getMaxMinionCount() {
-		return 100;
-	}
-
-	@Override
-	public SaveableMinionHandler getMinionHandler() {
-		return minionHandler;
-	}
-	
-	@Override
-	 public int getMaxInPortalTime()
-	    {
-	        return 500;
-	}
-
-	@Override
-	public long getLastComebackCall() {
-		return 0;
+	public void writeFullUpdateToNBT(NBTTagCompound nbt) {
+		this.writeEntityToNBT(nbt);
 	}
 
 }

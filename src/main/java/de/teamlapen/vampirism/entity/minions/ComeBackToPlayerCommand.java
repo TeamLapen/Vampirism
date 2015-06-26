@@ -1,17 +1,27 @@
 package de.teamlapen.vampirism.entity.minions;
 
-import de.teamlapen.vampirism.entity.ai.EntityAIMoveToLord;
 import net.minecraft.entity.ai.EntityAIBase;
+import de.teamlapen.vampirism.entity.ai.EntityAIMoveToLord;
 
 public class ComeBackToPlayerCommand extends DefaultMinionCommand {
 
 	private final EntityRemoteVampireMinion minion;
 	private final EntityAIBase comeBack;
-	
-	public ComeBackToPlayerCommand(int id,EntityRemoteVampireMinion minion) {
+
+	public ComeBackToPlayerCommand(int id, EntityRemoteVampireMinion minion) {
 		super(id);
-		comeBack=new EntityAIMoveToLord(minion);
-		this.minion=minion;
+		comeBack = new EntityAIMoveToLord(minion);
+		this.minion = minion;
+	}
+
+	@Override
+	public int getMinU() {
+		return 0;
+	}
+
+	@Override
+	public int getMinV() {
+		return 0;
 	}
 
 	@Override
@@ -29,16 +39,6 @@ public class ComeBackToPlayerCommand extends DefaultMinionCommand {
 	public void onDeactivated() {
 		minion.tasks.removeTask(comeBack);
 
-	}
-
-	@Override
-	public int getMinU() {
-		return 0;
-	}
-
-	@Override
-	public int getMinV() {
-		return 0;
 	}
 
 }

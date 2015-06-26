@@ -25,6 +25,14 @@ public interface ILastingSkill extends ISkill {
 	public void onDeactivated(VampirePlayer vampire, EntityPlayer player);
 
 	/**
+	 * Called when the skill is activated after a world reload. SERVER SIDE ONLY
+	 * 
+	 * @param vampire
+	 * @param player
+	 */
+	public void onReActivated(VampirePlayer vampire, EntityPlayer player);
+
+	/**
 	 * Called every LivingUpdate for each entity which has this skill activated Calls on client side might be wrong due to sync
 	 * 
 	 * @param vampire
@@ -32,12 +40,4 @@ public interface ILastingSkill extends ISkill {
 	 * @return if true the skill is cancelled
 	 */
 	public boolean onUpdate(VampirePlayer vampire, EntityPlayer player);
-	
-	/**
-	 * Called when the skill is activated after a world reload. SERVER SIDE ONLY
-	 * 
-	 * @param vampire
-	 * @param player
-	 */
-	public void onReActivated(VampirePlayer vampire, EntityPlayer player);
 }

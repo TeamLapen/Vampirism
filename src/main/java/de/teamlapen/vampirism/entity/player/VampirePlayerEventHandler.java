@@ -22,6 +22,30 @@ import de.teamlapen.vampirism.network.RequestEntityUpdatePacket;
 
 public class VampirePlayerEventHandler {
 
+	@SubscribeEvent
+	public void onAttackEntity(AttackEntityEvent event) {
+		if (VampirePlayer.get(event.entityPlayer).isSkillActive(Skills.batMode))
+			event.setCanceled(true);
+	}
+
+	@SubscribeEvent
+	public void onBlockPlaced(BlockEvent.PlaceEvent event) {
+		try {
+			if (VampirePlayer.get(event.player).isSkillActive(Skills.batMode)) {
+				event.setCanceled(true);
+			}
+		} catch (Exception e) {
+			// Added try catch to prevent any exception in case some other mod uses auto placers or so
+		}
+	}
+
+	@SubscribeEvent
+	public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
+		if (VampirePlayer.get(event.entityPlayer).isSkillActive(Skills.batMode)) {
+			event.setCanceled(true);
+		}
+	}
+
 	@SubscribeEvent(receiveCanceled = true)
 	public void onEntityConstructing(EntityConstructing event) {
 		if (event.entity instanceof EntityPlayer && VampirePlayer.get((EntityPlayer) event.entity) == null) {
@@ -38,6 +62,13 @@ public class VampirePlayerEventHandler {
 				VampirePlayer.onPlayerJoinWorld((EntityPlayer) event.entity);
 			}
 
+		}
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
+	public void onItemUse(PlayerUseItemEvent.Start event) {
+		if (VampirePlayer.get(event.entityPlayer).isSkillActive(Skills.batMode)) {
+			event.setCanceled(true);
 		}
 	}
 
@@ -74,55 +105,25 @@ public class VampirePlayerEventHandler {
 			;
 		}
 	}
-	
-	@SubscribeEvent(priority=EventPriority.HIGHEST)
-	public void onItemUse(PlayerUseItemEvent.Start event){
-		if(VampirePlayer.get(event.entityPlayer).isSkillActive(Skills.batMode)){
-			event.setCanceled(true);
-		}
-	}
-	
+
 	@SubscribeEvent
-	public void onBreakSpeed(PlayerEvent.BreakSpeed event){
-		if(VampirePlayer.get(event.entityPlayer).isSkillActive(Skills.batMode)){
-			event.setCanceled(true);
-		}
+	public void onPlayerChangedDimension(PlayerChangedDimensionEvent e) {
+		VampirePlayer.get(e.player).onChangedDimension(e.fromDim, e.toDim);
 	}
-	
+
 	@SubscribeEvent
-	public void onBlockPlaced(BlockEvent.PlaceEvent event){
-		try {
-			if(VampirePlayer.get(event.player).isSkillActive(Skills.batMode)){
-				event.setCanceled(true);
-			}
-		} catch (Exception e) {
-			//Added try catch to prevent any exception in case some other mod uses auto placers or so
-		}
-	}
-	
-	@SubscribeEvent
-	public void onAttackEntity(AttackEntityEvent event){
-		if(VampirePlayer.get(event.entityPlayer).isSkillActive(Skills.batMode))event.setCanceled(true);
-	}
-	
-	@SubscribeEvent
-	public void onPlayerClone(PlayerEvent.Clone event){
+	public void onPlayerClone(PlayerEvent.Clone event) {
 		VampirePlayer.get(event.entityPlayer).copyFrom(event.original);
 	}
-	
+
 	@SubscribeEvent
-	public void onPlayerLoggedIn(PlayerLoggedInEvent e){
-			VampirePlayer.get(e.player).onPlayerLoggedIn();
+	public void onPlayerLoggedIn(PlayerLoggedInEvent e) {
+		VampirePlayer.get(e.player).onPlayerLoggedIn();
 	}
-		
+
 	@SubscribeEvent
-	public void onPlayerLoggedOut(PlayerLoggedOutEvent e){
-			VampirePlayer.get(e.player).onPlayerLoggedOut();
-	}
-		
-	@SubscribeEvent
-	public void onPlayerChangedDimension(PlayerChangedDimensionEvent e){
-			VampirePlayer.get(e.player).onChangedDimension(e.fromDim, e.toDim);
+	public void onPlayerLoggedOut(PlayerLoggedOutEvent e) {
+		VampirePlayer.get(e.player).onPlayerLoggedOut();
 	}
 
 }

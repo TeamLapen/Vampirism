@@ -2,9 +2,7 @@ package de.teamlapen.vampirism.block;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraftforge.common.MinecraftForge;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.coremod.CoreHandler;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 public abstract class BasicBlock extends Block {
@@ -22,5 +20,5 @@ public abstract class BasicBlock extends Block {
 	protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
 		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
 	}
-	
+
 }

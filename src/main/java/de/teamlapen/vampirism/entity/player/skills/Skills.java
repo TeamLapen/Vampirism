@@ -13,9 +13,12 @@ import de.teamlapen.vampirism.util.Logger;
  *
  */
 public class Skills {
-	
+
 	public static ISkill vampireRage;
 	public static ISkill batMode;
+
+	private final static ArrayList<ISkill> skills = new ArrayList<ISkill>();
+
 	/**
 	 * Used by {@link de.teamlapen.vampirism.client.gui.GUISelectSkill}
 	 * 
@@ -24,7 +27,7 @@ public class Skills {
 	public static ArrayList<ISkill> getAvailableSkills(VampirePlayer player) {
 		ArrayList<ISkill> sl = new ArrayList<ISkill>();
 		for (ISkill s : skills) {
-			if (1==s.canUse(player, (EntityPlayer) player.getRepresentingEntity())) {
+			if (1 == s.canUse(player, (EntityPlayer) player.getRepresentingEntity())) {
 				sl.add(s);
 			}
 		}
@@ -54,11 +57,11 @@ public class Skills {
 	 * Register all default skills
 	 */
 	public static void registerDefaultSkills() {
-		vampireRage= Skills.registerSkill(new VampireRageSkill());
+		vampireRage = Skills.registerSkill(new VampireRageSkill());
 		Skills.registerSkill(new RegenSkill());
 		Skills.registerSkill(new ChangeWeatherSkill());
 		Skills.registerSkill(new ReviveFallenSkill());
-		batMode=Skills.registerSkill(new BatSkill());
+		batMode = Skills.registerSkill(new BatSkill());
 		Skills.registerSkill(new SummonBatSkill());
 		Skills.registerSkill(new InvisibilitySkill());
 		Skills.registerSkill(new TeleportSkill());
@@ -76,6 +79,4 @@ public class Skills {
 		skills.add(s);
 		return s;
 	}
-
-	private final static ArrayList<ISkill> skills = new ArrayList<ISkill>();
 }

@@ -9,7 +9,19 @@ import cpw.mods.fml.relauncher.SideOnly;
  *
  */
 public interface IPieElement {
-	public String getUnlocalizedName();
+	/**
+	 * Should return the location of the icon map where the icon is in
+	 * 
+	 * @return
+	 */
+	@SideOnly(Side.CLIENT)
+	public ResourceLocation getIconLoc();
+
+	/**
+	 * @return The assigned Id
+	 */
+	public int getId();
+
 	/**
 	 * Should return the min U texture coordinate within the icon map
 	 * 
@@ -25,19 +37,6 @@ public interface IPieElement {
 	 */
 	@SideOnly(Side.CLIENT)
 	public int getMinV();
-	
 
-	/**
-	 * Should return the location of the icon map where the icon is in
-	 * 
-	 * @return
-	 */
-	@SideOnly(Side.CLIENT)
-	public ResourceLocation getIconLoc();
-	
-
-	/**
-	 * @return The assigned Id
-	 */
-	public int getId();
+	public String getUnlocalizedName();
 }

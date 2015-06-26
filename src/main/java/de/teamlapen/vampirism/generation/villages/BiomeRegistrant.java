@@ -17,6 +17,8 @@ import de.teamlapen.vampirism.util.Logger;
  */
 public class BiomeRegistrant {
 
+	private static Set<BiomeGenBase> biomeSet;
+
 	public static void addBiome(BiomeGenBase biome) {
 		BiomeManager.addVillageBiome(biome, true);
 		Logger.d("BiomeRegistrant", "Added %s (ID:%d) as a village biome.", biome.biomeName, biome.biomeID);
@@ -72,11 +74,11 @@ public class BiomeRegistrant {
 		return biomes;
 	}
 
+	// Removals
+
 	public static void init() {
 		biomeSet = fetchAllBiomes();
 	}
-
-	// Removals
 
 	public static void removeBiome(BiomeGenBase biome) {
 		BiomeManager.removeVillageBiome(biome);
@@ -93,7 +95,7 @@ public class BiomeRegistrant {
 		if (biomeForId != null)
 			removeBiome(biomeForId);
 		else
-			Logger.w("BiomeRegistrant", "Can't find biome with ID %d" , id);
+			Logger.w("BiomeRegistrant", "Can't find biome with ID %d", id);
 	}
 
 	public static void removeBiomeByName(String name) {
@@ -106,7 +108,7 @@ public class BiomeRegistrant {
 		if (biomeForId != null)
 			removeBiome(biomeForId);
 		else
-			Logger.w("BiomeRegistrant", "Can't find biome with name %s" , name);
+			Logger.w("BiomeRegistrant", "Can't find biome with name %s", name);
 	}
 
 	public static void removeBiomesByType(BiomeDictionary.Type type) {
@@ -120,8 +122,6 @@ public class BiomeRegistrant {
 		if (type != null)
 			removeBiomesByType(type);
 		else
-			Logger.w("BiomeRegistrant", "Can't find type with name %s" , name);
+			Logger.w("BiomeRegistrant", "Can't find type with name %s", name);
 	}
-
-	private static Set<BiomeGenBase> biomeSet;
 }

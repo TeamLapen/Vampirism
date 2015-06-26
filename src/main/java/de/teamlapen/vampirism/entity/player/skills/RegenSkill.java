@@ -10,6 +10,11 @@ import de.teamlapen.vampirism.util.BALANCE;
 public class RegenSkill extends DefaultSkill {
 
 	@Override
+	public boolean canBeUsedBy(VampirePlayer vampire, EntityPlayer player) {
+		return !vampire.isVampireLord();
+	}
+
+	@Override
 	public int getCooldown() {
 		return BALANCE.VP_SKILLS.REGEN_COOLDOWN * 20;
 	}
@@ -30,6 +35,11 @@ public class RegenSkill extends DefaultSkill {
 	}
 
 	@Override
+	public String getUnlocalizedName() {
+		return "skill.vampirism.regen";
+	}
+
+	@Override
 	public boolean onActivated(VampirePlayer vampire, EntityPlayer player) {
 		int dur = BALANCE.VP_SKILLS.REGEN_DURATION * 20;
 		player.addPotionEffect(new PotionEffect(Potion.regeneration.id, dur, 0));
@@ -40,16 +50,6 @@ public class RegenSkill extends DefaultSkill {
 	@Override
 	public String toString() {
 		return "RegenSkill";
-	}
-	
-	@Override
-	public boolean canBeUsedBy(VampirePlayer vampire,EntityPlayer player){
-		return !vampire.isVampireLord();
-	}
-	
-	@Override
-	public String getUnlocalizedName() {
-		return "skill.vampirism.regen";
 	}
 
 }

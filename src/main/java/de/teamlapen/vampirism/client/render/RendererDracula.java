@@ -6,7 +6,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.client.model.ModelDracula;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 @SideOnly(Side.CLIENT)
