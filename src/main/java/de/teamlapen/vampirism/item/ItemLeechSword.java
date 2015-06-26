@@ -103,7 +103,7 @@ public class ItemLeechSword extends ItemSword {
 				itemStack.stackTagCompound = new NBTTagCompound();
 				itemStack.stackTagCompound.setInteger("blood", 0);
 			}
-			itemStack.stackTagCompound.setInteger("blood", itemStack.stackTagCompound.getInteger("blood") + VampireMob.getMaxBloodAmount((EntityCreature) entityTarget));
+			itemStack.stackTagCompound.setInteger("blood", itemStack.stackTagCompound.getInteger("blood") + VampireMob.get((EntityCreature) entityTarget).max_blood);
 			if (itemStack.stackTagCompound.getInteger("blood") > MAX_BLOOD)
 				itemStack.stackTagCompound.setInteger("blood", MAX_BLOOD);
 			else if (itemStack.stackTagCompound.getInteger("blood") < 0)

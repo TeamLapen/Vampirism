@@ -10,6 +10,8 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -46,6 +48,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
  * @author Maxanier
  *
  */
+@SideOnly(Side.CLIENT)
 public class TextureHelper {
 
 	/**

@@ -1,8 +1,15 @@
 package de.teamlapen.vampirism;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.io.Reader;
 import java.lang.reflect.Field;
+import java.util.HashMap;
 
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
@@ -44,6 +51,12 @@ public class Configs {
 	public static boolean reset_balance_in_dev;
 
 	public static int blood_vision_recompile_ticks;
+	
+	public static final HashMap<String,Integer> bloodValues=new HashMap<String,Integer>();
+	
+	public static boolean bloodValuesRead=false;
+	
+	public static float bloodValueMultiplier;
 
 	public static Configuration config;
 
@@ -72,6 +85,30 @@ public class Configs {
 	public static void init(File configDir, boolean inDev) {
 		File mainConfig = new File(configDir, REFERENCE.MODID + ".cfg");
 		File balanceConfig = new File(configDir, REFERENCE.MODID + "_balance.cfg");
+		File bloodConfig = new File(configDir,REFERENCE.MODID+"_blood_values.txt");
+		
+		try {
+			loadBloodValuesFromReader(new InputStreamReader(Configs.class.getResourceAsStream("/default_blood_values.txt")),"default_blood_values.txt");
+			bloodValuesRead=true;
+		} catch (IOException e) {
+			Logger.e("Configs", e, "Could not read default blood values, this should not happen and destroys the mod experience");
+		}
+		
+		if(bloodConfig.exists()){
+			try {
+				loadBloodValuesFromReader(new FileReader(bloodConfig),bloodConfig.getName());
+				bloodValuesRead=true;
+				Logger.i("Configs","Succesfully loaded additional blood value file");
+			} catch (IOException e) {
+				Logger.e("Configs", e, "Could not read blood values from config file %s",bloodConfig.getName());
+			}
+		}
+		
+		Integer i=bloodValues.get("multiplier");
+		if(i!=null){
+			bloodValueMultiplier=i/10F;
+		}
+		
 		config = new Configuration(mainConfig);
 		balance = new Configuration(balanceConfig);
 		String old = loadConfiguration();
@@ -241,6 +278,49 @@ public class Configs {
 			Configs.loadConfiguration();
 			Configs.loadBalanceConfiguration();
 		}
+	}
+	
+	
+	/**
+	 * 
+	 * @param r Reader the values should be read from
+	 * @param file Just for logging of errors
+	 * @throws FileNotFoundException
+	 * @throws IOException
+	 */
+	private static void loadBloodValuesFromReader(Reader r,String file) throws IOException{
+		BufferedReader br=null;
+			try {
+				br=new BufferedReader(r);
+				String line;
+				while((line=br.readLine())!=null){
+					if(line.startsWith("#"))continue;
+					if(line.isEmpty())continue;
+					String[] p=line.split("=");
+					if(p.length!=2){
+						Logger.w("ReadBlood", "Line %s  in %s is not formatted properly", line,file);
+						continue;
+					}
+					int val;
+					try {
+						val=Integer.parseInt(p[1]);
+					} catch (NumberFormatException e) {
+						Logger.w("ReadBlood", "Line %s  in %s is not formatted properly", line,file);
+						continue;
+					}
+					bloodValues.put(p[0], val);
+				}
+			} catch (IOException e) {
+				
+				throw e;
+			}
+			finally{
+				if(br!=null){
+					br.close();
+				}
+				r.close();
+			}
+		
 	}
 
 }

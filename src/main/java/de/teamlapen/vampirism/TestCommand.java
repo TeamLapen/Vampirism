@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 import de.teamlapen.vampirism.entity.minions.EntityRemoteVampireMinion;
@@ -84,6 +85,18 @@ public class TestCommand implements ICommand {
 					}
 
 					return;
+				}
+				if("entity".equals(param[0])){
+					List l= p.worldObj.getEntitiesWithinAABBExcludingEntity(p, p.boundingBox.expand(3, 2, 3));
+					for(Object o:l){
+						if(o instanceof EntityCreature){
+							sendMessage(sender,o.getClass().getName());
+						}
+						else{
+							sendMessage(sender,"Not biteable "+o.getClass().getName());
+						}
+					}
+
 				}
 				if ("minions".equals(param[0])) {
 					for (IMinion m : vampire.getMinionHandler().getMinionListForDebug()) {

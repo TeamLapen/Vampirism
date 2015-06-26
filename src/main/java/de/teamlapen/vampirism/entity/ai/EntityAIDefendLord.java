@@ -16,6 +16,8 @@ public class EntityAIDefendLord extends EntityAITarget {
 	IMinion minion;
 
 	EntityLivingBase target;
+	
+	int lastUpdate=0;
 
 	public EntityAIDefendLord(IMinion minion) {
 		super(minion.getRepresentingEntity(), false, false);
@@ -25,6 +27,8 @@ public class EntityAIDefendLord extends EntityAITarget {
 
 	@Override
 	public boolean shouldExecute() {
+		if(minion.getRepresentingEntity().ticksExisted<lastUpdate+100)return false;
+		
 		IMinionLord l = minion.getLord();
 		if (l != null) {
 			target = l.getMinionTarget();
@@ -41,6 +45,7 @@ public class EntityAIDefendLord extends EntityAITarget {
 	@Override
 	public void startExecuting() {
 		minion.getRepresentingEntity().setAttackTarget(target);
+		lastUpdate=minion.getRepresentingEntity().ticksExisted;
 		super.startExecuting();
 	}
 }

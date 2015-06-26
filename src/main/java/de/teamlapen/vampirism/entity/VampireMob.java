@@ -26,6 +26,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.entity.ai.EntityAIModifier;
 import de.teamlapen.vampirism.entity.minions.DefendLordCommand;
 import de.teamlapen.vampirism.entity.minions.IMinion;
@@ -51,27 +52,6 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		return (VampireMob) mob.getExtendedProperties(VampireMob.EXT_PROP_NAME);
 	}
 
-	/**
-	 * Returns how much blood can be collected by biting this entity. -1 if poisonous, -2 if defending
-	 * 
-	 * @param e
-	 * @return
-	 */
-	public static int getMaxBloodAmount(EntityCreature e) {
-		if (e instanceof EntityPig || e instanceof EntitySheep || e instanceof EntityOcelot || e instanceof EntityWolf) {
-			return BALANCE.SMALL_BLOOD_AMOUNT;
-		}
-		if (e instanceof EntityCow || e instanceof EntityHorse) {
-			return BALANCE.NORMAL_BLOOD_AMOUNT;
-		}
-		if (e instanceof EntityVillager || e instanceof EntityWitch) {
-			return BALANCE.BIG_BLOOD_AMOUNT;
-		}
-		if (e instanceof EntityVampireHunter) {
-			return -2;
-		}
-		return -1;
-	}
 	public static final void register(EntityCreature mob) {
 		mob.registerExtendedProperties(VampireMob.EXT_PROP_NAME, new VampireMob(mob));
 	}
@@ -79,7 +59,12 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 
 	private final String KEY_TYPE = "type";
 
-	private final int blood;
+	private int blood;
+	public final int max_blood;
+	/**
+	 * Determines if this mob can become a vampire or gets instantly killed after sucking blood from it
+	 */
+	private final boolean canBecomeVampire;
 	private byte type;
 
 	private UUID lordId = null;
@@ -93,7 +78,27 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 
 	public VampireMob(EntityCreature mob) {
 		entity = mob;
-		blood = getMaxBloodAmount(mob);
+		boolean flag1=false;
+		if(mob instanceof EntityVampireHunter){
+			max_blood=-2;
+		}
+		else if(Configs.bloodValuesRead){
+			Integer i=Configs.bloodValues.get(mob.getClass().getName());
+			if(i==null||i==0){
+				max_blood=-1;
+			}
+			else{
+				max_blood=Math.round(((float)Math.abs(i))*Configs.bloodValueMultiplier);
+				if(Integer.signum(i)==1){
+					flag1=true;
+				}
+			}
+		}
+		else{
+			max_blood=5;
+		}
+		canBecomeVampire=flag1;
+		blood = max_blood;
 		type = (byte) 0;
 		commands = new ArrayList<IMinionCommand>();
 		commands.add(new DefendLordCommand(0, this));
@@ -136,7 +141,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 			// Cannot be bitten yet
 			return -1;
 		}
-		if (entity.worldObj.rand.nextInt(2) == 0) {
+		if (canBecomeVampire&&entity.worldObj.rand.nextInt(2) == 0) {
 			makeVampire();
 		} else {
 			if (entity instanceof EntityVampireHunter) {
@@ -144,7 +149,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 			} else {
 				// Type should be only changed by the dedicated methods, but since the mob will die instantly it should not cause any problems
 				type = (byte) (type | 1);
-				entity.attackEntityFrom(DamageSource.magic, 100);
+				entity.attackEntityFrom(DamageSource.magic, 1000);
 			}
 
 		}
@@ -293,7 +298,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	}
 
 	private boolean makeVampire() {
-		if (blood < 0) {
+		if (blood < 0||!canBecomeVampire) {
 			return false;
 		}
 		setVampire();
