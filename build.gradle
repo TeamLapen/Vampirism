@@ -21,22 +21,26 @@ apply plugin: "eclipse"
 apply plugin: "forge"
 apply plugin: "maven"
 
+loadProperties()
+
 repositories {
     maven { // The repo from which to get waila
         name "Mobius Repo"
         url "http://mobiusstrip.eu/maven"
     }
+    maven { url 'http://tehnut.info/maven/' }
     mavenCentral()
 }
 
 dependencies {
-    compile('mcp.mobius.waila:Waila:1.5.11-RC2-NONEI_1.7.10') {
+    compile('mcp.mobius.waila:Waila:'+config.waila_version) {
         exclude group: 'mcp.mobius.waila'
     }
+    compile "info.amerifrance.guideapi:Guide-API:"+config.minecraft_version+"-"+config.guide_api_version+":deobf"
     compile group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.annotation', version: '1.1.0'
  }
  
-loadProperties()
+
 
 version=project.mod_version
 group = "de.teamlapen.vampirism"

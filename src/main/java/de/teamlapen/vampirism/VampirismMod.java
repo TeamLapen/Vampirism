@@ -8,6 +8,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -29,6 +30,7 @@ import de.teamlapen.vampirism.generation.villages.VillageBiomes;
 import de.teamlapen.vampirism.generation.villages.VillageCreationHandler;
 import de.teamlapen.vampirism.generation.villages.VillageGenReplacer;
 import de.teamlapen.vampirism.generation.villages.VillageModChurchPiece;
+import de.teamlapen.vampirism.guide.VampirismGuide;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.RenderScreenRedPacket;
 import de.teamlapen.vampirism.network.RequestEntityUpdatePacket;
@@ -39,6 +41,7 @@ import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
+import cpw.mods.fml.common.Optional;
 
 @Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION, guiFactory = "de.teamlapen.vampirism.client.gui.ModGuiFactory")
 public class VampirismMod {
@@ -83,7 +86,7 @@ public class VampirismMod {
 		proxy.registerSubscriptions();
 		FMLCommonHandler.instance().bus().register(new Configs());
 		if (Configs.village_gen_enabled) {
-			Logger.i("VillageDensity", "Registering replacer for village generation.");
+			Logger.i("Init", "Registering replacer for village generation.");
 			MinecraftForge.TERRAIN_GEN_BUS.register(new VillageGenReplacer());
 		}
 		FMLInterModComms.sendMessage("Waila", "register", "de.teamlapen.vampirism.WailaDataProvider.callbackRegister");
@@ -101,9 +104,15 @@ public class VampirismMod {
 		
 		String potion=ModPotion.checkPotions();
 		if(potion!=null){
-			Logger.e("Potion", "Not all potions were successfully added {%s}", potion);
+			Logger.e("PostInit", "Not all potions were successfully added {%s}", potion);
 			potionFail=true;
 		}
+		
+		if(Loader.isModLoaded("guideapi"))
+        {
+			Logger.d("PostInit", "Found Guide-API -> Registering guide book");
+			registerGuideBook();
+        }
 	}
 
 	@EventHandler
@@ -144,6 +153,11 @@ public class VampirismMod {
 		modChannel.registerMessage(RenderScreenRedPacket.Handler.class, RenderScreenRedPacket.class, id++, Side.CLIENT);
 		modChannel.registerMessage(UpdateEntityPacket.Handler.class, UpdateEntityPacket.class, id++, Side.CLIENT);
 		modChannel.registerMessage(RequestEntityUpdatePacket.Handler.class, RequestEntityUpdatePacket.class, id++, Side.SERVER);
+	}
+	
+	@Optional.Method(modid = "guideapi")
+	private static void registerGuideBook(){
+		VampirismGuide.registerGuide();
 	}
 
 }
