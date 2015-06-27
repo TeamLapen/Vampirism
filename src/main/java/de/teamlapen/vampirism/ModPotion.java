@@ -33,7 +33,7 @@ public class ModPotion extends Potion {
 					f.set(null, newPotionTypes);
 				}
 			} catch (Exception e) {
-				Logger.e("ModPotion", "COULDN'T INCREASE POTION ARRAY SIZE", e);
+				Logger.e("ModPotion",e, "COULDN'T INCREASE POTION ARRAY SIZE");
 			}
 		}
 
@@ -41,10 +41,10 @@ public class ModPotion extends Potion {
 
 	public static void init() {
 		increasePotionArraySize();
-		sunscreen = new ModPotion(40, false, 345345).setIconIndex(7, 1).setPotionName("potion.vampirism:sunscreen");
-		thirst = new ModPotion(41, false, 859494).setIconIndex(1, 1).setPotionName("potion.vampirism:thirst");
-		saturation = new ModPotion(42, false, 850484).setIconIndex(2, 2).setPotionName("potion.vampirism:saturation");
-		sanguinare = new ModPotion(43, false, 0x6A0888).setIconIndex(7, 1).setPotionName("potion.vampirism:sanguinare")
+		sunscreen = new ModPotion(Configs.potion_id_sunscreen, false, 345345).setIconIndex(7, 1).setPotionName("potion.vampirism:sunscreen");
+		thirst = new ModPotion(Configs.potion_id_thirst, false, 859494).setIconIndex(1, 1).setPotionName("potion.vampirism:thirst");
+		saturation = new ModPotion(Configs.potion_id_saturation, false, 850484).setIconIndex(2, 2).setPotionName("potion.vampirism:saturation");
+		sanguinare = new ModPotion(Configs.potion_id_sanguinare, false, 0x6A0888).setIconIndex(7, 1).setPotionName("potion.vampirism:sanguinare")
 				.func_111184_a(SharedMonsterAttributes.attackDamage, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, 0);
 	}
 
@@ -67,6 +67,28 @@ public class ModPotion extends Potion {
 				VampirePlayer.get((EntityPlayer) entity).getBloodStats().addExhaustion(0.010F * (amplifier + 1));
 			}
 		}
+	}
+	
+	/**
+	 * Checks if all potions were successfully registered, otherwise it returns a String which contains the failed ones.
+	 * @return Null if everything is OK
+	 */
+	public static String checkPotions(){
+		String r="";
+		if(!sunscreen.equals(Potion.potionTypes[sunscreen.id])){
+			r+="sunscreen, ";
+		}
+		if(!thirst.equals(Potion.potionTypes[thirst.id])){
+			r+="thirst, ";
+		}
+		if(!saturation.equals(Potion.potionTypes[saturation.id])){
+			r+="saturation, ";
+		}
+		if(!sanguinare.equals(Potion.potionTypes[sanguinare.id])){
+			r+="sanguinare, ";
+		}
+		if(r.isEmpty())return null;
+		return r;
 	}
 
 	@Override

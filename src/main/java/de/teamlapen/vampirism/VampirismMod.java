@@ -52,6 +52,8 @@ public class VampirismMod {
 	public static SimpleNetworkWrapper modChannel;
 
 	public static boolean inDev = false;
+	
+	public static boolean potionFail =false;
 
 	public static CreativeTabs tabVampirism = new CreativeTabs("vampirism") {
 		@Override
@@ -96,6 +98,12 @@ public class VampirismMod {
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
 		VillageBiomes.postInit(event);
+		
+		String potion=ModPotion.checkPotions();
+		if(potion!=null){
+			Logger.e("Potion", "Not all potions were successfully added {%s}", potion);
+			potionFail=true;
+		}
 	}
 
 	@EventHandler

@@ -8,6 +8,7 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
@@ -19,6 +20,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import de.teamlapen.vampirism.ModBiomes;
+import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.VampirismEventHandler;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
@@ -53,7 +55,7 @@ public abstract class CommonProxy implements IProxy {
 	public void onServerTick(TickEvent.ServerTickEvent event) {
 		WorldServer server = MinecraftServer.getServer().worldServerForDimension(0);
 
-		if (server.areAllPlayersAsleep()) {
+		if (server.areAllPlayersAsleep()&&event.phase.equals(TickEvent.Phase.START)) {
 			Logger.i("ServerProxy", "All players are asleep");
 			if (server.playerEntities.size() > 0) {// Should always be the case, but better check
 				if (VampirePlayer.get(((EntityPlayer) server.playerEntities.get(0))).sleepingCoffin) {
@@ -68,6 +70,9 @@ public abstract class CommonProxy implements IProxy {
 				}
 			}
 
+		}
+		if(VampirismMod.potionFail&&event.phase.equals(TickEvent.Phase.END)&&MinecraftServer.getServer().getTickCounter()%200==0){
+			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("There was a SEVERE error adding Vampirism's potions, please check and change the configured IDs of "+ModPotion.checkPotions()));
 		}
 	}
 
