@@ -8,29 +8,29 @@ entity.vampirism.vampireMinionS.name=Vampiro Bebê
 entity.vampirism.dracula.name=Dracula
 
 # Items
-item.vampirism:vampiresFear.name=Terror do Vampiro
-item.vampirism:bloodBottle.name=Frasco de Sangue
-item.vampirism:vampireFang.name=Dentes de Vampiro
-item.vampirism:pitchfork.name=Tridente
-item.vampirism:humanHeart.name=Coração de Humano
-item.vampirism:torch.name=Tocha
-item.vampirism:pureBlood.name=Sangue Puro
-item.vampirism:sunscreen.name=Protetor Solar
+item.vampirism.vampiresFear.name=Terror do Vampiro
+item.vampirism.bloodBottle.name=Frasco de Sangue
+item.vampirism.vampireFang.name=Dentes de Vampiro
+item.vampirism.pitchfork.name=Tridente
+item.vampirism.humanHeart.name=Coração de Humano
+item.vampirism.torch.name=Tocha
+item.vampirism.pureBlood.name=Sangue Puro
+item.vampirism.sunscreen.name=Protetor Solar
 
 # Blocks
-block.vampirism:bloodAltar.name=Blood Altar of Saturation
-block.vampirism:bloodAltarTier2.name=Blood Altar of Inspiration
-block.vampirism:bloodAltarTier3.name=Blood Altar 3
-block.vampirism:bloodAltarTier4.name=Blood Altar of Infusion
-block.vampirism:bloodAltarTier4Tip.name=Blood Altar of Infusion Tip
-block.vampirism:churchAltar.name=Altar da Purificação
-block.vampirism:cursedEarth.name=Terra Amaldiçoada
-block.vampirism:vampireOrchid.name=Orquídea Vampirica
+block.vampirism.bloodAltar.name=Blood Altar of Saturation
+block.vampirism.bloodAltarTier2.name=Blood Altar of Inspiration
+block.vampirism.bloodAltarTier3.name=Blood Altar 3
+block.vampirism.bloodAltarTier4.name=Blood Altar of Infusion
+block.vampirism.bloodAltarTier4Tip.name=Blood Altar of Infusion Tip
+block.vampirism.churchAltar.name=Altar da Purificação
+block.vampirism.cursedEarth.name=Terra Amaldiçoada
+block.vampirism.vampireOrchid.name=Orquídea Vampirica
 
 
 #GUI
-gui.vampirism:revertback.head=Voltar a ser um humano normal
-gui.vampirism:revertback.desc=Você ira perder todos os seus níveis e ira morrer
+gui.vampirism.revertback.head=Voltar a ser um humano normal
+gui.vampirism.revertback.desc=Você ira perder todos os seus níveis e ira morrer
 
 # Keys
 keys.vampirism.category=Vampirism
@@ -40,21 +40,21 @@ keys.vampirism.skill=Ativar as abilidades de Vampiro
 
 #General
 itemGroup.vampirism=Vampirism
-death.attack.sun=%1$s nao gosta do sol :D
-potion.vampirism:sunscreen=Protetor solar
-potion.vampirism:thirst=Sede
-potion.vampirism:saturation=Saturação
-text.vampirism:skill.level_to_low=O seu nivel de vampiro é muito baixo para isso
-text.vampirism:skill.cooldown_not_over=Por favor espere até que o tempo de recarga complete (cooldown)
-text.vampirism:entity_level=Nivel
-text.vampirism:ritual_missing_times=Ainda falta itens para esse ritual
-text.vampirism:ritual_structure_wrong=A estrutura do ritual esta errada
-text.vampirism:ritual_level_wrong=Você nao pode usar este altar no seu nivel
-text.vampirism:not_enough_blood=Não a sangue o suficiente no altar
-text.vampirism:ritual_requirements_not_met=Nem todos os requisitos para esse ritual foram cumpridos
-text.vampirism:purity=Pureza
-text.vampirism:auto_fill_enabled=Auto Carregamento Ativado
-text.vampirism:auto_fill_disabled=Auto Carregamento Desativado
+death.attack.sun=%1$s nao gosta do sol .D
+potion.vampirism.sunscreen=Protetor solar
+potion.vampirism.thirst=Sede
+potion.vampirism.saturation=Saturação
+text.vampirism.skill.level_to_low=O seu nivel de vampiro é muito baixo para isso
+text.vampirism.skill.cooldown_not_over=Por favor espere até que o tempo de recarga complete (cooldown)
+text.vampirism.entity_level=Nivel
+text.vampirism.ritual_missing_times=Ainda falta itens para esse ritual
+text.vampirism.ritual_structure_wrong=A estrutura do ritual esta errada
+text.vampirism.ritual_level_wrong=Você nao pode usar este altar no seu nivel
+text.vampirism.not_enough_blood=Não a sangue o suficiente no altar
+text.vampirism.ritual_requirements_not_met=Nem todos os requisitos para esse ritual foram cumpridos
+text.vampirism.purity=Pureza
+text.vampirism.auto_fill_enabled=Auto Carregamento Ativado
+text.vampirism.auto_fill_disabled=Auto Carregamento Desativado
 
 #Config
 category.vampirism.balance=Configurações de balanceamento

@@ -19,18 +19,19 @@ public class ItemPitchfork extends ItemSword {
 		super(Item.ToolMaterial.IRON);
 		this.setNoRepair();
 		setUnlocalizedName(name);
+		this.setTextureName(REFERENCE.MODID+":"+name);
 		this.maxStackSize = 1;
 		setCreativeTab(VampirismMod.tabVampirism);
 	}
 
 	@Override
 	public String getUnlocalizedName() {
-		return String.format("item.%s%s", REFERENCE.MODID.toLowerCase() + ":", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return String.format("item.%s%s", REFERENCE.MODID.toLowerCase() + ".", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 
 	@Override
 	public String getUnlocalizedName(ItemStack itemstack) {
-		return String.format("item.%s%s", REFERENCE.MODID.toLowerCase() + ":", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return this.getUnlocalizedName();
 	}
 
 	protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
@@ -40,7 +41,7 @@ public class ItemPitchfork extends ItemSword {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister iconRegister) {
-		itemIcon = iconRegister.registerIcon(this.getUnlocalizedName().substring(this.getUnlocalizedName().indexOf(".") + 1));
-		bigIcon = iconRegister.registerIcon(this.getUnlocalizedName().substring(this.getUnlocalizedName().indexOf(".") + 1) + ".big");
+		itemIcon = iconRegister.registerIcon(this.getIconString());
+		bigIcon = iconRegister.registerIcon(this.getIconString() + ".big");
 	}
 }

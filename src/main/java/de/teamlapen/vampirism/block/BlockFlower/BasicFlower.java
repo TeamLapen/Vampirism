@@ -57,7 +57,6 @@ public abstract class BasicFlower extends BlockFlower {
 	/**
 	 * returns a list of blocks with the same ID, but different meta (eg: wood returns 4 blocks)
 	 */
-	// Added to prevent a crash opening creative tab, issue #18
 	@Override
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@SideOnly(Side.CLIENT)
@@ -69,7 +68,7 @@ public abstract class BasicFlower extends BlockFlower {
 
 	@Override
 	public String getUnlocalizedName() {
-		return String.format("block.%s%s", REFERENCE.MODID.toLowerCase() + ":", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return String.format("block.%s%s", REFERENCE.MODID.toLowerCase() + ".", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 
 	protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
@@ -79,6 +78,6 @@ public abstract class BasicFlower extends BlockFlower {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerBlockIcons(IIconRegister iconRegister) {
-		iIcon[0] = iconRegister.registerIcon(this.getUnlocalizedName().substring(this.getUnlocalizedName().indexOf(".") + 1));
+		iIcon[0] = iconRegister.registerIcon(REFERENCE.MODID+":"+getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 }

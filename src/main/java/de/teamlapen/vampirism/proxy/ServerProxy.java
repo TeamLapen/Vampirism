@@ -7,6 +7,7 @@ import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import de.teamlapen.vampirism.entity.player.skills.BatSkill;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.REFERENCE.KEY;
 
 public class ServerProxy extends CommonProxy {
 
@@ -68,8 +69,8 @@ public class ServerProxy extends CommonProxy {
 	}
 
 	@Override
-	public String translateToLocal(String s) {
-		return s;
+	public String getKey(KEY key) {
+		return key.toString();
 	}
 
 }

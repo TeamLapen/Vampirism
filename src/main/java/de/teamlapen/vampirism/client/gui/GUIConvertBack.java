@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.network.InputEventPacket;
 public class GUIConvertBack extends GuiYesNo {
 
 	public GUIConvertBack() {
-		super(null, I18n.format("gui.vampirism:revertback.head", new Object[0]), I18n.format("gui.vampirism:revertback.desc", new Object[0]), 0);
+		super(null, I18n.format("gui.vampirism.revertback.head", new Object[0]), I18n.format("gui.vampirism.revertback.desc", new Object[0]), 0);
 	}
 
 	@Override

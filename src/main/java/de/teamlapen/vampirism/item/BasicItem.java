@@ -14,25 +14,20 @@ public abstract class BasicItem extends Item {
 		super();
 		setCreativeTab(VampirismMod.tabVampirism);
 		this.setUnlocalizedName(name);
+		this.setTextureName(REFERENCE.MODID+":"+name);
 	}
 
 	@Override
 	public String getUnlocalizedName() {
-		return String.format("item.%s%s", REFERENCE.MODID.toLowerCase() + ":", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return String.format("item.%s%s", REFERENCE.MODID.toLowerCase() + ".", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 
 	@Override
 	public String getUnlocalizedName(ItemStack itemstack) {
-		return String.format("item.%s%s", REFERENCE.MODID.toLowerCase() + ":", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return this.getUnlocalizedName();
 	}
 
 	protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
 		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister iconRegister) {
-		itemIcon = iconRegister.registerIcon(this.getUnlocalizedName().substring(this.getUnlocalizedName().indexOf(".") + 1));
 	}
 }

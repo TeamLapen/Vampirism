@@ -64,7 +64,7 @@ public class WailaDataProvider implements IWailaDataProvider, IWailaEntityProvid
 			if (entity instanceof EntityPlayer) {
 				VampirePlayer vampire = VampirePlayer.get((EntityPlayer) entity);
 				if (vampire.getLevel() > 0) {
-					currenttip.add(String.format("%s: %d", StatCollector.translateToLocal("text.vampirism:vampirelevel"), vampire.getLevel()));
+					currenttip.add(String.format("%s: %d", StatCollector.translateToLocal("text.vampirism.vampirelevel"), vampire.getLevel()));
 					if (vampire.isVampireLord()) {
 						currenttip.add(SpecialChars.WHITE + StatCollector.translateToLocal("entity.vampirism.vampireLord.name"));
 					}
@@ -78,16 +78,16 @@ public class WailaDataProvider implements IWailaDataProvider, IWailaEntityProvid
 
 				int blood = vampire.getBlood();
 				if (blood > 0) {
-					currenttip.add(String.format("%s%s: %d", SpecialChars.RED, StatCollector.translateToLocal("text.vampirism:entitysblood"), blood));
+					currenttip.add(String.format("%s%s: %d", SpecialChars.RED, StatCollector.translateToLocal("text.vampirism.entitysblood"), blood));
 				}
 				if (minion != null) {
-					currenttip.add(SpecialChars.GREEN + StatCollector.translateToLocal("text.vampirism:minion"));
+					currenttip.add(SpecialChars.GREEN + StatCollector.translateToLocal("text.vampirism.minion"));
 					IMinionLord lord = minion.getLord();
 					if (lord != null) {
-						currenttip.add(String.format("%s%s: %s", SpecialChars.WHITE, StatCollector.translateToLocal("text.vampirism:lord"), lord.getRepresentingEntity().getCommandSenderName()));
+						currenttip.add(String.format("%s%s: %s", SpecialChars.WHITE, StatCollector.translateToLocal("text.vampirism.lord"), lord.getRepresentingEntity().getCommandSenderName()));
 						IMinionCommand c = minion.getCommand(minion.getActiveCommandId());
 						if (c != null) {
-							currenttip.add(String.format("%s%s: %s", SpecialChars.WHITE, StatCollector.translateToLocal("text.vampirism:curret_task"),
+							currenttip.add(String.format("%s%s: %s", SpecialChars.WHITE, StatCollector.translateToLocal("text.vampirism.curret_task"),
 									StatCollector.translateToLocal(c.getUnlocalizedName())));
 						}
 
@@ -113,11 +113,11 @@ public class WailaDataProvider implements IWailaDataProvider, IWailaEntityProvid
 						blood = altar1.getBloodLeft();
 					}
 
-					currenttip.add(String.format("%s%s: %d", SpecialChars.RED, StatCollector.translateToLocal("text.vampirism:blood_left"), blood));
+					currenttip.add(String.format("%s%s: %d", SpecialChars.RED, StatCollector.translateToLocal("text.vampirism.blood_left"), blood));
 				}
 			} else if (tile instanceof TileEntityBloodAltar2) {
 				TileEntityBloodAltar2 altar2 = (TileEntityBloodAltar2) tile;
-				currenttip.add(String.format("%s%s: %d/%d", SpecialChars.RED, StatCollector.translateToLocal("text.vampirism:blood"), altar2.getBloodAmount(), altar2.getMaxBlood()));
+				currenttip.add(String.format("%s%s: %d/%d", SpecialChars.RED, StatCollector.translateToLocal("text.vampirism.blood"), altar2.getBloodAmount(), altar2.getMaxBlood()));
 			}
 		}
 

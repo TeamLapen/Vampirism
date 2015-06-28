@@ -34,6 +34,17 @@ public class KeyInputEventHandler {
 
 	public static KeyBinding VISION = new KeyBinding(REFERENCE.KEYS.SWITCH_VISION, Keyboard.KEY_N, REFERENCE.KEYS.CATEGORY);
 
+	public static int getBindedKey(KEY key){
+		switch(key){
+		case SUCK:return SUCK.getKeyCode();
+		case SKILL:return SKILL.getKeyCode();
+		case MINION_CONTROL:return MINION_CONTROL.getKeyCode();
+		case VISION:return VISION.getKeyCode();
+		case AUTO:return AUTO.getKeyCode();
+		default:return 0;
+		}
+	}
+	
 	private static KEY getPressedKeyBinding() {
 		if (SUCK.isPressed()) {
 			return KEY.SUCK;
@@ -84,7 +95,7 @@ public class KeyInputEventHandler {
 					m = VampireMob.get((EntityCreature) mouseOver.entityHit);
 				}
 				if (m != null && !VampirePlayer.get(player).equals(m.getLord())) {
-					player.addChatComponentMessage(new ChatComponentTranslation("text.vampirism:no_control_minion"));
+					player.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.no_control_minion"));
 					return;
 				}
 			}

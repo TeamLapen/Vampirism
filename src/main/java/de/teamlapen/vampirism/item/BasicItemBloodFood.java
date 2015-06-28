@@ -19,18 +19,19 @@ public abstract class BasicItemBloodFood extends ItemFood {
 		super(0, 0, false);
 		setCreativeTab(VampirismMod.tabVampirism);
 		this.setUnlocalizedName(name);
+		this.setTextureName(REFERENCE.MODID+":"+name);
 		this.setAlwaysEdible();
 		bloodAmount = amount;
 	}
 
 	@Override
 	public String getUnlocalizedName() {
-		return String.format("item.%s%s", REFERENCE.MODID.toLowerCase() + ":", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return String.format("item.%s%s", REFERENCE.MODID.toLowerCase() + ".", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 
 	@Override
 	public String getUnlocalizedName(ItemStack itemstack) {
-		return String.format("item.%s%s", REFERENCE.MODID.toLowerCase() + ":", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return String.format("item.%s%s", REFERENCE.MODID.toLowerCase() + ".", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 
 	protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
@@ -44,11 +45,5 @@ public abstract class BasicItemBloodFood extends ItemFood {
 		world.playSoundAtEntity(player, "random.burp", 0.5F, world.rand.nextFloat() * 0.1F + 0.9F);
 		this.onFoodEaten(stack, world, player);
 		return stack;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister iconRegister) {
-		itemIcon = iconRegister.registerIcon(this.getUnlocalizedName().substring(this.getUnlocalizedName().indexOf(".") + 1));
 	}
 }

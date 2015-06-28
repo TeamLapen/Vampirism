@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.RenderBat;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.shader.ShaderGroup;
 import net.minecraft.client.util.JsonException;
 import net.minecraft.entity.Entity;
@@ -65,6 +66,7 @@ import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.util.REFERENCE.KEY;
 
 public class ClientProxy extends CommonProxy {
 	private final static String TAG = "ClientProxy";
@@ -215,7 +217,7 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public String translateToLocal(String s) {
-		return I18n.format(s, new Object[0]);
+	public String getKey(KEY key) {
+		return GameSettings.getKeyDisplayString(KeyInputEventHandler.getBindedKey(key));
 	}
 }

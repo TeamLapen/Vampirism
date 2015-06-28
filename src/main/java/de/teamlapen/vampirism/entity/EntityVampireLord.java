@@ -19,6 +19,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.VampirismMod;
@@ -94,7 +95,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 
 	@Override
 	public String getCommandSenderName() {
-		return super.getCommandSenderName() + " " + VampirismMod.proxy.translateToLocal("text.vampirism:entity_level") + " " + level;
+		return super.getCommandSenderName() + " " + StatCollector.translateToLocal("text.vampirism.entity_level") + " " + level;
 	}
 
 	@Override

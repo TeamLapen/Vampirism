@@ -6,6 +6,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
+import de.teamlapen.vampirism.util.REFERENCE;
 
 public interface IProxy {
 
@@ -63,11 +64,5 @@ public interface IProxy {
 
 	public void setPlayerBat(EntityPlayer player, boolean bat);
 
-	/**
-	 * Translate the string to local language if on clientS
-	 * 
-	 * @param s
-	 * @return
-	 */
-	public String translateToLocal(String s);
+	public String getKey(REFERENCE.KEY key);
 }

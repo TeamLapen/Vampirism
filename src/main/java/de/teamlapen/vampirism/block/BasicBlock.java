@@ -14,7 +14,7 @@ public abstract class BasicBlock extends Block {
 
 	@Override
 	public String getUnlocalizedName() {
-		return String.format("block.%s%s", REFERENCE.MODID.toLowerCase() + ":", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
+		return String.format("block.%s%s", REFERENCE.MODID.toLowerCase() + ".", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
 	}
 
 	protected String getUnwrappedUnlocalizedName(String unlocalizedName) {

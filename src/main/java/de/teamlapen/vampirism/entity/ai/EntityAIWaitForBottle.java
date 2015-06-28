@@ -52,7 +52,7 @@ public class EntityAIWaitForBottle extends EntityAIBase {
 	public void resetTask() {
 		lord = null;
 		if (!checkBottle()) {
-			MinionHelper.sendMessageToLord(minion, "text.vampirism:thanks");
+			MinionHelper.sendMessageToLord(minion, "text.vampirism.thanks");
 		}
 	}
 
@@ -70,7 +70,7 @@ public class EntityAIWaitForBottle extends EntityAIBase {
 
 	@Override
 	public void startExecuting() {
-		MinionHelper.sendMessageToLord(minion, "text.vampirism:need_empty_bottle");
+		MinionHelper.sendMessageToLord(minion, "text.vampirism.need_empty_bottle");
 	}
 
 	@Override

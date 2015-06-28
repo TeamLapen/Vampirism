@@ -164,7 +164,7 @@ public class MinionHelper {
 			if (m.getRepresentingEntity().hasCustomNameTag()) {
 				c1 = new ChatComponentText(m.getRepresentingEntity().getCustomNameTag());
 			} else {
-				c1 = new ChatComponentTranslation("text.vampirism:minion");
+				c1 = new ChatComponentTranslation("text.vampirism.minion");
 			}
 
 			c1.appendText(": ");

@@ -24,7 +24,7 @@ public class TileEntityBloodAltar2 extends TileEntity {
 
 	public static final int MAX_BLOOD = 100;
 	public final static int MIN_LEVEL = 1;
-	private final static int MAX_LEVEL = 3;
+	public final static int MAX_LEVEL = 3;
 	private int bloodAmount = 0;
 	private final String KEY_BLOOD_AMOUNT = "blood_amount";
 	private int ritualTicksLeft = 0;
@@ -82,12 +82,12 @@ public class TileEntityBloodAltar2 extends TileEntity {
 		VampirePlayer player = VampirePlayer.get(p);
 		int level = player.getLevel();
 		if (level < MIN_LEVEL || level > MAX_LEVEL) {
-			p.addChatMessage(new ChatComponentTranslation("text.vampirism:ritual_level_wrong"));
+			p.addChatMessage(new ChatComponentTranslation("text.vampirism.ritual_level_wrong"));
 			return;
 		}
 		int neededBlood = BALANCE.LEVELING.A2_getRequiredBlood(level);
 		if (bloodAmount < neededBlood) {
-			p.addChatComponentMessage(new ChatComponentTranslation("text.vampirism:not_enough_blood"));
+			p.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.not_enough_blood"));
 			return;
 		}
 

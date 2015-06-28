@@ -41,10 +41,10 @@ public class ModPotion extends Potion {
 
 	public static void init() {
 		increasePotionArraySize();
-		sunscreen = new ModPotion(Configs.potion_id_sunscreen, false, 345345).setIconIndex(7, 1).setPotionName("potion.vampirism:sunscreen");
-		thirst = new ModPotion(Configs.potion_id_thirst, false, 859494).setIconIndex(1, 1).setPotionName("potion.vampirism:thirst");
-		saturation = new ModPotion(Configs.potion_id_saturation, false, 850484).setIconIndex(2, 2).setPotionName("potion.vampirism:saturation");
-		sanguinare = new ModPotion(Configs.potion_id_sanguinare, false, 0x6A0888).setIconIndex(7, 1).setPotionName("potion.vampirism:sanguinare")
+		sunscreen = new ModPotion(Configs.potion_id_sunscreen, false, 345345).setIconIndex(7, 1).setPotionName("potion.vampirism.sunscreen");
+		thirst = new ModPotion(Configs.potion_id_thirst, false, 859494).setIconIndex(1, 1).setPotionName("potion.vampirism.thirst");
+		saturation = new ModPotion(Configs.potion_id_saturation, false, 850484).setIconIndex(2, 2).setPotionName("potion.vampirism.saturation");
+		sanguinare = new ModPotion(Configs.potion_id_sanguinare, false, 0x6A0888).setIconIndex(7, 1).setPotionName("potion.vampirism.sanguinare")
 				.func_111184_a(SharedMonsterAttributes.attackDamage, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, 0);
 	}
 

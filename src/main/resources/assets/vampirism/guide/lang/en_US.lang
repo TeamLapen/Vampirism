@@ -1,0 +1,43 @@
+#General
+guide.vampirism.book.title=Vampirism Guide
+guide.vampirism.welcomeMessage=guide.vampirism.welcomeMessage
+guide.vamprism.book.name=Vampirism Guide
+
+#Getting Started
+guide.vampirism.gettingStarted.category=Getting Started
+guide.vampirism.gettingStarted.overview.title=Overview
+guide.vampirism.gettingStarted.overview.text=Vampirism is a mod that adds a whole new way of playing Minecraft. You may have previously spent a lot of time avoiding mobs, but as a Vampire, you will develop a thirst for killing :) \n When wandering around the world you might notice there are more villages in more biomes, in which you can assuage one's thirst. The villages in swamps are especially interesting.
+guide.vampirism.gettingStarted.firstSteps.title=First steps
+guide.vampirism.gettingStarted.firstSteps.text=You will start out as a regular player, to become a vampire you have to be bitten by a vampire. So either let them hit you on purpose or just wait until it happens by accident. When they hit you there is a chance, you receive a potion effect called "Sanguinare Vampiris" which lasts a Minecraft day. After the potion has ended, you become a vampire. In case you don't want to become one, you can always cancel the effect with a milk bucket. Alternatively you can right-click with vampire fangs in you hand to inject some blood into you and get the same effect as above.
+guide.vampirism.gettingStarted.asAVampire.title=As a vampire
+guide.vampirism.gettingStarted.asAVampire.text=Once you become a Vampire, one of your main sources of blood (at least the best source) are villagers and you should find plenty of those. Watch out though, there are still Vampires that may attack you, same as when you are a regular player. The Vampire Hunters, however, will not attack you, when you are a level 1 Vampire.\nAs a Vampire, you need to watch how much blood you have. Suck blood by pressing 'F' from Villagers and from some mobs to get more blood. Extra blood can be stored in a Blood Bottle. If you want to transfer blood between the Blood Bottle and the Blood Bar use right click or shift right click on the mouse. You will know which mobs you can't get blood from, as you will receive damage trying to suck their blood. In the beginning you will be a level 1 vampire (the level is displayed above your XP-level) and have improved speed, health and strength.\nTo get to higher vampire levels you have to perform different rituals. When you get above a certain level, Vampires will no longer attack you, but Vampire Hunters will. As you advance through levels your abilities improve, but some disadvantages like sun damage might appear.
+
+#Items and Blocks
+guide.vampirism.itemsAndBlocks.category=Items and Blocks
+guide.vampirism.itemsAndBlocks.found.title=Found in the world
+guide.vampirism.itemsAndBlocks.found.pureBlood=Is dropped by Vampire Lords in different purity levels depending on the Lords level. Required for the higher tier rituals.
+guide.vampirism.itemsAndBlocks.found.bloodAltar1=This block can act as a beacon and gives you a speed as well as a saturation effect (you consume less blood). But to enable this effect, you have to craft yourself a "Leech" sword and fill it with blood by killing villagers or other creatures with it. Then you can insert the sword into the block which enables the effect, but slowly depletes the sword. The block cannot be crafted, but has to be found in swamplands.
+guide.vampirism.itemsAndBlocks.found.vampireFlower=Vampire Orchids can be found in the vampire biome.
+guide.vampirism.itemsAndBlocks.found.humanHearth=These are dropped by vampire hunters. You can either eat them to get a large amount of blood or use them in several rituals.
+guide.vampirism.itemsAndBlocks.found.vampireFang=These are dropped by vampires. You can use them in a few crafting recipes or right click with them to get "Sanguinare Vampiris".
+guide.vampirism.itemsAndBlocks.bBottle.text=Holds blood to tide you over when not out hunting. You can transfer blood to the blood bar with a right click of the mouse. Transfer extra blood to the bottle with shift + right click. Enable auto mode, (press %s) to automatically transfer extra blood to any blood bottle in the visible inventory. Filled up bottles are also used in a few crafting recipes. You can either craft it with the following recipe or simple keep normal glas bottles on your hotbar when bitting mobs.
+guide.vampirism.itemsAndBlocks.sunscreen.text=Decreases you sun damage for some time.
+guide.vampirism.itemsAndBlocks.armor.text=The specially designed Vampire armor reduces the influence of the sun on vampires. If fully worn you do not get a confusion effect as well as less instant damage. The armor itself can be compared to vanilla iron armor.
+guide.vampirism.itemsAndBlocks.armor.title=Vampire armor
+guide.vampirism.itemsAndBlocks.altars.altar2.text=This altar is used for leveling between levels %d and %d
+guide.vampirism.itemsAndBlocks.altars.altar4.text=The %s is used for leveling as of level %d and consists of several blocks: The main block, tips and different vanilla structure blocks. For further information take a look at the leveling section.
+guide.vampirism.itemsAndBlocks.altars.title=Altar blocks
+guide.vampirism.itemsAndBlocks.coffin.text=The coffin can be used to sleep during the day and to set your spawn-point. It is recommend do place it in spot where the sun does not get. You can change the interior color by shift-right-clicking with a dye on it. 
+
+#Levels
+guide.vampirism.levels.introduction.title=Introduction
+guide.vampirism.levels.introduction.text=After becoming a vampire (see Getting Started) you probably want to reach higher levels. To level up you have perform rituals at different altars, but always at night.
+guide.vampirism.levels.altar2.title=Levels %d to %d
+guide.vampirism.levels.altar2.text=Craft the altar block and place it somewhere. To use this one you have to fill it with blood (right-click with filled blood bottles). If there is enough blood inside you can right-click with an empty hand and the blood will be infused into you, making you even stronger.
+guide.vampirism.levels.altar4.title=Level %d+
+guide.vampirism.levels.altar4.text=This altar requires a multiblock structure. First craft the main block (see Items and Blocks) and place it down, then you have to build pillars at defined position. The pillar block type and height varies depending on the level, on top has to be a tip each. Make sure there are no other blocks (e.g. grass) in the area (Example screenshots at the end). After the structure is complete, put the required amount of items into the altar (Take a look at the following table), shift right click and wait for the magic to happen. Do not use shift click to insert the items into the altar, there is a bug in forge for 1.7.10
+guide.vampirism.levels.altar4.item_text=Required items
+guide.vampirism.levels.altar4.structure1.name=Structure 1
+guide.vampirism.levels.altar4.structure2.name=Structure 2 (You have to face north when building it)
+guide.vampirism.levels.altar4.item_req=Item requirements
+guide.vampirism.levels.altar4.struc_req=Structure requirements

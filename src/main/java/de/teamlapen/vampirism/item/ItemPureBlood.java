@@ -9,6 +9,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.VampirismMod;
@@ -27,7 +28,7 @@ public class ItemPureBlood extends BasicItem {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
-		list.add(EnumChatFormatting.RED + VampirismMod.proxy.translateToLocal("text.vampirism:purity") + ": " + (itemStack.getItemDamage() + 1) + "/" + COUNT);
+		list.add(EnumChatFormatting.RED + StatCollector.translateToLocal("text.vampirism.purity") + ": " + (itemStack.getItemDamage() + 1) + "/" + COUNT);
 	}
 
 	@Override
@@ -50,7 +51,7 @@ public class ItemPureBlood extends BasicItem {
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IIconRegister iconRegister) {
 		for (int i = 0; i < COUNT; i++) {
-			icons[i] = iconRegister.registerIcon(getUnlocalizedName().substring(this.getUnlocalizedName().indexOf(".") + 1) + "_" + i);
+			icons[i] = iconRegister.registerIcon(this.getIconString() + "_" + i);
 		}
 	}
 

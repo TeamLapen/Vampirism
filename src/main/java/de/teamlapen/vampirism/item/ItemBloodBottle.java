@@ -106,7 +106,7 @@ public class ItemBloodBottle extends ItemGlassBottle {
 	private IIcon[] icons;
 
 	public ItemBloodBottle() {
-		setUnlocalizedName(REFERENCE.MODID + ":" + name);
+		setUnlocalizedName(REFERENCE.MODID + "." + name);
 		setHasSubtypes(true);
 		setCreativeTab(VampirismMod.tabVampirism);
 		this.maxStackSize = 1; // TODO: I want this to not stack when blood is

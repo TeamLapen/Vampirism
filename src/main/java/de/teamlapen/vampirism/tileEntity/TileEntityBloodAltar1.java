@@ -139,7 +139,7 @@ public class TileEntityBloodAltar1 extends TileEntity {
 
 	public void startRitual(EntityPlayer player, ItemStack itemStack) {
 		if (VampirePlayer.get(player).getLevel() == 0) {
-			player.addChatMessage(new ChatComponentTranslation("text.vampirism:ritual_no_vampire"));
+			player.addChatMessage(new ChatComponentTranslation("text.vampirism.ritual_no_vampire"));
 			return;
 		}
 		// Put sword into altar

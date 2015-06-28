@@ -27,7 +27,7 @@ public class GUISleepCoffin extends GuiSleepMP {
 	public void initGui() {
 		super.initGui();
 		if (this.buttonList.size() > 0) {
-			((GuiButton) this.buttonList.get(0)).displayString = I18n.format("text.vampirism:coffin.stopsleeping", new Object[0]);
+			((GuiButton) this.buttonList.get(0)).displayString = I18n.format("text.vampirism.coffin.stopsleeping", new Object[0]);
 		}
 
 		// this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height - 40, ));

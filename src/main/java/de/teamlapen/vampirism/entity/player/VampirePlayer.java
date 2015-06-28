@@ -432,7 +432,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	public int getMinionsLeft(boolean notify) {
 		int left = minionHandler.getMinionsLeft();
 		if (notify && left == 0) {
-			player.addChatMessage(new ChatComponentTranslation("text.vampirism:no_more_minions"));
+			player.addChatMessage(new ChatComponentTranslation("text.vampirism.no_more_minions"));
 		}
 		return left;
 	}
@@ -803,9 +803,9 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		} else if (t == 0) {// Ready
 			int r = s.canUse(this, player);
 			if (r == -1) {
-				player.addChatMessage(new ChatComponentTranslation("text.vampirism:skill.deactivated_by_serveradmin"));
+				player.addChatMessage(new ChatComponentTranslation("text.vampirism.skill.deactivated_by_serveradmin"));
 			} else if (r == 0) {
-				player.addChatMessage(new ChatComponentTranslation("text.vampirism:skill.level_to_low"));
+				player.addChatMessage(new ChatComponentTranslation("text.vampirism.skill.level_to_low"));
 			} else if (r == 1) {
 				if (s.onActivated(this, player)) {
 					if (s instanceof ILastingSkill) {
@@ -818,7 +818,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 			}
 		} else {// In cooldown
-			player.addChatMessage(new ChatComponentTranslation("text.vampirism:skill.cooldown_not_over"));
+			player.addChatMessage(new ChatComponentTranslation("text.vampirism.skill.cooldown_not_over"));
 		}
 		dirty = true;
 	}
@@ -826,16 +826,16 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	public void onToggleAutoFillBlood() {
 		if (autoFillBlood) {
 			autoFillBlood = false;
-			this.player.addChatMessage(new ChatComponentTranslation("text.vampirism:auto_fill_disabled"));
+			this.player.addChatMessage(new ChatComponentTranslation("text.vampirism.auto_fill_disabled"));
 		} else {
 			autoFillBlood = true;
-			this.player.addChatMessage(new ChatComponentTranslation("text.vampirism:auto_fill_enabled"));
+			this.player.addChatMessage(new ChatComponentTranslation("text.vampirism.auto_fill_enabled"));
 		}
 	}
 
 	public void onToggleVision() {
 		if (getLevel() == 0) {
-			player.addChatMessage(new ChatComponentTranslation("text.vampirism:skill.level_to_low"));
+			player.addChatMessage(new ChatComponentTranslation("text.vampirism.skill.level_to_low"));
 			return;
 		}
 		int v = getVision() + 1;
@@ -844,11 +844,11 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		this.setVision(v);
 		this.sync(false);
 		if (v == 0) {
-			player.addChatMessage(new ChatComponentTranslation("text.vampirism:normal_vision"));
+			player.addChatMessage(new ChatComponentTranslation("text.vampirism.normal_vision"));
 		} else if (v == 1) {
-			player.addChatMessage(new ChatComponentTranslation("text.vampirism:night_vision"));
+			player.addChatMessage(new ChatComponentTranslation("text.vampirism.night_vision"));
 		} else {
-			player.addChatMessage(new ChatComponentTranslation("text.vampirism:blood_vision"));
+			player.addChatMessage(new ChatComponentTranslation("text.vampirism.blood_vision"));
 		}
 
 	}

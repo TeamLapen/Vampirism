@@ -93,7 +93,7 @@ public class BatSkill extends DefaultSkill implements ILastingSkill {
 	@Override
 	public boolean onUpdate(VampirePlayer vampire, EntityPlayer player) {
 		if (vampire.gettingSundamage() && !player.worldObj.isRemote) {
-			player.addChatMessage(new ChatComponentTranslation("text.vampirism:cant_fly_day"));
+			player.addChatMessage(new ChatComponentTranslation("text.vampirism.cant_fly_day"));
 			return true;
 		}
 		return false;

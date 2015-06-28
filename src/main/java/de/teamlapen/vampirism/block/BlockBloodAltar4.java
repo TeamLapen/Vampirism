@@ -86,7 +86,7 @@ public class BlockBloodAltar4 extends BasicBlockContainer {
 		}
 		if (!player.isSneaking()) {
 			if (!te.getPhase().equals(PHASE.NOT_RUNNING)) {
-				player.addChatMessage(new ChatComponentTranslation("text.vampirism:ritual_still_running"));
+				player.addChatMessage(new ChatComponentTranslation("text.vampirism.ritual_still_running"));
 				return false;
 			}
 			player.openGui(VampirismMod.instance, GuiHandler.ID_ALTAR_4, world, x, y, z);
