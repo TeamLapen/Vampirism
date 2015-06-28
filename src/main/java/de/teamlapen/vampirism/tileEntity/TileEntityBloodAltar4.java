@@ -62,6 +62,7 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 			{ { 0, 2, 0, 0, 0, 2, 0 }, { 0, 0, 0, 0, 0, 0, 0 }, { 2, 0, 0, 0, 0, 0, 2 }, { 0, 0, 0, 0, 0, 0, 0 }, { 0, 2, 0, 0, 0, 2, 0 } } };
 	private int runningTick;
 	private final int DURATION_TICK = 450;
+	public static final int MIN_LEVEL = 4;
 
 	/**
 	 * Only available when running ({@link #runningTick}>0
@@ -196,6 +197,7 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 	/**
 	 * Checks if the requirements for a level up are met
 	 * 
+	 * IF CHANGED MAKE SURE TO ADJUST THE GUIDE AS WELL {@link de.teamlapen.vampirism.guide.VampirismGuide#createItemRequirementsAltar4()}
 	 * @param player
 	 * @param sl
 	 *            Level of the structure
@@ -206,7 +208,7 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 			return LevReq.STRUCTURE_WRONG;
 
 		int pl = VampirePlayer.get(player).getLevel();
-		if (pl < 4 || pl > REFERENCE.HIGHEST_REACHABLE_LEVEL)
+		if (pl < MIN_LEVEL || pl > REFERENCE.HIGHEST_REACHABLE_LEVEL)
 			return LevReq.LEVEL_WRONG;
 		if (pl == 4) {
 			if (sl != 1)
@@ -265,7 +267,7 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 
 	/**
 	 * Determines the level of the structure build around the altar. TODO make it rotatable
-	 * 
+	 * Make sure to adjust {@link de.teamlapen.vampirism.guide.VampirismGuide#createStructureRequirementsAltar4()} as well when changing this method
 	 * @return
 	 */
 	private int determineLevel() {
@@ -314,7 +316,7 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 
 	@Override
 	public String getInventoryName() {
-		return "block.vampirism:bloodAltarTier4.name";
+		return "block.vampirism.bloodAltarTier4.name";
 	}
 
 	/**
@@ -422,11 +424,11 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 		if (result != LevReq.OK) {
 			if (!this.worldObj.isRemote) {
 				if (result == LevReq.ITEM_MISSING)
-					player.addChatMessage(new ChatComponentTranslation("text.vampirism:ritual_missing_times"));
+					player.addChatMessage(new ChatComponentTranslation("text.vampirism.ritual_missing_times"));
 				if (result == LevReq.STRUCTURE_WRONG)
-					player.addChatMessage(new ChatComponentTranslation("text.vampirism:ritual_structure_wrong"));
+					player.addChatMessage(new ChatComponentTranslation("text.vampirism.ritual_structure_wrong"));
 				if (result == LevReq.LEVEL_WRONG)
-					player.addChatMessage(new ChatComponentTranslation("text.vampirism:ritual_level_wrong"));
+					player.addChatMessage(new ChatComponentTranslation("text.vampirism.ritual_level_wrong"));
 			}
 
 			return;

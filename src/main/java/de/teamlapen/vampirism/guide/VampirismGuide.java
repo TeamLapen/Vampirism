@@ -1,11 +1,247 @@
 package de.teamlapen.vampirism.guide;
 
-import net.minecraft.util.ResourceLocation;
-import amerifrance.guideapi.api.GuideRegistry;
-import amerifrance.guideapi.util.serialization.BookCreator;
+import java.awt.Color;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-public class VampirismGuide {
-	private final static ResourceLocation jsonLoc=new ResourceLocation("");
+import net.minecraft.block.Block;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.CraftingManager;
+import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StatCollector;
+import de.teamlapen.vampirism.ModBlocks;
+import de.teamlapen.vampirism.ModItems;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.guide.PageTable.Builder;
+import de.teamlapen.vampirism.item.ItemBloodBottle;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar4;
+import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.util.REFERENCE.KEY;
+import amerifrance.guideapi.api.GuideRegistry;
+import amerifrance.guideapi.api.abstraction.CategoryAbstract;
+import amerifrance.guideapi.api.abstraction.EntryAbstract;
+import amerifrance.guideapi.api.abstraction.IPage;
+import amerifrance.guideapi.api.base.Book;
+import amerifrance.guideapi.api.base.CategoryBase;
+import amerifrance.guideapi.api.util.BookBuilder;
+import amerifrance.guideapi.api.util.PageHelper;
+import amerifrance.guideapi.categories.CategoryItemStack;
+import amerifrance.guideapi.entries.EntryUniText;
+import amerifrance.guideapi.pages.PageIRecipe;
+import amerifrance.guideapi.pages.PageLocItemStack;
+import amerifrance.guideapi.pages.PageLocText;
+import amerifrance.guideapi.pages.PageUnlocImage;
+import amerifrance.guideapi.pages.PageUnlocItemStack;
+import amerifrance.guideapi.pages.PageUnlocText;
+
+public class VampirismGuide{
+	public static Book vampirismGuide;
+	private static List recipeList;
+	public static List<CategoryAbstract> categories = new ArrayList<CategoryAbstract>();
 	public static void registerGuide(){
+		recipeList=CraftingManager.getInstance().getRecipeList();
+		registerGettingStarted();
+		registerItemsAndBlocks();
+		registerLevels();
+		BookBuilder builder = new BookBuilder();
+		builder.setCategories(categories).setUnlocBookTitle("guide.vampirism.book.title").setUnlocWelcomeMessage("guide.vampirism.welcomeMessage").setUnlocDisplayName("guide.vamprism.book.name").setBookColor(new Color(137,8,163)).setAuthor("--Team Lapen");
+		builder.setSpawnWithBook(true);
+		vampirismGuide = builder.build();
+		GuideRegistry.registerBook(vampirismGuide);
+	}
+	
+	private static void registerGettingStarted(){
+		List<EntryAbstract> entries = new ArrayList<EntryAbstract>();
+		
+		entries.add(createUnlocLongTextEntry("guide.vampirism.gettingStarted.overview.title","guide.vampirism.gettingStarted.overview.text"));
+		
+		entries.add(createUnlocLongTextEntry("guide.vampirism.gettingStarted.firstSteps.title","guide.vampirism.gettingStarted.firstSteps.text"));
+		
+		entries.add(createUnlocLongTextEntry("guide.vampirism.gettingStarted.asAVampire.title","guide.vampirism.gettingStarted.asAVampire.text"));
+		
+		
+		categories.add(new CategoryItemStack(entries,"guide.vampirism.gettingStarted.category",new ItemStack(ModItems.bloodBottle,1,ItemBloodBottle.MAX_BLOOD)));
+	}
+	
+	private static void registerItemsAndBlocks(){
+		List<EntryAbstract> entries = new ArrayList<EntryAbstract>();
+		
+		ArrayList<IPage> found=new ArrayList<IPage>();
+		found.add(new PageUnlocItemStack("guide.vampirism.itemsAndBlocks.found.vampireFang",ModItems.vampireFang));
+		found.add(new PageUnlocItemStack("guide.vampirism.itemsAndBlocks.found.humanHearth",ModItems.humanHeart));
+		found.add(new PageUnlocItemStack("guide.vampirism.itemsAndBlocks.found.vampireFlower",ModBlocks.vampireFlower));
+		found.add(new PageUnlocItemStack("guide.vampirism.itemsAndBlocks.found.bloodAltar1",ModBlocks.bloodAltar1));
+		found.add(new PageUnlocItemStack("guide.vampirism.itemsAndBlocks.found.pureBlood",ModItems.pureBlood));
+		entries.add(new EntryUniText(found,"guide.vampirism.itemsAndBlocks.found.title"));
+		
+		String bBottle=locAndFormat("guide.vampirism.itemsAndBlocks.bBottle.text", VampirismMod.proxy.getKey(KEY.AUTO));
+		entries.add(createCraftableStackEntryLoc(new ItemStack(ModItems.bloodBottle),bBottle));
+		
+		entries.add(createCraftableStackEntry(new ItemStack(ModItems.sunscreen),"guide.vampirism.itemsAndBlocks.sunscreen.text"));
+		
+		ArrayList<IPage> armor = new ArrayList<IPage>();
+		armor.add(new PageUnlocText("guide.vampirism.itemsAndBlocks.armor.text"));
+		armor.add(new PageIRecipe(getRecipe(ModItems.vampireHelmet)));
+		armor.add(new PageIRecipe(getRecipe(ModItems.vampireChestplate)));
+		armor.add(new PageIRecipe(getRecipe(ModItems.vampireLeggings)));
+		armor.add(new PageIRecipe(getRecipe(ModItems.vampireBoots)));
+		entries.add(new EntryUniText(armor,"guide.vampirism.itemsAndBlocks.armor.title"));
+		
+		ArrayList<IPage> altar = new ArrayList<IPage>();
+		altar.add(new PageLocText(locAndFormat("guide.vampirism.itemsAndBlocks.altars.altar2.text",TileEntityBloodAltar2.MIN_LEVEL,TileEntityBloodAltar2.MAX_LEVEL)));
+		altar.add(new PageIRecipe(getRecipe(ModBlocks.bloodAltar2)));
+		altar.add(new PageUnlocText(locAndFormat("guide.vampirism.itemsAndBlocks.altars.altar4.text",loc(ModBlocks.bloodAltar4.getUnlocalizedName()),TileEntityBloodAltar4.MIN_LEVEL)));
+		altar.add(new PageIRecipe(getRecipe(ModBlocks.bloodAltar4)));
+		altar.add(new PageIRecipe(getRecipe(ModBlocks.bloodAltar4Tip)));
+		entries.add(new EntryUniText(altar,"guide.vampirism.itemsAndBlocks.altars.title"));
+		
+		entries.add(createCraftableStackEntry(new ItemStack(ModItems.coffin),"guide.vampirism.itemsAndBlocks.coffin.text"));
+		
+		categories.add(new CategoryItemStack(entries,"guide.vampirism.itemsAndBlocks.category",new ItemStack(ModItems.leechSword,1)));
+	}
+	
+	private static void registerLevels(){
+		List<EntryAbstract> entries = new ArrayList<EntryAbstract>();
+		
+		entries.add(createUnlocLongTextEntry("guide.vampirism.levels.introduction.title","guide.vampirism.levels.introduction.text"));
+		
+		String at2t=locAndFormat("guide.vampirism.levels.altar2.title",TileEntityBloodAltar2.MIN_LEVEL,TileEntityBloodAltar2.MAX_LEVEL);
+		ArrayList<IPage> pagesAt2 = new ArrayList<IPage>();
+		String at2=loc("guide.vampirism.levels.altar2.text");
+		at2+="\n";
+		for(int i=TileEntityBloodAltar2.MIN_LEVEL;i<=TileEntityBloodAltar2.MAX_LEVEL;i++){
+			at2+=loc("text.vampirism.entity_level")+" "+i+": "+BALANCE.LEVELING.A2_getRequiredBlood(i)+" "+loc("text.vampirism.blood")+"\n";
+		}
+		pagesAt2.add(new PageIRecipe(getRecipe(ModBlocks.bloodAltar2)));
+		pagesAt2.addAll(PageHelper.pagesForLongText(at2));
+		entries.add(new EntryUniText(pagesAt2,at2t));
+		
+		String at4t=locAndFormat("guide.vampirism.levels.altar4.title",TileEntityBloodAltar4.MIN_LEVEL);
+		ArrayList<IPage> pagesAt4 = new ArrayList<IPage>();
+		pagesAt4.add(new PageIRecipe(getRecipe(ModBlocks.bloodAltar4)));
+		pagesAt4.add(new PageIRecipe(getRecipe(ModBlocks.bloodAltar4Tip)));
+		pagesAt4.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.levels.altar4.text")));
+		pagesAt4.add(createItemRequirementsAltar4());
+		pagesAt4.add(createStructureRequirementsAltar4());
+		pagesAt4.add(new PageUnlocImage("guide.vampirism.levels.altar4.structure1.name",new ResourceLocation(REFERENCE.MODID+":guide/screenshots/altar4_structure1.png"),false));
+		pagesAt4.add(new PageUnlocImage("guide.vampirism.levels.altar4.structure2.name",new ResourceLocation(REFERENCE.MODID+":guide/screenshots/altar4_structure2.png"),false));
+		entries.add(new EntryUniText(pagesAt4,at4t));
+		
+		categories.add(new CategoryItemStack(entries,"guide.vampirism.levels.category",new ItemStack(ModBlocks.bloodAltar2)));
+	}
+	
+	private static IPage createItemRequirementsAltar4(){
+		PageTable.Builder builder=new PageTable.Builder(3);
+		builder.addUnlocLine("text.vampirism.entity_level",ModItems.pureBlood.getUnlocalizedName()+".name",ModItems.humanHeart.getUnlocalizedName()+".name");
+		builder.addLine(4,0,5);
+		builder.addLine(5,"1 Purity(1)",0);
+		builder.addLine(6,"1 Purity(1)",5);
+		builder.addLine(7,"1 Purity(2)",0);
+		builder.addLine(8,"1 Purity(2)",5);
+		builder.addLine(9,"1 Purity(3)",5);
+		builder.addLine(10,"1 Purity(3)",5);
+		builder.addLine(11,"1 Purity(4)",10);
+		builder.addLine(12,"1 Purity(4)",5);
+		builder.addLine(13,"1 Purity(5)",0);
+		builder.setHeadline(loc("guide.vampirism.levels.altar4.item_req"));
+		return builder.build();
+	}
+	
+	private static IPage createStructureRequirementsAltar4(){
+		PageTable.Builder builder=new PageTable.Builder(3);
+		builder.addUnlocLine("text.vampirism.entity_level","text.vampirism.structure","text.vampirism.pillar_blocks");
+		builder.addLine(4,1,Blocks.stonebrick.getLocalizedName());
+		builder.addLine(5,1,Blocks.stonebrick.getLocalizedName());
+		builder.addLine(6,1,Blocks.stonebrick.getLocalizedName());
+		builder.addLine(7,1,Blocks.iron_block.getLocalizedName());
+		builder.addLine(8,1,Blocks.iron_block.getLocalizedName());
+		builder.addLine(9,2,Blocks.iron_block.getLocalizedName());
+		builder.addLine(10,2,Blocks.iron_block.getLocalizedName());
+		builder.addLine(11,2,Blocks.gold_block.getLocalizedName());
+		builder.addLine(12,2,Blocks.gold_block.getLocalizedName());
+		builder.addLine(13,2,Blocks.gold_block.getLocalizedName());
+		builder.setHeadline(loc("guide.vampirism.levels.altar4.struc_req"));
+		return builder.build();
+	}
+	
+	/**
+	 * Simply translate the given string
+	 * @param unLoc
+	 * @return
+	 */
+	private static String loc(String unLoc){
+		return StatCollector.translateToLocal(unLoc);
+	}
+	
+	/**
+	 * Firstly translates the given string and then uses String.format with the given objects on it
+	 * @param unLoc
+	 * @param objects
+	 * @return
+	 */
+	private static String locAndFormat(String unLoc,Object...objects){
+		return String.format(loc(unLoc),objects);
+	}
+	
+	/**
+	 * Creates a item entry including a localized text and the crafting recipe
+	 * @param item
+	 * @param locText
+	 * @return
+	 */
+	private static EntryAbstract createCraftableStackEntryLoc(ItemStack item,String locText){
+		ArrayList<IPage> pages=new ArrayList<IPage>();
+		pages.addAll(PageHelper.pagesForLongText(locText,item));
+		pages.add(new PageIRecipe(getRecipe(item)));
+		return new EntryUniText(pages,item.getUnlocalizedName()+".name");
+	}
+	
+	/**
+	 * Creates a simple text entry with unLoc title and long unlocText
+	 * @param unlocTitle
+	 * @param unlocText
+	 * @return
+	 */
+	private static EntryAbstract createUnlocLongTextEntry(String unlocTitle,String unlocText){
+		ArrayList<IPage> pages=new ArrayList<IPage>();
+		pages.addAll(PageHelper.pagesForLongText(loc(unlocText)));
+		return new EntryUniText(pages,unlocTitle);
+	}
+	
+	/**
+	 * Creates a item entry including an unlocalized text and the crafting recipe
+	 * @param item
+	 * @param unlocText
+	 * @return
+	 */
+	private static EntryAbstract createCraftableStackEntry(ItemStack item,String unlocText){
+		return createCraftableStackEntryLoc(item,loc(unlocText));
+	}
+	
+	
+	private static IRecipe getRecipe(Item item){
+		return getRecipe(new ItemStack(item,1));
+	}
+	private static IRecipe getRecipe(Block block){
+		return getRecipe(new ItemStack(block,1));
+	}
+	private static IRecipe getRecipe(ItemStack stack)
+	{		
+		for(Object obj : recipeList)
+		{
+			IRecipe recipe = (IRecipe)obj;
+			if(recipe.getRecipeOutput() != null && stack.isItemEqual(recipe.getRecipeOutput()))
+			{
+				return recipe;
+			}
+		}
+		
+		return null;
 	}
 }
