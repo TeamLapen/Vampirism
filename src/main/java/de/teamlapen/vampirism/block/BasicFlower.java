@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.block.BlockFlower;
+package de.teamlapen.vampirism.block;
 
 import java.util.List;
 

@@ -18,7 +18,7 @@ import de.teamlapen.vampirism.block.BlockChurchAltar.TileEntityChurchAltar;
 import de.teamlapen.vampirism.block.BlockCoffin;
 import de.teamlapen.vampirism.block.BlockCursedEarth;
 import de.teamlapen.vampirism.block.MaterialLiquidBlood;
-import de.teamlapen.vampirism.block.BlockFlower.VampireFlower;
+import de.teamlapen.vampirism.block.VampireFlower;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar4;
