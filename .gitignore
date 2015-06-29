@@ -8,6 +8,10 @@ build.bat
 /bin
 Thumbs.db
 *.bak
+Vampirism.iml
+.settings
+
+#Minecraft run files. Incase someone configured it wrong or differently
 config/
 saves/
 logs/
