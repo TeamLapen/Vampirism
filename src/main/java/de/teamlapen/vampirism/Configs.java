@@ -34,7 +34,7 @@ public class Configs {
 	}
 
 	/**
-	 * Loads/refreshes the configuration and adds comments if there aren't any {@link #init(File) init} has to be called once before using this
+	 * Loads/refreshes the configuration and adds comments if there aren't any {@link #init(File,boolean) init} has to be called once before using this
 	 * 
 	 * @return If the config are of an older version it returns the old version otherwise its null
 	 */
@@ -51,6 +51,7 @@ public class Configs {
 		player_blood_watcher = config.get(CATEGORY_GENERAL, "player_data_watcher_id", 21, "ID for datawatcher. HAS TO BE THE SAME ON CLIENT AND SERVER").getInt();
 		getVampireBiomeId();
 		reset_balance_in_dev = config.getBoolean("reset_balance_in_dev", CATEGORY_GENERAL, true, "For developers: Should the balance values be reset on start in dev environment");
+		modify_player_texture = config.getBoolean("modify_vampire_player_texture",CATEGORY_GENERAL,true,"Modifies the players skin to be vampirish");
 		String conf_version = config.get(CATEGORY_GENERAL, "config_mod_version", REFERENCE.VERSION).getString();
 		config.get(CATEGORY_GENERAL, "config_mod_version", REFERENCE.VERSION).set(REFERENCE.VERSION);
 		// Village
@@ -200,6 +201,8 @@ public class Configs {
 	public static boolean disable_village_biome;
 
 	public static boolean reset_balance_in_dev;
+
+	public static boolean modify_player_texture;
 
 	public static Configuration config;
 
