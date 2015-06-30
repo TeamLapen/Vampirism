@@ -17,7 +17,6 @@ saves/
 logs/
 options.txt
 usernamecache.json
-screenshots/
 crash-reports/*
 banned-ips.json
 banned-players.json

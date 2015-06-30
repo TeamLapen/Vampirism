@@ -5,8 +5,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import amerifrance.guideapi.pages.*;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.CraftingManager;
@@ -33,12 +35,6 @@ import amerifrance.guideapi.api.util.BookBuilder;
 import amerifrance.guideapi.api.util.PageHelper;
 import amerifrance.guideapi.categories.CategoryItemStack;
 import amerifrance.guideapi.entries.EntryUniText;
-import amerifrance.guideapi.pages.PageIRecipe;
-import amerifrance.guideapi.pages.PageLocItemStack;
-import amerifrance.guideapi.pages.PageLocText;
-import amerifrance.guideapi.pages.PageUnlocImage;
-import amerifrance.guideapi.pages.PageUnlocItemStack;
-import amerifrance.guideapi.pages.PageUnlocText;
 
 public class VampirismGuide{
 	public static Book vampirismGuide;
@@ -49,6 +45,8 @@ public class VampirismGuide{
 		registerGettingStarted();
 		registerItemsAndBlocks();
 		registerLevels();
+		registerMobs();
+		registerVP();
 		BookBuilder builder = new BookBuilder();
 		builder.setCategories(categories).setUnlocBookTitle("guide.vampirism.book.title").setUnlocWelcomeMessage("guide.vampirism.welcomeMessage").setUnlocDisplayName("guide.vamprism.book.name").setBookColor(new Color(137,8,163)).setAuthor("--Team Lapen");
 		builder.setSpawnWithBook(true);
@@ -59,14 +57,14 @@ public class VampirismGuide{
 	private static void registerGettingStarted(){
 		List<EntryAbstract> entries = new ArrayList<EntryAbstract>();
 		
-		entries.add(createUnlocLongTextEntry("guide.vampirism.gettingStarted.overview.title","guide.vampirism.gettingStarted.overview.text"));
+		entries.add(createUnlocLongTextEntry("guide.vampirism.gettingStarted.overview.title", "guide.vampirism.gettingStarted.overview.text"));
 		
-		entries.add(createUnlocLongTextEntry("guide.vampirism.gettingStarted.firstSteps.title","guide.vampirism.gettingStarted.firstSteps.text"));
+		entries.add(createUnlocLongTextEntry("guide.vampirism.gettingStarted.firstSteps.title", "guide.vampirism.gettingStarted.firstSteps.text"));
 		
 		entries.add(createUnlocLongTextEntry("guide.vampirism.gettingStarted.asAVampire.title","guide.vampirism.gettingStarted.asAVampire.text"));
 		
 		
-		categories.add(new CategoryItemStack(entries,"guide.vampirism.gettingStarted.category",new ItemStack(ModItems.bloodBottle,1,ItemBloodBottle.MAX_BLOOD)));
+		categories.add(new CategoryItemStack(entries, "guide.vampirism.gettingStarted.category", new ItemStack(ModItems.bloodBottle, 1, ItemBloodBottle.MAX_BLOOD)));
 	}
 	
 	private static void registerItemsAndBlocks(){
@@ -109,7 +107,7 @@ public class VampirismGuide{
 	private static void registerLevels(){
 		List<EntryAbstract> entries = new ArrayList<EntryAbstract>();
 		
-		entries.add(createUnlocLongTextEntry("guide.vampirism.levels.introduction.title","guide.vampirism.levels.introduction.text"));
+		entries.add(createUnlocLongTextEntry("guide.vampirism.levels.introduction.title", "guide.vampirism.levels.introduction.text"));
 		
 		String at2t=locAndFormat("guide.vampirism.levels.altar2.title",TileEntityBloodAltar2.MIN_LEVEL,TileEntityBloodAltar2.MAX_LEVEL);
 		ArrayList<IPage> pagesAt2 = new ArrayList<IPage>();
@@ -138,17 +136,17 @@ public class VampirismGuide{
 	
 	private static IPage createItemRequirementsAltar4(){
 		PageTable.Builder builder=new PageTable.Builder(3);
-		builder.addUnlocLine("text.vampirism.entity_level",ModItems.pureBlood.getUnlocalizedName()+".name",ModItems.humanHeart.getUnlocalizedName()+".name");
-		builder.addLine(4,0,5);
+		builder.addUnlocLine("text.vampirism.entity_level", ModItems.pureBlood.getUnlocalizedName() + ".name", ModItems.humanHeart.getUnlocalizedName() + ".name");
+		builder.addLine(4, 0, 5);
 		builder.addLine(5,"1 Purity(1)",0);
-		builder.addLine(6,"1 Purity(1)",5);
-		builder.addLine(7,"1 Purity(2)",0);
-		builder.addLine(8,"1 Purity(2)",5);
-		builder.addLine(9,"1 Purity(3)",5);
-		builder.addLine(10,"1 Purity(3)",5);
-		builder.addLine(11,"1 Purity(4)",10);
-		builder.addLine(12,"1 Purity(4)",5);
-		builder.addLine(13,"1 Purity(5)",0);
+		builder.addLine(6, "1 Purity(1)", 5);
+		builder.addLine(7, "1 Purity(2)", 0);
+		builder.addLine(8, "1 Purity(2)", 5);
+		builder.addLine(9, "1 Purity(3)", 5);
+		builder.addLine(10, "1 Purity(3)", 5);
+		builder.addLine(11, "1 Purity(4)", 10);
+		builder.addLine(12, "1 Purity(4)", 5);
+		builder.addLine(13, "1 Purity(5)", 0);
 		builder.setHeadline(loc("guide.vampirism.levels.altar4.item_req"));
 		return builder.build();
 	}
@@ -169,24 +167,97 @@ public class VampirismGuide{
 		builder.setHeadline(loc("guide.vampirism.levels.altar4.struc_req"));
 		return builder.build();
 	}
-	
+
+	private static void registerMobs(){
+		List<EntryAbstract> entries = new ArrayList<EntryAbstract>();
+
+		ArrayList<IPage> hunter =new ArrayList<IPage>();
+		hunter.add(new PageImage(new ResourceLocation(REFERENCE.MODID + ":guide/screenshots/hunter.png")));
+		hunter.addAll(PageHelper.pagesForLongText(locAndFormat("guide.vampirism.mobs.hunter.text", BALANCE.VAMPIRE_HUNTER_ATTACK_LEVEL)));
+		entries.add(new EntryUniText(hunter, "guide.vampirism.mobs.hunter.title"));
+
+		ArrayList<IPage> vampire_npc =new ArrayList<IPage>();
+		vampire_npc.add(new PageImage(new ResourceLocation(REFERENCE.MODID + ":guide/screenshots/vampire.png")));
+		vampire_npc.addAll(PageHelper.pagesForLongText(locAndFormat("guide.vampirism.mobs.vampire.text", BALANCE.VAMPIRE_FRIENDLY_LEVEL)));
+		entries.add(new EntryUniText(vampire_npc, "guide.vampirism.mobs.vampire.title"));
+
+		ArrayList<IPage> vampire_lord =new ArrayList<IPage>();
+		vampire_lord.add(new PageImage(new ResourceLocation(REFERENCE.MODID + ":guide/screenshots/vampire_lord.png")));
+		vampire_lord.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.mobs.vampire_lord.text",true)));
+		entries.add(new EntryUniText(vampire_lord, "guide.vampirism.mobs.vampire_lord.title"));
+
+		ArrayList<IPage> vampire_minion =new ArrayList<IPage>();
+		vampire_minion.add(new PageImage(new ResourceLocation(REFERENCE.MODID + ":guide/screenshots/vampire_minion.png")));
+		vampire_minion.add(new PageImage(new ResourceLocation(REFERENCE.MODID + ":guide/screenshots/minion.png")));
+		vampire_minion.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.mobs.vampire_minion.text",true)));
+		entries.add(new EntryUniText(vampire_minion, "guide.vampirism.mobs.vampire_minion.title"));
+
+		ArrayList<IPage> ghost =new ArrayList<IPage>();
+		ghost.add(new PageImage(new ResourceLocation(REFERENCE.MODID + ":guide/screenshots/ghost.png")));
+		ghost.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.mobs.ghost.text",true)));
+
+		entries.add(new EntryUniText(ghost, "guide.vampirism.mobs.ghost.title"));
+
+		categories.add(new CategoryItemStack(entries, "guide.vampirism.mobs.category", new ItemStack(ModItems.vampireFang)));
+	}
+
+	private static void registerVP(){
+		List<EntryAbstract> entries =new ArrayList<>();
+
+		ArrayList<IPage> general=new ArrayList<IPage>();
+		String s=locAndFormat("guide.vampirism.vplayer.general.text", REFERENCE.HIGHEST_REACHABLE_LEVEL, VampirismMod.proxy.getKey(KEY.VISION), VampirismMod.proxy.getKey(KEY.SUCK),
+				VampirismMod.proxy.getKey(KEY.AUTO));
+		if(BALANCE.VAMPIRE_PLAYER_LOOSE_LEVEL){
+			s+="\n\n"+loc("guide.vampirism.vplayer.general.loose_level");
+		}
+		general.addAll(PageHelper.pagesForLongText(s));
+		entries.add(new EntryUniText(general, "guide.vampirism.vplayer.general.title"));
+
+		ArrayList<IPage> sun_damage=new ArrayList<IPage>();
+		sun_damage.addAll(PageHelper.pagesForLongText(locAndFormat("guide.vampirism.vplayer.sun_damage.text")));
+		entries.add(new EntryUniText(sun_damage, "guide.vampirism.vplayer.sun_damage.title"));
+
+		ArrayList<IPage> skills=new ArrayList<IPage>();
+		skills.addAll(PageHelper.pagesForLongText(locAndFormat("guide.vampirism.vplayer.skills.text")));
+		skills.add(new PageLocImage(loc("guide.vampirism.vplayer.skills.menu_text"), new ResourceLocation(REFERENCE.MODID + ":guide/screenshots/skills_menu.png"), false));
+		skills.addAll(PageHelper.pagesForLongText(locAndFormat("guide.vampirism.vplayer.skills.bat_transformation")));
+		skills.addAll(PageHelper.pagesForLongText(locAndFormat("guide.vampirism.vplayer.skills.revive_fallen")));
+		skills.add(new PageLocText(loc("guide.vampirism.vplayer.skills.end",true)));
+		entries.add(new EntryUniText(skills, "guide.vampirism.vplayer.skills.title"));
+
+		
+		categories.add(new CategoryItemStack(entries,"guide.vampirism.vplayer.category",new ItemStack(Items.skull,1,3)));
+	}
 	/**
 	 * Simply translate the given string
-	 * @param unLoc
+	 * @param unLoc Unlocalized String
 	 * @return
 	 */
 	private static String loc(String unLoc){
 		return StatCollector.translateToLocal(unLoc);
 	}
-	
+
 	/**
-	 * Firstly translates the given string and then uses String.format with the given objects on it
+	 * Translatets the string and optionally replaces e.g. /n by \n
+	 * @param unLoc
+	 * @param replace
+	 * @return
+	 */
+	private static String loc(String unLoc,boolean replace){
+		String s=loc(unLoc);
+		if(replace){
+			s=s.replaceAll("/n","\n");
+		}
+		return s;
+	}
+	/**
+	 * Firstly translates the given string, replaces e.g. /n by \n and then uses String.format with the given objects on it
 	 * @param unLoc
 	 * @param objects
 	 * @return
 	 */
 	private static String locAndFormat(String unLoc,Object...objects){
-		return String.format(loc(unLoc),objects);
+		return String.format(loc(unLoc,true),objects);
 	}
 	
 	/**

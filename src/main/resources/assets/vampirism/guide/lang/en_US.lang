@@ -41,3 +41,35 @@ guide.vampirism.levels.altar4.structure1.name=Structure 1
 guide.vampirism.levels.altar4.structure2.name=Structure 2 (You have to face north when building it)
 guide.vampirism.levels.altar4.item_req=Item requirements
 guide.vampirism.levels.altar4.struc_req=Structure requirements
+guide.vampirism.levels.category=How to level up
+
+#Mobs
+guide.vampirism.mobs.category=Mobs
+guide.vampirism.mobs.hunter.text=Hunts vampires ;)/nOnly attacks players with a vampire level higher than %s./nVampire Hunters near villages try to defend their village.
+guide.vampirism.mobs.hunter.title=Vampire Hunter
+guide.vampirism.mobs.vampire.text=Attacks players as long as they don't have a vampire level higher than %s./nAlso attacks villagers and makes them to vampire./nNight active
+guide.vampirism.mobs.vampire.title=Vampire
+guide.vampirism.mobs.vampire_lord.text=Spawns rarely in vampire biomes./nOccurs in different levels partially depending on the players level./nDrops pure blood./Is very strong and summons minions which help him
+guide.vampirism.mobs.vampire_lord.title=Vampire Lord
+guide.vampirism.mobs.vampire_minion.title=Vampire Minion
+guide.vampirism.mobs.vampire_minion.text=Are subordinated to their lord./nHave the texture of their lord./nCan be controlled by vampire lord players.
+guide.vampirism.mobs.ghost.text=Spawns in the vampire biome.
+guide.vampirism.mobs.ghost.title=Ghost
+
+#VampirePlayer
+guide.vampirism.vplayer.category=Vampire Player Features
+guide.vampirism.vplayer.general.text=Player can have different vampire levels (see section "How to level up"), you currently can reach a max level of %s./n/nYour speed, damage, jump height and health increase with you leveling up./n/nVampire Player have a night vision effect which gets stronger with higher levels as well as a blood vision which allows you to spot animals easily. To can toggle between these (Key: %s)./n/nInstead of a foodbar vampires have a blood bar which acts similar to the former./n/nYou can suck blood from some mobs (Key: %s), you should see some vampire fangs pop up when you look at them. If you bite a mob which does't have blood, you get a short poison effect./n/nBitten mobs will either die or be converted to a vampire version./n/nYou can store blood in blood bottles by using (shift-) right-click. You can enable autofill (Key: %s) which fills any left blood, when biting a mob, into glas or blood bottles on you hotbar./n/nYou have a slightly modified skin as a vampire.
+guide.vampirism.vplayer.general.title=General
+guide.vampirism.vplayer.general.loose_level=If you are killed by a vampire hunter you loose one vampire level.
+guide.vampirism.vplayer.sun_damage.text=There are three different impacts of the sun on vampire player: Nausea, weakness and damage./nWith higher vampire levels you will be affected by multiple of them./nOn lower levels you can protect yourself from the highest type of sundamage by consuming sunscreen./nYou can protect you from nausea by fully wearing vampire armor./n
+guide.vampirism.vplayer.sun_damage.title=Sun Damage
+guide.vampirism.vplayer.skills.text=As a vampire you get special skills with higher levels. You can for example control the weather as of level 4./n/nTo To activate this there is a special menu: Hold the middle mouse button [check your key/control configuration] pressed and a "skill rose" will pop up, move the mouse in the direction of the desired skill until it's highlighted and release the button./n/nIf you don't want so select any skill either release the mouse when nothing is selected or select the red cross./n/nAll skills have a minimum required level and a cooldown time, you can only activate it if it is not in cooldown mode. Some skills also have a duration, then you can deactivate the skill if you do not need it anymore by selecting it again to decrease the cooldown time.
+guide.vampirism.vplayer.skills.title=Skills
+guide.vampirism.vplayer.skills.bat_transformation=Skill: Bat Transformation/n/nAt night you can convert to a bat and fly like in creative mod, but you cannot place or break blocks or use items. Another big disadvantage of the bat is its low health, so avoid hostile creatures. You can toggle it as often as you want, but at sunrise you will be automatically converted back.
+guide.vampirism.vplayer.skills.revive_fallen=Skill: Revive the fallen/n/nZombies and Skeletons (more mobs might be added in the future)sometimes leave a pile of bones when they die. Then you can use this skill to revive the fallen mobs which will then fight as minions for you.
+guide.vampirism.vplayer.skills.end=There are many more skills. Just try them out.
+guide.vampirism.vplayer.skills.menu_text=This is the "skill rose" to toggle skills
+
+
+
+
