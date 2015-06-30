@@ -70,6 +70,8 @@ public class Configs {
 
 	public static Configuration balance;
 
+	public static boolean modify_vampire_player_texture;
+
 	public static int getVampireBiomeId() {
 		return config.getInt("vampirism_biome_id", CATEGORY_GENERAL, -1, -1, 1000, "If you set this to -1 the mod will try to find a free biome id");
 	}
@@ -178,6 +180,7 @@ public class Configs {
 		player_blood_watcher = config.get(CATEGORY_GENERAL, "player_data_watcher_id", 21, "ID for datawatcher. HAS TO BE THE SAME ON CLIENT AND SERVER").getInt();
 		getVampireBiomeId();
 		reset_balance_in_dev = config.getBoolean("reset_balance_in_dev", CATEGORY_GENERAL, true, "For developers: Should the balance values be reset on start in dev environment");
+		modify_vampire_player_texture = config.getBoolean("modify_vampire_player_texture", CATEGORY_GENERAL, true, "(Temporarly)modify the players skill to look vampirish");
 		String conf_version = config.get(CATEGORY_GENERAL, "config_mod_version", REFERENCE.VERSION).getString();
 		config.get(CATEGORY_GENERAL, "config_mod_version", REFERENCE.VERSION).set(REFERENCE.VERSION);
 		blood_vision_recompile_ticks = config.getInt("blood_vision_recompile", CATEGORY_GENERAL, 2, 1, 100, "Every n tick the blood vision entities are recompiled - Might have a performance impact");

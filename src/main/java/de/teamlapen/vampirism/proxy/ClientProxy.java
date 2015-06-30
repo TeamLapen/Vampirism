@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.proxy;
 
+import de.teamlapen.vampirism.Configs;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.EntityRenderer;
@@ -76,7 +77,7 @@ public class ClientProxy extends CommonProxy {
 	@Override
 	public ResourceLocation checkVampireTexture(Entity entity, ResourceLocation loc) {
 		if (entity instanceof AbstractClientPlayer) {
-			if (VampirePlayer.get((EntityPlayer) entity).getLevel() > 0) {
+			if (Configs.modify_vampire_player_texture&&VampirePlayer.get((EntityPlayer) entity).getLevel() > 0) {
 				ResourceLocation vamp = new ResourceLocation("vampirism/temp/" + loc.hashCode());
 				TextureHelper.createVampireTexture((EntityLivingBase) entity, loc, vamp);
 				return vamp;
