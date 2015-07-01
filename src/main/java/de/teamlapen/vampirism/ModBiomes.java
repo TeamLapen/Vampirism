@@ -28,7 +28,7 @@ public class ModBiomes {
 			Configs.setVampireBiomeId(biomeID);
 		}
 
-		biomeVampireForest = new BiomeVampireForest(biomeID).setBiomeName(BiomeVampireForest.name);
+		biomeVampireForest = new BiomeVampireForest(biomeID).setBiomeName(BiomeVampireForest.name).setHeight(new BiomeGenBase.Height(0.1F,0.025F));
 
 		// like swamp
 		biomeVampireForest.setColor(0xCC00CC);
