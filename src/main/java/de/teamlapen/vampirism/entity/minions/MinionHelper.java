@@ -57,10 +57,7 @@ public class MinionHelper {
 				if (excludeVampires) {
 					if (entity instanceof EntityVampire) {
 						IMinionLord l = minion.getLord();
-						if (l != null && l instanceof VampirePlayer && ((VampirePlayer) l).isVampireLord()) {
-							return true;
-						}
-						return false;
+						return l != null && l instanceof VampirePlayer && ((VampirePlayer) l).isVampireLord();
 					}
 
 				}

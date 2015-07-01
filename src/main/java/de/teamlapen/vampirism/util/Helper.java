@@ -35,11 +35,11 @@ public class Helper {
 	public static class Obfuscation {
 		private static final HashMap<String, String[]> posNames = new HashMap<String, String[]>();
 
-		private static final void add(String key, String... value) {
+		private static void add(String key, String... value) {
 			posNames.put(key, value);
 		}
 
-		public static final void fillMap() {
+		public static void fillMap() {
 			add("EntityPlayer/updateItemUse", "updateItemUse", "func_71010_c");
 			add("EntityPlayer/setSize", "setSize", "func_70105_a");
 			add("EntityPlayer/sleeping", "sleeping", "field_71083_bS");

@@ -202,7 +202,7 @@ public class VampirismGuide{
 	}
 
 	private static void registerVP(){
-		List<EntryAbstract> entries =new ArrayList<>();
+		List<EntryAbstract> entries =new ArrayList<EntryAbstract>();
 
 		ArrayList<IPage> general=new ArrayList<IPage>();
 		String s=locAndFormat("guide.vampirism.vplayer.general.text", REFERENCE.HIGHEST_REACHABLE_LEVEL, VampirismMod.proxy.getKey(KEY.VISION), VampirismMod.proxy.getKey(KEY.SUCK),

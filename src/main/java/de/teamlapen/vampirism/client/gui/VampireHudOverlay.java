@@ -164,15 +164,14 @@ public class VampireHudOverlay extends Gui {
 				for (int i = 0; i < 10; ++i) {
 					int idx = i * 2 + 1;
 					int x = left - i * 8 - 9;
-					int y = top;
 
 					// Draw Background
-					drawTexturedModalRect(x, y, 0, 0, 9, 9);
+					drawTexturedModalRect(x, top, 0, 0, 9, 9);
 
 					if (idx < stats.getBloodLevel()) {
-						drawTexturedModalRect(x, y, 9, 0, 9, 9);
+						drawTexturedModalRect(x, top, 9, 0, 9, 9);
 					} else if (idx == stats.getBloodLevel()) {
-						drawTexturedModalRect(x, y, 18, 0, 9, 9);
+						drawTexturedModalRect(x, top, 18, 0, 9, 9);
 					}
 				}
 				this.mc.getTextureManager().bindTexture(Gui.icons);

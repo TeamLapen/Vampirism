@@ -48,9 +48,6 @@ public class BlockCursedEarth extends BasicBlock {
 	// Added so plants can grow on this block (trees too)
 	@Override
 	public boolean canSustainPlant(IBlockAccess world, int x, int y, int z, ForgeDirection direction, IPlantable plantable) {
-		if (plantable instanceof BlockBush || plantable instanceof BlockFlower) {
-			return true;
-		}
-		return false;
+		return plantable instanceof BlockBush || plantable instanceof BlockFlower;
 	}
 }

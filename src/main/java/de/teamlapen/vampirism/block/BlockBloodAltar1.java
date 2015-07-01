@@ -36,7 +36,7 @@ public class BlockBloodAltar1 extends BasicBlockContainer {
 			ItemStack item = null;
 			try {
 				item = player.inventory.getCurrentItem();
-			} catch (NullPointerException e) {
+			} catch (NullPointerException ignored) {
 			}
 
 			TileEntityBloodAltar1 te = (TileEntityBloodAltar1) world.getTileEntity(par2, par3, par4);

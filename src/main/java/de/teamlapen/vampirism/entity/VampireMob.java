@@ -48,11 +48,11 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 
 	private final static String TAG = "VampireMob";
 
-	public static final VampireMob get(EntityCreature mob) {
+	public static VampireMob get(EntityCreature mob) {
 		return (VampireMob) mob.getExtendedProperties(VampireMob.EXT_PROP_NAME);
 	}
 
-	public static final void register(EntityCreature mob) {
+	public static void register(EntityCreature mob) {
 		mob.registerExtendedProperties(VampireMob.EXT_PROP_NAME, new VampireMob(mob));
 	}
 	private final EntityCreature entity;

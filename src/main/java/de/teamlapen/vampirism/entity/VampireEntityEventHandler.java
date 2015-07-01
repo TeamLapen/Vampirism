@@ -72,7 +72,7 @@ public class VampireEntityEventHandler {
 			// Set the home position of VampireHunters to a near village if one
 			// is found
 			EntityVampireHunter e = (EntityVampireHunter) event.entity;
-			if (e.isLookingForHome() == false)
+			if (!e.isLookingForHome())
 				return;
 
 			if (event.world.villageCollectionObj != null) {

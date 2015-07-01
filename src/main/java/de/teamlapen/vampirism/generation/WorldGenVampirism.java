@@ -64,7 +64,7 @@ public class WorldGenVampirism implements IWorldGenerator {
 		BiomeGenBase biome = world.getWorldChunkManager().getBiomeGenAt(x, z);
 
 		spawnChance += GenerateBloodAltar.spawnChance;
-		if (generatedStructure == false && chance < spawnChance) {
+		if (!generatedStructure && chance < spawnChance) {
 			if (biome == BiomeGenBase.swampland || biome == BiomeGenBase.roofedForest) {
 				// Create Blood Altar
 				int posX = x + random.nextInt(16);

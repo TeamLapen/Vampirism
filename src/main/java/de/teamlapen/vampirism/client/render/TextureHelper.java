@@ -169,7 +169,7 @@ public class TextureHelper {
 			ResourceLocation overlay = getOverlay(e);
 			ITextureObject texture = null;
 			try {
-				if (e instanceof EntityHorse) {
+				if (e instanceof EntityHorse&&overlay!=null) {
 					LayeredTexture horseTex = (LayeredTexture) manager.getTexture(old);
 					List l = horseTex.layeredTextureNames;
 					l.add(overlay.toString());

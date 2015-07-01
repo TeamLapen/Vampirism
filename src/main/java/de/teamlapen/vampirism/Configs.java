@@ -163,7 +163,7 @@ public class Configs {
 	}
 
 	/**
-	 * Loads/refreshes the configuration and adds comments if there aren't any {@link #init(File) init} has to be called once before using this
+	 * Loads/refreshes the configuration and adds comments if there aren't any {@link #init(File,boolean) init} has to be called once before using this
 	 * 
 	 * @return If the config are of an older version it returns the old version otherwise its null
 	 */
@@ -324,11 +324,7 @@ public class Configs {
 					}
 					bloodValues.put(p[0], val);
 				}
-			} catch (IOException e) {
-				
-				throw e;
-			}
-			finally{
+			} finally{
 				if(br!=null){
 					br.close();
 				}

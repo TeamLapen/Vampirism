@@ -42,11 +42,11 @@ import de.teamlapen.vampirism.util.REFERENCE;
  */
 public class TileEntityBloodAltar4 extends InventoryTileEntity {
 
-	private static enum LevReq {
+	private enum LevReq {
 		OK, STRUCTURE_WRONG, ITEM_MISSING, LEVEL_WRONG;
 	}
 
-	public static enum PHASE {
+	public enum PHASE {
 		NOT_RUNNING, PARTICLE_SPREAD, BEAM1, BEAM2, WAITING, LEVELUP, ENDING, CLEAN_UP;
 	}
 

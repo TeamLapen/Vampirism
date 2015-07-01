@@ -13,7 +13,7 @@ public class REFERENCE {
 		public static final String BLINDING_BAT_NAME = "vampirism.blinding_bat";
 	}
 
-	public static enum KEY {
+	public enum KEY {
 		UNKNOWN, SUCK, AUTO, SKILL, VISION, MINION_CONTROL
 	}
 

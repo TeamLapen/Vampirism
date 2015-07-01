@@ -90,7 +90,7 @@ public class TileEntityCoffin extends TileEntity {
 		if ((this.getBlockMetadata() & -8) == 0)
 			return;
 		// On the server, metadata has priority over tile entity. On the client, tile entity has priority over metadata
-		if (!this.worldObj.isRemote && (occupied != ((this.getBlockMetadata() & 4) != 0))) {
+		if (!this.worldObj.isRemote && (occupied == ((this.getBlockMetadata() & 4) == 0))) {
 			occupied = !occupied;
 			needsAnimation = true;
 			markDirty();

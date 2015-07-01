@@ -236,7 +236,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 * @param player
 	 * @return VampirePlayer property of player
 	 */
-	public static final VampirePlayer get(EntityPlayer player) {
+	public static VampirePlayer get(EntityPlayer player) {
 		return (VampirePlayer) player.getExtendedProperties(VampirePlayer.EXT_PROP_NAME);
 	}
 
@@ -260,7 +260,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 * 
 	 * @param player
 	 */
-	public static final void register(EntityPlayer player) {
+	public static void register(EntityPlayer player) {
 		player.registerExtendedProperties(VampirePlayer.EXT_PROP_NAME, new VampirePlayer(player));
 	}
 
@@ -944,7 +944,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		if (minionTarget != null && !minionTarget.isEntityAlive()) {
 			minionTarget = null;
 		}
-		if (dirty == true) {
+		if (dirty) {
 			this.sync(true);
 			dirty = false;
 		}
@@ -1175,7 +1175,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	/**
 	 * Suck blood from an EntityLiving belonging to the given id. Only sucks blood if health is low enough and if the entity has blood
 	 * 
-	 * @param e
+	 * @param entityId
 	 *            Id of Entity to suck blood from
 	 */
 	public void suckBlood(int entityId) {

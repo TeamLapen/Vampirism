@@ -26,7 +26,7 @@ import de.teamlapen.vampirism.util.Logger;
  */
 public class SaveableMinionHandler {
 
-	public static enum Call {
+	public enum Call {
 		DEFEND_LORD, ATTACK_NON_PLAYER, ATTACK, FOLLOW;
 	}
 	private final static String TAG = "MinionHandler";
