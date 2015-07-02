@@ -8,7 +8,7 @@ This mod adds several rituals which allow you to first become a vampire and then
 As a vampire you don't need to eat all that dry bread or eat these strange fruits called "apples", you prefer some red and tasty blood, which you have to suck from animals or better villagers, but be careful not every animal likes to give blood.
 
 [Minecraft Forum Thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/2364443-vampirism-become-a-vampire)  
-[Downloads](http://teamlapen.de/projects/vampirism/files)
+[Downloads](http://teamlapen.de/projects/vampirism/files)  
 [Help to translate](https://crowdin.com/project/vampirism)
 
 ## Team ##
