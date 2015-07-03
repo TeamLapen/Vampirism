@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.generation;
 
 import java.util.Random;
 
-import de.teamlapen.vampirism.generation.structures.CastleGenerator;
+import de.teamlapen.vampirism.generation.castle.CastleGenerator;
 import net.minecraft.entity.Entity;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;

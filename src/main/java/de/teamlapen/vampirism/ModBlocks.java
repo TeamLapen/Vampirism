@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism;
 
+import de.teamlapen.vampirism.block.*;
+import de.teamlapen.vampirism.tileEntity.*;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.init.Blocks;
@@ -7,22 +9,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import cpw.mods.fml.common.registry.GameRegistry;
-import de.teamlapen.vampirism.block.BlockBloodAltar1;
-import de.teamlapen.vampirism.block.BlockBloodAltar2;
-import de.teamlapen.vampirism.block.BlockBloodAltar3;
-import de.teamlapen.vampirism.block.BlockBloodAltar4;
-import de.teamlapen.vampirism.block.BlockBloodAltar4Tip;
 import de.teamlapen.vampirism.block.BlockBloodAltar4Tip.TileEntityBloodAltar4Tip;
-import de.teamlapen.vampirism.block.BlockChurchAltar;
 import de.teamlapen.vampirism.block.BlockChurchAltar.TileEntityChurchAltar;
-import de.teamlapen.vampirism.block.BlockCoffin;
-import de.teamlapen.vampirism.block.BlockCursedEarth;
-import de.teamlapen.vampirism.block.MaterialLiquidBlood;
-import de.teamlapen.vampirism.block.VampireFlower;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar4;
-import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 
 public class ModBlocks {
 
@@ -38,6 +26,7 @@ public class ModBlocks {
 	public final static BlockCursedEarth cursedEarth = new BlockCursedEarth();
 	public final static BlockChurchAltar churchAltar = new BlockChurchAltar();
 	public final static BlockCoffin coffin = new BlockCoffin();
+	public final static BlockTemplateGenerator templateGenerator = new BlockTemplateGenerator();
 	// Flowers
 	public final static VampireFlower vampireFlower = new VampireFlower();
 	public static void init() {
@@ -56,6 +45,12 @@ public class ModBlocks {
 		GameRegistry.registerTileEntity(TileEntityChurchAltar.class, "TileEntityChurchAltar");
 		GameRegistry.registerTileEntity(TileEntityBloodAltar4Tip.class, "TileEntityBloodAltarTier4Tip");
 		GameRegistry.registerTileEntity(TileEntityCoffin.class, "TileEntityCoffin");
+
+		if(VampirismMod.inDev){
+			GameRegistry.registerBlock(templateGenerator,ItemBlock.class,BlockTemplateGenerator.name);
+			GameRegistry.registerTileEntity(TileEntityTemplateGenerator.class, "TileEntityTemplateGenerator");
+			templateGenerator.setCreativeTab(VampirismMod.tabVampirism);
+		}
 
 		// Flowers
 		GameRegistry.registerBlock(vampireFlower, VampireFlower.name);
