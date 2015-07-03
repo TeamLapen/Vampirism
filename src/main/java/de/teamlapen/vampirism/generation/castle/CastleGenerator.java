@@ -35,13 +35,12 @@ public class CastleGenerator extends WorldGenerator {
 	public CastleGenerator() {
 		this.biomes = new ArrayList<>();
 		biomes.add(ModBiomes.biomeVampireForest);
-		tileMap=new HashMap<String,BuildingTile>();
 	}
 
 	private Position[] positions;
 	private boolean checked=false;
 
-	public void checkBiome(World world,int posX, int posZ,Random rnd){
+	public void checkBiome(World world,int chunkX, int chunkZ,Random rnd){
 		if(!checked){
 			this.findPositions(world,rnd);
 			if(positions!=null){
@@ -56,18 +55,22 @@ public class CastleGenerator extends WorldGenerator {
 		}
 		if (positions!=null) {
 			for(Position p :positions){
-				Logger.d(TAG,"Checking position %s for %d %d", p,posX,posZ);
-				if(p.isChunkInPosition(posX,posZ)){
-					String s=p.getTileAt(posX - p.chunkXPos, posZ - p.chunkZPos);
-					Logger.d(TAG,"Found tile %s for %d %d",s,posX,posZ);
-					String[] param=s.split(",");
 
-					int height=Integer.parseInt(param[0]);
-					for(int i=1;i<param.length;i+=2){
+				if(p.isChunkInPosition(chunkX,chunkZ)){
+					Logger.d(TAG,"Processing position %s for %d %d", p,chunkX,chunkZ);
+					String s=p.getTileAt(chunkX - p.chunkXPos, chunkZ - p.chunkZPos);
+					Logger.d(TAG,"Found tile %s for %d %d",s,chunkX,chunkZ);
+					String[] param=s.split(",");
+					int height=p.getHeight();
+					if(height==-1){
+						height=getAverageHeight(world.getChunkFromChunkCoords(chunkX,chunkZ));
+						p.setHeight(height);
+					}
+					for(int i=0;i<param.length;i+=2){
 						int rotation=Integer.parseInt(param[i]);
 						BuildingTile tile=tileMap.get(param[i+1]);
 						if(tile!=null){
-							tile.build(posX,posZ,world,height,rotation);
+							tile.build(chunkX,chunkZ,world,height,rotation);
 						}
 					}
 
@@ -76,7 +79,7 @@ public class CastleGenerator extends WorldGenerator {
 			}
 		}
 		else{
-			Logger.w(TAG,"No positions available");
+			Logger.w(TAG, "No positions available");
 		}
 	}
 	private void findPositions(World world,Random rnd){
@@ -115,7 +118,7 @@ public class CastleGenerator extends WorldGenerator {
 				}
 			}
 		else{
-				Logger.d(TAG,"Did not find any positions");
+				Logger.d(TAG, "Did not find any positions");
 			}
 		checked=true;
 	}
@@ -189,25 +192,24 @@ public class CastleGenerator extends WorldGenerator {
 			String[][] tiles=new String[sx][sz];
 			for(int x=0;x<sx;x++){
 				for(int z=0;z<sz;z++){
-					int average=getAverageHeight(world.getChunkFromChunkCoords(position.chunkXPos+x,position.chunkZPos+z));
-					tiles[x][z]=""+average+",flatDirt";
+					tiles[x][z]="0,flatDirt";
 				}
 			}
 			for(int x=0;x<sx;x++){
 				tiles[x][0]+=",2,wall";
 			}
 			for(int x=0;x<sx;x++){
-				tiles[x][sz-1]=",0,wall";
+				tiles[x][sz-1]+=",0,wall";
 			}
 			for(int z=0;z<sz;z++){
-				tiles[0][z]=",1,wall";
+				tiles[0][z]+=",1,wall";
 			}
 			for(int z=0;z<sz;z++){
-				tiles[sx-1][z]=",3,wall";
+				tiles[sx-1][z]+=",3,wall";
 			}
 
 			for(int z=1;z<sz-1;z++){
-				tiles[sx-1][z]=",1,house";
+				tiles[sx-1][z]+=",1,house";
 			}
 			position.setTiles(tiles);
 			Logger.d(TAG,"Set tile array %d %d",sx,sz);
@@ -234,25 +236,26 @@ public class CastleGenerator extends WorldGenerator {
 
 	public static void loadTiles(){
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		tileMap=new HashMap<String,BuildingTile>();
 		BuildingTile tile;
 		tile=loadTile("wall", gson);
 		if(tile!=null)tileMap.put("wall",tile);
-		tile=loadTile("tileDirt",gson);
-		if(tile!=null)tileMap.put("tileDirt",tile);
+		tile=loadTile("flatDirt",gson);
+		if(tile!=null)tileMap.put("flatDirt",tile);
 		tile=loadTile("house1",gson);
 		if(tile!=null)tileMap.put("house1",tile);
 	}
-	private static BuildingTile loadTile(String fileName,Gson gson){
+	private static BuildingTile loadTile(String name,Gson gson){
 		BuildingTile tile= null;
 		try {
-			InputStreamReader inputStreamReader = new InputStreamReader(VampirismMod.class.getResourceAsStream("assets/vampirism/building_tiles/"+fileName));
+			InputStreamReader inputStreamReader = new InputStreamReader(VampirismMod.class.getResourceAsStream("/assets/vampirism/building_tiles/"+name+".json"));
 			tile = gson.fromJson(inputStreamReader, BuildingTile.class);
 			tile.finishLoading();
 			inputStreamReader.close();
 		} catch (IOException e) {
-			Logger.e(TAG,e,"Failed to load tile %s",fileName);
+			Logger.e(TAG,e,"Failed to load tile %s",name);
 		} catch (NullPointerException e){
-			Logger.e(TAG,e,"Did not find tile %s",fileName);
+			Logger.e(TAG,e,"Did not find tile %s",name);
 		}
 		return tile;
 	}
@@ -265,6 +268,16 @@ public class CastleGenerator extends WorldGenerator {
 		private int sizeX;
 		private int sizeZ;
 		private String[][] tiles;
+
+		public int getHeight() {
+			return height;
+		}
+
+		public void setHeight(int height) {
+			this.height = height;
+		}
+
+		private int height=-1;
 		public Position(int chunkX, int chunkY) {
 			super(chunkX, chunkY);
 		}
@@ -301,8 +314,8 @@ public class CastleGenerator extends WorldGenerator {
 
 		public boolean isChunkInPosition(int cx,int cz){
 			if(!hasSize())return false;
-			if(cx>=this.chunkXPos&&cx<=this.chunkXPos+sizeX){
-				if(cz>=this.chunkZPos&&cz<=this.chunkZPos+sizeZ){
+			if(cx>=this.chunkXPos&&cx<this.chunkXPos+sizeX){
+				if(cz>=this.chunkZPos&&cz<this.chunkZPos+sizeZ){
 					return true;
 				}
 			}

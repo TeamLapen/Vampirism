@@ -88,11 +88,11 @@ public class WorldGenVampirism implements IWorldGenerator {
 
 		switch (world.provider.dimensionId) {
 		case -1:
-			generateNether(world, random, chunkX * 16, chunkZ * 16);
+			generateNether(world, random, chunkX, chunkZ);
 		case 0:
-			generateSurface(world, random, chunkX * 16, chunkZ * 16);
+			generateSurface(world, random, chunkX, chunkZ);
 		case 1:
-			generateEnd(world, random, chunkX * 16, chunkZ * 16);
+			generateEnd(world, random, chunkX, chunkZ);
 		}
 
 	}
@@ -106,8 +106,8 @@ public class WorldGenVampirism implements IWorldGenerator {
 	}
 
 	private void generateSurface(World world, Random random, int x, int z) {
-		addStructures(world, random, x, z);
-		addEntities(world, random, x + 8, z + 8);
+		addStructures(world, random, x<<4, z<<4);
+		addEntities(world, random, x<<4 + 8, z<<4 + 8);
 		castleGenerator.checkBiome(world,x,z,random);
 	}
 }
