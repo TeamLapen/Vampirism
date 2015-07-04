@@ -11,13 +11,15 @@ import java.util.List;
  */
 public class BuildingTile {
 	private List<BlockList> blocks;
-
-	public  BuildingTile(List<BlockList> blocks){
+	private List<Extra> extras;
+	public  BuildingTile(List<BlockList> blocks,List<Extra> extras){
 		this.blocks=blocks;
+		this.extras=extras;
 	}
 
 	public BuildingTile(){
 		this.blocks=new LinkedList<BlockList>();
+		this.extras=new LinkedList<Extra>();
 	}
 	public void build(int cx,int cz,World world,int groundHeight,int rotation){
 		int x=cx<<4;
@@ -29,6 +31,11 @@ public class BuildingTile {
 				p=rotatePosition(rotation,p);
 				world.setBlock(x+p.x,groundHeight+p.y,z+p.z,l.block,l.getBlockMetaForRotation(rotation),2);
 			}
+		}
+		for(Extra extra:extras){
+			BlockList.BlockPosition p=extra.pos;
+			p=rotatePosition(rotation,p);
+			extra.applyExtra(world.getTileEntity(x+p.x,groundHeight+p.y,z+p.z));
 		}
 	}
 

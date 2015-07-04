@@ -1,6 +1,27 @@
 {
   "blocks": [
     {
+      "blockId": "minecraft:ladder",
+      "meta": [
+        4,
+        2,
+        5,
+        3
+      ],
+      "blockPositions": [
+        {
+          "x": 4,
+          "y": 0,
+          "z": 6
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "z": 6
+        }
+      ]
+    },
+    {
       "blockId": "minecraft:planks",
       "meta": [
         4,
@@ -235,9 +256,9 @@
       "blockId": "minecraft:oak_stairs",
       "meta": [
         0,
-        0,
-        0,
-        0
+        2,
+        1,
+        3
       ],
       "blockPositions": [
         {
@@ -404,12 +425,102 @@
       ]
     },
     {
+      "blockId": "minecraft:mob_spawner",
+      "meta": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blockPositions": [
+        {
+          "x": 6,
+          "y": -1,
+          "z": 7
+        }
+      ]
+    },
+    {
+      "blockId": "minecraft:torch",
+      "meta": [
+        1,
+        3,
+        2,
+        4
+      ],
+      "blockPositions": [
+        {
+          "x": 6,
+          "y": 1,
+          "z": 7
+        }
+      ]
+    },
+    {
+      "blockId": "vampirism:blockCoffin",
+      "meta": [
+        8,
+        9,
+        10,
+        11
+      ],
+      "blockPositions": [
+        {
+          "x": 6,
+          "y": 0,
+          "z": 8
+        },
+        {
+          "x": 9,
+          "y": 0,
+          "z": 8
+        }
+      ]
+    },
+    {
+      "blockId": "vampirism:blockCoffin",
+      "meta": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blockPositions": [
+        {
+          "x": 6,
+          "y": 0,
+          "z": 9
+        },
+        {
+          "x": 9,
+          "y": 0,
+          "z": 9
+        }
+      ]
+    },
+    {
+      "blockId": "minecraft:wall_sign",
+      "meta": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "blockPositions": [
+        {
+          "x": 7,
+          "y": 2,
+          "z": 4
+        }
+      ]
+    },
+    {
       "blockId": "minecraft:wooden_door",
       "meta": [
         1,
-        1,
-        1,
-        1
+        2,
+        3,
+        0
       ],
       "blockPositions": [
         {
@@ -435,6 +546,11 @@
       "blockPositions": [
         {
           "x": 7,
+          "y": 1,
+          "z": 5
+        },
+        {
+          "x": 11,
           "y": 1,
           "z": 5
         }
@@ -488,12 +604,60 @@
       ]
     },
     {
+      "blockId": "minecraft:chest",
+      "meta": [
+        4,
+        2,
+        5,
+        3
+      ],
+      "blockPositions": [
+        {
+          "x": 9,
+          "y": 0,
+          "z": 6
+        }
+      ]
+    },
+    {
+      "blockId": "minecraft:torch",
+      "meta": [
+        2,
+        4,
+        1,
+        3
+      ],
+      "blockPositions": [
+        {
+          "x": 9,
+          "y": 1,
+          "z": 7
+        }
+      ]
+    },
+    {
+      "blockId": "minecraft:trapdoor",
+      "meta": [
+        0,
+        3,
+        1,
+        2
+      ],
+      "blockPositions": [
+        {
+          "x": 10,
+          "y": 0,
+          "z": 4
+        }
+      ]
+    },
+    {
       "blockId": "minecraft:oak_stairs",
       "meta": [
         1,
-        1,
-        1,
-        1
+        3,
+        0,
+        2
       ],
       "blockPositions": [
         {
@@ -527,6 +691,115 @@
           "z": 10
         }
       ]
+    },
+    {
+      "blockId": "minecraft:wooden_door",
+      "meta": [
+        5,
+        6,
+        7,
+        4
+      ],
+      "blockPositions": [
+        {
+          "x": 11,
+          "y": 0,
+          "z": 5
+        }
+      ]
+    },
+    {
+      "blockId": "minecraft:stonebrick",
+      "meta": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blockPositions": [
+        {
+          "x": 11,
+          "y": 0,
+          "z": 6
+        },
+        {
+          "x": 11,
+          "y": 1,
+          "z": 6
+        },
+        {
+          "x": 12,
+          "y": 0,
+          "z": 5
+        },
+        {
+          "x": 12,
+          "y": 1,
+          "z": 5
+        },
+        {
+          "x": 12,
+          "y": 0,
+          "z": 6
+        },
+        {
+          "x": 12,
+          "y": 1,
+          "z": 6
+        }
+      ]
+    }
+  ],
+  "extras": [
+    {
+      "type": "SPAWNER",
+      "pos": {
+        "x": 6,
+        "y": -1,
+        "z": 7
+      },
+      "extra": "{EntityId:\"Pig\",MaxNearbyEntities:6s,RequiredPlayerRange:16s,SpawnCount:4s,MaxSpawnDelay:800s,SpawnRange:4s,Delay:0s,MinSpawnDelay:200s}"
+    },
+    {
+      "type": "COFFIN",
+      "pos": {
+        "x": 6,
+        "y": 0,
+        "z": 8
+      }
+    },
+    {
+      "type": "COFFIN",
+      "pos": {
+        "x": 6,
+        "y": 0,
+        "z": 9
+      }
+    },
+    {
+      "type": "CHEST",
+      "pos": {
+        "x": 9,
+        "y": 0,
+        "z": 6
+      },
+      "extra": "[0:{Slot:0b,id:14s,Count:1b,Damage:0s},1:{Slot:1b,id:323s,Count:1b,Damage:0s}]"
+    },
+    {
+      "type": "COFFIN",
+      "pos": {
+        "x": 9,
+        "y": 0,
+        "z": 8
+      }
+    },
+    {
+      "type": "COFFIN",
+      "pos": {
+        "x": 9,
+        "y": 0,
+        "z": 9
+      }
     }
   ]
 }
