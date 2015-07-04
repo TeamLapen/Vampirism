@@ -22,24 +22,12 @@ public class BuildingTile {
 	public void build(int cx,int cz,World world,int groundHeight,int rotation){
 		int x=cx<<4;
 		int z=cz<<4;
-		Logger.d("Tile","Building tile at %d %d (%d %d %d) with rotation %d",cx,cz,x,groundHeight,z,rotation);
-		boolean debugged=false;
-		for (int i=x;i<x+16;i++){
-			for(int j=z;j<z+16;j++){
-				for(int k=groundHeight;k<groundHeight+15;k++){
-					world.setBlockToAir(i,k,j);
-				}
-			}
-		}
+//		Logger.d("Tile","Building tile at %d %d (%d %d %d) with rotation %d",cx,cz,x,groundHeight,z,rotation);
 		for(BlockList l:blocks){
 			List<BlockList.BlockPosition> pos=l.getPositions();
 			for(BlockList.BlockPosition p:pos){
 				p=rotatePosition(rotation,p);
 				world.setBlock(x+p.x,groundHeight+p.y,z+p.z,l.block,l.getBlockMetaForRotation(rotation),2);
-				if(!debugged){
-					Logger.d("Tile","%d %d %d %s",x+p.x,groundHeight+p.y,z+p.z,l.block);
-					debugged=true;
-				}
 			}
 		}
 	}

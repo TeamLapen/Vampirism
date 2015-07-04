@@ -14,10 +14,7 @@ import net.minecraft.world.gen.feature.WorldGenerator;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by Max on 01.07.2015.
@@ -37,26 +34,35 @@ public class CastleGenerator extends WorldGenerator {
 		biomes.add(ModBiomes.biomeVampireForest);
 	}
 
-	private Position[] positions;
-	private boolean checked=false;
-
 	public void checkBiome(World world,int chunkX, int chunkZ,Random rnd){
-		if(!checked){
-			this.findPositions(world,rnd);
-			if(positions!=null){
-				for(int i=0;i<positions.length;i++){
-					Logger.d(TAG,"Preprocessing position %s",positions[i]);
-					positions[i]=this.optimizePosition(positions[i], world, rnd);
-					preGeneratePosition(positions[i],world,rnd);
+		CastlePositionData data=CastlePositionData.get(world);
+		if(!data.checked){
+			data.positions.addAll(this.findPositions(world, rnd));
+			data.checked=true;
+			if(data.positions.size()>0){
+				ListIterator<CastlePositionData.Position> iterator = data.positions.listIterator();
+				while(iterator.hasNext()){
+					CastlePositionData.Position pos=iterator.next();
+					Logger.d(TAG,"Preprocessing position %s",pos);
+					CastlePositionData.Position pos2=this.optimizePosition(pos, world, rnd);
+					if(!pos2.equals(pos)){
+						pos=pos2;
+						iterator.set(pos2);
+					}
 					Logger.d(TAG,"Finished preprocessing position");
 				}
 
 			}
+			data.markDirty();
 		}
-		if (positions!=null) {
-			for(Position p :positions){
+		if (data.positions.size()>0) {
+			for(CastlePositionData.Position p :data.positions){
 
 				if(p.isChunkInPosition(chunkX,chunkZ)){
+					if(!p.hasTiles()){
+						preGeneratePosition(p, world, rnd);
+						data.markDirty();
+					}
 					Logger.d(TAG,"Processing position %s for %d %d", p,chunkX,chunkZ);
 					String s=p.getTileAt(chunkX - p.chunkXPos, chunkZ - p.chunkZPos);
 					Logger.d(TAG,"Found tile %s for %d %d",s,chunkX,chunkZ);
@@ -66,6 +72,13 @@ public class CastleGenerator extends WorldGenerator {
 						height=getAverageHeight(world.getChunkFromChunkCoords(chunkX,chunkZ));
 						p.setHeight(height);
 					}
+					for (int i=(chunkX<<4);i<(chunkX<<4)+16;i++){
+						for(int j=(chunkZ<<4);j<(chunkZ<<4)+16;j++){
+							for(int k=height;k<height+20;k++){
+								world.setBlockToAir(i,k,j);
+							}
+						}
+					}
 					for(int i=0;i<param.length;i+=2){
 						int rotation=Integer.parseInt(param[i]);
 						BuildingTile tile=tileMap.get(param[i+1]);
@@ -73,22 +86,19 @@ public class CastleGenerator extends WorldGenerator {
 							tile.build(chunkX,chunkZ,world,height,rotation);
 						}
 					}
-
+					p.markGenerated(chunkX,chunkZ);
+					data.markDirty();
 					break;
 				}
 			}
 		}
-		else{
-			Logger.w(TAG, "No positions available");
-		}
 	}
-	private void findPositions(World world,Random rnd){
-		Logger.d(TAG,"Looking for Positions");
+	private List<CastlePositionData.Position> findPositions(World world,Random rnd){
+			Logger.d(TAG,"Looking for Positions");
 			double phy = rnd.nextDouble() * Math.PI * 2.0D;
-			int found=0;
-			Position[] foundPos=new Position[MAX_CASTLES];
+			List<CastlePositionData.Position> foundPos=new LinkedList<CastlePositionData.Position>();
 			double radius = ( rnd.nextDouble()) * 32 * +5;
-			for (int i = 0; i < MAX_TRYS&&found<MAX_CASTLES; i++)
+			for (int i = 0; i < MAX_TRYS&&foundPos.size()<MAX_CASTLES; i++)
 			{
 				int x = (int)Math.round(Math.cos(phy) * radius);
 				int z = (int)Math.round(Math.sin(phy) * radius);
@@ -98,8 +108,8 @@ public class CastleGenerator extends WorldGenerator {
 				{
 					int cx = chunkposition.chunkPosX >> 4;
 					int cz = chunkposition.chunkPosZ >> 4;
-					foundPos[found]=new Position(cx,cz);
-					found++;
+					foundPos.add(new CastlePositionData.Position(cx,cz));
+					Logger.d(TAG,"Found position %d %d",cx,cz);
 				}
 
 				phy += (Math.PI * 2D)/ (double)MAX_CASTLES;
@@ -110,24 +120,18 @@ public class CastleGenerator extends WorldGenerator {
 					radius*=(1+rnd.nextDouble());
 				}
 			}
-			if(found>0) {
-				positions = new Position[found];
-				for (int j = 0; j < found; j++) {
-					positions[j] = foundPos[j];
-					Logger.i(TAG, "Found position %s", positions[j]);
-				}
-			}
-		else{
-				Logger.d(TAG, "Did not find any positions");
-			}
-		checked=true;
+
+		if(foundPos.size()==0){
+			Logger.w(TAG,"Did not find any positions");
+		}
+		return foundPos;
 	}
 
 
 	/**
 		Finding the largest area with this algorithm http://www.geeksforgeeks.org/maximum-size-sub-matrix-with-all-1s-in-a-binary-matrix/
 	**/
-	private Position optimizePosition(Position position, World world, Random rnd){
+	private CastlePositionData.Position optimizePosition(CastlePositionData.Position position, World world, Random rnd){
 		Logger.d(TAG,"Optimizing Position");
 		final int TEST_SIZE=10;
 		final int D_TEST_SIZE=TEST_SIZE*2;
@@ -172,18 +176,22 @@ public class CastleGenerator extends WorldGenerator {
 
 
 		if(max[0]>=MIN_SIZE){
-			Logger.d(TAG,"Found fitting area with size %d at coords %d %d",max[0],position.chunkXPos-TEST_SIZE+max[1],position.chunkZPos-TEST_SIZE+max[2]);
+			int highcx=position.chunkXPos-TEST_SIZE+max[1];
+			int highcz=position.chunkZPos-TEST_SIZE+max[2];
+			int lowcx=highcx-max[0];
+			int lowcz=highcz-max[0];
+			Logger.d(TAG,"Found fitting area with size %d at coords %d %d (%d %d)",max[0],lowcx,lowcz,highcx,highcz);
 			int sx=MIN_SIZE+rnd.nextInt(Math.min(max[0],MAX_SIZE)-MIN_SIZE+1);
 			int sz=MIN_SIZE+rnd.nextInt(Math.min(max[0],MAX_SIZE)-MIN_SIZE+1);
-			Logger.d(TAG,"Using size %sx%s",sx,sz);
-			Position p=new Position(position.chunkXPos+max[1]-max[0]+((max[0]-sx)/2),position.chunkZPos+max[2]-max[0]+((max[0]-sz)/2));
+			Logger.d(TAG, "Using size %sx%s", sx, sz);
+			CastlePositionData.Position p=new CastlePositionData.Position(lowcx+((max[0]-sx)/2),lowcz+((max[0]-sz)/2));
 			p.setSize(sx,sz);
 			return p;
 		}
 		return position;
 	}
 
-	private void preGeneratePosition(Position position,World world,Random rnd){
+	private void preGeneratePosition(CastlePositionData.Position position,World world,Random rnd){
 
 		if(position.hasSize()){
 			Logger.d(TAG,"Pregenerating position %s",position);
@@ -209,10 +217,9 @@ public class CastleGenerator extends WorldGenerator {
 			}
 
 			for(int z=1;z<sz-1;z++){
-				tiles[sx-1][z]+=",1,house";
+				tiles[sx-1][z]+=","+rnd.nextInt(4)+",house1";
 			}
 			position.setTiles(tiles);
-			Logger.d(TAG,"Set tile array %d %d",sx,sz);
 		}
 	}
 
@@ -264,63 +271,5 @@ public class CastleGenerator extends WorldGenerator {
 		return false;
 	}
 
-	private class Position extends ChunkCoordIntPair{
-		private int sizeX;
-		private int sizeZ;
-		private String[][] tiles;
 
-		public int getHeight() {
-			return height;
-		}
-
-		public void setHeight(int height) {
-			this.height = height;
-		}
-
-		private int height=-1;
-		public Position(int chunkX, int chunkY) {
-			super(chunkX, chunkY);
-		}
-
-		public void setSize(int x,int y){
-			sizeX=x;
-			sizeZ =y;
-		}
-
-		public int getSizeX() {
-			return sizeX;
-		}
-
-		public int getSizeZ() {
-			return sizeZ;
-		}
-
-		public boolean hasSize(){
-			return sizeZ >0&&sizeX>0;
-		}
-
-		public boolean hasTiles(){
-			return tiles!=null;
-		}
-
-		public void setTiles(String[][] tiles){
-			this.tiles=tiles;
-		}
-
-		public String getTileAt(int x,int z){
-			if(!hasTiles())return "";
-			return tiles[x][z];
-		}
-
-		public boolean isChunkInPosition(int cx,int cz){
-			if(!hasSize())return false;
-			if(cx>=this.chunkXPos&&cx<this.chunkXPos+sizeX){
-				if(cz>=this.chunkZPos&&cz<this.chunkZPos+sizeZ){
-					return true;
-				}
-			}
-			return false;
-		}
-
-	}
 }
