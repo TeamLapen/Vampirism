@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Represents a chunksized building component
+ * Represents a chunk sized building component
  */
 public class BuildingTile {
 	private List<BlockList> blocks;
@@ -29,7 +29,7 @@ public class BuildingTile {
 			List<BlockList.BlockPosition> pos=l.getPositions();
 			for(BlockList.BlockPosition p:pos){
 				p=rotatePosition(rotation,p);
-				world.setBlock(x+p.x,groundHeight+p.y,z+p.z,l.block,l.getBlockMetaForRotation(rotation),2);
+				world.setBlock(x+p.x,groundHeight+p.y,z+p.z,l.block,l.getBlockMetaForRotation(rotation),0);
 			}
 		}
 		for(Extra extra:extras){

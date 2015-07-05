@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.tileEntity;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -76,15 +77,6 @@ public class TileEntityCoffin extends TileEntity {
 			this.lidPos = 0;
 	}
 
-	public void readFromNBTPartial(NBTTagCompound nbt) {
-		super.readFromNBT(nbt);
-		this.otherX = nbt.getInteger("px");
-		this.otherY = nbt.getInteger("py");
-		this.otherZ = nbt.getInteger("pz");
-		this.occupied = nbt.getBoolean("occ");
-		this.color = nbt.getInteger("color");
-	}
-
 	@Override
 	public void updateEntity() {
 		if ((this.getBlockMetadata() & -8) == 0)
@@ -110,5 +102,29 @@ public class TileEntityCoffin extends TileEntity {
 		par1NBTTagCompound.setBoolean("occ", occupied);
 		par1NBTTagCompound.setInteger("color", color);
 		par1NBTTagCompound.setBoolean("needsAnim", needsAnimation);
+	}
+
+	/**
+	 * Tries to find the second block/tile. Used by the castle generation
+	 */
+	public void tryToFindOtherTile(){
+		for(int i=-1;i<2;i+=2){
+				Block b=this.getWorldObj().getBlock(this.xCoord+i,this.yCoord,this.zCoord);
+				if(b instanceof BlockCoffin){
+					this.otherX=this.xCoord+i;
+					this.otherY=this.yCoord;
+					this.otherZ=this.zCoord;
+					return;
+				}
+		}
+		for(int j=-1;j<2;j+=2){
+			Block b=this.getWorldObj().getBlock(this.xCoord,this.yCoord,this.zCoord+j);
+			if(b instanceof BlockCoffin){
+				this.otherX=this.xCoord;
+				this.otherY=this.yCoord;
+				this.otherZ=this.zCoord+j;
+				return;
+			}
+		}
 	}
 }

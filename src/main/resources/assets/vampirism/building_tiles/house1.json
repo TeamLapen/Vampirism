@@ -758,7 +758,9 @@
         "y": -1,
         "z": 7
       },
-      "extra": "{EntityId:\"Pig\",MaxNearbyEntities:6s,RequiredPlayerRange:16s,SpawnCount:4s,MaxSpawnDelay:800s,SpawnRange:4s,Delay:0s,MinSpawnDelay:200s}"
+      "extra": {
+        "entity_name": "Bat"
+      }
     },
     {
       "type": "COFFIN",
@@ -766,7 +768,8 @@
         "x": 6,
         "y": 0,
         "z": 8
-      }
+      },
+      "extra": {}
     },
     {
       "type": "COFFIN",
@@ -774,7 +777,8 @@
         "x": 6,
         "y": 0,
         "z": 9
-      }
+      },
+      "extra": {}
     },
     {
       "type": "CHEST",
@@ -783,7 +787,22 @@
         "y": 0,
         "z": 6
       },
-      "extra": "[0:{Slot:0b,id:14s,Count:1b,Damage:0s},1:{Slot:1b,id:323s,Count:1b,Damage:0s}]"
+      "extra": {
+        "items": [
+          {
+            "s": 0,
+            "name": "minecraft:gold_ore",
+            "count": 1,
+            "damage": 0
+          },
+          {
+            "s": 1,
+            "name": "minecraft:sign",
+            "count": 1,
+            "damage": 0
+          }
+        ]
+      }
     },
     {
       "type": "COFFIN",
@@ -791,7 +810,8 @@
         "x": 9,
         "y": 0,
         "z": 8
-      }
+      },
+      "extra": {}
     },
     {
       "type": "COFFIN",
@@ -799,7 +819,8 @@
         "x": 9,
         "y": 0,
         "z": 9
-      }
+      },
+      "extra": {}
     }
   ]
 }

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.generation.castle;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import de.teamlapen.vampirism.ModBiomes;
+import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.util.MathHelper;
@@ -63,7 +64,6 @@ public class CastleGenerator extends WorldGenerator {
 						preGeneratePosition(p, world, rnd);
 						data.markDirty();
 					}
-					Logger.d(TAG,"Processing position %s for %d %d", p,chunkX,chunkZ);
 					String s=p.getTileAt(chunkX - p.chunkXPos, chunkZ - p.chunkZPos);
 					Logger.d(TAG,"Found tile %s for %d %d",s,chunkX,chunkZ);
 					String[] param=s.split(",");
@@ -76,6 +76,13 @@ public class CastleGenerator extends WorldGenerator {
 						for(int j=(chunkZ<<4);j<(chunkZ<<4)+16;j++){
 							for(int k=height;k<height+20;k++){
 								world.setBlockToAir(i,k,j);
+							}
+						}
+					}
+					for (int i=(chunkX<<4);i<(chunkX<<4)+16;i++){
+						for(int j=(chunkZ<<4);j<(chunkZ<<4)+16;j++){
+							for(int k=height-1;k>height-10;k--){
+								world.setBlock(i,k,j, ModBlocks.cursedEarth);
 							}
 						}
 					}
