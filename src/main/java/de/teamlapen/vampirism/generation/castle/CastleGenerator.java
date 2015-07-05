@@ -129,7 +129,7 @@ public class CastleGenerator extends WorldGenerator {
 			}
 
 		if(foundPos.size()==0){
-			Logger.w(TAG,"Did not find any positions");
+			Logger.w(TAG, "Did not find any positions");
 		}
 		return foundPos;
 	}
@@ -192,7 +192,7 @@ public class CastleGenerator extends WorldGenerator {
 			int sz=MIN_SIZE+rnd.nextInt(Math.min(max[0],MAX_SIZE)-MIN_SIZE+1);
 			Logger.d(TAG, "Using size %sx%s", sx, sz);
 			CastlePositionData.Position p=new CastlePositionData.Position(lowcx+((max[0]-sx)/2),lowcz+((max[0]-sz)/2));
-			p.setSize(sx,sz);
+			p.setSize(sx, sz);
 			return p;
 		}
 		return position;
@@ -223,11 +223,32 @@ public class CastleGenerator extends WorldGenerator {
 				tiles[sx-1][z]+=",3,wall";
 			}
 
-			for(int z=1;z<sz-1;z++){
-				tiles[sx-1][z]+=","+rnd.nextInt(4)+",house1";
+			for(int x=1;x<sx-1;x++){
+				for(int z=1;z<sz-1;z++){
+					tiles[x][z]+=getRandomHouse(rnd);
+				}
 			}
+			tiles[sx/2][sz/2]="0,flatDirt";
+			tiles[sx/2+1][sz/2]="0,flatDirt,0,castlell";
+			tiles[sx/2+1][sz/2+1]="0,flatDirt";
+			tiles[sx/2][sz/2+1]="0,flatDirt";
+
+
 			position.setTiles(tiles);
 		}
+	}
+
+	private String getRandomHouse(Random rnd){
+		int dir=rnd.nextInt(4);
+		int type=rnd.nextInt(6);
+		String s;
+		switch (type){
+		case 0:s="house1";break;
+		case 1:s="house2";break;
+		case 3:s="stables";break;
+		default:return "";
+		}
+		return ","+dir+","+s;
 	}
 
 	private int getAverageHeight(Chunk chunk) {
@@ -258,6 +279,12 @@ public class CastleGenerator extends WorldGenerator {
 		if(tile!=null)tileMap.put("flatDirt",tile);
 		tile=loadTile("house1",gson);
 		if(tile!=null)tileMap.put("house1",tile);
+		tile=loadTile("house2",gson);
+		if(tile!=null)tileMap.put("house2",tile);
+		tile=loadTile("stables",gson);
+		if(tile!=null)tileMap.put("stables",tile);
+		tile=loadTile("castlell",gson);
+		if(tile!=null)tileMap.put("castlell",tile);
 	}
 	private static BuildingTile loadTile(String name,Gson gson){
 		BuildingTile tile= null;

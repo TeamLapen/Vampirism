@@ -10,18 +10,20 @@ import de.teamlapen.vampirism.generation.castle.Extra;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityHanging;
+import net.minecraft.entity.item.EntityPainting;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.chunk.Chunk;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * Created by Max on 03.07.2015.
@@ -30,8 +32,8 @@ public class TileEntityTemplateGenerator extends TileEntity {
 	private List<BlockList> blockLists;
 	private List<Extra> extraList;
 	private final String TAG="TETemplateGenerator";
-	public void onActivated(int minX){
-		Logger.i(TAG,"Activated with minX %d",minX);
+	public void onActivated(int minY){
+		Logger.i(TAG,"Activated with minY %d",minY);
 		blockLists=new LinkedList<BlockList>();
 		extraList=new LinkedList<Extra>();
 		Chunk chunk=
@@ -39,9 +41,20 @@ public class TileEntityTemplateGenerator extends TileEntity {
 
 		for(int x=0;x<16;x++){
 			for(int z=0;z<16;z++){
-				for(int y=this.yCoord+minX;y<worldObj.getActualHeight();y++){
+				for(int y=this.yCoord+minY;y<worldObj.getActualHeight();y++){
 					Block block=chunk.getBlock(x, y, z);
-					if(block.getMaterial()!= Material.air&&!block.equals(Blocks.sand)&&!block.equals(ModBlocks.templateGenerator)){
+					if(block.equals(ModBlocks.templateGenerator))continue;
+					if(block.equals(Blocks.sand))continue;
+					if(block.getMaterial()==Material.air&&y>=this.yCoord)continue;
+					if(block.equals(Blocks.standing_sign)){
+						TileEntitySign sign= (TileEntitySign) chunk.getTileEntityUnsafe(x,y,z);
+						if(sign!=null){
+							Extra e=new Extra(Extra.TYPE.SPAWN_ENTITY,new BlockList.BlockPosition(x,y-this.yCoord,z));
+							e.retrieveExtra(sign);
+							extraList.add(e);
+						}
+						continue;
+					}
 						int m=chunk.getBlockMetadata(x, y, z);
 						int[] meta=guessMetaForBlock(block,m);
 						addBlock(block,meta,x,y-this.yCoord,z);
@@ -65,11 +78,19 @@ public class TileEntityTemplateGenerator extends TileEntity {
 							}
 
 						}
-					}
+
 
 
 				}
 			}
+		}
+		List<EntityPainting> paintings=new ArrayList<EntityPainting>();
+		chunk.getEntitiesOfTypeWithinAAAB(EntityPainting.class, AxisAlignedBB.getBoundingBox(Integer.MIN_VALUE, this.yCoord + minY, Integer.MIN_VALUE, Integer.MAX_VALUE, worldObj.getActualHeight(), Integer.MAX_VALUE), paintings, null);
+		for(EntityPainting p:paintings){
+			Logger.d("test","saving painting");
+			Extra extra=new Extra(Extra.TYPE.PAINTING,new BlockList.BlockPosition(p.field_146063_b-(chunk.xPosition<<4),p.field_146064_c-this.yCoord,p.field_146062_d-(chunk.zPosition<<4)));
+			extra.retrieveExtra(p);
+			extraList.add(extra);
 		}
 		save();
 		blockLists=null;

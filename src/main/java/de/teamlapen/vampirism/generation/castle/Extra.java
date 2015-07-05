@@ -6,16 +6,21 @@ import com.google.gson.JsonObject;
 import cpw.mods.fml.common.registry.GameRegistry;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import de.teamlapen.vampirism.util.Logger;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.item.EntityPainting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityMobSpawner;
+import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.world.World;
 
 /**
- * Created by Max on 04.07.2015.
+ * Used to save additional informations from tileentitys with building tiles
+ * @author Maxanier
  */
 public class Extra {
 	public final TYPE type;
@@ -25,39 +30,66 @@ public class Extra {
 		this.type=t;
 		this.pos=pos;
 	}
+	public void applyExtra(World world,int wx,int wy,int wz){
+		if(type==TYPE.SPAWN_ENTITY){
+			int c=extra.get("count").getAsInt();
+			String entity=extra.get("entity").getAsString();
+			for(int i=0;i<c;i++){
+				Entity e= EntityList.createEntityByName(entity,world);
+				if(e!=null) {
+					e.setPosition(wx, wy, wz);
+					world.spawnEntityInWorld(e);
+				}
+			}
 
-	public  void applyExtra(TileEntity tileEntity){
-			switch (type){
+		}
+		else if(type==TYPE.PAINTING){
+			int dir=extra.get("dir").getAsInt();
+			String title=extra.get("title").getAsString();
+			EntityPainting.EnumArt art=null;
+			for(EntityPainting.EnumArt a: EntityPainting.EnumArt.values()){
+				if(a.title.equals(title)){
+					art=a;
+					break;
+				}
+			}
+			if(art==null)art= EntityPainting.EnumArt.Alban;
+			EntityPainting p=new EntityPainting(world,wx,wy,wz,dir);
+			p.art=art;
+			Logger.d("test","Spawning painting in %s %s %s (%dir)",wx,wy,wz,dir);
+			world.spawnEntityInWorld(p);
+
+		} else{
+			TileEntity tileEntity=world.getTileEntity(wx, wy, wz);
+			switch (type) {
 			case SPAWNER:
-				((TileEntityMobSpawner)tileEntity).func_145881_a().setEntityName(extra.get("entity_name").getAsString());
+				((TileEntityMobSpawner) tileEntity).func_145881_a().setEntityName(extra.get("entity_name").getAsString());
 				break;
 			case CHEST:
-				JsonArray items=extra.getAsJsonArray("items");
-				TileEntityChest chest= (TileEntityChest) tileEntity;
-				for (int i = 0; i < items.size(); ++i)
-				{
-					JsonObject item=items.get(i).getAsJsonObject();
-					int slot=item.get("s").getAsInt();
+				JsonArray items = extra.getAsJsonArray("items");
+				TileEntityChest chest = (TileEntityChest) tileEntity;
+				for (int i = 0; i < items.size(); ++i) {
+					JsonObject item = items.get(i).getAsJsonObject();
+					int slot = item.get("s").getAsInt();
 
-					if (slot >= 0 && slot < chest.getSizeInventory())
-					{
-						String[] part=item.get("name").getAsString().split(":");
-						Item it=GameRegistry.findItem(part[0], part[1]);
-						ItemStack st=new ItemStack(it,item.get("count").getAsInt());
+					if (slot >= 0 && slot < chest.getSizeInventory()) {
+						String[] part = item.get("name").getAsString().split(":");
+						Item it = GameRegistry.findItem(part[0], part[1]);
+						ItemStack st = new ItemStack(it, item.get("count").getAsInt());
 						st.setItemDamage(item.get("damage").getAsInt());
-						chest.setInventorySlotContents(slot,st);
+						chest.setInventorySlotContents(slot, st);
 					}
 				}
 				break;
 			case COFFIN:
-				TileEntityCoffin te=((TileEntityCoffin) tileEntity);
+				TileEntityCoffin te = ((TileEntityCoffin) tileEntity);
 				te.tryToFindOtherTile();
-				te.color=extra.get("color").getAsInt();
+				te.color = extra.get("color").getAsInt();
+				break;
 			}
-
-
-		JsonObject jsonObject;
+		}
 	}
+
 	public void retrieveExtra(TileEntity tileEntity){
 		extra=new JsonObject();
 		switch (type){
@@ -88,11 +120,23 @@ public class Extra {
 		case COFFIN:
 			extra.addProperty("color",((TileEntityCoffin)tileEntity).color);
 			break;
+		case SPAWN_ENTITY:
+			TileEntitySign sign=(TileEntitySign)tileEntity;
+			int count=Integer.parseInt(sign.signText[0]);
+			String entity=sign.signText[1]+sign.signText[2]+sign.signText[3];
+			extra.addProperty("count",count);
+			extra.addProperty("entity",entity.trim());
+			break;
 		}
 
 	}
 
+	public void retrieveExtra(EntityPainting p){
+		extra=new JsonObject();
+		extra.addProperty("dir",p.hangingDirection);
+		extra.addProperty("title",p.art.title);
+	}
 	public static enum TYPE{
-		SPAWNER,COFFIN,CHEST;
+		SPAWNER,COFFIN,CHEST,SPAWN_ENTITY,PAINTING;
 	}
 }

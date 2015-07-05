@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * Represents a chunk sized building component
+ * @author Maxanier
  */
 public class BuildingTile {
 	private List<BlockList> blocks;
@@ -35,7 +36,7 @@ public class BuildingTile {
 		for(Extra extra:extras){
 			BlockList.BlockPosition p=extra.pos;
 			p=rotatePosition(rotation,p);
-			extra.applyExtra(world.getTileEntity(x+p.x,groundHeight+p.y,z+p.z));
+			extra.applyExtra(world,x+p.x,groundHeight+p.y,z+p.z);
 		}
 	}
 
