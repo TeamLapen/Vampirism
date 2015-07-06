@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism;
 
+import de.teamlapen.vampirism.generation.castle.CastleGenerator;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.launchwrapper.Launch;
@@ -135,6 +136,7 @@ public class VampirismMod {
 		setupNetwork();
 
 		VillageBiomes.preInit(event);
+		CastleGenerator.loadTiles();
 
 		Skills.registerDefaultSkills();
 

@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.util.MovingObjectPosition;
 
 /**
  * Basic command on which all other commands should depend on
@@ -96,7 +97,14 @@ public class TestCommand implements ICommand {
 							sendMessage(sender,"Not biteable "+o.getClass().getName());
 						}
 					}
-
+					return;
+				}
+				if("block".equals(param[0])){
+					MovingObjectPosition pos = Helper.getPlayerLookingSpot(p,0);
+					if(pos!=null&&MovingObjectPosition.MovingObjectType.BLOCK.equals(pos.typeOfHit)){
+						sendMessage(sender,"Block: "+p.worldObj.getBlock(pos.blockX,pos.blockY,pos.blockZ)+" Meta: "+p.worldObj.getBlockMetadata(pos.blockX,pos.blockY,pos.blockZ));
+					}
+					return;
 				}
 				if ("minions".equals(param[0])) {
 					for (IMinion m : vampire.getMinionHandler().getMinionListForDebug()) {

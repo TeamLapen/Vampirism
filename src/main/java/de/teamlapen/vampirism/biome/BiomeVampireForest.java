@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.biome;
 
 import java.util.Random;
 
+import de.teamlapen.vampirism.generation.castle.CastlePositionData;
+import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -46,15 +48,23 @@ public class BiomeVampireForest extends BiomeGenBase {
 
 	@Override
 	public void decorate(World world, Random rand, int chunk_X, int chunk_Z) {
-		super.theBiomeDecorator.decorateChunk(world, rand, this, chunk_X, chunk_Z);
+		boolean flag=true;
+		CastlePositionData data = CastlePositionData.get(world);
+		for(CastlePositionData.Position p:data.getPositions()){
+			if(p.isChunkInPosition(chunk_X>>4,chunk_Z>>4)){
+				flag=false;
+			}
+		}
+		if(flag){
+			super.theBiomeDecorator.decorateChunk(world, rand, this, chunk_X, chunk_Z);
 
-		for (int j = 0; j < 5; ++j) {
-			int x = chunk_X + rand.nextInt(16);
-			int z = chunk_Z + rand.nextInt(16);
-			int y = world.getHeightValue(x, z);
-			if (world.getBlock(x, y - 1, z) == ModBlocks.cursedEarth && world.getBlock(x, y, z) == Blocks.air) {
-				world.setBlock(x, y, z, ModBlocks.vampireFlower, 0, 3);
-				// Logger.i("BiomeVampireForest", "placed a vampire flower at: " + x + "," + y + "," + z);
+			for (int j = 0; j < 5; ++j) {
+				int x = chunk_X + rand.nextInt(16);
+				int z = chunk_Z + rand.nextInt(16);
+				int y = world.getHeightValue(x, z);
+				if (world.getBlock(x, y - 1, z) == ModBlocks.cursedEarth && world.getBlock(x, y, z) == Blocks.air) {
+					world.setBlock(x, y, z, ModBlocks.vampireFlower, 0, 3);
+				}
 			}
 		}
 	}
