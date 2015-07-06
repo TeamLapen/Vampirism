@@ -1,3 +1,4 @@
+#X-Generator: crowdin.com
 # Entitys
 entity.vampirism.vampireHunter.name=Vampire Hunter
 entity.vampirism.vampire.name=Vampire
@@ -35,9 +36,6 @@ block.vampirism.churchAltar.name=Altar of Cleansing
 block.vampirism.cursedEarth.name=Cursed Earth
 block.vampirism.vampireOrchid.name=Vampire Orchid
 block.vampirism.blockCoffin.name=Coffin
-block.vampirism.castleBlock.name=Castle Block
-block.vampirism.castleSlab.name=Castle Slab
-block.vampirism.castleStairs.name=Castle Stairs
 
 #GUI
 gui.vampirism.revertback.head=Revert back to normal human
@@ -90,9 +88,6 @@ text.vampirism.thanks=Thanks
 text.vampirism.coming_back=I'm coming back, my lord
 text.vampirism.sorry_i_died_while_doing=My lord, I'm sorry but I died while fulfilling your task
 text.vampirism.current_task=Current task
-text.vampirism.blood=Blood
-text.vampirism.structure=Structure
-text.vampirism.pillar_blocks=Pillar blocks
 
 #Skill
 skill.vampirism.bat_skill=Toggle Batmode

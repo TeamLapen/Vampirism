@@ -1,3 +1,4 @@
+#X-Generator: crowdin.com
 # Entitys
 entity.vampirism.vampireHunter.name=Vampir Jäger
 entity.vampirism.vampire.name=Vampir
@@ -14,20 +15,21 @@ item.vampirism.vampiresFear.name=Vampir's Angst
 item.vampirism.bloodBottle.name=Blut Flasche
 item.vampirism.vampireFang.name=Vampirzahn
 item.vampirism.pitchfork.name=Mistgabel
-item.vampirism.humanHearth.name=Menschliches Herz
+item.vampirism.humanHeart.name=Menschliches Herz
 item.vampirism.torch.name=Fackel
 item.vampirism.pureBlood.name=Reines Blut
 item.vampirism.sunscreen.name=Sonnenschutz
+item.vampirism.leechSword.name=Blutsauger
 item.vampirism.coffin.name=Sarg
 item.vampirism.vampireArmor_helmet.name=Vampir Helm
 item.vampirism.vampireArmor_leggings.name=Vampir Hose
 item.vampirism.vampireArmor_boots.name=Vampir Schuhe
 item.vampirism.vampireArmor_chestplate.name=Vampir Brustplatte
+item.vampirism.minionNameTag.name=Lakai Namensschild
 
 # Blocks
 block.vampirism.bloodAltar.name=Blood Altar der Sättigung
 block.vampirism.bloodAltarTier2.name=Blood Altar der Inspiration
-block.vampirism.bloodAltarTier3.name=Blood Altar 3
 block.vampirism.bloodAltarTier4.name=Blood Altar der Infusion
 block.vampirism.bloodAltarTier4Tip.name=Blood Altar der Infusion Tip
 block.vampirism.churchAltar.name=Altar der Reinigung
@@ -46,13 +48,13 @@ keys.vampirism.auto=Automatisches Füllen der Blut Flaschen
 keys.vampirism.skill=Aktiviere Vampir Fähigkeiten
 key.vampirism.vision=Wechsle Sicht
 
-
 #General
 itemGroup.vampirism=Vampirismus
 death.attack.sun=%1$s mochte die Sonne nicht
 potion.vampirism.sunscreen=Sonnenschutz
 potion.vampirism.thirst=Durst
 potion.vampirism.saturation=Sättigung
+potion.vampirism.sanguinare=Sanguinare Vampiris
 text.vampirism.skill.level_to_low=Dein Vampire Level ist zu niedrig dafür
 text.vampirism.skill.cooldown_not_over=Bitte warte bis die Abklingzeit vorbei ist
 text.vampirism.entity_level=Level
@@ -65,8 +67,8 @@ text.vampirism.ritual_requirements_not_met=Nicht alle Vorraussetzungen sind erf�
 text.vampirism.purity=Reinheit
 text.vampirism.auto_fill_enabled=Automatisches Füllen aktiviert
 text.vampirism.auto_fill_disabled=Automatisches Füllen deaktiviert
-text.vampirism.ritual_no_vampire=Für dieses Ritual musst du ein Vampir sein
 text.vampirism.skill.deactivated_by_serveradmin=Diese Fähigkeit wurde durch den Serveradmin deaktiviert
+text.vampirism.ritual_no_vampire=Für dieses Ritual musst du ein Vampir sein
 text.vampirism.cant_fly_day=Du kannst am Tag nicht fliegen
 text.vampirism.no_more_minions=Du kannst nicht noch mehr Minions kontrollieren
 text.vampirism.coffin.noSleep=Du kannst nur am Tag schlafen
@@ -75,11 +77,17 @@ text.vampirism.coffin.stopsleeping=Verlasse Sarg
 text.vampirism.blood_left=Blut übrig
 text.vampirism.blood=Blut
 text.vampirism.vampirelevel=Vampirlevel
-text.vampirism.entitysblood=Entity's blood
-text.vampirism.minion=Minion
+text.vampirism.entitysblood=Blut der Kreatur
+text.vampirism.minion=Lakai
 text.vampirism.lord=Sklave
 text.vampirism.normal_vision=Normale Sicht
 text.vampirism.night_vision=Nachtsicht
+text.vampirism.no_control_minion=Du hast keine Kontrolle über diesen Lakai
+text.vampirism.need_empty_bottle=Mein Lord, ich brauche eine leere Flasche um Blut zu sammeln
+text.vampirism.thanks=Danke
+text.vampirism.coming_back=Ich komme zurück, mein Lord
+text.vampirism.sorry_i_died_while_doing=Main Lord, es tut mir Leid aber ich starb beim erfüllen deiner Aufgabe
+text.vampirism.current_task=Aktuelle Aufgabe
 
 #Skill
 skill.vampirism.bat_skill=Aktiviere Fledermaus
@@ -93,13 +101,22 @@ skill.vampirism.summon_bats=Beschwöre Fledermäuse
 skill.vampirism.teleport=Teleport
 skill.vampirism.vampire_rage=Vampire Wut
 
+#Minion command
+minioncommand.vampirism.attackhostilenoplayers=Feine angreifen
+minioncommand.vampirism.attackhostile=Feinde und Spieler angreifen
+minioncommand.vampirism.collectblood=Sammele Blut
+minioncommand.vampirism.defendlord=Verteidige Lord
+minioncommand.vampirism.stayhere=Bleib hier
+minioncommand.vampirism.comeback=Komm zurück (ferne Lakaien)
+minioncommand.vampirism.justfollow=Folge mir
+
 #Config
 category.vampirism.balance=Balance Einstellungen
 category.vampirism.balance.tooltip=Konfiguriere fast jede Balance relevante Einstellung
 category.vampirism.balance_level=Levelup Einstellungen
 category.vampirism.balance_player_mod=Vampir Spieler Eigenschaften
+category.vampirism.balance_player_skills=Vampir  Spieler Fähigkeiten Einstellung
 category.vampirism.balance_mob_prop=Vampirism Mob Einstellungen
 category.vampirism.balance_mob_prop.tooltip=Die Eigenschaften von hinzugefÃ¼gten Mobs anpassen 
 category.vampirism.balance_vv_prop=Dorf Eigenschaften
 category.vampirism.balance_vv_prop.tooltip=Konfiguriere wie sich Jäger im Dorf verhalten und andere Dorf Eigenschaften verändern
-

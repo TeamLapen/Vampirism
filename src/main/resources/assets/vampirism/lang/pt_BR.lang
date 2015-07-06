@@ -1,3 +1,4 @@
+#X-Generator: crowdin.com
 # Entitys
 entity.vampirism.vampireHunter.name=Caçador de Vampiro
 entity.vampirism.vampire.name=Vampiro
@@ -5,7 +6,9 @@ entity.vampirism.ghost.name=Fantasma
 entity.vampirism.vampireLord.name=Lorde Vampiro
 entity.vampirism.vampireMinionR.name=Vampiro Bebê
 entity.vampirism.vampireMinionS.name=Vampiro Bebê
-entity.vampirism.dracula.name=Dracula
+entity.vampirism.blinding_bat.name=Morcego
+entity.vampirism.dracula.name=Drácula
+entity.vampirism.dead_mob.name=Mob Morto
 
 # Items
 item.vampirism.vampiresFear.name=Terror do Vampiro
@@ -16,45 +19,96 @@ item.vampirism.humanHeart.name=Coração de Humano
 item.vampirism.torch.name=Tocha
 item.vampirism.pureBlood.name=Sangue Puro
 item.vampirism.sunscreen.name=Protetor Solar
+item.vampirism.leechSword.name=Sanguessuga
+item.vampirism.coffin.name=Caixão
+item.vampirism.vampireArmor_helmet.name=Capacete do Vampiro
+item.vampirism.vampireArmor_leggings.name=Calça do Vampiro
+item.vampirism.vampireArmor_boots.name=Botas do Vampiro
+item.vampirism.vampireArmor_chestplate.name=Golpeá do Vampiro
+item.vampirism.minionNameTag.name=Crachá de Minion
 
 # Blocks
-block.vampirism.bloodAltar.name=Blood Altar of Saturation
-block.vampirism.bloodAltarTier2.name=Blood Altar of Inspiration
-block.vampirism.bloodAltarTier3.name=Blood Altar 3
-block.vampirism.bloodAltarTier4.name=Blood Altar of Infusion
-block.vampirism.bloodAltarTier4Tip.name=Blood Altar of Infusion Tip
+block.vampirism.bloodAltar.name=Altar de sangue de saturação
+block.vampirism.bloodAltarTier2.name=Altar de sangue de inspiração
+block.vampirism.bloodAltarTier4.name=Altar de sangue de infusão
+block.vampirism.bloodAltarTier4Tip.name=Altar de sangue da ponta de infusão 
 block.vampirism.churchAltar.name=Altar da Purificação
 block.vampirism.cursedEarth.name=Terra Amaldiçoada
 block.vampirism.vampireOrchid.name=Orquídea Vampirica
-
+block.vampirism.blockCoffin.name=Caixão
 
 #GUI
 gui.vampirism.revertback.head=Voltar a ser um humano normal
 gui.vampirism.revertback.desc=Você ira perder todos os seus níveis e ira morrer
 
 # Keys
-keys.vampirism.category=Vampirism
+keys.vampirism.category=Vampirismo
 keys.vampirism.suck=Chupar Sangue
 keys.vampirism.auto=Carregar automaticamente os frascos de sangue
 keys.vampirism.skill=Ativar as abilidades de Vampiro
+key.vampirism.vision=Mudar a visão
 
 #General
-itemGroup.vampirism=Vampirism
+itemGroup.vampirism=Vampirismo
 death.attack.sun=%1$s nao gosta do sol .D
-potion.vampirism.sunscreen=Protetor solar
+potion.vampirism.sunscreen=Protetor Solar
 potion.vampirism.thirst=Sede
 potion.vampirism.saturation=Saturação
+potion.vampirism.sanguinare=Sanguinare Vampiris
 text.vampirism.skill.level_to_low=O seu nivel de vampiro é muito baixo para isso
 text.vampirism.skill.cooldown_not_over=Por favor espere até que o tempo de recarga complete (cooldown)
 text.vampirism.entity_level=Nivel
 text.vampirism.ritual_missing_times=Ainda falta itens para esse ritual
 text.vampirism.ritual_structure_wrong=A estrutura do ritual esta errada
 text.vampirism.ritual_level_wrong=Você nao pode usar este altar no seu nivel
+text.vampirism.ritual_still_running=O ritual ainda está em execução
 text.vampirism.not_enough_blood=Não a sangue o suficiente no altar
 text.vampirism.ritual_requirements_not_met=Nem todos os requisitos para esse ritual foram cumpridos
 text.vampirism.purity=Pureza
 text.vampirism.auto_fill_enabled=Auto Carregamento Ativado
 text.vampirism.auto_fill_disabled=Auto Carregamento Desativado
+text.vampirism.skill.deactivated_by_serveradmin=Esta habilidade é desativada pelo seu serveradmin
+text.vampirism.ritual_no_vampire=Você precisa ser um vampiro para este ritual
+text.vampirism.cant_fly_day=Você não pode voar de dia
+text.vampirism.no_more_minions=Você não é capaz de controlar qualquer asseclas mais
+text.vampirism.coffin.noSleep=Você só pode dormir no dia
+text.vampirism.coffin.occupied=Este caixão está ocupado
+text.vampirism.coffin.stopsleeping=Deixar o caixão
+text.vampirism.blood_left=Esquerda do sangue
+text.vampirism.blood=sangue
+text.vampirism.vampirelevel=Vampirelevel
+text.vampirism.entitysblood=Sangue da entidade
+text.vampirism.minion=Minion
+text.vampirism.lord=Senhor
+text.vampirism.normal_vision=Visão normal
+text.vampirism.night_vision=Visão Noturna
+text.vampirism.no_control_minion=Você não tem controle sobre este minion
+text.vampirism.need_empty_bottle=Meu senhor, eu preciso de uma garrafa vazia para coletar sangue
+text.vampirism.thanks=Obrigado
+text.vampirism.coming_back=Eu vou voltar, meu senhor
+text.vampirism.sorry_i_died_while_doing=Meu senhor, me desculpe, mas eu morri enquanto cumprindo sua tarefa
+text.vampirism.current_task=Tarefa atual
+
+#Skill
+skill.vampirism.bat_skill=Modo Morcego Ativo
+skill.vampirism.change_weather=Condições do tempo
+skill.vampirism.cancel=Anular
+skill.vampirism.freeze=Congelar
+skill.vampirism.invisibility=Invisibilidade
+skill.vampirism.regen=Regeneração
+skill.vampirism.revive_fallen=Reviver caídos
+skill.vampirism.summon_bats=Convocar os morcegos
+skill.vampirism.teleport=Teletransporte
+skill.vampirism.vampire_rage=Raiva de vampiro
+
+#Minion command
+minioncommand.vampirism.attackhostilenoplayers=Ataque hostil
+minioncommand.vampirism.attackhostile=Ataque hostil incluindo jogador
+minioncommand.vampirism.collectblood=Colheita de sangue
+minioncommand.vampirism.defendlord=Defender o senhor
+minioncommand.vampirism.stayhere=Ficar aqui
+minioncommand.vampirism.comeback=Voltar (asseclas remotas)
+minioncommand.vampirism.justfollow=Siga-me
 
 #Config
 category.vampirism.balance=Configurações de balanceamento

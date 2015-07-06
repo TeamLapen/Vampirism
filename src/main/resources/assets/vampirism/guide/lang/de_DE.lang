@@ -1,0 +1,30 @@
+#X-Generator: crowdin.com
+#General
+guide.vampirism.book.title=Vampirism Handbuch
+guide.vamprism.book.name=Vampirism Handbuch
+
+#Getting Started
+guide.vampirism.gettingStarted.category=Einstieg
+guide.vampirism.gettingStarted.overview.title=Übersicht
+guide.vampirism.gettingStarted.overview.text=Vampirism ist eine Mod, die eine neue Art des Minecraft Spielens hinzufügt. Früher hast du vermutlich vermieden Nachts durch die Gegend zu wanden, aber als Vampir fühlst du dich im Dunkeln wohler. Bei umher wandern wird dir vermutlich auffallen, dass du mehr Dörfer in mehr Biomen finden wirst in denen du deinen Durst stillen kannst.
+guide.vampirism.gettingStarted.firstSteps.title=Erste Schritte
+guide.vampirism.gettingStarted.firstSteps.text=Du startest als normaler Spieler. Um ein Vampir zu werden musst du von einem anderen Vampir gebissen werden. Wenn ein anderer Vampir dich beißt besteht dich Chance, dass du einen Trank-Effekt namens "Sanguinare Vampiris". Dieser dauert einen Tag an und wenn er endet, bist du ein Vampir. Willst du dies vermeiden kannst du den Effekt durch Trinken von Milch abbrechen. Solltest du trotz Vampir Bissen keinen Effekt bekommen, kannst du auch einfach mit Vampir Zähnen rechts-klicken und dir so das Blut injizieren.
+guide.vampirism.gettingStarted.asAVampire.title=Als Vampir
+
+#Items and Blocks
+guide.vampirism.itemsAndBlocks.category=Gegenstände und Blöcke
+guide.vampirism.itemsAndBlocks.found.title=In der Welt gefunden
+guide.vampirism.itemsAndBlocks.found.pureBlood=Wird von Vampir-Lords in verschiedenen Reinheitsgrade abhängig von der Höhe des Lords hinterlassen. Erforderlich für die Rituale höherer Stufen.
+guide.vampirism.itemsAndBlocks.found.bloodAltar1=Dieser Block kann als Leuchtfeuer fungieren und gibt dir Geschwindigkeits- sowie Sättigungseffekte (du verbrauchst weniger Blut). Aber um diesen Effekt zu aktivieren, musst du dir ein "Blutsauger" herstellen und ihn durch Töten von Tieren füllen. Ist es gefüllt, kannst du es in den Altar einführen und der Effekt wird aktiviert, verbraucht aber langsam das gesammelte Blut. Dieser Block kann nicht hergestellt werden sondern nur in Sümpfen gefunden werden.
+guide.vampirism.itemsAndBlocks.found.vampireFlower=Vampir Orchideen können im Vampir Biom gefunden werden.
+
+#Levels
+
+#Mobs
+
+#VampirePlayer
+
+
+
+
+

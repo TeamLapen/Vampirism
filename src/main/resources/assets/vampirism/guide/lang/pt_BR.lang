@@ -1,0 +1,33 @@
+#X-Generator: crowdin.com
+#General
+guide.vampirism.book.title=Guia de vampirismo
+guide.vamprism.book.name=Guia de vampirismo
+
+#Getting Started
+guide.vampirism.gettingStarted.category=Começar
+guide.vampirism.gettingStarted.overview.title=Síntese
+guide.vampirism.gettingStarted.overview.text=Vampirismo é um mod que adiciona uma nova maneira de jogar Minecraft. Você pode ter anteriormente gastado muito tempo evitando multidões, mas como um vampiro, você desenvolverá uma sede por matar \:)   Quando vagando pelo mundo você pode notar que há mais aldeias em biomas mais, no qual você pode aplacar a sede. As aldeias em pântanos são especialmente interessantes.
+guide.vampirism.gettingStarted.firstSteps.title=Primeiros passos
+guide.vampirism.gettingStarted.firstSteps.text=Você vai começar para fora como um jogador regular, para se tornar um vampiro, que você tem que ser mordido por um vampiro. Também deixe-os te bater de propósito ou só Esperem até que aconteça por acaso. Quando eles atingiram você há uma chance, você recebe um efeito de poção, chamado "Sanguinare Vampiris" que dura um dia de Minecraft. Após ter terminado a poção, você se torna um vampiro. No caso de você não quer se tornar um, você sempre pode cancelar o efeito com um balde de leite. Alternativamente você pode botão direito do mouse com presas de vampiro em mão para injetar um pouco de sangue em você e obter o mesmo efeito como acima.
+guide.vampirism.gettingStarted.asAVampire.title=Como um vampiro
+guide.vampirism.gettingStarted.asAVampire.text=Depois de se tornar um vampiro, uma das suas principais fontes de sangue (pelo menos a melhor fonte) são aldeões e encontrará muitas dessas. Cuidado, porém, ainda existem vampiros que podem atacá-lo, mesmo que quando você é um jogador regular. Os caçadores de vampiros, no entanto, não atacarão você, quando você está a um nível 1 vampiro. Como um vampiro, você precisa ver quanto sangue você tem. Suga sangue pressionando 'F' dos moradores e de alguns mobs para tirar mais sangue. Sangue extra pode ser armazenado em um frasco de sangue. Se você deseja transferir sangue entre o frasco de sangue e o uso de sangue Bar botão direito do mouse ou shift clique com botão direito do mouse. Você saberá quais mobs não consegue sangue de, como você irá receber danos tentando sugar seu sangue. No começo você vai ser um vampiro de nível 1 (o nível é exibido acima do seu nível XP) e melhorou a velocidade, força e saúde. Para chegar a níveis mais elevados de vampiro, você tem que executar rituais diferentes. Quando você ficar acima de um determinado nível, os vampiros já não irão atacá-lo, mas será de caçadores de vampiros. Como você avançar através dos níveis melhorar suas habilidades, mas podem aparecer algumas desvantagens como danos causados pelo sol.
+
+#Items and Blocks
+guide.vampirism.itemsAndBlocks.category=Blocos e itens
+guide.vampirism.itemsAndBlocks.found.title=Encontrado no mundo
+guide.vampirism.itemsAndBlocks.found.pureBlood=É Descartado por Vampire Lords em níveis de pureza diferentes dependendo do nível de Lordes. Necessárias para os rituais de camada superiores.
+guide.vampirism.itemsAndBlocks.found.bloodAltar1=Este bloco pode agir como um farol e dá-lhe uma velocidade, bem como um efeito de saturação (você consumir menos sangue). Mas para ativar este efeito, você tem que se ofício uma espada "Sanguessuga" e preenchê-lo com sangue, matando os aldeões ou outras criaturas com isso. Então você pode inserir a espada para o bloco que permite que o efeito, mas esgota lentamente a espada. O bloco não pode ser trabalhado, mas tem que ser encontrada em pântanos.
+guide.vampirism.itemsAndBlocks.found.vampireFlower=Orquídeas de vampiro podem ser encontradas no bioma de vampiro.
+guide.vampirism.itemsAndBlocks.found.humanHearth=Estas são descartadas por caçadores de vampiros. Você também pode comê-los para obter uma grande quantidade de sangue ou usá-los em vários rituais.
+guide.vampirism.itemsAndBlocks.found.vampireFang=Estas são descartadas por vampiros. Você pode usá-los em algumas receitas crafting ou clique direito com eles para obter "Vampiris Sanguinare".
+
+#Levels
+
+#Mobs
+
+#VampirePlayer
+
+
+
+
+
