@@ -19,7 +19,7 @@ import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.world.World;
 
 /**
- * Used to save additional informations from tileentitys with building tiles
+ * Used to save additional information from tileentitys or other things with building tiles
  * @author Maxanier
  */
 public class Extra {
@@ -30,6 +30,14 @@ public class Extra {
 		this.type=t;
 		this.pos=pos;
 	}
+
+	/**
+	 * Applies this extra to the given world
+	 * @param world
+	 * @param wx World x coordinate
+	 * @param wy World y coordinate
+	 * @param wz World z coordinate
+	 */
 	public void applyExtra(World world,int wx,int wy,int wz){
 		if(type==TYPE.SPAWN_ENTITY){
 			int c=extra.get("count").getAsInt();
@@ -56,7 +64,6 @@ public class Extra {
 			if(art==null)art= EntityPainting.EnumArt.Alban;
 			EntityPainting p=new EntityPainting(world,wx,wy,wz,dir);
 			p.art=art;
-			Logger.d("test","Spawning painting in %s %s %s (%dir)",wx,wy,wz,dir);
 			world.spawnEntityInWorld(p);
 
 		} else{
@@ -90,6 +97,10 @@ public class Extra {
 		}
 	}
 
+	/**
+	 * Retrieves the information from a tileentity as long as this extra has the right type
+	 * @param tileEntity
+	 */
 	public void retrieveExtra(TileEntity tileEntity){
 		extra=new JsonObject();
 		switch (type){
@@ -131,11 +142,19 @@ public class Extra {
 
 	}
 
+	/**
+	 * Retrieves information from a painting
+	 * @param p
+	 */
 	public void retrieveExtra(EntityPainting p){
 		extra=new JsonObject();
 		extra.addProperty("dir",p.hangingDirection);
 		extra.addProperty("title",p.art.title);
 	}
+
+	/**
+	 * Types of {@link Extra}s
+	 */
 	public static enum TYPE{
 		SPAWNER,COFFIN,CHEST,SPAWN_ENTITY,PAINTING;
 	}

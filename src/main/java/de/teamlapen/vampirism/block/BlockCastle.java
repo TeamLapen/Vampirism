@@ -14,14 +14,20 @@ import net.minecraft.util.IIcon;
 
 import java.util.List;
 
+/**
+ * Simple block for castles similar to stone bricks
+ */
 public class BlockCastle extends BasicBlock {
-	private static final String[]  types={"brick","darkBrick","slab","darkSlab"};
+	private static final String[]  types={"purpleBrick","darkBrick"};
 	public final static String name="castleBlock";
 	@SideOnly(Side.CLIENT)
 	private IIcon[] icons;
 	public BlockCastle() {
 		super(Material.rock, name);
-		this.setBlockTextureName(REFERENCE.MODID + ":" + name);
+		this.setBlockTextureName(REFERENCE.MODID + ":" + BlockCastle.name);
+		this.setHardness(2.0F);
+		setResistance(10.0F);
+		setStepSound(soundTypePiston);
 	}
 
 	@Override

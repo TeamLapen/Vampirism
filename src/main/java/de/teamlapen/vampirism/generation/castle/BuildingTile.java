@@ -22,6 +22,15 @@ public class BuildingTile {
 		this.blocks=new LinkedList<BlockList>();
 		this.extras=new LinkedList<Extra>();
 	}
+
+	/**
+	 * Builds the tile in the world
+	 * @param cx Chunk x coordinate
+	 * @param cz Chunk z coordinate
+	 * @param world World
+	 * @param groundHeight Height for the ground level
+	 * @param rotation Rotation (0-3/South-East)
+	 */
 	public void build(int cx,int cz,World world,int groundHeight,int rotation){
 		int x=cx<<4;
 		int z=cz<<4;
@@ -40,6 +49,12 @@ public class BuildingTile {
 		}
 	}
 
+	/**
+	 * Rotates the relative position
+	 * @param rotation
+	 * @param pos
+	 * @return
+	 */
 	private BlockList.BlockPosition rotatePosition(int rotation,BlockList.BlockPosition pos){
 		switch (rotation){
 		case 1:
@@ -53,6 +68,9 @@ public class BuildingTile {
 		}
 	}
 
+	/**
+	 * Calls {@link BlockList#finishLoad()} for all {@link #blocks}
+	 */
 	public void finishLoading() {
 		for(BlockList l : blocks){
 			l.finishLoad();

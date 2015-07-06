@@ -119,9 +119,17 @@ public abstract class CommonProxy implements IProxy {
 		allBiomes = allBiomes.clone();
 		allBiomes[9] = null;
 		allBiomes[8] = null;
+		BiomeGenBase[] allBiomesNoVampire=allBiomes.clone();
+		int vId=ModBiomes.biomeVampireForest.biomeID;
+		if(vId>0&&vId<allBiomes.length){
+			allBiomesNoVampire[vId]=null;
+		}
 		BiomeGenBase[] biomes = Iterators.toArray(Iterators.filter(Iterators.forArray(allBiomes), Predicates.notNull()), BiomeGenBase.class);
+		allBiomesNoVampire=Iterators.toArray(Iterators.filter(Iterators.forArray(allBiomesNoVampire), Predicates.notNull()), BiomeGenBase.class);
 
-		registerEntity(EntityVampireHunter.class, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, BALANCE.VAMPIRE_HUNTER_SPAWN_PROBE, 1, 2, EnumCreatureType.creature, biomes);
+
+
+		registerEntity(EntityVampireHunter.class, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, BALANCE.VAMPIRE_HUNTER_SPAWN_PROBE, 1, 2, EnumCreatureType.creature, allBiomesNoVampire);
 		registerEntity(EntityVampire.class, REFERENCE.ENTITY.VAMPIRE_NAME, BALANCE.VAMPIRE_SPAWN_PROBE, 1, 3, EnumCreatureType.monster, biomes);
 		registerEntity(EntityVampireLord.class, REFERENCE.ENTITY.VAMPIRE_LORD_NAME, BALANCE.VAMPIRE_LORD_SPAWN_PROBE, 1, 1, EnumCreatureType.monster, ModBiomes.biomeVampireForest);
 		registerEntity(EntitySaveableVampireMinion.class, REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME, false);

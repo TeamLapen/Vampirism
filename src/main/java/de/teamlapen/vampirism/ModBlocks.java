@@ -3,6 +3,7 @@ package de.teamlapen.vampirism;
 import de.teamlapen.vampirism.block.*;
 import de.teamlapen.vampirism.item.ItemMetaBlock;
 import de.teamlapen.vampirism.tileEntity.*;
+import net.minecraft.block.BlockStairs;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.init.Blocks;
@@ -30,6 +31,10 @@ public class ModBlocks {
 	public final static BlockCoffin coffin = new BlockCoffin();
 	public final static BlockTemplateGenerator templateGenerator = new BlockTemplateGenerator();
 	public final static BlockCastle castleBlock = new BlockCastle();
+	public final static BlockCastleSlab doubleCastleSlab = new BlockCastleSlab(true);
+	public final static BlockCastleSlab castleSlab = new BlockCastleSlab(false);
+	public final static BlockStairs castleStairsPurple = new BlockCastleStairs(castleBlock,0);
+	public final static BlockStairs castleStairsDark = new BlockCastleStairs(castleBlock,1);
 	// Flowers
 	public final static VampireFlower vampireFlower = new VampireFlower();
 	public static void init() {
@@ -42,6 +47,10 @@ public class ModBlocks {
 		GameRegistry.registerBlock(churchAltar, BlockChurchAltar.name);
 		GameRegistry.registerBlock(coffin, BlockCoffin.name);
 		GameRegistry.registerBlock(castleBlock, ItemMetaBlock.class,BlockCastle.name);
+		GameRegistry.registerBlock(castleSlab,null,BlockCastleSlab.name);
+		GameRegistry.registerBlock(doubleCastleSlab,null,BlockCastleSlab.doubleName);
+		GameRegistry.registerBlock(castleStairsDark,BlockCastleStairs.name+"_dark");
+		GameRegistry.registerBlock(castleStairsPurple,BlockCastleStairs.name+"_purple");
 		GameRegistry.registerTileEntity(TileEntityBloodAltar1.class, "TileEntityBloodAltar");
 		GameRegistry.registerTileEntity(TileEntityBloodAltar2.class, "TileEntityBloodAltarTier2");
 		// GameRegistry.registerTileEntity(TileEntityBloodAltarTier3.class, "TileEntityBloodAltarTier3");

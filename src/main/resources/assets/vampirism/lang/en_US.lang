@@ -36,6 +36,8 @@ block.vampirism.cursedEarth.name=Cursed Earth
 block.vampirism.vampireOrchid.name=Vampire Orchid
 block.vampirism.blockCoffin.name=Coffin
 block.vampirism.castleBlock.name=Castle Block
+block.vampirism.castleSlab.name=Castle Slab
+block.vampirism.castleStairs.name=Castle Stairs
 
 #GUI
 gui.vampirism.revertback.head=Revert back to normal human

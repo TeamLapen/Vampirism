@@ -89,10 +89,13 @@ public class WorldGenVampirism implements IWorldGenerator {
 		switch (world.provider.dimensionId) {
 		case -1:
 			generateNether(world, random, chunkX, chunkZ);
+			break;
 		case 0:
 			generateSurface(world, random, chunkX, chunkZ);
+			break;
 		case 1:
 			generateEnd(world, random, chunkX, chunkZ);
+			break;
 		}
 
 	}

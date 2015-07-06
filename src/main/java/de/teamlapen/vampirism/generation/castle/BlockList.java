@@ -12,6 +12,7 @@ import java.util.List;
 
 /**
  * Holds positions for a single block type
+ * All positions are relative to the block with the lowest x and z values within a chunk and at ground height
  * @author Maxanier
  */
 public class BlockList {
@@ -26,6 +27,12 @@ public class BlockList {
 		this.meta=meta;
 	}
 
+	/**
+	 * Add a position for this block type.
+	 * @param x
+	 * @param y
+	 * @param z
+	 */
 	public void addPosition(int x,int y,int z){
 		blockPositions.add(new BlockPosition(x,y,z));
 	}
@@ -34,11 +41,19 @@ public class BlockList {
 		return blockPositions;
 	}
 
+	/**
+	 *
+	 * @param rotation
+	 * @return The metadata of this block rotated by the given rotation
+	 */
 	public int getBlockMetaForRotation(int rotation){
 		if(rotation>3)rotation=0;
 		return meta[rotation];
 	}
 
+	/**
+	 * Simple class to hold relative x,y,z positions
+	 */
 	public static class BlockPosition {
 		public final int x,y,z;
 
@@ -49,11 +64,17 @@ public class BlockList {
 		}
 	}
 
+	/**
+	 * Converts the block instance to its string id
+	 */
 	public void prepareForSave(){
 		blockId=getPairedIdForBlock(block);
 		block=null;
 	}
 
+	/**
+	 * Converts the saved block id string back to an instance of the block
+	 */
 	public void finishLoad(){
 		block=getBlockForString(blockId);
 
@@ -64,6 +85,11 @@ public class BlockList {
 		blockId=null;
 	}
 
+	/**
+	 *
+	 * @param block
+	 * @return The unique id for the given block
+	 */
 	public static String getPairedIdForBlock(Block block)
 	{
 		GameRegistry.UniqueIdentifier un = GameRegistry.findUniqueIdentifierFor(block);
@@ -77,6 +103,11 @@ public class BlockList {
 		return name;
 	}
 
+	/**
+	 *
+	 * @param str
+	 * @return The block corresponding to the given unique id
+	 */
 	public static Block getBlockForString(String str)
 	{
 		String[] parts = str.split(":");
@@ -85,6 +116,12 @@ public class BlockList {
 		return GameRegistry.findBlock(modId, name);
 	}
 
+	/**
+	 * Checks if this BlockList represents the given blocktype
+	 * @param b
+	 * @param meta
+	 * @return
+	 */
 	public boolean equals(Block b,int[] meta){
 		return b.equals(block)&& Arrays.equals(this.meta,meta);
 	}

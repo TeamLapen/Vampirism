@@ -18,7 +18,9 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 /**
- * Created by Max on 01.07.2015.
+ * World generator for vampire castles in vampire biomes.
+ * Manages finding, optimizing, pregenerating and generating of the castle (-position)
+ * @author Maxanier
  */
 public class CastleGenerator extends WorldGenerator {
 
@@ -35,6 +37,7 @@ public class CastleGenerator extends WorldGenerator {
 		biomes.add(ModBiomes.biomeVampireForest);
 	}
 
+
 	public void checkBiome(World world,int chunkX, int chunkZ,Random rnd){
 		CastlePositionData data=CastlePositionData.get(world);
 		if(!data.checked){
@@ -44,13 +47,11 @@ public class CastleGenerator extends WorldGenerator {
 				ListIterator<CastlePositionData.Position> iterator = data.positions.listIterator();
 				while(iterator.hasNext()){
 					CastlePositionData.Position pos=iterator.next();
-					Logger.d(TAG,"Preprocessing position %s",pos);
 					CastlePositionData.Position pos2=this.optimizePosition(pos, world, rnd);
 					if(!pos2.equals(pos)){
 						pos=pos2;
 						iterator.set(pos2);
 					}
-					Logger.d(TAG,"Finished preprocessing position");
 				}
 
 			}
@@ -65,7 +66,6 @@ public class CastleGenerator extends WorldGenerator {
 						data.markDirty();
 					}
 					String s=p.getTileAt(chunkX - p.chunkXPos, chunkZ - p.chunkZPos);
-					Logger.d(TAG,"Found tile %s for %d %d",s,chunkX,chunkZ);
 					String[] param=s.split(",");
 					int height=p.getHeight();
 					if(height==-1){
@@ -100,6 +100,13 @@ public class CastleGenerator extends WorldGenerator {
 			}
 		}
 	}
+
+	/**
+	 * Looks for positions in the world
+	 * @param world
+	 * @param rnd
+	 * @return
+	 */
 	private List<CastlePositionData.Position> findPositions(World world,Random rnd){
 			Logger.d(TAG,"Looking for Positions");
 			double phy = rnd.nextDouble() * Math.PI * 2.0D;
@@ -134,10 +141,14 @@ public class CastleGenerator extends WorldGenerator {
 		return foundPos;
 	}
 
-
 	/**
-		Finding the largest area with this algorithm http://www.geeksforgeeks.org/maximum-size-sub-matrix-with-all-1s-in-a-binary-matrix/
-	**/
+	 * Optimizes the given position by choosing a large area only containing the vampire biome, setting a useable size and adjusting the position
+	 * Finds the largest area with this algorithm http://www.geeksforgeeks.org/maximum-size-sub-matrix-with-all-1s-in-a-binary-matrix/
+	 * @param position
+	 * @param world
+	 * @param rnd
+	 * @return
+	 */
 	private CastlePositionData.Position optimizePosition(CastlePositionData.Position position, World world, Random rnd){
 		Logger.d(TAG,"Optimizing Position");
 		final int TEST_SIZE=10;
@@ -190,7 +201,6 @@ public class CastleGenerator extends WorldGenerator {
 			Logger.d(TAG,"Found fitting area with size %d at coords %d %d (%d %d)",max[0],lowcx,lowcz,highcx,highcz);
 			int sx=MIN_SIZE+rnd.nextInt(Math.min(max[0],MAX_SIZE)-MIN_SIZE+1);
 			int sz=MIN_SIZE+rnd.nextInt(Math.min(max[0],MAX_SIZE)-MIN_SIZE+1);
-			Logger.d(TAG, "Using size %sx%s", sx, sz);
 			CastlePositionData.Position p=new CastlePositionData.Position(lowcx+((max[0]-sx)/2),lowcz+((max[0]-sz)/2));
 			p.setSize(sx, sz);
 			return p;
@@ -198,6 +208,12 @@ public class CastleGenerator extends WorldGenerator {
 		return position;
 	}
 
+	/**
+	 * Pregenerates the given position by (randomly) selecting tiles for it
+	 * @param position
+	 * @param world
+	 * @param rnd
+	 */
 	private void preGeneratePosition(CastlePositionData.Position position,World world,Random rnd){
 
 		if(position.hasSize()){
@@ -228,10 +244,10 @@ public class CastleGenerator extends WorldGenerator {
 					tiles[x][z]+=getRandomHouse(rnd);
 				}
 			}
-			tiles[sx/2][sz/2]="0,flatDirt";
-			tiles[sx/2+1][sz/2]="0,flatDirt,0,castlell";
-			tiles[sx/2+1][sz/2+1]="0,flatDirt";
-			tiles[sx/2][sz/2+1]="0,flatDirt";
+			tiles[sx/2][sz/2]="0,flatDirt,0,castlelr";
+			tiles[sx/2-1][sz/2]="0,flatDirt,0,castlell";
+			tiles[sx/2-1][sz/2-1]="0,flatDirt,0,castleul";
+			tiles[sx/2][sz/2-1]="0,flatDirt,0,castleur";
 
 
 			position.setTiles(tiles);
@@ -240,12 +256,12 @@ public class CastleGenerator extends WorldGenerator {
 
 	private String getRandomHouse(Random rnd){
 		int dir=rnd.nextInt(4);
-		int type=rnd.nextInt(6);
+		int type=rnd.nextInt(4);
 		String s;
 		switch (type){
 		case 0:s="house1";break;
 		case 1:s="house2";break;
-		case 3:s="stables";break;
+		case 2:s="stables";break;
 		default:return "";
 		}
 		return ","+dir+","+s;
@@ -269,6 +285,9 @@ public class CastleGenerator extends WorldGenerator {
 		}
 	}
 
+	/**
+	 * Loads all tiles from the jar
+	 */
 	public static void loadTiles(){
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		tileMap=new HashMap<String,BuildingTile>();
@@ -285,7 +304,20 @@ public class CastleGenerator extends WorldGenerator {
 		if(tile!=null)tileMap.put("stables",tile);
 		tile=loadTile("castlell",gson);
 		if(tile!=null)tileMap.put("castlell",tile);
+		tile=loadTile("castlelr",gson);
+		if(tile!=null)tileMap.put("castlelr",tile);
+		tile=loadTile("castleul",gson);
+		if(tile!=null)tileMap.put("castleul",tile);
+		tile=loadTile("castleur",gson);
+		if(tile!=null)tileMap.put("castleur",tile);
 	}
+
+	/**
+	 * Loads a tile's json from the mod jar
+	 * @param name
+	 * @param gson
+	 * @return
+	 */
 	private static BuildingTile loadTile(String name,Gson gson){
 		BuildingTile tile= null;
 		try {
@@ -301,6 +333,15 @@ public class CastleGenerator extends WorldGenerator {
 		return tile;
 	}
 
+	/**
+	 * Unused
+	 * @param p_76484_1_
+	 * @param p_76484_2_
+	 * @param p_76484_3_
+	 * @param p_76484_4_
+	 * @param p_76484_5_
+	 * @return
+	 */
 	@Override public boolean generate(World p_76484_1_, Random p_76484_2_, int p_76484_3_, int p_76484_4_, int p_76484_5_) {
 		return false;
 	}

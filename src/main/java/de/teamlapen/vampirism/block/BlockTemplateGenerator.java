@@ -11,7 +11,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 /**
- * Created by Max on 03.07.2015.
+ * Simple block for {@link TileEntityTemplateGenerator}
+ *
  */
 public class BlockTemplateGenerator extends BlockContainer {
 	public static final String name="templateGenerator";

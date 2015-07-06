@@ -11,7 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by Max on 04.07.2015.
+ * Manages and stores the position data for a world
+ * @author Maxanier
  */
 public class CastlePositionData extends WorldSavedData{
 
@@ -33,10 +34,18 @@ public class CastlePositionData extends WorldSavedData{
 		fullyGeneratedPositions=new LinkedList<Position>();
 	}
 
+	/**
+	 * @return Whether the world was already checked for castle positions
+	 */
+	public boolean isChecked(){
+		return checked;
+	}
 
+	public List<Position> getPositions(){
+		return positions;
+	}
 
 	@Override public void readFromNBT(NBTTagCompound nbt) {
-		Logger.d("test", "Loading from nbt");
 		checked=nbt.getBoolean("checked");
 		if(checked){
 			if(nbt.hasKey("positions")){
@@ -75,6 +84,9 @@ public class CastlePositionData extends WorldSavedData{
 		}
 	}
 
+	/**
+	 * Holds a castles positions information including size and tiles
+	 */
 	public static class Position extends ChunkCoordIntPair {
 		private int sizeX;
 		private int sizeZ;
@@ -134,6 +146,12 @@ public class CastlePositionData extends WorldSavedData{
 			return generated==tileCount;
 		}
 
+		/**
+		 * Checks if the given chunk coordinates are within this position
+		 * @param cx
+		 * @param cz
+		 * @return
+		 */
 		public boolean isChunkInPosition(int cx,int cz){
 			if(!hasSize())return false;
 			if(cx>=this.chunkXPos&&cx<this.chunkXPos+sizeX){
