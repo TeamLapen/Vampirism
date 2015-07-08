@@ -98,7 +98,7 @@ public class VillageVampire {
 	}
 
 	private void makeAgressive(Village v) {
-		Logger.d(TAG, "Making agrressive");
+		Logger.d(TAG, "Making agressive");
 		agressive = true;
 		for (EntityVillager e : getVillager(v)) {
 			if (!VampireMob.get(e).isVampire() && world.rand.nextInt(4) == 0) {

@@ -25,7 +25,6 @@ public class TileEntityCoffin extends TileEntity {
 	}
 
 	public void changeColor(int color) {
-		Logger.i("TECoffin", "Changecolor called, prev=%s, new=%s\nTile=%s", this.color, color, this.toString());
 		this.color = color;
 		needsAnimation = false;
 		markDirty();

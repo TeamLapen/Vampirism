@@ -87,7 +87,6 @@ public class TileEntityTemplateGenerator extends TileEntity {
 		List<EntityPainting> paintings=new ArrayList<EntityPainting>();
 		chunk.getEntitiesOfTypeWithinAAAB(EntityPainting.class, AxisAlignedBB.getBoundingBox(Integer.MIN_VALUE, this.yCoord + minY, Integer.MIN_VALUE, Integer.MAX_VALUE, worldObj.getActualHeight(), Integer.MAX_VALUE), paintings, null);
 		for(EntityPainting p:paintings){
-			Logger.d("test","saving painting");
 			Extra extra=new Extra(Extra.TYPE.PAINTING,new BlockList.BlockPosition(p.field_146063_b-(chunk.xPosition<<4),p.field_146064_c-this.yCoord,p.field_146062_d-(chunk.zPosition<<4)));
 			extra.retrieveExtra(p);
 			extraList.add(extra);

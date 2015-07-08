@@ -688,7 +688,6 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	}
 
 	public void onChangedDimension(int from, int to) {
-		Logger.d(TAG, "Changed from " + from + " to " + to);
 		minionHandler.teleportMinionsToLord();
 	}
 
@@ -783,12 +782,10 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	}
 
 	public void onPlayerLoggedIn() {
-		Logger.d(TAG, "LoggedIn");
 		minionHandler.addLoadedMinions();
 	}
 
 	public void onPlayerLoggedOut() {
-		Logger.d(TAG, "LoggedOut");
 		minionHandler.killMinions(true);
 	}
 

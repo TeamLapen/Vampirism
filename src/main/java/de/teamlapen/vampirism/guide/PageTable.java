@@ -53,7 +53,6 @@ public class PageTable extends PageBase {
         		int mw=width[i]*charWidth;
         		int aw=fontRenderer.getStringWidth(l[i]);
         		int dw=(mw-aw)/2;
-        		Logger.i("te", "%s", dw);
         		fontRenderer.drawString(l[i], x+dw, y, 0);
         		x+=mw;
         	}

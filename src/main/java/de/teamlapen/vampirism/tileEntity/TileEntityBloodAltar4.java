@@ -102,23 +102,23 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 
 		if (blood > 0) {
 			if (stackPureBlood == null || stackPureBlood.stackSize < blood) {
-				Logger.i(TAG, "Pure blood bottles are not present");
+				Logger.t(TAG, "Pure blood bottles are not present");
 				return false;
 			}
 			if (stackPureBlood.getItemDamage() < bloodMeta) {
-				Logger.i(TAG, "Pure blood is of the wrong level (" + stackPureBlood.getItemDamage() + "/" + bloodMeta + ")");
+				Logger.t(TAG, "Pure blood is of the wrong level (" + stackPureBlood.getItemDamage() + "/" + bloodMeta + ")");
 				return false;
 			}
 		}
 		if (heart > 0) {
 			if (stackHeart == null || stackHeart.stackSize < heart) {
-				Logger.i(TAG, "Hearts are not present");
+				Logger.t(TAG, "Hearts are not present");
 				return false;
 			}
 		}
 		if (par3 > 0) {
 			if (stack3 == null || stack3.stackSize < par3) {
-				Logger.i(TAG, "Item 3 is not present");
+				Logger.t(TAG, "Item 3 is not present");
 				return false;
 			}
 		}
@@ -147,7 +147,7 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 	 * @return
 	 */
 	private Block checkBlocks(int lx, int ly, int lz, int hx, int hy, int hz, int[][][] structure) {
-		Logger.i(TAG, "0.length: " + structure.length + ":" + structure[0].length + ":" + structure[0][0].length);
+		Logger.t(TAG, "0.length: " + structure.length + ":" + structure[0].length + ":" + structure[0][0].length);
 		Block blocktype = null;
 		for (int x = lx; x <= hx; x++) {
 			for (int z = lz; z <= hz; z++) {
@@ -164,25 +164,25 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 					}
 					if (type == 2) {
 						if (!(b instanceof BlockBloodAltar4Tip)) {
-							Logger.i(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
+							Logger.t(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
 							return null;
 						}
 					}
 					if (type == 3) {
 						if (!(b instanceof BlockBloodAltar4)) {
-							Logger.i(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
+							Logger.t(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
 							return null;
 						}
 					}
 					if (type == 4) {
 						if (!(b instanceof BlockBed)) {
-							Logger.i(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
+							Logger.t(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
 							return null;
 						}
 					}
 					if (type == 1) {
 						if (blocktype != null && !blocktype.equals(b)) {
-							Logger.i(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
+							Logger.t(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
 							return null;
 						}
 						blocktype = b;

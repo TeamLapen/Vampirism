@@ -33,7 +33,7 @@ public class CastleGenerator extends WorldGenerator {
 	private static HashMap<String,BuildingTile> tileMap;
 
 	public CastleGenerator() {
-		this.biomes = new ArrayList<>();
+		this.biomes = new ArrayList();
 		biomes.add(ModBiomes.biomeVampireForest);
 	}
 

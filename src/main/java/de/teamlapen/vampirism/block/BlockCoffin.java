@@ -71,7 +71,6 @@ public class BlockCoffin extends BasicBlockContainer {
 
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par4, float f1, float f2, float f3) {
-		Logger.d("BlockCoffin", String.format("Coffin activated, x=%s, y=%s, z=%s, remote=%s, meta=%s", x, y, z, world.isRemote, world.getBlockMetadata(x, y, z)));
 		if (world.isRemote) {
 			return true;
 		} else {
@@ -83,8 +82,6 @@ public class BlockCoffin extends BasicBlockContainer {
 				z = te.otherZ;
 			}
 			if (player.isSneaking()) {
-				Logger.d("BlockCoffin", String.format("Shift right click at x=%s, y=%s, z=%s", x, y, z));
-				Logger.d("BlockCoffin", String.format("itemInUse: %s", player.getItemInUse() == null));
 				return false;
 			}
 
@@ -99,7 +96,6 @@ public class BlockCoffin extends BasicBlockContainer {
 				if (enumstatus == EntityPlayer.EnumStatus.OK) {
 					setCoffinOccupied(world, x, y, z, player, true);
 					((TileEntityCoffin) world.getTileEntity(x, y, z)).markDirty();
-					Logger.d("BlockCoffin", String.format("Letting player sleep in coffin, x=%s, y=%s, z=%s, remote=%s, meta=%s", x, y, z, world.isRemote, world.getBlockMetadata(x, y, z)));
 					return true;
 				} else {
 					if (enumstatus == EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW) {

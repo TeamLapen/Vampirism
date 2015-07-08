@@ -49,6 +49,13 @@ public class Logger {
 		log(Level.INFO, tag, format, data);
 	}
 
+	/**
+	 * Should be used for test log calls so they can be easily found and removed
+	 * @param format
+	 * @param data
+	 */
+	public static void t(String format,Object... data){log(Level.INFO,"Test",format,data);};
+
 	private static void log(Level level, String tag, String format, Object... data) {
 		if (tag == null) {
 			tag = getLogLocation(stackInfo.fillInStackTrace());

@@ -21,7 +21,7 @@ public class BiomeRegistrant {
 
 	public static void addBiome(BiomeGenBase biome) {
 		BiomeManager.addVillageBiome(biome, true);
-		Logger.d("BiomeRegistrant", "Added %s (ID:%d) as a village biome.", biome.biomeName, biome.biomeID);
+//		Logger.d("BiomeRegistrant", "Added %s (ID:%d) as a village biome.", biome.biomeName, biome.biomeID);
 	}
 
 	public static void addBiomeById(int id) {
@@ -82,7 +82,7 @@ public class BiomeRegistrant {
 
 	public static void removeBiome(BiomeGenBase biome) {
 		BiomeManager.removeVillageBiome(biome);
-		Logger.d("BiomeRegistrant", "Removed %s (ID:%d) from village biomes.", biome.biomeName, biome.biomeID);
+//		Logger.d("BiomeRegistrant", "Removed %s (ID:%d) from village biomes.", biome.biomeName, biome.biomeID);
 	}
 
 	public static void removeBiomeById(int id) {

@@ -84,7 +84,7 @@ public class TeleportSkill extends DefaultSkill {
 			} else {
 			}
 		} else {
-			Logger.i("debug", "Block does not exist");
+			Logger.t("Block does not exist");
 		}
 
 		if (!flag) {

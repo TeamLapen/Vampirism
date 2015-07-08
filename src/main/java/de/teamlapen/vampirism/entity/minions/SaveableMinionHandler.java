@@ -192,7 +192,7 @@ public class SaveableMinionHandler {
 			Logger.e(TAG, "Trying to register a non saveable minion %s at minion handler %s. This SHOULD NOT happen", m, this);
 		} else {
 			minions.add(m);
-			Logger.i("test", "register minion %s", m);
+			Logger.t("register minion %s", m);
 		}
 	}
 

@@ -35,13 +35,11 @@ public class ItemCoffin extends BasicItem {
 
 		if (world.isAirBlock(x, y, z) && world.isAirBlock(x + shiftArray[direction][0], y + shiftArray[direction][1], z + shiftArray[direction][2])) {
 			if (!world.setBlock(x, y, z, ModBlocks.coffin, direction | -8, 3))
-				Logger.e(TAG, "Primary coffin block placement failed");
+				Logger.w(TAG, "Primary coffin block placement failed");
 			else {
-				Logger.i(TAG, "Primary coffin block placed");
 				if (!world.setBlock(x + shiftArray[direction][0], y + shiftArray[direction][1], z + shiftArray[direction][2], ModBlocks.coffin, 0, 3))
-					Logger.e(TAG, "Secondary coffin block placement failed");
+					Logger.w(TAG, "Secondary coffin block placement failed");
 				else {
-					Logger.i(TAG, "Secondary block placed");
 				}
 				TileEntityCoffin tePrim = (TileEntityCoffin) world.getTileEntity(x, y, z);
 				TileEntityCoffin teSec = (TileEntityCoffin) world.getTileEntity(x + shiftArray[direction][0], y + shiftArray[direction][1], z + shiftArray[direction][2]);
