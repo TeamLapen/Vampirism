@@ -94,7 +94,7 @@ public class VampirismGuide{
 		ArrayList<IPage> altar = new ArrayList<IPage>();
 		altar.add(new PageLocText(locAndFormat("guide.vampirism.itemsAndBlocks.altars.altar2.text",TileEntityBloodAltar2.MIN_LEVEL,TileEntityBloodAltar2.MAX_LEVEL)));
 		altar.add(new PageIRecipe(getRecipe(ModBlocks.bloodAltar2)));
-		altar.add(new PageUnlocText(locAndFormat("guide.vampirism.itemsAndBlocks.altars.altar4.text",loc(ModBlocks.bloodAltar4.getUnlocalizedName()),TileEntityBloodAltar4.MIN_LEVEL)));
+		altar.add(new PageUnlocText(locAndFormat("guide.vampirism.itemsAndBlocks.altars.altar4.text",loc(ModBlocks.bloodAltar4.getUnlocalizedName()+".name"),TileEntityBloodAltar4.MIN_LEVEL)));
 		altar.add(new PageIRecipe(getRecipe(ModBlocks.bloodAltar4)));
 		altar.add(new PageIRecipe(getRecipe(ModBlocks.bloodAltar4Tip)));
 		entries.add(new EntryUniText(altar,"guide.vampirism.itemsAndBlocks.altars.title"));

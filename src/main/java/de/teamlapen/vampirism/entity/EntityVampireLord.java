@@ -199,7 +199,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 				m = (IMinion) Helper.spawnEntityBehindEntity(this.getAttackTarget(), REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME);
 			}
 			if (m == null) {
-				m = (IMinion) Helper.spawnEntityInWorld(worldObj, this.boundingBox.expand(19, 14, 19), REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME, 3);
+				m = (IMinion) Helper.spawnEntityInWorld(worldObj, this.boundingBox.expand(19, 4, 19), REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME, 3);
 			}
 			if (m != null) {
 				m.setLord(this);
