@@ -2,8 +2,10 @@ package de.teamlapen.vampirism.client.model;
 
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.Entity;
 import de.teamlapen.vampirism.util.Logger;
+import org.lwjgl.opengl.GL11;
 
 /**
  * 
@@ -1284,11 +1286,14 @@ public class ModelBloodAltar2 extends ModelBase {
 
 	public void renderSphere(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
 		Base.render(f5);
+		GL11.glEnable(GL11.GL_BLEND);
+		OpenGlHelper.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
 		for (ModelRenderer[] i : sphere)
 			if (i != null)
 				for (ModelRenderer j : i)
 					if (j != null)
 						j.render(f5);
+		GL11.glDisable(GL11.GL_BLEND);
 	}
 
 	public void setBloodLevel(int level) {

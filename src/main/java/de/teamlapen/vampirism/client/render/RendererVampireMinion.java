@@ -65,7 +65,7 @@ public class RendererVampireMinion extends RenderBiped {
 			GL11.glColor4f(1F, 1F, 1F, size);
 			this.bindTexture(this.getVampireTexture(m.getOldVampireTexture()));
 			this.mainModel.render(p_77036_1_, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
-
+			GL11.glDisable(GL11.GL_BLEND);
 		}
 	}
 
