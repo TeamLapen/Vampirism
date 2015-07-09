@@ -50,12 +50,8 @@ public class RendererBloodAltar2 extends TileEntitySpecialRenderer {
 		adjustRotatePivotViaMeta(te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 		model.render(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
-		GL11.glDisable(GL11.GL_BLEND);
-		Tessellator.instance.setBrightness(5);
-		Tessellator.instance.setColorOpaque(0, 0, 0);
 		model.renderBase(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		model.renderBlood(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
-		GL11.glEnable(GL11.GL_BLEND);
 		model.renderSphere(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		GL11.glPopMatrix();
 		GL11.glPopMatrix();
