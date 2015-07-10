@@ -1,5 +1,9 @@
 package de.teamlapen.vampirism.network;
 
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.client.render.particle.DarkLordParticle;
+import de.teamlapen.vampirism.client.render.particle.ParticleHandler;
+import de.teamlapen.vampirism.util.TickRunnable;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
@@ -27,6 +31,8 @@ public class SpawnCustomParticlePacket implements IMessage {
 
 		@Override
 		public IMessage onMessage(SpawnCustomParticlePacket message, MessageContext ctx) {
+			WorldClient world = Minecraft.getMinecraft().theWorld;
+			if(world==null)return null;
 			try {
 				switch (message.data.getInteger("type")) {
 				case 0:
@@ -42,11 +48,33 @@ public class SpawnCustomParticlePacket implements IMessage {
 					}
 					break;
 				case 2:
-					WorldClient w = Minecraft.getMinecraft().theWorld;
-					Entity e = w.getEntityByID(message.data.getInteger("id"));
+					Entity e = world.getEntityByID(message.data.getInteger("id"));
 					if (e != null && e instanceof EntityLivingBase) {
 						Helper.spawnParticlesAroundEntity((EntityLivingBase) e, message.data.getString("particle"), message.data.getDouble("distance"), message.amount);
 					}
+					break;
+				case 3:
+					final Entity entity = world.getEntityByID(message.data.getInteger("id"));
+					if(entity==null)return null;
+					final boolean thePlayer=entity.equals(Minecraft.getMinecraft().thePlayer);
+					TickRunnable run=new TickRunnable() {
+						int tick=0;
+						@Override public boolean shouldContinue() {
+							return !entity.isDead&&tick<100;
+						}
+
+						@Override public void onTick() {
+							if(++tick%5==0) {
+
+								for (int i = 0; i < message.amount; i++) {
+									ParticleHandler.instance().addEffect(new DarkLordParticle(world, entity,thePlayer));
+								}
+							}
+
+
+						}
+					};
+					VampirismMod.proxy.addTickRunnable(run);
 					break;
 
 				default:
@@ -88,6 +116,10 @@ public class SpawnCustomParticlePacket implements IMessage {
 		this.data.setDouble("posY", posY);
 		this.data.setDouble("posZ", posZ);
 		this.data.setInteger("amount", amount);
+	}
+
+	public SpawnCustomParticlePacket(int type, double posX, double posY, double posZ, int amount){
+		this(type, posX, posY, posZ, amount,new NBTTagCompound());
 	}
 
 	@Override

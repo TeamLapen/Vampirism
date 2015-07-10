@@ -2,10 +2,13 @@ package de.teamlapen.vampirism;
 
 import java.util.List;
 
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import de.teamlapen.vampirism.entity.minions.EntityRemoteVampireMinion;
 import de.teamlapen.vampirism.entity.minions.EntitySaveableVampireMinion;
@@ -85,6 +88,19 @@ public class TestCommand implements ICommand {
 						sendMessage(sender, "You are now a vampire lord");
 					}
 
+					return;
+				}
+				if("part".equals(param[0])){
+					if(param.length<2)return;
+					int id=Integer.parseInt(param[1]);
+					int amount=10;
+					if(param.length>2){
+						amount=Integer.parseInt(param[2]);
+					}
+					NBTTagCompound nbt=new NBTTagCompound();
+					nbt.setInteger("id",p.getEntityId());
+					IMessage m=new SpawnCustomParticlePacket(id,p.posX,p.posY,p.posZ,amount,nbt);
+					VampirismMod.modChannel.sendToAll(m);
 					return;
 				}
 				if("entity".equals(param[0])){

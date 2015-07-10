@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.proxy;
 
+import cpw.mods.fml.common.gameevent.TickEvent;
+import de.teamlapen.vampirism.util.TickRunnable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
@@ -29,7 +31,14 @@ public class ServerProxy extends CommonProxy {
 
 	@Override
 	public void onClientTick(ClientTickEvent event) {
-		// TODO Auto-generated method stub
+
+	}
+
+	@Override public void addTickRunnable(TickRunnable run) {
+		super.addTickRunnable(run,false);
+	}
+
+	@Override public void onServerTick(TickEvent.ServerTickEvent event) {
 
 	}
 

@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.proxy;
 
 import de.teamlapen.vampirism.Configs;
+import de.teamlapen.vampirism.client.render.particle.ParticleHandler;
+import de.teamlapen.vampirism.util.TickRunnable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.EntityRenderer;
@@ -73,6 +75,14 @@ public class ClientProxy extends CommonProxy {
 	private final static String TAG = "ClientProxy";
 	private static final ResourceLocation saturation1 = new ResourceLocation(REFERENCE.MODID + ":shaders/saturation1.json");
 	public static final ResourceLocation steveTextures = new ResourceLocation("textures/entity/steve.png");
+
+	@Override public void onServerTick(TickEvent.ServerTickEvent event) {
+
+	}
+
+	@Override public void addTickRunnable(TickRunnable run) {
+		super.addTickRunnable(run,true);
+	}
 
 	@Override
 	public ResourceLocation checkVampireTexture(Entity entity, ResourceLocation loc) {
@@ -202,8 +212,10 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForge.EVENT_BUS.register(new VampireHudOverlay(Minecraft.getMinecraft()));
 		Object renderHandler = new RenderHandler(Minecraft.getMinecraft());
 		MinecraftForge.EVENT_BUS.register(renderHandler);
+		MinecraftForge.EVENT_BUS.register(ParticleHandler.instance());
 		FMLCommonHandler.instance().bus().register(renderHandler);
 		FMLCommonHandler.instance().bus().register(new KeyInputEventHandler());
+		FMLCommonHandler.instance().bus().register(ParticleHandler.instance());
 	}
 
 	@Override

@@ -1,7 +1,10 @@
 package de.teamlapen.vampirism.proxy;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
+import de.teamlapen.vampirism.util.TickRunnable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
@@ -42,6 +45,8 @@ import de.teamlapen.vampirism.util.REFERENCE;
 public abstract class CommonProxy implements IProxy {
 
 	private int modEntityId = 0;
+	private List<TickRunnable> clientRunnables=new ArrayList<TickRunnable>();
+	private List<TickRunnable> serverRunnables = new ArrayList<TickRunnable>();
 
 	private int calculateColor(String n) {
 		int hash = n.hashCode();
@@ -51,30 +56,70 @@ public abstract class CommonProxy implements IProxy {
 		return hash;
 	}
 
+
 	@Override
-	public void onServerTick(TickEvent.ServerTickEvent event) {
-		WorldServer server = MinecraftServer.getServer().worldServerForDimension(0);
+	public void onTick(TickEvent event){
+		if(event instanceof TickEvent.ServerTickEvent){
+			WorldServer server = MinecraftServer.getServer().worldServerForDimension(0);
 
-		if (server.areAllPlayersAsleep()&&event.phase.equals(TickEvent.Phase.START)) {
-			Logger.i("ServerProxy", "All players are asleep");
-			if (server.playerEntities.size() > 0) {// Should always be the case, but better check
-				if (VampirePlayer.get(((EntityPlayer) server.playerEntities.get(0))).sleepingCoffin) {
-					Logger.i("CommonProxy", "All players are sleeping in a coffin ->waking them up");
-					// Set time to next night
-					long i = server.getWorldTime() + 24000L;
-					server.setWorldTime(i - i % 24000L - 11000L);
+			if (server.areAllPlayersAsleep()&&event.phase.equals(TickEvent.Phase.START)) {
+				Logger.i("ServerProxy", "All players are asleep");
+				if (server.playerEntities.size() > 0) {// Should always be the case, but better check
+					if (VampirePlayer.get(((EntityPlayer) server.playerEntities.get(0))).sleepingCoffin) {
+						Logger.i("CommonProxy", "All players are sleeping in a coffin ->waking them up");
+						// Set time to next night
+						long i = server.getWorldTime() + 24000L;
+						server.setWorldTime(i - i % 24000L - 11000L);
 
-					wakeAllPlayers(server);
-				} else {
-					Logger.i("CommonProxy", "All players are sleeping in a bed");
+						wakeAllPlayers(server);
+					} else {
+						Logger.i("CommonProxy", "All players are sleeping in a bed");
+					}
 				}
+
+			}
+			if(VampirismMod.potionFail&&event.phase.equals(TickEvent.Phase.END)&&MinecraftServer.getServer().getTickCounter()%200==0){
+				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("There was a SEVERE error adding Vampirism's potions, please check and change the configured IDs of "+ModPotion.checkPotions()));
 			}
 
+			Iterator<TickRunnable> iterator=serverRunnables.iterator();
+			while(iterator.hasNext()){
+				TickRunnable run=iterator.next();
+				if(!run.shouldContinue()){
+					iterator.remove();
+				}
+				else{
+					run.onTick();
+				}
+			}
+			onServerTick((TickEvent.ServerTickEvent) event);
 		}
-		if(VampirismMod.potionFail&&event.phase.equals(TickEvent.Phase.END)&&MinecraftServer.getServer().getTickCounter()%200==0){
-			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("There was a SEVERE error adding Vampirism's potions, please check and change the configured IDs of "+ModPotion.checkPotions()));
+		else if(event instanceof TickEvent.ClientTickEvent){
+			Iterator<TickRunnable> iterator=clientRunnables.iterator();
+			while(iterator.hasNext()){
+				TickRunnable run=iterator.next();
+				if(!run.shouldContinue()){
+					iterator.remove();
+				}
+				else{
+					run.onTick();
+				}
+			}
+			onClientTick((TickEvent.ClientTickEvent) event);
 		}
 	}
+
+	protected void addTickRunnable(TickRunnable run,boolean client) {
+		List<TickRunnable> list=client?clientRunnables:serverRunnables;
+		if(list.size()>100){
+			Logger.w("CommonProxy","There are over 100 runnables in %s list. Deleting them.",client?"client":"server");
+		}
+		list.add(run);
+	}
+
+	public abstract void onClientTick(TickEvent.ClientTickEvent event);
+
+	public abstract void onServerTick(TickEvent.ServerTickEvent event);
 
 	private void registerEntity(Class<? extends Entity> clazz, String name, boolean useGlobal) {
 

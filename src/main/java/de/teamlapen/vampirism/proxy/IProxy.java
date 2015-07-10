@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.proxy;
 
+import cpw.mods.fml.common.gameevent.TickEvent;
+import de.teamlapen.vampirism.util.TickRunnable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
@@ -26,9 +28,9 @@ public interface IProxy {
 	 */
 	public EntityPlayer getSPPlayer();
 
-	public void onClientTick(ClientTickEvent event);
+	public void onTick(TickEvent event);
 
-	public void onServerTick(ServerTickEvent event);
+	public void addTickRunnable(TickRunnable run);
 
 	/**
 	 * Registeres all entitys

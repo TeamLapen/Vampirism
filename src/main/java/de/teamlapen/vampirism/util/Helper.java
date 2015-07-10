@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -332,6 +333,15 @@ public class Helper {
 
 			return true;
 		}
+	}
+
+	/**
+	 *
+	 * @param ran
+	 * @return Random double between -1 and 1
+	 */
+	public static double rnd1n1(Random ran){
+		return (ran.nextDouble()-0.5D)*2;
 	}
 
 }

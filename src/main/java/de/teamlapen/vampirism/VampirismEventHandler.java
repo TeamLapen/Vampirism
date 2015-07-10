@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism;
 
+import cpw.mods.fml.common.gameevent.TickEvent;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemDye;
@@ -55,8 +56,8 @@ public class VampirismEventHandler {
 	}
 
 	@SubscribeEvent
-	public void onClientTick(ClientTickEvent event) {
-		VampirismMod.proxy.onClientTick(event);
+	public void onClientTick(TickEvent event) {
+		VampirismMod.proxy.onTick(event);
 	}
 
 	@SubscribeEvent
@@ -66,10 +67,6 @@ public class VampirismEventHandler {
 		}
 	}
 
-	@SubscribeEvent
-	public void onServerTick(ServerTickEvent event) {
-		VampirismMod.proxy.onServerTick(event);
-	}
 
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
