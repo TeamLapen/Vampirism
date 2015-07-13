@@ -30,8 +30,8 @@ public class SpawnCustomParticlePacket implements IMessage {
 	public static class Handler implements IMessageHandler<SpawnCustomParticlePacket, IMessage> {
 
 		@Override
-		public IMessage onMessage(SpawnCustomParticlePacket message, MessageContext ctx) {
-			WorldClient world = Minecraft.getMinecraft().theWorld;
+		public IMessage onMessage(final SpawnCustomParticlePacket message, MessageContext ctx) {
+			final WorldClient world = Minecraft.getMinecraft().theWorld;
 			if(world==null)return null;
 			try {
 				switch (message.data.getInteger("type")) {
