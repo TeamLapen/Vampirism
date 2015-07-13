@@ -1,12 +1,17 @@
 package de.teamlapen.vampirism.proxy;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
+import cpw.mods.fml.common.registry.GameRegistry;
+import de.teamlapen.vampirism.item.ItemSpawnEgg;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
@@ -47,10 +52,15 @@ import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.villages.VillageVampireData;
+import net.minecraftforge.oredict.OreDictionary;
 
 public abstract class CommonProxy implements IProxy {
 	
 	private int modEntityId=0;
+	/**
+	 * List of entity names which should be spawnable
+	 */
+	public static final List<String> spawnableEntityNames=new ArrayList<String>();
 
 	@Override
 	public void registerEntitys() {
@@ -72,27 +82,18 @@ public abstract class CommonProxy implements IProxy {
 		registerEntity(EntityDracula.class,REFERENCE.ENTITY.DRACULA_NAME,false);
 		registerEntity(EntityGhost.class,REFERENCE.ENTITY.GHOST_NAME,5,1,2,EnumCreatureType.monster,ModBiomes.biomeVampireForest);
 		registerEntity(EntityBlindingBat.class,REFERENCE.ENTITY.BLINDING_BAT_NAME,false);
+		Item item=new ItemSpawnEgg(spawnableEntityNames);
+		GameRegistry.registerItem(item, ItemSpawnEgg.name);
+		OreDictionary.registerOre("mobEgg", item);
 
 	}
-	private void registerEntity(Class<? extends Entity> clazz,String name,boolean useGlobal){
+	private void registerEntity(Class<? extends Entity> clazz,String name,boolean egg){
 
-		Logger.d("EntityRegister", "Adding "+name+"("+clazz.getSimpleName()+")"+(useGlobal?" with global id":"with mod id"));
-		if(useGlobal){
-			EntityRegistry.registerGlobalEntityID(clazz, name, EntityRegistry.findGlobalUniqueEntityId(),calculateColor(name) ,calculateColor(name+"2"));
+		Logger.d("EntityRegister", "Adding " + name + "(" + clazz.getSimpleName() + ") with mod id %d", modEntityId);
+		EntityRegistry.registerModEntity(clazz, name.replace("vampirism.", ""), modEntityId++, VampirismMod.instance, 80, 1, true);
+		if(egg){
+			spawnableEntityNames.add(name);
 		}
-		else{
-			name=name.replace("vampirism.", "");
-			EntityRegistry.registerModEntity(clazz, name, modEntityId++, VampirismMod.instance, 80, 1, true);
-		}
-
-	}
-	
-	private int calculateColor(String n){
-		int hash=n.hashCode();
-		while(hash>0xFFFFFF){
-			hash=(int)((float)hash/50F);
-		}
-		return hash;
 	}
 	
 	/**

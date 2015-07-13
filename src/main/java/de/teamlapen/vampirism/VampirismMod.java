@@ -83,6 +83,7 @@ public class VampirismMod {
 	@EventHandler
 	public void onServerStart(FMLServerStartingEvent e) {
 		e.registerServerCommand(new TestCommand()); // Keep there until final
+		e.registerServerCommand(new SummonCommand());
 
 	}
 
@@ -98,7 +99,7 @@ public class VampirismMod {
 			inDev=true;
 			Logger.inDev=true;
 		}
-		Configs.init(event.getModConfigurationDirectory(),inDev);
+		Configs.init(event.getModConfigurationDirectory(), inDev);
 		Helper.Obfuscation.fillMap();
 		
 		ModPotion.init();
