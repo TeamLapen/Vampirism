@@ -1,52 +1,51 @@
 package de.teamlapen.vampirism.proxy;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+import com.google.common.base.Predicates;
+import com.google.common.collect.Iterators;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
+import de.teamlapen.vampirism.ModBiomes;
+import de.teamlapen.vampirism.ModPotion;
+import de.teamlapen.vampirism.VampirismEventHandler;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.*;
+import de.teamlapen.vampirism.entity.minions.EntityRemoteVampireMinion;
+import de.teamlapen.vampirism.entity.minions.EntitySaveableVampireMinion;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.VampirePlayerEventHandler;
+import de.teamlapen.vampirism.item.ItemSpawnEgg;
+import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.TickRunnable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.oredict.OreDictionary;
 
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterators;
-
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import de.teamlapen.vampirism.ModBiomes;
-import de.teamlapen.vampirism.ModPotion;
-import de.teamlapen.vampirism.VampirismEventHandler;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.entity.EntityBlindingBat;
-import de.teamlapen.vampirism.entity.EntityDeadMob;
-import de.teamlapen.vampirism.entity.EntityDracula;
-import de.teamlapen.vampirism.entity.EntityGhost;
-import de.teamlapen.vampirism.entity.EntityVampire;
-import de.teamlapen.vampirism.entity.EntityVampireHunter;
-import de.teamlapen.vampirism.entity.EntityVampireLord;
-import de.teamlapen.vampirism.entity.VampireEntityEventHandler;
-import de.teamlapen.vampirism.entity.minions.EntityRemoteVampireMinion;
-import de.teamlapen.vampirism.entity.minions.EntitySaveableVampireMinion;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.entity.player.VampirePlayerEventHandler;
-import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.REFERENCE;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public abstract class CommonProxy implements IProxy {
 
-	private int modEntityId = 0;
-	private List<TickRunnable> clientRunnables=new ArrayList<TickRunnable>();
+	/**
+	 * List of entity names which should be spawnable
+	 */
+	public static final List<String> spawnableEntityNames = new ArrayList<String>();
+	private List<TickRunnable> clientRunnables = new ArrayList<TickRunnable>();
 	private List<TickRunnable> serverRunnables = new ArrayList<TickRunnable>();
+	private int modEntityId = 0;
 
 	private int calculateColor(String n) {
 		int hash = n.hashCode();
@@ -56,13 +55,11 @@ public abstract class CommonProxy implements IProxy {
 		return hash;
 	}
 
-
-	@Override
-	public void onTick(TickEvent event){
-		if(event instanceof TickEvent.ServerTickEvent){
+	@Override public void onTick(TickEvent event) {
+		if (event instanceof TickEvent.ServerTickEvent) {
 			WorldServer server = MinecraftServer.getServer().worldServerForDimension(0);
 
-			if (server.areAllPlayersAsleep()&&event.phase.equals(TickEvent.Phase.START)) {
+			if (server.areAllPlayersAsleep() && event.phase.equals(TickEvent.Phase.START)) {
 				Logger.i("ServerProxy", "All players are asleep");
 				if (server.playerEntities.size() > 0) {// Should always be the case, but better check
 					if (VampirePlayer.get(((EntityPlayer) server.playerEntities.get(0))).sleepingCoffin) {
@@ -78,30 +75,28 @@ public abstract class CommonProxy implements IProxy {
 				}
 
 			}
-			if(VampirismMod.potionFail&&event.phase.equals(TickEvent.Phase.END)&&MinecraftServer.getServer().getTickCounter()%200==0){
-				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("There was a SEVERE error adding Vampirism's potions, please check and change the configured IDs of "+ModPotion.checkPotions()));
+			if (VampirismMod.potionFail && event.phase.equals(TickEvent.Phase.END) && MinecraftServer.getServer().getTickCounter() % 200 == 0) {
+				MinecraftServer.getServer().getConfigurationManager()
+						.sendChatMsg(new ChatComponentText("There was a SEVERE error adding Vampirism's potions, please check and change the configured IDs of " + ModPotion.checkPotions()));
 			}
 
-			Iterator<TickRunnable> iterator=serverRunnables.iterator();
-			while(iterator.hasNext()){
-				TickRunnable run=iterator.next();
-				if(!run.shouldContinue()){
+			Iterator<TickRunnable> iterator = serverRunnables.iterator();
+			while (iterator.hasNext()) {
+				TickRunnable run = iterator.next();
+				if (!run.shouldContinue()) {
 					iterator.remove();
-				}
-				else{
+				} else {
 					run.onTick();
 				}
 			}
 			onServerTick((TickEvent.ServerTickEvent) event);
-		}
-		else if(event instanceof TickEvent.ClientTickEvent){
-			Iterator<TickRunnable> iterator=clientRunnables.iterator();
-			while(iterator.hasNext()){
-				TickRunnable run=iterator.next();
-				if(!run.shouldContinue()){
+		} else if (event instanceof TickEvent.ClientTickEvent) {
+			Iterator<TickRunnable> iterator = clientRunnables.iterator();
+			while (iterator.hasNext()) {
+				TickRunnable run = iterator.next();
+				if (!run.shouldContinue()) {
 					iterator.remove();
-				}
-				else{
+				} else {
 					run.onTick();
 				}
 			}
@@ -109,10 +104,10 @@ public abstract class CommonProxy implements IProxy {
 		}
 	}
 
-	protected void addTickRunnable(TickRunnable run,boolean client) {
-		List<TickRunnable> list=client?clientRunnables:serverRunnables;
-		if(list.size()>100){
-			Logger.w("CommonProxy","There are over 100 runnables in %s list. Deleting them.",client?"client":"server");
+	protected void addTickRunnable(TickRunnable run, boolean client) {
+		List<TickRunnable> list = client ? clientRunnables : serverRunnables;
+		if (list.size() > 100) {
+			Logger.w("CommonProxy", "There are over 100 runnables in %s list. Deleting them.", client ? "client" : "server");
 		}
 		list.add(run);
 	}
@@ -121,35 +116,26 @@ public abstract class CommonProxy implements IProxy {
 
 	public abstract void onServerTick(TickEvent.ServerTickEvent event);
 
-	private void registerEntity(Class<? extends Entity> clazz, String name, boolean useGlobal) {
+	private void registerEntity(Class<? extends Entity> clazz, String name, boolean egg) {
 
-		Logger.d("EntityRegister", "Adding " + name + "(" + clazz.getSimpleName() + ")" + (useGlobal ? " with global id" : "with mod id"));
-		if (useGlobal) {
-			EntityRegistry.registerGlobalEntityID(clazz, name, EntityRegistry.findGlobalUniqueEntityId(), calculateColor(name), calculateColor(name + "2"));
-		} else {
-			name = name.replace("vampirism.", "");
-			EntityRegistry.registerModEntity(clazz, name, modEntityId++, VampirismMod.instance, 80, 1, true);
+		Logger.d("EntityRegister", "Adding " + name + "(" + clazz.getSimpleName() + ") with mod id %d", modEntityId);
+		EntityRegistry.registerModEntity(clazz, name.replace("vampirism.", ""), modEntityId++, VampirismMod.instance, 80, 1, true);
+		if (egg) {
+			spawnableEntityNames.add(name);
 		}
 
 	}
 
 	/**
-	 * Registers the Entity and it's spawn
-	 * 
+	 * Registers the entity and add a spawn entry for it
+	 *
 	 * @param clazz
-	 *            Class
 	 * @param name
-	 *            Name
 	 * @param probe
-	 *            WeightedProbe
 	 * @param min
-	 *            Min group size
 	 * @param max
-	 *            Max group size
 	 * @param type
-	 *            CreatureType
 	 * @param biomes
-	 *            Biomes
 	 */
 	private void registerEntity(Class<? extends EntityLiving> clazz, String name, int probe, int min, int max, EnumCreatureType type, BiomeGenBase... biomes) {
 		this.registerEntity(clazz, name, true);
@@ -157,22 +143,19 @@ public abstract class CommonProxy implements IProxy {
 		EntityRegistry.addSpawn(clazz, probe, min, max, type, biomes);
 	}
 
-	@Override
-	public void registerEntitys() {
+	@Override public void registerEntitys() {
 		// Create a array of all biomes except hell and end
 		BiomeGenBase[] allBiomes = BiomeGenBase.getBiomeGenArray();
 		allBiomes = allBiomes.clone();
 		allBiomes[9] = null;
 		allBiomes[8] = null;
-		BiomeGenBase[] allBiomesNoVampire=allBiomes.clone();
-		int vId=ModBiomes.biomeVampireForest.biomeID;
-		if(vId>0&&vId<allBiomes.length){
-			allBiomesNoVampire[vId]=null;
+		BiomeGenBase[] allBiomesNoVampire = allBiomes.clone();
+		int vId = ModBiomes.biomeVampireForest.biomeID;
+		if (vId > 0 && vId < allBiomes.length) {
+			allBiomesNoVampire[vId] = null;
 		}
 		BiomeGenBase[] biomes = Iterators.toArray(Iterators.filter(Iterators.forArray(allBiomes), Predicates.notNull()), BiomeGenBase.class);
-		allBiomesNoVampire=Iterators.toArray(Iterators.filter(Iterators.forArray(allBiomesNoVampire), Predicates.notNull()), BiomeGenBase.class);
-
-
+		allBiomesNoVampire = Iterators.toArray(Iterators.filter(Iterators.forArray(allBiomesNoVampire), Predicates.notNull()), BiomeGenBase.class);
 
 		registerEntity(EntityVampireHunter.class, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, BALANCE.VAMPIRE_HUNTER_SPAWN_PROBE, 1, 2, EnumCreatureType.creature, allBiomesNoVampire);
 		registerEntity(EntityVampire.class, REFERENCE.ENTITY.VAMPIRE_NAME, BALANCE.VAMPIRE_SPAWN_PROBE, 1, 3, EnumCreatureType.monster, biomes);
@@ -184,10 +167,13 @@ public abstract class CommonProxy implements IProxy {
 		registerEntity(EntityGhost.class, REFERENCE.ENTITY.GHOST_NAME, 5, 1, 2, EnumCreatureType.monster, ModBiomes.biomeVampireForest);
 		registerEntity(EntityBlindingBat.class, REFERENCE.ENTITY.BLINDING_BAT_NAME, false);
 
+		Item item = new ItemSpawnEgg(spawnableEntityNames);
+		GameRegistry.registerItem(item, ItemSpawnEgg.name);
+		OreDictionary.registerOre("mobEgg", item);
+
 	}
 
-	@Override
-	public void registerSubscriptions() {
+	@Override public void registerSubscriptions() {
 		Object playerHandler = new VampirePlayerEventHandler();
 		MinecraftForge.EVENT_BUS.register(playerHandler);
 		FMLCommonHandler.instance().bus().register(playerHandler);
@@ -198,8 +184,7 @@ public abstract class CommonProxy implements IProxy {
 	}
 
 	private void wakeAllPlayers(WorldServer server) {
-		@SuppressWarnings("rawtypes")
-		Iterator iterator = server.playerEntities.iterator();
+		@SuppressWarnings("rawtypes") Iterator iterator = server.playerEntities.iterator();
 
 		while (iterator.hasNext()) {
 			EntityPlayerMP p = (EntityPlayerMP) iterator.next();
