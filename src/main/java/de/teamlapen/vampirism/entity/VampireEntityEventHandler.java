@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.ModBiomes;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -11,6 +12,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.IMob;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChunkCoordinates;
@@ -31,6 +33,7 @@ import de.teamlapen.vampirism.util.DifficultyCalculator;
 import de.teamlapen.vampirism.util.DifficultyCalculator.Difficulty;
 import de.teamlapen.vampirism.util.DifficultyCalculator.IAdjustableLevel;
 import de.teamlapen.vampirism.util.Logger;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 
 public class VampireEntityEventHandler {
 

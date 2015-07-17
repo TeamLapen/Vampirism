@@ -11,6 +11,7 @@ public class REFERENCE {
 		public static final String VAMPIRE_MINION_SAVEABLE_NAME = "vampirism.vampireMinionS";
 		public static final String DEAD_MOB_NAME = "vampirism.dead_mob";
 		public static final String BLINDING_BAT_NAME = "vampirism.blinding_bat";
+		public static final String DUMMY_CREATURE = "vampirism.dummy_creature";
 	}
 
 	public enum KEY {

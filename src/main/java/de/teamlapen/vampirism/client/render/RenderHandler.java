@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.client.render;
 import java.nio.FloatBuffer;
 import java.util.List;
 
+import de.teamlapen.vampirism.biome.BiomeVampireForest;
+import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiSleepMP;
@@ -16,6 +18,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.MathHelper;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.GuiOpenEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
@@ -56,8 +59,10 @@ public class RenderHandler {
 	private final int ENTITY_RADIUS;
 	private final int ENTITY_MIN_SQ_RADIUS;
 	private final int BLOOD_VISION_FADE_TICKS = 80;
+	private final int VAMPIRE_BIOME_FADE_TICKS = 160;
 	private FloatBuffer fogColorBuffer;
 	private int bloodVisionTicks = 0;
+	private int vampireBiomeTicks = 0;
 
 	public RenderHandler(Minecraft mc) {
 		this.mc = mc;
@@ -67,7 +72,6 @@ public class RenderHandler {
 		entityDisplayListId = GL11.glGenLists(2);
 		entitySphereListId = entityDisplayListId + 1;
 		this.buildEntitySphere();
-		this.fogColorBuffer = GLAllocation.createDirectFloatBuffer(16);
 	}
 
 	/**
@@ -138,25 +142,41 @@ public class RenderHandler {
 			if (bloodVisionTicks > 0) {
 				bloodVisionTicks--;
 			}
-			return;
+			if(vampireBiomeTicks>10&&bloodVisionTicks==15){
+				bloodVisionTicks=0;
+			}
+		} else {
+
+
+			if (bloodVisionTicks < BLOOD_VISION_FADE_TICKS) {
+				bloodVisionTicks++;
+
+			}
+			entityCooldownTicks--;
+
+			if (entityCooldownTicks < 1) {
+				this.compileEntitys();
+				entityCooldownTicks = COMPILE_ENTITY_COOLDOWN;
+			}
+
 		}
 
-		if (bloodVisionTicks < BLOOD_VISION_FADE_TICKS) {
-			bloodVisionTicks++;
+		if(mc.thePlayer.worldObj.getBiomeGenForCoords(MathHelper.floor_double(mc.thePlayer.posX),MathHelper.floor_double(mc.thePlayer.posZ)) instanceof BiomeVampireForest){
+			if(vampireBiomeTicks< VAMPIRE_BIOME_FADE_TICKS){
+				vampireBiomeTicks++;
+			}
 		}
-		entityCooldownTicks--;
-
-		if (entityCooldownTicks < 1) {
-			this.compileEntitys();
-			entityCooldownTicks = COMPILE_ENTITY_COOLDOWN;
+		else{
+			if(vampireBiomeTicks>0){
+				vampireBiomeTicks--;
+			}
 		}
-
 	}
 
 	@SubscribeEvent
 	public void onFogDensity(EntityViewRenderEvent.FogDensity event) {
 		if (event.entity instanceof EntityPlayer) {
-			if (VampirePlayer.get((EntityPlayer) event.entity).getVision() == 2) {
+			if (bloodVisionTicks>0||vampireBiomeTicks>10) {
 				event.density = 1.0F;
 				event.setCanceled(true);
 			}
@@ -240,24 +260,46 @@ public class RenderHandler {
 			GL11.glPopMatrix();
 
 		}
-		renderBloodVisionFog(bloodVisionTicks);
+		if(vampireBiomeTicks>0){
+			renderVampireBiomeFog(vampireBiomeTicks);
+		}
+		if(bloodVisionTicks>0){
+			renderBloodVisionFog(bloodVisionTicks);
+		}
+
+
 
 	}
 
 	private void renderBloodVisionFog(int ticks) {
-
-		if (ticks < 1 || ticks > BLOOD_VISION_FADE_TICKS)
-			return;
 
 		float f = ((float) BLOOD_VISION_FADE_TICKS) / (float) ticks;
 		GL11.glPushMatrix();
 		boolean fog = GL11.glIsEnabled(GL11.GL_FOG);
 		if (!fog)
 			GL11.glEnable(GL11.GL_FOG);
-		GL11.glFog(GL11.GL_FOG_COLOR, this.setFogColorBuffer(0, 1, 0, 1.0F));
 		GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
 		GL11.glFogf(GL11.GL_FOG_START, 4.0F * f);
 		GL11.glFogf(GL11.GL_FOG_END, 5.5F * f);
+		GL11.glNormal3f(0.0F, -1.0F, 0.0F);
+		GL11.glColor4f(1F, 1F, 1F, 1.0F);
+		GL11.glFogf(GL11.GL_FOG_DENSITY, 1.0F);
+		if (!fog)
+			GL11.glDisable(GL11.GL_FOG);
+		GL11.glPopMatrix();
+	}
+
+
+	private void renderVampireBiomeFog(int ticks) {
+
+		float f = ((float) VAMPIRE_BIOME_FADE_TICKS) / (float) ticks/1.3F;
+		GL11.glPushMatrix();
+		boolean fog = GL11.glIsEnabled(GL11.GL_FOG);
+		if (!fog)
+			GL11.glEnable(GL11.GL_FOG);
+		GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
+		GL11.glFogf(GL11.GL_FOG_START, 12.0F * f);
+		GL11.glFogf(GL11.GL_FOG_END, 28.5F * f);
 		GL11.glNormal3f(0.0F, -1.0F, 0.0F);
 		GL11.glColor4f(1F, 1F, 1F, 1.0F);
 		GL11.glFogf(GL11.GL_FOG_DENSITY, 1.0F);
@@ -334,10 +376,12 @@ public class RenderHandler {
 	/**
 	 * Update and return fogColorBuffer with the RGBA values passed as arguments
 	 */
-	private FloatBuffer setFogColorBuffer(float p_78469_1_, float p_78469_2_, float p_78469_3_, float p_78469_4_) {
-		this.fogColorBuffer.clear();
-		this.fogColorBuffer.put(p_78469_1_).put(p_78469_2_).put(p_78469_3_).put(p_78469_4_);
-		this.fogColorBuffer.flip();
+	private FloatBuffer getFogColorBuffer() {
+		if(this.fogColorBuffer==null){
+			this.fogColorBuffer = GLAllocation.createDirectFloatBuffer(16);
+			this.fogColorBuffer.put(1).put(1).put(1);
+			this.fogColorBuffer.flip();
+		}
 		return this.fogColorBuffer;
 	}
 }

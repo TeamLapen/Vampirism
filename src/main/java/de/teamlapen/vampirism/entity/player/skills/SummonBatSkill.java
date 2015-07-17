@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
+import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,6 +44,7 @@ public class SummonBatSkill extends DefaultSkill {
 	public boolean onActivated(VampirePlayer vampire, EntityPlayer player) {
 		for (int i = 0; i < BALANCE.VP_SKILLS.SUMMON_BAT_COUNT; i++) {
 			Entity e = EntityList.createEntityByName(REFERENCE.ENTITY.BLINDING_BAT_NAME, player.worldObj);
+			((EntityBlindingBat)e).restrictLiveSpan();
 			e.copyLocationAndAnglesFrom(player);
 			player.worldObj.spawnEntityInWorld(e);
 		}

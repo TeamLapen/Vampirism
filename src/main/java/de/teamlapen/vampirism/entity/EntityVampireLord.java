@@ -299,4 +299,11 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 		this.writeEntityToNBT(nbt);
 	}
 
+	@Override public boolean getCanSpawnHere() {
+
+		int i = MathHelper.floor_double(this.boundingBox.minY);
+		//Only spawn on the surface
+		if(i<60)return false;
+		return super.getCanSpawnHere();
+	}
 }

@@ -511,6 +511,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		if (ticksInSun < 101) {
 			ticksInSun++;
 		}
+		if(player.capabilities.isCreativeMode)return;
 		/** Non programmatically reference to #getSunDamageTicksInSun */
 		int type = Math.min(3, Math.round(getLevel() / 2F - 0.51F));
 		if (player.isPotionActive(ModPotion.sunscreen) && type > 0)

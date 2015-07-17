@@ -2,15 +2,23 @@ package de.teamlapen.vampirism.biome;
 
 import java.util.Random;
 
+import cpw.mods.fml.common.Mod;
+import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.generation.castle.CastlePositionData;
+import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.entity.passive.EntityChicken;
+import net.minecraft.entity.passive.EntityCow;
+import net.minecraft.entity.passive.EntityPig;
+import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.ModBlocks;
-import de.teamlapen.vampirism.entity.EntityGhost;
+import net.minecraft.world.gen.feature.WorldGenTrees;
 
 /**
  * 
@@ -26,16 +34,21 @@ public class BiomeVampireForest extends BiomeGenBase {
 		super(id);
 
 		this.spawnableCreatureList.clear();
-		this.spawnableCreatureList.add(new SpawnListEntry(EntityGhost.class, 5, 2, 10));
 		this.spawnableMonsterList.clear();
 		this.spawnableWaterCreatureList.clear();
+		this.spawnableMonsterList.add(new SpawnListEntry(EntityGhost.class, 10, 3, 5));
+		this.spawnableMonsterList.add(new SpawnListEntry(EntityVampireLord.class, 1, 1, 1));
+		this.spawnableMonsterList.add(new SpawnListEntry(EntityBlindingBat.class, 1, 4, 8));
+		this.spawnableMonsterList.add(new SpawnListEntry(EntityVampire.class, 10,2,4));
+		this.spawnableCreatureList.add(new BiomeGenBase.SpawnListEntry(EntityDummyBittenAnimal.class,10,2,4));
+
 
 		this.topBlock = ModBlocks.cursedEarth;
-		this.fillerBlock = Blocks.dirt;
-		this.theBiomeDecorator.treesPerChunk = 6;
-		this.theBiomeDecorator.grassPerChunk = 5;
-		this.theBiomeDecorator.deadBushPerChunk = 1;
-		this.theBiomeDecorator.mushroomsPerChunk = 4;
+		this.fillerBlock = ModBlocks.cursedEarth;
+		this.theBiomeDecorator.treesPerChunk = 5;
+		this.theBiomeDecorator.grassPerChunk = 4;
+		this.theBiomeDecorator.deadBushPerChunk = 4;
+		this.worldGeneratorTrees=new WorldGenTrees(false,4,1,0,false);
 
 		// Add the vampire forest flower here
 		this.flowers.clear();
@@ -76,7 +89,15 @@ public class BiomeVampireForest extends BiomeGenBase {
 	@SideOnly(Side.CLIENT)
 	public int getBiomeGrassColor(int p_150558_1_, int p_150558_2_, int p_150558_3_) {
 		// int grassColor = 0x7A317A; // dark purple
-		int grassColor = 0x3D3D52; // Mixture of purple and green
-		return getModdedBiomeGrassColor(grassColor);
+		int grassColor = 0x1E1F1F; // Mixture of purple and green
+		return grassColor;
+	}
+
+	@Override public int getSkyColorByTemp(float p_76731_1_) {
+		return 0xA33641;
+	}
+
+	@Override public int getBiomeFoliageColor(int p_150571_1_, int p_150571_2_, int p_150571_3_) {
+		return 0x1E1F1F;
 	}
 }

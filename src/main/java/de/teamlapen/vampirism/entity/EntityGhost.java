@@ -2,12 +2,7 @@ package de.teamlapen.vampirism.entity;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWander;
-import net.minecraft.entity.ai.EntityAIWatchClosest;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
@@ -31,6 +26,7 @@ public class EntityGhost extends EntityMob {
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0D, true));
 		this.tasks.addTask(3, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
 		this.tasks.addTask(4, new EntityAIWander(this, 1.0D));
+		this.tasks.addTask(2, new EntityAIFleeSun(this, 0.9F));
 		this.tasks.addTask(5, new EntityAISwimming(this));
 		this.targetTasks.addTask(0, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
@@ -107,8 +103,8 @@ public class EntityGhost extends EntityMob {
 		return true;
 	}
 
-	@Override
-	protected boolean isValidLightLevel() {
-		return true;
-	}
+//	@Override
+//	protected boolean isValidLightLevel() {
+//		return true;
+//	}
 }

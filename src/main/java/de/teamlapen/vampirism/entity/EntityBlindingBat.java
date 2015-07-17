@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.entity.player.VampirePlayer;
 
 public class EntityBlindingBat extends EntityBat {
 
+	private boolean restrictLiveSpan;
 	public EntityBlindingBat(World p_i1680_1_) {
 		super(p_i1680_1_);
 	}
@@ -19,7 +20,7 @@ public class EntityBlindingBat extends EntityBat {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		if (this.ticksExisted > 600) {
+		if (restrictLiveSpan&&this.ticksExisted > 600) {
 			this.attackEntityFrom(DamageSource.magic, 10F);
 		}
 		if (!this.worldObj.isRemote) {
@@ -30,6 +31,10 @@ public class EntityBlindingBat extends EntityBat {
 				}
 			}
 		}
+	}
+
+	public void restrictLiveSpan(){
+		this.restrictLiveSpan=true;
 	}
 
 	@Override public boolean getCanSpawnHere() {

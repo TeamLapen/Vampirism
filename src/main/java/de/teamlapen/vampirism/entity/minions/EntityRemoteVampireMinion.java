@@ -162,6 +162,7 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 	@Override
 	public void onDeath(DamageSource src) {
 		MinionHelper.sendMessageToLord(this, "text.vampirism.sorry_i_died_while_doing", "\\: ", getActiveCommand().getUnlocalizedName());
+		this.dropItem(ModItems.gemOfBinding,1);
 	}
 
 	@Override

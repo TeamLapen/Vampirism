@@ -297,7 +297,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		this.sync();
 	}
 
-	private boolean makeVampire() {
+	public boolean makeVampire() {
 		if (blood < 0||!canBecomeVampire) {
 			return false;
 		}

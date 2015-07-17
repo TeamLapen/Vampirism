@@ -158,14 +158,15 @@ public abstract class CommonProxy implements IProxy {
 		allBiomesNoVampire = Iterators.toArray(Iterators.filter(Iterators.forArray(allBiomesNoVampire), Predicates.notNull()), BiomeGenBase.class);
 
 		registerEntity(EntityVampireHunter.class, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, BALANCE.VAMPIRE_HUNTER_SPAWN_PROBE, 1, 2, EnumCreatureType.creature, allBiomesNoVampire);
-		registerEntity(EntityVampire.class, REFERENCE.ENTITY.VAMPIRE_NAME, BALANCE.VAMPIRE_SPAWN_PROBE, 1, 3, EnumCreatureType.monster, biomes);
-		registerEntity(EntityVampireLord.class, REFERENCE.ENTITY.VAMPIRE_LORD_NAME, BALANCE.VAMPIRE_LORD_SPAWN_PROBE, 1, 1, EnumCreatureType.monster, ModBiomes.biomeVampireForest);
+		registerEntity(EntityVampire.class, REFERENCE.ENTITY.VAMPIRE_NAME, BALANCE.VAMPIRE_SPAWN_PROBE, 1, 3, EnumCreatureType.monster, allBiomesNoVampire);
+		registerEntity(EntityVampireLord.class, REFERENCE.ENTITY.VAMPIRE_LORD_NAME,true);
 		registerEntity(EntitySaveableVampireMinion.class, REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME, false);
 		registerEntity(EntityRemoteVampireMinion.class, REFERENCE.ENTITY.VAMPIRE_MINION_REMOTE_NAME, false);
 		registerEntity(EntityDeadMob.class, REFERENCE.ENTITY.DEAD_MOB_NAME, false);
 		registerEntity(EntityDracula.class, REFERENCE.ENTITY.DRACULA_NAME, false);
-		registerEntity(EntityGhost.class, REFERENCE.ENTITY.GHOST_NAME, 5, 1, 2, EnumCreatureType.monster, ModBiomes.biomeVampireForest);
+		registerEntity(EntityGhost.class, REFERENCE.ENTITY.GHOST_NAME,true);
 		registerEntity(EntityBlindingBat.class, REFERENCE.ENTITY.BLINDING_BAT_NAME, false);
+		registerEntity(EntityDummyBittenAnimal.class,REFERENCE.ENTITY.DUMMY_CREATURE,false);
 
 		Item item = new ItemSpawnEgg(spawnableEntityNames);
 		GameRegistry.registerItem(item, ItemSpawnEgg.name);

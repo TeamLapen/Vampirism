@@ -91,7 +91,7 @@ public class SaveableMinionHandler {
 		while (it.hasNext()) {
 			IMinion m = it.next();
 			if (m.getRepresentingEntity().isDead || !lord.equals(m.getLord())) {
-				Logger.i("tes", "removed because %b %b %s %s", m.getRepresentingEntity().isDead, !lord.equals(m.getLord()), lord, m.getLord());
+				Logger.t( "removed because %b %b %s %s", m.getRepresentingEntity().isDead, !lord.equals(m.getLord()), lord, m.getLord());
 				it.remove();
 			}
 		}
