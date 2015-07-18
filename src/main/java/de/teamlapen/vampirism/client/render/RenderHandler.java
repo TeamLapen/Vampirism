@@ -138,7 +138,7 @@ public class RenderHandler {
 	public void onClientTick(TickEvent.ClientTickEvent event) {
 		if (mc.theWorld == null)
 			return;
-		if (VampirePlayer.get(mc.thePlayer).getVision() != 2 && !VampirePlayer.get(mc.thePlayer).gettingSundamage()) {
+		if (VampirePlayer.get(mc.thePlayer).getVision() != 2||VampirePlayer.get(mc.thePlayer).gettingSundamage()) {
 			if (bloodVisionTicks > 0) {
 				bloodVisionTicks--;
 			}
@@ -292,14 +292,14 @@ public class RenderHandler {
 
 	private void renderVampireBiomeFog(int ticks) {
 
-		float f = ((float) VAMPIRE_BIOME_FADE_TICKS) / (float) ticks/1.3F;
+		float f = ((float) VAMPIRE_BIOME_FADE_TICKS) / (float) ticks/1.5F;
 		GL11.glPushMatrix();
 		boolean fog = GL11.glIsEnabled(GL11.GL_FOG);
 		if (!fog)
 			GL11.glEnable(GL11.GL_FOG);
 		GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
-		GL11.glFogf(GL11.GL_FOG_START, 12.0F * f);
-		GL11.glFogf(GL11.GL_FOG_END, 28.5F * f);
+		GL11.glFogf(GL11.GL_FOG_START, 15.0F * f);
+		GL11.glFogf(GL11.GL_FOG_END, 50.5F * f);
 		GL11.glNormal3f(0.0F, -1.0F, 0.0F);
 		GL11.glColor4f(1F, 1F, 1F, 1.0F);
 		GL11.glFogf(GL11.GL_FOG_DENSITY, 1.0F);
