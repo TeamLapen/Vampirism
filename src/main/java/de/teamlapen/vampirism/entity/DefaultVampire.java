@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.biome.BiomeVampireForest;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -115,6 +116,7 @@ public abstract class DefaultVampire extends EntityMob {
 		float brightness = this.getBrightness(1.0F);
 		boolean canSeeSky = this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
 		if (brightness > 0.5F) {
+			if(Helper.isEntityInVampireBiome(this))return false;
 			if (VampirismMod.isSunDamageTime(this.worldObj) && canSeeSky) {
 				return true;
 			}
@@ -165,4 +167,14 @@ public abstract class DefaultVampire extends EntityMob {
 		this.setDead();
 	}
 
+	@Override
+	public boolean isValidLightLevel(){
+		if(Helper.isEntityInVampireBiome(this))return true;
+		return super.isValidLightLevel();
+	}
+
+	@Override public float getBlockPathWeight(int x, int y, int z) {
+		if(this.worldObj.getBiomeGenForCoords(x,z) instanceof BiomeVampireForest)return 0.5F;
+		return super.getBlockPathWeight(x, y, z);
+	}
 }

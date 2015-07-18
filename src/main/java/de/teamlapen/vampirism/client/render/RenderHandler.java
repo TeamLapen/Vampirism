@@ -4,6 +4,7 @@ import java.nio.FloatBuffer;
 import java.util.List;
 
 import de.teamlapen.vampirism.biome.BiomeVampireForest;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
@@ -161,7 +162,7 @@ public class RenderHandler {
 
 		}
 
-		if(Configs.render_fog_vampire_biome&&mc.thePlayer.worldObj.getBiomeGenForCoords(MathHelper.floor_double(mc.thePlayer.posX),MathHelper.floor_double(mc.thePlayer.posZ)) instanceof BiomeVampireForest){
+		if(Configs.render_fog_vampire_biome&& Helper.isEntityInVampireBiome(mc.thePlayer)){
 			if(vampireBiomeTicks< VAMPIRE_BIOME_FADE_TICKS){
 				vampireBiomeTicks++;
 			}

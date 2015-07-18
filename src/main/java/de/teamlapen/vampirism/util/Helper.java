@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
+import de.teamlapen.vampirism.biome.BiomeVampireForest;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -342,6 +343,11 @@ public class Helper {
 	 */
 	public static double rnd1n1(Random ran){
 		return (ran.nextDouble()-0.5D)*2;
+	}
+
+	public static boolean isEntityInVampireBiome(Entity e){
+		if(e==null||e.worldObj==null)return false;
+		return e.worldObj.getBiomeGenForCoords(MathHelper.floor_double(e.posX),MathHelper.floor_double(e.posZ)) instanceof BiomeVampireForest;
 	}
 
 }

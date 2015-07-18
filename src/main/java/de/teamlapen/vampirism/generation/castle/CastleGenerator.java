@@ -24,7 +24,7 @@ import java.util.*;
  */
 public class CastleGenerator extends WorldGenerator {
 
-	private final int MAX_TRYS=5;
+	private final int MAX_TRYS=128;
 	private final int MAX_CASTLES=2;
 	private final int MAX_SIZE=6;
 	private final int MIN_SIZE=4;
@@ -109,9 +109,11 @@ public class CastleGenerator extends WorldGenerator {
 	 */
 	private List<CastlePositionData.Position> findPositions(World world,Random rnd){
 			Logger.d(TAG,"Looking for Positions");
+			long t=System.currentTimeMillis();
 			double phy = rnd.nextDouble() * Math.PI * 2.0D;
 			List<CastlePositionData.Position> foundPos=new LinkedList<CastlePositionData.Position>();
-			double radius = ( rnd.nextDouble()) * 32 * +5;
+
+			double radius = ( rnd.nextDouble()) * 32  +5;
 			for (int i = 0; i < MAX_TRYS&&foundPos.size()<MAX_CASTLES; i++)
 			{
 				int x = (int)Math.round(Math.cos(phy) * radius);
@@ -122,22 +124,26 @@ public class CastleGenerator extends WorldGenerator {
 				{
 					int cx = chunkposition.chunkPosX >> 4;
 					int cz = chunkposition.chunkPosZ >> 4;
-					foundPos.add(new CastlePositionData.Position(cx,cz));
+					foundPos.add(new CastlePositionData.Position(cx, cz));
 					Logger.d(TAG,"Found position %d %d",cx,cz);
+					//Increase the counter to avoid mutliple castles in one spot
+					i+=(8-(i%8));
 				}
 
-				phy += (Math.PI * 2D)/ (double)MAX_CASTLES;
+				phy += (Math.PI/4F);
 
-				if (i>0&&i % MAX_CASTLES==0)
+				if (i>0&&i % 8==0)
 				{
-					phy+=(Math.PI * 2D)/(double)MAX_CASTLES/2;
-					radius*=(1+rnd.nextDouble());
+					phy+=(Math.PI /8F);
+					radius*=(1.5D+rnd.nextDouble());
 				}
 			}
 
 		if(foundPos.size()==0){
+			VampirismMod.vampireCastleFail=true;
 			Logger.w(TAG, "Did not find any positions");
 		}
+		Logger.d(TAG,"Looking for positions took %s ms",System.currentTimeMillis()-t);
 		return foundPos;
 	}
 
@@ -151,6 +157,7 @@ public class CastleGenerator extends WorldGenerator {
 	 */
 	private CastlePositionData.Position optimizePosition(CastlePositionData.Position position, World world, Random rnd){
 		Logger.d(TAG,"Optimizing Position");
+		long t=System.currentTimeMillis();
 		final int TEST_SIZE=10;
 		final int D_TEST_SIZE=TEST_SIZE*2;
 		Boolean[][] biomes=new Boolean[D_TEST_SIZE][D_TEST_SIZE];
@@ -192,7 +199,7 @@ public class CastleGenerator extends WorldGenerator {
 //		Logger.i(TAG,"Help");
 //		this.printMatrix(help);
 
-
+		Logger.d(TAG,"Optimizing position took %s ms",System.currentTimeMillis()-t);
 		if(max[0]>=MIN_SIZE){
 			int highcx=position.chunkXPos-TEST_SIZE+max[1];
 			int highcz=position.chunkZPos-TEST_SIZE+max[2];
@@ -205,6 +212,7 @@ public class CastleGenerator extends WorldGenerator {
 			p.setSize(sx, sz);
 			return p;
 		}
+
 		return position;
 	}
 
@@ -215,7 +223,6 @@ public class CastleGenerator extends WorldGenerator {
 	 * @param rnd
 	 */
 	private void preGeneratePosition(CastlePositionData.Position position,World world,Random rnd){
-
 		if(position.hasSize()){
 			Logger.d(TAG,"Pregenerating position %s",position);
 			int sx=position.getSizeX();
@@ -248,7 +255,7 @@ public class CastleGenerator extends WorldGenerator {
 			tiles[sx/2-1][sz/2]="0,flatDirt,0,castlell";
 			tiles[sx/2-1][sz/2-1]="0,flatDirt,0,castleul";
 			tiles[sx/2][sz/2-1]="0,flatDirt,0,castleur";
-
+			position.setMainCastle(new ChunkCoordIntPair(position.chunkXPos+sx/2-1,position.chunkZPos+sz/2-1),new ChunkCoordIntPair(position.chunkXPos+sx/2,position.chunkZPos+sz/2));
 
 			position.setTiles(tiles);
 		}

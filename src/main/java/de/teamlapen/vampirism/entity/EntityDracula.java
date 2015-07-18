@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.generation.castle.CastlePositionData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
@@ -13,10 +14,12 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Helper;
+import org.eclipse.jdt.annotation.NonNull;
 
 /** @author Mistadon */
 public class EntityDracula extends EntityVampire implements IBossDisplayData {
@@ -29,12 +32,11 @@ public class EntityDracula extends EntityVampire implements IBossDisplayData {
 	private final int maxTeleportDistanceX = 16;
 	private final int maxTeleportDistanceY = 16;
 	private final int maxTeleportDistanceZ = 16;
+	private boolean inCastle;
 
 	public EntityDracula(World par1World) {
 		super(par1World);
-
 		this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityVampireHunter.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.2));
-
 		this.tasks.addTask(6, new EntityAIWander(this, 0.7));
 		this.tasks.addTask(9, new EntityAILookIdle(this));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
@@ -152,5 +154,13 @@ public class EntityDracula extends EntityVampire implements IBossDisplayData {
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("ddelay", disappearDelay);
+	}
+
+	/**
+	 * Called when the entity is spawned in a castle as lord
+	 */
+	public void makeCastleLord(@NonNull CastlePositionData.Position pos){
+		ChunkCoordIntPair lc=pos.getLowerMainCastle();
+		this.setHomeArea(lc.chunkXPos << 4 + 15, (int) this.posY+1, lc.chunkZPos << 4 + 15, 23);
 	}
 }

@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism;
 
 import cpw.mods.fml.common.gameevent.TickEvent;
+import de.teamlapen.vampirism.entity.VampireMob;
+import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemDye;
@@ -56,7 +58,7 @@ public class VampirismEventHandler {
 	}
 
 	@SubscribeEvent
-	public void onClientTick(TickEvent event) {
+	public void onTick(TickEvent event) {
 		VampirismMod.proxy.onTick(event);
 	}
 
@@ -70,6 +72,10 @@ public class VampirismEventHandler {
 
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
+		if(!event.world.isRemote&&event.world.provider.dimensionId==0){
+			//Reset the castle fail notice
+			VampirismMod.vampireCastleFail=false;
+		}
 		// Loading VillageVampireData
 		FMLCommonHandler.instance().bus().register(VillageVampireData.get(event.world));// Not sure if this is the right position or if it could lead to a memory leak
 	}

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import cpw.mods.fml.common.registry.GameRegistry;
+import de.teamlapen.vampirism.entity.EntityDracula;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.Entity;

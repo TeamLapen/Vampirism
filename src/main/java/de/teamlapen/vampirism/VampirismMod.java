@@ -59,6 +59,8 @@ public class VampirismMod {
 	
 	public static boolean potionFail =false;
 
+	public static boolean vampireCastleFail = false;
+
 	public static CreativeTabs tabVampirism = new CreativeTabs("vampirism") {
 		@Override
 		@SideOnly(Side.CLIENT)

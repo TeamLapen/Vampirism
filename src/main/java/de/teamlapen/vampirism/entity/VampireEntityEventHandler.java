@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.ModBiomes;
+import de.teamlapen.vampirism.generation.castle.CastlePositionData;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -121,6 +122,12 @@ public class VampireEntityEventHandler {
 				Logger.w("VampireEntityEventHandler", "Cannot change the target tasks of creeper");
 			} else {
 				tasks.addTask(3, new EntityAIAvoidVampirePlayer(creeper, 12.0F, 1.0D, 1.2D, BALANCE.VAMPIRE_PLAYER_CREEPER_AVOID_LEVEL));
+			}
+		}
+		else if(event.entity instanceof EntityDracula){
+			CastlePositionData.Position pos=CastlePositionData.get(event.world).findPosAtChunk(event.entity.chunkCoordX,event.entity.chunkCoordZ);
+			if(pos!=null){
+				((EntityDracula)event.entity).makeCastleLord(pos);
 			}
 		}
 	}

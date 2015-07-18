@@ -108,8 +108,8 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 	}
 
 	@Override
-	public float getBlockPathWeight(int p_70783_1_, int p_70783_2_, int p_70783_3_) {
-		float i = 0.5F - this.worldObj.getLightBrightness(p_70783_1_, p_70783_2_, p_70783_3_);
+	public float getBlockPathWeight(int x, int y, int z) {
+		float i = 0.5F - this.worldObj.getLightBrightness(x, y, z);
 		if (i > 0)
 			return i;
 		return 0.01F;

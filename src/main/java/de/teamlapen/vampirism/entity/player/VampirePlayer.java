@@ -496,6 +496,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	public boolean gettingSundamage() {
 		if (player.worldObj != null && player.worldObj.provider.dimensionId == 0) {
 			if (player.worldObj.canBlockSeeTheSky(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ))) {
+				if(Helper.isEntityInVampireBiome(player))return false;
 				return VampirismMod.isSunDamageTime(player.worldObj);
 			}
 		}

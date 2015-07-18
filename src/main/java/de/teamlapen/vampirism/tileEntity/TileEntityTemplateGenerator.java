@@ -140,79 +140,98 @@ public class TileEntityTemplateGenerator extends TileEntity {
 	}
 	private int[] guessMetaForBlock(Block block,int meta){
 		int[] metadata=null;
-		if (block instanceof BlockStairs)
-		{
-			/**
-			 * Used retrieve direction from meta
-			 */
-			int[] rotSet=new int[]{3,1,0,2};
-			/**
-			 * Represents rotation metadata for direction 0 (south)
-			 */
-			int[] normalSet = new int[]{2, 1, 3, 0};
-			int[] upSet = new int[]{6, 5, 7, 4};
+		try {
+			if (block instanceof BlockStairs)
+			{
+				/**
+				 * Used retrieve direction from meta
+				 */
+				int[] rotSet=new int[]{3,1,0,2};
+				/**
+				 * Represents rotation metadata for direction 0 (south)
+				 */
+				int[] normalSet = new int[]{2, 1, 3, 0};
+				int[] upSet = new int[]{6, 5, 7, 4};
 
-			if(meta>3){
-				metadata=rotate(upSet,rotSet[meta-4]);
+				if(meta>3){
+					metadata=rotate(upSet,rotSet[meta-4]);
+				}
+				else{
+					metadata=rotate(normalSet,rotSet[meta]);
+				}
 			}
-			else{
-				metadata=rotate(normalSet,rotSet[meta]);
-			}
-		}
-		else if(block instanceof BlockLadder)
-		{
-			int[] rotSet=new int[]{0,0,0,2,3,1};
+			else if(block instanceof BlockLadder)
+			{
+				int[] rotSet=new int[]{0,0,0,2,3,1};
 
-			int[] set= new int[]{2,5,3,4};
-			metadata=rotate(set,rotSet[meta]);
-
-		}else if(block instanceof BlockTrapDoor)
-		{
-			int[] rotSet=new int[]{0,2,3,1};
-			int[] normalSet=new int[]{0,3,1,2};
-			int[] upSet=new int[]{8,11,9,10};
-
-			if(meta>7){
-				metadata=rotate(upSet,rotSet[meta-8]);
-			}
-			else{
-				metadata=rotate(normalSet,rotSet[meta]);
-			}
-		}else if(block instanceof BlockTorch)
-		{
-			int[] rotSet=new int[]{1,3,2,0};
-			int[] set= new int[]{4,1,3,2};
-
-
-			if(meta!=5){
-				metadata=rotate(set,rotSet[meta-1]);
-			}
-		}else if(block instanceof BlockDoor)
-		{
-			int[] rotSet = new int[]{3,0,1,2};
-
-			int[] set= new int[]{1,2,3,0};
-			int[] openSet= new int[]{5,6,7,4};
-
-			if(meta<4){
+				int[] set= new int[]{2,5,3,4};
 				metadata=rotate(set,rotSet[meta]);
+
+			}else if(block instanceof BlockTrapDoor)
+			{
+				int[] rotSet=new int[]{0,2,3,1};
+				int[] normalSet=new int[]{0,3,1,2};
+				int[] upSet=new int[]{8,11,9,10};
+
+				if(meta>7){
+					metadata=rotate(upSet,rotSet[meta-8]);
+				}
+				else{
+					metadata=rotate(normalSet,rotSet[meta]);
+				}
+			}else if(block instanceof BlockTorch)
+			{
+				int[] rotSet=new int[]{1,3,2,0};
+				int[] set= new int[]{4,1,3,2};
+
+
+				if(meta!=5){
+					metadata=rotate(set,rotSet[meta-1]);
+				}
+			}else if(block instanceof BlockDoor)
+			{
+				int[] rotSet = new int[]{3,0,1,2};
+
+				int[] set= new int[]{1,2,3,0};
+				int[] openSet= new int[]{5,6,7,4};
+
+				if(meta<4){
+					metadata=rotate(set,rotSet[meta]);
+				}
+				else if(meta<8){
+					metadata=rotate(openSet,rotSet[meta-4]);
+				}
 			}
-			else if(meta<8){
-				metadata=rotate(openSet,rotSet[meta-4]);
+			else if(block instanceof BlockCoffin){
+				int[] set={8,9,10,11};
+				if(meta>0){
+					metadata=rotate(set,meta%4);
+				}
 			}
-		}
-		else if(block instanceof BlockCoffin){
-			int[] set={8,9,10,11};
-			if(meta>0){
-				metadata=rotate(set,meta%4);
+			else if(block instanceof BlockChest){
+				int[] rotSet={0,2,3,1};
+				int[] set={2,5,3,4};
+				metadata=rotate(set,rotSet[meta-2]);
 			}
+			else if(block instanceof BlockFenceGate){
+				int[] set={0,1,2,3};
+				int[] setOpen={4,5,6,7};
+				if(meta>3){
+					metadata=rotate(setOpen,meta-4);
+				}
+				else{
+					metadata=rotate(set,meta);
+				}
+			}
+			else if(block instanceof BlockFurnace){
+				int[] set={2,5,3,4};
+				int[] rotSet={0,2,3,1};
+				metadata=rotate(set,rotSet[meta-2]);
+			}
+			if(metadata!=null)return metadata;
+		} catch (IndexOutOfBoundsException e) {
+			Logger.w(TAG,"Failed to guess the right metadata for %s %d.",block,meta);
 		}
-		else if(block instanceof BlockChest){
-			int[] rotSet={0,2,3,1};
-			int[] set={2,5,3,4};
-			metadata=rotate(set,rotSet[meta-2]);
-		}
-		if(metadata!=null)return metadata;
 		return new int[]{meta,meta,meta,meta};
 	}
 }

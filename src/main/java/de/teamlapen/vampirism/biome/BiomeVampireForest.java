@@ -55,25 +55,19 @@ public class BiomeVampireForest extends BiomeGenBase {
 		this.addFlower(ModBlocks.vampireFlower, 1, 10);
 
 		this.canSpawnLightningBolt();
-		this.waterColorMultiplier = 14745518; // same as swamp
-		this.setDisableRain();
+		//this.waterColorMultiplier = 14745518; // same as swamp
+		this.waterColorMultiplier = 0xFF2505;
 	}
 
 	@Override
-	public void decorate(World world, Random rand, int chunk_X, int chunk_Z) {
-		boolean flag=true;
+	public void decorate(World world, Random rand, int coordX, int coordZ) {
 		CastlePositionData data = CastlePositionData.get(world);
-		for(CastlePositionData.Position p:data.getPositions()){
-			if(p.isChunkInPosition(chunk_X>>4,chunk_Z>>4)){
-				flag=false;
-			}
-		}
-		if(flag){
-			super.theBiomeDecorator.decorateChunk(world, rand, this, chunk_X, chunk_Z);
+		if(data.findPosAt(coordX,coordZ)!=null){
+			super.theBiomeDecorator.decorateChunk(world, rand, this, coordX, coordZ);
 
 			for (int j = 0; j < 5; ++j) {
-				int x = chunk_X + rand.nextInt(16);
-				int z = chunk_Z + rand.nextInt(16);
+				int x = coordX + rand.nextInt(16);
+				int z = coordZ + rand.nextInt(16);
 				int y = world.getHeightValue(x, z);
 				if (world.getBlock(x, y - 1, z) == ModBlocks.cursedEarth && world.getBlock(x, y, z) == Blocks.air) {
 					world.setBlock(x, y, z, ModBlocks.vampireFlower, 0, 3);

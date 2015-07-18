@@ -6,6 +6,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
+import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -41,8 +42,33 @@ public class CastlePositionData extends WorldSavedData{
 		return checked;
 	}
 
-	public List<Position> getPositions(){
-		return positions;
+//	public List<Position> getPositions(){
+//		return positions;
+//	}
+
+	/**
+	 * Returns the castle position object for this coordinates or null if there is no castle
+	 * @param coordX
+	 * @param coordZ
+	 * @return
+	 */
+	public @Nullable Position findPosAt(int coordX,int coordZ){
+		return this.findPosAtChunk(coordX>>4,coordZ>>4);
+	}
+
+	/**
+	 * Returns the castle position object for this chunk coordinates or null if there is no castle
+	 * @param chunkX
+	 * @param chunkZ
+	 * @return
+	 */
+	public @Nullable Position findPosAtChunk(int chunkX,int chunkZ){
+		for(CastlePositionData.Position p:positions){
+			if(p.isChunkInPosition(chunkX,chunkZ)){
+				return p;
+			}
+		}
+		return null;
 	}
 
 	@Override public void readFromNBT(NBTTagCompound nbt) {
@@ -90,6 +116,22 @@ public class CastlePositionData extends WorldSavedData{
 	public static class Position extends ChunkCoordIntPair {
 		private int sizeX;
 		private int sizeZ;
+
+		public ChunkCoordIntPair getLowerMainCastle() {
+			return lowerMainCastle;
+		}
+
+		public ChunkCoordIntPair getUpperMainCastle() {
+			return upperMainCastle;
+		}
+
+		public void setMainCastle(ChunkCoordIntPair lowerMainCastle,ChunkCoordIntPair upperMainCastle) {
+			this.lowerMainCastle = lowerMainCastle;
+			this.upperMainCastle = upperMainCastle;
+		}
+
+		private ChunkCoordIntPair lowerMainCastle;
+		private ChunkCoordIntPair upperMainCastle;
 		private int tileCount;
 		private String[][] tiles;
 		private int generated;
@@ -164,7 +206,7 @@ public class CastlePositionData extends WorldSavedData{
 
 		private NBTTagCompound toNBT(){
 			NBTTagCompound nbt=new NBTTagCompound();
-			nbt.setIntArray("pos",new int[]{chunkXPos,chunkZPos,sizeX,sizeZ,height});
+			nbt.setIntArray("pos", new int[] { chunkXPos, chunkZPos, sizeX, sizeZ, height });
 			if(hasTiles()&&!fullyGenerated()){
 				String s="";
 				for(int x=0;x<sizeX;x++){
@@ -176,6 +218,8 @@ public class CastlePositionData extends WorldSavedData{
 				nbt.setString("tiles",s);
 			}
 			nbt.setInteger("generated",generated);
+			nbt.setIntArray("lmc",new int[]{lowerMainCastle.chunkXPos,lowerMainCastle.chunkZPos});
+			nbt.setIntArray("umc",new int[]{upperMainCastle.chunkXPos,upperMainCastle.chunkZPos});
 			return nbt;
 		}
 
@@ -203,6 +247,15 @@ public class CastlePositionData extends WorldSavedData{
 		p.generated=nbt.getInteger("generated");
 		if(nbt.hasKey("tiles")&&!p.fullyGenerated()){
 			p.loadTilesFromString(nbt.getString("tiles"));
+		}
+		if(nbt.hasKey("lmc")){
+			int[] lc=nbt.getIntArray("lmc");
+			int[] uc=nbt.getIntArray("umc");
+			p.setMainCastle(new ChunkCoordIntPair(lc[0],lc[1]),new ChunkCoordIntPair(uc[0],uc[1]));
+		}
+		else{
+			//Compability code for older test worlds. Can probably be removed later TODO
+			p.setMainCastle(new ChunkCoordIntPair(pos[0]+1,pos[1]+1),new ChunkCoordIntPair(pos[0]+2,pos[1]+2));
 		}
 		return p;
 	}
