@@ -66,6 +66,8 @@ public class Configs {
 	
 	public static int potion_id_thirst;
 
+	public static boolean render_fog_vampire_biome;
+
 	public static Configuration config;
 
 	public static Configuration balance;
@@ -188,6 +190,7 @@ public class Configs {
 		potion_id_thirst = config.getInt("potion_id_thirst", CATEGORY_GENERAL, 41, 30, 255, "Potion id thirst (Have to be the same on server and client)");
 		potion_id_saturation = config.getInt("potion_id_saturation", CATEGORY_GENERAL, 42, 30, 255, "Potion id for saturation (Have to be the same on server and client)");
 		potion_id_sunscreen = config.getInt("potion_id_sunscreen", CATEGORY_GENERAL, 40, 30, 255, "Potion id for sunscreen (Have to be the same on server and client)");
+		render_fog_vampire_biome = config.getBoolean("fog_vampire_biome",CATEGORY_GENERAL,true,"Render fog in the vampire biome");
 		// Village
 		village_gen_enabled = config.get(cat_village.getQualifiedName(), "change_village_gen_enabled", true, "Should the custom generator be injected? (Enables/Disables the village mod)")
 				.getBoolean();

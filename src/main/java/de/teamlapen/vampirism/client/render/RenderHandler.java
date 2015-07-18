@@ -161,7 +161,7 @@ public class RenderHandler {
 
 		}
 
-		if(mc.thePlayer.worldObj.getBiomeGenForCoords(MathHelper.floor_double(mc.thePlayer.posX),MathHelper.floor_double(mc.thePlayer.posZ)) instanceof BiomeVampireForest){
+		if(Configs.render_fog_vampire_biome&&mc.thePlayer.worldObj.getBiomeGenForCoords(MathHelper.floor_double(mc.thePlayer.posX),MathHelper.floor_double(mc.thePlayer.posZ)) instanceof BiomeVampireForest){
 			if(vampireBiomeTicks< VAMPIRE_BIOME_FADE_TICKS){
 				vampireBiomeTicks++;
 			}
