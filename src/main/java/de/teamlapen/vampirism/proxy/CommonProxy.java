@@ -167,7 +167,7 @@ public abstract class CommonProxy implements IProxy {
 		registerEntity(EntitySaveableVampireMinion.class, REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME, false);
 		registerEntity(EntityRemoteVampireMinion.class, REFERENCE.ENTITY.VAMPIRE_MINION_REMOTE_NAME, false);
 		registerEntity(EntityDeadMob.class, REFERENCE.ENTITY.DEAD_MOB_NAME, false);
-		registerEntity(EntityDracula.class, REFERENCE.ENTITY.DRACULA_NAME, false);
+		registerEntity(EntityDracula.class, REFERENCE.ENTITY.DRACULA_NAME, true);//TODO disable egg again
 		registerEntity(EntityGhost.class, REFERENCE.ENTITY.GHOST_NAME,true);
 		registerEntity(EntityBlindingBat.class, REFERENCE.ENTITY.BLINDING_BAT_NAME, false);
 		registerEntity(EntityDummyBittenAnimal.class,REFERENCE.ENTITY.DUMMY_CREATURE,false);

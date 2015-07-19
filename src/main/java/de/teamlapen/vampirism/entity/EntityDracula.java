@@ -1,16 +1,17 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.generation.castle.CastlePositionData;
+import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAvoidEntity;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.boss.IBossDisplayData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
@@ -22,23 +23,22 @@ import de.teamlapen.vampirism.util.Helper;
 import org.eclipse.jdt.annotation.NonNull;
 
 /** @author Mistadon */
-public class EntityDracula extends EntityVampire implements IBossDisplayData {
+public class EntityDracula extends DefaultVampire implements IBossDisplayData {
 	// TODO Sounds
 
 	private static final int DISAPPEAR_DELAY = 200;
-	private int teleportDelay;
 	private int disappearDelay;
-	private final int maxTeleportDelay = 30;
 	private final int maxTeleportDistanceX = 16;
 	private final int maxTeleportDistanceY = 16;
 	private final int maxTeleportDistanceZ = 16;
 	private boolean inCastle;
+	private int damageCounter=0;
 
 	public EntityDracula(World par1World) {
 		super(par1World);
-		this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityVampireHunter.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.2));
-		this.tasks.addTask(6, new EntityAIWander(this, 0.7));
-		this.tasks.addTask(9, new EntityAILookIdle(this));
+		this.tasks.addTask(2,new EntityAIMoveTowardsRestriction(this,1.0D));
+		this.tasks.addTask(12, new EntityAIWander(this, 0.7));
+		this.tasks.addTask(13, new EntityAILookIdle(this));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
 
@@ -69,27 +69,25 @@ public class EntityDracula extends EntityVampire implements IBossDisplayData {
 		}
 	}
 
+	@Override public boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_) {
+		damageCounter+=p_70097_2_*5;
+		return super.attackEntityFrom(p_70097_1_, p_70097_2_);
+	}
+
 	@Override
 	public void onLivingUpdate() {
-		if (this.worldObj.isDaytime() && !this.worldObj.isRemote) {
-			float f = this.getBrightness(1.0F);
-
-			if (f > 0.5F && this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ))
-					&& this.rand.nextFloat() * 30.0F < (f - 0.4F) * 2.0F) {
-				this.entityToAttack = null;
-				this.teleportRandomly();
-			}
-		}
-
-		if (this.isBurning()) {
-			this.entityToAttack = null;
-			this.teleportRandomly();
-		}
 
 		this.isJumping = false;
 
-		if (this.entityToAttack != null)
+		if (this.entityToAttack != null) {
 			this.faceEntity(this.entityToAttack, 100.0F, 100.0F);
+			if(this.rand.nextInt(300)==0){
+				this.addPotionEffect(new PotionEffect(Potion.invisibility.id,60));
+			}
+		}
+		if(this.isInWater()||this.handleLavaMovement()){
+			this.teleportRandomly();
+		}
 
 		if (!this.worldObj.isRemote && this.isEntityAlive()) {
 			if (disappearDelay > 0) {
@@ -97,17 +95,23 @@ public class EntityDracula extends EntityVampire implements IBossDisplayData {
 					this.teleportAway();
 				}
 			}
+			if(damageCounter>0)damageCounter--;
+			if(damageCounter>50){
+				if(this.teleportRandomly()){
+					damageCounter=0;
+				}
+			}
 			if (this.entityToAttack != null) {
 				if (this.entityToAttack instanceof EntityPlayer && this.shouldAttackPlayer((EntityPlayer) this.entityToAttack)) {
-					if (this.entityToAttack.getDistanceSqToEntity(this) < 16.0D)
-						this.teleportRandomly();
-					this.teleportDelay = 0;
+					//					if (this.entityToAttack.getDistanceSqToEntity(this) < 16.0D){
+					//						this.teleportRandomly();
+					//						if(rand.nextBoolean()){
+					//							this.summonBats();
+					//						}
+					//					}
 
-				} else if (this.entityToAttack.getDistanceSqToEntity(this) > 256.0D && this.teleportDelay++ >= maxTeleportDelay && this.teleportToEntity(this.entityToAttack)) {
-					this.teleportDelay = 0;
 				}
-			} else
-				this.teleportDelay = 0;
+			}
 		}
 
 		super.onLivingUpdate();
@@ -136,7 +140,15 @@ public class EntityDracula extends EntityVampire implements IBossDisplayData {
 		double d0 = this.posX + (this.rand.nextDouble() - 0.5D) * maxTeleportDistanceX;
 		double d1 = this.posY + (this.rand.nextInt(maxTeleportDistanceY) - maxTeleportDistanceY * 0.5D);
 		double d2 = this.posZ + (this.rand.nextDouble() - 0.5D) * maxTeleportDistanceZ;
-		return Helper.teleportTo(this, d0, d1, d2, true);
+		if(this.isWithinHomeDistance(MathHelper.floor_double(d0),MathHelper.floor_double(d1),MathHelper.floor_double(d2))){
+			if(Helper.teleportTo(this, d0, d1, d2, true)){
+				if(rand.nextInt(5)==0){
+					summonBats();
+				}
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/** Teleports dracula to the given entity */
@@ -161,6 +173,16 @@ public class EntityDracula extends EntityVampire implements IBossDisplayData {
 	 */
 	public void makeCastleLord(@NonNull CastlePositionData.Position pos){
 		ChunkCoordIntPair lc=pos.getLowerMainCastle();
-		this.setHomeArea(lc.chunkXPos << 4 + 15, (int) this.posY+1, lc.chunkZPos << 4 + 15, 23);
+		this.setHomeArea(lc.chunkXPos << 4 + 15, (int) this.posY + 1, lc.chunkZPos << 4 + 15, 16);
+		inCastle=true;
+	}
+
+	private void summonBats(){
+		for (int i = 0; i < BALANCE.VP_SKILLS.SUMMON_BAT_COUNT; i++) {
+			Entity e = EntityList.createEntityByName(REFERENCE.ENTITY.BLINDING_BAT_NAME, worldObj);
+			((EntityBlindingBat)e).restrictLiveSpan();
+			e.copyLocationAndAnglesFrom(this);
+			worldObj.spawnEntityInWorld(e);
+		}
 	}
 }
