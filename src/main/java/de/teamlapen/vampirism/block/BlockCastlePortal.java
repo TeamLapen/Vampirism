@@ -1,10 +1,14 @@
 package de.teamlapen.vampirism.block;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.castleDim.TeleporterCastle;
+import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPortal;
+import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
@@ -19,6 +23,7 @@ public class BlockCastlePortal extends BlockPortal {
 		this.setBlockName(name);
 		this.setHardness(1000000F);
 		this.setResistance(1000000000F);
+		this.setBlockTextureName(REFERENCE.MODID + ":" + name);
 	}
 
 	@Override
@@ -65,4 +70,12 @@ public class BlockCastlePortal extends BlockPortal {
 	@Override public boolean func_150000_e(World p_150000_1_, int p_150000_2_, int p_150000_3_, int p_150000_4_) {
 		return false;
 	}
+
+	@SideOnly(Side.CLIENT)
+	public void registerBlockIcons(IIconRegister p_149651_1_)
+	{
+
+		this.blockIcon = p_149651_1_.registerIcon(this.getTextureName());
+	}
+
 }

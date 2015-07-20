@@ -17,6 +17,7 @@ import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import de.teamlapen.vampirism.util.Logger;
+import org.eclipse.jdt.annotation.Nullable;
 
 /**
  * 
@@ -145,7 +146,8 @@ public class BlockCoffin extends BasicBlockContainer {
 		}
 	}
 
-	public void setCoffinOccupied(World world, int x, int y, int z, EntityPlayer player, boolean flag) {
+
+	public void setCoffinOccupied(World world, int x, int y, int z, @Nullable EntityPlayer player, boolean flag) {
 		setBedOccupied(world, x, y, z, player, flag);
 		((TileEntityCoffin) world.getTileEntity(x, y, z)).occupied = flag;
 		// if(!world.isRemote)

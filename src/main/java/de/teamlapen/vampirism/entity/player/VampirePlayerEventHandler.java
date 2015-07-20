@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.entity.player;
 
+import de.teamlapen.vampirism.castleDim.ChunkProviderCastle;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -31,7 +33,7 @@ public class VampirePlayerEventHandler {
 	@SubscribeEvent
 	public void onBlockPlaced(BlockEvent.PlaceEvent event) {
 		try {
-			if (VampirePlayer.get(event.player).isSkillActive(Skills.batMode)) {
+			if (VampirePlayer.get(event.player).isSkillActive(Skills.batMode)|| (event.player.worldObj.provider.dimensionId==VampirismMod.castleDimensionId&&!ChunkProviderCastle.allowedToBuildHere(event.player))) {
 				event.setCanceled(true);
 			}
 		} catch (Exception e) {
@@ -41,7 +43,7 @@ public class VampirePlayerEventHandler {
 
 	@SubscribeEvent
 	public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-		if (VampirePlayer.get(event.entityPlayer).isSkillActive(Skills.batMode)) {
+		if (VampirePlayer.get(event.entityPlayer).isSkillActive(Skills.batMode)||(event.entity.worldObj.provider.dimensionId==VampirismMod.castleDimensionId&&!ChunkProviderCastle.allowedToBuildHere(event.entity))) {
 			event.setCanceled(true);
 		}
 	}

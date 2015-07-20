@@ -1,36 +1,26 @@
 package de.teamlapen.vampirism.castleDim;
 
-import cpw.mods.fml.common.eventhandler.Event;
 import de.teamlapen.vampirism.ModBlocks;
-import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.IProgressUpdate;
-import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.SpawnerAnimals;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraft.world.gen.ChunkProviderEnd;
-import net.minecraft.world.gen.NoiseGenerator;
-import net.minecraft.world.gen.NoiseGeneratorOctaves;
-import net.minecraft.world.gen.NoiseGeneratorPerlin;
-import net.minecraft.world.gen.feature.WorldGenDungeons;
-import net.minecraft.world.gen.feature.WorldGenLakes;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.terraingen.ChunkProviderEvent;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
 import net.minecraftforge.event.terraingen.TerrainGen;
 
 import java.util.List;
 import java.util.Random;
 
-import static net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.*;
-import static net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.ICE;
+import static net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.EventType.ANIMALS;
 
 /**
  * Chunkprovider for the castle world.
@@ -39,15 +29,13 @@ import static net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.Ev
 public class ChunkProviderCastle implements IChunkProvider {
 	protected World worldObj;
 	protected Random rand;
+
 	public ChunkProviderCastle(World world, long seed) {
-		worldObj=world;
-		rand=new Random(seed);
+		worldObj = world;
+		rand = new Random(seed);
 	}
 
-
-	@Override
-	public void populate(IChunkProvider p_73153_1_, int p_73153_2_, int p_73153_3_)
-	{
+	@Override public void populate(IChunkProvider p_73153_1_, int p_73153_2_, int p_73153_3_) {
 		BlockFalling.fallInstantly = true;
 		int k = p_73153_2_ * 16;
 		int l = p_73153_3_ * 16;
@@ -55,17 +43,15 @@ public class ChunkProviderCastle implements IChunkProvider {
 		this.rand.setSeed(this.worldObj.getSeed());
 		long i1 = this.rand.nextLong() / 2L * 2L + 1L;
 		long j1 = this.rand.nextLong() / 2L * 2L + 1L;
-		this.rand.setSeed((long)p_73153_2_ * i1 + (long)p_73153_3_ * j1 ^ this.worldObj.getSeed());
+		this.rand.setSeed((long) p_73153_2_ * i1 + (long) p_73153_3_ * j1 ^ this.worldObj.getSeed());
 		boolean flag = false;
 
 		MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Pre(p_73153_1_, worldObj, rand, p_73153_2_, p_73153_3_, flag));
 
 		//biomegenbase.decorate(this.worldObj, this.rand, k, l);
-		if (TerrainGen.populate(p_73153_1_, worldObj, rand, p_73153_2_, p_73153_3_, flag, ANIMALS))
-		{
+		if (TerrainGen.populate(p_73153_1_, worldObj, rand, p_73153_2_, p_73153_3_, flag, ANIMALS)) {
 			SpawnerAnimals.performWorldGenSpawning(this.worldObj, biomegenbase, k + 8, l + 8, 16, 16, this.rand);
 		}
-
 
 		MinecraftForge.EVENT_BUS.post(new PopulateChunkEvent.Post(p_73153_1_, worldObj, rand, p_73153_2_, p_73153_3_, flag));
 
@@ -112,45 +98,46 @@ public class ChunkProviderCastle implements IChunkProvider {
 		return false;
 	}
 
-	@Override
-	public Chunk provideChunk(int p_73154_1_, int p_73154_2_)
-	{
-		this.rand.setSeed((long)p_73154_1_ * 341873128712L + (long)p_73154_2_ * 132897987541L);
+	@Override public Chunk provideChunk(int p_73154_1_, int p_73154_2_) {
+		this.rand.setSeed((long) p_73154_1_ * 341873128712L + (long) p_73154_2_ * 132897987541L);
 		Block[] ablock = new Block[32768];
 		byte[] meta = new byte[ablock.length];
-		BiomeGenBase[] biomesForGeneration ;
-		biomesForGeneration=this.worldObj.getWorldChunkManager().loadBlockGeneratorData(null, p_73154_1_ * 16, p_73154_2_ * 16, 16, 16);
+		BiomeGenBase[] biomesForGeneration;
+		//biomesForGeneration=this.worldObj.getWorldChunkManager().loadBlockGeneratorData(null, p_73154_1_ * 16, p_73154_2_ * 16, 16, 16);
 		this.generateTerrain(p_73154_1_, p_73154_2_, ablock, meta);
 		Chunk chunk = new Chunk(this.worldObj, ablock, meta, p_73154_1_, p_73154_2_);
-		byte[] abyte = chunk.getBiomeArray();
-
-		for (int k = 0; k < abyte.length; ++k)
-		{
-			abyte[k] = (byte)biomesForGeneration[k].biomeID;
-		}
+		//		byte[] abyte = chunk.getBiomeArray();
+		//
+		//		for (int k = 0; k < abyte.length; ++k)
+		//		{
+		//			abyte[k] = (byte)biomesForGeneration[k].biomeID;
+		//		}
 
 		chunk.generateSkylightMap();
 		return chunk;
 	}
 
-	protected void generateTerrain(int chunkX,int chunkZ,Block[] blocks,byte[] meta){
-		if(chunkZ==6){
-			if(chunkX==2)createEntranceChunk(blocks,meta,true);
-			if(chunkX==3)createEntranceChunk(blocks,meta,false);
+	protected void generateTerrain(int chunkX, int chunkZ, Block[] blocks, byte[] meta) {
+		if (chunkZ == 6) {
+			if (chunkX == 2)
+				createEntranceChunk(blocks, meta, true);
+			if (chunkX == 3)
+				createEntranceChunk(blocks, meta, false);
 		}
-		if(chunkX>5||chunkX<0||chunkZ>5||chunkZ<0)return;
-		int y=2;
-		for(int x=0;x<16;x++){
-			for(int z=0;z<16;z++){
-				int i=x*128*16|z*128|y;
-				blocks[i]=Blocks.bedrock;
+		if (chunkX > 5 || chunkX < 0 || chunkZ > 5 || chunkZ < 0)
+			return;
+		int y = 2;
+		for (int x = 0; x < 16; x++) {
+			for (int z = 0; z < 16; z++) {
+				int i = x * 128 * 16 | z * 128 | y;
+				blocks[i] = Blocks.bedrock;
 			}
 		}
-		for (y+=1;y<12;y++){
-			for(int x=0;x<16;x++){
-				for(int z=0;z<16;z++){
-					int i=x*128*16|z*128|y;
-					blocks[i]= ModBlocks.cursedEarth;
+		for (y += 1; y < 13; y++) {
+			for (int x = 0; x < 16; x++) {
+				for (int z = 0; z < 16; z++) {
+					int i = x * 128 * 16 | z * 128 | y;
+					blocks[i] = ModBlocks.cursedEarth;
 				}
 			}
 		}
@@ -158,44 +145,56 @@ public class ChunkProviderCastle implements IChunkProvider {
 
 	/**
 	 * Creates a half of the entrance area
+	 *
 	 * @param blocks
 	 * @param meta
 	 * @param left
 	 */
-	protected void createEntranceChunk(Block[] blocks,byte[] meta,boolean left){
-		int y=12;
-		int x=0;
-		int z=0;
-		int i=0;
-		for(x=0;x<9;x++){
-			for(z=0;z<10;z++){
-				i=(left?15-x:x)*128*16|z*128|y;
-				blocks[i]= Blocks.obsidian;
+	protected void createEntranceChunk(Block[] blocks, byte[] meta, boolean left) {
+		int y = 12;
+		int x = 0;
+		int z = 0;
+		int i = 0;
+		for (x = 0; x < 9; x++) {
+			for (z = 0; z < 10; z++) {
+				i = (left ? 15 - x : x) * 128 * 16 | z * 128 | y;
+				blocks[i] = Blocks.obsidian;
 			}
 		}
-		for(x=0;x<2;x++){
-			z=9;
-			for(y=12;y<16;y++){
-				i=(left?15-x:x)*128*16|z*128|y;
-				blocks[i]= Blocks.bedrock;
+		for (x = 0; x < 2; x++) {
+			z = 9;
+			for (y = 12; y < 16; y++) {
+				i = (left ? 15 - x : x) * 128 * 16 | z * 128 | y;
+				blocks[i] = Blocks.bedrock;
 			}
 		}
-		y=13;
-		x=0;
-		i=(left?15-x:x)*128*16|z*128|y;
-		blocks[i]=ModBlocks.castlePortal;
-		y=14;
-		i=(left?15-x:x)*128*16|z*128|y;
-		blocks[i]=ModBlocks.castlePortal;
-		z=10;
-		y=13;
-		i=(left?15-x:x)*128*16|z*128|y;
-		blocks[i]=Blocks.bedrock;
-		y=14;
-		i=(left?15-x:x)*128*16|z*128|y;
-		blocks[i]=Blocks.bedrock;
+		y = 13;
+		x = 0;
+		i = (left ? 15 - x : x) * 128 * 16 | z * 128 | y;
+		blocks[i] = ModBlocks.castlePortal;
+		y = 14;
+		i = (left ? 15 - x : x) * 128 * 16 | z * 128 | y;
+		blocks[i] = ModBlocks.castlePortal;
+		z = 10;
+		y = 13;
+		i = (left ? 15 - x : x) * 128 * 16 | z * 128 | y;
+		blocks[i] = Blocks.bedrock;
+		y = 14;
+		i = (left ? 15 - x : x) * 128 * 16 | z * 128 | y;
+		blocks[i] = Blocks.bedrock;
 	}
 
+	/**
+	 * Checks if the given entity is in the main area and is thereby allowed to build
+	 * @param e
+	 * @return
+	 */
+	public static boolean allowedToBuildHere(Entity e){
+		int cX=e.chunkCoordX;
+		int cZ=e.chunkCoordZ;
+		if(cX>0&&cX<6&&cZ>0&&cZ<6)return true;
+		return false;
+	}
 	@Override public Chunk loadChunk(int p_73158_1_, int p_73158_2_) {
 		return null;
 	}

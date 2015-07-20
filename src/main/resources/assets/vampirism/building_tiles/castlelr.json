@@ -4677,18 +4677,6 @@
       "extra": {
         "entity_name": "vampirism.blinding_bat"
       }
-    },
-    {
-      "type": "PAINTING",
-      "pos": {
-        "x": 13,
-        "y": 1,
-        "z": -1
-      },
-      "extra": {
-        "dir": 1,
-        "title": "Skeleton"
-      }
     }
   ]
 }

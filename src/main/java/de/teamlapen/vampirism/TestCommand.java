@@ -3,12 +3,16 @@ package de.teamlapen.vampirism;
 import java.util.List;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import de.teamlapen.vampirism.block.BlockCoffin;
 import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
+import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
+import net.minecraft.block.Block;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import de.teamlapen.vampirism.entity.minions.EntityRemoteVampireMinion;
 import de.teamlapen.vampirism.entity.minions.EntitySaveableVampireMinion;
@@ -119,6 +123,18 @@ public class TestCommand implements ICommand {
 					MovingObjectPosition pos = Helper.getPlayerLookingSpot(p,0);
 					if(pos!=null&&MovingObjectPosition.MovingObjectType.BLOCK.equals(pos.typeOfHit)){
 						sendMessage(sender,"Block: "+p.worldObj.getBlock(pos.blockX,pos.blockY,pos.blockZ)+" Meta: "+p.worldObj.getBlockMetadata(pos.blockX,pos.blockY,pos.blockZ));
+					}
+					return;
+				}
+				if("close".equals(param[0])){
+					MovingObjectPosition pos = Helper.getPlayerLookingSpot(p,0);
+					if(pos!=null&&MovingObjectPosition.MovingObjectType.BLOCK.equals(pos.typeOfHit)){
+						Block b=p.worldObj.getBlock(pos.blockX,pos.blockY,pos.blockZ);
+						if(b instanceof BlockCoffin){
+							((BlockCoffin)b).setCoffinOccupied(p.worldObj,pos.blockX,pos.blockY,pos.blockZ,null,true);
+							TileEntity t=p.worldObj.getTileEntity(pos.blockX,pos.blockY,pos.blockZ);
+							t.markDirty();
+						}
 					}
 					return;
 				}

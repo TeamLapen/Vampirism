@@ -1909,7 +1909,8 @@
         "z": 8
       },
       "extra": {
-        "color": 1
+        "color": 1,
+        "closed":true
       }
     },
     {
@@ -1920,7 +1921,8 @@
         "z": 9
       },
       "extra": {
-        "color": 15
+        "color": 15,
+        "closed": true
       }
     }
   ]

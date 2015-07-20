@@ -1706,7 +1706,8 @@
         "z": 4
       },
       "extra": {
-        "color": 0
+        "color": 0,
+        "closed": true
       }
     },
     {
@@ -1717,7 +1718,8 @@
         "z": 4
       },
       "extra": {
-        "color": 15
+        "color": 15,
+        "closed":true
       }
     },
     {

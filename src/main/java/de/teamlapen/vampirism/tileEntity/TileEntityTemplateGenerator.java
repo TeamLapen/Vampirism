@@ -55,6 +55,7 @@ public class TileEntityTemplateGenerator extends TileEntity {
 						}
 						continue;
 					}
+
 						int m=chunk.getBlockMetadata(x, y, z);
 						int[] meta=guessMetaForBlock(block,m);
 						addBlock(block,meta,x,y-this.yCoord,z);
@@ -67,6 +68,9 @@ public class TileEntityTemplateGenerator extends TileEntity {
 						}
 						else if(block instanceof BlockCoffin){
 							extraType = Extra.TYPE.COFFIN;
+						}
+						else if(block.equals(Blocks.wall_sign)){
+							extraType= Extra.TYPE.WALL_SIGN;
 						}
 						if(extraType!=null){
 
@@ -227,6 +231,16 @@ public class TileEntityTemplateGenerator extends TileEntity {
 				int[] set={2,5,3,4};
 				int[] rotSet={0,2,3,1};
 				metadata=rotate(set,rotSet[meta-2]);
+			}
+			else if(Blocks.wall_sign.equals(block)){
+				int[] set={2,5,3,4};
+				int[] rotSet={0,2,3,1};
+				metadata=rotate(set,rotSet[meta-2]);
+			}
+			else if(block instanceof BlockFenceGate){
+				int[] set={0,1,2,3};
+				int[] openSet={4,5,6,7};
+				metadata=rotate(meta>3?openSet:set,meta);
 			}
 			if(metadata!=null)return metadata;
 		} catch (IndexOutOfBoundsException e) {

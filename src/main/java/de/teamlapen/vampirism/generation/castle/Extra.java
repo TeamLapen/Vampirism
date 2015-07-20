@@ -93,8 +93,16 @@ public class Extra {
 				TileEntityCoffin te = ((TileEntityCoffin) tileEntity);
 				te.tryToFindOtherTile();
 				te.color = extra.get("color").getAsInt();
+				te.occupied=extra.get("closed").getAsBoolean();
 				break;
+			case WALL_SIGN:
+				TileEntitySign sign2=(TileEntitySign)tileEntity;
+				sign2.signText[0]=extra.get("t0").getAsString();
+				sign2.signText[1]=extra.get("t1").getAsString();
+				sign2.signText[2]=extra.get("t2").getAsString();
+				sign2.signText[3]=extra.get("t3").getAsString();
 			}
+
 		}
 	}
 
@@ -131,6 +139,7 @@ public class Extra {
 			break;
 		case COFFIN:
 			extra.addProperty("color",((TileEntityCoffin)tileEntity).color);
+			extra.addProperty("closed",((TileEntityCoffin)tileEntity).occupied);
 			break;
 		case SPAWN_ENTITY:
 			TileEntitySign sign=(TileEntitySign)tileEntity;
@@ -138,6 +147,13 @@ public class Extra {
 			String entity=sign.signText[1]+sign.signText[2]+sign.signText[3];
 			extra.addProperty("count",count);
 			extra.addProperty("entity",entity.trim());
+			break;
+		case WALL_SIGN:
+			TileEntitySign sign2=(TileEntitySign)tileEntity;
+			extra.addProperty("t0",sign2.signText[0]);
+			extra.addProperty("t1",sign2.signText[1]);
+			extra.addProperty("t2",sign2.signText[2]);
+			extra.addProperty("t3",sign2.signText[3]);
 			break;
 		}
 
@@ -157,6 +173,6 @@ public class Extra {
 	 * Types of {@link Extra}s
 	 */
 	public static enum TYPE{
-		SPAWNER,COFFIN,CHEST,SPAWN_ENTITY,PAINTING;
+		SPAWNER,COFFIN,CHEST,SPAWN_ENTITY,PAINTING,WALL_SIGN;
 	}
 }
