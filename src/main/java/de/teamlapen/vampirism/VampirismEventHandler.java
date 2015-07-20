@@ -2,14 +2,21 @@ package de.teamlapen.vampirism;
 
 import cpw.mods.fml.common.gameevent.TickEvent;
 import de.teamlapen.vampirism.entity.VampireMob;
+import de.teamlapen.vampirism.generation.WorldGenVampirism;
+import de.teamlapen.vampirism.generation.castle.CastlePositionData;
 import de.teamlapen.vampirism.util.Logger;
+import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+import net.minecraftforge.event.world.ChunkDataEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.Event.Result;
@@ -76,7 +83,41 @@ public class VampirismEventHandler {
 			//Reset the castle fail notice
 			VampirismMod.vampireCastleFail=false;
 		}
+//		if(event.world instanceof WorldServer&&event.world.provider.dimensionId==VampirismMod.castleDimensionId){
+//			IChunkProvider chunkProvider=((WorldServer) event.world).theChunkProviderServer.currentChunkProvider;
+//			CastlePositionData.reset(event.world);
+//			for(int x=0;x<6;x++){
+//				for(int z=0;z<6;z++){
+//					Chunk old=event.world.getChunkFromChunkCoords(x,z);
+//					Chunk c=chunkProvider.provideChunk(x, z);
+//					old.setStorageArrays(c.getBlockStorageArray());
+//					old.entityLists=c.entityLists;
+//					WorldGenVampirism.castleGenerator.checkBiome(event.world,x,z,event.world.rand,true);
+//				}
+//			}
+//		}
+
 		// Loading VillageVampireData
 		FMLCommonHandler.instance().bus().register(VillageVampireData.get(event.world));// Not sure if this is the right position or if it could lead to a memory leak
 	}
+
+//	@SubscribeEvent
+//	public void onWorldUnload(WorldEvent.Unload event){
+//		if(!event.world.isRemote&&event.world.provider.dimensionId==VampirismMod.castleDimensionId){
+//			for(int x=0;x<6;x++){
+//				for(int z=0;z<6;z++){
+//					Chunk c=new Chunk(event.world,new Block[32768],x,z);
+//					event.world.getChunkFromChunkCoords(x,z).setStorageArrays(c.getBlockStorageArray());
+//				}
+//			}
+//		}
+//	}
+
+
+//	@SubscribeEvent
+//	public void onChunkLoad(ChunkDataEvent.Load event){
+//		int x=event.getData().getCompoundTag("Level").getInteger("xPos");
+//		int z=event.getData().getCompoundTag("Level").getInteger("zPos");
+//		event.getChunk().setStorageArrays();
+//	}
 }

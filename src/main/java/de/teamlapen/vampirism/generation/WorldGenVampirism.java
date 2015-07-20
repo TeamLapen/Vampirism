@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.generation;
 
 import java.util.Random;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.generation.castle.CastleGenerator;
 import net.minecraft.entity.Entity;
 import net.minecraft.village.Village;
@@ -24,10 +25,10 @@ import de.teamlapen.vampirism.villages.VillageVampireData;
  */
 public class WorldGenVampirism implements IWorldGenerator {
 
-	public final CastleGenerator castleGenerator;
+	public final static CastleGenerator castleGenerator=new CastleGenerator();
 
 	public WorldGenVampirism() {
-		castleGenerator=new CastleGenerator();
+		
 	}
 
 	/**
@@ -97,6 +98,9 @@ public class WorldGenVampirism implements IWorldGenerator {
 			generateEnd(world, random, chunkX, chunkZ);
 			break;
 		}
+		if(world.provider.dimensionId==VampirismMod.castleDimensionId){
+			castleGenerator.checkBiome(world,chunkX,chunkZ,random,true);
+		}
 
 	}
 
@@ -111,6 +115,6 @@ public class WorldGenVampirism implements IWorldGenerator {
 	private void generateSurface(World world, Random random, int x, int z) {
 		addStructures(world, random, x<<4, z<<4);
 		addEntities(world, random, x<<4 + 8, z<<4 + 8);
-		castleGenerator.checkBiome(world,x,z,random);
+		castleGenerator.checkBiome(world,x,z,random,false);
 	}
 }

@@ -29,6 +29,11 @@ public class CastlePositionData extends WorldSavedData{
 		}
 		return data;
 	}
+
+	public static void reset(World world){
+		CastlePositionData data = new CastlePositionData(IDENTIFIER);
+		world.perWorldStorage.setData(IDENTIFIER,data);
+	}
 	public CastlePositionData(String identifier) {
 		super(identifier);
 		positions=new LinkedList<Position>();
@@ -217,9 +222,11 @@ public class CastlePositionData extends WorldSavedData{
 				s.substring(0,s.length()-1);
 				nbt.setString("tiles",s);
 			}
+			if(hasTiles()){
+				nbt.setIntArray("lmc", new int[] { lowerMainCastle.chunkXPos,lowerMainCastle.chunkZPos});
+				nbt.setIntArray("umc",new int[]{upperMainCastle.chunkXPos,upperMainCastle.chunkZPos});
+			}
 			nbt.setInteger("generated",generated);
-			nbt.setIntArray("lmc",new int[]{lowerMainCastle.chunkXPos,lowerMainCastle.chunkZPos});
-			nbt.setIntArray("umc",new int[]{upperMainCastle.chunkXPos,upperMainCastle.chunkZPos});
 			return nbt;
 		}
 

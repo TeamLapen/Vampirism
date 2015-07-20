@@ -37,24 +37,42 @@ public class CastleGenerator extends WorldGenerator {
 		biomes.add(ModBiomes.biomeVampireForest);
 	}
 
-
-	public void checkBiome(World world,int chunkX, int chunkZ,Random rnd){
+	/**
+	 * Should be called for every biome.
+	 * Generates and optimizes positions if they was not generated before.
+	 * Also (pre) generates the castle stuff when the given chunk is within a position
+	 * @param world
+	 * @param chunkX
+	 * @param chunkZ
+	 * @param rnd
+	 * @param castleWorld Whether it is the castle dimension or the overworld
+	 */
+	public void checkBiome(World world,int chunkX, int chunkZ,Random rnd,boolean castleWorld){
 		CastlePositionData data=CastlePositionData.get(world);
 		if(!data.checked){
-			data.positions.addAll(this.findPositions(world, rnd));
-			data.checked=true;
-			if(data.positions.size()>0){
-				ListIterator<CastlePositionData.Position> iterator = data.positions.listIterator();
-				while(iterator.hasNext()){
-					CastlePositionData.Position pos=iterator.next();
-					CastlePositionData.Position pos2=this.optimizePosition(pos, world, rnd);
-					if(!pos2.equals(pos)){
-						pos=pos2;
-						iterator.set(pos2);
-					}
-				}
-
+			if(castleWorld){
+				CastlePositionData.Position p=new CastlePositionData.Position(0,0);
+				p.setSize(6,6);
+				data.positions.add(p);
 			}
+			else{
+
+				data.positions.addAll(this.findPositions(world, rnd));
+
+				if(data.positions.size()>0){
+					ListIterator<CastlePositionData.Position> iterator = data.positions.listIterator();
+					while(iterator.hasNext()){
+						CastlePositionData.Position pos=iterator.next();
+						CastlePositionData.Position pos2=this.optimizePosition(pos, world, rnd);
+						if(!pos2.equals(pos)){
+							pos=pos2;
+							iterator.set(pos2);
+						}
+					}
+
+				}
+			}
+			data.checked=true;
 			data.markDirty();
 		}
 		if (data.positions.size()>0) {

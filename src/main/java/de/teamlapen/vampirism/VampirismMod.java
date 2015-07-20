@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism;
 
+import de.teamlapen.vampirism.castleDim.WorldProviderCastle;
 import de.teamlapen.vampirism.generation.castle.CastleGenerator;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -7,6 +8,7 @@ import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
@@ -61,6 +63,8 @@ public class VampirismMod {
 
 	public static boolean vampireCastleFail = false;
 
+	public static int castleDimensionId;
+
 	public static CreativeTabs tabVampirism = new CreativeTabs("vampirism") {
 		@Override
 		@SideOnly(Side.CLIENT)
@@ -80,6 +84,9 @@ public class VampirismMod {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
+		castleDimensionId=DimensionManager.getNextFreeDimId();
+		DimensionManager.registerProviderType(castleDimensionId, WorldProviderCastle.class,false);
+		DimensionManager.registerDimension(castleDimensionId,castleDimensionId);
 		proxy.registerEntitys();
 		proxy.registerRenderer();
 		proxy.registerSounds();
