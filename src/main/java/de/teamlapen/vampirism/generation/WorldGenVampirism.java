@@ -55,7 +55,7 @@ public class WorldGenVampirism implements IWorldGenerator {
 			VillageVampire vv = VillageVampireData.get(world).getVillageVampire(v);
 
 			int spawnedHunter = world.getEntitiesWithinAABB(EntityVampireHunter.class, vv.getBoundingBox()).size();
-			for (Entity e : Helper.spawnEntityInVillage(v, BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE - spawnedHunter, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world)) {
+			for (Entity e : Helper.spawnEntityInVillage(v, random.nextInt(3)- spawnedHunter, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world)) {
 				((EntityVampireHunter) e).setHomeArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, v.getVillageRadius());
 			}
 		} catch (Exception e) {
