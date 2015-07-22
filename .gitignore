@@ -25,5 +25,5 @@ ops.json
 server.properties
 usercache.json
 whitelist.json
-world*
+world/
 hs*

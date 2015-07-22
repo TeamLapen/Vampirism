@@ -29,6 +29,7 @@ import static net.minecraftforge.event.terraingen.PopulateChunkEvent.Populate.Ev
 public class ChunkProviderCastle implements IChunkProvider {
 	protected World worldObj;
 	protected Random rand;
+	public final static int MAX_Y_HEIGHT=35;
 
 	public ChunkProviderCastle(World world, long seed) {
 		worldObj = world;
@@ -133,7 +134,7 @@ public class ChunkProviderCastle implements IChunkProvider {
 				blocks[i] = Blocks.bedrock;
 			}
 		}
-		for (y += 1; y < 13; y++) {
+		for (y += 1; y <=MAX_Y_HEIGHT; y++) {
 			for (int x = 0; x < 16; x++) {
 				for (int z = 0; z < 16; z++) {
 					int i = x * 128 * 16 | z * 128 | y;
@@ -151,7 +152,7 @@ public class ChunkProviderCastle implements IChunkProvider {
 	 * @param left
 	 */
 	protected void createEntranceChunk(Block[] blocks, byte[] meta, boolean left) {
-		int y = 12;
+		int y = MAX_Y_HEIGHT;
 		int x = 0;
 		int z = 0;
 		int i = 0;
@@ -163,23 +164,23 @@ public class ChunkProviderCastle implements IChunkProvider {
 		}
 		for (x = 0; x < 2; x++) {
 			z = 9;
-			for (y = 12; y < 16; y++) {
+			for (y = MAX_Y_HEIGHT; y < MAX_Y_HEIGHT+4; y++) {
 				i = (left ? 15 - x : x) * 128 * 16 | z * 128 | y;
 				blocks[i] = Blocks.bedrock;
 			}
 		}
-		y = 13;
+		y = MAX_Y_HEIGHT+1;
 		x = 0;
 		i = (left ? 15 - x : x) * 128 * 16 | z * 128 | y;
 		blocks[i] = ModBlocks.castlePortal;
-		y = 14;
+		y = MAX_Y_HEIGHT+2;
 		i = (left ? 15 - x : x) * 128 * 16 | z * 128 | y;
 		blocks[i] = ModBlocks.castlePortal;
 		z = 10;
-		y = 13;
+		y = MAX_Y_HEIGHT+1;
 		i = (left ? 15 - x : x) * 128 * 16 | z * 128 | y;
 		blocks[i] = Blocks.bedrock;
-		y = 14;
+		y = MAX_Y_HEIGHT+2;
 		i = (left ? 15 - x : x) * 128 * 16 | z * 128 | y;
 		blocks[i] = Blocks.bedrock;
 	}

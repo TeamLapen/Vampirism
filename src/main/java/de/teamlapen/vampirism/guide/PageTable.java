@@ -94,7 +94,7 @@ public class PageTable extends PageBase {
 			for(int i=0;i<strings.length;i++){
 				loc[i]=StatCollector.translateToLocal(strings[i]);
 			}
-			return addLine(loc);
+			return addLine((Object[])loc);
 		}
 		
 		public PageTable build(){
