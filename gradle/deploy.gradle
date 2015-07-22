@@ -1,0 +1,22 @@
+apply plugin: "curseforge"
+
+curse {
+    projectId = "233029"
+    relatedProject 'guide-api': 'optionalLibrary'
+
+    if (project.buildnumber.equals("RELEASE")) {
+        releaseType = 'beta'
+        //changelog = new File("resources/changelog/${project.version}.txt").text
+    } else {
+        releaseType = 'alpha'
+        //changelog = ""
+    }
+
+    if(project.hasProperty("curseforge_key")) {
+        apiKey = project.curseforge_key
+    } else if(System.getenv().TRAVIS) {
+        apiKey = System.getenv().CURSEFORGE_KEY_SECRET
+    }
+    addGameVersion config.minecraft_version
+    additionalArtifact devJar
+}

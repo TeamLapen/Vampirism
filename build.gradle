@@ -59,13 +59,19 @@ def loadProperties(){
 	}
 	
 	ext.mod_version="LocalTest"
+    ext.buildnumber = "DEV"
 	if(System.getenv().CI){
 		project.mod_version = System.getenv("MODVERSION")
+        project.buildnumber = "SNAPSHOT"
 		logger.lifecycle "In CI. Version: ${project.mod_version}"
 	}
 	else{
 		logger.lifecycle "Local build"
 	}
+    if(System.getenv().RELEASE){
+        project.buildnumber = "RELEASE"
+        logger.lifecycle "This is a release"
+    }
 }
 
 sourceSets
@@ -125,6 +131,8 @@ task devJar(type: Jar, dependsOn: 'classes') {
 artifacts {
     archives devJar
 }
+
+apply from: 'gradle/deploy.gradle'
 
 
 

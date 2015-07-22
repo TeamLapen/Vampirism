@@ -32,6 +32,7 @@ if [[ $commsg != *"$r"* ]]; then
 	echo "Creating snapshot build: "$(printenv MODVERSION)
 else
 	recommend=1
+	export RELEASE=true
 	#Extract new version
 	v="VERSION:"
 	if [[ $commsg == *"$v"* ]]; then
@@ -56,12 +57,13 @@ else
 fi
 ./gradlew setupCIWorkspace
 ./gradlew build
-for f in build/libs/*.jar; do
-if [[ $f == *"dev"* ]]
-then
-dev=$f;
-else
-file=$f;
-fi
-done
-curl -F "pass=$PASS" -F "file=@$file" -F "dev=@$dev" -F "recommend=$recommend" http://teamlapen.de/projects/vampirism/files/upload.php
+#Jars are already uploaded to curse by gradle
+#for f in build/libs/*.jar; do
+#if [[ $f == *"dev"* ]]
+#then
+#dev=$f;
+#else
+#file=$f;
+#fi
+#done
+#curl -F "pass=$PASS" -F "file=@$file" -F "dev=@$dev" -F "recommend=$recommend" http://teamlapen.de/projects/vampirism/files/upload.php
