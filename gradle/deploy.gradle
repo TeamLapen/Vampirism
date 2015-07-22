@@ -14,8 +14,11 @@ curse {
 
     if(project.hasProperty("curseforge_key")) {
         apiKey = project.curseforge_key
-    } else if(System.getenv().TRAVIS) {
+    } else if(System.getenv().CI) {
         apiKey = System.getenv().CURSEFORGE_KEY_SECRET
+    }
+    else{
+        apiKey = ''
     }
     addGameVersion config.minecraft_version
     additionalArtifact devJar
