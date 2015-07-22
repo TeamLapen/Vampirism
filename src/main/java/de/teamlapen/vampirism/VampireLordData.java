@@ -5,7 +5,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 
 /**
- * Created by Max on 19.07.2015.
+ * Stores vampire lord informations for the map.
  */
 public class VampireLordData extends WorldSavedData {
 	private final static String IDENTIFIER ="vampirism_lord_data";
@@ -32,11 +32,11 @@ public class VampireLordData extends WorldSavedData {
 		super(identifier);
 	}
 
-	@Override public void readFromNBT(NBTTagCompound p_76184_1_) {
-
+	@Override public void readFromNBT(NBTTagCompound nbt) {
+		shouldRegenerateCastleDim=nbt.getBoolean("regenerate");
 	}
 
-	@Override public void writeToNBT(NBTTagCompound p_76187_1_) {
-
+	@Override public void writeToNBT(NBTTagCompound nbt) {
+		nbt.setBoolean("regenerate",shouldRegenerateCastleDim);
 	}
 }

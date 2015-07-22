@@ -1,0 +1,27 @@
+def minor = 0
+def tag = "v0.0.-1"
+try {
+    tag = getLatestTag()
+}
+catch (Exception e){
+    logger.lifecycle "Failed to find the latest tag. Probably there is none."
+}
+def versions = tag.tokenize('.')
+minor= (versions[2]).toInteger()+1
+project.mod_version="v${config.main_version}.${config.major_version}.${minor}"
+if(!System.getenv().RELEASE&&System.getenv().CI){
+    project.mod_version=project.mod_version+"-Alpha"+System.getenv().DRONE_BUILD_NUMBER
+}
+if(!System.getenv().CI){
+    project.mod_version=project.mod_version+"-TEST"
+}
+
+logger.lifecycle "Version "+project.mod_version
+def getLatestTag(){
+    def stdout = new ByteArrayOutputStream()
+    exec {
+        commandLine 'git','describe','--tags','--abbrev=0', "--match", "\"v${config.main_version}.${config.major_version}*\""
+        standardOutput = stdout
+    }
+    return stdout.toString().trim()
+}

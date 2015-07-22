@@ -4,12 +4,12 @@ curse {
     projectId = "233029"
     relatedProject 'guide-api': 'optionalLibrary'
 
-    if (project.buildnumber.equals("RELEASE")) {
+    if (System.getenv().RELEASE) {
         releaseType = 'beta'
         //changelog = new File("resources/changelog/${project.version}.txt").text
     } else {
         releaseType = 'alpha'
-        //changelog = ""
+        changelog = "This version should not be used in your 'productive' world. It contains the latest features, but also the latest bugs.\n Probably not all features are finished.\n To see what might have changed visit our Github page and browse the latest commits."
     }
 
     if(project.hasProperty("curseforge_key")) {
@@ -20,6 +20,7 @@ curse {
     else{
         apiKey = ''
     }
+    displayName= "Vampirism-${config.minecraft_version}-${project.mod_version}"
     addGameVersion config.minecraft_version
     additionalArtifact devJar
 }

@@ -1,0 +1,35 @@
+repositories {
+    maven { // The repo from which to get waila
+        name "Mobius Repo"
+        url "http://mobiusstrip.eu/maven"
+    }
+    maven { url 'http://tehnut.info/maven/' }
+    mavenCentral()
+}
+
+dependencies {
+    compile('mcp.mobius.waila:Waila:'+config.waila_version)
+    compile "info.amerifrance.guideapi:Guide-API:"+config.minecraft_version+"-"+config.guide_api_version+":deobf"
+    compile group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.annotation', version: '1.1.0'
+}
+
+minecraft {
+    version = config.minecraft_version + "-" + config.forge_version
+
+    replaceIn "util/REFERENCE.java"
+    replace "@VERSION@", "${project.mod_version}"
+    replace "@MVERSION@", "${config.minecraft_version}"
+}
+
+processResources {
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        include '*.info'
+        // replace version and mcversion
+        expand 'm_version': project.mod_version, 'mc_version': project.config.minecraft_version
+    }
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude '**/*.info'
+    }
+}

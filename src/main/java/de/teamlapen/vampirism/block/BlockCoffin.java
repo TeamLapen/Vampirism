@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
@@ -83,7 +84,10 @@ public class BlockCoffin extends BasicBlockContainer {
 				z = te.otherZ;
 			}
 			if (player.isSneaking()) {
-				return false;
+				if(player.getItemInUse()!=null&&player.getItemInUse().getItem() instanceof ItemDye){
+					return false;
+				}
+
 			}
 
 			if (world.provider.canRespawnHere() && world.getBiomeGenForCoords(x, z) != BiomeGenBase.hell) {
