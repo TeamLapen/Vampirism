@@ -56,7 +56,7 @@ else
 	curl --data "$API_JSON" https://api.github.com/repos/${1}/${2}/releases?access_token=${token}
 fi
 ./gradlew setupCIWorkspace
-./gradlew build
+./gradlew build curse
 #Jars are already uploaded to curse by gradle
 #for f in build/libs/*.jar; do
 #if [[ $f == *"dev"* ]]
