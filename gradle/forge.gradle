@@ -32,4 +32,6 @@ processResources {
     from(sourceSets.main.resources.srcDirs) {
         exclude '**/*.info'
     }
+
+    exclude '**/Thumbs.db'
 }
