@@ -15,6 +15,10 @@ if(!System.getenv().RELEASE&&System.getenv().CI){
 if(!System.getenv().CI){
     project.mod_version=project.mod_version+"-TEST"
 }
+else{
+    writeVersion(project.mod_version)
+}
+
 
 logger.lifecycle "Version "+project.mod_version
 def getLatestTag(){
@@ -24,4 +28,10 @@ def getLatestTag(){
         standardOutput = stdout
     }
     return stdout.toString().trim()
+}
+
+def writeVersion(String ver){
+    exec {
+        commandLine 'export',"VAMP_VERSION=${ver}"
+    }
 }

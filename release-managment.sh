@@ -21,4 +21,6 @@ else
 	export RELEASE=true
 fi
 ./gradlew setupCIWorkspace
-./gradlew build curse
+#./gradlew build curse
+version=$(printenv VAMP_VERSION)
+echo "Finished building version: " $version
