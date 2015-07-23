@@ -24,9 +24,11 @@ fi
 #./gradlew build curse
 version=$(<version.txt)
 echo "Finished building version: " $version
-if ["$(printenv RELEASE)"="true"]
+if ["$(printenv RELEASE)"=="true"]
 then
 API_JSON=$(printf '{"tag_name": "v%s","target_commitish": "%s","name": "v%s","body": "Release of version %s","draft": false,"prerelease": false}' $version $(printenv GIT_COMMIT) $version $version)
 token=$(printenv TOKEN)
 curl --data "$API_JSON" https://api.github.com/repos/${1}/${2}/releases?access_token=${token}
 fi
+API_JSON=$(printf '{ "body":"[DRONE]%s"}' $(printenv DRONE_BUILD_URL))
+curl --data "$API_JSON" https://api.github.com/repos/${1}/${2}/commits/$(printenv GIT_COMMIT)/comments
