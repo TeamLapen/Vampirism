@@ -103,10 +103,9 @@ public class TextureHelper {
 					if (w != overlay.getWidth(null)) {
 						overlay = overlay.getScaledInstance(w, -1, Image.SCALE_SMOOTH);
 					}
-
-					if (h == overlay.getHeight(null)) {
-						BufferedImage combined = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-
+					int oh=overlay.getHeight(null);
+					if (h == oh||h==oh*2) {
+						BufferedImage combined = new BufferedImage(w, oh, BufferedImage.TYPE_INT_ARGB);
 						Graphics g = combined.getGraphics();
 						g.drawImage(image, 0, 0, null);
 						g.drawImage(overlay, 0, 0, null);
@@ -116,7 +115,7 @@ public class TextureHelper {
 					}
 
 				} catch (Exception e) {
-					Logger.e(TAG, "Failed to combine images " + overlayLocation + " and " + textureLocation, e);
+					Logger.e(TAG, e,"Failed to combine images " + overlayLocation + " and " + textureLocation);
 				}
 
 				boolean flag = false;

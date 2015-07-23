@@ -68,13 +68,13 @@ public class ClientProxy extends CommonProxy {
 	public ResourceLocation checkVampireTexture(Entity entity, ResourceLocation loc) {
 		if (entity instanceof AbstractClientPlayer) {
 			if (Configs.modify_vampire_player_texture&&VampirePlayer.get((EntityPlayer) entity).getLevel() > 0) {
-				ResourceLocation vamp = new ResourceLocation("vampirism/temp/" + loc.hashCode());
+				ResourceLocation vamp = new ResourceLocation("vampirism/temp/" + loc.getResourcePath());
 				TextureHelper.createVampireTexture((EntityLivingBase) entity, loc, vamp);
 				return vamp;
 			}
 		} else if (entity instanceof EntityCreature) {
 			if (VampireMob.get((EntityCreature) entity).isVampire()) {
-				ResourceLocation vamp = new ResourceLocation("vampirism/temp/" + loc.hashCode());
+				ResourceLocation vamp = new ResourceLocation("vampirism/temp/" + loc.getResourceDomain()+"/"+loc.getResourcePath());
 				TextureHelper.createVampireTexture((EntityLiving) entity, loc, vamp);
 				return vamp;
 			}
