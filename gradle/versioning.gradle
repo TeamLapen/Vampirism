@@ -31,7 +31,6 @@ def getLatestTag(){
 }
 
 def writeVersion(){
-    exec {
-        commandLine 'export',"VAMP_VERSION=${project.mod_version}"
-    }
+    def file = new File("version.txt")
+    file.text=project.mod_version
 }

@@ -22,5 +22,5 @@ else
 fi
 ./gradlew setupCIWorkspace
 #./gradlew build curse
-version=$(printenv VAMP_VERSION)
+version=$(<version.txt)
 echo "Finished building version: " $version
