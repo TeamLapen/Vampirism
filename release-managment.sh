@@ -16,7 +16,7 @@ fi
 #Check if release
 r="#release"
 if [[ $commsg != *"$r"* ]]; then
-	echo "Creating snapshot build: "$(printenv MODVERSION)
+	echo "Creating snapshot build"
 else
 	export RELEASE=true
 fi
@@ -24,3 +24,8 @@ fi
 #./gradlew build curse
 version=$(<version.txt)
 echo "Finished building version: " $version
+if [RELEASE]; then
+API_JSON=$(printf '{"tag_name": "v%s","target_commitish": "%s","name": "v%s","body": "Release of version %s","draft": false,"prerelease": false}' $version $(printenv GIT_COMMIT) $version $version)
+token=$(printenv TOKEN)
+curl --data "$API_JSON" https://api.github.com/repos/${1}/${2}/releases?access_token=${token}
+fi
