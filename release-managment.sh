@@ -29,6 +29,7 @@ API_JSON=$(printf '{"tag_name": "v%s","target_commitish": "%s","name": "v%s","bo
 token=$(printenv TOKEN)
 curl --data "$API_JSON" https://api.github.com/repos/${1}/${2}/releases?access_token=${token}
 fi
-API_JSON=$(printf '{ "body":"[DRONE]%s"}' $(printenv DRONE_BUILD_URL))
-echo $(printenv GIT_COMMIT)
-curl --data "$API_JSON" https://api.github.com/repos/${1}/${2}/commits/0b81ab96486db8a83cdce06e2953021da85b1550/comments
+API_JSON=$(printf '{ "body":"[DRONE]%s"}'
+echo "https://api.github.com/repos/${1}/${2}/commits/$(printenv DRONE_BUILD_URL))/comments"
+echo $API_JSON
+curl --data "$API_JSON" https://api.github.com/repos/${1}/${2}/commits/$(printenv DRONE_BUILD_URL))/comments
