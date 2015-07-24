@@ -20,8 +20,8 @@ if [[ $commsg != *"$r"* ]]; then
 else
 	export RELEASE="true"
 fi
-./gradlew setupCIWorkspace
-./gradlew build curse
+#./gradlew setupCIWorkspace
+#./gradlew build curse
 version=$(<version.txt)
 echo "Finished building version: " $version
 if [[ $commsg = *"$r"* ]]; then
@@ -30,4 +30,4 @@ token=$(printenv TOKEN)
 curl --data "$API_JSON" https://api.github.com/repos/${1}/${2}/releases?access_token=${token}
 fi
 API_JSON=$(printf '{ "body":"[DRONE]%s"}' $(printenv DRONE_BUILD_URL))
-curl --data "$API_JSON" https://api.github.com/repos/${1}/${2}/commits/$(printenv GIT_COMMIT)/comments?access_token=${token}
+curl -u maxanier:${token} --data "$API_JSON" https://api.github.com/repos/${1}/${2}/commits/$(printenv GIT_COMMIT)/comments
