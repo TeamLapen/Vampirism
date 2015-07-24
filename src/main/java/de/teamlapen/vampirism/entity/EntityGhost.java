@@ -94,7 +94,7 @@ public class EntityGhost extends EntityMob {
 	 */
 	@Override
 	public float getBlockPathWeight(int p_70783_1_, int p_70783_2_, int p_70783_3_) {
-		return 0.0F;
+		return 0.1F;
 		// return 0.5F - this.worldObj.getLightBrightness(p_70783_1_, p_70783_2_, p_70783_3_);
 	}
 
@@ -103,8 +103,8 @@ public class EntityGhost extends EntityMob {
 		return true;
 	}
 
-//	@Override
-//	protected boolean isValidLightLevel() {
-//		return true;
-//	}
+	@Override
+	protected boolean isValidLightLevel() {
+		return true;
+	}
 }

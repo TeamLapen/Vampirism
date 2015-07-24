@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.VampireLordData;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.castleDim.TeleporterCastle;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
@@ -47,6 +48,9 @@ public class BlockCastlePortal extends BlockPortal {
 				if(!VampireLordData.get(par1World).isPortalEnabled()){
 					player.timeUntilPortal=40;
 					player.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.lord_portal_disabled"));
+				}
+				else if(VampirePlayer.get(player).getLevel()<REFERENCE.HIGHEST_REACHABLE_LEVEL){
+					player.timeUntilPortal=10;
 				}
 				else{
 					player.mcServer.getConfigurationManager().transferPlayerToDimension(player, VampirismMod.castleDimensionId, new TeleporterCastle(mServer.worldServerForDimension(VampirismMod.castleDimensionId)));

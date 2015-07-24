@@ -1,4 +1,3 @@
-#X-Generator: crowdin.com
 # Entitys
 entity.vampirism.vampireHunter.name=Vampire Hunter
 entity.vampirism.vampire.name=Vampire
@@ -9,6 +8,7 @@ entity.vampirism.vampireMinionS.name=Vampire Minion
 entity.vampirism.blinding_bat.name=Bat
 entity.vampirism.dracula.name=Dracula
 entity.vampirism.dead_mob.name=Dead mob
+entity.vampirism.portal_guard.name=Portal Guard
 
 # Items
 item.vampirism.vampiresFear.name=Vampire's fear
@@ -36,6 +36,11 @@ block.vampirism.churchAltar.name=Altar of Cleansing
 block.vampirism.cursedEarth.name=Cursed Earth
 block.vampirism.vampireOrchid.name=Vampire Orchid
 block.vampirism.blockCoffin.name=Coffin
+block.vampirism.castlePortal.name=Portal Block
+block.vampirism.castleBlock.name=Castle Block
+block.vampirism.castleSlab.name=Castle Slab
+block.vampirism.doubleCastleSlab.name=Double Castle Slab
+block.vampirism.castleStairs.name=Castle Stairs
 
 #GUI
 gui.vampirism.revertback.head=Revert back to normal human
@@ -88,6 +93,15 @@ text.vampirism.thanks=Thanks
 text.vampirism.coming_back=I'm coming back, my lord
 text.vampirism.sorry_i_died_while_doing=My lord, I'm sorry but I died while fulfilling your task
 text.vampirism.current_task=Current task
+text.vampirism.lord.become=You are raised to the Vampire Lord
+text.vampirism.lord.other_player_become=has defeated the current Vampire Lord and replaces him
+text.vampirism.lord.vampire_replace=Another player has replaced you as Vampire Lord
+text.vampirism.lord.vampire_kill_replace=Another vampire has killed you and took your place as Vampire Lord
+text.vampirism.lord.new_lord_castle=A new Vampire Lord has risen and moved into his castle
+text.vampirism.lord.vampire_replace_absence=Another vampire has replaced you as Vampire Lord in your absence
+text.vampirism.lord.portal_disabled=This portal does not lead anywhere
+text.vampirism.lord.level_to_low=You vampire level is too low to be a Vampire Lord
+text.vampirism.guard_stay_away_level_low=Your vampire level is too low to travel to Dracula's castle. Stay away!
 
 #Skill
 skill.vampirism.bat_skill=Toggle Batmode

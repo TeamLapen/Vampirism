@@ -9,7 +9,7 @@ public class StayHereCommand extends DefaultMinionCommand {
 	public StayHereCommand(int id, EntityRemoteVampireMinion minion) {
 		super(id);
 		this.minion = minion;
-		stay = new EntityAIStayHere(minion);
+		stay = new EntityAIStayHere(minion,4,-1);
 	}
 
 	@Override
