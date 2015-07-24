@@ -88,10 +88,13 @@ public class TestCommand implements ICommand {
 			if (param.length > 0) {
 				if ("lord".equals(param[0])) {
 					vampire.setLevel(REFERENCE.HIGHEST_REACHABLE_LEVEL);
-					if (vampire.setVampireLord(true)) {
-						sendMessage(sender, "You are now a vampire lord");
-					}
+					VampireLordData.get(p.worldObj).makeLord(p);
 
+					return;
+				}
+				if("lords".equals(param[0])){
+					sendMessage(sender,VampireLordData.get(p.worldObj).getLordNamesAsString());
+					sendMessage(sender,"Your UUID: "+((EntityPlayer) sender).getUniqueID());
 					return;
 				}
 				if("part".equals(param[0])){

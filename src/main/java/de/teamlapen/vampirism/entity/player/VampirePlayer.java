@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import de.teamlapen.vampirism.*;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -29,10 +30,6 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.Configs;
-import de.teamlapen.vampirism.ModItems;
-import de.teamlapen.vampirism.ModPotion;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.block.BlockCoffin;
 import de.teamlapen.vampirism.entity.DefaultVampire;
 import de.teamlapen.vampirism.entity.EntityDracula;
@@ -252,6 +249,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 				((ILastingSkill) Skills.getSkill(i)).onReActivated(p, player);
 			}
 		}
+		p.refreshVampireLordState();
 		p.sync(false);
 	}
 
@@ -605,7 +603,6 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			Logger.w(TAG, "Loaded skill timers have a different size than the existing skills");
 			skillTimer = new int[Skills.getSkillCount()];
 		}
-		vampireLord = properties.getBoolean(KEY_VAMPIRE_LORD);
 		if (properties.hasKey(KEY_AUTOFILL)) {
 			setAutoFillBlood(properties.getBoolean(KEY_AUTOFILL));
 		}
@@ -698,7 +695,6 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			Entity src = source.getEntity();
 			if (src instanceof EntityVampireHunter && BALANCE.VAMPIRE_PLAYER_LOOSE_LEVEL) {
 				looseLevel();
-				this.setVampireLord(false);
 			}
 
 			if (isVampireLord()) {
@@ -718,7 +714,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 				}
 				if (old != null) {
 					if (old instanceof EntityPlayer) {
-						// TODO if other player is the killer he can become the lord
+						VampireLordData.get(player.worldObj).replaceLord(player, (EntityPlayer) old);
 
 					} else {
 						EntityDracula dracula = (EntityDracula) EntityList.createEntityByName(REFERENCE.ENTITY.DRACULA_NAME, old.worldObj);
@@ -727,7 +723,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 						old.worldObj.spawnEntityInWorld(dracula);
 						old.setDead();
 					}
-					this.setVampireLord(false);
+					VampireLordData.get(player.worldObj).makeNoLord(player, "text.vampirism.lost_lord_other_vampire_defeated");
 
 				}
 
@@ -932,6 +928,12 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			}
 		}
 
+		if(!player.worldObj.isRemote&&vampireLord){
+			if(getLevel()<REFERENCE.HIGHEST_REACHABLE_LEVEL){
+				VampireLordData.get(player.worldObj).makeNoLord(player, "text.vampirism.lord_level_to_low");
+			}
+		}
+
 		if (batTransformed != this.isSkillActive(Skills.batMode)) {
 			batTransformed = !batTransformed;
 			VampirismMod.proxy.setPlayerBat(player, batTransformed);
@@ -957,7 +959,6 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		properties.setIntArray(KEY_SKILLS, skillTimer);
 		properties.setBoolean(KEY_AUTOFILL, isAutoFillBlood());
 		properties.setInteger(KEY_VISION, getVision());
-		properties.setBoolean(KEY_VAMPIRE_LORD, isVampireLord());
 		properties.setTag(KEY_EXTRADATA, extraData);
 		properties.setTag(KEY_MINIONS, minionHandler.getMinionsToSave());
 		properties.setLong(KEY_COMEBACK_CALL, lastRemoteMinionComebackCall);
@@ -990,17 +991,13 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		if (l >= 0) {
 			level = l;
 			PlayerModifiers.applyModifiers(l, player);
-
-			if (l < REFERENCE.HIGHEST_REACHABLE_LEVEL) {
-				this.vampireLord = false;
-			}
 			this.sync(true);
 		}
 	}
 
 	/**
-	 * Sets if the player is a vampire lord or not
-	 * 
+	 * Should only be called by @{@link VampireLordData}.
+	 * Use @{@link VampireLordData#makeLord(EntityPlayer)} )} or @{@link VampireLordData#makeNoLord(EntityPlayer, String)} instead
 	 * @param state
 	 * @return will return false if the player cannot become a vampire lord
 	 */
@@ -1009,8 +1006,10 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			Logger.w(TAG, "Cannot become a vampire lord since the player has not reached the highest level");
 			return false;
 		}
-		this.vampireLord = state;
-		this.sync(true);
+		if(state!=vampireLord){
+			this.vampireLord = state;
+			this.sync(true);
+		}
 		return true;
 	}
 
@@ -1213,6 +1212,12 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		this.sync(true);
 		if (vanilla) {
 			player.wakeUpPlayer(immediately, updateWorld, setSpawn);
+		}
+	}
+
+	public void refreshVampireLordState(){
+		if(!player.worldObj.isRemote){
+			vampireLord=VampireLordData.get(player.worldObj).isLord(player);
 		}
 	}
 

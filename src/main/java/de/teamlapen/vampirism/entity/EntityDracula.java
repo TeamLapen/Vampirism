@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.VampireLordData;
 import de.teamlapen.vampirism.generation.castle.CastlePositionData;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -12,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
@@ -33,6 +35,7 @@ public class EntityDracula extends DefaultVampire implements IBossDisplayData {
 	private final int maxTeleportDistanceZ = 16;
 	private boolean inCastle;
 	private int damageCounter=0;
+	private final static String TAG = "Dracula";
 
 	public EntityDracula(World par1World) {
 		super(par1World);
@@ -64,8 +67,35 @@ public class EntityDracula extends DefaultVampire implements IBossDisplayData {
 	@Override
 	public void onDeath(DamageSource src) {
 		if (src.getSourceOfDamage() instanceof EntityPlayer) {
-			VampirePlayer p = VampirePlayer.get((EntityPlayer) src.getSourceOfDamage());
-			p.setVampireLord(true);
+			boolean flag=VampireLordData.get(this.worldObj).makeLord((EntityPlayer) src.getSourceOfDamage());
+			if(flag){
+				VampireLordData.get(this.worldObj).onDraculaDied();
+			}
+			else{
+				VampireLordData.get(this.worldObj).setRegenerateCastleDim(true);
+			}
+			Logger.d(TAG,"Dracula (%s) was killed by a player",this);
+		}
+		else{
+			//If Dracula died in a castle area, but was not killed by a player, try to respawn him with low health otherwise regenerate the world
+			CastlePositionData.Position pos=CastlePositionData.get(worldObj).findPosAtChunk(chunkCoordX,chunkCoordZ);
+			if(pos!=null){
+				EntityDracula drac= (EntityDracula) EntityList.createEntityByName(REFERENCE.ENTITY.DRACULA_NAME,worldObj);
+				boolean flag=Helper.spawnEntityInWorld(worldObj, AxisAlignedBB.getBoundingBox(pos.getLowerMainCastle().chunkXPos<<4,pos.getHeight(),pos.getLowerMainCastle().chunkXPos<<4,pos.getUpperMainCastle().chunkXPos<<4,pos.getHeight()+10,pos.getUpperMainCastle().chunkZPos<<4),drac,10);
+				if(flag){
+					drac.makeCastleLord(pos);
+					drac.setHealth(10);
+					Logger.i(TAG, "Dracula (%s) died inside a castle, but could be respawned",this);
+				}
+				else{
+					drac.setDead();
+					VampireLordData.get(this.worldObj).setRegenerateCastleDim(true);
+					Logger.w(TAG,"Dracula (%s) died inside a castle and could not be respawned -> regenerate dimension",this);
+				}
+			}
+			else{
+				Logger.w(TAG,"Dracula (%s) died outside of a castle",this);
+			}
 		}
 	}
 

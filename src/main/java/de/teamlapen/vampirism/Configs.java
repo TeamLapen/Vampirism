@@ -66,6 +66,8 @@ public class Configs {
 	
 	public static int potion_id_thirst;
 
+	public static boolean mulitple_lords;
+
 	public static boolean render_fog_vampire_biome;
 
 	public static Configuration config;
@@ -191,6 +193,8 @@ public class Configs {
 		potion_id_saturation = config.getInt("potion_id_saturation", CATEGORY_GENERAL, 42, 30, 255, "Potion id for saturation (Have to be the same on server and client)");
 		potion_id_sunscreen = config.getInt("potion_id_sunscreen", CATEGORY_GENERAL, 40, 30, 255, "Potion id for sunscreen (Have to be the same on server and client)");
 		render_fog_vampire_biome = config.getBoolean("fog_vampire_biome",CATEGORY_GENERAL,true,"Render fog in the vampire biome");
+		mulitple_lords = config.getBoolean("multiple_lords",CATEGORY_GENERAL,false,"Allows multiple player to be a vampire lord at a time. If changed from true to false, all players will loose their lord status");
+
 		// Village
 		village_gen_enabled = config.get(cat_village.getQualifiedName(), "change_village_gen_enabled", true, "Should the custom generator be injected? (Enables/Disables the village mod)")
 				.getBoolean();

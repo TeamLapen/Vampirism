@@ -100,7 +100,6 @@ public class VillageVampireData extends WorldSavedData {
 
 	}
 
-	@SubscribeEvent
 	public void onWorldTick(TickEvent.WorldTickEvent event) {
 		if (worldObj == null || worldObj.villageCollectionObj == null)
 			return;

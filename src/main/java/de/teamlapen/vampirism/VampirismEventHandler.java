@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism;
 
 import cpw.mods.fml.common.gameevent.TickEvent;
+import cpw.mods.fml.relauncher.Side;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.generation.WorldGenVampirism;
 import de.teamlapen.vampirism.generation.castle.CastlePositionData;
@@ -10,10 +11,13 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -70,6 +74,13 @@ public class VampirismEventHandler {
 	@SubscribeEvent
 	public void onTick(TickEvent event) {
 		VampirismMod.proxy.onTick(event);
+		if(event instanceof ServerTickEvent){
+			World w=DimensionManager.getWorld(0);
+			if(w!=null){
+				VampireLordData.get(w).tick((ServerTickEvent) event);
+			}
+
+		}
 	}
 
 	@SubscribeEvent
@@ -79,6 +90,11 @@ public class VampirismEventHandler {
 		}
 	}
 
+	@SubscribeEvent
+	public void onWorldTick(TickEvent.WorldTickEvent event){
+		VillageVampireData.get(event.world).onWorldTick(event);
+	}
+
 
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
@@ -86,8 +102,5 @@ public class VampirismEventHandler {
 			//Reset the castle fail notice
 			VampirismMod.vampireCastleFail = false;
 		}
-
-		// Loading VillageVampireData
-		FMLCommonHandler.instance().bus().register(VillageVampireData.get(event.world));// Not sure if this is the right position or if it could lead to a memory leak
 	}
 }

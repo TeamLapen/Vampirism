@@ -18,7 +18,7 @@ if(!System.getenv().CI){
 else{
     writeVersion()
 }
-
+version=project.mod_version
 
 logger.lifecycle "Version "+project.mod_version
 def getLatestTag(){

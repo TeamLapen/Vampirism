@@ -106,6 +106,7 @@ public class VampirismMod {
 	public void onServerStart(FMLServerStartingEvent e) {
 		e.registerServerCommand(new TestCommand()); // Keep there until final
 		e.registerServerCommand(new SummonCommand());
+		e.registerServerCommand(new VampirismCommand());
 
 	}
 

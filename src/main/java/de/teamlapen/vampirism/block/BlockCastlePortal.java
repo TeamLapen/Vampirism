@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.block;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import de.teamlapen.vampirism.VampireLordData;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.castleDim.TeleporterCastle;
 import de.teamlapen.vampirism.util.Logger;
@@ -12,6 +13,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 
 /**
@@ -42,8 +44,14 @@ public class BlockCastlePortal extends BlockPortal {
 			else if (player.dimension != VampirismMod.castleDimensionId)
 			{
 				player.timeUntilPortal = 10;
+				if(!VampireLordData.get(par1World).isPortalEnabled()){
+					player.timeUntilPortal=40;
+					player.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.lord_portal_disabled"));
+				}
+				else{
+					player.mcServer.getConfigurationManager().transferPlayerToDimension(player, VampirismMod.castleDimensionId, new TeleporterCastle(mServer.worldServerForDimension(VampirismMod.castleDimensionId)));
+				}
 
-				player.mcServer.getConfigurationManager().transferPlayerToDimension(player, VampirismMod.castleDimensionId, new TeleporterCastle(mServer.worldServerForDimension(VampirismMod.castleDimensionId)));
 			}
 			else
 			{
