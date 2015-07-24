@@ -53,6 +53,9 @@ public class TileEntityTemplateGenerator extends TileEntity {
 							e.retrieveExtra(sign);
 							extraList.add(e);
 						}
+						if(y<this.yCoord){
+							addBlock(Blocks.air,new int[]{0,0,0,0},x,y-this.yCoord,z);
+						}
 						continue;
 					}
 

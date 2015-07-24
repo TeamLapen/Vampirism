@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import cpw.mods.fml.common.registry.GameRegistry;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.EntityDracula;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityPainting;
@@ -43,6 +45,9 @@ public class Extra {
 		if(type==TYPE.SPAWN_ENTITY){
 			int c=extra.get("count").getAsInt();
 			String entity=extra.get("entity").getAsString();
+			if(REFERENCE.ENTITY.DRACULA_NAME.equals(entity)&&world.provider.dimensionId!= VampirismMod.castleDimensionId){
+				return;
+			}
 			for(int i=0;i<c;i++){
 				Entity e= EntityList.createEntityByName(entity,world);
 				if(e!=null) {

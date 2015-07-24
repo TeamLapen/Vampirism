@@ -281,12 +281,15 @@ public class CastleGenerator extends WorldGenerator {
 
 	private String getRandomHouse(Random rnd){
 		int dir=rnd.nextInt(4);
-		int type=rnd.nextInt(4);
+		int type=rnd.nextInt(8);
 		String s;
 		switch (type){
-		case 0:s="house1";break;
-		case 1:s="house2";break;
-		case 2:s="stables";break;
+		case 0:case 1:s="house1";break;
+		case 2:case 3:s="house2";break;
+		case 4:s="stables";break;
+		case 5:s="blacksmith";break;
+		case 6:s="grave";break;
+		case 7:s="pasture";break;
 		default:return "";
 		}
 		return ","+dir+","+s;
@@ -316,27 +319,30 @@ public class CastleGenerator extends WorldGenerator {
 	public static void loadTiles(){
 		Gson gson = new GsonBuilder().setPrettyPrinting().create();
 		tileMap=new HashMap<String,BuildingTile>();
-		BuildingTile tile;
-		tile=loadTile("wall", gson);
-		if(tile!=null)tileMap.put("wall",tile);
-		tile=loadTile("flatDirt",gson);
-		if(tile!=null)tileMap.put("flatDirt",tile);
-		tile=loadTile("house1",gson);
-		if(tile!=null)tileMap.put("house1",tile);
-		tile=loadTile("house2",gson);
-		if(tile!=null)tileMap.put("house2",tile);
-		tile=loadTile("stables",gson);
-		if(tile!=null)tileMap.put("stables",tile);
-		tile=loadTile("castlell",gson);
-		if(tile!=null)tileMap.put("castlell",tile);
-		tile=loadTile("castlelr",gson);
-		if(tile!=null)tileMap.put("castlelr",tile);
-		tile=loadTile("castleul",gson);
-		if(tile!=null)tileMap.put("castleul",tile);
-		tile=loadTile("castleur",gson);
-		if(tile!=null)tileMap.put("castleur",tile);
+		loadTile("wall",gson,tileMap);
+		loadTile("flatDirt",gson,tileMap);
+		loadTile("house1",gson,tileMap);
+		loadTile("house2",gson,tileMap);
+		loadTile("stables",gson,tileMap);
+		loadTile("castlell",gson,tileMap);
+		loadTile("castlelr",gson,tileMap);
+		loadTile("castleur",gson,tileMap);
+		loadTile("castleul",gson,tileMap);
+		loadTile("blacksmith",gson,tileMap);
+		loadTile("grave",gson,tileMap);
+		loadTile("pasture",gson,tileMap);
 	}
 
+	/**
+	 * Loads the tile and puts it to the given map if successful
+	 * @param name
+	 * @param gson
+	 * @param addTo
+	 */
+	private static void loadTile(String name,Gson gson,Map<String,BuildingTile> addTo){
+		BuildingTile tile=loadTile(name,gson);
+		if(tile!=null)addTo.put(name,tile);
+	}
 	/**
 	 * Loads a tile's json from the mod jar
 	 * @param name
