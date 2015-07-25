@@ -35,3 +35,10 @@ processResources {
 
     exclude '**/Thumbs.db'
 }
+
+jar {
+    manifest {
+        attributes 'FMLCorePlugin': 'de.teamlapen.vampirism.coremod.VampirismFMLLoadingPlugin',
+                'FMLCorePluginContainsFMLMod': 'true'
+    }
+}

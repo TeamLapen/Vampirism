@@ -20,8 +20,6 @@ public class ServerProxy extends CommonProxy {
 
 	@Override
 	public void enableMaxPotionDuration(PotionEffect p) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override

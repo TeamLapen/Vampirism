@@ -147,7 +147,6 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 	 * @return
 	 */
 	private Block checkBlocks(int lx, int ly, int lz, int hx, int hy, int hz, int[][][] structure) {
-		Logger.t(TAG, "0.length: " + structure.length + ":" + structure[0].length + ":" + structure[0][0].length);
 		Block blocktype = null;
 		for (int x = lx; x <= hx; x++) {
 			for (int z = lz; z <= hz; z++) {
@@ -164,25 +163,25 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 					}
 					if (type == 2) {
 						if (!(b instanceof BlockBloodAltar4Tip)) {
-							Logger.t(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
+							Logger.d(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
 							return null;
 						}
 					}
 					if (type == 3) {
 						if (!(b instanceof BlockBloodAltar4)) {
-							Logger.t(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
+							Logger.d(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
 							return null;
 						}
 					}
 					if (type == 4) {
 						if (!(b instanceof BlockBed)) {
-							Logger.t(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
+							Logger.d(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
 							return null;
 						}
 					}
 					if (type == 1) {
 						if (blocktype != null && !blocktype.equals(b)) {
-							Logger.t(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
+							Logger.d(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
 							return null;
 						}
 						blocktype = b;
@@ -281,6 +280,10 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 		Block type = null;
 		Logger.i(TAG, "Testing structure 2");
 		type = checkBlocks(x - 3, y, z - 2, x + 3, y + 3, z + 2, structure2);
+		if(type==null){
+			Logger.i(TAG,"Testing rotated structure 2");
+			type=checkBlocks(x-2,y,z-3,x+2,y+3,z+3,rotateBy90(structure2));
+		}
 		if (type != null) {
 			if (type instanceof BlockCompressed) {
 				if (((BlockCompressed) type).getMapColor(1).equals(MapColor.ironColor)) {
@@ -305,6 +308,36 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 		}
 		return 0;
 
+	}
+
+	/**
+	 * Rotate the lower 2x2 matrix by 90 degrees
+	 * @param matrix
+	 * @return
+	 */
+	private int[][][] rotateBy90(int[][][] matrix){
+		int[][][] result=new int[matrix.length][][];
+		for(int y=0;y<matrix.length;y++){
+			result[y]=rotateBy90(matrix[y]);
+		}
+		return result;
+	}
+
+	/**
+	 * Rotate the MxN matrix by 90 degrees
+	 * @param matrix
+	 * @return
+	 */
+	private int[][] rotateBy90(int[][] matrix){
+		int M=matrix.length;
+		int N=matrix[0].length;
+		int[][] result = new int[N][M];
+		for(int m=0;m<M;m++){
+			for(int n=0;n<N;n++){
+				result[N-1-n][m]=matrix[m][n];
+			}
+		}
+		return result;
 	}
 
 	@Override

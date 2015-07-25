@@ -48,6 +48,14 @@ public class TileEntityBloodAltar2 extends TileEntity {
 		return bloodAmount - old;
 	}
 
+	public int removeBlood(int maxAmount){
+		int amount=Math.min(maxAmount,bloodAmount);
+		bloodAmount-=amount;
+		markDirty();
+		this.worldObj.markBlockForUpdate(this.xCoord,this.yCoord,this.zCoord);
+		return amount;
+	}
+
 	public int getBloodAmount() {
 		return bloodAmount;
 	}

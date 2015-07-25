@@ -24,7 +24,6 @@ public class EntityDeadMob extends Entity {
 		mobs = new ArrayList<String>();
 		mobs.add("Zombie");
 		mobs.add("Skeleton");
-		mobs.add(REFERENCE.ENTITY.GHOST_NAME);
 	}
 
 	public static boolean canBecomeDeadMob(EntityCreature entity) {

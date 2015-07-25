@@ -124,10 +124,14 @@ public class VampireEntityEventHandler {
 				tasks.addTask(3, new EntityAIAvoidVampirePlayer(creeper, 12.0F, 1.0D, 1.2D, BALANCE.VAMPIRE_PLAYER_CREEPER_AVOID_LEVEL));
 			}
 		}
-		else if(event.entity instanceof EntityDracula){
-			CastlePositionData.Position pos=CastlePositionData.get(event.world).findPosAtChunk(event.entity.chunkCoordX,event.entity.chunkCoordZ);
+		else if(!event.world.isRemote&&event.entity instanceof EntityDracula){
+			CastlePositionData.Position pos=CastlePositionData.get(event.world).findPosAt(MathHelper.floor_double(event.entity.posX),MathHelper.floor_double(event.entity.posZ),true);
+			Logger.t("Positions %s, dracula: %s %s",CastlePositionData.get(event.world),event.entity.posX,event.entity.posZ);
 			if(pos!=null){
 				((EntityDracula)event.entity).makeCastleLord(pos);
+			}
+			else{
+				Logger.w("EntityEventHandler","Dracula was spawned outside a castle");
 			}
 		}
 	}

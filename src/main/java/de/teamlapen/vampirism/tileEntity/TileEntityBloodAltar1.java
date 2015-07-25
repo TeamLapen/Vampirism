@@ -36,19 +36,33 @@ public class TileEntityBloodAltar1 extends TileEntity {
 	public final String OCCUPIED_NBTKEY = "occupied";
 	public final String BLOOD_NBTKEY = "blood";
 	public final String TICK_NBTKEY = "tick";
+	public final String INFINITE_NBTKEY = "infinite";
 	private final String TAG = "TEBloodAltar";
 	public int distance = 25;
 	private int tickCounter = 0;
 	private TileEntityBeacon fakeBeacon;
 
+	public boolean isInfinite() {
+		return infinite;
+	}
+
+
+	/**
+	 * If true the altar does not consume any blood from the sword.
+	 * Reset when the sword is taken out.
+	 */
+	private boolean infinite;
+
 	public TileEntityBloodAltar1() {
 		super();
+		infinite=false;
 	}
 
 	public void dropSword() {
 		if (this.isOccupied()) {
 			EntityItem sword = new EntityItem(this.worldObj, this.xCoord, this.yCoord + 1, this.zCoord, getSwordToEject());
 			this.worldObj.spawnEntityInWorld(sword);
+			infinite=false;
 		}
 	}
 
@@ -89,6 +103,13 @@ public class TileEntityBloodAltar1 extends TileEntity {
 		return occupied;
 	}
 
+	public void makeInfinite(){
+		this.infinite=true;
+		this.bloodAmount=ItemLeechSword.MAX_BLOOD;
+		this.occupied=true;
+		this.markDirty();
+	}
+
 	/**
 	 * Marks the block dirty and ready for update
 	 */
@@ -125,6 +146,9 @@ public class TileEntityBloodAltar1 extends TileEntity {
 		this.occupied = nbt.getBoolean(OCCUPIED_NBTKEY);
 		this.bloodAmount = nbt.getInteger(BLOOD_NBTKEY);
 		this.tickCounter = nbt.getInteger(TICK_NBTKEY);
+		if(nbt.hasKey(INFINITE_NBTKEY)){
+			this.infinite = nbt.getBoolean(INFINITE_NBTKEY);
+		}
 	}
 
 	@Override
@@ -154,7 +178,9 @@ public class TileEntityBloodAltar1 extends TileEntity {
 	public void updateEntity() {
 		if (this.worldObj.getTotalWorldTime() % 100L == 0L && !this.worldObj.isRemote) {
 			if (bloodAmount > 0) {
-				bloodAmount--;
+				if(!infinite){
+					bloodAmount--;
+				}
 				if (bloodAmount == 0) {
 					this.markDirty();
 				}
@@ -185,5 +211,6 @@ public class TileEntityBloodAltar1 extends TileEntity {
 		nbt.setBoolean(OCCUPIED_NBTKEY, occupied);
 		nbt.setInteger(BLOOD_NBTKEY, bloodAmount);
 		nbt.setInteger(TICK_NBTKEY, tickCounter);
+		nbt.setBoolean(INFINITE_NBTKEY,infinite);
 	}
 }

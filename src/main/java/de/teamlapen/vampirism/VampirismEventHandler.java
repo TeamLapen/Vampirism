@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.Side;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.generation.WorldGenVampirism;
 import de.teamlapen.vampirism.generation.castle.CastlePositionData;
+import de.teamlapen.vampirism.item.ItemBloodBottle;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.block.Block;
 import net.minecraft.entity.item.EntityItem;
@@ -37,24 +38,26 @@ import org.apache.commons.lang3.StringUtils;
 
 public class VampirismEventHandler {
 	@SubscribeEvent
-	public void dye(PlayerInteractEvent e) {
+	public void playerInteract(PlayerInteractEvent e) {
 		if (e.world.isRemote)
 			return;
 		ItemStack i = null;
-		if (e.entityPlayer.isSneaking() && e.action == Action.RIGHT_CLICK_BLOCK && e.world.getBlock(e.x, e.y, e.z).equals(ModBlocks.coffin)
-				&& (i = (e.entityPlayer).inventory.getCurrentItem()) != null && i.getItem() instanceof ItemDye) {
-			int color = i.getItemDamage();
-			TileEntityCoffin t = (TileEntityCoffin) e.world.getTileEntity(e.x, e.y, e.z);
-			if (t == null)
-				return;
-			t = t.getPrimaryTileEntity();
-			if (t == null)
-				return;
-			t.changeColor(color);
-			e.useBlock = Result.DENY;
-			e.useItem = Result.DENY;
-			if (!e.entityPlayer.capabilities.isCreativeMode) {
-				i.stackSize--;
+		if (e.action == Action.RIGHT_CLICK_BLOCK ){
+			if(e.entityPlayer.isSneaking() &&e.world.getBlock(e.x, e.y, e.z).equals(ModBlocks.coffin)
+					&& (i = (e.entityPlayer).inventory.getCurrentItem()) != null && i.getItem() instanceof ItemDye) {
+				int color = i.getItemDamage();
+				TileEntityCoffin t = (TileEntityCoffin) e.world.getTileEntity(e.x, e.y, e.z);
+				if (t == null)
+					return;
+				t = t.getPrimaryTileEntity();
+				if (t == null)
+					return;
+				t.changeColor(color);
+				e.useBlock = Result.DENY;
+				e.useItem = Result.DENY;
+				if (!e.entityPlayer.capabilities.isCreativeMode) {
+					i.stackSize--;
+				}
 			}
 		}
 	}

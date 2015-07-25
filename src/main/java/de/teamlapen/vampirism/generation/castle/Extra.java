@@ -6,6 +6,8 @@ import com.google.gson.JsonObject;
 import cpw.mods.fml.common.registry.GameRegistry;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.EntityDracula;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -106,6 +108,17 @@ public class Extra {
 				sign2.signText[1]=extra.get("t1").getAsString();
 				sign2.signText[2]=extra.get("t2").getAsString();
 				sign2.signText[3]=extra.get("t3").getAsString();
+				break;
+			case ALTAR_2:
+				TileEntityBloodAltar2 altar2= (TileEntityBloodAltar2) tileEntity;
+				altar2.addBlood(extra.get("blood").getAsInt());
+				break;
+			case  ALTAR_1:
+				TileEntityBloodAltar1 altar1= (TileEntityBloodAltar1) tileEntity;
+				if(extra.get("infinite").getAsBoolean()) {
+					altar1.makeInfinite();
+				}
+
 			}
 
 		}
@@ -160,6 +173,14 @@ public class Extra {
 			extra.addProperty("t2",sign2.signText[2]);
 			extra.addProperty("t3",sign2.signText[3]);
 			break;
+		case ALTAR_2:
+			TileEntityBloodAltar2 altar2=(TileEntityBloodAltar2)tileEntity;
+			extra.addProperty("blood",altar2.getBloodAmount());
+			break;
+		case ALTAR_1:
+			TileEntityBloodAltar1 altar1= (TileEntityBloodAltar1) tileEntity;
+			extra.addProperty("infinite",altar1.isInfinite());
+			break;
 		}
 
 	}
@@ -178,6 +199,6 @@ public class Extra {
 	 * Types of {@link Extra}s
 	 */
 	public static enum TYPE{
-		SPAWNER,COFFIN,CHEST,SPAWN_ENTITY,PAINTING,WALL_SIGN;
+		SPAWNER,COFFIN,CHEST,SPAWN_ENTITY,PAINTING,WALL_SIGN,ALTAR_2,ALTAR_1;
 	}
 }

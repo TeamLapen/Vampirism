@@ -13,7 +13,7 @@ if(!System.getenv().RELEASE&&System.getenv().CI){
     project.mod_version=project.mod_version+".Alpha"+System.getenv().DRONE_BUILD_NUMBER
 }
 if(!System.getenv().CI){
-    project.mod_version=project.mod_version+".TEST"
+    project.mod_version=project.mod_version+".TEST-"+getDate()
 }
 else{
     writeVersion()
@@ -33,4 +33,10 @@ def getLatestTag(){
 def writeVersion(){
     def file = new File("version.txt")
     file.text=project.mod_version
+}
+
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('yyyy-MM-dd-HH-mm')
+    return formattedDate
 }

@@ -165,7 +165,6 @@ public class Helper {
 		return new ChunkCoordinates(x, y, z);
 	}
 
-	@SideOnly(Side.SERVER)
 	public static void sendPacketToPlayersAround(IMessage message, Entity e) {
 		VampirismMod.modChannel.sendToAllAround(message, new TargetPoint(e.dimension, e.posX, e.posY, e.posZ, 100));
 	}

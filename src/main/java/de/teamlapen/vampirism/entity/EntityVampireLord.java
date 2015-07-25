@@ -2,16 +2,13 @@ package de.teamlapen.vampirism.entity;
 
 import java.util.UUID;
 
+import de.teamlapen.vampirism.generation.castle.CastlePositionData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAvoidEntity;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -47,12 +44,13 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	public EntityVampireLord(World par1World) {
 		super(par1World);
 
-		this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityVampireHunter.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.2));
+		//this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityVampireHunter.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.2));
 		this.tasks.addTask(6, new EntityAIWander(this, 0.2));
 		this.tasks.addTask(9, new EntityAILookIdle(this));
+		this.tasks.addTask(6,new EntityAIAttackOnCollide(this,EntityVampireLord.class,1.0D,false));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
-
+		this.targetTasks.addTask(3,new EntityAINearestAttackableTarget(this,EntityVampireLord.class,5,false));
 		minionHandler = new SaveableMinionHandler(this);
 
 	}
@@ -304,6 +302,10 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 		int i = MathHelper.floor_double(this.boundingBox.minY);
 		//Only spawn on the surface
 		if(i<60)return false;
+		CastlePositionData data = CastlePositionData.get(worldObj);
+		if(data.findPosAt(MathHelper.floor_double(posX),MathHelper.floor_double(posZ),true)!=null){
+			return false;
+		}
 		return super.getCanSpawnHere();
 	}
 }

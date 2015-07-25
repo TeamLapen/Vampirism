@@ -189,7 +189,7 @@ public class VampireLordData extends WorldSavedData {
 		shouldRegenerateCastleDim=true;
 		portalEnabled=true;
 		if(message){
-			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentTranslation("text.vampirism.new_lord_in_castle"));
+			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentTranslation("text.vampirism.lord.new_lord_castle"));
 		}
 		this.markDirty();
 	}

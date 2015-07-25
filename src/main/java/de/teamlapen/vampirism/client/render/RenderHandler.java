@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.render;
 import java.nio.FloatBuffer;
 import java.util.List;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.biome.BiomeVampireForest;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
@@ -162,7 +163,7 @@ public class RenderHandler {
 
 		}
 
-		if(Configs.render_fog_vampire_biome&& Helper.isEntityInVampireBiome(mc.thePlayer)){
+		if(Configs.render_fog_vampire_biome&& mc.theWorld.provider.dimensionId!= VampirismMod.castleDimensionId&&Helper.isEntityInVampireBiome(mc.thePlayer)){
 			if(vampireBiomeTicks< VAMPIRE_BIOME_FADE_TICKS){
 				vampireBiomeTicks++;
 			}

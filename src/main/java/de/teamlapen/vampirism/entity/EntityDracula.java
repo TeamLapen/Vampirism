@@ -10,6 +10,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.boss.IBossDisplayData;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -78,7 +79,7 @@ public class EntityDracula extends DefaultVampire implements IBossDisplayData {
 		}
 		else{
 			//If Dracula died in a castle area, but was not killed by a player, try to respawn him with low health otherwise regenerate the world
-			CastlePositionData.Position pos=CastlePositionData.get(worldObj).findPosAtChunk(chunkCoordX,chunkCoordZ);
+			CastlePositionData.Position pos=CastlePositionData.get(worldObj).findPosAtChunk(chunkCoordX,chunkCoordZ,true);
 			if(pos!=null){
 				EntityDracula drac= (EntityDracula) EntityList.createEntityByName(REFERENCE.ENTITY.DRACULA_NAME,worldObj);
 				boolean flag=Helper.spawnEntityInWorld(worldObj, AxisAlignedBB.getBoundingBox(pos.getLowerMainCastle().chunkXPos<<4,pos.getHeight(),pos.getLowerMainCastle().chunkXPos<<4,pos.getUpperMainCastle().chunkXPos<<4,pos.getHeight()+10,pos.getUpperMainCastle().chunkZPos<<4),drac,10);
@@ -202,9 +203,27 @@ public class EntityDracula extends DefaultVampire implements IBossDisplayData {
 	 * Called when the entity is spawned in a castle as lord
 	 */
 	public void makeCastleLord(@NonNull CastlePositionData.Position pos){
+		Logger.d(TAG,"Set draculas home pos");
 		ChunkCoordIntPair lc=pos.getLowerMainCastle();
-		this.setHomeArea(lc.chunkXPos << 4 + 15, (int) this.posY + 1, lc.chunkZPos << 4 + 15, 16);
+		this.setHomeArea((lc.chunkXPos << 4) + 15, (int) this.posY + 1,( lc.chunkZPos << 4 )+ 15, 17);
 		inCastle=true;
+		Logger.t("Home at %d %d %d with r %s",this.getHomePosition().posX,this.getHomePosition().posY,this.getHomePosition().posZ,this.func_110174_bM());
+
+	}
+
+	public void createTestGlass(){
+		if(!this.hasHome())return;
+		Logger.t("galas");
+		for(int x= (int) (posX-100);x<posX+100;x++){
+			for( int y= (int) (posY-100);y<posY+100;y++){
+				for(int z= (int) (posZ-100);z<posZ+100;z++){
+					if(this.isWithinHomeDistance(x,y,z)){
+						this.worldObj.setBlock(x,y,z, Blocks.glass);
+					}
+
+				}
+			}
+		}
 	}
 
 	private void summonBats(){

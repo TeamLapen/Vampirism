@@ -255,7 +255,17 @@ public class CastleGenerator extends WorldGenerator {
 				tiles[x][0]+=",2,wall";
 			}
 			for(int x=0;x<sx;x++){
-				tiles[x][sz-1]+=",0,wall";
+				if(x==sx/2){
+					tiles[x][sz-1]+=",0,entrancer";
+				}
+				else if(x==sx/2-1){
+					tiles[x][sz-1]+=",0,entrancel";
+				}
+				else{
+					tiles[x][sz-1]+=",0,wall";
+				}
+
+
 			}
 			for(int z=0;z<sz;z++){
 				tiles[0][z]+=",1,wall";
@@ -264,8 +274,8 @@ public class CastleGenerator extends WorldGenerator {
 				tiles[sx-1][z]+=",3,wall";
 			}
 
-			for(int x=1;x<sx-1;x++){
-				for(int z=1;z<sz-1;z++){
+			for(int x=0;x<sx-1;x++){
+				for(int z=0;z<sz-1;z++){
 					tiles[x][z]+=getRandomHouse(rnd);
 				}
 			}
@@ -331,6 +341,8 @@ public class CastleGenerator extends WorldGenerator {
 		loadTile("blacksmith",gson,tileMap);
 		loadTile("grave",gson,tileMap);
 		loadTile("pasture",gson,tileMap);
+		loadTile("entrancel",gson,tileMap);
+		loadTile("entrancer",gson,tileMap);
 	}
 
 	/**

@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.tileEntity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import de.teamlapen.vampirism.ModBlocks;
+import de.teamlapen.vampirism.block.BlockBloodAltar1;
+import de.teamlapen.vampirism.block.BlockBloodAltar2;
 import de.teamlapen.vampirism.block.BlockCoffin;
 import de.teamlapen.vampirism.generation.castle.BlockList;
 import de.teamlapen.vampirism.generation.castle.BuildingTile;
@@ -26,7 +28,7 @@ import java.io.Writer;
 import java.util.*;
 
 /**
- * Created by Max on 03.07.2015.
+ * Used for development. Generates the .json schematics from chunks.
  */
 public class TileEntityTemplateGenerator extends TileEntity {
 	private List<BlockList> blockLists;
@@ -74,6 +76,12 @@ public class TileEntityTemplateGenerator extends TileEntity {
 						}
 						else if(block.equals(Blocks.wall_sign)){
 							extraType= Extra.TYPE.WALL_SIGN;
+						}
+						else if(block instanceof BlockBloodAltar2){
+							extraType= Extra.TYPE.ALTAR_2;
+						}
+					else if(block instanceof BlockBloodAltar1){
+							extraType= Extra.TYPE.ALTAR_1;
 						}
 						if(extraType!=null){
 
@@ -244,6 +252,13 @@ public class TileEntityTemplateGenerator extends TileEntity {
 				int[] set={0,1,2,3};
 				int[] openSet={4,5,6,7};
 				metadata=rotate(meta>3?openSet:set,meta);
+			}
+			else if(block instanceof BlockButton){
+				if(meta>0&&meta<5){
+					int[] set={3,2,4,1};
+					int[] rotSet={3,1,0,2};
+					metadata=rotate(set,rotSet[meta-1]);
+				}
 			}
 			if(metadata!=null)return metadata;
 		} catch (IndexOutOfBoundsException e) {

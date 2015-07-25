@@ -945,7 +945,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		if (minionTarget != null && !minionTarget.isEntityAlive()) {
 			minionTarget = null;
 		}
-		if (dirty) {
+		if (dirty&&!player.worldObj.isRemote) {
 			this.sync(true);
 			dirty = false;
 		}

@@ -21,7 +21,6 @@ public class ItemPitchfork extends ItemSword {
 		setUnlocalizedName(name);
 		this.setTextureName(REFERENCE.MODID+":"+name);
 		this.maxStackSize = 1;
-		setCreativeTab(VampirismMod.tabVampirism);
 	}
 
 	@Override

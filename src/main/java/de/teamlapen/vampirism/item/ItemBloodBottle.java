@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.item;
 
 import java.util.List;
 
+import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -134,10 +135,10 @@ public class ItemBloodBottle extends ItemGlassBottle {
 	/**
 	 * Called whenever this item is equipped and the right mouse button is pressed.
 	 * 
-	 * @param itemStack
+	 * @param stack
 	 * @param world
-	 * @param entityPlayer
-	 *            This method does: 1) Shift + right click adds blood from blood bar 2) Right click removes blood and puts it in blood bar 3) TODO: Fill blood bottle from any other blood containers
+	 * @param player
+	 *            This method does: 1) Shift + right click adds blood from blood bar 2) Right click removes blood and puts it in blood bar 3)
 	 *            (if made)
 	 */
 	@Override
@@ -148,6 +149,7 @@ public class ItemBloodBottle extends ItemGlassBottle {
 
 			// Remove blood from blood bar and add to bottle on shift + right click
 			if (player.isSneaking()) {
+				Logger.t("add");
 				int bloodBottle = getBlood(stack);
 				int bloodBar = vampire.getBlood();
 				if (bloodBottle < MAX_BLOOD && bloodBar > 0) {
@@ -157,6 +159,7 @@ public class ItemBloodBottle extends ItemGlassBottle {
 			}
 			// Add blood to blood bar from bottle on right click
 			else {
+				Logger.t("remove");
 				int bloodBottle = getBlood(stack);
 				int bloodBar = vampire.getBlood();
 				if (bloodBottle > 0 && bloodBar < VampirePlayer.MAXBLOOD) {

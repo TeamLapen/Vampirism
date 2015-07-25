@@ -87,7 +87,7 @@ public class WailaDataProvider implements IWailaDataProvider, IWailaEntityProvid
 						currenttip.add(String.format("%s%s: %s", SpecialChars.WHITE, StatCollector.translateToLocal("text.vampirism.lord"), lord.getRepresentingEntity().getCommandSenderName()));
 						IMinionCommand c = minion.getCommand(minion.getActiveCommandId());
 						if (c != null) {
-							currenttip.add(String.format("%s%s: %s", SpecialChars.WHITE, StatCollector.translateToLocal("text.vampirism.curret_task"),
+							currenttip.add(String.format("%s%s: %s", SpecialChars.WHITE, StatCollector.translateToLocal("text.vampirism.current_task"),
 									StatCollector.translateToLocal(c.getUnlocalizedName())));
 						}
 

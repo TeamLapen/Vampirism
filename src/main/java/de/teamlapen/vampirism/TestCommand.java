@@ -3,8 +3,11 @@ package de.teamlapen.vampirism;
 import java.util.List;
 
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import de.teamlapen.vampirism.block.BlockBloodAltar1;
 import de.teamlapen.vampirism.block.BlockCoffin;
+import de.teamlapen.vampirism.entity.EntityDracula;
 import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import net.minecraft.block.Block;
 import net.minecraft.command.ICommand;
@@ -93,8 +96,8 @@ public class TestCommand implements ICommand {
 					return;
 				}
 				if("lords".equals(param[0])){
-					sendMessage(sender,VampireLordData.get(p.worldObj).getLordNamesAsString());
-					sendMessage(sender,"Your UUID: "+((EntityPlayer) sender).getUniqueID());
+					sendMessage(sender, VampireLordData.get(p.worldObj).getLordNamesAsString());
+					sendMessage(sender, "Your UUID: " + ((EntityPlayer) sender).getUniqueID());
 					return;
 				}
 				if("part".equals(param[0])){
@@ -105,7 +108,7 @@ public class TestCommand implements ICommand {
 						amount=Integer.parseInt(param[2]);
 					}
 					NBTTagCompound nbt=new NBTTagCompound();
-					nbt.setInteger("id",p.getEntityId());
+					nbt.setInteger("id", p.getEntityId());
 					IMessage m=new SpawnCustomParticlePacket(id,p.posX,p.posY,p.posZ,amount,nbt);
 					VampirismMod.modChannel.sendToAll(m);
 					return;
@@ -122,12 +125,32 @@ public class TestCommand implements ICommand {
 					}
 					return;
 				}
+				if("dracula".equals(param[0])){
+					List l= p.worldObj.getEntitiesWithinAABBExcludingEntity(p, p.boundingBox.expand(6, 6, 6));
+					for(Object o:l){
+						if(o instanceof EntityDracula){
+							((EntityDracula)o).createTestGlass();
+							Logger.t("dounf safd");
+						}
+					}
+					return;
+				}
 				if("block".equals(param[0])){
-					MovingObjectPosition pos = Helper.getPlayerLookingSpot(p,0);
+					MovingObjectPosition pos = Helper.getPlayerLookingSpot(p, 0);
 					if(pos!=null&&MovingObjectPosition.MovingObjectType.BLOCK.equals(pos.typeOfHit)){
 						sendMessage(sender,"Block: "+p.worldObj.getBlock(pos.blockX,pos.blockY,pos.blockZ)+" Meta: "+p.worldObj.getBlockMetadata(pos.blockX,pos.blockY,pos.blockZ));
 					}
 					return;
+				}
+				if("infinite".equals(param[0])){
+					MovingObjectPosition pos = Helper.getPlayerLookingSpot(p,0);
+					if(pos!=null&&MovingObjectPosition.MovingObjectType.BLOCK.equals(pos.typeOfHit)) {
+						Block b = p.worldObj.getBlock(pos.blockX, pos.blockY, pos.blockZ);
+						if (b instanceof BlockBloodAltar1) {
+							TileEntityBloodAltar1 altar1 = (TileEntityBloodAltar1) p.worldObj.getTileEntity(pos.blockX, pos.blockY, pos.blockZ);
+							altar1.makeInfinite();
+						}
+					}
 				}
 				if("close".equals(param[0])){
 					MovingObjectPosition pos = Helper.getPlayerLookingSpot(p,0);

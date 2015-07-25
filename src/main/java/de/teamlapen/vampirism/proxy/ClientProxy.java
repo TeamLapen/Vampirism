@@ -183,7 +183,6 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void registerSounds() {
-		// TODO Auto-generated method stub
 
 	}
 

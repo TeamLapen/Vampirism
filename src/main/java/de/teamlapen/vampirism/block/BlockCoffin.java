@@ -84,7 +84,7 @@ public class BlockCoffin extends BasicBlockContainer {
 				z = te.otherZ;
 			}
 			if (player.isSneaking()) {
-				if(player.getItemInUse()!=null&&player.getItemInUse().getItem() instanceof ItemDye){
+				if(player.getCurrentEquippedItem()!=null&&player.getCurrentEquippedItem().getItem() instanceof ItemDye){
 					return false;
 				}
 
@@ -110,20 +110,8 @@ public class BlockCoffin extends BasicBlockContainer {
 					}
 					return true;
 				}
-			} else {
-				double d2 = x + 0.5D;
-				double d0 = y + 0.5D;
-				double d1 = z + 0.5D;
-				world.setBlockToAir(x, y, z);
-
-				if (world.getBlock(x, y, z) == this) {
-					world.setBlockToAir(x, y, z);
-					d2 = (d2 + x + 0.5D) / 2.0D;
-					d0 = (d0 + y + 0.5D) / 2.0D;
-					d1 = (d1 + z + 0.5D) / 2.0D;
-				}
-
-				world.newExplosion((Entity) null, x + 0.5F, y + 0.5F, z + 0.5F, 5.0F, true, true);
+			} else{
+				player.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.coffin.wrong_dimension"));
 				return true;
 			}
 		}

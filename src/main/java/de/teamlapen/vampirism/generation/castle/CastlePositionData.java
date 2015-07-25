@@ -6,8 +6,10 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
+import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jdt.annotation.Nullable;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -55,22 +57,31 @@ public class CastlePositionData extends WorldSavedData{
 	 * Returns the castle position object for this coordinates or null if there is no castle
 	 * @param coordX
 	 * @param coordZ
+	 * @param all If true already fully generated positions will be included
 	 * @return
 	 */
-	public @Nullable Position findPosAt(int coordX,int coordZ){
-		return this.findPosAtChunk(coordX>>4,coordZ>>4);
+	public @Nullable Position findPosAt(int coordX,int coordZ,boolean all){
+		return this.findPosAtChunk(coordX>>4,coordZ>>4,all);
 	}
 
 	/**
 	 * Returns the castle position object for this chunk coordinates or null if there is no castle
 	 * @param chunkX
 	 * @param chunkZ
+	 * @param all If true already fully generated positions will be included
 	 * @return
 	 */
-	public @Nullable Position findPosAtChunk(int chunkX,int chunkZ){
+	public @Nullable Position findPosAtChunk(int chunkX,int chunkZ,boolean all){
 		for(CastlePositionData.Position p:positions){
 			if(p.isChunkInPosition(chunkX,chunkZ)){
 				return p;
+			}
+		}
+		if(all){
+			for(CastlePositionData.Position p:fullyGeneratedPositions){
+				if(p.isChunkInPosition(chunkX,chunkZ)){
+					return p;
+				}
 			}
 		}
 		return null;
@@ -128,6 +139,10 @@ public class CastlePositionData extends WorldSavedData{
 
 		public ChunkCoordIntPair getUpperMainCastle() {
 			return upperMainCastle;
+		}
+
+		@Override public String toString() {
+			return super.toString()+"["+sizeZ+","+sizeZ+"]";
 		}
 
 		public void setMainCastle(ChunkCoordIntPair lowerMainCastle,ChunkCoordIntPair upperMainCastle) {
@@ -263,7 +278,12 @@ public class CastlePositionData extends WorldSavedData{
 		else{
 			//Compability code for older test worlds. Can probably be removed later TODO
 			p.setMainCastle(new ChunkCoordIntPair(pos[0]+1,pos[1]+1),new ChunkCoordIntPair(pos[0]+2,pos[1]+2));
+			Logger.w("CastlePos","Creating fake main castle for compatibility reasons");
 		}
 		return p;
+	}
+
+	@Override public String toString() {
+		return String.format("PosData(Checked %b, Positions %s, GenPositions %s)",checked, Arrays.toString(positions.toArray()),Arrays.toString(fullyGeneratedPositions.toArray()));
 	}
 }

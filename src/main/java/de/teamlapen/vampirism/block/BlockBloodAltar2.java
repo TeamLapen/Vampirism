@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.block;
 
+import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -26,10 +27,15 @@ public class BlockBloodAltar2 extends BasicBlockContainer {
 		this.setHarvestLevel("pickaxe", 1);
 	}
 
-	private void addBlood(TileEntityBloodAltar2 te, ItemStack item) {
-		if(item==null)return;
-		int amount = ItemBloodBottle.getBlood(item);
-		ItemBloodBottle.removeBlood(item, te.addBlood(amount));
+	private void interactBottle(TileEntityBloodAltar2 te,ItemStack bottle){
+		if(bottle==null)return;
+		int old=ItemBloodBottle.getBlood(bottle);
+		if(old>0){
+			ItemBloodBottle.removeBlood(bottle,te.addBlood(old));
+		}
+		else{
+			ItemBloodBottle.addBlood(bottle,te.removeBlood(ItemBloodBottle.MAX_BLOOD));
+		}
 	}
 
 	@Override
@@ -68,9 +74,11 @@ public class BlockBloodAltar2 extends BasicBlockContainer {
 			}
 			TileEntityBloodAltar2 te = (TileEntityBloodAltar2) world.getTileEntity(par2, par3, par4);
 			if (item != null && item.getItem() instanceof ItemBloodBottle) {
-				addBlood(te, item);
+				Logger.t("Interact");
+				interactBottle(te, item);
 				return true;
-			} else if (item == null) {
+			} else if (item == null&&player.isSneaking()) {
+				Logger.t("start");
 				startRitual(te, player);
 			}
 

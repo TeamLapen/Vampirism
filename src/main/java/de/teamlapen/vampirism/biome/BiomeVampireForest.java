@@ -62,7 +62,7 @@ public class BiomeVampireForest extends BiomeGenBase {
 	@Override
 	public void decorate(World world, Random rand, int coordX, int coordZ) {
 		CastlePositionData data = CastlePositionData.get(world);
-		if(data.findPosAt(coordX,coordZ)==null){
+		if(data.findPosAt(coordX,coordZ,false)==null){
 			super.theBiomeDecorator.decorateChunk(world, rand, this, coordX, coordZ);
 
 			for (int j = 0; j < 5; ++j) {

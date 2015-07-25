@@ -76,7 +76,7 @@ public class TeleporterCastle extends Teleporter {
 			return;
 		}
 		CastlePositionData.reset(server);
-		server.unloadEntities(server.getLoadedEntityList());
+		server.unloadEntities(server.loadedEntityList);
 		server.theChunkProviderServer.provideChunk(2, 6);
 		server.theChunkProviderServer.provideChunk(3, 6);
 		for (int x = 0; x < 6; x++) {
