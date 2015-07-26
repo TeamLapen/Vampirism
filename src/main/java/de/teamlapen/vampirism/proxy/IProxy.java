@@ -55,11 +55,6 @@ public interface IProxy {
 	public void registerRenderer();
 
 	/**
-	 * Registeres all sounds
-	 */
-	public void registerSounds();
-
-	/**
 	 * Registers all important subscriptions, which should be registered at startup (init)
 	 */
 	public void registerSubscriptions();

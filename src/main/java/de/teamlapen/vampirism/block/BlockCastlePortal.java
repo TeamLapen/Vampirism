@@ -17,6 +17,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 
+import java.util.Random;
+
 /**
  * Portal block for castle dimension. Unbreakable
  */
@@ -27,6 +29,10 @@ public class BlockCastlePortal extends BlockPortal {
 		this.setHardness(1000000F);
 		this.setResistance(1000000000F);
 		this.setBlockTextureName(REFERENCE.MODID + ":" + name);
+	}
+
+	@Override public void updateTick(World p_149674_1_, int p_149674_2_, int p_149674_3_, int p_149674_4_, Random p_149674_5_) {
+		//Do not spawn mobs
 	}
 
 	@Override

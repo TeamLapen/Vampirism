@@ -89,7 +89,6 @@ public class VampirismMod {
 		DimensionManager.registerDimension(castleDimensionId,castleDimensionId);
 		proxy.registerEntitys();
 		proxy.registerRenderer();
-		proxy.registerSounds();
 		GameRegistry.registerWorldGenerator(new WorldGenVampirism(), 1000);
 		VillagerRegistry.instance().registerVillageCreationHandler(new VillageCreationHandler());
 		MapGenStructureIO.func_143031_a(VillageModChurchPiece.class, "ViVMC");

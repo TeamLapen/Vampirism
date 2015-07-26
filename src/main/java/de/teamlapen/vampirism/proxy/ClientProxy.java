@@ -1,12 +1,15 @@
 package de.teamlapen.vampirism.proxy;
 
-import de.teamlapen.vampirism.Configs;
+import de.teamlapen.vampirism.*;
+import de.teamlapen.vampirism.biome.BiomeVampireForest;
 import de.teamlapen.vampirism.client.model.ModelDracula;
 import de.teamlapen.vampirism.client.render.*;
 import de.teamlapen.vampirism.client.render.particle.ParticleHandler;
 import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.util.TickRunnable;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.ISound;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -23,6 +26,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
@@ -31,9 +35,6 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
-import de.teamlapen.vampirism.ModBlocks;
-import de.teamlapen.vampirism.ModItems;
-import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.block.BlockBloodAltar4Tip.TileEntityBloodAltar4Tip;
 import de.teamlapen.vampirism.block.BlockChurchAltar.TileEntityChurchAltar;
 import de.teamlapen.vampirism.client.KeyInputEventHandler;
@@ -125,6 +126,16 @@ public class ClientProxy extends CommonProxy {
 				}
 			}
 		}
+		int i= (int) (1000*Math.random());
+		if(i==0){
+			Minecraft mc=Minecraft.getMinecraft();
+			if(mc.theWorld!=null&&mc.thePlayer!=null){
+				if(mc.theWorld.getBiomeGenForCoords(MathHelper.floor_double(mc.thePlayer.posX),MathHelper.floor_double(mc.thePlayer.posZ)) instanceof BiomeVampireForest){
+					PositionedSoundRecord sound = new PositionedSoundRecord(new ResourceLocation("vampirism:ambient.vampire_biome"), 0.9F, 1F,(float)(mc.thePlayer.posX+(10*(Math.random()-0.5D))),(float)mc.thePlayer.posY,(float)(mc.thePlayer.posZ+(10*(Math.random()-0.5D))));
+					mc.getSoundHandler().playSound(sound);
+				}
+			}
+		}
 
 	}
 
@@ -179,11 +190,6 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.bloodAltar4Tip), new RenderTileEntityItem(altar4Tip, new TileEntityBloodAltar4Tip()));
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoffin.class, new RendererCoffin());
-	}
-
-	@Override
-	public void registerSounds() {
-
 	}
 
 	@Override

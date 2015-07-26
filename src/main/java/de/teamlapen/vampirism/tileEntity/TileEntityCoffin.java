@@ -16,6 +16,7 @@ public class TileEntityCoffin extends TileEntity {
 	public int otherY;
 	public int otherZ;
 	public boolean occupied;
+	private boolean lastTickOccupied;
 	public int lidPos;
 	public int color = 15;
 	public boolean needsAnimation = false;
@@ -85,8 +86,16 @@ public class TileEntityCoffin extends TileEntity {
 			occupied = !occupied;
 			needsAnimation = true;
 			markDirty();
-		} else
+
+		} else{
 			BlockBed.func_149979_a(worldObj, xCoord, yCoord, zCoord, occupied);
+		}
+
+			if(lastTickOccupied!=occupied){
+				this.worldObj.playSoundEffect(xCoord, (double)this.yCoord + 0.5D, zCoord, "vampirism:coffin_lid", 0.5F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+			}
+			lastTickOccupied=occupied;
+
 		// Logger.i("TECoffin",
 		// String.format("updateEntity called, now: occupied=%s, remote=%s",
 		// occupied, this.worldObj.isRemote));

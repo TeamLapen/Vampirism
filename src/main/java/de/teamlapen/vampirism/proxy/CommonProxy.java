@@ -83,7 +83,7 @@ public abstract class CommonProxy implements IProxy {
 				MinecraftServer.getServer().getConfigurationManager()
 						.sendChatMsg(new ChatComponentText("There was an error generating the vampire castle. It is very recommend to generate a new world!"));
 			}
-
+			
 			Iterator<TickRunnable> iterator = serverRunnables.iterator();
 			while (iterator.hasNext()) {
 				TickRunnable run = iterator.next();

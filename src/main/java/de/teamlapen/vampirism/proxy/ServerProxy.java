@@ -53,12 +53,6 @@ public class ServerProxy extends CommonProxy {
 	}
 
 	@Override
-	public void registerSounds() {
-		// Client side only
-
-	}
-
-	@Override
 	public void registerSubscriptions() {
 		super.registerSubscriptions();
 

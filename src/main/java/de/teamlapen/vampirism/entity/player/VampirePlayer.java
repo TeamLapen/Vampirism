@@ -722,8 +722,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 						dracula.makeDisappear();
 						old.worldObj.spawnEntityInWorld(dracula);
 						old.setDead();
+						VampireLordData.get(player.worldObj).makeNoLord(player, "text.vampirism.lord.vampire_kill_replace");
 					}
-					VampireLordData.get(player.worldObj).makeNoLord(player, "text.vampirism.lost_lord_other_vampire_defeated");
 
 				}
 

@@ -102,6 +102,7 @@ public class TeleporterCastle extends Teleporter {
 				//server.getPlayerManager().markBlockForUpdate(x<<4,15,z<<4); not necessary
 			}
 		}
+		VampireLordData.get(server).setRegenerateCastleDim(false);
 		//server.theChunkProviderServer.unloadAllChunks(); not necessary
 	}
 }

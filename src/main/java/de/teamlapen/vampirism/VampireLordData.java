@@ -93,9 +93,9 @@ public class VampireLordData extends WorldSavedData {
 					lords.clear();
 				}
 				lords.add(player.getUniqueID());
-					player.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.become_lord"));
+					player.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.lord.become"));
 					MinecraftServer.getServer().getConfigurationManager().sendChatMsg(
-							new ChatComponentText(player.getDisplayName() + " ").appendSibling(new ChatComponentTranslation("text.vampirism.other_player_become_lord")));
+							new ChatComponentText(player.getDisplayName() + " ").appendSibling(new ChatComponentTranslation("text.vampirism.lord.other_player_become")));
 			}
 			markDirty();
 			return true;
@@ -115,9 +115,9 @@ public class VampireLordData extends WorldSavedData {
 			oldPlayer.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.lord.vampire_kill_replace"));
 			if(!lords.contains(newPlayer)){
 				lords.add(newPlayer.getUniqueID());
-				newPlayer.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.become_lord"));
+				newPlayer.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.lord.become"));
 				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(
-						new ChatComponentText(newPlayer.getDisplayName() + " ").appendSibling(new ChatComponentTranslation("text.vampirism.other_player_become_lord")));
+						new ChatComponentText(newPlayer.getDisplayName() + " ").appendSibling(new ChatComponentTranslation("text.vampirism.lord.other_player_become")));
 			}
 			markDirty();
 			return true;

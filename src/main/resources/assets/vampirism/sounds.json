@@ -16,7 +16,7 @@
           "entity/vampire/bite_long"
         ]
     },
-     "scary_ambient": {
+     "ambient.scary": {
     	"category": "ambient",
         "sounds": [
             {
@@ -24,5 +24,33 @@
                 "stream":true
             }
         ]
+    },
+    "ambient.castle":{
+      "category":"ambient",
+      "sounds":[
+        {
+          "name":"ambient/blood_dripping",
+          "stream":true
+        },
+        {
+          "name":"ambient/blood_dripping2",
+          "stream":true
+        }
+      ]
+    },
+    "ambient.vampire_biome":{
+      "category":"ambient",
+      "sounds":[
+        {
+          "name":"ambient/ghosty_ambient",
+          "stream":true
+        }
+      ]
+    },
+    "coffin_lid":{
+      "category":"ambient",
+      "sounds": [
+          "fx/coffin_lid_slide"
+      ]
     }
 }
