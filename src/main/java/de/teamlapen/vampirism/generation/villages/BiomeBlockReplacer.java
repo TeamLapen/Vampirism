@@ -39,7 +39,6 @@ public class BiomeBlockReplacer implements IEventListener {
 		} catch (NullPointerException e) {
 			Logger.w("BiomeBlockReplacer", "NullPointerException when replacing blocks:");
 			e.printStackTrace();
-			// VillageBiomes.log.warning("Something was NULL when replacing blocks.");
 			Logger.w("BiomeBlockReplacer", "Biome class: " + biome.getClass() + "; Condition: " + condition);
 			return false;
 		}

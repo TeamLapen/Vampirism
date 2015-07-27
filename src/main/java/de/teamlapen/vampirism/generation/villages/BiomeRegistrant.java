@@ -8,6 +8,7 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.BiomeManager;
 import de.teamlapen.vampirism.util.Logger;
+import org.eclipse.jdt.annotation.NonNull;
 
 /**
  * Adds and removes biomes where villages will be generated
@@ -37,10 +38,10 @@ public class BiomeRegistrant {
 			Logger.w("BiomeRegistrant", "Can't find biome with ID %d", id);
 	}
 
-	public static void addBiomeByName(String name) {
+	public static void addBiomeByName(@NonNull String name) {
 		BiomeGenBase biomeForId = null;
 		for (BiomeGenBase biome : biomeSet) {
-			if (biome.biomeName.equals(name))
+			if (name.equals(biome.biomeName))
 				biomeForId = biome;
 		}
 
@@ -98,10 +99,10 @@ public class BiomeRegistrant {
 			Logger.w("BiomeRegistrant", "Can't find biome with ID %d", id);
 	}
 
-	public static void removeBiomeByName(String name) {
+	public static void removeBiomeByName(@NonNull String name) {
 		BiomeGenBase biomeForId = null;
 		for (BiomeGenBase biome : biomeSet) {
-			if (biome.biomeName.equals(name))
+			if (name.equals(biome.biomeName))
 				biomeForId = biome;
 		}
 

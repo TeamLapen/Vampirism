@@ -92,6 +92,10 @@ public class ConfigHandler {
 				if (b.equals(replacement))
 					continue;
 
+				if(b==null||replacement==null){
+					Logger.w("BiomeCfgHandler","Cannot read replacements from line %s",line);
+					continue;
+				}
 				if (!map.containsKey(b))
 					map.put(b, new ArrayList<Pair<String, Block>>());
 				map.get(b).add(new Pair<String, Block>(condition, replacement));
@@ -121,7 +125,7 @@ public class ConfigHandler {
 			}
 			sc.close();
 		} catch (IOException e) {
-			Logger.e("ConfigHandler", String.format("[%s] Can't load or create its config in %s.", REFERENCE.MODID, file.getAbsolutePath()));
+			Logger.e("ConfigHandler","[%s] Can't load or create its config in %s.", REFERENCE.MODID, file.getAbsolutePath());
 		}
 	}
 }
