@@ -1,0 +1,127 @@
+#X-Generator: crowdin.com
+# Entitys
+entity.vampirism.vampireHunter.name=吸血鬼ハンター
+entity.vampirism.vampire.name=吸血鬼
+entity.vampirism.ghost.name=ゴースト
+entity.vampirism.vampireLord.name=ヴァンパイア卿
+entity.vampirism.vampireMinionR.name=吸血鬼の手先
+entity.vampirism.vampireMinionS.name=吸血鬼の手先
+entity.vampirism.blinding_bat.name=バット
+entity.vampirism.dracula.name=ドラキュラ
+entity.vampirism.dead_mob.name=死んでいる暴徒
+
+# Items
+item.vampirism.vampiresFear.name=吸血鬼の恐怖
+item.vampirism.bloodBottle.name=血液ボトル
+item.vampirism.vampireFang.name=吸血鬼の牙
+item.vampirism.pitchfork.name=ピッチ フォーク
+item.vampirism.humanHeart.name=人間の心
+item.vampirism.torch.name=トーチ
+item.vampirism.pureBlood.name=純粋な血液
+item.vampirism.sunscreen.name=日焼け止め
+item.vampirism.leechSword.name=リーチ
+item.vampirism.coffin.name=棺
+item.vampirism.vampireArmor_helmet.name=吸血鬼のヘルメット
+item.vampirism.vampireArmor_leggings.name=吸血鬼のレギンス
+item.vampirism.vampireArmor_boots.name=吸血鬼のブーツ
+item.vampirism.vampireArmor_chestplate.name=吸血鬼のチェスト
+item.vampirism.minionNameTag.name=手先の名札
+
+# Blocks
+block.vampirism.bloodAltar.name=彩度の血の祭壇
+block.vampirism.bloodAltarTier2.name=インスピレーションの血の祭壇
+block.vampirism.bloodAltarTier4.name=輸液の血の祭壇
+block.vampirism.bloodAltarTier4Tip.name=注入の先端の血の祭壇
+block.vampirism.churchAltar.name=クレンジングの祭壇
+block.vampirism.cursedEarth.name=呪われた地球
+block.vampirism.vampireOrchid.name=バンパイア オーキッド
+block.vampirism.blockCoffin.name=棺
+block.vampirism.castleBlock.name=城ブロック
+block.vampirism.castleSlab.name=城スラブ
+block.vampirism.castleStairs.name=城の階段
+
+#GUI
+gui.vampirism.revertback.head=普通の人間に戻す
+gui.vampirism.revertback.desc=すべてのあなたのレベルとダイ失うことになります。
+
+# Keys
+keys.vampirism.category=吸血鬼
+keys.vampirism.suck=血を吸う
+keys.vampirism.auto=自動血液ボトル
+keys.vampirism.skill=吸血鬼のスキルをアクティブにします。
+key.vampirism.vision=スイッチ ビジョン
+
+#General
+itemGroup.vampirism=吸血鬼
+death.attack.sun=%1$s 好き太陽ではなかった
+potion.vampirism.sunscreen=日焼け止め
+potion.vampirism.thirst=喉の渇き
+potion.vampirism.saturation=彩度
+potion.vampirism.sanguinare=吸血鬼ブリード
+text.vampirism.skill.level_to_low=そのため吸血鬼レベルが小さすぎます。
+text.vampirism.skill.cooldown_not_over=クールダウンが終わるまでお待ちください。
+text.vampirism.entity_level=レベル
+text.vampirism.ritual_missing_times=この儀式のための項目がないです。
+text.vampirism.ritual_structure_wrong=構造はこの儀式のため間違っています。
+text.vampirism.ritual_level_wrong=このレベルでこの祭壇を使用することはできません。
+text.vampirism.ritual_still_running=儀式がまだ実行されています。
+text.vampirism.not_enough_blood=祭壇に十分な血液がないです。
+text.vampirism.ritual_requirements_not_met=この儀式のためのすべての要件が満たされました。
+text.vampirism.purity=純度
+text.vampirism.auto_fill_enabled=自動入力が有効になっています。
+text.vampirism.auto_fill_disabled=自動塗りつぶし無効
+text.vampirism.skill.deactivated_by_serveradmin=このスキルは、サーバーの管理者によって無効化されます
+text.vampirism.ritual_no_vampire=この儀式のため吸血する必要があります。
+text.vampirism.cant_fly_day=昼間に飛ぶことができません。
+text.vampirism.no_more_minions=任意のより多くの手下を制御できません。
+text.vampirism.coffin.noSleep=1 日だけ寝ることができます。
+text.vampirism.coffin.occupied=この棺は占められる
+text.vampirism.coffin.stopsleeping=棺をまま
+text.vampirism.blood_left=血左
+text.vampirism.blood=血
+text.vampirism.vampirelevel=吸血鬼レベル
+text.vampirism.entitysblood=エンティティの血
+text.vampirism.minion=ミニオン
+text.vampirism.lord=主
+text.vampirism.normal_vision=正常な視力
+text.vampirism.night_vision=ナイト ビジョン
+text.vampirism.no_control_minion=この手先を制御があるない場合
+text.vampirism.need_empty_bottle=私の主よ、私は血を収集するために空のボトルを必要があります。
+text.vampirism.thanks=おかげで
+text.vampirism.coming_back=私は来て、私の主
+text.vampirism.sorry_i_died_while_doing=私の主よ、私は申し訳ありませんが、私はあなたの仕事を果たしながら死亡
+text.vampirism.current_task=現在のタスク
+text.vampirism.structure=構造
+text.vampirism.pillar_blocks=柱ブロック
+
+#Skill
+skill.vampirism.bat_skill=トグルバットモード
+skill.vampirism.change_weather=天気
+skill.vampirism.cancel=キャンセル
+skill.vampirism.freeze=凍結
+skill.vampirism.invisibility=目に見えない
+skill.vampirism.regen=再生
+skill.vampirism.revive_fallen=倒れた復活します。
+skill.vampirism.summon_bats=コウモリを召喚します。
+skill.vampirism.teleport=テレポート
+skill.vampirism.vampire_rage=吸血鬼の怒り
+
+#Minion command
+minioncommand.vampirism.attackhostilenoplayers=敵対的な攻撃します。
+minioncommand.vampirism.attackhostile=プレーヤーを含む敵対的な攻撃します。
+minioncommand.vampirism.collectblood=血を収集します。
+minioncommand.vampirism.defendlord=主を守るため
+minioncommand.vampirism.stayhere=ここに滞在します。
+minioncommand.vampirism.comeback=(リモートの手先) に戻る
+minioncommand.vampirism.justfollow=ちょうど私に従ってください。
+
+#Config
+category.vampirism.balance=バランスの設定
+category.vampirism.balance.tooltip=ほぼすべてのバランスの関連するプロパティを変更します。
+category.vampirism.balance_level=バランスの設定をレベルアップ
+category.vampirism.balance_player_mod=吸血鬼プレーヤー修飾子の設定
+category.vampirism.balance_player_skills=吸血鬼のプレーヤーのスキル設定
+category.vampirism.balance_mob_prop=吸血鬼暴徒プロパティ
+category.vampirism.balance_mob_prop.tooltip=吸血によって追加されたモブのプロパティの変更
+category.vampirism.balance_vv_prop=村の吸血鬼プロパティ
+category.vampirism.balance_vv_prop.tooltip=村の道ハンター行動し、他の村を調整変更に関連するもの

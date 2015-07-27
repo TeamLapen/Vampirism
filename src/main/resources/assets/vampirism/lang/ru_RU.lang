@@ -36,6 +36,9 @@ block.vampirism.churchAltar.name=Очищающий Алтарь
 block.vampirism.cursedEarth.name=Проклятая земля
 block.vampirism.vampireOrchid.name=Вампирская орхидея
 block.vampirism.blockCoffin.name=Гроб
+block.vampirism.castleBlock.name=Блок замка
+block.vampirism.castleSlab.name=Плитки замка
+block.vampirism.castleStairs.name=Ступеньки замка
 
 #GUI
 gui.vampirism.revertback.head=Обратиться обратно в человека
@@ -88,6 +91,8 @@ text.vampirism.thanks=Благодарю
 text.vampirism.coming_back=Я вернулся, мой лорд
 text.vampirism.sorry_i_died_while_doing=Мой лорд, прошу прощения, но я умер, пока выполнял ваше задание
 text.vampirism.current_task=Текущее задание
+text.vampirism.structure=Структура
+text.vampirism.pillar_blocks=Блоки колонны
 
 #Skill
 skill.vampirism.bat_skill=Обратиться в летучую мышь

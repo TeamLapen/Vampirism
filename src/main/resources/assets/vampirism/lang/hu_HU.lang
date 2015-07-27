@@ -1,0 +1,76 @@
+#X-Generator: crowdin.com
+# Entitys
+entity.vampirism.vampireHunter.name=Vámpír Vadász
+entity.vampirism.vampire.name=Vámpír
+entity.vampirism.ghost.name=Szellem
+entity.vampirism.vampireLord.name=Vámpír Parancsnok
+entity.vampirism.vampireMinionR.name=Vámpír Kegyenc
+entity.vampirism.vampireMinionS.name=Vámpír Kegyenc
+entity.vampirism.blinding_bat.name=Denevér
+entity.vampirism.dracula.name=Drakula
+entity.vampirism.dead_mob.name=Halott mob
+
+# Items
+item.vampirism.vampiresFear.name=Vámpír félelme
+item.vampirism.bloodBottle.name=Vér Üveg
+item.vampirism.vampireFang.name=Vámpír Fog
+item.vampirism.pitchfork.name=Vasvilla
+item.vampirism.humanHeart.name=Emberi szív
+item.vampirism.torch.name=Fáklya
+item.vampirism.pureBlood.name=Tiszta Vér
+item.vampirism.sunscreen.name=Naptej
+item.vampirism.leechSword.name=Pióca
+item.vampirism.coffin.name=Koporsó
+item.vampirism.vampireArmor_helmet.name=Vámpír sisakja
+item.vampirism.vampireArmor_leggings.name=Vámpír nadrágja
+item.vampirism.vampireArmor_boots.name=Vámpír cipője
+item.vampirism.vampireArmor_chestplate.name=Vámpír mellvértje
+item.vampirism.minionNameTag.name=Kegyenc névcédula
+
+# Blocks
+block.vampirism.bloodAltar.name=Telítettség Vér Oltárja
+block.vampirism.bloodAltarTier2.name=Inspiráció Vér Oltárja
+block.vampirism.bloodAltarTier4.name=Infúzió Vér Oltárja
+block.vampirism.bloodAltarTier4Tip.name=Infúzió Tip Vér Oltárja
+block.vampirism.churchAltar.name=Tisztítás Oltárja
+block.vampirism.cursedEarth.name=Elátkozott Föld
+block.vampirism.vampireOrchid.name=Vámpír orchidea
+block.vampirism.blockCoffin.name=Koporsó
+block.vampirism.castleBlock.name=Kastély Blokk
+block.vampirism.castleSlab.name=Kastély Lap
+block.vampirism.castleStairs.name=Kastély Lépcső
+
+#GUI
+gui.vampirism.revertback.head=Vissza változás emberré
+gui.vampirism.revertback.desc=Elfogod veszíteni az összes szinted és meghalsz
+
+# Keys
+keys.vampirism.category=Vámpirizmus
+keys.vampirism.suck=Vér szívás
+keys.vampirism.auto=Automatikus Vér Üveg Töltés
+keys.vampirism.skill=Vámpír Képességek Aktiválása
+key.vampirism.vision=Nézet váltás
+
+#General
+itemGroup.vampirism=Vámpirizmus
+death.attack.sun=%1$s nem szerette a napot
+potion.vampirism.sunscreen=Naptej
+potion.vampirism.thirst=Szomjúság
+potion.vampirism.saturation=Telítettség
+text.vampirism.skill.level_to_low=A Vámpír szinted túl kicsi ehhez
+text.vampirism.skill.cooldown_not_over=Kérlek várj amíg a visszaszámlálásnak vége van
+
+#Skill
+
+#Minion command
+minioncommand.vampirism.justfollow=Csak kövess engem
+
+#Config
+category.vampirism.balance=Egyensúlyi beállítások
+category.vampirism.balance_level=Szintlépés egyensúly beállítások
+category.vampirism.balance_player_mod=Vámpír játékos módosítása
+category.vampirism.balance_player_skills=Vámpír játékos képesség módosítás
+category.vampirism.balance_mob_prop=Vámpurizmus mob tulajdonságok
+category.vampirism.balance_mob_prop.tooltip=Mobok tulajdonságai megváltoztatása, akik vámpirizmusból lettek vámpírok
+category.vampirism.balance_vv_prop=Vámpir Falu tulajdonságok
+category.vampirism.balance_vv_prop.tooltip=Viselkedés megváltoztatása, hogy hogy viselkedjenek a vadászok a faluban és bármilyen más falusi dolgok

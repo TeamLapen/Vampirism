@@ -1,10 +1,14 @@
 #X-Generator: crowdin.com
 # Entitys
 entity.vampirism.vampireHunter.name=Chasseur de vampire
+entity.vampirism.vampire.name=Vampire
 entity.vampirism.ghost.name=Fantôme
 entity.vampirism.vampireLord.name=Seigneur vampire
-entity.vampirism.vampireMinionR.name=Favori de vampire
-entity.vampirism.vampireMinionS.name=Favori de vampire
+entity.vampirism.vampireMinionR.name=Sbire de Vampire
+entity.vampirism.vampireMinionS.name=Sbire de Vampire
+entity.vampirism.blinding_bat.name=Chauve-souris
+entity.vampirism.dracula.name=Dracula
+entity.vampirism.dead_mob.name=Mort vivant
 
 # Items
 item.vampirism.vampiresFear.name=Frayeur de vampire
@@ -15,11 +19,26 @@ item.vampirism.humanHeart.name=Coeur humain
 item.vampirism.torch.name=Torche
 item.vampirism.pureBlood.name=Sang pur
 item.vampirism.sunscreen.name=Crème solaire
+item.vampirism.leechSword.name=Sangsue
+item.vampirism.coffin.name=Cercueil
+item.vampirism.vampireArmor_helmet.name=Casque du vampire
+item.vampirism.vampireArmor_leggings.name=Jambières du vampire
+item.vampirism.vampireArmor_boots.name=Bottes du vampire
+item.vampirism.vampireArmor_chestplate.name=Plastron du vampire
+item.vampirism.minionNameTag.name=Badge nominatif de favori
 
 # Blocks
+block.vampirism.bloodAltar.name=Autel de sang de saturation
+block.vampirism.bloodAltarTier2.name=Autel de sang d'inspiration
+block.vampirism.bloodAltarTier4.name=Autel de sang d'infusion
+block.vampirism.bloodAltarTier4Tip.name=Autel de sang d'infusion (bout)
 block.vampirism.churchAltar.name=Autel de nettoyage
 block.vampirism.cursedEarth.name=Terre maudite
 block.vampirism.vampireOrchid.name=Orchidé vampire
+block.vampirism.blockCoffin.name=Cercueil
+block.vampirism.castleBlock.name=Bloc de château
+block.vampirism.castleSlab.name=Dalle de château
+block.vampirism.castleStairs.name=Escaliers de château
 
 #GUI
 gui.vampirism.revertback.head=Retransformation en humain normal
@@ -30,12 +49,15 @@ keys.vampirism.category=Vampirisme
 keys.vampirism.suck=Suce le sang
 keys.vampirism.auto=Auto remplissage de bouteille de sang
 keys.vampirism.skill=Active les compétence de vampire
+key.vampirism.vision=Changer de vision
 
 #General
 itemGroup.vampirism=Vampirisme
 death.attack.sun=%1$s n'a pas aimé le soleil
 potion.vampirism.sunscreen=Crème solaire
 potion.vampirism.thirst=Soif
+potion.vampirism.saturation=Saturation
+potion.vampirism.sanguinare=Sanguinare Vampiris
 text.vampirism.skill.level_to_low=Votre niveau de vampire est trop bas pour celà
 text.vampirism.skill.cooldown_not_over=Veuillez attendre jusqu'à la fin de votre récupération
 text.vampirism.entity_level=Niveau
@@ -49,10 +71,49 @@ text.vampirism.purity=Pureté
 text.vampirism.auto_fill_enabled=Remplissage auto activé
 text.vampirism.auto_fill_disabled=Remplissage auto désactivé
 text.vampirism.skill.deactivated_by_serveradmin=Cette capacité est désactivée par votre administrateur serveur
+text.vampirism.ritual_no_vampire=Vous devez être un vampire pour ce rituel
+text.vampirism.cant_fly_day=Vous ne pouvez pas voler de jour
+text.vampirism.no_more_minions=Vous ne pouvez pas contrôler plus de favoris
+text.vampirism.coffin.noSleep=Vous pouvez seulement dormir de jour
+text.vampirism.coffin.occupied=Ce cercueil est occupé
+text.vampirism.coffin.stopsleeping=Quitte le cercueil
+text.vampirism.blood_left=Sang restant
+text.vampirism.blood=Sang
+text.vampirism.vampirelevel=Niveau de vampire
+text.vampirism.entitysblood=Sang de l'entité
+text.vampirism.minion=Favori
+text.vampirism.lord=Seigneur
+text.vampirism.normal_vision=Vision normale
+text.vampirism.night_vision=Vision nocturne
+text.vampirism.no_control_minion=Vous n'avez aucun contrôle sur ce favori
+text.vampirism.need_empty_bottle=Mon seigneur, j'ai besoin d'une bouteille vide pour récolter le sang
+text.vampirism.thanks=Merci
+text.vampirism.coming_back=Je revient, mon seigneur
+text.vampirism.sorry_i_died_while_doing=Mon seigneur, je suis désolé mais je suis mort en accomplissant votre tâche
+text.vampirism.current_task=Tâche en cours
+text.vampirism.structure=Structure
+text.vampirism.pillar_blocks=Blocs de pilier
 
 #Skill
+skill.vampirism.bat_skill=Activer/désactiver le mode chauve-souris
+skill.vampirism.change_weather=Temps
+skill.vampirism.cancel=Annuler
+skill.vampirism.freeze=Geler
+skill.vampirism.invisibility=Invisibilité
+skill.vampirism.regen=Régénération
+skill.vampirism.revive_fallen=Faire revivre les morts
+skill.vampirism.summon_bats=Invoquer des chauves-souris
+skill.vampirism.teleport=Téléporter
+skill.vampirism.vampire_rage=Rage de vampire
 
 #Minion command
+minioncommand.vampirism.attackhostilenoplayers=Attaque hostile
+minioncommand.vampirism.attackhostile=Attaque hostile incluant le joueur
+minioncommand.vampirism.collectblood=Recueillir le sang
+minioncommand.vampirism.defendlord=Défendre le Seigneur
+minioncommand.vampirism.stayhere=Restez ici
+minioncommand.vampirism.comeback=Reviens (favoris distants)
+minioncommand.vampirism.justfollow=Suit-moi seulement
 
 #Config
 category.vampirism.balance=Propriétés d'équilibrage
