@@ -5,10 +5,7 @@ import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAIBreakDoor;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -48,7 +45,12 @@ public abstract class DefaultVampire extends EntityMob {
 		this.setSize(0.6F, 1.8F);
 
 		this.tasks.addTask(0, new EntityAISwimming(this));
-		this.tasks.addTask(1, new EntityAIBreakDoor(this));
+		if(world.provider.dimensionId==VampirismMod.castleDimensionId){
+			this.tasks.addTask(1,new EntityAIOpenDoor(this,true));
+		}
+		else{
+			this.tasks.addTask(1, new EntityAIBreakDoor(this));
+		}
 		this.tasks.addTask(5, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.1, false));
 		this.tasks.addTask(5, new EntityAIAttackOnCollide(this, EntityVampireHunter.class, 1.0, true));
 		this.tasks.addTask(6, new EntityAIAttackOnCollide(this, EntityVillager.class, 0.9, true));

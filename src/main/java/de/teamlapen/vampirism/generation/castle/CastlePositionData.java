@@ -278,7 +278,7 @@ public class CastlePositionData extends WorldSavedData{
 		else{
 			//Compability code for older test worlds. Can probably be removed later TODO
 			p.setMainCastle(new ChunkCoordIntPair(pos[0]+1,pos[1]+1),new ChunkCoordIntPair(pos[0]+2,pos[1]+2));
-			Logger.w("CastlePos","Creating fake main castle for compatibility reasons");
+			Logger.w("CastlePos","Creating fake main castle for compatibility reasons for Position (%d/%d)",pos[0],pos[1]);
 		}
 		return p;
 	}

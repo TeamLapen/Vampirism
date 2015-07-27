@@ -126,12 +126,12 @@ public class ClientProxy extends CommonProxy {
 				}
 			}
 		}
-		int i= (int) (1000*Math.random());
+		int i= (int) (2000*Math.random());
 		if(i==0){
 			Minecraft mc=Minecraft.getMinecraft();
-			if(mc.theWorld!=null&&mc.thePlayer!=null){
+			if(mc.theWorld!=null&&mc.thePlayer!=null&&!mc.isGamePaused()){
 				if(mc.theWorld.getBiomeGenForCoords(MathHelper.floor_double(mc.thePlayer.posX),MathHelper.floor_double(mc.thePlayer.posZ)) instanceof BiomeVampireForest){
-					PositionedSoundRecord sound = new PositionedSoundRecord(new ResourceLocation("vampirism:ambient.vampire_biome"), 0.9F, 1F,(float)(mc.thePlayer.posX+(10*(Math.random()-0.5D))),(float)mc.thePlayer.posY,(float)(mc.thePlayer.posZ+(10*(Math.random()-0.5D))));
+					PositionedSoundRecord sound = new PositionedSoundRecord(new ResourceLocation("vampirism:ambient.vampire_biome"), 0.6F, 1F,(float)(mc.thePlayer.posX+(10*(Math.random()-0.5D))),(float)mc.thePlayer.posY,(float)(mc.thePlayer.posZ+(10*(Math.random()-0.5D))));
 					mc.getSoundHandler().playSound(sound);
 				}
 			}
