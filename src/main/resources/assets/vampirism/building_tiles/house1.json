@@ -687,12 +687,12 @@
       ]
     },
     {
-      "blockId": "vampirism:castleBlock",
+      "blockId": "vampirism:doubleCastleSlab",
       "meta": [
-        3,
-        3,
-        3,
-        3
+        1,
+        1,
+        1,
+        1
       ],
       "blockPositions": [
         {
@@ -1075,6 +1075,37 @@
       ]
     },
     {
+      "blockId": "minecraft:torch",
+      "meta": [
+        5,
+        5,
+        5,
+        5
+      ],
+      "blockPositions": [
+        {
+          "x": 4,
+          "y": 4,
+          "z": 4
+        },
+        {
+          "x": 4,
+          "y": 4,
+          "z": 10
+        },
+        {
+          "x": 11,
+          "y": 4,
+          "z": 4
+        },
+        {
+          "x": 11,
+          "y": 4,
+          "z": 10
+        }
+      ]
+    },
+    {
       "blockId": "minecraft:oak_stairs",
       "meta": [
         1,
@@ -1087,6 +1118,22 @@
           "x": 4,
           "y": 0,
           "z": 5
+        }
+      ]
+    },
+    {
+      "blockId": "minecraft:flower_pot",
+      "meta": [
+        4,
+        4,
+        4,
+        4
+      ],
+      "blockPositions": [
+        {
+          "x": 4,
+          "y": 0,
+          "z": 7
         }
       ]
     },
@@ -1424,97 +1471,6 @@
       ]
     },
     {
-      "blockId": "minecraft:carpet",
-      "meta": [
-        14,
-        14,
-        14,
-        14
-      ],
-      "blockPositions": [
-        {
-          "x": 6,
-          "y": 0,
-          "z": 5
-        },
-        {
-          "x": 6,
-          "y": 0,
-          "z": 6
-        },
-        {
-          "x": 6,
-          "y": 0,
-          "z": 7
-        },
-        {
-          "x": 6,
-          "y": 0,
-          "z": 8
-        },
-        {
-          "x": 7,
-          "y": 0,
-          "z": 5
-        },
-        {
-          "x": 7,
-          "y": 0,
-          "z": 6
-        },
-        {
-          "x": 7,
-          "y": 0,
-          "z": 7
-        },
-        {
-          "x": 7,
-          "y": 0,
-          "z": 8
-        },
-        {
-          "x": 8,
-          "y": 0,
-          "z": 5
-        },
-        {
-          "x": 8,
-          "y": 0,
-          "z": 6
-        },
-        {
-          "x": 8,
-          "y": 0,
-          "z": 7
-        },
-        {
-          "x": 8,
-          "y": 0,
-          "z": 8
-        },
-        {
-          "x": 9,
-          "y": 0,
-          "z": 5
-        },
-        {
-          "x": 9,
-          "y": 0,
-          "z": 6
-        },
-        {
-          "x": 9,
-          "y": 0,
-          "z": 7
-        },
-        {
-          "x": 9,
-          "y": 0,
-          "z": 8
-        }
-      ]
-    },
-    {
       "blockId": "minecraft:gravel",
       "meta": [
         0,
@@ -1686,9 +1642,9 @@
       "blockId": "minecraft:furnace",
       "meta": [
         4,
-        4,
-        4,
-        4
+        2,
+        5,
+        3
       ],
       "blockPositions": [
         {
@@ -1832,7 +1788,7 @@
     {
       "type": "SPAWN_ENTITY",
       "pos": {
-        "x": 5,
+        "x": 7,
         "y": 0,
         "z": 7
       },
@@ -1910,7 +1866,7 @@
       },
       "extra": {
         "color": 1,
-        "closed":true
+        "closed": false
       }
     },
     {
@@ -1922,7 +1878,7 @@
       },
       "extra": {
         "color": 15,
-        "closed": true
+        "closed": false
       }
     }
   ]

@@ -66,6 +66,11 @@ public class CastleGenerator extends WorldGenerator {
 		loadTile("entrancel", gson, tileMap);
 		loadTile("entrancer", gson, tileMap);
 		loadTile("path", gson, tileMap);
+		loadTile("dirt2",gson,tileMap);
+		loadTile("house3",gson,tileMap);
+		loadTile("house4",gson,tileMap);
+		loadTile("treasure",gson,tileMap);
+		loadTile("wall_corner",gson,tileMap);
 	}
 
 	/**
@@ -146,7 +151,7 @@ public class CastleGenerator extends WorldGenerator {
 
 				if (p.isChunkInPosition(chunkX, chunkZ)) {
 					if (!p.hasTiles()) {
-						preGeneratePosition(p, world, rnd);
+						preGeneratePosition(p, world);
 						data.markDirty();
 					}
 					String s = p.getTileAt(chunkX - p.chunkXPos, chunkZ - p.chunkZPos);
@@ -303,10 +308,10 @@ public class CastleGenerator extends WorldGenerator {
 	 *
 	 * @param position
 	 * @param world
-	 * @param rnd
 	 */
-	private void preGeneratePosition(CastlePositionData.Position position, World world, Random rnd) {
+	private void preGeneratePosition(CastlePositionData.Position position, World world) {
 		if (position.hasSize()) {
+			Random rnd=new Random();
 			Logger.d(TAG, "Pregenerating position %s", position);
 			if (pregenerating) {
 				Logger.e(TAG, "Already pregenerating. Did not expect that.");
@@ -325,31 +330,7 @@ public class CastleGenerator extends WorldGenerator {
 				}
 			}
 
-			//Add path from entrance to the castle
-			for (int z = sz - 1; z > sz / 2; z--) {
-				addPathAndDir(sx / 2, z, 3);
-				addPathAndDir(sx / 2 - 1, z, 1);
-			}
 
-			//Create walls
-			for (int x = 0; x < sx; x++) {
-				tiles[x][0] += ",2,wall";
-			}
-			for (int x = 0; x < sx; x++) {
-				if (x == sx / 2) {
-					tiles[x][sz - 1] += ",0,entrancer";
-				} else if (x == sx / 2 - 1) {
-					tiles[x][sz - 1] += ",0,entrancel";
-				} else {
-					tiles[x][sz - 1] += ",0,wall";
-				}
-			}
-			for (int z = 0; z < sz; z++) {
-				tiles[0][z] += ",1,wall";
-			}
-			for (int z = 0; z < sz; z++) {
-				tiles[sx - 1][z] += ",3,wall";
-			}
 
 			/**
 			 * Upper castle x (middle)
@@ -381,23 +362,25 @@ public class CastleGenerator extends WorldGenerator {
 
 			//Upper left
 			boolean ulcorner = false;
+			boolean flag=false;
 			if (rnd.nextBoolean()) {
+				flag=true;
 				addPathAndDir(ucx - 2, ucz - 2, 2);
 				addPathAndDir(ucx - 2, ucz - 1, 0);
 				if (ucx - 3 >= 0) {
-					if (rnd.nextBoolean()) {
+					if (rnd.nextBoolean()||rnd.nextBoolean()) {
 						addPathAndDir(ucx - 3, ucz - 2, 1);
 						addPathAndDir(ucx - 2, ucz - 2, 3);
 						ulcorner = true;
 					}
 				}
 			}
-			if (rnd.nextBoolean()) {
+			if (!flag||rnd.nextBoolean()) {
 				addPathAndDir(ucx - 1, ucz - 2, 3);
 				addPathAndDir(ucx - 2, ucz - 2, 1);
 
 				if (ucz - 3 >= 0) {
-					if (rnd.nextBoolean()) {
+					if (rnd.nextBoolean()||rnd.nextBoolean()) {
 						addPathAndDir(ucx - 2, ucz - 3, 2);
 						addPathAndDir(ucx - 2, ucz - 2, 0);
 						ulcorner = true;
@@ -415,18 +398,20 @@ public class CastleGenerator extends WorldGenerator {
 			}
 
 			boolean urcorner = false;
+			flag=false;
 			if (rnd.nextBoolean()) {
+				flag=true;
 				addPathAndDir(ucx + 1, ucz - 2, 3);
 				addPathAndDir(ucx, ucz - 2, 1);
 				if (ucz - 3 >= 0) {
-					if (rnd.nextBoolean()) {
+					if (rnd.nextBoolean()||rnd.nextBoolean()) {
 						addPathAndDir(ucx + 1, ucz - 3, 2);
 						addPathAndDir(ucx + 1, ucz - 2, 0);
 						urcorner = true;
 					}
 				}
 			}
-			if (rnd.nextBoolean()) {
+			if (!flag||rnd.nextBoolean()) {
 				addPathAndDir(ucx + 1, ucz - 2, 2);
 				addPathAndDir(ucx + 1, ucz - 1, 0);
 				if (ucx + 2 < sx) {
@@ -446,7 +431,9 @@ public class CastleGenerator extends WorldGenerator {
 			}
 
 			boolean lrcorner = false;
+			flag=false;
 			if (rnd.nextBoolean()) {
+				flag=true;
 				addPathAndDir(ucx + 1, ucz, 2);
 				addPathAndDir(ucx + 1, ucz + 1, 0);
 				if (ucx + 2 < sx) {
@@ -457,11 +444,11 @@ public class CastleGenerator extends WorldGenerator {
 					}
 				}
 			}
-			if (rnd.nextBoolean()) {
+			if (flag||rnd.nextBoolean()) {
 				addPathAndDir(ucx + 1, ucz + 1, 3);
 				addPathAndDir(ucx, ucz + 1, 1);
 				if (ucz + 2 < sz) {
-					if (rnd.nextBoolean()) {
+					if (rnd.nextBoolean()||rnd.nextBoolean()) {
 						addPathAndDir(ucx + 1, ucz + 2, 0);
 						addPathAndDir(ucx + 1, ucz + 1, 2);
 						lrcorner = true;
@@ -480,8 +467,9 @@ public class CastleGenerator extends WorldGenerator {
 			}
 
 			boolean llcorner = false;
-
+			flag=false;
 			if (rnd.nextBoolean()) {
+				flag=true;
 				addPathAndDir(ucx - 1, ucz + 1, 3);
 				addPathAndDir(ucx - 2, ucz + 1, 1);
 				if (ucz + 2 < sz) {
@@ -493,11 +481,11 @@ public class CastleGenerator extends WorldGenerator {
 				}
 
 			}
-			if (rnd.nextBoolean()) {
+			if (!flag||rnd.nextBoolean()) {
 				addPathAndDir(ucx - 2, ucz + 1, 0);
 				addPathAndDir(ucx - 2, ucz, 2);
 				if (ucx - 3 >= 0) {
-					if (rnd.nextBoolean()) {
+					if (rnd.nextBoolean()||rnd.nextBoolean()) {
 						addPathAndDir(ucx - 3, ucz + 1, 1);
 						addPathAndDir(ucx - 2, ucz + 1, 3);
 						llcorner = true;
@@ -516,7 +504,7 @@ public class CastleGenerator extends WorldGenerator {
 			}
 
 			//Middle right/left paths
-			if (rnd.nextBoolean()) {
+			if (rnd.nextBoolean()||rnd.nextBoolean()) {
 				addPathAndDir(ucx + 1, ucz, 0);
 				addPathAndDir(ucx + 1, ucz - 1, 2);
 				if (ucx + 2 < sx) {
@@ -531,7 +519,7 @@ public class CastleGenerator extends WorldGenerator {
 				}
 			}
 
-			if (rnd.nextBoolean()) {
+			if (rnd.nextBoolean()||rnd.nextBoolean()) {
 				addPathAndDir(ucx - 2, ucz, 0);
 				addPathAndDir(ucx - 2, ucz - 1, 2);
 				if (ucx - 3 >= 0) {
@@ -561,6 +549,32 @@ public class CastleGenerator extends WorldGenerator {
 					}
 
 				}
+			}
+
+			//Add path from entrance to the castle
+			for (int z = sz - 1; z > sz / 2; z--) {
+				addPathAndDir(sx / 2, z, 3);
+				addPathAndDir(sx / 2 - 1, z, 1);
+			}
+
+			//Create walls
+			for (int x = 0; x < sx; x++) {
+				tiles[x][0] += ",2,wall";
+			}
+			for (int x = 0; x < sx; x++) {
+				if (x == sx / 2) {
+					tiles[x][sz - 1] += ",0,entrancer";
+				} else if (x == sx / 2 - 1) {
+					tiles[x][sz - 1] += ",0,entrancel";
+				} else {
+					tiles[x][sz - 1] += ",0,wall";
+				}
+			}
+			for (int z = 0; z < sz; z++) {
+				tiles[0][z] += ",1,wall";
+			}
+			for (int z = 0; z < sz; z++) {
+				tiles[sx - 1][z] += ",3,wall";
 			}
 
 			position.setMainCastle(new ChunkCoordIntPair(position.chunkXPos + sx / 2 - 1, position.chunkZPos + sz / 2 - 1),
@@ -604,7 +618,7 @@ public class CastleGenerator extends WorldGenerator {
 	 */
 	private String getRandomHouse(Random rnd, int[] dirs, boolean allowNonHouse) {
 		int dir = dirs[rnd.nextInt(dirs.length)];
-		int type = rnd.nextInt(allowNonHouse ? 7 : 6);
+		int type = rnd.nextInt(allowNonHouse ? 12 : 11);
 		String s;
 		switch (type) {
 		case 0:
@@ -616,12 +630,19 @@ public class CastleGenerator extends WorldGenerator {
 			s = "house2";
 			break;
 		case 4:
+		case 5:
+		case 6:
+			s="house3";
+		case 7:
+		case 8:
+			s="house4";
+		case 9:
 			s = "blacksmith";
 			break;
-		case 6:
+		case 11:
 			return getRandomNonHouse(rnd, dirs, false);
 		default:
-			return "";
+			return rnd.nextBoolean()?"":",0,dirt2";
 		}
 		return "," + dir + "," + s;
 	}
@@ -646,7 +667,7 @@ public class CastleGenerator extends WorldGenerator {
 		case 5:
 			return getRandomHouse(rnd, dirs, false);
 		default:
-			return "";
+			return rnd.nextBoolean()?"":",0,dirt2";
 		}
 		return "," + dir + "," + s;
 	}
