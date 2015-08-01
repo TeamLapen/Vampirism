@@ -691,16 +691,17 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	}
 
 	public void onDeath(DamageSource source) {
-		if (source.damageType.equals("mob") && source instanceof EntityDamageSource) {
+		if (source instanceof EntityDamageSource) {
 			Entity src = source.getEntity();
 			if (src instanceof EntityVampireHunter && BALANCE.VAMPIRE_PLAYER_LOOSE_LEVEL) {
 				looseLevel();
 			}
-
 			if (isVampireLord()) {
 				EntityLivingBase old = null;
 				if (src instanceof EntityVampire) {
 					old = (EntityLivingBase) src;
+				} else if(src instanceof EntityPlayer){
+					old= (EntityLivingBase) src;
 				} else if (src instanceof IMinion) {
 					IMinionLord l = ((IMinion) src).getLord();
 					if (l != null) {
@@ -930,7 +931,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 		if(!player.worldObj.isRemote&&vampireLord){
 			if(getLevel()<REFERENCE.HIGHEST_REACHABLE_LEVEL){
-				VampireLordData.get(player.worldObj).makeNoLord(player, "text.vampirism.lord_level_to_low");
+				VampireLordData.get(player.worldObj).makeNoLord(player, "text.vampirism.lord.level_to_low");
 			}
 		}
 

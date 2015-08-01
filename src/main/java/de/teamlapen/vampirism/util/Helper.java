@@ -16,11 +16,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.*;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import scala.actors.threadpool.Arrays;
@@ -347,6 +344,24 @@ public class Helper {
 	public static boolean isEntityInVampireBiome(Entity e){
 		if(e==null||e.worldObj==null)return false;
 		return e.worldObj.getBiomeGenForCoords(MathHelper.floor_double(e.posX),MathHelper.floor_double(e.posZ)) instanceof BiomeVampireForest;
+	}
+
+	/**
+	 * Sends the component message to all players except the given one.
+	 * Only use on server or common side
+	 * @param player
+	 * @param message
+	 */
+	public static void sendMessageToAllExcept(EntityPlayer player,IChatComponent message){
+		for(Object o:MinecraftServer.getServer().getConfigurationManager().playerEntityList){
+			if(!o.equals(player)){
+				((EntityPlayer)o).addChatComponentMessage(message);
+			}
+		}
+	}
+
+	public static void sendMessageToAll(IChatComponent message){
+		sendMessageToAllExcept(null,message);
 	}
 
 }

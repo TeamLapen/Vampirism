@@ -5,12 +5,15 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 import org.eclipse.jdt.annotation.Nullable;
@@ -43,6 +46,10 @@ public class VampireLordData extends WorldSavedData {
 
 	private boolean portalEnabled;
 	final private List<UUID> lords;
+
+	private long joinTime=-1L;
+	private long lastOnlineTime;
+
 	/**
 	 * List of lords which lost their lord state while being absent
 	 */
@@ -94,9 +101,10 @@ public class VampireLordData extends WorldSavedData {
 				}
 				lords.add(player.getUniqueID());
 					player.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.lord.become"));
-					MinecraftServer.getServer().getConfigurationManager().sendChatMsg(
-							new ChatComponentText(player.getDisplayName() + " ").appendSibling(new ChatComponentTranslation("text.vampirism.lord.other_player_become")));
+				Helper.sendMessageToAllExcept(player,
+						new ChatComponentText(player.getDisplayName() + " ").appendSibling(new ChatComponentTranslation("text.vampirism.lord.other_player_become")));
 			}
+			lastOnlineTime=MinecraftServer.getServer().worldServerForDimension(0).getTotalWorldTime();
 			markDirty();
 			return true;
 		}
@@ -116,7 +124,7 @@ public class VampireLordData extends WorldSavedData {
 			if(!lords.contains(newPlayer)){
 				lords.add(newPlayer.getUniqueID());
 				newPlayer.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.lord.become"));
-				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(
+				Helper.sendMessageToAllExcept(newPlayer,
 						new ChatComponentText(newPlayer.getDisplayName() + " ").appendSibling(new ChatComponentTranslation("text.vampirism.lord.other_player_become")));
 			}
 			markDirty();
@@ -177,11 +185,25 @@ public class VampireLordData extends WorldSavedData {
 
 	private void checkLords(){
 		if(!Configs.mulitple_lords&&lords.size()>0){
-			if(shouldLooseLord(lords.get(0))){
-				disabledLord.add(lords.remove(0));
-				openAndRegenDim(true);
-				this.markDirty();
+			if(getPlayerFormUUID(lords.get(0))==null){
+				joinTime=-1;
+				if(shouldLooseLord(lords.get(0))){
+					Logger.d(TAG,"Lord %s is offline and looses his lord status",lords.get(0));
+					disabledLord.add(lords.remove(0));
+					openAndRegenDim(true);
+					this.markDirty();
+				}
 			}
+			else{
+				if(joinTime==-1){
+					joinTime=MinecraftServer.getServer().worldServers[0].getTotalWorldTime();
+				}
+				else if((MinecraftServer.getServer().worldServerForDimension(0).getTotalWorldTime()-joinTime)>200){
+					lastOnlineTime=MinecraftServer.getServer().worldServerForDimension(0).getTotalWorldTime();
+					this.markDirty();
+				}
+			}
+
 		}
 	}
 
@@ -195,6 +217,20 @@ public class VampireLordData extends WorldSavedData {
 	}
 
 	private boolean shouldLooseLord(UUID uuid){
+		if(MinecraftServer.getServer().isSinglePlayer())return false;
+		boolean flag=false;
+		for(Object o:MinecraftServer.getServer().getConfigurationManager().playerEntityList){
+			EntityPlayer p= (EntityPlayer) o;
+			if(VampirePlayer.get(p).getLevel()== REFERENCE.HIGHEST_REACHABLE_LEVEL&&!isLord(p)){
+				flag=true;
+			}
+		}
+		if(flag){
+			if(MathHelper.floor_float(((float)MinecraftServer.getServer().worldServerForDimension(0).getTotalWorldTime() - lastOnlineTime )/ 24000F)>Configs.looseLordDaysCount){
+				return true;
+			}
+		}
+
 		return false;
 	}
 
@@ -213,7 +249,7 @@ public class VampireLordData extends WorldSavedData {
 			UUID uuid=it.next();
 			EntityPlayer player=getPlayerFormUUID(uuid);
 			if(player!=null){
-				player.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.lost_lord_absence"));
+				player.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.lord.vampire_replace_absence"));
 				it.remove();
 			}
 			this.markDirty();
@@ -221,7 +257,7 @@ public class VampireLordData extends WorldSavedData {
 	}
 
 	public void tick(TickEvent.ServerTickEvent event){
-		if(event.getPhase().equals(TickEvent.Phase.END)&& MinecraftServer.getSystemTimeMillis()%5000==0){
+		if(event.phase.equals(TickEvent.Phase.END)&& MinecraftServer.getServer().getTickCounter()%100==0){
 			checkLords();
 			checkDisabledLords();
 		}
@@ -239,14 +275,18 @@ public class VampireLordData extends WorldSavedData {
 			}
 			it.remove();
 		}
+		lastOnlineTime=0;
 		MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("Vampire Lords were reset"));
 		this.openAndRegenDim(true);
+
+		this.markDirty();
 	}
 
 
 	@Override public void readFromNBT(NBTTagCompound nbt) {
 		shouldRegenerateCastleDim=nbt.getBoolean("regenerate");
 		portalEnabled=nbt.getBoolean("portal");
+		lastOnlineTime=nbt.getLong("last_online");
 		try {
 			int i=0;
 			while(nbt.hasKey("lord_ls_"+i)){
@@ -284,5 +324,6 @@ public class VampireLordData extends WorldSavedData {
 			nbt.setLong("dis_lord_ls_"+i,disabledLord.get(i).getLeastSignificantBits());
 			nbt.setLong("dis_lord_ms_"+i,disabledLord.get(i).getMostSignificantBits());
 		}
+		nbt.setLong("last_online",lastOnlineTime);
 	}
 }
