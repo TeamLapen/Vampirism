@@ -49,9 +49,25 @@ public class CastlePositionData extends WorldSavedData{
 		return checked;
 	}
 
-//	public List<Position> getPositions(){
-//		return positions;
-//	}
+	public Position findNearestCastle(int posX,int posZ){
+		int maxD=Integer.MAX_VALUE;
+		Position pos=null;
+		for(Position p:positions){
+			int sd=(p.chunkXPos-(posX>>4))*(p.chunkXPos-(posX>>4))+(p.chunkZPos-(posZ>>4))*(p.chunkZPos-(posZ>>4));
+			if(sd<maxD){
+				maxD=sd;
+				pos=p;
+			}
+		}
+		for(Position p:fullyGeneratedPositions){
+			int sd=(p.chunkXPos-(posX>>4))*(p.chunkXPos-(posX>>4))+(p.chunkZPos-(posZ>>4))*(p.chunkZPos-(posZ>>4));
+			if(sd<maxD){
+				maxD=sd;
+				pos=p;
+			}
+		}
+		return pos;
+	}
 
 	/**
 	 * Returns the castle position object for this coordinates or null if there is no castle

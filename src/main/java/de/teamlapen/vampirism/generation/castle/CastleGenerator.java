@@ -13,6 +13,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import org.apache.commons.lang3.ArrayUtils;
+import org.eclipse.jdt.annotation.Nullable;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -135,7 +136,11 @@ public class CastleGenerator extends WorldGenerator {
 					while (iterator.hasNext()) {
 						CastlePositionData.Position pos = iterator.next();
 						CastlePositionData.Position pos2 = this.optimizePosition(pos, world, rnd);
-						if (!pos2.equals(pos)) {
+						if(pos2==null){
+							Logger.d(TAG,"Dropping pos %s because it is to small",pos);
+							iterator.remove();
+						}
+						else if (!pos2.equals(pos)) {
 							pos = pos2;
 							iterator.set(pos2);
 						}
@@ -241,9 +246,10 @@ public class CastleGenerator extends WorldGenerator {
 	 * @param position
 	 * @param world
 	 * @param rnd
-	 * @return
+	 * @return Modified position or null if the positions is useless
 	 */
-	private CastlePositionData.Position optimizePosition(CastlePositionData.Position position, World world, Random rnd) {
+	private @Nullable
+	CastlePositionData.Position optimizePosition(CastlePositionData.Position position, World world, Random rnd) {
 		Logger.d(TAG, "Optimizing Position");
 		long t = System.currentTimeMillis();
 		final int TEST_SIZE = 10;
@@ -251,7 +257,7 @@ public class CastleGenerator extends WorldGenerator {
 		Boolean[][] biomes = new Boolean[D_TEST_SIZE][D_TEST_SIZE];
 		for (int i = -TEST_SIZE; i < TEST_SIZE; i++) {
 			for (int j = -TEST_SIZE; j < TEST_SIZE; j++) {
-				biomes[i + TEST_SIZE][j + TEST_SIZE] = ModBiomes.biomeVampireForest.equals(world.getWorldChunkManager().getBiomeGenAt(position.chunkXPos + i << 4, position.chunkZPos + j << 4));
+				biomes[i + TEST_SIZE][j + TEST_SIZE] = ModBiomes.biomeVampireForest.equals(world.getWorldChunkManager().getBiomeGenAt((position.chunkXPos + i << 4)+8, (position.chunkZPos + j << 4)+8));
 			}
 		}
 		//		Logger.i(TAG,"Biomes");
@@ -287,20 +293,20 @@ public class CastleGenerator extends WorldGenerator {
 		//		this.printMatrix(help);
 
 		Logger.d(TAG, "Optimizing position took %s ms", System.currentTimeMillis() - t);
-		if (max[0] >= MIN_SIZE) {
+		if (max[0] >= MIN_SIZE+2) {
 			int highcx = position.chunkXPos - TEST_SIZE + max[1];
 			int highcz = position.chunkZPos - TEST_SIZE + max[2];
 			int lowcx = highcx - max[0];
 			int lowcz = highcz - max[0];
 			Logger.d(TAG, "Found fitting area with size %d at coords %d %d (%d %d)", max[0], lowcx, lowcz, highcx, highcz);
-			int sx = MIN_SIZE + rnd.nextInt(Math.min(max[0], MAX_SIZE) - MIN_SIZE + 1);
-			int sz = MIN_SIZE + rnd.nextInt(Math.min(max[0], MAX_SIZE) - MIN_SIZE + 1);
+			int sx = MIN_SIZE + rnd.nextInt(Math.min(max[0]-2, MAX_SIZE) - MIN_SIZE + 1);
+			int sz = MIN_SIZE + rnd.nextInt(Math.min(max[0]-2, MAX_SIZE) - MIN_SIZE + 1);
 			CastlePositionData.Position p = new CastlePositionData.Position(lowcx + ((max[0] - sx) / 2), lowcz + ((max[0] - sz) / 2));
 			p.setSize(sx, sz);
 			return p;
 		}
 
-		return position;
+		return null;
 	}
 
 	/**

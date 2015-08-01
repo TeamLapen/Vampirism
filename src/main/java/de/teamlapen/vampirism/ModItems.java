@@ -1,24 +1,13 @@
 package de.teamlapen.vampirism;
 
 import de.teamlapen.vampirism.block.BlockCastleSlab;
+import de.teamlapen.vampirism.item.*;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemSlab;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import cpw.mods.fml.common.registry.GameRegistry;
-import de.teamlapen.vampirism.item.ItemBloodBottle;
-import de.teamlapen.vampirism.item.ItemCoffin;
-import de.teamlapen.vampirism.item.ItemGemOfBinding;
-import de.teamlapen.vampirism.item.ItemHumanHeart;
-import de.teamlapen.vampirism.item.ItemLeechSword;
-import de.teamlapen.vampirism.item.ItemMinionNameTag;
-import de.teamlapen.vampirism.item.ItemPitchfork;
-import de.teamlapen.vampirism.item.ItemPureBlood;
-import de.teamlapen.vampirism.item.ItemSunscreen;
-import de.teamlapen.vampirism.item.ItemTorch;
-import de.teamlapen.vampirism.item.ItemVampireArmor;
-import de.teamlapen.vampirism.item.ItemVampireFang;
 
 public class ModItems {
 
@@ -41,6 +30,7 @@ public class ModItems {
 	public static ItemGemOfBinding gemOfBinding = new ItemGemOfBinding();
 	public static ItemMinionNameTag minionNameTag = new ItemMinionNameTag();
 	public static ItemSlab castleSlabItem;
+	public static ItemBloodEye bloodEye=new ItemBloodEye();
 	public static void init() {
 		GameRegistry.registerItem(leechSword, ItemLeechSword.name);
 		GameRegistry.registerItem(bloodBottle, ItemBloodBottle.name);
@@ -58,6 +48,7 @@ public class ModItems {
 		GameRegistry.registerItem(gemOfBinding, ItemGemOfBinding.name);
 		GameRegistry.registerItem(minionNameTag, ItemMinionNameTag.name);
 		GameRegistry.registerItem((castleSlabItem=new ItemSlab(ModBlocks.castleSlab,ModBlocks.castleSlab,ModBlocks.doubleCastleSlab,false)), BlockCastleSlab.name);
+		GameRegistry.registerItem(bloodEye,ItemBloodEye.name);
 	}
 	public static void registerRecipes() {
 		GameRegistry.addRecipe(new ItemStack(bloodBottle, 1, 0), "   ", "XYX", " X ", 'X', Blocks.glass, 'Y', Items.rotten_flesh);
@@ -73,5 +64,6 @@ public class ModItems {
 		GameRegistry.addRecipe(new ItemStack(gemOfBinding, 1), " X ", "YZY", " V ", 'X', ModItems.humanHeart, 'Y', new ItemStack(bloodBottle, 1, ItemBloodBottle.MAX_BLOOD), 'Z', Items.diamond, 'V',
 				ModBlocks.vampireFlower);
 		GameRegistry.addShapelessRecipe(new ItemStack(minionNameTag), Items.paper, ModBlocks.vampireFlower);
+		GameRegistry.addShapelessRecipe(new ItemStack(bloodEye),Items.ender_eye,new ItemStack(bloodBottle,1,ItemBloodBottle.MAX_BLOOD));
 	}
 }
