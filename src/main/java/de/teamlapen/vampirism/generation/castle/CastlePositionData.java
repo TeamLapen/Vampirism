@@ -291,7 +291,7 @@ public class CastlePositionData extends WorldSavedData{
 			int[] uc=nbt.getIntArray("umc");
 			p.setMainCastle(new ChunkCoordIntPair(lc[0],lc[1]),new ChunkCoordIntPair(uc[0],uc[1]));
 		}
-		else{
+		else if(p.hasTiles()){
 			//Compability code for older test worlds. Can probably be removed later TODO
 			p.setMainCastle(new ChunkCoordIntPair(pos[0]+1,pos[1]+1),new ChunkCoordIntPair(pos[0]+2,pos[1]+2));
 			Logger.w("CastlePos","Creating fake main castle for compatibility reasons for Position (%d/%d)",pos[0],pos[1]);

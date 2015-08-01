@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
@@ -69,15 +70,15 @@ public class EntityGhost extends EntityMob {
 
 	@Override
 	protected void dropFewItems(boolean par1, int par2) {
-		int dropChance1 = this.rand.nextInt(10);
-		if (dropChance1 == 0) {
-			this.dropItem(ModItems.bloodBottle, 1);
-		}
-
-		int dropChance2 = this.rand.nextInt(5);
-		if (dropChance2 == 0) {
-			this.dropItem(ModItems.humanHeart, 1);
-		}
+//		int dropChance1 = this.rand.nextInt(10);
+//		if (dropChance1 == 0) {
+//			this.dropItem(ModItems.bloodBottle, 1);
+//		}
+//
+//		int dropChance2 = this.rand.nextInt(5);
+//		if (dropChance2 == 0) {
+//			this.dropItem(ModItems.humanHeart, 1);
+//		}
 	}
 
 	/**
@@ -106,5 +107,17 @@ public class EntityGhost extends EntityMob {
 	@Override
 	protected boolean isValidLightLevel() {
 		return true;
+	}
+
+	/**
+	 * Ghost do not make any step sounds
+	 * @param p_145780_1_
+	 * @param p_145780_2_
+	 * @param p_145780_3_
+	 * @param p_145780_4_
+	 */
+	@Override
+	protected void func_145780_a(int p_145780_1_, int p_145780_2_, int p_145780_3_, Block p_145780_4_){
+		return;
 	}
 }

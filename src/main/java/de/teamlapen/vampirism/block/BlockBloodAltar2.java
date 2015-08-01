@@ -74,11 +74,9 @@ public class BlockBloodAltar2 extends BasicBlockContainer {
 			}
 			TileEntityBloodAltar2 te = (TileEntityBloodAltar2) world.getTileEntity(par2, par3, par4);
 			if (item != null && item.getItem() instanceof ItemBloodBottle) {
-				Logger.t("Interact");
 				interactBottle(te, item);
 				return true;
-			} else if (item == null&&player.isSneaking()) {
-				Logger.t("start");
+			} else if (item == null||player.isSneaking()) {
 				startRitual(te, player);
 			}
 

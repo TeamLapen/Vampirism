@@ -28,13 +28,13 @@ public final class BALANCE {
 		@DefaultInt(value = 10, minValue = 5, maxValue = 20, name = "Distance where Hunter Attacks Vampire", comment = "")
 		public static int VAMPIRE_DISTANCE_HUNTER;
 
-		@DefaultDouble(value = 90.0D, minValue = 20.0D, maxValue = 150.0D, name = "Vampire Lord Max Health", comment = "")
+		@DefaultDouble(value = 130.0D, minValue = 20.0D, maxValue = 150.0D, name = "Vampire Lord Max Health", comment = "")
 		public static double VAMPIRE_LORD_MAX_HEALTH;
 		@DefaultDouble(value = 7.0D, minValue = 1.0D, maxValue = 14.0D, name = "Vampire Lord Attack Damage", comment = "")
 		public static double VAMPIRE_LORD_ATTACK_DAMAGE;
-		@DefaultDouble(value = 0.3D, minValue = 0.1D, maxValue = 0.6D, name = "Vampire Lord Movement Speed", comment = "")
+		@DefaultDouble(value = 0.35D, minValue = 0.1D, maxValue = 0.6D, name = "Vampire Lord Movement Speed", comment = "")
 		public static double VAMPIRE_LORD_MOVEMENT_SPEED;
-		@DefaultDouble(value = 1.3D, minValue = 1.0D, maxValue = 2.0D, name = "Vampire Lord Improvement per Level", comment = "For each higher level the stats are multiplied with this factor")
+		@DefaultDouble(value = 1.27D, minValue = 1.0D, maxValue = 2.0D, name = "Vampire Lord Improvement per Level", comment = "For each higher level the stats are multiplied with this factor")
 		public static double VAMPIRE_LORD_IMPROVEMENT_PER_LEVEL;
 
 		@DefaultDouble(value = 35.0D, minValue = 15.0D, maxValue = 70.0D, name = "Vampire Hunter Max Health", comment = "")
@@ -55,7 +55,7 @@ public final class BALANCE {
 		@DefaultDouble(value = 0.25D, minValue = 0.1D, maxValue = 0.5D, name = "Vampire Minion Movement Speed", comment = "")
 		public static double VAMPIRE_MINION_MOVEMENT_SPEED;
 
-		@DefaultDouble(value = 100.0D, minValue = 50.0D, maxValue = 150.0D, name = "Dracula Max Health", comment = "")
+		@DefaultDouble(value = 150.0D, minValue = 50.0D, maxValue = 150.0D, name = "Dracula Max Health", comment = "")
 		public static double DRACULA_MAX_HEALTH;
 		@DefaultDouble(value = 10.0D, minValue = 5.0D, maxValue = 20.0D, name = "Dracula Attack Damage", comment = "")
 		public static double DRACULA_ATTACK_DAMAGE;

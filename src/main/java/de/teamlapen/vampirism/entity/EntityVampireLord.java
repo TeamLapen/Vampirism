@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity;
 
 import java.util.UUID;
 
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.generation.castle.CastlePositionData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -65,7 +66,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 		if (aggressive) {
 			this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(20D);
 			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(
-					Math.min(4.5D, BALANCE.MOBPROP.VAMPIRE_LORD_MOVEMENT_SPEED * Math.pow(BALANCE.MOBPROP.VAMPIRE_LORD_IMPROVEMENT_PER_LEVEL, level - 1)));
+					BALANCE.MOBPROP.VAMPIRE_LORD_MOVEMENT_SPEED * Math.pow((BALANCE.MOBPROP.VAMPIRE_LORD_IMPROVEMENT_PER_LEVEL-1)/3+1, (level - 1)));
 		} else {
 			this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(5D);
 			this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(
@@ -80,8 +81,15 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	public boolean attackEntityAsMob(Entity entity) {
 		boolean flag = super.attackEntityAsMob(entity);
 		if (flag && entity instanceof EntityLivingBase) {
-			((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.weakness.id, 200, rand.nextInt(1) + 1));
-			((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100, rand.nextInt(1) + 1));
+			float tm=1f;
+			int mr=1;
+			if(entity instanceof EntityPlayer){
+				float pld=this.getLevel()-VampirePlayer.get((EntityPlayer) entity).getLevel()/3f;
+				tm=pld+1;
+				mr=pld<1.5f?1:(pld<3?2:3);
+			}
+			((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.weakness.id, (int)(200*tm), rand.nextInt(mr) + 1));
+			((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, (int)(100*tm), rand.nextInt(mr) + 1));
 		}
 		return flag;
 	}

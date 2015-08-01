@@ -35,7 +35,7 @@ public class REFERENCE {
 	public static final String MINECRAFT_VERSION = "@MVERSION@";
 	public static final String VAMPIRE_LEVEL_NBT_KEY = "vampirelevel";
 
-	public static final int HIGHEST_REACHABLE_LEVEL = 13;
+	public static final int HIGHEST_REACHABLE_LEVEL = 14;
 
 	public static final String UPDATE_FILE_LINK = "http://teamlapen.de/projects/vampirism/files/modversion.json";
 
