@@ -7100,6 +7100,18 @@
       }
     },
     {
+      "type": "SPAWN_ENTITY",
+      "pos": {
+        "x": 3,
+        "y": 0,
+        "z": 9
+      },
+      "extra": {
+        "count": 1,
+        "entity": "vampirism.dracula"
+      }
+    },
+    {
       "type": "WALL_SIGN",
       "pos": {
         "x": 3,
@@ -7180,49 +7192,73 @@
     {
       "type": "PAINTING",
       "pos": {
-        "x": 5,
-        "y": 5,
-        "z": 1
-      },
-      "extra": {
-        "dir": 0,
-        "title": "Plant"
-      }
-    },
-    {
-      "type": "PAINTING",
-      "pos": {
-        "x": 8,
+        "x": 12,
         "y": 4,
         "z": 1
       },
       "extra": {
         "dir": 0,
-        "title": "Stage"
+        "title": "DonkeyKong"
       }
     },
     {
       "type": "PAINTING",
       "pos": {
-        "x": 12,
-        "y": 3,
-        "z": 1
-      },
-      "extra": {
-        "dir": 0,
-        "title": "Pool"
-      }
-    },
-    {
-      "type": "PAINTING",
-      "pos": {
-        "x": 14,
+        "x": 7,
         "y": 5,
         "z": 1
       },
       "extra": {
         "dir": 0,
-        "title": "Match"
+        "title": "Skeleton"
+      }
+    },
+    {
+      "type": "PAINTING",
+      "pos": {
+        "x": 9,
+        "y": 7,
+        "z": 11
+      },
+      "extra": {
+        "dir": 2,
+        "title": "Sunset"
+      }
+    },
+    {
+      "type": "PAINTING",
+      "pos": {
+        "x": 1,
+        "y": 3,
+        "z": 9
+      },
+      "extra": {
+        "dir": 3,
+        "title": "Void"
+      }
+    },
+    {
+      "type": "PAINTING",
+      "pos": {
+        "x": 9,
+        "y": 1,
+        "z": 1
+      },
+      "extra": {
+        "dir": 0,
+        "title": "Wanderer"
+      }
+    },
+    {
+      "type": "PAINTING",
+      "pos": {
+        "x": 1,
+        "y": 4,
+        "z": 3
+      },
+      "extra": {
+        "dir": 3,
+        "title": "Stage"
       }
     }
   ]

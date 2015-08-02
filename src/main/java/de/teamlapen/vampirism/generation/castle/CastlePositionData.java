@@ -148,6 +148,7 @@ public class CastlePositionData extends WorldSavedData{
 	public static class Position extends ChunkCoordIntPair {
 		private int sizeX;
 		private int sizeZ;
+		private boolean draculasDim=false;
 
 		public ChunkCoordIntPair getLowerMainCastle() {
 			return lowerMainCastle;
@@ -185,6 +186,13 @@ public class CastlePositionData extends WorldSavedData{
 			super(chunkX, chunkY);
 		}
 
+		public void setDraculasDim(){
+			draculasDim=true;
+		}
+
+		public boolean isDraculasDim(){
+			return draculasDim;
+		}
 		public void setSize(int x,int y){
 			sizeX=x;
 			sizeZ =y;
@@ -242,7 +250,7 @@ public class CastlePositionData extends WorldSavedData{
 
 		private NBTTagCompound toNBT(){
 			NBTTagCompound nbt=new NBTTagCompound();
-			nbt.setIntArray("pos", new int[] { chunkXPos, chunkZPos, sizeX, sizeZ, height });
+			nbt.setIntArray("pos", new int[]{chunkXPos, chunkZPos, sizeX, sizeZ, height});
 			if(hasTiles()&&!fullyGenerated()){
 				String s="";
 				for(int x=0;x<sizeX;x++){
@@ -257,7 +265,11 @@ public class CastlePositionData extends WorldSavedData{
 				nbt.setIntArray("lmc", new int[] { lowerMainCastle.chunkXPos,lowerMainCastle.chunkZPos});
 				nbt.setIntArray("umc",new int[]{upperMainCastle.chunkXPos,upperMainCastle.chunkZPos});
 			}
-			nbt.setInteger("generated",generated);
+			nbt.setInteger("generated", generated);
+			if(draculasDim){
+				nbt.setBoolean("draDim",true);
+			}
+
 			return nbt;
 		}
 
@@ -283,6 +295,9 @@ public class CastlePositionData extends WorldSavedData{
 		p.setSize(pos[2],pos[3]);
 		p.setHeight(pos[4]);
 		p.generated=nbt.getInteger("generated");
+		if(nbt.hasKey("draDim")){
+			p.setDraculasDim();
+		}
 		if(nbt.hasKey("tiles")&&!p.fullyGenerated()){
 			p.loadTilesFromString(nbt.getString("tiles"));
 		}

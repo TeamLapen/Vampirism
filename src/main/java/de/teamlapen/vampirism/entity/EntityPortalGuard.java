@@ -32,7 +32,7 @@ public class EntityPortalGuard extends EntityMob {
 		};
 		this.tasks.addTask(1, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0D, false));
 		this.tasks.addTask(2,new EntityAIWatchClosest(this,EntityPlayer.class,8.0F));
-		this.tasks.addTask(2,new EntityAIWarnPlayer(this,6,"text.vampirism.guard_stay_away_level_low",60,playerSelector));
+		this.tasks.addTask(2,new EntityAIWarnPlayer(this,5,"text.vampirism.guard_stay_away_level_low",60,playerSelector));
 		this.targetTasks.addTask(1,new EntityAINearestAttackableTarget(this, EntityPlayer.class, 1, true, true, playerSelector));
 		this.setSize(0.9F, 1.8F);
 		this.setCurrentItemOrArmor(0, new ItemStack(Items.stone_sword));

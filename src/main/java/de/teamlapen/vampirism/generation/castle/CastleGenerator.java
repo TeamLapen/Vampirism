@@ -72,6 +72,12 @@ public class CastleGenerator extends WorldGenerator {
 		loadTile("house4",gson,tileMap);
 		loadTile("treasure",gson,tileMap);
 		loadTile("wall_corner",gson,tileMap);
+		loadTile("castle_lavall",gson,tileMap);
+		loadTile("castle_lavaul",gson,tileMap);
+		loadTile("castle_lavalr",gson,tileMap);
+		loadTile("castle_lavaur",gson,tileMap);
+		loadTile("castle_portalur",gson,tileMap);
+
 	}
 
 	/**
@@ -126,6 +132,7 @@ public class CastleGenerator extends WorldGenerator {
 			if (castleWorld) {
 				CastlePositionData.Position p = new CastlePositionData.Position(0, 0);
 				p.setSize(6, 6);
+				p.setDraculasDim();
 				data.positions.add(p);
 			} else {
 
@@ -353,6 +360,18 @@ public class CastleGenerator extends WorldGenerator {
 			tiles[ucx - 1][ucz - 1] = "0,flatDirt,0,castleul,0,path,3,path";
 			tiles[ucx][ucz - 1] = "0,flatDirt,0,castleur,0,path,1,path";
 
+			if(position.isDraculasDim()){
+				tiles[ucx][ucz]+= ",0,castle_lavalr";
+				tiles[ucx - 1][ucz] +=",0,castle_lavall";
+				tiles[ucx - 1][ucz - 1] += ",0,castle_lavaul";
+				tiles[ucx][ucz - 1]  += ",0,castle_lavaur";
+			}
+			else{
+//				tiles[ucx][ucz]+=
+//				tiles[ucx - 1][ucz] +=
+//				tiles[ucx - 1][ucz - 1] +=
+				tiles[ucx][ucz - 1]  += ",0,castle_portalur";
+			}
 			//Place paths around the castle
 			addPathAndDir(ucx, ucz - 2, 2);
 			addPathAndDir(ucx - 1, ucz - 2, 2);

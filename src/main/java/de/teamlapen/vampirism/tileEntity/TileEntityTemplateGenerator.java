@@ -47,6 +47,7 @@ public class TileEntityTemplateGenerator extends TileEntity {
 					Block block=chunk.getBlock(x, y, z);
 					if(block.equals(ModBlocks.templateGenerator))continue;
 					if(block.equals(Blocks.sand))continue;
+					if(block.equals(Blocks.sandstone))continue;
 					if(block.getMaterial()==Material.air&&y>=this.yCoord)continue;
 					if(block.equals(Blocks.standing_sign)){
 						TileEntitySign sign= (TileEntitySign) chunk.getTileEntityUnsafe(x,y,z);
