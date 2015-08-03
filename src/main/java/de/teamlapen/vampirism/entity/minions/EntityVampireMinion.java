@@ -1,14 +1,19 @@
 package de.teamlapen.vampirism.entity.minions;
 
-import java.util.Iterator;
-import java.util.List;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import de.teamlapen.vampirism.entity.DefaultVampire;
+import de.teamlapen.vampirism.entity.EntityPortalGuard;
+import de.teamlapen.vampirism.entity.ai.EntityAIHurtByNonLord;
+import de.teamlapen.vampirism.network.ISyncable;
+import de.teamlapen.vampirism.network.UpdateEntityPacket;
+import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
@@ -16,17 +21,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.entity.DefaultVampire;
-import de.teamlapen.vampirism.network.ISyncable;
-import de.teamlapen.vampirism.network.UpdateEntityPacket;
-import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.Helper;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Base class for all vampire minions. Handles conversion and commands
@@ -54,7 +53,7 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 		this.tasks.addTask(15, new EntityAIWander(this, 0.7));
 		this.tasks.addTask(16, new EntityAIWatchClosest(this, EntityPlayer.class, 10));
 
-		this.targetTasks.addTask(8, new EntityAIHurtByTarget(this, false));
+		this.targetTasks.addTask(8, new EntityAIHurtByNonLord(this, false));
 
 		activeCommand = this.getDefaultCommand();
 		activeCommand.onActivated();
@@ -164,6 +163,18 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 	}
 
 	@Override
+	public boolean canAttackClass(Class p_70686_1_) {
+		if (EntityPortalGuard.class.equals(p_70686_1_)) return false;
+		return super.canAttackClass(p_70686_1_);
+	}
+
+	@Override
+	public boolean canEntityBeSeen(Entity p_70685_1_) {
+		if (p_70685_1_.isInvisible()) return false;
+		return super.canEntityBeSeen(p_70685_1_);
+	}
+
+	@Override
 	public void onLivingUpdate() {
 		if (oldVampireTexture != -1 && this.ticksExisted > 50) {
 			oldVampireTexture = -1;
@@ -193,6 +204,9 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 
 				}
 			}
+		}
+		if (this.ticksExisted % 100 == 0 && (this.getLastAttackerTime() == 0 || this.getLastAttackerTime() - ticksExisted > 100)) {
+			this.heal(2F);
 		}
 		super.onLivingUpdate();
 	}

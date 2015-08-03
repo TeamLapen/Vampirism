@@ -1,7 +1,18 @@
 package de.teamlapen.vampirism.tileEntity;
 
-import java.util.ArrayList;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import de.teamlapen.vampirism.ModBlocks;
+import de.teamlapen.vampirism.ModItems;
+import de.teamlapen.vampirism.ModPotion;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.block.BlockBloodAltar4;
+import de.teamlapen.vampirism.block.BlockBloodAltar4Tip;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.network.RenderScreenRedPacket;
+import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
+import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockCompressed;
@@ -20,19 +31,8 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChunkCoordinates;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.ModBlocks;
-import de.teamlapen.vampirism.ModItems;
-import de.teamlapen.vampirism.ModPotion;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.block.BlockBloodAltar4;
-import de.teamlapen.vampirism.block.BlockBloodAltar4Tip;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.network.RenderScreenRedPacket;
-import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
-import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.REFERENCE;
+
+import java.util.ArrayList;
 
 /**
  * Tileentity used for BloodAltar 4
@@ -43,11 +43,11 @@ import de.teamlapen.vampirism.util.REFERENCE;
 public class TileEntityBloodAltar4 extends InventoryTileEntity {
 
 	private enum LevReq {
-		OK, STRUCTURE_WRONG, ITEM_MISSING, LEVEL_WRONG;
+		OK, STRUCTURE_WRONG, ITEM_MISSING, LEVEL_WRONG
 	}
 
 	public enum PHASE {
-		NOT_RUNNING, PARTICLE_SPREAD, BEAM1, BEAM2, WAITING, LEVELUP, ENDING, CLEAN_UP;
+		NOT_RUNNING, PARTICLE_SPREAD, BEAM1, BEAM2, WAITING, LEVELUP, ENDING, CLEAN_UP
 	}
 
 	private final static String TAG = "TEBAltar4";
@@ -286,10 +286,10 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 		}
 		if (type != null) {
 			if (type instanceof BlockCompressed) {
-				if (((BlockCompressed) type).getMapColor(1).equals(MapColor.ironColor)) {
+				if (type.getMapColor(1).equals(MapColor.ironColor)) {
 					return 3;
 				}
-				if (((BlockCompressed) type).getMapColor(1).equals(MapColor.goldColor)) {
+				if (type.getMapColor(1).equals(MapColor.goldColor)) {
 					return 4;
 				}
 			}
@@ -301,13 +301,56 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 				return 1;
 			}
 			if (type instanceof BlockCompressed) {
-				if (((BlockCompressed) type).getMapColor(1).equals(MapColor.ironColor)) {
+				if (type.getMapColor(1).equals(MapColor.ironColor)) {
 					return 2;
 				}
 			}
 		}
 		return 0;
 
+	}
+
+	private int determineLevel2() {
+		int x = this.xCoord;
+		int y = this.yCoord;
+		int z = this.zCoord;
+		Block type = null;
+		ChunkCoordinates[] pos = findTips();
+		if (pos.length != 6 && pos.length != 4) {
+			Logger.d(TAG, "The tip count is wrong");
+			return 0;
+		}
+		boolean large = pos.length == 6;
+		for (ChunkCoordinates p : pos) {
+			for (int i = 1; i <= (large ? 3 : 2); i++) {
+				Block b = worldObj.getBlock(p.posX, p.posY - i, p.posZ);
+				if (type == null) type = b;
+				else {
+					Logger.d(TAG, "Looking for %s but found %s at %d %d %d", type.getUnlocalizedName(), b.getUnlocalizedName(), p.posX, p.posY - i, p.posZ);
+					if (!type.equals(b)) return 0;
+				}
+			}
+		}
+		if (large) {
+			if (type instanceof BlockCompressed) {
+				if (type.getMapColor(1).equals(MapColor.ironColor)) {
+					return 3;
+				}
+				if (type.getMapColor(1).equals(MapColor.goldColor)) {
+					return 4;
+				}
+			}
+		} else {
+			if (type instanceof BlockStoneBrick) {
+				return 1;
+			}
+			if (type instanceof BlockCompressed) {
+				if (type.getMapColor(1).equals(MapColor.ironColor)) {
+					return 2;
+				}
+			}
+		}
+		return 0;
 	}
 
 	/**
@@ -416,11 +459,10 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 
 	/**
 	 * Searchs for the tips and returns their position
-	 * 
-	 * @param level
+	 *
 	 * @return
 	 */
-	private ChunkCoordinates[] getTips(int level) {
+	private ChunkCoordinates[] findTips() {
 		ArrayList<ChunkCoordinates> coord = new ArrayList<ChunkCoordinates>();
 		int lx = this.xCoord - 3;
 		int ly = this.yCoord;
@@ -450,8 +492,12 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 		if (runningTick > 0) {
 			return;
 		}
-		int sl = this.determineLevel();
-
+		int sl = 0;
+		try {
+			sl = this.determineLevel2();
+		} catch (Exception e) {
+			Logger.e(TAG, e, "Failed to determine level");
+		}
 		LevReq result = checkLevelRequirement(player, sl);
 		Logger.d(TAG, "SL: " + sl + " Result: " + result);
 		if (result != LevReq.OK) {
@@ -468,7 +514,7 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 		}
 		runningTick = DURATION_TICK;
 		this.player = player;
-		tips = getTips(sl);
+		tips = findTips();
 		if (!this.worldObj.isRemote) {
 			for (int i = 0; i < tips.length; i++) {
 				NBTTagCompound data = new NBTTagCompound();
@@ -497,7 +543,7 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 		if (tick > 0 && player == null) {
 			try {
 				this.player = (EntityPlayer) this.worldObj.getEntityByID(tagCompound.getInteger("playerId"));
-				this.tips = getTips(this.determineLevel());
+				this.tips = findTips();
 				this.runningTick = tick;
 			} catch (NullPointerException e) {
 			}

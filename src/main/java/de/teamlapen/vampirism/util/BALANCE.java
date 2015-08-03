@@ -48,7 +48,7 @@ public final class BALANCE {
 		@DefaultDouble(value = 1.4D, minValue = 1.0D, maxValue = 3.0D, name = "Vampire Hunter Agressive Multiplier", comment = "")
 		public static double VAMPIRE_HUNTER_AGRESSIVE_MULT;
 
-		@DefaultDouble(value = 10.0D, minValue = 5.0D, maxValue = 20.0D, name = "Vampire Minion Max Health", comment = "")
+		@DefaultDouble(value = 15.0D, minValue = 5.0D, maxValue = 20.0D, name = "Vampire Minion Max Health", comment = "")
 		public static double VAMPIRE_MINION_MAX_HEALTH;
 		@DefaultDouble(value = 3.0D, minValue = 1.5D, maxValue = 6.0D, name = "Vampire Minion Attack Damage", comment = "")
 		public static double VAMPIRE_MINION_ATTACK_DAMAGE;

@@ -1,38 +1,40 @@
 package de.teamlapen.vampirism.entity.minions;
 
-import java.util.UUID;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import org.eclipse.jdt.annotation.NonNull;
+
+import java.util.UUID;
 
 public interface IMinionLord {
 
-	public long getLastComebackCall();
+	long getLastComebackCall();
 
-	public int getMaxMinionCount();
+	int getMaxMinionCount();
 
-	public SaveableMinionHandler getMinionHandler();
+	SaveableMinionHandler getMinionHandler();
 
 	/**
 	 * @return The target the lord's minions should attack, can be null
 	 */
-	public EntityLivingBase getMinionTarget();
+	EntityLivingBase getMinionTarget();
 
 	/**
 	 * The Entity representing this lord. Can be the same as this object (e.g. VampireLord) or something else (e.g. VampirePlayer)
 	 * 
 	 * @return
 	 */
-	public EntityLivingBase getRepresentingEntity();
+	@NonNull
+	EntityLivingBase getRepresentingEntity();
 
-	public double getTheDistanceSquared(Entity e);
+	double getTheDistanceSquared(Entity e);
 
 	/**
 	 * Entity's uuid
 	 * 
 	 * @return
 	 */
-	public UUID getThePersistentID();
+	UUID getThePersistentID();
 
-	public boolean isTheEntityAlive();
+	boolean isTheEntityAlive();
 }

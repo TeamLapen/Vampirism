@@ -1,10 +1,21 @@
 package de.teamlapen.vampirism.entity.player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.*;
+import de.teamlapen.vampirism.block.BlockCoffin;
+import de.teamlapen.vampirism.entity.*;
+import de.teamlapen.vampirism.entity.minions.*;
+import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler.Call;
+import de.teamlapen.vampirism.entity.player.skills.ILastingSkill;
+import de.teamlapen.vampirism.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.entity.player.skills.Skills;
+import de.teamlapen.vampirism.item.ItemBloodBottle;
+import de.teamlapen.vampirism.item.ItemVampireArmor;
+import de.teamlapen.vampirism.network.SpawnParticlePacket;
+import de.teamlapen.vampirism.network.UpdateEntityPacket;
+import de.teamlapen.vampirism.network.UpdateEntityPacket.ISyncableExtendedProperties;
+import de.teamlapen.vampirism.util.*;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -19,43 +30,13 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S0APacketUseBed;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.ChunkCoordinates;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EntityDamageSource;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.*;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.block.BlockCoffin;
-import de.teamlapen.vampirism.entity.DefaultVampire;
-import de.teamlapen.vampirism.entity.EntityDracula;
-import de.teamlapen.vampirism.entity.EntityVampire;
-import de.teamlapen.vampirism.entity.EntityVampireHunter;
-import de.teamlapen.vampirism.entity.VampireMob;
-import de.teamlapen.vampirism.entity.minions.EntityVampireMinion;
-import de.teamlapen.vampirism.entity.minions.IMinion;
-import de.teamlapen.vampirism.entity.minions.IMinionLord;
-import de.teamlapen.vampirism.entity.minions.MinionHelper;
-import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler;
-import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler.Call;
-import de.teamlapen.vampirism.entity.player.skills.ILastingSkill;
-import de.teamlapen.vampirism.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.entity.player.skills.Skills;
-import de.teamlapen.vampirism.item.ItemBloodBottle;
-import de.teamlapen.vampirism.item.ItemVampireArmor;
-import de.teamlapen.vampirism.network.SpawnParticlePacket;
-import de.teamlapen.vampirism.network.UpdateEntityPacket;
-import de.teamlapen.vampirism.network.UpdateEntityPacket.ISyncableExtendedProperties;
-import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.DefaultPieElement;
-import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.IPieElement;
-import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.REFERENCE;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * IExtendedEntityPropertiesClass which extends the EntityPlayer with vampire properties
@@ -123,10 +104,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			int bloodToRemove = Math.min(a, blood);
 
 			changeBlood(-bloodToRemove);
-			if (bloodToRemove > blood) {
-				return false;
-			}
-			return true;
+			return bloodToRemove <= blood;
 		}
 
 		public int getBloodLevel() {
@@ -760,6 +738,9 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		}
 		if (source.getEntity() instanceof EntityLivingBase && getLevel() > 0) {
 			this.minionTarget = (EntityLivingBase) source.getEntity();
+			if (MinionHelper.isLordSafe(minionTarget, this)) {
+				this.minionTarget = null;
+			}
 			return false;
 		}
 		if (DamageSource.fall.equals(source) && !this.skipFallDamageReduction) {
@@ -1074,10 +1055,10 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		}
 
 		if (this.player.isRiding()) {
-			this.player.mountEntity((Entity) null);
+			this.player.mountEntity(null);
 		}
 
-		Helper.Reflection.callMethod(Entity.class, this.player, Helper.Obfuscation.getPosNames("EntityPlayer/setSize"), new Class[] { float.class, float.class }, new Object[] { 0.2F, 0.2F });
+		Helper.Reflection.callMethod(Entity.class, this.player, Helper.Obfuscation.getPosNames("EntityPlayer/setSize"), new Class[]{float.class, float.class}, 0.2F, 0.2F);
 		// this.player.setSize(0.2F, 0.2F);
 		this.player.yOffset = 0.2F;
 

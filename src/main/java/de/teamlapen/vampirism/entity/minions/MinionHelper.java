@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.entity.minions;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import de.teamlapen.vampirism.entity.EntityVampire;
+import de.teamlapen.vampirism.entity.VampireMob;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -12,13 +12,11 @@ import net.minecraft.util.ChatComponentStyle;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
-
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
-import de.teamlapen.vampirism.entity.EntityVampire;
-import de.teamlapen.vampirism.entity.VampireMob;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MinionHelper {
 
@@ -42,7 +40,8 @@ public class MinionHelper {
 			public boolean isEntityApplicable(Entity entity) {
 				IMinion m = MinionHelper.getMinionFromEntity(entity);
 				if (selectPlayer) {
-					if (MinionHelper.isLordSafe(m, minion.getLord())) {
+					if (MinionHelper.isLordSafe(m, minion.getLord())) return false;
+					if (MinionHelper.isLordSafe(minion, entity)) {
 						return false;
 					}
 					if (entity instanceof EntityPlayer)
@@ -112,31 +111,42 @@ public class MinionHelper {
 	 * @return
 	 */
 	public static boolean isLordPlayer(@Nullable IMinion m) {
-		if (m != null && m.getLord() instanceof VampirePlayer) {
-			return true;
+		return m != null && m.getLord() instanceof VampirePlayer;
+	}
+
+	/**
+	 * Checks if the given entity is the minions lord. Contains null check.
+	 *
+	 * @param m minion
+	 * @param e lord
+	 * @return
+	 */
+	public static boolean isLordSafe(@NonNull IMinion m, @Nullable Entity e) {
+		IMinionLord l = m.getLord();
+		return l != null && l.getRepresentingEntity().equals(e);
+	}
+
+	/**
+	 * Checks if the given entity is the minions lord. Contains null check.
+	 * @param e Minion
+	 * @param l Lord
+	 * @return
+	 */
+	public static boolean isLordSafe(@Nullable EntityLivingBase e, @NonNull IMinionLord l) {
+		if (e == null) return false;
+		if (e instanceof EntityVampireMinion) {
+			return l.equals(((EntityVampireMinion) e).getLord());
+		} else if (e instanceof EntityCreature) {
+			return l.equals(VampireMob.get((EntityCreature) e).getLord());
 		}
 		return false;
 	}
 
 	/**
-	 * Checks if the given entity is the minions lord. Contains null check.
-	 * 
-	 * @param m
-	 * @param e
-	 * @return
-	 */
-	public static boolean isLordSafe(@NonNull IMinion m, @Nullable EntityLivingBase e) {
-		IMinionLord l = m.getLord();
-		if (l != null && l.getRepresentingEntity().equals(e))
-			return true;
-		return false;
-	}
-
-	/**
 	 * Checks if the given lord is the minions lord. Contains null check.
-	 * 
-	 * @param m
-	 * @param l
+	 *
+	 * @param m minion
+	 * @param l lord
 	 * @return
 	 */
 	public static boolean isLordSafe(@Nullable IMinion m, @Nullable IMinionLord l) {
