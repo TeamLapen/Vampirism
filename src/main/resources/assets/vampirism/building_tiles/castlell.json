@@ -5410,6 +5410,38 @@
       ]
     },
     {
+      "blockId": "minecraft:obsidian",
+      "meta": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blockPositions": [
+        {
+          "x": 2,
+          "y": 0,
+          "z": 10
+        }
+      ]
+    },
+    {
+      "blockId": "vampirism:bloodAltarTier2",
+      "meta": [
+        3,
+        3,
+        3,
+        3
+      ],
+      "blockPositions": [
+        {
+          "x": 2,
+          "y": 1,
+          "z": 10
+        }
+      ]
+    },
+    {
       "blockId": "minecraft:torch",
       "meta": [
         1,
@@ -7044,6 +7076,11 @@
           "x": 15,
           "y": 0,
           "z": 7
+        },
+        {
+          "x": 15,
+          "y": 0,
+          "z": 9
         }
       ]
     },
@@ -7078,25 +7115,20 @@
           "z": 8
         }
       ]
-    },
-    {
-      "blockId": "minecraft:stone_pressure_plate",
-      "meta": [
-        0,
-        0,
-        0,
-        0
-      ],
-      "blockPositions": [
-        {
-          "x": 15,
-          "y": 0,
-          "z": 9
-        }
-      ]
     }
   ],
   "extras": [
+    {
+      "type": "ALTAR_2",
+      "pos": {
+        "x": 2,
+        "y": 1,
+        "z": 10
+      },
+      "extra": {
+        "blood": 70
+      }
+    },
     {
       "type": "CHEST",
       "pos": {

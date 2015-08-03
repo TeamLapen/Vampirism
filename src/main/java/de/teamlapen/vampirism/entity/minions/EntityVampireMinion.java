@@ -205,7 +205,7 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 				}
 			}
 		}
-		if (this.ticksExisted % 100 == 0 && (this.getLastAttackerTime() == 0 || this.getLastAttackerTime() - ticksExisted > 100)) {
+		if (BALANCE.MOBPROP.VAMPIRE_MINION_REGENERATE_SECS >= 0 && this.ticksExisted % (BALANCE.MOBPROP.VAMPIRE_MINION_REGENERATE_SECS * 20) == 0 && (this.getLastAttackerTime() == 0 || this.getLastAttackerTime() - ticksExisted > 100)) {
 			this.heal(2F);
 		}
 		super.onLivingUpdate();

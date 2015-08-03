@@ -137,7 +137,8 @@ public class MinionHelper {
 		if (e instanceof EntityVampireMinion) {
 			return l.equals(((EntityVampireMinion) e).getLord());
 		} else if (e instanceof EntityCreature) {
-			return l.equals(VampireMob.get((EntityCreature) e).getLord());
+			VampireMob m = VampireMob.get((EntityCreature) e);
+			return m.isMinion() && l.equals(m.getLord());
 		}
 		return false;
 	}

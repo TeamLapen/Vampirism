@@ -1,15 +1,14 @@
 package de.teamlapen.vampirism.block;
 
-import de.teamlapen.vampirism.util.Logger;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import de.teamlapen.vampirism.item.ItemBloodBottle;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.item.ItemBloodBottle;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
 
 /**
  * Block for Blood Altar 2
@@ -27,11 +26,14 @@ public class BlockBloodAltar2 extends BasicBlockContainer {
 		this.setHarvestLevel("pickaxe", 1);
 	}
 
-	private void interactBottle(TileEntityBloodAltar2 te,ItemStack bottle){
+	private void interactBottle(TileEntityBloodAltar2 te, ItemStack bottle, boolean creative) {
 		if(bottle==null)return;
 		int old=ItemBloodBottle.getBlood(bottle);
 		if(old>0){
-			ItemBloodBottle.removeBlood(bottle,te.addBlood(old));
+			int added = te.addBlood(old);
+			if (!creative) {
+				ItemBloodBottle.removeBlood(bottle, old);
+			}
 		}
 		else{
 			ItemBloodBottle.addBlood(bottle,te.removeBlood(ItemBloodBottle.MAX_BLOOD));
@@ -74,7 +76,7 @@ public class BlockBloodAltar2 extends BasicBlockContainer {
 			}
 			TileEntityBloodAltar2 te = (TileEntityBloodAltar2) world.getTileEntity(par2, par3, par4);
 			if (item != null && item.getItem() instanceof ItemBloodBottle) {
-				interactBottle(te, item);
+				interactBottle(te, item, player.capabilities.isCreativeMode);
 				return true;
 			} else if (item == null||player.isSneaking()) {
 				startRitual(te, player);

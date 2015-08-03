@@ -9323,6 +9323,58 @@
       ]
     },
     {
+      "blockId": "minecraft:obsidian",
+      "meta": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blockPositions": [
+        {
+          "x": 0,
+          "y": 0,
+          "z": 3
+        },
+        {
+          "x": 2,
+          "y": 0,
+          "z": 15
+        },
+        {
+          "x": 8,
+          "y": 0,
+          "z": 2
+        }
+      ]
+    },
+    {
+      "blockId": "vampirism:bloodAltarTier2",
+      "meta": [
+        2,
+        2,
+        2,
+        2
+      ],
+      "blockPositions": [
+        {
+          "x": 0,
+          "y": 1,
+          "z": 3
+        },
+        {
+          "x": 2,
+          "y": 1,
+          "z": 15
+        },
+        {
+          "x": 8,
+          "y": 1,
+          "z": 2
+        }
+      ]
+    },
+    {
       "blockId": "vampirism:castleStairs_dark",
       "meta": [
         1,
@@ -11555,6 +11607,28 @@
   ],
   "extras": [
     {
+      "type": "ALTAR_2",
+      "pos": {
+        "x": 0,
+        "y": 1,
+        "z": 3
+      },
+      "extra": {
+        "blood": 26
+      }
+    },
+    {
+      "type": "ALTAR_2",
+      "pos": {
+        "x": 2,
+        "y": 1,
+        "z": 15
+      },
+      "extra": {
+        "blood": 55
+      }
+    },
+    {
       "type": "SPAWNER",
       "pos": {
         "x": 4,
@@ -11587,6 +11661,17 @@
       "extra": {
         "color": 15,
         "closed": false
+      }
+    },
+    {
+      "type": "ALTAR_2",
+      "pos": {
+        "x": 8,
+        "y": 1,
+        "z": 2
+      },
+      "extra": {
+        "blood": 26
       }
     },
     {

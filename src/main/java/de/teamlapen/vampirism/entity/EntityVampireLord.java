@@ -1,14 +1,18 @@
 package de.teamlapen.vampirism.entity;
 
-import java.util.UUID;
-
+import de.teamlapen.vampirism.ModItems;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.minions.IMinion;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.generation.castle.CastlePositionData;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
+import de.teamlapen.vampirism.network.ISyncable;
+import de.teamlapen.vampirism.network.UpdateEntityPacket;
+import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.DifficultyCalculator.Difficulty;
+import de.teamlapen.vampirism.util.DifficultyCalculator.IAdjustableLevel;
+import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -19,28 +23,14 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import de.teamlapen.vampirism.ModItems;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.entity.minions.IMinion;
-import de.teamlapen.vampirism.entity.minions.IMinionLord;
-import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler;
-import de.teamlapen.vampirism.network.ISyncable;
-import de.teamlapen.vampirism.network.UpdateEntityPacket;
-import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.DifficultyCalculator.Difficulty;
-import de.teamlapen.vampirism.util.DifficultyCalculator.IAdjustableLevel;
-import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.REFERENCE;
 
-public class EntityVampireLord extends DefaultVampire implements ISyncable, IMinionLord, IAdjustableLevel {
+public class EntityVampireLord extends DefaultVampireWithMinion implements ISyncable, IAdjustableLevel {
 
 	private final static int MAX_LEVEL = 5;
 
 	protected int level = 0;
 
 	private boolean prevAttacking = false;
-
-	private final SaveableMinionHandler minionHandler;
 
 	public EntityVampireLord(World par1World) {
 		super(par1World);
@@ -52,7 +42,6 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
 		this.targetTasks.addTask(3,new EntityAINearestAttackableTarget(this,EntityVampireLord.class,5,false));
-		minionHandler = new SaveableMinionHandler(this);
 
 	}
 
@@ -104,10 +93,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 		return super.getCommandSenderName() + " " + StatCollector.translateToLocal("text.vampirism.entity_level") + " " + level;
 	}
 
-	@Override
-	public long getLastComebackCall() {
-		return 0;
-	}
+
 
 	@Override
 	public int getLevel() {
@@ -122,41 +108,6 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	@Override
 	public int getMaxLevel() {
 		return MAX_LEVEL;
-	}
-
-	@Override
-	public int getMaxMinionCount() {
-		return 100;
-	}
-
-	@Override
-	public SaveableMinionHandler getMinionHandler() {
-		return minionHandler;
-	}
-
-	@Override
-	public EntityLivingBase getMinionTarget() {
-		return this.getAttackTarget();
-	}
-
-	@Override
-	public EntityLivingBase getRepresentingEntity() {
-		return this;
-	}
-
-	@Override
-	public double getTheDistanceSquared(Entity e) {
-		return this.getDistanceSqToEntity(e);
-	}
-
-	@Override
-	public UUID getThePersistentID() {
-		return this.getPersistentID();
-	}
-
-	@Override
-	public boolean isTheEntityAlive() {
-		return this.isEntityAlive();
 	}
 
 	@Override
@@ -188,7 +139,6 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 			prevAttacking = false;
 			this.applyEntityAttributes(false);
 		}
-		this.minionHandler.checkMinions();
 		if (!worldObj.isRemote && shouldSpawnMinion()) {
 			int i = 0;
 			if (this.recentlyHit > 0) {
@@ -216,7 +166,6 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 				this.teleportAway();
 			}
 		}
-		minionHandler.addLoadedMinions();
 		super.onLivingUpdate();
 	}
 
@@ -224,7 +173,6 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		this.loadUpdateFromNBT(nbt);
-		minionHandler.loadMinions(nbt.getTagList("minions", 10));
 	}
 
 	@Override
@@ -262,7 +210,7 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	 */
 	protected boolean shouldSpawnMinion() {
 		if (this.ticksExisted % 40 == 0) {
-			int count = minionHandler.getMinionCount();
+			int count = getMinionHandler().getMinionCount();
 			if (count < level + 1) {
 				return true;
 			}
@@ -297,7 +245,6 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("level", level);
-		nbt.setTag("minions", minionHandler.getMinionsToSave());
 	}
 
 	@Override
@@ -315,5 +262,10 @@ public class EntityVampireLord extends DefaultVampire implements ISyncable, IMin
 			return false;
 		}
 		return super.getCanSpawnHere();
+	}
+
+	@Override
+	public int getMaxMinionCount() {
+		return 100;
 	}
 }

@@ -1,31 +1,33 @@
 package de.teamlapen.vampirism;
 
-import java.util.List;
-
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import de.teamlapen.vampirism.block.BlockBloodAltar1;
 import de.teamlapen.vampirism.block.BlockCoffin;
+import de.teamlapen.vampirism.castleDim.TeleporterCastle;
 import de.teamlapen.vampirism.entity.EntityDracula;
-import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
-import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
-import net.minecraft.block.Block;
-import net.minecraft.command.ICommand;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
 import de.teamlapen.vampirism.entity.minions.EntityRemoteVampireMinion;
 import de.teamlapen.vampirism.entity.minions.EntitySaveableVampireMinion;
 import de.teamlapen.vampirism.entity.minions.EntityVampireMinion;
 import de.teamlapen.vampirism.entity.minions.IMinion;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.block.Block;
+import net.minecraft.command.ICommand;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
+
+import java.util.List;
 
 /**
  * Basic command on which all other commands should depend on
@@ -94,6 +96,11 @@ public class TestCommand implements ICommand {
 					VampireLordData.get(p.worldObj).makeLord(p);
 
 					return;
+				}
+				if ("dim".equals(param[0]) && p instanceof EntityPlayerMP) {
+					if (p.dimension != VampirismMod.castleDimensionId) {
+						((EntityPlayerMP) p).mcServer.getConfigurationManager().transferPlayerToDimension(((EntityPlayerMP) p), VampirismMod.castleDimensionId, new TeleporterCastle(MinecraftServer.getServer().worldServerForDimension(VampirismMod.castleDimensionId)));
+					}
 				}
 				if("lords".equals(param[0])){
 					sendMessage(sender, VampireLordData.get(p.worldObj).getLordNamesAsString());

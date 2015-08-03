@@ -1173,7 +1173,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 * Sends updates to the client
 	 */
 	public void sync(boolean all) {
-		if (!player.worldObj.isRemote) {
+		if (!player.worldObj.isRemote && player instanceof EntityPlayerMP) {
 			if (all) {
 				Helper.sendPacketToPlayersAround(new UpdateEntityPacket(this), player);
 			} else {

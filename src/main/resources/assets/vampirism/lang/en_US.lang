@@ -103,6 +103,7 @@ text.vampirism.lord.portal_disabled=This portal does not lead anywhere
 text.vampirism.lord.level_to_low=You vampire level is too low to be a Vampire Lord
 text.vampirism.guard_stay_away_level_low=Your vampire level is too low to travel to Dracula's castle. Stay away!
 text.vampirism.coffin.wrong_dimension=You can't sleep in this dimension.
+text.vampirism.unknown_command=Unknown Vampirism command
 
 #Skill
 skill.vampirism.bat_skill=Toggle Batmode

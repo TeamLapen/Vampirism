@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.client.render.particle;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.util.Logger;
 
 /**
  * Flying Blood Particle for rituals
@@ -15,8 +15,8 @@ import de.teamlapen.vampirism.util.Logger;
  *
  */
 @SideOnly(Side.CLIENT)
-public class FlyingBloodPlayerParticle extends EntityFX {
-	public static void addParticle(FlyingBloodPlayerParticle p) {
+public class FlyingBloodEntityParticle extends EntityFX {
+	public static void addParticle(FlyingBloodEntityParticle p) {
 		Minecraft.getMinecraft().effectRenderer.addEffect(p);
 	}
 	private final int MAX_AGE = 60;
@@ -24,7 +24,7 @@ public class FlyingBloodPlayerParticle extends EntityFX {
 
 	private final Entity entity;
 
-	public FlyingBloodPlayerParticle(double posX, double posY, double posZ, NBTTagCompound data) {
+	public FlyingBloodEntityParticle(double posX, double posY, double posZ, NBTTagCompound data) {
 
 		super(Minecraft.getMinecraft().theWorld, posX, posY, posZ, 0D, 0D, 0D);
 		entity = this.worldObj.getEntityByID(data.getInteger("player_id"));
@@ -32,14 +32,30 @@ public class FlyingBloodPlayerParticle extends EntityFX {
 			Logger.e(TAG, "Entity with id " + data.getInteger("player_id") + " cannot be found");
 			throw new NullPointerException("Entity not found");
 		}
+		boolean direct = false;
+		if (data.hasKey("direct")) {
+			direct = true;
+		}
 		this.particleRed = 1.0F;
 		this.particleBlue = this.particleGreen = 0.0F;
 		this.noClip = true;
-		this.particleMaxAge = MAX_AGE;
+		if (direct) {
+			this.particleMaxAge = MAX_AGE / 2;
+		} else {
+			this.particleMaxAge = MAX_AGE;
+		}
+
 		this.setParticleTextureIndex(65);
-		this.motionX = (this.worldObj.rand.nextDouble() - 0.5);
-		this.motionY = (this.worldObj.rand.nextDouble() + 0.2);
-		this.motionZ = (this.worldObj.rand.nextDouble() - 0.5);
+		if (direct) {
+			this.motionX = ((this.worldObj.rand.nextDouble() - 0.5F) / 5f);
+			this.motionY = (this.worldObj.rand.nextDouble() / 5f);
+			this.motionZ = ((this.worldObj.rand.nextDouble() - 0.5F) / 5f);
+		} else {
+			this.motionX = (this.worldObj.rand.nextDouble() - 0.5);
+			this.motionY = (this.worldObj.rand.nextDouble() + 0.2);
+			this.motionZ = (this.worldObj.rand.nextDouble() - 0.5);
+		}
+
 		this.onUpdate();
 	}
 
@@ -61,7 +77,7 @@ public class FlyingBloodPlayerParticle extends EntityFX {
 		double wayZ = entity.posZ - this.posZ;
 
 		int tleft = this.particleMaxAge - this.particleAge;
-		if (tleft < MAX_AGE / 2) {
+		if (tleft < this.particleMaxAge / 2) {
 			this.motionX = wayX / tleft;
 			this.motionY = wayY / tleft;
 			this.motionZ = wayZ / tleft;

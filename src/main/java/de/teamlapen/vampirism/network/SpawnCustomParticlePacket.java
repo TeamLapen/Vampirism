@@ -1,8 +1,16 @@
 package de.teamlapen.vampirism.network;
 
+import cpw.mods.fml.common.network.ByteBufUtils;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
+import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.render.particle.DarkLordParticle;
+import de.teamlapen.vampirism.client.render.particle.FlyingBloodEntityParticle;
+import de.teamlapen.vampirism.client.render.particle.FlyingBloodParticle;
 import de.teamlapen.vampirism.client.render.particle.ParticleHandler;
+import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.TickRunnable;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
@@ -10,14 +18,6 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import de.teamlapen.vampirism.client.render.particle.FlyingBloodParticle;
-import de.teamlapen.vampirism.client.render.particle.FlyingBloodPlayerParticle;
-import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.Logger;
 
 /**
  * Packet to spawn custom particles
@@ -38,7 +38,7 @@ public class SpawnCustomParticlePacket implements IMessage {
 				case 0:
 					for (int i = 0; i < message.amount; i++) {
 
-						FlyingBloodPlayerParticle.addParticle(new FlyingBloodPlayerParticle(message.posX, message.posY, message.posZ, message.data));
+						FlyingBloodEntityParticle.addParticle(new FlyingBloodEntityParticle(message.posX, message.posY, message.posZ, message.data));
 
 					}
 					break;
