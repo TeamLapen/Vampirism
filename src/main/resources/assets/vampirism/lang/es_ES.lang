@@ -1,0 +1,127 @@
+#X-Generator: crowdin.com
+# Entitys
+entity.vampirism.vampireHunter.name=Cazador de vampiros
+entity.vampirism.vampire.name=Vampiro
+entity.vampirism.ghost.name=Fantasma
+entity.vampirism.vampireLord.name=Señor de los vampiros
+entity.vampirism.vampireMinionR.name=Súbdito de vampiro
+entity.vampirism.vampireMinionS.name=Súbdito de vampiro
+entity.vampirism.blinding_bat.name=Murciélago
+entity.vampirism.dracula.name=Drácula
+entity.vampirism.dead_mob.name=Mob muerto
+
+# Items
+item.vampirism.vampiresFear.name=Miedo del vampiro
+item.vampirism.bloodBottle.name=Frasco de sangre
+item.vampirism.vampireFang.name=Colmillo de vampiro
+item.vampirism.pitchfork.name=Tridente
+item.vampirism.humanHeart.name=Corazón de humano
+item.vampirism.torch.name=Antorcha
+item.vampirism.pureBlood.name=Sangre pura
+item.vampirism.sunscreen.name=Protector solar
+item.vampirism.leechSword.name=Sanguijuela
+item.vampirism.coffin.name=Ataúd
+item.vampirism.vampireArmor_helmet.name=Casco de vampiro
+item.vampirism.vampireArmor_leggings.name=Grebas de vampiro
+item.vampirism.vampireArmor_boots.name=Botas de vampiro
+item.vampirism.vampireArmor_chestplate.name=Peto de vampiro
+item.vampirism.minionNameTag.name=Etiqueta de nombre del súbdito
+
+# Blocks
+block.vampirism.bloodAltar.name=Altar de sangre de Saturación
+block.vampirism.bloodAltarTier2.name=Altar de sangre de Inspiración
+block.vampirism.bloodAltarTier4.name=Altar de sangre de Infusión
+block.vampirism.bloodAltarTier4Tip.name=Punta del Altar de sangre de la Infusión
+block.vampirism.churchAltar.name=Altar de la Limpieza
+block.vampirism.cursedEarth.name=Tierra maldita
+block.vampirism.vampireOrchid.name=Orquídea de vampiro
+block.vampirism.blockCoffin.name=Ataúd
+block.vampirism.castleBlock.name=Bloque de castillo
+block.vampirism.castleSlab.name=Losa de castillo
+block.vampirism.castleStairs.name=Escaleras de castillo
+
+#GUI
+gui.vampirism.revertback.head=Volver a ser un humano
+gui.vampirism.revertback.desc=Perderás todos tus niveles y morirás
+
+# Keys
+keys.vampirism.category=Vampirismo
+keys.vampirism.suck=Chupar sangre
+keys.vampirism.auto=Auto-rellenar frascos de sangre
+keys.vampirism.skill=Activar atributos de vampiro
+key.vampirism.vision=Cambiar visión
+
+#General
+itemGroup.vampirism=Vampirismo
+death.attack.sun=A %1$s no le gustaba el Sol
+potion.vampirism.sunscreen=Protector solar
+potion.vampirism.thirst=Sed
+potion.vampirism.saturation=Saturación
+potion.vampirism.sanguinare=Sanguinare Vampiris
+text.vampirism.skill.level_to_low=Tu nivel de vampiro es muy bajo para eso
+text.vampirism.skill.cooldown_not_over=Por favor, espere hasta el tiempo de reutilización
+text.vampirism.entity_level=Nivel
+text.vampirism.ritual_missing_times=Le faltan elementos para este ritual
+text.vampirism.ritual_structure_wrong=La estructura está mal para este ritual
+text.vampirism.ritual_level_wrong=No puede utilizar este altar a este nivel
+text.vampirism.ritual_still_running=El ritual sigue funcionando
+text.vampirism.not_enough_blood=No hay suficiente sangre en el altar
+text.vampirism.ritual_requirements_not_met=No todos los requisitos para este ritual se cumplieron
+text.vampirism.purity=Pureza
+text.vampirism.auto_fill_enabled=Auto-relleno activado
+text.vampirism.auto_fill_disabled=Auto-relleno desactivado
+text.vampirism.skill.deactivated_by_serveradmin=Esta habilidad esta desactivada por el administrador de su servidor
+text.vampirism.ritual_no_vampire=¡ Tienes que ser un vampiro para este ritual \!
+text.vampirism.cant_fly_day=Usted no puede volar durante el día
+text.vampirism.no_more_minions=No eres capaz de controlar más súbditos
+text.vampirism.coffin.noSleep=Sólo se puede dormir en el día
+text.vampirism.coffin.occupied=Este ataúd esta ocupado
+text.vampirism.coffin.stopsleeping=Abandonar el ataúd
+text.vampirism.blood_left=Sangre restante
+text.vampirism.blood=Sangre
+text.vampirism.vampirelevel=Nivel de vampiro
+text.vampirism.entitysblood=Sangre de la entidad
+text.vampirism.minion=Súbdito
+text.vampirism.lord=Señor
+text.vampirism.normal_vision=Visión normal
+text.vampirism.night_vision=Visión nocturna
+text.vampirism.no_control_minion=No tiene ningún control sobre este súbdito
+text.vampirism.need_empty_bottle=Mi señor, necesito una botella vacía para recoger la sangre
+text.vampirism.thanks=Gracias
+text.vampirism.coming_back=Vuelvo, mi señor
+text.vampirism.sorry_i_died_while_doing=Mi señor, lo siento pero morí cumpliendo con su tarea
+text.vampirism.current_task=Tarea actual
+text.vampirism.structure=Estructura
+text.vampirism.pillar_blocks=Bloques de pilar
+
+#Skill
+skill.vampirism.bat_skill=Activar modo murciélago
+skill.vampirism.change_weather=Clima
+skill.vampirism.cancel=Cancelar
+skill.vampirism.freeze=Congelar
+skill.vampirism.invisibility=Invisibilidad
+skill.vampirism.regen=Regeneración
+skill.vampirism.revive_fallen=Revivir al caído
+skill.vampirism.summon_bats=Invocar murciélagos
+skill.vampirism.teleport=Teletrasportar
+skill.vampirism.vampire_rage=Ira de vampiro
+
+#Minion command
+minioncommand.vampirism.attackhostilenoplayers=Atacar mobs hostiles
+minioncommand.vampirism.attackhostile=Atacar mobs hostiles incluyendo jugador
+minioncommand.vampirism.collectblood=Recolectar sangre
+minioncommand.vampirism.defendlord=Defender al señor
+minioncommand.vampirism.stayhere=Permanecer aquí
+minioncommand.vampirism.comeback=Regresa (súbditos remotos)
+minioncommand.vampirism.justfollow=Sólo sigueme
+
+#Config
+category.vampirism.balance=Configuración de balance
+category.vampirism.balance.tooltip=Cambiar casi cualquier propiedad relevante del balance
+category.vampirism.balance_level=Configuración de balance al subir de nivel
+category.vampirism.balance_player_mod=Configuración de modificador de vampiro
+category.vampirism.balance_player_skills=Configuración de habilidades de vampiro
+category.vampirism.balance_mob_prop=Propiedades de los mobs de Vampirism
+category.vampirism.balance_mob_prop.tooltip=Cambiar las propiedades de los mobs añadidos por Vampirism
+category.vampirism.balance_vv_prop=Propiedades de vampiro del pueblo
+category.vampirism.balance_vv_prop.tooltip=Cambia la forma en que los cazadores actúan en los pueblos y ajustan otras cosas relacionadas con los pueblos

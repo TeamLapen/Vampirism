@@ -36,6 +36,9 @@ block.vampirism.churchAltar.name=Altar da Purificação
 block.vampirism.cursedEarth.name=Terra Amaldiçoada
 block.vampirism.vampireOrchid.name=Orquídea Vampirica
 block.vampirism.blockCoffin.name=Caixão
+block.vampirism.castleBlock.name=Bloco do Castelo
+block.vampirism.castleSlab.name=Laje do Castelo
+block.vampirism.castleStairs.name=Escadas do Castelo
 
 #GUI
 gui.vampirism.revertback.head=Voltar a ser um humano normal
@@ -50,7 +53,7 @@ key.vampirism.vision=Mudar a visão
 
 #General
 itemGroup.vampirism=Vampirismo
-death.attack.sun=%1$s nao gosta do sol .D
+death.attack.sun=%1$s parece nao gostar muito de sol \:D
 potion.vampirism.sunscreen=Protetor Solar
 potion.vampirism.thirst=Sede
 potion.vampirism.saturation=Saturação
@@ -67,31 +70,33 @@ text.vampirism.ritual_requirements_not_met=Nem todos os requisitos para esse rit
 text.vampirism.purity=Pureza
 text.vampirism.auto_fill_enabled=Auto Carregamento Ativado
 text.vampirism.auto_fill_disabled=Auto Carregamento Desativado
-text.vampirism.skill.deactivated_by_serveradmin=Esta habilidade é desativada pelo seu serveradmin
+text.vampirism.skill.deactivated_by_serveradmin=Esta habilidade esta desativada pelo seu administrador
 text.vampirism.ritual_no_vampire=Você precisa ser um vampiro para este ritual
 text.vampirism.cant_fly_day=Você não pode voar de dia
-text.vampirism.no_more_minions=Você não é capaz de controlar qualquer asseclas mais
-text.vampirism.coffin.noSleep=Você só pode dormir no dia
+text.vampirism.no_more_minions=Você não é capaz de controlar mais minions do que isso
+text.vampirism.coffin.noSleep=Você só pode dormir durante o dia
 text.vampirism.coffin.occupied=Este caixão está ocupado
 text.vampirism.coffin.stopsleeping=Deixar o caixão
-text.vampirism.blood_left=Esquerda do sangue
-text.vampirism.blood=sangue
-text.vampirism.vampirelevel=Vampirelevel
+text.vampirism.blood_left=Sangue restante
+text.vampirism.blood=Sangue
+text.vampirism.vampirelevel=Level Vampirico
 text.vampirism.entitysblood=Sangue da entidade
 text.vampirism.minion=Minion
 text.vampirism.lord=Senhor
 text.vampirism.normal_vision=Visão normal
 text.vampirism.night_vision=Visão Noturna
 text.vampirism.no_control_minion=Você não tem controle sobre este minion
-text.vampirism.need_empty_bottle=Meu senhor, eu preciso de uma garrafa vazia para coletar sangue
+text.vampirism.need_empty_bottle=Meu senhor, eu preciso de um frasco vazio para coletar sangue
 text.vampirism.thanks=Obrigado
-text.vampirism.coming_back=Eu vou voltar, meu senhor
+text.vampirism.coming_back=Eu estou voltando, meu senhor
 text.vampirism.sorry_i_died_while_doing=Meu senhor, me desculpe, mas eu morri enquanto cumprindo sua tarefa
 text.vampirism.current_task=Tarefa atual
+text.vampirism.structure=Estrutura
+text.vampirism.pillar_blocks=Blocos pilar
 
 #Skill
-skill.vampirism.bat_skill=Modo Morcego Ativo
-skill.vampirism.change_weather=Condições do tempo
+skill.vampirism.bat_skill=Ativar Modo_Morcego
+skill.vampirism.change_weather=Condições Climaticas
 skill.vampirism.cancel=Anular
 skill.vampirism.freeze=Congelar
 skill.vampirism.invisibility=Invisibilidade
@@ -104,11 +109,11 @@ skill.vampirism.vampire_rage=Raiva de vampiro
 #Minion command
 minioncommand.vampirism.attackhostilenoplayers=Ataque hostil
 minioncommand.vampirism.attackhostile=Ataque hostil incluindo jogador
-minioncommand.vampirism.collectblood=Colheita de sangue
+minioncommand.vampirism.collectblood=Coletar sangue
 minioncommand.vampirism.defendlord=Defender o senhor
 minioncommand.vampirism.stayhere=Ficar aqui
-minioncommand.vampirism.comeback=Voltar (asseclas remotas)
-minioncommand.vampirism.justfollow=Siga-me
+minioncommand.vampirism.comeback=Voltar (Minions Remotos)
+minioncommand.vampirism.justfollow=Apenas Siga-me
 
 #Config
 category.vampirism.balance=Configurações de balanceamento
@@ -118,5 +123,5 @@ category.vampirism.balance_player_mod=Configurações do Jogador-Vampiro
 category.vampirism.balance_player_skills=Configurações das habilidades do jogador
 category.vampirism.balance_mob_prop=Propriedades dos mobs Vampiros
 category.vampirism.balance_mob_prop.tooltip=Mudar as configurações dos mobs adicionados pelo Vampirism
-category.vampirism.balance_vv_prop=Propriedades do Villager
+category.vampirism.balance_vv_prop=Propriedades dos Villagers Vampiros
 category.vampirism.balance_vv_prop.tooltip=Mudar a maneira como os caçadores agem nas vilas e ajustar outras opções relacionadas as vilas.

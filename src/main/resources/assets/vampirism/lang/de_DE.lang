@@ -36,6 +36,9 @@ block.vampirism.churchAltar.name=Altar der Reinigung
 block.vampirism.cursedEarth.name=Verfluchte Erde
 block.vampirism.vampireOrchid.name=Vampir Orchidee
 block.vampirism.blockCoffin.name=Sarg
+block.vampirism.castleBlock.name=Burg Stein
+block.vampirism.castleSlab.name=Burg Stufe
+block.vampirism.castleStairs.name=Burg Treppe
 
 #GUI
 gui.vampirism.revertback.head=Verwandle dich zurück in einen normalen Menschen
@@ -88,6 +91,8 @@ text.vampirism.thanks=Danke
 text.vampirism.coming_back=Ich komme zurück, mein Lord
 text.vampirism.sorry_i_died_while_doing=Main Lord, es tut mir Leid aber ich starb beim erfüllen deiner Aufgabe
 text.vampirism.current_task=Aktuelle Aufgabe
+text.vampirism.structure=Struktur
+text.vampirism.pillar_blocks=Pfeiler Blöcke
 
 #Skill
 skill.vampirism.bat_skill=Aktiviere Fledermaus
