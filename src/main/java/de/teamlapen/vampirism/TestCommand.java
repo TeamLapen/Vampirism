@@ -136,8 +136,7 @@ public class TestCommand implements ICommand {
 					List l= p.worldObj.getEntitiesWithinAABBExcludingEntity(p, p.boundingBox.expand(6, 6, 6));
 					for(Object o:l){
 						if(o instanceof EntityDracula){
-							((EntityDracula)o).createTestGlass();
-							Logger.t("dounf safd");
+							Logger.t("Dracula %s", o);
 						}
 					}
 					return;

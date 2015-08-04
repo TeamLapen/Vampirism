@@ -707,6 +707,9 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 				}
 
 			}
+			if (player instanceof EntityPlayerMP && (src instanceof EntityDracula || src instanceof EntityVampireMinion)) {
+				src.onKillEntity(player);
+			}
 		}
 		for (int i = 0; i < skillTimer.length; i++) {
 			if (skillTimer[i] > 0) {

@@ -1,10 +1,14 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.VampireLordData;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.ai.DraculaAIHeal;
 import de.teamlapen.vampirism.entity.minions.EntitySaveableVampireMinion;
 import de.teamlapen.vampirism.entity.minions.EntityVampireMinion;
 import de.teamlapen.vampirism.generation.castle.CastlePositionData;
+import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
@@ -13,7 +17,6 @@ import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.boss.IBossDisplayData;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -28,10 +31,11 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 	// TODO Sounds
 
 	private static final int DISAPPEAR_DELAY = 200;
-	private static final int HOME_RADIUS = 19;
+	private static final int TELEPORT_THRESHOLD = 30;
+	private AxisAlignedBB castle;
 	private int disappearDelay;
 	private final int maxTeleportDistanceX = 16;
-	private final int maxTeleportDistanceY = 20;
+	private final int maxTeleportDistanceY = 3;
 	private final int maxTeleportDistanceZ = 16;
 	private int damageCounter=0;
 	private final static String TAG = "Dracula";
@@ -43,8 +47,7 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 		this.tasks.addTask(12, new EntityAIWander(this, 0.7));
 		this.tasks.addTask(13, new EntityAILookIdle(this));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
-		this.isImmuneToFire = true;
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
 	}
 
 	@Override
@@ -53,7 +56,7 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(BALANCE.MOBPROP.DRACULA_MAX_HEALTH);
 		this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(BALANCE.MOBPROP.DRACULA_ATTACK_DAMAGE);
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.DRACULA_MOVEMENT_SPEED);
-		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(32F);
+		this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(50F);
 	}
 
 	/**
@@ -63,6 +66,19 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 		if (this.disappearDelay == 0) {
 			this.disappearDelay = DISAPPEAR_DELAY;
 		}
+	}
+
+	@Override
+	protected void attackedEntityAsMob(EntityLivingBase entity) {
+		if (rand.nextInt(3) == 0) {
+			entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100, 2));
+			entity.addPotionEffect(new PotionEffect(Potion.weakness.id, 50));
+			if (rand.nextBoolean()) {
+				entity.addPotionEffect(new PotionEffect(Potion.confusion.id, 120));
+			}
+		}
+
+
 	}
 
 	@Override
@@ -95,13 +111,78 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 				}
 			}
 			else{
-				Logger.w(TAG,"Dracula (%s) died outside of a castle",this);
+				Logger.w(TAG, "Dracula (%s) died outside of a castle", this);
+			}
+		}
+	}
+
+	@Override
+	public boolean isWithinHomeDistanceCurrentPosition() {
+		return super.isWithinHomeDistanceCurrentPosition();
+	}
+
+	@Override
+	public boolean hasHome() {
+		return castle != null;
+	}
+
+	@Override
+	public boolean isWithinHomeDistance(int p_110176_1_, int p_110176_2_, int p_110176_3_) {
+		if (castle != null) {
+			return castle.isVecInside(Vec3.createVectorHelper(p_110176_1_, p_110176_2_, p_110176_3_));
+		}
+		return true;
+	}
+
+	@Override
+	public ChunkCoordinates getHomePosition() {
+		if (castle == null) {
+			return null;
+		}
+		return new ChunkCoordinates((int) castle.minX + 16, (int) castle.minY + 3, (int) (castle.minZ + 16));
+	}
+
+	@Override
+	public void onKillEntity(EntityLivingBase entity) {
+		if (entity instanceof EntityPlayer) {
+			this.restoreOnPlayerKill((EntityPlayer) entity);
+		}
+	}
+
+	public void restoreOnPlayerKill(EntityPlayer player) {
+		this.setHealth(this.getMaxHealth());
+		NBTTagCompound data = new NBTTagCompound();
+		data.setInteger("player_id", this.getEntityId());
+		data.setBoolean("direct", true);
+		VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(0, MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posZ), MathHelper.floor_double(posZ), 40, data));
+
+		for (int x = (int) (this.posX - 25); x < this.posX + 25; x++) {
+			for (int y = (int) (this.posY - 5); y < this.posY + 10; y++) {
+				for (int z = (int) (this.posZ - 25); z < this.posZ + 25; z++) {
+					if (ModBlocks.bloodAltar2.equals(this.worldObj.getBlock(x, y, z))) {
+						((TileEntityBloodAltar2) worldObj.getTileEntity(x, y, z)).removeBlood(TileEntityBloodAltar2.MAX_BLOOD);
+						((TileEntityBloodAltar2) worldObj.getTileEntity(x, y, z)).addBlood(rand.nextInt(TileEntityBloodAltar2.MAX_BLOOD));
+					}
+				}
 			}
 		}
 	}
 
 	@Override public boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_) {
-		damageCounter += p_70097_2_ * 2;
+		if (this.getHealth() < this.getMaxHealth() * 0.8) {
+			damageCounter += p_70097_2_ * 2;
+			if (damageCounter > TELEPORT_THRESHOLD && !this.worldObj.isRemote) {
+				if (rand.nextInt(3) == 0) {
+					damageCounter = 0;
+					Logger.t("Reset counter on attack");
+				} else if (this.teleportRandomly()) {
+					damageCounter = 0;
+					Logger.t("Teleported on attack");
+				} else {
+					Logger.t("Failed to teleport on attack");
+				}
+			}
+		}
 		return super.attackEntityFrom(p_70097_1_, p_70097_2_);
 	}
 
@@ -116,9 +197,7 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 				this.faceEntity(this.entityToAttack, 100.0F, 100.0F);
 			}
 		}
-		if(this.isInWater()||this.handleLavaMovement()){
-			this.teleportRandomly();
-		}
+
 
 		if (!this.worldObj.isRemote && this.isEntityAlive()) {
 			if (disappearDelay > 0) {
@@ -126,9 +205,19 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 					this.teleportAway();
 				}
 			}
-			if(damageCounter>0)damageCounter--;
-			if (damageCounter > 40) {
-				if(this.teleportRandomly()){
+			if (this.isInWater() || this.handleLavaMovement()) {
+				this.teleportRandomly();
+			}
+			if (this.ticksExisted % 60 == 0) {
+				//Logger.t("Damage %d",damageCounter);
+				if (damageCounter > 30) {
+					if (this.teleportRandomly()) {
+						damageCounter = 0;
+						Logger.t("Teleported");
+					} else {
+						Logger.t("Failed to teleport");
+					}
+				} else {
 					damageCounter=0;
 				}
 			}
@@ -138,6 +227,7 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 						EntitySaveableVampireMinion entity = (EntitySaveableVampireMinion) Helper.spawnEntityBehindEntity((EntityLivingBase) this.entityToAttack, REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME);
 						if (entity != null) {
 							entity.setLord(this);
+							entity.addPotionEffect(new PotionEffect(Potion.damageBoost.id, 20000, 2));
 							minionInHomeDist(entity);
 						}
 					}
@@ -146,10 +236,10 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 			}
 
 			if (this.ticksExisted % 100 == 0 && this.hasHome() && this.getMinionHandler().getMinionCount() < 1) {
-				ChunkCoordinates pos = this.getHomePosition();
-				EntityVampireMinion minion = (EntityVampireMinion) Helper.spawnEntityInWorld(worldObj, AxisAlignedBB.getBoundingBox(pos.posX - 16, pos.posY - 2, pos.posZ - 16, pos.posX + 16, pos.posY + 10, pos.posZ + 16), REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME, 3);
+				EntityVampireMinion minion = (EntityVampireMinion) Helper.spawnEntityInWorld(worldObj, castle, REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME, 3);
 				if (minion != null) {
 					minion.setLord(this);
+					minion.addPotionEffect(new PotionEffect(Potion.resistance.id, 20000, 3));
 				}
 			}
 		}
@@ -163,8 +253,8 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 
 	private boolean minionInHomeDist(EntityCreature minion) {
 		if (this.hasHome()) {
-			minion.setHomeArea(this.getHomePosition().posX, this.getHomePosition().posY, this.getHomePosition().posZ, HOME_RADIUS);
-			if (!minion.isWithinHomeDistanceCurrentPosition()) {
+
+			if (isWithinHomeDistance(MathHelper.floor_double(minion.posX), MathHelper.floor_double(minion.posY), MathHelper.floor_double(minion.posZ))) {
 				minion.setDead();
 				return false;
 			}
@@ -183,14 +273,13 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 	private boolean teleportRandomly() {
 		double d0 = this.posX + (this.rand.nextDouble() - 0.5D) * maxTeleportDistanceX;
 		double d1 = this.posY + (this.rand.nextInt((int) (maxTeleportDistanceY * 1.5)) - maxTeleportDistanceY * 0.5D);
-		if (this.hasHome() && this.getHomePosition().posY - 6 > d1) d1 = this.posY;
 		double d2 = this.posZ + (this.rand.nextDouble() - 0.5D) * maxTeleportDistanceZ;
 		if(this.isWithinHomeDistance(MathHelper.floor_double(d0),MathHelper.floor_double(d1),MathHelper.floor_double(d2))){
 			if(Helper.teleportTo(this, d0, d1, d2, true)){
 				if (rand.nextInt(10) == 0) {
 					this.addPotionEffect(new PotionEffect(Potion.invisibility.id, 60));
 					this.addPotionEffect(new PotionEffect(Potion.regeneration.id, 60, 2));
-					this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60));
+					this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 2));
 					summonBats();
 				}
 				return true;
@@ -202,16 +291,16 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 		return false;
 	}
 
-	/** Teleports dracula to the given entity */
-	private boolean teleportToEntity(Entity e) {
-		Vec3 vec3 = Vec3.createVectorHelper(this.posX - e.posX, this.boundingBox.minY + this.height / 2.0F - e.posY + e.getEyeHeight(), this.posZ - e.posZ);
-		vec3 = vec3.normalize();
-		double d0 = 16.0D;
-		double d1 = this.posX + (this.rand.nextDouble() - 0.5D) * 8.0D - vec3.xCoord * d0;
-		double d2 = this.posY + (this.rand.nextInt(16) - 8) - vec3.yCoord * d0;
-		double d3 = this.posZ + (this.rand.nextDouble() - 0.5D) * 8.0D - vec3.zCoord * d0;
-		return Helper.teleportTo(this, d1, d2, d3, true);
-	}
+//	/** Teleports dracula to the given entity */
+//	private boolean teleportToEntity(Entity e) {
+//		Vec3 vec3 = Vec3.createVectorHelper(this.posX - e.posX, this.boundingBox.minY + this.height / 2.0F - e.posY + e.getEyeHeight(), this.posZ - e.posZ);
+//		vec3 = vec3.normalize();
+//		double d0 = 16.0D;
+//		double d1 = this.posX + (this.rand.nextDouble() - 0.5D) * 8.0D - vec3.xCoord * d0;
+//		double d2 = this.posY + (this.rand.nextInt(16) - 8) - vec3.yCoord * d0;
+//		double d3 = this.posZ + (this.rand.nextDouble() - 0.5D) * 8.0D - vec3.zCoord * d0;
+//		return Helper.teleportTo(this, d1, d2, d3, true);
+//	}
 
 	@Override
 	public void writeEntityToNBT(NBTTagCompound nbt) {
@@ -225,25 +314,8 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 	public void makeCastleLord(@NonNull CastlePositionData.Position pos){
 		Logger.d(TAG, "Set draculas home pos");
 		ChunkCoordIntPair lc=pos.getLowerMainCastle();
-		this.setHomeArea((lc.chunkXPos << 4) + 15, (int) this.posY + 5, (lc.chunkZPos << 4) + 15, HOME_RADIUS);
-		Logger.t("Home at %d %d %d with r %s", this.getHomePosition().posX, this.getHomePosition().posY, this.getHomePosition().posZ, this.func_110174_bM());
-
-	}
-
-	@Deprecated
-	public void createTestGlass(){
-		if(!this.hasHome())return;
-		Logger.t("galas");
-		for(int x= (int) (posX-100);x<posX+100;x++){
-			for( int y= (int) (posY-100);y<posY+100;y++){
-				for(int z= (int) (posZ-100);z<posZ+100;z++){
-					if(this.isWithinHomeDistance(x,y,z)){
-						this.worldObj.setBlock(x,y,z, Blocks.glass);
-					}
-
-				}
-			}
-		}
+		ChunkCoordIntPair uc = pos.getUpperMainCastle();
+		this.castle = AxisAlignedBB.getBoundingBox(lc.chunkXPos << 4, pos.getHeight() - 1, lc.chunkZPos << 4, (uc.chunkXPos << 4) + 15, pos.getHeight() + 5, (uc.chunkZPos << 4) + 15);
 	}
 
 	private void summonBats(){

@@ -48,9 +48,9 @@ public final class BALANCE {
 		@DefaultDouble(value = 1.4D, minValue = 1.0D, maxValue = 3.0D, name = "Vampire Hunter Agressive Multiplier", comment = "")
 		public static double VAMPIRE_HUNTER_AGRESSIVE_MULT;
 
-		@DefaultDouble(value = 15.0D, minValue = 5.0D, maxValue = 20.0D, name = "Vampire Minion Max Health", comment = "")
+		@DefaultDouble(value = 20.0D, minValue = 5.0D, maxValue = 200.0D, name = "Vampire Minion Max Health", comment = "")
 		public static double VAMPIRE_MINION_MAX_HEALTH;
-		@DefaultDouble(value = 3.0D, minValue = 1.5D, maxValue = 6.0D, name = "Vampire Minion Attack Damage", comment = "")
+		@DefaultDouble(value = 6.0D, minValue = 1.5D, maxValue = 20.0D, name = "Vampire Minion Attack Damage", comment = "")
 		public static double VAMPIRE_MINION_ATTACK_DAMAGE;
 		@DefaultDouble(value = 0.25D, minValue = 0.1D, maxValue = 0.5D, name = "Vampire Minion Movement Speed", comment = "")
 		public static double VAMPIRE_MINION_MOVEMENT_SPEED;
@@ -59,11 +59,11 @@ public final class BALANCE {
 
 		@DefaultDouble(value = 300.0D, minValue = 50.0D, maxValue = 150.0D, name = "Dracula Max Health", comment = "")
 		public static double DRACULA_MAX_HEALTH;
-		@DefaultDouble(value = 10.0D, minValue = 5.0D, maxValue = 20.0D, name = "Dracula Attack Damage", comment = "")
+		@DefaultDouble(value = 12.0D, minValue = 5.0D, maxValue = 20.0D, name = "Dracula Attack Damage", comment = "")
 		public static double DRACULA_ATTACK_DAMAGE;
 		@DefaultDouble(value = 0.4D, minValue = 0.2D, maxValue = 0.8D, name = "Dracula Movement Speed", comment = "")
 		public static double DRACULA_MOVEMENT_SPEED;
-		@DefaultInt(value = 5, minValue = -1, name = "VDracula Regenerate Seconds", comment = "Regenerate 1 heart every n seconds. -1 to disable")
+		@DefaultInt(value = 5, minValue = -1, name = "Dracula Regenerate Seconds", comment = "Regenerate 1 heart every n seconds. -1 to disable")
 		public static int DRACULA_REGENERATE_SECS;
 	}
 

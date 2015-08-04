@@ -61,9 +61,9 @@ public class DraculaAIHeal extends EntityAIBase {
     public boolean continueExecuting() {
         if (dracula.getHealth() < THRESHOLD + (dracula.getMaxHealth() - THRESHOLD) / 2) {
             if (currentPos != null) {
-                Logger.t("2 %s", dracula.getNavigator().getPath());
+                //Logger.t("2 %s", dracula.getNavigator().getPath());
                 if (atAltar || (dracula.ticksExisted % 40 != 0 && !dracula.getNavigator().noPath())) {
-                    Logger.t("3");
+                    //  Logger.t("3");
                     return true;
                 }
                 if (dracula.getNavigator().tryMoveToXYZ(currentPos.posX, currentPos.posY, currentPos.posZ, 0.9F))
@@ -107,6 +107,8 @@ public class DraculaAIHeal extends EntityAIBase {
                 remove = true;
             }
 
+        } else {
+            atAltar = false;
         }
 
         if (remove) {
@@ -122,10 +124,13 @@ public class DraculaAIHeal extends EntityAIBase {
     }
 
     private void checkForAltars() {
-        for (int x = (int) (dracula.posX - 20); x < dracula.posX + 20; x++) {
+        for (int x = (int) (dracula.posX - 25); x < dracula.posX + 25; x++) {
             for (int y = (int) (dracula.posY - 5); y < dracula.posY + 10; y++) {
-                for (int z = (int) (dracula.posZ - 20); z < dracula.posZ + 20; z++) {
+                for (int z = (int) (dracula.posZ - 25); z < dracula.posZ + 25; z++) {
                     if (ModBlocks.bloodAltar2.equals(dracula.worldObj.getBlock(x, y, z)) && ((TileEntityBloodAltar2) dracula.worldObj.getTileEntity(x, y, z)).getBloodAmount() > 0) {
+                        if (dracula.hasHome() && !dracula.isWithinHomeDistance(x, y, z)) {
+                            continue;
+                        }
                         positions.add(new ChunkCoordinates(x, y, z));
                     }
                 }

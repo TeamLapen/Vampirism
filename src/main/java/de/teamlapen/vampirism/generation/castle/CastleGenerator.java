@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import de.teamlapen.vampirism.ModBiomes;
 import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.castleDim.ChunkProviderCastle;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkCoordIntPair;
@@ -133,6 +134,7 @@ public class CastleGenerator extends WorldGenerator {
 				CastlePositionData.Position p = new CastlePositionData.Position(0, 0);
 				p.setSize(6, 6);
 				p.setDraculasDim();
+				p.setHeight(ChunkProviderCastle.MAX_Y_HEIGHT + 1);
 				data.positions.add(p);
 			} else {
 

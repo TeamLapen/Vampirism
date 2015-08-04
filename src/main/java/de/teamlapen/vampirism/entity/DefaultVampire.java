@@ -1,6 +1,14 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.ModPotion;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.biome.BiomeVampireForest;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.villages.VillageVampire;
+import de.teamlapen.vampirism.villages.VillageVampireData;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -13,14 +21,6 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import de.teamlapen.vampirism.ModPotion;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.villages.VillageVampire;
-import de.teamlapen.vampirism.villages.VillageVampireData;
 
 /**
  * Abstract class which already implements some vampire specific things, like sundamage
@@ -93,10 +93,17 @@ public abstract class DefaultVampire extends EntityMob {
 	public boolean attackEntityAsMob(Entity entity) {
 		boolean flag = super.attackEntityAsMob(entity);
 		if (flag && entity instanceof EntityLivingBase && this.rand.nextInt(3) == 0) {
-			((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.weakness.id, 200));
-			((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100));
+			this.attackedEntityAsMob((EntityLivingBase) entity);
 		}
 		return flag;
+	}
+
+	protected void attackedEntityAsMob(EntityLivingBase entity) {
+		if (this.rand.nextInt(3) == 0) {
+			(entity).addPotionEffect(new PotionEffect(Potion.weakness.id, 200));
+			(entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100));
+		}
+
 	}
 
 	@Override

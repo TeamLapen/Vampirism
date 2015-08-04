@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.vampirism.entity.ai.EntityAIStayHere;
 import de.teamlapen.vampirism.entity.ai.EntityAIWarnPlayer;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -38,6 +37,11 @@ public class EntityPortalGuard extends EntityMob {
 		this.setCurrentItemOrArmor(0, new ItemStack(Items.stone_sword));
 		this.entityCollisionReduction=1.0F;
 
+	}
+
+	@Override
+	public boolean doesEntityNotTriggerPressurePlate() {
+		return true;
 	}
 
 	@Override protected boolean isAIEnabled() {

@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.castleDim;
 import de.teamlapen.vampirism.VampireLordData;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.generation.WorldGenVampirism;
 import de.teamlapen.vampirism.generation.castle.CastlePositionData;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.Entity;
@@ -16,8 +15,6 @@ import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.Teleporter;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.chunk.Chunk;
-
-import java.util.List;
 
 /**
  * Teleporter for the castle dimension
@@ -68,7 +65,7 @@ public class TeleporterCastle extends Teleporter {
 		}
 	}
 
-	public void handleRegeneration() {
+	private void handleRegeneration() {
 		if (!VampireLordData.get(server).shouldRegenerateCastleDim())
 			return;
 		if (server.theChunkProviderServer.loadedChunks.size() > 0) {
