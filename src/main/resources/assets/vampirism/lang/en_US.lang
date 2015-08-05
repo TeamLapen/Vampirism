@@ -26,6 +26,7 @@ item.vampirism.vampireArmor_leggings.name=Vampire's leggings
 item.vampirism.vampireArmor_boots.name=Vampire's boots
 item.vampirism.vampireArmor_chestplate.name=Vampire's chestplate
 item.vampirism.minionNameTag.name=Minion name tag
+item.vampirism.gemOfBinding.name=Gem of Binding
 
 # Blocks
 block.vampirism.bloodAltar.name=Blood Altar of Saturation
@@ -128,6 +129,8 @@ minioncommand.vampirism.defendlord=Defend lord
 minioncommand.vampirism.stayhere=Stay here
 minioncommand.vampirism.comeback=Come back (Remote minions)
 minioncommand.vampirism.justfollow=Just follow me
+minioncommand.vampirism.converttosaveable=Take Gem of Binding back
+minioncommand.vampirism.defendarea=Defend area
 
 #Config
 category.vampirism.balance=Balance settings

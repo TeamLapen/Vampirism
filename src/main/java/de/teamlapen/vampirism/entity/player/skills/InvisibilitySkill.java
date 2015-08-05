@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
-import net.minecraft.entity.player.EntityPlayer;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
+import net.minecraft.entity.player.EntityPlayer;
 
 public class InvisibilitySkill extends DefaultSkill implements ILastingSkill {
 
@@ -28,13 +28,11 @@ public class InvisibilitySkill extends DefaultSkill implements ILastingSkill {
 
 	@Override
 	public int getMinU() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 128;
 	}
 
 	@Override
 	public int getMinV() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

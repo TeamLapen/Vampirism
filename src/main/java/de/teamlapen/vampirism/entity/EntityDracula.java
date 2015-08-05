@@ -29,8 +29,6 @@ import org.eclipse.jdt.annotation.NonNull;
 import java.util.List;
 
 public class EntityDracula extends DefaultVampireWithMinion implements IBossDisplayData {
-	// TODO Sounds
-
 	private static final int DISAPPEAR_DELAY = 200;
 	private static final int TELEPORT_THRESHOLD = 30;
 	private AxisAlignedBB castle;
@@ -175,12 +173,9 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 			if (damageCounter > TELEPORT_THRESHOLD && !this.worldObj.isRemote) {
 				if (rand.nextInt(3) == 0) {
 					damageCounter = 0;
-					Logger.t("Reset counter on attack");
 				} else if (this.teleportRandomly()) {
 					damageCounter = 0;
-					Logger.t("Teleported on attack");
 				} else {
-					Logger.t("Failed to teleport on attack");
 				}
 			}
 		}
@@ -214,9 +209,7 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 				if (damageCounter > 30) {
 					if (this.teleportRandomly()) {
 						damageCounter = 0;
-						Logger.t("Teleported");
 					} else {
-						Logger.t("Failed to teleport");
 					}
 				} else {
 					damageCounter=0;
@@ -332,6 +325,7 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 	public void freezeSkill() {
 		List l = worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(10, 5, 10), this.getMinionHandler().getLivingBaseSelectorExludingMinions());
 		for (Object o : l) {
+			if (o instanceof EntityBlindingBat) continue;
 			EntityLivingBase e = (EntityLivingBase) o;
 			e.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, BALANCE.VP_SKILLS.FREEZE_DURATION * 20, 10));
 			e.addPotionEffect(new PotionEffect(Potion.resistance.id, BALANCE.VP_SKILLS.FREEZE_DURATION * 20, 10));

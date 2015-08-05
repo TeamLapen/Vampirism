@@ -70,21 +70,26 @@ public class VampireEntityEventHandler {
 		}
 
 		if (event.entity instanceof EntityVampireHunter) {
-			// Set the home position of VampireHunters to a near village if one
-			// is found
-			EntityVampireHunter e = (EntityVampireHunter) event.entity;
-			if (!e.isLookingForHome())
-				return;
+			if (event.world.provider.dimensionId == VampirismMod.castleDimensionId) {
+				event.entity.setDead();
+			} else {
+				// Set the home position of VampireHunters to a near village if one
+				// is found
+				EntityVampireHunter e = (EntityVampireHunter) event.entity;
+				if (!e.isLookingForHome())
+					return;
 
-			if (event.world.villageCollectionObj != null) {
-				Village v = event.world.villageCollectionObj.findNearestVillage(MathHelper.floor_double(e.posX), MathHelper.floor_double(e.posY), MathHelper.floor_double(e.posZ), 20);
-				if (v != null) {
-					int r = v.getVillageRadius();
-					//AxisAlignedBB box = AxisAlignedBB.getBoundingBox(v.getCenter().posX - r, 0, v.getCenter().posZ - r, v.getCenter().posX + r, event.world.getActualHeight(), v.getCenter().posZ + r);
-					ChunkCoordinates cc = v.getCenter();
-					e.setHomeArea(cc.posX, cc.posY, cc.posZ, r);
+				if (event.world.villageCollectionObj != null) {
+					Village v = event.world.villageCollectionObj.findNearestVillage(MathHelper.floor_double(e.posX), MathHelper.floor_double(e.posY), MathHelper.floor_double(e.posZ), 20);
+					if (v != null) {
+						int r = v.getVillageRadius();
+						//AxisAlignedBB box = AxisAlignedBB.getBoundingBox(v.getCenter().posX - r, 0, v.getCenter().posZ - r, v.getCenter().posX + r, event.world.getActualHeight(), v.getCenter().posZ + r);
+						ChunkCoordinates cc = v.getCenter();
+						e.setHomeArea(cc.posX, cc.posY, cc.posZ, r);
+					}
 				}
 			}
+
 		} else if (event.entity instanceof EntityIronGolem) {
 			// Replace the EntityAINearestAttackableTarget of Irongolems, so
 			// they do not attack VampireHunters
@@ -120,7 +125,6 @@ public class VampireEntityEventHandler {
 		}
 		else if(!event.world.isRemote&&event.entity instanceof EntityDracula){
 			CastlePositionData.Position pos=CastlePositionData.get(event.world).findPosAt(MathHelper.floor_double(event.entity.posX),MathHelper.floor_double(event.entity.posZ),true);
-			Logger.t("Positions %s, dracula: %s %s",CastlePositionData.get(event.world),event.entity.posX,event.entity.posZ);
 			if(pos!=null){
 				((EntityDracula)event.entity).makeCastleLord(pos);
 			}

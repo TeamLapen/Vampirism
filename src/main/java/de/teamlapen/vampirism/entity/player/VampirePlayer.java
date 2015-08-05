@@ -199,9 +199,6 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	private static final String KEY_VISION = "vision";
 
 	@SideOnly(Side.CLIENT)
-	private final static ResourceLocation minionCallIconLoc = new ResourceLocation(REFERENCE.MODID + ":textures/gui/minion_call.png");
-
-	@SideOnly(Side.CLIENT)
 	private final static ResourceLocation minionCommandIconLoc = new ResourceLocation(REFERENCE.MODID + ":textures/gui/minion_commands.png");
 
 	private static final String KEY_MINIONS = "minions";
@@ -348,7 +345,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	public List<IPieElement> getAvailableMinionCalls() {
 		List<IPieElement> list = new ArrayList<IPieElement>();
 		if (this.isVampireLord()) {
-			list.add(new DefaultPieElement(1, "minioncommand.vampirism.comeback", 0, 0, minionCallIconLoc, new float[] { 1, 1, 0.05F }));
+			list.add(new DefaultPieElement(1, "minioncommand.vampirism.comeback", 128, 0, minionCommandIconLoc, new float[]{1, 1, 0.05F}));
 			list.add(new DefaultPieElement(2, "minioncommand.vampirism.defendlord", 64, 0, minionCommandIconLoc, new float[] { 0.88F, 0.45F, 0 }));
 			list.add(new DefaultPieElement(5, "minioncommand.vampirism.justfollow", 32, 0, minionCommandIconLoc, new float[] { 0.88F, 0.45F, 0 }));
 			if (this.getMinionHandler().getMinionCount() > 0) {
@@ -1065,7 +1062,6 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		// this.player.setSize(0.2F, 0.2F);
 		this.player.yOffset = 0.2F;
 
-		// TODO Set player position correctly
 		if (this.player.worldObj.blockExists(x, y, z)) {
 			int direction = ((BlockCoffin) player.worldObj.getBlock(x, y, z)).getDirection(player.worldObj, x, y, z);
 			float xOffset = 0.5F;

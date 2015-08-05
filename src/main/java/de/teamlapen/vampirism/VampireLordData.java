@@ -1,8 +1,5 @@
 package de.teamlapen.vampirism;
 
-import com.mojang.authlib.GameProfile;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
@@ -16,7 +13,6 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
-import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -305,7 +301,7 @@ public class VampireLordData extends WorldSavedData {
 		} catch (Exception e) {
 			Logger.e(TAG,e,"Failed to read lord uuids");
 		}
-		Logger.t("Loaded %d %d lords",lords.size(),disabledLord.size());
+		Logger.d(TAG, "Loaded %d %d lords", lords.size(), disabledLord.size());
 		if(!Configs.mulitple_lords&&lords.size()>1){
 			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("The configuration was changed so that only one player can be a vampire lord at a time"));
 			MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("Therefore all players loose their lord status"));

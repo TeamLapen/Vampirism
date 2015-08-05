@@ -16,7 +16,7 @@ public class ComeBackToPlayerCommand extends DefaultMinionCommand {
 
 	@Override
 	public int getMinU() {
-		return 0;
+		return 128;
 	}
 
 	@Override

@@ -1,14 +1,13 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.MovingObjectPosition;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
+import net.minecraft.block.Block;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.MovingObjectPosition;
 
 public class TeleportSkill extends DefaultSkill {
 
@@ -29,13 +28,11 @@ public class TeleportSkill extends DefaultSkill {
 
 	@Override
 	public int getMinU() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 112;
 	}
 
 	@Override
 	public int getMinV() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -83,8 +80,6 @@ public class TeleportSkill extends DefaultSkill {
 
 			} else {
 			}
-		} else {
-			Logger.t("Block does not exist");
 		}
 
 		if (!flag) {
@@ -94,7 +89,7 @@ public class TeleportSkill extends DefaultSkill {
 		}
 		if (player instanceof EntityPlayerMP) {
 			EntityPlayerMP playerMp = (EntityPlayerMP) player;
-			playerMp.mountEntity((Entity) null);
+			playerMp.mountEntity(null);
 			playerMp.setPositionAndUpdate(x, y, z);
 		}
 		player.worldObj.playSoundEffect(ox, oy, oz, "mob.endermen.portal", 1.0F, 1.0F);

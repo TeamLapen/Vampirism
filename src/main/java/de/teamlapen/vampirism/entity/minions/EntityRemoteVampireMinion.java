@@ -49,13 +49,11 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 
 		@Override
 		public int getMinU() {
-			// TODO Auto-generated method stub
-			return 0;
+			return 144;
 		}
 
 		@Override
 		public int getMinV() {
-			// TODO Auto-generated method stub
 			return 0;
 		}
 
@@ -133,6 +131,7 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 
 	@Override
 	public IMinionCommand getCommand(int id) {
+		if (id == -1) return comeBack;
 		if (id < commands.size())
 			return commands.get(id);
 		return null;

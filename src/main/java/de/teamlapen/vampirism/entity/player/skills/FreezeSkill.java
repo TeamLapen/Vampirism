@@ -1,14 +1,15 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
-import java.util.List;
-
+import de.teamlapen.vampirism.entity.EntityBlindingBat;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.Helper;
+
+import java.util.List;
 
 public class FreezeSkill extends DefaultSkill {
 
@@ -19,7 +20,7 @@ public class FreezeSkill extends DefaultSkill {
 
 	@Override
 	public int getCooldown() {
-		return BALANCE.VP_SKILLS.FREEZE_COOLDOWN;
+		return BALANCE.VP_SKILLS.FREEZE_COOLDOWN * 20;
 	}
 
 	@Override
@@ -29,13 +30,11 @@ public class FreezeSkill extends DefaultSkill {
 
 	@Override
 	public int getMinU() {
-		// TODO Auto-generated method stub
-		return 0;
+		return 144;
 	}
 
 	@Override
 	public int getMinV() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -48,9 +47,11 @@ public class FreezeSkill extends DefaultSkill {
 	public boolean onActivated(final VampirePlayer vampire, final EntityPlayer player) {
 		List l = player.worldObj.getEntitiesWithinAABBExcludingEntity(player, player.boundingBox.expand(10, 5, 10), vampire.getMinionHandler().getLivingBaseSelectorExludingMinions());
 		for (Object o : l) {
+			if (o instanceof EntityBlindingBat) continue;
 			EntityLivingBase e = (EntityLivingBase) o;
 			e.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, BALANCE.VP_SKILLS.FREEZE_DURATION * 20, 10));
 			e.addPotionEffect(new PotionEffect(Potion.resistance.id, BALANCE.VP_SKILLS.FREEZE_DURATION * 20, 10));
+			e.addPotionEffect(new PotionEffect(Potion.jump.id, BALANCE.VP_SKILLS.FREEZE_DURATION * 20, 128));
 			Helper.spawnParticlesAroundEntity(e, "snowshovel", 1.5, 40);
 		}
 		return false;

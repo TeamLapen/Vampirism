@@ -14,7 +14,7 @@ public class JustFollowCommand extends DefaultMinionCommand {
 
 	@Override
 	public int getMinU() {
-		return 0;
+		return 112;
 	}
 
 	@Override

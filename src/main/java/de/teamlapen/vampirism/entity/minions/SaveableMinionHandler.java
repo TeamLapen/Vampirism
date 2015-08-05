@@ -1,8 +1,7 @@
 package de.teamlapen.vampirism.entity.minions;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
+import de.teamlapen.vampirism.entity.VampireMob;
+import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -12,11 +11,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
-
 import org.eclipse.jdt.annotation.NonNull;
 
-import de.teamlapen.vampirism.entity.VampireMob;
-import de.teamlapen.vampirism.util.Logger;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Used in IMinionLord classes to manage their saveable minions
@@ -27,7 +25,7 @@ import de.teamlapen.vampirism.util.Logger;
 public class SaveableMinionHandler {
 
 	public enum Call {
-		DEFEND_LORD, ATTACK_NON_PLAYER, ATTACK, FOLLOW;
+		DEFEND_LORD, ATTACK_NON_PLAYER, ATTACK, FOLLOW
 	}
 	private final static String TAG = "MinionHandler";
 	private final ArrayList<IMinion> minions;
@@ -91,7 +89,6 @@ public class SaveableMinionHandler {
 		while (it.hasNext()) {
 			IMinion m = it.next();
 			if (m.getRepresentingEntity().isDead || !lord.equals(m.getLord())) {
-				Logger.t( "removed because %b %b %s %s", m.getRepresentingEntity().isDead, !lord.equals(m.getLord()), lord, m.getLord());
 				it.remove();
 			}
 		}
@@ -192,7 +189,6 @@ public class SaveableMinionHandler {
 			Logger.e(TAG, "Trying to register a non saveable minion %s at minion handler %s. This SHOULD NOT happen", m, this);
 		} else {
 			minions.add(m);
-			Logger.t("register minion %s", m);
 		}
 	}
 

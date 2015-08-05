@@ -104,8 +104,13 @@ public class TestCommand extends BasicCommand {
 			}
 
 			@Override
+			public String getCommandUsage(ICommandSender var1) {
+				return this.getCommandName() + " <id> (<amount>)";
+			}
+
+			@Override
 			public String getCommandName() {
-				return "part <id> (<amount>)";
+				return "part";
 			}
 		});
 

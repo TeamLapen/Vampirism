@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.entity.EntityDracula;
 import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
 import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
@@ -53,8 +52,6 @@ public class DraculaAIHeal extends EntityAIBase {
                 currentPos = null;
                 path = null;
             }
-            Logger.t("No path");
-
         }
         return false;
     }
@@ -72,7 +69,6 @@ public class DraculaAIHeal extends EntityAIBase {
                     return true;
             }
         }
-        Logger.t("stop");
         return false;
     }
 
@@ -140,7 +136,6 @@ public class DraculaAIHeal extends EntityAIBase {
             }
         }
         checked = true;
-        Logger.t("Found %d", positions.size());
     }
 
     private void updateAltars() {
@@ -154,7 +149,6 @@ public class DraculaAIHeal extends EntityAIBase {
             }
             iterator.remove();
         }
-        Logger.t("%d Left", positions.size());
     }
 
     private boolean isAltarAtPos(ChunkCoordinates pos) {

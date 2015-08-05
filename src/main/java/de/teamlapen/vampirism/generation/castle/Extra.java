@@ -4,6 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import cpw.mods.fml.common.registry.GameRegistry;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.EntityDracula;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
@@ -14,10 +15,12 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityPainting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 
 /**
@@ -52,7 +55,9 @@ public class Extra {
 				if(e!=null) {
 					e.setPosition(wx, wy, wz);
 					world.spawnEntityInWorld(e);
+					if (e instanceof EntityDracula) Logger.t("Spawned Dracula %s", e);
 				} else {
+					MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("Failed to spawn " + entity));//TODO remove
 					Logger.w("Extra", "Failed to create %s in world %s", entity, world);
 				}
 			}

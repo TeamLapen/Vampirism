@@ -6,15 +6,12 @@ import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.block.BlockBloodAltar4;
-import de.teamlapen.vampirism.block.BlockBloodAltar4Tip;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.RenderScreenRedPacket;
 import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockCompressed;
 import net.minecraft.block.BlockStoneBrick;
 import net.minecraft.block.material.MapColor;
@@ -75,14 +72,14 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 	private ChunkCoordinates[] tips;
 
 	public TileEntityBloodAltar4() {
-		super(new Slot[] { new Slot(ModItems.pureBlood, 44, 34), new Slot(ModItems.humanHeart, 80, 34), new Slot(new InventoryTileEntity.IItemSelector() {
+		super(new Slot[]{new Slot(ModItems.pureBlood, 44, 34), new Slot(ModItems.humanHeart, 80, 34), new Slot(new InventoryTileEntity.IItemSelector() {
 
 			@Override
 			public boolean isItemAllowed(ItemStack item) {
 				// Placeholder
 				return false;
 			}
-		}, 116, 34) });
+		}, 116, 34)});
 	}
 
 	/**
@@ -102,23 +99,23 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 
 		if (blood > 0) {
 			if (stackPureBlood == null || stackPureBlood.stackSize < blood) {
-				Logger.t(TAG, "Pure blood bottles are not present");
+				//Logger.d(TAG, "Pure blood bottles are not present");
 				return false;
 			}
 			if (stackPureBlood.getItemDamage() < bloodMeta) {
-				Logger.t(TAG, "Pure blood is of the wrong level (" + stackPureBlood.getItemDamage() + "/" + bloodMeta + ")");
+				//Logger.d(TAG, "Pure blood is of the wrong level (" + stackPureBlood.getItemDamage() + "/" + bloodMeta + ")");
 				return false;
 			}
 		}
 		if (heart > 0) {
 			if (stackHeart == null || stackHeart.stackSize < heart) {
-				Logger.t(TAG, "Hearts are not present");
+				//Logger.d(TAG, "Hearts are not present");
 				return false;
 			}
 		}
 		if (par3 > 0) {
 			if (stack3 == null || stack3.stackSize < par3) {
-				Logger.t(TAG, "Item 3 is not present");
+				//Logger.d(TAG, "Item 3 is not present");
 				return false;
 			}
 		}
@@ -128,70 +125,6 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 		return true;
 	}
 
-	/**
-	 * Checks if the blocks in the given box match to the structure description. If it matches it returns the block at the positions marked with 1 in the structure, otherwise its null
-	 * 
-	 * @param lx
-	 *            Lower x
-	 * @param ly
-	 *            Lower y
-	 * @param lz
-	 *            Lower z
-	 * @param hx
-	 *            Higher x
-	 * @param hy
-	 *            Higher y
-	 * @param hz
-	 *            Higher z
-	 * @param structure
-	 * @return
-	 */
-	private Block checkBlocks(int lx, int ly, int lz, int hx, int hy, int hz, int[][][] structure) {
-		Block blocktype = null;
-		for (int x = lx; x <= hx; x++) {
-			for (int z = lz; z <= hz; z++) {
-				for (int y = ly; y <= hy; y++) {
-					int type = structure[y - ly][z - lz][x - lx];
-					Block b = worldObj.getBlock(x, y, z);
-					// Logger.i("Test", "T:" + x + ":" + y + ":" + z + ";" + (x - lx) + ":" + (y - ly) + ":" + (z - lz) + ";" + type + ";" + b.getUnlocalizedName());
-					if (type == 0) {
-						// Disabled for now to prevent grass or so blocking and stop some mod conflicts, can probably be enabled again sometim TODO
-						// if (!(b.isAir(worldObj, x, y, z))) {
-						// Logger.i(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
-						// return null;
-						// }
-					}
-					if (type == 2) {
-						if (!(b instanceof BlockBloodAltar4Tip)) {
-							Logger.d(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
-							return null;
-						}
-					}
-					if (type == 3) {
-						if (!(b instanceof BlockBloodAltar4)) {
-							Logger.d(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
-							return null;
-						}
-					}
-					if (type == 4) {
-						if (!(b instanceof BlockBed)) {
-							Logger.d(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
-							return null;
-						}
-					}
-					if (type == 1) {
-						if (blocktype != null && !blocktype.equals(b)) {
-							Logger.d(TAG, "Expected " + type + " found: " + b.getUnlocalizedName() + " at " + (x - lx) + ":" + (y - ly) + ":" + (z - lz));
-							return null;
-						}
-						blocktype = b;
-					}
-
-				}
-			}
-		}
-		return blocktype;
-	}
 
 	/**
 	 * Checks if the requirements for a level up are met
@@ -261,52 +194,6 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 				return LevReq.ITEM_MISSING;
 		}
 		return LevReq.OK;
-
-	}
-
-	/**
-	 * Determines the level of the structure build around the altar. TODO make it rotatable
-	 * Make sure to adjust {@link de.teamlapen.vampirism.guide.VampirismGuide#createStructureRequirementsAltar4()} as well when changing this method
-	 * @return
-	 */
-	private int determineLevel() {
-
-		int x = this.xCoord;
-		int y = this.yCoord;
-		int z = this.zCoord;
-		// setBlocks(x-2,y,z-2,x+2,y+2,z+2,structure1);
-		int meta = worldObj.getBlockMetadata(x, y, z);
-		Logger.d(TAG, "Meta: " + meta);
-		Block type = null;
-		Logger.i(TAG, "Testing structure 2");
-		type = checkBlocks(x - 3, y, z - 2, x + 3, y + 3, z + 2, structure2);
-		if(type==null){
-			Logger.i(TAG,"Testing rotated structure 2");
-			type=checkBlocks(x-2,y,z-3,x+2,y+3,z+3,rotateBy90(structure2));
-		}
-		if (type != null) {
-			if (type instanceof BlockCompressed) {
-				if (type.getMapColor(1).equals(MapColor.ironColor)) {
-					return 3;
-				}
-				if (type.getMapColor(1).equals(MapColor.goldColor)) {
-					return 4;
-				}
-			}
-		}
-		Logger.i(TAG, "Testing structure 1");
-		type = checkBlocks(x - 2, y, z - 2, x + 2, y + 2, z + 2, structure1);
-		if (type != null) {
-			if (type instanceof BlockStoneBrick) {
-				return 1;
-			}
-			if (type instanceof BlockCompressed) {
-				if (type.getMapColor(1).equals(MapColor.ironColor)) {
-					return 2;
-				}
-			}
-		}
-		return 0;
 
 	}
 

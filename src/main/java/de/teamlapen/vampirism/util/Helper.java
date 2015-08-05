@@ -1,13 +1,12 @@
 package de.teamlapen.vampirism.util;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-
+import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
+import cpw.mods.fml.common.network.simpleimpl.IMessage;
+import cpw.mods.fml.relauncher.ReflectionHelper;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.biome.BiomeVampireForest;
+import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
+import de.teamlapen.vampirism.villages.VillageVampire;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -21,14 +20,13 @@ import net.minecraft.util.*;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import scala.actors.threadpool.Arrays;
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.relauncher.ReflectionHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
-import de.teamlapen.vampirism.villages.VillageVampire;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 
 public class Helper {
 	public static class Obfuscation {
@@ -323,7 +321,6 @@ public class Helper {
 			}
 
 			if (sound) {
-				// TODO different sound (bang?)
 				entity.worldObj.playSoundEffect(d3, d4, d5, "mob.endermen.portal", 1.0F, 1.0F);
 				entity.playSound("mob.endermen.portal", 1.0F, 1.0F);
 			}

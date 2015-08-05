@@ -1,8 +1,11 @@
 package de.teamlapen.vampirism.item;
 
-import java.util.List;
-
-import de.teamlapen.vampirism.util.Logger;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import de.teamlapen.vampirism.ModItems;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,15 +16,9 @@ import net.minecraft.item.ItemGlassBottle;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-
 import org.eclipse.jdt.annotation.NonNull;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.ModItems;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.util.REFERENCE;
+import java.util.List;
 
 /**
  * 
@@ -110,8 +107,7 @@ public class ItemBloodBottle extends ItemGlassBottle {
 		setUnlocalizedName(REFERENCE.MODID + "." + name);
 		setHasSubtypes(true);
 		setCreativeTab(VampirismMod.tabVampirism);
-		this.maxStackSize = 1; // TODO: I want this to not stack when blood is
-								// in bottle, but stack when empty
+		this.maxStackSize = 1;
 	}
 
 	/**
@@ -149,7 +145,6 @@ public class ItemBloodBottle extends ItemGlassBottle {
 
 			// Remove blood from blood bar and add to bottle on shift + right click
 			if (player.isSneaking()) {
-				Logger.t("add");
 				int bloodBottle = getBlood(stack);
 				int bloodBar = vampire.getBlood();
 				if (bloodBottle < MAX_BLOOD && bloodBar > 0) {
@@ -159,7 +154,6 @@ public class ItemBloodBottle extends ItemGlassBottle {
 			}
 			// Add blood to blood bar from bottle on right click
 			else {
-				Logger.t("remove");
 				int bloodBottle = getBlood(stack);
 				int bloodBar = vampire.getBlood();
 				if (bloodBottle > 0 && bloodBar < VampirePlayer.MAXBLOOD) {

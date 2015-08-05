@@ -54,7 +54,9 @@ public class Logger {
 	 * @param format
 	 * @param data
 	 */
-	public static void t(String format,Object... data){log(Level.INFO,"Test",format,data);};
+	public static void t(String format, Object... data) {
+		log(Level.INFO, "Test", format, data);
+	}
 
 	private static void log(Level level, String tag, String format, Object... data) {
 		if (tag == null) {

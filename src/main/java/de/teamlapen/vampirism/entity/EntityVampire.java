@@ -14,8 +14,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 public class EntityVampire extends DefaultVampire {
-	// TODO Sounds
-
 	private boolean inCastle = false;
 	public EntityVampire(World par1World) {
 		super(par1World);

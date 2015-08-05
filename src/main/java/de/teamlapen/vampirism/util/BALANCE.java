@@ -149,7 +149,7 @@ public final class BALANCE {
 		@DefaultInt(value = 16, minValue = 1, name = "Summon blinding bats count")
 		public static int SUMMON_BAT_COUNT;
 
-		@DefaultInt(value = 50, minValue = 1, name = "Lord teleport max distance")
+		@DefaultInt(value = 60, minValue = 1, name = "Lord teleport max distance")
 		public static int TELEPORT_MAX_DISTANCE;
 
 		@DefaultInt(value = 30, minValue = 1, name = "Lord teleport cooldown")
