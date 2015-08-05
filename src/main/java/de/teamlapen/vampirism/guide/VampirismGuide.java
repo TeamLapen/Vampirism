@@ -1,11 +1,24 @@
 package de.teamlapen.vampirism.guide;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
+import amerifrance.guideapi.api.GuideRegistry;
+import amerifrance.guideapi.api.abstraction.CategoryAbstract;
+import amerifrance.guideapi.api.abstraction.EntryAbstract;
+import amerifrance.guideapi.api.abstraction.IPage;
+import amerifrance.guideapi.api.base.Book;
+import amerifrance.guideapi.api.util.BookBuilder;
+import amerifrance.guideapi.api.util.PageHelper;
+import amerifrance.guideapi.categories.CategoryItemStack;
+import amerifrance.guideapi.entries.EntryUniText;
 import amerifrance.guideapi.pages.*;
+import de.teamlapen.vampirism.ModBlocks;
+import de.teamlapen.vampirism.ModItems;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.item.ItemBloodBottle;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar4;
+import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.util.REFERENCE.KEY;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -15,31 +28,33 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import de.teamlapen.vampirism.ModBlocks;
-import de.teamlapen.vampirism.ModItems;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.guide.PageTable.Builder;
-import de.teamlapen.vampirism.item.ItemBloodBottle;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar4;
-import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.util.REFERENCE.KEY;
-import amerifrance.guideapi.api.GuideRegistry;
-import amerifrance.guideapi.api.abstraction.CategoryAbstract;
-import amerifrance.guideapi.api.abstraction.EntryAbstract;
-import amerifrance.guideapi.api.abstraction.IPage;
-import amerifrance.guideapi.api.base.Book;
-import amerifrance.guideapi.api.base.CategoryBase;
-import amerifrance.guideapi.api.util.BookBuilder;
-import amerifrance.guideapi.api.util.PageHelper;
-import amerifrance.guideapi.categories.CategoryItemStack;
-import amerifrance.guideapi.entries.EntryUniText;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class VampirismGuide{
 	public static Book vampirismGuide;
 	private static List recipeList;
 	public static List<CategoryAbstract> categories = new ArrayList<CategoryAbstract>();
+	private static HashMap<String, EntryAbstract> linkedEntries = new HashMap<String, EntryAbstract>();
+
+	public static EntryAbstract getLinkedEntry(String identifier) {
+		return linkedEntries.get(identifier);
+	}
+
+	/**
+	 * Adds a entry and it's identifier to the link list, which is used to bind the entries, after the guide is fully registered.
+	 *
+	 * @param identifier
+	 * @param entry
+	 * @return
+	 */
+	private static EntryAbstract addLink(String identifier, EntryAbstract entry) {
+		linkedEntries.put(identifier, entry);
+		return entry;
+	}
 	public static void registerGuide(){
 		recipeList=CraftingManager.getInstance().getRecipeList();
 		registerGettingStarted();
@@ -47,6 +62,7 @@ public class VampirismGuide{
 		registerLevels();
 		registerMobs();
 		registerVP();
+		registerVampireLord();
 		BookBuilder builder = new BookBuilder();
 		builder.setCategories(categories).setUnlocBookTitle("guide.vampirism.book.title").setUnlocWelcomeMessage("guide.vampirism.welcomeMessage").setUnlocDisplayName("guide.vamprism.book.name").setBookColor(new Color(137,8,163)).setAuthor("--Team Lapen");
 		builder.setSpawnWithBook(true);
@@ -128,8 +144,8 @@ public class VampirismGuide{
 		pagesAt4.add(createItemRequirementsAltar4());
 		pagesAt4.add(createStructureRequirementsAltar4());
 		pagesAt4.add(new PageUnlocImage("guide.vampirism.levels.altar4.structure1.name",new ResourceLocation(REFERENCE.MODID+":guide/screenshots/altar4_structure1.png"),false));
-		pagesAt4.add(new PageUnlocImage("guide.vampirism.levels.altar4.structure2.name",new ResourceLocation(REFERENCE.MODID+":guide/screenshots/altar4_structure2.png"),false));
-		entries.add(new EntryUniText(pagesAt4,at4t));
+		pagesAt4.add(new PageUnlocImage("guide.vampirism.levels.altar4.structure2.name",new ResourceLocation(REFERENCE.MODID+":guide/screenshots/altar4_structure2.png"), false));
+		entries.add(addLink("level_altar_4", new EntryUniText(pagesAt4,at4t)));
 		
 		categories.add(new CategoryItemStack(entries,"guide.vampirism.levels.category",new ItemStack(ModBlocks.bloodAltar2)));
 	}
@@ -183,18 +199,18 @@ public class VampirismGuide{
 
 		ArrayList<IPage> vampire_lord =new ArrayList<IPage>();
 		vampire_lord.add(new PageImage(new ResourceLocation(REFERENCE.MODID + ":guide/screenshots/vampire_lord.png")));
-		vampire_lord.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.mobs.vampire_lord.text",true)));
+		vampire_lord.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.mobs.vampire_lord.text", true)));
 		entries.add(new EntryUniText(vampire_lord, "guide.vampirism.mobs.vampire_lord.title"));
 
 		ArrayList<IPage> vampire_minion =new ArrayList<IPage>();
 		vampire_minion.add(new PageImage(new ResourceLocation(REFERENCE.MODID + ":guide/screenshots/vampire_minion.png")));
 		vampire_minion.add(new PageImage(new ResourceLocation(REFERENCE.MODID + ":guide/screenshots/minion.png")));
-		vampire_minion.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.mobs.vampire_minion.text",true)));
+		vampire_minion.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.mobs.vampire_minion.text", true)));
 		entries.add(new EntryUniText(vampire_minion, "guide.vampirism.mobs.vampire_minion.title"));
 
 		ArrayList<IPage> ghost =new ArrayList<IPage>();
 		ghost.add(new PageImage(new ResourceLocation(REFERENCE.MODID + ":guide/screenshots/ghost.png")));
-		ghost.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.mobs.ghost.text",true)));
+		ghost.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.mobs.ghost.text", true)));
 
 		entries.add(new EntryUniText(ghost, "guide.vampirism.mobs.ghost.title"));
 
@@ -222,12 +238,17 @@ public class VampirismGuide{
 		skills.add(new PageLocImage(loc("guide.vampirism.vplayer.skills.menu_text"), new ResourceLocation(REFERENCE.MODID + ":guide/screenshots/skills_menu.png"), false));
 		skills.addAll(PageHelper.pagesForLongText(locAndFormat("guide.vampirism.vplayer.skills.bat_transformation")));
 		skills.addAll(PageHelper.pagesForLongText(locAndFormat("guide.vampirism.vplayer.skills.revive_fallen")));
-		skills.add(new PageLocText(loc("guide.vampirism.vplayer.skills.end",true)));
+		skills.add((new PageLocText(loc("guide.vampirism.vplayer.skills.end", true))));
 		entries.add(new EntryUniText(skills, "guide.vampirism.vplayer.skills.title"));
 
 		
-		categories.add(new CategoryItemStack(entries,"guide.vampirism.vplayer.category",new ItemStack(Items.skull,1,3)));
+		categories.add(new CategoryItemStack(entries,"guide.vampirism.vplayer.category",new ItemStack(Items.skull, 1, 3)));
 	}
+
+	private static void registerVampireLord() {
+		List<EntryAbstract> entries = new ArrayList<EntryAbstract>();
+	}
+
 	/**
 	 * Simply translate the given string
 	 * @param unLoc Unlocalized String

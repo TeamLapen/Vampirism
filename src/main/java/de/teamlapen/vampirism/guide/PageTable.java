@@ -1,21 +1,19 @@
 package de.teamlapen.vampirism.guide;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.lwjgl.opengl.GL11;
-
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.StatCollector;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.util.Logger;
 import amerifrance.guideapi.api.abstraction.CategoryAbstract;
 import amerifrance.guideapi.api.abstraction.EntryAbstract;
 import amerifrance.guideapi.api.base.Book;
 import amerifrance.guideapi.api.base.PageBase;
 import amerifrance.guideapi.api.util.TextHelper;
 import amerifrance.guideapi.gui.GuiBase;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.StatCollector;
+import org.lwjgl.opengl.GL11;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Book page containing a table and an optional headline
@@ -46,8 +44,8 @@ public class PageTable extends PageBase {
         	fontRenderer.drawString(TextHelper.BOLD+headline, x, y, 0);
         	y+=fontRenderer.FONT_HEIGHT;
         }
-        drawLine(x,y+fontRenderer.FONT_HEIGHT,x+(guiBase.xSize*3F/5F) ,y+fontRenderer.FONT_HEIGHT,guiBase.publicZLevel);
-        for(String[] l:lines){
+		drawLine(x, y + fontRenderer.FONT_HEIGHT, x + (guiBase.xSize * 3F / 5F), y + fontRenderer.FONT_HEIGHT, guiBase.publicZLevel);
+		for(String[] l:lines){
         	x=guiLeft + 39;
         	for(int i=0;i<l.length;i++){
         		int mw=width[i]*charWidth;
@@ -62,7 +60,7 @@ public class PageTable extends PageBase {
        
         fontRenderer.setUnicodeFlag(false);
     }
-	
+
 	public static class Builder{
 		int columns;
 		List<String[]> lines;
