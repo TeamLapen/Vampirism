@@ -1,22 +1,21 @@
 package de.teamlapen.vampirism.generation;
 
-import java.util.Random;
-
+import cpw.mods.fml.common.IWorldGenerator;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.generation.castle.CastleGenerator;
+import de.teamlapen.vampirism.generation.structures.GenerateBloodAltar;
+import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.villages.VillageVampire;
+import de.teamlapen.vampirism.villages.VillageVampireData;
 import net.minecraft.entity.Entity;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
-import cpw.mods.fml.common.IWorldGenerator;
-import de.teamlapen.vampirism.entity.EntityVampireHunter;
-import de.teamlapen.vampirism.generation.structures.GenerateBloodAltar;
-import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.villages.VillageVampire;
-import de.teamlapen.vampirism.villages.VillageVampireData;
+
+import java.util.Random;
 
 /**
  * 
@@ -53,7 +52,7 @@ public class WorldGenVampirism implements IWorldGenerator {
 				return;
 			}
 			VillageVampire vv = VillageVampireData.get(world).getVillageVampire(v);
-
+			if (vv == null) return;
 			int spawnedHunter = world.getEntitiesWithinAABB(EntityVampireHunter.class, vv.getBoundingBox()).size();
 			for (Entity e : Helper.spawnEntityInVillage(v, random.nextInt(3)- spawnedHunter, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world)) {
 				((EntityVampireHunter) e).setHomeArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, v.getVillageRadius());

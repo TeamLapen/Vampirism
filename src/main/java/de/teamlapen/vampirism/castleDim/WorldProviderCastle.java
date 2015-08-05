@@ -51,4 +51,9 @@ public class WorldProviderCastle extends WorldProvider {
 	public boolean canCoordinateBeSpawn(int p_76566_1_, int p_76566_2_) {
 		return this.worldObj.getTopBlock(p_76566_1_, p_76566_2_).getMaterial().blocksMovement();
 	}
+
+	@Override
+	public boolean isDaytime() {
+		return false;
+	}
 }

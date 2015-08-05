@@ -138,7 +138,6 @@ public class CastleGenerator extends WorldGenerator {
 				p.setHeight(ChunkProviderCastle.MAX_Y_HEIGHT + 1);
 				data.positions.add(p);
 			} else {
-
 				data.positions.addAll(this.findPositions(world, rnd));
 
 				if (data.positions.size() > 0) {
@@ -155,14 +154,20 @@ public class CastleGenerator extends WorldGenerator {
 							iterator.set(pos2);
 						}
 					}
+				}
+				if (data.positions.size() == 0) {
+					Logger.w(TAG, "Did not find any positions");
+					if (world.provider.dimensionId == 0) {
+						VampirismMod.vampireCastleFail = true;
 
+					}
 				}
 			}
 			data.checked = true;
 			data.markDirty();
 		}
-		if (data.positions.size() == 0) {
-			if (world.getBiomeGenForCoords(chunkX << 4 + 8, chunkZ << 4 + 8) instanceof BiomeVampireForest) {
+		if (data.positions.size() == 0 && data.fullyGeneratedPositions.size() == 0) {
+			if (world.getBiomeGenForCoords((chunkX << 4) + 8, (chunkZ << 4) + 8) instanceof BiomeVampireForest) {
 				CastlePositionData.Position pos = new CastlePositionData.Position(chunkX, chunkZ);
 				pos = this.optimizePosition(pos, world, rnd);
 				if (pos != null) {
@@ -253,10 +258,6 @@ public class CastleGenerator extends WorldGenerator {
 			}
 		}
 
-		if (foundPos.size() == 0) {
-			VampirismMod.vampireCastleFail = true;
-			Logger.w(TAG, "Did not find any positions");
-		}
 		Logger.d(TAG, "Looking for positions took %s ms", System.currentTimeMillis() - t);
 		return foundPos;
 	}

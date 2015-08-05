@@ -266,7 +266,7 @@ public class EntityVampireLord extends DefaultVampireWithMinion implements ISync
 		//Only spawn on the surface
 		if(i<60)return false;
 		CastlePositionData data = CastlePositionData.get(worldObj);
-		if(data.findPosAt(MathHelper.floor_double(posX),MathHelper.floor_double(posZ),true)!=null){
+		if (!data.isPosAt(MathHelper.floor_double(posX), MathHelper.floor_double(posZ))) {
 			return false;
 		}
 		return super.getCanSpawnHere();

@@ -10,6 +10,8 @@ import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ChunkCoordinates;
 
 import java.util.ArrayList;
@@ -98,6 +100,7 @@ public class DraculaAIHeal extends EntityAIBase {
                         VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(0, currentPos.posX, currentPos.posY + 0.5, currentPos.posZ, 2, data));
                         altar.removeBlood(5);
                         dracula.heal(10F);
+                        dracula.addPotionEffect(new PotionEffect(Potion.resistance.id, 6, 2));
                     }
 
                 } else {

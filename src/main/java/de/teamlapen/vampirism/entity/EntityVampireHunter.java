@@ -1,18 +1,19 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.ModItems;
+import de.teamlapen.vampirism.entity.ai.HunterAIDefendVillage;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.network.ISyncable;
+import de.teamlapen.vampirism.network.UpdateEntityPacket;
+import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.DifficultyCalculator.Difficulty;
+import de.teamlapen.vampirism.util.DifficultyCalculator.IAdjustableLevel;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
-import net.minecraft.entity.ai.EntityAIHurtByTarget;
-import net.minecraft.entity.ai.EntityAILookIdle;
-import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
-import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
-import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
-import net.minecraft.entity.ai.EntityAIOpenDoor;
-import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -21,15 +22,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
-import de.teamlapen.vampirism.ModItems;
-import de.teamlapen.vampirism.entity.ai.EntityAIDefendVillage;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.network.ISyncable;
-import de.teamlapen.vampirism.network.UpdateEntityPacket;
-import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.DifficultyCalculator.Difficulty;
-import de.teamlapen.vampirism.util.DifficultyCalculator.IAdjustableLevel;
-import de.teamlapen.vampirism.util.Helper;
 
 /**
  * Vampire Hunter with three levels: Level 1: Agressive villager, Level 2: Professional hunter, Level 3: Professional hunter with axe and stake
@@ -199,7 +191,7 @@ public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjust
 			isLookingForHome = false;
 			this.tasks.addTask(3, new EntityAIMoveTowardsRestriction(this, 1.0F));
 			this.tasks.addTask(4, new EntityAIMoveThroughVillage(this, 0.9F, false));
-			this.targetTasks.addTask(2, new EntityAIDefendVillage(this));
+			this.targetTasks.addTask(2, new HunterAIDefendVillage(this));
 		}
 	}
 

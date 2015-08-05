@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.entity.minions;
 
-import java.util.ArrayList;
-
-import javax.annotation.Nullable;
-
+import de.teamlapen.vampirism.entity.ai.MinionAIFollowBoss;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.ai.EntityAIFleeSun;
@@ -11,13 +11,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
-
 import org.eclipse.jdt.annotation.NonNull;
 
-import de.teamlapen.vampirism.entity.ai.EntityAIFollowBoss;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.REFERENCE;
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 /**
  * Vampire minion which is saved with it's lord and is designed to protect the lord
@@ -35,7 +32,7 @@ public class EntitySaveableVampireMinion extends EntityVampireMinion {
 
 	public EntitySaveableVampireMinion(World world) {
 		super(world);
-		this.tasks.addTask(7, new EntityAIFollowBoss(this, 1.0D));
+		this.tasks.addTask(7, new MinionAIFollowBoss(this, 1.0D));
 		this.tasks.addTask(14, new EntityAIFleeSun(this, 0.9F));
 		commands = new ArrayList<IMinionCommand>();
 		commands.add(getActiveCommand());

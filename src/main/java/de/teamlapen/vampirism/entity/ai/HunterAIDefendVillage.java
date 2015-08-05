@@ -1,5 +1,9 @@
 package de.teamlapen.vampirism.entity.ai;
 
+import de.teamlapen.vampirism.entity.EntityVampire;
+import de.teamlapen.vampirism.entity.EntityVampireHunter;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.BALANCE;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITarget;
 import net.minecraft.entity.monster.EntityZombie;
@@ -8,18 +12,14 @@ import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.MathHelper;
 import net.minecraft.village.Village;
-import de.teamlapen.vampirism.entity.EntityVampire;
-import de.teamlapen.vampirism.entity.EntityVampireHunter;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.util.BALANCE;
 
-public class EntityAIDefendVillage extends EntityAITarget {
+public class HunterAIDefendVillage extends EntityAITarget {
 
 	EntityVampireHunter hunter;
 
 	EntityLivingBase villageAgressorTarget;
 
-	public EntityAIDefendVillage(EntityVampireHunter h) {
+	public HunterAIDefendVillage(EntityVampireHunter h) {
 		super(h, false, false);
 		hunter = h;
 		this.setMutexBits(1);

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity.minions;
 
+import de.teamlapen.vampirism.entity.ai.MinionAIMoveToLord;
 import net.minecraft.entity.ai.EntityAIBase;
-import de.teamlapen.vampirism.entity.ai.EntityAIMoveToLord;
 
 public class ComeBackToPlayerCommand extends DefaultMinionCommand {
 
@@ -10,7 +10,7 @@ public class ComeBackToPlayerCommand extends DefaultMinionCommand {
 
 	public ComeBackToPlayerCommand(int id, EntityRemoteVampireMinion minion) {
 		super(id);
-		comeBack = new EntityAIMoveToLord(minion);
+		comeBack = new MinionAIMoveToLord(minion);
 		this.minion = minion;
 	}
 

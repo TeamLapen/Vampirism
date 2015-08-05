@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
+import net.minecraft.entity.boss.BossStatus;
 import net.minecraft.entity.boss.IBossDisplayData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -249,6 +250,7 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 		}
 
 		super.onLivingUpdate();
+		BossStatus.setBossStatus(this, true);
 	}
 
 	private boolean minionInHomeDist(EntityCreature minion) {

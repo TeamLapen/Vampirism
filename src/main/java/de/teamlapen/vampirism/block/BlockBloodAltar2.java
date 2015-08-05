@@ -22,7 +22,7 @@ public class BlockBloodAltar2 extends BasicBlockContainer {
 
 	public BlockBloodAltar2() {
 		super(Material.iron, name);
-		this.setHardness(4.0F);
+		this.setHardness(40.0F);
 		this.setHarvestLevel("pickaxe", 1);
 	}
 

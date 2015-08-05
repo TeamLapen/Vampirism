@@ -5,7 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.entity.DefaultVampire;
 import de.teamlapen.vampirism.entity.EntityDracula;
 import de.teamlapen.vampirism.entity.EntityPortalGuard;
-import de.teamlapen.vampirism.entity.ai.EntityAIHurtByNonLord;
+import de.teamlapen.vampirism.entity.ai.MinionAIHurtByNonLord;
 import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.network.UpdateEntityPacket;
 import de.teamlapen.vampirism.util.BALANCE;
@@ -64,7 +64,7 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 		this.tasks.addTask(15, new EntityAIWander(this, 0.7));
 		this.tasks.addTask(16, new EntityAIWatchClosest(this, EntityPlayer.class, 10));
 
-		this.targetTasks.addTask(8, new EntityAIHurtByNonLord(this, false));
+		this.targetTasks.addTask(8, new MinionAIHurtByNonLord(this, false));
 
 		activeCommand = this.getDefaultCommand();
 		activeCommand.onActivated();

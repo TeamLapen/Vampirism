@@ -1,18 +1,19 @@
 package de.teamlapen.vampirism.villages;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
+import cpw.mods.fml.common.gameevent.TickEvent;
+import de.teamlapen.vampirism.generation.castle.CastlePositionData;
+import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import de.teamlapen.vampirism.util.Logger;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * VillageVampire data handler, implemented similar to VillageCollection
@@ -82,7 +83,15 @@ public class VillageVampireData extends WorldSavedData {
 		return getVillageVampire(v);
 	}
 
-	public VillageVampire getVillageVampire(Village v) {
+	/**
+	 * Gets or create the VillageVampire to the given village. Can be null if no vampire version can exist
+	 *
+	 * @param v
+	 * @return
+	 */
+	public
+	@Nullable
+	VillageVampire getVillageVampire(Village v) {
 		synchronized (villageList) {
 			for (VillageVampire vv : villageList) {
 				if (vv.getCenter().equals(v.getCenter())) {
@@ -92,6 +101,10 @@ public class VillageVampireData extends WorldSavedData {
 			VillageVampire vv = new VillageVampire();
 			vv.setWorld(worldObj);
 			vv.setCenter(v.getCenter());
+			if (CastlePositionData.get(worldObj).isPosAt(v.getCenter().posX, v.getCenter().posZ)) {
+				Logger.d("VampireVillage", "Cannot create a village at %s, because it is inside a castle", v.getCenter());
+				return null;
+			}
 			Logger.d("VampireVillage", "Created village at " + v.getCenter());
 			villageList.add(vv);
 			this.markDirty();

@@ -1,24 +1,16 @@
 package de.teamlapen.vampirism.biome;
 
-import java.util.Random;
-
-import cpw.mods.fml.common.Mod;
-import de.teamlapen.vampirism.entity.*;
-import de.teamlapen.vampirism.generation.castle.CastlePositionData;
-import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.entity.passive.EntityChicken;
-import net.minecraft.entity.passive.EntityCow;
-import net.minecraft.entity.passive.EntityPig;
-import net.minecraft.entity.passive.EntitySheep;
-import net.minecraft.init.Blocks;
-import net.minecraft.world.World;
-import net.minecraft.world.biome.BiomeGenBase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.ModBlocks;
+import de.teamlapen.vampirism.entity.*;
+import de.teamlapen.vampirism.generation.castle.CastlePositionData;
+import net.minecraft.init.Blocks;
+import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.feature.WorldGenTrees;
+
+import java.util.Random;
 
 /**
  * 
@@ -62,7 +54,7 @@ public class BiomeVampireForest extends BiomeGenBase {
 	@Override
 	public void decorate(World world, Random rand, int coordX, int coordZ) {
 		CastlePositionData data = CastlePositionData.get(world);
-		if(data.findPosAt(coordX,coordZ,false)==null){
+		if (!data.isPosAt(coordX, coordZ)) {
 			super.theBiomeDecorator.decorateChunk(world, rand, this, coordX, coordZ);
 
 			for (int j = 0; j < 5; ++j) {

@@ -9,6 +9,7 @@ import net.minecraft.world.WorldSavedData;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,8 +21,9 @@ public class CastlePositionData extends WorldSavedData{
 
 	private final static String IDENTIFIER = "castle_positions";
 	List<Position> positions;
-	private List<Position> fullyGeneratedPositions;
+	List<Position> fullyGeneratedPositions;
 	boolean checked;
+	private HashMap<ChunkCoordIntPair, Boolean> cachedChunks;
 	public static CastlePositionData get(World world){
 		CastlePositionData data= (CastlePositionData) world.perWorldStorage.loadData(CastlePositionData.class, IDENTIFIER);
 		if(data==null){
@@ -39,6 +41,7 @@ public class CastlePositionData extends WorldSavedData{
 		super(identifier);
 		positions=new LinkedList<Position>();
 		fullyGeneratedPositions=new LinkedList<Position>();
+		cachedChunks = new HashMap<ChunkCoordIntPair, Boolean>();
 	}
 
 	/**
@@ -77,6 +80,28 @@ public class CastlePositionData extends WorldSavedData{
 	 */
 	public @Nullable Position findPosAt(int coordX,int coordZ,boolean all){
 		return this.findPosAtChunk(coordX>>4,coordZ>>4,all);
+	}
+
+
+	/**
+	 * Checks if there is a castle at the given chunk. Caches the result.
+	 */
+	public boolean isPosAt(int coordX, int coordZ) {
+		return isPosAtChunk(coordX >> 4, coordZ >> 4);
+	}
+
+	/**
+	 * Checks if there is a castle at the given chunk. Caches the result.
+	 */
+	public boolean isPosAtChunk(int chunkX, int chunkZ) {
+		ChunkCoordIntPair p = new ChunkCoordIntPair(chunkX, chunkZ);
+		Boolean b = cachedChunks.get(p);
+		if (b == null) {
+			Position pos = findPosAtChunk(chunkX, chunkZ, true);
+			b = (pos != null);
+			cachedChunks.put(p, b);
+		}
+		return b;
 	}
 
 	/**

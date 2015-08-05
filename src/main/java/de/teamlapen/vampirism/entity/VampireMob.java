@@ -1,38 +1,10 @@
 package de.teamlapen.vampirism.entity;
 
-import java.util.ArrayList;
-import java.util.UUID;
-
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityAgeable;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.monster.EntityWitch;
-import net.minecraft.entity.passive.EntityCow;
-import net.minecraft.entity.passive.EntityHorse;
-import net.minecraft.entity.passive.EntityOcelot;
-import net.minecraft.entity.passive.EntityPig;
-import net.minecraft.entity.passive.EntitySheep;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.passive.EntityWolf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.DamageSource;
-import net.minecraft.world.World;
-
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.Configs;
-import de.teamlapen.vampirism.entity.ai.EntityAIModifier;
-import de.teamlapen.vampirism.entity.minions.DefendLordCommand;
-import de.teamlapen.vampirism.entity.minions.IMinion;
-import de.teamlapen.vampirism.entity.minions.IMinionCommand;
-import de.teamlapen.vampirism.entity.minions.IMinionLord;
-import de.teamlapen.vampirism.entity.minions.JustFollowCommand;
+import de.teamlapen.vampirism.entity.ai.VanillaAIModifier;
+import de.teamlapen.vampirism.entity.minions.*;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.UpdateEntityPacket;
 import de.teamlapen.vampirism.network.UpdateEntityPacket.ISyncableExtendedProperties;
@@ -41,6 +13,21 @@ import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.villages.VillageVampire;
 import de.teamlapen.vampirism.villages.VillageVampireData;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityAgeable;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
+import net.minecraft.world.World;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
+
+import java.util.ArrayList;
+import java.util.UUID;
 
 public class VampireMob implements ISyncableExtendedProperties, IMinion {
 
@@ -363,7 +350,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	 */
 	private void setMinion() {
 		type = (byte) (type | 2);
-		EntityAIModifier.makeMinion(this, entity);
+		VanillaAIModifier.makeMinion(this, entity);
 	}
 
 	/**
@@ -371,7 +358,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	 */
 	private void setVampire() {
 		type = (byte) (type | 1);
-		EntityAIModifier.addVampireMobTasks(entity);
+		VanillaAIModifier.addVampireMobTasks(entity);
 	}
 
 	@Override

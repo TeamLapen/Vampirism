@@ -1,7 +1,16 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.vampirism.ModBiomes;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.ai.EntityAIAvoidVampirePlayer;
 import de.teamlapen.vampirism.generation.castle.CastlePositionData;
+import de.teamlapen.vampirism.network.ISyncable;
+import de.teamlapen.vampirism.network.RequestEntityUpdatePacket;
+import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.DifficultyCalculator;
+import de.teamlapen.vampirism.util.DifficultyCalculator.Difficulty;
+import de.teamlapen.vampirism.util.DifficultyCalculator.IAdjustableLevel;
+import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -13,7 +22,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.IMob;
-import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChunkCoordinates;
@@ -24,17 +32,6 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.entity.ai.EntityAIAvoidVampirePlayer;
-import de.teamlapen.vampirism.network.ISyncable;
-import de.teamlapen.vampirism.network.RequestEntityUpdatePacket;
-import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.DifficultyCalculator;
-import de.teamlapen.vampirism.util.DifficultyCalculator.Difficulty;
-import de.teamlapen.vampirism.util.DifficultyCalculator.IAdjustableLevel;
-import de.teamlapen.vampirism.util.Logger;
-import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 
 public class VampireEntityEventHandler {
 
@@ -104,10 +101,7 @@ public class VampireEntityEventHandler {
 
 							@Override
 							public boolean isEntityApplicable(Entity entity) {
-								if (entity instanceof IMob && !(entity instanceof EntityVampireHunter)) {
-									return true;
-								}
-								return false;
+								return entity instanceof IMob && !(entity instanceof EntityVampireHunter);
 							}
 
 						}));
@@ -132,6 +126,10 @@ public class VampireEntityEventHandler {
 			}
 			else{
 				Logger.w("EntityEventHandler","Dracula was spawned outside a castle");
+			}
+		} else if (!event.world.isRemote && event.entity instanceof EntityVampire) {
+			if (CastlePositionData.get(event.world).isPosAt(MathHelper.floor_double(event.entity.posX), MathHelper.floor_double(event.entity.posZ))) {
+				((EntityVampire) event.entity).makeCastleVampire();
 			}
 		}
 	}

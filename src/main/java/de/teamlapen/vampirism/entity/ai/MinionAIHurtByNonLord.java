@@ -5,10 +5,10 @@ import de.teamlapen.vampirism.entity.minions.IMinion;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 
-public class EntityAIHurtByNonLord extends EntityAIHurtByTarget {
+public class MinionAIHurtByNonLord extends EntityAIHurtByTarget {
     IMinion minion;
 
-    public EntityAIHurtByNonLord(EntityVampireMinion minion, boolean p_i1660_2_) {
+    public MinionAIHurtByNonLord(EntityVampireMinion minion, boolean p_i1660_2_) {
         super(minion, p_i1660_2_);
         this.minion = minion;
     }

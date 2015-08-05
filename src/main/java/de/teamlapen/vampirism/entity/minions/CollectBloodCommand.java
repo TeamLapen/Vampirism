@@ -1,18 +1,12 @@
 package de.teamlapen.vampirism.entity.minions;
 
+import de.teamlapen.vampirism.ModItems;
+import de.teamlapen.vampirism.entity.ai.*;
+import de.teamlapen.vampirism.item.ItemBloodBottle;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-
 import org.eclipse.jdt.annotation.NonNull;
-
-import de.teamlapen.vampirism.ModItems;
-import de.teamlapen.vampirism.entity.ai.EntityAIBiteNearbyEntity;
-import de.teamlapen.vampirism.entity.ai.EntityAIMoveAround;
-import de.teamlapen.vampirism.entity.ai.EntityAIMoveToBiteable;
-import de.teamlapen.vampirism.entity.ai.EntityAIMoveToLord;
-import de.teamlapen.vampirism.entity.ai.EntityAIWaitForBottle;
-import de.teamlapen.vampirism.item.ItemBloodBottle;
 
 /**
  * Makes the minion collect blood and therefore picks up bottles
@@ -33,9 +27,9 @@ public class CollectBloodCommand extends DefaultMinionCommand {
 		super(id);
 		minion = m;
 		runAround = new EntityAIMoveAround(m.getRepresentingEntity(), 1.0, false);
-		runToPlayer = new EntityAIMoveToLord.EntityAIMinionBringBottle(m);
-		bite = new EntityAIBiteNearbyEntity.EntityAIMinionCollectFromNearby(m);
-		moveToBiteable = new EntityAIMoveToBiteable(m);
+		runToPlayer = new MinionAIMoveToLord.MinionAIBringBottle(m);
+		bite = new MinionAIBiteNearbyEntity.MinionAIMinionCollectFromNearby(m);
+		moveToBiteable = new VampireAIMoveToBiteable(m);
 		waitForBottle = new EntityAIWaitForBottle(m);
 	}
 
