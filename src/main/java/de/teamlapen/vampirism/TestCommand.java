@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.entity.minions.EntitySaveableVampireMinion;
 import de.teamlapen.vampirism.entity.minions.EntityVampireMinion;
 import de.teamlapen.vampirism.entity.minions.IMinion;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.generation.WorldGenVampirism;
 import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
 import de.teamlapen.vampirism.util.Helper;
@@ -25,7 +26,9 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.ChunkCoordIntPair;
 
 import java.util.List;
 
@@ -101,6 +104,11 @@ public class TestCommand implements ICommand {
 					if (p.dimension != VampirismMod.castleDimensionId) {
 						((EntityPlayerMP) p).mcServer.getConfigurationManager().transferPlayerToDimension(((EntityPlayerMP) p), VampirismMod.castleDimensionId, new TeleporterCastle(MinecraftServer.getServer().worldServerForDimension(VampirismMod.castleDimensionId)));
 					}
+				}
+				if ("biome".equals(param[0])) {
+					ChunkCoordIntPair pos = WorldGenVampirism.castleGenerator.findNearVampireBiome(p.worldObj, MathHelper.floor_double(p.posX), MathHelper.floor_double(p.posZ), 10000);
+					sendMessage(sender, String.format("Found %s", pos));
+					return;
 				}
 				if("lords".equals(param[0])){
 					sendMessage(sender, VampireLordData.get(p.worldObj).getLordNamesAsString());

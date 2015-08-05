@@ -79,10 +79,6 @@ public abstract class CommonProxy implements IProxy {
 				MinecraftServer.getServer().getConfigurationManager()
 						.sendChatMsg(new ChatComponentText("There was a SEVERE error adding Vampirism's potions, please check and change the configured IDs of " + ModPotion.checkPotions()));
 			}
-			if(VampirismMod.vampireCastleFail  && event.phase.equals(TickEvent.Phase.END) && MinecraftServer.getServer().getTickCounter() % 180 == 0 ){
-				MinecraftServer.getServer().getConfigurationManager()
-						.sendChatMsg(new ChatComponentText("There was an error generating the vampire castle. It is very recommend to generate a new world!"));
-			}
 			
 			Iterator<TickRunnable> iterator = serverRunnables.iterator();
 			while (iterator.hasNext()) {

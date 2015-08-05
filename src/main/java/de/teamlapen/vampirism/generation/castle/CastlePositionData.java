@@ -6,7 +6,6 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
-import org.apache.commons.lang3.ArrayUtils;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.Arrays;
@@ -182,8 +181,9 @@ public class CastlePositionData extends WorldSavedData{
 		}
 
 		private int height=-1;
-		public Position(int chunkX, int chunkY) {
-			super(chunkX, chunkY);
+
+		public Position(int chunkX, int chunkZ) {
+			super(chunkX, chunkZ);
 		}
 
 		public void setDraculasDim(){
@@ -193,10 +193,11 @@ public class CastlePositionData extends WorldSavedData{
 		public boolean isDraculasDim(){
 			return draculasDim;
 		}
-		public void setSize(int x,int y){
+
+		public void setSize(int x, int z) {
 			sizeX=x;
-			sizeZ =y;
-			tileCount=x*y;
+			sizeZ = z;
+			tileCount = x * z;
 		}
 
 		public int getSizeX() {

@@ -1,40 +1,25 @@
 package de.teamlapen.vampirism;
 
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import de.teamlapen.vampirism.entity.VampireMob;
-import de.teamlapen.vampirism.generation.WorldGenVampirism;
-import de.teamlapen.vampirism.generation.castle.CastlePositionData;
-import de.teamlapen.vampirism.item.ItemBloodBottle;
-import de.teamlapen.vampirism.util.Logger;
-import net.minecraft.block.Block;
-import net.minecraft.entity.item.EntityItem;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemDye;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.ChunkCoordIntPair;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
-import net.minecraft.world.chunk.Chunk;
-import net.minecraft.world.chunk.IChunkProvider;
-import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.common.ForgeChunkManager;
-import net.minecraftforge.event.entity.player.BonemealEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
-import net.minecraftforge.event.world.ChunkDataEvent;
-import net.minecraftforge.event.world.WorldEvent;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.Event.Result;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import de.teamlapen.vampirism.villages.VillageVampireData;
-import org.apache.commons.lang3.StringUtils;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.init.Blocks;
+import net.minecraft.item.ItemDye;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.world.World;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.event.entity.player.BonemealEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
+import net.minecraftforge.event.world.WorldEvent;
 
 public class VampirismEventHandler {
 	@SubscribeEvent
@@ -90,6 +75,13 @@ public class VampirismEventHandler {
 	public void onPlayerLoggedOut(PlayerLoggedOutEvent e) {
 		if (VampirePlayer.get(e.player).sleepingCoffin) {
 			VampirePlayer.get(e.player).wakeUpPlayer(true, true, false, false);
+		}
+	}
+
+	@SubscribeEvent
+	public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent e) {
+		if (VampirismMod.vampireCastleFail) {
+			e.player.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.castle_fail"));
 		}
 	}
 

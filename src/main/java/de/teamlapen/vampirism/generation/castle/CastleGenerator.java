@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import de.teamlapen.vampirism.ModBiomes;
 import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.biome.BiomeVampireForest;
 import de.teamlapen.vampirism.castleDim.ChunkProviderCastle;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.util.MathHelper;
@@ -30,7 +31,7 @@ public class CastleGenerator extends WorldGenerator {
 
 	private final static String TAG = "CastleGenerator";
 	private static HashMap<String, BuildingTile> tileMap;
-	private final int MAX_TRYS = 128;
+	private final int MAX_TRYS = 0;//128;
 	private final int MAX_CASTLES = 3;
 	private final int MAX_SIZE = 6;
 	private final int MIN_SIZE = 4;
@@ -159,6 +160,18 @@ public class CastleGenerator extends WorldGenerator {
 			}
 			data.checked = true;
 			data.markDirty();
+		}
+		if (data.positions.size() == 0) {
+			if (world.getBiomeGenForCoords(chunkX << 4 + 8, chunkZ << 4 + 8) instanceof BiomeVampireForest) {
+				CastlePositionData.Position pos = new CastlePositionData.Position(chunkX, chunkZ);
+				pos = this.optimizePosition(pos, world, rnd);
+				if (pos != null) {
+					data.positions.add(pos);
+					data.markDirty();
+					VampirismMod.vampireCastleFail = false;
+					Logger.i(TAG, "Position List was empty, but found a vampire biome -> Added to list");
+				}
+			}
 		}
 		if (data.positions.size() > 0) {
 			for (CastlePositionData.Position p : data.positions) {
@@ -729,6 +742,24 @@ public class CastleGenerator extends WorldGenerator {
 	 */
 	@Override public boolean generate(World p_76484_1_, Random p_76484_2_, int p_76484_3_, int p_76484_4_, int p_76484_5_) {
 		return false;
+	}
+
+	public ChunkCoordIntPair findNearVampireBiome(World world, int x, int z, int maxDist) {
+		long start = System.currentTimeMillis();
+		for (int i = 0; i < maxDist; i++) {
+			for (int j = -i; j < i; j++) {
+				if (world.getBiomeGenForCoords(x + (i << 4), z + (j << 4)) instanceof BiomeVampireForest) {
+					Logger.d(TAG, "Took %d ms to find a vampire biome", (int) (System.currentTimeMillis() - start));
+					return new ChunkCoordIntPair((x >> 4) + i, (z >> 4) + j);
+				}
+				if (world.getBiomeGenForCoords(x - (i << 4), z + (j << 4)) instanceof BiomeVampireForest) {
+					Logger.d(TAG, "Took %d ms to find a vampire biome", (int) (System.currentTimeMillis() - start));
+					return new ChunkCoordIntPair((x >> 4) - i, (z >> 4) + j);
+				}
+			}
+		}
+		Logger.d(TAG, "Took %d ms to not find a vampire biome", (int) (System.currentTimeMillis() - start));
+		return null;
 	}
 
 }

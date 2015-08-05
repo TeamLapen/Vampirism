@@ -1,7 +1,29 @@
 package de.teamlapen.vampirism;
 
+import cpw.mods.fml.common.*;
+import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.Mod.Instance;
+import cpw.mods.fml.common.event.*;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.VillagerRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.castleDim.WorldProviderCastle;
+import de.teamlapen.vampirism.entity.player.skills.Skills;
+import de.teamlapen.vampirism.generation.WorldGenVampirism;
 import de.teamlapen.vampirism.generation.castle.CastleGenerator;
+import de.teamlapen.vampirism.generation.villages.VillageBiomes;
+import de.teamlapen.vampirism.generation.villages.VillageCreationHandler;
+import de.teamlapen.vampirism.generation.villages.VillageGenReplacer;
+import de.teamlapen.vampirism.generation.villages.VillageModChurchPiece;
+import de.teamlapen.vampirism.guide.VampirismGuide;
+import de.teamlapen.vampirism.network.*;
+import de.teamlapen.vampirism.proxy.IProxy;
+import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.launchwrapper.Launch;
@@ -10,43 +32,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.Loader;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLInterModComms;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.VillagerRegistry;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.entity.player.skills.Skills;
-import de.teamlapen.vampirism.generation.WorldGenVampirism;
-import de.teamlapen.vampirism.generation.villages.VillageBiomes;
-import de.teamlapen.vampirism.generation.villages.VillageCreationHandler;
-import de.teamlapen.vampirism.generation.villages.VillageGenReplacer;
-import de.teamlapen.vampirism.generation.villages.VillageModChurchPiece;
-import de.teamlapen.vampirism.guide.VampirismGuide;
-import de.teamlapen.vampirism.network.InputEventPacket;
-import de.teamlapen.vampirism.network.RenderScreenRedPacket;
-import de.teamlapen.vampirism.network.RequestEntityUpdatePacket;
-import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
-import de.teamlapen.vampirism.network.SpawnParticlePacket;
-import de.teamlapen.vampirism.network.UpdateEntityPacket;
-import de.teamlapen.vampirism.proxy.IProxy;
-import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.REFERENCE;
-import cpw.mods.fml.common.Optional;
 
-@Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION, guiFactory = "de.teamlapen.vampirism.client.gui.ModGuiFactory")
+@Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION, acceptedMinecraftVersions = "[1.7.10]", dependencies = "required-after:Forge@[10.13.4.1448,)", guiFactory = "de.teamlapen.vampirism.client.gui.ModGuiFactory")
 public class VampirismMod {
 
 	@Instance(value = REFERENCE.MODID)

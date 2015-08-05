@@ -170,6 +170,14 @@ public class EntityVampireLord extends DefaultVampireWithMinion implements ISync
 	}
 
 	@Override
+	public void onKillEntity(EntityLivingBase entity) {
+		super.onKillEntity(entity);
+		if (entity instanceof EntityVampireLord) {
+			this.setHealth(this.getMaxHealth());
+		}
+	}
+
+	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		this.loadUpdateFromNBT(nbt);
