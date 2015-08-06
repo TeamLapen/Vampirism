@@ -1,19 +1,19 @@
 package de.teamlapen.vampirism.client.render;
 
-import net.minecraft.client.renderer.entity.RenderBiped;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.client.model.ModelBipedCloaked;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.client.renderer.entity.RenderBiped;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
-public class RendererVampireLord extends RenderBiped {
+public class RendererVampireBaron extends RenderBiped {
 
-	private static final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vampireLord.png");
+	private static final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vampireBaron.png");
 
-	public RendererVampireLord(float p_i1261_2_) {
+	public RendererVampireBaron(float p_i1261_2_) {
 		super(new ModelBipedCloaked(0.0F, 0.0F, 128, 64), p_i1261_2_);
 	}
 

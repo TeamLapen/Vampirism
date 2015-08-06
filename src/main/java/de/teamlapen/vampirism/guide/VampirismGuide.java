@@ -212,17 +212,17 @@ public class VampirismGuide{
 		ArrayList<IPage> hunter =new ArrayList<IPage>();
 		hunter.add(new PageImage(new ResourceLocation(REFERENCE.MODID + ":guide/screenshots/hunter.png")));
 		hunter.addAll(PageHelper.pagesForLongText(locAndFormat("guide.vampirism.mobs.hunter.text", BALANCE.VAMPIRE_HUNTER_ATTACK_LEVEL)));
-		entries.add(new EntryUniText(hunter, "guide.vampirism.mobs.hunter.title"));
+		entries.add(new EntryUniText(hunter, "entity." + REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME + ".name"));
 
 		ArrayList<IPage> vampire_npc =new ArrayList<IPage>();
 		vampire_npc.add(new PageImage(new ResourceLocation(REFERENCE.MODID + ":guide/screenshots/vampire.png")));
 		vampire_npc.addAll(PageHelper.pagesForLongText(locAndFormat("guide.vampirism.mobs.vampire.text", BALANCE.VAMPIRE_FRIENDLY_LEVEL)));
-		entries.add(new EntryUniText(vampire_npc, "guide.vampirism.mobs.vampire.title"));
+		entries.add(new EntryUniText(vampire_npc, "entity." + REFERENCE.ENTITY.VAMPIRE_NAME + ".name"));
 
-		ArrayList<IPage> vampire_lord =new ArrayList<IPage>();
-		vampire_lord.add(new PageImage(new ResourceLocation(REFERENCE.MODID + ":guide/screenshots/vampire_lord.png")));
-		vampire_lord.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.mobs.vampire_lord.text", true)));
-		entries.add(new EntryUniText(vampire_lord, "guide.vampirism.mobs.vampire_lord.title"));
+		ArrayList<IPage> vampire_baron = new ArrayList<IPage>();
+		vampire_baron.add(new PageImage(new ResourceLocation(REFERENCE.MODID + ":guide/screenshots/vampire_baron.png")));
+		vampire_baron.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.mobs.vampire_baron.text", true)));
+		entries.add(new EntryUniText(vampire_baron, "entity." + REFERENCE.ENTITY.VAMPIRE_BARON + ".name"));
 
 		ArrayList<IPage> vampire_minion =new ArrayList<IPage>();
 		vampire_minion.add(new PageImage(new ResourceLocation(REFERENCE.MODID + ":guide/screenshots/vampire_minion.png")));

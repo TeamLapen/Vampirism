@@ -16,7 +16,7 @@ guide.vampirism.gettingStarted.asAVampire.text=Once you become a Vampire, one of
 #Items and Blocks
 guide.vampirism.itemsAndBlocks.category=Items and Blocks
 guide.vampirism.itemsAndBlocks.found.title=Found in the world
-guide.vampirism.itemsAndBlocks.found.pureBlood=Is dropped by Vampire Lords in different purity levels depending on the Lords level. Required for the higher tier rituals.
+guide.vampirism.itemsAndBlocks.found.pureBlood=Is dropped by Vampire Barons in different purity levels depending on the Barons level. Required for the higher tier rituals.
 guide.vampirism.itemsAndBlocks.found.bloodAltar1=This block can act as a beacon and gives you a speed as well as a saturation effect (you consume less blood). But to enable this effect, you have to craft yourself a "Leech" sword and fill it with blood by killing villagers or other creatures with it. Then you can insert the sword into the block which enables the effect, but slowly depletes the sword. The block cannot be crafted, but has to be found in swamplands.
 guide.vampirism.itemsAndBlocks.found.vampireFlower=Vampire Orchids can be found in the vampire biome.
 guide.vampirism.itemsAndBlocks.found.humanHearth=These are dropped by vampire hunters. You can either eat them to get a large amount of blood or use them in several rituals.
@@ -49,11 +49,8 @@ guide.vampirism.levels.category=How to level up
 #Mobs
 guide.vampirism.mobs.category=Mobs
 guide.vampirism.mobs.hunter.text=Hunts vampires ;)/nOnly attacks players with a vampire level higher than %s./nVampire Hunters near villages try to defend their village.
-guide.vampirism.mobs.hunter.title=Vampire Hunter
 guide.vampirism.mobs.vampire.text=Attacks players as long as they don't have a vampire level higher than %s./nAlso attacks villagers and makes them to vampire./nNight active
-guide.vampirism.mobs.vampire.title=Vampire
-guide.vampirism.mobs.vampire_lord.text=Spawns rarely in vampire biomes./nOccurs in different levels partially depending on the players level./nDrops pure blood./nIs very strong and summons minions which help him
-guide.vampirism.mobs.vampire_lord.title=Vampire Lord
+guide.vampirism.mobs.vampire_baron.text=Spawns rarely in vampire biomes./nOccurs in different levels partially depending on the players level./nDrops pure blood./nIs very strong and summons minions which help him
 guide.vampirism.mobs.vampire_minion.title=Vampire Minion
 guide.vampirism.mobs.vampire_minion.text=Are subordinated to their lord./nHave the texture of their lord./nCan be controlled by vampire lord players.
 guide.vampirism.mobs.ghost.text=Spawns in the vampire biome.

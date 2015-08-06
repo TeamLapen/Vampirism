@@ -21,6 +21,7 @@ import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.TickRunnable;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
@@ -159,11 +160,12 @@ public abstract class CommonProxy implements IProxy {
 
 		registerEntity(EntityVampireHunter.class, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, BALANCE.VAMPIRE_HUNTER_SPAWN_PROBE, 1, 2, EnumCreatureType.creature, allBiomesNoVampire);
 		registerEntity(EntityVampire.class, REFERENCE.ENTITY.VAMPIRE_NAME, BALANCE.VAMPIRE_SPAWN_PROBE, 1, 3, EnumCreatureType.monster, allBiomesNoVampire);
-		registerEntity(EntityVampireLord.class, REFERENCE.ENTITY.VAMPIRE_LORD_NAME,true);
+		registerEntity(EntityVampireBaron.class, REFERENCE.ENTITY.VAMPIRE_BARON, true);
+		EntityList.stringToClassMapping.put("vampirism.vampireLord", EntityVampireBaron.class);
 		registerEntity(EntitySaveableVampireMinion.class, REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME, false);
 		registerEntity(EntityRemoteVampireMinion.class, REFERENCE.ENTITY.VAMPIRE_MINION_REMOTE_NAME, false);
 		registerEntity(EntityDeadMob.class, REFERENCE.ENTITY.DEAD_MOB_NAME, false);
-		registerEntity(EntityDracula.class, REFERENCE.ENTITY.DRACULA_NAME, true);//TODO disable egg again
+		registerEntity(EntityDracula.class, REFERENCE.ENTITY.DRACULA_NAME, false);
 		registerEntity(EntityGhost.class, REFERENCE.ENTITY.GHOST_NAME,true);
 		registerEntity(EntityBlindingBat.class, REFERENCE.ENTITY.BLINDING_BAT_NAME, false);
 		registerEntity(EntityDummyBittenAnimal.class,REFERENCE.ENTITY.DUMMY_CREATURE,false);
