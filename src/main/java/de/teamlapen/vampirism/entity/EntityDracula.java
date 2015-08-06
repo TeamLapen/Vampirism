@@ -47,6 +47,7 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 		this.tasks.addTask(13, new EntityAILookIdle(this));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
+		this.experienceValue = 100;
 	}
 
 	@Override

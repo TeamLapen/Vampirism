@@ -27,6 +27,7 @@ item.vampirism.vampireArmor_boots.name=Vampire's boots
 item.vampirism.vampireArmor_chestplate.name=Vampire's chestplate
 item.vampirism.minionNameTag.name=Minion name tag
 item.vampirism.gemOfBinding.name=Gem of Binding
+item.vampirism.bloodEye.name=Blood Eye
 
 # Blocks
 block.vampirism.bloodAltar.name=Blood Altar of Saturation

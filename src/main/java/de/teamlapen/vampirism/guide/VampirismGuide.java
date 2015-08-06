@@ -33,6 +33,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 
 public class VampirismGuide{
 	public static Book vampirismGuide;
@@ -108,14 +109,27 @@ public class VampirismGuide{
 		entries.add(new EntryUniText(armor,"guide.vampirism.itemsAndBlocks.armor.title"));
 		
 		ArrayList<IPage> altar = new ArrayList<IPage>();
-		altar.add(new PageLocText(locAndFormat("guide.vampirism.itemsAndBlocks.altars.altar2.text",TileEntityBloodAltar2.MIN_LEVEL,TileEntityBloodAltar2.MAX_LEVEL)));
+		altar.add(new PageLocText(locAndFormat("guide.vampirism.itemsAndBlocks.altars.altar2.text", TileEntityBloodAltar2.MIN_LEVEL, TileEntityBloodAltar2.MAX_LEVEL)));
 		altar.add(new PageIRecipe(getRecipe(ModBlocks.bloodAltar2)));
-		altar.add(new PageUnlocText(locAndFormat("guide.vampirism.itemsAndBlocks.altars.altar4.text",loc(ModBlocks.bloodAltar4.getUnlocalizedName()+".name"),TileEntityBloodAltar4.MIN_LEVEL)));
+		altar.add(new PageUnlocText(locAndFormat("guide.vampirism.itemsAndBlocks.altars.altar4.text", loc(ModBlocks.bloodAltar4.getUnlocalizedName() + ".name"), TileEntityBloodAltar4.MIN_LEVEL)));
 		altar.add(new PageIRecipe(getRecipe(ModBlocks.bloodAltar4)));
 		altar.add(new PageIRecipe(getRecipe(ModBlocks.bloodAltar4Tip)));
-		entries.add(new EntryUniText(altar,"guide.vampirism.itemsAndBlocks.altars.title"));
-		
-		entries.add(createCraftableStackEntry(new ItemStack(ModItems.coffin),"guide.vampirism.itemsAndBlocks.coffin.text"));
+		entries.add(new EntryUniText(altar, "guide.vampirism.itemsAndBlocks.altars.title"));
+
+		entries.add(createCraftableStackEntry(new ItemStack(ModItems.coffin), "guide.vampirism.itemsAndBlocks.coffin.text"));
+
+		EntryAbstract gemOfBinding = createCraftableStackEntry(new ItemStack(ModItems.gemOfBinding), "guide.vampirism.itemsAndBlocks.used_for_minions");
+		addLink("items_gemOfBinding", gemOfBinding);
+		entries.add(gemOfBinding);
+
+		EntryAbstract nameTag = createCraftableStackEntry(new ItemStack(ModItems.minionNameTag), "guide.vampirism.itemsAndBlocks.used_for_minions");
+		addLink("items_minion_name_tag", nameTag);
+		entries.add(nameTag);
+
+		EntryAbstract bloodEye = createCraftableStackEntry(new ItemStack(ModItems.bloodEye), "guide.vampirism.itemsAndBlocks.blood_eye.text");
+		addLink("items_blood_eye", bloodEye);
+		entries.add(bloodEye);
+
 		
 		categories.add(new CategoryItemStack(entries,"guide.vampirism.itemsAndBlocks.category",new ItemStack(ModItems.leechSword,1)));
 	}
@@ -145,7 +159,7 @@ public class VampirismGuide{
 		pagesAt4.add(createStructureRequirementsAltar4());
 		pagesAt4.add(new PageUnlocImage("guide.vampirism.levels.altar4.structure1.name",new ResourceLocation(REFERENCE.MODID+":guide/screenshots/altar4_structure1.png"),false));
 		pagesAt4.add(new PageUnlocImage("guide.vampirism.levels.altar4.structure2.name",new ResourceLocation(REFERENCE.MODID+":guide/screenshots/altar4_structure2.png"), false));
-		entries.add(addLink("level_altar_4", new EntryUniText(pagesAt4,at4t)));
+		entries.add(addLink("level_altar_4", new EntryUniText(pagesAt4, at4t)));
 		
 		categories.add(new CategoryItemStack(entries,"guide.vampirism.levels.category",new ItemStack(ModBlocks.bloodAltar2)));
 	}
@@ -239,7 +253,7 @@ public class VampirismGuide{
 		skills.addAll(PageHelper.pagesForLongText(locAndFormat("guide.vampirism.vplayer.skills.bat_transformation")));
 		skills.addAll(PageHelper.pagesForLongText(locAndFormat("guide.vampirism.vplayer.skills.revive_fallen")));
 		skills.add((new PageLocText(loc("guide.vampirism.vplayer.skills.end", true))));
-		entries.add(new EntryUniText(skills, "guide.vampirism.vplayer.skills.title"));
+		entries.add(addLink("vampire_skills", new EntryUniText(skills, "guide.vampirism.vplayer.skills.title")));
 
 		
 		categories.add(new CategoryItemStack(entries,"guide.vampirism.vplayer.category",new ItemStack(Items.skull, 1, 3)));
@@ -247,6 +261,36 @@ public class VampirismGuide{
 
 	private static void registerVampireLord() {
 		List<EntryAbstract> entries = new ArrayList<EntryAbstract>();
+		ArrayList<IPage> intro = new ArrayList<IPage>();
+		intro.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.vlord.introduction.text", true)));
+		entries.add(new EntryUniText(intro, "guide.vampirism.vlord.introduction.title"));
+
+		ArrayList<IPage> becomeOne = new ArrayList<IPage>();
+		becomeOne.addAll(PageHelper.pagesForLongText(locAndFormat("guide.vampirism.vlord.become.text", REFERENCE.HIGHEST_REACHABLE_LEVEL, loc(ModItems.bloodEye.getUnlocalizedName() + ".name"))));
+		addLinksToPages(becomeOne, "items_blood_eye");
+		entries.add(new EntryUniText(becomeOne, "guide.vampirism.vlord.become.title"));
+
+		ArrayList<IPage> about = new ArrayList<IPage>();
+		about.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.vlord.about.text", true)));
+		addLinksToPages(about, "lord_skills", "lord_minions", "lord_multiplayer");
+		entries.add(new EntryUniText(about, "guide.vampirism.vlord.about.title"));
+
+		ArrayList<IPage> multiplayer = new ArrayList<IPage>();
+		multiplayer.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.vlord.multiplayer.text", true)));
+		entries.add(addLink("lord_multiplayer", new EntryUniText(multiplayer, "guide.vampirism.vlord.multiplayer.title")));
+
+		ArrayList<IPage> skills = new ArrayList<IPage>();
+		skills.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.vlord.skills.text", true)));
+		addLinksToPages(skills, "vampire_skills");
+		entries.add(addLink("lord_skills", new EntryUniText(skills, "guide.vampirism.vlord.skills.title")));
+
+		ArrayList<IPage> minions = new ArrayList<IPage>();
+		minions.addAll(PageHelper.pagesForLongText(locAndFormat("guide.vampirism.vlord.minions.text", VampirismMod.proxy.getKey(KEY.MINION_CONTROL), loc(ModItems.gemOfBinding.getUnlocalizedName() + ".name"))));
+		addLinksToPages(minions, "items_gemOfBinding", "items_minion_name_tag");
+		entries.add(addLink("lord_minions", new EntryUniText(minions, "guide.vampirism.vlord.minions.title")));
+
+		categories.add(new CategoryItemStack(entries, "guide.vampirism.vlord.category", new ItemStack(ModItems.gemOfBinding)));
+
 	}
 
 	/**
@@ -318,7 +362,7 @@ public class VampirismGuide{
 	
 	
 	private static IRecipe getRecipe(Item item){
-		return getRecipe(new ItemStack(item,1));
+		return getRecipe(new ItemStack(item, 1));
 	}
 	private static IRecipe getRecipe(Block block){
 		return getRecipe(new ItemStack(block,1));
@@ -335,5 +379,22 @@ public class VampirismGuide{
 		}
 		
 		return null;
+	}
+
+	/**
+	 * Adds links to all included pages by replacing them with @link{PageHolderWithLinks}
+	 *
+	 * @param pages
+	 * @param links
+	 */
+	private static void addLinksToPages(ArrayList<IPage> pages, String... links) {
+		ListIterator<IPage> it = pages.listIterator();
+		while (it.hasNext()) {
+			PageHolderWithLinks newP = new PageHolderWithLinks(it.next());
+			for (String s : links) {
+				newP.addLink(s);
+			}
+			it.set(newP);
+		}
 	}
 }
