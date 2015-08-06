@@ -8,6 +8,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
+import de.teamlapen.vampirism.util.VampireLordData;
 import de.teamlapen.vampirism.villages.VillageVampireData;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;

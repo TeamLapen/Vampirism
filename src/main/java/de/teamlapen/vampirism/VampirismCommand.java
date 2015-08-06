@@ -2,6 +2,7 @@ package de.teamlapen.vampirism;
 
 import de.teamlapen.vampirism.generation.WorldGenVampirism;
 import de.teamlapen.vampirism.util.BasicCommand;
+import de.teamlapen.vampirism.util.VampireLordData;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;

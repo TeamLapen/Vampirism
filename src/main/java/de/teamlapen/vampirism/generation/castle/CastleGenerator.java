@@ -31,7 +31,7 @@ public class CastleGenerator extends WorldGenerator {
 
 	private final static String TAG = "CastleGenerator";
 	private static HashMap<String, BuildingTile> tileMap;
-	private final int MAX_TRYS = 0;//128;
+	private final int MAX_TRYS = 128;
 	private final int MAX_CASTLES = 3;
 	private final int MAX_SIZE = 6;
 	private final int MIN_SIZE = 4;

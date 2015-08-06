@@ -2,11 +2,11 @@ package de.teamlapen.vampirism.block;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.VampireLordData;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.castleDim.TeleporterCastle;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.util.VampireLordData;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPortal;
 import net.minecraft.client.renderer.texture.IIconRegister;

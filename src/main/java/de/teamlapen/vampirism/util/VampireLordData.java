@@ -1,10 +1,8 @@
-package de.teamlapen.vampirism;
+package de.teamlapen.vampirism.util;
 
 import cpw.mods.fml.common.gameevent.TickEvent;
+import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;

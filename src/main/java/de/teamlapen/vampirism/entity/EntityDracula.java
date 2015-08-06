@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.ModBlocks;
-import de.teamlapen.vampirism.VampireLordData;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.ai.DraculaAIHeal;
 import de.teamlapen.vampirism.entity.minions.EntitySaveableVampireMinion;
@@ -9,10 +8,7 @@ import de.teamlapen.vampirism.entity.minions.EntityVampireMinion;
 import de.teamlapen.vampirism.generation.castle.CastlePositionData;
 import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
-import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.util.*;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.boss.BossStatus;

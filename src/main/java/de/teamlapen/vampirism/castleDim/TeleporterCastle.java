@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.castleDim;
 
-import de.teamlapen.vampirism.VampireLordData;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.generation.castle.CastlePositionData;
 import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.VampireLordData;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
