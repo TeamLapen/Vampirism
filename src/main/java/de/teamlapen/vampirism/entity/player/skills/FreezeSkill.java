@@ -54,7 +54,7 @@ public class FreezeSkill extends DefaultSkill {
 			e.addPotionEffect(new PotionEffect(Potion.jump.id, BALANCE.VP_SKILLS.FREEZE_DURATION * 20, 128));
 			Helper.spawnParticlesAroundEntity(e, "snowshovel", 1.5, 40);
 		}
-		return false;
+		return l.size() > 0;
 	}
 
 }

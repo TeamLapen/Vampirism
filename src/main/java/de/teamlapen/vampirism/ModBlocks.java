@@ -1,6 +1,9 @@
 package de.teamlapen.vampirism;
 
+import cpw.mods.fml.common.registry.GameRegistry;
 import de.teamlapen.vampirism.block.*;
+import de.teamlapen.vampirism.block.BlockBloodAltar4Tip.TileEntityBloodAltar4Tip;
+import de.teamlapen.vampirism.block.BlockChurchAltar.TileEntityChurchAltar;
 import de.teamlapen.vampirism.item.ItemMetaBlock;
 import de.teamlapen.vampirism.tileEntity.*;
 import net.minecraft.block.BlockStairs;
@@ -9,11 +12,7 @@ import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemBlockWithMetadata;
 import net.minecraft.item.ItemStack;
-import cpw.mods.fml.common.registry.GameRegistry;
-import de.teamlapen.vampirism.block.BlockBloodAltar4Tip.TileEntityBloodAltar4Tip;
-import de.teamlapen.vampirism.block.BlockChurchAltar.TileEntityChurchAltar;
 
 public class ModBlocks {
 
@@ -77,5 +76,10 @@ public class ModBlocks {
 		GameRegistry.addRecipe(new ItemStack(bloodAltar4, 1), "   ", "YZY", "ZZZ", 'Y', Items.gold_ingot, 'Z', Blocks.obsidian);
 		GameRegistry.addRecipe(new ItemStack(bloodAltar4Tip, 1), "   ", " X ", "XYX", 'X', Items.iron_ingot, 'Y', Blocks.iron_block);
 		GameRegistry.addRecipe(new ItemStack(castleBlock,1,0),"XXX","XYX","XXX",'X',Blocks.stonebrick,'Y',ModBlocks.vampireFlower);
+		GameRegistry.addShapelessRecipe(new ItemStack(castleBlock, 8, 1), castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, new ItemStack(Items.dye, 1, 0));
+		GameRegistry.addRecipe(new ItemStack(castleSlab, 6, 0), "XXX", 'X', new ItemStack(castleBlock, 1, 0));
+		GameRegistry.addRecipe(new ItemStack(castleSlab, 6, 1), "XXX", 'X', new ItemStack(castleBlock, 1, 1));
+		GameRegistry.addRecipe(new ItemStack(castleStairsDark, 1), "  X", " XX", "XXX", 'X', new ItemStack(castleBlock, 1, 1));
+		GameRegistry.addRecipe(new ItemStack(castleStairsPurple, 1), "  X", " XX", "XXX", 'X', new ItemStack(castleBlock, 1, 0));
 	}
 }

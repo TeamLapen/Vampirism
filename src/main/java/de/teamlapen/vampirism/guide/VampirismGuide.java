@@ -130,7 +130,15 @@ public class VampirismGuide{
 		addLink("items_blood_eye", bloodEye);
 		entries.add(bloodEye);
 
-		
+		ArrayList<IPage> castleBlocks = new ArrayList<IPage>();
+		castleBlocks.add(new PageIRecipe(getRecipe(new ItemStack(ModBlocks.castleBlock, 1, 0))));
+		castleBlocks.add(new PageIRecipe(getRecipe(new ItemStack(ModBlocks.castleBlock, 1, 1))));
+		castleBlocks.add(new PageIRecipe(getRecipe(new ItemStack(ModBlocks.castleSlab, 1, 0))));
+		castleBlocks.add(new PageIRecipe(getRecipe(new ItemStack(ModBlocks.castleSlab, 1, 1))));
+		castleBlocks.add(new PageIRecipe(getRecipe(new ItemStack(ModBlocks.castleStairsPurple, 1))));
+		castleBlocks.add(new PageIRecipe(getRecipe(new ItemStack(ModBlocks.castleStairsDark, 1, 0))));
+
+		entries.add(new EntryUniText(castleBlocks, ModBlocks.castleBlock.getUnlocalizedName() + ".name"));
 		categories.add(new CategoryItemStack(entries,"guide.vampirism.itemsAndBlocks.category",new ItemStack(ModItems.leechSword,1)));
 	}
 	

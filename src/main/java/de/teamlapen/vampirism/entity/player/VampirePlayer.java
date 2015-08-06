@@ -347,7 +347,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		if (this.isVampireLord()) {
 			list.add(new DefaultPieElement(1, "minioncommand.vampirism.comeback", 128, 0, minionCommandIconLoc, new float[]{1, 1, 0.05F}));
 			list.add(new DefaultPieElement(2, "minioncommand.vampirism.defendlord", 64, 0, minionCommandIconLoc, new float[] { 0.88F, 0.45F, 0 }));
-			list.add(new DefaultPieElement(5, "minioncommand.vampirism.justfollow", 32, 0, minionCommandIconLoc, new float[] { 0.88F, 0.45F, 0 }));
+			list.add(new DefaultPieElement(5, "minioncommand.vampirism.justfollow", 112, 0, minionCommandIconLoc, new float[]{0.88F, 0.45F, 0}));
 			if (this.getMinionHandler().getMinionCount() > 0) {
 				list.add(new DefaultPieElement(3, "minioncommand.vampirism.attackhostilenoplayers", 0, 0, minionCommandIconLoc, new float[] { 0.6F, 0.3F, 0.01F }));
 				list.add(new DefaultPieElement(4, "minioncommand.vampirism.attackhostile", 32, 0, minionCommandIconLoc, new float[] { 0.6F, 0.3F, 0.01F }));
@@ -1129,8 +1129,15 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		}
 
 		if (e instanceof EntityVampire && this.isVampireLord()) {
-			this.makeVampireToMinion((EntityVampire) e);
-			return;
+			PotionEffect p1 = e.getActivePotionEffect(Potion.moveSlowdown);
+			if (p1 != null && p1.getAmplifier() == 10) {
+				PotionEffect p2 = e.getActivePotionEffect(Potion.jump);
+				if (p2 != null && p2.getAmplifier() == 128) {
+					this.makeVampireToMinion((EntityVampire) e);
+					return;
+				}
+			}
+
 		}
 		VampireMob mob = VampireMob.get(e);
 		int amount = mob.bite();

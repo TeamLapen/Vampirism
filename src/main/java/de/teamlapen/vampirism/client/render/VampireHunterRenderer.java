@@ -1,5 +1,11 @@
 package de.teamlapen.vampirism.client.render;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import de.teamlapen.vampirism.client.model.ModelVHVillager;
+import de.teamlapen.vampirism.client.model.ModelVampireHunter;
+import de.teamlapen.vampirism.entity.EntityVampireHunter;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderLiving;
@@ -8,15 +14,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.client.model.ModelVHVillager;
-import de.teamlapen.vampirism.client.model.ModelVampireHunter;
-import de.teamlapen.vampirism.entity.EntityVampireHunter;
-import de.teamlapen.vampirism.util.REFERENCE;
 
 @SideOnly(Side.CLIENT)
 public class VampireHunterRenderer extends RenderBiped {
@@ -72,7 +70,7 @@ public class VampireHunterRenderer extends RenderBiped {
 	@Override
 	public void doRender(EntityLiving entity, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
 		int level = ((EntityVampireHunter) entity).getLevel();
-		if (level == 3) {
+		if (level == 3 || level == 4) {
 			rendererLevel3.doRender(entity, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
 		}
 		if (level == 2) {

@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.DifficultyCalculator.Difficulty;
 import de.teamlapen.vampirism.util.DifficultyCalculator.IAdjustableLevel;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -19,19 +20,21 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 
 /**
- * Vampire Hunter with three levels: Level 1: Agressive villager, Level 2: Professional hunter, Level 3: Professional hunter with axe and stake
+ * Vampire Hunter with three levels: Level 1: Agressive villager, Level 2: Professional hunter, Level 3: Professional hunter with axe and stake, Level 4: see 3 but with potion effects
  * 
  * @author Maxanier
  *
  */
 public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjustableLevel {
 
-	private final static int MAX_LEVEL = 3;
+	private final static int MAX_LEVEL = 4;
 	private boolean isLookingForHome;
 	protected int level = 0;
 
@@ -217,6 +220,10 @@ public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjust
 			} else {
 				this.setCurrentItemOrArmor(0, null);
 			}
+			if (level == 4) {
+				this.addPotionEffect(new PotionEffect(Potion.resistance.id, 100000, 1));
+				this.addPotionEffect(new PotionEffect(Potion.damageBoost.id, 10000, 2));
+			}
 			if (sync && !this.worldObj.isRemote) {
 				NBTTagCompound nbt = new NBTTagCompound();
 				nbt.setInteger("level", level);
@@ -228,6 +235,11 @@ public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjust
 
 	@Override
 	public int suggestLevel(Difficulty d) {
+		if (d.maxLevel == REFERENCE.HIGHEST_REACHABLE_LEVEL) {
+			if (this.rand.nextInt(d.maxLevel - d.avgLevel + 1) == 0) {
+				return 4;
+			}
+		}
 		return this.rand.nextInt(2) + 2;
 	}
 

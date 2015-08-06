@@ -1,18 +1,18 @@
 package de.teamlapen.vampirism.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.REFERENCE;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EntityDeadMob extends Entity {
 
@@ -79,6 +79,7 @@ public class EntityDeadMob extends Entity {
 		EntityCreature e = (EntityCreature) EntityList.createEntityByName(getDeadMob(), worldObj);
 		if (e != null) {
 			e.copyLocationAndAnglesFrom(this);
+			e.setHealth(e.getMaxHealth() * 2 / 3);
 			worldObj.spawnEntityInWorld(e);
 		} else {
 			Logger.w(TAG, "Could not create entity: " + getDeadMob());

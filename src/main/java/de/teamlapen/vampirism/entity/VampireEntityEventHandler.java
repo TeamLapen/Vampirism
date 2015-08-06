@@ -15,12 +15,14 @@ import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityIronGolem;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -135,6 +137,13 @@ public class VampireEntityEventHandler {
 			if (CastlePositionData.get(event.world).isPosAt(MathHelper.floor_double(event.entity.posX), MathHelper.floor_double(event.entity.posZ))) {
 				((EntityVampire) event.entity).makeCastleVampire();
 			}
+		} else if (event.entity instanceof EntityZombie) {
+			try {
+				((EntityZombie) event.entity).tasks.addTask(3, new EntityAIAttackOnCollide((EntityCreature) event.entity, DefaultVampire.class, 1.0F, false));
+			} catch (Exception e) {
+				Logger.e("EntityEventHandler", e, "Failed to add attack task to zombie %s", event.entity);
+			}
+
 		}
 	}
 

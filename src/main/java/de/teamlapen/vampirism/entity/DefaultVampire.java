@@ -54,6 +54,7 @@ public abstract class DefaultVampire extends EntityMob {
 		this.tasks.addTask(5, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.1, false));
 		this.tasks.addTask(5, new EntityAIAttackOnCollide(this, EntityVampireHunter.class, 1.0, true));
 		this.tasks.addTask(6, new EntityAIAttackOnCollide(this, EntityVillager.class, 0.9, true));
+		this.tasks.addTask(6, new EntityAIAttackOnCollide(this, DefaultVampire.class, 0.9, true));
 	}
 
 	@Override
