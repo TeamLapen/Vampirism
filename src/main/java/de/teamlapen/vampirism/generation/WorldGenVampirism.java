@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.villages.VillageVampireData;
 import net.minecraft.entity.Entity;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.IChunkProvider;
 
@@ -43,7 +44,7 @@ public class WorldGenVampirism implements IWorldGenerator {
 	 *            ZCoord
 	 */
 	private void addEntities(World world, Random random, int x, int z) {
-
+		if(world.provider.terrainType== WorldType.FLAT)return;
 		// Added try/catch block to resolve issue #15
 		try {
 			int y = world.getHeightValue(x, z);

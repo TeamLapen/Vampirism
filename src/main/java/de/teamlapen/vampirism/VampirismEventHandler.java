@@ -8,6 +8,7 @@ import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
+import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.VampireLordData;
 import de.teamlapen.vampirism.villages.VillageVampireData;
 import net.minecraft.entity.item.EntityItem;
@@ -17,10 +18,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.event.entity.player.BonemealEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.world.WorldEvent;
+import org.apache.commons.lang3.ArrayUtils;
 
 public class VampirismEventHandler {
 	@SubscribeEvent
@@ -98,5 +101,15 @@ public class VampirismEventHandler {
 			//Reset the castle fail notice
 			VampirismMod.vampireCastleFail = false;
 		}
+	}
+
+	@SubscribeEvent
+	public void onWorldWpsnasdf(WorldEvent.PotentialSpawns event) {
+		Logger.t("Spawns %s", ArrayUtils.toString(event.list.toArray()));
+	}
+
+	@SubscribeEvent
+	public void asdf(LivingSpawnEvent.CheckSpawn event) {
+		Logger.t("Checking %s", event.entity);
 	}
 }

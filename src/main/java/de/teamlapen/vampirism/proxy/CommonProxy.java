@@ -33,8 +33,10 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
@@ -147,18 +149,18 @@ public abstract class CommonProxy implements IProxy {
 	@Override public void registerEntitys() {
 		// Create a array of all biomes except hell and end
 		BiomeGenBase[] allBiomes = BiomeGenBase.getBiomeGenArray();
-		allBiomes = allBiomes.clone();
+		allBiomes = Arrays.copyOf(allBiomes, allBiomes.length);
 		allBiomes[9] = null;
 		allBiomes[8] = null;
-		BiomeGenBase[] allBiomesNoVampire = allBiomes.clone();
+		BiomeGenBase[] allBiomesNoVampire = Arrays.copyOf(allBiomes, allBiomes.length);
 		int vId = ModBiomes.biomeVampireForest.biomeID;
 		if (vId > 0 && vId < allBiomes.length) {
 			allBiomesNoVampire[vId] = null;
 		}
 		BiomeGenBase[] biomes = Iterators.toArray(Iterators.filter(Iterators.forArray(allBiomes), Predicates.notNull()), BiomeGenBase.class);
 		allBiomesNoVampire = Iterators.toArray(Iterators.filter(Iterators.forArray(allBiomesNoVampire), Predicates.notNull()), BiomeGenBase.class);
-
-		registerEntity(EntityVampireHunter.class, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, BALANCE.VAMPIRE_HUNTER_SPAWN_PROBE, 1, 2, EnumCreatureType.creature, allBiomesNoVampire);
+		Logger.t(ArrayUtils.toString(allBiomesNoVampire));
+		registerEntity(EntityVampireHunter.class, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, BALANCE.VAMPIRE_HUNTER_SPAWN_PROBE, 1, 2, EnumCreatureType.monster, allBiomesNoVampire);
 		registerEntity(EntityVampire.class, REFERENCE.ENTITY.VAMPIRE_NAME, BALANCE.VAMPIRE_SPAWN_PROBE, 1, 3, EnumCreatureType.monster, allBiomesNoVampire);
 		registerEntity(EntityVampireBaron.class, REFERENCE.ENTITY.VAMPIRE_BARON, true);
 		EntityList.stringToClassMapping.put("vampirism.vampireLord", EntityVampireBaron.class);

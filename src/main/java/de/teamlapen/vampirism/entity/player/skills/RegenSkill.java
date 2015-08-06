@@ -1,18 +1,13 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 
 public class RegenSkill extends DefaultSkill {
-
-	@Override
-	public boolean canBeUsedBy(VampirePlayer vampire, EntityPlayer player) {
-		return !vampire.isVampireLord();
-	}
 
 	@Override
 	public int getCooldown() {

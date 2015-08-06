@@ -120,6 +120,7 @@ public class EntityVampireBaron extends DefaultVampireWithMinion implements ISyn
 
 	@Override
 	public void onDeath(DamageSource s) {
+		super.onDeath(s);
 		if (this.recentlyHit > 0 && this.worldObj.getGameRules().getGameRuleBooleanValue("doMobLoot")) {
 			if (level > 0 && level < 6) {
 				this.entityDropItem(new ItemStack(ModItems.pureBlood, 1, level - 1), 0.3F);
@@ -176,6 +177,7 @@ public class EntityVampireBaron extends DefaultVampireWithMinion implements ISyn
 			this.setHealth(this.getMaxHealth());
 		}
 	}
+
 
 	@Override
 	public void readEntityFromNBT(NBTTagCompound nbt) {

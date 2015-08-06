@@ -1,13 +1,20 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.player.EntityPlayer;
 import de.teamlapen.vampirism.entity.EntityDeadMob;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.player.EntityPlayer;
 
 public class ReviveFallenSkill extends DefaultSkill {
+
+
+	@Override
+	public boolean canBeUsedBy(VampirePlayer vampire, EntityPlayer player) {
+		if(vampire.isVampireLord())return false;
+		return super.canBeUsedBy(vampire, player);
+	}
 
 	@Override
 	public int getCooldown() {
@@ -21,13 +28,11 @@ public class ReviveFallenSkill extends DefaultSkill {
 
 	@Override
 	public int getMinU() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public int getMinV() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 

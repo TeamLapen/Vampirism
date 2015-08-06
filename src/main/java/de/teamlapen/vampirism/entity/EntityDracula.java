@@ -27,8 +27,10 @@ import java.util.List;
 public class EntityDracula extends DefaultVampireWithMinion implements IBossDisplayData {
 	private static final int DISAPPEAR_DELAY = 200;
 	private static final int TELEPORT_THRESHOLD = 30;
+	private static final int TELEPORT_DELAY = 80;
 	private AxisAlignedBB castle;
 	private int disappearDelay;
+	private int teleportDelay = 0;
 	private final int maxTeleportDistanceX = 16;
 	private final int maxTeleportDistanceY = 3;
 	private final int maxTeleportDistanceZ = 16;
@@ -198,6 +200,9 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 					this.teleportAway();
 				}
 			}
+			if (teleportDelay > 0) {
+				teleportDelay--;
+			}
 			if (this.isInWater() || this.handleLavaMovement()) {
 				this.teleportRandomly();
 			}
@@ -263,6 +268,7 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 
 	/** Teleports dracula randomly */
 	private boolean teleportRandomly() {
+		if (teleportDelay > 0) return false;
 		double d0 = this.posX + (this.rand.nextDouble() - 0.5D) * maxTeleportDistanceX;
 		double d1 = this.posY + (this.rand.nextInt((int) (maxTeleportDistanceY * 1.5)) - maxTeleportDistanceY * 0.5D);
 		double d2 = this.posZ + (this.rand.nextDouble() - 0.5D) * maxTeleportDistanceZ;
@@ -274,6 +280,7 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 					this.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 60, 2));
 					summonBats();
 				}
+				teleportDelay = TELEPORT_DELAY;
 				return true;
 			}
 		}

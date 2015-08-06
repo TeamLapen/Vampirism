@@ -1,16 +1,16 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.BALANCE;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.util.BALANCE;
 
 public class VampireRageSkill extends DefaultSkill implements ILastingSkill {
 
 	@Override
 	public boolean canBeUsedBy(VampirePlayer vampire, EntityPlayer player) {
-		return !vampire.isSkillActive(Skills.batMode) && !vampire.isVampireLord();
+		return !vampire.isSkillActive(Skills.batMode);
 	}
 
 	@Override

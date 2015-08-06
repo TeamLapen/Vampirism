@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.entity.DefaultVampire;
 import de.teamlapen.vampirism.entity.EntityDracula;
 import de.teamlapen.vampirism.entity.EntityPortalGuard;
+import de.teamlapen.vampirism.entity.EntityVampireBaron;
 import de.teamlapen.vampirism.entity.ai.MinionAIHurtByNonLord;
 import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.network.UpdateEntityPacket;
@@ -52,6 +53,11 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 		if (entity instanceof EntityPlayer) {
 			if (this.getLord() != null && this.getLord() instanceof EntityDracula) {
 				((EntityDracula) this.getLord()).restoreOnPlayerKill((EntityPlayer) entity);
+			}
+		}
+		else{
+			if(this.getLord() !=null && this.getLord() instanceof EntityVampireBaron){
+				((EntityVampireBaron) this.getLord()).onKillEntity(entity);
 			}
 		}
 	}
