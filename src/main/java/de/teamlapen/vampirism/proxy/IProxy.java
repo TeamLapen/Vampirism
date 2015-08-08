@@ -1,14 +1,12 @@
 package de.teamlapen.vampirism.proxy;
 
 import cpw.mods.fml.common.gameevent.TickEvent;
+import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.TickRunnable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
-import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
-import de.teamlapen.vampirism.util.REFERENCE;
 
 public interface IProxy {
 
@@ -19,28 +17,28 @@ public interface IProxy {
 	 * @param loc
 	 * @return
 	 */
-	public ResourceLocation checkVampireTexture(Entity entity, ResourceLocation loc);
+	ResourceLocation checkVampireTexture(Entity entity, ResourceLocation loc);
 
-	public void enableMaxPotionDuration(PotionEffect p);
+	void enableMaxPotionDuration(PotionEffect p);
 
 	/**
 	 * @return Clientside: thePlayer, Serverside: null
 	 */
-	public EntityPlayer getSPPlayer();
+	EntityPlayer getSPPlayer();
 
-	public void onTick(TickEvent event);
+	void onTick(TickEvent event);
 
-	public void addTickRunnable(TickRunnable run);
+	void addTickRunnable(TickRunnable run);
 
 	/**
 	 * Registeres all entitys
 	 */
-	public void registerEntitys();
+	void registerEntitys();
 
 	/**
 	 * Register keybindings
 	 */
-	public void registerKeyBindings();
+	void registerKeyBindings();
 
 	// Coffin methods
 	// public void wakeAllPlayers();
@@ -52,14 +50,14 @@ public interface IProxy {
 	/**
 	 * Registeres all renders
 	 */
-	public void registerRenderer();
+	void registerRenderer();
 
 	/**
 	 * Registers all important subscriptions, which should be registered at startup (init)
 	 */
-	public void registerSubscriptions();
+	void registerSubscriptions();
 
-	public void setPlayerBat(EntityPlayer player, boolean bat);
+	void setPlayerBat(EntityPlayer player, boolean bat);
 
-	public String getKey(REFERENCE.KEY key);
+	String getKey(REFERENCE.KEY key);
 }

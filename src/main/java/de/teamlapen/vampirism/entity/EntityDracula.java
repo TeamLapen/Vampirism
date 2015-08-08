@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
 import de.teamlapen.vampirism.util.*;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
-import net.minecraft.entity.boss.BossStatus;
 import net.minecraft.entity.boss.IBossDisplayData;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -244,8 +243,10 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 			this.heal(5F);
 		}
 
+		if (!this.worldObj.isRemote && this.isGettingSundamage()) {
+			this.makeDisappear();
+		}
 		super.onLivingUpdate();
-		BossStatus.setBossStatus(this, true);
 	}
 
 	private boolean minionInHomeDist(EntityCreature minion) {

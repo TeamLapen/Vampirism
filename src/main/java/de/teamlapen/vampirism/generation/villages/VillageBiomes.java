@@ -1,13 +1,14 @@
 package de.teamlapen.vampirism.generation.villages;
 
-import java.io.File;
-import java.util.regex.Pattern;
-
-import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import de.teamlapen.vampirism.Configs;
+import de.teamlapen.vampirism.ModBiomes;
 import de.teamlapen.vampirism.util.Logger;
+import net.minecraftforge.common.MinecraftForge;
+
+import java.io.File;
+import java.util.regex.Pattern;
 
 /**
  * All the initialization for new Village Biomes
@@ -44,6 +45,9 @@ public class VillageBiomes {
 		for (String name : ConfigHandler.getRemoveTypes()) {
 			Logger.d("VillageBiomes", "Removing all " + name + " biomes from village biomes.");
 			BiomeRegistrant.removeBiomesByTypeName(name);
+		}
+		if (!Configs.disable_vampire_biome) {
+			BiomeRegistrant.removeBiome(ModBiomes.biomeVampireForest);
 		}
 
 		// Register the custom village block replacer

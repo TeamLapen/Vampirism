@@ -15,11 +15,13 @@ import de.teamlapen.vampirism.util.VampireLordData;
 import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
 
 import java.util.List;
@@ -64,6 +66,7 @@ public class TestCommand extends BasicCommand {
 			protected void processCommand(ICommandSender sender, EntityPlayer player, VampirePlayer vampire, String[] param) {
 				vampire.setLevel(REFERENCE.HIGHEST_REACHABLE_LEVEL);
 				VampireLordData.get(player.worldObj).makeLord(player);
+				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(sender.getCommandSenderName() + " made himself a Vampire Lord"));
 			}
 
 			@Override
@@ -132,6 +135,24 @@ public class TestCommand extends BasicCommand {
 			@Override
 			public String getCommandName() {
 				return "entity";
+			}
+		});
+		addSub(new TestSubCommand() {
+			@Override
+			protected void processCommand(ICommandSender sender, EntityPlayer player, VampirePlayer vampire, String[] param) {
+				List l = player.worldObj.getEntitiesWithinAABBExcludingEntity(player, player.boundingBox.expand(3, 2, 3));
+				for (Object o : l) {
+					if (o instanceof EntityLivingBase) {
+						boolean flag = Helper.canReallySee((EntityLivingBase) o, player, false);
+						sendMessage(sender, "Result " + flag);
+						return;
+					}
+				}
+			}
+
+			@Override
+			public String getCommandName() {
+				return "look";
 			}
 		});
 		addSub(new TestSubCommand() {
@@ -209,6 +230,7 @@ public class TestCommand extends BasicCommand {
 		if (param != null && param.length == 1 && sender instanceof EntityPlayer) {
 			try {
 				VampirePlayer.get((EntityPlayer) sender).setLevel(Integer.parseInt(param[0]));
+				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(sender.getCommandSenderName() + " changed his vampire level to " + VampirePlayer.get((EntityPlayer) sender).getLevel()));
 				return;
 			} catch (NumberFormatException e) {
 

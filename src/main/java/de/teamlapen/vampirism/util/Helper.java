@@ -361,4 +361,32 @@ public class Helper {
 		sendMessageToAllExcept(null,message);
 	}
 
+
+	/**
+	 * Checks if the target entity is in the field of view (180 degree) of the base entity. Only works reliable for players (due to server-client sync)
+	 *
+	 * @param entity
+	 * @param target
+	 * @param alsoRaytrace Raytraces first
+	 * @return
+	 */
+	public static boolean canReallySee(EntityLivingBase entity, EntityLivingBase target, boolean alsoRaytrace) {
+		if (alsoRaytrace && !entity.canEntityBeSeen(target)) {
+			return false;
+		}
+
+		Vec3 look1 = Vec3.createVectorHelper(Math.cos(entity.rotationYawHead / 180 * Math.PI), 0, Math.sin(entity.rotationYawHead / 180 * Math.PI));
+		Vec3 dist = Vec3.createVectorHelper(target.posX - entity.posX, 0, target.posZ - entity.posZ);
+		look1.yCoord = 0;
+		look1 = look1.normalize();
+		dist = dist.normalize();
+		//Check if the vector is left or right of look1
+		double a = look1.xCoord == 0d ? 0 : look1.zCoord / look1.xCoord;
+		boolean left = (dist.xCoord * a < dist.zCoord);
+		double alpha = Math.acos(look1.dotProduct(dist));
+		if (left) alpha *= -1;
+		return alpha > 0;
+
+	}
+
 }

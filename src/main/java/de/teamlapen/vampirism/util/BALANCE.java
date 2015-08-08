@@ -197,12 +197,15 @@ public final class BALANCE {
 	@DefaultInt(value = 100, minValue = 0, name = "Vampire Spawn Probe", comment = "")
 	public static int VAMPIRE_SPAWN_PROBE;
 
-	@DefaultInt(value = 30, minValue = 0, name = "Vampire Lord Spawn Probe", comment = "")
+	@DefaultInt(value = 30, minValue = 0, name = "Vampire Lord Spawn Probe", comment = "Not used anymore")
 	public static int VAMPIRE_LORD_SPAWN_PROBE;
 
 	// Vampireplayer
 	@DefaultBoolean(value = true, name = "Vampire Player Loose Level", comment = "Whether vampireplayers should loose level if killed by a hunter")
 	public static boolean VAMPIRE_PLAYER_LOOSE_LEVEL;
+
+	@DefaultInt(value = 1, name = "Player min turn level", comment = "Minimum vampire level a player need to have to turn other creatures")
+	public static int VAMPIRE_PLAYER_MIN_TURN_LEVEL;
 
 	@DefaultDouble(value = 7.0D, minValue = 0D, name = "Vampire Player Sun Damage", comment = "")
 	public static double VAMPIRE_PLAYER_SUN_DAMAGE;

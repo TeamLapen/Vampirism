@@ -33,7 +33,6 @@ import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.oredict.OreDictionary;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -159,7 +158,6 @@ public abstract class CommonProxy implements IProxy {
 		}
 		BiomeGenBase[] biomes = Iterators.toArray(Iterators.filter(Iterators.forArray(allBiomes), Predicates.notNull()), BiomeGenBase.class);
 		allBiomesNoVampire = Iterators.toArray(Iterators.filter(Iterators.forArray(allBiomesNoVampire), Predicates.notNull()), BiomeGenBase.class);
-		Logger.t(ArrayUtils.toString(allBiomesNoVampire));
 		registerEntity(EntityVampireHunter.class, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, BALANCE.VAMPIRE_HUNTER_SPAWN_PROBE, 1, 2, EnumCreatureType.monster, allBiomesNoVampire);
 		registerEntity(EntityVampire.class, REFERENCE.ENTITY.VAMPIRE_NAME, BALANCE.VAMPIRE_SPAWN_PROBE, 1, 3, EnumCreatureType.monster, allBiomesNoVampire);
 		registerEntity(EntityVampireBaron.class, REFERENCE.ENTITY.VAMPIRE_BARON, true);

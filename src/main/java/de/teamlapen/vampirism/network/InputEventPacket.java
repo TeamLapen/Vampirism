@@ -1,8 +1,5 @@
 package de.teamlapen.vampirism.network;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.DamageSource;
 import cpw.mods.fml.common.network.ByteBufUtils;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -11,6 +8,9 @@ import de.teamlapen.vampirism.entity.minions.IMinion;
 import de.teamlapen.vampirism.entity.minions.MinionHelper;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Logger;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.DamageSource;
 
 public class InputEventPacket implements IMessage {
 	public static class Handler implements IMessageHandler<InputEventPacket, IMessage> {
@@ -28,7 +28,7 @@ public class InputEventPacket implements IMessage {
 				}
 				if (id != 0) {
 					EntityPlayer player = ctx.getServerHandler().playerEntity;
-					VampirePlayer.get(player).suckBlood(id);
+					VampirePlayer.get(player).bite(id);
 				}
 			} else if (message.action.equals(TOGGLEAUTOFILLBLOOD)) {
 				EntityPlayer player = ctx.getServerHandler().playerEntity;

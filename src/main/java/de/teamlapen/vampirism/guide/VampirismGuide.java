@@ -93,7 +93,7 @@ public class VampirismGuide{
 		found.add(new PageUnlocItemStack("guide.vampirism.itemsAndBlocks.found.vampireFlower",ModBlocks.vampireFlower));
 		found.add(new PageUnlocItemStack("guide.vampirism.itemsAndBlocks.found.bloodAltar1",ModBlocks.bloodAltar1));
 		found.add(new PageUnlocItemStack("guide.vampirism.itemsAndBlocks.found.pureBlood",ModItems.pureBlood));
-		entries.add(new EntryUniText(found,"guide.vampirism.itemsAndBlocks.found.title"));
+		entries.add(addLink("items_found", new EntryUniText(found, "guide.vampirism.itemsAndBlocks.found.title")));
 		
 		String bBottle=locAndFormat("guide.vampirism.itemsAndBlocks.bBottle.text", VampirismMod.proxy.getKey(KEY.AUTO));
 		entries.add(createCraftableStackEntryLoc(new ItemStack(ModItems.bloodBottle),bBottle));
@@ -163,7 +163,7 @@ public class VampirismGuide{
 		pagesAt4.add(new PageIRecipe(getRecipe(ModBlocks.bloodAltar4)));
 		pagesAt4.add(new PageIRecipe(getRecipe(ModBlocks.bloodAltar4Tip)));
 		pagesAt4.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.levels.altar4.text")));
-		pagesAt4.add(createItemRequirementsAltar4());
+		pagesAt4.add(new PageHolderWithLinks(createItemRequirementsAltar4()).addLink("items_found"));
 		pagesAt4.add(createStructureRequirementsAltar4());
 		pagesAt4.add(new PageUnlocImage("guide.vampirism.levels.altar4.structure1.name",new ResourceLocation(REFERENCE.MODID+":guide/screenshots/altar4_structure1.png"),false));
 		pagesAt4.add(new PageUnlocImage("guide.vampirism.levels.altar4.structure2.name",new ResourceLocation(REFERENCE.MODID+":guide/screenshots/altar4_structure2.png"), false));
@@ -184,7 +184,7 @@ public class VampirismGuide{
 		builder.addLine(10, "1 Purity(3)", 5);
 		builder.addLine(11, "1 Purity(4)", 10);
 		builder.addLine(12, "1 Purity(4)", 5);
-		builder.addLine(13, "1 Purity(5)", 0);
+		builder.addLine(13, "2 Purity(5)", 0);
 		builder.setHeadline(loc("guide.vampirism.levels.altar4.item_req"));
 		return builder.build();
 	}

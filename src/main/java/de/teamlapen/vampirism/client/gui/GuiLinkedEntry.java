@@ -4,6 +4,8 @@ import amerifrance.guideapi.api.abstraction.CategoryAbstract;
 import amerifrance.guideapi.api.abstraction.EntryAbstract;
 import amerifrance.guideapi.api.base.Book;
 import amerifrance.guideapi.gui.GuiEntry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.entity.player.EntityPlayer;
@@ -22,6 +24,7 @@ public class GuiLinkedEntry extends GuiEntry {
         this.fromPage = fromPage;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void actionPerformed(GuiButton button) {
         if (button.id == 0) {

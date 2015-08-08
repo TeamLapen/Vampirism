@@ -1,14 +1,14 @@
 package de.teamlapen.vampirism.generation.villages;
 
-import java.util.HashSet;
-import java.util.Set;
-
+import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.BiomeManager;
-import de.teamlapen.vampirism.util.Logger;
 import org.eclipse.jdt.annotation.NonNull;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Adds and removes biomes where villages will be generated

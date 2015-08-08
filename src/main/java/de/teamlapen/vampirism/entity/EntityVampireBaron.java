@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.ModItems;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.minions.IMinion;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.generation.castle.CastlePositionData;
@@ -162,7 +161,7 @@ public class EntityVampireBaron extends DefaultVampireWithMinion implements ISyn
 				m.setLord(this);
 			}
 		}
-		if (!this.worldObj.isRemote && VampirismMod.isSunDamageTime(this.worldObj)) {
+		if (!this.worldObj.isRemote && this.isGettingSundamage()) {
 			if (this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ))) {
 				this.teleportAway();
 			}
@@ -263,12 +262,11 @@ public class EntityVampireBaron extends DefaultVampireWithMinion implements ISyn
 	}
 
 	@Override public boolean getCanSpawnHere() {
-
 		int i = MathHelper.floor_double(this.boundingBox.minY);
 		//Only spawn on the surface
 		if(i<60)return false;
 		CastlePositionData data = CastlePositionData.get(worldObj);
-		if (!data.isPosAt(MathHelper.floor_double(posX), MathHelper.floor_double(posZ))) {
+		if (data.isPosAt(MathHelper.floor_double(posX), MathHelper.floor_double(posZ))) {
 			return false;
 		}
 		return super.getCanSpawnHere();
