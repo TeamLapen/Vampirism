@@ -3,7 +3,6 @@
 entity.vampirism.vampireHunter.name=Охотник на вампиров
 entity.vampirism.vampire.name=Вампир
 entity.vampirism.ghost.name=Призрак
-entity.vampirism.vampireLord.name=Лорд Вампиров
 entity.vampirism.vampireMinionR.name=Вампирский миньон
 entity.vampirism.vampireMinionS.name=Вампирский миньон
 entity.vampirism.blinding_bat.name=Летучая мышь
@@ -91,8 +90,6 @@ text.vampirism.thanks=Благодарю
 text.vampirism.coming_back=Я вернулся, мой лорд
 text.vampirism.sorry_i_died_while_doing=Мой лорд, прошу прощения, но я умер, пока выполнял ваше задание
 text.vampirism.current_task=Текущее задание
-text.vampirism.structure=Структура
-text.vampirism.pillar_blocks=Блоки колонны
 
 #Skill
 skill.vampirism.bat_skill=Обратиться в летучую мышь
@@ -125,3 +122,4 @@ category.vampirism.balance_mob_prop=Настройки мобов вампири
 category.vampirism.balance_mob_prop.tooltip=Изменить настройки мобов, добавленных Вампиризмом
 category.vampirism.balance_vv_prop=Настройки вампирских деревень
 category.vampirism.balance_vv_prop.tooltip=Изменить поведение охотников в деревнях и подправить другие вещи, касающиеся деревень
+

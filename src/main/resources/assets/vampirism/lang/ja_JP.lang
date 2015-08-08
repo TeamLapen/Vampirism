@@ -3,7 +3,6 @@
 entity.vampirism.vampireHunter.name=吸血鬼ハンター
 entity.vampirism.vampire.name=吸血鬼
 entity.vampirism.ghost.name=ゴースト
-entity.vampirism.vampireLord.name=ヴァンパイア卿
 entity.vampirism.vampireMinionR.name=吸血鬼の手先
 entity.vampirism.vampireMinionS.name=吸血鬼の手先
 entity.vampirism.blinding_bat.name=バット
@@ -91,8 +90,6 @@ text.vampirism.thanks=おかげで
 text.vampirism.coming_back=私は来て、私の主
 text.vampirism.sorry_i_died_while_doing=私の主よ、私は申し訳ありませんが、私はあなたの仕事を果たしながら死亡
 text.vampirism.current_task=現在のタスク
-text.vampirism.structure=構造
-text.vampirism.pillar_blocks=柱ブロック
 
 #Skill
 skill.vampirism.bat_skill=トグルバットモード
@@ -125,3 +122,4 @@ category.vampirism.balance_mob_prop=吸血鬼暴徒プロパティ
 category.vampirism.balance_mob_prop.tooltip=吸血によって追加されたモブのプロパティの変更
 category.vampirism.balance_vv_prop=村の吸血鬼プロパティ
 category.vampirism.balance_vv_prop.tooltip=村の道ハンター行動し、他の村を調整変更に関連するもの
+

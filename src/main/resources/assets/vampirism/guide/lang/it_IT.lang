@@ -1,7 +1,6 @@
 #X-Generator: crowdin.com
 #General
 guide.vampirism.book.title=Guida al vampirismo
-guide.vampirism.welcomeMessage=guide.vampirism.BenvenutoMessage
 guide.vamprism.book.name=Guida al vampirismo
 
 #Getting Started
@@ -16,7 +15,6 @@ guide.vampirism.gettingStarted.asAVampire.text=Una volta diventato un vampiro, u
 #Items and Blocks
 guide.vampirism.itemsAndBlocks.category=Blocchi e oggetti
 guide.vampirism.itemsAndBlocks.found.title=Trovato nel mondo
-guide.vampirism.itemsAndBlocks.found.pureBlood=È rilasciato dal Signore dei vampiri in livelli di purezza differente a seconda del livello dei vari signori dei vampiri. Necessaria per i rituali di livello superiore.
 guide.vampirism.itemsAndBlocks.found.bloodAltar1=Questo blocco può agire come un faro e ti dà una velocità così come un effetto di saturazione (si consuma meno sangue). Ma per attivare questo effetto, è necessario creare da soli la spada "Leech" che si riempie di sangue uccidendo gli abitanti dei villaggi o altre creature con la spada. Quindi è possibile inserire la spada nel blocco per attivare l'effetto, ma ciò esaurisce lentamente la spada. Il blocco non può essere realizzato, ma si da trovare nelle paludi.
 guide.vampirism.itemsAndBlocks.found.vampireFlower=Le orchidee vampiriche possono essere trovate nel Bioma vampirico.
 guide.vampirism.itemsAndBlocks.found.humanHearth=Questi vengono droppati dal cacciatori di vampiri. Si possono mangiare sia per ottenere una grande quantità di sangue o utilizzarli in diversi rituali.
@@ -47,11 +45,7 @@ guide.vampirism.levels.category=Come salire di livello
 #Mobs
 guide.vampirism.mobs.category=Mob
 guide.vampirism.mobs.hunter.text=Battute di caccia vampiri;) / Non solo attacca i giocatori con un livello di vampiro superiore %s. / nVampire cacciatori vicino a villaggi tenta di difendere il loro villaggio.
-guide.vampirism.mobs.hunter.title=Cacciatore di vampiri
 guide.vampirism.mobs.vampire.text=Attacca i giocatori fino a quando non hanno un livello di vampiro superiore %s. / ovviamente attacca gli abitanti del villaggio e li rende a vampiro. / Ooca attivo
-guide.vampirism.mobs.vampire.title=Vampiro
-guide.vampirism.mobs.vampire_lord.text=Spawna raramente nei biomi dei vampiri. / nOccurs in diversi livelli parzialmente a seconda del livello di giocatori. / nDrops puro sangue. / è molto forte e citazione tirapiedi che aiutano
-guide.vampirism.mobs.vampire_lord.title=Signore (Capo) dei vampiri
 guide.vampirism.mobs.vampire_minion.title=Schiavo dei vampiri
 guide.vampirism.mobs.vampire_minion.text=Sono subordinati al loro Signore. / nHave la consistenza del loro Signore. / n essere controllati da giocatori signore vampiro.
 guide.vampirism.mobs.ghost.text=Depone le uova nel Bioma vampiro.
@@ -71,7 +65,7 @@ guide.vampirism.vplayer.skills.revive_fallen=Abilità\: Rilanciare la caduta/n/n
 guide.vampirism.vplayer.skills.end=Ci sono molte altre abilità. Basta provarli.
 guide.vampirism.vplayer.skills.menu_text=Questo è l'abilità di toggle "abilità rosa" per
 
-
+#VampireLord
 
 
 

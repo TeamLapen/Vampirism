@@ -1,7 +1,6 @@
 #X-Generator: crowdin.com
 #General
 guide.vampirism.book.title=Guide du vampirisme
-guide.vampirism.welcomeMessage=guide.vampirism.welcomeMessage
 guide.vamprism.book.name=Guide du vampirisme
 
 #Getting Started
@@ -16,7 +15,6 @@ guide.vampirism.gettingStarted.asAVampire.text=Une fois que vous êtes un vampir
 #Items and Blocks
 guide.vampirism.itemsAndBlocks.category=Blocs et éléments
 guide.vampirism.itemsAndBlocks.found.title=Trouvé dans le monde
-guide.vampirism.itemsAndBlocks.found.pureBlood=Est lâché par les Seigneurs de Vampire dans les différent niveaux de pureté selon le niveau du Seigneur. Requis pour les rituels de niveau supérieurs.
 guide.vampirism.itemsAndBlocks.found.bloodAltar1=Ce bloc peut agir comme une balise et vous donne de la vitesse ainsi qu'un effet de saturation (vous consommez moins de sang). Mais pour permettre cet effet, vous avez à vous fabriquer une épée « Sangsue » et la remplir avec du sang en tuant le villageois ou autres créatures avec. Ensuite, vous pouvez insérer l'épée dans le bloc qui activel'effet, mais épuise lentement l'épée. Le bloc ne peut pas être conçu, mais doit être trouvée dans les marécages.
 guide.vampirism.itemsAndBlocks.found.vampireFlower=Les orchidées vampires peuvent être trouvées dans le biome vampire.
 guide.vampirism.itemsAndBlocks.found.humanHearth=Ils sont lâchés par les chasseurs de vampires. Vous pouvez les manger soit pour obtenir une grande quantité de sang ou les utiliser dans plusieurs rituels.
@@ -47,11 +45,7 @@ guide.vampirism.levels.category=Comment monter de niveau
 #Mobs
 guide.vampirism.mobs.category=Créatures
 guide.vampirism.mobs.hunter.text=Chassent les vampires ;)/nSeule les attaques de joueurs avec un niveau plus élevé que les %s./nChasseurs de Vampire près des villages essayent de défendre les villages.
-guide.vampirism.mobs.hunter.title=Chasseur de vampire
 guide.vampirism.mobs.vampire.text=Attaquent les joueurs tant qu'ils n'ont pas un niveau de vampire plus haut que %s./nAttaquent les villageois et les vampirisent./nActif la nuit
-guide.vampirism.mobs.vampire.title=Vampire
-guide.vampirism.mobs.vampire_lord.text=Apparaissent rarement dans les biomes vampire./nSurvient dans différents niveaux partiellement selon le niveau du joueur./nLache du sang pur./Sont très forts et invoquent des sbires qui l'aident
-guide.vampirism.mobs.vampire_lord.title=Seigneur vampire
 guide.vampirism.mobs.vampire_minion.title=Favori de vampire
 guide.vampirism.mobs.vampire_minion.text=Sont subordonnés à leur seigneur./nOnt la texture de leur seigneur./nPeut être contrôlé par les joueurs seigneurs de vampire.
 guide.vampirism.mobs.ghost.text=Apparaitre dans le biome vampire.
@@ -71,7 +65,7 @@ guide.vampirism.vplayer.skills.revive_fallen=Compétence \: Faire revivre les mo
 guide.vampirism.vplayer.skills.end=Il y a beaucoup plus de compétences. Essayez-les seulement.
 guide.vampirism.vplayer.skills.menu_text=Il s'agit de la « rose  à compétence» pour changer de compétence
 
-
+#VampireLord
 
 
 

@@ -1,7 +1,6 @@
 #X-Generator: crowdin.com
 #General
 guide.vampirism.book.title=Guia de vampirismo
-guide.vampirism.welcomeMessage=guide.vampirism.welcomeMessage
 guide.vamprism.book.name=Guia de vampirismo
 
 #Getting Started
@@ -16,7 +15,6 @@ guide.vampirism.gettingStarted.asAVampire.text=Depois de se tornar um vampiro, u
 #Items and Blocks
 guide.vampirism.itemsAndBlocks.category=Blocos e itens
 guide.vampirism.itemsAndBlocks.found.title=Encontrado no mundo
-guide.vampirism.itemsAndBlocks.found.pureBlood=É Descartado por Vampire Lords em níveis de pureza diferentes dependendo do nível de Lordes. Necessárias para os rituais de camada superiores.
 guide.vampirism.itemsAndBlocks.found.bloodAltar1=Este bloco pode agir como um farol e dá-lhe uma velocidade, bem como um efeito de saturação (você consumir menos sangue). Mas para ativar este efeito, você tem que se ofício uma espada "Sanguessuga" e preenchê-lo com sangue, matando os aldeões ou outras criaturas com isso. Então você pode inserir a espada para o bloco que permite que o efeito, mas esgota lentamente a espada. O bloco não pode ser trabalhado, mas tem que ser encontrada em pântanos.
 guide.vampirism.itemsAndBlocks.found.vampireFlower=Orquídeas de vampiro podem ser encontradas no bioma de vampiro.
 guide.vampirism.itemsAndBlocks.found.humanHearth=Estas são descartadas por caçadores de vampiros. Você também pode comê-los para obter uma grande quantidade de sangue ou usá-los em vários rituais.
@@ -47,11 +45,7 @@ guide.vampirism.levels.category=Como subir de nível
 #Mobs
 guide.vampirism.mobs.category=Mobs
 guide.vampirism.mobs.hunter.text=Caça vampiros;) / Apenas ataca os jogadores com um nível de vampiro superior %s. / nVampire caçadores perto de aldeias tentar defender a sua aldeia.
-guide.vampirism.mobs.hunter.title=Caçador de Vampiro
 guide.vampirism.mobs.vampire.text=Ataca os jogadores desde que eles não têm um nível de vampiro superior %s. / nAlso ataca aldeões e torna a vampiro. / Night ativo
-guide.vampirism.mobs.vampire.title=Vampiro
-guide.vampirism.mobs.vampire_lord.text=Spawns raramente em vampiro biomas. / nOccurs em diferentes níveis parcialmente, dependendo do nível de jogadores... / nDrops puro sangue. / é muito forte e convoca os asseclas que ajudá-lo
-guide.vampirism.mobs.vampire_lord.title=Lorde Vampiro
 guide.vampirism.mobs.vampire_minion.title=Vampiro Minion
 guide.vampirism.mobs.vampire_minion.text=São subordinados ao seu senhor. / nHave a textura do seu senhor. / nPode ser controlados por jogadores de Lorde vampiro.
 guide.vampirism.mobs.ghost.text=Desova no bioma de vampiro.
@@ -71,7 +65,7 @@ guide.vampirism.vplayer.skills.revive_fallen=Habilidade\: Reviver o caído/n/nZo
 guide.vampirism.vplayer.skills.end=Existem muitas habilidades mais. Apenas experimentá-los.
 guide.vampirism.vplayer.skills.menu_text=Isto é as habilidades de alternância "habilidade rosa"
 
-
+#VampireLord
 
 
 

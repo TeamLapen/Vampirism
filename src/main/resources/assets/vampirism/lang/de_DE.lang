@@ -3,12 +3,13 @@
 entity.vampirism.vampireHunter.name=Vampir Jäger
 entity.vampirism.vampire.name=Vampir
 entity.vampirism.ghost.name=Geist
-entity.vampirism.vampireLord.name=Vampir Lord
+entity.vampirism.vampireBaron.name=Vampir Baron
 entity.vampirism.vampireMinionR.name=Vampir Sklave
 entity.vampirism.vampireMinionS.name=Vampir Sklave
 entity.vampirism.blinding_bat.name=Fledermaus
 entity.vampirism.dracula.name=Dracula
 entity.vampirism.dead_mob.name=Toter mob
+entity.vampirism.portal_guard.name=Portal Wache
 
 # Items
 item.vampirism.vampiresFear.name=Vampir's Angst
@@ -26,6 +27,8 @@ item.vampirism.vampireArmor_leggings.name=Vampir Hose
 item.vampirism.vampireArmor_boots.name=Vampir Schuhe
 item.vampirism.vampireArmor_chestplate.name=Vampir Brustplatte
 item.vampirism.minionNameTag.name=Lakai Namensschild
+item.vampirism.gemOfBinding.name=Juwel der Bindung
+item.vampirism.bloodEye.name=Blutiges Auge
 
 # Blocks
 block.vampirism.bloodAltar.name=Blood Altar der Sättigung
@@ -36,8 +39,10 @@ block.vampirism.churchAltar.name=Altar der Reinigung
 block.vampirism.cursedEarth.name=Verfluchte Erde
 block.vampirism.vampireOrchid.name=Vampir Orchidee
 block.vampirism.blockCoffin.name=Sarg
+block.vampirism.castlePortal.name=Portal Block
 block.vampirism.castleBlock.name=Burg Stein
 block.vampirism.castleSlab.name=Burg Stufe
+block.vampirism.doubleCastleSlab.name=Doppelte Burg Stufe
 block.vampirism.castleStairs.name=Burg Treppe
 
 #GUI
@@ -91,8 +96,20 @@ text.vampirism.thanks=Danke
 text.vampirism.coming_back=Ich komme zurück, mein Lord
 text.vampirism.sorry_i_died_while_doing=Main Lord, es tut mir Leid aber ich starb beim erfüllen deiner Aufgabe
 text.vampirism.current_task=Aktuelle Aufgabe
-text.vampirism.structure=Struktur
-text.vampirism.pillar_blocks=Pfeiler Blöcke
+text.vampirism.lord.become=Du wurdest zum Vampir Graf erhoben
+text.vampirism.lord.other_player_become=hat den aktuellen Vampir Graf besiegt und nimmt seinen Platz ein
+text.vampirism.lord.vampire_replace=Ein anderer Spieler hat dich als Vampir Graf ersetzt
+text.vampirism.lord.vampire_kill_replace=Ein anderer Vampir hat dich getötet und deinen Platz als Vampir Graf eingenommen
+text.vampirism.lord.new_lord_castle=Ein neuer Vampir Graf ist erschienen und ist in sein Schloss eingezogen
+text.vampirism.lord.vampire_replace_absence=Ein anderer Vampir hat dich in deiner Abwesenheit als Vampire Graf ersetzt
+text.vampirism.lord.portal_disabled=Dieses Portal führt nirgendwo hin
+text.vampirism.lord.level_to_low=Dein Vampir Level ist zu niedrig um ein Vampir Graf zu sein
+text.vampirism.guard_stay_away_level_low=Dein Vampir Level ist zu niedrig um zu Dracula zu reisen. Halte dich fern\!
+text.vampirism.coffin.wrong_dimension=Du kannst in dieser Dimension nicht schlafen.
+text.vampirism.biome.looking_for_biome=Suche nach einem Vampir Wald Biom. Bitte warte
+text.vampirism.biome.not_found=Es wurde kein Vampir Biom gefunden.
+text.vampirism.biome.found=Ein Vampire Wald Biom wurde gefunden
+text.vampirism.castle_fail=Vampirism war nicht in der Lage eine passende Position für ein Vampir Schloss zu finden. Es wird empfohlen eine neue Welt zu generieren. Du kannst aber auch das Kommando "/vampirism checkForVampireBiome" ausführen, wenn dies kein Biom findet, gibt es vermutlich einen Mod Konflikt.
 
 #Skill
 skill.vampirism.bat_skill=Aktiviere Fledermaus
@@ -114,6 +131,8 @@ minioncommand.vampirism.defendlord=Verteidige Lord
 minioncommand.vampirism.stayhere=Bleib hier
 minioncommand.vampirism.comeback=Komm zurück (ferne Lakaien)
 minioncommand.vampirism.justfollow=Folge mir
+minioncommand.vampirism.converttosaveable=Juwel der Bindung zurücknehmen
+minioncommand.vampirism.defendarea=Verteidige Gebiet
 
 #Config
 category.vampirism.balance=Balance Einstellungen
@@ -125,3 +144,4 @@ category.vampirism.balance_mob_prop=Vampirism Mob Einstellungen
 category.vampirism.balance_mob_prop.tooltip=Die Eigenschaften von hinzugefÃ¼gten Mobs anpassen 
 category.vampirism.balance_vv_prop=Dorf Eigenschaften
 category.vampirism.balance_vv_prop.tooltip=Konfiguriere wie sich Jäger im Dorf verhalten und andere Dorf Eigenschaften verändern
+

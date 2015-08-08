@@ -3,7 +3,6 @@
 entity.vampirism.vampireHunter.name=Cacciatore di Vampiri
 entity.vampirism.vampire.name=Vampiro
 entity.vampirism.ghost.name=Fantasma
-entity.vampirism.vampireLord.name=Signore dei vampiri
 entity.vampirism.vampireMinionR.name=Schiavo vampirico
 entity.vampirism.vampireMinionS.name=Schiavo vampirico
 entity.vampirism.blinding_bat.name=Pipistrello
@@ -91,8 +90,6 @@ text.vampirism.thanks=Grazie
 text.vampirism.coming_back=Sto tornando, mio Signore
 text.vampirism.sorry_i_died_while_doing=Mio Signore, mi dispiace ma sono morto soddisfando il vostro compito
 text.vampirism.current_task=Attività corrente
-text.vampirism.structure=Struttura
-text.vampirism.pillar_blocks=Blocchi del pilastro
 
 #Skill
 skill.vampirism.bat_skill=Togli la modalità pipistrello
@@ -125,3 +122,4 @@ category.vampirism.balance_mob_prop=Proprietà del vampirismo dei mob
 category.vampirism.balance_mob_prop.tooltip=Modificare le proprietà dei mostri aggiunti dalla mod Vampirism
 category.vampirism.balance_vv_prop=Proprietà del vampiro del villaggio
 category.vampirism.balance_vv_prop.tooltip=Cambia il modo di agire dei cacciatori nei villaggi e regolare altre cose correlate al villaggio
+

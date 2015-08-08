@@ -1,7 +1,6 @@
 #X-Generator: crowdin.com
 #General
 guide.vampirism.book.title=Guía de vampirismo
-guide.vampirism.welcomeMessage=guia.vampirismo.mensajedebienvenida
 guide.vamprism.book.name=Guía de vampirismo
 
 #Getting Started
@@ -16,7 +15,6 @@ guide.vampirism.gettingStarted.asAVampire.text=Una vez que te conviertes en un v
 #Items and Blocks
 guide.vampirism.itemsAndBlocks.category=Objetos y bloques
 guide.vampirism.itemsAndBlocks.found.title=Encontrado en el mundo
-guide.vampirism.itemsAndBlocks.found.pureBlood=Es soltado por los Señores Vampiros en distintos niveles de pureza dependiendo del nivel del Señor. Es requerido para rituales de nivel superior.
 guide.vampirism.itemsAndBlocks.found.bloodAltar1=Este bloque puede actuar como un faro y te da velocidad, así como un efecto de saturación (consumes menos sangre). Pero para activar este efecto, tienes que contruirte una espada "Sanguijuela" y llenarla con sangre matando a los aldeanos u otras criaturas con la espada. Entonces puede introducir la espada en el bloque que activa el efecto, pero agota lentamente la espada. El bloque no puede ser hecho, tiene que encontrarse en pantanos.
 guide.vampirism.itemsAndBlocks.found.vampireFlower=Orquídeas de vampiro pueden encontrarse en el biomas vampíricos.
 guide.vampirism.itemsAndBlocks.found.humanHearth=Estos son soltados por cazadores de vampiros. Puedes comertelos para obtener una gran cantidad de sangre o utilizarlos en varios rituales.
@@ -47,11 +45,7 @@ guide.vampirism.levels.category=Cómo subir de nivel
 #Mobs
 guide.vampirism.mobs.category=Mobs
 guide.vampirism.mobs.hunter.text=Cazadores de vampiros ;)/nSolo atacan a jugadores con un nivel de vampiro mayor de %s./n Cazadores de vampiros que estan cerca de su pueblo intentan defenderlo.
-guide.vampirism.mobs.hunter.title=Cazador de vampiros
 guide.vampirism.mobs.vampire.text=Ataca a los jugadores a menos que tengan un nivel mas alto de %s./nTambien ataca a los aldeanos y los hace vampiro./nNoche activa
-guide.vampirism.mobs.vampire.title=Vampiro
-guide.vampirism.mobs.vampire_lord.text=Aparecen raramente en biomas vampíricos./nOcurre en diferentes niveles dependiendo parcialmente en el nivel del jugador./nSuelta sangre pura./Es muy fuerte y invoca a súbditos que le ayudan
-guide.vampirism.mobs.vampire_lord.title=Señor de los vampiros
 guide.vampirism.mobs.vampire_minion.title=Súbdito de vampiro
 guide.vampirism.mobs.vampire_minion.text=Son subordinados a su señor./nTienen la textura de su señor./nPueden ser controlados por un jugador que sea señor de los vampiros.
 guide.vampirism.mobs.ghost.text=Aparece en el bioma vampírico.
@@ -71,7 +65,7 @@ guide.vampirism.vplayer.skills.revive_fallen=Habilidad\: Revivir el caído/n/nZo
 guide.vampirism.vplayer.skills.end=Hay muchas más habilidades. Solo pruébalas.
 guide.vampirism.vplayer.skills.menu_text=Este es el menu de hablidad para activar las habilidades
 
-
+#VampireLord
 
 
 

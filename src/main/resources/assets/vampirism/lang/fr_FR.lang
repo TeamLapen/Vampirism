@@ -3,7 +3,6 @@
 entity.vampirism.vampireHunter.name=Chasseur de vampire
 entity.vampirism.vampire.name=Vampire
 entity.vampirism.ghost.name=Fantôme
-entity.vampirism.vampireLord.name=Seigneur vampire
 entity.vampirism.vampireMinionR.name=Sbire de Vampire
 entity.vampirism.vampireMinionS.name=Sbire de Vampire
 entity.vampirism.blinding_bat.name=Chauve-souris
@@ -91,8 +90,6 @@ text.vampirism.thanks=Merci
 text.vampirism.coming_back=Je revient, mon seigneur
 text.vampirism.sorry_i_died_while_doing=Mon seigneur, je suis désolé mais je suis mort en accomplissant votre tâche
 text.vampirism.current_task=Tâche en cours
-text.vampirism.structure=Structure
-text.vampirism.pillar_blocks=Blocs de pilier
 
 #Skill
 skill.vampirism.bat_skill=Activer/désactiver le mode chauve-souris
@@ -125,3 +122,4 @@ category.vampirism.balance_mob_prop=Propriété de vampirisme des créatures
 category.vampirism.balance_mob_prop.tooltip=Change les propriétés des créatures ajouté par Vampirism
 category.vampirism.balance_vv_prop=Propriétés des village
 category.vampirism.balance_vv_prop.tooltip=Change la manière d'agir des chasseur des villages et adjuste les options de balance des autres villages
+

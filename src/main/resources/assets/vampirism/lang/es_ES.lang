@@ -3,7 +3,6 @@
 entity.vampirism.vampireHunter.name=Cazador de vampiros
 entity.vampirism.vampire.name=Vampiro
 entity.vampirism.ghost.name=Fantasma
-entity.vampirism.vampireLord.name=Señor de los vampiros
 entity.vampirism.vampireMinionR.name=Súbdito de vampiro
 entity.vampirism.vampireMinionS.name=Súbdito de vampiro
 entity.vampirism.blinding_bat.name=Murciélago
@@ -15,7 +14,7 @@ item.vampirism.vampiresFear.name=Miedo del vampiro
 item.vampirism.bloodBottle.name=Frasco de sangre
 item.vampirism.vampireFang.name=Colmillo de vampiro
 item.vampirism.pitchfork.name=Tridente
-item.vampirism.humanHeart.name=Corazón de humano
+item.vampirism.humanHeart.name=Corazón humano
 item.vampirism.torch.name=Antorcha
 item.vampirism.pureBlood.name=Sangre pura
 item.vampirism.sunscreen.name=Protector solar
@@ -36,6 +35,7 @@ block.vampirism.churchAltar.name=Altar de la Limpieza
 block.vampirism.cursedEarth.name=Tierra maldita
 block.vampirism.vampireOrchid.name=Orquídea de vampiro
 block.vampirism.blockCoffin.name=Ataúd
+block.vampirism.castlePortal.name=Bloque de Portal
 block.vampirism.castleBlock.name=Bloque de castillo
 block.vampirism.castleSlab.name=Losa de castillo
 block.vampirism.castleStairs.name=Escaleras de castillo
@@ -91,8 +91,15 @@ text.vampirism.thanks=Gracias
 text.vampirism.coming_back=Vuelvo, mi señor
 text.vampirism.sorry_i_died_while_doing=Mi señor, lo siento pero morí cumpliendo con su tarea
 text.vampirism.current_task=Tarea actual
-text.vampirism.structure=Estructura
-text.vampirism.pillar_blocks=Bloques de pilar
+text.vampirism.lord.other_player_become=a derrotado al actual Señor Vampiro y lo ha reemplazado
+text.vampirism.lord.vampire_replace=Otro jugador te ha reemplazado como Señor Vampiro
+text.vampirism.lord.vampire_kill_replace=Otro vampiro te ha matado y ha tomado tu lugar como Señor Vampiro
+text.vampirism.lord.vampire_replace_absence=Otro vampiro te ha reemplazado como Señor Vampiro en tu ausencia
+text.vampirism.lord.portal_disabled=Este portal no lleva a ninguna parte
+text.vampirism.lord.level_to_low=Tu nivel de vampiro es demasiado bajo para ser un Señor Vampiro
+text.vampirism.guard_stay_away_level_low=Tu nivel de vampiro es demasiado bajo para viajar al Castillo de Dracula. Mantente alejado\!
+text.vampirism.coffin.wrong_dimension=No puedes dormir en esta dimensión.
+text.vampirism.castle_fail=Vampirism no fue capaz de encontrar una posición adecuada para un Castillo de Vampiro. Es recomendable generar un nuevo mundo. También puedes intentar "/vampirism checkForVampireBiome", si eso no encuentra un bioma, probablemente otro mod está interfiriendo.
 
 #Skill
 skill.vampirism.bat_skill=Activar modo murciélago
@@ -125,3 +132,4 @@ category.vampirism.balance_mob_prop=Propiedades de los mobs de Vampirism
 category.vampirism.balance_mob_prop.tooltip=Cambiar las propiedades de los mobs añadidos por Vampirism
 category.vampirism.balance_vv_prop=Propiedades de vampiro del pueblo
 category.vampirism.balance_vv_prop.tooltip=Cambia la forma en que los cazadores actúan en los pueblos y ajustan otras cosas relacionadas con los pueblos
+

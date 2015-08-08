@@ -3,7 +3,6 @@
 entity.vampirism.vampireHunter.name=Vampir Avcısı
 entity.vampirism.vampire.name=Vampir
 entity.vampirism.ghost.name=Hayalet
-entity.vampirism.vampireLord.name=Vampir Lordu
 entity.vampirism.vampireMinionR.name=Vampir Kölesi
 entity.vampirism.vampireMinionS.name=Vampir Kölesi
 entity.vampirism.blinding_bat.name=Yarasa
@@ -48,3 +47,4 @@ block.vampirism.castleBlock.name=Kale Bloğu
 #Minion command
 
 #Config
+

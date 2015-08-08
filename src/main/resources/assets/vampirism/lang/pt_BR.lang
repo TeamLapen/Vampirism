@@ -3,7 +3,6 @@
 entity.vampirism.vampireHunter.name=Caçador de Vampiro
 entity.vampirism.vampire.name=Vampiro
 entity.vampirism.ghost.name=Fantasma
-entity.vampirism.vampireLord.name=Lorde Vampiro
 entity.vampirism.vampireMinionR.name=Vampiro Bebê
 entity.vampirism.vampireMinionS.name=Vampiro Bebê
 entity.vampirism.blinding_bat.name=Morcego
@@ -91,8 +90,6 @@ text.vampirism.thanks=Obrigado
 text.vampirism.coming_back=Eu estou voltando, meu senhor
 text.vampirism.sorry_i_died_while_doing=Meu senhor, me desculpe, mas eu morri enquanto cumprindo sua tarefa
 text.vampirism.current_task=Tarefa atual
-text.vampirism.structure=Estrutura
-text.vampirism.pillar_blocks=Blocos pilar
 
 #Skill
 skill.vampirism.bat_skill=Ativar Modo_Morcego
@@ -125,3 +122,4 @@ category.vampirism.balance_mob_prop=Propriedades dos mobs Vampiros
 category.vampirism.balance_mob_prop.tooltip=Mudar as configurações dos mobs adicionados pelo Vampirism
 category.vampirism.balance_vv_prop=Propriedades dos Villagers Vampiros
 category.vampirism.balance_vv_prop.tooltip=Mudar a maneira como os caçadores agem nas vilas e ajustar outras opções relacionadas as vilas.
+

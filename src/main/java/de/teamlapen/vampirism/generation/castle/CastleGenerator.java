@@ -618,10 +618,10 @@ public class CastleGenerator extends WorldGenerator {
 				tiles[sx - 1][z] += ",3,wall";
 			}
 
-			tiles[0][0] += ",0,wall_corner";
-			tiles[0][sz - 1] += ",1,wall_corner";
-			tiles[sx - 1][sz - 1] += ",2,wall_corner";
-			tiles[sx - 1][0] += ",3,wall_corner";
+			tiles[0][0] += ",1,wall_corner";
+			tiles[0][sz - 1] += ",0,wall_corner";
+			tiles[sx - 1][sz - 1] += ",3,wall_corner";
+			tiles[sx - 1][0] += ",2,wall_corner";
 
 			position.setMainCastle(new ChunkCoordIntPair(position.chunkXPos + sx / 2 - 1, position.chunkZPos + sz / 2 - 1),
 					new ChunkCoordIntPair(position.chunkXPos + sx / 2, position.chunkZPos + sz / 2));
