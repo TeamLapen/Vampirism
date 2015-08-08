@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.util.TickRunnable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityPainting;
@@ -43,7 +44,7 @@ public class Extra {
 	 * @param wy World y coordinate
 	 * @param wz World z coordinate
 	 */
-	public void applyExtra(World world,int wx,int wy,int wz){
+	public void applyExtra(final World world, int wx, int wy, int wz) {
 		if(type==TYPE.SPAWN_ENTITY){
 			int c=extra.get("count").getAsInt();
 			String entity=extra.get("entity").getAsString();
@@ -51,11 +52,29 @@ public class Extra {
 				return;
 			}
 			for(int i=0;i<c;i++){
-				Entity e= EntityList.createEntityByName(entity,world);
+				final Entity e = EntityList.createEntityByName(entity, world);
 				if(e!=null) {
-					e.setPosition(wx, wy, wz);
-					world.spawnEntityInWorld(e);
-					if (e instanceof EntityDracula) Logger.t("Spawned Dracula %s", e);
+					e.setPosition(wx, wy + 0.19D, wz);
+					boolean success = world.spawnEntityInWorld(e);
+					if (e instanceof EntityDracula) Logger.t("Spawned Dracula %s (%b)", e, success);
+					if (!success) {
+						VampirismMod.proxy.addTickRunnable(new TickRunnable() {
+							int tick = 20;
+
+							@Override
+							public boolean shouldContinue() {
+								return tick > 0;
+							}
+
+							@Override
+							public void onTick() {
+								tick--;
+								if (tick == 0) {
+									world.spawnEntityInWorld(e);
+								}
+							}
+						});
+					}
 				} else {
 					MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText("Failed to spawn " + entity));//TODO remove
 					Logger.w("Extra", "Failed to create %s in world %s", entity, world);

@@ -219,7 +219,10 @@ public final class BALANCE {
 	@DefaultInt(value = 1200, comment = "Duration of the sanguinare vampiris effect in seconds", name = "Sanguinare Duration", minValue = 1)
 	public static int VAMPIRE_PLAYER_SANGUINARE_DURATION;
 
-	@DefaultInt(value = 5, comment = "Vampire lord's minion count", name = "Vampire lord minion count", minValue = 0)
+	@DefaultInt(value = 6, name = "Bite damage", minValue = 0)
+	public static int VAMPIRE_PLAYER_BITE_DMG;
+
+	@DefaultInt(value = 5, comment = "Vampire lord's minion count", name = "Unused", minValue = 0)
 	public static int VAMPIRE_PLAYER_LORD_MINIONS;
 
 	@DefaultInt(value = 40, name = "Blood vision max distance", minValue = 5)
@@ -228,15 +231,10 @@ public final class BALANCE {
 	@DefaultInt(value = 5, name = "Blood vision mix distance", minValue = 0)
 	public static int VAMPIRE_PLAYER_BLOOD_VISION_MIN_DISTANCE;
 
-	// Vampiremob
-	@DefaultInt(value = 5, minValue = 2, maxValue = 30, name = "Small Mob Blood Amount", comment = "The amount of blood you get when you bite a 'small' mob")
-	public static int SMALL_BLOOD_AMOUNT;
+	@DefaultInt(value = 60, comment = "Duration of the sanguinare vampiris effect in seconds", name = "Sanguinare Duration for Mobs", minValue = 1)
+	public static int VAMPIRE_MOB_SANGUINARE_DURATION;
 
-	@DefaultInt(value = 10, minValue = 2, maxValue = 30, name = "Medium Mob Blood Amount", comment = "")
-	public static int NORMAL_BLOOD_AMOUNT;
-	@DefaultInt(value = 15, minValue = 2, maxValue = 30, name = "Big Mob Blood Amount", comment = "")
-	public static int BIG_BLOOD_AMOUNT;
-	@DefaultDouble(value = 1.0D, minValue = 0.01D, maxValue = 1.0D, name = "Mob Health to Suck Blood", comment = "Percentage of his max health a mob can maximal have to be bitten (Disabled by default)")
+	@DefaultDouble(value = 1.0D, minValue = 0.01D, maxValue = 1.0D, name = "Mob Health to Suck Blood", comment = "Not used anymore")
 	public static double SUCK_BLOOD_HEALTH_REQUIREMENT;
 	// Other
 	@DefaultDouble(value = 1.0D, minValue = 0.1D, maxValue = 4.0D, name = "Blood Saturation", comment = "Influences the blood usage.")

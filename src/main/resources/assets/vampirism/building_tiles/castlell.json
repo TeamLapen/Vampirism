@@ -7064,7 +7064,7 @@
       ]
     },
     {
-      "blockId": "minecraft:heavy_weighted_pressure_plate",
+      "blockId": "minecraft:stone_pressure_plate",
       "meta": [
         0,
         0,
@@ -7126,7 +7126,7 @@
         "z": 10
       },
       "extra": {
-        "blood": 70
+        "blood": 38
       }
     },
     {
@@ -7160,7 +7160,7 @@
         "z": 10
       },
       "extra": {
-        "entity_name": "vampirism.blinding_bat"
+        "entity_name": "Pig"
       }
     },
     {

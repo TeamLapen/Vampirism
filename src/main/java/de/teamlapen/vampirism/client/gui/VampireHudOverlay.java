@@ -1,7 +1,11 @@
 package de.teamlapen.vampirism.client.gui;
 
-import java.awt.Color;
-
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import de.teamlapen.vampirism.entity.VampireMob;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.skills.Skills;
+import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -14,15 +18,9 @@ import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import de.teamlapen.vampirism.entity.VampireMob;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.entity.player.skills.Skills;
-import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.REFERENCE;
+import java.awt.*;
 
 public class VampireHudOverlay extends Gui {
 
@@ -87,7 +85,7 @@ public class VampireHudOverlay extends Gui {
 			VampireMob mob = VampireMob.get((EntityCreature) p.entityHit);
 			if (mob == null)
 				return;
-			if (mob.canBeBitten() && VampirePlayer.get(Minecraft.getMinecraft().thePlayer).getLevel() > 0) {
+			if (mob.getBlood()>0 && VampirePlayer.get(Minecraft.getMinecraft().thePlayer).getLevel() > 0) {
 				mc.mcProfiler.startSection("vampireFang");
 
 				GL11.glEnable(GL11.GL_BLEND);
@@ -95,9 +93,7 @@ public class VampireHudOverlay extends Gui {
 				this.mc.getTextureManager().bindTexture(icons);
 				int left = event.resolution.getScaledWidth() / 2 - 8;
 				int top = event.resolution.getScaledHeight() / 2 - 4;
-				if (mob.lowEnoughHealth()) {
-					GL11.glColor4f(1F, 0F, 0F, 0.8F);
-				}
+				GL11.glColor4f(1F, 0F, 0F, 0.8F);
 				drawTexturedModalRect(left, top, 27, 0, 16, 16);
 				GL11.glDisable(GL11.GL_BLEND);
 				mc.mcProfiler.endSection();

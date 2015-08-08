@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.Configs;
+import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.entity.ai.VanillaAIModifier;
 import de.teamlapen.vampirism.entity.minions.*;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
@@ -46,8 +47,11 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 
 	private final String KEY_TYPE = "type";
 
+	private final String KEY_BLOOD = "blood";
+
 	private int blood;
 	public final int max_blood;
+
 	/**
 	 * Determines if this mob can become a vampire or gets instantly killed after sucking blood from it
 	 */
@@ -110,55 +114,45 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 
 	/**
 	 * Bite the entity. Returns the retrieved blood
-	 * 
-	 * @return Retrieved blood, 0 if already empty, -1 if health too high, -2 if not biteable
 	 */
-	public int bite() {
-		if (blood == -1) {
-			return -2;
-		}
-		if (blood == -2) {
-			return -1;
-		}
-		if (isVampire()) {
+	public int bite(boolean canTurn) {
+		if (blood <= 0) {
 			return 0;
 		}
+		int amt = Math.min(blood, (int) (max_blood / 2F));
+		blood -= amt;
+		if (blood < max_blood / 2) {
+			if (blood == 0 || entity.getRNG().nextInt(blood) == 0) {
 
-		if (!lowEnoughHealth()) {
-			// Cannot be bitten yet
-			return -1;
-		}
-		if (canBecomeVampire&&entity.worldObj.rand.nextInt(2) == 0) {
-			makeVampire();
-		} else {
-			if (entity instanceof EntityVampireHunter) {
-				entity.attackEntityFrom(DamageSource.magic, 1);
-			} else {
-				// Type should be only changed by the dedicated methods, but since the mob will die instantly it should not cause any problems
-				type = (byte) (type | 1);
-				entity.attackEntityFrom(DamageSource.magic, 1000);
+				if (canBecomeVampire && canTurn && entity.getRNG().nextBoolean()) {
+					if (Configs.realismMode) {
+						entity.addPotionEffect(new PotionEffect(ModPotion.sanguinare.id, BALANCE.VAMPIRE_MOB_SANGUINARE_DURATION * 20));
+					} else {
+						makeVampire();
+					}
+
+				} else {
+					entity.attackEntityFrom(DamageSource.magic, 1000);
+					if (entity instanceof EntityVillager) {
+						VillageVampire v = VillageVampireData.get(entity.worldObj).findNearestVillage(entity);
+						if (v != null) {
+							v.villagerBitten();
+						}
+					}
+				}
 			}
 
 		}
 
-		if (entity instanceof EntityVillager) {
-			VillageVampire v = VillageVampireData.get(entity.worldObj).findNearestVillage(entity);
-			if (v != null) {
-				v.villagerBitten();
-			}
-		}
 		// If entity is a child only give 1/3 blood
 		if (entity instanceof EntityAgeable) {
 			if (((EntityAgeable) entity).getGrowingAge() < 0) {
-				return Math.round((float) blood / 3);
+				return Math.round((float) amt / 3);
 			}
 		}
-		return blood;
+		this.sync();
+		return amt;
 
-	}
-
-	public boolean canBeBitten() {
-		return blood > 0 && !isVampire();
 	}
 
 	@Override
@@ -171,16 +165,8 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		return commands;
 	}
 
-	/**
-	 * If the mob can be bitten, returns its blood amount, otherwise returns -1
-	 * 
-	 * @return
-	 */
 	public int getBlood() {
-		if (canBeBitten()) {
-			return blood;
-		}
-		return -1;
+		return blood;
 	}
 
 	@Override
@@ -228,6 +214,9 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 			if (properties.hasKey(KEY_TYPE)) {
 				type = properties.getByte(KEY_TYPE);
 			}
+			if (properties.hasKey(KEY_BLOOD)) {
+				blood = properties.getInteger(KEY_BLOOD);
+			}
 			IMinionCommand command = null;
 			if (isMinion()) {
 				if (properties.hasKey("BossUUIDMost")) {
@@ -264,6 +253,9 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		if (nbt.hasKey(KEY_TYPE)) {
 			type = nbt.getByte(KEY_TYPE);
 		}
+		if (nbt.hasKey(KEY_BLOOD)) {
+			blood = nbt.getInteger(KEY_BLOOD);
+		}
 		if (nbt.hasKey("BossUUIDMost")) {
 			this.lordId = new UUID(nbt.getLong("BossUUIDMost"), nbt.getLong("BossUUIDLeast"));
 		}
@@ -272,9 +264,9 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		}
 	}
 
-	public boolean lowEnoughHealth() {
-		return (entity.getHealth() / entity.getMaxHealth()) <= BALANCE.SUCK_BLOOD_HEALTH_REQUIREMENT;
-	}
+//	public boolean lowEnoughHealth() {
+//		return (entity.getHealth() / entity.getMaxHealth()) <= BALANCE.SUCK_BLOOD_HEALTH_REQUIREMENT;
+//	}
 
 	public void makeMinion(IMinionLord lord) {
 		this.setLord(lord);
@@ -285,13 +277,14 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	}
 
 	public boolean makeVampire() {
-		if (blood < 0||!canBecomeVampire) {
+		if (!canBecomeVampire || blood < 0) {
 			return false;
 		}
+		blood = 0;
 		setVampire();
 
-		entity.addPotionEffect(new PotionEffect(Potion.weakness.id, 200));
-		entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100));
+		entity.addPotionEffect(new PotionEffect(Potion.weakness.id, 200, 2));
+		entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100, 2));
 		this.sync();
 		return true;
 	}
@@ -308,6 +301,19 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 				}
 			}
 		}
+
+		if (!entity.worldObj.isRemote) {
+			if (blood > 0 && blood < max_blood && entity.ticksExisted % 40 == 0) {
+				entity.addPotionEffect(new PotionEffect(Potion.weakness.id, 40));
+				entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 40));
+				if (entity.getRNG().nextInt(8) == 0) {
+					blood++;
+				}
+			}
+			if (entity.isPotionActive(ModPotion.sanguinare.id) && entity.getActivePotionEffect(ModPotion.sanguinare).getDuration() == 1) {
+				this.makeVampire();
+			}
+		}
 	}
 
 	@Override
@@ -320,6 +326,9 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 			if (activeCommand != null) {
 				properties.setInteger("command_id", activeCommand.getId());
 			}
+		}
+		if (blood >= 0) {
+			properties.setInteger(KEY_BLOOD, getBlood());
 		}
 		compound.setTag(EXT_PROP_NAME, properties);
 
@@ -381,6 +390,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	@Override
 	public void writeFullUpdateToNBT(NBTTagCompound nbt) {
 		nbt.setByte(KEY_TYPE, type);
+		nbt.setInteger(KEY_BLOOD, blood);
 		if (activeCommand != null) {
 			nbt.setInteger("active_command_id", activeCommand.getId());
 		}

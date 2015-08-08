@@ -1,12 +1,16 @@
 package de.teamlapen.vampirism.client.render;
 
-import java.nio.FloatBuffer;
-import java.util.List;
-
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent;
+import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.biome.BiomeVampireForest;
+import de.teamlapen.vampirism.client.gui.GUISleepCoffin;
+import de.teamlapen.vampirism.entity.VampireMob;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.skills.BatSkill;
+import de.teamlapen.vampirism.entity.player.skills.Skills;
+import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.client.gui.GuiSleepMP;
@@ -20,26 +24,13 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MathHelper;
-import net.minecraftforge.client.event.EntityViewRenderEvent;
-import net.minecraftforge.client.event.GuiOpenEvent;
-import net.minecraftforge.client.event.RenderHandEvent;
-import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-
+import net.minecraftforge.client.event.*;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 import org.lwjgl.util.glu.Sphere;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import de.teamlapen.vampirism.Configs;
-import de.teamlapen.vampirism.client.gui.GUISleepCoffin;
-import de.teamlapen.vampirism.entity.VampireMob;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.entity.player.skills.BatSkill;
-import de.teamlapen.vampirism.entity.player.skills.Skills;
-import de.teamlapen.vampirism.util.BALANCE;
+import java.nio.FloatBuffer;
+import java.util.List;
 
 /**
  * Rendering handler used for rendering and render transformation e.g. bat transformation
@@ -327,7 +318,7 @@ public class RenderHandler {
 				green = 0.04313F;
 				blue = 0.04313F;
 
-			} else if (!VampireMob.get((EntityCreature) entity).canBeBitten()) {
+			} else if (!(VampireMob.get((EntityCreature) entity).getBlood() > 0)) {
 				red = 0.039215F;
 				green = 0.0745F;
 				blue = 0.1647F;

@@ -5880,7 +5880,7 @@
       ]
     },
     {
-      "blockId": "minecraft:wooden_door",
+      "blockId": "minecraft:iron_door",
       "meta": [
         2,
         3,
@@ -5901,7 +5901,7 @@
       ]
     },
     {
-      "blockId": "minecraft:wooden_door",
+      "blockId": "minecraft:iron_door",
       "meta": [
         8,
         8,
@@ -6090,10 +6090,10 @@
     {
       "blockId": "minecraft:oak_stairs",
       "meta": [
-        4,
         6,
         5,
-        7
+        7,
+        4
       ],
       "blockPositions": [
         {
@@ -6102,13 +6102,99 @@
           "z": 4
         },
         {
-          "x": 4,
+          "x": 5,
           "y": 0,
+          "z": 4
+        },
+        {
+          "x": 6,
+          "y": 0,
+          "z": 4
+        },
+        {
+          "x": 7,
+          "y": 0,
+          "z": 4
+        }
+      ]
+    },
+    {
+      "blockId": "minecraft:carpet",
+      "meta": [
+        14,
+        14,
+        14,
+        14
+      ],
+      "blockPositions": [
+        {
+          "x": 4,
+          "y": 1,
+          "z": 4
+        },
+        {
+          "x": 4,
+          "y": 1,
           "z": 5
         },
         {
+          "x": 4,
+          "y": 1,
+          "z": 6
+        },
+        {
+          "x": 4,
+          "y": 1,
+          "z": 12
+        },
+        {
           "x": 5,
-          "y": 0,
+          "y": 1,
+          "z": 4
+        },
+        {
+          "x": 5,
+          "y": 1,
+          "z": 6
+        },
+        {
+          "x": 5,
+          "y": 1,
+          "z": 12
+        },
+        {
+          "x": 6,
+          "y": 1,
+          "z": 4
+        },
+        {
+          "x": 6,
+          "y": 1,
+          "z": 6
+        },
+        {
+          "x": 7,
+          "y": 1,
+          "z": 4
+        },
+        {
+          "x": 7,
+          "y": 1,
+          "z": 6
+        },
+        {
+          "x": 8,
+          "y": 1,
+          "z": 4
+        },
+        {
+          "x": 8,
+          "y": 1,
+          "z": 5
+        },
+        {
+          "x": 8,
+          "y": 1,
           "z": 6
         }
       ]
@@ -6138,11 +6224,6 @@
           "z": 6
         },
         {
-          "x": 4,
-          "y": 0,
-          "z": 12
-        },
-        {
           "x": 5,
           "y": 5,
           "z": 4
@@ -6151,11 +6232,6 @@
           "x": 5,
           "y": 5,
           "z": 6
-        },
-        {
-          "x": 5,
-          "y": 0,
-          "z": 12
         },
         {
           "x": 6,
@@ -6293,31 +6369,26 @@
     {
       "blockId": "minecraft:oak_stairs",
       "meta": [
-        7,
         4,
         6,
-        5
+        5,
+        7
       ],
       "blockPositions": [
+        {
+          "x": 4,
+          "y": 0,
+          "z": 5
+        },
         {
           "x": 4,
           "y": 0,
           "z": 6
         },
         {
-          "x": 6,
+          "x": 4,
           "y": 0,
-          "z": 6
-        },
-        {
-          "x": 7,
-          "y": 0,
-          "z": 6
-        },
-        {
-          "x": 8,
-          "y": 0,
-          "z": 5
+          "z": 12
         }
       ]
     },
@@ -6418,27 +6489,6 @@
       ]
     },
     {
-      "blockId": "minecraft:carpet",
-      "meta": [
-        15,
-        15,
-        15,
-        15
-      ],
-      "blockPositions": [
-        {
-          "x": 4,
-          "y": 1,
-          "z": 12
-        },
-        {
-          "x": 5,
-          "y": 1,
-          "z": 12
-        }
-      ]
-    },
-    {
       "blockId": "minecraft:stone_brick_stairs",
       "meta": [
         3,
@@ -6462,36 +6512,41 @@
     {
       "blockId": "minecraft:oak_stairs",
       "meta": [
-        6,
-        5,
         7,
-        4
+        4,
+        6,
+        5
       ],
       "blockPositions": [
         {
           "x": 5,
           "y": 0,
-          "z": 4
+          "z": 5
+        },
+        {
+          "x": 5,
+          "y": 0,
+          "z": 6
         },
         {
           "x": 6,
           "y": 0,
-          "z": 4
+          "z": 6
         },
         {
           "x": 7,
           "y": 0,
-          "z": 4
+          "z": 6
         },
         {
           "x": 8,
           "y": 0,
-          "z": 4
+          "z": 6
         }
       ]
     },
     {
-      "blockId": "minecraft:planks",
+      "blockId": "minecraft:carpet",
       "meta": [
         0,
         0,
@@ -6501,17 +6556,17 @@
       "blockPositions": [
         {
           "x": 5,
-          "y": 0,
+          "y": 1,
           "z": 5
         },
         {
           "x": 6,
-          "y": 0,
+          "y": 1,
           "z": 5
         },
         {
           "x": 7,
-          "y": 0,
+          "y": 1,
           "z": 5
         }
       ]
@@ -6704,6 +6759,42 @@
       ]
     },
     {
+      "blockId": "minecraft:oak_stairs",
+      "meta": [
+        5,
+        7,
+        4,
+        6
+      ],
+      "blockPositions": [
+        {
+          "x": 5,
+          "y": 0,
+          "z": 12
+        },
+        {
+          "x": 6,
+          "y": 0,
+          "z": 5
+        },
+        {
+          "x": 7,
+          "y": 0,
+          "z": 5
+        },
+        {
+          "x": 8,
+          "y": 0,
+          "z": 4
+        },
+        {
+          "x": 8,
+          "y": 0,
+          "z": 5
+        }
+      ]
+    },
+    {
       "blockId": "vampirism:bloodAltarTier2",
       "meta": [
         3,
@@ -6767,7 +6858,7 @@
       ]
     },
     {
-      "blockId": "minecraft:wooden_door",
+      "blockId": "minecraft:iron_door",
       "meta": [
         0,
         1,
@@ -6779,22 +6870,6 @@
           "x": 7,
           "y": 0,
           "z": 12
-        }
-      ]
-    },
-    {
-      "blockId": "minecraft:oak_stairs",
-      "meta": [
-        5,
-        7,
-        4,
-        6
-      ],
-      "blockPositions": [
-        {
-          "x": 8,
-          "y": 0,
-          "z": 6
         }
       ]
     },

@@ -28,7 +28,7 @@ public class InputEventPacket implements IMessage {
 				}
 				if (id != 0) {
 					EntityPlayer player = ctx.getServerHandler().playerEntity;
-					VampirePlayer.get(player).bite(id);
+					VampirePlayer.get(player).biteEntity(id);
 				}
 			} else if (message.action.equals(TOGGLEAUTOFILLBLOOD)) {
 				EntityPlayer player = ctx.getServerHandler().playerEntity;

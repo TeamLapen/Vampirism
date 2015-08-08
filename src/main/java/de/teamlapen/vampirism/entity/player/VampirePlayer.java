@@ -1128,43 +1128,39 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 * @param e
 	 *            Entity to suck blood from
 	 */
-	public void bite(EntityLivingBase e) {
+	public void biteEntity(EntityLivingBase e) {
 		if (e.worldObj.isRemote) {
 			return;
 		}
 		if (getLevel() == 0) {
 			return;
 		}
-
-		if (e instanceof EntityVampire && this.isVampireLord()) {
-			PotionEffect p1 = e.getActivePotionEffect(Potion.moveSlowdown);
-			if (p1 != null && p1.getAmplifier() == 10) {
-				PotionEffect p2 = e.getActivePotionEffect(Potion.jump);
-				if (p2 != null && p2.getAmplifier() == 128) {
-					this.makeVampireToMinion((EntityVampire) e);
-					return;
-				}
+		if (biteCooldown > 0) return;
+		int blood = 0;
+		BITE_TYPE type = determineByteType(e);
+		if (type == BITE_TYPE.MAKE_MINION) {
+			this.makeVampireToMinion((EntityVampire) e);
+		} else if (type == BITE_TYPE.SUCK_BLOOD_PLAYER) {
+			blood = VampirePlayer.get((EntityPlayer) e).bite();
+		} else if (type == BITE_TYPE.SUCK_BLOOD) {
+			blood = VampireMob.get((EntityCreature) e).bite(canTurnOthers());
+		} else if (type == BITE_TYPE.ATTACK) {
+			e.attackEntityFrom(DamageSource.causePlayerDamage(player), BALANCE.VAMPIRE_PLAYER_BITE_DMG);
+			if (player.getRNG().nextInt(4) == 0) {
+				player.addPotionEffect(new PotionEffect(Potion.poison.id, 60));
 			}
-
 		}
+		biteCooldown = BITE_COOLDOWN;
+		if (blood <= 0) return;
 
-		if (!(e instanceof EntityCreature)) return;
-		VampireMob mob = VampireMob.get((EntityCreature) e);
-		int amount = mob.bite();
-		if (amount > 0) {
-			int amt = this.bloodStats.addBlood(amount);
+		if (blood > 0) {
+			int amt = this.bloodStats.addBlood(blood);
 			if (amt > 0 && isAutoFillBlood()) {
 				fillBloodIntoInventory(amt);
 			}
 			VampirismMod.modChannel.sendToAll(new SpawnParticlePacket("magicCrit", e.posX, e.posY, e.posZ, player.posX - e.posX, player.posY - e.posY, player.posZ - e.posZ, 10));
 			VampirismMod.modChannel.sendTo(new SpawnParticlePacket("blood_eat", 0, 0, 0, 0, 0, 0, 10), (EntityPlayerMP) player);
 
-		} else if (amount == -1) {
-			player.attackEntityFrom(DamageSource.outOfWorld, 1);
-			VampirismMod.modChannel.sendToAll(new SpawnParticlePacket("crit", e.posX, e.posY, e.posZ, player.posX - e.posX, player.posY - e.posY, player.posZ - e.posZ, 10));
-		} else if (amount == -2) {
-			player.addPotionEffect(new PotionEffect(19, 80, 1));
-			player.addPotionEffect(new PotionEffect(9, 120, 0));
 		}
 	}
 
@@ -1186,13 +1182,16 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			return BITE_TYPE.ATTACK;
 		} else if (entity instanceof EntityCreature) {
 			VampireMob mob = VampireMob.get((EntityCreature) entity);
+			if (mob.getBlood() > 0) {
+				return BITE_TYPE.SUCK_BLOOD;
+			}
 
 		}
-		return BITE_TYPE.NONE;
+		return BITE_TYPE.ATTACK;
 	}
 
 	public enum BITE_TYPE {
-		ATTACK, SUCK_BLOOD, SUCK_BLOOD_PLAYER, MAKE_MINION, NONE
+		ATTACK, SUCK_BLOOD, SUCK_BLOOD_PLAYER, MAKE_MINION
 	}
 
 	/**
@@ -1201,15 +1200,29 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 * @param entityId
 	 *            Id of Entity to suck blood from
 	 */
-	public void bite(int entityId) {
+	public void biteEntity(int entityId) {
 		Entity e = player.worldObj.getEntityByID(entityId);
 		if (e != null && e instanceof EntityLivingBase) {
 			if (e.getDistanceToEntity(player) <= ((EntityPlayerMP) player).theItemInWorldManager.getBlockReachDistance() + 2) {
-				bite((EntityLivingBase) e);
+				biteEntity((EntityLivingBase) e);
 			} else {
 				Logger.w(TAG, "Entity sent by client is not in reach " + entityId);
 			}
 		}
+	}
+
+	/**
+	 * Bite the player himself.
+	 *
+	 * @return Amount of blood given
+	 */
+	private int bite() {
+		int amt = this.getBloodStats().getBloodLevel();
+		this.getBloodStats().consumeBlood(amt);
+		if (!player.isPotionActive(ModPotion.sanguinare)) {
+			player.addPotionEffect(new PotionEffect(ModPotion.sanguinare.id, BALANCE.VAMPIRE_PLAYER_SANGUINARE_DURATION));
+		}
+		return amt;
 	}
 
 	/**

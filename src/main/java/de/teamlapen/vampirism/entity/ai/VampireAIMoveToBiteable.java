@@ -44,7 +44,7 @@ public class VampireAIMoveToBiteable extends EntityAIBase {
 		}
 		List list = vampire.worldObj.getEntitiesWithinAABB(EntityCreature.class, vampire.boundingBox.expand(10, 3, 10));
 		for (Object o : list) {
-			if (VampireMob.get((EntityCreature) o).canBeBitten()) {
+			if (VampireMob.get((EntityCreature) o).getBlood() > 0) {
 				target = (EntityCreature) o;
 				return true;
 			}

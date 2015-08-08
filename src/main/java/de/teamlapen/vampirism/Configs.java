@@ -1,26 +1,14 @@
 package de.teamlapen.vampirism;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
-import java.io.Reader;
-import java.lang.reflect.Field;
-import java.util.HashMap;
-
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.common.config.Configuration;
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.DefaultBoolean;
-import de.teamlapen.vampirism.util.DefaultDouble;
-import de.teamlapen.vampirism.util.DefaultInt;
-import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.util.*;
+import net.minecraftforge.common.config.ConfigCategory;
+import net.minecraftforge.common.config.Configuration;
+
+import java.io.*;
+import java.lang.reflect.Field;
+import java.util.HashMap;
 
 public class Configs {
 
@@ -75,6 +63,8 @@ public class Configs {
 	public static Configuration balance;
 
 	public static int looseLordDaysCount;
+
+	public static boolean realismMode;
 
 	public static boolean modify_vampire_player_texture;
 
@@ -194,10 +184,11 @@ public class Configs {
 		potion_id_thirst = config.getInt("potion_id_thirst", CATEGORY_GENERAL, 41, 30, 255, "Potion id thirst (Have to be the same on server and client)");
 		potion_id_saturation = config.getInt("potion_id_saturation", CATEGORY_GENERAL, 42, 30, 255, "Potion id for saturation (Have to be the same on server and client)");
 		potion_id_sunscreen = config.getInt("potion_id_sunscreen", CATEGORY_GENERAL, 40, 30, 255, "Potion id for sunscreen (Have to be the same on server and client)");
-		render_fog_vampire_biome = config.getBoolean("fog_vampire_biome",CATEGORY_GENERAL,true,"Render fog in the vampire biome");
-		mulitple_lords = config.getBoolean("multiple_lords",CATEGORY_GENERAL,false,"Allows multiple player to be a vampire lord at a time. If changed from true to false, all players will loose their lord status");
-		looseLordDaysCount = config.getInt("loose_lord_after_days",CATEGORY_GENERAL,300,1,Integer.MAX_VALUE,"Loose vampire lord status if not being online for n Minecraft days on multiplayer servers");
+		render_fog_vampire_biome = config.getBoolean("fog_vampire_biome", CATEGORY_GENERAL, true, "Render fog in the vampire biome");
+		mulitple_lords = config.getBoolean("multiple_lords", CATEGORY_GENERAL, false, "Allows multiple player to be a vampire lord at a time. If changed from true to false, all players will loose their lord status");
+		looseLordDaysCount = config.getInt("loose_lord_after_days", CATEGORY_GENERAL, 300, 1, Integer.MAX_VALUE, "Loose vampire lord status if not being online for n Minecraft days on multiplayer servers");
 
+		realismMode = config.getBoolean("vampire_realism_mode", CATEGORY_GENERAL, false, "Changes a few things and changes some default balance values to make it more 'realistic' ");
 		// Village
 		village_gen_enabled = config.get(cat_village.getQualifiedName(), "change_village_gen_enabled", true, "Should the custom generator be injected? (Enables/Disables the village mod)")
 				.getBoolean();

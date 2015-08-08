@@ -707,26 +707,6 @@
         },
         {
           "x": 6,
-          "y": -5,
-          "z": 3
-        },
-        {
-          "x": 6,
-          "y": -4,
-          "z": 3
-        },
-        {
-          "x": 6,
-          "y": -3,
-          "z": 3
-        },
-        {
-          "x": 6,
-          "y": -2,
-          "z": 3
-        },
-        {
-          "x": 6,
           "y": -1,
           "z": 3
         },
@@ -734,21 +714,6 @@
           "x": 6,
           "y": 3,
           "z": 3
-        },
-        {
-          "x": 6,
-          "y": -4,
-          "z": 4
-        },
-        {
-          "x": 6,
-          "y": -3,
-          "z": 4
-        },
-        {
-          "x": 6,
-          "y": -2,
-          "z": 4
         },
         {
           "x": 6,
@@ -817,26 +782,6 @@
         },
         {
           "x": 7,
-          "y": -5,
-          "z": 2
-        },
-        {
-          "x": 7,
-          "y": -4,
-          "z": 2
-        },
-        {
-          "x": 7,
-          "y": -3,
-          "z": 2
-        },
-        {
-          "x": 7,
-          "y": -2,
-          "z": 2
-        },
-        {
-          "x": 7,
           "y": -1,
           "z": 2
         },
@@ -844,31 +789,6 @@
           "x": 7,
           "y": 3,
           "z": 2
-        },
-        {
-          "x": 7,
-          "y": -6,
-          "z": 3
-        },
-        {
-          "x": 7,
-          "y": -5,
-          "z": 4
-        },
-        {
-          "x": 7,
-          "y": -2,
-          "z": 4
-        },
-        {
-          "x": 7,
-          "y": -4,
-          "z": 5
-        },
-        {
-          "x": 7,
-          "y": -3,
-          "z": 5
         },
         {
           "x": 7,
@@ -892,26 +812,6 @@
         },
         {
           "x": 8,
-          "y": -5,
-          "z": 2
-        },
-        {
-          "x": 8,
-          "y": -4,
-          "z": 2
-        },
-        {
-          "x": 8,
-          "y": -3,
-          "z": 2
-        },
-        {
-          "x": 8,
-          "y": -2,
-          "z": 2
-        },
-        {
-          "x": 8,
           "y": -1,
           "z": 2
         },
@@ -919,36 +819,6 @@
           "x": 8,
           "y": 3,
           "z": 2
-        },
-        {
-          "x": 8,
-          "y": -5,
-          "z": 3
-        },
-        {
-          "x": 8,
-          "y": -2,
-          "z": 3
-        },
-        {
-          "x": 8,
-          "y": -5,
-          "z": 4
-        },
-        {
-          "x": 8,
-          "y": -2,
-          "z": 4
-        },
-        {
-          "x": 8,
-          "y": -4,
-          "z": 5
-        },
-        {
-          "x": 8,
-          "y": -3,
-          "z": 5
         },
         {
           "x": 8,
@@ -974,26 +844,6 @@
           "x": 9,
           "y": 3,
           "z": 2
-        },
-        {
-          "x": 9,
-          "y": -4,
-          "z": 3
-        },
-        {
-          "x": 9,
-          "y": -3,
-          "z": 3
-        },
-        {
-          "x": 9,
-          "y": -4,
-          "z": 4
-        },
-        {
-          "x": 9,
-          "y": -3,
-          "z": 4
         },
         {
           "x": 9,
@@ -2714,11 +2564,6 @@
         {
           "x": 9,
           "y": 0,
-          "z": 3
-        },
-        {
-          "x": 9,
-          "y": 0,
           "z": 4
         },
         {
@@ -2755,11 +2600,6 @@
           "x": 9,
           "y": 0,
           "z": 11
-        },
-        {
-          "x": 10,
-          "y": 0,
-          "z": 3
         },
         {
           "x": 10,
@@ -2877,26 +2717,6 @@
       "blockPositions": [
         {
           "x": 7,
-          "y": -5,
-          "z": 3
-        },
-        {
-          "x": 7,
-          "y": -4,
-          "z": 3
-        },
-        {
-          "x": 7,
-          "y": -3,
-          "z": 3
-        },
-        {
-          "x": 7,
-          "y": -2,
-          "z": 3
-        },
-        {
-          "x": 7,
           "y": -1,
           "z": 3
         }
@@ -2915,43 +2735,6 @@
           "x": 7,
           "y": 0,
           "z": 3
-        }
-      ]
-    },
-    {
-      "blockId": "minecraft:chest",
-      "meta": [
-        2,
-        5,
-        3,
-        4
-      ],
-      "blockPositions": [
-        {
-          "x": 7,
-          "y": -4,
-          "z": 4
-        }
-      ]
-    },
-    {
-      "blockId": "vampirism:castleStairs_dark",
-      "meta": [
-        6,
-        5,
-        7,
-        4
-      ],
-      "blockPositions": [
-        {
-          "x": 7,
-          "y": -3,
-          "z": 4
-        },
-        {
-          "x": 8,
-          "y": -3,
-          "z": 4
         }
       ]
     },
@@ -3024,64 +2807,6 @@
       ]
     },
     {
-      "blockId": "minecraft:chest",
-      "meta": [
-        4,
-        2,
-        5,
-        3
-      ],
-      "blockPositions": [
-        {
-          "x": 8,
-          "y": -4,
-          "z": 3
-        },
-        {
-          "x": 12,
-          "y": 0,
-          "z": 4
-        },
-        {
-          "x": 12,
-          "y": 0,
-          "z": 5
-        }
-      ]
-    },
-    {
-      "blockId": "vampirism:castleStairs_dark",
-      "meta": [
-        4,
-        6,
-        5,
-        7
-      ],
-      "blockPositions": [
-        {
-          "x": 8,
-          "y": -3,
-          "z": 3
-        }
-      ]
-    },
-    {
-      "blockId": "minecraft:air",
-      "meta": [
-        0,
-        0,
-        0,
-        0
-      ],
-      "blockPositions": [
-        {
-          "x": 8,
-          "y": -4,
-          "z": 4
-        }
-      ]
-    },
-    {
       "blockId": "minecraft:wooden_pressure_plate",
       "meta": [
         0,
@@ -3104,6 +2829,37 @@
           "x": 8,
           "y": 1,
           "z": 7
+        },
+        {
+          "x": 9,
+          "y": 0,
+          "z": 3
+        },
+        {
+          "x": 10,
+          "y": 0,
+          "z": 3
+        }
+      ]
+    },
+    {
+      "blockId": "minecraft:stone_pressure_plate",
+      "meta": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "blockPositions": [
+        {
+          "x": 9,
+          "y": 0,
+          "z": 1
+        },
+        {
+          "x": 10,
+          "y": 0,
+          "z": 1
         }
       ]
     },
@@ -3173,6 +2929,27 @@
           "x": 12,
           "y": 0,
           "z": 3
+        }
+      ]
+    },
+    {
+      "blockId": "minecraft:chest",
+      "meta": [
+        4,
+        2,
+        5,
+        3
+      ],
+      "blockPositions": [
+        {
+          "x": 12,
+          "y": 0,
+          "z": 4
+        },
+        {
+          "x": 12,
+          "y": 0,
+          "z": 5
         }
       ]
     },
@@ -3398,150 +3175,19 @@
     {
       "type": "CHEST",
       "pos": {
-        "x": 7,
-        "y": -4,
-        "z": 4
-      },
-      "extra": {
-        "items": [
-          {
-            "s": 2,
-            "name": "vampirism:vampireOrchid",
-            "count": 1,
-            "damage": 0
-          },
-          {
-            "s": 3,
-            "name": "vampirism:vampireOrchid",
-            "count": 1,
-            "damage": 0
-          },
-          {
-            "s": 10,
-            "name": "vampirism:vampireOrchid",
-            "count": 1,
-            "damage": 0
-          },
-          {
-            "s": 12,
-            "name": "vampirism:vampireOrchid",
-            "count": 1,
-            "damage": 0
-          },
-          {
-            "s": 13,
-            "name": "vampirism:vampireOrchid",
-            "count": 1,
-            "damage": 0
-          },
-          {
-            "s": 14,
-            "name": "vampirism:vampireOrchid",
-            "count": 1,
-            "damage": 0
-          },
-          {
-            "s": 15,
-            "name": "vampirism:vampireOrchid",
-            "count": 1,
-            "damage": 0
-          },
-          {
-            "s": 16,
-            "name": "vampirism:vampireOrchid",
-            "count": 1,
-            "damage": 0
-          },
-          {
-            "s": 17,
-            "name": "vampirism:vampireOrchid",
-            "count": 1,
-            "damage": 0
-          },
-          {
-            "s": 19,
-            "name": "vampirism:vampireOrchid",
-            "count": 1,
-            "damage": 0
-          },
-          {
-            "s": 20,
-            "name": "vampirism:vampireOrchid",
-            "count": 1,
-            "damage": 0
-          },
-          {
-            "s": 21,
-            "name": "vampirism:vampireOrchid",
-            "count": 1,
-            "damage": 0
-          },
-          {
-            "s": 23,
-            "name": "vampirism:vampireOrchid",
-            "count": 1,
-            "damage": 0
-          },
-          {
-            "s": 24,
-            "name": "vampirism:vampireOrchid",
-            "count": 1,
-            "damage": 0
-          },
-          {
-            "s": 25,
-            "name": "vampirism:vampireOrchid",
-            "count": 1,
-            "damage": 0
-          },
-          {
-            "s": 26,
-            "name": "vampirism:vampireOrchid",
-            "count": 1,
-            "damage": 0
-          }
-        ]
-      }
-    },
-    {
-      "type": "CHEST",
-      "pos": {
-        "x": 8,
-        "y": -4,
-        "z": 3
-      },
-      "extra": {
-        "items": [
-          {
-            "s": 7,
-            "name": "minecraft:iron_block",
-            "count": 1,
-            "damage": 0
-          },
-          {
-            "s": 11,
-            "name": "minecraft:diamond",
-            "count": 1,
-            "damage": 0
-          },
-          {
-            "s": 15,
-            "name": "minecraft:iron_block",
-            "count": 1,
-            "damage": 0
-          }
-        ]
-      }
-    },
-    {
-      "type": "CHEST",
-      "pos": {
         "x": 12,
         "y": 0,
         "z": 4
       },
       "extra": {
-        "items": []
+        "items": [
+          {
+            "s": 0,
+            "name": "minecraft:golden_chestplate",
+            "count": 1,
+            "damage": 0
+          }
+        ]
       }
     },
     {
@@ -3552,7 +3198,20 @@
         "z": 5
       },
       "extra": {
-        "items": []
+        "items": [
+          {
+            "s": 11,
+            "name": "minecraft:golden_boots",
+            "count": 1,
+            "damage": 0
+          },
+          {
+            "s": 13,
+            "name": "minecraft:golden_leggings",
+            "count": 1,
+            "damage": 0
+          }
+        ]
       }
     }
   ]

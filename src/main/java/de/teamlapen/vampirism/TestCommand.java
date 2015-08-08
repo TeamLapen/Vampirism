@@ -87,7 +87,7 @@ public class TestCommand extends BasicCommand {
 
 			@Override
 			public String getCommandName() {
-				return "dim";
+				return "ddim";
 			}
 		});
 
@@ -158,7 +158,7 @@ public class TestCommand extends BasicCommand {
 		addSub(new TestSubCommand() {
 			@Override
 			protected void processCommand(ICommandSender sender, EntityPlayer player, VampirePlayer vampire, String[] param) {
-				List l = player.worldObj.getEntitiesWithinAABBExcludingEntity(player, player.boundingBox.expand(6, 6, 6));
+				List l = player.worldObj.getEntitiesWithinAABBExcludingEntity(player, player.boundingBox.expand(50, 50, 50));
 					for(Object o:l){
 						if(o instanceof EntityDracula){
 							sendMessage(sender, o.toString());

@@ -1395,7 +1395,38 @@
         "z": 10
       },
       "extra": {
-        "items": []
+        "items": [
+          {
+            "s": 12,
+            "name": "minecraft:iron_ingot",
+            "count": 1,
+            "damage": 0
+          },
+          {
+            "s": 13,
+            "name": "minecraft:iron_ingot",
+            "count": 1,
+            "damage": 0
+          },
+          {
+            "s": 21,
+            "name": "minecraft:iron_ingot",
+            "count": 1,
+            "damage": 0
+          },
+          {
+            "s": 22,
+            "name": "minecraft:iron_ingot",
+            "count": 1,
+            "damage": 0
+          },
+          {
+            "s": 23,
+            "name": "minecraft:iron_ingot",
+            "count": 1,
+            "damage": 0
+          }
+        ]
       }
     },
     {
@@ -1406,7 +1437,20 @@
         "z": 11
       },
       "extra": {
-        "items": []
+        "items": [
+          {
+            "s": 6,
+            "name": "minecraft:iron_ingot",
+            "count": 1,
+            "damage": 0
+          },
+          {
+            "s": 11,
+            "name": "minecraft:iron_helmet",
+            "count": 1,
+            "damage": 0
+          }
+        ]
       }
     }
   ]

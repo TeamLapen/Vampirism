@@ -69,7 +69,7 @@ public class MinionAIBiteNearbyEntity extends EntityAIBase {
 			List list = vampire.worldObj.getEntitiesWithinAABB(EntityCreature.class, vampire.boundingBox.expand(2, 2, 2));
 			for (Object o : list) {
 				mob = VampireMob.get((EntityCreature) o);
-				if (mob.canBeBitten())
+				if (mob.getBlood() > 0)
 					return true;
 			}
 		}
@@ -79,7 +79,7 @@ public class MinionAIBiteNearbyEntity extends EntityAIBase {
 
 	@Override
 	public void startExecuting() {
-		int amount = mob.bite();
+		int amount = mob.bite(true);
 		vampire.worldObj.playSoundAtEntity(vampire, REFERENCE.MODID + ":player.bite", 1.0F, 1.0F);
 		addBlood(amount);
 	}

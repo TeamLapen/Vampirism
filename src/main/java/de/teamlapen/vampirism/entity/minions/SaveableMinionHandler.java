@@ -136,7 +136,7 @@ public class SaveableMinionHandler {
 					e.isDead = true;
 			}
 		}
-		Logger.d(TAG, "Saved " + list.tagCount() + " minions");
+		//Logger.d(TAG, "Saved " + list.tagCount() + " minions");
 		return list;
 	}
 
@@ -153,7 +153,7 @@ public class SaveableMinionHandler {
 
 	public void loadMinions(NBTTagList list) {
 		if (list == null || list.tagCount() == 0) {
-			Logger.d(TAG, "Empty minion list to load");
+			//Logger.d(TAG, "Empty minion list to load");
 			return;
 		}
 		loadedMinions = new ArrayList<IMinion>();
@@ -163,9 +163,9 @@ public class SaveableMinionHandler {
 			if (entity != null && entity instanceof IMinion) {
 				entity.posY = entity.posY + entity.height;
 				loadedMinions.add((IMinion) entity);
-				Logger.d(TAG, "Loaded minion from nbt");
+				//Logger.d(TAG, "Loaded minion from nbt");
 			} else {
-				Logger.d(TAG, "Failed to load minion from NBT");
+				//Logger.d(TAG, "Failed to load minion from NBT");
 			}
 		}
 
@@ -210,7 +210,7 @@ public class SaveableMinionHandler {
 			e.copyLocationAndAnglesFrom(e1);
 		}
 		for (IMinion m : toTeleportDim) {
-			Logger.d(TAG, "Teleporting minion");
+			//Logger.d(TAG, "Teleporting minion");
 			Entity e = m.getRepresentingEntity();
 			e.travelToDimension(e1.dimension);
 			e.timeUntilPortal = e.getPortalCooldown();

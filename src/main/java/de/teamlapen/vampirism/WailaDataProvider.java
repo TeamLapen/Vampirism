@@ -1,23 +1,5 @@
 package de.teamlapen.vampirism;
 
-import java.util.List;
-
-import mcp.mobius.waila.api.IWailaConfigHandler;
-import mcp.mobius.waila.api.IWailaDataAccessor;
-import mcp.mobius.waila.api.IWailaDataProvider;
-import mcp.mobius.waila.api.IWailaEntityAccessor;
-import mcp.mobius.waila.api.IWailaEntityProvider;
-import mcp.mobius.waila.api.IWailaRegistrar;
-import mcp.mobius.waila.api.SpecialChars;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.StatCollector;
-import net.minecraft.world.World;
 import cpw.mods.fml.common.Optional;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.minions.IMinion;
@@ -28,6 +10,18 @@ import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
 import de.teamlapen.vampirism.util.REFERENCE;
+import mcp.mobius.waila.api.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.StatCollector;
+import net.minecraft.world.World;
+
+import java.util.List;
 
 @Optional.Interface(iface = "mcp.mobius.waila.api.IWailaDataProvider", modid = "Waila")
 public class WailaDataProvider implements IWailaDataProvider, IWailaEntityProvider {
@@ -77,7 +71,7 @@ public class WailaDataProvider implements IWailaDataProvider, IWailaEntityProvid
 				IMinion minion = MinionHelper.getMinionFromEntity(entity);
 
 				int blood = vampire.getBlood();
-				if (blood > 0) {
+				if (blood >= 0) {
 					currenttip.add(String.format("%s%s: %d", SpecialChars.RED, StatCollector.translateToLocal("text.vampirism.entitysblood"), blood));
 				}
 				if (minion != null) {
