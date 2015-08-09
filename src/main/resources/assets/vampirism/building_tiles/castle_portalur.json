@@ -3597,7 +3597,7 @@
   ],
   "extras": [
     {
-      "type": 3,
+      "type": "SPAWN_ENTITY",
       "pos": {
         "x": 3,
         "y": -9,
@@ -3609,7 +3609,7 @@
       }
     },
     {
-      "type": 5,
+      "type": "WALL_SIGN",
       "pos": {
         "x": 4,
         "y": -7,
@@ -3623,7 +3623,7 @@
       }
     },
     {
-      "type": 5,
+      "type": "WALL_SIGN",
       "pos": {
         "x": 5,
         "y": -7,
@@ -3637,7 +3637,7 @@
       }
     },
     {
-      "type": 3,
+      "type": "SPAWN_ENTITY",
       "pos": {
         "x": 6,
         "y": -9,
@@ -3649,7 +3649,7 @@
       }
     },
     {
-      "type": 0,
+      "type": "SPAWNER",
       "pos": {
         "x": 10,
         "y": -4,

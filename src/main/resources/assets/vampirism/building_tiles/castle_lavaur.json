@@ -10424,7 +10424,7 @@
   ],
   "extras": [
     {
-      "type": 0,
+      "type": "SPAWNER",
       "pos": {
         "x": 10,
         "y": -4,

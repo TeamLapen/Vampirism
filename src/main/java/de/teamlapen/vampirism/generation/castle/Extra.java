@@ -29,24 +29,10 @@ import net.minecraft.world.World;
  * @author Maxanier
  */
 public class Extra {
-	public static final int SPAWNER=0;
-	public static final int COFFIN=1;
-	public static final int CHEST=2;
-	public static final int SPAWN_ENTITY=3;
-	public static final int PAINTING=4;
-	public static final int WALL_SIGN=5;
-	public static final int ALTAR_2=6;
-	public static final int ALTAR_1=7;
-	public final int type;
+	public final TYPE type;
 	public final BlockList.BlockPosition pos;
 	private JsonObject extra;
-
-	/**
-	 *
-	 * @param t Type int representation
-	 * @param pos
-	 */
-	public Extra(int t,BlockList.BlockPosition pos){
+	public Extra(TYPE t,BlockList.BlockPosition pos){
 		this.type=t;
 		this.pos=pos;
 	}
@@ -59,7 +45,7 @@ public class Extra {
 	 * @param wz World z coordinate
 	 */
 	public void applyExtra(final World world, int wx, int wy, int wz) {
-		if(type==SPAWN_ENTITY){
+		if(type==TYPE.SPAWN_ENTITY){
 			int c=extra.get("count").getAsInt();
 			String entity=extra.get("entity").getAsString();
 			if(REFERENCE.ENTITY.DRACULA_NAME.equals(entity)&&world.provider.dimensionId!= VampirismMod.castleDimensionId){
@@ -96,7 +82,7 @@ public class Extra {
 			}
 
 		}
-		else if(type==PAINTING){
+		else if(type==TYPE.PAINTING){
 			int dir=extra.get("dir").getAsInt();
 			String title=extra.get("title").getAsString();
 			EntityPainting.EnumArt art=null;
@@ -230,5 +216,12 @@ public class Extra {
 		extra=new JsonObject();
 		extra.addProperty("dir",p.hangingDirection);
 		extra.addProperty("title",p.art.title);
+	}
+
+	/**
+	 * Types of {@link Extra}s
+	 */
+	public enum TYPE {
+		SPAWNER, COFFIN, CHEST, SPAWN_ENTITY, PAINTING, WALL_SIGN, ALTAR_2, ALTAR_1
 	}
 }

@@ -12,6 +12,8 @@ import de.teamlapen.vampirism.generation.castle.Extra;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.item.EntityPainting;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
@@ -50,7 +52,7 @@ public class TileEntityTemplateGenerator extends TileEntity {
 					if(block.equals(Blocks.standing_sign)){
 						TileEntitySign sign= (TileEntitySign) chunk.getTileEntityUnsafe(x,y,z);
 						if(sign!=null){
-							Extra e = new Extra(Extra.SPAWN_ENTITY, new BlockList.BlockPosition(x, y - this.yCoord, z));
+							Extra e=new Extra(Extra.TYPE.SPAWN_ENTITY,new BlockList.BlockPosition(x,y-this.yCoord,z));
 							e.retrieveExtra(sign);
 							extraList.add(e);
 						}
@@ -63,26 +65,26 @@ public class TileEntityTemplateGenerator extends TileEntity {
 						int m=chunk.getBlockMetadata(x, y, z);
 						int[] meta=guessMetaForBlock(block,m);
 						addBlock(block,meta,x,y-this.yCoord,z);
-					int extraType = -1;
+						Extra.TYPE extraType=null;
 						if(block instanceof BlockMobSpawner){
-							extraType = Extra.SPAWNER;
+							extraType= Extra.TYPE.SPAWNER;
 						}
 						else if(block instanceof BlockChest){
-							extraType = Extra.CHEST;
+							extraType= Extra.TYPE.CHEST;
 						}
 						else if(block instanceof BlockCoffin){
-							extraType = Extra.COFFIN;
+							extraType = Extra.TYPE.COFFIN;
 						}
 						else if(block.equals(Blocks.wall_sign)){
-							extraType = Extra.WALL_SIGN;
+							extraType= Extra.TYPE.WALL_SIGN;
 						}
 						else if(block instanceof BlockBloodAltar2){
-							extraType = Extra.ALTAR_2;
+							extraType= Extra.TYPE.ALTAR_2;
 						}
 					else if(block instanceof BlockBloodAltar1){
-							extraType = Extra.ALTAR_1;
+							extraType= Extra.TYPE.ALTAR_1;
 						}
-					if (extraType != -1) {
+						if(extraType!=null){
 
 							TileEntity t=chunk.getTileEntityUnsafe(x, y, z);
 							if(t!=null){
@@ -101,7 +103,7 @@ public class TileEntityTemplateGenerator extends TileEntity {
 		List<EntityPainting> paintings=new ArrayList<EntityPainting>();
 		chunk.getEntitiesOfTypeWithinAAAB(EntityPainting.class, AxisAlignedBB.getBoundingBox(Integer.MIN_VALUE, this.yCoord + minY, Integer.MIN_VALUE, Integer.MAX_VALUE, worldObj.getActualHeight(), Integer.MAX_VALUE), paintings, null);
 		for(EntityPainting p:paintings){
-			Extra extra = new Extra(Extra.PAINTING, new BlockList.BlockPosition(p.field_146063_b - (chunk.xPosition << 4), p.field_146064_c - this.yCoord, p.field_146062_d - (chunk.zPosition << 4)));
+			Extra extra=new Extra(Extra.TYPE.PAINTING,new BlockList.BlockPosition(p.field_146063_b-(chunk.xPosition<<4),p.field_146064_c-this.yCoord,p.field_146062_d-(chunk.zPosition<<4)));
 			extra.retrieveExtra(p);
 			extraList.add(extra);
 		}

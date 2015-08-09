@@ -27,7 +27,7 @@ echo "Finished building version: " $version
 if [[ $commsg = *"$r"* ]]; then
 API_JSON=$(printf '{"tag_name": "v%s","target_commitish": "%s","name": "v%s","body": "Release of version %s","draft": false,"prerelease": false}' $version $(printenv GIT_COMMIT) $version $version)
 token=$(printenv TOKEN)
-curl -u maxanier:${token} --data "$API_JSON" https://api.github.com/repos/${1}/${2}/releases
+curl maxanier:${token} --data "$API_JSON" https://api.github.com/repos/${1}/${2}/releases
 fi
 API_JSON=$(printf '{ "body":"[DRONE]%s"}' $(printenv DRONE_BUILD_URL))
 curl -u maxanier:${token} --data "$API_JSON" https://api.github.com/repos/${1}/${2}/commits/$(printenv GIT_COMMIT)/comments
