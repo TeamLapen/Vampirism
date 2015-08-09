@@ -3,6 +3,7 @@ echo ""
 echo ""
 echo "VersionManagment:"
 git fetch -t
+echo $(printenv GIT_BRANCH)
 echo "Test describe"
 git describe --tags --abbrev=0 --match "v0.7*"
 
