@@ -13,6 +13,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Avoids no such field exceptions caused by modded enums
+ *
+ * @param <T>
+ * @author OniBait
+ */
 public final class ModdedEnumTypeAdapter<T extends Enum<T>> extends TypeAdapter<T> {
     private final Map<String, T> nameToConstant = new HashMap<String, T>();
     private final Map<T, String> constantToName = new HashMap<T, String>();
