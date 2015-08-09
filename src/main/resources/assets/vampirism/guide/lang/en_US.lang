@@ -1,0 +1,89 @@
+#X-Generator: crowdin.com
+#General
+guide.vampirism.book.title=Vampirism Guide
+guide.vampirism.welcomeMessage=Welcome to the Vampirism Guide. Take a look around to find out what you can do in this mod. Have fun.
+guide.vamprism.book.name=Vampirism Guide
+
+#Getting Started
+guide.vampirism.gettingStarted.category=Getting Started
+guide.vampirism.gettingStarted.overview.title=Overview
+guide.vampirism.gettingStarted.overview.text=Vampirism is a mod that adds a whole new way of playing Minecraft. Previously you probably did not go out at night, but as a Vampire, you are starting to like the darkness and will develop a thirst for killing \:) \n When wandering around the world you might notice there are more villages in more biomes, in which you can assuage one's thirst. The villages in swamps are especially interesting.
+guide.vampirism.gettingStarted.firstSteps.title=First steps
+guide.vampirism.gettingStarted.firstSteps.text=You will start out as a regular player, to become a vampire you have to be bitten by a vampire. So either let them hit you on purpose or just wait until it happens by accident. When they hit you there is a chance, you receive a potion effect called "Sanguinare Vampiris" which lasts a Minecraft day. After the potion has ended, you become a vampire. In case you don't want to become one, you can always cancel the effect with a milk bucket. Alternatively you can right-click with vampire fangs in you hand to inject some blood into you and get the same effect as above.
+guide.vampirism.gettingStarted.asAVampire.title=As a vampire
+guide.vampirism.gettingStarted.asAVampire.text=Once you become a Vampire, one of your main sources of blood (at least the best source) are villagers and you should find plenty of those. Watch out though, there are still Vampires that may attack you, same as when you are a regular player. The Vampire Hunters, however, will not attack you, when you are a level 1 Vampire.\nAs a Vampire, you need to watch how much blood you have. Suck blood by pressing 'F' from Villagers and from some mobs to get more blood. Extra blood can be stored in a Blood Bottle. If you want to transfer blood between the Blood Bottle and the Blood Bar use right click or shift right click on the mouse. You will know which mobs you can't get blood from, as you will receive damage trying to suck their blood. In the beginning you will be a level 1 vampire (the level is displayed above your XP-level) and have improved speed, health and strength.\nTo get to higher vampire levels you have to perform different rituals. When you get above a certain level, Vampires will no longer attack you, but Vampire Hunters will. As you advance through levels your abilities improve, but some disadvantages like sun damage might appear.
+
+#Items and Blocks
+guide.vampirism.itemsAndBlocks.category=Items and Blocks
+guide.vampirism.itemsAndBlocks.found.title=Found in the world
+guide.vampirism.itemsAndBlocks.found.pureBlood=Is dropped by Vampire Barons in different purity levels depending on the Barons level. Required for the higher tier rituals.
+guide.vampirism.itemsAndBlocks.found.bloodAltar1=This block can act as a beacon and gives you a speed as well as a saturation effect (you consume less blood). But to enable this effect, you have to craft yourself a "Leech" sword and fill it with blood by killing villagers or other creatures with it. Then you can insert the sword into the block which enables the effect, but slowly depletes the sword. The block cannot be crafted, but has to be found in swamplands.
+guide.vampirism.itemsAndBlocks.found.vampireFlower=Vampire Orchids can be found in the vampire biome.
+guide.vampirism.itemsAndBlocks.found.humanHearth=These are dropped by vampire hunters. You can either eat them to get a large amount of blood or use them in several rituals.
+guide.vampirism.itemsAndBlocks.found.vampireFang=These are dropped by vampires. You can use them in a few crafting recipes or right click with them to get "Sanguinare Vampiris".
+guide.vampirism.itemsAndBlocks.bBottle.text=Holds blood to tide you over when not out hunting. You can transfer blood to the blood bar with a right click of the mouse. Transfer extra blood to the bottle with shift + right click. Enable auto mode, (press %s) to automatically transfer extra blood to any blood bottle in the visible inventory. Filled up bottles are also used in a few crafting recipes. You can either craft it with the following recipe or simple keep normal glas bottles on your hotbar when bitting mobs.
+guide.vampirism.itemsAndBlocks.sunscreen.text=Decreases you sun damage for some time.
+guide.vampirism.itemsAndBlocks.armor.text=The specially designed Vampire armor reduces the influence of the sun on vampires. If fully worn you do not get a confusion effect as well as less instant damage. The armor itself can be compared to vanilla iron armor.
+guide.vampirism.itemsAndBlocks.armor.title=Vampire armor
+guide.vampirism.itemsAndBlocks.altars.altar2.text=This altar is used for leveling between levels %d and %d
+guide.vampirism.itemsAndBlocks.altars.altar4.text=The %s is used for leveling as of level %d and consists of several blocks\: The main block, tips and different vanilla structure blocks. For further information take a look at the leveling section.
+guide.vampirism.itemsAndBlocks.altars.title=Altar blocks
+guide.vampirism.itemsAndBlocks.coffin.text=The coffin can be used to sleep during the day and to set your spawn-point. It is recommend do place it in spot where the sun does not get. You can change the interior color by shift-right-clicking with a dye on it. 
+guide.vampirism.itemsAndBlocks.used_for_minions=Used for minions
+guide.vampirism.itemsAndBlocks.blood_eye.text=Can be used to locate the nearest castle
+
+#Levels
+guide.vampirism.levels.introduction.title=Introduction
+guide.vampirism.levels.introduction.text=After becoming a vampire (see Getting Started) you probably want to reach higher levels. To level up you have perform rituals at different altars, but always at night.
+guide.vampirism.levels.altar2.title=Levels %d to %d
+guide.vampirism.levels.altar2.text=Craft the altar block and place it somewhere. To use this one you have to fill it with blood (right-click with filled blood bottles). If there is enough blood inside you can right-click with an empty hand and the blood will be infused into you, making you even stronger.
+guide.vampirism.levels.altar4.title=Level %d+
+guide.vampirism.levels.altar4.text=This altar requires a multiblock structure. First craft the main block (see Items and Blocks) and place it down, then you have to build pillars at defined position. The pillar block type and height varies depending on the level, on top has to be a tip each. Make sure there are no other blocks (e.g. grass) in the area (Example screenshots at the end). After the structure is complete, put the required amount of items into the altar (Take a look at the following table), shift right click and wait for the magic to happen. Do not use shift click to insert the items into the altar, there is a bug in forge for 1.7.10
+guide.vampirism.levels.altar4.item_text=Required items
+guide.vampirism.levels.altar4.structure1.name=Structure 1
+guide.vampirism.levels.altar4.structure2.name=Structure 2
+guide.vampirism.levels.altar4.item_req=Item requirements
+guide.vampirism.levels.altar4.struc_req=Structure requirements
+guide.vampirism.levels.category=How to level up
+
+#Mobs
+guide.vampirism.mobs.category=Mobs
+guide.vampirism.mobs.hunter.text=Hunts vampires ;)/nOnly attacks players with a vampire level higher than %s./nVampire Hunters near villages try to defend their village.
+guide.vampirism.mobs.vampire.text=Attacks players as long as they don't have a vampire level higher than %s./nAlso attacks villagers and makes them to vampire./nNight active
+guide.vampirism.mobs.vampire_baron.text=Spawns rarely in vampire biomes./nOccurs in different levels partially depending on the players level./nDrops pure blood./nIs very strong and summons minions which help him
+guide.vampirism.mobs.vampire_minion.title=Vampire Minion
+guide.vampirism.mobs.vampire_minion.text=Are subordinated to their lord./nHave the texture of their lord./nCan be controlled by vampire lord players.
+guide.vampirism.mobs.ghost.text=Spawns in the vampire biome.
+guide.vampirism.mobs.ghost.title=Ghost
+
+#VampirePlayer
+guide.vampirism.vplayer.category=Vampire Player Features
+guide.vampirism.vplayer.general.text=Player can have different vampire levels (see section "How to level up"), you currently can reach a max level of %s./n/nYour speed, damage, jump height and health increase with you leveling up./n/nVampire Player have a night vision effect which gets stronger with higher levels as well as a blood vision which allows you to spot animals easily. To can toggle between these (Key\: %s)./n/nInstead of a foodbar vampires have a blood bar which acts similar to the former./n/nYou can suck blood from some mobs (Key\: %s), you should see some vampire fangs pop up when you look at them. If you bite a mob which does't have blood, you get a short poison effect./n/nBitten mobs will either die or be converted to a vampire version./n/nYou can store blood in blood bottles by using (shift-) right-click. You can enable autofill (Key\: %s) which fills any left blood, when biting a mob, into glas or blood bottles on you hotbar./n/nYou have a slightly modified skin as a vampire.
+guide.vampirism.vplayer.general.title=General
+guide.vampirism.vplayer.general.loose_level=If you are killed by a vampire hunter you loose one vampire level.
+guide.vampirism.vplayer.sun_damage.text=There are three different impacts of the sun on vampire player\: Nausea, weakness and damage./nWith higher vampire levels you will be affected by multiple of them./nOn lower levels you can protect yourself from the highest type of sundamage by consuming sunscreen./nYou can protect you from nausea by fully wearing vampire armor./n
+guide.vampirism.vplayer.sun_damage.title=Sun Damage
+guide.vampirism.vplayer.skills.text=As a vampire you get special skills with higher levels. You can for example control the weather as of level 4./n/nTo To activate this there is a special menu\: Hold the middle mouse button [check your key/control configuration] pressed and a "skill rose" will pop up, move the mouse in the direction of the desired skill until it's highlighted and release the button./n/nIf you don't want so select any skill either release the mouse when nothing is selected or select the red cross./n/nAll skills have a minimum required level and a cooldown time, you can only activate it if it is not in cooldown mode. Some skills also have a duration, then you can deactivate the skill if you do not need it anymore by selecting it again to decrease the cooldown time.
+guide.vampirism.vplayer.skills.title=Skills
+guide.vampirism.vplayer.skills.bat_transformation=Skill\: Bat Transformation/n/nAt night you can convert to a bat and fly like in creative mod, but you cannot place or break blocks or use items. Another big disadvantage of the bat is its low health, so avoid hostile creatures. You can toggle it as often as you want, but at sunrise you will be automatically converted back.
+guide.vampirism.vplayer.skills.revive_fallen=Skill\: Revive the fallen/n/nZombies and Skeletons (more mobs might be added in the future)sometimes leave a pile of bones when they die. Then you can use this skill to revive the fallen mobs which will then fight as minions for you.
+guide.vampirism.vplayer.skills.end=There are many more skills. Just try them out.
+guide.vampirism.vplayer.skills.menu_text=This is the "skill rose" to toggle skills
+
+#VampireLord
+guide.vampirism.vlord.category=Vampire Lord
+guide.vampirism.vlord.introduction.title=Introduction
+guide.vampirism.vlord.introduction.text=All the while there was one which was superior to the others. He calls himself Dracula and lives in a large castle. He has minions which serve him and sacrifize themselves to protect him. /nOnly very few vampires tried to defeat him and take his position, but they all failed. Maybe you can do better?
+guide.vampirism.vlord.become.title=How to become one
+guide.vampirism.vlord.become.text=If you really want to take Dracula's place, you have to be prepared. Make sure you have already reached vampire level %d, otherwise you can not even get to him. Also equip yourself very well. /nThen start looking for Vampire Forest biomes with a castle inside. You can use %s to find it quicker. /nIn the main castle building take a look around, you should be able to find a special portal, which Dracula uses to quickly get to his home. Once you are in his main castle you have to defeat him to become a Vampire Lord. Good Look.
+guide.vampirism.vlord.about.title=About beeing a Lord
+guide.vampirism.vlord.about.text=Beeing a Vampire Lord makes you stronger and gives you some new skills (see the other entries), but there are a few things you should know. /nSome other vampires are also interested in becoming a Vampire Lord and there are a few ways you could loose your position to them. /nFirstly make sure to not be killed by a Hunter, because loosing a vampire level makes to to weak to hold your positions. /nSecondly be aware that other vampires will attack you, vampires in castles will mostly respect your superiority, but outside there are many envious ones. /nIf you are playing on a multiplayer server also read the according entry.
+guide.vampirism.vlord.multiplayer.title=In Multiplayer
+guide.vampirism.vlord.multiplayer.text=On multiplayer servers you also have to be aware that other players can defeat you and replace you as Lord if they are qualified. /nThis is also the way to become the Vampire Lord after the first player has defeated Dracula. But is also possible that the other player looses the Lord status, e.g. when he was offline for to long. /n/nThere is also the config option to allow multiple player vampire lords at once. If this is enabled, Dracula respawns and can be killed by another player.
+guide.vampirism.vlord.skills.title=Vampire Lord skills
+guide.vampirism.vlord.skills.text=After defeating the current Vampire Lord you also learn a few skills he had. They are available in the normal skill rose, but you might not be able to use all the old ones./n/nTeleport/nYou can teleport over short distances/n/nInvisibility/nBe invisble for a short time/n/nFreeze/nFreeze everyone around for a short time.
+guide.vampirism.vlord.minions.title=Minions
+guide.vampirism.vlord.minions.text=As Vampire Lord you are so powerful that you can make vampires to your minions. Freeze one and then use your bite key to intimidate him. He will become your minion. /nThen you can use %s while facing him to open a control menu and give him different different tasks. /nTo control multiple minions at ones, press the same key while facing no minion. /n/nThe normal minions will always stay with you, otherwise they would run away. To make them able to fulfill tasks at other places, you have to use the %s on them. /nThen you can send them for example to collect blood, in this form they are also a little bit smarter and try to hide from the sun. To name your minions you can use a special and cheap minion name tag.
+
+
+

@@ -1,0 +1,147 @@
+#X-Generator: crowdin.com
+# Entitys
+entity.vampirism.vampireHunter.name=Vampierenjager
+entity.vampirism.vampire.name=Vampier
+entity.vampirism.ghost.name=Geest
+entity.vampirism.vampireBaron.name=Vampieren Baron
+entity.vampirism.vampireMinionR.name=Vampieren volgeling
+entity.vampirism.vampireMinionS.name=Vampieren volgeling
+entity.vampirism.blinding_bat.name=Vleermuis
+entity.vampirism.dracula.name=Dracula
+entity.vampirism.dead_mob.name=Dood wezen
+entity.vampirism.portal_guard.name=Portaal wachter
+
+# Items
+item.vampirism.vampiresFear.name=Vampieren angst
+item.vampirism.bloodBottle.name=Bloed fles
+item.vampirism.vampireFang.name=Vampieren tanden
+item.vampirism.pitchfork.name=Hooivork
+item.vampirism.humanHeart.name=Menselijk hart
+item.vampirism.torch.name=Toorts
+item.vampirism.pureBlood.name=Puur bloed
+item.vampirism.sunscreen.name=Zonnecreme
+item.vampirism.leechSword.name=Bloedzuiger
+item.vampirism.coffin.name=Kist
+item.vampirism.vampireArmor_helmet.name=Vampieren helm
+item.vampirism.vampireArmor_leggings.name=vampieren broek
+item.vampirism.vampireArmor_boots.name=Vampieren schoenen
+item.vampirism.vampireArmor_chestplate.name=Vampieren borstplaat
+item.vampirism.minionNameTag.name=Volgelingen naam kaartje
+item.vampirism.gemOfBinding.name=Juweel van binding
+item.vampirism.bloodEye.name=Bloed oog
+
+# Blocks
+block.vampirism.bloodAltar.name=Bloed altaar van verzadiging
+block.vampirism.bloodAltarTier2.name=Bloed altaar van inspiratie
+block.vampirism.bloodAltarTier4.name=Bloed altaar van aftreksel
+block.vampirism.bloodAltarTier4Tip.name=Bloed altaar van aftreksel top
+block.vampirism.churchAltar.name=Altaar van reiniging
+block.vampirism.cursedEarth.name=Vervloekte aarde
+block.vampirism.vampireOrchid.name=Vampieren orchidee
+block.vampirism.blockCoffin.name=Kist
+block.vampirism.castlePortal.name=Portaal blok
+block.vampirism.castleBlock.name=Kasteel blok
+block.vampirism.castleSlab.name=Kasteel plaat
+block.vampirism.doubleCastleSlab.name=Dubbele kasteel plaat
+block.vampirism.castleStairs.name=Kasteel trap
+
+#GUI
+gui.vampirism.revertback.head=Terugkeren naar normale mens
+gui.vampirism.revertback.desc=Je zult al je levels verliezen en sterven
+
+# Keys
+keys.vampirism.category=Vampirisme
+keys.vampirism.suck=Bloed zuigen
+keys.vampirism.auto=Automatisch opvullen van de bloedfles
+keys.vampirism.skill=Activeren van Vampier vaardigheden
+key.vampirism.vision=Wissel zicht
+
+#General
+itemGroup.vampirism=Vampirisme
+death.attack.sun=%1$s Hield nied van de zon
+potion.vampirism.sunscreen=Zonnecreme
+potion.vampirism.thirst=Dorst
+potion.vampirism.saturation=Verzadiging
+potion.vampirism.sanguinare=Sanguinare Vampiris
+text.vampirism.skill.level_to_low=Je vampieren level is te laag om dit te doen
+text.vampirism.skill.cooldown_not_over=Wacht alsjeblieft tot het afkoelen voorbij is
+text.vampirism.entity_level=Level
+text.vampirism.ritual_missing_times=Je mist dingen voor dit ritueel
+text.vampirism.ritual_structure_wrong=De structuur is verkeerd voor dit ritueel
+text.vampirism.ritual_level_wrong=Je kunt dit altaar niet gebruiken op dit niveau
+text.vampirism.ritual_still_running=Het ritueel wordt nog steeds uitgevoerd
+text.vampirism.not_enough_blood=Er is niet genoeg bloed in het altaar
+text.vampirism.ritual_requirements_not_met=Niet alle eisen voor dit ritueel werden voldaan
+text.vampirism.purity=Zuiverheid
+text.vampirism.auto_fill_enabled=Automatisch vullen ingeschakeld
+text.vampirism.auto_fill_disabled=Automatisch vullen uitgeschakeld
+text.vampirism.skill.deactivated_by_serveradmin=Deze vaardigheid is uitgeschakeld door uw server beheerder
+text.vampirism.ritual_no_vampire=Je moet een vampier voor dit ritueel
+text.vampirism.cant_fly_day=Je kunt niet vliegen overdag
+text.vampirism.no_more_minions=Je kan geen extra volgelingen meer controleren
+text.vampirism.coffin.noSleep=Je kan enkel overdag slapen
+text.vampirism.coffin.occupied=Deze kist is in gebruik
+text.vampirism.coffin.stopsleeping=Verlaat de kist
+text.vampirism.blood_left=Overgelaten bloed
+text.vampirism.blood=Bloed
+text.vampirism.vampirelevel=Vampierenlevel
+text.vampirism.entitysblood=Wezen's bloed
+text.vampirism.minion=Volgeling
+text.vampirism.lord=Heer
+text.vampirism.normal_vision=Normaal zicht
+text.vampirism.night_vision=Nachtzicht
+text.vampirism.no_control_minion=Je hebt geen controle over deze volgeling
+text.vampirism.need_empty_bottle=Mijn heer, Ik heb een lege fles nodig om bloed te verzamelen
+text.vampirism.thanks=Bedankt
+text.vampirism.coming_back=Ik kom terug, Mijn heer
+text.vampirism.sorry_i_died_while_doing=Mijn heer, het spijt me maar ik ben gestroven toen ik uw taak in vervulling bracht
+text.vampirism.current_task=Huidige taak
+text.vampirism.lord.become=U worden verhoogd tot Vampieren heer
+text.vampirism.lord.other_player_become=heeft de huidige vampieren heer verslagen en vervangt hem
+text.vampirism.lord.vampire_replace=Een andere speler heeft vervangen u als Vampieren heer
+text.vampirism.lord.vampire_kill_replace=Een andere vampire heeft u gedood en uw plaats als Vampieren heer ingenomen
+text.vampirism.lord.new_lord_castle=Een nieuwe Vampieren heer is ge creërt en is verhuisd naar zijn kasteel
+text.vampirism.lord.vampire_replace_absence=Een andere vampier heeft u vervangen als Vampieren heer in uw afwezigheid
+text.vampirism.lord.portal_disabled=Dit portaal leidt nergens naar toe
+text.vampirism.lord.level_to_low=Je vampieren nieveau is te laag om een vampieren heer te worden
+text.vampirism.guard_stay_away_level_low=Uw vampieren niveau is te laag om naar Dracula's kasteel te reizen. Blijf uit de buurt\!
+text.vampirism.coffin.wrong_dimension=Je kan niet slapen in deze dimensie.
+text.vampirism.biome.looking_for_biome=Op zoek naar een vampieren bos biotoop. Een ogenblik geduld
+text.vampirism.biome.not_found=Geen Vampieren bos biotoop werd gevonden.
+text.vampirism.biome.found=Een Vampire Forest biotoop gevonden
+text.vampirism.castle_fail=Vampirisme was niet in staat om een geschikte positie voor een Vampieren kasteel te vinden.\nHet wordt aanbevolen om een nieuwe wereld te genereren. U kunt ook proberen "/ vampirisme checkForVampireBiome", als dat geen biotoop kan vinden, is een andere mod zich waarschijnlijk aan het mengen.
+
+#Skill
+skill.vampirism.bat_skill=Schakel vleermuis mode
+skill.vampirism.change_weather=Weer
+skill.vampirism.cancel=Annuleren
+skill.vampirism.freeze=Bevriezen
+skill.vampirism.invisibility=Onzichtbaarheid
+skill.vampirism.regen=Regeneratie
+skill.vampirism.revive_fallen=De gevallen doen heropstaan
+skill.vampirism.summon_bats=Roep vleermuizen
+skill.vampirism.teleport=Teleporteer
+skill.vampirism.vampire_rage=Vampieren Woede
+
+#Minion command
+minioncommand.vampirism.attackhostilenoplayers=Vijandig aanvallen
+minioncommand.vampirism.attackhostile=Vijandig aanvallen inclusief speler
+minioncommand.vampirism.collectblood=Verzamel bloed
+minioncommand.vampirism.defendlord=Verdedig heer
+minioncommand.vampirism.stayhere=Blijf hier
+minioncommand.vampirism.comeback=Kom terug (afgelegen volgelingen)
+minioncommand.vampirism.justfollow=Volg me
+minioncommand.vampirism.converttosaveable=Neem juweel van binding terug
+minioncommand.vampirism.defendarea=Verdedig gebied
+
+#Config
+category.vampirism.balance=Balans instellingen
+category.vampirism.balance.tooltip=Bijna elke evenwichte relevante eigenschap wijzigen
+category.vampirism.balance_level="niveau omhoog" evenwicht instellingen
+category.vampirism.balance_player_mod=Vampier speler modifier instellingen
+category.vampirism.balance_player_skills=Vampier speler vaardigheids instellingen
+category.vampirism.balance_mob_prop=Vampirisme wezen eigenschappen
+category.vampirism.balance_mob_prop.tooltip=Verander eigenschappen van de wezens toegevoegd door Vampirisme
+category.vampirism.balance_vv_prop=Vampieren dorp eigenschappen
+category.vampirism.balance_vv_prop.tooltip=Verander de manier waarop de jagers in dorpen zich gedragen en andere dorp gerelateerde dingen
+
