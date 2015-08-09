@@ -2226,7 +2226,7 @@
   ],
   "extras": [
     {
-      "type": "SPAWN_ENTITY",
+      "type": 3,
       "pos": {
         "x": 5,
         "y": 0,
@@ -2238,7 +2238,7 @@
       }
     },
     {
-      "type": "SPAWN_ENTITY",
+      "type": 3,
       "pos": {
         "x": 5,
         "y": 0,
@@ -2250,7 +2250,7 @@
       }
     },
     {
-      "type": "SPAWN_ENTITY",
+      "type": 3,
       "pos": {
         "x": 5,
         "y": 0,
@@ -2262,7 +2262,7 @@
       }
     },
     {
-      "type": "SPAWN_ENTITY",
+      "type": 3,
       "pos": {
         "x": 10,
         "y": 0,
@@ -2274,7 +2274,7 @@
       }
     },
     {
-      "type": "SPAWN_ENTITY",
+      "type": 3,
       "pos": {
         "x": 10,
         "y": 0,
@@ -2286,7 +2286,7 @@
       }
     },
     {
-      "type": "SPAWN_ENTITY",
+      "type": 3,
       "pos": {
         "x": 11,
         "y": 0,

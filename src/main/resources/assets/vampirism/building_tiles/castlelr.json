@@ -5916,7 +5916,7 @@
   ],
   "extras": [
     {
-      "type": "SPAWN_ENTITY",
+      "type": 3,
       "pos": {
         "x": 1,
         "y": 0,
@@ -5928,7 +5928,7 @@
       }
     },
     {
-      "type": "SPAWN_ENTITY",
+      "type": 3,
       "pos": {
         "x": 7,
         "y": 0,
@@ -5940,7 +5940,7 @@
       }
     },
     {
-      "type": "CHEST",
+      "type": 2,
       "pos": {
         "x": 13,
         "y": 0,
@@ -5951,7 +5951,7 @@
       }
     },
     {
-      "type": "CHEST",
+      "type": 2,
       "pos": {
         "x": 13,
         "y": 0,

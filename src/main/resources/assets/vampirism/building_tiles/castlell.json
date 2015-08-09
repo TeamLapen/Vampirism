@@ -7119,7 +7119,7 @@
   ],
   "extras": [
     {
-      "type": "ALTAR_2",
+      "type": 6,
       "pos": {
         "x": 2,
         "y": 1,
@@ -7130,7 +7130,7 @@
       }
     },
     {
-      "type": "CHEST",
+      "type": 2,
       "pos": {
         "x": 2,
         "y": 12,
@@ -7141,7 +7141,7 @@
       }
     },
     {
-      "type": "SPAWN_ENTITY",
+      "type": 3,
       "pos": {
         "x": 5,
         "y": 5,
@@ -7153,7 +7153,7 @@
       }
     },
     {
-      "type": "SPAWNER",
+      "type": 0,
       "pos": {
         "x": 5,
         "y": 10,
@@ -7164,7 +7164,7 @@
       }
     },
     {
-      "type": "SPAWN_ENTITY",
+      "type": 3,
       "pos": {
         "x": 15,
         "y": 0,
