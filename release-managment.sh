@@ -22,7 +22,7 @@ else
 	export RELEASE="true"
 fi
 ./gradlew setupCIWorkspace
-#./gradlew build curse
+./gradlew build curse
 version=$(<version.txt)
 echo "Finished building version: " $version
 token=$(printenv TOKEN)
