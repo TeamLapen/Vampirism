@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.biome.BiomeVampireForest;
 import de.teamlapen.vampirism.castleDim.ChunkProviderCastle;
 import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.ModdedEnumTypeAdapter;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.ChunkPosition;
@@ -52,7 +53,7 @@ public class CastleGenerator extends WorldGenerator {
 	 * Loads all tiles from the jar
 	 */
 	public static void loadTiles() {
-		Gson gson = new GsonBuilder().setPrettyPrinting().create();
+		Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapterFactory(ModdedEnumTypeAdapter.ENUM_FACTORY).create();
 		tileMap = new HashMap<String, BuildingTile>();
 		loadTile("wall", gson, tileMap);
 		loadTile("flatDirt", gson, tileMap);
