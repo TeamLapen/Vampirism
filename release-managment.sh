@@ -3,12 +3,6 @@ echo ""
 echo ""
 echo "VersionManagment:"
 git fetch -t
-echo $(printenv GIT_BRANCH)
-echo "Test describe"
-git describe --tags --abbrev=0 --match "v0.7*"
-
-echo "Test describe2\n"
-git describe --tags `git rev-list --tags --max-count=1`
 #Get commit message
 commsg=$(git show -s --format=%s $(printenv GIT_COMMIT))
 echo "Commit message: " $commsg
