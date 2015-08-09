@@ -27,8 +27,8 @@ if [[ $commsg != *"$r"* ]]; then
 else
 	export RELEASE="true"
 fi
-./gradlew setupCIWorkspace
-./gradlew build
+#./gradlew setupCIWorkspace
+#./gradlew build curse
 version=$(<version.txt)
 echo "Finished building version: " $version
 token=$(printenv TOKEN)
