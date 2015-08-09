@@ -25,14 +25,9 @@ logger.lifecycle "Version "+project.mod_version
 logger.lifecycle 'git', 'describe', '--tags', '--abbrev=0', "--match", "\"v${config.main_version}.${config.major_version}*\""
 def getLatestTag(){
     def stdout = new ByteArrayOutputStream()
+
     exec {
-        commandLine 'git', 'describe', '--tags', '--abbrev=0'
-    }
-    exec {
-        commandLine 'git', 'describe', '--tags', '--abbrev=0', "--match", "'*'"
-    }
-    exec {
-        commandLine 'git', 'describe', '--tags', '--abbrev=0', "--match", "'v0.7*'"
+        commandLine 'git', 'describe', '--tags', '--abbrev=0', "--match=v0.7*"
         //commandLine 'git','describe','--tags','--abbrev=0', "--match", "\"v${config.main_version}.${config.major_version}*\""
         standardOutput = stdout
     }
