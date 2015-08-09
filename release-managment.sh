@@ -5,9 +5,8 @@ echo "VersionManagment:"
 git fetch -t
 echo "Test describe"
 git describe --tags --abbrev=0 --match "v0.7*"
+
 echo "Test describe2\n"
-git describe
-echo "Test describe3\n"
 git describe --tags `git rev-list --tags --max-count=1`
 #Get commit message
 commsg=$(git show -s --format=%s $(printenv GIT_COMMIT))
@@ -27,7 +26,7 @@ if [[ $commsg != *"$r"* ]]; then
 else
 	export RELEASE="true"
 fi
-#./gradlew setupCIWorkspace
+./gradlew setupCIWorkspace
 #./gradlew build curse
 version=$(<version.txt)
 echo "Finished building version: " $version
