@@ -27,6 +27,7 @@ guide.vampirism.itemsAndBlocks.altars.altar2.text=Cet autel est utilisé pour au
 guide.vampirism.itemsAndBlocks.altars.altar4.text=Le %s est utilisé pour augmenter de niveau au niveau %d et se compose de plusieurs blocs \: Le bloc principal, des astuces et différents blocs de structure vanilla. Pour plus d'informations, jetez un oeil à la section mise à niveau.
 guide.vampirism.itemsAndBlocks.altars.title=Blocs d'autel
 guide.vampirism.itemsAndBlocks.coffin.text=Le cercueil peut être utilisé pour dormir pendant le jour et pour définir votre point d'apparition. Il est recommandé de le placer dans un endroit où le soleil ne peut pas aller. Vous pouvez changer la couleur intérieur avec MAJ + clic droit avec la teinture dessus. 
+guide.vampirism.itemsAndBlocks.used_for_minions=Utilisé pour les favoris
 
 #Levels
 guide.vampirism.levels.introduction.title=Introduction
@@ -66,6 +67,7 @@ guide.vampirism.vplayer.skills.end=Il y a beaucoup plus de compétences. Essayez
 guide.vampirism.vplayer.skills.menu_text=Il s'agit de la « rose  à compétence» pour changer de compétence
 
 #VampireLord
+guide.vampirism.vlord.introduction.title=Introduction
 
 
 

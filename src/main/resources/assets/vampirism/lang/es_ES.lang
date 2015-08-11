@@ -3,11 +3,13 @@
 entity.vampirism.vampireHunter.name=Cazador de vampiros
 entity.vampirism.vampire.name=Vampiro
 entity.vampirism.ghost.name=Fantasma
+entity.vampirism.vampireBaron.name=Barón vampiro
 entity.vampirism.vampireMinionR.name=Súbdito de vampiro
 entity.vampirism.vampireMinionS.name=Súbdito de vampiro
 entity.vampirism.blinding_bat.name=Murciélago
 entity.vampirism.dracula.name=Drácula
 entity.vampirism.dead_mob.name=Mob muerto
+entity.vampirism.portal_guard.name=Protector del portal
 
 # Items
 item.vampirism.vampiresFear.name=Miedo del vampiro
@@ -25,6 +27,8 @@ item.vampirism.vampireArmor_leggings.name=Grebas de vampiro
 item.vampirism.vampireArmor_boots.name=Botas de vampiro
 item.vampirism.vampireArmor_chestplate.name=Peto de vampiro
 item.vampirism.minionNameTag.name=Etiqueta de nombre del súbdito
+item.vampirism.gemOfBinding.name=Joya de enlace
+item.vampirism.bloodEye.name=Ojo de sangre
 
 # Blocks
 block.vampirism.bloodAltar.name=Altar de sangre de Saturación
@@ -38,6 +42,7 @@ block.vampirism.blockCoffin.name=Ataúd
 block.vampirism.castlePortal.name=Bloque de Portal
 block.vampirism.castleBlock.name=Bloque de castillo
 block.vampirism.castleSlab.name=Losa de castillo
+block.vampirism.doubleCastleSlab.name=Losa de castillo doble
 block.vampirism.castleStairs.name=Escaleras de castillo
 
 #GUI
@@ -73,7 +78,7 @@ text.vampirism.auto_fill_disabled=Auto-relleno desactivado
 text.vampirism.skill.deactivated_by_serveradmin=Esta habilidad esta desactivada por el administrador de su servidor
 text.vampirism.ritual_no_vampire=¡ Tienes que ser un vampiro para este ritual \!
 text.vampirism.cant_fly_day=Usted no puede volar durante el día
-text.vampirism.no_more_minions=No eres capaz de controlar más súbditos
+text.vampirism.no_more_minions=No eres capaz de controlar más subditos
 text.vampirism.coffin.noSleep=Sólo se puede dormir en el día
 text.vampirism.coffin.occupied=Este ataúd esta ocupado
 text.vampirism.coffin.stopsleeping=Abandonar el ataúd
@@ -81,24 +86,29 @@ text.vampirism.blood_left=Sangre restante
 text.vampirism.blood=Sangre
 text.vampirism.vampirelevel=Nivel de vampiro
 text.vampirism.entitysblood=Sangre de la entidad
-text.vampirism.minion=Súbdito
+text.vampirism.minion=Subdito
 text.vampirism.lord=Señor
 text.vampirism.normal_vision=Visión normal
 text.vampirism.night_vision=Visión nocturna
-text.vampirism.no_control_minion=No tiene ningún control sobre este súbdito
+text.vampirism.no_control_minion=No tiene ningún control sobre este subdito
 text.vampirism.need_empty_bottle=Mi señor, necesito una botella vacía para recoger la sangre
 text.vampirism.thanks=Gracias
 text.vampirism.coming_back=Vuelvo, mi señor
 text.vampirism.sorry_i_died_while_doing=Mi señor, lo siento pero morí cumpliendo con su tarea
 text.vampirism.current_task=Tarea actual
-text.vampirism.lord.other_player_become=a derrotado al actual Señor Vampiro y lo ha reemplazado
-text.vampirism.lord.vampire_replace=Otro jugador te ha reemplazado como Señor Vampiro
-text.vampirism.lord.vampire_kill_replace=Otro vampiro te ha matado y ha tomado tu lugar como Señor Vampiro
+text.vampirism.lord.become=Eres ascendido a Señor de los vampiros
+text.vampirism.lord.other_player_become=a derrotado al actual Señor de los vampiros y lo ha reemplazado
+text.vampirism.lord.vampire_replace=Otro jugador te ha reemplazado como Señor de los vampiros
+text.vampirism.lord.vampire_kill_replace=Otro vampiro te ha matado y ha tomado tu lugar como Señor de los vampiros
+text.vampirism.lord.new_lord_castle=Un nuevo Señor de los vampiros ha surgido y se trasladó a su castillo
 text.vampirism.lord.vampire_replace_absence=Otro vampiro te ha reemplazado como Señor Vampiro en tu ausencia
 text.vampirism.lord.portal_disabled=Este portal no lleva a ninguna parte
-text.vampirism.lord.level_to_low=Tu nivel de vampiro es demasiado bajo para ser un Señor Vampiro
-text.vampirism.guard_stay_away_level_low=Tu nivel de vampiro es demasiado bajo para viajar al Castillo de Dracula. Mantente alejado\!
+text.vampirism.lord.level_to_low=Tu nivel de vampiro es demasiado bajo para ser un Señor de los vampiros
+text.vampirism.guard_stay_away_level_low=Tu nivel de vampiro es demasiado bajo para viajar al castillo de Dracula. Mantente alejado\!
 text.vampirism.coffin.wrong_dimension=No puedes dormir en esta dimensión.
+text.vampirism.biome.looking_for_biome=En busca de un bioma de bosque de vampiro. Espera por favor
+text.vampirism.biome.not_found=No se encontró ningún bioma de bosque de vampiro.
+text.vampirism.biome.found=Bioma de bosque de vampiro encontrado
 text.vampirism.castle_fail=Vampirism no fue capaz de encontrar una posición adecuada para un Castillo de Vampiro. Es recomendable generar un nuevo mundo. También puedes intentar "/vampirism checkForVampireBiome", si eso no encuentra un bioma, probablemente otro mod está interfiriendo.
 
 #Skill
@@ -119,8 +129,10 @@ minioncommand.vampirism.attackhostile=Atacar mobs hostiles incluyendo jugador
 minioncommand.vampirism.collectblood=Recolectar sangre
 minioncommand.vampirism.defendlord=Defender al señor
 minioncommand.vampirism.stayhere=Permanecer aquí
-minioncommand.vampirism.comeback=Regresa (súbditos remotos)
+minioncommand.vampirism.comeback=Regresar (subditos remotos)
 minioncommand.vampirism.justfollow=Sólo sigueme
+minioncommand.vampirism.converttosaveable=Devuelve gema de enlace
+minioncommand.vampirism.defendarea=Defiende el área
 
 #Config
 category.vampirism.balance=Configuración de balance

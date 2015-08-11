@@ -191,7 +191,7 @@ public final class BALANCE {
 	@DefaultInt(value = 2, minValue = 1, name = "Player Level for Vampire Attack", comment = "Vampires attack players unless their vampire level is higher than this")
 	public static int VAMPIRE_FRIENDLY_LEVEL;
 
-	@DefaultInt(value = 50, minValue = 0, name = "Vampire Hunter Spawn", comment = "Should be compared with the spawnrate of friendly mobs")
+	@DefaultInt(value = 5, minValue = 0, name = "Vampire Hunter Spawn", comment = "Should be compared with the spawnrate of friendly mobs")
 	public static int VAMPIRE_HUNTER_SPAWN_PROBE;
 
 	@DefaultInt(value = 100, minValue = 0, name = "Vampire Spawn Probe", comment = "")

@@ -113,7 +113,6 @@ text.vampirism.castle_fail=Vampirism was not able to find a appropriate position
 text.vampirism.structure=Structure
 text.vampirism.pillar_blocks=Pillar Blocks
 
-
 #Skill
 skill.vampirism.bat_skill=Toggle Batmode
 skill.vampirism.change_weather=Weather

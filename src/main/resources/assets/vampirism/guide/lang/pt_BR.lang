@@ -1,6 +1,7 @@
 #X-Generator: crowdin.com
 #General
-guide.vampirism.book.title=Guia de vampirismo
+guide.vampirism.book.title=Guia de Vampirismo
+guide.vampirism.welcomeMessage=Bem vindo ao guia do Vampirismo. De uma olhada e veja o que você pode fazer nesse mod.
 guide.vamprism.book.name=Guia de vampirismo
 
 #Getting Started
@@ -15,6 +16,7 @@ guide.vampirism.gettingStarted.asAVampire.text=Depois de se tornar um vampiro, u
 #Items and Blocks
 guide.vampirism.itemsAndBlocks.category=Blocos e itens
 guide.vampirism.itemsAndBlocks.found.title=Encontrado no mundo
+guide.vampirism.itemsAndBlocks.found.pureBlood=É dropado por Barões Vampiros em diferentes níveis de pureza dependendo do nível deles. Obrigatório para os rituais de nível superior.
 guide.vampirism.itemsAndBlocks.found.bloodAltar1=Este bloco pode agir como um farol e dá-lhe uma velocidade, bem como um efeito de saturação (você consumir menos sangue). Mas para ativar este efeito, você tem que se ofício uma espada "Sanguessuga" e preenchê-lo com sangue, matando os aldeões ou outras criaturas com isso. Então você pode inserir a espada para o bloco que permite que o efeito, mas esgota lentamente a espada. O bloco não pode ser trabalhado, mas tem que ser encontrada em pântanos.
 guide.vampirism.itemsAndBlocks.found.vampireFlower=Orquídeas de vampiro podem ser encontradas no bioma de vampiro.
 guide.vampirism.itemsAndBlocks.found.humanHearth=Estas são descartadas por caçadores de vampiros. Você também pode comê-los para obter uma grande quantidade de sangue ou usá-los em vários rituais.
@@ -27,6 +29,8 @@ guide.vampirism.itemsAndBlocks.altars.altar2.text=Este altar é usado para o niv
 guide.vampirism.itemsAndBlocks.altars.altar4.text=O %s é usado para o nivelamento a partir de nível %d e consiste em vários blocos\: O bloco principal, as pontas e blocos de estrutura diferente de baunilha. Para mais informações, dê uma olhada na seção de nivelamento.
 guide.vampirism.itemsAndBlocks.altars.title=Blocos de altar
 guide.vampirism.itemsAndBlocks.coffin.text=O caixão pode ser usado para dormir durante o dia e para definir o seu ponto de desova. Isso é recomendo colocá-lo no lugar onde o sol não dá. Você pode alterar a cor do interior, shift-direito-clicando com uma tintura nele. 
+guide.vampirism.itemsAndBlocks.used_for_minions=Usado pelos minions
+guide.vampirism.itemsAndBlocks.blood_eye.text=Pode ser usado para localizar o castelo mais proximo
 
 #Levels
 guide.vampirism.levels.introduction.title=Introdução
@@ -46,6 +50,7 @@ guide.vampirism.levels.category=Como subir de nível
 guide.vampirism.mobs.category=Mobs
 guide.vampirism.mobs.hunter.text=Caça vampiros;) / Apenas ataca os jogadores com um nível de vampiro superior %s. / nVampire caçadores perto de aldeias tentar defender a sua aldeia.
 guide.vampirism.mobs.vampire.text=Ataca os jogadores desde que eles não têm um nível de vampiro superior %s. / nAlso ataca aldeões e torna a vampiro. / Night ativo
+guide.vampirism.mobs.vampire_baron.text=Spawna raramente em biomas de vampiro./nOcorre em níveis diferentes, dependendo parcialmente do level do jogador./nDropa "Sangue Puro"./nÉ bem forte e sumona minions que irao ajudar ele
 guide.vampirism.mobs.vampire_minion.title=Vampiro Minion
 guide.vampirism.mobs.vampire_minion.text=São subordinados ao seu senhor. / nHave a textura do seu senhor. / nPode ser controlados por jogadores de Lorde vampiro.
 guide.vampirism.mobs.ghost.text=Desova no bioma de vampiro.
@@ -55,17 +60,26 @@ guide.vampirism.mobs.ghost.title=Fantasma
 guide.vampirism.vplayer.category=Características do leitor de vampiro
 guide.vampirism.vplayer.general.text=Jogador pode ter níveis diferentes de vampiro (consulte a seção "Como subir de nível"), você pode atualmente alcança um nível máximo de velocidade %s./n/nYour, danificar, salto altura e aumento da saúde com você nivelamento up./n/nVampire Player tem um efeito de visão de noite que fica mais forte com níveis mais elevados, bem como uma visão de sangue, que permite detectar animais facilmente. Que pode alternar entre estas (chave\: %s)./n/nInstead de um foodbar vampiros têm uma barra de sangue que funciona semelhante da former./n/nYou pode sugar o sangue de alguns mobs (chave\: %s), você deve ver algumas presas de vampiro pop-up quando você olha para eles. Você morde uma multidão que does ' t ter sangue, se um curto veneno effect./n/nBitten multidões também vão morrer ou ser convertidos em um vampiro version./n/nYou pode armazenar sangue em garrafas de sangue usando (shift-) botão direito do mouse. Você pode habilitar o autofill (chave\: %s) que preenche qualquer sangue esquerdo, quando morder uma multidão, em glas ou sangue garrafas na hotbar./n/nYou você tem uma pele ligeiramente modificada como um vampiro.
 guide.vampirism.vplayer.general.title=Informações gerais
-guide.vampirism.vplayer.general.loose_level=Se você for morto por um caçador de vampiros que você solta um nível de vampiro.
-guide.vampirism.vplayer.sun_damage.text=Existem três diferentes impactos do sol sobre jogador vampiro\: náuseas, fraqueza e dano. / c maior vampiro níveis você será afetado por vários deles. / não baixa os níveis você pode se proteger contra o tipo mais alto de sundamage consumindo o protetor solar. / nVocê pode protegê-lo de náusea, totalmente vestindo armadura de vampiro. / n
+guide.vampirism.vplayer.general.loose_level=Se você for morto por um caçador de vampiros você perdera um nível de vampiro.
+guide.vampirism.vplayer.sun_damage.text=Existem três diferentes impactos do sol sobre jogador vampiro\: náuseas, fraqueza e dano./nQuanto maior o nível do vampiro maior sera o efeito causado em você (proporcional ao nivel do vampiro)./nNos níveis iniciais você pode se proteger contra o tipo mais alto de "Dano Solar" consumindo o "protetor solar"./nVocê pode se proteger da náusea vestindo uma armadura de vampiro completa./n
 guide.vampirism.vplayer.sun_damage.title=Danos causados pelo sol
 guide.vampirism.vplayer.skills.text=Como um vampiro, você tem habilidades especiais com níveis mais elevados. Você pode, por exemplo, controlar o tempo a partir do nível 4. / n/nTo para ativar isso aí é um menu especial\: mantenha pressionado o botão do meio do mouse [Verifique a configuração de chave/controle] pressionado e uma rosa de"habilidade" irá aparecer, mover o mouse na direção da skill desejada até que ele é realçado e lançamento do button./n/nIf não quer, então, selecionar qualquer habilidade ou solte o mouse quando não há nada selecionado ou selecione o cross./n/nAll vermelho habilidades têm um nível mínimo exigido e um tempo de cooldown, você pode apenas ativá-lo se não estiver no modo de cooldown. Algumas habilidades também têm uma duração e, em seguida, você pode desativar a habilidade, se você não precisar dele mais selecionando-o novamente para diminuir o tempo de cooldown.
 guide.vampirism.vplayer.skills.title=Habilidades
 guide.vampirism.vplayer.skills.bat_transformation=Noite de taco transformação/n/nAt habilidade\: Você pode converter para um morcego e voar como no mod criativo, mas você não pode colocar ou quebrar blocos ou usar itens. Outra grande desvantagem do morcego é sua baixa saúde, então evite criaturas hostis. Você pode alternar o tão frequentemente como você deseja, mas ao nascer do sol, para que você será automaticamente convertido.
 guide.vampirism.vplayer.skills.revive_fallen=Habilidade\: Reviver o caído/n/nZombies e esqueletos (mobs mais podem ser adicionados no futuro) às vezes deixam uma pilha de ossos, quando eles morrem. Então você pode usar esta habilidade para reviver os mobs caídos que então lutará como asseclas para você.
-guide.vampirism.vplayer.skills.end=Existem muitas habilidades mais. Apenas experimentá-los.
-guide.vampirism.vplayer.skills.menu_text=Isto é as habilidades de alternância "habilidade rosa"
+guide.vampirism.vplayer.skills.end=Existem muitas outras habilidades. Basta experimentá-los.
+guide.vampirism.vplayer.skills.menu_text=Isto é a"Rosa das habilidades" para definir as habilidades
 
 #VampireLord
+guide.vampirism.vlord.category=Lorde Vampiro
+guide.vampirism.vlord.introduction.title=Introdução
+guide.vampirism.vlord.introduction.text=Durante todo esse tempo havia um que era superior aos outros. Ele se intitula Dracula e vive em um grande castelo. Ele tem servos que lhe servem e sacrificam-se para protegê-lo. / nApenas alguns poucos vampiros tentaram derrotá-lo e tomar sua posição, mas todos eles falharam. Talvez você possa fazer melhor?
+guide.vampirism.vlord.become.title=Como se tornar um
+guide.vampirism.vlord.become.text=Se você realmente quer tomar o lugar de Dracula, você tem que estar preparado. Certifique-se de que você já atingiu o nível vampiro %d, caso contrário, você não pode nem mesmo chegar até ele. Também se equipe muito bem. /nEntão comece a procurar por biomas Floresta de Vampíro com um castelo no interior. Você pode usar %s para encontrá-lo mais rápido. /nNo edifício do castelo principal dê uma olhada ao redor, você deve ser capaz de encontrar um portal especial, no qual Drácula usa para chegar rapidamente à sua casa. Assim que você estiver em seu castelo principal você tem que derrotá-lo para se tornar um Vampíro Lorde. Boa Sorte.
+guide.vampirism.vlord.about.title=Sobre ser um Lorde
+guide.vampirism.vlord.multiplayer.title=Em Multijogador
+guide.vampirism.vlord.skills.title=Habilidades do Lorde Vampiro
+guide.vampirism.vlord.minions.title=Minions
 
 
 

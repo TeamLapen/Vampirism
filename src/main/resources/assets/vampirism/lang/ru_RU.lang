@@ -3,11 +3,13 @@
 entity.vampirism.vampireHunter.name=Охотник на вампиров
 entity.vampirism.vampire.name=Вампир
 entity.vampirism.ghost.name=Призрак
+entity.vampirism.vampireBaron.name=Барон Вампиров
 entity.vampirism.vampireMinionR.name=Вампирский миньон
 entity.vampirism.vampireMinionS.name=Вампирский миньон
 entity.vampirism.blinding_bat.name=Летучая мышь
 entity.vampirism.dracula.name=Дракула
 entity.vampirism.dead_mob.name=Мёртвый моб
+entity.vampirism.portal_guard.name=Cтраж Портала
 
 # Items
 item.vampirism.vampiresFear.name=Страх вампира
@@ -25,6 +27,8 @@ item.vampirism.vampireArmor_leggings.name=Вампирские штаны
 item.vampirism.vampireArmor_boots.name=Вампирские ботинки
 item.vampirism.vampireArmor_chestplate.name=Вампирский нагрудник
 item.vampirism.minionNameTag.name=Тег имени Миньона
+item.vampirism.gemOfBinding.name=Камень привязки
+item.vampirism.bloodEye.name=Кровавый глаз
 
 # Blocks
 block.vampirism.bloodAltar.name=Кровавый Алтарь Насыщения
@@ -35,8 +39,10 @@ block.vampirism.churchAltar.name=Очищающий Алтарь
 block.vampirism.cursedEarth.name=Проклятая земля
 block.vampirism.vampireOrchid.name=Вампирская орхидея
 block.vampirism.blockCoffin.name=Гроб
+block.vampirism.castlePortal.name=Блок Портала
 block.vampirism.castleBlock.name=Блок замка
 block.vampirism.castleSlab.name=Плита замка
+block.vampirism.doubleCastleSlab.name=Двойная Плита Замка
 block.vampirism.castleStairs.name=Ступеньки замка
 
 #GUI
@@ -90,6 +96,20 @@ text.vampirism.thanks=Благодарю
 text.vampirism.coming_back=Я вернулся, мой лорд
 text.vampirism.sorry_i_died_while_doing=Мой лорд, прошу прощения, но я умер, пока выполнял ваше задание
 text.vampirism.current_task=Текущее задание
+text.vampirism.lord.become=Вы стали Лордом Вампиров
+text.vampirism.lord.other_player_become=победил текущего Лорда Вампиров и стал на его место
+text.vampirism.lord.vampire_replace=Другой игрок заменил вас в качестве Лорда Вампиров
+text.vampirism.lord.vampire_kill_replace=Другой вампир убил вас и занял ваше место в качестве Лорда Вампиров
+text.vampirism.lord.new_lord_castle=Новый Лорд Вампиров вырос и переехал в свой замок
+text.vampirism.lord.vampire_replace_absence=Другой вампир заменил вас в качестве Лорда Вампиров в ваше отсутсвие
+text.vampirism.lord.portal_disabled=Этот портал никуда не ведёт
+text.vampirism.lord.level_to_low=Ваш уровень вампиризма слишком мал чтобы стать Лордом Вампиров
+text.vampirism.guard_stay_away_level_low=Ваш уровень вампиризма слишком мал для поездки в замок Дракулы. Держитесь подальше\!
+text.vampirism.coffin.wrong_dimension=Вы не можете спать в этом измерении.
+text.vampirism.biome.looking_for_biome=Ищем Вампирский лесной биом. Пожалуйста подождите
+text.vampirism.biome.not_found=Вампирский Лесной Биом не был найден.
+text.vampirism.biome.found=Вампирский Лесной Биом найден
+text.vampirism.castle_fail=Vampirism не смог найти подходящее место для Замка Вампиров.Рекомендуется создать новый мир.Вы также можете попробовать "/vampirism checkForVampireBiome", если это не помогает, в этом вероятно виноват другой мод.
 
 #Skill
 skill.vampirism.bat_skill=Обратиться в летучую мышь
@@ -111,6 +131,8 @@ minioncommand.vampirism.defendlord=Защищать Лорда
 minioncommand.vampirism.stayhere=Стоять здесь
 minioncommand.vampirism.comeback=Вернись (миньонам)
 minioncommand.vampirism.justfollow=Следуй за мной
+minioncommand.vampirism.converttosaveable=Верните Камень Привязки обратно
+minioncommand.vampirism.defendarea=Область защиты
 
 #Config
 category.vampirism.balance=Настройки баланса
