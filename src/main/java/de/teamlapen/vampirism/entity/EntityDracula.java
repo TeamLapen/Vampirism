@@ -16,18 +16,19 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.*;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import org.eclipse.jdt.annotation.NonNull;
 
 import java.util.List;
 
-public class EntityDracula extends DefaultVampireWithMinion implements IBossDisplayData {
+public class EntityDracula extends EntityDefaultVampireWithMinion implements IBossDisplayData {
 	private static final int DISAPPEAR_DELAY = 200;
 	private static final int TELEPORT_THRESHOLD = 30;
 	private static final int TELEPORT_DELAY = 80;
-	private AxisAlignedBB castle;
 	private int disappearDelay;
 	private int teleportDelay = 0;
 	private final int maxTeleportDistanceX = 16;
@@ -116,27 +117,6 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 	@Override
 	public boolean isWithinHomeDistanceCurrentPosition() {
 		return super.isWithinHomeDistanceCurrentPosition();
-	}
-
-	@Override
-	public boolean hasHome() {
-		return castle != null;
-	}
-
-	@Override
-	public boolean isWithinHomeDistance(int p_110176_1_, int p_110176_2_, int p_110176_3_) {
-		if (castle != null) {
-			return castle.isVecInside(Vec3.createVectorHelper(p_110176_1_, p_110176_2_, p_110176_3_));
-		}
-		return true;
-	}
-
-	@Override
-	public ChunkCoordinates getHomePosition() {
-		if (castle == null) {
-			return null;
-		}
-		return new ChunkCoordinates((int) castle.minX + 16, (int) castle.minY + 3, (int) (castle.minZ + 16));
 	}
 
 	@Override
@@ -231,7 +211,7 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 			}
 
 			if (this.ticksExisted % 100 == 0 && this.hasHome() && this.getMinionHandler().getMinionCount() < 1) {
-				EntityVampireMinion minion = (EntityVampireMinion) Helper.spawnEntityInWorld(worldObj, castle, REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME, 3);
+				EntityVampireMinion minion = (EntityVampireMinion) Helper.spawnEntityInWorld(worldObj, getHome(), REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME, 3);
 				if (minion != null) {
 					minion.setLord(this);
 					minion.addPotionEffect(new PotionEffect(Potion.resistance.id, 20000, 3));
@@ -315,7 +295,7 @@ public class EntityDracula extends DefaultVampireWithMinion implements IBossDisp
 		Logger.d(TAG, "Set draculas home pos");
 		ChunkCoordIntPair lc=pos.getLowerMainCastle();
 		ChunkCoordIntPair uc = pos.getUpperMainCastle();
-		this.castle = AxisAlignedBB.getBoundingBox(lc.chunkXPos << 4, pos.getHeight() - 1, lc.chunkZPos << 4, (uc.chunkXPos << 4) + 15, pos.getHeight() + 5, (uc.chunkZPos << 4) + 15);
+		this.setHome(AxisAlignedBB.getBoundingBox(lc.chunkXPos << 4, pos.getHeight() - 1, lc.chunkZPos << 4, (uc.chunkXPos << 4) + 15, pos.getHeight() + 5, (uc.chunkZPos << 4) + 15));
 	}
 
 	private void summonBats(){

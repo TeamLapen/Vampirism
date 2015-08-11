@@ -1,7 +1,10 @@
 package de.teamlapen.vampirism.item;
 
-import java.util.List;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.VampireMob;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.entity.EntityCreature;
@@ -14,11 +17,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.entity.VampireMob;
-import de.teamlapen.vampirism.util.REFERENCE;
+
+import java.util.List;
 
 public class ItemLeechSword extends ItemSword {
 	public static final int MAX_BLOOD = 100;
@@ -43,7 +43,6 @@ public class ItemLeechSword extends ItemSword {
 		if (amount > MAX_BLOOD)
 			amount = MAX_BLOOD;
 		itemStack.stackTagCompound.setInteger("blood", amount);
-		;
 	}
 
 	private IIcon unusedIcon;
@@ -104,7 +103,7 @@ public class ItemLeechSword extends ItemSword {
 				itemStack.stackTagCompound = new NBTTagCompound();
 				itemStack.stackTagCompound.setInteger("blood", 0);
 			}
-			itemStack.stackTagCompound.setInteger("blood", itemStack.stackTagCompound.getInteger("blood") + VampireMob.get((EntityCreature) entityTarget).max_blood);
+			itemStack.stackTagCompound.setInteger("blood", itemStack.stackTagCompound.getInteger("blood") + VampireMob.get((EntityCreature) entityTarget).getBlood());
 			if (itemStack.stackTagCompound.getInteger("blood") > MAX_BLOOD)
 				itemStack.stackTagCompound.setInteger("blood", MAX_BLOOD);
 			else if (itemStack.stackTagCompound.getInteger("blood") < 0)

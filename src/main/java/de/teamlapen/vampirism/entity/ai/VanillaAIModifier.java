@@ -10,14 +10,15 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 
+
 public class VanillaAIModifier {
 
 	public static void addVampireMobTasks(EntityCreature entity) {
 		EntityAITasks tasks = entity.tasks;
 		// Attack player
-		tasks.addTask(1, new EntityAIAttackOnCollide(entity, EntityPlayer.class, 1.0D, false));
+		tasks.addTask(1, new net.minecraft.entity.ai.EntityAIAttackOnCollide(entity, EntityPlayer.class, 1.0D, false));
 		// Attack vampire hunter
-		tasks.addTask(1, new EntityAIAttackOnCollide(entity, EntityVampireHunter.class, 1.0D, true));
+		tasks.addTask(1, new net.minecraft.entity.ai.EntityAIAttackOnCollide(entity, EntityVampireHunter.class, 1.0D, true));
 
 		EntityAITasks targetTasks = entity.targetTasks;
 		targetTasks.addTask(3, new EntityAINearestAttackableTarget(entity, EntityPlayer.class, 0, true, false, new IEntitySelector() {
@@ -39,7 +40,7 @@ public class VanillaAIModifier {
 		EntityAITasks tasks = entity.tasks;
 		tasks.taskEntries.clear();
 		tasks.addTask(0, new EntityAISwimming(entity));
-		tasks.addTask(2, new EntityAIAttackOnCollide(entity, EntityLivingBase.class, 1.0D, false));
+		tasks.addTask(2, new net.minecraft.entity.ai.EntityAIAttackOnCollide(entity, EntityLivingBase.class, 1.0D, false));
 		tasks.addTask(7, new MinionAIFollowBoss(minion, 1.0D));
 		tasks.addTask(16, new EntityAIWatchClosest(entity, EntityPlayer.class, 10));
 

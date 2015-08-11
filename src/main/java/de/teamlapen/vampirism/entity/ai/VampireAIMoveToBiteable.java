@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.entity.ai;
 
-import de.teamlapen.vampirism.entity.DefaultVampire;
+import de.teamlapen.vampirism.entity.EntityVampireBase;
 import de.teamlapen.vampirism.entity.VampireMob;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -15,11 +15,11 @@ import java.util.List;
  */
 public class VampireAIMoveToBiteable extends EntityAIBase {
 
-	private final DefaultVampire vampire;
+	private final EntityVampireBase vampire;
 	private EntityCreature target;
 	private int timeout;
 
-	public VampireAIMoveToBiteable(DefaultVampire vampire) {
+	public VampireAIMoveToBiteable(EntityVampireBase vampire) {
 		super();
 		this.vampire = vampire;
 		this.setMutexBits(1);

@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity.ai;
 
 import de.teamlapen.vampirism.ModItems;
-import de.teamlapen.vampirism.entity.DefaultVampire;
+import de.teamlapen.vampirism.entity.EntityVampireBase;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.minions.EntityRemoteVampireMinion;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
@@ -19,7 +19,7 @@ import java.util.List;
  * @author Maxanier
  *
  */
-public class MinionAIBiteNearbyEntity extends EntityAIBase {
+public class VampireAIBiteNearbyEntity extends EntityAIBase {
 
 	/**
 	 * Bites nearbe entity and fills the equipped bottle
@@ -27,7 +27,7 @@ public class MinionAIBiteNearbyEntity extends EntityAIBase {
 	 * @author Max
 	 *
 	 */
-	public static class MinionAIMinionCollectFromNearby extends MinionAIBiteNearbyEntity {
+	public static class MinionAIMinionCollectFromNearby extends VampireAIBiteNearbyEntity {
 
 		public MinionAIMinionCollectFromNearby(EntityRemoteVampireMinion vampire) {
 			super(vampire);
@@ -51,11 +51,12 @@ public class MinionAIBiteNearbyEntity extends EntityAIBase {
 		}
 
 	}
-	protected final DefaultVampire vampire;
+
+	protected final EntityVampireBase vampire;
 
 	protected VampireMob mob;
 
-	public MinionAIBiteNearbyEntity(DefaultVampire vampire) {
+	public VampireAIBiteNearbyEntity(EntityVampireBase vampire) {
 		this.vampire = vampire;
 	}
 

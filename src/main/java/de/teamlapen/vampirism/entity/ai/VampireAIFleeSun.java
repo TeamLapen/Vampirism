@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.entity.ai;
 
-import de.teamlapen.vampirism.entity.DefaultVampire;
+import de.teamlapen.vampirism.entity.EntityVampireBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
@@ -10,7 +10,7 @@ import java.util.Random;
 
 public class VampireAIFleeSun extends EntityAIBase {
 
-	protected final DefaultVampire vampire;
+	protected final EntityVampireBase vampire;
 	private final double speed;
 	private final World world;
 	private double shelterX;
@@ -19,7 +19,7 @@ public class VampireAIFleeSun extends EntityAIBase {
 
 	private boolean restrictToHome;
 
-	public VampireAIFleeSun(DefaultVampire vampire, double speed) {
+	public VampireAIFleeSun(EntityVampireBase vampire, double speed) {
 		this(vampire, speed, false);
 	}
 
@@ -30,7 +30,7 @@ public class VampireAIFleeSun extends EntityAIBase {
 	 * @param restrictToHome
 	 *            If the entitys home should be respected, if there is one.
 	 */
-	public VampireAIFleeSun(DefaultVampire vampire, double speed, boolean restrictToHome) {
+	public VampireAIFleeSun(EntityVampireBase vampire, double speed, boolean restrictToHome) {
 		this.vampire = vampire;
 		this.speed = speed;
 		this.world = vampire.worldObj;

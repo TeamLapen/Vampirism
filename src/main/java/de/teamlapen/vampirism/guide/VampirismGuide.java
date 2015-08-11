@@ -385,7 +385,7 @@ public class VampirismGuide{
 				return recipe;
 			}
 		}
-		
+
 		return null;
 	}
 

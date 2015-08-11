@@ -139,7 +139,7 @@ public class VampireEntityEventHandler {
 			}
 		} else if (event.entity instanceof EntityZombie) {
 			try {
-				((EntityZombie) event.entity).tasks.addTask(3, new EntityAIAttackOnCollide((EntityCreature) event.entity, DefaultVampire.class, 1.0F, false));
+				((EntityZombie) event.entity).tasks.addTask(3, new EntityAIAttackOnCollide((EntityCreature) event.entity, EntityVampirism.class, 1.0F, false));
 			} catch (Exception e) {
 				Logger.e("EntityEventHandler", e, "Failed to add attack task to zombie %s", event.entity);
 			}
@@ -159,7 +159,7 @@ public class VampireEntityEventHandler {
 	public void onLivingDrops(LivingDropsEvent e) {
 		if (e.entityLiving instanceof EntityCreature) {
 			VampireMob mob = VampireMob.get((EntityCreature) e.entityLiving);
-			if (mob.max_blood > 0 && mob.getBlood() < mob.max_blood / 3) {
+			if (mob.biteableEntry.max_blood > 0 && mob.getBlood() < mob.biteableEntry.max_blood / 3) {
 				for (EntityItem i : e.drops) {
 					ItemStack s = i.getEntityItem();
 					if (s.getItem().equals(Items.porkchop) || s.getItem().equals(Items.beef)) {

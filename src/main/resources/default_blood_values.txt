@@ -8,3 +8,5 @@ net.minecraft.entity.passive.EntityPig=5
 net.minecraft.entity.passive.EntitySheep=5
 net.minecraft.entity.passive.EntityOcelot=5
 net.minecraft.entity.passive.EntityWolf=5
+#MCA
+mca.entity.EntityHuman=-15

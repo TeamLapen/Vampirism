@@ -69,18 +69,7 @@ public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjust
 			}
 
 		}));
-		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, DefaultVampire.class, 0, true));
-		this.targetTasks.addTask(4, new EntityAINearestAttackableTarget(this, EntityCreature.class, 0, true, false, new IEntitySelector() {
-
-			@Override
-			public boolean isEntityApplicable(Entity entity) {
-				if (entity instanceof EntityCreature) {
-					return VampireMob.get((EntityCreature) entity).isVampire();
-				}
-				return false;
-			}
-
-		}));
+		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVampireBase.class, 0, true));
 
 		// Default to not in a village, will be set to false in
 		// WorldGenVampirism when generated on the surface in a village

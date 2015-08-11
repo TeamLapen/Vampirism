@@ -8,12 +8,11 @@ import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
-import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
-public class EntityVampire extends DefaultVampire {
+public class EntityVampire extends EntityDefaultVampire {
 	private boolean inCastle = false;
 	public EntityVampire(World par1World) {
 		super(par1World);
@@ -38,17 +37,6 @@ public class EntityVampire extends DefaultVampire {
 			}
 		}));
 
-		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVillager.class, 20, true, false, new IEntitySelector() {
-
-			@Override
-			public boolean isEntityApplicable(Entity entity) {
-				if (entity instanceof EntityVillager) {
-					return !VampireMob.get((EntityVillager) entity).isVampire();
-				}
-				return false;
-			}
-
-		}));
 
 	}
 

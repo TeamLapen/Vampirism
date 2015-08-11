@@ -1,7 +1,10 @@
 package de.teamlapen.vampirism.villages;
 
-import java.util.List;
-
+import de.teamlapen.vampirism.entity.EntityVampireHunter;
+import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.passive.EntityVillager;
@@ -10,12 +13,8 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
-import de.teamlapen.vampirism.entity.EntityVampireHunter;
-import de.teamlapen.vampirism.entity.VampireMob;
-import de.teamlapen.vampirism.util.BALANCE;
-import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.REFERENCE;
+
+import java.util.List;
 
 /**
  * Saveable class which handle and stores vampirism related data for villages
@@ -101,7 +100,7 @@ public class VillageVampire {
 		Logger.d(TAG, "Making agressive");
 		agressive = true;
 		for (EntityVillager e : getVillager(v)) {
-			if (!VampireMob.get(e).isVampire() && world.rand.nextInt(4) == 0) {
+			if (world.rand.nextInt(4) == 0) {
 				EntityVampireHunter h = (EntityVampireHunter) EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world);
 				h.copyLocationAndAnglesFrom(e);
 				world.spawnEntityInWorld(h);

@@ -733,7 +733,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 * @return
 	 */
 	public boolean onEntityAttacked(DamageSource source, float amount) {
-		if (source.getEntity() instanceof DefaultVampire && getLevel() == 0) {
+		if (source.getEntity() instanceof EntityVampireBase && getLevel() == 0) {
 			// Since the method seems to be called 4 times probability is
 			// decreased by the factor 4
 			if (player.worldObj.rand.nextInt(BALANCE.VAMPIRE_PLAYER_SANGUINARE_PROB * 4) == 0) {
