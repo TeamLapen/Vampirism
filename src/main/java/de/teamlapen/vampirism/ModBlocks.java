@@ -35,6 +35,8 @@ public class ModBlocks {
 	public final static BlockStairs castleStairsPurple = new BlockCastleStairs(castleBlock,0);
 	public final static BlockStairs castleStairsDark = new BlockCastleStairs(castleBlock,1);
 	public final static BlockCastlePortal castlePortal = new BlockCastlePortal();
+	public final static BlockDraculaButton blockDraculaButton = new BlockDraculaButton();
+
 	// Flowers
 	public final static VampireFlower vampireFlower = new VampireFlower();
 	public static void init() {
@@ -52,6 +54,7 @@ public class ModBlocks {
 		GameRegistry.registerBlock(castleStairsDark,BlockCastleStairs.name+"_dark");
 		GameRegistry.registerBlock(castleStairsPurple,BlockCastleStairs.name+"_purple");
 		GameRegistry.registerBlock(castlePortal,BlockCastlePortal.name);
+		GameRegistry.registerBlock(blockDraculaButton, BlockDraculaButton.name);
 		GameRegistry.registerTileEntity(TileEntityBloodAltar1.class, "TileEntityBloodAltar");
 		GameRegistry.registerTileEntity(TileEntityBloodAltar2.class, "TileEntityBloodAltarTier2");
 		// GameRegistry.registerTileEntity(TileEntityBloodAltarTier3.class, "TileEntityBloodAltarTier3");

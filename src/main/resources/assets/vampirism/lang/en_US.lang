@@ -112,6 +112,7 @@ text.vampirism.biome.found=Found a Vampire Forest Biome
 text.vampirism.castle_fail=Vampirism was not able to find a appropriate position for a Vampire Castle. It is recommend to generate a new world. You can also try "/vampirism checkForVampireBiome", if that does not find a biome, another mod is probably interfering.
 text.vampirism.structure=Structure
 text.vampirism.pillar_blocks=Pillar Blocks
+text.vampirism.no_dracula_to_call=Dracula is dead and cannot be called
 
 #Skill
 skill.vampirism.bat_skill=Toggle Batmode

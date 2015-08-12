@@ -7,10 +7,13 @@ import net.minecraft.entity.Entity;
 public class ModelBipedCloaked extends ModelBiped {
 
 	public ModelBipedCloaked(float f1, float f2, int texWidth, int texHeight) {
-		super(f1, f2, texWidth, texHeight);
+		this(f1, f2, texWidth, texHeight, 65, 0);
+	}
 
-		super.bipedCloak = new ModelRenderer(this, 65, 0);
-		super.bipedCloak.addBox(-7.0F, 0.0F, 0.0F, 14, 20, 1);
+	public ModelBipedCloaked(float f1, float f2, int texWidth, int texHeight, int capeX, int capeY) {
+		super(f1, f2, texWidth, texHeight);
+		super.bipedCloak = new ModelRenderer(this, capeX, capeY);
+		super.bipedCloak.addBox(-7.0F, 0.0F, 0.4F, 14, 20, 1);
 		super.bipedCloak.setRotationPoint(0, 0, 2);
 	}
 
