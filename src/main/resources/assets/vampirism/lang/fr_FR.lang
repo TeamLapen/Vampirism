@@ -3,11 +3,13 @@
 entity.vampirism.vampireHunter.name=Chasseur de vampire
 entity.vampirism.vampire.name=Vampire
 entity.vampirism.ghost.name=Fantôme
+entity.vampirism.vampireBaron.name=Baron vampire
 entity.vampirism.vampireMinionR.name=Sbire de Vampire
 entity.vampirism.vampireMinionS.name=Sbire de Vampire
 entity.vampirism.blinding_bat.name=Chauve-souris
 entity.vampirism.dracula.name=Dracula
 entity.vampirism.dead_mob.name=Mort vivant
+entity.vampirism.portal_guard.name=Garde du portail
 
 # Items
 item.vampirism.vampiresFear.name=Frayeur de vampire
@@ -25,6 +27,8 @@ item.vampirism.vampireArmor_leggings.name=Jambières du vampire
 item.vampirism.vampireArmor_boots.name=Bottes du vampire
 item.vampirism.vampireArmor_chestplate.name=Plastron du vampire
 item.vampirism.minionNameTag.name=Badge nominatif de favori
+item.vampirism.gemOfBinding.name=Gemme d'attache
+item.vampirism.bloodEye.name=Œil sanglant
 
 # Blocks
 block.vampirism.bloodAltar.name=Autel de sang de saturation
@@ -35,8 +39,10 @@ block.vampirism.churchAltar.name=Autel de nettoyage
 block.vampirism.cursedEarth.name=Terre maudite
 block.vampirism.vampireOrchid.name=Orchidé vampire
 block.vampirism.blockCoffin.name=Cercueil
+block.vampirism.castlePortal.name=Bloc de portail
 block.vampirism.castleBlock.name=Bloc de château
 block.vampirism.castleSlab.name=Dalle de château
+block.vampirism.doubleCastleSlab.name=Dalle double de château
 block.vampirism.castleStairs.name=Escaliers de château
 
 #GUI
@@ -90,6 +96,10 @@ text.vampirism.thanks=Merci
 text.vampirism.coming_back=Je revient, mon seigneur
 text.vampirism.sorry_i_died_while_doing=Mon seigneur, je suis désolé mais je suis mort en accomplissant votre tâche
 text.vampirism.current_task=Tâche en cours
+text.vampirism.lord.level_to_low=Votre niveau de vampire est trop bas pour devenir seigneur vampire
+text.vampirism.guard_stay_away_level_low=Votre niveau de vampire est trop bas pour voyager au château de Dracula. Restez au loin \!
+text.vampirism.coffin.wrong_dimension=Vous ne pouvez pas dormir dans cette dimension.
+text.vampirism.biome.looking_for_biome=A la recherche d'un biome forêt de vampire. Veuillez patienter
 
 #Skill
 skill.vampirism.bat_skill=Activer/désactiver le mode chauve-souris
@@ -111,6 +121,8 @@ minioncommand.vampirism.defendlord=Défendre le Seigneur
 minioncommand.vampirism.stayhere=Restez ici
 minioncommand.vampirism.comeback=Reviens (favoris distants)
 minioncommand.vampirism.justfollow=Suit-moi seulement
+minioncommand.vampirism.converttosaveable=Rendre la femme d'attache
+minioncommand.vampirism.defendarea=Défendez la zone
 
 #Config
 category.vampirism.balance=Propriétés d'équilibrage

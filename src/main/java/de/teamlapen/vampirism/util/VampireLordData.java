@@ -44,6 +44,11 @@ public class VampireLordData extends WorldSavedData {
 	private long joinTime=-1L;
 	private long lastOnlineTime;
 
+
+	public boolean canCallDracula() {
+		return lords.isEmpty() || Configs.mulitple_lords;
+	}
+
 	/**
 	 * List of lords which lost their lord state while being absent
 	 */

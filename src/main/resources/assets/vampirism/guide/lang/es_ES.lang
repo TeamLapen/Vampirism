@@ -1,6 +1,7 @@
 #X-Generator: crowdin.com
 #General
 guide.vampirism.book.title=Guía de vampirismo
+guide.vampirism.welcomeMessage=Bienvenido a la guia de Vampirism. Echa un vistazo para descubrir que puedes hacer con este mod. Diviertete.
 guide.vamprism.book.name=Guía de vampirismo
 
 #Getting Started
@@ -15,6 +16,7 @@ guide.vampirism.gettingStarted.asAVampire.text=Una vez que te conviertes en un v
 #Items and Blocks
 guide.vampirism.itemsAndBlocks.category=Objetos y bloques
 guide.vampirism.itemsAndBlocks.found.title=Encontrado en el mundo
+guide.vampirism.itemsAndBlocks.found.pureBlood=Es soltado por los barones vampiros en distintos niveles de pureza dependiendo del nivel del baron. Es requerido para rituales de nivel superior.
 guide.vampirism.itemsAndBlocks.found.bloodAltar1=Este bloque puede actuar como un faro y te da velocidad, así como un efecto de saturación (consumes menos sangre). Pero para activar este efecto, tienes que contruirte una espada "Sanguijuela" y llenarla con sangre matando a los aldeanos u otras criaturas con la espada. Entonces puede introducir la espada en el bloque que activa el efecto, pero agota lentamente la espada. El bloque no puede ser hecho, tiene que encontrarse en pantanos.
 guide.vampirism.itemsAndBlocks.found.vampireFlower=Orquídeas de vampiro pueden encontrarse en el biomas vampíricos.
 guide.vampirism.itemsAndBlocks.found.humanHearth=Estos son soltados por cazadores de vampiros. Puedes comertelos para obtener una gran cantidad de sangre o utilizarlos en varios rituales.
@@ -27,6 +29,8 @@ guide.vampirism.itemsAndBlocks.altars.altar2.text=Este altar es usando para subi
 guide.vampirism.itemsAndBlocks.altars.altar4.text=El %s se utiliza para nivelar a partir del nivel %d y consiste en varios bloques\: el bloque principal, puntas y diferentes bloques de minecraft. Para más información mira la sección de nivelación.
 guide.vampirism.itemsAndBlocks.altars.title=Bloques de altar
 guide.vampirism.itemsAndBlocks.coffin.text=El ataúd se puede utilizar para dormir durante el día y para establecer su punto de generacion. Se recomienda colocarlo en el lugar donde el sol llegue. Puedes cambiar el color del interior pulsando shift más click derecho con un tinte en la mano. 
+guide.vampirism.itemsAndBlocks.used_for_minions=Utilizado para subditos
+guide.vampirism.itemsAndBlocks.blood_eye.text=Puede utilizarse para localizar el castillo más cercano
 
 #Levels
 guide.vampirism.levels.introduction.title=Introducción
@@ -46,8 +50,9 @@ guide.vampirism.levels.category=Cómo subir de nivel
 guide.vampirism.mobs.category=Mobs
 guide.vampirism.mobs.hunter.text=Cazadores de vampiros ;)/nSolo atacan a jugadores con un nivel de vampiro mayor de %s./n Cazadores de vampiros que estan cerca de su pueblo intentan defenderlo.
 guide.vampirism.mobs.vampire.text=Ataca a los jugadores a menos que tengan un nivel mas alto de %s./nTambien ataca a los aldeanos y los hace vampiro./nNoche activa
-guide.vampirism.mobs.vampire_minion.title=Súbdito de vampiro
-guide.vampirism.mobs.vampire_minion.text=Son subordinados a su señor./nTienen la textura de su señor./nPueden ser controlados por un jugador que sea señor de los vampiros.
+guide.vampirism.mobs.vampire_baron.text=Aparecen raramente en biomas vampiricos./nOcurre en diferentes niveles dependiendo parcialmente en el nivel del jugador./nSuelta sangre pura./Es muy fuerte y invoca a subditos que le ayudan
+guide.vampirism.mobs.vampire_minion.title=Subdito de vampiro
+guide.vampirism.mobs.vampire_minion.text=Son subordinados a su Señor./nTienen la textura de su Señor./nPueden ser controlados por un jugador que sea Señor de los vampiros.
 guide.vampirism.mobs.ghost.text=Aparece en el bioma vampírico.
 guide.vampirism.mobs.ghost.title=Fantasma
 
@@ -61,11 +66,24 @@ guide.vampirism.vplayer.sun_damage.title=Daño solar
 guide.vampirism.vplayer.skills.text=Como un vampiro tienes habilidades especiales con niveles más altos. Por ejemplo puede controlar el clima a partir del nivel 4./nnPara activar esto hay un menú especial\: Mantenga pulsado el botón central del ratón [Compruebe su configuración de control/tecla] presionado y el menu de habilidades aparecera, mueva el ratón en la dirección de la habilidad deseada hasta que se destaque y suelte el boton./n/nSino quiere seleccionar cualquier habilidad suelte el ratón cuando no haya nada seleccionado o seleccione la cruz roja./n/nTodas las habilidades tienen un nivel mínimo necesario y un tiempo de espera para poder reusarse, usted puede sólo activarlo si no esta en modo de receso. Algunas habilidades también tienen una duración, a continuación, puede desactivar la habilidad si no la necesita ya seleccionando nuevamente la habilidad para disminuir el tiempo de enfriamiento.
 guide.vampirism.vplayer.skills.title=Habilidades
 guide.vampirism.vplayer.skills.bat_transformation=Habilidad\: Transformación en murciélago/n/nEn las noches tu te puedes transformar en un murciélago y volar como en modo creativo pero no puede colocar o quitar ningun bloque ni usar objetos. Otra gran desventaja del murciélago es su poca vida asi que evita criaturas hostiles. Puedes activarlo tan frecuente como quieras pero cuando salga el sol seras regresado a tu forma humana automaticamente.
-guide.vampirism.vplayer.skills.revive_fallen=Habilidad\: Revivir el caído/n/nZombies y esqueletos (más mobs podrían añadirse en el futuro) a veces dejan una pila de huesos cuando mueren. Entonces se puede usar esta habilidad para revivir los mobs caídos para que luego luchen como súbditos tuyos.
+guide.vampirism.vplayer.skills.revive_fallen=Habilidad\: Revivir el caído/n/nZombies y esqueletos (más mobs podrían añadirse en el futuro) a veces dejan una pila de huesos cuando mueren. Entonces se puede usar esta habilidad para revivir los mobs caídos para que luego luchen como subditos tuyos.
 guide.vampirism.vplayer.skills.end=Hay muchas más habilidades. Solo pruébalas.
 guide.vampirism.vplayer.skills.menu_text=Este es el menu de hablidad para activar las habilidades
 
 #VampireLord
+guide.vampirism.vlord.category=Señor de los vampiros
+guide.vampirism.vlord.introduction.title=Introducción
+guide.vampirism.vlord.introduction.text=Al mismo tiempo hubo uno que fue superior a los demás. Se llama Dracula y vive en un castillo grande. Tiene subditos que le sirven y se sacrifican para protegerlo. /nSolo muy pocos vampiros intentaron derrotarlo y tomar su posición, pero todos fracasaron. ¿Quizas tu puedes hacerlo mejor?
+guide.vampirism.vlord.become.title=Como convertirse en uno
+guide.vampirism.vlord.become.text=Si realmente quieres tomar lugar de Dracula, tienes que estar preparado. Asegúrese de que ya ha alcanzado nivel %d de vampiro, de lo contrario usted no puede incluso llegar a él. También equípate muy bien. /nEntonces comienza a buscar biomas de bosque de vampiro con un castillo dentro. Puede utilizar %s para encontrar más rápido. /nEn el castillo principal date una vuelta, debes ser capaz de encontrar un portal especial que Drácula utiliza para llegar rápidamente a su casa. Una vez en su castillo principal deberás derrotarlo para convertirse en el Señor de los vampiros. Buena suerte.
+guide.vampirism.vlord.about.title=Acerca de ser un Señor
+guide.vampirism.vlord.about.text=Ser un Señor de los vampiros te hace más fuerte y te da algunas nuevas habilidades (véase las otras entradas), pero hay algunas cosas que debes saber. /nOtros vampiros también están interesados en convertirse en Señor de los vampiros y hay algunas maneras de perder su posición. /nPrimero asegurate de no ser asesinado por un cazador, porque al perder un nivel de vampiro te haces debil para poder mantener tu posicion. /nSegundo ser consciente de que te atacarán otros vampiros, los vampiros de los castillos respetaran tu superioridad, pero fuera de allí hay muchos vampiros envidiosos. /nSi estás jugando en un servidor multijugador también lee la entrada correspondiente.
+guide.vampirism.vlord.multiplayer.title=En el modo multijugador
+guide.vampirism.vlord.multiplayer.text=En los servidores multijugadores también debe ser consciente de que otros jugadores pueden derrotarte y reemplazarle como Señor si están calificados. /nEste es también el modo para convertirse en el Señor de los vampiros después de que el primer jugador ha derrotado a Drácula. Pero también es posible que el otro jugador pierda la condición de Señor, por ejemplo cuando estuvo desconectado por mucho tiempo. /n/nTambién esta la opción de configuración para permitir a múltiples jugadores ser Señores de los vampiros a la vez. Si esta opción está activada, Drácula reaparece y puede ser matado por otro jugador.
+guide.vampirism.vlord.skills.title=Habilidades del Señor de los vampiros
+guide.vampirism.vlord.skills.text=Después de derrotar al actual Señor de los vampiros también aprender las habilidades que este tenía. Están disponibles en el menu de habilidades, pero no podra usar las antiguas./n/nTeletransporte/nTu te puedes teletransportar cortas distancias/n/nInvisibilidad/nSer invisble por un poco de tiempo/n/nCongelar/nCongela a todos a su alrededor por un poco de tiempo.
+guide.vampirism.vlord.minions.title=Subditos
+guide.vampirism.vlord.minions.text=Como Señor de los vampiros eres tan poderoso que puedes convertir vampiros a súbditos. Congela uno entonces presiona tu tecla para morder para intimidarlo. Él se convertirá en su súbdito. /nEntonces puedes utilizar %s mientras estes apuntandole para abrir un menú de control y darle diferentes tareas. /nPara controlar múltiples subditos a la vez, pulsa la misma tecla sin apuntar a ningun subdito. /n/nLos subditos normales permanecerán siempre contigo, de lo contrario huiran. Para que sean capaces de cumplir tareas en otros lugares, tienes que usar la tecla %s en ellos. /nEntonces puedes enviarlos por ejemplo a recoger sangre, de esta forma también son un poco más inteligente y tratan de evitar el sol. Para nombrar tus subditos se puede utilizar una etiqueta de nombre para subdito.
 
 
 
