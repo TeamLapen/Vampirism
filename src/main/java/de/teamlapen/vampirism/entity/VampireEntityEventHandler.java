@@ -71,10 +71,10 @@ public class VampireEntityEventHandler {
 			}
 		}
 
-		if (event.entity instanceof EntityVampireHunter) {
+		if (event.entity instanceof EntityHunterBase) {
 			if (event.world.provider.dimensionId == VampirismMod.castleDimensionId) {
 				event.entity.setDead();
-			} else {
+			} else if (event.entity instanceof EntityVampireHunter) {
 				// Set the home position of VampireHunters to a near village if one
 				// is found
 				EntityVampireHunter e = (EntityVampireHunter) event.entity;
@@ -108,7 +108,7 @@ public class VampireEntityEventHandler {
 
 							@Override
 							public boolean isEntityApplicable(Entity entity) {
-								return entity instanceof IMob && !(entity instanceof EntityVampireHunter);
+								return entity instanceof IMob && !(entity instanceof EntityHunterBase);
 							}
 
 						}));
@@ -157,7 +157,7 @@ public class VampireEntityEventHandler {
 
 	@SubscribeEvent
 	public void onLivingDrops(LivingDropsEvent e) {
-		if (e.entityLiving instanceof EntityCreature) {
+		if (e.entityLiving instanceof EntityConvertedCreature) {
 			VampireMob mob = VampireMob.get((EntityCreature) e.entityLiving);
 			if (mob.max_blood > 0 && mob.getBlood() < mob.max_blood / 3) {
 				for (EntityItem i : e.drops) {

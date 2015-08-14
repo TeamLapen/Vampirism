@@ -10,10 +10,14 @@ import net.minecraft.entity.ai.*;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 /**
- * Created by Max on 14.08.2015.
+ * Converted creature class.
+ * Contains (stores and syncs) a normal Entity for rendering purpose
  */
 public class EntityConvertedCreature extends EntityVampireBase implements ISyncable {
 
@@ -22,11 +26,12 @@ public class EntityConvertedCreature extends EntityVampireBase implements ISynca
 
     public EntityConvertedCreature(World world) {
         super(world);
+
+        this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityHunterBase.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.2, 1.4));
+        this.tasks.addTask(3, new EntityAIRestrictSun(this));
+        this.tasks.addTask(4, new VampireAIFleeSun(this, 1.2F));
         tasks.addTask(5, new net.minecraft.entity.ai.EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0D, false));
         tasks.addTask(5, new net.minecraft.entity.ai.EntityAIAttackOnCollide(this, EntityHunterBase.class, 1.0D, true));
-        this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityVampireHunter.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.2));
-        this.tasks.addTask(3, new EntityAIRestrictSun(this));
-        this.tasks.addTask(4, new VampireAIFleeSun(this, 0.9F));
 
         this.tasks.addTask(10, new EntityAIMoveThroughVillage(this, 0.6, false));
         this.tasks.addTask(11, new EntityAIWander(this, 0.7));
@@ -41,7 +46,8 @@ public class EntityConvertedCreature extends EntityVampireBase implements ISynca
         convertedCreature.copyLocationAndAnglesFrom(creature);
         convertedCreature.setEntityCreature(creature);
         convertedCreature.setSize(creature.width, creature.height);
-        creature.setDead();
+        convertedCreature.addPotionEffect(new PotionEffect(Potion.weakness.id, 200, 2));
+        convertedCreature.addPotionEffect(new PotionEffect(Potion.regeneration.id, 200, 1));
         return convertedCreature;
     }
 
@@ -80,13 +86,13 @@ public class EntityConvertedCreature extends EntityVampireBase implements ISynca
         if (!nil()) {
             IAttributeInstance dmg = entityCreature.getEntityAttribute(SharedMonsterAttributes.attackDamage);
             if (dmg != null) {
-                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(dmg.getBaseValue());
+                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(dmg.getBaseValue() * 1.3);
             } else {
                 this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(BALANCE.MOBPROP.VAMPIRE_MOB_DEFAULT_DMG);
             }
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(entityCreature.getEntityAttribute(SharedMonsterAttributes.maxHealth).getBaseValue());
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(entityCreature.getEntityAttribute(SharedMonsterAttributes.maxHealth).getBaseValue() * 1.5);
             this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(entityCreature.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).getBaseValue());
-            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(entityCreature.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getBaseValue());
+            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(entityCreature.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getBaseValue() * 1.2);
         } else {
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(1000);
             this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(0);
@@ -185,7 +191,7 @@ public class EntityConvertedCreature extends EntityVampireBase implements ISynca
 
     @Override
     public String getCommandSenderName() {
-        return nil() ? super.getCommandSenderName() : entityCreature.getCommandSenderName();
+        return StatCollector.translateToLocal("entity.vampirism.vampire.name") + " " + (nil() ? super.getCommandSenderName() : entityCreature.getCommandSenderName());
     }
 
     @Override

@@ -15,7 +15,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -32,7 +31,7 @@ import net.minecraft.world.World;
  * @author Maxanier
  *
  */
-public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjustableLevel {
+public class EntityVampireHunter extends EntityHunterBase implements ISyncable, IAdjustableLevel {
 
 	private final static int MAX_LEVEL = 4;
 	private boolean isLookingForHome;
@@ -41,12 +40,10 @@ public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjust
 	public EntityVampireHunter(World p_i1738_1_) {
 		super(p_i1738_1_);
 
-		this.getNavigator().setAvoidsWater(true);
 		this.getNavigator().setBreakDoors(true);
 		this.setSize(0.6F, 1.8F);
 
 		// Tasks (more tasks may be added in setLookingForHome()
-		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityVampire.class, 1.1, false));
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.1, false));
@@ -86,17 +83,17 @@ public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjust
 	}
 
 	@Override
-	protected boolean canDespawn() {
-		return false; // keeps it from despawning when player is far away
-	}
-
-	@Override
 	protected void dropFewItems(boolean recentlyHit, int lootingLevel) {
 		if (recentlyHit) {
 			if (this.rand.nextInt(3) == 0) {
 				this.dropItem(ModItems.humanHeart, 1);
 			}
 		}
+	}
+
+	@Override
+	protected boolean canDespawn() {
+		return isLookingForHome && super.canDespawn();
 	}
 
 	@Override
@@ -131,26 +128,6 @@ public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjust
 		return MAX_LEVEL;
 	}
 
-	@Override
-	public boolean isAIEnabled() {
-		return true;
-	}
-
-	/**
-	 * 
-	 * @return Whether the hunter is looking for a village or not.
-	 */
-	public boolean isLookingForHome() {
-		return isLookingForHome;
-	}
-
-	/**
-	 * Ignore light level
-	 */
-	@Override
-	protected boolean isValidLightLevel() {
-		return true;
-	}
 
 	@Override
 	public void loadUpdateFromNBT(NBTTagCompound nbt) {
@@ -244,6 +221,9 @@ public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjust
 		nbt.setInteger("level", level);
 	}
 
+	public boolean isLookingForHome() {
+		return isLookingForHome;
+	}
 	@Override
 	public void writeFullUpdateToNBT(NBTTagCompound nbt) {
 		this.writeEntityToNBT(nbt);

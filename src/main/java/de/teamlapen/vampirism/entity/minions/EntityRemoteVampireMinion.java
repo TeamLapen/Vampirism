@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity.minions;
 
 import de.teamlapen.vampirism.ModItems;
-import de.teamlapen.vampirism.entity.EntityVampireHunter;
+import de.teamlapen.vampirism.entity.EntityHunterBase;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
@@ -85,7 +85,7 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 
 	public EntityRemoteVampireMinion(World world) {
 		super(world);
-		this.tasks.addTask(2, new EntityAIAvoidEntity(this, EntityVampireHunter.class, MathHelper.floor_float(BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER * 1.5F), 1.1, 1.4));
+		this.tasks.addTask(2, new EntityAIAvoidEntity(this, EntityHunterBase.class, MathHelper.floor_float(BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER * 1.5F), 1.1, 1.4));
 		this.tasks.addTask(2, new EntityAIRestrictSun(this));
 		this.tasks.addTask(7, new VampireAIFleeSun(this, 1.1F, true));
 		commands = new ArrayList<IMinionCommand>();

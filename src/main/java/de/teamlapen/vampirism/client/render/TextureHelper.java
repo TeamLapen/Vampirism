@@ -1,26 +1,14 @@
 package de.teamlapen.vampirism.client.render;
 
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-
-import javax.imageio.ImageIO;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraft.client.renderer.texture.AbstractTexture;
-import net.minecraft.client.renderer.texture.ITextureObject;
-import net.minecraft.client.renderer.texture.LayeredTexture;
-import net.minecraft.client.renderer.texture.SimpleTexture;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.renderer.texture.TextureUtil;
+import net.minecraft.client.renderer.texture.*;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.data.TextureMetadataSection;
@@ -29,18 +17,17 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityPigZombie;
 import net.minecraft.entity.monster.EntityWitch;
 import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.entity.passive.EntityCow;
-import net.minecraft.entity.passive.EntityHorse;
-import net.minecraft.entity.passive.EntityOcelot;
-import net.minecraft.entity.passive.EntityPig;
-import net.minecraft.entity.passive.EntitySheep;
-import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.entity.passive.EntityWolf;
+import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.REFERENCE;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
 
 /**
  * Used to create vampire versions of textures by overlaying them with an overlay
@@ -168,15 +155,19 @@ public class TextureHelper {
 			ResourceLocation overlay = getOverlay(e);
 			ITextureObject texture = null;
 			try {
-				if (e instanceof EntityHorse&&overlay!=null) {
-					LayeredTexture horseTex = (LayeredTexture) manager.getTexture(old);
-					List l = horseTex.layeredTextureNames;
-					l.add(overlay.toString());
-					texture = new LayeredTexture(toStringArraySafe(l));
-				} else if (overlay == null) {
+				if (overlay!=null) {
+					ITextureObject tex =  manager.getTexture(old);
+					if(tex instanceof LayeredTexture){
+						List l = ((LayeredTexture)tex).layeredTextureNames;
+						l.add(overlay.toString());
+						texture = new LayeredTexture(toStringArraySafe(l));
+					}
+					else{
+						texture = new VampireTexture(old, overlay);
+					}
+
+				} else{
 					texture = new SimpleTexture(old);
-				} else {
-					texture = new VampireTexture(old, overlay);
 				}
 			} catch (Exception e1) {
 				Logger.e(TAG, "Failed to create overlayed texture object", e1);

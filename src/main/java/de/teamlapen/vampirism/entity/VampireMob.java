@@ -283,6 +283,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		blood = 0;
 		setVampire();
 		Entity e = EntityConvertedCreature.createFrom(entity);
+		entity.setDead();
 		entity.worldObj.spawnEntityInWorld(e);
 //		entity.addPotionEffect(new PotionEffect(Potion.weakness.id, 200, 2));
 //		entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100, 2));
@@ -313,6 +314,15 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 			}
 			if (entity.isPotionActive(ModPotion.sanguinare.id) && entity.getActivePotionEffect(ModPotion.sanguinare).getDuration() == 1) {
 				this.makeVampire();
+			}
+
+			/*
+			* Compat code to convert old mobs
+			 */
+			if (isVampire()) {
+				EntityConvertedCreature convertedCreature = EntityConvertedCreature.createFrom(entity);
+				entity.setDead();
+				entity.worldObj.spawnEntityInWorld(convertedCreature);
 			}
 		}
 	}
@@ -368,7 +378,6 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	 */
 	private void setVampire() {
 		type = (byte) (type | 1);
-		VanillaAIModifier.addVampireMobTasks(entity);
 	}
 
 	@Override

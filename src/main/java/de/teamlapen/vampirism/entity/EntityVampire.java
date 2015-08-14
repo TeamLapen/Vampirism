@@ -17,7 +17,7 @@ public class EntityVampire extends EntityDefaultVampire {
 	public EntityVampire(World par1World) {
 		super(par1World);
 		// Avoids Vampire Hunters
-		this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityVampireHunter.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.2));
+		this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityHunterBase.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.2));
 		this.tasks.addTask(3, new EntityAIRestrictSun(this));
 		this.tasks.addTask(4, new VampireAIFleeSun(this, 0.9F));
 		// Low priority tasks
