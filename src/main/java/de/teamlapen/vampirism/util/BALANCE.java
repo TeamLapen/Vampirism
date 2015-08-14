@@ -7,6 +7,8 @@ import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
  *
  */
 public final class BALANCE {
+
+
 	public static class LEVELING {
 		@DefaultInt(value = 40, minValue = 20, maxValue = 800, name = "Minimum Blood for Altar 2", comment = "Blood required for the first level up with altar 2")
 		public static int ALTAR_2_MIN_BLOOD;
@@ -65,6 +67,9 @@ public final class BALANCE {
 		public static double DRACULA_MOVEMENT_SPEED;
 		@DefaultInt(value = 5, minValue = -1, name = "Dracula Regenerate Seconds", comment = "Regenerate 1 heart every n seconds. -1 to disable")
 		public static int DRACULA_REGENERATE_SECS;
+
+		@DefaultDouble(value = 1, minValue = 0, name = "Vampire Mob Default DMG")
+		public static double VAMPIRE_MOB_DEFAULT_DMG;
 	}
 
 	/**

@@ -282,10 +282,11 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		}
 		blood = 0;
 		setVampire();
-
-		entity.addPotionEffect(new PotionEffect(Potion.weakness.id, 200, 2));
-		entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100, 2));
-		this.sync();
+		Entity e = EntityConvertedCreature.createFrom(entity);
+		entity.worldObj.spawnEntityInWorld(e);
+//		entity.addPotionEffect(new PotionEffect(Potion.weakness.id, 200, 2));
+//		entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100, 2));
+//		this.sync();
 		return true;
 	}
 

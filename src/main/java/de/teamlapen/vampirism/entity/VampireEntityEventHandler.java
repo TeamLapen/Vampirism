@@ -159,7 +159,7 @@ public class VampireEntityEventHandler {
 	public void onLivingDrops(LivingDropsEvent e) {
 		if (e.entityLiving instanceof EntityCreature) {
 			VampireMob mob = VampireMob.get((EntityCreature) e.entityLiving);
-			if (mob.biteableEntry.max_blood > 0 && mob.getBlood() < mob.biteableEntry.max_blood / 3) {
+			if (mob.max_blood > 0 && mob.getBlood() < mob.max_blood / 3) {
 				for (EntityItem i : e.drops) {
 					ItemStack s = i.getEntityItem();
 					if (s.getItem().equals(Items.porkchop) || s.getItem().equals(Items.beef)) {

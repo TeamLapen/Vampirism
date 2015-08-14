@@ -170,7 +170,7 @@ public abstract class CommonProxy implements IProxy {
 		registerEntity(EntityBlindingBat.class, REFERENCE.ENTITY.BLINDING_BAT_NAME, false);
 		registerEntity(EntityDummyBittenAnimal.class,REFERENCE.ENTITY.DUMMY_CREATURE,false);
 		registerEntity(EntityPortalGuard.class, REFERENCE.ENTITY.PORTAL_GUARD, false);
-
+		registerEntity(EntityConvertedCreature.class, REFERENCE.ENTITY.CONVERTED_CREATURE, false);
 		Item item = new ItemSpawnEgg(spawnableEntityNames);
 		GameRegistry.registerItem(item, ItemSpawnEgg.name);
 		OreDictionary.registerOre("mobEgg", item);
