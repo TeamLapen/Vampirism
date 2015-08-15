@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.ai;
 
 import de.teamlapen.vampirism.entity.minions.EntityVampireMinion;
 import de.teamlapen.vampirism.entity.minions.IMinion;
+import de.teamlapen.vampirism.entity.minions.MinionHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIHurtByTarget;
 
@@ -15,7 +16,7 @@ public class MinionAIHurtByNonLord extends EntityAIHurtByTarget {
 
     @Override
     protected boolean isSuitableTarget(EntityLivingBase target, boolean p_75296_2_) {
-        if (minion.getLord().getRepresentingEntity().equals(target)) return false;
+        if (MinionHelper.isLordSafe(minion, target)) return false;
         return super.isSuitableTarget(target, p_75296_2_);
     }
 }
