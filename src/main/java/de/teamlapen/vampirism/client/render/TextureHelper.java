@@ -12,12 +12,8 @@ import net.minecraft.client.renderer.texture.*;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.data.TextureMetadataSection;
-import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.monster.EntityPigZombie;
-import net.minecraft.entity.monster.EntityWitch;
-import net.minecraft.entity.monster.EntityZombie;
-import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
@@ -27,7 +23,9 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Used to create vampire versions of textures by overlaying them with an overlay
@@ -140,6 +138,11 @@ public class TextureHelper {
 
 	private final static ResourceLocation playerOverlay = new ResourceLocation(REFERENCE.MODID + ":textures/entity/playerOverlay.png");
 
+	private final static Map<Class,ResourceLocation> overlays=new HashMap<Class, ResourceLocation>();
+
+	static {
+		overlays.put(EntityPlayer.class,playerOverlay);
+	}
 	/**
 	 * Makes sure that the texture manager has a vampire version texture at the newLoc index
 	 * 
@@ -152,7 +155,7 @@ public class TextureHelper {
 	public static void createVampireTexture(EntityLivingBase e, ResourceLocation old, ResourceLocation newLoc) {
 		TextureManager manager = RenderManager.instance.renderEngine;
 		if (manager.getTexture(newLoc) == null) {
-			ResourceLocation overlay = getOverlay(e);
+			ResourceLocation overlay = getOverlay(e.getClass());
 			ITextureObject texture = null;
 			try {
 				if (overlay!=null) {
@@ -180,48 +183,22 @@ public class TextureHelper {
 
 	/**
 	 * Returns the resource location of the respective overlay
-	 * 
-	 * @param e
+	 *
 	 * @return Can be null if none is found
 	 */
-	private static ResourceLocation getOverlay(Entity e) {
-		if (e instanceof EntityPlayer) {
-			return playerOverlay;
-		} else if (e instanceof EntityOcelot) {
-			return getOverlay("cat");
-		} else if (e instanceof EntityVillager) {
-			return getOverlay("villager");
-		} else if (e instanceof EntityCow) {
-			return getOverlay("cow");
-		} else if (e instanceof EntityPig) {
-			return getOverlay("pig");
-		} else if (e instanceof EntitySheep) {
-			return getOverlay("sheep");
-		} else if (e instanceof EntityHorse) {
-			return getOverlay("horse");
-		} else if (e instanceof EntityWolf) {
-			return getOverlay("wolf");
-		} else if (e instanceof EntityZombie) {
-			return getOverlay("zombie");
-		} else if (e instanceof EntityPigZombie) {
-			return getOverlay("pigman");
-		} else if (e instanceof EntityWitch) {
-			return getOverlay("witch");
+	private static ResourceLocation getOverlay(Class clazz) {
+		if(clazz.equals(EntityCreature.class))return null;
+		ResourceLocation loc=overlays.get(clazz);
+		if(loc==null){
+			return getOverlay(clazz.getSuperclass());
 		}
-		Logger.w(TAG, "Did not find an overlay for " + e.getClass());
-		return null;
+		return loc;
 	}
 
-	/**
-	 * Makes a resource location out of the given name, but does not guarantee that it exists
-	 * 
-	 * @param s
-	 * @return
-	 */
-	private static ResourceLocation getOverlay(String s) {
-		return new ResourceLocation(REFERENCE.MODID + ":textures/entity/vanilla/" + s + "Overlay.png");
-	}
 
+	public static void registerConvertedOverlay(Class<? extends EntityCreature> clazz,String loc){
+		overlays.put(clazz,new ResourceLocation(loc));
+	}
 	/**
 	 * Try's to get the real skin file which corresponds to the fake location
 	 * 

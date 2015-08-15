@@ -1,0 +1,86 @@
+package de.teamlapen.vampirism.entity.ai;
+
+import de.teamlapen.vampirism.entity.EntityVampireBase;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.ai.EntityAIMoveIndoors;
+import net.minecraft.entity.ai.RandomPositionGenerator;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
+import net.minecraft.village.Village;
+import net.minecraft.village.VillageDoorInfo;
+
+/**
+ * Had to simply copy {@link EntityAIMoveIndoors} since all variables are private
+ */
+public class VampireAIMoveIndoors extends EntityAIBase {
+    private final EntityVampireBase vampire;
+    private EntityCreature entityObj;
+    private VillageDoorInfo doorInfo;
+    private int insidePosX = -1;
+    private int insidePosZ = -1;
+
+    public VampireAIMoveIndoors(EntityVampireBase p_i1637_1_) {
+        vampire = p_i1637_1_;
+        this.setMutexBits(1);
+    }
+
+    @Override
+    public boolean shouldExecute() {
+        int i = MathHelper.floor_double(vampire.posX);
+        int j = MathHelper.floor_double(this.vampire.posY);
+        int k = MathHelper.floor_double(this.vampire.posZ);
+
+        if ((this.vampire.worldObj.isDaytime() || this.vampire.worldObj.isRaining()) && !this.vampire.worldObj.provider.hasNoSky) {
+            if (this.vampire.getRNG().nextInt(50) != 0) {
+                return false;
+            } else if (this.insidePosX != -1 && this.vampire.getDistanceSq((double) this.insidePosX, this.vampire.posY, (double) this.insidePosZ) < 4.0D) {
+                return false;
+            } else {
+                Village village = this.vampire.worldObj.villageCollectionObj.findNearestVillage(i, j, k, 14);
+
+                if (village == null) {
+                    return false;
+                } else {
+                    this.doorInfo = village.findNearestDoorUnrestricted(i, j, k);
+                    return this.doorInfo != null;
+                }
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Returns whether an in-progress EntityAIBase should continue executing
+     */
+    public boolean continueExecuting() {
+        return !this.entityObj.getNavigator().noPath();
+    }
+
+    /**
+     * Execute a one shot task or start executing a continuous task
+     */
+    public void startExecuting() {
+        this.insidePosX = -1;
+
+        if (this.entityObj.getDistanceSq((double) this.doorInfo.getInsidePosX(), (double) this.doorInfo.posY, (double) this.doorInfo.getInsidePosZ()) > 256.0D) {
+            Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockTowards(this.entityObj, 14, 3, Vec3.createVectorHelper((double) this.doorInfo.getInsidePosX() + 0.5D, (double) this.doorInfo.getInsidePosY(), (double) this.doorInfo.getInsidePosZ() + 0.5D));
+
+            if (vec3 != null) {
+                this.entityObj.getNavigator().tryMoveToXYZ(vec3.xCoord, vec3.yCoord, vec3.zCoord, 1.0D);
+            }
+        } else {
+            this.entityObj.getNavigator().tryMoveToXYZ((double) this.doorInfo.getInsidePosX() + 0.5D, (double) this.doorInfo.getInsidePosY(), (double) this.doorInfo.getInsidePosZ() + 0.5D, 1.0D);
+        }
+    }
+
+    /**
+     * Resets the task
+     */
+    public void resetTask() {
+        this.insidePosX = this.doorInfo.getInsidePosX();
+        this.insidePosZ = this.doorInfo.getInsidePosZ();
+        this.doorInfo = null;
+    }
+}

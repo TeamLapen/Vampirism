@@ -1,17 +1,16 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
+import de.teamlapen.vampirism.entity.convertible.BiteableRegistry;
+import de.teamlapen.vampirism.entity.convertible.ConvertingHandler;
 import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.util.BALANCE;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
-import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
@@ -27,38 +26,30 @@ public class EntityConvertedCreature extends EntityVampireBase implements ISynca
     public EntityConvertedCreature(World world) {
         super(world);
 
-        this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityHunterBase.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.2, 1.4));
-        this.tasks.addTask(3, new EntityAIRestrictSun(this));
-        this.tasks.addTask(4, new VampireAIFleeSun(this, 1.2F));
-        tasks.addTask(5, new net.minecraft.entity.ai.EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0D, false));
+        this.tasks.addTask(1, new EntityAIAvoidEntity(this, EntityHunterBase.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.05));
+        this.tasks.addTask(2, new EntityAIRestrictSun(this));
+        this.tasks.addTask(4, new VampireAIFleeSun(this, 1F));
+        tasks.addTask(5, new net.minecraft.entity.ai.EntityAIAttackOnCollide(this, EntityPlayer.class, 0.9D, false));
         tasks.addTask(5, new net.minecraft.entity.ai.EntityAIAttackOnCollide(this, EntityHunterBase.class, 1.0D, true));
 
-        this.tasks.addTask(10, new EntityAIMoveThroughVillage(this, 0.6, false));
+
         this.tasks.addTask(11, new EntityAIWander(this, 0.7));
-        this.tasks.addTask(12, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
-        this.tasks.addTask(13, new EntityAILookIdle(this));
+        this.tasks.addTask(13, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
+        this.tasks.addTask(15, new EntityAILookIdle(this));
 
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
     }
 
-    public static EntityConvertedCreature createFrom(EntityCreature creature) {
-        EntityConvertedCreature convertedCreature = new EntityConvertedCreature(creature.worldObj);
-        convertedCreature.copyLocationAndAnglesFrom(creature);
-        convertedCreature.setEntityCreature(creature);
-        convertedCreature.setSize(creature.width, creature.height);
-        convertedCreature.addPotionEffect(new PotionEffect(Potion.weakness.id, 200, 2));
-        convertedCreature.addPotionEffect(new PotionEffect(Potion.regeneration.id, 200, 1));
-        return convertedCreature;
-    }
 
-    protected void setEntityCreature(EntityCreature creature) {
-        if (creature == null && entityCreature != null) {
+    public void setEntityCreature(EntityCreature creature) {
+        if ((creature == null && entityCreature != null)) {
             entityChanged = true;
             entityCreature = null;
         } else {
             if (!creature.equals(entityCreature)) {
                 entityCreature = creature;
                 entityChanged = true;
+                this.setSize(creature.width, creature.height);
             }
         }
     }
@@ -82,17 +73,19 @@ public class EntityConvertedCreature extends EntityVampireBase implements ISynca
         this.updateEntityAttributes();
     }
 
+
+    @Override
+    protected void dropFewItems(boolean p_70628_1_, int p_70628_2_) {
+        getConvertingHandler().dropConvertedItems(entityCreature, p_70628_1_, p_70628_2_);
+    }
+
     protected void updateEntityAttributes() {
         if (!nil()) {
-            IAttributeInstance dmg = entityCreature.getEntityAttribute(SharedMonsterAttributes.attackDamage);
-            if (dmg != null) {
-                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(dmg.getBaseValue() * 1.3);
-            } else {
-                this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(BALANCE.MOBPROP.VAMPIRE_MOB_DEFAULT_DMG);
-            }
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(entityCreature.getEntityAttribute(SharedMonsterAttributes.maxHealth).getBaseValue() * 1.5);
-            this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(entityCreature.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).getBaseValue());
-            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(entityCreature.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getBaseValue() * 1.2);
+            ConvertingHandler handler = getConvertingHandler();
+            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(handler.getConvertedDMG(entityCreature));
+            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(handler.getConvertedMaxHealth(entityCreature));
+            this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(handler.getConvertedKnockBackResistance(entityCreature));
+            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(handler.getConvertedSpeed(entityCreature));
         } else {
             this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(1000);
             this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(0);
@@ -105,9 +98,7 @@ public class EntityConvertedCreature extends EntityVampireBase implements ISynca
     public void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
         if (nbt.hasKey("entity")) {
-            entityCreature = (EntityCreature) EntityList.createEntityFromNBT(nbt.getCompoundTag("entity"), worldObj);
-            entityChanged = true;
-            setSize(entityCreature.width, entityCreature.height);
+            setEntityCreature((EntityCreature) EntityList.createEntityFromNBT(nbt.getCompoundTag("entity"), worldObj));
         }
     }
 
@@ -167,9 +158,7 @@ public class EntityConvertedCreature extends EntityVampireBase implements ISynca
     @Override
     public void loadUpdateFromNBT(NBTTagCompound nbt) {
         if (nbt.hasKey("entity")) {
-            entityCreature = (EntityCreature) EntityList.createEntityFromNBT(nbt.getCompoundTag("entity"), worldObj);
-            setSize(entityCreature.width, entityCreature.height);
-            entityChanged = true;
+            setEntityCreature((EntityCreature) EntityList.createEntityFromNBT(nbt.getCompoundTag("entity"), worldObj));
         }
     }
 
@@ -206,6 +195,9 @@ public class EntityConvertedCreature extends EntityVampireBase implements ISynca
         }
     }
 
+    protected ConvertingHandler getConvertingHandler() {
+        return BiteableRegistry.getEntry(entityCreature).convertingHandler;
+    }
     protected boolean nil() {
         return entityCreature == null;
     }

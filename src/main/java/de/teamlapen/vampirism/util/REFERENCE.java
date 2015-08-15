@@ -13,7 +13,9 @@ public class REFERENCE {
 		public static final String BLINDING_BAT_NAME = "vampirism.blinding_bat";
 		public static final String DUMMY_CREATURE = "vampirism.dummy_creature";
 		public static final String PORTAL_GUARD = "vampirism.portal_guard";
-		public static final String CONVERTED_CREATURE = "vampirism.converted_creature";
+		public static final String CONVERTED_CREATURE = "vampirism.converted.creature";
+		public static final String CONVERTED_VILLAGER = "vampirism.converted.villager";
+		public static final String CONVERTED_SHEEP = "vampirism.converted.sheep";
 	}
 
 	public enum KEY {

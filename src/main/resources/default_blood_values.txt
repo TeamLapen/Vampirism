@@ -1,12 +1,10 @@
 #General Multiplier. Is divided by 10.
 multiplier=10
 #Vanilla
-net.minecraft.entity.passive.EntityCow=10
-net.minecraft.entity.passive.EntityHorse=10
-net.minecraft.entity.passive.EntityVillager=15
-net.minecraft.entity.passive.EntityPig=5
-net.minecraft.entity.passive.EntitySheep=5
-net.minecraft.entity.passive.EntityOcelot=5
-net.minecraft.entity.passive.EntityWolf=5
-#MCA
-mca.entity.EntityHuman=-15
+Cow=10
+EntityHorse=10
+Villager=15
+Pig=5
+Sheep=5
+Ozelot=5
+Wolf=5

@@ -10,6 +10,8 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 
 import java.util.List;
 
@@ -30,7 +32,7 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
 	public static class MinionAIMinionCollectFromNearby extends VampireAIBiteNearbyEntity {
 
 		public MinionAIMinionCollectFromNearby(EntityRemoteVampireMinion vampire) {
-			super(vampire);
+			super(vampire, 10);
 		}
 
 		@Override
@@ -55,18 +57,20 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
 	protected final EntityVampireBase vampire;
 
 	protected VampireMob mob;
+	private final int chance;
 
-	public VampireAIBiteNearbyEntity(EntityVampireBase vampire) {
+	public VampireAIBiteNearbyEntity(EntityVampireBase vampire, int chance) {
 		this.vampire = vampire;
+		this.chance = chance;
 	}
 
 	protected void addBlood(int amount) {
-
+		vampire.addPotionEffect(new PotionEffect(Potion.regeneration.id, amount * 20));
 	}
 
 	@Override
 	public boolean shouldExecute() {
-		if (vampire.getRNG().nextInt(10) == 0) {
+		if (vampire.getRNG().nextInt(chance) == 0) {
 			List list = vampire.worldObj.getEntitiesWithinAABB(EntityCreature.class, vampire.boundingBox.expand(2, 2, 2));
 			for (Object o : list) {
 				mob = VampireMob.get((EntityCreature) o);

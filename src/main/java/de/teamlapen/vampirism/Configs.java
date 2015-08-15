@@ -2,6 +2,7 @@ package de.teamlapen.vampirism;
 
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import de.teamlapen.vampirism.entity.convertible.BiteableRegistry;
 import de.teamlapen.vampirism.util.*;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
@@ -9,6 +10,7 @@ import net.minecraftforge.common.config.Configuration;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Configs {
 
@@ -39,12 +41,6 @@ public class Configs {
 	public static boolean reset_balance_in_dev;
 
 	public static int blood_vision_recompile_ticks;
-	
-	public static final HashMap<String,Integer> bloodValues=new HashMap<String,Integer>();
-	
-	public static boolean bloodValuesRead=false;
-	
-	public static float bloodValueMultiplier;
 	
 	public static int potion_id_sanguinare;
 	
@@ -94,25 +90,21 @@ public class Configs {
 		File bloodConfig = new File(configDir,REFERENCE.MODID+"_blood_values.txt");
 		
 		try {
-			loadBloodValuesFromReader(new InputStreamReader(Configs.class.getResourceAsStream("/default_blood_values.txt")),"default_blood_values.txt");
-			bloodValuesRead=true;
+
+			Map<String, Integer> defaultValues = loadBloodValuesFromReader(new InputStreamReader(Configs.class.getResourceAsStream("/default_blood_values.txt")), "default_blood_values.txt");
+			BiteableRegistry.addBloodValues(defaultValues);
 		} catch (IOException e) {
 			Logger.e("Configs", e, "Could not read default blood values, this should not happen and destroys the mod experience");
 		}
 		
 		if(bloodConfig.exists()){
 			try {
-				loadBloodValuesFromReader(new FileReader(bloodConfig),bloodConfig.getName());
-				bloodValuesRead=true;
+				Map<String, Integer> override = loadBloodValuesFromReader(new FileReader(bloodConfig), bloodConfig.getName());
+				BiteableRegistry.overrideBloodValues(override);
 				Logger.i("Configs","Succesfully loaded additional blood value file");
 			} catch (IOException e) {
 				Logger.e("Configs", e, "Could not read blood values from config file %s",bloodConfig.getName());
 			}
-		}
-		
-		Integer i=bloodValues.get("multiplier");
-		if(i!=null){
-			bloodValueMultiplier=i/10F;
 		}
 		
 		config = new Configuration(mainConfig);
@@ -303,7 +295,8 @@ public class Configs {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	private static void loadBloodValuesFromReader(Reader r,String file) throws IOException{
+	private static Map<String, Integer> loadBloodValuesFromReader(Reader r, String file) throws IOException {
+		Map<String, Integer> bloodValues = new HashMap<String, Integer>();
 		BufferedReader br=null;
 			try {
 				br=new BufferedReader(r);
@@ -331,6 +324,7 @@ public class Configs {
 				}
 				r.close();
 			}
+		return bloodValues;
 		
 	}
 

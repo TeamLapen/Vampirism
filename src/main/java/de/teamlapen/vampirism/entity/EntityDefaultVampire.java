@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.ai.VampireAIBiteNearbyEntity;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAIBreakDoor;
@@ -25,6 +26,7 @@ public class EntityDefaultVampire extends EntityVampireBase {
         this.tasks.addTask(5, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.1F, false));
         this.tasks.addTask(5, new EntityAIAttackOnCollide(this, EntityHunterBase.class, 1.0F, false));
         this.tasks.addTask(6, new EntityAIAttackOnCollide(this, EntityVampireBase.class, 1.0F, false));
+        this.tasks.addTask(7, new VampireAIBiteNearbyEntity(this, 200));
 
     }
 

@@ -11,6 +11,9 @@ import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.VampirismEventHandler;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.*;
+import de.teamlapen.vampirism.entity.convertible.BiteableRegistry;
+import de.teamlapen.vampirism.entity.convertible.EntityConvertedSheep;
+import de.teamlapen.vampirism.entity.convertible.EntityConvertedVillager;
 import de.teamlapen.vampirism.entity.minions.EntityRemoteVampireMinion;
 import de.teamlapen.vampirism.entity.minions.EntitySaveableVampireMinion;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
@@ -24,6 +27,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
@@ -171,12 +175,25 @@ public abstract class CommonProxy implements IProxy {
 		registerEntity(EntityDummyBittenAnimal.class,REFERENCE.ENTITY.DUMMY_CREATURE,false);
 		registerEntity(EntityPortalGuard.class, REFERENCE.ENTITY.PORTAL_GUARD, false);
 		registerEntity(EntityConvertedCreature.class, REFERENCE.ENTITY.CONVERTED_CREATURE, false);
+		registerEntity(EntityConvertedVillager.class, REFERENCE.ENTITY.CONVERTED_VILLAGER, false);
+		registerEntity(EntityConvertedSheep.class, REFERENCE.ENTITY.CONVERTED_SHEEP, false);
 		Item item = new ItemSpawnEgg(spawnableEntityNames);
 		GameRegistry.registerItem(item, ItemSpawnEgg.name);
 		OreDictionary.registerOre("mobEgg", item);
 
+		registerConvertibles();
+
 	}
 
+	private void registerConvertibles() {
+		String base = REFERENCE.MODID + ":textures/entity/vanilla/%sOverlay.png";
+		BiteableRegistry.addConvertible(EntityCow.class, String.format(base, "cow"));
+		BiteableRegistry.addConvertible(EntityPig.class, String.format(base, "pig"));
+		BiteableRegistry.addConvertible(EntityOcelot.class, String.format(base, "cat"));
+		BiteableRegistry.addConvertible(EntityHorse.class, String.format(base, "horse"));
+		BiteableRegistry.addConvertible(EntitySheep.class, String.format(base, "sheep"), new EntityConvertedSheep.ConvertingSheepHandler());
+		BiteableRegistry.addConvertible(EntityVillager.class, String.format(base, "villager"), new EntityConvertedVillager.VillagerConvertingHandler());
+	}
 	@Override public void registerSubscriptions() {
 		Object playerHandler = new VampirePlayerEventHandler();
 		MinecraftForge.EVENT_BUS.register(playerHandler);
