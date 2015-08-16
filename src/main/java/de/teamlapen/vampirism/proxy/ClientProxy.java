@@ -19,13 +19,11 @@ import de.teamlapen.vampirism.client.model.ModelGhost;
 import de.teamlapen.vampirism.client.render.*;
 import de.teamlapen.vampirism.client.render.particle.ParticleHandler;
 import de.teamlapen.vampirism.entity.*;
+import de.teamlapen.vampirism.entity.convertible.EntityConvertedCreature;
 import de.teamlapen.vampirism.entity.minions.EntityVampireMinion;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.skills.BatSkill;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar4;
-import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
+import de.teamlapen.vampirism.tileEntity.*;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -192,6 +190,8 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.bloodAltar4Tip), new RenderTileEntityItem(altar4Tip, new TileEntityBloodAltar4Tip()));
 
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoffin.class, new RendererCoffin());
+
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTent.class, new RendererTent());
 	}
 
 	@Override

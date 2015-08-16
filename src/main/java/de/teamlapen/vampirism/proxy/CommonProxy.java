@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.VampirismEventHandler;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.entity.convertible.BiteableRegistry;
+import de.teamlapen.vampirism.entity.convertible.EntityConvertedCreature;
 import de.teamlapen.vampirism.entity.convertible.EntityConvertedSheep;
 import de.teamlapen.vampirism.entity.convertible.EntityConvertedVillager;
 import de.teamlapen.vampirism.entity.minions.EntityRemoteVampireMinion;
