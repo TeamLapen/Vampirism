@@ -44,6 +44,18 @@ public abstract class EntityVampireMinion extends EntityDefaultVampire implement
 
 	private IMinionCommand activeCommand;
 
+	@Override
+	public boolean wantsBlood() {
+		return wantsBlood;
+	}
+
+
+	public void setWantsBlood(boolean wantsBlood) {
+		this.wantsBlood = wantsBlood;
+	}
+
+	private boolean wantsBlood = false;
+
 	@SideOnly(Side.CLIENT)
 	private int activeCommandId;
 

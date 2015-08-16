@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.convertible;
 
-import de.teamlapen.vampirism.entity.EntityConvertedCreature;
 import de.teamlapen.vampirism.util.BALANCE;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;

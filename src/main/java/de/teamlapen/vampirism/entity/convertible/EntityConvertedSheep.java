@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.convertible;
 
-import de.teamlapen.vampirism.entity.EntityConvertedCreature;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;

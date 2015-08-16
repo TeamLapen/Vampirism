@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.entity.EntityHunterBase;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.item.ItemBloodBottle;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -13,6 +14,7 @@ import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.ai.EntityAIRestrictSun;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -218,4 +220,20 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 		}
 	}
 
+	@Override
+	public void addBlood(int amt) {
+		ItemStack item = getEquipmentInSlot(0);
+		if (item != null) {
+			if (item.getItem().equals(Items.glass_bottle)) {
+				ItemStack stack1 = new ItemStack(ModItems.bloodBottle, 1, 0);
+				ItemBloodBottle.addBlood(stack1, amt);
+				setCurrentItemOrArmor(0, stack1);
+				return;
+			}
+			if (item.getItem().equals(ModItems.bloodBottle)) {
+				ItemBloodBottle.addBlood(item, amt);
+				return;
+			}
+		}
+	}
 }

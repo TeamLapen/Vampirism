@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity.ai;
 
 import de.teamlapen.vampirism.entity.EntityVampireBase;
-import net.minecraft.entity.EntityCreature;
+import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIMoveIndoors;
 import net.minecraft.entity.ai.RandomPositionGenerator;
@@ -15,7 +15,6 @@ import net.minecraft.village.VillageDoorInfo;
  */
 public class VampireAIMoveIndoors extends EntityAIBase {
     private final EntityVampireBase vampire;
-    private EntityCreature entityObj;
     private VillageDoorInfo doorInfo;
     private int insidePosX = -1;
     private int insidePosZ = -1;
@@ -55,7 +54,7 @@ public class VampireAIMoveIndoors extends EntityAIBase {
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     public boolean continueExecuting() {
-        return !this.entityObj.getNavigator().noPath();
+        return !this.vampire.getNavigator().noPath();
     }
 
     /**
@@ -63,15 +62,15 @@ public class VampireAIMoveIndoors extends EntityAIBase {
      */
     public void startExecuting() {
         this.insidePosX = -1;
-
-        if (this.entityObj.getDistanceSq((double) this.doorInfo.getInsidePosX(), (double) this.doorInfo.posY, (double) this.doorInfo.getInsidePosZ()) > 256.0D) {
-            Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockTowards(this.entityObj, 14, 3, Vec3.createVectorHelper((double) this.doorInfo.getInsidePosX() + 0.5D, (double) this.doorInfo.getInsidePosY(), (double) this.doorInfo.getInsidePosZ() + 0.5D));
+        Logger.t("Starting move indoors");
+        if (this.vampire.getDistanceSq((double) this.doorInfo.getInsidePosX(), (double) this.doorInfo.posY, (double) this.doorInfo.getInsidePosZ()) > 256.0D) {
+            Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockTowards(this.vampire, 14, 3, Vec3.createVectorHelper((double) this.doorInfo.getInsidePosX() + 0.5D, (double) this.doorInfo.getInsidePosY(), (double) this.doorInfo.getInsidePosZ() + 0.5D));
 
             if (vec3 != null) {
-                this.entityObj.getNavigator().tryMoveToXYZ(vec3.xCoord, vec3.yCoord, vec3.zCoord, 1.0D);
+                this.vampire.getNavigator().tryMoveToXYZ(vec3.xCoord, vec3.yCoord, vec3.zCoord, 1.0D);
             }
         } else {
-            this.entityObj.getNavigator().tryMoveToXYZ((double) this.doorInfo.getInsidePosX() + 0.5D, (double) this.doorInfo.getInsidePosY(), (double) this.doorInfo.getInsidePosZ() + 0.5D, 1.0D);
+            this.vampire.getNavigator().tryMoveToXYZ((double) this.doorInfo.getInsidePosX() + 0.5D, (double) this.doorInfo.getInsidePosY(), (double) this.doorInfo.getInsidePosZ() + 0.5D, 1.0D);
         }
     }
 
@@ -79,6 +78,7 @@ public class VampireAIMoveIndoors extends EntityAIBase {
      * Resets the task
      */
     public void resetTask() {
+        Logger.t("Stop move indoors");
         this.insidePosX = this.doorInfo.getInsidePosX();
         this.insidePosZ = this.doorInfo.getInsidePosZ();
         this.doorInfo = null;

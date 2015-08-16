@@ -1,14 +1,14 @@
 package de.teamlapen.vampirism.entity.convertible;
 
 import de.teamlapen.vampirism.ModItems;
-import de.teamlapen.vampirism.entity.EntityConvertedCreature;
 import de.teamlapen.vampirism.entity.ai.VVillagerAILookAtCustomer;
 import de.teamlapen.vampirism.entity.ai.VVillagerAITrade;
 import de.teamlapen.vampirism.entity.ai.VampireAIMoveIndoors;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
-import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
+import net.minecraft.entity.ai.EntityAIOpenDoor;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -33,7 +33,6 @@ public class EntityConvertedVillager extends EntityConvertedCreature implements 
     public static class VillagerConvertingHandler extends ConvertingHandler<EntityVillager> {
         @Override
         public EntityConvertedCreature createFrom(EntityVillager entity) {
-            Logger.t("Creating converted creature");
             EntityConvertedCreature convertedCreature = new EntityConvertedVillager(entity.worldObj);
             this.copyImportantStuff(convertedCreature, entity);
             return convertedCreature;
@@ -52,9 +51,11 @@ public class EntityConvertedVillager extends EntityConvertedCreature implements 
 
     public EntityConvertedVillager(World world) {
         super(world);
+        this.getNavigator().setBreakDoors(true);
         this.tasks.addTask(1, new VVillagerAILookAtCustomer(this));
         this.tasks.addTask(1, new VVillagerAITrade(this));
-        this.tasks.addTask(3, new VampireAIMoveIndoors(this));
+        this.tasks.addTask(2, new VampireAIMoveIndoors(this));
+        this.tasks.addTask(4, new EntityAIOpenDoor(this, true));
         this.tasks.addTask(10, new EntityAIMoveThroughVillage(this, 0.6, false));
 
     }
@@ -194,11 +195,10 @@ public class EntityConvertedVillager extends EntityConvertedCreature implements 
     }
 
     public boolean interact(EntityPlayer p_70085_1_) {
-        Logger.t("Interacting");
         ItemStack itemstack = p_70085_1_.inventory.getCurrentItem();
         boolean flag = itemstack != null && itemstack.getItem() == Items.spawn_egg;
 
-        if (!flag && this.isEntityAlive() && !this.isTrading() && !this.isChild() && !p_70085_1_.isSneaking()) {
+        if (!flag && this.isEntityAlive() && !this.isTrading() && !this.isChild() && !p_70085_1_.isSneaking() && VampirePlayer.get(p_70085_1_).getLevel() > 0) {
             if (!this.worldObj.isRemote) {
                 this.setCustomer(p_70085_1_);
                 p_70085_1_.displayGUIMerchant(this, this.getCustomNameTag());

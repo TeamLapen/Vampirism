@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.render;
 
-import de.teamlapen.vampirism.entity.EntityConvertedCreature;
+import de.teamlapen.vampirism.entity.convertible.EntityConvertedCreature;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;

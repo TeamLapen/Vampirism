@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.entity.ai.VanillaAIModifier;
 import de.teamlapen.vampirism.entity.convertible.BiteableEntry;
 import de.teamlapen.vampirism.entity.convertible.BiteableRegistry;
+import de.teamlapen.vampirism.entity.convertible.EntityConvertedCreature;
 import de.teamlapen.vampirism.entity.minions.*;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.UpdateEntityPacket;

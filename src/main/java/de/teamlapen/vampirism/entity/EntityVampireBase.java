@@ -73,6 +73,14 @@ public abstract class EntityVampireBase extends EntityVampirism {
         }
     }
 
+    public boolean wantsBlood() {
+        return false;
+    }
+
+    public void addBlood(int amt) {
+        addPotionEffect(new PotionEffect(Potion.regeneration.id, amt * 20));
+    }
+
     @Override
     public boolean getCanSpawnHere() {
         if (!isValidLightLevel()) return false;

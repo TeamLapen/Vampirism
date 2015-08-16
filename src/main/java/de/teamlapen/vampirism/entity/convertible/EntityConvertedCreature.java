@@ -1,10 +1,11 @@
-package de.teamlapen.vampirism.entity;
+package de.teamlapen.vampirism.entity.convertible;
 
+import de.teamlapen.vampirism.entity.EntityHunterBase;
+import de.teamlapen.vampirism.entity.EntityVampireBase;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
-import de.teamlapen.vampirism.entity.convertible.BiteableRegistry;
-import de.teamlapen.vampirism.entity.convertible.ConvertingHandler;
 import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -27,8 +28,9 @@ public class EntityConvertedCreature extends EntityVampireBase implements ISynca
         super(world);
 
         this.tasks.addTask(1, new EntityAIAvoidEntity(this, EntityHunterBase.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.05));
-        this.tasks.addTask(2, new EntityAIRestrictSun(this));
-        this.tasks.addTask(4, new VampireAIFleeSun(this, 1F));
+
+        this.tasks.addTask(3, new VampireAIFleeSun(this, 1F));
+        this.tasks.addTask(4, new EntityAIRestrictSun(this));
         tasks.addTask(5, new net.minecraft.entity.ai.EntityAIAttackOnCollide(this, EntityPlayer.class, 0.9D, false));
         tasks.addTask(5, new net.minecraft.entity.ai.EntityAIAttackOnCollide(this, EntityHunterBase.class, 1.0D, true));
 
@@ -58,6 +60,7 @@ public class EntityConvertedCreature extends EntityVampireBase implements ISynca
     public void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
         if (!nil()) {
+            Logger.t("Writing %s to nbt", this);
             NBTTagCompound entity = new NBTTagCompound();
             entityCreature.isDead = false;
             entityCreature.writeToNBTOptional(entity);
@@ -165,6 +168,7 @@ public class EntityConvertedCreature extends EntityVampireBase implements ISynca
     @Override
     public void writeFullUpdateToNBT(NBTTagCompound nbt) {
         if (entityCreature != null) {
+            Logger.t("Writing %s to update", this);
             NBTTagCompound entity = new NBTTagCompound();
             entityCreature.isDead = false;
             entityCreature.writeToNBTOptional(entity);

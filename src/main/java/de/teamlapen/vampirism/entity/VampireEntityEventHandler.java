@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.ai.EntityAIAvoidVampirePlayer;
+import de.teamlapen.vampirism.entity.convertible.EntityConvertedCreature;
 import de.teamlapen.vampirism.generation.castle.CastlePositionData;
 import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.network.RequestEntityUpdatePacket;
