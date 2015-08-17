@@ -42,6 +42,11 @@ public class EntityConvertedVillager extends EntityConvertedCreature implements 
         public double getConvertedSpeed(EntityVillager entity) {
             return 0.295D;
         }
+
+        @Override
+        public void dropConvertedItems(EntityVillager entity, boolean recentlyHit, int looting) {
+            entity.dropItem(ModItems.weakVampireFang, 1);
+        }
     }
 
     private EntityPlayer buyingPlayer;

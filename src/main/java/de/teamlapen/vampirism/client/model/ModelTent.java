@@ -12,7 +12,7 @@ public class ModelTent extends ModelBase {
     ModelRenderer LeftSide;
     ModelRenderer RightSide;
     ModelRenderer Bottom;
-    ModelRenderer Front1;
+    //    ModelRenderer Front1;
     ModelRenderer Front2;
     ModelRenderer Bed;
 
@@ -38,12 +38,12 @@ public class ModelTent extends ModelBase {
         Bottom.setTextureSize(64, 32);
         Bottom.mirror = true;
         setRotation(Bottom, 0F, 0F, 0F);
-        Front1 = new ModelRenderer(this, 132, 0);
-        Front1.addBox(0F, 0F, 0F, 1, 23, 23);
-        Front1.setRotationPoint(-8F, 23F, -8F);
-        Front1.setTextureSize(64, 32);
-        Front1.mirror = true;
-        setRotation(Front1, 0.7679449F, 0F, 0F);
+//        Front1 = new ModelRenderer(this, 132, 0);
+//        Front1.addBox(0F, 0F, 0F, 1, 23, 23);
+//        Front1.setRotationPoint(-8F, 23F, -8F);
+//        Front1.setTextureSize(64, 32);
+//        Front1.mirror = true;
+//        setRotation(Front1, 0.7679449F, 0F, 0F);
         Front2 = new ModelRenderer(this, 183, 0);
         Front2.addBox(0F, 0F, 0F, 1, 23, 23);
         Front2.setRotationPoint(23F, 23F, -8F);
@@ -64,7 +64,7 @@ public class ModelTent extends ModelBase {
         LeftSide.render(f5);
         RightSide.render(f5);
         Bottom.render(f5);
-        Front1.render(f5);
+//        Front1.render(f5);
         Front2.render(f5);
         Bed.render(f5);
     }

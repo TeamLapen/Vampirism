@@ -1167,11 +1167,11 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	public BITE_TYPE determineByteType(EntityLivingBase entity) {
 		if (entity instanceof EntityVampire && this.isVampireLord()) {
 			PotionEffect p1 = entity.getActivePotionEffect(Potion.moveSlowdown);
-			if (p1 != null && p1.getAmplifier() == 10) {
-				PotionEffect p2 = entity.getActivePotionEffect(Potion.jump);
-				if (p2 != null && p2.getAmplifier() == 128) {
+			PotionEffect p2 = entity.getActivePotionEffect(Potion.jump);
+			//Both should be true, but to increase compatibility one is enought
+			if (p1 != null && p1.getAmplifier() == 10 || p2 != null && p2.getAmplifier() == 128) {
+
 					return BITE_TYPE.MAKE_MINION;
-				}
 			}
 		}
 

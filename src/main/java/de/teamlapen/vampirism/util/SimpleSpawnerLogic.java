@@ -24,10 +24,6 @@ public abstract class SimpleSpawnerLogic {
 
     private int spawnCount = 1;
 
-    public void setSpawnDelay(int spawnDelay) {
-        this.spawnDelay = spawnDelay;
-    }
-
 
     public void setMaxNearbyEntities(int maxNearbyEntities) {
         this.maxNearbyEntities = maxNearbyEntities;

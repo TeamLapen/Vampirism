@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.entity;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.ai.EntityAIAvoidVampirePlayer;
-import de.teamlapen.vampirism.entity.convertible.EntityConvertedCreature;
 import de.teamlapen.vampirism.generation.castle.CastlePositionData;
 import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.network.RequestEntityUpdatePacket;
@@ -25,7 +25,7 @@ import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.monster.IMob;
-import net.minecraft.init.Items;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
@@ -158,16 +158,8 @@ public class VampireEntityEventHandler {
 
 	@SubscribeEvent
 	public void onLivingDrops(LivingDropsEvent e) {
-		if (e.entityLiving instanceof EntityConvertedCreature) {
-			VampireMob mob = VampireMob.get((EntityCreature) e.entityLiving);
-			if (mob.max_blood > 0 && mob.getBlood() < mob.max_blood / 3) {
-				for (EntityItem i : e.drops) {
-					ItemStack s = i.getEntityItem();
-					if (s.getItem().equals(Items.porkchop) || s.getItem().equals(Items.beef)) {
-						i.setEntityItemStack(new ItemStack(Items.rotten_flesh, s.stackSize));
-					}
-				}
-			}
+		if (e.entityLiving instanceof EntityVillager) {
+			e.drops.add(new EntityItem(e.entity.worldObj, e.entity.posX, e.entity.posY + 0.4, e.entity.posZ, new ItemStack(ModItems.weakHumanHeart, 1)));
 		}
 	}
 
