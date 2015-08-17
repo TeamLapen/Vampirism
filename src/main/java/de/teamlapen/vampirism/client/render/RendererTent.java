@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.client.render;
 
 import de.teamlapen.vampirism.client.model.ModelTent;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -25,7 +24,8 @@ public class RendererTent extends TileEntitySpecialRenderer {
         int meta = 2;
         if (world != null)
             meta = world.getBlockMetadata(x, y, z);
-        GL11.glRotatef(meta * 90, 0.0F, 1.0F, 0.0F);
+        //Weird rotation because the model is rotated in a wrong way
+        GL11.glRotatef(meta * -90 + 90, 0.0F, 1.0F, 0.0F);
     }
 
     @Override
@@ -36,8 +36,8 @@ public class RendererTent extends TileEntitySpecialRenderer {
         GL11.glPushMatrix();
         adjustRotatePivotViaMeta(te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord);
         GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
-        Tessellator.instance.setBrightness(5);
-        Tessellator.instance.setColorOpaque(0, 0, 0);
+//        Tessellator.instance.setBrightness(5);
+//        Tessellator.instance.setColorOpaque(0, 0, 0);
         model.render(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
         GL11.glPopMatrix();
         GL11.glPopMatrix();

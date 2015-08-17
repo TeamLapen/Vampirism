@@ -14,7 +14,7 @@ public class ModelTent extends ModelBase {
     ModelRenderer Bottom;
     ModelRenderer Front1;
     ModelRenderer Front2;
-    ModelRenderer Shape1;
+    ModelRenderer Bed;
 
     public ModelTent() {
         textureWidth = 256;
@@ -50,12 +50,12 @@ public class ModelTent extends ModelBase {
         Front2.setTextureSize(64, 32);
         Front2.mirror = true;
         setRotation(Front2, 0.7679449F, 0F, 0F);
-        Shape1 = new ModelRenderer(this, 4, 63);
-        Shape1.addBox(0F, 0F, 0F, 24, 2, 12);
-        Shape1.setRotationPoint(-5F, 22F, 2F);
-        Shape1.setTextureSize(256, 128);
-        Shape1.mirror = true;
-        setRotation(Shape1, 0F, 0F, 0F);
+        Bed = new ModelRenderer(this, 4, 63);
+        Bed.addBox(0F, 0F, 0F, 24, 2, 12);
+        Bed.setRotationPoint(-5F, 22F, 2F);
+        Bed.setTextureSize(256, 128);
+        Bed.mirror = true;
+        setRotation(Bed, 0F, 0F, 0F);
     }
 
     public void render(Entity entity, float f, float f1, float f2, float f3, float f4, float f5) {
@@ -66,7 +66,7 @@ public class ModelTent extends ModelBase {
         Bottom.render(f5);
         Front1.render(f5);
         Front2.render(f5);
-        Shape1.render(f5);
+        Bed.render(f5);
     }
 
     private void setRotation(ModelRenderer model, float x, float y, float z) {

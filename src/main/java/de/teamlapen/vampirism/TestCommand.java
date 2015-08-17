@@ -14,7 +14,9 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.VampireLordData;
 import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -124,7 +126,9 @@ public class TestCommand extends BasicCommand {
 				List l = player.worldObj.getEntitiesWithinAABBExcludingEntity(player, player.boundingBox.expand(3, 2, 3));
 					for(Object o:l){
 						if(o instanceof EntityCreature){
-							sendMessage(sender,o.getClass().getName());
+
+							String s = EntityList.getEntityString((Entity) o);
+							sendMessage(sender, s);
 						}
 						else{
 							sendMessage(sender, "Not biteable " + o.getClass().getName());

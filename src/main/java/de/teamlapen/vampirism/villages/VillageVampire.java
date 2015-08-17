@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.villages;
 
+import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Helper;
@@ -39,9 +40,9 @@ public class VillageVampire {
 
 	private void checkHunterCount(Village v) {
 		int count = getHunter(v).size();
-		if (count < BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE || (agressive && count < BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE * 1.4)) {
+		if (!Configs.disable_hunter && count < BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE || (agressive && count < BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE * 1.4)) {
 			for (Entity e : Helper.spawnEntityInVillage(v, 2, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world)) {
-				((EntityVampireHunter) e).setHomeArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, v.getVillageRadius());
+				((EntityVampireHunter) e).setVillageArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, v.getVillageRadius());
 				if (agressive) {
 					((EntityVampireHunter) e).setLevel(3, true);
 				}

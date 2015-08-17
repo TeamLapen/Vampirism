@@ -21,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
@@ -148,13 +149,18 @@ public class EntityVampireHunter extends EntityHunterBase implements ISyncable, 
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		this.loadUpdateFromNBT(nbt);
+		if (nbt.hasKey("looking_for_home")) {
+			isLookingForHome = nbt.getBoolean("looking_for_home");
+			if (hasHome()) {
+				this.tasks.addTask(3, new EntityAIMoveTowardsRestriction(this, 1.0F));
+			}
+		}
 	}
 
 	/**
 	 * Makes the hunter not look for a new home anymore, sets the home area and adds village specific AI tasks
 	 */
-	@Override
-	public void setHomeArea(int p_110171_1_, int p_110171_2_, int p_110171_3_, int p_110171_4_) {
+	public void setVillageArea(int p_110171_1_, int p_110171_2_, int p_110171_3_, int p_110171_4_) {
 		super.setHomeArea(p_110171_1_, p_110171_2_, p_110171_3_, p_110171_4_);
 		if (isLookingForHome) {
 			isLookingForHome = false;
@@ -162,6 +168,13 @@ public class EntityVampireHunter extends EntityHunterBase implements ISyncable, 
 			this.tasks.addTask(4, new EntityAIMoveThroughVillage(this, 0.9F, false));
 			this.targetTasks.addTask(2, new HunterAIDefendVillage(this));
 		}
+	}
+
+	public void setCampArea(AxisAlignedBB box) {
+		super.setHome(box);
+		saveHome = true;
+		isLookingForHome = false;
+		this.tasks.addTask(3, new EntityAIMoveTowardsRestriction(this, 1.0F));
 	}
 
 	@Override
@@ -219,6 +232,10 @@ public class EntityVampireHunter extends EntityHunterBase implements ISyncable, 
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("level", level);
+		if (saveHome) {
+			nbt.setBoolean("looking_for_home", isLookingForHome);
+		}
+
 	}
 
 	public boolean isLookingForHome() {

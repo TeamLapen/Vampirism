@@ -1,14 +1,13 @@
 package de.teamlapen.vampirism.generation.structures;
 
-import java.util.Random;
-
+import de.teamlapen.vampirism.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
-import de.teamlapen.vampirism.ModBlocks;
-import de.teamlapen.vampirism.util.Logger;
+
+import java.util.Random;
 
 /**
  * 
@@ -16,7 +15,6 @@ import de.teamlapen.vampirism.util.Logger;
  *
  */
 public class GenerateBloodAltar extends WorldGenerator {
-	public static int spawnChance = 50; // chance n/1000
 
 	@Override
 	public boolean generate(World world, Random rand, int x, int y, int z) {
@@ -45,17 +43,17 @@ public class GenerateBloodAltar extends WorldGenerator {
 		return true;
 	}
 
-	protected Block[] GetValidSpawnBlocks() {
+	protected Block[] getValidSpawnBlocks() {
 		return new Block[] { Blocks.grass, Blocks.dirt, Blocks.sand, Blocks.cobblestone, Blocks.gravel };
 	}
 
-	public boolean locationIsValidSpawn(World world, int x, int y, int z) {
+	protected boolean locationIsValidSpawn(World world, int x, int y, int z) {
 
 		Block checkBlock = world.getBlock(x, y - 1, z);
 		Block blockAbove = world.getBlock(x, y, z);
 		Block blockBelow = world.getBlock(x, y - 2, z);
 
-		for (Block i : GetValidSpawnBlocks()) {
+		for (Block i : getValidSpawnBlocks()) {
 			if (blockAbove != Blocks.air) {
 				return false;
 			}

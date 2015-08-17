@@ -196,7 +196,7 @@ public final class BALANCE {
 	@DefaultInt(value = 2, minValue = 1, name = "Player Level for Vampire Attack", comment = "Vampires attack players unless their vampire level is higher than this")
 	public static int VAMPIRE_FRIENDLY_LEVEL;
 
-	@DefaultInt(value = 5, minValue = 0, name = "Vampire Hunter Spawn", comment = "Should be compared with the spawnrate of friendly mobs")
+	@DefaultInt(value = 5, minValue = 0, name = "Vampire Hunter Spawn", comment = "Not used anymore")
 	public static int VAMPIRE_HUNTER_SPAWN_PROBE;
 
 	@DefaultInt(value = 100, minValue = 0, name = "Vampire Spawn Probe", comment = "")
@@ -249,6 +249,12 @@ public final class BALANCE {
 	public static int BLOOD_EXH_PER_BL;
 	@DefaultInt(value = 3, minValue = -1, name = "Create dead mob probability", comment = "1/n Propability to create a dead mob entity. -1 to disable, 0 to always")
 	public static int DEAD_MOB_PROP;
+
+	@DefaultInt(value = 50, minValue = 0, maxValue = 1000, name = "Altar of regeneration spawn chance", comment = "Chance that a altar is generated. n/1000 for each valid chunk")
+	public static int ALTAR_1_SPAWN_CHANCE;
+
+	@DefaultInt(value = 30, minValue = 0, maxValue = 1000, name = "Hunter camp spawn chance", comment = "Chance that a camp is generated. n/1000 for each valid chunk")
+	public static int HUNTER_CAMP_SPAWN_CHANCE;
 	/**
 	 * Calculates the players night vision effect
 	 * 

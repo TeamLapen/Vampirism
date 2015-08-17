@@ -88,7 +88,7 @@ public class VampireEntityEventHandler {
 						int r = v.getVillageRadius();
 						//AxisAlignedBB box = AxisAlignedBB.getBoundingBox(v.getCenter().posX - r, 0, v.getCenter().posZ - r, v.getCenter().posX + r, event.world.getActualHeight(), v.getCenter().posZ + r);
 						ChunkCoordinates cc = v.getCenter();
-						e.setHomeArea(cc.posX, cc.posY, cc.posZ, r);
+						e.setVillageArea(cc.posX, cc.posY, cc.posZ, r);
 					}
 				}
 			}

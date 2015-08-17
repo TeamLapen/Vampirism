@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
@@ -18,6 +19,7 @@ public abstract class EntityVampirism extends EntityCreature {
     protected boolean hasArms = false;
     protected boolean peaceful = false;
     private AxisAlignedBB home;
+    protected boolean saveHome = false;
 
     public EntityVampirism(World p_i1595_1_) {
         super(p_i1595_1_);
@@ -204,5 +206,24 @@ public abstract class EntityVampirism extends EntityCreature {
 
     public AxisAlignedBB getHome() {
         return home;
+    }
+
+    @Override
+    public void writeEntityToNBT(NBTTagCompound nbt) {
+        super.writeEntityToNBT(nbt);
+        if (saveHome && hasHome()) {
+            int[] h = {(int) home.minX, (int) home.minY, (int) home.minZ, (int) home.maxX, (int) home.maxY, (int) home.maxZ};
+            nbt.setIntArray("home", h);
+        }
+    }
+
+    @Override
+    public void readEntityFromNBT(NBTTagCompound nbt) {
+        super.readEntityFromNBT(nbt);
+        if (nbt.hasKey("home")) {
+            saveHome = true;
+            int[] h = nbt.getIntArray("home");
+            home = AxisAlignedBB.getBoundingBox(h[0], h[1], h[2], h[3], h[4], h[5]);
+        }
     }
 }

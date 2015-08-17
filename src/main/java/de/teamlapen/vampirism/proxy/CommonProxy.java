@@ -54,13 +54,6 @@ public abstract class CommonProxy implements IProxy {
 	private List<TickRunnable> serverRunnables = new ArrayList<TickRunnable>();
 	private int modEntityId = 0;
 
-	private int calculateColor(String n) {
-		int hash = n.hashCode();
-		while (hash > 0xFFFFFF) {
-			hash = (int) (hash / 50F);
-		}
-		return hash;
-	}
 
 	@Override public void onTick(TickEvent event) {
 		if (event instanceof TickEvent.ServerTickEvent) {
@@ -163,7 +156,7 @@ public abstract class CommonProxy implements IProxy {
 		}
 		BiomeGenBase[] biomes = Iterators.toArray(Iterators.filter(Iterators.forArray(allBiomes), Predicates.notNull()), BiomeGenBase.class);
 		allBiomesNoVampire = Iterators.toArray(Iterators.filter(Iterators.forArray(allBiomesNoVampire), Predicates.notNull()), BiomeGenBase.class);
-		registerEntity(EntityVampireHunter.class, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, BALANCE.VAMPIRE_HUNTER_SPAWN_PROBE, 1, 2, EnumCreatureType.monster, allBiomesNoVampire);
+		registerEntity(EntityVampireHunter.class, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, true);
 		registerEntity(EntityVampire.class, REFERENCE.ENTITY.VAMPIRE_NAME, BALANCE.VAMPIRE_SPAWN_PROBE, 1, 3, EnumCreatureType.monster, allBiomesNoVampire);
 		registerEntity(EntityVampireBaron.class, REFERENCE.ENTITY.VAMPIRE_BARON, true);
 		EntityList.stringToClassMapping.put("vampirism.vampireLord", EntityVampireBaron.class);

@@ -64,6 +64,8 @@ public class Configs {
 
 	public static boolean modify_vampire_player_texture;
 
+	public static boolean disable_hunter;
+
 	public static int getVampireBiomeId() {
 		return config.getInt("vampirism_biome_id", CATEGORY_GENERAL, -1, -1, 1000, "If you set this to -1 the mod will try to find a free biome id");
 	}
@@ -181,6 +183,7 @@ public class Configs {
 		looseLordDaysCount = config.getInt("loose_lord_after_days", CATEGORY_GENERAL, 300, 1, Integer.MAX_VALUE, "Loose vampire lord status if not being online for n Minecraft days on multiplayer servers");
 
 		realismMode = config.getBoolean("vampire_realism_mode", CATEGORY_GENERAL, false, "Changes a few things and changes some default balance values to make it more 'realistic' ");
+
 		// Village
 		village_gen_enabled = config.get(cat_village.getQualifiedName(), "change_village_gen_enabled", true, "Should the custom generator be injected? (Enables/Disables the village mod)")
 				.getBoolean();
@@ -206,6 +209,7 @@ public class Configs {
 
 		disable_vampire_biome = config.getBoolean("disable_vampire_biome", cat_disabled.getQualifiedName(), false, "Disable the generation of the vampire biome. !You wont be able to become a vampire lord!");
 		disable_village_biome = config.getBoolean("disable_village_biomes", CATEGORY_DISABLE, false, "Disables the biome based alternation of village generation");
+		disable_hunter = config.getBoolean("disable_vampire_hunter", CATEGORY_DISABLE, false, "Disable hunter spawn. Will make the mod  easier and unbalanced");
 
 		if (config.hasChanged()) {
 			config.save();
