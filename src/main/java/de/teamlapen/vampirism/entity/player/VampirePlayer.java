@@ -33,6 +33,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S0APacketUseBed;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
@@ -1149,6 +1150,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			if (player.getRNG().nextInt(4) == 0) {
 				player.addPotionEffect(new PotionEffect(Potion.poison.id, 60));
 			}
+		} else if (type == BITE_TYPE.NONE) {
+			return;
 		}
 		biteCooldown = BITE_COOLDOWN;
 		if (blood <= 0) return;
@@ -1176,6 +1179,9 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		}
 
 		if (entity instanceof EntityPlayer) {
+			if (((EntityPlayer) entity).capabilities.isCreativeMode || !MinecraftServer.getServer().isPVPEnabled()) {
+				return BITE_TYPE.NONE;
+			}
 			if (this.canTurnOthers() && !Helper.canReallySee(entity, player, false)) {
 				return BITE_TYPE.SUCK_BLOOD_PLAYER;
 			}
@@ -1191,7 +1197,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	}
 
 	public enum BITE_TYPE {
-		ATTACK, SUCK_BLOOD, SUCK_BLOOD_PLAYER, MAKE_MINION
+		ATTACK, SUCK_BLOOD, SUCK_BLOOD_PLAYER, MAKE_MINION, NONE
 	}
 
 	/**

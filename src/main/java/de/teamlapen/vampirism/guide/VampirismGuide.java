@@ -79,6 +79,8 @@ public class VampirismGuide{
 		entries.add(createUnlocLongTextEntry("guide.vampirism.gettingStarted.firstSteps.title", "guide.vampirism.gettingStarted.firstSteps.text"));
 		
 		entries.add(createUnlocLongTextEntry("guide.vampirism.gettingStarted.asAVampire.title","guide.vampirism.gettingStarted.asAVampire.text"));
+
+		entries.add(createUnlocLongTextEntry("guide.vampirism.gettingStarted.biteableCreatures.title", "guide.vampirism.gettingStarted.biteableCreatures.text"));
 		
 		
 		categories.add(new CategoryItemStack(entries, "guide.vampirism.gettingStarted.category", new ItemStack(ModItems.bloodBottle, 1, ItemBloodBottle.MAX_BLOOD)));
@@ -88,8 +90,12 @@ public class VampirismGuide{
 		List<EntryAbstract> entries = new ArrayList<EntryAbstract>();
 		
 		ArrayList<IPage> found=new ArrayList<IPage>();
-		found.add(new PageUnlocItemStack("guide.vampirism.itemsAndBlocks.found.vampireFang",ModItems.vampireFang));
-		found.add(new PageUnlocItemStack("guide.vampirism.itemsAndBlocks.found.humanHearth",ModItems.humanHeart));
+		found.add(new PageLocItemStack(loc("item.vampirism.vampireFang.name") + "\n" + loc("guide.vampirism.itemsAndBlocks.found.vampireFang"), ModItems.vampireFang));
+		found.add(new PageLocItemStack(loc("item.vampirism.weakVampireFang.name") + "\n" + loc("guide.vampirism.itemsAndBlocks.found.weakVampireFang"), ModItems.weakVampireFang));
+		found.add(new PageIRecipe(getRecipe(ModItems.vampireFang)));
+		found.add(new PageLocItemStack(loc("item.vampirism.humanHeart.name") + "\n" + loc("guide.vampirism.itemsAndBlocks.found.humanHearth"), ModItems.humanHeart));
+		found.add(new PageLocItemStack(loc("item.vampirism.weakHumanHeart.name") + "\n" + loc("guide.vampirism.itemsAndBlocks.found.weakHumanHearth"), ModItems.weakHumanHeart));
+		found.add(new PageIRecipe(getRecipe(ModItems.humanHeart)));
 		found.add(new PageUnlocItemStack("guide.vampirism.itemsAndBlocks.found.vampireFlower",ModBlocks.vampireFlower));
 		found.add(new PageUnlocItemStack("guide.vampirism.itemsAndBlocks.found.bloodAltar1",ModBlocks.bloodAltar1));
 		found.add(new PageUnlocItemStack("guide.vampirism.itemsAndBlocks.found.pureBlood",ModItems.pureBlood));
@@ -233,8 +239,15 @@ public class VampirismGuide{
 		ArrayList<IPage> ghost =new ArrayList<IPage>();
 		ghost.add(new PageImage(new ResourceLocation(REFERENCE.MODID + ":guide/screenshots/ghost.png")));
 		ghost.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.mobs.ghost.text", true)));
+		entries.add(new EntryUniText(ghost, "entity." + REFERENCE.ENTITY.GHOST_NAME + ".name"));
 
-		entries.add(new EntryUniText(ghost, "guide.vampirism.mobs.ghost.title"));
+		ArrayList<IPage> dracula = new ArrayList<IPage>();
+		dracula.add(new PageImage(new ResourceLocation(REFERENCE.MODID + ":guide/screenshots/dracula.png")));
+		dracula.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.mobs.dracula.text", true)));
+		addLinksToPages(dracula, "lord_intro");
+		entries.add(new EntryUniText(dracula, "entity." + REFERENCE.ENTITY.DRACULA_NAME + ".name"));
+
+
 
 		categories.add(new CategoryItemStack(entries, "guide.vampirism.mobs.category", new ItemStack(ModItems.vampireFang)));
 	}
@@ -271,7 +284,7 @@ public class VampirismGuide{
 		List<EntryAbstract> entries = new ArrayList<EntryAbstract>();
 		ArrayList<IPage> intro = new ArrayList<IPage>();
 		intro.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.vlord.introduction.text", true)));
-		entries.add(new EntryUniText(intro, "guide.vampirism.vlord.introduction.title"));
+		entries.add(addLink("lord_intro", new EntryUniText(intro, "guide.vampirism.vlord.introduction.title")));
 
 		ArrayList<IPage> becomeOne = new ArrayList<IPage>();
 		becomeOne.addAll(PageHelper.pagesForLongText(locAndFormat("guide.vampirism.vlord.become.text", REFERENCE.HIGHEST_REACHABLE_LEVEL, loc(ModItems.bloodEye.getUnlocalizedName() + ".name"))));
@@ -354,7 +367,7 @@ public class VampirismGuide{
 	 */
 	private static EntryAbstract createUnlocLongTextEntry(String unlocTitle,String unlocText){
 		ArrayList<IPage> pages=new ArrayList<IPage>();
-		pages.addAll(PageHelper.pagesForLongText(loc(unlocText)));
+		pages.addAll(PageHelper.pagesForLongText(loc(unlocText, true)));
 		return new EntryUniText(pages,unlocTitle);
 	}
 	
@@ -395,7 +408,7 @@ public class VampirismGuide{
 	 * @param pages
 	 * @param links
 	 */
-	private static void addLinksToPages(ArrayList<IPage> pages, String... links) {
+	private static void addLinksToPages(List<IPage> pages, String... links) {
 		ListIterator<IPage> it = pages.listIterator();
 		while (it.hasNext()) {
 			PageHolderWithLinks newP = new PageHolderWithLinks(it.next());

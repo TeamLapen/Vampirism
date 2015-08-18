@@ -72,5 +72,7 @@ public class ModItems {
 				ModBlocks.vampireFlower);
 		GameRegistry.addShapelessRecipe(new ItemStack(minionNameTag), Items.paper, ModBlocks.vampireFlower);
 		GameRegistry.addShapelessRecipe(new ItemStack(bloodEye),Items.ender_eye,new ItemStack(bloodBottle,1,ItemBloodBottle.MAX_BLOOD));
+		GameRegistry.addShapelessRecipe(new ItemStack(humanHeart), ModItems.weakHumanHeart, ModItems.weakHumanHeart, ModItems.weakHumanHeart, ModItems.weakHumanHeart, ModItems.weakHumanHeart, ModItems.weakHumanHeart);
+		GameRegistry.addShapelessRecipe(new ItemStack(vampireFang), ModItems.weakVampireFang, ModItems.weakVampireFang, ModItems.weakVampireFang, ModItems.weakVampireFang, ModItems.weakVampireFang, ModItems.weakVampireFang);
 	}
 }

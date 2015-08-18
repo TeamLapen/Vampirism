@@ -317,4 +317,8 @@ public abstract class EntityVampireMinion extends EntityDefaultVampire implement
 
 	}
 
+	@Override
+	public int getTalkInterval() {
+		return 2000;
+	}
 }

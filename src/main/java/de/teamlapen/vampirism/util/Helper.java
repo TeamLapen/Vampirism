@@ -385,7 +385,7 @@ public class Helper {
 		boolean left = (dist.xCoord * a < dist.zCoord);
 		double alpha = Math.acos(look1.dotProduct(dist));
 		if (left) alpha *= -1;
-		return alpha > 0;
+		return alpha < 0;
 
 	}
 
