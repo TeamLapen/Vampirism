@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.ai.EntityAIAvoidVampirePlayer;
@@ -159,7 +160,8 @@ public class VampireEntityEventHandler {
 	@SubscribeEvent
 	public void onLivingDrops(LivingDropsEvent e) {
 		if (e.entityLiving instanceof EntityVillager) {
-			e.drops.add(new EntityItem(e.entity.worldObj, e.entity.posX, e.entity.posY + 0.4, e.entity.posZ, new ItemStack(ModItems.weakHumanHeart, 1)));
+			ItemStack stack = new ItemStack((Configs.disable_hunter ? ModItems.humanHeart : ModItems.weakHumanHeart), 1);
+			e.drops.add(new EntityItem(e.entity.worldObj, e.entity.posX, e.entity.posY + 0.4, e.entity.posZ, stack));
 		}
 	}
 

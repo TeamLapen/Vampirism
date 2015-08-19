@@ -43,7 +43,7 @@ public class TeleporterCastle extends Teleporter {
 
 				int[] old = extra.getIntArray("teleporter_castle_old");
 				extra.removeTag("teleporter_castle_old");
-				if (old != null) {
+				if (old != null&&old.length==3) {
 					chunkCoordinates = new ChunkCoordinates(old[0], old[1], old[2]);
 				}
 			}

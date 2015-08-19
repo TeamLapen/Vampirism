@@ -824,6 +824,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			return;
 		}
 		int v = getVision() + 1;
+		if (v == 2 && Configs.disable_blood_vision) v++;
 		if (v > 2)
 			v = 0;
 		this.setVision(v);

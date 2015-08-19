@@ -47,7 +47,7 @@ public class EntityConvertedCreature extends EntityVampireBase implements ISynca
         if ((creature == null && entityCreature != null)) {
             entityChanged = true;
             entityCreature = null;
-        } else {
+        } else if (creature != null) {
             if (!creature.equals(entityCreature)) {
                 entityCreature = creature;
                 entityChanged = true;
@@ -60,12 +60,11 @@ public class EntityConvertedCreature extends EntityVampireBase implements ISynca
     public void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
         if (!nil()) {
-            Logger.t("Writing %s to nbt", this);
             NBTTagCompound entity = new NBTTagCompound();
             entityCreature.isDead = false;
             entityCreature.writeToNBTOptional(entity);
             entityCreature.isDead = true;
-            nbt.setTag("entity", entity);
+            nbt.setTag("entity_old", entity);
         }
 
     }
@@ -100,8 +99,10 @@ public class EntityConvertedCreature extends EntityVampireBase implements ISynca
     @Override
     public void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
-        if (nbt.hasKey("entity")) {
-            setEntityCreature((EntityCreature) EntityList.createEntityFromNBT(nbt.getCompoundTag("entity"), worldObj));
+        if (nbt.hasKey("entity_old")) {
+            setEntityCreature((EntityCreature) EntityList.createEntityFromNBT(nbt.getCompoundTag("entity_old"), worldObj));
+        } else {
+            Logger.t("Converted does not have old");
         }
     }
 
@@ -109,6 +110,7 @@ public class EntityConvertedCreature extends EntityVampireBase implements ISynca
     public void onUpdate() {
         super.onUpdate();
         if (!worldObj.isRemote && entityCreature == null) {
+            Logger.t("Setting dead");
             this.setDead();
         }
     }
@@ -131,9 +133,6 @@ public class EntityConvertedCreature extends EntityVampireBase implements ISynca
             entityCreature.lastTickPosX = this.lastTickPosX;
             entityCreature.lastTickPosY = this.lastTickPosY;
             entityCreature.lastTickPosZ = this.lastTickPosZ;
-//            entityCreature.chunkCoordX=this.chunkCoordX;
-//            entityCreature.chunkCoordY=this.chunkCoordY;
-//            entityCreature.chunkCoordZ=this.chunkCoordZ;
             entityCreature.hurtTime = this.hurtTime;
             entityCreature.maxHurtTime = this.maxHurtTime;
             entityCreature.attackedAtYaw = this.attackedAtYaw;
@@ -166,9 +165,13 @@ public class EntityConvertedCreature extends EntityVampireBase implements ISynca
     }
 
     @Override
+    protected boolean canDespawn() {
+        return false;
+    }
+
+    @Override
     public void writeFullUpdateToNBT(NBTTagCompound nbt) {
         if (entityCreature != null) {
-            Logger.t("Writing %s to update", this);
             NBTTagCompound entity = new NBTTagCompound();
             entityCreature.isDead = false;
             entityCreature.writeToNBTOptional(entity);

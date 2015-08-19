@@ -138,7 +138,7 @@ public class RenderHandler {
 			if(vampireBiomeTicks>10&&bloodVisionTicks==15){
 				bloodVisionTicks=0;
 			}
-		} else {
+		} else if (!Configs.disable_blood_vision) {
 
 
 			if (bloodVisionTicks < BLOOD_VISION_FADE_TICKS) {

@@ -374,7 +374,7 @@ public class Helper {
 		if (alsoRaytrace && !entity.canEntityBeSeen(target)) {
 			return false;
 		}
-
+		Logger.t("Testing if %s can see %s", entity, target);
 		Vec3 look1 = Vec3.createVectorHelper(Math.cos(entity.rotationYawHead / 180 * Math.PI), 0, Math.sin(entity.rotationYawHead / 180 * Math.PI));
 		Vec3 dist = Vec3.createVectorHelper(target.posX - entity.posX, 0, target.posZ - entity.posZ);
 		look1.yCoord = 0;
@@ -385,7 +385,8 @@ public class Helper {
 		boolean left = (dist.xCoord * a < dist.zCoord);
 		double alpha = Math.acos(look1.dotProduct(dist));
 		if (left) alpha *= -1;
-		return alpha < 0;
+		Logger.t("Result %s (%b)", alpha, left);
+		return alpha > 0;
 
 	}
 

@@ -84,14 +84,14 @@ public abstract class SimpleSpawnerLogic {
                     Entity entity = EntityList.createEntityByName(this.getEntityName(), this.getSpawnerWorld());
 
                     if (entity == null) {
-                        return;
+                        break;
                     }
 
                     int j = this.getSpawnerWorld().getEntitiesWithinAABB(entity.getClass(), getSpawningBox()).size();
 
                     if (j >= this.maxNearbyEntities) {
                         this.resetTimer();
-                        return;
+                        break;
                     }
 
                     if (Helper.spawnEntityInWorld(getSpawnerWorld(), getSpawningBox(), entity, 1)) {

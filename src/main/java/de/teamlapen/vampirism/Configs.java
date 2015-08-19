@@ -72,6 +72,10 @@ public class Configs {
 
 	public static int gui_level_offset_y;
 
+	public static boolean gui_yellow_border;
+
+	public static boolean disable_blood_vision;
+
 	public static int getVampireBiomeId() {
 		return config.getInt("vampirism_biome_id", CATEGORY_GENERAL, -1, -1, 1000, "If you set this to -1 the mod will try to find a free biome id");
 	}
@@ -216,12 +220,14 @@ public class Configs {
 		// Gui
 		gui_level_offset_x = config.getInt("level_offset_x", CATEGORY_GUI, 0, -250, 250, "X-Offset of the level indicator from the center in pixels");
 		gui_level_offset_y = config.getInt("level_offset_y", CATEGORY_GUI, 47, 0, 270, "Y-Offset of the level indicator from the bottom in pixels");
+		gui_yellow_border = config.getBoolean("yellow_border", CATEGORY_GUI, true, "Enables/disables the yellow border which is rendered when you are standing in the sun");
 
 		// Disable
 
 		disable_vampire_biome = config.getBoolean("disable_vampire_biome", cat_disabled.getQualifiedName(), false, "Disable the generation of the vampire biome. !You wont be able to become a vampire lord!");
 		disable_village_biome = config.getBoolean("disable_village_biomes", CATEGORY_DISABLE, false, "Disables the biome based alternation of village generation");
 		disable_hunter = config.getBoolean("disable_vampire_hunter", CATEGORY_DISABLE, false, "Disable hunter spawn. Will make the mod  easier and unbalanced");
+		disable_blood_vision = config.getBoolean("disable_blood_vision", CATEGORY_DISABLE, false, "Disables the blood vision ability");
 
 		if (config.hasChanged()) {
 			config.save();

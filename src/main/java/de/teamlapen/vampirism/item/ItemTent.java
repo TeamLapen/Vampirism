@@ -17,7 +17,10 @@ public class ItemTent extends BasicItem {
 
     public ItemTent() {
         super(name);
+        this.setTextureName("bed");
+        this.setFull3D();
     }
+
 
     public boolean onItemUse(ItemStack item, EntityPlayer player, World world, int x, int y, int z, int side, float xOffset, float yOffset, float zOffset) {
         if (world.isRemote || side > 1)

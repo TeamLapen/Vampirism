@@ -8,3 +8,6 @@ Pig=5
 Sheep=5
 Ozelot=5
 Wolf=5
+
+#MCA
+MCA.EntityHuman=15

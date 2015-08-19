@@ -186,7 +186,7 @@ public class VampireHudOverlay extends Gui {
 	@SubscribeEvent
 	public void onRenderWorldLast(RenderWorldLastEvent event) {
 		boolean lord = VampirePlayer.get(this.mc.thePlayer).isSkillActive(Skills.vampireRage);
-		int sunTicks = VampirePlayer.get(this.mc.thePlayer).getSunDamageTicksInSun();
+		int sunTicks = Configs.gui_yellow_border ? VampirePlayer.get(this.mc.thePlayer).getSunDamageTicksInSun() : 0;
 		if (renderRed > 0 || lord || sunTicks > 0) {
 			// Set the working matrix/layer to a layer directly on the screen/in front of the player
 			ScaledResolution scaledresolution = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);

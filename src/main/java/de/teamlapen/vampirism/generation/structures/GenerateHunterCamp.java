@@ -44,6 +44,13 @@ public class GenerateHunterCamp extends WorldGenerator {
                 int y = world.getHeightValue(x, z);
                 world.setBlock(x, y, z, Blocks.crafting_table);
             }
+            if (rand.nextInt(3) == 0) {
+                int r = rand.nextInt(2);
+                int x = posX + entrance[dir][r][0] * 2;
+                int z = posZ + entrance[dir][r][1] * 2;
+                int y = world.getHeightValue(x, z);
+                world.setBlock(x, y, z, Blocks.torch);
+            }
             return true;
         }
 

@@ -10,7 +10,6 @@ import de.teamlapen.vampirism.generation.structures.GenerateBloodAltar;
 import de.teamlapen.vampirism.generation.structures.GenerateHunterCamp;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.villages.VillageVampire;
 import de.teamlapen.vampirism.villages.VillageVampireData;
@@ -104,7 +103,6 @@ public class WorldGenVampirism implements IWorldGenerator {
 		if (world.provider.terrainType.equals(WorldType.FLAT)) {
 			prop = 0.2F;
 		}
-		Logger.t("Chance %d /%s", chance, BALANCE.HUNTER_CAMP_SPAWN_CHANCE * prop);
 		if (!generatedStructure && !Configs.disable_hunter && chance < BALANCE.HUNTER_CAMP_SPAWN_CHANCE * prop && !biome.equals(ModBiomes.biomeVampireForest)) {
 			int posX = x + random.nextInt(16);
 			int posZ = z + random.nextInt(16);
@@ -126,7 +124,6 @@ public class WorldGenVampirism implements IWorldGenerator {
 
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
-
 		switch (world.provider.dimensionId) {
 		case -1:
 			generateNether(world, random, chunkX, chunkZ);
@@ -141,7 +138,6 @@ public class WorldGenVampirism implements IWorldGenerator {
 		if(world.provider.dimensionId==VampirismMod.castleDimensionId){
 			castleGenerator.checkBiome(world,chunkX,chunkZ,random,true);
 		}
-
 	}
 
 	private void generateEnd(World world, Random random, int x, int z) {
