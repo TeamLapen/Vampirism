@@ -16,6 +16,8 @@ public class Configs {
 
 	public static final String CATEGORY_GENERAL = Configuration.CATEGORY_GENERAL;
 
+	public static final String CATEGORY_GUI = "gui";
+
 	public static final String CATEGORY_VILLAGE = "village_settings";
 
 	public static final String CATEGORY_BALANCE = "balance";
@@ -65,6 +67,10 @@ public class Configs {
 	public static boolean modify_vampire_player_texture;
 
 	public static boolean disable_hunter;
+
+	public static int gui_level_offset_x;
+
+	public static int gui_level_offset_y;
 
 	public static int getVampireBiomeId() {
 		return config.getInt("vampirism_biome_id", CATEGORY_GENERAL, -1, -1, 1000, "If you set this to -1 the mod will try to find a free biome id");
@@ -165,6 +171,8 @@ public class Configs {
 		cat_general.setComment("General settings");
 		ConfigCategory cat_disabled = config.getCategory(CATEGORY_DISABLE);
 		cat_disabled.setComment("You can disable some features here, but it is not recommend and might cause problems (e.g. you can't get certain items");
+		ConfigCategory cat_gui = config.getCategory(CATEGORY_GUI);
+		cat_gui.setComment("Adjust some of Vampirism's gui elements");
 
 		// General
 		player_blood_watcher = config.get(CATEGORY_GENERAL, "player_data_watcher_id", 21, "ID for datawatcher. HAS TO BE THE SAME ON CLIENT AND SERVER").getInt();
@@ -204,6 +212,10 @@ public class Configs {
 			village_gen_enabled = false;
 			Logger.e("VillageDensity", "Invalid config: Size must be non-negative.");
 		}
+
+		// Gui
+		gui_level_offset_x = config.getInt("level_offset_x", CATEGORY_GUI, 0, -250, 250, "X-Offset of the level indicator from the center in pixels");
+		gui_level_offset_y = config.getInt("level_offset_y", CATEGORY_GUI, 47, 0, 270, "Y-Offset of the level indicator from the bottom in pixels");
 
 		// Disable
 

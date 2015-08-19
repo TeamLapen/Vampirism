@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.skills.Skills;
@@ -125,8 +126,8 @@ public class VampireHudOverlay extends Gui {
 			// boolean flag1 = false;
 			int color = Color.MAGENTA.getRGB();
 			String text = lord ? "Lord" : ("" + level);
-			int x = (event.resolution.getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2;
-			int y = event.resolution.getScaledHeight() - 31 - 4 - 12;
+			int x = (event.resolution.getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2 + Configs.gui_level_offset_x;
+			int y = event.resolution.getScaledHeight() - Configs.gui_level_offset_y;
 			mc.fontRenderer.drawString(text, x + 1, y, 0);
 			mc.fontRenderer.drawString(text, x - 1, y, 0);
 			mc.fontRenderer.drawString(text, x, y + 1, 0);

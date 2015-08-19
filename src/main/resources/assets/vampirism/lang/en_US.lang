@@ -142,6 +142,9 @@ minioncommand.vampirism.converttosaveable=Take Gem of Binding back
 minioncommand.vampirism.defendarea=Defend area
 
 #Config
+category.vampirism.village=Village settings
+category.vampirism.disable=Disable parts
+category.vampirism.gui=Gui settings
 category.vampirism.balance=Balance settings
 category.vampirism.balance.tooltip=Change almost any balance relevant property
 category.vampirism.balance_level=Levelup balance settings
