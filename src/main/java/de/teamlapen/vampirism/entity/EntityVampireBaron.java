@@ -23,7 +23,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
-public class EntityVampireBaron extends DefaultVampireWithMinion implements ISyncable, IAdjustableLevel {
+public class EntityVampireBaron extends EntityDefaultVampireWithMinion implements ISyncable, IAdjustableLevel {
 
 	private final static int MAX_LEVEL = 5;
 

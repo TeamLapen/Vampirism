@@ -374,18 +374,15 @@ public class Helper {
 		if (alsoRaytrace && !entity.canEntityBeSeen(target)) {
 			return false;
 		}
-
-		Vec3 look1 = Vec3.createVectorHelper(Math.cos(entity.rotationYawHead / 180 * Math.PI), 0, Math.sin(entity.rotationYawHead / 180 * Math.PI));
+		Vec3 look1 = Vec3.createVectorHelper(-Math.sin(entity.rotationYawHead / 180 * Math.PI), 0, Math.cos(entity.rotationYawHead / 180 * Math.PI));
 		Vec3 dist = Vec3.createVectorHelper(target.posX - entity.posX, 0, target.posZ - entity.posZ);
-		look1.yCoord = 0;
+		//look1.yCoord = 0;
 		look1 = look1.normalize();
 		dist = dist.normalize();
+
 		//Check if the vector is left or right of look1
-		double a = look1.xCoord == 0d ? 0 : look1.zCoord / look1.xCoord;
-		boolean left = (dist.xCoord * a < dist.zCoord);
 		double alpha = Math.acos(look1.dotProduct(dist));
-		if (left) alpha *= -1;
-		return alpha > 0;
+		return alpha < Math.PI / 2;
 
 	}
 

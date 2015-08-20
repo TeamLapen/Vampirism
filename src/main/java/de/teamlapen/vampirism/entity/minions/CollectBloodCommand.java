@@ -28,7 +28,7 @@ public class CollectBloodCommand extends DefaultMinionCommand {
 		minion = m;
 		runAround = new EntityAIMoveAround(m.getRepresentingEntity(), 1.0, false);
 		runToPlayer = new MinionAIMoveToLord.MinionAIBringBottle(m);
-		bite = new MinionAIBiteNearbyEntity.MinionAIMinionCollectFromNearby(m);
+		bite = new VampireAIBiteNearbyEntity2(m);
 		moveToBiteable = new VampireAIMoveToBiteable(m);
 		waitForBottle = new EntityAIWaitForBottle(m);
 	}
@@ -50,6 +50,7 @@ public class CollectBloodCommand extends DefaultMinionCommand {
 
 	@Override
 	public void onActivated() {
+		minion.setWantsBlood(true);
 		minion.tasks.addTask(9, runToPlayer);
 		minion.tasks.addTask(10, waitForBottle);
 		minion.tasks.addTask(11, bite);
@@ -69,7 +70,7 @@ public class CollectBloodCommand extends DefaultMinionCommand {
 				minion.getRepresentingEntity().setCurrentItemOrArmor(0, null);
 			}
 		}
-
+		minion.setWantsBlood(false);
 		minion.tasks.removeTask(runToPlayer);
 		minion.tasks.removeTask(bite);
 		minion.tasks.removeTask(runAround);

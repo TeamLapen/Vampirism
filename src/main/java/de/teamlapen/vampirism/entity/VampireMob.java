@@ -5,6 +5,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.entity.ai.VanillaAIModifier;
+import de.teamlapen.vampirism.entity.convertible.BiteableEntry;
+import de.teamlapen.vampirism.entity.convertible.BiteableRegistry;
+import de.teamlapen.vampirism.entity.convertible.EntityConvertedCreature;
 import de.teamlapen.vampirism.entity.minions.*;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.UpdateEntityPacket;
@@ -69,26 +72,15 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 
 	public VampireMob(EntityCreature mob) {
 		entity = mob;
-		boolean flag1=false;
-		if(mob instanceof EntityVampireHunter){
-			max_blood=-2;
-		}
-		else if(Configs.bloodValuesRead){
-			Integer i=Configs.bloodValues.get(mob.getClass().getName());
-			if(i==null||i==0){
-				max_blood=-1;
-			}
-			else{
-				max_blood=Math.round(((float)Math.abs(i))*Configs.bloodValueMultiplier);
-				if(Integer.signum(i)==1){
-					flag1=true;
-				}
-			}
+		BiteableEntry entry = BiteableRegistry.getEntry(mob);
+		if (entry != null) {
+			max_blood = entry.blood;
+			canBecomeVampire = entry.convertible;
 		}
 		else{
-			max_blood=5;
+			max_blood = -1;
+			canBecomeVampire = false;
 		}
-		canBecomeVampire=flag1;
 		blood = max_blood;
 		type = (byte) 0;
 		commands = new ArrayList<IMinionCommand>();
@@ -124,7 +116,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		if (blood < max_blood / 2) {
 			if (blood == 0 || entity.getRNG().nextInt(blood) == 0) {
 
-				if (canBecomeVampire && canTurn && entity.getRNG().nextBoolean()) {
+				if (canBecomeVampire && canTurn /*&&  TODO eneable again entity.getRNG().nextBoolean()*/) {
 					if (Configs.realismMode) {
 						entity.addPotionEffect(new PotionEffect(ModPotion.sanguinare.id, BALANCE.VAMPIRE_MOB_SANGUINARE_DURATION * 20));
 					} else {
@@ -282,10 +274,12 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		}
 		blood = 0;
 		setVampire();
-
-		entity.addPotionEffect(new PotionEffect(Potion.weakness.id, 200, 2));
-		entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100, 2));
-		this.sync();
+		Entity e = BiteableRegistry.convert(entity);
+		entity.setDead();
+		entity.worldObj.spawnEntityInWorld(e);
+//		entity.addPotionEffect(new PotionEffect(Potion.weakness.id, 200, 2));
+//		entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 100, 2));
+//		this.sync();
 		return true;
 	}
 
@@ -312,6 +306,15 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 			}
 			if (entity.isPotionActive(ModPotion.sanguinare.id) && entity.getActivePotionEffect(ModPotion.sanguinare).getDuration() == 1) {
 				this.makeVampire();
+			}
+
+			/*
+			* Compat code to convert old mobs
+			 */
+			if (isVampire()) {
+				EntityConvertedCreature convertedCreature = BiteableRegistry.convert(entity);
+				entity.setDead();
+				entity.worldObj.spawnEntityInWorld(convertedCreature);
 			}
 		}
 	}
@@ -367,7 +370,6 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 	 */
 	private void setVampire() {
 		type = (byte) (type | 1);
-		VanillaAIModifier.addVampireMobTasks(entity);
 	}
 
 	@Override

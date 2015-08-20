@@ -33,6 +33,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.S0APacketUseBed;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
@@ -733,7 +734,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 * @return
 	 */
 	public boolean onEntityAttacked(DamageSource source, float amount) {
-		if (source.getEntity() instanceof DefaultVampire && getLevel() == 0) {
+		if (source.getEntity() instanceof EntityVampireBase && getLevel() == 0) {
 			// Since the method seems to be called 4 times probability is
 			// decreased by the factor 4
 			if (player.worldObj.rand.nextInt(BALANCE.VAMPIRE_PLAYER_SANGUINARE_PROB * 4) == 0) {
@@ -823,6 +824,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			return;
 		}
 		int v = getVision() + 1;
+		if (v == 2 && Configs.disable_blood_vision) v++;
 		if (v > 2)
 			v = 0;
 		this.setVision(v);
@@ -1149,6 +1151,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			if (player.getRNG().nextInt(4) == 0) {
 				player.addPotionEffect(new PotionEffect(Potion.poison.id, 60));
 			}
+		} else if (type == BITE_TYPE.NONE) {
+			return;
 		}
 		biteCooldown = BITE_COOLDOWN;
 		if (blood <= 0) return;
@@ -1167,15 +1171,18 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	public BITE_TYPE determineByteType(EntityLivingBase entity) {
 		if (entity instanceof EntityVampire && this.isVampireLord()) {
 			PotionEffect p1 = entity.getActivePotionEffect(Potion.moveSlowdown);
-			if (p1 != null && p1.getAmplifier() == 10) {
-				PotionEffect p2 = entity.getActivePotionEffect(Potion.jump);
-				if (p2 != null && p2.getAmplifier() == 128) {
+			PotionEffect p2 = entity.getActivePotionEffect(Potion.jump);
+			//Both should be true, but to increase compatibility one is enought
+			if (p1 != null && p1.getAmplifier() == 10 || p2 != null && p2.getAmplifier() == 128) {
+
 					return BITE_TYPE.MAKE_MINION;
-				}
 			}
 		}
 
 		if (entity instanceof EntityPlayer) {
+			if (((EntityPlayer) entity).capabilities.isCreativeMode || !MinecraftServer.getServer().isPVPEnabled()) {
+				return BITE_TYPE.NONE;
+			}
 			if (this.canTurnOthers() && !Helper.canReallySee(entity, player, false)) {
 				return BITE_TYPE.SUCK_BLOOD_PLAYER;
 			}
@@ -1191,7 +1198,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	}
 
 	public enum BITE_TYPE {
-		ATTACK, SUCK_BLOOD, SUCK_BLOOD_PLAYER, MAKE_MINION
+		ATTACK, SUCK_BLOOD, SUCK_BLOOD_PLAYER, MAKE_MINION, NONE
 	}
 
 	/**
@@ -1217,11 +1224,17 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	 * @return Amount of blood given
 	 */
 	private int bite() {
+		if (getLevel() == 0) {
+			int amt = player.getFoodStats().getFoodLevel();
+			player.getFoodStats().setFoodLevel(0);
+			player.addExhaustion(1000F);
+			if (!player.isPotionActive(ModPotion.sanguinare)) {
+				player.addPotionEffect(new PotionEffect(ModPotion.sanguinare.id, BALANCE.VAMPIRE_PLAYER_SANGUINARE_DURATION * 20));
+			}
+			return amt;
+		}
 		int amt = this.getBloodStats().getBloodLevel();
 		this.getBloodStats().consumeBlood(amt);
-		if (!player.isPotionActive(ModPotion.sanguinare)) {
-			player.addPotionEffect(new PotionEffect(ModPotion.sanguinare.id, BALANCE.VAMPIRE_PLAYER_SANGUINARE_DURATION));
-		}
 		return amt;
 	}
 
@@ -1254,7 +1267,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	}
 
 	public void refreshVampireLordState(){
-		if(!player.worldObj.isRemote){
+		if (player.worldObj != null && !player.worldObj.isRemote) {
 			vampireLord=VampireLordData.get(player.worldObj).isLord(player);
 		}
 	}

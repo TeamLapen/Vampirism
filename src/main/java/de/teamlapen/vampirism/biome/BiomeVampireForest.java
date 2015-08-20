@@ -57,7 +57,7 @@ public class BiomeVampireForest extends BiomeGenBase {
 		if (!data.isPosAt(coordX, coordZ)) {
 			super.theBiomeDecorator.decorateChunk(world, rand, this, coordX, coordZ);
 
-			for (int j = 0; j < 5; ++j) {
+			for (int j = 0; j < 3; ++j) {
 				int x = coordX + rand.nextInt(16);
 				int z = coordZ + rand.nextInt(16);
 				int y = world.getHeightValue(x, z);

@@ -1,9 +1,10 @@
 package de.teamlapen.vampirism.entity.minions;
 
 import de.teamlapen.vampirism.ModItems;
-import de.teamlapen.vampirism.entity.EntityVampireHunter;
+import de.teamlapen.vampirism.entity.EntityHunterBase;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.item.ItemBloodBottle;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -13,6 +14,7 @@ import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.ai.EntityAIRestrictSun;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -85,7 +87,7 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 
 	public EntityRemoteVampireMinion(World world) {
 		super(world);
-		this.tasks.addTask(2, new EntityAIAvoidEntity(this, EntityVampireHunter.class, MathHelper.floor_float(BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER * 1.5F), 1.1, 1.4));
+		this.tasks.addTask(2, new EntityAIAvoidEntity(this, EntityHunterBase.class, MathHelper.floor_float(BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER * 1.5F), 1.1, 1.4));
 		this.tasks.addTask(2, new EntityAIRestrictSun(this));
 		this.tasks.addTask(7, new VampireAIFleeSun(this, 1.1F, true));
 		commands = new ArrayList<IMinionCommand>();
@@ -218,4 +220,20 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 		}
 	}
 
+	@Override
+	public void addBlood(int amt) {
+		ItemStack item = getEquipmentInSlot(0);
+		if (item != null) {
+			if (item.getItem().equals(Items.glass_bottle)) {
+				ItemStack stack1 = new ItemStack(ModItems.bloodBottle, 1, 0);
+				ItemBloodBottle.addBlood(stack1, amt);
+				setCurrentItemOrArmor(0, stack1);
+				return;
+			}
+			if (item.getItem().equals(ModItems.bloodBottle)) {
+				ItemBloodBottle.addBlood(item, amt);
+				return;
+			}
+		}
+	}
 }

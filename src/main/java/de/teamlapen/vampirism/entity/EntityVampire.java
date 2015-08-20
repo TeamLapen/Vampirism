@@ -2,27 +2,29 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
+import de.teamlapen.vampirism.entity.ai.VampireAIMoveToBiteable;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
-import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
-public class EntityVampire extends DefaultVampire {
+public class EntityVampire extends EntityDefaultVampire {
 	private boolean inCastle = false;
+	private int bloodtimer = 100;
 	public EntityVampire(World par1World) {
 		super(par1World);
 		// Avoids Vampire Hunters
-		this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityVampireHunter.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.2));
+		this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityHunterBase.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.2));
 		this.tasks.addTask(3, new EntityAIRestrictSun(this));
 		this.tasks.addTask(4, new VampireAIFleeSun(this, 0.9F));
 		// Low priority tasks
-		this.tasks.addTask(10, new EntityAIMoveThroughVillage(this, 0.6, false));
+		this.tasks.addTask(9, new VampireAIMoveToBiteable(this));
+		this.tasks.addTask(10, new EntityAIMoveThroughVillage(this, 0.6, true));
 		this.tasks.addTask(11, new EntityAIWander(this, 0.7));
 		this.tasks.addTask(12, new EntityAILookIdle(this));
 
@@ -38,17 +40,6 @@ public class EntityVampire extends DefaultVampire {
 			}
 		}));
 
-		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVillager.class, 20, true, false, new IEntitySelector() {
-
-			@Override
-			public boolean isEntityApplicable(Entity entity) {
-				if (entity instanceof EntityVillager) {
-					return !VampireMob.get((EntityVillager) entity).isVampire();
-				}
-				return false;
-			}
-
-		}));
 
 	}
 
@@ -75,4 +66,20 @@ public class EntityVampire extends DefaultVampire {
 		return inCastle;
 	}
 
+	@Override
+	public boolean wantsBlood() {
+		return bloodtimer == 0;
+	}
+
+	@Override
+	public void addBlood(int amt) {
+		super.addBlood(amt);
+		bloodtimer += amt * 40 + rand.nextInt(10) * 20;
+	}
+
+	@Override
+	public void onLivingUpdate() {
+		super.onLivingUpdate();
+		if (bloodtimer > 0) bloodtimer--;
+	}
 }

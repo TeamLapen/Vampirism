@@ -12,11 +12,11 @@ import java.util.UUID;
 /**
  * Default vampire with minions
  */
-public abstract class DefaultVampireWithMinion extends DefaultVampire implements IMinionLord {
+public abstract class EntityDefaultVampireWithMinion extends EntityDefaultVampire implements IMinionLord {
 
     private final SaveableMinionHandler minionHandler;
 
-    public DefaultVampireWithMinion(World world) {
+    public EntityDefaultVampireWithMinion(World world) {
         super(world);
         minionHandler = new SaveableMinionHandler(this);
     }

@@ -7,6 +7,8 @@ import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
  *
  */
 public final class BALANCE {
+
+
 	public static class LEVELING {
 		@DefaultInt(value = 40, minValue = 20, maxValue = 800, name = "Minimum Blood for Altar 2", comment = "Blood required for the first level up with altar 2")
 		public static int ALTAR_2_MIN_BLOOD;
@@ -65,6 +67,9 @@ public final class BALANCE {
 		public static double DRACULA_MOVEMENT_SPEED;
 		@DefaultInt(value = 5, minValue = -1, name = "Dracula Regenerate Seconds", comment = "Regenerate 1 heart every n seconds. -1 to disable")
 		public static int DRACULA_REGENERATE_SECS;
+
+		@DefaultDouble(value = 1, minValue = 0, name = "Vampire Mob Default DMG")
+		public static double VAMPIRE_MOB_DEFAULT_DMG;
 	}
 
 	/**
@@ -191,7 +196,7 @@ public final class BALANCE {
 	@DefaultInt(value = 2, minValue = 1, name = "Player Level for Vampire Attack", comment = "Vampires attack players unless their vampire level is higher than this")
 	public static int VAMPIRE_FRIENDLY_LEVEL;
 
-	@DefaultInt(value = 5, minValue = 0, name = "Vampire Hunter Spawn", comment = "Should be compared with the spawnrate of friendly mobs")
+	@DefaultInt(value = 5, minValue = 0, name = "Vampire Hunter Spawn", comment = "Not used anymore")
 	public static int VAMPIRE_HUNTER_SPAWN_PROBE;
 
 	@DefaultInt(value = 100, minValue = 0, name = "Vampire Spawn Probe", comment = "")
@@ -244,6 +249,12 @@ public final class BALANCE {
 	public static int BLOOD_EXH_PER_BL;
 	@DefaultInt(value = 3, minValue = -1, name = "Create dead mob probability", comment = "1/n Propability to create a dead mob entity. -1 to disable, 0 to always")
 	public static int DEAD_MOB_PROP;
+
+	@DefaultInt(value = 50, minValue = 0, maxValue = 1000, name = "Altar of regeneration spawn chance", comment = "Chance that a altar is generated. n/1000 for each valid chunk")
+	public static int ALTAR_1_SPAWN_CHANCE;
+
+	@DefaultInt(value = 30, minValue = 0, maxValue = 1000, name = "Hunter camp spawn chance", comment = "Chance that a camp is generated. n/1000 for each valid chunk")
+	public static int HUNTER_CAMP_SPAWN_CHANCE;
 	/**
 	 * Calculates the players night vision effect
 	 * 

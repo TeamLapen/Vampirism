@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.entity;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import de.teamlapen.vampirism.Configs;
+import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.ai.EntityAIAvoidVampirePlayer;
 import de.teamlapen.vampirism.generation.castle.CastlePositionData;
@@ -24,7 +26,7 @@ import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.monster.EntityIronGolem;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.monster.IMob;
-import net.minecraft.init.Items;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.MathHelper;
@@ -71,10 +73,10 @@ public class VampireEntityEventHandler {
 			}
 		}
 
-		if (event.entity instanceof EntityVampireHunter) {
+		if (event.entity instanceof EntityHunterBase) {
 			if (event.world.provider.dimensionId == VampirismMod.castleDimensionId) {
 				event.entity.setDead();
-			} else {
+			} else if (event.entity instanceof EntityVampireHunter) {
 				// Set the home position of VampireHunters to a near village if one
 				// is found
 				EntityVampireHunter e = (EntityVampireHunter) event.entity;
@@ -87,7 +89,7 @@ public class VampireEntityEventHandler {
 						int r = v.getVillageRadius();
 						//AxisAlignedBB box = AxisAlignedBB.getBoundingBox(v.getCenter().posX - r, 0, v.getCenter().posZ - r, v.getCenter().posX + r, event.world.getActualHeight(), v.getCenter().posZ + r);
 						ChunkCoordinates cc = v.getCenter();
-						e.setHomeArea(cc.posX, cc.posY, cc.posZ, r);
+						e.setVillageArea(cc.posX, cc.posY, cc.posZ, r);
 					}
 				}
 			}
@@ -108,7 +110,7 @@ public class VampireEntityEventHandler {
 
 							@Override
 							public boolean isEntityApplicable(Entity entity) {
-								return entity instanceof IMob && !(entity instanceof EntityVampireHunter);
+								return entity instanceof IMob && !(entity instanceof EntityHunterBase);
 							}
 
 						}));
@@ -139,7 +141,7 @@ public class VampireEntityEventHandler {
 			}
 		} else if (event.entity instanceof EntityZombie) {
 			try {
-				((EntityZombie) event.entity).tasks.addTask(3, new EntityAIAttackOnCollide((EntityCreature) event.entity, DefaultVampire.class, 1.0F, false));
+				((EntityZombie) event.entity).tasks.addTask(3, new EntityAIAttackOnCollide((EntityCreature) event.entity, EntityVampirism.class, 1.0F, false));
 			} catch (Exception e) {
 				Logger.e("EntityEventHandler", e, "Failed to add attack task to zombie %s", event.entity);
 			}
@@ -157,16 +159,9 @@ public class VampireEntityEventHandler {
 
 	@SubscribeEvent
 	public void onLivingDrops(LivingDropsEvent e) {
-		if (e.entityLiving instanceof EntityCreature) {
-			VampireMob mob = VampireMob.get((EntityCreature) e.entityLiving);
-			if (mob.max_blood > 0 && mob.getBlood() < mob.max_blood / 3) {
-				for (EntityItem i : e.drops) {
-					ItemStack s = i.getEntityItem();
-					if (s.getItem().equals(Items.porkchop) || s.getItem().equals(Items.beef)) {
-						i.setEntityItemStack(new ItemStack(Items.rotten_flesh, s.stackSize));
-					}
-				}
-			}
+		if (e.entityLiving instanceof EntityVillager) {
+			ItemStack stack = new ItemStack((Configs.disable_hunter ? ModItems.humanHeart : ModItems.weakHumanHeart), 1);
+			e.drops.add(new EntityItem(e.entity.worldObj, e.entity.posX, e.entity.posY + 0.4, e.entity.posZ, stack));
 		}
 	}
 

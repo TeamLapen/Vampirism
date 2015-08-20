@@ -15,13 +15,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
-import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
@@ -32,7 +32,7 @@ import net.minecraft.world.World;
  * @author Maxanier
  *
  */
-public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjustableLevel {
+public class EntityVampireHunter extends EntityHunterBase implements ISyncable, IAdjustableLevel {
 
 	private final static int MAX_LEVEL = 4;
 	private boolean isLookingForHome;
@@ -41,12 +41,10 @@ public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjust
 	public EntityVampireHunter(World p_i1738_1_) {
 		super(p_i1738_1_);
 
-		this.getNavigator().setAvoidsWater(true);
 		this.getNavigator().setBreakDoors(true);
 		this.setSize(0.6F, 1.8F);
 
 		// Tasks (more tasks may be added in setLookingForHome()
-		this.tasks.addTask(0, new EntityAISwimming(this));
 		this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityVampire.class, 1.1, false));
 		this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.1, false));
@@ -69,18 +67,7 @@ public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjust
 			}
 
 		}));
-		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, DefaultVampire.class, 0, true));
-		this.targetTasks.addTask(4, new EntityAINearestAttackableTarget(this, EntityCreature.class, 0, true, false, new IEntitySelector() {
-
-			@Override
-			public boolean isEntityApplicable(Entity entity) {
-				if (entity instanceof EntityCreature) {
-					return VampireMob.get((EntityCreature) entity).isVampire();
-				}
-				return false;
-			}
-
-		}));
+		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVampireBase.class, 0, true));
 
 		// Default to not in a village, will be set to false in
 		// WorldGenVampirism when generated on the surface in a village
@@ -97,17 +84,17 @@ public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjust
 	}
 
 	@Override
-	protected boolean canDespawn() {
-		return false; // keeps it from despawning when player is far away
-	}
-
-	@Override
 	protected void dropFewItems(boolean recentlyHit, int lootingLevel) {
 		if (recentlyHit) {
 			if (this.rand.nextInt(3) == 0) {
 				this.dropItem(ModItems.humanHeart, 1);
 			}
 		}
+	}
+
+	@Override
+	protected boolean canDespawn() {
+		return isLookingForHome && super.canDespawn();
 	}
 
 	@Override
@@ -142,26 +129,6 @@ public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjust
 		return MAX_LEVEL;
 	}
 
-	@Override
-	public boolean isAIEnabled() {
-		return true;
-	}
-
-	/**
-	 * 
-	 * @return Whether the hunter is looking for a village or not.
-	 */
-	public boolean isLookingForHome() {
-		return isLookingForHome;
-	}
-
-	/**
-	 * Ignore light level
-	 */
-	@Override
-	protected boolean isValidLightLevel() {
-		return true;
-	}
 
 	@Override
 	public void loadUpdateFromNBT(NBTTagCompound nbt) {
@@ -182,13 +149,18 @@ public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjust
 	public void readEntityFromNBT(NBTTagCompound nbt) {
 		super.readEntityFromNBT(nbt);
 		this.loadUpdateFromNBT(nbt);
+		if (nbt.hasKey("looking_for_home")) {
+			isLookingForHome = nbt.getBoolean("looking_for_home");
+			if (hasHome()) {
+				this.tasks.addTask(3, new EntityAIMoveTowardsRestriction(this, 1.0F));
+			}
+		}
 	}
 
 	/**
 	 * Makes the hunter not look for a new home anymore, sets the home area and adds village specific AI tasks
 	 */
-	@Override
-	public void setHomeArea(int p_110171_1_, int p_110171_2_, int p_110171_3_, int p_110171_4_) {
+	public void setVillageArea(int p_110171_1_, int p_110171_2_, int p_110171_3_, int p_110171_4_) {
 		super.setHomeArea(p_110171_1_, p_110171_2_, p_110171_3_, p_110171_4_);
 		if (isLookingForHome) {
 			isLookingForHome = false;
@@ -196,6 +168,13 @@ public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjust
 			this.tasks.addTask(4, new EntityAIMoveThroughVillage(this, 0.9F, false));
 			this.targetTasks.addTask(2, new HunterAIDefendVillage(this));
 		}
+	}
+
+	public void setCampArea(AxisAlignedBB box) {
+		super.setHome(box);
+		saveHome = true;
+		isLookingForHome = false;
+		this.tasks.addTask(3, new EntityAIMoveTowardsRestriction(this, 1.0F));
 	}
 
 	@Override
@@ -253,8 +232,15 @@ public class EntityVampireHunter extends EntityMob implements ISyncable, IAdjust
 	public void writeEntityToNBT(NBTTagCompound nbt) {
 		super.writeEntityToNBT(nbt);
 		nbt.setInteger("level", level);
+		if (saveHome) {
+			nbt.setBoolean("looking_for_home", isLookingForHome);
+		}
+
 	}
 
+	public boolean isLookingForHome() {
+		return isLookingForHome;
+	}
 	@Override
 	public void writeFullUpdateToNBT(NBTTagCompound nbt) {
 		this.writeEntityToNBT(nbt);

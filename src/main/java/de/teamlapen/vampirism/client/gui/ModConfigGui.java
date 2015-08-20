@@ -1,10 +1,5 @@
 package de.teamlapen.vampirism.client.gui;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraftforge.common.config.ConfigElement;
 import cpw.mods.fml.client.config.DummyConfigElement;
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.client.config.GuiConfigEntries;
@@ -12,6 +7,11 @@ import cpw.mods.fml.client.config.GuiConfigEntries.CategoryEntry;
 import cpw.mods.fml.client.config.IConfigElement;
 import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraftforge.common.config.ConfigElement;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModConfigGui extends GuiConfig {
 
@@ -37,10 +37,12 @@ public class ModConfigGui extends GuiConfig {
 
 		@Override
 		protected GuiScreen buildChildScreen() {
-			return new GuiConfig(this.owningScreen, getConfigElements(), this.owningScreen.modID, Configs.CATEGORY_BALANCE, true, true, REFERENCE.NAME + " Balance");
+			return new GuiConfig(this.owningScreen, getConfigElements(), this.owningScreen.modID, Configs.CATEGORY_BALANCE, true, true, this.owningScreen.title,
+					((this.owningScreen.titleLine2 == null ? "" : this.owningScreen.titleLine2) + " > " + this.name));
 		}
 
 	}
+
 
 	public static class BalanceLevelEntry extends CategoryEntry {
 
@@ -112,8 +114,9 @@ public class ModConfigGui extends GuiConfig {
 	private static List<IConfigElement> getConfigElements() {
 		List<IConfigElement> list = new ArrayList<IConfigElement>();
 		list.addAll(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_GENERAL)).getChildElements());
-		list.addAll(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_VILLAGE)).getChildElements());
-		list.addAll(new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_DISABLE)).getChildElements());
+		list.add(new DummyConfigElement.DummyCategoryElement("village", "category.vampirism.village", new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_VILLAGE)).getChildElements()));
+		list.add(new DummyConfigElement.DummyCategoryElement("disable", "category.vampirism.disable", new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_DISABLE)).getChildElements()));
+		list.add(new DummyConfigElement.DummyCategoryElement("gui", "category.vampirism.gui", new ConfigElement(Configs.config.getCategory(Configs.CATEGORY_GUI)).getChildElements()));
 		list.add(new DummyConfigElement.DummyCategoryElement("balance", "category.vampirism.balance", BalanceEntry.class));
 		return list;
 

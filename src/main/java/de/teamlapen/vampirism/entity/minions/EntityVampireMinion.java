@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.entity.minions;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.entity.DefaultVampire;
+import de.teamlapen.vampirism.entity.EntityDefaultVampire;
 import de.teamlapen.vampirism.entity.EntityDracula;
 import de.teamlapen.vampirism.entity.EntityPortalGuard;
 import de.teamlapen.vampirism.entity.EntityVampireBaron;
@@ -35,7 +35,7 @@ import java.util.List;
  * @author Max
  *
  */
-public abstract class EntityVampireMinion extends DefaultVampire implements IMinion, ISyncable {
+public abstract class EntityVampireMinion extends EntityDefaultVampire implements IMinion, ISyncable {
 
 	/**
 	 * Used for the visual transition from normal vampire to players minion
@@ -43,6 +43,18 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 	private int oldVampireTexture = -1;
 
 	private IMinionCommand activeCommand;
+
+	@Override
+	public boolean wantsBlood() {
+		return wantsBlood;
+	}
+
+
+	public void setWantsBlood(boolean wantsBlood) {
+		this.wantsBlood = wantsBlood;
+	}
+
+	private boolean wantsBlood = false;
 
 	@SideOnly(Side.CLIENT)
 	private int activeCommandId;
@@ -305,4 +317,8 @@ public abstract class EntityVampireMinion extends DefaultVampire implements IMin
 
 	}
 
+	@Override
+	public int getTalkInterval() {
+		return 2000;
+	}
 }

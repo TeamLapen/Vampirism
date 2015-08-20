@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.skills.Skills;
@@ -125,8 +126,8 @@ public class VampireHudOverlay extends Gui {
 			// boolean flag1 = false;
 			int color = Color.MAGENTA.getRGB();
 			String text = lord ? "Lord" : ("" + level);
-			int x = (event.resolution.getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2;
-			int y = event.resolution.getScaledHeight() - 31 - 4 - 12;
+			int x = (event.resolution.getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2 + Configs.gui_level_offset_x;
+			int y = event.resolution.getScaledHeight() - Configs.gui_level_offset_y;
 			mc.fontRenderer.drawString(text, x + 1, y, 0);
 			mc.fontRenderer.drawString(text, x - 1, y, 0);
 			mc.fontRenderer.drawString(text, x, y + 1, 0);
@@ -185,7 +186,7 @@ public class VampireHudOverlay extends Gui {
 	@SubscribeEvent
 	public void onRenderWorldLast(RenderWorldLastEvent event) {
 		boolean lord = VampirePlayer.get(this.mc.thePlayer).isSkillActive(Skills.vampireRage);
-		int sunTicks = VampirePlayer.get(this.mc.thePlayer).getSunDamageTicksInSun();
+		int sunTicks = Configs.gui_yellow_border ? VampirePlayer.get(this.mc.thePlayer).getSunDamageTicksInSun() : 0;
 		if (renderRed > 0 || lord || sunTicks > 0) {
 			// Set the working matrix/layer to a layer directly on the screen/in front of the player
 			ScaledResolution scaledresolution = new ScaledResolution(this.mc, this.mc.displayWidth, this.mc.displayHeight);

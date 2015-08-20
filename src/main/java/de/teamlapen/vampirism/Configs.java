@@ -2,6 +2,7 @@ package de.teamlapen.vampirism;
 
 import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import de.teamlapen.vampirism.entity.convertible.BiteableRegistry;
 import de.teamlapen.vampirism.util.*;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
@@ -9,10 +10,13 @@ import net.minecraftforge.common.config.Configuration;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Configs {
 
 	public static final String CATEGORY_GENERAL = Configuration.CATEGORY_GENERAL;
+
+	public static final String CATEGORY_GUI = "gui";
 
 	public static final String CATEGORY_VILLAGE = "village_settings";
 
@@ -40,12 +44,6 @@ public class Configs {
 
 	public static int blood_vision_recompile_ticks;
 	
-	public static final HashMap<String,Integer> bloodValues=new HashMap<String,Integer>();
-	
-	public static boolean bloodValuesRead=false;
-	
-	public static float bloodValueMultiplier;
-	
 	public static int potion_id_sanguinare;
 	
 	public static int potion_id_saturation;
@@ -67,6 +65,16 @@ public class Configs {
 	public static boolean realismMode;
 
 	public static boolean modify_vampire_player_texture;
+
+	public static boolean disable_hunter;
+
+	public static int gui_level_offset_x;
+
+	public static int gui_level_offset_y;
+
+	public static boolean gui_yellow_border;
+
+	public static boolean disable_blood_vision;
 
 	public static int getVampireBiomeId() {
 		return config.getInt("vampirism_biome_id", CATEGORY_GENERAL, -1, -1, 1000, "If you set this to -1 the mod will try to find a free biome id");
@@ -94,25 +102,21 @@ public class Configs {
 		File bloodConfig = new File(configDir,REFERENCE.MODID+"_blood_values.txt");
 		
 		try {
-			loadBloodValuesFromReader(new InputStreamReader(Configs.class.getResourceAsStream("/default_blood_values.txt")),"default_blood_values.txt");
-			bloodValuesRead=true;
+
+			Map<String, Integer> defaultValues = loadBloodValuesFromReader(new InputStreamReader(Configs.class.getResourceAsStream("/default_blood_values.txt")), "default_blood_values.txt");
+			BiteableRegistry.addBloodValues(defaultValues);
 		} catch (IOException e) {
 			Logger.e("Configs", e, "Could not read default blood values, this should not happen and destroys the mod experience");
 		}
 		
 		if(bloodConfig.exists()){
 			try {
-				loadBloodValuesFromReader(new FileReader(bloodConfig),bloodConfig.getName());
-				bloodValuesRead=true;
+				Map<String, Integer> override = loadBloodValuesFromReader(new FileReader(bloodConfig), bloodConfig.getName());
+				BiteableRegistry.overrideBloodValues(override);
 				Logger.i("Configs","Succesfully loaded additional blood value file");
 			} catch (IOException e) {
 				Logger.e("Configs", e, "Could not read blood values from config file %s",bloodConfig.getName());
 			}
-		}
-		
-		Integer i=bloodValues.get("multiplier");
-		if(i!=null){
-			bloodValueMultiplier=i/10F;
 		}
 		
 		config = new Configuration(mainConfig);
@@ -171,6 +175,8 @@ public class Configs {
 		cat_general.setComment("General settings");
 		ConfigCategory cat_disabled = config.getCategory(CATEGORY_DISABLE);
 		cat_disabled.setComment("You can disable some features here, but it is not recommend and might cause problems (e.g. you can't get certain items");
+		ConfigCategory cat_gui = config.getCategory(CATEGORY_GUI);
+		cat_gui.setComment("Adjust some of Vampirism's gui elements");
 
 		// General
 		player_blood_watcher = config.get(CATEGORY_GENERAL, "player_data_watcher_id", 21, "ID for datawatcher. HAS TO BE THE SAME ON CLIENT AND SERVER").getInt();
@@ -189,6 +195,7 @@ public class Configs {
 		looseLordDaysCount = config.getInt("loose_lord_after_days", CATEGORY_GENERAL, 300, 1, Integer.MAX_VALUE, "Loose vampire lord status if not being online for n Minecraft days on multiplayer servers");
 
 		realismMode = config.getBoolean("vampire_realism_mode", CATEGORY_GENERAL, false, "Changes a few things and changes some default balance values to make it more 'realistic' ");
+
 		// Village
 		village_gen_enabled = config.get(cat_village.getQualifiedName(), "change_village_gen_enabled", true, "Should the custom generator be injected? (Enables/Disables the village mod)")
 				.getBoolean();
@@ -210,10 +217,17 @@ public class Configs {
 			Logger.e("VillageDensity", "Invalid config: Size must be non-negative.");
 		}
 
+		// Gui
+		gui_level_offset_x = config.getInt("level_offset_x", CATEGORY_GUI, 0, -250, 250, "X-Offset of the level indicator from the center in pixels");
+		gui_level_offset_y = config.getInt("level_offset_y", CATEGORY_GUI, 47, 0, 270, "Y-Offset of the level indicator from the bottom in pixels");
+		gui_yellow_border = config.getBoolean("yellow_border", CATEGORY_GUI, true, "Enables/disables the yellow border which is rendered when you are standing in the sun");
+
 		// Disable
 
 		disable_vampire_biome = config.getBoolean("disable_vampire_biome", cat_disabled.getQualifiedName(), false, "Disable the generation of the vampire biome. !You wont be able to become a vampire lord!");
 		disable_village_biome = config.getBoolean("disable_village_biomes", CATEGORY_DISABLE, false, "Disables the biome based alternation of village generation");
+		disable_hunter = config.getBoolean("disable_vampire_hunter", CATEGORY_DISABLE, false, "Disable hunter spawn. Will make the mod  easier and unbalanced");
+		disable_blood_vision = config.getBoolean("disable_blood_vision", CATEGORY_DISABLE, false, "Disables the blood vision ability");
 
 		if (config.hasChanged()) {
 			config.save();
@@ -303,7 +317,8 @@ public class Configs {
 	 * @throws FileNotFoundException
 	 * @throws IOException
 	 */
-	private static void loadBloodValuesFromReader(Reader r,String file) throws IOException{
+	private static Map<String, Integer> loadBloodValuesFromReader(Reader r, String file) throws IOException {
+		Map<String, Integer> bloodValues = new HashMap<String, Integer>();
 		BufferedReader br=null;
 			try {
 				br=new BufferedReader(r);
@@ -331,6 +346,7 @@ public class Configs {
 				}
 				r.close();
 			}
+		return bloodValues;
 		
 	}
 

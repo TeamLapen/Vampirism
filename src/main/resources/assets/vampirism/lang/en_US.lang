@@ -29,6 +29,9 @@ item.vampirism.vampireArmor_chestplate.name=Vampire's chestplate
 item.vampirism.minionNameTag.name=Minion name tag
 item.vampirism.gemOfBinding.name=Gem of Binding
 item.vampirism.bloodEye.name=Blood Eye
+item.vampirism.weakVampireFang.name=Weak Vampire Fang
+item.vampirism.weakHumanHeart.name=Weak Human Heart
+item.vampirism.item_tent.name=Tent
 
 # Blocks
 block.vampirism.bloodAltar.name=Blood Altar of Saturation
@@ -44,6 +47,7 @@ block.vampirism.castleBlock.name=Castle Block
 block.vampirism.castleSlab.name=Castle Slab
 block.vampirism.doubleCastleSlab.name=Double Castle Slab
 block.vampirism.castleStairs.name=Castle Stairs
+block.vampirism.tent.name=Tent
 
 #GUI
 gui.vampirism.revertback.head=Revert back to normal human
@@ -138,6 +142,9 @@ minioncommand.vampirism.converttosaveable=Take Gem of Binding back
 minioncommand.vampirism.defendarea=Defend area
 
 #Config
+category.vampirism.village=Village settings
+category.vampirism.disable=Disable parts
+category.vampirism.gui=Gui settings
 category.vampirism.balance=Balance settings
 category.vampirism.balance.tooltip=Change almost any balance relevant property
 category.vampirism.balance_level=Levelup balance settings

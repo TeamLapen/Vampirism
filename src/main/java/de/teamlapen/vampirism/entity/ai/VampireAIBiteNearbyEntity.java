@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity.ai;
 
 import de.teamlapen.vampirism.ModItems;
-import de.teamlapen.vampirism.entity.DefaultVampire;
+import de.teamlapen.vampirism.entity.EntityVampireBase;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.minions.EntityRemoteVampireMinion;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
@@ -10,6 +10,8 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 
 import java.util.List;
 
@@ -19,7 +21,7 @@ import java.util.List;
  * @author Maxanier
  *
  */
-public class MinionAIBiteNearbyEntity extends EntityAIBase {
+public class VampireAIBiteNearbyEntity extends EntityAIBase {
 
 	/**
 	 * Bites nearbe entity and fills the equipped bottle
@@ -27,10 +29,10 @@ public class MinionAIBiteNearbyEntity extends EntityAIBase {
 	 * @author Max
 	 *
 	 */
-	public static class MinionAIMinionCollectFromNearby extends MinionAIBiteNearbyEntity {
+	public static class MinionAIMinionCollectFromNearby extends VampireAIBiteNearbyEntity {
 
 		public MinionAIMinionCollectFromNearby(EntityRemoteVampireMinion vampire) {
-			super(vampire);
+			super(vampire, 10);
 		}
 
 		@Override
@@ -51,21 +53,24 @@ public class MinionAIBiteNearbyEntity extends EntityAIBase {
 		}
 
 	}
-	protected final DefaultVampire vampire;
+
+	protected final EntityVampireBase vampire;
 
 	protected VampireMob mob;
+	private final int chance;
 
-	public MinionAIBiteNearbyEntity(DefaultVampire vampire) {
+	public VampireAIBiteNearbyEntity(EntityVampireBase vampire, int chance) {
 		this.vampire = vampire;
+		this.chance = chance;
 	}
 
 	protected void addBlood(int amount) {
-
+		vampire.addPotionEffect(new PotionEffect(Potion.regeneration.id, amount * 20));
 	}
 
 	@Override
 	public boolean shouldExecute() {
-		if (vampire.getRNG().nextInt(10) == 0) {
+		if (vampire.getRNG().nextInt(chance) == 0) {
 			List list = vampire.worldObj.getEntitiesWithinAABB(EntityCreature.class, vampire.boundingBox.expand(2, 2, 2));
 			for (Object o : list) {
 				mob = VampireMob.get((EntityCreature) o);
