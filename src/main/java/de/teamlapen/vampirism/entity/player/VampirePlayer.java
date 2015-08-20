@@ -1261,7 +1261,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	}
 
 	public void refreshVampireLordState(){
-		if(!player.worldObj.isRemote){
+		if (player.worldObj != null && !player.worldObj.isRemote) {
 			vampireLord=VampireLordData.get(player.worldObj).isLord(player);
 		}
 	}
