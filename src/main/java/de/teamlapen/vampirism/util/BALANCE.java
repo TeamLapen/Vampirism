@@ -227,9 +227,6 @@ public final class BALANCE {
 	@DefaultInt(value = 6, name = "Bite damage", minValue = 0)
 	public static int VAMPIRE_PLAYER_BITE_DMG;
 
-	@DefaultInt(value = 5, comment = "Vampire lord's minion count", name = "Unused", minValue = 0)
-	public static int VAMPIRE_PLAYER_LORD_MINIONS;
-
 	@DefaultInt(value = 40, name = "Blood vision max distance", minValue = 5)
 	public static int VAMPIRE_PLAYER_BLOOD_VISION_DISTANCE;
 
