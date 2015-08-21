@@ -29,6 +29,9 @@ item.vampirism.vampireArmor_chestplate.name=Vampir Brustplatte
 item.vampirism.minionNameTag.name=Lakai Namensschild
 item.vampirism.gemOfBinding.name=Juwel der Bindung
 item.vampirism.bloodEye.name=Blutiges Auge
+item.vampirism.weakVampireFang.name=Schwache Vampir Zähne
+item.vampirism.weakHumanHeart.name=Schwaches menschliches Herz
+item.vampirism.item_tent.name=Zelt
 
 # Blocks
 block.vampirism.bloodAltar.name=Blood Altar der Sättigung
@@ -44,6 +47,7 @@ block.vampirism.castleBlock.name=Burg Stein
 block.vampirism.castleSlab.name=Burg Stufe
 block.vampirism.doubleCastleSlab.name=Doppelte Burg Stufe
 block.vampirism.castleStairs.name=Burg Treppe
+block.vampirism.tent.name=Zelt
 
 #GUI
 gui.vampirism.revertback.head=Verwandle dich zurück in einen normalen Menschen
@@ -110,6 +114,9 @@ text.vampirism.biome.looking_for_biome=Suche nach einem Vampir Wald Biom. Bitte 
 text.vampirism.biome.not_found=Es wurde kein Vampir Biom gefunden.
 text.vampirism.biome.found=Ein Vampire Wald Biom wurde gefunden
 text.vampirism.castle_fail=Vampirism war nicht in der Lage eine passende Position für ein Vampir Schloss zu finden. Es wird empfohlen eine neue Welt zu generieren. Du kannst aber auch das Kommando "/vampirism checkForVampireBiome" ausführen, wenn dies kein Biom findet, gibt es vermutlich einen Mod Konflikt.
+text.vampirism.structure=Struktur
+text.vampirism.pillar_blocks=Pfeiler Blöcke
+text.vampirism.no_dracula_to_call=Dracula ist tot und kann nicht gerufen werden
 
 #Skill
 skill.vampirism.bat_skill=Aktiviere Fledermaus
@@ -144,4 +151,5 @@ category.vampirism.balance_mob_prop=Vampirism Mob Einstellungen
 category.vampirism.balance_mob_prop.tooltip=Die Eigenschaften von hinzugefÃ¼gten Mobs anpassen 
 category.vampirism.balance_vv_prop=Dorf Eigenschaften
 category.vampirism.balance_vv_prop.tooltip=Konfiguriere wie sich Jäger im Dorf verhalten und andere Dorf Eigenschaften verändern
+
 

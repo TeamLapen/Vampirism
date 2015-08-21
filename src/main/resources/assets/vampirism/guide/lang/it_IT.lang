@@ -10,7 +10,6 @@ guide.vampirism.gettingStarted.overview.text=La Vamparism è un mod che aggiunge
 guide.vampirism.gettingStarted.firstSteps.title=Primi passi
 guide.vampirism.gettingStarted.firstSteps.text=Partirai come un normale giocatore, per diventare un vampiro devi essere morso da un vampiro. Quindi,o lasci che loro ti colpiscano di proposito o semplicemente aspetti finché succede per caso. Quando ti avranno morso avrai una possibilità che venga visualizzato un effetto di pozione chiamato "Sanguinamento Vampirico" che dura un giorno di Minecraft. Una volta terminata la pozione,diventi un vampiro. Nel caso in cui non lo volete diventare, è sempre possibile annullare l'effetto con un secchio di latte. In alternativa è possibile fare clic destro con le zanne di vampiro in mano e di iniettare un po' di sangue in te e ottenere lo stesso effetto.
 guide.vampirism.gettingStarted.asAVampire.title=Come un vampiro
-guide.vampirism.gettingStarted.asAVampire.text=Una volta diventato un vampiro, una delle sue principali fonti di sangue (almeno la fonte migliore) sono gli abitanti del villaggio e si dovrebbe trovare un sacco di quelli. Attenzione però, ci sono ancora i vampiri che ti possono attaccare, come quando sei un giocatore regolare. I cacciatori di vampiri, tuttavia, non ti, attaccano quando sei un vampiro al livello 1. Come vampiro, devi guardare quanto sete di sangue hai. Succhiando il sangue premendo 'F' dagli abitanti del villaggio e da alcuni mobs per ottenere più sangue. il sangue extra può essere imbottigliato in una bottiglia di sangue. Se si desidera utilizzare la bottiglia di sangue bisogna fare clic destro o MAIUSC clic destro del mouse. Saprete quali sono i mob da cui non è possibile ottenere sangue infatti si riceveranno dei danni cercando di succhiare il loro sangue. All'inizio sarai un vampiro di livello 1 (il livello viene visualizzato sopra la barra dell'esperienza) e si ha la velocità, la salute e la forza migliorata. Per raggiungere livelli più elevati di vampiro è necessario eseguire diversi rituali. Quando si arriva sopra un certo livello, i vampiri non ti attaccheranno, ma ti attaccheranno i cacciatori di vampiri.Avanzando di livello migliori le tue abilità, ma appaiono alcuni svantaggi come i danni da parte del sole.
 
 #Items and Blocks
 guide.vampirism.itemsAndBlocks.category=Blocchi e oggetti
@@ -44,12 +43,10 @@ guide.vampirism.levels.category=Come salire di livello
 
 #Mobs
 guide.vampirism.mobs.category=Mob
-guide.vampirism.mobs.hunter.text=Battute di caccia vampiri;) / Non solo attacca i giocatori con un livello di vampiro superiore %s. / nVampire cacciatori vicino a villaggi tenta di difendere il loro villaggio.
 guide.vampirism.mobs.vampire.text=Attacca i giocatori fino a quando non hanno un livello di vampiro superiore %s. / ovviamente attacca gli abitanti del villaggio e li rende a vampiro. / Ooca attivo
 guide.vampirism.mobs.vampire_minion.title=Schiavo dei vampiri
 guide.vampirism.mobs.vampire_minion.text=Sono subordinati al loro Signore. / nHave la consistenza del loro Signore. / n essere controllati da giocatori signore vampiro.
 guide.vampirism.mobs.ghost.text=Depone le uova nel Bioma vampiro.
-guide.vampirism.mobs.ghost.title=Fantasma
 
 #VampirePlayer
 guide.vampirism.vplayer.category=Caratteristiche del Giocatore quando e' vampiro
@@ -66,6 +63,7 @@ guide.vampirism.vplayer.skills.end=Ci sono molte altre abilità. Basta provarli.
 guide.vampirism.vplayer.skills.menu_text=Questo è l'abilità di toggle "abilità rosa" per
 
 #VampireLord
+
 
 
 

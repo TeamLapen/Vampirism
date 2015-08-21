@@ -11,7 +11,6 @@ guide.vampirism.gettingStarted.overview.text=Vampirismo es un mod que añade una
 guide.vampirism.gettingStarted.firstSteps.title=Primeros pasos
 guide.vampirism.gettingStarted.firstSteps.text=Usted va a iniciar como un jugador normal, para convertirse en vampiro usted debe ser mordido por uno. Asi que dejese morder a proposito o espere a que pase por accidente. Cuando te muerdan hay una probabilidad de que usted reciba un efecto de poción llamado "Sanguinare Vampiris", el cual dura un dia de Minecraft, siempre puede anular el efecto bebiendo leche. De otra manera puede hace click derecho con los colmillos de un vampiro en su mano para así injectar un poco de sangre y obtener el efecto antes mencionado.
 guide.vampirism.gettingStarted.asAVampire.title=Como un vampiro
-guide.vampirism.gettingStarted.asAVampire.text=Una vez que te conviertes en un vampiro, uno de sus principales fuentes de sangre (al menos la mejor fuente) son los aldeanos y usted debe encontrar un montón de estos. Ten cuidado sin embargo, todavía hay vampiros que pueden atacarte, igual que cuando eres un jugador regular. Los cazadores de vampiros, sin embargo, no te atacarán cuando un vampiro de nivel 1. Como un vampiro necesita ver la cantidad de sangre que tiene. Chupa sangre pulsando 'F' de los aldeanos y de algunos mobs para conseguir más sangre. Sangre adicional puede guardarse en un frasco de sangre. Si desea transferir sangre entre la botella de sangre y la barra de sangre haga click derecho. Usted sabrá que mobs no te da sangre pues usted recibirá daño tratando de chupar su sangre. Al principio será un vampiro de nivel 1 (el nivel se muestra por encima de su nivel de XP) y ha mejorado la velocidad, salud y fuerza. Para llegar a niveles más altos de vampiro tienes que realizar los diferentes rituales. Al llegar por encima de cierto nivel los vampiros ya no te atacarán, pero si los cazadores de vampiros. A medida que subes de nivel se mejoran tus habilidades, pero algunas desventajas como el daño solar pueden aparecer.
 
 #Items and Blocks
 guide.vampirism.itemsAndBlocks.category=Objetos y bloques
@@ -48,13 +47,11 @@ guide.vampirism.levels.category=Cómo subir de nivel
 
 #Mobs
 guide.vampirism.mobs.category=Mobs
-guide.vampirism.mobs.hunter.text=Cazadores de vampiros ;)/nSolo atacan a jugadores con un nivel de vampiro mayor de %s./n Cazadores de vampiros que estan cerca de su pueblo intentan defenderlo.
 guide.vampirism.mobs.vampire.text=Ataca a los jugadores a menos que tengan un nivel mas alto de %s./nTambien ataca a los aldeanos y los hace vampiro./nNoche activa
 guide.vampirism.mobs.vampire_baron.text=Aparecen raramente en biomas vampiricos./nOcurre en diferentes niveles dependiendo parcialmente en el nivel del jugador./nSuelta sangre pura./Es muy fuerte y invoca a subditos que le ayudan
 guide.vampirism.mobs.vampire_minion.title=Subdito de vampiro
 guide.vampirism.mobs.vampire_minion.text=Son subordinados a su Señor./nTienen la textura de su Señor./nPueden ser controlados por un jugador que sea Señor de los vampiros.
 guide.vampirism.mobs.ghost.text=Aparece en el bioma vampírico.
-guide.vampirism.mobs.ghost.title=Fantasma
 
 #VampirePlayer
 guide.vampirism.vplayer.category=Características de jugador de vampiro
@@ -84,6 +81,7 @@ guide.vampirism.vlord.skills.title=Habilidades del Señor de los vampiros
 guide.vampirism.vlord.skills.text=Después de derrotar al actual Señor de los vampiros también aprender las habilidades que este tenía. Están disponibles en el menu de habilidades, pero no podra usar las antiguas./n/nTeletransporte/nTu te puedes teletransportar cortas distancias/n/nInvisibilidad/nSer invisble por un poco de tiempo/n/nCongelar/nCongela a todos a su alrededor por un poco de tiempo.
 guide.vampirism.vlord.minions.title=Subditos
 guide.vampirism.vlord.minions.text=Como Señor de los vampiros eres tan poderoso que puedes convertir vampiros a súbditos. Congela uno entonces presiona tu tecla para morder para intimidarlo. Él se convertirá en su súbdito. /nEntonces puedes utilizar %s mientras estes apuntandole para abrir un menú de control y darle diferentes tareas. /nPara controlar múltiples subditos a la vez, pulsa la misma tecla sin apuntar a ningun subdito. /n/nLos subditos normales permanecerán siempre contigo, de lo contrario huiran. Para que sean capaces de cumplir tareas en otros lugares, tienes que usar la tecla %s en ellos. /nEntonces puedes enviarlos por ejemplo a recoger sangre, de esta forma también son un poco más inteligente y tratan de evitar el sol. Para nombrar tus subditos se puede utilizar una etiqueta de nombre para subdito.
+
 
 
 

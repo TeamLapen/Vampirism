@@ -11,7 +11,6 @@ guide.vampirism.gettingStarted.overview.text=A Vampirism egy olyan mod ami egy �
 guide.vampirism.gettingStarted.firstSteps.title=Első lépések
 guide.vampirism.gettingStarted.firstSteps.text=Egy átlagos játékos ként kezdesz, ahhoz hogy vámpír legyél, meg kell hogy harapjon egy. Szóval várj amíg megtámad egy, vagy várj amíg véletlen megtörténik. Amikor megütnek, van egy esély, hogy kapsz egy effektet (potion effektet) aminek a neve "Sanguinare Vampiris" ami egy Minecraft napig tart. Amikor az effektnek vége, vámpír leszel. Ha nem akarsz vámpír lenni, igyál tejet. Alternatívként jobb klikkelhetsz a vámpír fogakkal a kezeddel hogy beolts magadnak vért magadba, és megkapod ugyanazt az effektet, mint a fenti.
 guide.vampirism.gettingStarted.asAVampire.title=Mint egy vámpír
-guide.vampirism.gettingStarted.asAVampire.text=Amikor vámpír vagy, az egyik főforrás a véredhez (legalábbis a legjobb forrás) a falusiak és sokat találhatsz belőlük. Vigyázz azonban, vannak Vámpírok akik megtámadhatnak, ugyanúgy mint ha átlagos játékos lennél. A Vámpír Vadászok, viszont nem fognak támadni, ha 1 -es szintű Vámpír vagy. Vámpírként, kell figyelned hogy mennyi véred van. Szívhatsz vért úgy, hogy megnyomod az 'F' betűt miközben falusira, vagy egyéb mobra nézel. Extra véreket lehet Vér Üvegben tárolni. Ha szeretnél átszállítani a vér és a Vér Üveg között, jobb klikkelj, vagy shift jobb klikkelj az egéren. Fogod tudni melyik moboktól nem fogsz tudni vért szívni, mivel sebződni fogsz, amikor vért próbálsz kiszívni belőlük. Az elején 1 -es szintű vámpír leszel (a szinted jelezve van az Xp szintd fölött) és jobb gyorsaságod, életed, és erőd van. Ha szintet akarsz lépni, el kell végezni különböző rituálékat. Amikor szintet lépsz, a Vámpírok nem fognak támadni téged, de Vámpír Vadászok igen. Ha szintet lépsz, az erőid jobbak lesznek, de lesznek hátulütőik mint például a napfény sebez.
 
 #Items and Blocks
 guide.vampirism.itemsAndBlocks.category=Tárgyak és Blokkok
@@ -36,7 +35,6 @@ guide.vampirism.levels.category=Szintlépés
 #Mobs
 guide.vampirism.mobs.category=Mobok
 guide.vampirism.mobs.vampire_minion.title=Vámpír Kegyenc
-guide.vampirism.mobs.ghost.title=Szellem
 
 #VampirePlayer
 guide.vampirism.vplayer.category=Vámpír Játékos Jellemzők
@@ -48,6 +46,7 @@ guide.vampirism.vplayer.skills.bat_transformation=Tapasztalat\: Denevérré Vál
 guide.vampirism.vlord.category=Vámpírok Ura
 guide.vampirism.vlord.introduction.title=Bemutatkozás
 guide.vampirism.vlord.minions.title=Kegyencek
+
 
 
 

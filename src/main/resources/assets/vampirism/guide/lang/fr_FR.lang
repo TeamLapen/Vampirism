@@ -10,7 +10,6 @@ guide.vampirism.gettingStarted.overview.text=Vampirisme est un mod qui ajoute un
 guide.vampirism.gettingStarted.firstSteps.title=Premiers pas
 guide.vampirism.gettingStarted.firstSteps.text=Vous débutez comme un joueur régulier, pour devenir un vampire vous devez être mordu par un vampire. Alors laissez vous mordre dans ce but ou attendez que cela arrive par accident. Quand ils vous auront mordu, il y a une chance que vous aillez l'effet de la potion "Sanguinare Vampiris" pour la durée d'un jour Minecraft. A la fin de la potion, vous êtes un vampire. Dans le cas ou vous ne souhaitez pas le devenir, vous pouvez annuler l'effet avec un seau de lait. Autrement, vous pouvez cliquer-droit avec des Crocs de vampire en main pour vous injecter du sang et obtenir le même effet que la morsure.
 guide.vampirism.gettingStarted.asAVampire.title=Comme un vampire
-guide.vampirism.gettingStarted.asAVampire.text=Une fois que vous êtes un vampire, l'une de vos sources principale de sang (du moins la meilleure) sont les villageois et vous devrez en trouver beaucoup. Cependant, il subsiste encore des vampires qui peuvent vous attaquer alors que vous êtes vampire niveau 1.\nEn tant que vampire, vous devez surveiller la quantité de sang que vous avez. Sucez le sang en pressant la touche 'F' sur les villageois et sur certaines créatures afin d'obtenir plus de sang. Le sang supplémentaire peut être stocké dans les bouteilles de sang. Pour transférer le sang d'une bouteille de sang vers votre barre de sang, utilisez Clique-Droit ou Maj-Clique-Droit avec la souris. Vous saurez quelle créature n'a pas de sang lorsque vous recevrez des dommages en tentant de leur sucer le sang. Au début, vous serez un vampire de niveau 1 (le niveau est affiché au-dessus de la barre d'XP) et vous aurez la vitesse, la santé et la force améliorées. \nPour monter à des niveaux de vampire plus élevés, vous devez accomplir différents rituels. Au-delà d'un certain niveau, les vampires ne vous attaquerons plus, mais les chasseurs de vampire le ferons. Tant que vous avancerez dans les niveaux, vos capacités s'amélioreront, mais quelques inconvénient, tel que les dégâts du soleil, apparaitront.
 
 #Items and Blocks
 guide.vampirism.itemsAndBlocks.category=Blocs et éléments
@@ -45,12 +44,10 @@ guide.vampirism.levels.category=Comment monter de niveau
 
 #Mobs
 guide.vampirism.mobs.category=Créatures
-guide.vampirism.mobs.hunter.text=Chassent les vampires ;)/nSeule les attaques de joueurs avec un niveau plus élevé que les %s./nChasseurs de Vampire près des villages essayent de défendre les villages.
 guide.vampirism.mobs.vampire.text=Attaquent les joueurs tant qu'ils n'ont pas un niveau de vampire plus haut que %s./nAttaquent les villageois et les vampirisent./nActif la nuit
 guide.vampirism.mobs.vampire_minion.title=Favori de vampire
 guide.vampirism.mobs.vampire_minion.text=Sont subordonnés à leur seigneur./nOnt la texture de leur seigneur./nPeut être contrôlé par les joueurs seigneurs de vampire.
 guide.vampirism.mobs.ghost.text=Apparaitre dans le biome vampire.
-guide.vampirism.mobs.ghost.title=Fantôme
 
 #VampirePlayer
 guide.vampirism.vplayer.category=Caractéristiques du joueur Vampire
@@ -68,6 +65,7 @@ guide.vampirism.vplayer.skills.menu_text=Il s'agit de la « rose  à compétence
 
 #VampireLord
 guide.vampirism.vlord.introduction.title=Introduction
+
 
 
 

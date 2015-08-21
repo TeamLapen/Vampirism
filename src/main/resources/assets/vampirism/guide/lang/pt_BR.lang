@@ -11,7 +11,6 @@ guide.vampirism.gettingStarted.overview.text=Vampirismo é um mod que adiciona u
 guide.vampirism.gettingStarted.firstSteps.title=Primeiros passos
 guide.vampirism.gettingStarted.firstSteps.text=Você vai começar para fora como um jogador regular, para se tornar um vampiro, que você tem que ser mordido por um vampiro. Também deixe-os te bater de propósito ou só Esperem até que aconteça por acaso. Quando eles atingiram você há uma chance, você recebe um efeito de poção, chamado "Sanguinare Vampiris" que dura um dia de Minecraft. Após ter terminado a poção, você se torna um vampiro. No caso de você não quer se tornar um, você sempre pode cancelar o efeito com um balde de leite. Alternativamente você pode botão direito do mouse com presas de vampiro em mão para injetar um pouco de sangue em você e obter o mesmo efeito como acima.
 guide.vampirism.gettingStarted.asAVampire.title=Como um vampiro
-guide.vampirism.gettingStarted.asAVampire.text=Depois de se tornar um vampiro, uma das suas principais fontes de sangue (pelo menos a melhor fonte) são aldeões e encontrará muitas dessas. Cuidado, porém, ainda existem vampiros que podem atacá-lo, mesmo que quando você é um jogador regular. Os caçadores de vampiros, no entanto, não atacarão você, quando você está a um nível 1 vampiro. Como um vampiro, você precisa ver quanto sangue você tem. Suga sangue pressionando 'F' dos moradores e de alguns mobs para tirar mais sangue. Sangue extra pode ser armazenado em um frasco de sangue. Se você deseja transferir sangue entre o frasco de sangue e o uso de sangue Bar botão direito do mouse ou shift clique com botão direito do mouse. Você saberá quais mobs não consegue sangue de, como você irá receber danos tentando sugar seu sangue. No começo você vai ser um vampiro de nível 1 (o nível é exibido acima do seu nível XP) e melhorou a velocidade, força e saúde. Para chegar a níveis mais elevados de vampiro, você tem que executar rituais diferentes. Quando você ficar acima de um determinado nível, os vampiros já não irão atacá-lo, mas será de caçadores de vampiros. Como você avançar através dos níveis melhorar suas habilidades, mas podem aparecer algumas desvantagens como danos causados pelo sol.
 
 #Items and Blocks
 guide.vampirism.itemsAndBlocks.category=Blocos e itens
@@ -48,13 +47,11 @@ guide.vampirism.levels.category=Como subir de nível
 
 #Mobs
 guide.vampirism.mobs.category=Mobs
-guide.vampirism.mobs.hunter.text=Caça vampiros;) / Apenas ataca os jogadores com um nível de vampiro superior %s. / nVampire caçadores perto de aldeias tentar defender a sua aldeia.
 guide.vampirism.mobs.vampire.text=Ataca os jogadores desde que eles não têm um nível de vampiro superior %s. / nAlso ataca aldeões e torna a vampiro. / Night ativo
 guide.vampirism.mobs.vampire_baron.text=Spawna raramente em biomas de vampiro./nOcorre em níveis diferentes, dependendo parcialmente do level do jogador./nDropa "Sangue Puro"./nÉ bem forte e sumona minions que irao ajudar ele
 guide.vampirism.mobs.vampire_minion.title=Vampiro Minion
 guide.vampirism.mobs.vampire_minion.text=São subordinados ao seu senhor. / nHave a textura do seu senhor. / nPode ser controlados por jogadores de Lorde vampiro.
 guide.vampirism.mobs.ghost.text=Desova no bioma de vampiro.
-guide.vampirism.mobs.ghost.title=Fantasma
 
 #VampirePlayer
 guide.vampirism.vplayer.category=Características do leitor de vampiro
@@ -80,6 +77,7 @@ guide.vampirism.vlord.about.title=Sobre ser um Lorde
 guide.vampirism.vlord.multiplayer.title=Em Multijogador
 guide.vampirism.vlord.skills.title=Habilidades do Lorde Vampiro
 guide.vampirism.vlord.minions.title=Minions
+
 
 
 

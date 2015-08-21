@@ -11,7 +11,6 @@ guide.vampirism.gettingStarted.overview.text=Vampirisme is een mod die een hele 
 guide.vampirism.gettingStarted.firstSteps.title=Eerste stappen
 guide.vampirism.gettingStarted.firstSteps.text=U zal beginnen als een gewone speler, om een vampier te worden moet je gebeten door een vampier. Dus ofwel laat ze je raken met opzet of gewoon wachten tot het per ongeluk gebeurt. Wanneer zij raken u er is een kans dat u een drankje effect genaamd "Sanguinare Vampiris" krijgt, die een Minecraft dag duurt. Nadat het effect is beëindigd, Word je een vampier. In het geval dat u geen vampier wilt worden, kunt u altijd het effect annuleren met een emmer melk. Als alternatief kunt u met de rechtermuisknop met Vampier tanden in je hand wat bloed injecteren in u en krijgt u hetzelfde effect als hierboven.
 guide.vampirism.gettingStarted.asAVampire.title=Als een vampier
-guide.vampirism.gettingStarted.asAVampire.text=Zodra u een vampier bent, is een van uw belangrijkste bronnen van bloed (ten minste de beste bron) dorpelingen en je moet je veel van hen vinden. Kijk uit, hoewel, er zijn nog steeds vampieren die u aanvallen, hetzelfde als wanneer u een normale speler bent. De vampierenjagers, echter, zullen u niet aanvallen, wanneer u een niveau 1 Vampier bent.\n Als een vampier moet u kijken hoeveel bloed u hebt. door de 'F'-toets in te drukken zuigt u bloed van dorpsbewoners en sommige mobs om meer bloed te verkrijgen. Extra bloed kan worden opgeslagen in een bloed fles. Als u bloed wilt overbrengen van bloed-fles en de bloed Bar, Klik met de rechtermuisknop of shift klik met de rechtermuisknop. U weet van welke mobs je geen bloed van kunt krijgen, want u ontvangt schade als u probeert om hun bloed te zuigen. In het begin u zult een niveau 1-vampier (het niveau wordt weergegeven boven uw XP-niveau) en hebt u verbeterde snelheid, gezondheid en kracht.\nOm naar een hoger vampieren level te behalen, moeten er verschillende rituelen uitgevoert worden. Wanneer u een bepaald niveau haalt, zullen Vampires je niet langer aanvallen, maar Vampierenjagerswel. Als u door de niveaus vooruitgaat zullen uw vaardigheden verbeteren, maar sommige nadelen zoals beschadiging door de zon kunnen tevoorschijn komen.
 
 #Items and Blocks
 guide.vampirism.itemsAndBlocks.category=Spullen en blokken
@@ -48,13 +47,11 @@ guide.vampirism.levels.category=Hoe niveaus omhoog gaan
 
 #Mobs
 guide.vampirism.mobs.category=Wezens
-guide.vampirism.mobs.hunter.text=Jaagt op vampieren ;) /nvalt allen spelers aan met een vampieren niveau hoger dan %s. / nVampire jagers in de buurt van dorpen proberen hun dorp te verdedigen.
 guide.vampirism.mobs.vampire.text=Valt alleen spelers aan met een vampier niveau hoger dan %s. / nook vallen ze dorpelingen aan en maakt ze vampier. / ns'nachts actief
 guide.vampirism.mobs.vampire_baron.text=Verschijnt zelden in vampier biotopen. /nVerchijnt in verschillende niveaus gedeeltelijk afhankelijk van het spelers niveau. / nLaat zuiver bloed vallen. / nIs zeer sterke en roept minions die hem helpen
 guide.vampirism.mobs.vampire_minion.title=Vampieren volgeling
 guide.vampirism.mobs.vampire_minion.text=Ondergeschikt aan hun heer. / nHebben de textuur van hun heer. / nKan worden gecontroleerd door vampier heer spelers.
 guide.vampirism.mobs.ghost.text=Verschijnd in de vampieren biotoop.
-guide.vampirism.mobs.ghost.title=Geest
 
 #VampirePlayer
 guide.vampirism.vplayer.category=Vampieren speler functies
@@ -84,6 +81,7 @@ guide.vampirism.vlord.skills.title=Vampire Heer vaardigheden
 guide.vampirism.vlord.skills.text=Na het verslaan van de huidige Vampieren heer leert u ook een paar vaardigheden die hij had. Ze zijn beschikbaar in de normale vaardigheids roos, maar mogelijk kunt u de oude niet meer gebruiken./n/nTeleportatie/nJe kan teleporteren over korte afstanden/n/nOnzichtbaarheid/nWees onzichtbaar voor een korte tijd/n/nBevries/nBevries iedereen rond je voor een korte tijd.
 guide.vampirism.vlord.minions.title=Volgelingen
 guide.vampirism.vlord.minions.text=Als Vampieren heer ben je zijn zo machtig dat u vampieren u minions kan maken. bevries er een en bijt hem (door op de bijt-toets te drukken) om hem te intimideren. Hij zal uw volgeling worden. /nDan kan u %s gebruiken terwijl u naar hem kijkt om een systeemmenu te openen en geef hem verschillende verschillende taken. /nOm controle van meerdere minions tegelijk te hebben, druk op dezelfde toets terwijl geconfronteerd met geen minion. /n/nDe normale minions zullen altijd met u blijven, anders zouden ze weglopen. Om ze taken te laten vervullen op andere plaatsen, moet u de %s gebruiken op hen. /nDan u kunt ze bijvoorbeeld gebruiken voor het verzamelen van bloed, in deze vorm zijn ze ook een beetje slimmer en proberen ze te verbergen van de zon. Als u uw Volgelingen een naam wilt geven kunt u een speciaal en goedkoop Volgelingen naam kaartje gebruiken.
+
 
 
 

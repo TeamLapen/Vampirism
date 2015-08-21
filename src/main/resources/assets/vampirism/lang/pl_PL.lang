@@ -1,0 +1,148 @@
+#X-Generator: crowdin.com
+# Entitys
+entity.vampirism.vampireHunter.name=Łowca wampirów
+entity.vampirism.vampire.name=Wampir
+entity.vampirism.ghost.name=Duch
+entity.vampirism.vampireBaron.name=Baron wampirów
+entity.vampirism.vampireMinionR.name=Sługus wampirów
+entity.vampirism.vampireMinionS.name=Wampirzy sługus
+entity.vampirism.blinding_bat.name=Nietoperz
+entity.vampirism.dracula.name=Drakula
+entity.vampirism.dead_mob.name=Martwy mob
+entity.vampirism.portal_guard.name=Strażnik portalu
+
+# Items
+item.vampirism.vampiresFear.name=Postrach wampira
+item.vampirism.bloodBottle.name=Butelka krwi
+item.vampirism.vampireFang.name=Ząb wampira
+item.vampirism.pitchfork.name=Widły
+item.vampirism.humanHeart.name=Serce człowieka
+item.vampirism.torch.name=Pochodnia
+item.vampirism.pureBlood.name=Czysta krew
+item.vampirism.sunscreen.name=Ochrona przed słońcem
+item.vampirism.leechSword.name=Pijawka
+item.vampirism.coffin.name=Trumna
+item.vampirism.vampireArmor_helmet.name=Hełm wampira
+item.vampirism.vampireArmor_leggings.name=Spodnie wampira
+item.vampirism.vampireArmor_boots.name=Buty wampira
+item.vampirism.vampireArmor_chestplate.name=Napierśnik wampira
+item.vampirism.minionNameTag.name=Znacznik sługusa
+item.vampirism.gemOfBinding.name=Klejnot Przywiązania
+item.vampirism.bloodEye.name=Krwawe oko
+
+# Blocks
+block.vampirism.bloodAltar.name=Krwawy ołtarz nasycenia
+block.vampirism.bloodAltarTier2.name=Krwawy ołtarz inspiracji
+block.vampirism.bloodAltarTier4.name=Krwawy ołtarz wlewu
+block.vampirism.bloodAltarTier4Tip.name=Krwawy ołtarz końca wlewu
+block.vampirism.churchAltar.name=Ołtarz oczyszczenia
+block.vampirism.cursedEarth.name=Przeklęta ziemia
+block.vampirism.vampireOrchid.name=Wampirza orchidea
+block.vampirism.blockCoffin.name=Trumna
+block.vampirism.castlePortal.name=Blok portalu
+block.vampirism.castleBlock.name=Blok zamku
+block.vampirism.castleSlab.name=Zamkowa półpłytka
+block.vampirism.doubleCastleSlab.name=Podwójna zamkowa półpłytka
+block.vampirism.castleStairs.name=Zamkowe schody
+
+#GUI
+gui.vampirism.revertback.head=Przywrócenie do zwykłego człowieka
+gui.vampirism.revertback.desc=Stracisz wszystkie poziomy i zginiesz
+
+# Keys
+keys.vampirism.category=Wampiryzm
+keys.vampirism.suck=Ssanie krwi
+keys.vampirism.auto=Automatyczne wypełnianie butelki krwi
+keys.vampirism.skill=Aktywacja umiejętności wampira
+key.vampirism.vision=Przełączanie wizji
+
+#General
+itemGroup.vampirism=Wampiryzm
+death.attack.sun=%1$s nie lubi słońca
+potion.vampirism.sunscreen=Krem do opalania
+potion.vampirism.thirst=Pragnienie
+potion.vampirism.saturation=Nasycenie
+potion.vampirism.sanguinare=Wampiryzm
+text.vampirism.skill.level_to_low=Twój poziom wampira jest na to zbyt niski
+text.vampirism.skill.cooldown_not_over=Poczekaj dopóki trwają efekty uboczne
+text.vampirism.entity_level=Poziom
+text.vampirism.ritual_missing_times=Brakuje ci rzeczy na ten rytuał
+text.vampirism.ritual_structure_wrong=Układ jest niewłaściwy dla tego rytuału
+text.vampirism.ritual_level_wrong=Nie możesz użyć tego ołtarza na tym poziomie
+text.vampirism.ritual_still_running=Rytuał nadal trwa
+text.vampirism.not_enough_blood=Nie ma wystarczająco dużo krwi w ołtarzu
+text.vampirism.ritual_requirements_not_met=Nie wszystkie wymagania dla tego rytuału zostały spełnione
+text.vampirism.purity=Czystość
+text.vampirism.auto_fill_enabled=Automatyczne wypełnianie włączone
+text.vampirism.auto_fill_disabled=Automatyczne wypełnianie wyłączone
+text.vampirism.skill.deactivated_by_serveradmin=Ta umiejętnoś jest zablokowana przez admina serwera
+text.vampirism.ritual_no_vampire=Musisz być wampirem dla tego rytuału
+text.vampirism.cant_fly_day=Nie możesz latać podczas dnia
+text.vampirism.no_more_minions=Nie jesteś zdolny do posiadania więcej sługusów
+text.vampirism.coffin.noSleep=Możesz spać tylko podczas dnia
+text.vampirism.coffin.occupied=Ta trumna jest zajęta
+text.vampirism.coffin.stopsleeping=Opuść trumnę
+text.vampirism.blood_left=Utrata krwi
+text.vampirism.blood=Krew
+text.vampirism.vampirelevel=Poziom wampira
+text.vampirism.entitysblood=Krew wrogów
+text.vampirism.minion=Sługus
+text.vampirism.lord=Władca
+text.vampirism.normal_vision=Zwykła wizja
+text.vampirism.night_vision=Nocna wizja
+text.vampirism.no_control_minion=Nie masz kontroli nad tym sługusem
+text.vampirism.need_empty_bottle=Mój władco, potrzebuję pustej butelki, by zebrać krew
+text.vampirism.thanks=Dziękuję
+text.vampirism.coming_back=Wracam, mój władco
+text.vampirism.sorry_i_died_while_doing=Mój władców, wybacz mi, ale zginąłem podczas wypełniania twojego zadania
+text.vampirism.current_task=Obecne zadanie
+text.vampirism.lord.become=Jesteś przeniesiony do Władcy Wampirów
+text.vampirism.lord.other_player_become=pokonał obecnego Władcę Wampirów i zastąpił go
+text.vampirism.lord.vampire_replace=Inny gracz zastąpił cię jako Władca Wampirów
+text.vampirism.lord.vampire_kill_replace=Inny wampir zabił cię i zastąpił cię jako Władca Wampirów
+text.vampirism.lord.new_lord_castle=Nowy Władca Wampirów powstał i przenosi się do swojego zamku
+text.vampirism.lord.vampire_replace_absence=Inny wampir zastąpił cię jako Władca Wampirów podczas twojej nieobecności
+text.vampirism.lord.portal_disabled=Ten portal nigdzie nie prowadzi
+text.vampirism.lord.level_to_low=Twój poziom wampira jest zbyt niski, żeby zostać Władcą Wampirów
+text.vampirism.guard_stay_away_level_low=Twój poziom wampira jest zbyt niski, żeby podróżować do zamku Drakuli. Trzymaj się z dala od niego\!
+text.vampirism.coffin.wrong_dimension=Nie możesz spać w tym wymiarze.
+text.vampirism.biome.looking_for_biome=Poszukuję Lasu Wampirów. Proszę czekać
+text.vampirism.biome.not_found=Nie znaleziono Lasu Wampirów.
+text.vampirism.biome.found=Znaleziono Las Wampirów
+text.vampirism.castle_fail=Wampiryzm nie był zdolny, żeby znaleźć właściwą pozycję dla Zamku Wampirów. Zalecane jest stworzenie nowego świata. Możesz również spróbować "/vampirism checkForVampireBiome", jeżeli biom nie zostanie znaleziony, inna modyfikacja zapewne ingeruje w Wampiryzm.
+
+#Skill
+skill.vampirism.bat_skill=Przełączenie trybu nietoperza
+skill.vampirism.change_weather=Pogoda
+skill.vampirism.cancel=Anuluj
+skill.vampirism.freeze=Zamroź
+skill.vampirism.invisibility=Niewidzialność
+skill.vampirism.regen=Regeneracja
+skill.vampirism.revive_fallen=Ożywiać upadłych
+skill.vampirism.summon_bats=Przyzywać Nietoperze
+skill.vampirism.teleport=Teleportować się
+skill.vampirism.vampire_rage=Gniew Wampira
+
+#Minion command
+minioncommand.vampirism.attackhostilenoplayers=Atakować wrogów
+minioncommand.vampirism.attackhostile=Atakować wrogów włączając graczy
+minioncommand.vampirism.collectblood=Zbierać krew
+minioncommand.vampirism.defendlord=Chronić Władcę
+minioncommand.vampirism.stayhere=Stać tutaj
+minioncommand.vampirism.comeback=Wracać (odległe sługusy)
+minioncommand.vampirism.justfollow=Tylko podążać za mną
+minioncommand.vampirism.converttosaveable=Wziąć Klejnot Przywiązania z powrotem
+minioncommand.vampirism.defendarea=Chronić obszar
+
+#Config
+category.vampirism.balance=Ustawienia bilansu
+category.vampirism.balance.tooltip=Zmień prawie każdy bilans dotyczący majątku
+category.vampirism.balance_level=Zwiększ ustawienia bilansu
+category.vampirism.balance_player_mod=Ustawienia modyfikacji gracza Wampira
+category.vampirism.balance_player_skills=Ustawienia umiejętności gracza Wampira
+category.vampirism.balance_mob_prop=Wampiryzm posiadłości mobów
+category.vampirism.balance_mob_prop.tooltip=Zmień posiadłości mobów dodane przez Wampiryzm
+category.vampirism.balance_vv_prop=Posiadłości Wioski Wampirów
+category.vampirism.balance_vv_prop.tooltip=Zmień sposób w jaki łowcy w wioskach postępują i dostosowują inne wioski powiązanymi rzeczami
+
+
