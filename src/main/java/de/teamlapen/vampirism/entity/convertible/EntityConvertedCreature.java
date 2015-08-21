@@ -54,6 +54,10 @@ public class EntityConvertedCreature extends EntityVampireBase implements ISynca
                 this.setSize(creature.width, creature.height);
             }
         }
+        if (entityCreature != null && getConvertingHandler() == null) {
+            entityCreature = null;
+            Logger.w("ConvCreature", "Cannot find converting handler for converted creature %s (%s)", this, entityCreature);
+        }
     }
 
     @Override

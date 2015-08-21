@@ -116,7 +116,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		if (blood < max_blood / 2) {
 			if (blood == 0 || entity.getRNG().nextInt(blood) == 0) {
 
-				if (canBecomeVampire && canTurn /*&&  TODO eneable again entity.getRNG().nextBoolean()*/) {
+				if (canBecomeVampire && canTurn && entity.getRNG().nextBoolean()) {
 					if (Configs.realismMode) {
 						entity.addPotionEffect(new PotionEffect(ModPotion.sanguinare.id, BALANCE.VAMPIRE_MOB_SANGUINARE_DURATION * 20));
 					} else {

@@ -10,6 +10,7 @@ import amerifrance.guideapi.api.util.PageHelper;
 import amerifrance.guideapi.categories.CategoryItemStack;
 import amerifrance.guideapi.entries.EntryUniText;
 import amerifrance.guideapi.pages.*;
+import cpw.mods.fml.common.registry.GameRegistry;
 import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.VampirismMod;
@@ -69,6 +70,9 @@ public class VampirismGuide{
 		builder.setSpawnWithBook(true);
 		vampirismGuide = builder.build();
 		GuideRegistry.registerBook(vampirismGuide);
+		ItemStack bookstack = GuideRegistry.getItemStackForBook(vampirismGuide);
+		GameRegistry.addShapelessRecipe(bookstack, new ItemStack(Items.book), new ItemStack(ModItems.vampireFang));
+		GameRegistry.addShapelessRecipe(bookstack, new ItemStack(Items.book), new ItemStack(ModItems.weakVampireFang));
 	}
 	
 	private static void registerGettingStarted(){
