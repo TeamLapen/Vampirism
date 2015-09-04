@@ -8,7 +8,7 @@ This mod adds several rituals which allow you to first become a vampire and then
 As a vampire you don't need to eat all that dry bread or eat these strange fruits called "apples", you prefer some red and tasty blood, which you have to suck from animals or better villagers, but be careful not every animal likes to give blood.
 
 [Minecraft Forum Thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/2364443-vampirism-become-a-vampire)  
-[Downloads](http://teamlapen.de/projects/vampirism/files)  
+[Downloads](http://minecraft.curseforge.com/mc-mods/233029-vampirism-become-a-vampire/files)  
 [Help to translate](https://crowdin.com/project/vampirism)
 
 ## Team ##
@@ -17,14 +17,14 @@ As a vampire you don't need to eat all that dry bread or eat these strange fruit
 - wildbill22 _Code_  
 - LRA_10 _Models/Textures_
 
-## Thanks ##
-- Cheaterpaul _Textures_
-- Mazdallier _Translation_
-- evernife _Translation_
+
+## API ##
+There is no really API yet, but one is planned for the near future.  
+If you already know what you want to see in that API feel free to contact maxanier
 
 ## Licence ##
 This mod is licenced under [LGPLv3](https://raw.githubusercontent.com/TeamLapen/Vampirism/master/LICENCE)
 
-This mod uses these sounds from freesound:
-DST-VampireMonk.mp3 by Striderjapan -- http://www.freesound.org/people/Striderjapan/sounds/141368/ -- License: CC Attribution
-vampire bites by Bernuy -- http://www.freesound.org/people/Bernuy/sounds/268501/ -- License: CC Attribution
+This mod uses these sounds from freesound:  
+DST-VampireMonk.mp3 by Striderjapan -- http://www.freesound.org/people/Striderjapan/sounds/141368/ -- License: CC Attribution  
+vampire bites by Bernuy -- http://www.freesound.org/people/Bernuy/sounds/268501/ -- License: CC Attribution  
