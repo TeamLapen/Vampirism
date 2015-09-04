@@ -3,11 +3,13 @@
 entity.vampirism.vampireHunter.name=Caçador de Vampiro
 entity.vampirism.vampire.name=Vampiro
 entity.vampirism.ghost.name=Fantasma
+entity.vampirism.vampireBaron.name=Barão Vampiro
 entity.vampirism.vampireMinionR.name=Vampiro Bebê
 entity.vampirism.vampireMinionS.name=Vampiro Bebê
 entity.vampirism.blinding_bat.name=Morcego
 entity.vampirism.dracula.name=Drácula
 entity.vampirism.dead_mob.name=Mob Morto
+entity.vampirism.portal_guard.name=Guarda do Portal
 
 # Items
 item.vampirism.vampiresFear.name=Terror do Vampiro
@@ -25,6 +27,11 @@ item.vampirism.vampireArmor_leggings.name=Calça do Vampiro
 item.vampirism.vampireArmor_boots.name=Botas do Vampiro
 item.vampirism.vampireArmor_chestplate.name=Golpeá do Vampiro
 item.vampirism.minionNameTag.name=Crachá de Minion
+item.vampirism.gemOfBinding.name=Jóia de Ligação
+item.vampirism.bloodEye.name=Olho de Sangue
+item.vampirism.weakVampireFang.name=Presa de Vampiro Fraco
+item.vampirism.weakHumanHeart.name=Coração de Humano Fraco
+item.vampirism.item_tent.name=Barraca
 
 # Blocks
 block.vampirism.bloodAltar.name=Altar de sangue de saturação
@@ -35,9 +42,12 @@ block.vampirism.churchAltar.name=Altar da Purificação
 block.vampirism.cursedEarth.name=Terra Amaldiçoada
 block.vampirism.vampireOrchid.name=Orquídea Vampirica
 block.vampirism.blockCoffin.name=Caixão
+block.vampirism.castlePortal.name=Bloco de Portal
 block.vampirism.castleBlock.name=Bloco do Castelo
 block.vampirism.castleSlab.name=Laje do Castelo
+block.vampirism.doubleCastleSlab.name=Laje de Castelo Dupla
 block.vampirism.castleStairs.name=Escadas do Castelo
+block.vampirism.tent.name=Barraca
 
 #GUI
 gui.vampirism.revertback.head=Voltar a ser um humano normal
@@ -90,6 +100,23 @@ text.vampirism.thanks=Obrigado
 text.vampirism.coming_back=Eu estou voltando, meu senhor
 text.vampirism.sorry_i_died_while_doing=Meu senhor, me desculpe, mas eu morri enquanto cumprindo sua tarefa
 text.vampirism.current_task=Tarefa atual
+text.vampirism.lord.become=Você foi elevado a Lorde Vampiro
+text.vampirism.lord.other_player_become=derrotou o atual Lorde Vampiro e o substituiu
+text.vampirism.lord.vampire_replace=Outro jogador substituiu você como Lorde Vampiro
+text.vampirism.lord.vampire_kill_replace=Outro vampiro matou você e pegou o seu lugar como Lorde Vampiro
+text.vampirism.lord.new_lord_castle=Um novo Lorde Vampiro ressuscitou e se mudou para o castelo dele
+text.vampirism.lord.vampire_replace_absence=Outro vampiro substituiu você como Lorde Vampiro na sua ausência
+text.vampirism.lord.portal_disabled=Este portal não leva a lugar algum
+text.vampirism.lord.level_to_low=Seu nível vampiro é muito baixo para se tornar um Lorde Vampiro
+text.vampirism.guard_stay_away_level_low=Seu nível vampiro é muito baixo para viajar ao castelo do Drácula. Afaste-se\!
+text.vampirism.coffin.wrong_dimension=Você não pode dormir nessa dimensão.
+text.vampirism.biome.looking_for_biome=Procurando por um bioma floresta de vampiro. Por favor, espere
+text.vampirism.biome.not_found=Nenhum bioma floresta de vampiro encontrado.
+text.vampirism.biome.found=Bioma floresta de vampiro encontrado
+text.vampirism.castle_fail=Vampirismo incapaz de encontrar uma posição apropriada para um castelo vampiro. É recomendável criar um novo mundo. Você também pode tentar "/vampirism checkForVampireBiome", se isso não encontrar um bioma, outro mod provavelmente está interferindo.
+text.vampirism.structure=Estrutura
+text.vampirism.pillar_blocks=Blocos de Pilar
+text.vampirism.no_dracula_to_call=Drácula está morto e não pode ser invocado
 
 #Skill
 skill.vampirism.bat_skill=Ativar Modo_Morcego
@@ -111,6 +138,8 @@ minioncommand.vampirism.defendlord=Defender o senhor
 minioncommand.vampirism.stayhere=Ficar aqui
 minioncommand.vampirism.comeback=Voltar (Minions Remotos)
 minioncommand.vampirism.justfollow=Apenas Siga-me
+minioncommand.vampirism.converttosaveable=Recupere a jóia de ligação
+minioncommand.vampirism.defendarea=Defender área
 
 #Config
 category.vampirism.balance=Configurações de balanceamento

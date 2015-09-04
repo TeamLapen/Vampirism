@@ -29,6 +29,9 @@ item.vampirism.vampireArmor_chestplate.name=血族胸甲
 item.vampirism.minionNameTag.name=仆从命名牌
 item.vampirism.gemOfBinding.name=约束宝石
 item.vampirism.bloodEye.name=鲜血之眼
+item.vampirism.weakVampireFang.name=虚弱血族之牙
+item.vampirism.weakHumanHeart.name=虚弱猎手之心
+item.vampirism.item_tent.name=帐篷
 
 # Blocks
 block.vampirism.bloodAltar.name=充盈血祭坛
@@ -44,6 +47,7 @@ block.vampirism.castleBlock.name=古堡之石
 block.vampirism.castleSlab.name=古堡台阶
 block.vampirism.doubleCastleSlab.name=双层古堡台阶
 block.vampirism.castleStairs.name=古堡楼梯
+block.vampirism.tent.name=帐篷
 
 #GUI
 gui.vampirism.revertback.head=转变回正常人
@@ -110,6 +114,9 @@ text.vampirism.biome.looking_for_biome=寻找血族森林生物群落，请稍�
 text.vampirism.biome.not_found=未发现血族森林生物群落.
 text.vampirism.biome.found=发现血族森林生物群落
 text.vampirism.castle_fail=血族传说未能找到一个适当的位置生成吸血鬼城堡. 建议生成一个新的世界. 您也可以尝试"/ vampirism checkForVampireBiome"，如果依旧找不到生物群落，可能是由于另一个模可能干扰。
+text.vampirism.structure=结构
+text.vampirism.pillar_blocks=柱石
+text.vampirism.no_dracula_to_call=德古拉已死，无法被召唤
 
 #Skill
 skill.vampirism.bat_skill=化蝠

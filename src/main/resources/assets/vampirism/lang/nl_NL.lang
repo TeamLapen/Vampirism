@@ -29,6 +29,9 @@ item.vampirism.vampireArmor_chestplate.name=Vampieren borstplaat
 item.vampirism.minionNameTag.name=Volgelingen naam kaartje
 item.vampirism.gemOfBinding.name=Juweel van binding
 item.vampirism.bloodEye.name=Bloed oog
+item.vampirism.weakVampireFang.name=Zwakke Vampieren tand
+item.vampirism.weakHumanHeart.name=Zwak menselijk hart
+item.vampirism.item_tent.name=Tent
 
 # Blocks
 block.vampirism.bloodAltar.name=Bloed altaar van verzadiging
@@ -44,6 +47,7 @@ block.vampirism.castleBlock.name=Kasteel blok
 block.vampirism.castleSlab.name=Kasteel plaat
 block.vampirism.doubleCastleSlab.name=Dubbele kasteel plaat
 block.vampirism.castleStairs.name=Kasteel trap
+block.vampirism.tent.name=Tent
 
 #GUI
 gui.vampirism.revertback.head=Terugkeren naar normale mens
@@ -110,6 +114,9 @@ text.vampirism.biome.looking_for_biome=Op zoek naar een vampieren bos biotoop. E
 text.vampirism.biome.not_found=Geen Vampieren bos biotoop werd gevonden.
 text.vampirism.biome.found=Een Vampire Forest biotoop gevonden
 text.vampirism.castle_fail=Vampirisme was niet in staat om een geschikte positie voor een Vampieren kasteel te vinden.\nHet wordt aanbevolen om een nieuwe wereld te genereren. U kunt ook proberen "/ vampirisme checkForVampireBiome", als dat geen biotoop kan vinden, is een andere mod zich waarschijnlijk aan het mengen.
+text.vampirism.structure=Structuur
+text.vampirism.pillar_blocks=Pilaar blokken
+text.vampirism.no_dracula_to_call=Dracula is dood en kan niet geroept worden
 
 #Skill
 skill.vampirism.bat_skill=Schakel vleermuis mode
