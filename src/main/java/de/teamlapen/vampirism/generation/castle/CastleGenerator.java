@@ -80,6 +80,7 @@ public class CastleGenerator extends WorldGenerator {
 		loadTile("castle_lavalr",gson,tileMap);
 		loadTile("castle_lavaur",gson,tileMap);
 		loadTile("castle_portalur",gson,tileMap);
+		loadTile("castleul_button", gson, tileMap);
 
 	}
 
@@ -213,7 +214,10 @@ public class CastleGenerator extends WorldGenerator {
 						BuildingTile tile = tileMap.get(param[i + 1]);
 						if (tile != null) {
 							tile.build(chunkX, chunkZ, world, height, rotation);
+						} else {
+							Logger.w(TAG, "Did not find tile %s", param[i + 1]);
 						}
+
 					}
 					p.markGenerated(chunkX, chunkZ);
 					data.markDirty();
@@ -380,7 +384,7 @@ public class CastleGenerator extends WorldGenerator {
 			if(position.isDraculasDim()){
 				tiles[ucx][ucz]+= ",0,castle_lavalr";
 				tiles[ucx - 1][ucz] +=",0,castle_lavall";
-				tiles[ucx - 1][ucz - 1] += ",0,castle_lavaul";
+				tiles[ucx - 1][ucz - 1] += ",0,castle_lavaul,0,castleul_button";
 				tiles[ucx][ucz - 1]  += ",0,castle_lavaur";
 			}
 			else{

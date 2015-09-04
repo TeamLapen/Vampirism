@@ -295,6 +295,10 @@ public class EntityDracula extends EntityDefaultVampireWithMinion implements IBo
 		Logger.d(TAG, "Set draculas home pos");
 		ChunkCoordIntPair lc=pos.getLowerMainCastle();
 		ChunkCoordIntPair uc = pos.getUpperMainCastle();
+		if (lc == null || uc == null) {
+			Logger.w(TAG, "Pos %s does not contain lc or uc when setting home", pos);
+			return;
+		}
 		this.setHome(AxisAlignedBB.getBoundingBox(lc.chunkXPos << 4, pos.getHeight() - 1, lc.chunkZPos << 4, (uc.chunkXPos << 4) + 15, pos.getHeight() + 5, (uc.chunkZPos << 4) + 15));
 	}
 

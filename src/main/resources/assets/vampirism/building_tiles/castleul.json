@@ -3708,6 +3708,11 @@
         },
         {
           "x": 13,
+          "y": 1,
+          "z": 1
+        },
+        {
+          "x": 13,
           "y": 2,
           "z": 1
         },
@@ -5996,11 +6001,6 @@
           "x": 6,
           "y": 0,
           "z": 13
-        },
-        {
-          "x": 12,
-          "y": 1,
-          "z": 2
         }
       ]
     },
@@ -6958,38 +6958,6 @@
       ]
     },
     {
-      "blockId": "minecraft:obsidian",
-      "meta": [
-        0,
-        0,
-        0,
-        0
-      ],
-      "blockPositions": [
-        {
-          "x": 13,
-          "y": 1,
-          "z": 1
-        }
-      ]
-    },
-    {
-      "blockId": "vampirism:draculaButton",
-      "meta": [
-        3,
-        2,
-        4,
-        1
-      ],
-      "blockPositions": [
-        {
-          "x": 13,
-          "y": 1,
-          "z": 2
-        }
-      ]
-    },
-    {
       "blockId": "minecraft:cobblestone_wall",
       "meta": [
         0,
@@ -7205,20 +7173,6 @@
       },
       "extra": {
         "infinite": true
-      }
-    },
-    {
-      "type": "WALL_SIGN",
-      "pos": {
-        "x": 12,
-        "y": 1,
-        "z": 2
-      },
-      "extra": {
-        "t0": "",
-        "t1": "Call Dracula",
-        "t2": "",
-        "t3": ""
       }
     },
     {

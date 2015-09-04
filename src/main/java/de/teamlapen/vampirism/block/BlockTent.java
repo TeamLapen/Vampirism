@@ -11,6 +11,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * Basic tent block. Mainly placeholder for the tent rendered for {@link BlockMainTent}
@@ -29,6 +30,12 @@ public class BlockTent extends BasicBlock {
     @Override
     public MovingObjectPosition collisionRayTrace(World p_149731_1_, int p_149731_2_, int p_149731_3_, int p_149731_4_, Vec3 p_149731_5_, Vec3 p_149731_6_) {
         return super.collisionRayTrace(p_149731_1_, p_149731_2_, p_149731_3_, p_149731_4_, p_149731_5_, p_149731_6_);
+    }
+
+
+    @Override
+    public int quantityDropped(Random p_149745_1_) {
+        return 0;
     }
 
     @Override
