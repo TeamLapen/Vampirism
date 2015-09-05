@@ -1,7 +1,15 @@
 package de.teamlapen.vampirism.entity.player;
 
+import cpw.mods.fml.common.eventhandler.EventPriority;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.castleDim.ChunkProviderCastle;
-import net.minecraft.entity.Entity;
+import de.teamlapen.vampirism.entity.player.skills.Skills;
+import de.teamlapen.vampirism.network.RequestEntityUpdatePacket;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -13,14 +21,6 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.world.BlockEvent;
-import cpw.mods.fml.common.eventhandler.EventPriority;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.entity.player.skills.Skills;
-import de.teamlapen.vampirism.network.RequestEntityUpdatePacket;
 
 public class VampirePlayerEventHandler {
 
@@ -58,7 +58,7 @@ public class VampirePlayerEventHandler {
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		if (event.entity instanceof EntityPlayer) {
-			if (event.entity.worldObj.isRemote) {
+			if (event.entity.worldObj.isRemote || event.entity instanceof EntityClientPlayerMP) {
 				VampirismMod.modChannel.sendToServer(new RequestEntityUpdatePacket(event.entity));
 			} else {
 				VampirePlayer.onPlayerJoinWorld((EntityPlayer) event.entity);
@@ -104,7 +104,6 @@ public class VampirePlayerEventHandler {
 	public void onLivingUpdate(LivingUpdateEvent event) {
 		if (event.entity instanceof EntityPlayer) {
 			VampirePlayer.get((EntityPlayer) event.entity).onUpdate();
-			;
 		}
 	}
 
