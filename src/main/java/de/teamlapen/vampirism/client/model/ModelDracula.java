@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.model;
 
 import net.minecraft.entity.Entity;
-
 import org.lwjgl.opengl.GL11;
 
 public class ModelDracula extends ModelBipedCloaked {

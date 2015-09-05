@@ -1,22 +1,20 @@
 package de.teamlapen.vampirism.client.gui;
 
-import java.util.ArrayList;
-
+import de.teamlapen.vampirism.client.KeyInputEventHandler;
+import de.teamlapen.vampirism.util.IPieElement;
+import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.GuiIngameForge;
-
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Cursor;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
-import de.teamlapen.vampirism.client.KeyInputEventHandler;
-import de.teamlapen.vampirism.util.IPieElement;
-import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.REFERENCE;
+import java.util.ArrayList;
 
 /**
  * Radial/pie menu which can be used as screen overlay to select stuff The angles (in radiant) used in this class are used to describe the direction from the screen center. 0/2Pi shows right, Pi/2 up

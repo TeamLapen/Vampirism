@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.item;
 
+import de.teamlapen.vampirism.entity.minions.EntitySaveableVampireMinion;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import de.teamlapen.vampirism.entity.minions.EntitySaveableVampireMinion;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
 
 public class ItemGemOfBinding extends BasicItem {
 

@@ -1,18 +1,16 @@
 package de.teamlapen.vampirism.client.render;
 
+import de.teamlapen.vampirism.client.model.ModelPileOfBones;
+import de.teamlapen.vampirism.entity.EntityDeadMob;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.client.model.ModelPileOfBones;
-import de.teamlapen.vampirism.entity.EntityDeadMob;
-import de.teamlapen.vampirism.util.REFERENCE;
 
 @SideOnly(Side.CLIENT)
 public class RendererDeadMob extends Render {

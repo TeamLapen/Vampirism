@@ -1,15 +1,13 @@
 package de.teamlapen.vampirism.client.render;
 
+import de.teamlapen.vampirism.client.model.ModelChurchAltar;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-
 import org.lwjgl.opengl.GL11;
-
-import de.teamlapen.vampirism.client.model.ModelChurchAltar;
-import de.teamlapen.vampirism.util.REFERENCE;
 
 public class RendererChurchAltar extends TileEntitySpecialRenderer {
 

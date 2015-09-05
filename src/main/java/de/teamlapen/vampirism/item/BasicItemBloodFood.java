@@ -1,15 +1,12 @@
 package de.teamlapen.vampirism.item;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.util.REFERENCE;
 
 public abstract class BasicItemBloodFood extends ItemFood {
 

@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.generation.castle;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import cpw.mods.fml.common.registry.GameRegistry;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.EntityDracula;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
@@ -23,6 +22,7 @@ import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
  * Used to save additional information from tileentitys or other things with building tiles

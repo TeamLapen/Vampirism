@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.entity.ai;
 
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.util.Vec3;
-import de.teamlapen.vampirism.util.Helper;
 
 /**
  * Very similar to EntityAIWander, but with less waiting in between. Trys to make distance by running away from the prior target, also trys to detect if it is stuck and teleports.

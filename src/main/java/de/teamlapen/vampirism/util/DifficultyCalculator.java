@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.util;
 
-import java.util.List;
-
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
-import cpw.mods.fml.common.FMLCommonHandler;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+
+import java.util.List;
 
 public class DifficultyCalculator {
 

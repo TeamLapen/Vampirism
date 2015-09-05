@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.item;
 
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.util.REFERENCE;
 
 public class ItemVampireArmor extends ItemArmor {
 

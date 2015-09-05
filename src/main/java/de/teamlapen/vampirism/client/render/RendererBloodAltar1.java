@@ -1,5 +1,8 @@
 package de.teamlapen.vampirism.client.render;
 
+import de.teamlapen.vampirism.client.model.ModelBloodAltar1;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntityBeaconRenderer;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
@@ -7,14 +10,9 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.client.model.ModelBloodAltar1;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
-import de.teamlapen.vampirism.util.REFERENCE;
 
 @SideOnly(Side.CLIENT)
 public class RendererBloodAltar1 extends TileEntitySpecialRenderer {

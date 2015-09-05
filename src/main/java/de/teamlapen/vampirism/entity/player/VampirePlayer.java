@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.entity.player;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.ModPotion;
@@ -37,6 +35,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.List;

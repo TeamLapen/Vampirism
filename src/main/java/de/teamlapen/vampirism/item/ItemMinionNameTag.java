@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.item;
 
+import de.teamlapen.vampirism.entity.minions.EntityVampireMinion;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import de.teamlapen.vampirism.entity.minions.EntityVampireMinion;
 
 public class ItemMinionNameTag extends BasicItem {
 

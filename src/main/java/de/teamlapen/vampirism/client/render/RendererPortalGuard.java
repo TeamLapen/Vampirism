@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.client.render;
 
+import de.teamlapen.vampirism.entity.EntityPortalGuard;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.ResourceLocation;
-import de.teamlapen.vampirism.entity.EntityPortalGuard;
 
 /**
  * Renderer for the @{@link EntityPortalGuard}

@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.block;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 
 public abstract class BasicBlock extends Block {
 	protected BasicBlock(Material p_i45394_1_, String name) {

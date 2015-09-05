@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
-import net.minecraft.entity.player.EntityPlayer;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * Has no function. Only used to display a cancel section in the skill menu

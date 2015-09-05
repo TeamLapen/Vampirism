@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.client.gui;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.MovingObjectPosition;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.KeyInputEventHandler;
 import de.teamlapen.vampirism.entity.minions.DefaultMinionCommand;
@@ -11,6 +9,8 @@ import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.DefaultPieElement;
 import de.teamlapen.vampirism.util.IPieElement;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.MovingObjectPosition;
 
 public class GUIMinionControl extends GUIPieMenu {
 

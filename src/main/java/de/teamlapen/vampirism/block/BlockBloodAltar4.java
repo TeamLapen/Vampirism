@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.block;
 
-import java.util.Random;
-
+import de.teamlapen.vampirism.GuiHandler;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar4;
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar4.PHASE;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.EntityItem;
@@ -12,10 +14,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
-import de.teamlapen.vampirism.GuiHandler;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar4;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar4.PHASE;
+
+import java.util.Random;
 
 /**
  * BlockBloodAltar4

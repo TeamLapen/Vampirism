@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.entity.convertible;
 
-import cpw.mods.fml.common.FMLCommonHandler;
 import de.teamlapen.vampirism.client.render.TextureHelper;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.HashMap;

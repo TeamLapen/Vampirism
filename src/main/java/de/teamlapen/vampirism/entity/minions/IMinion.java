@@ -1,14 +1,12 @@
 package de.teamlapen.vampirism.entity.minions;
 
-import java.util.ArrayList;
-
 import net.minecraft.entity.EntityCreature;
-
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.eclipse.jdt.annotation.NonNull;
 import org.eclipse.jdt.annotation.Nullable;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.ArrayList;
 
 public interface IMinion {
 

@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.entity.player;
 
-import java.util.UUID;
-
+import de.teamlapen.vampirism.util.BALANCE;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
-import de.teamlapen.vampirism.util.BALANCE;
+
+import java.util.UUID;
 
 /**
  * Calculates and applies player modifiers depending on the VampireLevel

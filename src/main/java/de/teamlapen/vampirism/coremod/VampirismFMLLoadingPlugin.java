@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.coremod;
 
-import java.util.Map;
-
-import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraftforge.fml.relauncher.IFMLLoadingPlugin;
+
+import java.util.Map;
 
 /**
  * Coremod loader plugin

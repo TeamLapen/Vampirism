@@ -1,15 +1,13 @@
 package de.teamlapen.vampirism.client.render;
 
+import de.teamlapen.vampirism.client.model.ModelCoffin;
+import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-
 import org.lwjgl.opengl.GL11;
-
-import de.teamlapen.vampirism.client.model.ModelCoffin;
-import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
-import de.teamlapen.vampirism.util.REFERENCE;
 
 public class RendererCoffin extends TileEntitySpecialRenderer {
 	public static final String[] colors = new String[] { "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange",

@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Default implementation of ISkill, provides some standard methods

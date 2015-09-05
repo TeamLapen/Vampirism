@@ -1,16 +1,16 @@
 package de.teamlapen.vampirism.coremod;
 
-import java.util.ArrayList;
-
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.BALANCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.util.BALANCE;
+
+import java.util.ArrayList;
 
 /**
  * Class for static communication between modified/transformed classes and the mod

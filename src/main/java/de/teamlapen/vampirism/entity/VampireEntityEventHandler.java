@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity;
 
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.VampirismMod;
@@ -36,6 +35,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class VampireEntityEventHandler {
 

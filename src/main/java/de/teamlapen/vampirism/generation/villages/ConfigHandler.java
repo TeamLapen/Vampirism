@@ -1,24 +1,18 @@
 package de.teamlapen.vampirism.generation.villages;
 
+import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.Pair;
+import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.block.Block;
+import org.apache.commons.io.IOUtils;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import net.minecraft.block.Block;
-
-import org.apache.commons.io.IOUtils;
-
-import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.Pair;
-import de.teamlapen.vampirism.util.REFERENCE;
 
 /**
  * Reads the VillageBiomes.cfg (this is not a standard config file) Has methods to retrieve specific config lines based on codes at the beginning of each line Will copy VillageBiomesDefault.cfg from

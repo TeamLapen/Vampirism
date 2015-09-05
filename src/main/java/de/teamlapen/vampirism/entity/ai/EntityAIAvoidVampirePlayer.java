@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.ai;
 
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -8,7 +9,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.pathfinding.PathNavigate;
 import net.minecraft.util.Vec3;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
 
 /**
  * Avoid vampire player task.

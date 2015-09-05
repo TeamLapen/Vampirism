@@ -1,14 +1,14 @@
 package de.teamlapen.vampirism.network;
 
+import de.teamlapen.vampirism.network.UpdateEntityPacket.ISyncableExtendedProperties;
+import de.teamlapen.vampirism.util.Logger;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
-import cpw.mods.fml.common.network.simpleimpl.MessageContext;
-import de.teamlapen.vampirism.network.UpdateEntityPacket.ISyncableExtendedProperties;
-import de.teamlapen.vampirism.util.Logger;
+import net.minecraftforge.fml.common.network.ByteBufUtils;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
+import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 /**
  * Send by the client to request an update for the entity with the included id. The entity has to either implement ISyncable or {@link UpdateEntityPacket.Handler#tryToGetISyncable(Entity)} has to

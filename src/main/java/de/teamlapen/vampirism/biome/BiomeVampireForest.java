@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.biome;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.generation.castle.CastlePositionData;
@@ -9,6 +7,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.gen.feature.WorldGenTrees;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 

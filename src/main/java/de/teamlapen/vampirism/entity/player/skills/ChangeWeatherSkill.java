@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.storage.WorldInfo;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.storage.WorldInfo;
 
 public class ChangeWeatherSkill extends DefaultSkill {
 

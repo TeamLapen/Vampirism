@@ -1,14 +1,12 @@
 package de.teamlapen.vampirism.client.gui;
 
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar4;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.GL11;
-
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar4;
-import de.teamlapen.vampirism.util.REFERENCE;
 
 /**
  * GUI for the BloodAltar4, currently just a placeholer

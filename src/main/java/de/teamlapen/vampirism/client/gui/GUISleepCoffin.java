@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.client.gui;
 
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.network.InputEventPacket;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiSleepMP;
 import net.minecraft.client.resources.I18n;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.network.InputEventPacket;
 
 public class GUISleepCoffin extends GuiSleepMP {
 	@Override

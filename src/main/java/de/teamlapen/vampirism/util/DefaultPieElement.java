@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.util;
 
 import net.minecraft.util.ResourceLocation;
-
 import org.eclipse.jdt.annotation.Nullable;
 
 public class DefaultPieElement implements IPieElement {

@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.World;
-import cpw.mods.fml.common.network.IGuiHandler;
 import de.teamlapen.vampirism.client.gui.GUIBloodAltar4;
 import de.teamlapen.vampirism.client.gui.GUIConvertBack;
 import de.teamlapen.vampirism.client.gui.GUIMinionControl;
 import de.teamlapen.vampirism.client.gui.GUISelectSkill;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar4;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.IGuiHandler;
 
 /**
  * Gui handler used to open GUI's

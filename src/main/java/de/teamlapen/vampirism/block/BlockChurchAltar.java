@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.block;
 
+import de.teamlapen.vampirism.GuiHandler;
+import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import de.teamlapen.vampirism.GuiHandler;
-import de.teamlapen.vampirism.VampirismMod;
 
 public class BlockChurchAltar extends BasicBlockContainer {
 	public static class TileEntityChurchAltar extends TileEntity {

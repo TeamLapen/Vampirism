@@ -1,10 +1,9 @@
 package de.teamlapen.vampirism.generation.castle;
 
-import com.google.gson.JsonObject;
-import cpw.mods.fml.common.registry.GameRegistry;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.Arrays;
 import java.util.LinkedList;

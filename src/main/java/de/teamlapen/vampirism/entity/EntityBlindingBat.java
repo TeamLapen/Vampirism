@@ -1,14 +1,14 @@
 package de.teamlapen.vampirism.entity;
 
-import java.util.List;
-
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
+
+import java.util.List;
 
 public class EntityBlindingBat extends EntityBat {
 

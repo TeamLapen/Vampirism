@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.block;
 
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar3;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar3;
 
 /**
  * 

@@ -1,11 +1,9 @@
 package de.teamlapen.vampirism.entity.minions;
 
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-
 import org.eclipse.jdt.annotation.NonNull;
-
-import de.teamlapen.vampirism.util.REFERENCE;
 
 /**
  * Default implementation of IMinionCommand

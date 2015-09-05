@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import de.teamlapen.vampirism.block.BlockCastleSlab;
 import de.teamlapen.vampirism.item.*;
 import net.minecraft.init.Blocks;
@@ -8,6 +7,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemSlab;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ModItems {
 

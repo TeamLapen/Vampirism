@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.generation.castle;
 
-import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.world.World;
 
 import java.util.LinkedList;

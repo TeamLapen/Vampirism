@@ -1,10 +1,8 @@
 package de.teamlapen.vampirism.entity.minions;
 
-import net.minecraft.item.ItemStack;
-
-import org.eclipse.jdt.annotation.NonNull;
-
 import de.teamlapen.vampirism.util.IPieElement;
+import net.minecraft.item.ItemStack;
+import org.eclipse.jdt.annotation.NonNull;
 
 /**
  * Interface for minion commands, which can be executed by minions and activated via an {@link de.teamlapen.vampirism.client.gui.GUIMinionControl}

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.generation;
 
-import cpw.mods.fml.common.IWorldGenerator;
 import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.ModBiomes;
 import de.teamlapen.vampirism.VampirismMod;
@@ -21,6 +20,7 @@ import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenPlains;
 import net.minecraft.world.chunk.IChunkProvider;
+import net.minecraftforge.fml.common.IWorldGenerator;
 
 import java.util.Random;
 

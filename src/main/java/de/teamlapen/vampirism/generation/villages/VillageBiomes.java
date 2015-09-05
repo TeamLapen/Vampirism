@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.generation.villages;
 
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.ModBiomes;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import java.io.File;
 import java.util.regex.Pattern;

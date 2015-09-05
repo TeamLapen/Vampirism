@@ -1,18 +1,18 @@
 package de.teamlapen.vampirism.generation.villages;
 
-import java.util.List;
-import java.util.Map;
-
+import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.Pair;
 import net.minecraft.block.Block;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.event.terraingen.BiomeEvent;
-import cpw.mods.fml.common.eventhandler.Event;
-import cpw.mods.fml.common.eventhandler.IEventListener;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.Pair;
+import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.IEventListener;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * Replaces blocks used to build village with blocks defined in the VillageBiomes.cfg

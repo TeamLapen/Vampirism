@@ -1,14 +1,14 @@
 package de.teamlapen.vampirism.generation.villages;
 
-import java.util.List;
-import java.util.Random;
-
+import de.teamlapen.vampirism.ModBlocks;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureComponent;
 import net.minecraft.world.gen.structure.StructureVillagePieces;
 import net.minecraft.world.gen.structure.StructureVillagePieces.Start;
-import de.teamlapen.vampirism.ModBlocks;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  * Village structure piece. A church with the block to become a normal player again

@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.tileEntity;
 
+import de.teamlapen.vampirism.block.BlockCoffin;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.nbt.NBTTagCompound;
@@ -8,8 +9,6 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import de.teamlapen.vampirism.block.BlockCoffin;
-import de.teamlapen.vampirism.util.Logger;
 
 public class TileEntityCoffin extends TileEntity {
 	public int otherX;

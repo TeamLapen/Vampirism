@@ -2,10 +2,6 @@ package de.teamlapen.vampirism.proxy;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterators;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
 import de.teamlapen.vampirism.ModBiomes;
 import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.VampirismEventHandler;
@@ -37,6 +33,10 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.ArrayList;

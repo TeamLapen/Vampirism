@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism;
 
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import de.teamlapen.vampirism.block.BlockBloodAltar1;
 import de.teamlapen.vampirism.block.BlockCoffin;
 import de.teamlapen.vampirism.castleDim.TeleporterCastle;
@@ -25,6 +24,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 import java.util.List;
 

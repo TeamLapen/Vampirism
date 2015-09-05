@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.player.EntityPlayer;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.player.EntityPlayer;
 
 public class SummonBatSkill extends DefaultSkill {
 

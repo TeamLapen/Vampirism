@@ -12,8 +12,6 @@ import de.teamlapen.vampirism.generation.castle.Extra;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityHanging;
 import net.minecraft.entity.item.EntityPainting;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;

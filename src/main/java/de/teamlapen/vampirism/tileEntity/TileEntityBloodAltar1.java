@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.tileEntity;
 
-import java.util.Iterator;
-import java.util.List;
-
+import de.teamlapen.vampirism.ModItems;
+import de.teamlapen.vampirism.ModPotion;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.item.ItemLeechSword;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -17,13 +19,11 @@ import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.ModItems;
-import de.teamlapen.vampirism.ModPotion;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.item.ItemLeechSword;
-import de.teamlapen.vampirism.util.Helper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Beacon style blood altar

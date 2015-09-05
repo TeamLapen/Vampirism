@@ -1,15 +1,13 @@
 package de.teamlapen.vampirism.client.render;
 
+import de.teamlapen.vampirism.client.model.ModelTorch;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.IItemRenderer;
-
 import org.lwjgl.opengl.GL11;
-
-import de.teamlapen.vampirism.client.model.ModelTorch;
-import de.teamlapen.vampirism.util.REFERENCE;
 
 public class RendererTorch implements IItemRenderer {
 	private ModelTorch model;

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.villages;
 
-import cpw.mods.fml.common.gameevent.TickEvent;
 import de.teamlapen.vampirism.generation.castle.CastlePositionData;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.Entity;
@@ -9,6 +8,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.ArrayList;

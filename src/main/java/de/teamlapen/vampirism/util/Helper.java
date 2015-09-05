@@ -1,8 +1,5 @@
 package de.teamlapen.vampirism.util;
 
-import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
-import cpw.mods.fml.common.network.simpleimpl.IMessage;
-import cpw.mods.fml.relauncher.ReflectionHelper;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.biome.BiomeVampireForest;
 import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
@@ -19,6 +16,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
+import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import scala.actors.threadpool.Arrays;
 
 import java.lang.reflect.Field;

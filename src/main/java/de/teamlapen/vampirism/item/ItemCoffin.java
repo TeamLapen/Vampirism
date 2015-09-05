@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.item;
 
+import de.teamlapen.vampirism.ModBlocks;
+import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
+import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import de.teamlapen.vampirism.ModBlocks;
-import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
-import de.teamlapen.vampirism.util.Logger;
 
 /**
  * 

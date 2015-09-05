@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.block;
 
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.util.REFERENCE;
 
 public abstract class BasicBlockContainer extends BlockContainer {
 

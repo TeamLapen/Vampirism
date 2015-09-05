@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.block;
 
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockFlower;
 import net.minecraft.block.material.Material;
 import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.ForgeDirection;
-import de.teamlapen.vampirism.util.REFERENCE;
 
 /**
  * 

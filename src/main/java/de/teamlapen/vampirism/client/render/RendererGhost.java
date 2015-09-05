@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.client.render;
 
+import de.teamlapen.vampirism.entity.EntityGhost;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.entity.EntityGhost;
-import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * 

@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.client.model;
 
+import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.Entity;
-import de.teamlapen.vampirism.util.Logger;
 import org.lwjgl.opengl.GL11;
 
 /**

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import de.teamlapen.vampirism.block.*;
 import de.teamlapen.vampirism.block.BlockBloodAltar4Tip.TileEntityBloodAltar4Tip;
 import de.teamlapen.vampirism.block.BlockChurchAltar.TileEntityChurchAltar;
@@ -13,6 +12,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ModBlocks {
 

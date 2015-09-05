@@ -1,12 +1,10 @@
 package de.teamlapen.vampirism.client.model;
 
+import de.teamlapen.vampirism.entity.EntityDeadMob;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
-
 import org.lwjgl.opengl.GL11;
-
-import de.teamlapen.vampirism.entity.EntityDeadMob;
 
 public class ModelPileOfBones extends ModelBase {
 	ModelRenderer bone1;

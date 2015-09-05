@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.proxy;
 
-import cpw.mods.fml.common.gameevent.TickEvent;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.TickRunnable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 public interface IProxy {
 

@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.generation.castle.CastlePositionData;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.item.EntityEnderEye;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.util;
 
-import cpw.mods.fml.common.gameevent.TickEvent;
 import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,6 +10,7 @@ import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.ArrayList;
 import java.util.Iterator;

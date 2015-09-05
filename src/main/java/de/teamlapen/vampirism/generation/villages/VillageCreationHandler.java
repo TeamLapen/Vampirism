@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.generation.villages;
 
-import java.util.List;
-import java.util.Random;
-
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.gen.structure.StructureVillagePieces;
 import net.minecraft.world.gen.structure.StructureVillagePieces.PieceWeight;
 import net.minecraft.world.gen.structure.StructureVillagePieces.Start;
-import cpw.mods.fml.common.registry.VillagerRegistry.IVillageCreationHandler;
+import net.minecraftforge.fml.common.registry.VillagerRegistry.IVillageCreationHandler;
+
+import java.util.List;
+import java.util.Random;
 
 /**
  * Handler used for the registration of VillageModChurchPiece

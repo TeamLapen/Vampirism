@@ -1,15 +1,13 @@
 package de.teamlapen.vampirism.client.render;
 
+import de.teamlapen.vampirism.item.ItemPitchfork;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraftforge.client.IItemRenderer;
-
 import org.lwjgl.opengl.GL11;
-
-import de.teamlapen.vampirism.item.ItemPitchfork;
 
 public class PitchforkRenderer implements IItemRenderer {
 	private RenderItem itemRenderer;

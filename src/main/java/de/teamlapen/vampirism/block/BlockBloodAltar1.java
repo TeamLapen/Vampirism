@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.block;
 
+import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
 
 public class BlockBloodAltar1 extends BasicBlockContainer {
 	public static final String name = "bloodAltar";

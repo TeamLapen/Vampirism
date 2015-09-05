@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.block;
 
+import de.teamlapen.vampirism.ModItems;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,10 +16,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.biome.BiomeGenBase;
-import de.teamlapen.vampirism.ModItems;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
-import de.teamlapen.vampirism.util.Logger;
 import org.eclipse.jdt.annotation.Nullable;
 
 /**
