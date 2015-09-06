@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.item.EntityEnderEye;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
@@ -28,8 +29,8 @@ public class ItemBloodEye extends BasicItem {
                     return stack;
                 }
                 else{
-                    EntityEnderEye eye=new EntityEnderEye(p_77659_2_,player.posX, player.posY + 1.62D - (double)player.yOffset, player.posZ);
-                    eye.moveTowards(pos.chunkXPos<<4,(int)player.posY+5,pos.chunkZPos<<4);
+                    EntityEnderEye eye=new EntityEnderEye(p_77659_2_,player.posX, player.posY, player.posZ);
+                    eye.moveTowards(new BlockPos(pos.chunkXPos<<4,(int)player.posY+5,pos.chunkZPos<<4));
                     p_77659_2_.spawnEntityInWorld(eye);
                 }
                 if(!player.capabilities.isCreativeMode){

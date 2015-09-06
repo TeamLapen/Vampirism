@@ -1,17 +1,18 @@
 package de.teamlapen.vampirism.item;
 
-import net.minecraft.block.Block;
+import net.minecraft.block.BlockFence;
 import net.minecraft.block.BlockLiquid;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -50,28 +51,32 @@ public class ItemSpawnEgg extends BasicItem {
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ){
 		if (world.isRemote)
 			return true;
+		else if(!player.canPlayerEdit(pos.offset(side),side,stack)){
+			return false;
+		}
 		else {
 			if (stack.getItemDamage()>=entities.size()) {
 				return false;
 			}
 			String name = entities.get(stack.getItemDamage());
-			Block block = world.getBlock(x, y, z);
-			x += Facing.offsetsXForSide[side];
-			y += Facing.offsetsYForSide[side];
-			z += Facing.offsetsZForSide[side];
+			IBlockState blockState = world.getBlockState(pos);
+			pos.offset(side);
+
 			double d0 = 0.0D;
 
-			if (side == 1 && block.getRenderType() == 11)
+			if (side == EnumFacing.UP && blockState instanceof BlockFence)
+			{
 				d0 = 0.5D;
+			}
 
-			Entity entity = spawnMob(world, x + 0.5D, y + d0, z + 0.5D,name);
+			Entity entity = spawnMob(world,pos.getX()+ 0.5D, pos.getY() + d0, pos.getZ() + 0.5D,name);
 
 			if (entity != null) {
 				if (entity instanceof EntityLivingBase && stack.hasDisplayName())
-					((EntityLiving) entity).setCustomNameTag(stack.getDisplayName());
+					(entity).setCustomNameTag(stack.getDisplayName());
 
 				if (!player.capabilities.isCreativeMode)
 					stack.stackSize--;
@@ -96,18 +101,16 @@ public class ItemSpawnEgg extends BasicItem {
 				return stack;
 			else {
 				if (movingobjectposition.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-					int i = movingobjectposition.blockX;
-					int j = movingobjectposition.blockY;
-					int k = movingobjectposition.blockZ;
+					BlockPos pos=movingobjectposition.getBlockPos();
 
-					if (!world.canMineBlock(player, i, j, k))
+					if (!world.isBlockModifiable(player,pos))
 						return stack;
 
-					if (!player.canPlayerEdit(i, j, k, movingobjectposition.sideHit, stack))
+					if (!player.canPlayerEdit(pos, movingobjectposition.sideHit, stack))
 						return stack;
 
-					if (world.getBlock(i, j, k) instanceof BlockLiquid) {
-						Entity entity = spawnMob(world, i, j, k,name);
+					if (world.getBlockState(pos).getBlock() instanceof BlockLiquid) {
+						Entity entity = spawnMob(world,pos.getX()+0.5D,pos.getY()+0.5D,pos.getZ()+0.5D,name);
 
 						if (entity != null) {
 							if (entity instanceof EntityLivingBase && stack.hasDisplayName())
@@ -132,7 +135,7 @@ public class ItemSpawnEgg extends BasicItem {
 			entity.setLocationAndAngles(x, y, z, MathHelper.wrapAngleTo180_float(world.rand.nextFloat() * 360.0F), 0.0F);
 			entityliving.rotationYawHead = entityliving.rotationYaw;
 			entityliving.renderYawOffset = entityliving.rotationYaw;
-			entityliving.onSpawnWithEgg((IEntityLivingData) null);
+			entityliving.func_180482_a(world.getDifficultyForLocation(new BlockPos(entityliving)),null);
 			world.spawnEntityInWorld(entity);
 			entityliving.playLivingSound();
 		}
@@ -148,20 +151,4 @@ public class ItemSpawnEgg extends BasicItem {
 
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public boolean requiresMultipleRenderPasses() {
-		return true;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIconFromDamageForRenderPass(int meta, int pass) {
-		return Items.spawn_egg.getIconFromDamageForRenderPass(meta, pass);
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister reg) {
-	}
 }

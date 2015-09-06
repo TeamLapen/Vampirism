@@ -1,13 +1,16 @@
 package de.teamlapen.vampirism.item;
 
+import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.util.EnumHelper;
 
 public class ItemVampireArmor extends ItemArmor {
+
 
 	private static final String name = "vampireArmor";
 
@@ -36,38 +39,24 @@ public class ItemVampireArmor extends ItemArmor {
 		return true;
 	}
 
-	public ItemVampireArmor(int armorIndex) {
-		super(ItemArmor.ArmorMaterial.CHAIN, 2, armorIndex);
+	public ItemVampireArmor(int renderIndex,int armorType) {
+		super(ModItems.ARMOR_BLOOD_IRON, renderIndex, armorType);
 
 		setCreativeTab(VampirismMod.tabVampirism);
-		this.setUnlocalizedName(name + "_" + getSuffixFromId(armorIndex));
-		this.setTextureName(REFERENCE.MODID + ":" + name + "_" + getSuffixFromId(armorIndex));
+		this.setUnlocalizedName(name + "_" + getSuffixFromId(armorType));
 	}
 
-	@Override
-	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type) {
-		if (this.armorType == 2) {
-			return REFERENCE.MODID + ":textures/items/vampireArmor_2.png";
-		}
-		return REFERENCE.MODID + ":textures/items/vampireArmor_1.png";
-	}
+//	@Override
+//	public String getArmorTexture(ItemStack stack, Entity entity, int slot, String type) {
+//		if (this.armorType == 2) {
+//			return REFERENCE.MODID + ":textures/items/vampireArmor_2.png";
+//		}
+//		return REFERENCE.MODID + ":textures/items/vampireArmor_1.png";
+//	}
 
 	public String getRegisterItemName() {
 		return name + "_" + getSuffixFromId(this.armorType);
 	}
 
-	@Override
-	public String getUnlocalizedName() {
-		return String.format("item.%s%s", REFERENCE.MODID.toLowerCase() + ".", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
-	}
-
-	@Override
-	public String getUnlocalizedName(ItemStack itemstack) {
-		return String.format("item.%s%s", REFERENCE.MODID.toLowerCase() + ".", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
-	}
-
-	protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
-		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
-	}
 
 }

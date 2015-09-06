@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -18,6 +19,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.eclipse.jdt.annotation.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**

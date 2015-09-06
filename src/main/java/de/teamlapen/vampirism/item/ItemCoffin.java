@@ -3,8 +3,10 @@ package de.teamlapen.vampirism.item;
 import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import de.teamlapen.vampirism.util.Logger;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
@@ -32,9 +34,9 @@ public class ItemCoffin extends BasicItem {
 		y++;
 		// Direction the player is facing
 		int direction = MathHelper.floor_double((player.rotationYaw * 4F) / 360F + 0.5D) & 3;
-
-		if (world.isAirBlock(x, y, z) && world.isAirBlock(x + shiftArray[direction][0], y + shiftArray[direction][1], z + shiftArray[direction][2])) {
-			if (!world.setBlock(x, y, z, ModBlocks.coffin, direction | -8, 3))
+		BlockPos blockPos=new BlockPos(x,y,z);
+		if (world.isAirBlock(blockPos) && world.isAirBlock(new BlockPos(x + shiftArray[direction][0], y + shiftArray[direction][1], z + shiftArray[direction][2]))) {
+			if (!world.setBlockState(blockPos, ModBlocks.coffin.getStateFromMeta(direction|-8), 3))
 				Logger.w(TAG, "Primary coffin block placement failed");
 			else {
 				if (!world.setBlock(x + shiftArray[direction][0], y + shiftArray[direction][1], z + shiftArray[direction][2], ModBlocks.coffin, 0, 3))

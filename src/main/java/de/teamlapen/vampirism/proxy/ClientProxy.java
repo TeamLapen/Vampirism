@@ -65,6 +65,26 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
+	public void preInit() {
+		super.preInit();
+		registerKeyBindings();
+		ModBlocks.preInitClient();
+	}
+
+	@Override
+	public void init() {
+		super.init();
+		registerRenderer();
+		ModItems.initClient();
+		ModBlocks.initClient();
+	}
+
+	@Override
+	public void postInit() {
+		super.postInit();
+	}
+
+	@Override
 	public ResourceLocation checkVampireTexture(Entity entity, ResourceLocation loc) {
 		if (entity instanceof AbstractClientPlayer) {
 			if (Configs.modify_vampire_player_texture&&VampirePlayer.get((EntityPlayer) entity).getLevel() > 0) {
@@ -138,7 +158,6 @@ public class ClientProxy extends CommonProxy {
 
 	}
 
-	@Override
 	public void registerKeyBindings() {
 		ClientRegistry.registerKeyBinding(KeyInputEventHandler.SUCK);
 		ClientRegistry.registerKeyBinding(KeyInputEventHandler.AUTO);
@@ -147,7 +166,6 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.registerKeyBinding(KeyInputEventHandler.MINION_CONTROL);
 	}
 
-	@Override
 	public void registerRenderer() {
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampireHunter.class, new VampireHunterRenderer());
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampire.class, new VampireRenderer(0.5F));
@@ -194,6 +212,8 @@ public class ClientProxy extends CommonProxy {
 		TileEntitySpecialRenderer tent = new RendererTent();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTent.class, tent);
 		MinecraftForgeClient.registerItemRenderer(ModItems.tent, new RenderTileEntityItem(tent, new TileEntityTent()).setRotation(45F).setScale(0.55F));
+
+		ModItems.registerModels();
 	}
 
 	@Override

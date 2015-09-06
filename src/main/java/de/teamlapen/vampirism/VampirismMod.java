@@ -75,17 +75,15 @@ public class VampirismMod {
 		castleDimensionId=DimensionManager.getNextFreeDimId();
 		DimensionManager.registerProviderType(castleDimensionId, WorldProviderCastle.class,false);
 		DimensionManager.registerDimension(castleDimensionId,castleDimensionId);
-		proxy.registerEntitys();
-		proxy.registerRenderer();
 		GameRegistry.registerWorldGenerator(new WorldGenVampirism(), 1000);
 		VillagerRegistry.instance().registerVillageCreationHandler(new VillageCreationHandler());
 		MapGenStructureIO.func_143031_a(VillageModChurchPiece.class, "ViVMC");
-		proxy.registerSubscriptions();
 		FMLCommonHandler.instance().bus().register(new Configs());
 		if (Configs.village_gen_enabled) {
 			Logger.i("Init", "Registering replacer for village generation.");
 			MinecraftForge.TERRAIN_GEN_BUS.register(new VillageGenReplacer());
 		}
+		proxy.init();
 		FMLInterModComms.sendMessage("Waila", "register", "de.teamlapen.vampirism.WailaDataProvider.callbackRegister");
 	}
 
@@ -99,6 +97,7 @@ public class VampirismMod {
 
 	@EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
+		proxy.postInit();
 		VillageBiomes.postInit(event);
 		BiteableRegistry.finishRegistration();
 		String potion=ModPotion.checkPotions();
@@ -124,13 +123,7 @@ public class VampirismMod {
 		Configs.init(event.getModConfigurationDirectory(), inDev);
 		Helper.Obfuscation.fillMap();
 
-		ModPotion.init();
-		ModBlocks.init();
-		ModItems.init();
-		ModBiomes.init();
-		ModBlocks.registerRecipes();
-		ModItems.registerRecipes();
-		proxy.registerKeyBindings();
+		proxy.preInit();
 		setupNetwork();
 
 		VillageBiomes.preInit(event);

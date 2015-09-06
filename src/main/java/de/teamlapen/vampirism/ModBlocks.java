@@ -5,14 +5,22 @@ import de.teamlapen.vampirism.block.BlockBloodAltar4Tip.TileEntityBloodAltar4Tip
 import de.teamlapen.vampirism.block.BlockChurchAltar.TileEntityChurchAltar;
 import de.teamlapen.vampirism.item.ItemMetaBlock;
 import de.teamlapen.vampirism.tileEntity.*;
+import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.MaterialLiquid;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ModBlocks {
 
@@ -41,7 +49,7 @@ public class ModBlocks {
 
 	// Flowers
 	public final static VampireFlower vampireFlower = new VampireFlower();
-	public static void init() {
+	public static void preInit() {
 		GameRegistry.registerBlock(bloodAltar1, BlockBloodAltar1.name);
 		GameRegistry.registerBlock(bloodAltar2, ItemBlock.class, BlockBloodAltar2.name);
 		// GameRegistry.registerBlock(bloodAltarTier3, ItemBlock.class,BlockBloodAltarTier3.name);
@@ -89,5 +97,26 @@ public class ModBlocks {
 		GameRegistry.addRecipe(new ItemStack(castleSlab, 6, 1), "XXX", 'X', new ItemStack(castleBlock, 1, 1));
 		GameRegistry.addRecipe(new ItemStack(castleStairsDark, 1), "  X", " XX", "XXX", 'X', new ItemStack(castleBlock, 1, 1));
 		GameRegistry.addRecipe(new ItemStack(castleStairsPurple, 1), "  X", " XX", "XXX", 'X', new ItemStack(castleBlock, 1, 0));
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void preInitClient(){
+		ModelBakery.addVariantName(Item.getItemFromBlock(castleBlock), "vampirism:castleBlock_purpleBrick", "vampirism:castleBlock_darkBrick", "vampirism:castleBlock_darkBrickBloody");
+	}
+
+	@SideOnly(Side.CLIENT)
+	public static void initClient(){
+		reg(castleBlock,0,"castleBlock_purpleBrick");
+		reg(castleBlock,1,"castleBlock_darkBrick");
+		reg(castleBlock,2,"castleBlock_darkBrickBloody");
+	}
+
+	private static void reg(Block block){
+
+	}
+
+	private static void reg(Block block,int meta,String file){
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
+				.register(Item.getItemFromBlock(block), meta, new ModelResourceLocation(REFERENCE.MODID+ ":" + file, "inventory"));
 	}
 }

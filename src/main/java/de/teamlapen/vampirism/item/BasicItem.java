@@ -12,7 +12,5 @@ public abstract class BasicItem extends Item {
 
 		setCreativeTab(VampirismMod.tabVampirism);
 		this.setUnlocalizedName(REFERENCE.MODID + "." + name);
-
-		GameRegistry.registerItem(this, name);
 	}
 }

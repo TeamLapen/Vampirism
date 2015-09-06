@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -13,7 +13,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -23,35 +22,36 @@ import java.util.List;
 public class ItemLeechSword extends ItemSword {
 	public static final int MAX_BLOOD = 100;
 
+	@SideOnly(Side.CLIENT)
+	private static final ModelResourceLocation model=new ModelResourceLocation("vampirism:leechSword","inventory");
+	@SideOnly(Side.CLIENT)
+	private static final ModelResourceLocation model_unused=new ModelResourceLocation("vampirism:leechSwordUnused","inventory");
+
 	public static final String name = "leechSword";
 
 	public static int getBlood(ItemStack itemStack) {
-		if (itemStack == null || itemStack.stackTagCompound == null) {
+		if (itemStack == null || !itemStack.hasTagCompound()) {
 			return 0;
 		}
-		return itemStack.stackTagCompound.getInteger("blood");
+		return itemStack.getTagCompound().getInteger("blood");
 	}
 
 	public static void setBlood(ItemStack itemStack, int amount) {
 		if (itemStack == null || amount < 0) {
 			return;
 		}
-		if (itemStack.stackTagCompound == null) {
-			itemStack.stackTagCompound = new NBTTagCompound();
-			itemStack.stackTagCompound.setInteger("blood", 0);
+		if (!itemStack.hasTagCompound()) {
+			itemStack.setTagCompound(new NBTTagCompound());
 		}
 		if (amount > MAX_BLOOD)
 			amount = MAX_BLOOD;
-		itemStack.stackTagCompound.setInteger("blood", amount);
+		itemStack.getTagCompound().setInteger("blood", amount);
 	}
-
-	private IIcon unusedIcon;
 
 	public ItemLeechSword() {
 		super(Item.ToolMaterial.IRON);
 		this.setNoRepair();
-		setUnlocalizedName(name);
-		this.setTextureName(REFERENCE.MODID+":"+name);
+		setUnlocalizedName(REFERENCE.MODID+":"+name);
 		this.maxStackSize = 1;
 		setCreativeTab(VampirismMod.tabVampirism);
 	}
@@ -59,25 +59,17 @@ public class ItemLeechSword extends ItemSword {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
-		if (itemStack.stackTagCompound != null) {
-			int blood = itemStack.stackTagCompound.getInteger("blood");
+		if (itemStack.hasTagCompound()) {
+			int blood = itemStack.getTagCompound().getInteger("blood");
 			list.add(EnumChatFormatting.RED + "Blood: " + blood + "/" + MAX_BLOOD);
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public IIcon getIcon(ItemStack stack, int pass) {
-		return getIconIndex(stack);
-	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
-	public IIcon getIconIndex(ItemStack stack) {
-		if (getBlood(stack) > 0) {
-			return itemIcon;
-		}
-		return unusedIcon;
+	@SideOnly(Side.CLIENT)
+	public ModelResourceLocation getModel(ItemStack stack, EntityPlayer player, int useRemaining) {
+		return getBlood(stack)==0?model_unused:model;
 	}
 
 	@Override
@@ -99,35 +91,23 @@ public class ItemLeechSword extends ItemSword {
 		if (entityTarget.worldObj.isRemote)
 			return false;
 		if (entityTarget.getHealth() <= 0 && entityTarget instanceof EntityCreature) {
-			if (itemStack.stackTagCompound == null) {
-				itemStack.stackTagCompound = new NBTTagCompound();
-				itemStack.stackTagCompound.setInteger("blood", 0);
+			if (!itemStack.hasTagCompound()) {
+				itemStack.setTagCompound(new NBTTagCompound());
 			}
-			itemStack.stackTagCompound.setInteger("blood", itemStack.stackTagCompound.getInteger("blood") + VampireMob.get((EntityCreature) entityTarget).getBlood());
-			if (itemStack.stackTagCompound.getInteger("blood") > MAX_BLOOD)
-				itemStack.stackTagCompound.setInteger("blood", MAX_BLOOD);
-			else if (itemStack.stackTagCompound.getInteger("blood") < 0)
-				itemStack.stackTagCompound.setInteger("blood", 0);
+			NBTTagCompound tag=itemStack.getTagCompound();
+			tag.setInteger("blood", tag.getInteger("blood") + VampireMob.get((EntityCreature) entityTarget).getBlood());
+			if (tag.getInteger("blood") > MAX_BLOOD)
+				tag.setInteger("blood", MAX_BLOOD);
+			else if (tag.getInteger("blood") < 0)
+				tag.setInteger("blood", 0);
 		}
 		return false;
 	}
 
 	@Override
-	public boolean onBlockDestroyed(ItemStack p_150894_1_, World p_150894_2_, Block p_150894_3_, int p_150894_4_, int p_150894_5_, int p_150894_6_, EntityLivingBase p_150894_7_) {
-
-		return true;
-	}
-
-	@Override
 	public void onCreated(ItemStack itemStack, World world, EntityPlayer player) {
-		itemStack.stackTagCompound = new NBTTagCompound();
-		itemStack.stackTagCompound.setInteger("blood", 0);
+//		itemStack.stackTagCompound = new NBTTagCompound();
+//		itemStack.stackTagCompound.setInteger("blood", 0);
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister iconRegister) {
-		itemIcon = iconRegister.registerIcon(this.getIconString());
-		unusedIcon = iconRegister.registerIcon(REFERENCE.MODID+":leechSwordUnused");
-	}
 }

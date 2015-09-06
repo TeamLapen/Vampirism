@@ -39,7 +39,7 @@ public class ModPotion extends Potion {
 
 	}
 
-	public static void init() {
+	public static void preInit() {
 		increasePotionArraySize();
 		sunscreen = new ModPotion(Configs.potion_id_sunscreen, false, 345345).setIconIndex(7, 1).setPotionName("potion.vampirism.sunscreen");
 		thirst = new ModPotion(Configs.potion_id_thirst, false, 859494).setIconIndex(1, 1).setPotionName("potion.vampirism.thirst");

@@ -2,10 +2,7 @@ package de.teamlapen.vampirism.proxy;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterators;
-import de.teamlapen.vampirism.ModBiomes;
-import de.teamlapen.vampirism.ModPotion;
-import de.teamlapen.vampirism.VampirismEventHandler;
-import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.*;
 import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.entity.convertible.BiteableRegistry;
 import de.teamlapen.vampirism.entity.convertible.EntityConvertedCreature;
@@ -54,6 +51,27 @@ public abstract class CommonProxy implements IProxy {
 	private List<TickRunnable> serverRunnables = new ArrayList<TickRunnable>();
 	private int modEntityId = 0;
 
+
+	@Override
+	public void preInit() {
+		ModBlocks.preInit();
+		ModItems.preInit();
+		ModPotion.preInit();
+		ModBiomes.preInit();
+		ModBlocks.registerRecipes();
+		ModItems.registerRecipes();
+	}
+
+	@Override
+	public void init() {
+		registerEntitys();
+		registerSubscriptions();
+	}
+
+	@Override
+	public void postInit() {
+
+	}
 
 	@Override public void onTick(TickEvent event) {
 		if (event instanceof TickEvent.ServerTickEvent) {
@@ -143,7 +161,7 @@ public abstract class CommonProxy implements IProxy {
 		EntityRegistry.addSpawn(clazz, probe, min, max, type, biomes);
 	}
 
-	@Override public void registerEntitys() {
+	public void registerEntitys() {
 		// Create a array of all biomes except hell and end
 		BiomeGenBase[] allBiomes = BiomeGenBase.getBiomeGenArray();
 		allBiomes = Arrays.copyOf(allBiomes, allBiomes.length);
@@ -188,7 +206,7 @@ public abstract class CommonProxy implements IProxy {
 		BiteableRegistry.addConvertible(EntitySheep.class, String.format(base, "sheep"), new EntityConvertedSheep.ConvertingSheepHandler());
 		BiteableRegistry.addConvertible(EntityVillager.class, String.format(base, "villager"), new EntityConvertedVillager.VillagerConvertingHandler());
 	}
-	@Override public void registerSubscriptions() {
+	public void registerSubscriptions() {
 		Object playerHandler = new VampirePlayerEventHandler();
 		MinecraftForge.EVENT_BUS.register(playerHandler);
 		FMLCommonHandler.instance().bus().register(playerHandler);

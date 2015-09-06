@@ -18,7 +18,7 @@ public class ModBiomes {
 	public static BiomeGenBase biomeVampireForest;
 	public static BiomeEntry biomeEntryVampireForest;
 
-	public static void init() {
+	public static void preInit() {
 		int biomeID = Configs.getVampireBiomeId();
 		if (biomeID == -1) {
 			biomeID = 10;

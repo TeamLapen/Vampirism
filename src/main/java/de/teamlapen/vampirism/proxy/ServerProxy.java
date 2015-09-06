@@ -40,17 +40,6 @@ public class ServerProxy extends CommonProxy {
 
 	}
 
-	@Override
-	public void registerKeyBindings() {
-		// Client side only
-
-	}
-
-	@Override
-	public void registerRenderer() {
-		// Client side only
-
-	}
 
 	@Override
 	public void registerSubscriptions() {

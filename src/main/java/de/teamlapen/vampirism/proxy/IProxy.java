@@ -30,15 +30,13 @@ public interface IProxy {
 
 	void addTickRunnable(TickRunnable run);
 
+	void preInit();
+	void init();
+	void postInit();
 	/**
 	 * Registeres all entitys
 	 */
-	void registerEntitys();
 
-	/**
-	 * Register keybindings
-	 */
-	void registerKeyBindings();
 
 	// Coffin methods
 	// public void wakeAllPlayers();
@@ -50,12 +48,10 @@ public interface IProxy {
 	/**
 	 * Registeres all renders
 	 */
-	void registerRenderer();
 
 	/**
 	 * Registers all important subscriptions, which should be registered at startup (init)
 	 */
-	void registerSubscriptions();
 
 	void setPlayerBat(EntityPlayer player, boolean bat);
 

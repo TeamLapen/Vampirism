@@ -1,23 +1,18 @@
 package de.teamlapen.vampirism.item;
 
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
 public class ItemPureBlood extends BasicItem {
 
 	public static final String name = "pureBlood";
-	private static final int COUNT = 5;
-	public IIcon[] icons = new IIcon[COUNT];
+	public static final int COUNT = 5;
 
 	public ItemPureBlood() {
 		super(name);
@@ -30,13 +25,6 @@ public class ItemPureBlood extends BasicItem {
 		list.add(EnumChatFormatting.RED + StatCollector.translateToLocal("text.vampirism.purity") + ": " + (itemStack.getItemDamage() + 1) + "/" + COUNT);
 	}
 
-	@Override
-	public IIcon getIconFromDamage(int meta) {
-		if (meta >= COUNT)
-			meta = 0;
-
-		return this.icons[meta];
-	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -46,12 +34,5 @@ public class ItemPureBlood extends BasicItem {
 		}
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public void registerIcons(IIconRegister iconRegister) {
-		for (int i = 0; i < COUNT; i++) {
-			icons[i] = iconRegister.registerIcon(this.getIconString() + "_" + i);
-		}
-	}
 
 }

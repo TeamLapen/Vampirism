@@ -386,4 +386,8 @@ public class Helper {
 
 	}
 
+	public static interface IntToInt {
+		int match(int i);
+	}
+
 }

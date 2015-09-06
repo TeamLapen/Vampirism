@@ -5,6 +5,8 @@ import de.teamlapen.vampirism.tileEntity.TileEntityTent;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
@@ -17,26 +19,31 @@ public class ItemTent extends BasicItem {
 
     public ItemTent() {
         super(name);
-        this.setTextureName("bed");
         this.setFull3D();
     }
 
-
-    public boolean onItemUse(ItemStack item, EntityPlayer player, World world, int x, int y, int z, int side, float xOffset, float yOffset, float zOffset) {
-        if (world.isRemote || side > 1)
+    @Override
+    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (world.isRemote || side!=EnumFacing.UP)
             return false;
 
-        y++;
+        pos.add(0,1,0);
         int dir = MathHelper.floor_double((player.rotationYaw * 4F) / 360F + 0.5D) & 3;
 
-        boolean flag = placeAt(world, x, y, z, dir, false);
+        boolean flag = placeAt(world, pos, dir, false,false);
         if (flag && !player.capabilities.isCreativeMode) {
-            item.stackSize--;
+            stack.stackSize--;
         }
         return flag;
     }
 
-    public static boolean placeAt(World world, int x, int y, int z, int dir, boolean force) {
+
+
+
+    public static boolean placeAt(World world, BlockPos pos, int dir, boolean force,boolean spawner) {
+        int x=pos.getX();
+        int y=pos.getY();
+        int z=pos.getZ();
         int x1 = x + (dir == 0 ? 1 : (dir == 2 ? -1 : 0));
         int z1 = z + (dir == 1 ? 1 : (dir == 3 ? -1 : 0));
         int x2 = x + (dir == 1 ? -1 : (dir == 2 ? -1 : 1));
@@ -46,16 +53,20 @@ public class ItemTent extends BasicItem {
 
         Block tent = ModBlocks.blockTent;
         Block main = ModBlocks.blockMainTent;
-        if (force || main.canPlaceBlockAt(world, x, y, z) && tent.canPlaceBlockAt(world, x1, y, z1) && tent.canPlaceBlockAt(world, x2, y, z2) && tent.canPlaceBlockAt(world, x3, y, z3)) {
-            boolean flag = world.setBlock(x, y, z, main, dir, 3);
+        if (force || canPlaceAt(main,world,x,y,z) && canPlaceAt(tent, world, x1, y, z1) && canPlaceAt(tent, world, x2, y, z2) && canPlaceAt(tent, world, x3, y, z3)) {
+            boolean flag = world.setBlockState(pos, main.getStateFromMeta(dir), 3);
             if (flag) {
-                world.setBlock(x1, y, z1, tent, dir + 4, 3);
-                world.setBlock(x2, y, z2, tent, dir + 8, 3);
-                world.setBlock(x3, y, z3, tent, dir + 12, 3);
-                ((TileEntityTent) world.getTileEntity(x, y, z)).markAsSpawner();
+                world.setBlockState(new BlockPos(x1, y, z1), tent.getStateFromMeta(dir+4), 3);
+                world.setBlockState(new BlockPos(x2, y, z2), tent.getStateFromMeta(dir+8), 3);
+                world.setBlockState(new BlockPos(x3, y, z3), tent.getStateFromMeta(dir+12), 3);
+                if (spawner)((TileEntityTent) world.getTileEntity(pos)).markAsSpawner();
                 return true;
             }
         }
         return false;
+    }
+
+    private static boolean canPlaceAt(Block block,World world,int x,int y,int z){
+        return block.canPlaceBlockAt(world,new BlockPos(x,y,z));
     }
 }
