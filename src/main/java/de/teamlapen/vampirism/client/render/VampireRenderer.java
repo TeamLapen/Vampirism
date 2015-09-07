@@ -2,7 +2,9 @@ package de.teamlapen.vampirism.client.render;
 
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.model.ModelBiped;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderBiped;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -31,8 +33,8 @@ public class VampireRenderer extends RenderBiped {
 		return texture;
 	}
 
-	public VampireRenderer(float p_i1261_2_) {
-		super(new ModelBiped(), p_i1261_2_);
+	public VampireRenderer(RenderManager renderManager,float p_i1261_2_) {
+		super(renderManager,new ModelBiped(), p_i1261_2_);
 	}
 
 	@Override

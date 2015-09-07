@@ -15,7 +15,7 @@ public class BlockCastleStairs extends BlockStairs {
 	public final static String name="castleStairs";
 	public BlockCastleStairs(Block block, int meta) {
 		super(block, meta);
-		this.setBlockName("castleStairs");
+		this.setUnlocalizedName("castleStairs");
 		this.setCreativeTab(VampirismMod.tabVampirism);
 	}
 

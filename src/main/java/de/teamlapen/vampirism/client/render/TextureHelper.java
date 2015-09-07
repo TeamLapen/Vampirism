@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.texture.*;
+import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.data.TextureMetadataSection;
@@ -26,6 +27,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Used to create vampire versions of textures by overlaying them with an overlay
@@ -36,6 +38,10 @@ import java.util.Map;
 @SideOnly(Side.CLIENT)
 public class TextureHelper {
 
+	/** The default skin for the Steve model. */
+	private static final ResourceLocation TEXTURE_STEVE = new ResourceLocation("textures/entity/steve.png");
+	/** The default skin for the Alex model. */
+	private static final ResourceLocation TEXTURE_ALEX = new ResourceLocation("textures/entity/alex.png");
 	/**
 	 * Used instead of SimpleTexture for the vampire versions Does the image combining when loading the texture
 	 * 
@@ -45,10 +51,16 @@ public class TextureHelper {
 	private static class VampireTexture extends AbstractTexture {
 		protected final ResourceLocation textureLocation;
 		protected final ResourceLocation overlayLocation;
+		protected final boolean slimPlayer;
 
 		public VampireTexture(ResourceLocation loc, ResourceLocation overlay) {
-			this.textureLocation = loc;
-			this.overlayLocation = overlay;
+			this(loc,overlay,false);
+		}
+
+		public VampireTexture(ResourceLocation textureLocation, ResourceLocation overlayLocation, boolean slimPlayer) {
+			this.textureLocation = textureLocation;
+			this.overlayLocation = overlayLocation;
+			this.slimPlayer = slimPlayer;
 		}
 
 		@Override
@@ -66,7 +78,7 @@ public class TextureHelper {
 						image = ImageIO.read(f);
 					} else {
 						Logger.w(TAG, "Did not find skin " + this.textureLocation + " which should be at " + f);
-						iresource = resManager.getResource(AbstractClientPlayer.locationStevePng);
+						iresource = resManager.getResource(slimPlayer?TEXTURE_ALEX:TEXTURE_STEVE);
 						inputstream = iresource.getInputStream();
 						image = ImageIO.read(inputstream);
 					}
@@ -137,6 +149,7 @@ public class TextureHelper {
 	private static final String TAG = "TextureHelper";
 
 	private final static ResourceLocation playerOverlay = new ResourceLocation(REFERENCE.MODID + ":textures/entity/playerOverlay.png");
+	private final static ResourceLocation playerOverlaySlim = new ResourceLocation(REFERENCE.MODID + ":textures/entity/playerOverlaySlim.png");
 
 	private final static Map<Class,ResourceLocation> overlays=new HashMap<Class, ResourceLocation>();
 
@@ -153,9 +166,23 @@ public class TextureHelper {
 	 *            New fake texture location
 	 */
 	public static void createVampireTexture(EntityLivingBase e, ResourceLocation old, ResourceLocation newLoc) {
-		TextureManager manager = RenderManager.instance.renderEngine;
+		TextureManager manager = Minecraft.getMinecraft().getTextureManager();
 		if (manager.getTexture(newLoc) == null) {
-			ResourceLocation overlay = getOverlay(e.getClass());
+			boolean slimPlayer=false;
+			ResourceLocation overlay;
+			if(e instanceof EntityPlayer){
+				if(DefaultPlayerSkin.getSkinType(e.getUniqueID()).equals("slim")){
+					slimPlayer=true;
+					overlay=playerOverlaySlim;
+				}
+				else {
+					overlay=playerOverlay;
+				}
+			}
+			else{
+				overlay= getOverlay(e.getClass());
+			}
+
 			ITextureObject texture = null;
 			try {
 				if (overlay!=null) {
@@ -166,7 +193,7 @@ public class TextureHelper {
 						texture = new LayeredTexture(toStringArraySafe(l));
 					}
 					else{
-						texture = new VampireTexture(old, overlay);
+						texture = new VampireTexture(old, overlay,slimPlayer);
 					}
 
 				} else{

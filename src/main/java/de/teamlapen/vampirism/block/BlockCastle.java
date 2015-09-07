@@ -1,18 +1,14 @@
 package de.teamlapen.vampirism.block;
 
 import de.teamlapen.vampirism.item.ItemMetaBlock;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.IIcon;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
@@ -87,30 +83,17 @@ public class BlockCastle extends BasicBlock implements ItemMetaBlock.IMetaBlockN
 	}
 
 	public final static String name="castleBlock";
-	@SideOnly(Side.CLIENT)
-	private IIcon[] icons;
 
 
 	public BlockCastle(){
 		super(Material.rock, name);
-		this.setBlockTextureName(REFERENCE.MODID + ":" + BlockCastle.name);
 		this.setHardness(2.0F);
 		setResistance(10.0F);
 		setStepSound(soundTypePiston);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(TYPE,EnumType.PURPLE));
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int meta)
-	{
-		if (meta < 0 || meta >= icons.length)
-		{
-			meta = 0;
-		}
 
-		return this.icons[meta];
-	}
 
 	public int damageDropped(int p_149692_1_)
 	{
@@ -127,19 +110,7 @@ public class BlockCastle extends BasicBlock implements ItemMetaBlock.IMetaBlockN
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister p_149651_1_)
-	{
-		this.icons = new IIcon[types.length];
 
-		for (int i = 0; i < this.icons.length; ++i)
-		{
-			String s = this.getTextureName();
-				s = s + "_" + types[i];
-
-			this.icons[i] = p_149651_1_.registerIcon(s);
-		}
-	}
 
 	@SideOnly(Side.CLIENT)
 	@Override public void randomDisplayTick(World world, BlockPos pos,IBlockState state, Random rand) {

@@ -197,9 +197,9 @@ public abstract class GUIPieMenu extends GuiScreen {
 			this.drawUnselectedCenter(cX, cY);
 		} else {
 			String name = StatCollector.translateToLocal(elements.get(selectedElement).getUnlocalizedName());
-			int tx = cX - mc.fontRenderer.getStringWidth(name) / 2;
+			int tx = cX - mc.fontRendererObj.getStringWidth(name) / 2;
 			int ty = this.height / 7;
-			mc.fontRenderer.drawStringWithShadow(name, tx, ty, 16777215);
+			mc.fontRendererObj.drawStringWithShadow(name, tx, ty, 16777215);
 		}
 		this.mc.mcProfiler.endSection();
 		super.drawScreen(mouseX, mouseY, partialTicks);

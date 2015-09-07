@@ -1,15 +1,19 @@
 package de.teamlapen.vampirism.block;
 
-import de.teamlapen.vampirism.ModItems;
+import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.IStringSerializable;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -19,72 +23,141 @@ import java.util.Random;
 /**
  * Slab block for Castle Block
  */
-public class BlockCastleSlab extends BlockSlab {
-	public final static String[] types ={"purpleSlab","darkSlab"};
-	public final static String name="castleSlab";
-	public final static String doubleName="doubleCastleSlab";
-	@SideOnly(Side.CLIENT)
-	private IIcon[] icons;
-	public BlockCastleSlab(boolean doubleS) {
-		super(doubleS,Material.rock);
-		this.setBlockName(name);
-		this.setBlockTextureName(REFERENCE.MODID + ":" + BlockCastle.name);
-		this.setCreativeTab(VampirismMod.tabVampirism);
+public abstract class BlockCastleSlab extends BlockSlab {
+
+
+	public static final PropertyEnum VARIANT = PropertyEnum.create("variant",EnumType.class);
+	public static final PropertyBool SEAMLESS = PropertyBool.create("seamless");
+
+	@Override
+	public String getUnlocalizedName(int meta) {
+		return super.getUnlocalizedName();
+	}
+
+
+	@Override
+	public IProperty getVariantProperty() {
+		return VARIANT;
+	}
+
+	@Override
+	public Object getVariant(ItemStack stack) {
+		return EnumType.byMetadata(stack.getMetadata()&7);
+	}
+
+	public enum EnumType implements IStringSerializable{
+		PURPLE(0,"castleBlock_purpleBrick"),
+		DARK(1,"castleBlock_darkBrick");
+		private int meta;
+		private String name;
+
+		private static final EnumType[] META_LOOKUP = new EnumType[values().length];
+
+		static {
+			EnumType[] values = values();
+			for(int i=0;i<values.length;i++){
+				META_LOOKUP[i]=values[i];
+			}
+		}
+
+		EnumType(int meta, String name) {
+			this.meta = meta;
+			this.name = name;
+		}
+
+		public String getName(){
+			return this.name;
+		}
+
+		public String toString(){
+			return getName();
+		}
+
+		public int getMetadata(){
+			return meta;
+		}
+		public static EnumType byMetadata(int meta)
+		{
+			if (meta < 0 || meta >= META_LOOKUP.length)
+			{
+				meta = 0;
+			}
+
+			return META_LOOKUP[meta];
+		}
+
+
+	}
+
+	public final static String name="castleBlock_slab";
+	public final static String doubleName="castleBlock_double_slab";
+
+	public BlockCastleSlab() {
+		super(Material.rock);
+		this.setUnlocalizedName(REFERENCE.MODID + "." + BlockCastle.name);
+
 		this.setHardness(2.0F);
 		setResistance(10.0F);
 		setStepSound(soundTypePiston);
+		IBlockState blockState = this.blockState.getBaseState();
+		if(isDouble()){
+			blockState=blockState.withProperty(SEAMLESS,Boolean.valueOf(false));
+		}
+		else{
+			blockState=blockState.withProperty(HALF, EnumBlockHalf.BOTTOM);
+			this.setCreativeTab(VampirismMod.tabVampirism);
+		}
+		this.useNeighborBrightness = !this.isDouble();
+		this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, EnumType.PURPLE));
 	}
 
-	@SideOnly(Side.CLIENT)
-	public IIcon getIcon(int side, int meta){
-		meta=meta&7;
-		if(meta<0||meta>=types.length){
-			meta=0;
-		}
-		return icons[meta];
+	@Override
+	public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+		return Item.getItemFromBlock(ModBlocks.castleSlab);
 	}
-	@Override public String func_150002_b(int p_150002_1_) {
-		return getUnlocalizedName();
+
+
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		IBlockState iblockstate = this.getDefaultState().withProperty(VARIANT, EnumType.byMetadata(meta & 7));
+		if(isDouble()){
+			iblockstate=iblockstate.withProperty(SEAMLESS,Boolean.valueOf((meta&8)!=0));
+		}
+		else{
+			iblockstate=iblockstate.withProperty(HALF,(meta&8)==0? EnumBlockHalf.BOTTOM:EnumBlockHalf.TOP);
+		}
+		return iblockstate;
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		byte b=0;
+		int i=b|((EnumType)state.getValue(VARIANT)).getMetadata();
+		if(isDouble()){
+			if((Boolean)state.getValue(SEAMLESS)){
+				i |=8;
+			}
+		}
+		else if(state.getValue(HALF)==EnumBlockHalf.TOP){
+			i |=8;
+		}
+		return i;
 	}
 
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item item, CreativeTabs p_149666_2_, List list){
-		for(int i=0;i<types.length;i++){
+		for(int i=0;i<EnumType.values().length;i++){
 			list.add(new ItemStack(item,1,i));
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister p_149651_1_)
-	{
-		this.icons = new IIcon[types.length];
-
-		for (int i = 0; i < this.icons.length; ++i)
-		{
-			String s = this.getTextureName();
-			s = s + "_" + types[i];
-
-			this.icons[i] = p_149651_1_.registerIcon(s);
-		}
+	@Override
+	protected BlockState createBlockState() {
+		return isDouble()?new BlockState(this,new IProperty[]{SEAMLESS, VARIANT}):new BlockState(this,new IProperty[]{HALF, VARIANT});
 	}
 
 	@Override
-	protected ItemStack createStackedBlock(int meta)
-	{
-		return new ItemStack(ModItems.castleSlabItem, 2, meta & 7);
-	}
-
-	public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
-		return ModItems.castleSlabItem;
-	}
-
-
-		@Override
-	public String getUnlocalizedName() {
-		return String.format("block.%s%s", REFERENCE.MODID.toLowerCase() + ".", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
-	}
-
-	protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
-		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
+	public int damageDropped(IBlockState state) {
+		return ((EnumType)state.getValue(VARIANT)).getMetadata();
 	}
 }

@@ -6,9 +6,11 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiSleepMP;
 import net.minecraft.client.resources.I18n;
 
+import java.io.IOException;
+
 public class GUISleepCoffin extends GuiSleepMP {
 	@Override
-	protected void actionPerformed(GuiButton p_146284_1_) {
+	protected void actionPerformed(GuiButton p_146284_1_) throws IOException{
 		if (p_146284_1_.id == 1) {
 			this.func_146418_g();
 		} else {
@@ -37,17 +39,13 @@ public class GUISleepCoffin extends GuiSleepMP {
 	 * Fired when a key is typed. This is the equivalent of KeyListener.keyTyped(KeyEvent e).
 	 */
 	@Override
-	protected void keyTyped(char p_73869_1_, int p_73869_2_) {
+	protected void keyTyped(char p_73869_1_, int p_73869_2_) throws IOException{
 		if (p_73869_2_ == 1) {
 			this.func_146418_g();
 		} else if (p_73869_2_ != 28 && p_73869_2_ != 156) {
 			super.keyTyped(p_73869_1_, p_73869_2_);
 		} else {
 			String s = this.inputField.getText().trim();
-
-			if (!s.isEmpty()) {
-				this.func_146403_a(s); // Forge: fix vanilla not adding messages to the sent list while sleeping
-			}
 
 			this.inputField.setText("");
 			this.mc.ingameGUI.getChatGUI().resetScroll();

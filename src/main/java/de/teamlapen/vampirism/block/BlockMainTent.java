@@ -4,10 +4,13 @@ import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.tileEntity.TileEntityTent;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 /**
@@ -34,25 +37,22 @@ public class BlockMainTent extends BlockTent implements ITileEntityProvider {
 
 
     @Override
-    public boolean renderAsNormalBlock() {
-        return false;
-    }
-
-    @Override
     public void breakBlock(World world, int x, int y, int z, Block p_149749_5_, int meta) {
         super.breakBlock(world, x, y, z, p_149749_5_, meta);
         world.spawnEntityInWorld(new EntityItem(world, x, y + 1, z, new ItemStack(ModItems.tent, 1)));
     }
 
-    public boolean onBlockEventReceived(World p_149696_1_, int p_149696_2_, int p_149696_3_, int p_149696_4_, int p_149696_5_, int p_149696_6_) {
-        super.onBlockEventReceived(p_149696_1_, p_149696_2_, p_149696_3_, p_149696_4_, p_149696_5_, p_149696_6_);
-        TileEntity tileentity = p_149696_1_.getTileEntity(p_149696_2_, p_149696_3_, p_149696_4_);
-        return tileentity != null ? tileentity.receiveClientEvent(p_149696_5_, p_149696_6_) : false;
+    @Override
+    public boolean onBlockEventReceived(World worldIn, BlockPos pos, IBlockState state, int eventID, int eventParam) {
+         super.onBlockEventReceived(worldIn, pos, state, eventID, eventParam);
+        TileEntity tileentity = worldIn.getTileEntity(pos);
+        return tileentity != null ? tileentity.receiveClientEvent(pos.getX(),pos.getY()) : false;
     }
 
+
     @Override
-    public boolean onBlockActivated(World p_149727_1_, int p_149727_2_, int p_149727_3_, int p_149727_4_, EntityPlayer p_149727_5_, int p_149727_6_, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
-        ((TileEntityTent) p_149727_1_.getTileEntity(p_149727_2_, p_149727_3_, p_149727_4_)).onActivated(p_149727_5_);
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {
+        ((TileEntityTent) worldIn.getTileEntity(pos)).onActivated(playerIn);
         return true;
     }
 }

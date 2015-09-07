@@ -3,9 +3,12 @@ package de.teamlapen.vampirism.block;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar2;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -45,36 +48,16 @@ public class BlockBloodAltar2 extends BasicBlockContainer {
 		return new TileEntityBloodAltar2();
 	}
 
-	/*
-	 * Not needed anymore
-	 * 
-	 * @SideOnly(Side.CLIENT)
-	 * 
-	 * @Override public String getItemIconName() { return "vampirism:spawnBloodAltar";
-	 * 
-	 * }
-	 */
-	@SideOnly(Side.CLIENT)
-	@Override
-	public int getRenderBlockPass() {
-		return 1;
-	}
-
-	@SideOnly(Side.CLIENT)
-	@Override
-	public boolean isOpaqueCube() {
-		return false;
-	}
 
 	@Override
-	public boolean onBlockActivated(World world, int par2, int par3, int par4, EntityPlayer player, int par6, float par7, float par8, float par9) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!world.isRemote) {
 			ItemStack item = null;
 			try {
 				item = player.inventory.getCurrentItem();
 			} catch (NullPointerException e) {
 			}
-			TileEntityBloodAltar2 te = (TileEntityBloodAltar2) world.getTileEntity(par2, par3, par4);
+			TileEntityBloodAltar2 te = (TileEntityBloodAltar2) world.getTileEntity(pos);
 			if (item != null && item.getItem() instanceof ItemBloodBottle) {
 				interactBottle(te, item, player.capabilities.isCreativeMode);
 				return true;
@@ -86,24 +69,10 @@ public class BlockBloodAltar2 extends BasicBlockContainer {
 		return false;
 	}
 
+
 	private void startRitual(TileEntityBloodAltar2 te, EntityPlayer p) {
 		te.startRitual(p);
 	}
 
-	// public IIcon getIcon(int p_149691_1_, int p_149691_2_) {
-	// return p_149691_1_ == 1 ? this.field_149935_N
-	// : (p_149691_1_ == 0 ? this.field_149935_N
-	// : (p_149691_1_ != p_149691_2_ ? this.blockIcon
-	// : this.field_149936_O));
-	// }
-	//
-	// @SideOnly(Side.CLIENT)
-	// public void registerBlockIcons(IIconRegister p_149651_1_) {
-	// this.blockIcon = p_149651_1_.registerIcon("furnace_side");
-	// this.field_149936_O = p_149651_1_
-	// .registerIcon(this.field_149932_b ? "furnace_front_on"
-	// : "furnace_front_off");
-	// this.field_149935_N = p_149651_1_.registerIcon("furnace_top");
-	// }
 
 }

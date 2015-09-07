@@ -85,8 +85,8 @@ public class ModelGhost extends ModelBase {
 
 		this.head.rotateAngleY = f3 / (180F / (float) Math.PI);
 		this.head.rotateAngleX = f4 / (180F / (float) Math.PI);
-		float f6 = MathHelper.sin(this.onGround * (float) Math.PI);
-		float f7 = MathHelper.sin((1.0F - (1.0F - this.onGround) * (1.0F - this.onGround)) * (float) Math.PI);
+		float f6 = MathHelper.sin(this.swingProgress* (float) Math.PI);
+		float f7 = MathHelper.sin((1.0F - (1.0F - this.swingProgress) * (1.0F - this.swingProgress)) * (float) Math.PI);
 		this.rightarm.rotateAngleZ = 0.0F;
 		this.leftarm.rotateAngleZ = 0.0F;
 		this.rightarm.rotateAngleY = -(0.1F - f6 * 0.6F);

@@ -7,14 +7,13 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.VampireLordData;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockPortal;
-import net.minecraft.client.renderer.texture.IIconRegister;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Random;
 
@@ -24,18 +23,19 @@ import java.util.Random;
 public class BlockCastlePortal extends BlockPortal {
 	public static final String name="castlePortal";
 	public BlockCastlePortal(){
-		this.setBlockName(name);
 		this.setHardness(1000000F);
 		this.setResistance(1000000000F);
-		this.setBlockTextureName(REFERENCE.MODID + ":" + name);
-	}
-
-	@Override public void updateTick(World p_149674_1_, int p_149674_2_, int p_149674_3_, int p_149674_4_, Random p_149674_5_) {
-		//Do not spawn mobs
+		this.setUnlocalizedName(REFERENCE.MODID + "." + name);
 	}
 
 	@Override
-	public void onEntityCollidedWithBlock(World par1World, int par2, int par3, int par4, Entity par5Entity)
+	public void updateTick(World worldIn, BlockPos pos, IBlockState state, Random rand) {
+		//DO not spawn mobs
+	}
+
+
+	@Override
+	public void onEntityCollidedWithBlock(World par1World, BlockPos pos,IBlockState state, Entity par5Entity)
 	{
 		if ((par5Entity.ridingEntity == null) && (par5Entity.riddenByEntity == null) && ((par5Entity instanceof EntityPlayerMP)))
 		{
@@ -81,18 +81,17 @@ public class BlockCastlePortal extends BlockPortal {
 		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
 	}
 
-	@Override public void onNeighborBlockChange(World p_149695_1_, int p_149695_2_, int p_149695_3_, int p_149695_4_, Block p_149695_5_) {
+	@Override
+	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock) {
+
 	}
 
-	@Override public boolean func_150000_e(World p_150000_1_, int p_150000_2_, int p_150000_3_, int p_150000_4_) {
+
+	@Override
+	public boolean func_176548_d(World worldIn, BlockPos p_176548_2_) {
 		return false;
 	}
 
-	@SideOnly(Side.CLIENT)
-	public void registerBlockIcons(IIconRegister p_149651_1_)
-	{
 
-		this.blockIcon = p_149651_1_.registerIcon(this.getTextureName());
-	}
 
 }

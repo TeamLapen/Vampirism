@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.RenderBiped;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
@@ -20,8 +21,8 @@ public class RendererVampireMinion extends RenderBiped {
 
 	private static final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vampire.png");
 
-	public RendererVampireMinion(float p_i1261_2_) {
-		super(new ModelBipedShrinkable(), p_i1261_2_);
+	public RendererVampireMinion(RenderManager renderManager,float p_i1261_2_) {
+		super(renderManager,new ModelBipedShrinkable(), p_i1261_2_);
 	}
 
 	@Override

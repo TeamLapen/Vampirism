@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.castleDim;
 
 import de.teamlapen.vampirism.ModBiomes;
 import de.teamlapen.vampirism.VampirismMod;
-import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.biome.WorldChunkManagerHell;
 import net.minecraft.world.chunk.IChunkProvider;
@@ -13,6 +13,11 @@ import net.minecraft.world.chunk.IChunkProvider;
 public class WorldProviderCastle extends WorldProvider {
 	@Override public String getDimensionName() {
 		return "Vampire castle";
+	}
+
+	@Override
+	public String getInternalNameSuffix() {
+		return "_vampire_castle";
 	}
 
 	@Override protected void registerWorldChunkManager() {
@@ -28,9 +33,12 @@ public class WorldProviderCastle extends WorldProvider {
 		return false;
 	}
 
-	public ChunkCoordinates getEntrancePortalLocation() {
-		return new ChunkCoordinates(48, ChunkProviderCastle.MAX_Y_HEIGHT+1, 104);
+	@Override
+	public BlockPos getSpawnCoordinate() {
+		return new BlockPos(48,ChunkProviderCastle.MAX_Y_HEIGHT+1,104);
 	}
+
+
 
 	public int getAverageGroundLevel() {
 		return 12;
@@ -49,7 +57,7 @@ public class WorldProviderCastle extends WorldProvider {
 	}
 
 	public boolean canCoordinateBeSpawn(int p_76566_1_, int p_76566_2_) {
-		return this.worldObj.getTopBlock(p_76566_1_, p_76566_2_).getMaterial().blocksMovement();
+		return this.worldObj.getTopSolidOrLiquidBlock(new BlockPos(p_76566_1_,0,p_76566_2_)).getY()>0;
 	}
 
 	@Override

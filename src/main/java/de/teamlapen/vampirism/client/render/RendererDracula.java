@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.entity.EntityDracula;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderBiped;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.boss.BossStatus;
@@ -16,8 +17,8 @@ public class RendererDracula extends RenderBiped {
 
 	private static final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID + ":textures/entity/dracula.png");
 
-	public RendererDracula(ModelBiped model, float f) {
-		super(model, f);
+	public RendererDracula(RenderManager renderManager,ModelBiped model, float f) {
+		super(renderManager,model, f);
 	}
 
 	@Override

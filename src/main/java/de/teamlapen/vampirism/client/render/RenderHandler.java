@@ -10,10 +10,8 @@ import de.teamlapen.vampirism.entity.player.skills.Skills;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.GuiSleepMP;
-import net.minecraft.client.gui.inventory.GuiContainerCreative;
-import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.entity.Render;
@@ -102,11 +100,11 @@ public class RenderHandler {
 
 		WorldClient world = this.mc.theWorld;
 
-		EntityClientPlayerMP player = this.mc.thePlayer;
+		EntityPlayerSP player = this.mc.thePlayer;
 		if ((world == null) || (player == null))
 			return;
 
-		List list = world.getEntitiesWithinAABBExcludingEntity(player, player.boundingBox.expand(ENTITY_RADIUS, ENTITY_RADIUS, ENTITY_RADIUS));
+		List list = world.getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().expand(ENTITY_RADIUS, ENTITY_RADIUS, ENTITY_RADIUS));
 		for (Object o : list) {
 			if (o instanceof EntityCreature || o instanceof EntityPlayer) {
 				EntityLivingBase e = (EntityLivingBase) o;
@@ -154,7 +152,7 @@ public class RenderHandler {
 
 		}
 
-		if(Configs.render_fog_vampire_biome&& mc.theWorld.provider.dimensionId!= VampirismMod.castleDimensionId&&Helper.isEntityInVampireBiome(mc.thePlayer)){
+		if(Configs.render_fog_vampire_biome&& mc.theWorld.provider.getDimensionId()!= VampirismMod.castleDimensionId&&Helper.isEntityInVampireBiome(mc.thePlayer)){
 			if(vampireBiomeTicks< VAMPIRE_BIOME_FADE_TICKS){
 				vampireBiomeTicks++;
 			}
@@ -202,7 +200,8 @@ public class RenderHandler {
 			EntityPlayer player = event.entityPlayer;
 
 			float parTick = event.partialRenderTick;
-			Render renderer = RenderManager.instance.getEntityRenderObject(entityBat);
+			RenderManager renderManager=Minecraft.getMinecraft().getRenderManager();
+			Render renderer = renderManager.getEntityRenderObject(entityBat);
 
 			// Copy values
 			entityBat.prevRenderYawOffset = player.prevRenderYawOffset;
@@ -221,15 +220,15 @@ public class RenderHandler {
 			double d0 = player.lastTickPosX + (player.posX - player.lastTickPosX) * parTick;
 			double d1 = player.lastTickPosY + (player.posY - player.lastTickPosY) * parTick;
 			double d2 = player.lastTickPosZ + (player.posZ - player.lastTickPosZ) * parTick;
-			// Translate and render
+			// Translate and render TODO fix
 			GL11.glPushMatrix();
-			GL11.glTranslated(
-					1 * (d0 - RenderManager.renderPosX),
-					1
-							* (d1 - RenderManager.renderPosY)
-							+ (event.entityPlayer == Minecraft.getMinecraft().thePlayer
-									&& !((Minecraft.getMinecraft().currentScreen instanceof GuiInventory || Minecraft.getMinecraft().currentScreen instanceof GuiContainerCreative) && RenderManager.instance.playerViewY == 180.0F) ? (BatSkill.BAT_HEIGHT + 0.2 - event.entityPlayer.yOffset)
-									: 0D), 1 * (d2 - RenderManager.renderPosZ));
+//			GL11.glTranslated(
+//					1 * (d0 - renderManager.renderPosX),
+//					1
+//							* (d1 - RenderManager.renderPosY)
+//							+ (event.entityPlayer == Minecraft.getMinecraft().thePlayer
+//									&& !((Minecraft.getMinecraft().currentScreen instanceof GuiInventory || Minecraft.getMinecraft().currentScreen instanceof GuiContainerCreative) && RenderManager.instance.playerViewY == 180.0F) ? (BatSkill.BAT_HEIGHT + 0.2 - event.entityPlayer.yOffset)
+//									: 0D), 1 * (d2 - RenderManager.renderPosZ));
 			renderer.doRender(entityBat, 0, 0, 0, f1, event.partialRenderTick);
 			GL11.glPopMatrix();
 		}
@@ -345,7 +344,7 @@ public class RenderHandler {
 		if (mc.theWorld != null) {
 			if (event.phase == TickEvent.Phase.START) {
 				if (VampirePlayer.get(mc.thePlayer).isSkillActive(Skills.batMode)) {
-					ySize = mc.thePlayer.yOffset - BatSkill.BAT_EYE_HEIGHT + mc.thePlayer.getDefaultEyeHeight();
+					ySize =  - BatSkill.BAT_EYE_HEIGHT + mc.thePlayer.getDefaultEyeHeight(); //TODO fix
 					eyeHeight = mc.thePlayer.eyeHeight;
 					mc.thePlayer.lastTickPosY -= ySize;
 					mc.thePlayer.prevPosY -= ySize;

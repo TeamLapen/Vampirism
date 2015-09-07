@@ -390,4 +390,14 @@ public class Helper {
 		int match(int i);
 	}
 
+	public static void write(NBTTagCompound nbt,String base,BlockPos pos){
+		nbt.setInteger(base+"_x",pos.getX());
+		nbt.setInteger(base+"_y",pos.getY());
+		nbt.setInteger(base+"_z",pos.getZ());
+	}
+
+	public static BlockPos readPos(NBTTagCompound nbt,String base){
+		return new BlockPos(nbt.getInteger(base+"_x"),nbt.getInteger(base+"_y"),nbt.getInteger(base+"_z"));
+	}
+
 }

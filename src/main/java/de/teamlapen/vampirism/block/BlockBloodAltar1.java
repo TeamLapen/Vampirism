@@ -3,9 +3,12 @@ package de.teamlapen.vampirism.block;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
 public class BlockBloodAltar1 extends BasicBlockContainer {
@@ -19,11 +22,13 @@ public class BlockBloodAltar1 extends BasicBlockContainer {
 	}
 
 	@Override
-	public void breakBlock(World world, int x, int y, int z, Block par5, int par6) {
-		TileEntityBloodAltar1 te = (TileEntityBloodAltar1) world.getTileEntity(x, y, z);
+	public void breakBlock(World world, BlockPos pos, IBlockState state) {
+		TileEntityBloodAltar1 te = (TileEntityBloodAltar1) world.getTileEntity(pos);
 		te.dropSword();
-		super.breakBlock(world, x, y, z, par5, par6);
+		super.breakBlock(world, pos, state);
 	}
+
+
 
 	@Override
 	public TileEntity createNewTileEntity(World world, int metadata) {
@@ -31,7 +36,7 @@ public class BlockBloodAltar1 extends BasicBlockContainer {
 	}
 
 	@Override
-	public boolean onBlockActivated(World world, int par2, int par3, int par4, EntityPlayer player, int par6, float par7, float par8, float par9) {
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
 		if (!world.isRemote) {
 			ItemStack item = null;
 			try {
@@ -39,7 +44,7 @@ public class BlockBloodAltar1 extends BasicBlockContainer {
 			} catch (NullPointerException ignored) {
 			}
 
-			TileEntityBloodAltar1 te = (TileEntityBloodAltar1) world.getTileEntity(par2, par3, par4);
+			TileEntityBloodAltar1 te = (TileEntityBloodAltar1) world.getTileEntity(pos);
 			te.onActivated(player, item);
 		}
 		return true;

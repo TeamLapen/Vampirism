@@ -24,6 +24,7 @@ import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChunkCoordinates;
 import net.minecraftforge.fml.relauncher.Side;
@@ -61,7 +62,7 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 	/**
 	 * Only available when running ({@link #runningTick}>0
 	 */
-	private ChunkCoordinates[] tips;
+	private BlockPos[] tips;
 
 	public TileEntityBloodAltar4() {
 		super(new Slot[]{new Slot(ModItems.pureBlood, 44, 34), new Slot(ModItems.humanHeart, 80, 34), new Slot(new InventoryTileEntity.IItemSelector() {
@@ -330,7 +331,7 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 	 * 
 	 * @return
 	 */
-	public ChunkCoordinates[] getTips() {
+	public BlockPos[] getTips() {
 		if (this.runningTick <= 1)
 			return null;
 		return this.tips;
@@ -341,7 +342,7 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 	 *
 	 * @return
 	 */
-	private ChunkCoordinates[] findTips() {
+	private BlockPos[] findTips() {
 		ArrayList<ChunkCoordinates> coord = new ArrayList<ChunkCoordinates>();
 		int lx = this.xCoord - 3;
 		int ly = this.yCoord;

@@ -1,19 +1,21 @@
 package de.teamlapen.vampirism.tileEntity;
 
+import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.block.BlockCoffin;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 
 public class TileEntityCoffin extends TileEntity {
-	public int otherX;
-	public int otherY;
-	public int otherZ;
+	public BlockPos otherPos;
 	public boolean occupied;
 	private boolean lastTickOccupied;
 	public int lidPos;
@@ -34,39 +36,37 @@ public class TileEntityCoffin extends TileEntity {
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbtTag = new NBTTagCompound();
 		this.writeToNBT(nbtTag);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
+		return new S35PacketUpdateTileEntity(this.getPos(), 1, nbtTag);
 	}
 
 	public TileEntityCoffin getPrimaryTileEntity() {
 		if ((this.getBlockMetadata() & -8) == 0)
-			return (TileEntityCoffin) worldObj.getTileEntity(otherX, otherY, otherZ);
+			return (TileEntityCoffin) worldObj.getTileEntity(otherPos);
 		return this;
 	}
 
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
-		return AxisAlignedBB.getBoundingBox(this.xCoord - 4, this.yCoord, this.zCoord - 4, this.xCoord + 4, this.yCoord + 2, this.zCoord + 4);
+		return AxisAlignedBB.fromBounds(pos.getX() - 4,pos.getY(), pos.getZ()- 4, pos.getX() + 4, pos.getY() + 2, pos.getZ() + 4);
 	}
 
 	@Override
 	public void markDirty() {
 		super.markDirty();
-		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+		this.worldObj.markBlockForUpdate(pos);
 	}
 
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
-		readFromNBT(packet.func_148857_g());
-		((BlockCoffin) this.worldObj.getBlock(this.xCoord, this.yCoord, this.zCoord)).setCoffinOccupied(this.worldObj, this.xCoord, this.yCoord, this.zCoord, null, this.occupied);
+		readFromNBT(packet.getNbtCompound());
+		ModBlocks.coffin.setCoffinOccupied(this.worldObj, pos, null, this.occupied);
 		// Logger.i("TECoffin", String.format("onDataPacket called, occupied=%s, remote=%s", this.occupied, this.worldObj.isRemote));
 	}
 
 	@Override
 	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
 		super.readFromNBT(par1NBTTagCompound);
-		this.otherX = par1NBTTagCompound.getInteger("px");
-		this.otherY = par1NBTTagCompound.getInteger("py");
-		this.otherZ = par1NBTTagCompound.getInteger("pz");
+		otherPos=Helper.readPos(par1NBTTagCompound,"op");
 		this.occupied = par1NBTTagCompound.getBoolean("occ");
 		this.color = par1NBTTagCompound.getInteger("color");
 		this.needsAnimation = par1NBTTagCompound.getBoolean("needsAnim");
@@ -87,11 +87,11 @@ public class TileEntityCoffin extends TileEntity {
 			markDirty();
 
 		} else{
-			BlockBed.func_149979_a(worldObj, xCoord, yCoord, zCoord, occupied);
+			BlockBed.func_149979_a(worldObj, pos, occupied);
 		}
 
 			if(lastTickOccupied!=occupied){
-				this.worldObj.playSoundEffect(xCoord, (double)this.yCoord + 0.5D, zCoord, "vampirism:coffin_lid", 0.5F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+				this.worldObj.playSoundEffect(pos.getX(), (double)this.pos.getY() + 0.5D, pos.getZ(), "vampirism:coffin_lid", 0.5F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
 			}
 			lastTickOccupied=occupied;
 
@@ -103,9 +103,7 @@ public class TileEntityCoffin extends TileEntity {
 	@Override
 	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
 		super.writeToNBT(par1NBTTagCompound);
-		par1NBTTagCompound.setInteger("px", otherX);
-		par1NBTTagCompound.setInteger("py", otherY);
-		par1NBTTagCompound.setInteger("pz", otherZ);
+		Helper.write(par1NBTTagCompound,"op",otherPos);
 		par1NBTTagCompound.setBoolean("occ", occupied);
 		par1NBTTagCompound.setInteger("color", color);
 		par1NBTTagCompound.setBoolean("needsAnim", needsAnimation);
@@ -116,20 +114,16 @@ public class TileEntityCoffin extends TileEntity {
 	 */
 	public void tryToFindOtherTile(){
 		for(int i=-1;i<2;i+=2){
-				Block b=this.getWorldObj().getBlock(this.xCoord+i,this.yCoord,this.zCoord);
+				Block b=this.getWorld().getBlockState(pos.add(i,0,0)).getBlock();
 				if(b instanceof BlockCoffin){
-					this.otherX=this.xCoord+i;
-					this.otherY=this.yCoord;
-					this.otherZ=this.zCoord;
+					otherPos=pos.add(i,0,0);
 					return;
 				}
 		}
 		for(int j=-1;j<2;j+=2){
-			Block b=this.getWorldObj().getBlock(this.xCoord,this.yCoord,this.zCoord+j);
+			Block b=this.getWorld().getBlockState(pos.add(0,0,j)).getBlock();
 			if(b instanceof BlockCoffin){
-				this.otherX=this.xCoord;
-				this.otherY=this.yCoord;
-				this.otherZ=this.zCoord+j;
+				otherPos=pos.add(0,0,j);
 				return;
 			}
 		}

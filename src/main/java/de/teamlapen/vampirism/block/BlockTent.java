@@ -3,8 +3,10 @@ package de.teamlapen.vampirism.block;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
@@ -24,12 +26,6 @@ public class BlockTent extends BasicBlock {
     public BlockTent() {
         super(Material.cloth, name);
         this.setCreativeTab(null);
-        this.setBlockTextureName(REFERENCE.MODID + ":invisible");
-    }
-
-    @Override
-    public MovingObjectPosition collisionRayTrace(World p_149731_1_, int p_149731_2_, int p_149731_3_, int p_149731_4_, Vec3 p_149731_5_, Vec3 p_149731_6_) {
-        return super.collisionRayTrace(p_149731_1_, p_149731_2_, p_149731_3_, p_149731_4_, p_149731_5_, p_149731_6_);
     }
 
 
@@ -39,43 +35,24 @@ public class BlockTent extends BasicBlock {
     }
 
     @Override
-    public void breakBlock(World world, int x, int y, int z, Block p_149749_5_, int meta) {
-
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         int dir = meta & 3;
-        int pos = (meta & 12) >> 2;
-        int[][] sets = others[pos];
+        int rpos = (meta & 12) >> 2;
+        int[][] sets = others[rpos];
         for (int i = 0; i < 3; i++) {
             int[] p = rotate(sets[i], dir);
-            Block b = world.getBlock(x + p[0], y, z + p[1]);
-            world.setBlockToAir(x + p[0], y, z + p[1]);
+            Block b = worldIn.getBlockState(pos.add(p[0],0,p[1])).getBlock();
+           worldIn.setBlockToAir(pos.add(p[0],0,p[1]));
         }
-        super.breakBlock(world, x, y, z, p_149749_5_, meta);
+        super.breakBlock(worldIn, pos, state);
     }
+
 
     @Override
     public boolean isOpaqueCube() {
         return false;
     }
-
-    @Override
-    public void addCollisionBoxesToList(World p_149743_1_, int p_149743_2_, int p_149743_3_, int p_149743_4_, AxisAlignedBB p_149743_5_, List p_149743_6_, Entity p_149743_7_) {
-        super.addCollisionBoxesToList(p_149743_1_, p_149743_2_, p_149743_3_, p_149743_4_, p_149743_5_, p_149743_6_, p_149743_7_);
-    }
-
-    @Override
-    public AxisAlignedBB getCollisionBoundingBoxFromPool(World p_149668_1_, int p_149668_2_, int p_149668_3_, int p_149668_4_) {
-        return super.getCollisionBoundingBoxFromPool(p_149668_1_, p_149668_2_, p_149668_3_, p_149668_4_);
-    }
-
-    @Override
-    public AxisAlignedBB getSelectedBoundingBoxFromPool(World p_149633_1_, int p_149633_2_, int p_149633_3_, int p_149633_4_) {
-        return super.getSelectedBoundingBoxFromPool(p_149633_1_, p_149633_2_, p_149633_3_, p_149633_4_);
-    }
-
-    @Override
-    public void setBlockBoundsBasedOnState(IBlockAccess p_149719_1_, int p_149719_2_, int p_149719_3_, int p_149719_4_) {
-        super.setBlockBoundsBasedOnState(p_149719_1_, p_149719_2_, p_149719_3_, p_149719_4_);
-    }
+    
 
     private int[] rotate(int[] set, int dir) {
         if (dir == 0) {

@@ -1,0 +1,8 @@
+{
+	"variants": {
+		"seamless=true,variant=purpleBrick": { "model": "vampirism:purpleBrick_block" },
+		"seamless=false,variant=purpleBrick": { "model": "vampirism:purpleBrick_block" },
+		"seamless=true,variant=darkBrick": { "model": "vampirism:darkBrick_block" },
+		"seamless=false,variant=darkBrick": { "model": "vampirism:darkBrick_block" }
+	}
+}

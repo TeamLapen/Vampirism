@@ -4,8 +4,6 @@ import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.client.renderer.texture.IIconRegister;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -13,13 +11,11 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGlassBottle;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.eclipse.jdt.annotation.NonNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -102,9 +98,6 @@ public class ItemBloodBottle extends ItemGlassBottle {
 		stack.setItemDamage(Math.max(stack.getItemDamage() - a, 0));
 	}
 
-	@SideOnly(Side.CLIENT)
-	private IIcon[] icons;
-
 	public ItemBloodBottle() {
 		setUnlocalizedName(REFERENCE.MODID + "." + name);
 		setHasSubtypes(true);
@@ -112,15 +105,7 @@ public class ItemBloodBottle extends ItemGlassBottle {
 		this.maxStackSize = 1;
 	}
 
-	/**
-	 * Gets an icon based on an item's damage value
-	 */
-	@Override
-	public IIcon getIconFromDamage(int index) {
-		if (index != 0)
-			index = index / 2;
-		return icons[index];
-	}
+
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@SideOnly(Side.CLIENT)
@@ -167,13 +152,4 @@ public class ItemBloodBottle extends ItemGlassBottle {
 		return stack;
 	}
 
-	@SideOnly(Side.CLIENT)
-	@Override
-	public void registerIcons(IIconRegister par1) {
-		icons = new IIcon[NUM_ICONS];
-
-		for (int i = 0; i < icons.length; i++) {
-			icons[i] = par1.registerIcon(REFERENCE.MODID + ":" + textureBaseName + Integer.toString(i));
-		}
-	}
 }

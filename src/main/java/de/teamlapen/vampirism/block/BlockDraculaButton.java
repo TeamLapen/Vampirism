@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.VampireLordData;
 import net.minecraft.block.BlockButton;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,8 +16,10 @@ import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -36,11 +39,11 @@ public class BlockDraculaButton extends BlockButton {
     public BlockDraculaButton() {
         super(false);
         this.setCreativeTab(null);
-        this.setBlockName("button");
+        this.setUnlocalizedName("button");
     }
 
     @Override
-    public boolean onBlockActivated(World world, int posX, int posY, int posZ, EntityPlayer player, int p_149727_6_, float p_149727_7_, float p_149727_8_, float p_149727_9_) {
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
         int i1 = world.getBlockMetadata(posX, posY, posZ);
         int j1 = i1 & 7;
         int k1 = 8 - (i1 & 8);
@@ -98,12 +101,13 @@ public class BlockDraculaButton extends BlockButton {
             }
 
             world.setBlockMetadataWithNotify(posX, posY, posZ, j1 + k1, 3);
-            world.markBlockRangeForRenderUpdate(posX, posY, posZ, posX, posY, posZ);
-            world.playSoundEffect((double) posX + 0.5D, (double) posY + 0.5D, (double) posZ + 0.5D, "random.click", 0.3F, 0.6F);
-            world.scheduleBlockUpdate(posX, posY, posZ, this, this.tickRate(world));
+            world.markBlockRangeForRenderUpdate(pos,pos);
+            world.playSoundEffect((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, "random.click", 0.3F, 0.6F);
+            world.scheduleUpdate(pos, this, this.tickRate(world));
             return true;
         }
     }
+
 
     @Override
     public int tickRate(World p_149738_1_) {
@@ -111,27 +115,25 @@ public class BlockDraculaButton extends BlockButton {
     }
 
     @Override
-    public int isProvidingWeakPower(IBlockAccess p_149709_1_, int p_149709_2_, int p_149709_3_, int p_149709_4_, int p_149709_5_) {
+    public int isProvidingWeakPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side) {
         return 0;
     }
 
     @Override
-    public int isProvidingStrongPower(IBlockAccess p_149748_1_, int p_149748_2_, int p_149748_3_, int p_149748_4_, int p_149748_5_) {
+    public int isProvidingStrongPower(IBlockAccess worldIn, BlockPos pos, IBlockState state, EnumFacing side) {
         return 0;
     }
+
 
     @Override
     public boolean canProvidePower() {
         return false;
     }
 
-    @SideOnly(Side.CLIENT)
-    public IIcon getIcon(int p_149691_1_, int p_149691_2_) {
-        return Blocks.stone.getBlockTextureFromSide(1);
-    }
 
     @Override
-    public Item getItemDropped(int p_149650_1_, Random p_149650_2_, int p_149650_3_) {
+    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
         return Item.getItemFromBlock(Blocks.stone_button);
     }
+
 }

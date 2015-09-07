@@ -4,8 +4,8 @@ import de.teamlapen.vampirism.client.model.ModelPileOfBones;
 import de.teamlapen.vampirism.entity.EntityDeadMob;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.model.ModelBase;
-import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -19,9 +19,10 @@ public class RendererDeadMob extends Render {
 	private final ResourceLocation texture_zombie = new ResourceLocation(REFERENCE.MODID + ":textures/entity/deadZombie.png");
 	private final ResourceLocation texture_skeleton = new ResourceLocation(REFERENCE.MODID + ":textures/entity/deadSkeleton.png");
 
-	RenderBlocks render = new RenderBlocks();
 
-	public RendererDeadMob() {
+
+	public RendererDeadMob(RenderManager renderManager) {
+		super(renderManager);
 		model = new ModelPileOfBones();
 	}
 
@@ -53,9 +54,7 @@ public class RendererDeadMob extends Render {
 		return this.texture_zombie;
 	}
 
-	@Override
-	public boolean isStaticEntity() {
-		return false;
-	}
+
+
 
 }

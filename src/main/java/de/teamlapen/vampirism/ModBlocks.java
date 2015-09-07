@@ -3,6 +3,7 @@ package de.teamlapen.vampirism;
 import de.teamlapen.vampirism.block.*;
 import de.teamlapen.vampirism.block.BlockBloodAltar4Tip.TileEntityBloodAltar4Tip;
 import de.teamlapen.vampirism.block.BlockChurchAltar.TileEntityChurchAltar;
+import de.teamlapen.vampirism.item.ItemCastleSlab;
 import de.teamlapen.vampirism.item.ItemMetaBlock;
 import de.teamlapen.vampirism.tileEntity.*;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -29,7 +30,6 @@ public class ModBlocks {
 	public final static MaterialLiquid blood = new MaterialLiquidBlood(MapColor.netherrackColor);
 
 	public final static BlockBloodAltar2 bloodAltar2 = new BlockBloodAltar2();
-	public final static BlockBloodAltar3 bloodAltar3 = new BlockBloodAltar3();
 
 	public final static BlockBloodAltar4 bloodAltar4 = new BlockBloodAltar4();
 	public final static BlockBloodAltar4Tip bloodAltar4Tip = new BlockBloodAltar4Tip();
@@ -38,8 +38,8 @@ public class ModBlocks {
 	public final static BlockCoffin coffin = new BlockCoffin();
 	public final static BlockTemplateGenerator templateGenerator = new BlockTemplateGenerator();
 	public final static BlockCastle castleBlock = new BlockCastle();
-	public final static BlockCastleSlab doubleCastleSlab = new BlockCastleSlab(true);
-	public final static BlockCastleSlab castleSlab = new BlockCastleSlab(false);
+	public final static BlockCastleSlab doubleCastleSlab = new BlockCastleSlabDouble();
+	public final static BlockCastleSlab castleSlab = new BlockCastleSlabHalf();
 	public final static BlockStairs castleStairsPurple = new BlockCastleStairs(castleBlock,0);
 	public final static BlockStairs castleStairsDark = new BlockCastleStairs(castleBlock,1);
 	public final static BlockCastlePortal castlePortal = new BlockCastlePortal();
@@ -59,8 +59,8 @@ public class ModBlocks {
 		GameRegistry.registerBlock(churchAltar, BlockChurchAltar.name);
 		GameRegistry.registerBlock(coffin, BlockCoffin.name);
 		GameRegistry.registerBlock(castleBlock, ItemMetaBlock.class,BlockCastle.name);
-		GameRegistry.registerBlock(castleSlab,null,BlockCastleSlab.name);
-		GameRegistry.registerBlock(doubleCastleSlab,null,BlockCastleSlab.doubleName);
+		GameRegistry.registerBlock(castleSlab, ItemCastleSlab.class,BlockCastleSlab.name,castleSlab,doubleCastleSlab,false);
+		GameRegistry.registerBlock(doubleCastleSlab,ItemCastleSlab.class,BlockCastleSlab.doubleName,castleSlab,doubleCastleSlab,true);
 		GameRegistry.registerBlock(castleStairsDark,BlockCastleStairs.name+"_dark");
 		GameRegistry.registerBlock(castleStairsPurple,BlockCastleStairs.name+"_purple");
 		GameRegistry.registerBlock(castlePortal,BlockCastlePortal.name);
@@ -102,6 +102,7 @@ public class ModBlocks {
 	@SideOnly(Side.CLIENT)
 	public static void preInitClient(){
 		ModelBakery.addVariantName(Item.getItemFromBlock(castleBlock), "vampirism:castleBlock_purpleBrick", "vampirism:castleBlock_darkBrick", "vampirism:castleBlock_darkBrickBloody");
+		ModelBakery.addVariantName(Item.getItemFromBlock(castleSlab),"vampirism:purpleBrick_slab","vampirism:darkBrick_slab");
 	}
 
 	@SideOnly(Side.CLIENT)

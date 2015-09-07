@@ -1,17 +1,17 @@
 package de.teamlapen.vampirism.castleDim;
 
 import de.teamlapen.vampirism.ModBlocks;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockFalling;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.IProgressUpdate;
-import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.SpawnerAnimals;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.chunk.ChunkPrimer;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.terraingen.PopulateChunkEvent;
@@ -40,7 +40,7 @@ public class ChunkProviderCastle implements IChunkProvider {
 		BlockFalling.fallInstantly = true;
 		int k = p_73153_2_ * 16;
 		int l = p_73153_3_ * 16;
-		BiomeGenBase biomegenbase = this.worldObj.getBiomeGenForCoords(k + 16, l + 16);
+		BiomeGenBase biomegenbase = this.worldObj.getBiomeGenForCoords(new BlockPos(k + 16,0, l + 16));
 		this.rand.setSeed(this.worldObj.getSeed());
 		long i1 = this.rand.nextLong() / 2L * 2L + 1L;
 		long j1 = this.rand.nextLong() / 2L * 2L + 1L;
@@ -59,6 +59,11 @@ public class ChunkProviderCastle implements IChunkProvider {
 		BlockFalling.fallInstantly = false;
 	}
 
+	@Override
+	public boolean func_177460_a(IChunkProvider p_177460_1_, Chunk p_177460_2_, int p_177460_3_, int p_177460_4_) {
+		return false;
+	}
+
 	@Override public boolean saveChunks(boolean p_73151_1_, IProgressUpdate p_73151_2_) {
 		return true;
 	}
@@ -75,19 +80,23 @@ public class ChunkProviderCastle implements IChunkProvider {
 		return "providerVampirismCastle";
 	}
 
-	@Override public List getPossibleCreatures(EnumCreatureType p_73155_1_, int p_73155_2_, int p_73155_3_, int p_73155_4_) {
+	@Override
+	public List func_177458_a(EnumCreatureType p_177458_1_, BlockPos p_177458_2_) {
 		return null;
 	}
 
-	@Override public ChunkPosition func_147416_a(World p_147416_1_, String p_147416_2_, int p_147416_3_, int p_147416_4_, int p_147416_5_) {
+	@Override
+	public BlockPos getStrongholdGen(World worldIn, String p_180513_2_, BlockPos p_180513_3_) {
 		return null;
 	}
+
 
 	@Override public int getLoadedChunkCount() {
 		return 0;
 	}
 
-	@Override public void recreateStructures(int p_82695_1_, int p_82695_2_) {
+	@Override
+	public void recreateStructures(Chunk p_180514_1_, int p_180514_2_, int p_180514_3_) {
 
 	}
 
@@ -101,12 +110,11 @@ public class ChunkProviderCastle implements IChunkProvider {
 
 	@Override public Chunk provideChunk(int p_73154_1_, int p_73154_2_) {
 		this.rand.setSeed((long) p_73154_1_ * 341873128712L + (long) p_73154_2_ * 132897987541L);
-		Block[] ablock = new Block[32768];
-		byte[] meta = new byte[ablock.length];
+		ChunkPrimer primer=new ChunkPrimer();
 		BiomeGenBase[] biomesForGeneration;
 		//biomesForGeneration=this.worldObj.getWorldChunkManager().loadBlockGeneratorData(null, p_73154_1_ * 16, p_73154_2_ * 16, 16, 16);
-		this.generateTerrain(p_73154_1_, p_73154_2_, ablock, meta);
-		Chunk chunk = new Chunk(this.worldObj, ablock, meta, p_73154_1_, p_73154_2_);
+		this.generateTerrain(p_73154_1_, p_73154_2_, primer);
+		Chunk chunk = new Chunk(this.worldObj, primer, p_73154_1_, p_73154_2_);
 		//		byte[] abyte = chunk.getBiomeArray();
 		//
 		//		for (int k = 0; k < abyte.length; ++k)
@@ -118,12 +126,17 @@ public class ChunkProviderCastle implements IChunkProvider {
 		return chunk;
 	}
 
-	protected void generateTerrain(int chunkX, int chunkZ, Block[] blocks, byte[] meta) {
+	@Override
+	public Chunk provideChunk(BlockPos blockPosIn) {
+		return null;
+	}
+
+	protected void generateTerrain(int chunkX, int chunkZ,ChunkPrimer primer) {
 		if (chunkZ == 6) {
 			if (chunkX == 2)
-				createEntranceChunk(blocks, meta, true);
+				createEntranceChunk(primer, true);
 			if (chunkX == 3)
-				createEntranceChunk(blocks, meta, false);
+				createEntranceChunk(primer, false);
 		}
 		if (chunkX > 5 || chunkX < 0 || chunkZ > 5 || chunkZ < 0)
 			return;
@@ -131,14 +144,14 @@ public class ChunkProviderCastle implements IChunkProvider {
 		for (int x = 0; x < 16; x++) {
 			for (int z = 0; z < 16; z++) {
 				int i = x * 128 * 16 | z * 128 | y;
-				blocks[i] = Blocks.bedrock;
+				primer.setBlockState(i,Blocks.bedrock.getDefaultState());
 			}
 		}
 		for (y += 1; y <=MAX_Y_HEIGHT; y++) {
 			for (int x = 0; x < 16; x++) {
 				for (int z = 0; z < 16; z++) {
 					int i = x * 128 * 16 | z * 128 | y;
-					blocks[i] = ModBlocks.cursedEarth;
+					primer.setBlockState(i,ModBlocks.cursedEarth.getDefaultState());
 				}
 			}
 		}
@@ -146,12 +159,9 @@ public class ChunkProviderCastle implements IChunkProvider {
 
 	/**
 	 * Creates a half of the entrance area
-	 *
-	 * @param blocks
-	 * @param meta
-	 * @param left
+
 	 */
-	protected void createEntranceChunk(Block[] blocks, byte[] meta, boolean left) {
+	protected void createEntranceChunk(ChunkPrimer primer, boolean left) {
 		int y = MAX_Y_HEIGHT;
 		int x = 0;
 		int z = 0;
@@ -159,30 +169,30 @@ public class ChunkProviderCastle implements IChunkProvider {
 		for (x = 0; x < 9; x++) {
 			for (z = 0; z < 10; z++) {
 				i = (left ? 15 - x : x) * 128 * 16 | z * 128 | y;
-				blocks[i] = Blocks.obsidian;
+				primer.setBlockState(i,Blocks.obsidian.getDefaultState());
 			}
 		}
 		for (x = 0; x < 2; x++) {
 			z = 9;
 			for (y = MAX_Y_HEIGHT; y < MAX_Y_HEIGHT+4; y++) {
 				i = (left ? 15 - x : x) * 128 * 16 | z * 128 | y;
-				blocks[i] = Blocks.bedrock;
+				primer.setBlockState(i,Blocks.bedrock.getDefaultState());
 			}
 		}
 		y = MAX_Y_HEIGHT+1;
 		x = 0;
 		i = (left ? 15 - x : x) * 128 * 16 | z * 128 | y;
-		blocks[i] = ModBlocks.castlePortal;
+		primer.setBlockState(i,ModBlocks.castlePortal.getDefaultState());
 		y = MAX_Y_HEIGHT+2;
 		i = (left ? 15 - x : x) * 128 * 16 | z * 128 | y;
-		blocks[i] = ModBlocks.castlePortal;
+		primer.setBlockState(i,ModBlocks.castlePortal.getDefaultState());
 		z = 10;
 		y = MAX_Y_HEIGHT+1;
 		i = (left ? 15 - x : x) * 128 * 16 | z * 128 | y;
-		blocks[i] = Blocks.bedrock;
+		primer.setBlockState(i,Blocks.bedrock.getDefaultState());
 		y = MAX_Y_HEIGHT+2;
 		i = (left ? 15 - x : x) * 128 * 16 | z * 128 | y;
-		blocks[i] = Blocks.bedrock;
+		primer.setBlockState(i,Blocks.bedrock.getDefaultState());
 	}
 
 	/**
@@ -195,9 +205,6 @@ public class ChunkProviderCastle implements IChunkProvider {
 		int cZ=e.chunkCoordZ;
 		if(cX>0&&cX<6&&cZ>0&&cZ<6)return true;
 		return false;
-	}
-	@Override public Chunk loadChunk(int p_73158_1_, int p_73158_2_) {
-		return null;
 	}
 
 }

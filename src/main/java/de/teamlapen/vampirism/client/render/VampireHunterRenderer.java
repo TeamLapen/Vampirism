@@ -23,8 +23,8 @@ public class VampireHunterRenderer extends RenderBiped {
 
 		private static final ResourceLocation villagerTexture = new ResourceLocation("textures/entity/villager/villager.png");
 
-		public RendererCustomVillager(ModelBase p_i1262_1_, float p_i1262_2_) {
-			super(p_i1262_1_, p_i1262_2_);
+		public RendererCustomVillager(RenderManager renderManager,ModelBase p_i1262_1_, float p_i1262_2_) {
+			super(renderManager,p_i1262_1_, p_i1262_2_);
 		}
 
 		@Override
@@ -45,8 +45,8 @@ public class VampireHunterRenderer extends RenderBiped {
 
 		private static final ResourceLocation texture3 = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vampireHunter.png");
 
-		public VampireHunterRenderer2() {
-			super(new ModelVampireHunter(true), 0.5F);
+		public VampireHunterRenderer2(RenderManager renderManager) {
+			super(renderManager,new ModelVampireHunter(true), 0.5F);
 		}
 
 		@Override
@@ -61,10 +61,10 @@ public class VampireHunterRenderer extends RenderBiped {
 	private final RendererCustomVillager rendererVillager;
 	private final RenderBiped rendererLevel3;
 
-	public VampireHunterRenderer() {
-		super(new ModelVampireHunter(false), 0.5F);
-		rendererLevel3 = new VampireHunterRenderer2();
-		rendererVillager = new RendererCustomVillager(new ModelVHVillager(0.0F), 0.0F);
+	public VampireHunterRenderer(RenderManager renderManager) {
+		super(renderManager,new ModelVampireHunter(false), 0.5F);
+		rendererLevel3 = new VampireHunterRenderer2(renderManager);
+		rendererVillager = new RendererCustomVillager(renderManager,new ModelVHVillager(0.0F), 0.0F);
 	}
 
 	@Override
@@ -86,11 +86,5 @@ public class VampireHunterRenderer extends RenderBiped {
 		return textureNormal;
 	}
 
-	@Override
-	public void setRenderManager(RenderManager manager) {
-		super.setRenderManager(manager);
-		rendererLevel3.setRenderManager(manager);
-		rendererVillager.setRenderManager(manager);
-	}
 
 }
