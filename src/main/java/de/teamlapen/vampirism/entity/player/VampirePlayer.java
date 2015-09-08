@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.player;
 
+import com.google.common.base.Predicate;
 import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.ModPotion;
@@ -131,7 +132,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 				player.getFoodStats().addStats(5, 1);
 			}
 
-			EnumDifficulty enumdifficulty = player.worldObj.difficultySetting;
+			EnumDifficulty enumdifficulty = player.worldObj.getDifficulty();
 
 			int newBloodLevel = getBlood();
 			newBloodLevel = Math.min(newBloodLevel + bloodToAdd, MAXBLOOD);
@@ -330,24 +331,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		}
 	}
 
-	private void func_71013_b(int direction) {
-		this.player.field_71079_bU = 0.0F;
-		this.player.field_71089_bV = 0.0F;
 
-		switch (direction) {
-		case 0:
-			this.player.field_71089_bV = -1.8F;
-			break;
-		case 1:
-			this.player.field_71079_bU = 1.8F;
-			break;
-		case 2:
-			this.player.field_71089_bV = 1.8F;
-			break;
-		case 3:
-			this.player.field_71079_bU = -1.8F;
-		}
-	}
 
 	@SideOnly(Side.CLIENT)
 	public List<IPieElement> getAvailableMinionCalls() {
@@ -357,7 +341,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			list.add(new DefaultPieElement(2, "minioncommand.vampirism.defendlord", 64, 0, minionCommandIconLoc, new float[] { 0.88F, 0.45F, 0 }));
 			list.add(new DefaultPieElement(5, "minioncommand.vampirism.justfollow", 112, 0, minionCommandIconLoc, new float[]{0.88F, 0.45F, 0}));
 			if (this.getMinionHandler().getMinionCount() > 0) {
-				list.add(new DefaultPieElement(3, "minioncommand.vampirism.attackhostilenoplayers", 0, 0, minionCommandIconLoc, new float[] { 0.6F, 0.3F, 0.01F }));
+				list.add(new DefaultPieElement(3, "minioncommand.vampirism.attackhostilenoplayers", 0, 0, minionCommandIconLoc, new float[]{0.6F, 0.3F, 0.01F}));
 				list.add(new DefaultPieElement(4, "minioncommand.vampirism.attackhostile", 32, 0, minionCommandIconLoc, new float[] { 0.6F, 0.3F, 0.01F }));
 			}
 
@@ -475,8 +459,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	}
 
 	public boolean gettingSundamage() {
-		if (player.worldObj != null && player.worldObj.provider.dimensionId == 0) {
-			if (player.worldObj.canBlockSeeTheSky(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ))) {
+		if (player.worldObj != null && player.worldObj.provider.getDimensionId() == 0) {
+			if (player.worldObj.canBlockSeeSky(player.getPosition())) {
 				if(Helper.isEntityInVampireBiome(player))return false;
 				return VampirismMod.isSunDamageTime(player.worldObj);
 			}
@@ -763,7 +747,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 		}
 
-		if (sleepingCoffin && !player.isEntityInvulnerable() && !(player.capabilities.disableDamage && !source.canHarmInCreative())) {
+		if (sleepingCoffin && !player.isEntityInvulnerable(source) && !(player.capabilities.disableDamage && !source.canHarmInCreative())) {
 			this.wakeUpPlayer(false, true, false, false);
 		}
 		return false;
@@ -1012,9 +996,9 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	/**
 	 * puts player to sleep on specified coffin if possible
 	 */
-	public EntityPlayer.EnumStatus sleepInCoffinAt(int x, int y, int z) {
+	public EntityPlayer.EnumStatus trySleepInCoffin(BlockPos pos) {
 		// Logger.d("VampirePlayer", String.format(
-		// "sleepInCoffinAt called, x=%s, y=%s, z=%s, remote=%s", x, y, z, this.isRemote()));
+		// "trySleepInCoffin called, x=%s, y=%s, z=%s, remote=%s", x, y, z, this.isRemote()));
 
 		if (!this.player.worldObj.isRemote) {
 			if (this.sleepingCoffin || !this.isTheEntityAlive()) {
@@ -1031,16 +1015,16 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 				return EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW;
 			}
 
-			if (Math.abs(this.player.posX - x) > 3.0D || Math.abs(this.player.posY - y) > 2.0D || Math.abs(this.player.posZ - z) > 3.0D) {
+			if (Math.abs(this.player.posX - pos.getX()) > 3.0D || Math.abs(this.player.posY - pos.getY()) > 2.0D || Math.abs(this.player.posZ - pos.getZ()) > 3.0D) {
 				return EntityPlayer.EnumStatus.TOO_FAR_AWAY;
 			}
 
 			double d0 = 8.0D;
 			double d1 = 5.0D;
-			List list = this.player.worldObj.selectEntitiesWithinAABB(EntityMob.class, AxisAlignedBB.getBoundingBox(x - d0, y - d1, z - d0, x + d0, y + d1, z + d0), new IEntitySelector() {
+			List list = this.player.worldObj.getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB(pos.add(-d0, -d1, -d0), pos.add(d0, d1, d0)), new Predicate<Entity>() {
 
 				@Override
-				public boolean isEntityApplicable(Entity entity) {
+				public boolean apply(Entity entity) {
 					if (!(entity instanceof EntityMob))
 						return false;
 					if (entity instanceof IMinion) {
@@ -1070,38 +1054,50 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 		Helper.Reflection.callMethod(Entity.class, this.player, Helper.Obfuscation.getPosNames("EntityPlayer/setSize"), new Class[]{float.class, float.class}, 0.2F, 0.2F);
 		// this.player.setSize(0.2F, 0.2F);
-		this.player.yOffset = 0.2F;
 
-		if (this.player.worldObj.blockExists(x, y, z)) {
-			int direction = ((BlockCoffin) player.worldObj.getBlock(x, y, z)).getDirection(player.worldObj, x, y, z);
+		if (this.player.worldObj.isBlockLoaded(pos)) {
+			EnumFacing enumFacing = ((BlockCoffin)player.worldObj.getBlockState(pos).getBlock()).getCoffinDirection(player.worldObj, pos);
 			float xOffset = 0.5F;
 			float zOffset = 0.5F;
-			float yOffset = 0.5F;
+			float yOffset = 0.5F;//0.6875
 
-			switch (direction) {
-			case 0:
-				zOffset = 1.8F;
-				break;
-			case 3:
-				xOffset = 1.8F;
-				break;
-			case 2:
-				zOffset = -0.8F;
-				break;
-			case 1:
-				xOffset = -0.8F;
+			switch (enumFacing) {
+				case SOUTH:
+					zOffset = 0.9F;
+					break;
+				case NORTH:
+					zOffset = 0.1F;
+					break;
+				case WEST:
+					xOffset= 0.1F;
+					break;
+				case EAST:
+					xOffset = 0.9F;
+
+//			OLD
+//			case 0:
+//				zOffset = 1.8F;
+//				break;
+//			case 3:
+//				xOffset = 1.8F;
+//				break;
+//			case 2:
+//				zOffset = -0.8F;
+//				break;
+//			case 1:
+//				xOffset = -0.8F;
 			}
 
-			this.func_71013_b(direction);
-			this.player.setPosition(x + xOffset, y + yOffset, z + zOffset);
+			this.func_175139_a(enumFacing);
+			this.player.setPosition(pos.getX() + xOffset, pos.getY() + yOffset, pos.getZ()+ zOffset);
 			Logger.i("VampirePlayer", String.format("Setting player position, xOffset=%.3f, yOffset=%.3f, zOffset=%.3f", xOffset, yOffset, zOffset));
 		} else {
-			this.player.setPosition(x + 0.5F, y + 0.9375F, z + 0.5F);
+			this.player.setPosition(pos.getX()+ 0.5F, pos.getY() + 0.9375F, pos.getZ() + 0.5F);
 			Logger.i("VampirePlayer", "blockExists(x,y,z) was false, standard offsets");
 		}
 
-		S0APacketUseBed s0apacketusebed = new S0APacketUseBed((this.player), x, y, z);
-		((EntityPlayerMP) this.player).getServerForPlayer().getEntityTracker().func_151247_a((this.player), s0apacketusebed);
+		S0APacketUseBed s0apacketusebed = new S0APacketUseBed((this.player), pos);
+		((EntityPlayerMP) this.player).getServerForPlayer().getEntityTracker().func_151248_b((this.player), s0apacketusebed);
 		((EntityPlayerMP) this.player).playerNetServerHandler.setPlayerLocation(((EntityPlayerMP) this.player).posX, ((EntityPlayerMP) this.player).posY, ((EntityPlayerMP) this.player).posZ,
 				((EntityPlayerMP) this.player).rotationYaw, ((EntityPlayerMP) this.player).rotationPitch);
 		((EntityPlayerMP) this.player).playerNetServerHandler.sendPacket(s0apacketusebed);
@@ -1113,7 +1109,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		// Following method will replace: this.player.sleepTimer = 0;
 		Helper.Reflection.setPrivateField(EntityPlayer.class, this.player, 0, Helper.Obfuscation.getPosNames("EntityPlayer/sleepTimer"));
 
-		this.player.playerLocation = new ChunkCoordinates(x, y, z);
+		this.player.playerLocation = pos;
 		this.player.motionX = this.player.motionZ = this.player.motionY = 0.0D;
 
 		if (!this.player.worldObj.isRemote) {
@@ -1123,6 +1119,27 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		VampirePlayer.get(player).sync(true);
 		return EntityPlayer.EnumStatus.OK;
 	}
+
+	private void func_175139_a(EnumFacing enumFacing) {
+		this.player.renderOffsetX=0F;
+		this.player.renderOffsetZ=0F;
+
+		switch (enumFacing){
+			case SOUTH:
+				this.player.renderOffsetZ=-1.8F;
+				break;
+			case NORTH:
+				this.player.renderOffsetZ=1.8F;
+				break;
+			case WEST:
+				this.player.renderOffsetX=1.8F;
+				break;
+			case EAST:
+				this.player.renderOffsetX=-1.8F;
+				break;
+		}
+	}
+
 
 	/**
 	 * Suck blood from an EntityLiving. Only sucks blood if health is low enough and if the entity has blood

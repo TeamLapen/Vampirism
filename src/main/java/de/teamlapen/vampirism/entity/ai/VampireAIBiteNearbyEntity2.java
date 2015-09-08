@@ -28,7 +28,7 @@ public class VampireAIBiteNearbyEntity2 extends EntityAIBase {
     @Override
     public boolean shouldExecute() {
         if (vampire.wantsBlood()) {
-            List list = vampire.worldObj.getEntitiesWithinAABB(EntityCreature.class, vampire.boundingBox.expand(2.5, 1.5, 2.5));
+            List list = vampire.worldObj.getEntitiesWithinAABB(EntityCreature.class, vampire.getEntityBoundingBox().expand(2.5, 1.5, 2.5));
             if (list.size() > 1) {
                 Collections.sort(list, new Comparator() {
                     @Override

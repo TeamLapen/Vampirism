@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.render.particle;
 
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
@@ -35,7 +36,7 @@ public class DarkLordParticle extends EntityFX {
 		else{
 			yoff+=entity.height;
 		}
-		EntityLivingBase renderentity = FMLClientHandler.instance().getClient().renderViewEntity;
+		Entity renderentity = FMLClientHandler.instance().getClient().getRenderViewEntity();
 		int visibleDistance = 64;
 		if (!FMLClientHandler.instance().getClient().gameSettings.fancyGraphics)
 			visibleDistance = 32;
@@ -43,7 +44,8 @@ public class DarkLordParticle extends EntityFX {
 			this.phy=Math.PI*2D;
 	}
 
-	@Override public void renderParticle(Tessellator tessellator, float partT, float p_70539_3_, float p_70539_4_, float p_70539_5_, float p_70539_6_, float p_70539_7_) {
+	@Override
+	public void func_180434_a(WorldRenderer worldRenderer, Entity player, float partT, float rotX, float rotXZ, float rotZ, float rotYZ, float rotXY) {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, alpha);
 		float baseX=0,baseY=0;
 		float sx=32/(float)256,sy=32/(float)256;
@@ -53,11 +55,10 @@ public class DarkLordParticle extends EntityFX {
 		float z = (float)(this.prevPosZ + (this.posZ - this.prevPosZ) * (double)partT - interpPosZ);
 
 		float s=this.particleScale*0.1F;
-		tessellator.addVertexWithUV((double) (x - p_70539_3_ *s - p_70539_6_*s), (double) (y - p_70539_4_ *s), (double) (z - p_70539_5_*s - p_70539_7_ *s), (double) baseX + sx, (double) baseY + sy);
-		tessellator.addVertexWithUV((double) (x - p_70539_3_ *s + p_70539_6_ *s), (double) (y + p_70539_4_*s ), (double) (z - p_70539_5_ *s+ p_70539_7_*s), (double) baseX + sx, (double) baseY);
-		tessellator.addVertexWithUV((double) (x + p_70539_3_ *s + p_70539_6_*s), (double) (y + p_70539_4_ *s), (double) (z + p_70539_5_ *s+ p_70539_7_ *s), (double) baseX, (double) baseY);
-		tessellator.addVertexWithUV((double) (x + p_70539_3_ - p_70539_6_ *s), (double) (y - p_70539_4_ *s), (double) (z + p_70539_5_ *s- p_70539_7_ *s), (double) baseX, (double) baseY + sy);
-
+		worldRenderer.addVertexWithUV((double) (x - rotX *s - rotYZ*s), (double) (y - rotXZ *s), (double) (z - rotZ*s - rotXY *s), (double) baseX + sx, (double) baseY + sy);
+		worldRenderer.addVertexWithUV((double) (x - rotX *s + rotYZ *s), (double) (y + rotXZ*s ), (double) (z - rotZ *s+ rotXY*s), (double) baseX + sx, (double) baseY);
+		worldRenderer.addVertexWithUV((double) (x + rotX *s + rotYZ*s), (double) (y + rotXZ *s), (double) (z + rotZ *s+ rotXY *s), (double) baseX, (double) baseY);
+		worldRenderer.addVertexWithUV((double) (x + rotX - rotYZ * s), (double) (y - rotXZ * s), (double) (z + rotZ * s - rotXY * s), (double) baseX, (double) baseY + sy);
 	}
 
 	public void onUpdate()

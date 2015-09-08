@@ -46,7 +46,7 @@ public class ReviveFallenSkill extends DefaultSkill {
 		int max = vampire.getMinionsLeft(true);
 		if (max == 0)
 			return false;
-		for (Object o : player.worldObj.getEntitiesWithinAABB(EntityDeadMob.class, player.boundingBox.expand(10, 10, 10))) {
+		for (Object o : player.worldObj.getEntitiesWithinAABB(EntityDeadMob.class, player.getEntityBoundingBox().expand(10, 10, 10))) {
 			EntityCreature e = ((EntityDeadMob)o).convertToMob();
 			if (e != null) {
 				VampireMob.get(e).makeMinion(vampire);

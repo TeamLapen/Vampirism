@@ -7,7 +7,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemDye;
@@ -50,7 +49,7 @@ public class BlockCoffin extends BasicBlockContainer {
 			world.spawnEntityInWorld(new EntityItem(world, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(ModItems.coffin, 1)));
 		if ((par & 4) != 0)
 			wakeSleepingPlayer(world, pos);
-		super.breakBlock(world,pos,state);
+		super.breakBlock(world, pos, state);
 	}
 
 
@@ -59,6 +58,10 @@ public class BlockCoffin extends BasicBlockContainer {
 		return new TileEntityCoffin();
 	}
 
+	public EnumFacing getCoffinDirection(IBlockAccess world,BlockPos pos){
+		//TODO implement
+		return null;
+	}
 	public int getDirection(World world, int x, int y, int z) {
 		return world.getBlockMetadata(x, y, z) & 3;
 	}
@@ -98,7 +101,7 @@ public class BlockCoffin extends BasicBlockContainer {
 					return true;
 				}
 
-				EntityPlayer.EnumStatus enumstatus = VampirePlayer.get(player).sleepInCoffinAt(pos);
+				EntityPlayer.EnumStatus enumstatus = VampirePlayer.get(player).trySleepInCoffin(pos);
 
 				if (enumstatus == EntityPlayer.EnumStatus.OK) {
 					setCoffinOccupied(world,pos, player, true);

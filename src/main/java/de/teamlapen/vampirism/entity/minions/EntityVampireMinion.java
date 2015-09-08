@@ -20,6 +20,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -77,7 +78,7 @@ public abstract class EntityVampireMinion extends EntityDefaultVampire implement
 	public EntityVampireMinion(World world) {
 		super(world);
 		// this.setSize(0.5F, 1.1F);
-		this.func_110163_bv();
+		this.enablePersistence();
 		this.tasks.addTask(6, new EntityAIAttackOnCollide(this, EntityLivingBase.class, 1.0, false));
 		this.tasks.addTask(15, new EntityAIWander(this, 0.7));
 		this.tasks.addTask(16, new EntityAIWatchClosest(this, EntityPlayer.class, 10));
@@ -108,8 +109,8 @@ public abstract class EntityVampireMinion extends EntityDefaultVampire implement
 	}
 
 	@Override
-	public void copyDataFrom(Entity from, boolean p) {
-		super.copyDataFrom(from, p);
+	public void copyDataFromOld(Entity from) {
+		super.copyDataFromOld(from);
 		if (from instanceof EntityVampireMinion) {
 			EntityVampireMinion m = (EntityVampireMinion) from;
 			this.copyDataFromMinion(m);
@@ -135,13 +136,15 @@ public abstract class EntityVampireMinion extends EntityDefaultVampire implement
 		return this.activeCommandId;
 	}
 
+
 	@Override
-	public float getBlockPathWeight(int x, int y, int z) {
-		float i = 0.5F - this.worldObj.getLightBrightness(x, y, z);
+	public float func_180484_a(BlockPos pos) {
+		float i = 0.5F - this.worldObj.getLightBrightness(pos);
 		if (i > 0)
 			return i;
 		return 0.01F;
 	}
+
 
 	/**
 	 * Has to return the command which is activated on default
@@ -213,7 +216,7 @@ public abstract class EntityVampireMinion extends EntityDefaultVampire implement
 		}
 		if (!this.worldObj.isRemote && !this.dead) {
 			@SuppressWarnings("rawtypes")
-			List list = this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.boundingBox.expand(1.0D, 0.0D, 1.0D));
+			List list = this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D));
 			@SuppressWarnings("rawtypes")
 			Iterator iterator = list.iterator();
 

@@ -6,9 +6,11 @@ import de.teamlapen.vampirism.entity.minions.IMinion;
 import de.teamlapen.vampirism.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.entity.minions.MinionHelper;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
+import de.teamlapen.vampirism.util.Helper18;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
@@ -77,7 +79,7 @@ public class MinionAIMoveToLord extends EntityAIBase {
 	@Override
 	public void resetTask() {
 		lord = null;
-		minion.getRepresentingEntity().getNavigator().setAvoidsWater(avoidWater);
+		Helper18.setAvoidsWater(minion.getRepresentingEntity(), avoidWater);
 	}
 
 	@Override
@@ -97,8 +99,8 @@ public class MinionAIMoveToLord extends EntityAIBase {
 	@Override
 	public void startExecuting() {
 		minion.getRepresentingEntity().getNavigator().tryMoveToEntityLiving(lord, 1.0);
-		avoidWater = minion.getRepresentingEntity().getNavigator().getAvoidsWater();
-		minion.getRepresentingEntity().getNavigator().setAvoidsWater(false);
+		avoidWater = Helper18.getAvoidsWater(minion.getRepresentingEntity());
+		Helper18.setAvoidsWater(minion.getRepresentingEntity(), false);
 	}
 
 	@Override
@@ -110,12 +112,13 @@ public class MinionAIMoveToLord extends EntityAIBase {
 				if (this.minion.getRepresentingEntity().getDistanceSqToEntity(lord) > TELEPORT_SQ_DISTANCE) {
 					int x = MathHelper.floor_double(lord.posX) - 2;
 					int z = MathHelper.floor_double(lord.posZ) - 2;
-					int y = MathHelper.floor_double(lord.boundingBox.minY);
+					int y = MathHelper.floor_double(lord.getEntityBoundingBox().minY);
 
 					for (int dx = 0; dx <= 4; ++dx) {
 						for (int dz = 0; dz <= 4; ++dz) {
-							if ((dx < 1 || dz < 1 || dx > 3 || dz > 3) && World.doesBlockHaveSolidTopSurface(lord.worldObj, x + dx, y - 1, z + dz)
-									&& !lord.worldObj.getBlock(x + dx, y, z + dz).isNormalCube() && !lord.worldObj.getBlock(x + dx, y + 1, z + dz).isNormalCube()) {
+							BlockPos temp=new BlockPos(x+dx,y,z+dz);
+							if ((dx < 1 || dz < 1 || dx > 3 || dz > 3) && World.doesBlockHaveSolidTopSurface(lord.worldObj, temp.down())
+									&& !lord.worldObj.getBlockState(temp).getBlock().isNormalCube() && !lord.worldObj.getBlockState(temp.up()).getBlock().isNormalCube()) {
 								minion.getRepresentingEntity().setLocationAndAngles(x + dx + 0.5F, y, z + dz + 0.5F,
 										MathHelper.wrapAngleTo180_float(lord.rotationYaw + 180F), MathHelper.wrapAngleTo180_float(lord.rotationPitch + 180F));
 								minion.getRepresentingEntity().getNavigator().clearPathEntity();

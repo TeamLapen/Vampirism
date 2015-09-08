@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.minions;
 
+import com.google.common.base.Predicate;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.command.IEntitySelector;
@@ -33,16 +34,16 @@ public class SaveableMinionHandler {
 
 	private final IMinionLord lord;
 
-	private final IEntitySelector livingBaseSelector;
+	private final Predicate<Entity> livingBaseSelector;
 
 	public SaveableMinionHandler(@NonNull final IMinionLord lord) {
 		minions = new ArrayList<IMinion>();
 		this.lord = lord;
 
-		livingBaseSelector = new IEntitySelector() {
+		livingBaseSelector = new Predicate<Entity>() {
 
 			@Override
-			public boolean isEntityApplicable(Entity e) {
+			public boolean apply(Entity e) {
 				if (!(e instanceof EntityLivingBase)) {
 					return false;
 				}
@@ -99,7 +100,7 @@ public class SaveableMinionHandler {
 	 * 
 	 * @return
 	 */
-	public IEntitySelector getLivingBaseSelectorExludingMinions() {
+	public Predicate getLivingBaseSelectorExludingMinions() {
 		return livingBaseSelector;
 	}
 

@@ -45,9 +45,10 @@ public class FreezeSkill extends DefaultSkill {
 
 	@Override
 	public boolean onActivated(final VampirePlayer vampire, final EntityPlayer player) {
-		List l = player.worldObj.getEntitiesWithinAABBExcludingEntity(player, player.boundingBox.expand(10, 5, 10), vampire.getMinionHandler().getLivingBaseSelectorExludingMinions());
+		List l = player.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, player.getEntityBoundingBox().expand(10, 5, 10), vampire.getMinionHandler().getLivingBaseSelectorExludingMinions());
 		for (Object o : l) {
 			if (o instanceof EntityBlindingBat) continue;
+			if(o.equals(player))continue;
 			EntityLivingBase e = (EntityLivingBase) o;
 			e.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, BALANCE.VP_SKILLS.FREEZE_DURATION * 20, 10));
 			e.addPotionEffect(new PotionEffect(Potion.resistance.id, BALANCE.VP_SKILLS.FREEZE_DURATION * 20, 10));

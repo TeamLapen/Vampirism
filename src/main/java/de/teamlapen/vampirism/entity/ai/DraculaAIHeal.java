@@ -11,7 +11,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathEntity;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.BlockPos;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,8 +27,8 @@ public class DraculaAIHeal extends EntityAIBase {
     boolean checked;
     private boolean atAltar;
     private PathEntity path;
-    private ChunkCoordinates currentPos;
-    private List<ChunkCoordinates> positions = new ArrayList<ChunkCoordinates>();
+    private BlockPos currentPos;
+    private List<BlockPos> positions = new ArrayList<BlockPos>();
 
     public DraculaAIHeal(EntityDracula dracula) {
         this.dracula = dracula;
@@ -47,7 +47,7 @@ public class DraculaAIHeal extends EntityAIBase {
             }
             if (positions.size() > 0) {
                 currentPos = positions.get(dracula.getRNG().nextInt(positions.size()));
-                path = dracula.getNavigator().getPathToXYZ(currentPos.posX, currentPos.posY, currentPos.posZ);
+                path = dracula.getNavigator().getPathToXYZ(currentPos.getX(), currentPos.getY(), currentPos.getZ());
                 if (path != null) return true;
                 currentPos = null;
                 path = null;
@@ -65,7 +65,7 @@ public class DraculaAIHeal extends EntityAIBase {
                     //  Logger.t("3");
                     return true;
                 }
-                if (dracula.getNavigator().tryMoveToXYZ(currentPos.posX, currentPos.posY, currentPos.posZ, 0.9F))
+                if (dracula.getNavigator().tryMoveToXYZ(currentPos.getX(), currentPos.getY(), currentPos.getZ(), 0.9F))
                     return true;
             }
         }
@@ -83,7 +83,7 @@ public class DraculaAIHeal extends EntityAIBase {
     @Override
     public void updateTask() {
         boolean remove = false;
-        if (dracula.getDistanceSq(currentPos.posX, currentPos.posY, currentPos.posZ) < 8) {
+        if (dracula.getDistanceSq(currentPos) < 8) {
             atAltar = true;
             dracula.getNavigator().clearPathEntity();
             if (isAltarAtPos(currentPos)) {
@@ -93,7 +93,7 @@ public class DraculaAIHeal extends EntityAIBase {
                         NBTTagCompound data = new NBTTagCompound();
                         data.setInteger("player_id", dracula.getEntityId());
                         data.setBoolean("direct", true);
-                        VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(0, currentPos.posX, currentPos.posY + 0.5, currentPos.posZ, 2, data));
+                        VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(0, currentPos.getX(), currentPos.getY() + 0.5, currentPos.getZ(), 2, data));
                         altar.removeBlood(5);
                         dracula.heal(10F);
                         dracula.addPotionEffect(new PotionEffect(Potion.resistance.id, 6, 2));
@@ -126,11 +126,12 @@ public class DraculaAIHeal extends EntityAIBase {
         for (int x = (int) (dracula.posX - 25); x < dracula.posX + 25; x++) {
             for (int y = (int) (dracula.posY - 5); y < dracula.posY + 10; y++) {
                 for (int z = (int) (dracula.posZ - 25); z < dracula.posZ + 25; z++) {
-                    if (ModBlocks.bloodAltar2.equals(dracula.worldObj.getBlock(x, y, z)) && ((TileEntityBloodAltar2) dracula.worldObj.getTileEntity(x, y, z)).getBloodAmount() > 0) {
+                    BlockPos p=new BlockPos(x,y,z);
+                    if (ModBlocks.bloodAltar2.equals(dracula.worldObj.getBlockState(p).getBlock()) && ((TileEntityBloodAltar2) dracula.worldObj.getTileEntity(p)).getBloodAmount() > 0) {
                         if (dracula.hasHome() && !dracula.isWithinHomeDistance(x, y, z)) {
                             continue;
                         }
-                        positions.add(new ChunkCoordinates(x, y, z));
+                        positions.add(p);
                     }
                 }
             }
@@ -139,9 +140,9 @@ public class DraculaAIHeal extends EntityAIBase {
     }
 
     private void updateAltars() {
-        Iterator<ChunkCoordinates> iterator = positions.iterator();
+        Iterator<BlockPos> iterator = positions.iterator();
         while (iterator.hasNext()) {
-            ChunkCoordinates pos = iterator.next();
+            BlockPos pos = iterator.next();
             if (isAltarAtPos(pos)) {
                 if (getAltarTile(pos).getBloodAmount() > 0) {
                     continue;
@@ -151,11 +152,11 @@ public class DraculaAIHeal extends EntityAIBase {
         }
     }
 
-    private boolean isAltarAtPos(ChunkCoordinates pos) {
-        return ModBlocks.bloodAltar2.equals(dracula.worldObj.getBlock(pos.posX, pos.posY, pos.posZ));
+    private boolean isAltarAtPos(BlockPos pos) {
+        return ModBlocks.bloodAltar2.equals(dracula.worldObj.getBlockState(pos).getBlock());
     }
 
-    private TileEntityBloodAltar2 getAltarTile(ChunkCoordinates pos) {
-        return ((TileEntityBloodAltar2) dracula.worldObj.getTileEntity(pos.posX, pos.posY, pos.posZ));
+    private TileEntityBloodAltar2 getAltarTile(BlockPos pos) {
+        return ((TileEntityBloodAltar2) dracula.worldObj.getTileEntity(pos));
     }
 }

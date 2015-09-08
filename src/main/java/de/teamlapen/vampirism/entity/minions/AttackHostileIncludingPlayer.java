@@ -19,7 +19,7 @@ public class AttackHostileIncludingPlayer extends DefaultMinionCommand {
 	public AttackHostileIncludingPlayer(int id, IMinion minion) {
 		super(id);
 		this.minion = minion;
-		attack = new EntityAINearestAttackableTarget(minion.getRepresentingEntity(), EntityLivingBase.class, 0, true, false, MinionHelper.getEntitySelectorForMinion(minion, EntityMob.class, true,
+		attack = new EntityAINearestAttackableTarget(minion.getRepresentingEntity(), EntityLivingBase.class, 0, true, false, MinionHelper.getPredicateForMinion(minion, EntityMob.class, true,
 				true));
 	}
 

@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.util.Helper18;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -8,6 +9,7 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
@@ -19,7 +21,7 @@ import net.minecraft.world.World;
 public class EntityGhost extends EntityMob {
 	public EntityGhost(World world) {
 		super(world);
-		this.getNavigator().setCanSwim(true);
+		Helper18.setCanSwim(this,true);
 		this.experienceValue = 20;
 		this.setSize(0.8F, 2.0F);
 		this.clearAITasks();
@@ -28,7 +30,7 @@ public class EntityGhost extends EntityMob {
 		this.tasks.addTask(4, new EntityAIWander(this, 1.0D));
 		this.tasks.addTask(2, new EntityAIFleeSun(this, 0.9F));
 		this.tasks.addTask(5, new EntityAISwimming(this));
-		this.targetTasks.addTask(0, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true));
+		this.targetTasks.addTask(0, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true, false, null));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, true));
 	}
 
@@ -80,28 +82,12 @@ public class EntityGhost extends EntityMob {
 //		}
 	}
 
-	/**
-	 * Testing purposes. Entities are having trouble attacking players; hopefully this will help out.
-	 */
-	@Override
-	protected Entity findPlayerToAttack() {
-		EntityPlayer entityplayer = this.worldObj.getClosestVulnerablePlayerToEntity(this, 24.0D);
-		return entityplayer != null && this.canEntityBeSeen(entityplayer) ? entityplayer : null;
-	}
 
-	/**
-	 * Takes a coordinate in and returns a weight to determine how likely this creature will try to path to the block. Args: x, y, z
-	 */
 	@Override
-	public float getBlockPathWeight(int p_70783_1_, int p_70783_2_, int p_70783_3_) {
+	public float func_180484_a(BlockPos pos) {
 		return 0.1F;
-		// return 0.5F - this.worldObj.getLightBrightness(p_70783_1_, p_70783_2_, p_70783_3_);
 	}
 
-	@Override
-	public boolean isAIEnabled() {
-		return true;
-	}
 
 	@Override
 	protected boolean isValidLightLevel() {
@@ -110,13 +96,9 @@ public class EntityGhost extends EntityMob {
 
 	/**
 	 * Ghost do not make any step sounds
-	 * @param p_145780_1_
-	 * @param p_145780_2_
-	 * @param p_145780_3_
-	 * @param p_145780_4_
 	 */
 	@Override
-	protected void func_145780_a(int p_145780_1_, int p_145780_2_, int p_145780_3_, Block p_145780_4_){
+	protected void playStepSound(BlockPos p_180429_1_, Block p_180429_2_) {
 		return;
 	}
 }

@@ -17,6 +17,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkCoordIntPair;
@@ -44,7 +45,7 @@ public class EntityDracula extends EntityDefaultVampireWithMinion implements IBo
 		this.tasks.addTask(12, new EntityAIWander(this, 0.7));
 		this.tasks.addTask(13, new EntityAILookIdle(this));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false,false,null));
 		this.experienceValue = 100;
 	}
 
@@ -96,7 +97,7 @@ public class EntityDracula extends EntityDefaultVampireWithMinion implements IBo
 			CastlePositionData.Position pos=CastlePositionData.get(worldObj).findPosAtChunk(chunkCoordX,chunkCoordZ,true);
 			if(pos!=null){
 				EntityDracula drac= (EntityDracula) EntityList.createEntityByName(REFERENCE.ENTITY.DRACULA_NAME,worldObj);
-				boolean flag=Helper.spawnEntityInWorld(worldObj, AxisAlignedBB.getBoundingBox(pos.getLowerMainCastle().chunkXPos<<4,pos.getHeight(),pos.getLowerMainCastle().chunkXPos<<4,pos.getUpperMainCastle().chunkXPos<<4,pos.getHeight()+10,pos.getUpperMainCastle().chunkZPos<<4),drac,10);
+				boolean flag=Helper.spawnEntityInWorld(worldObj, new AxisAlignedBB(pos.getLowerMainCastle().chunkXPos<<4,pos.getHeight(),pos.getLowerMainCastle().chunkXPos<<4,pos.getUpperMainCastle().chunkXPos<<4,pos.getHeight()+10,pos.getUpperMainCastle().chunkZPos<<4),drac,10);
 				if(flag){
 					drac.makeCastleLord(pos);
 					drac.setHealth(10);
@@ -136,9 +137,10 @@ public class EntityDracula extends EntityDefaultVampireWithMinion implements IBo
 		for (int x = (int) (this.posX - 25); x < this.posX + 25; x++) {
 			for (int y = (int) (this.posY - 5); y < this.posY + 10; y++) {
 				for (int z = (int) (this.posZ - 25); z < this.posZ + 25; z++) {
-					if (ModBlocks.bloodAltar2.equals(this.worldObj.getBlock(x, y, z))) {
-						((TileEntityBloodAltar2) worldObj.getTileEntity(x, y, z)).removeBlood(TileEntityBloodAltar2.MAX_BLOOD);
-						((TileEntityBloodAltar2) worldObj.getTileEntity(x, y, z)).addBlood(rand.nextInt(TileEntityBloodAltar2.MAX_BLOOD));
+					BlockPos temp=new BlockPos(x,y,z);
+					if (ModBlocks.bloodAltar2.equals(this.worldObj.getBlockState(temp).getBlock())) {
+						((TileEntityBloodAltar2) worldObj.getTileEntity(temp)).removeBlood(TileEntityBloodAltar2.MAX_BLOOD);
+						((TileEntityBloodAltar2) worldObj.getTileEntity(temp)).addBlood(rand.nextInt(TileEntityBloodAltar2.MAX_BLOOD));
 					}
 				}
 			}
@@ -165,10 +167,10 @@ public class EntityDracula extends EntityDefaultVampireWithMinion implements IBo
 
 		this.isJumping = false;
 
-		if (this.entityToAttack != null) {
+		if (this.getAttackTarget() != null) {
 
 			if(this.rand.nextInt(300)==0){
-				this.faceEntity(this.entityToAttack, 100.0F, 100.0F);
+				this.faceEntity(this.getAttackTarget(), 100.0F, 100.0F);
 			}
 		}
 
@@ -196,10 +198,10 @@ public class EntityDracula extends EntityDefaultVampireWithMinion implements IBo
 					damageCounter=0;
 				}
 			}
-			if (this.entityToAttack != null) {
-				if (this.entityToAttack instanceof EntityPlayer) {
+			if (this.getAttackTarget() != null) {
+				if (this.getAttackTarget() instanceof EntityPlayer) {
 					if (getMinionHandler().getMinionCount() < 4 && rand.nextInt(80) == 0) {
-						EntitySaveableVampireMinion entity = (EntitySaveableVampireMinion) Helper.spawnEntityBehindEntity((EntityLivingBase) this.entityToAttack, REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME);
+						EntitySaveableVampireMinion entity = (EntitySaveableVampireMinion) Helper.spawnEntityBehindEntity((EntityLivingBase) this.getAttackTarget(), REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME);
 						if (entity != null) {
 							entity.setLord(this);
 							entity.addPotionEffect(new PotionEffect(Potion.damageBoost.id, 20000, 2));
@@ -299,7 +301,7 @@ public class EntityDracula extends EntityDefaultVampireWithMinion implements IBo
 			Logger.w(TAG, "Pos %s does not contain lc or uc when setting home", pos);
 			return;
 		}
-		this.setHome(AxisAlignedBB.getBoundingBox(lc.chunkXPos << 4, pos.getHeight() - 1, lc.chunkZPos << 4, (uc.chunkXPos << 4) + 15, pos.getHeight() + 5, (uc.chunkZPos << 4) + 15));
+		this.setHome(new AxisAlignedBB(lc.chunkXPos << 4, pos.getHeight() - 1, lc.chunkZPos << 4, (uc.chunkXPos << 4) + 15, pos.getHeight() + 5, (uc.chunkZPos << 4) + 15));
 	}
 
 	private void summonBats(){
@@ -312,9 +314,9 @@ public class EntityDracula extends EntityDefaultVampireWithMinion implements IBo
 	}
 
 	public void freezeSkill() {
-		List l = worldObj.getEntitiesWithinAABBExcludingEntity(this, this.boundingBox.expand(10, 5, 10), this.getMinionHandler().getLivingBaseSelectorExludingMinions());
+		List l = worldObj.getEntitiesWithinAABB(EntityLivingBase.class, this.getEntityBoundingBox().expand(10, 5, 10), this.getMinionHandler().getLivingBaseSelectorExludingMinions());
 		for (Object o : l) {
-			if (o instanceof EntityBlindingBat) continue;
+			if (o instanceof EntityBlindingBat||o.equals(this)) continue;
 			EntityLivingBase e = (EntityLivingBase) o;
 			e.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, BALANCE.VP_SKILLS.FREEZE_DURATION * 20, 10));
 			e.addPotionEffect(new PotionEffect(Potion.resistance.id, BALANCE.VP_SKILLS.FREEZE_DURATION * 20, 10));

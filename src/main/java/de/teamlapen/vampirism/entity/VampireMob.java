@@ -173,7 +173,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		if (!isMinion()) {
 			Logger.w("VampireMob", "Trying to get lord, but mob is no minion");
 		}
-		EntityPlayer player = (lordId == null ? null : entity.worldObj.func_152378_a(lordId));
+		EntityPlayer player = (lordId == null ? null : entity.worldObj.getPlayerEntityByUUID(lordId));
 		return (player == null ? null : VampirePlayer.get(player));
 	}
 
@@ -264,7 +264,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 		this.setLord(lord);
 		setMinion();
 		this.activateMinionCommand(this.getCommand(0));
-		entity.func_110163_bv();
+		entity.enablePersistence();
 		this.sync();
 	}
 

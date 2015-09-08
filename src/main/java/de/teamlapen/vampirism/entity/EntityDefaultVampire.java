@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.ai.VampireAIBiteNearbyEntity2;
+import de.teamlapen.vampirism.util.Helper18;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
 import net.minecraft.entity.ai.EntityAIBreakDoor;
@@ -15,10 +16,10 @@ import net.minecraft.world.World;
 public class EntityDefaultVampire extends EntityVampireBase {
     public EntityDefaultVampire(World world) {
         super(world);
-        this.getNavigator().setBreakDoors(true);
+        Helper18.setBreakDoors(this,true);
         this.setSize(0.6F, 1.8F);
 
-        if (world.provider.dimensionId == VampirismMod.castleDimensionId) {
+        if (world.provider.getDimensionId() == VampirismMod.castleDimensionId) {
             this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
         } else {
             this.tasks.addTask(1, new EntityAIBreakDoor(this));

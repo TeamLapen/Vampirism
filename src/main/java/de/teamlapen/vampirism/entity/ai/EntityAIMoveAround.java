@@ -36,7 +36,7 @@ public class EntityAIMoveAround extends EntityAIBase {
 		this.creature = creature;
 		this.setMutexBits(1);
 		this.speed = speed;
-		oldPosition = Vec3.createVectorHelper(creature.posX, creature.posY, creature.posZ);
+		oldPosition = new Vec3(creature.posX, creature.posY, creature.posZ);
 		oldStopPosition = oldPosition;
 		this.teleportAtDay = teleportAtDay;
 	}
@@ -51,7 +51,7 @@ public class EntityAIMoveAround extends EntityAIBase {
 
 	@Override
 	public void resetTask() {
-		Vec3 s = Vec3.createVectorHelper(creature.posX, creature.posY, creature.posZ);
+		Vec3 s = new Vec3(creature.posX, creature.posY, creature.posZ);
 		if (oldStopPosition.squareDistanceTo(s) < 42 && (teleportAtDay || !creature.worldObj.isDaytime())) {
 			shortTrys++;
 		} else if (shortTrys > 0) {
@@ -67,7 +67,7 @@ public class EntityAIMoveAround extends EntityAIBase {
 		if (vec3 == null) {
 			return false;
 		} else {
-			oldPosition = Vec3.createVectorHelper(xPosition, yPosition, zPosition);
+			oldPosition = new Vec3(xPosition, yPosition, zPosition);
 			this.xPosition = vec3.xCoord;
 			this.yPosition = vec3.yCoord;
 			this.zPosition = vec3.zCoord;

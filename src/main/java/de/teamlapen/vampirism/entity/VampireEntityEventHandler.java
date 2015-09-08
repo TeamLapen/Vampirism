@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import com.google.common.base.Predicate;
 import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.VampirismMod;
@@ -12,8 +13,6 @@ import de.teamlapen.vampirism.util.DifficultyCalculator;
 import de.teamlapen.vampirism.util.DifficultyCalculator.Difficulty;
 import de.teamlapen.vampirism.util.DifficultyCalculator.IAdjustableLevel;
 import de.teamlapen.vampirism.util.Logger;
-import net.minecraft.command.IEntitySelector;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIAttackOnCollide;
@@ -27,7 +26,7 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.village.Village;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
@@ -74,7 +73,7 @@ public class VampireEntityEventHandler {
 		}
 
 		if (event.entity instanceof EntityHunterBase) {
-			if (event.world.provider.dimensionId == VampirismMod.castleDimensionId) {
+			if (event.world.provider.getDimensionId() == VampirismMod.castleDimensionId) {
 				event.entity.setDead();
 			} else if (event.entity instanceof EntityVampireHunter) {
 				// Set the home position of VampireHunters to a near village if one
@@ -84,12 +83,12 @@ public class VampireEntityEventHandler {
 					return;
 
 				if (event.world.villageCollectionObj != null) {
-					Village v = event.world.villageCollectionObj.findNearestVillage(MathHelper.floor_double(e.posX), MathHelper.floor_double(e.posY), MathHelper.floor_double(e.posZ), 20);
+					Village v = event.world.villageCollectionObj.getNearestVillage(e.getPosition(), 20);
 					if (v != null) {
 						int r = v.getVillageRadius();
 						//AxisAlignedBB box = AxisAlignedBB.getBoundingBox(v.getCenter().posX - r, 0, v.getCenter().posZ - r, v.getCenter().posX + r, event.world.getActualHeight(), v.getCenter().posZ + r);
-						ChunkCoordinates cc = v.getCenter();
-						e.setVillageArea(cc.posX, cc.posY, cc.posZ, r);
+						BlockPos cc = v.getCenter();
+						e.setVillageArea(cc, r);
 					}
 				}
 			}
@@ -106,10 +105,10 @@ public class VampireEntityEventHandler {
 					EntityAIBase t = ((EntityAITasks.EntityAITaskEntry) o).action;
 					if (t instanceof EntityAINearestAttackableTarget) {
 						targetTasks.removeTask(t);
-						targetTasks.addTask(3, new EntityAINearestAttackableTarget(golem, EntityLiving.class, 0, false, true, new IEntitySelector() {
+						targetTasks.addTask(3, new EntityAINearestAttackableTarget(golem, EntityLiving.class, 0, false, true, new Predicate() {
 
 							@Override
-							public boolean isEntityApplicable(Entity entity) {
+							public boolean apply(Object entity) {
 								return entity instanceof IMob && !(entity instanceof EntityHunterBase);
 							}
 

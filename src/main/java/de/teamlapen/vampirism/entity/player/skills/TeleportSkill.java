@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 
 public class TeleportSkill extends DefaultSkill {
@@ -51,28 +52,26 @@ public class TeleportSkill extends DefaultSkill {
 			player.worldObj.playSoundAtEntity(player, "note.bass", 1.0F, 1.0F);
 			return false;// TODO make something else
 		}
-		int x = pos.blockX;
-		int y = pos.blockY + 1;
-		int z = pos.blockZ;
-		player.setPosition(x, y, z);
+		BlockPos target=pos.getBlockPos().up();
+		player.setPosition(target.getX(),target.getY(),target.getZ());
 		boolean flag = false;
-		if (player.worldObj.blockExists(x, y, z)) {
+		if (player.worldObj.isBlockLoaded(target)) {
 			boolean flag1 = false;
 
-			while (!flag1 && y > 0) {
-				Block block = player.worldObj.getBlock(x, y - 1, z);
+			while (!flag1 && target.getY() > 0) {
+				Block block = player.worldObj.getBlockState(target.down()).getBlock();
 				if (block.getMaterial().blocksMovement())
 					flag1 = true;
 				else {
 					--player.posY;
-					--y;
+					target=target.down();
 				}
 			}
 
 			if (flag1) {
-				player.setPosition(x, y, z);
+				player.setPosition(target.getX(),target.getY(),target.getZ());
 
-				if (player.worldObj.getCollidingBoundingBoxes(player, player.boundingBox).isEmpty() && !player.worldObj.isAnyLiquid(player.boundingBox)) {
+				if (player.worldObj.getCollidingBoundingBoxes(player, player.getEntityBoundingBox()).isEmpty() && !player.worldObj.isAnyLiquid(player.getEntityBoundingBox())) {
 					flag = true;
 				} else {
 					Logger.d("debug", "CollidingBox not empty or liquid");
@@ -90,7 +89,7 @@ public class TeleportSkill extends DefaultSkill {
 		if (player instanceof EntityPlayerMP) {
 			EntityPlayerMP playerMp = (EntityPlayerMP) player;
 			playerMp.mountEntity(null);
-			playerMp.setPositionAndUpdate(x, y, z);
+			playerMp.setPositionAndUpdate(target.getX(),target.getY(),target.getZ());
 		}
 		player.worldObj.playSoundEffect(ox, oy, oz, "mob.endermen.portal", 1.0F, 1.0F);
 		player.playSound("mob.endermen.portal", 1.0F, 1.0F);

@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import com.google.common.base.Predicate;
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.entity.ai.HunterAIDefendVillage;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
@@ -9,9 +10,8 @@ import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.DifficultyCalculator.Difficulty;
 import de.teamlapen.vampirism.util.DifficultyCalculator.IAdjustableLevel;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.Helper18;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.command.IEntitySelector;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
@@ -22,7 +22,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 
@@ -41,7 +42,7 @@ public class EntityVampireHunter extends EntityHunterBase implements ISyncable, 
 	public EntityVampireHunter(World p_i1738_1_) {
 		super(p_i1738_1_);
 
-		this.getNavigator().setBreakDoors(true);
+		Helper18.setBreakDoors(this, true);
 		this.setSize(0.6F, 1.8F);
 
 		// Tasks (more tasks may be added in setLookingForHome()
@@ -56,10 +57,10 @@ public class EntityVampireHunter extends EntityHunterBase implements ISyncable, 
 		// TargetTasks (more tasks may be added in setHomeArea)
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true, false, new IEntitySelector() {
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true, false, new Predicate() {
 
 			@Override
-			public boolean isEntityApplicable(Entity entity) {
+			public boolean apply(Object entity) {
 				if (entity instanceof EntityPlayer) {
 					return VampirePlayer.get((EntityPlayer) entity).getLevel() > BALANCE.VAMPIRE_HUNTER_ATTACK_LEVEL;
 				}
@@ -67,7 +68,7 @@ public class EntityVampireHunter extends EntityHunterBase implements ISyncable, 
 			}
 
 		}));
-		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVampireBase.class, 0, true));
+		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVampireBase.class, 0, true,false,null));
 
 		// Default to not in a village, will be set to false in
 		// WorldGenVampirism when generated on the surface in a village
@@ -97,10 +98,7 @@ public class EntityVampireHunter extends EntityHunterBase implements ISyncable, 
 		return isLookingForHome && super.canDespawn();
 	}
 
-	@Override
-	public float getBlockPathWeight(int p_70783_1_, int p_70783_2_, int p_70783_3_) {
-		return 0.5F;
-	}
+
 
 	@Override
 	protected Item getDropItem() {
@@ -115,8 +113,8 @@ public class EntityVampireHunter extends EntityHunterBase implements ISyncable, 
 	public Village getHomeVillage() {
 		if (isLookingForHome)
 			return null;
-		ChunkCoordinates cc = this.getHomePosition();
-		return this.worldObj.villageCollectionObj.findNearestVillage(cc.posX, cc.posY, cc.posZ, 10);
+		BlockPos cc = this.getHomePosition();
+		return this.worldObj.villageCollectionObj.getNearestVillage(cc, 10);
 	}
 
 	@Override
@@ -140,8 +138,8 @@ public class EntityVampireHunter extends EntityHunterBase implements ISyncable, 
 
 	@Override
 	protected void onDeathUpdate() {
-		this.worldObj.spawnParticle("depthsuspend", posX, posY, posZ, 0.5F, 0.5F, 0.5F);
-		this.worldObj.spawnParticle("mobSpellAmbient", posX, posY, posZ, 0.5F, 0.5F, 0.5F);
+		this.worldObj.spawnParticle(EnumParticleTypes.SUSPENDED, posX, posY, posZ, 0.5F, 0.5F, 0.5F);
+		this.worldObj.spawnParticle(EnumParticleTypes.SPELL_MOB_AMBIENT, posX, posY, posZ, 0.5F, 0.5F, 0.5F);
 		super.onDeathUpdate();
 	}
 
@@ -160,8 +158,8 @@ public class EntityVampireHunter extends EntityHunterBase implements ISyncable, 
 	/**
 	 * Makes the hunter not look for a new home anymore, sets the home area and adds village specific AI tasks
 	 */
-	public void setVillageArea(int p_110171_1_, int p_110171_2_, int p_110171_3_, int p_110171_4_) {
-		super.setHomeArea(p_110171_1_, p_110171_2_, p_110171_3_, p_110171_4_);
+	public void setVillageArea(BlockPos pos, int r) {
+		super.setHomeArea(pos, r);
 		if (isLookingForHome) {
 			isLookingForHome = false;
 			this.tasks.addTask(3, new EntityAIMoveTowardsRestriction(this, 1.0F));

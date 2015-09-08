@@ -39,8 +39,8 @@ public class EntityVampireBaron extends EntityDefaultVampireWithMinion implement
 		this.tasks.addTask(9, new EntityAILookIdle(this));
 		this.tasks.addTask(6, new EntityAIAttackOnCollide(this, EntityVampireBaron.class, 1.0D, false));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
-		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVampireBaron.class, 5, false));
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false,false,null));
+		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVampireBaron.class, 5, false,false,null));
 
 	}
 
@@ -88,9 +88,11 @@ public class EntityVampireBaron extends EntityDefaultVampireWithMinion implement
 	}
 
 	@Override
-	public String getCommandSenderName() {
-		return super.getCommandSenderName() + " " + StatCollector.translateToLocal("text.vampirism.entity_level") + " " + level;
+	public String getName() {
+		return super.getName()+" "+StatCollector.translateToLocal("text.vampirism.entity_level")+ " "+level;
 	}
+
+
 
 
 
@@ -155,14 +157,14 @@ public class EntityVampireBaron extends EntityDefaultVampireWithMinion implement
 				m = (IMinion) Helper.spawnEntityBehindEntity(this.getAttackTarget(), REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME);
 			}
 			if (m == null) {
-				m = (IMinion) Helper.spawnEntityInWorld(worldObj, this.boundingBox.expand(19, 4, 19), REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME, 3);
+				m = (IMinion) Helper.spawnEntityInWorld(worldObj, this.getEntityBoundingBox().expand(19, 4, 19), REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME, 3);
 			}
 			if (m != null) {
 				m.setLord(this);
 			}
 		}
 		if (!this.worldObj.isRemote && this.isGettingSundamage()) {
-			if (this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ))) {
+			if (this.worldObj.canBlockSeeSky(this.getPosition())) {
 				this.teleportAway();
 			}
 		}
@@ -262,7 +264,7 @@ public class EntityVampireBaron extends EntityDefaultVampireWithMinion implement
 	}
 
 	@Override public boolean getCanSpawnHere() {
-		int i = MathHelper.floor_double(this.boundingBox.minY);
+		int i = MathHelper.floor_double(this.getEntityBoundingBox().minY);
 		//Only spawn on the surface
 		if(i<60)return false;
 		CastlePositionData data = CastlePositionData.get(worldObj);

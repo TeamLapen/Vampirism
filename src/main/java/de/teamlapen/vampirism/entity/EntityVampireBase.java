@@ -3,10 +3,12 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.Helper18;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
@@ -20,7 +22,7 @@ public abstract class EntityVampireBase extends EntityVampirism {
 
     public EntityVampireBase(World p_i1595_1_) {
         super(p_i1595_1_);
-        this.getNavigator().setAvoidsWater(true);
+        Helper18.setAvoidsWater(this, true);
         this.tasks.addTask(0, new EntityAISwimming(this));
     }
 
@@ -31,7 +33,7 @@ public abstract class EntityVampireBase extends EntityVampirism {
     public boolean isGettingSundamage(boolean forceRefresh) {
         if (this.ticksExisted % 5 != 0) return sundamageCache;
         float brightness = this.getBrightness(1.0F);
-        boolean canSeeSky = this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
+        boolean canSeeSky = this.worldObj.canBlockSeeSky(this.getPosition());
         if (brightness > 0.5F) {
             if (Helper.isEntityInVampireBiome(this)) return false;
             if (VampirismMod.isSunDamageTime(this.worldObj) && canSeeSky) {
@@ -53,20 +55,19 @@ public abstract class EntityVampireBase extends EntityVampirism {
 
     protected boolean isValidLightLevel() {
         if (Helper.isEntityInVampireBiome(this)) return true;
-        int i = MathHelper.floor_double(this.posX);
-        int j = MathHelper.floor_double(this.boundingBox.minY);
-        int k = MathHelper.floor_double(this.posZ);
+        BlockPos pos=new BlockPos(this.posX,this.getEntityBoundingBox().minY,this.posZ);
 
-        if (this.worldObj.getSavedLightValue(EnumSkyBlock.Sky, i, j, k) > this.rand.nextInt(32)) {
+
+        if (this.worldObj.getLightFor(EnumSkyBlock.SKY, pos) > this.rand.nextInt(32)) {
             return false;
         } else {
-            int l = this.worldObj.getBlockLightValue(i, j, k);
+            int l = this.worldObj.getLightFromNeighbors(pos);
 
             if (this.worldObj.isThundering()) {
-                int i1 = this.worldObj.skylightSubtracted;
-                this.worldObj.skylightSubtracted = 10;
-                l = this.worldObj.getBlockLightValue(i, j, k);
-                this.worldObj.skylightSubtracted = i1;
+                int i1 = this.worldObj.getSkylightSubtracted();
+                this.worldObj.setSkylightSubtracted(10);
+                l = this.worldObj.getLightFromNeighbors(pos);
+                this.worldObj.setSkylightSubtracted(i1);
             }
 
             return l <= this.rand.nextInt(8);

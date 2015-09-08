@@ -73,8 +73,8 @@ public class EntitySaveableVampireMinion extends EntityVampireMinion {
 	}
 
 	@Override
-	public void copyDataFrom(Entity from, boolean p) {
-		super.copyDataFrom(from, p);
+	public void copyDataFromOld(Entity from) {
+		super.copyDataFromOld(from);
 		if (from instanceof EntitySaveableVampireMinion) {
 			EntitySaveableVampireMinion m = (EntitySaveableVampireMinion) from;
 			this.setLord(m.getLord());

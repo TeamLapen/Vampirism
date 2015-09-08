@@ -58,7 +58,7 @@ public class EntityAIAvoidVampirePlayer extends EntityAIBase {
 		if (p.getLevel() < avoidLevel) {
 			return false;
 		}
-		Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(this.entity, 16, 7, Vec3.createVectorHelper(this.closestPlayer.posX, this.closestPlayer.posY, this.closestPlayer.posZ));
+		Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockAwayFrom(this.entity, 16, 7, new Vec3(this.closestPlayer.posX, this.closestPlayer.posY, this.closestPlayer.posZ));
 
 		if (vec3 == null) {
 			return false;

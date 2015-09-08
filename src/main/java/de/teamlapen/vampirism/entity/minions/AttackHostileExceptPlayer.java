@@ -19,7 +19,7 @@ public class AttackHostileExceptPlayer extends DefaultMinionCommand {
 		super(id);
 		minion = m;
 
-		attack = new EntityAINearestAttackableTarget(m.getRepresentingEntity(), EntityMob.class, 0, true, false, MinionHelper.getEntitySelectorForMinion(minion, EntityMob.class, false, true));
+		attack = new EntityAINearestAttackableTarget(m.getRepresentingEntity(), EntityMob.class, 0, true, false, MinionHelper.getPredicateForMinion(minion, EntityMob.class, false, true));
 	}
 
 	@Override

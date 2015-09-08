@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.ai;
 
+import com.google.common.base.Predicate;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -16,12 +17,12 @@ public class EntityAIWarnPlayer extends EntityAIBase {
 	protected int perTick=1;
 	protected String unLoc;
 	private EntityPlayer closestEntity;
-	private IEntitySelector selector;
+	private Predicate selector;
 	private int tick;
 	public EntityAIWarnPlayer(EntityLiving entity,int distance,String unlocText,int perTick){
 		this(entity, distance, unlocText, perTick,null);
 	}
-	public EntityAIWarnPlayer(EntityLiving entity,int distance,String unlocText,int perTick,IEntitySelector selector){
+	public EntityAIWarnPlayer(EntityLiving entity,int distance,String unlocText,int perTick,Predicate selector){
 		this.distance=distance;
 		this.perTick=perTick;
 		this.entityLiving=entity;
@@ -31,7 +32,7 @@ public class EntityAIWarnPlayer extends EntityAIBase {
 	@Override public boolean shouldExecute() {
 		this.closestEntity = entityLiving.worldObj.getClosestPlayerToEntity(entityLiving, (double)distance);
 		if(closestEntity!=null&&selector!=null){
-			return selector.isEntityApplicable(closestEntity);
+			return selector.apply(closestEntity);
 		}
 		return closestEntity!=null;
 	}

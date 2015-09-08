@@ -7,10 +7,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
@@ -45,7 +42,7 @@ public abstract class EntityVampirism extends EntityCreature {
     public void onUpdate() {
         super.onUpdate();
 
-        if (!this.worldObj.isRemote && !peaceful && this.worldObj.difficultySetting == EnumDifficulty.PEACEFUL) {
+        if (!this.worldObj.isRemote && !peaceful && this.worldObj.getDifficulty()== EnumDifficulty.PEACEFUL) {
             this.setDead();
         }
     }
@@ -57,12 +54,12 @@ public abstract class EntityVampirism extends EntityCreature {
 
     @Override
     public boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_) {
-        if (this.isEntityInvulnerable()) {
+        if (this.isEntityInvulnerable(p_70097_1_)) {
             return false;
         } else if (super.attackEntityFrom(p_70097_1_, p_70097_2_)) {
             Entity entity = p_70097_1_.getEntity();
             if (entity instanceof EntityLivingBase) {
-                this.setTarget(entity);
+                this.setAttackTarget((EntityLivingBase) entity);
             }
             return true;
         }
@@ -100,8 +97,8 @@ public abstract class EntityVampirism extends EntityCreature {
         int i = 0;
 
         if (entity instanceof EntityLivingBase) {
-            f += EnchantmentHelper.getEnchantmentModifierLiving(this, (EntityLivingBase) entity);
-            i += EnchantmentHelper.getKnockbackModifier(this, (EntityLivingBase) entity);
+            f += EnchantmentHelper.func_152377_a(this.getHeldItem(), ((EntityLivingBase) entity).getCreatureAttribute());
+            i += EnchantmentHelper.getKnockbackModifier(this);
         }
 
         boolean flag = entity.attackEntityFrom(DamageSource.causeMobDamage(this), f);
@@ -134,14 +131,10 @@ public abstract class EntityVampirism extends EntityCreature {
         return flag;
     }
 
-    @Override
-    public boolean isAIEnabled() {
-        return true;
-    }
 
 
     public boolean getCanSpawnHere() {
-        return (peaceful || this.worldObj.difficultySetting != EnumDifficulty.PEACEFUL) && super.getCanSpawnHere();
+        return (peaceful || this.worldObj.getDifficulty()!= EnumDifficulty.PEACEFUL) && super.getCanSpawnHere();
     }
 
     protected void applyEntityAttributes() {
@@ -168,7 +161,7 @@ public abstract class EntityVampirism extends EntityCreature {
 
     public boolean isWithinHomeDistance(double x, double y, double z) {
         if (home != null) {
-            return home.isVecInside(Vec3.createVectorHelper(x, y, z));
+            return home.isVecInside(new Vec3(x, y, z));
         }
         return true;
     }
@@ -179,23 +172,41 @@ public abstract class EntityVampirism extends EntityCreature {
     }
 
     @Override
+    public boolean func_180485_d(BlockPos p_180485_1_) {
+        return this.isWithinHomeDistance(p_180485_1_);
+    }
+
+    public boolean isWithinHomeDistance(BlockPos pos){
+        return this.isWithinHomeDistance(pos.getX(),pos.getY(),pos.getZ());
+    }
+
     public boolean isWithinHomeDistance(int p_110176_1_, int p_110176_2_, int p_110176_3_) {
         return this.isWithinHomeDistance((double) p_110176_1_, (double) p_110176_2_, (double) p_110176_3_);
     }
 
+
+
     @Override
-    public void setHomeArea(int x, int y, int z, int r) {
-        this.setHome(AxisAlignedBB.getBoundingBox(x - r, y - r, z - r, x + r, y + r, z + r));
+    public void func_175449_a(BlockPos p_175449_1_, int p_175449_2_) {
+        this.setHomeArea(p_175449_1_,p_175449_2_);
+    }
+
+    public void setHomeArea(BlockPos pos, int r) {
+        this.setHome(new AxisAlignedBB(pos.add(-r,-r,-r),pos.add(r,r,r)));
     }
 
     @Override
-    public ChunkCoordinates getHomePosition() {
-        if (!hasHome()) return new ChunkCoordinates(0, 0, 0);
-        ChunkCoordinates center = new ChunkCoordinates(0, 0, 0);
-        center.posX = (int) (home.minX + (home.maxX - home.minX) / 2);
-        center.posY = (int) (home.minY + (home.maxY - home.minY) / 2);
-        center.posZ = (int) (home.minZ + (home.maxZ - home.minZ) / 2);
-        return center;
+    public BlockPos func_180486_cf() {
+        return getHomePosition();
+    }
+
+    public BlockPos getHomePosition() {
+        if (!hasHome()) return new BlockPos(0, 0, 0);
+        int posX,posY,posZ;
+        posX = (int) (home.minX + (home.maxX - home.minX) / 2);
+        posY = (int) (home.minY + (home.maxY - home.minY) / 2);
+        posZ = (int) (home.minZ + (home.maxZ - home.minZ) / 2);
+        return new BlockPos(posX,posY,posZ);
     }
 
     @Override
@@ -203,9 +214,7 @@ public abstract class EntityVampirism extends EntityCreature {
         this.home = null;
     }
 
-    @Override
-    protected void updateEntityActionState() {
-    }
+
 
     public AxisAlignedBB getHome() {
         return home;
@@ -226,7 +235,7 @@ public abstract class EntityVampirism extends EntityCreature {
         if (nbt.hasKey("home")) {
             saveHome = true;
             int[] h = nbt.getIntArray("home");
-            home = AxisAlignedBB.getBoundingBox(h[0], h[1], h[2], h[3], h[4], h[5]);
+            home = new AxisAlignedBB(h[0], h[1], h[2], h[3], h[4], h[5]);
         }
     }
 }

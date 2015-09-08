@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.Configs;
+import de.teamlapen.vampirism.util.Helper18;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.world.World;
 
@@ -10,7 +11,7 @@ import net.minecraft.world.World;
 public class EntityHunterBase extends EntityVampirism {
     public EntityHunterBase(World world) {
         super(world);
-        this.getNavigator().setAvoidsWater(true);
+        Helper18.setAvoidsWater(this,true);
         this.tasks.addTask(0, new EntityAISwimming(this));
     }
 

@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import com.google.common.base.Predicate;
 import de.teamlapen.vampirism.entity.ai.EntityAIWarnPlayer;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -21,8 +22,8 @@ import net.minecraft.world.World;
 public class EntityPortalGuard extends EntityMob {
 	public EntityPortalGuard(World world) {
 		super(world);
-		IEntitySelector playerSelector=new IEntitySelector() {
-			@Override public boolean isEntityApplicable(Entity entity) {
+		Predicate playerSelector=new Predicate() {
+			@Override public boolean apply(Object entity) {
 				if(entity instanceof EntityPlayer){
 					return VampirePlayer.get((EntityPlayer) entity).getLevel()< REFERENCE.HIGHEST_REACHABLE_LEVEL;
 				}
@@ -41,10 +42,6 @@ public class EntityPortalGuard extends EntityMob {
 
 	@Override
 	public boolean doesEntityNotTriggerPressurePlate() {
-		return true;
-	}
-
-	@Override protected boolean isAIEnabled() {
 		return true;
 	}
 

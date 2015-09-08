@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
 import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.Helper18;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
@@ -87,7 +88,7 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 
 	public EntityRemoteVampireMinion(World world) {
 		super(world);
-		this.tasks.addTask(2, new EntityAIAvoidEntity(this, EntityHunterBase.class, MathHelper.floor_float(BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER * 1.5F), 1.1, 1.4));
+		this.tasks.addTask(2, new EntityAIAvoidEntity(this, Helper18.getPredicateForClass(EntityHunterBase.class), MathHelper.floor_float(BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER * 1.5F), 1.1, 1.4));
 		this.tasks.addTask(2, new EntityAIRestrictSun(this));
 		this.tasks.addTask(7, new VampireAIFleeSun(this, 1.1F, true));
 		commands = new ArrayList<IMinionCommand>();
@@ -116,8 +117,8 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 	}
 
 	@Override
-	public void copyDataFrom(Entity from, boolean p) {
-		super.copyDataFrom(from, p);
+	public void copyDataFromOld(Entity from) {
+		super.copyDataFromOld(from);
 		if (from instanceof EntityRemoteVampireMinion) {
 			EntityRemoteVampireMinion m = (EntityRemoteVampireMinion) from;
 			lordId = m.lordId;
@@ -146,7 +147,7 @@ public class EntityRemoteVampireMinion extends EntityVampireMinion {
 
 	@Override
 	public @Nullable IMinionLord getLord() {
-		EntityPlayer player = (lordId == null ? null : worldObj.func_152378_a(lordId));
+		EntityPlayer player = (lordId == null ? null : worldObj.getPlayerEntityByUUID(lordId));
 		return (player == null ? null : VampirePlayer.get(player));
 	}
 

@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.entity;
 
+import com.google.common.base.Predicate;
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
 import de.teamlapen.vampirism.entity.ai.VampireAIMoveToBiteable;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.Helper18;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -19,7 +21,7 @@ public class EntityVampire extends EntityDefaultVampire {
 	public EntityVampire(World par1World) {
 		super(par1World);
 		// Avoids Vampire Hunters
-		this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityHunterBase.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.2));
+		this.tasks.addTask(3, new EntityAIAvoidEntity(this, Helper18.getPredicateForClass(EntityHunterBase.class), BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.2));
 		this.tasks.addTask(3, new EntityAIRestrictSun(this));
 		this.tasks.addTask(4, new VampireAIFleeSun(this, 0.9F));
 		// Low priority tasks
@@ -30,9 +32,9 @@ public class EntityVampire extends EntityDefaultVampire {
 
 		// Search for players
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true, false, new IEntitySelector() {
+		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true, false, new Predicate() {
 			@Override
-			public boolean isEntityApplicable(Entity entity) {
+			public boolean apply(Object entity) {
 				if (entity instanceof EntityPlayer) {
 					return VampirePlayer.get((EntityPlayer) entity).getLevel() <= BALANCE.VAMPIRE_FRIENDLY_LEVEL || (!EntityVampire.this.isInCastle() && VampirePlayer.get((EntityPlayer) entity).isVampireLord());
 				}

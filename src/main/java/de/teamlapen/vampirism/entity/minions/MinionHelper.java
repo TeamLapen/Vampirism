@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.minions;
 
+import com.google.common.base.Predicate;
 import de.teamlapen.vampirism.entity.EntityVampire;
 import de.teamlapen.vampirism.entity.VampireMob;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
@@ -33,11 +34,11 @@ public class MinionHelper {
 	 *            If vampire npc should be excluded. Does not exclude vampires if the minions lord is a vampire lord
 	 * @return
 	 */
-	public static IEntitySelector getEntitySelectorForMinion(final IMinion minion, final Class<? extends Entity> targetClass, final boolean selectPlayer, final boolean excludeVampires) {
-		return new IEntitySelector() {
+	public static Predicate<Entity> getPredicateForMinion(final IMinion minion, final Class<? extends Entity> targetClass, final boolean selectPlayer, final boolean excludeVampires) {
+		return new Predicate<Entity>(){
 
 			@Override
-			public boolean isEntityApplicable(Entity entity) {
+			public boolean apply(Entity entity) {
 				IMinion m = MinionHelper.getMinionFromEntity(entity);
 				if (selectPlayer) {
 					if (MinionHelper.isLordSafe(m, minion.getLord())) return false;
@@ -93,7 +94,7 @@ public class MinionHelper {
 	 */
 	public static List<VampireMob> getNearMobMinions(IMinionLord lord, int distance) {
 		List<VampireMob> list = new ArrayList<VampireMob>();
-		List list2 = lord.getRepresentingEntity().worldObj.getEntitiesWithinAABB(EntityCreature.class, lord.getRepresentingEntity().boundingBox.expand(distance, distance, distance));
+		List list2 = lord.getRepresentingEntity().worldObj.getEntitiesWithinAABB(EntityCreature.class, lord.getRepresentingEntity().getEntityBoundingBox().expand(distance, distance, distance));
 		for (Object o : list2) {
 			VampireMob m = VampireMob.get((EntityCreature) o);
 			if (m.isMinion() && isLordSafe(m, lord)) {
@@ -169,7 +170,7 @@ public class MinionHelper {
 		IMinionLord l = m.getLord();
 		if (l != null && l.getRepresentingEntity() instanceof EntityPlayer) {
 			ChatComponentStyle c1;
-			if (m.getRepresentingEntity().hasCustomNameTag()) {
+			if (m.getRepresentingEntity().hasCustomName()) {
 				c1 = new ChatComponentText(m.getRepresentingEntity().getCustomNameTag());
 			} else {
 				c1 = new ChatComponentTranslation("text.vampirism.minion");

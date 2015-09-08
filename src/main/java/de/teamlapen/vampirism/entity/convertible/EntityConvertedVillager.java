@@ -6,9 +6,11 @@ import de.teamlapen.vampirism.entity.ai.VVillagerAITrade;
 import de.teamlapen.vampirism.entity.ai.VampireAIMoveIndoors;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
+import de.teamlapen.vampirism.util.Helper18;
 import net.minecraft.entity.IMerchant;
 import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
 import net.minecraft.entity.ai.EntityAIOpenDoor;
+import net.minecraft.entity.item.EntityXPOrb;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -29,6 +31,8 @@ import java.util.Random;
  */
 public class EntityConvertedVillager extends EntityConvertedCreature implements IMerchant {
 
+
+    private boolean isWillingToTrade;
 
     public static class VillagerConvertingHandler extends ConvertingHandler<EntityVillager> {
         @Override
@@ -56,7 +60,7 @@ public class EntityConvertedVillager extends EntityConvertedCreature implements 
 
     public EntityConvertedVillager(World world) {
         super(world);
-        this.getNavigator().setBreakDoors(true);
+        Helper18.setBreakDoors(this, true);
         this.tasks.addTask(1, new VVillagerAILookAtCustomer(this));
         this.tasks.addTask(1, new VVillagerAITrade(this));
         this.tasks.addTask(2, new VampireAIMoveIndoors(this));
@@ -116,12 +120,12 @@ public class EntityConvertedVillager extends EntityConvertedCreature implements 
                             MerchantRecipe merchantrecipe = (MerchantRecipe) iterator.next();
 
                             if (merchantrecipe.isRecipeDisabled()) {
-                                merchantrecipe.func_82783_a(this.rand.nextInt(6) + this.rand.nextInt(6) + 2);
+                                merchantrecipe.increaseMaxTradeUses(this.rand.nextInt(6) + this.rand.nextInt(6) + 2);
                             }
                         }
                     }
 
-                    this.addDefaultEquipmentAndRecipies(1);
+                    this.addDefaultEquipmentAndRecipies();
                     this.needsInitilization = false;
                 }
 
@@ -133,13 +137,13 @@ public class EntityConvertedVillager extends EntityConvertedCreature implements 
     @Override
     public MerchantRecipeList getRecipes(EntityPlayer p_70934_1_) {
         if (this.buyingList == null) {
-            this.addDefaultEquipmentAndRecipies(1);
+            this.addDefaultEquipmentAndRecipies();
         }
 
         return this.buyingList;
     }
 
-    private void addDefaultEquipmentAndRecipies(int i) {
+    private void addDefaultEquipmentAndRecipies() {
         MerchantRecipeList merchantRecipeList = new MerchantRecipeList();
 
         addRecipe(merchantRecipeList, new ItemStack(ModItems.humanHeart, 9), 2, this.getRNG(), 0.5F);
@@ -152,9 +156,9 @@ public class EntityConvertedVillager extends EntityConvertedCreature implements 
         if (this.buyingList == null) {
             this.buyingList = new MerchantRecipeList();
         }
-
-        for (int l = 0; l < i && l < merchantRecipeList.size(); ++l) {
-            this.buyingList.addToListWithCheck((MerchantRecipe) merchantRecipeList.get(l));
+        int i=rand.nextInt(2)+1;
+        for (int l = 0; l <i&& l < merchantRecipeList.size(); ++l) {
+            this.buyingList.add(merchantRecipeList.remove(rand.nextInt(merchantRecipeList.size())));
         }
     }
 
@@ -175,19 +179,28 @@ public class EntityConvertedVillager extends EntityConvertedCreature implements 
     }
 
     @Override
-    public void useRecipe(MerchantRecipe p_70933_1_) {
-        p_70933_1_.incrementToolUses();
+    public void useRecipe(MerchantRecipe recipe) {
+        recipe.incrementToolUses();
         this.livingSoundTime = -this.getTalkInterval();
         this.playSound("mob.villager.yes", this.getSoundVolume(), this.getSoundPitch());
 
-        if (p_70933_1_.hasSameIDsAs((MerchantRecipe) this.buyingList.get(this.buyingList.size() - 1))) {
-            this.timeUntilReset = 40;
-            this.needsInitilization = true;
+        int xp = 3 + this.rand.nextInt(4);
+
+        if(recipe.getToolUses()==1||this.rand.nextInt(5)==0){
+            this.timeUntilReset=40;
+            this.needsInitilization=true;
+            this.isWillingToTrade=true;
+            xp+=5;
         }
+
+        if(recipe.getRewardsExp()){
+            this.worldObj.spawnEntityInWorld(new EntityXPOrb(this.worldObj, this.posX, this.posY + 0.5D, this.posZ, xp));
+        }
+
     }
 
     @Override
-    public void func_110297_a_(ItemStack p_110297_1_) {
+    public void verifySellingItem(ItemStack p_110297_1_) {
         if (!this.worldObj.isRemote && this.livingSoundTime > -this.getTalkInterval() + 20) {
             this.livingSoundTime = -this.getTalkInterval();
 
@@ -199,19 +212,19 @@ public class EntityConvertedVillager extends EntityConvertedCreature implements 
         }
     }
 
-    public boolean interact(EntityPlayer p_70085_1_) {
-        ItemStack itemstack = p_70085_1_.inventory.getCurrentItem();
+    public boolean interact(EntityPlayer player) {
+        ItemStack itemstack = player.inventory.getCurrentItem();
         boolean flag = itemstack != null && itemstack.getItem() == Items.spawn_egg;
 
-        if (!flag && this.isEntityAlive() && !this.isTrading() && !this.isChild() && !p_70085_1_.isSneaking() && VampirePlayer.get(p_70085_1_).getLevel() > 0) {
+        if (!flag && this.isEntityAlive() && !this.isTrading() && !this.isChild() && !player.isSneaking() && VampirePlayer.get(player).getLevel() > 0) {
             if (!this.worldObj.isRemote) {
-                this.setCustomer(p_70085_1_);
-                p_70085_1_.displayGUIMerchant(this, this.getCustomNameTag());
+                this.setCustomer(player);
+                player.displayVillagerTradeGui(this);
             }
 
             return true;
         } else {
-            return super.interact(p_70085_1_);
+            return super.interact(player);
         }
     }
 

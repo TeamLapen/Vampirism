@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.convertible;
 
+import com.google.common.base.Predicate;
 import de.teamlapen.vampirism.entity.EntityHunterBase;
 import de.teamlapen.vampirism.entity.EntityVampireBase;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
@@ -27,7 +28,12 @@ public class EntityConvertedCreature extends EntityVampireBase implements ISynca
     public EntityConvertedCreature(World world) {
         super(world);
 
-        this.tasks.addTask(1, new EntityAIAvoidEntity(this, EntityHunterBase.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.05));
+        this.tasks.addTask(1, new EntityAIAvoidEntity(this, new Predicate() {
+            @Override
+            public boolean apply(Object input) {
+                return input instanceof EntityHunterBase;
+            }
+        }, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.05));
 
         this.tasks.addTask(3, new VampireAIFleeSun(this, 1F));
         this.tasks.addTask(4, new EntityAIRestrictSun(this));
@@ -190,9 +196,10 @@ public class EntityConvertedCreature extends EntityVampireBase implements ISynca
     }
 
     @Override
-    public String getCommandSenderName() {
-        return StatCollector.translateToLocal("entity.vampirism.vampire.name") + " " + (nil() ? super.getCommandSenderName() : entityCreature.getCommandSenderName());
+    public String getName() {
+        return  StatCollector.translateToLocal("entity.vampirism.vampire.name") + " " + (nil() ? super.getName() : entityCreature.getName());
     }
+
 
     @Override
     public String toString() {

@@ -55,7 +55,7 @@ public class EntityDeadMob extends Entity {
 
 	@Override
 	public boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_) {
-		if (this.isEntityInvulnerable()) {
+		if (this.isEntityInvulnerable(p_70097_1_)) {
 			return false;
 		} else {
 			if (!this.isDead && !this.worldObj.isRemote) {
@@ -107,11 +107,8 @@ public class EntityDeadMob extends Entity {
 		return this.dataWatcher.getWatchableObjectInt(WATCHER_TYPE_ID);
 	}
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public float getShadowSize() {
-		return 0.0F;
-	}
+
+
 
 	@Override
 	public void onUpdate() {

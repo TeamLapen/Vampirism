@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIMoveIndoors;
 import net.minecraft.entity.ai.RandomPositionGenerator;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.village.Village;
@@ -26,22 +27,19 @@ public class VampireAIMoveIndoors extends EntityAIBase {
 
     @Override
     public boolean shouldExecute() {
-        int i = MathHelper.floor_double(vampire.posX);
-        int j = MathHelper.floor_double(this.vampire.posY);
-        int k = MathHelper.floor_double(this.vampire.posZ);
-
-        if ((this.vampire.worldObj.isDaytime() || this.vampire.worldObj.isRaining()) && !this.vampire.worldObj.provider.hasNoSky) {
+        BlockPos pos=vampire.getPosition();
+        if ((this.vampire.worldObj.isDaytime() || this.vampire.worldObj.isRaining()) && !this.vampire.worldObj.provider.getHasNoSky()) {
             if (this.vampire.getRNG().nextInt(50) != 0) {
                 return false;
             } else if (this.insidePosX != -1 && this.vampire.getDistanceSq((double) this.insidePosX, this.vampire.posY, (double) this.insidePosZ) < 4.0D) {
                 return false;
             } else {
-                Village village = this.vampire.worldObj.villageCollectionObj.findNearestVillage(i, j, k, 14);
+                Village village = this.vampire.worldObj.villageCollectionObj.getNearestVillage(pos, 14);
 
                 if (village == null) {
                     return false;
                 } else {
-                    this.doorInfo = village.findNearestDoorUnrestricted(i, j, k);
+                    this.doorInfo = village.getNearestDoor(pos);
                     return this.doorInfo != null;
                 }
             }
@@ -62,15 +60,15 @@ public class VampireAIMoveIndoors extends EntityAIBase {
      */
     public void startExecuting() {
         this.insidePosX = -1;
-        Logger.t("Starting move indoors");
-        if (this.vampire.getDistanceSq((double) this.doorInfo.getInsidePosX(), (double) this.doorInfo.posY, (double) this.doorInfo.getInsidePosZ()) > 256.0D) {
-            Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockTowards(this.vampire, 14, 3, Vec3.createVectorHelper((double) this.doorInfo.getInsidePosX() + 0.5D, (double) this.doorInfo.getInsidePosY(), (double) this.doorInfo.getInsidePosZ() + 0.5D));
+        BlockPos pos=this.doorInfo.getInsideBlockPos();
+        if (this.vampire.getDistanceSq(pos) > 256.0D) {
+            Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockTowards(this.vampire, 14, 3, new Vec3((double) pos.getX() + 0.5D, (double) pos.getY(), (double) pos.getZ() + 0.5D));
 
             if (vec3 != null) {
                 this.vampire.getNavigator().tryMoveToXYZ(vec3.xCoord, vec3.yCoord, vec3.zCoord, 1.0D);
             }
         } else {
-            this.vampire.getNavigator().tryMoveToXYZ((double) this.doorInfo.getInsidePosX() + 0.5D, (double) this.doorInfo.getInsidePosY(), (double) this.doorInfo.getInsidePosZ() + 0.5D, 1.0D);
+            this.vampire.getNavigator().tryMoveToXYZ((double) pos.getX()+ 0.5D, (double) pos.getY(),(double) pos.getZ() + 0.5D, 1.0D);
         }
     }
 
@@ -79,8 +77,8 @@ public class VampireAIMoveIndoors extends EntityAIBase {
      */
     public void resetTask() {
         Logger.t("Stop move indoors");
-        this.insidePosX = this.doorInfo.getInsidePosX();
-        this.insidePosZ = this.doorInfo.getInsidePosZ();
+        this.insidePosX = this.doorInfo.getInsideBlockPos().getX();
+        this.insidePosZ = this.doorInfo.getInsideBlockPos().getZ();
         this.doorInfo = null;
     }
 }

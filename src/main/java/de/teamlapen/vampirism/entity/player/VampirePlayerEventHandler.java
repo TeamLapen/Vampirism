@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.castleDim.ChunkProviderCastle;
 import de.teamlapen.vampirism.entity.player.skills.Skills;
 import de.teamlapen.vampirism.network.RequestEntityUpdatePacket;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -33,7 +33,7 @@ public class VampirePlayerEventHandler {
 	@SubscribeEvent
 	public void onBlockPlaced(BlockEvent.PlaceEvent event) {
 		try {
-			if (VampirePlayer.get(event.player).isSkillActive(Skills.batMode)|| (event.player.worldObj.provider.dimensionId==VampirismMod.castleDimensionId&&!ChunkProviderCastle.allowedToBuildHere(event.player))) {
+			if (VampirePlayer.get(event.player).isSkillActive(Skills.batMode)|| (event.player.worldObj.provider.getDimensionId()==VampirismMod.castleDimensionId&&!ChunkProviderCastle.allowedToBuildHere(event.player))) {
 				event.setCanceled(true);
 			}
 		} catch (Exception e) {
@@ -43,7 +43,7 @@ public class VampirePlayerEventHandler {
 
 	@SubscribeEvent
 	public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-		if (VampirePlayer.get(event.entityPlayer).isSkillActive(Skills.batMode)||(event.entity.worldObj.provider.dimensionId==VampirismMod.castleDimensionId&&!ChunkProviderCastle.allowedToBuildHere(event.entity))) {
+		if (VampirePlayer.get(event.entityPlayer).isSkillActive(Skills.batMode)||(event.entity.worldObj.provider.getDimensionId()==VampirismMod.castleDimensionId&&!ChunkProviderCastle.allowedToBuildHere(event.entity))) {
 			event.setCanceled(true);
 		}
 	}
@@ -58,7 +58,7 @@ public class VampirePlayerEventHandler {
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		if (event.entity instanceof EntityPlayer) {
-			if (event.entity.worldObj.isRemote || event.entity instanceof EntityClientPlayerMP) {
+			if (event.entity.worldObj.isRemote || event.entity instanceof EntityPlayerSP) {
 				VampirismMod.modChannel.sendToServer(new RequestEntityUpdatePacket(event.entity));
 			} else {
 				VampirePlayer.onPlayerJoinWorld((EntityPlayer) event.entity);

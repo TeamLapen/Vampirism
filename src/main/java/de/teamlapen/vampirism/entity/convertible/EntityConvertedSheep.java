@@ -2,19 +2,39 @@ package de.teamlapen.vampirism.entity.convertible;
 
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IShearable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Max on 15.08.2015.
  */
 public class EntityConvertedSheep extends EntityConvertedCreature implements IShearable {
 
+
+    @Override
+    public boolean isShearable(ItemStack item, IBlockAccess world, BlockPos pos) {
+        return !getSheared();
+    }
+
+    @Override
+    public List<ItemStack> onSheared(ItemStack item, IBlockAccess world, BlockPos pos, int fortune) {
+        ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
+        setSheared(true);
+        int i = 1 + rand.nextInt(3);
+        for (int j = 0; j < i; j++) {
+            ret.add(new ItemStack(Blocks.wool, 1, getFleeceColor().getMetadata()));
+        }
+        this.playSound("mob.sheep.shear", 1.0F, 1.0F);
+        return ret;
+    }
 
     public static class ConvertingSheepHandler extends ConvertingHandler<EntitySheep> {
         @Override
@@ -67,26 +87,12 @@ public class EntityConvertedSheep extends EntityConvertedCreature implements ISh
         }
     }
 
-    @Override
-    public boolean isShearable(ItemStack item, IBlockAccess world, int x, int y, int z) {
-        return !getSheared();
+
+
+    public EnumDyeColor getFleeceColor() {
+        return nil() ? EnumDyeColor.BLACK : ((EntitySheep) this.getEntityCreature()).getFleeceColor();//this.dataWatcher.getWatchableObjectByte(16) & 15;
     }
 
-    public int getFleeceColor() {
-        return nil() ? 0 : ((EntitySheep) this.getEntityCreature()).getFleeceColor();//this.dataWatcher.getWatchableObjectByte(16) & 15;
-    }
-
-    @Override
-    public ArrayList<ItemStack> onSheared(ItemStack item, IBlockAccess world, int x, int y, int z, int fortune) {
-        ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
-        setSheared(true);
-        int i = 1 + rand.nextInt(3);
-        for (int j = 0; j < i; j++) {
-            ret.add(new ItemStack(Blocks.wool, 1, getFleeceColor()));
-        }
-        this.playSound("mob.sheep.shear", 1.0F, 1.0F);
-        return ret;
-    }
 
     @Override
     public void writeEntityToNBT(NBTTagCompound nbt) {

@@ -24,7 +24,7 @@ public class EntityBlindingBat extends EntityBat {
 			this.attackEntityFrom(DamageSource.magic, 10F);
 		}
 		if (!this.worldObj.isRemote) {
-			List l = worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.boundingBox);
+			List l = worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox());
 			for (Object e : l) {
 				if (VampirePlayer.get((EntityPlayer) e).getLevel() == 0) {
 					((EntityPlayer) e).addPotionEffect(new PotionEffect(Potion.blindness.id, 40));
@@ -38,6 +38,6 @@ public class EntityBlindingBat extends EntityBat {
 	}
 
 	@Override public boolean getCanSpawnHere() {
-		return this.worldObj.checkNoEntityCollision(this.boundingBox) && this.worldObj.getCollidingBoundingBoxes(this, this.boundingBox).isEmpty() && !this.worldObj.isAnyLiquid(this.boundingBox);
+		return this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox()) && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox()).isEmpty() && !this.worldObj.isAnyLiquid(this.getEntityBoundingBox());
 	}
 }
