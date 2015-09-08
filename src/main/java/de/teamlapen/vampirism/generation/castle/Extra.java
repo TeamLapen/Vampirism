@@ -15,12 +15,15 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.item.EntityPainting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.tileentity.TileEntityMobSpawner;
 import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -30,9 +33,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
  */
 public class Extra {
 	public final TYPE type;
-	public final BlockList.BlockPosition pos;
+	public final BlockPos pos;
 	private JsonObject extra;
-	public Extra(TYPE t,BlockList.BlockPosition pos){
+	public Extra(TYPE t,BlockPos pos){
 		this.type=t;
 		this.pos=pos;
 	}
@@ -40,21 +43,19 @@ public class Extra {
 	/**
 	 * Applies this extra to the given world
 	 * @param world
-	 * @param wx World x coordinate
-	 * @param wy World y coordinate
-	 * @param wz World z coordinate
+	 * @param wPos absolute position in the world
 	 */
-	public void applyExtra(final World world, int wx, int wy, int wz) {
+	public void applyExtra(final World world, BlockPos wPos) {
 		if(type==TYPE.SPAWN_ENTITY){
 			int c=extra.get("count").getAsInt();
 			String entity=extra.get("entity").getAsString();
-			if(REFERENCE.ENTITY.DRACULA_NAME.equals(entity)&&world.provider.dimensionId!= VampirismMod.castleDimensionId){
+			if(REFERENCE.ENTITY.DRACULA_NAME.equals(entity)&&world.provider.getDimensionId()!= VampirismMod.castleDimensionId){
 				return;
 			}
 			for(int i=0;i<c;i++){
 				final Entity e = EntityList.createEntityByName(entity, world);
 				if(e!=null) {
-					e.setPosition(wx, wy + 0.19D, wz);
+					e.setPosition(wPos.getX(), wPos.getY() + 0.19D, wPos.getZ());
 					boolean success = world.spawnEntityInWorld(e);
 					if (e instanceof EntityDracula) Logger.t("Spawned Dracula %s (%b)", e, success);
 					if (!success) {
@@ -83,7 +84,7 @@ public class Extra {
 
 		}
 		else if(type==TYPE.PAINTING){
-			int dir=extra.get("dir").getAsInt();
+			String facing = extra.get("facing").getAsString();
 			String title=extra.get("title").getAsString();
 			EntityPainting.EnumArt art=null;
 			for(EntityPainting.EnumArt a: EntityPainting.EnumArt.values()){
@@ -92,16 +93,16 @@ public class Extra {
 					break;
 				}
 			}
-			if(art==null)art= EntityPainting.EnumArt.Alban;
-			EntityPainting p=new EntityPainting(world,wx,wy,wz,dir);
+			if(art==null)art= EntityPainting.EnumArt.ALBAN;
+			EntityPainting p = new EntityPainting(world,wPos, EnumFacing.byName(facing));
 			p.art=art;
 			world.spawnEntityInWorld(p);
 
 		} else{
-			TileEntity tileEntity=world.getTileEntity(wx, wy, wz);
+			TileEntity tileEntity=world.getTileEntity(wPos);
 			switch (type) {
 			case SPAWNER:
-				((TileEntityMobSpawner) tileEntity).func_145881_a().setEntityName(extra.get("entity_name").getAsString());
+				((TileEntityMobSpawner) tileEntity).getSpawnerBaseLogic().setEntityName(extra.get("entity_name").getAsString());
 				break;
 			case CHEST:
 				JsonArray items = extra.getAsJsonArray("items");
@@ -127,10 +128,10 @@ public class Extra {
 				break;
 			case WALL_SIGN:
 				TileEntitySign sign2=(TileEntitySign)tileEntity;
-				sign2.signText[0]=extra.get("t0").getAsString();
-				sign2.signText[1]=extra.get("t1").getAsString();
-				sign2.signText[2]=extra.get("t2").getAsString();
-				sign2.signText[3]=extra.get("t3").getAsString();
+				sign2.signText[0]=new ChatComponentText(extra.get("t0").getAsString());
+				sign2.signText[1]=new ChatComponentText(extra.get("t1").getAsString());
+				sign2.signText[2]=new ChatComponentText(extra.get("t2").getAsString());
+				sign2.signText[3]=new ChatComponentText(extra.get("t3").getAsString());
 				break;
 			case ALTAR_2:
 				TileEntityBloodAltar2 altar2= (TileEntityBloodAltar2) tileEntity;
@@ -155,7 +156,9 @@ public class Extra {
 		extra=new JsonObject();
 		switch (type){
 		case SPAWNER:
-			extra.addProperty("entity_name", ((TileEntityMobSpawner) tileEntity).func_145881_a().getEntityNameToSpawn());
+			NBTTagCompound compound=new NBTTagCompound();
+			((TileEntityMobSpawner) tileEntity).getSpawnerBaseLogic().writeToNBT(compound);
+			extra.addProperty("entity_name", compound.getString("EntityId"));
 			break;
 		case CHEST:
 			JsonArray items=new JsonArray();
@@ -184,17 +187,17 @@ public class Extra {
 			break;
 		case SPAWN_ENTITY:
 			TileEntitySign sign=(TileEntitySign)tileEntity;
-			int count=Integer.parseInt(sign.signText[0]);
-			String entity=sign.signText[1]+sign.signText[2]+sign.signText[3];
+			int count=Integer.parseInt(sign.signText[0].getUnformattedText());
+			String entity=sign.signText[1].getUnformattedText()+sign.signText[2].getUnformattedText()+sign.signText[3].getUnformattedText();
 			extra.addProperty("count",count);
 			extra.addProperty("entity",entity.trim());
 			break;
 		case WALL_SIGN:
 			TileEntitySign sign2=(TileEntitySign)tileEntity;
-			extra.addProperty("t0",sign2.signText[0]);
-			extra.addProperty("t1",sign2.signText[1]);
-			extra.addProperty("t2",sign2.signText[2]);
-			extra.addProperty("t3",sign2.signText[3]);
+			extra.addProperty("t0",sign2.signText[0].getUnformattedText());
+			extra.addProperty("t1",sign2.signText[1].getUnformattedText());
+			extra.addProperty("t2",sign2.signText[2].getUnformattedText());
+			extra.addProperty("t3",sign2.signText[3].getUnformattedText());
 			break;
 		case ALTAR_2:
 			TileEntityBloodAltar2 altar2=(TileEntityBloodAltar2)tileEntity;
@@ -214,7 +217,7 @@ public class Extra {
 	 */
 	public void retrieveExtra(EntityPainting p){
 		extra=new JsonObject();
-		extra.addProperty("dir",p.hangingDirection);
+		extra.addProperty("dir",p.getHorizontalFacing().getName2().toLowerCase());
 		extra.addProperty("title",p.art.title);
 	}
 

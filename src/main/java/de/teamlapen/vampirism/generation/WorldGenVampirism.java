@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.villages.VillageVampire;
 import de.teamlapen.vampirism.villages.VillageVampireData;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.BlockPos;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
@@ -47,17 +48,14 @@ public class WorldGenVampirism implements IWorldGenerator {
 	 *            World
 	 * @param random
 	 *            Random
-	 * @param x
-	 *            xCoord
-	 * @param z
-	 *            ZCoord
+	 * @param blockPos pos
 	 */
-	private void addEntities(World world, Random random, int x, int z) {
-		if(world.provider.terrainType== WorldType.FLAT)return;
+	private void addEntities(World world, Random random, BlockPos blockPos) {
+		if(world.getWorldInfo().getTerrainType()== WorldType.FLAT)return;
 		// Added try/catch block to resolve issue #15
 		try {
-			int y = world.getHeightValue(x, z);
-			Village v = world.villageCollectionObj.findNearestVillage(x, y, z, 0);
+			blockPos=world.getHorizon(blockPos);
+			Village v = world.villageCollectionObj.getNearestVillage(blockPos,0);
 			if (v == null) {
 				return;
 			}
@@ -65,7 +63,7 @@ public class WorldGenVampirism implements IWorldGenerator {
 			if (vv == null) return;
 			int spawnedHunter = world.getEntitiesWithinAABB(EntityVampireHunter.class, vv.getBoundingBox()).size();
 			for (Entity e : Helper.spawnEntityInVillage(v, random.nextInt(3)- spawnedHunter, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world)) {
-				((EntityVampireHunter) e).setVillageArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, v.getVillageRadius());
+				((EntityVampireHunter) e).setVillageArea(blockPos, v.getVillageRadius());
 			}
 		} catch (Exception e) {
 			// If an exception occurs, it is likely a bug in minecraft, but we don't need to crash so we will return
@@ -73,25 +71,22 @@ public class WorldGenVampirism implements IWorldGenerator {
 		}
 	}
 
-	private void addStructures(World world, Random random, int x, int z) {
+	private void addStructures(World world, Random random, BlockPos blockPos) {
 		int chance = random.nextInt(1000);
 		boolean generatedStructure = false; // needed when a 2nd structure is
 											// added
-		BiomeGenBase biome = world.getWorldChunkManager().getBiomeGenAt(x, z);
+		BiomeGenBase biome = world.getBiomeGenForCoords(blockPos);
 
 		if (!generatedStructure && chance < BALANCE.ALTAR_1_SPAWN_CHANCE) {
 			if (biome == BiomeGenBase.swampland || biome == BiomeGenBase.roofedForest) {
-				// Create Blood Altar
-				int posX = x + random.nextInt(16);
-				int posZ = z + random.nextInt(16);
-				// Set y to center of altar
-				int posY = world.getHeightValue(posX + 1, posZ + 1);
-				generatedStructure = generateBloodAltar.generate(world, random, posX, posY, posZ);
+
+				blockPos=world.getHorizon(blockPos.add(random.nextInt(16)-8+1,0,random.nextInt(16)-8+1));
+				generatedStructure = generateBloodAltar.generate(world, random, blockPos);
 			}
 		}
 		chance = random.nextInt(1000);
 		int trees = biome.theBiomeDecorator.treesPerChunk;
-		float bh = biome.heightVariation;
+		float bh = biome.maxHeight;
 		float prop = 1;
 		if (trees > 2 && trees < 11) {
 			prop += trees;
@@ -100,23 +95,21 @@ public class WorldGenVampirism implements IWorldGenerator {
 
 		if (biome instanceof BiomeGenPlains) prop *= 0.7F;
 
-		if (world.provider.terrainType.equals(WorldType.FLAT)) {
+		if (world.getWorldInfo().getTerrainType().equals(WorldType.FLAT)) {
 			prop = 0.2F;
 		}
 		if (!generatedStructure && !Configs.disable_hunter && chance < BALANCE.HUNTER_CAMP_SPAWN_CHANCE * prop && !biome.equals(ModBiomes.biomeVampireForest)) {
-			int posX = x + random.nextInt(16);
-			int posZ = z + random.nextInt(16);
-			int posY = world.getHeightValue(x, z);
-			if (world.getBlock(x, posY - 1, z).getMaterial() == Material.leaves) {
-				posY--;
-				while ((world.getBlock(x, posY, z).getMaterial() == Material.leaves || world.isAirBlock(x, posY, z)) && posY > 50) {
-					posY--;
+			blockPos=world.getHorizon(blockPos.add(random.nextInt(16)-8,0,random.nextInt(16)-8));
+			if (world.getBlockState(blockPos.down()).getBlock().getMaterial() == Material.leaves) {
+				blockPos=blockPos.down();
+				while ((world.getBlockState(blockPos).getBlock().getMaterial() == Material.leaves || world.isAirBlock(blockPos)) && blockPos.getY() > 50) {
+					blockPos=blockPos.down();
 				}
 			}
 
-			float temp = biome.getFloatTemperature(posX, posY, posZ);
+			float temp = biome.getFloatTemperature(blockPos);
 			if (generateHunterCamp.isValidTemperature(temp)) {
-				generatedStructure = generateHunterCamp.generate(world, random, posX, posY, posZ);
+				generatedStructure = generateHunterCamp.generate(world, random, blockPos);
 			}
 
 		}
@@ -124,7 +117,7 @@ public class WorldGenVampirism implements IWorldGenerator {
 
 	@Override
 	public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
-		switch (world.provider.dimensionId) {
+		switch (world.provider.getDimensionId()) {
 		case -1:
 			generateNether(world, random, chunkX, chunkZ);
 			break;
@@ -135,24 +128,25 @@ public class WorldGenVampirism implements IWorldGenerator {
 			generateEnd(world, random, chunkX, chunkZ);
 			break;
 		}
-		if(world.provider.dimensionId==VampirismMod.castleDimensionId){
+		if(world.provider.getDimensionId()==VampirismMod.castleDimensionId){
 			castleGenerator.checkBiome(world,chunkX,chunkZ,random,true);
 		}
 	}
 
-	private void generateEnd(World world, Random random, int x, int z) {
+	private void generateEnd(World world, Random random, int cx, int cz) {
 
 	}
 
-	private void generateNether(World world, Random random, int x, int z) {
+	private void generateNether(World world, Random random, int cx, int cz) {
 
 	}
 
-	private void generateSurface(World world, Random random, int x, int z) {
-		addEntities(world, random, x << 4 + 8, z << 4 + 8);
+	private void generateSurface(World world, Random random, int cx, int cz) {
+		BlockPos center=new BlockPos((cx<<4)+8,0,((cz<<4)+8));
+		addEntities(world, random, center);
 		if (world.getWorldInfo().isMapFeaturesEnabled()) {
-			castleGenerator.checkBiome(world, x, z, random, false);
-			addStructures(world, random, x << 4, z << 4);
+			castleGenerator.checkBiome(world, cx,cz, random, false);
+			addStructures(world, random, center);
 		}
 
 	}

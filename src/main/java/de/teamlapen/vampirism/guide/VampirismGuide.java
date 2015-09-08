@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.guide;
 
-import amerifrance.guideapi.api.GuideRegistry;
+import amerifrance.guideapi.api.registry.GuideRegistry;
 import amerifrance.guideapi.api.abstraction.CategoryAbstract;
 import amerifrance.guideapi.api.abstraction.EntryAbstract;
 import amerifrance.guideapi.api.abstraction.IPage;

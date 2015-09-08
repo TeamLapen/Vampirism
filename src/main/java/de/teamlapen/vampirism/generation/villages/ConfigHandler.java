@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.Pair;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import org.apache.commons.io.IOUtils;
 
 import java.io.File;
@@ -42,7 +43,7 @@ public class ConfigHandler {
 		return result;
 	}
 
-	public static Map<Block, List<Pair<String, Integer>>> getMetadata() {
+	private static Map<Block, List<Pair<String, Integer>>> getMetaReplacement() {
 		Map<Block, List<Pair<String, Integer>>> map = new HashMap<Block, List<Pair<String, Integer>>>();
 
 		Pattern p = Pattern.compile("^~([\\w:]+),[\\w:]+?:(\\d+),([bt]:.+)");
@@ -69,7 +70,33 @@ public class ConfigHandler {
 		return getAfterPrefix("-t:");
 	}
 
-	public static Map<Block, List<Pair<String, Block>>> getReplacements() {
+	public static Map<Block,List<Pair<String,IBlockState>>> getReplacements(){
+		Map<Block,List<Pair<String,IBlockState>>> replacements=new HashMap<Block,List<Pair<String,IBlockState>>>();
+
+		Map<Block, List<Pair<String, Block>>> blocks=getBlockReplacements();
+		Map<Block, List<Pair<String, Integer>>> metas=getMetaReplacement();
+
+		for(Block block:blocks.keySet()){
+			List<Pair<String,IBlockState>> blockstates=new ArrayList<>();
+			List<Pair<String, Integer>> meta=metas.get(block);
+			for(Pair<String,Block> repBlock:blocks.get(block)){
+				boolean replaced=false;
+				for(Pair<String,Integer> repMeta:meta){
+					if(repMeta.left.equals(repBlock.left)){
+						blockstates.add(new Pair<>(repBlock.left,repBlock.right.getStateFromMeta(repMeta.right)));
+						replaced=true;
+						break;
+					}
+				}
+				if(!replaced){
+					blockstates.add(new Pair<>(repBlock.left,repBlock.right.getDefaultState()));
+				}
+			}
+			replacements.put(block,blockstates);
+		}
+		return replacements;
+	}
+	private static Map<Block, List<Pair<String, Block>>> getBlockReplacements() {
 		// TODO: Handle bad configs.
 		Map<Block, List<Pair<String, Block>>> map = new HashMap<Block, List<Pair<String, Block>>>();
 

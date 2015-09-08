@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.generation.villages;
 
 import de.teamlapen.vampirism.ModBlocks;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureComponent;
@@ -18,9 +19,9 @@ import java.util.Random;
  */
 public class VillageModChurchPiece extends StructureVillagePieces.Church {
 
-	public static VillageModChurchPiece buildComponent(StructureVillagePieces.Start p_74919_0_, List p_74919_1_, Random p_74919_2_, int p_74919_3_, int p_74919_4_, int p_74919_5_, int p_74919_6_,
+	public static VillageModChurchPiece buildComponent(StructureVillagePieces.Start p_74919_0_, List p_74919_1_, Random p_74919_2_, int p_74919_3_, int p_74919_4_, int p_74919_5_, EnumFacing p_74919_6_,
 			int p_74919_7_) {
-		StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(p_74919_3_, p_74919_4_, p_74919_5_, 0, 0, 0, 5, 12, 9, p_74919_6_);
+		StructureBoundingBox structureboundingbox = StructureBoundingBox.func_175897_a(p_74919_3_, p_74919_4_, p_74919_5_, 0, 0, 0, 5, 12, 9, p_74919_6_);
 		return canVillageGoDeeper(structureboundingbox) && StructureComponent.findIntersecting(p_74919_1_, structureboundingbox) == null ? new VillageModChurchPiece(p_74919_0_, p_74919_7_,
 				p_74919_2_, structureboundingbox, p_74919_6_) : null;
 	}
@@ -29,7 +30,7 @@ public class VillageModChurchPiece extends StructureVillagePieces.Church {
 		super();
 	}
 
-	public VillageModChurchPiece(Start p_i2102_1_, int p_i2102_2_, Random p_i2102_3_, StructureBoundingBox p_i2102_4_, int p_i2102_5_) {
+	public VillageModChurchPiece(Start p_i2102_1_, int p_i2102_2_, Random p_i2102_3_, StructureBoundingBox p_i2102_4_, EnumFacing p_i2102_5_) {
 		super(p_i2102_1_, p_i2102_2_, p_i2102_3_, p_i2102_4_, p_i2102_5_);
 	}
 
@@ -37,7 +38,7 @@ public class VillageModChurchPiece extends StructureVillagePieces.Church {
 	public boolean addComponentParts(World p_74875_1_, Random p_74875_2_, StructureBoundingBox p_74875_3_) {
 		super.addComponentParts(p_74875_1_, p_74875_2_, p_74875_3_);
 		int i = this.getMetadataWithOffset(ModBlocks.churchAltar, 1);
-		this.placeBlockAtCurrentPosition(p_74875_1_, ModBlocks.churchAltar, i, 2, 2, 7, p_74875_3_);
+		this.func_175808_b(p_74875_1_, ModBlocks.churchAltar.getStateFromMeta(i), 2, 2, 7, p_74875_3_);//Maybe func_175811_a instead
 		return true;
 	}
 }

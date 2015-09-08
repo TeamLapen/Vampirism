@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.generation.villages;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.Pair;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
@@ -44,13 +46,11 @@ public class BiomeBlockReplacer implements IEventListener {
 		}
 	}
 
-	private Map<Block, List<Pair<String, Block>>> replacements;
+	private Map<Block, List<Pair<String, IBlockState>>> replacements;
 
-	private Map<Block, List<Pair<String, Integer>>> metadata;
 
 	public BiomeBlockReplacer() {
 		replacements = ConfigHandler.getReplacements();
-		metadata = ConfigHandler.getMetadata();
 	}
 
 	@Override
@@ -59,8 +59,8 @@ public class BiomeBlockReplacer implements IEventListener {
 
 		if (event instanceof BiomeEvent.GetVillageBlockID) {
 			BiomeEvent.GetVillageBlockID ev = (BiomeEvent.GetVillageBlockID) event;
-			if (replacements.containsKey(ev.original)) {
-				for (Pair<String, Block> pair : replacements.get(ev.original)) {
+			if (replacements.containsKey(ev.original.getBlock())) {
+				for (Pair<String, IBlockState> pair : replacements.get(ev.original.getBlock())) {
 					if (checkCondition(ev.biome, pair.left)) {
 						ev.replacement = pair.right;
 						ev.setResult(Event.Result.DENY);
@@ -69,25 +69,25 @@ public class BiomeBlockReplacer implements IEventListener {
 			}
 
 		}
-		if (event instanceof BiomeEvent.GetVillageBlockMeta) {
-			BiomeEvent.GetVillageBlockMeta ev = (BiomeEvent.GetVillageBlockMeta) event;
-			boolean replaced = false;
-			if (metadata.containsKey(ev.original)) {
-				for (Pair<String, Integer> pair : metadata.get(ev.original)) {
-					if (checkCondition(ev.biome, pair.left)) {
-						ev.replacement = pair.right;
-						ev.setResult(Event.Result.DENY);
-						replaced = true;
-					}
-				}
-			}
-			if (!replaced && replacements.containsKey(ev.original)) {
-				for (Pair<String, Block> pair : replacements.get(ev.original)) {
-					if (checkCondition(ev.biome, pair.left)) {
-						ev.setResult(Event.Result.ALLOW);
-					}
-				}
-			}
-		}
+//		if (event instanceof BiomeEvent.GetVillageBlockMeta) {
+//			BiomeEvent.GetVillageBlockMeta ev = (BiomeEvent.GetVillageBlockMeta) event;
+//			boolean replaced = false;
+//			if (metadata.containsKey(ev.original)) {
+//				for (Pair<String, Integer> pair : metadata.get(ev.original)) {
+//					if (checkCondition(ev.biome, pair.left)) {
+//						ev.replacement = pair.right;
+//						ev.setResult(Event.Result.DENY);
+//						replaced = true;
+//					}
+//				}
+//			}
+//			if (!replaced && replacements.containsKey(ev.original)) {
+//				for (Pair<String, Block> pair : replacements.get(ev.original)) {
+//					if (checkCondition(ev.biome, pair.left)) {
+//						ev.setResult(Event.Result.ALLOW);
+//					}
+//				}
+//			}
+//		}
 	}
 }

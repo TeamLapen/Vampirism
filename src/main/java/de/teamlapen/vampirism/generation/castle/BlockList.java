@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.generation.castle;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.Arrays;
@@ -19,10 +20,10 @@ public class BlockList {
 	public String blockId;
 	private final int[] meta;
 
-	private LinkedList<BlockPosition> blockPositions;
+	private LinkedList<BlockPos> blockPositions;
 	public BlockList(Block block,int[] meta){
 		this.block=block;
-		blockPositions =new LinkedList<BlockPosition>();
+		blockPositions =new LinkedList<BlockPos>();
 		this.meta=meta;
 	}
 
@@ -33,10 +34,10 @@ public class BlockList {
 	 * @param z
 	 */
 	public void addPosition(int x,int y,int z){
-		blockPositions.add(new BlockPosition(x,y,z));
+		blockPositions.add(new BlockPos(x,y,z));
 	}
 
-	public List<BlockPosition> getPositions(){
+	public List<BlockPos> getPositions(){
 		return blockPositions;
 	}
 
@@ -50,18 +51,6 @@ public class BlockList {
 		return meta[rotation];
 	}
 
-	/**
-	 * Simple class to hold relative x,y,z positions
-	 */
-	public static class BlockPosition {
-		public final int x,y,z;
-
-		public BlockPosition(int x, int y, int z) {
-			this.x = x;
-			this.y = y;
-			this.z = z;
-		}
-	}
 
 	/**
 	 * Converts the block instance to its string id

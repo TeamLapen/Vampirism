@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
@@ -17,41 +18,45 @@ import java.util.Random;
 public class GenerateBloodAltar extends WorldGenerator {
 
 	@Override
-	public boolean generate(World world, Random rand, int x, int y, int z) {
-		if (!locationIsValidSpawn(world, x, y, z) || !locationIsValidSpawn(world, x + 2, y, z) || !locationIsValidSpawn(world, x + 2, y, z + 2) || !locationIsValidSpawn(world, x, y, z + 2))
+	public boolean generate(World world, Random random, BlockPos pos) {
+		if (!locationIsValidSpawn(world, pos) || !locationIsValidSpawn(world, pos.add(2,0,0)) || !locationIsValidSpawn(world, pos.add(2,0,2)) || !locationIsValidSpawn(world, pos.add(0,0,2)))
 			return false;
 
-		world.setBlock(x + 0, y + 0, z + 0, Blocks.obsidian, 0, 3);
-		world.setBlock(x + 1, y + 0, z + 0, Blocks.obsidian, 0, 3);
-		world.setBlock(x + 2, y + 0, z + 0, Blocks.obsidian, 0, 3);
-		world.setBlock(x + 0, y + 0, z + 1, Blocks.obsidian, 0, 3);
-		world.setBlock(x + 1, y + 0, z + 1, Blocks.obsidian, 0, 3);
-		world.setBlock(x + 2, y + 0, z + 1, Blocks.obsidian, 0, 3);
-		world.setBlock(x + 0, y + 0, z + 2, Blocks.obsidian, 0, 3);
-		world.setBlock(x + 1, y + 0, z + 2, Blocks.obsidian, 0, 3);
-		world.setBlock(x + 2, y + 0, z + 2, Blocks.obsidian, 0, 3);
-		world.setBlock(x + 0, y + 1, z + 0, Blocks.air, 0, 3);
-		world.setBlock(x + 1, y + 1, z + 0, Blocks.air, 0, 3);
-		world.setBlock(x + 2, y + 1, z + 0, Blocks.air, 0, 3);
-		world.setBlock(x + 0, y + 1, z + 1, Blocks.air, 0, 3);
-		world.setBlock(x + 1, y + 1, z + 1, ModBlocks.bloodAltar1, 1, 3);
-		world.setBlock(x + 2, y + 1, z + 1, Blocks.air, 0, 3);
-		world.setBlock(x + 0, y + 1, z + 2, Blocks.air, 0, 3);
-		world.setBlock(x + 1, y + 1, z + 2, Blocks.air, 0, 3);
-		world.setBlock(x + 2, y + 1, z + 2, Blocks.air, 0, 3);
+		world.setBlockState(pos,Blocks.obsidian.getDefaultState(),3);
+		world.setBlockState(pos.add(1, 0, 0), Blocks.obsidian.getDefaultState(), 3);
+		world.setBlockState(pos.add(2, 0, 0), Blocks.obsidian.getDefaultState(), 3);
+		world.setBlockState(pos.add(0, 0, 1), Blocks.obsidian.getDefaultState(), 3);
+		world.setBlockState(pos.add(0, 0, 2), Blocks.obsidian.getDefaultState(), 3);
+		world.setBlockState(pos.add(1, 0, 1), Blocks.obsidian.getDefaultState(), 3);
+		world.setBlockState(pos.add(2, 0, 2), Blocks.obsidian.getDefaultState(), 3);
+		world.setBlockState(pos.add(1, 0, 2), Blocks.obsidian.getDefaultState(), 3);
+		world.setBlockState(pos.add(2, 0, 1), Blocks.obsidian.getDefaultState(), 3);
 
+		world.setBlockState(pos.add(0, 1, 0), Blocks.air.getDefaultState(), 3);
+		world.setBlockState(pos.add(1,1,0),Blocks.air.getDefaultState(),3);
+		world.setBlockState(pos.add(2,1,0),Blocks.air.getDefaultState(),3);
+		world.setBlockState(pos.add(0,1,1),Blocks.air.getDefaultState(),3);
+
+		world.setBlockState(pos.add(1,1,1),ModBlocks.bloodAltar1.getStateFromMeta(1),3);
+
+		world.setBlockState(pos.add(2,1,1),Blocks.air.getDefaultState(),3);
+		world.setBlockState(pos.add(0,1,2),Blocks.air.getDefaultState(),3);
+		world.setBlockState(pos.add(1,1,2),Blocks.air.getDefaultState(),3);
+		world.setBlockState(pos.add(2,1,2),Blocks.air.getDefaultState(),3);
 		return true;
 	}
+
+
 
 	protected Block[] getValidSpawnBlocks() {
 		return new Block[] { Blocks.grass, Blocks.dirt, Blocks.sand, Blocks.cobblestone, Blocks.gravel };
 	}
 
-	protected boolean locationIsValidSpawn(World world, int x, int y, int z) {
+	protected boolean locationIsValidSpawn(World world, BlockPos pos) {
 
-		Block checkBlock = world.getBlock(x, y - 1, z);
-		Block blockAbove = world.getBlock(x, y, z);
-		Block blockBelow = world.getBlock(x, y - 2, z);
+		Block checkBlock = world.getBlockState(pos.down()).getBlock();
+		Block blockAbove = world.getBlockState(pos).getBlock();
+		Block blockBelow = world.getBlockState(pos.down(2)).getBlock();
 
 		for (Block i : getValidSpawnBlocks()) {
 			if (blockAbove != Blocks.air) {

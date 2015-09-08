@@ -9,10 +9,11 @@ import de.teamlapen.vampirism.biome.BiomeVampireForest;
 import de.teamlapen.vampirism.castleDim.ChunkProviderCastle;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.ModdedEnumTypeAdapter;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkCoordIntPair;
-import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import org.apache.commons.lang3.ArrayUtils;
@@ -55,32 +56,32 @@ public class CastleGenerator extends WorldGenerator {
 	public static void loadTiles() {
 		Gson gson = new GsonBuilder().setPrettyPrinting().registerTypeAdapterFactory(ModdedEnumTypeAdapter.ENUM_FACTORY).create();
 		tileMap = new HashMap<String, BuildingTile>();
-		loadTile("wall", gson, tileMap);
-		loadTile("flatDirt", gson, tileMap);
-		loadTile("house1", gson, tileMap);
-		loadTile("house2", gson, tileMap);
-		loadTile("stables", gson, tileMap);
-		loadTile("castlell", gson, tileMap);
-		loadTile("castlelr", gson, tileMap);
-		loadTile("castleur", gson, tileMap);
-		loadTile("castleul", gson, tileMap);
-		loadTile("blacksmith", gson, tileMap);
-		loadTile("grave", gson, tileMap);
-		loadTile("pasture", gson, tileMap);
-		loadTile("entrancel", gson, tileMap);
-		loadTile("entrancer", gson, tileMap);
-		loadTile("path", gson, tileMap);
-		loadTile("dirt2",gson,tileMap);
-		loadTile("house3",gson,tileMap);
-		loadTile("house4",gson,tileMap);
-		loadTile("treasure",gson,tileMap);
-		loadTile("wall_corner",gson,tileMap);
-		loadTile("castle_lavall",gson,tileMap);
-		loadTile("castle_lavaul",gson,tileMap);
-		loadTile("castle_lavalr",gson,tileMap);
-		loadTile("castle_lavaur",gson,tileMap);
-		loadTile("castle_portalur",gson,tileMap);
-		loadTile("castleul_button", gson, tileMap);
+//		loadTile("wall", gson, tileMap);
+//		loadTile("flatDirt", gson, tileMap);
+//		loadTile("house1", gson, tileMap);
+//		loadTile("house2", gson, tileMap);
+//		loadTile("stables", gson, tileMap);
+//		loadTile("castlell", gson, tileMap);
+//		loadTile("castlelr", gson, tileMap);
+//		loadTile("castleur", gson, tileMap);
+//		loadTile("castleul", gson, tileMap);
+//		loadTile("blacksmith", gson, tileMap);
+//		loadTile("grave", gson, tileMap);
+//		loadTile("pasture", gson, tileMap);
+//		loadTile("entrancel", gson, tileMap);
+//		loadTile("entrancer", gson, tileMap);
+//		loadTile("path", gson, tileMap);
+//		loadTile("dirt2",gson,tileMap);
+//		loadTile("house3",gson,tileMap);
+//		loadTile("house4",gson,tileMap);
+//		loadTile("treasure",gson,tileMap);
+//		loadTile("wall_corner",gson,tileMap);
+//		loadTile("castle_lavall",gson,tileMap);
+//		loadTile("castle_lavaul",gson,tileMap);
+//		loadTile("castle_lavalr",gson,tileMap);
+//		loadTile("castle_lavaur",gson,tileMap);
+//		loadTile("castle_portalur",gson,tileMap);
+//		loadTile("castleul_button", gson, tileMap);
 
 	}
 
@@ -159,7 +160,7 @@ public class CastleGenerator extends WorldGenerator {
 				}
 				if (data.positions.size() == 0) {
 					Logger.w(TAG, "Did not find any positions");
-					if (world.provider.dimensionId == 0) {
+					if (world.provider.getDimensionId() == 0) {
 						VampirismMod.vampireCastleFail = true;
 
 					}
@@ -169,7 +170,7 @@ public class CastleGenerator extends WorldGenerator {
 			data.markDirty();
 		}
 		if (data.positions.size() == 0 && data.fullyGeneratedPositions.size() == 0) {
-			if (world.getBiomeGenForCoords((chunkX << 4) + 8, (chunkZ << 4) + 8) instanceof BiomeVampireForest) {
+			if (world.getBiomeGenForCoords(new BlockPos((chunkX << 4) + 8, 0,(chunkZ << 4) + 8)) instanceof BiomeVampireForest) {
 				CastlePositionData.Position pos = new CastlePositionData.Position(chunkX, chunkZ);
 				pos = this.optimizePosition(pos, world, rnd);
 				if (pos != null) {
@@ -198,14 +199,14 @@ public class CastleGenerator extends WorldGenerator {
 					for (int i = (chunkX << 4); i < (chunkX << 4) + 16; i++) {
 						for (int j = (chunkZ << 4); j < (chunkZ << 4) + 16; j++) {
 							for (int k = height; k < height + 20; k++) {
-								world.setBlockToAir(i, k, j);
+								world.setBlockToAir(new BlockPos(i, k, j));
 							}
 						}
 					}
 					for (int i = (chunkX << 4); i < (chunkX << 4) + 16; i++) {
 						for (int j = (chunkZ << 4); j < (chunkZ << 4) + 16; j++) {
 							for (int k = height - 1; k > height - 10; k--) {
-								world.setBlock(i, k, j, ModBlocks.cursedEarth);
+								world.setBlockState(new BlockPos(i, k, j), ModBlocks.cursedEarth.getDefaultState());
 							}
 						}
 					}
@@ -244,11 +245,11 @@ public class CastleGenerator extends WorldGenerator {
 		for (int i = 0; i < MAX_TRYS && foundPos.size() < MAX_CASTLES; i++) {
 			int x = (int) Math.round(Math.cos(phy) * radius);
 			int z = (int) Math.round(Math.sin(phy) * radius);
-			ChunkPosition chunkposition = world.getWorldChunkManager().findBiomePosition((x << 4) + 8, (z << 4) + 8, 112, this.biomes, rnd);
+			BlockPos blockposition = world.getWorldChunkManager().findBiomePosition((x << 4) + 8, (z << 4) + 8, 112, this.biomes, rnd);
 
-			if (chunkposition != null) {
-				int cx = chunkposition.chunkPosX >> 4;
-				int cz = chunkposition.chunkPosZ >> 4;
+			if (blockposition != null) {
+				int cx = blockposition.getX() >> 4;
+				int cz = blockposition.getZ() >> 4;
 				foundPos.add(new CastlePositionData.Position(cx, cz));
 				Logger.d(TAG, "Found position %d %d", cx, cz);
 				//Increase the counter to avoid mutliple castles in one spot
@@ -285,7 +286,16 @@ public class CastleGenerator extends WorldGenerator {
 		Boolean[][] biomes = new Boolean[D_TEST_SIZE][D_TEST_SIZE];
 		for (int i = -TEST_SIZE; i < TEST_SIZE; i++) {
 			for (int j = -TEST_SIZE; j < TEST_SIZE; j++) {
-				biomes[i + TEST_SIZE][j + TEST_SIZE] = ModBiomes.biomeVampireForest.equals(world.getWorldChunkManager().getBiomeGenAt((position.chunkXPos + i << 4)+8, (position.chunkZPos + j << 4)+8));
+				BiomeGenBase[] tempBiomes=world.getWorldChunkManager().getBiomeGenAt(null,position.chunkXPos+i<<4,position.chunkZPos+i<<4,16,16,true);
+				int wrong=0;
+				for(BiomeGenBase b:tempBiomes){
+					if(!ModBiomes.biomeVampireForest.equals(b)){
+						if(++wrong>25){
+							break;
+						}
+					}
+				}
+				biomes[i + TEST_SIZE][j + TEST_SIZE] = wrong<25;
 			}
 		}
 		//		Logger.i(TAG,"Biomes");
@@ -724,7 +734,7 @@ public class CastleGenerator extends WorldGenerator {
 	}
 
 	private int getAverageHeight(Chunk chunk) {
-		int[] map = chunk.heightMap;
+		int[] map = chunk.getHeightMap();
 		int sum = 0;
 		for (int i = 0; i < map.length; i++) {
 			sum += map[i];
@@ -739,31 +749,32 @@ public class CastleGenerator extends WorldGenerator {
 				System.out.print(String.valueOf(objects[i][j]));
 			}
 		}
+
 	}
 
 	/**
 	 * Unused
-	 *
-	 * @param p_76484_1_
-	 * @param p_76484_2_
-	 * @param p_76484_3_
-	 * @param p_76484_4_
-	 * @param p_76484_5_
+	 * @param worldIn
+	 * @param p_180709_2_
+	 * @param p_180709_3_
 	 * @return
 	 */
-	@Override public boolean generate(World p_76484_1_, Random p_76484_2_, int p_76484_3_, int p_76484_4_, int p_76484_5_) {
+	@Override
+	public boolean generate(World worldIn, Random p_180709_2_, BlockPos p_180709_3_) {
 		return false;
 	}
+
+
 
 	public ChunkCoordIntPair findNearVampireBiome(World world, int x, int z, int maxDist) {
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < maxDist; i++) {
 			for (int j = -i; j < i; j++) {
-				if (world.getBiomeGenForCoords(x + (i << 4), z + (j << 4)) instanceof BiomeVampireForest) {
+				if (world.getBiomeGenForCoords(new BlockPos(x + (i << 4),0, z + (j << 4))) instanceof BiomeVampireForest) {
 					Logger.d(TAG, "Took %d ms to find a vampire biome", (int) (System.currentTimeMillis() - start));
 					return new ChunkCoordIntPair((x >> 4) + i, (z >> 4) + j);
 				}
-				if (world.getBiomeGenForCoords(x - (i << 4), z + (j << 4)) instanceof BiomeVampireForest) {
+				if (world.getBiomeGenForCoords(new BlockPos(x - (i << 4),0, z + (j << 4))) instanceof BiomeVampireForest) {
 					Logger.d(TAG, "Took %d ms to find a vampire biome", (int) (System.currentTimeMillis() - start));
 					return new ChunkCoordIntPair((x >> 4) - i, (z >> 4) + j);
 				}

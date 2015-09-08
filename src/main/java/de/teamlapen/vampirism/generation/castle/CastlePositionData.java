@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.generation.castle;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
@@ -25,17 +26,17 @@ public class CastlePositionData extends WorldSavedData{
 	boolean checked;
 	private HashMap<ChunkCoordIntPair, Boolean> cachedChunks;
 	public static CastlePositionData get(World world){
-		CastlePositionData data= (CastlePositionData) world.perWorldStorage.loadData(CastlePositionData.class, IDENTIFIER);
+		CastlePositionData data= (CastlePositionData) world.getPerWorldStorage().loadData(CastlePositionData.class, IDENTIFIER);
 		if(data==null){
 			data = new CastlePositionData(IDENTIFIER);
-			world.perWorldStorage.setData(IDENTIFIER,data);
+			world.getPerWorldStorage().setData(IDENTIFIER,data);
 		}
 		return data;
 	}
 
 	public static void reset(World world){
 		CastlePositionData data = new CastlePositionData(IDENTIFIER);
-		world.perWorldStorage.setData(IDENTIFIER,data);
+		world.getPerWorldStorage().setData(IDENTIFIER,data);
 	}
 	public CastlePositionData(String identifier) {
 		super(identifier);
@@ -51,6 +52,9 @@ public class CastlePositionData extends WorldSavedData{
 		return checked;
 	}
 
+	public Position findNearestCastle(BlockPos pos){
+		return findNearestCastle(pos.getX(),pos.getZ());
+	}
 	public Position findNearestCastle(int posX,int posZ){
 		int maxD=Integer.MAX_VALUE;
 		Position pos=null;
@@ -82,6 +86,16 @@ public class CastlePositionData extends WorldSavedData{
 		return this.findPosAtChunk(coordX>>4,coordZ>>4,all);
 	}
 
+	/**
+	 * Returns the castle position object for this coordinates or null if there is no castle
+	 * @param pos Block pos
+	 * @param all If true already fully generated positions will be included
+	 * @return
+	 */
+	public @Nullable Position findPosAt(BlockPos pos,boolean all){
+		return this.findPosAt(pos.getX(), pos.getZ(), all);
+	}
+
 
 	/**
 	 * Checks if there is a castle at the given chunk. Caches the result.
@@ -90,6 +104,8 @@ public class CastlePositionData extends WorldSavedData{
 		return isPosAtChunk(coordX >> 4, coordZ >> 4);
 	}
 
+
+	public boolean isPosAt(BlockPos pos){return isPosAt(pos.getX(),pos.getZ());}
 	/**
 	 * Checks if there is a castle at the given chunk. Caches the result.
 	 */

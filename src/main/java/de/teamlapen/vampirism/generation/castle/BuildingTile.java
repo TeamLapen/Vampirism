@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.generation.castle;
 
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.LinkedList;
@@ -35,16 +36,16 @@ public class BuildingTile {
 		int z=cz<<4;
 //		Logger.d("Tile","Building tile at %d %d (%d %d %d) with rotation %d",cx,cz,x,groundHeight,z,rotation);
 		for(BlockList l:blocks){
-			List<BlockList.BlockPosition> pos=l.getPositions();
-			for(BlockList.BlockPosition p:pos){
+			List<BlockPos> pos=l.getPositions();
+			for(BlockPos p:pos){
 				p=rotatePosition(rotation,p);
-				world.setBlock(x+p.x,groundHeight+p.y,z+p.z,l.block,l.getBlockMetaForRotation(rotation),0);
+				world.setBlockState(p.add(x,groundHeight,z),l.block.getStateFromMeta(l.getBlockMetaForRotation(rotation)),0);
 			}
 		}
 		for(Extra extra:extras){
-			BlockList.BlockPosition p=extra.pos;
+			BlockPos p=extra.pos;
 			p=rotatePosition(rotation,p);
-			extra.applyExtra(world,x+p.x,groundHeight+p.y,z+p.z);
+			extra.applyExtra(world,p.add(x,groundHeight,z));
 		}
 	}
 
@@ -54,14 +55,14 @@ public class BuildingTile {
 	 * @param pos
 	 * @return
 	 */
-	private BlockList.BlockPosition rotatePosition(int rotation,BlockList.BlockPosition pos){
+	private BlockPos rotatePosition(int rotation,BlockPos pos){
 		switch (rotation){
 		case 1:
-			return new BlockList.BlockPosition(15-pos.z,pos.y,pos.x);
+			return new BlockPos(15-pos.getX(),pos.getY(),pos.getZ());
 		case 2:
-			return new BlockList.BlockPosition(15-pos.x,pos.y,15-pos.z);
+			return new BlockPos(15-pos.getX(),pos.getY(),15-pos.getZ());
 		case 3:
-			return new BlockList.BlockPosition(pos.z,pos.y,15-pos.x);
+			return new BlockPos(pos.getX(),pos.getY(),15-pos.getZ());
 		default:
 			return pos;
 		}
