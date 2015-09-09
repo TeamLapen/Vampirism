@@ -13,12 +13,10 @@ import mcp.mobius.waila.api.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.StatCollector;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.common.Optional;
 
 import java.util.List;
@@ -40,12 +38,7 @@ public class WailaDataProvider implements IWailaDataProvider, IWailaEntityProvid
 	}
 
 	@Override
-	public NBTTagCompound getNBTData(EntityPlayerMP player, Entity ent, NBTTagCompound tag, World world) {
-		return null;
-	}
-
-	@Override
-	public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
+	public NBTTagCompound getNBTData(TileEntity te, NBTTagCompound tag, IWailaDataAccessorServer accessor) {
 		if (te instanceof TileEntityBloodAltar1) {
 			tag.setInteger("vampirism:bloodLeft", ((TileEntityBloodAltar1) te).getBloodLeft());
 		}
@@ -53,7 +46,13 @@ public class WailaDataProvider implements IWailaDataProvider, IWailaEntityProvid
 	}
 
 	@Override
-	public List<String> getWailaBody(Entity entity, List<String> currenttip, IWailaEntityAccessor accessor, IWailaConfigHandler config) {
+	public NBTTagCompound getNBTData(Entity ent, NBTTagCompound tag, IWailaEntityAccessorServer accessor) {
+		return null;
+	}
+
+
+	@Override
+	public ITaggedList.ITipList getWailaBody(Entity entity, ITaggedList.ITipList currenttip, IWailaEntityAccessor accessor, IWailaConfigHandler config) {
 		if (config.getConfig("option.vampirism.showPlayerInfo", true)) {
 			if (entity instanceof EntityPlayer) {
 				VampirePlayer vampire = VampirePlayer.get((EntityPlayer) entity);
@@ -78,7 +77,7 @@ public class WailaDataProvider implements IWailaDataProvider, IWailaEntityProvid
 					currenttip.add(SpecialChars.GREEN + StatCollector.translateToLocal("text.vampirism.minion"));
 					IMinionLord lord = minion.getLord();
 					if (lord != null) {
-						currenttip.add(String.format("%s%s: %s", SpecialChars.WHITE, StatCollector.translateToLocal("text.vampirism.lord"), lord.getRepresentingEntity().getCommandSenderName()));
+						currenttip.add(String.format("%s%s: %s", SpecialChars.WHITE, StatCollector.translateToLocal("text.vampirism.lord"), lord.getRepresentingEntity().getName()));
 						IMinionCommand c = minion.getCommand(minion.getActiveCommandId());
 						if (c != null) {
 							currenttip.add(String.format("%s%s: %s", SpecialChars.WHITE, StatCollector.translateToLocal("text.vampirism.current_task"),
@@ -92,8 +91,9 @@ public class WailaDataProvider implements IWailaDataProvider, IWailaEntityProvid
 		return currenttip;
 	}
 
+
 	@Override
-	public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+	public ITaggedList.ITipList getWailaBody(ItemStack itemStack, ITaggedList.ITipList currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		if (config.getConfig("option.vampirism.showAltarInfo", true)) {
 			TileEntity tile = accessor.getTileEntity();
 			if (tile instanceof TileEntityBloodAltar1) {
@@ -119,14 +119,16 @@ public class WailaDataProvider implements IWailaDataProvider, IWailaEntityProvid
 	}
 
 	@Override
-	public List<String> getWailaHead(Entity entity, List<String> currenttip, IWailaEntityAccessor accessor, IWailaConfigHandler config) {
+	public ITaggedList.ITipList getWailaHead(ItemStack itemStack, ITaggedList.ITipList currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		return currenttip;
 	}
 
 	@Override
-	public List<String> getWailaHead(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+	public ITaggedList.ITipList getWailaHead(Entity entity, ITaggedList.ITipList currenttip, IWailaEntityAccessor accessor, IWailaConfigHandler config) {
 		return currenttip;
 	}
+
+
 
 	@Override
 	public Entity getWailaOverride(IWailaEntityAccessor accessor, IWailaConfigHandler config) {
@@ -139,13 +141,14 @@ public class WailaDataProvider implements IWailaDataProvider, IWailaEntityProvid
 	}
 
 	@Override
-	public List<String> getWailaTail(Entity entity, List<String> currenttip, IWailaEntityAccessor accessor, IWailaConfigHandler config) {
+	public ITaggedList.ITipList getWailaTail(ItemStack itemStack, ITaggedList.ITipList currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
 		return currenttip;
 	}
 
 	@Override
-	public List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+	public ITaggedList.ITipList getWailaTail(Entity entity, ITaggedList.ITipList currenttip, IWailaEntityAccessor accessor, IWailaConfigHandler config) {
 		return currenttip;
 	}
+
 
 }

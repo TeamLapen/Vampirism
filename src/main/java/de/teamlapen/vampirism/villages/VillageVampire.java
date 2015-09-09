@@ -7,11 +7,12 @@ import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.util.BlockPos;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 
@@ -26,12 +27,12 @@ import java.util.List;
 public class VillageVampire {
 	public static AxisAlignedBB getBoundingBox(Village v) {
 		int r = v.getVillageRadius();
-		ChunkCoordinates cc = v.getCenter();
-		return AxisAlignedBB.getBoundingBox(cc.posX - r, cc.posY - 10, cc.posZ - r, cc.posX + r, cc.posY + 10, cc.posZ + r);
+		BlockPos cc = v.getCenter();
+		return new AxisAlignedBB(cc.add(-r,-10,-r),cc.add(r,10,r));
 	}
 	private final String TAG = "VillageVampire";
 	private World world;
-	private final ChunkCoordinates center = new ChunkCoordinates(0, 0, 0);
+	private BlockPos center = new BlockPos(0, 0, 0);
 	private int recentlyBitten;
 	private int recentlyConverted;
 	private boolean agressive;
@@ -42,7 +43,7 @@ public class VillageVampire {
 		int count = getHunter(v).size();
 		if (!Configs.disable_hunter && count < BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE || (agressive && count < BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE * 1.4)) {
 			for (Entity e : Helper.spawnEntityInVillage(v, 2, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world)) {
-				((EntityVampireHunter) e).setVillageArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, v.getVillageRadius());
+				((EntityVampireHunter) e).setVillageArea(v.getCenter(), v.getVillageRadius());
 				if (agressive) {
 					((EntityVampireHunter) e).setLevel(3, true);
 				}
@@ -54,7 +55,7 @@ public class VillageVampire {
 		return getBoundingBox(this.getVillage());
 	}
 
-	public ChunkCoordinates getCenter() {
+	public BlockPos getCenter() {
 		return center;
 	}
 
@@ -64,7 +65,7 @@ public class VillageVampire {
 	}
 
 	public Village getVillage() {
-		Village v = world.villageCollectionObj.findNearestVillage(center.posX, center.posY, center.posZ, 0);
+		Village v = world.villageCollectionObj.getNearestVillage(center, 0);
 		if (v == null)
 			return null;
 		if (!v.getCenter().equals(center)) {
@@ -85,7 +86,7 @@ public class VillageVampire {
 	 * @return -1 annihilated,0 center has been updated, 1 ok
 	 */
 	public int isAnnihilated() {
-		Village v = world.villageCollectionObj.findNearestVillage(center.posX, center.posY, center.posZ, 0);
+		Village v = world.villageCollectionObj.getNearestVillage(center, 0);
 		if (v == null) {
 			Logger.i(TAG, "Can't find village at " + center.toString());
 			return -1;
@@ -128,16 +129,15 @@ public class VillageVampire {
 	}
 
 	public void readFromNBT(NBTTagCompound nbt) {
-		center.posX = nbt.getInteger("CX");
-		center.posY = nbt.getInteger("CY");
-		center.posZ = nbt.getInteger("CZ");
+		center=Helper.readPos(nbt, "c");
+
 		agressive = nbt.getBoolean("AGR");
 		recentlyBitten = nbt.getInteger("BITTEN");
 		recentlyConverted = nbt.getInteger("CONVERTED");
 	}
 
-	public void setCenter(ChunkCoordinates cc) {
-		center.set(cc.posX, cc.posY, cc.posZ);
+	public void setCenter(BlockPos cc) {
+		center=cc;
 	}
 
 	public void setWorld(World world) {
@@ -150,7 +150,7 @@ public class VillageVampire {
 		List l = world.getEntitiesWithinAABB(EntityVillager.class, getBoundingBox(v));
 		if (l.size() > 0) {
 			EntityVillager ev = (EntityVillager) l.get(world.rand.nextInt(l.size()));
-			EntityVillager entityvillager = ev.createChild(ev);
+			EntityAgeable entityvillager = ev.createChild(ev);
 			ev.setGrowingAge(6000);
 			entityvillager.setGrowingAge(-24000);
 			entityvillager.setLocationAndAngles(ev.posX, ev.posY, ev.posZ, 0.0F, 0.0F);
@@ -217,9 +217,7 @@ public class VillageVampire {
 	}
 
 	public void writeToNBT(NBTTagCompound nbt) {
-		nbt.setInteger("CX", center.posX);
-		nbt.setInteger("CY", center.posY);
-		nbt.setInteger("CZ", center.posZ);
+		Helper.write(nbt,"c",center);
 		nbt.setBoolean("AGR", agressive);
 		nbt.setInteger("BITTEN", recentlyBitten);
 		nbt.setInteger("CONVERTED", recentlyConverted);

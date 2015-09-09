@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.item.ItemLeechSword;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -14,9 +15,11 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -30,7 +33,7 @@ import java.util.List;
  * 
  * @author maxanier @author Mistadon
  */
-public class TileEntityBloodAltar1 extends TileEntity {
+public class TileEntityBloodAltar1 extends TileEntity implements IUpdatePlayerListBox {
 	private boolean occupied = false;
 	private int bloodAmount;
 	public final String OCCUPIED_NBTKEY = "occupied";
@@ -60,7 +63,7 @@ public class TileEntityBloodAltar1 extends TileEntity {
 
 	public void dropSword() {
 		if (this.isOccupied()) {
-			EntityItem sword = new EntityItem(this.worldObj, this.xCoord, this.yCoord + 1, this.zCoord, getSwordToEject());
+			EntityItem sword = new EntityItem(this.worldObj, pos.getX(), pos.getY() + 1, pos.getZ(), getSwordToEject());
 			this.worldObj.spawnEntityInWorld(sword);
 			infinite=false;
 		}
@@ -74,7 +77,7 @@ public class TileEntityBloodAltar1 extends TileEntity {
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbtTag = new NBTTagCompound();
 		this.writeToNBT(nbtTag);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
+		return new S35PacketUpdateTileEntity(pos, 1, nbtTag);
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -116,7 +119,7 @@ public class TileEntityBloodAltar1 extends TileEntity {
 	@Override
 	public void markDirty() {
 		super.markDirty();
-		this.worldObj.markBlockForUpdate(this.xCoord, yCoord, zCoord);
+		this.worldObj.markBlockForUpdate(this.pos);
 	}
 
 	public void onActivated(EntityPlayer player, ItemStack itemStack) {
@@ -137,7 +140,7 @@ public class TileEntityBloodAltar1 extends TileEntity {
 
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
-		readFromNBT(packet.func_148857_g());
+		readFromNBT(packet.getNbtCompound());
 	}
 
 	@Override
@@ -174,36 +177,13 @@ public class TileEntityBloodAltar1 extends TileEntity {
 		markDirty();
 	}
 
+
 	@Override
-	public void updateEntity() {
-		if (this.worldObj.getTotalWorldTime() % 100L == 0L && !this.worldObj.isRemote) {
-			if (bloodAmount > 0) {
-				if(!infinite){
-					bloodAmount--;
-				}
-				if (bloodAmount == 0) {
-					this.markDirty();
-				}
-				AxisAlignedBB axisalignedbb = AxisAlignedBB.getBoundingBox(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1).expand(distance, distance,
-						distance);
-				axisalignedbb.maxY = this.worldObj.getHeight();
-				List list = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, axisalignedbb);
-				Iterator iterator = list.iterator();
-				EntityPlayer entityplayer;
-
-				while (iterator.hasNext()) {
-					entityplayer = (EntityPlayer) iterator.next();
-					VampirePlayer vampire = VampirePlayer.get(entityplayer);
-					if (vampire.getLevel() > 0) {
-						entityplayer.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 120, 0, true));
-						entityplayer.addPotionEffect(new PotionEffect(ModPotion.saturation.id, 120, 1, true));
-					}
-				}
-			}
-
-		}
-
+	public void updateContainingBlockInfo() {
+		super.updateContainingBlockInfo();
 	}
+
+
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
@@ -212,5 +192,34 @@ public class TileEntityBloodAltar1 extends TileEntity {
 		nbt.setInteger(BLOOD_NBTKEY, bloodAmount);
 		nbt.setInteger(TICK_NBTKEY, tickCounter);
 		nbt.setBoolean(INFINITE_NBTKEY,infinite);
+	}
+
+	@Override
+	public void update() {
+		if (this.worldObj.getTotalWorldTime() % 100L == 0L && !this.worldObj.isRemote) {
+			if (bloodAmount > 0) {
+				if(!infinite){
+					bloodAmount--;
+				}
+				if (bloodAmount == 0) {
+					this.markDirty();
+				}
+				AxisAlignedBB axisalignedbb = new AxisAlignedBB(pos,pos.add(1,worldObj.getHeight(),1)).expand(distance, distance,
+						distance);
+				List list = this.worldObj.getEntitiesWithinAABB(EntityPlayer.class, axisalignedbb);
+				Iterator iterator = list.iterator();
+				EntityPlayer entityplayer;
+
+				while (iterator.hasNext()) {
+					entityplayer = (EntityPlayer) iterator.next();
+					VampirePlayer vampire = VampirePlayer.get(entityplayer);
+					if (vampire.getLevel() > 0) {
+						entityplayer.addPotionEffect(new PotionEffect(Potion.moveSpeed.id, 120, 0, true,false));
+						entityplayer.addPotionEffect(new PotionEffect(ModPotion.saturation.id, 120, 1, true,false));
+					}
+				}
+			}
+
+		}
 	}
 }

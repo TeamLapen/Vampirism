@@ -77,7 +77,7 @@ public class VampirismMod {
 		DimensionManager.registerDimension(castleDimensionId,castleDimensionId);
 		GameRegistry.registerWorldGenerator(new WorldGenVampirism(), 1000);
 		VillagerRegistry.instance().registerVillageCreationHandler(new VillageCreationHandler());
-		MapGenStructureIO.func_143031_a(VillageModChurchPiece.class, "ViVMC");
+		MapGenStructureIO.registerStructureComponent(VillageModChurchPiece.class, "ViVMC");
 		FMLCommonHandler.instance().bus().register(new Configs());
 		if (Configs.village_gen_enabled) {
 			Logger.i("Init", "Registering replacer for village generation.");

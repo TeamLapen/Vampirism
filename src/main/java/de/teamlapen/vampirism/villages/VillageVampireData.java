@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.util.BlockPos;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
@@ -25,10 +26,10 @@ public class VillageVampireData extends WorldSavedData {
 
 	private static final String IDENTIFIER = "vampirism_village";
 	public static VillageVampireData get(World world) {
-		VillageVampireData data = (VillageVampireData) world.perWorldStorage.loadData(VillageVampireData.class, IDENTIFIER);
+		VillageVampireData data = (VillageVampireData) world.getPerWorldStorage().loadData(VillageVampireData.class, IDENTIFIER);
 		if (data == null) {
 			data = new VillageVampireData();
-			world.perWorldStorage.setData(IDENTIFIER, data);
+			world.getPerWorldStorage().setData(IDENTIFIER, data);
 		}
 		data.setWorld(world);
 		return data;
@@ -69,15 +70,15 @@ public class VillageVampireData extends WorldSavedData {
 	}
 
 	public VillageVampire findNearestVillage(Entity e) {
-		return this.findNearestVillage((int) e.posX, (int) e.posY, (int) e.posZ, 5);
+		return this.findNearestVillage(e.getPosition(), 5);
 	}
 
 	/**
 	 * Finds the nearest village, but only the given coordinates are withing it's bounding box plus the given the distance.
 	 */
-	public VillageVampire findNearestVillage(int x, int y, int z, int r) {
+	public VillageVampire findNearestVillage(BlockPos pos,int r) {
 
-		Village v = worldObj.villageCollectionObj.findNearestVillage(x, y, z, r);
+		Village v = worldObj.villageCollectionObj.getNearestVillage(pos,r);
 		if (v == null)
 			return null;
 		return getVillageVampire(v);
@@ -101,7 +102,7 @@ public class VillageVampireData extends WorldSavedData {
 			VillageVampire vv = new VillageVampire();
 			vv.setWorld(worldObj);
 			vv.setCenter(v.getCenter());
-			if (CastlePositionData.get(worldObj).isPosAt(v.getCenter().posX, v.getCenter().posZ)) {
+			if (CastlePositionData.get(worldObj).isPosAt(v.getCenter())) {
 				Logger.d("VampireVillage", "Cannot create a village at %s, because it is inside a castle", v.getCenter());
 				return null;
 			}

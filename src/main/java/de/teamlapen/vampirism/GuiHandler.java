@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.client.gui.GUIMinionControl;
 import de.teamlapen.vampirism.client.gui.GUISelectSkill;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar4;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
 
@@ -21,7 +22,7 @@ public class GuiHandler implements IGuiHandler {
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		if (ID == ID_ALTAR_4) {
-			TileEntityBloodAltar4 tile = (TileEntityBloodAltar4) world.getTileEntity(x, y, z);
+			TileEntityBloodAltar4 tile = (TileEntityBloodAltar4) world.getTileEntity(new BlockPos(x, y, z));
 			return new GUIBloodAltar4(player.inventory, tile);
 		}
 		if (ID == ID_CONVERT_BACK) {
@@ -39,7 +40,7 @@ public class GuiHandler implements IGuiHandler {
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		if (ID == ID_ALTAR_4) {
-			TileEntityBloodAltar4 tile = (TileEntityBloodAltar4) world.getTileEntity(x, y, z);
+			TileEntityBloodAltar4 tile = (TileEntityBloodAltar4) world.getTileEntity(new BlockPos(x, y, z));
 			return tile.getNewInventoryContainer(player.inventory);
 		}
 		return null;

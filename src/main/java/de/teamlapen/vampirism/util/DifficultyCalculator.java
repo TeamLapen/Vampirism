@@ -86,7 +86,7 @@ public class DifficultyCalculator {
 	}
 
 	public static Difficulty getLocalDifficulty(World w, double cX, double cZ, int r) {
-		List<EntityPlayer> list = w.getEntitiesWithinAABB(EntityPlayer.class, AxisAlignedBB.getBoundingBox(cX - r, 0, cZ - r, cX + r, 256, cZ + r));
+		List<EntityPlayer> list = w.getEntitiesWithinAABB(EntityPlayer.class, new AxisAlignedBB(cX - r, 0, cZ - r, cX + r, 256, cZ + r));
 		return calculateDifficulty(list);
 	}
 

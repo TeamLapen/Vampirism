@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.VampireLordData;
 import net.minecraft.block.Block;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -68,7 +69,7 @@ public class TestCommand extends BasicCommand {
 			protected void processCommand(ICommandSender sender, EntityPlayer player, VampirePlayer vampire, String[] param) {
 				vampire.setLevel(REFERENCE.HIGHEST_REACHABLE_LEVEL);
 				VampireLordData.get(player.worldObj).makeLord(player);
-				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(sender.getCommandSenderName() + " made himself a Vampire Lord"));
+				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(sender.getName() + " made himself a Vampire Lord"));
 			}
 
 			@Override
@@ -123,7 +124,7 @@ public class TestCommand extends BasicCommand {
 		addSub(new TestSubCommand() {
 			@Override
 			protected void processCommand(ICommandSender sender, EntityPlayer player, VampirePlayer vampire, String[] param) {
-				List l = player.worldObj.getEntitiesWithinAABBExcludingEntity(player, player.boundingBox.expand(3, 2, 3));
+				List l = player.worldObj.getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().expand(3, 2, 3));
 					for(Object o:l){
 						if(o instanceof EntityCreature){
 
@@ -144,7 +145,7 @@ public class TestCommand extends BasicCommand {
 		addSub(new TestSubCommand() {
 			@Override
 			protected void processCommand(ICommandSender sender, EntityPlayer player, VampirePlayer vampire, String[] param) {
-				List l = player.worldObj.getEntitiesWithinAABBExcludingEntity(player, player.boundingBox.expand(3, 2, 3));
+				List l = player.worldObj.getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().expand(3, 2, 3));
 				for (Object o : l) {
 					if (o instanceof EntityLivingBase) {
 						boolean flag = Helper.canReallySee((EntityLivingBase) o, player, false);
@@ -162,7 +163,7 @@ public class TestCommand extends BasicCommand {
 		addSub(new TestSubCommand() {
 			@Override
 			protected void processCommand(ICommandSender sender, EntityPlayer player, VampirePlayer vampire, String[] param) {
-				List l = player.worldObj.getEntitiesWithinAABBExcludingEntity(player, player.boundingBox.expand(50, 50, 50));
+				List l = player.worldObj.getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().expand(50, 50, 50));
 					for(Object o:l){
 						if(o instanceof EntityDracula){
 							sendMessage(sender, o.toString());
@@ -181,7 +182,7 @@ public class TestCommand extends BasicCommand {
 			protected void processCommand(ICommandSender sender, EntityPlayer player, VampirePlayer vampire, String[] param) {
 				MovingObjectPosition pos = Helper.getPlayerLookingSpot(player, 0);
 					if(pos!=null&&MovingObjectPosition.MovingObjectType.BLOCK.equals(pos.typeOfHit)){
-						sendMessage(sender, "Block: " + player.worldObj.getBlock(pos.blockX, pos.blockY, pos.blockZ) + " Meta: " + player.worldObj.getBlockMetadata(pos.blockX, pos.blockY, pos.blockZ));
+						sendMessage(sender, "Block: " + player.worldObj.getBlockState(pos.getBlockPos()));
 					}
 			}
 
@@ -195,9 +196,9 @@ public class TestCommand extends BasicCommand {
 			protected void processCommand(ICommandSender sender, EntityPlayer player, VampirePlayer vampire, String[] param) {
 				MovingObjectPosition pos = Helper.getPlayerLookingSpot(player, 0);
 				if (pos != null && MovingObjectPosition.MovingObjectType.BLOCK.equals(pos.typeOfHit)) {
-					Block b = player.worldObj.getBlock(pos.blockX, pos.blockY, pos.blockZ);
+					Block b = player.worldObj.getBlockState(pos.getBlockPos()).getBlock();
 					if (b instanceof BlockBloodAltar1) {
-						TileEntityBloodAltar1 altar1 = (TileEntityBloodAltar1) player.worldObj.getTileEntity(pos.blockX, pos.blockY, pos.blockZ);
+						TileEntityBloodAltar1 altar1 = (TileEntityBloodAltar1) player.worldObj.getTileEntity(pos.getBlockPos());
 						altar1.makeInfinite();
 					}
 				}
@@ -213,10 +214,10 @@ public class TestCommand extends BasicCommand {
 			protected void processCommand(ICommandSender sender, EntityPlayer player, VampirePlayer vampire, String[] param) {
 				MovingObjectPosition pos = Helper.getPlayerLookingSpot(player, 0);
 				if (pos != null && MovingObjectPosition.MovingObjectType.BLOCK.equals(pos.typeOfHit)) {
-					Block b = player.worldObj.getBlock(pos.blockX, pos.blockY, pos.blockZ);
+					Block b = player.worldObj.getBlockState(pos.getBlockPos()).getBlock();
 					if (b instanceof BlockCoffin) {
-						((BlockCoffin) b).setCoffinOccupied(player.worldObj, pos.blockX, pos.blockY, pos.blockZ, null, true);
-						TileEntity t = player.worldObj.getTileEntity(pos.blockX, pos.blockY, pos.blockZ);
+						((BlockCoffin) b).setCoffinOccupied(player.worldObj, pos.getBlockPos(), null, true);
+						TileEntity t = player.worldObj.getTileEntity(pos.getBlockPos());
 						t.markDirty();
 					}
 				}
@@ -230,33 +231,36 @@ public class TestCommand extends BasicCommand {
 	}
 
 	@Override
-	public void processCommand(ICommandSender sender, String[] param) {
+	public void execute(ICommandSender sender, String[] param) throws CommandException {
 		if (param != null && param.length == 1 && sender instanceof EntityPlayer) {
 			try {
 				VampirePlayer.get((EntityPlayer) sender).setLevel(Integer.parseInt(param[0]));
-				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(sender.getCommandSenderName() + " changed his vampire level to " + VampirePlayer.get((EntityPlayer) sender).getLevel()));
+				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(sender.getName() + " changed his vampire level to " + VampirePlayer.get((EntityPlayer) sender).getLevel()));
 				return;
 			} catch (NumberFormatException e) {
 
 			}
 		}
-		super.processCommand(sender, param);
+		super.execute(sender, param);
 	}
 
+
 	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender sender) {
+	public boolean canCommandSenderUse(ICommandSender sender) {
 		if (VampirismMod.inDev)
 			return true;
-		return sender.canCommandSenderUseCommand(2, this.getCommandName());
+		return sender.canUseCommand(2, this.getName());
 	}
 
+
 	@Override
-	public String getCommandName() {
+	public String getName() {
 		if (VampirismMod.inDev) {
 			return "test";
 		}
 		return "vtest";
 	}
+
 
 	@Deprecated
 	public void processCommandOld(ICommandSender sender, String[] param) {

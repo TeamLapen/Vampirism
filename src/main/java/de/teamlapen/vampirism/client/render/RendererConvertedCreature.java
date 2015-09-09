@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
  * Created by Max on 14.08.2015.
  */
 public class RendererConvertedCreature extends Render {
-    protected RendererConvertedCreature(RenderManager renderManager) {
+    public RendererConvertedCreature(RenderManager renderManager) {
         super(renderManager);
     }
 

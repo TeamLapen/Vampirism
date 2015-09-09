@@ -29,10 +29,10 @@ public class VampirismEventHandler {
 			return;
 		ItemStack i = null;
 		if (e.action == Action.RIGHT_CLICK_BLOCK ){
-			if(e.entityPlayer.isSneaking() &&e.world.getBlock(e.x, e.y, e.z).equals(ModBlocks.coffin)
+			if(e.entityPlayer.isSneaking() &&e.world.getBlockState(e.pos).getBlock().equals(ModBlocks.coffin)
 					&& (i = (e.entityPlayer).inventory.getCurrentItem()) != null && i.getItem() instanceof ItemDye) {
 				int color = i.getItemDamage();
-				TileEntityCoffin t = (TileEntityCoffin) e.world.getTileEntity(e.x, e.y, e.z);
+				TileEntityCoffin t = (TileEntityCoffin) e.world.getTileEntity(e.pos);
 				if (t == null)
 					return;
 				t = t.getPrimaryTileEntity();
@@ -53,7 +53,7 @@ public class VampirismEventHandler {
 		if (Configs.disable_vampire_biome) {
 			if (Blocks.grass.equals(event.block)) {
 				if (event.world.rand.nextInt(9) == 0) {
-					EntityItem flower = new EntityItem(event.world, event.x, event.y + 1, event.z, new ItemStack(ModBlocks.vampireFlower, 1));
+					EntityItem flower = new EntityItem(event.world, event.pos.getX(), event.pos.getY() + 1, event.pos.getZ(), new ItemStack(ModBlocks.vampireFlower, 1));
 					event.world.spawnEntityInWorld(flower);
 				}
 			}
@@ -94,7 +94,7 @@ public class VampirismEventHandler {
 
 	@SubscribeEvent
 	public void onWorldLoad(WorldEvent.Load event) {
-		if (!event.world.isRemote && event.world.provider.dimensionId == 0) {
+		if (!event.world.isRemote && event.world.provider.getDimensionId()== 0) {
 			//Reset the castle fail notice
 			VampirismMod.vampireCastleFail = false;
 		}

@@ -80,13 +80,13 @@ public class VampirismCommand extends BasicCommand {
 			}
 		});
 	}
-	@Override public String getCommandName() {
+	@Override public String getName() {
 		return "vampirism";
 	}
 
 	public boolean isSenderCreative(ICommandSender sender) {
 		if (VampirismMod.inDev)
 			return true;
-		return sender.canCommandSenderUseCommand(2, this.getCommandName());
+		return sender.canUseCommand(2, this.getName());
 	}
 }

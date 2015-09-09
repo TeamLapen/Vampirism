@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.util;
 
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -55,24 +57,24 @@ public abstract class BasicCommand implements ICommand {
 
     @Override
     public String getCommandUsage(ICommandSender p_71518_1_) {
-        return String.format("/%s <subcommand> <params> | Use /%s help to get all available subcommands", this.getCommandName(), this.getCommandName());
+        return String.format("/%s <subcommand> <params> | Use /%s help to get all available subcommands", this.getName(), this.getName());
     }
 
     @Override
-    public void processCommand(ICommandSender sender, String[] param) {
+    public void execute(ICommandSender sender, String[] param) throws CommandException {
         if (param == null || param.length == 0) {
             sendMessage(sender, getCommandUsage(sender));
             return;
         }
         if ("help".equals(param[0])) {
             if (param.length > 1) {
-                sendMessage(sender, String.format("/%s %s", this.getCommandName(), getSub(param[1]).getCommandUsage(sender)));
+                sendMessage(sender, String.format("/%s %s", this.getName(), getSub(param[1]).getCommandUsage(sender)));
             } else {
                 String t = "Available subcommands: ";
                 for (SubCommand s : subCommands) {
                     t += s.getCommandName() + ", ";
                 }
-                t += "Use /" + getCommandName() + " help <subcommand> to get more informations";
+                t += "Use /" + getName() + " help <subcommand> to get more informations";
                 sendMessage(sender, t);
             }
             return;
@@ -87,15 +89,22 @@ public abstract class BasicCommand implements ICommand {
         }
     }
 
+
     @Override
-    public boolean canCommandSenderUseCommand(ICommandSender sender) {
+    public boolean canCommandSenderUse(ICommandSender sender) {
         return true;
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender p_71516_1_, String[] p_71516_2_) {
+    public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
         return null;
     }
+
+    @Override
+    public List getAliases() {
+        return aliases;
+    }
+
 
     @Override
     public boolean isUsernameIndex(String[] p_82358_1_, int p_82358_2_) {
@@ -107,10 +116,6 @@ public abstract class BasicCommand implements ICommand {
         return 0;
     }
 
-    @Override
-    public List getCommandAliases() {
-        return aliases;
-    }
 
     public static void sendMessage(ICommandSender target, String message) {
         String[] lines = message.split("\\n");

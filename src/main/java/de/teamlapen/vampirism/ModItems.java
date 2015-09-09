@@ -38,7 +38,6 @@ public class ModItems {
 	public static ItemVampireArmor vampireBoots = new ItemVampireArmor(1,3);
 	public static ItemGemOfBinding gemOfBinding = new ItemGemOfBinding();
 	public static ItemMinionNameTag minionNameTag = new ItemMinionNameTag();
-	public static ItemSlab castleSlabItem;
 	public static ItemBloodEye bloodEye=new ItemBloodEye();
 	public static ItemTent tent = new ItemTent();
 
@@ -58,7 +57,6 @@ public class ModItems {
 		GameRegistry.registerItem(vampireBoots, vampireBoots.getRegisterItemName());
 		GameRegistry.registerItem(gemOfBinding, ItemGemOfBinding.name);
 		GameRegistry.registerItem(minionNameTag, ItemMinionNameTag.name);
-		GameRegistry.registerItem((castleSlabItem=new ItemSlab(ModBlocks.castleSlab,ModBlocks.castleSlab,ModBlocks.doubleCastleSlab,false)), BlockCastleSlab.name);
 		GameRegistry.registerItem(bloodEye,ItemBloodEye.name);
 		GameRegistry.registerItem(tent, ItemTent.name);
 		GameRegistry.registerItem(weakHumanHeart, ItemWeakHumanHeart.name);

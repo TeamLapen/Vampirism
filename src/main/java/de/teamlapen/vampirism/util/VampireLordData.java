@@ -55,10 +55,10 @@ public class VampireLordData extends WorldSavedData {
 	final private List<UUID> disabledLord;
 
 	public static VampireLordData get(World world){
-		VampireLordData data= (VampireLordData) world.mapStorage.loadData(VampireLordData.class,IDENTIFIER);
+		VampireLordData data= (VampireLordData) world.getMapStorage().loadData(VampireLordData.class,IDENTIFIER);
 		if(data==null){
 			data=new VampireLordData(IDENTIFIER);
-			world.mapStorage.setData(IDENTIFIER,data);
+			world.getMapStorage().setData(IDENTIFIER,data);
 		}
 		return data;
 	}

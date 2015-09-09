@@ -15,7 +15,6 @@ import net.minecraft.block.BlockStoneBrick;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -23,10 +22,8 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.ChunkCoordinates;
+import net.minecraft.server.gui.IUpdatePlayerListBox;
+import net.minecraft.util.*;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -38,7 +35,21 @@ import java.util.ArrayList;
  * @author Max
  *
  */
-public class TileEntityBloodAltar4 extends InventoryTileEntity {
+public class TileEntityBloodAltar4 extends InventoryTileEntity implements IUpdatePlayerListBox{
+
+
+
+
+
+	@Override
+	public String getName() {
+		return "block.vampirism.bloodAltarTier4.name";
+	}
+
+	@Override
+	public IChatComponent getDisplayName() {
+		return new ChatComponentTranslation(this.getName(), new Object[0]);
+	}
 
 	private enum LevReq {
 		OK, STRUCTURE_WRONG, ITEM_MISSING, LEVEL_WRONG
@@ -191,32 +202,33 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 	}
 
 	private int determineLevel2() {
-		int x = this.xCoord;
-		int y = this.yCoord;
-		int z = this.zCoord;
+
 		Block type = null;
-		ChunkCoordinates[] pos = findTips();
+		BlockPos[] pos = findTips();
 		if (pos.length != 6 && pos.length != 4) {
 			Logger.d(TAG, "The tip count is wrong");
 			return 0;
 		}
 		boolean large = pos.length == 6;
-		for (ChunkCoordinates p : pos) {
+		for (BlockPos p : pos) {
 			for (int i = 1; i <= (large ? 3 : 2); i++) {
-				Block b = worldObj.getBlock(p.posX, p.posY - i, p.posZ);
+				Block b = worldObj.getBlockState(p.down(i)).getBlock();
 				if (type == null) type = b;
 				else {
-					Logger.d(TAG, "Looking for %s but found %s at %d %d %d", type.getUnlocalizedName(), b.getUnlocalizedName(), p.posX, p.posY - i, p.posZ);
-					if (!type.equals(b)) return 0;
+
+					if (!type.equals(b)){
+						Logger.d(TAG, "Looking for %s but found %s at %d %d %d", type.getUnlocalizedName(), b.getUnlocalizedName(), p.down(i));
+						return 0;
+					}
 				}
 			}
 		}
 		if (large) {
 			if (type instanceof BlockCompressed) {
-				if (type.getMapColor(1).equals(MapColor.ironColor)) {
+				if (type.getMapColor(type.getDefaultState()).equals(MapColor.ironColor)) {
 					return 3;
 				}
-				if (type.getMapColor(1).equals(MapColor.goldColor)) {
+				if (type.getMapColor(type.getDefaultState()).equals(MapColor.goldColor)) {
 					return 4;
 				}
 			}
@@ -225,7 +237,7 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 				return 1;
 			}
 			if (type instanceof BlockCompressed) {
-				if (type.getMapColor(1).equals(MapColor.ironColor)) {
+				if (type.getMapColor(type.getDefaultState()).equals(MapColor.ironColor)) {
 					return 2;
 				}
 			}
@@ -267,12 +279,7 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbtTag = new NBTTagCompound();
 		this.writeToNBT(nbtTag);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
-	}
-
-	@Override
-	public String getInventoryName() {
-		return "block.vampirism.bloodAltarTier4.name";
+		return new S35PacketUpdateTileEntity(pos, 1, nbtTag);
 	}
 
 	/**
@@ -343,10 +350,10 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 	 * @return
 	 */
 	private BlockPos[] findTips() {
-		ArrayList<ChunkCoordinates> coord = new ArrayList<ChunkCoordinates>();
-		int lx = this.xCoord - 3;
-		int ly = this.yCoord;
-		int lz = this.zCoord - 3;
+		ArrayList<BlockPos> coord = new ArrayList<BlockPos>();
+		int lx = pos.getX() - 3;
+		int ly = pos.getY();
+		int lz = pos.getZ() - 3;
 		int hx = lx + 6;
 		int hy = ly + 4;
 		int hz = lz + 6;
@@ -354,13 +361,13 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 		for (int x = lx; x <= hx; x++) {
 			for (int z = lz; z <= hz; z++) {
 				for (int y = ly; y <= hy; y++) {
-					if (worldObj.getBlock(x, y, z).equals(ModBlocks.bloodAltar4Tip)) {
-						coord.add(new ChunkCoordinates(x, y, z));
+					if (worldObj.getBlockState(new BlockPos(x,y,z)).getBlock().equals(ModBlocks.bloodAltar4Tip)) {
+						coord.add(new BlockPos(x, y, z));
 					}
 				}
 			}
 		}
-		return coord.toArray(new ChunkCoordinates[coord.size()]);
+		return coord.toArray(new BlockPos[coord.size()]);
 	}
 
 	/**
@@ -398,13 +405,13 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 		if (!this.worldObj.isRemote) {
 			for (int i = 0; i < tips.length; i++) {
 				NBTTagCompound data = new NBTTagCompound();
-				data.setInteger("destX", tips[i].posX);
-				data.setInteger("destY", tips[i].posY);
-				data.setInteger("destZ", tips[i].posZ);
+				data.setInteger("destX", tips[i].getX());
+				data.setInteger("destY", tips[i].getY());
+				data.setInteger("destZ", tips[i].getZ());
 				data.setInteger("age", 100);
-				VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(1, this.xCoord, this.yCoord, this.zCoord, 5, data));
+				VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(1, pos.getX(),pos.getY(),pos.getZ(), 5, data));
 			}
-			this.worldObj.markBlockForUpdate(xCoord, yCoord, zCoord);
+			this.worldObj.markBlockForUpdate(pos);
 		}
 		player.addPotionEffect(new PotionEffect(Potion.resistance.id, DURATION_TICK, 10));
 		this.markDirty();
@@ -413,7 +420,7 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-		this.readFromNBT(pkt.func_148857_g());
+		this.readFromNBT(pkt.getNbtCompound());
 	}
 
 	@Override
@@ -434,47 +441,9 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 		}
 	}
 
-	/**
-	 * test method to set the blocks
-	 * 
-	 * @param lx
-	 * @param ly
-	 * @param lz
-	 * @param hx
-	 * @param hy
-	 * @param hz
-	 * @param structure
-	 */
-	@SuppressWarnings("unused")
-	private void setBlocks(int lx, int ly, int lz, int hx, int hy, int hz, int[][][] structure) {
-
-		for (int x = lx; x <= hx; x++) {
-			for (int z = lz; z <= hz; z++) {
-				for (int y = ly; y < hy; y++) {
-					int type = structure[y - ly][z - lz][x - lx];
-					if (type == 0) {
-						worldObj.setBlock(x, y, z, Blocks.air);
-					}
-					if (type == 2) {
-						worldObj.setBlock(x, y, z, ModBlocks.bloodAltar4Tip);
-					}
-					if (type == 3) {
-						worldObj.setBlock(x, y, z, ModBlocks.bloodAltar4);
-					}
-					if (type == 4) {
-						worldObj.setBlock(x, y, z, Blocks.bed);
-					}
-					if (type == 1) {
-						worldObj.setBlock(x, y, z, Blocks.stonebrick);
-					}
-
-				}
-			}
-		}
-	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 		runningTick--;
 		if (runningTick <= 0)
 			return;
@@ -496,11 +465,11 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 				if (runningTick % 15 == 0) {
 					for (int i = 0; i < tips.length; i++) {
 						NBTTagCompound data = new NBTTagCompound();
-						data.setInteger("destX", tips[i].posX);
-						data.setInteger("destY", tips[i].posY);
-						data.setInteger("destZ", tips[i].posZ);
+						data.setInteger("destX", tips[i].getX());
+						data.setInteger("destY", tips[i].getY());
+						data.setInteger("destZ", tips[i].getZ());
 						data.setInteger("age", 60);
-						VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(1, this.xCoord, this.yCoord, this.zCoord, 5, data));
+						VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(1, pos.getX(),pos.getY(),pos.getZ(), 5, data));
 					}
 				}
 			}
@@ -518,7 +487,7 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 			VampirePlayer.get(player).levelUp();
 			if (this.worldObj.isRemote) {
 				this.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, "random.explode", 4.0F, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
-				this.worldObj.spawnParticle("hugeexplosion", player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);
+				this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);
 			} else {
 				player.addPotionEffect(new PotionEffect(ModPotion.saturation.id, 400, 2));
 			}
@@ -526,6 +495,8 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 			player.addPotionEffect(new PotionEffect(Potion.damageBoost.id, 400, 2));
 		}
 	}
+
+
 
 	@Override
 	public void writeToNBT(NBTTagCompound tagCompound) {

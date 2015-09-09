@@ -37,13 +37,15 @@ public class Helper {
 		}
 
 		public static void fillMap() {
-			add("EntityPlayer/updateItemUse", "updateItemUse", "func_71010_c");
 			add("EntityPlayer/setSize", "setSize", "func_70105_a");
 			add("EntityPlayer/sleeping", "sleeping", "field_71083_bS");
 			add("EntityPlayer/sleepTimer", "sleepTimer", "field_71076_b");
 			add("Minecraft/fileAssets", "fileAssets", "field_110446_Y");
 			add("TileEntityBeacon/field_146015_k", "field_146015_k");
 			add("Entity/setSize", "setSize", "func_70105_a");
+			add("EntityPlayer/updateItemUse", "updateItemUse", "func_71010_c");
+			add("EntityRenderer/loadShader","loadShader","func_175069_a");
+			add("EntityRenderer/theShaderGroup","theShaderGroup","field_147707_d");
 		}
 
 		public static String[] getPosNames(String key) {
@@ -130,9 +132,9 @@ public class Helper {
 		float pitch = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * scale;
 		float yaw = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * scale;
 		double x = player.prevPosX + (player.posX - player.prevPosX) * scale;
-		double y = player.prevPosY + (player.posY - player.prevPosY) * scale + 1.62D - player.yOffset;
+		double y = player.prevPosY + (player.posY - player.prevPosY) * scale + 1.62D ;
 		double z = player.prevPosZ + (player.posZ - player.prevPosZ) * scale;
-		Vec3 vector1 = Vec3.createVectorHelper(x, y, z);
+		Vec3 vector1 = new Vec3(x, y, z);
 		float cosYaw = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
 		float sinYaw = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
 		float cosPitch = -MathHelper.cos(-pitch * 0.017453292F);
@@ -150,14 +152,14 @@ public class Helper {
 		return player.worldObj.rayTraceBlocks(vector1, vector2);
 	}
 
-	public static ChunkCoordinates getRandomPosInBox(World w, AxisAlignedBB box) {
+	public static BlockPos getRandomPosInBox(World w, AxisAlignedBB box) {
 		int x = (int) box.minX + w.rand.nextInt((int) (box.maxX - box.minX) + 1);
 		int z = (int) box.minZ + w.rand.nextInt((int) (box.maxZ - box.minZ) + 1);
-		int y = w.getHeightValue(x, z) + 1;
+		int y = w.getHorizon(new BlockPos(x,0, z)).getY() + 1;
 		if (y < box.minX || y > box.maxY) {
 			y = (int) box.minY + w.rand.nextInt((int) (box.maxY - box.minY) + 1);
 		}
-		return new ChunkCoordinates(x, y, z);
+		return new BlockPos(x, y, z);
 	}
 
 	public static void sendPacketToPlayersAround(IMessage message, Entity e) {
@@ -179,7 +181,8 @@ public class Helper {
 			p.worldObj.spawnEntityInWorld(e);
 			return e;
 		} else {
-			e.setPosition(x, p.worldObj.getHeightValue((int) Math.round(x), (int) Math.round(z)), z);
+			int y=p.worldObj.getHorizon(new BlockPos(x,0,z)).getY();
+			e.setPosition(x, y, z);
 			if (e.getCanSpawnHere()) {
 				p.worldObj.spawnEntityInWorld(e);
 				return e;
@@ -213,8 +216,8 @@ public class Helper {
 		boolean flag = false;
 		int i = 0;
 		while (!flag && i++ < maxTry) {
-			ChunkCoordinates c = getRandomPosInBox(world, box);
-			e.setPosition(c.posX, c.posY, c.posZ);
+			BlockPos c = getRandomPosInBox(world, box);
+			e.setPosition(c.getX(), c.getY(), c.getZ());
 			if (!(e instanceof EntityLiving) || ((EntityLiving) e).getCanSpawnHere()) {
 				flag = true;
 			}
@@ -237,10 +240,10 @@ public class Helper {
 		}
 	}
 
-	public static void spawnParticlesAroundEntity(EntityLivingBase e, String particle, double maxDistance, int amount) {
+	public static void spawnParticlesAroundEntity(EntityLivingBase e, EnumParticleTypes particle, double maxDistance, int amount) {
 		if (!e.worldObj.isRemote) {
 			NBTTagCompound nbt = new NBTTagCompound();
-			nbt.setString("particle", particle);
+			nbt.setInteger("particle_id", particle.getParticleID());
 			nbt.setInteger("id", e.getEntityId());
 			nbt.setDouble("distance", maxDistance);
 			Helper.sendPacketToPlayersAround(new SpawnCustomParticlePacket(2, 0, 0, 0, amount, nbt), e);
@@ -278,27 +281,26 @@ public class Helper {
 		entity.posY = y;
 		entity.posZ = z;
 		boolean flag = false;
-		int i = MathHelper.floor_double(entity.posX);
-		int j = MathHelper.floor_double(entity.posY);
-		int k = MathHelper.floor_double(entity.posZ);
+		BlockPos blockPos=entity.getPosition();
 
-		if (entity.worldObj.blockExists(i, j, k)) {
+
+		if (entity.worldObj.isBlockLoaded(blockPos)) {
 			boolean flag1 = false;
 
-			while (!flag1 && j > 0) {
-				Block block = entity.worldObj.getBlock(i, j - 1, k);
+			while (!flag1 && blockPos.getY() > 0) {
+				Block block = entity.worldObj.getBlockState(blockPos.down()).getBlock();
 				if (block.getMaterial().blocksMovement())
 					flag1 = true;
 				else {
 					--entity.posY;
-					--j;
+					blockPos=blockPos.down();
 				}
 			}
 
 			if (flag1) {
 				entity.setPosition(entity.posX, entity.posY, entity.posZ);
 
-				if (entity.worldObj.getCollidingBoundingBoxes(entity, entity.boundingBox).isEmpty() && !entity.worldObj.isAnyLiquid(entity.boundingBox))
+				if (entity.worldObj.getCollidingBoundingBoxes(entity, entity.getEntityBoundingBox()).isEmpty() && !entity.worldObj.isAnyLiquid(entity.getEntityBoundingBox()))
 					flag = true;
 			}
 		}
@@ -317,7 +319,7 @@ public class Helper {
 				double d7 = d3 + (entity.posX - d3) * d6 + (entity.getRNG().nextDouble() - 0.5D) * entity.width * 2.0D;
 				double d8 = d4 + (entity.posY - d4) * d6 + entity.getRNG().nextDouble() * entity.height;
 				double d9 = d5 + (entity.posZ - d5) * d6 + (entity.getRNG().nextDouble() - 0.5D) * entity.width * 2.0D;
-				entity.worldObj.spawnParticle("portal", d7, d8, d9, f, f1, f2);
+				entity.worldObj.spawnParticle(EnumParticleTypes.PORTAL, d7, d8, d9, f, f1, f2);
 			}
 
 			if (sound) {
@@ -340,7 +342,7 @@ public class Helper {
 
 	public static boolean isEntityInVampireBiome(Entity e){
 		if(e==null||e.worldObj==null)return false;
-		return e.worldObj.getBiomeGenForCoords(MathHelper.floor_double(e.posX),MathHelper.floor_double(e.posZ)) instanceof BiomeVampireForest;
+		return e.worldObj.getBiomeGenForCoords(e.getPosition()) instanceof BiomeVampireForest;
 	}
 
 	/**
@@ -374,8 +376,8 @@ public class Helper {
 		if (alsoRaytrace && !entity.canEntityBeSeen(target)) {
 			return false;
 		}
-		Vec3 look1 = Vec3.createVectorHelper(-Math.sin(entity.rotationYawHead / 180 * Math.PI), 0, Math.cos(entity.rotationYawHead / 180 * Math.PI));
-		Vec3 dist = Vec3.createVectorHelper(target.posX - entity.posX, 0, target.posZ - entity.posZ);
+		Vec3 look1 = new Vec3(-Math.sin(entity.rotationYawHead / 180 * Math.PI), 0, Math.cos(entity.rotationYawHead / 180 * Math.PI));
+		Vec3 dist = new Vec3(target.posX - entity.posX, 0, target.posZ - entity.posZ);
 		//look1.yCoord = 0;
 		look1 = look1.normalize();
 		dist = dist.normalize();

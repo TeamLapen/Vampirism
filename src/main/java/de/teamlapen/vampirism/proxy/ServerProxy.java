@@ -54,7 +54,7 @@ public class ServerProxy extends CommonProxy {
 		Helper.Reflection.callMethod(Entity.class, player, Helper.Obfuscation.getPosNames("Entity/setSize"), Helper.Reflection.createArray(float.class, float.class), width, height);
 		player.setPosition(player.posX, player.posY + (bat ? 1F : -1F) * (BatSkill.PLAYER_HEIGHT - BatSkill.BAT_HEIGHT), player.posZ);
 		// Logger.i("test", BatSkill.BAT_EYE_HEIGHT+": p "+player.getDefaultEyeHeight()+ ": y "+player.yOffset+" :e1 "+player.eyeHeight);
-		player.eyeHeight = (bat ? BatSkill.BAT_EYE_HEIGHT : player.getDefaultEyeHeight()) - player.yOffset;// Different from Client side
+		player.eyeHeight = (bat ? BatSkill.BAT_EYE_HEIGHT : player.getDefaultEyeHeight());// Different from Client side
 		// Logger.i("test2", BatSkill.BAT_EYE_HEIGHT+": p "+player.getDefaultEyeHeight()+ ": y "+player.yOffset+" :e2 "+player.eyeHeight);
 	}
 

@@ -14,6 +14,8 @@ import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
@@ -21,7 +23,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 /**
  * Packet to spawn custom particles
- * 
+ * TODO switch to Enum for types
  * @author Maxanier
  *
  */
@@ -50,7 +52,7 @@ public class SpawnCustomParticlePacket implements IMessage {
 				case 2:
 					Entity e = world.getEntityByID(message.data.getInteger("id"));
 					if (e != null && e instanceof EntityLivingBase) {
-						Helper.spawnParticlesAroundEntity((EntityLivingBase) e, message.data.getString("particle"), message.data.getDouble("distance"), message.amount);
+						Helper.spawnParticlesAroundEntity((EntityLivingBase) e, EnumParticleTypes.getParticleFromId(message.data.getInteger("particle_id")), message.data.getDouble("distance"), message.amount);
 					}
 					break;
 				case 3:
@@ -105,7 +107,7 @@ public class SpawnCustomParticlePacket implements IMessage {
 
 	/**
 	 * @param type
-	 *            0:Flying_Blood_Player,1:Flying_Blood,2:{@link Helper#spawnParticlesAroundEntity(EntityLivingBase, String, double, int)}
+	 *            0:Flying_Blood_Player,1:Flying_Blood,2:{@link Helper#spawnParticlesAroundEntity(EntityLivingBase, EnumParticleTypes, double, int)}
 	 * @param data
 	 *            CustomData
 	 */
@@ -120,6 +122,10 @@ public class SpawnCustomParticlePacket implements IMessage {
 
 	public SpawnCustomParticlePacket(int type, double posX, double posY, double posZ, int amount){
 		this(type, posX, posY, posZ, amount,new NBTTagCompound());
+	}
+
+	public SpawnCustomParticlePacket(int type,BlockPos pos,int amount){
+		this(type,pos.getX(),pos.getY(),pos.getZ(),amount);
 	}
 
 	@Override

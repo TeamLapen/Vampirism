@@ -30,6 +30,7 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.RenderBat;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.shader.ShaderGroup;
@@ -61,7 +62,7 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override public void addTickRunnable(TickRunnable run) {
-		super.addTickRunnable(run,true);
+		super.addTickRunnable(run, true);
 	}
 
 	@Override
@@ -128,16 +129,13 @@ public class ClientProxy extends CommonProxy {
 					active = true;
 				}
 				EntityRenderer renderer = mc.entityRenderer;
-				if (active && renderer.theShaderGroup == null) {
-					try {
-						renderer.theShaderGroup = new ShaderGroup(mc.getTextureManager(), mc.getResourceManager(), mc.getFramebuffer(), saturation1);
-						renderer.theShaderGroup.createBindFramebuffers(mc.displayWidth, mc.displayHeight);
-					} catch (JsonException e) {
+				if (active && renderer.getShaderGroup() == null) {
+					Helper.Reflection.callMethod(EntityRenderer.class,renderer,Helper.Obfuscation.getPosNames("EntityRenderer/loadShader"),new Class[]{ResourceLocation.class},saturation1);
 
-					}
-				} else if (!active && renderer.theShaderGroup != null && renderer.theShaderGroup.getShaderGroupName().equals(saturation1.toString())) {
-					renderer.theShaderGroup.deleteShaderGroup();
-					renderer.theShaderGroup = null;
+				} else if (!active && renderer.getShaderGroup() != null && renderer.getShaderGroup().getShaderGroupName().equals(saturation1.toString())) {
+					renderer.getShaderGroup().deleteShaderGroup();
+					Helper.Reflection.setPrivateField(EntityRenderer.class,renderer,null,Helper.Obfuscation.getPosNames("EntityRenderer/theShaderGroup"));
+					renderer.switchUseShader();
 				}
 			} catch (Exception e) {
 				if (Minecraft.getSystemTime() % 20000 == 0) {
@@ -149,7 +147,7 @@ public class ClientProxy extends CommonProxy {
 		if(i==0){
 			Minecraft mc=Minecraft.getMinecraft();
 			if(mc.theWorld!=null&&mc.thePlayer!=null&&!mc.isGamePaused()){
-				if(mc.theWorld.getBiomeGenForCoords(MathHelper.floor_double(mc.thePlayer.posX),MathHelper.floor_double(mc.thePlayer.posZ)) instanceof BiomeVampireForest){
+				if(mc.theWorld.getBiomeGenForCoords(mc.thePlayer.getPosition()) instanceof BiomeVampireForest){
 					PositionedSoundRecord sound = new PositionedSoundRecord(new ResourceLocation("vampirism:ambient.vampire_biome"), 0.6F, 1F,(float)(mc.thePlayer.posX+(10*(Math.random()-0.5D))),(float)mc.thePlayer.posY,(float)(mc.thePlayer.posZ+(10*(Math.random()-0.5D))));
 					mc.getSoundHandler().playSound(sound);
 				}
@@ -167,16 +165,17 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	public void registerRenderer() {
-		RenderingRegistry.registerEntityRenderingHandler(EntityVampireHunter.class, new VampireHunterRenderer());
-		RenderingRegistry.registerEntityRenderingHandler(EntityVampire.class, new VampireRenderer(0.5F));
-		 RenderingRegistry.registerEntityRenderingHandler(EntityDracula.class, new RendererDracula(new ModelDracula(), 0.5F));
-		RenderingRegistry.registerEntityRenderingHandler(EntityGhost.class, new RendererGhost(new ModelGhost(), 0.5F));
-		RenderingRegistry.registerEntityRenderingHandler(EntityVampireBaron.class, new RendererVampireBaron(0.5F));
-		RenderingRegistry.registerEntityRenderingHandler(EntityVampireMinion.class, new RendererVampireMinion(0.5F));
-		RenderingRegistry.registerEntityRenderingHandler(EntityDeadMob.class, new RendererDeadMob());
-		RenderingRegistry.registerEntityRenderingHandler(EntityBlindingBat.class, new RenderBat());
-		RenderingRegistry.registerEntityRenderingHandler(EntityPortalGuard.class,new RendererPortalGuard(0.5F));
-		RenderingRegistry.registerEntityRenderingHandler(EntityConvertedCreature.class, new RendererConvertedCreature());
+		RenderManager manager=Minecraft.getMinecraft().getRenderManager();
+		RenderingRegistry.registerEntityRenderingHandler(EntityVampireHunter.class, new VampireHunterRenderer(manager));
+		RenderingRegistry.registerEntityRenderingHandler(EntityVampire.class, new VampireRenderer(manager,0.5F));
+		 RenderingRegistry.registerEntityRenderingHandler(EntityDracula.class, new RendererDracula(manager,new ModelDracula(), 0.5F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityGhost.class, new RendererGhost(manager,new ModelGhost(), 0.5F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityVampireBaron.class, new RendererVampireBaron(manager,0.5F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityVampireMinion.class, new RendererVampireMinion(manager,0.5F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityDeadMob.class, new RendererDeadMob(manager));
+		RenderingRegistry.registerEntityRenderingHandler(EntityBlindingBat.class, new RenderBat(manager));
+		RenderingRegistry.registerEntityRenderingHandler(EntityPortalGuard.class,new RendererPortalGuard(manager,0.5F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityConvertedCreature.class, new RendererConvertedCreature(manager));
 		MinecraftForgeClient.registerItemRenderer(ModItems.pitchfork, new PitchforkRenderer());
 		// MinecraftForgeClient.registerItemRenderer(ModItems.torch, new RendererTorch());
 
@@ -212,8 +211,6 @@ public class ClientProxy extends CommonProxy {
 		TileEntitySpecialRenderer tent = new RendererTent();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTent.class, tent);
 		MinecraftForgeClient.registerItemRenderer(ModItems.tent, new RenderTileEntityItem(tent, new TileEntityTent()).setRotation(45F).setScale(0.55F));
-
-		ModItems.registerModels();
 	}
 
 	@Override
@@ -235,7 +232,7 @@ public class ClientProxy extends CommonProxy {
 		Helper.Reflection.callMethod(Entity.class, player, Helper.Obfuscation.getPosNames("Entity/setSize"), Helper.Reflection.createArray(float.class, float.class), width, height);
 		player.setPosition(player.posX, player.posY + (bat ? 1F : -1F) * (BatSkill.PLAYER_HEIGHT - BatSkill.BAT_HEIGHT), player.posZ);
 		// Logger.i("test3", BatSkill.BAT_EYE_HEIGHT+": p "+player.getDefaultEyeHeight()+ ": y "+player.yOffset+" :e1 "+player.eyeHeight);
-		player.eyeHeight = (bat ? BatSkill.BAT_EYE_HEIGHT - player.yOffset : player.getDefaultEyeHeight());// Different from Server side
+		player.eyeHeight = (bat ? BatSkill.BAT_EYE_HEIGHT  : player.getDefaultEyeHeight());// Different from Server side
 		// Logger.i("test4", BatSkill.BAT_EYE_HEIGHT+": p "+player.getDefaultEyeHeight()+ ": y "+player.yOffset+" :e2 "+player.eyeHeight);
 	}
 

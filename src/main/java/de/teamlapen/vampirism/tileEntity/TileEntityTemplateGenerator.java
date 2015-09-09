@@ -17,6 +17,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.chunk.Chunk;
 
 import java.io.File;
@@ -37,32 +38,32 @@ public class TileEntityTemplateGenerator extends TileEntity {
 		blockLists=new LinkedList<BlockList>();
 		extraList=new LinkedList<Extra>();
 		Chunk chunk=
-				this.getWorldObj().getChunkFromBlockCoords(this.xCoord, this.zCoord);
+				this.getWorld().getChunkFromBlockCoords(pos);
 
 		for(int x=0;x<16;x++){
 			for(int z=0;z<16;z++){
-				for(int y=this.yCoord+minY;y<worldObj.getActualHeight();y++){
+				for(int y=this.pos.getY()+minY;y<worldObj.getActualHeight();y++){
 					Block block=chunk.getBlock(x, y, z);
 					if(block.equals(ModBlocks.templateGenerator))continue;
 					if(block.equals(Blocks.sand))continue;
 					if(block.equals(Blocks.sandstone))continue;
-					if(block.getMaterial()==Material.air&&y>=this.yCoord)continue;
+					if(block.getMaterial()==Material.air&&y>=this.pos.getY())continue;
 					if(block.equals(Blocks.standing_sign)){
-						TileEntitySign sign= (TileEntitySign) chunk.getTileEntityUnsafe(x,y,z);
+						TileEntitySign sign= (TileEntitySign) chunk.getTileEntity(new BlockPos(x, y, z), Chunk.EnumCreateEntityType.CHECK);
 						if(sign!=null){
-							Extra e=new Extra(Extra.TYPE.SPAWN_ENTITY,new BlockList.BlockPosition(x,y-this.yCoord,z));
+							Extra e=new Extra(Extra.TYPE.SPAWN_ENTITY,new BlockPos(x,y-pos.getY(),z));
 							e.retrieveExtra(sign);
 							extraList.add(e);
 						}
-						if(y<this.yCoord){
-							addBlock(Blocks.air,new int[]{0,0,0,0},x,y-this.yCoord,z);
+						if(y<pos.getY()){
+							addBlock(Blocks.air,new int[]{0,0,0,0},x,y-pos.getY(),z);
 						}
 						continue;
 					}
 
-						int m=chunk.getBlockMetadata(x, y, z);
+						int m=block.getMetaFromState(chunk.getBlockState(new BlockPos(x, y, z)));
 						int[] meta=guessMetaForBlock(block,m);
-						addBlock(block,meta,x,y-this.yCoord,z);
+						addBlock(block,meta,x,y-pos.getY(),z);
 						Extra.TYPE extraType=null;
 						if(block instanceof BlockMobSpawner){
 							extraType= Extra.TYPE.SPAWNER;
@@ -84,9 +85,9 @@ public class TileEntityTemplateGenerator extends TileEntity {
 						}
 						if(extraType!=null){
 
-							TileEntity t=chunk.getTileEntityUnsafe(x, y, z);
+							TileEntity t=chunk.getTileEntity(new BlockPos(x, y, z), Chunk.EnumCreateEntityType.CHECK);
 							if(t!=null){
-								Extra e=new Extra(extraType,new BlockList.BlockPosition(x,y-this.yCoord,z));
+								Extra e=new Extra(extraType,new BlockPos(x,y-this.pos.getY(),z));
 								e.retrieveExtra(t);
 								extraList.add(e);
 							}
@@ -99,9 +100,9 @@ public class TileEntityTemplateGenerator extends TileEntity {
 			}
 		}
 		List<EntityPainting> paintings=new ArrayList<EntityPainting>();
-		chunk.getEntitiesOfTypeWithinAAAB(EntityPainting.class, AxisAlignedBB.getBoundingBox(Integer.MIN_VALUE, this.yCoord + minY, Integer.MIN_VALUE, Integer.MAX_VALUE, worldObj.getActualHeight(), Integer.MAX_VALUE), paintings, null);
+		chunk.getEntitiesOfTypeWithinAAAB(EntityPainting.class, new AxisAlignedBB(Integer.MIN_VALUE, pos.getY() + minY, Integer.MIN_VALUE, Integer.MAX_VALUE, worldObj.getActualHeight(), Integer.MAX_VALUE), paintings, null);
 		for(EntityPainting p:paintings){
-			Extra extra=new Extra(Extra.TYPE.PAINTING,new BlockList.BlockPosition(p.field_146063_b-(chunk.xPosition<<4),p.field_146064_c-this.yCoord,p.field_146062_d-(chunk.zPosition<<4)));
+			Extra extra=new Extra(Extra.TYPE.PAINTING,p.func_174857_n().add(-(chunk.xPosition<<4),this.pos.getY(),-(chunk.zPosition<<4)));
 			extra.retrieveExtra(p);
 			extraList.add(extra);
 		}

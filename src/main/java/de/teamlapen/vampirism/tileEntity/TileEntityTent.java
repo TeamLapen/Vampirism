@@ -9,15 +9,17 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 
 /**
  * Tileentity for the hunters tent
  * Handles hunter spawning
  */
-public class TileEntityTent extends TileEntity {
+public class TileEntityTent extends TileEntity implements IUpdatePlayerListBox{
 
     private boolean spawn = false;
     private SimpleSpawnerLogic spawnerLogic = new SimpleSpawnerLogic() {
@@ -25,7 +27,7 @@ public class TileEntityTent extends TileEntity {
 
         @Override
         protected void onReset() {
-            TileEntityTent.this.worldObj.addBlockEvent(getSpawnerX(), getSpawnerY(), getSpawnerZ(), ModBlocks.blockMainTent, 1, 0);
+            TileEntityTent.this.worldObj.addBlockEvent(getSpawnerPos(), ModBlocks.blockMainTent, 1, 0);
         }
 
         @Override
@@ -33,19 +35,23 @@ public class TileEntityTent extends TileEntity {
             return TileEntityTent.this.worldObj;
         }
 
+        public BlockPos getSpawnerPos(){
+            return TileEntityTent.this.getPos();
+        }
+
         @Override
         public int getSpawnerX() {
-            return TileEntityTent.this.xCoord;
+            return TileEntityTent.this.pos.getX();
         }
 
         @Override
         public int getSpawnerY() {
-            return TileEntityTent.this.yCoord;
+            return TileEntityTent.this.pos.getY();
         }
 
         @Override
         public int getSpawnerZ() {
-            return TileEntityTent.this.zCoord;
+            return TileEntityTent.this.pos.getZ();
         }
 
         @Override
@@ -68,8 +74,7 @@ public class TileEntityTent extends TileEntity {
     }
 
     @Override
-    public void updateEntity() {
-        super.updateEntity();
+    public void update() {
         if (spawn) {
             spawnerLogic.updateSpawner();
         }
@@ -94,7 +99,7 @@ public class TileEntityTent extends TileEntity {
     public Packet getDescriptionPacket() {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
         this.writeToNBT(nbttagcompound);
-        return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbttagcompound);
+        return new S35PacketUpdateTileEntity(this.pos, 1, nbttagcompound);
     }
 
     public boolean receiveClientEvent(int p_145842_1_, int p_145842_2_) {

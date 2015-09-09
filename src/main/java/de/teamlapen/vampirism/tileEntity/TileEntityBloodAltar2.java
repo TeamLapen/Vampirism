@@ -12,6 +12,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 
@@ -20,7 +21,7 @@ import net.minecraft.util.ChatComponentTranslation;
  * 
  * @author Maxanier
  */
-public class TileEntityBloodAltar2 extends TileEntity {
+public class TileEntityBloodAltar2 extends TileEntity implements IUpdatePlayerListBox{
 
 	public static final int MAX_BLOOD = 100;
 	public final static int MIN_LEVEL = 1;
@@ -44,7 +45,7 @@ public class TileEntityBloodAltar2 extends TileEntity {
 			bloodAmount = MAX_BLOOD;
 		}
 		markDirty();
-		this.worldObj.markBlockForUpdate(this.xCoord, yCoord, zCoord);
+		this.worldObj.markBlockForUpdate(this.pos);
 		return bloodAmount - old;
 	}
 
@@ -52,7 +53,7 @@ public class TileEntityBloodAltar2 extends TileEntity {
 		int amount=Math.min(maxAmount,bloodAmount);
 		bloodAmount-=amount;
 		markDirty();
-		this.worldObj.markBlockForUpdate(this.xCoord,this.yCoord,this.zCoord);
+		this.worldObj.markBlockForUpdate(this.pos);
 		return amount;
 	}
 
@@ -64,7 +65,7 @@ public class TileEntityBloodAltar2 extends TileEntity {
 	public Packet getDescriptionPacket() {
 		NBTTagCompound nbtTag = new NBTTagCompound();
 		this.writeToNBT(nbtTag);
-		return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 1, nbtTag);
+		return new S35PacketUpdateTileEntity(this.pos, 1, nbtTag);
 	}
 
 	public int getMaxBlood() {
@@ -73,7 +74,7 @@ public class TileEntityBloodAltar2 extends TileEntity {
 
 	@Override
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
-		readFromNBT(packet.func_148857_g());
+		readFromNBT(packet.getNbtCompound());
 	}
 
 	@Override
@@ -101,37 +102,13 @@ public class TileEntityBloodAltar2 extends TileEntity {
 
 		NBTTagCompound data = new NBTTagCompound();
 		data.setInteger("player_id", p.getEntityId());
-		VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(0, this.xCoord, this.yCoord, this.zCoord, 40, data));
+		VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(0, pos.getX(),pos.getY(),pos.getZ(), 40, data));
 
 		ritualPlayer = p;
 		ritualTicksLeft = RITUAL_TIME;
 	}
 
-	@Override
-	public void updateEntity() {
-		if (ritualTicksLeft == 0)
-			return;
 
-		switch (ritualTicksLeft) {
-		case 5:
-			getWorldObj().addWeatherEffect(new EntityLightningBolt(getWorldObj(), this.xCoord, this.yCoord, this.zCoord));
-			ritualPlayer.setHealth(ritualPlayer.getMaxHealth());
-
-			VampirePlayer.get(ritualPlayer).getBloodStats().addBlood(VampirePlayer.MAXBLOOD);
-
-			break;
-		case 1:
-			VampirePlayer player = VampirePlayer.get(ritualPlayer);
-			bloodAmount -= BALANCE.LEVELING.A2_getRequiredBlood(player.getLevel());
-			ritualPlayer.addPotionEffect(new PotionEffect(Potion.regeneration.id, player.getLevel() * 5));
-			player.levelUp();
-			markDirty();
-			this.worldObj.markBlockForUpdate(this.xCoord, yCoord, zCoord);
-			break;
-		}
-
-		ritualTicksLeft--;
-	}
 
 	@Override
 	public void writeToNBT(NBTTagCompound nbt) {
@@ -139,4 +116,29 @@ public class TileEntityBloodAltar2 extends TileEntity {
 		nbt.setInteger(KEY_BLOOD_AMOUNT, bloodAmount);
 	}
 
+	@Override
+	public void update() {
+		if (ritualTicksLeft == 0)
+			return;
+
+		switch (ritualTicksLeft) {
+			case 5:
+				getWorld().addWeatherEffect(new EntityLightningBolt(getWorld(), pos.getX(),pos.getY(),pos.getZ()));
+				ritualPlayer.setHealth(ritualPlayer.getMaxHealth());
+
+				VampirePlayer.get(ritualPlayer).getBloodStats().addBlood(VampirePlayer.MAXBLOOD);
+
+				break;
+			case 1:
+				VampirePlayer player = VampirePlayer.get(ritualPlayer);
+				bloodAmount -= BALANCE.LEVELING.A2_getRequiredBlood(player.getLevel());
+				ritualPlayer.addPotionEffect(new PotionEffect(Potion.regeneration.id, player.getLevel() * 5));
+				player.levelUp();
+				markDirty();
+				this.worldObj.markBlockForUpdate(this.pos);
+				break;
+		}
+
+		ritualTicksLeft--;
+	}
 }

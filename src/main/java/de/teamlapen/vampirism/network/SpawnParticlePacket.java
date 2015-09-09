@@ -6,7 +6,10 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -28,13 +31,13 @@ public class SpawnParticlePacket implements IMessage {
 				return null;
 			}
 			WorldClient world = Minecraft.getMinecraft().theWorld;
-			world.spawnParticle(message.type, message.x, message.y, message.z, message.velX, message.velY, message.velZ);
+			world.spawnParticle(message.type, message.x, message.y, message.z, message.velX, message.velY, message.velZ,message.params);
 			for (int i = 1; i < message.amount; i++) {
 				Random ran = world.rand;
 				double x = message.x + (ran.nextGaussian());
 				double y = message.y + (ran.nextGaussian());
 				double z = message.z + (ran.nextGaussian());
-				world.spawnParticle(message.type, x, y, z, ran.nextDouble(), ran.nextGaussian(), ran.nextGaussian());
+				world.spawnParticle(message.type, x, y, z, ran.nextDouble(), ran.nextGaussian(), ran.nextGaussian(),message.params);
 			}
 			return null;
 		}
@@ -43,26 +46,23 @@ public class SpawnParticlePacket implements IMessage {
 
 	private static void spawnEatParticle(EntityPlayer p) {
 		for (int j = 0; j < 16; ++j) {
-			Vec3 vec3 = Vec3.createVectorHelper((p.worldObj.rand.nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
-			vec3.rotateAroundX(-p.rotationPitch * (float) Math.PI / 180.0F);
-			vec3.rotateAroundY(-p.rotationYaw * (float) Math.PI / 180.0F);
-			Vec3 vec31 = Vec3.createVectorHelper((p.worldObj.rand.nextFloat() - 0.5D) * 0.3D, (-p.worldObj.rand.nextFloat()) * 0.6D - 0.3D, 0.6D);
-			vec31.rotateAroundX(-p.rotationPitch * (float) Math.PI / 180.0F);
-			vec31.rotateAroundY(-p.rotationYaw * (float) Math.PI / 180.0F);
-			vec31 = vec31.addVector(p.posX, p.posY + p.getEyeHeight(), p.posZ);
-			String s = "iconcrack_260";
-
-			// if (p_71010_1_.getHasSubtypes())
-			// {
-			// s = s + "_" + p_71010_1_.getItemDamage();
-			// }
-
-			p.worldObj.spawnParticle(s, vec31.xCoord, vec31.yCoord, vec31.zCoord, vec3.xCoord, vec3.yCoord + 0.05D, vec3.zCoord);
+			Vec3 vec3 = new Vec3((p.getRNG().nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
+			vec3= vec3.rotatePitch(-p.rotationPitch*(float)Math.PI/180F);
+			vec3= vec3.rotateYaw(-p.rotationYaw * (float) Math.PI / 180F);
+			double d0 = (double)(-p.getRNG().nextFloat()) * 0.6D - 0.3D;
+			Vec3 vec31 = new Vec3(((double)p.getRNG().nextFloat() - 0.5D) * 0.3D, d0, 0.6D);
+			vec31 = vec31.rotatePitch(-p.rotationPitch * (float)Math.PI / 180.0F);
+			vec31 = vec31.rotateYaw(-p.rotationYaw * (float)Math.PI / 180.0F);
+			vec31 = vec31.addVector(p.posX, p.posY + (double)p.getEyeHeight(), p.posZ);
+			
+			p.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, vec31.xCoord, vec31.yCoord, vec31.zCoord, vec3.xCoord, vec3.yCoord + 0.05D, vec3.zCoord, Item.getIdFromItem(Items.apple));
 		}
 	}
-	private String type;
+	private EnumParticleTypes type;
 
 	private double x, y, z, velX, velY, velZ;
+
+	private int[] params;
 
 	private int amount;
 
@@ -75,8 +75,7 @@ public class SpawnParticlePacket implements IMessage {
 
 	/**
 	 * Tells the client to spawn a particle. Arguments are the same as in {@link net.minecraft.world.World#spawnParticle}, only pamount is added
-	 * 
-	 * @param ptype
+	 *
 	 * @param px
 	 * @param py
 	 * @param pz
@@ -86,7 +85,7 @@ public class SpawnParticlePacket implements IMessage {
 	 * @param pamount
 	 *            Amount of randomly spawned particle
 	 */
-	public SpawnParticlePacket(String ptype, double px, double py, double pz, double pvelx, double pvely, double pvelz, int pamount) {
+	public SpawnParticlePacket(EnumParticleTypes ptype, double px, double py, double pz, double pvelx, double pvely, double pvelz, int pamount,int... params) {
 		type = ptype;
 		x = px;
 		y = py;
@@ -95,12 +94,13 @@ public class SpawnParticlePacket implements IMessage {
 		velY = pvely;
 		velZ = pvelz;
 		amount = pamount;
+		this.params=params;
 	}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		NBTTagCompound tag = ByteBufUtils.readTag(buf);
-		type = tag.getString("type");
+		type = EnumParticleTypes.getParticleFromId(tag.getInteger("type"));
 		x = tag.getDouble("x");
 		y = tag.getDouble("y");
 		z = tag.getDouble("z");
@@ -108,13 +108,19 @@ public class SpawnParticlePacket implements IMessage {
 		velY = tag.getDouble("velY");
 		velZ = tag.getDouble("velZ");
 		amount = tag.getInteger("amount");
+		if(tag.hasKey("params")){
+			params=tag.getIntArray("params");
+		}
+		else{
+			params=new int[0];
+		}
 
 	}
 
 	@Override
 	public void toBytes(ByteBuf buf) {
 		NBTTagCompound tag = new NBTTagCompound();
-		tag.setString("type", type);
+		tag.setInteger("type", type.getParticleID());
 		tag.setDouble("x", x);
 		tag.setDouble("y", y);
 		tag.setDouble("z", z);
@@ -122,6 +128,9 @@ public class SpawnParticlePacket implements IMessage {
 		tag.setDouble("velY", velY);
 		tag.setDouble("velZ", velZ);
 		tag.setInteger("amount", amount);
+		if(params!=null){
+			tag.setIntArray("params",params);
+		}
 		ByteBufUtils.writeTag(buf, tag);
 
 	}

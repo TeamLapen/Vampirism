@@ -173,10 +173,13 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 		this.slots = slots;
 	}
 
+
 	@Override
-	public void closeInventory() {
+	public void closeInventory(EntityPlayer player) {
 
 	}
+
+
 
 	@Override
 	public ItemStack decrStackSize(int slot, int amt) {
@@ -224,10 +227,13 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 		return null;
 	}
 
+
 	@Override
-	public boolean hasCustomInventoryName() {
+	public boolean hasCustomName() {
 		return false;
 	}
+
+
 
 	@Override
 	public boolean isItemValidForSlot(int slot, ItemStack stack) {
@@ -239,11 +245,11 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 
 	@Override
 	public boolean isUseableByPlayer(EntityPlayer player) {
-		return player.getDistanceSq(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5) < MAX_DIST_SQRT;
+		return player.getDistanceSq(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5) < MAX_DIST_SQRT;
 	}
 
 	@Override
-	public void openInventory() {
+	public void openInventory(EntityPlayer player) {
 
 	}
 
@@ -289,4 +295,25 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 		tagCompound.setTag("Inventory", itemList);
 	}
 
+	@Override
+	public int getField(int id) {
+		return 0;
+	}
+
+	@Override
+	public void setField(int id, int value) {
+
+	}
+
+	@Override
+	public int getFieldCount() {
+		return 0;
+	}
+
+	@Override
+	public void clear() {
+		for(int i=0;i<slots.length;i++){
+			slots[i]=null;
+		}
+	}
 }
