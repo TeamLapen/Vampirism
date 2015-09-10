@@ -54,7 +54,6 @@ public class ModelVampireHunter extends ModelBipedCloaked {
 		stake.setTextureSize(128, 64);
 		stake.mirror = true;
 
-		super.bipedEars = null;
 	}
 
 	public boolean getRenderWeapon() {

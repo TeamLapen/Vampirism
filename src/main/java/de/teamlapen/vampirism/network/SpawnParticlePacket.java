@@ -25,7 +25,8 @@ public class SpawnParticlePacket implements IMessage {
 		@Override
 		public IMessage onMessage(SpawnParticlePacket message, MessageContext ctx) {
 
-			if (message.type.equals("blood_eat")) {
+			//TODO move bite to CustomeParticle
+			if (message.type.equals(EnumParticleTypes.WATER_WAKE)) {
 				spawnEatParticle(VampirismMod.proxy.getSPPlayer());
 				Minecraft.getMinecraft().thePlayer.playSound(REFERENCE.MODID + ":player.bite", 1.0F, 1.0F);
 				return null;

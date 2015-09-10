@@ -151,7 +151,7 @@ public abstract class EntityVampirism extends EntityCreature {
      */
     protected void teleportAway() {
         this.setInvisible(true);
-        Helper.spawnParticlesAroundEntity(this, "portal", 5, 64);
+        Helper.spawnParticlesAroundEntity(this,EnumParticleTypes.PORTAL, 5, 64);
 
         this.worldObj.playSoundEffect(this.posX, this.posY, this.posZ, "mob.endermen.portal", 1.0F, 1.0F);
         this.playSound("mob.endermen.portal", 1.0F, 1.0F);

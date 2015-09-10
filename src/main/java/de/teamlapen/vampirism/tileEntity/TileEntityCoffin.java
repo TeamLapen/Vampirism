@@ -4,17 +4,16 @@ import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.block.BlockCoffin;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockBed;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTUtil;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 
-public class TileEntityCoffin extends TileEntity {
+public class TileEntityCoffin extends TileEntity implements IUpdatePlayerListBox{
 	public BlockPos otherPos;
 	public boolean occupied;
 	private boolean lastTickOccupied;
@@ -77,17 +76,17 @@ public class TileEntityCoffin extends TileEntity {
 	}
 
 	@Override
-	public void updateEntity() {
-		if ((this.getBlockMetadata() & -8) == 0)
+	public void update() {
+		if (!BlockCoffin.isHead(worldObj,pos))
 			return;
 		// On the server, metadata has priority over tile entity. On the client, tile entity has priority over metadata
-		if (!this.worldObj.isRemote && (occupied == ((this.getBlockMetadata() & 4) == 0))) {
+		if (!this.worldObj.isRemote && (occupied == (!BlockCoffin.isOccupied(worldObj,pos)))) {
 			occupied = !occupied;
 			needsAnimation = true;
 			markDirty();
 
 		} else{
-			BlockBed.func_149979_a(worldObj, pos, occupied);
+			BlockCoffin.setCoffinOccupied(worldObj, pos, occupied);
 		}
 
 			if(lastTickOccupied!=occupied){

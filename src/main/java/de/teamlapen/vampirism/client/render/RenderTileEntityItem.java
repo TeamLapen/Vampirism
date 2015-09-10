@@ -6,6 +6,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 
+/**
+ * Probably not required anymore TODO remove and replace
+ */
 public class RenderTileEntityItem implements IItemRenderer {
 	TileEntitySpecialRenderer render;
 
@@ -31,7 +34,7 @@ public class RenderTileEntityItem implements IItemRenderer {
 			GL11.glScalef(scale, scale, scale);
 		}
 		GL11.glRotatef(rotation, 0, 1, 0);
-		this.render.renderTileEntityAt(this.entity, 0.0D, 0.0D, 0.0D, 0.0F);
+		this.render.renderTileEntityAt(this.entity, 0.0D, 0.0D, 0.0D, 0.0F,0);
 	}
 
 	/**

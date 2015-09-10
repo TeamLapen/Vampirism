@@ -6,12 +6,15 @@ import de.teamlapen.vampirism.block.BlockChurchAltar.TileEntityChurchAltar;
 import de.teamlapen.vampirism.item.ItemCastleSlab;
 import de.teamlapen.vampirism.item.ItemMetaBlock;
 import de.teamlapen.vampirism.tileEntity.*;
+import de.teamlapen.vampirism.util.IIgnorePropsForRender;
+import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.MaterialLiquid;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.statemap.StateMap;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.init.Blocks;
@@ -19,9 +22,12 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.lang.reflect.Field;
 
 public class ModBlocks {
 
@@ -40,8 +46,8 @@ public class ModBlocks {
 	public final static BlockCastle castleBlock = new BlockCastle();
 	public final static BlockCastleSlab doubleCastleSlab = new BlockCastleSlabDouble();
 	public final static BlockCastleSlab castleSlab = new BlockCastleSlabHalf();
-	public final static BlockStairs castleStairsPurple = new BlockCastleStairs(castleBlock,0);
-	public final static BlockStairs castleStairsDark = new BlockCastleStairs(castleBlock,1);
+	public final static BlockStairs castleStairsPurple = new BlockCastleStairs(castleBlock.getStateFromMeta(0));
+	public final static BlockStairs castleStairsDark = new BlockCastleStairs(castleBlock.getStateFromMeta(1));
 	public final static BlockCastlePortal castlePortal = new BlockCastlePortal();
 	public final static BlockDraculaButton blockDraculaButton = new BlockDraculaButton();
 	public final static BlockMainTent blockMainTent = new BlockMainTent();
@@ -101,8 +107,28 @@ public class ModBlocks {
 
 	@SideOnly(Side.CLIENT)
 	public static void preInitClient(){
+
+		for(Field f:ModBlocks.class.getDeclaredFields()){
+			//Logger.t("%s (%s)",f,f.getType());
+			if(Block.class.isAssignableFrom(f.getType())){
+				//Logger.t("Checking %s (%s) for ignored properties",f,f.getType());
+				try {
+					Block b= (Block) f.get(null);
+					if(b instanceof IIgnorePropsForRender){
+						Logger.t("Adding ignored properties for %s",b);
+						ModelLoader.setCustomStateMapper(b,new StateMap.Builder().addPropertiesToIgnore(((IIgnorePropsForRender)b).getRenderIgnoredProperties()).build());
+					}
+
+				} catch (IllegalAccessException e) {
+					Logger.e("ModBlocks","Failed to retrieve block for %s",f);
+				}
+			}
+		}
+
+		ModelBakery.addVariantName(Item.getItemFromBlock(blockTent),"vampirism:tent");
+		ModelBakery.addVariantName(Item.getItemFromBlock(blockMainTent),"vampirism:tent_main");
 		ModelBakery.addVariantName(Item.getItemFromBlock(castleBlock), "vampirism:castleBlock_purpleBrick", "vampirism:castleBlock_darkBrick", "vampirism:castleBlock_darkBrickBloody");
-		ModelBakery.addVariantName(Item.getItemFromBlock(castleSlab),"vampirism:purpleBrick_slab","vampirism:darkBrick_slab");
+		ModelBakery.addVariantName(Item.getItemFromBlock(castleSlab), "vampirism:purpleBrick_slab", "vampirism:darkBrick_slab");
 	}
 
 	@SideOnly(Side.CLIENT)
@@ -110,6 +136,9 @@ public class ModBlocks {
 		reg(castleBlock,0,"castleBlock_purpleBrick");
 		reg(castleBlock,1,"castleBlock_darkBrick");
 		reg(castleBlock,2,"castleBlock_darkBrickBloody");
+		reg(blockTent,0,"tent");
+		reg(blockMainTent,0,"tent_main");
+		reg(cursedEarth,0,BlockCursedEarth.name);
 	}
 
 	private static void reg(Block block){

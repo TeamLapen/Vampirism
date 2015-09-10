@@ -21,6 +21,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -212,7 +213,7 @@ public abstract class EntityVampireMinion extends EntityDefaultVampire implement
 			oldVampireTexture = -1;
 		}
 		if (oldVampireTexture != -1 && worldObj.isRemote) {
-			Helper.spawnParticlesAroundEntity(this, "witchMagic", 1.0F, 3);
+			Helper.spawnParticlesAroundEntity(this, EnumParticleTypes.SPELL_WITCH, 1.0F, 3);
 		}
 		if (!this.worldObj.isRemote && !this.dead) {
 			@SuppressWarnings("rawtypes")

@@ -36,7 +36,7 @@ public class GUIBloodAltar4 extends GuiContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-		String string = this.tileAltar.hasCustomInventoryName() ? this.tileAltar.getInventoryName() : I18n.format(this.tileAltar.getInventoryName(), new Object[0]);
+		String string = this.tileAltar.hasCustomName() ? this.tileAltar.getName() : I18n.format(this.tileAltar.getName(), new Object[0]);
 		this.fontRendererObj.drawString(string, this.xSize / 2 - this.fontRendererObj.getStringWidth(string) + 6, 6, 4210752);
 		this.fontRendererObj.drawString(I18n.format("container.inventory", new Object[0]), 8, this.ySize - 94, 4210752);
 	}

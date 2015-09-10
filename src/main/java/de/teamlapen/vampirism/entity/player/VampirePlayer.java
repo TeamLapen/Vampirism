@@ -1179,8 +1179,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			if (amt > 0 && isAutoFillBlood()) {
 				fillBloodIntoInventory(amt);
 			}
-			VampirismMod.modChannel.sendToAll(new SpawnParticlePacket("magicCrit", e.posX, e.posY, e.posZ, player.posX - e.posX, player.posY - e.posY, player.posZ - e.posZ, 10));
-			VampirismMod.modChannel.sendTo(new SpawnParticlePacket("blood_eat", 0, 0, 0, 0, 0, 0, 10), (EntityPlayerMP) player);
+			VampirismMod.modChannel.sendToAll(new SpawnParticlePacket(EnumParticleTypes.CRIT_MAGIC, e.posX, e.posY, e.posZ, player.posX - e.posX, player.posY - e.posY, player.posZ - e.posZ, 10));
+			VampirismMod.modChannel.sendTo(new SpawnParticlePacket(EnumParticleTypes.WATER_WAKE/*replace with custom particle packet*/, 0, 0, 0, 0, 0, 0, 10), (EntityPlayerMP) player);
 
 		}
 	}

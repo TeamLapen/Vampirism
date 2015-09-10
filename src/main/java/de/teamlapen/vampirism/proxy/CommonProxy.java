@@ -54,9 +54,10 @@ public abstract class CommonProxy implements IProxy {
 
 	@Override
 	public void preInit() {
+		ModPotion.preInit();
 		ModBlocks.preInit();
 		ModItems.preInit();
-		ModPotion.preInit();
+
 		ModBiomes.preInit();
 		ModBlocks.registerRecipes();
 		ModItems.registerRecipes();

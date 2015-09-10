@@ -4,7 +4,12 @@ import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockBed;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyEnum;
+import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -15,6 +20,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -33,9 +39,63 @@ public class BlockCoffin extends BasicBlockContainer {
 	public final static Material material = Material.rock;
 	private final String TAG = "BlockCoffin";
 
+	public static final PropertyEnum PART = PropertyEnum.create("part", EnumPartType.class);
+	//public static final PropertyBool OCCUPIED = PropertyBool.create("occupied");
+
+
+	public static enum EnumPartType implements IStringSerializable{
+		HEAD("head"),
+		FOOT("foot");
+		private final String name;
+		EnumPartType(String name){
+			this.name=name;
+		}
+
+		@Override
+		public String getName() {
+			return name;
+		}
+
+
+		@Override
+		public String toString() {
+			return getName();
+		}
+	}
+
 	public BlockCoffin() {
 		super(material, name);
 		this.setCreativeTab(null);
+		this.setDefaultState(this.blockState.getBaseState().withProperty(BlockBed.OCCUPIED, false).withProperty(PART, EnumPartType.FOOT));
+	}
+
+	@Override
+	public IBlockState getStateFromMeta(int meta) {
+		EnumFacing enumFacing = EnumFacing.getHorizontal(meta);
+		return (meta&8)>0?this.getDefaultState().withProperty(PART,EnumPartType.HEAD).withProperty(FACING,enumFacing).withProperty(BlockBed.OCCUPIED,Boolean.valueOf((meta&4)>0)):this.getDefaultState().withProperty(PART, EnumPartType.FOOT).withProperty(FACING,enumFacing);
+	}
+
+	@Override
+	public int getMetaFromState(IBlockState state) {
+		byte b0 = 0;
+		int i = b0 | ((EnumFacing)state.getValue(FACING)).getHorizontalIndex();
+		if(state.getValue(PART)==EnumPartType.HEAD){
+			i|=8;
+			if(((Boolean)state.getValue(BlockBed.OCCUPIED)).booleanValue()){
+				i|=4;
+			}
+		}
+		return i;
+	}
+
+	@Override
+	protected BlockState createBlockState() {
+		return new BlockState(this,new IProperty[]{BlockBed.OCCUPIED,PART,FACING});
+	}
+
+	@Override
+	public TileEntity createNewTileEntity(World worldIn, int meta) {
+		return new TileEntityCoffin();
 	}
 
 	@Override
@@ -45,25 +105,31 @@ public class BlockCoffin extends BasicBlockContainer {
 			return;
 		world.setBlockToAir(te.otherPos);
 		world.removeTileEntity(te.otherPos);
-		if ((par & -8) != 0)
+		if (state.getValue(PART)==EnumPartType.HEAD)
 			world.spawnEntityInWorld(new EntityItem(world, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(ModItems.coffin, 1)));
-		if ((par & 4) != 0)
+		if(((Boolean)state.getValue(BlockBed.OCCUPIED)).booleanValue()) {
 			wakeSleepingPlayer(world, pos);
+		}
 		super.breakBlock(world, pos, state);
 	}
 
 
 	@Override
-	public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
-		return new TileEntityCoffin();
+	public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+		if (state.getValue(PART) == EnumPartType.FOOT)
+		{
+			IBlockState iblockstate1 = worldIn.getBlockState(pos.offset((EnumFacing)state.getValue(FACING)));
+
+			if (iblockstate1.getBlock() == this)
+			{
+				state = state.withProperty(BlockBed.OCCUPIED, iblockstate1.getValue(BlockBed.OCCUPIED));
+			}
+		}
+		return state;
 	}
 
 	public EnumFacing getCoffinDirection(IBlockAccess world,BlockPos pos){
-		//TODO implement
-		return null;
-	}
-	public int getDirection(World world, int x, int y, int z) {
-		return world.getBlockMetadata(x, y, z) & 3;
+		return (EnumFacing) world.getBlockState(pos).getValue(FACING);
 	}
 
 	// Miscellaneous methods (rendertype etc.)
@@ -84,7 +150,7 @@ public class BlockCoffin extends BasicBlockContainer {
 			return true;
 		} else {
 			// Gets the coordinates of the primary block
-			if ((world.getBlockMetadata(x, y, z) & -8) == 0) {
+			if (state.getValue(PART)==EnumPartType.FOOT) {
 				TileEntityCoffin te = (TileEntityCoffin) world.getTileEntity(pos);
 				pos=te.otherPos;
 			}
@@ -96,7 +162,7 @@ public class BlockCoffin extends BasicBlockContainer {
 			}
 
 			if (world.provider.canRespawnHere() && world.getBiomeGenForCoords(pos) != BiomeGenBase.hell) {
-				if ((world.getBlockMetadata(pos) & 4) != 0) {
+				if (((Boolean)state.getValue(BlockBed.OCCUPIED)).booleanValue()) {
 					player.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.coffin.occupied", new Object[0]));
 					return true;
 				}
@@ -142,8 +208,19 @@ public class BlockCoffin extends BasicBlockContainer {
 		}
 	}
 
+	public static boolean isOccupied(IBlockAccess world,BlockPos pos){
+		return (Boolean)world.getBlockState(pos).getValue(BlockBed.OCCUPIED);
+	}
+
+	public static void setCoffinOccupied(World world,BlockPos pos,boolean value){
+		IBlockState state=world.getBlockState(pos);
+		world.setBlockState(pos,state.withProperty(BlockBed.OCCUPIED,value),4);
+	}
 
 
+	public static boolean isHead(IBlockAccess world,BlockPos pos){
+		return world.getBlockState(pos).getValue(PART)==EnumPartType.HEAD;
+	}
 
 	public void setCoffinOccupied(World world, BlockPos pos, @Nullable EntityPlayer player, boolean flag) {
 		setBedOccupied(world, pos, player, flag);

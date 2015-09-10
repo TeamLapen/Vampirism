@@ -1,12 +1,18 @@
 package de.teamlapen.vampirism.item;
 
 import de.teamlapen.vampirism.ModBlocks;
+import de.teamlapen.vampirism.block.BasicBlockContainer;
+import de.teamlapen.vampirism.block.BlockCoffin;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import de.teamlapen.vampirism.util.Logger;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockBed;
 import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
@@ -26,41 +32,45 @@ public class ItemCoffin extends BasicItem {
 	}
 
 	@Override
-	public boolean onItemUse(ItemStack item, EntityPlayer player, World world, int x, int y, int z, int side, float xOffset, float yOffset, float zOffset) {
-		if (world.isRemote || side > 1)
+	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
+		if (world.isRemote)
+			return true;
+		if(side !=EnumFacing.UP){
 			return false;
+		}
 		// Increasing y, so the coffin is placed on top of the block that was
-		// clicked at
-		y++;
+		// clicked at except if the block is replaceable
+		IBlockState iblockstate = world.getBlockState(pos);
+		Block block = iblockstate.getBlock();
+		boolean replaceable = block.isReplaceable(world, pos);
+
+		if (!replaceable)
+		{
+			pos = pos.up();
+		}
 		// Direction the player is facing
 		int direction = MathHelper.floor_double((player.rotationYaw * 4F) / 360F + 0.5D) & 3;
-		BlockPos blockPos=new BlockPos(x,y,z);
-		if (world.isAirBlock(blockPos) && world.isAirBlock(new BlockPos(x + shiftArray[direction][0], y + shiftArray[direction][1], z + shiftArray[direction][2]))) {
-			if (!world.setBlockState(blockPos, ModBlocks.coffin.getStateFromMeta(direction|-8), 3))
-				Logger.w(TAG, "Primary coffin block placement failed");
-			else {
-				if (!world.setBlock(x + shiftArray[direction][0], y + shiftArray[direction][1], z + shiftArray[direction][2], ModBlocks.coffin, 0, 3))
-					Logger.w(TAG, "Secondary coffin block placement failed");
-				else {
-				}
-				TileEntityCoffin tePrim = (TileEntityCoffin) world.getTileEntity(x, y, z);
-				TileEntityCoffin teSec = (TileEntityCoffin) world.getTileEntity(x + shiftArray[direction][0], y + shiftArray[direction][1], z + shiftArray[direction][2]);
-				if (tePrim != null) {
-					tePrim.otherX = x + shiftArray[direction][0];
-					tePrim.otherY = y + shiftArray[direction][1];
-					tePrim.otherZ = z + shiftArray[direction][2];
-				} else
-					Logger.e(TAG, "No (primary) coffin tile entity found at x=" + x + ", y=" + y + ", z=" + z);
+		EnumFacing facing=EnumFacing.getHorizontal(direction);
+		BlockPos other=pos.offset(facing);
+		boolean other_replaceable = block.isReplaceable(world, other);
+		boolean flag1 = world.isAirBlock(pos) || replaceable;
+		boolean flag2 = world.isAirBlock(other) || other_replaceable;
 
-				if (teSec != null) {
-					teSec.otherX = x;
-					teSec.otherY = y;
-					teSec.otherZ = z;
-				} else
-					Logger.e(TAG, "No (secondary) coffin tile entity found at x=" + x + ", y=" + y + ", z=" + z);
+		if(player.canPlayerEdit(pos,side,stack)&&player.canPlayerEdit(other,side,stack)){
+			if(flag1&&flag2&&World.doesBlockHaveSolidTopSurface(world,pos.down())&&World.doesBlockHaveSolidTopSurface(world,other.down())){
+				IBlockState state1=ModBlocks.coffin.getDefaultState().withProperty(BlockBed.OCCUPIED,Boolean.valueOf(false)).withProperty(BlockCoffin.PART, BlockCoffin.EnumPartType.FOOT).withProperty(BasicBlockContainer.FACING,facing);
+				if(world.setBlockState(pos,state1,3)){
+					IBlockState state2=state1.withProperty(BlockCoffin.PART, BlockCoffin.EnumPartType.HEAD);
+					if(world.setBlockState(other,state2,3)){
+						((TileEntityCoffin)world.getTileEntity(pos)).otherPos=other;
+						((TileEntityCoffin)world.getTileEntity(other)).otherPos=pos;
+					}
+				}
+				--stack.stackSize;
+				return true;
 			}
 		}
-		item.stackSize--;
-		return true;
+		return false;
 	}
+
 }

@@ -18,13 +18,9 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.ChunkCoordinates;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IIcon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 import java.util.Random;
@@ -44,28 +40,17 @@ public class BlockDraculaButton extends BlockButton {
 
     @Override
     public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
-        int i1 = world.getBlockMetadata(posX, posY, posZ);
-        int j1 = i1 & 7;
-        int k1 = 8 - (i1 & 8);
-
-        if (k1 == 0 || world.provider.dimensionId != VampirismMod.castleDimensionId) {
+        if (((Boolean) state.getValue(POWERED)).booleanValue() || world.provider.getDimensionId() != VampirismMod.castleDimensionId) {
             return true;
         } else {
             if (!world.isRemote) {
                 int a = 5;
                 int maxTry = 25;
                 EntityDracula drac = null;
-                AxisAlignedBB box;
-                if ((i1 & 7) == 1) {
-                    box = AxisAlignedBB.getBoundingBox(posX, posY - 1, posZ - a, posX + a, posY + 2, posZ + a);
-                } else if ((i1 & 7) == 2) {
-                    box = AxisAlignedBB.getBoundingBox(posX - a, posY - 1, posZ - a, posX, posY + 2, posZ + a);
-                } else if ((i1 & 7) == 3) {
-                    box = AxisAlignedBB.getBoundingBox(posX - a, posY - 1, posZ, posX + a, posY + 2, posZ + a);
-                } else {
-                    box = AxisAlignedBB.getBoundingBox(posX - a, posY - 1, posZ - a, posX + a, posY + 2, posZ);
-                }
-                List list = world.getEntitiesWithinAABB(EntityDracula.class, AxisAlignedBB.getBoundingBox(posX - 100, 0, posZ - 100, posX + 100, 256, posZ + 100));
+                EnumFacing facing= (EnumFacing) state.getValue(FACING);
+                AxisAlignedBB box=new AxisAlignedBB(pos.offset(facing.rotateY(),a).down(),pos.offset(facing.rotateYCCW(),a).offset(facing,a).up(2));
+
+                List list = world.getEntitiesWithinAABB(EntityDracula.class, new AxisAlignedBB(pos.getX()-100,0,pos.getZ()-100,pos.getX()+100,0,pos.getZ()+100));
                 if (list.isEmpty()) {
                     if (VampireLordData.get(world).canCallDracula()) {
                         drac = (EntityDracula) EntityList.createEntityByName(REFERENCE.ENTITY.DRACULA_NAME, world);
@@ -82,8 +67,8 @@ public class BlockDraculaButton extends BlockButton {
 
                     int i = 0;
                     while (!flag && i++ < maxTry) {
-                        ChunkCoordinates c = Helper.getRandomPosInBox(world, box);
-                        drac.setPosition(c.posX, c.posY, c.posZ);
+                        BlockPos c = Helper.getRandomPosInBox(world, box);
+                        drac.setPosition(c.getX(),c.getY(),c.getZ());
                         if (!(drac instanceof EntityLiving) || (drac).getCanSpawnHere()) {
                             flag = true;
                         }
@@ -99,13 +84,14 @@ public class BlockDraculaButton extends BlockButton {
                     drac.heal(100F);
                 }
             }
-
-            world.setBlockMetadataWithNotify(posX, posY, posZ, j1 + k1, 3);
-            world.markBlockRangeForRenderUpdate(pos,pos);
+            world.setBlockState(pos, state.withProperty(POWERED, Boolean.valueOf(true)), 3);
+            world.markBlockRangeForRenderUpdate(pos, pos);
             world.playSoundEffect((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, "random.click", 0.3F, 0.6F);
             world.scheduleUpdate(pos, this, this.tickRate(world));
-            return true;
         }
+        return true;
+
+
     }
 
 

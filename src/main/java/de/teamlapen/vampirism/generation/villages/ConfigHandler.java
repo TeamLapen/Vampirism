@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
  * resources to the config folder as VillageBiomes.cfg if it doesn't already exist
  * 
  * @author WILLIAM
- *
+ * TODO make sure this works in 1.8
  */
 public class ConfigHandler {
 
@@ -81,11 +81,15 @@ public class ConfigHandler {
 			List<Pair<String, Integer>> meta=metas.get(block);
 			for(Pair<String,Block> repBlock:blocks.get(block)){
 				boolean replaced=false;
-				for(Pair<String,Integer> repMeta:meta){
-					if(repMeta.left.equals(repBlock.left)){
-						blockstates.add(new Pair<>(repBlock.left,repBlock.right.getStateFromMeta(repMeta.right)));
-						replaced=true;
-						break;
+				if(meta!=null) {
+
+
+					for (Pair<String, Integer> repMeta : meta) {
+						if (repMeta.left.equals(repBlock.left)) {
+							blockstates.add(new Pair<>(repBlock.left, repBlock.right.getStateFromMeta(repMeta.right)));
+							replaced = true;
+							break;
+						}
 					}
 				}
 				if(!replaced){

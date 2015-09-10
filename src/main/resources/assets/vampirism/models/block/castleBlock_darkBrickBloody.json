@@ -1,6 +1,6 @@
 {
   "parent":"block/cube_all",
   "textures": {
-    "all": "vampirism:castleBlock_darkBrickBloody"
+    "all": "vampirism:blocks/castleBlock_darkBrickBloody"
   }
 }

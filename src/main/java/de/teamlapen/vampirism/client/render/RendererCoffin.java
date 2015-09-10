@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
 
-public class RendererCoffin extends TileEntitySpecialRenderer {
+public class RendererCoffin extends VampirismTileEntitySpecialRenderer {
 	public static final String[] colors = new String[] { "black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange",
 			"white" };
 	private ModelCoffin model;
@@ -26,10 +26,7 @@ public class RendererCoffin extends TileEntitySpecialRenderer {
 		}
 	}
 
-	private void adjustRotatePivotViaMeta(World world, int x, int y, int z) {
-		int meta = world.getBlockMetadata(x, y, z);
-		GL11.glRotatef(meta * (-90), 0.0F, 1.0F, 0.0F);
-	}
+
 
 	private float calcLidAngle(int pos) {
 		if (pos == maxLidPos)
@@ -40,7 +37,7 @@ public class RendererCoffin extends TileEntitySpecialRenderer {
 	}
 
 	@Override
-	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float scale) {
+	public void renderTileEntity(TileEntity te, double x, double y, double z, float scale,int p5) {
 		TileEntityCoffin tile = (TileEntityCoffin) te;
 		if ((te.getBlockMetadata() & (-8)) == 0)
 			return;
@@ -57,7 +54,7 @@ public class RendererCoffin extends TileEntitySpecialRenderer {
 		int color = Math.min(tile.color, 15);
 		bindTexture(textures[color]);
 		GL11.glPushMatrix();
-		adjustRotatePivotViaMeta(te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord);
+		adjustRotatePivotViaMeta(te.getWorld(), te.getPos());
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 		model.rotateLid(calcLidAngle(tile.lidPos));
 		model.render(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);

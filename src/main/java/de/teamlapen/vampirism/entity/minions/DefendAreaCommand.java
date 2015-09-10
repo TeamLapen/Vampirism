@@ -46,7 +46,7 @@ public class DefendAreaCommand extends DefaultMinionCommand {
 		if (minion.hasHome()) {
 			oldHome = minion.getHome();
 		}
-		minion.setHomeArea(MathHelper.floor_double(minion.posX), MathHelper.floor_double(minion.posY), MathHelper.floor_double(minion.posZ), MAX_DISTANCE);
+		minion.setHomeArea(minion.getPosition(), MAX_DISTANCE);
 	}
 
 	@Override

@@ -37,10 +37,12 @@ public class BlockMainTent extends BlockTent implements ITileEntityProvider {
 
 
     @Override
-    public void breakBlock(World world, int x, int y, int z, Block p_149749_5_, int meta) {
-        super.breakBlock(world, x, y, z, p_149749_5_, meta);
-        world.spawnEntityInWorld(new EntityItem(world, x, y + 1, z, new ItemStack(ModItems.tent, 1)));
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        super.breakBlock(worldIn, pos, state);
+        worldIn.spawnEntityInWorld(new EntityItem(worldIn,pos.getX(),pos.getY()+1,pos.getZ(),new ItemStack(ModItems.tent,1)));
     }
+
+
 
     @Override
     public boolean onBlockEventReceived(World worldIn, BlockPos pos, IBlockState state, int eventID, int eventParam) {

@@ -44,6 +44,10 @@ public class UpdateEntityPacket implements IMessage {
 
 		@Override
 		public IMessage onMessage(UpdateEntityPacket message, MessageContext ctx) {
+			if(Minecraft.getMinecraft().theWorld==null){
+				Logger.w("UpdateEntity","World not loaded yet");
+				return null;
+			}
 			Entity e = Minecraft.getMinecraft().theWorld.getEntityByID(message.id);
 			if (e != null) {
 				ISyncable s = tryToGetISyncable(e);

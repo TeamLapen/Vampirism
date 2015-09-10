@@ -34,7 +34,7 @@ import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-@Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION, acceptedMinecraftVersions = "[1.7.10]", dependencies = "required-after:Forge@[10.13.4.1448,)", guiFactory = "de.teamlapen.vampirism.client.gui.ModGuiFactory")
+@Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION, acceptedMinecraftVersions = "[1.8]", dependencies = "required-after:Forge@[11.14.3.1450,)", guiFactory = "de.teamlapen.vampirism.client.gui.ModGuiFactory")
 public class VampirismMod {
 
 	@Instance(value = REFERENCE.MODID)
