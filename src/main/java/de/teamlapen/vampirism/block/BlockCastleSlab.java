@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.block;
 
 import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.util.IBlockRegistrable;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.BlockSlab;
 import net.minecraft.block.material.Material;
@@ -23,7 +24,22 @@ import java.util.Random;
 /**
  * Slab block for Castle Block
  */
-public abstract class BlockCastleSlab extends BlockSlab {
+public abstract class BlockCastleSlab extends BlockSlab  implements IBlockRegistrable{
+
+
+	@Override
+	public String[] getVariantsToRegister() {
+		String[] variants=new String[EnumType.META_LOOKUP.length];
+		for(int i=0;i<variants.length;i++){
+			variants[i]=name+"_"+EnumType.META_LOOKUP[i].getName();
+		}
+		return variants;
+	}
+
+	@Override
+	public boolean shouldRegisterSimpleItem() {
+		return false;
+	}
 
 
 	public static final PropertyEnum VARIANT = PropertyEnum.create("variant",EnumType.class);
@@ -46,8 +62,8 @@ public abstract class BlockCastleSlab extends BlockSlab {
 	}
 
 	public enum EnumType implements IStringSerializable{
-		PURPLE(0,"castleBlock_purpleBrick"),
-		DARK(1,"castleBlock_darkBrick");
+		PURPLE(0,"purpleBrick"),
+		DARK(1,"darkBrick");
 		private int meta;
 		private String name;
 

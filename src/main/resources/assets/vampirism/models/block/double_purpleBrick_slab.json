@@ -1,0 +1,7 @@
+{
+  "parent": "block/cube_column",
+  "textures": {
+    "end": "vampirism:blocks/castleBlock_purpleSlab",
+    "side": "vampirism:blocks/castleBlock_purpleSlab"
+  }
+}

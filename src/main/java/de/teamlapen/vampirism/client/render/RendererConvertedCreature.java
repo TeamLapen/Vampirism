@@ -25,7 +25,7 @@ public class RendererConvertedCreature extends Render {
 
         if (e != null) {
             e.isDead = false;
-            this.renderManager.doRenderEntity(entity, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_,false);
+            this.renderManager.doRenderEntity(e, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_,false);
             e.isDead = true;
         }
     }

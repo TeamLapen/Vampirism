@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.block;
 
 import de.teamlapen.vampirism.item.ItemMetaBlock;
+import de.teamlapen.vampirism.util.IBlockRegistrable;
+import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockState;
@@ -21,13 +23,13 @@ import java.util.Random;
 /**
  * Simple block for castles similar to stone bricks
  */
-public class BlockCastle extends BasicBlock implements ItemMetaBlock.IMetaBlockName{
+public class BlockCastle extends BasicBlock implements ItemMetaBlock.IMetaBlockName,IBlockRegistrable{
 
 	public static final PropertyEnum TYPE= PropertyEnum.create("type",EnumType.class);
 
 	@Override
 	public String getSpecialName(ItemStack stack) {
-		return EnumType.fromID(stack.getItemDamage()).getName();
+		return null;//EnumType.fromID(stack.getItemDamage()).getName();
 	}
 
 	@Override
@@ -35,11 +37,30 @@ public class BlockCastle extends BasicBlock implements ItemMetaBlock.IMetaBlockN
 		return new ItemStack(Item.getItemFromBlock(this),1,this.getMetaFromState(world.getBlockState(pos)));
 	}
 
+	@Override
+	public String[] getVariantsToRegister() {
+		String[] variants=new String[EnumType.ID_LOOKUP.length];
+		for(int i=0;i<variants.length;i++){
+			variants[i]=name+"_"+EnumType.ID_LOOKUP[i].getName();
+		}
+		return variants;
+	}
+
+	@Override
+	public boolean shouldRegisterSimpleItem() {
+		return false;
+	}
+
+
 	public enum EnumType implements IStringSerializable{
 		PURPLE(0,"purpleBrick"),
 		DARK(1,"darkBrick"),
 		DARK_BLOODY(2,"darkBrickBloody");
 
+		private final static EnumType[] ID_LOOKUP;
+		static {
+			ID_LOOKUP=values();
+		}
 		private int id;
 		private String name;
 
@@ -60,8 +81,8 @@ public class BlockCastle extends BasicBlock implements ItemMetaBlock.IMetaBlockN
 		}
 
 		public static EnumType fromID(int id){
-			for(EnumType t:EnumType.values()){
-				if(t.id==id)return t;
+			if(id<ID_LOOKUP.length){
+				return ID_LOOKUP[id];
 			}
 			return PURPLE;
 		}
@@ -94,19 +115,17 @@ public class BlockCastle extends BasicBlock implements ItemMetaBlock.IMetaBlockN
 	}
 
 
-
-	public int damageDropped(int p_149692_1_)
-	{
-		//Do not drop the bloody stone
-		if(p_149692_1_==2)return 1;
-		return p_149692_1_;
+	@Override
+	public int damageDropped(IBlockState state) {
+		if(state.getValue(TYPE)==EnumType.DARK_BLOODY)return EnumType.DARK.id;
+		return ((EnumType)state.getValue(TYPE)).id;
 	}
 
 	@SideOnly(Side.CLIENT)
 	public void getSubBlocks(Item item, CreativeTabs creativeTab, List list)
 	{
-		for(int i=0;i<EnumType.values().length;i++){
-			list.add(new ItemStack(item,1,i));
+		for(int i=0;i<EnumType.ID_LOOKUP.length;i++){
+			list.add(new ItemStack(item, 1, i));
 		}
 	}
 

@@ -18,6 +18,11 @@ import net.minecraft.world.World;
  */
 public class BlockMainTent extends BlockTent implements ITileEntityProvider {
 
+    @Override
+    public String[] getVariantsToRegister() {
+        return new String[]{name};
+    }
+
     public static final String name = "tent_main";
 
     public BlockMainTent() {

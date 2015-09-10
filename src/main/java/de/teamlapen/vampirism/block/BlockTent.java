@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.block;
 
+import de.teamlapen.vampirism.util.IBlockRegistrable;
 import de.teamlapen.vampirism.util.IIgnorePropsForRender;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -17,7 +18,7 @@ import java.util.Random;
 /**
  * Basic tent block. Mainly placeholder for the tent rendered for {@link BlockMainTent}
  */
-public class BlockTent extends BasicBlock  implements IIgnorePropsForRender{
+public class BlockTent extends BasicBlock  implements IIgnorePropsForRender,IBlockRegistrable{
 
     public static final PropertyDirection FACING = PropertyDirection.create("facing",EnumFacing.Plane.HORIZONTAL);
     public static final PropertyEnum POSITION = PropertyEnum.create("position",EnumPos.class);
@@ -25,6 +26,16 @@ public class BlockTent extends BasicBlock  implements IIgnorePropsForRender{
     @Override
     public IProperty[] getRenderIgnoredProperties() {
         return new IProperty[]{FACING,POSITION};
+    }
+
+    @Override
+    public String[] getVariantsToRegister() {
+        return new String[]{name};
+    }
+
+    @Override
+    public boolean shouldRegisterSimpleItem() {
+        return false;
     }
 
     public enum EnumPos implements IStringSerializable{

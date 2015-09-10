@@ -77,7 +77,7 @@ public class ConfigHandler {
 		Map<Block, List<Pair<String, Integer>>> metas=getMetaReplacement();
 
 		for(Block block:blocks.keySet()){
-			List<Pair<String,IBlockState>> blockstates=new ArrayList<>();
+			List<Pair<String,IBlockState>> blockstates=new ArrayList<Pair<String, IBlockState>>();
 			List<Pair<String, Integer>> meta=metas.get(block);
 			for(Pair<String,Block> repBlock:blocks.get(block)){
 				boolean replaced=false;
@@ -86,14 +86,14 @@ public class ConfigHandler {
 
 					for (Pair<String, Integer> repMeta : meta) {
 						if (repMeta.left.equals(repBlock.left)) {
-							blockstates.add(new Pair<>(repBlock.left, repBlock.right.getStateFromMeta(repMeta.right)));
+							blockstates.add(new Pair<String, IBlockState>(repBlock.left, repBlock.right.getStateFromMeta(repMeta.right)));
 							replaced = true;
 							break;
 						}
 					}
 				}
 				if(!replaced){
-					blockstates.add(new Pair<>(repBlock.left,repBlock.right.getDefaultState()));
+					blockstates.add(new Pair<String, IBlockState>(repBlock.left,repBlock.right.getDefaultState()));
 				}
 			}
 			replacements.put(block,blockstates);

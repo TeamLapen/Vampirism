@@ -19,6 +19,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.NetworkRegistry.TargetPoint;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import org.apache.commons.lang3.ArrayUtils;
 import scala.actors.threadpool.Arrays;
 
 import java.lang.reflect.Field;
@@ -400,6 +401,14 @@ public class Helper {
 
 	public static BlockPos readPos(NBTTagCompound nbt,String base){
 		return new BlockPos(nbt.getInteger(base+"_x"),nbt.getInteger(base+"_y"),nbt.getInteger(base+"_z"));
+	}
+
+	public static String[] prefix(String prefix,String... strings){
+		String[] result=new String[strings.length];
+		for(int i=0;i<strings.length;i++){
+			result[i]=prefix+strings[i];
+		}
+		return result;
 	}
 
 }

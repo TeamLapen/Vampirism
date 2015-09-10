@@ -1,8 +1,8 @@
 {
 	"variants": {
-		"seamless=true,variant=purpleBrick": { "model": "vampirism:purpleBrick_block" },
-		"seamless=false,variant=purpleBrick": { "model": "vampirism:purpleBrick_block" },
-		"seamless=true,variant=darkBrick": { "model": "vampirism:darkBrick_block" },
-		"seamless=false,variant=darkBrick": { "model": "vampirism:darkBrick_block" }
+		"seamless=true,variant=purplebrick": { "model": "vampirism:double_purpleBrick_slab" },
+		"seamless=false,variant=purplebrick": { "model": "vampirism:double_purpleBrick_slab" },
+		"seamless=true,variant=darkbrick": { "model": "vampirism:double_darkBrick_slab" },
+		"seamless=false,variant=darkbrick": { "model": "vampirism:double_darkBrick_slab" }
 	}
 }

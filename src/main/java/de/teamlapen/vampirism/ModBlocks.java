@@ -6,9 +6,7 @@ import de.teamlapen.vampirism.block.BlockChurchAltar.TileEntityChurchAltar;
 import de.teamlapen.vampirism.item.ItemCastleSlab;
 import de.teamlapen.vampirism.item.ItemMetaBlock;
 import de.teamlapen.vampirism.tileEntity.*;
-import de.teamlapen.vampirism.util.IIgnorePropsForRender;
-import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.material.MapColor;
@@ -28,6 +26,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ModBlocks {
 
@@ -69,7 +69,7 @@ public class ModBlocks {
 		GameRegistry.registerBlock(doubleCastleSlab,ItemCastleSlab.class,BlockCastleSlab.doubleName,castleSlab,doubleCastleSlab,true);
 		GameRegistry.registerBlock(castleStairsDark,BlockCastleStairs.name+"_dark");
 		GameRegistry.registerBlock(castleStairsPurple,BlockCastleStairs.name+"_purple");
-		GameRegistry.registerBlock(castlePortal,BlockCastlePortal.name);
+		GameRegistry.registerBlock(castlePortal,null,BlockCastlePortal.name);
 		GameRegistry.registerBlock(blockDraculaButton, BlockDraculaButton.name);
 		GameRegistry.registerBlock(blockMainTent, BlockMainTent.name);
 		GameRegistry.registerBlock(blockTent, BlockTent.name);
@@ -106,8 +106,10 @@ public class ModBlocks {
 	}
 
 	@SideOnly(Side.CLIENT)
+	private static List<Block> blocksToItemRegister;
+	@SideOnly(Side.CLIENT)
 	public static void preInitClient(){
-
+		blocksToItemRegister=new ArrayList<Block>();
 		for(Field f:ModBlocks.class.getDeclaredFields()){
 			//Logger.t("%s (%s)",f,f.getType());
 			if(Block.class.isAssignableFrom(f.getType())){
@@ -118,33 +120,58 @@ public class ModBlocks {
 						Logger.t("Adding ignored properties for %s",b);
 						ModelLoader.setCustomStateMapper(b,new StateMap.Builder().addPropertiesToIgnore(((IIgnorePropsForRender)b).getRenderIgnoredProperties()).build());
 					}
+					if(b instanceof IBlockRegistrable){
+						blocksToItemRegister.add(b);
+						if(!((IBlockRegistrable) b).shouldRegisterSimpleItem()){
+							String[] variants=((IBlockRegistrable) b).getVariantsToRegister();
+							if(variants!=null){
+								ModelBakery.addVariantName(Item.getItemFromBlock(b), Helper.prefix("vampirism:",variants));
+							}
+						}
+
+					}
 
 				} catch (IllegalAccessException e) {
 					Logger.e("ModBlocks","Failed to retrieve block for %s",f);
 				}
 			}
 		}
-
-		ModelBakery.addVariantName(Item.getItemFromBlock(blockTent),"vampirism:tent");
-		ModelBakery.addVariantName(Item.getItemFromBlock(blockMainTent),"vampirism:tent_main");
-		ModelBakery.addVariantName(Item.getItemFromBlock(castleBlock), "vampirism:castleBlock_purpleBrick", "vampirism:castleBlock_darkBrick", "vampirism:castleBlock_darkBrickBloody");
-		ModelBakery.addVariantName(Item.getItemFromBlock(castleSlab), "vampirism:purpleBrick_slab", "vampirism:darkBrick_slab");
 	}
+
+
 
 	@SideOnly(Side.CLIENT)
 	public static void initClient(){
-		reg(castleBlock,0,"castleBlock_purpleBrick");
-		reg(castleBlock,1,"castleBlock_darkBrick");
-		reg(castleBlock,2,"castleBlock_darkBrickBloody");
-		reg(blockTent,0,"tent");
-		reg(blockMainTent,0,"tent_main");
-		reg(cursedEarth,0,BlockCursedEarth.name);
+		for(Block b:blocksToItemRegister){
+			if(((IBlockRegistrable)b).shouldRegisterSimpleItem()){
+				Logger.t("Simple reg %s",b);
+				reg(b);
+			}
+			else{
+				String[] variants=((IBlockRegistrable)b).getVariantsToRegister();
+				if(variants!=null){
+					reg(b,variants);
+					Logger.t("Variant reg %s %s",b,variants);
+				}
+			}
+		}
+		reg(cursedEarth);
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(blockDraculaButton), 0, new ModelResourceLocation("stone_button","inventory"));
 	}
 
+	@SideOnly(Side.CLIENT)
 	private static void reg(Block block){
-
+		String file=block.getUnlocalizedName().replace("tile." + REFERENCE.MODID + ".", "");
+		reg(block,0,file);
 	}
 
+	@SideOnly(Side.CLIENT)
+	private static void reg(Block block,String... filesForMeta){
+		for(int i=0;i<filesForMeta.length;i++){
+			reg(block,i,filesForMeta[i]);
+		}
+	}
+	@SideOnly(Side.CLIENT)
 	private static void reg(Block block,int meta,String file){
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher()
 				.register(Item.getItemFromBlock(block), meta, new ModelResourceLocation(REFERENCE.MODID+ ":" + file, "inventory"));

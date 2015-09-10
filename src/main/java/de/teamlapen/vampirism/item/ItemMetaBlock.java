@@ -21,10 +21,16 @@ public class ItemMetaBlock extends ItemBlock {
 
 	@Override
 	public String getUnlocalizedName(ItemStack stack) {
-		return super.getUnlocalizedName(stack) + "." + ((IMetaBlockName)this.block).getSpecialName(stack);
+		String name=((IMetaBlockName)this.block).getSpecialName(stack);
+		return super.getUnlocalizedName(stack) +((name==null)?"": ("." +name)) ;
 	}
 
 	public static interface IMetaBlockName{
+		/**
+		 * Get the special name, which is added to the default unloc name (<unlocname>.<special name>) Can be null, if no extra name should be added
+		 * @param stack
+		 * @return
+		 */
 		String getSpecialName(ItemStack stack);
 	}
 }

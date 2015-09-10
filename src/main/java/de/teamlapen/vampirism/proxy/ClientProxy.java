@@ -176,8 +176,9 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlindingBat.class, new RenderBat(manager));
 		RenderingRegistry.registerEntityRenderingHandler(EntityPortalGuard.class,new RendererPortalGuard(manager,0.5F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityConvertedCreature.class, new RendererConvertedCreature(manager));
-		// MinecraftForgeClient.registerItemRenderer(ModItems.torch, new RendererTorch());
 
+
+		//TODO update forge and use https://github.com/MinecraftForge/MinecraftForge/commit/b175d265b9643faf3408754f6923a8f55f6ee5d3 for rendering
 		// BloodAltar
 		TileEntitySpecialRenderer bloodAltar = new RendererBloodAltar1();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltar1.class, bloodAltar);

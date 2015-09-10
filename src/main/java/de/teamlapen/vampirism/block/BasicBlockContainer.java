@@ -32,20 +32,10 @@ public abstract class BasicBlockContainer extends BlockContainer {
 		return -1;
 	}
 
-	@Override
-	public String getUnlocalizedName() {
-		return String.format("block.%s%s", REFERENCE.MODID.toLowerCase() + ".", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
-	}
 
 	protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
 		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
 	}
-
-	@Override
-	public boolean hasTileEntity() {
-		return true;
-	}
-
 	@Override
 	public boolean isOpaqueCube() {
 		return false;
