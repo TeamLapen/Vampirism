@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
@@ -389,8 +390,12 @@ public class Helper {
 
 	}
 
-	public static interface IntToInt {
-		int match(int i);
+	public static interface IntToString {
+		String match(int i);
+	}
+
+	public static interface StackToString{
+		String match(ItemStack stack);
 	}
 
 	public static void write(NBTTagCompound nbt,String base,BlockPos pos){

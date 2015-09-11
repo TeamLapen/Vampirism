@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.item;
 
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.util.IItemRegistrable;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,7 +10,7 @@ import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.util.EnumHelper;
 
-public class ItemVampireArmor extends ItemArmor {
+public class ItemVampireArmor extends ItemArmor implements IItemRegistrable {
 
 
 	private static final String name = "vampireArmor";
@@ -43,7 +44,7 @@ public class ItemVampireArmor extends ItemArmor {
 		super(ModItems.ARMOR_BLOOD_IRON, renderIndex, armorType);
 
 		setCreativeTab(VampirismMod.tabVampirism);
-		this.setUnlocalizedName(name + "_" + getSuffixFromId(armorType));
+		this.setUnlocalizedName(REFERENCE.MODID+"."+name + "_" + getSuffixFromId(armorType));
 	}
 
 //	@Override
@@ -59,4 +60,8 @@ public class ItemVampireArmor extends ItemArmor {
 	}
 
 
+	@Override
+	public String getBaseName() {
+		return name+"_"+getSuffixFromId(armorType);
+	}
 }

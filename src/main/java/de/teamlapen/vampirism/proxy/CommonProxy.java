@@ -190,9 +190,9 @@ public abstract class CommonProxy implements IProxy {
 		registerEntity(EntityConvertedCreature.class, REFERENCE.ENTITY.CONVERTED_CREATURE, false);
 		registerEntity(EntityConvertedVillager.class, REFERENCE.ENTITY.CONVERTED_VILLAGER, false);
 		registerEntity(EntityConvertedSheep.class, REFERENCE.ENTITY.CONVERTED_SHEEP, false);
-		Item item = new ItemSpawnEgg(spawnableEntityNames);
-		GameRegistry.registerItem(item, ItemSpawnEgg.name);
-		OreDictionary.registerOre("mobEgg", item);
+		ModItems.spawn_egg= new ItemSpawnEgg(spawnableEntityNames);
+		GameRegistry.registerItem(ModItems.spawn_egg, ItemSpawnEgg.name);
+		OreDictionary.registerOre("mobEgg", ModItems.spawn_egg);
 
 		registerConvertibles();
 

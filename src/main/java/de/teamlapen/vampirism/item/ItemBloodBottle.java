@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.item;
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.IItemRegistrable;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -23,7 +25,7 @@ import java.util.List;
  * @author WILLIAM
  *
  */
-public class ItemBloodBottle extends ItemGlassBottle {
+public class ItemBloodBottle extends ItemGlassBottle implements IItemRegistrable.IItemMetaRegistrable{
 
 	public static final String name = "bloodBottle";
 
@@ -152,4 +154,23 @@ public class ItemBloodBottle extends ItemGlassBottle {
 		return stack;
 	}
 
+	@Override
+	public int getMetaCount() {
+		return MAX_BLOOD+1;
+	}
+
+	@Override
+	public Helper.IntToString getMetaMatcher() {
+		return new Helper.IntToString() {
+			@Override
+			public String match(int i) {
+				return "" + i / 2;
+			}
+		};
+	}
+
+	@Override
+	public String getBaseName() {
+		return textureBaseName;
+	}
 }

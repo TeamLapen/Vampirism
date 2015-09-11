@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.item;
 
+import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.IItemRegistrable;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -9,7 +11,7 @@ import net.minecraft.util.StatCollector;
 
 import java.util.List;
 
-public class ItemPureBlood extends BasicItem {
+public class ItemPureBlood extends BasicItem implements IItemRegistrable.IItemMetaRegistrable{
 
 	public static final String name = "pureBlood";
 	public static final int COUNT = 5;
@@ -34,5 +36,18 @@ public class ItemPureBlood extends BasicItem {
 		}
 	}
 
+	@Override
+	public String getBaseName() {
+		return name+"_";
+	}
 
+	@Override
+	public int getMetaCount() {
+		return COUNT;
+	}
+
+	@Override
+	public Helper.IntToString getMetaMatcher() {
+		return null;
+	}
 }

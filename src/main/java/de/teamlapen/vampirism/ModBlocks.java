@@ -155,8 +155,12 @@ public class ModBlocks {
 				}
 			}
 		}
-		reg(cursedEarth);
+		blocksToItemRegister.clear();
+		blocksToItemRegister=null;
+		reg(castleStairsDark,"castleStairs_dark");
+		reg(castleStairsPurple,"castleStairs_purple");
 		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(blockDraculaButton), 0, new ModelResourceLocation("stone_button","inventory"));
+
 	}
 
 	@SideOnly(Side.CLIENT)

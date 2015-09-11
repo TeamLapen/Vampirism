@@ -70,14 +70,16 @@ public class ClientProxy extends CommonProxy {
 		super.preInit();
 		registerKeyBindings();
 		ModBlocks.preInitClient();
+		ModItems.preInitClient();
 	}
 
 	@Override
 	public void init() {
 		super.init();
 		registerRenderer();
-		ModItems.initClient();
+
 		ModBlocks.initClient();
+		ModItems.initClient();
 	}
 
 	@Override

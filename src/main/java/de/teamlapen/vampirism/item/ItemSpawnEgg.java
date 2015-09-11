@@ -1,5 +1,8 @@
 package de.teamlapen.vampirism.item;
 
+import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.IItemRegistrable;
+import de.teamlapen.vampirism.util.IVanillaExt;
 import net.minecraft.block.BlockFence;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.block.state.IBlockState;
@@ -22,20 +25,20 @@ import java.util.List;
 /**
  * Similar to ItemMonsterPlacer, but for Vampirism
  */
-public class ItemSpawnEgg extends BasicItem {
+public class ItemSpawnEgg extends BasicItem implements IItemRegistrable.IItemFlexibleRegistrable,IVanillaExt{
 	public final static String name="spawn_egg";
-	private List<String> entities;
+	private final List<String> entities;
 	public ItemSpawnEgg(List<String> entities) {
 		super(name);
 		setCreativeTab(CreativeTabs.tabMisc);
 		this.entities=entities;
 		this.hasSubtypes=true;
+		this.setUnlocalizedName("monsterPlacer");
 	}
 
 	@Override
 	public String getItemStackDisplayName(ItemStack stack) {
-		String s = ("" + StatCollector.translateToLocal(Items.spawn_egg.getUnlocalizedName() + ".name")).trim();
-
+		String s = super.getItemStackDisplayName(stack);//("" + StatCollector.translateToLocal(Items.spawn_egg.getUnlocalizedName() + ".name")).trim();
 		if (stack.getItemDamage()<entities.size()) {
 			String entity = entities.get(stack.getItemDamage());
 			s = s + " " + StatCollector.translateToLocal("entity." + entity + ".name");
@@ -151,4 +154,18 @@ public class ItemSpawnEgg extends BasicItem {
 
 	}
 
+	@Override
+	public String[] getModelVariants() {
+		return new String[]{"spawn_egg"};
+	}
+
+	@Override
+	public Helper.StackToString getModelMatcher() {
+		return new Helper.StackToString() {
+			@Override
+			public String match(ItemStack stack) {
+				return "spawn_egg";
+			}
+		};
+	}
 }

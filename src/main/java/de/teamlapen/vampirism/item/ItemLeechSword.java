@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.item;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.VampireMob;
+import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.IItemRegistrable;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -19,13 +21,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
-public class ItemLeechSword extends ItemSword {
+public class ItemLeechSword extends ItemSword implements IItemRegistrable.IItemFlexibleRegistrable {
 	public static final int MAX_BLOOD = 100;
 
-	@SideOnly(Side.CLIENT)
-	private static final ModelResourceLocation model=new ModelResourceLocation("vampirism:leechSword","inventory");
-	@SideOnly(Side.CLIENT)
-	private static final ModelResourceLocation model_unused=new ModelResourceLocation("vampirism:leechSwordUnused","inventory");
 
 	public static final String name = "leechSword";
 
@@ -66,25 +64,6 @@ public class ItemLeechSword extends ItemSword {
 	}
 
 
-	@Override
-	@SideOnly(Side.CLIENT)
-	public ModelResourceLocation getModel(ItemStack stack, EntityPlayer player, int useRemaining) {
-		return getBlood(stack)==0?model_unused:model;
-	}
-
-	@Override
-	public String getUnlocalizedName() {
-		return String.format("item.%s%s", REFERENCE.MODID.toLowerCase() + ".", getUnwrappedUnlocalizedName(super.getUnlocalizedName()));
-	}
-
-	@Override
-	public String getUnlocalizedName(ItemStack itemstack) {
-		return this.getUnlocalizedName();
-	}
-
-	protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
-		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
-	}
 
 	@Override
 	public boolean hitEntity(ItemStack itemStack, EntityLivingBase entityTarget, EntityLivingBase e2) {
@@ -110,4 +89,27 @@ public class ItemLeechSword extends ItemSword {
 //		itemStack.stackTagCompound.setInteger("blood", 0);
 	}
 
+	@Override
+	public String[] getModelVariants() {
+		return new String[]{"leechSword","leechSwordUnused"};
+	}
+
+	@Override
+	public Helper.StackToString getModelMatcher() {
+		return new Helper.StackToString() {
+			@Override
+			public String match(ItemStack stack) {
+				int i = ItemLeechSword.getBlood(stack);
+				if (i == 0) {
+					return "leechSwordUnused";
+				}
+				return "leechSword";
+			}
+		};
+	}
+
+	@Override
+	public String getBaseName() {
+		return name;
+	}
 }
