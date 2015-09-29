@@ -1,6 +1,6 @@
-Vampirism
+Vampirism for Minecraft 1.8
 =========
-_This is totally WIP code, check out the 1.7.10 branch for stable code_
+_This is totally WIP code for 1.8, check out the 1.7.10 branch for stable code_
 
 Vampires are fast, strong and blood-thirsty entities, which do not like the sun, but don't fear the night, and the best thing is: You can become one!
 
