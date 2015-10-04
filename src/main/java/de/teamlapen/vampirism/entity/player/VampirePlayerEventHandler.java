@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.castleDim.ChunkProviderCastle;
 import de.teamlapen.vampirism.entity.player.skills.Skills;
 import de.teamlapen.vampirism.network.RequestEntityUpdatePacket;
-import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -58,9 +57,7 @@ public class VampirePlayerEventHandler {
 	@SubscribeEvent
 	public void onEntityJoinWorld(EntityJoinWorldEvent event) {
 		if (event.entity instanceof EntityPlayer) {
-			Logger.t(event.entity.getClass().getName());
 			if (event.entity.worldObj.isRemote || event.entity.getClass().getName().equals("net.minecraft.client.entity.EntityClientPlayerMP")) {
-				Logger.t("Test Client");
 				VampirismMod.modChannel.sendToServer(new RequestEntityUpdatePacket(event.entity));
 			} else {
 				VampirePlayer.onPlayerJoinWorld((EntityPlayer) event.entity);

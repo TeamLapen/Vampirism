@@ -11,12 +11,27 @@ guide.vampirism.gettingStarted.overview.text=Vampirism ist eine Mod, die eine ne
 guide.vampirism.gettingStarted.firstSteps.title=Erste Schritte
 guide.vampirism.gettingStarted.firstSteps.text=Du startest als normaler Spieler. Um ein Vampir zu werden musst du von einem anderen Vampir gebissen werden. Wenn ein anderer Vampir dich beißt besteht dich Chance, dass du einen Trank-Effekt namens "Sanguinare Vampiris". Dieser dauert einen Tag an und wenn er endet, bist du ein Vampir. Willst du dies vermeiden kannst du den Effekt durch Trinken von Milch abbrechen. Solltest du trotz Vampir Bissen keinen Effekt bekommen, kannst du auch einfach mit Vampir Zähnen rechts-klicken und dir so das Blut injizieren.
 guide.vampirism.gettingStarted.asAVampire.title=Als Vampir
+guide.vampirism.gettingStarted.biteableCreatures.title=Gebissene Kreaturen
+guide.vampirism.gettingStarted.biteableCreatures.text=Wenn du von einer Kreatur Blut saugst, senkt sich ihr Blutlevel. Wenn dieser zu niedrig ist, wird die Kreatur schwach, allerdings regeneriert sie auch langsam Blut.\nWenn du jedoch alles Blut aussaugst, wird sie entweder sterben oder ebenfalls ein Vampir werden. Konvertierte Kreaturen verhalten sich etwas anders als zuvor, zum Beispiel nehmen sie Schaden durch Sonnenstrahlen und versuchen diese daher zu vermeiden.\nVampir Dorfbewohner haben vielleicht sogar spezielle Angebote für dich.\nDu kannst aber auch Blut von anderen Spielern saugen. Da sich diese allerdings etwas verteidigen können, musst du sie von hinten überraschen.
 
 #Items and Blocks
 guide.vampirism.itemsAndBlocks.category=Gegenstände und Blöcke
 guide.vampirism.itemsAndBlocks.found.title=In der Welt gefunden
+guide.vampirism.itemsAndBlocks.found.pureBlood=Wird von Vampir Baronen in verschiedenen Reinheitsgraden abhängig von der Stufe des Lords hinterlassen. Wird für Rituale höherer Stufen benötigt.
 guide.vampirism.itemsAndBlocks.found.bloodAltar1=Dieser Block kann als Leuchtfeuer fungieren und gibt dir Geschwindigkeits- sowie Sättigungseffekte (du verbrauchst weniger Blut). Aber um diesen Effekt zu aktivieren, musst du dir ein "Blutsauger" herstellen und ihn durch Töten von Tieren füllen. Ist es gefüllt, kannst du es in den Altar einführen und der Effekt wird aktiviert, verbraucht aber langsam das gesammelte Blut. Dieser Block kann nicht hergestellt werden sondern nur in Sümpfen gefunden werden.
 guide.vampirism.itemsAndBlocks.found.vampireFlower=Vampir Orchideen können im Vampir Biom gefunden werden.
+guide.vampirism.itemsAndBlocks.found.humanHearth=Diese werden von Vampir Jägern hinterlassen. Du kannst sie entweder essen um große Mengen an Blut zu bekommen oder sie für unterschiedliche Rituale verwenden.
+guide.vampirism.itemsAndBlocks.found.vampireFang=Diese werden von Vampiren hinterlassen. Du kannst sie nutzen um verschiedene Gegenstände herzustellen oder mit einem Rechtsklick dir den Effekt "Sanguinare Vampiris" zufügen.
+guide.vampirism.itemsAndBlocks.bBottle.text=Bewahrt Blut auf um dich abseits der Jagd zuversorgen. Du kannst mithilfe eines Rechtsklicks Blut trinken oder während du schleichst es auffüllen. Aktiviere den auto mode (drücke %s) um automatisch nicht benötigtes Blut in Flaschen in deiner Hotbar zu füllen. Volle Flaschen werden auch in manchen Rezepten benötigt. Du kannst die Flaschen entweder herstellen oder einfach normale Glas Flaschen in deiner Hotbar halten.
+guide.vampirism.itemsAndBlocks.sunscreen.text=Verringert den Schaden den du durch die Sonne nimmst zeitweise.
+guide.vampirism.itemsAndBlocks.armor.text=Diese speziell entwickelte Vampir Rüstung reduziert den Einfluss der Sonne auf Vampire. Wenn vollständig ausgerüstet erhältst du keinen Verwirrungs-Effekt sowie weniger Schaden. Die restlichen Werte sind vergleichbar mit einer normalen Eisen-Rüstung.
+guide.vampirism.itemsAndBlocks.armor.title=Vampir Rüstung
+guide.vampirism.itemsAndBlocks.altars.altar2.text=Dieser Altar wird zum aufleveln zwischen %d und %d verwendet
+guide.vampirism.itemsAndBlocks.altars.altar4.text=Der %s wird zum aufleveln ab Level %d verwendet und besteht aus mehreren Blöcken\: Der Hauptblock, Säulen aus Vanilla Blöcken und speziellen Spitzen. Für mehrer Information öffne den Leveling Abschnitt.
+guide.vampirism.itemsAndBlocks.altars.title=Altar Blöcke
+guide.vampirism.itemsAndBlocks.coffin.text=Der Sarg kann verwendet werden um während des Tages zu Schlafen und den Spawn-Punkt zu setzten. Es ist empfehlenswert ihn an einer dunklen Stelle aufzustellen. Du kannst die Farbe im Inneren ändern indem du mit einem Farbstoff in der Hand darauf Shift-Rechts-Klickst. 
+guide.vampirism.itemsAndBlocks.used_for_minions=Für Vampir-Sklaven verwendet
+guide.vampirism.itemsAndBlocks.blood_eye.text=Kann verwendet werden, um die nächste Burg zu finden
 
 #Levels
 

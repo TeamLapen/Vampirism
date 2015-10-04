@@ -1,0 +1,155 @@
+#X-Generator: crowdin.com
+# Entitys
+entity.vampirism.vampireHunter.name=Caçador de vampiros
+entity.vampirism.vampire.name=Vampiro
+entity.vampirism.ghost.name=Fantasma
+entity.vampirism.vampireBaron.name=Barão vampiro
+entity.vampirism.vampireMinionR.name=Escravo vampiro
+entity.vampirism.vampireMinionS.name=Escravo vampiro
+entity.vampirism.blinding_bat.name=Morcego
+entity.vampirism.dracula.name=Dracula
+entity.vampirism.dead_mob.name=Mob morto
+entity.vampirism.portal_guard.name=Guarda do portal
+
+# Items
+item.vampirism.vampiresFear.name=Medo do vampiro
+item.vampirism.bloodBottle.name=Garrafa de sange
+item.vampirism.vampireFang.name=Dentes de vampiro
+item.vampirism.pitchfork.name=Forquilha
+item.vampirism.humanHeart.name=Coração humano
+item.vampirism.torch.name=Tocha
+item.vampirism.pureBlood.name=Sangue puro
+item.vampirism.sunscreen.name=Protetor solar
+item.vampirism.leechSword.name=Leech
+item.vampirism.coffin.name=Caixão
+item.vampirism.vampireArmor_helmet.name=Capacete vampírico
+item.vampirism.vampireArmor_leggings.name=Calças vampíricas
+item.vampirism.vampireArmor_boots.name=Botas vampíricas
+item.vampirism.vampireArmor_chestplate.name=Peitoral vampírico
+item.vampirism.minionNameTag.name=Nome de escravo
+item.vampirism.gemOfBinding.name=Jóia de ligação
+item.vampirism.bloodEye.name=Olho de sangue
+item.vampirism.weakVampireFang.name=Dente de vampiro fraco
+item.vampirism.weakHumanHeart.name=Coração de humano fraco
+item.vampirism.item_tent.name=Tenda
+
+# Blocks
+block.vampirism.bloodAltar.name=Altar de sangue da saturação
+block.vampirism.bloodAltarTier2.name=Altar de sangue da inspiração
+block.vampirism.bloodAltarTier4.name=Altar de sangue da infusão
+block.vampirism.bloodAltarTier4Tip.name=Ponta do altar de infusão
+block.vampirism.churchAltar.name=Altar de limpeza
+block.vampirism.cursedEarth.name=Terra amaldiçoada
+block.vampirism.vampireOrchid.name=Orquídea vampírica
+block.vampirism.blockCoffin.name=Caixão
+block.vampirism.castlePortal.name=Bloco de portal
+block.vampirism.castleBlock.name=Bloco de castelo
+block.vampirism.castleSlab.name=Degrau de castelo
+block.vampirism.doubleCastleSlab.name=Degrau de castelo duplo
+block.vampirism.castleStairs.name=Escadas de castelo
+block.vampirism.tent.name=Tenda
+
+#GUI
+gui.vampirism.revertback.head=Voltar a ser humano
+gui.vampirism.revertback.desc=Vais perder os teus níveis e morrer
+
+# Keys
+keys.vampirism.category=Vampirismo
+keys.vampirism.suck=Sugar sangue
+keys.vampirism.auto=Encher garrafa automaticamente
+keys.vampirism.skill=Ativar habilidades de vampiro
+key.vampirism.vision=Mudar a visão
+
+#General
+itemGroup.vampirism=Vampirismo
+death.attack.sun=%1$s não gostou do sol
+potion.vampirism.sunscreen=Protetor solar
+potion.vampirism.thirst=Sede
+potion.vampirism.saturation=Saturação
+potion.vampirism.sanguinare=Sanguinare Vampiris
+text.vampirism.skill.level_to_low=O teu nível de vampiro é demasiado baixa para isso
+text.vampirism.skill.cooldown_not_over=Espera
+text.vampirism.entity_level=Nível
+text.vampirism.ritual_missing_times=Está faltando itens para este ritual
+text.vampirism.ritual_structure_wrong=A estrutura é errada para este ritual
+text.vampirism.ritual_level_wrong=Você não pode usar este altar a este nível
+text.vampirism.ritual_still_running=O ritual ainda está em execução
+text.vampirism.not_enough_blood=Não há sangue suficiente no altar
+text.vampirism.ritual_requirements_not_met=Nem todos os requisitos para este ritual foram atendidos
+text.vampirism.purity=Pureza
+text.vampirism.auto_fill_enabled=Preenchimento automático habilitado
+text.vampirism.auto_fill_disabled=Preenchimento automático desabilitado
+text.vampirism.skill.deactivated_by_serveradmin=Esta habilidade é desativada pelo admin
+text.vampirism.ritual_no_vampire=Você precisa ser um vampiro para este ritual
+text.vampirism.cant_fly_day=Você não pode voar de dia
+text.vampirism.no_more_minions=Você não é capaz de controlar mais escravos
+text.vampirism.coffin.noSleep=Você só pode dormir no dia
+text.vampirism.coffin.occupied=Este caixão está ocupado
+text.vampirism.coffin.stopsleeping=Deixar o caixão
+text.vampirism.blood_left=Sangue de sobra
+text.vampirism.blood=sangue
+text.vampirism.vampirelevel=Nível de vampiro
+text.vampirism.entitysblood=Sangue da entidade
+text.vampirism.minion=Escravo
+text.vampirism.lord=Senhor
+text.vampirism.normal_vision=Visão normal
+text.vampirism.night_vision=Visão noturna
+text.vampirism.no_control_minion=Você não tem controle sobre este escravo
+text.vampirism.need_empty_bottle=Meu senhor, eu preciso de uma garrafa vazia para coletar sangue
+text.vampirism.thanks=Obrigado
+text.vampirism.coming_back=Eu vou voltar, meu senhor
+text.vampirism.sorry_i_died_while_doing=Meu senhor, me desculpe, mas eu morri enquanto cumprindo sua tarefa
+text.vampirism.current_task=Tarefa atual
+text.vampirism.lord.become=Você é gerado agora o senhor dos vampiros
+text.vampirism.lord.other_player_become=derrotou o senhor vampiro atual e vai substitui-lo
+text.vampirism.lord.vampire_replace=Outro jogador substituiu-te
+text.vampirism.lord.vampire_kill_replace=Outro vampiro matou e tomou seu lugar como senhor dos vampiros
+text.vampirism.lord.new_lord_castle=Um novo senhor vampiro tem aumentado e mudou-se para seu castelo
+text.vampirism.lord.vampire_replace_absence=Outro vampiro você substituiu como senhor vampiro na sua ausência
+text.vampirism.lord.portal_disabled=Este portal não leva a qualquer lugar
+text.vampirism.lord.level_to_low=Nível de vampiro você é demasiado baixo para ser um senhor dos vampiros
+text.vampirism.guard_stay_away_level_low=Seu nível de vampiro é demasiado baixo para viajar ao castelo do Dracula. Afaste-se\!
+text.vampirism.coffin.wrong_dimension=Não pode dormir nesta dimensão.
+text.vampirism.biome.looking_for_biome=À procura de uma floresta vampírica
+text.vampirism.biome.not_found=Nenhuma encontrada.
+text.vampirism.biome.found=Floresta encontrada
+text.vampirism.castle_fail=Vampirismo não foi capaz de encontrar uma posição apropriada para um castelo do vampiro. É recomendável para gerar um novo mundo. Você também pode tentar "/ vampirismo checkForVampireBiome", se isso não localizar um bioma, outro mod provavelmente está interferindo.
+text.vampirism.structure=Estrutura
+text.vampirism.pillar_blocks=Blocos de pilar
+text.vampirism.no_dracula_to_call=Drácula está morto e não pode ser chamado
+
+#Skill
+skill.vampirism.bat_skill=Alterar modo de morcego
+skill.vampirism.change_weather=Clima
+skill.vampirism.cancel=Cancelar
+skill.vampirism.freeze=Congelar
+skill.vampirism.invisibility=Invisibilidade
+skill.vampirism.regen=Regeneração
+skill.vampirism.revive_fallen=Reviver os mortos
+skill.vampirism.summon_bats=Convocar os morcegos
+skill.vampirism.teleport=Teletransportar
+skill.vampirism.vampire_rage=Raiva de vampiro
+
+#Minion command
+minioncommand.vampirism.attackhostilenoplayers=Ataque hostil
+minioncommand.vampirism.attackhostile=Ataque hostil incluindo jogador
+minioncommand.vampirism.collectblood=Colheita de sangue
+minioncommand.vampirism.defendlord=Defender o senhor
+minioncommand.vampirism.stayhere=Ficar aqui
+minioncommand.vampirism.comeback=Voltar
+minioncommand.vampirism.justfollow=Siga-me
+minioncommand.vampirism.converttosaveable=Devolver joia de vinculação
+minioncommand.vampirism.defendarea=Defender a área
+
+#Config
+category.vampirism.balance=Configurações de equilíbrio
+category.vampirism.balance.tooltip=Alterar qualquer propriedade relevante equilíbrio
+category.vampirism.balance_level=Configurações de equilíbrio de niveis
+category.vampirism.balance_player_mod=Configurações de modificador do vampiro
+category.vampirism.balance_player_skills=Configurações de habilidades de vampiro
+category.vampirism.balance_mob_prop=Propriedades dos mobs do mod
+category.vampirism.balance_mob_prop.tooltip=Alterar as propriedades dos mobs adicionados pelo vampirismo
+category.vampirism.balance_vv_prop=Propriedades de vampiro da aldeia
+category.vampirism.balance_vv_prop.tooltip=Mudança, os caçadores de maneira nas aldeias atuam e ajustar outra aldeia coisas relacionadas
+
+

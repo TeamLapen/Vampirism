@@ -24,7 +24,7 @@ guide.vampirism.itemsAndBlocks.found.vampireFlower=Vampire Orchids can be found 
 guide.vampirism.itemsAndBlocks.found.humanHearth=These are dropped by vampire hunters. You can either eat them to get a large amount of blood or use them in several rituals.
 guide.vampirism.itemsAndBlocks.found.vampireFang=These are dropped by vampires. You can use them in a few crafting recipes or right click with them to get "Sanguinare Vampiris".
 guide.vampirism.itemsAndBlocks.bBottle.text=Holds blood to tide you over when not out hunting. You can transfer blood to the blood bar with a right click of the mouse. Transfer extra blood to the bottle with shift + right click. Enable auto mode, (press %s) to automatically transfer extra blood to any blood bottle in the visible inventory. Filled up bottles are also used in a few crafting recipes. You can either craft it with the following recipe or simple keep normal glas bottles on your hotbar when bitting mobs.
-guide.vampirism.itemsAndBlocks.sunscreen.text=Decreases you sun damage for some time.
+guide.vampirism.itemsAndBlocks.sunscreen.text=Decreases your sun damage for some time.
 guide.vampirism.itemsAndBlocks.armor.text=The specially designed Vampire armor reduces the influence of the sun on vampires. If fully worn you do not get a confusion effect as well as less instant damage. The armor itself can be compared to vanilla iron armor.
 guide.vampirism.itemsAndBlocks.armor.title=Vampire armor
 guide.vampirism.itemsAndBlocks.altars.altar2.text=This altar is used for leveling between levels %d and %d
@@ -88,6 +88,7 @@ guide.vampirism.vlord.skills.title=Vampire Lord skills
 guide.vampirism.vlord.skills.text=After defeating the current Vampire Lord you also learn a few skills he had. They are available in the normal skill rose, but you might not be able to use all the old ones./n/nTeleport/nYou can teleport over short distances/n/nInvisibility/nBe invisble for a short time/n/nFreeze/nFreeze everyone around for a short time.
 guide.vampirism.vlord.minions.title=Minions
 guide.vampirism.vlord.minions.text=As Vampire Lord you are so powerful that you can make vampires to your minions. Freeze one and then use your bite key to intimidate him. He will become your minion. /nThen you can use %s while facing him to open a control menu and give him different different tasks. /nTo control multiple minions at ones, press the same key while facing no minion. /n/nThe normal minions will always stay with you, otherwise they would run away. To make them able to fulfill tasks at other places, you have to use the %s on them. /nThen you can send them for example to collect blood, in this form they are also a little bit smarter and try to hide from the sun. To name your minions you can use a special and cheap minion name tag.
+
 
 
 

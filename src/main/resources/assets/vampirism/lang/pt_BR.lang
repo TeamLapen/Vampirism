@@ -105,7 +105,7 @@ text.vampirism.lord.other_player_become=derrotou o atual Lorde Vampiro e o subst
 text.vampirism.lord.vampire_replace=Outro jogador substituiu você como Lorde Vampiro
 text.vampirism.lord.vampire_kill_replace=Outro vampiro matou você e pegou o seu lugar como Lorde Vampiro
 text.vampirism.lord.new_lord_castle=Um novo Lorde Vampiro ressuscitou e se mudou para o castelo dele
-text.vampirism.lord.vampire_replace_absence=Outro vampiro substituiu você como Lorde Vampiro na sua ausência
+text.vampirism.lord.vampire_replace_absence=Outro vampiro substituiu você como Senhor Vampiro na sua ausência
 text.vampirism.lord.portal_disabled=Este portal não leva a lugar algum
 text.vampirism.lord.level_to_low=Seu nível vampiro é muito baixo para se tornar um Lorde Vampiro
 text.vampirism.guard_stay_away_level_low=Seu nível vampiro é muito baixo para viajar ao castelo do Drácula. Afaste-se\!
@@ -119,7 +119,7 @@ text.vampirism.pillar_blocks=Blocos de Pilar
 text.vampirism.no_dracula_to_call=Drácula está morto e não pode ser invocado
 
 #Skill
-skill.vampirism.bat_skill=Ativar Modo_Morcego
+skill.vampirism.bat_skill=Modo Morcego Ativo
 skill.vampirism.change_weather=Condições Climaticas
 skill.vampirism.cancel=Anular
 skill.vampirism.freeze=Congelar
