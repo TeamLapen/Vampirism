@@ -122,12 +122,10 @@ public class ModBlocks {
 					}
 					if(b instanceof IBlockRegistrable){
 						blocksToItemRegister.add(b);
-						if(!((IBlockRegistrable) b).shouldRegisterSimpleItem()){
 							String[] variants=((IBlockRegistrable) b).getVariantsToRegister();
 							if(variants!=null){
 								ModelBakery.addVariantName(Item.getItemFromBlock(b), Helper.prefix("vampirism:",variants));
 							}
-						}
 
 					}
 
@@ -136,6 +134,7 @@ public class ModBlocks {
 				}
 			}
 		}
+		ModelBakery.addVariantName(Item.getItemFromBlock(coffin),"vampirism:coffin_foot","vampirism:coffin_head");
 	}
 
 
@@ -157,9 +156,10 @@ public class ModBlocks {
 		}
 		blocksToItemRegister.clear();
 		blocksToItemRegister=null;
+		reg(coffin,"coffin_foot");
 		reg(castleStairsDark,"castleStairs_dark");
 		reg(castleStairsPurple,"castleStairs_purple");
-		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(blockDraculaButton), 0, new ModelResourceLocation("stone_button","inventory"));
+		Minecraft.getMinecraft().getRenderItem().getItemModelMesher().register(Item.getItemFromBlock(blockDraculaButton), 0, new ModelResourceLocation("stone_button", "inventory"));
 
 	}
 

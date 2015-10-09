@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.block;
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
+import de.teamlapen.vampirism.util.IBlockRegistrable;
+import de.teamlapen.vampirism.util.IIgnorePropsForRender;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.material.Material;
@@ -34,16 +36,24 @@ import org.eclipse.jdt.annotation.Nullable;
  *         Metadata: first two bits are the direction third bit determines whether it is occupied or not (true means it's occupied) therefore if occupied: meta & 4 != 0 fourth bit determines whether
  *         it is the primary block (true means it's primary) therefore if primary: meta & -8 != 0
  */
-public class BlockCoffin extends BasicBlockContainer {
+public class BlockCoffin extends BasicBlockContainer  implements IIgnorePropsForRender{
 	public static final String name = "blockCoffin";
 	public final static Material material = Material.rock;
 	private final String TAG = "BlockCoffin";
 
 	public static final PropertyEnum PART = PropertyEnum.create("part", EnumPartType.class);
-	//public static final PropertyBool OCCUPIED = PropertyBool.create("occupied");
 
+	@Override
+	public IProperty[] getRenderIgnoredProperties() {
+		return new IProperty[]{BlockBed.OCCUPIED};
+	}
 
-	public static enum EnumPartType implements IStringSerializable{
+	@Override
+	public int getRenderType() {
+		return 3;
+	}
+
+	public enum EnumPartType implements IStringSerializable{
 		HEAD("head"),
 		FOOT("foot");
 		private final String name;
@@ -61,6 +71,11 @@ public class BlockCoffin extends BasicBlockContainer {
 		public String toString() {
 			return getName();
 		}
+	}
+
+	@Override
+	public boolean isFullCube() {
+		return false;
 	}
 
 	public BlockCoffin() {

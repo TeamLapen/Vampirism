@@ -28,15 +28,6 @@ public abstract class BasicBlockContainer extends BlockContainer {
 
 
 	@Override
-	public int getRenderType() {
-		return -1;
-	}
-
-
-	protected String getUnwrappedUnlocalizedName(String unlocalizedName) {
-		return unlocalizedName.substring(unlocalizedName.indexOf(".") + 1);
-	}
-	@Override
 	public boolean isOpaqueCube() {
 		return false;
 	}

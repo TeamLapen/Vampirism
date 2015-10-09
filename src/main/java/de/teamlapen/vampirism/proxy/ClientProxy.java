@@ -208,7 +208,7 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityBloodAltar4Tip.class, altar4Tip);
 		MinecraftForgeClient.registerItemRenderer(Item.getItemFromBlock(ModBlocks.bloodAltar4Tip), new RenderTileEntityItem(altar4Tip, new TileEntityBloodAltar4Tip()));
 
-		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoffin.class, new RendererCoffin());
+//		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoffin.class, new RendererCoffin());
 
 		TileEntitySpecialRenderer tent = new RendererTent();
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTent.class, tent);
