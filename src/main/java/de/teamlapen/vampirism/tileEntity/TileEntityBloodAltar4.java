@@ -219,6 +219,9 @@ public class TileEntityBloodAltar4 extends InventoryTileEntity {
 					return 4;
 				}
 			}
+			if (ModBlocks.gildedIron.equals(type)) {
+				return 4;
+			}
 		} else {
 			if (type instanceof BlockStoneBrick) {
 				return 1;

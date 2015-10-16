@@ -28,11 +28,11 @@ public class BiomeVampireForest extends BiomeGenBase {
 		this.spawnableCreatureList.clear();
 		this.spawnableMonsterList.clear();
 		this.spawnableWaterCreatureList.clear();
-		this.spawnableMonsterList.add(new SpawnListEntry(EntityGhost.class, 10, 2, 3));
+		this.spawnableMonsterList.add(new SpawnListEntry(EntityGhost.class, 2, 1, 1));
 		this.spawnableMonsterList.add(new SpawnListEntry(EntityVampireBaron.class, 1, 1, 1));
-		this.spawnableMonsterList.add(new SpawnListEntry(EntityBlindingBat.class, 3, 4, 8));
-		this.spawnableMonsterList.add(new SpawnListEntry(EntityVampire.class, 10,2,3));
-		this.spawnableCreatureList.add(new BiomeGenBase.SpawnListEntry(EntityDummyBittenAnimal.class,10,3,5));
+		this.spawnableMonsterList.add(new SpawnListEntry(EntityBlindingBat.class, 8, 2, 6));
+		this.spawnableMonsterList.add(new SpawnListEntry(EntityVampire.class, 6,1,3));
+		this.spawnableCreatureList.add(new BiomeGenBase.SpawnListEntry(EntityDummyBittenAnimal.class,15,3,5));
 
 
 		this.topBlock = ModBlocks.cursedEarth;
@@ -66,6 +66,11 @@ public class BiomeVampireForest extends BiomeGenBase {
 				}
 			}
 		}
+	}
+
+	@Override
+	public float getSpawningChance() {
+		return 0.02F;
 	}
 
 	/**

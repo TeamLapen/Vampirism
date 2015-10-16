@@ -38,6 +38,7 @@ public class ModBlocks {
 	public final static BlockDraculaButton blockDraculaButton = new BlockDraculaButton();
 	public final static BlockMainTent blockMainTent = new BlockMainTent();
 	public final static BlockTent blockTent = new BlockTent();
+	public final static BlockGildedIron gildedIron = new BlockGildedIron();
 
 	// Flowers
 	public final static VampireFlower vampireFlower = new VampireFlower();
@@ -59,6 +60,7 @@ public class ModBlocks {
 		GameRegistry.registerBlock(blockDraculaButton, BlockDraculaButton.name);
 		GameRegistry.registerBlock(blockMainTent, BlockMainTent.name);
 		GameRegistry.registerBlock(blockTent, BlockTent.name);
+		GameRegistry.registerBlock(gildedIron, BlockGildedIron.name);
 		GameRegistry.registerTileEntity(TileEntityBloodAltar1.class, "TileEntityBloodAltar");
 		GameRegistry.registerTileEntity(TileEntityBloodAltar2.class, "TileEntityBloodAltarTier2");
 		// GameRegistry.registerTileEntity(TileEntityBloodAltarTier3.class, "TileEntityBloodAltarTier3");
@@ -89,5 +91,7 @@ public class ModBlocks {
 		GameRegistry.addRecipe(new ItemStack(castleSlab, 6, 1), "XXX", 'X', new ItemStack(castleBlock, 1, 1));
 		GameRegistry.addRecipe(new ItemStack(castleStairsDark, 1), "  X", " XX", "XXX", 'X', new ItemStack(castleBlock, 1, 1));
 		GameRegistry.addRecipe(new ItemStack(castleStairsPurple, 1), "  X", " XX", "XXX", 'X', new ItemStack(castleBlock, 1, 0));
+		GameRegistry.addRecipe(new ItemStack(gildedIron, 1), "XYX", "YYY", "XYX", 'X', Items.gold_ingot, 'Y', Items.iron_ingot);
+		GameRegistry.addRecipe(new ItemStack(gildedIron, 1), "YXY", "XYX", "YXY", 'X', Items.gold_ingot, 'Y', Items.iron_ingot);
 	}
 }

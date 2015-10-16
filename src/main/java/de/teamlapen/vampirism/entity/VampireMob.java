@@ -300,7 +300,7 @@ public class VampireMob implements ISyncableExtendedProperties, IMinion {
 			if (blood > 0 && blood < max_blood && entity.ticksExisted % 40 == 0) {
 				entity.addPotionEffect(new PotionEffect(Potion.weakness.id, 40));
 				entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 40, 2));
-				if (entity.getRNG().nextInt(8) == 0) {
+				if (entity.getRNG().nextInt(BALANCE.VAMPIRE_MOB_REGEN_CHANCE) == 0) {
 					blood++;
 				}
 			}

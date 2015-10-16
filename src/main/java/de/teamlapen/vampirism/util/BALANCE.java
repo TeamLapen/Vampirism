@@ -252,6 +252,9 @@ public final class BALANCE {
 
 	@DefaultInt(value = 30, minValue = 0, maxValue = 1000, name = "Hunter camp spawn chance", comment = "Chance that a camp is generated. n/1000 for each valid chunk")
 	public static int HUNTER_CAMP_SPAWN_CHANCE;
+
+	@DefaultInt(value = 20, minValue = 1, name = "Vampire mob blood regen chance", comment = "Chance that a bitten mob regenerates one blood. Tested every two seconds and the chance is 1/n")
+	public static int VAMPIRE_MOB_REGEN_CHANCE;
 	/**
 	 * Calculates the players night vision effect
 	 * 

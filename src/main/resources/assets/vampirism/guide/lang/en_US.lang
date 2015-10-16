@@ -1,4 +1,3 @@
-#X-Generator: crowdin.com
 #General
 guide.vampirism.book.title=Vampirism Guide
 guide.vampirism.welcomeMessage=Welcome to the Vampirism Guide. Take a look around to find out what you can do in this mod. Have fun.
@@ -35,6 +34,7 @@ guide.vampirism.itemsAndBlocks.used_for_minions=Used for minions
 guide.vampirism.itemsAndBlocks.blood_eye.text=Can be used to locate the nearest castle
 guide.vampirism.itemsAndBlocks.found.weakVampireFang=These are dropped by weak vampires like converted villagers. Can be combined to create a stronger version.
 guide.vampirism.itemsAndBlocks.found.weakHumanHearth=These are dropped by weak humans, like villagers. Can be combined to create a stronger version.
+guide.vampirism.itemsAndBlocks.gildedIron.text=A block that looks similar to a normal gold block, but does not require a lot of gold. Used for rituals.
 
 #Levels
 guide.vampirism.levels.introduction.title=Introduction

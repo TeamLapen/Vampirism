@@ -107,8 +107,9 @@ public class VampirismGuide{
 		
 		String bBottle=locAndFormat("guide.vampirism.itemsAndBlocks.bBottle.text", VampirismMod.proxy.getKey(KEY.AUTO));
 		entries.add(createCraftableStackEntryLoc(new ItemStack(ModItems.bloodBottle),bBottle));
-		
-		entries.add(createCraftableStackEntry(new ItemStack(ModItems.sunscreen),"guide.vampirism.itemsAndBlocks.sunscreen.text"));
+
+		entries.add(createCraftableStackEntry(new ItemStack(ModItems.sunscreen), "guide.vampirism.itemsAndBlocks.sunscreen.text"));
+		entries.add(createCraftableStackEntry(new ItemStack(ModBlocks.gildedIron), "guide.vampirism.itemsAndBlocks.gildedIron.text"));
 		
 		ArrayList<IPage> armor = new ArrayList<IPage>();
 		armor.add(new PageUnlocText("guide.vampirism.itemsAndBlocks.armor.text"));
@@ -201,17 +202,17 @@ public class VampirismGuide{
 	
 	private static IPage createStructureRequirementsAltar4(){
 		PageTable.Builder builder=new PageTable.Builder(3);
-		builder.addUnlocLine("text.vampirism.entity_level","text.vampirism.structure","text.vampirism.pillar_blocks");
-		builder.addLine(4,1,Blocks.stonebrick.getLocalizedName());
+		builder.addUnlocLine("text.vampirism.entity_level", "text.vampirism.structure", "text.vampirism.pillar_blocks");
+		builder.addLine(4, 1, Blocks.stonebrick.getLocalizedName());
 		builder.addLine(5,1,Blocks.stonebrick.getLocalizedName());
 		builder.addLine(6,1,Blocks.stonebrick.getLocalizedName());
 		builder.addLine(7,1,Blocks.iron_block.getLocalizedName());
 		builder.addLine(8,1,Blocks.iron_block.getLocalizedName());
 		builder.addLine(9,2,Blocks.iron_block.getLocalizedName());
 		builder.addLine(10,2,Blocks.iron_block.getLocalizedName());
-		builder.addLine(11,2,Blocks.gold_block.getLocalizedName());
-		builder.addLine(12,2,Blocks.gold_block.getLocalizedName());
-		builder.addLine(13,2,Blocks.gold_block.getLocalizedName());
+		builder.addLine(11, 2, ModBlocks.gildedIron.getLocalizedName());
+		builder.addLine(12, 2, ModBlocks.gildedIron.getLocalizedName());
+		builder.addLine(13, 2, ModBlocks.gildedIron.getLocalizedName());
 		builder.setHeadline(loc("guide.vampirism.levels.altar4.struc_req"));
 		return builder.build();
 	}
