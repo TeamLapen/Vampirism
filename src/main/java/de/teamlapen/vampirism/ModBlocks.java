@@ -39,6 +39,7 @@ public class ModBlocks {
 	public final static BlockMainTent blockMainTent = new BlockMainTent();
 	public final static BlockTent blockTent = new BlockTent();
 	public final static BlockGildedIron gildedIron = new BlockGildedIron();
+	public final static BlockGarlic garlicPlant = new BlockGarlic();
 
 	// Flowers
 	public final static VampireFlower vampireFlower = new VampireFlower();
@@ -61,6 +62,7 @@ public class ModBlocks {
 		GameRegistry.registerBlock(blockMainTent, BlockMainTent.name);
 		GameRegistry.registerBlock(blockTent, BlockTent.name);
 		GameRegistry.registerBlock(gildedIron, BlockGildedIron.name);
+		GameRegistry.registerBlock(garlicPlant, BlockGarlic.name);
 		GameRegistry.registerTileEntity(TileEntityBloodAltar1.class, "TileEntityBloodAltar");
 		GameRegistry.registerTileEntity(TileEntityBloodAltar2.class, "TileEntityBloodAltarTier2");
 		// GameRegistry.registerTileEntity(TileEntityBloodAltarTier3.class, "TileEntityBloodAltarTier3");

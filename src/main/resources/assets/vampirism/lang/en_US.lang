@@ -31,6 +31,7 @@ item.vampirism.bloodEye.name=Blood Eye
 item.vampirism.weakVampireFang.name=Weak Vampire Fang
 item.vampirism.weakHumanHeart.name=Weak Human Heart
 item.vampirism.item_tent.name=Tent
+item.vampirism.garlic.name=Garlic
 
 # Blocks
 block.vampirism.bloodAltar.name=Blood Altar of Saturation
@@ -48,6 +49,7 @@ block.vampirism.doubleCastleSlab.name=Double Castle Slab
 block.vampirism.castleStairs.name=Castle Stairs
 block.vampirism.tent.name=Tent
 block.vampirism.gildedIronBlock.name=Gilded Iron Block
+block.vampirism.garlic.name=Garlic
 
 #GUI
 gui.vampirism.revertback.head=Revert back to normal human

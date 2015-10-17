@@ -34,6 +34,7 @@ public class ModItems {
 	public static ItemSlab castleSlabItem;
 	public static ItemBloodEye bloodEye=new ItemBloodEye();
 	public static ItemTent tent = new ItemTent();
+	public static ItemGarlic garlic;
 
 	public static void init() {
 		GameRegistry.registerItem(leechSword, ItemLeechSword.name);
@@ -56,6 +57,8 @@ public class ModItems {
 		GameRegistry.registerItem(tent, ItemTent.name);
 		GameRegistry.registerItem(weakHumanHeart, ItemWeakHumanHeart.name);
 		GameRegistry.registerItem(weakVampireFang, ItemWeakVampireFang.name);
+		garlic = new ItemGarlic(ModBlocks.garlicPlant);
+		GameRegistry.registerItem(garlic, ItemGarlic.name);
 	}
 	public static void registerRecipes() {
 		GameRegistry.addRecipe(new ItemStack(bloodBottle, 1, 0), "   ", "XYX", " X ", 'X', Blocks.glass, 'Y', Items.rotten_flesh);
