@@ -27,10 +27,13 @@ import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.WeightedRandomChestContent;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
+import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -82,6 +85,13 @@ public class VampirismMod {
 		MapGenStructureIO.func_143031_a(VillageModChurchPiece.class, "ViVMC");
 		proxy.registerSubscriptions();
 		FMLCommonHandler.instance().bus().register(new Configs());
+
+		//Add garlic to chests
+		WeightedRandomChestContent garlicChest = new WeightedRandomChestContent(new ItemStack(ModItems.garlic), 1, 15, 100);
+		ChestGenHooks.addItem(ChestGenHooks.DUNGEON_CHEST, garlicChest);
+		ChestGenHooks.addItem(ChestGenHooks.MINESHAFT_CORRIDOR, garlicChest);
+		ChestGenHooks.addItem(ChestGenHooks.PYRAMID_JUNGLE_CHEST, garlicChest);
+
 		if (Configs.village_gen_enabled) {
 			Logger.i("Init", "Registering replacer for village generation.");
 			MinecraftForge.TERRAIN_GEN_BUS.register(new VillageGenReplacer());

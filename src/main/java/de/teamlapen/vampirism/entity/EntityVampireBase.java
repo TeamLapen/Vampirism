@@ -2,7 +2,9 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.block.IGarlic;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.potion.Potion;
@@ -17,11 +19,32 @@ import net.minecraft.world.World;
 public abstract class EntityVampireBase extends EntityVampirism {
     private boolean sundamageCache;
     protected float sundamage = 0.5f;
+    protected int resitsGarlic = 0;
 
     public EntityVampireBase(World p_i1595_1_) {
         super(p_i1595_1_);
         this.getNavigator().setAvoidsWater(true);
         this.tasks.addTask(0, new EntityAISwimming(this));
+    }
+
+    public int isInGarlic() {
+        if (worldObj != null) {
+            Block b = worldObj.getBlock((int) posX, (int) posY + 1, (int) posZ);
+            if (b instanceof IGarlic) {
+                return ((IGarlic) b).isWeakGarlic() ? 1 : 2;
+            }
+        }
+        return 0;
+    }
+
+    public int getResitsGarlic() {
+        return resitsGarlic;
+    }
+
+    public boolean isGarlicOkAt(int x, int y, int z) {
+        Block b = worldObj.getBlock(x, y, z);
+        int i = (b instanceof IGarlic ? ((IGarlic) b).isWeakGarlic() ? 1 : 2 : 0);
+        return resitsGarlic >= i;
     }
 
     public boolean isGettingSundamage() {
@@ -84,6 +107,7 @@ public abstract class EntityVampireBase extends EntityVampirism {
     @Override
     public boolean getCanSpawnHere() {
         if (!isValidLightLevel()) return false;
+        if (isInGarlic() > resitsGarlic) return false;
         return super.getCanSpawnHere();
     }
 
@@ -97,7 +121,18 @@ public abstract class EntityVampireBase extends EntityVampirism {
                 }
                 this.attackEntityFrom(VampirismMod.sunDamage, dmg);
             }
+            if (this.ticksExisted % 10 == 0) {
+                if (isInGarlic() > resitsGarlic) {
+                    this.addPotionEffect(new PotionEffect(Potion.poison.id, 50, 0));
+                }
+            }
         }
         super.onLivingUpdate();
+    }
+
+    @Override
+    public float getBlockPathWeight(int x, int y, int z) {
+        boolean t = isGarlicOkAt(x, y, z);
+        return super.getBlockPathWeight(x, y, z) / (t ? 1 : 3);
     }
 }

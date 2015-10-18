@@ -10,7 +10,8 @@ import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.util.ForgeDirection;
 
 /**
- * Created by Max on 17.10.2015.
+ * Garlic item.
+ * Also acts as seed for the garlic plant.
  */
 public class ItemGarlic extends BasicItem implements IPlantable {
 

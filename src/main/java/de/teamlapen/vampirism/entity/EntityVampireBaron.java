@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.ModItems;
+import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
 import de.teamlapen.vampirism.entity.minions.IMinion;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.generation.castle.CastlePositionData;
@@ -35,12 +36,15 @@ public class EntityVampireBaron extends EntityDefaultVampireWithMinion implement
 		super(par1World);
 
 		//this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityVampireHunter.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.2));
+		this.tasks.addTask(4, new VampireAIFleeGarlic(this, 0.9F));
 		this.tasks.addTask(6, new EntityAIWander(this, 0.2));
 		this.tasks.addTask(9, new EntityAILookIdle(this));
 		this.tasks.addTask(6, new EntityAIAttackOnCollide(this, EntityVampireBaron.class, 1.0D, false));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
 		this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVampireBaron.class, 5, false));
+
+		this.resitsGarlic = 1;
 
 	}
 

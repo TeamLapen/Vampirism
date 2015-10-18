@@ -1,7 +1,8 @@
 package de.teamlapen.vampirism.block;
 
 /**
- * Created by Max on 17.10.2015.
+ * Garlic interface for blocks to indicate that the block contains garlic.
+ * Also determines if it is strong or weak garlic.
  */
 public interface IGarlic {
     boolean isWeakGarlic();

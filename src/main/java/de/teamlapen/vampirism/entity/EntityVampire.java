@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.ModItems;
+import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
 import de.teamlapen.vampirism.entity.ai.VampireAIMoveToBiteable;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
@@ -22,6 +23,7 @@ public class EntityVampire extends EntityDefaultVampire {
 		this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityHunterBase.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.2));
 		this.tasks.addTask(3, new EntityAIRestrictSun(this));
 		this.tasks.addTask(4, new VampireAIFleeSun(this, 0.9F));
+		this.tasks.addTask(4, new VampireAIFleeGarlic(this, 0.9F));
 		// Low priority tasks
 		this.tasks.addTask(9, new VampireAIMoveToBiteable(this));
 		this.tasks.addTask(10, new EntityAIMoveThroughVillage(this, 0.6, true));

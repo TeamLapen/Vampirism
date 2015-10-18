@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.block.BlockBloodAltar4Tip.TileEntityBloodAltar4Tip
 import de.teamlapen.vampirism.block.BlockChurchAltar.TileEntityChurchAltar;
 import de.teamlapen.vampirism.item.ItemMetaBlock;
 import de.teamlapen.vampirism.tileEntity.*;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.BlockStairs;
 import net.minecraft.block.material.MapColor;
 import net.minecraft.block.material.MaterialLiquid;
@@ -40,6 +41,10 @@ public class ModBlocks {
 	public final static BlockTent blockTent = new BlockTent();
 	public final static BlockGildedIron gildedIron = new BlockGildedIron();
 	public final static BlockGarlic garlicPlant = new BlockGarlic();
+	public final static BlockGarlicGas garlicGasWeak = new BlockGarlicGas(true);
+	public final static BlockGarlicGas garlicGasStrong = new BlockGarlicGas(false);
+	public final static BlockGarlicTorch garlicTorchWeak = (BlockGarlicTorch) new BlockGarlicTorch(true).setBlockName(REFERENCE.MODID + ".garlicTorchWeak").setBlockTextureName(REFERENCE.MODID + ":" + "garlicTorchWeak");
+	public final static BlockGarlicTorch garlicTorchStrong = (BlockGarlicTorch) new BlockGarlicTorch(false).setBlockName(REFERENCE.MODID + ".garlicTorchStrong").setBlockTextureName(REFERENCE.MODID + ":" + "garlicTorchStrong");
 
 	// Flowers
 	public final static VampireFlower vampireFlower = new VampireFlower();
@@ -63,6 +68,10 @@ public class ModBlocks {
 		GameRegistry.registerBlock(blockTent, BlockTent.name);
 		GameRegistry.registerBlock(gildedIron, BlockGildedIron.name);
 		GameRegistry.registerBlock(garlicPlant, BlockGarlic.name);
+		GameRegistry.registerBlock(garlicGasWeak, BlockGarlicGas.name + "_weak");
+		GameRegistry.registerBlock(garlicGasStrong, BlockGarlicGas.name + "_strong");
+		GameRegistry.registerBlock(garlicTorchWeak, "garlicTorchWeak");
+		GameRegistry.registerBlock(garlicTorchStrong, "garlicTorchStrong");
 		GameRegistry.registerTileEntity(TileEntityBloodAltar1.class, "TileEntityBloodAltar");
 		GameRegistry.registerTileEntity(TileEntityBloodAltar2.class, "TileEntityBloodAltarTier2");
 		// GameRegistry.registerTileEntity(TileEntityBloodAltarTier3.class, "TileEntityBloodAltarTier3");
@@ -95,5 +104,7 @@ public class ModBlocks {
 		GameRegistry.addRecipe(new ItemStack(castleStairsPurple, 1), "  X", " XX", "XXX", 'X', new ItemStack(castleBlock, 1, 0));
 		GameRegistry.addRecipe(new ItemStack(gildedIron, 1), "XYX", "YYY", "XYX", 'X', Items.gold_ingot, 'Y', Items.iron_ingot);
 		GameRegistry.addRecipe(new ItemStack(gildedIron, 1), "YXY", "XYX", "YXY", 'X', Items.gold_ingot, 'Y', Items.iron_ingot);
+		GameRegistry.addRecipe(new ItemStack(garlicTorchWeak), "X", "Y", 'X', ModItems.garlic, 'Y', Items.stick);
+		GameRegistry.addRecipe(new ItemStack(garlicTorchStrong), "X", "Y", 'X', ModItems.concentratedGarlic, 'Y', Items.stick);
 	}
 }

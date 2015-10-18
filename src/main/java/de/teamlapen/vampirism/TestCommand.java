@@ -227,6 +227,25 @@ public class TestCommand extends BasicCommand {
 				return "close";
 			}
 		});
+		addSub(new TestSubCommand() {
+			@Override
+			protected void processCommand(ICommandSender sender, EntityPlayer player, VampirePlayer vampire, String[] param) {
+				for (int x = -3; x < 4; x++) {
+					for (int y = -1; y < 2; y++) {
+						for (int z = -3; z < 4; z++) {
+							if (player.getEntityWorld().isAirBlock((int) player.posX + x, (int) player.posY + y, (int) player.posZ + z)) {
+								player.worldObj.setBlock((int) player.posX + x, (int) player.posY + y, (int) player.posZ + z, ModBlocks.garlicGasWeak);
+							}
+						}
+					}
+				}
+			}
+
+			@Override
+			public String getCommandName() {
+				return "garlic";
+			}
+		});
 	}
 
 	@Override

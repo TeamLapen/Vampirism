@@ -46,6 +46,7 @@ public class EntityDracula extends EntityDefaultVampireWithMinion implements IBo
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));
 		this.experienceValue = 100;
+		this.resitsGarlic = 2;
 	}
 
 	@Override

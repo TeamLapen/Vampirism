@@ -3,8 +3,10 @@ package de.teamlapen.vampirism;
 import cpw.mods.fml.common.registry.GameRegistry;
 import de.teamlapen.vampirism.block.BlockCastleSlab;
 import de.teamlapen.vampirism.item.*;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemSlab;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
@@ -35,6 +37,10 @@ public class ModItems {
 	public static ItemBloodEye bloodEye=new ItemBloodEye();
 	public static ItemTent tent = new ItemTent();
 	public static ItemGarlic garlic;
+	/**
+	 * Concentrated form of garlic
+	 */
+	public static Item concentratedGarlic = new Item().setCreativeTab(VampirismMod.tabVampirism).setUnlocalizedName(REFERENCE.MODID + ".concentratedGarlic").setTextureName(REFERENCE.MODID + ":concentratedGarlic");
 
 	public static void init() {
 		GameRegistry.registerItem(leechSword, ItemLeechSword.name);
@@ -59,6 +65,7 @@ public class ModItems {
 		GameRegistry.registerItem(weakVampireFang, ItemWeakVampireFang.name);
 		garlic = new ItemGarlic(ModBlocks.garlicPlant);
 		GameRegistry.registerItem(garlic, ItemGarlic.name);
+		GameRegistry.registerItem(concentratedGarlic, "item_concentratedGarlic");
 	}
 	public static void registerRecipes() {
 		GameRegistry.addRecipe(new ItemStack(bloodBottle, 1, 0), "   ", "XYX", " X ", 'X', Blocks.glass, 'Y', Items.rotten_flesh);
@@ -77,5 +84,7 @@ public class ModItems {
 		GameRegistry.addShapelessRecipe(new ItemStack(bloodEye),Items.ender_eye,new ItemStack(bloodBottle,1,ItemBloodBottle.MAX_BLOOD));
 		GameRegistry.addShapelessRecipe(new ItemStack(humanHeart), ModItems.weakHumanHeart, ModItems.weakHumanHeart, ModItems.weakHumanHeart, ModItems.weakHumanHeart, ModItems.weakHumanHeart, ModItems.weakHumanHeart);
 		GameRegistry.addShapelessRecipe(new ItemStack(vampireFang), ModItems.weakVampireFang, ModItems.weakVampireFang, ModItems.weakVampireFang, ModItems.weakVampireFang, ModItems.weakVampireFang, ModItems.weakVampireFang);
+		GameRegistry.addShapelessRecipe(new ItemStack(concentratedGarlic), ModItems.garlic, ModItems.garlic, ModItems.garlic, ModItems.garlic, ModItems.garlic, ModItems.garlic, ModItems.garlic, ModItems.garlic, ModItems.garlic);
+
 	}
 }

@@ -7,16 +7,22 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.BlockCrops;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
- * Created by Max on 17.10.2015.
+ * Garlic Plant
+ * Similar to potatoes, the (dropped) item also is the seed.
+ * 7 grow states with 4 different icons
+ *
+ * @author Maxanier
  */
 public class BlockGarlic extends BlockCrops implements IGarlic {
 
@@ -52,7 +58,7 @@ public class BlockGarlic extends BlockCrops implements IGarlic {
             int l = p_149674_1_.getBlockMetadata(p_149674_2_, p_149674_3_, p_149674_4_);
 
             if (l < 7) {
-                float f = 1;
+                float f = 0.5F;
 
                 if (p_149674_5_.nextInt((int) (25.0F / f) + 1) == 0) {
                     ++l;
@@ -118,5 +124,10 @@ public class BlockGarlic extends BlockCrops implements IGarlic {
         for (int i = 0; i < this.icons.length; ++i) {
             this.icons[i] = p_149651_1_.registerIcon(this.getTextureName() + "_stage_" + i);
         }
+    }
+
+    @Override
+    public ArrayList<ItemStack> getDrops(World world, int x, int y, int z, int metadata, int fortune) {
+        return super.getDrops(world, x, y, z, metadata, fortune-1);
     }
 }

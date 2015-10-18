@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.minions;
 
 import de.teamlapen.vampirism.entity.ai.MinionAIFollowBoss;
+import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -34,6 +35,7 @@ public class EntitySaveableVampireMinion extends EntityVampireMinion {
 		super(world);
 		this.tasks.addTask(7, new MinionAIFollowBoss(this, 1.0D));
 		this.tasks.addTask(14, new EntityAIFleeSun(this, 0.9F));
+		this.tasks.addTask(14, new VampireAIFleeGarlic(this, 0.9F));
 		commands = new ArrayList<IMinionCommand>();
 		commands.add(getActiveCommand());
 		commands.add(new AttackHostileExceptPlayer(1, this));

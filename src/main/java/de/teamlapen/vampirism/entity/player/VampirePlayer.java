@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.block.BlockCoffin;
+import de.teamlapen.vampirism.block.IGarlic;
 import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.entity.minions.*;
 import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler.Call;
@@ -19,6 +20,7 @@ import de.teamlapen.vampirism.network.SpawnParticlePacket;
 import de.teamlapen.vampirism.network.UpdateEntityPacket;
 import de.teamlapen.vampirism.network.UpdateEntityPacket.ISyncableExtendedProperties;
 import de.teamlapen.vampirism.util.*;
+import net.minecraft.block.Block;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -485,6 +487,16 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		return false;
 	}
 
+	public boolean isInStrongGarlic() {
+		if (player.worldObj != null) {
+			Block b = player.worldObj.getBlock((int) player.posX, (int) player.posY + 1, (int) player.posZ);
+			if (b instanceof IGarlic) {
+				return !((IGarlic) b).isWeakGarlic();
+			}
+		}
+		return false;
+	}
+
 	public int getVision() {
 		return vision;
 	}
@@ -873,6 +885,11 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 					ticksInSun--;
 				}
 
+			}
+			if (player.ticksExisted % 10 == 0) {
+				if (isInStrongGarlic()) {
+					player.addPotionEffect(new PotionEffect(Potion.poison.id, 60, 1));
+				}
 			}
 			if (biteCooldown > 0) biteCooldown--;
 			if (player.isPotionActive(ModPotion.sanguinare.id)) {
