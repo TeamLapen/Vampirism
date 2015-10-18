@@ -64,12 +64,12 @@ public class ModBlocks {
 		GameRegistry.registerBlock(castleStairsPurple,BlockCastleStairs.name+"_purple");
 		GameRegistry.registerBlock(castlePortal,BlockCastlePortal.name);
 		GameRegistry.registerBlock(blockDraculaButton, BlockDraculaButton.name);
-		GameRegistry.registerBlock(blockMainTent, BlockMainTent.name);
-		GameRegistry.registerBlock(blockTent, BlockTent.name);
+		GameRegistry.registerBlock(blockMainTent, null, BlockMainTent.name);//TODO If old saves do not load, remove the null argument
+		GameRegistry.registerBlock(blockTent, null, BlockTent.name);//TODO If old saves do not load, remove the null argument
 		GameRegistry.registerBlock(gildedIron, BlockGildedIron.name);
-		GameRegistry.registerBlock(garlicPlant, BlockGarlic.name);
-		GameRegistry.registerBlock(garlicGasWeak, BlockGarlicGas.name + "_weak");
-		GameRegistry.registerBlock(garlicGasStrong, BlockGarlicGas.name + "_strong");
+		GameRegistry.registerBlock(garlicPlant, null, BlockGarlic.name);
+		GameRegistry.registerBlock(garlicGasWeak, null, BlockGarlicGas.name + "_weak");
+		GameRegistry.registerBlock(garlicGasStrong, null, BlockGarlicGas.name + "_strong");
 		GameRegistry.registerBlock(garlicTorchWeak, "garlicTorchWeak");
 		GameRegistry.registerBlock(garlicTorchStrong, "garlicTorchStrong");
 		GameRegistry.registerTileEntity(TileEntityBloodAltar1.class, "TileEntityBloodAltar");
