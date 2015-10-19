@@ -86,5 +86,11 @@ public class ModItems {
 		GameRegistry.addShapelessRecipe(new ItemStack(vampireFang), ModItems.weakVampireFang, ModItems.weakVampireFang, ModItems.weakVampireFang, ModItems.weakVampireFang, ModItems.weakVampireFang, ModItems.weakVampireFang);
 		GameRegistry.addShapelessRecipe(new ItemStack(concentratedGarlic), ModItems.garlic, ModItems.garlic, ModItems.garlic, ModItems.garlic, ModItems.garlic, ModItems.garlic, ModItems.garlic, ModItems.garlic, ModItems.garlic);
 
+		//Add garlic version of swords
+		GameRegistry.addRecipe(GarlicHelper.createGarlicRecipe(Items.iron_sword));
+		GameRegistry.addRecipe(GarlicHelper.createGarlicRecipe(Items.golden_sword));
+		GameRegistry.addRecipe(GarlicHelper.createGarlicRecipe(Items.wooden_sword));
+		GameRegistry.addRecipe(GarlicHelper.createGarlicRecipe(Items.diamond_sword));
+		GameRegistry.addRecipe(GarlicHelper.createGarlicRecipe(Items.stone_sword));
 	}
 }

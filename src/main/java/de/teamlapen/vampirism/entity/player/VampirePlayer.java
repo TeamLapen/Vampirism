@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler.Call;
 import de.teamlapen.vampirism.entity.player.skills.ILastingSkill;
 import de.teamlapen.vampirism.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.entity.player.skills.Skills;
+import de.teamlapen.vampirism.item.GarlicHelper;
 import de.teamlapen.vampirism.item.ItemBloodBottle;
 import de.teamlapen.vampirism.item.ItemVampireArmor;
 import de.teamlapen.vampirism.network.SpawnParticlePacket;
@@ -852,7 +853,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	}
 
 	/**
-	 * Called every LivingEntityUpdate, returns immediately if level =0;
+	 * Called every LivingEntityUpdate, returns immediately after checking sleep-state and sanguinare potion if level =0;
 	 */
 	public void onUpdate() {
 		if (this.sleepingCoffin && player.isPlayerSleeping()) {
@@ -954,6 +955,12 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		if (minionTarget != null && !minionTarget.isEntityAlive()) {
 			minionTarget = null;
 		}
+
+		ItemStack held = player.getHeldItem();
+		if (held != null && GarlicHelper.getGarlicValue(held) > 0) {
+			player.addPotionEffect(new PotionEffect(Potion.poison.id, 50, 1));
+		}
+
 		if (dirty&&!player.worldObj.isRemote) {
 			this.sync(true);
 			dirty = false;

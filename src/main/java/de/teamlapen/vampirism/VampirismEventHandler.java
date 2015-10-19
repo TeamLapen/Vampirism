@@ -7,6 +7,7 @@ import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.item.GarlicHelper;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
 import de.teamlapen.vampirism.util.VampireLordData;
 import de.teamlapen.vampirism.villages.VillageVampireData;
@@ -15,9 +16,12 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.event.entity.player.BonemealEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import net.minecraftforge.event.world.WorldEvent;
@@ -97,6 +101,14 @@ public class VampirismEventHandler {
 		if (!event.world.isRemote && event.world.provider.dimensionId == 0) {
 			//Reset the castle fail notice
 			VampirismMod.vampireCastleFail = false;
+		}
+	}
+
+	@SubscribeEvent
+	public void onItemTooltip(ItemTooltipEvent event) {
+		int i = GarlicHelper.getGarlicValue(event.itemStack);
+		if (i > 0) {
+			event.toolTip.add(EnumChatFormatting.YELLOW + StatCollector.translateToLocal("block.vampirism.garlic.name") + " " + i);
 		}
 	}
 }

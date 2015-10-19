@@ -8,6 +8,7 @@ import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.castleDim.ChunkProviderCastle;
 import de.teamlapen.vampirism.entity.player.skills.Skills;
+import de.teamlapen.vampirism.item.GarlicHelper;
 import de.teamlapen.vampirism.network.RequestEntityUpdatePacket;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
@@ -25,8 +26,11 @@ public class VampirePlayerEventHandler {
 
 	@SubscribeEvent
 	public void onAttackEntity(AttackEntityEvent event) {
-		if (VampirePlayer.get(event.entityPlayer).isSkillActive(Skills.batMode))
+		if (VampirePlayer.get(event.entityPlayer).isSkillActive(Skills.batMode)) {
 			event.setCanceled(true);
+		} else {
+			GarlicHelper.onPlayerAttackedEntity(event.entityPlayer, event.target);
+		}
 	}
 
 	@SubscribeEvent

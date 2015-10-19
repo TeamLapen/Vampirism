@@ -253,6 +253,9 @@ public final class BALANCE {
 	@DefaultInt(value = 30, minValue = 0, maxValue = 1000, name = "Hunter camp spawn chance", comment = "Chance that a camp is generated. n/1000 for each valid chunk")
 	public static int HUNTER_CAMP_SPAWN_CHANCE;
 
+	@DefaultInt(value = 20, minValue = 0, name = "Garlic weapon effect durability", comment = "The amount of hits you can do with a garlic weapon until the garlic wears off")
+	public static int GARLIC_WEAPON_EFFECT_DURABILITY;
+
 	@DefaultInt(value = 20, minValue = 1, name = "Vampire mob blood regen chance", comment = "Chance that a bitten mob regenerates one blood. Tested every two seconds and the chance is 1/n")
 	public static int VAMPIRE_MOB_REGEN_CHANCE;
 	/**
