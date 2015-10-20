@@ -16,6 +16,7 @@ public class REFERENCE {
 		public static final String CONVERTED_CREATURE = "vampirism.converted.creature";
 		public static final String CONVERTED_VILLAGER = "vampirism.converted.villager";
 		public static final String CONVERTED_SHEEP = "vampirism.converted.sheep";
+		public static final String VAMPIRE_HUNTER_2_NAME = "vampirism.vampireHunter2";
 	}
 
 	public enum KEY {
@@ -41,5 +42,7 @@ public class REFERENCE {
 	public static final int HIGHEST_REACHABLE_LEVEL = 14;
 
 	public static final String UPDATE_FILE_LINK = "http://teamlapen.de/projects/vampirism/files/modversion.json";
+
+	public static final String SUPPORTER_FILE_LINK = "";
 
 }

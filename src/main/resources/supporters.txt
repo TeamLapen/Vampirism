@@ -1,0 +1,12 @@
+#List of player of supporters of Vampirism
+#Used e.g. for vampire hunters
+#<Desciptive name>:<skin name>
+
+#Developer
+Vampire Slayer Maxanier:maxanier
+Dreaded Mistadon:mistadon
+The powerful Bill:wildbill
+
+#Contributer
+The skilled LRA10:lra10
+The sporty Paul:cheaterpaul

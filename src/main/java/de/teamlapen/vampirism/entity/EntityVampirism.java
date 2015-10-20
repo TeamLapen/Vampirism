@@ -19,6 +19,9 @@ public abstract class EntityVampirism extends EntityCreature {
     protected boolean hasArms = false;
     protected boolean peaceful = false;
     private AxisAlignedBB home;
+    /**
+     * Whether to save the home position to nbt or not
+     */
     protected boolean saveHome = false;
 
     public EntityVampirism(World p_i1595_1_) {

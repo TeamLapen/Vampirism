@@ -25,6 +25,7 @@ import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.util.SupporterManager;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -97,6 +98,7 @@ public class VampirismMod {
 			MinecraftForge.TERRAIN_GEN_BUS.register(new VillageGenReplacer());
 		}
 		FMLInterModComms.sendMessage("Waila", "register", "de.teamlapen.vampirism.WailaDataProvider.callbackRegister");
+		SupporterManager.getInstance().initAsync();
 	}
 
 	@EventHandler
@@ -122,6 +124,7 @@ public class VampirismMod {
 			Logger.d("PostInit", "Found Guide-API -> Registering guide book");
 			registerGuideBook();
         }
+		Logger.d("PostInit", "Loaded supporters: %s", SupporterManager.getInstance().getSupporterString());
 	}
 
 	@EventHandler

@@ -159,6 +159,7 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityBlindingBat.class, new RenderBat());
 		RenderingRegistry.registerEntityRenderingHandler(EntityPortalGuard.class,new RendererPortalGuard(0.5F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityConvertedCreature.class, new RendererConvertedCreature());
+		RenderingRegistry.registerEntityRenderingHandler(EntityVampireHunter2.class, new RenderVampireHunter2());
 		MinecraftForgeClient.registerItemRenderer(ModItems.pitchfork, new PitchforkRenderer());
 		// MinecraftForgeClient.registerItemRenderer(ModItems.torch, new RendererTorch());
 

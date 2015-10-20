@@ -9,16 +9,16 @@ import net.minecraft.entity.Entity;
  *
  */
 public class ModelVampireHunter extends ModelBipedCloaked {
-	ModelRenderer hatTop, hatRim, axeShaft, axeBlade1, axeBlade2, stake;
+	ModelRenderer hatTop, hatRim, axeShaft, axeBlade1, axeBlade2, stake,secondHead;
 
 	private boolean renderWeapons;
 
 	public ModelVampireHunter(boolean hasWeapons) {
-		super(0.0F, 0.0F, 128, 64);
-
+		super(0.0F, 0.0F, 64, 64,0,25);
+		this.bipedHeadwear.isHidden=true;
 		renderWeapons = hasWeapons;
 
-		hatTop = new ModelRenderer(this, 0, 45);
+		hatTop = new ModelRenderer(this, 0, 24);
 		hatTop.addBox(-4F, -14F, -4F, 8, 5, 8);
 		hatTop.setRotationPoint(super.bipedHead.rotationPointX, super.bipedHead.rotationPointY, super.bipedHead.rotationPointZ);
 		hatTop.setTextureSize(128, 64);
@@ -30,29 +30,35 @@ public class ModelVampireHunter extends ModelBipedCloaked {
 		hatRim.setTextureSize(128, 64);
 		hatRim.mirror = true;
 
-		axeShaft = new ModelRenderer(this, 41, 17);
+		axeShaft = new ModelRenderer(this, 32, 0);
 		axeShaft.addBox(-2F, 8F, -17F, 1, 1, 15);
 		axeShaft.setRotationPoint(super.bipedRightArm.rotationPointX, super.bipedRightArm.rotationPointY, super.bipedRightArm.rotationPointZ);
 		axeShaft.setTextureSize(128, 64);
 		axeShaft.mirror = true;
 
-		axeBlade1 = new ModelRenderer(this, 0, 5);
+		axeBlade1 = new ModelRenderer(this, 0, 47);
 		axeBlade1.addBox(-2F, 4F, -16F, 1, 4, 7);
 		axeBlade1.setRotationPoint(super.bipedRightArm.rotationPointX, super.bipedRightArm.rotationPointY, super.bipedRightArm.rotationPointZ);
 		axeBlade1.setTextureSize(128, 64);
 		axeBlade1.mirror = true;
 
-		axeBlade2 = new ModelRenderer(this, 0, 5);
+		axeBlade2 = new ModelRenderer(this, 0, 47);
 		axeBlade2.addBox(-2F, 9F, -16F, 1, 4, 7);
 		axeBlade2.setRotationPoint(super.bipedRightArm.rotationPointX, super.bipedRightArm.rotationPointY, super.bipedRightArm.rotationPointZ);
 		axeBlade2.setTextureSize(128, 64);
 		axeBlade2.mirror = true;
 
-		stake = new ModelRenderer(this, 24, 46);
+		stake = new ModelRenderer(this, 32, 0);
 		stake.addBox(1F, 8F, -8F, 1, 1, 6);
 		stake.setRotationPoint(super.bipedLeftArm.rotationPointX, super.bipedLeftArm.rotationPointY, super.bipedLeftArm.rotationPointZ);
 		stake.setTextureSize(128, 64);
 		stake.mirror = true;
+
+		secondHead = new ModelRenderer(this, 0, 0);
+		secondHead.setTextureSize(64,32);
+		secondHead.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, 0.0F);
+		secondHead.setRotationPoint(0.0F, 0.0F + 0.0F, 0.0F);
+
 
 		super.bipedEars = null;
 	}
@@ -73,6 +79,10 @@ public class ModelVampireHunter extends ModelBipedCloaked {
 			axeBlade2.render(f5);
 			stake.render(f5);
 		}
+	}
+
+	public void renderSecondHead(float f5){
+		secondHead.render(f5);
 	}
 
 	public void setRenderWeapon(boolean flag) {
@@ -100,5 +110,8 @@ public class ModelVampireHunter extends ModelBipedCloaked {
 		stake.rotateAngleX = super.bipedLeftArm.rotateAngleX;
 		stake.rotateAngleY = super.bipedLeftArm.rotateAngleY;
 		stake.rotateAngleZ = super.bipedLeftArm.rotateAngleZ;
+		secondHead.rotateAngleX = super.bipedHead.rotateAngleX;
+		secondHead.rotateAngleY = super.bipedHead.rotateAngleY;
+		secondHead.rotateAngleZ = super.bipedHead.rotateAngleZ;
 	}
 }
