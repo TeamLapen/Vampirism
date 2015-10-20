@@ -292,7 +292,12 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 	public VampirePlayer(EntityPlayer player) {
 		this.player = player;
-		this.player.getDataWatcher().addObject(Configs.player_blood_watcher, MAXBLOOD);
+		try {
+			this.player.getDataWatcher().addObject(Configs.player_blood_watcher, MAXBLOOD);
+		} catch (IllegalArgumentException e) {
+			e.initCause(new Exception("Please change the player blood watcher id in config/vampirism.conf to something else"));
+			throw e;
+		}
 		bloodStats = new BloodStats();
 		autoFillBlood = true;
 		vision = 1;

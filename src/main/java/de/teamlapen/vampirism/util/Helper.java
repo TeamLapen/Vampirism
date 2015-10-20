@@ -340,7 +340,12 @@ public class Helper {
 
 	public static boolean isEntityInVampireBiome(Entity e){
 		if(e==null||e.worldObj==null)return false;
-		return e.worldObj.getBiomeGenForCoords(MathHelper.floor_double(e.posX),MathHelper.floor_double(e.posZ)) instanceof BiomeVampireForest;
+		try {
+			return e.worldObj.getBiomeGenForCoords(MathHelper.floor_double(e.posX), MathHelper.floor_double(e.posZ)) instanceof BiomeVampireForest;
+		} catch (NullPointerException e1) {
+			Logger.e("Helper", e1, "Nullpointer when checking biome. This is strange and should not happen");
+			return false;
+		}
 	}
 
 	/**

@@ -8,10 +8,7 @@ import de.teamlapen.vampirism.entity.EntityDracula;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
-import de.teamlapen.vampirism.util.BasicCommand;
-import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.util.VampireLordData;
+import de.teamlapen.vampirism.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -26,6 +23,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -246,18 +244,41 @@ public class TestCommand extends BasicCommand {
 				return "garlic";
 			}
 		});
+		addSub(new TestSubCommand() {
+			@Override
+			protected void processCommand(ICommandSender sender, EntityPlayer player, VampirePlayer vampire, String[] param) {
+				Logger.t("Params %s", Arrays.toString(param));
+				if (param.length != 1 && param.length != 2) {
+					return;
+				}
+				int level = 0;
+				try {
+					level = Integer.parseInt(param[0]);
+				} catch (NumberFormatException e) {
+					level = 0;
+				}
+				EntityPlayer p = player;
+				if (param.length == 2) {
+					EntityPlayer p2 = MinecraftServer.getServer().getConfigurationManager().func_152612_a(param[1]);
+					if (p2 != null) p = p2;
+				}
+				VampirePlayer.get(p).setLevel(level);
+				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(p.getCommandSenderName() + " changed his vampire level to " + VampirePlayer.get(p).getLevel()));
+
+			}
+
+			@Override
+			public String getCommandName() {
+				return "level";
+			}
+		});
 	}
 
 	@Override
 	public void processCommand(ICommandSender sender, String[] param) {
 		if (param != null && param.length == 1 && sender instanceof EntityPlayer) {
-			try {
-				VampirePlayer.get((EntityPlayer) sender).setLevel(Integer.parseInt(param[0]));
-				MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(sender.getCommandSenderName() + " changed his vampire level to " + VampirePlayer.get((EntityPlayer) sender).getLevel()));
-				return;
-			} catch (NumberFormatException e) {
-
-			}
+			//Convert short level command to long version
+			param = new String[]{"level", param[0]};
 		}
 		super.processCommand(sender, param);
 	}
