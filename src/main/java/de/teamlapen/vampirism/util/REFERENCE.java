@@ -43,6 +43,6 @@ public class REFERENCE {
 
 	public static final String UPDATE_FILE_LINK = "http://teamlapen.de/projects/vampirism/files/modversion.json";
 
-	public static final String SUPPORTER_FILE_LINK = "";
+	public static final String SUPPORTER_FILE_LINK = "https://raw.githubusercontent.com/TeamLapen/Vampirism/1.7.10/src/main/resources/supporters.txt";
 
 }

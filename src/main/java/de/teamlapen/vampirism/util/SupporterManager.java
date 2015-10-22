@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,14 +44,20 @@ public class SupporterManager {
 
     private void init() {
         Supporter[] supporters = null;
+        InputStream inputStream = null;
         try {
-            supporters = retrieveSupporter(getStreamFromUrl(new URL(REFERENCE.SUPPORTER_FILE_LINK)));
+            inputStream = new URL(REFERENCE.SUPPORTER_FILE_LINK).openStream();
+            supporters = retrieveSupporter(inputStream);
+            inputStream.close();
+            Logger.t("Loaded supporters from url %s", Arrays.toString(supporters));
         } catch (IOException e) {
             Logger.e(TAG, e, "Failed to retrieve supporters from url");
         }
         if (supporters == null) {
             try {
-                supporters = retrieveSupporter(getStreamFromRes("/supporters.txt"));
+                inputStream = VampirismMod.class.getResourceAsStream("/supporters.txt");
+                supporters = retrieveSupporter(inputStream);
+                inputStream.close();
             } catch (IOException e) {
                 Logger.e(TAG, "Failed to retrieve supporters from resources");
             }
@@ -75,6 +80,7 @@ public class SupporterManager {
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
         String line;
         List<Supporter> supporters = new ArrayList<Supporter>();
+
         try {
             while ((line = reader.readLine()) != null) {
                 if (line.isEmpty() || line.startsWith("#")) continue;
@@ -93,27 +99,6 @@ public class SupporterManager {
         }
         return supporters.toArray(new Supporter[supporters.size()]);
     }
-
-    private InputStream getStreamFromUrl(URL url) throws IOException {
-        InputStream is = null;
-        try {
-            URLConnection connection = url.openConnection();
-            connection.setRequestProperty("User-Agent", System.getProperty("java.version"));
-            connection.connect();
-
-            is = connection.getInputStream();
-        } finally {
-            if (is != null) {
-                is.close();
-            }
-        }
-        return is;
-    }
-
-    private InputStream getStreamFromRes(String path) {
-        return VampirismMod.class.getResourceAsStream(path);
-    }
-
     public class Supporter {
         public final String textureName;
         public final String senderName;
