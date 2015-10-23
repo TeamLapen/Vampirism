@@ -26,9 +26,11 @@ public class RenderVampireHunter2 extends RenderBiped {
     }
 
     protected void renderModel(EntityVampireHunter2 hunter, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float p_77036_7_) {
+        ((ModelVampireHunter)modelBipedMain).setRenderWeapon(hunter.shouldRenderDefaultWeapons());
         modelBipedMain.bipedHead.isHidden = true;
         super.renderModel(hunter, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
         modelBipedMain.bipedHead.isHidden = false;
+        ((ModelVampireHunter)modelBipedMain).setRenderWeapon(true);
         String tex = hunter.getTextureName();
         bindPlayerTexture(tex);
         ((ModelVampireHunter) modelBipedMain).renderSecondHead(p_77036_7_);

@@ -9,6 +9,7 @@ entity.vampirism.blinding_bat.name=Bat
 entity.vampirism.dracula.name=Dracula
 entity.vampirism.dead_mob.name=Dead mob
 entity.vampirism.portal_guard.name=Portal Guard
+entity.vampirism.vampireHunter2.name=Advanced Vampire Hunter
 
 # Items
 item.vampirism.vampiresFear.name=Vampire's fear
@@ -33,6 +34,7 @@ item.vampirism.weakHumanHeart.name=Weak Human Heart
 item.vampirism.item_tent.name=Tent
 item.vampirism.garlic.name=Garlic
 item.vampirism.concentratedGarlic.name=Concentrated Garlic
+item.vampirism.garlic_bomb.name=Garlic Bomb
 
 # Blocks
 block.vampirism.bloodAltar.name=Blood Altar of Saturation
@@ -123,6 +125,7 @@ text.vampirism.castle_fail=Vampirism was not able to find a appropriate position
 text.vampirism.structure=Structure
 text.vampirism.pillar_blocks=Pillar Blocks
 text.vampirism.no_dracula_to_call=Dracula is dead and cannot be called
+text.vampirism.garlic_weapons=This weapon is coated with garlic and poisons vampires./nBut the garlic wears off.
 
 #Skill
 skill.vampirism.bat_skill=Toggle Batmode

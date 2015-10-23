@@ -109,6 +109,17 @@ public class VampirismEventHandler {
 		int i = GarlicHelper.getGarlicValue(event.itemStack);
 		if (i > 0) {
 			event.toolTip.add(EnumChatFormatting.YELLOW + StatCollector.translateToLocal("block.vampirism.garlic.name") + " " + i);
+//			if(Minecraft.getMinecraft().gameSettings.keyBindSneak.getIsKeyPressed()){
+//				String[] parts=StatCollector.translateToLocal("text.vampirism.garlic_weapons").split("/n");
+//				for(String p:parts){
+//					event.toolTip.add(p);
+//				}
+//			}
+
+
+
 		}
+
+
 	}
 }

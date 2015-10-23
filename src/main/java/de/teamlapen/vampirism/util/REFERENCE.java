@@ -11,12 +11,13 @@ public class REFERENCE {
 		public static final String VAMPIRE_MINION_SAVEABLE_NAME = "vampirism.vampireMinionS";
 		public static final String DEAD_MOB_NAME = "vampirism.dead_mob";
 		public static final String BLINDING_BAT_NAME = "vampirism.blinding_bat";
-		public static final String DUMMY_CREATURE = "vampirism.dummy_creature";
-		public static final String PORTAL_GUARD = "vampirism.portal_guard";
-		public static final String CONVERTED_CREATURE = "vampirism.converted.creature";
-		public static final String CONVERTED_VILLAGER = "vampirism.converted.villager";
-		public static final String CONVERTED_SHEEP = "vampirism.converted.sheep";
+		public static final String DUMMY_CREATURE_NAME = "vampirism.dummy_creature";
+		public static final String PORTAL_GUARD_NAME = "vampirism.portal_guard";
+		public static final String CONVERTED_CREATURE_NAME = "vampirism.converted.creature";
+		public static final String CONVERTED_VILLAGER_NAME = "vampirism.converted.villager";
+		public static final String CONVERTED_SHEEP_NAME = "vampirism.converted.sheep";
 		public static final String VAMPIRE_HUNTER_2_NAME = "vampirism.vampireHunter2";
+		public static final String GARLIC_BOMB_NAME = "vampirism.garlicbomb";
 	}
 
 	public enum KEY {

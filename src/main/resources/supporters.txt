@@ -1,6 +1,8 @@
 #List of player of supporters of Vampirism
 #Used e.g. for vampire hunters
-#<Desciptive name>:<skin name>
+#<Descriptive name>:<skin name>
+#Descriptive name can be "null" to use the default name
+#Skin name can be "none" to use the default face
 
 #Developer
 Vampire Slayer Maxanier:maxanier
@@ -10,3 +12,13 @@ The powerful Bill:wildbill
 #Contributer
 The skilled LRA10:lra10
 The sporty Paul:cheaterpaul
+Sneaky Thomas:none
+
+#Main translators
+#(if you are a translator and think you should be on this list
+#please contact maxanier on the Minecraft Forum with your crowdin username, your minecraft username and your preferred vampire hunter name)
+Mazdallier:mazdallier
+Evernife:evernife
+
+#Patreons
+Ezflaffer:ezflaffer

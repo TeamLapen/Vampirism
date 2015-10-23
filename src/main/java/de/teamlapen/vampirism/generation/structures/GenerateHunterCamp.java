@@ -1,8 +1,12 @@
 package de.teamlapen.vampirism.generation.structures;
 
+import de.teamlapen.vampirism.entity.EntityVampireHunter2;
 import de.teamlapen.vampirism.item.ItemTent;
+import de.teamlapen.vampirism.util.Logger;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityList;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
@@ -43,6 +47,14 @@ public class GenerateHunterCamp extends WorldGenerator {
                 int z = posZ + entrance[dir][r][1] * 2;
                 int y = world.getHeightValue(x, z);
                 world.setBlock(x, y, z, Blocks.crafting_table);
+                if (rand.nextInt(2) == 0) {//TODO make better camps and move hunter2 there
+                    EntityVampireHunter2 hunter = (EntityVampireHunter2) EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_HUNTER_2_NAME, world);
+                    hunter.setPosition(x, y + 1.1F, z);
+                    hunter.setHomeArea(x, y, z, 10);
+                    world.spawnEntityInWorld(hunter);
+                    Logger.t("Spawned hunter at %d %d %d", x, y + 1, z);
+
+                }
             }
             if (rand.nextInt(3) == 0) {
                 int r = rand.nextInt(2);

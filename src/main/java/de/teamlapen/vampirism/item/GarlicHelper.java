@@ -15,6 +15,7 @@ import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraftforge.oredict.RecipeSorter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +62,7 @@ public class GarlicHelper {
                 return super.getCraftingResult(inv);
             }
         };
+        RecipeSorter.register("vampirism:garlicsword", recipe.getClass(), RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
         return recipe;
     }
 

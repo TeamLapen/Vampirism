@@ -1,25 +1,33 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.SupporterManager;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.IRangedAttackMob;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
 /**
  * Second type of vampire hunter. Respresents a supporter and is strong
  */
-public class EntityVampireHunter2 extends EntityHunterBase implements ISyncable {
+public class EntityVampireHunter2 extends EntityHunterBase implements ISyncable, IRangedAttackMob {
 
     private String textureName;
+
+    private int type;
+    private final int MAX_TYPES = 2;
+    private final static String TAG = "Hunter2";
 
     public String getSenderName() {
         return senderName;
@@ -31,15 +39,21 @@ public class EntityVampireHunter2 extends EntityHunterBase implements ISyncable 
 
     private String senderName;
 
+    public boolean shouldRenderDefaultWeapons() {
+        return renderDefaultWeapons;
+    }
+
+    private boolean renderDefaultWeapons = true;
+
+    private EntityAIBase arrowAttackTask = new EntityAIArrowAttack(this, 1.0D, 60, 13F);
+    private EntityAIBase collideAttackTask = new EntityAIAttackOnCollide(this, EntityLivingBase.class, 1.1D, false);
+
     public EntityVampireHunter2(World world) {
         super(world);
         this.getNavigator().setBreakDoors(true);
         this.setSize(0.6F, 1.8F);
 
         this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
-        this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityVampire.class, 1.1, false));
-        this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.1, false));
-        this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityCreature.class, 0.9, false));
         this.tasks.addTask(3, new EntityAIMoveTowardsRestriction(this, 1.0F));
 
         this.tasks.addTask(6, new EntityAIWander(this, 0.7));
@@ -60,9 +74,11 @@ public class EntityVampireHunter2 extends EntityHunterBase implements ISyncable 
         }));
         this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVampireBase.class, 0, true));
 
+
         SupporterManager.Supporter s = SupporterManager.getInstance().getRandom(getRNG());
         textureName = s.textureName;
         senderName = s.senderName;
+        updateType(getRNG().nextInt(MAX_TYPES));
     }
 
     @Override
@@ -84,6 +100,7 @@ public class EntityVampireHunter2 extends EntityHunterBase implements ISyncable 
         super.writeEntityToNBT(nbt);
         nbt.setString("textureName", textureName);
         nbt.setString("senderName", senderName == null ? "null" : senderName);
+        nbt.setInteger("type", type);
     }
 
     @Override
@@ -91,6 +108,24 @@ public class EntityVampireHunter2 extends EntityHunterBase implements ISyncable 
         super.readEntityFromNBT(nbt);
         this.loadUpdateFromNBT(nbt);
 
+    }
+
+    protected void updateType(int type) {
+        tasks.removeTask(arrowAttackTask);
+        tasks.removeTask(collideAttackTask);
+
+        if (type == 0) {
+            renderDefaultWeapons = true;
+            this.setCurrentItemOrArmor(0, null);
+
+            tasks.addTask(2, collideAttackTask);
+        } else if (type == 1) {
+            renderDefaultWeapons = false;
+            this.setCurrentItemOrArmor(0, new ItemStack(ModItems.garlicBomb));
+
+            tasks.addTask(2, arrowAttackTask);
+        }
+        this.type = type;
     }
 
     @Override
@@ -108,16 +143,39 @@ public class EntityVampireHunter2 extends EntityHunterBase implements ISyncable 
             senderName = nbt.getString("senderName");
             if (senderName.equals("null")) senderName = null;
         }
+        if (nbt.hasKey("type")) {
+            updateType(nbt.getInteger("type"));
+        }
     }
 
     @Override
     public void writeFullUpdateToNBT(NBTTagCompound nbt) {
         nbt.setString("senderName", senderName == null ? "null" : senderName);
         nbt.setString("textureName", textureName);
+        nbt.setInteger("type", type);
     }
 
     @Override
     public String getCommandSenderName() {
         return senderName == null ? super.getCommandSenderName() : senderName;
+    }
+
+    @Override
+    public void attackEntityWithRangedAttack(EntityLivingBase p_82196_1_, float p_82196_2_) {
+        EntityGarlicBomb garlicBomb = new EntityGarlicBomb(this.worldObj, this);
+        garlicBomb.rotationPitch -= -20.0F;
+        double d0 = p_82196_1_.posX + p_82196_1_.motionX - this.posX;
+        double d1 = p_82196_1_.posY + (double) p_82196_1_.getEyeHeight() - 1.100000023841858D - this.posY;
+        double d2 = p_82196_1_.posZ + p_82196_1_.motionZ - this.posZ;
+        float f1 = MathHelper.sqrt_double(d0 * d0 + d2 * d2);
+
+
+        garlicBomb.setThrowableHeading(d0, d1 + (double) (f1 * 0.2F), d2, 0.75F, 8.0F);
+        this.worldObj.spawnEntityInWorld(garlicBomb);
+    }
+
+    @Override
+    protected boolean canDespawn() {
+        return false;
     }
 }

@@ -166,12 +166,13 @@ public abstract class CommonProxy implements IProxy {
 		registerEntity(EntityDracula.class, REFERENCE.ENTITY.DRACULA_NAME, false);
 		registerEntity(EntityGhost.class, REFERENCE.ENTITY.GHOST_NAME,true);
 		registerEntity(EntityBlindingBat.class, REFERENCE.ENTITY.BLINDING_BAT_NAME, false);
-		registerEntity(EntityDummyBittenAnimal.class,REFERENCE.ENTITY.DUMMY_CREATURE,false);
-		registerEntity(EntityPortalGuard.class, REFERENCE.ENTITY.PORTAL_GUARD, false);
-		registerEntity(EntityConvertedCreature.class, REFERENCE.ENTITY.CONVERTED_CREATURE, false);
-		registerEntity(EntityConvertedVillager.class, REFERENCE.ENTITY.CONVERTED_VILLAGER, false);
-		registerEntity(EntityConvertedSheep.class, REFERENCE.ENTITY.CONVERTED_SHEEP, false);
+		registerEntity(EntityDummyBittenAnimal.class, REFERENCE.ENTITY.DUMMY_CREATURE_NAME, false);
+		registerEntity(EntityPortalGuard.class, REFERENCE.ENTITY.PORTAL_GUARD_NAME, false);
+		registerEntity(EntityConvertedCreature.class, REFERENCE.ENTITY.CONVERTED_CREATURE_NAME, false);
+		registerEntity(EntityConvertedVillager.class, REFERENCE.ENTITY.CONVERTED_VILLAGER_NAME, false);
+		registerEntity(EntityConvertedSheep.class, REFERENCE.ENTITY.CONVERTED_SHEEP_NAME, false);
 		registerEntity(EntityVampireHunter2.class, REFERENCE.ENTITY.VAMPIRE_HUNTER_2_NAME, true);
+		registerEntity(EntityGarlicBomb.class, REFERENCE.ENTITY.GARLIC_BOMB_NAME, false);
 		Item item = new ItemSpawnEgg(spawnableEntityNames);
 		GameRegistry.registerItem(item, ItemSpawnEgg.name);
 		OreDictionary.registerOre("mobEgg", item);

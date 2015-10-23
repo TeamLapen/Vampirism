@@ -35,6 +35,7 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.RenderBat;
+import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.shader.ShaderGroup;
@@ -160,6 +161,8 @@ public class ClientProxy extends CommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityPortalGuard.class,new RendererPortalGuard(0.5F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityConvertedCreature.class, new RendererConvertedCreature());
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampireHunter2.class, new RenderVampireHunter2());
+		RenderingRegistry.registerEntityRenderingHandler(EntityGarlicBomb.class, new RenderSnowball(ModItems.garlic, 0));
+
 		MinecraftForgeClient.registerItemRenderer(ModItems.pitchfork, new PitchforkRenderer());
 		// MinecraftForgeClient.registerItemRenderer(ModItems.torch, new RendererTorch());
 

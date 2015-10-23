@@ -37,6 +37,8 @@ public class ModItems {
 	public static ItemBloodEye bloodEye=new ItemBloodEye();
 	public static ItemTent tent = new ItemTent();
 	public static ItemGarlic garlic;
+	public static ItemGarlicBomb garlicBomb = new ItemGarlicBomb();
+
 	/**
 	 * Concentrated form of garlic
 	 */
@@ -66,6 +68,7 @@ public class ModItems {
 		garlic = new ItemGarlic(ModBlocks.garlicPlant);
 		GameRegistry.registerItem(garlic, ItemGarlic.name);
 		GameRegistry.registerItem(concentratedGarlic, "item_concentratedGarlic");
+		GameRegistry.registerItem(garlicBomb, ItemGarlicBomb.name);
 	}
 	public static void registerRecipes() {
 		GameRegistry.addRecipe(new ItemStack(bloodBottle, 1, 0), "   ", "XYX", " X ", 'X', Blocks.glass, 'Y', Items.rotten_flesh);

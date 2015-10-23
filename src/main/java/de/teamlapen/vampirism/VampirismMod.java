@@ -124,7 +124,6 @@ public class VampirismMod {
 			Logger.d("PostInit", "Found Guide-API -> Registering guide book");
 			registerGuideBook();
         }
-		Logger.d("PostInit", "Loaded supporters: %s", SupporterManager.getInstance().getSupporterString());
 	}
 
 	@EventHandler
