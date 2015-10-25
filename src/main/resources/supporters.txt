@@ -5,7 +5,7 @@
 #Skin name can be "none" to use the default face
 
 #Developer
-Vampire Slayer Maxanier:maxanier
+Vampire Slayer Maxanier:none
 Dreaded Mistadon:mistadon
 The powerful Bill:wildbill
 
@@ -21,4 +21,4 @@ Mazdallier:mazdallier
 Evernife:evernife
 
 #Patreons
-Ezflaffer:ezflaffer
+eZflaffer the Loquacious:ezflaffer

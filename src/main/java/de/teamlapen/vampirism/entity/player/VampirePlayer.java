@@ -894,7 +894,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			}
 			if (player.ticksExisted % 10 == 0) {
 				if (isInStrongGarlic()) {
-					player.addPotionEffect(new PotionEffect(Potion.poison.id, 60, 1));
+					player.addPotionEffect(new PotionEffect(ModPotion.garlic.id, 60, 1));
 				}
 			}
 			if (biteCooldown > 0) biteCooldown--;
@@ -963,7 +963,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 		ItemStack held = player.getHeldItem();
 		if (held != null && GarlicHelper.getGarlicValue(held) > 0) {
-			player.addPotionEffect(new PotionEffect(Potion.poison.id, 50, 1));
+			player.addPotionEffect(new PotionEffect(ModPotion.garlic.id, 50, 0));
 		}
 
 		if (dirty&&!player.worldObj.isRemote) {

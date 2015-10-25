@@ -123,7 +123,7 @@ public abstract class EntityVampireBase extends EntityVampirism {
             }
             if (this.ticksExisted % 10 == 0) {
                 if (isInGarlic() > resitsGarlic) {
-                    this.addPotionEffect(new PotionEffect(Potion.poison.id, 50, 0));
+                    this.addPotionEffect(new PotionEffect(ModPotion.garlic.id, 50, 0));
                 }
             }
         }

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.item;
 
 import de.teamlapen.vampirism.ModItems;
+import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.entity.EntityVampireBase;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.BALANCE;
@@ -13,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.ShapelessRecipes;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.oredict.RecipeSorter;
 
@@ -82,7 +82,7 @@ public class GarlicHelper {
             int i = getGarlicValue(stack);
             if (i > 0) {
                 if (target instanceof EntityVampireBase || (target instanceof EntityPlayer && VampirePlayer.get((EntityPlayer) target).getLevel() > 0)) {
-                    ((EntityLivingBase) target).addPotionEffect(new PotionEffect(Potion.poison.id, 60, 1));
+                    ((EntityLivingBase) target).addPotionEffect(new PotionEffect(ModPotion.garlic.id, 60, 0));
                 }
                 setGarlic(stack, --i);
             }

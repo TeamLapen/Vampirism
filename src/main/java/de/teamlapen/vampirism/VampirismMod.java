@@ -66,6 +66,7 @@ public class VampirismMod {
 	};
 
 	public static DamageSource sunDamage = (new DamageSource("sun")).setDamageBypassesArmor().setMagicDamage();
+	public static DamageSource garlicDamage = (new DamageSource("garlic")).setDamageBypassesArmor().setMagicDamage();
 
 	public static boolean isSunDamageTime(World world) {
 		if (world == null)

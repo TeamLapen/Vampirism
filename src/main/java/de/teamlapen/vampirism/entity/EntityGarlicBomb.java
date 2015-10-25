@@ -1,10 +1,8 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.ModPotion;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityThrowable;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
@@ -47,7 +45,6 @@ public class EntityGarlicBomb extends EntityThrowable {
                     double d0 = this.getDistanceSqToEntity(entitylivingbase);
 
                     if (d0 < (distance * distance)) {
-                        if (entitylivingbase instanceof EntityVampireBase || (entitylivingbase instanceof EntityPlayer && VampirePlayer.get((EntityPlayer) entitylivingbase).getLevel() > 0)) {
                             double d1 = 1.0D - Math.sqrt(d0) / 4.0D;
 
                             if (entitylivingbase == p_70184_1_.entityHit) {
@@ -57,9 +54,9 @@ public class EntityGarlicBomb extends EntityThrowable {
                             int j = (int) (d1 * (double) duration + 0.5D);
 
                             if (j > 20) {
-                                entitylivingbase.addPotionEffect(new PotionEffect(Potion.poison.id, j, 1));
+                                entitylivingbase.addPotionEffect(new PotionEffect(ModPotion.garlic.id, j, 1));
                             }
-                        }
+
                     }
                 }
             }

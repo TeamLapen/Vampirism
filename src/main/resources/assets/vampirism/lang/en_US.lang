@@ -71,10 +71,12 @@ key.vampirism.vision=Switch vision
 #General
 itemGroup.vampirism=Vampirism
 death.attack.sun=%1$s did not like the sun
+death.attack.garlic=%1$s was poisoned by garlic
 potion.vampirism.sunscreen=Sunscreen
 potion.vampirism.thirst=Thirst
 potion.vampirism.saturation=Saturation
 potion.vampirism.sanguinare=Sanguinare Vampiris
+potion.vampirism.garlic=Garlic
 text.vampirism.skill.level_to_low=Your vampire level is too low for that
 text.vampirism.skill.cooldown_not_over=Please wait until the cooldown is over
 text.vampirism.entity_level=Level
