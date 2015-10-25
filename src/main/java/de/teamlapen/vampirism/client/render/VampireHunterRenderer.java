@@ -41,55 +41,52 @@ public class VampireHunterRenderer extends RenderBiped {
 
 	}
 
-	protected static class VampireHunterRenderer2 extends RenderBiped {
 
-		private static final ResourceLocation texture3 = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vampireHunter.png");
-
-		public VampireHunterRenderer2() {
-			super(new ModelVampireHunter(true), 0.5F);
-		}
-
-		@Override
-		protected ResourceLocation getEntityTexture(Entity entity) {
-			return texture3;
-		}
-
-	}
-
-	private static final ResourceLocation textureNormal = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vampireHunter.png");
+	private static final ResourceLocation textureBase1 = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vampireHunterBase1.png");
+	private static final ResourceLocation textureBase4 = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vampireHunterBase4.png");
+	private static final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampireHunterExtra.png");
 
 	private final RendererCustomVillager rendererVillager;
-	private final RenderBiped rendererLevel3;
 
 	public VampireHunterRenderer() {
-		super(new ModelVampireHunter(false), 0.5F);
-		rendererLevel3 = new VampireHunterRenderer2();
+		super(new ModelVampireHunter(), 0.5F);
 		rendererVillager = new RendererCustomVillager(new ModelVHVillager(0.0F), 0.0F);
 	}
 
 	@Override
 	public void doRender(EntityLiving entity, double p_76986_2_, double p_76986_4_, double p_76986_6_, float p_76986_8_, float p_76986_9_) {
 		int level = ((EntityVampireHunter) entity).getLevel();
-		if (level == 3 || level == 4) {
-			rendererLevel3.doRender(entity, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
-		}
-		if (level == 2) {
-			super.doRender(entity, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
-		}
 		if (level == 1) {
 			rendererVillager.doRender(entity, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
+			return;
+		}
+		super.doRender(entity, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_);
+
+	}
+
+	@Override
+	protected void renderModel(EntityLivingBase entity, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float f) {
+		int level = ((EntityVampireHunter) entity).getLevel();
+		boolean second = entity.getEntityId() % 2 == 1;
+		if (second) {
+			((ModelVampireHunter) modelBipedMain).setSkipCloakOnce();
+		}
+		super.renderModel(entity, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, f);
+		bindTexture(textureExtra);
+		((ModelVampireHunter) modelBipedMain).renderHat(f, second ? 3 : 1);
+		if (level == 3 || level == 4) {
+			((ModelVampireHunter) modelBipedMain).renderWeapons(f);
 		}
 	}
 
 	@Override
 	protected ResourceLocation getEntityTexture(Entity entity) {
-		return textureNormal;
+		return entity.getEntityId() % 2 == 0 ? textureBase1 : textureBase4;
 	}
 
 	@Override
 	public void setRenderManager(RenderManager manager) {
 		super.setRenderManager(manager);
-		rendererLevel3.setRenderManager(manager);
 		rendererVillager.setRenderManager(manager);
 	}
 

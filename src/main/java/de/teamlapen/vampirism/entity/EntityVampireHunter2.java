@@ -26,7 +26,7 @@ public class EntityVampireHunter2 extends EntityHunterBase implements ISyncable,
     private String textureName;
 
     private int type;
-    private final int MAX_TYPES = 2;
+    private final int MAX_TYPES = 3;
     private final static String TAG = "Hunter2";
 
     public String getSenderName() {
@@ -39,6 +39,13 @@ public class EntityVampireHunter2 extends EntityHunterBase implements ISyncable,
 
     private String senderName;
 
+    /**
+     * Determines the outfit of the hunter.
+     * The lowest three bits are used for the outfit.
+     * The next three bits for the hat.
+     */
+    private int outfit;
+
     public boolean shouldRenderDefaultWeapons() {
         return renderDefaultWeapons;
     }
@@ -47,6 +54,7 @@ public class EntityVampireHunter2 extends EntityHunterBase implements ISyncable,
 
     private EntityAIBase arrowAttackTask = new EntityAIArrowAttack(this, 1.0D, 60, 13F);
     private EntityAIBase collideAttackTask = new EntityAIAttackOnCollide(this, EntityLivingBase.class, 1.1D, false);
+    private EntityAIAvoidEntity fleeTask = new EntityAIAvoidEntity(this, EntityPlayer.class, 16, 0.8, 1.5);
 
     public EntityVampireHunter2(World world) {
         super(world);
@@ -74,6 +82,7 @@ public class EntityVampireHunter2 extends EntityHunterBase implements ISyncable,
         }));
         this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVampireBase.class, 0, true));
 
+        outfit = getRNG().nextInt(64);
 
         SupporterManager.Supporter s = SupporterManager.getInstance().getRandom(getRNG());
         textureName = s.textureName;
@@ -100,6 +109,7 @@ public class EntityVampireHunter2 extends EntityHunterBase implements ISyncable,
         super.writeEntityToNBT(nbt);
         nbt.setString("textureName", textureName);
         nbt.setString("senderName", senderName == null ? "null" : senderName);
+        nbt.setInteger("outfit", outfit);
         nbt.setInteger("type", type);
     }
 
@@ -113,19 +123,29 @@ public class EntityVampireHunter2 extends EntityHunterBase implements ISyncable,
     protected void updateType(int type) {
         tasks.removeTask(arrowAttackTask);
         tasks.removeTask(collideAttackTask);
+        tasks.removeTask(fleeTask);
+        this.setCurrentItemOrArmor(0, null);
+        renderDefaultWeapons = false;
 
         if (type == 0) {
             renderDefaultWeapons = true;
-            this.setCurrentItemOrArmor(0, null);
+
 
             tasks.addTask(2, collideAttackTask);
         } else if (type == 1) {
-            renderDefaultWeapons = false;
+
             this.setCurrentItemOrArmor(0, new ItemStack(ModItems.garlicBomb));
 
             tasks.addTask(2, arrowAttackTask);
+        } else if (type == 2) {
+            tasks.addTask(2, fleeTask);
         }
         this.type = type;
+    }
+
+    @Override
+    public boolean getAlwaysRenderNameTagForRender() {
+        return true;
     }
 
     @Override
@@ -146,6 +166,13 @@ public class EntityVampireHunter2 extends EntityHunterBase implements ISyncable,
         if (nbt.hasKey("type")) {
             updateType(nbt.getInteger("type"));
         }
+        if (nbt.hasKey("outfit")) {
+            outfit = nbt.getInteger("outfit");
+        }
+    }
+
+    public int getOutfit(int part) {
+        return outfit >> (part * 3);
     }
 
     @Override
@@ -153,6 +180,7 @@ public class EntityVampireHunter2 extends EntityHunterBase implements ISyncable,
         nbt.setString("senderName", senderName == null ? "null" : senderName);
         nbt.setString("textureName", textureName);
         nbt.setInteger("type", type);
+        nbt.setInteger("outfit", outfit);
     }
 
     @Override
