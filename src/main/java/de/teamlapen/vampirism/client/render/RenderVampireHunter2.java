@@ -68,7 +68,8 @@ public class RenderVampireHunter2 extends RenderBiped {
     private void bindPlayerTexture(String username) {
         ResourceLocation location;
         if ("none".equals(username) || ((location = AbstractClientPlayer.getLocationSkin(username)) == null)) {
-            location = textureBase3;
+            this.bindTexture(textureBase3);
+            return;
             //location = AbstractClientPlayer.getLocationSkin("steve");
         }
         AbstractClientPlayer.getDownloadImageSkin(location, username);

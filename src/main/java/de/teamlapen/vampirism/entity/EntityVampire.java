@@ -19,6 +19,8 @@ public class EntityVampire extends EntityDefaultVampire {
 	private int bloodtimer = 100;
 	public EntityVampire(World par1World) {
 		super(par1World);
+
+		this.hasArms = true;
 		// Avoids Vampire Hunters
 		this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityHunterBase.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.2));
 		this.tasks.addTask(3, new EntityAIRestrictSun(this));

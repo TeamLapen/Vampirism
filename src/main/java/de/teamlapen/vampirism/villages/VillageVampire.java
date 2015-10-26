@@ -43,9 +43,12 @@ public class VillageVampire {
 		if (!Configs.disable_hunter && count < BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE || (agressive && count < BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE * 1.4)) {
 			for (Entity e : Helper.spawnEntityInVillage(v, 2, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world)) {
 				((EntityVampireHunter) e).setVillageArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, v.getVillageRadius());
-				if (agressive) {
+				if (((EntityVampireHunter) e).getRNG().nextBoolean()) {
+					((EntityVampireHunter) e).setLevel(1, true);
+				} else if (agressive) {
 					((EntityVampireHunter) e).setLevel(3, true);
 				}
+
 			}
 		}
 	}

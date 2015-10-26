@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity.ai;
 
 import de.teamlapen.vampirism.entity.EntityVampireBase;
-import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIMoveIndoors;
 import net.minecraft.entity.ai.RandomPositionGenerator;
@@ -62,7 +61,6 @@ public class VampireAIMoveIndoors extends EntityAIBase {
      */
     public void startExecuting() {
         this.insidePosX = -1;
-        Logger.t("Starting move indoors");
         if (this.vampire.getDistanceSq((double) this.doorInfo.getInsidePosX(), (double) this.doorInfo.posY, (double) this.doorInfo.getInsidePosZ()) > 256.0D) {
             Vec3 vec3 = RandomPositionGenerator.findRandomTargetBlockTowards(this.vampire, 14, 3, Vec3.createVectorHelper((double) this.doorInfo.getInsidePosX() + 0.5D, (double) this.doorInfo.getInsidePosY(), (double) this.doorInfo.getInsidePosZ() + 0.5D));
 
@@ -78,7 +76,6 @@ public class VampireAIMoveIndoors extends EntityAIBase {
      * Resets the task
      */
     public void resetTask() {
-        Logger.t("Stop move indoors");
         this.insidePosX = this.doorInfo.getInsidePosX();
         this.insidePosZ = this.doorInfo.getInsidePosZ();
         this.doorInfo = null;

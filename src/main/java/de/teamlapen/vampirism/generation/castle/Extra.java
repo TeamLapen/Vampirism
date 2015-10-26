@@ -56,7 +56,7 @@ public class Extra {
 				if(e!=null) {
 					e.setPosition(wx, wy + 0.19D, wz);
 					boolean success = world.spawnEntityInWorld(e);
-					if (e instanceof EntityDracula) Logger.t("Spawned Dracula %s (%b)", e, success);
+					if (e instanceof EntityDracula) Logger.d("Extra", "Spawned Dracula %s (%b)", e, success);
 					if (!success) {
 						VampirismMod.proxy.addTickRunnable(new TickRunnable() {
 							int tick = 20;

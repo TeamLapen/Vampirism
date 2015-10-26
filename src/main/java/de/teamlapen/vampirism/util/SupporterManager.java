@@ -49,7 +49,6 @@ public class SupporterManager {
             inputStream = new URL(REFERENCE.SUPPORTER_FILE_LINK).openStream();
             supporters = retrieveSupporter(inputStream);
             inputStream.close();
-            Logger.t("Loaded supporters from url %s", Arrays.toString(supporters));
         } catch (IOException e) {
             Logger.e(TAG, e, "Failed to retrieve supporters from url");
         }

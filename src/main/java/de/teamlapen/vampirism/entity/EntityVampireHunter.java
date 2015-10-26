@@ -41,6 +41,7 @@ public class EntityVampireHunter extends EntityHunterBase implements ISyncable, 
 	public EntityVampireHunter(World p_i1738_1_) {
 		super(p_i1738_1_);
 
+		this.hasArms = true;
 		this.getNavigator().setBreakDoors(true);
 		this.setSize(0.6F, 1.8F);
 
@@ -82,6 +83,7 @@ public class EntityVampireHunter extends EntityHunterBase implements ISyncable, 
 		this.updateEntityAttributes();
 
 	}
+
 
 	@Override
 	protected void dropFewItems(boolean recentlyHit, int lootingLevel) {
@@ -221,6 +223,7 @@ public class EntityVampireHunter extends EntityHunterBase implements ISyncable, 
 		}
 		return this.rand.nextInt(2) + 2;
 	}
+
 
 	protected void updateEntityAttributes() {
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_HEALTH);

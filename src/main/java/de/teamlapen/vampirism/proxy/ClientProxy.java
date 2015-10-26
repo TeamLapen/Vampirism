@@ -150,7 +150,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void registerRenderer() {
-		RenderingRegistry.registerEntityRenderingHandler(EntityVampireHunter.class, new VampireHunterRenderer());
+		RenderingRegistry.registerEntityRenderingHandler(EntityVampireHunter.class, new RenderVampireHunter());
 		RenderingRegistry.registerEntityRenderingHandler(EntityVampire.class, new VampireRenderer(0.5F));
 		 RenderingRegistry.registerEntityRenderingHandler(EntityDracula.class, new RendererDracula(new ModelDracula(), 0.5F));
 		RenderingRegistry.registerEntityRenderingHandler(EntityGhost.class, new RendererGhost(new ModelGhost(), 0.5F));

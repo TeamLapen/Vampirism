@@ -58,6 +58,8 @@ public class EntityVampireHunter2 extends EntityHunterBase implements ISyncable,
 
     public EntityVampireHunter2(World world) {
         super(world);
+
+        this.hasArms = true;
         this.getNavigator().setBreakDoors(true);
         this.setSize(0.6F, 1.8F);
 

@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.generation.structures;
 
 import de.teamlapen.vampirism.entity.EntityVampireHunter2;
 import de.teamlapen.vampirism.item.ItemTent;
-import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -52,7 +51,6 @@ public class GenerateHunterCamp extends WorldGenerator {
                     hunter.setPosition(x, y + 1.1F, z);
                     hunter.setHomeArea(x, y, z, 10);
                     world.spawnEntityInWorld(hunter);
-                    Logger.t("Spawned hunter at %d %d %d", x, y + 1, z);
 
                 }
             }

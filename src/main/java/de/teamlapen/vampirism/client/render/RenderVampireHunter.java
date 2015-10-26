@@ -2,55 +2,31 @@ package de.teamlapen.vampirism.client.render;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.client.model.ModelVHVillager;
 import de.teamlapen.vampirism.client.model.ModelVampireHunter;
 import de.teamlapen.vampirism.entity.EntityVampireHunter;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderBiped;
-import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
-import org.lwjgl.opengl.GL11;
 
 @SideOnly(Side.CLIENT)
-public class VampireHunterRenderer extends RenderBiped {
+public class RenderVampireHunter extends RenderBiped {
 
-	protected static class RendererCustomVillager extends RenderLiving {
 
-		private static final ResourceLocation villagerTexture = new ResourceLocation("textures/entity/villager/villager.png");
-
-		public RendererCustomVillager(ModelBase p_i1262_1_, float p_i1262_2_) {
-			super(p_i1262_1_, p_i1262_2_);
-		}
-
-		@Override
-		protected ResourceLocation getEntityTexture(Entity p_110775_1_) {
-			return villagerTexture;
-		}
-
-		@Override
-		protected void preRenderCallback(EntityLivingBase p_77041_1_, float p_77041_2_) {
-			float f1 = 0.9375F;
-
-			GL11.glScalef(f1, f1, f1);
-		}
-
-	}
 
 
 	private static final ResourceLocation textureBase1 = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vampireHunterBase1.png");
 	private static final ResourceLocation textureBase4 = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vampireHunterBase4.png");
 	private static final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampireHunterExtra.png");
 
-	private final RendererCustomVillager rendererVillager;
+	private final RenderHunterVillager rendererVillager;
 
-	public VampireHunterRenderer() {
+	public RenderVampireHunter() {
 		super(new ModelVampireHunter(), 0.5F);
-		rendererVillager = new RendererCustomVillager(new ModelVHVillager(0.0F), 0.0F);
+		rendererVillager = new RenderHunterVillager(0.5F);
 	}
 
 	@Override
