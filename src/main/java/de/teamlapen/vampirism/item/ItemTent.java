@@ -52,7 +52,8 @@ public class ItemTent extends BasicItem {
                 world.setBlock(x1, y, z1, tent, dir + 4, 3);
                 world.setBlock(x2, y, z2, tent, dir + 8, 3);
                 world.setBlock(x3, y, z3, tent, dir + 12, 3);
-                ((TileEntityTent) world.getTileEntity(x, y, z)).markAsSpawner();
+                TileEntityTent tile = (TileEntityTent) world.getTileEntity(x, y, z);
+                if (tile != null) tile.markAsSpawner();
                 return true;
             }
         }

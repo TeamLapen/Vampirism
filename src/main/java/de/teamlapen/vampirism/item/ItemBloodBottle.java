@@ -117,6 +117,9 @@ public class ItemBloodBottle extends ItemGlassBottle {
 	public IIcon getIconFromDamage(int index) {
 		if (index != 0)
 			index = index / 2;
+		if (index < 0 || index >= icons.length) {
+			index = 0;
+		}
 		return icons[index];
 	}
 

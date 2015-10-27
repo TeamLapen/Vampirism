@@ -97,6 +97,10 @@ public class EntityDracula extends EntityDefaultVampireWithMinion implements IBo
 			CastlePositionData.Position pos=CastlePositionData.get(worldObj).findPosAtChunk(chunkCoordX,chunkCoordZ,true);
 			if(pos!=null){
 				EntityDracula drac= (EntityDracula) EntityList.createEntityByName(REFERENCE.ENTITY.DRACULA_NAME,worldObj);
+				if (drac == null) {
+					//Should not happen
+					Logger.w(null, "Failed to create a new Dracula entity on death.");
+				}
 				boolean flag=Helper.spawnEntityInWorld(worldObj, AxisAlignedBB.getBoundingBox(pos.getLowerMainCastle().chunkXPos<<4,pos.getHeight(),pos.getLowerMainCastle().chunkXPos<<4,pos.getUpperMainCastle().chunkXPos<<4,pos.getHeight()+10,pos.getUpperMainCastle().chunkZPos<<4),drac,10);
 				if(flag){
 					drac.makeCastleLord(pos);
