@@ -80,6 +80,8 @@ public class Configs {
 
 	public static boolean disable_garlic_gas;
 
+	public static boolean updateNotification;
+
 	public static int getVampireBiomeId() {
 		return config.getInt("vampirism_biome_id", CATEGORY_GENERAL, -1, -1, 1000, "If you set this to -1 the mod will try to find a free biome id");
 	}
@@ -198,6 +200,7 @@ public class Configs {
 		render_fog_vampire_biome = config.getBoolean("fog_vampire_biome", CATEGORY_GENERAL, true, "Render fog in the vampire biome");
 		mulitple_lords = config.getBoolean("multiple_lords", CATEGORY_GENERAL, false, "Allows multiple player to be a vampire lord at a time. If changed from true to false, all players will loose their lord status");
 		looseLordDaysCount = config.getInt("loose_lord_after_days", CATEGORY_GENERAL, 300, 1, Integer.MAX_VALUE, "Loose vampire lord status if not being online for n Minecraft days on multiplayer servers");
+		updateNotification = config.getBoolean("show_update_hint", CATEGORY_GENERAL, true, "Whether to show a hint when a new version of Vampirism is available or not");
 
 		realismMode = config.getBoolean("vampire_realism_mode", CATEGORY_GENERAL, false, "Changes a few things and changes some default balance values to make it more 'realistic' ");
 

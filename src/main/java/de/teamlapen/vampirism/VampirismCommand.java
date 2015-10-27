@@ -3,12 +3,13 @@ package de.teamlapen.vampirism;
 import de.teamlapen.vampirism.generation.WorldGenVampirism;
 import de.teamlapen.vampirism.util.BasicCommand;
 import de.teamlapen.vampirism.util.VampireLordData;
+import de.teamlapen.vampirism.util.VersionChecker;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.*;
 import net.minecraft.world.ChunkCoordIntPair;
+
+import java.util.List;
 
 /**
  * Main vampirism command
@@ -72,6 +73,38 @@ public class VampirismCommand extends BasicCommand {
 						p.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.biome.found"));
 					}
 				}
+			}
+
+			@Override
+			public String getCommandUsage(ICommandSender var1) {
+				return getCommandName();
+			}
+		});
+		addSub(new SubCommand() {
+			@Override
+			public boolean canCommandSenderUseCommand(ICommandSender var1) {
+				return true;
+			}
+
+			@Override
+			public String getCommandName() {
+				return "changelog";
+			}
+
+			@Override
+			public void processCommand(ICommandSender var1, String[] var2) {
+				if (VersionChecker.newVersion == null) {
+					var1.addChatMessage(new ChatComponentText("There is no new version available"));
+					return;
+				}
+				List<String> changes = VersionChecker.newVersion.getChangeLog();
+				var1.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Vampirism " + VersionChecker.newVersion.getModVersion() + "(" + VersionChecker.newVersion.getMcVersion() + ")"));
+				for (String c : changes) {
+					var1.addChatMessage(new ChatComponentText("-" + c));
+				}
+				var1.addChatMessage(new ChatComponentText(""));
+				IChatComponent component = IChatComponent.Serializer.func_150699_a(VersionChecker.addVersionInfo(StatCollector.translateToLocal("text.vampirism.update_message")));
+				var1.addChatMessage(component);
 			}
 
 			@Override

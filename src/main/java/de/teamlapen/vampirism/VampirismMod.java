@@ -22,10 +22,7 @@ import de.teamlapen.vampirism.generation.villages.VillageModChurchPiece;
 import de.teamlapen.vampirism.guide.VampirismGuide;
 import de.teamlapen.vampirism.network.*;
 import de.teamlapen.vampirism.proxy.IProxy;
-import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.util.Logger;
-import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.util.SupporterManager;
+import de.teamlapen.vampirism.util.*;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -97,6 +94,9 @@ public class VampirismMod {
 		if (Configs.village_gen_enabled) {
 			Logger.i("Init", "Registering replacer for village generation.");
 			MinecraftForge.TERRAIN_GEN_BUS.register(new VillageGenReplacer());
+		}
+		if (!Loader.isModLoaded("VersionChecker")) {
+			VersionChecker.execute();
 		}
 		FMLInterModComms.sendMessage("Waila", "register", "de.teamlapen.vampirism.WailaDataProvider.callbackRegister");
 		SupporterManager.getInstance().initAsync();

@@ -9,7 +9,9 @@ import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.item.GarlicHelper;
 import de.teamlapen.vampirism.tileEntity.TileEntityCoffin;
+import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.VampireLordData;
+import de.teamlapen.vampirism.util.VersionChecker;
 import de.teamlapen.vampirism.villages.VillageVampireData;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.init.Blocks;
@@ -17,6 +19,7 @@ import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
@@ -87,6 +90,15 @@ public class VampirismEventHandler {
 	public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent e) {
 		if (VampirismMod.vampireCastleFail) {
 			e.player.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.castle_fail"));
+		}
+		if (Configs.updateNotification && VersionChecker.newVersion != null) {
+			if (e.player.getRNG().nextInt(5) == 0) {
+
+				//Inspired by @Vazikii's useful message
+				e.player.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.outdated", REFERENCE.VERSION, VersionChecker.newVersion.getModVersion()));
+				IChatComponent component = IChatComponent.Serializer.func_150699_a(VersionChecker.addVersionInfo(StatCollector.translateToLocal("text.vampirism.update_message")));
+				e.player.addChatComponentMessage(component);
+			}
 		}
 	}
 
