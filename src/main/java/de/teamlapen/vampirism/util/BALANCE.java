@@ -47,8 +47,12 @@ public final class BALANCE {
 		public static double VAMPIRE_HUNTER_MOVEMENT_SPEED;
 		@DefaultInt(value = 5, minValue = 0, maxValue = 20, name = "Maximum Vampire Hunters per Village", comment = "")
 		public static int VAMPIRE_HUNTER_MAX_PER_VILLAGE;
-		@DefaultDouble(value = 1.4D, minValue = 1.0D, maxValue = 3.0D, name = "Vampire Hunter Agressive Multiplier", comment = "")
-		public static double VAMPIRE_HUNTER_AGRESSIVE_MULT;
+		@DefaultDouble(value = 130.0D, minValue = 15.0D, maxValue = 700.0D, name = "Vampire Hunter 2 Max Health", comment = "")
+		public static double VAMPIRE_HUNTER2_MAX_HEALTH;
+		@DefaultDouble(value = 8D, minValue = 1.0D, maxValue = 30.0D, name = "Vampire Hunter 2 Attack Damage", comment = "")
+		public static double VAMPIRE_HUNTER2_ATTACK_DAMAGE;
+		@DefaultDouble(value = 0.31D, minValue = 0.1D, maxValue = 0.6D, name = "Vampire Hunter 2 Movement Speed", comment = "")
+		public static double VAMPIRE_HUNTER2_MOVEMENT_SPEED;
 
 		@DefaultDouble(value = 20.0D, minValue = 5.0D, maxValue = 200.0D, name = "Vampire Minion Max Health", comment = "")
 		public static double VAMPIRE_MINION_MAX_HEALTH;

@@ -1,9 +1,12 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.Configs;
 import de.teamlapen.vampirism.ModItems;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.ISyncable;
 import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SupporterManager;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
@@ -15,6 +18,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 
@@ -66,8 +71,10 @@ public class EntityVampireHunter2 extends EntityHunterBase implements ISyncable,
         this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
         this.tasks.addTask(3, new EntityAIMoveTowardsRestriction(this, 1.0F));
 
-        this.tasks.addTask(6, new EntityAIWander(this, 0.7));
-        this.tasks.addTask(9, new EntityAILookIdle(this));
+        this.tasks.addTask(6, new EntityAIWander(this, 0.5));
+        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 14.0F));
+        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityVampireBase.class, 12.0F));
+        this.tasks.addTask(10, new EntityAILookIdle(this));
 
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 
@@ -89,7 +96,30 @@ public class EntityVampireHunter2 extends EntityHunterBase implements ISyncable,
         SupporterManager.Supporter s = SupporterManager.getInstance().getRandom(getRNG());
         textureName = s.textureName;
         senderName = s.senderName;
+        if (Configs.disable_supporter_hunter_names) senderName = null;
         updateType(getRNG().nextInt(MAX_TYPES));
+
+        this.addPotionEffect(new PotionEffect(Potion.regeneration.id, 10000, 1));
+    }
+
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+
+        if (recentlyHit > 0 && getRNG().nextInt(100) == 0) {
+            Helper.spawnEntityBehindEntity(this.getAttackTarget(), REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME);
+        }
+    }
+
+    @Override
+    protected void attackedEntityAsMob(EntityLivingBase entity) {
+        super.attackedEntityAsMob(entity);
+        if (getRNG().nextBoolean()) {
+            entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 40, 10));
+            if (getRNG().nextBoolean()) {
+                entity.addPotionEffect(new PotionEffect(Potion.blindness.id, 50));
+            }
+        }
     }
 
     @Override
@@ -100,10 +130,9 @@ public class EntityVampireHunter2 extends EntityHunterBase implements ISyncable,
     }
 
     protected void updateEntityAttributes() {
-        int l = 4;
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_HEALTH);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_ATTACK_DAMAGE * l);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER_MOVEMENT_SPEED);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER2_MAX_HEALTH);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER2_ATTACK_DAMAGE);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(BALANCE.MOBPROP.VAMPIRE_HUNTER2_MOVEMENT_SPEED);
     }
 
     @Override

@@ -38,7 +38,8 @@ public class EntityVampireBaron extends EntityDefaultVampireWithMinion implement
 		//this.tasks.addTask(3, new EntityAIAvoidEntity(this, EntityVampireHunter.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.2));
 		this.tasks.addTask(4, new VampireAIFleeGarlic(this, 0.9F));
 		this.tasks.addTask(6, new EntityAIWander(this, 0.2));
-		this.tasks.addTask(9, new EntityAILookIdle(this));
+		this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+		this.tasks.addTask(10, new EntityAILookIdle(this));
 		this.tasks.addTask(6, new EntityAIAttackOnCollide(this, EntityVampireBaron.class, 1.0D, false));
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 		this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, false));

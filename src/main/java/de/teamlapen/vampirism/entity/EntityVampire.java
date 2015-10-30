@@ -30,7 +30,9 @@ public class EntityVampire extends EntityDefaultVampire {
 		this.tasks.addTask(9, new VampireAIMoveToBiteable(this));
 		this.tasks.addTask(10, new EntityAIMoveThroughVillage(this, 0.6, true));
 		this.tasks.addTask(11, new EntityAIWander(this, 0.7));
-		this.tasks.addTask(12, new EntityAILookIdle(this));
+		this.tasks.addTask(12, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+		this.tasks.addTask(13, new EntityAIWatchClosest(this, EntityHunterBase.class, 8.0F));
+		this.tasks.addTask(14, new EntityAILookIdle(this));
 
 		// Search for players
 		this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));

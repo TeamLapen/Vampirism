@@ -82,6 +82,8 @@ public class Configs {
 
 	public static boolean updateNotification;
 
+	public static boolean disable_supporter_hunter_names;
+
 	public static int getVampireBiomeId() {
 		return config.getInt("vampirism_biome_id", CATEGORY_GENERAL, -1, -1, 1000, "If you set this to -1 the mod will try to find a free biome id");
 	}
@@ -236,7 +238,8 @@ public class Configs {
 		disable_village_biome = config.getBoolean("disable_village_biomes", CATEGORY_DISABLE, false, "Disables the biome based alternation of village generation");
 		disable_hunter = config.getBoolean("disable_vampire_hunter", CATEGORY_DISABLE, false, "Disable hunter spawn. Will make the mod  easier and unbalanced");
 		disable_blood_vision = config.getBoolean("disable_blood_vision", CATEGORY_DISABLE, false, "Disables the blood vision ability");
-		disable_garlic_gas = config.getBoolean("disable_garlic_gas", CATEGORY_DISABLE, false, "Disable the garlic gas blocks, therby garlic does not have a area of affect damage");
+		disable_garlic_gas = config.getBoolean("disable_garlic_gas", CATEGORY_DISABLE, false, "Disable the garlic gas blocks, thereby garlic does not have a area of affect damage");
+		disable_supporter_hunter_names = config.getBoolean("disable_supporter_hunter_names", CATEGORY_DISABLE, false, "Do not use names of Vampirism's supporters as hunter names");
 
 		if (config.hasChanged()) {
 			config.save();
