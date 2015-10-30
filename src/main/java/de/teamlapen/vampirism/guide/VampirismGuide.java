@@ -150,6 +150,21 @@ public class VampirismGuide{
 		castleBlocks.add(new PageIRecipe(getRecipe(new ItemStack(ModBlocks.castleStairsDark, 1, 0))));
 
 		entries.add(new EntryUniText(castleBlocks, ModBlocks.castleBlock.getUnlocalizedName() + ".name"));
+
+		ArrayList<IPage> garlicItems = new ArrayList<IPage>();
+		garlicItems.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.itemsAndBlocks.garlic"), ModItems.garlic));
+		garlicItems.add(new PageIRecipe(getRecipe(ModItems.concentratedGarlic)));
+		garlicItems.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.itemsAndBlocks.garlic_concentrated"), ModItems.concentratedGarlic));
+		garlicItems.add(new PageIRecipe(getRecipe(ModBlocks.garlicTorchWeak)));
+		garlicItems.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.itemsAndBlocks.garlic_torch_weak"), ModBlocks.garlicTorchWeak));
+		garlicItems.add(new PageIRecipe(getRecipe(ModBlocks.garlicTorchStrong)));
+		garlicItems.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.itemsAndBlocks.garlic_torch_strong"), ModBlocks.garlicTorchStrong));
+//		garlicItems.add(new PageIRecipe(getRecipe(ModItems.garlicBomb)));
+//		garlicItems.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.itemsAndBlocks.garlic_bomb"),ModItems.garlicBomb));
+
+		entries.add(new EntryUniText(garlicItems, ModItems.garlic.getUnlocalizedName() + ".name"));
+
+
 		categories.add(new CategoryItemStack(entries,"guide.vampirism.itemsAndBlocks.category",new ItemStack(ModItems.leechSword,1)));
 	}
 	
@@ -229,6 +244,11 @@ public class VampirismGuide{
 		vampire_npc.add(new PageImage(new ResourceLocation(REFERENCE.MODID + ":guide/screenshots/vampire.png")));
 		vampire_npc.addAll(PageHelper.pagesForLongText(locAndFormat("guide.vampirism.mobs.vampire.text", BALANCE.VAMPIRE_FRIENDLY_LEVEL)));
 		entries.add(new EntryUniText(vampire_npc, "entity." + REFERENCE.ENTITY.VAMPIRE_NAME + ".name"));
+
+		ArrayList<IPage> hunter2 = new ArrayList<IPage>();
+		hunter2.add(new PageImage(new ResourceLocation(REFERENCE.MODID + ":guide/screenshots/hunter2.png")));
+		hunter2.addAll(PageHelper.pagesForLongText(locAndFormat("guide.vampirism.mobs.hunter2.text", BALANCE.VAMPIRE_HUNTER_ATTACK_LEVEL)));
+		entries.add(new EntryUniText(hunter2, "entity." + REFERENCE.ENTITY.VAMPIRE_HUNTER_2_NAME + ".name"));
 
 		ArrayList<IPage> vampire_baron = new ArrayList<IPage>();
 		vampire_baron.add(new PageImage(new ResourceLocation(REFERENCE.MODID + ":guide/screenshots/vampire_baron.png")));
