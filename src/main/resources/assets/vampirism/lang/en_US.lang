@@ -1,3 +1,4 @@
+#X-Generator: crowdin.com
 # Entitys
 entity.vampirism.vampireHunter.name=Vampire Hunter
 entity.vampirism.vampire.name=Vampire
@@ -9,7 +10,6 @@ entity.vampirism.blinding_bat.name=Bat
 entity.vampirism.dracula.name=Dracula
 entity.vampirism.dead_mob.name=Dead mob
 entity.vampirism.portal_guard.name=Portal Guard
-entity.vampirism.vampireHunter2.name=Advanced Vampire Hunter
 
 # Items
 item.vampirism.vampiresFear.name=Vampire's fear
@@ -32,9 +32,6 @@ item.vampirism.bloodEye.name=Blood Eye
 item.vampirism.weakVampireFang.name=Weak Vampire Fang
 item.vampirism.weakHumanHeart.name=Weak Human Heart
 item.vampirism.item_tent.name=Tent
-item.vampirism.garlic.name=Garlic
-item.vampirism.concentratedGarlic.name=Concentrated Garlic
-item.vampirism.garlic_bomb.name=Garlic Bomb
 
 # Blocks
 block.vampirism.bloodAltar.name=Blood Altar of Saturation
@@ -51,11 +48,6 @@ block.vampirism.castleSlab.name=Castle Slab
 block.vampirism.doubleCastleSlab.name=Double Castle Slab
 block.vampirism.castleStairs.name=Castle Stairs
 block.vampirism.tent.name=Tent
-block.vampirism.gildedIronBlock.name=Gilded Iron Block
-block.vampirism.garlic.name=Garlic
-tile.vampirism.garlicTorchWeak.name=Weak Garlic Torch
-tile.vampirism.garlicTorchStrong.name=Strong Garlic Torch
-tile.vampirism.garlicGas.name=Garlic Gas
 
 #GUI
 gui.vampirism.revertback.head=Revert back to normal human
@@ -71,12 +63,10 @@ key.vampirism.vision=Switch vision
 #General
 itemGroup.vampirism=Vampirism
 death.attack.sun=%1$s did not like the sun
-death.attack.garlic=%1$s was poisoned by garlic
 potion.vampirism.sunscreen=Sunscreen
 potion.vampirism.thirst=Thirst
 potion.vampirism.saturation=Saturation
 potion.vampirism.sanguinare=Sanguinare Vampiris
-potion.vampirism.garlic=Garlic
 text.vampirism.skill.level_to_low=Your vampire level is too low for that
 text.vampirism.skill.cooldown_not_over=Please wait until the cooldown is over
 text.vampirism.entity_level=Level
@@ -127,9 +117,6 @@ text.vampirism.castle_fail=Vampirism was not able to find a appropriate position
 text.vampirism.structure=Structure
 text.vampirism.pillar_blocks=Pillar Blocks
 text.vampirism.no_dracula_to_call=Dracula is dead and cannot be called
-text.vampirism.garlic_weapons=This weapon is coated with garlic and poisons vampires./nBut the garlic wears off.
-text.vampirism.outdated=You are running Vampirism %s, the latest version is %s.
-text.vampirism.update_message=["Click for... [",{"text":"Download","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the download page","color":"green"}},"clickEvent":{"action":"open_url","value":"@download@"}},"] [",{"text":"Website","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the mod's forum page","color":"green"}},"clickEvent":{"action":"open_url","value":"@forum@"}},"] [",{"text":"Changelog","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this see the version's Changelog","color":"green"}},"clickEvent":{"action":"run_command","value":"/vampirism changelog"}},"]"]
 
 #Skill
 skill.vampirism.bat_skill=Toggle Batmode
@@ -164,5 +151,6 @@ category.vampirism.balance_mob_prop=Vampirism mob properties
 category.vampirism.balance_mob_prop.tooltip=Change properties of the mobs added by Vampirism
 category.vampirism.balance_vv_prop=Village Vampire properties
 category.vampirism.balance_vv_prop.tooltip=Change the way hunters in villages act and adjust other village related stuff
+
 
 

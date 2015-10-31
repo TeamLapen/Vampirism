@@ -10,6 +10,7 @@ entity.vampirism.blinding_bat.name=Fledermaus
 entity.vampirism.dracula.name=Dracula
 entity.vampirism.dead_mob.name=Toter mob
 entity.vampirism.portal_guard.name=Portal Wache
+entity.vampirism.vampireHunter2.name=Fortgeschrittener Vampir Jäger
 
 # Items
 item.vampirism.vampiresFear.name=Vampir's Angst
@@ -32,6 +33,9 @@ item.vampirism.bloodEye.name=Blutiges Auge
 item.vampirism.weakVampireFang.name=Schwache Vampir Zähne
 item.vampirism.weakHumanHeart.name=Schwaches menschliches Herz
 item.vampirism.item_tent.name=Zelt
+item.vampirism.garlic.name=Knoblauch
+item.vampirism.concentratedGarlic.name=Konzentrierter Knoblauch
+item.vampirism.garlic_bomb.name=Knoblauch Bombe
 
 # Blocks
 block.vampirism.bloodAltar.name=Blood Altar der Sättigung
@@ -48,6 +52,11 @@ block.vampirism.castleSlab.name=Burg Stufe
 block.vampirism.doubleCastleSlab.name=Doppelte Burg Stufe
 block.vampirism.castleStairs.name=Burg Treppe
 block.vampirism.tent.name=Zelt
+block.vampirism.gildedIronBlock.name=Vergoldeter Eisen Block
+block.vampirism.garlic.name=Knoblauch
+tile.vampirism.garlicTorchWeak.name=Schwache Knoblauch Fackel
+tile.vampirism.garlicTorchStrong.name=Starke Knoblauch Fackel
+tile.vampirism.garlicGas.name=Knoblauch Gas
 
 #GUI
 gui.vampirism.revertback.head=Verwandle dich zurück in einen normalen Menschen
@@ -63,10 +72,12 @@ key.vampirism.vision=Wechsle Sicht
 #General
 itemGroup.vampirism=Vampirismus
 death.attack.sun=%1$s mochte die Sonne nicht
+death.attack.garlic=%1$s wurde durch Knoblauch vergiftet
 potion.vampirism.sunscreen=Sonnenschutz
 potion.vampirism.thirst=Durst
 potion.vampirism.saturation=Sättigung
 potion.vampirism.sanguinare=Sanguinare Vampiris
+potion.vampirism.garlic=Knoblauch
 text.vampirism.skill.level_to_low=Dein Vampire Level ist zu niedrig dafür
 text.vampirism.skill.cooldown_not_over=Bitte warte bis die Abklingzeit vorbei ist
 text.vampirism.entity_level=Level
@@ -117,6 +128,9 @@ text.vampirism.castle_fail=Vampirism war nicht in der Lage eine passende Positio
 text.vampirism.structure=Struktur
 text.vampirism.pillar_blocks=Pfeiler Blöcke
 text.vampirism.no_dracula_to_call=Dracula ist tot und kann nicht gerufen werden
+text.vampirism.garlic_weapons=Diese Waffe ist mit Knoblauch beschichtet und vergiftet Vampire./n Aber der Knoblauch löst sich langsam ab.
+text.vampirism.outdated=Du nutzt Vampirism %s, die aktuelle Version ist %s.
+text.vampirism.update_message=["Klicken für... [",{"text"\:"Download","color"\:"green","hoverEvent"\:{"action"\:"show_text","value"\:{"text"\:"Klicke um zum Download zu gelangen","color"\:"green"}},"clickEvent"\:{"action"\:"open_url","value"\:"@download@"}},"] [",{"text"\:"Webseite","color"\:"green","hoverEvent"\:{"action"\:"show_text","value"\:{"text"\:"Klicke um zum Forum Thread zu kommen","color"\:"green"}},"clickEvent"\:{"action"\:"open_url","value"\:"@forum@"}},"] [",{"text"\:"Changelog","color"\:"green","hoverEvent"\:{"action"\:"show_text","value"\:{"text"\:"Klicke um das Changelog dieser Version zu sehen","color"\:"green"}},"clickEvent"\:{"action"\:"run_command","value"\:"/vampirism changelog"}},"]"]
 
 #Skill
 skill.vampirism.bat_skill=Aktiviere Fledermaus
@@ -151,5 +165,6 @@ category.vampirism.balance_mob_prop=Vampirism Mob Einstellungen
 category.vampirism.balance_mob_prop.tooltip=Die Eigenschaften von hinzugefÃ¼gten Mobs anpassen 
 category.vampirism.balance_vv_prop=Dorf Eigenschaften
 category.vampirism.balance_vv_prop.tooltip=Konfiguriere wie sich Jäger im Dorf verhalten und andere Dorf Eigenschaften verändern
+
 
 

@@ -1,0 +1,117 @@
+#X-Generator: crowdin.com
+# Entitys
+entity.vampirism.vampireHunter.name=뱀파이어 사냥꾼
+entity.vampirism.vampire.name=뱀파이어
+entity.vampirism.ghost.name=유령
+entity.vampirism.vampireBaron.name=뱀파이어 남작
+entity.vampirism.vampireMinionR.name=뱀파이어 하인
+entity.vampirism.vampireMinionS.name=뱀파이어 하인
+entity.vampirism.blinding_bat.name=박쥐
+entity.vampirism.dracula.name=드라큘라
+entity.vampirism.dead_mob.name=죽은 폭도
+entity.vampirism.portal_guard.name=포탈 문지기
+
+# Items
+item.vampirism.vampiresFear.name=뱀파이어의 공포
+item.vampirism.bloodBottle.name=혈액병
+item.vampirism.vampireFang.name=뱀파이어 송곳니
+item.vampirism.humanHeart.name=인간 심장
+item.vampirism.torch.name=횃불
+item.vampirism.pureBlood.name=순수한 피
+item.vampirism.sunscreen.name=햇빛 차단제
+item.vampirism.leechSword.name=리치
+item.vampirism.coffin.name=관
+item.vampirism.vampireArmor_helmet.name=뱀파이어 투구
+item.vampirism.vampireArmor_leggings.name=뱀파이어 레깅스
+item.vampirism.vampireArmor_boots.name=뱀파이어 부츠
+item.vampirism.vampireArmor_chestplate.name=뱀파이어 갑옷
+item.vampirism.minionNameTag.name=하인 이름표
+item.vampirism.bloodEye.name=혈액 눈
+item.vampirism.weakVampireFang.name=약한 뱀파이어 송곳니
+item.vampirism.weakHumanHeart.name=약한 인간의 심장
+item.vampirism.item_tent.name=텐트
+
+# Blocks
+block.vampirism.churchAltar.name=정화의 제단
+block.vampirism.cursedEarth.name=저주받은 땅
+block.vampirism.vampireOrchid.name=뱀파이어 오치드
+block.vampirism.blockCoffin.name=관
+block.vampirism.castlePortal.name=포탈 블록
+block.vampirism.castleBlock.name=성 블록
+block.vampirism.castleSlab.name=성 반 블록
+block.vampirism.castleStairs.name=성 계단
+block.vampirism.tent.name=텐트
+
+#GUI
+gui.vampirism.revertback.head=일반 인간으로 돌아갑니다.
+gui.vampirism.revertback.desc=당신은 모든 레벨을 잃고 죽습니다.
+
+# Keys
+keys.vampirism.category=뱀파이어
+keys.vampirism.suck=피 빨기
+keys.vampirism.auto=혈액 병 자동 채우기
+keys.vampirism.skill=뱀파이어 스킬 사용
+key.vampirism.vision=시야 전환
+
+#General
+itemGroup.vampirism=뱀파이어
+potion.vampirism.sunscreen=햇빛 차단제
+text.vampirism.skill.level_to_low=당신의 뱀파이어 레벨이 너무 낮습니다.
+text.vampirism.skill.cooldown_not_over=쿨다운이 끝날때까지 기다려주세요.
+text.vampirism.entity_level=레벨
+text.vampirism.ritual_missing_times=이 의식을 위한 아이템이 없습니다.
+text.vampirism.ritual_structure_wrong=이 의식을 위한 구조물이 잘못되었습니다.
+text.vampirism.ritual_level_wrong=현재 레벨에서 이 제단을 사용할 수 없습니다.
+text.vampirism.ritual_still_running=의식이 진행 중입니다.
+text.vampirism.not_enough_blood=제단에 피가 부족합니다.
+text.vampirism.purity=순수
+text.vampirism.auto_fill_enabled=자동 채우기 사용
+text.vampirism.auto_fill_disabled=자동 채우기 사용안함
+text.vampirism.skill.deactivated_by_serveradmin=이 스킬은 서버 관리자에 의해 비활성화 되었습니다.
+text.vampirism.ritual_no_vampire=이 의식을 위한 뱀파이어가 필요합니다.
+text.vampirism.cant_fly_day=낮에 날 수 없습니다.
+text.vampirism.no_more_minions=더 많은 부하를 조종 할 수 없습니다.
+text.vampirism.coffin.noSleep=낮에만 잘 수 있습니다.
+text.vampirism.coffin.occupied=이 관은 사용 중 입니다.
+text.vampirism.coffin.stopsleeping=관에서 일어나기
+text.vampirism.blood=피
+text.vampirism.vampirelevel=뱀파이어 레벨
+text.vampirism.minion=부하
+text.vampirism.lord=로드
+text.vampirism.normal_vision=일반 시야
+text.vampirism.night_vision=야간 투시
+text.vampirism.need_empty_bottle=나의 로드, 피를 모으기 위해 빈병이 필요합니다.
+text.vampirism.coming_back=돌아가는 중입니다, 나의 로드.
+text.vampirism.sorry_i_died_while_doing=나의 로드, 죄송하지만 시킨일을 하던 중 죽었습니다.
+text.vampirism.current_task=현재 작업
+text.vampirism.lord.level_to_low=뱀파이어 로드가 되기엔 뱀파이어 레벨이 너무 낮습니다.
+text.vampirism.guard_stay_away_level_low=드라큘라의 성을 모험하기엔 뱀파이어 레벨이 너무 낮다. 도망쳐\!
+text.vampirism.coffin.wrong_dimension=이 차원에서 잘 수 없습니다.
+text.vampirism.biome.looking_for_biome=Vampire Forest 바이옴을 찾는 중 입니다. 잠시만 기다려 주세요.
+text.vampirism.biome.not_found=Vampire Forest 바이옴을 찾을 수 없습니다.
+text.vampirism.biome.found=Vampire Forest 바이옴을 찾았습니다.
+text.vampirism.castle_fail=Vampirism이 적당한 위치의 뱀파이어 성을 찾을 수 없습니다. 새로운 월드를 만드는걸 추천 합니다. 당신은 "/vampirism checkForVampireBiome"이 명령어를 해볼 수 있으며, 바이옴을 찾이 못한다면, 다른 모드가 방해 한걸지도 모릅니다.
+text.vampirism.structure=건축물
+text.vampirism.no_dracula_to_call=드라큘라가 죽어있어 부를 수 없습니다.
+
+#Skill
+skill.vampirism.bat_skill=박쥐 모드 변환
+skill.vampirism.change_weather=날씨
+skill.vampirism.cancel=취소
+skill.vampirism.summon_bats=박쥐 소환
+skill.vampirism.teleport=텔레포트
+skill.vampirism.vampire_rage=뱀파이어의 분노
+
+#Minion command
+minioncommand.vampirism.stayhere=여기서 기다려
+
+#Config
+category.vampirism.balance=밸런스 설정
+category.vampirism.balance_level=레벨 업 밸런스 설정
+category.vampirism.balance_player_skills=뱀파이어 플레이어 스킬 설정
+category.vampirism.balance_mob_prop=Vampirism 몬스터 속성
+category.vampirism.balance_mob_prop.tooltip=Vampirism에서 추가된 몬스터들 속성 변경
+category.vampirism.balance_vv_prop=뱀파이어 마을 속성
+
+
+
