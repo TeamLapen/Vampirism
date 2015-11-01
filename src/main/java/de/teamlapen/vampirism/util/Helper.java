@@ -165,7 +165,11 @@ public class Helper {
 	}
 
 	public static Entity spawnEntityBehindEntity(EntityLivingBase p, String name) {
+		if (p == null) return null;
 		EntityLiving e = (EntityLiving) EntityList.createEntityByName(name, p.worldObj);
+		if (e == null) {
+			Logger.w("Helper", "Failed to create %s", name);
+		}
 		float yaw = p.rotationYawHead;
 		float cosYaw = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
 		float sinYaw = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);

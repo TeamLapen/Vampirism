@@ -106,7 +106,7 @@ public class EntityVampireHunter2 extends EntityHunterBase implements ISyncable,
     public void onLivingUpdate() {
         super.onLivingUpdate();
 
-        if (recentlyHit > 0 && getRNG().nextInt(100) == 0) {
+        if (recentlyHit > 0 && getRNG().nextInt(100) == 0 && this.getAttackTarget() != null) {
             Helper.spawnEntityBehindEntity(this.getAttackTarget(), REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME);
         }
     }
