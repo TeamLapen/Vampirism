@@ -1255,8 +1255,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	private int bite() {
 		if (getLevel() == 0) {
 			int amt = player.getFoodStats().getFoodLevel();
-			player.getFoodStats().setFoodLevel(0);
-			player.addExhaustion(1000F);
+			player.addExhaustion(10000F);
+			player.addPotionEffect(new PotionEffect(Potion.hunger.id, 1000, 50));
 			if (!player.isPotionActive(ModPotion.sanguinare)) {
 				player.addPotionEffect(new PotionEffect(ModPotion.sanguinare.id, BALANCE.VAMPIRE_PLAYER_SANGUINARE_DURATION * 20));
 			}

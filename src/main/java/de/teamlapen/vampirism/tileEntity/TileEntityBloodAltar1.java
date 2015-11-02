@@ -1,8 +1,12 @@
 package de.teamlapen.vampirism.tileEntity;
 
-import java.util.Iterator;
-import java.util.List;
-
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import de.teamlapen.vampirism.ModItems;
+import de.teamlapen.vampirism.ModPotion;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.item.ItemLeechSword;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -17,13 +21,9 @@ import net.minecraft.tileentity.TileEntityBeacon;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.ModItems;
-import de.teamlapen.vampirism.ModPotion;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
-import de.teamlapen.vampirism.item.ItemLeechSword;
-import de.teamlapen.vampirism.util.Helper;
+
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Beacon style blood altar
@@ -41,6 +41,7 @@ public class TileEntityBloodAltar1 extends TileEntity {
 	public int distance = 25;
 	private int tickCounter = 0;
 	private TileEntityBeacon fakeBeacon;
+	private final int max_blood;
 
 	public boolean isInfinite() {
 		return infinite;
@@ -56,6 +57,7 @@ public class TileEntityBloodAltar1 extends TileEntity {
 	public TileEntityBloodAltar1() {
 		super();
 		infinite=false;
+		max_blood = ItemLeechSword.MAX_BLOOD;
 	}
 
 	public void dropSword() {
@@ -67,7 +69,7 @@ public class TileEntityBloodAltar1 extends TileEntity {
 	}
 
 	public int getBloodLeft() {
-		return bloodAmount;
+		return infinite ? max_blood : bloodAmount;
 	}
 
 	@Override
@@ -96,7 +98,7 @@ public class TileEntityBloodAltar1 extends TileEntity {
 	}
 
 	public boolean isActive() {
-		return bloodAmount > 0;
+		return bloodAmount > 0 || infinite;
 	}
 
 	public boolean isOccupied() {
@@ -105,7 +107,7 @@ public class TileEntityBloodAltar1 extends TileEntity {
 
 	public void makeInfinite(){
 		this.infinite=true;
-		this.bloodAmount=ItemLeechSword.MAX_BLOOD;
+		this.bloodAmount = 0;
 		this.occupied=true;
 		this.markDirty();
 	}
@@ -177,7 +179,7 @@ public class TileEntityBloodAltar1 extends TileEntity {
 	@Override
 	public void updateEntity() {
 		if (this.worldObj.getTotalWorldTime() % 100L == 0L && !this.worldObj.isRemote) {
-			if (bloodAmount > 0) {
+			if (bloodAmount > 0 || infinite) {
 				if(!infinite){
 					bloodAmount--;
 				}

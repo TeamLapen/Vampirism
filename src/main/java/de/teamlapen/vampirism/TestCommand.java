@@ -277,8 +277,13 @@ public class TestCommand extends BasicCommand {
 	@Override
 	public void processCommand(ICommandSender sender, String[] param) {
 		if (param != null && param.length == 1 && sender instanceof EntityPlayer) {
-			//Convert short level command to long version
-			param = new String[]{"level", param[0]};
+			try {
+				Integer.parseInt(param[0]);
+				//Convert short level command to long version
+				param = new String[]{"level", param[0]};
+			} catch (Exception ignore) {
+			}
+
 		}
 		super.processCommand(sender, param);
 	}

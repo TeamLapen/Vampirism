@@ -35,7 +35,7 @@ public class GenerateHunterCamp extends WorldGenerator {
             int dir = rand.nextInt(4);
             posX += +rotX[dir];
             posZ += rotZ[dir];
-            ItemTent.placeAt(world, posX, h, posZ, dir, true);
+            ItemTent.placeAt(world, posX, h, posZ, dir, true, true);
             for (int[] pos : entrance[dir]) {
                 world.setBlockToAir(posX + pos[0], h, posZ + pos[1]);
                 world.setBlockToAir(posX + pos[0], h + 1, posZ + pos[1]);

@@ -29,14 +29,14 @@ public class ItemTent extends BasicItem {
         y++;
         int dir = MathHelper.floor_double((player.rotationYaw * 4F) / 360F + 0.5D) & 3;
 
-        boolean flag = placeAt(world, x, y, z, dir, false);
+        boolean flag = placeAt(world, x, y, z, dir, false, false);
         if (flag && !player.capabilities.isCreativeMode) {
             item.stackSize--;
         }
         return flag;
     }
 
-    public static boolean placeAt(World world, int x, int y, int z, int dir, boolean force) {
+    public static boolean placeAt(World world, int x, int y, int z, int dir, boolean force, boolean spawner) {
         int x1 = x + (dir == 0 ? 1 : (dir == 2 ? -1 : 0));
         int z1 = z + (dir == 1 ? 1 : (dir == 3 ? -1 : 0));
         int x2 = x + (dir == 1 ? -1 : (dir == 2 ? -1 : 1));
@@ -53,7 +53,7 @@ public class ItemTent extends BasicItem {
                 world.setBlock(x2, y, z2, tent, dir + 8, 3);
                 world.setBlock(x3, y, z3, tent, dir + 12, 3);
                 TileEntityTent tile = (TileEntityTent) world.getTileEntity(x, y, z);
-                if (tile != null) tile.markAsSpawner();
+                if (tile != null && spawner) tile.markAsSpawner();
                 return true;
             }
         }
