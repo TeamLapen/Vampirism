@@ -35,6 +35,8 @@ item.vampirism.item_tent.name=Tent
 item.vampirism.garlic.name=Garlic
 item.vampirism.concentratedGarlic.name=Concentrated Garlic
 item.vampirism.garlic_bomb.name=Garlic Bomb
+item.vampirism.cheat_level_up.name=Cheat a vampire level
+item.vampirism.blood_bottle_bundle.name=Blood Bottle Bundle
 
 # Blocks
 block.vampirism.bloodAltar.name=Blood Altar of Saturation

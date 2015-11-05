@@ -112,6 +112,27 @@ public class VampirismCommand extends BasicCommand {
 				return getCommandName();
 			}
 		});
+		addSub(new SubCommand() {
+			@Override
+			public boolean canCommandSenderUseCommand(ICommandSender var1) {
+				return isSenderCreative(var1);
+			}
+
+			@Override
+			public String getCommandName() {
+				return "lord_offline_time";
+			}
+
+			@Override
+			public void processCommand(ICommandSender var1, String[] var2) {
+				var1.addChatMessage(new ChatComponentText("Current lord has been offline for " + VampireLordData.get(var1.getEntityWorld()).getCurrentLordOfflineTime() + " ticks"));
+			}
+
+			@Override
+			public String getCommandUsage(ICommandSender var1) {
+				return getCommandName();
+			}
+		});
 	}
 	@Override public String getCommandName() {
 		return "vampirism";

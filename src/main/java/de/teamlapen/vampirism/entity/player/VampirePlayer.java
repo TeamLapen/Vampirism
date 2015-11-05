@@ -2,10 +2,7 @@ package de.teamlapen.vampirism.entity.player;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import de.teamlapen.vampirism.Configs;
-import de.teamlapen.vampirism.ModItems;
-import de.teamlapen.vampirism.ModPotion;
-import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.*;
 import de.teamlapen.vampirism.block.BlockCoffin;
 import de.teamlapen.vampirism.block.IGarlic;
 import de.teamlapen.vampirism.entity.*;
@@ -84,6 +81,10 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		public void addExhaustion(float amount) {
 			if (isSkillActive(Skills.vampireRage)) {
 				amount = amount * 1.5F;
+			}
+			if (BALANCE.INCREASE_BLOOD_USAGE) {
+				float f = getLevel() / (float) REFERENCE.HIGHEST_REACHABLE_LEVEL + 1F;
+				amount *= f;
 			}
 			this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount, maxExhaustion);
 		}
@@ -486,6 +487,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		if (player.worldObj != null && player.worldObj.provider.dimensionId == 0) {
 			if (player.worldObj.canBlockSeeTheSky(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ))) {
 				if(Helper.isEntityInVampireBiome(player))return false;
+				if (player.worldObj.isRaining()) return false;
 				return VampirismMod.isSunDamageTime(player.worldObj);
 			}
 		}
@@ -585,7 +587,13 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	public void levelUp() {
 		int level = getLevel();
 		level++;
+		if (level > REFERENCE.HIGHEST_REACHABLE_LEVEL) {
+			level--;
+		}
 		setLevel(level);
+		if (level == 1) {
+			player.addStat(Achievements.becomingAVampire, 1);
+		}
 	}
 
 	@Override
@@ -632,7 +640,9 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			this.skillTimer = nbt.getIntArray("timers");
 		}
 		if (nbt.hasKey("lord")) {
+			boolean old = vampireLord;
 			this.vampireLord = nbt.getBoolean("lord");
+			if (old != vampireLord) player.refreshDisplayName();
 		}
 		if (nbt.hasKey("sleepingCoffin"))
 			this.sleepingCoffin = nbt.getBoolean("sleepingCoffin");
@@ -1028,7 +1038,9 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			return false;
 		}
 		if(state!=vampireLord){
+			player.addStat(Achievements.becomingALord, 1);
 			this.vampireLord = state;
+			player.refreshDisplayName();
 			this.sync(true);
 		}
 		return true;
@@ -1191,6 +1203,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			if (amt > 0 && isAutoFillBlood()) {
 				fillBloodIntoInventory(amt);
 			}
+			player.addStat(Achievements.suckingBlood, 1);
 			VampirismMod.modChannel.sendToAll(new SpawnParticlePacket("magicCrit", e.posX, e.posY, e.posZ, player.posX - e.posX, player.posY - e.posY, player.posZ - e.posZ, 10));
 			VampirismMod.modChannel.sendTo(new SpawnParticlePacket("blood_eat", 0, 0, 0, 0, 0, 0, 10), (EntityPlayerMP) player);
 
@@ -1297,7 +1310,11 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 	public void refreshVampireLordState(){
 		if (player.worldObj != null && !player.worldObj.isRemote) {
+			boolean old = vampireLord;
 			vampireLord=VampireLordData.get(player.worldObj).isLord(player);
+			if (old != vampireLord) {
+				player.refreshDisplayName();
+			}
 		}
 	}
 

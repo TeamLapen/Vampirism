@@ -96,5 +96,8 @@ guide.vampirism.vlord.minions.title=Minions
 guide.vampirism.vlord.minions.text=As Vampire Lord you are so powerful that you can make vampires to your minions. Freeze one and then use your bite key to intimidate him. He will become your minion. /nThen you can use %s while facing him to open a control menu and give him different different tasks. /nTo control multiple minions at ones, press the same key while facing no minion. /n/nThe normal minions will always stay with you, otherwise they would run away. To make them able to fulfill tasks at other places, you have to use the %s on them. /nThen you can send them for example to collect blood, in this form they are also a little bit smarter and try to hide from the sun. To name your minions you can use a special and cheap minion name tag.
 
 
-
+#Achievements
+achievement.vampirism.becoming_lord=Becoming a Vampire Lord
+achievement.vampirism.sucking_blood=Sucking blood
+achievement.vampirism.becoming_vampire=Becoming a Vampire
 

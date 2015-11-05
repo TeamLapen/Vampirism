@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
-import java.util.ArrayList;
-
-import net.minecraft.entity.player.EntityPlayer;
 import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.util.Logger;
+import net.minecraft.entity.player.EntityPlayer;
+
+import java.util.ArrayList;
 
 /**
  * Manages the vampire skills and their registration
@@ -59,7 +59,7 @@ public class Skills {
 	public static void registerDefaultSkills() {
 		vampireRage = Skills.registerSkill(new VampireRageSkill());
 		Skills.registerSkill(new RegenSkill());
-		Skills.registerSkill(new ChangeWeatherSkill());
+		//Skills.registerSkill(new ChangeWeatherSkill());
 		Skills.registerSkill(new ReviveFallenSkill());
 		batMode = Skills.registerSkill(new BatSkill());
 		Skills.registerSkill(new SummonBatSkill());

@@ -6,7 +6,6 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
-import de.teamlapen.vampirism.ModBiomes;
 import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.VampirismEventHandler;
 import de.teamlapen.vampirism.VampirismMod;
@@ -28,6 +27,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -149,15 +149,36 @@ public abstract class CommonProxy implements IProxy {
 		allBiomes = Arrays.copyOf(allBiomes, allBiomes.length);
 		allBiomes[9] = null;
 		allBiomes[8] = null;
-		BiomeGenBase[] allBiomesNoVampire = Arrays.copyOf(allBiomes, allBiomes.length);
-		int vId = ModBiomes.biomeVampireForest.biomeID;
-		if (vId > 0 && vId < allBiomes.length) {
-			allBiomesNoVampire[vId] = null;
+//		BiomeGenBase[] allBiomesNoVampire = Arrays.copyOf(allBiomes, allBiomes.length);
+//		int vId = ModBiomes.biomeVampireForest.biomeID;
+//		if (vId > 0 && vId < allBiomes.length) {
+//			allBiomesNoVampire[vId] = null;
+//		}
+		BiomeGenBase[] zombieBiomes = Arrays.copyOf(allBiomes, allBiomes.length);
+		for (int i = 0; i < zombieBiomes.length; i++) {
+			BiomeGenBase b = zombieBiomes[i];
+			if (b != null) {
+				if (!b.getBiomeClass().getName().startsWith("net.minecraft.")) {
+					Iterator<BiomeGenBase.SpawnListEntry> iterator = b.getSpawnableList(EnumCreatureType.monster).iterator();
+					boolean zombie = false;
+					while (iterator.hasNext()) {
+						if (iterator.next().entityClass.equals(EntityZombie.class)) {
+							zombie = true;
+							break;
+						}
+					}
+					if (!zombie) {
+						Logger.d("EntitySpawn", "In biome %s no vampire will spawn", b);
+						zombieBiomes[i] = null;
+					}
+				}
+			}
 		}
-		BiomeGenBase[] biomes = Iterators.toArray(Iterators.filter(Iterators.forArray(allBiomes), Predicates.notNull()), BiomeGenBase.class);
-		allBiomesNoVampire = Iterators.toArray(Iterators.filter(Iterators.forArray(allBiomesNoVampire), Predicates.notNull()), BiomeGenBase.class);
+		//BiomeGenBase[] biomes = Iterators.toArray(Iterators.filter(Iterators.forArray(allBiomes), Predicates.notNull()), BiomeGenBase.class);
+		//allBiomesNoVampire = Iterators.toArray(Iterators.filter(Iterators.forArray(allBiomesNoVampire), Predicates.notNull()), BiomeGenBase.class);
+		zombieBiomes = Iterators.toArray(Iterators.filter(Iterators.forArray(zombieBiomes), Predicates.notNull()), BiomeGenBase.class);
 		registerEntity(EntityVampireHunter.class, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, true);
-		registerEntity(EntityVampire.class, REFERENCE.ENTITY.VAMPIRE_NAME, BALANCE.VAMPIRE_SPAWN_PROBE, 1, 3, EnumCreatureType.monster, allBiomesNoVampire);
+		registerEntity(EntityVampire.class, REFERENCE.ENTITY.VAMPIRE_NAME, BALANCE.VAMPIRE_SPAWN_PROBE, 1, 3, EnumCreatureType.monster, zombieBiomes);
 		registerEntity(EntityVampireBaron.class, REFERENCE.ENTITY.VAMPIRE_BARON, true);
 		EntityList.stringToClassMapping.put("vampirism.vampireLord", EntityVampireBaron.class);
 		registerEntity(EntitySaveableVampireMinion.class, REFERENCE.ENTITY.VAMPIRE_MINION_SAVEABLE_NAME, false);

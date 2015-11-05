@@ -196,8 +196,7 @@ public class VampireLordData extends WorldSavedData {
 			else{
 				if(joinTime==-1){
 					joinTime=MinecraftServer.getServer().worldServers[0].getTotalWorldTime();
-				}
-				else if((MinecraftServer.getServer().worldServerForDimension(0).getTotalWorldTime()-joinTime)>200){
+				} else if ((MinecraftServer.getServer().worldServerForDimension(0).getTotalWorldTime() - joinTime) > 1000) {
 					lastOnlineTime=MinecraftServer.getServer().worldServerForDimension(0).getTotalWorldTime();
 					this.markDirty();
 				}
@@ -231,6 +230,13 @@ public class VampireLordData extends WorldSavedData {
 		}
 
 		return false;
+	}
+
+	public int getCurrentLordOfflineTime() {
+		if (joinTime != -1) return 0;
+		if (lords.size() == 0) return -1;
+		if (lords.size() > 1) return -2;
+		return (int) (MinecraftServer.getServer().worldServerForDimension(0).getTotalWorldTime() - lastOnlineTime);
 	}
 
 	private EntityPlayer getPlayerFormUUID(UUID uuid){

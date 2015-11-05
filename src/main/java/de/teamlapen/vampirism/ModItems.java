@@ -38,6 +38,8 @@ public class ModItems {
 	public static ItemTent tent = new ItemTent();
 	public static ItemGarlic garlic;
 	public static ItemGarlicBomb garlicBomb = new ItemGarlicBomb();
+	public static ItemCheatLevelUp cheatLevelUp = new ItemCheatLevelUp();
+	public static ItemBloodBottleBundle bloodBottleBundle = new ItemBloodBottleBundle();
 
 	/**
 	 * Concentrated form of garlic
@@ -69,6 +71,8 @@ public class ModItems {
 		GameRegistry.registerItem(garlic, ItemGarlic.name);
 		GameRegistry.registerItem(concentratedGarlic, "item_concentratedGarlic");
 		GameRegistry.registerItem(garlicBomb, ItemGarlicBomb.name);
+		GameRegistry.registerItem(cheatLevelUp, ItemCheatLevelUp.name);
+		GameRegistry.registerItem(bloodBottleBundle, ItemBloodBottleBundle.name);
 	}
 	public static void registerRecipes() {
 		GameRegistry.addRecipe(new ItemStack(bloodBottle, 1, 0), "   ", "XYX", " X ", 'X', Blocks.glass, 'Y', Items.rotten_flesh);
@@ -88,6 +92,8 @@ public class ModItems {
 		GameRegistry.addShapelessRecipe(new ItemStack(humanHeart), ModItems.weakHumanHeart, ModItems.weakHumanHeart, ModItems.weakHumanHeart, ModItems.weakHumanHeart, ModItems.weakHumanHeart, ModItems.weakHumanHeart);
 		GameRegistry.addShapelessRecipe(new ItemStack(vampireFang), ModItems.weakVampireFang, ModItems.weakVampireFang, ModItems.weakVampireFang, ModItems.weakVampireFang, ModItems.weakVampireFang, ModItems.weakVampireFang);
 		GameRegistry.addShapelessRecipe(new ItemStack(concentratedGarlic), ModItems.garlic, ModItems.garlic, ModItems.garlic, ModItems.garlic, ModItems.garlic, ModItems.garlic, ModItems.garlic, ModItems.garlic, ModItems.garlic);
+		GameRegistry.addShapelessRecipe(new ItemStack(garlicBomb), ModItems.concentratedGarlic, Items.glass_bottle);
+		GameRegistry.addShapelessRecipe(new ItemStack(bloodBottleBundle), new ItemStack(bloodBottle, 1, ItemBloodBottle.MAX_BLOOD), new ItemStack(bloodBottle, 1, ItemBloodBottle.MAX_BLOOD), new ItemStack(bloodBottle, 1, ItemBloodBottle.MAX_BLOOD), new ItemStack(bloodBottle, 1, ItemBloodBottle.MAX_BLOOD));
 
 		//Add garlic version of swords
 		GameRegistry.addRecipe(GarlicHelper.createGarlicRecipe(Items.iron_sword));

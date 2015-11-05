@@ -262,6 +262,9 @@ public final class BALANCE {
 
 	@DefaultInt(value = 20, minValue = 1, name = "Vampire mob blood regen chance", comment = "Chance that a bitten mob regenerates one blood. Tested every two seconds and the chance is 1/n")
 	public static int VAMPIRE_MOB_REGEN_CHANCE;
+
+	@DefaultBoolean(value = true, name = "Increase blood usage", comment = "Increase the amount of blood needed per vampire level")
+	public static boolean INCREASE_BLOOD_USAGE;
 	/**
 	 * Calculates the players night vision effect
 	 * 

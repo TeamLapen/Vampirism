@@ -44,7 +44,9 @@ public class VersionChecker implements Runnable {
                 if (latest.getModVersion().equalsIgnoreCase(REFERENCE.VERSION)) {
                     Logger.d(TAG, "%s is up-to-date", REFERENCE.MODID);
                 } else if (VampirismMod.inDev) {
-                    Logger.d(TAG, "In dev, but the newest offical version of %s is %s", REFERENCE.MODID, latest.getModVersion());
+                    Logger.d(TAG, "In dev, but the newest official version of %s is %s", REFERENCE.MODID, latest.getModVersion());
+                } else if (REFERENCE.VERSION.contains("Alpha")) {
+                    Logger.d(TAG, "In alpha, the newest official version of %s is %s", REFERENCE.MODID, latest.getModVersion());
                 } else {
                     Logger.d(TAG, "%s (%s) is out-of-date. A new version (%s) is available", REFERENCE.MODID, REFERENCE.VERSION, latest.getModVersion());
                     newVersion = latest;

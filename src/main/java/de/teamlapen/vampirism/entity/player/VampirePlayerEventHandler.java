@@ -11,6 +11,8 @@ import de.teamlapen.vampirism.entity.player.skills.Skills;
 import de.teamlapen.vampirism.item.GarlicHelper;
 import de.teamlapen.vampirism.network.RequestEntityUpdatePacket;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -128,6 +130,16 @@ public class VampirePlayerEventHandler {
 	@SubscribeEvent
 	public void onPlayerLoggedOut(PlayerLoggedOutEvent e) {
 		VampirePlayer.get(e.player).onPlayerLoggedOut();
+	}
+
+	@SubscribeEvent
+	public void onPlayerName(PlayerEvent.NameFormat event) {
+		if (event.entityPlayer != null && VampirePlayer.get(event.entityPlayer).isVampireLord()) {
+			if (event.displayname == null) {
+				event.displayname = event.username;
+			}
+			event.displayname = EnumChatFormatting.RED + StatCollector.translateToLocal("text.vampirism.lord") + ": " + EnumChatFormatting.RESET + event.displayname;
+		}
 	}
 
 }
