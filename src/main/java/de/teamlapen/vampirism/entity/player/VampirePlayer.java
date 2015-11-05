@@ -591,7 +591,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			level--;
 		}
 		setLevel(level);
-		if (level == 1) {
+		if (level > 0) {
 			player.addStat(Achievements.becomingAVampire, 1);
 		}
 	}

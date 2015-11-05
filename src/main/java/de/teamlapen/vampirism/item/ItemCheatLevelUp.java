@@ -20,7 +20,9 @@ public class ItemCheatLevelUp extends BasicItem {
     @Override
     public ItemStack onItemRightClick(ItemStack stack, World p_77659_2_, EntityPlayer player) {
         VampirePlayer.get(player).levelUp();
-        MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(player.getCommandSenderName() + " changed his vampire level to " + VampirePlayer.get(player).getLevel()));
+        if (!p_77659_2_.isRemote) {
+            MinecraftServer.getServer().getConfigurationManager().sendChatMsg(new ChatComponentText(player.getCommandSenderName() + " changed his vampire level to " + VampirePlayer.get(player).getLevel()));
+        }
         if (!player.capabilities.isCreativeMode) {
             stack.stackSize--;
         }

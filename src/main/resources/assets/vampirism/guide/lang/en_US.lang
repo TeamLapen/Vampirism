@@ -40,6 +40,7 @@ guide.vampirism.itemsAndBlocks.garlic_concentrated=Used in a few recipes.
 guide.vampirism.itemsAndBlocks.garlic_torch_weak=Gives near weak vampires (excluding players) a garlic effect. Also prevents vampires from spawning nearby.
 guide.vampirism.itemsAndBlocks.garlic_torch_strong=Gives all vampires a stronger garlic effect. Also prevents vampires from spawning nearby.
 guide.vampirism.itemsAndBlocks.garlic_bomb=Throwable garlic weapon with area of effect damage.
+guide.vampirism.itemsAndBlocks.blood_bottle_bundle.text=Can be used to store blood bottles more efficiently. Use right click to un-bundle the bottles again.
 
 #Levels
 guide.vampirism.levels.introduction.title=Introduction

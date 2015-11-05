@@ -27,8 +27,9 @@ import java.util.List;
 
 /**
  * Beacon style blood altar
- * 
- * @author maxanier @author Mistadon
+ * REWRITE RECOMMEND to make the infinite option more clean
+ *
+ * @author maxanier, Mistadon
  */
 public class TileEntityBloodAltar1 extends TileEntity {
 	private boolean occupied = false;
@@ -64,7 +65,7 @@ public class TileEntityBloodAltar1 extends TileEntity {
 		if (this.isOccupied()) {
 			EntityItem sword = new EntityItem(this.worldObj, this.xCoord, this.yCoord + 1, this.zCoord, getSwordToEject());
 			this.worldObj.spawnEntityInWorld(sword);
-			infinite=false;
+			//Infinite is alread disabled in {@link #getSwordToEject()}
 		}
 	}
 
@@ -94,6 +95,7 @@ public class TileEntityBloodAltar1 extends TileEntity {
 		ItemStack s = new ItemStack(ModItems.leechSword, 1);
 		ItemLeechSword.setBlood(s, bloodAmount);
 		bloodAmount = 0;
+		infinite = false;
 		return s;
 	}
 
@@ -169,10 +171,10 @@ public class TileEntityBloodAltar1 extends TileEntity {
 			return;
 		}
 		// Put sword into altar
-		player.inventory.consumeInventoryItem(itemStack.getItem());
 		occupied = true;
 		this.bloodAmount = ItemLeechSword.getBlood(itemStack);
-
+		itemStack.stackSize--;
+		infinite = false;
 		markDirty();
 	}
 

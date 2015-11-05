@@ -107,7 +107,7 @@ public class VampirismGuide{
 		
 		String bBottle=locAndFormat("guide.vampirism.itemsAndBlocks.bBottle.text", VampirismMod.proxy.getKey(KEY.AUTO));
 		entries.add(createCraftableStackEntryLoc(new ItemStack(ModItems.bloodBottle),bBottle));
-
+		entries.add(createCraftableStackEntry(new ItemStack(ModItems.bloodBottleBundle), "guide.vampirism.itemsAndBlocks.blood_bottle_bundle.text"));
 		entries.add(createCraftableStackEntry(new ItemStack(ModItems.sunscreen), "guide.vampirism.itemsAndBlocks.sunscreen.text"));
 		entries.add(createCraftableStackEntry(new ItemStack(ModBlocks.gildedIron), "guide.vampirism.itemsAndBlocks.gildedIron.text"));
 		
@@ -159,8 +159,8 @@ public class VampirismGuide{
 		garlicItems.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.itemsAndBlocks.garlic_torch_weak"), ModBlocks.garlicTorchWeak));
 		garlicItems.add(new PageIRecipe(getRecipe(ModBlocks.garlicTorchStrong)));
 		garlicItems.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.itemsAndBlocks.garlic_torch_strong"), ModBlocks.garlicTorchStrong));
-//		garlicItems.add(new PageIRecipe(getRecipe(ModItems.garlicBomb)));
-//		garlicItems.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.itemsAndBlocks.garlic_bomb"),ModItems.garlicBomb));
+		garlicItems.add(new PageIRecipe(getRecipe(ModItems.garlicBomb)));
+		garlicItems.addAll(PageHelper.pagesForLongText(loc("guide.vampirism.itemsAndBlocks.garlic_bomb"), ModItems.garlicBomb));
 
 		entries.add(new EntryUniText(garlicItems, ModItems.garlic.getUnlocalizedName() + ".name"));
 

@@ -5,14 +5,13 @@
 #Skin name can be "none" to use the default face
 
 #Developer
-Vampire Slayer Maxanier:none
+#Vampire Slayer Maxanier:none
 Dreaded Mistadon:mistadon
 The powerful Bill:wildbill
 
 #Contributer
 The skilled LRA10:lra10
 Paul the Hunter Boy:cheaterpaul
-Sneaky Thomas:none
 
 #Main translators
 #(if you are a translator and think you should be on this list
