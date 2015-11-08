@@ -1,17 +1,6 @@
-apply plugin: "curseforge"
+apply plugin: "com.matthewprenger.cursegradle"
 
-curse {
-    projectId = "233029"
-    relatedProject 'guide-api': 'optionalLibrary'
-
-    if (System.getenv().RELEASE) {
-        releaseType = 'beta'
-        //changelog = new File("resources/changelog/${project.version}.txt").text
-    } else {
-        releaseType = 'alpha'
-        changelog = "This version should not be used in your 'productive' world. It contains the latest features, but also the latest bugs.\n Probably not all features are finished.\n To see what might have changed visit our Github page and browse the latest commits."
-    }
-
+curseforge {
     if(project.hasProperty("curseforge_key")) {
         apiKey = project.curseforge_key
     } else if(System.getenv().CI) {
@@ -20,7 +9,33 @@ curse {
     else{
         apiKey = ''
     }
-    displayName= "Vampirism-${config.minecraft_version}-${project.mod_version}"
-    addGameVersion config.minecraft_version
-    additionalArtifact devJar
+    project{
+        id="233029"
+
+        if (System.getenv().RELEASE) {
+            releaseType = 'beta'
+            //changelog = new File("resources/changelog/${project.version}.txt").text
+        } else {
+            releaseType = 'alpha'
+            changelog = "This version should not be used in your 'productive' world. It contains the latest features, but also the latest bugs.\n Probably not all features are finished.\n To see what might have changed visit our Github page and browse the latest commits."
+        }
+        addGameVersion config.minecraft_version
+
+        mainArtifact(jar){
+            displayName= "Vampirism-${config.minecraft_version}-${project.mod_version}"
+            relations{
+                optionalLibrary 'guide-api'
+            }
+
+        }
+
+
+        addArtifact devJar
+    }
+
+
+
+
+
+
 }
