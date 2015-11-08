@@ -117,14 +117,15 @@ public class RendererBloodAltar4 extends VampirismTileEntitySpecialRenderer {
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		bindTexture(texture);
 		GL11.glPushMatrix();
-		adjustRotatePivotViaMeta(te.getWorld(), te.getPos());
+			adjustRotatePivotViaMeta(te);
+
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 		model.render(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		GL11.glPopMatrix();
 		GL11.glPopMatrix();
 
 		// Render the beams if the ritual is running
-		PHASE phase = te4.getPhase();
+		PHASE phase = te4==null?PHASE.NOT_RUNNING:te4.getPhase();
 		if (phase == PHASE.BEAM1 || phase == PHASE.BEAM2) {
 			x += 0.5;
 			y += 3;

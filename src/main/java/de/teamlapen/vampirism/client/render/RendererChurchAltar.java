@@ -28,8 +28,17 @@ public class RendererChurchAltar extends VampirismTileEntitySpecialRenderer {
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		bindTexture(texture);
 		GL11.glPushMatrix();
-		adjustRotatePivotViaMeta(te.getWorld(), te.getPos());
-		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
+
+		if(te!=null){
+			adjustRotatePivotViaMeta(te);
+			GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
+		}
+		else{
+			GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
+			GL11.glRotatef(90F, 0.0F, 1.0F, 0.0F);
+		}
+
+
 		model.render(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);
 		GL11.glPopMatrix();
 		GL11.glPopMatrix();

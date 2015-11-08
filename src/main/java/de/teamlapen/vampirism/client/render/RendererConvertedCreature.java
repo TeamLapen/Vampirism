@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.client.render;
 
 import de.teamlapen.vampirism.entity.convertible.EntityConvertedCreature;
+import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
@@ -26,9 +27,11 @@ public class RendererConvertedCreature extends Render {
         if (e != null) {
             e.isDead = false;
             this.renderManager.doRenderEntity(e, p_76986_2_, p_76986_4_, p_76986_6_, p_76986_8_, p_76986_9_,false);
+
             e.isDead = true;
         }
     }
+
 
     @Override
     protected ResourceLocation getEntityTexture(Entity p_110775_1_) {

@@ -30,6 +30,7 @@ import java.util.*;
  * Used for development. Generates the .json schematics from chunks.
  */
 public class TileEntityTemplateGenerator extends TileEntity {
+
 	private List<BlockList> blockLists;
 	private List<Extra> extraList;
 	private final String TAG="TETemplateGenerator";

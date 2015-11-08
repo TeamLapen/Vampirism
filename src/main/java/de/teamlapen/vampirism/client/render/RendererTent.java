@@ -30,7 +30,7 @@ public class RendererTent extends VampirismTileEntitySpecialRenderer {
         GL11.glPushMatrix();
         GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
         GL11.glPushMatrix();
-        adjustRotatePivotViaMeta(te.getWorld(), te.getPos());
+        adjustRotatePivotViaMeta(te);
         GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 //        Tessellator.instance.setBrightness(5);
 //        Tessellator.instance.setColorOpaque(0, 0, 0);

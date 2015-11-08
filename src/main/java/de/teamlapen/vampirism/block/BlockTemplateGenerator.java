@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.block;
 
 import de.teamlapen.vampirism.tileEntity.TileEntityTemplateGenerator;
+import de.teamlapen.vampirism.util.IBlockRegistrable;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -16,11 +18,12 @@ import net.minecraft.world.World;
  * Simple block for {@link TileEntityTemplateGenerator}
  *
  */
-public class BlockTemplateGenerator extends BlockContainer {
+public class BlockTemplateGenerator extends BlockContainer implements IBlockRegistrable{
 	public static final String name="templateGenerator";
 
 	public BlockTemplateGenerator() {
 		super(Material.iron);
+		this.setUnlocalizedName(REFERENCE.MODID + "." + name);
 	}
 
 	@Override public TileEntity createNewTileEntity(World p_149915_1_, int p_149915_2_) {
@@ -42,4 +45,19 @@ public class BlockTemplateGenerator extends BlockContainer {
 		return true;
 	}
 
+	@Override
+	public int getRenderType() {
+		return 3;
+	}
+
+
+	@Override
+	public String[] getVariantsToRegister() {
+		return null;
+	}
+
+	@Override
+	public boolean shouldRegisterSimpleItem() {
+		return true;
+	}
 }

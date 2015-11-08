@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.block;
 
 import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
+import de.teamlapen.vampirism.util.IIgnorePropsForRender;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -11,7 +13,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 
-public class BlockBloodAltar1 extends BasicBlockContainer {
+public class BlockBloodAltar1 extends BasicBlockContainer{
 	public static final String name = "bloodAltar";
 	private final String TAG = "BlockBloodAltar";
 
@@ -49,5 +51,4 @@ public class BlockBloodAltar1 extends BasicBlockContainer {
 		}
 		return true;
 	}
-
 }

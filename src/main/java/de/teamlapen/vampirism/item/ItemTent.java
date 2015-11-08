@@ -19,7 +19,6 @@ public class ItemTent extends BasicItem {
 
     public ItemTent() {
         super(name);
-        this.setFull3D();
     }
 
     @Override

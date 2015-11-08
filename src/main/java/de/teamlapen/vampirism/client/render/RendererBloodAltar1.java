@@ -43,12 +43,12 @@ public class RendererBloodAltar1 extends VampirismTileEntitySpecialRenderer {
 	@Override
 	public void renderTileEntity(TileEntity te, double x, double y, double z, float p5, int p_180535_9_) {
 		TileEntityBloodAltar1 te1 = ((TileEntityBloodAltar1) te);
-		model.setOccupied(te1.isOccupied());
+		model.setOccupied(te1==null?false:te1.isOccupied());
 		GL11.glPushMatrix();
 		GL11.glTranslatef((float) x + 0.5F, (float) y + 1.5F, (float) z + 0.5F);
 		bindTexture(texture);
 		GL11.glPushMatrix();
-		adjustRotatePivotViaMeta(te.getWorld(), te.getPos());
+		adjustRotatePivotViaMeta(te);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 		Tessellator.getInstance().getWorldRenderer().setBrightness(5);
 		Tessellator.getInstance().getWorldRenderer().setColorOpaque(0, 0, 0);
@@ -56,7 +56,7 @@ public class RendererBloodAltar1 extends VampirismTileEntitySpecialRenderer {
 		GL11.glPopMatrix();
 		GL11.glPopMatrix();
 
-		if (te1.isActive()) {
+		if (te1!=null&&te1.isActive()) {
 			this.fakeBeaconRenderer.renderTileEntityAt(te1.getFakeBeacon(), x, y, z, p5,p_180535_9_);
 		}
 	}

@@ -54,7 +54,7 @@ public class RendererCoffin extends VampirismTileEntitySpecialRenderer {
 		int color = Math.min(tile.color, 15);
 		bindTexture(textures[color]);
 		GL11.glPushMatrix();
-		adjustRotatePivotViaMeta(te.getWorld(), te.getPos());
+		adjustRotatePivotViaMeta(te);
 		GL11.glRotatef(180F, 0.0F, 0.0F, 1.0F);
 		model.rotateLid(calcLidAngle(tile.lidPos));
 		model.render(null, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F, 0.0625F);

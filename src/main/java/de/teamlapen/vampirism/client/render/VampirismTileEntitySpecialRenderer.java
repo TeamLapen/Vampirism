@@ -6,6 +6,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import org.eclipse.jdt.annotation.Nullable;
 import org.lwjgl.opengl.GL11;
 
 /**
@@ -13,10 +14,11 @@ import org.lwjgl.opengl.GL11;
  */
 public abstract class VampirismTileEntitySpecialRenderer extends TileEntitySpecialRenderer {
 
-    protected void adjustRotatePivotViaMeta(World world, BlockPos pos) {
+    protected void adjustRotatePivotViaMeta(@Nullable TileEntity tile) {
+        if(tile==null)return;
         EnumFacing dir=EnumFacing.NORTH;
-        if (world != null)
-            dir = BasicBlockContainer.getFacing(world.getBlockState(pos));
+        if (tile.getWorld() != null)
+            dir = BasicBlockContainer.getFacing(tile.getWorld().getBlockState(tile.getPos()));
         GL11.glRotatef(dir.getIndex() - 2 * 90, 0.0F, 1.0F, 0.0F);
     }
 
