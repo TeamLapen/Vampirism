@@ -145,7 +145,7 @@ public class ItemBloodBottle extends ItemGlassBottle {
 
 		if (!world.isRemote&&stack!=null) {
 			VampirePlayer vampire = VampirePlayer.get(player);
-
+			if (vampire.getLevel() == 0) return stack;
 			// Remove blood from blood bar and add to bottle on shift + right click
 			if (player.isSneaking()) {
 				int bloodBottle = getBlood(stack);

@@ -40,7 +40,7 @@ public class BlockGarlicGas extends BlockAir implements IGarlic {
 
     @Override
     public void updateTick(World world, int x, int y, int z, Random random) {
-        if (Configs.disable_garlic_gas || random.nextInt(10) == 0) {
+        if (Configs.disable_garlic_gas || random.nextInt(3) == 0) {
             world.setBlockToAir(x, y, z);
         }
     }

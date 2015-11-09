@@ -64,6 +64,20 @@ public class BlockGarlicTorch extends BlockTorch implements IGarlic {
 
     }
 
+    @Override
+    public void breakBlock(World p_149749_1_, int p_149749_2_, int p_149749_3_, int p_149749_4_, Block p_149749_5_, int p_149749_6_) {
+        for (int x = p_149749_2_ - 5; x < p_149749_2_ + 6; x++) {
+            for (int y = p_149749_3_ - 4; y < p_149749_3_ + 5; y++) {
+                for (int z = p_149749_4_ - 5; z < p_149749_4_ + 6; z++) {
+                    if (p_149749_1_.getBlock(x, y, z) instanceof BlockGarlicGas) {
+                        p_149749_1_.setBlockToAir(x, y, z);
+                    }
+                }
+            }
+        }
+        super.breakBlock(p_149749_1_, p_149749_2_, p_149749_3_, p_149749_4_, p_149749_5_, p_149749_6_);
+    }
+
     private void makeGarlic(World world, int x, int y, int z) {
         Block b = world.getBlock(x, y, z);
         if (b.getMaterial() == Material.air && (!(b instanceof IGarlic) || (!weakGarlic && ((IGarlic) b).isWeakGarlic()))) {

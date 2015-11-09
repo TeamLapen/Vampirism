@@ -100,8 +100,8 @@ public class ModBlocks {
 		GameRegistry.addShapelessRecipe(new ItemStack(castleBlock, 8, 1), castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, new ItemStack(Items.dye, 1, 0));
 		GameRegistry.addRecipe(new ItemStack(castleSlab, 6, 0), "XXX", 'X', new ItemStack(castleBlock, 1, 0));
 		GameRegistry.addRecipe(new ItemStack(castleSlab, 6, 1), "XXX", 'X', new ItemStack(castleBlock, 1, 1));
-		GameRegistry.addRecipe(new ItemStack(castleStairsDark, 1), "  X", " XX", "XXX", 'X', new ItemStack(castleBlock, 1, 1));
-		GameRegistry.addRecipe(new ItemStack(castleStairsPurple, 1), "  X", " XX", "XXX", 'X', new ItemStack(castleBlock, 1, 0));
+		GameRegistry.addRecipe(new ItemStack(castleStairsDark, 4), "  X", " XX", "XXX", 'X', new ItemStack(castleBlock, 1, 1));
+		GameRegistry.addRecipe(new ItemStack(castleStairsPurple, 4), "  X", " XX", "XXX", 'X', new ItemStack(castleBlock, 1, 0));
 		GameRegistry.addRecipe(new ItemStack(gildedIron, 1), "XYX", "YYY", "XYX", 'X', Items.gold_ingot, 'Y', Items.iron_ingot);
 		GameRegistry.addRecipe(new ItemStack(gildedIron, 1), "YXY", "XYX", "YXY", 'X', Items.gold_ingot, 'Y', Items.iron_ingot);
 		GameRegistry.addRecipe(new ItemStack(garlicTorchWeak), "X", "Y", 'X', ModItems.garlic, 'Y', Items.stick);
