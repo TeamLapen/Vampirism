@@ -6,7 +6,7 @@
   "version": "${m_version}",
   "mcversion": "${mc_version}",
   "url": "http://teamlapen.de/projects/vampirism",
-  "updateUrl": "http://teamlapen.de/projects/vampirism/files",
+  "updateUrl": "http://teamlapen.de/projects/vampirism",
   "authors": [
     "maxanier",
 	"Mistadon",

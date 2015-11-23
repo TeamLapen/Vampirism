@@ -21,6 +21,7 @@ minecraft {
     replaceIn "util/REFERENCE.java"
     replace "@VERSION@", "${project.mod_version}"
     replace "@MVERSION@", "${config.minecraft_version}"
+    replace "@FVERSION@", "${config.forge_version}"
 }
 
 processResources {
