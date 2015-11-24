@@ -1,4 +1,3 @@
-#X-Generator: crowdin.com
 # Entitys
 entity.vampirism.vampireHunter.name=Vampire Hunter
 entity.vampirism.vampire.name=Vampire
@@ -147,7 +146,7 @@ category.vampirism.disable=Disable parts
 category.vampirism.gui=Gui settings
 category.vampirism.balance=Balance settings
 category.vampirism.balance.tooltip=Change almost any balance relevant property
-category.vampirism.balance_level=Levelup balance settings
+category.vampirism.balance_leveling=Levelup balance settings
 category.vampirism.balance_player_mod=Vampire player modifier settings
 category.vampirism.balance_player_skills=Vampire player skills settings
 category.vampirism.balance_mob_prop=Vampirism mob properties

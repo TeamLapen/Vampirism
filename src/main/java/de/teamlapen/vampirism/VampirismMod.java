@@ -1,8 +1,14 @@
 package de.teamlapen.vampirism;
 
+import de.teamlapen.lib.util.Logger;
+import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.launchwrapper.Launch;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -11,10 +17,12 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
+import java.io.File;
+
 /**
  * Main class for Vampirism
  */
-@Mod(modid = REFERENCE.MODID,name=REFERENCE.NAME,version = REFERENCE.VERSION,acceptedMinecraftVersions = "["+REFERENCE.MINECRAFT_VERSION+"]",dependencies = "required-after:Forge@["+REFERENCE.FORGE_VERSION+",)")
+@Mod(modid = REFERENCE.MODID,name=REFERENCE.NAME,version = REFERENCE.VERSION,acceptedMinecraftVersions = "[1.8]",dependencies = "required-after:Forge@["+REFERENCE.FORGE_VERSION_MIN+",)",guiFactory = "de.teamlapen.vampirism.client.core.ModGuiFactory")
 public class VampirismMod {
 
     @Mod.Instance(value = REFERENCE.MODID)
@@ -23,20 +31,30 @@ public class VampirismMod {
     @SidedProxy(clientSide = "de.teamlapen.vampirism.proxy.ClientProxy", serverSide = "de.teamlapen.vampirism.proxy.ServerProxy")
     public static IProxy proxy;
 
+    public static boolean inDev=false;
+
+    public final static Logger log=new Logger(REFERENCE.MODID,"de.teamlapen.vampirism");
     @Mod.EventHandler
     public void init(FMLInitializationEvent event){
-        proxy.init(event);
+        log.t("Test balance value %s",Balance.leveling.TEST_VALUE);
         ModPotions.init(event);
         ModBlocks.init(event);
         ModItems.init(event);
         ModBiomes.init(event);
         ModEntities.init(event);
+        proxy.init(event);
 
+        Object mod_event_handler=new ModEventHandler();
+        MinecraftForge.EVENT_BUS.register(mod_event_handler);
+        FMLCommonHandler.instance().bus().register(mod_event_handler);
     }
 
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event){
-        proxy.preInit(event);
+        checkDevEnv();
+        Configs.init(new File(event.getModConfigurationDirectory(),REFERENCE.MODID),inDev);
+        Balance.init(new File(event.getModConfigurationDirectory(),REFERENCE.MODID),inDev);
+
         ModPotions.preInit(event);
         ModBlocks.preInit(event);
         ModItems.preInit(event);
@@ -44,20 +62,26 @@ public class VampirismMod {
         ModEntities.preInit(event);
         ModBlocks.preInitAfterItems();
         ModItems.preInitAfterBlocks();
-
+        proxy.preInit(event);
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event){
-        proxy.postInit(event);
         ModPotions.postInit(event);
         ModBiomes.postInit(event);
-
+        proxy.postInit(event);
     }
 
     @Mod.EventHandler
     public void onServerStart(FMLServerStartingEvent event){
 
+    }
+
+    private void checkDevEnv(){
+        if ((Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment")) {
+            inDev = true;
+            log.inDev = true;
+        }
     }
 
 }
