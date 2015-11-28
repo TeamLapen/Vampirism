@@ -23,8 +23,8 @@ As a vampire you don't need to eat all that dry bread or eat these strange fruit
 
 
 ## API ##
-There is no really API yet, but one is planned for the near future.  
-If you already know what you want to see in that API feel free to contact maxanier
+There is an API in progress under de.teamlapen.vampirism.api, but it is far from finished, so don't use it yet.
+If you want to see something in that API feel free to contact maxanier
 
 ## Licence ##
 This mod is licenced under [LGPLv3](https://raw.githubusercontent.com/TeamLapen/Vampirism/master/LICENCE)

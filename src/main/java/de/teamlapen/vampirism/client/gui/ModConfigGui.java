@@ -12,6 +12,7 @@ import net.minecraftforge.fml.client.config.GuiConfigEntries;
 import net.minecraftforge.fml.client.config.IConfigElement;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -23,7 +24,10 @@ public class ModConfigGui extends GuiConfig {
         @SuppressWarnings("rawtypes")
         private static List<IConfigElement> getConfigElements() {
             List<IConfigElement> list = new ArrayList<IConfigElement>();
-           list.add(createDummyElement(Balance.leveling));
+            Collection<BalanceValues> categories=Balance.getCategories().values();
+            for(BalanceValues values:categories){
+                list.add(createDummyElement(values));
+            }
 
             return list;
 

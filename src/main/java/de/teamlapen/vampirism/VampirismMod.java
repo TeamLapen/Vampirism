@@ -4,6 +4,8 @@ import de.teamlapen.lib.util.Logger;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.entity.ModEntityEventHandler;
+import de.teamlapen.vampirism.entity.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.launchwrapper.Launch;
@@ -47,6 +49,14 @@ public class VampirismMod {
         Object mod_event_handler=new ModEventHandler();
         MinecraftForge.EVENT_BUS.register(mod_event_handler);
         FMLCommonHandler.instance().bus().register(mod_event_handler);
+
+        Object mod_player_event_handler=new ModPlayerEventHandler();
+        MinecraftForge.EVENT_BUS.register(mod_player_event_handler);
+        FMLCommonHandler.instance().bus().register(mod_player_event_handler);
+
+        Object mod_entity_event_handler=new ModEntityEventHandler();
+        MinecraftForge.EVENT_BUS.register(mod_entity_event_handler);
+        FMLCommonHandler.instance().bus().register(mod_entity_event_handler);
     }
 
     @Mod.EventHandler
@@ -74,7 +84,7 @@ public class VampirismMod {
 
     @Mod.EventHandler
     public void onServerStart(FMLServerStartingEvent event){
-
+        event.registerServerCommand(new VampirismCommand());
     }
 
     private void checkDevEnv(){
