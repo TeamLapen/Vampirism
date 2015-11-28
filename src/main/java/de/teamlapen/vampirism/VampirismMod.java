@@ -35,6 +35,7 @@ public class VampirismMod {
 
     public static boolean inDev=false;
 
+
     public final static Logger log=new Logger(REFERENCE.MODID,"de.teamlapen.vampirism");
     @Mod.EventHandler
     public void init(FMLInitializationEvent event){
@@ -59,6 +60,9 @@ public class VampirismMod {
         FMLCommonHandler.instance().bus().register(mod_entity_event_handler);
     }
 
+    public static boolean isRealism(){
+        return Configs.realism_mode;
+    }
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event){
         checkDevEnv();

@@ -1,0 +1,36 @@
+package de.teamlapen.vampirism.client.render;
+
+
+import de.teamlapen.vampirism.client.model.ModelGhost;
+import de.teamlapen.vampirism.entity.EntityGhost;
+import de.teamlapen.vampirism.util.REFERENCE;
+
+import net.minecraft.client.renderer.entity.RenderLiving;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+/**
+ *
+ * @author WILLIAM
+ *
+ */
+@SideOnly(Side.CLIENT)
+public class RenderGhost extends RenderLiving {
+    private static final ResourceLocation ghostTexture = new ResourceLocation(REFERENCE.MODID + ":textures/entity/ghost.png");
+
+    public RenderGhost(RenderManager renderManager) {
+        super(renderManager, new ModelGhost(), 0.3F);
+    }
+
+    @Override
+    protected ResourceLocation getEntityTexture(Entity entity) {
+        return this.getEntityTexture((EntityGhost) entity);
+    }
+
+    protected ResourceLocation getEntityTexture(EntityGhost entity) {
+        return ghostTexture;
+    }
+}
