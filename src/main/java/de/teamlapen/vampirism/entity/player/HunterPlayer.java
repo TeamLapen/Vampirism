@@ -3,20 +3,23 @@ package de.teamlapen.vampirism.entity.player;
 import de.teamlapen.lib.network.ISyncable;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IHunterPlayer;
+import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 /**
  * Main class for hunter players
  */
-public class HunterPlayer implements IHunterPlayer,ISyncable.ISyncableExtendedProperties {
+public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
 
-    private final EntityPlayer player;
 
     public HunterPlayer(EntityPlayer player) {
-        this.player=player;
+        super(player);
     }
 
     /**
@@ -57,8 +60,20 @@ public class HunterPlayer implements IHunterPlayer,ISyncable.ISyncableExtendedPr
     }
 
     @Override
+    protected int getMaxLevel() {
+        return REFERENCE.HIGHEST_HUNTER_LEVEL;
+    }
+
+    @Override
     public void sync(boolean all) {
 
+    }
+
+
+    @Override
+    protected void onLevelChanged() {
+        PlayerModifiers.applyModifier(player, SharedMonsterAttributes.attackDamage, "Hunter", getLevel(), Balance.hp.STRENGTH_LCAP, Balance.hp.STRENGTH_MAX_MOD, Balance.hp.STRENGTH_TYPE);
+        super.onLevelChanged();
     }
 
     @Override
@@ -68,6 +83,46 @@ public class HunterPlayer implements IHunterPlayer,ISyncable.ISyncableExtendedPr
 
     @Override
     public void writeFullUpdateToNBT(NBTTagCompound nbt) {
+
+    }
+
+    @Override
+    protected VampirismPlayer copyFromPlayer(EntityPlayer old) {
+        return null;
+    }
+
+    @Override
+    public void onJoinWorld() {
+
+    }
+
+    @Override
+    public boolean onEntityAttacked(DamageSource src, float amt) {
+        return false;
+    }
+
+    @Override
+    public void onDeath(DamageSource src) {
+
+    }
+
+    @Override
+    public void onUpdate() {
+
+    }
+
+    @Override
+    public void onChangedDimension(int from, int to) {
+
+    }
+
+    @Override
+    public void onPlayerLoggedIn() {
+
+    }
+
+    @Override
+    public void onPlayerLoggedOut() {
 
     }
 }

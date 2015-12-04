@@ -34,7 +34,7 @@ public class ModConfigGui extends GuiConfig {
         }
 
         private static DummyConfigElement.DummyCategoryElement createDummyElement(BalanceValues balance){
-            return new DummyConfigElement.DummyCategoryElement(balance.getName(),"category.vampirism."+balance.getName(),new ConfigElement(balance.getConfigCategory()).getChildElements());
+            return new DummyConfigElement.DummyCategoryElement("balance_"+balance.getName(),"category.vampirism.balance_"+balance.getName(),new ConfigElement(balance.getConfigCategory()).getChildElements());
         }
 
         public BalanceEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop) {

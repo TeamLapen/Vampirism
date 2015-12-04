@@ -3,20 +3,35 @@ package de.teamlapen.vampirism.entity.player;
 import de.teamlapen.lib.network.ISyncable;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IVampirePlayer;
+import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 /**
  * Main class for Vampire Players.
  */
-public class VampirePlayer implements IVampirePlayer,ISyncable.ISyncableExtendedProperties {
+public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
 
-    private final EntityPlayer player;
 
+    private boolean sundamage_cache=false;
     public VampirePlayer(EntityPlayer player) {
-        this.player=player;
+        super(player);
+    }
+
+    @Override
+    protected int getMaxLevel() {
+        return REFERENCE.HIGHEST_VAMPIRE_LEVEL;
+    }
+
+    @Override
+    protected VampirismPlayer copyFromPlayer(EntityPlayer old) {
+        return this;
     }
 
     /**
@@ -30,34 +45,15 @@ public class VampirePlayer implements IVampirePlayer,ISyncable.ISyncableExtended
     public static void register(EntityPlayer player){
         player.registerExtendedProperties(VampirismAPI.VP_EXT_PROP_NAME,new VampirePlayer(player));
     }
-    @Override
-    public int getTheEntityID() {
-        return player.getEntityId();
-    }
+
 
     @Override
-    public void saveNBTData(NBTTagCompound compound) {
+    protected void onLevelChanged() {
+        PlayerModifiers.applyModifier(player, SharedMonsterAttributes.movementSpeed,"Vampire",getLevel(), Balance.vp.SPEED_LCAP,Balance.vp.SPEED_MAX_MOD,Balance.vp.SPEED_TYPE);
+        PlayerModifiers.applyModifier(player, SharedMonsterAttributes.attackDamage, "Vampire", getLevel(), Balance.vp.STRENGTH_LCAP, Balance.vp.STRENGTH_MAX_MOD, Balance.vp.STRENGTH_TYPE);
+        PlayerModifiers.applyModifier(player, SharedMonsterAttributes.maxHealth,"Vampire",getLevel(), Balance.vp.HEALTH_LCAP,Balance.vp.HEALTH_MAX_MOD,Balance.vp.HEALTH_TYPE);
 
-    }
-
-    @Override
-    public void loadNBTData(NBTTagCompound compound) {
-
-    }
-
-    @Override
-    public void init(Entity entity, World world) {
-
-    }
-
-    @Override
-    public void loadUpdateFromNBT(NBTTagCompound nbt) {
-
-    }
-
-    @Override
-    public void writeFullUpdateToNBT(NBTTagCompound nbt) {
-
+        super.onLevelChanged();
     }
 
     @Override
@@ -65,15 +61,6 @@ public class VampirePlayer implements IVampirePlayer,ISyncable.ISyncableExtended
         return 0;
     }
 
-    @Override
-    public int getLevel() {
-        return 0;
-    }
-
-    @Override
-    public EntityPlayer getRepresentingPlayer() {
-        return player;
-    }
 
     @Override
     public boolean isAutoFillEnabled() {
@@ -85,36 +72,59 @@ public class VampirePlayer implements IVampirePlayer,ISyncable.ISyncableExtended
         return false;
     }
 
-    @Override
-    public void setLevel(int level) {
 
-    }
-
-    @Override
-    public void sync(boolean all) {
-
-    }
 
     @Override
     public boolean canTurnOthers() {
-        return false;
+        return getLevel()>=Balance.vp.MIN_TURN_LEVEL;
     }
 
     @Override
     public boolean isGettingSundamage(boolean forcerefresh) {
-        return false;
+        if(player.ticksExisted%8==0){
+            sundamage_cache= Helper.gettingSundamge(player);
+        }
+        return sundamage_cache;
     }
 
     @Override
     public boolean isGettingSundamge() {
+        return isGettingSundamage(false);
+    }
+
+
+    @Override
+    public void onJoinWorld() {
+
+    }
+
+    @Override
+    public boolean onEntityAttacked(DamageSource src, float amt) {
         return false;
     }
 
-    /**
-     * Copy the vampire player fields from the given player
-     * @param player
-     */
-    public void copyFrom(EntityPlayer player){
+    @Override
+    public void onDeath(DamageSource src) {
+
+    }
+
+    @Override
+    public void onUpdate() {
+
+    }
+
+    @Override
+    public void onChangedDimension(int from, int to) {
+
+    }
+
+    @Override
+    public void onPlayerLoggedIn() {
+
+    }
+
+    @Override
+    public void onPlayerLoggedOut() {
 
     }
 }

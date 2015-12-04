@@ -12,4 +12,5 @@ public class REFERENCE {
     public static final String FORGE_VERSION_MIN="11.14.4.1563";
 
     public static final int HIGHEST_VAMPIRE_LEVEL=14;
+    public static final int HIGHEST_HUNTER_LEVEL=15;
 }

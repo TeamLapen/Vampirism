@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism;
 
 import de.teamlapen.lib.util.Logger;
+import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.player.FractionRegistry;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.*;
@@ -77,6 +79,11 @@ public class VampirismMod {
         ModBlocks.preInitAfterItems();
         ModItems.preInitAfterBlocks();
         proxy.preInit(event);
+
+        //Check VampirismApi
+        if(REFERENCE.HIGHEST_HUNTER_LEVEL!= VampirismAPI.getHighestHunterLevel()||REFERENCE.HIGHEST_VAMPIRE_LEVEL!=VampirismAPI.getHighestVampireLevel()){
+            log.e("Vampirism","There seems to be a problem with Vampirism's API");
+        }
     }
 
     @Mod.EventHandler

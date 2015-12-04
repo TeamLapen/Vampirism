@@ -1,16 +1,11 @@
 package de.teamlapen.vampirism.api.entity.player;
 
-import net.minecraft.entity.player.EntityPlayer;
+import de.teamlapen.vampirism.api.entity.IHunter;
+import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 
 /**
  * Interface for the hunter player data
  */
-public interface IHunterPlayer {
+public interface IHunterPlayer extends IFractionPlayer,IHunter,IMinionLord{
 
-    EntityPlayer getRepresentingPlayer();
-    /**
-     * Sends a sync packet to the client
-     * @param all Whether to send it to all players around or only to the corresponding player
-     */
-    void sync(boolean all);
 }
