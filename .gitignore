@@ -14,7 +14,6 @@ Vampirism.iml
 org.eclipse.jdt.core.prefs
 
 #Minecraft run files. Incase someone configured it wrong or differently
-config/
 saves/
 logs/
 options.txt
@@ -27,5 +26,4 @@ ops.json
 server.properties
 usercache.json
 whitelist.json
-world/
 hs*

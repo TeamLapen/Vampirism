@@ -72,7 +72,7 @@ public class VampirismAPI {
      * @param dimensionId
      * @param sundamage
      */
-    public static void specifyConfiguredSundamgeForDim(int dimensionId, boolean sundamage){
+    public static void specifyConfiguredSundamageForDim(int dimensionId, boolean sundamage){
         sundamageConfiguredDims.put(dimensionId,sundamage);
     }
 
@@ -89,14 +89,6 @@ public class VampirismAPI {
         return r==null?defaultSundamage:r;
     }
 
-    /**
-     * Default dimensions in which you do not get sundamage, when a blacklist is used
-     */
-    private final static Set<Integer> noSundamageDims=new CopyOnWriteArraySet<Integer>();
-    static {
-        noSundamageDims.add(-1);
-        noSundamageDims.add(1);
-    }
     /**
      * Extended entity properties key for vampire player
      */
