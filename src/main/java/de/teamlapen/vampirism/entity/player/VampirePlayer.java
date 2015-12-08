@@ -880,6 +880,13 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 				player.motionY = 0;
 
 		}
+
+		if (vampireLord && !player.worldObj.isRemote) {
+			if (getLevel() < REFERENCE.HIGHEST_REACHABLE_LEVEL) {
+				VampireLordData.get(player.worldObj).makeNoLord(player, "text.vampirism.lord.level_to_low");
+			}
+		}
+
 		if (getLevel() <= 0) {
 			PotionEffect sang = player.getActivePotionEffect(ModPotion.sanguinare);
 			if (sang != null) {
@@ -953,11 +960,6 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 			}
 		}
 
-		if(!player.worldObj.isRemote&&vampireLord){
-			if(getLevel()<REFERENCE.HIGHEST_REACHABLE_LEVEL){
-				VampireLordData.get(player.worldObj).makeNoLord(player, "text.vampirism.lord.level_to_low");
-			}
-		}
 
 		if (batTransformed != this.isSkillActive(Skills.batMode)) {
 			batTransformed = !batTransformed;
