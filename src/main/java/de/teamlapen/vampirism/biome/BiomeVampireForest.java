@@ -5,6 +5,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.generation.castle.CastlePositionData;
+import de.teamlapen.vampirism.util.SunDmgHelper;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -30,7 +31,7 @@ public class BiomeVampireForest extends BiomeGenBase {
 		this.spawnableWaterCreatureList.clear();
 		this.spawnableMonsterList.add(new SpawnListEntry(EntityGhost.class, 2, 1, 1));
 		this.spawnableMonsterList.add(new SpawnListEntry(EntityVampireBaron.class, 1, 1, 1));
-		this.spawnableMonsterList.add(new SpawnListEntry(EntityBlindingBat.class, 8, 2, 6));
+		this.spawnableMonsterList.add(new SpawnListEntry(EntityBlindingBat.class, 8, 2, 4));
 		this.spawnableMonsterList.add(new SpawnListEntry(EntityVampire.class, 6,1,3));
 		this.spawnableCreatureList.add(new BiomeGenBase.SpawnListEntry(EntityDummyBittenAnimal.class,15,3,5));
 
@@ -49,6 +50,7 @@ public class BiomeVampireForest extends BiomeGenBase {
 		this.canSpawnLightningBolt();
 		//this.waterColorMultiplier = 14745518; // same as swamp
 		this.waterColorMultiplier = 0xFF2505;
+		SunDmgHelper.addNoSundamageBiome(id);
 	}
 
 	@Override

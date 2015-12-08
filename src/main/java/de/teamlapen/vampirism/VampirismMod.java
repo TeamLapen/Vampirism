@@ -29,7 +29,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.WeightedRandomChestContent;
-import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraftforge.common.ChestGenHooks;
 import net.minecraftforge.common.DimensionManager;
@@ -65,18 +64,13 @@ public class VampirismMod {
 	public static DamageSource sunDamage = (new DamageSource("sun")).setDamageBypassesArmor().setMagicDamage();
 	public static DamageSource garlicDamage = (new DamageSource("garlic")).setDamageBypassesArmor().setMagicDamage();
 
-	public static boolean isSunDamageTime(World world) {
-		if (world == null)
-			return false;
-		int t = (int) (world.getWorldTime() % 24000);
-		return (t > 0 && t < 12500);
-	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		castleDimensionId=DimensionManager.getNextFreeDimId();
 		DimensionManager.registerProviderType(castleDimensionId, WorldProviderCastle.class,false);
 		DimensionManager.registerDimension(castleDimensionId,castleDimensionId);
+		SunDmgHelper.specifySundamageForDim(castleDimensionId, false);
 		proxy.registerEntitys();
 		proxy.registerRenderer();
 		Achievements.registerAchievements();

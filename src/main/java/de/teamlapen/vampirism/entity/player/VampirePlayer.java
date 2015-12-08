@@ -283,6 +283,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 
 	private boolean vampireLord = false;
 
+	private boolean sundamageCache = false;
+
 	private boolean batTransformed = false;
 
 	private int ticksInSun = 0;
@@ -484,15 +486,8 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 	}
 
 	public boolean gettingSundamage() {
-		if (player.worldObj != null && player.worldObj.provider.dimensionId == 0) {
-			if (player.worldObj.canBlockSeeTheSky(MathHelper.floor_double(player.posX), MathHelper.floor_double(player.posY), MathHelper.floor_double(player.posZ))) {
-				if(Helper.isEntityInVampireBiome(player))return false;
-				if (player.worldObj.isRaining()) return false;
-				return VampirismMod.isSunDamageTime(player.worldObj);
-			}
-		}
-
-		return false;
+		if (player.ticksExisted % 4 != 0) return sundamageCache;
+		return (sundamageCache = SunDmgHelper.gettingSundamge(player));
 	}
 
 	public boolean isInStrongGarlic() {

@@ -206,6 +206,25 @@ public class Configs {
 
 		realismMode = config.getBoolean("vampire_realism_mode", CATEGORY_GENERAL, false, "Changes a few things and changes some default balance values to make it more 'realistic' ");
 
+		SunDmgHelper.setDefaultDimsSundamage(config.getBoolean("sundamage_default", CATEGORY_GENERAL, false, "Whether you should receive sundamge in unknown dimension or not"));
+		SunDmgHelper.resetConfiguredSundamgeDims();
+		String[] sundamageDims = config.getStringList("sundamage_dims", CATEGORY_GENERAL, new String[0], "Specify if individual dimensions should have sundamage. Use e.g. '5:1' to enable sundamage for dimension 5 or '5:0' to disable it. One line per dimension.");
+		for (String s : sundamageDims) {
+			String[] t = s.split(":");
+			if (t.length != 2) {
+				Logger.w("Configs", "Cannot understand sundamge dimension line '%s'. Missing seperator", s);
+				continue;
+			}
+			try {
+				int dim = Integer.valueOf(t[0]);
+				boolean type = Integer.valueOf(t[1]) != 0 ? true : false;
+				SunDmgHelper.specifyConfiguredSundamageForDim(dim, type);
+			} catch (NumberFormatException e) {
+				Logger.w("Configs", "Cannot understand sundamge dimension line '%s'. Failed to convert numbers", s);
+				continue;
+			}
+		}
+
 		// Village
 		village_gen_enabled = config.get(cat_village.getQualifiedName(), "change_village_gen_enabled", true, "Should the custom generator be injected? (Enables/Disables the village mod)")
 				.getBoolean();

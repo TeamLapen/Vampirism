@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.ModPotion;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.block.IGarlic;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.SunDmgHelper;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAISwimming;
@@ -52,21 +53,8 @@ public abstract class EntityVampireBase extends EntityVampirism {
     }
 
     public boolean isGettingSundamage(boolean forceRefresh) {
-        if (this.ticksExisted % 5 != 0) return sundamageCache;
-        float brightness = this.getBrightness(1.0F);
-        boolean canSeeSky = this.worldObj.canBlockSeeTheSky(MathHelper.floor_double(this.posX), MathHelper.floor_double(this.posY), MathHelper.floor_double(this.posZ));
-        if (brightness > 0.5F) {
-            if (Helper.isEntityInVampireBiome(this) || this.worldObj.isRaining()) {
-                sundamageCache = false;
-                return false;
-            }
-            if (VampirismMod.isSunDamageTime(this.worldObj) && canSeeSky) {
-                sundamageCache = true;
-                return true;
-            }
-        }
-        sundamageCache = false;
-        return false;
+        if (this.ticksExisted % 8 != 0 && !forceRefresh) return sundamageCache;
+        return (sundamageCache = SunDmgHelper.gettingSundamge(this));
     }
 
     protected void attackedEntityAsMob(EntityLivingBase entity) {

@@ -133,6 +133,32 @@ public class VampirismCommand extends BasicCommand {
 				return getCommandName();
 			}
 		});
+		addSub(new SubCommand() {
+			@Override
+			public boolean canCommandSenderUseCommand(ICommandSender var1) {
+				return true;
+			}
+
+			@Override
+			public String getCommandName() {
+				return "currentDimension";
+			}
+
+			@Override
+			public void processCommand(ICommandSender var1, String[] var2) {
+				if (var1 instanceof EntityPlayer) {
+					EntityPlayer p = (EntityPlayer) var1;
+					if (p.worldObj != null) {
+						var1.addChatMessage(new ChatComponentText("Dimension ID: " + p.worldObj.provider.dimensionId));
+					}
+				}
+			}
+
+			@Override
+			public String getCommandUsage(ICommandSender var1) {
+				return getCommandName();
+			}
+		});
 	}
 	@Override public String getCommandName() {
 		return "vampirism";
