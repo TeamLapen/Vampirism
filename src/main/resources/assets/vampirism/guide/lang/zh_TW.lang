@@ -1,0 +1,102 @@
+#X-Generator: crowdin.com
+#General
+guide.vampirism.book.title=血族指南書
+guide.vampirism.welcomeMessage=歡迎來到血族指南. 你可以瀏覽此書籍發掘你能在模組裏做的事. 路途愉快！
+guide.vamprism.book.name=血族指南
+
+#Getting Started
+guide.vampirism.gettingStarted.category=啟程
+guide.vampirism.gettingStarted.overview.title=概觀
+guide.vampirism.gettingStarted.overview.text=血族模組讓你在當個創世神裏有全新的體驗. 身為嗜血血族的你將投進黑暗的懷抱.\n在到處探險時你會發覺村莊生成率大幅提升，好能讓你大飽口福. 尤其是在沼澤中生成的村莊，更可以為你的冒險增添驚喜 \:)
+guide.vampirism.gettingStarted.firstSteps.title=起步
+guide.vampirism.gettingStarted.firstSteps.text=你將會以一個普通人族玩家的身份出生，若要變成血族就必須被一隻吸血鬼咬到。無論是基於意外還是事先安排好的事故，你都有機率會在被吸血鬼攻擊時獲得“血族猩紅熱"的效果，此效果長達Minecraft中的一天。效果結束之後你將會加入血族。如果你還不想變成吸血鬼的話，你可以用牛奶取消此效果。除此之外你也可以在拿著吸血鬼獠牙時點擊滑鼠右鍵來注入一些血族的鮮血進入你的身體已獲得同樣的效果。
+guide.vampirism.gettingStarted.asAVampire.title=作為一名血族
+guide.vampirism.gettingStarted.asAVampire.text=當你成為了一名血族之後，你其中一個血液來源(起碼是最好的)就是大量被生成的村民。不過你得小心其它的吸血鬼還會不斷地主動攻擊你，就與你還是一個人類時一樣。吸血鬼獵人則在你一等時不會攻擊你。身為一隻吸血鬼你必須注意你的飢渴度。你可以對著生物或村民按'F'來吸取他們的血液。多餘的血液可以儲存在血瓶裡。如果你想轉換飢渴度和血瓶內的血的話可以用右鍵或者滑鼠SHIFT 右鍵。當你的指標對準一隻可吸血生物時，指標將轉換成一對小獠牙，其它的則會直接造成傷害。一開始你將是一隻一等吸血鬼（血族等級在你的經驗等級之上)，你將擁有移動加速，生命加成和攻擊力加強的效果。\n想得到更高的血族等級你必須進行不同的儀式。 當你達到一定的等級之後，吸血鬼將不會攻擊你，但反之吸血鬼獵人則會。升級的當兒當然你的能力也會變強，但你也會有如陽光傷害的負面效果。
+guide.vampirism.gettingStarted.biteableCreatures.title=被咬的生物
+guide.vampirism.gettingStarted.biteableCreatures.text=當你吸取一個生物的血液時，他將會變得很虛弱，血量會變低但是會漸漸回血。 \n 但是如果你繼續吸取他的血液時，他將會死亡或變成吸血鬼。\n變種生物將會與普通的不一樣，他們會受到陽光的傷害，不過會盡量避免。\n 吸血鬼村民還可能會給你特別優惠。\n 你也可以吸取同伺服器玩家的血液。但是基於他們能更有效的防禦自己，通常只有從後面的攻擊能成功。
+
+#Items and Blocks
+guide.vampirism.itemsAndBlocks.category=物品與方塊
+guide.vampirism.itemsAndBlocks.found.title=在這個世界所能發現的
+guide.vampirism.itemsAndBlocks.found.pureBlood=由不同等級的吸血鬼公爵掉落不同純度的血液。在高級升等儀式中需要用到。
+guide.vampirism.itemsAndBlocks.found.bloodAltar1=此方塊可以成為你的燈標，也可以給你速度加成，充裕效果(你消耗較少的血量)。你可以製造一個嗜血之刀，將其充滿血液。你可以斬殺村民或其他生物來將其填滿。之後你便能將劍插入方塊中來啟動效果，但內涵的血液將被慢慢耗盡。此方塊不能被製造，但是沼澤地形中必定會有一個。
+guide.vampirism.itemsAndBlocks.found.vampireFlower=血族蘭花可以在血族森林裡找到。
+guide.vampirism.itemsAndBlocks.found.humanHearth=可以通過斬殺吸血鬼獵人獲得。你可以吃掉他們，補充大量的飢渴度或者把它們放入祭壇
+guide.vampirism.itemsAndBlocks.found.vampireFang=這些由吸血鬼掉落。他們被用於一些合成中，或者能被右擊來提供"血族猩紅熱"的效果
+guide.vampirism.itemsAndBlocks.bBottle.text=讓你在無法狩獵卻又飢渴難耐時平復你的慾望。你可以右鍵來飲用內涵的血液。Shift加上右鍵可以讓你一次過飲用大量的血液。啟動自動模式， (按 %s）來自動將血液輸入多餘的血如血瓶內。滿滿的血瓶也被用於一些合成當中。你可以用下列的方式合成它或者在吸血時裝備普通的玻璃瓶。
+guide.vampirism.itemsAndBlocks.sunscreen.text=減少一段時間內的陽光傷害
+guide.vampirism.itemsAndBlocks.armor.text=這個特製的吸血鬼套裝是用來減弱太陽對於吸血鬼的影響力。全副裝備之後你將不會獲得混亂效果，陽光傷害也將減少。此幅盔甲可以和傳統的鐵裝比較。
+guide.vampirism.itemsAndBlocks.armor.title=吸血鬼套裝
+guide.vampirism.itemsAndBlocks.altars.altar2.text=此祭壇用於%d級至%d級的升級
+guide.vampirism.itemsAndBlocks.altars.altar4.text=%s適用於升級%d之後的等級，它包含了這幾種方塊\: 本體，錐頂和基礎建築方塊。你可以在升級的頁面了解更多。
+guide.vampirism.itemsAndBlocks.altars.title=祭壇方塊
+guide.vampirism.itemsAndBlocks.coffin.text=棺材可以用於存點或是在白天睡覺。誠意推薦您把它蓋在陽光曬不到的地方。你可以SHIFT+右鍵染料來改變它的內部顏色。 
+guide.vampirism.itemsAndBlocks.used_for_minions=小嘍嘍用途
+guide.vampirism.itemsAndBlocks.blood_eye.text=可以用來追踪最靠近的城堡
+guide.vampirism.itemsAndBlocks.found.weakVampireFang=這些由弱吸血鬼如變種村民掉落。可以合成正常的版本。
+guide.vampirism.itemsAndBlocks.found.weakHumanHearth=這些由弱的人類，如普通村民掉落。可以合成更強的版本。
+guide.vampirism.itemsAndBlocks.gildedIron.text=一個看起來像金磚的方塊，不需要很多的金。用於儀式。
+guide.vampirism.itemsAndBlocks.garlic=大蒜可以在箱子找到，它的種植方法相似與馬鈴薯。它可以用於幾種不同的合成來製造對付吸血鬼的武器。你也可以將其附於普通劍來給予讓吸血鬼中毒的能力。
+guide.vampirism.itemsAndBlocks.garlic_concentrated=在幾種合成中使用。
+guide.vampirism.itemsAndBlocks.garlic_torch_weak=給弱吸血鬼(除玩家) 大蒜的效果。也可以防止吸血鬼在附近生成
+guide.vampirism.itemsAndBlocks.garlic_torch_strong=給所有吸血鬼強力大蒜的效果。防止吸血鬼在附近出沒。
+guide.vampirism.itemsAndBlocks.garlic_bomb=可以丟的範圍性攻擊大蒜武器
+
+#Levels
+guide.vampirism.levels.introduction.title=介紹
+guide.vampirism.levels.introduction.text=成為了血族的一員後（見啟程章) 你可能會想要到達高一點的等級。你可以在不同的祭壇上進行不同的儀式，不過千萬要記得一定要在晚上。
+guide.vampirism.levels.altar2.title=等級%d至等級%d
+guide.vampirism.levels.altar2.text=合成祭壇方塊並將它擺到某處。使用方法是將其充滿血液(用血瓶右鍵它). 如果有充足的血液你就能用空手右鍵它， 裡面的血將會被注入你的體內，增強你的能力。
+guide.vampirism.levels.altar4.title=等級%d+
+guide.vampirism.levels.altar4.text=這個祭壇需要由多種方塊建造成的結構。首先先合成本體（看物品與方塊）讓後將它放下，之後你必須在指定的位置上建柱子。柱子所用的基礎建築方塊和高度取決於升級的等級，每根柱子上必須有一個錐頂。確保在儀式區域沒有別的東西(如：草；最後會有截圖列子）。建造完成後，將所需的物品放入祭壇內（請看表), SHIFT 右鍵你就能親自體驗血族魔法了！注\:請勿SHIFT點擊東西入祭壇，Forge 1.7.10中已出現BUG.
+guide.vampirism.levels.altar4.item_text=所需物品
+guide.vampirism.levels.altar4.structure1.name=結構1
+guide.vampirism.levels.altar4.structure2.name=結構2 （建造時請朝向北方)
+guide.vampirism.levels.altar4.item_req=所需物品
+guide.vampirism.levels.altar4.struc_req=所以結構模式
+guide.vampirism.levels.category=如何升等
+
+#Mobs
+guide.vampirism.mobs.category=怪物
+guide.vampirism.mobs.hunter.text=獵殺吸血鬼 ;)/n 在村莊或是在營地出現在世界各角落。只攻擊血族等級%s以上的吸血鬼。/n 在村莊附近的吸血鬼獵人會嘗試保護該村莊
+guide.vampirism.mobs.vampire.text=攻擊不高於血族等級%s的玩家。/n也會攻擊村民把他們變成吸血鬼。/n於夜間活動
+guide.vampirism.mobs.vampire_baron.text=在血族森林中生成。/n根據玩家的等級生成不同級別的公爵。/n掉落純血。/n非常強大，會召喚幫助他的小嘍嘍
+guide.vampirism.mobs.vampire_minion.title=吸血鬼小嘍嘍
+guide.vampirism.mobs.vampire_minion.text=對他們的主人忠誠。/n有他們主人的造型。/n可以被玩家血族之王控制。
+guide.vampirism.mobs.ghost.text=在血族森林裡生成。
+guide.vampirism.mobs.dracula.text=住在大城堡的血族之王。可以查閱血族之王的章節來了解更多詳情。
+guide.vampirism.mobs.hunter2.text=進階版的吸血鬼獵人。/n可以使喚以及比普通吸血鬼獵人更強大。他們有特別的名字和皮膚（血族傳說的支持者），或者一些普通隨機的名字。
+
+#VampirePlayer
+guide.vampirism.vplayer.category=血族玩家特徵
+guide.vampirism.vplayer.general.text=玩家可以有不同的血族等級(見”如何升級“的章節")，至今你可以到達最高的%s等。/n/n你的速度，力量，跳躍能力和生命都會隨著你升級而提升。/n/n血族玩家將會擁有夜視效果，此效果會隨著等級增加而變強。玩家也會有血視，能讓您更輕易看見生物。你可以切換這兩種視野模式（按%s鍵）。/n/n 成為血族後飽食度將被飢渴度取代，兩者的功能相似。/n/n你可以用%s鍵吸取生物的血液，你的指標將會變成一堆小獠牙。如果你咬了一直沒有血的怪物，你將會得到一個短暫的中毒效果。/n/n被咬的怪物會死亡，或者會變異成吸血鬼的版本。/n/n你可以用(SHIFT+)右鍵來儲存血液如血瓶中。你可以用自動填滿(按%s鍵), 把在吸血時多餘的血注入在欄位的血瓶裡。/n/n你的造型將會在成為血族後被稍微更改。
+guide.vampirism.vplayer.general.title=一般資訊
+guide.vampirism.vplayer.general.loose_level=如果你被吸血鬼獵人殺死你將失去一個血族等級。
+guide.vampirism.vplayer.sun_damage.text=太陽將會對玩家有三種不同的效果\: 噁心，虛弱和傷害。/n較高的血族等級會讓你更容易得到多種效果。/n在低等時你可以使用防曬膏來保護自己免受傷害。/n你也可以穿上全副吸血鬼套裝來防禦噁心的狀態。/n
+guide.vampirism.vplayer.sun_damage.title=太陽傷害
+guide.vampirism.vplayer.skills.text=身為吸血鬼你在升等時會得到特別的技能，例如說你能在4等控制天氣。/n/n有一個特別的界面：技能圈，會在你按住滑鼠中鍵時彈出來，把滑鼠移到想使用的技能，變量之後才放開。/n/n如果你不要使用任何技能的話你可以直接移到紅色的叉上，或者當沒有東西被選到的時候就會自動取消施法。/n/n所有技能都有最低等級的限制，你只能在冷卻之後才能再次使用。有些技能有時段效果，你可以在度選擇該技能來取消它並減少冷卻時間。
+guide.vampirism.vplayer.skills.title=技能
+guide.vampirism.vplayer.skills.bat_transformation=技能\: 變成蝙蝠/n/n夜間時你可以變成一隻蝙蝠，好像創造模式一樣飛，但是你不能放置或破壞磚塊，或者使用物品。另個壞處就是蝙蝠狀態血量非常低，所以你必須躲避主動怪。你可以隨心所欲的變來變去，但是太陽升起的那一刻你就會被變回來了。
+guide.vampirism.vplayer.skills.revive_fallen=技能：復活屍骨/n/n殭屍和骷髏（未來可能會有更多怪）在死亡時會留下一灘屍骨，你就能夠用此技能來復活他們，成為你自己的小嘍嘍。
+guide.vampirism.vplayer.skills.end=還有很多很多，自己試試看就知道了。
+guide.vampirism.vplayer.skills.menu_text=這是施法的技能圈
+
+#VampireLord
+guide.vampirism.vlord.category=血族之王
+guide.vampirism.vlord.introduction.title=介紹
+guide.vampirism.vlord.introduction.text=一直以來居高臨下，自稱為德古拉的他住在一座非常大的城堡裡。他有着服侍以及願意為了保護他犧牲自己的小嘍嘍。/n只有少部分的吸血鬼敢挑戰他，想奪走血族之王的稱號，但未曾有人成功過。。。或許你能夠成為下一任的血族之王?
+guide.vampirism.vlord.become.title=如何成為一名血族之王
+guide.vampirism.vlord.become.text=如果你想要血族之王這個稱號，你就必須做好萬全的準備。確保你有%d等，要不讓你連他的臉都見不到。全副武裝，到血族森林尋找城堡。你可以用%s來加速你的尋找。/n在主城堡內你會找到一個特殊的傳送門，是德古拉用來快速回家用的。當你到了他的家之後你就必須打敗他。成功的話你就是下一任血族之王了,萬歲！
+guide.vampirism.vlord.about.title=關於成為血族之王
+guide.vampirism.vlord.about.text=成為血族之王之後你將變得更強大，並且會獲得新的技能(看其他)，但是你還是得留意一些小細節。/n其它的吸血鬼也想要成為血族之王，所以會有種種的方法讓你失去你寶貴的名譽。/n首先確保你不被吸血鬼獵人殺死，少了一個等級讓你變得更弱了。/n第二，確保你知道其他血族回來攻擊你，在城池內的吸血鬼會尊敬你，但野生的可非常嫉妒你的才華哦！/n如果你在多人伺服器遊玩的話也請看多人的章節。
+guide.vampirism.vlord.multiplayer.title=多人模式中
+guide.vampirism.vlord.multiplayer.text=在多人伺服器中相信你也發覺其他玩家可以打敗你，獲得血族之王的稱號。/n這是唯一在第一位玩家打敗德古拉之後稱王的方法，但是也有也能在特殊情況下該玩家會失去血族之王的稱號，如：下線太久。/n/n設定中可設置多個玩家同時成為血族之王。如果這個項目被啟動的話，德古拉會重生，並且能被另個玩家召喚擊殺。
+guide.vampirism.vlord.skills.title=血族之王技能
+guide.vampirism.vlord.skills.text=擊殺了血族之王之後你也會學到他的某些技能。他們會在技能圈裡顯示，但你將不會得到所有的技能。/n/n瞬移/n你能瞬間移動短距離/n/n隱身/n隱身一小段時間/n/n定身/n使附近所有人定身一小段時間
+guide.vampirism.vlord.minions.title=小嘍嘍
+guide.vampirism.vlord.minions.text=成為血族之王之後你能夠把普通吸血鬼變成自己的小嘍嘍。使用定身再咬他就能夠把他變成自己的隨從了。/n你可以面對著一隻小嘍嘍，用%s鍵來顯示出小嘍嘍控制面板，分配他工作。/n如果想一次過控制幾隻小嘍嘍，按著同樣的鍵，不過不要面對著任何的小嘍嘍。/n/n正常來說小嘍嘍都會呆在你身邊，不然他們就會逃跑。如果要讓他們在不同地方執行不同的任務的話，可以用%s鍵。/n你可以讓他們去為你收集血液，當然他們也會很聰明的躲避太陽。你可以用特殊的名牌來命名你的小嘍嘍們。
+
+
+
+
+

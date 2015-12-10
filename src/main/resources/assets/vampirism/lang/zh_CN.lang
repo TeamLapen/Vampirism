@@ -10,6 +10,7 @@ entity.vampirism.blinding_bat.name=蝙蝠
 entity.vampirism.dracula.name=德拉库拉
 entity.vampirism.dead_mob.name=死去的怪物
 entity.vampirism.portal_guard.name=守卫
+entity.vampirism.vampireHunter2.name=资深恶魔猎人
 
 # Items
 item.vampirism.vampiresFear.name=血族之恐惧
@@ -32,6 +33,9 @@ item.vampirism.bloodEye.name=鲜血之眼
 item.vampirism.weakVampireFang.name=虚弱血族之牙
 item.vampirism.weakHumanHeart.name=虚弱猎手之心
 item.vampirism.item_tent.name=帐篷
+item.vampirism.garlic.name=大蒜
+item.vampirism.concentratedGarlic.name=浓缩大蒜
+item.vampirism.garlic_bomb.name=大蒜炸弹
 
 # Blocks
 block.vampirism.bloodAltar.name=充盈血祭坛
@@ -48,6 +52,11 @@ block.vampirism.castleSlab.name=古堡台阶
 block.vampirism.doubleCastleSlab.name=双层古堡台阶
 block.vampirism.castleStairs.name=古堡楼梯
 block.vampirism.tent.name=帐篷
+block.vampirism.gildedIronBlock.name=装饰铁块
+block.vampirism.garlic.name=大蒜
+tile.vampirism.garlicTorchWeak.name=微弱大蒜火炬
+tile.vampirism.garlicTorchStrong.name=强烈大蒜火炬
+tile.vampirism.garlicGas.name=大蒜气
 
 #GUI
 gui.vampirism.revertback.head=转变回正常人
@@ -63,10 +72,12 @@ key.vampirism.vision=转换形态
 #General
 itemGroup.vampirism=血族传说
 death.attack.sun=%1$s 并不喜欢太阳
+death.attack.garlic=%1$s 被大蒜毒毙
 potion.vampirism.sunscreen=防晒
 potion.vampirism.thirst=干渴
 potion.vampirism.saturation=饱饮
 potion.vampirism.sanguinare=吸血猩红热
+potion.vampirism.garlic=大蒜
 text.vampirism.skill.level_to_low=你的血族等级太低
 text.vampirism.skill.cooldown_not_over=请耐心等待直到冷却完毕
 text.vampirism.entity_level=等级
@@ -117,6 +128,8 @@ text.vampirism.castle_fail=血族传说未能找到一个适当的位置生成�
 text.vampirism.structure=结构
 text.vampirism.pillar_blocks=柱石
 text.vampirism.no_dracula_to_call=德古拉已死，无法被召唤
+text.vampirism.garlic_weapons=这种武器涂有大蒜并可以伤害吸血鬼。 /n 但大蒜会消退.
+text.vampirism.outdated=您正在运行血族传说 %s，最新版本是 %s。
 
 #Skill
 skill.vampirism.bat_skill=化蝠
@@ -143,6 +156,14 @@ minioncommand.vampirism.defendarea=保护区域
 
 #Config
 category.vampirism.balance=平衡设置
+category.vampirism.balance.tooltip=更改任何平衡性相关属性
+category.vampirism.balance_level=等级平衡设置
+category.vampirism.balance_player_mod=血族玩家设置
+category.vampirism.balance_player_skills=血族玩家技能设置
+category.vampirism.balance_mob_prop=血族怪物属性
+category.vampirism.balance_mob_prop.tooltip=更改血族传说添加怪物的属性
+category.vampirism.balance_vv_prop=血族村民属性
+category.vampirism.balance_vv_prop.tooltip=改变恶魔猎人在村庄中的行动并调整其他村庄相关的东西
 
 
 

@@ -1,6 +1,7 @@
 #X-Generator: crowdin.com
 #General
-guide.vampirism.book.title=Guide du vampirisme
+guide.vampirism.book.title=Guide du vampire
+guide.vampirism.welcomeMessage=Bienvenue dans le guide du vampire. Explorez le, et découvrez tout ses possibilités.\nAmusez vous bien.
 guide.vamprism.book.name=Guide du vampirisme
 
 #Getting Started
@@ -10,6 +11,7 @@ guide.vampirism.gettingStarted.overview.text=Vampirisme est un mod qui ajoute un
 guide.vampirism.gettingStarted.firstSteps.title=Premiers pas
 guide.vampirism.gettingStarted.firstSteps.text=Vous débutez comme un joueur régulier, pour devenir un vampire vous devez être mordu par un vampire. Alors laissez vous mordre dans ce but ou attendez que cela arrive par accident. Quand ils vous auront mordu, il y a une chance que vous aillez l'effet de la potion "Sanguinare Vampiris" pour la durée d'un jour Minecraft. A la fin de la potion, vous êtes un vampire. Dans le cas ou vous ne souhaitez pas le devenir, vous pouvez annuler l'effet avec un seau de lait. Autrement, vous pouvez cliquer-droit avec des Crocs de vampire en main pour vous injecter du sang et obtenir le même effet que la morsure.
 guide.vampirism.gettingStarted.asAVampire.title=Comme un vampire
+guide.vampirism.gettingStarted.asAVampire.text=Une fois devenus vampire, la source principale de sang (au moins la meilleure) est les villageois est vous devriez en trouver en grand nombre. Cependant faites attention, il y encore des vampires qui peuvent vous attaquer comme lorsque que vous étiez un joueur normal. Les chasseurs de vampires toutefois ne vous attaqueront pas au niveau 1 de vampire.\nEn tant que vampire, vous devez surveiller votre quantité de sang. Sucez le sang des villageois et d'autres créatures passives en pressant la touche "F"\nLe sang supplémentaire peut être stocké dans des bouteilles de sang. Si vous voulez transférer du sang entre une bouteille et votre barre, pressez la touche pour vous accroupir et faites clique droit. Quand vous regardez une créature à laquelle vous pouvez prendre du sang des crocs apparaissent comme indicateurs. Pour les autres créatures vous prendrez des dégâts en les mordant. Au début vous serez un vampire de niveau 1 (les niveaux s'affichent au-dessus de la barre d'expérience) et vous aurez la vitesse, la vie et la force améliorée.\nPour atteindre un niveau de vampire supérieur vous devez accomplir des rituels. Au-delà d'un certain niveau, les vampires ne vous attaqueront plus mais les chasseurs de vampires le feront. En avançant dans les niveaux vos capacités s'amélioreront, mais quelques inconvénients tels que les dégâts du soleil, apparaîtront.
 
 #Items and Blocks
 guide.vampirism.itemsAndBlocks.category=Blocs et éléments

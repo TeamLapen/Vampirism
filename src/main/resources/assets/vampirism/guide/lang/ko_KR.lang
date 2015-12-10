@@ -1,0 +1,42 @@
+#X-Generator: crowdin.com
+#General
+guide.vampirism.book.title=Vampirism 가이드
+guide.vampirism.welcomeMessage=Vamprisim 가이드에 오신걸 환영합니다. 둘러보며 찾아낸 것을 이모드에서 할 수 있습니다. 즐거운 시간 보내세요.
+guide.vamprism.book.name=Vampirism 가이드
+
+#Getting Started
+guide.vampirism.gettingStarted.category=시작하기
+guide.vampirism.gettingStarted.overview.title=개요
+guide.vampirism.gettingStarted.firstSteps.title=첫 번째 단계
+
+#Items and Blocks
+guide.vampirism.itemsAndBlocks.category=아이템과 블럭들
+guide.vampirism.itemsAndBlocks.found.title=월드에서 찾을수 있는 것
+guide.vampirism.itemsAndBlocks.armor.title=뱀파이어 방어구
+
+#Levels
+guide.vampirism.levels.altar2.title=레벨 %d 에서 %d
+guide.vampirism.levels.altar4.title=레벨 %d+
+guide.vampirism.levels.altar4.item_text=필요한 아이템
+guide.vampirism.levels.altar4.structure1.name=구조물 1
+guide.vampirism.levels.altar4.structure2.name=구조물 2 (북쪽을 향해 지어야함)
+guide.vampirism.levels.altar4.item_req=필요한 아이템
+guide.vampirism.levels.altar4.struc_req=필요한 구조물
+guide.vampirism.levels.category=레벨 업 하는 법
+
+#Mobs
+guide.vampirism.mobs.category=몬스터
+guide.vampirism.mobs.ghost.text=뱀파이어 바이옴에서 소환된다.
+
+#VampirePlayer
+guide.vampirism.vplayer.category=뱀파이어 플레이어 특성
+guide.vampirism.vplayer.sun_damage.title=햇빛 데미지
+
+#VampireLord
+guide.vampirism.vlord.category=뱀파이어 로드
+guide.vampirism.vlord.skills.title=뱀파이어 로드 스킬
+
+
+
+
+

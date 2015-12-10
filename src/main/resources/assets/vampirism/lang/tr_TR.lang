@@ -25,6 +25,10 @@ item.vampirism.vampireArmor_leggings.name=Vampirin Pantolonu
 item.vampirism.vampireArmor_boots.name=Vampirin Botları
 item.vampirism.vampireArmor_chestplate.name=Vampirin Zırhı
 item.vampirism.minionNameTag.name=Köle Ad Etiketi
+item.vampirism.weakVampireFang.name=Zayıf Vampir Azıdişi
+item.vampirism.weakHumanHeart.name=Zayıf İnsan Kalbi
+item.vampirism.item_tent.name=Çadır
+item.vampirism.garlic.name=Sarımsak
 
 # Blocks
 block.vampirism.bloodAltar.name=Doygunluğun Kan Altarı
@@ -35,17 +39,28 @@ block.vampirism.cursedEarth.name=Lanetli Toprak
 block.vampirism.vampireOrchid.name=Vampir Orkidesi
 block.vampirism.blockCoffin.name=Tabut
 block.vampirism.castleBlock.name=Kale Bloğu
+block.vampirism.castleStairs.name=Şato Merdivenleri
 
 #GUI
+gui.vampirism.revertback.head=Normal insana geri dönüşüm
 
 # Keys
 
 #General
+text.vampirism.skill.level_to_low=Onun için vampirlik seviyeniz yeterli değil
+text.vampirism.entity_level=Seviye
+text.vampirism.ritual_level_wrong=Bu sunağı, bu seviyede kullanamazsın
+text.vampirism.ritual_still_running=Ayin devam etmekte
+text.vampirism.not_enough_blood=Sunağın içinde yeterince kan yok
+text.vampirism.night_vision=Gece Görüşü
 
 #Skill
+skill.vampirism.teleport=Işınlan
 
 #Minion command
+minioncommand.vampirism.collectblood=Kan topla
 
 #Config
+
 
 

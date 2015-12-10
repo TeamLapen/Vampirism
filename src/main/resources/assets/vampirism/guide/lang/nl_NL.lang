@@ -35,6 +35,12 @@ guide.vampirism.itemsAndBlocks.used_for_minions=Gebruikt voor volgelingen
 guide.vampirism.itemsAndBlocks.blood_eye.text=Kan worden gebruikt om het dichtstbijzijnde kasteel te zoeken
 guide.vampirism.itemsAndBlocks.found.weakVampireFang=Zwakke vampieren laten deze vallen, zoals veranderde dorpelingen. kan gecombineer worden om een sterkere versie te maken.
 guide.vampirism.itemsAndBlocks.found.weakHumanHearth=Zwakke mensen laten deze vallen, zoals dorpelingen. kunnen gecombineer worden om een sterkere versie te maken.
+guide.vampirism.itemsAndBlocks.gildedIron.text=Een blok dat lijkt op een normaal gouden blok, maar heeft niet zo veel goud nodig. wordt gebruikt voor rituelen.
+guide.vampirism.itemsAndBlocks.garlic=Knoflook kan worden gevonden in kisten en kan vergelijkbaar worden geplant zoals aardappelen. Het kan worden gebruikt in verschillende recepten om wapens tegen vampieren maken. U kunt het ook toepassen op elke vanille zwaard om het vergiftegend te maken tegenover de vampieren.
+guide.vampirism.itemsAndBlocks.garlic_concentrated=Gebruikt in een paar recepten.
+guide.vampirism.itemsAndBlocks.garlic_torch_weak=Geeft zwakke vampieren in de buurt (met uitzondering van spelers) een knoflook-effect. Ook voorkomt u dat vampieren spawnen in de buurt.
+guide.vampirism.itemsAndBlocks.garlic_torch_strong=Geeft alle vampieren een sterker effect van knoflook. Ook voorkomt u dat vampieren spawnen in de buurt.
+guide.vampirism.itemsAndBlocks.garlic_bomb=Gooibaar knoflook wapen met oppervlakte van effect schade.
 
 #Levels
 guide.vampirism.levels.introduction.title=Inleiding
@@ -59,6 +65,7 @@ guide.vampirism.mobs.vampire_minion.title=Vampieren volgeling
 guide.vampirism.mobs.vampire_minion.text=Ondergeschikt aan hun heer. / nHebben de textuur van hun heer. / nKan worden gecontroleerd door vampier heer spelers.
 guide.vampirism.mobs.ghost.text=Verschijnd in de vampieren biotoop.
 guide.vampirism.mobs.dracula.text=Vampier heer die in een groot kasteel woont. Neem een kijkje op de vampieren heer sectie voor meer informatie.
+guide.vampirism.mobs.hunter2.text=Geavanceerde versie van een vampieren jager. / n Is een behoorlijk stuk sterker en roept normale jagers om hem te helpen. Ze hebben afzonderlijke namen en huiden van vampirisme supporters evenals meer willekeurige namen.
 
 #VampirePlayer
 guide.vampirism.vplayer.category=Vampieren speler functies

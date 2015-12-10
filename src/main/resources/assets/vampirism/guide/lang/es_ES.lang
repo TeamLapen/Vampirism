@@ -1,28 +1,31 @@
 #X-Generator: crowdin.com
 #General
-guide.vampirism.book.title=Guía de vampirismo
-guide.vampirism.welcomeMessage=Bienvenido a la guia de Vampirism. Echa un vistazo para descubrir que puedes hacer con este mod. Diviertete.
-guide.vamprism.book.name=Guía de vampirismo
+guide.vampirism.book.title=Guía de Vampirism
+guide.vampirism.welcomeMessage=Bienvenido a la guía de Vampirism. Echa un vistazo para descubrir lo que puedes hacer con este mod. Diviértete.
+guide.vamprism.book.name=Guía de Vampirism
 
 #Getting Started
 guide.vampirism.gettingStarted.category=Empezando
 guide.vampirism.gettingStarted.overview.title=Vista en general
-guide.vampirism.gettingStarted.overview.text=Vampirismo es un mod que añade una nueva forma de jugar Minecraft. Tu puedes haber pasado mucho tiempo evitando los mobs, pero como un vampiro, usted desarrollará una sed por matar. Cuando este explorando por el mundo podrá notar hay más pueblos en más biomas, en el que puede calmar su sed. Los pueblos en los pantanos son especialmente interesantes.
+guide.vampirism.gettingStarted.overview.text=Vampirism es un mod que añade una nueva forma de jugar Minecraft. Previamente puede que no acostumbrases a salir de noche, pero como un vampiro, empezarás a tomar un gusto por la oscuridad y desarrollarás una sed sangrienta y asesina ;).\n Cuando explores por el mundo podrás notar la mayor frecuencia de aldeas en las biomas, en las que, por supuesto, podrás saciar tu sed. Los pueblos de los pantanos son especialmente interesantes.
 guide.vampirism.gettingStarted.firstSteps.title=Primeros pasos
-guide.vampirism.gettingStarted.firstSteps.text=Usted va a iniciar como un jugador normal, para convertirse en vampiro usted debe ser mordido por uno. Asi que dejese morder a proposito o espere a que pase por accidente. Cuando te muerdan hay una probabilidad de que usted reciba un efecto de poción llamado "Sanguinare Vampiris", el cual dura un dia de Minecraft, siempre puede anular el efecto bebiendo leche. De otra manera puede hace click derecho con los colmillos de un vampiro en su mano para así injectar un poco de sangre y obtener el efecto antes mencionado.
+guide.vampirism.gettingStarted.firstSteps.text=Iniciarás como un jugador normal, para convertirte en vampiro debes ser mordido por uno. Así que o los dejas que golpeen intencionalmente, o sólo esperas a que pase accidentalmente. Cuando te dañen hay una pequeña posibilidad de que recibas el efecto de estado llamad "Vampirismo Sanguinario", el cual durará un día en Minecraft. Luego de que el efecto haya acabado, te transformarás en vampiro.\nEn caso de no desearlo, siempre podrás contrarrestarlo con una cubeta de leche. Alternativamente puedes dar clic derecho con unos colmillos de vampiro sobre tu mano para inyectar la sangre en ti y conseguir el efecto ya mencionado.
 guide.vampirism.gettingStarted.asAVampire.title=Como un vampiro
+guide.vampirism.gettingStarted.asAVampire.text=Una vez te haz transformado en un Vampiro, una de tus principales fuentes de sangre (o al menos la mejor) son los aldeanos, y es que debes hallar a muchos de ellos. Sin embargo, debes cuidar tus espaldas ya que aún habrán otros Vampiros que desearán atacarte, al igual como cuando eres un jugador normal. Los Cazadores de Vampiros, por otro lado, no te prestarán mucha atención cuando eres un Vampiro de nivel 1.\n Siendo un Vampiro debes prestar atención a tus niveles de sangre. Succiona sangre presionando 'F' sobre algún aldeano o mob para conseguir más. La sangre extra pude ser almacenada en un Frasco de Sangre. Si quieres transferir esta sangre del Frasco de Sangre hacia tu Barra de Sangre, usa el clic derecho con el frasco en la mano. Cuando mires a una criatura te será posible chupar sangre, pequeños colmillos aparecerán como indicador. Para cualquier otro ser puedes causarles daño al morderlos.\nAl principio serás un vampiro de nivel 1 (esto está desplegado sobre tu nivel de experiencia), y con ello tu velocidad, salud y fuerza mejorarán. Para conseguir mayores niveles de vampiro debes realizar diversos rituales. Cuando asciendas a cierto nivel, los otros Vampiros dejarán de atacarte, y en cambio los Cazadores de Vampiros tomarán esta acción. A medida que avances y aumentes tus niveles tus habilidades crecerán, aunque algunas desventajas tales como el daño solar se harán presentes.
+guide.vampirism.gettingStarted.biteableCreatures.title=Criaturas mordidas
+guide.vampirism.gettingStarted.biteableCreatures.text=Cuando muerdas a alguna criatura, te llevarás con ello una fracción de su sangre. Cuando esta criatura tenga un bajo nivel de sangre se mantendrá débil, aunque regenerará su sangre lentamente.\n Si tú, sin embargo, vuelves a succionar más sangre, morirá o se convertirá en un vampiro. Las criaturas transformadas actúan de una manera un tanto diferente de las comunes; se dañarán con el sol, y por lo tanto tratan de evitar la luz.\n Los Aldeanos Vampiro pueden incluso tener ofertas especiales para ti.\n También puedes chupar sangre de otros jugadores en tu servidor. Ya que ellos son capaces de defenderse a sí mismos un poco mejor, esto es sólo posible desde su espalda (la mordida).
 
 #Items and Blocks
 guide.vampirism.itemsAndBlocks.category=Objetos y bloques
-guide.vampirism.itemsAndBlocks.found.title=Encontrado en el mundo
-guide.vampirism.itemsAndBlocks.found.pureBlood=Es soltado por los barones vampiros en distintos niveles de pureza dependiendo del nivel del baron. Es requerido para rituales de nivel superior.
-guide.vampirism.itemsAndBlocks.found.bloodAltar1=Este bloque puede actuar como un faro y te da velocidad, así como un efecto de saturación (consumes menos sangre). Pero para activar este efecto, tienes que contruirte una espada "Sanguijuela" y llenarla con sangre matando a los aldeanos u otras criaturas con la espada. Entonces puede introducir la espada en el bloque que activa el efecto, pero agota lentamente la espada. El bloque no puede ser hecho, tiene que encontrarse en pantanos.
-guide.vampirism.itemsAndBlocks.found.vampireFlower=Orquídeas de vampiro pueden encontrarse en el biomas vampíricos.
-guide.vampirism.itemsAndBlocks.found.humanHearth=Estos son soltados por cazadores de vampiros. Puedes comertelos para obtener una gran cantidad de sangre o utilizarlos en varios rituales.
-guide.vampirism.itemsAndBlocks.found.vampireFang=Estos son soltados por vampiros. Puedes usarlos en algunas recetas de creación o hacer click derecho para obtener el efecto "Sanguinare Vampiris".
+guide.vampirism.itemsAndBlocks.found.title=Encontrados en el mundo
+guide.vampirism.itemsAndBlocks.found.pureBlood=Es soltado por los Barones Vampiro en distintos niveles de pureza dependiendo del nivel del barón. Es requerido para rituales de nivel superior.
+guide.vampirism.itemsAndBlocks.found.bloodAltar1=Este bloque puede actuar como un faro, y te da velocidad, así como un efecto de saturación (consumes menos sangre). Pero para activarlo, tienes que construirte una espada "Sanguijuela" y llenarla con sangre matando a los aldeanos u otras criaturas con la espada. Entonces puedes introducir la espada en el bloque que activa el efecto, pero agota lentamente la espada. El bloque no puede ser fabricado, sino que debe encontrarse en los pantanos.
+guide.vampirism.itemsAndBlocks.found.vampireFlower=Las Orquídeas de vampiro pueden encontrarse en las biomas vampíricas.
+guide.vampirism.itemsAndBlocks.found.humanHearth=Éstos son soltados por cazadores de vampiros. Puedes comértelos para obtener una gran cantidad de sangre o utilizarlos en varios rituales.
+guide.vampirism.itemsAndBlocks.found.vampireFang=Éstos son soltados por vampiros. Puedes usarlos en algunas recetas de creación o hacer clic derecho sobre ellos para obtener el efecto "Vampirismo Sanguinario".
 guide.vampirism.itemsAndBlocks.bBottle.text=Almacena sangre para cuando no estes de caceria. Puedes transferir la sangre a tu barra de sangre con click derecho. Puedes transferir sangre extra al frasco con shift más click derecho. Puedes activar el modo automatico, (presiona %s) para transferir automaticamente sangre extra a cualquier frasco de sangre en el inventorio. Frasco de sangre llenos tambien son usados en algunas recetras de creacion. Tu puedes crearlos con las receta siguiente o simpremente ten frascos de cristal en el hotbar mientras muerdes mobs.
-guide.vampirism.itemsAndBlocks.sunscreen.text=Disminuye daño solar durante un tiempo.
-guide.vampirism.itemsAndBlocks.armor.text=La armadura de vampiro especialmente diseñada reduce la influencia del sol sobre vampiros. Si se usa la armadura completa no se obtiene el efecto de confusión, así como menos daño instantáneo. La armadura puede ser comparada con armadura de hierro, es decir tiene la misma durabilidad.
+guide.vampirism.itemsAndBlocks.sunscreen.text=Disminuye el daño solar durante un periodo de tiempo.
+guide.vampirism.itemsAndBlocks.armor.text=La armadura de vampiro especialmente diseñada para reducir la influencia del sol sobre vampiros. Si se usa la armadura completa no se obtiene el efecto de confusión, y así un menor daño instantáneo. Esta armadura puede ser comparada con la de hierro, es decir, tiene la misma durabilidad.
 guide.vampirism.itemsAndBlocks.armor.title=Armadura de vampiro
 guide.vampirism.itemsAndBlocks.altars.altar2.text=Este altar es usando para subir entre los niveles %d y %d
 guide.vampirism.itemsAndBlocks.altars.altar4.text=El %s se utiliza para nivelar a partir del nivel %d y consiste en varios bloques\: el bloque principal, puntas y diferentes bloques de minecraft. Para más información mira la sección de nivelación.
@@ -30,6 +33,14 @@ guide.vampirism.itemsAndBlocks.altars.title=Bloques de altar
 guide.vampirism.itemsAndBlocks.coffin.text=El ataúd se puede utilizar para dormir durante el día y para establecer su punto de generacion. Se recomienda colocarlo en el lugar donde el sol llegue. Puedes cambiar el color del interior pulsando shift más click derecho con un tinte en la mano. 
 guide.vampirism.itemsAndBlocks.used_for_minions=Utilizado para subditos
 guide.vampirism.itemsAndBlocks.blood_eye.text=Puede utilizarse para localizar el castillo más cercano
+guide.vampirism.itemsAndBlocks.found.weakVampireFang=Éstas son soltadas por vampiros débiles, como lo son los aldeanos convertidos. Pueden ser combinadas para crear una versión más fuerte.
+guide.vampirism.itemsAndBlocks.found.weakHumanHearth=Éstos son soltados por humanos débiles, como lo son los aldeanos. Pueden ser combinados para crear una versión más fuerte.
+guide.vampirism.itemsAndBlocks.gildedIron.text=Un bloque que luce como un bloque de oro normal, pero que sin embargo no requiere de una gran cantidad de oro. Utilizado para rituales.
+guide.vampirism.itemsAndBlocks.garlic=El ajo puede ser encontrado en cofres, además de poder sembrarse de manera parecida a las papas. También puede ser utilizado en la elaboración de armas contra vampiros. Igualmente podrás aplicarlo sobre cualquier espada común para volverla dañina contra los vampiros.
+guide.vampirism.itemsAndBlocks.garlic_concentrated=Usado en la fabricación de algunas cosas.
+guide.vampirism.itemsAndBlocks.garlic_torch_weak=Afecta a vampiros de bajo nivel (excluyendo a jugadores) con ajo. También evita la aparición cercana de vampiros.
+guide.vampirism.itemsAndBlocks.garlic_torch_strong=Afecta a todo vampiro con un daño por ajo más poderoso. También evita la aparición cercana de vampiros.
+guide.vampirism.itemsAndBlocks.garlic_bomb=Arma de ajo para arrojar que afecta un área de rango determinado.
 
 #Levels
 guide.vampirism.levels.introduction.title=Introducción
@@ -47,11 +58,14 @@ guide.vampirism.levels.category=Cómo subir de nivel
 
 #Mobs
 guide.vampirism.mobs.category=Mobs
+guide.vampirism.mobs.hunter.text=Caza vampiros ;)/n Aparece en aldeas o pequeños campamentos a través del mundo. Únicamente es hostil hacia jugadores con un nivel de vampiro mayor a %s./nCazadores de Vampiros que se encuentren cerca de las aldeas tratarán de defenderla.
 guide.vampirism.mobs.vampire.text=Ataca a los jugadores a menos que tengan un nivel mas alto de %s./nTambien ataca a los aldeanos y los hace vampiro./nNoche activa
 guide.vampirism.mobs.vampire_baron.text=Aparecen raramente en biomas vampiricos./nOcurre en diferentes niveles dependiendo parcialmente en el nivel del jugador./nSuelta sangre pura./Es muy fuerte y invoca a subditos que le ayudan
 guide.vampirism.mobs.vampire_minion.title=Subdito de vampiro
 guide.vampirism.mobs.vampire_minion.text=Son subordinados a su Señor./nTienen la textura de su Señor./nPueden ser controlados por un jugador que sea Señor de los vampiros.
 guide.vampirism.mobs.ghost.text=Aparece en el bioma vampírico.
+guide.vampirism.mobs.dracula.text=El Señor de los Vampiros, quien vive en un gran castillo. Da una mirada a la sección de Señor de los Vampiros para mayor información.
+guide.vampirism.mobs.hunter2.text=Una versión más avanzada de un cazador de vampiros./n Es considerablemente más poderoso y consigue refuerzos llamando a cazadores normales. Llevan nombres propios consigo, además de skins de jugadores que han apoyado Vampirism, así como algunos otros nombres aleatorios.
 
 #VampirePlayer
 guide.vampirism.vplayer.category=Características de jugador de vampiro
