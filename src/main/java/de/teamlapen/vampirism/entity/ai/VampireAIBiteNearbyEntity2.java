@@ -30,12 +30,20 @@ public class VampireAIBiteNearbyEntity2 extends EntityAIBase {
         if (vampire.wantsBlood()) {
             List list = vampire.worldObj.getEntitiesWithinAABB(EntityCreature.class, vampire.boundingBox.expand(2.5, 1.5, 2.5));
             if (list.size() > 1) {
-                Collections.sort(list, new Comparator() {
-                    @Override
-                    public int compare(Object o1, Object o2) {
-                        return vampire.getDistanceSqToEntity((Entity) o1) > vampire.getDistanceSqToEntity((Entity) o2) ? 1 : -1;
-                    }
-                });
+
+                try {
+                    Collections.sort(list, new Comparator() {
+                        @Override
+                        public int compare(Object o1, Object o2) {
+                            return vampire.getDistanceSqToEntity((Entity) o1) > vampire.getDistanceSqToEntity((Entity) o2) ? 1 : -1;
+                        }
+                    });
+                } catch (Exception e) {
+                    //TODO investigate issue
+                    //java.lang.IllegalArgumentException: Comparison method violates its general contract!
+                    //at java.util.TimSort.mergeHi(TimSort.java:895)
+                    //http://openeye.openmods.info/crashes/796f6b43ea81b10156658bd4f662e0c1
+                }
 
             }
 

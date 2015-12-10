@@ -56,6 +56,7 @@ public class ClientProxy extends CommonProxy {
 	private final static String TAG = "ClientProxy";
 	private static final ResourceLocation saturation1 = new ResourceLocation(REFERENCE.MODID + ":shaders/saturation1.json");
 	public static final ResourceLocation steveTextures = new ResourceLocation("textures/entity/steve.png");
+	private boolean doShaders = true;
 
 	@Override public void onServerTick(TickEvent.ServerTickEvent event) {
 
@@ -98,7 +99,7 @@ public class ClientProxy extends CommonProxy {
 	public void onClientTick(ClientTickEvent event) {
 		if (!event.phase.equals(TickEvent.Phase.START))
 			return;
-		if (OpenGlHelper.shadersSupported) {
+		if (OpenGlHelper.shadersSupported && doShaders) {
 			try {
 				Minecraft mc = Minecraft.getMinecraft();
 				if (mc.thePlayer == null)
@@ -115,6 +116,12 @@ public class ClientProxy extends CommonProxy {
 						renderer.theShaderGroup.createBindFramebuffers(mc.displayWidth, mc.displayHeight);
 					} catch (JsonException e) {
 
+					} catch (NoClassDefFoundError noClassDefFoundError) {
+						//Probably it is not good to catch an error, but currently I don't have time to find another solution :/
+						//Not sure if this even works though
+						//Should prevent this strange error http://openeye.openmods.info/crashes/f8f48b72eb405544b26167214fad7970
+						//Probably another mods modifies the shader stuff
+						doShaders = false;
 					}
 				} else if (!active && renderer.theShaderGroup != null && renderer.theShaderGroup.getShaderGroupName().equals(saturation1.toString())) {
 					renderer.theShaderGroup.deleteShaderGroup();
@@ -123,6 +130,9 @@ public class ClientProxy extends CommonProxy {
 			} catch (Exception e) {
 				if (Minecraft.getSystemTime() % 20000 == 0) {
 					Logger.e(TAG, "Failed to handle saturation shader", e);
+					if (Minecraft.getSystemTime() % 200000 == 0) {
+						doShaders = false;
+					}
 				}
 			}
 		}
