@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.config;
 
 import de.teamlapen.lib.config.BalanceValues;
+import de.teamlapen.lib.config.DefaultBoolean;
 import de.teamlapen.lib.config.DefaultDouble;
 import de.teamlapen.lib.config.DefaultInt;
 import de.teamlapen.vampirism.VampirismMod;
@@ -11,20 +12,6 @@ import java.io.File;
  * Balance values for vampire players.
  */
 public class BalanceVampirePlayer extends BalanceValues {
-    /**
-     * Creates a configuration for balance values
-     *
-     * @param directory
-     */
-    public BalanceVampirePlayer(File directory) {
-        super("vampire_player", directory);
-    }
-
-    @Override
-    protected boolean shouldUseAlternate() {
-        return VampirismMod.isRealism();
-    }
-
     @DefaultDouble(value = 1.0D, minValue = 0.5D, maxValue = 2.0D, name = "Health Max Modifier", comment = "")
     public static double HEALTH_MAX_MOD;
     @DefaultInt(value = 20, minValue = 10, maxValue = 40, name = "Health Level Cap", comment = "")
@@ -49,7 +36,24 @@ public class BalanceVampirePlayer extends BalanceValues {
     public static int JUMP_LCAP;
     @DefaultDouble(value = 0.5D, minValue = 0.1D, maxValue = 1.0D, name = "Jump Type", comment = "")
     public static double JUMP_TYPE;
-
     @DefaultInt(value = 3,name="Turn Others Level",minValue = 1,hasAlternate = true,alternateValue = 1,comment = "Level as of which a vampire player is able to infect other players")
     public static int MIN_TURN_LEVEL;
+    @DefaultDouble(value = 1.0F, name = "Blood Exhaustion Modifier", minValue = 0, maxValue = 5, comment = "Blood exhaustion is multiplied with this value")
+    public static int BLOOD_EXHAUSTION_MOD;
+    @DefaultBoolean(value = true, name = "Blood Increase Exhaustion", comment = "Increase exhaustion modifier with higher levels")
+    public static boolean BLOOD_INCREASE_EXHAUSTION;
+
+    /**
+     * Creates a configuration for balance values
+     *
+     * @param directory
+     */
+    public BalanceVampirePlayer(File directory) {
+        super("vampire_player", directory);
+    }
+
+    @Override
+    protected boolean shouldUseAlternate() {
+        return VampirismMod.isRealism();
+    }
 }

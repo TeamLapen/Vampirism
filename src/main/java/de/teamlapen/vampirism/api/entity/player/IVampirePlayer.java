@@ -18,4 +18,19 @@ public interface IVampirePlayer extends IVampire,IFractionPlayer,IMinionLord {
 
 
     boolean canTurnOthers();
+
+    /**
+     * Add an exhaustion modifier (used in blood usage)
+     *
+     * @param id  ID to remove it later
+     * @param mod Exhaustion is multiplied with this
+     */
+    void addExhaustionModifier(String id, float mod);
+
+    /**
+     * Removes a modifier registered with {@link #addExhaustionModifier(String, float)}
+     *
+     * @param id
+     */
+    void removeExhaustionModifier(String id);
 }

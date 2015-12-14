@@ -2,7 +2,6 @@ package de.teamlapen.vampirism;
 
 import de.teamlapen.lib.util.Logger;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.player.FractionRegistry;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.*;
@@ -19,7 +18,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.io.File;
 
@@ -29,16 +27,17 @@ import java.io.File;
 @Mod(modid = REFERENCE.MODID,name=REFERENCE.NAME,version = REFERENCE.VERSION,acceptedMinecraftVersions = "[1.8]",dependencies = "required-after:Forge@["+REFERENCE.FORGE_VERSION_MIN+",)",guiFactory = "de.teamlapen.vampirism.client.core.ModGuiFactory")
 public class VampirismMod {
 
+    public final static Logger log = new Logger(REFERENCE.MODID, "de.teamlapen.vampirism");
     @Mod.Instance(value = REFERENCE.MODID)
     public static VampirismMod instance;
-
     @SidedProxy(clientSide = "de.teamlapen.vampirism.proxy.ClientProxy", serverSide = "de.teamlapen.vampirism.proxy.ServerProxy")
     public static IProxy proxy;
-
     public static boolean inDev=false;
 
+    public static boolean isRealism() {
+        return Configs.realism_mode;
+    }
 
-    public final static Logger log=new Logger(REFERENCE.MODID,"de.teamlapen.vampirism");
     @Mod.EventHandler
     public void init(FMLInitializationEvent event){
         log.t("Test balance value %s",Balance.leveling.TEST_VALUE);
@@ -62,9 +61,6 @@ public class VampirismMod {
         FMLCommonHandler.instance().bus().register(mod_entity_event_handler);
     }
 
-    public static boolean isRealism(){
-        return Configs.realism_mode;
-    }
     @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event){
         checkDevEnv();
