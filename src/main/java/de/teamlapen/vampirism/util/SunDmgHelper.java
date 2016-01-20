@@ -104,22 +104,27 @@ public class SunDmgHelper {
      * @return
      */
     public static boolean gettingSundamge(EntityLivingBase entity) {
-        MinecraftServer.getServer().theProfiler.startSection("vampirism_checkSundamage");
-        if (entity.worldObj != null && getSundamageInDim(entity.worldObj.provider.dimensionId)) {
-            if (!entity.worldObj.isRaining()) {
-                float angle = entity.worldObj.getCelestialAngle(1.0F);
-                if (angle > 0.78 || angle < 0.24) {
-                    if (entity.worldObj.canBlockSeeTheSky(MathHelper.floor_double(entity.posX), MathHelper.floor_double(entity.posY), MathHelper.floor_double(entity.posZ))) {
-                        if (getSundamageInBiome(entity.worldObj.getBiomeGenForCoords(MathHelper.floor_double(entity.posX), MathHelper.floor_double(entity.posZ)).biomeID)) {
-                            MinecraftServer.getServer().theProfiler.endSection();
-                            return true;
+        try {
+            MinecraftServer.getServer().theProfiler.startSection("vampirism_checkSundamage");
+            if (entity.worldObj != null && getSundamageInDim(entity.worldObj.provider.dimensionId)) {
+                if (!entity.worldObj.isRaining()) {
+                    float angle = entity.worldObj.getCelestialAngle(1.0F);
+                    if (angle > 0.78 || angle < 0.24) {
+                        if (entity.worldObj.canBlockSeeTheSky(MathHelper.floor_double(entity.posX), MathHelper.floor_double(entity.posY), MathHelper.floor_double(entity.posZ))) {
+                            if (getSundamageInBiome(entity.worldObj.getBiomeGenForCoords(MathHelper.floor_double(entity.posX), MathHelper.floor_double(entity.posZ)).biomeID)) {
+                                MinecraftServer.getServer().theProfiler.endSection();
+                                return true;
+                            }
                         }
                     }
-                }
 
+                }
             }
+            MinecraftServer.getServer().theProfiler.endSection();
+        } catch (Exception e) {
+            Logger.e("SunDmgHelper", "Really strange exception while trying to check sundamage", e);
+            return false;
         }
-        MinecraftServer.getServer().theProfiler.endSection();
         return false;
     }
 }
