@@ -54,8 +54,8 @@ public abstract class BalanceValues {
                     f.set(this, configuration.get(cat.getQualifiedName(), a.name(),value, a.comment()).getBoolean());
                 }
             } catch (NullPointerException e1) {
-                VampLib.log.e(TAG, "Author probably forgot to specify a default value for " + name + " in " + this.name, e1);
-                throw new Error("Please check you default values");
+                VampLib.log.e(TAG, "Author probably forgot to specify a default annotation for " + name + " in " + this.name, e1);
+                throw new Error("Please check you default values in " + this.name);
             } catch (Exception e) {
                 VampLib.log.e(TAG, "Cant set " + this.name + " values", e);
                 throw new Error("Please check your "+configuration.getConfigFile().getAbsolutePath()+" config file");

@@ -19,8 +19,8 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
 
     protected boolean hasArms = true;
     protected boolean peaceful = false;
-    private AxisAlignedBB home;
     protected boolean saveHome = false;
+    private AxisAlignedBB home;
 
     public EntityVampirism(World p_i1595_1_) {
         super(p_i1595_1_);
@@ -47,11 +47,6 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
             this.setDead();
         }
     }
-
-    public void setHome(AxisAlignedBB home) {
-        this.home = home;
-    }
-
 
     @Override
     public boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_) {
@@ -117,11 +112,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
                 entity.setFire(j * 4);
             }
 
-            if (entity instanceof EntityLivingBase) {
-                EnchantmentHelper.func_151384_a((EntityLivingBase) entity, this);
-            }
-
-            EnchantmentHelper.func_151385_b(this, entity);
+            this.applyEnchantments(this, entity);
 
             if (entity instanceof EntityLivingBase) {
                 this.attackedEntityAsMob((EntityLivingBase) entity);
@@ -131,8 +122,6 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
 
         return flag;
     }
-
-
 
     public boolean getCanSpawnHere() {
         return (peaceful || this.worldObj.getDifficulty()!= EnumDifficulty.PEACEFUL) && super.getCanSpawnHere();
@@ -173,8 +162,8 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     }
 
     @Override
-    public boolean func_180485_d(BlockPos p_180485_1_) {
-        return this.isWithinHomeDistance(p_180485_1_);
+    public boolean isWithinHomeDistanceFromPosition(BlockPos pos) {
+        return this.isWithinHomeDistance(pos);
     }
 
     public boolean isWithinHomeDistance(BlockPos pos){
@@ -185,20 +174,13 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         return this.isWithinHomeDistance((double) posX, (double) posY, (double) posZ);
     }
 
-
-
     @Override
-    public void func_175449_a(BlockPos p_175449_1_, int p_175449_2_) {
-        this.setHomeArea(p_175449_1_,p_175449_2_);
+    public void setHomePosAndDistance(BlockPos pos, int distance) {
+        this.setHomeArea(pos, distance);
     }
 
     public void setHomeArea(BlockPos pos, int r) {
         this.setHome(new AxisAlignedBB(pos.add(-r,-r,-r),pos.add(r,r,r)));
-    }
-
-    @Override
-    public BlockPos func_180486_cf() {
-        return getHomePosition();
     }
 
     public BlockPos getHomePosition() {
@@ -215,10 +197,12 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         this.home = null;
     }
 
-
-
     public AxisAlignedBB getHome() {
         return home;
+    }
+
+    public void setHome(AxisAlignedBB home) {
+        this.home = home;
     }
 
     @Override

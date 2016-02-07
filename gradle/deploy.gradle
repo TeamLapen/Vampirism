@@ -1,5 +1,3 @@
-apply plugin: "com.matthewprenger.cursegradle"
-
 curseforge {
     if(project.hasProperty("curseforge_key")) {
         apiKey = project.curseforge_key
@@ -30,7 +28,7 @@ curseforge {
         }
 
 
-        addArtifact devJar
+        addArtifact deobfJar
     }
 
 

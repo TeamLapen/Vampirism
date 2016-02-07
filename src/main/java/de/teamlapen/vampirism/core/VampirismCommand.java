@@ -7,7 +7,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -23,7 +22,7 @@ public class VampirismCommand extends BasicCommand {
         addSub(new SubCommand() {
             @Override
             public boolean canCommandSenderUseCommand(ICommandSender var1) {
-                return var1.canUseCommand(3,getCommandName());
+                return var1.canCommandSenderUseCommand(3, getCommandName());
             }
 
             @Override
@@ -69,13 +68,13 @@ public class VampirismCommand extends BasicCommand {
     }
 
     @Override
-    public String getName() {
+    public String getCommandName() {
         return "vampirism";
     }
 
     public boolean isSenderCreative(ICommandSender sender) {
         if (VampirismMod.inDev)
             return true;
-        return sender.canUseCommand(2, this.getName());
+        return sender.canCommandSenderUseCommand(2, this.getCommandName());
     }
 }

@@ -4,34 +4,18 @@ import de.teamlapen.vampirism.client.core.ModBlocksRender;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.core.ModItemsRender;
 import de.teamlapen.vampirism.client.core.ModKeys;
-import de.teamlapen.vampirism.core.ModItems;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLStateEvent;
 
 /**
  * Clientside Proxy
  */
 public class ClientProxy extends CommonProxy {
-    @Override
-    public void preInit(FMLPreInitializationEvent event) {
-        ModBlocksRender.preInit(event);
-        ModItemsRender.preInit(event);
-        ModEntitiesRender.preInit(event);
-        ModKeys.preInit(event);
-    }
 
     @Override
-    public void init(FMLInitializationEvent event) {
-        ModBlocksRender.init(event);
-        ModItemsRender.init(event);
-        ModEntitiesRender.init(event);
-        ModKeys.init(event);
-
-    }
-
-    @Override
-    public void postInit(FMLPostInitializationEvent event) {
-
+    public void onInitStep(Step step, FMLStateEvent event) {
+        ModBlocksRender.onInitStep(step, event);
+        ModItemsRender.onInitStep(step, event);
+        ModEntitiesRender.onInitStep(step, event);
+        ModKeys.onInitStep(step, event);
     }
 }

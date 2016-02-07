@@ -4,7 +4,7 @@ try {
     tag = getLatestTag()
 }
 catch (Exception e){
-    e.printStackTrace()
+    //e.printStackTrace()
     logger.lifecycle "Failed to find the latest tag. Probably there is none."
 }
 def versions = tag.tokenize('.')

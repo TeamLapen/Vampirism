@@ -13,22 +13,16 @@ import java.io.File;
  */
 public class Configs {
 
-    private final static String TAG="Configs";
     public static final String CATEGORY_GENERAL = Configuration.CATEGORY_GENERAL;
-
     public static final String CATEGORY_GUI = "gui";
-
     public static final String CATEGORY_VILLAGE = "village_settings";
-
     public static final String CATEGORY_BALANCE = "balance";
-
     public static final String CATEGORY_DISABLE = "disabled";
-
-    private static Configuration main_config;
-
+    private final static String TAG = "Configs";
     public static boolean realism_mode;
     public static boolean resetConfigurationInDev;
     public static boolean sundamage_default;
+    private static Configuration main_config;
 
     public static void init(File configDir, boolean inDev){
         File mainConfigFile=new File(configDir, REFERENCE.MODID+".cfg");
@@ -61,7 +55,7 @@ public class Configs {
         for(String s:sundamageDims){
             String[] t=s.split(":");
             if(t.length!=2){
-                VampirismMod.log.w(TAG,"Cannot understand sundamge dimension line '%s'. Missing seperator",s);
+                VampirismMod.log.w(TAG, "Cannot understand sundamage dimension line '%s'. Missing separator", s);
                 continue;
             }
             try {

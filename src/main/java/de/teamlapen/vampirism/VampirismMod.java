@@ -1,17 +1,19 @@
 package de.teamlapen.vampirism;
 
+import de.teamlapen.lib.util.IInitListener;
 import de.teamlapen.lib.util.Logger;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.player.FractionRegistry;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
-import de.teamlapen.vampirism.core.*;
+import de.teamlapen.vampirism.core.ModEventHandler;
+import de.teamlapen.vampirism.core.VampirismCommand;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -24,7 +26,7 @@ import java.io.File;
 /**
  * Main class for Vampirism
  */
-@Mod(modid = REFERENCE.MODID,name=REFERENCE.NAME,version = REFERENCE.VERSION,acceptedMinecraftVersions = "[1.8]",dependencies = "required-after:Forge@["+REFERENCE.FORGE_VERSION_MIN+",)",guiFactory = "de.teamlapen.vampirism.client.core.ModGuiFactory")
+@Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION, acceptedMinecraftVersions = "[1.8.9]", dependencies = "required-after:Forge@[" + REFERENCE.FORGE_VERSION_MIN + ",)", guiFactory = "de.teamlapen.vampirism.client.core.ModGuiFactory")
 public class VampirismMod {
 
     public final static Logger log = new Logger(REFERENCE.MODID, "de.teamlapen.vampirism");
@@ -41,24 +43,13 @@ public class VampirismMod {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event){
         log.t("Test balance value %s",Balance.leveling.TEST_VALUE);
-        ModPotions.init(event);
-        ModBlocks.init(event);
-        ModItems.init(event);
-        ModBiomes.init(event);
-        ModEntities.init(event);
-        proxy.init(event);
+        proxy.onInitStep(IInitListener.Step.INIT, event);
 
-        Object mod_event_handler=new ModEventHandler();
-        MinecraftForge.EVENT_BUS.register(mod_event_handler);
-        FMLCommonHandler.instance().bus().register(mod_event_handler);
+        MinecraftForge.EVENT_BUS.register(new ModEventHandler());
 
-        Object mod_player_event_handler=new ModPlayerEventHandler();
-        MinecraftForge.EVENT_BUS.register(mod_player_event_handler);
-        FMLCommonHandler.instance().bus().register(mod_player_event_handler);
+        MinecraftForge.EVENT_BUS.register(new ModPlayerEventHandler());
 
-        Object mod_entity_event_handler=new ModEntityEventHandler();
-        MinecraftForge.EVENT_BUS.register(mod_entity_event_handler);
-        FMLCommonHandler.instance().bus().register(mod_entity_event_handler);
+        MinecraftForge.EVENT_BUS.register(new ModEntityEventHandler());
     }
 
     @Mod.EventHandler
@@ -67,14 +58,7 @@ public class VampirismMod {
         Configs.init(new File(event.getModConfigurationDirectory(),REFERENCE.MODID),inDev);
         Balance.init(new File(event.getModConfigurationDirectory(),REFERENCE.MODID),inDev);
 
-        ModPotions.preInit(event);
-        ModBlocks.preInit(event);
-        ModItems.preInit(event);
-        ModBiomes.preInit(event);
-        ModEntities.preInit(event);
-        ModBlocks.preInitAfterItems();
-        ModItems.preInitAfterBlocks();
-        proxy.preInit(event);
+        proxy.onInitStep(IInitListener.Step.PRE_INIT, event);
 
         //Check VampirismApi
         if(REFERENCE.HIGHEST_HUNTER_LEVEL!= VampirismAPI.getHighestHunterLevel()||REFERENCE.HIGHEST_VAMPIRE_LEVEL!=VampirismAPI.getHighestVampireLevel()){
@@ -84,9 +68,8 @@ public class VampirismMod {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event){
-        ModPotions.postInit(event);
-        ModBiomes.postInit(event);
-        proxy.postInit(event);
+        proxy.onInitStep(IInitListener.Step.POST_INIT, event);
+        FractionRegistry.finish();
     }
 
     @Mod.EventHandler

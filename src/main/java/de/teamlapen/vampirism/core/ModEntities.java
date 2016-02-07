@@ -12,8 +12,8 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 import java.util.ArrayList;
@@ -45,11 +45,24 @@ public class ModEntities {
      */
     public static final List<String> spawnableEntityNames = new ArrayList<String>();
     private static int modEntityId = 0;
-    public static void preInit(FMLPreInitializationEvent event) {
+
+    public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
+        switch (step) {
+            case PRE_INIT:
+                preInit((FMLPreInitializationEvent) event);
+                break;
+            case INIT:
+                init((FMLInitializationEvent) event);
+                break;
+        }
 
     }
 
-    public static void init(FMLInitializationEvent event) {
+    private static void preInit(FMLPreInitializationEvent event) {
+
+    }
+
+    private static void init(FMLInitializationEvent event) {
         BiomeGenBase[] allBiomes=BiomeGenBase.getBiomeGenArray();
         allBiomes= Arrays.copyOf(allBiomes,allBiomes.length);
         allBiomes[9]=null;//Remove nether and end

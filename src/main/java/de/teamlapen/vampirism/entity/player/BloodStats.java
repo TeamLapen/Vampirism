@@ -29,7 +29,7 @@ public class BloodStats {
     private float modifier;
 
     public BloodStats() {
-        addExhaustionModifier("config", BalanceVampirePlayer.BLOOD_EXHAUSTION_MOD);
+        addExhaustionModifier("config", (float) BalanceVampirePlayer.BLOOD_EXHAUSTION_MOD);
     }
 
     /**
@@ -104,7 +104,7 @@ public class BloodStats {
                 this.bloodLevel = Math.max(bloodLevel - 1, 0);
             }
         }
-        if (player.worldObj.getGameRules().getGameRuleBooleanValue("naturalRegeneration") && this.bloodLevel >= 18 && player.shouldHeal()) {
+        if (player.worldObj.getGameRules().getBoolean("naturalRegeneration") && this.bloodLevel >= 18 && player.shouldHeal()) {
             ++this.bloodTimer;
 
             if (this.bloodTimer >= 80) {

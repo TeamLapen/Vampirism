@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.lib.util.HelperOneEightMapping;
 import de.teamlapen.vampirism.config.Balance;
 import net.minecraft.block.Block;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.BlockPos;
@@ -19,7 +19,7 @@ import net.minecraft.world.World;
 public class EntityGhost extends EntityVampirism {
     public EntityGhost(World p_i1595_1_) {
         super(p_i1595_1_);
-        HelperOneEightMapping.setCanSwim(this,true);
+        ((PathNavigateGround) getNavigator()).setCanSwim(true);
         this.setSize(0.8F,2.0F);
         this.tasks.addTask(0,new EntityAISwimming(this));
         this.tasks.addTask(2,new EntityAIAttackOnCollide(this, EntityPlayer.class,1.0D,true));
@@ -66,7 +66,7 @@ public class EntityGhost extends EntityVampirism {
     }
 
     @Override
-    public float func_180484_a(BlockPos pos) {
+    public float getBlockPathWeight(BlockPos pos) {
         return 0.1F;
     }
 

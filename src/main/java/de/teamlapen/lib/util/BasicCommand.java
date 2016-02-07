@@ -52,38 +52,34 @@ public abstract class BasicCommand extends CommandBase {
         };
     }
 
-    public interface SubCommand {
-        boolean canCommandSenderUseCommand(ICommandSender var1);
+    public static void sendMessage(ICommandSender target, String message) {
+        String[] lines = message.split("\\n");
+        for (String line : lines) {
+            target.addChatMessage(new ChatComponentText(line));
+        }
 
-        String getCommandName();
-
-        void processCommand(ICommandSender var1, String[] var2);
-
-        String getCommandUsage(ICommandSender var1);
-
-        List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos);
     }
 
     @Override
     public String getCommandUsage(ICommandSender p_71518_1_) {
-        return String.format("/%s <subcommand> <params> | Use /%s help to get all available subcommands", this.getName(), this.getName());
+        return String.format("/%s <subcommand> <params> | Use /%s help to get all available subcommands", this.getCommandName(), this.getCommandName());
     }
 
     @Override
-    public void execute(ICommandSender sender, String[] param) throws CommandException {
+    public void processCommand(ICommandSender sender, String[] param) throws CommandException {
         if (param == null || param.length == 0) {
             sendMessage(sender, getCommandUsage(sender));
             return;
         }
         if ("help".equals(param[0])) {
             if (param.length > 1) {
-                sendMessage(sender, String.format("/%s %s", this.getName(), getSub(param[1]).getCommandUsage(sender)));
+                sendMessage(sender, String.format("/%s %s", this.getCommandName(), getSub(param[1]).getCommandUsage(sender)));
             } else {
                 String t = "Available subcommands: ";
                 for (SubCommand s : subCommands) {
                     t += s.getCommandName() + ", ";
                 }
-                t += "Use /" + getName() + " help <subcommand> to get more informations";
+                t += "Use /" + getCommandName() + " help <subcommand> to get more informations";
                 sendMessage(sender, t);
             }
             return;
@@ -100,7 +96,7 @@ public abstract class BasicCommand extends CommandBase {
 
 
     @Override
-    public boolean canCommandSenderUse(ICommandSender sender) {
+    public boolean canCommandSenderUseCommand(ICommandSender sender) {
         return true;
     }
 
@@ -115,7 +111,7 @@ public abstract class BasicCommand extends CommandBase {
     }
 
     @Override
-    public List getAliases() {
+    public List getCommandAliases() {
         return aliases;
     }
 
@@ -126,17 +122,8 @@ public abstract class BasicCommand extends CommandBase {
     }
 
     @Override
-    public int compareTo(Object o) {
+    public int compareTo(ICommand o) {
         return 0;
-    }
-
-
-    public static void sendMessage(ICommandSender target, String message) {
-        String[] lines = message.split("\\n");
-        for (String line : lines) {
-            target.addChatMessage(new ChatComponentText(line));
-        }
-
     }
 
     /**
@@ -162,6 +149,18 @@ public abstract class BasicCommand extends CommandBase {
             names[i]=subCommands.get(i).getCommandName();
         }
         return names;
+    }
+
+    public interface SubCommand {
+        boolean canCommandSenderUseCommand(ICommandSender var1);
+
+        String getCommandName();
+
+        void processCommand(ICommandSender var1, String[] var2);
+
+        String getCommandUsage(ICommandSender var1);
+
+        List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos);
     }
 
  }

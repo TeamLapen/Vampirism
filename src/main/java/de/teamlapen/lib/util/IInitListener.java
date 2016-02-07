@@ -1,14 +1,14 @@
 package de.teamlapen.lib.util;
 
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLStateEvent;
 
 /**
  * Simple interface which provides preInit,init and postInit.
  */
 public interface IInitListener {
-    void  preInit(FMLPreInitializationEvent event);
-    void init(FMLInitializationEvent event);
-    void postInit(FMLPostInitializationEvent event);
+    void onInitStep(Step step, FMLStateEvent event);
+
+    enum Step {
+        PRE_INIT, INIT, POST_INIT
+    }
 }

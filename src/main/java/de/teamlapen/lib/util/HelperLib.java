@@ -9,13 +9,12 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
 /**
- * Created by Max on 26.11.2015.
+ * General Utility Class
  */
 public class HelperLib {
     public static String entityToString(Entity e) {
@@ -61,7 +60,7 @@ public class HelperLib {
     public static BlockPos getRandomPosInBox(World w, AxisAlignedBB box) {
         int x = (int) box.minX + w.rand.nextInt((int) (box.maxX - box.minX) + 1);
         int z = (int) box.minZ + w.rand.nextInt((int) (box.maxZ - box.minZ) + 1);
-        int y = w.getHorizon(new BlockPos(x,0, z)).getY() + 1;
+        int y = w.getHeight(new BlockPos(x, 0, z)).getY() + 1;
         if (y < box.minX || y > box.maxY) {
             y = (int) box.minY + w.rand.nextInt((int) (box.maxY - box.minY) + 1);
         }
@@ -83,7 +82,7 @@ public class HelperLib {
             p.worldObj.spawnEntityInWorld(e);
             return e;
         } else {
-            int y=p.worldObj.getHorizon(new BlockPos(x,0,z)).getY();
+            int y = p.worldObj.getHeight(new BlockPos(x, 0, z)).getY();
             e.setPosition(x, y, z);
             if (e.getCanSpawnHere()) {
                 p.worldObj.spawnEntityInWorld(e);
