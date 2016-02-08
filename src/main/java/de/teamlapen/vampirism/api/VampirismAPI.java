@@ -1,14 +1,13 @@
 package de.teamlapen.vampirism.api;
 
-import de.teamlapen.vampirism.api.entity.player.IFractionPlayer;
+import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IHunterPlayer;
+import de.teamlapen.vampirism.api.entity.player.IPlayerEventListener;
 import de.teamlapen.vampirism.api.entity.player.IVampirePlayer;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.FMLLog;
 
-import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -21,7 +20,21 @@ public class VampirismAPI {
     private final static HashMap<Integer,Boolean> sundamageDims=new HashMap<Integer, Boolean>();
     private final static HashMap<Integer,Boolean> sundamageConfiguredDims =new HashMap<Integer, Boolean>();
     private final static Set<Integer> noSundamageBiomes=new CopyOnWriteArraySet<Integer>();
+    /**
+     * Vampire Player Faction
+     * Filled during pre-init.
+     */
+    public static PlayableFaction<IVampirePlayer> VAMPIRE_FACTION;
+    /**
+     * Hunter Player Faction
+     * Filled during pre-init.
+     */
+    public static PlayableFaction<IHunterPlayer> HUNTER_FACTION;
     private static boolean defaultSundamage=false;
+    /**
+     * Stores {@link net.minecraftforge.common.IExtendedEntityProperties} keys which should receive PlayerEvents
+     */
+    private static List<String> eventListenerProps = new ArrayList<>();
 
     static {
         sundamageDims.put(0,true);
@@ -38,16 +51,41 @@ public class VampirismAPI {
         defaultSundamage=val;
     }
 
-    public static void addNoSundamageBiome(int id){
+    /**
+     * Key of a {@link net.minecraftforge.common.IExtendedEntityProperties} which implements {@link IPlayerEventListener} and should receive the events.
+     * Has to be called before init.
+     *
+     * @param id
+     */
+    public static void registerPlayerEventReceivingProperty(String id) {
+        if (eventListenerProps == null) {
+            FMLLog.severe("[VampirismApi] You have to register PlayerEventReceiver BEFORE init. (" + id + ")");
+        } else {
+            eventListenerProps.add(id);
+        }
+    }
+
+    /**
+     * Create PlayerEventReceivingProperty Array
+     * FOR INTERNAL USAGE ONLY
+     */
+    public static String[] buildPlayerEventReceiver() {
+        String[] r = eventListenerProps.toArray(new String[eventListenerProps.size()]);
+        eventListenerProps = null;
+        return r;
+    }
+
+    public static void addNoSundamageBiome(int id) {
         noSundamageBiomes.add(id);
     }
+
     /**
      * Specifies if vampires should get sundamage in this dimension
      * @param dimensionId
      * @param sundamage
      */
-    public static void specifySundamageForDim(int dimensionId,boolean sundamage){
-        sundamageDims.put(dimensionId,sundamage);
+    public static void specifySundamageForDim(int dimensionId, boolean sundamage) {
+        sundamageDims.put(dimensionId, sundamage);
     }
 
     /**
@@ -55,7 +93,7 @@ public class VampirismAPI {
      * @param id
      * @return
      */
-    public static boolean getSundamageInBiome(int id){
+    public static boolean getSundamageInBiome(int id) {
         return !noSundamageBiomes.contains(id);
     }
 
@@ -63,17 +101,18 @@ public class VampirismAPI {
      * Resets the configured sundamage dims. E.G. on configuration reload
      * FOR INTERNAL USAGE ONLY
      */
-    public static void resetConfiguredSundamgeDims(){
+    public static void resetConfiguredSundamgeDims() {
         sundamageConfiguredDims.clear();
     }
+
     /**
      * Adds settings from Vampirism's config file.
      * FOR INTERNAL USAGE ONLY
      * @param dimensionId
      * @param sundamage
      */
-    public static void specifyConfiguredSundamageForDim(int dimensionId, boolean sundamage){
-        sundamageConfiguredDims.put(dimensionId,sundamage);
+    public static void specifyConfiguredSundamageForDim(int dimensionId, boolean sundamage) {
+        sundamageConfiguredDims.put(dimensionId, sundamage);
     }
 
     /**
@@ -81,76 +120,12 @@ public class VampirismAPI {
      * @param dim
      * @return
      */
-    public static boolean getSundamageInDim(int dim){
-        Boolean r= sundamageConfiguredDims.get(dim);
-        if(r==null){
-            r= sundamageDims.get(dim);
+    public static boolean getSundamageInDim(int dim) {
+        Boolean r = sundamageConfiguredDims.get(dim);
+        if (r == null) {
+            r = sundamageDims.get(dim);
         }
-        return r==null?defaultSundamage:r;
+        return r == null ? defaultSundamage:r;
     }
 
-    /**
-     * Extended entity properties key for vampire player
-     */
-    public final static String VP_EXT_PROP_NAME="VampirePlayer";
-
-    /**
-     * Extended entity properties key for hunter player
-     */
-    public final static String HP_EXT_PROP_NAME="HunterPlayer";
-
-    /**
-     * Don't call before the construction event of the player entity is finished
-     * @param player
-     * @return
-     */
-    public static IVampirePlayer getVampirePlayer(EntityPlayer player){
-        return (IVampirePlayer) player.getExtendedProperties(VP_EXT_PROP_NAME);
-    }
-
-    /**
-     * Don't call before the construction event of the player entity is finished
-     * @param player
-     * @return
-     */
-    public static IHunterPlayer getHunterPlayer(EntityPlayer player){
-        return (IHunterPlayer) player.getExtendedProperties(HP_EXT_PROP_NAME);
-    }
-
-    public static List<IFractionPlayer> getAllPlayerProperties(EntityPlayer player){
-        List<IFractionPlayer> l=new LinkedList<IFractionPlayer>();
-        l.add(getHunterPlayer(player));
-        l.add(getVampirePlayer(player));
-        return l;
-    }
-
-    /**
-     * Returns the highest reachable vampire level.
-     * @return
-     */
-    public static int getHighestVampireLevel(){
-        try {
-            Class reference=Class.forName("de.teamlapen.vampirism.util.REFERENCE");
-            Field level=reference.getField("HIGHEST_VAMPIRE_LEVEL");
-            return level.getInt(null);
-        } catch (Exception e) {
-            FMLLog.severe("Failed to retrieve highest vampire level. This should be fixed.");
-        }
-        return 1;
-    }
-
-    /**
-     * Returns the highest reachable hunter level.
-     * @return
-     */
-    public static int getHighestHunterLevel(){
-        try {
-            Class reference=Class.forName("de.teamlapen.vampirism.util.REFERENCE");
-            Field level=reference.getField("HIGHEST_HUNTER_LEVEL");
-            return level.getInt(null);
-        } catch (Exception e) {
-            FMLLog.severe("Failed to retrieve highest hunter level. This should be fixed.");
-        }
-        return 1;
-    }
 }

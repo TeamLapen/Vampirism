@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.player;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IVampirePlayer;
 import de.teamlapen.vampirism.config.BalanceVampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
@@ -15,12 +16,12 @@ import net.minecraft.util.DamageSource;
  */
 public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
 
-
     private final BloodStats bloodStats = new BloodStats();//TODO sync blood
     private boolean sundamage_cache=false;
     public VampirePlayer(EntityPlayer player) {
         super(player);
     }
+
 
     /**
      * Don't call before the construction event of the player entity is finished
@@ -29,11 +30,11 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
      * @return
      */
     public static VampirePlayer get(EntityPlayer player) {
-        return (VampirePlayer) VampirismAPI.getVampirePlayer(player);
+        return (VampirePlayer) VampirismAPI.VAMPIRE_FACTION.getProp(player);
     }
 
     public static void register(EntityPlayer player) {
-        player.registerExtendedProperties(VampirismAPI.VP_EXT_PROP_NAME, new VampirePlayer(player));
+        player.registerExtendedProperties(VampirismAPI.VAMPIRE_FACTION.prop, new VampirePlayer(player));
     }
 
     @Override
@@ -153,6 +154,11 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
     }
 
     @Override
+    public void onPlayerClone(EntityPlayer original) {
+        copyFrom(original);
+    }
+
+    @Override
     public void saveNBTData(NBTTagCompound nbt) {
         super.saveNBTData(nbt);
         bloodStats.writeNBT(nbt);
@@ -162,5 +168,10 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
     public void loadNBTData(NBTTagCompound nbt) {
         super.loadNBTData(nbt);
         bloodStats.readNBT(nbt);
+    }
+
+    @Override
+    public PlayableFaction<IVampirePlayer> getFaction() {
+        return VampirismAPI.VAMPIRE_FACTION;
     }
 }

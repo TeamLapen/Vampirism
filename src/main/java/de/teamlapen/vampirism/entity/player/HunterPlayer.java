@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.entity.player;
 
-import de.teamlapen.lib.network.ISyncable;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IHunterPlayer;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.BalanceHunterPlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -17,6 +17,9 @@ import net.minecraft.world.World;
  */
 public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
 
+    static {
+        VampirismAPI.registerPlayerEventReceivingProperty(VampirismAPI.HUNTER_FACTION.prop);
+    }
 
     public HunterPlayer(EntityPlayer player) {
         super(player);
@@ -28,10 +31,10 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
      * @return
      */
     public static HunterPlayer get(EntityPlayer player){
-        return (HunterPlayer) VampirismAPI.getHunterPlayer(player);
+        return (HunterPlayer) VampirismAPI.HUNTER_FACTION.getProp(player);
     }
     public static void register(EntityPlayer player){
-        player.registerExtendedProperties(VampirismAPI.HP_EXT_PROP_NAME,new HunterPlayer(player));
+        player.registerExtendedProperties(VampirismAPI.HUNTER_FACTION.prop, new HunterPlayer(player));
     }
 
     @Override
@@ -60,6 +63,12 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
     }
 
     @Override
+    public PlayableFaction<IHunterPlayer> getFaction() {
+        return VampirismAPI.HUNTER_FACTION;
+    }
+
+
+    @Override
     protected int getMaxLevel() {
         return REFERENCE.HIGHEST_HUNTER_LEVEL;
     }
@@ -72,7 +81,7 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
 
     @Override
     protected void onLevelChanged() {
-        PlayerModifiers.applyModifier(player, SharedMonsterAttributes.attackDamage, "Hunter", getLevel(), Balance.hp.STRENGTH_LCAP, Balance.hp.STRENGTH_MAX_MOD, Balance.hp.STRENGTH_TYPE);
+        PlayerModifiers.applyModifier(player, SharedMonsterAttributes.attackDamage, "Hunter", getLevel(), BalanceHunterPlayer.STRENGTH_LCAP, BalanceHunterPlayer.STRENGTH_MAX_MOD, BalanceHunterPlayer.STRENGTH_TYPE);
         super.onLevelChanged();
     }
 
@@ -124,5 +133,10 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
     @Override
     public void onPlayerLoggedOut() {
 
+    }
+
+    @Override
+    public void onPlayerClone(EntityPlayer original) {
+        copyFrom(original);
     }
 }

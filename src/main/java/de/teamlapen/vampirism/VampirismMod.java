@@ -3,12 +3,14 @@ package de.teamlapen.vampirism;
 import de.teamlapen.lib.util.IInitListener;
 import de.teamlapen.lib.util.Logger;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.player.FractionRegistry;
+import de.teamlapen.vampirism.api.entity.player.FactionRegistry;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModEventHandler;
 import de.teamlapen.vampirism.core.VampirismCommand;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
+import de.teamlapen.vampirism.entity.factions.HunterFaction;
+import de.teamlapen.vampirism.entity.factions.VampireFaction;
 import de.teamlapen.vampirism.entity.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -58,18 +60,17 @@ public class VampirismMod {
         Configs.init(new File(event.getModConfigurationDirectory(),REFERENCE.MODID),inDev);
         Balance.init(new File(event.getModConfigurationDirectory(),REFERENCE.MODID),inDev);
 
+        setupAPI();
+
         proxy.onInitStep(IInitListener.Step.PRE_INIT, event);
 
-        //Check VampirismApi
-        if(REFERENCE.HIGHEST_HUNTER_LEVEL!= VampirismAPI.getHighestHunterLevel()||REFERENCE.HIGHEST_VAMPIRE_LEVEL!=VampirismAPI.getHighestVampireLevel()){
-            log.e("Vampirism","There seems to be a problem with Vampirism's API");
-        }
+
     }
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event){
         proxy.onInitStep(IInitListener.Step.POST_INIT, event);
-        FractionRegistry.finish();
+        FactionRegistry.finish();
     }
 
     @Mod.EventHandler
@@ -82,6 +83,18 @@ public class VampirismMod {
             inDev = true;
             log.inDev = true;
         }
+    }
+
+    /**
+     * Fills some API fields. Should be called during pre-init, but after configs are loaded
+     */
+    private void setupAPI() {
+        VampirismAPI.VAMPIRE_FACTION = VampireFaction.instance();
+        VampirismAPI.HUNTER_FACTION = HunterFaction.instance();
+        FactionRegistry.addFaction(VampirismAPI.VAMPIRE_FACTION);
+        FactionRegistry.addFaction(VampirismAPI.HUNTER_FACTION);
+        VampirismAPI.registerPlayerEventReceivingProperty(VampireFaction.instance().prop);
+        VampirismAPI.registerPlayerEventReceivingProperty(HunterFaction.instance().prop);
     }
 
 }

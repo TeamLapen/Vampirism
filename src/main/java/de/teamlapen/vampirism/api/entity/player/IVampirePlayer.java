@@ -2,11 +2,12 @@ package de.teamlapen.vampirism.api.entity.player;
 
 import de.teamlapen.vampirism.api.entity.IVampire;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
+import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * Interface for the player vampire data
  */
-public interface IVampirePlayer extends IVampire,IFractionPlayer,IMinionLord {
+public interface IVampirePlayer extends IVampire, IFactionPlayer, IMinionLord {
     int getBloodLevel();
 
 
@@ -33,4 +34,12 @@ public interface IVampirePlayer extends IVampire,IFractionPlayer,IMinionLord {
      * @param id
      */
     void removeExhaustionModifier(String id);
+
+
+    /**
+     * Copys all values from another player's IFactionPlayer
+     *
+     * @param old
+     */
+    void copyFrom(EntityPlayer old);
 }

@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.entity.player;
 
 import de.teamlapen.lib.network.ISyncable;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
-import de.teamlapen.vampirism.api.entity.player.FractionRegistry;
-import de.teamlapen.vampirism.api.entity.player.IFractionPlayer;
+import de.teamlapen.vampirism.api.entity.player.FactionRegistry;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.IPlayerEventListener;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -18,7 +18,8 @@ import java.util.UUID;
  * Basic class for all of Vampirism's players.
  * Implements basic methods for level or minion handling
  */
-public abstract class VampirismPlayer implements IFractionPlayer, ISyncable.ISyncableExtendedProperties, IPlayerEventListener,IMinionLord {
+public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISyncableExtendedProperties, IPlayerEventListener, IMinionLord {
+
 
     protected final EntityPlayer player;
 
@@ -35,21 +36,12 @@ public abstract class VampirismPlayer implements IFractionPlayer, ISyncable.ISyn
     }
 
     @Override
-    public void levelUp() {
-        setLevel(getLevel()+1);
-    }
-
-    @Override
-    public EntityPlayer getRepresentingPlayer() {
-        return player;
-    }
-
-    @Override
     public void setLevel(int level) {
         if(level>=0&&level<=getMaxLevel()){
             if(level>0){
-                IFractionPlayer active=FractionRegistry.getActiveFraction(player);
+                IFactionPlayer active = FactionRegistry.getActiveFactionPlayer(player);
                 if(active!=null&&active!=this){
+                    //Should be detected before setLevel is even called
                     player.addChatMessage(new ChatComponentTranslation("text.vampirism.player.multiple_factions"));
                     return;
                 }
@@ -57,6 +49,16 @@ public abstract class VampirismPlayer implements IFractionPlayer, ISyncable.ISyn
             this.level=level;
             onLevelChanged();
         }
+    }
+
+    @Override
+    public void levelUp() {
+        setLevel(getLevel() + 1);
+    }
+
+    @Override
+    public EntityPlayer getRepresentingPlayer() {
+        return player;
     }
 
     /**
@@ -146,7 +148,6 @@ public abstract class VampirismPlayer implements IFractionPlayer, ISyncable.ISyn
     }
 
 
-    @Override
     public void copyFrom(EntityPlayer old) {
         VampirismPlayer p=copyFromPlayer(old);
         this.level=p.getLevel();
@@ -158,4 +159,6 @@ public abstract class VampirismPlayer implements IFractionPlayer, ISyncable.ISyn
      * @return
      */
     protected abstract VampirismPlayer copyFromPlayer(EntityPlayer old);
+
+
 }

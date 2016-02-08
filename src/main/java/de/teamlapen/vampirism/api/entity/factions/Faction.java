@@ -1,0 +1,28 @@
+package de.teamlapen.vampirism.api.entity.factions;
+
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+/**
+ * Represents a entity faction (e.g. Vampires)
+ */
+public abstract class Faction {
+
+    public final String name;
+    /**
+     * Stores the interface each entity (or for playable factions the IExtendedEntityProperties) implements
+     */
+    protected final Class<? extends IFactionEntity> entityInterface;
+
+    /**
+     * @param name  Name
+     * @param iface @param iface Interface each entity (or for playable factions the IExtendedEntityProperties) implements
+     */
+    protected Faction(String name, Class<? extends IFactionEntity> iface) {
+        this.name = name;
+        this.entityInterface = iface;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public abstract int getColor();
+}
