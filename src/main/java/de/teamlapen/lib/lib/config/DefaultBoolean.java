@@ -1,4 +1,4 @@
-package de.teamlapen.lib.config;
+package de.teamlapen.lib.lib.config;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

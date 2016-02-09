@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.lib.util.IInitListener;
+import de.teamlapen.lib.lib.util.IInitListener;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 

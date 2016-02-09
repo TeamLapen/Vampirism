@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.lib.util.BasicCommand;
+import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.config.Balance;
 import net.minecraft.command.ICommandSender;

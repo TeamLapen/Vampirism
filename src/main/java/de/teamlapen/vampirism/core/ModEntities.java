@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import com.google.common.base.Predicates;
 import com.google.common.collect.Iterators;
-import de.teamlapen.lib.util.IInitListener;
+import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityGhost;

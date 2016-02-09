@@ -1,6 +1,6 @@
-package de.teamlapen.lib.util;
+package de.teamlapen.lib.lib.util;
 
-import de.teamlapen.lib.client.gui.GuiPieMenu;
+import de.teamlapen.lib.lib.gui.client.GuiPieMenu;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

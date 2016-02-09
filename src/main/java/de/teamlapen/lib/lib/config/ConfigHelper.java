@@ -1,4 +1,4 @@
-package de.teamlapen.lib.config;
+package de.teamlapen.lib.lib.config;
 
 import de.teamlapen.lib.VampLib;
 import net.minecraftforge.common.config.Configuration;

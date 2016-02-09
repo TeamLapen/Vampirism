@@ -1,8 +1,9 @@
-package de.teamlapen.lib.client.gui;
+package de.teamlapen.lib.lib.gui.client;
 
 
+import de.teamlapen.lib.LIBREFERENCE;
 import de.teamlapen.lib.VampLib;
-import de.teamlapen.lib.util.IPieElement;
+import de.teamlapen.lib.lib.util.IPieElement;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
@@ -24,17 +25,19 @@ import java.util.ArrayList;
  *
  */
 public abstract class GuiPieMenu extends GuiScreen {
-    private final static ResourceLocation backgroundTex = new ResourceLocation(VampLib.MODID + ":textures/gui/pie-menu-bg.png");
-    private final static ResourceLocation centerTex = new ResourceLocation(VampLib.MODID + ":textures/gui/pie-menu-center.png");
+    private final static ResourceLocation backgroundTex = new ResourceLocation(LIBREFERENCE.MODID + ":textures/gui/pie-menu-bg.png");
+    private final static ResourceLocation centerTex = new ResourceLocation(LIBREFERENCE.MODID + ":textures/gui/pie-menu-center.png");
     private static final ResourceLocation WIDGETS = new ResourceLocation("textures/gui/widgets.png");
     protected final ArrayList<IPieElement> elements;
-    private int selectedElement = -1;
-    private int elementCount;
-
     /**
      * Icon width/height
      */
     protected final int IS = 16;
+    protected final float bgred;
+    protected final float bgblue;
+    protected final float bggreen;
+    protected final float bgalpha;
+    protected final String name;
     /**
      * Size of the background image
      */
@@ -47,16 +50,12 @@ public abstract class GuiPieMenu extends GuiScreen {
      * Size of the images for the center
      */
     private final int CS = 100;
+    private int selectedElement = -1;
+    private int elementCount;
     /**
      * Angle between each element in rad
      */
     private double radDiff;
-
-    protected final float bgred;
-    protected final float bgblue;
-    protected final float bggreen;
-    protected final float bgalpha;
-    protected final String name;
 
     public GuiPieMenu(long backgroundColor, String name) {
         this.allowUserInput = true;

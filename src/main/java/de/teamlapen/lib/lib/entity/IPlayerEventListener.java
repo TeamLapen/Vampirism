@@ -1,11 +1,12 @@
-package de.teamlapen.vampirism.api.entity.player;
+package de.teamlapen.lib.lib.entity;
+
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 
 /**
  * Provides serveral event related methods, which should be called by a dedicated EventHandler.
- * Vampirism automatically does this for all ExtendedPlayerProperties which implement this and are registered as Faction in {@link FactionRegistry}
+ * You can register implementing {@link net.minecraftforge.common.IExtendedEntityProperties} in {@link de.teamlapen.lib.HelperRegistry} to let the library call this.
  */
 public interface IPlayerEventListener {
 

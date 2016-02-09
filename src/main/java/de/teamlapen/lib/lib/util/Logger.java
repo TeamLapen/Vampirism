@@ -1,8 +1,8 @@
-package de.teamlapen.lib.util;
+package de.teamlapen.lib.lib.util;
 
 
- import org.apache.logging.log4j.Level;
- import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * Logging class, which provides different methods for different log levels and always adds a tag which states to what the log is related
@@ -16,17 +16,16 @@ public class Logger {
     private final Throwable stackInfo = new Throwable();
     private final String packagename;
     private final String modid;
+    /**
+     * Used to convert DEBUG levels to INFO level in dev, since it seems to be impossible to change the view level
+     */
+    public boolean inDev = false;
 
     public Logger(String modid,String packagename) {
        logger = LogManager.getLogger(modid);
         this.packagename=packagename;
         this.modid=modid;
     }
-
-    /**
-     * Used to convert DEBUG levels to INFO level in dev, since it seems to be impossible to change the view level
-     */
-    public boolean inDev = false;
 
     public void d(String tag, String format, Object... data) {
         if (inDev) {

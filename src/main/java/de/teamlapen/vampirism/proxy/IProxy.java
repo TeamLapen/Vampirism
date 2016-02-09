@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.proxy;
 
-import de.teamlapen.lib.util.IInitListener;
+import de.teamlapen.lib.lib.util.IInitListener;
 
 /**
  * Proxy interface

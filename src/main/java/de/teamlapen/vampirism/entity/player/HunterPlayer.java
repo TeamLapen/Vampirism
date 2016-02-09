@@ -17,9 +17,6 @@ import net.minecraft.world.World;
  */
 public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
 
-    static {
-        VampirismAPI.registerPlayerEventReceivingProperty(VampirismAPI.HUNTER_FACTION.prop);
-    }
 
     public HunterPlayer(EntityPlayer player) {
         super(player);
@@ -40,6 +37,11 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
     @Override
     public int getTheEntityID() {
         return player.getEntityId();
+    }
+
+    @Override
+    public String getPropertyKey() {
+        return VampirismAPI.HUNTER_FACTION.prop;
     }
 
     @Override

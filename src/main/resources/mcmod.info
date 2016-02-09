@@ -17,7 +17,26 @@
   "screenshots": [
   ],
   "parent":"",
-  "dependencies": [
+  "requiredMods":[ "teamlapen-lib"
+    ],
+  "dependencies": [ "teamlapen-lib"
+    ],
+   "useDependencyInformation":true
+},
+{
+  "modid": "teamlapen-lib",
+  "name": "TeamLapen Library",
+  "description": "Library currently only used by Vampirism and therby included in it",
+  "version": "${m_version}",
+  "mcversion": "${mc_version}",
+  "url": "http://teamlapen.de/projects/vampirism",
+  "authors": [
+    "maxanier"
+
+  ],
+  "credits": "maxanier",
+  "screenshots": [
   ]
 }
+
 ]

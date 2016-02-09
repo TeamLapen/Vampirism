@@ -11,4 +11,5 @@ public class ServerProxy extends CommonProxy {
     public void onInitStep(Step step, FMLStateEvent event) {
 
     }
+
 }

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.core;
 
-import de.teamlapen.lib.util.IInitListener;
+import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.client.render.RenderGhost;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityGhost;

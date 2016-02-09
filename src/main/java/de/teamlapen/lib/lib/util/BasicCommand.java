@@ -1,4 +1,4 @@
-package de.teamlapen.lib.util;
+package de.teamlapen.lib.lib.util;
 
 
 import net.minecraft.command.CommandBase;

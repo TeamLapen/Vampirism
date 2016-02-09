@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism;
 
-import de.teamlapen.lib.util.IInitListener;
-import de.teamlapen.lib.util.Logger;
+import de.teamlapen.lib.HelperRegistry;
+import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
+import de.teamlapen.lib.lib.util.IInitListener;
+import de.teamlapen.lib.lib.util.Logger;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.FactionRegistry;
 import de.teamlapen.vampirism.config.Balance;
@@ -11,7 +13,10 @@ import de.teamlapen.vampirism.core.VampirismCommand;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.factions.HunterFaction;
 import de.teamlapen.vampirism.entity.factions.VampireFaction;
+import de.teamlapen.vampirism.entity.player.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.ModPlayerEventHandler;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.launchwrapper.Launch;
@@ -28,7 +33,7 @@ import java.io.File;
 /**
  * Main class for Vampirism
  */
-@Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION, acceptedMinecraftVersions = "[1.8.9]", dependencies = "required-after:Forge@[" + REFERENCE.FORGE_VERSION_MIN + ",)", guiFactory = "de.teamlapen.vampirism.client.core.ModGuiFactory")
+@Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION, acceptedMinecraftVersions = "[1.8.9]", dependencies = "required-after:Forge@[" + REFERENCE.FORGE_VERSION_MIN + ",);required-after:teamlapen-lib", guiFactory = "de.teamlapen.vampirism.client.core.ModGuiFactory")
 public class VampirismMod {
 
     public final static Logger log = new Logger(REFERENCE.MODID, "de.teamlapen.vampirism");
@@ -37,6 +42,7 @@ public class VampirismMod {
     @SidedProxy(clientSide = "de.teamlapen.vampirism.proxy.ClientProxy", serverSide = "de.teamlapen.vampirism.proxy.ServerProxy")
     public static IProxy proxy;
     public static boolean inDev=false;
+    public static AbstractPacketDispatcher dispatcher = new ModPacketDispatcher();
 
     public static boolean isRealism() {
         return Configs.realism_mode;
@@ -52,6 +58,11 @@ public class VampirismMod {
         MinecraftForge.EVENT_BUS.register(new ModPlayerEventHandler());
 
         MinecraftForge.EVENT_BUS.register(new ModEntityEventHandler());
+
+        HelperRegistry.registerPlayerEventReceivingProperty(VampireFaction.instance().prop);
+        HelperRegistry.registerPlayerEventReceivingProperty(HunterFaction.instance().prop);
+        HelperRegistry.registerSyncablePlayerProperty(VampireFaction.instance().prop, VampirePlayer.class);
+        HelperRegistry.registerSyncablePlayerProperty(HunterFaction.instance().prop, HunterPlayer.class);
     }
 
     @Mod.EventHandler
@@ -61,7 +72,7 @@ public class VampirismMod {
         Balance.init(new File(event.getModConfigurationDirectory(),REFERENCE.MODID),inDev);
 
         setupAPI();
-
+        dispatcher.registerPackets();
         proxy.onInitStep(IInitListener.Step.PRE_INIT, event);
 
 
@@ -93,8 +104,6 @@ public class VampirismMod {
         VampirismAPI.HUNTER_FACTION = HunterFaction.instance();
         FactionRegistry.addFaction(VampirismAPI.VAMPIRE_FACTION);
         FactionRegistry.addFaction(VampirismAPI.HUNTER_FACTION);
-        VampirismAPI.registerPlayerEventReceivingProperty(VampireFaction.instance().prop);
-        VampirismAPI.registerPlayerEventReceivingProperty(HunterFaction.instance().prop);
     }
 
 }

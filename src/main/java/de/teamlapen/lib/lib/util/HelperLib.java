@@ -1,4 +1,4 @@
-package de.teamlapen.lib.util;
+package de.teamlapen.lib.lib.util;
 
 import com.google.common.base.Predicate;
 import net.minecraft.block.Block;

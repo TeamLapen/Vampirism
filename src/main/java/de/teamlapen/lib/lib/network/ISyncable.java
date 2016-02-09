@@ -1,4 +1,4 @@
-package de.teamlapen.lib.network;
+package de.teamlapen.lib.lib.network;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.IExtendedEntityProperties;
@@ -22,18 +22,25 @@ public interface ISyncable  {
      */
     void writeFullUpdateToNBT(NBTTagCompound nbt);
 
+    /**
+     * Send package
+     *
+     * @param all For IExtendedProperties the package will only be send to the respective player if this is false
+     */
+    void sync(boolean all);
+
     interface ISyncableExtendedProperties extends IExtendedEntityProperties,ISyncable{
         /**
          * Returns the entity id of the representing entity
          *
          * @return
          */
-        public int getTheEntityID();
+        int getTheEntityID();
 
         /**
-         * Sends a sync packet to the client
-         * @param all Whether to send it to all players around or only to the corresponding player
+         * Return the key which can be used to retrieve this property from the entity using {@link net.minecraft.entity.Entity#getExtendedProperties(String)}
+         * @return
          */
-        void sync(boolean all);
+        String getPropertyKey();
     }
 }

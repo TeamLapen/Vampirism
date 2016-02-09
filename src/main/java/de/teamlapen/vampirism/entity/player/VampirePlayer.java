@@ -174,4 +174,14 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
     public PlayableFaction<IVampirePlayer> getFaction() {
         return VampirismAPI.VAMPIRE_FACTION;
     }
+
+    @Override
+    public String getPropertyKey() {
+        return VampirismAPI.VAMPIRE_FACTION.prop;
+    }
+
+    @Override
+    public void sync(boolean all) {
+
+    }
 }

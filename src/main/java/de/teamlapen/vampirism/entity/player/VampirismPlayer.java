@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.entity.player;
 
-import de.teamlapen.lib.network.ISyncable;
+import de.teamlapen.lib.lib.entity.IPlayerEventListener;
+import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.api.entity.player.FactionRegistry;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import de.teamlapen.vampirism.api.entity.player.IPlayerEventListener;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -79,10 +79,6 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
         return player.getEntityId();
     }
 
-    @Override
-    public void sync(boolean all) {
-        //TODO
-    }
 
     @Override
     public long getLastComebackCall() {

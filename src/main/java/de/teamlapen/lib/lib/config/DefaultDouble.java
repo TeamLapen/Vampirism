@@ -1,4 +1,4 @@
-package de.teamlapen.lib.config;
+package de.teamlapen.lib.lib.config;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -7,16 +7,16 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ ElementType.FIELD })
-public @interface DefaultInt {
+public @interface DefaultDouble {
     String comment() default "";
 
-    int maxValue() default Integer.MAX_VALUE;
+    double maxValue() default Double.MAX_VALUE;
 
-    int minValue() default Integer.MIN_VALUE;
+    double minValue() default Double.MIN_VALUE;
 
     String name();
 
-    int value();
+    double value();
 
     /**
      * Whether this default value has an alternate or not.
@@ -26,5 +26,5 @@ public @interface DefaultInt {
      */
     boolean hasAlternate() default false;
 
-   int alternateValue() default 0;
+    double alternateValue() default 0D;
 }
