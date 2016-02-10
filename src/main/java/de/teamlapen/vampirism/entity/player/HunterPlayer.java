@@ -45,13 +45,13 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
     }
 
     @Override
-    public void saveNBTData(NBTTagCompound compound) {
-        super.saveNBTData(compound);
+    public void saveData(NBTTagCompound compound) {
+
     }
 
     @Override
-    public void loadNBTData(NBTTagCompound compound) {
-        super.loadNBTData(compound);
+    public void loadData(NBTTagCompound compound) {
+
     }
 
     @Override
@@ -80,17 +80,15 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
     @Override
     protected void onLevelChanged() {
         PlayerModifiers.applyModifier(player, SharedMonsterAttributes.attackDamage, "Hunter", getLevel(), BalanceHunterPlayer.STRENGTH_LCAP, BalanceHunterPlayer.STRENGTH_MAX_MOD, BalanceHunterPlayer.STRENGTH_TYPE);
-        super.onLevelChanged();
     }
 
     @Override
-    public void loadUpdateFromNBT(NBTTagCompound nbt) {
-        super.loadUpdateFromNBT(nbt);
+    protected void loadUpdate(NBTTagCompound nbt) {
+
     }
 
     @Override
-    public void writeFullUpdateToNBT(NBTTagCompound nbt) {
-        super.writeFullUpdateToNBT(nbt);
+    protected void writeFullUpdate(NBTTagCompound nbt) {
     }
 
     @Override

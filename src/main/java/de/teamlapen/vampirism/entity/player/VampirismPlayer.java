@@ -23,6 +23,7 @@ import java.util.UUID;
 public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISyncableExtendedProperties, IPlayerEventListener, IMinionLord {
 
 
+    private static final String TAG = "VampirismPlayer";
     protected final EntityPlayer player;
 
     private final String TAG_LEVEL="level";
@@ -39,7 +40,7 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
 
     @Override
     public void setLevel(int level) {
-        VampirismMod.log.t("Setting level %s (c %s,max %s)", level, getLevel(), getMaxLevel());
+        //VampirismMod.log.t("Setting level %s (c %s,max %s)", level, getLevel(), getMaxLevel());
         if (level >= 0 && level <= getMaxLevel() && getLevel() != level) {
             if(level>0){
                 IFactionPlayer active = FactionRegistry.getActiveFactionPlayer(player);
@@ -67,8 +68,9 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
 
     /**
      * Called when the level is changed
+     * Can be overridden in subclasses
      */
-    protected  void onLevelChanged(){
+    protected void onLevelChanged() {
     }
 
     /**
@@ -120,14 +122,27 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
     }
 
     @Override
-    public void saveNBTData(NBTTagCompound nbt) {
-        nbt.setInteger(TAG_LEVEL,level);
+    public final void saveNBTData(NBTTagCompound nbt) {
+        NBTTagCompound properties = new NBTTagCompound();
+        properties.setInteger(TAG_LEVEL, level);
+        saveData(properties);
+        nbt.setTag(getPropertyKey(), properties);
     }
 
+    protected abstract void saveData(NBTTagCompound nbt);
+
     @Override
-    public void loadNBTData(NBTTagCompound nbt) {
-        level=nbt.getInteger(TAG_LEVEL);
+    public final void loadNBTData(NBTTagCompound nbt) {
+        NBTTagCompound properties = nbt.getCompoundTag(getPropertyKey());
+        if (properties == null) {
+            VampirismMod.log.i(TAG, "VampirePlayer data for %s cannot be loaded. It probably does not exist", player);
+            return;
+        }
+        level = properties.getInteger(TAG_LEVEL);
+        loadData(properties);
     }
+
+    protected abstract void loadData(NBTTagCompound nbt);
 
     @Override
     public void init(Entity entity, World world) {
@@ -135,18 +150,34 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
     }
 
     @Override
-    public void loadUpdateFromNBT(NBTTagCompound nbt) {
+    public final void loadUpdateFromNBT(NBTTagCompound nbt) {
         if(nbt.hasKey(TAG_LEVEL)){
             level=nbt.getInteger(TAG_LEVEL);
 
         }
+        loadData(nbt);
+    }
+
+    /**
+     * Can be overridden to load data from updates in subclasses
+     *
+     * @param nbt
+     */
+    protected void loadUpdate(NBTTagCompound nbt) {
     }
 
     @Override
-    public void writeFullUpdateToNBT(NBTTagCompound nbt) {
+    public final void writeFullUpdateToNBT(NBTTagCompound nbt) {
         nbt.setInteger(TAG_LEVEL,level);
+        writeFullUpdate(nbt);
     }
 
+    /**
+     * Can be overridden to put data into updates in subclasses
+     *
+     * @param nbt
+     */
+    protected void writeFullUpdate(NBTTagCompound nbt){}
 
     public void copyFrom(EntityPlayer old) {
         VampirismPlayer p=copyFromPlayer(old);

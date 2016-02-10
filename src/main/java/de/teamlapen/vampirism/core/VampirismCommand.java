@@ -83,7 +83,7 @@ public class VampirismCommand extends BasicCommand {
                 if (!(var1 instanceof EntityPlayer)) {
                     return false;//TODO set level for other players (via console)
                 }
-                return var1.canCommandSenderUseCommand(2, getCommandName());
+                return isSenderCreative(var1);
             }
 
             @Override

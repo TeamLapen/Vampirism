@@ -53,7 +53,6 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
         PlayerModifiers.applyModifier(player, SharedMonsterAttributes.attackDamage, "Vampire", getLevel(), BalanceVampirePlayer.STRENGTH_LCAP, BalanceVampirePlayer.STRENGTH_MAX_MOD, BalanceVampirePlayer.STRENGTH_TYPE);
         PlayerModifiers.applyModifier(player, SharedMonsterAttributes.maxHealth, "Vampire", getLevel(), BalanceVampirePlayer.HEALTH_LCAP, BalanceVampirePlayer.HEALTH_MAX_MOD, BalanceVampirePlayer.HEALTH_TYPE);
         bloodStats.addExhaustionModifier("level", 1.0F + getLevel() / (float) getMaxLevel());
-        super.onLevelChanged();
     }
 
     @Override
@@ -159,14 +158,12 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
     }
 
     @Override
-    public void saveNBTData(NBTTagCompound nbt) {
-        super.saveNBTData(nbt);
+    public void saveData(NBTTagCompound nbt) {
         bloodStats.writeNBT(nbt);
     }
 
     @Override
-    public void loadNBTData(NBTTagCompound nbt) {
-        super.loadNBTData(nbt);
+    public void loadData(NBTTagCompound nbt) {
         bloodStats.readNBT(nbt);
     }
 
@@ -182,8 +179,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
 
 
     @Override
-    public void writeFullUpdateToNBT(NBTTagCompound nbt) {
-        super.writeFullUpdateToNBT(nbt);
+    protected void writeFullUpdate(NBTTagCompound nbt) {
 
     }
 }
