@@ -5,71 +5,66 @@ import de.teamlapen.lib.network.UpdateEntityPacket;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 /**
  * General Helper library
  */
-public class Helper {
-    private final static int PACKET_DISTANCE = 100;
+public class HelperLib {
 
     /**
-     * Syncs the entity to players in {@link Helper#PACKET_DISTANCE} radius.
+     * Syncs the entity to players tracking this entity.
      * Entity has to implement {@link ISyncable}
      *
      * @param entity
      */
     public static void sync(Entity entity) {
-        IMessage m = new UpdateEntityPacket(entity);
-        VampLib.dispatcher.sendToAllAround(m, createTargetPoint(entity));
+        IMessage m = UpdateEntityPacket.create(entity);
+        VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);
     }
 
     /**
-     * Syncs the entity to players in {@link Helper#PACKET_DISTANCE} radius using the given data
+     * Syncs the entity to players tracking this entity using the given data
      * Entity has to implement {@link ISyncable}
      *
      * @param entity
      */
     public static void sync(Entity entity, NBTTagCompound data) {
-        IMessage m = new UpdateEntityPacket(entity, data);
-        VampLib.dispatcher.sendToAllAround(m, createTargetPoint(entity));
+        IMessage m = UpdateEntityPacket.create(entity, data);
+        VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);
     }
 
     /**
      * Syncs the extended properties.
      * If the entity is a player and "all" is false it will only be send to the respective player
-     * Otherwise it will we send to all players in {@link Helper#PACKET_DISTANCE} radius using the given data
+     * Otherwise it will we send to all players tracking the entity radius using the given data
      *
      * @param entity
      */
     public static void sync(ISyncable.ISyncableExtendedProperties prop, Entity entity, boolean all) {
-        IMessage m = new UpdateEntityPacket(prop);
+        IMessage m = UpdateEntityPacket.create(prop);
+        VampLib.log.t("Sending %s", m);
         if (entity instanceof EntityPlayerMP && !all) {
             VampLib.dispatcher.sendTo(m, (EntityPlayerMP) entity);
         } else {
-            VampLib.dispatcher.sendToAllAround(m, createTargetPoint(entity));
+            VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);
         }
     }
 
     /**
      * Syncs the extended properties using the given data.
      * If the entity is a player and "all" is false it will only be send to the respective player
-     * Otherwise it will we send to all players in {@link Helper#PACKET_DISTANCE} radius using the given data
+     * Otherwise it will we send to all players tracking this entity using the given data
      *
      * @param entity
      */
     public static void sync(ISyncable.ISyncableExtendedProperties prop, NBTTagCompound data, Entity entity, boolean all) {
-        IMessage m = new UpdateEntityPacket(prop, data);
+        IMessage m = UpdateEntityPacket.create(prop, data);
         if (entity instanceof EntityPlayerMP && !all) {
             VampLib.dispatcher.sendTo(m, (EntityPlayerMP) entity);
         } else {
-            VampLib.dispatcher.sendToAllAround(m, createTargetPoint(entity));
+            VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);
         }
-    }
-
-    private static NetworkRegistry.TargetPoint createTargetPoint(Entity e) {
-        return new NetworkRegistry.TargetPoint(e.dimension, e.posX, e.posY, e.posZ, PACKET_DISTANCE);
     }
 
 

@@ -14,7 +14,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
-import java.awt.*;
 
 /**
  * Handles general Overlay thingies
@@ -57,14 +56,12 @@ public class VampirismHUDOverlay extends Gui {
         if (event.type != RenderGameOverlayEvent.ElementType.EXPERIENCE) {
             return;
         }
-
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glDisable(GL11.GL_LIGHTING);
-
         if (mc.playerController.gameIsSurvivalOrAdventure() && cachedPlayer.faction != null) {
             mc.mcProfiler.startSection("factionLevel");
             // boolean flag1 = false;
-            int color = Color.MAGENTA.getRGB();
+            int color = cachedPlayer.faction.getColor();
             String text = cachedPlayer.alt == null ? "" + cachedPlayer.level : cachedPlayer.alt;
             int x = (event.resolution.getScaledWidth() - mc.fontRendererObj.getStringWidth(text)) / 2 + Configs.gui_level_offset_x;
             int y = event.resolution.getScaledHeight() - Configs.gui_level_offset_y;

@@ -1,7 +1,10 @@
 package de.teamlapen.lib.lib.network;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -77,6 +80,12 @@ public abstract class AbstractPacketDispatcher {
      */
     public final void sendToDimension(IMessage message, int dimensionId) {
         dispatcher.sendToDimension(message, dimensionId);
+    }
+
+    public final void sendToAllTrackingPlayers(IMessage message, Entity target) {
+        EntityTracker et = ((WorldServer) target.worldObj).getEntityTracker();
+        // does not send it to the player himself it target is a player et.sendToAllTrackingEntity(target, dispatcher.getPacketFrom(message));
+        et.func_151248_b(target, dispatcher.getPacketFrom(message));
     }
 
     /**

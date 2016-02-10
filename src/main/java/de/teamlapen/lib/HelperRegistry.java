@@ -2,6 +2,8 @@ package de.teamlapen.lib;
 
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +17,13 @@ public class HelperRegistry {
     private static List<String> syncableEntityProperties = new ArrayList<>();
     private static List<String> eventListenerProps = new ArrayList<>();
     private static String[] eventListenerPropsFinal;
+    /**
+     * Stores syncable property keys for {@link EntityPlayer}
+     */
     private static String[] syncablePlayerPropertiesFinal;
+    /**
+     * Stores syncable property keys for {@link EntityLiving}
+     */
     private static String[] syncableEntityPropertiesFinal;
 
     /**
@@ -41,7 +49,7 @@ public class HelperRegistry {
 
     /**
      * Register a entity {@link de.teamlapen.lib.lib.network.ISyncable.ISyncableExtendedProperties} which should be synced on world join
-     *
+     * Only works for entities extending {@link EntityLiving}
      * @param clz
      */
     public static void registerSyncableEntityProperty(String prop, Class<? extends ISyncable.ISyncableExtendedProperties> clz) {

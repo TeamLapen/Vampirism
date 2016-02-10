@@ -46,12 +46,12 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
 
     @Override
     public void saveNBTData(NBTTagCompound compound) {
-
+        super.saveNBTData(compound);
     }
 
     @Override
     public void loadNBTData(NBTTagCompound compound) {
-
+        super.loadNBTData(compound);
     }
 
     @Override
@@ -75,10 +75,6 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
         return REFERENCE.HIGHEST_HUNTER_LEVEL;
     }
 
-    @Override
-    public void sync(boolean all) {
-
-    }
 
 
     @Override
@@ -89,12 +85,12 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
 
     @Override
     public void loadUpdateFromNBT(NBTTagCompound nbt) {
-
+        super.loadUpdateFromNBT(nbt);
     }
 
     @Override
     public void writeFullUpdateToNBT(NBTTagCompound nbt) {
-
+        super.writeFullUpdateToNBT(nbt);
     }
 
     @Override

@@ -1,8 +1,15 @@
 package de.teamlapen.lib.entity;
 
+import de.teamlapen.lib.HelperRegistry;
+import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
+import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.lib.network.RequestPlayerUpdatePacket;
+import de.teamlapen.lib.network.UpdateEntityPacket;
 import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
@@ -21,6 +28,15 @@ public class EntityEventHandler {
         this.listeners = listeners;
     }
 
+
+    @SubscribeEvent
+    public void onStartTracking(PlayerEvent.StartTracking event) {
+        if ((event.target instanceof EntityLiving && HelperRegistry.getSyncableEntityProperties().length > 0) || event.target instanceof ISyncable || (event.target instanceof EntityPlayer && HelperRegistry.getSyncablePlayerProperties().length > 0)) {
+            //TODO check if this works
+            UpdateEntityPacket packet = UpdateEntityPacket.createJoinWorldPacket(event.target);
+            VampLib.dispatcher.sendTo(packet, (EntityPlayerMP) event.entityPlayer);
+        }
+    }
     @SubscribeEvent
     public void onPlayerClone(PlayerEvent.Clone event) {
         for (int i = 0; i < listeners.length; i++) {
@@ -30,9 +46,14 @@ public class EntityEventHandler {
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
+        if (event.entity.worldObj.isRemote) {
+            if ((event.entity instanceof EntityPlayerSP && HelperRegistry.getSyncablePlayerProperties().length > 0)) {
+                VampLib.dispatcher.sendToServer(new RequestPlayerUpdatePacket());
+            }
+        }
+
         if (event.entity instanceof EntityPlayer) {
             if (event.entity.worldObj.isRemote || event.entity instanceof EntityPlayerSP) {
-                //TODO request update
             } else {
                 for (int i = 0; i < listeners.length; i++) {
                     ((IPlayerEventListener) event.entity.getExtendedProperties(listeners[i])).onJoinWorld();

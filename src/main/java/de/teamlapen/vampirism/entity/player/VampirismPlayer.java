@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.entity.player;
 
+import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.api.entity.player.FactionRegistry;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -37,7 +39,8 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
 
     @Override
     public void setLevel(int level) {
-        if(level>=0&&level<=getMaxLevel()){
+        VampirismMod.log.t("Setting level %s (c %s,max %s)", level, getLevel(), getMaxLevel());
+        if (level >= 0 && level <= getMaxLevel() && getLevel() != level) {
             if(level>0){
                 IFactionPlayer active = FactionRegistry.getActiveFactionPlayer(player);
                 if(active!=null&&active!=this){
@@ -48,6 +51,7 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
             }
             this.level=level;
             onLevelChanged();
+            this.sync(true);
         }
     }
 
@@ -65,7 +69,6 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
      * Called when the level is changed
      */
     protected  void onLevelChanged(){
-        this.sync(true);
     }
 
     /**
@@ -135,6 +138,7 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
     public void loadUpdateFromNBT(NBTTagCompound nbt) {
         if(nbt.hasKey(TAG_LEVEL)){
             level=nbt.getInteger(TAG_LEVEL);
+
         }
     }
 
@@ -156,5 +160,8 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
      */
     protected abstract VampirismPlayer copyFromPlayer(EntityPlayer old);
 
-
+    @Override
+    public void sync(boolean all) {
+        HelperLib.sync(this, player, all);
+    }
 }

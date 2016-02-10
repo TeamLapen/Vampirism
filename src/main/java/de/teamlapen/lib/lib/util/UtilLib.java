@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 /**
  * General Utility Class
  */
-public class HelperLib {
+public class UtilLib {
     public static String entityToString(Entity e) {
         if (e == null) {
             return "Entity is null";
@@ -233,7 +233,7 @@ public class HelperLib {
 
     /**
      * Stores the given pos with in the tagcompound using base.
-     * Can be retrieved again with {@link HelperLib#readPos(NBTTagCompound, String)}
+     * Can be retrieved again with {@link UtilLib#readPos(NBTTagCompound, String)}
      * @param nbt
      * @param base
      * @param pos
@@ -245,7 +245,7 @@ public class HelperLib {
     }
 
     /**
-     * Reads a position written by {@link HelperLib#write(NBTTagCompound, String, BlockPos)}.
+     * Reads a position written by {@link UtilLib#write(NBTTagCompound, String, BlockPos)}.
      * @param nbt
      * @param base
      * @return

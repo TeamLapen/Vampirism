@@ -180,8 +180,10 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
         return VampirismAPI.VAMPIRE_FACTION.prop;
     }
 
+
     @Override
-    public void sync(boolean all) {
+    public void writeFullUpdateToNBT(NBTTagCompound nbt) {
+        super.writeFullUpdateToNBT(nbt);
 
     }
 }
