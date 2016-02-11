@@ -12,4 +12,6 @@ public class REFERENCE {
     public static final int HIGHEST_VAMPIRE_LEVEL=14;
     public static final int HIGHEST_HUNTER_LEVEL=15;
     public static final String FORGE_VERSION = "@FVERSION@";
+
+    public static final int EYE_TYPE_COUNT = 6;
 }

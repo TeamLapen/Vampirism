@@ -191,8 +191,22 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
      */
     protected abstract VampirismPlayer copyFromPlayer(EntityPlayer old);
 
-    @Override
+    /**
+     * Sync all data
+     *
+     * @param all Whether all tracking players should receive this packet or only the representing player
+     */
     public void sync(boolean all) {
         HelperLib.sync(this, player, all);
+    }
+
+    /**
+     * Sync the property using the given data
+     *
+     * @param data
+     * @param all  Whether all tracking players should receive this packet or only the representing player
+     */
+    protected void sync(NBTTagCompound data, boolean all) {
+        HelperLib.sync(this, data, player, all);
     }
 }

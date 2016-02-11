@@ -20,6 +20,7 @@ public class BloodStats {
     public static final float MEDIUM_SATURATION = 0.7F;
     public static final float HIGH_SATURATION = 1.0F;
     private final int MAXBLOOD = 20;
+    private final EntityPlayer player;
     private int bloodLevel = 20;
     private float bloodSaturationLevel = 5.0F;
     private float bloodExhaustionLevel;
@@ -28,9 +29,11 @@ public class BloodStats {
     private Map<String, Float> modifiers = new HashMap<String, Float>();
     private float modifier;
 
-    public BloodStats() {
+    public BloodStats(EntityPlayer player) {
+        this.player = player;
         addExhaustionModifier("config", (float) BalanceVampirePlayer.BLOOD_EXHAUSTION_MOD);
     }
+
 
     /**
      * Reads nbt written by either {@link #writeNBTBlood(NBTTagCompound)} or {@link #writeNBT(NBTTagCompound)}
@@ -58,6 +61,17 @@ public class BloodStats {
         nbt.setInteger("bloodTimer", bloodTimer);
         nbt.setFloat("bloodSaturation", bloodSaturationLevel);
         nbt.setFloat("bloodExhaustion", bloodExhaustionLevel);
+    }
+
+    void loadUpdate(NBTTagCompound nbt) {
+        if (nbt.hasKey("bloodLevel")) {
+            setBloodLevel(nbt.getInteger("bloodLevel"));
+        }
+    }
+
+    NBTTagCompound writeUpdate(NBTTagCompound nbt) {
+        nbt.setInteger("bloodLevel", bloodLevel);
+        return nbt;
     }
 
     /**
@@ -93,7 +107,12 @@ public class BloodStats {
         }
     }
 
-    public void onUpdate(EntityPlayer player) {
+    /**
+     * Updated the blood level
+     *
+     * @return Whether it changed or not
+     */
+    public boolean onUpdate() {
         EnumDifficulty enumDifficulty = player.worldObj.getDifficulty();
         this.prevBloodLevel = bloodLevel;
         if (this.bloodExhaustionLevel > 4.0F) {
@@ -125,6 +144,7 @@ public class BloodStats {
         } else {
             this.bloodTimer = 0;
         }
+        return this.prevBloodLevel != this.bloodLevel;
     }
 
     /**

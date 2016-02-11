@@ -22,13 +22,6 @@ public interface ISyncable  {
      */
     void writeFullUpdateToNBT(NBTTagCompound nbt);
 
-    /**
-     * Send package containing all syncable data.
-     * Should not be used too often, send smaller package manually if you need something updated frequently
-     *
-     * @param all For IExtendedProperties the package will only be send to the respective player if this is false
-     */
-    void sync(boolean all);
 
     interface ISyncableExtendedProperties extends IExtendedEntityProperties,ISyncable{
         /**

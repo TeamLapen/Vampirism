@@ -5,6 +5,8 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.FactionRegistry;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
@@ -138,6 +140,44 @@ public class VampirismCommand extends BasicCommand {
             @Override
             public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
                 return args.length == 1 ? getListOfStringsMatchingLastWord(args, pfaction_names) : null;
+            }
+        });
+        addSub(new SubCommand() {
+            @Override
+            public boolean canCommandSenderUseCommand(ICommandSender var1) {
+                return var1 instanceof EntityPlayer;
+            }
+
+            @Override
+            public String getCommandName() {
+                return "eye";
+            }
+
+            @Override
+            public void processCommand(ICommandSender var1, String[] var2) {
+                EntityPlayer player = (EntityPlayer) var1;
+                if (var2.length != 1) {
+                    sendMessage(var1, "Usage: +" + getCommandUsage(var1));
+                    return;
+                }
+                try {
+                    int type = Integer.parseInt(var2[0]);
+                    if (!VampirePlayer.get(player).setEyeType(type)) {
+                        sendMessage(var1, "<id> has to be a valid number between 0 and " + (REFERENCE.EYE_TYPE_COUNT - 1));
+                    }
+                } catch (NumberFormatException e) {
+                    sendMessage(var1, "<id> has to be a number");
+                }
+            }
+
+            @Override
+            public String getCommandUsage(ICommandSender var1) {
+                return getCommandName() + " <id [0-" + (REFERENCE.EYE_TYPE_COUNT - 1) + "]> ";
+            }
+
+            @Override
+            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+                return null;
             }
         });
     }

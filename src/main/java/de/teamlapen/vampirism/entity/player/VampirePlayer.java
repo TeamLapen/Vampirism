@@ -16,12 +16,14 @@ import net.minecraft.util.DamageSource;
  */
 public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
 
-    private final BloodStats bloodStats = new BloodStats();//TODO sync blood
+    private final BloodStats bloodStats;
+    private final String KEY_EYE = "eye_type";
     private boolean sundamage_cache=false;
+    private int eyeType = 0;
     public VampirePlayer(EntityPlayer player) {
         super(player);
+        bloodStats = new BloodStats(player);
     }
-
 
     /**
      * Don't call before the construction event of the player entity is finished
@@ -35,6 +37,35 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
 
     public static void register(EntityPlayer player) {
         player.registerExtendedProperties(VampirismAPI.VAMPIRE_FACTION.prop, new VampirePlayer(player));
+    }
+
+    /**
+     * @return Eyetype for rendering
+     */
+    public int getEyeType() {
+        return eyeType;
+    }
+
+    /**
+     * Sets the eyeType as long as it is valid.
+     * Also sends a sync packet if on server
+     *
+     * @param eyeType
+     * @return Whether the type is valid or not
+     */
+    public boolean setEyeType(int eyeType) {
+        if (eyeType >= REFERENCE.EYE_TYPE_COUNT || eyeType < 0) {
+            return false;
+        }
+        if (eyeType != this.eyeType) {
+            this.eyeType = eyeType;
+            if (!player.worldObj.isRemote) {
+                NBTTagCompound nbt = new NBTTagCompound();
+                nbt.setInteger(KEY_EYE, eyeType);
+                sync(nbt, true);
+            }
+        }
+        return true;
     }
 
     @Override
@@ -104,6 +135,11 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
     }
 
     @Override
+    public boolean isDisguised() {
+        return false;//TODO implement
+    }
+
+    @Override
     public boolean isGettingSundamage(boolean forcerefresh) {
         if(player.ticksExisted%8==0){
             sundamage_cache= Helper.gettingSundamge(player);
@@ -135,6 +171,9 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
     @Override
     public void onUpdate() {
 
+        if (this.bloodStats.onUpdate()) {
+            sync(this.bloodStats.writeUpdate(new NBTTagCompound()), false);
+        }
     }
 
     @Override
@@ -160,11 +199,21 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
     @Override
     public void saveData(NBTTagCompound nbt) {
         bloodStats.writeNBT(nbt);
+        nbt.setInteger(KEY_EYE, eyeType);
     }
 
     @Override
     public void loadData(NBTTagCompound nbt) {
         bloodStats.readNBT(nbt);
+        eyeType = nbt.getInteger(KEY_EYE);
+    }
+
+    @Override
+    protected void loadUpdate(NBTTagCompound nbt) {
+        if (nbt.hasKey(KEY_EYE)) {
+            setEyeType(nbt.getInteger(KEY_EYE));
+        }
+        bloodStats.loadUpdate(nbt);
     }
 
     @Override
@@ -180,6 +229,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
 
     @Override
     protected void writeFullUpdate(NBTTagCompound nbt) {
-
+        nbt.setInteger(KEY_EYE, getEyeType());
+        bloodStats.writeUpdate(nbt);
     }
 }

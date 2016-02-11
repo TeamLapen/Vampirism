@@ -35,6 +35,6 @@ public class HunterFaction extends PlayableFaction<IHunterPlayer> {
     @SideOnly(Side.CLIENT)
     @Override
     public int getColor() {
-        return Color.BLACK.getRGB();
+        return Color.BLUE.getRGB();
     }
 }

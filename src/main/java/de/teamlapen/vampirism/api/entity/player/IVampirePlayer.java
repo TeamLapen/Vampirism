@@ -42,4 +42,6 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer, IMinionLord {
      * @param old
      */
     void copyFrom(EntityPlayer old);
+
+    boolean isDisguised();
 }

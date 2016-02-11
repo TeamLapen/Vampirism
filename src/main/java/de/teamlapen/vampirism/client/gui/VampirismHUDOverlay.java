@@ -6,8 +6,13 @@ import de.teamlapen.vampirism.api.entity.player.FactionRegistry;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.IVampirePlayer;
 import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.entity.player.BloodStats;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -22,6 +27,7 @@ public class VampirismHUDOverlay extends Gui {
 
     private final CachedPlayer cachedPlayer = new CachedPlayer();
     private final Minecraft mc;
+    private final ResourceLocation icons = new ResourceLocation(REFERENCE.MODID + ":textures/gui/icons.png");
 
     public VampirismHUDOverlay(Minecraft mc) {
         this.mc = mc;
@@ -71,6 +77,46 @@ public class VampirismHUDOverlay extends Gui {
             mc.fontRendererObj.drawString(text, x, y - 1, 0);
             mc.fontRendererObj.drawString(text, x, y, color);
             mc.mcProfiler.endSection();
+        }
+    }
+
+    @SubscribeEvent
+    public void onRenderFoodBar(RenderGameOverlayEvent.Pre event) {
+        if (event.type != RenderGameOverlayEvent.ElementType.FOOD) {
+            return;
+        }
+
+        if (cachedPlayer.faction == VampirismAPI.VAMPIRE_FACTION) {
+            event.setCanceled(true);
+
+            if (mc.playerController.gameIsSurvivalOrAdventure()) {
+                BloodStats stats = VampirePlayer.get(mc.thePlayer).getBloodStats();
+                mc.mcProfiler.startSection("vampireBlood");
+
+                GL11.glEnable(GL11.GL_BLEND);
+
+                this.mc.getTextureManager().bindTexture(icons);
+                int left = event.resolution.getScaledWidth() / 2 + 91;
+                int top = event.resolution.getScaledHeight() - GuiIngameForge.right_height;
+                GuiIngameForge.right_height += 10;
+
+                for (int i = 0; i < 10; ++i) {
+                    int idx = i * 2 + 1;
+                    int x = left - i * 8 - 9;
+
+                    // Draw Background
+                    drawTexturedModalRect(x, top, 0, 0, 9, 9);
+
+                    if (idx < stats.getBloodLevel()) {
+                        drawTexturedModalRect(x, top, 9, 0, 9, 9);
+                    } else if (idx == stats.getBloodLevel()) {
+                        drawTexturedModalRect(x, top, 18, 0, 9, 9);
+                    }
+                }
+                this.mc.getTextureManager().bindTexture(Gui.icons);
+                GL11.glDisable(GL11.GL_BLEND);
+                mc.mcProfiler.endSection();
+            }
         }
     }
 
