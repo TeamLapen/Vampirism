@@ -2,11 +2,14 @@ package de.teamlapen.vampirism.config;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.convertible.BiteableRegistry;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 
-import java.io.File;
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Manages configuration
@@ -31,7 +34,15 @@ public class Configs {
         File mainConfigFile=new File(configDir, REFERENCE.MODID+".cfg");
         File bloodConfigFile=new File(configDir,REFERENCE.MODID+"_blood_values.txt");
 
-        //TODO load blood values
+        if (bloodConfigFile.exists()) {
+            try {
+                Map<String, Integer> override = loadBloodValuesFromReader(new FileReader(bloodConfigFile), bloodConfigFile.getName());
+                BiteableRegistry.overrideBloodValues(override);
+                VampirismMod.log.i(TAG, "Succesfully loaded additional blood value file");
+            } catch (IOException e) {
+                VampirismMod.log.e(TAG, "Could not read blood values from config file %s", bloodConfigFile.getName());
+            }
+        }
 
         main_config=new Configuration(mainConfigFile);
         loadConfiguration();
@@ -86,5 +97,44 @@ public class Configs {
 
     public static Configuration getMainConfig(){
         return main_config;
+    }
+
+    /**
+     * @param r    Reader the values should be read from
+     * @param file Just for logging of errors
+     * @throws FileNotFoundException
+     * @throws IOException
+     */
+    private static Map<String, Integer> loadBloodValuesFromReader(Reader r, String file) throws IOException {
+        Map<String, Integer> bloodValues = new HashMap<>();
+        BufferedReader br = null;
+        try {
+            br = new BufferedReader(r);
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.startsWith("#")) continue;
+                if (line.isEmpty()) continue;
+                String[] p = line.split("=");
+                if (p.length != 2) {
+                    VampirismMod.log.w("ReadBlood", "Line %s  in %s is not formatted properly", line, file);
+                    continue;
+                }
+                int val;
+                try {
+                    val = Integer.parseInt(p[1]);
+                } catch (NumberFormatException e) {
+                    VampirismMod.log.w("ReadBlood", "Line %s  in %s is not formatted properly", line, file);
+                    continue;
+                }
+                bloodValues.put(p[0], val);
+            }
+        } finally {
+            if (br != null) {
+                br.close();
+            }
+            r.close();
+        }
+        return bloodValues;
+
     }
 }

@@ -1,20 +1,31 @@
 package de.teamlapen.vampirism.proxy;
 
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.entity.convertible.BiteableRegistry;
 import de.teamlapen.vampirism.client.core.ModBlocksRender;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.core.ModItemsRender;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.client.gui.VampirismHUDOverlay;
+import de.teamlapen.vampirism.client.render.LayerVampireEntity;
 import de.teamlapen.vampirism.client.render.LayerVampirePlayerHead;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.RendererLivingEntity;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
+
+import java.util.Map;
 
 /**
  * Clientside Proxy
  */
 public class ClientProxy extends CommonProxy {
+    private final static String TAG = "ClientProxy";
 
     @Override
     public void onInitStep(Step step, FMLStateEvent event) {
@@ -25,7 +36,8 @@ public class ClientProxy extends CommonProxy {
         ModKeys.onInitStep(step, event);
         if (step == Step.INIT) {
             registerSubscriptions();
-            registerVampireHead();
+        } else if (step == Step.POST_INIT) {
+            registerVampireEntityOverlays();
         }
     }
 
@@ -33,10 +45,36 @@ public class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register(new VampirismHUDOverlay(Minecraft.getMinecraft()));
     }
 
-    private void registerVampireHead() {
-        for (RenderPlayer renderPlayer : Minecraft.getMinecraft().getRenderManager().getSkinMap().values()) {
+    private void registerVampirePlayerHead(RenderManager manager) {
+        for (RenderPlayer renderPlayer : manager.getSkinMap().values()) {
             renderPlayer.addLayer(new LayerVampirePlayerHead(renderPlayer));
         }
+    }
+
+    private void registerVampireEntityOverlays() {
+        RenderManager manager = Minecraft.getMinecraft().getRenderManager();
+        registerVampirePlayerHead(manager);
+        for (Map.Entry<Class<? extends EntityCreature>, String> entry : BiteableRegistry.getConvertibleOverlay().entrySet()) {
+            registerVampireEntityOverlay(manager, entry.getKey(), new ResourceLocation(entry.getValue()));
+        }
+//        registerVampireEntityOverlay(manager,EntityCow.class,new ResourceLocation(REFERENCE.MODID + ":textures/entity/vanilla/cowOverlay.png"));
+//        registerVampireEntityOverlay(manager, EntitySheep.class,new ResourceLocation(REFERENCE.MODID + ":textures/entity/vanilla/sheepOverlay.png"));
+//        registerVampireEntityOverlay(manager, EntityPig.class,new ResourceLocation(REFERENCE.MODID + ":textures/entity/vanilla/pigOverlay.png"));
+//        registerVampireEntityOverlay(manager, EntityWolf.class,new ResourceLocation(REFERENCE.MODID + ":textures/entity/vanilla/wolfOverlay.png"));
+    }
+
+    private void registerVampireEntityOverlay(RenderManager manager, Class<? extends EntityCreature> clazz, ResourceLocation loc) {
+        Render render = manager.getEntityClassRenderObject(clazz);
+        if (render == null) {
+            VampirismMod.log.e(TAG, "Did not find renderer for %s", clazz);
+            return;
+        }
+        if (!(render instanceof RendererLivingEntity)) {
+            VampirismMod.log.e(TAG, "Renderer (%s) for %s does not extend RenderLivingEntity", clazz, render);
+            return;
+        }
+        RendererLivingEntity rendererLiving = (RendererLivingEntity) render;
+        rendererLiving.addLayer(new LayerVampireEntity(rendererLiving, loc));
     }
 
 

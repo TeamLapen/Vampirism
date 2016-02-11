@@ -19,8 +19,11 @@ public class HelperLib {
      * @param entity
      */
     public static void sync(Entity entity) {
-        IMessage m = UpdateEntityPacket.create(entity);
-        VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);
+        if (!entity.worldObj.isRemote) {
+            IMessage m = UpdateEntityPacket.create(entity);
+            VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);
+        }
+
     }
 
     /**
@@ -30,8 +33,11 @@ public class HelperLib {
      * @param entity
      */
     public static void sync(Entity entity, NBTTagCompound data) {
-        IMessage m = UpdateEntityPacket.create(entity, data);
-        VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);
+        if (!entity.worldObj.isRemote) {
+            IMessage m = UpdateEntityPacket.create(entity, data);
+            VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);
+        }
+
     }
 
     /**
@@ -42,13 +48,16 @@ public class HelperLib {
      * @param entity
      */
     public static void sync(ISyncable.ISyncableExtendedProperties prop, Entity entity, boolean all) {
-        IMessage m = UpdateEntityPacket.create(prop);
-        VampLib.log.t("Sending %s", m);
-        if (entity instanceof EntityPlayerMP && !all) {
-            VampLib.dispatcher.sendTo(m, (EntityPlayerMP) entity);
-        } else {
-            VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);
+        if (!entity.worldObj.isRemote) {
+            IMessage m = UpdateEntityPacket.create(prop);
+            VampLib.log.t("Sending %s", m);
+            if (entity instanceof EntityPlayerMP && !all) {
+                VampLib.dispatcher.sendTo(m, (EntityPlayerMP) entity);
+            } else {
+                VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);
+            }
         }
+
     }
 
     /**
@@ -59,12 +68,15 @@ public class HelperLib {
      * @param entity
      */
     public static void sync(ISyncable.ISyncableExtendedProperties prop, NBTTagCompound data, Entity entity, boolean all) {
-        IMessage m = UpdateEntityPacket.create(prop, data);
-        if (entity instanceof EntityPlayerMP && !all) {
-            VampLib.dispatcher.sendTo(m, (EntityPlayerMP) entity);
-        } else {
-            VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);
+        if (!entity.worldObj.isRemote) {
+            IMessage m = UpdateEntityPacket.create(prop, data);
+            if (entity instanceof EntityPlayerMP && !all) {
+                VampLib.dispatcher.sendTo(m, (EntityPlayerMP) entity);
+            } else {
+                VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);
+            }
         }
+
     }
 
 

@@ -1,8 +1,10 @@
 package de.teamlapen.vampirism.api;
 
+import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.IVampirePlayer;
+import net.minecraft.entity.EntityCreature;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -13,6 +15,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public class VampirismAPI {
 
+    public static final String EXTENDED_CREATURE_PROP = "ExtCreatureVampirism";
     private final static HashMap<Integer,Boolean> sundamageDims=new HashMap<Integer, Boolean>();
     private final static HashMap<Integer,Boolean> sundamageConfiguredDims =new HashMap<Integer, Boolean>();
     private final static Set<Integer> noSundamageBiomes=new CopyOnWriteArraySet<Integer>();
@@ -44,7 +47,14 @@ public class VampirismAPI {
         defaultSundamage=val;
     }
 
-
+    /**
+     * Get the Vampirism's extended entity property which every {@link EntityCreature} has
+     *
+     * @return
+     */
+    public static IExtendedCreatureVampirism getExtendedCreatureVampirism(EntityCreature creature) {
+        return (IExtendedCreatureVampirism) creature.getExtendedProperties(EXTENDED_CREATURE_PROP);
+    }
 
     public static void addNoSundamageBiome(int id) {
         noSundamageBiomes.add(id);

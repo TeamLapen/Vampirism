@@ -25,6 +25,9 @@ public class BalanceMobProps extends BalanceValues {
     @DefaultInt(value=30,name="ghost_health",minValue = 0)
     public int GHOST_HEALTH;
 
+    @DefaultInt(value = 1, minValue = 0, name = "converted_mob_default_dmg")
+    public int CONVERTED_MOB_DEFAULT_DMG;
+
     public BalanceMobProps(File directory) {
         super("mob_prop", directory);
     }

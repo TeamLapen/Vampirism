@@ -5,6 +5,7 @@ import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.lib.lib.util.Logger;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.convertible.BiteableRegistry;
 import de.teamlapen.vampirism.api.entity.player.FactionRegistry;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
@@ -51,7 +52,7 @@ public class VampirismMod {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event){
         log.t("Test balance value %s",Balance.leveling.TEST_VALUE);
-        proxy.onInitStep(IInitListener.Step.INIT, event);
+
 
         MinecraftForge.EVENT_BUS.register(new ModEventHandler());
 
@@ -63,6 +64,8 @@ public class VampirismMod {
         HelperRegistry.registerPlayerEventReceivingProperty(HunterFaction.instance().prop);
         HelperRegistry.registerSyncablePlayerProperty(VampireFaction.instance().prop, VampirePlayer.class);
         HelperRegistry.registerSyncablePlayerProperty(HunterFaction.instance().prop, HunterPlayer.class);
+
+        proxy.onInitStep(IInitListener.Step.INIT, event);
     }
 
     @Mod.EventHandler
@@ -80,8 +83,10 @@ public class VampirismMod {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event){
-        proxy.onInitStep(IInitListener.Step.POST_INIT, event);
         FactionRegistry.finish();
+        BiteableRegistry.finishRegistration(Balance.mobProps.CONVERTED_MOB_DEFAULT_DMG);
+        proxy.onInitStep(IInitListener.Step.POST_INIT, event);
+
     }
 
     @Mod.EventHandler
