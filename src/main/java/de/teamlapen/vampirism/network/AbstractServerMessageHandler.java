@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.network;
 
 import de.teamlapen.lib.lib.network.AbstractMessageHandler;
+import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
+import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -16,4 +18,8 @@ public abstract class AbstractServerMessageHandler<T extends IMessage> extends A
         return null;
     }
 
+    @Override
+    protected AbstractPacketDispatcher getDispatcher() {
+        return VampirismMod.dispatcher;
+    }
 }

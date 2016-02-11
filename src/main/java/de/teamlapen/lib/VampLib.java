@@ -22,7 +22,7 @@ public class VampLib {
     public static boolean inDev = false;
     public static AbstractPacketDispatcher dispatcher = new LibraryPacketDispatcher();
 
-    @SidedProxy(clientSide = "de.teamlapen.lib.proxy.ClientProxy", serverSide = "de.teamlapen.lib.proxy.ServerProxy")
+    @SidedProxy(clientSide = "de.teamlapen.lib.proxy.ClientProxy", serverSide = "de.teamlapen.lib.proxy.CommonProxy")
     public static IProxy proxy;
 
     @Mod.EventHandler

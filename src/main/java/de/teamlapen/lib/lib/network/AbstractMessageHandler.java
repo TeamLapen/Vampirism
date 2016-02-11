@@ -1,7 +1,11 @@
 package de.teamlapen.lib.lib.network;
 
 import de.teamlapen.lib.VampLib;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.IThreadListener;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -33,13 +37,48 @@ public abstract class AbstractMessageHandler<T extends IMessage> implements IMes
      Calls the respective handle method and provides the right player entity
      */
     @Override
-    public IMessage onMessage(T message, MessageContext ctx) {
+    public IMessage onMessage(final T message, final MessageContext ctx) {
+        final EntityPlayer player = getPlayerEntityByProxy(ctx);
         if (ctx.side.isClient()) {
-            return handleClientMessage(getPlayerEntityByProxy(ctx), message, ctx);
+
+            if (handleOnMainThread()) {
+                final AbstractPacketDispatcher dispatcher = getDispatcher();
+                IThreadListener mainThread = Minecraft.getMinecraft();
+                mainThread.addScheduledTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        IMessage response = handleClientMessage(player, message, ctx);
+                        if (response != null) {
+                            dispatcher.sendToServer(response);
+                        }
+                    }
+                });
+                return null;
+            }
+            return handleClientMessage(player, message, ctx);
         } else {
-            return handleServerMessage(getPlayerEntityByProxy(ctx), message, ctx);
+            if (handleOnMainThread()) {
+                final AbstractPacketDispatcher dispatcher = getDispatcher();
+                IThreadListener mainThread = (WorldServer) ctx.getServerHandler().playerEntity.worldObj;
+                mainThread.addScheduledTask(new Runnable() {
+                    @Override
+                    public void run() {
+                        IMessage response = handleServerMessage(player, message, ctx);
+                        if (response != null) {
+                            dispatcher.sendTo(response, (EntityPlayerMP) player);
+                        }
+                    }
+                });
+                return null;
+            }
+            return handleServerMessage(player, message, ctx);
         }
     }
+
+    protected abstract boolean handleOnMainThread();
+
+    protected abstract AbstractPacketDispatcher getDispatcher();
+
 
     /**
      * Return the corresponding player entity.

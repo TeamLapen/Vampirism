@@ -1,6 +1,8 @@
 package de.teamlapen.lib.network;
 
+import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.network.AbstractMessageHandler;
+import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
 import de.teamlapen.lib.lib.network.ISyncable;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,6 +35,16 @@ public class RequestPlayerUpdatePacket implements IMessage {
         @Override
         public IMessage handleServerMessage(EntityPlayer player, RequestPlayerUpdatePacket message, MessageContext ctx) {
             return UpdateEntityPacket.createJoinWorldPacket(player);
+        }
+
+        @Override
+        protected boolean handleOnMainThread() {
+            return true;
+        }
+
+        @Override
+        protected AbstractPacketDispatcher getDispatcher() {
+            return VampLib.dispatcher;
         }
     }
 }
