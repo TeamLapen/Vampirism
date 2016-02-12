@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.entity.player;
 
-import de.teamlapen.vampirism.config.BalanceVampirePlayer;
+import de.teamlapen.vampirism.config.Balance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -14,6 +14,7 @@ import java.util.Map;
 
 /**
  * Handles VP's blood stats. Very similar to {@link FoodStats}
+ * TODO maybe make a api interface for this
  */
 public class BloodStats {
     public static final float LOW_SATURATION = 0.3F;
@@ -31,7 +32,7 @@ public class BloodStats {
 
     public BloodStats(EntityPlayer player) {
         this.player = player;
-        addExhaustionModifier("config", (float) BalanceVampirePlayer.BLOOD_EXHAUSTION_MOD);
+        addExhaustionModifier("config", (float) Balance.vp.BLOOD_EXHAUSTION_MOD);
     }
 
 
@@ -159,6 +160,20 @@ public class BloodStats {
         bloodLevel += add;
         bloodSaturationLevel = Math.min(this.bloodSaturationLevel + (float) add * saturationModifier * 2.0F, (float) bloodLevel);
         return amount - add;
+    }
+
+    /**
+     * Removes blood from the vampires blood level
+     *
+     * @param a amount
+     * @return whether the vampire had enough blood or not
+     */
+    public boolean consumeBlood(int a) {
+        int blood = getBloodLevel();
+        int bloodToRemove = Math.min(a, blood);
+
+        bloodLevel -= bloodToRemove;
+        return bloodToRemove <= blood;
     }
 
     public int getBloodLevel() {

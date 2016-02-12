@@ -155,7 +155,7 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
             level=nbt.getInteger(TAG_LEVEL);
 
         }
-        loadData(nbt);
+        loadUpdate(nbt);
     }
 
     /**

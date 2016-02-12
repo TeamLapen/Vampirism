@@ -34,6 +34,13 @@ public class Configs {
         File mainConfigFile=new File(configDir, REFERENCE.MODID+".cfg");
         File bloodConfigFile=new File(configDir,REFERENCE.MODID+"_blood_values.txt");
 
+        try {
+
+            Map<String, Integer> defaultValues = loadBloodValuesFromReader(new InputStreamReader(Configs.class.getResourceAsStream("/default_blood_values.txt")), "default_blood_values.txt");
+            BiteableRegistry.addBloodValues(defaultValues);
+        } catch (IOException e) {
+            VampirismMod.log.e(TAG, e, "Could not read default blood values, this should not happen and destroys the mod experience");
+        }
         if (bloodConfigFile.exists()) {
             try {
                 Map<String, Integer> override = loadBloodValuesFromReader(new FileReader(bloodConfigFile), bloodConfigFile.getName());

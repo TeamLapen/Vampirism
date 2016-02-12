@@ -13,6 +13,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
+import java.util.Random;
+
 /**
  * General Utility Class
  */
@@ -187,6 +189,22 @@ public class UtilLib {
             }
 
             return true;
+        }
+    }
+
+    /**
+     * Spawn multiple particles, with a small offset between
+     */
+    public static void spawnParticles(World world,EnumParticleTypes particleType, double xCoord, double yCoord, double zCoord, double xOffset, double yOffset, double zOffset, int amount,int... extra){
+        double x=xCoord;
+        double y=yCoord;
+        double z=zCoord;
+        for(int i=0;i<amount;i++){
+            world.spawnParticle(particleType, x, y,z,xOffset,yOffset,zOffset,extra);
+            Random ran = world.rand;
+            x = xCoord + (ran.nextGaussian());
+            y = yCoord + (ran.nextGaussian());
+             z = zCoord + (ran.nextGaussian());
         }
     }
     /**

@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.entity.player;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IHunterPlayer;
-import de.teamlapen.vampirism.config.BalanceHunterPlayer;
+import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -79,7 +79,7 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
 
     @Override
     protected void onLevelChanged() {
-        PlayerModifiers.applyModifier(player, SharedMonsterAttributes.attackDamage, "Hunter", getLevel(), BalanceHunterPlayer.STRENGTH_LCAP, BalanceHunterPlayer.STRENGTH_MAX_MOD, BalanceHunterPlayer.STRENGTH_TYPE);
+        PlayerModifiers.applyModifier(player, SharedMonsterAttributes.attackDamage, "Hunter", getLevel(), Balance.hp.STRENGTH_LCAP, Balance.hp.STRENGTH_MAX_MOD, Balance.hp.STRENGTH_TYPE);
     }
 
     @Override

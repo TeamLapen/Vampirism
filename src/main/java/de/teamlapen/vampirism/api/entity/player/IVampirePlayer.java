@@ -1,13 +1,15 @@
 package de.teamlapen.vampirism.api.entity.player;
 
+import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.IVampire;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * Interface for the player vampire data
  */
-public interface IVampirePlayer extends IVampire, IFactionPlayer, IMinionLord {
+public interface IVampirePlayer extends IVampire, IFactionPlayer, IMinionLord, IBiteableEntity {
     int getBloodLevel();
 
 
@@ -44,4 +46,13 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer, IMinionLord {
     void copyFrom(EntityPlayer old);
 
     boolean isDisguised();
+
+    /**
+     * @return The bite type which would be applied to the give entity
+     */
+    BITE_TYPE determineBiteType(EntityLivingBase entity);
+
+    enum BITE_TYPE {
+        ATTACK, SUCK_BLOOD_CREATURE, SUCK_BLOOD_PLAYER, SUCK_BLOOD, NONE
+    }
 }

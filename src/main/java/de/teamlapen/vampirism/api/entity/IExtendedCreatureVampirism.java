@@ -5,7 +5,7 @@ import net.minecraft.entity.EntityCreature;
 /**
  * Interface for vampirism extended entity property which every {@link EntityCreature} has
  */
-public interface IExtendedCreatureVampirism {
+public interface IExtendedCreatureVampirism extends IBiteableEntity {
     /**
      * @return the representing entity
      */
