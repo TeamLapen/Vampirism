@@ -6,6 +6,7 @@ import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.network.RequestPlayerUpdatePacket;
 import de.teamlapen.lib.network.UpdateEntityPacket;
+import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,7 +33,6 @@ public class EntityEventHandler {
     @SubscribeEvent
     public void onStartTracking(PlayerEvent.StartTracking event) {
         if ((event.target instanceof EntityLiving && HelperRegistry.getSyncableEntityProperties().length > 0) || event.target instanceof ISyncable || (event.target instanceof EntityPlayer && HelperRegistry.getSyncablePlayerProperties().length > 0)) {
-            //TODO check if this works
             UpdateEntityPacket packet = UpdateEntityPacket.createJoinWorldPacket(event.target);
             VampLib.dispatcher.sendTo(packet, (EntityPlayerMP) event.entityPlayer);
         }

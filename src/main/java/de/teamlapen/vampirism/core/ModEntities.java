@@ -4,12 +4,17 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Iterators;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.entity.convertible.BiteableRegistry;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityGhost;
+import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
+import de.teamlapen.vampirism.entity.converted.EntityConvertedSheep;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.monster.EntityZombie;
+import net.minecraft.entity.passive.*;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -62,6 +67,18 @@ public class ModEntities {
 
     }
 
+    /**
+     * Register convertibles for vanilla creatures and maybe for future vampirism creature as well
+     */
+    private static void registerConvertibles(){
+        String base = REFERENCE.MODID + ":textures/entity/vanilla/%sOverlay.png";
+        BiteableRegistry.addConvertible(EntityCow.class, String.format(base, "cow"));
+        BiteableRegistry.addConvertible(EntityPig.class, String.format(base, "pig"));
+        BiteableRegistry.addConvertible(EntityOcelot.class, String.format(base, "cat"));
+        BiteableRegistry.addConvertible(EntityHorse.class, String.format(base, "horse"));
+        BiteableRegistry.addConvertible(EntitySheep.class,String.format(base,"sheep"),new EntityConvertedSheep.ConvertingSheepHandler());
+    }
+
     private static void init(FMLInitializationEvent event) {
         BiomeGenBase[] allBiomes=BiomeGenBase.getBiomeGenArray();
         allBiomes= Arrays.copyOf(allBiomes,allBiomes.length);
@@ -96,6 +113,9 @@ public class ModEntities {
 
         registerEntity(EntityBlindingBat.class,BLINDING_BAT_NAME,false);
         registerEntity(EntityGhost.class,GHOST_NAME,true);
+        registerEntity(EntityConvertedCreature.class,CONVERTED_CREATURE,false);
+        registerEntity(EntityConvertedSheep.class,CONVERTED_SHEEP,false);
+        registerConvertibles();
         //TODO init spawn egg
     }
 

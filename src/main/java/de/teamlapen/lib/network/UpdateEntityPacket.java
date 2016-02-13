@@ -218,7 +218,6 @@ public class UpdateEntityPacket implements IMessage {
             if (message.props != null) {
 
                 for (String key : message.props.getKeySet()) {
-                    VampLib.log.t("Loading %s", key);
                     handleProperty(e, key, message.props.getCompoundTag(key));
                 }
 

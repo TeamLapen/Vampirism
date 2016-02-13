@@ -27,4 +27,14 @@ public interface IExtendedCreatureVampirism extends IBiteableEntity {
      * @return Max blood level
      */
     int getMaxBlood();
+
+    /**
+     * Convert this creature into a vampire version if possible
+     */
+    void makeVampire();
+
+    /**
+     * @return If this entity can be converted to a vampire version
+     */
+    boolean canBecomeVampire();
 }

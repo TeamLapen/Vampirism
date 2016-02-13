@@ -50,7 +50,6 @@ public class HelperLib {
     public static void sync(ISyncable.ISyncableExtendedProperties prop, Entity entity, boolean all) {
         if (!entity.worldObj.isRemote) {
             IMessage m = UpdateEntityPacket.create(prop);
-            VampLib.log.t("Sending %s", m);
             if (entity instanceof EntityPlayerMP && !all) {
                 VampLib.dispatcher.sendTo(m, (EntityPlayerMP) entity);
             } else {

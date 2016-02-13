@@ -118,6 +118,18 @@ public class ExtendedCreature implements ISyncable.ISyncableExtendedProperties, 
         return maxBlood;
     }
 
+    @Override
+    public void makeVampire() {
+        if(canBecomeVampire()){
+            blood=0;
+            Entity e= (Entity) BiteableRegistry.convert(entity);
+            if(e!=null){
+                entity.setDead();
+                entity.worldObj.spawnEntityInWorld(e);
+            }
+        }
+    }
+
     private void sync() {
         HelperLib.sync(this, getEntity(), false);
     }
@@ -125,6 +137,11 @@ public class ExtendedCreature implements ISyncable.ISyncableExtendedProperties, 
     private void sync(NBTTagCompound data) {
         HelperLib.sync(this, data, getEntity(), false);
 
+    }
+
+    @Override
+    public String toString() {
+        return super.toString()+" for entity ("+entity.toString()+")";
     }
 
     @Override
@@ -139,7 +156,7 @@ public class ExtendedCreature implements ISyncable.ISyncableExtendedProperties, 
                     if (VampirismMod.isRealism()) {
                         //TODO entity.addPotionEffect(new PotionEffect(ModPotion.sanguinare.id, BALANCE.VAMPIRE_MOB_SANGUINARE_DURATION * 20));
                     } else {
-                        //TODO makeVampire();
+                        makeVampire();
                     }
 
                 } else {

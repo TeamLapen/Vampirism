@@ -336,7 +336,8 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
 
             player.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, vec31.xCoord, vec31.yCoord, vec31.zCoord, vec3.xCoord, vec3.yCoord + 0.05D, vec3.zCoord, Item.getIdFromItem(Items.apple));
         }
-        player.worldObj.playSoundAtEntity(player, "vampirism:player.bite", 1.0F, 1.0F);
+        //Play bite sounds. Using this method since it is the only client side method. And this is called on every relevant client anyway
+        player.worldObj.playSound(player.posX,player.posY,player.posZ,REFERENCE.MODID+":player.bite",1.0F,1.0F,false);
     }
 
     public BITE_TYPE determineBiteType(EntityLivingBase entity) {

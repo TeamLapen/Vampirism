@@ -57,10 +57,6 @@ public class ClientProxy extends CommonProxy {
         for (Map.Entry<Class<? extends EntityCreature>, String> entry : BiteableRegistry.getConvertibleOverlay().entrySet()) {
             registerVampireEntityOverlay(manager, entry.getKey(), new ResourceLocation(entry.getValue()));
         }
-//        registerVampireEntityOverlay(manager,EntityCow.class,new ResourceLocation(REFERENCE.MODID + ":textures/entity/vanilla/cowOverlay.png"));
-//        registerVampireEntityOverlay(manager, EntitySheep.class,new ResourceLocation(REFERENCE.MODID + ":textures/entity/vanilla/sheepOverlay.png"));
-//        registerVampireEntityOverlay(manager, EntityPig.class,new ResourceLocation(REFERENCE.MODID + ":textures/entity/vanilla/pigOverlay.png"));
-//        registerVampireEntityOverlay(manager, EntityWolf.class,new ResourceLocation(REFERENCE.MODID + ":textures/entity/vanilla/wolfOverlay.png"));
     }
 
     private void registerVampireEntityOverlay(RenderManager manager, Class<? extends EntityCreature> clazz, ResourceLocation loc) {
