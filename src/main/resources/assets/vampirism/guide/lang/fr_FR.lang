@@ -1,6 +1,6 @@
 #X-Generator: crowdin.com
 #General
-guide.vampirism.book.title=Guide du vampire
+guide.vampirism.book.title=Guide du vampirisme
 guide.vampirism.welcomeMessage=Bienvenue dans le guide du vampire. Explorez le, et découvrez tout ses possibilités.\nAmusez vous bien.
 guide.vamprism.book.name=Guide du vampirisme
 
@@ -12,10 +12,13 @@ guide.vampirism.gettingStarted.firstSteps.title=Premiers pas
 guide.vampirism.gettingStarted.firstSteps.text=Vous débutez comme un joueur régulier, pour devenir un vampire vous devez être mordu par un vampire. Alors laissez vous mordre dans ce but ou attendez que cela arrive par accident. Quand ils vous auront mordu, il y a une chance que vous aillez l'effet de la potion "Sanguinare Vampiris" pour la durée d'un jour Minecraft. A la fin de la potion, vous êtes un vampire. Dans le cas ou vous ne souhaitez pas le devenir, vous pouvez annuler l'effet avec un seau de lait. Autrement, vous pouvez cliquer-droit avec des Crocs de vampire en main pour vous injecter du sang et obtenir le même effet que la morsure.
 guide.vampirism.gettingStarted.asAVampire.title=Comme un vampire
 guide.vampirism.gettingStarted.asAVampire.text=Une fois devenus vampire, la source principale de sang (au moins la meilleure) est les villageois est vous devriez en trouver en grand nombre. Cependant faites attention, il y encore des vampires qui peuvent vous attaquer comme lorsque que vous étiez un joueur normal. Les chasseurs de vampires toutefois ne vous attaqueront pas au niveau 1 de vampire.\nEn tant que vampire, vous devez surveiller votre quantité de sang. Sucez le sang des villageois et d'autres créatures passives en pressant la touche "F"\nLe sang supplémentaire peut être stocké dans des bouteilles de sang. Si vous voulez transférer du sang entre une bouteille et votre barre, pressez la touche pour vous accroupir et faites clique droit. Quand vous regardez une créature à laquelle vous pouvez prendre du sang des crocs apparaissent comme indicateurs. Pour les autres créatures vous prendrez des dégâts en les mordant. Au début vous serez un vampire de niveau 1 (les niveaux s'affichent au-dessus de la barre d'expérience) et vous aurez la vitesse, la vie et la force améliorée.\nPour atteindre un niveau de vampire supérieur vous devez accomplir des rituels. Au-delà d'un certain niveau, les vampires ne vous attaqueront plus mais les chasseurs de vampires le feront. En avançant dans les niveaux vos capacités s'amélioreront, mais quelques inconvénients tels que les dégâts du soleil, apparaîtront.
+guide.vampirism.gettingStarted.biteableCreatures.title=Créature mordu
+guide.vampirism.gettingStarted.biteableCreatures.text=En suçant le sang d'une créature , vous prenez un peu de son sang. Quand la créature mordu n'aura bientôt plus de vie, et se regénéra plus lentement.\nSi vous suçer tout son sang , il moura ou deviendra un vampire. Les créature vampirisée agireont différement des créature normal, Il prêneront des dégats au soleil, mais essayera d'évitée le soleil. Les villagois vampirisée seront sous vos ordre.\nVous pouvez aussi sucer le sang d'autre joueur sur votre serveur. Car il sont capable de se défendre eu même. mais ceci n'est possible que par derrière.
 
 #Items and Blocks
 guide.vampirism.itemsAndBlocks.category=Blocs et éléments
 guide.vampirism.itemsAndBlocks.found.title=Trouvé dans le monde
+guide.vampirism.itemsAndBlocks.found.pureBlood=Est lâché par les Seigneurs de Vampire dans les différent niveaux de pureté selon le niveau du Seigneur. Requis pour les rituels de niveau supérieurs.
 guide.vampirism.itemsAndBlocks.found.bloodAltar1=Ce bloc peut agir comme une balise et vous donne de la vitesse ainsi qu'un effet de saturation (vous consommez moins de sang). Mais pour permettre cet effet, vous avez à vous fabriquer une épée « Sangsue » et la remplir avec du sang en tuant le villageois ou autres créatures avec. Ensuite, vous pouvez insérer l'épée dans le bloc qui activel'effet, mais épuise lentement l'épée. Le bloc ne peut pas être conçu, mais doit être trouvée dans les marécages.
 guide.vampirism.itemsAndBlocks.found.vampireFlower=Les orchidées vampires peuvent être trouvées dans le biome vampire.
 guide.vampirism.itemsAndBlocks.found.humanHearth=Ils sont lâchés par les chasseurs de vampires. Vous pouvez les manger soit pour obtenir une grande quantité de sang ou les utiliser dans plusieurs rituels.
@@ -29,6 +32,15 @@ guide.vampirism.itemsAndBlocks.altars.altar4.text=Le %s est utilisé pour augmen
 guide.vampirism.itemsAndBlocks.altars.title=Blocs d'autel
 guide.vampirism.itemsAndBlocks.coffin.text=Le cercueil peut être utilisé pour dormir pendant le jour et pour définir votre point d'apparition. Il est recommandé de le placer dans un endroit où le soleil ne peut pas aller. Vous pouvez changer la couleur intérieur avec MAJ + clic droit avec la teinture dessus. 
 guide.vampirism.itemsAndBlocks.used_for_minions=Utilisé pour les favoris
+guide.vampirism.itemsAndBlocks.blood_eye.text=Peut être utilisée pour localiser le château le plus proche
+guide.vampirism.itemsAndBlocks.found.weakVampireFang=Ceux-ci sont lachée par des vampire faible comme les villagois vampirisée. Ils peuvent être combinée pour créer une version plus forte.
+guide.vampirism.itemsAndBlocks.found.weakHumanHearth=Ceux-ci sont lachée par des vampire humain faible comme les villagois. Ils peuvent être combinée pour créer une version plus forte.
+guide.vampirism.itemsAndBlocks.gildedIron.text=Un bloc similaire au bloc d'or, mais ne requit pas beaucoup d'or. Ils sont utilisée pour les rituels.
+guide.vampirism.itemsAndBlocks.garlic=L'ail peut être trouvée dans les coffre et sont plantée comme des patates. Il sont utilisées dans plusieurs recettes pour fabriquer des armes contre les vampires. Vous pouvez\négalement l'appliquer à n'importe quel épée pour les utilisée comme poison pour les vampires.
+guide.vampirism.itemsAndBlocks.garlic_concentrated=Utilisé dans quelques recettes.
+guide.vampirism.itemsAndBlocks.garlic_torch_weak=Donne au vampire faible (sauf joueur) des éffet d'ail. Empêche également les vampire d'apparaître dans la zone en question.
+guide.vampirism.itemsAndBlocks.garlic_torch_strong=Donne a tout les vampire un effet très fort d'ail. Empêche également les vampire d'apparaître dans la zone en question.
+guide.vampirism.itemsAndBlocks.garlic_bomb=Ail jetable. si les joueur et vampire touchée . il donnent l'effet d'ail.
 
 #Levels
 guide.vampirism.levels.introduction.title=Introduction
@@ -46,10 +58,14 @@ guide.vampirism.levels.category=Comment monter de niveau
 
 #Mobs
 guide.vampirism.mobs.category=Créatures
+guide.vampirism.mobs.hunter.text=Chasseur de vampires;) / n Apparait dans les villages ou dans de petits camps dans le monde entier. Attaque uniquement les joueurs avec un niveau de vampire supérieur à %s. / nLes chasseur de vampire près de villages vont éssayer de défendre leur village.
 guide.vampirism.mobs.vampire.text=Attaquent les joueurs tant qu'ils n'ont pas un niveau de vampire plus haut que %s./nAttaquent les villageois et les vampirisent./nActif la nuit
+guide.vampirism.mobs.vampire_baron.text=Apparaissent rarement dans les biomes vampire./nSurvient dans différents niveaux partiellement selon le niveau du joueur./nLache du sang pur./Sont très forts et invoquent des sbires qui l'aident
 guide.vampirism.mobs.vampire_minion.title=Favori de vampire
 guide.vampirism.mobs.vampire_minion.text=Sont subordonnés à leur seigneur./nOnt la texture de leur seigneur./nPeut être contrôlé par les joueurs seigneurs de vampire.
 guide.vampirism.mobs.ghost.text=Apparaitre dans le biome vampire.
+guide.vampirism.mobs.dracula.text=Seigneur vampire qui vit dans un grand château. Jetez un oeil à la section de Seigneur vampire pour plus de renseignements.
+guide.vampirism.mobs.hunter2.text=Version avancée d'un chasseur de vampire. / n est tout à fait beaucoup plus fort et appelle les chasseurs normales pour l'aider. Ils ont des noms individuels et les peaux des partisans du vampirisme ainsi que quelques noms plus aléatoires.
 
 #VampirePlayer
 guide.vampirism.vplayer.category=Caractéristiques du joueur Vampire
@@ -66,7 +82,19 @@ guide.vampirism.vplayer.skills.end=Il y a beaucoup plus de compétences. Essayez
 guide.vampirism.vplayer.skills.menu_text=Il s'agit de la « rose  à compétence» pour changer de compétence
 
 #VampireLord
+guide.vampirism.vlord.category=Seigneur vampire
 guide.vampirism.vlord.introduction.title=Introduction
+guide.vampirism.vlord.introduction.text=Pendant tout ce temps il y avait un qui était supérieur aux autres. Il s'appelle Dracula et vit dans un grand château. Il a des serviteurs qui servent à lui et sacrifice eux-mêmes pour le protéger. / nSeule très peu de vampires a tenté de vaincre et de prendre son poste, mais ils ont tous échoué. Peut-être que vous pouvez faire mieux ?
+guide.vampirism.vlord.become.title=Comment en devenir un
+guide.vampirism.vlord.become.text=Si vous voulez vraiment prendre la place de dracula. vous devez être préparée. Assurez-vous que vous avez atteint le niveau de vampire %d sinon vous pouvez même pas l'avoir. équiper vous correctement. /nAprès aller cherchez un biome de vampire avec un chateau a l'interieur. Vous pouvez utiliser %s pour le trouver plus facilement. /nln Regardez dans le batiment principal, vous serez en mesure de trouver un portail spécial, qui utilise des Dracula pour accéder rapidement à son domicile. Une fois que vous serez dans le chateau , vous devrez le battre. Bonne chance .
+guide.vampirism.vlord.about.title=A propos de devenir un Segnieur
+guide.vampirism.vlord.about.text=Devenir un Segnieur Vampire vous rend fort et vous donne de nouveau pouvoir, mais ils y a quelque trucs que vous devez savoir. /nQuelque autre vampires vous aussi être interessée de devenir un Segnieur vampire et il y a quelque mouen de perde votre position a eu. /nPremierement , soyer sûr de ne pas être tuer par un chasseur. car perde un niveau vous rend trop trop faible pour maintenir votre positions. /nDeuxièment , soyer prévenu que d'autre vampires vous attaquera, les vampire dans les chateau réspecteront votre superioritée, mais dehors il y a beaucoup de jaloux; /nSi vous joueur sur un serveur multijoueur. liser aussi le multijoueur.
+guide.vampirism.vlord.multiplayer.title=En multijoueur
+guide.vampirism.vlord.multiplayer.text=Sur les serveurs multijoueur, il faut aussi être conscient que les autre joueur peuvent vous battre et vous remplacer en tant que Segnieurs. /nC'est aussi un moyen de devenir un Segnieur Vampire après que le premier joueur est battu Dracula. Mais il est possible que l'autre joueur perde son status de Segnieur, e.g. Quand il est hors-ligne trop longtemps. /Il y a également la configuration qui permet que plusieurs joueur devienent des Segnieur Vampire.S'il activée, Dracula réapparait et peut être tuer pas un autre joueur.
+guide.vampirism.vlord.skills.title=Compétences de Seigneur Vampire
+guide.vampirism.vlord.skills.text=Après avoir battu le Segnieur Vampire récent, vous pouvez aussi apprendre les compétences qu'il avait. Ils sont disponible dans la rose de comptétence ormale, mais vous ne serez pas capable d'utiliser tout les ancient./n/nTéléportation/nVous pouvez vous téléporter sur de courte distance/n/nInvisibilitée/nêtre invisible pour quelque temps/n/nGeler/n Geler tous le mond autour pour quelque temps.
+guide.vampirism.vlord.minions.title=Sbires
+guide.vampirism.vlord.minions.text=En tant que Segnieur Vampire , vous êtes aussi puissant que vous pouvez faire des vampire vos sbires. Geler en-un et mordez leus pour l'intimider. Il deviendra votre sbire. /nDonc vous pouvez utiliser %s quand vous le regarder d'ouvrir le menu de controle et lui donner des ordre. /nPour controler plusieur sbire a la fois, appuyer sur la même touche quand vous regarder un qu'il n'est pas votre sbire. /n/nLes sbires normaux resteront toujours avec vous, sinon il couront ailleurs. Pour qu'il sont capable de remplir les ordes a la place des autre, vous devrez utiliser le %s sur eux. /nQuand vous l'envoyer récuperée du sang par example , sous cette forme il seront un peut plus agile et essayeront de sa cacher du soleil. Pour nommez vos minions vous pouvez utilisez une spéciale étiquette.
 
 
 

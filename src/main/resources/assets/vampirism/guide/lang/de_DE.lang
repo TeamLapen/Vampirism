@@ -11,6 +11,7 @@ guide.vampirism.gettingStarted.overview.text=Vampirism ist eine Mod, die eine ne
 guide.vampirism.gettingStarted.firstSteps.title=Erste Schritte
 guide.vampirism.gettingStarted.firstSteps.text=Du startest als normaler Spieler. Um ein Vampir zu werden musst du von einem anderen Vampir gebissen werden. Wenn ein anderer Vampir dich beißt besteht dich Chance, dass du einen Trank-Effekt namens "Sanguinare Vampiris". Dieser dauert einen Tag an und wenn er endet, bist du ein Vampir. Willst du dies vermeiden kannst du den Effekt durch Trinken von Milch abbrechen. Solltest du trotz Vampir Bissen keinen Effekt bekommen, kannst du auch einfach mit Vampir Zähnen rechts-klicken und dir so das Blut injizieren.
 guide.vampirism.gettingStarted.asAVampire.title=Als Vampir
+guide.vampirism.gettingStarted.asAVampire.text=Sobald Sie ein Vampir , einem Ihrer Hauptquellen des Blutes (zumindest die beste Quelle ) geworden sind  Dorfbewohner , und Sie sollten viele von denen zu finden. Achten Sie aber , es gibt immer noch Vampire , die Sie angreifen können , genau wie wenn Sie ein regelmäßiger Spieler sind . Die Vampir Jäger werden aber nicht angreifen , wenn Sie ein Level 1 Vampir sind . Als Vampir , müssen Sie beobachten , wie viel Blut Sie haben. Blut saugen , indem Sie "F" von Dorfbewohnern und von einigen Mobs , mehr Blut zu bekommen. Zusätzliche Blut in einer Blutkonserve gelagert werden. Wenn Sie möchten , um Blut zwischen der Blut- Flasche und der Blut-Bar zu übertragen zu verwenden Rechtsklick oder nach rechts verschieben , klicken Sie auf der Maus. Bei der Betrachtung einer Kreatur können Sie saugen Blut aus , kleine Zähne wird als Indikator angezeigt. Um alle anderen Geschöpfe können Schäden durch Beißen ihnen umzugehen. Am Anfang werden Sie ein Stufe 1 Vampir sein ( der Pegel wird über dem XP -Level angezeigt) und haben Geschwindigkeit, Kraft und Gesundheit verbessert. Um höhere Vampir Ebenen muss man verschiedene Rituale durchführen. Wenn Sie über einem bestimmten Niveau zu bekommen, werden Vampire nicht mehr angreifen , aber Vampir Jäger schon . Wie Sie durch die Ebenen voraus Ihre Fähigkeiten zu verbessern, aber auch einige Nachteile wie Sonnenschäden auftreten könnten .
 guide.vampirism.gettingStarted.biteableCreatures.title=Gebissene Kreaturen
 guide.vampirism.gettingStarted.biteableCreatures.text=Wenn du von einer Kreatur Blut saugst, senkt sich ihr Blutlevel. Wenn dieser zu niedrig ist, wird die Kreatur schwach, allerdings regeneriert sie auch langsam Blut.\nWenn du jedoch alles Blut aussaugst, wird sie entweder sterben oder ebenfalls ein Vampir werden. Konvertierte Kreaturen verhalten sich etwas anders als zuvor, zum Beispiel nehmen sie Schaden durch Sonnenstrahlen und versuchen diese daher zu vermeiden.\nVampir Dorfbewohner haben vielleicht sogar spezielle Angebote für dich.\nDu kannst aber auch Blut von anderen Spielern saugen. Da sich diese allerdings etwas verteidigen können, musst du sie von hinten überraschen.
 
@@ -32,14 +33,37 @@ guide.vampirism.itemsAndBlocks.altars.title=Altar Blöcke
 guide.vampirism.itemsAndBlocks.coffin.text=Der Sarg kann verwendet werden um während des Tages zu Schlafen und den Spawn-Punkt zu setzten. Es ist empfehlenswert ihn an einer dunklen Stelle aufzustellen. Du kannst die Farbe im Inneren ändern indem du mit einem Farbstoff in der Hand darauf Shift-Rechts-Klickst. 
 guide.vampirism.itemsAndBlocks.used_for_minions=Für Vampir-Sklaven verwendet
 guide.vampirism.itemsAndBlocks.blood_eye.text=Kann verwendet werden, um die nächste Burg zu finden
+guide.vampirism.itemsAndBlocks.gildedIron.text=Ein Block, der ähnlich wie ein nomaler Goldblock aussieht, aber er benötigt nicht viel Gold. Wird für Rituale verwendet.
+guide.vampirism.itemsAndBlocks.garlic_concentrated=Wird in einigen Rezepten verwendet.
+guide.vampirism.itemsAndBlocks.garlic_bomb=Werfbare Knoblauch Waffe mit Flächenschaden.
 
 #Levels
+guide.vampirism.levels.introduction.title=Einführung
+guide.vampirism.levels.altar4.title=Level %d+
+guide.vampirism.levels.altar4.item_text=Benötigte Gegenstände
+guide.vampirism.levels.altar4.structure1.name=Struktur 1
+guide.vampirism.levels.altar4.structure2.name=Struktur 2 (Du solltest in den Norden gucken , wenn du es baust)
+guide.vampirism.levels.altar4.item_req=Item Anforderungen
+guide.vampirism.levels.category=Wie man auflevelt
 
 #Mobs
+guide.vampirism.mobs.category=Mobs
+guide.vampirism.mobs.vampire.text=Atackiert Spieler wenn sie kein Vampir Level haben was höher ist als %s./nEs greift auch Dorfbewohner an und macht diese zum Vampir./nNacht aktiv
+guide.vampirism.mobs.vampire_minion.title=Vampir Sklave
+guide.vampirism.mobs.ghost.text=Erscheinen im Vampir Biom.
 
 #VampirePlayer
+guide.vampirism.vplayer.category=Vampirspielerfunktionen
+guide.vampirism.vplayer.general.title=Generell
+guide.vampirism.vplayer.sun_damage.title=Sonnenschaden
+guide.vampirism.vplayer.skills.title=Fähigkeiten
 
 #VampireLord
+guide.vampirism.vlord.category=Vampirlord
+guide.vampirism.vlord.introduction.title=Einführung
+guide.vampirism.vlord.become.title=Wie werde ich einer
+guide.vampirism.vlord.multiplayer.title=Im Mehrspieler Modus
+guide.vampirism.vlord.minions.title=Skalaven
 
 
 
