@@ -517,7 +517,7 @@ public class VampirePlayer implements ISyncableExtendedProperties, IMinionLord {
 		if (type > 0) {
 			long t = player.worldObj.getTotalWorldTime();
 			boolean armor = ItemVampireArmor.isFullyWorn(player);
-			if ((t % 250 == 0 || ticksInSun == 1) && !armor) {
+			if (!armor && BALANCE.VAMPIRE_PLAYER_SUNDAMAGE_NAUSEA && (t % 250 == 0 || ticksInSun == 1)) {
 				player.addPotionEffect(new PotionEffect(Potion.confusion.id, 180));
 			}
 			if (type > 1) {

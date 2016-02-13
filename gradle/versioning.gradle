@@ -21,7 +21,6 @@ else{
     writeVersion()
 }
 version = config.minecraft_version + "-" + project.mod_version
-
 logger.lifecycle "Version "+project.mod_version
 def getLatestTag(){
     def stdout = new ByteArrayOutputStream()

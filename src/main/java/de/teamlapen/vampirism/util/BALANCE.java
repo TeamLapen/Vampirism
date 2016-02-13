@@ -143,8 +143,6 @@ public final class BALANCE {
 		@DefaultInt(value = 45, name = "Invisibility Cooldown")
 		public static int INVISIBILITY_COOLDOWN;
 
-		@DefaultInt(value = 2, minValue = 1, name = "Bat Speed Modifier")
-		public static int BAT_SPEED_MOD;
 
 		@DefaultInt(value = 3, minValue = -1, name = "Bat Transformation Min Level")
 		public static int BAT_MIN_LEVEL;
@@ -200,14 +198,10 @@ public final class BALANCE {
 	@DefaultInt(value = 2, minValue = 1, name = "Player Level for Vampire Attack", comment = "Vampires attack players unless their vampire level is higher than this")
 	public static int VAMPIRE_FRIENDLY_LEVEL;
 
-	@DefaultInt(value = 5, minValue = 0, name = "Vampire Hunter Spawn", comment = "Not used anymore")
-	public static int VAMPIRE_HUNTER_SPAWN_PROBE;
 
 	@DefaultInt(value = 100, minValue = 0, name = "Vampire Spawn Probe", comment = "")
 	public static int VAMPIRE_SPAWN_PROBE;
 
-	@DefaultInt(value = 30, minValue = 0, name = "Vampire Lord Spawn Probe", comment = "Not used anymore")
-	public static int VAMPIRE_LORD_SPAWN_PROBE;
 
 	// Vampireplayer
 	@DefaultBoolean(value = true, name = "Vampire Player Loose Level", comment = "Whether vampireplayers should loose level if killed by a hunter")
@@ -265,6 +259,9 @@ public final class BALANCE {
 
 	@DefaultBoolean(value = true, name = "Increase blood usage", comment = "Increase the amount of blood needed per vampire level")
 	public static boolean INCREASE_BLOOD_USAGE;
+
+	@DefaultBoolean(value = true, name = "Sundamage Nausea", comment = "Whether or not the player can get a nausea effect in the sun")
+	public static boolean VAMPIRE_PLAYER_SUNDAMAGE_NAUSEA;
 	/**
 	 * Calculates the players night vision effect
 	 * 

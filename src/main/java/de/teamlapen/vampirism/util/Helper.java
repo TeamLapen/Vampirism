@@ -347,6 +347,7 @@ public class Helper {
 		try {
 			return e.worldObj.getBiomeGenForCoords(MathHelper.floor_double(e.posX), MathHelper.floor_double(e.posZ)) instanceof BiomeVampireForest;
 		} catch (NullPointerException e1) {
+			//http://openeye.openmods.info/crashes/8cef4d710e41adf9be8362e57ad70d28
 			Logger.e("Helper", e1, "Nullpointer when checking biome. This is strange and should not happen");
 			return false;
 		}

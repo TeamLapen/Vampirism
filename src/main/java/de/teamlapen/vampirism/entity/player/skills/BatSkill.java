@@ -1,7 +1,8 @@
 package de.teamlapen.vampirism.entity.player.skills;
 
-import java.util.UUID;
-
+import de.teamlapen.vampirism.entity.player.PlayerModifiers;
+import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.util.BALANCE;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -9,8 +10,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ChatComponentTranslation;
-import de.teamlapen.vampirism.entity.player.PlayerModifiers;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
+
+import java.util.UUID;
 
 public class BatSkill extends DefaultSkill implements ILastingSkill {
 	public final static float BAT_WIDTH = 0.5F;
@@ -40,7 +41,7 @@ public class BatSkill extends DefaultSkill implements ILastingSkill {
 
 	@Override
 	public int getMinLevel() {
-		return 4;
+		return BALANCE.VP_SKILLS.BAT_MIN_LEVEL;
 	}
 
 	@Override
