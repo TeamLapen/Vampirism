@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.Achievements;
 import de.teamlapen.vampirism.core.ModEventHandler;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.VampirismCommand;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.converted.DefaultConvertingHandler;
@@ -23,6 +24,8 @@ import de.teamlapen.vampirism.entity.player.VampirePlayer;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.Item;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
@@ -47,6 +50,12 @@ public class VampirismMod {
     public static IProxy proxy;
     public static boolean inDev=false;
     public static AbstractPacketDispatcher dispatcher = new ModPacketDispatcher();
+    public static CreativeTabs creativeTab = new CreativeTabs(REFERENCE.MODID) {
+        @Override
+        public Item getTabIconItem() {
+            return ModItems.vampireFang;
+        }
+    };
 
     public static boolean isRealism() {
         return Configs.realism_mode;

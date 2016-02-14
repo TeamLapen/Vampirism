@@ -1,7 +1,10 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import de.teamlapen.lib.lib.util.InventoryRenderHelper;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 
 /**
@@ -12,13 +15,16 @@ public class ModItemsRender {
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
             case PRE_INIT:
-                preInit((FMLPreInitializationEvent) event);
+                registerRenderers();
                 break;
         }
 
     }
 
-    private static void preInit(FMLPreInitializationEvent event) {
+    private static void registerRenderers() {
+        VampirismMod.log.d("ModItemsRender", "Registering renderer");
+        InventoryRenderHelper renderHelper = new InventoryRenderHelper(REFERENCE.MODID);
+        renderHelper.registerRender(ModItems.vampireFang, "normal");
 
     }
 }
