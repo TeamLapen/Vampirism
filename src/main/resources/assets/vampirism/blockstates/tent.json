@@ -1,6 +1,0 @@
-{
-  "variants": {
-    "normal": { "model": "vampirism:invisible" },
-    "inventory": { "model": "vampirism:invisible" }
-  }
-}

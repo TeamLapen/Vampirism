@@ -1,7 +1,0 @@
-{
-  "variants":{
-    "type=purplebrick":{"model":"vampirism:castleBlock_purpleBrick"},
-    "type=darkbrick":{"model":"vampirism:castleBlock_darkBrick"},
-    "type=darkbrickbloody":{"model":"vampirism:castleBlock_darkBrickBloody"}
-  }
-}

@@ -1,8 +1,0 @@
-{
-	"variants": {
-		"half=bottom,variant=purplebrick": { "model": "vampirism:half_purpleBrick_slab" },
-		"half=top,variant=purplebrick": { "model": "vampirism:upper_purpleBrick_slab" },
-		"half=bottom,variant=darkbrick": { "model": "vampirism:half_darkBrick_slab" },
-		"half=top,variant=darkbrick": { "model": "vampirism:upper_darkBrick_slab" }
-	}
-}

@@ -1,6 +1,0 @@
-{
-  "parent": "vampirism:item/standard_item",
-	"textures": {
-		"layer0": "vampirism:items/minionNameTag"
-	}
-}
