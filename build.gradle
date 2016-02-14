@@ -21,7 +21,7 @@ loadProperties()
 
 group = "de.teamlapen.vampirism"
 archivesBaseName= "Vampirism"
-sourceCompatibility = 1.8
+sourceCompatibility = 1.7
 targetCompatibility = 1.8
 
 def loadProperties(){
@@ -39,3 +39,14 @@ apply from: 'gradle/versioning.gradle'
 apply from: 'gradle/forge.gradle'
 apply from: 'gradle/dev.gradle'
 apply from: 'gradle/deploy.gradle'
+
+sourceSets
+        {
+            main
+                    {
+                        java { srcDirs = ["$projectDir/src/main/java", "$projectDir/src/lib/java"] } resources {
+                            srcDirs = ["$projectDir/src/main/resources", "$projectDir/src/lib/resources"]
+                        }
+                    }
+
+        }

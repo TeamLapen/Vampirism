@@ -6,7 +6,6 @@ import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.lib.network.RequestPlayerUpdatePacket;
 import de.teamlapen.lib.network.UpdateEntityPacket;
-import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;

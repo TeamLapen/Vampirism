@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.client.render.RenderGhost;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderBat;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -38,8 +37,23 @@ public class ModEntitiesRender{
     }
 
     private static void preInit(FMLPreInitializationEvent event){
-        RenderingRegistry.registerEntityRenderingHandler(EntityBlindingBat.class,RenderBat::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityGhost.class,RenderGhost::new);
-        RenderingRegistry.registerEntityRenderingHandler(EntityConvertedCreature.class,RenderConvertedCreature::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityBlindingBat.class, new IRenderFactory<EntityBlindingBat>() {
+            @Override
+            public Render<? super EntityBlindingBat> createRenderFor(RenderManager manager) {
+                return new RenderBat(manager);
+            }
+        });//RenderBat::new
+        RenderingRegistry.registerEntityRenderingHandler(EntityGhost.class, new IRenderFactory<EntityGhost>() {
+            @Override
+            public Render<? super EntityGhost> createRenderFor(RenderManager manager) {
+                return new RenderGhost(manager);
+            }
+        });
+        RenderingRegistry.registerEntityRenderingHandler(EntityConvertedCreature.class, new IRenderFactory<EntityConvertedCreature>() {
+            @Override
+            public Render<? super EntityConvertedCreature> createRenderFor(RenderManager manager) {
+                return new RenderConvertedCreature(manager);
+            }
+        });
     }
 }

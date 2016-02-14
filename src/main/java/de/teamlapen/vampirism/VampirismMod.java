@@ -6,6 +6,7 @@ import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.lib.lib.util.Logger;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.BiteableRegistry;
+import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.api.entity.player.FactionRegistry;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
@@ -111,7 +112,12 @@ public class VampirismMod {
         VampirismAPI.HUNTER_FACTION = HunterFaction.instance();
         FactionRegistry.addFaction(VampirismAPI.VAMPIRE_FACTION);
         FactionRegistry.addFaction(VampirismAPI.HUNTER_FACTION);
-        BiteableRegistry.setDefaultConvertingHandlerCreator(DefaultConvertingHandler::new);
+        BiteableRegistry.setDefaultConvertingHandlerCreator(new BiteableRegistry.ICreateDefaultConvertingHandler() {
+            @Override
+            public IConvertingHandler create(IConvertingHandler.IDefaultHelper helper) {
+                return new DefaultConvertingHandler(helper);
+            }
+        });//DefaultConvertingHandler::new
     }
 
 }
