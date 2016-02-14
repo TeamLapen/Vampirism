@@ -1,0 +1,7 @@
+Hello,
+
+I would like to see a event in either net.minecraft.util.FoodStats#addExhaustion or in net.minecraft.entity.player.EntityPlayer#addExhaustion.
+There probably a few use cases e.g. a power armor, that reduces the players food usage, but I would like to use it in my mod Vampirism.
+It replaces (for Vampire Player) the food bar with a blood bar, which can only be filled by sucking blood from animals. Therefore it needs to be informed about the players exhaustions.
+I've thought about a few ways to do this, but finally came to the conclusion that a hook would be the best way. I will list them here, please tell me if you disagree:
+1.

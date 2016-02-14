@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.entity.player;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
@@ -23,6 +25,13 @@ public class ModPlayerEventHandler {
             if (HunterPlayer.get((EntityPlayer) event.entity) == null) {
                 HunterPlayer.register((EntityPlayer) event.entity);
             }
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onLivingUpdateLast(LivingEvent.LivingUpdateEvent event) {
+        if (event.entity instanceof EntityPlayer) {
+            VampirePlayer.get((EntityPlayer) event.entity).onUpdateBloodStats();
         }
     }
 

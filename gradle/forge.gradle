@@ -32,7 +32,7 @@ processResources {
 
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
-        include '*.info'
+        include '*.info', "*.mcmeta", "META_INF/**"
         // replace version and mcversion
         expand 'm_version': project.mod_version, 'mc_version': project.config.minecraft_version
     }
@@ -45,8 +45,10 @@ processResources {
 }
 
 jar {
+    //Keep the jar as clean as possible
+    includeEmptyDirs = false
     manifest {
-        attributes 'FMLCorePlugin': 'de.teamlapen.vampirism.coremod.VampirismFMLLoadingPlugin',
-                'FMLCorePluginContainsFMLMod': 'true'
+        //attributes 'FMLCorePlugin': 'de.teamlapen.vampirism.coremod.VampirismFMLLoadingPlugin',
+        //        'FMLCorePluginContainsFMLMod': 'true'
     }
 }

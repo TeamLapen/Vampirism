@@ -1,11 +1,14 @@
 package de.teamlapen.vampirism.entity.player;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.util.SRGNAMES;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.FoodStats;
 import net.minecraft.world.EnumDifficulty;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -20,6 +23,7 @@ public class BloodStats {
     public static final float LOW_SATURATION = 0.3F;
     public static final float MEDIUM_SATURATION = 0.7F;
     public static final float HIGH_SATURATION = 1.0F;
+    private final static String TAG = "BloodStats";
     private final int MAXBLOOD = 20;
     private final EntityPlayer player;
     private int bloodLevel = 20;
@@ -110,11 +114,22 @@ public class BloodStats {
 
     /**
      * Updated the blood level
-     *
+     * Only call this if the player is a vampire
      * @return Whether it changed or not
      */
     public boolean onUpdate() {
+        FoodStats foodStats = player.getFoodStats();
+        foodStats.setFoodLevel(10);
         EnumDifficulty enumDifficulty = player.worldObj.getDifficulty();
+        float e = 0;
+        try {
+            e = ReflectionHelper.getPrivateValue(FoodStats.class, foodStats, "foodExhaustionLevel", SRGNAMES.FoodStats_foodExhaustionLevel);
+            addExhaustion(e);
+            ReflectionHelper.setPrivateValue(FoodStats.class, foodStats, 0, "foodExhaustionLevel", SRGNAMES.FoodStats_foodExhaustionLevel);
+        } catch (Exception e1) {
+            VampirismMod.log.e(TAG, e1, "Failed to access foodExhaustionLevel");
+            throw e1;
+        }
         this.prevBloodLevel = bloodLevel;
         if (this.bloodExhaustionLevel > 4.0F) {
             this.bloodExhaustionLevel -= 4.0F;
@@ -132,7 +147,7 @@ public class BloodStats {
                 this.addExhaustion(3.0F);
                 this.bloodTimer = 0;
             }
-        } else if (this.bloodTimer <= 0) {
+        } else if (this.bloodLevel <= 0) {
             ++this.bloodTimer;
 
             if (this.bloodTimer >= 80) {
@@ -184,7 +199,7 @@ public class BloodStats {
         bloodLevel = amt < 0 ? 0 : (amt > 20 ? 20 : amt);
     }
 
-    public void addExhaustion(float amount) {
+    protected void addExhaustion(float amount) {
         this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount * modifier, 40F);
     }
 

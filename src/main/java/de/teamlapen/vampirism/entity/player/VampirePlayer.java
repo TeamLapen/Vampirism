@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.IVampire;
 import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.Achievements;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -25,6 +26,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.FoodStats;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -105,6 +107,9 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
         PlayerModifiers.applyModifier(player, SharedMonsterAttributes.attackDamage, "Vampire", getLevel(), Balance.vp.STRENGTH_LCAP, Balance.vp.STRENGTH_MAX_MOD, Balance.vp.STRENGTH_TYPE);
         PlayerModifiers.applyModifier(player, SharedMonsterAttributes.maxHealth, "Vampire", getLevel(), Balance.vp.HEALTH_LCAP, Balance.vp.HEALTH_MAX_MOD, Balance.vp.HEALTH_TYPE);
         bloodStats.addExhaustionModifier("level", 1.0F + getLevel() / (float) getMaxLevel());
+        if (getLevel() > 0) {
+            player.addStat(Achievements.becomingAVampire, 1);
+        }
     }
 
     @Override
@@ -192,12 +197,20 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
 
     @Override
     public void onUpdate() {
-
-        if (this.bloodStats.onUpdate()) {
-            sync(this.bloodStats.writeUpdate(new NBTTagCompound()), false);
-        }
         if (!player.worldObj.isRemote) {
             if (biteCooldown > 0) biteCooldown--;
+        }
+    }
+
+    /**
+     * Update the blood stats.
+     * Is called by a separate event handler, so this is done after all exhaustion is added to {@link FoodStats#foodExhaustionLevel}
+     */
+    public void onUpdateBloodStats() {
+        if (getLevel() > 0) {
+            if (this.bloodStats.onUpdate()) {
+                sync(this.bloodStats.writeUpdate(new NBTTagCompound()), false);
+            }
         }
     }
 
@@ -307,6 +320,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
             if (amt > 0) {
                 handleSpareBlood(amt);
             }
+            player.addStat(Achievements.suckingBlood, 1);
             NBTTagCompound updatePacket = bloodStats.writeUpdate(new NBTTagCompound());
             updatePacket.setInteger(KEY_SPAWN_BITE_PARTICLE, entity.getEntityId());
             sync(updatePacket, true);
