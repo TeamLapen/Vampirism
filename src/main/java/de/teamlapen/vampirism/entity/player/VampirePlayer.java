@@ -126,7 +126,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
      * TODO core mod hook into EntityPlayer
      */
     public void addExhaustion(float p_71020_1_) {
-        if (!player.capabilities.disableDamage) {
+        if (!player.capabilities.disableDamage && getLevel() > 0) {
             if (!player.worldObj.isRemote) {
                 bloodStats.addExhaustion(p_71020_1_);
             }

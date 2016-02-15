@@ -25,6 +25,8 @@ public class ModItemsRender {
         VampirismMod.log.d("ModItemsRender", "Registering renderer");
         InventoryRenderHelper renderHelper = new InventoryRenderHelper(REFERENCE.MODID);
         renderHelper.registerRender(ModItems.vampireFang, "normal");
+        renderHelper.registerRender(ModItems.humanHeart, "normal");
+        renderHelper.registerRender(ModItems.humanHeartWeak, "normal");
 
     }
 }

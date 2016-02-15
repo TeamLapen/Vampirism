@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.items.ItemHumanHeart;
+import de.teamlapen.vampirism.items.ItemHumanHeartWeak;
 import de.teamlapen.vampirism.items.ItemVampireFang;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
@@ -13,6 +15,8 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class ModItems {
 
     public static ItemVampireFang vampireFang;
+    public static ItemHumanHeart humanHeart;
+    public static ItemHumanHeartWeak humanHeartWeak;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
@@ -27,6 +31,8 @@ public class ModItems {
     private static void registerItems() {
         VampirismMod.log.d("ModItems", "Registering Items");
         vampireFang = registerItem(new ItemVampireFang());
+        humanHeart = registerItem(new ItemHumanHeart());
+        humanHeartWeak = registerItem(new ItemHumanHeartWeak());
     }
 
     private static <T extends Item> T registerItem(T item) {
