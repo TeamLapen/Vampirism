@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.Achievements;
+import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Permissions;
@@ -133,6 +134,14 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
         }
     }
 
+    private void makeVampire() {
+        //TODO handle other faction levels
+        if (getLevel() == 0) {
+            this.levelUp();
+            player.addPotionEffect(new PotionEffect(Potion.resistance.id, 300));//TODO add saturation as well
+        }
+    }
+
     @Override
     public boolean isAutoFillEnabled() {
         return false;
@@ -199,6 +208,12 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
     public void onUpdate() {
         if (!player.worldObj.isRemote) {
             if (biteCooldown > 0) biteCooldown--;
+            PotionEffect sanguinare = player.getActivePotionEffect(ModPotions.sanguinare);
+            if (sanguinare != null && getLevel() > 0) {
+                player.removePotionEffect(ModPotions.sanguinare.getId());
+            } else if (sanguinare != null && getLevel() == 0 && sanguinare.getDuration() == 1) {
+                makeVampire();
+            }
         }
     }
 
