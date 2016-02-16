@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.potion;
 
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;

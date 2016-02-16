@@ -1,9 +1,12 @@
 package de.teamlapen.vampirism.network;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampireSkill;
+import de.teamlapen.vampirism.api.entity.player.vampire.SkillRegistry;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -16,10 +19,10 @@ public class InputEventPacket implements IMessage {
 
     private final static String TAG = "InputEventPacket";
     public static String SUCKBLOOD = "sb";
-    private final String SPLIT = "-";
     //    public static String TOGGLEAUTOFILLBLOOD = "ta";
 //    public static String REVERTBACK = "rb";
-//    public static String TOGGLESKILL = "ts";
+    public static String TOGGLESKILL = "ts";
+    private final String SPLIT = "-";
 //    public static String LEAVE_COFFIN = "lc";
 //    public static String MINION_CONTROL = "mc";
 //    public static final String SWITCHVISION = "sw";
@@ -68,11 +71,39 @@ public class InputEventPacket implements IMessage {
                 try {
                     id = Integer.parseInt(message.param);
                 } catch (NumberFormatException e) {
-                    VampirismMod.log.e(TAG, "Receiving invalid param", e);
+                    VampirismMod.log.e(TAG, e, "Receiving invalid param for %s", message.action);
                 }
                 if (id != 0) {
                     VampirePlayer.get(player).biteEntity(id);
                 }
+            } else if (message.action.equals(TOGGLESKILL)) {
+                int id = -1;
+                try {
+                    id = Integer.parseInt(message.param);
+                } catch (NumberFormatException e) {
+                    VampirismMod.log.e(TAG, e, "Receiving invalid param for %s", message.action);
+                }
+                if (id != -1) {
+                    IVampireSkill skill = SkillRegistry.getSkillFromId(id);
+                    if (skill != null) {
+                        IVampireSkill.PERM r = VampirePlayer.get(player).getSkillHandler().toggleSkill(skill);
+                        switch (r) {
+                            case LEVEL_TO_LOW:
+                                player.addChatMessage(new ChatComponentTranslation("text.vampirism.skill.level_to_low"));
+                                break;
+                            case DISABLED:
+                                player.addChatMessage(new ChatComponentTranslation("text.vampirism.skill.deactivated_by_serveradmin"));
+                                break;
+                            case COOLDOWN:
+                                player.addChatMessage(new ChatComponentTranslation("text.vampirism.skill.cooldown_not_over"));
+                                break;
+                        }
+                    } else {
+                        VampirismMod.log.e(TAG, "Failed to find skill with id %d", id);
+                    }
+
+                }
+
             }
             return null;
         }

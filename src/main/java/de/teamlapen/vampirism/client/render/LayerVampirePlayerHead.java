@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.render;
 
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;

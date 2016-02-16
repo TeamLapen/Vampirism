@@ -1,0 +1,61 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "builtin/generated",
+    "transform": "forge:default-item"
+  },
+  "variants": {
+    "type": {
+      "meta_0": {
+        "textures": {
+          "layer0": "vampirism:items/blood_bottle_0"
+        }
+      },
+      "meta_1": {
+        "textures": {
+          "layer0": "vampirism:items/blood_bottle_1"
+        }
+      },
+      "meta_2": {
+        "textures": {
+          "layer0": "vampirism:items/blood_bottle_2"
+        }
+      },
+      "meta_3": {
+        "textures": {
+          "layer0": "vampirism:items/blood_bottle_3"
+        }
+      },
+      "meta_4": {
+        "textures": {
+          "layer0": "vampirism:items/blood_bottle_4"
+        }
+      },
+      "meta_5": {
+        "textures": {
+          "layer0": "vampirism:items/blood_bottle_5"
+        }
+      },
+      "meta_6": {
+        "textures": {
+          "layer0": "vampirism:items/blood_bottle_6"
+        }
+      },
+      "meta_7": {
+        "textures": {
+          "layer0": "vampirism:items/blood_bottle_7"
+        }
+      },
+      "meta_8": {
+        "textures": {
+          "layer0": "vampirism:items/blood_bottle_8"
+        }
+      },
+      "meta_9": {
+        "textures": {
+          "layer0": "vampirism:items/blood_bottle_9"
+        }
+      }
+    }
+  }
+}

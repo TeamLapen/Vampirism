@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.entity.player;
 
+import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;

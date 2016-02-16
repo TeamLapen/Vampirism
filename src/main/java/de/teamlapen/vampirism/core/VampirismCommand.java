@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.FactionRegistry;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;

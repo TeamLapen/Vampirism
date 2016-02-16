@@ -3,11 +3,13 @@ package de.teamlapen.vampirism.client.core;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.InputEventPacket;
+import de.teamlapen.vampirism.network.ModGuiHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
@@ -27,7 +29,7 @@ public class ModKeys {
 //    private static final String MINION_CONTROL = "key.vampirism.minion_control";
 
     private static KeyBinding SUCK = new KeyBinding(SUCK_BLOOD, Keyboard.KEY_F, CATEGORY);
-    private static KeyBinding SKILL = new KeyBinding(TOGGLE_SKILLS, -2, CATEGORY);
+    private static KeyBinding SKILL = new KeyBinding(TOGGLE_SKILLS, -98, CATEGORY);
 
     private ModKeys() {
 
@@ -49,29 +51,28 @@ public class ModKeys {
     }
 
     /**
-     * @param k if the number is negative it is interpreted as mousekey and multiplied with -1
+     * @param k if the number is negative it is interpreted as mousekey and 100 is added
      * @return Whether the key is down or not
      */
     public static boolean isKeyDown(int k) {
         if (k >= 0) {
             return Keyboard.isKeyDown(k);
         } else {
-            return Mouse.isButtonDown(k * -1);
+            return Mouse.isButtonDown(k + 100);
         }
     }
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
             case PRE_INIT:
-                preInit((FMLPreInitializationEvent) event);
+                MinecraftForge.EVENT_BUS.register(new ModKeys());
+                ClientRegistry.registerKeyBinding(SKILL);
+                ClientRegistry.registerKeyBinding(SUCK);
                 break;
         }
 
     }
 
-    private static void preInit(FMLPreInitializationEvent event) {
-        MinecraftForge.EVENT_BUS.register(new ModKeys());
-    }
 
     /**
      * @return the KeyBinding that is currently pressed
@@ -94,6 +95,9 @@ public class ModKeys {
             if (mouseOver != null && mouseOver.entityHit != null) {
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + mouseOver.entityHit.getEntityId()));
             }
+        } else if (keyPressed == KEY.SKILL) {
+            EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+            player.openGui(VampirismMod.instance, ModGuiHandler.ID_SKILL, player.worldObj, player.chunkCoordX, player.chunkCoordY, player.chunkCoordZ);
         }
     }
 

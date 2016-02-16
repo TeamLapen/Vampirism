@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.api;
 
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.IHunterPlayer;
-import de.teamlapen.vampirism.api.entity.player.IVampirePlayer;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.entity.EntityCreature;
 
 import java.util.HashMap;
@@ -16,6 +16,11 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class VampirismAPI {
 
     public static final String EXTENDED_CREATURE_PROP = "ExtCreatureVampirism";
+    public static final String FLUID_BLOOD_NAME = "vampirismblood";
+    /**
+     * One blood in the players blood stats represents this amount of mB fluid blood
+     */
+    public static final int FOOD_TO_FLUID_BLOOD = 100;
     private final static HashMap<Integer,Boolean> sundamageDims=new HashMap<Integer, Boolean>();
     private final static HashMap<Integer,Boolean> sundamageConfiguredDims =new HashMap<Integer, Boolean>();
     private final static Set<Integer> noSundamageBiomes=new CopyOnWriteArraySet<Integer>();

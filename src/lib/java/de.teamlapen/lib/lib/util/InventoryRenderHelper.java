@@ -40,6 +40,16 @@ public class InventoryRenderHelper {
     }
 
     /**
+     * {@link InventoryRenderHelper#registerRender(Item, int, String, String)} with registry name for every meta.
+     * variant is "meta_"+i
+     */
+    public void registerRenderAllMeta(Item item, int meta_count) {
+        for (int i = 0; i < meta_count; i++) {
+            registerRender(item, i, "meta_" + i);
+        }
+    }
+
+    /**
      * {@link InventoryRenderHelper#registerRender(Item, int, String, String)} with meta 0
      */
     public void registerRender(Item item, String name, String variant) {

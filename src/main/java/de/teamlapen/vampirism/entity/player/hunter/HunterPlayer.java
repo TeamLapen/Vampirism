@@ -1,9 +1,13 @@
-package de.teamlapen.vampirism.entity.player;
+package de.teamlapen.vampirism.entity.player.hunter;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.IHunterPlayer;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.entity.player.PlayerModifiers;
+import de.teamlapen.vampirism.entity.player.VampirismPlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -134,5 +138,10 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
     @Override
     public void onPlayerClone(EntityPlayer original) {
         copyFrom(original);
+    }
+
+    @Override
+    public Predicate<? super Entity> getNonFriendlySelector(boolean otherFactionPlayers) {
+        return Predicates.alwaysTrue();//TODO adjust
     }
 }

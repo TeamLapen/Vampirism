@@ -3,7 +3,6 @@ package de.teamlapen.lib.lib.gui.client;
 
 import de.teamlapen.lib.LIBREFERENCE;
 import de.teamlapen.lib.VampLib;
-import de.teamlapen.lib.lib.util.IPieElement;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
@@ -24,11 +23,11 @@ import java.util.ArrayList;
  * @author maxanier
  *
  */
-public abstract class GuiPieMenu extends GuiScreen {
+public abstract class GuiPieMenu<T> extends GuiScreen {
     private final static ResourceLocation backgroundTex = new ResourceLocation(LIBREFERENCE.MODID + ":textures/gui/pie-menu-bg.png");
     private final static ResourceLocation centerTex = new ResourceLocation(LIBREFERENCE.MODID + ":textures/gui/pie-menu-center.png");
     private static final ResourceLocation WIDGETS = new ResourceLocation("textures/gui/widgets.png");
-    protected final ArrayList<IPieElement> elements;
+    protected final ArrayList<T> elements;
     /**
      * Icon width/height
      */
@@ -64,10 +63,10 @@ public abstract class GuiPieMenu extends GuiScreen {
         this.bggreen = (backgroundColor & 255) / 255.0F;
         this.bgalpha = (backgroundColor >> 24 & 255) / 255.0F;
         this.name = name;
-        this.elements = new ArrayList<IPieElement>();
+        this.elements = new ArrayList<>();
     }
 
-    protected void afterIconDraw(IPieElement p, int x, int y) {
+    protected void afterIconDraw(T element, int x, int y) {
 
     }
 
@@ -157,7 +156,7 @@ public abstract class GuiPieMenu extends GuiScreen {
             selectedElement = -1;
         // Draw each skill
         for (int i = 0; i < elementCount; i++) {
-            IPieElement s = elements.get(i);
+            T element = elements.get(i);
 
             // Check if the mouse cursor is in the area of this element
             double rad = radDiff * i;
@@ -171,7 +170,7 @@ public abstract class GuiPieMenu extends GuiScreen {
             int y = (int) (cY - Math.sin(rad) * radius) - IS / 2;
 
             // Draw box and, if selected, highlight
-            float[] col = this.getColor(s);
+            float[] col = this.getColor(element);
             if (col != null) {
                 GL11.glColor4f(col[0], col[1], col[2], 0.5F);
             }
@@ -186,16 +185,16 @@ public abstract class GuiPieMenu extends GuiScreen {
                 drawSelectedCenter(cX, cY, rad);
             }
             // Draw Icon
-            this.mc.getTextureManager().bindTexture(s.getIconLoc());
-            this.drawTexturedModalRect(x, y, s.getMinU(), s.getMinV(), IS, IS);
+            this.mc.getTextureManager().bindTexture(getIconLoc(element));
+            this.drawTexturedModalRect(x, y, getMinU(element), getMinV(element), IS, IS);
 
-            this.afterIconDraw(s, x, y);
+            this.afterIconDraw(element, x, y);
 
         }
         if (selectedElement == -1) {
             this.drawUnselectedCenter(cX, cY);
         } else {
-            String name = StatCollector.translateToLocal(elements.get(selectedElement).getUnlocalizedName());
+            String name = StatCollector.translateToLocal(getUnlocalizedName(elements.get(selectedElement)));
             int tx = cX - mc.fontRendererObj.getStringWidth(name) / 2;
             int ty = this.height / 7;
             mc.fontRendererObj.drawStringWithShadow(name, tx, ty, 16777215);
@@ -203,6 +202,28 @@ public abstract class GuiPieMenu extends GuiScreen {
         this.mc.mcProfiler.endSection();
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
+
+    /**
+     * If null, Vampirism's default one will be used
+     * @param item
+     * @return the location of the icon map where the icon for the given item is in
+     */
+    protected abstract ResourceLocation getIconLoc(T item);
+
+    /**
+     *
+     * @param item
+     * @return the min U texture coordinate within the icon map
+     */
+    protected abstract int getMinU(T item);
+
+    /**
+     *
+     * @param item
+     * @return the min V texture coordinate within the icon map
+     */
+    protected abstract int getMinV(T item);
+    protected abstract String getUnlocalizedName(T item);
 
     /**
      * Draws a circle with an arrow at the given coords
@@ -271,7 +292,7 @@ public abstract class GuiPieMenu extends GuiScreen {
      * @param s
      * @return Can be null (-> 255,255,255)
      */
-    protected float[] getColor(IPieElement s) {
+    protected float[] getColor(T s) {
         return null;
     }
 
@@ -297,7 +318,7 @@ public abstract class GuiPieMenu extends GuiScreen {
         GuiIngameForge.renderCrosshairs = false;
     }
 
-    protected void onElementSelected(int id) {
+    protected void onElementSelected(T id) {
 
     }
 
@@ -358,7 +379,7 @@ public abstract class GuiPieMenu extends GuiScreen {
         this.mc.thePlayer.movementInput.updatePlayerMoveState();
         if (!isKeyDown(getMenuKeyCode())) {
             if (selectedElement >= 0) {
-                this.onElementSelected(selectedElement);
+                this.onElementSelected(elements.get(selectedElement));
             }
 
             this.mc.displayGuiScreen(null);

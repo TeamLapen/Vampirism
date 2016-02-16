@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.items.ItemBloodBottle;
 import de.teamlapen.vampirism.items.ItemHumanHeart;
 import de.teamlapen.vampirism.items.ItemHumanHeartWeak;
 import de.teamlapen.vampirism.items.ItemVampireFang;
@@ -17,11 +18,11 @@ public class ModItems {
     public static ItemVampireFang vampireFang;
     public static ItemHumanHeart humanHeart;
     public static ItemHumanHeartWeak humanHeartWeak;
+    public static ItemBloodBottle bloodBottle;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
             case PRE_INIT:
-                INIT:
                 registerItems();
                 break;
         }
@@ -33,6 +34,7 @@ public class ModItems {
         vampireFang = registerItem(new ItemVampireFang());
         humanHeart = registerItem(new ItemHumanHeart());
         humanHeartWeak = registerItem(new ItemHumanHeartWeak());
+        bloodBottle = registerItem(new ItemBloodBottle());
     }
 
     private static <T extends Item> T registerItem(T item) {

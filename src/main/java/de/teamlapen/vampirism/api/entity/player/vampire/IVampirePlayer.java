@@ -1,8 +1,9 @@
-package de.teamlapen.vampirism.api.entity.player;
+package de.teamlapen.vampirism.api.entity.player.vampire;
 
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.IVampire;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -47,6 +48,12 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer, IMinionLord, I
 
     boolean isDisguised();
 
+    /**
+     * Returns false for a null world
+     *
+     * @return if the player is in a remote world
+     */
+    boolean isRemote();
     /**
      * @return The bite type which would be applied to the give entity
      */

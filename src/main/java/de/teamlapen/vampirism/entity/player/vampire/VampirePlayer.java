@@ -1,16 +1,21 @@
-package de.teamlapen.vampirism.entity.player;
+package de.teamlapen.vampirism.entity.player.vampire;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.IVampire;
 import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.IVampirePlayer;
+import de.teamlapen.vampirism.api.entity.player.vampire.ISkillHandler;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.Achievements;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
+import de.teamlapen.vampirism.entity.player.PlayerModifiers;
+import de.teamlapen.vampirism.entity.player.VampirismPlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -41,13 +46,16 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
     private final BloodStats bloodStats;
     private final String KEY_EYE = "eye_type";
     private final String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
+    private final SkillHandler skillHandler;
     private boolean sundamage_cache=false;
     private int biteCooldown = 0;
     private int eyeType = 0;
     public VampirePlayer(EntityPlayer player) {
         super(player);
         bloodStats = new BloodStats(player);
+        skillHandler = new SkillHandler(this);
     }
+
 
     /**
      * Don't call before the construction event of the player entity is finished
@@ -83,7 +91,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
         }
         if (eyeType != this.eyeType) {
             this.eyeType = eyeType;
-            if (!player.worldObj.isRemote) {
+            if (!isRemote()) {
                 NBTTagCompound nbt = new NBTTagCompound();
                 nbt.setInteger(KEY_EYE, eyeType);
                 sync(nbt, true);
@@ -110,6 +118,8 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
         bloodStats.addExhaustionModifier("level", 1.0F + getLevel() / (float) getMaxLevel());
         if (getLevel() > 0) {
             player.addStat(Achievements.becomingAVampire, 1);
+        } else {
+            skillHandler.resetTimers();
         }
     }
 
@@ -124,11 +134,10 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
 
     /**
      * Increases exhaustion level by supplied amount
-     * TODO core mod hook into EntityPlayer
      */
     public void addExhaustion(float p_71020_1_) {
         if (!player.capabilities.disableDamage && getLevel() > 0) {
-            if (!player.worldObj.isRemote) {
+            if (!isRemote()) {
                 bloodStats.addExhaustion(p_71020_1_);
             }
         }
@@ -174,6 +183,15 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
         return false;//TODO implement
     }
 
+    @Override
+    public boolean isRemote() {
+        if (player.worldObj == null) {
+            VampirismMod.log.e(TAG, new Throwable("World not loaded").fillInStackTrace(), "Trying to check if remote, but world is not set yet");
+            return false;
+        }
+        return player.worldObj.isRemote;
+    }
+
 
     @Override
     public boolean isGettingSundamage(boolean forcerefresh) {
@@ -191,7 +209,9 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
 
     @Override
     public void onJoinWorld() {
-
+        if (getLevel() > 0) {
+            skillHandler.onSkillsReactivated();
+        }
     }
 
     @Override
@@ -201,12 +221,20 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
 
     @Override
     public void onDeath(DamageSource src) {
+        skillHandler.deactivateAllSkills();
+    }
 
+    public ISkillHandler getSkillHandler() {
+        return skillHandler;
     }
 
     @Override
     public void onUpdate() {
-        if (!player.worldObj.isRemote) {
+
+        if (!isRemote()) {
+            boolean sync = false;
+            NBTTagCompound syncPacket = new NBTTagCompound();
+
             if (biteCooldown > 0) biteCooldown--;
             PotionEffect sanguinare = player.getActivePotionEffect(ModPotions.sanguinare);
             if (sanguinare != null && getLevel() > 0) {
@@ -214,6 +242,17 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
             } else if (sanguinare != null && getLevel() == 0 && sanguinare.getDuration() == 1) {
                 makeVampire();
             }
+            if (skillHandler.updateSkills()) {
+                sync = true;
+                skillHandler.writeUpdateForClient(syncPacket);
+            }
+
+
+            if (sync) {
+                sync(syncPacket, false);
+            }
+        } else {
+            skillHandler.updateSkills();
         }
     }
 
@@ -253,12 +292,15 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
     public void saveData(NBTTagCompound nbt) {
         bloodStats.writeNBT(nbt);
         nbt.setInteger(KEY_EYE, eyeType);
+        skillHandler.saveToNbt(nbt);
+
     }
 
     @Override
     public void loadData(NBTTagCompound nbt) {
         bloodStats.readNBT(nbt);
         eyeType = nbt.getInteger(KEY_EYE);
+        skillHandler.loadFromNbt(nbt);
     }
 
     @Override
@@ -269,13 +311,18 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
         if (nbt.hasKey(KEY_SPAWN_BITE_PARTICLE)) {
             spawnBiteParticle(nbt.getInteger(KEY_SPAWN_BITE_PARTICLE));
         }
-
+        skillHandler.readUpdateFromServer(nbt);
         bloodStats.loadUpdate(nbt);
     }
 
     @Override
     public PlayableFaction<IVampirePlayer> getFaction() {
         return VampirismAPI.VAMPIRE_FACTION;
+    }
+
+    @Override
+    public Predicate<? super Entity> getNonFriendlySelector(boolean otherFactionPlayers) {
+        return Predicates.alwaysTrue();//TODO adjust
     }
 
     @Override
@@ -288,6 +335,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
     protected void writeFullUpdate(NBTTagCompound nbt) {
         nbt.setInteger(KEY_EYE, getEyeType());
         bloodStats.writeUpdate(nbt);
+        skillHandler.writeUpdateForClient(nbt);
     }
 
     /**
@@ -306,7 +354,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
      * @param entity
      */
     private void biteEntity(EntityLivingBase entity) {
-        if (entity.worldObj.isRemote) return;
+        if (isRemote()) return;
         if (getLevel() == 0) return;
         if (biteCooldown > 0) return;
         int blood = 0;

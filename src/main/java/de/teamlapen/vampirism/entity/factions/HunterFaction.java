@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.IHunter;
 import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.IHunterPlayer;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;

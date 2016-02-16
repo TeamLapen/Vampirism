@@ -18,9 +18,11 @@ import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.converted.DefaultConvertingHandler;
 import de.teamlapen.vampirism.entity.factions.HunterFaction;
 import de.teamlapen.vampirism.entity.factions.VampireFaction;
-import de.teamlapen.vampirism.entity.player.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.ModPlayerEventHandler;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.entity.player.vampire.SkillHandler;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -34,6 +36,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 import java.io.File;
 
@@ -88,7 +91,9 @@ public class VampirismMod {
 
         setupAPI();
         dispatcher.registerPackets();
+        NetworkRegistry.INSTANCE.registerGuiHandler(instance, new ModGuiHandler());
         proxy.onInitStep(IInitListener.Step.PRE_INIT, event);
+        SkillHandler.registerDefaultSkills();
 
 
     }

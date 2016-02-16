@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.entity.player.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
@@ -15,12 +15,11 @@ import java.util.List;
  * Bat which blinds non vampires for a short time.
  */
 public class EntityBlindingBat extends EntityBat {
+    private boolean restrictLiveSpan;
+
     public EntityBlindingBat(World worldIn) {
         super(worldIn);
     }
-
-    private boolean restrictLiveSpan;
-
 
     @Override
     public void onUpdate() {

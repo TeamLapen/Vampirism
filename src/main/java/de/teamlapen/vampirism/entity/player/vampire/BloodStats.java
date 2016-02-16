@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.entity.player;
+package de.teamlapen.vampirism.entity.player.vampire;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.config.Balance;
@@ -33,13 +33,16 @@ public class BloodStats {
     private int prevBloodLevel = 20;
     private Map<String, Float> modifiers = new HashMap<String, Float>();
     private float modifier;
+    private boolean changed = false;
 
     public BloodStats(EntityPlayer player) {
         this.player = player;
         addExhaustionModifier("config", (float) Balance.vp.BLOOD_EXHAUSTION_MOD);
     }
 
-
+    public boolean needsBlood() {
+        return bloodLevel < MAXBLOOD;
+    }
     /**
      * Reads nbt written by either {@link #writeNBTBlood(NBTTagCompound)} or {@link #writeNBT(NBTTagCompound)}
      *
@@ -160,7 +163,11 @@ public class BloodStats {
         } else {
             this.bloodTimer = 0;
         }
-        return this.prevBloodLevel != this.bloodLevel;
+        if (changed || this.prevBloodLevel != this.bloodLevel) {
+            changed = false;
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -174,6 +181,7 @@ public class BloodStats {
         int add = Math.min(amount, MAXBLOOD - bloodLevel);
         bloodLevel += add;
         bloodSaturationLevel = Math.min(this.bloodSaturationLevel + (float) add * saturationModifier * 2.0F, (float) bloodLevel);
+        changed = true;
         return amount - add;
     }
 
@@ -188,6 +196,7 @@ public class BloodStats {
         int bloodToRemove = Math.min(a, blood);
 
         bloodLevel -= bloodToRemove;
+        changed = true;
         return bloodToRemove <= blood;
     }
 
@@ -197,6 +206,7 @@ public class BloodStats {
 
     public void setBloodLevel(int amt) {
         bloodLevel = amt < 0 ? 0 : (amt > 20 ? 20 : amt);
+        changed = true;
     }
 
     protected void addExhaustion(float amount) {
