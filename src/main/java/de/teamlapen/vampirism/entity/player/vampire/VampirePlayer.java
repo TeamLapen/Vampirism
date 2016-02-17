@@ -107,7 +107,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
 
     @Override
     protected VampirismPlayer copyFromPlayer(EntityPlayer old) {
-        return this;
+        return get(old);
     }
 
     @Override
@@ -233,6 +233,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
 
         if (!isRemote()) {
             boolean sync = false;
+            boolean syncToAll = false;
             NBTTagCompound syncPacket = new NBTTagCompound();
 
             if (biteCooldown > 0) biteCooldown--;
@@ -244,12 +245,13 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
             }
             if (skillHandler.updateSkills()) {
                 sync = true;
+                syncToAll = true;
                 skillHandler.writeUpdateForClient(syncPacket);
             }
 
 
             if (sync) {
-                sync(syncPacket, false);
+                sync(syncPacket, syncToAll);
             }
         } else {
             skillHandler.updateSkills();

@@ -97,7 +97,7 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
 
     @Override
     protected VampirismPlayer copyFromPlayer(EntityPlayer old) {
-        return null;
+        return get(old);
     }
 
     @Override

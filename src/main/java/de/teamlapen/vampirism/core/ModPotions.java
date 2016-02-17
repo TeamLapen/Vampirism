@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
+import de.teamlapen.vampirism.potion.PotionThirst;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ResourceLocation;
@@ -26,7 +27,7 @@ public class ModPotions {
     }
 
     private static void preInit(FMLPreInitializationEvent event) {
-        thirst = new PotionSanguinare(new ResourceLocation(REFERENCE.MODID, "thirst"), true, 859494);
+        thirst = new PotionThirst(new ResourceLocation(REFERENCE.MODID, "thirst"), true, 859494);
         sanguinare = new PotionSanguinare(new ResourceLocation(REFERENCE.MODID, "sanguinare"), false, 0x6A0888);
     }
 

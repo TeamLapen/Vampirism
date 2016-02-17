@@ -52,12 +52,9 @@ public class EntityEventHandler {
         }
 
         if (event.entity instanceof EntityPlayer) {
-            if (event.entity.worldObj.isRemote) {
-            } else {
                 for (int i = 0; i < listeners.length; i++) {
                     ((IPlayerEventListener) event.entity.getExtendedProperties(listeners[i])).onJoinWorld();
                 }
-            }
         }
     }
 

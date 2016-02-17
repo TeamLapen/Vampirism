@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.ILastingVampireSkill;
 import de.teamlapen.vampirism.api.entity.player.vampire.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireSkill;
 import de.teamlapen.vampirism.api.entity.player.vampire.SkillRegistry;
-import de.teamlapen.vampirism.entity.player.vampire.skills.FreezeSkill;
+import de.teamlapen.vampirism.entity.player.vampire.skills.*;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.List;
@@ -16,6 +16,11 @@ import java.util.List;
 public class SkillHandler implements ISkillHandler {
     private final static String TAG = "SkillHandler";
     public static FreezeSkill freezeSkill;
+    public static InvisibilitySkill invisibilitySkill;
+    public static RegenSkill regenSkill;
+    public static TeleportSkill teleportSkill;
+    public static VampireRageSkill rageSkill;
+    public static BatSkill batSkill;
     /**
      * Saves timers for skill ids
      * Values:
@@ -34,6 +39,11 @@ public class SkillHandler implements ISkillHandler {
 
     public static void registerDefaultSkills() {
         freezeSkill = SkillRegistry.registerSkill(new FreezeSkill(), "freeze");
+        invisibilitySkill = SkillRegistry.registerSkill(new InvisibilitySkill(), "invisible");
+        regenSkill = SkillRegistry.registerSkill(new RegenSkill(), "regen");
+        teleportSkill = SkillRegistry.registerSkill(new TeleportSkill(), "teleport");
+        rageSkill = SkillRegistry.registerSkill(new VampireRageSkill(), "rage");
+        batSkill = SkillRegistry.registerSkill(new BatSkill(), "bat");
     }
 
     void loadFromNbt(NBTTagCompound nbt) {
@@ -61,11 +71,14 @@ public class SkillHandler implements ISkillHandler {
     }
 
     void onSkillsReactivated() {
-        for (int i = 0; i < skillTimer.length; i++) {
-            if (skillTimer[i] > 0) {
-                ((ILastingVampireSkill) SkillRegistry.getSkillFromId(i)).onReActivated(vampire);
+        if (!vampire.isRemote()) {
+            for (int i = 0; i < skillTimer.length; i++) {
+                if (skillTimer[i] > 0) {
+                    ((ILastingVampireSkill) SkillRegistry.getSkillFromId(i)).onReActivated(vampire);
+                }
             }
         }
+
     }
 
     void writeUpdateForClient(NBTTagCompound nbt) {
@@ -77,7 +90,14 @@ public class SkillHandler implements ISkillHandler {
         if (nbt.hasKey("skill_timers")) {
             int[] updated = nbt.getIntArray("skill_timers");
             for (int i = 0; i < skillTimer.length; i++) {
+                int old = skillTimer[i];
                 skillTimer[i] = updated[i];
+                if (updated[i] > 0 && old <= 0) {
+                    ((ILastingVampireSkill) SkillRegistry.getSkillFromId(i)).onActivatedClient(vampire);
+                } else if (updated[i] <= 0 && old > 0) {
+                    ((ILastingVampireSkill) SkillRegistry.getSkillFromId(i)).onDeactivated(vampire);//Called here if the skill is deactivated
+                }
+
             }
         }
     }
@@ -97,10 +117,8 @@ public class SkillHandler implements ISkillHandler {
                     skillTimer[i]--;
                     ILastingVampireSkill skill = (ILastingVampireSkill) SkillRegistry.getSkillFromId(i);
                     if (t == 1) {
-                        if (!vampire.isRemote()) {
-                            skill.onDeactivated(vampire);
+                        skill.onDeactivated(vampire);//Called here if the skill runs out.
                             dirty = true;
-                        }
                     } else {
                         if (skill.onUpdate(vampire)) {
                             skillTimer[i] = 1;

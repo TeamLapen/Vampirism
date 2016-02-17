@@ -100,6 +100,12 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
         return null;
     }
 
+    /**
+     * Only use this if you are dealing with minions.
+     * Otherwise use {@link VampirismPlayer#getRepresentingPlayer()}
+     *
+     * @return
+     */
     @Override
     public EntityLivingBase getRepresentingEntity() {
         return player;
@@ -185,7 +191,7 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
     }
 
     /**
-     * Copy all relevant values from the given player and return itself, so {@link VampirismPlayer} can copy it's values as well
+     * Copy all relevant values from the given player and return a instance of the old players VampirismPlayer, so {@link VampirismPlayer} can copy it's values as well
      * @param old
      * @return
      */

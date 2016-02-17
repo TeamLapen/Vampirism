@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.client.gui.VampirismHUDOverlay;
 import de.teamlapen.vampirism.client.render.LayerVampireEntity;
 import de.teamlapen.vampirism.client.render.LayerVampirePlayerHead;
+import de.teamlapen.vampirism.client.render.RenderHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -43,6 +44,7 @@ public class ClientProxy extends CommonProxy {
 
     private void registerSubscriptions() {
         MinecraftForge.EVENT_BUS.register(new VampirismHUDOverlay(Minecraft.getMinecraft()));
+        MinecraftForge.EVENT_BUS.register(new RenderHandler(Minecraft.getMinecraft()));
     }
 
     private void registerVampirePlayerHead(RenderManager manager) {

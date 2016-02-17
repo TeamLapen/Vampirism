@@ -12,7 +12,7 @@ public abstract class DefaultSkill implements IVampireSkill {
     /**
      * @param icons If null Vampirism's default one will be used
      */
-    protected DefaultSkill(ResourceLocation icons) {
+    public DefaultSkill(ResourceLocation icons) {
         this.icons = icons;
     }
 

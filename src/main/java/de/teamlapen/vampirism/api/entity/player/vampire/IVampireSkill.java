@@ -21,8 +21,7 @@ public interface IVampireSkill {
     String getUnlocalizedName();
 
     /**
-     * Called when the skill is activated SERVER SIDE ONLY
-     *
+     * Called when the skill is activated. Only called server side
      * @param vampire
      * @return Whether the skill was successfully activated. !Does not give any feedback to the user!
      */

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.entity.player.vampire;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import net.minecraft.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,6 +82,9 @@ public class SkillRegistry {
      * @return The same skill
      */
     public static <T extends IVampireSkill> T registerSkill(T skill, String key) {
+        if (skill == null || StringUtils.isNullOrEmpty(key)) {
+            throw new IllegalArgumentException(String.format("Tried to either register a null skill (%s) or with a null key (%s)", skill, key));
+        }
         if (skillMap.put(key, skill) != null) {
             throw new IllegalArgumentException("There is already a skill registered for " + key);
         }

@@ -54,6 +54,11 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer, IMinionLord, I
      * @return if the player is in a remote world
      */
     boolean isRemote();
+
+    /**
+     * @return The players vampire skill handler
+     */
+    ISkillHandler getSkillHandler();
     /**
      * @return The bite type which would be applied to the give entity
      */
