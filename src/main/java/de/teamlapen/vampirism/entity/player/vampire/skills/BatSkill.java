@@ -20,9 +20,7 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import java.lang.reflect.Method;
 import java.util.UUID;
 
-/**
- * Created by Max on 17.02.2016.
- */
+
 public class BatSkill extends DefaultSkill implements ILastingVampireSkill {
 
     public static final float BAT_HEIGHT = 0.8F;
@@ -128,7 +126,6 @@ public class BatSkill extends DefaultSkill implements ILastingVampireSkill {
 
             player.capabilities.allowFlying = true;
             player.capabilities.isFlying = true;
-            player.capabilities.allowEdit = false;//TODO check if this does the right thing
             player.sendPlayerAbilities();
         } else {
 
@@ -143,7 +140,6 @@ public class BatSkill extends DefaultSkill implements ILastingVampireSkill {
                 player.capabilities.allowFlying = false;
             }
             player.capabilities.isFlying = false;
-            player.capabilities.allowEdit = true;
             player.sendPlayerAbilities();
         }
 
@@ -175,4 +171,5 @@ public class BatSkill extends DefaultSkill implements ILastingVampireSkill {
     public void onActivatedClient(IVampirePlayer vampire) {
         setPlayerBat(vampire.getRepresentingPlayer(), true);
     }
+
 }

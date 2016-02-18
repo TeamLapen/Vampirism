@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.api.entity.convertible;
 
-import com.google.common.base.Throwables;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -9,7 +8,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,7 +27,6 @@ public class BiteableRegistry {
      * Used to store convertible handlers during init
      */
     private static final Map<Class<? extends EntityCreature>, IConvertingHandler> convertibles = new HashMap<>();
-    @SideOnly(Side.CLIENT)
     private static final Map<Class<? extends EntityCreature>, String> convertibleOverlay = new HashMap<>();
     private static final String TAG = "BiteableRegistry";
     /**
@@ -37,14 +34,12 @@ public class BiteableRegistry {
      */
     private static final Map<String, BiteableEntry> biteables = new HashMap<>();
     private static boolean finished = false;
-    public interface ICreateDefaultConvertingHandler{
-        IConvertingHandler create(IConvertingHandler.IDefaultHelper helper);
-    }
     private static  ICreateDefaultConvertingHandler defaultConvertingHandlerCreator;
 
     /**
      * @return A map mapping the overlay resource location string to e convertible entity's class
      */
+    @SideOnly(Side.CLIENT)
     public static Map<Class<? extends EntityCreature>, String> getConvertibleOverlay() {
         return convertibleOverlay;
     }
@@ -69,7 +64,7 @@ public class BiteableRegistry {
      * @param overlay_loc Location of the overlay texture file
      */
     public static void addConvertible(Class<? extends EntityCreature> clazz, String overlay_loc) {
-        addConvertible(clazz, overlay_loc, (IConvertingHandler)null);
+        addConvertible(clazz, overlay_loc, (IConvertingHandler) null);
     }
 
     /**
@@ -92,7 +87,7 @@ public class BiteableRegistry {
      */
     public static void addConvertible(Class<? extends EntityCreature> clazz, String overlay_loc, IConvertingHandler handler) {
         convertibles.put(clazz, handler);
-        if (FMLCommonHandler.instance().getSide().isClient()&&overlay_loc!=null) {
+        if (FMLCommonHandler.instance().getSide().isClient() && overlay_loc != null) {
             convertibleOverlay.put(clazz, overlay_loc);
         }
     }
@@ -124,6 +119,7 @@ public class BiteableRegistry {
     public static void setDefaultConvertingHandlerCreator(ICreateDefaultConvertingHandler creator){
         defaultConvertingHandlerCreator=creator;
     }
+
     public static BiteableEntry getEntry(String entity_name) {
         return biteables.get(entity_name);
     }
@@ -166,5 +162,9 @@ public class BiteableRegistry {
         convertibles.clear();
 
         finished = true;
+    }
+
+    public interface ICreateDefaultConvertingHandler {
+        IConvertingHandler create(IConvertingHandler.IDefaultHelper helper);
     }
 }
