@@ -28,8 +28,11 @@ public class BalanceMobProps extends BalanceValues {
     @DefaultInt(value = 1, minValue = 0, name = "converted_mob_default_dmg")
     public int CONVERTED_MOB_DEFAULT_DMG;
 
-    @DefaultInt(value = 60, comment = "Duration of the sanguinare effect for mobs in seconds", name = "mob_sanguinare_duration", minValue = 1)
-    public int MOB_SANGUINARE_DURATION;
+    @DefaultInt(value = 60, comment = "Duration of the sanguinare effect for mobs in seconds", name = "sanguinare_avg_duration", minValue = 1)
+    public int SANGUINARE_AVG_DURATION;
+
+    @DefaultInt(value = 20, name = "blood_regen_chance", comment = "Probability that a bitten creature will regen one blood. Is checked every 2 seconds with a 1/n chance")
+    public int BLOOD_REGEN_CHANCE;
 
     public BalanceMobProps(File directory) {
         super("mob_prop", directory);

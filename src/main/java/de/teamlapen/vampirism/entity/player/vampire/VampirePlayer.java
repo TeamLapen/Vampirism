@@ -17,6 +17,7 @@ import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.player.PlayerModifiers;
 import de.teamlapen.vampirism.entity.player.VampirismPlayer;
 import de.teamlapen.vampirism.potion.FakeNightVisionPotionEffect;
+import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -35,6 +36,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -158,13 +160,25 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
         }
     }
 
-    private void makeVampire() {
-        //TODO handle other faction levels
-        if (getLevel() == 0) {
+    /**
+     * Called when a sanguinare effect runs out.
+     * DON'T add/remove potions here, since it is called while the potion effect list is modified.
+     */
+    public void onSanguinareFinished() {
+        if (Helper.canBecomeVampire(player) && !isRemote()) {
             this.levelUp();
-            player.addPotionEffect(new PotionEffect(Potion.resistance.id, 300));//TODO add saturation as well
+            ((WorldServer) player.worldObj).addScheduledTask(new Runnable() {
+                @Override
+                public void run() {
+                    if (player != null && player.isEntityAlive()) {
+                        player.addPotionEffect(new PotionEffect(Potion.resistance.id, 300));//TODO add saturation as well
+                    }
+                }
+            });
+
         }
     }
+
 
     @Override
     public boolean isAutoFillEnabled() {
@@ -177,11 +191,6 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
     }
 
 
-
-    @Override
-    public boolean canTurnOthers() {
-        return getLevel() >= Balance.vp.MIN_TURN_LEVEL;
-    }
 
     @Override
     public void addExhaustionModifier(String id, float mod) {
@@ -247,7 +256,6 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
     public void onUpdate() {
 
         if (!isRemote()) {
-            PotionEffect sanguinare = player.getActivePotionEffect(ModPotions.sanguinare);
             if (getLevel() > 0) {
                 boolean sync = false;
                 boolean syncToAll = false;
@@ -259,18 +267,13 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
                     syncToAll = true;
                     skillHandler.writeUpdateForClient(syncPacket);
                 }
-                if (sanguinare != null) {
-                    player.removePotionEffect(ModPotions.sanguinare.getId());
-                }
 
                 if (sync) {
                     sync(syncPacket, syncToAll);
                 }
             } else {
 
-                if (sanguinare != null && sanguinare.getDuration() == 1) {
-                    makeVampire();
-                }
+
             }
 
 
@@ -495,10 +498,9 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
             int amt = player.getFoodStats().getFoodLevel();
             player.getFoodStats().setFoodLevel(0);
             player.addExhaustion(1000F);
-            //TODO
-//            if (!player.isPotionActive(ModPotion.sanguinare)) {
-//                player.addPotionEffect(new PotionEffect(ModPotion.sanguinare.id, BALANCE.VAMPIRE_PLAYER_SANGUINARE_DURATION * 20));
-//            }
+            if (!player.isPotionActive(ModPotions.sanguinare) && (!(biter instanceof EntityPlayer) || Permissions.canPlayerTurnPlayer((EntityPlayer) biter)) && Helper.canBecomeVampire(player)) {
+                PotionSanguinare.addRandom(player, true);
+            }
             return amt;
         }
         int amt = this.getBloodStats().getBloodLevel();

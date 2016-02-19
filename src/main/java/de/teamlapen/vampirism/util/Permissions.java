@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.util;
 
+import de.teamlapen.vampirism.config.Configs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 
@@ -18,5 +19,9 @@ public class Permissions {
             }
         }
         return true;
+    }
+
+    public static boolean canPlayerTurnPlayer(EntityPlayer player) {
+        return Configs.playerCanTurnPlayer;
     }
 }

@@ -9,11 +9,12 @@ import de.teamlapen.vampirism.api.entity.IVampire;
 import de.teamlapen.vampirism.api.entity.convertible.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.convertible.BiteableRegistry;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.potion.PotionSanguinare;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
@@ -142,6 +143,21 @@ public class ExtendedCreature implements ISyncable.ISyncableExtendedProperties, 
 
     }
 
+    /**
+     * Called every tick
+     */
+    public void onUpdate() {
+        if (!entity.worldObj.isRemote) {
+            if (blood > 0 && blood < getMaxBlood() && entity.ticksExisted % 40 == 8) {
+                entity.addPotionEffect(new PotionEffect(Potion.weakness.id, 41));
+                entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 41, 2));
+                if (entity.getRNG().nextInt(Balance.mobProps.BLOOD_REGEN_CHANCE) == 0) {
+                    setBlood(getBlood() + 1);
+                }
+            }
+        }
+    }
+
     @Override
     public String toString() {
         return super.toString()+" for entity ("+entity.toString()+")";
@@ -157,7 +173,7 @@ public class ExtendedCreature implements ISyncable.ISyncableExtendedProperties, 
 
                 if (canBecomeVampire && entity.getRNG().nextBoolean()) {
                     if (VampirismMod.isRealism()) {
-                        entity.addPotionEffect(new PotionEffect(ModPotions.sanguinare.id, Balance.mobProps.MOB_SANGUINARE_DURATION * 20));
+                        PotionSanguinare.addRandom(entity, false);
                     } else {
                         makeVampire();
                     }

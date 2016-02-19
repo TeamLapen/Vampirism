@@ -21,8 +21,6 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer, IMinionLord, I
     boolean isVampireLord();
 
 
-    boolean canTurnOthers();
-
     /**
      * Add an exhaustion modifier (used in blood usage)
      *

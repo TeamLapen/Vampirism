@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity;
 
 import net.minecraft.entity.EntityCreature;
 import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
@@ -13,6 +14,12 @@ public class ModEntityEventHandler {
     public void onEntityConstructing(EntityEvent.EntityConstructing event) {
         if (event.entity instanceof EntityCreature && ExtendedCreature.get((EntityCreature) event.entity) == null) {
             ExtendedCreature.register((EntityCreature) event.entity);
+        }
+    }
+
+    public void onEntityUpdate(LivingEvent.LivingUpdateEvent event) {
+        if (event.entity instanceof EntityCreature) {
+            ExtendedCreature.get((EntityCreature) event.entity).onUpdate();
         }
     }
 }

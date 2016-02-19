@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.player.FactionRegistry;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumParticleTypes;
 
@@ -41,5 +43,9 @@ public class Helper {
         }
         MinecraftServer.getServer().theProfiler.endSection();
         return false;
+    }
+
+    public static boolean canBecomeVampire(EntityPlayer player) {
+        return FactionRegistry.getActiveFaction(player) == null;
     }
 }
