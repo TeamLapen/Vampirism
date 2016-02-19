@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -23,6 +24,15 @@ public abstract class Faction {
         this.entityInterface = iface;
     }
 
+    /**
+     * Used for some rendering, e.g. for displaying the level
+     * @return
+     */
     @SideOnly(Side.CLIENT)
     public abstract int getColor();
+
+    /**
+     * @return Color for name in chat
+     */
+    public abstract EnumChatFormatting getChatColor();
 }

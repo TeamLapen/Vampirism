@@ -19,6 +19,16 @@ public class FactionRegistry {
     private static Faction[] allFactions;
     private static PlayableFaction[] playableFactions;
 
+    /**
+     * Call this if the your faction became active.
+     * This means call this, if the world is loaded, if the client receives the level update etc.
+     *
+     * @param player
+     * @param newFaction
+     */
+    public static void onChangedFaction(EntityPlayer player, PlayableFaction newFaction) {
+        player.refreshDisplayName();
+    }
 
     /**
      * Registers a faction

@@ -44,14 +44,7 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer, IMinionLord, I
      */
     void copyFrom(EntityPlayer old);
 
-    boolean isDisguised();
 
-    /**
-     * Returns false for a null world
-     *
-     * @return if the player is in a remote world
-     */
-    boolean isRemote();
 
     /**
      * @return The players vampire skill handler

@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.IVampire;
 import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -36,5 +37,10 @@ public class VampireFaction extends PlayableFaction<IVampirePlayer> {
     @Override
     public int getColor() {
         return Color.MAGENTA.getRGB();
+    }
+
+    @Override
+    public EnumChatFormatting getChatColor() {
+        return EnumChatFormatting.LIGHT_PURPLE;
     }
 }

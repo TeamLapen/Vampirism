@@ -103,19 +103,6 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
         return true;
     }
 
-    @Override
-    protected void onLevelChangedClient(int old, int level) {
-        if (old == 0) {
-            if (player.isPotionActive(Potion.nightVision)) {
-                player.removePotionEffect(Potion.nightVision.id);
-            }
-            player.addPotionEffect(new FakeNightVisionPotionEffect());
-        } else if (level == 0) {
-            if (player.getActivePotionEffect(Potion.nightVision) instanceof FakeNightVisionPotionEffect) {
-                player.removePotionEffect(Potion.nightVision.getId());
-            }
-        }
-    }
 
     @Override
     protected int getMaxLevel() {
@@ -128,15 +115,28 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
     }
 
     @Override
-    protected void onLevelChanged() {
-        PlayerModifiers.applyModifier(player, SharedMonsterAttributes.movementSpeed, "Vampire", getLevel(), Balance.vp.SPEED_LCAP, Balance.vp.SPEED_MAX_MOD, Balance.vp.SPEED_TYPE);
-        PlayerModifiers.applyModifier(player, SharedMonsterAttributes.attackDamage, "Vampire", getLevel(), Balance.vp.STRENGTH_LCAP, Balance.vp.STRENGTH_MAX_MOD, Balance.vp.STRENGTH_TYPE);
-        PlayerModifiers.applyModifier(player, SharedMonsterAttributes.maxHealth, "Vampire", getLevel(), Balance.vp.HEALTH_LCAP, Balance.vp.HEALTH_MAX_MOD, Balance.vp.HEALTH_TYPE);
-        bloodStats.addExhaustionModifier("level", 1.0F + getLevel() / (float) getMaxLevel());
-        if (getLevel() > 0) {
-            player.addStat(Achievements.becomingAVampire, 1);
+    protected void onLevelChanged(int old, int level) {
+        if (!isRemote()) {
+            PlayerModifiers.applyModifier(player, SharedMonsterAttributes.movementSpeed, "Vampire", getLevel(), Balance.vp.SPEED_LCAP, Balance.vp.SPEED_MAX_MOD, Balance.vp.SPEED_TYPE);
+            PlayerModifiers.applyModifier(player, SharedMonsterAttributes.attackDamage, "Vampire", getLevel(), Balance.vp.STRENGTH_LCAP, Balance.vp.STRENGTH_MAX_MOD, Balance.vp.STRENGTH_TYPE);
+            PlayerModifiers.applyModifier(player, SharedMonsterAttributes.maxHealth, "Vampire", getLevel(), Balance.vp.HEALTH_LCAP, Balance.vp.HEALTH_MAX_MOD, Balance.vp.HEALTH_TYPE);
+            bloodStats.addExhaustionModifier("level", 1.0F + getLevel() / (float) getMaxLevel());
+            if (level > 0) {
+                player.addStat(Achievements.becomingAVampire, 1);
+            } else {
+                skillHandler.resetTimers();
+            }
         } else {
-            skillHandler.resetTimers();
+            if (old == 0) {
+                if (player.isPotionActive(Potion.nightVision)) {
+                    player.removePotionEffect(Potion.nightVision.id);
+                }
+                player.addPotionEffect(new FakeNightVisionPotionEffect());
+            } else if (level == 0) {
+                if (player.getActivePotionEffect(Potion.nightVision) instanceof FakeNightVisionPotionEffect) {
+                    player.removePotionEffect(Potion.nightVision.getId());
+                }
+            }
         }
     }
 
@@ -205,15 +205,6 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
     @Override
     public boolean isDisguised() {
         return false;//TODO implement
-    }
-
-    @Override
-    public boolean isRemote() {
-        if (player.worldObj == null) {
-            VampirismMod.log.e(TAG, new Throwable("World not loaded").fillInStackTrace(), "Trying to check if remote, but world is not set yet");
-            return false;
-        }
-        return player.worldObj.isRemote;
     }
 
 

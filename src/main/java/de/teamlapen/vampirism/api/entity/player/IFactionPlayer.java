@@ -11,6 +11,8 @@ import net.minecraftforge.common.IExtendedEntityProperties;
  * Basic interface for all of Vampirism's player types (VampirePlayer, HunterPlayer, ...)
  * The player can have levels.
  * A player can only be part of one faction at once, this means only one IFaction ExtendedProperties belonging to a single player can have a level >0.
+ *
+ * If you are writing an addon and not a standalone mod, consider extending VampirismPlayer instead of implementing this
  */
 public interface IFactionPlayer extends IFactionEntity, IExtendedEntityProperties {
     /**
@@ -39,6 +41,19 @@ public interface IFactionPlayer extends IFactionEntity, IExtendedEntityPropertie
      * @return A predicate that selects all non friendly entities
      */
     Predicate<? super Entity> getNonFriendlySelector(boolean otherFactionPlayers);
+
+    /**
+     * @return If this is true, the players faction shouldn't be easily detectable, e.g. chat color or vampire eyes
+     */
+    boolean isDisguised();
+
+
+    /**
+     * Returns false for a null world
+     *
+     * @return if the player is in a remote world
+     */
+    boolean isRemote();
 
 
 

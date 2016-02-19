@@ -24,7 +24,7 @@ public class FakeNightVisionPotion extends Potion {
      * Checks if it is enabled in the configs first
      */
     public static void replaceNightVision() {
-        if (Configs.replaceVanillaNightVision) {
+        if (!Configs.disable_replaceVanillaNightVision) {
             instance.id = Potion.nightVision.getId();
             VampirismMod.log.d("FakeNVPotion", "Replacing vanilla night vision (%s) at %d", Potion.potionTypes[instance.getId()].getClass(), instance.getId());
             Potion.potionTypes[instance.getId()] = instance;

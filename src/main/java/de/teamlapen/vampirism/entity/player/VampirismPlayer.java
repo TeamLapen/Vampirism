@@ -40,20 +40,32 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
 
     @Override
     public void setLevel(int level) {
-        //VampirismMod.log.t("Setting level %s (c %s,max %s)", level, getLevel(), getMaxLevel());
-        if (level >= 0 && level <= getMaxLevel() && getLevel() != level) {
-            if(level>0){
+        int old = getLevel();
+        if (level >= 0 && level <= getMaxLevel() && old != level) {
+            if (level > 0) {
                 IFactionPlayer active = FactionRegistry.getActiveFactionPlayer(player);
-                if(active!=null&&active!=this){
+                if (active != null && active != this) {
                     //Should be detected before setLevel is even called
                     player.addChatMessage(new ChatComponentTranslation("text.vampirism.player.multiple_factions"));
                     return;
                 }
             }
-            this.level=level;
-            onLevelChanged();
+            this.level = level;
+            onLevelChanged(old, level);
+            if (old == 0) {
+                FactionRegistry.onChangedFaction(player, getFaction());
+            }
             this.sync(true);
         }
+    }
+
+    @Override
+    public boolean isRemote() {
+        if (player.worldObj == null) {
+            VampirismMod.log.e(TAG, new Throwable("World not loaded").fillInStackTrace(), "Trying to check if remote, but world is not set yet");
+            return false;
+        }
+        return player.worldObj.isRemote;
     }
 
     @Override
@@ -67,10 +79,13 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
     }
 
     /**
-     * Called when the level is changed
+     * Called when the level is changed, this means it is also called when the player joins a world.
+     * Called server and client side.
      * Can be overridden in subclasses
+     * @param old Old level
+     * @param level New level
      */
-    protected void onLevelChanged() {
+    protected void onLevelChanged(int old, int level) {
     }
 
     /**
@@ -141,10 +156,10 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
     public final void loadNBTData(NBTTagCompound nbt) {
         NBTTagCompound properties = nbt.getCompoundTag(getPropertyKey());
         if (properties == null) {
-            VampirismMod.log.i(TAG, "VampirePlayer data for %s cannot be loaded. It probably does not exist", player);
+            VampirismMod.log.i(TAG, "VampirismPlayer(%s) data for %s cannot be loaded. It probably does not exist", this.getClass(), player);
             return;
         }
-        level = properties.getInteger(TAG_LEVEL);
+        setLevel(properties.getInteger(TAG_LEVEL));
         loadData(properties);
     }
 
@@ -158,24 +173,11 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
     @Override
     public final void loadUpdateFromNBT(NBTTagCompound nbt) {
         if(nbt.hasKey(TAG_LEVEL)){
-            int old=level;
-            level=nbt.getInteger(TAG_LEVEL);
-            if(level!=old){
-                onLevelChangedClient(old,level);
-            }
-
+            setLevel(nbt.getInteger(TAG_LEVEL));
         }
         loadUpdate(nbt);
     }
 
-    /**
-     * Called client side if an update from the server is received and the level has changed.
-     * Be aware that this also happens on world join
-     * @param old
-     * @param level
-     */
-    protected void onLevelChangedClient(int old,int level){
-    }
 
     /**
      * Can be overridden to load data from updates in subclasses

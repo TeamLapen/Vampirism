@@ -1,9 +1,15 @@
 package de.teamlapen.vampirism.entity.player;
 
+import de.teamlapen.vampirism.api.entity.player.FactionRegistry;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.vampire.SkillHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.StatCollector;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -71,6 +77,20 @@ public class ModPlayerEventHandler {
     public void onItemUse(PlayerUseItemEvent.Start event) {
         if (VampirePlayer.get(event.entityPlayer).getSkillHandler().isSkillActive(SkillHandler.batSkill)) {
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void onPlayerName(PlayerEvent.NameFormat event) {
+        if (event.entityPlayer != null && !Configs.disable_factionDisplayChat) {
+            IFactionPlayer f = FactionRegistry.getActiveFactionPlayer(event.entityPlayer);
+            if (f != null && !f.isDisguised()) {
+                event.displayname = f.getFaction().getChatColor() + event.displayname;
+                if (f instanceof IVampirePlayer && ((IVampirePlayer) f).isVampireLord()) {
+                    event.displayname = EnumChatFormatting.RED + "[" + StatCollector.translateToLocal("text.vampirism.lord") + "] " + EnumChatFormatting.RESET + event.displayname;
+                }
+            }
+
         }
     }
 

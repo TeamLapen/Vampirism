@@ -219,5 +219,6 @@ public class SkillHandler implements ISkillHandler {
             }
             skillTimer[i] = 0;
         }
+        dirty = true;
     }
 }
