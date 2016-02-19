@@ -25,8 +25,9 @@ public class Configs {
     public static boolean realism_mode;
     public static boolean resetConfigurationInDev;
     public static int gui_level_offset_x;
-
     public static int gui_level_offset_y;
+
+    public static boolean replaceVanillaNightVision;
     public static boolean sundamage_default;
     private static Configuration main_config;
 
@@ -88,6 +89,8 @@ public class Configs {
                 continue;
             }
         }
+
+        replaceVanillaNightVision = main_config.getBoolean("replace_night_vision", CATEGORY_GENERAL, true, "Replace vanilla night vision, so it is not displayed to vampires all the time");
         // Gui
         gui_level_offset_x = main_config.getInt("level_offset_x", CATEGORY_GUI, 0, -250, 250, "X-Offset of the level indicator from the center in pixels");
         gui_level_offset_y = main_config.getInt("level_offset_y", CATEGORY_GUI, 47, 0, 270, "Y-Offset of the level indicator from the bottom in pixels");

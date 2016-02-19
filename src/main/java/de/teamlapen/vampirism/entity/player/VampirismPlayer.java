@@ -158,10 +158,23 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
     @Override
     public final void loadUpdateFromNBT(NBTTagCompound nbt) {
         if(nbt.hasKey(TAG_LEVEL)){
+            int old=level;
             level=nbt.getInteger(TAG_LEVEL);
+            if(level!=old){
+                onLevelChangedClient(old,level);
+            }
 
         }
         loadUpdate(nbt);
+    }
+
+    /**
+     * Called client side if an update from the server is received and the level has changed.
+     * Be aware that this also happens on world join
+     * @param old
+     * @param level
+     */
+    protected void onLevelChangedClient(int old,int level){
     }
 
     /**

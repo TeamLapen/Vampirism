@@ -16,6 +16,7 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
@@ -76,4 +77,13 @@ public class ClientProxy extends CommonProxy {
     }
 
 
+    @Override
+    public boolean isPlayerThePlayer(EntityPlayer player) {
+        return Minecraft.getMinecraft().thePlayer.equals(player);
+    }
+
+    @Override
+    public boolean isClientPlayerNull() {
+        return Minecraft.getMinecraft().thePlayer==null;
+    }
 }

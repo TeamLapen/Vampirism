@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.proxy;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 
 /**
@@ -12,4 +13,13 @@ public class ServerProxy extends CommonProxy {
         super.onInitStep(step, event);
     }
 
+    @Override
+    public boolean isPlayerThePlayer(EntityPlayer player) {
+        return false;
+    }
+
+    @Override
+    public boolean isClientPlayerNull() {
+        return false;
+    }
 }

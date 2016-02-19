@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.player.PlayerModifiers;
 import de.teamlapen.vampirism.entity.player.VampirismPlayer;
+import de.teamlapen.vampirism.potion.FakeNightVisionPotionEffect;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.Permissions;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -98,6 +99,20 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
             }
         }
         return true;
+    }
+
+    @Override
+    protected void onLevelChangedClient(int old, int level) {
+        if (old == 0) {
+            if (player.isPotionActive(Potion.nightVision)) {
+                player.removePotionEffect(Potion.nightVision.id);
+            }
+            player.addPotionEffect(new FakeNightVisionPotionEffect());
+        } else if (level == 0) {
+            if (player.getActivePotionEffect(Potion.nightVision) instanceof FakeNightVisionPotionEffect) {
+                player.removePotionEffect(Potion.nightVision.getId());
+            }
+        }
     }
 
     @Override
@@ -232,29 +247,46 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
     public void onUpdate() {
 
         if (!isRemote()) {
-            boolean sync = false;
-            boolean syncToAll = false;
-            NBTTagCompound syncPacket = new NBTTagCompound();
-
-            if (biteCooldown > 0) biteCooldown--;
             PotionEffect sanguinare = player.getActivePotionEffect(ModPotions.sanguinare);
-            if (sanguinare != null && getLevel() > 0) {
-                player.removePotionEffect(ModPotions.sanguinare.getId());
-            } else if (sanguinare != null && getLevel() == 0 && sanguinare.getDuration() == 1) {
-                makeVampire();
-            }
-            if (skillHandler.updateSkills()) {
-                sync = true;
-                syncToAll = true;
-                skillHandler.writeUpdateForClient(syncPacket);
+            if (getLevel() > 0) {
+                boolean sync = false;
+                boolean syncToAll = false;
+                NBTTagCompound syncPacket = new NBTTagCompound();
+
+                if (biteCooldown > 0) biteCooldown--;
+                if (skillHandler.updateSkills()) {
+                    sync = true;
+                    syncToAll = true;
+                    skillHandler.writeUpdateForClient(syncPacket);
+                }
+                if (sanguinare != null) {
+                    player.removePotionEffect(ModPotions.sanguinare.getId());
+                }
+
+                if (sync) {
+                    sync(syncPacket, syncToAll);
+                }
+            } else {
+
+                if (sanguinare != null && sanguinare.getDuration() == 1) {
+                    makeVampire();
+                }
             }
 
 
-            if (sync) {
-                sync(syncPacket, syncToAll);
-            }
+
+
+
         } else {
-            skillHandler.updateSkills();
+            if (getLevel() > 0) {
+                if (player.ticksExisted % 100 == 8 && player.getActivePotionEffect(Potion.nightVision) == null) {
+                    player.addPotionEffect(new FakeNightVisionPotionEffect());
+                }
+                skillHandler.updateSkills();
+            } else {
+
+            }
+
         }
     }
 

@@ -103,7 +103,6 @@ public class VampirismMod {
         FactionRegistry.finish();
         BiteableRegistry.finishRegistration(Balance.mobProps.CONVERTED_MOB_DEFAULT_DMG);
         proxy.onInitStep(IInitListener.Step.POST_INIT, event);
-
     }
 
     @Mod.EventHandler
