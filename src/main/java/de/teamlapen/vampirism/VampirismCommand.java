@@ -64,14 +64,14 @@ public class VampirismCommand extends BasicCommand {
 				if (Configs.disable_vampire_biome) {
 					p.addChatComponentMessage(new ChatComponentText("The Vampire Biome is disabled in the config file"));
 				} else {
-					int maxDist = 300;
+					int maxDist = 5000;
 					if (var2.length > 0) {
 						try {
 							maxDist = Integer.parseInt(var2[0]);
 						} catch (NumberFormatException e) {
 							Logger.w("CheckVampireBiome", "Failed to parse max dist %s", var2[0]);
 						}
-						if (maxDist > 350) {
+						if (maxDist > 10000) {
 							if (var2.length > 1 && "yes".equals(var2[1])) {
 
 							} else {

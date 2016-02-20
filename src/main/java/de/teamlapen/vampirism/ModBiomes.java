@@ -1,13 +1,14 @@
 package de.teamlapen.vampirism;
 
+import de.teamlapen.vampirism.biome.BiomeVampireForest;
+import de.teamlapen.vampirism.util.BALANCE;
+import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeDictionary.Type;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.common.BiomeManager.BiomeEntry;
 import net.minecraftforge.common.BiomeManager.BiomeType;
-import de.teamlapen.vampirism.biome.BiomeVampireForest;
-import de.teamlapen.vampirism.util.Logger;
 
 /**
  * 
@@ -34,7 +35,7 @@ public class ModBiomes {
 		biomeVampireForest.setColor(0xCC00CC);
 
 		BiomeDictionary.registerBiomeType(biomeVampireForest, Type.FOREST, Type.DENSE, Type.MAGICAL, Type.SPOOKY);
-		int weight = 10;
+		int weight = BALANCE.Vampire_BIOME_WEIGHT;
 		// int weight = 50; // Testing only
 		Logger.i("ModBiomes", "VampireForest created with id " + biomeID + " and weight: " + weight);
 		biomeEntryVampireForest = new BiomeEntry(biomeVampireForest, weight); // Change weight to 100 to see more of these

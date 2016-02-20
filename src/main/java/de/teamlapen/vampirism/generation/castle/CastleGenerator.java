@@ -34,7 +34,7 @@ public class CastleGenerator extends WorldGenerator {
 
 	private final static String TAG = "CastleGenerator";
 	private static HashMap<String, BuildingTile> tileMap;
-	private final int MAX_TRYS = 128;
+	private final int MAX_TRYS = 12800;
 	private final int MAX_CASTLES = 3;
 	private final int MAX_SIZE = 6;
 	private final int MIN_SIZE = 4;
@@ -758,8 +758,9 @@ public class CastleGenerator extends WorldGenerator {
 	}
 
 	private ChunkCoordIntPair isBiomeAt(World world, int x, int z) {
-		if (world.getBiomeGenForCoords(x, z) instanceof BiomeVampireForest) {
-			return new ChunkCoordIntPair((x >> 4), (z >> 4));
+		ChunkPosition position = world.getWorldChunkManager().findBiomePosition(x, z, 112, biomes, new Random());
+		if (position != null) {
+			return new ChunkCoordIntPair(position.chunkPosX >> 4, position.chunkPosZ >> 4);
 		}
 		return null;
 	}
@@ -781,10 +782,10 @@ public class CastleGenerator extends WorldGenerator {
 	 */
 	public ChunkCoordIntPair findNearVampireBiome(World world, int x, int z, int maxDist, ICommandSender listener) {
 		long start = System.currentTimeMillis();
-		maxDist = (maxDist / 10) * 10;//Round it
-		int maxop = (maxDist * maxDist + maxDist) / 2;
+		maxDist = (maxDist / 20) * 20;//Round it
+		long maxop = (((long) maxDist) * maxDist + maxDist) / 2;
 		ChunkCoordIntPair loc;
-		for (int i = 0; i < maxDist; i++) {
+		for (int i = 0; i < maxDist; i += 2) {
 			int cx = -i;
 			for (int cz = -i; cz <= i; cz++) {
 				if (cz % 2 == 0) continue;
@@ -806,7 +807,9 @@ public class CastleGenerator extends WorldGenerator {
 				}
 			}
 			if (listener != null && (i * 10) % maxDist == 0) {
-				listener.addChatMessage(new ChatComponentText((((int) ((i * i + i) / 2 / (float) maxop * 100))) + "% finished"));
+				long op = (((long) i) * i + i) / 2;
+				double perc = ((double) op / maxop) * 100;
+				listener.addChatMessage(new ChatComponentText(((int) perc) + "% finished"));
 			}
 
 		}

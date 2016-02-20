@@ -262,6 +262,9 @@ public final class BALANCE {
 
 	@DefaultBoolean(value = true, name = "Sundamage Nausea", comment = "Whether or not the player can get a nausea effect in the sun")
 	public static boolean VAMPIRE_PLAYER_SUNDAMAGE_NAUSEA;
+
+	@DefaultInt(value = 10, name = "Vampire Forest spawn change", minValue = 1)
+	public static int Vampire_BIOME_WEIGHT;
 	/**
 	 * Calculates the players night vision effect
 	 * 
