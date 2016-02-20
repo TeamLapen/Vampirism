@@ -36,9 +36,8 @@ public class ModBiomes {
 
 		BiomeDictionary.registerBiomeType(biomeVampireForest, Type.FOREST, Type.DENSE, Type.MAGICAL, Type.SPOOKY);
 		int weight = BALANCE.Vampire_BIOME_WEIGHT;
-		// int weight = 50; // Testing only
 		Logger.i("ModBiomes", "VampireForest created with id " + biomeID + " and weight: " + weight);
-		biomeEntryVampireForest = new BiomeEntry(biomeVampireForest, weight); // Change weight to 100 to see more of these
+		biomeEntryVampireForest = new BiomeEntry(biomeVampireForest, weight);
 		if (!Configs.disable_vampire_biome) {
 			BiomeManager.addBiome(BiomeType.WARM, biomeEntryVampireForest);
 		}

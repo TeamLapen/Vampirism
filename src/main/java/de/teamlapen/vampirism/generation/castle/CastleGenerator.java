@@ -290,8 +290,8 @@ public class CastleGenerator extends WorldGenerator {
 				biomes[i + TEST_SIZE][j + TEST_SIZE] = ModBiomes.biomeVampireForest.equals(world.getWorldChunkManager().getBiomeGenAt((position.chunkXPos + i << 4)+8, (position.chunkZPos + j << 4)+8));
 			}
 		}
-		//		Logger.i(TAG,"Biomes");
-		//		this.printMatrix(biomes);
+//		Logger.i(TAG,"Biomes");
+//		this.printMatrix(biomes);
 		Integer[][] help = new Integer[D_TEST_SIZE][D_TEST_SIZE];
 		for (int i = 0; i < D_TEST_SIZE; i++) {
 			help[i][0] = (biomes[i][0]) ? 1 : 0;
