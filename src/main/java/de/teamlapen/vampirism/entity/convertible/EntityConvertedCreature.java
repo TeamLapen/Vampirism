@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.util.BALANCE;
 import de.teamlapen.vampirism.util.Logger;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -211,5 +212,10 @@ public class EntityConvertedCreature extends EntityVampireBase implements ISynca
     }
     protected boolean nil() {
         return entityCreature == null;
+    }
+
+    @Override
+    public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount) {
+        return type == EnumCreatureType.creature;
     }
 }

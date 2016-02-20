@@ -1,9 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.*;
 import net.minecraft.world.World;
 
 /**
@@ -12,6 +9,11 @@ import net.minecraft.world.World;
 public class EntityDummyBittenAnimal extends EntityLiving {
 	public EntityDummyBittenAnimal(World p_i1595_1_) {
 		super(p_i1595_1_);
+	}
+
+	@Override
+	public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount) {
+		return type == EnumCreatureType.creature;
 	}
 
 	@Override public void onEntityUpdate() {

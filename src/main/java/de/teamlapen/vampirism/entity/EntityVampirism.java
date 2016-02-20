@@ -2,10 +2,7 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.world.EnumDifficulty;
@@ -40,6 +37,12 @@ public abstract class EntityVampirism extends EntityCreature {
             this.updateArmSwingProgress();
         }
         super.onLivingUpdate();
+    }
+
+    @Override
+    public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount) {
+        if (forSpawnCount && type == EnumCreatureType.monster) return true;
+        return super.isCreatureType(type, forSpawnCount);
     }
 
     public void onUpdate() {

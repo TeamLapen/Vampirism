@@ -11,10 +11,7 @@ import de.teamlapen.vampirism.tileEntity.TileEntityBloodAltar1;
 import de.teamlapen.vampirism.util.*;
 import net.minecraft.block.Block;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
@@ -24,7 +21,9 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Basic command on which all other commands should depend on
@@ -270,6 +269,36 @@ public class TestCommand extends BasicCommand {
 			@Override
 			public String getCommandName() {
 				return "level";
+			}
+		});
+		addSub(new TestSubCommand() {
+			@Override
+			protected void processCommand(ICommandSender sender, EntityPlayer player, VampirePlayer vampire, String[] param) {
+				int mob = 0;
+				int creature = 0;
+				int ambient = 0;
+				HashMap<Class, Integer> map = new HashMap<Class, Integer>();
+				for (int i = 0; i < player.worldObj.loadedEntityList.size(); i++) {
+					Entity e = (Entity) player.worldObj.loadedEntityList.get(i);
+					if (e.isCreatureType(EnumCreatureType.creature, true)) creature++;
+					if (e.isCreatureType(EnumCreatureType.monster, true)) mob++;
+					if (e.isCreatureType(EnumCreatureType.ambient, true)) ambient++;
+					if (map.get(e.getClass()) == null) {
+						map.put(e.getClass(), 0);
+					}
+					map.put(e.getClass(), map.get(e.getClass()) + 1);
+				}
+				sender.addChatMessage(new ChatComponentText("Mob " + mob + " Creature " + creature + " Ambient " + ambient));
+				for (Map.Entry<Class, Integer> entry : map.entrySet()) {
+					Logger.i("EntityCount", entry.getKey().getSimpleName() + ": " + entry.getValue());
+				}
+				sender.addChatMessage(new ChatComponentText("For more information check the log"));
+
+			}
+
+			@Override
+			public String getCommandName() {
+				return "countEntities";
 			}
 		});
 	}
