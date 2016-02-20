@@ -9,6 +9,8 @@ import de.teamlapen.vampirism.biome.BiomeVampireForest;
 import de.teamlapen.vampirism.castleDim.ChunkProviderCastle;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.ModdedEnumTypeAdapter;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.ChunkPosition;
@@ -278,7 +280,7 @@ public class CastleGenerator extends WorldGenerator {
 	 */
 	private @Nullable
 	CastlePositionData.Position optimizePosition(CastlePositionData.Position position, World world, Random rnd) {
-		Logger.d(TAG, "Optimizing Position");
+		Logger.d(TAG, "Optimizing Position %s", position);
 		long t = System.currentTimeMillis();
 		final int TEST_SIZE = 10;
 		final int D_TEST_SIZE = TEST_SIZE * 2;
@@ -320,20 +322,20 @@ public class CastleGenerator extends WorldGenerator {
 		//		Logger.i(TAG,"Help");
 		//		this.printMatrix(help);
 
-		Logger.d(TAG, "Optimizing position took %s ms", System.currentTimeMillis() - t);
+
 		if (max[0] >= MIN_SIZE+2) {
 			int highcx = position.chunkXPos - TEST_SIZE + max[1];
 			int highcz = position.chunkZPos - TEST_SIZE + max[2];
 			int lowcx = highcx - max[0];
 			int lowcz = highcz - max[0];
-			Logger.d(TAG, "Found fitting area with size %d at coords %d %d (%d %d)", max[0], lowcx, lowcz, highcx, highcz);
+			Logger.d(TAG, "Found fitting area with size %d at coords %d %d (%d %d) after %s ms", max[0], lowcx, lowcz, highcx, highcz, System.currentTimeMillis() - t);
 			int sx = MIN_SIZE + rnd.nextInt(Math.min(max[0]-2, MAX_SIZE) - MIN_SIZE + 1);
 			int sz = MIN_SIZE + rnd.nextInt(Math.min(max[0]-2, MAX_SIZE) - MIN_SIZE + 1);
 			CastlePositionData.Position p = new CastlePositionData.Position(lowcx + ((max[0] - sx) / 2), lowcz + ((max[0] - sz) / 2));
 			p.setSize(sx, sz);
 			return p;
 		}
-
+		Logger.d(TAG, "Failed to optimizing position after %s ms", System.currentTimeMillis() - t);
 		return null;
 	}
 
@@ -755,19 +757,58 @@ public class CastleGenerator extends WorldGenerator {
 		return false;
 	}
 
-	public ChunkCoordIntPair findNearVampireBiome(World world, int x, int z, int maxDist) {
+	private ChunkCoordIntPair isBiomeAt(World world, int x, int z) {
+		if (world.getBiomeGenForCoords(x, z) instanceof BiomeVampireForest) {
+			return new ChunkCoordIntPair((x >> 4), (z >> 4));
+		}
+		return null;
+	}
+
+	private ChunkCoordIntPair logSearchResult(long start, ChunkCoordIntPair loc) {
+		Logger.i(TAG, "Took %d ms to find a vampire biome at %d %d", (int) (System.currentTimeMillis() - start), loc.chunkXPos, loc.chunkZPos);
+		return loc;
+	}
+
+	/**
+	 * Search for a vampire biome by checking every second chunk starting at the player and moving in cicles to the outside
+	 *
+	 * @param world
+	 * @param x
+	 * @param z
+	 * @param maxDist  Max radius
+	 * @param listener Will be notified about status updates. Can be null
+	 * @return
+	 */
+	public ChunkCoordIntPair findNearVampireBiome(World world, int x, int z, int maxDist, ICommandSender listener) {
 		long start = System.currentTimeMillis();
+		maxDist = (maxDist / 10) * 10;//Round it
+		int maxop = (maxDist * maxDist + maxDist) / 2;
+		ChunkCoordIntPair loc;
 		for (int i = 0; i < maxDist; i++) {
-			for (int j = -i; j < i; j++) {
-				if (world.getBiomeGenForCoords(x + (i << 4), z + (j << 4)) instanceof BiomeVampireForest) {
-					Logger.d(TAG, "Took %d ms to find a vampire biome", (int) (System.currentTimeMillis() - start));
-					return new ChunkCoordIntPair((x >> 4) + i, (z >> 4) + j);
-				}
-				if (world.getBiomeGenForCoords(x - (i << 4), z + (j << 4)) instanceof BiomeVampireForest) {
-					Logger.d(TAG, "Took %d ms to find a vampire biome", (int) (System.currentTimeMillis() - start));
-					return new ChunkCoordIntPair((x >> 4) - i, (z >> 4) + j);
+			int cx = -i;
+			for (int cz = -i; cz <= i; cz++) {
+				if (cz % 2 == 0) continue;
+				loc = isBiomeAt(world, x + (cx << 4), z + (cz << 4));
+				if (loc != null) return logSearchResult(start, loc);
+				if (cz == i && cx <0){
+					cz = -i;
+					cx = i;
 				}
 			}
+			int cz = -i;
+			for (int cx2 = -i + 1; cx2 < i; cx2++) {
+				if (cx2 % 2 == 0) continue;
+				loc = isBiomeAt(world, x + (cx2 << 4), z + (cz << 4));
+				if (loc != null) return logSearchResult(start, loc);
+				if (cx == i - 1 && cz < 0){
+					cz=i;
+					cx = i - 1;
+				}
+			}
+			if (listener != null && (i * 10) % maxDist == 0) {
+				listener.addChatMessage(new ChatComponentText((((int) ((i * i + i) / 2 / (float) maxop * 100))) + "% finished"));
+			}
+
 		}
 		Logger.d(TAG, "Took %d ms to not find a vampire biome", (int) (System.currentTimeMillis() - start));
 		return null;

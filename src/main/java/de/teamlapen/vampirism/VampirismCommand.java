@@ -2,6 +2,7 @@ package de.teamlapen.vampirism;
 
 import de.teamlapen.vampirism.generation.WorldGenVampirism;
 import de.teamlapen.vampirism.util.BasicCommand;
+import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.VampireLordData;
 import de.teamlapen.vampirism.util.VersionChecker;
 import net.minecraft.command.ICommandSender;
@@ -61,10 +62,26 @@ public class VampirismCommand extends BasicCommand {
 				if (!(var1 instanceof EntityPlayer)) return;
 				EntityPlayer p = (EntityPlayer) var1;
 				if (Configs.disable_vampire_biome) {
-					p.addChatComponentMessage(new ChatComponentText("The Vampire Viome is disabled in the config file"));
+					p.addChatComponentMessage(new ChatComponentText("The Vampire Biome is disabled in the config file"));
 				} else {
+					int maxDist = 300;
+					if (var2.length > 0) {
+						try {
+							maxDist = Integer.parseInt(var2[0]);
+						} catch (NumberFormatException e) {
+							Logger.w("CheckVampireBiome", "Failed to parse max dist %s", var2[0]);
+						}
+						if (maxDist > 350) {
+							if (var2.length > 1 && "yes".equals(var2[1])) {
+
+							} else {
+								p.addChatMessage(new ChatComponentText("This will take a looong time. Please use '/" + getCommandUsage(var1) + " yes', if you are sure"));
+								return;
+							}
+						}
+					}
 					p.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.biome.looking_for_biome"));
-					ChunkCoordIntPair pos = WorldGenVampirism.castleGenerator.findNearVampireBiome(p.worldObj, MathHelper.floor_double(p.posX), MathHelper.floor_double(p.posZ), 1000);
+					ChunkCoordIntPair pos = WorldGenVampirism.castleGenerator.findNearVampireBiome(p.worldObj, MathHelper.floor_double(p.posX), MathHelper.floor_double(p.posZ), maxDist, var1);
 					if (pos == null) {
 						p.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.biome.not_found"));
 					} else if (p.capabilities.isCreativeMode) {
@@ -77,7 +94,7 @@ public class VampirismCommand extends BasicCommand {
 
 			@Override
 			public String getCommandUsage(ICommandSender var1) {
-				return getCommandName();
+				return getCommandName() + " <maxRadius>";
 			}
 		});
 		addSub(new SubCommand() {

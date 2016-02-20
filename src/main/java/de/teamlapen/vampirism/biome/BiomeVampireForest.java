@@ -72,7 +72,7 @@ public class BiomeVampireForest extends BiomeGenBase {
 
 	@Override
 	public float getSpawningChance() {
-		return 0.02F;
+		return 0.0000000002F;
 	}
 
 	/**
