@@ -21,7 +21,7 @@
     ],
   "dependencies": [ "teamlapen-lib"
     ],
-   "useDependencyInformation":true
+   "useDependencyInformation":false
 },
 {
   "modid": "teamlapen-lib",

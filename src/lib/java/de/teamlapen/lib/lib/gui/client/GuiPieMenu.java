@@ -208,8 +208,6 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
     }
 
     /**
-     * If null, Vampirism's default one will be used
-     *
      * @param item
      * @return the location of the icon map where the icon for the given item is in
      */
