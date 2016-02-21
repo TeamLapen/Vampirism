@@ -48,6 +48,14 @@ public class BalanceVampirePlayer extends BalanceValues {
     public double PLAYER_BLOOD_SATURATION;
     @DefaultInt(value = 900, name = "sanguinare_avg_duration", minValue = 1, comment = "Average duration of player sanguinare effect, in seconds")
     public int SANGUINARE_AVG_DURATION;
+    @DefaultInt(value = 5, alternateValue = 3, name = "sundamage_min_level", minValue = 1, comment = "The vampire level as of the player receives damage from the sun")
+    public int SUNDAMAGE_MINLEVEL;
+    @DefaultBoolean(value = true, name = "sundamage_nausea", comment = "If the player should get a nausea effect if in sun")
+    public boolean SUNDAMAGE_NAUSEA;
+    @DefaultInt(value = 3, alternateValue = 1, name = "sundamage_min_level", minValue = 1, comment = "The vampire level as of the player receives a weakness effect from the sun")
+    public int SUNDAMAGE_WEAKNESS_MINLEVEL;
+    @DefaultDouble(value = 7.0, alternateValue = 14, name = "sundamage_damage", minValue = 1, comment = "Damage a player receives every two seconds if in sun. Is multiplied with several factors.")
+    public double SUNDAMAGE_DAMAGE;
 
     /**
      * Creates a configuration for balance values

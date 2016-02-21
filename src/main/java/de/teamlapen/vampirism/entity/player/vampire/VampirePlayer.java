@@ -67,6 +67,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
     private boolean sundamage_cache = false;
     private int biteCooldown = 0;
     private int eyeType = 0;
+    private int ticksInSun = 0;
 
     public VampirePlayer(EntityPlayer player) {
         super(player);
@@ -178,6 +179,20 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
     }
 
     @Override
+    public float getSundamageMultiplier() {
+        float mult = 1F;
+        if (isVampireLord()) {
+            mult *= 1.8F;
+        }
+        return mult;
+    }
+
+    @Override
+    public int getTicksInSun() {
+        return ticksInSun;
+    }
+
+    @Override
     public boolean isAutoFillEnabled() {
         return false;
     }
@@ -248,6 +263,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
     public void onJoinWorld() {
         if (getLevel() > 0) {
             skillHandler.onSkillsReactivated();
+            ticksInSun = 0;
         }
     }
 
@@ -318,6 +334,11 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
                 NBTTagCompound syncPacket = new NBTTagCompound();
 
                 if (biteCooldown > 0) biteCooldown--;
+                if (isGettingSundamge()) {
+                    handleSunDamage();
+                } else if (ticksInSun > 0) {
+                    ticksInSun--;
+                }
                 if (skillHandler.updateSkills()) {
                     sync = true;
                     syncToAll = true;
@@ -329,7 +350,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
                 }
             } else {
 
-
+                ticksInSun = 0;
             }
 
 
@@ -339,8 +360,13 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
                     player.addPotionEffect(new FakeNightVisionPotionEffect());
                 }
                 skillHandler.updateSkills();
+                if (isGettingSundamge()) {
+                    handleSunDamage();
+                } else if (ticksInSun > 0) {
+                    ticksInSun--;
+                }
             } else {
-
+                ticksInSun = 0;
             }
 
         }
@@ -472,6 +498,26 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
      */
     private void handleSpareBlood(int amt) {
         //TODO
+    }
+
+    /**
+     * Handle sun damage
+     */
+    private void handleSunDamage() {
+        if (ticksInSun < 100) {
+            ticksInSun++;
+        }
+        if (player.capabilities.isCreativeMode || player.capabilities.disableDamage) return;
+        if (Balance.vp.SUNDAMAGE_NAUSEA && player.ticksExisted % 300 == 1 && ticksInSun > 50) {
+            player.addPotionEffect(new PotionEffect(Potion.confusion.id, 180));
+        }
+        if (getLevel() >= Balance.vp.SUNDAMAGE_WEAKNESS_MINLEVEL && player.ticksExisted % 150 == 3) {
+            player.addPotionEffect(new PotionEffect(Potion.weakness.id, 152, 1));
+        }
+        if (getLevel() >= Balance.vp.SUNDAMAGE_MINLEVEL && ticksInSun >= 100 && player.ticksExisted % 40 == 5) {
+            float damage = (float) (Balance.vp.SUNDAMAGE_DAMAGE * getSundamageMultiplier());
+            player.attackEntityFrom(VampirismAPI.sundamage, damage);
+        }
     }
 
     /**

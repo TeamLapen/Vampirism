@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.DamageSource;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -37,6 +38,7 @@ public class VampirismAPI {
      * Filled during pre-init.
      */
     public static PlayableFaction<IHunterPlayer> HUNTER_FACTION;
+    public static DamageSource sundamage = new DamageSource("sun").setDamageBypassesArmor().setMagicDamage();
     private static boolean defaultSundamage = false;
 
     static {

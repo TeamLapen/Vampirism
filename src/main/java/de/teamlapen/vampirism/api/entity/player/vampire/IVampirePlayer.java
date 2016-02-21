@@ -31,6 +31,16 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer, IMinionLord, I
     ISkillHandler getSkillHandler();
 
     /**
+     * @return The multiplier for sundamage
+     */
+    float getSundamageMultiplier();
+
+    /**
+     * @return The amount of ticks the player has been in sun. Never higher than 100
+     */
+    int getTicksInSun();
+
+    /**
      * @return Whether automatically filling blood into bottles is enabled or not.
      */
     boolean isAutoFillEnabled();
