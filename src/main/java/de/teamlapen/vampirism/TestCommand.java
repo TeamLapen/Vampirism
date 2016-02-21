@@ -19,6 +19,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.world.biome.BiomeGenBase;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -299,6 +300,26 @@ public class TestCommand extends BasicCommand {
 			@Override
 			public String getCommandName() {
 				return "countEntities";
+			}
+		});
+		addSub(new TestSubCommand() {
+			@Override
+			protected void processCommand(ICommandSender sender, EntityPlayer player, VampirePlayer vampire, String[] param) {
+				BiomeGenBase b = player.worldObj.getBiomeGenForCoords((int) player.posX, (int) player.posZ);
+				player.addChatMessage(new ChatComponentText("Chunk Biome"));
+				player.addChatMessage(new ChatComponentText("Biome: " + b.biomeName + " ID: " + b.biomeID + " Class: " + b.getBiomeClass() + "(" + b.getClass() + ")"));
+				BiomeGenBase b2 = player.worldObj.getWorldChunkManager().getBiomeGenAt((int) player.posX, (int) player.posZ);
+				player.addChatMessage(new ChatComponentText("WorldChunkManager Biome"));
+				player.addChatMessage(new ChatComponentText("Biome: " + b2.biomeName + " ID: " + b2.biomeID + " Class: " + b2.getBiomeClass() + "(" + b2.getClass() + ")"));
+				player.addChatMessage(new ChatComponentText("VBiome: " + ModBiomes.biomeVampireForest.biomeID + " Replacement: " + BiomeGenBase.getBiome(ModBiomes.biomeVampireForest.biomeID)));
+				for (BiomeGenBase base : BiomeGenBase.getBiomeGenArray()) {
+					if (base != null) Logger.t(base.biomeID + " " + base.biomeName + " " + base.getClass());
+				}
+			}
+
+			@Override
+			public String getCommandName() {
+				return "biome";
 			}
 		});
 	}

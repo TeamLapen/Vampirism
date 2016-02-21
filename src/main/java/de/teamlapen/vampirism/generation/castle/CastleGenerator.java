@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import de.teamlapen.vampirism.ModBiomes;
 import de.teamlapen.vampirism.ModBlocks;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.biome.BiomeVampireForest;
 import de.teamlapen.vampirism.castleDim.ChunkProviderCastle;
 import de.teamlapen.vampirism.util.Logger;
 import de.teamlapen.vampirism.util.ModdedEnumTypeAdapter;
@@ -171,7 +170,7 @@ public class CastleGenerator extends WorldGenerator {
 			data.markDirty();
 		}
 		if (data.positions.size() == 0 && data.fullyGeneratedPositions.size() == 0) {
-			if (world.getBiomeGenForCoords((chunkX << 4) + 8, (chunkZ << 4) + 8) instanceof BiomeVampireForest) {
+			if (world.getBiomeGenForCoords((chunkX << 4) + 8, (chunkZ << 4) + 8).biomeID == ModBiomes.biomeVampireForest.biomeID) {
 				CastlePositionData.Position pos = new CastlePositionData.Position(chunkX, chunkZ);
 				pos = this.optimizePosition(pos, world, rnd);
 				if (pos != null) {
@@ -287,7 +286,7 @@ public class CastleGenerator extends WorldGenerator {
 		Boolean[][] biomes = new Boolean[D_TEST_SIZE][D_TEST_SIZE];
 		for (int i = -TEST_SIZE; i < TEST_SIZE; i++) {
 			for (int j = -TEST_SIZE; j < TEST_SIZE; j++) {
-				biomes[i + TEST_SIZE][j + TEST_SIZE] = ModBiomes.biomeVampireForest.equals(world.getWorldChunkManager().getBiomeGenAt((position.chunkXPos + i << 4)+8, (position.chunkZPos + j << 4)+8));
+				biomes[i + TEST_SIZE][j + TEST_SIZE] = ModBiomes.biomeVampireForest.biomeID == (world.getWorldChunkManager().getBiomeGenAt((position.chunkXPos + i << 4) + 8, (position.chunkZPos + j << 4) + 8).biomeID);
 			}
 		}
 //		Logger.i(TAG,"Biomes");

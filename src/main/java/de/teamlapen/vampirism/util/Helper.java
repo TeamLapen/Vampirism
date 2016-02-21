@@ -3,8 +3,8 @@ package de.teamlapen.vampirism.util;
 import cpw.mods.fml.common.network.NetworkRegistry.TargetPoint;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.relauncher.ReflectionHelper;
+import de.teamlapen.vampirism.ModBiomes;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.biome.BiomeVampireForest;
 import de.teamlapen.vampirism.network.SpawnCustomParticlePacket;
 import de.teamlapen.vampirism.villages.VillageVampire;
 import net.minecraft.block.Block;
@@ -345,7 +345,7 @@ public class Helper {
 	public static boolean isEntityInVampireBiome(Entity e){
 		if(e==null||e.worldObj==null)return false;
 		try {
-			return e.worldObj.getBiomeGenForCoords(MathHelper.floor_double(e.posX), MathHelper.floor_double(e.posZ)) instanceof BiomeVampireForest;
+			return e.worldObj.getBiomeGenForCoords(MathHelper.floor_double(e.posX), MathHelper.floor_double(e.posZ)).biomeID == ModBiomes.biomeVampireForest.biomeID;
 		} catch (NullPointerException e1) {
 			//http://openeye.openmods.info/crashes/8cef4d710e41adf9be8362e57ad70d28
 			Logger.e("Helper", e1, "Nullpointer when checking biome. This is strange and should not happen");

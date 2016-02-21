@@ -5,11 +5,7 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.gameevent.TickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
-import de.teamlapen.vampirism.Configs;
-import de.teamlapen.vampirism.ModBlocks;
-import de.teamlapen.vampirism.ModItems;
-import de.teamlapen.vampirism.ModPotion;
-import de.teamlapen.vampirism.biome.BiomeVampireForest;
+import de.teamlapen.vampirism.*;
 import de.teamlapen.vampirism.block.BlockBloodAltar4Tip.TileEntityBloodAltar4Tip;
 import de.teamlapen.vampirism.block.BlockChurchAltar.TileEntityChurchAltar;
 import de.teamlapen.vampirism.client.KeyInputEventHandler;
@@ -140,7 +136,7 @@ public class ClientProxy extends CommonProxy {
 		if(i==0){
 			Minecraft mc=Minecraft.getMinecraft();
 			if(mc.theWorld!=null&&mc.thePlayer!=null&&!mc.isGamePaused()){
-				if(mc.theWorld.getBiomeGenForCoords(MathHelper.floor_double(mc.thePlayer.posX),MathHelper.floor_double(mc.thePlayer.posZ)) instanceof BiomeVampireForest){
+				if (mc.theWorld.getBiomeGenForCoords(MathHelper.floor_double(mc.thePlayer.posX), MathHelper.floor_double(mc.thePlayer.posZ)).biomeID == ModBiomes.biomeVampireForest.biomeID) {
 					PositionedSoundRecord sound = new PositionedSoundRecord(new ResourceLocation("vampirism:ambient.vampire_biome"), 0.6F, 1F,(float)(mc.thePlayer.posX+(10*(Math.random()-0.5D))),(float)mc.thePlayer.posY,(float)(mc.thePlayer.posZ+(10*(Math.random()-0.5D))));
 					mc.getSoundHandler().playSound(sound);
 				}

@@ -103,7 +103,7 @@ public class WorldGenVampirism implements IWorldGenerator {
 		if (world.provider.terrainType.equals(WorldType.FLAT)) {
 			prop = 0.2F;
 		}
-		if (!generatedStructure && !Configs.disable_hunter && chance < BALANCE.HUNTER_CAMP_SPAWN_CHANCE * prop && !biome.equals(ModBiomes.biomeVampireForest)) {
+		if (!generatedStructure && !Configs.disable_hunter && chance < BALANCE.HUNTER_CAMP_SPAWN_CHANCE * prop && !(biome.biomeID == (ModBiomes.biomeVampireForest.biomeID))) {
 			int posX = x + random.nextInt(16);
 			int posZ = z + random.nextInt(16);
 			int posY = world.getHeightValue(x, z);
