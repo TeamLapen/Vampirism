@@ -18,15 +18,6 @@ public interface IVampireSkill {
      */
     int getCooldown();
 
-    String getUnlocalizedName();
-
-    /**
-     * Called when the skill is activated. Only called server side
-     * @param vampire
-     * @return Whether the skill was successfully activated. !Does not give any feedback to the user!
-     */
-    boolean onActivated(IVampirePlayer vampire);
-
     /**
      * Should return the location of the icon map where the icon is in
      *
@@ -50,6 +41,16 @@ public interface IVampireSkill {
      */
     @SideOnly(Side.CLIENT)
     int getMinV();
+
+    String getUnlocalizedName();
+
+    /**
+     * Called when the skill is activated. Only called server side
+     *
+     * @param vampire
+     * @return Whether the skill was successfully activated. !Does not give any feedback to the user!
+     */
+    boolean onActivated(IVampirePlayer vampire);
 
     enum PERM {
         ALLOWED, DISABLED, LEVEL_TO_LOW, DISALLOWED, COOLDOWN//Cooldown should not be used by the skill itself, but only by the {@link ISkillHandler}

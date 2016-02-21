@@ -12,10 +12,11 @@ public class ConfigHelper {
 
     /**
      * Resets the configuration by simply clearing the config file
+     *
      * @param config
      * @return
      */
-    public static Configuration reset(Configuration config){
+    public static Configuration reset(Configuration config) {
         VampLib.log.i("Configs", "Resetting config file " + config.getConfigFile().getName());
         try {
             PrintWriter writer = new PrintWriter(config.getConfigFile());

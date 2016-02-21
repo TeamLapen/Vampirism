@@ -23,7 +23,7 @@ public class InputEventPacket implements IMessage {
 //    public static String REVERTBACK = "rb";
     public static String TOGGLESKILL = "ts";
     private final String SPLIT = "-";
-//    public static String LEAVE_COFFIN = "lc";
+    //    public static String LEAVE_COFFIN = "lc";
 //    public static String MINION_CONTROL = "mc";
 //    public static final String SWITCHVISION = "sw";
     private String param;

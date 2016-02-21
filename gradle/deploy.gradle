@@ -1,14 +1,13 @@
 curseforge {
-    if(project.hasProperty("curseforge_key")) {
+    if (project.hasProperty("curseforge_key")) {
         apiKey = project.curseforge_key
-    } else if(System.getenv().CI) {
+    } else if (System.getenv().CI) {
         apiKey = System.getenv().CURSEFORGE_KEY_SECRET
-    }
-    else{
+    } else {
         apiKey = ''
     }
-    project{
-        id="233029"
+    project {
+        id = "233029"
 
         if (System.getenv().RELEASE) {
             releaseType = 'beta'
@@ -19,9 +18,9 @@ curseforge {
         }
         addGameVersion config.minecraft_version
 
-        mainArtifact(jar){
-            displayName= "Vampirism-${config.minecraft_version}-${project.mod_version}"
-            relations{
+        mainArtifact(jar) {
+            displayName = "Vampirism-${config.minecraft_version}-${project.mod_version}"
+            relations {
                 optionalLibrary 'guide-api'
             }
 
@@ -30,10 +29,6 @@ curseforge {
 
         addArtifact deobfJar
     }
-
-
-
-
 
 
 }

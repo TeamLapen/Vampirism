@@ -15,13 +15,33 @@ public class VampireRageSkill extends DefaultSkill implements ILastingVampireSki
     }
 
     @Override
-    public int getMinLevel() {
-        return Balance.vps.RAGE_MIN_LEVEL;
+    public boolean canBeUsedBy(IVampirePlayer vampire) {
+        return !vampire.getSkillHandler().isSkillActive(SkillHandler.batSkill);
     }
 
     @Override
     public int getCooldown() {
         return Balance.vps.RAGE_COOLDOWN * 20;
+    }
+
+    @Override
+    public int getDuration(int level) {
+        return 20 * (Balance.vps.RAGE_MIN_DURATION + Balance.vps.RAGE_DUR_PL * (level - getMinLevel()));
+    }
+
+    @Override
+    public int getMinLevel() {
+        return Balance.vps.RAGE_MIN_LEVEL;
+    }
+
+    @Override
+    public int getMinU() {
+        return 32;
+    }
+
+    @Override
+    public int getMinV() {
+        return 0;
     }
 
     @Override
@@ -36,23 +56,8 @@ public class VampireRageSkill extends DefaultSkill implements ILastingVampireSki
     }
 
     @Override
-    public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.getSkillHandler().isSkillActive(SkillHandler.batSkill);
-    }
+    public void onActivatedClient(IVampirePlayer vampire) {
 
-    @Override
-    public int getMinU() {
-        return 32;
-    }
-
-    @Override
-    public int getMinV() {
-        return 0;
-    }
-
-    @Override
-    public int getDuration(int level) {
-        return 20 * (Balance.vps.RAGE_MIN_DURATION + Balance.vps.RAGE_DUR_PL * (level - getMinLevel()));
     }
 
     @Override
@@ -62,11 +67,6 @@ public class VampireRageSkill extends DefaultSkill implements ILastingVampireSki
 
     @Override
     public void onReActivated(IVampirePlayer vampire) {
-
-    }
-
-    @Override
-    public void onActivatedClient(IVampirePlayer vampire) {
 
     }
 

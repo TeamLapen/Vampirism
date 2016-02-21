@@ -14,11 +14,12 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  * Handles all events used in central parts of the mod
  */
 public class ModEventHandler {
-    private final static String TAG="EventHandler";
+    private final static String TAG = "EventHandler";
+
     @SubscribeEvent
-    public void onConfigurationChanged(ConfigChangedEvent.OnConfigChangedEvent e){
-        if(e.modID.equalsIgnoreCase(REFERENCE.MODID)){
-            VampirismMod.log.i(TAG,"Configuration (%s) changed",e.configID);
+    public void onConfigurationChanged(ConfigChangedEvent.OnConfigChangedEvent e) {
+        if (e.modID.equalsIgnoreCase(REFERENCE.MODID)) {
+            VampirismMod.log.i(TAG, "Configuration (%s) changed", e.configID);
             Configs.onConfigurationChanged();
             Balance.onConfigurationChanged();
         }

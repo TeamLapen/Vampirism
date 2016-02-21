@@ -15,7 +15,7 @@ import net.minecraft.world.World;
 /**
  * Base class for most vampirism mobs
  */
-public abstract class EntityVampirism extends EntityCreature implements IEntityWithHome{
+public abstract class EntityVampirism extends EntityCreature implements IEntityWithHome {
 
     protected boolean hasArms = true;
     protected boolean peaceful = false;
@@ -24,68 +24,6 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
 
     public EntityVampirism(World p_i1595_1_) {
         super(p_i1595_1_);
-    }
-
-    public boolean hasHome() {
-        return home != null;
-    }
-
-    protected void attackedEntityAsMob(EntityLivingBase entity) {
-    }
-
-    public void onLivingUpdate() {
-        if (hasArms) {
-            this.updateArmSwingProgress();
-        }
-        super.onLivingUpdate();
-    }
-
-    public void onUpdate() {
-        super.onUpdate();
-
-        if (!this.worldObj.isRemote && !peaceful && this.worldObj.getDifficulty()== EnumDifficulty.PEACEFUL) {
-            this.setDead();
-        }
-    }
-
-    @Override
-    public boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_) {
-        if (this.isEntityInvulnerable(p_70097_1_)) {
-            return false;
-        } else if (super.attackEntityFrom(p_70097_1_, p_70097_2_)) {
-            Entity entity = p_70097_1_.getEntity();
-            if (entity instanceof EntityLivingBase) {
-                this.setAttackTarget((EntityLivingBase) entity);
-            }
-            return true;
-        }
-        return false;
-    }
-
-    protected String getSwimSound() {
-        return "game.hostile.swim";
-    }
-
-    protected String getSplashSound() {
-        return "game.hostile.swim.splash";
-    }
-
-    /**
-     * Returns the sound this mob makes when it is hurt.
-     */
-    protected String getHurtSound() {
-        return "game.hostile.hurt";
-    }
-
-    /**
-     * Returns the sound this mob makes on death.
-     */
-    protected String getDeathSound() {
-        return "game.hostile.die";
-    }
-
-    protected String func_146067_o(int p_146067_1_) {
-        return p_146067_1_ > 4 ? "game.hostile.hurt.fall.big" : "game.hostile.hurt.fall.small";
     }
 
     public boolean attackEntityAsMob(Entity entity) {
@@ -123,30 +61,48 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         return flag;
     }
 
+    @Override
+    public boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_) {
+        if (this.isEntityInvulnerable(p_70097_1_)) {
+            return false;
+        } else if (super.attackEntityFrom(p_70097_1_, p_70097_2_)) {
+            Entity entity = p_70097_1_.getEntity();
+            if (entity instanceof EntityLivingBase) {
+                this.setAttackTarget((EntityLivingBase) entity);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void detachHome() {
+        this.home = null;
+    }
+
     public boolean getCanSpawnHere() {
-        return (peaceful || this.worldObj.getDifficulty()!= EnumDifficulty.PEACEFUL) && super.getCanSpawnHere();
+        return (peaceful || this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL) && super.getCanSpawnHere();
     }
 
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
-        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
+    public AxisAlignedBB getHome() {
+        return home;
     }
 
-    protected boolean func_146066_aG() {
-        return true;
+    public void setHome(AxisAlignedBB home) {
+        this.home = home;
     }
 
-    /**
-     * Fakes a teleportation and actually just kills the entity
-     */
-    protected void teleportAway() {
-        this.setInvisible(true);
-        Helper.spawnParticlesAroundEntity(this,EnumParticleTypes.PORTAL, 5, 64);
+    public BlockPos getHomePosition() {
+        if (!hasHome()) return new BlockPos(0, 0, 0);
+        int posX, posY, posZ;
+        posX = (int) (home.minX + (home.maxX - home.minX) / 2);
+        posY = (int) (home.minY + (home.maxY - home.minY) / 2);
+        posZ = (int) (home.minZ + (home.maxZ - home.minZ) / 2);
+        return new BlockPos(posX, posY, posZ);
+    }
 
-        this.worldObj.playSoundEffect(this.posX, this.posY, this.posZ, "mob.endermen.portal", 1.0F, 1.0F);
-        this.playSound("mob.endermen.portal", 1.0F, 1.0F);
-
-        this.setDead();
+    public boolean hasHome() {
+        return home != null;
     }
 
     public boolean isWithinHomeDistance(double x, double y, double z) {
@@ -154,6 +110,14 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
             return home.isVecInside(new Vec3(x, y, z));
         }
         return true;
+    }
+
+    public boolean isWithinHomeDistance(BlockPos pos) {
+        return this.isWithinHomeDistance(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    public boolean isWithinHomeDistance(int posX, int posY, int posZ) {
+        return this.isWithinHomeDistance((double) posX, (double) posY, (double) posZ);
     }
 
     @Override
@@ -166,51 +130,18 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         return this.isWithinHomeDistance(pos);
     }
 
-    public boolean isWithinHomeDistance(BlockPos pos){
-        return this.isWithinHomeDistance(pos.getX(),pos.getY(),pos.getZ());
+    public void onLivingUpdate() {
+        if (hasArms) {
+            this.updateArmSwingProgress();
+        }
+        super.onLivingUpdate();
     }
 
-    public boolean isWithinHomeDistance(int posX, int posY, int posZ) {
-        return this.isWithinHomeDistance((double) posX, (double) posY, (double) posZ);
-    }
+    public void onUpdate() {
+        super.onUpdate();
 
-    @Override
-    public void setHomePosAndDistance(BlockPos pos, int distance) {
-        this.setHomeArea(pos, distance);
-    }
-
-    public void setHomeArea(BlockPos pos, int r) {
-        this.setHome(new AxisAlignedBB(pos.add(-r,-r,-r),pos.add(r,r,r)));
-    }
-
-    public BlockPos getHomePosition() {
-        if (!hasHome()) return new BlockPos(0, 0, 0);
-        int posX,posY,posZ;
-        posX = (int) (home.minX + (home.maxX - home.minX) / 2);
-        posY = (int) (home.minY + (home.maxY - home.minY) / 2);
-        posZ = (int) (home.minZ + (home.maxZ - home.minZ) / 2);
-        return new BlockPos(posX,posY,posZ);
-    }
-
-    @Override
-    public void detachHome() {
-        this.home = null;
-    }
-
-    public AxisAlignedBB getHome() {
-        return home;
-    }
-
-    public void setHome(AxisAlignedBB home) {
-        this.home = home;
-    }
-
-    @Override
-    public void writeEntityToNBT(NBTTagCompound nbt) {
-        super.writeEntityToNBT(nbt);
-        if (saveHome && hasHome()) {
-            int[] h = {(int) home.minX, (int) home.minY, (int) home.minZ, (int) home.maxX, (int) home.maxY, (int) home.maxZ};
-            nbt.setIntArray("home", h);
+        if (!this.worldObj.isRemote && !peaceful && this.worldObj.getDifficulty() == EnumDifficulty.PEACEFUL) {
+            this.setDead();
         }
     }
 
@@ -224,6 +155,31 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         }
     }
 
+    public void setHomeArea(BlockPos pos, int r) {
+        this.setHome(new AxisAlignedBB(pos.add(-r, -r, -r), pos.add(r, r, r)));
+    }
+
+    @Override
+    public void setHomePosAndDistance(BlockPos pos, int distance) {
+        this.setHomeArea(pos, distance);
+    }
+
+    @Override
+    public void writeEntityToNBT(NBTTagCompound nbt) {
+        super.writeEntityToNBT(nbt);
+        if (saveHome && hasHome()) {
+            int[] h = {(int) home.minX, (int) home.minY, (int) home.minZ, (int) home.maxX, (int) home.maxY, (int) home.maxZ};
+            nbt.setIntArray("home", h);
+        }
+    }
+
+    protected void applyEntityAttributes() {
+        super.applyEntityAttributes();
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
+    }
+
+    protected void attackedEntityAsMob(EntityLivingBase entity) {
+    }
 
     /**
      * Clears tasks and targetTasks
@@ -231,5 +187,48 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     protected void clearAITasks() {
         tasks.taskEntries.clear();
         targetTasks.taskEntries.clear();
+    }
+
+    protected boolean func_146066_aG() {
+        return true;
+    }
+
+    protected String func_146067_o(int p_146067_1_) {
+        return p_146067_1_ > 4 ? "game.hostile.hurt.fall.big" : "game.hostile.hurt.fall.small";
+    }
+
+    /**
+     * Returns the sound this mob makes on death.
+     */
+    protected String getDeathSound() {
+        return "game.hostile.die";
+    }
+
+    /**
+     * Returns the sound this mob makes when it is hurt.
+     */
+    protected String getHurtSound() {
+        return "game.hostile.hurt";
+    }
+
+    protected String getSplashSound() {
+        return "game.hostile.swim.splash";
+    }
+
+    protected String getSwimSound() {
+        return "game.hostile.swim";
+    }
+
+    /**
+     * Fakes a teleportation and actually just kills the entity
+     */
+    protected void teleportAway() {
+        this.setInvisible(true);
+        Helper.spawnParticlesAroundEntity(this, EnumParticleTypes.PORTAL, 5, 64);
+
+        this.worldObj.playSoundEffect(this.posX, this.posY, this.posZ, "mob.endermen.portal", 1.0F, 1.0F);
+        this.playSound("mob.endermen.portal", 1.0F, 1.0F);
+
+        this.setDead();
     }
 }

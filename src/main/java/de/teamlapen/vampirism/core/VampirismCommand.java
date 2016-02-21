@@ -26,7 +26,7 @@ import java.util.Set;
 public class VampirismCommand extends BasicCommand {
 
     public VampirismCommand() {
-        if(VampirismMod.inDev){
+        if (VampirismMod.inDev) {
             aliases.add("v");
         }
         final PlayableFaction[] pfactions = FactionRegistry.getPlayableFactions();
@@ -35,6 +35,11 @@ public class VampirismCommand extends BasicCommand {
             pfaction_names[i] = pfactions[i].name;
         }
         addSub(new SubCommand() {
+            @Override
+            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+                return (args.length == 1) ? getListOfStringsMatchingLastWord(args, getCategories()) : null;
+            }
+
             @Override
             public boolean canCommandSenderUseCommand(ICommandSender var1) {
                 return var1.canCommandSenderUseCommand(3, getCommandName());
@@ -46,41 +51,39 @@ public class VampirismCommand extends BasicCommand {
             }
 
             @Override
+            public String getCommandUsage(ICommandSender var1) {
+                return getCommandName() + " <all/[category]>";
+            }
+
+            @Override
             public void processCommand(ICommandSender var1, String[] var2) {
                 String cat;
-                if(var2==null||var2.length==0){
-                    cat="all";
+                if (var2 == null || var2.length == 0) {
+                    cat = "all";
+                } else {
+                    cat = var2[0];
                 }
-                else{
-                    cat=var2[0];
-                }
-                boolean p=Balance.reset(cat);
-                if(p){
-                    var1.addChatMessage(new ChatComponentText("Successfully reset "+cat+" balance category. Please restart MC."));
-                }
-                else{
-                    var1.addChatMessage(new ChatComponentText("Did not find "+cat+" balance category."));
+                boolean p = Balance.reset(cat);
+                if (p) {
+                    var1.addChatMessage(new ChatComponentText("Successfully reset " + cat + " balance category. Please restart MC."));
+                } else {
+                    var1.addChatMessage(new ChatComponentText("Did not find " + cat + " balance category."));
                 }
             }
 
-            @Override
-            public String getCommandUsage(ICommandSender var1) {
-                return getCommandName()+" <all/[category]>";
-            }
-
-            @Override
-            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-                return (args.length==1)?getListOfStringsMatchingLastWord(args,getCategories()):null;
-            }
-
-            private String[] getCategories(){
-                Set<String> categories= Balance.getCategories().keySet();
-                String[] result=categories.toArray(new String[categories.size()+1]);
-                result[result.length-1]="all";
+            private String[] getCategories() {
+                Set<String> categories = Balance.getCategories().keySet();
+                String[] result = categories.toArray(new String[categories.size() + 1]);
+                result[result.length - 1] = "all";
                 return result;
             }
         });
         addSub(new SubCommand() {
+
+            @Override
+            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+                return args.length == 1 ? getListOfStringsMatchingLastWord(args, pfaction_names) : null;
+            }
 
             @Override
             public boolean canCommandSenderUseCommand(ICommandSender var1) {
@@ -93,6 +96,12 @@ public class VampirismCommand extends BasicCommand {
             @Override
             public String getCommandName() {
                 return "level";
+            }
+
+            @Override
+            public String getCommandUsage(ICommandSender var1) {
+
+                return getCommandName() + " " + ArrayUtils.toString(pfaction_names) + " <level>";
             }
 
             @Override
@@ -134,19 +143,13 @@ public class VampirismCommand extends BasicCommand {
 
                 }
             }
-
-            @Override
-            public String getCommandUsage(ICommandSender var1) {
-
-                return getCommandName() + " " + ArrayUtils.toString(pfaction_names) + " <level>";
-            }
-
-            @Override
-            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-                return args.length == 1 ? getListOfStringsMatchingLastWord(args, pfaction_names) : null;
-            }
         });
         addSub(new SubCommand() {
+            @Override
+            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+                return null;
+            }
+
             @Override
             public boolean canCommandSenderUseCommand(ICommandSender var1) {
                 return var1 instanceof EntityPlayer;
@@ -155,6 +158,11 @@ public class VampirismCommand extends BasicCommand {
             @Override
             public String getCommandName() {
                 return "eye";
+            }
+
+            @Override
+            public String getCommandUsage(ICommandSender var1) {
+                return getCommandName() + " <id [0-" + (REFERENCE.EYE_TYPE_COUNT - 1) + "]> ";
             }
 
             @Override
@@ -172,16 +180,6 @@ public class VampirismCommand extends BasicCommand {
                 } catch (NumberFormatException e) {
                     sendMessage(var1, "<id> has to be a number");
                 }
-            }
-
-            @Override
-            public String getCommandUsage(ICommandSender var1) {
-                return getCommandName() + " <id [0-" + (REFERENCE.EYE_TYPE_COUNT - 1) + "]> ";
-            }
-
-            @Override
-            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-                return null;
             }
         });
     }

@@ -17,11 +17,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 
 public class PotionSanguinare extends VampirismPotion {
-    public PotionSanguinare(ResourceLocation location, boolean badEffect, int potionColor) {
-        super(location, badEffect, potionColor);
-        setIconIndex(7, 1).setPotionName("potion.vampirism.sanguinare").registerPotionAttributeModifier(SharedMonsterAttributes.attackDamage, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, 0);
-    }
-
     /**
      * @param entity
      * @param player Whether to use the player effect duration or the mob duration
@@ -31,6 +26,11 @@ public class PotionSanguinare extends VampirismPotion {
         int duration = (int) ((entity.getRNG().nextFloat() + 0.5F) * avgDuration);
         entity.addPotionEffect(new PotionSanguinareEffect(ModPotions.sanguinare.id, duration));
 
+    }
+
+    public PotionSanguinare(ResourceLocation location, boolean badEffect, int potionColor) {
+        super(location, badEffect, potionColor);
+        setIconIndex(7, 1).setPotionName("potion.vampirism.sanguinare").registerPotionAttributeModifier(SharedMonsterAttributes.attackDamage, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, 0);
     }
 
     @Override
@@ -52,12 +52,6 @@ public class PotionSanguinare extends VampirismPotion {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public boolean shouldRenderInvText(PotionEffect effect) {
-        return false;
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
     public void renderInventoryEffect(int x, int y, PotionEffect effect, Minecraft mc) {
 //        https://github.com/MinecraftForge/MinecraftForge/issues/2473
         String s1 = I18n.format(getName());
@@ -66,5 +60,11 @@ public class PotionSanguinare extends VampirismPotion {
         String s = "Unknown";
         mc.fontRendererObj.drawStringWithShadow(s, (float) (x + 10 + 18), (float) (y + 6 + 10), 8355711);
 
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public boolean shouldRenderInvText(PotionEffect effect) {
+        return false;
     }
 }

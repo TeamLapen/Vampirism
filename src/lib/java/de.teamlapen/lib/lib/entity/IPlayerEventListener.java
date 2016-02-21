@@ -10,23 +10,24 @@ import net.minecraft.util.DamageSource;
  */
 public interface IPlayerEventListener {
 
-    void onJoinWorld();
+    void onChangedDimension(int from, int to);
+
+    void onDeath(DamageSource src);
 
     /**
      * Called when the corrosponding player is attacked.
+     *
      * @return If false the damage will be canceled
      */
     boolean onEntityAttacked(DamageSource src, float amt);
 
-    void onDeath(DamageSource src);
+    void onJoinWorld();
 
-    void onUpdate();
-
-    void onChangedDimension(int from,int to);
+    void onPlayerClone(EntityPlayer original);
 
     void onPlayerLoggedIn();
 
     void onPlayerLoggedOut();
 
-    void onPlayerClone(EntityPlayer original);
+    void onUpdate();
 }

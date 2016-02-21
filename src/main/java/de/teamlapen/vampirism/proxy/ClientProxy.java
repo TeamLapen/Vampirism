@@ -30,6 +30,16 @@ public class ClientProxy extends CommonProxy {
     private final static String TAG = "ClientProxy";
 
     @Override
+    public boolean isClientPlayerNull() {
+        return Minecraft.getMinecraft().thePlayer == null;
+    }
+
+    @Override
+    public boolean isPlayerThePlayer(EntityPlayer player) {
+        return Minecraft.getMinecraft().thePlayer.equals(player);
+    }
+
+    @Override
     public void onInitStep(Step step, FMLStateEvent event) {
         super.onInitStep(step, event);
         ModBlocksRender.onInitStep(step, event);
@@ -48,20 +58,6 @@ public class ClientProxy extends CommonProxy {
         MinecraftForge.EVENT_BUS.register(new RenderHandler(Minecraft.getMinecraft()));
     }
 
-    private void registerVampirePlayerHead(RenderManager manager) {
-        for (RenderPlayer renderPlayer : manager.getSkinMap().values()) {
-            renderPlayer.addLayer(new LayerVampirePlayerHead(renderPlayer));
-        }
-    }
-
-    private void registerVampireEntityOverlays() {
-        RenderManager manager = Minecraft.getMinecraft().getRenderManager();
-        registerVampirePlayerHead(manager);
-        for (Map.Entry<Class<? extends EntityCreature>, String> entry : BiteableRegistry.getConvertibleOverlay().entrySet()) {
-            registerVampireEntityOverlay(manager, entry.getKey(), new ResourceLocation(entry.getValue()));
-        }
-    }
-
     private void registerVampireEntityOverlay(RenderManager manager, Class<? extends EntityCreature> clazz, ResourceLocation loc) {
         Render render = manager.getEntityClassRenderObject(clazz);
         if (render == null) {
@@ -76,14 +72,17 @@ public class ClientProxy extends CommonProxy {
         rendererLiving.addLayer(new LayerVampireEntity(rendererLiving, loc));
     }
 
-
-    @Override
-    public boolean isPlayerThePlayer(EntityPlayer player) {
-        return Minecraft.getMinecraft().thePlayer.equals(player);
+    private void registerVampireEntityOverlays() {
+        RenderManager manager = Minecraft.getMinecraft().getRenderManager();
+        registerVampirePlayerHead(manager);
+        for (Map.Entry<Class<? extends EntityCreature>, String> entry : BiteableRegistry.getConvertibleOverlay().entrySet()) {
+            registerVampireEntityOverlay(manager, entry.getKey(), new ResourceLocation(entry.getValue()));
+        }
     }
 
-    @Override
-    public boolean isClientPlayerNull() {
-        return Minecraft.getMinecraft().thePlayer==null;
+    private void registerVampirePlayerHead(RenderManager manager) {
+        for (RenderPlayer renderPlayer : manager.getSkinMap().values()) {
+            renderPlayer.addLayer(new LayerVampirePlayerHead(renderPlayer));
+        }
     }
 }

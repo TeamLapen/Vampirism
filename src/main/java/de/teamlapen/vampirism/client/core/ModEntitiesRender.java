@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.event.FMLStateEvent;
 /**
  * Handles entity render registration
  */
-public class ModEntitiesRender{
+public class ModEntitiesRender {
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
@@ -36,7 +36,7 @@ public class ModEntitiesRender{
 
     }
 
-    private static void preInit(FMLPreInitializationEvent event){
+    private static void preInit(FMLPreInitializationEvent event) {
         RenderingRegistry.registerEntityRenderingHandler(EntityBlindingBat.class, new IRenderFactory<EntityBlindingBat>() {
             @Override
             public Render<? super EntityBlindingBat> createRenderFor(RenderManager manager) {

@@ -10,16 +10,6 @@ import net.minecraft.entity.EntityLivingBase;
  * Interface for the player vampire data
  */
 public interface IVampirePlayer extends IVampire, IFactionPlayer, IMinionLord, IBiteableEntity {
-    int getBloodLevel();
-
-
-    /**
-     * @return Whether automatically filling blood into bottles is enabled or not.
-     */
-    boolean isAutoFillEnabled();
-    boolean isVampireLord();
-
-
     /**
      * Add an exhaustion modifier (used in blood usage)
      *
@@ -29,23 +19,30 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer, IMinionLord, I
     void addExhaustionModifier(String id, float mod);
 
     /**
-     * Removes a modifier registered with {@link #addExhaustionModifier(String, float)}
-     *
-     * @param id
+     * @return The bite type which would be applied to the give entity
      */
-    void removeExhaustionModifier(String id);
+    BITE_TYPE determineBiteType(EntityLivingBase entity);
 
-
-
+    int getBloodLevel();
 
     /**
      * @return The players vampire skill handler
      */
     ISkillHandler getSkillHandler();
+
     /**
-     * @return The bite type which would be applied to the give entity
+     * @return Whether automatically filling blood into bottles is enabled or not.
      */
-    BITE_TYPE determineBiteType(EntityLivingBase entity);
+    boolean isAutoFillEnabled();
+
+    boolean isVampireLord();
+
+    /**
+     * Removes a modifier registered with {@link #addExhaustionModifier(String, float)}
+     *
+     * @param id
+     */
+    void removeExhaustionModifier(String id);
 
     enum BITE_TYPE {
         ATTACK, SUCK_BLOOD_CREATURE, SUCK_BLOOD_PLAYER, SUCK_BLOOD, NONE

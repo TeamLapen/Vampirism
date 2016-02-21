@@ -25,33 +25,6 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class ModPlayerEventHandler {
 
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onEntityConstructing(EntityEvent.EntityConstructing event) {
-        if (event.entity instanceof EntityPlayer) {
-            /*
-            Register ExtendedProperties.
-            Could be done via factions, but that might be a little bit overkill for 2-5 factions and might cause trouble with addon mods.
-             */
-            if (FactionPlayerHandler.get((EntityPlayer) event.entity) == null) {
-                FactionPlayerHandler.register((EntityPlayer) event.entity);
-            }
-            if (VampirePlayer.get((EntityPlayer) event.entity) == null) {
-                VampirePlayer.register((EntityPlayer) event.entity);
-            }
-            if (HunterPlayer.get((EntityPlayer) event.entity) == null) {
-                HunterPlayer.register((EntityPlayer) event.entity);
-            }
-
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onLivingUpdateLast(LivingEvent.LivingUpdateEvent event) {
-        if (event.entity instanceof EntityPlayer) {
-            VampirePlayer.get((EntityPlayer) event.entity).onUpdateBloodStats();
-        }
-    }
-
     @SubscribeEvent
     public void onAttackEntity(AttackEntityEvent event) {
         if (VampirePlayer.get(event.entityPlayer).getSkillHandler().isSkillActive(SkillHandler.batSkill)) {
@@ -77,10 +50,44 @@ public class ModPlayerEventHandler {
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onEntityConstructing(EntityEvent.EntityConstructing event) {
+        if (event.entity instanceof EntityPlayer) {
+            /*
+            Register ExtendedProperties.
+            Could be done via factions, but that might be a little bit overkill for 2-5 factions and might cause trouble with addon mods.
+             */
+            if (FactionPlayerHandler.get((EntityPlayer) event.entity) == null) {
+                FactionPlayerHandler.register((EntityPlayer) event.entity);
+            }
+            if (VampirePlayer.get((EntityPlayer) event.entity) == null) {
+                VampirePlayer.register((EntityPlayer) event.entity);
+            }
+            if (HunterPlayer.get((EntityPlayer) event.entity) == null) {
+                HunterPlayer.register((EntityPlayer) event.entity);
+            }
+
+        }
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onItemUse(PlayerUseItemEvent.Start event) {
         if (VampirePlayer.get(event.entityPlayer).getSkillHandler().isSkillActive(SkillHandler.batSkill)) {
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onLivingUpdateLast(LivingEvent.LivingUpdateEvent event) {
+        if (event.entity instanceof EntityPlayer) {
+            VampirePlayer.get((EntityPlayer) event.entity).onUpdateBloodStats();
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onPlayerClone(PlayerEvent.Clone event) {
+        if (!event.entityPlayer.worldObj.isRemote) {
+            FactionPlayerHandler.get(event.entityPlayer).copyFrom(event.original);
         }
     }
 
@@ -95,13 +102,6 @@ public class ModPlayerEventHandler {
                 }
             }
 
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onPlayerClone(PlayerEvent.Clone event) {
-        if (!event.entityPlayer.worldObj.isRemote) {
-            FactionPlayerHandler.get(event.entityPlayer).copyFrom(event.original);
         }
     }
 

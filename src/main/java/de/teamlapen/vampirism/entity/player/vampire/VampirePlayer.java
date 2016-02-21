@@ -43,22 +43,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * Main class for Vampire Players.
  */
-public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
+public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
 
     private final static String TAG = "VampirePlayer";
-    private final BloodStats bloodStats;
-    private final String KEY_EYE = "eye_type";
-    private final String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
-    private final SkillHandler skillHandler;
-    private boolean sundamage_cache=false;
-    private int biteCooldown = 0;
-    private int eyeType = 0;
-    public VampirePlayer(EntityPlayer player) {
-        super(player);
-        bloodStats = new BloodStats(player);
-        skillHandler = new SkillHandler(this);
-    }
-
 
     /**
      * Don't call before the construction event of the player entity is finished
@@ -73,6 +60,96 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
     public static void register(EntityPlayer player) {
         player.registerExtendedProperties(VampirismAPI.VAMPIRE_FACTION.prop, new VampirePlayer(player));
     }
+    private final BloodStats bloodStats;
+    private final String KEY_EYE = "eye_type";
+    private final String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
+    private final SkillHandler skillHandler;
+    private boolean sundamage_cache = false;
+    private int biteCooldown = 0;
+    private int eyeType = 0;
+
+    public VampirePlayer(EntityPlayer player) {
+        super(player);
+        bloodStats = new BloodStats(player);
+        skillHandler = new SkillHandler(this);
+    }
+
+    /**
+     * Increases exhaustion level by supplied amount
+     */
+    public void addExhaustion(float p_71020_1_) {
+        if (!player.capabilities.disableDamage && getLevel() > 0) {
+            if (!isRemote()) {
+                bloodStats.addExhaustion(p_71020_1_);
+            }
+        }
+    }
+
+    @Override
+    public void addExhaustionModifier(String id, float mod) {
+        bloodStats.addExhaustionModifier(id, mod);
+    }
+
+    /**
+     * Bite the entity with the given id.
+     * Checks reach distance
+     *
+     * @param entityId
+     */
+    public void biteEntity(int entityId) {
+        Entity e = player.worldObj.getEntityByID(entityId);
+        if (e != null && e instanceof EntityLivingBase) {
+            if (e.getDistanceToEntity(player) <= ((EntityPlayerMP) player).theItemInWorldManager.getBlockReachDistance() + 2) {
+                biteEntity((EntityLivingBase) e);
+            } else {
+                VampirismMod.log.w(TAG, "Entity sent by client is not in reach " + entityId);
+            }
+        }
+    }
+
+    @Override
+    public boolean canBeBitten(IVampire biter) {
+        return true;
+    }
+
+    @Override
+    public boolean canLeaveFaction() {
+        return true;
+    }
+
+    public BITE_TYPE determineBiteType(EntityLivingBase entity) {
+        if (entity instanceof IBiteableEntity) {
+            if (((IBiteableEntity) entity).canBeBitten(this)) return BITE_TYPE.SUCK_BLOOD;
+        }
+        if (entity instanceof EntityCreature) {
+            if (ExtendedCreature.get((EntityCreature) entity).canBeBitten(this)) {
+                return BITE_TYPE.SUCK_BLOOD_CREATURE;
+            }
+        } else if (entity instanceof EntityPlayer) {
+            if (((EntityPlayer) entity).capabilities.isCreativeMode || !Permissions.getPermission("pvp", player)) {
+                return BITE_TYPE.NONE;
+            }
+            if (!UtilLib.canReallySee(entity, player, false) && VampirePlayer.get((EntityPlayer) entity).canBeBitten(this)) {
+                return BITE_TYPE.SUCK_BLOOD_PLAYER;
+            }
+            return BITE_TYPE.ATTACK;
+        }
+        return BITE_TYPE.ATTACK;
+    }
+
+    @Override
+    public int getBloodLevel() {
+        return bloodStats.getBloodLevel();
+    }
+
+    @Override
+    public float getBloodSaturation() {
+        return (float) Balance.vp.PLAYER_BLOOD_SATURATION;
+    }
+
+    public BloodStats getBloodStats() {
+        return bloodStats;
+    }
 
     /**
      * @return Eyetype for rendering
@@ -81,37 +158,97 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
         return eyeType;
     }
 
-    /**
-     * Sets the eyeType as long as it is valid.
-     * Also sends a sync packet if on server
-     *
-     * @param eyeType
-     * @return Whether the type is valid or not
-     */
-    public boolean setEyeType(int eyeType) {
-        if (eyeType >= REFERENCE.EYE_TYPE_COUNT || eyeType < 0) {
-            return false;
+    @Override
+    public PlayableFaction<IVampirePlayer> getFaction() {
+        return VampirismAPI.VAMPIRE_FACTION;
+    }
+
+    @Override
+    public Predicate<? super Entity> getNonFriendlySelector(boolean otherFactionPlayers) {
+        return Predicates.alwaysTrue();//TODO adjust
+    }
+
+    @Override
+    public String getPropertyKey() {
+        return VampirismAPI.VAMPIRE_FACTION.prop;
+    }
+
+    public ISkillHandler getSkillHandler() {
+        return skillHandler;
+    }
+
+    @Override
+    public boolean isAutoFillEnabled() {
+        return false;
+    }
+
+    @Override
+    public boolean isDisguised() {
+        return false;//TODO implement
+    }
+
+    @Override
+    public boolean isGettingSundamage(boolean forcerefresh) {
+        if (player.ticksExisted % 8 == 0) {
+            sundamage_cache = Helper.gettingSundamge(player);
         }
-        if (eyeType != this.eyeType) {
-            this.eyeType = eyeType;
-            if (!isRemote()) {
-                NBTTagCompound nbt = new NBTTagCompound();
-                nbt.setInteger(KEY_EYE, eyeType);
-                sync(nbt, true);
+        return sundamage_cache;
+    }
+
+    @Override
+    public boolean isGettingSundamge() {
+        return isGettingSundamage(false);
+    }
+
+    @Override
+    public boolean isVampireLord() {
+        return false;
+    }
+
+    @Override
+    public void loadData(NBTTagCompound nbt) {
+        bloodStats.readNBT(nbt);
+        eyeType = nbt.getInteger(KEY_EYE);
+        skillHandler.loadFromNbt(nbt);
+    }
+
+    @Override
+    public int onBite(IVampire biter) {
+        if (getLevel() == 0) {
+            int amt = player.getFoodStats().getFoodLevel();
+            player.getFoodStats().setFoodLevel(0);
+            player.addExhaustion(1000F);
+            if (!player.isPotionActive(ModPotions.sanguinare) && (!(biter instanceof EntityPlayer) || Permissions.canPlayerTurnPlayer((EntityPlayer) biter)) && Helper.canBecomeVampire(player)) {
+                PotionSanguinare.addRandom(player, true);
             }
+            return amt;
         }
-        return true;
-    }
-
-
-    @Override
-    protected int getMaxLevel() {
-        return REFERENCE.HIGHEST_VAMPIRE_LEVEL;
+        int amt = this.getBloodStats().getBloodLevel();
+        this.getBloodStats().consumeBlood(amt);
+        sync(this.getBloodStats().writeUpdate(new NBTTagCompound()), false);
+        return amt;
     }
 
     @Override
-    protected VampirismPlayer copyFromPlayer(EntityPlayer old) {
-        return get(old);
+    public void onChangedDimension(int from, int to) {
+
+    }
+
+    @Override
+    public void onDeath(DamageSource src) {
+        skillHandler.deactivateAllSkills();
+    }
+
+    @Override
+    public boolean onEntityAttacked(DamageSource src, float amt) {
+        return false;
+    }
+
+    @Override
+    public void onJoinWorld() {
+        if (getLevel() > 0) {
+            skillHandler.onSkillsReactivated();
+        }
     }
 
     @Override
@@ -141,28 +278,13 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
     }
 
     @Override
-    public boolean canLeaveFaction() {
-        return true;
+    public void onPlayerLoggedIn() {
+
     }
 
     @Override
-    public int getBloodLevel() {
-        return bloodStats.getBloodLevel();
-    }
+    public void onPlayerLoggedOut() {
 
-    public BloodStats getBloodStats() {
-        return bloodStats;
-    }
-
-    /**
-     * Increases exhaustion level by supplied amount
-     */
-    public void addExhaustion(float p_71020_1_) {
-        if (!player.capabilities.disableDamage && getLevel() > 0) {
-            if (!isRemote()) {
-                bloodStats.addExhaustion(p_71020_1_);
-            }
-        }
     }
 
     /**
@@ -184,70 +306,6 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
 //            });
 
         }
-    }
-
-
-    @Override
-    public boolean isAutoFillEnabled() {
-        return false;
-    }
-
-    @Override
-    public boolean isVampireLord() {
-        return false;
-    }
-
-
-
-    @Override
-    public void addExhaustionModifier(String id, float mod) {
-        bloodStats.addExhaustionModifier(id, mod);
-    }
-
-    @Override
-    public void removeExhaustionModifier(String id) {
-        bloodStats.removeExhaustionModifier(id);
-    }
-
-    @Override
-    public boolean isDisguised() {
-        return false;//TODO implement
-    }
-
-
-    @Override
-    public boolean isGettingSundamage(boolean forcerefresh) {
-        if(player.ticksExisted%8==0){
-            sundamage_cache= Helper.gettingSundamge(player);
-        }
-        return sundamage_cache;
-    }
-
-    @Override
-    public boolean isGettingSundamge() {
-        return isGettingSundamage(false);
-    }
-
-
-    @Override
-    public void onJoinWorld() {
-        if (getLevel() > 0) {
-            skillHandler.onSkillsReactivated();
-        }
-    }
-
-    @Override
-    public boolean onEntityAttacked(DamageSource src, float amt) {
-        return false;
-    }
-
-    @Override
-    public void onDeath(DamageSource src) {
-        skillHandler.deactivateAllSkills();
-    }
-
-    public ISkillHandler getSkillHandler() {
-        return skillHandler;
     }
 
     @Override
@@ -273,9 +331,6 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
 
 
             }
-
-
-
 
 
         } else {
@@ -304,20 +359,9 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
     }
 
     @Override
-    public void onChangedDimension(int from, int to) {
-
+    public void removeExhaustionModifier(String id) {
+        bloodStats.removeExhaustionModifier(id);
     }
-
-    @Override
-    public void onPlayerLoggedIn() {
-
-    }
-
-    @Override
-    public void onPlayerLoggedOut() {
-
-    }
-
 
     @Override
     public void saveData(NBTTagCompound nbt) {
@@ -327,11 +371,36 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
 
     }
 
+    /**
+     * Sets the eyeType as long as it is valid.
+     * Also sends a sync packet if on server
+     *
+     * @param eyeType
+     * @return Whether the type is valid or not
+     */
+    public boolean setEyeType(int eyeType) {
+        if (eyeType >= REFERENCE.EYE_TYPE_COUNT || eyeType < 0) {
+            return false;
+        }
+        if (eyeType != this.eyeType) {
+            this.eyeType = eyeType;
+            if (!isRemote()) {
+                NBTTagCompound nbt = new NBTTagCompound();
+                nbt.setInteger(KEY_EYE, eyeType);
+                sync(nbt, true);
+            }
+        }
+        return true;
+    }
+
     @Override
-    public void loadData(NBTTagCompound nbt) {
-        bloodStats.readNBT(nbt);
-        eyeType = nbt.getInteger(KEY_EYE);
-        skillHandler.loadFromNbt(nbt);
+    protected VampirismPlayer copyFromPlayer(EntityPlayer old) {
+        return get(old);
+    }
+
+    @Override
+    protected int getMaxLevel() {
+        return REFERENCE.HIGHEST_VAMPIRE_LEVEL;
     }
 
     @Override
@@ -347,35 +416,10 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
     }
 
     @Override
-    public PlayableFaction<IVampirePlayer> getFaction() {
-        return VampirismAPI.VAMPIRE_FACTION;
-    }
-
-    @Override
-    public Predicate<? super Entity> getNonFriendlySelector(boolean otherFactionPlayers) {
-        return Predicates.alwaysTrue();//TODO adjust
-    }
-
-    @Override
-    public String getPropertyKey() {
-        return VampirismAPI.VAMPIRE_FACTION.prop;
-    }
-
-
-    @Override
     protected void writeFullUpdate(NBTTagCompound nbt) {
         nbt.setInteger(KEY_EYE, getEyeType());
         bloodStats.writeUpdate(nbt);
         skillHandler.writeUpdateForClient(nbt);
-    }
-
-    /**
-     * Handle blood which could not be filled into the blood stats
-     *
-     * @param amt
-     */
-    private void handleSpareBlood(int amt) {
-        //TODO
     }
 
     /**
@@ -422,6 +466,15 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
     }
 
     /**
+     * Handle blood which could not be filled into the blood stats
+     *
+     * @param amt
+     */
+    private void handleSpareBlood(int amt) {
+        //TODO
+    }
+
+    /**
      * Spawn particle after biting an entity
      *
      * @param entityId Id of the entity
@@ -445,71 +498,6 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
             player.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, vec31.xCoord, vec31.yCoord, vec31.zCoord, vec3.xCoord, vec3.yCoord + 0.05D, vec3.zCoord, Item.getIdFromItem(Items.apple));
         }
         //Play bite sounds. Using this method since it is the only client side method. And this is called on every relevant client anyway
-        player.worldObj.playSound(player.posX,player.posY,player.posZ,REFERENCE.MODID+":player.bite",1.0F,1.0F,false);
-    }
-
-    public BITE_TYPE determineBiteType(EntityLivingBase entity) {
-        if (entity instanceof IBiteableEntity) {
-            if (((IBiteableEntity) entity).canBeBitten(this)) return BITE_TYPE.SUCK_BLOOD;
-        }
-        if (entity instanceof EntityCreature) {
-            if (ExtendedCreature.get((EntityCreature) entity).canBeBitten(this)) {
-                return BITE_TYPE.SUCK_BLOOD_CREATURE;
-            }
-        } else if (entity instanceof EntityPlayer) {
-            if (((EntityPlayer) entity).capabilities.isCreativeMode || !Permissions.getPermission("pvp", player)) {
-                return BITE_TYPE.NONE;
-            }
-            if (!UtilLib.canReallySee(entity, player, false) && VampirePlayer.get((EntityPlayer) entity).canBeBitten(this)) {
-                return BITE_TYPE.SUCK_BLOOD_PLAYER;
-            }
-            return BITE_TYPE.ATTACK;
-        }
-        return BITE_TYPE.ATTACK;
-    }
-
-
-    /**
-     * Bite the entity with the given id.
-     * Checks reach distance
-     *
-     * @param entityId
-     */
-    public void biteEntity(int entityId) {
-        Entity e = player.worldObj.getEntityByID(entityId);
-        if (e != null && e instanceof EntityLivingBase) {
-            if (e.getDistanceToEntity(player) <= ((EntityPlayerMP) player).theItemInWorldManager.getBlockReachDistance() + 2) {
-                biteEntity((EntityLivingBase) e);
-            } else {
-                VampirismMod.log.w(TAG, "Entity sent by client is not in reach " + entityId);
-            }
-        }
-    }
-
-    @Override
-    public int onBite(IVampire biter) {
-        if (getLevel() == 0) {
-            int amt = player.getFoodStats().getFoodLevel();
-            player.getFoodStats().setFoodLevel(0);
-            player.addExhaustion(1000F);
-            if (!player.isPotionActive(ModPotions.sanguinare) && (!(biter instanceof EntityPlayer) || Permissions.canPlayerTurnPlayer((EntityPlayer) biter)) && Helper.canBecomeVampire(player)) {
-                PotionSanguinare.addRandom(player, true);
-            }
-            return amt;
-        }
-        int amt = this.getBloodStats().getBloodLevel();
-        this.getBloodStats().consumeBlood(amt);
-        sync(this.getBloodStats().writeUpdate(new NBTTagCompound()), false);
-        return amt;
-    }
-
-    @Override
-    public boolean canBeBitten(IVampire biter) {
-        return true;
-    }
-
-    @Override
-    public float getBloodSaturation() {
-        return (float) Balance.vp.PLAYER_BLOOD_SATURATION;
+        player.worldObj.playSound(player.posX, player.posY, player.posZ, REFERENCE.MODID + ":player.bite", 1.0F, 1.0F, false);
     }
 }

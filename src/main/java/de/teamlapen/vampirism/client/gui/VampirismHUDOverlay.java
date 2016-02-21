@@ -74,12 +74,6 @@ public class VampirismHUDOverlay extends Gui {
         }
     }
 
-    @SubscribeEvent
-    public void onRenderWorldLast(RenderWorldLastEvent event) {
-
-
-    }
-
     /**
      * Render Level
      */
@@ -145,6 +139,12 @@ public class VampirismHUDOverlay extends Gui {
                 mc.mcProfiler.endSection();
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onRenderWorldLast(RenderWorldLastEvent event) {
+
+
     }
 
 }

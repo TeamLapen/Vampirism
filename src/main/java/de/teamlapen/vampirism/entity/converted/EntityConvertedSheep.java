@@ -17,12 +17,50 @@ import java.util.List;
  * {@link IConvertedCreature} for sheep
  * Allows converted sheep to be sheared
  */
-public class EntityConvertedSheep  extends EntityConvertedCreature implements IShearable {
+public class EntityConvertedSheep extends EntityConvertedCreature implements IShearable {
 
+
+    private Boolean lastSheared = null;
+
+    public EntityConvertedSheep(World world) {
+        super(world);
+    }
+
+    public int getFleeceColor() {
+        return nil() ? 0 : ((EntitySheep) this.getOldCreature()).getFleeceColor().getDyeDamage();//this.dataWatcher.getWatchableObjectByte(16) & 15;
+    }
+
+    /**
+     * returns true if a sheeps wool has been sheared
+     */
+    public boolean getSheared() {
+        return (this.dataWatcher.getWatchableObjectByte(16) & 16) != 0;
+    }
+
+    public void setSheared(boolean p_70893_1_) {
+        byte b0 = this.dataWatcher.getWatchableObjectByte(16);
+
+        if (p_70893_1_) {
+            this.dataWatcher.updateObject(16, Byte.valueOf((byte) (b0 | 16)));
+        } else {
+            this.dataWatcher.updateObject(16, Byte.valueOf((byte) (b0 & -17)));
+        }
+    }
 
     @Override
     public boolean isShearable(ItemStack item, IBlockAccess world, BlockPos pos) {
         return !getSheared();
+    }
+
+    @Override
+    public void onEntityUpdate() {
+        super.onEntityUpdate();
+        boolean t = getSheared();
+        if (!nil() && (lastSheared == null || lastSheared.booleanValue() != t)) {
+            lastSheared = t;
+            ((EntitySheep) getOldCreature()).setSheared(lastSheared);
+
+        }
     }
 
     @Override
@@ -37,78 +75,36 @@ public class EntityConvertedSheep  extends EntityConvertedCreature implements IS
         return ret;
     }
 
+    @Override
+    public void readEntityFromNBT(NBTTagCompound nbt) {
+        super.readEntityFromNBT(nbt);
+        this.setSheared(nbt.getBoolean("Sheared"));
+    }
+
+    @Override
+    public void writeEntityToNBT(NBTTagCompound nbt) {
+        super.writeEntityToNBT(nbt);
+        nbt.setBoolean("Sheared", this.getSheared());
+    }
+
+    @Override
+    protected void entityInit() {
+        super.entityInit();
+        this.dataWatcher.addObject(16, new Byte((byte) 0));
+    }
+
     public static class ConvertingSheepHandler extends DefaultConvertingHandler<EntitySheep> {
         public ConvertingSheepHandler() {
             super(null);
         }
 
         @Override
-            public EntityConvertedCreature createFrom(EntitySheep entity) {
-                EntityConvertedSheep creature = new EntityConvertedSheep(entity.worldObj);
-                this.copyImportantStuff(creature, entity);
-                creature.setSheared(entity.getSheared());
-                return creature;
-            }
-      }
-
-        private Boolean lastSheared = null;
-
-        public EntityConvertedSheep(World world) {
-            super(world);
+        public EntityConvertedCreature createFrom(EntitySheep entity) {
+            EntityConvertedSheep creature = new EntityConvertedSheep(entity.worldObj);
+            this.copyImportantStuff(creature, entity);
+            creature.setSheared(entity.getSheared());
+            return creature;
         }
-
-
-        @Override
-        public void onEntityUpdate() {
-            super.onEntityUpdate();
-            boolean t = getSheared();
-            if (!nil() && (lastSheared == null || lastSheared.booleanValue() != t)) {
-                lastSheared = t;
-                ((EntitySheep) getOldCreature()).setSheared(lastSheared);
-
-            }
-        }
-
-        @Override
-        protected void entityInit() {
-            super.entityInit();
-            this.dataWatcher.addObject(16, new Byte((byte) 0));
-        }
-
-        /**
-         * returns true if a sheeps wool has been sheared
-         */
-        public boolean getSheared() {
-            return (this.dataWatcher.getWatchableObjectByte(16) & 16) != 0;
-        }
-
-        public void setSheared(boolean p_70893_1_) {
-            byte b0 = this.dataWatcher.getWatchableObjectByte(16);
-
-            if (p_70893_1_) {
-                this.dataWatcher.updateObject(16, Byte.valueOf((byte) (b0 | 16)));
-            } else {
-                this.dataWatcher.updateObject(16, Byte.valueOf((byte) (b0 & -17)));
-            }
-        }
-
-
-
-        public int getFleeceColor() {
-            return nil() ? 0 : ((EntitySheep) this.getOldCreature()).getFleeceColor().getDyeDamage();//this.dataWatcher.getWatchableObjectByte(16) & 15;
-        }
-
-
-        @Override
-        public void writeEntityToNBT(NBTTagCompound nbt) {
-            super.writeEntityToNBT(nbt);
-            nbt.setBoolean("Sheared", this.getSheared());
-        }
-
-        @Override
-        public void readEntityFromNBT(NBTTagCompound nbt) {
-            super.readEntityFromNBT(nbt);
-            this.setSheared(nbt.getBoolean("Sheared"));
-        }
+    }
 
 }

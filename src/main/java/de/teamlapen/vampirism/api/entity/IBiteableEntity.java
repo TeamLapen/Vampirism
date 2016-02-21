@@ -9,12 +9,6 @@ public interface IBiteableEntity {
 
     /**
      * @param biter The biting entity
-     * @return Amount of blood that should be added
-     */
-    int onBite(IVampire biter);
-
-    /**
-     * @param biter The biting entity
      * @return If the entity currently can be bitten
      */
     boolean canBeBitten(IVampire biter);
@@ -25,4 +19,10 @@ public interface IBiteableEntity {
      * @return Saturation modifier of this entities blood
      */
     float getBloodSaturation();
+
+    /**
+     * @param biter The biting entity
+     * @return Amount of blood that should be added
+     */
+    int onBite(IVampire biter);
 }

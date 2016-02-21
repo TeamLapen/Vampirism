@@ -17,10 +17,6 @@ public class HunterFaction extends PlayableFaction<IHunterPlayer> {
 
     private static HunterFaction instance;
 
-    private HunterFaction() {
-        super("Hunter", IHunter.class, "HunterPlayer");
-    }
-
     public static HunterFaction instance() {
         if (instance == null) {
             instance = new HunterFaction();
@@ -28,9 +24,13 @@ public class HunterFaction extends PlayableFaction<IHunterPlayer> {
         return instance;
     }
 
+    private HunterFaction() {
+        super("Hunter", IHunter.class, "HunterPlayer");
+    }
+
     @Override
-    public int getHighestReachableLevel() {
-        return REFERENCE.HIGHEST_HUNTER_LEVEL;
+    public EnumChatFormatting getChatColor() {
+        return EnumChatFormatting.BLUE;
     }
 
     @SideOnly(Side.CLIENT)
@@ -40,7 +40,7 @@ public class HunterFaction extends PlayableFaction<IHunterPlayer> {
     }
 
     @Override
-    public EnumChatFormatting getChatColor() {
-        return EnumChatFormatting.BLUE;
+    public int getHighestReachableLevel() {
+        return REFERENCE.HIGHEST_HUNTER_LEVEL;
     }
 }

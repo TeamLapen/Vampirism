@@ -9,8 +9,8 @@ import net.minecraftforge.fml.common.event.FMLStateEvent;
 public class ServerProxy extends CommonProxy {
 
     @Override
-    public void onInitStep(Step step, FMLStateEvent event) {
-        super.onInitStep(step, event);
+    public boolean isClientPlayerNull() {
+        return false;
     }
 
     @Override
@@ -19,7 +19,7 @@ public class ServerProxy extends CommonProxy {
     }
 
     @Override
-    public boolean isClientPlayerNull() {
-        return false;
+    public void onInitStep(Step step, FMLStateEvent event) {
+        super.onInitStep(step, event);
     }
 }

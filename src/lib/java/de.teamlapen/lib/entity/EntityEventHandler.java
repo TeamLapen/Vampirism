@@ -28,18 +28,10 @@ public class EntityEventHandler {
         this.listeners = listeners;
     }
 
-
     @SubscribeEvent
-    public void onStartTracking(PlayerEvent.StartTracking event) {
-        if ((event.target instanceof EntityLiving && HelperRegistry.getSyncableEntityProperties().length > 0) || event.target instanceof ISyncable || (event.target instanceof EntityPlayer && HelperRegistry.getSyncablePlayerProperties().length > 0)) {
-            UpdateEntityPacket packet = UpdateEntityPacket.createJoinWorldPacket(event.target);
-            VampLib.dispatcher.sendTo(packet, (EntityPlayerMP) event.entityPlayer);
-        }
-    }
-    @SubscribeEvent
-    public void onPlayerClone(PlayerEvent.Clone event) {
+    public void onChangedDimension(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent event) {
         for (int i = 0; i < listeners.length; i++) {
-            ((IPlayerEventListener) event.entityPlayer.getExtendedProperties(listeners[i])).onPlayerClone(event.original);
+            ((IPlayerEventListener) event.player.getExtendedProperties(listeners[i])).onChangedDimension(event.fromDim, event.toDim);
         }
     }
 
@@ -52,9 +44,9 @@ public class EntityEventHandler {
         }
 
         if (event.entity instanceof EntityPlayer) {
-                for (int i = 0; i < listeners.length; i++) {
-                    ((IPlayerEventListener) event.entity.getExtendedProperties(listeners[i])).onJoinWorld();
-                }
+            for (int i = 0; i < listeners.length; i++) {
+                ((IPlayerEventListener) event.entity.getExtendedProperties(listeners[i])).onJoinWorld();
+            }
         }
     }
 
@@ -86,9 +78,9 @@ public class EntityEventHandler {
     }
 
     @SubscribeEvent
-    public void onChangedDimension(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent event) {
+    public void onPlayerClone(PlayerEvent.Clone event) {
         for (int i = 0; i < listeners.length; i++) {
-            ((IPlayerEventListener) event.player.getExtendedProperties(listeners[i])).onChangedDimension(event.fromDim, event.toDim);
+            ((IPlayerEventListener) event.entityPlayer.getExtendedProperties(listeners[i])).onPlayerClone(event.original);
         }
     }
 
@@ -103,6 +95,14 @@ public class EntityEventHandler {
     public void onPlayerLoggedOut(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent event) {
         for (int i = 0; i < listeners.length; i++) {
             ((IPlayerEventListener) event.player.getExtendedProperties(listeners[i])).onPlayerLoggedOut();
+        }
+    }
+
+    @SubscribeEvent
+    public void onStartTracking(PlayerEvent.StartTracking event) {
+        if ((event.target instanceof EntityLiving && HelperRegistry.getSyncableEntityProperties().length > 0) || event.target instanceof ISyncable || (event.target instanceof EntityPlayer && HelperRegistry.getSyncablePlayerProperties().length > 0)) {
+            UpdateEntityPacket packet = UpdateEntityPacket.createJoinWorldPacket(event.target);
+            VampLib.dispatcher.sendTo(packet, (EntityPlayerMP) event.entityPlayer);
         }
     }
 }

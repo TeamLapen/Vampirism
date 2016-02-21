@@ -26,6 +26,15 @@ public class ExtendedCreature implements ISyncable.ISyncableExtendedProperties, 
 
     private static final String TAG = "ExtendedCreature";
     private final static String KEY_BLOOD = "bloodLevel";
+
+    public static ExtendedCreature get(EntityCreature mob) {
+        return (ExtendedCreature) mob.getExtendedProperties(VampirismAPI.EXTENDED_CREATURE_PROP);
+    }
+
+    public static void register(EntityCreature mob) {
+        mob.registerExtendedProperties(VampirismAPI.EXTENDED_CREATURE_PROP, new ExtendedCreature(mob));
+    }
+
     private final EntityCreature entity;
     private final int maxBlood;
     private final boolean canBecomeVampire;
@@ -48,58 +57,13 @@ public class ExtendedCreature implements ISyncable.ISyncableExtendedProperties, 
         blood = maxBlood;
     }
 
-    public static ExtendedCreature get(EntityCreature mob) {
-        return (ExtendedCreature) mob.getExtendedProperties(VampirismAPI.EXTENDED_CREATURE_PROP);
-    }
-
-    public static void register(EntityCreature mob) {
-        mob.registerExtendedProperties(VampirismAPI.EXTENDED_CREATURE_PROP, new ExtendedCreature(mob));
+    @Override
+    public boolean canBeBitten(IVampire biter) {
+        return getBlood() > 0;
     }
 
     public boolean canBecomeVampire() {
         return canBecomeVampire;
-    }
-
-    @Override
-    public int getTheEntityID() {
-        return entity.getEntityId();
-    }
-
-    @Override
-    public String getPropertyKey() {
-        return VampirismAPI.EXTENDED_CREATURE_PROP;
-    }
-
-    @Override
-    public void saveNBTData(NBTTagCompound compound) {
-        compound.setInteger(KEY_BLOOD, blood);
-    }
-
-    @Override
-    public void loadNBTData(NBTTagCompound compound) {
-        setBlood(compound.getInteger(KEY_BLOOD));
-    }
-
-    @Override
-    public void init(Entity entity, World world) {
-
-    }
-
-    @Override
-    public void loadUpdateFromNBT(NBTTagCompound nbt) {
-        if (nbt.hasKey(KEY_BLOOD)) {
-            setBlood(nbt.getInteger(KEY_BLOOD));
-        }
-    }
-
-    @Override
-    public void writeFullUpdateToNBT(NBTTagCompound nbt) {
-        nbt.setInteger(KEY_BLOOD, getBlood());
-    }
-
-    @Override
-    public EntityCreature getEntity() {
-        return entity;
     }
 
     @Override
@@ -118,49 +82,57 @@ public class ExtendedCreature implements ISyncable.ISyncableExtendedProperties, 
     }
 
     @Override
+    public float getBloodSaturation() {
+        return 1.0F;//TODO adjust
+    }
+
+    @Override
+    public EntityCreature getEntity() {
+        return entity;
+    }
+
+    @Override
     public int getMaxBlood() {
         return maxBlood;
     }
 
     @Override
-    public void makeVampire() {
-        if(canBecomeVampire()){
-            blood=0;
-            Entity e= (Entity) BiteableRegistry.convert(entity);
-            if(e!=null){
-                entity.setDead();
-                entity.worldObj.spawnEntityInWorld(e);
-            }
-        }
+    public String getPropertyKey() {
+        return VampirismAPI.EXTENDED_CREATURE_PROP;
     }
 
-    private void sync() {
-        HelperLib.sync(this, getEntity(), false);
+    @Override
+    public int getTheEntityID() {
+        return entity.getEntityId();
     }
 
-    private void sync(NBTTagCompound data) {
-        HelperLib.sync(this, data, getEntity(), false);
+    @Override
+    public void init(Entity entity, World world) {
 
     }
 
-    /**
-     * Called every tick
-     */
-    public void onUpdate() {
-        if (!entity.worldObj.isRemote) {
-            if (blood > 0 && blood < getMaxBlood() && entity.ticksExisted % 40 == 8) {
-                entity.addPotionEffect(new PotionEffect(Potion.weakness.id, 41));
-                entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 41, 2));
-                if (entity.getRNG().nextInt(Balance.mobProps.BLOOD_REGEN_CHANCE) == 0) {
-                    setBlood(getBlood() + 1);
-                }
-            }
+    @Override
+    public void loadNBTData(NBTTagCompound compound) {
+        setBlood(compound.getInteger(KEY_BLOOD));
+    }
+
+    @Override
+    public void loadUpdateFromNBT(NBTTagCompound nbt) {
+        if (nbt.hasKey(KEY_BLOOD)) {
+            setBlood(nbt.getInteger(KEY_BLOOD));
         }
     }
 
     @Override
-    public String toString() {
-        return super.toString()+" for entity ("+entity.toString()+")";
+    public void makeVampire() {
+        if (canBecomeVampire()) {
+            blood = 0;
+            Entity e = (Entity) BiteableRegistry.convert(entity);
+            if (e != null) {
+                entity.setDead();
+                entity.worldObj.spawnEntityInWorld(e);
+            }
+        }
     }
 
     @Override
@@ -195,13 +167,42 @@ public class ExtendedCreature implements ISyncable.ISyncableExtendedProperties, 
         return amt;
     }
 
-    @Override
-    public boolean canBeBitten(IVampire biter) {
-        return getBlood() > 0;
+    /**
+     * Called every tick
+     */
+    public void onUpdate() {
+        if (!entity.worldObj.isRemote) {
+            if (blood > 0 && blood < getMaxBlood() && entity.ticksExisted % 40 == 8) {
+                entity.addPotionEffect(new PotionEffect(Potion.weakness.id, 41));
+                entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 41, 2));
+                if (entity.getRNG().nextInt(Balance.mobProps.BLOOD_REGEN_CHANCE) == 0) {
+                    setBlood(getBlood() + 1);
+                }
+            }
+        }
     }
 
     @Override
-    public float getBloodSaturation() {
-        return 1.0F;//TODO adjust
+    public void saveNBTData(NBTTagCompound compound) {
+        compound.setInteger(KEY_BLOOD, blood);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString() + " for entity (" + entity.toString() + ")";
+    }
+
+    @Override
+    public void writeFullUpdateToNBT(NBTTagCompound nbt) {
+        nbt.setInteger(KEY_BLOOD, getBlood());
+    }
+
+    private void sync() {
+        HelperLib.sync(this, getEntity(), false);
+    }
+
+    private void sync(NBTTagCompound data) {
+        HelperLib.sync(this, data, getEntity(), false);
+
     }
 }

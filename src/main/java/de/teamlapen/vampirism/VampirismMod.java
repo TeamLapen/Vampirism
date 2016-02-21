@@ -52,7 +52,7 @@ public class VampirismMod {
     public static VampirismMod instance;
     @SidedProxy(clientSide = "de.teamlapen.vampirism.proxy.ClientProxy", serverSide = "de.teamlapen.vampirism.proxy.ServerProxy")
     public static IProxy proxy;
-    public static boolean inDev=false;
+    public static boolean inDev = false;
     public static AbstractPacketDispatcher dispatcher = new ModPacketDispatcher();
     public static CreativeTabs creativeTab = new CreativeTabs(REFERENCE.MODID) {
         @Override
@@ -66,8 +66,8 @@ public class VampirismMod {
     }
 
     @Mod.EventHandler
-    public void init(FMLInitializationEvent event){
-        log.t("Test balance value %s",Balance.leveling.TEST_VALUE);
+    public void init(FMLInitializationEvent event) {
+        log.t("Test balance value %s", Balance.leveling.TEST_VALUE);
 
 
         MinecraftForge.EVENT_BUS.register(new ModEventHandler());
@@ -86,10 +86,22 @@ public class VampirismMod {
     }
 
     @Mod.EventHandler
-    public void preInit(FMLPreInitializationEvent event){
+    public void onServerStart(FMLServerStartingEvent event) {
+        event.registerServerCommand(new VampirismCommand());
+    }
+
+    @Mod.EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        FactionRegistry.finish();
+        BiteableRegistry.finishRegistration(Balance.mobProps.CONVERTED_MOB_DEFAULT_DMG);
+        proxy.onInitStep(IInitListener.Step.POST_INIT, event);
+    }
+
+    @Mod.EventHandler
+    public void preInit(FMLPreInitializationEvent event) {
         checkDevEnv();
-        Configs.init(new File(event.getModConfigurationDirectory(),REFERENCE.MODID),inDev);
-        Balance.init(new File(event.getModConfigurationDirectory(),REFERENCE.MODID),inDev);
+        Configs.init(new File(event.getModConfigurationDirectory(), REFERENCE.MODID), inDev);
+        Balance.init(new File(event.getModConfigurationDirectory(), REFERENCE.MODID), inDev);
 
         setupAPI();
         dispatcher.registerPackets();
@@ -100,19 +112,7 @@ public class VampirismMod {
 
     }
 
-    @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event){
-        FactionRegistry.finish();
-        BiteableRegistry.finishRegistration(Balance.mobProps.CONVERTED_MOB_DEFAULT_DMG);
-        proxy.onInitStep(IInitListener.Step.POST_INIT, event);
-    }
-
-    @Mod.EventHandler
-    public void onServerStart(FMLServerStartingEvent event){
-        event.registerServerCommand(new VampirismCommand());
-    }
-
-    private void checkDevEnv(){
+    private void checkDevEnv() {
         if ((Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment")) {
             inDev = true;
             log.inDev = true;

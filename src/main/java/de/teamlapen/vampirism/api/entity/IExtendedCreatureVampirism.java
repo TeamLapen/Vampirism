@@ -7,9 +7,9 @@ import net.minecraft.entity.EntityCreature;
  */
 public interface IExtendedCreatureVampirism extends IBiteableEntity {
     /**
-     * @return the representing entity
+     * @return If this entity can be converted to a vampire version
      */
-    EntityCreature getEntity();
+    boolean canBecomeVampire();
 
     /**
      * If the entity never had any blood, this returns -1
@@ -24,6 +24,11 @@ public interface IExtendedCreatureVampirism extends IBiteableEntity {
     void setBlood(int blood);
 
     /**
+     * @return the representing entity
+     */
+    EntityCreature getEntity();
+
+    /**
      * @return Max blood level
      */
     int getMaxBlood();
@@ -32,9 +37,4 @@ public interface IExtendedCreatureVampirism extends IBiteableEntity {
      * Convert this creature into a vampire version if possible
      */
     void makeVampire();
-
-    /**
-     * @return If this entity can be converted to a vampire version
-     */
-    boolean canBecomeVampire();
 }

@@ -38,13 +38,13 @@ public class RequestPlayerUpdatePacket implements IMessage {
         }
 
         @Override
-        protected boolean handleOnMainThread() {
-            return true;
+        protected AbstractPacketDispatcher getDispatcher() {
+            return VampLib.dispatcher;
         }
 
         @Override
-        protected AbstractPacketDispatcher getDispatcher() {
-            return VampLib.dispatcher;
+        protected boolean handleOnMainThread() {
+            return true;
         }
     }
 }

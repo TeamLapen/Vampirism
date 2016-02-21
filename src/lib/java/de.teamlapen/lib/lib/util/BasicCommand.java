@@ -17,6 +17,14 @@ import java.util.List;
  */
 public abstract class BasicCommand extends CommandBase {
 
+    public static void sendMessage(ICommandSender target, String message) {
+        String[] lines = message.split("\\n");
+        for (String line : lines) {
+            target.addChatMessage(new ChatComponentText(line));
+        }
+
+    }
+
     protected List aliases;
     private List<SubCommand> subCommands;
     private SubCommand unknown;
@@ -25,6 +33,11 @@ public abstract class BasicCommand extends CommandBase {
         aliases = new ArrayList();
         subCommands = new ArrayList<SubCommand>();
         unknown = new SubCommand() {
+            @Override
+            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+                return null;
+            }
+
             @Override
             public boolean canCommandSenderUseCommand(ICommandSender var1) {
                 return true;
@@ -36,33 +49,45 @@ public abstract class BasicCommand extends CommandBase {
             }
 
             @Override
-            public void processCommand(ICommandSender var1, String[] var2) {
-                sendMessage(var1, "Unknown command");
-            }
-
-            @Override
             public String getCommandUsage(ICommandSender var1) {
                 return BasicCommand.this.getCommandUsage(var1);
             }
 
             @Override
-            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-                return null;
+            public void processCommand(ICommandSender var1, String[] var2) {
+                sendMessage(var1, "Unknown command");
             }
         };
     }
 
-    public static void sendMessage(ICommandSender target, String message) {
-        String[] lines = message.split("\\n");
-        for (String line : lines) {
-            target.addChatMessage(new ChatComponentText(line));
-        }
+    @Override
+    public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+        return (args.length == 1) ? getListOfStringsMatchingLastWord(args, getSubNames()) : getSubcommandTabCompletion(sender, args, pos);
+    }
 
+    @Override
+    public boolean canCommandSenderUseCommand(ICommandSender sender) {
+        return true;
+    }
+
+    @Override
+    public int compareTo(ICommand o) {
+        return 0;
+    }
+
+    @Override
+    public List getCommandAliases() {
+        return aliases;
     }
 
     @Override
     public String getCommandUsage(ICommandSender p_71518_1_) {
         return String.format("/%s <subcommand> <params> | Use /%s help to get all available subcommands", this.getCommandName(), this.getCommandName());
+    }
+
+    @Override
+    public boolean isUsernameIndex(String[] p_82358_1_, int p_82358_2_) {
+        return false;
     }
 
     @Override
@@ -94,41 +119,14 @@ public abstract class BasicCommand extends CommandBase {
         }
     }
 
-
-    @Override
-    public boolean canCommandSenderUseCommand(ICommandSender sender) {
-        return true;
-    }
-
-    @Override
-    public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-        return (args.length==1)?getListOfStringsMatchingLastWord(args,getSubNames()):getSubcommandTabCompletion(sender, args, pos);
-    }
-
-    private List getSubcommandTabCompletion(ICommandSender sender,String[] args,BlockPos pos){
-        if(args.length<2)return null;
-        return getSub(args[0]).addTabCompletionOptions(sender,ArrayUtils.subarray(args,1,args.length),pos);
-    }
-
-    @Override
-    public List getCommandAliases() {
-        return aliases;
-    }
-
-
-    @Override
-    public boolean isUsernameIndex(String[] p_82358_1_, int p_82358_2_) {
-        return false;
-    }
-
-    @Override
-    public int compareTo(ICommand o) {
-        return 0;
+    protected void addSub(SubCommand s) {
+        subCommands.add(s);
     }
 
     /**
      * Returns the subcommand matching the given name.
      * If no command is found, returns a default "unknown" command.
+     *
      * @param name
      * @return
      */
@@ -139,28 +137,29 @@ public abstract class BasicCommand extends CommandBase {
         return unknown;
     }
 
-    protected void addSub(SubCommand s) {
-        subCommands.add(s);
-    }
-
-    private String[] getSubNames(){
-        String[] names=new String[subCommands.size()];
-        for(int i=0;i<names.length;i++){
-            names[i]=subCommands.get(i).getCommandName();
+    private String[] getSubNames() {
+        String[] names = new String[subCommands.size()];
+        for (int i = 0; i < names.length; i++) {
+            names[i] = subCommands.get(i).getCommandName();
         }
         return names;
     }
 
+    private List getSubcommandTabCompletion(ICommandSender sender, String[] args, BlockPos pos) {
+        if (args.length < 2) return null;
+        return getSub(args[0]).addTabCompletionOptions(sender, ArrayUtils.subarray(args, 1, args.length), pos);
+    }
+
     public interface SubCommand {
+        List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos);
+
         boolean canCommandSenderUseCommand(ICommandSender var1);
 
         String getCommandName();
 
-        void processCommand(ICommandSender var1, String[] var2);
-
         String getCommandUsage(ICommandSender var1);
 
-        List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos);
+        void processCommand(ICommandSender var1, String[] var2);
     }
 
- }
+}

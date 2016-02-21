@@ -21,7 +21,6 @@ import java.util.ArrayList;
  * (!negative Y), Pi left ... (similar to the visualization of complex numbers.
  *
  * @author maxanier
- *
  */
 public abstract class GuiPieMenu<T> extends GuiScreen {
     private final static ResourceLocation backgroundTex = new ResourceLocation(LIBREFERENCE.MODID + ":textures/gui/pie-menu-bg.png");
@@ -66,78 +65,9 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
         this.elements = new ArrayList<>();
     }
 
-    protected void afterIconDraw(T element, int x, int y) {
-
-    }
-
     @Override
     public boolean doesGuiPauseGame() {
         return false;
-    }
-
-    /**
-     * Draws the background cicle image as well as border lines between the different segments
-     *
-     * @param cX
-     *            CenterX
-     * @param cY
-     *            CenterY
-     */
-    private void drawBackground(float cX, float cY) {
-        // Calculate the scale which has to be applied for the image to fit
-        float scale = (this.height / 2F + IS + IS) / BGS;
-
-        GL11.glPushMatrix();
-        GL11.glTranslatef(cX, cY, this.zLevel);
-        GL11.glScalef(scale, scale, 1);
-
-        // Draw the cicle image
-        this.mc.getTextureManager().bindTexture(backgroundTex);
-        GL11.glColor4f(this.bgred, this.bggreen, this.bgblue, this.bgalpha);
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(1F, 1F);
-        GL11.glVertex3f(BGS / 2, BGS / 2, this.zLevel);
-        GL11.glTexCoord2f(1F, 0F);
-        GL11.glVertex3f(BGS / 2, -BGS / 2, this.zLevel);
-        GL11.glTexCoord2f(0F, 0F);
-        GL11.glVertex3f(-BGS / 2, -BGS / 2, this.zLevel);
-        GL11.glTexCoord2f(0F, 1F);
-        GL11.glVertex3f(-BGS / 2, BGS / 2, this.zLevel);
-        GL11.glEnd();
-
-        // Draw the lines
-        if (elementCount > 1) {
-            for (int i = 0; i < elementCount; i++) {
-                double rad = i * radDiff + radDiff / 2;
-                double cos = Math.cos(rad);
-                double sin = Math.sin(rad);
-                this.drawLine(cos * RR, sin * RR, +cos * BGS / 2, sin * BGS / 2);
-            }
-        }
-        GL11.glPopMatrix();
-
-    }
-
-    /**
-     * Draws a line between the given coordinates
-     *
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
-     */
-    protected void drawLine(double x1, double y1, double x2, double y2) {
-        GL11.glPushMatrix();
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glColor4f(0F, 0F, 0F, 1F);
-        GL11.glLineWidth(2F);
-        GL11.glBegin(GL11.GL_LINES);
-        GL11.glVertex3d(x1, y1, this.zLevel);
-        GL11.glVertex3d(x2, y2, this.zLevel);
-        GL11.glEnd();
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        GL11.glColor4f(1, 1, 1, 1);
-        GL11.glPopMatrix();
     }
 
     @Override
@@ -203,35 +133,164 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 
+    @Override
+    public void initGui() {
+        this.onGuiInit();
+        this.elementCount = elements.size();
+        radDiff = 2D * Math.PI / elementCount;// gap in rad
+        // Disable cursor
+        try {
+            Mouse.setNativeCursor(new Cursor(1, 1, 0, 0, 1, BufferUtils.createIntBuffer(1), null));
+        } catch (LWJGLException e) {
+            VampLib.log.e("GuiPieMenu", "Failed to set empty cursor", e);
+        }
+        GuiIngameForge.renderCrosshairs = false;
+    }
+
+    @Override
+    public void onGuiClosed() {
+        GuiIngameForge.renderCrosshairs = true;
+        // Enable cursor
+        try {
+            Mouse.setNativeCursor(null);
+        } catch (LWJGLException e) {
+            VampLib.log.e("GuiPieMenu", "Could not reset cursor", e);
+        }
+    }
+
+    @Override
+    public void updateScreen() {
+        super.updateScreen();
+        this.mc.thePlayer.movementInput.updatePlayerMoveState();
+        if (!isKeyDown(getMenuKeyCode())) {
+            if (selectedElement >= 0) {
+                this.onElementSelected(elements.get(selectedElement));
+            }
+
+            this.mc.displayGuiScreen(null);
+        }
+    }
+
+    protected void afterIconDraw(T element, int x, int y) {
+
+    }
+
+    /**
+     * Draws a line between the given coordinates
+     *
+     * @param x1
+     * @param y1
+     * @param x2
+     * @param y2
+     */
+    protected void drawLine(double x1, double y1, double x2, double y2) {
+        GL11.glPushMatrix();
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glColor4f(0F, 0F, 0F, 1F);
+        GL11.glLineWidth(2F);
+        GL11.glBegin(GL11.GL_LINES);
+        GL11.glVertex3d(x1, y1, this.zLevel);
+        GL11.glVertex3d(x2, y2, this.zLevel);
+        GL11.glEnd();
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glColor4f(1, 1, 1, 1);
+        GL11.glPopMatrix();
+    }
+
+    /**
+     * This method is called to retrieve the color for the elements border
+     *
+     * @param s
+     * @return Can be null (-> 255,255,255)
+     */
+    protected float[] getColor(T s) {
+        return null;
+    }
+
     /**
      * If null, Vampirism's default one will be used
+     *
      * @param item
      * @return the location of the icon map where the icon for the given item is in
      */
     protected abstract ResourceLocation getIconLoc(T item);
 
     /**
+     * Should return the menu key.
+     * For mouse buttons the value should be negative. When checking the mouse key 100 is added to this key code to access the button.
+     * Take a look at {@link GuiPieMenu#isKeyDown(int)}
      *
+     * @return
+     */
+    protected abstract int getMenuKeyCode();
+
+    /**
      * @param item
      * @return the min U texture coordinate within the icon map
      */
     protected abstract int getMinU(T item);
 
     /**
-     *
      * @param item
      * @return the min V texture coordinate within the icon map
      */
     protected abstract int getMinV(T item);
+
     protected abstract String getUnlocalizedName(T item);
+
+    protected void onElementSelected(T id) {
+
+    }
+
+    protected abstract void onGuiInit();
+
+    /**
+     * Draws the background cicle image as well as border lines between the different segments
+     *
+     * @param cX CenterX
+     * @param cY CenterY
+     */
+    private void drawBackground(float cX, float cY) {
+        // Calculate the scale which has to be applied for the image to fit
+        float scale = (this.height / 2F + IS + IS) / BGS;
+
+        GL11.glPushMatrix();
+        GL11.glTranslatef(cX, cY, this.zLevel);
+        GL11.glScalef(scale, scale, 1);
+
+        // Draw the cicle image
+        this.mc.getTextureManager().bindTexture(backgroundTex);
+        GL11.glColor4f(this.bgred, this.bggreen, this.bgblue, this.bgalpha);
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glTexCoord2f(1F, 1F);
+        GL11.glVertex3f(BGS / 2, BGS / 2, this.zLevel);
+        GL11.glTexCoord2f(1F, 0F);
+        GL11.glVertex3f(BGS / 2, -BGS / 2, this.zLevel);
+        GL11.glTexCoord2f(0F, 0F);
+        GL11.glVertex3f(-BGS / 2, -BGS / 2, this.zLevel);
+        GL11.glTexCoord2f(0F, 1F);
+        GL11.glVertex3f(-BGS / 2, BGS / 2, this.zLevel);
+        GL11.glEnd();
+
+        // Draw the lines
+        if (elementCount > 1) {
+            for (int i = 0; i < elementCount; i++) {
+                double rad = i * radDiff + radDiff / 2;
+                double cos = Math.cos(rad);
+                double sin = Math.sin(rad);
+                this.drawLine(cos * RR, sin * RR, +cos * BGS / 2, sin * BGS / 2);
+            }
+        }
+        GL11.glPopMatrix();
+
+    }
 
     /**
      * Draws a circle with an arrow at the given coords
      *
      * @param cX
      * @param cY
-     * @param rad
-     *            The direction the arrow should point in radiant
+     * @param rad The direction the arrow should point in radiant
      */
     private void drawSelectedCenter(double cX, double cY, double rad) {
 
@@ -286,54 +345,13 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
         GL11.glPopMatrix();
     }
 
-    /**
-     * This method is called to retrieve the color for the elements border
-     *
-     * @param s
-     * @return Can be null (-> 255,255,255)
-     */
-    protected float[] getColor(T s) {
-        return null;
-    }
-
-    /**
-     * Should return the menu key.
-     * For mouse buttons the value should be negative. When checking the mouse key 100 is added to this key code to access the button.
-     * Take a look at {@link GuiPieMenu#isKeyDown(int)}
-     * @return
-     */
-    protected abstract int getMenuKeyCode();
-
-    @Override
-    public void initGui() {
-        this.onGuiInit();
-        this.elementCount = elements.size();
-        radDiff = 2D * Math.PI / elementCount;// gap in rad
-        // Disable cursor
-        try {
-            Mouse.setNativeCursor(new Cursor(1, 1, 0, 0, 1, BufferUtils.createIntBuffer(1), null));
-        } catch (LWJGLException e) {
-            VampLib.log.e("GuiPieMenu", "Failed to set empty cursor", e);
-        }
-        GuiIngameForge.renderCrosshairs = false;
-    }
-
-    protected void onElementSelected(T id) {
-
-    }
-
-    @Override
-    public void onGuiClosed() {
-        GuiIngameForge.renderCrosshairs = true;
-        // Enable cursor
-        try {
-            Mouse.setNativeCursor(null);
-        } catch (LWJGLException e) {
-            VampLib.log.e("GuiPieMenu", "Could not reset cursor", e);
+    private boolean isKeyDown(int key) {
+        if (key >= 0) {
+            return Keyboard.isKeyDown(key);
+        } else {
+            return Mouse.isButtonDown(key + 100);
         }
     }
-
-    protected abstract void onGuiInit();
 
     /**
      * Calculates the absolute mouse coordinates from the scaled ones and sets the cursor accordingly
@@ -350,16 +368,11 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
     /**
      * Checks if the mouse if the mouse cursor is to far from the center and moves it back if necessary
      *
-     * @param x
-     *            MouseX
-     * @param y
-     *            MouseY
-     * @param cX
-     *            CenterX
-     * @param cY
-     *            CenterY
-     * @param r
-     *            Allowed distance
+     * @param x  MouseX
+     * @param y  MouseY
+     * @param cX CenterX
+     * @param cY CenterY
+     * @param r  Allowed distance
      * @return Angle/Direction of the mouse pointer as seen from the center
      */
     private double updateMouse(int x, int y, int cX, int cY, double r) {
@@ -371,27 +384,5 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
             setAbsoluteMouse(dx / 1.5 + cX + 4, dy / 1.5 + cY);
         }
         return rad;
-    }
-
-    @Override
-    public void updateScreen() {
-        super.updateScreen();
-        this.mc.thePlayer.movementInput.updatePlayerMoveState();
-        if (!isKeyDown(getMenuKeyCode())) {
-            if (selectedElement >= 0) {
-                this.onElementSelected(elements.get(selectedElement));
-            }
-
-            this.mc.displayGuiScreen(null);
-        }
-    }
-
-    private boolean isKeyDown(int key){
-        if(key>=0){
-            return Keyboard.isKeyDown(key);
-        }
-        else {
-            return Mouse.isButtonDown(key+100);
-        }
     }
 }

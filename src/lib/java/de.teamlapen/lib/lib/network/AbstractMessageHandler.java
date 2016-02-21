@@ -75,10 +75,7 @@ public abstract class AbstractMessageHandler<T extends IMessage> implements IMes
         }
     }
 
-    protected abstract boolean handleOnMainThread();
-
     protected abstract AbstractPacketDispatcher getDispatcher();
-
 
     /**
      * Return the corresponding player entity.
@@ -90,4 +87,6 @@ public abstract class AbstractMessageHandler<T extends IMessage> implements IMes
     protected EntityPlayer getPlayerEntityByProxy(MessageContext ctx) {
         return VampLib.proxy.getPlayerEntity(ctx);
     }
+
+    protected abstract boolean handleOnMainThread();
 }

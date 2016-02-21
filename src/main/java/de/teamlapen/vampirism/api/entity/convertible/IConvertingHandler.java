@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.api.entity.convertible;
 
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 
 /**
@@ -17,18 +16,23 @@ public interface IConvertingHandler<T extends EntityCreature> {
 
     /**
      * If Vampirism's default converted creature is used, this can be used to specify some properties of the converted creature
+     *
      * @param <Q>
      */
-    interface IDefaultHelper<Q extends EntityCreature>{
+    interface IDefaultHelper<Q extends EntityCreature> {
         /**
          * Drop items on entity's death.
          * Is called in {@link EntityCreature#onDeath(DamageSource)}
          */
-        void dropConvertedItems(Q entity,boolean recentlyHit,int looting);
+        void dropConvertedItems(Q entity, boolean recentlyHit, int looting);
+
         double getConvertedDMG(Q entity);
-        double getConvertedSpeed(Q entity);
+
         double getConvertedKnockbackResistance(Q entity);
+
         double getConvertedMaxHealth(Q entity);
-        
+
+        double getConvertedSpeed(Q entity);
+
     }
 }

@@ -16,7 +16,6 @@ public interface IMinionLord {
     long getLastComebackCall();
 
     /**
-     *
      * @return The maximum amount of minion the lord can control
      */
     int getMaxMinionCount();

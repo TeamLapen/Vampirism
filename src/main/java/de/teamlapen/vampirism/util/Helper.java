@@ -16,16 +16,17 @@ public class Helper {
     /**
      * Checks if the entity can get sundamage at it's current position.
      * It is recommend to cache the value for a few ticks.
+     *
      * @param entity
      * @return
      */
-    public static boolean gettingSundamge(EntityLivingBase entity){
+    public static boolean gettingSundamge(EntityLivingBase entity) {
         MinecraftServer.getServer().theProfiler.startSection("vampirism_checkSundamage");
-        if(entity.worldObj!=null&& VampirismAPI.getSundamageInDim(entity.worldObj.provider.getDimensionId())){
-            if(!entity.worldObj.isRaining()){
-                float angle=entity.worldObj.getCelestialAngle(1.0F);
+        if (entity.worldObj != null && VampirismAPI.getSundamageInDim(entity.worldObj.provider.getDimensionId())) {
+            if (!entity.worldObj.isRaining()) {
+                float angle = entity.worldObj.getCelestialAngle(1.0F);
                 if (angle > 0.78 || angle < 0.24) {
-                    if(entity.worldObj.canBlockSeeSky(entity.getPosition())){
+                    if (entity.worldObj.canBlockSeeSky(entity.getPosition())) {
                         int biomeID = 0;
                         try {
                             biomeID = entity.worldObj.getBiomeGenForCoords(entity.getPosition()).biomeID;

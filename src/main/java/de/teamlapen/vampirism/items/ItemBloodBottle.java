@@ -32,6 +32,50 @@ public class ItemBloodBottle extends VampirismItem implements IFluidContainerIte
         super(name);
     }
 
+    @Override
+    public FluidStack drain(ItemStack container, int maxDrain, boolean doDrain) {
+
+        int currentAmt = getBlood(container);
+        if (currentAmt == 0) return null;
+        FluidStack stack = new FluidStack(ModFluids.blood, Math.min(currentAmt, getAdjustedAmount(maxDrain)));
+        if (doDrain) {
+            setBlood(container, currentAmt - stack.amount);
+        }
+        return stack;
+    }
+
+    @Override
+    public int fill(ItemStack container, FluidStack resource, boolean doFill) {
+        if (resource == null) return 0;
+        if (!resource.getFluid().equals(ModFluids.blood)) {
+            return 0;
+        }
+        if (!doFill) {
+
+            return Math.min(capacity - getBlood(container), getAdjustedAmount(resource.amount));
+        }
+
+        int itemamt = getBlood(container);
+        int toFill = Math.min(capacity - itemamt, getAdjustedAmount(resource.amount));
+        setBlood(container, itemamt + toFill);
+        return toFill;
+
+
+    }
+
+    public int getBlood(ItemStack stack) {
+        return stack.getItemDamage() * MULTIPLIER;
+    }
+
+    @Override
+    public int getCapacity(ItemStack container) {
+        return capacity;
+    }
+
+    @Override
+    public FluidStack getFluid(ItemStack container) {
+        return new FluidStack(ModFluids.blood, getBlood(container) * MULTIPLIER);
+    }
 
     @Override
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
@@ -62,23 +106,8 @@ public class ItemBloodBottle extends VampirismItem implements IFluidContainerIte
         return itemStackIn;
     }
 
-    public int getBlood(ItemStack stack) {
-        return stack.getItemDamage() * MULTIPLIER;
-    }
-
     public void setBlood(ItemStack stack, int amt) {
         stack.setItemDamage(amt / MULTIPLIER);
-    }
-
-
-    @Override
-    public FluidStack getFluid(ItemStack container) {
-        return new FluidStack(ModFluids.blood, getBlood(container) * MULTIPLIER);
-    }
-
-    @Override
-    public int getCapacity(ItemStack container) {
-        return capacity;
     }
 
     /**
@@ -89,36 +118,5 @@ public class ItemBloodBottle extends VampirismItem implements IFluidContainerIte
      */
     private int getAdjustedAmount(int amt) {
         return amt - amt % MULTIPLIER;
-    }
-
-    @Override
-    public int fill(ItemStack container, FluidStack resource, boolean doFill) {
-        if (resource == null) return 0;
-        if (!resource.getFluid().equals(ModFluids.blood)) {
-            return 0;
-        }
-        if (!doFill) {
-
-            return Math.min(capacity - getBlood(container), getAdjustedAmount(resource.amount));
-        }
-
-        int itemamt = getBlood(container);
-        int toFill = Math.min(capacity - itemamt, getAdjustedAmount(resource.amount));
-        setBlood(container, itemamt + toFill);
-        return toFill;
-
-
-    }
-
-    @Override
-    public FluidStack drain(ItemStack container, int maxDrain, boolean doDrain) {
-
-        int currentAmt = getBlood(container);
-        if (currentAmt == 0) return null;
-        FluidStack stack = new FluidStack(ModFluids.blood, Math.min(currentAmt, getAdjustedAmount(maxDrain)));
-        if (doDrain) {
-            setBlood(container, currentAmt - stack.amount);
-        }
-        return stack;
     }
 }

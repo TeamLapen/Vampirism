@@ -19,57 +19,58 @@ public class Balance {
     public static BalanceHunterPlayer hp;
     public static BalanceVampireSkills vps;
 
-    public static void init(File configDir, boolean inDev){
-        File balanceDir=new File(configDir,"balance");
-       leveling=new BalanceLeveling(balanceDir);
-        mobProps=new BalanceMobProps(balanceDir);
-        vp=new BalanceVampirePlayer(balanceDir);
-        hp=new BalanceHunterPlayer(balanceDir);
+    public static void init(File configDir, boolean inDev) {
+        File balanceDir = new File(configDir, "balance");
+        leveling = new BalanceLeveling(balanceDir);
+        mobProps = new BalanceMobProps(balanceDir);
+        vp = new BalanceVampirePlayer(balanceDir);
+        hp = new BalanceHunterPlayer(balanceDir);
         vps = new BalanceVampireSkills(balanceDir);
-        categories.put(leveling.getName(),leveling);
-        categories.put(mobProps.getName(),mobProps);
-        categories.put(vp.getName(),vp);
-        categories.put(hp.getName(),hp);
+        categories.put(leveling.getName(), leveling);
+        categories.put(mobProps.getName(), mobProps);
+        categories.put(vp.getName(), vp);
+        categories.put(hp.getName(), hp);
         categories.put(vps.getName(), vps);
-        if(inDev&&Configs.resetConfigurationInDev){
+        if (inDev && Configs.resetConfigurationInDev) {
             reset(null);
         }
         loadConfiguration();
-        VampirismMod.log.i(TAG,"Loaded balance configuration");
+        VampirismMod.log.i(TAG, "Loaded balance configuration");
     }
 
-    private static void loadConfiguration(){
-        for(BalanceValues values:categories.values()) {
+    private static void loadConfiguration() {
+        for (BalanceValues values : categories.values()) {
             values.loadBalance();
         }
     }
 
-    public static void onConfigurationChanged(){
-        VampirismMod.log.i(TAG,"Reloading changed balance configuration");
+    public static void onConfigurationChanged() {
+        VampirismMod.log.i(TAG, "Reloading changed balance configuration");
         loadConfiguration();
     }
 
     /**
      * Resets the matching balance category.
+     *
      * @param category False if category is not found
      * @return
      */
-    public static  boolean reset(String category){
+    public static boolean reset(String category) {
         if (category == null || category.equals("all")) {
-            for(BalanceValues values:categories.values()){
+            for (BalanceValues values : categories.values()) {
                 values.reset();
             }
             return true;
         }
-        BalanceValues values=categories.get(category);
-        if(values!=null){
+        BalanceValues values = categories.get(category);
+        if (values != null) {
             values.reset();
             return true;
         }
         return false;
     }
 
-    public static Map<String,BalanceValues> getCategories(){
+    public static Map<String, BalanceValues> getCategories() {
         return categories;
     }
 

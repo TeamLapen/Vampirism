@@ -25,14 +25,15 @@ public abstract class Faction {
     }
 
     /**
+     * @return Color for name in chat
+     */
+    public abstract EnumChatFormatting getChatColor();
+
+    /**
      * Used for some rendering, e.g. for displaying the level
+     *
      * @return
      */
     @SideOnly(Side.CLIENT)
     public abstract int getColor();
-
-    /**
-     * @return Color for name in chat
-     */
-    public abstract EnumChatFormatting getChatColor();
 }

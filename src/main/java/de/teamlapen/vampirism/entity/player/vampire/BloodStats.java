@@ -40,55 +40,19 @@ public class BloodStats {
         addExhaustionModifier("config", (float) Balance.vp.BLOOD_EXHAUSTION_MOD);
     }
 
-    public boolean needsBlood() {
-        return bloodLevel < MAXBLOOD;
-    }
     /**
-     * Reads nbt written by either {@link #writeNBTBlood(NBTTagCompound)} or {@link #writeNBT(NBTTagCompound)}
+     * Adds blood to the stats
      *
-     * @param nbt
+     * @param amount
+     * @param saturationModifier
+     * @return The amound which could not be added
      */
-    public void readNBT(NBTTagCompound nbt) {
-        if (nbt.hasKey("bloodLevel")) {
-            bloodLevel = nbt.getInteger("bloodLevel");
-            if (nbt.hasKey("bloodTimer")) {
-                bloodTimer = nbt.getInteger("bloodTimer");
-                bloodSaturationLevel = nbt.getFloat("bloodSaturation");
-                bloodExhaustionLevel = nbt.getFloat("bloodExhaustion");
-            }
-        }
-    }
-
-    /**
-     * Write all relevant data to nbt
-     *
-     * @param nbt
-     */
-    public void writeNBT(NBTTagCompound nbt) {
-        writeNBTBlood(nbt);
-        nbt.setInteger("bloodTimer", bloodTimer);
-        nbt.setFloat("bloodSaturation", bloodSaturationLevel);
-        nbt.setFloat("bloodExhaustion", bloodExhaustionLevel);
-    }
-
-    void loadUpdate(NBTTagCompound nbt) {
-        if (nbt.hasKey("bloodLevel")) {
-            setBloodLevel(nbt.getInteger("bloodLevel"));
-        }
-    }
-
-    NBTTagCompound writeUpdate(NBTTagCompound nbt) {
-        nbt.setInteger("bloodLevel", bloodLevel);
-        return nbt;
-    }
-
-    /**
-     * Write only the blood level to nbt
-     *
-     * @param nbt
-     */
-    public void writeNBTBlood(NBTTagCompound nbt) {
-        nbt.setInteger("bloodLevel", bloodLevel);
+    public int addBlood(int amount, float saturationModifier) {
+        int add = Math.min(amount, MAXBLOOD - bloodLevel);
+        bloodLevel += add;
+        bloodSaturationLevel = Math.min(this.bloodSaturationLevel + (float) add * saturationModifier * 2.0F, (float) bloodLevel);
+        changed = true;
+        return amount - add;
     }
 
     /**
@@ -103,21 +67,43 @@ public class BloodStats {
         updateExhaustionModifier();
     }
 
-    public void removeExhaustionModifier(String id) {
-        modifiers.remove(id);
-        updateExhaustionModifier();
+    /**
+     * Removes blood from the vampires blood level
+     *
+     * @param a amount
+     * @return whether the vampire had enough blood or not
+     */
+    public boolean consumeBlood(int a) {
+        int blood = getBloodLevel();
+        int bloodToRemove = Math.min(a, blood);
+
+        bloodLevel -= bloodToRemove;
+        changed = true;
+        return bloodToRemove <= blood;
     }
 
-    private void updateExhaustionModifier() {
-        modifier = 1.0F;
-        for (Float f : modifiers.values()) {
-            modifier *= f;
-        }
+    public int getBloodLevel() {
+        return bloodLevel;
+    }
+
+    public void setBloodLevel(int amt) {
+        bloodLevel = amt < 0 ? 0 : (amt > 20 ? 20 : amt);
+        changed = true;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public int getPrevBloodLevel() {
+        return prevBloodLevel;
+    }
+
+    public boolean needsBlood() {
+        return bloodLevel < MAXBLOOD;
     }
 
     /**
      * Updated the blood level
      * Only call this if the player is a vampire
+     *
      * @return Whether it changed or not
      */
     public boolean onUpdate() {
@@ -171,51 +157,67 @@ public class BloodStats {
     }
 
     /**
-     * Adds blood to the stats
+     * Reads nbt written by either {@link #writeNBTBlood(NBTTagCompound)} or {@link #writeNBT(NBTTagCompound)}
      *
-     * @param amount
-     * @param saturationModifier
-     * @return The amound which could not be added
+     * @param nbt
      */
-    public int addBlood(int amount, float saturationModifier) {
-        int add = Math.min(amount, MAXBLOOD - bloodLevel);
-        bloodLevel += add;
-        bloodSaturationLevel = Math.min(this.bloodSaturationLevel + (float) add * saturationModifier * 2.0F, (float) bloodLevel);
-        changed = true;
-        return amount - add;
+    public void readNBT(NBTTagCompound nbt) {
+        if (nbt.hasKey("bloodLevel")) {
+            bloodLevel = nbt.getInteger("bloodLevel");
+            if (nbt.hasKey("bloodTimer")) {
+                bloodTimer = nbt.getInteger("bloodTimer");
+                bloodSaturationLevel = nbt.getFloat("bloodSaturation");
+                bloodExhaustionLevel = nbt.getFloat("bloodExhaustion");
+            }
+        }
+    }
+
+    public void removeExhaustionModifier(String id) {
+        modifiers.remove(id);
+        updateExhaustionModifier();
     }
 
     /**
-     * Removes blood from the vampires blood level
+     * Write all relevant data to nbt
      *
-     * @param a amount
-     * @return whether the vampire had enough blood or not
+     * @param nbt
      */
-    public boolean consumeBlood(int a) {
-        int blood = getBloodLevel();
-        int bloodToRemove = Math.min(a, blood);
-
-        bloodLevel -= bloodToRemove;
-        changed = true;
-        return bloodToRemove <= blood;
+    public void writeNBT(NBTTagCompound nbt) {
+        writeNBTBlood(nbt);
+        nbt.setInteger("bloodTimer", bloodTimer);
+        nbt.setFloat("bloodSaturation", bloodSaturationLevel);
+        nbt.setFloat("bloodExhaustion", bloodExhaustionLevel);
     }
 
-    public int getBloodLevel() {
-        return bloodLevel;
-    }
-
-    public void setBloodLevel(int amt) {
-        bloodLevel = amt < 0 ? 0 : (amt > 20 ? 20 : amt);
-        changed = true;
+    /**
+     * Write only the blood level to nbt
+     *
+     * @param nbt
+     */
+    public void writeNBTBlood(NBTTagCompound nbt) {
+        nbt.setInteger("bloodLevel", bloodLevel);
     }
 
     protected void addExhaustion(float amount) {
         this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount * modifier, 40F);
     }
 
-    @SideOnly(Side.CLIENT)
-    public int getPrevBloodLevel() {
-        return prevBloodLevel;
+    void loadUpdate(NBTTagCompound nbt) {
+        if (nbt.hasKey("bloodLevel")) {
+            setBloodLevel(nbt.getInteger("bloodLevel"));
+        }
+    }
+
+    private void updateExhaustionModifier() {
+        modifier = 1.0F;
+        for (Float f : modifiers.values()) {
+            modifier *= f;
+        }
+    }
+
+    NBTTagCompound writeUpdate(NBTTagCompound nbt) {
+        nbt.setInteger("bloodLevel", bloodLevel);
+        return nbt;
     }
 
 }

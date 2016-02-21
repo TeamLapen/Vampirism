@@ -17,10 +17,6 @@ public class VampireFaction extends PlayableFaction<IVampirePlayer> {
 
     private static VampireFaction instance;
 
-    private VampireFaction() {
-        super("Vampire", IVampire.class, "VampirePlayer");
-    }
-
     public static VampireFaction instance() {
         if (instance == null) {
             instance = new VampireFaction();
@@ -28,9 +24,13 @@ public class VampireFaction extends PlayableFaction<IVampirePlayer> {
         return instance;
     }
 
+    private VampireFaction() {
+        super("Vampire", IVampire.class, "VampirePlayer");
+    }
+
     @Override
-    public int getHighestReachableLevel() {
-        return REFERENCE.HIGHEST_VAMPIRE_LEVEL;
+    public EnumChatFormatting getChatColor() {
+        return EnumChatFormatting.LIGHT_PURPLE;
     }
 
     @SideOnly(Side.CLIENT)
@@ -40,7 +40,7 @@ public class VampireFaction extends PlayableFaction<IVampirePlayer> {
     }
 
     @Override
-    public EnumChatFormatting getChatColor() {
-        return EnumChatFormatting.LIGHT_PURPLE;
+    public int getHighestReachableLevel() {
+        return REFERENCE.HIGHEST_VAMPIRE_LEVEL;
     }
 }

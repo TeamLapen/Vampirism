@@ -23,16 +23,6 @@ import java.util.List;
 public class UpdateEntityPacket implements IMessage {
 
     private final static String TAG = "UpdateEntityPacket";
-    private int id;
-    private NBTTagCompound data;
-    private NBTTagCompound props;
-
-    /**
-     * Dont use
-     */
-    public UpdateEntityPacket() {
-
-    }
 
     /**
      * Create a sync packet for the given property.
@@ -102,7 +92,7 @@ public class UpdateEntityPacket implements IMessage {
      * @param entity Has to implement ISyncable
      * @return
      */
-    public static UpdateEntityPacket create(Entity entity){
+    public static UpdateEntityPacket create(Entity entity) {
         if (!(entity instanceof ISyncable)) {
             throw new IllegalArgumentException("You cannot use this packet to sync this entity. The entity has to implement ISyncable");
         }
@@ -159,10 +149,21 @@ public class UpdateEntityPacket implements IMessage {
         } else {
             VampLib.log.w("RequestUpdatePacket", "There is nothing to update for entity %s", entity);
             return null;
-            }
-
-
         }
+
+
+    }
+
+    private int id;
+    private NBTTagCompound data;
+    private NBTTagCompound props;
+
+    /**
+     * Dont use
+     */
+    public UpdateEntityPacket() {
+
+    }
 
     @Override
     public void fromBytes(ByteBuf buf) {
@@ -172,7 +173,7 @@ public class UpdateEntityPacket implements IMessage {
             data = tag.getCompoundTag("data");
         }
         if (tag.hasKey("props")) {
-            props= tag.getCompoundTag("props");
+            props = tag.getCompoundTag("props");
         }
     }
 
@@ -180,11 +181,11 @@ public class UpdateEntityPacket implements IMessage {
     public void toBytes(ByteBuf buf) {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setInteger("id", id);
-        if (data!=null){
+        if (data != null) {
             tag.setTag("data", data);
         }
         if (props != null) {
-            tag.setTag("props",props);
+            tag.setTag("props", props);
         }
         ByteBufUtils.writeTag(buf, tag);
     }
@@ -193,18 +194,18 @@ public class UpdateEntityPacket implements IMessage {
 
         @Override
         public IMessage handleClientMessage(EntityPlayer player, UpdateEntityPacket message, MessageContext ctx) {
-            VampLib.log.t("Received %s %s %s",player,message.data,message.props);
+            VampLib.log.t("Received %s %s %s", player, message.data, message.props);
             if (player.worldObj == null) {
                 VampLib.log.w(TAG, "World not loaded yet");
                 return null;
             }
             Entity e = player.worldObj.getEntityByID(message.id);
             if (e == null) {
-                VampLib.log.e(TAG,"Did not find entity %s",message.id);
+                VampLib.log.e(TAG, "Did not find entity %s", message.id);
                 return null;
             }
 
-            if (message.data!=null) {
+            if (message.data != null) {
                 ISyncable syncable;
                 try {
                     syncable = (ISyncable) e;
@@ -226,6 +227,21 @@ public class UpdateEntityPacket implements IMessage {
             return null;
         }
 
+        @Override
+        public IMessage handleServerMessage(EntityPlayer player, UpdateEntityPacket message, MessageContext ctx) {
+            return null;
+        }
+
+        @Override
+        protected AbstractPacketDispatcher getDispatcher() {
+            return VampLib.dispatcher;
+        }
+
+        @Override
+        protected boolean handleOnMainThread() {
+            return true;
+        }
+
         private void handleProperty(Entity e, String prop, NBTTagCompound data) {
             ISyncable syncable;
             try {
@@ -239,21 +255,6 @@ public class UpdateEntityPacket implements IMessage {
             } else {
                 syncable.loadUpdateFromNBT(data);
             }
-        }
-
-        @Override
-        public IMessage handleServerMessage(EntityPlayer player, UpdateEntityPacket message, MessageContext ctx) {
-            return null;
-        }
-
-        @Override
-        protected boolean handleOnMainThread() {
-            return true;
-        }
-
-        @Override
-        protected AbstractPacketDispatcher getDispatcher() {
-            return VampLib.dispatcher;
         }
 
     }

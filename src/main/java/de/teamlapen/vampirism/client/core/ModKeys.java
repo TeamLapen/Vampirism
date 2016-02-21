@@ -31,10 +31,6 @@ public class ModKeys {
     private static KeyBinding SUCK = new KeyBinding(SUCK_BLOOD, Keyboard.KEY_F, CATEGORY);
     private static KeyBinding SKILL = new KeyBinding(TOGGLE_SKILLS, -98, CATEGORY);
 
-    private ModKeys() {
-
-    }
-
     /**
      * @param key
      * @return the key code which is currently bound to the given KEY_Action
@@ -73,17 +69,8 @@ public class ModKeys {
 
     }
 
+    private ModKeys() {
 
-    /**
-     * @return the KeyBinding that is currently pressed
-     */
-    private KEY getPressedKeyBinding() {
-        if (SUCK.isPressed()) {
-            return KEY.SUCK;
-        } else if (SKILL.isPressed()) {
-            return KEY.SKILL;
-        }
-        return KEY.UNKNOWN;
     }
 
     @SubscribeEvent
@@ -99,6 +86,18 @@ public class ModKeys {
             EntityPlayer player = Minecraft.getMinecraft().thePlayer;
             player.openGui(VampirismMod.instance, ModGuiHandler.ID_SKILL, player.worldObj, player.chunkCoordX, player.chunkCoordY, player.chunkCoordZ);
         }
+    }
+
+    /**
+     * @return the KeyBinding that is currently pressed
+     */
+    private KEY getPressedKeyBinding() {
+        if (SUCK.isPressed()) {
+            return KEY.SUCK;
+        } else if (SKILL.isPressed()) {
+            return KEY.SKILL;
+        }
+        return KEY.UNKNOWN;
     }
 
     public enum KEY {

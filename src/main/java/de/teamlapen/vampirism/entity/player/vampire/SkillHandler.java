@@ -21,6 +21,15 @@ public class SkillHandler implements ISkillHandler {
     public static TeleportSkill teleportSkill;
     public static VampireRageSkill rageSkill;
     public static BatSkill batSkill;
+
+    public static void registerDefaultSkills() {
+        freezeSkill = SkillRegistry.registerSkill(new FreezeSkill(), "freeze");
+        invisibilitySkill = SkillRegistry.registerSkill(new InvisibilitySkill(), "invisible");
+        regenSkill = SkillRegistry.registerSkill(new RegenSkill(), "regen");
+        teleportSkill = SkillRegistry.registerSkill(new TeleportSkill(), "teleport");
+        rageSkill = SkillRegistry.registerSkill(new VampireRageSkill(), "rage");
+        batSkill = SkillRegistry.registerSkill(new BatSkill(), "bat");
+    }
     /**
      * Saves timers for skill ids
      * Values:
@@ -37,105 +46,6 @@ public class SkillHandler implements ISkillHandler {
         this.skillTimer = new int[SkillRegistry.getSkillCount()];
     }
 
-    public static void registerDefaultSkills() {
-        freezeSkill = SkillRegistry.registerSkill(new FreezeSkill(), "freeze");
-        invisibilitySkill = SkillRegistry.registerSkill(new InvisibilitySkill(), "invisible");
-        regenSkill = SkillRegistry.registerSkill(new RegenSkill(), "regen");
-        teleportSkill = SkillRegistry.registerSkill(new TeleportSkill(), "teleport");
-        rageSkill = SkillRegistry.registerSkill(new VampireRageSkill(), "rage");
-        batSkill = SkillRegistry.registerSkill(new BatSkill(), "bat");
-    }
-
-    void loadFromNbt(NBTTagCompound nbt) {
-        NBTTagCompound skills = nbt.getCompoundTag("skills");
-        if (skills != null) {
-            for (String key : skills.getKeySet()) {
-                IVampireSkill skill = SkillRegistry.getSkillFromKey(key);
-                if (skill == null) {
-                    VampirismMod.log.w(TAG, "Did not find skill with key %s", key);
-                } else {
-                    skillTimer[SkillRegistry.getIdFromSkill(skill)] = skills.getInteger(key);
-                }
-            }
-        }
-    }
-
-    void saveToNbt(NBTTagCompound nbt) {
-        NBTTagCompound skills = new NBTTagCompound();
-        for (int i = 0; i < skillTimer.length; i++) {
-            IVampireSkill s = SkillRegistry.getSkillFromId(i);
-            String key = SkillRegistry.getKeyFromSkill(s);
-            skills.setInteger(key, skillTimer[i]);
-        }
-        nbt.setTag("skills", skills);
-    }
-
-    void onSkillsReactivated() {
-        if (!vampire.isRemote()) {
-            for (int i = 0; i < skillTimer.length; i++) {
-                if (skillTimer[i] > 0) {
-                    ((ILastingVampireSkill) SkillRegistry.getSkillFromId(i)).onReActivated(vampire);
-                }
-            }
-        }
-
-    }
-
-    void writeUpdateForClient(NBTTagCompound nbt) {
-        nbt.setIntArray("skill_timers", skillTimer);
-    }
-
-    void readUpdateFromServer(NBTTagCompound nbt) {
-
-        if (nbt.hasKey("skill_timers")) {
-            int[] updated = nbt.getIntArray("skill_timers");
-            for (int i = 0; i < skillTimer.length; i++) {
-                int old = skillTimer[i];
-                skillTimer[i] = updated[i];
-                if (updated[i] > 0 && old <= 0) {
-                    ((ILastingVampireSkill) SkillRegistry.getSkillFromId(i)).onActivatedClient(vampire);
-                } else if (updated[i] <= 0 && old > 0) {
-                    ((ILastingVampireSkill) SkillRegistry.getSkillFromId(i)).onDeactivated(vampire);//Called here if the skill is deactivated
-                }
-
-            }
-        }
-    }
-
-    /**
-     * Update the skills
-     *
-     * @return If a sync is recommend, only relevant on server side
-     */
-    boolean updateSkills() {
-        for (int i = 0; i < skillTimer.length; i++) {
-            int t = skillTimer[i];
-            if (t != 0) {
-                if (t < 0) {
-                    skillTimer[i]++;
-                } else {
-                    skillTimer[i]--;
-                    ILastingVampireSkill skill = (ILastingVampireSkill) SkillRegistry.getSkillFromId(i);
-                    if (t == 1) {
-                        skill.onDeactivated(vampire);//Called here if the skill runs out.
-                            dirty = true;
-                    } else {
-                        if (skill.onUpdate(vampire)) {
-                            skillTimer[i] = 1;
-                        }
-                    }
-
-                }
-            }
-        }
-        if (dirty) {
-            dirty = false;
-            return true;
-        }
-        return false;
-    }
-
-
     public void deactivateAllSkills() {
         for (int i = 0; i < skillTimer.length; i++) {
             if (skillTimer[i] > 0) {
@@ -146,6 +56,10 @@ public class SkillHandler implements ISkillHandler {
         }
     }
 
+    @Override
+    public List<IVampireSkill> getAvailableSkills() {
+        return SkillRegistry.getAvailableSkills(vampire);
+    }
 
     @Override
     public float getPercentageForSkill(IVampireSkill skill) {
@@ -157,8 +71,31 @@ public class SkillHandler implements ISkillHandler {
     }
 
     @Override
-    public List<IVampireSkill> getAvailableSkills() {
-        return SkillRegistry.getAvailableSkills(vampire);
+    public boolean isSkillActive(ILastingVampireSkill skill) {
+        return skillTimer[SkillRegistry.getIdFromSkill(skill)] > 0;
+    }
+
+    @Override
+    public boolean isSkillActive(String id) {
+        IVampireSkill skill = SkillRegistry.getSkillFromKey(id);
+        if (skill != null) {
+            return isSkillActive((ILastingVampireSkill) skill);
+        } else {
+            VampirismMod.log.w(TAG, "Skill with id %s is not registered");
+            return false;
+        }
+
+    }
+
+    @Override
+    public void resetTimers() {
+        for (int i = 0; i < skillTimer.length; i++) {
+            if (skillTimer[i] > 0) {
+                ((ILastingVampireSkill) SkillRegistry.getSkillFromId(i)).onDeactivated(vampire);
+            }
+            skillTimer[i] = 0;
+        }
+        dirty = true;
     }
 
     @Override
@@ -194,31 +131,92 @@ public class SkillHandler implements ISkillHandler {
 
     }
 
-    @Override
-    public boolean isSkillActive(ILastingVampireSkill skill) {
-        return skillTimer[SkillRegistry.getIdFromSkill(skill)] > 0;
-    }
-
-    @Override
-    public boolean isSkillActive(String id) {
-        IVampireSkill skill = SkillRegistry.getSkillFromKey(id);
-        if (skill != null) {
-            return isSkillActive((ILastingVampireSkill) skill);
-        } else {
-            VampirismMod.log.w(TAG, "Skill with id %s is not registered");
-            return false;
-        }
-
-    }
-
-    @Override
-    public void resetTimers() {
-        for (int i = 0; i < skillTimer.length; i++) {
-            if (skillTimer[i] > 0) {
-                ((ILastingVampireSkill) SkillRegistry.getSkillFromId(i)).onDeactivated(vampire);
+    void loadFromNbt(NBTTagCompound nbt) {
+        NBTTagCompound skills = nbt.getCompoundTag("skills");
+        if (skills != null) {
+            for (String key : skills.getKeySet()) {
+                IVampireSkill skill = SkillRegistry.getSkillFromKey(key);
+                if (skill == null) {
+                    VampirismMod.log.w(TAG, "Did not find skill with key %s", key);
+                } else {
+                    skillTimer[SkillRegistry.getIdFromSkill(skill)] = skills.getInteger(key);
+                }
             }
-            skillTimer[i] = 0;
         }
-        dirty = true;
+    }
+
+    void onSkillsReactivated() {
+        if (!vampire.isRemote()) {
+            for (int i = 0; i < skillTimer.length; i++) {
+                if (skillTimer[i] > 0) {
+                    ((ILastingVampireSkill) SkillRegistry.getSkillFromId(i)).onReActivated(vampire);
+                }
+            }
+        }
+
+    }
+
+    void readUpdateFromServer(NBTTagCompound nbt) {
+
+        if (nbt.hasKey("skill_timers")) {
+            int[] updated = nbt.getIntArray("skill_timers");
+            for (int i = 0; i < skillTimer.length; i++) {
+                int old = skillTimer[i];
+                skillTimer[i] = updated[i];
+                if (updated[i] > 0 && old <= 0) {
+                    ((ILastingVampireSkill) SkillRegistry.getSkillFromId(i)).onActivatedClient(vampire);
+                } else if (updated[i] <= 0 && old > 0) {
+                    ((ILastingVampireSkill) SkillRegistry.getSkillFromId(i)).onDeactivated(vampire);//Called here if the skill is deactivated
+                }
+
+            }
+        }
+    }
+
+    void saveToNbt(NBTTagCompound nbt) {
+        NBTTagCompound skills = new NBTTagCompound();
+        for (int i = 0; i < skillTimer.length; i++) {
+            IVampireSkill s = SkillRegistry.getSkillFromId(i);
+            String key = SkillRegistry.getKeyFromSkill(s);
+            skills.setInteger(key, skillTimer[i]);
+        }
+        nbt.setTag("skills", skills);
+    }
+
+    /**
+     * Update the skills
+     *
+     * @return If a sync is recommend, only relevant on server side
+     */
+    boolean updateSkills() {
+        for (int i = 0; i < skillTimer.length; i++) {
+            int t = skillTimer[i];
+            if (t != 0) {
+                if (t < 0) {
+                    skillTimer[i]++;
+                } else {
+                    skillTimer[i]--;
+                    ILastingVampireSkill skill = (ILastingVampireSkill) SkillRegistry.getSkillFromId(i);
+                    if (t == 1) {
+                        skill.onDeactivated(vampire);//Called here if the skill runs out.
+                        dirty = true;
+                    } else {
+                        if (skill.onUpdate(vampire)) {
+                            skillTimer[i] = 1;
+                        }
+                    }
+
+                }
+            }
+        }
+        if (dirty) {
+            dirty = false;
+            return true;
+        }
+        return false;
+    }
+
+    void writeUpdateForClient(NBTTagCompound nbt) {
+        nbt.setIntArray("skill_timers", skillTimer);
     }
 }

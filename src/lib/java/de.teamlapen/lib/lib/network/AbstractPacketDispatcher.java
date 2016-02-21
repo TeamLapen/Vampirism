@@ -29,15 +29,6 @@ public abstract class AbstractPacketDispatcher {
     public abstract void registerPackets();
 
     /**
-     * Registers a message and message handler
-     *
-     * @param side Side this message should be received
-     */
-    protected final void registerMessage(Class handlerClass, Class messageClass, Side side) {
-        dispatcher.registerMessage(handlerClass, messageClass, packetId++, side);
-    }
-
-    /**
      * Send this message to the specified player.
      * See {@link SimpleNetworkWrapper#sendTo(IMessage, EntityPlayerMP)}
      */
@@ -74,6 +65,12 @@ public abstract class AbstractPacketDispatcher {
                 player.posY, player.posZ, range);
     }
 
+    public final void sendToAllTrackingPlayers(IMessage message, Entity target) {
+        EntityTracker et = ((WorldServer) target.worldObj).getEntityTracker();
+        // does not send it to the player himself it target is a player et.sendToAllTrackingEntity(target, dispatcher.getPacketFrom(message));
+        et.func_151248_b(target, dispatcher.getPacketFrom(message));
+    }
+
     /**
      * Send this message to everyone within the supplied dimension.
      * See {@link SimpleNetworkWrapper#sendToDimension(IMessage, int)}
@@ -82,17 +79,20 @@ public abstract class AbstractPacketDispatcher {
         dispatcher.sendToDimension(message, dimensionId);
     }
 
-    public final void sendToAllTrackingPlayers(IMessage message, Entity target) {
-        EntityTracker et = ((WorldServer) target.worldObj).getEntityTracker();
-        // does not send it to the player himself it target is a player et.sendToAllTrackingEntity(target, dispatcher.getPacketFrom(message));
-        et.func_151248_b(target, dispatcher.getPacketFrom(message));
-    }
-
     /**
      * Send this message to the server.
      * See {@link SimpleNetworkWrapper#sendToServer(IMessage)}
      */
     public final void sendToServer(IMessage message) {
         dispatcher.sendToServer(message);
+    }
+
+    /**
+     * Registers a message and message handler
+     *
+     * @param side Side this message should be received
+     */
+    protected final void registerMessage(Class handlerClass, Class messageClass, Side side) {
+        dispatcher.registerMessage(handlerClass, messageClass, packetId++, side);
     }
 }

@@ -25,6 +25,21 @@ public class FakeNightVisionPotionEffect extends PotionEffect {
     }
 
     @Override
+    public boolean equals(Object p_equals_1_) {
+        return p_equals_1_ == this;
+    }
+
+    @Override
+    public String getEffectName() {
+        return "Vampire " + Potion.potionTypes[this.getPotionID()].getName();
+    }
+
+    @Override
+    public boolean getIsPotionDurationMax() {
+        return true;
+    }
+
+    @Override
     public boolean onUpdate(EntityLivingBase entityIn) {
         return true;
     }
@@ -35,22 +50,7 @@ public class FakeNightVisionPotionEffect extends PotionEffect {
     }
 
     @Override
-    public String getEffectName() {
-        return "Vampire " + Potion.potionTypes[this.getPotionID()].getName();
-    }
-
-    @Override
-    public boolean equals(Object p_equals_1_) {
-        return p_equals_1_ == this;
-    }
-
-    @Override
     public NBTTagCompound writeCustomPotionEffectToNBT(NBTTagCompound nbt) {
         return nbt;
-    }
-
-    @Override
-    public boolean getIsPotionDurationMax() {
-        return true;
     }
 }

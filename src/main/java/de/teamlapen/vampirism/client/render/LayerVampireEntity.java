@@ -20,7 +20,7 @@ public class LayerVampireEntity implements LayerRenderer<EntityCreature> {
 
     @Override
     public void doRenderLayer(EntityCreature entitylivingbaseIn, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scale) {
-        if (!entitylivingbaseIn.isInvisible()&&RenderConvertedCreature.renderOverlay) {
+        if (!entitylivingbaseIn.isInvisible() && RenderConvertedCreature.renderOverlay) {
             renderer.bindTexture(overlay);
             renderer.getMainModel().render(entitylivingbaseIn, p_177141_2_, p_177141_3_, p_177141_5_, p_177141_6_, p_177141_7_, scale);
         }

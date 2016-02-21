@@ -9,10 +9,16 @@ import net.minecraft.world.World;
 /**
  * Base class for Vampirism's vampire entities
  */
-public class EntityVampireBase extends EntityVampirism implements IVampire{
+public class EntityVampireBase extends EntityVampirism implements IVampire {
     private boolean sundamageCache;
+
     public EntityVampireBase(World p_i1595_1_) {
         super(p_i1595_1_);
+    }
+
+    @Override
+    public Faction getFaction() {
+        return VampirismAPI.VAMPIRE_FACTION;
     }
 
     @Override
@@ -24,10 +30,5 @@ public class EntityVampireBase extends EntityVampirism implements IVampire{
     @Override
     public boolean isGettingSundamge() {
         return isGettingSundamage(false);
-    }
-
-    @Override
-    public Faction getFaction() {
-        return VampirismAPI.VAMPIRE_FACTION;
     }
 }

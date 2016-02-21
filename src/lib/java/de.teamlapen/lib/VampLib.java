@@ -30,16 +30,16 @@ public class VampLib {
     }
 
     @Mod.EventHandler
+    public void postInit(FMLPostInitializationEvent event) {
+        HelperRegistry.finish();
+        MinecraftForge.EVENT_BUS.register(new EntityEventHandler(HelperRegistry.getEventListenerProps()));
+    }
+
+    @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         checkDevEnv();
         dispatcher.registerPackets();
 
-    }
-
-    @Mod.EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
-        HelperRegistry.finish();
-        MinecraftForge.EVENT_BUS.register(new EntityEventHandler(HelperRegistry.getEventListenerProps()));
     }
 
     private void checkDevEnv() {

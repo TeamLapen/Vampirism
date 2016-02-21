@@ -12,17 +12,17 @@ public class ModGuiHandler implements IGuiHandler {
     public final static int ID_SKILL = 0;
 
     @Override
-    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        return null;
-    }
-
-    @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
 
         switch (ID) {
             case ID_SKILL:
                 return new GuiSelectSkill();
         }
+        return null;
+    }
+
+    @Override
+    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
         return null;
     }
 }

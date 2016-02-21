@@ -6,9 +6,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 
 /**
- *
  * @author WILLIAM
- *
  */
 public class ModelGhost extends ModelBase {
     // fields
@@ -73,19 +71,13 @@ public class ModelGhost extends ModelBase {
         leftleg.render(f5);
     }
 
-    private void setRotation(ModelRenderer model, float x, float y, float z) {
-        model.rotateAngleX = x;
-        model.rotateAngleY = y;
-        model.rotateAngleZ = z;
-    }
-
     @Override
     public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
         super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
 
         this.head.rotateAngleY = f3 / (180F / (float) Math.PI);
         this.head.rotateAngleX = f4 / (180F / (float) Math.PI);
-        float f6 = MathHelper.sin(this.swingProgress* (float) Math.PI);
+        float f6 = MathHelper.sin(this.swingProgress * (float) Math.PI);
         float f7 = MathHelper.sin((1.0F - (1.0F - this.swingProgress) * (1.0F - this.swingProgress)) * (float) Math.PI);
         this.rightarm.rotateAngleZ = 0.0F;
         this.leftarm.rotateAngleZ = 0.0F;
@@ -99,5 +91,11 @@ public class ModelGhost extends ModelBase {
         this.leftarm.rotateAngleZ -= MathHelper.cos(f2 * 0.09F) * 0.05F + 0.05F;
         this.rightarm.rotateAngleX += MathHelper.sin(f2 * 0.067F) * 0.05F;
         this.leftarm.rotateAngleX -= MathHelper.sin(f2 * 0.067F) * 0.05F;
+    }
+
+    private void setRotation(ModelRenderer model, float x, float y, float z) {
+        model.rotateAngleX = x;
+        model.rotateAngleY = y;
+        model.rotateAngleZ = z;
     }
 }

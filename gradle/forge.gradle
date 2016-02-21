@@ -4,7 +4,7 @@ repositories {
         url "http://mobiusstrip.eu/maven"
     }
     maven { url 'http://tehnut.info/maven/' }
-    maven { url 'http://chickenbones.net/maven'}
+    maven { url 'http://chickenbones.net/maven' }
     mavenCentral()
 }
 

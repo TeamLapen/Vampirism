@@ -22,71 +22,22 @@ import net.minecraft.world.World;
 public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
 
 
-    public HunterPlayer(EntityPlayer player) {
-        super(player);
-    }
-
     /**
      * Don't call before the construction event of the player entity is finished
+     *
      * @param player
      * @return
      */
-    public static HunterPlayer get(EntityPlayer player){
+    public static HunterPlayer get(EntityPlayer player) {
         return (HunterPlayer) VampirismAPI.HUNTER_FACTION.getProp(player);
     }
-    public static void register(EntityPlayer player){
+
+    public static void register(EntityPlayer player) {
         player.registerExtendedProperties(VampirismAPI.HUNTER_FACTION.prop, new HunterPlayer(player));
     }
 
-    @Override
-    public int getTheEntityID() {
-        return player.getEntityId();
-    }
-
-    @Override
-    public String getPropertyKey() {
-        return VampirismAPI.HUNTER_FACTION.prop;
-    }
-
-    @Override
-    public void saveData(NBTTagCompound compound) {
-
-    }
-
-    @Override
-    public void loadData(NBTTagCompound compound) {
-
-    }
-
-    @Override
-    public void init(Entity entity, World world) {
-
-    }
-
-    @Override
-    public EntityPlayer getRepresentingPlayer() {
-        return player;
-    }
-
-    @Override
-    public PlayableFaction<IHunterPlayer> getFaction() {
-        return VampirismAPI.HUNTER_FACTION;
-    }
-
-
-    @Override
-    protected int getMaxLevel() {
-        return REFERENCE.HIGHEST_HUNTER_LEVEL;
-    }
-
-
-
-    @Override
-    public void onLevelChanged(int old, int level) {
-        if (!isRemote()) {
-            PlayerModifiers.applyModifier(player, SharedMonsterAttributes.attackDamage, "Hunter", getLevel(), Balance.hp.STRENGTH_LCAP, Balance.hp.STRENGTH_MAX_MOD, Balance.hp.STRENGTH_TYPE);
-        }
-
+    public HunterPlayer(EntityPlayer player) {
+        super(player);
     }
 
     @Override
@@ -95,21 +46,52 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
     }
 
     @Override
-    protected void loadUpdate(NBTTagCompound nbt) {
+    public PlayableFaction<IHunterPlayer> getFaction() {
+        return VampirismAPI.HUNTER_FACTION;
+    }
+
+    @Override
+    public Predicate<? super Entity> getNonFriendlySelector(boolean otherFactionPlayers) {
+        return Predicates.alwaysTrue();//TODO adjust
+    }
+
+    @Override
+    public String getPropertyKey() {
+        return VampirismAPI.HUNTER_FACTION.prop;
+    }
+
+    @Override
+    public EntityPlayer getRepresentingPlayer() {
+        return player;
+    }
+
+    @Override
+    public int getTheEntityID() {
+        return player.getEntityId();
+    }
+
+    @Override
+    public void init(Entity entity, World world) {
 
     }
 
     @Override
-    protected void writeFullUpdate(NBTTagCompound nbt) {
+    public boolean isDisguised() {
+        return false;//TODO
     }
 
     @Override
-    protected VampirismPlayer copyFromPlayer(EntityPlayer old) {
-        return get(old);
+    public void loadData(NBTTagCompound compound) {
+
     }
 
     @Override
-    public void onJoinWorld() {
+    public void onChangedDimension(int from, int to) {
+
+    }
+
+    @Override
+    public void onDeath(DamageSource src) {
 
     }
 
@@ -119,17 +101,15 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
     }
 
     @Override
-    public void onDeath(DamageSource src) {
+    public void onJoinWorld() {
 
     }
 
     @Override
-    public void onUpdate() {
-
-    }
-
-    @Override
-    public void onChangedDimension(int from, int to) {
+    public void onLevelChanged(int old, int level) {
+        if (!isRemote()) {
+            PlayerModifiers.applyModifier(player, SharedMonsterAttributes.attackDamage, "Hunter", getLevel(), Balance.hp.STRENGTH_LCAP, Balance.hp.STRENGTH_MAX_MOD, Balance.hp.STRENGTH_TYPE);
+        }
 
     }
 
@@ -143,14 +123,32 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
 
     }
 
-
     @Override
-    public Predicate<? super Entity> getNonFriendlySelector(boolean otherFactionPlayers) {
-        return Predicates.alwaysTrue();//TODO adjust
+    public void onUpdate() {
+
     }
 
     @Override
-    public boolean isDisguised() {
-        return false;//TODO
+    public void saveData(NBTTagCompound compound) {
+
+    }
+
+    @Override
+    protected VampirismPlayer copyFromPlayer(EntityPlayer old) {
+        return get(old);
+    }
+
+    @Override
+    protected int getMaxLevel() {
+        return REFERENCE.HIGHEST_HUNTER_LEVEL;
+    }
+
+    @Override
+    protected void loadUpdate(NBTTagCompound nbt) {
+
+    }
+
+    @Override
+    protected void writeFullUpdate(NBTTagCompound nbt) {
     }
 }

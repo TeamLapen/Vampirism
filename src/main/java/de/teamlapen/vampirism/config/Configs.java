@@ -33,9 +33,9 @@ public class Configs {
     public static boolean playerCanTurnPlayer;
     private static Configuration main_config;
 
-    public static void init(File configDir, boolean inDev){
-        File mainConfigFile=new File(configDir, REFERENCE.MODID+".cfg");
-        File bloodConfigFile=new File(configDir,REFERENCE.MODID+"_blood_values.txt");
+    public static void init(File configDir, boolean inDev) {
+        File mainConfigFile = new File(configDir, REFERENCE.MODID + ".cfg");
+        File bloodConfigFile = new File(configDir, REFERENCE.MODID + "_blood_values.txt");
 
         try {
 
@@ -54,12 +54,12 @@ public class Configs {
             }
         }
 
-        main_config=new Configuration(mainConfigFile);
+        main_config = new Configuration(mainConfigFile);
         loadConfiguration();
-        VampirismMod.log.i(TAG,"Loaded configuration");
+        VampirismMod.log.i(TAG, "Loaded configuration");
     }
 
-    private static void loadConfiguration(){
+    private static void loadConfiguration() {
         // Categories
         ConfigCategory cat_village = main_config.getCategory(CATEGORY_VILLAGE);
         cat_village.setComment("Here you can configure the village generation");
@@ -72,22 +72,22 @@ public class Configs {
 
         //General
         realism_mode = main_config.getBoolean("vampire_realism_mode", CATEGORY_GENERAL, false, "Changes a few things and changes some default balance values to make it more 'realistic'. You have to reset the balance values and restart MC after changing this.");
-        resetConfigurationInDev = main_config.getBoolean("reset_configuration_in_dev",CATEGORY_GENERAL,true,"Only relevant for developers");
-        VampirismAPI.setDefaultDimsSundamage(main_config.getBoolean("sundamage_default",CATEGORY_GENERAL,false,"Whether you should receive sundamge in unknown dimension or not"));
+        resetConfigurationInDev = main_config.getBoolean("reset_configuration_in_dev", CATEGORY_GENERAL, true, "Only relevant for developers");
+        VampirismAPI.setDefaultDimsSundamage(main_config.getBoolean("sundamage_default", CATEGORY_GENERAL, false, "Whether you should receive sundamge in unknown dimension or not"));
         VampirismAPI.resetConfiguredSundamgeDims();
-        String[] sundamageDims=main_config.getStringList("sundamage_dims",CATEGORY_GENERAL,new String[0],"Specify if individual dimensions should have sundamage. Use e.g. '5:1' to enable sundamage for dimension 5 or '5:0' to disable it");
-        for(String s:sundamageDims){
-            String[] t=s.split(":");
-            if(t.length!=2){
+        String[] sundamageDims = main_config.getStringList("sundamage_dims", CATEGORY_GENERAL, new String[0], "Specify if individual dimensions should have sundamage. Use e.g. '5:1' to enable sundamage for dimension 5 or '5:0' to disable it");
+        for (String s : sundamageDims) {
+            String[] t = s.split(":");
+            if (t.length != 2) {
                 VampirismMod.log.w(TAG, "Cannot understand sundamage dimension line '%s'. Missing separator", s);
                 continue;
             }
             try {
-                int dim=Integer.valueOf(t[0]);
-                boolean type=Integer.valueOf(t[1])!=0?true:false;
-                VampirismAPI.specifyConfiguredSundamageForDim(dim,type);
+                int dim = Integer.valueOf(t[0]);
+                boolean type = Integer.valueOf(t[1]) != 0 ? true : false;
+                VampirismAPI.specifyConfiguredSundamageForDim(dim, type);
             } catch (NumberFormatException e) {
-                VampirismMod.log.w(TAG,"Cannot understand sundamge dimension line '%s'. Failed to convert numbers",s);
+                VampirismMod.log.w(TAG, "Cannot understand sundamge dimension line '%s'. Failed to convert numbers", s);
                 continue;
             }
         }
@@ -103,17 +103,17 @@ public class Configs {
         disable_replaceVanillaNightVision = main_config.getBoolean("disable_replace_night_vision", CATEGORY_DISABLE, false, "Disable replacing vanilla night vision, if disabled the potion is shown to the player all the time");
         disable_factionDisplayChat = main_config.getBoolean("disable_faction_display_chat", CATEGORY_DISABLE, false, "Do not display the player's current faction in chat");
 
-        if(main_config.hasChanged())    {
+        if (main_config.hasChanged()) {
             main_config.save();
         }
     }
 
-    public static void onConfigurationChanged(){
-        VampirismMod.log.i(TAG,"Reloading changed configuration");
+    public static void onConfigurationChanged() {
+        VampirismMod.log.i(TAG, "Reloading changed configuration");
         loadConfiguration();
     }
 
-    public static Configuration getMainConfig(){
+    public static Configuration getMainConfig() {
         return main_config;
     }
 

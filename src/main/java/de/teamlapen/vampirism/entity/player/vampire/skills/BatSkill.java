@@ -40,13 +40,53 @@ public class BatSkill extends DefaultSkill implements ILastingVampireSkill {
     }
 
     @Override
-    public int getMinLevel() {
-        return Balance.vps.BAT_MIN_LEVEL;
+    public int getCooldown() {
+        return 1;
     }
 
     @Override
     public int getDuration(int level) {
         return Integer.MAX_VALUE - 1;
+    }
+
+    @Override
+    public int getMinLevel() {
+        return Balance.vps.BAT_MIN_LEVEL;
+    }
+
+    @Override
+    public int getMinU() {
+        return 64;
+    }
+
+    @Override
+    public int getMinV() {
+        return 0;
+    }
+
+    @Override
+    public String getUnlocalizedName() {
+        return "skill.vampirism.bat_skill";
+    }
+
+    @Override
+    public boolean onActivated(IVampirePlayer vampire) {
+        EntityPlayer player = vampire.getRepresentingPlayer();
+        float oldMax = player.getMaxHealth();
+        float oldHealth = player.getHealth();
+        setModifier(player, true);
+        float newMax = player.getMaxHealth();
+        float mult = newMax / oldMax;
+        float newHealth = mult * oldHealth;
+        if (newHealth < 1) newHealth = 1;
+        player.setHealth(newHealth);
+        setPlayerBat(player, true);
+        return true;
+    }
+
+    @Override
+    public void onActivatedClient(IVampirePlayer vampire) {
+        setPlayerBat(vampire.getRepresentingPlayer(), true);
     }
 
     @Override
@@ -79,41 +119,6 @@ public class BatSkill extends DefaultSkill implements ILastingVampireSkill {
             return true;
         }
         return false;
-    }
-
-    @Override
-    public int getCooldown() {
-        return 1;
-    }
-
-    @Override
-    public String getUnlocalizedName() {
-        return "skill.vampirism.bat_skill";
-    }
-
-    @Override
-    public boolean onActivated(IVampirePlayer vampire) {
-        EntityPlayer player = vampire.getRepresentingPlayer();
-        float oldMax = player.getMaxHealth();
-        float oldHealth = player.getHealth();
-        setModifier(player, true);
-        float newMax = player.getMaxHealth();
-        float mult = newMax / oldMax;
-        float newHealth = mult * oldHealth;
-        if (newHealth < 1) newHealth = 1;
-        player.setHealth(newHealth);
-        setPlayerBat(player, true);
-        return true;
-    }
-
-    @Override
-    public int getMinU() {
-        return 64;
-    }
-
-    @Override
-    public int getMinV() {
-        return 0;
     }
 
     private void setModifier(EntityPlayer player, boolean enabled) {
@@ -165,11 +170,6 @@ public class BatSkill extends DefaultSkill implements ILastingVampireSkill {
         //VampirismMod.log.t( BAT_EYE_HEIGHT+": p "+player.getDefaultEyeHeight()+ ": y "+player.getYOffset()+" :e1 "+player.eyeHeight);
         player.eyeHeight = (bat ? BAT_EYE_HEIGHT - (float) player.getYOffset() : player.getDefaultEyeHeight());// Different from Client side
         //VampirismMod.log.t("2"+ BAT_EYE_HEIGHT+": p "+player.getDefaultEyeHeight()+ ": y "+player.getYOffset()+" :e1 "+player.eyeHeight);
-    }
-
-    @Override
-    public void onActivatedClient(IVampirePlayer vampire) {
-        setPlayerBat(vampire.getRepresentingPlayer(), true);
     }
 
 }

@@ -50,6 +50,7 @@ public class HelperRegistry {
     /**
      * Register a entity {@link de.teamlapen.lib.lib.network.ISyncable.ISyncableExtendedProperties} which should be synced on world join
      * Only works for entities extending {@link EntityLiving}
+     *
      * @param clz
      */
     public static void registerSyncableEntityProperty(String prop, Class<? extends ISyncable.ISyncableExtendedProperties> clz) {

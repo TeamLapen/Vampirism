@@ -19,10 +19,6 @@ import java.util.List;
  * Mod config gui
  */
 public class ModConfigGui extends GuiConfig {
-    public ModConfigGui(GuiScreen parentScreen) {
-        super(parentScreen, getConfigElements(), REFERENCE.MODID, true, true, REFERENCE.NAME, "Main Configuration");
-    }
-
     private static List<IConfigElement> getConfigElements() {
         List<IConfigElement> list = new ArrayList<IConfigElement>();
         list.addAll(new ConfigElement(Configs.getMainConfig().getCategory(Configs.CATEGORY_GENERAL)).getChildElements());
@@ -33,17 +29,17 @@ public class ModConfigGui extends GuiConfig {
         return list;
     }
 
-    public static class BalanceEntry extends GuiConfigEntries.CategoryEntry {
+    public ModConfigGui(GuiScreen parentScreen) {
+        super(parentScreen, getConfigElements(), REFERENCE.MODID, true, true, REFERENCE.NAME, "Main Configuration");
+    }
 
-        public BalanceEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop) {
-            super(owningScreen, owningEntryList, prop);
-        }
+    public static class BalanceEntry extends GuiConfigEntries.CategoryEntry {
 
         @SuppressWarnings("rawtypes")
         private static List<IConfigElement> getConfigElements() {
             List<IConfigElement> list = new ArrayList<IConfigElement>();
-            Collection<BalanceValues> categories=Balance.getCategories().values();
-            for(BalanceValues values:categories){
+            Collection<BalanceValues> categories = Balance.getCategories().values();
+            for (BalanceValues values : categories) {
                 list.add(createDummyElement(values));
             }
 
@@ -51,8 +47,12 @@ public class ModConfigGui extends GuiConfig {
 
         }
 
-        private static DummyConfigElement.DummyCategoryElement createDummyElement(BalanceValues balance){
-            return new DummyConfigElement.DummyCategoryElement("balance_"+balance.getName(),"category.vampirism.balance_"+balance.getName(),new ConfigElement(balance.getConfigCategory()).getChildElements());
+        private static DummyConfigElement.DummyCategoryElement createDummyElement(BalanceValues balance) {
+            return new DummyConfigElement.DummyCategoryElement("balance_" + balance.getName(), "category.vampirism.balance_" + balance.getName(), new ConfigElement(balance.getConfigCategory()).getChildElements());
+        }
+
+        public BalanceEntry(GuiConfig owningScreen, GuiConfigEntries owningEntryList, IConfigElement prop) {
+            super(owningScreen, owningEntryList, prop);
         }
 
         @Override

@@ -16,13 +16,23 @@ public class RegenSkill extends DefaultSkill {
     }
 
     @Override
+    public int getCooldown() {
+        return Balance.vps.REGEN_COOLDOWN;
+    }
+
+    @Override
     public int getMinLevel() {
         return Balance.vps.REGEN_MIN_LEVEL;
     }
 
     @Override
-    public int getCooldown() {
-        return Balance.vps.REGEN_COOLDOWN;
+    public int getMinU() {
+        return 80;
+    }
+
+    @Override
+    public int getMinV() {
+        return 0;
     }
 
     @Override
@@ -37,15 +47,5 @@ public class RegenSkill extends DefaultSkill {
         player.addPotionEffect(new PotionEffect(Potion.regeneration.id, dur, 0));
         player.addPotionEffect(new PotionEffect(ModPotions.thirst.id, dur, 2));
         return true;
-    }
-
-    @Override
-    public int getMinU() {
-        return 80;
-    }
-
-    @Override
-    public int getMinV() {
-        return 0;
     }
 }

@@ -20,11 +20,11 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 loadProperties()
 
 group = "de.teamlapen.vampirism"
-archivesBaseName= "Vampirism"
+archivesBaseName = "Vampirism"
 sourceCompatibility = 1.7
 targetCompatibility = 1.8
 
-def loadProperties(){
+def loadProperties() {
     ext.configFile = file "build.properties"
 
     configFile.withReader {
@@ -33,8 +33,9 @@ def loadProperties(){
         project.ext.config = new ConfigSlurper().parse prop
     }
 
-    ext.mod_version="Test"
+    ext.mod_version = "Test"
 }
+
 apply from: 'gradle/versioning.gradle'
 apply from: 'gradle/forge.gradle'
 apply from: 'gradle/dev.gradle'

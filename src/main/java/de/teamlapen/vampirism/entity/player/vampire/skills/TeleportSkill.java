@@ -29,13 +29,23 @@ public class TeleportSkill extends DefaultSkill {
 //    }
 
     @Override
+    public int getCooldown() {
+        return Balance.vps.TELEPORT_COOLDOWN * 20;
+    }
+
+    @Override
     public int getMinLevel() {
         return Balance.vps.TELEPORT_MIN_LEVEL;
     }
 
     @Override
-    public int getCooldown() {
-        return Balance.vps.TELEPORT_COOLDOWN * 20;
+    public int getMinU() {
+        return 112;
+    }
+
+    @Override
+    public int getMinV() {
+        return 0;
     }
 
     @Override
@@ -84,15 +94,5 @@ public class TeleportSkill extends DefaultSkill {
         player.worldObj.playSoundEffect(ox, oy, oz, "mob.endermen.portal", 1.0F, 1.0F);
         player.worldObj.playSoundAtEntity(player, "mob.endermen.portal", 1.0F, 1.0F);
         return true;
-    }
-
-    @Override
-    public int getMinU() {
-        return 112;
-    }
-
-    @Override
-    public int getMinV() {
-        return 0;
     }
 }

@@ -17,8 +17,8 @@ public class InvisibilitySkill extends DefaultSkill implements ILastingVampireSk
 //    }
 
     @Override
-    public int getMinLevel() {
-        return Balance.vps.INVISIBILITY_MIN_LEVEL;
+    public int getCooldown() {
+        return Balance.vps.INVISIBILITY_COOLDOWN * 20;
     }
 
     @Override
@@ -27,31 +27,18 @@ public class InvisibilitySkill extends DefaultSkill implements ILastingVampireSk
     }
 
     @Override
-    public void onDeactivated(IVampirePlayer vampire) {
-        vampire.getRepresentingPlayer().setInvisible(false);
+    public int getMinLevel() {
+        return Balance.vps.INVISIBILITY_MIN_LEVEL;
     }
 
     @Override
-    public void onReActivated(IVampirePlayer vampire) {
-        onActivated(vampire);
+    public int getMinU() {
+        return 128;
     }
 
     @Override
-    public void onActivatedClient(IVampirePlayer vampire) {
-
-    }
-
-    @Override
-    public boolean onUpdate(IVampirePlayer vampire) {
-        if (!vampire.getRepresentingPlayer().isInvisible()) {
-            vampire.getRepresentingPlayer().setInvisible(true);
-        }
-        return false;
-    }
-
-    @Override
-    public int getCooldown() {
-        return Balance.vps.INVISIBILITY_COOLDOWN * 20;
+    public int getMinV() {
+        return 0;
     }
 
     @Override
@@ -66,12 +53,25 @@ public class InvisibilitySkill extends DefaultSkill implements ILastingVampireSk
     }
 
     @Override
-    public int getMinU() {
-        return 128;
+    public void onActivatedClient(IVampirePlayer vampire) {
+
     }
 
     @Override
-    public int getMinV() {
-        return 0;
+    public void onDeactivated(IVampirePlayer vampire) {
+        vampire.getRepresentingPlayer().setInvisible(false);
+    }
+
+    @Override
+    public void onReActivated(IVampirePlayer vampire) {
+        onActivated(vampire);
+    }
+
+    @Override
+    public boolean onUpdate(IVampirePlayer vampire) {
+        if (!vampire.getRepresentingPlayer().isInvisible()) {
+            vampire.getRepresentingPlayer().setInvisible(true);
+        }
+        return false;
     }
 }

@@ -34,7 +34,7 @@ public class BiteableRegistry {
      */
     private static final Map<String, BiteableEntry> biteables = new HashMap<>();
     private static boolean finished = false;
-    private static  ICreateDefaultConvertingHandler defaultConvertingHandlerCreator;
+    private static ICreateDefaultConvertingHandler defaultConvertingHandlerCreator;
 
     /**
      * @return A map mapping the overlay resource location string to e convertible entity's class
@@ -71,7 +71,7 @@ public class BiteableRegistry {
      * Register a entity class which can be converted using a default {@link IConvertingHandler} and thereby being turned into Vampirim's default {@link IConvertedCreature}
      *
      * @param clazz
-     * @param helper Helper instance for the DefaultHandler to specify some values for the converted creature
+     * @param helper      Helper instance for the DefaultHandler to specify some values for the converted creature
      * @param overlay_loc Location of the overlay texture file
      */
     public static void addConvertible(Class<? extends EntityCreature> clazz, String overlay_loc, IConvertingHandler.IDefaultHelper helper) {
@@ -83,7 +83,7 @@ public class BiteableRegistry {
      *
      * @param clazz
      * @param overlay_loc Location of the overlay texture file. Only required if Vampirism's default Converted Creature renderer is used, if you handle that stuff yourself, null is just fine.
-     * @param handler Handles the conversion
+     * @param handler     Handles the conversion
      */
     public static void addConvertible(Class<? extends EntityCreature> clazz, String overlay_loc, IConvertingHandler handler) {
         convertibles.put(clazz, handler);
@@ -96,14 +96,16 @@ public class BiteableRegistry {
      * @param entity
      * @return A converted creature for the given one
      */
-    public static @Nullable IConvertedCreature convert(EntityCreature entity) {
+    public static
+    @Nullable
+    IConvertedCreature convert(EntityCreature entity) {
         String s = EntityList.getEntityString(entity);
         BiteableEntry b = biteables.get(s);
         if (b != null && b.convertible) {
             return b.convertingHandler.createFrom(entity);
         }
 
-        FMLLog.severe("[VampirismAPI]["+TAG+"] Failed to find convertible entry for %s", entity);
+        FMLLog.severe("[VampirismAPI][" + TAG + "] Failed to find convertible entry for %s", entity);
         return null;
     }
 
@@ -114,10 +116,11 @@ public class BiteableRegistry {
     /**
      * Set the creator for Vampirism's default converting handler
      * FOR INTERNAL USAGE ONLY
+     *
      * @param
      */
-    public static void setDefaultConvertingHandlerCreator(ICreateDefaultConvertingHandler creator){
-        defaultConvertingHandlerCreator=creator;
+    public static void setDefaultConvertingHandlerCreator(ICreateDefaultConvertingHandler creator) {
+        defaultConvertingHandlerCreator = creator;
     }
 
     public static BiteableEntry getEntry(String entity_name) {

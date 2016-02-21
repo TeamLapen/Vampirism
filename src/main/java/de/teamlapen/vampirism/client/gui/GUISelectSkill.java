@@ -23,12 +23,22 @@ public class GuiSelectSkill extends GuiPieMenu<IVampireSkill> {
      */
     private IVampireSkill fakeSkill = new DefaultSkill(null) {
         @Override
+        public int getCooldown() {
+            return 0;
+        }
+
+        @Override
         public int getMinLevel() {
             return 0;
         }
 
         @Override
-        public int getCooldown() {
+        public int getMinU() {
+            return 16;
+        }
+
+        @Override
+        public int getMinV() {
             return 0;
         }
 
@@ -42,16 +52,6 @@ public class GuiSelectSkill extends GuiPieMenu<IVampireSkill> {
             return true;
         }
 
-        @Override
-        public int getMinU() {
-            return 16;
-        }
-
-        @Override
-        public int getMinV() {
-            return 0;
-        }
-
     };
 
     public GuiSelectSkill() {
@@ -59,8 +59,30 @@ public class GuiSelectSkill extends GuiPieMenu<IVampireSkill> {
     }
 
     @Override
+    protected void afterIconDraw(IVampireSkill p, int x, int y) {
+        if (p == fakeSkill) return;
+        // Draw usage indicator
+
+        float active = skillHandler.getPercentageForSkill(p);
+        if (active > 0) {
+
+            float h = active * IS;
+            this.drawGradientRect(x, (int) (y + h), x + IS, y + IS, 0xDDE0E000, 0x88E0E000);
+        } else if (active < 0) {
+
+            float h = (1F + (active)) * IS;
+            this.drawGradientRect(x, (int) (y + h), x + IS, y + IS, 0x880E0E0E, 0xEE0E0E0E);
+        }
+    }
+
+    @Override
     protected ResourceLocation getIconLoc(IVampireSkill item) {
         return item.getIconLoc() == null ? defaultIcons : item.getIconLoc();
+    }
+
+    @Override
+    protected int getMenuKeyCode() {
+        return ModKeys.getKeyCode(ModKeys.KEY.SKILL);
     }
 
     @Override
@@ -79,11 +101,6 @@ public class GuiSelectSkill extends GuiPieMenu<IVampireSkill> {
     }
 
     @Override
-    protected int getMenuKeyCode() {
-        return ModKeys.getKeyCode(ModKeys.KEY.SKILL);
-    }
-
-    @Override
     protected void onElementSelected(IVampireSkill skill) {
         if (skill != fakeSkill) {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLESKILL, "" + SkillRegistry.getIdFromSkill(skill)));
@@ -95,22 +112,5 @@ public class GuiSelectSkill extends GuiPieMenu<IVampireSkill> {
         skillHandler = VampirePlayer.get(this.mc.thePlayer).getSkillHandler();
         elements.addAll(skillHandler.getAvailableSkills());
         elements.add(fakeSkill);
-    }
-
-    @Override
-    protected void afterIconDraw(IVampireSkill p, int x, int y) {
-        if (p == fakeSkill) return;
-        // Draw usage indicator
-
-        float active = skillHandler.getPercentageForSkill(p);
-        if (active > 0) {
-
-            float h = active * IS;
-            this.drawGradientRect(x, (int) (y + h), x + IS, y + IS, 0xDDE0E000, 0x88E0E000);
-        } else if (active < 0) {
-
-            float h = (1F + (active)) * IS;
-            this.drawGradientRect(x, (int) (y + h), x + IS, y + IS, 0x880E0E0E, 0xEE0E0E0E);
-        }
     }
 }

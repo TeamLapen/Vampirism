@@ -14,12 +14,13 @@ public class BalanceHunterPlayer extends BalanceValues {
     public int STRENGTH_LCAP;
     @DefaultDouble(value = 0.5D, minValue = 0.5D, maxValue = 1.0D, name = "Strength Modifier Type", comment = "0.5 for square root, 1 for linear")
     public double STRENGTH_TYPE;
+
     /**
      * Creates a configuration for balance values
      *
      * @param directory
      */
-    public BalanceHunterPlayer( File directory) {
+    public BalanceHunterPlayer(File directory) {
         super("hunter_player", directory);
     }
 

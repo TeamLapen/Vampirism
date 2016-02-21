@@ -1,20 +1,25 @@
 {
-    "targets": [
-        "swap"
-    ],
-    "passes": [
+  "targets": [
+    "swap"
+  ],
+  "passes": [
+    {
+      "name": "color_convolve",
+      "intarget": "minecraft:main",
+      "outtarget": "swap",
+      "uniforms": [
         {
-            "name": "color_convolve",
-            "intarget": "minecraft:main",
-            "outtarget": "swap",
-            "uniforms": [
-                { "name": "Saturation", "values": [ 2 ] }
-            ]
-        },
-        {
-            "name": "blit",
-            "intarget": "swap",
-            "outtarget": "minecraft:main"
+          "name": "Saturation",
+          "values": [
+            2
+          ]
         }
-    ]
+      ]
+    },
+    {
+      "name": "blit",
+      "intarget": "swap",
+      "outtarget": "minecraft:main"
+    }
+  ]
 }

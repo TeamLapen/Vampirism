@@ -24,9 +24,9 @@ public class VampirismAPI {
      * One blood in the players blood stats represents this amount of mB fluid blood
      */
     public static final int FOOD_TO_FLUID_BLOOD = 100;
-    private final static HashMap<Integer,Boolean> sundamageDims=new HashMap<Integer, Boolean>();
-    private final static HashMap<Integer,Boolean> sundamageConfiguredDims =new HashMap<Integer, Boolean>();
-    private final static Set<Integer> noSundamageBiomes=new CopyOnWriteArraySet<Integer>();
+    private final static HashMap<Integer, Boolean> sundamageDims = new HashMap<Integer, Boolean>();
+    private final static HashMap<Integer, Boolean> sundamageConfiguredDims = new HashMap<Integer, Boolean>();
+    private final static Set<Integer> noSundamageBiomes = new CopyOnWriteArraySet<Integer>();
     /**
      * Vampire Player Faction
      * Filled during pre-init.
@@ -37,12 +37,12 @@ public class VampirismAPI {
      * Filled during pre-init.
      */
     public static PlayableFaction<IHunterPlayer> HUNTER_FACTION;
-    private static boolean defaultSundamage=false;
+    private static boolean defaultSundamage = false;
 
     static {
-        sundamageDims.put(0,true);
-        sundamageDims.put(-1,false);
-        sundamageDims.put(1,false);
+        sundamageDims.put(0, true);
+        sundamageDims.put(-1, false);
+        sundamageDims.put(1, false);
     }
 
     /**
@@ -56,10 +56,11 @@ public class VampirismAPI {
     /**
      * Specifies the default value for non specified dimensions
      * FOR INTERNAL USAGE ONLY
+     *
      * @param val
      */
-    public static void setDefaultDimsSundamage(boolean val){
-        defaultSundamage=val;
+    public static void setDefaultDimsSundamage(boolean val) {
+        defaultSundamage = val;
     }
 
     /**
@@ -77,6 +78,7 @@ public class VampirismAPI {
 
     /**
      * Specifies if vampires should get sundamage in this dimension
+     *
      * @param dimensionId
      * @param sundamage
      */
@@ -86,6 +88,7 @@ public class VampirismAPI {
 
     /**
      * Checkd if vampirs can get sundamage in that biome
+     *
      * @param id
      * @return
      */
@@ -104,6 +107,7 @@ public class VampirismAPI {
     /**
      * Adds settings from Vampirism's config file.
      * FOR INTERNAL USAGE ONLY
+     *
      * @param dimensionId
      * @param sundamage
      */
@@ -113,6 +117,7 @@ public class VampirismAPI {
 
     /**
      * Checks if vampires can get sundamge in that dimension
+     *
      * @param dim
      * @return
      */
@@ -121,7 +126,7 @@ public class VampirismAPI {
         if (r == null) {
             r = sundamageDims.get(dim);
         }
-        return r == null ? defaultSundamage:r;
+        return r == null ? defaultSundamage : r;
     }
 
 }

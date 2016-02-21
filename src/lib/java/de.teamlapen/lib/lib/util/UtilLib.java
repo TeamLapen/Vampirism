@@ -29,9 +29,9 @@ public class UtilLib {
     /**
      * Gets players looking spot (blocks only).
      * TODO check if this still works in 1.8
+     *
      * @param player
-     * @param restriction
-     *            Max distance or 0 for player reach distance or -1 for not restricted
+     * @param restriction Max distance or 0 for player reach distance or -1 for not restricted
      * @return The position as a MovingObjectPosition, null if not existent cf: https ://github.com/bspkrs/bspkrsCore/blob/master/src/main/java/bspkrs /util/CommonUtils.java
      */
     public static MovingObjectPosition getPlayerLookingSpot(EntityPlayer player, double restriction) {
@@ -39,7 +39,7 @@ public class UtilLib {
         float pitch = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * scale;
         float yaw = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * scale;
         double x = player.prevPosX + (player.posX - player.prevPosX) * scale;
-        double y = player.prevPosY + (player.posY - player.prevPosY) * scale + 1.62D ;
+        double y = player.prevPosY + (player.posY - player.prevPosY) * scale + 1.62D;
         double z = player.prevPosZ + (player.posZ - player.prevPosZ) * scale;
         Vec3 vector1 = new Vec3(x, y, z);
         float cosYaw = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
@@ -130,8 +130,7 @@ public class UtilLib {
      * @param x
      * @param y
      * @param z
-     * @param sound
-     *            If a teleport sound should be played
+     * @param sound  If a teleport sound should be played
      * @return Wether the teleport was successful or not
      */
     public static boolean teleportTo(EntityLiving entity, double x, double y, double z, boolean sound) {
@@ -142,7 +141,7 @@ public class UtilLib {
         entity.posY = y;
         entity.posZ = z;
         boolean flag = false;
-        BlockPos blockPos=entity.getPosition();
+        BlockPos blockPos = entity.getPosition();
 
 
         if (entity.worldObj.isBlockLoaded(blockPos)) {
@@ -154,7 +153,7 @@ public class UtilLib {
                     flag1 = true;
                 else {
                     --entity.posY;
-                    blockPos=blockPos.down();
+                    blockPos = blockPos.down();
                 }
             }
 
@@ -195,34 +194,36 @@ public class UtilLib {
     /**
      * Spawn multiple particles, with a small offset between
      */
-    public static void spawnParticles(World world,EnumParticleTypes particleType, double xCoord, double yCoord, double zCoord, double xOffset, double yOffset, double zOffset, int amount,int... extra){
-        double x=xCoord;
-        double y=yCoord;
-        double z=zCoord;
-        for(int i=0;i<amount;i++){
-            world.spawnParticle(particleType, x, y,z,xOffset,yOffset,zOffset,extra);
+    public static void spawnParticles(World world, EnumParticleTypes particleType, double xCoord, double yCoord, double zCoord, double xOffset, double yOffset, double zOffset, int amount, int... extra) {
+        double x = xCoord;
+        double y = yCoord;
+        double z = zCoord;
+        for (int i = 0; i < amount; i++) {
+            world.spawnParticle(particleType, x, y, z, xOffset, yOffset, zOffset, extra);
             Random ran = world.rand;
             x = xCoord + (ran.nextGaussian());
             y = yCoord + (ran.nextGaussian());
-             z = zCoord + (ran.nextGaussian());
+            z = zCoord + (ran.nextGaussian());
         }
     }
+
     /**
      * Sends the component message to all players except the given one.
      * Only use on server or common side
+     *
      * @param player
      * @param message
      */
-    public static void sendMessageToAllExcept(EntityPlayer player,IChatComponent message){
-        for(Object o: MinecraftServer.getServer().getConfigurationManager().playerEntityList){
-            if(!o.equals(player)){
-                ((EntityPlayer)o).addChatComponentMessage(message);
+    public static void sendMessageToAllExcept(EntityPlayer player, IChatComponent message) {
+        for (Object o : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
+            if (!o.equals(player)) {
+                ((EntityPlayer) o).addChatComponentMessage(message);
             }
         }
     }
 
-    public static void sendMessageToAll(IChatComponent message){
-        sendMessageToAllExcept(null,message);
+    public static void sendMessageToAll(IChatComponent message) {
+        sendMessageToAllExcept(null, message);
     }
 
     /**
@@ -252,46 +253,50 @@ public class UtilLib {
     /**
      * Stores the given pos with in the tagcompound using base.
      * Can be retrieved again with {@link UtilLib#readPos(NBTTagCompound, String)}
+     *
      * @param nbt
      * @param base
      * @param pos
      */
-    public static void write(NBTTagCompound nbt,String base,BlockPos pos){
-        nbt.setInteger(base+"_x",pos.getX());
-        nbt.setInteger(base+"_y",pos.getY());
-        nbt.setInteger(base+"_z",pos.getZ());
+    public static void write(NBTTagCompound nbt, String base, BlockPos pos) {
+        nbt.setInteger(base + "_x", pos.getX());
+        nbt.setInteger(base + "_y", pos.getY());
+        nbt.setInteger(base + "_z", pos.getZ());
     }
 
     /**
      * Reads a position written by {@link UtilLib#write(NBTTagCompound, String, BlockPos)}.
+     *
      * @param nbt
      * @param base
      * @return
      */
-    public static BlockPos readPos(NBTTagCompound nbt, String base){
-        return new BlockPos(nbt.getInteger(base+"_x"),nbt.getInteger(base+"_y"),nbt.getInteger(base+"_z"));
+    public static BlockPos readPos(NBTTagCompound nbt, String base) {
+        return new BlockPos(nbt.getInteger(base + "_x"), nbt.getInteger(base + "_y"), nbt.getInteger(base + "_z"));
     }
 
     /**
      * Prefixes each of the strings with the given prefix
+     *
      * @param prefix
      * @param strings
      * @return
      */
-    public static String[] prefix(String prefix,String... strings){
-        String[] result=new String[strings.length];
-        for(int i=0;i<strings.length;i++){
-            result[i]=prefix+strings[i];
+    public static String[] prefix(String prefix, String... strings) {
+        String[] result = new String[strings.length];
+        for (int i = 0; i < strings.length; i++) {
+            result[i] = prefix + strings[i];
         }
         return result;
     }
 
     /**
      * Creates a predicate which checks for the given class
+     *
      * @param clazz
      * @return
      */
-    public static Predicate getPredicateForClass(final Class clazz){
+    public static Predicate getPredicateForClass(final Class clazz) {
         return new Predicate() {
             @Override
             public boolean apply(Object input) {

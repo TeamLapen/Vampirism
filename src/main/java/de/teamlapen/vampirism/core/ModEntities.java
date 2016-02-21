@@ -70,25 +70,25 @@ public class ModEntities {
     /**
      * Register convertibles for vanilla creatures and maybe for future vampirism creature as well
      */
-    private static void registerConvertibles(){
+    private static void registerConvertibles() {
         String base = REFERENCE.MODID + ":textures/entity/vanilla/%sOverlay.png";
         BiteableRegistry.addConvertible(EntityCow.class, String.format(base, "cow"));
         BiteableRegistry.addConvertible(EntityPig.class, String.format(base, "pig"));
         BiteableRegistry.addConvertible(EntityOcelot.class, String.format(base, "cat"));
         BiteableRegistry.addConvertible(EntityHorse.class, String.format(base, "horse"));
-        BiteableRegistry.addConvertible(EntitySheep.class,String.format(base,"sheep"),new EntityConvertedSheep.ConvertingSheepHandler());
+        BiteableRegistry.addConvertible(EntitySheep.class, String.format(base, "sheep"), new EntityConvertedSheep.ConvertingSheepHandler());
     }
 
     private static void init(FMLInitializationEvent event) {
-        BiomeGenBase[] allBiomes=BiomeGenBase.getBiomeGenArray();
-        allBiomes= Arrays.copyOf(allBiomes,allBiomes.length);
-        allBiomes[9]=null;//Remove nether and end
-        allBiomes[8]=null;
+        BiomeGenBase[] allBiomes = BiomeGenBase.getBiomeGenArray();
+        allBiomes = Arrays.copyOf(allBiomes, allBiomes.length);
+        allBiomes[9] = null;//Remove nether and end
+        allBiomes[8] = null;
 
         /**
          * After setting this up this array will contain only biomes in which zombies can spawn.
          */
-        BiomeGenBase[] zombieBiomes=Arrays.copyOf(allBiomes,allBiomes.length);
+        BiomeGenBase[] zombieBiomes = Arrays.copyOf(allBiomes, allBiomes.length);
         for (int i = 0; i < zombieBiomes.length; i++) {
             BiomeGenBase b = zombieBiomes[i];
             if (b != null) {
@@ -111,10 +111,10 @@ public class ModEntities {
         //BiomeGenBase[] biomes = Iterators.toArray(Iterators.filter(Iterators.forArray(allBiomes), Predicates.notNull()), BiomeGenBase.class);
         zombieBiomes = Iterators.toArray(Iterators.filter(Iterators.forArray(zombieBiomes), Predicates.notNull()), BiomeGenBase.class);
 
-        registerEntity(EntityBlindingBat.class,BLINDING_BAT_NAME,false);
-        registerEntity(EntityGhost.class,GHOST_NAME,true);
-        registerEntity(EntityConvertedCreature.class,CONVERTED_CREATURE,false);
-        registerEntity(EntityConvertedSheep.class,CONVERTED_SHEEP,false);
+        registerEntity(EntityBlindingBat.class, BLINDING_BAT_NAME, false);
+        registerEntity(EntityGhost.class, GHOST_NAME, true);
+        registerEntity(EntityConvertedCreature.class, CONVERTED_CREATURE, false);
+        registerEntity(EntityConvertedSheep.class, CONVERTED_SHEEP, false);
         registerConvertibles();
         //TODO init spawn egg
     }

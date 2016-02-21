@@ -16,26 +16,6 @@ public abstract class DefaultSkill implements IVampireSkill {
         this.icons = icons;
     }
 
-    @Override
-    public PERM canUse(IVampirePlayer vampire) {
-        if (getMinLevel() == -1)
-            return PERM.DISABLED;
-        if (vampire.getLevel() < getMinLevel())
-            return PERM.LEVEL_TO_LOW;
-        return (canBeUsedBy(vampire) ? PERM.ALLOWED : PERM.DISALLOWED);
-    }
-
-    /**
-     * @return The minimum level which is required to use this skill
-     */
-    public abstract int getMinLevel();
-
-
-    @Override
-    public String toString() {
-        return super.toString() + " (" + SkillRegistry.getKeyFromSkill(this) + ")";
-    }
-
     /**
      * Can be overriden to check addidional requirements
      *
@@ -46,10 +26,28 @@ public abstract class DefaultSkill implements IVampireSkill {
         return true;
     }
 
+    @Override
+    public PERM canUse(IVampirePlayer vampire) {
+        if (getMinLevel() == -1)
+            return PERM.DISABLED;
+        if (vampire.getLevel() < getMinLevel())
+            return PERM.LEVEL_TO_LOW;
+        return (canBeUsedBy(vampire) ? PERM.ALLOWED : PERM.DISALLOWED);
+    }
 
     @Override
     public ResourceLocation getIconLoc() {
         return icons;
+    }
+
+    /**
+     * @return The minimum level which is required to use this skill
+     */
+    public abstract int getMinLevel();
+
+    @Override
+    public String toString() {
+        return super.toString() + " (" + SkillRegistry.getKeyFromSkill(this) + ")";
     }
 
 }

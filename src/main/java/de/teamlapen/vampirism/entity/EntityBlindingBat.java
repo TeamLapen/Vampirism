@@ -22,9 +22,14 @@ public class EntityBlindingBat extends EntityBat {
     }
 
     @Override
+    public boolean getCanSpawnHere() {
+        return this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox()) && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox()).isEmpty() && !this.worldObj.isAnyLiquid(this.getEntityBoundingBox());
+    }
+
+    @Override
     public void onUpdate() {
         super.onUpdate();
-        if (restrictLiveSpan&&this.ticksExisted > Balance.mobProps.BLINDING_BAT_LIVE_SPAWN) {
+        if (restrictLiveSpan && this.ticksExisted > Balance.mobProps.BLINDING_BAT_LIVE_SPAWN) {
             this.attackEntityFrom(DamageSource.magic, 10F);
         }
         if (!this.worldObj.isRemote) {
@@ -37,11 +42,7 @@ public class EntityBlindingBat extends EntityBat {
         }
     }
 
-    public void restrictLiveSpan(){
-        this.restrictLiveSpan=true;
-    }
-
-    @Override public boolean getCanSpawnHere() {
-        return this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox()) && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox()).isEmpty() && !this.worldObj.isAnyLiquid(this.getEntityBoundingBox());
+    public void restrictLiveSpan() {
+        this.restrictLiveSpan = true;
     }
 }

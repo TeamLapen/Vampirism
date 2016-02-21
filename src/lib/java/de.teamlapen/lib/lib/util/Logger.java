@@ -8,7 +8,6 @@ import org.apache.logging.log4j.LogManager;
  * Logging class, which provides different methods for different log levels and always adds a tag which states to what the log is related
  *
  * @author Max
- *
  */
 public class Logger {
 
@@ -21,10 +20,10 @@ public class Logger {
      */
     public boolean inDev = false;
 
-    public Logger(String modid,String packagename) {
-       logger = LogManager.getLogger(modid);
-        this.packagename=packagename;
-        this.modid=modid;
+    public Logger(String modid, String packagename) {
+        logger = LogManager.getLogger(modid);
+        this.packagename = packagename;
+        this.modid = modid;
     }
 
     public void d(String tag, String format, Object... data) {
@@ -45,21 +44,13 @@ public class Logger {
         logger.catching(Level.ERROR, t);
     }
 
-    private String getLogLocation(Throwable t) {
-        final StackTraceElement[] stack = t.getStackTrace();
-        if (stack.length < 3)
-            return "";
-        final StackTraceElement caller = stack[2];
-        String msg = caller.getClassName() + "." + caller.getMethodName() + "(" + caller.getFileName() + ":" + caller.getLineNumber() + ")";
-        return msg.replace(packagename, "{"+modid+"}");
-    }
-
     public void i(String tag, String format, Object... data) {
         log(Level.INFO, tag, format, data);
     }
 
     /**
      * Should be used for test log calls so they can be easily found and removed
+     *
      * @param format
      * @param data
      */
@@ -67,14 +58,23 @@ public class Logger {
         log(Level.INFO, "Test", format, data);
     }
 
+    public void w(String tag, String format, Object... data) {
+        log(Level.WARN, tag, format, data);
+    }
+
+    private String getLogLocation(Throwable t) {
+        final StackTraceElement[] stack = t.getStackTrace();
+        if (stack.length < 3)
+            return "";
+        final StackTraceElement caller = stack[2];
+        String msg = caller.getClassName() + "." + caller.getMethodName() + "(" + caller.getFileName() + ":" + caller.getLineNumber() + ")";
+        return msg.replace(packagename, "{" + modid + "}");
+    }
+
     private void log(Level level, String tag, String format, Object... data) {
         if (tag == null) {
             tag = getLogLocation(stackInfo.fillInStackTrace());
         }
         logger.log(level, '[' + tag + ']' + String.format(format, data));
-    }
-
-    public void w(String tag, String format, Object... data) {
-        log(Level.WARN, tag, format, data);
     }
 }

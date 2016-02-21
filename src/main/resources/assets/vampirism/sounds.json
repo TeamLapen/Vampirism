@@ -1,56 +1,52 @@
 {
-    "entity.vampire.scream":
-    {
-        "category": "hostile",
-        "sounds":
-        [
-          "entity/vampire/scream"
-        ]
-    },
-    "player.bite":
-    {
-        "category": "player",
-        "sounds":
-        [
-          "entity/vampire/bite",
-          "entity/vampire/bite_long"
-        ]
-    },
-     "ambient.scary": {
-    	"category": "ambient",
-        "sounds": [
-            {
-                "name": "ambient/scary",
-                "stream":true
-            }
-        ]
-    },
-    "ambient.castle":{
-      "category":"ambient",
-      "sounds":[
-        {
-          "name":"ambient/blood_dripping",
-          "stream":true
-        },
-        {
-          "name":"ambient/blood_dripping2",
-          "stream":true
-        }
-      ]
-    },
-    "ambient.vampire_biome":{
-      "category":"ambient",
-      "sounds":[
-        {
-          "name":"ambient/ghosty_ambient",
-          "stream":true
-        }
-      ]
-    },
-    "coffin_lid":{
-      "category":"ambient",
-      "sounds": [
-          "fx/coffin_lid_slide"
-      ]
-    }
+  "entity.vampire.scream": {
+    "category": "hostile",
+    "sounds": [
+      "entity/vampire/scream"
+    ]
+  },
+  "player.bite": {
+    "category": "player",
+    "sounds": [
+      "entity/vampire/bite",
+      "entity/vampire/bite_long"
+    ]
+  },
+  "ambient.scary": {
+    "category": "ambient",
+    "sounds": [
+      {
+        "name": "ambient/scary",
+        "stream": true
+      }
+    ]
+  },
+  "ambient.castle": {
+    "category": "ambient",
+    "sounds": [
+      {
+        "name": "ambient/blood_dripping",
+        "stream": true
+      },
+      {
+        "name": "ambient/blood_dripping2",
+        "stream": true
+      }
+    ]
+  },
+  "ambient.vampire_biome": {
+    "category": "ambient",
+    "sounds": [
+      {
+        "name": "ambient/ghosty_ambient",
+        "stream": true
+      }
+    ]
+  },
+  "coffin_lid": {
+    "category": "ambient",
+    "sounds": [
+      "fx/coffin_lid_slide"
+    ]
+  }
 }

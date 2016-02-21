@@ -5,28 +5,25 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.convertible.BiteableRegistry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
-import de.teamlapen.vampirism.api.entity.factions.Faction;
 import de.teamlapen.vampirism.entity.EntityVampireBase;
-import de.teamlapen.vampirism.entity.EntityVampirism;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
 /**
- *  Converted creature class.
+ * Converted creature class.
  * Contains (stores and syncs) a normal Entity for rendering purpose
  */
-public class EntityConvertedCreature<T extends EntityCreature> extends EntityVampireBase implements IConvertedCreature<T> ,ISyncable{
+public class EntityConvertedCreature<T extends EntityCreature> extends EntityVampireBase implements IConvertedCreature<T>, ISyncable {
+    private final static String TAG = "ConvCreature";
     private T entityCreature;
     private boolean entityChanged = false;
 
-    private final static String TAG="ConvCreature";
     public EntityConvertedCreature(World world) {
         super(world);
         //TODO make something that applies to all IHunter this.tasks.addTask(1, new EntityAIAvoidEntity(this, EntityHunterBase.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.05));
@@ -45,67 +42,18 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     }
 
     @Override
-    public void setEntityCreature(T creature) {
-        if ((creature == null && entityCreature != null)) {
-            entityChanged = true;
-            entityCreature = null;
-        } else if (creature != null) {
-            if (!creature.equals(entityCreature)) {
-                entityCreature = creature;
-                entityChanged = true;
-                this.setSize(creature.width, creature.height);
-            }
-        }
-        if (entityCreature != null && getConvertedHelper() == null) {
-            entityCreature = null;
-            VampirismMod.log.w(TAG, "Cannot find converting handler for converted creature %s (%s)", this, entityCreature);
-        }
+    public String getName() {
+        return StatCollector.translateToLocal("entity.vampirism.vampire.name") + " " + (nil() ? super.getName() : entityCreature.getName());
     }
 
-
-    public T getOldCreature(){
+    public T getOldCreature() {
         return entityCreature;
     }
-    @Override
-    public void writeEntityToNBT(NBTTagCompound nbt) {
-        super.writeEntityToNBT(nbt);
-            writeOldEntityToNBT(nbt);
-
-    }
-
-    /**
-     * Write the old entity to nbt
-     * @param nbt
-     */
-    private void writeOldEntityToNBT(NBTTagCompound nbt){
-        if(!nil()){
-            NBTTagCompound entity = new NBTTagCompound();
-            entityCreature.isDead = false;
-            entityCreature.writeToNBTOptional(entity);
-            entityCreature.isDead = true;
-            nbt.setTag("entity_old", entity);
-        }
-
-    }
 
     @Override
-    public void onUpdate() {
-        super.onUpdate();
-        if (!worldObj.isRemote && entityCreature == null) {
-            VampirismMod.log.t("Setting dead");
-            this.setDead();
-        }
-    }
-    @Override
-    public void readEntityFromNBT(NBTTagCompound nbt) {
-        super.readEntityFromNBT(nbt);
+    public void loadUpdateFromNBT(NBTTagCompound nbt) {
         if (nbt.hasKey("entity_old")) {
             setEntityCreature((T) EntityList.createEntityFromNBT(nbt.getCompoundTag("entity_old"), worldObj));
-            if(nil()){
-                VampirismMod.log.w(TAG,"Failed to create old entity %s. Maybe the entity does not exist anymore",nbt.getCompoundTag("entity_old"));
-            }
-        } else {
-            VampirismMod.log.w(TAG,"Saved entity did not have a old entity");
         }
     }
 
@@ -152,18 +100,69 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     }
 
     @Override
-    public void loadUpdateFromNBT(NBTTagCompound nbt) {
-        if (nbt.hasKey("entity_old")) {
-            setEntityCreature((T) EntityList.createEntityFromNBT(nbt.getCompoundTag("entity_old"), worldObj));
+    public void onUpdate() {
+        super.onUpdate();
+        if (!worldObj.isRemote && entityCreature == null) {
+            VampirismMod.log.t("Setting dead");
+            this.setDead();
         }
     }
 
-
     @Override
-    protected boolean canDespawn() {
-        return true;//TODO maybe change to false
+    public void playLivingSound() {
+        if (!nil()) {
+            entityCreature.playLivingSound();
+        }
     }
 
+    @Override
+    public void readEntityFromNBT(NBTTagCompound nbt) {
+        super.readEntityFromNBT(nbt);
+        if (nbt.hasKey("entity_old")) {
+            setEntityCreature((T) EntityList.createEntityFromNBT(nbt.getCompoundTag("entity_old"), worldObj));
+            if (nil()) {
+                VampirismMod.log.w(TAG, "Failed to create old entity %s. Maybe the entity does not exist anymore", nbt.getCompoundTag("entity_old"));
+            }
+        } else {
+            VampirismMod.log.w(TAG, "Saved entity did not have a old entity");
+        }
+    }
+
+    @Override
+    public void setEntityCreature(T creature) {
+        if ((creature == null && entityCreature != null)) {
+            entityChanged = true;
+            entityCreature = null;
+        } else if (creature != null) {
+            if (!creature.equals(entityCreature)) {
+                entityCreature = creature;
+                entityChanged = true;
+                this.setSize(creature.width, creature.height);
+            }
+        }
+        if (entityCreature != null && getConvertedHelper() == null) {
+            entityCreature = null;
+            VampirismMod.log.w(TAG, "Cannot find converting handler for converted creature %s (%s)", this, entityCreature);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "[" + super.toString() + " representing " + entityCreature + "]";
+    }
+
+    @Override
+    public void writeEntityToNBT(NBTTagCompound nbt) {
+        super.writeEntityToNBT(nbt);
+        writeOldEntityToNBT(nbt);
+
+    }
+
+    @Override
+    public void writeFullUpdateToNBT(NBTTagCompound nbt) {
+        writeOldEntityToNBT(nbt);
+
+    }
 
     @Override
     protected void applyEntityAttributes() {
@@ -172,10 +171,30 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     }
 
     @Override
-    public void writeFullUpdateToNBT(NBTTagCompound nbt) {
-        writeOldEntityToNBT(nbt);
-
+    protected boolean canDespawn() {
+        return true;//TODO maybe change to false
     }
+
+    @Override
+    protected void dropFewItems(boolean p_70628_1_, int p_70628_2_) {
+        getConvertedHelper().dropConvertedItems(entityCreature, p_70628_1_, p_70628_2_);
+    }
+
+    /**
+     * @return The {@link de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler.IDefaultHelper} for this creature
+     */
+    protected IConvertingHandler.IDefaultHelper getConvertedHelper() {
+        IConvertingHandler handler = BiteableRegistry.getEntry(entityCreature).convertingHandler;
+        if (handler instanceof DefaultConvertingHandler) {
+            return ((DefaultConvertingHandler) handler).getHelper();
+        }
+        return null;
+    }
+
+    protected boolean nil() {
+        return entityCreature == null;
+    }
+
     protected void updateEntityAttributes() {
         if (!nil()) {
             IConvertingHandler.IDefaultHelper helper = getConvertedHelper();
@@ -191,42 +210,19 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
 
     }
 
-    @Override
-    public String getName() {
-        return StatCollector.translateToLocal("entity.vampirism.vampire.name") + " " + (nil() ? super.getName() : entityCreature.getName());
-    }
-
-
-
-    @Override
-    protected void dropFewItems(boolean p_70628_1_, int p_70628_2_) {
-        getConvertedHelper().dropConvertedItems(entityCreature,p_70628_1_,p_70628_2_);
-    }
-
-    @Override
-    public String toString() {
-        return "[" + super.toString() + " representing " + entityCreature + "]";
-    }
-
-    @Override
-    public void playLivingSound() {
-        if (!nil()) {
-            entityCreature.playLivingSound();
-        }
-    }
-
     /**
-     * @return The {@link de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler.IDefaultHelper} for this creature
+     * Write the old entity to nbt
+     *
+     * @param nbt
      */
-    protected IConvertingHandler.IDefaultHelper getConvertedHelper(){
-        IConvertingHandler handler=BiteableRegistry.getEntry(entityCreature).convertingHandler;
-        if(handler instanceof DefaultConvertingHandler){
-            return ((DefaultConvertingHandler) handler).getHelper();
+    private void writeOldEntityToNBT(NBTTagCompound nbt) {
+        if (!nil()) {
+            NBTTagCompound entity = new NBTTagCompound();
+            entityCreature.isDead = false;
+            entityCreature.writeToNBTOptional(entity);
+            entityCreature.isDead = true;
+            nbt.setTag("entity_old", entity);
         }
-        return null;
-    }
 
-    protected boolean nil() {
-        return entityCreature == null;
     }
 }

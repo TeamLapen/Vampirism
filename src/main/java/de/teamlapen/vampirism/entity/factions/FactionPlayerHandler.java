@@ -19,6 +19,13 @@ import net.minecraft.world.World;
 public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperties, IFactionPlayerHandler {
     private final static String TAG = "FactionPlayerHandler";
 
+    public static FactionPlayerHandler get(EntityPlayer player) {
+        return (FactionPlayerHandler) player.getExtendedProperties(VampirismAPI.FACTION_PLAYER_HANDLER_PROP);
+    }
+
+    public static void register(EntityPlayer player) {
+        player.registerExtendedProperties(VampirismAPI.FACTION_PLAYER_HANDLER_PROP, new FactionPlayerHandler(player));
+    }
     private final EntityPlayer player;
     private PlayableFaction currentFaction = null;
     private int currentLevel = 0;
@@ -27,18 +34,42 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
         this.player = player;
     }
 
-    public static FactionPlayerHandler get(EntityPlayer player) {
-        return (FactionPlayerHandler) player.getExtendedProperties(VampirismAPI.FACTION_PLAYER_HANDLER_PROP);
+    @Override
+    public boolean canJoin(PlayableFaction faction) {
+        return currentFaction == null;
     }
-
-    public static void register(EntityPlayer player) {
-        player.registerExtendedProperties(VampirismAPI.FACTION_PLAYER_HANDLER_PROP, new FactionPlayerHandler(player));
-    }
-
 
     @Override
-    public int getTheEntityID() {
-        return player.getEntityId();
+    public boolean canLeaveFaction() {
+        if (currentFaction == null) return true;
+        return currentFaction.getProp(player).canLeaveFaction();
+    }
+
+    public void copyFrom(EntityPlayer old) {
+        FactionPlayerHandler oldP = get(old);
+        currentFaction = oldP.currentFaction;
+        currentLevel = oldP.currentLevel;
+        notifyFaction(oldP.currentFaction, oldP.currentLevel);
+    }
+
+    @Override
+    public PlayableFaction getCurrentFaction() {
+        return currentFaction;
+    }
+
+    @Override
+    public IFactionPlayer getCurrentFactionPlayer() {
+        return currentFaction == null ? null : currentFaction.getProp(player);
+    }
+
+    @Override
+    public int getCurrentLevel() {
+        return currentLevel;
+    }
+
+    @Override
+    public int getCurrentLevel(PlayableFaction f) {
+        return isInFaction(f) ? currentLevel : 0;
     }
 
     @Override
@@ -46,14 +77,25 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
         return VampirismAPI.FACTION_PLAYER_HANDLER_PROP;
     }
 
+    @Override
+    public int getTheEntityID() {
+        return player.getEntityId();
+    }
 
     @Override
-    public void saveNBTData(NBTTagCompound compound) {
-        if (currentFaction != null) {
-            NBTTagCompound nbt = new NBTTagCompound();
-            nbt.setString("faction", currentFaction.prop);
-            nbt.setInteger("level", currentLevel);
-            compound.setTag(getPropertyKey(), nbt);
+    public void init(Entity entity, World world) {
+
+    }
+
+    @Override
+    public boolean isInFaction(PlayableFaction f) {
+        return currentFaction == f;
+    }
+
+    @Override
+    public void joinFaction(PlayableFaction faction) {
+        if (canJoin(faction)) {
+            setFactionAndLevel(faction, 1);
         }
     }
 
@@ -73,95 +115,32 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
     }
 
     @Override
-    public void init(Entity entity, World world) {
-
-    }
-
-    private PlayableFaction getFactionFromString(String f) {
-        for (PlayableFaction p : FactionRegistry.getPlayableFactions()) {
-            if (p.prop.equals(f)) {
-                return p;
+    public void loadUpdateFromNBT(NBTTagCompound nbt) {
+        PlayableFaction old = currentFaction;
+        int oldLevel = currentLevel;
+        String f = nbt.getString("faction");
+        if ("null".equals(f)) {
+            currentFaction = null;
+            currentLevel = 0;
+        } else {
+            currentFaction = getFactionFromString(f);
+            if (currentFaction == null) {
+                VampirismMod.log.e(TAG, "Cannot find faction %s on client. You have to register factions on both sides!", f);
+                currentLevel = 0;
+            } else {
+                currentLevel = nbt.getInteger("level");
             }
         }
-        return null;
-    }
-
-    /**
-     * Called when the faction has changed
-     */
-    private void onChangedFaction() {
-        player.refreshDisplayName();
-    }
-
-
-    private void sync(boolean all) {
-        HelperLib.sync(this, player, all);
+        notifyFaction(old, oldLevel);
     }
 
     @Override
-    public PlayableFaction getCurrentFaction() {
-        return currentFaction;
-    }
-
-    @Override
-    public IFactionPlayer getCurrentFactionPlayer() {
-        return currentFaction == null ? null : currentFaction.getProp(player);
-    }
-
-    @Override
-    public boolean isInFaction(PlayableFaction f) {
-        return currentFaction == f;
-    }
-
-    @Override
-    public int getCurrentLevel() {
-        return currentLevel;
-    }
-
-    @Override
-    public int getCurrentLevel(PlayableFaction f) {
-        return isInFaction(f) ? currentLevel : 0;
-    }
-
-    @Override
-    public void joinFaction(PlayableFaction faction) {
-        if (canJoin(faction)) {
-            setFactionAndLevel(faction, 1);
-        }
-    }
-
-    @Override
-    public boolean canLeaveFaction() {
-        if (currentFaction == null) return true;
-        return currentFaction.getProp(player).canLeaveFaction();
-    }
-
-    @Override
-    public boolean setFactionLevel(PlayableFaction faction, int level) {
-        if (faction == currentFaction) {
-            return setFactionAndLevel(faction, level);
-        }
-        return false;
-    }
-
-    /**
-     * Notify faction about changes.
-     * {@link FactionPlayerHandler#currentFaction} and {@link FactionPlayerHandler#currentLevel} will be used as the new ones
-     *
-     * @param oldFaction
-     * @param oldLevel
-     */
-    private void notifyFaction(PlayableFaction oldFaction, int oldLevel) {
-        if (oldFaction != currentFaction && oldFaction != null) {
-            VampirismMod.log.t("Leaving faction %s", oldFaction.prop);
-            oldFaction.getProp(player).onLevelChanged(0, oldLevel);
-        }
+    public void saveNBTData(NBTTagCompound compound) {
         if (currentFaction != null) {
-            VampirismMod.log.t("Changing to %s %d", currentFaction, currentLevel);
-            currentFaction.getProp(player).onLevelChanged(currentLevel, oldFaction == currentFaction ? oldLevel : 0);
-        }
-        if (currentFaction != oldFaction) {
-            onChangedFaction();
+            NBTTagCompound nbt = new NBTTagCompound();
+            nbt.setString("faction", currentFaction.prop);
+            nbt.setInteger("level", currentLevel);
+            compound.setTag(getPropertyKey(), nbt);
         }
     }
 
@@ -195,28 +174,11 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
     }
 
     @Override
-    public boolean canJoin(PlayableFaction faction) {
-        return currentFaction == null;
-    }
-
-    @Override
-    public void loadUpdateFromNBT(NBTTagCompound nbt) {
-        PlayableFaction old = currentFaction;
-        int oldLevel = currentLevel;
-        String f = nbt.getString("faction");
-        if ("null".equals(f)) {
-            currentFaction = null;
-            currentLevel = 0;
-        } else {
-            currentFaction = getFactionFromString(f);
-            if (currentFaction == null) {
-                VampirismMod.log.e(TAG, "Cannot find faction %s on client. You have to register factions on both sides!", f);
-                currentLevel = 0;
-            } else {
-                currentLevel = nbt.getInteger("level");
-            }
+    public boolean setFactionLevel(PlayableFaction faction, int level) {
+        if (faction == currentFaction) {
+            return setFactionAndLevel(faction, level);
         }
-        notifyFaction(old, oldLevel);
+        return false;
     }
 
     @Override
@@ -225,11 +187,45 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
         nbt.setInteger("level", currentLevel);
     }
 
-    public void copyFrom(EntityPlayer old) {
-        FactionPlayerHandler oldP = get(old);
-        currentFaction = oldP.currentFaction;
-        currentLevel = oldP.currentLevel;
-        notifyFaction(oldP.currentFaction, oldP.currentLevel);
+    private PlayableFaction getFactionFromString(String f) {
+        for (PlayableFaction p : FactionRegistry.getPlayableFactions()) {
+            if (p.prop.equals(f)) {
+                return p;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Notify faction about changes.
+     * {@link FactionPlayerHandler#currentFaction} and {@link FactionPlayerHandler#currentLevel} will be used as the new ones
+     *
+     * @param oldFaction
+     * @param oldLevel
+     */
+    private void notifyFaction(PlayableFaction oldFaction, int oldLevel) {
+        if (oldFaction != currentFaction && oldFaction != null) {
+            VampirismMod.log.t("Leaving faction %s", oldFaction.prop);
+            oldFaction.getProp(player).onLevelChanged(0, oldLevel);
+        }
+        if (currentFaction != null) {
+            VampirismMod.log.t("Changing to %s %d", currentFaction, currentLevel);
+            currentFaction.getProp(player).onLevelChanged(currentLevel, oldFaction == currentFaction ? oldLevel : 0);
+        }
+        if (currentFaction != oldFaction) {
+            onChangedFaction();
+        }
+    }
+
+    /**
+     * Called when the faction has changed
+     */
+    private void onChangedFaction() {
+        player.refreshDisplayName();
+    }
+
+    private void sync(boolean all) {
+        HelperLib.sync(this, player, all);
     }
 
 

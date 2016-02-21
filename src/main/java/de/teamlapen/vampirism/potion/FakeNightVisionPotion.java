@@ -13,12 +13,6 @@ import net.minecraft.util.ResourceLocation;
 public class FakeNightVisionPotion extends Potion {
     public static final FakeNightVisionPotion instance = new FakeNightVisionPotion();
 
-    protected FakeNightVisionPotion() {
-        super(new ResourceLocation(REFERENCE.MODID, "night_vision"), false, 2039713);
-        setIconIndex(4, 1);
-        setPotionName("potion.nightVision");
-    }
-
     /**
      * Replace the night vision potion in {@link Potion#potionTypes} by the fake version using the same id.
      * Checks if it is enabled in the configs first
@@ -29,6 +23,12 @@ public class FakeNightVisionPotion extends Potion {
             VampirismMod.log.d("FakeNVPotion", "Replacing vanilla night vision (%s) at %d", Potion.potionTypes[instance.getId()].getClass(), instance.getId());
             Potion.potionTypes[instance.getId()] = instance;
         }
+    }
+
+    protected FakeNightVisionPotion() {
+        super(new ResourceLocation(REFERENCE.MODID, "night_vision"), false, 2039713);
+        setIconIndex(4, 1);
+        setPotionName("potion.nightVision");
     }
 
     @Override
