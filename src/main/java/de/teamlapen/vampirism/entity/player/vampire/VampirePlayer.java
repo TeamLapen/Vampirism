@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.Achievements;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.PlayerModifiers;
 import de.teamlapen.vampirism.entity.player.VampirismPlayer;
 import de.teamlapen.vampirism.potion.FakeNightVisionPotionEffect;
@@ -36,7 +37,6 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.FoodStats;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -115,29 +115,34 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
     }
 
     @Override
-    protected void onLevelChanged(int old, int level) {
+    public void onLevelChanged(int newLevel, int oldLevel) {
         if (!isRemote()) {
             PlayerModifiers.applyModifier(player, SharedMonsterAttributes.movementSpeed, "Vampire", getLevel(), Balance.vp.SPEED_LCAP, Balance.vp.SPEED_MAX_MOD, Balance.vp.SPEED_TYPE);
             PlayerModifiers.applyModifier(player, SharedMonsterAttributes.attackDamage, "Vampire", getLevel(), Balance.vp.STRENGTH_LCAP, Balance.vp.STRENGTH_MAX_MOD, Balance.vp.STRENGTH_TYPE);
             PlayerModifiers.applyModifier(player, SharedMonsterAttributes.maxHealth, "Vampire", getLevel(), Balance.vp.HEALTH_LCAP, Balance.vp.HEALTH_MAX_MOD, Balance.vp.HEALTH_TYPE);
             bloodStats.addExhaustionModifier("level", 1.0F + getLevel() / (float) getMaxLevel());
-            if (level > 0) {
+            if (newLevel > 0) {
                 player.addStat(Achievements.becomingAVampire, 1);
             } else {
                 skillHandler.resetTimers();
             }
         } else {
-            if (old == 0) {
+            if (oldLevel == 0) {
                 if (player.isPotionActive(Potion.nightVision)) {
                     player.removePotionEffect(Potion.nightVision.id);
                 }
                 player.addPotionEffect(new FakeNightVisionPotionEffect());
-            } else if (level == 0) {
+            } else if (newLevel == 0) {
                 if (player.getActivePotionEffect(Potion.nightVision) instanceof FakeNightVisionPotionEffect) {
                     player.removePotionEffect(Potion.nightVision.getId());
                 }
             }
         }
+    }
+
+    @Override
+    public boolean canLeaveFaction() {
+        return true;
     }
 
     @Override
@@ -166,15 +171,17 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
      */
     public void onSanguinareFinished() {
         if (Helper.canBecomeVampire(player) && !isRemote()) {
-            this.levelUp();
-            ((WorldServer) player.worldObj).addScheduledTask(new Runnable() {
-                @Override
-                public void run() {
-                    if (player != null && player.isEntityAlive()) {
-                        player.addPotionEffect(new PotionEffect(Potion.resistance.id, 300));//TODO add saturation as well
-                    }
-                }
-            });
+            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
+            handler.joinFaction(getFaction());
+            player.addPotionEffect(new PotionEffect(Potion.resistance.id, 300));//TODO add saturation as well
+//            ((WorldServer) player.worldObj).addScheduledTask(new Runnable() {
+//                @Override
+//                public void run() {
+//                    if (player != null && player.isEntityAlive()) {
+//
+//                    }
+//                }
+//            });
 
         }
     }
@@ -311,10 +318,6 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer{
 
     }
 
-    @Override
-    public void onPlayerClone(EntityPlayer original) {
-        copyFrom(original);
-    }
 
     @Override
     public void saveData(NBTTagCompound nbt) {

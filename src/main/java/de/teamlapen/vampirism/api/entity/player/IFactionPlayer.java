@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.entity.player;
 
 import com.google.common.base.Predicate;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,20 +17,14 @@ import net.minecraftforge.common.IExtendedEntityProperties;
  */
 public interface IFactionPlayer extends IFactionEntity, IExtendedEntityProperties {
     /**
+     *
+     * Preferably implement this by calling {@link IFactionPlayerHandler#getCurrentLevel(PlayableFaction)}
      * @return 0 if the player is not part of this faction, something > 0 if the player is part of the faction.
      */
     int getLevel();
 
-    /**
-     * Sets the vampire level.
-     * TODO check that it is a area check exists
-     * @param level
-     */
-    void setLevel(int level);
 
     EntityPlayer getRepresentingPlayer();
-
-    void levelUp();
 
     /**
      * @return the faction this faction player belongs to
@@ -47,6 +42,15 @@ public interface IFactionPlayer extends IFactionEntity, IExtendedEntityPropertie
      */
     boolean isDisguised();
 
+    /**
+     * Is called when the players faction level changed.
+     * Is called on world load.
+     * Is called on client and server side.
+     *
+     * @param newLevel
+     * @param oldLevel
+     */
+    void onLevelChanged(int newLevel, int oldLevel);
 
     /**
      * Returns false for a null world
@@ -54,6 +58,15 @@ public interface IFactionPlayer extends IFactionEntity, IExtendedEntityPropertie
      * @return if the player is in a remote world
      */
     boolean isRemote();
+
+    /**
+     * Mostly relevant in the set level command
+     * Vampirism's factions always return true here.
+     * Can be used if another mod does not want that a player leaves it's faction via the command
+     *
+     * @return
+     */
+    boolean canLeaveFaction();
 
 
 

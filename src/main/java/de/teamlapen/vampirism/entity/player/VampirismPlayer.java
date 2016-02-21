@@ -4,14 +4,13 @@ import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.entity.IPlayerEventListener;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
-import de.teamlapen.vampirism.api.entity.player.FactionRegistry;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.world.World;
 
 import java.util.UUID;
@@ -26,37 +25,14 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
     private static final String TAG = "VampirismPlayer";
     protected final EntityPlayer player;
 
-    private final String TAG_LEVEL="level";
-
-    private int level;
-
     public VampirismPlayer(EntityPlayer player){
         this.player=player;
     }
-    @Override
-    public int getLevel() {
-        return level;
-    }
+
 
     @Override
-    public void setLevel(int level) {
-        int old = getLevel();
-        if (level >= 0 && level <= getMaxLevel() && old != level) {
-            if (level > 0) {
-                IFactionPlayer active = FactionRegistry.getActiveFactionPlayer(player);
-                if (active != null && active != this) {
-                    //Should be detected before setLevel is even called
-                    player.addChatMessage(new ChatComponentTranslation("text.vampirism.player.multiple_factions"));
-                    return;
-                }
-            }
-            this.level = level;
-            onLevelChanged(old, level);
-            if (old == 0) {
-                FactionRegistry.onChangedFaction(player, getFaction());
-            }
-            this.sync(true);
-        }
+    public int getLevel() {
+        return VampirismAPI.getFactionPlayerHandler(player).getCurrentLevel(getFaction());
     }
 
     @Override
@@ -68,25 +44,13 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
         return player.worldObj.isRemote;
     }
 
-    @Override
-    public void levelUp() {
-        setLevel(getLevel() + 1);
-    }
 
     @Override
     public EntityPlayer getRepresentingPlayer() {
         return player;
     }
 
-    /**
-     * Called when the level is changed, this means it is also called when the player joins a world.
-     * Called server and client side.
-     * Can be overridden in subclasses
-     * @param old Old level
-     * @param level New level
-     */
-    protected void onLevelChanged(int old, int level) {
-    }
+
 
     /**
      * Max level this player type can reach
@@ -145,7 +109,6 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
     @Override
     public final void saveNBTData(NBTTagCompound nbt) {
         NBTTagCompound properties = new NBTTagCompound();
-        properties.setInteger(TAG_LEVEL, level);
         saveData(properties);
         nbt.setTag(getPropertyKey(), properties);
     }
@@ -159,7 +122,6 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
             VampirismMod.log.i(TAG, "VampirismPlayer(%s) data for %s cannot be loaded. It probably does not exist", this.getClass(), player);
             return;
         }
-        setLevel(properties.getInteger(TAG_LEVEL));
         loadData(properties);
     }
 
@@ -172,9 +134,6 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
 
     @Override
     public final void loadUpdateFromNBT(NBTTagCompound nbt) {
-        if(nbt.hasKey(TAG_LEVEL)){
-            setLevel(nbt.getInteger(TAG_LEVEL));
-        }
         loadUpdate(nbt);
     }
 
@@ -189,7 +148,6 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
 
     @Override
     public final void writeFullUpdateToNBT(NBTTagCompound nbt) {
-        nbt.setInteger(TAG_LEVEL,level);
         writeFullUpdate(nbt);
     }
 
@@ -200,9 +158,13 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
      */
     protected void writeFullUpdate(NBTTagCompound nbt){}
 
+    @Override
+    public void onPlayerClone(EntityPlayer original) {
+        copyFrom(original);
+    }
+
     public void copyFrom(EntityPlayer old) {
         VampirismPlayer p=copyFromPlayer(old);
-        this.level=p.getLevel();
     }
 
     /**

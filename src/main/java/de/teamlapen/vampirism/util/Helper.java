@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.player.FactionRegistry;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
@@ -46,6 +46,14 @@ public class Helper {
     }
 
     public static boolean canBecomeVampire(EntityPlayer player) {
-        return FactionRegistry.getActiveFaction(player) == null;
+        return FactionPlayerHandler.get(player).canJoin(VampirismAPI.VAMPIRE_FACTION);
+    }
+
+    public static boolean isVampire(EntityPlayer player) {
+        return FactionPlayerHandler.get(player).isInFaction(VampirismAPI.VAMPIRE_FACTION);
+    }
+
+    public static boolean isHunter(EntityPlayer player) {
+        return FactionPlayerHandler.get(player).isInFaction(VampirismAPI.HUNTER_FACTION);
     }
 }

@@ -2,9 +2,10 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.FactionRegistry;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.command.ICommandSender;
@@ -12,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -109,20 +111,22 @@ public class VampirismCommand extends BasicCommand {
                     //Search factions
                     for (int i = 0; i < pfaction_names.length; i++) {
                         if (pfaction_names[i].equalsIgnoreCase(var2[0])) {
+                            PlayableFaction newFaction = pfactions[i];
+                            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
+                            if (level == 0 && !handler.canLeaveFaction()) {
+                                ((EntityPlayer) var1).addChatComponentMessage(new ChatComponentTranslation("text.vampirism.faction.cant_leave").appendSibling(new ChatComponentText("(" + handler.getCurrentFaction().name + ")")));
+                                return;
+                            }
+                            if (level > newFaction.getHighestReachableLevel()) {
+                                level = newFaction.getHighestReachableLevel();
+                            }
+                            if (handler.setFactionAndLevel(newFaction, level)) {
+                                IChatComponent msg = var1.getDisplayName().appendSibling(new ChatComponentText(" is now a " + pfaction_names[i] + " level " + level));
+                                MinecraftServer.getServer().getConfigurationManager().sendChatMsg(msg);
+                            } else {
+                                ((EntityPlayer) var1).addChatComponentMessage(new ChatComponentTranslation("text.vampirism.faction.failed_to_change"));
+                            }
 
-                            if (level != 0) {//If level is higher than 0 set other factions level back to zero
-                                for (int j = 0; j < pfactions.length; j++) {
-                                    if (i != j) {
-                                        pfactions[j].getProp(player).setLevel(0);
-                                    }
-                                }
-                            }
-                            if (level > pfactions[i].getHighestReachableLevel()) {
-                                level = pfactions[i].getHighestReachableLevel();
-                            }
-                            pfactions[i].getProp(player).setLevel(level);
-                            IChatComponent msg = var1.getDisplayName().appendSibling(new ChatComponentText(" is now a " + pfaction_names[i] + " level " + level));
-                            MinecraftServer.getServer().getConfigurationManager().sendChatMsg(msg);
                             return;
                         }
                     }

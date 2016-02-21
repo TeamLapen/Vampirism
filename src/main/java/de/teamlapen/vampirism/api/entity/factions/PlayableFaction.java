@@ -27,5 +27,12 @@ public abstract class PlayableFaction<T extends IFactionPlayer> extends Faction 
         return (T) player.getExtendedProperties(prop);
     }
 
+    /**
+     * @return If Vampirism should render the factions level
+     */
+    public boolean renderLevel() {
+        return true;
+    }
+
 
 }

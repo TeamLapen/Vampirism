@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.entity.IVampire;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 
 /**
  * Interface for the player vampire data
@@ -36,13 +35,6 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer, IMinionLord, I
      */
     void removeExhaustionModifier(String id);
 
-
-    /**
-     * Copys all values from another player's IFactionPlayer
-     *
-     * @param old
-     */
-    void copyFrom(EntityPlayer old);
 
 
 

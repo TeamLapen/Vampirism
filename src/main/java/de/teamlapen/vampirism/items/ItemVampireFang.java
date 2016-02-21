@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.player.FactionRegistry;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.Helper;
@@ -27,7 +25,7 @@ public class ItemVampireFang extends VampirismItem {
             PotionSanguinare.addRandom(playerIn, true);
             playerIn.addPotionEffect(new PotionEffect(Potion.poison.getId(), 60));
         } else {
-            if (FactionRegistry.getActiveFaction(playerIn) == VampirismAPI.VAMPIRE_FACTION) {
+            if (Helper.isVampire(playerIn)) {
                 playerIn.addChatMessage(new ChatComponentTranslation("text.vampirism.already_vampire"));
             } else {
                 playerIn.addChatMessage(new ChatComponentTranslation("text.vampirism.immune_to_").appendSibling(new ChatComponentTranslation(ModPotions.sanguinare.getName())));

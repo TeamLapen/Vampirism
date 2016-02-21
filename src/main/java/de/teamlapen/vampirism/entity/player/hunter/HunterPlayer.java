@@ -82,11 +82,16 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
 
 
     @Override
-    protected void onLevelChanged(int old, int level) {
+    public void onLevelChanged(int old, int level) {
         if (!isRemote()) {
             PlayerModifiers.applyModifier(player, SharedMonsterAttributes.attackDamage, "Hunter", getLevel(), Balance.hp.STRENGTH_LCAP, Balance.hp.STRENGTH_MAX_MOD, Balance.hp.STRENGTH_TYPE);
         }
 
+    }
+
+    @Override
+    public boolean canLeaveFaction() {
+        return true;
     }
 
     @Override
@@ -138,10 +143,6 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
 
     }
 
-    @Override
-    public void onPlayerClone(EntityPlayer original) {
-        copyFrom(original);
-    }
 
     @Override
     public Predicate<? super Entity> getNonFriendlySelector(boolean otherFactionPlayers) {

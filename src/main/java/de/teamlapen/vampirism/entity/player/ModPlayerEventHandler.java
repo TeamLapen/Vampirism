@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.entity.player;
 
-import de.teamlapen.vampirism.api.entity.player.FactionRegistry;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.vampire.SkillHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
@@ -25,19 +25,23 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class ModPlayerEventHandler {
 
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onEntityConstructing(EntityEvent.EntityConstructing event) {
         if (event.entity instanceof EntityPlayer) {
             /*
             Register ExtendedProperties.
             Could be done via factions, but that might be a little bit overkill for 2-5 factions and might cause trouble with addon mods.
              */
+            if (FactionPlayerHandler.get((EntityPlayer) event.entity) == null) {
+                FactionPlayerHandler.register((EntityPlayer) event.entity);
+            }
             if (VampirePlayer.get((EntityPlayer) event.entity) == null) {
                 VampirePlayer.register((EntityPlayer) event.entity);
             }
             if (HunterPlayer.get((EntityPlayer) event.entity) == null) {
                 HunterPlayer.register((EntityPlayer) event.entity);
             }
+
         }
     }
 
@@ -83,7 +87,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onPlayerName(PlayerEvent.NameFormat event) {
         if (event.entityPlayer != null && !Configs.disable_factionDisplayChat) {
-            IFactionPlayer f = FactionRegistry.getActiveFactionPlayer(event.entityPlayer);
+            IFactionPlayer f = FactionPlayerHandler.get(event.entityPlayer).getCurrentFactionPlayer();
             if (f != null && !f.isDisguised()) {
                 event.displayname = f.getFaction().getChatColor() + event.displayname;
                 if (f instanceof IVampirePlayer && ((IVampirePlayer) f).isVampireLord()) {
@@ -91,6 +95,13 @@ public class ModPlayerEventHandler {
                 }
             }
 
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onPlayerClone(PlayerEvent.Clone event) {
+        if (!event.entityPlayer.worldObj.isRemote) {
+            FactionPlayerHandler.get(event.entityPlayer).copyFrom(event.original);
         }
     }
 

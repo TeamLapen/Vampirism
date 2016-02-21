@@ -7,7 +7,7 @@ import de.teamlapen.lib.lib.util.Logger;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.BiteableRegistry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
-import de.teamlapen.vampirism.api.entity.player.FactionRegistry;
+import de.teamlapen.vampirism.api.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.Achievements;
@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.VampirismCommand;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.converted.DefaultConvertingHandler;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.HunterFaction;
 import de.teamlapen.vampirism.entity.factions.VampireFaction;
 import de.teamlapen.vampirism.entity.player.ModPlayerEventHandler;
@@ -79,6 +80,7 @@ public class VampirismMod {
         HelperRegistry.registerPlayerEventReceivingProperty(HunterFaction.instance().prop);
         HelperRegistry.registerSyncablePlayerProperty(VampireFaction.instance().prop, VampirePlayer.class);
         HelperRegistry.registerSyncablePlayerProperty(HunterFaction.instance().prop, HunterPlayer.class);
+        HelperRegistry.registerSyncablePlayerProperty(VampirismAPI.FACTION_PLAYER_HANDLER_PROP, FactionPlayerHandler.class);
         Achievements.registerAchievement();
         proxy.onInitStep(IInitListener.Step.INIT, event);
     }

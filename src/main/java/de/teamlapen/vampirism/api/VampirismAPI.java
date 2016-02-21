@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.api;
 
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
+import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.player.EntityPlayer;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -16,6 +18,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 public class VampirismAPI {
 
     public static final String EXTENDED_CREATURE_PROP = "ExtCreatureVampirism";
+    public static final String FACTION_PLAYER_HANDLER_PROP = "FactionHandlerVampirism";
     public static final String FLUID_BLOOD_NAME = "vampirismblood";
     /**
      * One blood in the players blood stats represents this amount of mB fluid blood
@@ -36,11 +39,18 @@ public class VampirismAPI {
     public static PlayableFaction<IHunterPlayer> HUNTER_FACTION;
     private static boolean defaultSundamage=false;
 
-
     static {
         sundamageDims.put(0,true);
         sundamageDims.put(-1,false);
         sundamageDims.put(1,false);
+    }
+
+    /**
+     * @param player
+     * @return The respective {@link IFactionPlayerHandler}
+     */
+    public static IFactionPlayerHandler getFactionPlayerHandler(EntityPlayer player) {
+        return (IFactionPlayerHandler) player.getExtendedProperties(FACTION_PLAYER_HANDLER_PROP);
     }
 
     /**

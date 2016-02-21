@@ -17,6 +17,7 @@ public class ModEntityEventHandler {
         }
     }
 
+    @SubscribeEvent
     public void onEntityUpdate(LivingEvent.LivingUpdateEvent event) {
         if (event.entity instanceof EntityCreature) {
             ExtendedCreature.get((EntityCreature) event.entity).onUpdate();
