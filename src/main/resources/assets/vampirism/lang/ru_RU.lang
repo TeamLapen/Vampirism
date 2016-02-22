@@ -10,6 +10,7 @@ entity.vampirism.blinding_bat.name=Летучая мышь
 entity.vampirism.dracula.name=Дракула
 entity.vampirism.dead_mob.name=Мёртвый моб
 entity.vampirism.portal_guard.name=Cтраж Портала
+entity.vampirism.vampireHunter2.name=Сильный охотник на вампиров
 
 # Items
 item.vampirism.vampiresFear.name=Страх вампира
@@ -29,6 +30,12 @@ item.vampirism.vampireArmor_chestplate.name=Вампирский нагрудн�
 item.vampirism.minionNameTag.name=Тег имени Миньона
 item.vampirism.gemOfBinding.name=Камень привязки
 item.vampirism.bloodEye.name=Кровавый глаз
+item.vampirism.weakVampireFang.name=Клык слабого вампира
+item.vampirism.weakHumanHeart.name=Слабое человеческое сердце
+item.vampirism.item_tent.name=Палатка
+item.vampirism.garlic.name=Чеснок
+item.vampirism.concentratedGarlic.name=Концентрированный Чеснок
+item.vampirism.garlic_bomb.name=Чесночная Бомба
 
 # Blocks
 block.vampirism.bloodAltar.name=Кровавый Алтарь Насыщения
@@ -44,6 +51,12 @@ block.vampirism.castleBlock.name=Блок замка
 block.vampirism.castleSlab.name=Плита замка
 block.vampirism.doubleCastleSlab.name=Двойная Плита Замка
 block.vampirism.castleStairs.name=Ступеньки замка
+block.vampirism.tent.name=Палатка
+block.vampirism.gildedIronBlock.name=Позолоченный Железный Блок
+block.vampirism.garlic.name=Чеснок
+tile.vampirism.garlicTorchWeak.name=Слабый Чесночный Факел
+tile.vampirism.garlicTorchStrong.name=Сильный Чесночный Факел
+tile.vampirism.garlicGas.name=Чесночный Газ
 
 #GUI
 gui.vampirism.revertback.head=Обратиться обратно в человека
@@ -59,10 +72,12 @@ key.vampirism.vision=Сменить зрение
 #General
 itemGroup.vampirism=Вампиризм
 death.attack.sun=%1$s не нравится солнце
+death.attack.garlic=%1$s был отравлен чесноком
 potion.vampirism.sunscreen=Защита от солнца
 potion.vampirism.thirst=Жажда
 potion.vampirism.saturation=Насыщенность
 potion.vampirism.sanguinare=Sanguinare Vampiris
+potion.vampirism.garlic=Чеснок
 text.vampirism.skill.level_to_low=Ваш уровень вампира слишком низок
 text.vampirism.skill.cooldown_not_over=Пожалуйста, подождите, пока умение перезарядиться
 text.vampirism.entity_level=Уровень
@@ -110,6 +125,12 @@ text.vampirism.biome.looking_for_biome=Ищем Вампирский лесно�
 text.vampirism.biome.not_found=Вампирский Лесной Биом не был найден.
 text.vampirism.biome.found=Вампирский Лесной Биом найден
 text.vampirism.castle_fail=Vampirism не смог найти подходящее место для Замка Вампиров.Рекомендуется создать новый мир.Вы также можете попробовать "/vampirism checkForVampireBiome", если это не помогает, в этом вероятно виноват другой мод.
+text.vampirism.structure=Структура
+text.vampirism.pillar_blocks=Блок Колонны
+text.vampirism.no_dracula_to_call=Дракула мертв и не может быть вызван
+text.vampirism.garlic_weapons=Это оружие покрыто чесноком и отравляет вампиров. Но чеснок стирается с оружия.
+text.vampirism.outdated=Вы запустили мод Вампиризм %s, последняя версия %s.
+text.vampirism.update_message=["Click for... [",{"text"\:"Загрузка","color"\:"green","hoverEvent"\:{"action"\:"show_text","value"\:{"text"\:"Нажмите это чтобы перейти на страницу загрузки","color"\:"green"}},"clickEvent"\:{"action"\:"open_url","value"\:"@download@"}},"] [",{"text"\:"Сайт","color"\:"green","hoverEvent"\:{"action"\:"show_text","value"\:{"text"\:"Нажмите это чтобы перейти на страницу мода на форуме","color"\:"green"}},"clickEvent"\:{"action"\:"open_url","value"\:"@forum@"}},"] [",{"text"\:"Список изменений","color"\:"green","hoverEvent"\:{"action"\:"show_text","value"\:{"text"\:"Нажмите это чтобы увидеть список изменений версии","color"\:"green"}},"clickEvent"\:{"action"\:"run_command","value"\:"/vampirism changelog"}},"]"]
 
 #Skill
 skill.vampirism.bat_skill=Обратиться в летучую мышь
