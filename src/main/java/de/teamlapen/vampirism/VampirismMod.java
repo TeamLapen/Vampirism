@@ -5,6 +5,8 @@ import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.lib.lib.util.Logger;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.IHunter;
+import de.teamlapen.vampirism.api.entity.IVampire;
 import de.teamlapen.vampirism.api.entity.convertible.BiteableRegistry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.api.entity.factions.FactionRegistry;
@@ -27,10 +29,12 @@ import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -134,6 +138,9 @@ public class VampirismMod {
                 return new DefaultConvertingHandler(helper);
             }
         });//DefaultConvertingHandler::new
+
+        VampirismAPI.hunterCreatureType = EnumHelper.addCreatureType("vampirism:hunter", IHunter.class, 30, Material.air, false, false);
+        VampirismAPI.vampireCreatureType = EnumHelper.addCreatureType("vampirism:vampire", IVampire.class, 30, Material.air, false, false);
     }
 
 }

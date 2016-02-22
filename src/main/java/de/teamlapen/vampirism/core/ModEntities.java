@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedSheep;
+import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -30,7 +31,7 @@ import java.util.List;
  * Handles all entity registrations and reference.
  */
 public class ModEntities {
-    public static final String VAMPIRE_HUNTER_NAME = "vampirism.vampireHunter";
+    public static final String BASIC_HUNTER_NAME = "vampirism.vampireHunter";
     public static final String VAMPIRE_NAME = "vampirism.vampire";
     public static final String DRACULA_NAME = "vampirism.dracula";
     public static final String GHOST_NAME = "vampirism.ghost";
@@ -115,6 +116,7 @@ public class ModEntities {
         registerEntity(EntityGhost.class, GHOST_NAME, true);
         registerEntity(EntityConvertedCreature.class, CONVERTED_CREATURE, false);
         registerEntity(EntityConvertedSheep.class, CONVERTED_SHEEP, false);
+        registerEntity(EntityBasicHunter.class, BASIC_HUNTER_NAME, true);
         registerConvertibles();
         //TODO init spawn egg
     }

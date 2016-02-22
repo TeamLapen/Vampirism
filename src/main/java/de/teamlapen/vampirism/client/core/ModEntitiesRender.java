@@ -1,18 +1,18 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
-import de.teamlapen.vampirism.client.render.RenderConvertedCreature;
-import de.teamlapen.vampirism.client.render.RenderGhost;
+import de.teamlapen.vampirism.client.render.entities.RenderBasicHunter;
+import de.teamlapen.vampirism.client.render.entities.RenderConvertedCreature;
+import de.teamlapen.vampirism.client.render.entities.RenderGhost;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
+import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderBat;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 
 /**
@@ -23,20 +23,17 @@ public class ModEntitiesRender {
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
             case PRE_INIT:
-                preInit((FMLPreInitializationEvent) event);
+                registerEntityRenderer();
                 break;
             case INIT:
-                init((FMLInitializationEvent) event);
+
                 break;
         }
 
     }
 
-    private static void init(FMLInitializationEvent event) {
 
-    }
-
-    private static void preInit(FMLPreInitializationEvent event) {
+    private static void registerEntityRenderer() {
         RenderingRegistry.registerEntityRenderingHandler(EntityBlindingBat.class, new IRenderFactory<EntityBlindingBat>() {
             @Override
             public Render<? super EntityBlindingBat> createRenderFor(RenderManager manager) {
@@ -53,6 +50,12 @@ public class ModEntitiesRender {
             @Override
             public Render<? super EntityConvertedCreature> createRenderFor(RenderManager manager) {
                 return new RenderConvertedCreature(manager);
+            }
+        });
+        RenderingRegistry.registerEntityRenderingHandler(EntityBasicHunter.class, new IRenderFactory<EntityBasicHunter>() {
+            @Override
+            public Render<? super EntityBasicHunter> createRenderFor(RenderManager manager) {
+                return new RenderBasicHunter(manager);
             }
         });
     }

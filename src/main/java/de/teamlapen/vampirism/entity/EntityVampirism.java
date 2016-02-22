@@ -7,6 +7,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.*;
 import net.minecraft.world.EnumDifficulty;
@@ -17,13 +19,19 @@ import net.minecraft.world.World;
  */
 public abstract class EntityVampirism extends EntityCreature implements IEntityWithHome {
 
+    private final EntityAIBase moveTowardsRestriction;
     protected boolean hasArms = true;
     protected boolean peaceful = false;
+    /**
+     * Whether the home should be saved to nbt or not
+     */
     protected boolean saveHome = false;
     private AxisAlignedBB home;
+    private boolean moveTowardsRestrictionAdded = false;
 
-    public EntityVampirism(World p_i1595_1_) {
-        super(p_i1595_1_);
+    public EntityVampirism(World world) {
+        super(world);
+        moveTowardsRestriction = new EntityAIMoveTowardsRestriction(this, 1.0F);
     }
 
     public boolean attackEntityAsMob(Entity entity) {
@@ -189,6 +197,16 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         targetTasks.taskEntries.clear();
     }
 
+    /**
+     * Removes the MoveTowardsRestriction task
+     */
+    protected void disableMoveTowardsRestriction() {
+        if (moveTowardsRestrictionAdded) {
+            this.tasks.removeTask(moveTowardsRestriction);
+            moveTowardsRestrictionAdded = false;
+        }
+    }
+
     protected boolean func_146066_aG() {
         return true;
     }
@@ -217,6 +235,20 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
 
     protected String getSwimSound() {
         return "game.hostile.swim";
+    }
+
+    /**
+     * Add the MoveTowardsRestriction task with the given priority.
+     * Overrides prior priorities if existent
+     *
+     * @param prio
+     */
+    protected void setMoveTowardsRestriction(int prio) {
+        if (moveTowardsRestrictionAdded) {
+            this.tasks.removeTask(moveTowardsRestriction);
+        }
+        tasks.addTask(prio, moveTowardsRestriction);
+        moveTowardsRestrictionAdded = true;
     }
 
     /**

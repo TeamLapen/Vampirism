@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.render;
 
+import de.teamlapen.vampirism.client.render.entities.RenderConvertedCreature;
 import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityCreature;

@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.config.Balance;
 import net.minecraft.block.Block;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
+import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.potion.Potion;
@@ -15,7 +16,7 @@ import net.minecraft.world.World;
 /**
  * Entity Ghost
  */
-public class EntityGhost extends EntityVampirism {
+public class EntityGhost extends EntityVampirism implements IMob {
     public EntityGhost(World p_i1595_1_) {
         super(p_i1595_1_);
         ((PathNavigateGround) getNavigator()).setCanSwim(true);

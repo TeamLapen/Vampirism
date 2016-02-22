@@ -1,8 +1,9 @@
-package de.teamlapen.vampirism.entity;
+package de.teamlapen.vampirism.entity.vampire;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVampire;
 import de.teamlapen.vampirism.api.entity.factions.Faction;
+import de.teamlapen.vampirism.entity.EntityVampirism;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.world.World;
 

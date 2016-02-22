@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.client.render;
+package de.teamlapen.vampirism.client.render.entities;
 
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
 import net.minecraft.client.renderer.entity.Render;

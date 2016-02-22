@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 
@@ -28,6 +29,15 @@ public class VampirismAPI {
     private final static HashMap<Integer, Boolean> sundamageDims = new HashMap<Integer, Boolean>();
     private final static HashMap<Integer, Boolean> sundamageConfiguredDims = new HashMap<Integer, Boolean>();
     private final static Set<Integer> noSundamageBiomes = new CopyOnWriteArraySet<Integer>();
+
+    /**
+     * Hunter creatures are of this creature type. But when they are counted for spawning they belong to {@link EnumCreatureType#MONSTER}
+     */
+    public static EnumCreatureType hunterCreatureType;
+    /**
+     * Vampire creatures are of this creature type. But when they are counted for spawning they belong to {@link EnumCreatureType#MONSTER}
+     */
+    public static EnumCreatureType vampireCreatureType;
     /**
      * Vampire Player Faction
      * Filled during pre-init.

@@ -7,3 +7,4 @@
 *.jar binary
 *.zip binary
 *.cfg text eol=lf
+*.psd binary

@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.client.render;
+package de.teamlapen.vampirism.client.render.entities;
 
 
 import de.teamlapen.vampirism.client.model.ModelGhost;
