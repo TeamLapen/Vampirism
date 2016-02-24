@@ -3,11 +3,11 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
-import de.teamlapen.vampirism.api.entity.IVampire;
 import de.teamlapen.vampirism.api.entity.convertible.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.convertible.BiteableRegistry;
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import net.minecraft.entity.Entity;
@@ -28,11 +28,11 @@ public class ExtendedCreature implements ISyncable.ISyncableExtendedProperties, 
     private final static String KEY_BLOOD = "bloodLevel";
 
     public static ExtendedCreature get(EntityCreature mob) {
-        return (ExtendedCreature) mob.getExtendedProperties(VampirismAPI.EXTENDED_CREATURE_PROP);
+        return (ExtendedCreature) mob.getExtendedProperties(VReference.EXTENDED_CREATURE_PROP);
     }
 
     public static void register(EntityCreature mob) {
-        mob.registerExtendedProperties(VampirismAPI.EXTENDED_CREATURE_PROP, new ExtendedCreature(mob));
+        mob.registerExtendedProperties(VReference.EXTENDED_CREATURE_PROP, new ExtendedCreature(mob));
     }
 
     private final EntityCreature entity;
@@ -98,7 +98,7 @@ public class ExtendedCreature implements ISyncable.ISyncableExtendedProperties, 
 
     @Override
     public String getPropertyKey() {
-        return VampirismAPI.EXTENDED_CREATURE_PROP;
+        return VReference.EXTENDED_CREATURE_PROP;
     }
 
     @Override
@@ -113,7 +113,10 @@ public class ExtendedCreature implements ISyncable.ISyncableExtendedProperties, 
 
     @Override
     public void loadNBTData(NBTTagCompound compound) {
-        setBlood(compound.getInteger(KEY_BLOOD));
+        if (compound.hasKey(KEY_BLOOD)) {
+            setBlood(compound.getInteger(KEY_BLOOD));
+        }
+
     }
 
     @Override
@@ -189,7 +192,7 @@ public class ExtendedCreature implements ISyncable.ISyncableExtendedProperties, 
 
     @Override
     public String toString() {
-        return super.toString() + " for entity (" + entity.toString() + ")";
+        return super.toString() + " for entity (" + entity.toString() + ") [B" + blood + ",MB" + maxBlood + ",CV" + canBecomeVampire + "]";
     }
 
     @Override

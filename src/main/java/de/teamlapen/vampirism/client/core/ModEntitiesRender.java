@@ -2,12 +2,14 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.client.render.entities.RenderBasicHunter;
+import de.teamlapen.vampirism.client.render.entities.RenderBasicVampire;
 import de.teamlapen.vampirism.client.render.entities.RenderConvertedCreature;
 import de.teamlapen.vampirism.client.render.entities.RenderGhost;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
+import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderBat;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -56,6 +58,12 @@ public class ModEntitiesRender {
             @Override
             public Render<? super EntityBasicHunter> createRenderFor(RenderManager manager) {
                 return new RenderBasicHunter(manager);
+            }
+        });
+        RenderingRegistry.registerEntityRenderingHandler(EntityBasicVampire.class, new IRenderFactory<EntityBasicVampire>() {
+            @Override
+            public Render<? super EntityBasicVampire> createRenderFor(RenderManager manager) {
+                return new RenderBasicVampire(manager);
             }
         });
     }

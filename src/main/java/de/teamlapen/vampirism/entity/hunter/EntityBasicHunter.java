@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.entity.hunter;
 
-import de.teamlapen.vampirism.api.entity.IBasicHunter;
-import de.teamlapen.vampirism.api.entity.difficulty.Difficulty;
+import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.factions.PredicateFactionHostile;
+import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
-import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,16 +30,16 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter 
     private boolean datawatcher_init = false;
 
     public EntityBasicHunter(World world) {
-        super(world);
+        super(world, true);
         getDataWatcher().addObject(ID_LEVEL, -1);
         datawatcher_init = true;
         saveHome = true;
         hasArms = true;
         ((PathNavigateGround) this.getNavigator()).setEnterDoors(true);
-        ((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
+
         this.setSize(0.6F, 1.8F);
 
-        this.tasks.addTask(0, new EntityAISwimming(this));
+
         this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
         this.tasks.addTask(2, new EntityAIAttackOnCollide(this, 1.0, false));
 
@@ -51,7 +51,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter 
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 
         this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, new PredicateFactionHostile(getFaction(), true, false, false)));
-        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityLiving.class, 5, true, false, new PredicateFactionHostile(getFaction(), false, true, false)));
+        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, new PredicateFactionHostile(getFaction(), false, true, false)));
         this.setEquipmentDropChance(0, 0);
     }
 
@@ -103,7 +103,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter 
                 return MAX_LEVEL;
             }
         }
-        return this.rand.nextInt(3);
+        return this.rand.nextInt(MAX_LEVEL);
     }
 
     @Override
@@ -130,7 +130,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter 
             if (this.rand.nextInt(3) == 0) {
                 this.dropItem(ModItems.humanHeart, 1);
             }
-        }
+            }
     }
 
     protected void updateEntityAttributes() {

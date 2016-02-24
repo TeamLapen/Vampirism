@@ -18,6 +18,7 @@ public class Balance {
     public static BalanceVampirePlayer vp;
     public static BalanceHunterPlayer hp;
     public static BalanceVampireSkills vps;
+    public static BalanceGeneral general;
 
     public static void init(File configDir, boolean inDev) {
         File balanceDir = new File(configDir, "balance");
@@ -26,11 +27,13 @@ public class Balance {
         vp = new BalanceVampirePlayer(balanceDir);
         hp = new BalanceHunterPlayer(balanceDir);
         vps = new BalanceVampireSkills(balanceDir);
+        general = new BalanceGeneral(balanceDir);
         categories.put(leveling.getName(), leveling);
         categories.put(mobProps.getName(), mobProps);
         categories.put(vp.getName(), vp);
         categories.put(hp.getName(), hp);
         categories.put(vps.getName(), vps);
+        categories.put(general.getName(), general);
         if (inDev && Configs.resetConfigurationInDev) {
             reset(null);
         }

@@ -4,18 +4,16 @@ import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.lib.lib.util.Logger;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.IHunter;
-import de.teamlapen.vampirism.api.entity.IVampire;
 import de.teamlapen.vampirism.api.entity.convertible.BiteableRegistry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.api.entity.factions.FactionRegistry;
+import de.teamlapen.vampirism.api.entity.hunter.IHunter;
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
-import de.teamlapen.vampirism.core.Achievements;
-import de.teamlapen.vampirism.core.ModEventHandler;
-import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.core.VampirismCommand;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.converted.DefaultConvertingHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -85,7 +83,7 @@ public class VampirismMod {
         HelperRegistry.registerPlayerEventReceivingProperty(HunterFaction.instance().prop);
         HelperRegistry.registerSyncablePlayerProperty(VampireFaction.instance().prop, VampirePlayer.class);
         HelperRegistry.registerSyncablePlayerProperty(HunterFaction.instance().prop, HunterPlayer.class);
-        HelperRegistry.registerSyncablePlayerProperty(VampirismAPI.FACTION_PLAYER_HANDLER_PROP, FactionPlayerHandler.class);
+        HelperRegistry.registerSyncablePlayerProperty(VReference.FACTION_PLAYER_HANDLER_PROP, FactionPlayerHandler.class);
         Achievements.registerAchievement();
         proxy.onInitStep(IInitListener.Step.INIT, event);
     }
@@ -93,6 +91,7 @@ public class VampirismMod {
     @Mod.EventHandler
     public void onServerStart(FMLServerStartingEvent event) {
         event.registerServerCommand(new VampirismCommand());
+        event.registerServerCommand(new TestCommand());
     }
 
     @Mod.EventHandler
@@ -139,8 +138,8 @@ public class VampirismMod {
             }
         });//DefaultConvertingHandler::new
 
-        VampirismAPI.hunterCreatureType = EnumHelper.addCreatureType("vampirism:hunter", IHunter.class, 30, Material.air, false, false);
-        VampirismAPI.vampireCreatureType = EnumHelper.addCreatureType("vampirism:vampire", IVampire.class, 30, Material.air, false, false);
+        VReference.hunterCreatureType = EnumHelper.addCreatureType("vampirism:hunter", IHunter.class, 30, Material.air, false, false);
+        VReference.vampireCreatureType = EnumHelper.addCreatureType("vampirism:vampire", IVampire.class, 30, Material.air, false, false);
     }
 
 }

@@ -36,7 +36,7 @@ public class BatSkill extends DefaultSkill implements ILastingVampireSkill {
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.isGettingSundamge() && !vampire.getSkillHandler().isSkillActive(SkillHandler.rageSkill);
+        return !vampire.isGettingSundamage() && !vampire.getSkillHandler().isSkillActive(SkillHandler.rageSkill);
     }
 
     @Override
@@ -114,7 +114,7 @@ public class BatSkill extends DefaultSkill implements ILastingVampireSkill {
 
     @Override
     public boolean onUpdate(IVampirePlayer vampire) {
-        if (vampire.isGettingSundamge() && !vampire.isRemote()) {
+        if (vampire.isGettingSundamage() && !vampire.isRemote()) {
             vampire.getRepresentingPlayer().addChatMessage(new ChatComponentTranslation("text.vampirism.cant_fly_day"));
             return true;
         }

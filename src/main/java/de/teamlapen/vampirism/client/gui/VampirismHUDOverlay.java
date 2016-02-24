@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.lib.lib.gui.client.ExtendedGui;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -82,9 +81,6 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     biteable = VampirePlayer.get((EntityPlayer) entity);
                 }
                 if (biteable != null && biteable.canBeBitten(player)) {
-                    mc.mcProfiler.startSection("vampireFang");
-
-
                     this.mc.getTextureManager().bindTexture(icons);
                     int left = event.resolution.getScaledWidth() / 2 - 8;
                     int top = event.resolution.getScaledHeight() / 2 - 4;
@@ -93,7 +89,6 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     drawTexturedModalRect(left, top, 27, 0, 16, 16);
                     GL11.glColor4f(1F, 1F, 1F, 1F);
                     GL11.glDisable(GL11.GL_BLEND);
-                    mc.mcProfiler.endSection();
                     event.setCanceled(true);
                 }
             }
@@ -112,7 +107,6 @@ public class VampirismHUDOverlay extends ExtendedGui {
         GL11.glDisable(GL11.GL_LIGHTING);
         PlayableFaction faction = FactionPlayerHandler.get(mc.thePlayer).getCurrentFaction();
         if (mc.playerController.gameIsSurvivalOrAdventure() && faction != null && faction.renderLevel()) {
-            mc.mcProfiler.startSection("factionLevel");
             // boolean flag1 = false;
             int color = faction.getColor();
             String text = "" + FactionPlayerHandler.get(mc.thePlayer).getCurrentLevel();
@@ -123,7 +117,6 @@ public class VampirismHUDOverlay extends ExtendedGui {
             mc.fontRendererObj.drawString(text, x, y + 1, 0);
             mc.fontRendererObj.drawString(text, x, y - 1, 0);
             mc.fontRendererObj.drawString(text, x, y, color);
-            mc.mcProfiler.endSection();
         }
     }
 
@@ -138,7 +131,6 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
             if (mc.playerController.gameIsSurvivalOrAdventure()) {
                 BloodStats stats = VampirePlayer.get(mc.thePlayer).getBloodStats();
-                mc.mcProfiler.startSection("vampireBlood");
 
                 GL11.glEnable(GL11.GL_BLEND);
 
@@ -162,7 +154,6 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 }
                 this.mc.getTextureManager().bindTexture(Gui.icons);
                 GL11.glDisable(GL11.GL_BLEND);
-                mc.mcProfiler.endSection();
             }
         }
     }
@@ -187,7 +178,6 @@ public class VampirismHUDOverlay extends ExtendedGui {
             int h = (scaledresolution.getScaledHeight());
             if (fullScreen == true) {
                 // Render a see through red square over the whole screen
-                VampirismMod.log.t("test");
                 float r = (float) (screenColor >> 16 & 255) / 255.0F;
                 float g = (float) (screenColor >> 8 & 255) / 255.0F;
                 float b = (float) (screenColor & 255) / 255.0F;

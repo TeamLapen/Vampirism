@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.creativetab.CreativeTabs;
@@ -22,7 +22,7 @@ public class ItemBloodBottle extends VampirismItem implements IFluidContainerIte
 
     public static final int AMOUNT = 9;
     private static final String name = "bloodBottle";
-    private static final int MULTIPLIER = VampirismAPI.FOOD_TO_FLUID_BLOOD;
+    private static final int MULTIPLIER = VReference.FOOD_TO_FLUID_BLOOD;
     private static final int capacity = AMOUNT * MULTIPLIER;
 
     /**
@@ -90,14 +90,14 @@ public class ItemBloodBottle extends VampirismItem implements IFluidContainerIte
             if (playerIn.isSneaking()) {//Remove blood from bar
                 int playerBlood = vampire.getBloodLevel();
                 if (playerBlood > 0) {
-                    int i = fill(itemStackIn, new FluidStack(ModFluids.blood, VampirismAPI.FOOD_TO_FLUID_BLOOD), true);
+                    int i = fill(itemStackIn, new FluidStack(ModFluids.blood, VReference.FOOD_TO_FLUID_BLOOD), true);
                     if (i > 0) {
                         vampire.getBloodStats().consumeBlood(1);
                     }
                 }
             } else {//Fill blood bar
                 if (vampire.getBloodStats().needsBlood()) {
-                    if (drain(itemStackIn, VampirismAPI.FOOD_TO_FLUID_BLOOD, true) != null) {
+                    if (drain(itemStackIn, VReference.FOOD_TO_FLUID_BLOOD, true) != null) {
                         vampire.getBloodStats().addBlood(1, 0);
                     }
                 }

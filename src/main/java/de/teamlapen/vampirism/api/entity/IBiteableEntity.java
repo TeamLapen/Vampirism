@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.api.entity;
 
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+
 /**
  * Implement this in any EntityLivingBase if you want to something special regarding bites.
  * Vampirism will call this instead of the normal I

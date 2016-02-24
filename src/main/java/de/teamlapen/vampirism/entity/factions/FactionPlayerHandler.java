@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.entity.factions;
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
@@ -20,11 +20,11 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
     private final static String TAG = "FactionPlayerHandler";
 
     public static FactionPlayerHandler get(EntityPlayer player) {
-        return (FactionPlayerHandler) player.getExtendedProperties(VampirismAPI.FACTION_PLAYER_HANDLER_PROP);
+        return (FactionPlayerHandler) player.getExtendedProperties(VReference.FACTION_PLAYER_HANDLER_PROP);
     }
 
     public static void register(EntityPlayer player) {
-        player.registerExtendedProperties(VampirismAPI.FACTION_PLAYER_HANDLER_PROP, new FactionPlayerHandler(player));
+        player.registerExtendedProperties(VReference.FACTION_PLAYER_HANDLER_PROP, new FactionPlayerHandler(player));
     }
     private final EntityPlayer player;
     private PlayableFaction currentFaction = null;
@@ -74,7 +74,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
 
     @Override
     public String getPropertyKey() {
-        return VampirismAPI.FACTION_PLAYER_HANDLER_PROP;
+        return VReference.FACTION_PLAYER_HANDLER_PROP;
     }
 
     @Override

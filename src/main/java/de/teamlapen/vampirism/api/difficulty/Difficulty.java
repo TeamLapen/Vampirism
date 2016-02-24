@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.api.entity.difficulty;
+package de.teamlapen.vampirism.api.difficulty;
 
 /**
  * Represents a calculated difficulty level.

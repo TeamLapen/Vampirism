@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.vampirism.api.entity.difficulty.Difficulty;
-import de.teamlapen.vampirism.api.entity.difficulty.IAdjustableLevel;
+import de.teamlapen.vampirism.api.difficulty.Difficulty;
+import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
 import net.minecraft.entity.EntityCreature;
 import net.minecraftforge.event.entity.EntityEvent;

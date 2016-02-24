@@ -72,7 +72,6 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
 
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        this.mc.mcProfiler.startSection(name);
         // Calculate center and radius of the skill cycle
         int cX = this.width / 2;
         int cY = this.height / 2;
@@ -129,7 +128,6 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
             int ty = this.height / 7;
             mc.fontRendererObj.drawStringWithShadow(name, tx, ty, 16777215);
         }
-        this.mc.mcProfiler.endSection();
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 

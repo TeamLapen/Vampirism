@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.api.entity.player.vampire;
 
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
-import de.teamlapen.vampirism.api.entity.IVampire;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import net.minecraft.entity.EntityLivingBase;
 
 /**

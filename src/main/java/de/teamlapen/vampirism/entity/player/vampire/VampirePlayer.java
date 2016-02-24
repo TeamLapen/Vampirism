@@ -4,12 +4,14 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.EnumGarlicStrength;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
-import de.teamlapen.vampirism.api.entity.IVampire;
 import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.vampire.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.Achievements;
 import de.teamlapen.vampirism.core.ModPotions;
@@ -65,6 +67,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
     private final String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
     private final SkillHandler skillHandler;
     private boolean sundamage_cache = false;
+    private EnumGarlicStrength garlic_cache = EnumGarlicStrength.NONE;
     private int biteCooldown = 0;
     private int eyeType = 0;
     private int ticksInSun = 0;
@@ -118,6 +121,14 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
         return true;
     }
 
+    @Override
+    public void consumeBlood(int amt, float saturationMod) {
+        amt = this.bloodStats.addBlood(amt, saturationMod);
+        if (amt > 0) {
+            handleSpareBlood(amt);
+        }
+    }
+
     public BITE_TYPE determineBiteType(EntityLivingBase entity) {
         if (entity instanceof IBiteableEntity) {
             if (((IBiteableEntity) entity).canBeBitten(this)) return BITE_TYPE.SUCK_BLOOD;
@@ -136,6 +147,11 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
             return BITE_TYPE.ATTACK;
         }
         return BITE_TYPE.ATTACK;
+    }
+
+    @Override
+    public boolean doesResistGarlic(EnumGarlicStrength strength) {
+        return false;
     }
 
     @Override
@@ -203,15 +219,28 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
     }
 
     @Override
+    public EnumGarlicStrength isGettingGarlicDamage() {
+        return isGettingGarlicDamage(false);
+    }
+
+    @Override
+    public EnumGarlicStrength isGettingGarlicDamage(boolean forcerefresh) {
+        if (forcerefresh) {
+            garlic_cache = Helper.gettingGarlicDamage(player);
+        }
+        return garlic_cache;
+    }
+
+    @Override
     public boolean isGettingSundamage(boolean forcerefresh) {
-        if (player.ticksExisted % 8 == 0) {
+        if (forcerefresh) {
             sundamage_cache = Helper.gettingSundamge(player);
         }
         return sundamage_cache;
     }
 
     @Override
-    public boolean isGettingSundamge() {
+    public boolean isGettingSundamage() {
         return isGettingSundamage(false);
     }
 
@@ -326,18 +355,33 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
 
     @Override
     public void onUpdate() {
+        int level = getLevel();
+        if (level > 0) {
+            if (player.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 1) {
+                isGettingSundamage(true);
+            }
+            if (player.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 6) {
+                isGettingGarlicDamage(true);
+            }
+        } else {
+            sundamage_cache = false;
+            garlic_cache = EnumGarlicStrength.NONE;
+        }
 
         if (!isRemote()) {
-            if (getLevel() > 0) {
+            if (level > 0) {
                 boolean sync = false;
                 boolean syncToAll = false;
                 NBTTagCompound syncPacket = new NBTTagCompound();
 
                 if (biteCooldown > 0) biteCooldown--;
-                if (isGettingSundamge()) {
+                if (isGettingSundamage()) {
                     handleSunDamage();
                 } else if (ticksInSun > 0) {
                     ticksInSun--;
+                }
+                if (isGettingGarlicDamage() != EnumGarlicStrength.NONE) {
+                    handleGarlicDamage();
                 }
                 if (skillHandler.updateSkills()) {
                     sync = true;
@@ -355,12 +399,12 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
 
 
         } else {
-            if (getLevel() > 0) {
+            if (level > 0) {
                 if (player.ticksExisted % 100 == 8 && player.getActivePotionEffect(Potion.nightVision) == null) {
                     player.addPotionEffect(new FakeNightVisionPotionEffect());
                 }
                 skillHandler.updateSkills();
-                if (isGettingSundamge()) {
+                if (isGettingSundamage()) {
                     handleSunDamage();
                 } else if (ticksInSun > 0) {
                     ticksInSun--;
@@ -480,15 +524,19 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
         }
         biteCooldown = Balance.vp.BITE_COOLDOWN;
         if (blood > 0) {
-            int amt = this.bloodStats.addBlood(blood, saturationMod);
-            if (amt > 0) {
-                handleSpareBlood(amt);
-            }
+            consumeBlood(blood, saturationMod);
             player.addStat(Achievements.suckingBlood, 1);
             NBTTagCompound updatePacket = bloodStats.writeUpdate(new NBTTagCompound());
             updatePacket.setInteger(KEY_SPAWN_BITE_PARTICLE, entity.getEntityId());
             sync(updatePacket, true);
         }
+    }
+
+    /**
+     * Handle garlic damage
+     */
+    private void handleGarlicDamage() {
+        //TODO
     }
 
     /**
@@ -516,7 +564,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
         }
         if (getLevel() >= Balance.vp.SUNDAMAGE_MINLEVEL && ticksInSun >= 100 && player.ticksExisted % 40 == 5) {
             float damage = (float) (Balance.vp.SUNDAMAGE_DAMAGE * getSundamageMultiplier());
-            player.attackEntityFrom(VampirismAPI.sundamage, damage);
+            player.attackEntityFrom(VReference.sundamage, damage);
         }
     }
 

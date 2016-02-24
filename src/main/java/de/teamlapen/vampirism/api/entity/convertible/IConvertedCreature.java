@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api.entity.convertible;
 
-import de.teamlapen.vampirism.api.entity.IVampire;
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import net.minecraft.entity.EntityCreature;
 
 /**

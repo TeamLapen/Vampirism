@@ -45,6 +45,22 @@ public class BalanceMobProps extends BalanceValues {
     @DefaultDouble(value = 0.28D, minValue = 0.1, maxValue = 2, name = "hunter_speed")
     public double VAMPIRE_HUNTER_SPEED;
 
+    @DefaultDouble(value = 30D, minValue = 10D, maxValue = 10000D, name = "vampire_max_health")
+    public double VAMPIRE_MAX_HEALTH;
+    @DefaultDouble(value = 3D, minValue = 0D, maxValue = 10000, name = "vampire_max_health_pl", comment = "Max health is increased by this for every level the vampire has")
+    public double VAMPIRE_MAX_HEALTH_PL;
+    @DefaultDouble(value = 3D, minValue = 0D, name = "vampire_attack_damage")
+    public double VAMPIRE_ATTACK_DAMAGE;
+    @DefaultDouble(value = 1D, minValue = 0D, name = "vampire_attack_damage_pl")
+    public double VAMPIRE_ATTACK_DAMAGE_PL;
+    @DefaultDouble(value = 0.3D, minValue = 0.1, maxValue = 2, name = "vampire_speed")
+    public double VAMPIRE_SPEED;
+    @DefaultInt(value = 100, minValue = 0, maxValue = 1000000, name = "vampire_spawn_probe", comment = "e.g. Zombie spawn probe: 100")
+    public int VAMPIRE_SPAWN_PROBE;
+
+    @DefaultDouble(value = 0.5, minValue = 0.5, name = "vampire_mob_sun_damage")
+    public double VAMPIRE_MOB_SUN_DAMAGE;
+
     public BalanceMobProps(File directory) {
         super("mob_prop", directory);
     }

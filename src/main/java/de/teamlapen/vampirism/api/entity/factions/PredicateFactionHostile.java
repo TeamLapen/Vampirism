@@ -7,27 +7,44 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import javax.annotation.Nullable;
 
-/**
- * Created by Max on 22.02.2016.
- */
+
 public class PredicateFactionHostile implements Predicate<EntityLivingBase> {
     private final Faction thisFaction;
     private final boolean player;
     private final boolean nonPlayer;
     private final boolean neutralPlayer;
+    /**
+     * If null, all other faction are seen as hostile
+     */
+    private final Faction otherFaction;
 
-    public PredicateFactionHostile(Faction thisFaction, boolean player, boolean nonPlayer, boolean neutralPlayer) {
+    /**
+     * Selects entities
+     *
+     * @param thisFaction   The friendly faction
+     * @param player        If players should be selected
+     * @param nonPlayer     If non players should be selected
+     * @param neutralPlayer If neutral playsers should be selected
+     * @param otherFaction  If this is not null, only entities of this faction are selected.
+     */
+    public PredicateFactionHostile(Faction thisFaction, boolean player, boolean nonPlayer, boolean neutralPlayer, Faction otherFaction) {
         this.thisFaction = thisFaction;
         this.player = player;
         this.nonPlayer = nonPlayer;
         this.neutralPlayer = neutralPlayer;
+        this.otherFaction= otherFaction;
+    }
+
+    public PredicateFactionHostile(Faction thisFaction, boolean player, boolean nonPlayer, boolean neutralPlayer) {
+        this(thisFaction, player, nonPlayer, neutralPlayer,null);
     }
 
     @Override
     public boolean apply(@Nullable EntityLivingBase input) {
         if (input == null) return false;
         if (nonPlayer && input instanceof IFactionEntity) {
-            return !thisFaction.equals(((IFactionEntity) input).getFaction());
+            Faction other = ((IFactionEntity) input).getFaction();
+            return !thisFaction.equals(other) && (otherFaction == null || otherFaction.equals(other));
 
         }
         if (player && input instanceof EntityPlayer) {
@@ -35,7 +52,7 @@ public class PredicateFactionHostile implements Predicate<EntityLivingBase> {
             if (f == null) {
                 return neutralPlayer;
             } else {
-                return !thisFaction.equals(f);
+                return !thisFaction.equals(f) && (otherFaction == null || otherFaction.equals(f));
             }
         }
         return false;

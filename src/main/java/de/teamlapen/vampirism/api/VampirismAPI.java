@@ -6,9 +6,7 @@ import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.DamageSource;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -19,25 +17,12 @@ import java.util.concurrent.CopyOnWriteArraySet;
  */
 public class VampirismAPI {
 
-    public static final String EXTENDED_CREATURE_PROP = "ExtCreatureVampirism";
-    public static final String FACTION_PLAYER_HANDLER_PROP = "FactionHandlerVampirism";
-    public static final String FLUID_BLOOD_NAME = "vampirismblood";
-    /**
-     * One blood in the players blood stats represents this amount of mB fluid blood
-     */
-    public static final int FOOD_TO_FLUID_BLOOD = 100;
+
     private final static HashMap<Integer, Boolean> sundamageDims = new HashMap<Integer, Boolean>();
     private final static HashMap<Integer, Boolean> sundamageConfiguredDims = new HashMap<Integer, Boolean>();
     private final static Set<Integer> noSundamageBiomes = new CopyOnWriteArraySet<Integer>();
 
-    /**
-     * Hunter creatures are of this creature type. But when they are counted for spawning they belong to {@link EnumCreatureType#MONSTER}
-     */
-    public static EnumCreatureType hunterCreatureType;
-    /**
-     * Vampire creatures are of this creature type. But when they are counted for spawning they belong to {@link EnumCreatureType#MONSTER}
-     */
-    public static EnumCreatureType vampireCreatureType;
+
     /**
      * Vampire Player Faction
      * Filled during pre-init.
@@ -48,7 +33,7 @@ public class VampirismAPI {
      * Filled during pre-init.
      */
     public static PlayableFaction<IHunterPlayer> HUNTER_FACTION;
-    public static DamageSource sundamage = new DamageSource("sun").setDamageBypassesArmor().setMagicDamage();
+
     private static boolean defaultSundamage = false;
 
     static {
@@ -62,7 +47,7 @@ public class VampirismAPI {
      * @return The respective {@link IFactionPlayerHandler}
      */
     public static IFactionPlayerHandler getFactionPlayerHandler(EntityPlayer player) {
-        return (IFactionPlayerHandler) player.getExtendedProperties(FACTION_PLAYER_HANDLER_PROP);
+        return (IFactionPlayerHandler) player.getExtendedProperties(VReference.FACTION_PLAYER_HANDLER_PROP);
     }
 
     /**
@@ -81,7 +66,7 @@ public class VampirismAPI {
      * @return
      */
     public static IExtendedCreatureVampirism getExtendedCreatureVampirism(EntityCreature creature) {
-        return (IExtendedCreatureVampirism) creature.getExtendedProperties(EXTENDED_CREATURE_PROP);
+        return (IExtendedCreatureVampirism) creature.getExtendedProperties(VReference.EXTENDED_CREATURE_PROP);
     }
 
     public static void addNoSundamageBiome(int id) {

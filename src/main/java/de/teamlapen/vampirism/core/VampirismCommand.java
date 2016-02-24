@@ -189,9 +189,9 @@ public class VampirismCommand extends BasicCommand {
         return "vampirism";
     }
 
-    public boolean isSenderCreative(ICommandSender sender) {
+    protected boolean isSenderCreative(ICommandSender sender) {
         if (VampirismMod.inDev)
             return true;
-        return sender.canCommandSenderUseCommand(2, this.getCommandName());
+        return super.isSenderCreative(sender);
     }
 }

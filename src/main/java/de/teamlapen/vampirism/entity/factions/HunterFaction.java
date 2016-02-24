@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity.factions;
 
-import de.teamlapen.vampirism.api.entity.IHunter;
 import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
+import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.util.EnumChatFormatting;

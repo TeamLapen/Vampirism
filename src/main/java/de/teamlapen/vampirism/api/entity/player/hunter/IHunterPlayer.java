@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api.entity.player.hunter;
 
-import de.teamlapen.vampirism.api.entity.IHunter;
+import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 

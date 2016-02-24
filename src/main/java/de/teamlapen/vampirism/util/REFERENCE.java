@@ -14,4 +14,12 @@ public class REFERENCE {
     public static final String FORGE_VERSION = "@FVERSION@";
 
     public static final int EYE_TYPE_COUNT = 6;
+    /**
+     * Check for vampire garlic damage every n ticks
+     */
+    public final static int REFRESH_GARLIC_TICKS = 40;
+    /**
+     * Check for vampire sundamage every n ticks
+     */
+    public final static int REFRESH_SUNDAMAGE_TICKS = 8;
 }

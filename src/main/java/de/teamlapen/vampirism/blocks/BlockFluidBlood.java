@@ -15,9 +15,4 @@ public class BlockFluidBlood extends BlockFluidFinite {
         ModFluids.blood.setBlock(this);
         setRegistryName(REFERENCE.MODID, name);
     }
-
-    @Override
-    public int getRenderType() {
-        return 1;
-    }
 }

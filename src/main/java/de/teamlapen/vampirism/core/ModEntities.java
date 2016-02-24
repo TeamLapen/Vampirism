@@ -5,11 +5,13 @@ import com.google.common.collect.Iterators;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.convertible.BiteableRegistry;
+import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedSheep;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
+import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -32,7 +34,7 @@ import java.util.List;
  */
 public class ModEntities {
     public static final String BASIC_HUNTER_NAME = "vampirism.vampireHunter";
-    public static final String VAMPIRE_NAME = "vampirism.vampire";
+    public static final String BASIC_VAMPIRE_NAME = "vampirism.vampire";
     public static final String DRACULA_NAME = "vampirism.dracula";
     public static final String GHOST_NAME = "vampirism.ghost";
     public static final String VAMPIRE_BARON = "vampirism.vampireBaron";
@@ -117,8 +119,8 @@ public class ModEntities {
         registerEntity(EntityConvertedCreature.class, CONVERTED_CREATURE, false);
         registerEntity(EntityConvertedSheep.class, CONVERTED_SHEEP, false);
         registerEntity(EntityBasicHunter.class, BASIC_HUNTER_NAME, true);
+        registerEntity(EntityBasicVampire.class, BASIC_VAMPIRE_NAME, Balance.mobProps.VAMPIRE_SPAWN_PROBE, 1, 3, EnumCreatureType.MONSTER, zombieBiomes);
         registerConvertibles();
-        //TODO init spawn egg
     }
 
     private static void registerEntity(Class<? extends Entity> clazz, String name, boolean egg) {
@@ -126,6 +128,7 @@ public class ModEntities {
         VampirismMod.log.d("EntityRegister", "Adding " + name + "(" + clazz.getSimpleName() + ") with mod id %d", modEntityId);
         EntityRegistry.registerModEntity(clazz, name.replace("vampirism.", ""), modEntityId++, VampirismMod.instance, 80, 1, true);
         if (egg) {
+            EntityRegistry.registerEgg(clazz, 0x8B15A3, name.hashCode());
             spawnableEntityNames.add(name);
         }
 

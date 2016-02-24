@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
@@ -25,7 +26,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     private boolean entityChanged = false;
 
     public EntityConvertedCreature(World world) {
-        super(world);
+        super(world, false);
         //TODO make something that applies to all IHunter this.tasks.addTask(1, new EntityAIAvoidEntity(this, EntityHunterBase.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.05));
 
         //this.tasks.addTask(3, new VampireAIFleeSun(this, 1F));
@@ -48,6 +49,12 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
 
     public T getOldCreature() {
         return entityCreature;
+    }
+
+    @Override
+    public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount) {
+        if (forSpawnCount && type == EnumCreatureType.CREATURE) return true;
+        return super.isCreatureType(type, forSpawnCount);
     }
 
     @Override

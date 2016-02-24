@@ -123,6 +123,10 @@ public abstract class BasicCommand extends CommandBase {
         subCommands.add(s);
     }
 
+    protected boolean isSenderCreative(ICommandSender sender) {
+        return sender.canCommandSenderUseCommand(2, this.getCommandName());
+    }
+
     /**
      * Returns the subcommand matching the given name.
      * If no command is found, returns a default "unknown" command.

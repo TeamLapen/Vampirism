@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.api.entity.difficulty;
+package de.teamlapen.vampirism.api.difficulty;
 
 /**
  * If a entity implements this the level will automatically be set on world join.
