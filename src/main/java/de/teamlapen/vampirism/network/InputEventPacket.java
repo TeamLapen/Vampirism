@@ -1,9 +1,10 @@
 package de.teamlapen.vampirism.network;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireSkill;
-import de.teamlapen.vampirism.api.entity.player.vampire.SkillRegistry;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.vampire.skills.SkillRegistry;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentTranslation;
@@ -84,7 +85,7 @@ public class InputEventPacket implements IMessage {
                     VampirismMod.log.e(TAG, e, "Receiving invalid param for %s", message.action);
                 }
                 if (id != -1) {
-                    IVampireSkill skill = SkillRegistry.getSkillFromId(id);
+                    IVampireSkill skill = ((SkillRegistry) VampirismAPI.skillRegistry()).getSkillFromId(id);
                     if (skill != null) {
                         IVampireSkill.PERM r = VampirePlayer.get(player).getSkillHandler().toggleSkill(skill);
                         switch (r) {

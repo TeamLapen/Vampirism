@@ -2,9 +2,11 @@ package de.teamlapen.vampirism.entity.converted;
 
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.convertible.BiteableRegistry;
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
+import de.teamlapen.vampirism.api.entity.factions.PredicateFactionHostile;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
@@ -27,12 +29,10 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
 
     public EntityConvertedCreature(World world) {
         super(world, false);
-        //TODO make something that applies to all IHunter this.tasks.addTask(1, new EntityAIAvoidEntity(this, EntityHunterBase.class, BALANCE.MOBPROP.VAMPIRE_DISTANCE_HUNTER, 1.0, 1.05));
-
+        this.tasks.addTask(1, new EntityAIAvoidEntity<>(this, EntityCreature.class, new PredicateFactionHostile(getFaction(), false, true, false, VReference.HUNTER_FACTION), 10, 1.0, 1.1));
         //this.tasks.addTask(3, new VampireAIFleeSun(this, 1F));
         this.tasks.addTask(4, new EntityAIRestrictSun(this));
-        tasks.addTask(5, new net.minecraft.entity.ai.EntityAIAttackOnCollide(this, EntityPlayer.class, 0.9D, false));
-        //TODO make something that applies to all IHunter tasks.addTask(5, new net.minecraft.entity.ai.EntityAIAttackOnCollide(this, EntityHunterBase.class, 1.0D, true));
+        tasks.addTask(5, new net.minecraft.entity.ai.EntityAIAttackOnCollide(this, 0.9D, false));
 
 
         this.tasks.addTask(11, new EntityAIWander(this, 0.7));
@@ -40,6 +40,8 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
         this.tasks.addTask(15, new EntityAILookIdle(this));
 
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, new PredicateFactionHostile(getFaction(), true, false, true)));
+        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, new PredicateFactionHostile(getFaction(), false, true, false)));
     }
 
     @Override
@@ -191,7 +193,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
      * @return The {@link de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler.IDefaultHelper} for this creature
      */
     protected IConvertingHandler.IDefaultHelper getConvertedHelper() {
-        IConvertingHandler handler = BiteableRegistry.getEntry(entityCreature).convertingHandler;
+        IConvertingHandler handler = VampirismAPI.biteableRegistry().getEntry(entityCreature).convertingHandler;
         if (handler instanceof DefaultConvertingHandler) {
             return ((DefaultConvertingHandler) handler).getHelper();
         }

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.config;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.convertible.BiteableRegistry;
+import de.teamlapen.vampirism.entity.SundamageRegistry;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
@@ -40,14 +40,14 @@ public class Configs {
         try {
 
             Map<String, Integer> defaultValues = loadBloodValuesFromReader(new InputStreamReader(Configs.class.getResourceAsStream("/default_blood_values.txt")), "default_blood_values.txt");
-            BiteableRegistry.addBloodValues(defaultValues);
+            VampirismAPI.biteableRegistry().addBloodValues(defaultValues);
         } catch (IOException e) {
             VampirismMod.log.e(TAG, e, "Could not read default blood values, this should not happen and destroys the mod experience");
         }
         if (bloodConfigFile.exists()) {
             try {
                 Map<String, Integer> override = loadBloodValuesFromReader(new FileReader(bloodConfigFile), bloodConfigFile.getName());
-                BiteableRegistry.overrideBloodValues(override);
+                VampirismAPI.biteableRegistry().overrideBloodValues(override);
                 VampirismMod.log.i(TAG, "Succesfully loaded additional blood value file");
             } catch (IOException e) {
                 VampirismMod.log.e(TAG, "Could not read blood values from config file %s", bloodConfigFile.getName());
@@ -73,8 +73,8 @@ public class Configs {
         //General
         realism_mode = main_config.getBoolean("vampire_realism_mode", CATEGORY_GENERAL, false, "Changes a few things and changes some default balance values to make it more 'realistic'. You have to reset the balance values and restart MC after changing this.");
         resetConfigurationInDev = main_config.getBoolean("reset_configuration_in_dev", CATEGORY_GENERAL, true, "Only relevant for developers");
-        VampirismAPI.setDefaultDimsSundamage(main_config.getBoolean("sundamage_default", CATEGORY_GENERAL, false, "Whether you should receive sundamge in unknown dimension or not"));
-        VampirismAPI.resetConfiguredSundamgeDims();
+        ((SundamageRegistry) VampirismAPI.sundamageRegistry()).setDefaultDimsSundamage(main_config.getBoolean("sundamage_default", CATEGORY_GENERAL, false, "Whether you should receive sundamge in unknown dimension or not"));
+        ((SundamageRegistry) VampirismAPI.sundamageRegistry()).resetConfiguredSundamgeDims();
         String[] sundamageDims = main_config.getStringList("sundamage_dims", CATEGORY_GENERAL, new String[0], "Specify if individual dimensions should have sundamage. Use e.g. '5:1' to enable sundamage for dimension 5 or '5:0' to disable it");
         for (String s : sundamageDims) {
             String[] t = s.split(":");
@@ -85,7 +85,7 @@ public class Configs {
             try {
                 int dim = Integer.valueOf(t[0]);
                 boolean type = Integer.valueOf(t[1]) != 0 ? true : false;
-                VampirismAPI.specifyConfiguredSundamageForDim(dim, type);
+                ((SundamageRegistry) VampirismAPI.sundamageRegistry()).specifyConfiguredSundamageForDim(dim, type);
             } catch (NumberFormatException e) {
                 VampirismMod.log.w(TAG, "Cannot understand sundamge dimension line '%s'. Failed to convert numbers", s);
                 continue;

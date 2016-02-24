@@ -1,5 +1,8 @@
 package de.teamlapen.vampirism.api;
 
+import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.util.DamageSource;
 
@@ -24,4 +27,14 @@ public class VReference {
      */
     public static EnumCreatureType vampireCreatureType;
     public static DamageSource sundamage = new DamageSource("sun").setDamageBypassesArmor().setMagicDamage();
+    /**
+     * Vampire Player Faction
+     * Filled during pre-init.
+     */
+    public static PlayableFaction<IVampirePlayer> VAMPIRE_FACTION;
+    /**
+     * Hunter Player Faction
+     * Filled during pre-init.
+     */
+    public static PlayableFaction<IHunterPlayer> HUNTER_FACTION;
 }

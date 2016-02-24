@@ -4,7 +4,7 @@ import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.factions.FactionRegistry;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -188,7 +188,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
     }
 
     private PlayableFaction getFactionFromString(String f) {
-        for (PlayableFaction p : FactionRegistry.getPlayableFactions()) {
+        for (PlayableFaction p : VampirismAPI.factionRegistry().getPlayableFactions()) {
             if (p.prop.equals(f)) {
                 return p;
             }

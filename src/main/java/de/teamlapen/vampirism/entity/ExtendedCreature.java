@@ -4,9 +4,9 @@ import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
-import de.teamlapen.vampirism.api.entity.convertible.BiteableEntry;
-import de.teamlapen.vampirism.api.entity.convertible.BiteableRegistry;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
@@ -46,7 +46,7 @@ public class ExtendedCreature implements ISyncable.ISyncableExtendedProperties, 
 
     public ExtendedCreature(EntityCreature entity) {
         this.entity = entity;
-        BiteableEntry entry = BiteableRegistry.getEntry(entity);
+        BiteableEntry entry = VampirismAPI.biteableRegistry().getEntry(entity);
         if (entry != null) {
             maxBlood = entry.blood;
             canBecomeVampire = entry.convertible;
@@ -130,7 +130,7 @@ public class ExtendedCreature implements ISyncable.ISyncableExtendedProperties, 
     public void makeVampire() {
         if (canBecomeVampire()) {
             blood = 0;
-            Entity e = (Entity) BiteableRegistry.convert(entity);
+            Entity e = (Entity) VampirismAPI.biteableRegistry().convert(entity);
             if (e != null) {
                 entity.setDead();
                 entity.worldObj.spawnEntityInWorld(e);

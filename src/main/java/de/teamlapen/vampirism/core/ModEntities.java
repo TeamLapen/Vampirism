@@ -4,7 +4,8 @@ import com.google.common.base.Predicates;
 import com.google.common.collect.Iterators;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.convertible.BiteableRegistry;
+import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.IBiteableRegistry;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityGhost;
@@ -75,11 +76,12 @@ public class ModEntities {
      */
     private static void registerConvertibles() {
         String base = REFERENCE.MODID + ":textures/entity/vanilla/%sOverlay.png";
-        BiteableRegistry.addConvertible(EntityCow.class, String.format(base, "cow"));
-        BiteableRegistry.addConvertible(EntityPig.class, String.format(base, "pig"));
-        BiteableRegistry.addConvertible(EntityOcelot.class, String.format(base, "cat"));
-        BiteableRegistry.addConvertible(EntityHorse.class, String.format(base, "horse"));
-        BiteableRegistry.addConvertible(EntitySheep.class, String.format(base, "sheep"), new EntityConvertedSheep.ConvertingSheepHandler());
+        IBiteableRegistry registry = VampirismAPI.biteableRegistry();
+        registry.addConvertible(EntityCow.class, String.format(base, "cow"));
+        registry.addConvertible(EntityPig.class, String.format(base, "pig"));
+        registry.addConvertible(EntityOcelot.class, String.format(base, "cat"));
+        registry.addConvertible(EntityHorse.class, String.format(base, "horse"));
+        registry.addConvertible(EntitySheep.class, String.format(base, "sheep"), new EntityConvertedSheep.ConvertingSheepHandler());
     }
 
     private static void init(FMLInitializationEvent event) {

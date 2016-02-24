@@ -69,7 +69,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         MovingObjectPosition p = Minecraft.getMinecraft().objectMouseOver;
 
         if (p != null && p.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && p.entityHit != null) {
-            VampirePlayer player = VampirePlayer.get(mc.thePlayer);
+            IVampirePlayer player = VampirePlayer.get(mc.thePlayer);
             if (player.getLevel() > 0) {
                 Entity entity = p.entityHit;
                 IBiteableEntity biteable = null;

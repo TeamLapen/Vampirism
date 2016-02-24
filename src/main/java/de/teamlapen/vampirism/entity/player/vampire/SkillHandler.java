@@ -1,10 +1,8 @@
 package de.teamlapen.vampirism.entity.player.vampire;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.player.vampire.ILastingVampireSkill;
-import de.teamlapen.vampirism.api.entity.player.vampire.ISkillHandler;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampireSkill;
-import de.teamlapen.vampirism.api.entity.player.vampire.SkillRegistry;
+import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.player.vampire.*;
 import de.teamlapen.vampirism.entity.player.vampire.skills.*;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -23,12 +21,13 @@ public class SkillHandler implements ISkillHandler {
     public static BatSkill batSkill;
 
     public static void registerDefaultSkills() {
-        freezeSkill = SkillRegistry.registerSkill(new FreezeSkill(), "freeze");
-        invisibilitySkill = SkillRegistry.registerSkill(new InvisibilitySkill(), "invisible");
-        regenSkill = SkillRegistry.registerSkill(new RegenSkill(), "regen");
-        teleportSkill = SkillRegistry.registerSkill(new TeleportSkill(), "teleport");
-        rageSkill = SkillRegistry.registerSkill(new VampireRageSkill(), "rage");
-        batSkill = SkillRegistry.registerSkill(new BatSkill(), "bat");
+        ISkillRegistry registry = VampirismAPI.skillRegistry();
+        freezeSkill = registry.registerSkill(new FreezeSkill(), "freeze");
+        invisibilitySkill = registry.registerSkill(new InvisibilitySkill(), "invisible");
+        regenSkill = registry.registerSkill(new RegenSkill(), "regen");
+        teleportSkill = registry.registerSkill(new TeleportSkill(), "teleport");
+        rageSkill = registry.registerSkill(new VampireRageSkill(), "rage");
+        batSkill = registry.registerSkill(new BatSkill(), "bat");
     }
     /**
      * Saves timers for skill ids
@@ -38,19 +37,19 @@ public class SkillHandler implements ISkillHandler {
      * >0 - Active {@link ILastingVampireSkill}
      */
     private final int[] skillTimer;
-    private final VampirePlayer vampire;
+    private final IVampirePlayer vampire;
     private boolean dirty = false;
 
-    SkillHandler(VampirePlayer player) {
+    SkillHandler(IVampirePlayer player) {
         vampire = player;
-        this.skillTimer = new int[SkillRegistry.getSkillCount()];
+        this.skillTimer = new int[VampirismAPI.skillRegistry().getSkillCount()];
     }
 
     public void deactivateAllSkills() {
         for (int i = 0; i < skillTimer.length; i++) {
             if (skillTimer[i] > 0) {
-                skillTimer[i] = -SkillRegistry.getSkillFromId(i).getCooldown();
-                ((ILastingVampireSkill) SkillRegistry.getSkillFromId(i)).onDeactivated(vampire);
+                skillTimer[i] = -((SkillRegistry) VampirismAPI.skillRegistry()).getSkillFromId(i).getCooldown();
+                ((ILastingVampireSkill) ((SkillRegistry) VampirismAPI.skillRegistry()).getSkillFromId(i)).onDeactivated(vampire);
 
             }
         }
@@ -58,12 +57,12 @@ public class SkillHandler implements ISkillHandler {
 
     @Override
     public List<IVampireSkill> getAvailableSkills() {
-        return SkillRegistry.getAvailableSkills(vampire);
+        return VampirismAPI.skillRegistry().getAvailableSkills(vampire);
     }
 
     @Override
     public float getPercentageForSkill(IVampireSkill skill) {
-        Integer id = SkillRegistry.getIdFromSkill(skill);
+        Integer id = ((SkillRegistry) VampirismAPI.skillRegistry()).getIdFromSkill(skill);
         int i = skillTimer[id];
         if (i == 0) return 0F;
         if (i > 0) return i / ((float) ((ILastingVampireSkill) skill).getDuration(vampire.getLevel()));
@@ -72,12 +71,12 @@ public class SkillHandler implements ISkillHandler {
 
     @Override
     public boolean isSkillActive(ILastingVampireSkill skill) {
-        return skillTimer[SkillRegistry.getIdFromSkill(skill)] > 0;
+        return skillTimer[((SkillRegistry) VampirismAPI.skillRegistry()).getIdFromSkill(skill)] > 0;
     }
 
     @Override
     public boolean isSkillActive(String id) {
-        IVampireSkill skill = SkillRegistry.getSkillFromKey(id);
+        IVampireSkill skill = VampirismAPI.skillRegistry().getSkillFromKey(id);
         if (skill != null) {
             return isSkillActive((ILastingVampireSkill) skill);
         } else {
@@ -91,7 +90,7 @@ public class SkillHandler implements ISkillHandler {
     public void resetTimers() {
         for (int i = 0; i < skillTimer.length; i++) {
             if (skillTimer[i] > 0) {
-                ((ILastingVampireSkill) SkillRegistry.getSkillFromId(i)).onDeactivated(vampire);
+                ((ILastingVampireSkill) ((SkillRegistry) VampirismAPI.skillRegistry()).getSkillFromId(i)).onDeactivated(vampire);
             }
             skillTimer[i] = 0;
         }
@@ -101,7 +100,7 @@ public class SkillHandler implements ISkillHandler {
     @Override
     public IVampireSkill.PERM toggleSkill(IVampireSkill skill) {
 
-        int id = SkillRegistry.getIdFromSkill(skill);
+        int id = ((SkillRegistry) VampirismAPI.skillRegistry()).getIdFromSkill(skill);
         int t = skillTimer[id];
         VampirismMod.log.t("Toggling skill %s with id %d at current time %d", skill, id, t);
         if (t > 0) {
@@ -135,11 +134,11 @@ public class SkillHandler implements ISkillHandler {
         NBTTagCompound skills = nbt.getCompoundTag("skills");
         if (skills != null) {
             for (String key : skills.getKeySet()) {
-                IVampireSkill skill = SkillRegistry.getSkillFromKey(key);
+                IVampireSkill skill = VampirismAPI.skillRegistry().getSkillFromKey(key);
                 if (skill == null) {
                     VampirismMod.log.w(TAG, "Did not find skill with key %s", key);
                 } else {
-                    skillTimer[SkillRegistry.getIdFromSkill(skill)] = skills.getInteger(key);
+                    skillTimer[((SkillRegistry) VampirismAPI.skillRegistry()).getIdFromSkill(skill)] = skills.getInteger(key);
                 }
             }
         }
@@ -149,7 +148,7 @@ public class SkillHandler implements ISkillHandler {
         if (!vampire.isRemote()) {
             for (int i = 0; i < skillTimer.length; i++) {
                 if (skillTimer[i] > 0) {
-                    ((ILastingVampireSkill) SkillRegistry.getSkillFromId(i)).onReActivated(vampire);
+                    ((ILastingVampireSkill) ((SkillRegistry) VampirismAPI.skillRegistry()).getSkillFromId(i)).onReActivated(vampire);
                 }
             }
         }
@@ -164,9 +163,9 @@ public class SkillHandler implements ISkillHandler {
                 int old = skillTimer[i];
                 skillTimer[i] = updated[i];
                 if (updated[i] > 0 && old <= 0) {
-                    ((ILastingVampireSkill) SkillRegistry.getSkillFromId(i)).onActivatedClient(vampire);
+                    ((ILastingVampireSkill) ((SkillRegistry) VampirismAPI.skillRegistry()).getSkillFromId(i)).onActivatedClient(vampire);
                 } else if (updated[i] <= 0 && old > 0) {
-                    ((ILastingVampireSkill) SkillRegistry.getSkillFromId(i)).onDeactivated(vampire);//Called here if the skill is deactivated
+                    ((ILastingVampireSkill) ((SkillRegistry) VampirismAPI.skillRegistry()).getSkillFromId(i)).onDeactivated(vampire);//Called here if the skill is deactivated
                 }
 
             }
@@ -176,8 +175,8 @@ public class SkillHandler implements ISkillHandler {
     void saveToNbt(NBTTagCompound nbt) {
         NBTTagCompound skills = new NBTTagCompound();
         for (int i = 0; i < skillTimer.length; i++) {
-            IVampireSkill s = SkillRegistry.getSkillFromId(i);
-            String key = SkillRegistry.getKeyFromSkill(s);
+            IVampireSkill s = ((SkillRegistry) VampirismAPI.skillRegistry()).getSkillFromId(i);
+            String key = VampirismAPI.skillRegistry().getKeyFromSkill(s);
             skills.setInteger(key, skillTimer[i]);
         }
         nbt.setTag("skills", skills);
@@ -196,7 +195,7 @@ public class SkillHandler implements ISkillHandler {
                     skillTimer[i]++;
                 } else {
                     skillTimer[i]--;
-                    ILastingVampireSkill skill = (ILastingVampireSkill) SkillRegistry.getSkillFromId(i);
+                    ILastingVampireSkill skill = (ILastingVampireSkill) ((SkillRegistry) VampirismAPI.skillRegistry()).getSkillFromId(i);
                     if (t == 1) {
                         skill.onDeactivated(vampire);//Called here if the skill runs out.
                         dirty = true;

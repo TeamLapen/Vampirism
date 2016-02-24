@@ -1,4 +1,6 @@
-package de.teamlapen.vampirism.api.entity.convertible;
+package de.teamlapen.vampirism.api.entity;
+
+import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 
 /**
  * Stores max blood as well as information about converting for EntityCreature classes

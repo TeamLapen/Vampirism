@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.entity.vampire;
 
 import de.teamlapen.vampirism.api.EnumGarlicStrength;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.Faction;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.config.Balance;
@@ -54,7 +53,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
 
     @Override
     public Faction getFaction() {
-        return VampirismAPI.VAMPIRE_FACTION;
+        return VReference.VAMPIRE_FACTION;
     }
 
     @Override

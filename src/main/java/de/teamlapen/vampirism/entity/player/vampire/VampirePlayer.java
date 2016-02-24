@@ -6,7 +6,6 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumGarlicStrength;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.vampire.ISkillHandler;
@@ -56,11 +55,11 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
      * @return
      */
     public static VampirePlayer get(EntityPlayer player) {
-        return (VampirePlayer) VampirismAPI.VAMPIRE_FACTION.getProp(player);
+        return (VampirePlayer) VReference.VAMPIRE_FACTION.getProp(player);
     }
 
     public static void register(EntityPlayer player) {
-        player.registerExtendedProperties(VampirismAPI.VAMPIRE_FACTION.prop, new VampirePlayer(player));
+        player.registerExtendedProperties(VReference.VAMPIRE_FACTION.prop, new VampirePlayer(player));
     }
     private final BloodStats bloodStats;
     private final String KEY_EYE = "eye_type";
@@ -177,7 +176,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
 
     @Override
     public PlayableFaction<IVampirePlayer> getFaction() {
-        return VampirismAPI.VAMPIRE_FACTION;
+        return VReference.VAMPIRE_FACTION;
     }
 
     @Override
@@ -187,7 +186,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
 
     @Override
     public String getPropertyKey() {
-        return VampirismAPI.VAMPIRE_FACTION.prop;
+        return VReference.VAMPIRE_FACTION.prop;
     }
 
     public ISkillHandler getSkillHandler() {

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.api.EnumGarlicStrength;
 import de.teamlapen.vampirism.api.IGarlicBlock;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.BalanceGeneral;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -26,7 +27,7 @@ public class Helper {
     public static boolean gettingSundamge(EntityLivingBase entity) {
         if (entity.worldObj != null) {
             entity.worldObj.theProfiler.startSection("vampirism_checkSundamage");
-            if (VampirismAPI.getSundamageInDim(entity.worldObj.provider.getDimensionId())) {
+            if (VampirismAPI.sundamageRegistry().getSundamageInDim(entity.worldObj.provider.getDimensionId())) {
                 if (!entity.worldObj.isRaining()) {
                     float angle = entity.worldObj.getCelestialAngle(1.0F);
                     //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
@@ -38,7 +39,7 @@ public class Helper {
                             } catch (NullPointerException e) {
                                 //Strange thing which happen in 1.7.10, not sure about 1.8
                             }
-                            if (VampirismAPI.getSundamageInBiome(biomeID)) {
+                            if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biomeID)) {
                                 entity.worldObj.theProfiler.endSection();
                                 return true;
                             }
@@ -90,14 +91,14 @@ public class Helper {
     }
 
     public static boolean canBecomeVampire(EntityPlayer player) {
-        return FactionPlayerHandler.get(player).canJoin(VampirismAPI.VAMPIRE_FACTION);
+        return FactionPlayerHandler.get(player).canJoin(VReference.VAMPIRE_FACTION);
     }
 
     public static boolean isVampire(EntityPlayer player) {
-        return FactionPlayerHandler.get(player).isInFaction(VampirismAPI.VAMPIRE_FACTION);
+        return FactionPlayerHandler.get(player).isInFaction(VReference.VAMPIRE_FACTION);
     }
 
     public static boolean isHunter(EntityPlayer player) {
-        return FactionPlayerHandler.get(player).isInFaction(VampirismAPI.HUNTER_FACTION);
+        return FactionPlayerHandler.get(player).isInFaction(VReference.HUNTER_FACTION);
     }
 }

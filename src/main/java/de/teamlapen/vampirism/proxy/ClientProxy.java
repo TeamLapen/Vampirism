@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.proxy;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.convertible.BiteableRegistry;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.client.core.ModBlocksRender;
 import de.teamlapen.vampirism.client.core.ModEntitiesRender;
 import de.teamlapen.vampirism.client.core.ModItemsRender;
@@ -75,7 +75,7 @@ public class ClientProxy extends CommonProxy {
     private void registerVampireEntityOverlays() {
         RenderManager manager = Minecraft.getMinecraft().getRenderManager();
         registerVampirePlayerHead(manager);
-        for (Map.Entry<Class<? extends EntityCreature>, String> entry : BiteableRegistry.getConvertibleOverlay().entrySet()) {
+        for (Map.Entry<Class<? extends EntityCreature>, String> entry : VampirismAPI.biteableRegistry().getConvertibleOverlay().entrySet()) {
             registerVampireEntityOverlay(manager, entry.getKey(), new ResourceLocation(entry.getValue()));
         }
     }

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.entity.vampire;
 
-import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.factions.PredicateFactionHostile;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
@@ -50,7 +50,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
             this.tasks.addTask(1, new EntityAIBreakDoor(this));
             ((PathNavigateGround) this.getNavigator()).setBreakDoors(true);
         }
-        this.tasks.addTask(2, new EntityAIAvoidEntity<>(this, EntityCreature.class, new PredicateFactionHostile(getFaction(), false, true, false, VampirismAPI.HUNTER_FACTION), 10, 1.0, 1.1));
+        this.tasks.addTask(2, new EntityAIAvoidEntity<>(this, EntityCreature.class, new PredicateFactionHostile(getFaction(), false, true, false, VReference.HUNTER_FACTION), 10, 1.0, 1.1));
         this.tasks.addTask(2, new EntityAIRestrictSun(this));
         this.tasks.addTask(3, new VampireAIFleeSun(this, 0.9, false));
         this.tasks.addTask(3, new VampireAIFleeGarlic(this, 0.9, false));
@@ -63,9 +63,10 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityHunterBase.class, 17F));
         this.tasks.addTask(11, new EntityAILookIdle(this));
 
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, new PredicateFactionHostile(getFaction(), true, false, true)));
-        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, new PredicateFactionHostile(getFaction(), false, true, false)));
+        this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, false));
+        this.targetTasks.addTask(4, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, new PredicateFactionHostile(getFaction(), true, false, true)));
+        this.targetTasks.addTask(5, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, new PredicateFactionHostile(getFaction(), false, true, false)));//TODO maybe make them not attack hunters, although it looks interesting
+
     }
 
     @Override

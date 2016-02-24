@@ -2,9 +2,14 @@ package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.lib.lib.gui.client.GuiPieMenu;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.player.vampire.*;
+import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.player.vampire.DefaultSkill;
+import de.teamlapen.vampirism.api.entity.player.vampire.ISkillHandler;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampireSkill;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.vampire.skills.SkillRegistry;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.util.ResourceLocation;
@@ -103,7 +108,7 @@ public class GuiSelectSkill extends GuiPieMenu<IVampireSkill> {
     @Override
     protected void onElementSelected(IVampireSkill skill) {
         if (skill != fakeSkill) {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLESKILL, "" + SkillRegistry.getIdFromSkill(skill)));
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLESKILL, "" + ((SkillRegistry) VampirismAPI.skillRegistry()).getIdFromSkill(skill)));
         }
     }
 

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.factions.FactionRegistry;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -29,7 +29,7 @@ public class VampirismCommand extends BasicCommand {
         if (VampirismMod.inDev) {
             aliases.add("v");
         }
-        final PlayableFaction[] pfactions = FactionRegistry.getPlayableFactions();
+        final PlayableFaction[] pfactions = VampirismAPI.factionRegistry().getPlayableFactions();
         final String[] pfaction_names = new String[pfactions.length];
         for (int i = 0; i < pfactions.length; i++) {
             pfaction_names[i] = pfactions[i].name;

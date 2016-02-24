@@ -1,29 +1,22 @@
-package de.teamlapen.vampirism.api.entity.player.vampire;
+package de.teamlapen.vampirism.entity.player.vampire.skills;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import de.teamlapen.vampirism.api.entity.player.vampire.ISkillRegistry;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampireSkill;
 import net.minecraft.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Registry for vampire skills.
- * Never use the Integer id's here, they are only intended to be used for sync and to update timers
- */
-public class SkillRegistry {
-    private static final BiMap<String, IVampireSkill> skillMap = HashBiMap.create();
-    private static final BiMap<Integer, IVampireSkill> skillIdMap = HashBiMap.create();
 
-    public static int getSkillCount() {
-        return skillMap.size();
-    }
+public class SkillRegistry implements ISkillRegistry {
+    private final BiMap<String, IVampireSkill> skillMap = HashBiMap.create();
+    private final BiMap<Integer, IVampireSkill> skillIdMap = HashBiMap.create();
 
-    /**
-     * @param player
-     * @return A list of all skills the player can currently use
-     */
-    public static List<IVampireSkill> getAvailableSkills(IVampirePlayer player) {
+    @Override
+    public List<IVampireSkill> getAvailableSkills(IVampirePlayer player) {
         ArrayList<IVampireSkill> sl = new ArrayList<>();
         for (IVampireSkill s : skillMap.values()) {
             if (IVampireSkill.PERM.ALLOWED == s.canUse(player)) {
@@ -34,30 +27,12 @@ public class SkillRegistry {
     }
 
     /**
-     * @param key
-     * @return the skill that is registered with the given key
-     */
-    public static IVampireSkill getSkillFromKey(String key) {
-        return skillMap.get(key);
-    }
-
-    /**
-     * @param skill
-     * @return the key which maps to the given skill
-     */
-    public static String getKeyFromSkill(IVampireSkill skill) {
-        return skillMap.inverse().get(skill);
-    }
-
-
-    /**
-     * FOR INTERNAL USAGE ONLY
      * Throws an exception if skill is not registered
      *
      * @param skill
      * @return The id currently mapped to this skill. Could be different after a restart.
      */
-    public static int getIdFromSkill(IVampireSkill skill) {
+    public int getIdFromSkill(IVampireSkill skill) {
         Integer i = skillIdMap.inverse().get(skill);
         if (i == null) {
             throw new SkillNotRegisteredException(skill);
@@ -65,23 +40,31 @@ public class SkillRegistry {
         return i;
     }
 
-    /**
-     * FOR INTERNAL USAGE ONLY
-     *
-     * @return The skill currently mapped to this id. Could be different after a restart
-     */
-    public static IVampireSkill getSkillFromId(int id) {
-        return skillIdMap.get(id);
+    @Override
+    public String getKeyFromSkill(IVampireSkill skill) {
+        return skillMap.inverse().get(skill);
+    }
+
+    @Override
+    public int getSkillCount() {
+        return skillMap.size();
     }
 
     /**
-     * Register a skill
-     * Preferably during init
      *
-     * @param skill
-     * @return The same skill
+     * @return The skill currently mapped to this id. Could be different after a restart
      */
-    public static <T extends IVampireSkill> T registerSkill(T skill, String key) {
+    public IVampireSkill getSkillFromId(int id) {
+        return skillIdMap.get(id);
+    }
+
+    @Override
+    public IVampireSkill getSkillFromKey(String key) {
+        return skillMap.get(key);
+    }
+
+    @Override
+    public <T extends IVampireSkill> T registerSkill(T skill, String key) {
         if (skill == null || StringUtils.isNullOrEmpty(key)) {
             throw new IllegalArgumentException(String.format("Tried to either register a null skill (%s) or with a null key (%s)", skill, key));
         }
@@ -95,7 +78,7 @@ public class SkillRegistry {
     /**
      * Is thrown if an unregistered skill is used
      */
-    public static class SkillNotRegisteredException extends RuntimeException {
+    public class SkillNotRegisteredException extends RuntimeException {
         public SkillNotRegisteredException(String name) {
             super("Skill " + name + " is not registed. You cannot use it otherwise");
         }

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.entity.player.hunter;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
-import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.config.Balance;
@@ -29,11 +29,11 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
      * @return
      */
     public static HunterPlayer get(EntityPlayer player) {
-        return (HunterPlayer) VampirismAPI.HUNTER_FACTION.getProp(player);
+        return (HunterPlayer) VReference.HUNTER_FACTION.getProp(player);
     }
 
     public static void register(EntityPlayer player) {
-        player.registerExtendedProperties(VampirismAPI.HUNTER_FACTION.prop, new HunterPlayer(player));
+        player.registerExtendedProperties(VReference.HUNTER_FACTION.prop, new HunterPlayer(player));
     }
 
     public HunterPlayer(EntityPlayer player) {
@@ -47,7 +47,7 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
 
     @Override
     public PlayableFaction<IHunterPlayer> getFaction() {
-        return VampirismAPI.HUNTER_FACTION;
+        return VReference.HUNTER_FACTION;
     }
 
     @Override
@@ -57,7 +57,7 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
 
     @Override
     public String getPropertyKey() {
-        return VampirismAPI.HUNTER_FACTION.prop;
+        return VReference.HUNTER_FACTION.prop;
     }
 
     @Override

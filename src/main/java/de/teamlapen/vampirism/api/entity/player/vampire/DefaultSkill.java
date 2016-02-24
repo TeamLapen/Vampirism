@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.entity.player.vampire;
 
+import de.teamlapen.vampirism.api.VampirismAPI;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -47,7 +48,7 @@ public abstract class DefaultSkill implements IVampireSkill {
 
     @Override
     public String toString() {
-        return super.toString() + " (" + SkillRegistry.getKeyFromSkill(this) + ")";
+        return super.toString() + " (" + VampirismAPI.skillRegistry().getKeyFromSkill(this) + ")";
     }
 
 }
