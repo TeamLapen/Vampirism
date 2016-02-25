@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api;
 
-import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.entity.EnumCreatureType;
@@ -31,10 +31,10 @@ public class VReference {
      * Vampire Player Faction
      * Filled during pre-init.
      */
-    public static PlayableFaction<IVampirePlayer> VAMPIRE_FACTION;
+    public static IPlayableFaction<IVampirePlayer> VAMPIRE_FACTION;
     /**
      * Hunter Player Faction
      * Filled during pre-init.
      */
-    public static PlayableFaction<IHunterPlayer> HUNTER_FACTION;
+    public static IPlayableFaction<IHunterPlayer> HUNTER_FACTION;
 }

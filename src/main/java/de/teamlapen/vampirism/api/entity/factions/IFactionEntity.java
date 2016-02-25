@@ -9,5 +9,5 @@ public interface IFactionEntity {
      *
      * @return
      */
-    Faction getFaction();
+    IFaction getFaction();
 }

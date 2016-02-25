@@ -8,6 +8,8 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
@@ -18,8 +20,6 @@ import de.teamlapen.vampirism.entity.converted.BiteableRegistry;
 import de.teamlapen.vampirism.entity.converted.DefaultConvertingHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
-import de.teamlapen.vampirism.entity.factions.HunterFaction;
-import de.teamlapen.vampirism.entity.factions.VampireFaction;
 import de.teamlapen.vampirism.entity.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.vampire.SkillHandler;
@@ -33,6 +33,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.launchwrapper.Launch;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Mod;
@@ -43,6 +44,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 
+import java.awt.*;
 import java.io.File;
 
 /**
@@ -81,10 +83,10 @@ public class VampirismMod {
 
         MinecraftForge.EVENT_BUS.register(new ModEntityEventHandler());
 
-        HelperRegistry.registerPlayerEventReceivingProperty(VampireFaction.instance().prop);
-        HelperRegistry.registerPlayerEventReceivingProperty(HunterFaction.instance().prop);
-        HelperRegistry.registerSyncablePlayerProperty(VampireFaction.instance().prop, VampirePlayer.class);
-        HelperRegistry.registerSyncablePlayerProperty(HunterFaction.instance().prop, HunterPlayer.class);
+        HelperRegistry.registerPlayerEventReceivingProperty(VReference.VAMPIRE_FACTION.prop());
+        HelperRegistry.registerPlayerEventReceivingProperty(VReference.HUNTER_FACTION.prop());
+        HelperRegistry.registerSyncablePlayerProperty(VReference.VAMPIRE_FACTION.prop(), VampirePlayer.class);
+        HelperRegistry.registerSyncablePlayerProperty(VReference.HUNTER_FACTION.prop(), HunterPlayer.class);
         HelperRegistry.registerSyncablePlayerProperty(VReference.FACTION_PLAYER_HANDLER_PROP, FactionPlayerHandler.class);
         Achievements.registerAchievement();
         proxy.onInitStep(IInitListener.Step.INIT, event);
@@ -135,10 +137,10 @@ public class VampirismMod {
         BiteableRegistry biteableRegistry = new BiteableRegistry();
         SkillRegistry skillRegistry = new SkillRegistry();
         VampirismAPI.setUp(factionRegistry, sundamageRegistry, biteableRegistry, skillRegistry);
-        VReference.VAMPIRE_FACTION = VampireFaction.instance();
-        VReference.HUNTER_FACTION = HunterFaction.instance();
-        factionRegistry.addFaction(VReference.VAMPIRE_FACTION);
-        factionRegistry.addFaction(VReference.HUNTER_FACTION);
+        VReference.VAMPIRE_FACTION = factionRegistry.registerPlayableFaction("Vampire", IVampirePlayer.class, Color.magenta.getRGB(), "vampire_player", REFERENCE.HIGHEST_VAMPIRE_LEVEL);
+        VReference.VAMPIRE_FACTION.setChatColor(EnumChatFormatting.LIGHT_PURPLE).setUnlocalizedName("text.vampirism.vampire");
+        VReference.HUNTER_FACTION = factionRegistry.registerPlayableFaction("Hunter", IHunterPlayer.class, Color.BLUE.getRGB(), "hunter_player", REFERENCE.HIGHEST_HUNTER_LEVEL);
+        VReference.HUNTER_FACTION.setChatColor(EnumChatFormatting.BLUE).setUnlocalizedName("text.vampirism.hunter");
         biteableRegistry.setDefaultConvertingHandlerCreator(new BiteableRegistry.ICreateDefaultConvertingHandler() {
             @Override
             public IConvertingHandler create(IConvertingHandler.IDefaultHelper helper) {

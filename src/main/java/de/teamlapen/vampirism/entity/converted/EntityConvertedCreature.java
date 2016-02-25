@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
-import de.teamlapen.vampirism.api.entity.factions.PredicateFactionHostile;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
@@ -29,7 +28,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
 
     public EntityConvertedCreature(World world) {
         super(world, false);
-        this.tasks.addTask(1, new EntityAIAvoidEntity<>(this, EntityCreature.class, new PredicateFactionHostile(getFaction(), false, true, false, VReference.HUNTER_FACTION), 10, 1.0, 1.1));
+        this.tasks.addTask(1, new EntityAIAvoidEntity<>(this, EntityCreature.class, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, VReference.HUNTER_FACTION), 10, 1.0, 1.1));
         //this.tasks.addTask(3, new VampireAIFleeSun(this, 1F));
         this.tasks.addTask(4, new EntityAIRestrictSun(this));
         tasks.addTask(5, new net.minecraft.entity.ai.EntityAIAttackOnCollide(this, 0.9D, false));
@@ -40,8 +39,8 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
         this.tasks.addTask(15, new EntityAILookIdle(this));
 
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, new PredicateFactionHostile(getFaction(), true, false, true)));
-        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, new PredicateFactionHostile(getFaction(), false, true, false)));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, null)));
+        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, null)));
     }
 
     @Override

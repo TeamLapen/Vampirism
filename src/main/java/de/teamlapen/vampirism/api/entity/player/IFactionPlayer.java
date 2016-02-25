@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.api.entity.player;
 import com.google.common.base.Predicate;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
-import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.IExtendedEntityProperties;
@@ -28,10 +28,10 @@ public interface IFactionPlayer extends IFactionEntity, IExtendedEntityPropertie
     /**
      * @return the faction this faction player belongs to
      */
-    PlayableFaction<? extends IFactionPlayer> getFaction();
+    IPlayableFaction<? extends IFactionPlayer> getFaction();
 
     /**
-     * Preferably implement this by calling {@link IFactionPlayerHandler#getCurrentLevel(PlayableFaction)}
+     * Preferably implement this by calling {@link IFactionPlayerHandler#getCurrentLevel(IPlayableFaction)}
      *
      * @return 0 if the player is not part of this faction, something > 0 if the player is part of the faction.
      */

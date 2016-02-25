@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.lib.lib.gui.client.ExtendedGui;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
-import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Configs;
@@ -105,7 +105,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         }
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glDisable(GL11.GL_LIGHTING);
-        PlayableFaction faction = FactionPlayerHandler.get(mc.thePlayer).getCurrentFaction();
+        IPlayableFaction faction = FactionPlayerHandler.get(mc.thePlayer).getCurrentFaction();
         if (mc.playerController.gameIsSurvivalOrAdventure() && faction != null && faction.renderLevel()) {
             // boolean flag1 = false;
             int color = faction.getColor();

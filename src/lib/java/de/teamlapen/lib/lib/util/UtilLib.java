@@ -316,4 +316,11 @@ public class UtilLib {
         return AxisAlignedBB.fromBounds(center.getX()-distance,fullY?0:center.getY()-distance,center.getZ()-distance,center.getX()+distance,fullY?256:center.getY()+distance,center.getZ()+distance);
     }
 
+    public static boolean isNonNull(Object... objects) {
+        for (Object o : objects) {
+            if (o == null) return false;
+        }
+        return true;
+    }
+
 }

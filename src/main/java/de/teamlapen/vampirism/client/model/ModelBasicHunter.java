@@ -7,7 +7,7 @@ import net.minecraft.entity.Entity;
  * Model for Basic Vampire Hunter
  */
 public class ModelBasicHunter extends ModelBipedCloaked {
-    ModelRenderer hatTop, hatRim, axeShaft, axeBlade1, axeBlade2, stake, secondHead, hatTop2, hatRim2, hatRim3;
+    ModelRenderer hatTop, hatRim, axeShaft, axeBlade1, axeBlade2, stake, stakeRight, secondHead, hatTop2, hatRim2, hatRim3;
 
     public ModelBasicHunter() {
         super(0.0F, 0.0F, 64, 64, 0, 28);
@@ -67,6 +67,12 @@ public class ModelBasicHunter extends ModelBipedCloaked {
         stake.setTextureSize(128, 64);
         stake.mirror = true;
 
+        stakeRight = new ModelRenderer(this, 16, 48);
+        stakeRight.addBox(-2F, 8F, -8, 1, 1, 6);
+        stakeRight.setRotationPoint(super.bipedRightArm.rotationPointX, super.bipedRightArm.rotationPointY, super.bipedRightArm.rotationPointZ);
+        stakeRight.setTextureSize(128, 64);
+        stakeRight.mirror = true;
+
         secondHead = new ModelRenderer(this, 0, 0);
         secondHead.setTextureSize(64, 32);
         secondHead.addBox(-4.0F, -8.0F, -4.0F, 8, 8, 8, 0.0F);
@@ -112,12 +118,16 @@ public class ModelBasicHunter extends ModelBipedCloaked {
      * @param f5
      */
     public void renderWeapons(float f5, boolean onlyStake) {
-        if (!onlyStake) {
+        if (onlyStake) {
+
+            stakeRight.render(f5);
+        } else {
             axeShaft.render(f5);
             axeBlade1.render(f5);
             axeBlade2.render(f5);
+            stake.render(f5);
         }
-        stake.render(f5);
+
     }
 
     @Override
@@ -150,6 +160,9 @@ public class ModelBasicHunter extends ModelBipedCloaked {
         stake.rotateAngleX = super.bipedLeftArm.rotateAngleX;
         stake.rotateAngleY = super.bipedLeftArm.rotateAngleY;
         stake.rotateAngleZ = super.bipedLeftArm.rotateAngleZ;
+        stakeRight.rotateAngleX = super.bipedRightArm.rotateAngleX;
+        stakeRight.rotateAngleY = super.bipedRightArm.rotateAngleY;
+        stakeRight.rotateAngleZ = super.bipedRightArm.rotateAngleZ;
         secondHead.rotateAngleX = super.bipedHead.rotateAngleX;
         secondHead.rotateAngleY = super.bipedHead.rotateAngleY;
         secondHead.rotateAngleZ = super.bipedHead.rotateAngleZ;

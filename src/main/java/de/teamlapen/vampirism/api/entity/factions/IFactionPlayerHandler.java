@@ -13,7 +13,7 @@ public interface IFactionPlayerHandler {
      * @param faction
      * @return If the player can join the given faction
      */
-    boolean canJoin(PlayableFaction faction);
+    boolean canJoin(IPlayableFaction faction);
 
     /**
      * Checks currents factions {@link IFactionPlayer#canLeaveFaction()}
@@ -23,7 +23,7 @@ public interface IFactionPlayerHandler {
     /**
      * @return The currently active faction. Can be null
      */
-    PlayableFaction getCurrentFaction();
+    IPlayableFaction getCurrentFaction();
 
     /**
      * @return The currently active faction player. Can be null
@@ -45,21 +45,21 @@ public interface IFactionPlayerHandler {
      * @param f
      * @return If the faction is active: The faction level, otherwise 0
      */
-    int getCurrentLevel(PlayableFaction f);
+    int getCurrentLevel(IPlayableFaction f);
 
     /**
      * @param f
      * @return If the given faction is equal to the current one
      */
-    boolean isInFaction(PlayableFaction f);
+    boolean isInFaction(IPlayableFaction f);
 
     /**
      * Join the given faction and set the faction level to 1.
-     * Only successful if {@link IFactionPlayerHandler#canJoin(PlayableFaction)}
+     * Only successful if {@link IFactionPlayerHandler#canJoin(IPlayableFaction)}
      *
      * @param faction
      */
-    void joinFaction(PlayableFaction faction);
+    void joinFaction(IPlayableFaction faction);
 
     /**
      * Set the players faction and it's level. Only use this if you are sure that you want to override the previous faction.
@@ -68,15 +68,15 @@ public interface IFactionPlayerHandler {
      * @param level
      * @return If successful
      */
-    boolean setFactionAndLevel(PlayableFaction faction, int level);
+    boolean setFactionAndLevel(IPlayableFaction faction, int level);
 
     /**
      * Set the level for a faction. Only works if the player already is in the given faction.
-     * Use {@link IFactionPlayerHandler#joinFaction(PlayableFaction)} to join a faction first or {@link IFactionPlayerHandler#setFactionAndLevel(PlayableFaction, int)} if you are sure what you do
+     * Use {@link IFactionPlayerHandler#joinFaction(IPlayableFaction)} to join a faction first or {@link IFactionPlayerHandler#setFactionAndLevel(IPlayableFaction, int)} if you are sure what you do
      *
      * @param faction
      * @param level
      * @return If successful
      */
-    boolean setFactionLevel(PlayableFaction faction, int level);
+    boolean setFactionLevel(IPlayableFaction faction, int level);
 }

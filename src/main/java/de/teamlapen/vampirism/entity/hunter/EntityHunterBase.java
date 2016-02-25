@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity.hunter;
 
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.factions.Faction;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import net.minecraft.entity.EnumCreatureType;
@@ -24,7 +24,7 @@ public abstract class EntityHunterBase extends EntityVampirism implements IHunte
     }
 
     @Override
-    public Faction getFaction() {
+    public IFaction getFaction() {
         return VReference.HUNTER_FACTION;
     }
 

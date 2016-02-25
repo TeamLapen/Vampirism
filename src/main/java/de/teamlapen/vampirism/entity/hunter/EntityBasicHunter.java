@@ -1,11 +1,12 @@
 package de.teamlapen.vampirism.entity.hunter;
 
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
-import de.teamlapen.vampirism.api.entity.factions.PredicateFactionHostile;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
@@ -50,9 +51,18 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter 
 
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, new PredicateFactionHostile(getFaction(), true, false, false)));
-        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, new PredicateFactionHostile(getFaction(), false, true, false)));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, null)));
+        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, null)));
         this.setEquipmentDropChance(0, 0);
+    }
+
+    @Override
+    public boolean attackEntityAsMob(Entity entity) {
+        boolean flag = super.attackEntityAsMob(entity);
+        if (flag && this.getHeldItem() == null) {
+            this.swingItem();//Swing stake if nothing else is held
+        }
+        return flag;
     }
 
     @Override

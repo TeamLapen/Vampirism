@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
-import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,7 +27,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
         player.registerExtendedProperties(VReference.FACTION_PLAYER_HANDLER_PROP, new FactionPlayerHandler(player));
     }
     private final EntityPlayer player;
-    private PlayableFaction currentFaction = null;
+    private IPlayableFaction currentFaction = null;
     private int currentLevel = 0;
 
     private FactionPlayerHandler(EntityPlayer player) {
@@ -35,14 +35,14 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
     }
 
     @Override
-    public boolean canJoin(PlayableFaction faction) {
+    public boolean canJoin(IPlayableFaction faction) {
         return currentFaction == null;
     }
 
     @Override
     public boolean canLeaveFaction() {
         if (currentFaction == null) return true;
-        return currentFaction.getProp(player).canLeaveFaction();
+        return currentFaction.getPlayerProp(player).canLeaveFaction();
     }
 
     public void copyFrom(EntityPlayer old) {
@@ -53,13 +53,13 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
     }
 
     @Override
-    public PlayableFaction getCurrentFaction() {
+    public IPlayableFaction getCurrentFaction() {
         return currentFaction;
     }
 
     @Override
     public IFactionPlayer getCurrentFactionPlayer() {
-        return currentFaction == null ? null : currentFaction.getProp(player);
+        return currentFaction == null ? null : currentFaction.getPlayerProp(player);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
     }
 
     @Override
-    public int getCurrentLevel(PlayableFaction f) {
+    public int getCurrentLevel(IPlayableFaction f) {
         return isInFaction(f) ? currentLevel : 0;
     }
 
@@ -88,12 +88,12 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
     }
 
     @Override
-    public boolean isInFaction(PlayableFaction f) {
+    public boolean isInFaction(IPlayableFaction f) {
         return currentFaction == f;
     }
 
     @Override
-    public void joinFaction(PlayableFaction faction) {
+    public void joinFaction(IPlayableFaction faction) {
         if (canJoin(faction)) {
             setFactionAndLevel(faction, 1);
         }
@@ -116,7 +116,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
 
     @Override
     public void loadUpdateFromNBT(NBTTagCompound nbt) {
-        PlayableFaction old = currentFaction;
+        IPlayableFaction old = currentFaction;
         int oldLevel = currentLevel;
         String f = nbt.getString("faction");
         if ("null".equals(f)) {
@@ -138,19 +138,19 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
     public void saveNBTData(NBTTagCompound compound) {
         if (currentFaction != null) {
             NBTTagCompound nbt = new NBTTagCompound();
-            nbt.setString("faction", currentFaction.prop);
+            nbt.setString("faction", currentFaction.prop());
             nbt.setInteger("level", currentLevel);
             compound.setTag(getPropertyKey(), nbt);
         }
     }
 
     @Override
-    public boolean setFactionAndLevel(PlayableFaction faction, int level) {
-        PlayableFaction old = currentFaction;
+    public boolean setFactionAndLevel(IPlayableFaction faction, int level) {
+        IPlayableFaction old = currentFaction;
         int oldLevel = currentLevel;
         if (currentFaction != null && (currentFaction != faction || level == 0)) {
-            if (!currentFaction.getProp(player).canLeaveFaction()) {
-                VampirismMod.log.i(TAG, "You cannot leave faction %s, it is prevented by respective mod", currentFaction.prop);
+            if (!currentFaction.getPlayerProp(player).canLeaveFaction()) {
+                VampirismMod.log.i(TAG, "You cannot leave faction %s, it is prevented by respective mod", currentFaction.prop());
                 return false;
             }
         }
@@ -159,7 +159,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
             currentLevel = 0;
         } else {
             if (level < 0 || level > faction.getHighestReachableLevel()) {
-                VampirismMod.log.w(TAG, "Level %d in faction %s cannot be reached", level, faction.prop);
+                VampirismMod.log.w(TAG, "Level %d in faction %s cannot be reached", level, faction.prop());
                 return false;
             }
             currentFaction = faction;
@@ -174,7 +174,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
     }
 
     @Override
-    public boolean setFactionLevel(PlayableFaction faction, int level) {
+    public boolean setFactionLevel(IPlayableFaction faction, int level) {
         if (faction == currentFaction) {
             return setFactionAndLevel(faction, level);
         }
@@ -183,13 +183,13 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
 
     @Override
     public void writeFullUpdateToNBT(NBTTagCompound nbt) {
-        nbt.setString("faction", currentFaction == null ? "null" : currentFaction.prop);
+        nbt.setString("faction", currentFaction == null ? "null" : currentFaction.prop());
         nbt.setInteger("level", currentLevel);
     }
 
-    private PlayableFaction getFactionFromString(String f) {
-        for (PlayableFaction p : VampirismAPI.factionRegistry().getPlayableFactions()) {
-            if (p.prop.equals(f)) {
+    private IPlayableFaction getFactionFromString(String f) {
+        for (IPlayableFaction p : VampirismAPI.factionRegistry().getPlayableFactions()) {
+            if (p.prop().equals(f)) {
                 return p;
             }
         }
@@ -203,14 +203,14 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
      * @param oldFaction
      * @param oldLevel
      */
-    private void notifyFaction(PlayableFaction oldFaction, int oldLevel) {
+    private void notifyFaction(IPlayableFaction oldFaction, int oldLevel) {
         if (oldFaction != currentFaction && oldFaction != null) {
-            VampirismMod.log.t("Leaving faction %s", oldFaction.prop);
-            oldFaction.getProp(player).onLevelChanged(0, oldLevel);
+            VampirismMod.log.t("Leaving faction %s", oldFaction.prop());
+            oldFaction.getPlayerProp(player).onLevelChanged(0, oldLevel);
         }
         if (currentFaction != null) {
             VampirismMod.log.t("Changing to %s %d", currentFaction, currentLevel);
-            currentFaction.getProp(player).onLevelChanged(currentLevel, oldFaction == currentFaction ? oldLevel : 0);
+            currentFaction.getPlayerProp(player).onLevelChanged(currentLevel, oldFaction == currentFaction ? oldLevel : 0);
         }
         if (currentFaction != oldFaction) {
             onChangedFaction();

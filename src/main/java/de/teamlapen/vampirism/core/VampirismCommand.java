@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.factions.PlayableFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
@@ -29,10 +29,10 @@ public class VampirismCommand extends BasicCommand {
         if (VampirismMod.inDev) {
             aliases.add("v");
         }
-        final PlayableFaction[] pfactions = VampirismAPI.factionRegistry().getPlayableFactions();
+        final IPlayableFaction[] pfactions = VampirismAPI.factionRegistry().getPlayableFactions();
         final String[] pfaction_names = new String[pfactions.length];
         for (int i = 0; i < pfactions.length; i++) {
-            pfaction_names[i] = pfactions[i].name;
+            pfaction_names[i] = pfactions[i].name();
         }
         addSub(new SubCommand() {
             @Override
@@ -120,10 +120,10 @@ public class VampirismCommand extends BasicCommand {
                     //Search factions
                     for (int i = 0; i < pfaction_names.length; i++) {
                         if (pfaction_names[i].equalsIgnoreCase(var2[0])) {
-                            PlayableFaction newFaction = pfactions[i];
+                            IPlayableFaction newFaction = pfactions[i];
                             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
                             if (level == 0 && !handler.canLeaveFaction()) {
-                                ((EntityPlayer) var1).addChatComponentMessage(new ChatComponentTranslation("text.vampirism.faction.cant_leave").appendSibling(new ChatComponentText("(" + handler.getCurrentFaction().name + ")")));
+                                ((EntityPlayer) var1).addChatComponentMessage(new ChatComponentTranslation("text.vampirism.faction.cant_leave").appendSibling(new ChatComponentText("(" + handler.getCurrentFaction().name() + ")")));
                                 return;
                             }
                             if (level > newFaction.getHighestReachableLevel()) {
