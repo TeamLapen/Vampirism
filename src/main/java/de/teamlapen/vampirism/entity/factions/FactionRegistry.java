@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,7 +21,7 @@ public class FactionRegistry implements IFactionRegistry {
     private List<Faction> temp = new ArrayList<Faction>();
     private Faction[] allFactions;
     private PlayableFaction[] playableFactions;
-    private Map<Integer, Predicate<EntityLivingBase>> predicateMap = new HashMap<>();
+    private Map<Integer, Predicate<Entity>> predicateMap = new HashMap<>();
 
     /**
      * Finishes registrations during post init.
@@ -49,7 +49,7 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public Predicate<EntityLivingBase> getPredicate(IFaction thisFaction, boolean player, boolean mob, boolean neutralPlayer, IFaction otherFaction) {
+    public Predicate<Entity> getPredicate(IFaction thisFaction, boolean player, boolean mob, boolean neutralPlayer, IFaction otherFaction) {
         int key = 0;
         if (otherFaction != null) {
             int id = ((Faction) thisFaction).getId();
@@ -73,21 +73,21 @@ public class FactionRegistry implements IFactionRegistry {
         }
         key |= id & 63;
         Integer k = Integer.valueOf(key);
-        Predicate<EntityLivingBase> predicate;
+        Predicate<Entity> predicate;
         if (predicateMap.containsKey(k)) {
             predicate = predicateMap.get(k);
         } else {
             predicate = new PredicateFaction(thisFaction, player, mob, neutralPlayer, otherFaction);
             predicateMap.put(k, predicate);
         }
-        VampirismMod.log.t("%s,%b,%b,%b,%s", thisFaction, player, mob, neutralPlayer, otherFaction);
-        VampirismMod.log.t("%s", k);
-        VampirismMod.log.t("%s", predicate);
+//        VampirismMod.log.t("%s,%b,%b,%b,%s", thisFaction, player, mob, neutralPlayer, otherFaction);
+//        VampirismMod.log.t("%s", k);
+//        VampirismMod.log.t("%s", predicate);
         return predicate;
     }
 
     @Override
-    public Predicate<EntityLivingBase> getPredicate(IFaction thisFaction) {
+    public Predicate<Entity> getPredicate(IFaction thisFaction) {
 
         return getPredicate(thisFaction, true, true, true, null);
     }

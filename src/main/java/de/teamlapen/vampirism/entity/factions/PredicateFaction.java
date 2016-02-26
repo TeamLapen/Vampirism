@@ -4,6 +4,7 @@ import com.google.common.base.Predicate;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -12,7 +13,7 @@ import javax.annotation.Nullable;
 /**
  * Predicate for faction related selection
  */
-public class PredicateFaction implements Predicate<EntityLivingBase> {
+public class PredicateFaction implements Predicate<Entity> {
     private final IFaction thisFaction;
     private final boolean player;
     private final boolean nonPlayer;
@@ -44,8 +45,8 @@ public class PredicateFaction implements Predicate<EntityLivingBase> {
     }
 
     @Override
-    public boolean apply(@Nullable EntityLivingBase input) {
-        if (input == null) return false;
+    public boolean apply(@Nullable Entity input) {
+        if (input == null || !(input instanceof EntityLivingBase)) return false;
         if (nonPlayer && input instanceof IFactionEntity) {
             IFaction other = ((IFactionEntity) input).getFaction();
             return !thisFaction.equals(other) && (otherFaction == null || otherFaction.equals(other));

@@ -6,6 +6,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumGarlicStrength;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.vampire.ISkillHandler;
@@ -181,7 +182,12 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
 
     @Override
     public Predicate<? super Entity> getNonFriendlySelector(boolean otherFactionPlayers) {
-        return Predicates.alwaysTrue();//TODO adjust
+        if (otherFactionPlayers) {
+            return Predicates.alwaysTrue();
+        } else {
+            return VampirismAPI.factionRegistry().getPredicate(getFaction());
+        }
+
     }
 
     @Override

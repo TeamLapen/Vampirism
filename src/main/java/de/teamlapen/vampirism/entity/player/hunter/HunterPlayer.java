@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.player.hunter;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.config.Balance;
@@ -52,7 +53,11 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
 
     @Override
     public Predicate<? super Entity> getNonFriendlySelector(boolean otherFactionPlayers) {
-        return Predicates.alwaysTrue();//TODO adjust
+        if (otherFactionPlayers) {
+            return Predicates.alwaysTrue();
+        } else {
+            return VampirismAPI.factionRegistry().getPredicate(getFaction());
+        }
     }
 
     @Override

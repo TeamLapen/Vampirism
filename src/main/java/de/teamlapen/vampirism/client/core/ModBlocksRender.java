@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
+import de.teamlapen.lib.lib.util.InventoryRenderHelper;
+import de.teamlapen.vampirism.blocks.BlockCastleBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.state.IBlockState;
@@ -30,6 +32,10 @@ public class ModBlocksRender {
     }
 
     private static void registerRenderer() {
+        InventoryRenderHelper renderHelper = new InventoryRenderHelper(REFERENCE.MODID);
+        renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.castleBlock), BlockCastleBlock.types);
+
+
         ModelBakery.registerItemVariants(Item.getItemFromBlock(ModBlocks.fluidBlood));
         ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(ModBlocks.fluidBlood), new ItemMeshDefinition() {
             @Override

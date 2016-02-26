@@ -91,4 +91,14 @@ public class InventoryRenderHelper {
         }
     }
 
+    /**
+     * {@link InventoryRenderHelper#registerRender(Item, int, String, String)} with registry name for every variant.
+     * each variant represents one meta value
+     */
+    public void registerRenderAllMeta(Item item, String[] variants) {
+        for (int i = 0; i < variants.length; i++) {
+            registerRender(item, i, variants[i]);
+        }
+    }
+
 }
