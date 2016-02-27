@@ -34,6 +34,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Mod;
@@ -150,6 +151,7 @@ public class VampirismMod {
 
         VReference.hunterCreatureType = EnumHelper.addCreatureType("vampirism:hunter", IHunter.class, 30, Material.air, false, false);
         VReference.vampireCreatureType = EnumHelper.addCreatureType("vampirism:vampire", IVampire.class, 30, Material.air, false, false);
+        VReference.vampirePlantType = EnumPlantType.getPlantType("vampirism_vampire");
     }
 
     /**

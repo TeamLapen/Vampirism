@@ -1,0 +1,13 @@
+{
+  "forge_marker": 1,
+  "variants": {
+    "type": {
+      "vampireorchid": {
+        "model": "cross",
+        "textures": {
+          "cross": "vampirism:blocks/vampireOrchid"
+        }
+      }
+    }
+  }
+}

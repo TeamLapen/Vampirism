@@ -1,7 +1,9 @@
 package de.teamlapen.lib.lib.util;
 
 import com.google.common.base.Predicate;
+import de.teamlapen.lib.VampLib;
 import net.minecraft.block.Block;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -11,8 +13,11 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.*;
+import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.BiomeGenBase;
 
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -321,6 +326,66 @@ public class UtilLib {
             if (o == null) return false;
         }
         return true;
+    }
+
+    private static ChunkCoordIntPair isBiomeAt(World world, int x, int z, List<BiomeGenBase> biomes) {
+        BlockPos pos = world.getWorldChunkManager().findBiomePosition(x, z, 16, biomes, new Random());
+        if (pos != null) {
+            return new ChunkCoordIntPair(pos.getX() >> 4, pos.getZ() >> 4);
+        }
+        return null;
+    }
+
+    /**
+     * Search for a vampire biome by checking every second chunk starting at the player and moving in cicles to the outside
+     *
+     * @param world
+     * @param center   Pos to start with
+     * @param maxDist  Max radius
+     * @param listener Will be notified about status updates. Can be null
+     * @return
+     */
+    public static ChunkCoordIntPair findNearBiome(World world, BlockPos center, int maxDist, List<BiomeGenBase> biomes, ICommandSender listener) {
+        long start = System.currentTimeMillis();
+        maxDist = (maxDist / 20) * 20;//Round it
+        long maxop = (((long) maxDist) * maxDist + maxDist) / 2;
+        ChunkCoordIntPair loc;
+        for (int i = 0; i < maxDist; i += 2) {
+            int cx = -i;
+            for (int cz = -i; cz <= i; cz++) {
+                if (cz % 2 == 0) continue;
+                loc = isBiomeAt(world, center.getX() + (cx << 4), center.getZ() + (cz << 4), biomes);
+                if (loc != null) {
+                    VampLib.log.d("UtilLib", "Took %d ms to find a vampire biome", (int) (System.currentTimeMillis() - start), loc.chunkXPos, loc.chunkZPos);
+                    return loc;
+                }
+                if (cz == i && cx < 0) {
+                    cz = -i;
+                    cx = i;
+                }
+            }
+            int cz = -i;
+            for (int cx2 = -i + 1; cx2 < i; cx2++) {
+                if (cx2 % 2 == 0) continue;
+                loc = isBiomeAt(world, center.getX() + (cx2 << 4), center.getZ() + (cz << 4), biomes);
+                if (loc != null) {
+                    VampLib.log.d("UtilLib", "Took %d ms to find a vampire biome", (int) (System.currentTimeMillis() - start), loc.chunkXPos, loc.chunkZPos);
+                    return loc;
+                }
+                if (cx == i - 1 && cz < 0) {
+                    cz = i;
+                    cx = i - 1;
+                }
+            }
+            if (listener != null && (i * 10) % maxDist == 0) {
+                long op = (((long) i) * i + i) / 2;
+                double perc = ((double) op / maxop) * 100;
+                listener.addChatMessage(new ChatComponentText(((int) perc) + "% finished"));
+            }
+
+        }
+        VampLib.log.d("UtilLib", "Took %d ms to not find a vampire biome", (int) (System.currentTimeMillis() - start));
+        return null;
     }
 
 }

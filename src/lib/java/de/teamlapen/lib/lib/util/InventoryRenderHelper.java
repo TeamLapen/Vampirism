@@ -3,6 +3,7 @@ package de.teamlapen.lib.lib.util;
 import net.minecraft.block.Block;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
+import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.relauncher.Side;
@@ -11,6 +12,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * Helper for item/block model registration.
  * Inspired by @TehNut https://github.com/WayofTime/BloodMagic/blob/1.8/src/main/java/WayofTime/bloodmagic/util/helper/InventoryRenderHelperV2.java
+ *
+ * For blocks that only have the "normal" type, you can use the block methods to declare the item properties in the same file as the block one using "inventory".
+ * For blocks that have multiple types, you have to use the item methods using Item.getItemForBlock and specifiy the item models in blockstates/item
  */
 @SideOnly(Side.CLIENT)
 public class InventoryRenderHelper {
@@ -56,30 +60,33 @@ public class InventoryRenderHelper {
     /**
      * Register a CustomModelResourceLocation using {@link ModelLoader#setCustomModelResourceLocation(Item, int, ModelResourceLocation)} for the block's item
      */
-    public void registerRender(Block block, int meta, String name, String variant) {
-        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), meta, new ModelResourceLocation(new ResourceLocation(domain, name), variant));
+    public void registerRender(Block block, int meta, String name) {
+        ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(block), meta, new ModelResourceLocation(new ResourceLocation(domain, name), "inventory"));
     }
 
     /**
-     * {@link InventoryRenderHelper#registerRender(Block, int, String, String)} with registry name
+     * {@link InventoryRenderHelper#registerRender(Block, int, String)} with registry name
      */
-    public void registerRender(Block block, int meta, String variant) {
-        registerRender(block, meta, block.getRegistryName().split(":")[1], variant);
+    public void registerRender(Block block, int meta) {
+        registerRender(block, meta, block.getRegistryName().split(":")[1]);
     }
 
     /**
-     * {@link InventoryRenderHelper#registerRender(Block, int, String, String)} with meta 0
+     * {@link InventoryRenderHelper#registerRender(Block, int, String)} with meta 0
      */
-    public void registerRender(Block block, String name, String variant) {
-        registerRender(block, 0, name, variant);
+    public void registerRender(Block block, String name) {
+        registerRender(block, 0, name);
     }
 
     /**
-     * {@link InventoryRenderHelper#registerRender(Block, int, String, String)} with registry name and meta 0
+     * Register a item for a block which only has the normal property.
+     * Specify the model in the same file as the block under "inventory"
+     * @param block
      */
-    public void registerRender(Block block, String variant) {
-        registerRender(block, block.getRegistryName().split(":")[1], variant);
+    public void registerRender(Block block){
+        registerRender(block, 0, block.getRegistryName().split(":")[1]);
     }
+
 
     /**
      * {@link InventoryRenderHelper#registerRender(Item, int, String, String)} with registry name for every meta.
@@ -100,5 +107,16 @@ public class InventoryRenderHelper {
             registerRender(item, i, variants[i]);
         }
     }
+
+    /**
+     * {@link InventoryRenderHelper#registerRender(Item, int, String, String)} with registry name for every variant.
+     * each variant represents one meta value
+     */
+    public void registerRenderAllMeta(Item item, IStringSerializable[] variants){
+        for (int i=0;i<variants.length;i++){
+            registerRender(item,i,variants[i].getName());
+        }
+    }
+
 
 }

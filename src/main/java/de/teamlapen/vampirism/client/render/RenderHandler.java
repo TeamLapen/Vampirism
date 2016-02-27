@@ -1,19 +1,25 @@
 package de.teamlapen.vampirism.client.render;
 
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.entity.player.vampire.SkillHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.skills.BatSkill;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Handle most general rendering related stuff
@@ -21,13 +27,42 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderHandler {
     private final Minecraft mc;
+    private final int VAMPIRE_BIOME_FADE_TICKS = 160;
     private EntityBat entityBat;
     private boolean batTransform_shiftedPosY = false;
     private float batTransform_ySize = 0F;
     private float batTransform_eyeHeight;
+    private int vampireBiomeTicks = 0;
 
     public RenderHandler(Minecraft mc) {
         this.mc = mc;
+    }
+
+    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (mc.theWorld == null) return;
+        if (Configs.renderVampireForestFog && VReference.castleDimId != mc.theWorld.provider.getDimensionId() && Helper.isEntityInVampireBiome(mc.thePlayer)) {
+
+
+            if (vampireBiomeTicks < VAMPIRE_BIOME_FADE_TICKS) {
+                vampireBiomeTicks++;
+            }
+        } else {
+            if (vampireBiomeTicks > 0) {
+                vampireBiomeTicks--;
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onFogDensity(EntityViewRenderEvent.FogDensity event) {
+        if (event.entity instanceof EntityPlayer) {
+            if (vampireBiomeTicks > 10) {
+                event.density = 1.0F;
+                event.setCanceled(true);
+            }
+        }
+
     }
 
     @SubscribeEvent
@@ -36,6 +71,24 @@ public class RenderHandler {
             event.setCanceled(true);
         }
     }
+
+//    @SubscribeEvent
+//    public void onEntityJoinWorld(EntityJoinWorldEvent event){
+//        if(event.entity instanceof EntityPlayer){
+//            VampirismMod.log.t("Player"); //TODO check
+//            if(event.entity.equals(mc.thePlayer)){
+//                VampirismMod.log.t("this");
+//                if(Helper.isEntityInVampireBiome(mc.thePlayer)){
+//                    VampirismMod.log.t("that");
+//                    vampireBiomeTicks=VAMPIRE_BIOME_FADE_TICKS;
+//                }
+//                else{
+//                    VampirismMod.log.t(""+event.entity.worldObj.provider.getWorldChunkManager().getBiomeGenAt(null,event.entity.getPosition().getX(),event.entity.getPosition().getZ(),1,1,false)[0]);
+//                    vampireBiomeTicks=0;
+//                }
+//            }
+//        }
+//    }
 
     @SubscribeEvent
     public void onRenderPlayer(RenderPlayerEvent.Pre event) {
@@ -77,6 +130,14 @@ public class RenderHandler {
     }
 
     @SubscribeEvent
+    public void onRenderWorldLast(RenderWorldLastEvent event) {
+        if (mc.theWorld == null) return;
+        if (vampireBiomeTicks > 0) {
+            renderVampireBiomeFog(vampireBiomeTicks);
+        }
+    }
+
+    @SubscribeEvent
     public void renderTick(TickEvent.RenderTickEvent event) {
         /**
          * Render the player a little bit lower in first person and in bad mode.
@@ -105,6 +166,24 @@ public class RenderHandler {
                 }
             }
         }
+    }
+
+    private void renderVampireBiomeFog(int ticks) {
+
+        float f = ((float) VAMPIRE_BIOME_FADE_TICKS) / (float) ticks / 1.5F;
+        GL11.glPushMatrix();
+        boolean fog = GL11.glIsEnabled(GL11.GL_FOG);
+        if (!fog)
+            GL11.glEnable(GL11.GL_FOG);
+        GL11.glFogi(GL11.GL_FOG_MODE, GL11.GL_LINEAR);
+        GL11.glFogf(GL11.GL_FOG_START, 15.0F * f);
+        GL11.glFogf(GL11.GL_FOG_END, 50.5F * f);
+        GL11.glNormal3f(0.0F, -1.0F, 0.0F);
+        GL11.glColor4f(1F, 1F, 1F, 1.0F);
+        GL11.glFogf(GL11.GL_FOG_DENSITY, 1.0F);
+        if (!fog)
+            GL11.glDisable(GL11.GL_FOG);
+        GL11.glPopMatrix();
     }
 
 }

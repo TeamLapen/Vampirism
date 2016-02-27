@@ -15,6 +15,8 @@ public class BalanceGeneral extends BalanceValues {
     public static int GARLIC_CHECK_RANGE;
     @DefaultInt(value = 3, name = "garlic_check_range_vertical", minValue = 1, maxValue = 20, comment = "The vertical distance in which a garlic block has to be to harm. High values might have a performance impact")
     public static int GARLIC_CHECK_VERTICAL_RANGE;
+    @DefaultInt(value = 10, name = "vampire_forest_weight", minValue = 1)
+    public static int VAMPIRE_FOREST_WEIGHT;
 
     /**
      * Creates a configuration for balance values

@@ -1,11 +1,14 @@
 package de.teamlapen.vampirism.util;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumGarlicStrength;
 import de.teamlapen.vampirism.api.IGarlicBlock;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.BalanceGeneral;
+import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.BlockPos;
@@ -100,5 +103,16 @@ public class Helper {
 
     public static boolean isHunter(EntityPlayer player) {
         return FactionPlayerHandler.get(player).isInFaction(VReference.HUNTER_FACTION);
+    }
+
+    public static boolean isEntityInVampireBiome(Entity e) {
+        if (e == null || e.worldObj == null) return false;
+        try {
+            return e.worldObj.getBiomeGenForCoords(e.getPosition()).biomeID == ModBiomes.vampireForest.biomeID;
+        } catch (NullPointerException e1) {
+            //http://openeye.openmods.info/crashes/8cef4d710e41adf9be8362e57ad70d28
+            VampirismMod.log.e("Helper", e1, "Nullpointer when checking biome. This is strange and should not happen");
+            return false;
+        }
     }
 }

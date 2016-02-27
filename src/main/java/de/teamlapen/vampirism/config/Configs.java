@@ -22,12 +22,16 @@ public class Configs {
     public static final String CATEGORY_BALANCE = "balance";
     public static final String CATEGORY_DISABLE = "disabled";
     private final static String TAG = "Configs";
+    private final static String BIOMEVFKEY = "vampire_forest_biome_id";
     public static boolean realism_mode;
     public static boolean resetConfigurationInDev;
     public static int gui_level_offset_x;
     public static int gui_level_offset_y;
+    public static int vampireForestId;
+    public static boolean renderVampireForestFog;
 
     public static boolean disable_replaceVanillaNightVision;
+    public static boolean disable_vampireForest;
     public static boolean sundamage_default;
     public static boolean disable_factionDisplayChat;
     public static boolean playerCanTurnPlayer;
@@ -94,6 +98,8 @@ public class Configs {
 
 
         playerCanTurnPlayer = main_config.getBoolean("player_can_turn_player", CATEGORY_GENERAL, true, "If one player can bite infect a human player with sanguinare");
+        vampireForestId = main_config.getInt(BIOMEVFKEY, CATEGORY_GENERAL, -1, -1, 1000, "If you set this to -1 the mod will try to find a free biome id");
+        renderVampireForestFog = main_config.getBoolean("vampire_forest_fog", CATEGORY_GENERAL, true, "");
         // Gui
         gui_level_offset_x = main_config.getInt("level_offset_x", CATEGORY_GUI, 0, -250, 250, "X-Offset of the level indicator from the center in pixels");
         gui_level_offset_y = main_config.getInt("level_offset_y", CATEGORY_GUI, 47, 0, 270, "Y-Offset of the level indicator from the bottom in pixels");
@@ -102,7 +108,7 @@ public class Configs {
         //Disable
         disable_replaceVanillaNightVision = main_config.getBoolean("disable_replace_night_vision", CATEGORY_DISABLE, false, "Disable replacing vanilla night vision, if disabled the potion is shown to the player all the time");
         disable_factionDisplayChat = main_config.getBoolean("disable_faction_display_chat", CATEGORY_DISABLE, false, "Do not display the player's current faction in chat");
-
+        disable_vampireForest = main_config.getBoolean("disable_vampire_forest", CATEGORY_DISABLE, false, "Disable vampire forest generation");
         if (main_config.hasChanged()) {
             main_config.save();
         }
@@ -111,6 +117,12 @@ public class Configs {
     public static void onConfigurationChanged() {
         VampirismMod.log.i(TAG, "Reloading changed configuration");
         loadConfiguration();
+    }
+
+    public static void updateVampireBiomeId(int newId) {
+        vampireForestId = newId;
+        main_config.get(CATEGORY_GENERAL, BIOMEVFKEY, -1).set(newId);
+        main_config.save();
     }
 
     public static Configuration getMainConfig() {

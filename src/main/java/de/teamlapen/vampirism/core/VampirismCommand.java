@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.BasicCommand;
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -15,8 +17,11 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
+import net.minecraft.world.ChunkCoordIntPair;
+import net.minecraft.world.biome.BiomeGenBase;
 import org.apache.commons.lang3.ArrayUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -179,6 +184,63 @@ public class VampirismCommand extends BasicCommand {
                     }
                 } catch (NumberFormatException e) {
                     sendMessage(var1, "<id> has to be a number");
+                }
+            }
+        });
+        addSub(new SubCommand() {
+            @Override
+            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+                return null;
+            }
+
+            @Override
+            public boolean canCommandSenderUseCommand(ICommandSender var1) {
+                return true;
+            }
+
+            @Override
+            public String getCommandName() {
+                return "checkForVampireBiome";
+            }
+
+            @Override
+            public String getCommandUsage(ICommandSender var1) {
+                return getCommandName() + " <maxRadius>";
+            }
+
+            @Override
+            public void processCommand(ICommandSender var1, String[] var2) {
+                if (Configs.disable_vampireForest) {
+                    var1.addChatMessage(new ChatComponentText("The Vampire Biome is disabled in the config file"));
+                } else {
+                    int maxDist = 5000;
+                    if (var2.length > 0) {
+                        try {
+                            maxDist = Integer.parseInt(var2[0]);
+                        } catch (NumberFormatException e) {
+                            VampirismMod.log.w("CheckVampireBiome", "Failed to parse max dist %s", var2[0]);
+                            var1.addChatMessage(new ChatComponentText("Failed to parse max distance. Using " + maxDist));
+                        }
+                        if (maxDist > 10000) {
+                            if (var2.length > 1 && "yes".equals(var2[1])) {
+
+                            } else {
+                                var1.addChatMessage(new ChatComponentText("This will take a long time. Please use '/" + getCommandUsage(var1) + " yes', if you are sure"));
+                                return;
+                            }
+                        }
+                    }
+                    List<BiomeGenBase> biomes = new ArrayList<BiomeGenBase>();
+                    biomes.add(ModBiomes.vampireForest);
+                    var1.addChatMessage(new ChatComponentTranslation("text.vampirism.biome.looking_for_biome"));
+                    ChunkCoordIntPair pos = UtilLib.findNearBiome(var1.getEntityWorld(), (var1).getPosition(), maxDist, biomes, var1);
+                    if (pos == null) {
+                        var1.addChatMessage(new ChatComponentTranslation("text.vampirism.biome.not_found"));
+                    } else if (isSenderCreative(var1)) {
+                        var1.addChatMessage(new ChatComponentTranslation("text.vampirism.biome.found").appendSibling(new ChatComponentText("[" + (pos.chunkXPos << 4) + "," + (pos.chunkZPos << 4) + "]")));
+                    } else {
+                        var1.addChatMessage(new ChatComponentTranslation("text.vampirism.biome.found"));
+                    }
                 }
             }
         });
