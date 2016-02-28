@@ -2,10 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.items.ItemBloodBottle;
-import de.teamlapen.vampirism.items.ItemHumanHeart;
-import de.teamlapen.vampirism.items.ItemHumanHeartWeak;
-import de.teamlapen.vampirism.items.ItemVampireFang;
+import de.teamlapen.vampirism.items.*;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -19,7 +16,7 @@ public class ModItems {
     public static ItemHumanHeart humanHeart;
     public static ItemHumanHeartWeak humanHeartWeak;
     public static ItemBloodBottle bloodBottle;
-
+    public static ItemTent itemTent;
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
             case PRE_INIT:
@@ -35,6 +32,7 @@ public class ModItems {
         humanHeart = registerItem(new ItemHumanHeart());
         humanHeartWeak = registerItem(new ItemHumanHeartWeak());
         bloodBottle = registerItem(new ItemBloodBottle());
+        itemTent = registerItem(new ItemTent());
     }
 
     private static <T extends Item> T registerItem(T item) {

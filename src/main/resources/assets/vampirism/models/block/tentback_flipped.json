@@ -1,0 +1,41 @@
+{
+  "__comment": "Designed by Maxanier",
+  "textures": {
+    "tent_back": "vampirism:blocks/tent_back"
+  },
+  "elements": [
+    {
+      "from": [
+        0,
+        0,
+        16
+      ],
+      "to": [
+        16,
+        16,
+        16.0625
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0.001,
+            0.001,
+            15.999,
+            15.999
+          ],
+          "texture": "#tent_back"
+        },
+        "south": {
+          "uv": [
+            15.999,
+            0.001,
+            0.001,
+            15.999
+          ],
+          "texture": "#tent_back",
+          "cullface": "south"
+        }
+      }
+    }
+  ]
+}

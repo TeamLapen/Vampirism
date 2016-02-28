@@ -28,6 +28,7 @@ public class ModItemsRender {
         renderHelper.registerRender(ModItems.vampireFang, "normal");
         renderHelper.registerRender(ModItems.humanHeart, "normal");
         renderHelper.registerRender(ModItems.humanHeartWeak, "normal");
+        renderHelper.registerRender(ModItems.itemTent, "normal");
         renderHelper.registerRenderAllMeta(ModItems.bloodBottle, ItemBloodBottle.AMOUNT + 1);
 
     }

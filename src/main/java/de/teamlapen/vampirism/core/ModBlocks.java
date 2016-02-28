@@ -2,10 +2,8 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.item.ItemMetaBlock;
 import de.teamlapen.lib.lib.util.IInitListener;
-import de.teamlapen.vampirism.blocks.BlockCastleBlock;
-import de.teamlapen.vampirism.blocks.BlockCursedEarth;
-import de.teamlapen.vampirism.blocks.BlockFluidBlood;
-import de.teamlapen.vampirism.blocks.VampirismFlower;
+import de.teamlapen.vampirism.blocks.*;
+import de.teamlapen.vampirism.tileentity.TileTent;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
@@ -19,14 +17,21 @@ public class ModBlocks {
     public static BlockCastleBlock castleBlock;
     public static BlockCursedEarth cursedEarth;
     public static VampirismFlower vampirismFlower;
+    public static BlockTent tent;
+    public static BlockTentMain tentMain;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
             case PRE_INIT:
                 registerBlocks();
+                registerTiles();
                 break;
         }
 
+    }
+
+    private static void registerTiles() {
+        GameRegistry.registerTileEntity(TileTent.class, "VampirismTent");
     }
 
     private static void registerBlocks() {
@@ -34,6 +39,8 @@ public class ModBlocks {
         castleBlock = registerBlock(new BlockCastleBlock(), ItemMetaBlock.class);
         cursedEarth = registerBlock(new BlockCursedEarth());
         vampirismFlower = registerBlock(new VampirismFlower(), ItemMetaBlock.class);
+        tent = registerBlock(new BlockTent(), null);
+        tentMain = registerBlock(new BlockTentMain(), null);
 
     }
 

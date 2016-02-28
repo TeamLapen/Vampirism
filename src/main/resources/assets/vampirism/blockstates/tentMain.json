@@ -1,0 +1,35 @@
+{
+  "__comment": "Copied from tent.json. Dont edit this, edit the main file and copy it",
+  "forge_marker": 1,
+  "defaults": {
+    "model": "vampirism:tent"
+  },
+  "variants": {
+    "facing": {
+      "west": {
+        "y": 270
+      },
+      "east": {
+        "y": 90
+      },
+      "north": {
+      },
+      "south": {
+        "y": 180
+      }
+    },
+    "position": {
+      "0": {
+      },
+      "1": {
+      },
+      "2": {
+        "submodel": "vampirism:tentback",
+        "y": 180
+      },
+      "3": {
+        "submodel": "vampirism:tentback_flipped"
+      }
+    }
+  }
+}
