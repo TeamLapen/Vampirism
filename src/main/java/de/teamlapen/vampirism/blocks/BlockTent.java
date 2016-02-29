@@ -5,8 +5,10 @@ import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.world.World;
 
 /**
  * Part of a 2x2 block tent
@@ -25,6 +27,29 @@ public class BlockTent extends VampirismBlock {
         super(name, Material.cloth);
         this.setCreativeTab(null);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(POSITION, 0));
+    }
+
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        super.breakBlock(worldIn, pos, state);
+        EnumFacing dir = state.getValue(FACING);
+        int p = state.getValue(POSITION);
+        if (p == 0) {
+            dir = dir.getOpposite();
+        } else if (p == 1) {
+            pos = pos.offset(dir.rotateY());
+        } else if (p == 2) {
+            pos = pos.offset(dir.rotateY()).offset(dir.getOpposite());
+        } else if (p == 3) {
+            pos = pos.offset(dir);
+            dir = dir.getOpposite();
+        }
+        worldIn.setBlockToAir(pos);
+        worldIn.setBlockToAir(pos.offset(dir));
+        worldIn.setBlockToAir(pos.offset(dir.rotateYCCW()));
+        worldIn.setBlockToAir(pos.offset(dir).offset(dir.rotateYCCW()));
+
+
     }
 
     @Override

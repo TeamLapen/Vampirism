@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.biome.BiomeGenVampireForest;
-import de.teamlapen.vampirism.config.BalanceGeneral;
+import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
@@ -38,7 +38,7 @@ public class ModBiomes {
 
         BiomeDictionary.registerBiomeType(vampireForest, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY);
         if (!Configs.disable_vampireForest) {
-            int weight = BalanceGeneral.VAMPIRE_FOREST_WEIGHT;
+            int weight = Balance.general.VAMPIRE_FOREST_WEIGHT;
             BiomeManager.addBiome(BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(vampireForest, weight));
             VampirismMod.log.d("ModBiomes", "Registered vampire forest with id %d and weight %d", biomeId, weight);
         }

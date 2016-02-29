@@ -29,6 +29,7 @@ import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -44,6 +45,7 @@ import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.awt.*;
 import java.io.File;
@@ -84,6 +86,7 @@ public class VampirismMod {
 
         MinecraftForge.EVENT_BUS.register(new ModEntityEventHandler());
 
+        GameRegistry.registerWorldGenerator(new VampirismWorldGen(), 1000);
         HelperRegistry.registerPlayerEventReceivingProperty(VReference.VAMPIRE_FACTION.prop());
         HelperRegistry.registerPlayerEventReceivingProperty(VReference.HUNTER_FACTION.prop());
         HelperRegistry.registerSyncablePlayerProperty(VReference.VAMPIRE_FACTION.prop(), VampirePlayer.class);

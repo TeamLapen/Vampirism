@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.EnumGarlicStrength;
 import de.teamlapen.vampirism.api.IGarlicBlock;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.config.BalanceGeneral;
+import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.entity.Entity;
@@ -66,13 +66,13 @@ public class Helper {
         entity.worldObj.theProfiler.startSection("vampirism_checkGarlic");
         EnumGarlicStrength max = EnumGarlicStrength.NONE;
         BlockPos middle = entity.getPosition();
-        int dist = BalanceGeneral.GARLIC_CHECK_RANGE;
+        int dist = Balance.general.GARLIC_CHECK_RANGE;
         int minX = middle.getX() - dist;
-        int minY = middle.getY() - BalanceGeneral.GARLIC_CHECK_VERTICAL_RANGE;
+        int minY = middle.getY() - Balance.general.GARLIC_CHECK_VERTICAL_RANGE;
         if (minY < 0) minY = 0;
         int minZ = middle.getZ() - dist;
         int maxX = middle.getX() + dist + 1;
-        int maxY = middle.getY() + BalanceGeneral.GARLIC_CHECK_VERTICAL_RANGE + 1 + 1;
+        int maxY = middle.getY() + Balance.general.GARLIC_CHECK_VERTICAL_RANGE + 1 + 1;
         int maxZ = middle.getZ() + dist + 1;
         BlockPos.MutableBlockPos blockpos = new BlockPos.MutableBlockPos();
 
