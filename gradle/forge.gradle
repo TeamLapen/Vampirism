@@ -22,6 +22,7 @@ minecraft {
 }
 
 processResources {
+    exclude '**/Thumbs.db'
     // replace stuff in mcmod.info, nothing else
     from(sourceSets.main.resources.srcDirs) {
         include '*.info'
@@ -33,7 +34,7 @@ processResources {
         exclude '**/*.info'
     }
 
-    exclude '**/Thumbs.db'
+
 }
 
 jar {

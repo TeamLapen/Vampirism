@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.util;
 
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.MathHelper;
 
 import java.util.HashMap;
@@ -105,14 +104,12 @@ public class SunDmgHelper {
      */
     public static boolean gettingSundamge(EntityLivingBase entity) {
         try {
-            MinecraftServer.getServer().theProfiler.startSection("vampirism_checkSundamage");
             if (entity.worldObj != null && getSundamageInDim(entity.worldObj.provider.dimensionId)) {
                 if (!entity.worldObj.isRaining()) {
                     float angle = entity.worldObj.getCelestialAngle(1.0F);
                     if (angle > 0.78 || angle < 0.24) {
                         if (entity.worldObj.canBlockSeeTheSky(MathHelper.floor_double(entity.posX), MathHelper.floor_double(entity.posY), MathHelper.floor_double(entity.posZ))) {
                             if (getSundamageInBiome(entity.worldObj.getBiomeGenForCoords(MathHelper.floor_double(entity.posX), MathHelper.floor_double(entity.posZ)).biomeID)) {
-                                MinecraftServer.getServer().theProfiler.endSection();
                                 return true;
                             }
                         }
@@ -120,9 +117,8 @@ public class SunDmgHelper {
 
                 }
             }
-            MinecraftServer.getServer().theProfiler.endSection();
         } catch (Exception e) {
-            Logger.e("SunDmgHelper", "Really strange exception while trying to check sundamage", e);
+            Logger.e("SunDmgHelper", e, "Really strange exception while trying to check sundamage");
             return false;
         }
         return false;
