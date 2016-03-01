@@ -5,16 +5,16 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Interface for vampire player skills
+ * Interface for vampire player actions
  */
-public interface IVampireSkill {
+public interface IVampireAction {
     /**
-     * Checks if the player can use this skill
+     * Checks if the player can use this action
      */
     PERM canUse(IVampirePlayer vampire);
 
     /**
-     * @return Cooldown time in ticks until the skill can be used again
+     * @return Cooldown time in ticks until the action can be used again
      */
     int getCooldown();
 
@@ -45,15 +45,15 @@ public interface IVampireSkill {
     String getUnlocalizedName();
 
     /**
-     * Called when the skill is activated. Only called server side
+     * Called when the action is activated. Only called server side
      *
      * @param vampire
-     * @return Whether the skill was successfully activated. !Does not give any feedback to the user!
+     * @return Whether the action was successfully activated. !Does not give any feedback to the user!
      */
     boolean onActivated(IVampirePlayer vampire);
 
     enum PERM {
-        ALLOWED, DISABLED, LEVEL_TO_LOW, DISALLOWED, COOLDOWN//Cooldown should not be used by the skill itself, but only by the {@link ISkillHandler}
+        ALLOWED, DISABLED, LEVEL_TO_LOW, DISALLOWED, COOLDOWN//Cooldown should not be used by the skill itself, but only by the {@link IActionHandler}
     }
 
 }

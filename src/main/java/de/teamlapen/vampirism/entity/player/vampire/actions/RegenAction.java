@@ -1,6 +1,6 @@
-package de.teamlapen.vampirism.entity.player.vampire.skills;
+package de.teamlapen.vampirism.entity.player.vampire.actions;
 
-import de.teamlapen.vampirism.api.entity.player.vampire.DefaultSkill;
+import de.teamlapen.vampirism.api.entity.player.vampire.DefaultAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
@@ -9,15 +9,15 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
 
-public class RegenSkill extends DefaultSkill {
+public class RegenAction extends DefaultAction {
 
-    public RegenSkill() {
+    public RegenAction() {
         super(null);
     }
 
     @Override
     public int getCooldown() {
-        return Balance.vps.REGEN_COOLDOWN;
+        return Balance.vps.REGEN_COOLDOWN * 20;
     }
 
     @Override

@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.vampire.ISkillHandler;
+import de.teamlapen.vampirism.api.entity.player.vampire.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
@@ -65,7 +65,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
     private final BloodStats bloodStats;
     private final String KEY_EYE = "eye_type";
     private final String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
-    private final SkillHandler skillHandler;
+    private final ActionHandler actionHandler;
     private boolean sundamage_cache = false;
     private EnumGarlicStrength garlic_cache = EnumGarlicStrength.NONE;
     private int biteCooldown = 0;
@@ -76,7 +76,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
         super(player);
         applyEntityAttributes();
         bloodStats = new BloodStats(player);
-        skillHandler = new SkillHandler(this);
+        actionHandler = new ActionHandler(this);
     }
 
     /**
@@ -150,6 +150,10 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
         return false;
     }
 
+    public IActionHandler getActionHandler() {
+        return actionHandler;
+    }
+
     @Override
     public int getBloodLevel() {
         return bloodStats.getBloodLevel();
@@ -189,10 +193,6 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
     @Override
     public String getPropertyKey() {
         return VReference.VAMPIRE_FACTION.prop();
-    }
-
-    public ISkillHandler getSkillHandler() {
-        return skillHandler;
     }
 
     @Override
@@ -245,7 +245,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
     public void loadData(NBTTagCompound nbt) {
         bloodStats.readNBT(nbt);
         eyeType = nbt.getInteger(KEY_EYE);
-        skillHandler.loadFromNbt(nbt);
+        actionHandler.loadFromNbt(nbt);
     }
 
     @Override
@@ -272,7 +272,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
 
     @Override
     public void onDeath(DamageSource src) {
-        skillHandler.deactivateAllSkills();
+        actionHandler.deactivateAllActions();
     }
 
     @Override
@@ -283,7 +283,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
     @Override
     public void onJoinWorld() {
         if (getLevel() > 0) {
-            skillHandler.onSkillsReactivated();
+            actionHandler.onActionsReactivated();
             ticksInSun = 0;
         }
     }
@@ -298,7 +298,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
             if (newLevel > 0) {
                 player.addStat(Achievements.becomingAVampire, 1);
             } else {
-                skillHandler.resetTimers();
+                actionHandler.resetTimers();
             }
         } else {
             if (oldLevel == 0) {
@@ -375,10 +375,10 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
                 if (isGettingGarlicDamage() != EnumGarlicStrength.NONE) {
                     handleGarlicDamage();
                 }
-                if (skillHandler.updateSkills()) {
+                if (actionHandler.updateActions()) {
                     sync = true;
                     syncToAll = true;
-                    skillHandler.writeUpdateForClient(syncPacket);
+                    actionHandler.writeUpdateForClient(syncPacket);
                 }
 
                 if (sync) {
@@ -395,7 +395,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
                 if (player.ticksExisted % 100 == 8 && player.getActivePotionEffect(Potion.nightVision) == null) {
                     player.addPotionEffect(new FakeNightVisionPotionEffect());
                 }
-                skillHandler.updateSkills();
+                actionHandler.updateActions();
                 if (isGettingSundamage()) {
                     handleSunDamage();
                 } else if (ticksInSun > 0) {
@@ -424,7 +424,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
     public void saveData(NBTTagCompound nbt) {
         bloodStats.writeNBT(nbt);
         nbt.setInteger(KEY_EYE, eyeType);
-        skillHandler.saveToNbt(nbt);
+        actionHandler.saveToNbt(nbt);
 
     }
 
@@ -468,7 +468,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
         if (nbt.hasKey(KEY_SPAWN_BITE_PARTICLE)) {
             spawnBiteParticle(nbt.getInteger(KEY_SPAWN_BITE_PARTICLE));
         }
-        skillHandler.readUpdateFromServer(nbt);
+        actionHandler.readUpdateFromServer(nbt);
         bloodStats.loadUpdate(nbt);
     }
 
@@ -476,7 +476,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
     protected void writeFullUpdate(NBTTagCompound nbt) {
         nbt.setInteger(KEY_EYE, getEyeType());
         bloodStats.writeUpdate(nbt);
-        skillHandler.writeUpdateForClient(nbt);
+        actionHandler.writeUpdateForClient(nbt);
     }
 
     private void applyEntityAttributes() {

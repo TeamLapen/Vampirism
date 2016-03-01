@@ -9,7 +9,7 @@ import java.io.File;
 /**
  * Balance values for vampire players
  */
-public class BalanceVampireSkills extends BalanceValues {
+public class BalanceVampireActions extends BalanceValues {
 
     @DefaultInt(value = 60, minValue = 1, name = "Freeze cooldown", comment = "In seconds")
     public int FREEZE_COOLDOWN;
@@ -60,8 +60,8 @@ public class BalanceVampireSkills extends BalanceValues {
      *
      * @param directory
      */
-    public BalanceVampireSkills(File directory) {
-        super("vampire_player_skills", directory);
+    public BalanceVampireActions(File directory) {
+        super("vampire_player_actions", directory);
     }
 
     @Override

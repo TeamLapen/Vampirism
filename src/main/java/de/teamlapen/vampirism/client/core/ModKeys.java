@@ -24,12 +24,12 @@ public class ModKeys {
     private static final String CATEGORY = "keys.vampirism.category";
     private static final String SUCK_BLOOD = "keys.vampirism.suck";
     //    private static final String AUTO_BLOOD = "keys.vampirism.auto";
-    private static final String TOGGLE_SKILLS = "keys.vampirism.skill";
+    private static final String TOGGLE_ACTIONS = "keys.vampirism.action";
 //    private static final String SWITCH_VISION = "key.vampirism.vision";
 //    private static final String MINION_CONTROL = "key.vampirism.minion_control";
 
     private static KeyBinding SUCK = new KeyBinding(SUCK_BLOOD, Keyboard.KEY_F, CATEGORY);
-    private static KeyBinding SKILL = new KeyBinding(TOGGLE_SKILLS, -98, CATEGORY);
+    private static KeyBinding ACTION = new KeyBinding(TOGGLE_ACTIONS, -98, CATEGORY);
 
     /**
      * @param key
@@ -39,8 +39,8 @@ public class ModKeys {
         switch (key) {
             case SUCK:
                 return SUCK.getKeyCode();
-            case SKILL:
-                return SKILL.getKeyCode();
+            case ACTION:
+                return ACTION.getKeyCode();
             default:
                 return 0;
         }
@@ -62,7 +62,7 @@ public class ModKeys {
         switch (step) {
             case PRE_INIT:
                 MinecraftForge.EVENT_BUS.register(new ModKeys());
-                ClientRegistry.registerKeyBinding(SKILL);
+                ClientRegistry.registerKeyBinding(ACTION);
                 ClientRegistry.registerKeyBinding(SUCK);
                 break;
         }
@@ -82,9 +82,9 @@ public class ModKeys {
             if (mouseOver != null && mouseOver.entityHit != null) {
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + mouseOver.entityHit.getEntityId()));
             }
-        } else if (keyPressed == KEY.SKILL) {
+        } else if (keyPressed == KEY.ACTION) {
             EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-            player.openGui(VampirismMod.instance, ModGuiHandler.ID_SKILL, player.worldObj, player.chunkCoordX, player.chunkCoordY, player.chunkCoordZ);
+            player.openGui(VampirismMod.instance, ModGuiHandler.ID_ACTION, player.worldObj, player.chunkCoordX, player.chunkCoordY, player.chunkCoordZ);
         }
     }
 
@@ -94,13 +94,13 @@ public class ModKeys {
     private KEY getPressedKeyBinding() {
         if (SUCK.isPressed()) {
             return KEY.SUCK;
-        } else if (SKILL.isPressed()) {
-            return KEY.SKILL;
+        } else if (ACTION.isPressed()) {
+            return KEY.ACTION;
         }
         return KEY.UNKNOWN;
     }
 
     public enum KEY {
-        SUCK, UNKNOWN, SKILL
+        SUCK, UNKNOWN, ACTION
     }
 }

@@ -1,22 +1,22 @@
-package de.teamlapen.vampirism.entity.player.vampire.skills;
+package de.teamlapen.vampirism.entity.player.vampire.actions;
 
-import de.teamlapen.vampirism.api.entity.player.vampire.DefaultSkill;
-import de.teamlapen.vampirism.api.entity.player.vampire.ILastingVampireSkill;
+import de.teamlapen.vampirism.api.entity.player.vampire.DefaultAction;
+import de.teamlapen.vampirism.api.entity.player.vampire.ILastingVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.entity.player.vampire.SkillHandler;
+import de.teamlapen.vampirism.entity.player.vampire.ActionHandler;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
-public class VampireRageSkill extends DefaultSkill implements ILastingVampireSkill {
+public class VampireRageAction extends DefaultAction implements ILastingVampireAction {
 
-    public VampireRageSkill() {
+    public VampireRageAction() {
         super(null);
     }
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.getSkillHandler().isSkillActive(SkillHandler.batSkill);
+        return !vampire.getActionHandler().isActionActive(ActionHandler.batAction);
     }
 
     @Override

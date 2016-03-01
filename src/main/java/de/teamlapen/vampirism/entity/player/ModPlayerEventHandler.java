@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.entity.player.vampire.SkillHandler;
+import de.teamlapen.vampirism.entity.player.vampire.ActionHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
@@ -27,7 +27,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onAttackEntity(AttackEntityEvent event) {
-        if (VampirePlayer.get(event.entityPlayer).getSkillHandler().isSkillActive(SkillHandler.batSkill)) {
+        if (VampirePlayer.get(event.entityPlayer).getActionHandler().isActionActive(ActionHandler.batAction)) {
             event.setCanceled(true);
         }
     }
@@ -35,7 +35,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onBlockPlaced(BlockEvent.PlaceEvent event) {
         try {
-            if (VampirePlayer.get(event.player).getSkillHandler().isSkillActive(SkillHandler.batSkill)) {
+            if (VampirePlayer.get(event.player).getActionHandler().isActionActive(ActionHandler.batAction)) {
                 event.setCanceled(true);
             }
         } catch (Exception e) {
@@ -45,7 +45,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-        if (VampirePlayer.get(event.entityPlayer).getSkillHandler().isSkillActive(SkillHandler.batSkill)) {
+        if (VampirePlayer.get(event.entityPlayer).getActionHandler().isActionActive(ActionHandler.batAction)) {
             event.setCanceled(true);
         }
     }
@@ -72,7 +72,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onItemUse(PlayerUseItemEvent.Start event) {
-        if (VampirePlayer.get(event.entityPlayer).getSkillHandler().isSkillActive(SkillHandler.batSkill)) {
+        if (VampirePlayer.get(event.entityPlayer).getActionHandler().isActionActive(ActionHandler.batAction)) {
             event.setCanceled(true);
         }
     }

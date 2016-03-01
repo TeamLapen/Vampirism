@@ -3,13 +3,13 @@ package de.teamlapen.vampirism.client.gui;
 import de.teamlapen.lib.lib.gui.client.GuiPieMenu;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.player.vampire.DefaultSkill;
-import de.teamlapen.vampirism.api.entity.player.vampire.ISkillHandler;
+import de.teamlapen.vampirism.api.entity.player.vampire.DefaultAction;
+import de.teamlapen.vampirism.api.entity.player.vampire.IActionHandler;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampireSkill;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.entity.player.vampire.skills.SkillRegistry;
+import de.teamlapen.vampirism.entity.player.vampire.actions.ActionRegistry;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.util.ResourceLocation;
@@ -17,16 +17,16 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Gui which is used to select vampire skills
+ * Gui which is used to select vampire actions
  */
 @SideOnly(Side.CLIENT)
-public class GuiSelectSkill extends GuiPieMenu<IVampireSkill> {
-    private final static ResourceLocation defaultIcons = new ResourceLocation(REFERENCE.MODID + ":textures/gui/skills.png");
-    private ISkillHandler skillHandler;
+public class GuiSelectAction extends GuiPieMenu<IVampireAction> {
+    private final static ResourceLocation defaultIcons = new ResourceLocation(REFERENCE.MODID + ":textures/gui/actions.png");
+    private IActionHandler actionHandler;
     /**
      * Fake skill which represents the cancel button
      */
-    private IVampireSkill fakeSkill = new DefaultSkill(null) {
+    private IVampireAction fakeAction = new DefaultAction(null) {
         @Override
         public int getCooldown() {
             return 0;
@@ -59,16 +59,16 @@ public class GuiSelectSkill extends GuiPieMenu<IVampireSkill> {
 
     };
 
-    public GuiSelectSkill() {
-        super(2298478591L, "selectSkill");
+    public GuiSelectAction() {
+        super(2298478591L, "selectAction");
     }
 
     @Override
-    protected void afterIconDraw(IVampireSkill p, int x, int y) {
-        if (p == fakeSkill) return;
+    protected void afterIconDraw(IVampireAction p, int x, int y) {
+        if (p == fakeAction) return;
         // Draw usage indicator
 
-        float active = skillHandler.getPercentageForSkill(p);
+        float active = actionHandler.getPercentageForAction(p);
         if (active > 0) {
 
             float h = active * IS;
@@ -81,41 +81,41 @@ public class GuiSelectSkill extends GuiPieMenu<IVampireSkill> {
     }
 
     @Override
-    protected ResourceLocation getIconLoc(IVampireSkill item) {
+    protected ResourceLocation getIconLoc(IVampireAction item) {
         return item.getIconLoc() == null ? defaultIcons : item.getIconLoc();
     }
 
     @Override
     protected int getMenuKeyCode() {
-        return ModKeys.getKeyCode(ModKeys.KEY.SKILL);
+        return ModKeys.getKeyCode(ModKeys.KEY.ACTION);
     }
 
     @Override
-    protected int getMinU(IVampireSkill item) {
+    protected int getMinU(IVampireAction item) {
         return item.getMinU();
     }
 
     @Override
-    protected int getMinV(IVampireSkill item) {
+    protected int getMinV(IVampireAction item) {
         return item.getMinV();
     }
 
     @Override
-    protected String getUnlocalizedName(IVampireSkill item) {
+    protected String getUnlocalizedName(IVampireAction item) {
         return item.getUnlocalizedName();
     }
 
     @Override
-    protected void onElementSelected(IVampireSkill skill) {
-        if (skill != fakeSkill) {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLESKILL, "" + ((SkillRegistry) VampirismAPI.skillRegistry()).getIdFromSkill(skill)));
+    protected void onElementSelected(IVampireAction action) {
+        if (action != fakeAction) {
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + ((ActionRegistry) VampirismAPI.actionRegistry()).getIdFromAction(action)));
         }
     }
 
     @Override
     protected void onGuiInit() {
-        skillHandler = VampirePlayer.get(this.mc.thePlayer).getSkillHandler();
-        elements.addAll(skillHandler.getAvailableSkills());
-        elements.add(fakeSkill);
+        actionHandler = VampirePlayer.get(this.mc.thePlayer).getActionHandler();
+        elements.addAll(actionHandler.getAvailableActions());
+        elements.add(fakeAction);
     }
 }

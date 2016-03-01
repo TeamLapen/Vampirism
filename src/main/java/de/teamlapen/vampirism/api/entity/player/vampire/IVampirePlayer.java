@@ -16,13 +16,12 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer, IMinionLord, I
      */
     BITE_TYPE determineBiteType(EntityLivingBase entity);
 
-    int getBloodLevel();
-
     /**
      * @return The players vampire skill handler
      */
-    ISkillHandler getSkillHandler();
+    IActionHandler getActionHandler();
 
+    int getBloodLevel();
 
     /**
      * @return The amount of ticks the player has been in sun. Never higher than 100

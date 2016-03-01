@@ -1,7 +1,7 @@
-package de.teamlapen.vampirism.entity.player.vampire.skills;
+package de.teamlapen.vampirism.entity.player.vampire.actions;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.player.vampire.DefaultSkill;
+import de.teamlapen.vampirism.api.entity.player.vampire.DefaultAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
@@ -17,9 +17,9 @@ import java.util.List;
 /**
  * Freeze Skill
  */
-public class FreezeSkill extends DefaultSkill {
+public class FreezeAction extends DefaultAction {
 
-    public FreezeSkill() {
+    public FreezeAction() {
         super(null);
     }
 //  TODO activate again

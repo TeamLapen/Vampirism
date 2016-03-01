@@ -1,26 +1,26 @@
-package de.teamlapen.vampirism.entity.player.vampire.skills;
+package de.teamlapen.vampirism.entity.player.vampire.actions;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.api.entity.player.vampire.DefaultSkill;
+import de.teamlapen.vampirism.api.entity.player.vampire.DefaultAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.entity.player.vampire.SkillHandler;
+import de.teamlapen.vampirism.entity.player.vampire.ActionHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 
 
-public class TeleportSkill extends DefaultSkill {
+public class TeleportAction extends DefaultAction {
 
 
-    public TeleportSkill() {
+    public TeleportAction() {
         super(null);
     }
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.getSkillHandler().isSkillActive(SkillHandler.batSkill);
+        return !vampire.getActionHandler().isActionActive(ActionHandler.batAction);
     }
 //      TODO reactivate
 //    @Override

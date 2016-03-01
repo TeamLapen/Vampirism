@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.network;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampireSkill;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampireAction;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.entity.player.vampire.skills.SkillRegistry;
+import de.teamlapen.vampirism.entity.player.vampire.actions.ActionRegistry;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentTranslation;
@@ -22,7 +22,7 @@ public class InputEventPacket implements IMessage {
     public static String SUCKBLOOD = "sb";
     //    public static String TOGGLEAUTOFILLBLOOD = "ta";
 //    public static String REVERTBACK = "rb";
-    public static String TOGGLESKILL = "ts";
+    public static String TOGGLEACTION = "ta";
     private final String SPLIT = "-";
     //    public static String LEAVE_COFFIN = "lc";
 //    public static String MINION_CONTROL = "mc";
@@ -77,7 +77,7 @@ public class InputEventPacket implements IMessage {
                 if (id != 0) {
                     VampirePlayer.get(player).biteEntity(id);
                 }
-            } else if (message.action.equals(TOGGLESKILL)) {
+            } else if (message.action.equals(TOGGLEACTION)) {
                 int id = -1;
                 try {
                     id = Integer.parseInt(message.param);
@@ -85,22 +85,22 @@ public class InputEventPacket implements IMessage {
                     VampirismMod.log.e(TAG, e, "Receiving invalid param for %s", message.action);
                 }
                 if (id != -1) {
-                    IVampireSkill skill = ((SkillRegistry) VampirismAPI.skillRegistry()).getSkillFromId(id);
-                    if (skill != null) {
-                        IVampireSkill.PERM r = VampirePlayer.get(player).getSkillHandler().toggleSkill(skill);
+                    IVampireAction action = ((ActionRegistry) VampirismAPI.actionRegistry()).getActionFromId(id);
+                    if (action != null) {
+                        IVampireAction.PERM r = VampirePlayer.get(player).getActionHandler().toggleAction(action);
                         switch (r) {
                             case LEVEL_TO_LOW:
-                                player.addChatMessage(new ChatComponentTranslation("text.vampirism.skill.level_to_low"));
+                                player.addChatMessage(new ChatComponentTranslation("text.vampirism.action.level_to_low"));
                                 break;
                             case DISABLED:
-                                player.addChatMessage(new ChatComponentTranslation("text.vampirism.skill.deactivated_by_serveradmin"));
+                                player.addChatMessage(new ChatComponentTranslation("text.vampirism.action.deactivated_by_serveradmin"));
                                 break;
                             case COOLDOWN:
-                                player.addChatMessage(new ChatComponentTranslation("text.vampirism.skill.cooldown_not_over"));
+                                player.addChatMessage(new ChatComponentTranslation("text.vampirism.action.cooldown_not_over"));
                                 break;
                         }
                     } else {
-                        VampirismMod.log.e(TAG, "Failed to find skill with id %d", id);
+                        VampirismMod.log.e(TAG, "Failed to find action with id %d", id);
                     }
 
                 }

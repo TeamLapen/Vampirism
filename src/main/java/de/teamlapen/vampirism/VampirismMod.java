@@ -22,9 +22,9 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.entity.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.entity.player.vampire.SkillHandler;
+import de.teamlapen.vampirism.entity.player.vampire.ActionHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.entity.player.vampire.skills.SkillRegistry;
+import de.teamlapen.vampirism.entity.player.vampire.actions.ActionRegistry;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.proxy.IProxy;
@@ -120,7 +120,7 @@ public class VampirismMod {
         dispatcher.registerPackets();
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new ModGuiHandler());
         proxy.onInitStep(IInitListener.Step.PRE_INIT, event);
-        SkillHandler.registerDefaultSkills();
+        ActionHandler.registerDefaultActions();
 
 
     }
@@ -139,7 +139,7 @@ public class VampirismMod {
         FactionRegistry factionRegistry = new FactionRegistry();
         SundamageRegistry sundamageRegistry = new SundamageRegistry();
         BiteableRegistry biteableRegistry = new BiteableRegistry();
-        SkillRegistry skillRegistry = new SkillRegistry();
+        ActionRegistry skillRegistry = new ActionRegistry();
         VampirismAPI.setUp(factionRegistry, sundamageRegistry, biteableRegistry, skillRegistry);
         VReference.VAMPIRE_FACTION = factionRegistry.registerPlayableFaction("Vampire", IVampirePlayer.class, Color.magenta.getRGB(), "vampire_player", REFERENCE.HIGHEST_VAMPIRE_LEVEL);
         VReference.VAMPIRE_FACTION.setChatColor(EnumChatFormatting.LIGHT_PURPLE).setUnlocalizedName("text.vampirism.vampire");
