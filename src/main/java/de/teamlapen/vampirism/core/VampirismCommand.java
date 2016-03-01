@@ -68,7 +68,7 @@ public class VampirismCommand extends BasicCommand {
                 } else {
                     cat = var2[0];
                 }
-                boolean p = Balance.reset(cat);
+                boolean p = Balance.resetAndReload(cat);
                 if (p) {
                     var1.addChatMessage(new ChatComponentText("Successfully reset " + cat + " balance category. Please restart MC."));
                 } else {

@@ -20,24 +20,28 @@ public class BalanceVampirePlayer extends BalanceValues {
     public double HEALTH_TYPE;
     @DefaultDouble(value = 1.0D, minValue = 0.5D, maxValue = 2.0D, name = "strength_max_modifier", comment = "")
     public double STRENGTH_MAX_MOD;
-    @DefaultInt(value = 20, minValue = 10, maxValue = 40, name = "strength_level_cap", comment = "")
+    @DefaultInt(value = 20, minValue = 10, maxValue = 40, name = "strength_modifier_level_cap", comment = "")
     public int STRENGTH_LCAP;
     @DefaultDouble(value = 0.5D, minValue = 0.5D, maxValue = 1.0D, name = "strength_modifier_type", comment = "0.5 for square root, 1 for linear")
     public double STRENGTH_TYPE;
-    @DefaultDouble(value = 0.3D, minValue = 0.15D, maxValue = 5D, name = "speed_max_modifier", comment = "")
+    @DefaultDouble(value = 0.3D, minValue = 0.0D, maxValue = 5D, name = "speed_max_modifier", comment = "")
     public double SPEED_MAX_MOD;
-    @DefaultInt(value = 15, minValue = 7, maxValue = 100, name = "speed_level_cap", comment = "")
+    @DefaultInt(value = 15, minValue = 7, maxValue = 100, name = "speed_modifier_level_cap", comment = "")
     public int SPEED_LCAP;
     @DefaultDouble(value = 0.5D, minValue = 0.1D, maxValue = 1.0D, name = "speed_modifier_type", comment = "")
     public double SPEED_TYPE;
+    @DefaultDouble(value = 0.5D, minValue = 0.1D, maxValue = 1.0D, name = "speed_modifier_type", comment = "")
+    public double EXHAUSTION_TYPE;
+    @DefaultDouble(value = 1D, minValue = 0D, maxValue = 10, name = "exhaustion_modifier_max")
+    public double EXAUSTION_MAX_MOD;
     //    @DefaultDouble(value = 0.2D, minValue = 0.1D, maxValue = 0.4D, name = "Jump Max Boost", comment = "")
 //    public double JUMP_MAX_BOOST;
 //    @DefaultInt(value = 6, minValue = 3, maxValue = 100, name = "Jump Level Cap", comment = "")
 //    public int JUMP_LCAP;
 //    @DefaultDouble(value = 0.5D, minValue = 0.1D, maxValue = 1.0D, name = "Jump Type", comment = "")
 //    public double JUMP_TYPE;
-    @DefaultDouble(value = 1.0D, name = "blood_exhaustion_modifier", minValue = 0, maxValue = 5, comment = "Blood exhaustion is multiplied with this value")
-    public double BLOOD_EXHAUSTION_MOD;
+    @DefaultDouble(value = 1.0D, name = "blood_exhaustion_basic_modifier", minValue = 0, maxValue = 5, comment = "Blood exhaustion is multiplied with this value")
+    public double BLOOD_EXHAUSTION_BASIC_MOD;
     @DefaultBoolean(value = true, name = "blood_increase_exhaustion", comment = "Increase exhaustion modifier with higher levels")
     public boolean BLOOD_INCREASE_EXHAUSTION;
     @DefaultInt(value = 6, name = "bite_damage", minValue = 0)

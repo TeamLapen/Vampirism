@@ -4,6 +4,8 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.ai.attributes.IAttribute;
+import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.EnumPlantType;
 
@@ -19,6 +21,16 @@ public class VReference {
     public static final String EXTENDED_CREATURE_PROP = "ExtCreatureVampirism";
     public static final String FACTION_PLAYER_HANDLER_PROP = "FactionHandlerVampirism";
     public static final String FLUID_BLOOD_NAME = "vampirismblood";
+    /**
+     * Attribute which defines sundamage. Registered for all IVampire mobs as well as the EntityPlayer.
+     * Applied every 4 seconds if in sun
+     */
+    public final static IAttribute sunDamage = (new RangedAttribute(null, "vampirism.sundamage", 0.0D, 0.0D, 1000D)).setShouldWatch(true);
+    /**
+     * Allows modifying the blood exhaustion. Is multiplied with with the value calculated (from movement etc.).
+     * Registered for EntityPlayer
+     */
+    public final static IAttribute bloodExhaustion = (new RangedAttribute(null, "vampirism.blood_exhaustion", 1.0, 0.0, 10)).setShouldWatch(true);
     /**
      * Hunter creatures are of this creature type. But when they are counted for spawning they belong to {@link EnumCreatureType#MONSTER}
      */
@@ -42,6 +54,5 @@ public class VReference {
      * Filled during pre-init.
      */
     public static IPlayableFaction<IHunterPlayer> HUNTER_FACTION;
-
     public static int castleDimId = 1000;
 }

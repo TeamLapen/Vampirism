@@ -22,23 +22,24 @@ public class Balance {
 
     public static void init(File configDir, boolean inDev) {
         File balanceDir = new File(configDir, "balance");
-        leveling = new BalanceLeveling(balanceDir);
-        mobProps = new BalanceMobProps(balanceDir);
-        vp = new BalanceVampirePlayer(balanceDir);
-        hp = new BalanceHunterPlayer(balanceDir);
-        vps = new BalanceVampireSkills(balanceDir);
-        general = new BalanceGeneral(balanceDir);
-        categories.put(leveling.getName(), leveling);
-        categories.put(mobProps.getName(), mobProps);
-        categories.put(vp.getName(), vp);
-        categories.put(hp.getName(), hp);
-        categories.put(vps.getName(), vps);
-        categories.put(general.getName(), general);
+        leveling = addBalance(new BalanceLeveling(balanceDir));
+        mobProps = addBalance(new BalanceMobProps(balanceDir));
+        vp = addBalance(new BalanceVampirePlayer(balanceDir));
+        hp = addBalance(new BalanceHunterPlayer(balanceDir));
+        vps = addBalance(new BalanceVampireSkills(balanceDir));
+        general = addBalance(new BalanceGeneral(balanceDir));
         if (inDev && Configs.resetConfigurationInDev) {
-            reset(null);
+            resetAndReload(null);
+        } else {
+            loadConfiguration();
         }
-        loadConfiguration();
+
         VampirismMod.log.i(TAG, "Loaded balance configuration");
+    }
+
+    private static <T extends BalanceValues> T addBalance(T cat) {
+        categories.put(cat.getName(), cat);
+        return cat;
     }
 
     private static void loadConfiguration() {
@@ -52,22 +53,24 @@ public class Balance {
         loadConfiguration();
     }
 
+
     /**
-     * Resets the matching balance category.
+     * Resets the matching balance category and reloads it
      *
      * @param category False if category is not found
+
      * @return
      */
-    public static boolean reset(String category) {
+    public static boolean resetAndReload(String category) {
         if (category == null || category.equals("all")) {
             for (BalanceValues values : categories.values()) {
-                values.reset();
+                values.resetAndReload();
             }
             return true;
         }
         BalanceValues values = categories.get(category);
         if (values != null) {
-            values.reset();
+            values.resetAndReload();
             return true;
         }
         return false;

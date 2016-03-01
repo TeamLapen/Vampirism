@@ -17,7 +17,7 @@ import de.teamlapen.vampirism.core.Achievements;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.player.PlayerModifiers;
+import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.entity.player.VampirismPlayer;
 import de.teamlapen.vampirism.potion.FakeNightVisionPotionEffect;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
@@ -74,6 +74,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
 
     public VampirePlayer(EntityPlayer player) {
         super(player);
+        applyEntityAttributes();
         bloodStats = new BloodStats(player);
         skillHandler = new SkillHandler(this);
     }
@@ -87,11 +88,6 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
                 bloodStats.addExhaustion(p_71020_1_);
             }
         }
-    }
-
-    @Override
-    public void addExhaustionModifier(String id, float mod) {
-        bloodStats.addExhaustionModifier(id, mod);
     }
 
     /**
@@ -200,15 +196,6 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
     }
 
     @Override
-    public float getSundamageMultiplier() {
-        float mult = 1F;
-        if (isVampireLord()) {
-            mult *= 1.8F;
-        }
-        return mult;
-    }
-
-    @Override
     public int getTicksInSun() {
         return ticksInSun;
     }
@@ -304,10 +291,10 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
     @Override
     public void onLevelChanged(int newLevel, int oldLevel) {
         if (!isRemote()) {
-            PlayerModifiers.applyModifier(player, SharedMonsterAttributes.movementSpeed, "Vampire", getLevel(), Balance.vp.SPEED_LCAP, Balance.vp.SPEED_MAX_MOD, Balance.vp.SPEED_TYPE);
-            PlayerModifiers.applyModifier(player, SharedMonsterAttributes.attackDamage, "Vampire", getLevel(), Balance.vp.STRENGTH_LCAP, Balance.vp.STRENGTH_MAX_MOD, Balance.vp.STRENGTH_TYPE);
-            PlayerModifiers.applyModifier(player, SharedMonsterAttributes.maxHealth, "Vampire", getLevel(), Balance.vp.HEALTH_LCAP, Balance.vp.HEALTH_MAX_MOD, Balance.vp.HEALTH_TYPE);
-            bloodStats.addExhaustionModifier("level", 1.0F + getLevel() / (float) getMaxLevel());
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.movementSpeed, "Vampire", getLevel(), Balance.vp.SPEED_LCAP, Balance.vp.SPEED_MAX_MOD, Balance.vp.SPEED_TYPE);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.attackDamage, "Vampire", getLevel(), Balance.vp.STRENGTH_LCAP, Balance.vp.STRENGTH_MAX_MOD, Balance.vp.STRENGTH_TYPE);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.maxHealth, "Vampire", getLevel(), Balance.vp.HEALTH_LCAP, Balance.vp.HEALTH_MAX_MOD, Balance.vp.HEALTH_TYPE);
+            LevelAttributeModifier.applyModifier(player, VReference.bloodExhaustion, "Vampire", getLevel(), getMaxLevel(), Balance.vp.EXAUSTION_MAX_MOD, Balance.vp.EXHAUSTION_TYPE);
             if (newLevel > 0) {
                 player.addStat(Achievements.becomingAVampire, 1);
             } else {
@@ -434,11 +421,6 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
     }
 
     @Override
-    public void removeExhaustionModifier(String id) {
-        bloodStats.removeExhaustionModifier(id);
-    }
-
-    @Override
     public void saveData(NBTTagCompound nbt) {
         bloodStats.writeNBT(nbt);
         nbt.setInteger(KEY_EYE, eyeType);
@@ -495,6 +477,11 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
         nbt.setInteger(KEY_EYE, getEyeType());
         bloodStats.writeUpdate(nbt);
         skillHandler.writeUpdateForClient(nbt);
+    }
+
+    private void applyEntityAttributes() {
+        player.getAttributeMap().registerAttribute(VReference.sunDamage).setBaseValue(Balance.vp.SUNDAMAGE_DAMAGE);
+        player.getAttributeMap().registerAttribute(VReference.bloodExhaustion).setBaseValue(Balance.vp.BLOOD_EXHAUSTION_BASIC_MOD);
     }
 
     /**
@@ -568,7 +555,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
             player.addPotionEffect(new PotionEffect(Potion.weakness.id, 152, 1));
         }
         if (getLevel() >= Balance.vp.SUNDAMAGE_MINLEVEL && ticksInSun >= 100 && player.ticksExisted % 40 == 5) {
-            float damage = (float) (Balance.vp.SUNDAMAGE_DAMAGE * getSundamageMultiplier());
+            float damage = (float) (player.getEntityAttribute(VReference.sunDamage).getAttributeValue());
             player.attackEntityFrom(VReference.sundamage, damage);
         }
     }

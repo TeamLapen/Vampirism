@@ -17,7 +17,7 @@ import java.util.Map;
 public class Configs {
 
     public static final String CATEGORY_GENERAL = Configuration.CATEGORY_GENERAL;
-    public static final String CATEGORY_GUI = "assets/teamlapen-lib/gui";
+    public static final String CATEGORY_GUI = "gui";
     public static final String CATEGORY_VILLAGE = "village_settings";
     public static final String CATEGORY_BALANCE = "balance";
     public static final String CATEGORY_DISABLE = "disabled";
@@ -58,7 +58,7 @@ public class Configs {
             }
         }
 
-        main_config = new Configuration(mainConfigFile);
+        main_config = new Configuration(mainConfigFile, REFERENCE.VERSION);
         loadConfiguration();
         VampirismMod.log.i(TAG, "Loaded configuration");
     }

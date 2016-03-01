@@ -95,9 +95,9 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
             isGettingSundamage(true);
         }
         if (!worldObj.isRemote) {
-            if (isGettingSundamage() && ticksExisted % 20 == 11) {
-                float dmg = getSundamage();
-                this.attackEntityFrom(VReference.sundamage, dmg);
+            if (isGettingSundamage() && ticksExisted % 40 == 11) {
+                double dmg = getEntityAttribute(VReference.sunDamage).getAttributeValue();
+                this.attackEntityFrom(VReference.sundamage, (float) dmg);
             }
         }
         super.onLivingUpdate();
@@ -108,7 +108,11 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
         return false;
     }
 
-    protected float getSundamage() {
-        return (float) Balance.mobProps.VAMPIRE_MOB_SUN_DAMAGE;
+    @Override
+    protected void applyEntityAttributes() {
+        super.applyEntityAttributes();
+        getAttributeMap().registerAttribute(VReference.sunDamage).setBaseValue(Balance.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
+
     }
+
 }

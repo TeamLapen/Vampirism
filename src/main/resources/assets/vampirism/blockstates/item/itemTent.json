@@ -8,7 +8,7 @@
     "type": {
       "normal": {
         "textures": {
-          "layer0": "vampirism:items/humanHeart"
+          "layer0": "vampirism:items/item_tent"
         }
       }
     }

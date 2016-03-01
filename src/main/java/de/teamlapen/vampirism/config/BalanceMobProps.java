@@ -58,7 +58,7 @@ public class BalanceMobProps extends BalanceValues {
     @DefaultInt(value = 100, minValue = 0, maxValue = 1000000, name = "vampire_spawn_probe", comment = "e.g. Zombie spawn probe: 100")
     public int VAMPIRE_SPAWN_PROBE;
 
-    @DefaultDouble(value = 0.5, minValue = 0.5, name = "vampire_mob_sun_damage")
+    @DefaultDouble(value = 1.0, minValue = 0.0, maxValue = 1000, name = "vampire_mob_sun_damage")
     public double VAMPIRE_MOB_SUN_DAMAGE;
 
     public BalanceMobProps(File directory) {

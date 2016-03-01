@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity.player.vampire;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.util.SRGNAMES;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,9 +11,6 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Handles VP's blood stats. Very similar to {@link FoodStats}
@@ -31,13 +28,10 @@ public class BloodStats {
     private float bloodExhaustionLevel;
     private int bloodTimer;
     private int prevBloodLevel = 20;
-    private Map<String, Float> modifiers = new HashMap<String, Float>();
-    private float modifier;
     private boolean changed = false;
 
     public BloodStats(EntityPlayer player) {
         this.player = player;
-        addExhaustionModifier("config", (float) Balance.vp.BLOOD_EXHAUSTION_MOD);
     }
 
     /**
@@ -55,17 +49,6 @@ public class BloodStats {
         return amount - add;
     }
 
-    /**
-     * Add an exhaustion modifier.
-     * TODO APIfy maybe
-     *
-     * @param id  ID to remove it later
-     * @param mod Exhaustion is multiplied with this
-     */
-    public void addExhaustionModifier(String id, float mod) {
-        modifiers.put(id, mod);
-        updateExhaustionModifier();
-    }
 
     /**
      * Removes blood from the vampires blood level
@@ -172,10 +155,6 @@ public class BloodStats {
         }
     }
 
-    public void removeExhaustionModifier(String id) {
-        modifiers.remove(id);
-        updateExhaustionModifier();
-    }
 
     /**
      * Write all relevant data to nbt
@@ -199,7 +178,7 @@ public class BloodStats {
     }
 
     protected void addExhaustion(float amount) {
-        this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount * modifier, 40F);
+        this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount * (float) player.getEntityAttribute(VReference.bloodExhaustion).getAttributeValue(), 40F);
     }
 
     void loadUpdate(NBTTagCompound nbt) {
@@ -208,12 +187,6 @@ public class BloodStats {
         }
     }
 
-    private void updateExhaustionModifier() {
-        modifier = 1.0F;
-        for (Float f : modifiers.values()) {
-            modifier *= f;
-        }
-    }
 
     NBTTagCompound writeUpdate(NBTTagCompound nbt) {
         nbt.setInteger("bloodLevel", bloodLevel);

@@ -5,6 +5,7 @@ import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 
 import java.io.File;
+import java.io.PrintWriter;
 import java.lang.reflect.Field;
 
 /**
@@ -14,8 +15,26 @@ import java.lang.reflect.Field;
  */
 public abstract class BalanceValues {
     private final static String TAG = "Balance";
-    private final Configuration configuration;
+
+    /**
+     * Resets the configuration by simply clearing the config file
+     *
+     * @param f File to reset
+     * @return
+     */
+    private static void reset(File f) {
+        VampLib.log.i("Configs", "Resetting config file " + f.getName());
+        try {
+            PrintWriter writer = new PrintWriter(f);
+            writer.write("");
+            writer.flush();
+            writer.close();
+        } catch (Exception e) {
+            VampLib.log.e("Configs", "Failed to reset config file");
+        }
+    }
     private final String name;
+    private Configuration configuration;
 
     /**
      * Creates a configuration for balance values
@@ -75,8 +94,13 @@ public abstract class BalanceValues {
         }
     }
 
-    public void reset() {
-        ConfigHelper.reset(configuration);
+    /**
+     * Firstly clears the config file, then replaces the old configuration by a new one so the new (emtpy) file is loaded and then loads the default values and saves them.
+     */
+    public void resetAndReload() {
+        reset(configuration.getConfigFile());
+        configuration = new Configuration(configuration.getConfigFile());
+        loadBalance();
     }
 
     /**

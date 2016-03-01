@@ -1,19 +1,19 @@
 package de.teamlapen.lib.lib.util;
 
 
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommand;
-import net.minecraft.command.ICommandSender;
+import de.teamlapen.lib.VampLib;
+import net.minecraft.command.*;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
  * Basic command which manages subcommands
+ * TODO maybe work with  {@link CommandException}
  */
 public abstract class BasicCommand extends CommandBase {
 
@@ -93,8 +93,7 @@ public abstract class BasicCommand extends CommandBase {
     @Override
     public void processCommand(ICommandSender sender, String[] param) throws CommandException {
         if (param == null || param.length == 0) {
-            sendMessage(sender, getCommandUsage(sender));
-            return;
+            throw new WrongUsageException(getCommandUsage(sender));
         }
         if ("help".equals(param[0])) {
             if (param.length > 1) {
@@ -112,7 +111,15 @@ public abstract class BasicCommand extends CommandBase {
         }
         SubCommand cmd = getSub(param[0]);
         if (cmd.canCommandSenderUseCommand(sender)) {
-            cmd.processCommand(sender, ArrayUtils.subarray(param, 1, param.length));
+
+            try {
+                cmd.processCommand(sender, ArrayUtils.subarray(param, 1, param.length));
+            } catch (Exception e) {
+                if (!(e instanceof CommandException)) {
+                    VampLib.log.e("BasicCommand", e, "Failed to execute command %s with params %s", cmd, Arrays.toString(ArrayUtils.subarray(param, 1, param.length)));
+                }
+                throw e;
+            }
             return;
         } else {
             sendMessage(sender, "You are not allowed to use this command");
