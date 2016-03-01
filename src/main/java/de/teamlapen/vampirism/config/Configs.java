@@ -32,7 +32,6 @@ public class Configs {
 
     public static boolean disable_replaceVanillaNightVision;
     public static boolean disable_vampireForest;
-    public static boolean sundamage_default;
     public static boolean disable_factionDisplayChat;
     public static boolean playerCanTurnPlayer;
     private static Configuration main_config;
