@@ -1,13 +1,12 @@
-package de.teamlapen.vampirism.api.entity.player.vampire;
+package de.teamlapen.vampirism.api.entity.player;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * Reference implementation of IVampireAction. It is recommend to extend this
+ * Created by Max on 02.03.2016.
  */
-public abstract class DefaultAction implements IVampireAction {
-
+public abstract class DefaultAction<T extends IFactionPlayer> implements IAction<T> {
     private final ResourceLocation icons;
 
     /**
@@ -20,21 +19,21 @@ public abstract class DefaultAction implements IVampireAction {
     /**
      * Can be overriden to check addidional requirements
      *
-     * @param vampire
      * @return
      */
-    public boolean canBeUsedBy(IVampirePlayer vampire) {
+    public boolean canBeUsedBy(T vampire) {
         return true;
     }
 
     @Override
-    public PERM canUse(IVampirePlayer vampire) {
+    public IAction.PERM canUse(T vampire) {
         if (getMinLevel() == -1)
-            return PERM.DISABLED;
+            return IAction.PERM.DISABLED;
         if (vampire.getLevel() < getMinLevel())
-            return PERM.LEVEL_TO_LOW;
-        return (canBeUsedBy(vampire) ? PERM.ALLOWED : PERM.DISALLOWED);
+            return IAction.PERM.LEVEL_TO_LOW;
+        return (canBeUsedBy(vampire) ? IAction.PERM.ALLOWED : IAction.PERM.DISALLOWED);
     }
+
 
     @Override
     public ResourceLocation getIconLoc() {
@@ -50,5 +49,4 @@ public abstract class DefaultAction implements IVampireAction {
     public String toString() {
         return super.toString() + " (" + VampirismAPI.actionRegistry().getKeyFromAction(this) + ")";
     }
-
 }

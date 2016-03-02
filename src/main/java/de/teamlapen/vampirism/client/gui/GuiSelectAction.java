@@ -2,14 +2,13 @@ package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.lib.lib.gui.client.GuiPieMenu;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.player.vampire.DefaultAction;
-import de.teamlapen.vampirism.api.entity.player.vampire.IActionHandler;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampireAction;
+import de.teamlapen.vampirism.api.entity.player.IAction;
+import de.teamlapen.vampirism.api.entity.player.IActionHandler;
+import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.client.core.ModKeys;
-import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.entity.player.vampire.actions.ActionRegistry;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.player.actions.ActionHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.util.ResourceLocation;
@@ -20,13 +19,13 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Gui which is used to select vampire actions
  */
 @SideOnly(Side.CLIENT)
-public class GuiSelectAction extends GuiPieMenu<IVampireAction> {
+public class GuiSelectAction extends GuiPieMenu<IAction> {
     private final static ResourceLocation defaultIcons = new ResourceLocation(REFERENCE.MODID + ":textures/gui/actions.png");
     private IActionHandler actionHandler;
     /**
      * Fake skill which represents the cancel button
      */
-    private IVampireAction fakeAction = new DefaultAction(null) {
+    private IAction fakeAction = new DefaultVampireAction(null) {
         @Override
         public int getCooldown() {
             return 0;
@@ -64,7 +63,7 @@ public class GuiSelectAction extends GuiPieMenu<IVampireAction> {
     }
 
     @Override
-    protected void afterIconDraw(IVampireAction p, int x, int y) {
+    protected void afterIconDraw(IAction p, int x, int y) {
         if (p == fakeAction) return;
         // Draw usage indicator
 
@@ -81,7 +80,7 @@ public class GuiSelectAction extends GuiPieMenu<IVampireAction> {
     }
 
     @Override
-    protected ResourceLocation getIconLoc(IVampireAction item) {
+    protected ResourceLocation getIconLoc(IAction item) {
         return item.getIconLoc() == null ? defaultIcons : item.getIconLoc();
     }
 
@@ -91,30 +90,30 @@ public class GuiSelectAction extends GuiPieMenu<IVampireAction> {
     }
 
     @Override
-    protected int getMinU(IVampireAction item) {
+    protected int getMinU(IAction item) {
         return item.getMinU();
     }
 
     @Override
-    protected int getMinV(IVampireAction item) {
+    protected int getMinV(IAction item) {
         return item.getMinV();
     }
 
     @Override
-    protected String getUnlocalizedName(IVampireAction item) {
+    protected String getUnlocalizedName(IAction item) {
         return item.getUnlocalizedName();
     }
 
     @Override
-    protected void onElementSelected(IVampireAction action) {
+    protected void onElementSelected(IAction action) {
         if (action != fakeAction) {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + ((ActionRegistry) VampirismAPI.actionRegistry()).getIdFromAction(action)));
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + ((ActionHandler) actionHandler).getIdFromAction(action)));
         }
     }
 
     @Override
     protected void onGuiInit() {
-        actionHandler = VampirePlayer.get(this.mc.thePlayer).getActionHandler();
+        actionHandler = FactionPlayerHandler.get(mc.thePlayer).getCurrentFactionPlayer().getActionHandler();
         elements.addAll(actionHandler.getAvailableActions());
         elements.add(fakeAction);
     }

@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
-import de.teamlapen.vampirism.api.entity.player.vampire.IActionRegistry;
+import de.teamlapen.vampirism.api.entity.player.IActionRegistry;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -45,7 +45,7 @@ public class VampirismAPI {
 
     /**
      *
-     * @return The skill registry
+     * @return The action registry
      */
     public static IActionRegistry actionRegistry() {
         return actionRegistry;

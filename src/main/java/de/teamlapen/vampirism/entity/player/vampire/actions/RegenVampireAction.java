@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.entity.player.vampire.actions;
 
-import de.teamlapen.vampirism.api.entity.player.vampire.DefaultAction;
+import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
@@ -9,9 +9,9 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
 
-public class RegenAction extends DefaultAction {
+public class RegenVampireAction extends DefaultVampireAction {
 
-    public RegenAction() {
+    public RegenVampireAction() {
         super(null);
     }
 

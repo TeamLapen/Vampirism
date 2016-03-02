@@ -1,22 +1,30 @@
-package de.teamlapen.vampirism.api.entity.player.vampire;
+package de.teamlapen.vampirism.api.entity.player;
 
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Interface for vampire player actions
+ * Interface for player actions
  */
-public interface IVampireAction {
+public interface IAction<T extends IActionPlayer> {
     /**
      * Checks if the player can use this action
      */
-    PERM canUse(IVampirePlayer vampire);
+    PERM canUse(T player);
 
     /**
      * @return Cooldown time in ticks until the action can be used again
      */
     int getCooldown();
+
+    /**
+     * Return the faction, which players can use this action
+     *
+     * @return
+     */
+    IPlayableFaction<? extends IActionPlayer> getFaction();
 
     /**
      * Should return the location of the icon map where the icon is in
@@ -47,13 +55,11 @@ public interface IVampireAction {
     /**
      * Called when the action is activated. Only called server side
      *
-     * @param vampire
      * @return Whether the action was successfully activated. !Does not give any feedback to the user!
      */
-    boolean onActivated(IVampirePlayer vampire);
+    boolean onActivated(T player);
 
     enum PERM {
         ALLOWED, DISABLED, LEVEL_TO_LOW, DISALLOWED, COOLDOWN//Cooldown should not be used by the skill itself, but only by the {@link IActionHandler}
     }
-
 }

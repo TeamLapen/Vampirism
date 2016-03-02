@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.vampire.IActionHandler;
+import de.teamlapen.vampirism.api.entity.player.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
@@ -19,6 +19,7 @@ import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.entity.player.VampirismPlayer;
+import de.teamlapen.vampirism.entity.player.actions.ActionHandler;
 import de.teamlapen.vampirism.potion.FakeNightVisionPotionEffect;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.Helper;
@@ -65,7 +66,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
     private final BloodStats bloodStats;
     private final String KEY_EYE = "eye_type";
     private final String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
-    private final ActionHandler actionHandler;
+    private final ActionHandler<IVampirePlayer> actionHandler;
     private boolean sundamage_cache = false;
     private EnumGarlicStrength garlic_cache = EnumGarlicStrength.NONE;
     private int biteCooldown = 0;
@@ -150,7 +151,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
         return false;
     }
 
-    public IActionHandler getActionHandler() {
+    public IActionHandler<IVampirePlayer> getActionHandler() {
         return actionHandler;
     }
 
@@ -310,6 +311,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
                 if (player.getActivePotionEffect(Potion.nightVision) instanceof FakeNightVisionPotionEffect) {
                     player.removePotionEffect(Potion.nightVision.getId());
                 }
+                actionHandler.resetTimers();
             }
         }
     }

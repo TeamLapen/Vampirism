@@ -1,13 +1,13 @@
 package de.teamlapen.vampirism.entity.player.vampire.actions;
 
-import de.teamlapen.vampirism.api.entity.player.vampire.DefaultAction;
-import de.teamlapen.vampirism.api.entity.player.vampire.ILastingVampireAction;
+import de.teamlapen.vampirism.api.entity.player.ILastingAction;
+import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 
 
-public class InvisibilityAction extends DefaultAction implements ILastingVampireAction {
-    public InvisibilityAction() {
+public class InvisibilityVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
+    public InvisibilityVampireAction() {
         super(null);
     }
 //      TODO activate again

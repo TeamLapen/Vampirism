@@ -1,26 +1,25 @@
 package de.teamlapen.vampirism.entity.player.vampire.actions;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.api.entity.player.vampire.DefaultAction;
+import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.entity.player.vampire.ActionHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 
 
-public class TeleportAction extends DefaultAction {
+public class TeleportVampireAction extends DefaultVampireAction {
 
 
-    public TeleportAction() {
+    public TeleportVampireAction() {
         super(null);
     }
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.getActionHandler().isActionActive(ActionHandler.batAction);
+        return !vampire.getActionHandler().isActionActive(VampireActions.batAction);
     }
 //      TODO reactivate
 //    @Override

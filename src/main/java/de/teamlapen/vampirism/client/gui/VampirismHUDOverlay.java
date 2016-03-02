@@ -8,9 +8,9 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.player.vampire.ActionHandler;
 import de.teamlapen.vampirism.entity.player.vampire.BloodStats;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
@@ -49,7 +49,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         if (mc.thePlayer == null) return;
         IFactionPlayer player = FactionPlayerHandler.get(mc.thePlayer).getCurrentFactionPlayer();
         if (player != null && player instanceof IVampirePlayer) {
-            if (((IVampirePlayer) player).getActionHandler().isActionActive(ActionHandler.rageAction)) {
+            if (((IVampirePlayer) player).getActionHandler().isActionActive(VampireActions.rageAction)) {
                 screenPercentage = 100;
                 screenColor = 0xfff00000;
                 fullScreen = false;
@@ -57,6 +57,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 screenColor = 0xffffe700;
                 fullScreen = false;
             }
+        } else {
+            screenPercentage = 0;
         }
     }
 

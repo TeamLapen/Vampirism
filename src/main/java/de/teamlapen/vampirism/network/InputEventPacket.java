@@ -2,9 +2,10 @@ package de.teamlapen.vampirism.network;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampireAction;
+import de.teamlapen.vampirism.api.entity.player.IAction;
+import de.teamlapen.vampirism.api.entity.player.IActionHandler;
+import de.teamlapen.vampirism.entity.player.actions.ActionHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.entity.player.vampire.actions.ActionRegistry;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentTranslation;
@@ -85,9 +86,10 @@ public class InputEventPacket implements IMessage {
                     VampirismMod.log.e(TAG, e, "Receiving invalid param for %s", message.action);
                 }
                 if (id != -1) {
-                    IVampireAction action = ((ActionRegistry) VampirismAPI.actionRegistry()).getActionFromId(id);
+                    IActionHandler actionHandler = VampirismAPI.getFactionPlayerHandler(player).getCurrentFactionPlayer().getActionHandler();
+                    IAction action = ((ActionHandler) actionHandler).getActionFromId(id);
                     if (action != null) {
-                        IVampireAction.PERM r = VampirePlayer.get(player).getActionHandler().toggleAction(action);
+                        IAction.PERM r = VampirePlayer.get(player).getActionHandler().toggleAction(action);
                         switch (r) {
                             case LEVEL_TO_LOW:
                                 player.addChatMessage(new ChatComponentTranslation("text.vampirism.action.level_to_low"));

@@ -1,11 +1,10 @@
 package de.teamlapen.vampirism.entity.player.vampire.actions;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.player.vampire.DefaultAction;
-import de.teamlapen.vampirism.api.entity.player.vampire.ILastingVampireAction;
+import de.teamlapen.vampirism.api.entity.player.ILastingAction;
+import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.entity.player.vampire.ActionHandler;
 import de.teamlapen.vampirism.util.SRGNAMES;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -21,7 +20,7 @@ import java.lang.reflect.Method;
 import java.util.UUID;
 
 
-public class BatAction extends DefaultAction implements ILastingVampireAction {
+public class BatVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
     public static final float BAT_HEIGHT = 0.8F;
     public final static float BAT_EYE_HEIGHT = 0.85F * BAT_HEIGHT;
@@ -30,13 +29,13 @@ public class BatAction extends DefaultAction implements ILastingVampireAction {
     private final float PLAYER_WIDTH = 0.6F;
     private final float PLAYER_HEIGHT = 1.8F;
 
-    public BatAction() {
+    public BatVampireAction() {
         super(null);
     }
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.isGettingSundamage() && !vampire.getActionHandler().isActionActive(ActionHandler.rageAction);
+        return !vampire.isGettingSundamage() && !vampire.getActionHandler().isActionActive(VampireActions.rageAction);
     }
 
     @Override
