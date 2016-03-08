@@ -34,13 +34,17 @@ public class BiomeGenVampireForest extends BiomeGenBase {
         this.theBiomeDecorator.grassPerChunk = 4;
         this.theBiomeDecorator.deadBushPerChunk = 3;
         this.worldGeneratorTrees = new WorldGenTrees(false, 4, Blocks.log.getDefaultState().withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.SPRUCE), Blocks.leaves.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.OAK), false);
-        this.flowers.clear();
-        this.addFlower(ModBlocks.vampirismFlower.getDefaultState().withProperty(VampirismFlower.TYPE, VampirismFlower.EnumFlowerType.ORCHID), 10);
+
         this.waterColorMultiplier = 0xEE2505;
         VampirismAPI.sundamageRegistry().addNoSundamageBiome(id);
         setBiomeName(name);
         setHeight(new BiomeGenBase.Height(0.1F, 0.025F));
         setColor(0xCC00CC);
+    }
+
+    @Override
+    public void addDefaultFlowers() {
+        addFlower(ModBlocks.vampirismFlower.getDefaultState().withProperty(VampirismFlower.TYPE, VampirismFlower.EnumFlowerType.ORCHID), 10);
     }
 
     @Override
