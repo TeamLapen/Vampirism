@@ -24,6 +24,7 @@ import de.teamlapen.vampirism.entity.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.entity.player.actions.ActionRegistry;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.actions.HunterActions;
+import de.teamlapen.vampirism.entity.player.skills.SkillRegistry;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.network.ModGuiHandler;
@@ -137,6 +138,7 @@ public class VampirismMod {
         ((FactionRegistry) VampirismAPI.factionRegistry()).finish();
         ((BiteableRegistry) VampirismAPI.biteableRegistry()).finishRegistration(Balance.mobProps.CONVERTED_MOB_DEFAULT_DMG);
         ((ActionRegistry) VampirismAPI.actionRegistry()).finish();
+        ((SkillRegistry) VampirismAPI.skillRegistry()).finish();
     }
 
     /**
@@ -147,7 +149,8 @@ public class VampirismMod {
         SundamageRegistry sundamageRegistry = new SundamageRegistry();
         BiteableRegistry biteableRegistry = new BiteableRegistry();
         ActionRegistry actionRegistry = new ActionRegistry();
-        VampirismAPI.setUp(factionRegistry, sundamageRegistry, biteableRegistry, actionRegistry);
+        SkillRegistry skillRegistry = new SkillRegistry();
+        VampirismAPI.setUp(factionRegistry, sundamageRegistry, biteableRegistry, actionRegistry, skillRegistry);
         VReference.VAMPIRE_FACTION = factionRegistry.registerPlayableFaction("Vampire", IVampirePlayer.class, Color.magenta.getRGB(), "vampire_player", REFERENCE.HIGHEST_VAMPIRE_LEVEL);
         VReference.VAMPIRE_FACTION.setChatColor(EnumChatFormatting.LIGHT_PURPLE).setUnlocalizedName("text.vampirism.vampire");
         VReference.HUNTER_FACTION = factionRegistry.registerPlayableFaction("Hunter", IHunterPlayer.class, Color.BLUE.getRGB(), "hunter_player", REFERENCE.HIGHEST_HUNTER_LEVEL);

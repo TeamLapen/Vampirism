@@ -4,6 +4,8 @@ import com.google.common.base.Predicate;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionPlayer;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.IExtendedEntityProperties;
@@ -15,7 +17,7 @@ import net.minecraftforge.common.IExtendedEntityProperties;
  * <p>
  * If you are writing an addon and not a standalone mod, consider extending VampirismPlayer instead of implementing this
  */
-public interface IFactionPlayer extends IFactionEntity, IExtendedEntityProperties, IActionPlayer {
+public interface IFactionPlayer extends IFactionEntity, IExtendedEntityProperties, IActionPlayer, ISkillPlayer {
     /**
      * Mostly relevant in the set level command
      * Vampirism's factions always return true here.
@@ -24,8 +26,6 @@ public interface IFactionPlayer extends IFactionEntity, IExtendedEntityPropertie
      * @return
      */
     boolean canLeaveFaction();
-
-    IActionHandler<? extends IFactionPlayer> getActionHandler();
 
     /**
      * @return the faction this faction player belongs to

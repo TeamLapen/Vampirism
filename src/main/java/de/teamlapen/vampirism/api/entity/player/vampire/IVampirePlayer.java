@@ -2,16 +2,15 @@ package de.teamlapen.vampirism.api.entity.player.vampire;
 
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
-import de.teamlapen.vampirism.api.entity.player.IActionHandler;
-import de.teamlapen.vampirism.api.entity.player.IActionPlayer;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import net.minecraft.entity.EntityLivingBase;
 
 /**
  * Interface for the player vampire data
  */
-public interface IVampirePlayer extends IVampire, IFactionPlayer, IMinionLord, IBiteableEntity, IActionPlayer {
+public interface IVampirePlayer extends IVampire, IFactionPlayer, IMinionLord, IBiteableEntity {
 
     /**
      * @return The bite type which would be applied to the give entity

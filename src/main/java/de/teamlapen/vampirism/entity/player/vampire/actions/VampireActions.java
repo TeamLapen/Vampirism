@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity.player.vampire.actions;
 
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.player.IActionRegistry;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionRegistry;
 
 /**
  * Registers and holds all skills for vampire player

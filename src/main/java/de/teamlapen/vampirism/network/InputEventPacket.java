@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.network;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.player.IAction;
-import de.teamlapen.vampirism.api.entity.player.IActionHandler;
+import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.entity.player.actions.ActionHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import io.netty.buffer.ByteBuf;

@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import net.minecraft.client.Minecraft;
@@ -84,7 +85,10 @@ public class ModKeys {
             }
         } else if (keyPressed == KEY.ACTION) {
             EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-            player.openGui(VampirismMod.instance, ModGuiHandler.ID_ACTION, player.worldObj, player.chunkCoordX, player.chunkCoordY, player.chunkCoordZ);
+            if (FactionPlayerHandler.get(player).getCurrentFaction() != null) {
+                player.openGui(VampirismMod.instance, ModGuiHandler.ID_ACTION, player.worldObj, player.chunkCoordX, player.chunkCoordY, player.chunkCoordZ);
+            }
+
         }
     }
 

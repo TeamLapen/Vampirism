@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.api.entity.player;
+package de.teamlapen.vampirism.api.entity.player.actions;
 
 /**
  * Action with a duration which is updated every tick

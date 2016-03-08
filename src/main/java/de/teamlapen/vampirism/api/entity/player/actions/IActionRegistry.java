@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.api.entity.player;
+package de.teamlapen.vampirism.api.entity.player.actions;
 
 import com.google.common.collect.ImmutableBiMap;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;

@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.api.entity.player;
+package de.teamlapen.vampirism.api.entity.player.actions;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraft.util.ResourceLocation;

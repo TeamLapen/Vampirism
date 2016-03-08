@@ -9,7 +9,9 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.IActionHandler;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
@@ -20,6 +22,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.entity.player.VampirismPlayer;
 import de.teamlapen.vampirism.entity.player.actions.ActionHandler;
+import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
 import de.teamlapen.vampirism.potion.FakeNightVisionPotionEffect;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.Helper;
@@ -67,6 +70,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
     private final String KEY_EYE = "eye_type";
     private final String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
     private final ActionHandler<IVampirePlayer> actionHandler;
+    private final SkillHandler<IVampirePlayer> skillHandler;
     private boolean sundamage_cache = false;
     private EnumGarlicStrength garlic_cache = EnumGarlicStrength.NONE;
     private int biteCooldown = 0;
@@ -78,6 +82,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
         applyEntityAttributes();
         bloodStats = new BloodStats(player);
         actionHandler = new ActionHandler(this);
+        skillHandler = new SkillHandler<IVampirePlayer>(this);
     }
 
     /**
@@ -151,6 +156,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
         return false;
     }
 
+    @Override
     public IActionHandler<IVampirePlayer> getActionHandler() {
         return actionHandler;
     }
@@ -194,6 +200,11 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
     @Override
     public String getPropertyKey() {
         return VReference.VAMPIRE_FACTION.prop();
+    }
+
+    @Override
+    public ISkillHandler<? extends ISkillPlayer> getSkillHandler() {
+        return skillHandler;
     }
 
     @Override
@@ -247,6 +258,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
         bloodStats.readNBT(nbt);
         eyeType = nbt.getInteger(KEY_EYE);
         actionHandler.loadFromNbt(nbt);
+        skillHandler.loadFromNbt(nbt);
     }
 
     @Override
@@ -427,6 +439,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
         bloodStats.writeNBT(nbt);
         nbt.setInteger(KEY_EYE, eyeType);
         actionHandler.saveToNbt(nbt);
+        skillHandler.saveToNbt(nbt);
 
     }
 
@@ -470,8 +483,9 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
         if (nbt.hasKey(KEY_SPAWN_BITE_PARTICLE)) {
             spawnBiteParticle(nbt.getInteger(KEY_SPAWN_BITE_PARTICLE));
         }
-        actionHandler.readUpdateFromServer(nbt);
         bloodStats.loadUpdate(nbt);
+        actionHandler.readUpdateFromServer(nbt);
+        skillHandler.readUpdateFromServer(nbt);
     }
 
     @Override
@@ -479,6 +493,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
         nbt.setInteger(KEY_EYE, getEyeType());
         bloodStats.writeUpdate(nbt);
         actionHandler.writeUpdateForClient(nbt);
+        skillHandler.writeUpdateForClient(nbt);
     }
 
     private void applyEntityAttributes() {

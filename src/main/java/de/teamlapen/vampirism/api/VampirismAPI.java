@@ -5,7 +5,8 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
-import de.teamlapen.vampirism.api.entity.player.IActionRegistry;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionRegistry;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillRegistry;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -20,6 +21,7 @@ public class VampirismAPI {
     private static ISundamageRegistry sundamageRegistry;
     private static IBiteableRegistry biteableRegistry;
     private static IActionRegistry actionRegistry;
+    private static ISkillRegistry skillRegistry;
 
     /**
      * @return The faction registry
@@ -45,6 +47,14 @@ public class VampirismAPI {
 
     /**
      *
+     * @return The skill registry
+     */
+    public static ISkillRegistry skillRegistry() {
+        return skillRegistry;
+    }
+
+    /**
+     *
      * @return The action registry
      */
     public static IActionRegistry actionRegistry() {
@@ -57,11 +67,12 @@ public class VampirismAPI {
      * @param factionReg
      * @param sundamageReg
      */
-    public static void setUp(IFactionRegistry factionReg, ISundamageRegistry sundamageReg, IBiteableRegistry biteableReg, IActionRegistry actionReg) {
+    public static void setUp(IFactionRegistry factionReg, ISundamageRegistry sundamageReg, IBiteableRegistry biteableReg, IActionRegistry actionReg, ISkillRegistry skillReg) {
         factionRegistry = factionReg;
         sundamageRegistry = sundamageReg;
         biteableRegistry = biteableReg;
         actionRegistry = actionReg;
+        skillRegistry = skillReg;
     }
 
 

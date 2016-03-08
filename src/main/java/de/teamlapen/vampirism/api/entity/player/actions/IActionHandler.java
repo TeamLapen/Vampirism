@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.api.entity.player;
+package de.teamlapen.vampirism.api.entity.player.actions;
 
 
 import java.util.List;
@@ -14,11 +14,6 @@ public interface IActionHandler<T extends IActionPlayer> {
      */
     List<IAction<T>> getAvailableActions();
 
-    /**
-     * @param player
-     * @return A list of all actions the player can currently use
-     */
-    List<IAction<T>> getAvailableActions(T player);
 
     /**
      * Returns +Ticks_Left/Total_Duration(Positive) if action is active

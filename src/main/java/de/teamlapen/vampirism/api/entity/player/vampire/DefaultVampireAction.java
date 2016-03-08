@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.api.entity.player.vampire;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.DefaultAction;
+import de.teamlapen.vampirism.api.entity.player.actions.DefaultAction;
 import net.minecraft.util.ResourceLocation;
 
 /**

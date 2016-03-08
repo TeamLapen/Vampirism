@@ -4,8 +4,8 @@ import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableBiMap;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.IAction;
-import de.teamlapen.vampirism.api.entity.player.IActionRegistry;
+import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionRegistry;
 import net.minecraft.util.StringUtils;
 
 import java.util.HashMap;

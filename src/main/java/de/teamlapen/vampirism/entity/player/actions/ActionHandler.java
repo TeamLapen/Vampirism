@@ -3,10 +3,10 @@ package de.teamlapen.vampirism.entity.player.actions;
 import com.google.common.collect.ImmutableBiMap;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.player.IAction;
-import de.teamlapen.vampirism.api.entity.player.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import de.teamlapen.vampirism.api.entity.player.ILastingAction;
+import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
+import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.ArrayList;
@@ -60,8 +60,10 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         return actionIdMap.get(id);
     }
 
+
+
     @Override
-    public List<IAction<T>> getAvailableActions(T player) {
+    public List<IAction<T>> getAvailableActions() {
         ArrayList<IAction<T>> actions = new ArrayList<>();
         for (IAction<T> action : actionMap.values()) {
             if (action.canUse(player) == IAction.PERM.ALLOWED) {
@@ -70,11 +72,6 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         }
 
         return actions;
-    }
-
-    @Override
-    public List<IAction<T>> getAvailableActions() {
-        return getAvailableActions(player);
     }
 
     /**

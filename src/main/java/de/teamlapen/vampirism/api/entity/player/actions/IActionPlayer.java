@@ -1,5 +1,6 @@
-package de.teamlapen.vampirism.api.entity.player;
+package de.teamlapen.vampirism.api.entity.player.actions;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.IExtendedEntityProperties;
 
 /**
@@ -7,4 +8,6 @@ import net.minecraftforge.common.IExtendedEntityProperties;
  */
 public interface IActionPlayer {
     IActionHandler<? extends IActionPlayer> getActionHandler();
+
+    EntityPlayer getRepresentingPlayer();
 }

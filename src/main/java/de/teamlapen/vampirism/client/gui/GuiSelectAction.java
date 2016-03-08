@@ -2,8 +2,9 @@ package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.lib.lib.gui.client.GuiPieMenu;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.player.IAction;
-import de.teamlapen.vampirism.api.entity.player.IActionHandler;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.client.core.ModKeys;
@@ -113,8 +114,12 @@ public class GuiSelectAction extends GuiPieMenu<IAction> {
 
     @Override
     protected void onGuiInit() {
-        actionHandler = FactionPlayerHandler.get(mc.thePlayer).getCurrentFactionPlayer().getActionHandler();
-        elements.addAll(actionHandler.getAvailableActions());
-        elements.add(fakeAction);
+        IFactionPlayer player = FactionPlayerHandler.get(mc.thePlayer).getCurrentFactionPlayer();
+        if (player != null) {
+            actionHandler = player.getActionHandler();
+            elements.addAll(actionHandler.getAvailableActions());
+            elements.add(fakeAction);
+        }
+
     }
 }
