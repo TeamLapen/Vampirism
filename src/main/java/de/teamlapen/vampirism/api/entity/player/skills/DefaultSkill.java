@@ -5,6 +5,7 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.*;
 
@@ -14,6 +15,23 @@ import java.util.*;
 public abstract class DefaultSkill<T extends ISkillPlayer> implements ISkill<T> {
 
     private final Map<IAttribute, AttributeModifier> attributeModifierMap = new HashMap<>();
+    private int renderRow;
+    private int renderColumn;
+
+    @Override
+    public ResourceLocation getIconLoc() {
+        return null;
+    }
+
+    @Override
+    public int getRenderColumn() {
+        return renderColumn;
+    }
+
+    @Override
+    public int getRenderRow() {
+        return renderRow;
+    }
 
     @Override
     public final void onDisable(T player) {
@@ -34,6 +52,12 @@ public abstract class DefaultSkill<T extends ISkillPlayer> implements ISkill<T> 
         AttributeModifier attributemodifier = new AttributeModifier(UUID.fromString(name), this.getID(), amount, operation);
         this.attributeModifierMap.put(attribute, attributemodifier);
         return this;
+    }
+
+    @Override
+    public void setRenderPos(int row, int column) {
+        this.renderRow = row;
+        this.renderColumn = column;
     }
 
     @Override

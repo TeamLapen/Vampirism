@@ -39,7 +39,7 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
             if (node.isRoot() || isNodeEnabled(node.getParent())) {
                 return !isNodeEnabled(node);//If another skill in that node is already enabled this one cannot be enabled
             } else {
-                VampirismMod.log.t("Parent (%s) is not enabled for skill %s", node.getParent(), skill);
+                // VampirismMod.log.t("Parent (%s) is not enabled for skill %s", node.getParent(), skill);
             }
         } else {
             VampirismMod.log.t("Node for skill %s could not be found", skill);
@@ -49,8 +49,10 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
 
     public void disableAllSkills() {
         for (ISkill skill : enabledSkills) {
-            disableSkill(skill);
+            skill.onDisable(player);
         }
+        enabledSkills.clear();
+        dirty = true;
     }
 
     @Override
@@ -95,6 +97,13 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
     @Override
     public int getLeftSkillPoints() {
         return player.getLevel() - enabledSkills.size();
+    }
+
+    /**
+     * @return The root node of the faction this handler belongs to
+     */
+    public SkillNode getRootNode() {
+        return VampirismAPI.skillRegistry().getRootSkillNode(player.getFaction());
     }
 
     /**
