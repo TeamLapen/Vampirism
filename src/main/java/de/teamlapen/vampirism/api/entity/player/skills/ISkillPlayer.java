@@ -6,9 +6,9 @@ import net.minecraftforge.common.IExtendedEntityProperties;
 /**
  * Interface for {@link IExtendedEntityProperties} which can unlock skills
  */
-public interface ISkillPlayer extends IActionPlayer {
+public interface ISkillPlayer<T extends ISkillPlayer> extends IActionPlayer<T> {
     /**
      * @return The skill handler for this player
      */
-    ISkillHandler<? extends ISkillPlayer> getSkillHandler();
+    ISkillHandler<T> getSkillHandler();
 }

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity.player.actions;
 
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -40,6 +41,8 @@ public interface IActionHandler<T extends IActionPlayer> {
      */
     boolean isActionActive(String id);
 
+    boolean isActionUnlocked(IAction action);
+
     /**
      * Set all timers to 0
      */
@@ -52,4 +55,18 @@ public interface IActionHandler<T extends IActionPlayer> {
      * @return
      */
     IAction.PERM toggleAction(IAction action);
+
+    /**
+     * Unlock the given actions. The given action have to belong to the players faction and have to be registered
+     *
+     * @param actions
+     */
+    void unlockActions(Collection<IAction<T>> actions);
+
+    /**
+     * Locks the given actions again
+     *
+     * @param actions
+     */
+    void ununlockActions(Collection<IAction<T>> actions);
 }

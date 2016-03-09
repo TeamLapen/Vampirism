@@ -33,11 +33,6 @@ public class GuiSelectAction extends GuiPieMenu<IAction> {
         }
 
         @Override
-        public int getMinLevel() {
-            return 0;
-        }
-
-        @Override
         public int getMinU() {
             return 16;
         }
@@ -50,6 +45,11 @@ public class GuiSelectAction extends GuiPieMenu<IAction> {
         @Override
         public String getUnlocalizedName() {
             return "skill.vampirism.cancel";
+        }
+
+        @Override
+        public boolean isEnabled() {
+            return true;
         }
 
         @Override

@@ -13,6 +13,8 @@ public class VampireActions {
     public static TeleportVampireAction teleportAction;
     public static VampireRageVampireAction rageAction;
     public static BatVampireAction batAction;
+    public static SummonBatVampireAction summonBatAction;
+    public static DisguiseVampireAction disguiseAction;
 
     public static void registerDefaultActions() {
         IActionRegistry registry = VampirismAPI.actionRegistry();
@@ -22,5 +24,7 @@ public class VampireActions {
         teleportAction = registry.registerAction(new TeleportVampireAction(), "teleport");
         rageAction = registry.registerAction(new VampireRageVampireAction(), "rage");
         batAction = registry.registerAction(new BatVampireAction(), "bat");
+        disguiseAction = registry.registerAction(new DisguiseVampireAction(), "disguise");
+        summonBatAction = registry.registerAction(new SummonBatVampireAction(), "summonbat");
     }
 }

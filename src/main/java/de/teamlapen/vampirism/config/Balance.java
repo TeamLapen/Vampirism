@@ -17,7 +17,7 @@ public class Balance {
     public static BalanceMobProps mobProps;
     public static BalanceVampirePlayer vp;
     public static BalanceHunterPlayer hp;
-    public static BalanceVampireActions vps;
+    public static BalanceVampireActions vpa;
     public static BalanceGeneral general;
 
     public static void init(File configDir, boolean inDev) {
@@ -26,7 +26,7 @@ public class Balance {
         mobProps = addBalance(new BalanceMobProps(balanceDir));
         vp = addBalance(new BalanceVampirePlayer(balanceDir));
         hp = addBalance(new BalanceHunterPlayer(balanceDir));
-        vps = addBalance(new BalanceVampireActions(balanceDir));
+        vpa = addBalance(new BalanceVampireActions(balanceDir));
         general = addBalance(new BalanceGeneral(balanceDir));
         if (inDev && Configs.resetConfigurationInDev) {
             resetAndReload(null);

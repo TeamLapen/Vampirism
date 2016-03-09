@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -29,6 +30,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     private final T player;
     private final ImmutableBiMap<String, IAction<T>> actionMap;
     private final ImmutableBiMap<Integer, IAction<T>> actionIdMap;
+    private final List<IAction<T>> unlockedActions = new ArrayList<>();
     private boolean dirty = false;
 
     public ActionHandler(T player) {
@@ -65,7 +67,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     @Override
     public List<IAction<T>> getAvailableActions() {
         ArrayList<IAction<T>> actions = new ArrayList<>();
-        for (IAction<T> action : actionMap.values()) {
+        for (IAction<T> action : unlockedActions) {
             if (action.canUse(player) == IAction.PERM.ALLOWED) {
                 actions.add(action);
             }
@@ -112,6 +114,11 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
             return false;
         }
 
+    }
+
+    @Override
+    public boolean isActionUnlocked(IAction action) {
+        return unlockedActions.contains(action);
     }
 
     /**
@@ -208,6 +215,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
             dirty = true;
             return IAction.PERM.ALLOWED;
         } else if (t == 0) {
+            if (!isActionUnlocked(action)) return IAction.PERM.NOT_UNLOCKED;
             IAction.PERM r = action.canUse(player);
             if (r == IAction.PERM.ALLOWED) {
                 if (action.onActivated(player)) {
@@ -227,6 +235,21 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
             return IAction.PERM.COOLDOWN;
         }
 
+    }
+
+    @Override
+    public void unlockActions(Collection<IAction<T>> actions) {
+        unlockedActions.addAll(actions);
+    }
+
+    @Override
+    public void ununlockActions(Collection<IAction<T>> actions) {
+        unlockedActions.removeAll(actions);
+        for (IAction action : actions) {
+            if (action instanceof ILastingAction && isActionActive((ILastingAction) action)) {
+                toggleAction(action);
+            }
+        }
     }
 
     /**

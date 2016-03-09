@@ -91,8 +91,8 @@ public class InputEventPacket implements IMessage {
                     if (action != null) {
                         IAction.PERM r = VampirePlayer.get(player).getActionHandler().toggleAction(action);
                         switch (r) {
-                            case LEVEL_TO_LOW:
-                                player.addChatMessage(new ChatComponentTranslation("text.vampirism.action.level_to_low"));
+                            case NOT_UNLOCKED:
+                                player.addChatMessage(new ChatComponentTranslation("text.vampirism.action.not_unlocked"));
                                 break;
                             case DISABLED:
                                 player.addChatMessage(new ChatComponentTranslation("text.vampirism.action.deactivated_by_serveradmin"));

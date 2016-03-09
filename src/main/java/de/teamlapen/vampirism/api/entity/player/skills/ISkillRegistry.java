@@ -41,6 +41,7 @@ public interface ISkillRegistry {
      *
      * @param faction
      * @param skill
+     * @return The create root skill node
      */
-    void setRootSkill(IPlayableFaction faction, ISkill skill);
+    SkillNode setRootSkill(IPlayableFaction faction, ISkill skill);
 }

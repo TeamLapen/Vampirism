@@ -58,8 +58,14 @@ public class BalanceVampirePlayer extends BalanceValues {
     public boolean SUNDAMAGE_NAUSEA;
     @DefaultInt(value = 3, alternateValue = 1, name = "sundamage_min_level", minValue = 1, comment = "The vampire level as of the player receives a weakness effect from the sun")
     public int SUNDAMAGE_WEAKNESS_MINLEVEL;
-    @DefaultDouble(value = 7.0, alternateValue = 14, name = "sundamage_damage", minValue = 1, comment = "Damage a player receives every two seconds if in sun. Is multiplied with several factors.")
+    @DefaultDouble(value = 7.0, alternateValue = 14, name = "sundamage_damage", minValue = 1, comment = "Damage a player receives every 2 seconds if in sun. Is multiplied with several factors.")
     public double SUNDAMAGE_DAMAGE;
+
+    @DefaultDouble(value = 2.0, name = "garlic_damage", minValue = 1, comment = "Damage the player receives every 2 seconds if in garlic")
+    public double GARLIC_DAMAGE;
+
+    @DefaultInt(value = 5, name = "poisonous_bite_duration", minValue = 0, maxValue = 100, comment = "If the players bite is poisonous this specifies the duration (in sec)")
+    public int POISONOUS_BITE_DURATION;
 
     /**
      * Creates a configuration for balance values

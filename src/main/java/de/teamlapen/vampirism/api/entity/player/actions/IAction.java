@@ -60,6 +60,6 @@ public interface IAction<T extends IActionPlayer> {
     boolean onActivated(T player);
 
     enum PERM {
-        ALLOWED, DISABLED, LEVEL_TO_LOW, DISALLOWED, COOLDOWN//Cooldown should not be used by the skill itself, but only by the {@link IActionHandler}
+        ALLOWED, DISABLED, NOT_UNLOCKED, DISALLOWED, COOLDOWN//Cooldown should not be used by the skill itself, but only by the {@link IActionHandler}
     }
 }

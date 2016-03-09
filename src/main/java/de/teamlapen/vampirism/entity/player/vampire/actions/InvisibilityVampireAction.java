@@ -10,26 +10,18 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
     public InvisibilityVampireAction() {
         super(null);
     }
-//      TODO activate again
-//    @Override
-//    public boolean canBeUsedBy(IVampirePlayer vampire) {
-//        return vampire.isVampireLord();
-//    }
+
 
     @Override
     public int getCooldown() {
-        return Balance.vps.INVISIBILITY_COOLDOWN * 20;
+        return Balance.vpa.INVISIBILITY_COOLDOWN * 20;
     }
 
     @Override
     public int getDuration(int level) {
-        return Balance.vps.INVISIBILITY_DURATION * 20;
+        return Balance.vpa.INVISIBILITY_DURATION * 20;
     }
 
-    @Override
-    public int getMinLevel() {
-        return Balance.vps.INVISIBILITY_MIN_LEVEL;
-    }
 
     @Override
     public int getMinU() {
@@ -44,6 +36,11 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
     @Override
     public String getUnlocalizedName() {
         return "skill.vampirism.invisibility";
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return Balance.vpa.INVISIBILITY_ENABLED;
     }
 
     @Override

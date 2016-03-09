@@ -21,20 +21,10 @@ public class TeleportVampireAction extends DefaultVampireAction {
     public boolean canBeUsedBy(IVampirePlayer vampire) {
         return !vampire.getActionHandler().isActionActive(VampireActions.batAction);
     }
-//      TODO reactivate
-//    @Override
-//    public boolean canBeUsedBy(IVampirePlayer vampire) {
-//        return vampire.isVampireLord();
-//    }
 
     @Override
     public int getCooldown() {
-        return Balance.vps.TELEPORT_COOLDOWN * 20;
-    }
-
-    @Override
-    public int getMinLevel() {
-        return Balance.vps.TELEPORT_MIN_LEVEL;
+        return Balance.vpa.TELEPORT_COOLDOWN * 20;
     }
 
     @Override
@@ -53,9 +43,14 @@ public class TeleportVampireAction extends DefaultVampireAction {
     }
 
     @Override
+    public boolean isEnabled() {
+        return Balance.vpa.TELEPORT_ENABLED;
+    }
+
+    @Override
     public boolean onActivated(IVampirePlayer vampire) {
         EntityPlayer player = vampire.getRepresentingPlayer();
-        MovingObjectPosition target = UtilLib.getPlayerLookingSpot(player, Balance.vps.TELEPORT_MAX_DISTANCE);
+        MovingObjectPosition target = UtilLib.getPlayerLookingSpot(player, Balance.vpa.TELEPORT_MAX_DISTANCE);
         double ox = player.posX;
         double oy = player.posY;
         double oz = player.posZ;

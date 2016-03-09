@@ -10,6 +10,8 @@ public interface ISkill<T extends ISkillPlayer> {
      */
     String getID();
 
+    String getUnlocalizedName();
+
     /**
      * Called when the skill is disenabled (Server: on load from nbt/on disabling all skills e.g. via the gui. Client: on update from server)
      *

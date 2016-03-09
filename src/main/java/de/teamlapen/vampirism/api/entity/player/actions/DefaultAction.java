@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * Created by Max on 02.03.2016.
+ * Default implementation for an action
  */
 public abstract class DefaultAction<T extends IFactionPlayer> implements IAction<T> {
     private final ResourceLocation icons;
@@ -22,17 +22,15 @@ public abstract class DefaultAction<T extends IFactionPlayer> implements IAction
      *
      * @return
      */
-    public boolean canBeUsedBy(T vampire) {
+    public boolean canBeUsedBy(T player) {
         return true;
     }
 
     @Override
-    public IAction.PERM canUse(T vampire) {
-        if (getMinLevel() == -1)
+    public IAction.PERM canUse(T player) {
+        if (!isEnabled())
             return IAction.PERM.DISABLED;
-        if (vampire.getLevel() < getMinLevel())
-            return IAction.PERM.LEVEL_TO_LOW;
-        return (canBeUsedBy(vampire) ? IAction.PERM.ALLOWED : IAction.PERM.DISALLOWED);
+        return (canBeUsedBy(player) ? IAction.PERM.ALLOWED : IAction.PERM.DISALLOWED);
     }
 
 
@@ -42,12 +40,13 @@ public abstract class DefaultAction<T extends IFactionPlayer> implements IAction
     }
 
     /**
-     * @return The minimum level which is required to use this skill
+     *
+     * @return Should return false if deactivated in configs
      */
-    public abstract int getMinLevel();
+    public abstract boolean isEnabled();
 
     @Override
     public String toString() {
-        return super.toString() + " (" + VampirismAPI.actionRegistry().getKeyFromAction(this) + ")";
+        return VampirismAPI.actionRegistry().getKeyFromAction(this) + " (" + this.getClass().getSimpleName() + ")";
     }
 }

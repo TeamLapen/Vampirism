@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
-import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
@@ -49,7 +48,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * Main class for Vampire Players.
  */
-public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
+public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IVampirePlayer {
 
     private final static String TAG = "VampirePlayer";
 
@@ -71,6 +70,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
     private final String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
     private final ActionHandler<IVampirePlayer> actionHandler;
     private final SkillHandler<IVampirePlayer> skillHandler;
+    private final VampirePlayerSpecialAttributes specialAttributes = new VampirePlayerSpecialAttributes();
     private boolean sundamage_cache = false;
     private EnumGarlicStrength garlic_cache = EnumGarlicStrength.NONE;
     private int biteCooldown = 0;
@@ -203,8 +203,12 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
     }
 
     @Override
-    public ISkillHandler<? extends ISkillPlayer> getSkillHandler() {
+    public ISkillHandler<IVampirePlayer> getSkillHandler() {
         return skillHandler;
+    }
+
+    public VampirePlayerSpecialAttributes getSpecialAttributes() {
+        return specialAttributes;
     }
 
     @Override
@@ -219,7 +223,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
 
     @Override
     public boolean isDisguised() {
-        return false;//TODO implement
+        return specialAttributes.disguised;
     }
 
     @Override
@@ -310,8 +314,13 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
             LevelAttributeModifier.applyModifier(player, VReference.bloodExhaustion, "Vampire", getLevel(), getMaxLevel(), Balance.vp.EXAUSTION_MAX_MOD, Balance.vp.EXHAUSTION_TYPE);
             if (newLevel > 0) {
                 player.addStat(Achievements.becomingAVampire, 1);
+                if (oldLevel == 0) {
+                    skillHandler.enableRootSkill();
+                }
+
             } else {
                 actionHandler.resetTimers();
+                skillHandler.disableAllSkills();
             }
         } else {
             if (oldLevel == 0) {
@@ -393,6 +402,10 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
                     sync = true;
                     syncToAll = true;
                     actionHandler.writeUpdateForClient(syncPacket);
+                }
+                if (skillHandler.isDirty()) {
+                    sync = true;
+                    skillHandler.writeUpdateForClient(syncPacket);
                 }
 
                 if (sync) {
@@ -499,6 +512,8 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
     private void applyEntityAttributes() {
         player.getAttributeMap().registerAttribute(VReference.sunDamage).setBaseValue(Balance.vp.SUNDAMAGE_DAMAGE);
         player.getAttributeMap().registerAttribute(VReference.bloodExhaustion).setBaseValue(Balance.vp.BLOOD_EXHAUSTION_BASIC_MOD);
+        player.getAttributeMap().registerAttribute(VReference.biteDamage).setBaseValue(Balance.vp.BITE_DMG);
+        player.getAttributeMap().registerAttribute(VReference.garlicDamage).setBaseValue(Balance.vp.GARLIC_DAMAGE);
     }
 
     /**
@@ -524,9 +539,12 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
             blood = ((IBiteableEntity) entity).onBite(this);
             saturationMod = ((IBiteableEntity) entity).getBloodSaturation();
         } else if (type == BITE_TYPE.ATTACK) {
-            entity.attackEntityFrom(DamageSource.causePlayerDamage(player), Balance.vp.BITE_DMG);
-            if (player.getRNG().nextInt(4) == 0) {
+            entity.attackEntityFrom(DamageSource.causePlayerDamage(player), (float) player.getEntityAttribute(VReference.biteDamage).getAttributeValue());
+            if (entity.isEntityUndead() && player.getRNG().nextInt(4) == 0) {
                 player.addPotionEffect(new PotionEffect(Potion.poison.id, 60));
+            }
+            if (specialAttributes.poisonous_bite) {
+                entity.addPotionEffect(new PotionEffect(Potion.poison.id, Balance.vp.POISONOUS_BITE_DURATION * 20, 1));
             }
         } else if (type == BITE_TYPE.NONE) {
             return;
@@ -546,6 +564,7 @@ public class VampirePlayer extends VampirismPlayer implements IVampirePlayer {
      */
     private void handleGarlicDamage() {
         //TODO
+        VReference.garlicDamage.getDefaultValue();
     }
 
     /**

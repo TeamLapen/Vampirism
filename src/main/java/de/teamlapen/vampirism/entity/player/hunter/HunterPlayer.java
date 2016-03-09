@@ -5,11 +5,9 @@ import com.google.common.base.Predicates;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
-import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.entity.player.VampirismPlayer;
@@ -26,7 +24,7 @@ import net.minecraft.world.World;
 /**
  * Main class for hunter players
  */
-public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
+public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHunterPlayer {
 
 
     /**
@@ -58,7 +56,7 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
     }
 
     @Override
-    public IActionHandler<? extends IFactionPlayer> getActionHandler() {
+    public IActionHandler<IHunterPlayer> getActionHandler() {
         return actionHandler;
     }
 
@@ -82,7 +80,7 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
     }
 
     @Override
-    public ISkillHandler<? extends ISkillPlayer> getSkillHandler() {
+    public ISkillHandler<IHunterPlayer> getSkillHandler() {
         return skillHandler;
     }
 

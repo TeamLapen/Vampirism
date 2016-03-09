@@ -20,17 +20,12 @@ public class VampireRageVampireAction extends DefaultVampireAction implements IL
 
     @Override
     public int getCooldown() {
-        return Balance.vps.RAGE_COOLDOWN * 20;
+        return Balance.vpa.RAGE_COOLDOWN * 20;
     }
 
     @Override
     public int getDuration(int level) {
-        return 20 * (Balance.vps.RAGE_MIN_DURATION + Balance.vps.RAGE_DUR_PL * (level - getMinLevel()));
-    }
-
-    @Override
-    public int getMinLevel() {
-        return Balance.vps.RAGE_MIN_LEVEL;
+        return 20 * (Balance.vpa.RAGE_MIN_DURATION + Balance.vpa.RAGE_DUR_PL);
     }
 
     @Override
@@ -46,6 +41,11 @@ public class VampireRageVampireAction extends DefaultVampireAction implements IL
     @Override
     public String getUnlocalizedName() {
         return "skill.vampirism.vampire_rage";
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return Balance.vpa.RAGE_ENABLED;
     }
 
     @Override

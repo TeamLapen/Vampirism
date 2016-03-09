@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import net.minecraftforge.common.MinecraftForge;
+import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,6 +63,14 @@ public class SkillNode {
         parent.children.add(this);
     }
 
+    /**
+     * @param skill
+     * @return If the given skill is an element of this node
+     */
+    public boolean containsSkill(ISkill skill) {
+        return ArrayUtils.contains(elements, skill);
+    }
+
     public List<SkillNode> getChildren() {
         return children;
     }
@@ -84,5 +93,14 @@ public class SkillNode {
 
     public boolean isRoot() {
         return parent == null;
+    }
+
+    @Override
+    public String toString() {
+        return "SkillNode{" +
+                "faction=" + faction +
+                ", depth=" + depth +
+                ", elements=" + Arrays.toString(elements) +
+                '}';
     }
 }

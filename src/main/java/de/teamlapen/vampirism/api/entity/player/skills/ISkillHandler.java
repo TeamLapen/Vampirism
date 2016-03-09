@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
 /**
- * Created by Max on 08.03.2016.
+ * Handles the players skills
  */
 public interface ISkillHandler<T extends ISkillPlayer> {
 
@@ -11,11 +11,26 @@ public interface ISkillHandler<T extends ISkillPlayer> {
      */
     boolean canSkillBeEnabled(ISkill skill);
 
+
+    /**
+     * Disables the given skill
+     *
+     * @param skill
+     */
     void disableSkill(ISkill skill);
 
+    /**
+     * Enable the given skill. Check canSkillBeEnabled first
+     * @param skill
+     */
     void enableSkill(ISkill skill);
 
-    boolean isNodeEnabled(SkillNode skill);
+    /**
+     * @return The count of additional skills that can be currently unlocked
+     */
+    int getLeftSkillPoints();
+
+    boolean isNodeEnabled(SkillNode node);
 
     boolean isSkillEnabled(ISkill skill);
 }

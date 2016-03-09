@@ -49,11 +49,6 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     }
 
     @Override
-    public int getMinLevel() {
-        return Balance.vps.BAT_MIN_LEVEL;
-    }
-
-    @Override
     public int getMinU() {
         return 64;
     }
@@ -66,6 +61,11 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     @Override
     public String getUnlocalizedName() {
         return "skill.vampirism.bat_skill";
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return Balance.vpa.BAT_ENABLED;
     }
 
     @Override

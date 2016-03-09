@@ -99,6 +99,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
                 double dmg = getEntityAttribute(VReference.sunDamage).getAttributeValue();
                 this.attackEntityFrom(VReference.sundamage, (float) dmg);
             }
+            //TODO handle garlic
         }
         super.onLivingUpdate();
     }
@@ -112,6 +113,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         getAttributeMap().registerAttribute(VReference.sunDamage).setBaseValue(Balance.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
+        getAttributeMap().registerAttribute(VReference.garlicDamage).setBaseValue(Balance.mobProps.VAMPIRE_MOB_GARLIC_DAMAGE);
 
     }
 

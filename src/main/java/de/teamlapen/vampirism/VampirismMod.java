@@ -27,6 +27,7 @@ import de.teamlapen.vampirism.entity.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.entity.player.skills.SkillRegistry;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
+import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.proxy.IProxy;
@@ -123,6 +124,7 @@ public class VampirismMod {
         proxy.onInitStep(IInitListener.Step.PRE_INIT, event);
         VampireActions.registerDefaultActions();
         HunterActions.registerDefaultActions();
+        VampireSkills.registerVampireSkills();
 
 
     }

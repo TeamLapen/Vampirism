@@ -10,7 +10,7 @@ import net.minecraft.entity.EntityLivingBase;
 /**
  * Interface for the player vampire data
  */
-public interface IVampirePlayer extends IVampire, IFactionPlayer, IMinionLord, IBiteableEntity {
+public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>, IMinionLord, IBiteableEntity {
 
     /**
      * @return The bite type which would be applied to the give entity

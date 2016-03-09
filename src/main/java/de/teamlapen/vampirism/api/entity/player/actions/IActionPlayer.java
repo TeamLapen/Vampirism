@@ -6,8 +6,8 @@ import net.minecraftforge.common.IExtendedEntityProperties;
 /**
  * Interface for {@link IExtendedEntityProperties} that can use actions
  */
-public interface IActionPlayer {
-    IActionHandler<? extends IActionPlayer> getActionHandler();
+public interface IActionPlayer<T extends IActionPlayer> {
+    IActionHandler<T> getActionHandler();
 
     EntityPlayer getRepresentingPlayer();
 }

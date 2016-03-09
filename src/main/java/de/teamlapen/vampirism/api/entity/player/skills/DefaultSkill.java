@@ -6,10 +6,7 @@ import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Default implementation of ISkill. Handles entity modifiers and actions
@@ -21,29 +18,35 @@ public abstract class DefaultSkill<T extends ISkillPlayer> implements ISkill<T> 
     @Override
     public final void onDisable(T player) {
         removeAttributesModifiersFromEntity(player.getRepresentingPlayer());
+        player.getActionHandler().ununlockActions(getActions());
         onDisabled(player);
     }
 
     @Override
     public final void onEnable(T player) {
         applyAttributesModifiersToEntity(player.getRepresentingPlayer());
+
+        player.getActionHandler().unlockActions(getActions());
         onEnabled(player);
     }
 
-    public void removeAttributesModifiersFromEntity(EntityPlayer player) {
-        for (Map.Entry<IAttribute, AttributeModifier> entry : this.attributeModifierMap.entrySet()) {
-            IAttributeInstance iattributeinstance = player.getAttributeMap().getAttributeInstance(entry.getKey());
+    public DefaultSkill<T> registerAttributeModifier(IAttribute attribute, String name, double amount, int operation) {
+        AttributeModifier attributemodifier = new AttributeModifier(UUID.fromString(name), this.getID(), amount, operation);
+        this.attributeModifierMap.put(attribute, attributemodifier);
+        return this;
+    }
 
-            if (iattributeinstance != null) {
-                iattributeinstance.removeModifier(entry.getValue());
-            }
-        }
+    @Override
+    public String toString() {
+        return getID() + "(" + getClass().getSimpleName() + ")";
     }
 
     /**
-     * @return Can be null
+     * Add actions that should be added to the list
      */
-    protected abstract List<IAction<T>> getActions();
+    protected void getActions(Collection<IAction<T>> list) {
+
+    }
 
     protected void onDisabled(T player) {
     }
@@ -63,10 +66,19 @@ public abstract class DefaultSkill<T extends ISkillPlayer> implements ISkill<T> 
         }
     }
 
-    private void registerAttributeModifier(IAttribute attribute, String name, double amount, int operation) {
-        AttributeModifier attributemodifier = new AttributeModifier(UUID.fromString(name), this.getID(), amount, operation);
-        this.attributeModifierMap.put(attribute, attributemodifier);
+    private Collection<IAction<T>> getActions() {
+        Collection<IAction<T>> collection = new ArrayList<>();
+        getActions(collection);
+        return collection;
     }
 
+    private void removeAttributesModifiersFromEntity(EntityPlayer player) {
+        for (Map.Entry<IAttribute, AttributeModifier> entry : this.attributeModifierMap.entrySet()) {
+            IAttributeInstance iattributeinstance = player.getAttributeMap().getAttributeInstance(entry.getKey());
 
+            if (iattributeinstance != null) {
+                iattributeinstance.removeModifier(entry.getValue());
+            }
+        }
+    }
 }

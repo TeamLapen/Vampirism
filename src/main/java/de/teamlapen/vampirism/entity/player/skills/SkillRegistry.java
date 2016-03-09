@@ -8,6 +8,8 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillRegistry;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillNode;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.util.ChatComponentText;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +29,12 @@ public class SkillRegistry implements ISkillRegistry {
 
                     @Override
                     public String getID() {
-                        return faction.prop() + "dummy";
+                        return faction.prop() + "_dummy";
+                    }
+
+                    @Override
+                    public String getUnlocalizedName() {
+                        return faction.getUnlocalizedName();
                     }
 
                     @Override
@@ -62,6 +69,19 @@ public class SkillRegistry implements ISkillRegistry {
         return skillMap.get(faction).get(id);
     }
 
+    /**
+     * For debug purpose only.
+     * Prints the skills of the given faction to the given sender
+     *
+     * @param faction
+     * @param sender
+     */
+    public void printSkills(IPlayableFaction faction, ICommandSender sender) {
+        for (Map.Entry e : skillMap.get(faction).entrySet()) {
+            sender.addChatMessage(new ChatComponentText("ID: " + e.getKey() + " Skill: " + e.getValue()));
+        }
+    }
+
     @Override
     public void registerNode(SkillNode node) {
         BiMap<String, ISkill> map = skillMap.get(node.getFaction());
@@ -78,7 +98,9 @@ public class SkillRegistry implements ISkillRegistry {
     }
 
     @Override
-    public void setRootSkill(IPlayableFaction faction, ISkill skill) {
-        rootNodes.put(faction, new SkillNode(faction, skill));
+    public SkillNode setRootSkill(IPlayableFaction faction, ISkill skill) {
+        SkillNode s = new SkillNode(faction, skill);
+        rootNodes.put(faction, s);
+        return s;
     }
 }
