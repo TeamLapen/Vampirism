@@ -12,6 +12,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
@@ -74,6 +75,20 @@ public class ModPlayerEventHandler {
     public void onItemUse(PlayerUseItemEvent.Start event) {
         if (VampirePlayer.get(event.entityPlayer).getActionHandler().isActionActive(VampireActions.batAction)) {
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onLivingFall(LivingFallEvent event) {
+        if (event.entity instanceof EntityPlayer) {
+            event.distance -= VampirePlayer.get((EntityPlayer) event.entity).getSpecialAttributes().getJumpBoost();
+        }
+    }
+
+    @SubscribeEvent
+    public void onLivingJump(LivingEvent.LivingJumpEvent event) {
+        if (event.entity instanceof EntityPlayer) {
+            event.entity.motionY += (double) ((float) (VampirePlayer.get((EntityPlayer) event.entity).getSpecialAttributes().getJumpBoost()) * 0.1F);
         }
     }
 

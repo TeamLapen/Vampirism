@@ -480,7 +480,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     protected VampirismPlayer copyFromPlayer(EntityPlayer old) {
-        return get(old);
+        VampirePlayer oldVampire = get(old);
+        NBTTagCompound nbt = new NBTTagCompound();
+        oldVampire.saveData(nbt);
+        this.loadData(nbt);
+        return oldVampire;
     }
 
     @Override

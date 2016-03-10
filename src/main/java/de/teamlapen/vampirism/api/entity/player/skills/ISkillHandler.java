@@ -33,4 +33,9 @@ public interface ISkillHandler<T extends ISkillPlayer> {
     boolean isNodeEnabled(SkillNode node);
 
     boolean isSkillEnabled(ISkill skill);
+
+    /**
+     * Reset all skills but reactivate the root skill of the faction
+     */
+    void resetSkills();
 }

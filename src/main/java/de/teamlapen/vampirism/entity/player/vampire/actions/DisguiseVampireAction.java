@@ -27,12 +27,12 @@ public class DisguiseVampireAction extends DefaultVampireAction implements ILast
 
     @Override
     public int getMinU() {
-        return 0;
+        return 160;
     }
 
     @Override
     public int getMinV() {
-        return 16;
+        return 0;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class DisguiseVampireAction extends DefaultVampireAction implements ILast
     @Override
     public boolean onActivated(IVampirePlayer player) {
         ((VampirePlayer) player).getSpecialAttributes().disguised = true;
-        return false;
+        return true;
     }
 
     @Override

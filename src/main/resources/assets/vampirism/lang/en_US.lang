@@ -154,3 +154,7 @@ category.vampirism.balance_mob_prop.tooltip=Change properties of the mobs added 
 category.vampirism.balance_vv_prop=Village Vampire properties
 category.vampirism.balance_vv_prop.tooltip=Change the way hunters in villages act and adjust other village related stuff
 
+############# REWRITE NEW ###########################
+text.vampirism.skills.gui_title=Your skills
+text.vampirism.skills.points_left=%d skill point(s) left
+text.vampirism.skill.resetall=Reset skills

@@ -37,7 +37,12 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
         node = findSkillNode(node, skill);
         if (node != null) {
             if (node.isRoot() || isNodeEnabled(node.getParent())) {
-                return !isNodeEnabled(node);//If another skill in that node is already enabled this one cannot be enabled
+                if (getLeftSkillPoints() > 0) {
+                    return !isNodeEnabled(node);//If another skill in that node is already enabled this one cannot be enabled
+                } else {
+                    //VampirismMod.log.t("No more skill points left");
+                }
+
             } else {
                 // VampirismMod.log.t("Parent (%s) is not enabled for skill %s", node.getParent(), skill);
             }
@@ -97,6 +102,10 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
     @Override
     public int getLeftSkillPoints() {
         return player.getLevel() - enabledSkills.size();
+    }
+
+    public IFactionPlayer<T> getPlayer() {
+        return player;
     }
 
     /**
@@ -163,6 +172,12 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
         for (ISkill skill : old) {
             disableSkill(skill);
         }
+    }
+
+    public void resetSkills() {
+        disableAllSkills();
+        enableRootSkill();
+        //TODO make this cost something
     }
 
     public void saveToNbt(NBTTagCompound nbt) {

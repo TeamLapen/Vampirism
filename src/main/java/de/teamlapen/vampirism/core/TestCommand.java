@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.skills.SkillRegistry;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.profiler.Profiler;
@@ -16,6 +17,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -67,7 +69,7 @@ public class TestCommand extends BasicCommand {
         addSub(new SubCommand() {
             @Override
             public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-                return null;
+                return (args.length == 1) ? getListOfStringsMatchingLastWord(args, getOptions(sender)) : null;
             }
 
             @Override
@@ -99,6 +101,10 @@ public class TestCommand extends BasicCommand {
                     ((SkillRegistry) VampirismAPI.skillRegistry()).printSkills(factionPlayer.getFaction(), var1);
                     return;
                 }
+                if ("disableall".equals(var2[0])) {
+                    (factionPlayer.getSkillHandler()).resetSkills();
+                    return;
+                }
                 ISkill skill = VampirismAPI.skillRegistry().getSkill(factionPlayer.getFaction(), var2[0]);
                 if (skill == null) {
                     var1.addChatMessage(new ChatComponentText("Skill with id " + var2[0] + " could not be found for faction " + factionPlayer.getFaction().name()));
@@ -116,6 +122,19 @@ public class TestCommand extends BasicCommand {
                     var1.addChatMessage(new ChatComponentText("Could not enable skill"));
                 }
 
+            }
+
+            private List getOptions(ICommandSender sender) {
+                List list = new ArrayList();
+                list.add("list");
+                list.add("disableall");
+                try {
+                    IFactionPlayer factionPlayer = FactionPlayerHandler.get(getCommandSenderAsPlayer(sender)).getCurrentFactionPlayer();
+                    ((SkillRegistry) VampirismAPI.skillRegistry()).addSkills(factionPlayer.getFaction(), list);
+
+                } catch (PlayerNotFoundException e) {
+                }
+                return list;
             }
         });
     }

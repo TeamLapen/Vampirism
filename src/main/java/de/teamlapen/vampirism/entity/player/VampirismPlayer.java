@@ -29,10 +29,6 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
         this.player = player;
     }
 
-    public void copyFrom(EntityPlayer old) {
-        VampirismPlayer p = copyFromPlayer(old);
-    }
-
     @Override
     public long getLastComebackCall() {
         return 0;
@@ -188,5 +184,9 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
      * @param nbt
      */
     protected void writeFullUpdate(NBTTagCompound nbt) {
+    }
+
+    private void copyFrom(EntityPlayer old) {
+        VampirismPlayer p = copyFromPlayer(old);
     }
 }

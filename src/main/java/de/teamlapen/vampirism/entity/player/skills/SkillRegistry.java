@@ -16,6 +16,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,6 +29,50 @@ public class SkillRegistry implements ISkillRegistry {
      * Stores values relevant for rendering the skill menu. Only filled on client
      */
     private final Map<IPlayableFaction, Integer[]> skillNodeSizeMap = new HashMap<>();
+
+    /**
+     * For debug purpose only.
+     * Adds all available skill ids to the list
+     *
+     * @param faction
+     * @param list
+     */
+    public void addSkills(IPlayableFaction faction, List list) {
+        for (String s : skillMap.get(faction).keySet()) {
+            list.add(s);
+        }
+    }
+
+//    /**
+//     * Calculate and set the render position for the given node using the given column as center
+//     * @param base
+//     * @param column
+//     */
+//    private void setRenderPos(SkillNode base,int column){
+//        VampirismMod.log.t("Node %s at %d",base,column);
+//        int left=-base.getElements().length/2;
+//        VampirismMod.log.t("Left1 %d",left);
+//        for(ISkill skill:base.getElements()){
+//            skill.setRenderPos(base.getDepth(),column+left);
+//            VampirismMod.log.t("Skill %s at %d %d",skill,base.getDepth(),column+left);
+//            left++;
+//        }
+//        VampirismMod.log.t("Right %d",left);
+//        int[] widths=new int[base.getChildren().size()];
+//        int total=0;
+//        for(int i=0;i<widths.length;i++){
+//            SkillNode node=base.getChildren().get(i);
+//            widths[i]=calculateMaxSkillsPerNode(node)*calculateEndPoints(node);
+//            total+=widths[i];
+//        }
+//        VampirismMod.log.t("Width %d",total);
+//        left=-(total)/2;
+//        VampirismMod.log.t("Left2 %d",left);
+//        for(int i=0;i<widths.length;i++){
+//            setRenderPos(base.getChildren().get(i),column+left+widths[i]/2);
+//            left+=widths[i];
+//        }
+//    }
 
     public void finish() {
         for (final IPlayableFaction faction : VampirismAPI.factionRegistry().getPlayableFactions()) {
@@ -68,37 +113,6 @@ public class SkillRegistry implements ISkillRegistry {
 
         }
     }
-
-//    /**
-//     * Calculate and set the render position for the given node using the given column as center
-//     * @param base
-//     * @param column
-//     */
-//    private void setRenderPos(SkillNode base,int column){
-//        VampirismMod.log.t("Node %s at %d",base,column);
-//        int left=-base.getElements().length/2;
-//        VampirismMod.log.t("Left1 %d",left);
-//        for(ISkill skill:base.getElements()){
-//            skill.setRenderPos(base.getDepth(),column+left);
-//            VampirismMod.log.t("Skill %s at %d %d",skill,base.getDepth(),column+left);
-//            left++;
-//        }
-//        VampirismMod.log.t("Right %d",left);
-//        int[] widths=new int[base.getChildren().size()];
-//        int total=0;
-//        for(int i=0;i<widths.length;i++){
-//            SkillNode node=base.getChildren().get(i);
-//            widths[i]=calculateMaxSkillsPerNode(node)*calculateEndPoints(node);
-//            total+=widths[i];
-//        }
-//        VampirismMod.log.t("Width %d",total);
-//        left=-(total)/2;
-//        VampirismMod.log.t("Left2 %d",left);
-//        for(int i=0;i<widths.length;i++){
-//            setRenderPos(base.getChildren().get(i),column+left+widths[i]/2);
-//            left+=widths[i];
-//        }
-//    }
 
     /**
      * Returns a list of values relevant for rendering.
@@ -214,7 +228,7 @@ public class SkillRegistry implements ISkillRegistry {
         Integer[] info = new Integer[3];
         info[0] = calculateEndPoints(root);
         info[1] = calculateMaxSkillsPerNode(root);
-        info[2] = calculateMaxSkillDepth(root);
+        info[2] = calculateMaxSkillDepth(root)+1;
         return info;
     }
 
@@ -225,20 +239,21 @@ public class SkillRegistry implements ISkillRegistry {
      * @param column
      */
     private void setRenderPos(SkillNode base, int column) {
+        //TODO remove log
         VampirismMod.log.t("Node %s at %d", base, column);
-        int left = -base.getElements().length / 2;
+        int left = -(base.getElements().length * 2 -1) / 2;
         VampirismMod.log.t("Left1 %d", left);
         for (ISkill skill : base.getElements()) {
-            skill.setRenderPos(base.getDepth(), column + left);
-            VampirismMod.log.t("Skill %s at %d %d", skill, base.getDepth(), column + left);
-            left++;
+            skill.setRenderPos(base.getDepth() * 2, column + left);
+            VampirismMod.log.t("Skill %s at %d %d", skill, base.getDepth() * 2, column + left);
+            left+=2;
         }
         VampirismMod.log.t("Right %d", left);
         int[] widths = new int[base.getChildren().size()];
         int total = 0;
         for (int i = 0; i < widths.length; i++) {
             SkillNode node = base.getChildren().get(i);
-            widths[i] = calculateMaxSkillsPerNode(node) * calculateEndPoints(node);
+            widths[i] = calculateMaxSkillsPerNode(node) * calculateEndPoints(node)*2;
             total += widths[i];
         }
         VampirismMod.log.t("Width %d", total);

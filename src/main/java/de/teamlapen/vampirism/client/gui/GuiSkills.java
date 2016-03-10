@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -9,9 +10,11 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
 import de.teamlapen.vampirism.entity.player.skills.SkillRegistry;
+import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptionButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -36,7 +39,7 @@ import java.util.Random;
 public class GuiSkills extends GuiScreen {
     private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/achievement/achievement_background.png");
     private static final ResourceLocation defaultIcons = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills.png");
-    protected final int area_min_y = -112;
+    protected final int area_min_y = -77;
     protected final int skill_width = 24;
     private final List<SkillNode> skillNodes = new ArrayList<>();
     protected int display_width = 256;
@@ -46,19 +49,25 @@ public class GuiSkills extends GuiScreen {
     protected int area_max_y;
     protected int field_146563_h;
     protected int field_146564_i;
-    protected float field_146570_r = 1.0F;
-    protected double field_146569_s;
-    protected double field_146568_t;
-    protected double field_146567_u;
-    protected double field_146566_v;
+    protected float zoomOut = 1.0F;
+    protected double displayX;
+    protected double displayY;
+    protected double displayXNew;
+    protected double displayYNew;
     protected double field_146565_w;
     protected double field_146573_x;
     private SkillHandler skillHandler;
     private boolean display;
+    private ISkill selected;
     private int field_146554_D;
 
     public GuiSkills() {
 
+    }
+
+    @Override
+    public boolean doesGuiPauseGame() {
+        return false;
     }
 
     @Override
@@ -79,10 +88,10 @@ public class GuiSkills extends GuiScreen {
                 if (this.field_146554_D == 0) {
                     this.field_146554_D = 1;
                 } else {
-                    this.field_146567_u -= (double) ((float) (mouseX - this.field_146563_h) * this.field_146570_r);
-                    this.field_146566_v -= (double) ((float) (mouseY - this.field_146564_i) * this.field_146570_r);
-                    this.field_146565_w = this.field_146569_s = this.field_146567_u;
-                    this.field_146573_x = this.field_146568_t = this.field_146566_v;
+                    this.displayXNew -= (double) ((float) (mouseX - this.field_146563_h) * this.zoomOut);
+                    this.displayYNew -= (double) ((float) (mouseY - this.field_146564_i) * this.zoomOut);
+                    this.field_146565_w = this.displayX = this.displayXNew;
+                    this.field_146573_x = this.displayY = this.displayYNew;
                 }
 
                 this.field_146563_h = mouseX;
@@ -92,27 +101,27 @@ public class GuiSkills extends GuiScreen {
             this.field_146554_D = 0;
         }
 
-        int i1 = Mouse.getDWheel();
-        float f3 = this.field_146570_r;
+        int mdmovement = Mouse.getDWheel();
+        float zoomOutOld = this.zoomOut;
 
-        if (i1 < 0) {
-            this.field_146570_r += 0.25F;
-        } else if (i1 > 0) {
-            this.field_146570_r -= 0.25F;
+        if (mdmovement < 0) {
+            this.zoomOut += 0.25F;
+        } else if (mdmovement > 0) {
+            this.zoomOut -= 0.25F;
         }
 
-        this.field_146570_r = MathHelper.clamp_float(this.field_146570_r, 1.0F, 2.0F);
+        this.zoomOut = MathHelper.clamp_float(this.zoomOut, 1.0F, 2.0F);
 
-        if (this.field_146570_r != f3) {
-            float f5 = f3 - this.field_146570_r;
-            float f4 = f3 * (float) this.display_width;
-            float f = f3 * (float) this.display_height;
-            float f1 = this.field_146570_r * (float) this.display_width;
-            float f2 = this.field_146570_r * (float) this.display_height;
-            this.field_146567_u -= (double) ((f1 - f4) * 0.5F);
-            this.field_146566_v -= (double) ((f2 - f) * 0.5F);
-            this.field_146565_w = this.field_146569_s = this.field_146567_u;
-            this.field_146573_x = this.field_146568_t = this.field_146566_v;
+        if (this.zoomOut != zoomOutOld) {
+            float f5 = zoomOutOld - this.zoomOut;
+            float f4 = zoomOutOld * (float) this.display_width;
+            float f = zoomOutOld * (float) this.display_height;
+            float f1 = this.zoomOut * (float) this.display_width;
+            float f2 = this.zoomOut * (float) this.display_height;
+            this.displayXNew -= (double) ((f1 - f4) * 0.5F);
+            this.displayYNew -= (double) ((f2 - f) * 0.5F);
+            this.field_146565_w = this.displayX = this.displayXNew;
+            this.field_146573_x = this.displayY = this.displayYNew;
         }
 
         if (this.field_146565_w < (double) area_min_x) {
@@ -148,9 +157,12 @@ public class GuiSkills extends GuiScreen {
             skillHandler = (SkillHandler) factionPlayer.getSkillHandler();
             Integer[] info = ((SkillRegistry) VampirismAPI.skillRegistry()).getDisplayInfo(factionPlayer.getFaction());
             int w = info[0] * info[1] * skill_width * 2;
-            area_max_x = w + 77;
-            area_min_x = -w - 77;
+            area_max_x = w + 10 - display_width;
+            area_min_x = -w - 10 - display_width;
             area_max_y = info[2] * skill_width * 2;
+            this.displayX = displayXNew = field_146565_w = -100;
+            this.displayY = displayYNew = field_146573_x = -10;
+            VampirismMod.log.t("Area x(%d/%d) y(%d/%d)", area_min_x, area_max_x, area_min_y, area_max_y);
             skillNodes.clear();
             addToList(skillNodes, skillHandler.getRootNode());
         }
@@ -163,17 +175,17 @@ public class GuiSkills extends GuiScreen {
 
     public void updateScreen() {
         if (display) {
-            this.field_146569_s = this.field_146567_u;
-            this.field_146568_t = this.field_146566_v;
-            double d0 = this.field_146565_w - this.field_146567_u;
-            double d1 = this.field_146573_x - this.field_146566_v;
+            this.displayX = this.displayXNew;
+            this.displayY = this.displayYNew;
+            double d0 = this.field_146565_w - this.displayXNew;
+            double d1 = this.field_146573_x - this.displayYNew;
 
             if (d0 * d0 + d1 * d1 < 4.0D) {
-                this.field_146567_u += d0;
-                this.field_146566_v += d1;
+                this.displayXNew += d0;
+                this.displayYNew += d1;
             } else {
-                this.field_146567_u += d0 * 0.85D;
-                this.field_146566_v += d1 * 0.85D;
+                this.displayXNew += d0 * 0.85D;
+                this.displayYNew += d1 * 0.85D;
             }
         }
     }
@@ -184,17 +196,19 @@ public class GuiSkills extends GuiScreen {
             this.mc.displayGuiScreen(null);
         }
         if (button.id == 2) {
-            skillHandler.disableAllSkills();
-            skillHandler.enableRootSkill();
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESETSKILL, ""));
             //TODO make this "cost" something
         }
     }
 
     protected void drawTitle() {
         String title = I18n.format("text.vampirism.skills.gui_title");
-        int i = (this.width - display_width) / 2;
-        int j = (this.height - display_height) / 2;
-        this.fontRendererObj.drawString(title, i + 15, j + 5, 4210752);
+        int x = (this.width - display_width) / 2;
+        int y = (this.height - display_height) / 2;
+        this.fontRendererObj.drawString(title, x + 15, y + 5, 0x404040);
+        String points = I18n.format("text.vampirism.skills.points_left", skillHandler.getLeftSkillPoints());
+        x = (this.width + display_width) / 2 - fontRendererObj.getStringWidth(points);
+        this.fontRendererObj.drawString(points, x - 15, y + 5, 0x8B15A3);
     }
 
     @Override
@@ -206,6 +220,20 @@ public class GuiSkills extends GuiScreen {
             super.keyTyped(typedChar, keyCode);
         }
 
+    }
+
+    @Override
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+        if (mouseButton == 0 && selected != null) {
+            VampirismMod.log.t("Skill clicked %s", selected);
+            if (skillHandler.canSkillBeEnabled(selected)) {
+                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.UNLOCKSKILL, VampirismAPI.skillRegistry().getID(skillHandler.getPlayer().getFaction(), selected)));
+                playSoundEffect("random.levelup", 0.7F);
+            } else {
+                playSoundEffect("note.bass", 0.5F);
+            }
+        }
     }
 
     /**
@@ -223,8 +251,8 @@ public class GuiSkills extends GuiScreen {
     }
 
     private void drawSkills(int mouseX, int mouseY, float partialTicks) {
-        int offsetX = MathHelper.floor_double(this.field_146569_s + (this.field_146567_u - this.field_146569_s) * (double) partialTicks);
-        int offsetY = MathHelper.floor_double(this.field_146568_t + (this.field_146566_v - this.field_146568_t) * (double) partialTicks);
+        int offsetX = MathHelper.floor_double(this.displayX + (this.displayXNew - this.displayX) * (double) partialTicks);
+        int offsetY = MathHelper.floor_double(this.displayY + (this.displayYNew - this.displayY) * (double) partialTicks);
 
         if (offsetX < area_min_x) {
             offsetX = area_min_x;
@@ -249,14 +277,14 @@ public class GuiSkills extends GuiScreen {
         GlStateManager.depthFunc(518);
         GlStateManager.pushMatrix();
         GlStateManager.translate((float) i1, (float) j1, -200.0F);
-        GlStateManager.scale(1.0F / this.field_146570_r, 1.0F / this.field_146570_r, 1.0F);
+        GlStateManager.scale(1.0F / this.zoomOut, 1.0F / this.zoomOut, 1.0F);
         GlStateManager.enableTexture2D();
         GlStateManager.disableLighting();
         GlStateManager.enableRescaleNormal();
         GlStateManager.enableColorMaterial();
         int k1 = offsetX + 288 >> 4;
         int l1 = offsetY + 288 >> 4;
-        int i2 = (offsetX + 288) % 16;
+        int i2 = (offsetX + display_width * 2) % 16;
         int j2 = (offsetY + 288) % 16;
         int k2 = 4;
         int l2 = 8;
@@ -264,19 +292,19 @@ public class GuiSkills extends GuiScreen {
         int j3 = 22;
         int k3 = 37;
         Random random = new Random();
-        float f = 16.0F / this.field_146570_r;
-        float f1 = 16.0F / this.field_146570_r;
+        float f = 16.0F / this.zoomOut;
+        float f1 = 16.0F / this.zoomOut;
 
-        for (int l3 = 0; (float) l3 * f - (float) j2 < 155.0F; ++l3) {
-            float f2 = 0.6F - (float) (l1 + l3) / 25.0F * 0.3F;
+        for (int y = 0; (float) y * f - (float) j2 < 155.0F; ++y) {
+            float f2 = 0.6F - (float) (l1 + y) / 25.0F * 0.3F;
             GlStateManager.color(f2, f2, f2, 1.0F);
 
-            for (int i4 = 0; (float) i4 * f1 - (float) i2 < 224.0F; ++i4) {
-                random.setSeed((long) (this.mc.getSession().getPlayerID().hashCode() + k1 + i4 + (l1 + l3) * 16));
-                int j4 = random.nextInt(1 + l1 + l3) + (l1 + l3) / 2;
+            for (int x = 0; (float) x * f1 - (float) i2 < 224.0F; ++x) {
+                random.setSeed((long) (this.mc.getSession().getPlayerID().hashCode() + k1 + x + (l1 + y) * 16));
+                int j4 = random.nextInt(1 + l1 + y) + (l1 + y) / 2;
                 TextureAtlasSprite textureatlassprite = this.getTexture(Blocks.sand);
 
-                if (j4 <= 37 && l1 + l3 != 35) {
+                if (j4 <= 37 && l1 + y != 35) {
                     if (j4 == 22) {
                         if (random.nextInt(2) == 0) {
                             textureatlassprite = this.getTexture(Blocks.diamond_ore);
@@ -291,6 +319,7 @@ public class GuiSkills extends GuiScreen {
                         textureatlassprite = this.getTexture(ModBlocks.castleBlock);
                     } else if (j4 > 0) {
                         textureatlassprite = this.getTexture(Blocks.dirt);
+
                     }
                 } else {
                     Block block = Blocks.bedrock;
@@ -298,27 +327,33 @@ public class GuiSkills extends GuiScreen {
                 }
 
                 this.mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
-                this.drawTexturedModalRect(i4 * 16 - i2, l3 * 16 - j2, textureatlassprite, 16, 16);
+                this.drawTexturedModalRect(x * 16 - i2, y * 16 - j2, textureatlassprite, 16, 16);
             }
         }
 
         GlStateManager.enableDepth();
         GlStateManager.depthFunc(515);
         this.mc.getTextureManager().bindTexture(BACKGROUND);
-
+        //Draw lines/arrows
         for (SkillNode node : skillNodes) {
             if (node.getParent() != null) {
                 int xs = findHorizontalNodeCenter(node) - offsetX + 11;
-                int ys = node.getElements()[0].getRenderRow() * skill_width * 2 - offsetY + 11;
+                int ys = node.getElements()[0].getRenderRow() * skill_width - offsetY + 11;
 
                 int xp = findHorizontalNodeCenter(node.getParent()) - offsetX + 11;
-                int yp = node.getParent().getElements()[0].getRenderRow() * skill_width * 2 - offsetY + 11;
+                int yp = node.getParent().getElements()[0].getRenderRow() * skill_width - offsetY + 11;
 
-                int l4 = -16777216;
+                int unlockstate = skillHandler.isNodeEnabled(node) ? 0 : skillHandler.isNodeEnabled(node.getParent()) ? 1 : -1;
+                int color = 0xff000000;
+                if (unlockstate == 0) {
+                    color = 0xffa0a0a0;
+                } else if (unlockstate == 1) {
+                    color = 0xff009900;
+                }
 
 
-                this.drawHorizontalLine(xs, xp, yp, l4);
-                this.drawVerticalLine(xs, ys - 11, yp, l4);
+                this.drawHorizontalLine(xs, xp, yp, color);
+                this.drawVerticalLine(xs, ys - 11, yp, color);
                 if (ys > yp) {
                     //Currently always like this. The other option are here in case this changes at some point
                     this.drawTexturedModalRect(xs - 5, ys - 11 - 7, 96, 234, 11, 7);
@@ -332,29 +367,41 @@ public class GuiSkills extends GuiScreen {
             }
         }
 
-        //TODO draw lines
-        float mMouseX = (float) (mouseX - i1) * this.field_146570_r;
-        float mMouseY = (float) (mouseY - j1) * this.field_146570_r;
+        float mMouseX = (float) (mouseX - i1) * this.zoomOut;
+        float mMouseY = (float) (mouseY - j1) * this.zoomOut;
         RenderHelper.enableGUIStandardItemLighting();
         GlStateManager.disableLighting();
         GlStateManager.enableRescaleNormal();
         GlStateManager.enableColorMaterial();
 
-        ISkill selected = null;
-
+        //Draw skills
+        ISkill newselected = null;//Not sure if mouse clicks can occur while this is running, so don't set #selected to null here but use a extra variable to be sure
         for (SkillNode node : skillNodes) {
-            for (ISkill skill : node.getElements()) {
-                int x = skill.getRenderColumn() * 2 * skill_width - offsetX;
-                int y = skill.getRenderRow() * 2 * skill_width - offsetY;
+            ISkill[] elements = node.getElements();
+            if (elements.length > 1) {
+                int minX = elements[0].getRenderColumn() * skill_width - offsetX;
+                int maxX = elements[elements.length - 1].getRenderColumn() * skill_width - offsetX;
+                int y = elements[0].getRenderRow() * skill_width - offsetY;
+                if (maxX >= -24 && y >= -24 && (float) minX <= 224.0F * this.zoomOut && (float) y <= 155.0F * this.zoomOut) {
+                    GlStateManager.enableBlend();
+                    this.drawGradientRect(minX - 1, y - 1, maxX + 23, y + 23, 0xFF9B9DA1, 0xFF9B9DA1);
+                    GlStateManager.disableBlend();
+                }
 
-                if (x >= -24 && y >= -24 && (float) x <= 224.0F * this.field_146570_r && (float) y <= 155.0F * this.field_146570_r) {
+            }
+            for (int i = 0; i < elements.length; i++) {
+                ISkill skill = elements[i];
+                int x = skill.getRenderColumn() * skill_width - offsetX;
+                int y = skill.getRenderRow() * skill_width - offsetY;
+
+                if (x >= -24 && y >= -24 && (float) x <= 224.0F * this.zoomOut && (float) y <= 155.0F * this.zoomOut) {
                     int unlockstate = skillHandler.isSkillEnabled(skill) ? 0 : skillHandler.isNodeEnabled(node) ? -1 : skillHandler.canSkillBeEnabled(skill) ? 1 : 2;
 
                     if (unlockstate == 0) {
-                        float f5 = 0.75F;
+                        float f5 = 1F;
                         GlStateManager.color(f5, f5, f5, 1.0F);
                     } else if (unlockstate == 1) {
-                        float f6 = 1.0F;
+                        float f6 = 0.6F;
                         GlStateManager.color(f6, f6, f6, 1.0F);
                     } else if (unlockstate == 2) {
                         float f7 = 0.3F;
@@ -366,13 +413,13 @@ public class GuiSkills extends GuiScreen {
 
                     this.mc.getTextureManager().bindTexture(BACKGROUND);
 
-                    GlStateManager.enableBlend(); // Forge: Specifically enable blend because it is needed here. And we fix Generic RenderItem's leakage of it.
+                    GlStateManager.enableBlend();
                     this.drawTexturedModalRect(x - 2, y - 2, 0, 202, 26, 26);
-                    GlStateManager.disableBlend(); //Forge: Cleanup states we set.
+                    GlStateManager.disableBlend();
 
                     this.mc.getTextureManager().bindTexture(getIconLoc(skill));
 
-                    GlStateManager.disableLighting(); //Forge: Make sure Lighting is disabled. Fixes MC-33065
+                    GlStateManager.disableLighting();
                     GlStateManager.enableCull();
                     this.drawTexturedModalRect(x + 3, y + 3, skill.getMinU(), skill.getMinV(), 16, 16);
                     GlStateManager.blendFunc(770, 771);
@@ -382,7 +429,11 @@ public class GuiSkills extends GuiScreen {
                     GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
                     if (mMouseX >= (float) x && mMouseX <= (float) (x + 22) && mMouseY >= (float) y && mMouseY <= (float) (y + 22)) {
-                        selected = skill;
+                        newselected = skill;
+                    }
+
+                    if (i + 1 < elements.length) {
+                        this.drawCenteredString(fontRendererObj, "OR", x + skill_width + skill_width / 2, y + 1 + (skill_width - fontRendererObj.FONT_HEIGHT) / 2, 0xFFFFFF);
                     }
                 }
             }
@@ -400,7 +451,7 @@ public class GuiSkills extends GuiScreen {
         GlStateManager.disableDepth();
         GlStateManager.enableTexture2D();
         super.drawScreen(mouseX, mouseY, partialTicks);
-
+        selected = newselected;
         if (selected != null) {
             String name = selected.getUnlocalizedName();
             int m2MouseX = mouseX + 12;
@@ -418,8 +469,8 @@ public class GuiSkills extends GuiScreen {
     }
 
     private int findHorizontalNodeCenter(SkillNode node) {
-        int width = (node.getElements().length - 1) * skill_width * 2;
-        return node.getElements()[0].getRenderColumn() * skill_width * 2 + width / 2;
+        int width = (node.getElements().length - 1) * 2 * skill_width;
+        return node.getElements()[0].getRenderColumn() * skill_width + width / 2;
     }
 
     private ResourceLocation getIconLoc(ISkill skill) {
@@ -428,5 +479,9 @@ public class GuiSkills extends GuiScreen {
 
     private TextureAtlasSprite getTexture(Block block) {
         return Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getTexture(block.getDefaultState());
+    }
+
+    private void playSoundEffect(String sound, float pitch) {
+        mc.getSoundHandler().playSound(new PositionedSoundRecord(new ResourceLocation(sound), 4.0f, pitch, (float) mc.thePlayer.posX, (float) mc.thePlayer.posY, (float) mc.thePlayer.posZ));
     }
 }

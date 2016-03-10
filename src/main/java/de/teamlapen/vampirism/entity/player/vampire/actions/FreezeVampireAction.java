@@ -58,6 +58,7 @@ public class FreezeVampireAction extends DefaultVampireAction {
         List l = player.worldObj.getEntitiesInAABBexcluding(player, player.getEntityBoundingBox().expand(10, 5, 10), vampire.getNonFriendlySelector(true));
         for (Object o : l) {
             if (o instanceof EntityBlindingBat) continue;
+            if (!(o instanceof EntityLivingBase)) continue;
             EntityLivingBase e = (EntityLivingBase) o;
             e.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, Balance.vpa.FREEZE_DURATION * 20, 10));
             e.addPotionEffect(new PotionEffect(Potion.resistance.id, Balance.vpa.FREEZE_DURATION * 20, 10));

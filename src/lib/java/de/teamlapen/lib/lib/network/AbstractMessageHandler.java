@@ -33,8 +33,9 @@ public abstract class AbstractMessageHandler<T extends IMessage> implements IMes
      */
     public abstract IMessage handleServerMessage(EntityPlayer player, T message, MessageContext ctx);
 
-    /*
-     Calls the respective handle method and provides the right player entity
+    /**
+     *Calls the respective handle method and provides the right player entity
+     *@return If not null the reponse message will be send to back to the sender using the packet dispatcher of this handler {@link AbstractMessageHandler#getDispatcher()}
      */
     @Override
     public IMessage onMessage(final T message, final MessageContext ctx) {

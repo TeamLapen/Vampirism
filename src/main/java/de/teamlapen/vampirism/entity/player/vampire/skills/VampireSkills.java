@@ -9,6 +9,8 @@ import de.teamlapen.vampirism.api.entity.player.skills.SkillNode;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Registers the default vampire skills
@@ -25,7 +27,7 @@ public class VampireSkills {
 
             @Override
             public int getMinU() {
-                return 0;
+                return 32;
             }
 
             @Override
@@ -47,7 +49,7 @@ public class VampireSkills {
 
             @Override
             public int getMinU() {
-                return 0;
+                return 48;
             }
 
             @Override
@@ -64,6 +66,7 @@ public class VampireSkills {
         SkillNode skill4 = new SkillNode(skill3, new ActionSkill(VampireActions.batAction, "bat"));
         registerOffensiveSkills(skill4);
         registerUtilSkills(skill4);
+        registerDefensiveSkills(skill4);
     }
 
     private static void registerUtilSkills(SkillNode start) {
@@ -76,7 +79,7 @@ public class VampireSkills {
 
             @Override
             public int getMinU() {
-                return 0;
+                return 96;
             }
 
             @Override
@@ -98,7 +101,7 @@ public class VampireSkills {
 
             @Override
             public int getMinU() {
-                return 0;
+                return 64;
             }
 
             @Override
@@ -122,7 +125,7 @@ public class VampireSkills {
 
             @Override
             public int getMinU() {
-                return 0;
+                return 80;
             }
 
             @Override
@@ -150,7 +153,7 @@ public class VampireSkills {
 
             @Override
             public int getMinU() {
-                return 0;
+                return 128;
             }
 
             @Override
@@ -172,7 +175,7 @@ public class VampireSkills {
 
             @Override
             public int getMinU() {
-                return 0;
+                return 112;
             }
 
             @Override
@@ -197,6 +200,148 @@ public class VampireSkills {
         };
         SkillNode skill2 = new SkillNode(skill1, bite, bite2);
         //TODO add lighting or so
+
+    }
+
+    private static void registerDefensiveSkills(SkillNode start) {
+        SkillNode skill1 = new SkillNode(start, new DefaultSkill() {
+            @Override
+            public String getID() {
+                return "1first";
+            }
+
+            @Override
+            public int getMinU() {
+                return 0;
+            }
+
+            @Override
+            public int getMinV() {
+                return 0;
+            }
+
+            @Override
+            public String getUnlocalizedName() {
+                return "unknown";
+            }
+        });
+        DefaultSkill<IVampirePlayer> jump = new DefaultSkill<IVampirePlayer>() {
+            @Override
+            public String getID() {
+                return "1jump";
+            }
+
+            @Override
+            public int getMinU() {
+                return 160;
+            }
+
+            @Override
+            public int getMinV() {
+                return 0;
+            }
+
+            @Override
+            public String getUnlocalizedName() {
+                return "text.vampirism.skill.jump_boost";
+            }
+
+            @Override
+            protected void onDisabled(IVampirePlayer player) {
+                ((VampirePlayer) player).getSpecialAttributes().setJumpBoost(0);
+            }
+
+            @Override
+            protected void onEnabled(IVampirePlayer player) {
+                ((VampirePlayer) player).getSpecialAttributes().setJumpBoost(2);
+            }
+        };
+        DefaultSkill<IVampirePlayer> speed = new DefaultSkill<IVampirePlayer>() {
+            @Override
+            public String getID() {
+                return "1speed";
+            }
+
+            @Override
+            public int getMinU() {
+                return 144;
+            }
+
+            @Override
+            public int getMinV() {
+                return 0;
+            }
+
+            @Override
+            public String getUnlocalizedName() {
+                return "text.vampirism.skill.speed_boost";
+            }
+        };
+        speed.registerAttributeModifier(SharedMonsterAttributes.movementSpeed, "96dc968d-818f-4271-8dbf-6b799d603ad8", 0.15, 2);
+        SkillNode skill2 = new SkillNode(skill1, jump, speed);
+
+        SkillNode skill3 = new SkillNode(skill2, new DefaultSkill() {
+            @Override
+            public String getID() {
+                return "1bloodvision";
+            }
+
+            @Override
+            public int getMinU() {
+                return 176;
+            }
+
+            @Override
+            public int getMinV() {
+                return 0;
+            }
+
+            @Override
+            public String getUnlocalizedName() {
+                return "text.vampirism.skill.blood_vision";
+            }
+
+            //TODO blood vision
+        });
+        SkillNode skill4 = new SkillNode(skill3, new DefaultSkill<IVampirePlayer>() {
+            @Override
+            public String getID() {
+                return "1creeper";
+            }
+
+            @Override
+            public ResourceLocation getIconLoc() {
+                return super.getIconLoc();
+            }
+
+            @Override
+            public int getMinU() {
+                return 192;
+            }
+
+            @Override
+            public int getMinV() {
+                return 0;
+            }
+
+            @Override
+            public String getUnlocalizedName() {
+                return "text.vampirism.avoided_by_creepers";
+            }
+
+            @Override
+            protected void onDisabled(IVampirePlayer player) {
+                ((VampirePlayer) player).getSpecialAttributes().avoided_by_creepers = false;
+            }
+
+            @Override
+            protected void onEnabled(IVampirePlayer player) {
+                ((VampirePlayer) player).getSpecialAttributes().avoided_by_creepers = true;
+            }
+        });
+
+        SkillNode skill5 = new SkillNode(skill4, new ActionSkill(VampireActions.freezeAction, "1freeze"));
+        SkillNode skill6 = new SkillNode(skill5, new ActionSkill(VampireActions.teleportAction, "1teleport"));
 
 
     }

@@ -39,6 +39,7 @@ public interface IFactionPlayer<T extends IFactionPlayer> extends IFactionEntity
     int getLevel();
 
     /**
+     * Careful this selects all {@link Entity}'s including etc Items
      * @param otherFactionPlayers Whether other entities from the same faction that might be hostile should be included
      * @return A predicate that selects all non friendly entities
      */

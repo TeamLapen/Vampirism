@@ -48,8 +48,8 @@ public abstract class DefaultSkill<T extends ISkillPlayer> implements ISkill<T> 
         onEnabled(player);
     }
 
-    public DefaultSkill<T> registerAttributeModifier(IAttribute attribute, String name, double amount, int operation) {
-        AttributeModifier attributemodifier = new AttributeModifier(UUID.fromString(name), this.getID(), amount, operation);
+    public DefaultSkill<T> registerAttributeModifier(IAttribute attribute, String uuid, double amount, int operation) {
+        AttributeModifier attributemodifier = new AttributeModifier(UUID.fromString(uuid), this.getID(), amount, operation);
         this.attributeModifierMap.put(attribute, attributemodifier);
         return this;
     }
