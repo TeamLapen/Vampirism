@@ -25,7 +25,7 @@ public @interface DefaultDouble {
 
     double minValue() default Double.MIN_VALUE;
 
-    String name();
+    String name() default "";
 
     double value();
 }

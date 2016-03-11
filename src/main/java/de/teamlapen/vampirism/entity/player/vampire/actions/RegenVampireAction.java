@@ -1,6 +1,6 @@
-package de.teamlapen.vampirism.entity.player.vampire.skills;
+package de.teamlapen.vampirism.entity.player.vampire.actions;
 
-import de.teamlapen.vampirism.api.entity.player.vampire.DefaultSkill;
+import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
@@ -9,21 +9,17 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
 
-public class RegenSkill extends DefaultSkill {
+public class RegenVampireAction extends DefaultVampireAction {
 
-    public RegenSkill() {
+    public RegenVampireAction() {
         super(null);
     }
 
     @Override
     public int getCooldown() {
-        return Balance.vps.REGEN_COOLDOWN;
+        return Balance.vpa.REGEN_COOLDOWN * 20;
     }
 
-    @Override
-    public int getMinLevel() {
-        return Balance.vps.REGEN_MIN_LEVEL;
-    }
 
     @Override
     public int getMinU() {
@@ -41,9 +37,14 @@ public class RegenSkill extends DefaultSkill {
     }
 
     @Override
+    public boolean isEnabled() {
+        return Balance.vpa.REGEN_ENABLED;
+    }
+
+    @Override
     public boolean onActivated(IVampirePlayer vampire) {
         EntityPlayer player = vampire.getRepresentingPlayer();
-        int dur = Balance.vps.REGEN_DURATION * 20;
+        int dur = Balance.vpa.REGEN_DURATION * 20;
         player.addPotionEffect(new PotionEffect(Potion.regeneration.id, dur, 0));
         player.addPotionEffect(new PotionEffect(ModPotions.thirst.id, dur, 2));
         return true;

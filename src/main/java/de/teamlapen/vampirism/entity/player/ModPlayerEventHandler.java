@@ -5,13 +5,14 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.entity.player.vampire.SkillHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
@@ -27,7 +28,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onAttackEntity(AttackEntityEvent event) {
-        if (VampirePlayer.get(event.entityPlayer).getSkillHandler().isSkillActive(SkillHandler.batSkill)) {
+        if (VampirePlayer.get(event.entityPlayer).getActionHandler().isActionActive(VampireActions.batAction)) {
             event.setCanceled(true);
         }
     }
@@ -35,7 +36,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onBlockPlaced(BlockEvent.PlaceEvent event) {
         try {
-            if (VampirePlayer.get(event.player).getSkillHandler().isSkillActive(SkillHandler.batSkill)) {
+            if (VampirePlayer.get(event.player).getActionHandler().isActionActive(VampireActions.batAction)) {
                 event.setCanceled(true);
             }
         } catch (Exception e) {
@@ -45,7 +46,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-        if (VampirePlayer.get(event.entityPlayer).getSkillHandler().isSkillActive(SkillHandler.batSkill)) {
+        if (VampirePlayer.get(event.entityPlayer).getActionHandler().isActionActive(VampireActions.batAction)) {
             event.setCanceled(true);
         }
     }
@@ -72,8 +73,22 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onItemUse(PlayerUseItemEvent.Start event) {
-        if (VampirePlayer.get(event.entityPlayer).getSkillHandler().isSkillActive(SkillHandler.batSkill)) {
+        if (VampirePlayer.get(event.entityPlayer).getActionHandler().isActionActive(VampireActions.batAction)) {
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onLivingFall(LivingFallEvent event) {
+        if (event.entity instanceof EntityPlayer) {
+            event.distance -= VampirePlayer.get((EntityPlayer) event.entity).getSpecialAttributes().getJumpBoost();
+        }
+    }
+
+    @SubscribeEvent
+    public void onLivingJump(LivingEvent.LivingJumpEvent event) {
+        if (event.entity instanceof EntityPlayer) {
+            event.entity.motionY += (double) ((float) (VampirePlayer.get((EntityPlayer) event.entity).getSpecialAttributes().getJumpBoost()) * 0.1F);
         }
     }
 

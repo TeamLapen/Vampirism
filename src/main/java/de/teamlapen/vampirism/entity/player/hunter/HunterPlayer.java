@@ -5,10 +5,14 @@ import com.google.common.base.Predicates;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.entity.player.VampirismPlayer;
+import de.teamlapen.vampirism.entity.player.actions.ActionHandler;
+import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -20,7 +24,7 @@ import net.minecraft.world.World;
 /**
  * Main class for hunter players
  */
-public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
+public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHunterPlayer {
 
 
     /**
@@ -37,13 +41,23 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
         player.registerExtendedProperties(VReference.HUNTER_FACTION.prop(), new HunterPlayer(player));
     }
 
+    private final ActionHandler<IHunterPlayer> actionHandler;
+    private final SkillHandler<IHunterPlayer> skillHandler;
+
     public HunterPlayer(EntityPlayer player) {
         super(player);
+        actionHandler = new ActionHandler<IHunterPlayer>(this);
+        skillHandler = new SkillHandler<IHunterPlayer>(this);
     }
 
     @Override
     public boolean canLeaveFaction() {
         return true;
+    }
+
+    @Override
+    public IActionHandler<IHunterPlayer> getActionHandler() {
+        return actionHandler;
     }
 
     @Override
@@ -66,9 +80,10 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
     }
 
     @Override
-    public EntityPlayer getRepresentingPlayer() {
-        return player;
+    public ISkillHandler<IHunterPlayer> getSkillHandler() {
+        return skillHandler;
     }
+
 
     @Override
     public int getTheEntityID() {
@@ -87,7 +102,8 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
 
     @Override
     public void loadData(NBTTagCompound compound) {
-
+        actionHandler.loadFromNbt(compound);
+        skillHandler.loadFromNbt(compound);
     }
 
     @Override
@@ -97,7 +113,7 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
 
     @Override
     public void onDeath(DamageSource src) {
-
+        actionHandler.deactivateAllActions();
     }
 
     @Override
@@ -107,13 +123,16 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
 
     @Override
     public void onJoinWorld() {
-
+        if (getLevel() > 0) {
+            actionHandler.onActionsReactivated();
+        }
     }
 
     @Override
     public void onLevelChanged(int old, int level) {
         if (!isRemote()) {
             LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.attackDamage, "Hunter", getLevel(), Balance.hp.STRENGTH_LCAP, Balance.hp.STRENGTH_MAX_MOD, Balance.hp.STRENGTH_TYPE);
+            actionHandler.resetTimers();
         }
 
     }
@@ -130,17 +149,38 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
 
     @Override
     public void onUpdate() {
-
+        int level = getLevel();
+        if (!isRemote()) {
+            if (level > 0) {
+                boolean sync = false;
+                boolean syncToAll = false;
+                NBTTagCompound syncPacket = new NBTTagCompound();
+                if (actionHandler.updateActions()) {
+                    sync = true;
+                    syncToAll = true;
+                    actionHandler.writeUpdateForClient(syncPacket);
+                }
+                if (sync) {
+                    sync(syncPacket, syncToAll);
+                }
+            }
+        } else {
+            if (level > 0) {
+                actionHandler.updateActions();
+            }
+        }
     }
 
     @Override
     public void saveData(NBTTagCompound compound) {
-
+        actionHandler.saveToNbt(compound);
+        skillHandler.saveToNbt(compound);
     }
+
 
     @Override
     protected VampirismPlayer copyFromPlayer(EntityPlayer old) {
-        return get(old);
+        return get(old);//TODO
     }
 
     @Override
@@ -150,10 +190,13 @@ public class HunterPlayer extends VampirismPlayer implements IHunterPlayer {
 
     @Override
     protected void loadUpdate(NBTTagCompound nbt) {
-
+        actionHandler.readUpdateFromServer(nbt);
+        skillHandler.readUpdateFromServer(nbt);
     }
 
     @Override
     protected void writeFullUpdate(NBTTagCompound nbt) {
+        actionHandler.writeUpdateForClient(nbt);
+        skillHandler.writeUpdateForClient(nbt);
     }
 }

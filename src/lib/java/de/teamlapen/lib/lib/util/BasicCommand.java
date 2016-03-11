@@ -170,7 +170,7 @@ public abstract class BasicCommand extends CommandBase {
 
         String getCommandUsage(ICommandSender var1);
 
-        void processCommand(ICommandSender var1, String[] var2);
+        void processCommand(ICommandSender var1, String[] var2) throws CommandException;
     }
 
 }

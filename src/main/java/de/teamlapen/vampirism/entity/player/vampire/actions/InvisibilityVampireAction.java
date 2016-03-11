@@ -1,35 +1,27 @@
-package de.teamlapen.vampirism.entity.player.vampire.skills;
+package de.teamlapen.vampirism.entity.player.vampire.actions;
 
-import de.teamlapen.vampirism.api.entity.player.vampire.DefaultSkill;
-import de.teamlapen.vampirism.api.entity.player.vampire.ILastingVampireSkill;
+import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
+import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 
 
-public class InvisibilitySkill extends DefaultSkill implements ILastingVampireSkill {
-    public InvisibilitySkill() {
+public class InvisibilityVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
+    public InvisibilityVampireAction() {
         super(null);
     }
-//      TODO activate again
-//    @Override
-//    public boolean canBeUsedBy(IVampirePlayer vampire) {
-//        return vampire.isVampireLord();
-//    }
+
 
     @Override
     public int getCooldown() {
-        return Balance.vps.INVISIBILITY_COOLDOWN * 20;
+        return Balance.vpa.INVISIBILITY_COOLDOWN * 20;
     }
 
     @Override
     public int getDuration(int level) {
-        return Balance.vps.INVISIBILITY_DURATION * 20;
+        return Balance.vpa.INVISIBILITY_DURATION * 20;
     }
 
-    @Override
-    public int getMinLevel() {
-        return Balance.vps.INVISIBILITY_MIN_LEVEL;
-    }
 
     @Override
     public int getMinU() {
@@ -44,6 +36,11 @@ public class InvisibilitySkill extends DefaultSkill implements ILastingVampireSk
     @Override
     public String getUnlocalizedName() {
         return "skill.vampirism.invisibility";
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return Balance.vpa.INVISIBILITY_ENABLED;
     }
 
     @Override

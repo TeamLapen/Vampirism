@@ -1,41 +1,30 @@
-package de.teamlapen.vampirism.entity.player.vampire.skills;
+package de.teamlapen.vampirism.entity.player.vampire.actions;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.api.entity.player.vampire.DefaultSkill;
+import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.entity.player.vampire.SkillHandler;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 
 
-public class TeleportSkill extends DefaultSkill {
+public class TeleportVampireAction extends DefaultVampireAction {
 
 
-    public TeleportSkill() {
+    public TeleportVampireAction() {
         super(null);
     }
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.getSkillHandler().isSkillActive(SkillHandler.batSkill);
+        return !vampire.getActionHandler().isActionActive(VampireActions.batAction);
     }
-//      TODO reactivate
-//    @Override
-//    public boolean canBeUsedBy(IVampirePlayer vampire) {
-//        return vampire.isVampireLord();
-//    }
 
     @Override
     public int getCooldown() {
-        return Balance.vps.TELEPORT_COOLDOWN * 20;
-    }
-
-    @Override
-    public int getMinLevel() {
-        return Balance.vps.TELEPORT_MIN_LEVEL;
+        return Balance.vpa.TELEPORT_COOLDOWN * 20;
     }
 
     @Override
@@ -54,9 +43,14 @@ public class TeleportSkill extends DefaultSkill {
     }
 
     @Override
+    public boolean isEnabled() {
+        return Balance.vpa.TELEPORT_ENABLED;
+    }
+
+    @Override
     public boolean onActivated(IVampirePlayer vampire) {
         EntityPlayer player = vampire.getRepresentingPlayer();
-        MovingObjectPosition target = UtilLib.getPlayerLookingSpot(player, Balance.vps.TELEPORT_MAX_DISTANCE);
+        MovingObjectPosition target = UtilLib.getPlayerLookingSpot(player, Balance.vpa.TELEPORT_MAX_DISTANCE);
         double ox = player.posX;
         double oy = player.posY;
         double oz = player.posZ;

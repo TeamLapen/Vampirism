@@ -1,37 +1,31 @@
-package de.teamlapen.vampirism.entity.player.vampire.skills;
+package de.teamlapen.vampirism.entity.player.vampire.actions;
 
-import de.teamlapen.vampirism.api.entity.player.vampire.DefaultSkill;
-import de.teamlapen.vampirism.api.entity.player.vampire.ILastingVampireSkill;
+import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
+import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.entity.player.vampire.SkillHandler;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
-public class VampireRageSkill extends DefaultSkill implements ILastingVampireSkill {
+public class VampireRageVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
-    public VampireRageSkill() {
+    public VampireRageVampireAction() {
         super(null);
     }
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.getSkillHandler().isSkillActive(SkillHandler.batSkill);
+        return !vampire.getActionHandler().isActionActive(VampireActions.batAction);
     }
 
     @Override
     public int getCooldown() {
-        return Balance.vps.RAGE_COOLDOWN * 20;
+        return Balance.vpa.RAGE_COOLDOWN * 20;
     }
 
     @Override
     public int getDuration(int level) {
-        return 20 * (Balance.vps.RAGE_MIN_DURATION + Balance.vps.RAGE_DUR_PL * (level - getMinLevel()));
-    }
-
-    @Override
-    public int getMinLevel() {
-        return Balance.vps.RAGE_MIN_LEVEL;
+        return 20 * (Balance.vpa.RAGE_MIN_DURATION + Balance.vpa.RAGE_DUR_PL);
     }
 
     @Override
@@ -50,8 +44,13 @@ public class VampireRageSkill extends DefaultSkill implements ILastingVampireSki
     }
 
     @Override
+    public boolean isEnabled() {
+        return Balance.vpa.RAGE_ENABLED;
+    }
+
+    @Override
     public boolean onActivated(IVampirePlayer vampire) {
-        vampire.getRepresentingPlayer().addPotionEffect(new PotionEffect(Potion.moveSpeed.id, getDuration(vampire.getLevel()), 2));
+        vampire.getRepresentingPlayer().addPotionEffect(new PotionEffect(Potion.moveSpeed.id, getDuration(vampire.getLevel()), 2, false, false));
         return true;
     }
 

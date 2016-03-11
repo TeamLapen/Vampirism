@@ -1,13 +1,20 @@
 package de.teamlapen.vampirism.entity;
 
+import com.google.common.base.Predicate;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.ai.EntityAIAvoidEntity;
+import net.minecraft.entity.monster.EntityCreeper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import javax.annotation.Nullable;
 
 /**
  * Event handler for all entity related events
@@ -19,6 +26,7 @@ public class ModEntityEventHandler {
         if (event.entity instanceof EntityCreature && ExtendedCreature.get((EntityCreature) event.entity) == null) {
             ExtendedCreature.register((EntityCreature) event.entity);
         }
+
     }
 
     @SubscribeEvent
@@ -35,6 +43,14 @@ public class ModEntityEventHandler {
                 }
                 entity.setLevel(l);
             }
+        }
+        if (event.entity instanceof EntityCreeper) {
+            ((EntityCreeper) event.entity).tasks.addTask(3, new EntityAIAvoidEntity<>((EntityCreeper) event.entity, EntityPlayer.class, new Predicate<EntityPlayer>() {
+                @Override
+                public boolean apply(@Nullable EntityPlayer input) {
+                    return VampirePlayer.get(input).getSpecialAttributes().avoided_by_creepers;
+                }
+            }, 6, 1, 1.2));
         }
     }
 

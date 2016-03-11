@@ -70,16 +70,16 @@ public abstract class BalanceValues {
                     // Possible exception should not be caught so you can't forget a default value
                     DefaultInt a = f.getAnnotation(DefaultInt.class);
                     int value = (alt && a.hasAlternate()) ? a.alternateValue() : a.value();
-                    f.set(this, configuration.get(cat.getQualifiedName(), a.name(), value, a.comment(), a.minValue(), a.maxValue()).getInt());
+                    f.set(this, configuration.get(cat.getQualifiedName(), chooseName(name, a.name()), value, a.comment(), a.minValue(), a.maxValue()).getInt());
                 } else if (type == double.class) {
                     // Possible exception should not be caught so you can't forget a default value
                     DefaultDouble a = f.getAnnotation(DefaultDouble.class);
                     double value = (alt && a.hasAlternate()) ? a.alternateValue() : a.value();
-                    f.set(this, configuration.get(cat.getQualifiedName(), a.name(), value, a.comment(), a.minValue(), a.maxValue()).getDouble());
+                    f.set(this, configuration.get(cat.getQualifiedName(), chooseName(name, a.name()), value, a.comment(), a.minValue(), a.maxValue()).getDouble());
                 } else if (type == boolean.class) {
                     DefaultBoolean a = f.getAnnotation(DefaultBoolean.class);
                     boolean value = (alt && a.hasAlternate()) ? a.alternateValue() : a.value();
-                    f.set(this, configuration.get(cat.getQualifiedName(), a.name(), value, a.comment()).getBoolean());
+                    f.set(this, configuration.get(cat.getQualifiedName(), chooseName(name, a.name()), value, a.comment()).getBoolean());
                 }
             } catch (NullPointerException e1) {
                 VampLib.log.e(TAG, "Author probably forgot to specify a default annotation for " + name + " in " + this.name, e1);
@@ -107,4 +107,11 @@ public abstract class BalanceValues {
      * @return Wether to use alternative default values if present or not
      */
     protected abstract boolean shouldUseAlternate();
+
+    private String chooseName(String fieldName, String attrName) {
+        if (attrName.isEmpty()) {
+            return fieldName.toLowerCase();
+        }
+        return attrName;
+    }
 }

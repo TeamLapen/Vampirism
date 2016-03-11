@@ -2,9 +2,9 @@ package de.teamlapen.vampirism.client.render;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.Configs;
-import de.teamlapen.vampirism.entity.player.vampire.SkillHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.entity.player.vampire.skills.BatSkill;
+import de.teamlapen.vampirism.entity.player.vampire.actions.BatVampireAction;
+import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
@@ -67,7 +67,7 @@ public class RenderHandler {
 
     @SubscribeEvent
     public void onRenderHand(RenderHandEvent event) {
-        if (VampirePlayer.get(mc.thePlayer).getSkillHandler().isSkillActive(SkillHandler.batSkill)) {
+        if (VampirePlayer.get(mc.thePlayer).getActionHandler().isActionActive(VampireActions.batAction)) {
             event.setCanceled(true);
         }
     }
@@ -92,7 +92,7 @@ public class RenderHandler {
 
     @SubscribeEvent
     public void onRenderPlayer(RenderPlayerEvent.Pre event) {
-        if (VampirePlayer.get(event.entityPlayer).getSkillHandler().isSkillActive(SkillHandler.batSkill)) {
+        if (VampirePlayer.get(event.entityPlayer).getActionHandler().isActionActive(VampireActions.batAction)) {
             event.setCanceled(true);
             if (entityBat == null) {
                 entityBat = new EntityBat(event.entity.worldObj);
@@ -145,14 +145,14 @@ public class RenderHandler {
          */
         if (mc.theWorld != null) {
             if (event.phase == TickEvent.Phase.START) {
-                if (VampirePlayer.get(mc.thePlayer).getSkillHandler().isSkillActive(SkillHandler.batSkill) && mc.gameSettings.thirdPersonView == 0) {
+                if (VampirePlayer.get(mc.thePlayer).getActionHandler().isActionActive(VampireActions.batAction) && mc.gameSettings.thirdPersonView == 0) {
 
-                    //batTransform_ySize = -(float)mc.thePlayer.getYOffset() + BatSkill.BAT_EYE_HEIGHT ;
+                    //batTransform_ySize = -(float)mc.thePlayer.getYOffset() + BatVampireAction.BAT_EYE_HEIGHT ;
                     batTransform_eyeHeight = mc.thePlayer.eyeHeight;
 //                        mc.thePlayer.lastTickPosY -= batTransform_ySize;
 //                        mc.thePlayer.prevPosY -= batTransform_ySize;
 //                        mc.thePlayer.posY -= batTransform_ySize;
-                    mc.thePlayer.eyeHeight = mc.thePlayer.getDefaultEyeHeight() - BatSkill.BAT_EYE_HEIGHT + (float) mc.thePlayer.getYOffset();
+                    mc.thePlayer.eyeHeight = mc.thePlayer.getDefaultEyeHeight() - BatVampireAction.BAT_EYE_HEIGHT + (float) mc.thePlayer.getYOffset();
 
                     batTransform_shiftedPosY = true;
                 }
