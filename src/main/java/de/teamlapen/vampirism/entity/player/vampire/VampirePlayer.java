@@ -548,7 +548,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 player.addPotionEffect(new PotionEffect(Potion.poison.id, 60));
             }
             if (specialAttributes.poisonous_bite) {
-                entity.addPotionEffect(new PotionEffect(Potion.poison.id, Balance.vp.POISONOUS_BITE_DURATION * 20, 1));
+                entity.addPotionEffect(new PotionEffect(Potion.poison.id, Balance.vps.POISONOUS_BITE_DURATION * 20, 1));
             }
         } else if (type == BITE_TYPE.NONE) {
             return;

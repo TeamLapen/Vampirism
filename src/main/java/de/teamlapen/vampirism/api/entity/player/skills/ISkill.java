@@ -44,6 +44,14 @@ public interface ISkill<T extends ISkillPlayer> {
     @SideOnly(Side.CLIENT)
     int getRenderRow();
 
+    /**
+     * The description for this skill. Can be null
+     *
+     * @return
+     */
+    @SideOnly(Side.CLIENT)
+    String getUnlocDescription();
+
     String getUnlocalizedName();
 
     /**

@@ -40,6 +40,11 @@ public class ActionSkill<T extends ISkillPlayer> extends DefaultSkill<T> {
     }
 
     @Override
+    public String getUnlocDescription() {
+        return "text.vampirism.skill.unlocks_action";
+    }
+
+    @Override
     public String getUnlocalizedName() {
         return action.getUnlocalizedName();
     }

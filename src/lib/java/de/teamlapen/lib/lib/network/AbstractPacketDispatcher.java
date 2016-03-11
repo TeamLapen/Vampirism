@@ -1,6 +1,5 @@
 package de.teamlapen.lib.lib.network;
 
-import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityTracker;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,7 +33,6 @@ public abstract class AbstractPacketDispatcher {
      * See {@link SimpleNetworkWrapper#sendTo(IMessage, EntityPlayerMP)}
      */
     public final void sendTo(IMessage message, EntityPlayerMP player) {
-        VampirismMod.log.t("Sending %s to %s", message, player);
         dispatcher.sendTo(message, player);
     }
 

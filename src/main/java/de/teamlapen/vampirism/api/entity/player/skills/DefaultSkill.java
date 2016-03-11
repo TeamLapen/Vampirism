@@ -34,6 +34,11 @@ public abstract class DefaultSkill<T extends ISkillPlayer> implements ISkill<T> 
     }
 
     @Override
+    public String getUnlocDescription() {
+        return null;
+    }
+
+    @Override
     public final void onDisable(T player) {
         removeAttributesModifiersFromEntity(player.getRepresentingPlayer());
         player.getActionHandler().ununlockActions(getActions());

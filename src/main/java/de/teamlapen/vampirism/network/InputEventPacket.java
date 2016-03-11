@@ -123,9 +123,9 @@ public class InputEventPacket implements IMessage {
                     ISkill skill = VampirismAPI.skillRegistry().getSkill(factionPlayer.getFaction(), message.param);
                     if (skill != null) {
                         ISkillHandler skillHandler = factionPlayer.getSkillHandler();
-                        if (skillHandler.canSkillBeEnabled(skill)) {
+                        ISkillHandler.Result result = skillHandler.canSkillBeEnabled(skill);
+                        if (result == ISkillHandler.Result.OK) {
                             skillHandler.enableSkill(skill);
-                            VampirismMod.log.t("Unlocked %s", skill);
                             if (factionPlayer instanceof ISyncable.ISyncableExtendedProperties && skillHandler instanceof SkillHandler) {
                                 //TODO does this cause problems with addons?
                                 NBTTagCompound sync = new NBTTagCompound();
@@ -134,7 +134,7 @@ public class InputEventPacket implements IMessage {
                             }
 
                         } else {
-                            VampirismMod.log.w(TAG, "Skill %s cannot be activated for %s", skill, player);
+                            VampirismMod.log.w(TAG, "Skill %s cannot be activated for %s (%s)", skill, player, result);
                         }
                     } else {
                         VampirismMod.log.w(TAG, "Skill %s was not found so %s cannot activate it", message.param, player);

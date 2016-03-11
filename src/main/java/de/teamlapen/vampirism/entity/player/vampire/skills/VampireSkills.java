@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.DefaultSkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillRegistry;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillNode;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -61,6 +62,8 @@ public class VampireSkills {
             public String getUnlocalizedName() {
                 return "text.vampirism.skill.night_vision";
             }
+            //TODO make night vision enable only if this is enabled
+
         });
         SkillNode skill3 = new SkillNode(skill2, new ActionSkill(VampireActions.regenAction, "regen"));
         SkillNode skill4 = new SkillNode(skill3, new ActionSkill(VampireActions.batAction, "bat"));
@@ -92,7 +95,7 @@ public class VampireSkills {
                 return "text.vampirism.skill.less_sundamage";
             }
         };
-        damage.registerAttributeModifier(VReference.sunDamage, "EB47EDC1-ED4E-4CD8-BDDC-BE40956042A2", 0.7, 2);
+        damage.registerAttributeModifier(VReference.sunDamage, "EB47EDC1-ED4E-4CD8-BDDC-BE40956042A2", Balance.vps.SUNDAMAGE_REDUCTION1, 2);
         DefaultSkill<IVampirePlayer> damage2 = new DefaultSkill<IVampirePlayer>() {
             @Override
             public String getID() {
@@ -113,8 +116,9 @@ public class VampireSkills {
             public String getUnlocalizedName() {
                 return "text.vampirism.skill.less_garlicdamage";
             }
+
         };
-        damage2.registerAttributeModifier(VReference.garlicDamage, "155DF42A-9CA4-43BC-9F80-F0716CA43DA9", 0.5, 2);
+        damage2.registerAttributeModifier(VReference.garlicDamage, "155DF42A-9CA4-43BC-9F80-F0716CA43DA9", Balance.vps.GARLIC_REDUCTION1, 2);
         SkillNode skill2 = new SkillNode(skill1, damage, damage2);
 
         SkillNode skill3 = new SkillNode(skill2, (new DefaultSkill() {
@@ -134,10 +138,15 @@ public class VampireSkills {
             }
 
             @Override
+            public String getUnlocDescription() {
+                return "text.vampirism.skill.less_bloodthirst.desc";
+            }
+
+            @Override
             public String getUnlocalizedName() {
                 return "text.vampirism.skill.less_bloodthirst";
             }
-        }).registerAttributeModifier(VReference.bloodExhaustion, "980ad86f-fe76-433b-b26a-c4060e0e6751", 0.6, 2));
+        }).registerAttributeModifier(VReference.bloodExhaustion, "980ad86f-fe76-433b-b26a-c4060e0e6751", Balance.vps.BLOOD_THIRST_REDUCTION1, 2));
         SkillNode skill4 = new SkillNode(skill3, new ActionSkill(VampireActions.disguiseAction, "2disguise"));
         //TODO add one more
         SkillNode skill6 = new SkillNode(skill4, new ActionSkill(VampireActions.invisibilityAction, "2invisibility"));
@@ -162,11 +171,16 @@ public class VampireSkills {
             }
 
             @Override
+            public String getUnlocDescription() {
+                return "text.vampirism.skill.more_bite_damage.desc";
+            }
+
+            @Override
             public String getUnlocalizedName() {
                 return "text.vampirism.skill.more_bite_damage";
             }
         };
-        bite.registerAttributeModifier(VReference.biteDamage, "A08CAB62-EE88-4DB9-8F62-E9EF108A4E87", 2, 1);
+        bite.registerAttributeModifier(VReference.biteDamage, "A08CAB62-EE88-4DB9-8F62-E9EF108A4E87", Balance.vps.BITE_DAMAGE_MULT, 1);
         DefaultSkill<IVampirePlayer> bite2 = new DefaultSkill<IVampirePlayer>() {
             @Override
             public String getID() {
@@ -181,6 +195,11 @@ public class VampireSkills {
             @Override
             public int getMinV() {
                 return 0;
+            }
+
+            @Override
+            public String getUnlocDescription() {
+                return "text.vampirism.skill.poisonous_bite.desc";
             }
 
             @Override
@@ -243,7 +262,7 @@ public class VampireSkills {
 
             @Override
             public String getUnlocalizedName() {
-                return "text.vampirism.skill.jump_boost";
+                return "potion.jump";
             }
 
             @Override
@@ -253,7 +272,7 @@ public class VampireSkills {
 
             @Override
             protected void onEnabled(IVampirePlayer player) {
-                ((VampirePlayer) player).getSpecialAttributes().setJumpBoost(2);
+                ((VampirePlayer) player).getSpecialAttributes().setJumpBoost(Balance.vps.JUMP_BOOST + 1);
             }
         };
         DefaultSkill<IVampirePlayer> speed = new DefaultSkill<IVampirePlayer>() {
@@ -274,10 +293,10 @@ public class VampireSkills {
 
             @Override
             public String getUnlocalizedName() {
-                return "text.vampirism.skill.speed_boost";
+                return "potion.moveSpeed";
             }
         };
-        speed.registerAttributeModifier(SharedMonsterAttributes.movementSpeed, "96dc968d-818f-4271-8dbf-6b799d603ad8", 0.15, 2);
+        speed.registerAttributeModifier(SharedMonsterAttributes.movementSpeed, "96dc968d-818f-4271-8dbf-6b799d603ad8", Balance.vps.SPEED_BOOST, 2);
         SkillNode skill2 = new SkillNode(skill1, jump, speed);
 
         SkillNode skill3 = new SkillNode(skill2, new DefaultSkill() {
@@ -294,6 +313,11 @@ public class VampireSkills {
             @Override
             public int getMinV() {
                 return 0;
+            }
+
+            @Override
+            public String getUnlocDescription() {
+                return "text.vampirism.skill.blood_vision.desc";
             }
 
             @Override
@@ -326,7 +350,7 @@ public class VampireSkills {
 
             @Override
             public String getUnlocalizedName() {
-                return "text.vampirism.avoided_by_creepers";
+                return "text.vampirism.skill.avoided_by_creepers";
             }
 
             @Override

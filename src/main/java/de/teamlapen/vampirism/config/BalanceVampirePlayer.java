@@ -64,8 +64,6 @@ public class BalanceVampirePlayer extends BalanceValues {
     @DefaultDouble(value = 2.0, name = "garlic_damage", minValue = 1, comment = "Damage the player receives every 2 seconds if in garlic")
     public double GARLIC_DAMAGE;
 
-    @DefaultInt(value = 5, name = "poisonous_bite_duration", minValue = 0, maxValue = 100, comment = "If the players bite is poisonous this specifies the duration (in sec)")
-    public int POISONOUS_BITE_DURATION;
 
     /**
      * Creates a configuration for balance values

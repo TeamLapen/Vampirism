@@ -28,28 +28,27 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
     }
 
     @Override
-    public boolean canSkillBeEnabled(ISkill skill) {
+    public Result canSkillBeEnabled(ISkill skill) {
         if (isSkillEnabled(skill)) {
-            VampirismMod.log.t("Skill %s is already enabled", skill);
-            return false;
+            return Result.ALREADY_ENABLED;
         }
         SkillNode node = VampirismAPI.skillRegistry().getRootSkillNode(player.getFaction());
         node = findSkillNode(node, skill);
         if (node != null) {
             if (node.isRoot() || isNodeEnabled(node.getParent())) {
                 if (getLeftSkillPoints() > 0) {
-                    return !isNodeEnabled(node);//If another skill in that node is already enabled this one cannot be enabled
+                    return isNodeEnabled(node) ? Result.OTHER_NODE_SKILL : Result.OK;//If another skill in that node is already enabled this one cannot be enabled
                 } else {
-                    //VampirismMod.log.t("No more skill points left");
+                    return Result.NO_POINTS;
                 }
 
             } else {
-                // VampirismMod.log.t("Parent (%s) is not enabled for skill %s", node.getParent(), skill);
+                return Result.PARENT_NOT_ENABLED;
             }
         } else {
-            VampirismMod.log.t("Node for skill %s could not be found", skill);
+            VampirismMod.log.w(TAG, "Node for skill %s could not be found", skill);
+            return Result.NOT_FOUND;
         }
-        return false;
     }
 
     public void disableAllSkills() {
@@ -142,9 +141,6 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
             if (skill == null) {
                 VampirismMod.log.w(TAG, "Skill %s does not exist anymore", id);
                 continue;
-            }
-            if (enabledSkills.contains(skill)) {
-                VampirismMod.log.t("ACHTUNG DIE SKILLS SIND NOCH VORHANDEN CHANGE THIS");
             }
             enableSkill(skill);
 

@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.entity.player.skills;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.DefaultSkill;
@@ -239,16 +238,11 @@ public class SkillRegistry implements ISkillRegistry {
      * @param column
      */
     private void setRenderPos(SkillNode base, int column) {
-        //TODO remove log
-        VampirismMod.log.t("Node %s at %d", base, column);
         int left = -(base.getElements().length * 2 -1) / 2;
-        VampirismMod.log.t("Left1 %d", left);
         for (ISkill skill : base.getElements()) {
             skill.setRenderPos(base.getDepth() * 2, column + left);
-            VampirismMod.log.t("Skill %s at %d %d", skill, base.getDepth() * 2, column + left);
             left+=2;
         }
-        VampirismMod.log.t("Right %d", left);
         int[] widths = new int[base.getChildren().size()];
         int total = 0;
         for (int i = 0; i < widths.length; i++) {
@@ -256,9 +250,7 @@ public class SkillRegistry implements ISkillRegistry {
             widths[i] = calculateMaxSkillsPerNode(node) * calculateEndPoints(node)*2;
             total += widths[i];
         }
-        VampirismMod.log.t("Width %d", total);
         left = -(total) / 2;
-        VampirismMod.log.t("Left2 %d", left);
         for (int i = 0; i < widths.length; i++) {
             setRenderPos(base.getChildren().get(i), column + left + widths[i] / 2);
             left += widths[i];

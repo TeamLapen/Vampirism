@@ -9,7 +9,7 @@ public interface ISkillHandler<T extends ISkillPlayer> {
      * @param skill
      * @return Returns false if the skill already is unlocked or the parent node is not unlocked or the skill is not found
      */
-    boolean canSkillBeEnabled(ISkill skill);
+    Result canSkillBeEnabled(ISkill skill);
 
 
     /**
@@ -38,4 +38,8 @@ public interface ISkillHandler<T extends ISkillPlayer> {
      * Reset all skills but reactivate the root skill of the faction
      */
     void resetSkills();
+
+    enum Result {
+        OK, ALREADY_ENABLED, PARENT_NOT_ENABLED, NOT_FOUND, NO_POINTS, OTHER_NODE_SKILL
+    }
 }

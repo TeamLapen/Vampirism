@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.skills.SkillRegistry;
 import net.minecraft.command.CommandException;
@@ -115,11 +116,12 @@ public class TestCommand extends BasicCommand {
                     var1.addChatMessage(new ChatComponentText("Disabled skill"));
                     return;
                 }
-                if (factionPlayer.getSkillHandler().canSkillBeEnabled(skill)) {
+                ISkillHandler.Result result = factionPlayer.getSkillHandler().canSkillBeEnabled(skill);
+                if (result == ISkillHandler.Result.OK) {
                     factionPlayer.getSkillHandler().enableSkill(skill);
                     var1.addChatMessage(new ChatComponentText("Enabled skill"));
                 } else {
-                    var1.addChatMessage(new ChatComponentText("Could not enable skill"));
+                    var1.addChatMessage(new ChatComponentText("Could not enable skill " + result));
                 }
 
             }

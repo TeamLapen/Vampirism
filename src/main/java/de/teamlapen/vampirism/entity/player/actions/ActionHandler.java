@@ -208,7 +208,6 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
 
         int id = getIdFromAction(action);
         int t = actionTimer[id];
-        VampirismMod.log.t("Toggling action %s with id %d at current time %d", action, id, t);
         if (t > 0) {
             actionTimer[id] = Math.min((-action.getCooldown()) + t, 0);
             ((ILastingAction) action).onDeactivated(player);

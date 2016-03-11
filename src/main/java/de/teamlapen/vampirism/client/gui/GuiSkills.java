@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillNode;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -13,11 +14,13 @@ import de.teamlapen.vampirism.entity.player.skills.SkillRegistry;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptionButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.achievement.GuiAchievements;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -34,7 +37,8 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Gui screen which displays the skills available to the players and allows him to unlock some
+ * Gui screen which displays the skills available to the players and allows him to unlock some.
+ * Inspired by Minecraft's {@link GuiAchievements}
  */
 public class GuiSkills extends GuiScreen {
     private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/achievement/achievement_background.png");
@@ -162,7 +166,6 @@ public class GuiSkills extends GuiScreen {
             area_max_y = info[2] * skill_width * 2;
             this.displayX = displayXNew = field_146565_w = -100;
             this.displayY = displayYNew = field_146573_x = -10;
-            VampirismMod.log.t("Area x(%d/%d) y(%d/%d)", area_min_x, area_max_x, area_min_y, area_max_y);
             skillNodes.clear();
             addToList(skillNodes, skillHandler.getRootNode());
         }
@@ -205,10 +208,10 @@ public class GuiSkills extends GuiScreen {
         String title = I18n.format("text.vampirism.skills.gui_title");
         int x = (this.width - display_width) / 2;
         int y = (this.height - display_height) / 2;
-        this.fontRendererObj.drawString(title, x + 15, y + 5, 0x404040);
+        this.fontRendererObj.drawString(title, x + 15, y + 5, 0xFFFFFFFF);
         String points = I18n.format("text.vampirism.skills.points_left", skillHandler.getLeftSkillPoints());
         x = (this.width + display_width) / 2 - fontRendererObj.getStringWidth(points);
-        this.fontRendererObj.drawString(points, x - 15, y + 5, 0x8B15A3);
+        this.fontRendererObj.drawString(points, x - 15, y + 5, 0xFFFFFFFF);
     }
 
     @Override
@@ -226,8 +229,7 @@ public class GuiSkills extends GuiScreen {
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);
         if (mouseButton == 0 && selected != null) {
-            VampirismMod.log.t("Skill clicked %s", selected);
-            if (skillHandler.canSkillBeEnabled(selected)) {
+            if (skillHandler.canSkillBeEnabled(selected) == ISkillHandler.Result.OK) {
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.UNLOCKSKILL, VampirismAPI.skillRegistry().getID(skillHandler.getPlayer().getFaction(), selected)));
                 playSoundEffect("random.levelup", 0.7F);
             } else {
@@ -286,15 +288,11 @@ public class GuiSkills extends GuiScreen {
         int l1 = offsetY + 288 >> 4;
         int i2 = (offsetX + display_width * 2) % 16;
         int j2 = (offsetY + 288) % 16;
-        int k2 = 4;
-        int l2 = 8;
-        int i3 = 10;
-        int j3 = 22;
-        int k3 = 37;
         Random random = new Random();
         float f = 16.0F / this.zoomOut;
         float f1 = 16.0F / this.zoomOut;
 
+        //Render background block textures
         for (int y = 0; (float) y * f - (float) j2 < 155.0F; ++y) {
             float f2 = 0.6F - (float) (l1 + y) / 25.0F * 0.3F;
             GlStateManager.color(f2, f2, f2, 1.0F);
@@ -307,14 +305,14 @@ public class GuiSkills extends GuiScreen {
                 if (j4 <= 37 && l1 + y != 35) {
                     if (j4 == 22) {
                         if (random.nextInt(2) == 0) {
-                            textureatlassprite = this.getTexture(Blocks.diamond_ore);
+                            textureatlassprite = this.getTexture(Blocks.coal_block);
                         } else {
-                            textureatlassprite = this.getTexture(Blocks.redstone_ore);
+                            textureatlassprite = this.getTexture(Blocks.redstone_block);
                         }
                     } else if (j4 == 10) {
-                        textureatlassprite = this.getTexture(Blocks.iron_ore);
+                        textureatlassprite = this.getTexture(ModBlocks.castleBlock.getDefaultState().withProperty(ModBlocks.castleBlock.getStringProp(), "darkBrickBloody"));
                     } else if (j4 == 8) {
-                        textureatlassprite = this.getTexture(Blocks.coal_ore);
+                        textureatlassprite = this.getTexture(Blocks.stonebrick);
                     } else if (j4 > 4) {
                         textureatlassprite = this.getTexture(ModBlocks.castleBlock);
                     } else if (j4 > 0) {
@@ -331,10 +329,11 @@ public class GuiSkills extends GuiScreen {
             }
         }
 
+        //Draw lines/arrows
         GlStateManager.enableDepth();
         GlStateManager.depthFunc(515);
         this.mc.getTextureManager().bindTexture(BACKGROUND);
-        //Draw lines/arrows
+
         for (SkillNode node : skillNodes) {
             if (node.getParent() != null) {
                 int xs = findHorizontalNodeCenter(node) - offsetX + 11;
@@ -395,7 +394,7 @@ public class GuiSkills extends GuiScreen {
                 int y = skill.getRenderRow() * skill_width - offsetY;
 
                 if (x >= -24 && y >= -24 && (float) x <= 224.0F * this.zoomOut && (float) y <= 155.0F * this.zoomOut) {
-                    int unlockstate = skillHandler.isSkillEnabled(skill) ? 0 : skillHandler.isNodeEnabled(node) ? -1 : skillHandler.canSkillBeEnabled(skill) ? 1 : 2;
+                    int unlockstate = skillHandler.isSkillEnabled(skill) ? 0 : skillHandler.isNodeEnabled(node) ? -1 : skillHandler.canSkillBeEnabled(skill) == ISkillHandler.Result.OK ? 1 : 2;
 
                     if (unlockstate == 0) {
                         float f5 = 1F;
@@ -443,7 +442,13 @@ public class GuiSkills extends GuiScreen {
         GlStateManager.disableDepth();
         GlStateManager.enableBlend();
         GlStateManager.popMatrix();
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+
+        //Draw "window" and buttons
+        int color = skillHandler.getPlayer().getFaction().getColor();
+        int r = (color >> 16) & 0xFF;
+        int g = (color >> 8) & 0xFF;
+        int b = (color) & 0xFF;
+        GlStateManager.color(r / 255F, g / 255F, b / 255F, 1.0F);
         this.mc.getTextureManager().bindTexture(BACKGROUND);
         this.drawTexturedModalRect(k, l, 0, 0, this.display_width, this.display_height);
         this.zLevel = 0.0F;
@@ -451,15 +456,37 @@ public class GuiSkills extends GuiScreen {
         GlStateManager.disableDepth();
         GlStateManager.enableTexture2D();
         super.drawScreen(mouseX, mouseY, partialTicks);
+
+        //Draw information for selected skill
         selected = newselected;
         if (selected != null) {
-            String name = selected.getUnlocalizedName();
             int m2MouseX = mouseX + 12;
             int m2MouseY = mouseY - 4;
-            int j8 = Math.max(this.fontRendererObj.getStringWidth(name), 120);
-            this.drawGradientRect(m2MouseX - 3, m2MouseY - 3, m2MouseX + j8 + 3, m2MouseY + 3 + 12, -1073741824, -1073741824);
 
-            this.fontRendererObj.drawStringWithShadow(name, (float) m2MouseX, (float) m2MouseY, -8355712);
+            String name = I18n.format(selected.getUnlocalizedName());
+            String desc = selected.getUnlocDescription();
+            if (desc != null) {
+                desc = I18n.format(desc);
+            }
+
+            ISkillHandler.Result result = skillHandler.canSkillBeEnabled(selected);
+
+            int width_name = Math.max(this.fontRendererObj.getStringWidth(name), 110);
+            int height_desc = desc == null ? 0 : fontRendererObj.splitStringWidth(desc, width_name);
+
+            if (result == ISkillHandler.Result.ALREADY_ENABLED || result == ISkillHandler.Result.PARENT_NOT_ENABLED) {
+                height_desc += 12;
+            }
+            this.drawGradientRect(m2MouseX - 3, m2MouseY - 3, m2MouseX + width_name + 3, m2MouseY + height_desc + 3 + 12, -1073741824, -1073741824);
+
+            this.fontRendererObj.drawStringWithShadow(name, (float) m2MouseX, (float) m2MouseY, 0xff808080);
+            if (desc != null)
+                this.fontRendererObj.drawSplitString(desc, m2MouseX, m2MouseY + 12, width_name, 0xff505050);
+            if (result == ISkillHandler.Result.ALREADY_ENABLED) {
+                this.fontRendererObj.drawStringWithShadow(I18n.format("text.vampirism.skill.unlocked"), m2MouseX, m2MouseY + height_desc + 3, 0xFFFBAE00);
+            } else if (result == ISkillHandler.Result.PARENT_NOT_ENABLED) {
+                this.fontRendererObj.drawStringWithShadow(I18n.format("text.vampirism.skill.unlock_parent_first"), m2MouseX, m2MouseY + height_desc + 3, 0xFFA32228);
+            }
         }
 
 
@@ -477,8 +504,12 @@ public class GuiSkills extends GuiScreen {
         return skill.getIconLoc() == null ? defaultIcons : skill.getIconLoc();
     }
 
+
+    private TextureAtlasSprite getTexture(IBlockState blockstate) {
+        return Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getTexture(blockstate);
+    }
     private TextureAtlasSprite getTexture(Block block) {
-        return Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getTexture(block.getDefaultState());
+        return getTexture(block.getDefaultState());
     }
 
     private void playSoundEffect(String sound, float pitch) {
