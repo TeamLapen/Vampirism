@@ -23,14 +23,26 @@ public class VReference {
     public static final String FLUID_BLOOD_NAME = "vampirismblood";
     /**
      * Attribute which defines sundamage. Registered for all IVampire mobs as well as the EntityPlayer.
-     * Applied every 4 seconds if in sun
+     * Applied every 2 seconds if in sun
      */
-    public final static IAttribute sunDamage = (new RangedAttribute(null, "vampirism.sundamage", 0.0D, 0.0D, 1000D)).setShouldWatch(true);
+    public final static IAttribute sunDamage = (new RangedAttribute(null, "vampirism.sundamage", 0.0D, 0.0D, 1000D));
     /**
      * Allows modifying the blood exhaustion. Is multiplied with with the value calculated (from movement etc.).
      * Registered for EntityPlayer
      */
     public final static IAttribute bloodExhaustion = (new RangedAttribute(null, "vampirism.blood_exhaustion", 1.0, 0.0, 10)).setShouldWatch(true);
+
+    /**
+     * Allows modifying bite damage.
+     * Registered for EntityPlayer
+     */
+    public final static IAttribute biteDamage = (new RangedAttribute(null, "vampirism.bite_damage", 0.0, 0.0, 100));
+
+    /**
+     * Attribute which defines farlic. Registered for all IVampire mobs as well as the EntityPlayer.
+     * Applied every 2 seconds if in garlic
+     */
+    public final static IAttribute garlicDamage = (new RangedAttribute(null, "vampirism.garlicdamage", 0.0D, 0.0D, 1000D));
     /**
      * Hunter creatures are of this creature type. But when they are counted for spawning they belong to {@link EnumCreatureType#MONSTER}
      */

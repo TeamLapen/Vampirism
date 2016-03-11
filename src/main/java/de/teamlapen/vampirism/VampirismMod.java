@@ -21,10 +21,13 @@ import de.teamlapen.vampirism.entity.converted.DefaultConvertingHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.entity.player.ModPlayerEventHandler;
+import de.teamlapen.vampirism.entity.player.actions.ActionRegistry;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.entity.player.vampire.SkillHandler;
+import de.teamlapen.vampirism.entity.player.hunter.actions.HunterActions;
+import de.teamlapen.vampirism.entity.player.skills.SkillRegistry;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.entity.player.vampire.skills.SkillRegistry;
+import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
+import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.proxy.IProxy;
@@ -77,9 +80,6 @@ public class VampirismMod {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        log.t("Test balance value %s", Balance.leveling.TEST_VALUE);
-
-
         MinecraftForge.EVENT_BUS.register(new ModEventHandler());
 
         MinecraftForge.EVENT_BUS.register(new ModPlayerEventHandler());
@@ -104,8 +104,7 @@ public class VampirismMod {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        ((FactionRegistry) VampirismAPI.factionRegistry()).finish();
-        ((BiteableRegistry) VampirismAPI.biteableRegistry()).finishRegistration(Balance.mobProps.CONVERTED_MOB_DEFAULT_DMG);
+        finishAPI();
         proxy.onInitStep(IInitListener.Step.POST_INIT, event);
     }
 
@@ -120,7 +119,9 @@ public class VampirismMod {
         dispatcher.registerPackets();
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new ModGuiHandler());
         proxy.onInitStep(IInitListener.Step.PRE_INIT, event);
-        SkillHandler.registerDefaultSkills();
+        VampireActions.registerDefaultActions();
+        HunterActions.registerDefaultActions();
+        VampireSkills.registerVampireSkills();
 
 
     }
@@ -132,6 +133,13 @@ public class VampirismMod {
         }
     }
 
+    private void finishAPI() {
+        ((FactionRegistry) VampirismAPI.factionRegistry()).finish();
+        ((BiteableRegistry) VampirismAPI.biteableRegistry()).finishRegistration(Balance.mobProps.CONVERTED_MOB_DEFAULT_DMG);
+        ((ActionRegistry) VampirismAPI.actionRegistry()).finish();
+        ((SkillRegistry) VampirismAPI.skillRegistry()).finish();
+    }
+
     /**
      * Setup API during pre-init before configs are loaded
      */
@@ -139,9 +147,10 @@ public class VampirismMod {
         FactionRegistry factionRegistry = new FactionRegistry();
         SundamageRegistry sundamageRegistry = new SundamageRegistry();
         BiteableRegistry biteableRegistry = new BiteableRegistry();
+        ActionRegistry actionRegistry = new ActionRegistry();
         SkillRegistry skillRegistry = new SkillRegistry();
-        VampirismAPI.setUp(factionRegistry, sundamageRegistry, biteableRegistry, skillRegistry);
-        VReference.VAMPIRE_FACTION = factionRegistry.registerPlayableFaction("Vampire", IVampirePlayer.class, Color.magenta.getRGB(), "vampire_player", REFERENCE.HIGHEST_VAMPIRE_LEVEL);
+        VampirismAPI.setUp(factionRegistry, sundamageRegistry, biteableRegistry, actionRegistry, skillRegistry);
+        VReference.VAMPIRE_FACTION = factionRegistry.registerPlayableFaction("Vampire", IVampirePlayer.class, 0XFF780DA3, "vampire_player", REFERENCE.HIGHEST_VAMPIRE_LEVEL);
         VReference.VAMPIRE_FACTION.setChatColor(EnumChatFormatting.LIGHT_PURPLE).setUnlocalizedName("text.vampirism.vampire");
         VReference.HUNTER_FACTION = factionRegistry.registerPlayableFaction("Hunter", IHunterPlayer.class, Color.BLUE.getRGB(), "hunter_player", REFERENCE.HIGHEST_HUNTER_LEVEL);
         VReference.HUNTER_FACTION.setChatColor(EnumChatFormatting.BLUE).setUnlocalizedName("text.vampirism.hunter");

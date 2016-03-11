@@ -169,6 +169,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
         else if (currentLevel == 0) currentFaction = null;
         notifyFaction(old, oldLevel);
         sync(old != currentFaction);
+
         return true;
 
     }

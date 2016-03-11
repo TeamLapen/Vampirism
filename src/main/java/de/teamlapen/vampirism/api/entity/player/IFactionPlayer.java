@@ -4,6 +4,7 @@ import com.google.common.base.Predicate;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.IExtendedEntityProperties;
@@ -15,7 +16,7 @@ import net.minecraftforge.common.IExtendedEntityProperties;
  * <p>
  * If you are writing an addon and not a standalone mod, consider extending VampirismPlayer instead of implementing this
  */
-public interface IFactionPlayer extends IFactionEntity, IExtendedEntityProperties {
+public interface IFactionPlayer<T extends IFactionPlayer> extends IFactionEntity, IExtendedEntityProperties, ISkillPlayer<T> {
     /**
      * Mostly relevant in the set level command
      * Vampirism's factions always return true here.
@@ -28,7 +29,7 @@ public interface IFactionPlayer extends IFactionEntity, IExtendedEntityPropertie
     /**
      * @return the faction this faction player belongs to
      */
-    IPlayableFaction<? extends IFactionPlayer> getFaction();
+    IPlayableFaction<T> getFaction();
 
     /**
      * Preferably implement this by calling {@link IFactionPlayerHandler#getCurrentLevel(IPlayableFaction)}
@@ -38,6 +39,7 @@ public interface IFactionPlayer extends IFactionEntity, IExtendedEntityPropertie
     int getLevel();
 
     /**
+     * Careful this selects all {@link Entity}'s including etc Items
      * @param otherFactionPlayers Whether other entities from the same faction that might be hostile should be included
      * @return A predicate that selects all non friendly entities
      */
@@ -66,6 +68,5 @@ public interface IFactionPlayer extends IFactionEntity, IExtendedEntityPropertie
      * @param oldLevel
      */
     void onLevelChanged(int newLevel, int oldLevel);
-
 
 }

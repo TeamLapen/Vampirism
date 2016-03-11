@@ -154,3 +154,29 @@ category.vampirism.balance_mob_prop.tooltip=Change properties of the mobs added 
 category.vampirism.balance_vv_prop=Village Vampire properties
 category.vampirism.balance_vv_prop.tooltip=Change the way hunters in villages act and adjust other village related stuff
 
+############# REWRITE NEW ###########################
+
+#Skills
+text.vampirism.skills.gui_title=Your skills
+text.vampirism.skills.points_left=%d skill point(s) left
+text.vampirism.skill.resetall=Reset skills
+text.vampirism.skill.unlocked=Unlocked
+text.vampirism.skill.unlocks_action=Unlocks action
+text.vampirism.skill.unlock_parent_first=Unlock parent first
+text.vampirism.skill.avoided_by_creepers=Avoided by creepers
+text.vampirism.skill.blood_vision=Blood vision
+text.vampirism.skill.blood_vision.desc=Allows you to see entities through walls
+text.vampirism.skill.poisonous_bite=Poisonous Teeth
+text.vampirism.skill.poisonous_bite.desc=Poisons the creatures you bite
+text.vampirism.skill.more_bite_damage=Hardened Teeth
+text.vampirism.skill.more_bite_damage.desc=Deal more damage when biting
+text.vampirism.skill.less_bloodthirst=Frugal vampire
+text.vampirism.skill.less_bloodthirst.desc=Decreases your thirst for blood
+text.vampirism.skill.less_garlicdamage=Reduce garlic damage
+text.vampirism.skill.less_sundamage=Reduce sun damage
+text.vampirism.skill.night_vision=Night Vision
+
+
+
+#ETC
+text.vampirism.vampire=Vampire

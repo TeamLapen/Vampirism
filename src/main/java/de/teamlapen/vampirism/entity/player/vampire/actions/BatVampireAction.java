@@ -1,11 +1,10 @@
-package de.teamlapen.vampirism.entity.player.vampire.skills;
+package de.teamlapen.vampirism.entity.player.vampire.actions;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.entity.player.vampire.DefaultSkill;
-import de.teamlapen.vampirism.api.entity.player.vampire.ILastingVampireSkill;
+import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
+import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.entity.player.vampire.SkillHandler;
 import de.teamlapen.vampirism.util.SRGNAMES;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -21,7 +20,7 @@ import java.lang.reflect.Method;
 import java.util.UUID;
 
 
-public class BatSkill extends DefaultSkill implements ILastingVampireSkill {
+public class BatVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
     public static final float BAT_HEIGHT = 0.8F;
     public final static float BAT_EYE_HEIGHT = 0.85F * BAT_HEIGHT;
@@ -30,13 +29,13 @@ public class BatSkill extends DefaultSkill implements ILastingVampireSkill {
     private final float PLAYER_WIDTH = 0.6F;
     private final float PLAYER_HEIGHT = 1.8F;
 
-    public BatSkill() {
+    public BatVampireAction() {
         super(null);
     }
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.isGettingSundamage() && !vampire.getSkillHandler().isSkillActive(SkillHandler.rageSkill);
+        return !vampire.isGettingSundamage() && !vampire.getActionHandler().isActionActive(VampireActions.rageAction);
     }
 
     @Override
@@ -47,11 +46,6 @@ public class BatSkill extends DefaultSkill implements ILastingVampireSkill {
     @Override
     public int getDuration(int level) {
         return Integer.MAX_VALUE - 1;
-    }
-
-    @Override
-    public int getMinLevel() {
-        return Balance.vps.BAT_MIN_LEVEL;
     }
 
     @Override
@@ -67,6 +61,11 @@ public class BatSkill extends DefaultSkill implements ILastingVampireSkill {
     @Override
     public String getUnlocalizedName() {
         return "skill.vampirism.bat_skill";
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return Balance.vpa.BAT_ENABLED;
     }
 
     @Override
@@ -163,7 +162,7 @@ public class BatSkill extends DefaultSkill implements ILastingVampireSkill {
             Method mSetSize = ReflectionHelper.findMethod(Entity.class, player, new String[]{"setSize", SRGNAMES.Entity_setSize}, float.class, float.class);
             mSetSize.invoke(player, width, height);
         } catch (ReflectiveOperationException e) {
-            VampirismMod.log.e("BatSkill", e, "Could not change players size! ");
+            VampirismMod.log.e("BatAction", e, "Could not change players size! ");
             return;
         }
         player.setPosition(player.posX, player.posY + (bat ? 1F : 1F) * (PLAYER_HEIGHT - BAT_HEIGHT), player.posZ);

@@ -25,7 +25,7 @@ public @interface DefaultInt {
 
     int minValue() default Integer.MIN_VALUE;
 
-    String name();
+    String name() default "";
 
     int value();
 }

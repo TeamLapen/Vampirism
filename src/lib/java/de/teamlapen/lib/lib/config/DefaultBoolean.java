@@ -21,7 +21,7 @@ public @interface DefaultBoolean {
      */
     boolean hasAlternate() default false;
 
-    String name();
+    String name() default "";
 
     boolean value();
 }

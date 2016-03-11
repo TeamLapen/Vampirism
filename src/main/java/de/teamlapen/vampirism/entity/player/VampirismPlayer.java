@@ -19,7 +19,7 @@ import java.util.UUID;
  * Basic class for all of Vampirism's players.
  * Implements basic methods for level or minion handling
  */
-public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISyncableExtendedProperties, IPlayerEventListener, IMinionLord {
+public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFactionPlayer<T>, ISyncable.ISyncableExtendedProperties, IPlayerEventListener, IMinionLord {
 
 
     private static final String TAG = "VampirismPlayer";
@@ -27,10 +27,6 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
 
     public VampirismPlayer(EntityPlayer player) {
         this.player = player;
-    }
-
-    public void copyFrom(EntityPlayer old) {
-        VampirismPlayer p = copyFromPlayer(old);
     }
 
     @Override
@@ -188,5 +184,9 @@ public abstract class VampirismPlayer implements IFactionPlayer, ISyncable.ISync
      * @param nbt
      */
     protected void writeFullUpdate(NBTTagCompound nbt) {
+    }
+
+    private void copyFrom(EntityPlayer old) {
+        VampirismPlayer p = copyFromPlayer(old);
     }
 }

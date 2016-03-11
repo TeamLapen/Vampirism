@@ -17,6 +17,7 @@ public class Balance {
     public static BalanceMobProps mobProps;
     public static BalanceVampirePlayer vp;
     public static BalanceHunterPlayer hp;
+    public static BalanceVampireActions vpa;
     public static BalanceVampireSkills vps;
     public static BalanceGeneral general;
 
@@ -26,8 +27,9 @@ public class Balance {
         mobProps = addBalance(new BalanceMobProps(balanceDir));
         vp = addBalance(new BalanceVampirePlayer(balanceDir));
         hp = addBalance(new BalanceHunterPlayer(balanceDir));
-        vps = addBalance(new BalanceVampireSkills(balanceDir));
+        vpa = addBalance(new BalanceVampireActions(balanceDir));
         general = addBalance(new BalanceGeneral(balanceDir));
+        vps = addBalance(new BalanceVampireSkills(balanceDir));
         if (inDev && Configs.resetConfigurationInDev) {
             resetAndReload(null);
         } else {

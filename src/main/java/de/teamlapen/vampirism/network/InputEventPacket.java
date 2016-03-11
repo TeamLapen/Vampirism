@@ -1,12 +1,21 @@
 package de.teamlapen.vampirism.network;
 
+import de.teamlapen.lib.HelperLib;
+import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampireSkill;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.player.actions.ActionHandler;
+import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.entity.player.vampire.skills.SkillRegistry;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -20,13 +29,10 @@ public class InputEventPacket implements IMessage {
 
     private final static String TAG = "InputEventPacket";
     public static String SUCKBLOOD = "sb";
-    //    public static String TOGGLEAUTOFILLBLOOD = "ta";
-//    public static String REVERTBACK = "rb";
-    public static String TOGGLESKILL = "ts";
+    public static String TOGGLEACTION = "ta";
+    public static String UNLOCKSKILL = "us";
+    public static String RESETSKILL = "rs";
     private final String SPLIT = "-";
-    //    public static String LEAVE_COFFIN = "lc";
-//    public static String MINION_CONTROL = "mc";
-//    public static final String SWITCHVISION = "sw";
     private String param;
     private String action;
 
@@ -67,6 +73,7 @@ public class InputEventPacket implements IMessage {
         public IMessage handleServerMessage(EntityPlayer player, InputEventPacket message, MessageContext ctx) {
             if (message.action == null)
                 return null;
+            IFactionPlayer factionPlayer = FactionPlayerHandler.get(player).getCurrentFactionPlayer();
             if (message.action.equals(SUCKBLOOD)) {
                 int id = 0;
                 try {
@@ -77,7 +84,7 @@ public class InputEventPacket implements IMessage {
                 if (id != 0) {
                     VampirePlayer.get(player).biteEntity(id);
                 }
-            } else if (message.action.equals(TOGGLESKILL)) {
+            } else if (message.action.equals(TOGGLEACTION)) {
                 int id = -1;
                 try {
                     id = Integer.parseInt(message.param);
@@ -85,26 +92,71 @@ public class InputEventPacket implements IMessage {
                     VampirismMod.log.e(TAG, e, "Receiving invalid param for %s", message.action);
                 }
                 if (id != -1) {
-                    IVampireSkill skill = ((SkillRegistry) VampirismAPI.skillRegistry()).getSkillFromId(id);
-                    if (skill != null) {
-                        IVampireSkill.PERM r = VampirePlayer.get(player).getSkillHandler().toggleSkill(skill);
-                        switch (r) {
-                            case LEVEL_TO_LOW:
-                                player.addChatMessage(new ChatComponentTranslation("text.vampirism.skill.level_to_low"));
-                                break;
-                            case DISABLED:
-                                player.addChatMessage(new ChatComponentTranslation("text.vampirism.skill.deactivated_by_serveradmin"));
-                                break;
-                            case COOLDOWN:
-                                player.addChatMessage(new ChatComponentTranslation("text.vampirism.skill.cooldown_not_over"));
-                                break;
+                    if (factionPlayer != null) {
+                        IActionHandler actionHandler = VampirismAPI.getFactionPlayerHandler(player).getCurrentFactionPlayer().getActionHandler();
+                        IAction action = ((ActionHandler) actionHandler).getActionFromId(id);
+                        if (action != null) {
+                            IAction.PERM r = VampirePlayer.get(player).getActionHandler().toggleAction(action);
+                            switch (r) {
+                                case NOT_UNLOCKED:
+                                    player.addChatMessage(new ChatComponentTranslation("text.vampirism.action.not_unlocked"));
+                                    break;
+                                case DISABLED:
+                                    player.addChatMessage(new ChatComponentTranslation("text.vampirism.action.deactivated_by_serveradmin"));
+                                    break;
+                                case COOLDOWN:
+                                    player.addChatMessage(new ChatComponentTranslation("text.vampirism.action.cooldown_not_over"));
+                                    break;
+                            }
+                        } else {
+                            VampirismMod.log.e(TAG, "Failed to find action with id %d", id);
                         }
                     } else {
-                        VampirismMod.log.e(TAG, "Failed to find skill with id %d", id);
+                        VampirismMod.log.e(TAG, "Player %s is in no faction, so he cannot use action %d", player, id);
                     }
+
 
                 }
 
+            } else if (message.action.equals(UNLOCKSKILL)) {
+                if (factionPlayer != null) {
+                    ISkill skill = VampirismAPI.skillRegistry().getSkill(factionPlayer.getFaction(), message.param);
+                    if (skill != null) {
+                        ISkillHandler skillHandler = factionPlayer.getSkillHandler();
+                        ISkillHandler.Result result = skillHandler.canSkillBeEnabled(skill);
+                        if (result == ISkillHandler.Result.OK) {
+                            skillHandler.enableSkill(skill);
+                            if (factionPlayer instanceof ISyncable.ISyncableExtendedProperties && skillHandler instanceof SkillHandler) {
+                                //TODO does this cause problems with addons?
+                                NBTTagCompound sync = new NBTTagCompound();
+                                ((SkillHandler) skillHandler).writeUpdateForClient(sync);
+                                HelperLib.sync((ISyncable.ISyncableExtendedProperties) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
+                            }
+
+                        } else {
+                            VampirismMod.log.w(TAG, "Skill %s cannot be activated for %s (%s)", skill, player, result);
+                        }
+                    } else {
+                        VampirismMod.log.w(TAG, "Skill %s was not found so %s cannot activate it", message.param, player);
+                    }
+                } else {
+                    VampirismMod.log.e(TAG, "Player %s is in no faction, so he cannot unlock skills");
+                }
+
+
+            } else if (message.action.equals(RESETSKILL)) {
+                if (factionPlayer != null) {
+                    ISkillHandler skillHandler = factionPlayer.getSkillHandler();
+                    skillHandler.resetSkills();
+                    if (factionPlayer instanceof ISyncable.ISyncableExtendedProperties && skillHandler instanceof SkillHandler) {
+                        //TODO does this cause problems with addons?
+                        NBTTagCompound sync = new NBTTagCompound();
+                        ((SkillHandler) skillHandler).writeUpdateForClient(sync);
+                        HelperLib.sync((ISyncable.ISyncableExtendedProperties) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
+                    }
+                } else {
+                    VampirismMod.log.e(TAG, "Player %s is in no faction, so he cannot reset skills");
+                }
             }
             return null;
         }
