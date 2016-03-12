@@ -313,7 +313,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.maxHealth, "Vampire", getLevel(), Balance.vp.HEALTH_LCAP, Balance.vp.HEALTH_MAX_MOD, Balance.vp.HEALTH_TYPE);
             LevelAttributeModifier.applyModifier(player, VReference.bloodExhaustion, "Vampire", getLevel(), getMaxLevel(), Balance.vp.EXAUSTION_MAX_MOD, Balance.vp.EXHAUSTION_TYPE);
             if (newLevel > 0) {
-                player.addStat(Achievements.becomingAVampire, 1);
+                if (player instanceof EntityPlayerMP && ((EntityPlayerMP) player).playerNetServerHandler != null) {
+                    //When loading from NBT the playerNetServerHandler is not always initialized, but that's required for achievements. So checking here
+                    player.addStat(Achievements.becomingAVampire, 1);
+                }
+
                 if (oldLevel == 0) {
                     skillHandler.enableRootSkill();
                 }

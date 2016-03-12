@@ -48,6 +48,7 @@ public class DisguiseVampireAction extends DefaultVampireAction implements ILast
     @Override
     public boolean onActivated(IVampirePlayer player) {
         ((VampirePlayer) player).getSpecialAttributes().disguised = true;
+        player.getRepresentingPlayer().refreshDisplayName();
         return true;
     }
 
@@ -59,6 +60,7 @@ public class DisguiseVampireAction extends DefaultVampireAction implements ILast
     @Override
     public void onDeactivated(IVampirePlayer player) {
         ((VampirePlayer) player).getSpecialAttributes().disguised = false;
+        player.getRepresentingPlayer().refreshDisplayName();
     }
 
     @Override

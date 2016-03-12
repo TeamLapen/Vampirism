@@ -34,7 +34,7 @@ public class ModEntityEventHandler {
         //Probably not a very "clean" solution, but the only one I found
         if (!skipAttackDamageOnce && "player".equals(event.source.getDamageType()) && event.entity instanceof EntityPlayer) {
             ItemStack stack = ((EntityPlayer) event.entity).getCurrentEquippedItem();
-            if (stack.getItem() instanceof IFactionSlayerItem) {
+            if (stack != null && stack.getItem() instanceof IFactionSlayerItem) {
                 IFactionSlayerItem item = (IFactionSlayerItem) stack.getItem();
                 IFaction faction = null;
                 if (event.entity instanceof IFactionEntity) {

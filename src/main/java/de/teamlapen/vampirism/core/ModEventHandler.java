@@ -28,7 +28,7 @@ public class ModEventHandler {
     @SubscribeEvent
     public void onPlayerJoinedWorld(EntityJoinWorldEvent entityJoinWorldEvent) {
         if ((entityJoinWorldEvent.entity instanceof EntityPlayer)) {
-            if (VampirismMod.proxy.isClientPlayerNull()) {
+            if (VampirismMod.proxy.isClientPlayerNull() || VampirismMod.proxy.isPlayerThePlayer((EntityPlayer) entityJoinWorldEvent.entity)) {
                 //Did not find a better position to place this, since onPostInit is to early
                 FakeNightVisionPotion.replaceNightVision();
             }
