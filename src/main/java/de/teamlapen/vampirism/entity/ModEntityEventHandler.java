@@ -1,16 +1,22 @@
 package de.teamlapen.vampirism.entity;
 
 import com.google.common.base.Predicate;
+import de.teamlapen.vampirism.api.IFactionSlayerItem;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.entity.EntityEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -20,6 +26,34 @@ import javax.annotation.Nullable;
  * Event handler for all entity related events
  */
 public class ModEntityEventHandler {
+
+    private boolean skipAttackDamageOnce = false;
+
+    @SubscribeEvent
+    public void onEntityAttacked(LivingAttackEvent event) {
+        //Probably not a very "clean" solution, but the only one I found
+        if (!skipAttackDamageOnce && "player".equals(event.source.getDamageType()) && event.entity instanceof EntityPlayer) {
+            ItemStack stack = ((EntityPlayer) event.entity).getCurrentEquippedItem();
+            if (stack.getItem() instanceof IFactionSlayerItem) {
+                IFactionSlayerItem item = (IFactionSlayerItem) stack.getItem();
+                IFaction faction = null;
+                if (event.entity instanceof IFactionEntity) {
+                    faction = ((IFactionEntity) event.entity).getFaction();
+                } else if (event.entity instanceof EntityPlayer) {
+                    faction = FactionPlayerHandler.get((EntityPlayer) event.entity).getCurrentFaction();
+                }
+                if (faction != null && faction.equals(item.getSlayedFaction())) {
+                    float amt = event.ammount * item.getDamageMultiplier(stack);
+                    skipAttackDamageOnce = true;
+                    boolean result = net.minecraftforge.common.ForgeHooks.onLivingAttack(event.entityLiving, event.source, amt);
+                    skipAttackDamageOnce = false;
+                    event.setCanceled(!result);
+                }
+            }
+        }
+
+
+    }
 
     @SubscribeEvent
     public void onEntityConstructing(EntityEvent.EntityConstructing event) {

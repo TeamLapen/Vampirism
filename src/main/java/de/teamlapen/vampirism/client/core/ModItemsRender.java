@@ -30,6 +30,7 @@ public class ModItemsRender {
         renderHelper.registerRender(ModItems.humanHeartWeak, "normal");
         renderHelper.registerRender(ModItems.itemTent, "normal");
         renderHelper.registerRenderAllMeta(ModItems.bloodBottle, ItemBloodBottle.AMOUNT + 1);
+        renderHelper.registerRender(ModItems.battleAxe, "normal");
 
     }
 }

@@ -14,6 +14,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     protected final Class<T> entityInterface;
     private final int color;
     protected String unlocalizedName;
+    protected String unlocalizedNamePlural;
     /**
      * Id used for hashing
      */
@@ -24,6 +25,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
         this.name = name;
         this.entityInterface = entityInterface;
         this.color = color;
+        id = nextId++;
     }
 
     @Override
@@ -56,10 +58,9 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
         return unlocalizedName == null ? name : unlocalizedName;
     }
 
-    public Faction<T> setUnlocalizedName(String unlocalizedName) {
-        id = nextId++;
-        this.unlocalizedName = unlocalizedName;
-        return this;
+    @Override
+    public String getUnlocalizedNamePlural() {
+        return unlocalizedNamePlural == null ? name : unlocalizedNamePlural;
     }
 
     @Override
@@ -75,6 +76,12 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     @Override
     public String name() {
         return name;
+    }
+
+    public Faction<T> setUnlocalizedName(String unlocalizedName, String unlocalizedNamePlural) {
+        this.unlocalizedName = unlocalizedName;
+        this.unlocalizedNamePlural = unlocalizedNamePlural;
+        return this;
     }
 
     @Override

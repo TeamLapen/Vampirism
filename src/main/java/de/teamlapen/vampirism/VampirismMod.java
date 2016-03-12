@@ -151,9 +151,9 @@ public class VampirismMod {
         SkillRegistry skillRegistry = new SkillRegistry();
         VampirismAPI.setUp(factionRegistry, sundamageRegistry, biteableRegistry, actionRegistry, skillRegistry);
         VReference.VAMPIRE_FACTION = factionRegistry.registerPlayableFaction("Vampire", IVampirePlayer.class, 0XFF780DA3, "vampire_player", REFERENCE.HIGHEST_VAMPIRE_LEVEL);
-        VReference.VAMPIRE_FACTION.setChatColor(EnumChatFormatting.LIGHT_PURPLE).setUnlocalizedName("text.vampirism.vampire");
+        VReference.VAMPIRE_FACTION.setChatColor(EnumChatFormatting.LIGHT_PURPLE).setUnlocalizedName("text.vampirism.vampire", "text.vampirism.vampires");
         VReference.HUNTER_FACTION = factionRegistry.registerPlayableFaction("Hunter", IHunterPlayer.class, Color.BLUE.getRGB(), "hunter_player", REFERENCE.HIGHEST_HUNTER_LEVEL);
-        VReference.HUNTER_FACTION.setChatColor(EnumChatFormatting.BLUE).setUnlocalizedName("text.vampirism.hunter");
+        VReference.HUNTER_FACTION.setChatColor(EnumChatFormatting.BLUE).setUnlocalizedName("text.vampirism.hunter", "text.vampirism.hunters");
         biteableRegistry.setDefaultConvertingHandlerCreator(new BiteableRegistry.ICreateDefaultConvertingHandler() {
             @Override
             public IConvertingHandler create(IConvertingHandler.IDefaultHelper helper) {

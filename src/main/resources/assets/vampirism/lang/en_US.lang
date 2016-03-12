@@ -180,3 +180,8 @@ text.vampirism.skill.night_vision=Night Vision
 
 #ETC
 text.vampirism.vampire=Vampire
+text.vampirism.vampires=Vampires
+text.vampirism.hunter=Hunter
+text.vampirism.hunters=Hunter
+text.vampirism.can_only_be_used_by=This can only be used by %s players
+text.vampirism.can_only_be_used_by_level=This can only be used by %s players of level %s or higher

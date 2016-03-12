@@ -40,14 +40,21 @@ public interface IFaction<T extends IFactionEntity> {
     String getUnlocalizedName();
 
     /**
+     * If set returns unlocalized name in the plural form. Otherwise returns {@link IFaction#name()}
+     *
+     * @return
+     */
+    String getUnlocalizedNamePlural();
+
+    boolean isEntityOfFaction(EntityCreature creature);
+
+    String name();
+
+    /**
      * Set the unlocalized name
      *
      * @param name
      * @return The same instance
      */
-    IFaction<T> setUnlocalizedName(String name);
-
-    boolean isEntityOfFaction(EntityCreature creature);
-
-    String name();
+    IFaction<T> setUnlocalizedName(String name, String plural);
 }
