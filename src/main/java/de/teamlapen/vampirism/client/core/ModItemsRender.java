@@ -31,6 +31,7 @@ public class ModItemsRender {
         renderHelper.registerRender(ModItems.itemTent, "normal");
         renderHelper.registerRenderAllMeta(ModItems.bloodBottle, ItemBloodBottle.AMOUNT + 1);
         renderHelper.registerRender(ModItems.battleAxe, "normal");
+        renderHelper.registerRender(ModItems.itemCoffin, "normal");
 
     }
 }

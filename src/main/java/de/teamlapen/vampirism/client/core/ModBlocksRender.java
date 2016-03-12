@@ -4,7 +4,9 @@ import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.lib.lib.util.InventoryRenderHelper;
 import de.teamlapen.vampirism.blocks.BlockCastleBlock;
 import de.teamlapen.vampirism.blocks.VampirismFlower;
+import de.teamlapen.vampirism.client.render.tiles.CoffinTESR;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.tileentity.TileCoffin;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.ItemMeshDefinition;
@@ -15,6 +17,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 
 /**
@@ -27,6 +30,7 @@ public class ModBlocksRender {
         switch (step) {
             case PRE_INIT:
                 registerRenderer();
+                registerTileRenderer();
                 break;
         }
 
@@ -50,6 +54,16 @@ public class ModBlocksRender {
                 return new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "fluids"), "blood");
             }
         });
+        ModelLoader.setCustomStateMapper(ModBlocks.coffin, new StateMapperBase() {
+            @Override
+            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+                return new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "blockCoffin"), "normal");
+            }
+        });
+    }
+
+    private static void registerTileRenderer() {
+        ClientRegistry.bindTileEntitySpecialRenderer(TileCoffin.class, new CoffinTESR());
     }
 
 
