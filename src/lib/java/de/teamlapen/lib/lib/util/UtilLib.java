@@ -356,7 +356,7 @@ public class UtilLib {
                 if (cz % 2 == 0) continue;
                 loc = isBiomeAt(world, center.getX() + (cx << 4), center.getZ() + (cz << 4), biomes);
                 if (loc != null) {
-                    VampLib.log.d("UtilLib", "Took %d ms to find a vampire biome", (int) (System.currentTimeMillis() - start), loc.chunkXPos, loc.chunkZPos);
+                    VampLib.log.d("UtilLib", "Took %d ms to find a vampire biome %d %d", (int) (System.currentTimeMillis() - start), loc.chunkXPos, loc.chunkZPos);
                     return loc;
                 }
                 if (cz == i && cx < 0) {
@@ -369,7 +369,7 @@ public class UtilLib {
                 if (cx2 % 2 == 0) continue;
                 loc = isBiomeAt(world, center.getX() + (cx2 << 4), center.getZ() + (cz << 4), biomes);
                 if (loc != null) {
-                    VampLib.log.d("UtilLib", "Took %d ms to find a vampire biome", (int) (System.currentTimeMillis() - start), loc.chunkXPos, loc.chunkZPos);
+                    VampLib.log.d("UtilLib", "Took %d ms to find a vampire biome %d %d", (int) (System.currentTimeMillis() - start), loc.chunkXPos, loc.chunkZPos);
                     return loc;
                 }
                 if (cx == i - 1 && cz < 0) {

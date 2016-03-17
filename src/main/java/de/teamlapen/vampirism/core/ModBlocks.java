@@ -1,8 +1,9 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.lib.item.ItemMetaBlock;
+import de.teamlapen.lib.lib.item.ItemMetaBlock;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.blocks.*;
+import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
 import de.teamlapen.vampirism.tileentity.TileCoffin;
 import de.teamlapen.vampirism.tileentity.TileTent;
 import net.minecraft.block.Block;
@@ -21,6 +22,9 @@ public class ModBlocks {
     public static BlockTent tent;
     public static BlockTentMain tentMain;
     public static BlockCoffin coffin;
+    public static BlockAltarInfusion altarInfusion;
+    public static BlockAltarPillar altarPillar;
+    public static BlockAltarTip altarTip;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
@@ -35,6 +39,7 @@ public class ModBlocks {
     private static void registerTiles() {
         GameRegistry.registerTileEntity(TileTent.class, "VampirismTent");
         GameRegistry.registerTileEntity(TileCoffin.class, "VampirismCoffin");
+        GameRegistry.registerTileEntity(TileAltarInfusion.class, "VampirismAltarInfusion");
     }
 
     private static void registerBlocks() {
@@ -45,6 +50,10 @@ public class ModBlocks {
         tent = registerBlock(new BlockTent(), null);
         tentMain = registerBlock(new BlockTentMain(), null);
         coffin = registerBlock(new BlockCoffin(), null);
+        altarInfusion = registerBlock(new BlockAltarInfusion());
+        altarPillar = registerBlock(new BlockAltarPillar());
+        altarTip = registerBlock(new BlockAltarTip());
+
 
     }
 

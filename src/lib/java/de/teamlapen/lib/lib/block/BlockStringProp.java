@@ -4,9 +4,8 @@
  * https://github.com/WayofTime/BloodMagic/blob/da6f41039499ea85e77beabf1a685901e7a3323e/src/main/java/WayofTime/bloodmagic/block/base/BlockString.java
  *
  */
-package de.teamlapen.lib.block;
+package de.teamlapen.lib.lib.block;
 
-import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockState;

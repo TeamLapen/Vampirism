@@ -1,5 +1,5 @@
 
-package de.teamlapen.lib.item;
+package de.teamlapen.lib.lib.item;
 
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;

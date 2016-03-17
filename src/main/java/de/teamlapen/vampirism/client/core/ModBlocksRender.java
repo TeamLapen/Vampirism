@@ -2,10 +2,13 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.lib.lib.util.InventoryRenderHelper;
+import de.teamlapen.vampirism.blocks.BlockAltarPillar;
 import de.teamlapen.vampirism.blocks.BlockCastleBlock;
 import de.teamlapen.vampirism.blocks.VampirismFlower;
+import de.teamlapen.vampirism.client.render.tiles.AltarInfusionTESR;
 import de.teamlapen.vampirism.client.render.tiles.CoffinTESR;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
 import de.teamlapen.vampirism.tileentity.TileCoffin;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.state.IBlockState;
@@ -39,6 +42,9 @@ public class ModBlocksRender {
     private static void registerRenderer() {
         InventoryRenderHelper renderHelper = new InventoryRenderHelper(REFERENCE.MODID);
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.castleBlock), BlockCastleBlock.types);
+        renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.altarPillar), BlockAltarPillar.EnumPillarType.values());
+        renderHelper.registerRender(ModBlocks.altarTip);
+        renderHelper.registerRender(ModBlocks.altarInfusion);
         renderHelper.registerRender(ModBlocks.cursedEarth);
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.vampirismFlower), VampirismFlower.EnumFlowerType.values());
         ModelBakery.registerItemVariants(Item.getItemFromBlock(ModBlocks.fluidBlood));
@@ -64,6 +70,7 @@ public class ModBlocksRender {
 
     private static void registerTileRenderer() {
         ClientRegistry.bindTileEntitySpecialRenderer(TileCoffin.class, new CoffinTESR());
+        ClientRegistry.bindTileEntitySpecialRenderer(TileAltarInfusion.class, new AltarInfusionTESR());
     }
 
 

@@ -2,7 +2,7 @@
  * Inspired by @WayofTime's https://github.com/WayofTime/BloodMagic/blob/da6f41039499ea85e77beabf1a685901e7a3323e/src/main/java/WayofTime/bloodmagic/block/property/PropertyString.java
  */
 
-package de.teamlapen.lib.block;
+package de.teamlapen.lib.lib.block;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
@@ -13,10 +13,6 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public class PropertyString extends PropertyHelper<String> {
-    public static PropertyString create(String name, String[] values) {
-        return new PropertyString(name, values);
-    }
-
     private final ImmutableSet<String> allowedValues;
 
     protected PropertyString(String name, String[] values) {
@@ -25,6 +21,10 @@ public class PropertyString extends PropertyHelper<String> {
         HashSet<String> hashSet = Sets.newHashSet();
         hashSet.addAll(Arrays.asList(values));
         allowedValues = ImmutableSet.copyOf(hashSet);
+    }
+
+    public static PropertyString create(String name, String[] values) {
+        return new PropertyString(name, values);
     }
 
     @Override

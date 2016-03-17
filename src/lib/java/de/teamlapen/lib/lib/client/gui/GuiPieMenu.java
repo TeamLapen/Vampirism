@@ -1,4 +1,4 @@
-package de.teamlapen.lib.lib.gui.client;
+package de.teamlapen.lib.lib.client.gui;
 
 
 import de.teamlapen.lib.LIBREFERENCE;

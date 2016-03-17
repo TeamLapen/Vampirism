@@ -59,7 +59,7 @@ You should have a build.gradle along other files in the "Forge" as well as in th
 2. Run `gradlew.bat setupDecompWorkspace ideaModule` on Windows or `./gradlew setupDecompWorkspace ideaModule` on Linux
 3. Do the same thing inside the "Vampirism" folder
 4. Open IntelliJ and create an empty project in the top folder you've created
-5. Open "Project Structure", modules and import the `Forge.iml` in the "Forge" folder as well as the `Vampirism.iml` in the "Vampirism" folder. Make sure that src/main/java and src/lib/java are marked as source folders and /src/main/resources and src/lib/resources are marked as resource folders.
+5. Open "Project Structure", modules and import the `Forge.iml` in the "Forge" folder as well as the `Vampirism.iml` in the "Vampirism" folder. Make sure that src/main/java and src/lib/java are marked as source folders and /src/main/resources and src/lib/resources are marked as resource folders. Make sure you choose Java 7 as language level.
 6. Select the Vampirism module, open the dependency tab and add Forge as module dependency.
 
 You should have Vampirism's code in the project now and no errors should be displayed
@@ -74,7 +74,7 @@ That's it.
 If you would like to setup Vampirism in another way or another IDE, you should pay regard to the following points.
 1. Make sure `src/main/java` and `src/lib/java` are marked as source folders and `src/main/resources` and `src/lib/resources` are marked as resource folders.
 2. Vampirism might have a few dependencies (e.g. Waila), which are specified in the gradle files and should be automatically downloaded and added when you run `ideaModule` or `eclipse`.
-
+3. Vampirism requires at least Java 7
 
 
 ## Licence 

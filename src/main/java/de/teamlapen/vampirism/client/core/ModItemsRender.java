@@ -5,6 +5,7 @@ import de.teamlapen.lib.lib.util.InventoryRenderHelper;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.ItemBloodBottle;
+import de.teamlapen.vampirism.items.ItemPureBlood;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 
@@ -32,6 +33,7 @@ public class ModItemsRender {
         renderHelper.registerRenderAllMeta(ModItems.bloodBottle, ItemBloodBottle.AMOUNT + 1);
         renderHelper.registerRender(ModItems.battleAxe, "normal");
         renderHelper.registerRender(ModItems.itemCoffin, "normal");
+        renderHelper.registerRenderAllMeta(ModItems.pureBlood, ItemPureBlood.COUNT);
 
     }
 }

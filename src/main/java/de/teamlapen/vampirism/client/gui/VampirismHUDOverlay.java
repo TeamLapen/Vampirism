@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
-import de.teamlapen.lib.lib.gui.client.ExtendedGui;
+import de.teamlapen.lib.lib.client.gui.ExtendedGui;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -16,6 +16,10 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,6 +43,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
     private int screenColor = 0;
     private int screenPercentage = 0;
     private boolean fullScreen = false;
+    private int renderRedTick = 0;
+    private int rederRedOn, renderRedOff;
 
     public VampirismHUDOverlay(Minecraft mc) {
         this.mc = mc;
@@ -47,6 +53,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (mc.thePlayer == null) return;
+        if (event.phase == TickEvent.Phase.END) return;
         IFactionPlayer player = FactionPlayerHandler.get(mc.thePlayer).getCurrentFactionPlayer();
         if (player != null && player instanceof IVampirePlayer) {
             if (((IVampirePlayer) player).getActionHandler().isActionActive(VampireActions.rageAction)) {
@@ -60,6 +67,23 @@ public class VampirismHUDOverlay extends ExtendedGui {
         } else {
             screenPercentage = 0;
         }
+        if (renderRedTick > 0) {
+            screenColor = 0xffff0000;
+            fullScreen = true;
+            if (renderRedTick > renderRedOff) {
+                screenPercentage = (int) (100 * (1 - (renderRedTick - renderRedOff) / (float) rederRedOn));
+            } else {
+                screenPercentage = (int) (100 * renderRedTick / (float) renderRedOff);
+            }
+            renderRedTick--;
+        }
+
+    }
+
+    public void makeRenderRed(int on, int off) {
+        this.rederRedOn = on;
+        this.renderRedOff = off;
+        this.renderRedTick = on + off;
     }
 
     @SubscribeEvent
@@ -134,7 +158,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             if (mc.playerController.gameIsSurvivalOrAdventure()) {
                 BloodStats stats = VampirePlayer.get(mc.thePlayer).getBloodStats();
 
-                GL11.glEnable(GL11.GL_BLEND);
+                GlStateManager.enableBlend();
 
                 this.mc.getTextureManager().bindTexture(icons);
                 int left = event.resolution.getScaledWidth() / 2 + 91;
@@ -155,7 +179,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     }
                 }
                 this.mc.getTextureManager().bindTexture(Gui.icons);
-                GL11.glDisable(GL11.GL_BLEND);
+                GlStateManager.disableBlend();
             }
         }
     }
@@ -166,30 +190,42 @@ public class VampirismHUDOverlay extends ExtendedGui {
             //Set the working matrix/layer to a layer directly on the screen/in front of the player
             ScaledResolution scaledresolution = new ScaledResolution(this.mc);
             // int factor=scaledresolution.getScaleFactor();
-            GL11.glClear(GL11.GL_DEPTH_BUFFER_BIT);
-            GL11.glMatrixMode(GL11.GL_PROJECTION);
-            GL11.glLoadIdentity();
-            GL11.glOrtho(0.0D, scaledresolution.getScaledWidth_double(), scaledresolution.getScaledHeight_double(), 0.0D, 1D, -1D);
-            GL11.glMatrixMode(GL11.GL_MODELVIEW);
-            GL11.glLoadIdentity();
-            GL11.glPushMatrix();
+            GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
+            GlStateManager.matrixMode(GL11.GL_PROJECTION);
+            GlStateManager.loadIdentity();
+            GlStateManager.ortho(0.0D, scaledresolution.getScaledWidth_double(), scaledresolution.getScaledHeight_double(), 0.0D, 1D, -1D);
+            GlStateManager.matrixMode(GL11.GL_MODELVIEW);
+            GlStateManager.loadIdentity();
+            GlStateManager.pushMatrix();
             GL11.glDisable(GL11.GL_DEPTH_TEST);
-            GL11.glEnable(GL11.GL_BLEND);
-
             int w = (scaledresolution.getScaledWidth());
             int h = (scaledresolution.getScaledHeight());
-            if (fullScreen == true) {
-                // Render a see through red square over the whole screen
+            if (fullScreen) {
+
+
+                // Render a see through colored square over the whole screen
                 float r = (float) (screenColor >> 16 & 255) / 255.0F;
                 float g = (float) (screenColor >> 8 & 255) / 255.0F;
                 float b = (float) (screenColor & 255) / 255.0F;
-                GL11.glColor4f(r, g, b, screenPercentage / (float) 100);
-                GL11.glBegin(GL11.GL_QUADS);
-                GL11.glVertex3f(0.0f, h, 0.0f);
-                GL11.glVertex3f(w, h, 0.0f);
-                GL11.glVertex3f(w, 0.0f, 0.0f);
-                GL11.glVertex3f(0.0f, 0.0f, 0.0f);
-                GL11.glEnd();
+                float a = screenPercentage / 100f;
+
+                GlStateManager.disableTexture2D();
+                GlStateManager.enableBlend();
+                GlStateManager.disableAlpha();
+                GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+                GlStateManager.shadeModel(7425);
+                Tessellator tessellator = Tessellator.getInstance();
+                WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+                worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
+                worldrenderer.pos(0, h, (double) this.zLevel).color(r, g, b, a).endVertex();
+                worldrenderer.pos(w, h, (double) this.zLevel).color(r, g, b, a).endVertex();
+                worldrenderer.pos(w, 0, (double) this.zLevel).color(r, g, b, a).endVertex();
+                worldrenderer.pos(0, 0, (double) this.zLevel).color(r, g, b, a).endVertex();
+                tessellator.draw();
+                GlStateManager.shadeModel(7424);
+                GlStateManager.disableBlend();
+                GlStateManager.enableAlpha();
+                GlStateManager.enableTexture2D();
 
 				/*
                  * Try later this.drawGradientRect(0, 0, w,Math.round(h/(2/renderRed)), 0xfff00000, 0x000000); this.drawGradientRect(0, h-Math.round(h/(2/renderRed)), w, h, 0x00000000, 0xfff00000);
@@ -208,9 +244,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 this.drawGradientRect2(w - bw, 0, w, h, screenColor, 0x00);
 
             }
-            GL11.glDisable(GL11.GL_BLEND);
             GL11.glEnable(GL11.GL_DEPTH_TEST);
-            GL11.glPopMatrix();
+            GlStateManager.popMatrix();
         }
     }
 

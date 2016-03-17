@@ -2,7 +2,7 @@
 
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.lib.block.BlockStringProp;
+import de.teamlapen.lib.lib.block.BlockStringProp;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.material.Material;

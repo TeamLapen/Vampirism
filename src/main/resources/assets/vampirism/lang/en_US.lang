@@ -177,6 +177,8 @@ text.vampirism.skill.less_sundamage=Reduce sun damage
 text.vampirism.skill.night_vision=Night Vision
 
 
+#RITUALS
+text.vampirism.ritual_missing_items=Missing %s of %s for this ritual
 
 #ETC
 text.vampirism.vampire=Vampire

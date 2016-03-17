@@ -1,0 +1,36 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "builtin/generated",
+    "transform": "forge:default-item"
+  },
+  "variants": {
+    "type": {
+      "meta_0": {
+        "textures": {
+          "layer0": "vampirism:items/pureBlood_0"
+        }
+      },
+      "meta_1": {
+        "textures": {
+          "layer0": "vampirism:items/pureBlood_1"
+        }
+      },
+      "meta_2": {
+        "textures": {
+          "layer0": "vampirism:items/pureBlood_2"
+        }
+      },
+      "meta_3": {
+        "textures": {
+          "layer0": "vampirism:items/pureBlood_3"
+        }
+      },
+      "meta_4": {
+        "textures": {
+          "layer0": "vampirism:items/pureBlood_4"
+        }
+      }
+    }
+  }
+}

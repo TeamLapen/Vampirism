@@ -10,6 +10,8 @@ import de.teamlapen.vampirism.client.gui.VampirismHUDOverlay;
 import de.teamlapen.vampirism.client.render.LayerVampireEntity;
 import de.teamlapen.vampirism.client.render.LayerVampirePlayerHead;
 import de.teamlapen.vampirism.client.render.RenderHandler;
+import de.teamlapen.vampirism.client.render.particle.ParticleHandlerClient;
+import de.teamlapen.vampirism.util.IParticleHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -28,6 +30,13 @@ import java.util.Map;
  */
 public class ClientProxy extends CommonProxy {
     private final static String TAG = "ClientProxy";
+    private final ParticleHandlerClient particleHandlerClient;
+    private VampirismHUDOverlay overlay;
+
+    public ClientProxy() {
+        this.particleHandlerClient = new ParticleHandlerClient();
+    }
+
 
     @Override
     public boolean isClientPlayerNull() {
@@ -54,7 +63,8 @@ public class ClientProxy extends CommonProxy {
     }
 
     private void registerSubscriptions() {
-        MinecraftForge.EVENT_BUS.register(new VampirismHUDOverlay(Minecraft.getMinecraft()));
+        overlay = new VampirismHUDOverlay(Minecraft.getMinecraft());
+        MinecraftForge.EVENT_BUS.register(overlay);
         MinecraftForge.EVENT_BUS.register(new RenderHandler(Minecraft.getMinecraft()));
     }
 
@@ -84,5 +94,15 @@ public class ClientProxy extends CommonProxy {
         for (RenderPlayer renderPlayer : manager.getSkinMap().values()) {
             renderPlayer.addLayer(new LayerVampirePlayerHead(renderPlayer));
         }
+    }
+
+    @Override
+    public IParticleHandler getParticleHandler() {
+        return particleHandlerClient;
+    }
+
+    @Override
+    public void renderScreenRed(int ticksOn, int ticksOff) {
+        if (overlay != null) overlay.makeRenderRed(ticksOn, ticksOff);
     }
 }

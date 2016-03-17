@@ -1,4 +1,4 @@
-package de.teamlapen.lib.lib.gui.client;
+package de.teamlapen.lib.lib.client.gui;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
