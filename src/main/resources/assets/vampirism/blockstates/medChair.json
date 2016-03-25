@@ -1,0 +1,37 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+  },
+  "variants": {
+    "facing=north,part=top": {
+      "model": "vampirism:medchairhead"
+    },
+    "facing=north,part=bottom": {
+      "model": "vampirism:medchairbase"
+    },
+    "facing=east,part=top": {
+      "model": "vampirism:medchairhead",
+      "y": 90
+    },
+    "facing=east,part=bottom": {
+      "model": "vampirism:medchairbase",
+      "y": 90
+    },
+    "facing=south,part=top": {
+      "model": "vampirism:medchairhead",
+      "y": 180
+    },
+    "facing=south,part=bottom": {
+      "model": "vampirism:medchairbase",
+      "y": 180
+    },
+    "facing=west,part=top": {
+      "model": "vampirism:medchairhead",
+      "y": 270
+    },
+    "facing=west,part=bottom": {
+      "model": "vampirism:medchairbase",
+      "y": 270
+    }
+  }
+}

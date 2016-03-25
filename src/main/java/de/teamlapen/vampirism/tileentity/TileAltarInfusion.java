@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.tileentity;
 
+import de.teamlapen.lib.lib.inventory.InventoryHelper;
+import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.tile.InventoryTileEntity;
 import de.teamlapen.lib.lib.util.ValuedObject;
 import de.teamlapen.vampirism.VampirismMod;
@@ -15,6 +17,8 @@ import de.teamlapen.vampirism.util.IParticleHandler;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
@@ -37,19 +41,27 @@ import java.util.Random;
 public class TileAltarInfusion extends InventoryTileEntity implements ITickable {
 
     private final static String TAG = "TEAltarInfusion";
+    private static final Item[] items = new Item[]{
+            ModItems.pureBlood, ModItems.humanHeart, Items.apple
+    };
     private final int DURATION_TICK = 450;
     /**
-     * Only available when running ({@link #runningTick}>0
+     * Only available when running ({@link #runningTick}>0)
      */
     private EntityPlayer player;
     /**
-     * Only available when running ({@link #runningTick}>0
+     * Only available when running ({@link #runningTick}>0)
      */
     private BlockPos[] tips;
     private int runningTick;
+    /**
+     * The level the player will be after the levelup.
+     * Only available when running ({@link #runningTick}>0)
+     */
+    private int targetLevel;
 
     public TileAltarInfusion() {
-        super(new Slot[]{new Slot(ModItems.pureBlood, 44, 34), new Slot(ModItems.humanHeart, 80, 34), new Slot(new InventoryTileEntity.IItemSelector() {
+        super(new InventorySlot[]{new InventorySlot(items[0], 44, 34), new InventorySlot(items[1], 80, 34), new InventorySlot(new InventorySlot.IItemSelector() {
 
 
             @Override
@@ -110,8 +122,8 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         if (phase.equals(PHASE.LEVELUP)) {
             if (!worldObj.isRemote) {
                 IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
-                if (!handler.isInFaction(VReference.VAMPIRE_FACTION)) {
-                    VampirismMod.log.w(TAG, "Player %s switched faction while the ritual was running. Cannot levelup.", player);
+                if (handler.getCurrentLevel(VReference.VAMPIRE_FACTION) != targetLevel - 1) {
+                    VampirismMod.log.w(TAG, "Player %s changed level while the ritual was running. Cannot levelup.", player);
                     return;
                 }
                 handler.setFactionLevel(VReference.VAMPIRE_FACTION, handler.getCurrentLevel(VReference.VAMPIRE_FACTION) + 1);
@@ -132,7 +144,13 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
             return;
         }
         if (player.worldObj.isRemote) return;
-        int requiredLevel = checkRequiredLevel(player);
+
+        if (player.worldObj.isDaytime()) {
+            player.addChatMessage(new ChatComponentTranslation("text.vampirism.ritual_night_only"));
+            return;
+        }
+        targetLevel = VampirePlayer.get(player).getLevel() + 1;
+        int requiredLevel = checkRequiredLevel();
         if (requiredLevel == -1) {
             player.addChatMessage(new ChatComponentTranslation("text.vampirism.ritual_level_wrong"));
         } else if (!checkStructureLevel(requiredLevel)) {
@@ -170,7 +188,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
     }
 
     private boolean checkItemRequirements(EntityPlayer player) {
-        int newLevel = VampirePlayer.get(player).getLevel() + 1;
+        int newLevel = targetLevel;
         ItemStack missing = null;
         switch (newLevel) {
             case 5:
@@ -205,7 +223,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
                 break;
         }
         if (missing != null) {
-            IChatComponent item = missing.getItem().equals(ModItems.pureBlood) ? ModItems.pureBlood.getDisplayName(missing) : new ChatComponentTranslation(missing.getUnlocalizedName());
+            IChatComponent item = missing.getItem().equals(ModItems.pureBlood) ? ModItems.pureBlood.getDisplayName(missing) : new ChatComponentTranslation(missing.getUnlocalizedName() + ".name");
             IChatComponent main = new ChatComponentTranslation("text.vampirism.ritual_missing_items", missing.stackSize, item);
             player.addChatComponentMessage(main);
             return false;
@@ -214,63 +232,23 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
 
     }
 
-    /**
-     * Checks if the specified item are available, if they are it removes them and returns null. Otherwise it returns the stack that is missing
-     *
-     * @param bloodMeta
-     * @param blood
-     * @param heart
-     * @param par3
-     * @return
-     */
     private ItemStack checkAndRemoveItems(int bloodMeta, int blood, int heart, int par3) {
-        ItemStack stackPureBlood = this.getStackInSlot(0);
-        ItemStack stackHeart = this.getStackInSlot(1);
-        ItemStack stack3 = this.getStackInSlot(2);
-
-        int actualBlood = stackPureBlood == null ? 0 : stackPureBlood.getMetadata() < bloodMeta ? 0 : stackPureBlood.stackSize;
-        int actualHeart = stackHeart == null ? 0 : stackHeart.stackSize;
-        int actual3 = stack3 == null ? 0 : stack3.stackSize;
-        ItemStack missing = null;
-        if (actualBlood < blood) {
-            missing = new ItemStack(ModItems.pureBlood, blood - actualBlood, bloodMeta);
-        } else if (actualHeart < heart) {
-            missing = new ItemStack(ModItems.humanHeart, heart - actualHeart);
-        } else if (actual3 < par3) {
-            missing = new ItemStack(ModItems.vampireFang, par3 - actual3);//Placeholder
-        }
+        ItemStack missing = InventoryHelper.checkItems(this, items, new int[]{blood, heart, par3}, new int[]{bloodMeta == 0 ? Integer.MIN_VALUE : -bloodMeta, Integer.MIN_VALUE, Integer.MIN_VALUE});
         if (missing == null) {
-            if (stackPureBlood != null) {
-                stackPureBlood.stackSize -= blood;
-                if (stackPureBlood.stackSize == 0) {
-                    this.removeStackFromSlot(0);
-                }
-            }
-            if (stackHeart != null) {
-                stackHeart.stackSize -= heart;
-                if (stackHeart.stackSize == 0) {
-                    this.removeStackFromSlot(1);
-                }
-            }
-            if (stack3 != null) {
-                stack3.stackSize -= par3;
-                if (stack3.stackSize == 0) {
-                    this.removeStackFromSlot(2);
-                }
-            }
+            InventoryHelper.removeItems(this, new int[]{blood, heart, par3});
         }
         return missing;
     }
+
 
     /**
      * Determines the structure required for leveling up.
      * The current implementation returns a value between 4 two high stone pillars and 6 three high gold pillars.
      *
-     * @param player
      * @return
      */
-    private int checkRequiredLevel(EntityPlayer player) {
-        int newLevel = VampirePlayer.get(player).getLevel() + 1;
+    private int checkRequiredLevel() {
+        int newLevel = targetLevel;
         if (newLevel < 5 || newLevel > REFERENCE.HIGHEST_VAMPIRE_LEVEL) {
             return -1;
         }
@@ -391,6 +369,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
             try {
                 this.player = (EntityPlayer) this.worldObj.getEntityByID(tagCompound.getInteger("playerId"));
                 this.runningTick = tick;
+                this.targetLevel = VampirePlayer.get(player).getLevel() + 1;
             } catch (NullPointerException e) {
                 VampirismMod.log.w(TAG, "Failed to find player %d", tagCompound.getInteger("playerId"));
             }
@@ -399,7 +378,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
             this.runningTick = 0;
             this.tips = null;
         } else {
-            checkStructureLevel(checkRequiredLevel(player));
+            checkStructureLevel(checkRequiredLevel());
         }
     }
 

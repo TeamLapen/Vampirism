@@ -1,10 +1,11 @@
 package de.teamlapen.lib.lib.tile;
 
+import de.teamlapen.lib.lib.inventory.InventoryContainer;
+import de.teamlapen.lib.lib.inventory.InventorySlot;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -17,25 +18,30 @@ import net.minecraft.util.IChatComponent;
 /**
  * Basic abstract class for TileEntitys which need a small inventory (with an gui)
  */
-public abstract class InventoryTileEntity extends TileEntity implements IInventory {
+public abstract class InventoryTileEntity extends TileEntity implements IInventory, InventorySlot.IInventorySlotInventory {
 
     /**
      * Maximal squared distance from which the player can access the inventory
      */
     protected final int MAX_DIST_SQRT = 40;
-    private Slot[] slots;
+    private InventorySlot[] slots;
 
     /**
      * @param slots A slot 'description'. The array should contain one Slot instance for each inventory slot which should be created. The slots must each contain the position where they should be
      *              displayed in the GUI, they can also contain a filter for which items are allowed. Make sure that these Slot instance are unique on server and client.
      */
-    public InventoryTileEntity(Slot[] slots) {
+    public InventoryTileEntity(InventorySlot[] slots) {
         this.slots = slots;
     }
 
     @Override
     public void closeInventory(EntityPlayer player) {
 
+    }
+
+    @Override
+    public InventorySlot[] getSlots() {
+        return slots;
     }
 
     @Override
@@ -59,7 +65,7 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
     public ItemStack removeStackFromSlot(int index) {
         if (this.slots[index] != null) {
             ItemStack itemstack = this.slots[index].stack;
-            this.slots[index] = null;
+            this.slots[index].stack = null;
             return itemstack;
         } else {
             return null;
@@ -176,140 +182,12 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
         tagCompound.setTag("Inventory", itemList);
     }
 
-    public interface IItemSelector {
-        /**
-         * @param item
-         * @return whether the item is allowed or not
-         */
-        boolean isItemAllowed(ItemStack item);
-    }
 
-    public static class FilterSlot extends net.minecraft.inventory.Slot {
-        IItemSelector selector;
 
-        public FilterSlot(IInventory p_i1824_1_, int p_i1824_2_, int p_i1824_3_, int p_i1824_4_, IItemSelector selector) {
-            super(p_i1824_1_, p_i1824_2_, p_i1824_3_, p_i1824_4_);
-            this.selector = selector;
-        }
 
-        @Override
-        public boolean isItemValid(ItemStack stack) {
-            if (selector != null) {
-                return selector.isItemAllowed(stack);
-            }
-            return true;
-        }
 
-    }
 
-    /**
-     * Used for handling the item exchange between player and block inventory. Should be created with InventoryTileEntity.getNewInventoryContainer()
-     *
-     * @author Maxanier
-     */
-    public static class InventoryContainer extends Container {
 
-        private InventoryTileEntity tile;
 
-        public InventoryContainer(InventoryPlayer invPlayer, InventoryTileEntity te) {
-            tile = te;
-
-            for (int i = 0; i < tile.slots.length; i++) {
-                this.addSlotToContainer(new FilterSlot(tile, i, tile.slots[i].xDisplay, tile.slots[i].yDisplay, tile.slots[i].itemSelector));
-            }
-
-            int i;
-            for (i = 0; i < 3; ++i) {
-                for (int j = 0; j < 9; ++j) {
-                    this.addSlotToContainer(new net.minecraft.inventory.Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
-                }
-            }
-            for (i = 0; i < 9; ++i) {
-                this.addSlotToContainer(new net.minecraft.inventory.Slot(invPlayer, i, 8 + i * 18, 142));
-            }
-
-        }
-
-        @Override
-        public boolean canInteractWith(EntityPlayer p_75145_1_) {
-            return tile.isUseableByPlayer(p_75145_1_);
-        }
-
-        @Override
-        public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
-            ItemStack stack = null;
-            net.minecraft.inventory.Slot slotObject = inventorySlots.get(slot);
-
-            // null checks and checks if the item can be stacked (maxStackSize > 1)
-            if (slotObject != null && slotObject.getHasStack()) {
-                ItemStack stackInSlot = slotObject.getStack();
-                stack = stackInSlot.copy();
-                // merges the item into player inventory since its in the tileEntity
-                if (slot < tile.slots.length) {
-                    if (!this.mergeItemStack(stackInSlot, tile.slots.length, tile.slots.length + 36, true)) {
-                        return null;
-                    }
-                }
-                // places it into the tileEntity is possible since its in the player inventory
-                else if (!this.mergeItemStack(stackInSlot, 0, tile.slots.length, false)) {
-                    return null;
-                }
-
-                if (stackInSlot.stackSize == 0) {
-                    slotObject.putStack(null);
-                } else {
-                    slotObject.onSlotChanged();
-                }
-
-                if (stackInSlot.stackSize == stack.stackSize) {
-                    return null;
-                }
-                slotObject.onPickupFromSlot(player, stackInSlot);
-            }
-            return stack;
-        }
-    }
-
-    /**
-     * Used for inventory slot description as well as for storing the actual inventory
-     *
-     * @author Maxanier
-     */
-    public static class Slot {
-        public final IItemSelector itemSelector;
-        public final int xDisplay, yDisplay;
-        public ItemStack stack;
-
-        public Slot(final Class<? extends Item> cls, int xDisplay, int yDisplay) {
-            this(new IItemSelector() {
-
-                @Override
-                public boolean isItemAllowed(ItemStack item) {
-                    return cls.isInstance(item.getItem());
-                }
-
-            }, xDisplay, yDisplay);
-        }
-
-        public Slot(IItemSelector selector, int xDisplay, int yDisplay) {
-            itemSelector = selector;
-            this.xDisplay = xDisplay;
-            this.yDisplay = yDisplay;
-        }
-
-        public Slot(int xDisplay, int yDisplay) {
-            this((IItemSelector) null, xDisplay, yDisplay);
-        }
-
-        public Slot(final Item item, int xDisplay, int yDisplay) {
-            this(new IItemSelector() {
-                @Override
-                public boolean isItemAllowed(ItemStack stack) {
-                    return item.equals(stack.getItem());
-                }
-
-            }, xDisplay, yDisplay);
-        }
-    }
 
 }

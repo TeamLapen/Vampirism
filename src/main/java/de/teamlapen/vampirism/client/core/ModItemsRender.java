@@ -4,6 +4,7 @@ import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.lib.lib.util.InventoryRenderHelper;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.entity.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.items.ItemBloodBottle;
 import de.teamlapen.vampirism.items.ItemPureBlood;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -34,6 +35,6 @@ public class ModItemsRender {
         renderHelper.registerRender(ModItems.battleAxe, "normal");
         renderHelper.registerRender(ModItems.itemCoffin, "normal");
         renderHelper.registerRenderAllMeta(ModItems.pureBlood, ItemPureBlood.COUNT);
-
+        renderHelper.registerRenderAllMeta(ModItems.hunterIntel, HunterLevelingConf.instance().HUNTER_INTEL_COUNT, "normal");
     }
 }

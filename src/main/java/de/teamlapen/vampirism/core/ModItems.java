@@ -20,6 +20,7 @@ public class ModItems {
     public static ItemBattleAxe battleAxe;
     public static ItemCoffin itemCoffin;
     public static ItemPureBlood pureBlood;
+    public static ItemHunterIntel hunterIntel;
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
             case PRE_INIT:
@@ -39,6 +40,7 @@ public class ModItems {
         battleAxe = registerItem(new ItemBattleAxe());
         itemCoffin = registerItem(new ItemCoffin());
         pureBlood = registerItem(new ItemPureBlood());
+        hunterIntel = registerItem(new ItemHunterIntel());
     }
 
     private static <T extends Item> T registerItem(T item) {

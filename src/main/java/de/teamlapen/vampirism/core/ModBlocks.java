@@ -25,6 +25,8 @@ public class ModBlocks {
     public static BlockAltarInfusion altarInfusion;
     public static BlockAltarPillar altarPillar;
     public static BlockAltarTip altarTip;
+    public static BlockHunterTable hunterTable;
+    public static BlockMedChair medChair;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
@@ -53,6 +55,8 @@ public class ModBlocks {
         altarInfusion = registerBlock(new BlockAltarInfusion());
         altarPillar = registerBlock(new BlockAltarPillar());
         altarTip = registerBlock(new BlockAltarTip());
+        hunterTable = registerBlock(new BlockHunterTable());
+        medChair = registerBlock(new BlockMedChair());
 
 
     }

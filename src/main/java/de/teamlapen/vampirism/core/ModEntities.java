@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedSheep;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
+import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainer;
 import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
@@ -48,6 +49,7 @@ public class ModEntities {
     public static final String CONVERTED_CREATURE = "vampirism.converted.creature";
     public static final String CONVERTED_VILLAGER = "vampirism.converted.villager";
     public static final String CONVERTED_SHEEP = "vampirism.converted.sheep";
+    public static final String HUNTER_TRAINER = "vampirism.hunter_trainer";
 
     /**
      * List of entity names which should be spawnable
@@ -122,6 +124,7 @@ public class ModEntities {
         registerEntity(EntityConvertedSheep.class, CONVERTED_SHEEP, false);
         registerEntity(EntityBasicHunter.class, BASIC_HUNTER_NAME, true);
         registerEntity(EntityBasicVampire.class, BASIC_VAMPIRE_NAME, Balance.mobProps.VAMPIRE_SPAWN_PROBE, 1, 3, EnumCreatureType.MONSTER, zombieBiomes);
+        registerEntity(EntityHunterTrainer.class, HUNTER_TRAINER, true);
         registerConvertibles();
     }
 

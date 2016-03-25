@@ -18,6 +18,7 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -46,6 +47,7 @@ public class ModBlocksRender {
         renderHelper.registerRender(ModBlocks.altarTip);
         renderHelper.registerRender(ModBlocks.altarInfusion);
         renderHelper.registerRender(ModBlocks.cursedEarth);
+        renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.hunterTable), EnumFacing.HORIZONTALS);
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.vampirismFlower), VampirismFlower.EnumFlowerType.values());
         ModelBakery.registerItemVariants(Item.getItemFromBlock(ModBlocks.fluidBlood));
         ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(ModBlocks.fluidBlood), new ItemMeshDefinition() {
@@ -66,6 +68,7 @@ public class ModBlocksRender {
                 return new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "blockCoffin"), "normal");
             }
         });
+
     }
 
     private static void registerTileRenderer() {
