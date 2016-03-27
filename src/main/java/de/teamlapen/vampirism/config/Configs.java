@@ -30,6 +30,11 @@ public class Configs {
     public static int vampireForestId;
     public static boolean renderVampireForestFog;
 
+    public static int village_size;
+    public static int village_density;
+    public static int village_min_dist;
+    public static boolean village_modify;
+
     public static boolean disable_replaceVanillaNightVision;
     public static boolean disable_vampireForest;
     public static boolean disable_factionDisplayChat;
@@ -87,7 +92,7 @@ public class Configs {
             }
             try {
                 int dim = Integer.valueOf(t[0]);
-                boolean type = Integer.valueOf(t[1]) != 0 ? true : false;
+                boolean type = Integer.valueOf(t[1]) != 0;
                 ((SundamageRegistry) VampirismAPI.sundamageRegistry()).specifyConfiguredSundamageForDim(dim, type);
             } catch (NumberFormatException e) {
                 VampirismMod.log.w(TAG, "Cannot understand sundamge dimension line '%s'. Failed to convert numbers", s);
@@ -99,6 +104,13 @@ public class Configs {
         playerCanTurnPlayer = main_config.getBoolean("player_can_turn_player", CATEGORY_GENERAL, true, "If one player can bite infect a human player with sanguinare");
         vampireForestId = main_config.getInt(BIOMEVFKEY, CATEGORY_GENERAL, -1, -1, 1000, "If you set this to -1 the mod will try to find a free biome id");
         renderVampireForestFog = main_config.getBoolean("vampire_forest_fog", CATEGORY_GENERAL, true, "");
+
+        //Village
+        village_modify = main_config.getBoolean("village_modify_gen", CATEGORY_VILLAGE, true, "Whether to modify village generation chance or not");
+        village_density = main_config.getInt("village_density", CATEGORY_VILLAGE, 22, 1, 1000, "Minecraft will try to generate 1 village per NxN chunk area. Vanilla: 32");
+        village_min_dist = main_config.getInt("village_minimum_distance", CATEGORY_VILLAGE, 6, 1, 1000, "Village centers will be at least N chunks apart. Must be smaller than density. Vanilla: 8");
+        village_size = main_config.getInt("village_size", CATEGORY_VILLAGE, 0, 0, 10, "A higher size increases the overall spawn weight of buildings.");
+
         // Gui
         gui_level_offset_x = main_config.getInt("level_offset_x", CATEGORY_GUI, 0, -250, 250, "X-Offset of the level indicator from the center in pixels");
         gui_level_offset_y = main_config.getInt("level_offset_y", CATEGORY_GUI, 47, 0, 270, "Y-Offset of the level indicator from the bottom in pixels");

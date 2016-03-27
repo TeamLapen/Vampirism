@@ -36,8 +36,8 @@ public class EntityHunterTrainer extends EntityHunterBase {
 
 
         this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
-        this.tasks.addTask(2, new EntityAIAttackOnCollide(this, 1.0, false));
-        this.tasks.addTask(3, new HunterAILookAtTrainee(this));
+        this.tasks.addTask(4, new EntityAIAttackOnCollide(this, 1.0, false));
+        this.tasks.addTask(5, new HunterAILookAtTrainee(this));
         this.tasks.addTask(6, new EntityAIWander(this, 0.7));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 13F));
         this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityVampireBase.class, 17F));
@@ -64,9 +64,9 @@ public class EntityHunterTrainer extends EntityHunterBase {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(200);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(40);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.1);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(300);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(19);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.17);
         this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(5);
     }
 
@@ -82,7 +82,7 @@ public class EntityHunterTrainer extends EntityHunterBase {
 
         if (!flag && this.isEntityAlive() && !player.isSneaking()) {
             if (!this.worldObj.isRemote) {
-                if (HunterLevelingConf.instance().isLevelValidForTrainer(FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION))) {
+                if (HunterLevelingConf.instance().isLevelValidForTrainer(FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION) + 1)) {
                     this.trainee = player;
                     player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_TRAINER, player.worldObj, getPosition().getX(), getPosition().getY(), getPosition().getZ());
                 } else {
