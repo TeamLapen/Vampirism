@@ -1,9 +1,11 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.items.*;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -26,12 +28,18 @@ public class ModItems {
             case PRE_INIT:
                 registerItems();
                 break;
+            case INIT:
+                registerCraftingRecipes();
+                break;
         }
 
     }
 
+    private static void registerCraftingRecipes() {
+        GameRegistry.addRecipe(new ItemStack(bloodBottle, 1, 0), "   ", "XYX", " X ", 'X', Blocks.glass, 'Y', Items.rotten_flesh);
+    }
+
     private static void registerItems() {
-        VampirismMod.log.d("ModItems", "Registering Items");
         vampireFang = registerItem(new ItemVampireFang());
         humanHeart = registerItem(new ItemHumanHeart());
         humanHeartWeak = registerItem(new ItemHumanHeartWeak());
