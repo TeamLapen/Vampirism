@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.network;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockHunterTable;
 import de.teamlapen.vampirism.client.gui.*;
 import de.teamlapen.vampirism.inventory.HunterTrainerContainer;
@@ -18,6 +19,7 @@ public class ModGuiHandler implements IGuiHandler {
     public final static int ID_ALTAR_INFUSION = 2;
     public final static int ID_HUNTER_TABLE = 3;
     public final static int ID_HUNTER_TRAINER = 4;
+    public final static int ID_REVERT_BACK = 5;
 
     @Override
     public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
@@ -35,6 +37,9 @@ public class ModGuiHandler implements IGuiHandler {
                 return new GuiHunterTable(BlockHunterTable.createInventoryContainer(player, new BlockPos(x, y, z)));
             case ID_HUNTER_TRAINER:
                 return new GuiHunterTrainer(new HunterTrainerContainer(player));
+            case ID_REVERT_BACK:
+                VampirismMod.log.t("adfds");
+                return new GuiRevertBack();
         }
         return null;
     }

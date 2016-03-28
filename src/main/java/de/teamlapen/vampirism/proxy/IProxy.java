@@ -19,5 +19,5 @@ public interface IProxy extends IInitListener {
      */
     IParticleHandler getParticleHandler();
 
-    void renderScreenRed(int ticksOn, int ticksOff);
+    void renderScreenFullColor(int ticksOn, int ticksOff, int color);
 }

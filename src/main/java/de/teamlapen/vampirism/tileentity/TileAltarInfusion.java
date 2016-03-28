@@ -108,7 +108,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
             }
             if (runningTick == DURATION_TICK - 200) {
                 if (VampirismMod.proxy.isPlayerThePlayer(getPlayer())) {
-                    VampirismMod.proxy.renderScreenRed(DURATION_TICK - 250, 50);
+                    VampirismMod.proxy.renderScreenFullColor(DURATION_TICK - 250, 50, 0xFF0000);
 
                 }
             }

@@ -30,6 +30,8 @@ public class ModBlocks {
     public static BlockAltarTip altarTip;
     public static BlockHunterTable hunterTable;
     public static BlockMedChair medChair;
+    public static BlockGarlic garlic;
+    public static BlockChurchAltar churchAltar;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
@@ -61,8 +63,9 @@ public class ModBlocks {
         altarPillar = registerBlock(new BlockAltarPillar());
         altarTip = registerBlock(new BlockAltarTip());
         hunterTable = registerBlock(new BlockHunterTable());
-        medChair = registerBlock(new BlockMedChair());
-
+        medChair = registerBlock(new BlockMedChair(), null);
+        garlic = registerBlock(new BlockGarlic(), null);
+        churchAltar = registerBlock(new BlockChurchAltar());
 
     }
 
@@ -73,7 +76,7 @@ public class ModBlocks {
         GameRegistry.addRecipe(new ItemStack(castleBlock, 1, 0), "XXX", "XYX", "XXX", 'X', Blocks.stonebrick, 'Y', new ItemStack(vampirismFlower, 1, VampirismFlower.EnumFlowerType.ORCHID.getMeta()));
         GameRegistry.addShapelessRecipe(new ItemStack(castleBlock, 8, 1), castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, new ItemStack(Items.dye, 1, 0));
         GameRegistry.addRecipe(new ItemStack(hunterTable), "XY ", "ZZZ", "Z Z", 'X', ModItems.vampireFang, 'Y', Items.book, 'Z', Blocks.planks);//TODO maybe replace fangs with garlic
-
+        GameRegistry.addRecipe(new ItemStack(medChair), "XYX", "XXX", "XZX", 'X', Items.iron_ingot, 'Y', Blocks.wool, 'Z', Items.glass_bottle);
     }
 
     private static <T extends Block> T registerBlock(T block) {

@@ -1,14 +1,12 @@
 package de.teamlapen.vampirism.world.gen.village;
 
+import de.teamlapen.vampirism.blocks.BlockGarlic;
 import de.teamlapen.vampirism.blocks.BlockHunterTable;
 import de.teamlapen.vampirism.blocks.BlockMedChair;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainer;
-import net.minecraft.block.BlockChest;
-import net.minecraft.block.BlockOldLog;
-import net.minecraft.block.BlockPlanks;
-import net.minecraft.block.BlockTorch;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItemFrame;
@@ -165,10 +163,33 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
             worldIn.spawnEntityInWorld(itemFrame);
         }
 
-        //this.setBlockState(worldIn,Blocks.ite.getDefaultState(),1,2,-1,structureBoundingBoxIn);
+        //Place garlic plants
+        int garlic_age_count = BlockGarlic.AGE.getAllowedValues().size();
+        this.setBlockState(worldIn, Blocks.water.getDefaultState(), 1, -1, 6, structureBoundingBoxIn);
+        this.setBlockState(worldIn, Blocks.farmland.getDefaultState(), 1, -1, 7, structureBoundingBoxIn);
+        this.setBlockState(worldIn, ModBlocks.garlic.getDefaultState().withProperty(BlockGarlic.AGE, randomIn.nextInt(garlic_age_count)), 1, 0, 7, structureBoundingBoxIn);
+        this.setBlockState(worldIn, Blocks.farmland.getDefaultState(), 1, -1, 8, structureBoundingBoxIn);
+        this.setBlockState(worldIn, ModBlocks.garlic.getDefaultState().withProperty(BlockGarlic.AGE, randomIn.nextInt(garlic_age_count)), 1, 0, 8, structureBoundingBoxIn);
+        this.setBlockState(worldIn, Blocks.farmland.getDefaultState(), 1, -1, 9, structureBoundingBoxIn);
+        this.setBlockState(worldIn, ModBlocks.garlic.getDefaultState().withProperty(BlockGarlic.AGE, randomIn.nextInt(garlic_age_count)), 1, 0, 9, structureBoundingBoxIn);
+        this.setBlockState(worldIn, Blocks.oak_fence.getDefaultState(), 0, 0, 6, structureBoundingBoxIn);
+        this.setBlockState(worldIn, Blocks.oak_fence.getDefaultState(), 0, 0, 7, structureBoundingBoxIn);
+        this.setBlockState(worldIn, Blocks.oak_fence.getDefaultState(), 0, 0, 8, structureBoundingBoxIn);
+        this.setBlockState(worldIn, Blocks.oak_fence.getDefaultState(), 0, 0, 10, structureBoundingBoxIn);
+        this.setBlockState(worldIn, Blocks.oak_fence.getDefaultState(), 1, 0, 10, structureBoundingBoxIn);
+        this.setBlockState(worldIn, Blocks.oak_fence_gate.getDefaultState().withProperty(BlockFenceGate.FACING, coordBaseMode.rotateY()), 0, 0, 9, structureBoundingBoxIn);
+
+        for (int x = 0; x < 2; x++) {
+            for (int z = 6; z < 11; z++) {
+                this.clearCurrentPositionBlocksUpwards(worldIn, x, 7, z, structureBoundingBoxIn);
+                this.replaceAirAndLiquidDownwards(worldIn, Blocks.cobblestone.getDefaultState(), x, -2, z, structureBoundingBoxIn);
+            }
+        }
+
         if (this.getBlockStateFromPos(worldIn, 2, 0, -1, structureBoundingBoxIn).getBlock().getMaterial() == Material.air && this.getBlockStateFromPos(worldIn, 2, -1, -1, structureBoundingBoxIn).getBlock().getMaterial() != Material.air) {
             this.setBlockState(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 3)), 2, 0, -1, structureBoundingBoxIn);
         }
+
 
         for (int k2 = 0; k2 < 5; ++k2) {
             for (int i3 = 0; i3 < 9; ++i3) {

@@ -43,8 +43,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
     private int screenColor = 0;
     private int screenPercentage = 0;
     private boolean fullScreen = false;
-    private int renderRedTick = 0;
-    private int rederRedOn, renderRedOff;
+    private int renderFullTick = 0;
+    private int rederFullOn, renderFullOff, renderFullColor;
 
     public VampirismHUDOverlay(Minecraft mc) {
         this.mc = mc;
@@ -67,23 +67,27 @@ public class VampirismHUDOverlay extends ExtendedGui {
         } else {
             screenPercentage = 0;
         }
-        if (renderRedTick > 0) {
-            screenColor = 0xffff0000;
+        if (renderFullTick > 0) {
+            screenColor = renderFullColor;
             fullScreen = true;
-            if (renderRedTick > renderRedOff) {
-                screenPercentage = (int) (100 * (1 - (renderRedTick - renderRedOff) / (float) rederRedOn));
+            if (renderFullTick > renderFullOff) {
+                screenPercentage = (int) (100 * (1 - (renderFullTick - renderFullOff) / (float) rederFullOn));
             } else {
-                screenPercentage = (int) (100 * renderRedTick / (float) renderRedOff);
+                screenPercentage = (int) (100 * renderFullTick / (float) renderFullOff);
             }
-            renderRedTick--;
+            renderFullTick--;
         }
 
     }
 
-    public void makeRenderRed(int on, int off) {
-        this.rederRedOn = on;
-        this.renderRedOff = off;
-        this.renderRedTick = on + off;
+    public void makeRenderFullColor(int on, int off, int color) {
+        this.rederFullOn = on;
+        this.renderFullOff = off;
+        this.renderFullTick = on + off;
+        if ((color >> 24 & 255) == 0) {
+            color |= 0xFF000000;
+        }
+        this.renderFullColor = color;
     }
 
     @SubscribeEvent
@@ -207,7 +211,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 float r = (float) (screenColor >> 16 & 255) / 255.0F;
                 float g = (float) (screenColor >> 8 & 255) / 255.0F;
                 float b = (float) (screenColor & 255) / 255.0F;
-                float a = screenPercentage / 100f;
+                float a = (screenPercentage / 100f) * (screenColor >> 24 & 255) / 255F;
 
                 GlStateManager.disableTexture2D();
                 GlStateManager.enableBlend();

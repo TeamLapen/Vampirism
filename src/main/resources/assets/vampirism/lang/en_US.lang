@@ -188,6 +188,9 @@ tile.vampirism.hunterTable.name=Hunter Research Table
 #ITEMS
 item.vampirism.hunterIntel.name=Hunter Intel
 text.vampirism.for_level=for Level
+item.vampirism.injection.name=Syringe
+item.vampirism.injection.garlic.name=Garlic injection
+item.vampirism.injection.sanguinare.name=Sanguinare injection
 
 #ETC
 text.vampirism.vampire=Vampire
@@ -197,3 +200,5 @@ text.vampirism.hunters=Hunter
 text.vampirism.level_up=Level Up
 text.vampirism.can_only_be_used_by=This can only be used by %s players
 text.vampirism.can_only_be_used_by_level=This can only be used by %s players of level %s or higher
+text.vampirism.med_chair_other_faction=You cannot become a Hunter since you already are a %s
+text.vampirism.need_item_to_use=You need %s to use this
