@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.world.gen.village.VillagePieceModChurch;
 import de.teamlapen.vampirism.world.gen.village.VillagePieceTrainer;
 import net.minecraft.world.gen.MapGenBase;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
@@ -30,11 +31,12 @@ public class ModVillages {
 
     private static void registerPieces() {
         MapGenStructureIO.registerStructureComponent(VillagePieceTrainer.class, "Vampirism-TR");
-
+        MapGenStructureIO.registerStructureComponent(VillagePieceModChurch.class, "Vampirism-MC");
     }
 
     private static void registerCreationHandlers() {
         VillagerRegistry.instance().registerVillageCreationHandler(new VillagePieceTrainer.CreationHandler());
+        VillagerRegistry.instance().registerVillageCreationHandler(new VillagePieceModChurch.CreationHandler());
     }
 
     public static void modifyVillageSize(MapGenBase mapGenVillage) {
