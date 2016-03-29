@@ -102,7 +102,7 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public void renderScreenRed(int ticksOn, int ticksOff) {
-        if (overlay != null) overlay.makeRenderRed(ticksOn, ticksOff);
+    public void renderScreenFullColor(int ticksOn, int ticksOff, int color) {
+        if (overlay != null) overlay.makeRenderFullColor(ticksOn, ticksOff, color);
     }
 }

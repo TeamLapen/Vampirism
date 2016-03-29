@@ -17,6 +17,7 @@ public abstract class CommonProxy implements IProxy {
         ModBlocks.onInitStep(step, event);
         ModItems.onInitStep(step, event);
         ModBiomes.onInitStep(step, event);
+        ModVillages.onInitStep(step, event);
         ModEntities.onInitStep(step, event);
     }
 

@@ -49,6 +49,7 @@ public class ModBlocksRender {
         renderHelper.registerRender(ModBlocks.cursedEarth);
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.hunterTable), EnumFacing.HORIZONTALS);
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.vampirismFlower), VampirismFlower.EnumFlowerType.values());
+        renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.churchAltar), EnumFacing.HORIZONTALS);
         ModelBakery.registerItemVariants(Item.getItemFromBlock(ModBlocks.fluidBlood));
         ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(ModBlocks.fluidBlood), new ItemMeshDefinition() {
             @Override

@@ -99,7 +99,7 @@ public class ModEntities {
         for (int i = 0; i < zombieBiomes.length; i++) {
             BiomeGenBase b = zombieBiomes[i];
             if (b != null) {
-                if (!b.getBiomeClass().getName().startsWith("net.minecraft.")) {
+                if (!b.getBiomeClass().getName().startsWith("net.minecraft.") && !b.getBiomeClass().getName().startsWith("de.teamlapen.")) {
                     Iterator<BiomeGenBase.SpawnListEntry> iterator = b.getSpawnableList(EnumCreatureType.MONSTER).iterator();
                     boolean zombie = false;
                     while (iterator.hasNext()) {
@@ -109,7 +109,7 @@ public class ModEntities {
                         }
                     }
                     if (!zombie) {
-                        VampirismMod.log.d("EntitySpawn", "In biome %s no vampire will spawn", b);
+                        VampirismMod.log.d("ModEntities", "In biome %s no vampire will spawn", b);
                         zombieBiomes[i] = null;
                     }
                 }

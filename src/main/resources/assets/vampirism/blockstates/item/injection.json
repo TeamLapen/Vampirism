@@ -1,0 +1,26 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "builtin/generated",
+    "transform": "forge:default-item"
+  },
+  "variants": {
+    "type": {
+      "meta_0": {
+        "textures": {
+          "layer0": "vampirism:items/injection"
+        }
+      },
+      "meta_1": {
+        "textures": {
+          "layer0": "vampirism:items/injection_garlic"
+        }
+      },
+      "meta_2": {
+        "textures": {
+          "layer0": "vampirism:items/injection_sanguinare"
+        }
+      }
+    }
+  }
+}

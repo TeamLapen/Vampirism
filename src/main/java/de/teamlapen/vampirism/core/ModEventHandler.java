@@ -7,7 +7,9 @@ import de.teamlapen.vampirism.potion.FakeNightVisionPotion;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.terraingen.InitMapGenEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
@@ -22,6 +24,16 @@ public class ModEventHandler {
             VampirismMod.log.i(TAG, "Configuration (%s) changed", e.configID);
             Configs.onConfigurationChanged();
             Balance.onConfigurationChanged();
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void onInitMapGen(InitMapGenEvent event) {
+        if (event.type.equals(InitMapGenEvent.EventType.VILLAGE) && Configs.village_modify) {
+            if (event.newGen != event.originalGen) {
+                VampirismMod.log.w("VillageGen", "The village map generator was overwritten by another mod. There might be a problem! \n The new generator class is " + event.newGen.getClass().getCanonicalName());
+            }
+            ModVillages.modifyVillageSize(event.newGen);
         }
     }
 
