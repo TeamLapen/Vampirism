@@ -63,6 +63,25 @@ public class BalanceMobProps extends BalanceValues {
     @DefaultDouble(value = 1.0, minValue = 0.0, maxValue = 1000, name = "vampire_mob_sun_damage")
     public double VAMPIRE_MOB_SUN_DAMAGE;
 
+
+    @DefaultDouble(value = 160.0D, minValue = 20.0D, maxValue = 300.0D, comment = "")
+    public double VAMPIRE_BARON_MAX_HEALTH;
+    @DefaultDouble(value = 7.0D, minValue = 1.0D, maxValue = 14.0D, comment = "")
+    public double VAMPIRE_BARON_ATTACK_DAMAGE;
+    @DefaultDouble(value = 0.35D, minValue = 0.1D, maxValue = 0.6D, comment = "")
+    public double VAMPIRE_BARON_MOVEMENT_SPEED;
+    @DefaultDouble(value = 1.27D, minValue = 1.0D, maxValue = 2.0D, comment = "For each higher level the stats are multiplied with this factor")
+    public double VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL;
+
+    @DefaultDouble(value = 20.0D, minValue = 5.0D, maxValue = 200.0D, name = "Vampire Minion Max Health", comment = "")
+    public double VAMPIRE_MINION_MAX_HEALTH;
+    @DefaultDouble(value = 6.0D, minValue = 1.5D, maxValue = 20.0D, name = "Vampire Minion Attack Damage", comment = "")
+    public double VAMPIRE_MINION_ATTACK_DAMAGE;
+    @DefaultDouble(value = 0.25D, minValue = 0.1D, maxValue = 0.5D, name = "Vampire Minion Movement Speed", comment = "")
+    public double VAMPIRE_MINION_MOVEMENT_SPEED;
+    @DefaultInt(value = 5, minValue = -1, name = "Vampire Minion Regenerate Seconds", comment = "Regenerate 1 heart every n seconds. -1 to disable")
+    public int VAMPIRE_MINION_REGENERATE_SECS;
+
     public BalanceMobProps(File directory) {
         super("mob_prop", directory);
     }

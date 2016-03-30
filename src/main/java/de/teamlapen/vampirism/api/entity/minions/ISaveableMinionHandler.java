@@ -16,7 +16,7 @@ public interface ISaveableMinionHandler<T extends ISaveableMinion> {
     void checkMinions();
 
     /**
-     * Returns a predicate which only accepts EntityLivingBases which are not minions of this lord
+     * Returns a predicate which only accepts EntityLivingBases which are not minions of this lord or the lord itself
      *
      * @return
      */
@@ -37,12 +37,7 @@ public interface ISaveableMinionHandler<T extends ISaveableMinion> {
      */
     void killMinions(boolean instant);
 
-    /**
-     * Notifies all minions about the given call
-     *
-     * @param call
-     */
-    void notifyCall(ISaveableMinion.Call call);
+
 
     /**
      * Registers a minion to be saved
@@ -55,4 +50,9 @@ public interface ISaveableMinionHandler<T extends ISaveableMinion> {
     void teleportMinionsToLord();
 
     void unregisterMinion(T m);
+
+    /**
+     * Spawn the loaded (from NBT) minions to the lords world
+     */
+    void addLoadedMinions();
 }

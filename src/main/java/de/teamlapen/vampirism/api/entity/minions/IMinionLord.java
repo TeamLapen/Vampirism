@@ -21,8 +21,6 @@ public interface IMinionLord<T extends IMinion> {
      */
     int getMaxMinionCount();
 
-    ISaveableMinionHandler<? extends T> getMinionHandler();
-
     /**
      * @return The target the lord's minions should attack, can be null
      */

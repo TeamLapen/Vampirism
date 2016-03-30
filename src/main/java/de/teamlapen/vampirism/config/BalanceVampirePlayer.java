@@ -40,10 +40,10 @@ public class BalanceVampirePlayer extends BalanceValues {
 //    public int JUMP_LCAP;
 //    @DefaultDouble(value = 0.5D, minValue = 0.1D, maxValue = 1.0D, name = "Jump Type", comment = "")
 //    public double JUMP_TYPE;
-    @DefaultDouble(value = 1.0D, name = "blood_exhaustion_basic_modifier", minValue = 0, maxValue = 5, comment = "Blood exhaustion is multiplied with this value")
+    @DefaultDouble(value = 0.7D, name = "blood_exhaustion_basic_modifier", minValue = 0, maxValue = 5, comment = "Blood exhaustion is multiplied with this value")
     public double BLOOD_EXHAUSTION_BASIC_MOD;
-    @DefaultBoolean(value = true, name = "blood_increase_exhaustion", comment = "Increase exhaustion modifier with higher levels")
-    public boolean BLOOD_INCREASE_EXHAUSTION;
+    //    @DefaultBoolean(value = true, name = "blood_increase_exhaustion", comment = "Increase exhaustion modifier with higher levels")
+//    public boolean BLOOD_INCREASE_EXHAUSTION;
     @DefaultInt(value = 6, name = "bite_damage", minValue = 0)
     public int BITE_DMG;
     @DefaultInt(value = 15, name = "bite_cooldown", minValue = 1, comment = "Cooldown for vampire player bites in ticks")

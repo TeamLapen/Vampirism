@@ -20,9 +20,9 @@ import net.minecraft.world.World;
  */
 public abstract class EntityVampireBase extends EntityVampirism implements IVampireMob {
     private final boolean countAsMonster;
+    protected EnumGarlicStrength garlicResist = EnumGarlicStrength.NONE;
     private boolean sundamageCache;
     private EnumGarlicStrength garlicCache = EnumGarlicStrength.NONE;
-    private EnumGarlicStrength garlicResist = EnumGarlicStrength.NONE;
 
 
     public EntityVampireBase(World world, boolean countAsMonster) {

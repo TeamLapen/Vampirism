@@ -30,6 +30,8 @@ public class ItemBloodBottle extends VampirismItem implements IFluidContainerIte
      */
     public ItemBloodBottle() {
         super(name);
+        this.setMaxStackSize(1);
+        this.setHasSubtypes(true);
     }
 
     @Override
@@ -87,20 +89,24 @@ public class ItemBloodBottle extends VampirismItem implements IFluidContainerIte
     public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn) {
         if (!worldIn.isRemote && itemStackIn != null) {
             VampirePlayer vampire = VampirePlayer.get(playerIn);
-            if (playerIn.isSneaking()) {//Remove blood from bar
-                int playerBlood = vampire.getBloodLevel();
-                if (playerBlood > 0) {
-                    int i = fill(itemStackIn, new FluidStack(ModFluids.blood, VReference.FOOD_TO_FLUID_BLOOD), true);
-                    if (i > 0) {
-                        vampire.getBloodStats().consumeBlood(1);
-                    }
-                }
-            } else {//Fill blood bar
-                if (vampire.getBloodStats().needsBlood()) {
-                    if (drain(itemStackIn, VReference.FOOD_TO_FLUID_BLOOD, true) != null) {
-                        vampire.getBloodStats().addBlood(1, 0);
-                    }
-                }
+//            Cannot drain blood from the bar anymore
+//            if (playerIn.isSneaking()) {//Remove blood from bar
+//                int playerBlood = vampire.getBloodLevel();
+//                if (playerBlood > 0) {
+//                    int i = fill(itemStackIn, new FluidStack(ModFluids.blood, VReference.FOOD_TO_FLUID_BLOOD), true);
+//                    if (i > 0) {
+//                        vampire.getBloodStats().consumeBlood(1);
+//                    }
+//                }
+//            } else {//Fill blood bar
+//                if (vampire.getBloodStats().needsBlood()) {
+//                    if (drain(itemStackIn, VReference.FOOD_TO_FLUID_BLOOD, true) != null) {
+//                        vampire.getBloodStats().addBlood(1, 0);
+//                    }
+//                }
+//            }
+            if (drain(itemStackIn, VReference.FOOD_TO_FLUID_BLOOD, true) != null) {
+                vampire.getBloodStats().addBlood(1, 0);
             }
         }
         return itemStackIn;

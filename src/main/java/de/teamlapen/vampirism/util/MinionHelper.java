@@ -1,10 +1,12 @@
 package de.teamlapen.vampirism.util;
 
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.minions.IMinion;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.*;
@@ -158,16 +160,19 @@ public class MinionHelper {
 
     /**
      * Simply casts the given minion to EntityLivingBase.
-     * Throws an illegal state exception if the minion does not extend {@link EntityLivingBase} to inform the modder about that mistake
+     * Throws an illegal state exception if the minion does not extend {@link EntityCreature} to inform the modder about that mistake
      *
      * @param minion
      * @return
      */
-    public static EntityLivingBase entity(@Nonnull IMinion minion) {
-        if (minion instanceof EntityLivingBase) {
-            return (EntityLivingBase) minion;
+    public static EntityCreature entity(@Nonnull IMinion minion) {
+        try {
+            return (EntityCreature) minion;
+        } catch (ClassCastException e) {
+            VampirismMod.log.e("Minion", "All classes that implement IMinion have to extend EntityCreature. %s does not. This is a implementation fault.", minion.getClass());
+            throw e;
         }
 
-        throw new IllegalStateException("All classes that implement IMinion, have to extend EntityLivingBase. " + minion + " does not.");
+
     }
 }

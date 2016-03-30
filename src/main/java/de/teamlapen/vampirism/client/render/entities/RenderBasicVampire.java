@@ -9,7 +9,7 @@ import net.minecraft.util.ResourceLocation;
 
 public class RenderBasicVampire extends RenderBiped<EntityBasicVampire> {
 
-    private final ResourceLocation[] textures = {
+    private static final ResourceLocation[] textures = {
             new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire.png"),
             new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire1.png"),
             new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire2.png"),
@@ -21,8 +21,12 @@ public class RenderBasicVampire extends RenderBiped<EntityBasicVampire> {
         super(renderManagerIn, new ModelBiped(), 0.5F);
     }
 
+    public static ResourceLocation getVampireTexture(int entityId) {
+        return textures[entityId % textures.length];
+    }
+
     @Override
     protected ResourceLocation getEntityTexture(EntityBasicVampire entity) {
-        return textures[entity.getEntityId() % textures.length];
+        return getVampireTexture(entity.getEntityId());
     }
 }

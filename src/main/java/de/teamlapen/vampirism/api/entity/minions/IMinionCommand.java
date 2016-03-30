@@ -1,8 +1,12 @@
 package de.teamlapen.vampirism.api.entity.minions;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * Interface for minion commands, which can be executed by {@link IMinion}
@@ -36,4 +40,34 @@ public interface IMinionCommand {
      * @return
      */
     boolean shouldPickupItem(@Nonnull ItemStack item);
+
+    /**
+     * @return An id, which is unique for each command of a minion
+     */
+    int getId();
+
+    /**
+     * Should return the location of the icon map where the icon is in
+     *
+     * @return null to use vampirism's default one
+     */
+    @SideOnly(Side.CLIENT)
+    @Nullable
+    ResourceLocation getIconLoc();
+
+    /**
+     * Should return the min U texture coordinate within the icon map
+     *
+     * @return
+     */
+    @SideOnly(Side.CLIENT)
+    int getMinU();
+
+    /**
+     * Should return the min V texture coordinate within the icon map
+     *
+     * @return
+     */
+    @SideOnly(Side.CLIENT)
+    int getMinV();
 }

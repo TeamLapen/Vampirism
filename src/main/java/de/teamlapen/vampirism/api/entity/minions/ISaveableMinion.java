@@ -1,10 +1,18 @@
 package de.teamlapen.vampirism.api.entity.minions;
 
+import java.util.List;
+
 /**
  * {@link IMinion} that is saved in the lord's nbt tag, and is always related to the minion
  */
 public interface ISaveableMinion extends IMinion {
-    enum Call {
-        DEFEND_LORD, ATTACK_NON_PLAYER, ATTACK, FOLLOW
-    }
+
+    /**
+     * Return a list that contains all commands that can be triggered remotely
+     * Can be the same as {@link #getAvailableCommands(IMinionLord)}
+     *
+     * @param lord
+     * @return
+     */
+    List<IMinionCommand> getAvailableRemoteCommands(IMinionLord lord);
 }

@@ -35,7 +35,6 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter 
         getDataWatcher().addObject(ID_LEVEL, -1);
         datawatcher_init = true;
         saveHome = true;
-        hasArms = true;
         ((PathNavigateGround) this.getNavigator()).setEnterDoors(true);
 
         this.setSize(0.6F, 1.8F);
