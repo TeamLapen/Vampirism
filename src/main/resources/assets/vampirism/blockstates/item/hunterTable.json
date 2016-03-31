@@ -1,0 +1,21 @@
+{
+  //TODO fix item display rotation
+  "forge_marker": 1,
+  "defaults": {
+    "model": "vampirism:hunterTable",
+    "y": 180,
+    "transform": "forge:default-block"
+  },
+  "variants": {
+    "type": {
+      "north": {
+      },
+      "east": {
+      },
+      "south": {
+      },
+      "west": {
+      }
+    }
+  }
+}

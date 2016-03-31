@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
-import de.teamlapen.lib.lib.gui.client.GuiPieMenu;
+import de.teamlapen.lib.lib.client.gui.GuiPieMenu;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;

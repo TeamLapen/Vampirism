@@ -13,10 +13,12 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.actions.ActionHandler;
 import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.inventory.HunterTrainerContainer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.DamageSource;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -32,6 +34,8 @@ public class InputEventPacket implements IMessage {
     public static String TOGGLEACTION = "ta";
     public static String UNLOCKSKILL = "us";
     public static String RESETSKILL = "rs";
+    public static String TRAINERLEVELUP = "tl";
+    public static String REVERTBACK = "rb";
     private final String SPLIT = "-";
     private String param;
     private String action;
@@ -157,6 +161,16 @@ public class InputEventPacket implements IMessage {
                 } else {
                     VampirismMod.log.e(TAG, "Player %s is in no faction, so he cannot reset skills");
                 }
+            } else if (message.action.equals(TRAINERLEVELUP)) {
+                if (player.openContainer instanceof HunterTrainerContainer) {
+                    ((HunterTrainerContainer) player.openContainer).onLevelupClicked();
+                }
+            } else if (message.action.equals(REVERTBACK)) {
+
+                FactionPlayerHandler.get(player).setFactionAndLevel(null, 0);
+                VampirismMod.log.d(TAG, "Player %s left faction", player);
+                player.attackEntityFrom(DamageSource.magic, 1000);
+
             }
             return null;
         }

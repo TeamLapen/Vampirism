@@ -80,7 +80,9 @@ public class VampirismMod {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        MinecraftForge.EVENT_BUS.register(new ModEventHandler());
+        ModEventHandler eventHandler = new ModEventHandler();
+        MinecraftForge.EVENT_BUS.register(eventHandler);
+        MinecraftForge.TERRAIN_GEN_BUS.register(eventHandler);
 
         MinecraftForge.EVENT_BUS.register(new ModPlayerEventHandler());
 

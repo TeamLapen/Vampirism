@@ -71,7 +71,7 @@ text.vampirism.skill.cooldown_not_over=Please wait until the cooldown is over
 text.vampirism.entity_level=Level
 text.vampirism.ritual_missing_times=You are missing items for this ritual
 text.vampirism.ritual_structure_wrong=The structure is wrong for this ritual
-text.vampirism.ritual_level_wrong=You cannot use this altar at this level
+text.vampirism.ritual_level_wrong=You cannot use this at your level
 text.vampirism.ritual_still_running=The ritual is still running
 text.vampirism.not_enough_blood=There is not enough blood in the altar
 text.vampirism.ritual_requirements_not_met=Not all requirements for this ritual were met
@@ -176,12 +176,29 @@ text.vampirism.skill.less_garlicdamage=Reduce garlic damage
 text.vampirism.skill.less_sundamage=Reduce sun damage
 text.vampirism.skill.night_vision=Night Vision
 
+#ENTITIES
+entity.vampirism.hunter_trainer.name=Vampire Hunter Trainer
 
+#RITUALS
+text.vampirism.ritual_missing_items=Missing %s of "%s" for this ritual
+text.vampirism.trainer_level_wrong=This trainer cannot train you at this level
+
+#BLOCKS
+tile.vampirism.hunterTable.name=Hunter Research Table
+#ITEMS
+item.vampirism.hunterIntel.name=Hunter Intel
+text.vampirism.for_level=for Level
+item.vampirism.injection.name=Syringe
+item.vampirism.injection.garlic.name=Garlic injection
+item.vampirism.injection.sanguinare.name=Sanguinare injection
 
 #ETC
 text.vampirism.vampire=Vampire
 text.vampirism.vampires=Vampires
 text.vampirism.hunter=Hunter
 text.vampirism.hunters=Hunter
+text.vampirism.level_up=Level Up
 text.vampirism.can_only_be_used_by=This can only be used by %s players
 text.vampirism.can_only_be_used_by_level=This can only be used by %s players of level %s or higher
+text.vampirism.med_chair_other_faction=You cannot become a Hunter since you already are a %s
+text.vampirism.need_item_to_use=You need %s to use this

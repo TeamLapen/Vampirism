@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.lib.item.ItemMetaBlock;
+import de.teamlapen.lib.lib.item.ItemMetaBlock;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.BlockBush;
@@ -71,21 +71,20 @@ public class VampirismFlower extends BlockBush implements ItemMetaBlock.IMetaIte
             }
         }
 
+        private final int meta;
+        private final String name;
+        private final String unlocalizedName;
+        EnumFlowerType(int meta, String name, String unlocalizedName) {
+            this.meta = meta;
+            this.name = name;
+            this.unlocalizedName = unlocalizedName;
+        }
+
         public static EnumFlowerType getType(int meta) {
             if (meta >= TYPE_FOR_META.length) {
                 meta = 0;
             }
             return TYPE_FOR_META[meta];
-        }
-
-        private final int meta;
-        private final String name;
-        private final String unlocalizedName;
-
-        EnumFlowerType(int meta, String name, String unlocalizedName) {
-            this.meta = meta;
-            this.name = name;
-            this.unlocalizedName = unlocalizedName;
         }
 
         public int getMeta() {

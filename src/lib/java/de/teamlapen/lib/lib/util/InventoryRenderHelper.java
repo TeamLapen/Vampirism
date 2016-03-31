@@ -110,6 +110,16 @@ public class InventoryRenderHelper {
 
     /**
      * {@link InventoryRenderHelper#registerRender(Item, int, String, String)} with registry name for every variant.
+     * All metas use the same state
+     */
+    public void registerRenderAllMeta(Item item, int meta_count, String state) {
+        for (int i = 0; i < meta_count; i++) {
+            registerRender(item, i, state);
+        }
+    }
+
+    /**
+     * {@link InventoryRenderHelper#registerRender(Item, int, String, String)} with registry name for every variant.
      * each variant represents one meta value
      */
     public void registerRenderAllMeta(Item item, IStringSerializable[] variants){

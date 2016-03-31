@@ -12,7 +12,11 @@ import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedSheep;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
+import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainer;
+import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionSaveable;
 import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
+import de.teamlapen.vampirism.entity.vampire.EntityDummyBittenAnimal;
+import de.teamlapen.vampirism.entity.vampire.EntityVampireBaron;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -48,6 +52,7 @@ public class ModEntities {
     public static final String CONVERTED_CREATURE = "vampirism.converted.creature";
     public static final String CONVERTED_VILLAGER = "vampirism.converted.villager";
     public static final String CONVERTED_SHEEP = "vampirism.converted.sheep";
+    public static final String HUNTER_TRAINER = "vampirism.hunter_trainer";
 
     /**
      * List of entity names which should be spawnable
@@ -97,7 +102,7 @@ public class ModEntities {
         for (int i = 0; i < zombieBiomes.length; i++) {
             BiomeGenBase b = zombieBiomes[i];
             if (b != null) {
-                if (!b.getBiomeClass().getName().startsWith("net.minecraft.")) {
+                if (!b.getBiomeClass().getName().startsWith("net.minecraft.") && !b.getBiomeClass().getName().startsWith("de.teamlapen.")) {
                     Iterator<BiomeGenBase.SpawnListEntry> iterator = b.getSpawnableList(EnumCreatureType.MONSTER).iterator();
                     boolean zombie = false;
                     while (iterator.hasNext()) {
@@ -107,7 +112,7 @@ public class ModEntities {
                         }
                     }
                     if (!zombie) {
-                        VampirismMod.log.d("EntitySpawn", "In biome %s no vampire will spawn", b);
+                        VampirismMod.log.d("ModEntities", "In biome %s no vampire will spawn", b);
                         zombieBiomes[i] = null;
                     }
                 }
@@ -122,6 +127,10 @@ public class ModEntities {
         registerEntity(EntityConvertedSheep.class, CONVERTED_SHEEP, false);
         registerEntity(EntityBasicHunter.class, BASIC_HUNTER_NAME, true);
         registerEntity(EntityBasicVampire.class, BASIC_VAMPIRE_NAME, Balance.mobProps.VAMPIRE_SPAWN_PROBE, 1, 3, EnumCreatureType.MONSTER, zombieBiomes);
+        registerEntity(EntityHunterTrainer.class, HUNTER_TRAINER, true);
+        registerEntity(EntityVampireBaron.class, VAMPIRE_BARON, true);
+        registerEntity(EntityVampireMinionSaveable.class, VAMPIRE_MINION_SAVEABLE_NAME, false);
+        registerEntity(EntityDummyBittenAnimal.class, DUMMY_CREATURE, false);
         registerConvertibles();
     }
 

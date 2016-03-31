@@ -20,9 +20,9 @@ import net.minecraft.world.World;
  */
 public abstract class EntityVampireBase extends EntityVampirism implements IVampireMob {
     private final boolean countAsMonster;
+    protected EnumGarlicStrength garlicResist = EnumGarlicStrength.NONE;
     private boolean sundamageCache;
     private EnumGarlicStrength garlicCache = EnumGarlicStrength.NONE;
-    private EnumGarlicStrength garlicResist = EnumGarlicStrength.NONE;
 
 
     public EntityVampireBase(World world, boolean countAsMonster) {
@@ -48,6 +48,9 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     public boolean getCanSpawnHere() {
         if (isGettingSundamage(true)) return false;
         if (isGettingGarlicDamage(true) != EnumGarlicStrength.NONE) return false;
+        if (worldObj.getVillageCollection().getNearestVillage(getPosition(), 10) != null) {
+            return getRNG().nextInt(5) == 0 && super.getCanSpawnHere();
+        }
         return super.getCanSpawnHere();
     }
 

@@ -4,6 +4,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+
 /**
  * Skill that can be unlocked
  */
@@ -20,6 +22,7 @@ public interface ISkill<T extends ISkillPlayer> {
      * @return null to use vampirism's default one
      */
     @SideOnly(Side.CLIENT)
+    @Nullable
     ResourceLocation getIconLoc();
 
     /**

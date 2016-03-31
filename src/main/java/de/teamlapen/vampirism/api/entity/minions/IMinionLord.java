@@ -7,8 +7,9 @@ import java.util.UUID;
 
 /**
  * Interface for classes that can control minions. E.g. VampirePlayer
+ * @param <T> Interface that all minions of this lord implement. Can be {@link IMinion}
  */
-public interface IMinionLord {
+public interface IMinionLord<T extends IMinion> {
 
     /**
      * @return The absolute worldtime when the lord send the last comeback call
@@ -19,8 +20,6 @@ public interface IMinionLord {
      * @return The maximum amount of minion the lord can control
      */
     int getMaxMinionCount();
-
-    //SaveableMinionHandler getMinionHandler();
 
     /**
      * @return The target the lord's minions should attack, can be null

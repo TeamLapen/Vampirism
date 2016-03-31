@@ -6,6 +6,8 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
+import de.teamlapen.vampirism.entity.vampire.EntityDummyBittenAnimal;
+import de.teamlapen.vampirism.entity.vampire.EntityVampireBaron;
 import net.minecraft.block.BlockOldLeaf;
 import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.BlockPlanks;
@@ -25,8 +27,9 @@ public class BiomeGenVampireForest extends BiomeGenBase {
         this.spawnableCaveCreatureList.clear();
         this.spawnableMonsterList.add(new SpawnListEntry(EntityGhost.class, 2, 1, 1));
         this.spawnableMonsterList.add(new SpawnListEntry(EntityBasicVampire.class, 6, 1, 3));
+        this.spawnableMonsterList.add(new SpawnListEntry(EntityVampireBaron.class, 1, 1, 1));
         this.spawnableCaveCreatureList.add(new SpawnListEntry(EntityBlindingBat.class, 8, 2, 4));
-        //TODO this.spawnableCreatureList.add(new SpawnListEntry(EntityDummyBittenEntity));
+        this.spawnableCreatureList.add(new SpawnListEntry(EntityDummyBittenAnimal.class, 15, 3, 6));
 
         this.topBlock = ModBlocks.cursedEarth.getDefaultState();
         this.fillerBlock = ModBlocks.cursedEarth.getDefaultState();

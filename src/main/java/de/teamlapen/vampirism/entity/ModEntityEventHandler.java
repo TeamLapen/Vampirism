@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
+import de.teamlapen.vampirism.api.entity.minions.IMinionLordWithSaveable;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
@@ -32,8 +33,8 @@ public class ModEntityEventHandler {
     @SubscribeEvent
     public void onEntityAttacked(LivingAttackEvent event) {
         //Probably not a very "clean" solution, but the only one I found
-        if (!skipAttackDamageOnce && "player".equals(event.source.getDamageType()) && event.entity instanceof EntityPlayer) {
-            ItemStack stack = ((EntityPlayer) event.entity).getCurrentEquippedItem();
+        if (!skipAttackDamageOnce && "player".equals(event.source.getDamageType()) && event.source.getEntity() instanceof EntityPlayer) {
+            ItemStack stack = ((EntityPlayer) event.source.getEntity()).getCurrentEquippedItem();
             if (stack != null && stack.getItem() instanceof IFactionSlayerItem) {
                 IFactionSlayerItem item = (IFactionSlayerItem) stack.getItem();
                 IFaction faction = null;
@@ -85,6 +86,9 @@ public class ModEntityEventHandler {
                     return VampirePlayer.get(input).getSpecialAttributes().avoided_by_creepers;
                 }
             }, 6, 1, 1.2));
+        }
+        if (event.entity instanceof IMinionLordWithSaveable) {
+            ((IMinionLordWithSaveable) event.entity).getSaveableMinionHandler().addLoadedMinions();
         }
     }
 

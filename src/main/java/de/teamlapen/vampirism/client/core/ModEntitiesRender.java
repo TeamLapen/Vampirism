@@ -1,15 +1,15 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
-import de.teamlapen.vampirism.client.render.entities.RenderBasicHunter;
-import de.teamlapen.vampirism.client.render.entities.RenderBasicVampire;
-import de.teamlapen.vampirism.client.render.entities.RenderConvertedCreature;
-import de.teamlapen.vampirism.client.render.entities.RenderGhost;
+import de.teamlapen.vampirism.client.render.entities.*;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
+import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainer;
+import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionBase;
 import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
+import de.teamlapen.vampirism.entity.vampire.EntityVampireBaron;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderBat;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -64,6 +64,24 @@ public class ModEntitiesRender {
             @Override
             public Render<? super EntityBasicVampire> createRenderFor(RenderManager manager) {
                 return new RenderBasicVampire(manager);
+            }
+        });
+        RenderingRegistry.registerEntityRenderingHandler(EntityHunterTrainer.class, new IRenderFactory<EntityHunterTrainer>() {
+            @Override
+            public Render<? super EntityHunterTrainer> createRenderFor(RenderManager manager) {
+                return new RenderHunterTrainer(manager);
+            }
+        });
+        RenderingRegistry.registerEntityRenderingHandler(EntityVampireBaron.class, new IRenderFactory<EntityVampireBaron>() {
+            @Override
+            public Render<? super EntityVampireBaron> createRenderFor(RenderManager manager) {
+                return new RenderVampireBaron(manager);
+            }
+        });
+        RenderingRegistry.registerEntityRenderingHandler(EntityVampireMinionBase.class, new IRenderFactory<EntityVampireMinionBase>() {
+            @Override
+            public Render<? super EntityVampireMinionBase> createRenderFor(RenderManager manager) {
+                return new RenderVampireMinion(manager);
             }
         });
     }

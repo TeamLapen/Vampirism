@@ -17,7 +17,7 @@ As a vampire you don't need to eat all that dry bread or eat these strange fruit
 [Help to translate](https://crowdin.com/project/vampirism)
 
 ## Team [![Join the chat at https://gitter.im/TeamLapen/Vampirism](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TeamLapen/Vampirism?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)  
-- maxanier _Code_  
+- maxanier _Code/Models_  
 
 #### Inactive 
 - Mistadon _Code/Models_  
@@ -38,6 +38,44 @@ Located in de.teamlapen.lib
 Independent mod (Contains @Mod).  
 Provides Helpers and Registries to automate stuff like EntityUpdates.
 Provides abstract classes/default implementations/interfaces to simplify things (located under de.teamlapen.lib.lib).  
+
+## Setting up the development environment
+If you would like to compile your own versions or even contribute to Vampirism's development you need to setup a dev environment.
+The following instructions will setup a multi module setup for IntelliJ (Free community edition or Non-Free Ultimate edition). If you already have a setup or want to use another IDE, jump [here](#setting-up-vampirism-in-another-environment).
+
+#### Preperations
+1. Make sure you have the Java **JDK** (minimum Java 7) as well as the IntelliJ IDE installed.
+2. If you want to contribute to the development (via pull requests), fork Vampirism on Github.
+3. (Optionally) Install Git, so you can clone the repository and push changes.
+4. Create a folder for all Minecraft related development files.
+5. Create two folders ("Forge","Run") inside.
+6. Download the recommend Forge MDK [here](http://files.minecraftforge.net/) and extract the content to the "Forge" folder.
+7. Clone (`git clone https://github.com/TeamLapen/Vampirism`) or [download](https://github.com/TeamLapen/Vampirism/archive/master.zip) Vampirism to a new "Vampirism" folder next to the "Forge" one.
+
+You should have a build.gradle along other files in the "Forge" as well as in the "Vampirism" folder now
+
+#### Import
+1. Open a console windows inside the "Forge" folder (on windows use shift-right click and select "Open in console")
+2. Run `gradlew.bat setupDecompWorkspace ideaModule` on Windows or `./gradlew setupDecompWorkspace ideaModule` on Linux
+3. Do the same thing inside the "Vampirism" folder
+4. Open IntelliJ and create an empty project in the top folder you've created
+5. Open "Project Structure", modules and import the `Forge.iml` in the "Forge" folder as well as the `Vampirism.iml` in the "Vampirism" folder. Make sure that src/main/java and src/lib/java are marked as source folders and /src/main/resources and src/lib/resources are marked as resource folders. Make sure you choose Java 7 as language level.
+6. Select the Vampirism module, open the dependency tab and add Forge as module dependency.
+
+You should have Vampirism's code in the project now and no errors should be displayed
+#### Run configurations
+1. Click `Run->Edit Configurations` and create a new one.
+2. Set it up like [this](http://picload.org/image/wpoaicg/run_config.png) use the second folder "Run" you've created as working directory. It will store your world and configs etc.
+3. If you want run a server use GradleStartServer instead of GradleStart
+
+That's it.
+
+#### Setting up Vampirism in another environment
+If you would like to setup Vampirism in another way or another IDE, you should pay regard to the following points.
+1. Make sure `src/main/java` and `src/lib/java` are marked as source folders and `src/main/resources` and `src/lib/resources` are marked as resource folders.
+2. Vampirism might have a few dependencies (e.g. Waila), which are specified in the gradle files and should be automatically downloaded and added when you run `ideaModule` or `eclipse`.
+3. Vampirism requires at least Java 7
+
 
 ## Licence 
 This mod is licenced under [LGPLv3](https://raw.githubusercontent.com/TeamLapen/Vampirism/master/LICENCE)

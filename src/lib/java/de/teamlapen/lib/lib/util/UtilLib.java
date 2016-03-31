@@ -212,6 +212,22 @@ public class UtilLib {
         }
     }
 
+    public static void spawnParticlesAroundEntity(EntityLivingBase e, EnumParticleTypes particleType, double maxDistance, int amount) {
+
+
+        short short1 = (short) amount;
+        for (int l = 0; l < short1; ++l) {
+            double d6 = l / (short1 - 1.0D) - 0.5D;
+            float f = (e.getRNG().nextFloat() - 0.5F) * 0.2F;
+            float f1 = (e.getRNG().nextFloat() - 0.5F) * 0.2F;
+            float f2 = (e.getRNG().nextFloat() - 0.5F) * 0.2F;
+            double d7 = e.posX + (maxDistance) * d6 + (e.getRNG().nextDouble() - 0.5D) * e.width * 2.0D;
+            double d8 = e.posY + (maxDistance / 2) * d6 + e.getRNG().nextDouble() * e.height;
+            double d9 = e.posZ + (maxDistance) * d6 + (e.getRNG().nextDouble() - 0.5D) * e.width * 2.0D;
+            e.worldObj.spawnParticle(particleType, d7, d8, d9, f, f1, f2);
+        }
+    }
+
     /**
      * Sends the component message to all players except the given one.
      * Only use on server or common side
@@ -356,7 +372,7 @@ public class UtilLib {
                 if (cz % 2 == 0) continue;
                 loc = isBiomeAt(world, center.getX() + (cx << 4), center.getZ() + (cz << 4), biomes);
                 if (loc != null) {
-                    VampLib.log.d("UtilLib", "Took %d ms to find a vampire biome", (int) (System.currentTimeMillis() - start), loc.chunkXPos, loc.chunkZPos);
+                    VampLib.log.d("UtilLib", "Took %d ms to find a vampire biome %d %d", (int) (System.currentTimeMillis() - start), loc.chunkXPos, loc.chunkZPos);
                     return loc;
                 }
                 if (cz == i && cx < 0) {
@@ -369,7 +385,7 @@ public class UtilLib {
                 if (cx2 % 2 == 0) continue;
                 loc = isBiomeAt(world, center.getX() + (cx2 << 4), center.getZ() + (cz << 4), biomes);
                 if (loc != null) {
-                    VampLib.log.d("UtilLib", "Took %d ms to find a vampire biome", (int) (System.currentTimeMillis() - start), loc.chunkXPos, loc.chunkZPos);
+                    VampLib.log.d("UtilLib", "Took %d ms to find a vampire biome %d %d", (int) (System.currentTimeMillis() - start), loc.chunkXPos, loc.chunkZPos);
                     return loc;
                 }
                 if (cx == i - 1 && cz < 0) {

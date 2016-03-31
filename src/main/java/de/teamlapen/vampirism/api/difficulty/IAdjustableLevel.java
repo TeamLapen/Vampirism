@@ -26,7 +26,7 @@ public interface IAdjustableLevel {
 
     /**
      * Calculate a (random) level under consideration of the given difficulty
-     * If result is <0 the entity is not spawned
+     * If result is smaller than zero the entity is not spawned
      *
      * @param d
      * @return Can be over max level. Will be capped.
