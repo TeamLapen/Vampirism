@@ -82,7 +82,7 @@ public class SkillRegistry implements ISkillRegistry {
 
                     @Override
                     public String getID() {
-                        return faction.prop() + "_dummy";
+                        return faction.getKey() + "_dummy";
                     }
 
                     @Override

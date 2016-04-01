@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 
 /**
  * Handles factions and levels for the player
+ * Attached to all players as capability
  */
 public interface IFactionPlayerHandler {
 

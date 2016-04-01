@@ -41,15 +41,15 @@ public class HelperLib {
     }
 
     /**
-     * Syncs the extended properties.
+     * Syncs the given capability instance.
      * If the entity is a player and "all" is false it will only be send to the respective player
      * Otherwise it will we send to all players tracking the entity radius using the given data
      *
      * @param entity
      */
-    public static void sync(ISyncable.ISyncableExtendedProperties prop, Entity entity, boolean all) {
+    public static void sync(ISyncable.ISyncableEntityCapabilityInst cap, Entity entity, boolean all) {
         if (!entity.worldObj.isRemote) {
-            IMessage m = UpdateEntityPacket.create(prop);
+            IMessage m = UpdateEntityPacket.create(cap);
             if (entity instanceof EntityPlayerMP && !all) {
                 VampLib.dispatcher.sendTo(m, (EntityPlayerMP) entity);
             } else {
@@ -60,15 +60,15 @@ public class HelperLib {
     }
 
     /**
-     * Syncs the extended properties using the given data.
+     * Syncs the given capability instance using the given data.
      * If the entity is a player and "all" is false it will only be send to the respective player
      * Otherwise it will we send to all players tracking this entity using the given data
      *
      * @param entity
      */
-    public static void sync(ISyncable.ISyncableExtendedProperties prop, NBTTagCompound data, Entity entity, boolean all) {
+    public static void sync(ISyncable.ISyncableEntityCapabilityInst cap, NBTTagCompound data, Entity entity, boolean all) {
         if (!entity.worldObj.isRemote) {
-            IMessage m = UpdateEntityPacket.create(prop, data);
+            IMessage m = UpdateEntityPacket.create(cap, data);
             if (entity instanceof EntityPlayerMP && !all) {
                 VampLib.dispatcher.sendTo(m, (EntityPlayerMP) entity);
             } else {

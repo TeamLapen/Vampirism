@@ -8,7 +8,8 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import net.minecraft.entity.EntityLivingBase;
 
 /**
- * Interface for the player vampire data
+ * Interface for the player vampire data.
+ * Attached to all players as capability
  */
 public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>, IMinionLord, IBiteableEntity {
 

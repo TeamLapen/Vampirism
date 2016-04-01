@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.entity.factions;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.capabilities.Capability;
 
 /**
  * Represents one playable faction (e.g. Vampire Player)
@@ -10,13 +12,15 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class PlayableFaction<T extends IFactionPlayer> extends Faction<T> implements IPlayableFaction<T> {
     private final int highestLevel;
-    private final String playerProp;
+    private final Capability<T> playerCapability;
+    private final ResourceLocation key;
     private boolean renderLevel = true;
 
-    PlayableFaction(String name, Class<T> entityInterface, int color, String playerProp, int highestLevel) {
+    PlayableFaction(String name, Class<T> entityInterface, int color, ResourceLocation key, Capability<T> playerCapability, int highestLevel) {
         super(name, entityInterface, color);
         this.highestLevel = highestLevel;
-        this.playerProp = playerProp;
+        this.playerCapability = playerCapability;
+        this.key = key;
     }
 
     @Override
@@ -25,13 +29,13 @@ public class PlayableFaction<T extends IFactionPlayer> extends Faction<T> implem
     }
 
     @Override
-    public T getPlayerProp(EntityPlayer player) {
-        return (T) player.getExtendedProperties(prop());
+    public ResourceLocation getKey() {
+        return key;
     }
 
     @Override
-    public String prop() {
-        return playerProp;
+    public T getPlayerCapability(EntityPlayer player) {
+        return player.getCapability(playerCapability, null);
     }
 
     @Override
@@ -48,7 +52,7 @@ public class PlayableFaction<T extends IFactionPlayer> extends Faction<T> implem
     @Override
     public String toString() {
         return "PlayableFaction{" +
-                "playerProp='" + playerProp + '\'' +
+                "playerCapability='" + playerCapability + '\'' +
                 "name='" + name + '\'' +
                 '}';
     }

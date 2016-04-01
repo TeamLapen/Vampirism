@@ -35,20 +35,20 @@ package de.teamlapen.lib.network;
 //            Entity entity = player.worldObj.getEntityByID(message.id);
 //            VampLib.log.t("4 %s (%d) %s",entity,message.id,player);
 //            if(entity!=null){
-//                List<ISyncable.ISyncableExtendedProperties> props=null;
+//                List<ISyncable.ISyncableEntityCapabilityInst> props=null;
 //                String[] keys=null;
 //                if(entity instanceof EntityLiving){
-//                    keys=HelperRegistry.getSyncableEntityProperties();
+//                    keys=HelperRegistry.getSyncableEntityCaps();
 //                }
 //                else if(entity instanceof EntityPlayer){
-//                    keys=HelperRegistry.getSyncablePlayerProperties();
+//                    keys=HelperRegistry.getSyncablePlayerCaps();
 //
 //                }
 //                VampLib.log.t("5 %s",keys);
 //                if(keys!=null&&keys.length>0){
 //                    props=new ArrayList<>();
 //                    for(String prop: keys){
-//                        ISyncable.ISyncableExtendedProperties p= (ISyncable.ISyncableExtendedProperties) entity.getExtendedProperties(prop);
+//                        ISyncable.ISyncableEntityCapabilityInst p= (ISyncable.ISyncableEntityCapabilityInst) entity.getExtendedProperties(prop);
 //                        VampLib.log.t("Got prop %s for key %s in entity %s",p,prop,entity);
 //                        if(p!=null){
 //                            props.add(p);
@@ -58,11 +58,11 @@ package de.teamlapen.lib.network;
 //                if(props!=null){
 //                    VampLib.log.t("6");
 //                    if(entity instanceof ISyncable){
-//                        return UpdateEntityPacket.create((EntityLiving) entity,props.toArray(new ISyncable.ISyncableExtendedProperties[props.size()]));
+//                        return UpdateEntityPacket.create((EntityLiving) entity,props.toArray(new ISyncable.ISyncableEntityCapabilityInst[props.size()]));
 //                    }
 //                    else{
 //                        VampLib.log.t("Creating update packet for player %s (%s)",entity,props);
-//                        return UpdateEntityPacket.create(props.toArray(new ISyncable.ISyncableExtendedProperties[props.size()]));
+//                        return UpdateEntityPacket.create(props.toArray(new ISyncable.ISyncableEntityCapabilityInst[props.size()]));
 //                    }
 //                }
 //                else if(entity instanceof ISyncable){
@@ -92,7 +92,7 @@ package de.teamlapen.lib.network;
 //
 //    /**
 //     * Request a entity update.
-//     * Only has a result if the entity implements ISyncable or there is a {@link de.teamlapen.lib.lib.network.ISyncable.ISyncableExtendedProperties} registered in the HelperRegistry
+//     * Only has a result if the entity implements ISyncable or there is a {@link de.teamlapen.lib.lib.network.ISyncable.ISyncableEntityCapabilityInst} registered in the HelperRegistry
 //     *
 //     * @param entity
 //     */

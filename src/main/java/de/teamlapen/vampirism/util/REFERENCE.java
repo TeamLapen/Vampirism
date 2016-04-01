@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.util;
 
+import net.minecraft.util.ResourceLocation;
+
 /**
  * Class to store constants and stuff
  */
@@ -22,4 +24,9 @@ public class REFERENCE {
      * Check for vampire sundamage every n ticks
      */
     public final static int REFRESH_SUNDAMAGE_TICKS = 8;
+
+    public final static ResourceLocation FACTION_PLAYER_HANDLER_KEY = new ResourceLocation(MODID, "IFactionPlayerHandler");
+    public final static ResourceLocation VAMPIRE_PLAYER_KEY = new ResourceLocation(MODID, "IVampirePlayer");
+    public final static ResourceLocation HUNTER_PLAYER_KEY = new ResourceLocation(MODID, "IHunterPlayer");
+    public final static ResourceLocation EXTENDED_CREATURE_KEY = new ResourceLocation(MODID, "IExtendedCreature");
 }

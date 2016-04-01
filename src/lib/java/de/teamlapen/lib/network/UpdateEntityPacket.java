@@ -7,82 +7,87 @@ import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
 import de.teamlapen.lib.lib.network.ISyncable;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
- * Do Entity or IExtendedEntityProperty Update
+ * Does Entity or Entity capability updates.
+ * Entity capabilities that want to use this, have to be registered in {@link HelperRegistry}
  */
 public class UpdateEntityPacket implements IMessage {
 
     private final static String TAG = "UpdateEntityPacket";
 
     /**
-     * Create a sync packet for the given property.
+     * Create a sync packet for the given capability instance.
      *
-     * @param prop
+     * @param cap
      * @return
      */
-    public static UpdateEntityPacket create(ISyncable.ISyncableExtendedProperties prop) {
+    public static UpdateEntityPacket create(ISyncable.ISyncableEntityCapabilityInst cap) {
         NBTTagCompound data = new NBTTagCompound();
-        prop.writeFullUpdateToNBT(data);
-        return create(prop, data);
+        cap.writeFullUpdateToNBT(data);
+        return create(cap, data);
     }
 
     /**
-     * Create one sync packet for the given syncable entity containing firstly the data from it's {@link ISyncable} implementations and secondly all given properties
+     * Create one sync packet for the given syncable entity containing firstly the data from it's {@link ISyncable} implementations and secondly all given capability instances
      *
      * @param entity EntityLiving which implements ISyncable
-     * @param props  Have to belong to the given entity
+     * @param caps  Have to belong to the given entity
      * @return
      */
-    public static UpdateEntityPacket create(EntityLiving entity, ISyncable.ISyncableExtendedProperties... props) {
+    public static UpdateEntityPacket create(EntityLiving entity, ISyncable.ISyncableEntityCapabilityInst... caps) {
         if (!(entity instanceof ISyncable)) {
             throw new IllegalArgumentException("You cannot use this packet to sync this entity. The entity has to implement ISyncable");
         }
-        UpdateEntityPacket packet = create(props);
+        UpdateEntityPacket packet = create(caps);
         packet.data = new NBTTagCompound();
         ((ISyncable) entity).writeFullUpdateToNBT(packet.data);
         return packet;
     }
 
     /**
-     * Create one sync packet for all given properties.
+     * Create one sync packet for all given capability instances.
      *
-     * @param props Have to belong to the same entity
+     * @param caps Have to belong to the same entity
      * @return
      */
-    public static UpdateEntityPacket create(ISyncable.ISyncableExtendedProperties... props) {
+    public static UpdateEntityPacket create(ISyncable.ISyncableEntityCapabilityInst... caps) {
         UpdateEntityPacket packet = new UpdateEntityPacket();
-        packet.id = props[0].getTheEntityID();
-        packet.props = new NBTTagCompound();
-        for (int i = 0; i < props.length; i++) {
+        packet.id = caps[0].getTheEntityID();
+        packet.caps = new NBTTagCompound();
+        for (int i = 0; i < caps.length; i++) {
             NBTTagCompound data = new NBTTagCompound();
-            props[i].writeFullUpdateToNBT(data);
-            packet.props.setTag(props[i].getPropertyKey(), data);
+            caps[i].writeFullUpdateToNBT(data);
+            packet.caps.setTag(caps[i].getCapKey().toString(), data);
         }
         return packet;
     }
 
     /**
-     * Create a sync packet for the given property containing the given data
+     * Create a sync packet for the given capability instance containing the given data
      *
-     * @param prop
-     * @param data Should be loadable by the property
+     * @param cap
+     * @param data Should be loadable by the capability instance
      * @return
      */
-    public static UpdateEntityPacket create(ISyncable.ISyncableExtendedProperties prop, NBTTagCompound data) {
+    public static UpdateEntityPacket create(ISyncable.ISyncableEntityCapabilityInst cap, NBTTagCompound data) {
         UpdateEntityPacket packet = new UpdateEntityPacket();
-        packet.id = prop.getTheEntityID();
-        packet.props = new NBTTagCompound();
-        packet.props.setTag(prop.getPropertyKey(), data);
+        packet.id = cap.getTheEntityID();
+        packet.caps = new NBTTagCompound();
+        packet.caps.setTag(cap.getCapKey().toString(), data);
         return packet;
     }
 
@@ -121,28 +126,28 @@ public class UpdateEntityPacket implements IMessage {
     }
 
     public static UpdateEntityPacket createJoinWorldPacket(Entity entity) {
-        List<ISyncable.ISyncableExtendedProperties> props = null;
-        String[] keys = null;
-        if (entity instanceof EntityLiving) {
-            keys = HelperRegistry.getSyncableEntityProperties();
+        List<ISyncable.ISyncableEntityCapabilityInst> capsToSync = null;
+        Collection<Capability> allCaps = null;
+        if (entity instanceof EntityCreature) {
+            allCaps = HelperRegistry.getSyncableEntityCaps().values();
         } else if (entity instanceof EntityPlayer) {
-            keys = HelperRegistry.getSyncablePlayerProperties();
+            allCaps = HelperRegistry.getSyncablePlayerCaps().values();
 
         }
-        if (keys != null && keys.length > 0) {
-            props = new ArrayList<>();
-            for (String prop : keys) {
-                ISyncable.ISyncableExtendedProperties p = (ISyncable.ISyncableExtendedProperties) entity.getExtendedProperties(prop);
+        if (allCaps != null && allCaps.size() > 0) {
+            capsToSync = new ArrayList<>();
+            for (Capability cap : allCaps) {
+                ISyncable.ISyncableEntityCapabilityInst p = (ISyncable.ISyncableEntityCapabilityInst) entity.getCapability(cap, null);
                 if (p != null) {
-                    props.add(p);
+                    capsToSync.add(p);
                 }
             }
         }
-        if (props != null) {
+        if (capsToSync != null) {
             if (entity instanceof ISyncable) {
-                return UpdateEntityPacket.create((EntityLiving) entity, props.toArray(new ISyncable.ISyncableExtendedProperties[props.size()]));
+                return UpdateEntityPacket.create((EntityLiving) entity, capsToSync.toArray(new ISyncable.ISyncableEntityCapabilityInst[capsToSync.size()]));
             } else {
-                return UpdateEntityPacket.create(props.toArray(new ISyncable.ISyncableExtendedProperties[props.size()]));
+                return UpdateEntityPacket.create(capsToSync.toArray(new ISyncable.ISyncableEntityCapabilityInst[capsToSync.size()]));
             }
         } else if (entity instanceof ISyncable) {
             return UpdateEntityPacket.create(entity);
@@ -156,7 +161,7 @@ public class UpdateEntityPacket implements IMessage {
 
     private int id;
     private NBTTagCompound data;
-    private NBTTagCompound props;
+    private NBTTagCompound caps;
 
     /**
      * Dont use
@@ -172,8 +177,8 @@ public class UpdateEntityPacket implements IMessage {
         if (tag.hasKey("data")) {
             data = tag.getCompoundTag("data");
         }
-        if (tag.hasKey("props")) {
-            props = tag.getCompoundTag("props");
+        if (tag.hasKey("caps")) {
+            caps = tag.getCompoundTag("caps");
         }
     }
 
@@ -184,8 +189,8 @@ public class UpdateEntityPacket implements IMessage {
         if (data != null) {
             tag.setTag("data", data);
         }
-        if (props != null) {
-            tag.setTag("props", props);
+        if (caps != null) {
+            tag.setTag("caps", caps);
         }
         ByteBufUtils.writeTag(buf, tag);
     }
@@ -194,7 +199,8 @@ public class UpdateEntityPacket implements IMessage {
 
         @Override
         public IMessage handleClientMessage(EntityPlayer player, UpdateEntityPacket message, MessageContext ctx) {
-            VampLib.log.t("Received %s %s %s", player, message.data, message.props);
+            if (player.getRNG().nextInt(10) == 0)
+                VampLib.log.t("Received %s %s %s", message.id, message.data, message.caps);//Log a few random message, just to see if everything is alright. TODO Remove later
             if (player.worldObj == null) {
                 VampLib.log.w(TAG, "World not loaded yet");
                 return null;
@@ -216,10 +222,10 @@ public class UpdateEntityPacket implements IMessage {
                 }
                 syncable.loadUpdateFromNBT(message.data);
             }
-            if (message.props != null) {
+            if (message.caps != null) {
 
-                for (String key : message.props.getKeySet()) {
-                    handleProperty(e, key, message.props.getCompoundTag(key));
+                for (String key : message.caps.getKeySet()) {
+                    handleCapability(e, new ResourceLocation(key), message.caps.getCompoundTag(key));
                 }
 
 
@@ -242,16 +248,24 @@ public class UpdateEntityPacket implements IMessage {
             return true;
         }
 
-        private void handleProperty(Entity e, String prop, NBTTagCompound data) {
+        private void handleCapability(Entity e, ResourceLocation key, NBTTagCompound data) {
             ISyncable syncable;
+            Capability cap = HelperRegistry.getSyncableEntityCaps().get(key);
+            if (cap == null && e instanceof EntityPlayer) {
+                cap = HelperRegistry.getSyncablePlayerCaps().get(key);
+            }
+            if (cap == null) {
+                VampLib.log.w(TAG, "Capability with key %s is not registered in the HelperRegistry", key);
+            }
             try {
-                syncable = (ISyncable) e.getExtendedProperties(prop);
+
+                syncable = (ISyncable) e.getCapability(cap, null);
             } catch (ClassCastException ex) {
-                VampLib.log.w(TAG, "Target entity's property %s does not implement ISyncable (%s)", e.getExtendedProperties(prop), ex);
+                VampLib.log.w(TAG, "Target entity's capability %s (%s)does not implement ISyncable (%s)", e.getCapability(cap, null), cap, ex);
                 return;
             }
             if (syncable == null) {
-                VampLib.log.w(TAG, "Target entity %s does not have property %s", e, prop);
+                VampLib.log.w(TAG, "Target entity %s does not have capability %s", e, cap);
             } else {
                 syncable.loadUpdateFromNBT(data);
             }

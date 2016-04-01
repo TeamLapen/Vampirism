@@ -36,13 +36,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.FoodStats;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
+import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -51,6 +50,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IVampirePlayer {
 
+    @CapabilityInject(IVampirePlayer.class)
+    public static final Capability<IVampirePlayer> CAP = null;
     private final static String TAG = "VampirePlayer";
 
     /**
@@ -60,12 +61,41 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * @return
      */
     public static VampirePlayer get(EntityPlayer player) {
-        return (VampirePlayer) VReference.VAMPIRE_FACTION.getPlayerProp(player);
+        return (VampirePlayer) player.getCapability(CAP, null);
     }
 
-    public static void register(EntityPlayer player) {
-        player.registerExtendedProperties(VReference.VAMPIRE_FACTION.prop(), new VampirePlayer(player));
+
+    public static void registerCapability() {
+        CapabilityManager.INSTANCE.register(IVampirePlayer.class, new Storage(), VampirePlayerDefaultImpl.class);
     }
+
+    public static ICapabilityProvider createNewCapability(final EntityPlayer player) {
+        return new ICapabilitySerializable<NBTTagCompound>() {
+
+            IVampirePlayer inst = new VampirePlayer(player);
+
+            @Override
+            public void deserializeNBT(NBTTagCompound nbt) {
+                CAP.getStorage().readNBT(CAP, inst, null, nbt);
+            }
+
+            @Override
+            public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+                return capability == CAP ? (T) (inst) : null;//TODO switch to something like SLEEP_CAP.<T>cast(inst) in 1.9
+            }
+
+            @Override
+            public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+                return capability == CAP;
+            }
+
+            @Override
+            public NBTTagCompound serializeNBT() {
+                return (NBTTagCompound) CAP.getStorage().writeNBT(CAP, inst, null);
+            }
+        };
+    }
+
     private final BloodStats bloodStats;
     private final String KEY_EYE = "eye_type";
     private final String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
@@ -176,6 +206,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return bloodStats;
     }
 
+    @Override
+    public ResourceLocation getCapKey() {
+        return REFERENCE.VAMPIRE_PLAYER_KEY;
+    }
+
     /**
      * @return Eyetype for rendering
      */
@@ -198,10 +233,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     }
 
-    @Override
-    public String getPropertyKey() {
-        return VReference.VAMPIRE_FACTION.prop();
-    }
+
 
     @Override
     public ISkillHandler<IVampirePlayer> getSkillHandler() {
@@ -258,7 +290,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return false;
     }
 
-    @Override
     public void loadData(NBTTagCompound nbt) {
         bloodStats.readNBT(nbt);
         eyeType = nbt.getInteger(KEY_EYE);
@@ -452,7 +483,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
     }
 
-    @Override
     public void saveData(NBTTagCompound nbt) {
         bloodStats.writeNBT(nbt);
         nbt.setInteger(KEY_EYE, eyeType);
@@ -630,5 +660,19 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
         //Play bite sounds. Using this method since it is the only client side method. And this is called on every relevant client anyway
         player.worldObj.playSound(player.posX, player.posY, player.posZ, REFERENCE.MODID + ":player.bite", 1.0F, 1.0F, false);
+    }
+
+    private static class Storage implements net.minecraftforge.common.capabilities.Capability.IStorage<IVampirePlayer> {
+        @Override
+        public void readNBT(Capability<IVampirePlayer> capability, IVampirePlayer instance, EnumFacing side, NBTBase nbt) {
+            ((VampirePlayer) instance).loadData((NBTTagCompound) nbt);
+        }
+
+        @Override
+        public NBTBase writeNBT(Capability<IVampirePlayer> capability, IVampirePlayer instance, EnumFacing side) {
+            NBTTagCompound nbt = new NBTTagCompound();
+            ((VampirePlayer) instance).saveData(nbt);
+            return nbt;
+        }
     }
 }

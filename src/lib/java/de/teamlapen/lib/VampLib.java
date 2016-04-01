@@ -32,7 +32,7 @@ public class VampLib {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         HelperRegistry.finish();
-        MinecraftForge.EVENT_BUS.register(new EntityEventHandler(HelperRegistry.getEventListenerProps()));
+        MinecraftForge.EVENT_BUS.register(new EntityEventHandler(HelperRegistry.getEventListenerCaps()));
     }
 
     @Mod.EventHandler

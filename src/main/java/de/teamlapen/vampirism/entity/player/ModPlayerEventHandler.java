@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,7 +21,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -39,6 +40,15 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
  */
 public class ModPlayerEventHandler {
 
+
+    @SubscribeEvent
+    public void onAttachCapability(AttachCapabilitiesEvent.Entity event) {
+        if (event.getEntity() instanceof EntityPlayer) {
+            event.addCapability(REFERENCE.FACTION_PLAYER_HANDLER_KEY, FactionPlayerHandler.createNewCapability((EntityPlayer) event.getEntity()));
+            event.addCapability(REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.createNewCapability((EntityPlayer) event.getEntity()));
+            event.addCapability(REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.createNewCapability((EntityPlayer) event.getEntity()));
+        }
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onAttackEntity(AttackEntityEvent event) {
@@ -63,26 +73,6 @@ public class ModPlayerEventHandler {
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
         if (VampirePlayer.get(event.entityPlayer).getActionHandler().isActionActive(VampireActions.batAction)) {
             event.setCanceled(true);
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onEntityConstructing(EntityEvent.EntityConstructing event) {
-        if (event.entity instanceof EntityPlayer) {
-            /*
-            Register ExtendedProperties.
-            Could be done via factions, but that might be a little bit overkill for 2-5 factions and might cause trouble with addon mods.
-             */
-            if (FactionPlayerHandler.get((EntityPlayer) event.entity) == null) {
-                FactionPlayerHandler.register((EntityPlayer) event.entity);
-            }
-            if (VampirePlayer.get((EntityPlayer) event.entity) == null) {
-                VampirePlayer.register((EntityPlayer) event.entity);
-            }
-            if (HunterPlayer.get((EntityPlayer) event.entity) == null) {
-                HunterPlayer.register((EntityPlayer) event.entity);
-            }
-
         }
     }
 
