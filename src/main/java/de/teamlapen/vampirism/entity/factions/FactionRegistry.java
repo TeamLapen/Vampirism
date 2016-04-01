@@ -9,6 +9,8 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.capabilities.Capability;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -103,11 +105,11 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public <T extends IFactionPlayer> IPlayableFaction registerPlayableFaction(String name, Class<T> entityInterface, int color, String playerProp, int highestLevel) {
-        if (!UtilLib.isNonNull(name, entityInterface, playerProp)) {
+    public <T extends IFactionPlayer> IPlayableFaction registerPlayableFaction(String name, Class<T> entityInterface, int color, ResourceLocation key, Capability<T> playerCapabiltiy, int highestLevel) {
+        if (!UtilLib.isNonNull(name, entityInterface, playerCapabiltiy)) {
             throw new IllegalArgumentException("[Vampirism]Parameter for faction cannot be null");
         }
-        PlayableFaction<T> f = new PlayableFaction<>(name, entityInterface, color, playerProp, highestLevel);
+        PlayableFaction<T> f = new PlayableFaction<>(name, entityInterface, color, key, playerCapabiltiy, highestLevel);
         addFaction(f);
         return f;
     }

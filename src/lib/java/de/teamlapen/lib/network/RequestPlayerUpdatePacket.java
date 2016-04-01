@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 /**
- * Request a update packet for the players {@link ISyncable.ISyncableExtendedProperties} (e.g. on World join)
+ * Request a update packet for the players {@link ISyncable.ISyncableEntityCapabilityInst} (e.g. on World join)
  * TODO check if there is a better way to do this
  */
 public class RequestPlayerUpdatePacket implements IMessage {

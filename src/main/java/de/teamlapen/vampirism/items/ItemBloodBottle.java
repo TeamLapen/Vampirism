@@ -95,6 +95,7 @@ public class ItemBloodBottle extends VampirismItem implements IBloodContainerIte
     public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn) {
         if (!worldIn.isRemote && itemStackIn != null) {
             VampirePlayer vampire = VampirePlayer.get(playerIn);
+            if (vampire.getLevel() == 0) return itemStackIn;
 //            Cannot drain blood from the bar anymore
 //            if (playerIn.isSneaking()) {//Remove blood from bar
 //                int playerBlood = vampire.getBloodLevel();

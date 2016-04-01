@@ -3,36 +3,69 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.world.World;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.capabilities.*;
 
 /**
  * Extended entity property which every {@link EntityCreature} has
  */
-public class ExtendedCreature implements ISyncable.ISyncableExtendedProperties, IExtendedCreatureVampirism {
+public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst, IExtendedCreatureVampirism {
 
+    @CapabilityInject(IExtendedCreatureVampirism.class)
+    public static final Capability<IExtendedCreatureVampirism> CAP = null;
     private static final String TAG = "ExtendedCreature";
     private final static String KEY_BLOOD = "bloodLevel";
 
     public static ExtendedCreature get(EntityCreature mob) {
-        return (ExtendedCreature) mob.getExtendedProperties(VReference.EXTENDED_CREATURE_PROP);
+        return (ExtendedCreature) mob.getCapability(CAP, null);
     }
 
-    public static void register(EntityCreature mob) {
-        mob.registerExtendedProperties(VReference.EXTENDED_CREATURE_PROP, new ExtendedCreature(mob));
+
+    public static void registerCapability() {
+        CapabilityManager.INSTANCE.register(IExtendedCreatureVampirism.class, new Storage(), ExtendedCreatureDefaultImpl.class);
+    }
+
+    public static ICapabilityProvider createNewCapability(final EntityCreature creature) {
+        return new ICapabilitySerializable<NBTTagCompound>() {
+
+            IExtendedCreatureVampirism inst = new ExtendedCreature(creature);
+
+            @Override
+            public void deserializeNBT(NBTTagCompound nbt) {
+                CAP.getStorage().readNBT(CAP, inst, null, nbt);
+            }
+
+            @Override
+            public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+                return capability == CAP ? (T) (inst) : null;//TODO switch to something like SLEEP_CAP.<T>cast(inst) in 1.9
+            }
+
+            @Override
+            public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+                return capability == CAP;
+            }
+
+            @Override
+            public NBTTagCompound serializeNBT() {
+                return (NBTTagCompound) CAP.getStorage().writeNBT(CAP, inst, null);
+            }
+        };
     }
 
     private final EntityCreature entity;
@@ -87,6 +120,11 @@ public class ExtendedCreature implements ISyncable.ISyncableExtendedProperties, 
     }
 
     @Override
+    public ResourceLocation getCapKey() {
+        return REFERENCE.EXTENDED_CREATURE_KEY;
+    }
+
+    @Override
     public EntityCreature getEntity() {
         return entity;
     }
@@ -97,21 +135,11 @@ public class ExtendedCreature implements ISyncable.ISyncableExtendedProperties, 
     }
 
     @Override
-    public String getPropertyKey() {
-        return VReference.EXTENDED_CREATURE_PROP;
-    }
-
-    @Override
     public int getTheEntityID() {
         return entity.getEntityId();
     }
 
-    @Override
-    public void init(Entity entity, World world) {
 
-    }
-
-    @Override
     public void loadNBTData(NBTTagCompound compound) {
         if (compound.hasKey(KEY_BLOOD)) {
             setBlood(compound.getInteger(KEY_BLOOD));
@@ -185,7 +213,6 @@ public class ExtendedCreature implements ISyncable.ISyncableExtendedProperties, 
         }
     }
 
-    @Override
     public void saveNBTData(NBTTagCompound compound) {
         compound.setInteger(KEY_BLOOD, blood);
     }
@@ -207,5 +234,19 @@ public class ExtendedCreature implements ISyncable.ISyncableExtendedProperties, 
     private void sync(NBTTagCompound data) {
         HelperLib.sync(this, data, getEntity(), false);
 
+    }
+
+    private static class Storage implements Capability.IStorage<IExtendedCreatureVampirism> {
+        @Override
+        public void readNBT(Capability<IExtendedCreatureVampirism> capability, IExtendedCreatureVampirism instance, EnumFacing side, NBTBase nbt) {
+            ((ExtendedCreature) instance).loadNBTData((NBTTagCompound) nbt);
+        }
+
+        @Override
+        public NBTBase writeNBT(Capability<IExtendedCreatureVampirism> capability, IExtendedCreatureVampirism instance, EnumFacing side) {
+            NBTTagCompound nbt = new NBTTagCompound();
+            ((ExtendedCreature) instance).saveNBTData(nbt);
+            return nbt;
+        }
     }
 }

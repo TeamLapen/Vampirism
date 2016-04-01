@@ -3,29 +3,62 @@ package de.teamlapen.vampirism.entity.factions;
 import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
-import net.minecraft.entity.Entity;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.capabilities.*;
 
 /**
  * Extended entity property that handles factions and levels for the player
  */
-public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperties, IFactionPlayerHandler {
+public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapabilityInst, IFactionPlayerHandler {
+    @CapabilityInject(IFactionPlayerHandler.class)
+    public final static Capability<IFactionPlayerHandler> CAP = null;
     private final static String TAG = "FactionPlayerHandler";
 
     public static FactionPlayerHandler get(EntityPlayer player) {
-        return (FactionPlayerHandler) player.getExtendedProperties(VReference.FACTION_PLAYER_HANDLER_PROP);
+        return (FactionPlayerHandler) player.getCapability(CAP, null);
     }
 
-    public static void register(EntityPlayer player) {
-        player.registerExtendedProperties(VReference.FACTION_PLAYER_HANDLER_PROP, new FactionPlayerHandler(player));
+
+    public static void registerCapability() {
+        CapabilityManager.INSTANCE.register(IFactionPlayerHandler.class, new Storage(), FactionPlayerHandlerDefaultImpl.class);
     }
+
+    public static ICapabilityProvider createNewCapability(final EntityPlayer player) {
+        return new ICapabilitySerializable<NBTTagCompound>() {
+
+            IFactionPlayerHandler inst = new FactionPlayerHandler(player);
+
+            @Override
+            public void deserializeNBT(NBTTagCompound nbt) {
+                CAP.getStorage().readNBT(CAP, inst, null, nbt);
+            }
+
+            @Override
+            public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+                return capability == CAP ? (T) (inst) : null;//TODO switch to something like SLEEP_CAP.<T>cast(inst) in 1.9
+            }
+
+            @Override
+            public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+                return capability == CAP;
+            }
+
+            @Override
+            public NBTTagCompound serializeNBT() {
+                return (NBTTagCompound) CAP.getStorage().writeNBT(CAP, inst, null);
+            }
+        };
+    }
+
     private final EntityPlayer player;
     private IPlayableFaction currentFaction = null;
     private int currentLevel = 0;
@@ -42,7 +75,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
     @Override
     public boolean canLeaveFaction() {
         if (currentFaction == null) return true;
-        return currentFaction.getPlayerProp(player).canLeaveFaction();
+        return currentFaction.getPlayerCapability(player).canLeaveFaction();
     }
 
     public void copyFrom(EntityPlayer old) {
@@ -53,13 +86,18 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
     }
 
     @Override
+    public ResourceLocation getCapKey() {
+        return REFERENCE.FACTION_PLAYER_HANDLER_KEY;
+    }
+
+    @Override
     public IPlayableFaction getCurrentFaction() {
         return currentFaction;
     }
 
     @Override
     public IFactionPlayer getCurrentFactionPlayer() {
-        return currentFaction == null ? null : currentFaction.getPlayerProp(player);
+        return currentFaction == null ? null : currentFaction.getPlayerCapability(player);
     }
 
     @Override
@@ -73,19 +111,10 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
     }
 
     @Override
-    public String getPropertyKey() {
-        return VReference.FACTION_PLAYER_HANDLER_PROP;
-    }
-
-    @Override
     public int getTheEntityID() {
         return player.getEntityId();
     }
 
-    @Override
-    public void init(Entity entity, World world) {
-
-    }
 
     @Override
     public boolean isInFaction(IPlayableFaction f) {
@@ -99,11 +128,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
         }
     }
 
-    @Override
-    public void loadNBTData(NBTTagCompound compound) {
-        if (compound.hasKey(getPropertyKey())) {
-            NBTTagCompound nbt = compound.getCompoundTag(getPropertyKey());
-            currentFaction = getFactionFromString(nbt.getString("faction"));
+    public void loadNBTData(NBTTagCompound nbt) {
+
+        currentFaction = getFactionFromKey(new ResourceLocation(nbt.getString("faction")));
             if (currentFaction == null) {
                 VampirismMod.log.w(TAG, "Could not find faction %s. Did mods change?", nbt.getString("faction"));
             } else {
@@ -111,7 +138,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
                 notifyFaction(null, 0);
             }
 
-        }
+
     }
 
     @Override
@@ -123,7 +150,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
             currentFaction = null;
             currentLevel = 0;
         } else {
-            currentFaction = getFactionFromString(f);
+            currentFaction = getFactionFromKey(new ResourceLocation(f));
             if (currentFaction == null) {
                 VampirismMod.log.e(TAG, "Cannot find faction %s on client. You have to register factions on both sides!", f);
                 currentLevel = 0;
@@ -134,13 +161,11 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
         notifyFaction(old, oldLevel);
     }
 
-    @Override
-    public void saveNBTData(NBTTagCompound compound) {
+    public void saveNBTData(NBTTagCompound nbt) {
         if (currentFaction != null) {
-            NBTTagCompound nbt = new NBTTagCompound();
-            nbt.setString("faction", currentFaction.prop());
+
+            nbt.setString("faction", currentFaction.getKey().toString());
             nbt.setInteger("level", currentLevel);
-            compound.setTag(getPropertyKey(), nbt);
         }
     }
 
@@ -149,8 +174,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
         IPlayableFaction old = currentFaction;
         int oldLevel = currentLevel;
         if (currentFaction != null && (currentFaction != faction || level == 0)) {
-            if (!currentFaction.getPlayerProp(player).canLeaveFaction()) {
-                VampirismMod.log.i(TAG, "You cannot leave faction %s, it is prevented by respective mod", currentFaction.prop());
+            if (!currentFaction.getPlayerCapability(player).canLeaveFaction()) {
+                VampirismMod.log.i(TAG, "You cannot leave faction %s, it is prevented by respective mod", currentFaction.getKey());
                 return false;
             }
         }
@@ -159,7 +184,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
             currentLevel = 0;
         } else {
             if (level < 0 || level > faction.getHighestReachableLevel()) {
-                VampirismMod.log.w(TAG, "Level %d in faction %s cannot be reached", level, faction.prop());
+                VampirismMod.log.w(TAG, "Level %d in faction %s cannot be reached", level, faction.getKey());
                 return false;
             }
             currentFaction = faction;
@@ -184,13 +209,13 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
 
     @Override
     public void writeFullUpdateToNBT(NBTTagCompound nbt) {
-        nbt.setString("faction", currentFaction == null ? "null" : currentFaction.prop());
+        nbt.setString("faction", currentFaction == null ? "null" : currentFaction.getKey().toString());
         nbt.setInteger("level", currentLevel);
     }
 
-    private IPlayableFaction getFactionFromString(String f) {
+    private IPlayableFaction getFactionFromKey(ResourceLocation key) {
         for (IPlayableFaction p : VampirismAPI.factionRegistry().getPlayableFactions()) {
-            if (p.prop().equals(f)) {
+            if (p.getKey().equals(key)) {
                 return p;
             }
         }
@@ -206,12 +231,12 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
      */
     private void notifyFaction(IPlayableFaction oldFaction, int oldLevel) {
         if (oldFaction != currentFaction && oldFaction != null) {
-            VampirismMod.log.t("Leaving faction %s", oldFaction.prop());
-            oldFaction.getPlayerProp(player).onLevelChanged(0, oldLevel);
+            VampirismMod.log.t("Leaving faction %s", oldFaction.getKey());
+            oldFaction.getPlayerCapability(player).onLevelChanged(0, oldLevel);
         }
         if (currentFaction != null) {
             VampirismMod.log.t("Changing to %s %d", currentFaction, currentLevel);
-            currentFaction.getPlayerProp(player).onLevelChanged(currentLevel, oldFaction == currentFaction ? oldLevel : 0);
+            currentFaction.getPlayerCapability(player).onLevelChanged(currentLevel, oldFaction == currentFaction ? oldLevel : 0);
         }
         if (currentFaction != oldFaction) {
             onChangedFaction();
@@ -230,4 +255,18 @@ public class FactionPlayerHandler implements ISyncable.ISyncableExtendedProperti
     }
 
 
+    private static class Storage implements Capability.IStorage<IFactionPlayerHandler> {
+
+        @Override
+        public void readNBT(Capability<IFactionPlayerHandler> capability, IFactionPlayerHandler instance, EnumFacing side, NBTBase nbt) {
+            ((FactionPlayerHandler) instance).loadNBTData((NBTTagCompound) nbt);
+        }
+
+        @Override
+        public NBTBase writeNBT(Capability<IFactionPlayerHandler> capability, IFactionPlayerHandler instance, EnumFacing side) {
+            NBTTagCompound nbt = new NBTTagCompound();
+            ((FactionPlayerHandler) instance).saveNBTData(nbt);
+            return nbt;
+        }
+    }
 }

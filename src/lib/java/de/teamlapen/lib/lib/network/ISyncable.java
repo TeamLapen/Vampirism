@@ -1,7 +1,8 @@
 package de.teamlapen.lib.lib.network;
 
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraftforge.common.IExtendedEntityProperties;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -10,7 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public interface ISyncable {
     /**
-     * This method should load all included information. It might contain some or all synchable information.
+     * This method should load all included information. It might contain some or all syncable information.
      *
      * @param nbt
      */
@@ -23,13 +24,15 @@ public interface ISyncable {
     void writeFullUpdateToNBT(NBTTagCompound nbt);
 
 
-    interface ISyncableExtendedProperties extends IExtendedEntityProperties, ISyncable {
+    /**
+     * Interface for {@link Capability} implementations, which should be syncable
+     */
+    interface ISyncableEntityCapabilityInst extends ISyncable {
+
         /**
-         * Return the key which can be used to retrieve this property from the entity using {@link net.minecraft.entity.Entity#getExtendedProperties(String)}
-         *
-         * @return
+         * @return A unique location for this capability. Probably best to use the one it is registered with.
          */
-        String getPropertyKey();
+        ResourceLocation getCapKey();
 
         /**
          * Returns the entity id of the representing entity

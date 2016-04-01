@@ -1,10 +1,9 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
 import de.teamlapen.vampirism.api.entity.player.actions.IActionPlayer;
-import net.minecraftforge.common.IExtendedEntityProperties;
 
 /**
- * Interface for {@link IExtendedEntityProperties} which can unlock skills
+ * Interface for a player's capability which can unlock skills
  */
 public interface ISkillPlayer<T extends ISkillPlayer> extends IActionPlayer<T> {
     /**

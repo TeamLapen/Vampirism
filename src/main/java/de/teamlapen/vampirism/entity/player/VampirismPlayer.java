@@ -11,7 +11,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
 
 import java.util.UUID;
 
@@ -19,7 +18,7 @@ import java.util.UUID;
  * Basic class for all of Vampirism's players.
  * Implements basic methods for level or minion handling
  */
-public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFactionPlayer<T>, ISyncable.ISyncableExtendedProperties, IPlayerEventListener, IMinionLord {
+public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFactionPlayer<T>, ISyncable.ISyncableEntityCapabilityInst, IPlayerEventListener, IMinionLord {
 
 
     private static final String TAG = "VampirismPlayer";
@@ -81,10 +80,6 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
         return player.getUniqueID();
     }
 
-    @Override
-    public void init(Entity entity, World world) {
-
-    }
 
     @Override
     public boolean isRemote() {
@@ -100,15 +95,6 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
         return player.isEntityAlive();
     }
 
-    @Override
-    public final void loadNBTData(NBTTagCompound nbt) {
-        NBTTagCompound properties = nbt.getCompoundTag(getPropertyKey());
-        if (properties == null) {
-            VampirismMod.log.i(TAG, "VampirismPlayer(%s) data for %s cannot be loaded. It probably does not exist", this.getClass(), player);
-            return;
-        }
-        loadData(properties);
-    }
 
     @Override
     public final void loadUpdateFromNBT(NBTTagCompound nbt) {
@@ -120,12 +106,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
         copyFrom(original);
     }
 
-    @Override
-    public final void saveNBTData(NBTTagCompound nbt) {
-        NBTTagCompound properties = new NBTTagCompound();
-        saveData(properties);
-        nbt.setTag(getPropertyKey(), properties);
-    }
+
 
     /**
      * Sync all data
@@ -156,7 +137,6 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
      */
     protected abstract int getMaxLevel();
 
-    protected abstract void loadData(NBTTagCompound nbt);
 
     /**
      * Can be overridden to load data from updates in subclasses
@@ -166,10 +146,9 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
     protected void loadUpdate(NBTTagCompound nbt) {
     }
 
-    protected abstract void saveData(NBTTagCompound nbt);
 
     /**
-     * Sync the property using the given data
+     * Sync the capability using the given data
      *
      * @param data
      * @param all  Whether all tracking players should receive this packet or only the representing player

@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.api.entity.factions;
 import com.google.common.base.Predicate;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.capabilities.Capability;
 
 /**
  * Faction registry.
@@ -56,12 +58,13 @@ public interface IFactionRegistry {
     /**
      * Create and register a playable faction. Has to be called before post-init
      * @param name Faction name e.g. for level command
-     * @param entityInterface Interface all entities or for players the IExtendedEntityProperty implement
+     * @param entityInterface Interface all entities or (the given capability for players) implement
      * @param color Color e.g. for level rendering
-     * @param playerProp The key for the player's IExtendedEntityProperty
+     * @param playerCapability The capability which is attached to all players
+     * @param key Unique key, preferable the one used for registering the capability
      * @param highestLevel The highest reachable player level
-     * @param <T> Interface all entities or for players the IExtendedEntityProperty implement
+     * @param <T> nterface all entities or (the given capability for players)  implement
      * @return The created faction
      */
-    <T extends IFactionPlayer> IPlayableFaction registerPlayableFaction(String name, Class<T> entityInterface, int color, String playerProp, int highestLevel);
+    <T extends IFactionPlayer> IPlayableFaction registerPlayableFaction(String name, Class<T> entityInterface, int color, ResourceLocation key, Capability<T> playerCapability, int highestLevel);
 }

@@ -130,11 +130,11 @@ public class InputEventPacket implements IMessage {
                         ISkillHandler.Result result = skillHandler.canSkillBeEnabled(skill);
                         if (result == ISkillHandler.Result.OK) {
                             skillHandler.enableSkill(skill);
-                            if (factionPlayer instanceof ISyncable.ISyncableExtendedProperties && skillHandler instanceof SkillHandler) {
+                            if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst && skillHandler instanceof SkillHandler) {
                                 //TODO does this cause problems with addons?
                                 NBTTagCompound sync = new NBTTagCompound();
                                 ((SkillHandler) skillHandler).writeUpdateForClient(sync);
-                                HelperLib.sync((ISyncable.ISyncableExtendedProperties) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
+                                HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
                             }
 
                         } else {
@@ -152,11 +152,11 @@ public class InputEventPacket implements IMessage {
                 if (factionPlayer != null) {
                     ISkillHandler skillHandler = factionPlayer.getSkillHandler();
                     skillHandler.resetSkills();
-                    if (factionPlayer instanceof ISyncable.ISyncableExtendedProperties && skillHandler instanceof SkillHandler) {
+                    if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst && skillHandler instanceof SkillHandler) {
                         //TODO does this cause problems with addons?
                         NBTTagCompound sync = new NBTTagCompound();
                         ((SkillHandler) skillHandler).writeUpdateForClient(sync);
-                        HelperLib.sync((ISyncable.ISyncableExtendedProperties) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
+                        HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
                     }
                 } else {
                     VampirismMod.log.e(TAG, "Player %s is in no faction, so he cannot reset skills");

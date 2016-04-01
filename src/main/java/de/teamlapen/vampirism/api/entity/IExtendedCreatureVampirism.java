@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.api.entity;
 import net.minecraft.entity.EntityCreature;
 
 /**
- * Interface for vampirism extended entity property which every {@link EntityCreature} has
+ * Interface for Vampirism's capability every {@link EntityCreature} has attached
  */
 public interface IExtendedCreatureVampirism extends IBiteableEntity {
     /**

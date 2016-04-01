@@ -18,8 +18,6 @@ public class VReference {
      * One blood in the players blood stats represents this amount of mB fluid blood
      */
     public static final int FOOD_TO_FLUID_BLOOD = 100;
-    public static final String EXTENDED_CREATURE_PROP = "ExtCreatureVampirism";
-    public static final String FACTION_PLAYER_HANDLER_PROP = "FactionHandlerVampirism";
     public static final String FLUID_BLOOD_NAME = "vampirismblood";
     /**
      * Attribute which defines sundamage. Registered for all IVampire mobs as well as the EntityPlayer.

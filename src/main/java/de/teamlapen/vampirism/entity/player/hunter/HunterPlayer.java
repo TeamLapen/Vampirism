@@ -17,16 +17,20 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
-import net.minecraft.world.World;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.capabilities.*;
 
 /**
  * Main class for hunter players
  */
 public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHunterPlayer {
 
-
+    @CapabilityInject(IHunterPlayer.class)
+    public final static Capability<IHunterPlayer> CAP = null;
     /**
      * Don't call before the construction event of the player entity is finished
      *
@@ -34,11 +38,39 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
      * @return
      */
     public static HunterPlayer get(EntityPlayer player) {
-        return (HunterPlayer) VReference.HUNTER_FACTION.getPlayerProp(player);
+        return (HunterPlayer) player.getCapability(CAP, null);
     }
 
-    public static void register(EntityPlayer player) {
-        player.registerExtendedProperties(VReference.HUNTER_FACTION.prop(), new HunterPlayer(player));
+
+    public static void registerCapability() {
+        CapabilityManager.INSTANCE.register(IHunterPlayer.class, new Storage(), HunterPlayerDefaultImpl.class);
+    }
+
+    public static ICapabilityProvider createNewCapability(final EntityPlayer player) {
+        return new ICapabilitySerializable<NBTTagCompound>() {
+
+            IHunterPlayer inst = new HunterPlayer(player);
+
+            @Override
+            public void deserializeNBT(NBTTagCompound nbt) {
+                CAP.getStorage().readNBT(CAP, inst, null, nbt);
+            }
+
+            @Override
+            public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+                return capability == CAP ? (T) (inst) : null;//TODO switch to something like SLEEP_CAP.<T>cast(inst) in 1.9
+            }
+
+            @Override
+            public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+                return capability == CAP;
+            }
+
+            @Override
+            public NBTTagCompound serializeNBT() {
+                return (NBTTagCompound) CAP.getStorage().writeNBT(CAP, inst, null);
+            }
+        };
     }
 
     private final ActionHandler<IHunterPlayer> actionHandler;
@@ -61,6 +93,11 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     }
 
     @Override
+    public ResourceLocation getCapKey() {
+        return REFERENCE.HUNTER_PLAYER_KEY;
+    }
+
+    @Override
     public IPlayableFaction<IHunterPlayer> getFaction() {
         return VReference.HUNTER_FACTION;
     }
@@ -75,32 +112,21 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     }
 
     @Override
-    public String getPropertyKey() {
-        return VReference.HUNTER_FACTION.prop();
-    }
-
-    @Override
     public ISkillHandler<IHunterPlayer> getSkillHandler() {
         return skillHandler;
     }
-
 
     @Override
     public int getTheEntityID() {
         return player.getEntityId();
     }
 
-    @Override
-    public void init(Entity entity, World world) {
-
-    }
 
     @Override
     public boolean isDisguised() {
         return false;//TODO
     }
 
-    @Override
     public void loadData(NBTTagCompound compound) {
         actionHandler.loadFromNbt(compound);
         skillHandler.loadFromNbt(compound);
@@ -171,7 +197,6 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
         }
     }
 
-    @Override
     public void saveData(NBTTagCompound compound) {
         actionHandler.saveToNbt(compound);
         skillHandler.saveToNbt(compound);
@@ -198,5 +223,19 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     protected void writeFullUpdate(NBTTagCompound nbt) {
         actionHandler.writeUpdateForClient(nbt);
         skillHandler.writeUpdateForClient(nbt);
+    }
+
+    private static class Storage implements Capability.IStorage<IHunterPlayer> {
+        @Override
+        public void readNBT(Capability<IHunterPlayer> capability, IHunterPlayer instance, EnumFacing side, NBTBase nbt) {
+            ((HunterPlayer) instance).loadData((NBTTagCompound) nbt);
+        }
+
+        @Override
+        public NBTBase writeNBT(Capability<IHunterPlayer> capability, IHunterPlayer instance, EnumFacing side) {
+            NBTTagCompound nbt = new NBTTagCompound();
+            ((HunterPlayer) instance).saveData(nbt);
+            return nbt;
+        }
     }
 }

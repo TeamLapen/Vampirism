@@ -6,9 +6,13 @@ import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionRegistry;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillRegistry;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
 
 /**
  * Class for core api methods
@@ -17,6 +21,14 @@ import net.minecraft.entity.player.EntityPlayer;
 public class VampirismAPI {
 
 
+    @CapabilityInject(IExtendedCreatureVampirism.class)
+    private static final Capability<IExtendedCreatureVampirism> CAP_CREATURE = null;
+    @CapabilityInject(IHunterPlayer.class)
+    private final static Capability<IHunterPlayer> CAP_HUNTER_PLAYER = null;
+    @CapabilityInject(IVampirePlayer.class)
+    private static final Capability<IVampirePlayer> CAP_VAMPIRE_PLAYER = null;
+    @CapabilityInject(IFactionPlayerHandler.class)
+    private final static Capability<IFactionPlayerHandler> CAP_FACTION_HANDLER_PLAYER = null;
     private static IFactionRegistry factionRegistry;
     private static ISundamageRegistry sundamageRegistry;
     private static IBiteableRegistry biteableRegistry;
@@ -81,18 +93,18 @@ public class VampirismAPI {
      * @return The respective {@link IFactionPlayerHandler}
      */
     public static IFactionPlayerHandler getFactionPlayerHandler(EntityPlayer player) {
-        return (IFactionPlayerHandler) player.getExtendedProperties(VReference.FACTION_PLAYER_HANDLER_PROP);
+        return player.getCapability(CAP_FACTION_HANDLER_PLAYER, null);
     }
 
 
 
     /**
-     * Get the Vampirism's extended entity property which every {@link EntityCreature} has
+     * Get the {@link IExtendedCreatureVampirism} instance for the given creature
      *
      * @return
      */
     public static IExtendedCreatureVampirism getExtendedCreatureVampirism(EntityCreature creature) {
-        return (IExtendedCreatureVampirism) creature.getExtendedProperties(VReference.EXTENDED_CREATURE_PROP);
+        return creature.getCapability(CAP_CREATURE, null);
     }
 
 

@@ -122,7 +122,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     }
 
     /**
-     * Should only be called by the corresponding IExtendedEntityProperties
+     * Should only be called by the corresponding Capability instance
      *
      * @param nbt
      */
@@ -141,7 +141,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     }
 
     /**
-     * Should only be called by the corresponding IExtendedEntityProperties
+     * Should only be called by the corresponding Capability instance
      */
     public void onActionsReactivated() {
         if (!player.isRemote()) {
@@ -155,7 +155,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     }
 
     /**
-     * Should only be called by the corresponding IExtendedEntityProperties
+     * Should only be called by the corresponding Capability instance
      *
      * @param nbt
      */
@@ -189,7 +189,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
 
     /**
      * Saves action timings to nbt
-     * Should only be called by the corresponding IExtendedEntityProperties
+     * Should only be called by the corresponding Capability instance
      *
      * @param nbt
      */
@@ -253,7 +253,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
 
     /**
      * Update the actions
-     * Should only be called by the corresponding IExtendedEntityProperties
+     * Should only be called by the corresponding Capability instance
      *
      * @return If a sync is recommend, only relevant on server side
      */
@@ -288,7 +288,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
 
     /**
      * Writes an update for the client.
-     * Should only be called by the corresponding IExtendedEntityProperties
+     * Should only be called by the corresponding Capability instance
      *
      * @param nbt
      */

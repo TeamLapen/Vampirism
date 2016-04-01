@@ -10,12 +10,13 @@ import de.teamlapen.vampirism.api.entity.minions.IMinionLordWithSaveable;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.event.entity.EntityEvent;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -29,6 +30,13 @@ import javax.annotation.Nullable;
 public class ModEntityEventHandler {
 
     private boolean skipAttackDamageOnce = false;
+
+    @SubscribeEvent
+    public void onAttachCapability(AttachCapabilitiesEvent.Entity event) {
+        if (event.getEntity() instanceof EntityCreature) {
+            event.addCapability(REFERENCE.EXTENDED_CREATURE_KEY, ExtendedCreature.createNewCapability((EntityCreature) event.getEntity()));
+        }
+    }
 
     @SubscribeEvent
     public void onEntityAttacked(LivingAttackEvent event) {
@@ -53,14 +61,6 @@ public class ModEntityEventHandler {
             }
         }
 
-
-    }
-
-    @SubscribeEvent
-    public void onEntityConstructing(EntityEvent.EntityConstructing event) {
-        if (event.entity instanceof EntityCreature && ExtendedCreature.get((EntityCreature) event.entity) == null) {
-            ExtendedCreature.register((EntityCreature) event.entity);
-        }
 
     }
 

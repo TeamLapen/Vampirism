@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * Represents one playable faction (e.g. Vampire Player)
@@ -14,15 +15,15 @@ public interface IPlayableFaction<T extends IFactionPlayer> extends IFaction<T> 
     int getHighestReachableLevel();
 
     /**
-     * @param player
-     * @return The IExtendedEntityProp of this faction for the given player
+     * @return Unique key of this faction
      */
-    T getPlayerProp(EntityPlayer player);
+    ResourceLocation getKey();
 
     /**
-     * @return The player IExtendedEntityProp  key
+     * @param player
+     * @return The "<? extends IFactionPlayer>" of this faction for the given player
      */
-    String prop();
+    T getPlayerCapability(EntityPlayer player);
 
     /**
      * @return If the level should be rendered

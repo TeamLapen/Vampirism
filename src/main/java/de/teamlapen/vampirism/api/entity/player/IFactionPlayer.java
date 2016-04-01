@@ -7,16 +7,16 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.IExtendedEntityProperties;
 
 /**
  * Basic interface for all of Vampirism's player types (VampirePlayer, HunterPlayer, ...)
+ * The child classes are used as capabilities and attached to the player
  * The player can have levels.
- * A player can only be part of one faction at once, this means only one IFaction ExtendedProperties belonging to a single player can have a level >0.
+ * A player can only be part of one faction at once, this means only one IFactionPlayer capability belonging to a single player can have a level >0.
  * <p>
  * If you are writing an addon and not a standalone mod, consider extending VampirismPlayer instead of implementing this
  */
-public interface IFactionPlayer<T extends IFactionPlayer> extends IFactionEntity, IExtendedEntityProperties, ISkillPlayer<T> {
+public interface IFactionPlayer<T extends IFactionPlayer> extends IFactionEntity, ISkillPlayer<T> {
     /**
      * Mostly relevant in the set level command
      * Vampirism's factions always return true here.
@@ -68,5 +68,6 @@ public interface IFactionPlayer<T extends IFactionPlayer> extends IFactionEntity
      * @param oldLevel
      */
     void onLevelChanged(int newLevel, int oldLevel);
+
 
 }
