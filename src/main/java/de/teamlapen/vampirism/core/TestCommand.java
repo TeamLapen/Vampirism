@@ -8,10 +8,12 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.skills.SkillRegistry;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.command.WrongUsageException;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.server.MinecraftServer;
@@ -137,6 +139,35 @@ public class TestCommand extends BasicCommand {
                 } catch (PlayerNotFoundException e) {
                 }
                 return list;
+            }
+        });
+        addSub(new SubCommand() {
+            @Override
+            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+                return null;
+            }
+
+            @Override
+            public boolean canCommandSenderUseCommand(ICommandSender var1) {
+                return isSenderCreative(var1) && var1 instanceof EntityPlayer;
+            }
+
+            @Override
+            public String getCommandName() {
+                return "emtpyBloodBar";
+            }
+
+            @Override
+            public String getCommandUsage(ICommandSender var1) {
+                return getCommandName();
+            }
+
+            @Override
+            public void processCommand(ICommandSender var1, String[] var2) throws CommandException {
+                VampirePlayer player = VampirePlayer.get(getCommandSenderAsPlayer(var1));
+                if (player.getLevel() > 0) {
+                    player.getBloodStats().setBloodLevel(0);
+                }
             }
         });
     }

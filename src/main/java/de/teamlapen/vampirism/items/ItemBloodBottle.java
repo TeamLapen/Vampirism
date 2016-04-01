@@ -1,15 +1,18 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.items.IBloodContainerItem;
+import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
 
 import java.util.List;
 
@@ -18,7 +21,7 @@ import java.util.List;
  * Currently the only thing that can interact with the players bloodstats.
  * Can only store blood in {@link ItemBloodBottle#capacity} tenth units.
  */
-public class ItemBloodBottle extends VampirismItem implements IFluidContainerItem {
+public class ItemBloodBottle extends VampirismItem implements IBloodContainerItem {
 
     public static final int AMOUNT = 9;
     private static final String name = "bloodBottle";
@@ -36,12 +39,16 @@ public class ItemBloodBottle extends VampirismItem implements IFluidContainerIte
 
     @Override
     public FluidStack drain(ItemStack container, int maxDrain, boolean doDrain) {
-
         int currentAmt = getBlood(container);
         if (currentAmt == 0) return null;
         FluidStack stack = new FluidStack(ModFluids.blood, Math.min(currentAmt, getAdjustedAmount(maxDrain)));
         if (doDrain) {
             setBlood(container, currentAmt - stack.amount);
+            //TODO might cause crashes with other mods, although this is probably legit
+            if (getBlood(container) == 0 && Configs.autoConvertGlasBottles) {
+                VampirismMod.log.i("BloodBottle", "Replaced blood bottle by glas bottle, during IFluidContainerItem. If there is a crash afterwards, please contact the authors of Vampirism");//TODO and remove at some point
+                container.setItem(Items.glass_bottle);
+            }
         }
         return stack;
     }
@@ -53,7 +60,6 @@ public class ItemBloodBottle extends VampirismItem implements IFluidContainerIte
             return 0;
         }
         if (!doFill) {
-
             return Math.min(capacity - getBlood(container), getAdjustedAmount(resource.amount));
         }
 
@@ -105,9 +111,12 @@ public class ItemBloodBottle extends VampirismItem implements IFluidContainerIte
 //                    }
 //                }
 //            }
-            if (drain(itemStackIn, VReference.FOOD_TO_FLUID_BLOOD, true) != null) {
-                vampire.getBloodStats().addBlood(1, 0);
+            if (vampire.getBloodStats().needsBlood()) {
+                if (drain(itemStackIn, VReference.FOOD_TO_FLUID_BLOOD, true) != null) {
+                    vampire.getBloodStats().addBlood(1, 0);
+                }
             }
+
         }
         return itemStackIn;
     }

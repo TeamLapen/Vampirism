@@ -7,6 +7,13 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
  * Implemented by all vampire entities
  */
 public interface IVampire extends IFactionEntity {
+
+    /**
+     * Consume blood
+     *
+     * @param amt           In blood food unit, not mB. See {@link de.teamlapen.vampirism.api.VReference#FOOD_TO_FLUID_BLOOD} for conversion
+     * @param saturationMod
+     */
     void consumeBlood(int amt, float saturationMod);
 
     /**

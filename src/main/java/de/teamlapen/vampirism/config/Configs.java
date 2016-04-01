@@ -39,6 +39,8 @@ public class Configs {
     public static boolean disable_vampireForest;
     public static boolean disable_factionDisplayChat;
     public static boolean playerCanTurnPlayer;
+
+    public static boolean autoConvertGlasBottles;
     private static Configuration main_config;
 
     public static void init(File configDir, boolean inDev) {
@@ -104,6 +106,7 @@ public class Configs {
         playerCanTurnPlayer = main_config.getBoolean("player_can_turn_player", CATEGORY_GENERAL, true, "If one player can bite infect a human player with sanguinare");
         vampireForestId = main_config.getInt(BIOMEVFKEY, CATEGORY_GENERAL, -1, -1, 1000, "If you set this to -1 the mod will try to find a free biome id");
         renderVampireForestFog = main_config.getBoolean("vampire_forest_fog", CATEGORY_GENERAL, true, "");
+        autoConvertGlasBottles = main_config.getBoolean("auto_convert_glas_bottles", CATEGORY_GENERAL, true, "If glas bottles should automatically be converted to blood bottles if needed");
 
         //Village
         village_modify = main_config.getBoolean("village_modify_gen", CATEGORY_VILLAGE, true, "Whether to modify village generation chance or not");
