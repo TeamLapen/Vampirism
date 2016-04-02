@@ -4,6 +4,7 @@ import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.lib.lib.util.Logger;
+import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
@@ -58,7 +59,7 @@ import java.io.File;
  * Main class for Vampirism
  * TODO readd "required-after:teamlapen-lib;"
  */
-@Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION, acceptedMinecraftVersions = "[1.8.9]", dependencies = "required-after:Forge@[" + REFERENCE.FORGE_VERSION_MIN + ",);", guiFactory = "de.teamlapen.vampirism.client.core.ModGuiFactory")
+@Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION, acceptedMinecraftVersions = "[1.8.9]", dependencies = "required-after:Forge@[" + REFERENCE.FORGE_VERSION_MIN + ",);", guiFactory = "de.teamlapen.vampirism.client.core.ModGuiFactory", updateJSON = REFERENCE.VERSION_UPDATE_FILE)
 public class VampirismMod {
 
     public final static Logger log = new Logger(REFERENCE.MODID, "de.teamlapen.vampirism");
@@ -79,8 +80,16 @@ public class VampirismMod {
         return Configs.realism_mode;
     }
 
+    private VersionChecker.VersionInfo versionInfo;
+
+    public VersionChecker.VersionInfo getVersionInfo() {
+        return versionInfo;
+    }
+
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+        versionInfo = VersionChecker.executeVersionCheck(REFERENCE.VERSION_UPDATE_FILE, REFERENCE.VERSION.equals("@VERSION@") ? "0.0.0-Test" : REFERENCE.VERSION);
+
         ModEventHandler eventHandler = new ModEventHandler();
         MinecraftForge.EVENT_BUS.register(eventHandler);
         MinecraftForge.TERRAIN_GEN_BUS.register(eventHandler);

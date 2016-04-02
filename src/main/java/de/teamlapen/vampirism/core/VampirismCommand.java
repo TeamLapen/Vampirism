@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -13,12 +14,10 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.*;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.MinecraftForge;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
@@ -242,6 +241,47 @@ public class VampirismCommand extends BasicCommand {
                         var1.addChatMessage(new ChatComponentTranslation("text.vampirism.biome.found"));
                     }
                 }
+            }
+        });
+        addSub(new SubCommand() {
+            @Override
+            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+                return null;
+            }
+
+            @Override
+            public boolean canCommandSenderUseCommand(ICommandSender var1) {
+                return true;
+            }
+
+            @Override
+            public String getCommandName() {
+                return "changelog";
+            }
+
+            @Override
+            public String getCommandUsage(ICommandSender var1) {
+                return getCommandName();
+            }
+
+            @Override
+            public void processCommand(ICommandSender var1, String[] var2) {
+                if (!VampirismMod.instance.getVersionInfo().isNewVersionAvailable()) {
+                    var1.addChatMessage(new ChatComponentText("There is no new version available"));
+                    return;
+                }
+                VersionChecker.Version newVersion = VampirismMod.instance.getVersionInfo().getNewVersion();
+                List<String> changes = newVersion.getChanges();
+                var1.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Vampirism " + newVersion.name + "(" + MinecraftForge.MC_VERSION + ")"));
+                for (String c : changes) {
+                    var1.addChatMessage(new ChatComponentText("-" + c));
+                }
+                var1.addChatMessage(new ChatComponentText(""));
+                String template = StatCollector.translateToLocal("text.vampirism.update_message");
+                String homepage = VampirismMod.instance.getVersionInfo().getHomePage();
+                template = template.replaceAll("@download@", newVersion.getUrl() == null ? homepage : newVersion.getUrl()).replaceAll("@forum@", homepage);
+                IChatComponent component = IChatComponent.Serializer.jsonToComponent(template);
+                var1.addChatMessage(component);
             }
         });
     }

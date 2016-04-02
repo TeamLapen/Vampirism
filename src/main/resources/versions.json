@@ -1,0 +1,18 @@
+{
+  "comment": "Placeholder until the first version is released",
+  "homepage": "http://teamlapen.de/projects/vampirism",
+  "promos": {
+    "1.8.9-latest": "1.0.0-Alpha+04-04-00-11",
+    "1.8.9-recommended": "0.0.0"
+  },
+  "1.8.9": {
+    "1.0.0-Alpha+04-04-00-11": "Nothing\nMore",
+    "0.0.0": "Initial"
+  },
+  "downloads": {
+    "1.8.9": {
+      "1.0.0-Alpha+04-04-00-11": "http://download",
+      "0.0.0": "http://download2"
+    }
+  }
+}

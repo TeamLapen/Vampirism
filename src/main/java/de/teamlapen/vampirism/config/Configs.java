@@ -38,6 +38,7 @@ public class Configs {
     public static boolean disable_replaceVanillaNightVision;
     public static boolean disable_vampireForest;
     public static boolean disable_factionDisplayChat;
+    public static boolean disable_versionCheck;
     public static boolean playerCanTurnPlayer;
 
     public static boolean autoConvertGlasBottles;
@@ -123,6 +124,7 @@ public class Configs {
         disable_replaceVanillaNightVision = main_config.getBoolean("disable_replace_night_vision", CATEGORY_DISABLE, false, "Disable replacing vanilla night vision, if disabled the potion is shown to the player all the time");
         disable_factionDisplayChat = main_config.getBoolean("disable_faction_display_chat", CATEGORY_DISABLE, false, "Do not display the player's current faction in chat");
         disable_vampireForest = main_config.getBoolean("disable_vampire_forest", CATEGORY_DISABLE, false, "Disable vampire forest generation");
+        disable_versionCheck = main_config.getBoolean("disable_version_check", CATEGORY_DISABLE, false, "Disable vampirism's version check");
         if (main_config.hasChanged()) {
             main_config.save();
         }
