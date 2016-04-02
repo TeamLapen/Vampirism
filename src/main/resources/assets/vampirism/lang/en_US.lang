@@ -191,8 +191,8 @@ tile.vampirism.hunterTable.name=Hunter Research Table
 item.vampirism.hunterIntel.name=Hunter Intel
 text.vampirism.for_level=for Level
 item.vampirism.injection.name=Syringe
-item.vampirism.injection.garlic.name=Garlic injection
-item.vampirism.injection.sanguinare.name=Sanguinare injection
+item.vampirism.injection.garlic.name=Garlic Injection
+item.vampirism.injection.sanguinare.name=Sanguinare Injection
 
 #ETC
 text.vampirism.vampire=Vampire
