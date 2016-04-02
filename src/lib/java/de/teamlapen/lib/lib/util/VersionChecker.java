@@ -81,6 +81,7 @@ public class VersionChecker implements Runnable {
             VampLib.log.w(TAG, "Failed to parse current version (%s), aborting version check", currentVersion);
             return;
         }
+        versionInfo.currentVersion = current;
         Version possibleTarget = null;
         if (current.type == Version.TYPE.RELEASE) {
             if (rec != null) possibleTarget = Version.parse(rec);

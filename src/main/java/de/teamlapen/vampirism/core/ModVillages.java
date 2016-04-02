@@ -51,7 +51,7 @@ public class ModVillages {
                 Field[] fields = mapGenVillage.getClass().getDeclaredFields();
                 for (Field f : fields) {
                     String name = f.getName();
-                    if (name.equals("terrainType")) {
+                    if (name.equals("terrainType") || name.equals("field_75054_f")) {
                         type = f;
                     } else if (name.equals("field_82665_g")) {
                         density = f;
