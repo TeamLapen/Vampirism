@@ -4,6 +4,7 @@ import de.teamlapen.lib.lib.item.ItemMetaBlock;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
+import de.teamlapen.vampirism.tileentity.TileBloodContainer;
 import de.teamlapen.vampirism.tileentity.TileCoffin;
 import de.teamlapen.vampirism.tileentity.TileTent;
 import net.minecraft.block.Block;
@@ -32,6 +33,7 @@ public class ModBlocks {
     public static BlockMedChair medChair;
     public static BlockGarlic garlic;
     public static BlockChurchAltar churchAltar;
+    public static BlockBloodContainer bloodContainer;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
@@ -49,6 +51,7 @@ public class ModBlocks {
         GameRegistry.registerTileEntity(TileTent.class, "VampirismTent");
         GameRegistry.registerTileEntity(TileCoffin.class, "VampirismCoffin");
         GameRegistry.registerTileEntity(TileAltarInfusion.class, "VampirismAltarInfusion");
+        GameRegistry.registerTileEntity(TileBloodContainer.class, "VampirismBloodContainer");
     }
 
     private static void registerBlocks() {
@@ -66,6 +69,7 @@ public class ModBlocks {
         medChair = registerBlock(new BlockMedChair(), null);
         garlic = registerBlock(new BlockGarlic(), null);
         churchAltar = registerBlock(new BlockChurchAltar());
+        bloodContainer = registerBlock(new BlockBloodContainer());
 
     }
 
@@ -77,6 +81,7 @@ public class ModBlocks {
         GameRegistry.addShapelessRecipe(new ItemStack(castleBlock, 8, 1), castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, new ItemStack(Items.dye, 1, 0));
         GameRegistry.addRecipe(new ItemStack(hunterTable), "XY ", "ZZZ", "Z Z", 'X', ModItems.vampireFang, 'Y', Items.book, 'Z', Blocks.planks);//TODO maybe replace fangs with garlic
         GameRegistry.addRecipe(new ItemStack(medChair), "XYX", "XXX", "XZX", 'X', Items.iron_ingot, 'Y', Blocks.wool, 'Z', Items.glass_bottle);
+        GameRegistry.addRecipe(new ItemStack(bloodContainer), "XYX", "YZY", "XYX", 'X', Blocks.planks, 'Y', Blocks.glass, 'Z', Items.iron_ingot);
     }
 
     private static <T extends Block> T registerBlock(T block) {

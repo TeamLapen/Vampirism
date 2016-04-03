@@ -11,6 +11,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -35,6 +36,11 @@ public class ItemBloodBottle extends VampirismItem implements IBloodContainerIte
         super(name);
         this.setMaxStackSize(1);
         this.setHasSubtypes(true);
+    }
+
+    @Override
+    public boolean doesSneakBypassUse(World world, BlockPos pos, EntityPlayer player) {
+        return true;
     }
 
     @Override
@@ -93,6 +99,7 @@ public class ItemBloodBottle extends VampirismItem implements IBloodContainerIte
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn) {
+        //Won't be called when the player is sneaking since {@link ItemBloodBottle#doesSneakBypassUse} returns true to allow blood container interaction
         if (!worldIn.isRemote && itemStackIn != null) {
             VampirePlayer vampire = VampirePlayer.get(playerIn);
             if (vampire.getLevel() == 0) return itemStackIn;

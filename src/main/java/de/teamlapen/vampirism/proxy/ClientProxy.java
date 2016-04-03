@@ -2,10 +2,7 @@ package de.teamlapen.vampirism.proxy;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.client.core.ModBlocksRender;
-import de.teamlapen.vampirism.client.core.ModEntitiesRender;
-import de.teamlapen.vampirism.client.core.ModItemsRender;
-import de.teamlapen.vampirism.client.core.ModKeys;
+import de.teamlapen.vampirism.client.core.*;
 import de.teamlapen.vampirism.client.gui.VampirismHUDOverlay;
 import de.teamlapen.vampirism.client.render.LayerVampireEntity;
 import de.teamlapen.vampirism.client.render.LayerVampirePlayerHead;
@@ -37,6 +34,10 @@ public class ClientProxy extends CommonProxy {
         this.particleHandlerClient = new ParticleHandlerClient();
     }
 
+    @Override
+    public IParticleHandler getParticleHandler() {
+        return particleHandlerClient;
+    }
 
     @Override
     public boolean isClientPlayerNull() {
@@ -62,10 +63,16 @@ public class ClientProxy extends CommonProxy {
         }
     }
 
+    @Override
+    public void renderScreenFullColor(int ticksOn, int ticksOff, int color) {
+        if (overlay != null) overlay.makeRenderFullColor(ticksOn, ticksOff, color);
+    }
+
     private void registerSubscriptions() {
         overlay = new VampirismHUDOverlay(Minecraft.getMinecraft());
         MinecraftForge.EVENT_BUS.register(overlay);
         MinecraftForge.EVENT_BUS.register(new RenderHandler(Minecraft.getMinecraft()));
+        MinecraftForge.EVENT_BUS.register(new ClientEventHandler());
     }
 
     private void registerVampireEntityOverlay(RenderManager manager, Class<? extends EntityCreature> clazz, ResourceLocation loc) {
@@ -94,15 +101,5 @@ public class ClientProxy extends CommonProxy {
         for (RenderPlayer renderPlayer : manager.getSkinMap().values()) {
             renderPlayer.addLayer(new LayerVampirePlayerHead(renderPlayer));
         }
-    }
-
-    @Override
-    public IParticleHandler getParticleHandler() {
-        return particleHandlerClient;
-    }
-
-    @Override
-    public void renderScreenFullColor(int ticksOn, int ticksOff, int color) {
-        if (overlay != null) overlay.makeRenderFullColor(ticksOn, ticksOff, color);
     }
 }
