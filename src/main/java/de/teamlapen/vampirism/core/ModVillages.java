@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.util.SRGNAMES;
 import de.teamlapen.vampirism.world.gen.village.VillagePieceModChurch;
 import de.teamlapen.vampirism.world.gen.village.VillagePieceTrainer;
 import net.minecraft.world.gen.MapGenBase;
@@ -10,8 +11,7 @@ import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraft.world.gen.structure.MapGenVillage;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
-
-import java.lang.reflect.Field;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 /**
  * Handles Village related stuff
@@ -44,44 +44,25 @@ public class ModVillages {
 
 
             try {
-                Field type = null;
-                Field density = null;
-                Field minDist = null;
-
-                Field[] fields = mapGenVillage.getClass().getDeclaredFields();
-                for (Field f : fields) {
-                    String name = f.getName();
-                    if (name.equals("terrainType") || name.equals("field_75054_f")) {
-                        type = f;
-                    } else if (name.equals("field_82665_g")) {
-                        density = f;
-                    } else if (name.equals("field_82666_h")) {
-                        minDist = f;
-                    }
+                ReflectionHelper.setPrivateValue(MapGenVillage.class, (MapGenVillage) mapGenVillage, Configs.village_size, "terrainType", SRGNAMES.MapGenVillage_terrainType);
+            } catch (ReflectionHelper.UnableToAccessFieldException e) {
+                VampirismMod.log.e(TAG, e, "Could not modify field 'terrainType' in MapGenVillage");
                 }
 
-                if (type != null) {
-                    type.setAccessible(true);
-                    type.setInt(mapGenVillage, Configs.village_size);
-                } else {
-                    VampirismMod.log.w(TAG, "Could not find field 'terrainType' in MapGenVillage");
+            try {
+                ReflectionHelper.setPrivateValue(MapGenVillage.class, (MapGenVillage) mapGenVillage, Configs.village_density, "field_82665_g");
+            } catch (ReflectionHelper.UnableToAccessFieldException e) {
+                VampirismMod.log.e(TAG, e, "Could not modify field for village density in MapGenVillage");
                 }
-                if (density != null) {
-                    density.setAccessible(true);
-                    density.setInt(mapGenVillage, Configs.village_density);
-                } else {
-                    VampirismMod.log.w(TAG, "Could not find field 'field_82665_g'(density) in MapGenVillage");
+            try {
+                ReflectionHelper.setPrivateValue(MapGenVillage.class, (MapGenVillage) mapGenVillage, Configs.village_min_dist, "field_82666_h");
+            } catch (ReflectionHelper.UnableToAccessFieldException e) {
+                VampirismMod.log.e(TAG, e, "Could not modify field for village min dist in MapGenVillage");
                 }
-                if (minDist != null) {
-                    minDist.setAccessible(true);
-                    minDist.setInt(mapGenVillage, Configs.village_min_dist);
-                } else {
-                    VampirismMod.log.w(TAG, "Could not find field 'field_82666_h'(minDist) in MapGenVillage");
-                }
-                VampirismMod.log.d(TAG, "Modified MapGenVillage fields.");
-            } catch (Exception exc) {
-                VampirismMod.log.e(TAG, exc, "Could not modify MapGenVillage, consider disabling village_modify_gen in configs");
-            }
+
+
+            VampirismMod.log.d(TAG, "Modified MapGenVillage fields.");
+
         } else {
             //Should not be possible
             VampirismMod.log.e(TAG, "VillageGen (%s) is not an instance of MapGenVillage, can't modify gen", mapGenVillage);

@@ -142,6 +142,11 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter 
             }
     }
 
+    @Override
+    protected int getExperiencePoints(EntityPlayer player) {
+        return 6 + getLevel();
+    }
+
     protected void updateEntityAttributes() {
         int l = Math.max(getLevel(), 0);
         this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(Balance.mobProps.VAMPIRE_HUNTER_MAX_HEALTH + Balance.mobProps.VAMPIRE_HUNTER_MAX_HEALTH_PL * l);

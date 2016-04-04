@@ -31,7 +31,7 @@ public class ModPotions {
     private static void preInit(FMLPreInitializationEvent event) {
         thirst = new PotionThirst(new ResourceLocation(REFERENCE.MODID, "thirst"), true, 859494);
         sanguinare = new PotionSanguinare(new ResourceLocation(REFERENCE.MODID, "sanguinare"), false, 0x6A0888);
-        saturation = new VampirismPotion(new ResourceLocation(REFERENCE.MODID, "saturation"), false, 0xDCFF00);
+        saturation = new VampirismPotion(new ResourceLocation(REFERENCE.MODID, "saturation"), false, 0xDCFF00).setPotionName("potion.vampirism.saturation");
     }
 
 

@@ -63,128 +63,6 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     }
 
     @Override
-    public long getLastComebackCall() {
-        return 0;
-    }
-
-    @Override
-    public int getMaxMinionCount() {
-        return 15;
-    }
-
-    @Override
-    public ISaveableMinionHandler getSaveableMinionHandler() {
-        return minionHandler;
-    }
-
-    @Override
-    public EntityLivingBase getMinionTarget() {
-        return this.getAttackTarget();
-    }
-
-    @Override
-    public EntityLivingBase getRepresentingEntity() {
-        return this;
-    }
-
-    @Override
-    public double getTheDistanceSquared(Entity e) {
-        return this.getDistanceSqToEntity(e);
-    }
-
-    @Override
-    public UUID getThePersistentID() {
-        return this.getPersistentID();
-    }
-
-    @Override
-    public boolean isTheEntityAlive() {
-        return this.isEntityAlive();
-    }
-
-    @Override
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
-        this.updateEntityAttributes(false);
-    }
-
-    protected void updateEntityAttributes(boolean aggressive) {
-        if (aggressive) {
-            this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(20D);
-            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(
-                    Balance.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow((Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL - 1) / 3 + 1, (getLevel())));
-        } else {
-            this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(5D);
-            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(
-                    Balance.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow(Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()) / 3);
-        }
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(Balance.mobProps.VAMPIRE_BARON_MAX_HEALTH * Math.pow(Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage)
-                .setBaseValue(Balance.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE * Math.pow(Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
-    }
-
-    @Override
-    public int getLevel() {
-        return datawatcher_init ? getDataWatcher().getWatchableObjectInt(ID_LEVEL) : -1;
-    }
-
-    @Override
-    public void setLevel(int level) {
-        if (level >= 0) {
-            this.updateEntityAttributes(false);
-            float hp = this.getHealth() / this.getMaxHealth();
-            this.setHealth(this.getMaxHealth() * hp);
-            getDataWatcher().updateObject(ID_LEVEL, level);
-        }
-    }
-
-    /**
-     * Decides if a new minion should be spawned. Therefore randomly checks the existing minion count
-     *
-     * @return
-     */
-    protected boolean shouldSpawnMinion() {
-        if (this.ticksExisted % 30 == 7) {
-            int count = getSaveableMinionHandler().getMinionCount();
-            if (count < getLevel() + 2) {
-                return true;
-            }
-            if (recentlyHit > 0 && count < 4 + getLevel()) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    @Override
-    public int suggestLevel(Difficulty d) {
-        int avg = Math.round(((d.avgPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
-        int max = Math.round(((d.maxPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
-        int min = Math.round(((d.minPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * (MAX_LEVEL));
-        VampirismMod.log.t("Dif %d %d %d", min, max, avg);
-        switch (rand.nextInt(6)) {
-            case 0:
-                return min;
-            case 1:
-                return max + 1;
-            case 2:
-                return avg;
-            case 3:
-                return avg + 1;
-            case 4:
-                return rand.nextInt(MAX_LEVEL + 1);
-            default:
-                return rand.nextInt(max + 2 - min) + min;
-        }
-    }
-
-    @Override
-    public int getMaxLevel() {
-        return MAX_LEVEL;
-    }
-
-
-    @Override
     public boolean attackEntityAsMob(Entity entity) {
         boolean flag = super.attackEntityAsMob(entity);
         if (flag && entity instanceof EntityLivingBase) {
@@ -206,18 +84,87 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         return true;
     }
 
-
     @Override
-    public String getName() {
-        return super.getName() + " " + StatCollector.translateToLocal("text.vampirism.entity_level") + " " + (getLevel() + 1);
+    public boolean getCanSpawnHere() {
+        int i = MathHelper.floor_double(this.getEntityBoundingBox().minY);
+        //Only spawn on the surface
+        if (i < 60) return false;
+//        CastlePositionData data = CastlePositionData.get(worldObj);
+//        if (data.isPosAt(MathHelper.floor_double(posX), MathHelper.floor_double(posZ))) {
+//            return false;
+//        }
+        return super.getCanSpawnHere();
     }
 
+    @Override
+    public long getLastComebackCall() {
+        return 0;
+    }
+
+    @Override
+    public int getLevel() {
+        return datawatcher_init ? getDataWatcher().getWatchableObjectInt(ID_LEVEL) : -1;
+    }
+
+    @Override
+    public void setLevel(int level) {
+        if (level >= 0) {
+            this.updateEntityAttributes(false);
+            float hp = this.getHealth() / this.getMaxHealth();
+            this.setHealth(this.getMaxHealth() * hp);
+            getDataWatcher().updateObject(ID_LEVEL, level);
+        }
+    }
 
     @Override
     public int getMaxInPortalTime() {
         return 500;
     }
 
+    @Override
+    public int getMaxLevel() {
+        return MAX_LEVEL;
+    }
+
+    @Override
+    public int getMaxMinionCount() {
+        return 15;
+    }
+
+    @Override
+    public EntityLivingBase getMinionTarget() {
+        return this.getAttackTarget();
+    }
+
+    @Override
+    public String getName() {
+        return super.getName() + " " + StatCollector.translateToLocal("text.vampirism.entity_level") + " " + (getLevel() + 1);
+    }
+
+    @Override
+    public EntityLivingBase getRepresentingEntity() {
+        return this;
+    }
+
+    @Override
+    public ISaveableMinionHandler getSaveableMinionHandler() {
+        return minionHandler;
+    }
+
+    @Override
+    public double getTheDistanceSquared(Entity e) {
+        return this.getDistanceSqToEntity(e);
+    }
+
+    @Override
+    public UUID getThePersistentID() {
+        return this.getPersistentID();
+    }
+
+    @Override
+    public boolean isTheEntityAlive() {
+        return this.isEntityAlive();
+    }
 
     @Override
     public void onDeath(DamageSource s) {
@@ -228,6 +175,14 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
             } else if (getLevel() > 5) {
                 this.entityDropItem(new ItemStack(ModItems.pureBlood, 1, 4), 0.3F);
             }
+        }
+    }
+
+    @Override
+    public void onKillEntity(EntityLivingBase entity) {
+        super.onKillEntity(entity);
+        if (entity instanceof EntityVampireBaron) {
+            this.setHealth(this.getMaxHealth());
         }
     }
 
@@ -273,18 +228,32 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     }
 
     @Override
-    public void onKillEntity(EntityLivingBase entity) {
-        super.onKillEntity(entity);
-        if (entity instanceof EntityVampireBaron) {
-            this.setHealth(this.getMaxHealth());
-        }
-    }
-
-    @Override
     public void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
         setLevel(Math.min(nbt.getInteger("level"), 1));
         minionHandler.loadMinions(nbt.getTagList("minions", 10));
+    }
+
+    @Override
+    public int suggestLevel(Difficulty d) {
+        int avg = Math.round(((d.avgPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
+        int max = Math.round(((d.maxPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
+        int min = Math.round(((d.minPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * (MAX_LEVEL));
+        VampirismMod.log.t("Dif %d %d %d", min, max, avg);
+        switch (rand.nextInt(6)) {
+            case 0:
+                return min;
+            case 1:
+                return max + 1;
+            case 2:
+                return avg;
+            case 3:
+                return avg + 1;
+            case 4:
+                return rand.nextInt(MAX_LEVEL + 1);
+            default:
+                return rand.nextInt(max + 2 - min) + min;
+        }
     }
 
     @Override
@@ -295,14 +264,46 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     }
 
     @Override
-    public boolean getCanSpawnHere() {
-        int i = MathHelper.floor_double(this.getEntityBoundingBox().minY);
-        //Only spawn on the surface
-        if (i < 60) return false;
-//        CastlePositionData data = CastlePositionData.get(worldObj);
-//        if (data.isPosAt(MathHelper.floor_double(posX), MathHelper.floor_double(posZ))) {
-//            return false;
-//        }
-        return super.getCanSpawnHere();
+    protected void applyEntityAttributes() {
+        super.applyEntityAttributes();
+        this.updateEntityAttributes(false);
+    }
+
+    @Override
+    protected int getExperiencePoints(EntityPlayer player) {
+        return 20 + 5 * getLevel();
+    }
+
+    /**
+     * Decides if a new minion should be spawned. Therefore randomly checks the existing minion count
+     *
+     * @return
+     */
+    protected boolean shouldSpawnMinion() {
+        if (this.ticksExisted % 30 == 7) {
+            int count = getSaveableMinionHandler().getMinionCount();
+            if (count < getLevel() + 2) {
+                return true;
+            }
+            if (recentlyHit > 0 && count < 4 + getLevel()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected void updateEntityAttributes(boolean aggressive) {
+        if (aggressive) {
+            this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(20D);
+            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(
+                    Balance.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow((Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL - 1) / 3 + 1, (getLevel())));
+        } else {
+            this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(5D);
+            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(
+                    Balance.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow(Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()) / 3);
+        }
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(Balance.mobProps.VAMPIRE_BARON_MAX_HEALTH * Math.pow(Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage)
+                .setBaseValue(Balance.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE * Math.pow(Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
     }
 }

@@ -32,7 +32,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
         //this.tasks.addTask(3, new VampireAIFleeSun(this, 1F));
         this.tasks.addTask(4, new EntityAIRestrictSun(this));
         tasks.addTask(5, new net.minecraft.entity.ai.EntityAIAttackOnCollide(this, 0.9D, false));
-
+        this.experienceValue = 2;
 
         this.tasks.addTask(11, new EntityAIWander(this, 0.7));
         this.tasks.addTask(13, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));

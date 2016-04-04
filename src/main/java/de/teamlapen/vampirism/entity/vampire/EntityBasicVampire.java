@@ -160,6 +160,11 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     }
 
     @Override
+    protected int getExperiencePoints(EntityPlayer player) {
+        return 6 + getLevel();
+    }
+
+    @Override
     protected String getLivingSound() {
         return REFERENCE.MODID + ":entity.vampire.scream";
     }

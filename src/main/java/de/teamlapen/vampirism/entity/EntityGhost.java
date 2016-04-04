@@ -21,6 +21,7 @@ public class EntityGhost extends EntityVampirism implements IMob {
         super(p_i1595_1_);
         ((PathNavigateGround) getNavigator()).setCanSwim(true);
         this.setSize(0.8F, 2.0F);
+        this.experienceValue = 8;
         this.tasks.addTask(0, new EntityAISwimming(this));
         this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0D, true));
         this.tasks.addTask(7, new EntityAIWander(this, 0.9F));

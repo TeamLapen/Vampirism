@@ -1,31 +1,43 @@
 package de.teamlapen.vampirism.client.render;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.BatVampireAction;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.util.SRGNAMES;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.EntityRenderer;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.RenderHandEvent;
 import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
+
+import java.lang.reflect.Method;
 
 /**
  * Handle most general rendering related stuff
  */
 @SideOnly(Side.CLIENT)
 public class RenderHandler {
+    private static final ResourceLocation saturation1 = new ResourceLocation(REFERENCE.MODID + ":shaders/saturation1.json");
     private final Minecraft mc;
     private final int VAMPIRE_BIOME_FADE_TICKS = 160;
     private EntityBat entityBat;
@@ -33,6 +45,7 @@ public class RenderHandler {
     private float batTransform_ySize = 0F;
     private float batTransform_eyeHeight;
     private int vampireBiomeTicks = 0;
+    private boolean doShaders = true;
 
     public RenderHandler(Minecraft mc) {
         this.mc = mc;
@@ -41,6 +54,7 @@ public class RenderHandler {
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (mc.theWorld == null) return;
+        if (event.phase == TickEvent.Phase.END) return;
         if (Configs.renderVampireForestFog && VReference.castleDimId != mc.theWorld.provider.getDimensionId() && Helper.isEntityInVampireBiome(mc.thePlayer)) {
 
 
@@ -50,6 +64,26 @@ public class RenderHandler {
         } else {
             if (vampireBiomeTicks > 0) {
                 vampireBiomeTicks--;
+            }
+        }
+
+        if (OpenGlHelper.areShadersSupported() && doShaders) {
+            if (mc.thePlayer != null && mc.thePlayer.getRNG().nextInt(10) == 3) {
+                PotionEffect pe = mc.thePlayer.getActivePotionEffect(ModPotions.saturation);
+                boolean active = pe != null && pe.getAmplifier() >= 2;
+                EntityRenderer renderer = mc.entityRenderer;
+                if (active && !renderer.isShaderActive()) {
+                    //Load saturation shader if not active
+                    try {
+                        Method method = ReflectionHelper.findMethod(EntityRenderer.class, renderer, new String[]{"loadShader", SRGNAMES.EntityRenderer_loadShader}, ResourceLocation.class);
+                        method.invoke(renderer, saturation1);
+                    } catch (Exception e) {
+                        doShaders = false;
+                        VampirismMod.log.e("RenderHandler", e, "Failed to activate saturation shader");
+                    }
+                } else if (!active && renderer.isShaderActive() && renderer.getShaderGroup().getShaderGroupName().equals(saturation1.toString())) {
+                    renderer.stopUseShader();
+                }
             }
         }
     }
