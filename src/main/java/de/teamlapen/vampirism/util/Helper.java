@@ -11,8 +11,8 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.BlockPos;
 
 
 public class Helper {

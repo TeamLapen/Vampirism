@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.entity.factions;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * Represents a entity faction (e.g. Vampires)
@@ -19,7 +19,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
      * Id used for hashing
      */
     private int id;
-    private EnumChatFormatting chatColor;
+    private TextFormatting chatColor;
 
     Faction(String name, Class<T> entityInterface, int color) {
         this.name = name;
@@ -34,11 +34,11 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     }
 
     @Override
-    public EnumChatFormatting getChatColor() {
-        return chatColor == null ? EnumChatFormatting.WHITE : chatColor;
+    public TextFormatting getChatColor() {
+        return chatColor == null ? TextFormatting.WHITE : chatColor;
     }
 
-    public Faction<T> setChatColor(EnumChatFormatting chatColor) {
+    public Faction<T> setChatColor(TextFormatting chatColor) {
         this.chatColor = chatColor;
         return this;
     }

@@ -17,8 +17,8 @@ import de.teamlapen.vampirism.inventory.HunterTrainerContainer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
@@ -103,13 +103,13 @@ public class InputEventPacket implements IMessage {
                             IAction.PERM r = VampirePlayer.get(player).getActionHandler().toggleAction(action);
                             switch (r) {
                                 case NOT_UNLOCKED:
-                                    player.addChatMessage(new ChatComponentTranslation("text.vampirism.action.not_unlocked"));
+                                    player.addChatMessage(new TextComponentTranslation("text.vampirism.action.not_unlocked"));
                                     break;
                                 case DISABLED:
-                                    player.addChatMessage(new ChatComponentTranslation("text.vampirism.action.deactivated_by_serveradmin"));
+                                    player.addChatMessage(new TextComponentTranslation("text.vampirism.action.deactivated_by_serveradmin"));
                                     break;
                                 case COOLDOWN:
-                                    player.addChatMessage(new ChatComponentTranslation("text.vampirism.action.cooldown_not_over"));
+                                    player.addChatMessage(new TextComponentTranslation("text.vampirism.action.cooldown_not_over"));
                                     break;
                             }
                         } else {

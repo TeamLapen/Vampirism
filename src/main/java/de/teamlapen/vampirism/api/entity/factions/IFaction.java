@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * Represents a entity faction (e.g. Vampires)
@@ -13,14 +13,14 @@ public interface IFaction<T extends IFactionEntity> {
      *
      * @return
      */
-    EnumChatFormatting getChatColor();
+    TextFormatting getChatColor();
 
     /**
      * Set the chat color
      *
      * @return The same instance
      */
-    IFaction<T> setChatColor(EnumChatFormatting color);
+    IFaction<T> setChatColor(TextFormatting color);
 
     /**
      * Used for some rendering, e.g. for displaying the level

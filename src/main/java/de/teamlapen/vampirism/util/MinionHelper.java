@@ -9,7 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.*;
+import net.minecraft.util.text.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -129,31 +129,31 @@ public class MinionHelper {
         IMinionLord l = m.getLord();
         if (l != null && l.getRepresentingEntity() instanceof EntityPlayer) {
             EntityLivingBase entity = entity(m);
-            IChatComponent c1;
+            ITextComponent c1;
             if (entity.hasCustomName()) {
-                c1 = new ChatComponentText(entity.getCustomNameTag());
+                c1 = new TextComponentString(entity.getCustomNameTag());
             } else {
-                c1 = new ChatComponentTranslation("text.vampirism.minion");
+                c1 = new TextComponentTranslation("text.vampirism.minion");
             }
 
             c1.appendText(": ");
-            c1.getChatStyle().setColor((EnumChatFormatting.GREEN));
-            ChatComponentStyle c2;
+            c1.getChatStyle().setColor((TextFormatting.GREEN));
+            TextComponentBase c2;
             if (message[0].startsWith("\\")) {
-                c2 = new ChatComponentText(message[0].replace("\\", ""));
+                c2 = new TextComponentString(message[0].replace("\\", ""));
             } else {
-                c2 = new ChatComponentTranslation(message[0]);
+                c2 = new TextComponentTranslation(message[0]);
             }
             for (int i = 1; i < message.length; i++) {
                 if (message[i].startsWith("\\")) {
-                    c2.appendSibling(new ChatComponentText(message[i].replace("\\", "")));
+                    c2.appendSibling(new TextComponentString(message[i].replace("\\", "")));
                 } else {
-                    c2.appendSibling(new ChatComponentTranslation(message[i]));
+                    c2.appendSibling(new TextComponentTranslation(message[i]));
                 }
 
             }
             c1.appendSibling(c2);
-            c2.getChatStyle().setColor(EnumChatFormatting.WHITE);
+            c2.getChatStyle().setColor(TextFormatting.WHITE);
             ((EntityPlayer) l.getRepresentingEntity()).addChatComponentMessage(c1);
         }
     }

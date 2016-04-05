@@ -3,15 +3,15 @@ package de.teamlapen.vampirism.blocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -33,21 +33,6 @@ public class BlockAltarPillar extends VampirismBlock {
     }
 
     @Override
-    public IBlockState getStateFromMeta(int meta) {
-        return getDefaultState().withProperty(typeProperty, EnumPillarType.byMetadata(meta));
-    }
-
-    @Override
-    public int getMetaFromState(IBlockState state) {
-        return state.getValue(typeProperty).meta;
-    }
-
-    @Override
-    protected BlockState createBlockState() {
-        return new BlockState(this, typeProperty);
-    }
-
-    @Override
     public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
         List<ItemStack> list = new ArrayList<>();
         list.add(new ItemStack(Item.getItemFromBlock(this), 1));
@@ -56,6 +41,26 @@ public class BlockAltarPillar extends VampirismBlock {
             list.add(new ItemStack(Item.getItemFromBlock(type.fillerBlock), 1));
         }
         return list;
+    }
+
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return state.getValue(typeProperty).meta;
+    }
+
+    @Override
+    public IBlockState getStateFromMeta(int meta) {
+        return getDefaultState().withProperty(typeProperty, EnumPillarType.byMetadata(meta));
+    }
+
+    @Override
+    public boolean isFullCube() {
+        return false;
+    }
+
+    @Override
+    public boolean isOpaqueCube() {
+        return false;
     }
 
     @Override
@@ -86,13 +91,8 @@ public class BlockAltarPillar extends VampirismBlock {
     }
 
     @Override
-    public boolean isFullCube() {
-        return false;
-    }
-
-    @Override
-    public boolean isOpaqueCube() {
-        return false;
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, typeProperty);
     }
 
     public enum EnumPillarType implements IStringSerializable {
@@ -105,6 +105,13 @@ public class BlockAltarPillar extends VampirismBlock {
             }
         }
 
+        public static EnumPillarType byMetadata(int metadata) {
+            if (metadata < 0 || metadata >= METADATA_LOOKUP.length) {
+                metadata = 0;
+            }
+
+            return METADATA_LOOKUP[metadata];
+        }
         public final String name;
         public final Block fillerBlock;
         public final int meta;
@@ -115,12 +122,9 @@ public class BlockAltarPillar extends VampirismBlock {
             this.fillerBlock = fillerBlock;
         }
 
-        public static EnumPillarType byMetadata(int metadata) {
-            if (metadata < 0 || metadata >= METADATA_LOOKUP.length) {
-                metadata = 0;
-            }
-
-            return METADATA_LOOKUP[metadata];
+        @Override
+        public String getName() {
+            return name;
         }
 
         /**
@@ -130,11 +134,6 @@ public class BlockAltarPillar extends VampirismBlock {
          */
         public int getValue() {
             return meta;
-        }
-
-        @Override
-        public String getName() {
-            return name;
         }
     }
 }

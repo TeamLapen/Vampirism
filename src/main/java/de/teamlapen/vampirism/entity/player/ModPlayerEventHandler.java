@@ -18,16 +18,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
-import net.minecraftforge.event.entity.player.PlayerUseItemEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidHandler;
@@ -52,7 +52,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onAttackEntity(AttackEntityEvent event) {
-        if (VampirePlayer.get(event.entityPlayer).getActionHandler().isActionActive(VampireActions.batAction)) {
+        if (VampirePlayer.get(event.getEntityPlayer()).getActionHandler().isActionActive(VampireActions.batAction)) {
             event.setCanceled(true);
         }
         checkItemUsePerm(event);
@@ -61,7 +61,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onBlockPlaced(BlockEvent.PlaceEvent event) {
         try {
-            if (VampirePlayer.get(event.player).getActionHandler().isActionActive(VampireActions.batAction)) {
+            if (VampirePlayer.get(event.getPlayer()).getActionHandler().isActionActive(VampireActions.batAction)) {
                 event.setCanceled(true);
             }
         } catch (Exception e) {
@@ -71,14 +71,14 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-        if (VampirePlayer.get(event.entityPlayer).getActionHandler().isActionActive(VampireActions.batAction)) {
+        if (VampirePlayer.get(event.getEntityPlayer()).getActionHandler().isActionActive(VampireActions.batAction)) {
             event.setCanceled(true);
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onItemUse(PlayerUseItemEvent.Start event) {
-        if (VampirePlayer.get(event.entityPlayer).getActionHandler().isActionActive(VampireActions.batAction)) {
+    public void onItemUse(LivingEntityUseItemEvent.Start event) {
+        if (event.getEntity() instanceof EntityPlayer && VampirePlayer.get((EntityPlayer) event.getEntityLiving()).getActionHandler().isActionActive(VampireActions.batAction)) {
             event.setCanceled(true);
         }
         checkItemUsePerm(event);
@@ -86,29 +86,29 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onLivingFall(LivingFallEvent event) {
-        if (event.entity instanceof EntityPlayer) {
-            event.distance -= VampirePlayer.get((EntityPlayer) event.entity).getSpecialAttributes().getJumpBoost();
+        if (event.getEntity() instanceof EntityPlayer) {
+            event.setDistance(event.getDistance() - VampirePlayer.get((EntityPlayer) event.getEntity()).getSpecialAttributes().getJumpBoost());
         }
     }
 
     @SubscribeEvent
     public void onLivingJump(LivingEvent.LivingJumpEvent event) {
-        if (event.entity instanceof EntityPlayer) {
-            event.entity.motionY += (double) ((float) (VampirePlayer.get((EntityPlayer) event.entity).getSpecialAttributes().getJumpBoost()) * 0.1F);
+        if (event.getEntity() instanceof EntityPlayer) {
+            event.getEntity().motionY += (double) ((float) (VampirePlayer.get((EntityPlayer) event.getEntity()).getSpecialAttributes().getJumpBoost()) * 0.1F);
         }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onLivingUpdateLast(LivingEvent.LivingUpdateEvent event) {
-        if (event.entity instanceof EntityPlayer) {
-            VampirePlayer.get((EntityPlayer) event.entity).onUpdateBloodStats();
+        if (event.getEntity() instanceof EntityPlayer) {
+            VampirePlayer.get((EntityPlayer) event.getEntity()).onUpdateBloodStats();
         }
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onPlayerClone(PlayerEvent.Clone event) {
-        if (!event.entityPlayer.worldObj.isRemote) {
-            FactionPlayerHandler.get(event.entityPlayer).copyFrom(event.original);
+        if (!event.getEntityPlayer().worldObj.isRemote) {
+            FactionPlayerHandler.get(event.getEntityPlayer()).copyFrom(event.getOriginal());
         }
     }
 
@@ -158,7 +158,7 @@ public class ModPlayerEventHandler {
             if (f != null && !f.isDisguised()) {
                 event.displayname = f.getFaction().getChatColor() + event.displayname;
                 if (f instanceof IVampirePlayer && ((IVampirePlayer) f).isVampireLord()) {
-                    event.displayname = EnumChatFormatting.RED + "[" + StatCollector.translateToLocal("text.vampirism.lord") + "] " + EnumChatFormatting.RESET + event.displayname;
+                    event.displayname = TextFormatting.RED + "[" + I18n.translateToLocal("text.vampirism.lord") + "] " + TextFormatting.RESET + event.displayname;
                 }
             }
 
@@ -178,11 +178,11 @@ public class ModPlayerEventHandler {
             FactionPlayerHandler handler = FactionPlayerHandler.get(event.entityPlayer);
             if (!handler.isInFaction(item.getUsingFaction())) {
                 event.setCanceled(true);
-                event.entityPlayer.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.can_only_be_used_by", new ChatComponentTranslation(item.getUsingFaction().getUnlocalizedNamePlural())));
+                event.entityPlayer.addChatComponentMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by", new TextComponentTranslation(item.getUsingFaction().getUnlocalizedNamePlural())));
             } else {
                 if (handler.getCurrentLevel() < item.getMinLevel() || !item.canUse(handler.getCurrentFactionPlayer(), stack)) {
                     event.setCanceled(true);
-                    event.entityPlayer.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.can_only_be_used_by_level", new ChatComponentTranslation(item.getUsingFaction().getUnlocalizedNamePlural()), item.getMinLevel()));
+                    event.entityPlayer.addChatComponentMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by_level", new TextComponentTranslation(item.getUsingFaction().getUnlocalizedNamePlural()), item.getMinLevel()));
                 }
             }
 

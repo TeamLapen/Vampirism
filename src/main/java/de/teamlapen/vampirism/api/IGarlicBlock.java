@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api;
 
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
 /**

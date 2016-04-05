@@ -13,10 +13,10 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 
 import java.io.IOException;
 
@@ -34,14 +34,14 @@ public class GuiHunterTrainer extends GuiContainer {
     }
 
     @Override
-    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        this.mc.getTextureManager().bindTexture(altarGuiTextures);
-        int k = (this.width - this.xSize) / 2;
-        int l = (this.height - this.ySize) / 2;
-        this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
+    public void initGui() {
+        super.initGui();
+        int i = (this.width - this.xSize) / 2;
+        int j = (this.height - this.ySize) / 2;
+        String name = I18n.format("text.vampirism.level_up");
+        this.buttonList.add(this.buttonLevelup = new GuiButton(1, i + 120, j + 24, fontRendererObj.getStringWidth(name) + 5, 20, name));
+        this.buttonLevelup.enabled = false;
     }
-
 
     @Override
     public void updateScreen() {
@@ -50,31 +50,6 @@ public class GuiHunterTrainer extends GuiContainer {
             buttonLevelup.enabled = container.canLevelup();
         }
 
-    }
-
-    @Override
-    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-        String string = container.getHunterTrainerInventory().hasCustomName() ? this.container.getHunterTrainerInventory().getName() : I18n.format(this.container.getHunterTrainerInventory().getName());
-        this.fontRendererObj.drawString(string, 8, 6, 0x404040);
-        this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 94, 0x404040);
-
-        String text = null;
-        if (container.getMissingItems() != null) {
-            ItemStack missing = container.getMissingItems();
-            IChatComponent item = missing.getItem().equals(ModItems.hunterIntel) ? ModItems.hunterIntel.getDisplayName(missing) : new ChatComponentTranslation(missing.getUnlocalizedName() + ".name");
-            text = I18n.format("text.vampirism.ritual_missing_items", missing.stackSize, item.getUnformattedText());
-        }
-        if (text != null) this.fontRendererObj.drawSplitString(text, 8, 50, this.xSize - 10, 0x000000);
-    }
-
-    @Override
-    public void initGui() {
-        super.initGui();
-        int i = (this.width - this.xSize) / 2;
-        int j = (this.height - this.ySize) / 2;
-        String name = I18n.format("text.vampirism.level_up");
-        this.buttonList.add(this.buttonLevelup = new GuiButton(1, i + 120, j + 24, fontRendererObj.getStringWidth(name) + 5, 20, name));
-        this.buttonLevelup.enabled = false;
     }
 
     @Override
@@ -87,5 +62,29 @@ public class GuiHunterTrainer extends GuiContainer {
         } else {
             super.actionPerformed(button);
         }
+    }
+
+    @Override
+    protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+        this.mc.getTextureManager().bindTexture(altarGuiTextures);
+        int k = (this.width - this.xSize) / 2;
+        int l = (this.height - this.ySize) / 2;
+        this.drawTexturedModalRect(k, l, 0, 0, this.xSize, this.ySize);
+    }
+
+    @Override
+    protected void drawGuiContainerForegroundLayer(int par1, int par2) {
+        String string = container.getHunterTrainerInventory().hasCustomName() ? this.container.getHunterTrainerInventory().getName() : I18n.format(this.container.getHunterTrainerInventory().getName());
+        this.fontRendererObj.drawString(string, 8, 6, 0x404040);
+        this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 94, 0x404040);
+
+        String text = null;
+        if (container.getMissingItems() != null) {
+            ItemStack missing = container.getMissingItems();
+            ITextComponent item = missing.getItem().equals(ModItems.hunterIntel) ? ModItems.hunterIntel.getDisplayName(missing) : new TextComponentTranslation(missing.getUnlocalizedName() + ".name");
+            text = I18n.format("text.vampirism.ritual_missing_items", missing.stackSize, item.getUnformattedText());
+        }
+        if (text != null) this.fontRendererObj.drawSplitString(text, 8, 50, this.xSize - 10, 0x000000);
     }
 }

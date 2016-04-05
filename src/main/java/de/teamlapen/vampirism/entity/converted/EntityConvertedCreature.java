@@ -14,7 +14,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
 /**
@@ -45,7 +45,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
 
     @Override
     public String getName() {
-        return StatCollector.translateToLocal("entity.vampirism.vampire.name") + " " + (nil() ? super.getName() : entityCreature.getName());
+        return I18n.translateToLocal("entity.vampirism.vampire.name") + " " + (nil() ? super.getName() : entityCreature.getName());
     }
 
     public T getOldCreature() {

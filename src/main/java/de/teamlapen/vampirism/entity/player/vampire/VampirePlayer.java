@@ -41,6 +41,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.*;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -647,11 +648,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             UtilLib.spawnParticles(player.worldObj, EnumParticleTypes.CRIT_MAGIC, entity.posX, entity.posY, entity.posZ, player.posX - entity.posX, player.posY - entity.posY, player.posZ - entity.posZ, 10);
         }
         for (int j = 0; j < 16; ++j) {
-            Vec3 vec3 = new Vec3((player.getRNG().nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
+            Vec3d vec3 = new Vec3d((player.getRNG().nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
             vec3 = vec3.rotatePitch(-player.rotationPitch * (float) Math.PI / 180F);
             vec3 = vec3.rotateYaw(-player.rotationYaw * (float) Math.PI / 180F);
             double d0 = (double) (-player.getRNG().nextFloat()) * 0.6D - 0.3D;
-            Vec3 vec31 = new Vec3(((double) player.getRNG().nextFloat() - 0.5D) * 0.3D, d0, 0.6D);
+            Vec3d vec31 = new Vec3d(((double) player.getRNG().nextFloat() - 0.5D) * 0.3D, d0, 0.6D);
             vec31 = vec31.rotatePitch(-player.rotationPitch * (float) Math.PI / 180.0F);
             vec31 = vec31.rotateYaw(-player.rotationYaw * (float) Math.PI / 180.0F);
             vec31 = vec31.addVector(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ);

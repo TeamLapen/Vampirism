@@ -6,11 +6,11 @@ import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -55,7 +55,7 @@ public class TileTent extends TileEntity implements ITickable {
     public Packet getDescriptionPacket() {
         NBTTagCompound nbttagcompound = new NBTTagCompound();
         this.writeToNBT(nbttagcompound);
-        return new S35PacketUpdateTileEntity(this.getPos(), 1, nbttagcompound);
+        return new SPacketUpdateTileEntity(this.getPos(), 1, nbttagcompound);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class TileTent extends TileEntity implements ITickable {
     }
 
     public boolean receiveClientEvent(int id, int type) {
-        return this.spawnerLogic.setDelayToMin(id) ? true : super.receiveClientEvent(id, type);
+        return this.spawnerLogic.setDelayToMin(id) || super.receiveClientEvent(id, type);
     }
 
     public void setSpawn(boolean spawn) {

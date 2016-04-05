@@ -21,8 +21,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
 import java.util.UUID;
@@ -138,7 +138,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
 
     @Override
     public String getName() {
-        return super.getName() + " " + StatCollector.translateToLocal("text.vampirism.entity_level") + " " + (getLevel() + 1);
+        return super.getName() + " " + I18n.translateToLocal("text.vampirism.entity_level") + " " + (getLevel() + 1);
     }
 
     @Override

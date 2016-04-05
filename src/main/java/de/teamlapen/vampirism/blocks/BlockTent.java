@@ -3,11 +3,11 @@ package de.teamlapen.vampirism.blocks;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -53,8 +53,8 @@ public class BlockTent extends VampirismBlock {
     }
 
     @Override
-    public EnumWorldBlockLayer getBlockLayer() {
-        return EnumWorldBlockLayer.CUTOUT;
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.CUTOUT;
     }
 
     @Override
@@ -82,7 +82,7 @@ public class BlockTent extends VampirismBlock {
     }
 
     @Override
-    protected BlockState createBlockState() {
-        return new BlockState(this, FACING, POSITION);
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, FACING, POSITION);
     }
 }

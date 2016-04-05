@@ -9,8 +9,14 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
@@ -35,7 +41,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     }
 
     public boolean attackEntityAsMob(Entity entity) {
-        float f = (float) this.getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
+        float f = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
         int i = 0;
 
         if (entity instanceof EntityLivingBase) {
@@ -115,7 +121,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
 
     public boolean isWithinHomeDistance(double x, double y, double z) {
         if (home != null) {
-            return home.isVecInside(new Vec3(x, y, z));
+            return home.isVecInside(new Vec3d(x, y, z));
         }
         return true;
     }
@@ -258,8 +264,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         this.setInvisible(true);
         Helper.spawnParticlesAroundEntity(this, EnumParticleTypes.PORTAL, 5, 64);
 
-        this.worldObj.playSoundEffect(this.posX, this.posY, this.posZ, "mob.endermen.portal", 1.0F, 1.0F);
-        this.playSound("mob.endermen.portal", 1.0F, 1.0F);
+        this.playSound(SoundEvents.entity_endermen_teleport, 1, 1);
 
         this.setDead();
     }

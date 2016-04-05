@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.world.gen;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBiomes;
 import net.minecraft.block.material.Material;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;

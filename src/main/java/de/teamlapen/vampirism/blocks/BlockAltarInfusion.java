@@ -11,9 +11,9 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -31,14 +31,24 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isFullCube() {
-        return false;
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        dropItems(worldIn, pos);
+        super.breakBlock(worldIn, pos, state);
     }
 
+    @Override
+    public TileEntity createNewTileEntity(World worldIn, int meta) {
+        return new TileAltarInfusion();
+    }
 
     @Override
     public int getRenderType() {
         return 3;
+    }
+
+    @Override
+    public boolean isFullCube() {
+        return false;
     }
 
     @Override
@@ -47,11 +57,23 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
     }
 
     @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-        dropItems(worldIn, pos);
-        super.breakBlock(worldIn, pos, state);
-    }
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {
+        TileAltarInfusion te = (TileAltarInfusion) worldIn.getTileEntity(pos);
+        if (playerIn.isSneaking() && playerIn.getHeldItem() == null) {
+            te.onActivated(playerIn);
+            return true;
+        }
+        if (!playerIn.isSneaking()) {
+            if (!(te.getCurrentPhase() == TileAltarInfusion.PHASE.NOT_RUNNING) && playerIn.worldObj.isRemote) {
+                playerIn.addChatMessage(new TextComponentTranslation("text.vampirism.ritual_still_running"));
+                return false;
+            }
+            playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_ALTAR_INFUSION, worldIn, pos.getX(), pos.getY(), pos.getZ());
+            return true;
+        }
 
+        return false;
+    }
 
     private void dropItems(World world, BlockPos pos) {
         Random rand = new Random();
@@ -84,30 +106,6 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
                 item.stackSize = 0;
             }
         }
-    }
-
-    @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {
-        TileAltarInfusion te = (TileAltarInfusion) worldIn.getTileEntity(pos);
-        if (playerIn.isSneaking() && playerIn.getHeldItem() == null) {
-            te.onActivated(playerIn);
-            return true;
-        }
-        if (!playerIn.isSneaking()) {
-            if (!(te.getCurrentPhase() == TileAltarInfusion.PHASE.NOT_RUNNING) && playerIn.worldObj.isRemote) {
-                playerIn.addChatMessage(new ChatComponentTranslation("text.vampirism.ritual_still_running"));
-                return false;
-            }
-            playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_ALTAR_INFUSION, worldIn, pos.getX(), pos.getY(), pos.getZ());
-            return true;
-        }
-
-        return false;
-    }
-
-    @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new TileAltarInfusion();
     }
 
 }

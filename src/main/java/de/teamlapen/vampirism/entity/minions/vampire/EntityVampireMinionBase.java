@@ -19,8 +19,8 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -60,12 +60,56 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
     }
 
     @Override
-    public boolean wantsBlood() {
-        return wantsBlood;
+    public void activateMinionCommand(IMinionCommand command) {
+        if (command == null)
+            return;
+        this.activeCommand.onDeactivated();
+        this.activeCommand = command;
+        this.activeCommand.onActivated();
     }
 
-    public void setWantsBlood(boolean wantsBlood) {
-        this.wantsBlood = wantsBlood;
+    @Override
+    public boolean canAttackClass(Class p_70686_1_) {
+        //if (EntityPortalGuard.class.equals(p_70686_1_)) return false;//TODO
+        return super.canAttackClass(p_70686_1_);
+    }
+
+    @Override
+    public void copyDataFromOld(Entity entityIn) {
+        super.copyDataFromOld(entityIn);
+        if (entityIn instanceof EntityVampireMinionBase) {
+            this.copyDataFromMinion((EntityVampireMinionBase) entityIn);
+        }
+    }
+
+    public IMinionCommand getActiveCommand() {
+        return this.activeCommand;
+    }
+
+    @Override
+    public float getBlockPathWeight(BlockPos pos) {
+        float i = 0.5F - this.worldObj.getLightBrightness(pos);
+        if (i > 0)
+            return i;
+        return 0.01F;
+    }
+
+    public int getOldVampireTexture() {
+        return getDataWatcher().getWatchableObjectInt(ID_TEXTURE);
+    }
+
+    public void setOldVampireTexture(int oldVampireTexture) {
+        getDataWatcher().updateObject(ID_TEXTURE, oldVampireTexture);
+    }
+
+    @Override
+    public int getTalkInterval() {
+        return 2000;
+    }
+
+    @Override
+    public boolean isChild() {
+        return true;
     }
 
     @Override
@@ -78,85 +122,6 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
             super.onKillEntity(entity);
         }
 
-    }
-
-    @Override
-    public void activateMinionCommand(IMinionCommand command) {
-        if (command == null)
-            return;
-        this.activeCommand.onDeactivated();
-        this.activeCommand = command;
-        this.activeCommand.onActivated();
-    }
-
-    @Override
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(30D);
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(Balance.mobProps.VAMPIRE_MINION_MAX_HEALTH);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(Balance.mobProps.VAMPIRE_MINION_ATTACK_DAMAGE);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(Balance.mobProps.VAMPIRE_MINION_MOVEMENT_SPEED);
-    }
-
-    @Override
-    public void copyDataFromOld(Entity entityIn) {
-        super.copyDataFromOld(entityIn);
-        if (entityIn instanceof EntityVampireMinionBase) {
-            this.copyDataFromMinion((EntityVampireMinionBase) entityIn);
-        }
-    }
-
-
-    /**
-     * Copies vampire minion data
-     *
-     * @param from
-     */
-    protected void copyDataFromMinion(EntityVampireMinionBase from) {
-        this.setOldVampireTexture(from.getOldVampireTexture());
-        this.setLord(from.getLord());
-        this.activateMinionCommand(from.getActiveCommand());
-    }
-
-    public IMinionCommand getActiveCommand() {
-        return this.activeCommand;
-    }
-
-
-    @Override
-    public float getBlockPathWeight(BlockPos pos) {
-        float i = 0.5F - this.worldObj.getLightBrightness(pos);
-        if (i > 0)
-            return i;
-        return 0.01F;
-    }
-
-    /**
-     * Has to return the command which is activated on default
-     *
-     * @return
-     */
-    protected abstract
-    @Nonnull
-    IMinionCommand createDefaultCommand();
-
-    public int getOldVampireTexture() {
-        return getDataWatcher().getWatchableObjectInt(ID_TEXTURE);
-    }
-
-    public void setOldVampireTexture(int oldVampireTexture) {
-        getDataWatcher().updateObject(ID_TEXTURE, oldVampireTexture);
-    }
-
-    @Override
-    public boolean isChild() {
-        return true;
-    }
-
-    @Override
-    public boolean canAttackClass(Class p_70686_1_) {
-        //if (EntityPortalGuard.class.equals(p_70686_1_)) return false;//TODO
-        return super.canAttackClass(p_70686_1_);
     }
 
     @Override
@@ -215,6 +180,10 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
 
     }
 
+    public void setWantsBlood(boolean wantsBlood) {
+        this.wantsBlood = wantsBlood;
+    }
+
     /**
      * Replaces {@link #setCustomNameTag(String)}.
      *
@@ -231,11 +200,15 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
     }
 
     @Override
+    public boolean wantsBlood() {
+        return wantsBlood;
+    }
+
+    @Override
     public void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
         nbt.setInteger("command_id", getActiveCommand().getId());
     }
-
 
     @Override
     public boolean writeToNBTOptional(NBTTagCompound nbt) {
@@ -245,9 +218,32 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
         return super.writeToNBTOptional(nbt);
     }
 
-
     @Override
-    public int getTalkInterval() {
-        return 2000;
+    protected void applyEntityAttributes() {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(30D);
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(Balance.mobProps.VAMPIRE_MINION_MAX_HEALTH);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(Balance.mobProps.VAMPIRE_MINION_ATTACK_DAMAGE);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(Balance.mobProps.VAMPIRE_MINION_MOVEMENT_SPEED);
     }
+
+    /**
+     * Copies vampire minion data
+     *
+     * @param from
+     */
+    protected void copyDataFromMinion(EntityVampireMinionBase from) {
+        this.setOldVampireTexture(from.getOldVampireTexture());
+        this.setLord(from.getLord());
+        this.activateMinionCommand(from.getActiveCommand());
+    }
+
+    /**
+     * Has to return the command which is activated on default
+     *
+     * @return
+     */
+    protected abstract
+    @Nonnull
+    IMinionCommand createDefaultCommand();
 }

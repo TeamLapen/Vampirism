@@ -12,10 +12,10 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureComponent;
@@ -228,6 +228,17 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
 
     public static class CreationHandler implements VillagerRegistry.IVillageCreationHandler {
 
+        @Override
+        public StructureVillagePieces.Village buildComponent(StructureVillagePieces.PieceWeight villagePiece, StructureVillagePieces.Start startPiece, List<StructureComponent> pieces, Random random, int p1, int p2, int p3, EnumFacing facing, int p5) {
+            StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 9, 7, 12, facing);
+            return canVillageGoDeeper(structureboundingbox) && StructureComponent.findIntersecting(pieces, structureboundingbox) == null ? new VillagePieceTrainer(startPiece, p5, random, structureboundingbox, facing) : null;
+        }
+
+        @Override
+        public Class<?> getComponentClass() {
+            return VillagePieceTrainer.class;
+        }
+
         /**
          * @param random
          * @param terrainType Apparently rather the village size, than the terrain type
@@ -236,17 +247,6 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
         @Override
         public StructureVillagePieces.PieceWeight getVillagePieceWeight(Random random, int terrainType) {
             return new StructureVillagePieces.PieceWeight(VillagePieceTrainer.class, 20, MathHelper.getRandomIntegerInRange(random, 0, 1 + terrainType));
-        }
-
-        @Override
-        public Class<?> getComponentClass() {
-            return VillagePieceTrainer.class;
-        }
-
-        @Override
-        public StructureVillagePieces.Village buildComponent(StructureVillagePieces.PieceWeight villagePiece, StructureVillagePieces.Start startPiece, List<StructureComponent> pieces, Random random, int p1, int p2, int p3, EnumFacing facing, int p5) {
-            StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 9, 7, 12, facing);
-            return canVillageGoDeeper(structureboundingbox) && StructureComponent.findIntersecting(pieces, structureboundingbox) == null ? new VillagePieceTrainer(startPiece, p5, random, structureboundingbox, facing) : null;
         }
     }
 

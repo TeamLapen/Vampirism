@@ -9,8 +9,8 @@ import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
 import de.teamlapen.vampirism.entity.minions.ai.MinionAIFollowLord;
 import de.teamlapen.vampirism.entity.minions.commands.DefendLordCommand;
 import net.minecraft.entity.ai.EntityAIFleeSun;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -76,17 +76,15 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
     }
 
     @Override
-    public IMinionCommand getCommand(int id) {
-        if (id < commands.size())
-            return commands.get(id);
+    public List<IMinionCommand> getAvailableRemoteCommands(IMinionLord lord) {
         return null;
     }
 
     @Override
-    protected
-    @Nonnull
-    IMinionCommand createDefaultCommand() {
-        return new DefendLordCommand(0, this, 1);
+    public IMinionCommand getCommand(int id) {
+        if (id < commands.size())
+            return commands.get(id);
+        return null;
     }
 
     @Override
@@ -132,7 +130,9 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
     }
 
     @Override
-    public List<IMinionCommand> getAvailableRemoteCommands(IMinionLord lord) {
-        return null;
+    protected
+    @Nonnull
+    IMinionCommand createDefaultCommand() {
+        return new DefendLordCommand(0, this, 1);
     }
 }

@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.ItemInjection;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -17,10 +17,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 /**
@@ -85,13 +85,13 @@ public class BlockMedChair extends VampirismBlock {
                 }
             } else {
                 if (!worldIn.isRemote) {
-                    playerIn.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.med_chair_other_faction", new ChatComponentTranslation(faction.getUnlocalizedName())));
+                    playerIn.addChatComponentMessage(new TextComponentTranslation("text.vampirism.med_chair_other_faction", new TextComponentTranslation(faction.getUnlocalizedName())));
                 }
 
             }
         } else {
             if (worldIn.isRemote)
-                playerIn.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.need_item_to_use", new ChatComponentTranslation((new ItemStack(ModItems.injection, 1, ItemInjection.META_GARLIC)).getUnlocalizedName() + ".name")));
+                playerIn.addChatComponentMessage(new TextComponentTranslation("text.vampirism.need_item_to_use", new TextComponentTranslation((new ItemStack(ModItems.injection, 1, ItemInjection.META_GARLIC)).getUnlocalizedName() + ".name")));
         }
 
         return super.onBlockActivated(worldIn, pos, state, playerIn, side, hitX, hitY, hitZ);
@@ -103,8 +103,8 @@ public class BlockMedChair extends VampirismBlock {
     }
 
     @Override
-    protected BlockState createBlockState() {
-        return new BlockState(this, FACING, PART);
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, FACING, PART);
     }
 
     public enum EnumPart implements IStringSerializable {

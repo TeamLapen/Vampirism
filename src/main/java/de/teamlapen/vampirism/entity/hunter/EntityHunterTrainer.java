@@ -15,8 +15,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 /**
@@ -50,51 +50,9 @@ public class EntityHunterTrainer extends EntityHunterBase {
         this.setEquipmentDropChance(0, 0);
     }
 
-
-    public void setHome(AxisAlignedBB box) {
-        super.setHome(box);
-        this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO);
-    }
-
-    @Override
-    protected boolean canDespawn() {
-        return !hasHome() && super.canDespawn();
-    }
-
-    @Override
-    protected void applyEntityAttributes() {
-        super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(300);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(19);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.17);
-        this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(5);
-    }
-
     @Override
     public boolean getAlwaysRenderNameTagForRender() {
         return true;
-    }
-
-    @Override
-    protected boolean interact(EntityPlayer player) {
-        ItemStack itemstack = player.inventory.getCurrentItem();
-        boolean flag = itemstack != null && itemstack.getItem() == Items.spawn_egg;
-
-        if (!flag && this.isEntityAlive() && !player.isSneaking()) {
-            if (!this.worldObj.isRemote) {
-                if (HunterLevelingConf.instance().isLevelValidForTrainer(FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION) + 1)) {
-                    this.trainee = player;
-                    player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_TRAINER, player.worldObj, getPosition().getX(), getPosition().getY(), getPosition().getZ());
-                } else {
-                    player.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.trainer_level_wrong"));
-                }
-
-            }
-
-            return true;
-        } else {
-            return super.interact(player);
-        }
     }
 
     /**
@@ -109,6 +67,47 @@ public class EntityHunterTrainer extends EntityHunterBase {
         super.onLivingUpdate();
         if (trainee != null && trainee.openContainer == null) {
             this.trainee = null;
+        }
+    }
+
+    public void setHome(AxisAlignedBB box) {
+        super.setHome(box);
+        this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO);
+    }
+
+    @Override
+    protected void applyEntityAttributes() {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(300);
+        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(19);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.17);
+        this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(5);
+    }
+
+    @Override
+    protected boolean canDespawn() {
+        return !hasHome() && super.canDespawn();
+    }
+
+    @Override
+    protected boolean interact(EntityPlayer player) {
+        ItemStack itemstack = player.inventory.getCurrentItem();
+        boolean flag = itemstack != null && itemstack.getItem() == Items.spawn_egg;
+
+        if (!flag && this.isEntityAlive() && !player.isSneaking()) {
+            if (!this.worldObj.isRemote) {
+                if (HunterLevelingConf.instance().isLevelValidForTrainer(FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION) + 1)) {
+                    this.trainee = player;
+                    player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_TRAINER, player.worldObj, getPosition().getX(), getPosition().getY(), getPosition().getZ());
+                } else {
+                    player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.trainer_level_wrong"));
+                }
+
+            }
+
+            return true;
+        } else {
+            return super.interact(player);
         }
     }
 }

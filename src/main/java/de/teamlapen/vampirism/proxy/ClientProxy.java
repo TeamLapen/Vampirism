@@ -11,9 +11,9 @@ import de.teamlapen.vampirism.client.render.particle.ParticleHandlerClient;
 import de.teamlapen.vampirism.util.IParticleHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
-import net.minecraft.client.renderer.entity.RendererLivingEntity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -81,11 +81,11 @@ public class ClientProxy extends CommonProxy {
             VampirismMod.log.e(TAG, "Did not find renderer for %s", clazz);
             return;
         }
-        if (!(render instanceof RendererLivingEntity)) {
+        if (!(render instanceof RenderLivingBase)) {
             VampirismMod.log.e(TAG, "Renderer (%s) for %s does not extend RenderLivingEntity", clazz, render);
             return;
         }
-        RendererLivingEntity rendererLiving = (RendererLivingEntity) render;
+        RenderLivingBase rendererLiving = (RenderLivingBase) render;
         rendererLiving.addLayer(new LayerVampireEntity(rendererLiving, loc));
     }
 

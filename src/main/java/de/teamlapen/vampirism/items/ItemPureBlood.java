@@ -4,7 +4,11 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.translation.I18n;
 
 import java.util.List;
 
@@ -19,16 +23,14 @@ public class ItemPureBlood extends VampirismItem {
         this.setHasSubtypes(true);
     }
 
-    public IChatComponent getDisplayName(ItemStack stack) {
-        return new ChatComponentTranslation(getUnlocalizedName() + ".name").appendSibling(new ChatComponentText(" ")).appendSibling(new ChatComponentTranslation("text.vampirism.purity")).appendSibling(new ChatComponentText(" " + (stack.getItemDamage() + 1)));
-    }
-
-
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
-        list.add(EnumChatFormatting.RED + StatCollector.translateToLocal("text.vampirism.purity") + ": " + (itemStack.getItemDamage() + 1) + "/" + COUNT);
+        list.add(TextFormatting.RED + I18n.translateToLocal("text.vampirism.purity") + ": " + (itemStack.getItemDamage() + 1) + "/" + COUNT);
     }
 
+    public ITextComponent getDisplayName(ItemStack stack) {
+        return new TextComponentTranslation(getUnlocalizedName() + ".name").appendSibling(new TextComponentString(" ")).appendSibling(new TextComponentTranslation("text.vampirism.purity")).appendSibling(new TextComponentString(" " + (stack.getItemDamage() + 1)));
+    }
 
     @Override
     public void getSubItems(Item item, CreativeTabs tab, List list) {

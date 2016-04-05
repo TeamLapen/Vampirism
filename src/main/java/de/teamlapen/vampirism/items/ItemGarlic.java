@@ -5,8 +5,8 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.EnumPlantType;
@@ -23,13 +23,13 @@ public class ItemGarlic extends VampirismItem implements IGarlicItem, IPlantable
     }
 
     @Override
-    public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {
-        return EnumPlantType.Crop;
+    public IBlockState getPlant(IBlockAccess world, BlockPos pos) {
+        return ModBlocks.garlic.getDefaultState();
     }
 
     @Override
-    public IBlockState getPlant(IBlockAccess world, BlockPos pos) {
-        return ModBlocks.garlic.getDefaultState();
+    public EnumPlantType getPlantType(IBlockAccess world, BlockPos pos) {
+        return EnumPlantType.Crop;
     }
 
     /**

@@ -8,11 +8,11 @@ import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * Created by Max on 12.03.2016.
@@ -40,7 +40,7 @@ public class TileCoffin extends TileEntity implements ITickable {
     public Packet getDescriptionPacket() {
         NBTTagCompound nbtTag = new NBTTagCompound();
         this.writeToNBT(nbtTag);
-        return new S35PacketUpdateTileEntity(this.getPos(), 1, nbtTag);
+        return new SPacketUpdateTileEntity(this.getPos(), 1, nbtTag);
     }
 
     public TileCoffin getPrimaryTileEntity() {
@@ -61,7 +61,7 @@ public class TileCoffin extends TileEntity implements ITickable {
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
         readFromNBT(packet.getNbtCompound());
         ModBlocks.coffin.setCoffinOccupied(this.worldObj, pos, null, this.occupied);
         VampirismMod.log.t("onDataPacket called, occupied=%s, remote=%s", this.occupied, this.worldObj.isRemote);

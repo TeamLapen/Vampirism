@@ -3,8 +3,9 @@ package de.teamlapen.lib.lib.util;
 
 import de.teamlapen.lib.VampLib;
 import net.minecraft.command.*;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public abstract class BasicCommand extends CommandBase {
     public static void sendMessage(ICommandSender target, String message) {
         String[] lines = message.split("\\n");
         for (String line : lines) {
-            target.addChatMessage(new ChatComponentText(line));
+            target.addChatMessage(new TextComponentString(line));
         }
 
     }
@@ -61,12 +62,7 @@ public abstract class BasicCommand extends CommandBase {
     }
 
     @Override
-    public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-        return (args.length == 1) ? getListOfStringsMatchingLastWord(args, getSubNames()) : getSubcommandTabCompletion(sender, args, pos);
-    }
-
-    @Override
-    public boolean canCommandSenderUseCommand(ICommandSender sender) {
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
         return true;
     }
 
@@ -76,22 +72,7 @@ public abstract class BasicCommand extends CommandBase {
     }
 
     @Override
-    public List getCommandAliases() {
-        return aliases;
-    }
-
-    @Override
-    public String getCommandUsage(ICommandSender p_71518_1_) {
-        return String.format("/%s <subcommand> <params> | Use /%s help to get all available subcommands", this.getCommandName(), this.getCommandName());
-    }
-
-    @Override
-    public boolean isUsernameIndex(String[] p_82358_1_, int p_82358_2_) {
-        return false;
-    }
-
-    @Override
-    public void processCommand(ICommandSender sender, String[] param) throws CommandException {
+    public void execute(MinecraftServer server, ICommandSender sender, String[] param) throws CommandException {
         if (param == null || param.length == 0) {
             throw new WrongUsageException(getCommandUsage(sender));
         }
@@ -124,6 +105,26 @@ public abstract class BasicCommand extends CommandBase {
         } else {
             sendMessage(sender, "You are not allowed to use this command");
         }
+    }
+
+    @Override
+    public List getCommandAliases() {
+        return aliases;
+    }
+
+    @Override
+    public String getCommandUsage(ICommandSender p_71518_1_) {
+        return String.format("/%s <subcommand> <params> | Use /%s help to get all available subcommands", this.getCommandName(), this.getCommandName());
+    }
+
+    @Override
+    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+        return (args.length == 1) ? getListOfStringsMatchingLastWord(args, getSubNames()) : getSubcommandTabCompletion(sender, args, pos);
+    }
+
+    @Override
+    public boolean isUsernameIndex(String[] p_82358_1_, int p_82358_2_) {
+        return false;
     }
 
     protected void addSub(SubCommand s) {

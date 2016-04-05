@@ -18,13 +18,13 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -48,6 +48,16 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
     public VampirismHUDOverlay(Minecraft mc) {
         this.mc = mc;
+    }
+
+    public void makeRenderFullColor(int on, int off, int color) {
+        this.rederFullOn = on;
+        this.renderFullOff = off;
+        this.renderFullTick = on + off;
+        if ((color >> 24 & 255) == 0) {
+            color |= 0xFF000000;
+        }
+        this.renderFullColor = color;
     }
 
     @SubscribeEvent
@@ -80,25 +90,15 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
     }
 
-    public void makeRenderFullColor(int on, int off, int color) {
-        this.rederFullOn = on;
-        this.renderFullOff = off;
-        this.renderFullTick = on + off;
-        if ((color >> 24 & 255) == 0) {
-            color |= 0xFF000000;
-        }
-        this.renderFullColor = color;
-    }
-
     @SubscribeEvent
     public void onRenderCrosshair(RenderGameOverlayEvent.Pre event) {
         if (event.type != RenderGameOverlayEvent.ElementType.CROSSHAIRS) {
             return;
         }
 
-        MovingObjectPosition p = Minecraft.getMinecraft().objectMouseOver;
+        RayTraceResult p = Minecraft.getMinecraft().objectMouseOver;
 
-        if (p != null && p.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && p.entityHit != null) {
+        if (p != null && p.typeOfHit == RayTraceResult.MovingObjectType.ENTITY && p.entityHit != null) {
             IVampirePlayer player = VampirePlayer.get(mc.thePlayer);
             if (player.getLevel() > 0) {
                 Entity entity = p.entityHit;
@@ -219,7 +219,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
                 GlStateManager.shadeModel(7425);
                 Tessellator tessellator = Tessellator.getInstance();
-                WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+                VertexBuffer worldrenderer = tessellator.getWorldRenderer();
                 worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
                 worldrenderer.pos(0, h, (double) this.zLevel).color(r, g, b, a).endVertex();
                 worldrenderer.pos(w, h, (double) this.zLevel).color(r, g, b, a).endVertex();

@@ -8,7 +8,7 @@ import net.minecraft.block.BlockCrops;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 
 import java.util.List;
@@ -31,6 +31,10 @@ public class BlockGarlic extends BlockCrops implements IGarlicBlock {
         this.setUnlocalizedName(REFERENCE.MODID + "." + regName);
     }
 
+    @Override
+    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
+        return super.getDrops(world, pos, state, fortune - 1);
+    }
 
     @Override
     public EnumGarlicStrength getGarlicStrength(IBlockAccess world, BlockPos pos) {
@@ -38,18 +42,12 @@ public class BlockGarlic extends BlockCrops implements IGarlicBlock {
     }
 
     @Override
-    public List<ItemStack> getDrops(IBlockAccess world, BlockPos pos, IBlockState state, int fortune) {
-        return super.getDrops(world, pos, state, fortune - 1);
-    }
-
-
-    @Override
-    protected Item getSeed() {
+    protected Item getCrop() {
         return ModItems.itemGarlic;
     }
 
     @Override
-    protected Item getCrop() {
+    protected Item getSeed() {
         return ModItems.itemGarlic;
     }
 }

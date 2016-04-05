@@ -6,8 +6,8 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 
 
 public class TeleportVampireAction extends DefaultVampireAction {
@@ -50,7 +50,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
     @Override
     public boolean onActivated(IVampirePlayer vampire) {
         EntityPlayer player = vampire.getRepresentingPlayer();
-        MovingObjectPosition target = UtilLib.getPlayerLookingSpot(player, Balance.vpa.TELEPORT_MAX_DISTANCE);
+        RayTraceResult target = UtilLib.getPlayerLookingSpot(player, Balance.vpa.TELEPORT_MAX_DISTANCE);
         double ox = player.posX;
         double oy = player.posY;
         double oz = player.posZ;

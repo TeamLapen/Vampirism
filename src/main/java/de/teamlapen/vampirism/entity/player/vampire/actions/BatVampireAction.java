@@ -13,7 +13,7 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import java.lang.reflect.Method;
@@ -114,7 +114,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     @Override
     public boolean onUpdate(IVampirePlayer vampire) {
         if (vampire.isGettingSundamage() && !vampire.isRemote()) {
-            vampire.getRepresentingPlayer().addChatMessage(new ChatComponentTranslation("text.vampirism.cant_fly_day"));
+            vampire.getRepresentingPlayer().addChatMessage(new TextComponentTranslation("text.vampirism.cant_fly_day"));
             return true;
         }
         return false;

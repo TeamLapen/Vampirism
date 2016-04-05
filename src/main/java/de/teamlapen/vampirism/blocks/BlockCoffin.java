@@ -6,7 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
@@ -14,9 +14,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -157,7 +157,7 @@ public class BlockCoffin extends VampirismBlockContainer {
 
             if (world.provider.canRespawnHere() && world.getBiomeGenForCoords(pos) != BiomeGenBase.hell) {
                 if (state.getValue(BlockBed.OCCUPIED).booleanValue()) {
-                    player.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.coffin.occupied"));
+                    player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.coffin.occupied"));
                     return true;
                 }
 
@@ -169,14 +169,14 @@ public class BlockCoffin extends VampirismBlockContainer {
                     return true;
                 } else {
                     if (enumstatus == EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW) {
-                        player.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.coffin.noSleep"));
+                        player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.coffin.noSleep"));
                     } else if (enumstatus == EntityPlayer.EnumStatus.NOT_SAFE) {
-                        player.addChatComponentMessage(new ChatComponentTranslation("tile.bed.notSafe"));
+                        player.addChatComponentMessage(new TextComponentTranslation("tile.bed.notSafe"));
                     }
                     return true;
                 }
             } else {
-                player.addChatComponentMessage(new ChatComponentTranslation("text.vampirism.coffin.wrong_dimension"));
+                player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.coffin.wrong_dimension"));
                 return true;
             }
         }
@@ -210,8 +210,8 @@ public class BlockCoffin extends VampirismBlockContainer {
     }
 
     @Override
-    protected BlockState createBlockState() {
-        return new BlockState(this, BlockBed.OCCUPIED, BlockBed.PART, BlockDirectional.FACING);
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, BlockBed.OCCUPIED, BlockBed.PART, BlockDirectional.FACING);
     }
 
     private void wakeSleepingPlayer(World world, BlockPos pos) {
