@@ -19,6 +19,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
@@ -31,20 +34,15 @@ import java.util.UUID;
  * Vampire that spawns in the vampire forest, has minions and drops pure blood
  */
 public class EntityVampireBaron extends EntityVampireBase implements IVampireBaron {
+    private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(EntityVampireBaron.class, DataSerializers.VARINT);
     private final SaveableMinionHandler<IVampireMinion.Saveable> minionHandler;
-    private final int ID_LEVEL = 16;
     private final int MAX_LEVEL = 4;
-    /**
-     * True after the datawatcher has been initialized.
-     */
-    private boolean datawatcher_init = false;
+
     private boolean prevAttacking = false;
 
     public EntityVampireBaron(World world) {
         super(world, true);
         minionHandler = new SaveableMinionHandler<>(this);
-        getDataWatcher().addObject(ID_LEVEL, -1);
-        datawatcher_init = true;
         this.setSize(0.6F, 1.8F);
 
 
@@ -95,7 +93,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
 
     @Override
     public int getLevel() {
-        return datawatcher_init ? getDataWatcher().getWatchableObjectInt(ID_LEVEL) : -1;
+        return getDataManager().get(LEVEL);
     }
 
     @Override
@@ -104,7 +102,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
             this.updateEntityAttributes(false);
             float hp = this.getHealth() / this.getMaxHealth();
             this.setHealth(this.getMaxHealth() * hp);
-            getDataWatcher().updateObject(ID_LEVEL, level);
+            getDataManager().set(LEVEL, level);
         }
     }
 
@@ -259,6 +257,12 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.updateEntityAttributes(false);
+    }
+
+    @Override
+    protected void entityInit() {
+        super.entityInit();
+        getDataManager().register(LEVEL, -1);
     }
 
     @Override

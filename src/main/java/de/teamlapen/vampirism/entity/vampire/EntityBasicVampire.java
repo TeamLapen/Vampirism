@@ -19,6 +19,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -29,20 +32,17 @@ import net.minecraft.world.World;
 
 public class EntityBasicVampire extends EntityVampireBase implements IBasicVampire {
 
+    private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(EntityBasicVampire.class, DataSerializers.VARINT);
     private final int ID_LEVEL = 16;
     private final int MAX_LEVEL = 2;
     private final int MOVE_TO_RESTRICT_PRIO = 3;
     private int bloodtimer = 100;
-    /**
-     * True after the datawatcher has been initialized.
-     */
-    private boolean datawatcher_init = false;
+
 
     public EntityBasicVampire(World world) {
         super(world, true);
 
-        getDataWatcher().addObject(ID_LEVEL, -1);
-        datawatcher_init = true;
+
         hasArms = true;
 
         this.setSize(0.6F, 1.8F);
@@ -78,7 +78,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
 
     @Override
     public int getLevel() {
-        return datawatcher_init ? getDataWatcher().getWatchableObjectInt(ID_LEVEL) : -1;
+        getDataManager().get(LEVEL)
     }
 
     @Override
@@ -93,7 +93,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
             } else {
                 this.setCurrentItemOrArmor(0, null);
             }
-            getDataWatcher().updateObject(ID_LEVEL, level);
+            getDataManager().set(LEVEL, level);
         }
     }
 
@@ -158,6 +158,12 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
                 this.dropItem(ModItems.vampireFang, 1);
             }
         }
+    }
+
+    @Override
+    protected void entityInit() {
+        super.entityInit();
+        getDataManager().register(LEVEL, -1);
     }
 
     @Override

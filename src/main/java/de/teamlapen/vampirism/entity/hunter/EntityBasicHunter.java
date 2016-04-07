@@ -13,6 +13,9 @@ import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
@@ -23,18 +26,14 @@ import net.minecraft.world.World;
  * Exists in {@link EntityBasicHunter#MAX_LEVEL}+1 different levels
  */
 public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter {
-    private final int ID_LEVEL = 16;
+    private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(EntityBasicHunter.class, DataSerializers.VARINT);
     private final int MAX_LEVEL = 3;
     private final int MOVE_TO_RESTRICT_PRIO = 3;
-    /**
-     * True after the datawatcher has been initialized.
-     */
-    private boolean datawatcher_init = false;
+
 
     public EntityBasicHunter(World world) {
         super(world, true);
-        getDataWatcher().addObject(ID_LEVEL, -1);
-        datawatcher_init = true;
+
         saveHome = true;
         ((PathNavigateGround) this.getNavigator()).setEnterDoors(true);
 
@@ -55,7 +54,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter 
 
     @Override
     public int getLevel() {
-        return datawatcher_init ? getDataWatcher().getWatchableObjectInt(ID_LEVEL) : -1;
+        return getDataManager().get(LEVEL);
     }
 
     @Override
@@ -65,7 +64,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter 
             if (level == 3) {
                 this.addPotionEffect(new PotionEffect(MobEffects.resistance, 1000000, 1));
             }
-            getDataWatcher().updateObject(ID_LEVEL, level);
+            getDataManager().set(LEVEL, level);
         }
     }
 
@@ -129,6 +128,12 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter 
                 this.dropItem(ModItems.humanHeart, 1);
             }
             }
+    }
+
+    @Override
+    protected void entityInit() {
+        super.entityInit();
+        this.getDataManager().register(LEVEL, -1);
     }
 
     @Override

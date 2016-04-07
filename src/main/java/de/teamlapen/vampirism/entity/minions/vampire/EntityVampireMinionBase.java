@@ -20,6 +20,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -36,10 +39,10 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
 
 
     /**
-     * Datawatcher id for oldVampireTexture
+     * Datamanager key for oldVampireTexture
      * Used for the visual transition from normal vampire to players minion
      */
-    private final int ID_TEXTURE = 16;
+    private final static DataParameter<Integer> TEXTURE = EntityDataManager.createKey(EntityVampireMinionBase.class, DataSerializers.VARINT);
 
 
     private IMinionCommand activeCommand;
@@ -51,7 +54,6 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
         // this.setSize(0.5F, 1.1F);
         //this.func_110163_bv(); TODO check if this was relevant
 
-        getDataWatcher().addObject(ID_TEXTURE, -1);
         activeCommand = this.createDefaultCommand();
         activeCommand.onActivated();
     }
@@ -92,11 +94,11 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
     }
 
     public int getOldVampireTexture() {
-        return getDataWatcher().getWatchableObjectInt(ID_TEXTURE);
+        return getDataManager().get(TEXTURE);
     }
 
     public void setOldVampireTexture(int oldVampireTexture) {
-        getDataWatcher().updateObject(ID_TEXTURE, oldVampireTexture);
+        getDataManager().set(TEXTURE, oldVampireTexture);
     }
 
     @Override
@@ -243,6 +245,12 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
     protected abstract
     @Nonnull
     IMinionCommand createDefaultCommand();
+
+    @Override
+    protected void entityInit() {
+        super.entityInit();
+        getDataManager().register(TEXTURE, -1);
+    }
 
     @Override
     protected void initEntityAI() {
