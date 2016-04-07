@@ -11,10 +11,26 @@ import net.minecraft.item.ItemStack;
 public class ItemMetaBlock extends ItemBlock {
     final boolean customName;
 
-    public ItemMetaBlock(Block block) {
+    /**
+     * Creates a item for a meta block
+     *
+     * @param block
+     * @param register If the block's registry name should be set to the item
+     */
+    public ItemMetaBlock(Block block, boolean register) {
         super(block);
         customName = (block instanceof IMetaItemName);
         setHasSubtypes(true);
+        if (register) this.setRegistryName(block.getRegistryName());
+    }
+
+    /**
+     * Creates a item for a meta block and copies it's registry name
+     *
+     * @param block
+     */
+    public ItemMetaBlock(Block block) {
+        this(block,true);
     }
 
     @Override

@@ -66,10 +66,7 @@ public class ModItems {
     }
 
     private static <T extends Item> T registerItem(T item) {
-        if (item.getRegistryName() == null) {
-            throw new IllegalArgumentException("Missing registry name for " + item);
-        }
-        GameRegistry.registerItem(item);
+        GameRegistry.register(item);
         return item;
     }
 }

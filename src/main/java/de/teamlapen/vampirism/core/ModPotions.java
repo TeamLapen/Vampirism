@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.potion.VampirismPotion;
 import net.minecraft.potion.Potion;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
  * Handles all potion registrations and reference.
@@ -27,10 +28,15 @@ public class ModPotions {
     }
 
     private static void preInit(FMLPreInitializationEvent event) {
-        thirst = new PotionThirst("thirst", true, 859494);
+        thirst = register(new PotionThirst("thirst", true, 859494));
 
-        sanguinare = new PotionSanguinare("sanguinare", false, 0x6A0888);
-        saturation = new VampirismPotion("saturation", false, 0xDCFF00);
+        sanguinare = register(new PotionSanguinare("sanguinare", false, 0x6A0888));
+        saturation = register(new VampirismPotion("saturation", false, 0xDCFF00));
+    }
+
+    private static <T extends Potion> T register(T potion) {
+        GameRegistry.register(potion);
+        return potion;
     }
 
 

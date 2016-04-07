@@ -1,15 +1,16 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 public class SundamageRegistry implements ISundamageRegistry {
-    private HashMap<Integer, Boolean> sundamageDims = new HashMap<Integer, Boolean>();
-    private HashMap<Integer, Boolean> sundamageConfiguredDims = new HashMap<Integer, Boolean>();
-    private Set<Integer> noSundamageBiomes = new CopyOnWriteArraySet<Integer>();
+    private HashMap<Integer, Boolean> sundamageDims = new HashMap<>();
+    private HashMap<Integer, Boolean> sundamageConfiguredDims = new HashMap<>();
+    private Set<ResourceLocation> noSundamageBiomes = new CopyOnWriteArraySet<>();
     private boolean defaultSundamage = false;
 
     public SundamageRegistry() {
@@ -19,13 +20,13 @@ public class SundamageRegistry implements ISundamageRegistry {
     }
 
     @Override
-    public void addNoSundamageBiome(int id) {
-        noSundamageBiomes.add(id);
+    public void addNoSundamageBiome(ResourceLocation registryName) {
+        noSundamageBiomes.add(registryName);
     }
 
     @Override
-    public boolean getSundamageInBiome(int id) {
-        return !noSundamageBiomes.contains(id);
+    public boolean getSundamageInBiome(ResourceLocation registryName) {
+        return !noSundamageBiomes.contains(registryName);
     }
 
     @Override

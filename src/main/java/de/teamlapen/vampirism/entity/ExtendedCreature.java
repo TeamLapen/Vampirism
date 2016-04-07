@@ -13,9 +13,9 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
@@ -204,8 +204,8 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     public void onUpdate() {
         if (!entity.worldObj.isRemote) {
             if (blood > 0 && blood < getMaxBlood() && entity.ticksExisted % 40 == 8) {
-                entity.addPotionEffect(new PotionEffect(Potion.weakness.id, 41));
-                entity.addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, 41, 2));
+                entity.addPotionEffect(new PotionEffect(MobEffects.weakness, 41));
+                entity.addPotionEffect(new PotionEffect(MobEffects.moveSlowdown, 41, 2));
                 if (entity.getRNG().nextInt(Balance.mobProps.BLOOD_REGEN_CHANCE) == 0) {
                     setBlood(getBlood() + 1);
                 }

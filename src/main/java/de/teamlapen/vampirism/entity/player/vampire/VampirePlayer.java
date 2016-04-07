@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.Achievements;
 import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
@@ -35,6 +36,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -361,13 +363,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
         } else {
             if (oldLevel == 0) {
-                if (player.isPotionActive(Potion.nightVision)) {
-                    player.removePotionEffect(Potion.nightVision.id);
+                if (player.isPotionActive(MobEffects.nightVision)) {
+                    player.removePotionEffect(MobEffects.nightVision);
                 }
                 player.addPotionEffect(new FakeNightVisionPotionEffect());
             } else if (newLevel == 0) {
-                if (player.getActivePotionEffect(Potion.nightVision) instanceof FakeNightVisionPotionEffect) {
-                    player.removePotionEffect(Potion.nightVision.getId());
+                if (player.getActivePotionEffect(MobEffects.nightVision) instanceof FakeNightVisionPotionEffect) {
+                    player.removePotionEffect(MobEffects.nightVision);
                 }
                 actionHandler.resetTimers();
             }
@@ -625,10 +627,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
         if (player.capabilities.isCreativeMode || player.capabilities.disableDamage) return;
         if (Balance.vp.SUNDAMAGE_NAUSEA && player.ticksExisted % 300 == 1 && ticksInSun > 50) {
-            player.addPotionEffect(new PotionEffect(Potion.confusion.id, 180));
+            player.addPotionEffect(new PotionEffect(MobEffects.confusion, 180));
         }
         if (getLevel() >= Balance.vp.SUNDAMAGE_WEAKNESS_MINLEVEL && player.ticksExisted % 150 == 3) {
-            player.addPotionEffect(new PotionEffect(Potion.weakness.id, 152, 1));
+            player.addPotionEffect(new PotionEffect(MobEffects.weakness, 152, 1));
         }
         if (getLevel() >= Balance.vp.SUNDAMAGE_MINLEVEL && ticksInSun >= 100 && player.ticksExisted % 40 == 5) {
             float damage = (float) (player.getEntityAttribute(VReference.sunDamage).getAttributeValue());
@@ -660,7 +662,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             player.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, vec31.xCoord, vec31.yCoord, vec31.zCoord, vec3.xCoord, vec3.yCoord + 0.05D, vec3.zCoord, Item.getIdFromItem(Items.apple));
         }
         //Play bite sounds. Using this method since it is the only client side method. And this is called on every relevant client anyway
-        player.worldObj.playSound(player.posX, player.posY, player.posZ, REFERENCE.MODID + ":player.bite", 1.0F, 1.0F, false);
+        player.worldObj.playSound(player.posX, player.posY, player.posZ, ModSounds.player_bite, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
     }
 
     private static class Storage implements net.minecraftforge.common.capabilities.Capability.IStorage<IVampirePlayer> {

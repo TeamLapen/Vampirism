@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.biome;
 
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.blocks.VampirismFlower;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
@@ -41,8 +40,6 @@ public class BiomeGenVampireForest extends BiomeGenBase {
         this.theBiomeDecorator.grassPerChunk = 4;
         this.theBiomeDecorator.deadBushPerChunk = 3;
         this.worldGenTrees = new WorldGenTrees(false, 4, Blocks.log.getDefaultState().withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.SPRUCE), Blocks.leaves.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.OAK), false);
-
-        VampirismAPI.sundamageRegistry().addNoSundamageBiome(id);
 
     }
 
