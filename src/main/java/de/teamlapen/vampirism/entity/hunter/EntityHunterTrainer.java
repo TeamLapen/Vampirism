@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.pathfinding.PathNavigateGround;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
@@ -35,19 +36,7 @@ public class EntityHunterTrainer extends EntityHunterBase {
         this.setSize(0.6F, 1.8F);
 
 
-        this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
-        this.tasks.addTask(4, new EntityAIAttackOnCollide(this, 1.0, false));
-        this.tasks.addTask(5, new HunterAILookAtTrainee(this));
-        this.tasks.addTask(6, new EntityAIWander(this, 0.7));
-        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 13F));
-        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityVampireBase.class, 17F));
-        this.tasks.addTask(10, new EntityAILookIdle(this));
-
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, null)));
-        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, null)));
-        this.setEquipmentDropChance(0, 0);
+        this.setDontDropEquipment();
     }
 
     @Override
@@ -78,10 +67,10 @@ public class EntityHunterTrainer extends EntityHunterBase {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(300);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(19);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.17);
-        this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(5);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(300);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(19);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0.17);
+        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(5);
     }
 
     @Override
@@ -90,9 +79,25 @@ public class EntityHunterTrainer extends EntityHunterBase {
     }
 
     @Override
-    protected boolean interact(EntityPlayer player) {
-        ItemStack itemstack = player.inventory.getCurrentItem();
-        boolean flag = itemstack != null && itemstack.getItem() == Items.spawn_egg;
+    protected void initEntityAI() {
+        super.initEntityAI();
+        this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
+        this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.0, false));
+        this.tasks.addTask(5, new HunterAILookAtTrainee(this));
+        this.tasks.addTask(6, new EntityAIWander(this, 0.7));
+        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 13F));
+        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityVampireBase.class, 17F));
+        this.tasks.addTask(10, new EntityAILookIdle(this));
+
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, null)));
+        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, null)));
+    }
+
+    @Override
+    protected boolean processInteract(EntityPlayer player, EnumHand p_184645_2_, ItemStack stack) {
+        boolean flag = stack != null && stack.getItem() == Items.spawn_egg;
 
         if (!flag && this.isEntityAlive() && !player.isSneaking()) {
             if (!this.worldObj.isRemote) {
@@ -106,8 +111,11 @@ public class EntityHunterTrainer extends EntityHunterBase {
             }
 
             return true;
-        } else {
-            return super.interact(player);
         }
+
+
+        return super.processInteract(player, p_184645_2_, stack);
     }
+
+
 }

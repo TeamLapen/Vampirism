@@ -29,9 +29,7 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
 
     public EntityVampireMinionSaveable(World world) {
         super(world);
-        this.tasks.addTask(7, new MinionAIFollowLord(this, 1.0D));
-        this.tasks.addTask(14, new EntityAIFleeSun(this, 0.9F));
-        this.tasks.addTask(14, new VampireAIFleeGarlic(this, 0.9F, false));
+
         commands.add(getActiveCommand());
 //        commands.add(new AttackHostileExceptPlayer(1, this));
 //        commands.add(new AttackHostileIncludingPlayer(2, this));
@@ -45,6 +43,11 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
         } else {
             return super.attackEntityFrom(src, value);
         }
+    }
+
+    @Override
+    public ArrayList<IMinionCommand> getAvailableCommands(IMinionLord lord) {
+        return commands;
     }
 //
 //    /**
@@ -68,12 +71,6 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
 //        worldObj.spawnEntityInWorld(remote);
 //        this.setDead();
 //    }
-
-
-    @Override
-    public ArrayList<IMinionCommand> getAvailableCommands(IMinionLord lord) {
-        return commands;
-    }
 
     @Override
     public List<IMinionCommand> getAvailableRemoteCommands(IMinionLord lord) {
@@ -134,5 +131,13 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
     @Nonnull
     IMinionCommand createDefaultCommand() {
         return new DefendLordCommand(0, this, 1);
+    }
+
+    @Override
+    protected void initEntityAI() {
+        super.initEntityAI();
+        this.tasks.addTask(7, new MinionAIFollowLord(this, 1.0D));
+        this.tasks.addTask(14, new EntityAIFleeSun(this, 0.9F));
+        this.tasks.addTask(14, new VampireAIFleeGarlic(this, 0.9F, false));
     }
 }

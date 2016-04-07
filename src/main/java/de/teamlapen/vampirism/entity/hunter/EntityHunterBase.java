@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.world.World;
 
 /**
@@ -19,8 +18,6 @@ public abstract class EntityHunterBase extends EntityVampirism implements IHunte
         super(world);
         this.countAsMonster = countAsMonster;
 
-        ((PathNavigateGround) this.getNavigator()).setAvoidsWater(true);
-        this.tasks.addTask(0, new EntityAISwimming(this));
     }
 
     @Override
@@ -32,5 +29,11 @@ public abstract class EntityHunterBase extends EntityVampirism implements IHunte
     public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount) {
         if (forSpawnCount && countAsMonster && type == EnumCreatureType.MONSTER) return true;
         return super.isCreatureType(type, forSpawnCount);
+    }
+
+    @Override
+    protected void initEntityAI() {
+        super.initEntityAI();
+        this.tasks.addTask(0, new EntityAISwimming(this));
     }
 }

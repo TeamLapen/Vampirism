@@ -19,7 +19,7 @@ public class WorldGenHunterCamp extends WorldGenerator {
     @Override
     public boolean generate(World worldIn, Random rand, BlockPos position) {
         IBlockState ground = worldIn.getBlockState(position.down());
-        if (ground.getBlock().isSideSolid(worldIn, position.down(), EnumFacing.UP)) ;
+        if (ground.getBlock().isSideSolid(ground, worldIn, position.down(), EnumFacing.UP)) ;
         EnumFacing facing = EnumFacing.getHorizontal(rand.nextInt(EnumFacing.HORIZONTALS.length));
 
         BlockPos tl = worldIn.getHeight(position.offset(facing).offset(facing.rotateYCCW()));

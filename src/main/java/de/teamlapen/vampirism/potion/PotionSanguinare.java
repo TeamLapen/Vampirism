@@ -11,7 +11,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -24,13 +23,13 @@ public class PotionSanguinare extends VampirismPotion {
     public static void addRandom(EntityLivingBase entity, boolean player) {
         int avgDuration = 20 * (player ? Balance.vp.SANGUINARE_AVG_DURATION : Balance.mobProps.SANGUINARE_AVG_DURATION);
         int duration = (int) ((entity.getRNG().nextFloat() + 0.5F) * avgDuration);
-        entity.addPotionEffect(new PotionSanguinareEffect(ModPotions.sanguinare.id, duration));
+        entity.addPotionEffect(new PotionSanguinareEffect(ModPotions.sanguinare, duration));
 
     }
 
-    public PotionSanguinare(ResourceLocation location, boolean badEffect, int potionColor) {
-        super(location, badEffect, potionColor);
-        setIconIndex(7, 1).setPotionName("potion.vampirism.sanguinare").registerPotionAttributeModifier(SharedMonsterAttributes.attackDamage, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, 0);
+    public PotionSanguinare(String name, boolean badEffect, int potionColor) {
+        super(name, badEffect, potionColor);
+        setIconIndex(7, 1).registerPotionAttributeModifier(SharedMonsterAttributes.ATTACK_DAMAGE, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, 0);
     }
 
     @Override

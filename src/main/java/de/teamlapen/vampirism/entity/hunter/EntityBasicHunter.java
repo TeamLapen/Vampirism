@@ -11,10 +11,11 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
@@ -40,26 +41,14 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter 
         this.setSize(0.6F, 1.8F);
 
 
-        this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
-        this.tasks.addTask(2, new EntityAIAttackOnCollide(this, 1.0, false));
-
-        this.tasks.addTask(6, new EntityAIWander(this, 0.7));
-        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 13F));
-        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityVampireBase.class, 17F));
-        this.tasks.addTask(10, new EntityAILookIdle(this));
-
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, null)));
-        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, null)));
-        this.setEquipmentDropChance(0, 0);
+        this.setDontDropEquipment();
     }
 
     @Override
     public boolean attackEntityAsMob(Entity entity) {
         boolean flag = super.attackEntityAsMob(entity);
-        if (flag && this.getHeldItem() == null) {
-            this.swingItem();//Swing stake if nothing else is held
+        if (flag && this.getHeldItemMainhand() == null) {
+            this.swingArm(EnumHand.MAIN_HAND);  //Swing stake if nothing else is held
         }
         return flag;
     }
@@ -74,7 +63,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter 
         if (level >= 0) {
             this.updateEntityAttributes();
             if (level == 3) {
-                this.addPotionEffect(new PotionEffect(Potion.resistance.id, 1000000, 1));
+                this.addPotionEffect(new PotionEffect(MobEffects.resistance, 1000000, 1));
             }
             getDataWatcher().updateObject(ID_LEVEL, level);
         }
@@ -147,10 +136,28 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter 
         return 6 + getLevel();
     }
 
+    @Override
+    protected void initEntityAI() {
+        super.initEntityAI();
+
+        this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
+        this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0, false));
+
+        this.tasks.addTask(6, new EntityAIWander(this, 0.7));
+        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 13F));
+        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityVampireBase.class, 17F));
+        this.tasks.addTask(10, new EntityAILookIdle(this));
+
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, null)));
+        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, null)));
+    }
+
     protected void updateEntityAttributes() {
         int l = Math.max(getLevel(), 0);
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(Balance.mobProps.VAMPIRE_HUNTER_MAX_HEALTH + Balance.mobProps.VAMPIRE_HUNTER_MAX_HEALTH_PL * l);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(Balance.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE + Balance.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE_PL * l);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(Balance.mobProps.VAMPIRE_HUNTER_SPEED);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_HUNTER_MAX_HEALTH + Balance.mobProps.VAMPIRE_HUNTER_MAX_HEALTH_PL * l);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE + Balance.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE_PL * l);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.VAMPIRE_HUNTER_SPEED);
     }
 }

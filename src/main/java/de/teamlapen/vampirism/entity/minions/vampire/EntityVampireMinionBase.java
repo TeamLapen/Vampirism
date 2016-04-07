@@ -12,11 +12,12 @@ import de.teamlapen.vampirism.util.MinionHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.EntityAIAttackOnCollide;
+import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumParticleTypes;
@@ -49,11 +50,7 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
         super(world, true);
         // this.setSize(0.5F, 1.1F);
         //this.func_110163_bv(); TODO check if this was relevant
-        this.tasks.addTask(6, new EntityAIAttackOnCollide(this, 1.0, false));
-        this.tasks.addTask(15, new EntityAIWander(this, 0.7));
-        this.tasks.addTask(16, new EntityAIWatchClosest(this, EntityPlayer.class, 10));
 
-        this.targetTasks.addTask(8, new MinionAIHurtByTarget(this, false));
         getDataWatcher().addObject(ID_TEXTURE, -1);
         activeCommand = this.createDefaultCommand();
         activeCommand.onActivated();
@@ -143,11 +140,11 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
                 if (!entityitem.isDead && entityitem.getEntityItem() != null) {
                     ItemStack itemstack = entityitem.getEntityItem();
                     if (activeCommand.shouldPickupItem(itemstack)) {
-                        ItemStack stack1 = this.getEquipmentInSlot(0);
+                        ItemStack stack1 = this.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
                         if (stack1 != null) {
                             this.entityDropItem(stack1, 0.0F);
                         }
-                        this.setCurrentItemOrArmor(0, itemstack);
+                        this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, itemstack);
                         entityitem.setDead();
                     }
 
@@ -221,10 +218,10 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(30D);
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(Balance.mobProps.VAMPIRE_MINION_MAX_HEALTH);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(Balance.mobProps.VAMPIRE_MINION_ATTACK_DAMAGE);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(Balance.mobProps.VAMPIRE_MINION_MOVEMENT_SPEED);
+        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(30D);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_MINION_MAX_HEALTH);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.VAMPIRE_MINION_ATTACK_DAMAGE);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.VAMPIRE_MINION_MOVEMENT_SPEED);
     }
 
     /**
@@ -246,4 +243,14 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
     protected abstract
     @Nonnull
     IMinionCommand createDefaultCommand();
+
+    @Override
+    protected void initEntityAI() {
+        super.initEntityAI();
+        this.tasks.addTask(6, new EntityAIAttackMelee(this, 1.0, false));
+        this.tasks.addTask(15, new EntityAIWander(this, 0.7));
+        this.tasks.addTask(16, new EntityAIWatchClosest(this, EntityPlayer.class, 10));
+
+        this.targetTasks.addTask(8, new MinionAIHurtByTarget(this, false));
+    }
 }

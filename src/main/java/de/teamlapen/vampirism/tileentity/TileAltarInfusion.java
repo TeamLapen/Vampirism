@@ -18,6 +18,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -25,7 +26,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ITickable;
@@ -184,9 +184,10 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
 //                    data.setInteger("age", 100);
 //                    VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(1, this.xCoord, this.yCoord, this.zCoord, 5, data));
 //                }
-                this.worldObj.markBlockForUpdate(getPos());
+                IBlockState state = worldObj.getBlockState(getPos());
+                this.worldObj.notifyBlockUpdate(getPos(), state, state, 3);
             }
-            player.addPotionEffect(new PotionEffect(Potion.resistance.id, DURATION_TICK, 10));
+            player.addPotionEffect(new PotionEffect(MobEffects.resistance, DURATION_TICK, 10));
             this.markDirty();
             VampirismMod.log.t("Started");
             return;
@@ -276,10 +277,10 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
                 this.worldObj.playSound(player.posX, player.posY, player.posZ, SoundEvents.entity_generic_explode, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F, true);
                 this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);
             }
-            player.addPotionEffect(new PotionEffect(ModPotions.saturation.id, 400, 2));
+            player.addPotionEffect(new PotionEffect(ModPotions.saturation, 400, 2));
 
-            player.addPotionEffect(new PotionEffect(Potion.regeneration.id, 400, 2));
-            player.addPotionEffect(new PotionEffect(Potion.damageBoost.id, 400, 2));
+            player.addPotionEffect(new PotionEffect(MobEffects.regeneration, 400, 2));
+            player.addPotionEffect(new PotionEffect(MobEffects.damageBoost, 400, 2));
         }
     }
 

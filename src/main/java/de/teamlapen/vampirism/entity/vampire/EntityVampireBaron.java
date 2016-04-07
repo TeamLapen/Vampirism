@@ -16,9 +16,9 @@ import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.MathHelper;
@@ -51,15 +51,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         this.garlicResist = EnumGarlicStrength.MEDIUM;
 
 
-        this.tasks.addTask(4, new VampireAIFleeGarlic(this, 0.9F, false));
-        this.tasks.addTask(5, new EntityAIAttackOnCollide(this, 1.0F, false));
-        this.tasks.addTask(6, new EntityAIWander(this, 0.2));
-        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
-        this.tasks.addTask(10, new EntityAILookIdle(this));
 
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true, false));
-        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVampireBaron.class, true, false));
     }
 
     @Override
@@ -73,8 +65,9 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
                 tm = pld + 1;
                 mr = pld < 1.5f ? 1 : (pld < 3 ? 2 : 3);
             }
-            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.weakness.id, (int) (200 * tm), rand.nextInt(mr) + 1));
-            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(Potion.moveSlowdown.id, (int) (100 * tm), rand.nextInt(mr) + 1));
+            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.weakness, (int) (200 * tm), rand.nextInt(mr) + 1));
+            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.moveSlowdown(int)
+            (100 * tm), rand.nextInt(mr) + 1))
         }
         return flag;
     }
@@ -274,6 +267,20 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         return 20 + 5 * getLevel();
     }
 
+    @Override
+    protected void initEntityAI() {
+        super.initEntityAI();
+        this.tasks.addTask(4, new VampireAIFleeGarlic(this, 0.9F, false));
+        this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.0F, false));
+        this.tasks.addTask(6, new EntityAIWander(this, 0.2));
+        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(10, new EntityAILookIdle(this));
+
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true, false));
+        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVampireBaron.class, true, false));
+    }
+
     /**
      * Decides if a new minion should be spawned. Therefore randomly checks the existing minion count
      *
@@ -294,16 +301,16 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
 
     protected void updateEntityAttributes(boolean aggressive) {
         if (aggressive) {
-            this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(20D);
-            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(
+            this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(20D);
+            this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(
                     Balance.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow((Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL - 1) / 3 + 1, (getLevel())));
         } else {
-            this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(5D);
-            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(
+            this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(5D);
+            this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(
                     Balance.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow(Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()) / 3);
         }
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(Balance.mobProps.VAMPIRE_BARON_MAX_HEALTH * Math.pow(Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage)
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_BARON_MAX_HEALTH * Math.pow(Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
                 .setBaseValue(Balance.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE * Math.pow(Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
     }
 }
