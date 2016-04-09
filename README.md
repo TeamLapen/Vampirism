@@ -1,7 +1,7 @@
-Vampirism for Minecraft 1.8.9 - REWRITE
+Vampirism for Minecraft 1.9 - REWRITE
 =========
 
-_This is WIP rewrite for Minecraft 1.8.9, check out the 1.7.10 branch for complete and stable code_
+_This is WIP rewrite for Minecraft 1.9, check out the 1.7.10 branch for complete and stable code_
 
 ## Mod Description 
 
