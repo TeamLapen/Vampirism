@@ -17,13 +17,14 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.EnumDifficulty;
@@ -55,7 +56,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         this.tasks.addTask(2, new EntityAIRestrictSun(this));
         this.tasks.addTask(3, new VampireAIFleeSun(this, 0.9, false));
         this.tasks.addTask(3, new VampireAIFleeGarlic(this, 0.9, false));
-        this.tasks.addTask(4, new EntityAIAttackOnCollide(this, 1.0, false));
+        this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.0, false));
         this.tasks.addTask(5, new VampireAIBiteNearbyEntity(this));
         this.tasks.addTask(6, new VampireAIMoveToBiteable(this, 0.75));
         this.tasks.addTask(7, new EntityAIMoveThroughVillage(this, 0.6, true));
@@ -78,7 +79,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
 
     @Override
     public int getLevel() {
-        getDataManager().get(LEVEL)
+        return getDataManager().get(LEVEL);
     }
 
     @Override
@@ -86,12 +87,12 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         if (level >= 0) {
             this.updateEntityAttributes();
             if (level == 2) {
-                this.addPotionEffect(new PotionEffect(Potion.resistance.id, 1000000, 1));
+                this.addPotionEffect(new PotionEffect(MobEffects.resistance, 1000000, 1));
             }
             if (level == 1) {
-                this.setCurrentItemOrArmor(0, new ItemStack(Items.iron_sword));
+                this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.iron_sword));
             } else {
-                this.setCurrentItemOrArmor(0, null);
+                this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, null);
             }
             getDataManager().set(LEVEL, level);
         }

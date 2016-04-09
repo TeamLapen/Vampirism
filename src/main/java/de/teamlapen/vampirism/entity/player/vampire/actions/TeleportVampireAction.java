@@ -6,6 +6,8 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 
@@ -55,18 +57,18 @@ public class TeleportVampireAction extends DefaultVampireAction {
         double oy = player.posY;
         double oz = player.posZ;
         if (target == null) {
-            player.worldObj.playSoundAtEntity(player, "note.bass", 1.0F, 1.0F);
+            player.playSound(SoundEvents.block_note_bass, 1, 1);
             return false;
         }
         BlockPos pos = null;
-        if (player.worldObj.getBlockState(target.getBlockPos()).getBlock().getMaterial().blocksMovement()) {
+        if (player.worldObj.getBlockState(target.getBlockPos()).getMaterial().blocksMovement()) {
             pos = target.getBlockPos().up();
         }
 
         if (pos != null) {
             player.setPosition(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
-
-            if (player.worldObj.getCollidingBoundingBoxes(player, player.getEntityBoundingBox()).isEmpty() && !player.worldObj.isAnyLiquid(player.getEntityBoundingBox())) {
+//TODO check if collision stuff works here
+            if (player.worldObj.getCollisionBoxes(player.getEntityBoundingBox()).isEmpty() && !player.worldObj.isAnyLiquid(player.getEntityBoundingBox())) {
 
             } else {
                 pos = null;
@@ -77,16 +79,16 @@ public class TeleportVampireAction extends DefaultVampireAction {
 
         if (pos == null) {
             player.setPosition(ox, oy, oz);
-            player.worldObj.playSoundAtEntity(player, "note.bd", 1.0F, 1.0F);
+            player.playSound(SoundEvents.block_note_basedrum, 1, 1);
             return false;
         }
         if (player instanceof EntityPlayerMP) {
             EntityPlayerMP playerMp = (EntityPlayerMP) player;
-            playerMp.mountEntity(null);
+            playerMp.mountEntityAndWakeUp();
             playerMp.setPositionAndUpdate(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
         }
-        player.worldObj.playSoundEffect(ox, oy, oz, "mob.endermen.portal", 1.0F, 1.0F);
-        player.worldObj.playSoundAtEntity(player, "mob.endermen.portal", 1.0F, 1.0F);
+        player.worldObj.playSound(ox, oy, oz, SoundEvents.entity_endermen_teleport, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
+        player.worldObj.playSound(player.posX, player.posY, player.posZ, SoundEvents.entity_endermen_teleport, SoundCategory.PLAYERS, 1, 1, false);
         return true;
     }
 }

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 
 /**
  * Part of the Altar of Infusion structure
@@ -15,12 +16,12 @@ public class BlockAltarTip extends VampirismBlock {
     }
 
     @Override
-    public boolean isFullCube() {
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isOpaqueCube() {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 

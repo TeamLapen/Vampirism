@@ -11,7 +11,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.Potion;
+import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -99,9 +99,9 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         float newHealth = mult * oldHealth;
         player.setHealth(newHealth);
         if (player.onGround) {
-            player.addPotionEffect(new PotionEffect(Potion.resistance.id, 20, 100));
+            player.addPotionEffect(new PotionEffect(MobEffects.resistance, 20, 100));
         }
-        player.addPotionEffect(new PotionEffect(Potion.resistance.id, 60, 100));
+        player.addPotionEffect(new PotionEffect(MobEffects.resistance, 60, 100));
         setPlayerBat(player, false);
     }
 
@@ -123,7 +123,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     private void setModifier(EntityPlayer player, boolean enabled) {
         if (enabled) {
 
-            IAttributeInstance health = player.getEntityAttribute(SharedMonsterAttributes.maxHealth);
+            IAttributeInstance health = player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
             if (health.getModifier(healthModifierUUID) == null) {
                 health.applyModifier(new AttributeModifier(healthModifierUUID, "Bat Health Reduction", -0.9, 2).setSaved(false));
             }
@@ -134,7 +134,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         } else {
 
             // Health modifier
-            IAttributeInstance health = player.getEntityAttribute(SharedMonsterAttributes.maxHealth);
+            IAttributeInstance health = player.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH);
             AttributeModifier m = health.getModifier(healthModifierUUID);
             if (m != null) {
                 health.removeModifier(m);

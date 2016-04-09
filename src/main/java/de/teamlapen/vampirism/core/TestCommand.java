@@ -16,9 +16,9 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.profiler.Profiler;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,9 +63,9 @@ public class TestCommand extends BasicCommand {
             }
 
             private void print(ICommandSender var1, String id) {
-                List<Profiler.Result> l = MinecraftServer.getServer().theProfiler.getProfilingData(id);
+                List<Profiler.Result> l = FMLCommonHandler.instance().getMinecraftServerInstance().theProfiler.getProfilingData(id);
                 for (Profiler.Result r : l) {
-                    var1.addChatMessage(new TextComponentString("" + r.field_76331_c + ": " + r.field_76332_a + "|" + r.field_76330_b));
+                    var1.addChatMessage(new TextComponentString("" + r.profilerName + ": " + r.usePercentage + "|" + r.totalUsePercentage));
                 }
             }
         });

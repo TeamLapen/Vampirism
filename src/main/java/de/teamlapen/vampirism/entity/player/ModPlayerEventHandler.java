@@ -55,7 +55,9 @@ public class ModPlayerEventHandler {
         if (VampirePlayer.get(event.getEntityPlayer()).getActionHandler().isActionActive(VampireActions.batAction)) {
             event.setCanceled(true);
         }
-        checkItemUsePerm(event);
+        if (!checkItemUsePerm(event.getEntityPlayer().getHeldItemMainhand(), event.getEntityPlayer())) {
+            event.setCanceled(true);
+        }
     }
 
     @SubscribeEvent
@@ -81,7 +83,9 @@ public class ModPlayerEventHandler {
         if (event.getEntity() instanceof EntityPlayer && VampirePlayer.get((EntityPlayer) event.getEntityLiving()).getActionHandler().isActionActive(VampireActions.batAction)) {
             event.setCanceled(true);
         }
-        checkItemUsePerm(event);
+        if (event.getEntity() instanceof EntityPlayer && !checkItemUsePerm(event.getItem(), (EntityPlayer) event.getEntityLiving())) {
+            event.setCanceled(true);
+        }
     }
 
     @SubscribeEvent
@@ -113,14 +117,14 @@ public class ModPlayerEventHandler {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onPlayerInteract(PlayerInteractEvent event) {
+    public void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
         //Replace glas bottle by empty blood bottle, if interacting with a fluid container that contains blood
-        if (Configs.autoConvertGlasBottles && event.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK) {
-            if (event.world.getWorldBorder().contains(event.pos))
-                if (event.entityPlayer.getHeldItem() != null &&
-                        event.entityPlayer.getHeldItem().getItem() != null &&
-                        event.entityPlayer.getHeldItem().getItem().equals(Items.glass_bottle) && event.entityPlayer.getHeldItem().stackSize == 1) {
-                    Block block = event.world.getBlockState(event.pos).getBlock();
+        if (Configs.autoConvertGlasBottles) {
+            if (event.getWorld().getWorldBorder().contains(event.getPos()))
+                if (event.getItemStack() != null &&
+                        event.getItemStack().getItem() != null &&
+                        event.getItemStack().getItem().equals(Items.glass_bottle) && event.getItemStack().stackSize == 1) {
+                    Block block = event.getWorld().getBlockState(event.getPos()).getBlock();
                     boolean flag = false;
                     if (block instanceof IFluidTank) {
                         //Probably never happens
@@ -129,9 +133,9 @@ public class ModPlayerEventHandler {
                             flag = true;
                         }
                     } else if (block instanceof ITileEntityProvider) {
-                        TileEntity entity = event.world.getTileEntity(event.pos);
+                        TileEntity entity = event.getWorld().getTileEntity(event.getPos());
                         if (entity instanceof IFluidHandler) {
-                            FluidTankInfo[] infos = ((IFluidHandler) entity).getTankInfo(event.face);
+                            FluidTankInfo[] infos = ((IFluidHandler) entity).getTankInfo(event.getFace());
                             if (infos != null) {
                                 for (FluidTankInfo info : infos) {
                                     if (info.fluid != null && ModFluids.blood.equals(info.fluid.getFluid())) {
@@ -144,8 +148,8 @@ public class ModPlayerEventHandler {
                         }
                     }
                     if (flag) {
-                        event.entityPlayer.getHeldItem().setItem(ModItems.bloodBottle);
-                        event.entityPlayer.getHeldItem().setItemDamage(0);
+                        event.getItemStack().setItem(ModItems.bloodBottle);
+                        event.getItemStack().setItemDamage(0);
                     }
                 }
         }
@@ -153,12 +157,12 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onPlayerName(PlayerEvent.NameFormat event) {
-        if (event.entityPlayer != null && !Configs.disable_factionDisplayChat) {
-            IFactionPlayer f = FactionPlayerHandler.get(event.entityPlayer).getCurrentFactionPlayer();
+        if (event.getEntityPlayer() != null && !Configs.disable_factionDisplayChat) {
+            IFactionPlayer f = FactionPlayerHandler.get(event.getEntityPlayer()).getCurrentFactionPlayer();
             if (f != null && !f.isDisguised()) {
-                event.displayname = f.getFaction().getChatColor() + event.displayname;
+                event.setDisplayname(f.getFaction().getChatColor() + event.getDisplayname());
                 if (f instanceof IVampirePlayer && ((IVampirePlayer) f).isVampireLord()) {
-                    event.displayname = TextFormatting.RED + "[" + I18n.translateToLocal("text.vampirism.lord") + "] " + TextFormatting.RESET + event.displayname;
+                    event.setDisplayname(TextFormatting.RED + "[" + I18n.translateToLocal("text.vampirism.lord") + "] " + TextFormatting.RESET + event.getDisplayname());
                 }
             }
 
@@ -168,25 +172,28 @@ public class ModPlayerEventHandler {
     /**
      * Checks if the player is allowed to use that item ({@link IFactionLevelItem}) and cancels the event if not.
      *
-     * @param event
+     *@return If it is allowed to use the item
      */
-    private void checkItemUsePerm(PlayerEvent event) {
-        ItemStack stack = event.entityPlayer.getCurrentEquippedItem();
+    private boolean checkItemUsePerm(ItemStack stack, EntityPlayer player) {
+
 
         if (stack != null && stack.getItem() instanceof IFactionLevelItem) {
             IFactionLevelItem item = (IFactionLevelItem) stack.getItem();
-            FactionPlayerHandler handler = FactionPlayerHandler.get(event.entityPlayer);
+            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             if (!handler.isInFaction(item.getUsingFaction())) {
-                event.setCanceled(true);
-                event.entityPlayer.addChatComponentMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by", new TextComponentTranslation(item.getUsingFaction().getUnlocalizedNamePlural())));
+
+                player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by", new TextComponentTranslation(item.getUsingFaction().getUnlocalizedNamePlural())));
+                return false;
             } else {
                 if (handler.getCurrentLevel() < item.getMinLevel() || !item.canUse(handler.getCurrentFactionPlayer(), stack)) {
-                    event.setCanceled(true);
-                    event.entityPlayer.addChatComponentMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by_level", new TextComponentTranslation(item.getUsingFaction().getUnlocalizedNamePlural()), item.getMinLevel()));
+
+                    player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by_level", new TextComponentTranslation(item.getUsingFaction().getUnlocalizedNamePlural()), item.getMinLevel()));
+                    return false;
                 }
             }
 
         }
+        return true;
     }
 
 

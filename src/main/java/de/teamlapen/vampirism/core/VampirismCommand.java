@@ -13,7 +13,7 @@ import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -22,6 +22,7 @@ import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
@@ -139,7 +140,7 @@ public class VampirismCommand extends BasicCommand {
                             }
                             if (handler.setFactionAndLevel(newFaction, level)) {
                                 ITextComponent msg = var1.getDisplayName().appendSibling(new TextComponentString(" is now a " + pfaction_names[i] + " level " + level));
-                                MinecraftServer.getServer().getConfigurationManager().sendChatMsg(msg);
+                                FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().sendChatMsg(msg);
                             } else {
                                 ((EntityPlayer) var1).addChatComponentMessage(new TextComponentTranslation("text.vampirism.faction.failed_to_change"));
                             }
@@ -208,7 +209,7 @@ public class VampirismCommand extends BasicCommand {
 
             @Override
             public String getCommandUsage(ICommandSender var1) {
-                return getCommandName() + " <maxRadius>";
+                return getCommandName() + " <maxRadius in chunks>";
             }
 
             @Override
@@ -216,7 +217,7 @@ public class VampirismCommand extends BasicCommand {
                 if (Configs.disable_vampireForest) {
                     var1.addChatMessage(new TextComponentString("The Vampire Biome is disabled in the config file"));
                 } else {
-                    int maxDist = 5000;
+                    int maxDist = 150;
                     if (var2.length > 0) {
                         try {
                             maxDist = Integer.parseInt(var2[0]);
@@ -224,7 +225,7 @@ public class VampirismCommand extends BasicCommand {
                             VampirismMod.log.w("CheckVampireBiome", "Failed to parse max dist %s", var2[0]);
                             var1.addChatMessage(new TextComponentString("Failed to parse max distance. Using " + maxDist));
                         }
-                        if (maxDist > 10000) {
+                        if (maxDist > 500) {
                             if (var2.length > 1 && "yes".equals(var2[1])) {
 
                             } else {

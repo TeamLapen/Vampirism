@@ -12,6 +12,7 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
@@ -58,7 +59,7 @@ public class GuiHunterTrainer extends GuiContainer {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TRAINERLEVELUP, ""));
             EntityPlayer player = Minecraft.getMinecraft().thePlayer;
             UtilLib.spawnParticles(player.worldObj, EnumParticleTypes.ENCHANTMENT_TABLE, player.posX, player.posY, player.posZ, 1, 1, 1, 100);
-            player.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, "note.harp", 4.0F, (1.0F + (player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.2F) * 0.7F);
+            player.playSound(SoundEvents.block_note_harp, 4.0F, (1.0F + (player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.2F) * 0.7F);
         } else {
             super.actionPerformed(button);
         }

@@ -157,7 +157,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     @Override
     public void onLevelChanged(int old, int level) {
         if (!isRemote()) {
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.attackDamage, "Hunter", getLevel(), Balance.hp.STRENGTH_LCAP, Balance.hp.STRENGTH_MAX_MOD, Balance.hp.STRENGTH_TYPE);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Hunter", getLevel(), Balance.hp.STRENGTH_LCAP, Balance.hp.STRENGTH_MAX_MOD, Balance.hp.STRENGTH_TYPE);
             actionHandler.resetTimers();
         }
 

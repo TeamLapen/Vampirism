@@ -19,6 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Table for hunter "education/leveling"
+ * TODO create a unique texture for the top side
  */
 public class BlockHunterTable extends VampirismBlock {
     public static final String name = "hunterTable";
@@ -30,6 +31,8 @@ public class BlockHunterTable extends VampirismBlock {
     public BlockHunterTable() {
         super(name, Material.wood);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+        this.setHasFacing();
+
     }
 
     @SideOnly(Side.CLIENT)
@@ -53,7 +56,7 @@ public class BlockHunterTable extends VampirismBlock {
     }
 
     @Override
-    public boolean isFullyOpaque(IBlockState state) {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 

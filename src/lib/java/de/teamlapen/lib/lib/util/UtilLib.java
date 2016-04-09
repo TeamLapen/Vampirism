@@ -2,6 +2,7 @@ package de.teamlapen.lib.lib.util;
 
 import com.google.common.base.Predicate;
 import de.teamlapen.lib.VampLib;
+import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
@@ -12,11 +13,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
@@ -34,6 +35,10 @@ public class UtilLib {
             return "Entity is null";
         }
         return e.toString();
+    }
+
+    public static boolean doesBlockHaveSolidTopSurface(World worldIn, BlockPos pos) {
+        return worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos, EnumFacing.UP) && !worldIn.getBlockState(pos).getMaterial().isSolid() && !worldIn.getBlockState(pos.up()).getMaterial().isSolid();
     }
 
     /**
@@ -350,7 +355,7 @@ public class UtilLib {
     }
 
     private static ChunkCoordIntPair isBiomeAt(World world, int x, int z, List<BiomeGenBase> biomes) {
-        BlockPos pos = world.getBiomeProvider().findBiomePosition(x, z, 16, biomes, new Random());
+        BlockPos pos = world.getBiomeProvider().findBiomePosition(x, z, 32, biomes, new Random());
         if (pos != null) {
             return new ChunkCoordIntPair(pos.getX() >> 4, pos.getZ() >> 4);
         }
@@ -371,10 +376,10 @@ public class UtilLib {
         maxDist = (maxDist / 20) * 20;//Round it
         long maxop = (((long) maxDist) * maxDist + maxDist) / 2;
         ChunkCoordIntPair loc;
-        for (int i = 0; i < maxDist; i += 2) {
+        for (int i = 0; i < maxDist; i += 4) {
             int cx = -i;
             for (int cz = -i; cz <= i; cz++) {
-                if (cz % 2 == 0) continue;
+                if (cz % 4 != 0) continue;
                 loc = isBiomeAt(world, center.getX() + (cx << 4), center.getZ() + (cz << 4), biomes);
                 if (loc != null) {
                     VampLib.log.d("UtilLib", "Took %d ms to find a vampire biome %d %d", (int) (System.currentTimeMillis() - start), loc.chunkXPos, loc.chunkZPos);
@@ -387,7 +392,7 @@ public class UtilLib {
             }
             int cz = -i;
             for (int cx2 = -i + 1; cx2 < i; cx2++) {
-                if (cx2 % 2 == 0) continue;
+                if (cx2 % 4 != 0) continue;
                 loc = isBiomeAt(world, center.getX() + (cx2 << 4), center.getZ() + (cz << 4), biomes);
                 if (loc != null) {
                     VampLib.log.d("UtilLib", "Took %d ms to find a vampire biome %d %d", (int) (System.currentTimeMillis() - start), loc.chunkXPos, loc.chunkZPos);
@@ -401,7 +406,8 @@ public class UtilLib {
             if (listener != null && (i * 10) % maxDist == 0) {
                 long op = (((long) i) * i + i) / 2;
                 double perc = ((double) op / maxop) * 100;
-                listener.addChatMessage(new TextComponentString(((int) perc) + "% finished"));
+                VampirismMod.log.i("UtilLib", "Search %s percent finished", (int) perc);
+                //listener.addChatMessage(new TextComponentString(((int) perc) + "% finished")); //TODO maybe add back async
             }
 
         }

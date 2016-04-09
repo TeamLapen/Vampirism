@@ -8,5 +8,5 @@ public class SRGNAMES {
     public static final String Entity_setSize = "func_70105_a";
     public static final String EntityRenderer_loadShader = "func_175069_a";
     public static final String MapGenVillage_terrainType = "field_75054_f";
-    //public static final String Potion_nightVision = "field_76439_r";
+    public static final String MobEffects_nightVision = "field_76439_r";
 }

@@ -1,5 +1,4 @@
 {
-  //TODO fix item display rotation
   "forge_marker": 1,
   "defaults": {
     "model": "vampirism:hunterTable",

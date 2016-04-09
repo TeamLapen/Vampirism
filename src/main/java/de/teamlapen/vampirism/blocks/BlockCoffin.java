@@ -5,22 +5,25 @@ import de.teamlapen.vampirism.tileentity.TileCoffin;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBed;
 import net.minecraft.block.BlockDirectional;
+import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Biomes;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
-import net.minecraft.world.biome.BiomeGenBase;
 
 import javax.annotation.Nullable;
 
@@ -112,15 +115,18 @@ public class BlockCoffin extends VampirismBlockContainer {
     }
 
     // Miscellaneous methods (rendertype etc.)
+
+
     @Override
-    public int getMobilityFlag() {
-        return 2;
+    public EnumPushReaction getMobilityFlag(IBlockState state) {
+        return EnumPushReaction.DESTROY;
     }
 
     @Override
-    public int getRenderType() {
-        return 2;
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return EnumBlockRenderType.INVISIBLE;
     }
+
 
     @Override
     public IBlockState getStateFromMeta(int meta) {
@@ -129,17 +135,17 @@ public class BlockCoffin extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isBed(IBlockAccess world, BlockPos pos, Entity player) {
+    public boolean isBed(IBlockState state, IBlockAccess world, BlockPos pos, Entity player) {
         return true;
     }
 
     @Override
-    public boolean isFullCube() {
+    public boolean isFullBlock(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (world.isRemote) {
             return true;
         } else {
@@ -149,13 +155,13 @@ public class BlockCoffin extends VampirismBlockContainer {
                 pos = te.otherPos;
             }
             if (player.isSneaking()) {
-                if (player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() instanceof ItemDye) {
+                if (heldItem != null && heldItem.getItem() instanceof ItemDye) {
                     return false;
                 }
 
             }
 
-            if (world.provider.canRespawnHere() && world.getBiomeGenForCoords(pos) != BiomeGenBase.hell) {
+            if (world.provider.canRespawnHere() && world.getBiomeGenForCoords(pos) != Biomes.hell) {
                 if (state.getValue(BlockBed.OCCUPIED).booleanValue()) {
                     player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.coffin.occupied"));
                     return true;

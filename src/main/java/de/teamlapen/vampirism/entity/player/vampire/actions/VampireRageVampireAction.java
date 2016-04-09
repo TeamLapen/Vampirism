@@ -51,6 +51,7 @@ public class VampireRageVampireAction extends DefaultVampireAction implements IL
     @Override
     public boolean onActivated(IVampirePlayer vampire) {
         vampire.getRepresentingPlayer().addPotionEffect(new PotionEffect(MobEffects.moveSpeed, getDuration(vampire.getLevel()), 2, false, false));
+        vampire.getRepresentingPlayer().addPotionEffect(new PotionEffect(MobEffects.damageBoost, getDuration(vampire.getLevel()), 0, false, false));
         return true;
     }
 

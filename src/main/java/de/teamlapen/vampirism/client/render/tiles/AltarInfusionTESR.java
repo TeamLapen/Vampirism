@@ -108,7 +108,7 @@ public class AltarInfusionTESR extends VampirismTESR<TileAltarInfusion> {
         float f9 = -(tickStuff * 0.005F);
         float f10 = MathHelper.sqrt_float(wayX * wayX + wayY * wayY + wayZ * wayZ) / 32.0F + f9;
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer worldRenderer = tessellator.getWorldRenderer();
+        VertexBuffer worldRenderer = tessellator.getBuffer();
         worldRenderer.begin(GL11.GL_TRIANGLE_STRIP, DefaultVertexFormats.POSITION_TEX_COLOR);
         // Add all 2*8 vertex/corners
         byte b0 = 8;

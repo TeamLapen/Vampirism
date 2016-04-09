@@ -72,15 +72,14 @@ public class BlockTent extends VampirismBlock {
     }
 
     @Override
-    public boolean isFullCube() {
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isOpaqueCube() {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
-
     @Override
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, FACING, POSITION);

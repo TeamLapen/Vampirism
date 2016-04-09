@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.entity.minions.ai.MinionAIHurtByTarget;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBaron;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.util.MinionHelper;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
@@ -73,13 +72,6 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
         return super.canAttackClass(p_70686_1_);
     }
 
-    @Override
-    public void copyDataFromOld(Entity entityIn) {
-        super.copyDataFromOld(entityIn);
-        if (entityIn instanceof EntityVampireMinionBase) {
-            this.copyDataFromMinion((EntityVampireMinionBase) entityIn);
-        }
-    }
 
     public IMinionCommand getActiveCommand() {
         return this.activeCommand;

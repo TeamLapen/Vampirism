@@ -26,6 +26,7 @@ public class BlockChurchAltar extends VampirismBlock {
     public BlockChurchAltar() {
         super(regName, Material.wood);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+        this.setHasFacing();
     }
 
     @Override
@@ -44,10 +45,9 @@ public class BlockChurchAltar extends VampirismBlock {
     }
 
     @Override
-    public boolean isFullyOpaque(IBlockState state) {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
-
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         IFactionPlayerHandler handler = VampirismAPI.getFactionPlayerHandler(playerIn);
@@ -60,7 +60,7 @@ public class BlockChurchAltar extends VampirismBlock {
 
     @Override
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        return super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer).withProperty(FACING, placer.getHorizontalFacing());
+        return super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer).withProperty(FACING, placer.getHorizontalFacing().getOpposite());
     }
 
     @Override

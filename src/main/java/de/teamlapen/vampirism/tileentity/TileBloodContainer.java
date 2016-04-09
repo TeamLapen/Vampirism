@@ -44,7 +44,7 @@ public class TileBloodContainer extends TileFluidHandler {
         FluidStack old = tank.getFluid();
         this.readFromNBT(pkt.getNbtCompound());
         if (old != null && !old.isFluidStackIdentical(tank.getFluid()) || old == null && tank.getFluid() != null) {
-            this.worldObj.markBlockForUpdate(getPos());
+            this.worldObj.notifyBlockUpdate(getPos(), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 3);
         }
     }
 

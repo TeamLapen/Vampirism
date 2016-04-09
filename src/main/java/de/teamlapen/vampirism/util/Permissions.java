@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.config.Configs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 /**
  * TODO integrate with e.g. ForgeEssentials
@@ -15,7 +15,7 @@ public class Permissions {
     public static boolean getPermission(String permission, EntityPlayer player) {
         if (permission.equals("pvp")) {
             if (!player.worldObj.isRemote) {
-                return MinecraftServer.getServer().isPVPEnabled();
+                return FMLCommonHandler.instance().getMinecraftServerInstance().isPVPEnabled();
             }
         }
         return true;

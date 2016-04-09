@@ -92,13 +92,13 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
     @SubscribeEvent
     public void onRenderCrosshair(RenderGameOverlayEvent.Pre event) {
-        if (event.type != RenderGameOverlayEvent.ElementType.CROSSHAIRS) {
+        if (event.getType() != RenderGameOverlayEvent.ElementType.CROSSHAIRS) {
             return;
         }
 
         RayTraceResult p = Minecraft.getMinecraft().objectMouseOver;
 
-        if (p != null && p.typeOfHit == RayTraceResult.MovingObjectType.ENTITY && p.entityHit != null) {
+        if (p != null && p.typeOfHit == RayTraceResult.Type.ENTITY && p.entityHit != null) {
             IVampirePlayer player = VampirePlayer.get(mc.thePlayer);
             if (player.getLevel() > 0) {
                 Entity entity = p.entityHit;
@@ -112,8 +112,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 }
                 if (biteable != null && biteable.canBeBitten(player)) {
                     this.mc.getTextureManager().bindTexture(icons);
-                    int left = event.resolution.getScaledWidth() / 2 - 8;
-                    int top = event.resolution.getScaledHeight() / 2 - 4;
+                    int left = event.getResolution().getScaledWidth() / 2 - 8;
+                    int top = event.getResolution().getScaledHeight() / 2 - 4;
                     GL11.glEnable(GL11.GL_BLEND);
                     GL11.glColor4f(1F, 0F, 0F, 0.8F);
                     drawTexturedModalRect(left, top, 27, 0, 16, 16);
@@ -130,7 +130,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
      */
     @SubscribeEvent
     public void onRenderExperienceBar(RenderGameOverlayEvent.Post event) {
-        if (event.type != RenderGameOverlayEvent.ElementType.EXPERIENCE) {
+        if (event.getType() != RenderGameOverlayEvent.ElementType.EXPERIENCE) {
             return;
         }
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
@@ -140,8 +140,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
             // boolean flag1 = false;
             int color = faction.getColor();
             String text = "" + FactionPlayerHandler.get(mc.thePlayer).getCurrentLevel();
-            int x = (event.resolution.getScaledWidth() - mc.fontRendererObj.getStringWidth(text)) / 2 + Configs.gui_level_offset_x;
-            int y = event.resolution.getScaledHeight() - Configs.gui_level_offset_y;
+            int x = (event.getResolution().getScaledWidth() - mc.fontRendererObj.getStringWidth(text)) / 2 + Configs.gui_level_offset_x;
+            int y = event.getResolution().getScaledHeight() - Configs.gui_level_offset_y;
             mc.fontRendererObj.drawString(text, x + 1, y, 0);
             mc.fontRendererObj.drawString(text, x - 1, y, 0);
             mc.fontRendererObj.drawString(text, x, y + 1, 0);
@@ -152,7 +152,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
     @SubscribeEvent
     public void onRenderFoodBar(RenderGameOverlayEvent.Pre event) {
-        if (event.type != RenderGameOverlayEvent.ElementType.FOOD) {
+        if (event.getType() != RenderGameOverlayEvent.ElementType.FOOD) {
             return;
         }
 
@@ -165,8 +165,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 GlStateManager.enableBlend();
 
                 this.mc.getTextureManager().bindTexture(icons);
-                int left = event.resolution.getScaledWidth() / 2 + 91;
-                int top = event.resolution.getScaledHeight() - GuiIngameForge.right_height;
+                int left = event.getResolution().getScaledWidth() / 2 + 91;
+                int top = event.getResolution().getScaledHeight() - GuiIngameForge.right_height;
                 GuiIngameForge.right_height += 10;
 
                 for (int i = 0; i < 10; ++i) {
@@ -219,7 +219,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
                 GlStateManager.shadeModel(7425);
                 Tessellator tessellator = Tessellator.getInstance();
-                VertexBuffer worldrenderer = tessellator.getWorldRenderer();
+                VertexBuffer worldrenderer = tessellator.getBuffer();
                 worldrenderer.begin(7, DefaultVertexFormats.POSITION_COLOR);
                 worldrenderer.pos(0, h, (double) this.zLevel).color(r, g, b, a).endVertex();
                 worldrenderer.pos(w, h, (double) this.zLevel).color(r, g, b, a).endVertex();

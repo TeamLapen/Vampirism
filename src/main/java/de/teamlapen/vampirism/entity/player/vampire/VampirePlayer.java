@@ -40,7 +40,6 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
@@ -139,7 +138,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public void biteEntity(int entityId) {
         Entity e = player.worldObj.getEntityByID(entityId);
         if (e != null && e instanceof EntityLivingBase) {
-            if (e.getDistanceToEntity(player) <= ((EntityPlayerMP) player).theItemInWorldManager.getBlockReachDistance() + 2) {
+            if (e.getDistanceToEntity(player) <= ((EntityPlayerMP) player).interactionManager.getBlockReachDistance() + 2) {
                 biteEntity((EntityLivingBase) e);
             } else {
                 VampirismMod.log.w(TAG, "Entity sent by client is not in reach " + entityId);
@@ -343,9 +342,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public void onLevelChanged(int newLevel, int oldLevel) {
         if (!isRemote()) {
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.movementSpeed, "Vampire", getLevel(), Balance.vp.SPEED_LCAP, Balance.vp.SPEED_MAX_MOD, Balance.vp.SPEED_TYPE);
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.attackDamage, "Vampire", getLevel(), Balance.vp.STRENGTH_LCAP, Balance.vp.STRENGTH_MAX_MOD, Balance.vp.STRENGTH_TYPE);
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.maxHealth, "Vampire", getLevel(), Balance.vp.HEALTH_LCAP, Balance.vp.HEALTH_MAX_MOD, Balance.vp.HEALTH_TYPE);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MOVEMENT_SPEED, "Vampire", getLevel(), Balance.vp.SPEED_LCAP, Balance.vp.SPEED_MAX_MOD, Balance.vp.SPEED_TYPE);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Vampire", getLevel(), Balance.vp.STRENGTH_LCAP, Balance.vp.STRENGTH_MAX_MOD, Balance.vp.STRENGTH_TYPE);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MAX_HEALTH, "Vampire", getLevel(), Balance.vp.HEALTH_LCAP, Balance.vp.HEALTH_MAX_MOD, Balance.vp.HEALTH_TYPE);
             LevelAttributeModifier.applyModifier(player, VReference.bloodExhaustion, "Vampire", getLevel(), getMaxLevel(), Balance.vp.EXAUSTION_MAX_MOD, Balance.vp.EXHAUSTION_TYPE);
             if (newLevel > 0) {
                 if (player instanceof EntityPlayerMP && ((EntityPlayerMP) player).playerNetServerHandler != null) {
@@ -394,7 +393,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (Helper.canBecomeVampire(player) && !isRemote()) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             handler.joinFaction(getFaction());
-            player.addPotionEffect(new PotionEffect(Potion.resistance.id, 300));//TODO add saturation as well
+            player.addPotionEffect(new PotionEffect(MobEffects.resistance, 300));//TODO add saturation as well
 //            ((WorldServer) player.worldObj).addScheduledTask(new Runnable() {
 //                @Override
 //                public void run() {
@@ -458,7 +457,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
         } else {
             if (level > 0) {
-                if (player.ticksExisted % 100 == 8 && player.getActivePotionEffect(Potion.nightVision) == null) {
+                if (player.ticksExisted % 100 == 8 && player.getActivePotionEffect(MobEffects.nightVision) == null) {
                     player.addPotionEffect(new FakeNightVisionPotionEffect());
                 }
                 actionHandler.updateActions();
@@ -583,10 +582,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         } else if (type == BITE_TYPE.ATTACK) {
             entity.attackEntityFrom(DamageSource.causePlayerDamage(player), (float) player.getEntityAttribute(VReference.biteDamage).getAttributeValue());
             if (entity.isEntityUndead() && player.getRNG().nextInt(4) == 0) {
-                player.addPotionEffect(new PotionEffect(Potion.poison.id, 60));
+                player.addPotionEffect(new PotionEffect(MobEffects.poison, 60));
             }
             if (specialAttributes.poisonous_bite) {
-                entity.addPotionEffect(new PotionEffect(Potion.poison.id, Balance.vps.POISONOUS_BITE_DURATION * 20, 1));
+                entity.addPotionEffect(new PotionEffect(MobEffects.poison, Balance.vps.POISONOUS_BITE_DURATION * 20, 1));
             }
         } else if (type == BITE_TYPE.NONE) {
             return;

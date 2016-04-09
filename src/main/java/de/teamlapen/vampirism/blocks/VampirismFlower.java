@@ -62,7 +62,7 @@ public class VampirismFlower extends BlockBush implements ItemMetaBlock.IMetaIte
 
     public enum EnumFlowerType implements IStringSerializable {
 
-        ORCHID(0, "vampireOrchid", "vampireOrchid");
+        ORCHID(0, "vampire_orchid", "vampire_orchid");
         private static final EnumFlowerType[] TYPE_FOR_META = new EnumFlowerType[values().length];
 
         static {

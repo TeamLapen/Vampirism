@@ -2,21 +2,21 @@
   "entity.vampire.scream": {
     "category": "hostile",
     "sounds": [
-      "entity/vampire/scream"
+      "vampirism:entity/vampire/scream"
     ]
   },
   "player.bite": {
     "category": "player",
     "sounds": [
-      "entity/vampire/bite",
-      "entity/vampire/bite_long"
+      "vampirism:entity/vampire/bite",
+      "vampirism:entity/vampire/bite_long"
     ]
   },
   "ambient.scary": {
     "category": "ambient",
     "sounds": [
       {
-        "name": "ambient/scary",
+        "name": "vampirism:ambient/scary",
         "stream": true
       }
     ]
@@ -25,11 +25,11 @@
     "category": "ambient",
     "sounds": [
       {
-        "name": "ambient/blood_dripping",
+        "name": "vampirism:ambient/blood_dripping",
         "stream": true
       },
       {
-        "name": "ambient/blood_dripping2",
+        "name": "vampirism:ambient/blood_dripping2",
         "stream": true
       }
     ]
@@ -38,7 +38,7 @@
     "category": "ambient",
     "sounds": [
       {
-        "name": "ambient/ghosty_ambient",
+        "name": "vampirism:ambient/ghosty_ambient",
         "stream": true
       }
     ]
@@ -46,7 +46,7 @@
   "coffin_lid": {
     "category": "ambient",
     "sounds": [
-      "fx/coffin_lid_slide"
+      "vampirism:fx/coffin_lid_slide"
     ]
   }
 }

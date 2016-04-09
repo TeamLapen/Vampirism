@@ -14,17 +14,18 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 /**
- * Created by max on 19.03.16.
+ * Block which represents the top and the bottom part of a "Medical Chair" used for injections
  */
 public class BlockMedChair extends VampirismBlock {
     public static final PropertyEnum<EnumPart> PART = PropertyEnum.create("part", EnumPart.class);
@@ -33,6 +34,8 @@ public class BlockMedChair extends VampirismBlock {
     public BlockMedChair() {
         super(name, Material.iron);
         this.blockState.getBaseState().withProperty(PART, EnumPart.TOP).withProperty(FACING, EnumFacing.NORTH);
+        this.setHasFacing();
+
     }
 
     @Override
@@ -60,19 +63,20 @@ public class BlockMedChair extends VampirismBlock {
     }
 
     @Override
-    public boolean isFullCube() {
+    public boolean isFullCube(IBlockState state) {
+        return false;
+    }
+
+
+    @Override
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isOpaqueCube() {
-        return false;
-    }
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
 
-    @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {
-
-        ItemStack stack = playerIn.getHeldItem();
+        ItemStack stack = heldItem;
         if (stack != null && stack.getItem().equals(ModItems.injection) && stack.getMetadata() == ItemInjection.META_GARLIC) {
             IFactionPlayerHandler handler = VampirismAPI.getFactionPlayerHandler(playerIn);
             IPlayableFaction faction = handler.getCurrentFaction();
@@ -81,7 +85,7 @@ public class BlockMedChair extends VampirismBlock {
                     VampirismMod.proxy.renderScreenFullColor(4, 30, 0xBBBBBBFF);
                 } else {
                     handler.joinFaction(VReference.HUNTER_FACTION);
-                    playerIn.addPotionEffect(new PotionEffect(Potion.poison.id, 200, 1));
+                    playerIn.addPotionEffect(new PotionEffect(MobEffects.poison, 200, 1));
                 }
             } else {
                 if (!worldIn.isRemote) {
@@ -94,7 +98,7 @@ public class BlockMedChair extends VampirismBlock {
                 playerIn.addChatComponentMessage(new TextComponentTranslation("text.vampirism.need_item_to_use", new TextComponentTranslation((new ItemStack(ModItems.injection, 1, ItemInjection.META_GARLIC)).getUnlocalizedName() + ".name")));
         }
 
-        return super.onBlockActivated(worldIn, pos, state, playerIn, side, hitX, hitY, hitZ);
+        return true;
     }
 
     @Override

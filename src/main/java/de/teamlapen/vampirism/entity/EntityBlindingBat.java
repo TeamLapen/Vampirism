@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.Potion;
+import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
@@ -23,7 +23,7 @@ public class EntityBlindingBat extends EntityBat {
 
     @Override
     public boolean getCanSpawnHere() {
-        return this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox()) && this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox()).isEmpty() && !this.worldObj.isAnyLiquid(this.getEntityBoundingBox());
+        return this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox()) && this.worldObj.collidesWithAnyBlock(this.getEntityBoundingBox()) && !this.worldObj.isAnyLiquid(this.getEntityBoundingBox());
     }
 
     @Override
@@ -36,7 +36,7 @@ public class EntityBlindingBat extends EntityBat {
             List l = worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox());
             for (Object e : l) {
                 if (VampirePlayer.get((EntityPlayer) e).getLevel() == 0) {
-                    ((EntityPlayer) e).addPotionEffect(new PotionEffect(Potion.blindness.id, Balance.mobProps.BLINDING_BAT_EFFECT_DURATION));
+                    ((EntityPlayer) e).addPotionEffect(new PotionEffect(MobEffects.blindness, Balance.mobProps.BLINDING_BAT_EFFECT_DURATION));
                 }
             }
         }

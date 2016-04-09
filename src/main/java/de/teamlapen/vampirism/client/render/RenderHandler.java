@@ -55,7 +55,7 @@ public class RenderHandler {
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (mc.theWorld == null) return;
         if (event.phase == TickEvent.Phase.END) return;
-        if (Configs.renderVampireForestFog && VReference.castleDimId != mc.theWorld.provider.getDimensionId() && Helper.isEntityInVampireBiome(mc.thePlayer)) {
+        if (Configs.renderVampireForestFog && VReference.castleDimId != mc.theWorld.provider.getDimension() && Helper.isEntityInVampireBiome(mc.thePlayer)) {
 
 
             if (vampireBiomeTicks < VAMPIRE_BIOME_FADE_TICKS) {
@@ -90,9 +90,9 @@ public class RenderHandler {
 
     @SubscribeEvent
     public void onFogDensity(EntityViewRenderEvent.FogDensity event) {
-        if (event.entity instanceof EntityPlayer) {
+        if (event.getEntity() instanceof EntityPlayer) {
             if (vampireBiomeTicks > 10) {
-                event.density = 1.0F;
+                event.setDensity(1.0F);
                 event.setCanceled(true);
             }
         }
@@ -126,15 +126,15 @@ public class RenderHandler {
 
     @SubscribeEvent
     public void onRenderPlayer(RenderPlayerEvent.Pre event) {
-        if (VampirePlayer.get(event.entityPlayer).getActionHandler().isActionActive(VampireActions.batAction)) {
+        if (VampirePlayer.get(event.getEntityPlayer()).getActionHandler().isActionActive(VampireActions.batAction)) {
             event.setCanceled(true);
             if (entityBat == null) {
-                entityBat = new EntityBat(event.entity.worldObj);
+                entityBat = new EntityBat(event.getEntity().worldObj);
                 entityBat.setIsBatHanging(false);
             }
-            EntityPlayer player = event.entityPlayer;
+            EntityPlayer player = event.getEntityPlayer();
 
-            float parTick = event.partialRenderTick;
+            float parTick = event.getPartialRenderTick();
             Render renderer = mc.getRenderManager().getEntityRenderObject(entityBat);
 
             // Copy values
@@ -158,7 +158,7 @@ public class RenderHandler {
             double d3 = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double) parTick;
             double d4 = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double) parTick;
             double d5 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double) parTick;
-            mc.getRenderManager().doRenderEntity(entityBat, d0 - d3, d1 - d4, d2 - d5, f1, event.partialRenderTick, false);
+            mc.getRenderManager().doRenderEntity(entityBat, d0 - d3, d1 - d4, d2 - d5, f1, event.getPartialRenderTick(), false);
 
         }
     }
