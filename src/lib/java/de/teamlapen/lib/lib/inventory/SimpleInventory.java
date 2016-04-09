@@ -2,9 +2,9 @@ package de.teamlapen.lib.lib.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 
 /**
  * Simple Inventory
@@ -21,34 +21,14 @@ public abstract class SimpleInventory implements InventorySlot.IInventorySlotInv
 
     }
 
-    /**
-     * If the inventory changes {@link InventoryContainer#onInventoryChanged()} is called on the given container
-     *
-     * @param container
-     */
-    public void setChangeListener(InventoryContainer container) {
-        this.container = container;
-    }
+    @Override
+    public void clear() {
 
-    private void onContentChanged() {
-        if (container != null) {
-            container.onInventoryChanged();
-        }
     }
 
     @Override
-    public InventorySlot[] getSlots() {
-        return slots;
-    }
+    public void closeInventory(EntityPlayer player) {
 
-    @Override
-    public int getSizeInventory() {
-        return slots.length;
-    }
-
-    @Override
-    public ItemStack getStackInSlot(int index) {
-        return index >= getSizeInventory() ? null : slots[index].stack;
     }
 
     @Override
@@ -69,23 +49,18 @@ public abstract class SimpleInventory implements InventorySlot.IInventorySlotInv
     }
 
     @Override
-    public ItemStack removeStackFromSlot(int index) {
-        if (this.slots[index] != null) {
-            ItemStack itemstack = this.slots[index].stack;
-            this.slots[index].stack = null;
-            return itemstack;
-        } else {
-            return null;
-        }
+    public ITextComponent getDisplayName() {
+        return this.hasCustomName() ? new TextComponentString(this.getName()) : new TextComponentTranslation(this.getName());
     }
 
     @Override
-    public void setInventorySlotContents(int index, ItemStack stack) {
-        slots[index].stack = stack;
-        if (stack != null && stack.stackSize > getInventoryStackLimit()) {
-            stack.stackSize = getInventoryStackLimit();
-        }
-        onContentChanged();
+    public int getField(int id) {
+        return 0;
+    }
+
+    @Override
+    public int getFieldCount() {
+        return 0;
     }
 
     @Override
@@ -94,23 +69,23 @@ public abstract class SimpleInventory implements InventorySlot.IInventorySlotInv
     }
 
     @Override
-    public void markDirty() {
-
+    public int getSizeInventory() {
+        return slots.length;
     }
 
     @Override
-    public boolean isUseableByPlayer(EntityPlayer player) {
-        return true;
+    public InventorySlot[] getSlots() {
+        return slots;
     }
 
     @Override
-    public void openInventory(EntityPlayer player) {
-
+    public ItemStack getStackInSlot(int index) {
+        return index >= getSizeInventory() ? null : slots[index].stack;
     }
 
     @Override
-    public void closeInventory(EntityPlayer player) {
-
+    public boolean hasCustomName() {
+        return false;
     }
 
     @Override
@@ -122,8 +97,38 @@ public abstract class SimpleInventory implements InventorySlot.IInventorySlotInv
     }
 
     @Override
-    public int getField(int id) {
-        return 0;
+    public boolean isUseableByPlayer(EntityPlayer player) {
+        return true;
+    }
+
+    @Override
+    public void markDirty() {
+
+    }
+
+    @Override
+    public void openInventory(EntityPlayer player) {
+
+    }
+
+    @Override
+    public ItemStack removeStackFromSlot(int index) {
+        if (this.slots[index] != null) {
+            ItemStack itemstack = this.slots[index].stack;
+            this.slots[index].stack = null;
+            return itemstack;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * If the inventory changes {@link InventoryContainer#onInventoryChanged()} is called on the given container
+     *
+     * @param container
+     */
+    public void setChangeListener(InventoryContainer container) {
+        this.container = container;
     }
 
     @Override
@@ -132,23 +137,17 @@ public abstract class SimpleInventory implements InventorySlot.IInventorySlotInv
     }
 
     @Override
-    public int getFieldCount() {
-        return 0;
+    public void setInventorySlotContents(int index, ItemStack stack) {
+        slots[index].stack = stack;
+        if (stack != null && stack.stackSize > getInventoryStackLimit()) {
+            stack.stackSize = getInventoryStackLimit();
+        }
+        onContentChanged();
     }
 
-    @Override
-    public void clear() {
-
-    }
-
-
-    @Override
-    public boolean hasCustomName() {
-        return false;
-    }
-
-    @Override
-    public IChatComponent getDisplayName() {
-        return this.hasCustomName() ? new ChatComponentText(this.getName()) : new ChatComponentTranslation(this.getName());
+    private void onContentChanged() {
+        if (container != null) {
+            container.onInventoryChanged();
+        }
     }
 }

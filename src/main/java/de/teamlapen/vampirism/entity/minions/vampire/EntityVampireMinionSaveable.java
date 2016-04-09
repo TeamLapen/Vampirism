@@ -9,8 +9,8 @@ import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
 import de.teamlapen.vampirism.entity.minions.ai.MinionAIFollowLord;
 import de.teamlapen.vampirism.entity.minions.commands.DefendLordCommand;
 import net.minecraft.entity.ai.EntityAIFleeSun;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -29,9 +29,7 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
 
     public EntityVampireMinionSaveable(World world) {
         super(world);
-        this.tasks.addTask(7, new MinionAIFollowLord(this, 1.0D));
-        this.tasks.addTask(14, new EntityAIFleeSun(this, 0.9F));
-        this.tasks.addTask(14, new VampireAIFleeGarlic(this, 0.9F, false));
+
         commands.add(getActiveCommand());
 //        commands.add(new AttackHostileExceptPlayer(1, this));
 //        commands.add(new AttackHostileIncludingPlayer(2, this));
@@ -45,6 +43,11 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
         } else {
             return super.attackEntityFrom(src, value);
         }
+    }
+
+    @Override
+    public ArrayList<IMinionCommand> getAvailableCommands(IMinionLord lord) {
+        return commands;
     }
 //
 //    /**
@@ -69,10 +72,9 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
 //        this.setDead();
 //    }
 
-
     @Override
-    public ArrayList<IMinionCommand> getAvailableCommands(IMinionLord lord) {
-        return commands;
+    public List<IMinionCommand> getAvailableRemoteCommands(IMinionLord lord) {
+        return null;
     }
 
     @Override
@@ -80,13 +82,6 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
         if (id < commands.size())
             return commands.get(id);
         return null;
-    }
-
-    @Override
-    protected
-    @Nonnull
-    IMinionCommand createDefaultCommand() {
-        return new DefendLordCommand(0, this, 1);
     }
 
     @Override
@@ -132,7 +127,17 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
     }
 
     @Override
-    public List<IMinionCommand> getAvailableRemoteCommands(IMinionLord lord) {
-        return null;
+    protected
+    @Nonnull
+    IMinionCommand createDefaultCommand() {
+        return new DefendLordCommand(0, this, 1);
+    }
+
+    @Override
+    protected void initEntityAI() {
+        super.initEntityAI();
+        this.tasks.addTask(7, new MinionAIFollowLord(this, 1.0D));
+        this.tasks.addTask(14, new EntityAIFleeSun(this, 0.9F));
+        this.tasks.addTask(14, new VampireAIFleeGarlic(this, 0.9F, false));
     }
 }

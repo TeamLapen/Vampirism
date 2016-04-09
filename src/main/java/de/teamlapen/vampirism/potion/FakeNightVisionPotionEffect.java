@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.potion;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class FakeNightVisionPotionEffect extends PotionEffect {
     /**
      */
     public FakeNightVisionPotionEffect() {
-        super(Potion.nightVision.getId(), 10000, 0, false, false);
+        super(MobEffects.nightVision, 10000, 0, false, false);
         setCurativeItems(new ArrayList<ItemStack>());
     }
 
@@ -31,7 +31,7 @@ public class FakeNightVisionPotionEffect extends PotionEffect {
 
     @Override
     public String getEffectName() {
-        return "Vampire " + Potion.potionTypes[this.getPotionID()].getName();
+        return "Vampire " + "effect.nightVision";
     }
 
     @Override

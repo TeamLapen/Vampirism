@@ -5,23 +5,23 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockBloodContainer;
-import de.teamlapen.vampirism.client.model.blocks.BloodContainerModelFactory;
+import de.teamlapen.vampirism.client.model.blocks.BakedBloodContainerModel;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.IBakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.util.RegistrySimple;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.registry.RegistrySimple;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.Attributes;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.IRetexturableModel;
+import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -31,14 +31,12 @@ import java.util.Map;
 public class ClientEventHandler {
     @SubscribeEvent
     public void onModelBakeEvent(ModelBakeEvent event) {
-        IRetexturableModel[] containerFluidModels = new IRetexturableModel[BloodContainerModelFactory.FLUID_LEVELS];
+        IRetexturableModel[] containerFluidModels = new IRetexturableModel[BakedBloodContainerModel.FLUID_LEVELS];
         try {
             // load the fluid models for the different levels from the .json files
 
-            for (int x = 0; x < BloodContainerModelFactory.FLUID_LEVELS; x++) {
-                // Note: We have to use ResourceLocation here instead of ModelResourceLocation. Because if ModelResourceLocation is used,
-                // the ModelLoader expects to find a  BlockState .json for the model.
-                containerFluidModels[x] = (IRetexturableModel) event.modelLoader.getModel(new ResourceLocation(REFERENCE.MODID + ":block/bloodContainer/fluid_" + String.valueOf(x + 1)));
+            for (int x = 0; x < BakedBloodContainerModel.FLUID_LEVELS; x++) {
+                containerFluidModels[x] = (IRetexturableModel) ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/bloodContainer/fluid_" + String.valueOf(x + 1)));
             }
 
             Function<ResourceLocation, TextureAtlasSprite> textureGetter = new Function<ResourceLocation, TextureAtlasSprite>() {
@@ -58,7 +56,7 @@ public class ClientEventHandler {
                             .put("fluid", entry.getValue().getStill().toString())
                             .build());
 
-                    BloodContainerModelFactory.FLUID_MODELS[x].put(
+                    BakedBloodContainerModel.FLUID_MODELS[x].put(
                             entry.getKey(),
                             retexturedModel.bake(retexturedModel.getDefaultState(), Attributes.DEFAULT_BAKED_FORMAT, textureGetter));
 
@@ -67,7 +65,7 @@ public class ClientEventHandler {
 
             // get ModelResourceLocations of all tank block variants from the registry
 
-            RegistrySimple<ModelResourceLocation, IBakedModel> registry = (RegistrySimple) event.modelRegistry;
+            RegistrySimple<ModelResourceLocation, IBakedModel> registry = (RegistrySimple) event.getModelRegistry();
             ArrayList<ModelResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ModelResourceLocation modelLoc : registry.getKeys()) {
@@ -81,15 +79,14 @@ public class ClientEventHandler {
             // replace the registered tank block variants with TankModelFactories
 
             IBakedModel registeredModel;
-            BloodContainerModelFactory modelFactory;
-
+            IBakedModel newModel;
             for (ModelResourceLocation loc : modelLocations) {
-                registeredModel = event.modelRegistry.getObject(loc);
-                modelFactory = new BloodContainerModelFactory(registeredModel);
-                event.modelRegistry.putObject(loc, modelFactory);
+                registeredModel = event.getModelRegistry().getObject(loc);
+                newModel = new BakedBloodContainerModel(registeredModel);
+                event.getModelRegistry().putObject(loc, newModel);
             }
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             VampirismMod.log.e("ModelBake", e, "Failed to load fluid models for blood container");
 
             return;

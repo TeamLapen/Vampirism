@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.tileentity.TileTent;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
@@ -56,12 +57,14 @@ public class ModBlocks {
 
     private static void registerBlocks() {
         fluidBlood = registerBlock(new BlockFluidBlood());//TODO Maybe remove blood block later
-        castleBlock = registerBlock(new BlockCastleBlock(), ItemMetaBlock.class);
+        castleBlock = new BlockCastleBlock();
+        registerBlock(castleBlock, new ItemMetaBlock(castleBlock));
         cursedEarth = registerBlock(new BlockCursedEarth());
-        vampirismFlower = registerBlock(new VampirismFlower(), ItemMetaBlock.class);
+        vampirismFlower = new VampirismFlower();
+        registerBlock(vampirismFlower, new ItemMetaBlock(vampirismFlower));
         tent = registerBlock(new BlockTent(), null);
         tentMain = registerBlock(new BlockTentMain(), null);
-        coffin = registerBlock(new BlockCoffin(), null);
+        //coffin = registerBlock(new BlockCoffin(), null);
         altarInfusion = registerBlock(new BlockAltarInfusion());
         altarPillar = registerBlock(new BlockAltarPillar());
         altarTip = registerBlock(new BlockAltarTip());
@@ -84,15 +87,17 @@ public class ModBlocks {
         GameRegistry.addRecipe(new ItemStack(bloodContainer), "XYX", "YZY", "XYX", 'X', Blocks.planks, 'Y', Blocks.glass, 'Z', Items.iron_ingot);
     }
 
-    private static <T extends Block> T registerBlock(T block) {
-        return registerBlock(block, ItemBlock.class);
-    }
-    private static <T extends Block> T registerBlock(T block, Class<? extends ItemBlock> itemclass) {
-        if (block.getRegistryName() == null) {
-            throw new IllegalArgumentException("Missing registry name for " + block);
-        }
-        GameRegistry.registerBlock(block, itemclass);
+
+    private static <T extends Block> T registerBlock(T block, Item item) {
+        GameRegistry.register(block);
+        if (item != null) GameRegistry.register(item);
         return block;
+    }
+
+    private static <T extends Block> T registerBlock(T block) {
+        Item item = new ItemBlock(block);
+        item.setRegistryName(block.getRegistryName());
+        return registerBlock(block, item);
     }
 
 

@@ -4,11 +4,10 @@ import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.PotionThirst;
 import de.teamlapen.vampirism.potion.VampirismPotion;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.potion.Potion;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
  * Handles all potion registrations and reference.
@@ -29,9 +28,15 @@ public class ModPotions {
     }
 
     private static void preInit(FMLPreInitializationEvent event) {
-        thirst = new PotionThirst(new ResourceLocation(REFERENCE.MODID, "thirst"), true, 859494);
-        sanguinare = new PotionSanguinare(new ResourceLocation(REFERENCE.MODID, "sanguinare"), false, 0x6A0888);
-        saturation = new VampirismPotion(new ResourceLocation(REFERENCE.MODID, "saturation"), false, 0xDCFF00).setPotionName("potion.vampirism.saturation");
+        thirst = register(new PotionThirst("thirst", true, 859494));
+
+        sanguinare = register(new PotionSanguinare("sanguinare", false, 0x6A0888));
+        saturation = register(new VampirismPotion("saturation", false, 0xDCFF00));
+    }
+
+    private static <T extends Potion> T register(T potion) {
+        GameRegistry.register(potion);
+        return potion;
     }
 
 

@@ -1,7 +1,7 @@
 package de.teamlapen.lib.lib.util;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
@@ -40,7 +40,7 @@ public class InventoryRenderHelper {
      * {@link InventoryRenderHelper#registerRender(Item, int, String, String)} with registry name
      */
     public void registerRender(Item item, int meta, String variant) {
-        registerRender(item, meta, item.getRegistryName().split(":")[1], variant);
+        registerRender(item, meta, item.getRegistryName().getResourcePath(), variant);
     }
 
     /**
@@ -54,7 +54,7 @@ public class InventoryRenderHelper {
      * {@link InventoryRenderHelper#registerRender(Item, int, String, String)} with meta 0 and registry name
      */
     public void registerRender(Item item, String variant) {
-        registerRender(item, item.getRegistryName().split(":")[1], variant);
+        registerRender(item, item.getRegistryName().getResourcePath(), variant);
     }
 
     /**
@@ -68,7 +68,7 @@ public class InventoryRenderHelper {
      * {@link InventoryRenderHelper#registerRender(Block, int, String)} with registry name
      */
     public void registerRender(Block block, int meta) {
-        registerRender(block, meta, block.getRegistryName().split(":")[1]);
+        registerRender(block, meta, block.getRegistryName().getResourcePath());
     }
 
     /**
@@ -84,7 +84,7 @@ public class InventoryRenderHelper {
      * @param block
      */
     public void registerRender(Block block){
-        registerRender(block, 0, block.getRegistryName().split(":")[1]);
+        registerRender(block, 0, block.getRegistryName().getResourcePath());
     }
 
 

@@ -7,7 +7,7 @@ import de.teamlapen.vampirism.tileentity.TileBloodContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -16,9 +16,11 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumWorldBlockLayer;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
@@ -50,8 +52,8 @@ public class BlockBloodContainer extends VampirismBlockContainer {
     }
 
     @Override
-    public EnumWorldBlockLayer getBlockLayer() {
-        return EnumWorldBlockLayer.CUTOUT;
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.CUTOUT;
     }
 
     @Override
@@ -60,19 +62,20 @@ public class BlockBloodContainer extends VampirismBlockContainer {
         TileBloodContainer tile = (TileBloodContainer) world.getTileEntity(pos);
         if (tile != null) {
             FluidStack fluid = tile.getTankInfo().fluid;
-            return extendedState.withProperty(FLUID_LEVEL, fluid == null ? 0 : fluid.amount / TileBloodContainer.LEVEL_AMOUNT).withProperty(FLUID_NAME, fluid == null ? "" : fluid.getFluid().getName());
+            float amount = fluid == null ? 0 : fluid.amount / (float) TileBloodContainer.LEVEL_AMOUNT;
+            return extendedState.withProperty(FLUID_LEVEL, (amount > 0 && amount < 1) ? 1 : (int) amount).withProperty(FLUID_NAME, fluid == null ? "" : fluid.getFluid().getName());
 
         }
         return extendedState.withProperty(FLUID_LEVEL, 0).withProperty(FLUID_NAME, "");
     }
 
     @Override
-    public int getRenderType() {
-        return 3;
+    public EnumBlockRenderType getRenderType(IBlockState state) {
+        return EnumBlockRenderType.MODEL;
     }
 
     @Override
-    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te) {
+    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack heldStack) {
         ItemStack stack = new ItemStack(ModBlocks.bloodContainer, 1);
         FluidStack fluid = ((TileBloodContainer) te).getTankInfo().fluid;
         if (fluid != null && fluid.amount > 0) {
@@ -81,20 +84,20 @@ public class BlockBloodContainer extends VampirismBlockContainer {
         spawnAsEntity(worldIn, pos, stack);
     }
 
+
     @Override
-    public boolean isFullCube() {
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
 
     @Override
-    public boolean isOpaqueCube() {
+    public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
-
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!worldIn.isRemote) {
-            ItemStack stack = playerIn.getCurrentEquippedItem();
+            ItemStack stack = heldItem;
             if (stack != null) {
                 if (stack.getItem() instanceof IFluidContainerItem || FluidContainerRegistry.isContainer(stack)) {
                     TileBloodContainer bloodContainer = (TileBloodContainer) worldIn.getTileEntity(pos);
@@ -103,7 +106,7 @@ public class BlockBloodContainer extends VampirismBlockContainer {
                     } else {
                         drainContainerIntoTank(worldIn, pos, playerIn, stack, bloodContainer);
                     }
-                    worldIn.markBlockForUpdate(pos);
+                    worldIn.notifyBlockUpdate(pos, state, state, 3);
                     bloodContainer.markDirty();
                     return true;
                 }
@@ -130,7 +133,7 @@ public class BlockBloodContainer extends VampirismBlockContainer {
     }
 
     @Override
-    protected BlockState createBlockState() {
+    protected BlockStateContainer createBlockState() {
         return new ExtendedBlockState(this, new IProperty[]{}, new IUnlistedProperty[]{FLUID_LEVEL, FLUID_NAME});
     }
 

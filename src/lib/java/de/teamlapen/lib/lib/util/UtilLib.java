@@ -2,7 +2,8 @@ package de.teamlapen.lib.lib.util;
 
 import com.google.common.base.Predicate;
 import de.teamlapen.lib.VampLib;
-import net.minecraft.block.Block;
+import de.teamlapen.vampirism.VampirismMod;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -10,12 +11,17 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.*;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.fml.server.FMLServerHandler;
 
 import java.util.List;
 import java.util.Random;
@@ -31,6 +37,10 @@ public class UtilLib {
         return e.toString();
     }
 
+    public static boolean doesBlockHaveSolidTopSurface(World worldIn, BlockPos pos) {
+        return worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos, EnumFacing.UP) && !worldIn.getBlockState(pos).getMaterial().isSolid() && !worldIn.getBlockState(pos.up()).getMaterial().isSolid();
+    }
+
     /**
      * Gets players looking spot (blocks only).
      * TODO check if this still works in 1.8
@@ -39,14 +49,14 @@ public class UtilLib {
      * @param restriction Max distance or 0 for player reach distance or -1 for not restricted
      * @return The position as a MovingObjectPosition, null if not existent cf: https ://github.com/bspkrs/bspkrsCore/blob/master/src/main/java/bspkrs /util/CommonUtils.java
      */
-    public static MovingObjectPosition getPlayerLookingSpot(EntityPlayer player, double restriction) {
+    public static RayTraceResult getPlayerLookingSpot(EntityPlayer player, double restriction) {
         float scale = 1.0F;
         float pitch = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * scale;
         float yaw = player.prevRotationYaw + (player.rotationYaw - player.prevRotationYaw) * scale;
         double x = player.prevPosX + (player.posX - player.prevPosX) * scale;
         double y = player.prevPosY + (player.posY - player.prevPosY) * scale + 1.62D;
         double z = player.prevPosZ + (player.posZ - player.prevPosZ) * scale;
-        Vec3 vector1 = new Vec3(x, y, z);
+        Vec3d vector1 = new Vec3d(x, y, z);
         float cosYaw = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
         float sinYaw = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
         float cosPitch = -MathHelper.cos(-pitch * 0.017453292F);
@@ -55,12 +65,12 @@ public class UtilLib {
         float pitchAdjustedCosYaw = cosYaw * cosPitch;
         double distance = 500D;
         if (restriction == 0 && player instanceof EntityPlayerMP) {
-            distance = ((EntityPlayerMP) player).theItemInWorldManager.getBlockReachDistance();
+            distance = ((EntityPlayerMP) player).interactionManager.getBlockReachDistance();
         } else if (restriction > 0) {
             distance = restriction;
         }
 
-        Vec3 vector2 = vector1.addVector(pitchAdjustedSinYaw * distance, sinPitch * distance, pitchAdjustedCosYaw * distance);
+        Vec3d vector2 = vector1.addVector(pitchAdjustedSinYaw * distance, sinPitch * distance, pitchAdjustedCosYaw * distance);
         return player.worldObj.rayTraceBlocks(vector1, vector2);
     }
 
@@ -153,8 +163,8 @@ public class UtilLib {
             boolean flag1 = false;
 
             while (!flag1 && blockPos.getY() > 0) {
-                Block block = entity.worldObj.getBlockState(blockPos.down()).getBlock();
-                if (block.getMaterial().blocksMovement())
+                IBlockState blockState = entity.worldObj.getBlockState(blockPos.down());
+                if (blockState.getMaterial().blocksMovement())
                     flag1 = true;
                 else {
                     --entity.posY;
@@ -165,7 +175,7 @@ public class UtilLib {
             if (flag1) {
                 entity.setPosition(entity.posX, entity.posY, entity.posZ);
 
-                if (entity.worldObj.getCollidingBoundingBoxes(entity, entity.getEntityBoundingBox()).isEmpty() && !entity.worldObj.isAnyLiquid(entity.getEntityBoundingBox()))
+                if (entity.worldObj.collidesWithAnyBlock(entity.getEntityBoundingBox()) && !entity.worldObj.isAnyLiquid(entity.getEntityBoundingBox()))
                     flag = true;
             }
         }
@@ -188,8 +198,8 @@ public class UtilLib {
             }
 
             if (sound) {
-                entity.worldObj.playSoundEffect(d3, d4, d5, "mob.endermen.portal", 1.0F, 1.0F);
-                entity.playSound("mob.endermen.portal", 1.0F, 1.0F);
+                entity.worldObj.playSound(d3, d4, d5, SoundEvents.entity_endermen_teleport, SoundCategory.NEUTRAL, 1F, 1F, false);
+                entity.playSound(SoundEvents.entity_endermen_teleport, 1F, 1F);
             }
 
             return true;
@@ -235,15 +245,15 @@ public class UtilLib {
      * @param player
      * @param message
      */
-    public static void sendMessageToAllExcept(EntityPlayer player, IChatComponent message) {
-        for (Object o : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
+    public static void sendMessageToAllExcept(EntityPlayer player, ITextComponent message) {
+        for (Object o : FMLServerHandler.instance().getServer().getPlayerList().getPlayerList()) {
             if (!o.equals(player)) {
                 ((EntityPlayer) o).addChatComponentMessage(message);
             }
         }
     }
 
-    public static void sendMessageToAll(IChatComponent message) {
+    public static void sendMessageToAll(ITextComponent message) {
         sendMessageToAllExcept(null, message);
     }
 
@@ -259,8 +269,8 @@ public class UtilLib {
         if (alsoRaytrace && !entity.canEntityBeSeen(target)) {
             return false;
         }
-        Vec3 look1 = new Vec3(-Math.sin(entity.rotationYawHead / 180 * Math.PI), 0, Math.cos(entity.rotationYawHead / 180 * Math.PI));
-        Vec3 dist = new Vec3(target.posX - entity.posX, 0, target.posZ - entity.posZ);
+        Vec3d look1 = new Vec3d(-Math.sin(entity.rotationYawHead / 180 * Math.PI), 0, Math.cos(entity.rotationYawHead / 180 * Math.PI));
+        Vec3d dist = new Vec3d(target.posX - entity.posX, 0, target.posZ - entity.posZ);
         //look1.yCoord = 0;
         look1 = look1.normalize();
         dist = dist.normalize();
@@ -334,7 +344,7 @@ public class UtilLib {
      * @return
      */
     public static AxisAlignedBB createBB(BlockPos center,int distance,boolean fullY){
-        return AxisAlignedBB.fromBounds(center.getX()-distance,fullY?0:center.getY()-distance,center.getZ()-distance,center.getX()+distance,fullY?256:center.getY()+distance,center.getZ()+distance);
+        return new AxisAlignedBB(center.getX() - distance, fullY ? 0 : center.getY() - distance, center.getZ() - distance, center.getX() + distance, fullY ? 256 : center.getY() + distance, center.getZ() + distance);
     }
 
     public static boolean isNonNull(Object... objects) {
@@ -345,7 +355,7 @@ public class UtilLib {
     }
 
     private static ChunkCoordIntPair isBiomeAt(World world, int x, int z, List<BiomeGenBase> biomes) {
-        BlockPos pos = world.getWorldChunkManager().findBiomePosition(x, z, 16, biomes, new Random());
+        BlockPos pos = world.getBiomeProvider().findBiomePosition(x, z, 32, biomes, new Random());
         if (pos != null) {
             return new ChunkCoordIntPair(pos.getX() >> 4, pos.getZ() >> 4);
         }
@@ -366,10 +376,10 @@ public class UtilLib {
         maxDist = (maxDist / 20) * 20;//Round it
         long maxop = (((long) maxDist) * maxDist + maxDist) / 2;
         ChunkCoordIntPair loc;
-        for (int i = 0; i < maxDist; i += 2) {
+        for (int i = 0; i < maxDist; i += 4) {
             int cx = -i;
             for (int cz = -i; cz <= i; cz++) {
-                if (cz % 2 == 0) continue;
+                if (cz % 4 != 0) continue;
                 loc = isBiomeAt(world, center.getX() + (cx << 4), center.getZ() + (cz << 4), biomes);
                 if (loc != null) {
                     VampLib.log.d("UtilLib", "Took %d ms to find a vampire biome %d %d", (int) (System.currentTimeMillis() - start), loc.chunkXPos, loc.chunkZPos);
@@ -382,7 +392,7 @@ public class UtilLib {
             }
             int cz = -i;
             for (int cx2 = -i + 1; cx2 < i; cx2++) {
-                if (cx2 % 2 == 0) continue;
+                if (cx2 % 4 != 0) continue;
                 loc = isBiomeAt(world, center.getX() + (cx2 << 4), center.getZ() + (cz << 4), biomes);
                 if (loc != null) {
                     VampLib.log.d("UtilLib", "Took %d ms to find a vampire biome %d %d", (int) (System.currentTimeMillis() - start), loc.chunkXPos, loc.chunkZPos);
@@ -396,7 +406,8 @@ public class UtilLib {
             if (listener != null && (i * 10) % maxDist == 0) {
                 long op = (((long) i) * i + i) / 2;
                 double perc = ((double) op / maxop) * 100;
-                listener.addChatMessage(new ChatComponentText(((int) perc) + "% finished"));
+                VampirismMod.log.i("UtilLib", "Search %s percent finished", (int) perc);
+                //listener.addChatMessage(new TextComponentString(((int) perc) + "% finished")); //TODO maybe add back async
             }
 
         }

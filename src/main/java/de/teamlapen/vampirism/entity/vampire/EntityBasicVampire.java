@@ -6,42 +6,44 @@ import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.ai.VampireAIBiteNearbyEntity;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
 import de.teamlapen.vampirism.entity.ai.VampireAIMoveToBiteable;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.SoundEvent;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
 
 public class EntityBasicVampire extends EntityVampireBase implements IBasicVampire {
 
+    private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(EntityBasicVampire.class, DataSerializers.VARINT);
     private final int ID_LEVEL = 16;
     private final int MAX_LEVEL = 2;
     private final int MOVE_TO_RESTRICT_PRIO = 3;
     private int bloodtimer = 100;
-    /**
-     * True after the datawatcher has been initialized.
-     */
-    private boolean datawatcher_init = false;
+
 
     public EntityBasicVampire(World world) {
         super(world, true);
 
-        getDataWatcher().addObject(ID_LEVEL, -1);
-        datawatcher_init = true;
+
         hasArms = true;
 
         this.setSize(0.6F, 1.8F);
@@ -54,7 +56,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         this.tasks.addTask(2, new EntityAIRestrictSun(this));
         this.tasks.addTask(3, new VampireAIFleeSun(this, 0.9, false));
         this.tasks.addTask(3, new VampireAIFleeGarlic(this, 0.9, false));
-        this.tasks.addTask(4, new EntityAIAttackOnCollide(this, 1.0, false));
+        this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.0, false));
         this.tasks.addTask(5, new VampireAIBiteNearbyEntity(this));
         this.tasks.addTask(6, new VampireAIMoveToBiteable(this, 0.75));
         this.tasks.addTask(7, new EntityAIMoveThroughVillage(this, 0.6, true));
@@ -77,7 +79,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
 
     @Override
     public int getLevel() {
-        return datawatcher_init ? getDataWatcher().getWatchableObjectInt(ID_LEVEL) : -1;
+        return getDataManager().get(LEVEL);
     }
 
     @Override
@@ -85,14 +87,14 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         if (level >= 0) {
             this.updateEntityAttributes();
             if (level == 2) {
-                this.addPotionEffect(new PotionEffect(Potion.resistance.id, 1000000, 1));
+                this.addPotionEffect(new PotionEffect(MobEffects.resistance, 1000000, 1));
             }
             if (level == 1) {
-                this.setCurrentItemOrArmor(0, new ItemStack(Items.iron_sword));
+                this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.iron_sword));
             } else {
-                this.setCurrentItemOrArmor(0, null);
+                this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, null);
             }
-            getDataWatcher().updateObject(ID_LEVEL, level);
+            getDataManager().set(LEVEL, level);
         }
     }
 
@@ -160,20 +162,26 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     }
 
     @Override
+    protected void entityInit() {
+        super.entityInit();
+        getDataManager().register(LEVEL, -1);
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return ModSounds.entity_vampire_ambient;
+    }
+
+    @Override
     protected int getExperiencePoints(EntityPlayer player) {
         return 6 + getLevel();
     }
 
-    @Override
-    protected String getLivingSound() {
-        return REFERENCE.MODID + ":entity.vampire.scream";
-    }
-
     protected void updateEntityAttributes() {
         int l = Math.max(getLevel(), 0);
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(Balance.mobProps.VAMPIRE_MAX_HEALTH + Balance.mobProps.VAMPIRE_MAX_HEALTH_PL * l);
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(Balance.mobProps.VAMPIRE_ATTACK_DAMAGE + Balance.mobProps.VAMPIRE_ATTACK_DAMAGE_PL * l);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(Balance.mobProps.VAMPIRE_SPEED);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_MAX_HEALTH + Balance.mobProps.VAMPIRE_MAX_HEALTH_PL * l);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.VAMPIRE_ATTACK_DAMAGE + Balance.mobProps.VAMPIRE_ATTACK_DAMAGE_PL * l);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.VAMPIRE_SPEED);
     }
 
 }

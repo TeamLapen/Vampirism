@@ -17,12 +17,13 @@ dependencies {
 
 minecraft {
     version = config.minecraft_version + "-" + config.forge_version
-    mappings = "stable_20"
+    mappings = "snapshot_20160312"
     runDir = "run"
     replaceIn "util/REFERENCE.java"
     replace "@VERSION@", "${project.mod_version}"
     replace "@MVERSION@", "${config.minecraft_version}"
     replace "@FVERSION@", "${config.forge_version}"
+    makeObfSourceJar = false // an Srg named sources jar is made if enabled
 }
 
 processResources {

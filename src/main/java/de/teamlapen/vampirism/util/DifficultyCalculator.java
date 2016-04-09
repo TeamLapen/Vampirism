@@ -5,8 +5,7 @@ import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
@@ -15,7 +14,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Created by Max on 22.02.2016.
+ * Calculates a (local) difficulity based on the player faction levels
  */
 public class DifficultyCalculator {
 
@@ -81,7 +80,7 @@ public class DifficultyCalculator {
         if (FMLCommonHandler.instance().getEffectiveSide().isClient()) {
             throw new IllegalStateException("You can only use this method on server side");
         }
-        return calculateDifficulty(MinecraftServer.getServer().getConfigurationManager().playerEntityList);
+        return calculateDifficulty(FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerList());
     }
 
     /**

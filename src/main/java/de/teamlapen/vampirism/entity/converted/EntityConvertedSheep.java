@@ -3,14 +3,19 @@ package de.teamlapen.vampirism.entity.converted;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.init.Blocks;
+import net.minecraft.init.SoundEvents;
+import net.minecraft.item.EnumDyeColor;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.BlockPos;
+import net.minecraft.network.datasync.DataParameter;
+import net.minecraft.network.datasync.DataSerializers;
+import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IShearable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,30 +25,29 @@ import java.util.List;
 public class EntityConvertedSheep extends EntityConvertedCreature implements IShearable {
 
 
+    private final static DataParameter<Byte> COAT = EntityDataManager.createKey(EntityConvertedSheep.class, DataSerializers.BYTE);
     private Boolean lastSheared = null;
 
     public EntityConvertedSheep(World world) {
         super(world);
     }
 
-    public int getFleeceColor() {
-        return nil() ? 0 : ((EntitySheep) this.getOldCreature()).getFleeceColor().getDyeDamage();//this.dataWatcher.getWatchableObjectByte(16) & 15;
+    public EnumDyeColor getFleeceColor() {
+        return nil() ? EnumDyeColor.WHITE : ((EntitySheep) this.getOldCreature()).getFleeceColor();
     }
 
-    /**
-     * returns true if a sheeps wool has been sheared
-     */
+
     public boolean getSheared() {
-        return (this.dataWatcher.getWatchableObjectByte(16) & 16) != 0;
+        return ((this.dataWatcher.get(COAT)).byteValue() & 16) != 0;
     }
 
-    public void setSheared(boolean p_70893_1_) {
-        byte b0 = this.dataWatcher.getWatchableObjectByte(16);
+    public void setSheared(boolean sheared) {
+        byte b0 = this.dataWatcher.get(COAT).byteValue();
 
-        if (p_70893_1_) {
-            this.dataWatcher.updateObject(16, Byte.valueOf((byte) (b0 | 16)));
+        if (sheared) {
+            this.dataWatcher.set(COAT, Byte.valueOf((byte) (b0 | 16)));
         } else {
-            this.dataWatcher.updateObject(16, Byte.valueOf((byte) (b0 & -17)));
+            this.dataWatcher.set(COAT, Byte.valueOf((byte) (b0 & -17)));
         }
     }
 
@@ -65,13 +69,15 @@ public class EntityConvertedSheep extends EntityConvertedCreature implements ISh
 
     @Override
     public List<ItemStack> onSheared(ItemStack item, IBlockAccess world, BlockPos pos, int fortune) {
-        ArrayList<ItemStack> ret = new ArrayList<ItemStack>();
-        setSheared(true);
-        int i = 1 + rand.nextInt(3);
-        for (int j = 0; j < i; j++) {
-            ret.add(new ItemStack(Blocks.wool, 1, getFleeceColor()));
-        }
-        this.playSound("mob.sheep.shear", 1.0F, 1.0F);
+
+        this.setSheared(true);
+        int i = 1 + this.rand.nextInt(3);
+
+        java.util.List<ItemStack> ret = new java.util.ArrayList<ItemStack>();
+        for (int j = 0; j < i; ++j)
+            ret.add(new ItemStack(Item.getItemFromBlock(Blocks.wool), 1, this.getFleeceColor().getMetadata()));
+
+        this.playSound(SoundEvents.entity_sheep_shear, 1.0F, 1.0F);
         return ret;
     }
 
@@ -90,7 +96,8 @@ public class EntityConvertedSheep extends EntityConvertedCreature implements ISh
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.dataWatcher.addObject(16, new Byte((byte) 0));
+
+        this.dataWatcher.register(COAT, Byte.valueOf((byte) 0));
     }
 
     public static class ConvertingSheepHandler extends DefaultConvertingHandler<EntitySheep> {

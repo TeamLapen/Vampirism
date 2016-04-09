@@ -5,11 +5,12 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.BlockTallGrass;
 import net.minecraft.block.IGrowable;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IPlantable;
@@ -24,7 +25,7 @@ public class BlockCursedEarth extends VampirismBlock implements IGrowable {
     public BlockCursedEarth() {
         super(name, Material.ground);
         this.setHardness(0.5F).setResistance(2.0F).setHarvestLevel("shovel", 0);
-        setStepSound(soundTypeGravel);
+        setStepSound(SoundType.GROUND);
     }
 
     @Override
@@ -33,9 +34,10 @@ public class BlockCursedEarth extends VampirismBlock implements IGrowable {
     }
 
     @Override
-    public boolean canSustainPlant(IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable) {
+    public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable) {
         return plantable instanceof BlockBush || plantable.getPlantType(world, pos).equals(VReference.vampirePlantType);
     }
+
 
     @Override
     public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, IBlockState state) {
@@ -74,7 +76,7 @@ public class BlockCursedEarth extends VampirismBlock implements IGrowable {
 
                 blockpos1 = blockpos1.add(rand.nextInt(3) - 1, (rand.nextInt(3) - 1) * rand.nextInt(3) / 2, rand.nextInt(3) - 1);
 
-                if (worldIn.getBlockState(blockpos1.down()).getBlock() != ModBlocks.cursedEarth || worldIn.getBlockState(blockpos1).getBlock().isNormalCube()) {
+                if (worldIn.getBlockState(blockpos1.down()).getBlock() != ModBlocks.cursedEarth || worldIn.getBlockState(blockpos1).isNormalCube()) {
                     break;
                 }
 

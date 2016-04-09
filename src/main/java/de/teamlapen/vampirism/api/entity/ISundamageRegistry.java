@@ -1,18 +1,19 @@
 package de.teamlapen.vampirism.api.entity;
 
+import net.minecraft.util.ResourceLocation;
+
 /**
  * Manages sundamage for biomes and dimensions
  */
 public interface ISundamageRegistry {
-    void addNoSundamageBiome(int id);
+    void addNoSundamageBiome(ResourceLocation registryName);
 
     /**
      * Checkd if vampirs can get sundamage in that biome
      *
-     * @param id
      * @return
      */
-    boolean getSundamageInBiome(int id);
+    boolean getSundamageInBiome(ResourceLocation registryName);
 
     /**
      * Checks if vampires can get sundamge in that dimension

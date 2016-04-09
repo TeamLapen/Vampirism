@@ -39,7 +39,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.launchwrapper.Launch;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
@@ -59,7 +59,7 @@ import java.io.File;
  * Main class for Vampirism
  * TODO readd "required-after:teamlapen-lib;"
  */
-@Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION, acceptedMinecraftVersions = "[1.8.9]", dependencies = "required-after:Forge@[" + REFERENCE.FORGE_VERSION_MIN + ",);", guiFactory = "de.teamlapen.vampirism.client.core.ModGuiFactory", updateJSON = REFERENCE.VERSION_UPDATE_FILE)
+@Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION, acceptedMinecraftVersions = "[1.9]", dependencies = "required-after:Forge@[" + REFERENCE.FORGE_VERSION_MIN + ",);", guiFactory = "de.teamlapen.vampirism.client.core.ModGuiFactory", updateJSON = REFERENCE.VERSION_UPDATE_FILE)
 public class VampirismMod {
 
     public final static Logger log = new Logger(REFERENCE.MODID, "de.teamlapen.vampirism");
@@ -170,9 +170,9 @@ public class VampirismMod {
         SkillRegistry skillRegistry = new SkillRegistry();
         VampirismAPI.setUp(factionRegistry, sundamageRegistry, biteableRegistry, actionRegistry, skillRegistry);
         VReference.VAMPIRE_FACTION = factionRegistry.registerPlayableFaction("Vampire", IVampirePlayer.class, 0XFF780DA3, REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.CAP, REFERENCE.HIGHEST_VAMPIRE_LEVEL);
-        VReference.VAMPIRE_FACTION.setChatColor(EnumChatFormatting.DARK_PURPLE).setUnlocalizedName("text.vampirism.vampire", "text.vampirism.vampires");
+        VReference.VAMPIRE_FACTION.setChatColor(TextFormatting.DARK_PURPLE).setUnlocalizedName("text.vampirism.vampire", "text.vampirism.vampires");
         VReference.HUNTER_FACTION = factionRegistry.registerPlayableFaction("Hunter", IHunterPlayer.class, Color.BLUE.getRGB(), REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.CAP, REFERENCE.HIGHEST_HUNTER_LEVEL);
-        VReference.HUNTER_FACTION.setChatColor(EnumChatFormatting.DARK_BLUE).setUnlocalizedName("text.vampirism.hunter", "text.vampirism.hunters");
+        VReference.HUNTER_FACTION.setChatColor(TextFormatting.DARK_BLUE).setUnlocalizedName("text.vampirism.hunter", "text.vampirism.hunters");
         biteableRegistry.setDefaultConvertingHandlerCreator(new BiteableRegistry.ICreateDefaultConvertingHandler() {
             @Override
             public IConvertingHandler create(IConvertingHandler.IDefaultHelper helper) {

@@ -13,9 +13,9 @@ import de.teamlapen.vampirism.tileentity.TileCoffin;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.ItemMeshDefinition;
+import net.minecraft.client.renderer.block.model.ModelBakery;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
-import net.minecraft.client.resources.model.ModelBakery;
-import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -64,12 +64,12 @@ public class ModBlocksRender {
                 return new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "fluids"), "blood");
             }
         });
-        ModelLoader.setCustomStateMapper(ModBlocks.coffin, new StateMapperBase() {
-            @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                return new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "blockCoffin"), "normal");
-            }
-        });
+//        ModelLoader.setCustomStateMapper(ModBlocks.coffin, new StateMapperBase() {
+//            @Override
+//            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+//                return new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "blockCoffin"), "normal");
+//            }
+//        });
 
     }
 

@@ -3,11 +3,12 @@ package de.teamlapen.vampirism.world.gen;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBiomes;
 import net.minecraft.block.material.Material;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraft.world.biome.BiomeGenPlains;
+import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.fml.common.IWorldGenerator;
 
@@ -24,8 +25,8 @@ public class VampirismWorldGen implements IWorldGenerator {
     }
 
     @Override
-    public void generate(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
-        switch (world.provider.getDimensionId()) {
+    public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
+        switch (world.provider.getDimension()) {
             case -1:
                 generateNether(random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
                 break;
@@ -38,23 +39,24 @@ public class VampirismWorldGen implements IWorldGenerator {
         }
     }
 
-    public void generateEnd(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
+
+    public void generateEnd(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
 
     }
 
-    public void generateNether(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
+    public void generateNether(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
 
     }
 
-    public void generateOverworld(Random random, int chunkX, int chunkZ, World world, IChunkProvider chunkGenerator, IChunkProvider chunkProvider) {
+    public void generateOverworld(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
         boolean generatedStructure = false;
         boolean mapFeatures = world.getWorldInfo().isMapFeaturesEnabled();
         BiomeGenBase biome = world.getBiomeGenForCoords(new BlockPos((chunkX << 4) + 8, 0, (chunkZ << 4) + 8));
 
-        if (!generatedStructure && mapFeatures && biome.biomeID != ModBiomes.vampireForest.biomeID) {
+        if (!generatedStructure && mapFeatures && !ModBiomes.vampireForest.getRegistryName().equals(ModBiomes.vampireForest.getRegistryName())) {
             int chance = random.nextInt(1000);
             int trees = biome.theBiomeDecorator.treesPerChunk;
-            float bh = biome.maxHeight;
+            float bh = biome.getBaseHeight() + biome.getHeightVariation();
             float prop = 1;
             if (trees > 2 && trees < 11) {
                 prop += trees;
@@ -70,7 +72,7 @@ public class VampirismWorldGen implements IWorldGenerator {
                 BlockPos pos = new BlockPos((chunkX << 4) + random.nextInt(16), 0, (chunkZ << 4) + random.nextInt(16));
                 pos = world.getHeight(pos);
                 Material material;
-                while (((material = world.getBlockState(pos).getBlock().getMaterial()) == Material.leaves || material == Material.plants || world.isAirBlock(pos)) && pos.getY() > 50) {
+                while (((material = world.getBlockState(pos).getMaterial()) == Material.leaves || material == Material.plants || world.isAirBlock(pos)) && pos.getY() > 50) {
                     pos = pos.down();
                 }
                 float temp = biome.getFloatTemperature(pos);

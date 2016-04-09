@@ -1,12 +1,11 @@
 package de.teamlapen.vampirism.world.gen;
 
 import de.teamlapen.vampirism.items.ItemTent;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
 
@@ -20,7 +19,7 @@ public class WorldGenHunterCamp extends WorldGenerator {
     @Override
     public boolean generate(World worldIn, Random rand, BlockPos position) {
         IBlockState ground = worldIn.getBlockState(position.down());
-        if (ground.getBlock().isSideSolid(worldIn, position.down(), EnumFacing.UP)) ;
+        if (ground.getBlock().isSideSolid(ground, worldIn, position.down(), EnumFacing.UP)) ;
         EnumFacing facing = EnumFacing.getHorizontal(rand.nextInt(EnumFacing.HORIZONTALS.length));
 
         BlockPos tl = worldIn.getHeight(position.offset(facing).offset(facing.rotateYCCW()));
@@ -55,8 +54,7 @@ public class WorldGenHunterCamp extends WorldGenerator {
     }
 
     private boolean checkGround(World worldIn, BlockPos nw, IBlockState ground) {
-        Block b = worldIn.getBlockState(nw).getBlock();
-        Material m = b.getMaterial();
+        Material m = worldIn.getBlockState(nw).getMaterial();
         if (m.isLiquid()) return false;
         if (m.isReplaceable()) {
             worldIn.setBlockState(nw, ground);

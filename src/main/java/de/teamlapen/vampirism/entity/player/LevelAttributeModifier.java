@@ -22,9 +22,9 @@ public class LevelAttributeModifier {
     private static final Map<IAttribute, UUID> modifiers = new HashMap<IAttribute, UUID>();
 
     static {
-        modifiers.put(SharedMonsterAttributes.attackDamage, UUID.fromString("7600D8C4-3517-40BE-8CB1-359D46705A0F"));
-        modifiers.put(SharedMonsterAttributes.movementSpeed, UUID.fromString("0FCBF922-DBEC-492A-82F5-99F73AFF5065"));
-        modifiers.put(SharedMonsterAttributes.maxHealth, UUID.fromString("56C17EFE-E3EC-4E27-A12F-99D2FE927B70"));
+        modifiers.put(SharedMonsterAttributes.ATTACK_DAMAGE, UUID.fromString("7600D8C4-3517-40BE-8CB1-359D46705A0F"));
+        modifiers.put(SharedMonsterAttributes.MOVEMENT_SPEED, UUID.fromString("0FCBF922-DBEC-492A-82F5-99F73AFF5065"));
+        modifiers.put(SharedMonsterAttributes.MAX_HEALTH, UUID.fromString("56C17EFE-E3EC-4E27-A12F-99D2FE927B70"));
         modifiers.put(VReference.bloodExhaustion, UUID.fromString("4504ccfa-dfdc-11e5-b86d-9a79f06e9478"));
     }
 

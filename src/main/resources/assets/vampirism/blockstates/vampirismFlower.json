@@ -2,7 +2,7 @@
   "forge_marker": 1,
   "variants": {
     "type": {
-      "vampireorchid": {
+      "vampire_orchid": {
         "model": "cross",
         "textures": {
           "cross": "vampirism:blocks/vampireOrchid"

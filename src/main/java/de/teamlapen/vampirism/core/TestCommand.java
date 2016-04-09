@@ -16,9 +16,9 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.profiler.Profiler;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,17 +55,17 @@ public class TestCommand extends BasicCommand {
 
             @Override
             public void processCommand(ICommandSender var1, String[] var2) {
-                var1.addChatMessage(new ChatComponentText("Tick"));
+                var1.addChatMessage(new TextComponentString("Tick"));
                 print(var1, "tick");
-                var1.addChatMessage(new ChatComponentText("Garlic"));
+                var1.addChatMessage(new TextComponentString("Garlic"));
                 print(var1, "vampirism_checkGarlic");
 
             }
 
             private void print(ICommandSender var1, String id) {
-                List<Profiler.Result> l = MinecraftServer.getServer().theProfiler.getProfilingData(id);
+                List<Profiler.Result> l = FMLCommonHandler.instance().getMinecraftServerInstance().theProfiler.getProfilingData(id);
                 for (Profiler.Result r : l) {
-                    var1.addChatMessage(new ChatComponentText("" + r.field_76331_c + ": " + r.field_76332_a + "|" + r.field_76330_b));
+                    var1.addChatMessage(new TextComponentString("" + r.profilerName + ": " + r.usePercentage + "|" + r.totalUsePercentage));
                 }
             }
         });
@@ -94,7 +94,7 @@ public class TestCommand extends BasicCommand {
             public void processCommand(ICommandSender var1, String[] var2) throws CommandException {
                 IFactionPlayer factionPlayer = FactionPlayerHandler.get(getCommandSenderAsPlayer(var1)).getCurrentFactionPlayer();
                 if (factionPlayer == null) {
-                    var1.addChatMessage(new ChatComponentText("You have to be in a faction"));
+                    var1.addChatMessage(new TextComponentString("You have to be in a faction"));
                     return;
                 }
                 if (var2.length == 0) {
@@ -110,20 +110,20 @@ public class TestCommand extends BasicCommand {
                 }
                 ISkill skill = VampirismAPI.skillRegistry().getSkill(factionPlayer.getFaction(), var2[0]);
                 if (skill == null) {
-                    var1.addChatMessage(new ChatComponentText("Skill with id " + var2[0] + " could not be found for faction " + factionPlayer.getFaction().name()));
+                    var1.addChatMessage(new TextComponentString("Skill with id " + var2[0] + " could not be found for faction " + factionPlayer.getFaction().name()));
                     return;
                 }
                 if (factionPlayer.getSkillHandler().isSkillEnabled(skill)) {
                     factionPlayer.getSkillHandler().disableSkill(skill);
-                    var1.addChatMessage(new ChatComponentText("Disabled skill"));
+                    var1.addChatMessage(new TextComponentString("Disabled skill"));
                     return;
                 }
                 ISkillHandler.Result result = factionPlayer.getSkillHandler().canSkillBeEnabled(skill);
                 if (result == ISkillHandler.Result.OK) {
                     factionPlayer.getSkillHandler().enableSkill(skill);
-                    var1.addChatMessage(new ChatComponentText("Enabled skill"));
+                    var1.addChatMessage(new TextComponentString("Enabled skill"));
                 } else {
-                    var1.addChatMessage(new ChatComponentText("Could not enable skill " + result));
+                    var1.addChatMessage(new TextComponentString("Could not enable skill " + result));
                 }
 
             }

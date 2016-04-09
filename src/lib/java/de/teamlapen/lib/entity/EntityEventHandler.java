@@ -38,51 +38,51 @@ public class EntityEventHandler {
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (event.entity.worldObj.isRemote) {
-            if ((event.entity instanceof EntityPlayerSP && HelperRegistry.getSyncablePlayerCaps().size() > 0)) {
+        if (event.getEntity().worldObj.isRemote) {
+            if ((event.getEntity() instanceof EntityPlayerSP && HelperRegistry.getSyncablePlayerCaps().size() > 0)) {
                 VampLib.dispatcher.sendToServer(new RequestPlayerUpdatePacket());
             }
         }
 
-        if (event.entity instanceof EntityPlayer) {
+        if (event.getEntity() instanceof EntityPlayer) {
             for (int i = 0; i < listeners.length; i++) {
-                ((IPlayerEventListener) event.entity.getCapability(listeners[i], null)).onJoinWorld();
+                ((IPlayerEventListener) event.getEntity().getCapability(listeners[i], null)).onJoinWorld();
             }
         }
     }
 
     @SubscribeEvent
     public void onLivingAttack(LivingAttackEvent event) {
-        if (event.entity instanceof EntityPlayer) {
+        if (event.getEntity() instanceof EntityPlayer) {
             for (int i = 0; i < listeners.length; i++) {
-                ((IPlayerEventListener) event.entity.getCapability(listeners[i], null)).onEntityAttacked(event.source, event.ammount);
+                ((IPlayerEventListener) event.getEntity().getCapability(listeners[i], null)).onEntityAttacked(event.getSource(), event.getAmount());
             }
         }
     }
 
     @SubscribeEvent
     public void onLivingDeath(LivingDeathEvent event) {
-        if (event.entity instanceof EntityPlayer) {
+        if (event.getEntity() instanceof EntityPlayer) {
             for (int i = 0; i < listeners.length; i++) {
-                ((IPlayerEventListener) event.entity.getCapability(listeners[i], null)).onDeath(event.source);
+                ((IPlayerEventListener) event.getEntity().getCapability(listeners[i], null)).onDeath(event.getSource());
             }
         }
     }
 
     @SubscribeEvent
     public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
-        if (event.entity instanceof EntityPlayer) {
+        if (event.getEntity() instanceof EntityPlayer) {
             for (int i = 0; i < listeners.length; i++) {
-                ((IPlayerEventListener) event.entity.getCapability(listeners[i], null)).onUpdate();
+                ((IPlayerEventListener) event.getEntity().getCapability(listeners[i], null)).onUpdate();
             }
         }
     }
 
     @SubscribeEvent
     public void onPlayerClone(PlayerEvent.Clone event) {
-        if (event.wasDeath) {
+        if (event.isWasDeath()) {
             for (int i = 0; i < listeners.length; i++) {
-                ((IPlayerEventListener) event.entity.getCapability(listeners[i], null)).onPlayerClone(event.original);
+                ((IPlayerEventListener) event.getEntity().getCapability(listeners[i], null)).onPlayerClone(event.getOriginal());
             }
         }
 
@@ -104,9 +104,9 @@ public class EntityEventHandler {
 
     @SubscribeEvent
     public void onStartTracking(PlayerEvent.StartTracking event) {
-        if ((event.target instanceof EntityCreature && HelperRegistry.getSyncableEntityCaps().size() > 0) || event.target instanceof ISyncable || (event.target instanceof EntityPlayer && HelperRegistry.getSyncablePlayerCaps().size() > 0)) {
-            UpdateEntityPacket packet = UpdateEntityPacket.createJoinWorldPacket(event.target);
-            VampLib.dispatcher.sendTo(packet, (EntityPlayerMP) event.entityPlayer);
+        if ((event.getTarget() instanceof EntityCreature && HelperRegistry.getSyncableEntityCaps().size() > 0) || event.getTarget() instanceof ISyncable || (event.getTarget() instanceof EntityPlayer && HelperRegistry.getSyncablePlayerCaps().size() > 0)) {
+            UpdateEntityPacket packet = UpdateEntityPacket.createJoinWorldPacket(event.getTarget());
+            VampLib.dispatcher.sendTo(packet, (EntityPlayerMP) event.getEntityPlayer());
         }
     }
 }

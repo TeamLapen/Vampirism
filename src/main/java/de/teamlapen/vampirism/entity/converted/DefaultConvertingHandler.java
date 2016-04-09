@@ -9,7 +9,7 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.init.Items;
-import net.minecraft.potion.Potion;
+import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
 import javax.annotation.Nullable;
@@ -57,7 +57,7 @@ public class DefaultConvertingHandler<T extends EntityCreature> implements IConv
 
         @Override
         public double getConvertedDMG(EntityCreature entity) {
-            IAttributeInstance dmg = entity.getEntityAttribute(SharedMonsterAttributes.attackDamage);
+            IAttributeInstance dmg = entity.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
             if (dmg != null) {
                 return dmg.getBaseValue() * 1.3;
             } else {
@@ -67,17 +67,17 @@ public class DefaultConvertingHandler<T extends EntityCreature> implements IConv
 
         @Override
         public double getConvertedKnockbackResistance(EntityCreature entity) {
-            return entity.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).getBaseValue();
+            return entity.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).getBaseValue();
         }
 
         @Override
         public double getConvertedMaxHealth(EntityCreature entity) {
-            return entity.getEntityAttribute(SharedMonsterAttributes.maxHealth).getBaseValue() * 1.5;
+            return entity.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).getBaseValue() * 1.5;
         }
 
         @Override
         public double getConvertedSpeed(EntityCreature entity) {
-            return Math.min(entity.getEntityAttribute(SharedMonsterAttributes.movementSpeed).getBaseValue() * 1.2, 2.9D);
+            return Math.min(entity.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getBaseValue() * 1.2, 2.9D);
         }
     };
 
@@ -98,7 +98,7 @@ public class DefaultConvertingHandler<T extends EntityCreature> implements IConv
     public IConvertedCreature<T> createFrom(T entity) {
         EntityConvertedCreature<T> convertedCreature = new EntityConvertedCreature<T>(entity.worldObj);
         copyImportantStuff(convertedCreature, entity);
-        convertedCreature.addPotionEffect(new PotionEffect(Potion.weakness.id, 200, 2));
+        convertedCreature.addPotionEffect(new PotionEffect(MobEffects.weakness, 200, 2));
         return convertedCreature;
     }
 

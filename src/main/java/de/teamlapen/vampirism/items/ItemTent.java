@@ -6,9 +6,12 @@ import de.teamlapen.vampirism.tileentity.TileTent;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
 
 /**
  * Item used to place a tent
@@ -51,16 +54,18 @@ public class ItemTent extends VampirismItem {
     }
 
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (world.isRemote || side != EnumFacing.UP)
-            return false;
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if (facing != EnumFacing.UP)
+            return EnumActionResult.PASS;
+        if (world.isRemote) return EnumActionResult.PASS;
 
-        EnumFacing dir = EnumFacing.fromAngle(player.rotationYaw);
+        EnumFacing dir = EnumFacing.fromAngle(playerIn.rotationYaw);
         boolean flag = placeAt(world, pos.up(), dir, false, false);
-        if (flag && !player.capabilities.isCreativeMode) {
+        if (flag && !playerIn.capabilities.isCreativeMode) {
             stack.stackSize--;
         }
-        return flag;
+        return flag ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
     }
+
 
 }

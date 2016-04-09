@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.tileentity.TileCoffin;
 import net.minecraft.block.Block;
@@ -8,9 +9,11 @@ import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 /**
@@ -25,12 +28,13 @@ public class ItemCoffin extends VampirismItem {
     }
 
     @Override
-    public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (world.isRemote)
-            return true;
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+
         if (side != EnumFacing.UP) {
-            return false;
+            return EnumActionResult.FAIL;
         }
+        if (world.isRemote)
+            return EnumActionResult.PASS;
         // Increasing y, so the coffin is placed on top of the block that was
         // clicked at except if the block is replaceable
         IBlockState iblockstate = world.getBlockState(pos);
@@ -49,7 +53,7 @@ public class ItemCoffin extends VampirismItem {
         boolean flag2 = world.isAirBlock(other) || other_replaceable;
 
         if (player.canPlayerEdit(pos, side, stack) && player.canPlayerEdit(other, side, stack)) {
-            if (flag1 && flag2 && World.doesBlockHaveSolidTopSurface(world, pos.down()) && World.doesBlockHaveSolidTopSurface(world, other.down())) {
+            if (flag1 && flag2 && UtilLib.doesBlockHaveSolidTopSurface(world, pos.down()) && UtilLib.doesBlockHaveSolidTopSurface(world, other.down())) {
                 IBlockState state1 = ModBlocks.coffin.getDefaultState().withProperty(BlockBed.OCCUPIED, Boolean.valueOf(false)).withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT).withProperty(BlockDirectional.FACING, facing);
                 if (world.setBlockState(pos, state1, 3)) {
                     IBlockState state2 = state1.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD);
@@ -59,10 +63,12 @@ public class ItemCoffin extends VampirismItem {
                     }
                 }
                 --stack.stackSize;
-                return true;
+                return EnumActionResult.SUCCESS;
             }
         }
-        return false;
+        return EnumActionResult.FAIL;
     }
+
+
 
 }

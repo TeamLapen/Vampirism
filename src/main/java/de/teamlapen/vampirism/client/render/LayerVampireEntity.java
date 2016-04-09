@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.client.render;
 
 import de.teamlapen.vampirism.client.render.entities.RenderConvertedCreature;
-import net.minecraft.client.renderer.entity.RendererLivingEntity;
+import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.util.ResourceLocation;
@@ -11,10 +11,10 @@ import net.minecraft.util.ResourceLocation;
  */
 public class LayerVampireEntity implements LayerRenderer<EntityCreature> {
 
-    private final RendererLivingEntity renderer;
+    private final RenderLivingBase renderer;
     private final ResourceLocation overlay;
 
-    public LayerVampireEntity(RendererLivingEntity renderer, ResourceLocation overlay) {
+    public LayerVampireEntity(RenderLivingBase renderer, ResourceLocation overlay) {
         this.renderer = renderer;
         this.overlay = overlay;
     }

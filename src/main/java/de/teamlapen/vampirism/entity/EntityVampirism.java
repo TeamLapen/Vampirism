@@ -9,8 +9,15 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
@@ -35,11 +42,11 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     }
 
     public boolean attackEntityAsMob(Entity entity) {
-        float f = (float) this.getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
+        float f = (float) this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).getAttributeValue();
         int i = 0;
 
         if (entity instanceof EntityLivingBase) {
-            f += EnchantmentHelper.func_152377_a(this.getHeldItem(), ((EntityLivingBase) entity).getCreatureAttribute());
+            f += EnchantmentHelper.getModifierForCreature(this.getHeldItemMainhand(), ((EntityLivingBase) entity).getCreatureAttribute());
             i += EnchantmentHelper.getKnockbackModifier(this);
         }
 
@@ -115,7 +122,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
 
     public boolean isWithinHomeDistance(double x, double y, double z) {
         if (home != null) {
-            return home.isVecInside(new Vec3(x, y, z));
+            return home.isVecInside(new Vec3d(x, y, z));
         }
         return true;
     }
@@ -183,10 +190,15 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
 
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage);
+        this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
     }
 
     protected void attackedEntityAsMob(EntityLivingBase entity) {
+    }
+
+    @Override
+    protected boolean canDropLoot() {
+        return true;
     }
 
     /**
@@ -207,34 +219,37 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         }
     }
 
-    protected boolean func_146066_aG() {
-        return true;
+    protected SoundEvent getDeathSound() {
+        return SoundEvents.entity_hostile_death;
     }
 
-    protected String func_146067_o(int p_146067_1_) {
-        return p_146067_1_ > 4 ? "game.hostile.hurt.fall.big" : "game.hostile.hurt.fall.small";
+    @Override
+    protected SoundEvent getFallSound(int heightIn) {
+        return heightIn > 4 ? SoundEvents.entity_hostile_big_fall : SoundEvents.entity_hostile_small_fall;
     }
 
-    /**
-     * Returns the sound this mob makes on death.
-     */
-    protected String getDeathSound() {
-        return "game.hostile.die";
+    protected SoundEvent getHurtSound() {
+        return SoundEvents.entity_hostile_hurt;
     }
 
-    /**
-     * Returns the sound this mob makes when it is hurt.
-     */
-    protected String getHurtSound() {
-        return "game.hostile.hurt";
+    @Override
+    protected SoundEvent getSplashSound() {
+        return SoundEvents.entity_hostile_splash;
     }
 
-    protected String getSplashSound() {
-        return "game.hostile.swim.splash";
+    @Override
+    protected SoundEvent getSwimSound() {
+        return SoundEvents.entity_hostile_swim;
     }
 
-    protected String getSwimSound() {
-        return "game.hostile.swim";
+    protected void setDontDropEquipment() {
+        for (int i = 0; i < this.inventoryArmorDropChances.length; ++i) {
+            this.inventoryArmorDropChances[i] = 0;
+        }
+
+        for (int j = 0; j < this.inventoryHandsDropChances.length; ++j) {
+            this.inventoryHandsDropChances[j] = 0;
+        }
     }
 
     /**
@@ -258,8 +273,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         this.setInvisible(true);
         Helper.spawnParticlesAroundEntity(this, EnumParticleTypes.PORTAL, 5, 64);
 
-        this.worldObj.playSoundEffect(this.posX, this.posY, this.posZ, "mob.endermen.portal", 1.0F, 1.0F);
-        this.playSound("mob.endermen.portal", 1.0F, 1.0F);
+        this.playSound(SoundEvents.entity_endermen_teleport, 1, 1);
 
         this.setDead();
     }

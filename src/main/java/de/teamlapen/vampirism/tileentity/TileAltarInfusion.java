@@ -18,15 +18,22 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
-import net.minecraft.potion.Potion;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.*;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -72,10 +79,149 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         }, 116, 34)});
     }
 
+    /**
+     * Returns the phase the ritual is in
+     *
+     * @return
+     */
+    public PHASE getCurrentPhase() {
+        if (runningTick < 1) {
+            return PHASE.NOT_RUNNING;
+        }
+        if (runningTick == 1) {
+            return PHASE.CLEAN_UP;
+        }
+        if (runningTick > (DURATION_TICK - 100)) {
+            return PHASE.PARTICLE_SPREAD;
+        }
+        if (runningTick < DURATION_TICK - 160 && runningTick >= (DURATION_TICK - 200)) {
+            return PHASE.BEAM1;
+        }
+        if (runningTick < (DURATION_TICK - 200) && (runningTick > 50)) {
+            return PHASE.BEAM2;
+        }
+        if (runningTick == 50) {
+            return PHASE.LEVELUP;
+        }
+        if (runningTick < 50) {
+            return PHASE.ENDING;
+        }
+        return PHASE.WAITING;
+    }
+
+    @Override
+    public Packet getDescriptionPacket() {
+        NBTTagCompound nbtTag = new NBTTagCompound();
+        this.writeToNBT(nbtTag);
+        return new SPacketUpdateTileEntity(getPos(), 1, nbtTag);
+    }
 
     @Override
     public String getName() {
         return "block.vampirism.bloodAltarTier4.name";
+    }
+
+    /**
+     * Returns the affected player. If the ritual isn't running it returns null
+     *
+     * @return
+     */
+    public EntityPlayer getPlayer() {
+        if (this.runningTick <= 1)
+            return null;
+        return this.player;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public AxisAlignedBB getRenderBoundingBox() {
+        return INFINITE_EXTENT_AABB;
+    }
+
+    public int getRunningTick() {
+        return runningTick;
+    }
+
+    /**
+     * Returns the position of the tips. If the ritual isn't running it returns null
+     *
+     * @return
+     */
+    public BlockPos[] getTips() {
+        if (this.runningTick <= 1)
+            return null;
+        return this.tips;
+    }
+
+    public void onActivated(EntityPlayer player) {
+
+        if (runningTick > 0) {
+            return;
+        }
+        if (player.worldObj.isRemote) return;
+
+        if (player.worldObj.isDaytime()) {
+            player.addChatMessage(new TextComponentTranslation("text.vampirism.ritual_night_only"));
+            return;
+        }
+        targetLevel = VampirePlayer.get(player).getLevel() + 1;
+        int requiredLevel = checkRequiredLevel();
+        if (requiredLevel == -1) {
+            player.addChatMessage(new TextComponentTranslation("text.vampirism.ritual_level_wrong"));
+        } else if (!checkStructureLevel(requiredLevel)) {
+            player.addChatMessage(new TextComponentTranslation("text.vampirism.ritual_structure_wrong"));
+        } else if (!checkItemRequirements(player)) {
+        } else {
+            this.player = player;
+            runningTick = DURATION_TICK;
+
+            if (!this.worldObj.isRemote) {
+//                for (int i = 0; i < tips.length; i++) {
+//                    NBTTagCompound data = new NBTTagCompound();
+//                    data.setInteger("destX", tips[i].posX);
+//                    data.setInteger("destY", tips[i].posY);
+//                    data.setInteger("destZ", tips[i].posZ);
+//                    data.setInteger("age", 100);
+//                    VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(1, this.xCoord, this.yCoord, this.zCoord, 5, data));
+//                }
+                IBlockState state = worldObj.getBlockState(getPos());
+                this.worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+            }
+            player.addPotionEffect(new PotionEffect(MobEffects.resistance, DURATION_TICK, 10));
+            this.markDirty();
+            VampirismMod.log.t("Started");
+            return;
+        }
+        tips = null;
+        runningTick = 0;
+        this.player = null;
+
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        this.readFromNBT(pkt.getNbtCompound());
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tagCompound) {
+        super.readFromNBT(tagCompound);
+        int tick = tagCompound.getInteger("tick");
+        if (tick > 0 && player == null) {
+            try {
+                this.player = (EntityPlayer) this.worldObj.getEntityByID(tagCompound.getInteger("playerId"));
+                this.runningTick = tick;
+                this.targetLevel = VampirePlayer.get(player).getLevel() + 1;
+            } catch (NullPointerException e) {
+                VampirismMod.log.w(TAG, "Failed to find player %d", tagCompound.getInteger("playerId"));
+            }
+        }
+        if (player == null) {
+            this.runningTick = 0;
+            this.tips = null;
+        } else {
+            checkStructureLevel(checkRequiredLevel());
+        }
     }
 
     @Override
@@ -128,63 +274,31 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
                 }
                 handler.setFactionLevel(VReference.VAMPIRE_FACTION, handler.getCurrentLevel(VReference.VAMPIRE_FACTION) + 1);
             } else {
-                this.worldObj.playSoundEffect(player.posX, player.posY, player.posZ, "random.explode", 4.0F, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
+                this.worldObj.playSound(player.posX, player.posY, player.posZ, SoundEvents.entity_generic_explode, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F, true);
                 this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);
             }
-            player.addPotionEffect(new PotionEffect(ModPotions.saturation.id, 400, 2));
+            player.addPotionEffect(new PotionEffect(ModPotions.saturation, 400, 2));
 
-            player.addPotionEffect(new PotionEffect(Potion.regeneration.id, 400, 2));
-            player.addPotionEffect(new PotionEffect(Potion.damageBoost.id, 400, 2));
+            player.addPotionEffect(new PotionEffect(MobEffects.regeneration, 400, 2));
+            player.addPotionEffect(new PotionEffect(MobEffects.damageBoost, 400, 2));
         }
-    }
-
-    public void onActivated(EntityPlayer player) {
-
-        if (runningTick > 0) {
-            return;
-        }
-        if (player.worldObj.isRemote) return;
-
-        if (player.worldObj.isDaytime()) {
-            player.addChatMessage(new ChatComponentTranslation("text.vampirism.ritual_night_only"));
-            return;
-        }
-        targetLevel = VampirePlayer.get(player).getLevel() + 1;
-        int requiredLevel = checkRequiredLevel();
-        if (requiredLevel == -1) {
-            player.addChatMessage(new ChatComponentTranslation("text.vampirism.ritual_level_wrong"));
-        } else if (!checkStructureLevel(requiredLevel)) {
-            player.addChatMessage(new ChatComponentTranslation("text.vampirism.ritual_structure_wrong"));
-        } else if (!checkItemRequirements(player)) {
-        } else {
-            this.player = player;
-            runningTick = DURATION_TICK;
-
-            if (!this.worldObj.isRemote) {
-//                for (int i = 0; i < tips.length; i++) {
-//                    NBTTagCompound data = new NBTTagCompound();
-//                    data.setInteger("destX", tips[i].posX);
-//                    data.setInteger("destY", tips[i].posY);
-//                    data.setInteger("destZ", tips[i].posZ);
-//                    data.setInteger("age", 100);
-//                    VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(1, this.xCoord, this.yCoord, this.zCoord, 5, data));
-//                }
-                this.worldObj.markBlockForUpdate(getPos());
-            }
-            player.addPotionEffect(new PotionEffect(Potion.resistance.id, DURATION_TICK, 10));
-            this.markDirty();
-            VampirismMod.log.t("Started");
-            return;
-        }
-        tips = null;
-        runningTick = 0;
-        this.player = null;
-
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
-        this.readFromNBT(pkt.getNbtCompound());
+    public void writeToNBT(NBTTagCompound tagCompound) {
+        super.writeToNBT(tagCompound);
+        tagCompound.setInteger("tick", runningTick);
+        if (player != null) {
+            tagCompound.setInteger("playerId", player.getEntityId());
+        }
+    }
+
+    private ItemStack checkAndRemoveItems(int bloodMeta, int blood, int heart, int par3) {
+        ItemStack missing = InventoryHelper.checkItems(this, items, new int[]{blood, heart, par3}, new int[]{bloodMeta == 0 ? Integer.MIN_VALUE : -bloodMeta, Integer.MIN_VALUE, Integer.MIN_VALUE});
+        if (missing == null) {
+            InventoryHelper.removeItems(this, new int[]{blood, heart, par3});
+        }
+        return missing;
     }
 
     private boolean checkItemRequirements(EntityPlayer player) {
@@ -223,23 +337,14 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
                 break;
         }
         if (missing != null) {
-            IChatComponent item = missing.getItem().equals(ModItems.pureBlood) ? ModItems.pureBlood.getDisplayName(missing) : new ChatComponentTranslation(missing.getUnlocalizedName() + ".name");
-            IChatComponent main = new ChatComponentTranslation("text.vampirism.ritual_missing_items", missing.stackSize, item);
+            ITextComponent item = missing.getItem().equals(ModItems.pureBlood) ? ModItems.pureBlood.getDisplayName(missing) : new TextComponentTranslation(missing.getUnlocalizedName() + ".name");
+            ITextComponent main = new TextComponentTranslation("text.vampirism.ritual_missing_items", missing.stackSize, item);
             player.addChatComponentMessage(main);
             return false;
         }
         return true;
 
     }
-
-    private ItemStack checkAndRemoveItems(int bloodMeta, int blood, int heart, int par3) {
-        ItemStack missing = InventoryHelper.checkItems(this, items, new int[]{blood, heart, par3}, new int[]{bloodMeta == 0 ? Integer.MIN_VALUE : -bloodMeta, Integer.MIN_VALUE, Integer.MIN_VALUE});
-        if (missing == null) {
-            InventoryHelper.removeItems(this, new int[]{blood, heart, par3});
-        }
-        return missing;
-    }
-
 
     /**
      * Determines the structure required for leveling up.
@@ -322,105 +427,6 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
             }
         }
         return list.toArray(new BlockPos[list.size()]);
-    }
-
-    /**
-     * Returns the phase the ritual is in
-     *
-     * @return
-     */
-    public PHASE getCurrentPhase() {
-        if (runningTick < 1) {
-            return PHASE.NOT_RUNNING;
-        }
-        if (runningTick == 1) {
-            return PHASE.CLEAN_UP;
-        }
-        if (runningTick > (DURATION_TICK - 100)) {
-            return PHASE.PARTICLE_SPREAD;
-        }
-        if (runningTick < DURATION_TICK - 160 && runningTick >= (DURATION_TICK - 200)) {
-            return PHASE.BEAM1;
-        }
-        if (runningTick < (DURATION_TICK - 200) && (runningTick > 50)) {
-            return PHASE.BEAM2;
-        }
-        if (runningTick == 50) {
-            return PHASE.LEVELUP;
-        }
-        if (runningTick < 50) {
-            return PHASE.ENDING;
-        }
-        return PHASE.WAITING;
-    }
-
-    @Override
-    public Packet getDescriptionPacket() {
-        NBTTagCompound nbtTag = new NBTTagCompound();
-        this.writeToNBT(nbtTag);
-        return new S35PacketUpdateTileEntity(getPos(), 1, nbtTag);
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound tagCompound) {
-        super.readFromNBT(tagCompound);
-        int tick = tagCompound.getInteger("tick");
-        if (tick > 0 && player == null) {
-            try {
-                this.player = (EntityPlayer) this.worldObj.getEntityByID(tagCompound.getInteger("playerId"));
-                this.runningTick = tick;
-                this.targetLevel = VampirePlayer.get(player).getLevel() + 1;
-            } catch (NullPointerException e) {
-                VampirismMod.log.w(TAG, "Failed to find player %d", tagCompound.getInteger("playerId"));
-            }
-        }
-        if (player == null) {
-            this.runningTick = 0;
-            this.tips = null;
-        } else {
-            checkStructureLevel(checkRequiredLevel());
-        }
-    }
-
-    @Override
-    public void writeToNBT(NBTTagCompound tagCompound) {
-        super.writeToNBT(tagCompound);
-        tagCompound.setInteger("tick", runningTick);
-        if (player != null) {
-            tagCompound.setInteger("playerId", player.getEntityId());
-        }
-    }
-
-    /**
-     * Returns the affected player. If the ritual isn't running it returns null
-     *
-     * @return
-     */
-    public EntityPlayer getPlayer() {
-        if (this.runningTick <= 1)
-            return null;
-        return this.player;
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public AxisAlignedBB getRenderBoundingBox() {
-        return INFINITE_EXTENT_AABB;
-    }
-
-    public int getRunningTick() {
-        return runningTick;
-    }
-
-    /**
-     * Returns the position of the tips. If the ritual isn't running it returns null
-     *
-     * @return
-     */
-    public BlockPos[] getTips() {
-        if (this.runningTick <= 1)
-            return null;
-        return this.tips;
     }
 
     public enum PHASE {

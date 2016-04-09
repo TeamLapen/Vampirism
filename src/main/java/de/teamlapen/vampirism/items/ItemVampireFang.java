@@ -4,10 +4,13 @@ import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 public class ItemVampireFang extends VampirismItem {
@@ -19,18 +22,20 @@ public class ItemVampireFang extends VampirismItem {
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn) {
-        if (worldIn.isRemote) return itemStackIn;
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+
         if (Helper.canBecomeVampire(playerIn)) {
             PotionSanguinare.addRandom(playerIn, true);
-            playerIn.addPotionEffect(new PotionEffect(Potion.poison.getId(), 60));
+            playerIn.addPotionEffect(new PotionEffect(MobEffects.poison, 60));
         } else {
             if (Helper.isVampire(playerIn)) {
-                playerIn.addChatMessage(new ChatComponentTranslation("text.vampirism.already_vampire"));
+                playerIn.addChatMessage(new TextComponentTranslation("text.vampirism.already_vampire"));
             } else {
-                playerIn.addChatMessage(new ChatComponentTranslation("text.vampirism.immune_to_").appendSibling(new ChatComponentTranslation(ModPotions.sanguinare.getName())));
+                playerIn.addChatMessage(new TextComponentTranslation("text.vampirism.immune_to_").appendSibling(new TextComponentTranslation(ModPotions.sanguinare.getName())));
             }
         }
-        return itemStackIn;
+        itemStackIn.stackSize--;
+        return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
     }
+
 }

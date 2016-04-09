@@ -2,8 +2,9 @@
   "forge_marker": 1,
   "variants": {
     "type": {
-      "vampireorchid": {
+      "vampire_orchid": {
         "model": "builtin/generated",
+        "transform": "forge:default-item",
         "textures": {
           "layer0": "vampirism:blocks/vampireOrchid"
         }

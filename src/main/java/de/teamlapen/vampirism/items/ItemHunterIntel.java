@@ -5,7 +5,11 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.*;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -24,18 +28,13 @@ public class ItemHunterIntel extends VampirismItem {
         this.hasSubtypes = true;
     }
 
-    public IChatComponent getDisplayName(ItemStack stack) {
-        return new ChatComponentTranslation(getUnlocalizedName() + ".name").appendSibling(new ChatComponentText(" ")).appendSibling(new ChatComponentTranslation("text.vampirism.for_level")).appendSibling(new ChatComponentText(" " + HunterLevelingConf.instance().getLevelForHunterIntelMeta(stack.getMetadata())));
-    }
-
-    @SideOnly(Side.CLIENT)
-    public boolean hasEffect(ItemStack stack) {
-        return true;
-    }
-
     @Override
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
-        list.add(EnumChatFormatting.RED + StatCollector.translateToLocal("text.vampirism.for_level") + ": " + HunterLevelingConf.instance().getLevelForHunterIntelMeta(itemStack.getMetadata()));
+        list.add(TextFormatting.RED + I18n.translateToLocal("text.vampirism.for_level") + ": " + HunterLevelingConf.instance().getLevelForHunterIntelMeta(itemStack.getMetadata()));
+    }
+
+    public ITextComponent getDisplayName(ItemStack stack) {
+        return new TextComponentTranslation(getUnlocalizedName() + ".name").appendSibling(new TextComponentString(" ")).appendSibling(new TextComponentTranslation("text.vampirism.for_level")).appendSibling(new TextComponentString(" " + HunterLevelingConf.instance().getLevelForHunterIntelMeta(stack.getMetadata())));
     }
 
     @Override
@@ -43,5 +42,10 @@ public class ItemHunterIntel extends VampirismItem {
         for (int i = 0; i < HunterLevelingConf.instance().HUNTER_INTEL_COUNT; i++) {
             list.add(new ItemStack(item, 1, i));
         }
+    }
+
+    @SideOnly(Side.CLIENT)
+    public boolean hasEffect(ItemStack stack) {
+        return true;
     }
 }

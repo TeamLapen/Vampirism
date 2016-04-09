@@ -1,10 +1,18 @@
 package de.teamlapen.vampirism.client.model.blocks;
 
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import de.teamlapen.vampirism.blocks.BlockBloodContainer;
+import de.teamlapen.vampirism.client.core.ClientEventHandler;
+import de.teamlapen.vampirism.tileentity.TileBloodContainer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.block.model.*;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.IBakedModel;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.fluids.FluidStack;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -15,52 +23,27 @@ import java.util.List;
  */
 public class BakedBloodContainerModel implements IBakedModel {
 
+    public static final int FLUID_LEVELS = 14;
+    /**
+     * Stores a FluidName-> Baked Fluid model map for each possible fluid level
+     * Filled when the fluid json model is loaded (in {@link ClientEventHandler#onModelBakeEvent(ModelBakeEvent)} )}
+     */
+    public static final HashMap<String, IBakedModel>[] FLUID_MODELS = new HashMap[FLUID_LEVELS];
+    private final static ItemOverrideList overrideList = new CustomItemOverride();
+
+    static {
+        for (int x = 0; x < FLUID_LEVELS; x++) {
+            FLUID_MODELS[x] = new HashMap<>();
+        }
+    }
+
+
     private final IBakedModel baseModel;
-    private final String fluidName;
-    private final int fluidLevel;
+    private String fluidNameItem;
+    private int fluidLevelItem;
 
-    public BakedBloodContainerModel(IBakedModel baseModel, String fluidName, int fluidLevel) {
+    public BakedBloodContainerModel(IBakedModel baseModel) {
         this.baseModel = baseModel;
-        this.fluidName = fluidName;
-        this.fluidLevel = fluidLevel;
-    }
-
-    @Override
-    public List<BakedQuad> getFaceQuads(EnumFacing facing) {
-        List<BakedQuad> faceQuads = new LinkedList<>();
-
-        faceQuads.addAll(baseModel.getFaceQuads(facing));
-
-        if (fluidLevel > 0 && fluidLevel <= BloodContainerModelFactory.FLUID_LEVELS) {
-            HashMap<String, IBakedModel> fluidModels = BloodContainerModelFactory.FLUID_MODELS[fluidLevel - 1];
-
-            if (fluidModels.containsKey(fluidName)) {
-                faceQuads.addAll(fluidModels.get(fluidName).getFaceQuads(facing));
-            }
-        }
-        return faceQuads;
-    }
-
-
-    @Override
-    public List<BakedQuad> getGeneralQuads() {
-        List<BakedQuad> generalQuads = new LinkedList<>();
-        generalQuads.addAll(baseModel.getGeneralQuads());
-        if (fluidLevel > 0 && fluidLevel <= BloodContainerModelFactory.FLUID_LEVELS) {
-            HashMap<String, IBakedModel> fluidModels = BloodContainerModelFactory.FLUID_MODELS[fluidLevel - 1];
-
-            if (fluidModels.containsKey(fluidName)) {
-                // The fluid model needs a separate culling logic from the rest of the tank,
-                // because the top of the fluid is supposed to be visible if the tank block
-                // above is empty. (getGeneralQuads() handles quads that don't have a cullface
-                // annotation in the .json)
-
-                generalQuads.addAll(fluidModels.get(fluidName).getGeneralQuads());
-            }
-        }
-
-
-        return generalQuads;
     }
 
     @Override
@@ -69,8 +52,37 @@ public class BakedBloodContainerModel implements IBakedModel {
     }
 
     @Override
+    public ItemOverrideList getOverrides() {
+        return overrideList;
+    }
+
+    @Override
     public TextureAtlasSprite getParticleTexture() {
         return baseModel.getParticleTexture();
+    }
+
+    @Override
+    public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
+        List<BakedQuad> quads = new LinkedList<>();
+
+        try {
+            IExtendedBlockState extendedState = (IExtendedBlockState) state;
+            String fluidName = (extendedState == null) ? fluidNameItem : extendedState.getValue(BlockBloodContainer.FLUID_NAME);
+            int fluidLevel = (extendedState == null) ? fluidLevelItem : extendedState.getValue(BlockBloodContainer.FLUID_LEVEL);
+
+            quads.addAll(baseModel.getQuads(state, side, rand));
+            if (fluidLevel > 0 && fluidLevel <= FLUID_LEVELS) {
+                HashMap<String, IBakedModel> fluidModels = FLUID_MODELS[fluidLevel - 1];
+
+                if (fluidModels.containsKey(fluidName)) {
+                    quads.addAll(fluidModels.get(fluidName).getQuads(state, side, rand));
+                }
+            }
+        } catch (NullPointerException e) {
+            //Occurs when the block is destroyed since the it is not the correct extended block state
+            //TODO remove when forge is fixed
+        }
+        return quads;
     }
 
     @Override
@@ -86,5 +98,29 @@ public class BakedBloodContainerModel implements IBakedModel {
     @Override
     public boolean isGui3d() {
         return baseModel.isGui3d();
+    }
+
+    private static class CustomItemOverride extends ItemOverrideList {
+
+        public CustomItemOverride() {
+            super(new LinkedList<ItemOverride>());
+        }
+
+        @Override
+        public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
+            //VampirismMod.log.t("Model %s",originalModel);
+            if (originalModel instanceof BakedBloodContainerModel) {
+                if (stack.hasTagCompound() && stack.getTagCompound().hasKey("fluid")) {
+                    FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("fluid"));
+                    if (fluid != null) {
+                        ((BakedBloodContainerModel) originalModel).fluidNameItem = fluid.getFluid().getName();
+                        float amount = fluid.amount / (float) TileBloodContainer.LEVEL_AMOUNT;
+                        ((BakedBloodContainerModel) originalModel).fluidLevelItem = (amount > 0 && amount < 1) ? 1 : (int) amount;
+                        return originalModel;
+                    }
+                }
+            }
+            return super.handleItemState(originalModel, stack, world, entity);
+        }
     }
 }

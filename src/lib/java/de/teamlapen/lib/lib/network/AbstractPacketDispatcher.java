@@ -60,7 +60,7 @@ public abstract class AbstractPacketDispatcher {
      * Sends a message to everyone within a certain range of the player provided.
      */
     public final void sendToAllAround(IMessage message, EntityPlayer player, double range) {
-        sendToAllAround(message, player.worldObj.provider.getDimensionId(), player.posX,
+        sendToAllAround(message, player.worldObj.provider.getDimension(), player.posX,
 
                 player.posY, player.posZ, range);
     }

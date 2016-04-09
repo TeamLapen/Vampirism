@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
-import net.minecraft.potion.Potion;
+import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
 public class VampireRageVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
@@ -50,7 +50,8 @@ public class VampireRageVampireAction extends DefaultVampireAction implements IL
 
     @Override
     public boolean onActivated(IVampirePlayer vampire) {
-        vampire.getRepresentingPlayer().addPotionEffect(new PotionEffect(Potion.moveSpeed.id, getDuration(vampire.getLevel()), 2, false, false));
+        vampire.getRepresentingPlayer().addPotionEffect(new PotionEffect(MobEffects.moveSpeed, getDuration(vampire.getLevel()), 2, false, false));
+        vampire.getRepresentingPlayer().addPotionEffect(new PotionEffect(MobEffects.damageBoost, getDuration(vampire.getLevel()), 0, false, false));
         return true;
     }
 
@@ -61,7 +62,7 @@ public class VampireRageVampireAction extends DefaultVampireAction implements IL
 
     @Override
     public void onDeactivated(IVampirePlayer vampire) {
-        vampire.getRepresentingPlayer().removePotionEffect(Potion.moveSpeed.id);
+        vampire.getRepresentingPlayer().removePotionEffect(MobEffects.moveSpeed);
     }
 
     @Override

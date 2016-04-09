@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.entity.ai;
 
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 import java.util.Random;
@@ -35,7 +35,7 @@ public abstract class EntityAIFlee extends EntityAIBase {
     @Override
     public boolean shouldExecute() {
         if (!shouldFlee()) return false;
-        Vec3 vec3 = this.findPossibleShelter();
+        Vec3d vec3 = this.findPossibleShelter();
 
         if (vec3 == null) {
             return false;
@@ -55,7 +55,7 @@ public abstract class EntityAIFlee extends EntityAIBase {
 
     protected abstract boolean shouldFlee();
 
-    private Vec3 findPossibleShelter() {
+    private Vec3d findPossibleShelter() {
         Random random = this.theCreature.getRNG();
         BlockPos blockpos = new BlockPos(this.theCreature.posX, this.theCreature.getEntityBoundingBox().minY, this.theCreature.posZ);
 
@@ -66,7 +66,7 @@ public abstract class EntityAIFlee extends EntityAIBase {
                 if (restrictToHome && theCreature.hasHome()) {
                     if (!theCreature.isWithinHomeDistance(blockpos1)) continue;
                 }
-                return new Vec3((double) blockpos1.getX(), (double) blockpos1.getY(), (double) blockpos1.getZ());
+                return new Vec3d((double) blockpos1.getX(), (double) blockpos1.getY(), (double) blockpos1.getZ());
             }
         }
 

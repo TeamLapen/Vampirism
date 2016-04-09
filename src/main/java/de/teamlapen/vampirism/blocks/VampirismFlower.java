@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.properties.PropertyEnum;
-import net.minecraft.block.state.BlockState;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -56,13 +56,13 @@ public class VampirismFlower extends BlockBush implements ItemMetaBlock.IMetaIte
     }
 
     @Override
-    protected BlockState createBlockState() {
-        return new BlockState(this, TYPE);
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, TYPE);
     }
 
     public enum EnumFlowerType implements IStringSerializable {
 
-        ORCHID(0, "vampireOrchid", "vampireOrchid");
+        ORCHID(0, "vampire_orchid", "vampire_orchid");
         private static final EnumFlowerType[] TYPE_FOR_META = new EnumFlowerType[values().length];
 
         static {
@@ -71,20 +71,20 @@ public class VampirismFlower extends BlockBush implements ItemMetaBlock.IMetaIte
             }
         }
 
-        private final int meta;
-        private final String name;
-        private final String unlocalizedName;
-        EnumFlowerType(int meta, String name, String unlocalizedName) {
-            this.meta = meta;
-            this.name = name;
-            this.unlocalizedName = unlocalizedName;
-        }
-
         public static EnumFlowerType getType(int meta) {
             if (meta >= TYPE_FOR_META.length) {
                 meta = 0;
             }
             return TYPE_FOR_META[meta];
+        }
+        private final int meta;
+        private final String name;
+        private final String unlocalizedName;
+
+        EnumFlowerType(int meta, String name, String unlocalizedName) {
+            this.meta = meta;
+            this.name = name;
+            this.unlocalizedName = unlocalizedName;
         }
 
         public int getMeta() {

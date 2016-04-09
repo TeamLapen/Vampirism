@@ -6,11 +6,11 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -22,13 +22,7 @@ public class EntityGhost extends EntityVampirism implements IMob {
         ((PathNavigateGround) getNavigator()).setCanSwim(true);
         this.setSize(0.8F, 2.0F);
         this.experienceValue = 8;
-        this.tasks.addTask(0, new EntityAISwimming(this));
-        this.tasks.addTask(2, new EntityAIAttackOnCollide(this, EntityPlayer.class, 1.0D, true));
-        this.tasks.addTask(7, new EntityAIWander(this, 0.9F));
-        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 16));
 
-        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true, false, null));
-        this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, true));
     }
 
     /**
@@ -39,7 +33,7 @@ public class EntityGhost extends EntityVampirism implements IMob {
         if (!super.attackEntityFrom(source, par2)) {
             return false;
         } else {
-            addPotionEffect(new PotionEffect(Potion.invisibility.id, 20 * 5, 1));
+            addPotionEffect(new PotionEffect(MobEffects.invisibility, 20 * 5, 1));
         }
         return true;
     }
@@ -52,15 +46,27 @@ public class EntityGhost extends EntityVampirism implements IMob {
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(Balance.mobProps.GHOST_ATTACK_DAMAGE);
-        this.getEntityAttribute(SharedMonsterAttributes.followRange).setBaseValue(Balance.mobProps.GHOST_FOLLOW_RANGE);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(Balance.mobProps.GHOST_SPEED);
-        this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(Balance.mobProps.GHOST_HEALTH);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.GHOST_ATTACK_DAMAGE);
+        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(Balance.mobProps.GHOST_FOLLOW_RANGE);
+        this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.GHOST_SPEED);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.GHOST_HEALTH);
     }
 
     @Override
     protected void dropFewItems(boolean p_70628_1_, int p_70628_2_) {
         //TODO drop something
+    }
+
+    @Override
+    protected void initEntityAI() {
+        super.initEntityAI();
+        this.tasks.addTask(0, new EntityAISwimming(this));
+        this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0D, true));
+        this.tasks.addTask(7, new EntityAIWander(this, 0.9F));
+        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 16));
+
+        this.targetTasks.addTask(1, new EntityAINearestAttackableTarget(this, EntityPlayer.class, 0, true, false, null));
+        this.targetTasks.addTask(2, new EntityAIHurtByTarget(this, true));
     }
 
     /**

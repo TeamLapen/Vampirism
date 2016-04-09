@@ -5,7 +5,7 @@ import de.teamlapen.lib.LIBREFERENCE;
 import de.teamlapen.lib.VampLib;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.client.GuiIngameForge;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
@@ -123,7 +123,7 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
         if (selectedElement == -1) {
             this.drawUnselectedCenter(cX, cY);
         } else {
-            String name = StatCollector.translateToLocal(getUnlocalizedName(elements.get(selectedElement)));
+            String name = I18n.translateToLocal(getUnlocalizedName(elements.get(selectedElement)));
             int tx = cX - mc.fontRendererObj.getStringWidth(name) / 2;
             int ty = this.height / 7;
             mc.fontRendererObj.drawStringWithShadow(name, tx, ty, 16777215);

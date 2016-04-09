@@ -13,6 +13,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public class FlyingBloodParticle extends EntityFX {
+    public static void addParticle(FlyingBloodParticle p) {
+        Minecraft.getMinecraft().effectRenderer.addEffect(p);
+    }
     private final String TAG = "FlyingBloodParticle";
     private final double destX, destY, destZ;
 
@@ -25,19 +28,14 @@ public class FlyingBloodParticle extends EntityFX {
         this.destZ = destZ;
         this.particleRed = 1.0F;
         this.particleBlue = this.particleGreen = 0.0F;
-        this.noClip = true;
         this.setParticleTextureIndex(65);
         double wayX = destX - this.posX;
         double wayZ = destZ - this.posZ;
         double wayY = destY - this.posY;
-        this.motionX = (this.worldObj.rand.nextDouble() / 10 - 0.05) + wayX / particleMaxAge;
-        this.motionY = (this.worldObj.rand.nextDouble() / 10 - 0.01) + wayY / particleMaxAge;
-        this.motionZ = (this.worldObj.rand.nextDouble() / 10 - 0.05) + wayZ / particleMaxAge;
+        this.xSpeed = (this.worldObj.rand.nextDouble() / 10 - 0.05) + wayX / particleMaxAge;
+        this.ySpeed = (this.worldObj.rand.nextDouble() / 10 - 0.01) + wayY / particleMaxAge;
+        this.zSpeed = (this.worldObj.rand.nextDouble() / 10 - 0.05) + wayZ / particleMaxAge;
         this.onUpdate();
-    }
-
-    public static void addParticle(FlyingBloodParticle p) {
-        Minecraft.getMinecraft().effectRenderer.addEffect(p);
     }
 
     /**
@@ -51,7 +49,7 @@ public class FlyingBloodParticle extends EntityFX {
         this.prevPosZ = this.posZ;
 
         if (this.particleAge++ >= this.particleMaxAge) {
-            this.setDead();
+            this.setExpired();
         }
         double wayX = destX - this.posX;
         double wayY = destY - this.posY;
@@ -59,11 +57,11 @@ public class FlyingBloodParticle extends EntityFX {
 
         int tleft = this.particleMaxAge - this.particleAge;
         if (tleft < this.particleMaxAge / 1.2) {
-            this.motionX = wayX / tleft;
-            this.motionY = wayY / tleft;
-            this.motionZ = wayZ / tleft;
+            this.xSpeed = wayX / tleft;
+            this.ySpeed = wayY / tleft;
+            this.zSpeed = wayZ / tleft;
         }
-        this.moveEntity(this.motionX, this.motionY, this.motionZ);
+        this.moveEntity(this.xSpeed, this.ySpeed, this.zSpeed);
     }
 
 }

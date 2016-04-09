@@ -12,10 +12,10 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureComponent;
@@ -36,7 +36,7 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
 
     public VillagePieceTrainer(StructureVillagePieces.Start start, int type, Random rand, StructureBoundingBox boundingBox, EnumFacing facing) {
         super(start, type);
-        this.coordBaseMode = facing;
+        this.func_186164_a(facing);//Set facing
         this.boundingBox = boundingBox;
     }
 
@@ -71,15 +71,16 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
         this.setBlockState(worldIn, Blocks.planks.getDefaultState(), 8, 4, 2, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.planks.getDefaultState(), 8, 4, 3, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.planks.getDefaultState(), 8, 4, 4, structureBoundingBoxIn);
-        int i = this.getMetadataWithOffset(Blocks.oak_stairs, 3);
-        int j = this.getMetadataWithOffset(Blocks.oak_stairs, 2);
-
+        IBlockState rotatedStairs = Blocks.oak_stairs.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.NORTH);
+        IBlockState rotatedStairs1 = Blocks.oak_stairs.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.SOUTH);
+        IBlockState rotatedStairs2 = Blocks.oak_stairs.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.WEST);
+        IBlockState rotatedStairs3 = Blocks.oak_stairs.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.EAST);
         for (int k = -1; k <= 2; ++k) {
             for (int l = 0; l <= 8; ++l) {
-                this.setBlockState(worldIn, Blocks.oak_stairs.getStateFromMeta(i), l, 4 + k, k, structureBoundingBoxIn);
+                this.setBlockState(worldIn, rotatedStairs, l, 4 + k, k, structureBoundingBoxIn);
 
                 if ((k > -1 || l <= 1) && (k > 0 || l <= 3) && (k > 1 || l <= 4 || l >= 6)) {
-                    this.setBlockState(worldIn, Blocks.oak_stairs.getStateFromMeta(j), l, 4 + k, 5 - k, structureBoundingBoxIn);
+                    this.setBlockState(worldIn, rotatedStairs1, l, 4 + k, 5 - k, structureBoundingBoxIn);
                 }
             }
         }
@@ -89,24 +90,22 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
         this.fillWithBlocks(worldIn, structureBoundingBoxIn, 4, 5, 4, 4, 5, 10, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
         this.fillWithBlocks(worldIn, structureBoundingBoxIn, 6, 5, 4, 6, 5, 10, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
         this.fillWithBlocks(worldIn, structureBoundingBoxIn, 5, 6, 3, 5, 6, 10, Blocks.planks.getDefaultState(), Blocks.planks.getDefaultState(), false);
-        int k1 = this.getMetadataWithOffset(Blocks.oak_stairs, 0);
 
         for (int l1 = 4; l1 >= 1; --l1) {
             this.setBlockState(worldIn, Blocks.planks.getDefaultState(), l1, 2 + l1, 7 - l1, structureBoundingBoxIn);
 
             for (int i1 = 8 - l1; i1 <= 10; ++i1) {
-                this.setBlockState(worldIn, Blocks.oak_stairs.getStateFromMeta(k1), l1, 2 + l1, i1, structureBoundingBoxIn);
+                this.setBlockState(worldIn, rotatedStairs3, l1, 2 + l1, i1, structureBoundingBoxIn);
             }
         }
 
-        int i2 = this.getMetadataWithOffset(Blocks.oak_stairs, 1);
         this.setBlockState(worldIn, Blocks.planks.getDefaultState(), 6, 6, 3, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.planks.getDefaultState(), 7, 5, 4, structureBoundingBoxIn);
-        this.setBlockState(worldIn, Blocks.oak_stairs.getStateFromMeta(i2), 6, 6, 4, structureBoundingBoxIn);
+        this.setBlockState(worldIn, rotatedStairs2, 6, 6, 4, structureBoundingBoxIn);
 
         for (int j2 = 6; j2 <= 8; ++j2) {
             for (int j1 = 5; j1 <= 10; ++j1) {
-                this.setBlockState(worldIn, Blocks.oak_stairs.getStateFromMeta(i2), j2, 12 - j2, j1, structureBoundingBoxIn);
+                this.setBlockState(worldIn, rotatedStairs2, j2, 12 - j2, j1, structureBoundingBoxIn);
             }
         }
         IBlockState spruceLog = Blocks.log.getDefaultState().withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.SPRUCE);
@@ -136,29 +135,28 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
         this.setBlockState(worldIn, Blocks.planks.getDefaultState(), 5, 5, 10, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.air.getDefaultState(), 2, 1, 0, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.air.getDefaultState(), 2, 2, 0, structureBoundingBoxIn);
-        this.setBlockState(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode), 2, 3, 1, structureBoundingBoxIn);
-        this.placeDoorCurrentPosition(worldIn, structureBoundingBoxIn, randomIn, 2, 1, 0, EnumFacing.getHorizontal(this.getMetadataWithOffset(Blocks.oak_door, 1)));
+        this.setBlockState(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.NORTH), 2, 3, 1, structureBoundingBoxIn);
+        this.placeDoorCurrentPosition(worldIn, structureBoundingBoxIn, randomIn, 2, 1, 0, EnumFacing.NORTH);
         this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 0, -1, 3, 2, -1, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
         //Place decoration etc
-        this.setBlockState(worldIn, ModBlocks.hunterTable.getDefaultState().withProperty(BlockHunterTable.FACING, this.coordBaseMode), 5, 1, 7, structureBoundingBoxIn);
+        this.setBlockState(worldIn, ModBlocks.hunterTable.getDefaultState().withProperty(BlockHunterTable.FACING, EnumFacing.NORTH), 5, 1, 7, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.bookshelf.getDefaultState(), 7, 1, 9, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.bookshelf.getDefaultState(), 7, 2, 9, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.bookshelf.getDefaultState(), 3, 1, 9, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.bookshelf.getDefaultState(), 3, 2, 9, structureBoundingBoxIn);
 
 
-        boolean mirror = coordBaseMode.equals(EnumFacing.SOUTH) || coordBaseMode.equals(EnumFacing.WEST);
-        EnumFacing medChairFacing = mirror ? this.coordBaseMode.rotateY() : this.coordBaseMode.rotateYCCW();
+        EnumFacing medChairFacing = EnumFacing.WEST;
         this.setBlockState(worldIn, ModBlocks.medChair.getDefaultState().withProperty(BlockMedChair.PART, BlockMedChair.EnumPart.TOP).withProperty(BlockMedChair.FACING, medChairFacing), 7, 1, 3, structureBoundingBoxIn);
         this.setBlockState(worldIn, ModBlocks.medChair.getDefaultState().withProperty(BlockMedChair.PART, BlockMedChair.EnumPart.BOTTOM).withProperty(BlockMedChair.FACING, medChairFacing), 6, 1, 3, structureBoundingBoxIn);
 
-        this.setBlockState(worldIn, Blocks.chest.getDefaultState().withProperty(BlockChest.FACING, this.coordBaseMode.rotateY()), 7, 1, 2, structureBoundingBoxIn);
-        this.setBlockState(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode.getOpposite()), 6, 2, 9, structureBoundingBoxIn);
-        this.setBlockState(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, this.coordBaseMode.getOpposite()), 4, 2, 9, structureBoundingBoxIn);
+        this.setBlockState(worldIn, Blocks.chest.getDefaultState().withProperty(BlockChest.FACING, EnumFacing.WEST), 7, 1, 2, structureBoundingBoxIn);
+        this.setBlockState(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.SOUTH), 6, 2, 9, structureBoundingBoxIn);
+        this.setBlockState(worldIn, Blocks.torch.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.SOUTH), 4, 2, 9, structureBoundingBoxIn);
         //Place itemframe
         BlockPos itemFramePos = new BlockPos(getXWithOffset(1, -1), getYWithOffset(2), getZWithOffset(1, -1));
         if (structureBoundingBoxIn.isVecInside(itemFramePos)) {
-            EntityItemFrame itemFrame = new EntityItemFrame(worldIn, itemFramePos, this.coordBaseMode.getOpposite());
+            EntityItemFrame itemFrame = new EntityItemFrame(worldIn, itemFramePos, func_186165_e().getOpposite());
             itemFrame.setDisplayedItem(new ItemStack(ModItems.vampireFang));
             worldIn.spawnEntityInWorld(itemFrame);
         }
@@ -177,7 +175,7 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
         this.setBlockState(worldIn, Blocks.oak_fence.getDefaultState(), 0, 0, 8, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.oak_fence.getDefaultState(), 0, 0, 10, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.oak_fence.getDefaultState(), 1, 0, 10, structureBoundingBoxIn);
-        this.setBlockState(worldIn, Blocks.oak_fence_gate.getDefaultState().withProperty(BlockFenceGate.FACING, coordBaseMode.rotateY()), 0, 0, 9, structureBoundingBoxIn);
+        this.setBlockState(worldIn, Blocks.oak_fence_gate.getDefaultState().withProperty(BlockFenceGate.FACING, EnumFacing.WEST), 0, 0, 9, structureBoundingBoxIn);
 
         for (int x = 0; x < 2; x++) {
             for (int z = 6; z < 11; z++) {
@@ -186,8 +184,8 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
             }
         }
 
-        if (this.getBlockStateFromPos(worldIn, 2, 0, -1, structureBoundingBoxIn).getBlock().getMaterial() == Material.air && this.getBlockStateFromPos(worldIn, 2, -1, -1, structureBoundingBoxIn).getBlock().getMaterial() != Material.air) {
-            this.setBlockState(worldIn, Blocks.stone_stairs.getStateFromMeta(this.getMetadataWithOffset(Blocks.stone_stairs, 3)), 2, 0, -1, structureBoundingBoxIn);
+        if (this.getBlockStateFromPos(worldIn, 2, 0, -1, structureBoundingBoxIn).getMaterial() == Material.air && this.getBlockStateFromPos(worldIn, 2, -1, -1, structureBoundingBoxIn).getMaterial() != Material.air) {
+            this.setBlockState(worldIn, Blocks.stone_stairs.getDefaultState().withProperty(BlockStairs.FACING, EnumFacing.NORTH), 2, 0, -1, structureBoundingBoxIn);
         }
 
 
@@ -209,6 +207,10 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
         return true;
     }
 
+    private EnumFacing getFacing() {
+        return func_186165_e();
+    }
+
     private void spawnHunterTrainer(World worldIn, StructureBoundingBox structureBoundingBoxIn, int x, int y, int z) {
 
         int j = this.getXWithOffset(x, z);
@@ -219,14 +221,25 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
             return;
         }
 
-        AxisAlignedBB box = AxisAlignedBB.fromBounds(structureBoundingBoxIn.minX, structureBoundingBoxIn.minY, structureBoundingBoxIn.minZ, structureBoundingBoxIn.maxX, structureBoundingBoxIn.maxY, structureBoundingBoxIn.maxZ);
+        AxisAlignedBB box = new AxisAlignedBB(structureBoundingBoxIn.minX, structureBoundingBoxIn.minY, structureBoundingBoxIn.minZ, structureBoundingBoxIn.maxX, structureBoundingBoxIn.maxY, structureBoundingBoxIn.maxZ);
         EntityHunterTrainer hunterTrainer = new EntityHunterTrainer(worldIn);
-        hunterTrainer.setHome(box.contract(1, 0, 1));
+        hunterTrainer.setHome(box.expand(-1, 0, -1));
         hunterTrainer.setLocationAndAngles((double) j + 0.5D, (double) k, (double) l + 0.5D, 0.0F, 0.0F);
         worldIn.spawnEntityInWorld(hunterTrainer);
     }
 
     public static class CreationHandler implements VillagerRegistry.IVillageCreationHandler {
+
+        @Override
+        public StructureVillagePieces.Village buildComponent(StructureVillagePieces.PieceWeight villagePiece, StructureVillagePieces.Start startPiece, List<StructureComponent> pieces, Random random, int p1, int p2, int p3, EnumFacing facing, int p5) {
+            StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 9, 7, 12, facing);
+            return canVillageGoDeeper(structureboundingbox) && StructureComponent.findIntersecting(pieces, structureboundingbox) == null ? new VillagePieceTrainer(startPiece, p5, random, structureboundingbox, facing) : null;
+        }
+
+        @Override
+        public Class<?> getComponentClass() {
+            return VillagePieceTrainer.class;
+        }
 
         /**
          * @param random
@@ -236,17 +249,6 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
         @Override
         public StructureVillagePieces.PieceWeight getVillagePieceWeight(Random random, int terrainType) {
             return new StructureVillagePieces.PieceWeight(VillagePieceTrainer.class, 20, MathHelper.getRandomIntegerInRange(random, 0, 1 + terrainType));
-        }
-
-        @Override
-        public Class<?> getComponentClass() {
-            return VillagePieceTrainer.class;
-        }
-
-        @Override
-        public StructureVillagePieces.Village buildComponent(StructureVillagePieces.PieceWeight villagePiece, StructureVillagePieces.Start startPiece, List<StructureComponent> pieces, Random random, int p1, int p2, int p3, EnumFacing facing, int p5) {
-            StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 9, 7, 12, facing);
-            return canVillageGoDeeper(structureboundingbox) && StructureComponent.findIntersecting(pieces, structureboundingbox) == null ? new VillagePieceTrainer(startPiece, p5, random, structureboundingbox, facing) : null;
         }
     }
 

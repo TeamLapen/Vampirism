@@ -27,8 +27,10 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.MathHelper;
+import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.math.MathHelper;
 import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
@@ -231,9 +233,9 @@ public class GuiSkills extends GuiScreen {
         if (mouseButton == 0 && selected != null) {
             if (skillHandler.canSkillBeEnabled(selected) == ISkillHandler.Result.OK) {
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.UNLOCKSKILL, VampirismAPI.skillRegistry().getID(skillHandler.getPlayer().getFaction(), selected)));
-                playSoundEffect("random.levelup", 0.7F);
+                playSoundEffect(SoundEvents.entity_player_levelup, 0.7F);
             } else {
-                playSoundEffect("note.bass", 0.5F);
+                playSoundEffect(SoundEvents.block_note_bass, 0.5F);
             }
         }
     }
@@ -310,7 +312,7 @@ public class GuiSkills extends GuiScreen {
                             textureatlassprite = this.getTexture(Blocks.redstone_block);
                         }
                     } else if (j4 == 10) {
-                        textureatlassprite = this.getTexture(ModBlocks.castleBlock.getDefaultState().withProperty(ModBlocks.castleBlock.getStringProp(), "darkBrickBloody"));
+                        textureatlassprite = this.getTexture(ModBlocks.castleBlock.getDefaultState().withProperty(ModBlocks.castleBlock.getStringProp(), "dark_brick_bloody"));
                     } else if (j4 == 8) {
                         textureatlassprite = this.getTexture(Blocks.stonebrick);
                     } else if (j4 > 4) {
@@ -512,7 +514,7 @@ public class GuiSkills extends GuiScreen {
         return getTexture(block.getDefaultState());
     }
 
-    private void playSoundEffect(String sound, float pitch) {
-        mc.getSoundHandler().playSound(new PositionedSoundRecord(new ResourceLocation(sound), 4.0f, pitch, (float) mc.thePlayer.posX, (float) mc.thePlayer.posY, (float) mc.thePlayer.posZ));
+    private void playSoundEffect(SoundEvent event, float pitch) {
+        mc.getSoundHandler().playSound(PositionedSoundRecord.getMasterRecord(event, 1.0F));
     }
 }

@@ -6,14 +6,21 @@ import de.teamlapen.vampirism.api.items.IBloodContainerItem;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import net.minecraft.block.Block;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.IFluidHandler;
 
 import java.util.List;
 
@@ -39,9 +46,11 @@ public class ItemBloodBottle extends VampirismItem implements IBloodContainerIte
     }
 
     @Override
-    public boolean doesSneakBypassUse(World world, BlockPos pos, EntityPlayer player) {
-        return true;
+    public boolean doesSneakBypassUse(ItemStack stack, IBlockAccess world, BlockPos pos, EntityPlayer player) {
+        Block b = world.getBlockState(pos).getBlock();
+        return b instanceof IFluidHandler || b instanceof ITileEntityProvider && world.getTileEntity(pos) instanceof IFluidHandler;
     }
+
 
     @Override
     public FluidStack drain(ItemStack container, int maxDrain, boolean doDrain) {
@@ -52,7 +61,7 @@ public class ItemBloodBottle extends VampirismItem implements IBloodContainerIte
             setBlood(container, currentAmt - stack.amount);
             //TODO might cause crashes with other mods, although this is probably legit
             if (getBlood(container) == 0 && Configs.autoConvertGlasBottles) {
-                VampirismMod.log.i("BloodBottle", "Replaced blood bottle by glas bottle, during IFluidContainerItem. If there is a crash afterwards, please contact the authors of Vampirism");//TODO and remove at some point
+                VampirismMod.log.i("BloodBottle", "Replaced blood bottle by glas bottle, during IFluidContainerItem#drain. If there is a crash afterwards, please contact the authors of Vampirism");//TODO and remove at some point
                 container.setItem(Items.glass_bottle);
             }
         }
@@ -98,11 +107,14 @@ public class ItemBloodBottle extends VampirismItem implements IBloodContainerIte
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn) {
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
         //Won't be called when the player is sneaking since {@link ItemBloodBottle#doesSneakBypassUse} returns true to allow blood container interaction
-        if (!worldIn.isRemote && itemStackIn != null) {
+        if (worldIn.isRemote) {
+            return new ActionResult<>(EnumActionResult.PASS, itemStackIn);
+        }
+        if (!worldIn.isRemote) {
             VampirePlayer vampire = VampirePlayer.get(playerIn);
-            if (vampire.getLevel() == 0) return itemStackIn;
+            if (vampire.getLevel() == 0) return new ActionResult<>(EnumActionResult.PASS, itemStackIn);
 //            Cannot drain blood from the bar anymore
 //            if (playerIn.isSneaking()) {//Remove blood from bar
 //                int playerBlood = vampire.getBloodLevel();
@@ -122,12 +134,14 @@ public class ItemBloodBottle extends VampirismItem implements IBloodContainerIte
             if (vampire.getBloodStats().needsBlood()) {
                 if (drain(itemStackIn, VReference.FOOD_TO_FLUID_BLOOD, true) != null) {
                     vampire.getBloodStats().addBlood(1, 0);
+                    return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
                 }
             }
 
         }
-        return itemStackIn;
+        return new ActionResult<>(EnumActionResult.FAIL, itemStackIn);
     }
+
 
     public void setBlood(ItemStack stack, int amt) {
         stack.setItemDamage(amt / MULTIPLIER);

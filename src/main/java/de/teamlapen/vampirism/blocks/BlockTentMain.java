@@ -7,7 +7,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -35,6 +35,6 @@ public class BlockTentMain extends BlockTent implements ITileEntityProvider {
     @Override
     public boolean onBlockEventReceived(World worldIn, BlockPos pos, IBlockState state, int eventID, int eventParam) {
         TileEntity tile = worldIn.getTileEntity(pos);
-        return tile != null ? tile.receiveClientEvent(eventID, eventParam) : false;
+        return tile != null && tile.receiveClientEvent(eventID, eventParam);
     }
 }

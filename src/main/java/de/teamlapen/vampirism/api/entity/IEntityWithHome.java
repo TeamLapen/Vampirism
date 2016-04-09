@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.api.entity;
 
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * Extends {@link EntityCreature} home system with a way to set more accurate home positions

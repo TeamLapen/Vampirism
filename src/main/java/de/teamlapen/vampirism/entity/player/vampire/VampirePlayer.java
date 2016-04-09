@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.Achievements;
 import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
@@ -35,12 +36,13 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Items;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.*;
+import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -136,7 +138,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public void biteEntity(int entityId) {
         Entity e = player.worldObj.getEntityByID(entityId);
         if (e != null && e instanceof EntityLivingBase) {
-            if (e.getDistanceToEntity(player) <= ((EntityPlayerMP) player).theItemInWorldManager.getBlockReachDistance() + 2) {
+            if (e.getDistanceToEntity(player) <= ((EntityPlayerMP) player).interactionManager.getBlockReachDistance() + 2) {
                 biteEntity((EntityLivingBase) e);
             } else {
                 VampirismMod.log.w(TAG, "Entity sent by client is not in reach " + entityId);
@@ -340,9 +342,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public void onLevelChanged(int newLevel, int oldLevel) {
         if (!isRemote()) {
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.movementSpeed, "Vampire", getLevel(), Balance.vp.SPEED_LCAP, Balance.vp.SPEED_MAX_MOD, Balance.vp.SPEED_TYPE);
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.attackDamage, "Vampire", getLevel(), Balance.vp.STRENGTH_LCAP, Balance.vp.STRENGTH_MAX_MOD, Balance.vp.STRENGTH_TYPE);
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.maxHealth, "Vampire", getLevel(), Balance.vp.HEALTH_LCAP, Balance.vp.HEALTH_MAX_MOD, Balance.vp.HEALTH_TYPE);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MOVEMENT_SPEED, "Vampire", getLevel(), Balance.vp.SPEED_LCAP, Balance.vp.SPEED_MAX_MOD, Balance.vp.SPEED_TYPE);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Vampire", getLevel(), Balance.vp.STRENGTH_LCAP, Balance.vp.STRENGTH_MAX_MOD, Balance.vp.STRENGTH_TYPE);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MAX_HEALTH, "Vampire", getLevel(), Balance.vp.HEALTH_LCAP, Balance.vp.HEALTH_MAX_MOD, Balance.vp.HEALTH_TYPE);
             LevelAttributeModifier.applyModifier(player, VReference.bloodExhaustion, "Vampire", getLevel(), getMaxLevel(), Balance.vp.EXAUSTION_MAX_MOD, Balance.vp.EXHAUSTION_TYPE);
             if (newLevel > 0) {
                 if (player instanceof EntityPlayerMP && ((EntityPlayerMP) player).playerNetServerHandler != null) {
@@ -360,13 +362,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
         } else {
             if (oldLevel == 0) {
-                if (player.isPotionActive(Potion.nightVision)) {
-                    player.removePotionEffect(Potion.nightVision.id);
+                if (player.isPotionActive(MobEffects.nightVision)) {
+                    player.removePotionEffect(MobEffects.nightVision);
                 }
                 player.addPotionEffect(new FakeNightVisionPotionEffect());
             } else if (newLevel == 0) {
-                if (player.getActivePotionEffect(Potion.nightVision) instanceof FakeNightVisionPotionEffect) {
-                    player.removePotionEffect(Potion.nightVision.getId());
+                if (player.getActivePotionEffect(MobEffects.nightVision) instanceof FakeNightVisionPotionEffect) {
+                    player.removePotionEffect(MobEffects.nightVision);
                 }
                 actionHandler.resetTimers();
             }
@@ -391,7 +393,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (Helper.canBecomeVampire(player) && !isRemote()) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             handler.joinFaction(getFaction());
-            player.addPotionEffect(new PotionEffect(Potion.resistance.id, 300));//TODO add saturation as well
+            player.addPotionEffect(new PotionEffect(MobEffects.resistance, 300));//TODO add saturation as well
 //            ((WorldServer) player.worldObj).addScheduledTask(new Runnable() {
 //                @Override
 //                public void run() {
@@ -455,7 +457,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
         } else {
             if (level > 0) {
-                if (player.ticksExisted % 100 == 8 && player.getActivePotionEffect(Potion.nightVision) == null) {
+                if (player.ticksExisted % 100 == 8 && player.getActivePotionEffect(MobEffects.nightVision) == null) {
                     player.addPotionEffect(new FakeNightVisionPotionEffect());
                 }
                 actionHandler.updateActions();
@@ -580,10 +582,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         } else if (type == BITE_TYPE.ATTACK) {
             entity.attackEntityFrom(DamageSource.causePlayerDamage(player), (float) player.getEntityAttribute(VReference.biteDamage).getAttributeValue());
             if (entity.isEntityUndead() && player.getRNG().nextInt(4) == 0) {
-                player.addPotionEffect(new PotionEffect(Potion.poison.id, 60));
+                player.addPotionEffect(new PotionEffect(MobEffects.poison, 60));
             }
             if (specialAttributes.poisonous_bite) {
-                entity.addPotionEffect(new PotionEffect(Potion.poison.id, Balance.vps.POISONOUS_BITE_DURATION * 20, 1));
+                entity.addPotionEffect(new PotionEffect(MobEffects.poison, Balance.vps.POISONOUS_BITE_DURATION * 20, 1));
             }
         } else if (type == BITE_TYPE.NONE) {
             return;
@@ -624,10 +626,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
         if (player.capabilities.isCreativeMode || player.capabilities.disableDamage) return;
         if (Balance.vp.SUNDAMAGE_NAUSEA && player.ticksExisted % 300 == 1 && ticksInSun > 50) {
-            player.addPotionEffect(new PotionEffect(Potion.confusion.id, 180));
+            player.addPotionEffect(new PotionEffect(MobEffects.confusion, 180));
         }
         if (getLevel() >= Balance.vp.SUNDAMAGE_WEAKNESS_MINLEVEL && player.ticksExisted % 150 == 3) {
-            player.addPotionEffect(new PotionEffect(Potion.weakness.id, 152, 1));
+            player.addPotionEffect(new PotionEffect(MobEffects.weakness, 152, 1));
         }
         if (getLevel() >= Balance.vp.SUNDAMAGE_MINLEVEL && ticksInSun >= 100 && player.ticksExisted % 40 == 5) {
             float damage = (float) (player.getEntityAttribute(VReference.sunDamage).getAttributeValue());
@@ -647,11 +649,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             UtilLib.spawnParticles(player.worldObj, EnumParticleTypes.CRIT_MAGIC, entity.posX, entity.posY, entity.posZ, player.posX - entity.posX, player.posY - entity.posY, player.posZ - entity.posZ, 10);
         }
         for (int j = 0; j < 16; ++j) {
-            Vec3 vec3 = new Vec3((player.getRNG().nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
+            Vec3d vec3 = new Vec3d((player.getRNG().nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
             vec3 = vec3.rotatePitch(-player.rotationPitch * (float) Math.PI / 180F);
             vec3 = vec3.rotateYaw(-player.rotationYaw * (float) Math.PI / 180F);
             double d0 = (double) (-player.getRNG().nextFloat()) * 0.6D - 0.3D;
-            Vec3 vec31 = new Vec3(((double) player.getRNG().nextFloat() - 0.5D) * 0.3D, d0, 0.6D);
+            Vec3d vec31 = new Vec3d(((double) player.getRNG().nextFloat() - 0.5D) * 0.3D, d0, 0.6D);
             vec31 = vec31.rotatePitch(-player.rotationPitch * (float) Math.PI / 180.0F);
             vec31 = vec31.rotateYaw(-player.rotationYaw * (float) Math.PI / 180.0F);
             vec31 = vec31.addVector(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ);
@@ -659,7 +661,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             player.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, vec31.xCoord, vec31.yCoord, vec31.zCoord, vec3.xCoord, vec3.yCoord + 0.05D, vec3.zCoord, Item.getIdFromItem(Items.apple));
         }
         //Play bite sounds. Using this method since it is the only client side method. And this is called on every relevant client anyway
-        player.worldObj.playSound(player.posX, player.posY, player.posZ, REFERENCE.MODID + ":player.bite", 1.0F, 1.0F, false);
+        player.worldObj.playSound(player.posX, player.posY, player.posZ, ModSounds.player_bite, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
     }
 
     private static class Storage implements net.minecraftforge.common.capabilities.Capability.IStorage<IVampirePlayer> {

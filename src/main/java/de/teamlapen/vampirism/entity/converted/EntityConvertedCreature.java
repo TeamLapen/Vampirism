@@ -14,7 +14,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.StatCollector;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
 /**
@@ -28,24 +28,12 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
 
     public EntityConvertedCreature(World world) {
         super(world, false);
-        this.tasks.addTask(1, new EntityAIAvoidEntity<>(this, EntityCreature.class, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, VReference.HUNTER_FACTION), 10, 1.0, 1.1));
-        //this.tasks.addTask(3, new VampireAIFleeSun(this, 1F));
-        this.tasks.addTask(4, new EntityAIRestrictSun(this));
-        tasks.addTask(5, new net.minecraft.entity.ai.EntityAIAttackOnCollide(this, 0.9D, false));
-        this.experienceValue = 2;
 
-        this.tasks.addTask(11, new EntityAIWander(this, 0.7));
-        this.tasks.addTask(13, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
-        this.tasks.addTask(15, new EntityAILookIdle(this));
-
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, null)));
-        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, null)));
     }
 
     @Override
     public String getName() {
-        return StatCollector.translateToLocal("entity.vampirism.vampire.name") + " " + (nil() ? super.getName() : entityCreature.getName());
+        return I18n.translateToLocal("entity.vampirism.vampire.name") + " " + (nil() ? super.getName() : entityCreature.getName());
     }
 
     public T getOldCreature() {
@@ -199,6 +187,24 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
         return null;
     }
 
+    @Override
+    protected void initEntityAI() {
+        super.initEntityAI();
+        this.tasks.addTask(1, new EntityAIAvoidEntity<>(this, EntityCreature.class, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, VReference.HUNTER_FACTION), 10, 1.0, 1.1));
+        //this.tasks.addTask(3, new VampireAIFleeSun(this, 1F));
+        this.tasks.addTask(4, new EntityAIRestrictSun(this));
+        tasks.addTask(5, new EntityAIAttackMelee(this, 0.9D, false));
+        this.experienceValue = 2;
+
+        this.tasks.addTask(11, new EntityAIWander(this, 0.7));
+        this.tasks.addTask(13, new EntityAIWatchClosest(this, EntityPlayer.class, 6.0F));
+        this.tasks.addTask(15, new EntityAILookIdle(this));
+
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, null)));
+        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, null)));
+    }
+
     protected boolean nil() {
         return entityCreature == null;
     }
@@ -206,14 +212,14 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     protected void updateEntityAttributes() {
         if (!nil()) {
             IConvertingHandler.IDefaultHelper helper = getConvertedHelper();
-            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(helper.getConvertedDMG(entityCreature));
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(helper.getConvertedMaxHealth(entityCreature));
-            this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance).setBaseValue(helper.getConvertedKnockbackResistance(entityCreature));
-            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(helper.getConvertedSpeed(entityCreature));
+            this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(helper.getConvertedDMG(entityCreature));
+            this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(helper.getConvertedMaxHealth(entityCreature));
+            this.getEntityAttribute(SharedMonsterAttributes.KNOCKBACK_RESISTANCE).setBaseValue(helper.getConvertedKnockbackResistance(entityCreature));
+            this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(helper.getConvertedSpeed(entityCreature));
         } else {
-            this.getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(1000);
-            this.getEntityAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(0);
-            this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0);
+            this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(1000);
+            this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(0);
+            this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(0);
         }
 
     }

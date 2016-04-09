@@ -41,20 +41,20 @@ public class ModEntityEventHandler {
     @SubscribeEvent
     public void onEntityAttacked(LivingAttackEvent event) {
         //Probably not a very "clean" solution, but the only one I found
-        if (!skipAttackDamageOnce && "player".equals(event.source.getDamageType()) && event.source.getEntity() instanceof EntityPlayer) {
-            ItemStack stack = ((EntityPlayer) event.source.getEntity()).getCurrentEquippedItem();
+        if (!skipAttackDamageOnce && "player".equals(event.getSource().getDamageType()) && event.getSource().getEntity() instanceof EntityPlayer) {
+            ItemStack stack = ((EntityPlayer) event.getSource().getEntity()).getHeldItemMainhand();
             if (stack != null && stack.getItem() instanceof IFactionSlayerItem) {
                 IFactionSlayerItem item = (IFactionSlayerItem) stack.getItem();
                 IFaction faction = null;
-                if (event.entity instanceof IFactionEntity) {
-                    faction = ((IFactionEntity) event.entity).getFaction();
-                } else if (event.entity instanceof EntityPlayer) {
-                    faction = FactionPlayerHandler.get((EntityPlayer) event.entity).getCurrentFaction();
+                if (event.getEntity() instanceof IFactionEntity) {
+                    faction = ((IFactionEntity) event.getEntity()).getFaction();
+                } else if (event.getEntity() instanceof EntityPlayer) {
+                    faction = FactionPlayerHandler.get((EntityPlayer) event.getEntity()).getCurrentFaction();
                 }
                 if (faction != null && faction.equals(item.getSlayedFaction())) {
-                    float amt = event.ammount * item.getDamageMultiplier(stack);
+                    float amt = event.getAmount() * item.getDamageMultiplier(stack);
                     skipAttackDamageOnce = true;
-                    boolean result = net.minecraftforge.common.ForgeHooks.onLivingAttack(event.entityLiving, event.source, amt);
+                    boolean result = net.minecraftforge.common.ForgeHooks.onLivingAttack(event.getEntityLiving(), event.getSource(), amt);
                     skipAttackDamageOnce = false;
                     event.setCanceled(!result);
                 }
@@ -66,10 +66,10 @@ public class ModEntityEventHandler {
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (!event.world.isRemote && (event.entity instanceof IAdjustableLevel)) {
-            IAdjustableLevel entity = (IAdjustableLevel) event.entity;
+        if (!event.getWorld().isRemote && (event.getEntity() instanceof IAdjustableLevel)) {
+            IAdjustableLevel entity = (IAdjustableLevel) event.getEntity();
             if (entity.getLevel() == -1) {
-                Difficulty d = DifficultyCalculator.findDifficultyForPos(event.world, event.entity.getPosition(), 30);
+                Difficulty d = DifficultyCalculator.findDifficultyForPos(event.getWorld(), event.getEntity().getPosition(), 30);
                 int l = entity.suggestLevel(d);
                 if (l > entity.getMaxLevel()) {
                     l = entity.getMaxLevel();
@@ -79,23 +79,23 @@ public class ModEntityEventHandler {
                 entity.setLevel(l);
             }
         }
-        if (event.entity instanceof EntityCreeper) {
-            ((EntityCreeper) event.entity).tasks.addTask(3, new EntityAIAvoidEntity<>((EntityCreeper) event.entity, EntityPlayer.class, new Predicate<EntityPlayer>() {
+        if (event.getEntity() instanceof EntityCreeper) {
+            ((EntityCreeper) event.getEntity()).tasks.addTask(3, new EntityAIAvoidEntity<>((EntityCreeper) event.getEntity(), EntityPlayer.class, new Predicate<EntityPlayer>() {
                 @Override
                 public boolean apply(@Nullable EntityPlayer input) {
                     return VampirePlayer.get(input).getSpecialAttributes().avoided_by_creepers;
                 }
             }, 6, 1, 1.2));
         }
-        if (event.entity instanceof IMinionLordWithSaveable) {
-            ((IMinionLordWithSaveable) event.entity).getSaveableMinionHandler().addLoadedMinions();
+        if (event.getEntity() instanceof IMinionLordWithSaveable) {
+            ((IMinionLordWithSaveable) event.getEntity()).getSaveableMinionHandler().addLoadedMinions();
         }
     }
 
     @SubscribeEvent
     public void onEntityUpdate(LivingEvent.LivingUpdateEvent event) {
-        if (event.entity instanceof EntityCreature) {
-            ExtendedCreature.get((EntityCreature) event.entity).onUpdate();
+        if (event.getEntity() instanceof EntityCreature) {
+            ExtendedCreature.get((EntityCreature) event.getEntity()).onUpdate();
         }
     }
 }

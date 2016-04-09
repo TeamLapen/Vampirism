@@ -4,15 +4,17 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockCoffin;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModSounds;
 import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * Created by Max on 12.03.2016.
@@ -40,7 +42,7 @@ public class TileCoffin extends TileEntity implements ITickable {
     public Packet getDescriptionPacket() {
         NBTTagCompound nbtTag = new NBTTagCompound();
         this.writeToNBT(nbtTag);
-        return new S35PacketUpdateTileEntity(this.getPos(), 1, nbtTag);
+        return new SPacketUpdateTileEntity(this.getPos(), 1, nbtTag);
     }
 
     public TileCoffin getPrimaryTileEntity() {
@@ -51,17 +53,16 @@ public class TileCoffin extends TileEntity implements ITickable {
 
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return AxisAlignedBB.fromBounds(pos.getX() - 4, pos.getY(), pos.getZ() - 4, pos.getX() + 4, pos.getY() + 2, pos.getZ() + 4);
+        return new AxisAlignedBB(pos.getX() - 4, pos.getY(), pos.getZ() - 4, pos.getX() + 4, pos.getY() + 2, pos.getZ() + 4);
     }
 
     @Override
     public void markDirty() {
         super.markDirty();
-        this.worldObj.markBlockForUpdate(pos);
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
         readFromNBT(packet.getNbtCompound());
         ModBlocks.coffin.setCoffinOccupied(this.worldObj, pos, null, this.occupied);
         VampirismMod.log.t("onDataPacket called, occupied=%s, remote=%s", this.occupied, this.worldObj.isRemote);
@@ -115,7 +116,8 @@ public class TileCoffin extends TileEntity implements ITickable {
         }
 
         if (lastTickOccupied != occupied) {
-            this.worldObj.playSoundEffect(pos.getX(), (double) this.pos.getY() + 0.5D, pos.getZ(), "vampirism:coffin_lid", 0.5F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F);
+
+            this.worldObj.playSound(pos.getX(), (double) this.pos.getY() + 0.5D, pos.getZ(), ModSounds.block_coffin_lid, SoundCategory.BLOCKS, 0.5F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F, true);
         }
         lastTickOccupied = occupied;
 

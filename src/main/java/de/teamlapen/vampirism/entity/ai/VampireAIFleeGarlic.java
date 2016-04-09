@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.entity.ai;
 import de.teamlapen.vampirism.api.EnumGarlicStrength;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.util.Helper;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 

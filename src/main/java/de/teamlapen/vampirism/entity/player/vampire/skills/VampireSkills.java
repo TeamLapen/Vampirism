@@ -296,7 +296,7 @@ public class VampireSkills {
                 return "potion.moveSpeed";
             }
         };
-        speed.registerAttributeModifier(SharedMonsterAttributes.movementSpeed, "96dc968d-818f-4271-8dbf-6b799d603ad8", Balance.vps.SPEED_BOOST, 2);
+        speed.registerAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, "96dc968d-818f-4271-8dbf-6b799d603ad8", Balance.vps.SPEED_BOOST, 2);
         SkillNode skill2 = new SkillNode(skill1, jump, speed);
 
         SkillNode skill3 = new SkillNode(skill2, new DefaultSkill() {

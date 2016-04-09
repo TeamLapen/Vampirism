@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.network.ModGuiHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
@@ -84,7 +84,7 @@ public class ModKeys {
         KEY keyPressed = getPressedKeyBinding(); // Only call isPressed once, so
         // get value here!
         if (keyPressed == KEY.SUCK) {
-            MovingObjectPosition mouseOver = Minecraft.getMinecraft().objectMouseOver;
+            RayTraceResult mouseOver = Minecraft.getMinecraft().objectMouseOver;
             if (mouseOver != null && mouseOver.entityHit != null) {
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + mouseOver.entityHit.getEntityId()));
             }

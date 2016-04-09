@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.core;
 
-import com.google.common.base.Predicates;
-import com.google.common.collect.Iterators;
+import com.google.common.collect.Sets;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -23,6 +22,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.*;
+import net.minecraft.init.Biomes;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -30,9 +30,9 @@ import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Handles all entity registrations and reference.
@@ -90,43 +90,43 @@ public class ModEntities {
     }
 
     private static void init(FMLInitializationEvent event) {
-        BiomeGenBase[] allBiomes = BiomeGenBase.getBiomeGenArray();
-        allBiomes = Arrays.copyOf(allBiomes, allBiomes.length);
-        allBiomes[9] = null;//Remove nether and end
-        allBiomes[8] = null;
+        Set<BiomeGenBase> allBiomes = BiomeGenBase.explorationBiomesList;
+        allBiomes.remove(Biomes.hell);
+        allBiomes.remove(Biomes.sky);
 
         /**
          * After setting this up this array will contain only biomes in which zombies can spawn.
          */
-        BiomeGenBase[] zombieBiomes = Arrays.copyOf(allBiomes, allBiomes.length);
-        for (int i = 0; i < zombieBiomes.length; i++) {
-            BiomeGenBase b = zombieBiomes[i];
+        Set<BiomeGenBase> zombieBiomes = Sets.newHashSet();
+        zombieBiomes.addAll(allBiomes);
+        Iterator<BiomeGenBase> iterator = zombieBiomes.iterator();
+        while (iterator.hasNext()) {
+            BiomeGenBase b = iterator.next();
             if (b != null) {
                 if (!b.getBiomeClass().getName().startsWith("net.minecraft.") && !b.getBiomeClass().getName().startsWith("de.teamlapen.")) {
-                    Iterator<BiomeGenBase.SpawnListEntry> iterator = b.getSpawnableList(EnumCreatureType.MONSTER).iterator();
+                    Iterator<BiomeGenBase.SpawnListEntry> iterator2 = b.getSpawnableList(EnumCreatureType.MONSTER).iterator();
                     boolean zombie = false;
-                    while (iterator.hasNext()) {
-                        if (iterator.next().entityClass.equals(EntityZombie.class)) {
+                    while (iterator2.hasNext()) {
+                        if (iterator2.next().entityClass.equals(EntityZombie.class)) {
                             zombie = true;
                             break;
                         }
                     }
                     if (!zombie) {
                         VampirismMod.log.d("ModEntities", "In biome %s no vampire will spawn", b);
-                        zombieBiomes[i] = null;
+                        iterator.remove();
                     }
                 }
             }
         }
-        //BiomeGenBase[] biomes = Iterators.toArray(Iterators.filter(Iterators.forArray(allBiomes), Predicates.notNull()), BiomeGenBase.class);
-        zombieBiomes = Iterators.toArray(Iterators.filter(Iterators.forArray(zombieBiomes), Predicates.notNull()), BiomeGenBase.class);
+
 
         registerEntity(EntityBlindingBat.class, BLINDING_BAT_NAME, false);
         registerEntity(EntityGhost.class, GHOST_NAME, true);
         registerEntity(EntityConvertedCreature.class, CONVERTED_CREATURE, false);
         registerEntity(EntityConvertedSheep.class, CONVERTED_SHEEP, false);
         registerEntity(EntityBasicHunter.class, BASIC_HUNTER_NAME, true);
-        registerEntity(EntityBasicVampire.class, BASIC_VAMPIRE_NAME, Balance.mobProps.VAMPIRE_SPAWN_PROBE, 1, 3, EnumCreatureType.MONSTER, zombieBiomes);
+        registerEntity(EntityBasicVampire.class, BASIC_VAMPIRE_NAME, Balance.mobProps.VAMPIRE_SPAWN_PROBE, 1, 3, EnumCreatureType.MONSTER, zombieBiomes.toArray(new BiomeGenBase[zombieBiomes.size()]));
         registerEntity(EntityHunterTrainer.class, HUNTER_TRAINER, true);
         registerEntity(EntityVampireBaron.class, VAMPIRE_BARON, true);
         registerEntity(EntityVampireMinionSaveable.class, VAMPIRE_MINION_SAVEABLE_NAME, false);

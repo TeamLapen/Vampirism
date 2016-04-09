@@ -2,12 +2,15 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.biome.BiomeGenVampireForest;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.common.BiomeManager;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
  * Handles all biome registrations and reference.
@@ -25,22 +28,17 @@ public class ModBiomes {
     }
 
     private static void preInit() {
-        int biomeId = Configs.vampireForestId;
-        if (biomeId == -1) {
-            biomeId = 10;
-            while (BiomeDictionary.isBiomeRegistered(biomeId)) {
-                biomeId++;
-            }
-            Configs.updateVampireBiomeId(biomeId);
 
-        }
-        vampireForest = new BiomeGenVampireForest(biomeId);
-
+        vampireForest = new BiomeGenVampireForest();
+        vampireForest.setRegistryName(REFERENCE.MODID, "vampireForest");
+        VampirismAPI.sundamageRegistry().addNoSundamageBiome(vampireForest.getRegistryName());
         BiomeDictionary.registerBiomeType(vampireForest, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY);
+        GameRegistry.register(vampireForest);
         if (!Configs.disable_vampireForest) {
+
             int weight = Balance.general.VAMPIRE_FOREST_WEIGHT;
             BiomeManager.addBiome(BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(vampireForest, weight));
-            VampirismMod.log.d("ModBiomes", "Registered vampire forest with id %d and weight %d", biomeId, weight);
+            VampirismMod.log.d("ModBiomes", "Registered vampire forest with weight %d", weight);
         }
 
 

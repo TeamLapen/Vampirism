@@ -7,10 +7,13 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
 import java.util.List;
@@ -49,19 +52,20 @@ public class ItemInjection extends VampirismItem {
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn) {
+    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
         if (itemStackIn.getMetadata() == META_SANGUINARE) {
             IFactionPlayerHandler handler = VampirismAPI.getFactionPlayerHandler(playerIn);
             if (handler.getCurrentLevel(VReference.HUNTER_FACTION) > 0) {
                 playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_REVERT_BACK, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);
 
             } else {
-                playerIn.addPotionEffect(new PotionEffect(Potion.poison.id, 100));
+                playerIn.addPotionEffect(new PotionEffect(MobEffects.poison, 100));
             }
             itemStackIn.stackSize--;
+            return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
         }
-
-
-        return itemStackIn;
+        return new ActionResult<>(EnumActionResult.PASS, itemStackIn);
     }
+
+
 }

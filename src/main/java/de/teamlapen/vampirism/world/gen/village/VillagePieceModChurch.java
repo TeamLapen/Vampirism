@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.world.gen.village;
 import de.teamlapen.vampirism.blocks.BlockChurchAltar;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.StructureBoundingBox;
 import net.minecraft.world.gen.structure.StructureComponent;
@@ -29,11 +29,22 @@ public class VillagePieceModChurch extends StructureVillagePieces.Church {
     @Override
     public boolean addComponentParts(World worldIn, Random random, StructureBoundingBox structureBoundingBoxIn) {
         super.addComponentParts(worldIn, random, structureBoundingBoxIn);
-        this.setBlockState(worldIn, ModBlocks.churchAltar.getDefaultState().withProperty(BlockChurchAltar.FACING, coordBaseMode), 2, 2, 7, structureBoundingBoxIn);
+        this.setBlockState(worldIn, ModBlocks.churchAltar.getDefaultState().withProperty(BlockChurchAltar.FACING, EnumFacing.SOUTH), 2, 2, 7, structureBoundingBoxIn);
         return true;
     }
 
     public static class CreationHandler implements VillagerRegistry.IVillageCreationHandler {
+
+        @Override
+        public StructureVillagePieces.Village buildComponent(StructureVillagePieces.PieceWeight villagePiece, StructureVillagePieces.Start startPiece, List<StructureComponent> pieces, Random random, int p1, int p2, int p3, EnumFacing facing, int p5) {
+            StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 5, 12, 9, facing);
+            return canVillageGoDeeper(structureboundingbox) && StructureComponent.findIntersecting(pieces, structureboundingbox) == null ? new VillagePieceModChurch(startPiece, p5, random, structureboundingbox, facing) : null;
+        }
+
+        @Override
+        public Class<?> getComponentClass() {
+            return VillagePieceModChurch.class;
+        }
 
         /**
          * @param random
@@ -43,17 +54,6 @@ public class VillagePieceModChurch extends StructureVillagePieces.Church {
         @Override
         public StructureVillagePieces.PieceWeight getVillagePieceWeight(Random random, int terrainType) {
             return new StructureVillagePieces.PieceWeight(VillagePieceModChurch.class, 20, MathHelper.getRandomIntegerInRange(random, 0, 1 + terrainType));
-        }
-
-        @Override
-        public Class<?> getComponentClass() {
-            return VillagePieceModChurch.class;
-        }
-
-        @Override
-        public StructureVillagePieces.Village buildComponent(StructureVillagePieces.PieceWeight villagePiece, StructureVillagePieces.Start startPiece, List<StructureComponent> pieces, Random random, int p1, int p2, int p3, EnumFacing facing, int p5) {
-            StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 5, 12, 9, facing);
-            return canVillageGoDeeper(structureboundingbox) && StructureComponent.findIntersecting(pieces, structureboundingbox) == null ? new VillagePieceModChurch(startPiece, p5, random, structureboundingbox, facing) : null;
         }
     }
 }

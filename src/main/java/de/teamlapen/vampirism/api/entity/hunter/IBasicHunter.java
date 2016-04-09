@@ -1,7 +1,8 @@
 package de.teamlapen.vampirism.api.entity.hunter;
 
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
-import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.math.AxisAlignedBB;
+
 /**
  * Interface for basic
  */

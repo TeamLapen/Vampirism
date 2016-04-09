@@ -75,7 +75,10 @@ public class BloodHelper {
         if (glas != null && Configs.autoConvertGlasBottles) {
             ItemStack bloodBottle = new ItemStack(ModItems.bloodBottle, 1, 0);
             amt = amt - (ModItems.bloodBottle).fill(bloodBottle, new FluidStack(ModFluids.blood, amt), true);
-            player.inventory.consumeInventoryItem(Items.glass_bottle);
+            glas.stackSize--;
+            if (glas.stackSize == 0) {
+                player.inventory.deleteStack(glas);
+            }
             if (!player.inventory.addItemStackToInventory(bloodBottle)) {
                 player.dropPlayerItemWithRandomChoice(bloodBottle, false);
             }

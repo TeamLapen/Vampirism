@@ -79,18 +79,13 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
     }
 
     @Override
-    public Predicate<EntityLivingBase> getNonMinionSelector() {
-        return entityPredicate;
+    public int getLeftMinionSlots() {
+        return Math.max(lord.getMaxMinionCount() - this.getMinionCount(), 0);
     }
 
     @Override
     public int getMinionCount() {
         return minions.size();
-    }
-
-    @Override
-    public int getLeftMinionSlots() {
-        return Math.max(lord.getMaxMinionCount() - this.getMinionCount(), 0);
     }
 
     /**
@@ -106,7 +101,7 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
             boolean dead = e.isDead;
             e.isDead = false;
             NBTTagCompound nbt = new NBTTagCompound();
-            e.writeMountToNBT(nbt);
+            e.writeToNBTAtomically(nbt);
             list.appendTag(nbt);
             if (dead)
                 e.isDead = true;
@@ -115,6 +110,10 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
         return list;
     }
 
+    @Override
+    public Predicate<EntityLivingBase> getNonMinionSelector() {
+        return entityPredicate;
+    }
 
     @Override
     public void killMinions(boolean instant) {
@@ -182,19 +181,19 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
         for (IMinion m : toTeleportDim) {
             //Logger.d(TAG, "Teleporting minion");
             Entity e = MinionHelper.entity(m);
-            e.travelToDimension(e1.dimension);
+            e.changeDimension(e1.dimension);
             e.timeUntilPortal = e.getPortalCooldown();
 
         }
     }
 
     @Override
-    public void unregisterMinion(T m) {
-        minions.remove(m);
+    public String toString() {
+        return TAG + " for " + lord.toString() + " with " + getMinionCount() + " minions";
     }
 
     @Override
-    public String toString() {
-        return TAG + " for " + lord.toString() + " with " + getMinionCount() + " minions";
+    public void unregisterMinion(T m) {
+        minions.remove(m);
     }
 }

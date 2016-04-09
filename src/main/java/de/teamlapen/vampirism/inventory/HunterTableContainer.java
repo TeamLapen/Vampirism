@@ -12,7 +12,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * Container for the hunter table.
@@ -43,6 +43,10 @@ public class HunterTableContainer extends InventoryContainer {
         hunterLevel = FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION);
     }
 
+    public boolean canInteractWith(EntityPlayer playerIn) {
+        return playerIn.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) <= 64.0D;
+    }
+
     public HunterTableInventory getHunterInventory() {
         return inventory;
     }
@@ -69,10 +73,6 @@ public class HunterTableContainer extends InventoryContainer {
         }
     }
 
-    public boolean canInteractWith(EntityPlayer playerIn) {
-        return playerIn.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) <= 64.0D;
-    }
-
     @Override
     public void onInventoryChanged() {
         if (inventory != null && isLevelValid()) {
@@ -84,6 +84,14 @@ public class HunterTableContainer extends InventoryContainer {
         }
     }
 
+    /**
+     * Called when the resulting item is picked up
+     */
+    protected void onPickupResult() {
+        int[] req = levelingConf.getItemRequirementsForTable(hunterLevel + 1);
+        InventoryHelper.removeItems(inventory, new int[]{1, req[0], req[1], req[3]});
+        onInventoryChanged();
+    }
 
     /**
      * Checks if the given items are present
@@ -98,16 +106,6 @@ public class HunterTableContainer extends InventoryContainer {
         return InventoryHelper.checkItems(inventory, items, new int[]{1, fangs, blood, par3}, new int[]{Integer.MIN_VALUE, Integer.MIN_VALUE, bloodMeta == 0 ? Integer.MIN_VALUE : -bloodMeta, Integer.MIN_VALUE});
     }
 
-    /**
-     * Called when the resulting item is picked up
-     */
-    protected void onPickupResult() {
-        int[] req = levelingConf.getItemRequirementsForTable(hunterLevel + 1);
-        InventoryHelper.removeItems(inventory, new int[]{1, req[0], req[1], req[3]});
-        onInventoryChanged();
-    }
-
-
     private class SlotResult extends net.minecraft.inventory.Slot {
 
         private final HunterTableContainer container;
@@ -118,14 +116,14 @@ public class HunterTableContainer extends InventoryContainer {
         }
 
         @Override
-        public void onPickupFromSlot(EntityPlayer playerIn, ItemStack stack) {
-            container.onPickupResult();
-
+        public boolean isItemValid(ItemStack stack) {
+            return false;
         }
 
         @Override
-        public boolean isItemValid(ItemStack stack) {
-            return false;
+        public void onPickupFromSlot(EntityPlayer playerIn, ItemStack stack) {
+            container.onPickupResult();
+
         }
     }
 }

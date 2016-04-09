@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.entity.ai;
 
+import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -78,7 +78,7 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
         timer--;
         if (timer == 1) {
             int amount = creature.onBite(vampire);
-            vampire.worldObj.playSoundAtEntity(vampire, REFERENCE.MODID + ":player.bite", 1.0F, 1.0F);
+            vampire.playSound(ModSounds.player_bite, 1, 1);
             vampire.consumeBlood(amount, creature.getBloodSaturation());
         }
     }

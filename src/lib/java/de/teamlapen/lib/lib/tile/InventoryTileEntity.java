@@ -10,9 +10,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
 
 
 /**
@@ -35,13 +35,15 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
     }
 
     @Override
-    public void closeInventory(EntityPlayer player) {
-
+    public void clear() {
+        for (int i = 0; i < slots.length; i++) {
+            slots[i] = null;
+        }
     }
 
     @Override
-    public InventorySlot[] getSlots() {
-        return slots;
+    public void closeInventory(EntityPlayer player) {
+
     }
 
     @Override
@@ -61,15 +63,18 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
         return null;
     }
 
+    public ITextComponent getDisplayName() {
+        return this.hasCustomName() ? new TextComponentString(this.getName()) : new TextComponentTranslation(this.getName());
+    }
+
     @Override
-    public ItemStack removeStackFromSlot(int index) {
-        if (this.slots[index] != null) {
-            ItemStack itemstack = this.slots[index].stack;
-            this.slots[index].stack = null;
-            return itemstack;
-        } else {
-            return null;
-        }
+    public int getField(int id) {
+        return 0;
+    }
+
+    @Override
+    public int getFieldCount() {
+        return 0;
     }
 
     @Override
@@ -87,6 +92,11 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
     }
 
     @Override
+    public InventorySlot[] getSlots() {
+        return slots;
+    }
+
+    @Override
     public ItemStack getStackInSlot(int slot) {
         return slots[slot].stack;
     }
@@ -96,38 +106,12 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
         return false;
     }
 
-    public IChatComponent getDisplayName() {
-        return this.hasCustomName() ? new ChatComponentText(this.getName()) : new ChatComponentTranslation(this.getName());
-    }
-
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
         if (slots[slot].itemSelector != null) {
             return slots[slot].itemSelector.isItemAllowed(stack);
         }
         return true;
-    }
-
-    @Override
-    public int getField(int id) {
-        return 0;
-    }
-
-    @Override
-    public void setField(int id, int value) {
-
-    }
-
-    @Override
-    public int getFieldCount() {
-        return 0;
-    }
-
-    @Override
-    public void clear() {
-        for (int i = 0; i < slots.length; i++) {
-            slots[i] = null;
-        }
     }
 
     @Override
@@ -154,6 +138,22 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
                 slots[slot].stack = ItemStack.loadItemStackFromNBT(tag);
             }
         }
+    }
+
+    @Override
+    public ItemStack removeStackFromSlot(int index) {
+        if (this.slots[index] != null) {
+            ItemStack itemstack = this.slots[index].stack;
+            this.slots[index].stack = null;
+            return itemstack;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public void setField(int id, int value) {
+
     }
 
     @Override

@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.items.ItemBloodBottle;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
@@ -28,7 +28,7 @@ public class TileBloodContainer extends TileFluidHandler {
     public Packet getDescriptionPacket() {
         NBTTagCompound nbtTag = new NBTTagCompound();
         this.writeToNBT(nbtTag);
-        return new S35PacketUpdateTileEntity(getPos(), 1, nbtTag);
+        return new SPacketUpdateTileEntity(getPos(), 1, nbtTag);
     }
 
     public FluidTankInfo getTankInfo() {
@@ -40,11 +40,11 @@ public class TileBloodContainer extends TileFluidHandler {
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
         FluidStack old = tank.getFluid();
         this.readFromNBT(pkt.getNbtCompound());
         if (old != null && !old.isFluidStackIdentical(tank.getFluid()) || old == null && tank.getFluid() != null) {
-            this.worldObj.markBlockForUpdate(getPos());
+            this.worldObj.notifyBlockUpdate(getPos(), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 3);
         }
     }
 

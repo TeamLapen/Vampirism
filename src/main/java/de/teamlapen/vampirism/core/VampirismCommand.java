@@ -13,11 +13,16 @@ import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.*;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
@@ -69,9 +74,9 @@ public class VampirismCommand extends BasicCommand {
                 }
                 boolean p = Balance.resetAndReload(cat);
                 if (p) {
-                    var1.addChatMessage(new ChatComponentText("Successfully reset " + cat + " balance category. Please restart MC."));
+                    var1.addChatMessage(new TextComponentString("Successfully reset " + cat + " balance category. Please restart MC."));
                 } else {
-                    var1.addChatMessage(new ChatComponentText("Did not find " + cat + " balance category."));
+                    var1.addChatMessage(new TextComponentString("Did not find " + cat + " balance category."));
                 }
             }
 
@@ -127,17 +132,17 @@ public class VampirismCommand extends BasicCommand {
                             IPlayableFaction newFaction = pfactions[i];
                             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
                             if (level == 0 && !handler.canLeaveFaction()) {
-                                ((EntityPlayer) var1).addChatComponentMessage(new ChatComponentTranslation("text.vampirism.faction.cant_leave").appendSibling(new ChatComponentText("(" + handler.getCurrentFaction().name() + ")")));
+                                ((EntityPlayer) var1).addChatComponentMessage(new TextComponentTranslation("text.vampirism.faction.cant_leave").appendSibling(new TextComponentString("(" + handler.getCurrentFaction().name() + ")")));
                                 return;
                             }
                             if (level > newFaction.getHighestReachableLevel()) {
                                 level = newFaction.getHighestReachableLevel();
                             }
                             if (handler.setFactionAndLevel(newFaction, level)) {
-                                IChatComponent msg = var1.getDisplayName().appendSibling(new ChatComponentText(" is now a " + pfaction_names[i] + " level " + level));
-                                MinecraftServer.getServer().getConfigurationManager().sendChatMsg(msg);
+                                ITextComponent msg = var1.getDisplayName().appendSibling(new TextComponentString(" is now a " + pfaction_names[i] + " level " + level));
+                                FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().sendChatMsg(msg);
                             } else {
-                                ((EntityPlayer) var1).addChatComponentMessage(new ChatComponentTranslation("text.vampirism.faction.failed_to_change"));
+                                ((EntityPlayer) var1).addChatComponentMessage(new TextComponentTranslation("text.vampirism.faction.failed_to_change"));
                             }
 
                             return;
@@ -204,41 +209,41 @@ public class VampirismCommand extends BasicCommand {
 
             @Override
             public String getCommandUsage(ICommandSender var1) {
-                return getCommandName() + " <maxRadius>";
+                return getCommandName() + " <maxRadius in chunks>";
             }
 
             @Override
             public void processCommand(ICommandSender var1, String[] var2) {
                 if (Configs.disable_vampireForest) {
-                    var1.addChatMessage(new ChatComponentText("The Vampire Biome is disabled in the config file"));
+                    var1.addChatMessage(new TextComponentString("The Vampire Biome is disabled in the config file"));
                 } else {
-                    int maxDist = 5000;
+                    int maxDist = 150;
                     if (var2.length > 0) {
                         try {
                             maxDist = Integer.parseInt(var2[0]);
                         } catch (NumberFormatException e) {
                             VampirismMod.log.w("CheckVampireBiome", "Failed to parse max dist %s", var2[0]);
-                            var1.addChatMessage(new ChatComponentText("Failed to parse max distance. Using " + maxDist));
+                            var1.addChatMessage(new TextComponentString("Failed to parse max distance. Using " + maxDist));
                         }
-                        if (maxDist > 10000) {
+                        if (maxDist > 500) {
                             if (var2.length > 1 && "yes".equals(var2[1])) {
 
                             } else {
-                                var1.addChatMessage(new ChatComponentText("This will take a long time. Please use '/" + getCommandUsage(var1) + " yes', if you are sure"));
+                                var1.addChatMessage(new TextComponentString("This will take a long time. Please use '/" + getCommandUsage(var1) + " yes', if you are sure"));
                                 return;
                             }
                         }
                     }
                     List<BiomeGenBase> biomes = new ArrayList<BiomeGenBase>();
                     biomes.add(ModBiomes.vampireForest);
-                    var1.addChatMessage(new ChatComponentTranslation("text.vampirism.biome.looking_for_biome"));
+                    var1.addChatMessage(new TextComponentTranslation("text.vampirism.biome.looking_for_biome"));
                     ChunkCoordIntPair pos = UtilLib.findNearBiome(var1.getEntityWorld(), (var1).getPosition(), maxDist, biomes, var1);
                     if (pos == null) {
-                        var1.addChatMessage(new ChatComponentTranslation("text.vampirism.biome.not_found"));
+                        var1.addChatMessage(new TextComponentTranslation("text.vampirism.biome.not_found"));
                     } else if (isSenderCreative(var1)) {
-                        var1.addChatMessage(new ChatComponentTranslation("text.vampirism.biome.found").appendSibling(new ChatComponentText("[" + (pos.chunkXPos << 4) + "," + (pos.chunkZPos << 4) + "]")));
+                        var1.addChatMessage(new TextComponentTranslation("text.vampirism.biome.found").appendSibling(new TextComponentString("[" + (pos.chunkXPos << 4) + "," + (pos.chunkZPos << 4) + "]")));
                     } else {
-                        var1.addChatMessage(new ChatComponentTranslation("text.vampirism.biome.found"));
+                        var1.addChatMessage(new TextComponentTranslation("text.vampirism.biome.found"));
                     }
                 }
             }
@@ -267,20 +272,20 @@ public class VampirismCommand extends BasicCommand {
             @Override
             public void processCommand(ICommandSender var1, String[] var2) {
                 if (!VampirismMod.instance.getVersionInfo().isNewVersionAvailable()) {
-                    var1.addChatMessage(new ChatComponentText("There is no new version available"));
+                    var1.addChatMessage(new TextComponentString("There is no new version available"));
                     return;
                 }
                 VersionChecker.Version newVersion = VampirismMod.instance.getVersionInfo().getNewVersion();
                 List<String> changes = newVersion.getChanges();
-                var1.addChatMessage(new ChatComponentText(EnumChatFormatting.GREEN + "Vampirism " + newVersion.name + "(" + MinecraftForge.MC_VERSION + ")"));
+                var1.addChatMessage(new TextComponentString(TextFormatting.GREEN + "Vampirism " + newVersion.name + "(" + MinecraftForge.MC_VERSION + ")"));
                 for (String c : changes) {
-                    var1.addChatMessage(new ChatComponentText("-" + c));
+                    var1.addChatMessage(new TextComponentString("-" + c));
                 }
-                var1.addChatMessage(new ChatComponentText(""));
-                String template = StatCollector.translateToLocal("text.vampirism.update_message");
+                var1.addChatMessage(new TextComponentString(""));
+                String template = I18n.translateToLocal("text.vampirism.update_message");
                 String homepage = VampirismMod.instance.getVersionInfo().getHomePage();
                 template = template.replaceAll("@download@", newVersion.getUrl() == null ? homepage : newVersion.getUrl()).replaceAll("@forum@", homepage);
-                IChatComponent component = IChatComponent.Serializer.jsonToComponent(template);
+                ITextComponent component = ITextComponent.Serializer.jsonToComponent(template);
                 var1.addChatMessage(component);
             }
         });

@@ -9,7 +9,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillRegistry;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillNode;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -149,7 +149,7 @@ public class SkillRegistry implements ISkillRegistry {
      */
     public void printSkills(IPlayableFaction faction, ICommandSender sender) {
         for (Map.Entry e : skillMap.get(faction).entrySet()) {
-            sender.addChatMessage(new ChatComponentText("ID: " + e.getKey() + " Skill: " + e.getValue()));
+            sender.addChatMessage(new TextComponentString("ID: " + e.getKey() + " Skill: " + e.getValue()));
         }
     }
 

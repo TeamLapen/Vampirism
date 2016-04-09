@@ -10,8 +10,7 @@ import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.ai.EntityAISwimming;
-import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.potion.Potion;
+import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
 
@@ -28,15 +27,14 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     public EntityVampireBase(World world, boolean countAsMonster) {
         super(world);
         this.countAsMonster = countAsMonster;
-        ((PathNavigateGround) getNavigator()).setAvoidsWater(true);
-        this.tasks.addTask(0, new EntityAISwimming(this));
+
 
 
     }
 
     @Override
     public void consumeBlood(int amt, float saturationMod) {
-        this.addPotionEffect(new PotionEffect(Potion.regeneration.id, amt * 20));
+        this.addPotionEffect(new PotionEffect(MobEffects.regeneration, amt * 20));
     }
 
     @Override
@@ -118,6 +116,12 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
         getAttributeMap().registerAttribute(VReference.sunDamage).setBaseValue(Balance.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
         getAttributeMap().registerAttribute(VReference.garlicDamage).setBaseValue(Balance.mobProps.VAMPIRE_MOB_GARLIC_DAMAGE);
 
+    }
+
+    @Override
+    protected void initEntityAI() {
+        super.initEntityAI();
+        this.tasks.addTask(0, new EntityAISwimming(this));
     }
 
 }

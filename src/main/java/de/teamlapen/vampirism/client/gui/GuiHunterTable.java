@@ -7,9 +7,9 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 
 /**
  * Gui for the hunter table
@@ -43,7 +43,7 @@ public class GuiHunterTable extends GuiContainer {
             text = I18n.format("text.vampirism.ritual_level_wrong");
         } else if (container.getMissingItems() != null) {
             ItemStack missing = container.getMissingItems();
-            IChatComponent item = missing.getItem().equals(ModItems.pureBlood) ? ModItems.pureBlood.getDisplayName(missing) : new ChatComponentTranslation(missing.getUnlocalizedName() + ".name");
+            ITextComponent item = missing.getItem().equals(ModItems.pureBlood) ? ModItems.pureBlood.getDisplayName(missing) : new TextComponentTranslation(missing.getUnlocalizedName() + ".name");
             text = I18n.format("text.vampirism.ritual_missing_items", missing.stackSize, item.getUnformattedText());
         }
         if (text != null) this.fontRendererObj.drawSplitString(text, 8, 50, this.xSize - 10, 0x000000);

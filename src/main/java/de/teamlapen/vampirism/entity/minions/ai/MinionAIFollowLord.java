@@ -1,14 +1,14 @@
 package de.teamlapen.vampirism.entity.minions.ai;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.minions.IMinion;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.util.MinionHelper;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 
 public class MinionAIFollowLord extends EntityAIBase {
     /**
@@ -95,8 +95,8 @@ public class MinionAIFollowLord extends EntityAIBase {
                 for (int dx = 0; dx <= 4; ++dx) {
                     for (int dz = 0; dz <= 4; ++dz) {
                         BlockPos pos1 = pos.add(dx, 0, dz);
-                        if ((dx < 1 || dz < 1 || dx > 3 || dz > 3) && World.doesBlockHaveSolidTopSurface(lord.worldObj, pos1.down())
-                                && !lord.worldObj.getBlockState(pos1).getBlock().isNormalCube() && !lord.worldObj.getBlockState(pos.up()).getBlock().isNormalCube()) {
+                        if ((dx < 1 || dz < 1 || dx > 3 || dz > 3) && UtilLib.doesBlockHaveSolidTopSurface(lord.worldObj, pos1.down())
+                                && !lord.worldObj.getBlockState(pos1).isNormalCube() && !lord.worldObj.getBlockState(pos.up()).isNormalCube()) {
                             minionEntity.setLocationAndAngles(pos1.getX() + 0.5F, pos1.getY() + 0.1, pos1.getZ() + 0.5F,
                                     MathHelper.wrapAngleTo180_float(lord.rotationYaw + 180F), MathHelper.wrapAngleTo180_float(lord.rotationPitch + 180F));
                             minionEntity.getNavigator().clearPathEntity();

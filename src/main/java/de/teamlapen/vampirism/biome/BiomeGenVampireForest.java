@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.biome;
 
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.blocks.VampirismFlower;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
@@ -12,15 +11,19 @@ import net.minecraft.block.BlockOldLeaf;
 import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.init.Blocks;
-import net.minecraft.util.BlockPos;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import net.minecraft.world.gen.feature.WorldGenTrees;
+
+import java.util.Random;
 
 public class BiomeGenVampireForest extends BiomeGenBase {
     public final static String name = "vampireForest";
+    protected WorldGenTrees worldGenTrees;
 
-    public BiomeGenVampireForest(int id) {
-        super(id);
+    public BiomeGenVampireForest() {
+        super(new BiomeProperties(name).setWaterColor(0xEE2505).setBaseHeight(0.1F).setHeightVariation(0.025F));
         this.spawnableCreatureList.clear();
         this.spawnableMonsterList.clear();
         this.spawnableWaterCreatureList.clear();
@@ -36,18 +39,18 @@ public class BiomeGenVampireForest extends BiomeGenBase {
         this.theBiomeDecorator.treesPerChunk = 5;
         this.theBiomeDecorator.grassPerChunk = 4;
         this.theBiomeDecorator.deadBushPerChunk = 3;
-        this.worldGeneratorTrees = new WorldGenTrees(false, 4, Blocks.log.getDefaultState().withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.SPRUCE), Blocks.leaves.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.OAK), false);
+        this.worldGenTrees = new WorldGenTrees(false, 4, Blocks.log.getDefaultState().withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.SPRUCE), Blocks.leaves.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.OAK), false);
 
-        this.waterColorMultiplier = 0xEE2505;
-        VampirismAPI.sundamageRegistry().addNoSundamageBiome(id);
-        setBiomeName(name);
-        setHeight(new BiomeGenBase.Height(0.1F, 0.025F));
-        setColor(0xCC00CC);
     }
 
     @Override
     public void addDefaultFlowers() {
         addFlower(ModBlocks.vampirismFlower.getDefaultState().withProperty(VampirismFlower.TYPE, VampirismFlower.EnumFlowerType.ORCHID), 10);
+    }
+
+    @Override
+    public WorldGenAbstractTree genBigTreeChance(Random rand) {
+        return worldGenTrees;
     }
 
     @Override
@@ -64,5 +67,10 @@ public class BiomeGenVampireForest extends BiomeGenBase {
     @Override
     public int getSkyColorByTemp(float p_76731_1_) {
         return 0xA33641;
+    }
+
+    @Override
+    public int getWaterColorMultiplier() {
+        return super.getWaterColorMultiplier();
     }
 }

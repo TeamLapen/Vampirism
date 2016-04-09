@@ -6,17 +6,17 @@
   },
   "variants": {
     "type": {
-      "darkbrick": {
+      "dark_brick": {
         "textures": {
           "all": "vampirism:blocks/castleBlock_darkBrick"
         }
       },
-      "darkbrickbloody": {
+      "dark_brick_bloody": {
         "textures": {
           "all": "vampirism:blocks/castleBlock_darkBrickBloody"
         }
       },
-      "purplebrick": {
+      "purple_brick": {
         "textures": {
           "all": "vampirism:blocks/castleBlock_purpleBrick"
         }
