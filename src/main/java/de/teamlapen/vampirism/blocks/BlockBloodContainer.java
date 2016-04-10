@@ -1,18 +1,20 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.block.PropertyStringUnlisted;
+import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.tileentity.TileBloodContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -29,8 +31,9 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidTankInfo;
 import net.minecraftforge.fluids.IFluidContainerItem;
+
+import java.util.List;
 
 /**
  * Tileentity container that can store liquids.
@@ -75,6 +78,15 @@ public class BlockBloodContainer extends VampirismBlockContainer {
     }
 
     @Override
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+        super.getSubBlocks(itemIn, tab, list);
+        ItemStack stack = new ItemStack(itemIn, 1);
+        FluidStack fluid = new FluidStack(ModFluids.blood, TileBloodContainer.CAPACITY);
+        stack.setTagInfo("fluid", fluid.writeToNBT(new NBTTagCompound()));
+        list.add(stack);
+    }
+
+    @Override
     public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack heldStack) {
         ItemStack stack = new ItemStack(ModBlocks.bloodContainer, 1);
         FluidStack fluid = ((TileBloodContainer) te).getTankInfo().fluid;
@@ -83,7 +95,6 @@ public class BlockBloodContainer extends VampirismBlockContainer {
         }
         spawnAsEntity(worldIn, pos, stack);
     }
-
 
     @Override
     public boolean isFullCube(IBlockState state) {
@@ -94,6 +105,7 @@ public class BlockBloodContainer extends VampirismBlockContainer {
     public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
+
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!worldIn.isRemote) {
@@ -138,64 +150,11 @@ public class BlockBloodContainer extends VampirismBlockContainer {
     }
 
     private void drainContainerIntoTank(World worldIn, BlockPos pos, EntityPlayer playerIn, ItemStack stack, TileBloodContainer bloodContainer) {
-        FluidTankInfo tankInfo = bloodContainer.getTankInfo();
-        if (bloodContainer.isFull()) return;
-        if (stack.getItem() instanceof IFluidContainerItem) {
-            IFluidContainerItem containerItem = (IFluidContainerItem) stack.getItem();
-            FluidStack containerFluid = containerItem.getFluid(stack);
-            FluidStack tankFluid = tankInfo.fluid;
-            if (tankFluid == null || tankFluid.isFluidEqual(containerFluid)) {
-                int drainAmount = Math.min(tankInfo.capacity - (tankFluid == null ? 0 : tankFluid.amount), containerFluid.amount);
-                FluidStack drained = containerItem.drain(stack, drainAmount, true);
-                bloodContainer.fill(null, drained, true);
-            }
-        } else {
-            FluidStack containerFluid = FluidContainerRegistry.getFluidForFilledItem(stack);
-            if (bloodContainer.fill(null, containerFluid, true) > 0 && !playerIn.capabilities.isCreativeMode) {
-                ItemStack emptyContainer = FluidContainerRegistry.drainFluidContainer(stack);
-
-                if (--stack.stackSize <= 0) {
-                    playerIn.inventory.setInventorySlotContents(playerIn.inventory.currentItem, null);
-                }
-
-
-                if (!playerIn.inventory.addItemStackToInventory(emptyContainer)) {
-                    worldIn.spawnEntityInWorld(new EntityItem(worldIn, playerIn.posX + 0.5D, playerIn.posY + 1.5D, playerIn.posZ + 0.5D, emptyContainer));
-                } else if (playerIn instanceof EntityPlayerMP) {
-                    ((EntityPlayerMP) playerIn).sendContainerToPlayer(playerIn.inventoryContainer);
-                }
-            }
-        }
+        FluidLib.drainContainerIntoTank(playerIn, stack, bloodContainer, null);
     }
 
     private void fillContainerFromTank(World worldIn, BlockPos pos, EntityPlayer playerIn, ItemStack stack, TileBloodContainer bloodContainer) {
-        FluidTankInfo tankInfo = bloodContainer.getTankInfo();
-        if (tankInfo.fluid == null) return;
-        if (stack.getItem() instanceof IFluidContainerItem) {
-            IFluidContainerItem containerItem = (IFluidContainerItem) stack.getItem();
-            int filled = containerItem.fill(stack, tankInfo.fluid, true);
-            bloodContainer.drain(null, filled, true);
-        } else {
-            ItemStack filledStack = FluidContainerRegistry.fillFluidContainer(tankInfo.fluid, stack);
-            if (filledStack != null) {
-                int capacity = FluidContainerRegistry.getContainerCapacity(tankInfo.fluid, stack);
-                if (capacity > 0) {
-                    FluidStack drained = bloodContainer.drain(null, capacity, true);
-                    if (drained != null && drained.amount == capacity) {
-                        if (--stack.stackSize <= 0) {
-                            playerIn.inventory.setInventorySlotContents(playerIn.inventory.currentItem, null);
-                        }
-
-
-                        if (!playerIn.inventory.addItemStackToInventory(filledStack)) {
-                            worldIn.spawnEntityInWorld(new EntityItem(worldIn, playerIn.posX + 0.5D, playerIn.posY + 1.5D, playerIn.posZ + 0.5D, filledStack));
-                        } else if (playerIn instanceof EntityPlayerMP) {
-                            ((EntityPlayerMP) playerIn).sendContainerToPlayer(playerIn.inventoryContainer);
-                        }
-                    }
-                }
-            }
-        }
+        FluidLib.fillContainerFromTank(playerIn, stack, bloodContainer, null);
     }
 
 }

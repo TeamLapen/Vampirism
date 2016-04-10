@@ -3,10 +3,7 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.lib.lib.item.ItemMetaBlock;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.blocks.*;
-import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
-import de.teamlapen.vampirism.tileentity.TileBloodContainer;
-import de.teamlapen.vampirism.tileentity.TileCoffin;
-import de.teamlapen.vampirism.tileentity.TileTent;
+import de.teamlapen.vampirism.tileentity.*;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -35,6 +32,7 @@ public class ModBlocks {
     public static BlockGarlic garlic;
     public static BlockChurchAltar churchAltar;
     public static BlockBloodContainer bloodContainer;
+    public static BlockAltarInspiration altarInspiration;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
@@ -53,6 +51,7 @@ public class ModBlocks {
         GameRegistry.registerTileEntity(TileCoffin.class, "VampirismCoffin");
         GameRegistry.registerTileEntity(TileAltarInfusion.class, "VampirismAltarInfusion");
         GameRegistry.registerTileEntity(TileBloodContainer.class, "VampirismBloodContainer");
+        GameRegistry.registerTileEntity(TileAltarInspiration.class, "VampirismAltarInspiration");
     }
 
     private static void registerBlocks() {
@@ -73,6 +72,7 @@ public class ModBlocks {
         garlic = registerBlock(new BlockGarlic(), null);
         churchAltar = registerBlock(new BlockChurchAltar());
         bloodContainer = registerBlock(new BlockBloodContainer());
+        altarInspiration = registerBlock(new BlockAltarInspiration());
 
     }
 

@@ -2,18 +2,30 @@ package de.teamlapen.vampirism.entity.player.hunter;
 
 /**
  * Stores values/informations about the leveling of hunters. Might be replaced by an actually configurable object at some point
+ * All levels here are target levels, not the levels the player currently is on
  */
 public class HunterLevelingConf {
     private static HunterLevelingConf instance;
-    public final int TABLE_MIN_LEVEL = 5;
-    public final int TABLE_MAX_LEVEL = 14;
-    public final int HUNTER_INTEL_COUNT = 9;
 
     public static HunterLevelingConf instance() {
         if (instance == null) {
             instance = new HunterLevelingConf();
         }
         return instance;
+    }
+
+    public final int TABLE_MIN_LEVEL = 5;
+    public final int TABLE_MAX_LEVEL = 14;
+    public final int HUNTER_INTEL_COUNT = 9;
+
+    /**
+     * Converts hunter level to metadata for hunter intel. Returns -1 if there is no hunter intel for he given level
+     *
+     * @param level
+     * @return
+     */
+    public int getHunterIntelMetaForLevel(int level) {
+        return isLevelValidForTable(level) ? level - TABLE_MIN_LEVEL : -1;
     }
 
     public int[] getItemRequirementsForTable(int targetLevel) {
@@ -44,27 +56,6 @@ public class HunterLevelingConf {
                 return new int[]{0, 2, 4, 0};
         }
         return null;//Should never be reached
-    }
-
-    /**
-     * Checks if a hunter player can use the hunter table to obtain the target level book
-     *
-     * @param targetLevel
-     * @return
-     */
-    public boolean isLevelValidForTable(int targetLevel) {
-        return targetLevel >= TABLE_MIN_LEVEL && targetLevel <= TABLE_MAX_LEVEL;
-    }
-
-
-    /**
-     * Checks if a hunter player can reach the given level using the hunter trainer
-     *
-     * @param targetLevel
-     * @return
-     */
-    public boolean isLevelValidForTrainer(int targetLevel) {
-        return targetLevel >= TABLE_MIN_LEVEL && targetLevel <= TABLE_MAX_LEVEL;
     }
 
     public int[] getItemRequirementsForTrainer(int targetLevel) {
@@ -98,20 +89,30 @@ public class HunterLevelingConf {
     }
 
     /**
-     * Converts hunter level to metadata for hunter intel. Returns -1 if there is no hunter intel for he given level
-     *
-     * @param level
-     * @return
-     */
-    public int getHunterIntelMetaForLevel(int level) {
-        return isLevelValidForTable(level) ? level - TABLE_MIN_LEVEL : -1;
-    }
-
-    /**
      * @param meta
      * @return the hunter level that can be reached with this hunter intel metadata
      */
     public int getLevelForHunterIntelMeta(int meta) {
         return Math.min(meta + TABLE_MIN_LEVEL, TABLE_MAX_LEVEL);
+    }
+
+    /**
+     * Checks if a hunter player can use the hunter table to obtain the target level book
+     *
+     * @param targetLevel
+     * @return
+     */
+    public boolean isLevelValidForTable(int targetLevel) {
+        return targetLevel >= TABLE_MIN_LEVEL && targetLevel <= TABLE_MAX_LEVEL;
+    }
+
+    /**
+     * Checks if a hunter player can reach the given level using the hunter trainer
+     *
+     * @param targetLevel
+     * @return
+     */
+    public boolean isLevelValidForTrainer(int targetLevel) {
+        return targetLevel >= TABLE_MIN_LEVEL && targetLevel <= TABLE_MAX_LEVEL;
     }
 }

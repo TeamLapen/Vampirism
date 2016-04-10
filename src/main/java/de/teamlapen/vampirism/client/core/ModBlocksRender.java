@@ -48,6 +48,7 @@ public class ModBlocksRender {
         renderHelper.registerRender(ModBlocks.altarInfusion);
         renderHelper.registerRender(ModBlocks.cursedEarth);
         renderHelper.registerRender(ModBlocks.bloodContainer);
+        renderHelper.registerRender(ModBlocks.altarInspiration);
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.hunterTable), EnumFacing.HORIZONTALS);
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.vampirismFlower), VampirismFlower.EnumFlowerType.values());
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.churchAltar), EnumFacing.HORIZONTALS);

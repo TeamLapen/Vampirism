@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.render.particle;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.EntityFX;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -13,9 +12,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public class FlyingBloodParticle extends EntityFX {
-    public static void addParticle(FlyingBloodParticle p) {
-        Minecraft.getMinecraft().effectRenderer.addEffect(p);
-    }
     private final String TAG = "FlyingBloodParticle";
     private final double destX, destY, destZ;
 
@@ -38,9 +34,7 @@ public class FlyingBloodParticle extends EntityFX {
         this.onUpdate();
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
+
     @Override
     public void onUpdate() {
 

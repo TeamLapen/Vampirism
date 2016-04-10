@@ -11,6 +11,6 @@ public interface IParticleHandler {
     void spawnParticles(World world, Type type, double posX, double posY, double posZ, int count, double maxDist, Random random, Object... param);
 
     enum Type {
-        FlyingBlood
+        FlyingBlood, FlyingBloodEntity
     }
 }

@@ -35,9 +35,6 @@ public class TileBloodContainer extends TileFluidHandler {
         return tank.getInfo();
     }
 
-    public boolean isFull() {
-        return tank.getCapacity() == tank.getFluidAmount();
-    }
 
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
