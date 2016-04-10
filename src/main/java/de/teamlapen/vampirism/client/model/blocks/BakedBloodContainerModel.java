@@ -46,6 +46,12 @@ public class BakedBloodContainerModel implements IBakedModel {
         this.baseModel = baseModel;
     }
 
+    public BakedBloodContainerModel(IBakedModel baseModel, String fluidName, int fluidLevel) {
+        this(baseModel);
+        this.fluidNameItem = fluidName;
+        this.fluidLevelItem = fluidLevel;
+    }
+
     @Override
     public ItemCameraTransforms getItemCameraTransforms() {
         return baseModel.getItemCameraTransforms();
@@ -108,19 +114,18 @@ public class BakedBloodContainerModel implements IBakedModel {
 
         @Override
         public IBakedModel handleItemState(IBakedModel originalModel, ItemStack stack, World world, EntityLivingBase entity) {
-            //VampirismMod.log.t("Model %s",originalModel);
             if (originalModel instanceof BakedBloodContainerModel) {
                 if (stack.hasTagCompound() && stack.getTagCompound().hasKey("fluid")) {
                     FluidStack fluid = FluidStack.loadFluidStackFromNBT(stack.getTagCompound().getCompoundTag("fluid"));
                     if (fluid != null) {
-                        ((BakedBloodContainerModel) originalModel).fluidNameItem = fluid.getFluid().getName();
+
                         float amount = fluid.amount / (float) TileBloodContainer.LEVEL_AMOUNT;
-                        ((BakedBloodContainerModel) originalModel).fluidLevelItem = (amount > 0 && amount < 1) ? 1 : (int) amount;
-                        return originalModel;
+
+                        return new BakedBloodContainerModel(originalModel, fluid.getFluid().getName(), (amount > 0 && amount < 1) ? 1 : (int) amount);
                     }
                 }
             }
-            return super.handleItemState(originalModel, stack, world, entity);
+            return originalModel;
         }
     }
 }
