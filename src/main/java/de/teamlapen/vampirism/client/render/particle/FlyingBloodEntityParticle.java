@@ -18,7 +18,7 @@ public class FlyingBloodEntityParticle extends EntityFX {
 
     private final Entity entity;
 
-    public FlyingBloodEntityParticle(World world, double posX, double posY, double posZ, Entity entity, boolean direct) {
+    FlyingBloodEntityParticle(World world, double posX, double posY, double posZ, Entity entity, boolean direct) {
 
         super(world, posX, posY, posZ, 0D, 0D, 0D);
 

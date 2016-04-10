@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.tileentity;
 
+import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.tile.InventoryTileEntity;
@@ -8,12 +9,12 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.blocks.BlockAltarPillar;
+import de.teamlapen.vampirism.client.render.particle.ModParticles;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.util.IParticleHandler;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -248,7 +249,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
                     BlockPos pos = getPos();
                     for (int i = 0; i < tips.length; i++) {
                         BlockPos pTip = tips[i];
-                        VampirismMod.proxy.getParticleHandler().spawnParticles(worldObj, IParticleHandler.Type.FlyingBlood, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 5, 0.1, new Random(), pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5, 60);
+                        VampLib.proxy.getParticleHandler().spawnParticles(worldObj, ModParticles.FLYING_BLOOD, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 5, 0.1, new Random(), pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5, 60);
                     }
                 }
             }

@@ -19,6 +19,10 @@ public class Logger {
      * Used to convert DEBUG levels to INFO level in dev, since it seems to be impossible to change the view level
      */
     public boolean inDev = false;
+    /**
+     * Currently Forge automatically adds the mod id on server side, but not on client side. TODO remove
+     */
+    private boolean displayId = false;
 
     public Logger(String modid, String packagename) {
         logger = LogManager.getLogger(modid);
@@ -75,6 +79,6 @@ public class Logger {
         if (tag == null) {
             tag = getLogLocation(stackInfo.fillInStackTrace());
         }
-        logger.log(level, '[' + tag + ']' + String.format(format, data));
+        logger.log(level, (displayId ? '[' + modid + ']' : "") + '[' + tag + ']' + String.format(format, data));
     }
 }

@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.proxy;
 
+import de.teamlapen.vampirism.client.render.particle.ModParticles;
 import de.teamlapen.vampirism.core.*;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 
@@ -20,6 +21,9 @@ public abstract class CommonProxy implements IProxy {
         ModBiomes.onInitStep(step, event);
         ModVillages.onInitStep(step, event);
         ModEntities.onInitStep(step, event);
+        if (step == Step.INIT) {
+            ModParticles.init();
+        }
     }
 
 

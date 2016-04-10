@@ -15,7 +15,7 @@ public class FlyingBloodParticle extends EntityFX {
     private final String TAG = "FlyingBloodParticle";
     private final double destX, destY, destZ;
 
-    public FlyingBloodParticle(World world, double posX, double posY, double posZ, double destX, double destY, double
+    FlyingBloodParticle(World world, double posX, double posY, double posZ, double destX, double destY, double
             destZ, int maxage) {
         super(world, posX, posY, posZ, 0D, 0D, 0D);
         this.particleMaxAge = maxage;

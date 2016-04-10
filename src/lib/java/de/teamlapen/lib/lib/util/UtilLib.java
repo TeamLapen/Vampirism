@@ -38,7 +38,8 @@ public class UtilLib {
     }
 
     public static boolean doesBlockHaveSolidTopSurface(World worldIn, BlockPos pos) {
-        return worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos, EnumFacing.UP) && !worldIn.getBlockState(pos).getMaterial().isSolid() && !worldIn.getBlockState(pos.up()).getMaterial().isSolid();
+        VampirismMod.log.t("%s %b %b %b", worldIn.getBlockState(pos).getBlock(), worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos, EnumFacing.UP), worldIn.getBlockState(pos).getMaterial().isSolid(), !worldIn.getBlockState(pos.up()).getMaterial().isSolid());
+        return worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos, EnumFacing.UP) && worldIn.getBlockState(pos).getMaterial().isSolid() && !worldIn.getBlockState(pos.up()).getMaterial().isSolid();
     }
 
     /**

@@ -1,10 +1,10 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockMedChair;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -27,6 +27,7 @@ public class ItemMedChair extends VampirismItem {
 
     @Override
     public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+        VampirismMod.log.t("Stack %s, Hand %s Side %s", stack, hand, side);
         if (side != EnumFacing.UP) {
             return EnumActionResult.FAIL;
         }
@@ -49,10 +50,11 @@ public class ItemMedChair extends VampirismItem {
         boolean other_replaceable = block.isReplaceable(world, other);
         boolean flag1 = world.isAirBlock(pos) || replaceable;
         boolean flag2 = world.isAirBlock(other) || other_replaceable;
-
         if (player.canPlayerEdit(pos, side, stack) && player.canPlayerEdit(other, side, stack)) {
+            VampirismMod.log.t("%b %b %b %b", flag1, flag2, UtilLib.doesBlockHaveSolidTopSurface(world, pos.down()), UtilLib.doesBlockHaveSolidTopSurface(world, other.down()));
+
             if (flag1 && flag2 && UtilLib.doesBlockHaveSolidTopSurface(world, pos.down()) && UtilLib.doesBlockHaveSolidTopSurface(world, other.down())) {
-                IBlockState state1 = ModBlocks.medChair.getDefaultState().withProperty(BlockMedChair.PART, BlockMedChair.EnumPart.BOTTOM).withProperty(BlockDirectional.FACING, facing.getOpposite());
+                IBlockState state1 = ModBlocks.medChair.getDefaultState().withProperty(BlockMedChair.PART, BlockMedChair.EnumPart.BOTTOM).withProperty(BlockMedChair.FACING, facing.getOpposite());
                 if (world.setBlockState(pos, state1, 3)) {
                     IBlockState state2 = state1.withProperty(BlockMedChair.PART, BlockMedChair.EnumPart.TOP).withProperty(BlockMedChair.FACING, facing.getOpposite());
                     world.setBlockState(other, state2, 3);

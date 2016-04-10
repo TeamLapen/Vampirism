@@ -1,12 +1,12 @@
 package de.teamlapen.vampirism.tileentity;
 
-import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.client.render.particle.ModParticles;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.util.IParticleHandler;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.effect.EntityLightningBolt;
 import net.minecraft.entity.player.EntityPlayer;
@@ -98,8 +98,9 @@ public class TileAltarInspiration extends TileFluidHandler implements ITickable 
             if (p.worldObj.isRemote) p.addChatMessage(new TextComponentTranslation("text.vampirism.not_enough_blood"));
             return;
         }
-        if (p.worldObj.isRemote) {
-            VampirismMod.proxy.getParticleHandler().spawnParticles(p.worldObj, IParticleHandler.Type.FlyingBloodEntity, this.pos.getX() + 0.5, this.pos.getY() + 0.5, this.pos.getZ() + 0.5, 40, 0.1F, p.getRNG(), player.getRepresentingPlayer(), false);
+        if (!p.worldObj.isRemote) {
+            VampLib.proxy.getParticleHandler().spawnParticles(p.worldObj, ModParticles.FLYING_BLOOD_ENTITY, this.pos.getX() + 0.5, this.pos.getY() + 0.5, this.pos.getZ() + 0.5, 40, 0.1F, p.getRNG(), player.getRepresentingPlayer(), false);
+        } else {
             super.drain(null, neededBlood, true);
             IBlockState state = worldObj.getBlockState(getPos());
 

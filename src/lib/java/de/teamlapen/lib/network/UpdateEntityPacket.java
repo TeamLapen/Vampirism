@@ -2,9 +2,9 @@ package de.teamlapen.lib.network;
 
 import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.VampLib;
-import de.teamlapen.lib.lib.network.AbstractMessageHandler;
 import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
 import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.vampirism.network.AbstractClientMessageHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -195,7 +195,7 @@ public class UpdateEntityPacket implements IMessage {
         ByteBufUtils.writeTag(buf, tag);
     }
 
-    public static class Handler extends AbstractMessageHandler<UpdateEntityPacket> {
+    public static class Handler extends AbstractClientMessageHandler<UpdateEntityPacket> {
 
         @Override
         public IMessage handleClientMessage(EntityPlayer player, UpdateEntityPacket message, MessageContext ctx) {
@@ -230,11 +230,6 @@ public class UpdateEntityPacket implements IMessage {
 
 
             }
-            return null;
-        }
-
-        @Override
-        public IMessage handleServerMessage(EntityPlayer player, UpdateEntityPacket message, MessageContext ctx) {
             return null;
         }
 

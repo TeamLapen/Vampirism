@@ -17,5 +17,6 @@ public class LibraryPacketDispatcher extends AbstractPacketDispatcher {
     public void registerPackets() {
         registerMessage(UpdateEntityPacket.Handler.class, UpdateEntityPacket.class, Side.CLIENT);
         registerMessage(RequestPlayerUpdatePacket.Handler.class, RequestPlayerUpdatePacket.class, Side.SERVER);
+        registerMessage(SpawnCustomParticlePacket.Handler.class, SpawnCustomParticlePacket.class, Side.CLIENT);
     }
 }

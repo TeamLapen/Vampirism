@@ -63,6 +63,7 @@ public class VampireRageVampireAction extends DefaultVampireAction implements IL
     @Override
     public void onDeactivated(IVampirePlayer vampire) {
         vampire.getRepresentingPlayer().removePotionEffect(MobEffects.moveSpeed);
+        vampire.getRepresentingPlayer().removePotionEffect(MobEffects.damageBoost);
     }
 
     @Override

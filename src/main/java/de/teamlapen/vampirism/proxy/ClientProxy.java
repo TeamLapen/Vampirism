@@ -7,8 +7,6 @@ import de.teamlapen.vampirism.client.gui.VampirismHUDOverlay;
 import de.teamlapen.vampirism.client.render.LayerVampireEntity;
 import de.teamlapen.vampirism.client.render.LayerVampirePlayerHead;
 import de.teamlapen.vampirism.client.render.RenderHandler;
-import de.teamlapen.vampirism.client.render.particle.ParticleHandlerClient;
-import de.teamlapen.vampirism.util.IParticleHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -27,17 +25,13 @@ import java.util.Map;
  */
 public class ClientProxy extends CommonProxy {
     private final static String TAG = "ClientProxy";
-    private final ParticleHandlerClient particleHandlerClient;
+
     private VampirismHUDOverlay overlay;
 
     public ClientProxy() {
-        this.particleHandlerClient = new ParticleHandlerClient();
+
     }
 
-    @Override
-    public IParticleHandler getParticleHandler() {
-        return particleHandlerClient;
-    }
 
     @Override
     public boolean isClientPlayerNull() {
