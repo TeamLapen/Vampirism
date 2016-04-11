@@ -102,12 +102,6 @@ public class ModPlayerEventHandler {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onLivingUpdateLast(LivingEvent.LivingUpdateEvent event) {
-        if (event.getEntity() instanceof EntityPlayer) {
-            VampirePlayer.get((EntityPlayer) event.getEntity()).onUpdateBloodStats();
-        }
-    }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onPlayerClone(PlayerEvent.Clone event) {

@@ -23,6 +23,7 @@ import de.teamlapen.vampirism.entity.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.entity.player.VampirismPlayer;
 import de.teamlapen.vampirism.entity.player.actions.ActionHandler;
 import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
+import de.teamlapen.vampirism.entity.player.vampire.actions.BatVampireAction;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.potion.FakeNightVisionPotionEffect;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
@@ -44,6 +45,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.*;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -473,17 +475,21 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
     }
 
-    /**
-     * Update the blood stats.
-     * Is called by a separate event handler, so this is done after all exhaustion is added to {@link FoodStats#foodExhaustionLevel}
-     */
-    public void onUpdateBloodStats() {
-        if (getLevel() > 0) {
-            if (this.bloodStats.onUpdate()) {
-                sync(this.bloodStats.writeUpdate(new NBTTagCompound()), false);
+    @Override
+    public void onUpdatePlayer(TickEvent.Phase phase) {
+        if (phase == TickEvent.Phase.END) {
+            //Update blood stats
+            if (getLevel() > 0) {
+                if (this.bloodStats.onUpdate()) {
+                    sync(this.bloodStats.writeUpdate(new NBTTagCompound()), false);
+                }
+            }
+            if (getSpecialAttributes().bat) {
+                BatVampireAction.updatePlayerBatSize(player);
             }
         }
     }
+
 
     public void saveData(NBTTagCompound nbt) {
         bloodStats.writeNBT(nbt);

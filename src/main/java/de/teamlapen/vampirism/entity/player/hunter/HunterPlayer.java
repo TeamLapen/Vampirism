@@ -23,6 +23,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 /**
  * Main class for hunter players
@@ -195,6 +196,11 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
                 actionHandler.updateActions();
             }
         }
+    }
+
+    @Override
+    public void onUpdatePlayer(TickEvent.Phase phase) {
+
     }
 
     public void saveData(NBTTagCompound compound) {

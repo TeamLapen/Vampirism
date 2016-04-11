@@ -4,6 +4,7 @@ package de.teamlapen.lib.lib.entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 /**
  * Provides serveral event related methods, which should be called by a dedicated EventHandler.
@@ -30,5 +31,16 @@ public interface IPlayerEventListener {
 
     void onPlayerLoggedOut();
 
+    /**
+     * Called during EntityLiving Update. Somewhere in the middle of {@link EntityPlayer}'s onUpdate
+     */
     void onUpdate();
+
+    /**
+     * Called at the beginning and at the end of {@link EntityPlayer}'s onUpdate. {@link IPlayerEventListener#onUpdate()} is called in between.
+     * Should only be used for stuff that requires to run at the beginning or end
+     *
+     * @param phase
+     */
+    void onUpdatePlayer(TickEvent.Phase phase);
 }

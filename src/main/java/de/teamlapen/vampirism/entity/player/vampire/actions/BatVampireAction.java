@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.SRGNAMES;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -13,6 +14,7 @@ import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
@@ -22,10 +24,37 @@ import java.util.UUID;
 
 public class BatVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
-    public static final float BAT_HEIGHT = 0.8F;
+    private static final float BAT_HEIGHT = 0.8F;
     public final static float BAT_EYE_HEIGHT = 0.85F * BAT_HEIGHT;
+    private static final float BAT_WIDTH = 0.6F;
+
+    /**
+     * Set the player's entity size to the bat size if it isn't already
+     *
+     * @param player
+     */
+    public static void updatePlayerBatSize(EntityPlayer player) {
+        float width = BAT_WIDTH;
+        float height = BAT_HEIGHT;
+        if (player.isSneaking()) {
+            height = BAT_HEIGHT - 0.15F;
+        }
+        if (player.width != width || player.height != height) {
+            AxisAlignedBB axisalignedbb = player.getEntityBoundingBox();
+            axisalignedbb = new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + (double) width, axisalignedbb.minY + (double) height, axisalignedbb.minZ + (double) width);
+
+            if (!player.worldObj.collidesWithAnyBlock(axisalignedbb)) {
+                try {
+                    Method mSetSize = ReflectionHelper.findMethod(Entity.class, player, new String[]{"setSize", SRGNAMES.Entity_setSize}, float.class, float.class);
+                    mSetSize.invoke(player, width, height);
+                } catch (ReflectiveOperationException e) {
+                    VampirismMod.log.e("BatAction", e, "Could not change players size! ");
+                    return;
+                }
+            }
+        }
+    }
     public final UUID healthModifierUUID = UUID.fromString("4392fccb-4bfd-4290-b2e6-5cc91429053c");
-    private final float BAT_WIDTH = 0.5F;
     private final float PLAYER_WIDTH = 0.6F;
     private final float PLAYER_HEIGHT = 1.8F;
 
@@ -80,12 +109,14 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         if (newHealth < 1) newHealth = 1;
         player.setHealth(newHealth);
         setPlayerBat(player, true);
+        ((VampirePlayer) vampire).getSpecialAttributes().bat=true;
         return true;
     }
 
     @Override
     public void onActivatedClient(IVampirePlayer vampire) {
         setPlayerBat(vampire.getRepresentingPlayer(), true);
+        ((VampirePlayer) vampire).getSpecialAttributes().bat=true;
     }
 
     @Override
@@ -103,12 +134,14 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         }
         player.addPotionEffect(new PotionEffect(MobEffects.resistance, 60, 100));
         setPlayerBat(player, false);
+        ((VampirePlayer) vampire).getSpecialAttributes().bat=false;
     }
 
     @Override
     public void onReActivated(IVampirePlayer vampire) {
         setModifier(vampire.getRepresentingPlayer(), true);
         setPlayerBat(vampire.getRepresentingPlayer(), true);
+        ((VampirePlayer) vampire).getSpecialAttributes().bat=true;
     }
 
     @Override
@@ -156,19 +189,9 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
      * @param bat
      */
     private void setPlayerBat(EntityPlayer player, boolean bat) {
-        float width = bat ? BAT_WIDTH : PLAYER_WIDTH;
-        float height = bat ? BAT_HEIGHT : PLAYER_HEIGHT;
-        try {
-            Method mSetSize = ReflectionHelper.findMethod(Entity.class, player, new String[]{"setSize", SRGNAMES.Entity_setSize}, float.class, float.class);
-            mSetSize.invoke(player, width, height);
-        } catch (ReflectiveOperationException e) {
-            VampirismMod.log.e("BatAction", e, "Could not change players size! ");
-            return;
-        }
-        player.setPosition(player.posX, player.posY + (bat ? 1F : 1F) * (PLAYER_HEIGHT - BAT_HEIGHT), player.posZ);
-        //VampirismMod.log.t( BAT_EYE_HEIGHT+": p "+player.getDefaultEyeHeight()+ ": y "+player.getYOffset()+" :e1 "+player.eyeHeight);
-        player.eyeHeight = (bat ? BAT_EYE_HEIGHT - (float) player.getYOffset() : player.getDefaultEyeHeight());// Different from Client side
-        //VampirismMod.log.t("2"+ BAT_EYE_HEIGHT+": p "+player.getDefaultEyeHeight()+ ": y "+player.getYOffset()+" :e1 "+player.eyeHeight);
+        if (bat) updatePlayerBatSize(player);
+        if (bat) player.setPosition(player.posX, player.posY + (PLAYER_HEIGHT - BAT_HEIGHT), player.posZ);
+        player.eyeHeight = (bat ? BAT_EYE_HEIGHT : player.getDefaultEyeHeight());
     }
 
 }

@@ -17,6 +17,7 @@ import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 /**
  * Library's entity event handler to do stuff
@@ -99,6 +100,13 @@ public class EntityEventHandler {
     public void onPlayerLoggedOut(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent event) {
         for (int i = 0; i < listeners.length; i++) {
             ((IPlayerEventListener) event.player.getCapability(listeners[i], null)).onPlayerLoggedOut();
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerUpdate(TickEvent.PlayerTickEvent event) {
+        for (int i = 0; i < listeners.length; i++) {
+            ((IPlayerEventListener) event.player.getCapability(listeners[i], null)).onUpdatePlayer(event.phase);
         }
     }
 

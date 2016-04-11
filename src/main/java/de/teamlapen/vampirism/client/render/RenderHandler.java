@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.entity.player.vampire.actions.BatVampireAction;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -171,36 +170,6 @@ public class RenderHandler {
         }
     }
 
-    @SubscribeEvent
-    public void renderTick(TickEvent.RenderTickEvent event) {
-        /**
-         * Render the player a little bit lower in first person and in bad mode.
-         * Not sure how everything exactly works anymore, a lot of trial and error was required
-         */
-        if (mc.theWorld != null) {
-            if (event.phase == TickEvent.Phase.START) {
-                if (VampirePlayer.get(mc.thePlayer).getActionHandler().isActionActive(VampireActions.batAction) && mc.gameSettings.thirdPersonView == 0) {
-
-                    //batTransform_ySize = -(float)mc.thePlayer.getYOffset() + BatVampireAction.BAT_EYE_HEIGHT ;
-                    batTransform_eyeHeight = mc.thePlayer.eyeHeight;
-//                        mc.thePlayer.lastTickPosY -= batTransform_ySize;
-//                        mc.thePlayer.prevPosY -= batTransform_ySize;
-//                        mc.thePlayer.posY -= batTransform_ySize;
-                    mc.thePlayer.eyeHeight = mc.thePlayer.getDefaultEyeHeight() - BatVampireAction.BAT_EYE_HEIGHT + (float) mc.thePlayer.getYOffset();
-
-                    batTransform_shiftedPosY = true;
-                }
-            } else {
-                if (batTransform_shiftedPosY) {
-//                        batTransform_shiftedPosY = false;
-//                        mc.thePlayer.lastTickPosY += batTransform_ySize;
-//                        mc.thePlayer.prevPosY += batTransform_ySize;
-//                        mc.thePlayer.posY += batTransform_ySize;
-                    mc.thePlayer.eyeHeight = batTransform_eyeHeight;
-                }
-            }
-        }
-    }
 
     private void renderVampireBiomeFog(int ticks) {
 
