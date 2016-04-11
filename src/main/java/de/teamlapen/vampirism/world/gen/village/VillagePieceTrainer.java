@@ -36,19 +36,19 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
 
     public VillagePieceTrainer(StructureVillagePieces.Start start, int type, Random rand, StructureBoundingBox boundingBox, EnumFacing facing) {
         super(start, type);
-        this.func_186164_a(facing);//Set facing
+        this.setCoordBaseMode(facing);//Set facing
         this.boundingBox = boundingBox;
     }
 
     public boolean addComponentParts(World worldIn, Random randomIn, StructureBoundingBox structureBoundingBoxIn) {
-        if (this.field_143015_k < 0) {
-            this.field_143015_k = this.getAverageGroundLevel(worldIn, structureBoundingBoxIn);
+        if (this.averageGroundLvl < 0) {
+            this.averageGroundLvl = this.getAverageGroundLevel(worldIn, structureBoundingBoxIn);
 
-            if (this.field_143015_k < 0) {
+            if (this.averageGroundLvl < 0) {
                 return true;
             }
 
-            this.boundingBox.offset(0, this.field_143015_k - this.boundingBox.maxY + 7 - 1, 0);
+            this.boundingBox.offset(0, this.averageGroundLvl - this.boundingBox.maxY + 7 - 1, 0);
         }
         IBlockState sprucePlanks = Blocks.planks.getDefaultState().withProperty(BlockPlanks.VARIANT, BlockPlanks.EnumType.SPRUCE);
         this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 1, 1, 7, 4, 4, Blocks.air.getDefaultState(), Blocks.air.getDefaultState(), false);
@@ -156,7 +156,7 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
         //Place itemframe
         BlockPos itemFramePos = new BlockPos(getXWithOffset(1, -1), getYWithOffset(2), getZWithOffset(1, -1));
         if (structureBoundingBoxIn.isVecInside(itemFramePos)) {
-            EntityItemFrame itemFrame = new EntityItemFrame(worldIn, itemFramePos, func_186165_e().getOpposite());
+            EntityItemFrame itemFrame = new EntityItemFrame(worldIn, itemFramePos, getCoordBaseMode().getOpposite());
             itemFrame.setDisplayedItem(new ItemStack(ModItems.vampireFang));
             worldIn.spawnEntityInWorld(itemFrame);
         }
@@ -207,9 +207,6 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
         return true;
     }
 
-    private EnumFacing getFacing() {
-        return func_186165_e();
-    }
 
     private void spawnHunterTrainer(World worldIn, StructureBoundingBox structureBoundingBoxIn, int x, int y, int z) {
 

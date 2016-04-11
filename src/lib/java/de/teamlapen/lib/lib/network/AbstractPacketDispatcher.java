@@ -68,7 +68,7 @@ public abstract class AbstractPacketDispatcher {
     public final void sendToAllTrackingPlayers(IMessage message, Entity target) {
         EntityTracker et = ((WorldServer) target.worldObj).getEntityTracker();
         // does not send it to the player himself it target is a player et.sendToAllTrackingEntity(target, dispatcher.getPacketFrom(message));
-        et.func_151248_b(target, dispatcher.getPacketFrom(message));
+        et.sendToAllTrackingEntity(target, dispatcher.getPacketFrom(message));
     }
 
     /**

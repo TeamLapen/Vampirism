@@ -137,7 +137,7 @@ public class MinionHelper {
             }
 
             c1.appendText(": ");
-            c1.getChatStyle().setColor((TextFormatting.GREEN));
+            c1.getStyle().setColor((TextFormatting.GREEN));
             TextComponentBase c2;
             if (message[0].startsWith("\\")) {
                 c2 = new TextComponentString(message[0].replace("\\", ""));
@@ -153,7 +153,7 @@ public class MinionHelper {
 
             }
             c1.appendSibling(c2);
-            c2.getChatStyle().setColor(TextFormatting.WHITE);
+            c2.getStyle().setColor(TextFormatting.WHITE);
             ((EntityPlayer) l.getRepresentingEntity()).addChatComponentMessage(c1);
         }
     }

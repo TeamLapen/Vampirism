@@ -80,7 +80,7 @@ public class BloodHelper {
                 player.inventory.deleteStack(glas);
             }
             if (!player.inventory.addItemStackToInventory(bloodBottle)) {
-                player.dropPlayerItemWithRandomChoice(bloodBottle, false);
+                player.dropItem(bloodBottle, false);
             }
             if (amt > 0) return fillBloodIntoInventory(player, amt);
         }

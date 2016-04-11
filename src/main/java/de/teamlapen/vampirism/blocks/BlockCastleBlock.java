@@ -27,7 +27,7 @@ public class BlockCastleBlock extends VampirismBlockString {
         super(name, Material.rock, types);
         this.setHardness(2.0F);
         setResistance(10.0F);
-        setStepSound(SoundType.STONE);
+        setSoundType(SoundType.STONE);
     }
 
 

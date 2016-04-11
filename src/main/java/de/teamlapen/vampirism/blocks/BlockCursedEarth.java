@@ -25,7 +25,7 @@ public class BlockCursedEarth extends VampirismBlock implements IGrowable {
     public BlockCursedEarth() {
         super(name, Material.ground);
         this.setHardness(0.5F).setResistance(2.0F).setHarvestLevel("shovel", 0);
-        setStepSound(SoundType.GROUND);
+        setSoundType(SoundType.GROUND);
     }
 
     @Override

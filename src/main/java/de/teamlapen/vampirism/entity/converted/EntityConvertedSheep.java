@@ -38,16 +38,16 @@ public class EntityConvertedSheep extends EntityConvertedCreature implements ISh
 
 
     public boolean getSheared() {
-        return ((this.dataWatcher.get(COAT)).byteValue() & 16) != 0;
+        return ((this.dataManager.get(COAT)).byteValue() & 16) != 0;
     }
 
     public void setSheared(boolean sheared) {
-        byte b0 = this.dataWatcher.get(COAT).byteValue();
+        byte b0 = this.dataManager.get(COAT).byteValue();
 
         if (sheared) {
-            this.dataWatcher.set(COAT, Byte.valueOf((byte) (b0 | 16)));
+            this.dataManager.set(COAT, Byte.valueOf((byte) (b0 | 16)));
         } else {
-            this.dataWatcher.set(COAT, Byte.valueOf((byte) (b0 & -17)));
+            this.dataManager.set(COAT, Byte.valueOf((byte) (b0 & -17)));
         }
     }
 
@@ -97,7 +97,7 @@ public class EntityConvertedSheep extends EntityConvertedCreature implements ISh
     protected void entityInit() {
         super.entityInit();
 
-        this.dataWatcher.register(COAT, Byte.valueOf((byte) 0));
+        this.dataManager.register(COAT, Byte.valueOf((byte) 0));
     }
 
     public static class ConvertingSheepHandler extends DefaultConvertingHandler<EntitySheep> {

@@ -71,7 +71,7 @@ public class HunterTrainerContainer extends InventoryContainer {
                 ItemStack itemstack = this.tile.removeStackFromSlot(i);
 
                 if (itemstack != null) {
-                    playerIn.dropPlayerItemWithRandomChoice(itemstack, false);
+                    playerIn.dropItem(itemstack, false);
                 }
             }
         }

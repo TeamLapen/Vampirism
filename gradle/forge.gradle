@@ -17,7 +17,7 @@ dependencies {
 
 minecraft {
     version = config.minecraft_version + "-" + config.forge_version
-    mappings = "snapshot_20160312"
+    mappings = config.mappings
     runDir = "run"
     replaceIn "util/REFERENCE.java"
     replace "@VERSION@", "${project.mod_version}"
