@@ -3,6 +3,7 @@ package de.teamlapen.lib.lib.util;
 
 import de.teamlapen.lib.VampLib;
 import net.minecraft.command.*;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
@@ -17,7 +18,6 @@ import java.util.List;
  * TODO maybe work with  {@link CommandException}
  */
 public abstract class BasicCommand extends CommandBase {
-
     public static void sendMessage(ICommandSender target, String message) {
         String[] lines = message.split("\\n");
         for (String line : lines) {
@@ -26,6 +26,9 @@ public abstract class BasicCommand extends CommandBase {
 
     }
 
+    protected final int PERMISSION_LEVEL_CHEAT = 2;
+    protected final int PERMISSION_LEVEL_ADMIN = 3;
+    protected final int PERMISSION_LEVEL_FULL = 4;
     protected List aliases;
     private List<SubCommand> subCommands;
     private SubCommand unknown;
@@ -40,7 +43,7 @@ public abstract class BasicCommand extends CommandBase {
             }
 
             @Override
-            public boolean canCommandSenderUseCommand(ICommandSender var1) {
+            public boolean canSenderUseCommand(ICommandSender var1) {
                 return true;
             }
 
@@ -91,7 +94,7 @@ public abstract class BasicCommand extends CommandBase {
 
         }
         SubCommand cmd = getSub(param[0]);
-        if (cmd.canCommandSenderUseCommand(sender)) {
+        if (cmd.canSenderUseCommand(sender)) {
 
             try {
                 cmd.processCommand(sender, ArrayUtils.subarray(param, 1, param.length));
@@ -131,8 +134,8 @@ public abstract class BasicCommand extends CommandBase {
         subCommands.add(s);
     }
 
-    protected boolean isSenderCreative(ICommandSender sender) {
-        return sender.canCommandSenderUseCommand(2, this.getCommandName());
+    protected boolean canCommandSenderUseCheatCommand(ICommandSender sender) {
+        return sender.canCommandSenderUseCommand(PERMISSION_LEVEL_CHEAT, this.getCommandName()) || (sender instanceof EntityPlayer) && ((EntityPlayer) sender).capabilities.isCreativeMode;
     }
 
     /**
@@ -165,7 +168,7 @@ public abstract class BasicCommand extends CommandBase {
     public interface SubCommand {
         List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos);
 
-        boolean canCommandSenderUseCommand(ICommandSender var1);
+        boolean canSenderUseCommand(ICommandSender var1);
 
         String getCommandName();
 

@@ -416,4 +416,7 @@ public class UtilLib {
         return null;
     }
 
+    public static boolean isPlayerOp(EntityPlayer player) {
+        return FMLServerHandler.instance().getServer().getPlayerList().getOppedPlayers().getEntry(player.getGameProfile()) != null;
+    }
 }

@@ -39,8 +39,8 @@ public class TestCommand extends BasicCommand {
             }
 
             @Override
-            public boolean canCommandSenderUseCommand(ICommandSender var1) {
-                return isSenderCreative(var1);
+            public boolean canSenderUseCommand(ICommandSender var1) {
+                return canCommandSenderUseCommand(var1, PERMISSION_LEVEL_ADMIN, getCommandName());
             }
 
             @Override
@@ -76,8 +76,8 @@ public class TestCommand extends BasicCommand {
             }
 
             @Override
-            public boolean canCommandSenderUseCommand(ICommandSender var1) {
-                return isSenderCreative(var1) && var1 instanceof EntityPlayerMP;
+            public boolean canSenderUseCommand(ICommandSender var1) {
+                return canCommandSenderUseCheatCommand(var1) && var1 instanceof EntityPlayerMP;
             }
 
             @Override
@@ -148,8 +148,8 @@ public class TestCommand extends BasicCommand {
             }
 
             @Override
-            public boolean canCommandSenderUseCommand(ICommandSender var1) {
-                return isSenderCreative(var1) && var1 instanceof EntityPlayer;
+            public boolean canSenderUseCommand(ICommandSender var1) {
+                return canCommandSenderUseCheatCommand(var1) && var1 instanceof EntityPlayer;
             }
 
             @Override
@@ -177,9 +177,18 @@ public class TestCommand extends BasicCommand {
         return "vampirism-test";
     }
 
-    protected boolean isSenderCreative(ICommandSender sender) {
-        if (VampirismMod.inDev)
+    @Override
+    protected boolean canCommandSenderUseCheatCommand(ICommandSender sender) {
+        if (VampirismMod.inDev) {
             return true;
-        return super.isSenderCreative(sender);
+        }
+        return super.canCommandSenderUseCheatCommand(sender);
+    }
+
+    protected boolean canCommandSenderUseCommand(ICommandSender sender, int perm, String command) {
+        if (VampirismMod.inDev) {
+            return true;
+        }
+        return sender.canCommandSenderUseCommand(perm, command);
     }
 }

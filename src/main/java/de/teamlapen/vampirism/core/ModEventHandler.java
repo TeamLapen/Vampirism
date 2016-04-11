@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.core;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.config.Balance;
@@ -58,7 +59,7 @@ public class ModEventHandler {
         VersionChecker.VersionInfo versionInfo = VampirismMod.instance.getVersionInfo();
         if (!versionInfo.isChecked()) VampirismMod.log.w(TAG, "Version check is not finished yet");
         if (!Configs.disable_versionCheck && versionInfo.isNewVersionAvailable()) {
-            if (!FMLServerHandler.instance().getServer().isDedicatedServer() || FMLServerHandler.instance().getServer().getPlayerList().getOppedPlayers().getEntry(event.player.getGameProfile()) != null || event.player.getRNG().nextInt(5) == 0) {
+            if (!FMLServerHandler.instance().getServer().isDedicatedServer() || UtilLib.isPlayerOp(event.player) || event.player.getRNG().nextInt(5) == 0) {
                 if (event.player.getRNG().nextInt(4) == 0) {
                     VersionChecker.Version newVersion = versionInfo.getNewVersion();
                     //Inspired by @Vazikii's useful message

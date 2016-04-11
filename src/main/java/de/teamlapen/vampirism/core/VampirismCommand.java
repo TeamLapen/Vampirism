@@ -50,7 +50,7 @@ public class VampirismCommand extends BasicCommand {
             }
 
             @Override
-            public boolean canCommandSenderUseCommand(ICommandSender var1) {
+            public boolean canSenderUseCommand(ICommandSender var1) {
                 return var1.canCommandSenderUseCommand(3, getCommandName());
             }
 
@@ -95,11 +95,11 @@ public class VampirismCommand extends BasicCommand {
             }
 
             @Override
-            public boolean canCommandSenderUseCommand(ICommandSender var1) {
+            public boolean canSenderUseCommand(ICommandSender var1) {
                 if (!(var1 instanceof EntityPlayer)) {
                     return false;//TODO set level for other players (via console)
                 }
-                return isSenderCreative(var1);
+                return canCommandSenderUseCheatCommand(var1);
             }
 
             @Override
@@ -160,7 +160,7 @@ public class VampirismCommand extends BasicCommand {
             }
 
             @Override
-            public boolean canCommandSenderUseCommand(ICommandSender var1) {
+            public boolean canSenderUseCommand(ICommandSender var1) {
                 return var1 instanceof EntityPlayer;
             }
 
@@ -198,8 +198,8 @@ public class VampirismCommand extends BasicCommand {
             }
 
             @Override
-            public boolean canCommandSenderUseCommand(ICommandSender var1) {
-                return true;
+            public boolean canSenderUseCommand(ICommandSender var1) {
+                return canCommandSenderUseCommand(var1, PERMISSION_LEVEL_FULL, getCommandName());
             }
 
             @Override
@@ -240,10 +240,8 @@ public class VampirismCommand extends BasicCommand {
                     ChunkCoordIntPair pos = UtilLib.findNearBiome(var1.getEntityWorld(), (var1).getPosition(), maxDist, biomes, var1);
                     if (pos == null) {
                         var1.addChatMessage(new TextComponentTranslation("text.vampirism.biome.not_found"));
-                    } else if (isSenderCreative(var1)) {
-                        var1.addChatMessage(new TextComponentTranslation("text.vampirism.biome.found").appendSibling(new TextComponentString("[" + (pos.chunkXPos << 4) + "," + (pos.chunkZPos << 4) + "]")));
                     } else {
-                        var1.addChatMessage(new TextComponentTranslation("text.vampirism.biome.found"));
+                        var1.addChatMessage(new TextComponentTranslation("text.vampirism.biome.found").appendSibling(new TextComponentString("[" + (pos.chunkXPos << 4) + "," + (pos.chunkZPos << 4) + "]")));
                     }
                 }
             }
@@ -255,7 +253,7 @@ public class VampirismCommand extends BasicCommand {
             }
 
             @Override
-            public boolean canCommandSenderUseCommand(ICommandSender var1) {
+            public boolean canSenderUseCommand(ICommandSender var1) {
                 return true;
             }
 
@@ -296,9 +294,18 @@ public class VampirismCommand extends BasicCommand {
         return "vampirism";
     }
 
-    protected boolean isSenderCreative(ICommandSender sender) {
-        if (VampirismMod.inDev)
+    @Override
+    protected boolean canCommandSenderUseCheatCommand(ICommandSender sender) {
+        if (VampirismMod.inDev) {
             return true;
-        return super.isSenderCreative(sender);
+        }
+        return super.canCommandSenderUseCheatCommand(sender);
+    }
+
+    protected boolean canCommandSenderUseCommand(ICommandSender sender, int perm, String command) {
+        if (VampirismMod.inDev) {
+            return true;
+        }
+        return sender.canCommandSenderUseCommand(perm, command);
     }
 }
