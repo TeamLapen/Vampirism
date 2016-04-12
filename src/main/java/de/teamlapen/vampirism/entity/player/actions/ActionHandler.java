@@ -160,7 +160,6 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
      * @param nbt
      */
     public void readUpdateFromServer(NBTTagCompound nbt) {
-
         if (nbt.hasKey("action_timers")) {
             int[] updated = nbt.getIntArray("action_timers");
             for (int i = 0; i < actionTimer.length; i++) {

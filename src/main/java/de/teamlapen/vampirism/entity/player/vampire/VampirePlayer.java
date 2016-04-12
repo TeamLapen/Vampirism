@@ -367,7 +367,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 if (player.isPotionActive(MobEffects.nightVision)) {
                     player.removePotionEffect(MobEffects.nightVision);
                 }
-                player.addPotionEffect(new FakeNightVisionPotionEffect());
             } else if (newLevel == 0) {
                 if (player.getActivePotionEffect(MobEffects.nightVision) instanceof FakeNightVisionPotionEffect) {
                     player.removePotionEffect(MobEffects.nightVision);
@@ -459,7 +458,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
         } else {
             if (level > 0) {
-                if (player.ticksExisted % 100 == 8 && player.getActivePotionEffect(MobEffects.nightVision) == null) {
+                if (player.ticksExisted % 50 == 8 && getSpecialAttributes().night_vision && player.getActivePotionEffect(MobEffects.nightVision) == null) {
                     player.addPotionEffect(new FakeNightVisionPotionEffect());
                 }
                 actionHandler.updateActions();

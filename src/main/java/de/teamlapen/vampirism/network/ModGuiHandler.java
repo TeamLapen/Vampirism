@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.network;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockHunterTable;
 import de.teamlapen.vampirism.client.gui.*;
 import de.teamlapen.vampirism.inventory.HunterTrainerContainer;
@@ -38,7 +37,6 @@ public class ModGuiHandler implements IGuiHandler {
             case ID_HUNTER_TRAINER:
                 return new GuiHunterTrainer(new HunterTrainerContainer(player));
             case ID_REVERT_BACK:
-                VampirismMod.log.t("adfds");
                 return new GuiRevertBack();
         }
         return null;

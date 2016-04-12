@@ -20,7 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public abstract class AbstractMessageHandler<T extends IMessage> implements IMessageHandler<T, IMessage> {
     /**
      * Handle a message received on the client side
-     *
+     * @param player Client player. If NOT handled on main Thread this can be null when the game starts
      * @return a message to send back to the Server, or null if no reply is necessary
      */
     @SideOnly(Side.CLIENT)
@@ -28,18 +28,18 @@ public abstract class AbstractMessageHandler<T extends IMessage> implements IMes
 
     /**
      * Handle a message received on the server side
-     *
+     * @param player The player belonging to this message.
      * @return a message to send back to the Client, or null if no reply is necessary
      */
     public abstract IMessage handleServerMessage(EntityPlayer player, T message, MessageContext ctx);
 
     /**
      *Calls the respective handle method and provides the right player entity
-     *@return If not null the reponse message will be send to back to the sender using the packet dispatcher of this handler {@link AbstractMessageHandler#getDispatcher()}
+     *@return If not null the response message will be send to back to the sender using the packet dispatcher of this handler {@link AbstractMessageHandler#getDispatcher()}
      */
     @Override
     public IMessage onMessage(final T message, final MessageContext ctx) {
-        final EntityPlayer player = getPlayerEntityByProxy(ctx);
+
         if (ctx.side.isClient()) {
 
             if (handleOnMainThread()) {
@@ -48,6 +48,7 @@ public abstract class AbstractMessageHandler<T extends IMessage> implements IMes
                 mainThread.addScheduledTask(new Runnable() {
                     @Override
                     public void run() {
+                        EntityPlayer player = getPlayerEntityByProxy(ctx);
                         IMessage response = handleClientMessage(player, message, ctx);
                         if (response != null) {
                             dispatcher.sendToServer(response);
@@ -56,7 +57,8 @@ public abstract class AbstractMessageHandler<T extends IMessage> implements IMes
                 });
                 return null;
             }
-            return handleClientMessage(player, message, ctx);
+
+            return handleClientMessage(getPlayerEntityByProxy(ctx), message, ctx);
         } else {
             if (handleOnMainThread()) {
                 final AbstractPacketDispatcher dispatcher = getDispatcher();
@@ -64,6 +66,8 @@ public abstract class AbstractMessageHandler<T extends IMessage> implements IMes
                 mainThread.addScheduledTask(new Runnable() {
                     @Override
                     public void run() {
+                        EntityPlayer player = getPlayerEntityByProxy(ctx);
+
                         IMessage response = handleServerMessage(player, message, ctx);
                         if (response != null) {
                             dispatcher.sendTo(response, (EntityPlayerMP) player);
@@ -72,7 +76,7 @@ public abstract class AbstractMessageHandler<T extends IMessage> implements IMes
                 });
                 return null;
             }
-            return handleServerMessage(player, message, ctx);
+            return handleServerMessage(getPlayerEntityByProxy(ctx), message, ctx);
         }
     }
 

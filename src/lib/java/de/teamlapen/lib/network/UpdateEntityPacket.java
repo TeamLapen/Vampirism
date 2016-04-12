@@ -253,7 +253,6 @@ public class UpdateEntityPacket implements IMessage {
                 VampLib.log.w(TAG, "Capability with key %s is not registered in the HelperRegistry", key);
             }
             try {
-
                 syncable = (ISyncable) e.getCapability(cap, null);
             } catch (ClassCastException ex) {
                 VampLib.log.w(TAG, "Target entity's capability %s (%s)does not implement ISyncable (%s)", e.getCapability(cap, null), cap, ex);

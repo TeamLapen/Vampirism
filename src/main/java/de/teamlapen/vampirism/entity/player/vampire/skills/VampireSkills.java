@@ -10,7 +10,10 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
+import de.teamlapen.vampirism.potion.FakeNightVisionPotionEffect;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.init.MobEffects;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -64,6 +67,23 @@ public class VampireSkills {
             }
             //TODO make night vision enable only if this is enabled
 
+
+            @Override
+            protected void onDisabled(IVampirePlayer player) {
+                ((VampirePlayer) player).getSpecialAttributes().night_vision = false;
+                PotionEffect nightVision = player.getRepresentingPlayer().getActivePotionEffect(MobEffects.nightVision);
+                if (nightVision instanceof FakeNightVisionPotionEffect) {
+                    player.getRepresentingPlayer().removePotionEffect(nightVision.getPotion());
+                }
+            }
+
+            @Override
+            protected void onEnabled(IVampirePlayer player) {
+                ((VampirePlayer) player).getSpecialAttributes().night_vision = true;
+                if (player.isRemote()) {
+                    player.getRepresentingPlayer().addPotionEffect(new FakeNightVisionPotionEffect());
+                }
+            }
         });
         SkillNode skill3 = new SkillNode(skill2, new ActionSkill(VampireActions.regenAction, "regen"));
         SkillNode skill4 = new SkillNode(skill3, new ActionSkill(VampireActions.batAction, "bat"));
