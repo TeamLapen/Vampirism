@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.UUID;
 
@@ -178,5 +179,10 @@ public class VampirePlayerDefaultImpl implements IVampirePlayer {
     @Override
     public void onLevelChanged(int newLevel, int oldLevel) {
 
+    }
+
+    @Override
+    public EntityPlayer.EnumStatus trySleep(BlockPos pos) {
+        return null;
     }
 }

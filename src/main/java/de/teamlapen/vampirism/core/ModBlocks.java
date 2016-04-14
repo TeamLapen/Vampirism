@@ -63,7 +63,7 @@ public class ModBlocks {
         registerBlock(vampirismFlower, new ItemMetaBlock(vampirismFlower));
         tent = registerBlock(new BlockTent(), null);
         tentMain = registerBlock(new BlockTentMain(), null);
-        //coffin = registerBlock(new BlockCoffin(), null);
+        coffin = registerBlock(new BlockCoffin(), null);
         altarInfusion = registerBlock(new BlockAltarInfusion());
         altarPillar = registerBlock(new BlockAltarPillar());
         altarTip = registerBlock(new BlockAltarTip());

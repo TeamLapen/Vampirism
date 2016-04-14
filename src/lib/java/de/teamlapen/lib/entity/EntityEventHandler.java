@@ -56,7 +56,10 @@ public class EntityEventHandler {
     public void onLivingAttack(LivingAttackEvent event) {
         if (event.getEntity() instanceof EntityPlayer) {
             for (int i = 0; i < listeners.length; i++) {
-                ((IPlayerEventListener) event.getEntity().getCapability(listeners[i], null)).onEntityAttacked(event.getSource(), event.getAmount());
+                boolean cancel = ((IPlayerEventListener) event.getEntity().getCapability(listeners[i], null)).onEntityAttacked(event.getSource(), event.getAmount());
+                if (cancel) {
+                    event.setCanceled(true);
+                }
             }
         }
     }

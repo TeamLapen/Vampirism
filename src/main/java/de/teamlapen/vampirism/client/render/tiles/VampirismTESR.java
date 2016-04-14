@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
-import net.minecraft.block.BlockDirectional;
+import de.teamlapen.vampirism.blocks.VampirismBlockContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -15,7 +15,7 @@ public abstract class VampirismTESR<T extends TileEntity> extends TileEntitySpec
 
     /**
      * Rotates the block to fit the enum facing.
-     * ONLY CALL THIS IF THE BLOCK HAS A {@link BlockDirectional#FACING} PROPERTY
+     * ONLY CALL THIS IF THE BLOCK HAS A {@link VampirismBlockContainer#FACING} PROPERTY
      *
      * @param tile
      */
@@ -23,7 +23,7 @@ public abstract class VampirismTESR<T extends TileEntity> extends TileEntitySpec
         if (tile == null) return;
         EnumFacing dir = EnumFacing.NORTH;
         if (tile.getWorld() != null)
-            dir = tile.getWorld().getBlockState(tile.getPos()).getValue(BlockDirectional.FACING);
+            dir = tile.getWorld().getBlockState(tile.getPos()).getValue(VampirismBlockContainer.FACING);
         GlStateManager.rotate((dir.getHorizontalIndex() - 2) * -90, 0.0F, 1.0F, 0.0F);
     }
 }

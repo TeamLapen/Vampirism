@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
+import de.teamlapen.vampirism.blocks.BlockCoffin;
 import de.teamlapen.vampirism.client.model.ModelCoffin;
 import de.teamlapen.vampirism.tileentity.TileCoffin;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -27,11 +28,10 @@ public class CoffinTESR extends VampirismTESR<TileCoffin> {
     @Override
     public void renderTileEntityAt(TileCoffin te, double x, double y, double z, float partialTicks, int destroyStage) {
         TileCoffin tile = te;
-        if ((te.getBlockMetadata() & (-8)) == 0)
-            return;
+        if (!BlockCoffin.isHead(te.getWorld(), te.getPos())) return;
+
         // Calculate lid position
-        boolean occupied = (te.getBlockMetadata() & 4) != 0;
-        // Logger.i("test", "%s", tile.getPrimaryTileEntity()==tile);
+        boolean occupied = BlockCoffin.isOccupied(te.getWorld(), te.getPos());
         if (!occupied && tile.lidPos > 0)
             tile.lidPos--;
         else if (occupied && tile.lidPos < maxLidPos)

@@ -1,11 +1,9 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.blocks.BlockCoffin;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.tileentity.TileCoffin;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockBed;
-import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -54,13 +52,12 @@ public class ItemCoffin extends VampirismItem {
 
         if (player.canPlayerEdit(pos, side, stack) && player.canPlayerEdit(other, side, stack)) {
             if (flag1 && flag2 && UtilLib.doesBlockHaveSolidTopSurface(world, pos.down()) && UtilLib.doesBlockHaveSolidTopSurface(world, other.down())) {
-                IBlockState state1 = ModBlocks.coffin.getDefaultState().withProperty(BlockBed.OCCUPIED, Boolean.valueOf(false)).withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT).withProperty(BlockDirectional.FACING, facing);
+                IBlockState state1 = ModBlocks.coffin.getDefaultState().withProperty(BlockCoffin.OCCUPIED, Boolean.valueOf(false)).withProperty(BlockCoffin.PART, BlockCoffin.EnumPartType.FOOT).withProperty(BlockCoffin.FACING, facing);
                 if (world.setBlockState(pos, state1, 3)) {
-                    IBlockState state2 = state1.withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD);
-                    if (world.setBlockState(other, state2, 3)) {
-                        ((TileCoffin) world.getTileEntity(pos)).otherPos = other;
-                        ((TileCoffin) world.getTileEntity(other)).otherPos = pos;
-                    }
+                    IBlockState state2 = state1.withProperty(BlockCoffin.PART, BlockCoffin.EnumPartType.HEAD).withProperty(BlockCoffin.FACING, facing);
+                    world.setBlockState(other, state2, 3);
+
+
                 }
                 --stack.stackSize;
                 return EnumActionResult.SUCCESS;

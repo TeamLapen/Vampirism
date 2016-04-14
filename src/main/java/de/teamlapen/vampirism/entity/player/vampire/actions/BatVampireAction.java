@@ -1,13 +1,10 @@
 package de.teamlapen.vampirism.entity.player.vampire.actions;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.util.SRGNAMES;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
@@ -16,9 +13,7 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
-import java.lang.reflect.Method;
 import java.util.UUID;
 
 
@@ -39,18 +34,16 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         if (player.isSneaking()) {
             height = BAT_HEIGHT - 0.15F;
         }
+        if (player.isPlayerSleeping()) {
+            height = 0.2F;
+            width = 0.2F;
+        }
         if (player.width != width || player.height != height) {
             AxisAlignedBB axisalignedbb = player.getEntityBoundingBox();
             axisalignedbb = new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + (double) width, axisalignedbb.minY + (double) height, axisalignedbb.minZ + (double) width);
 
             if (!player.worldObj.collidesWithAnyBlock(axisalignedbb)) {
-                try {
-                    Method mSetSize = ReflectionHelper.findMethod(Entity.class, player, new String[]{"setSize", SRGNAMES.Entity_setSize}, float.class, float.class);
-                    mSetSize.invoke(player, width, height);
-                } catch (ReflectiveOperationException e) {
-                    VampirismMod.log.e("BatAction", e, "Could not change players size! ");
-                    return;
-                }
+                if (!VampirePlayer.get(player).setEntitySize(width, height)) return;
             }
         }
     }

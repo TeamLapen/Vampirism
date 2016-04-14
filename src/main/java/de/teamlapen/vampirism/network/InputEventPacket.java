@@ -36,6 +36,7 @@ public class InputEventPacket implements IMessage {
     public static String RESETSKILL = "rs";
     public static String TRAINERLEVELUP = "tl";
     public static String REVERTBACK = "rb";
+    public static String WAKEUP = "wu";
     private final String SPLIT = "-";
     private String param;
     private String action;
@@ -171,6 +172,9 @@ public class InputEventPacket implements IMessage {
                 VampirismMod.log.d(TAG, "Player %s left faction", player);
                 player.attackEntityFrom(DamageSource.magic, 1000);
 
+            } else if (message.action.equals(WAKEUP)) {
+                VampirismMod.log.t("adsf");
+                VampirePlayer.get(player).wakeUpPlayer(false, true, true);
             }
             return null;
         }

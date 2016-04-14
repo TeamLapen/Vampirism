@@ -19,7 +19,7 @@ public interface IPlayerEventListener {
     /**
      * Called when the corrosponding player is attacked.
      *
-     * @return If false the damage will be canceled
+     * @return If true the damage will be canceled
      */
     boolean onEntityAttacked(DamageSource src, float amt);
 

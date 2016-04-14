@@ -44,13 +44,13 @@ public class ModVillages {
 
 
             try {
-                ReflectionHelper.setPrivateValue(MapGenVillage.class, (MapGenVillage) mapGenVillage, Configs.village_size, "terrainType", SRGNAMES.MapGenVillage_terrainType);
+                ReflectionHelper.setPrivateValue(MapGenVillage.class, (MapGenVillage) mapGenVillage, Configs.village_size, "size", SRGNAMES.MapGenVillage_terrainType);
             } catch (ReflectionHelper.UnableToAccessFieldException e) {
                 VampirismMod.log.e(TAG, e, "Could not modify field 'terrainType' in MapGenVillage");
                 }
 
             try {
-                ReflectionHelper.setPrivateValue(MapGenVillage.class, (MapGenVillage) mapGenVillage, Configs.village_density, "field_82665_g");
+                ReflectionHelper.setPrivateValue(MapGenVillage.class, (MapGenVillage) mapGenVillage, Configs.village_density, "distance", SRGNAMES.MapGenVillage_distance);
             } catch (ReflectionHelper.UnableToAccessFieldException e) {
                 VampirismMod.log.e(TAG, e, "Could not modify field for village density in MapGenVillage");
                 }

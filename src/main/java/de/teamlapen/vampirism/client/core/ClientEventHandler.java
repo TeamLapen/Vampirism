@@ -6,10 +6,14 @@ import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockAltarInspiration;
 import de.teamlapen.vampirism.blocks.BlockBloodContainer;
+import de.teamlapen.vampirism.client.gui.GuiSleepCoffin;
 import de.teamlapen.vampirism.client.model.blocks.BakedAltarInspirationModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedBloodContainerModel;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiSleepMP;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -23,6 +27,7 @@ import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -31,6 +36,24 @@ import java.util.Map;
  * Handle general client side events
  */
 public class ClientEventHandler {
+    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (event.phase == TickEvent.Phase.START) {
+            Minecraft mc = Minecraft.getMinecraft();
+            if (mc.thePlayer != null && mc.theWorld != null) {
+                if ((mc.currentScreen == null || mc.currentScreen instanceof GuiSleepMP) && mc.thePlayer.isPlayerSleeping()) {
+                    IBlockState state = mc.thePlayer.worldObj.getBlockState(mc.thePlayer.playerLocation);
+                    if (state.getBlock().equals(ModBlocks.coffin)) {
+                        mc.displayGuiScreen(new GuiSleepCoffin());
+                    }
+                } else if (mc.currentScreen != null && mc.currentScreen instanceof GuiSleepCoffin && !mc.thePlayer.isPlayerSleeping()) {
+                    mc.displayGuiScreen(null);
+                }
+            }
+
+        }
+    }
+
     @SubscribeEvent
     public void onModelBakeEvent(ModelBakeEvent event) {
         IRetexturableModel[] containerFluidModels = new IRetexturableModel[BakedBloodContainerModel.FLUID_LEVELS];

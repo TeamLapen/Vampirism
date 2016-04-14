@@ -6,6 +6,8 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.BlockPos;
 
 /**
  * Interface for the player vampire data.
@@ -36,6 +38,14 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     boolean isAutoFillEnabled();
 
     boolean isVampireLord();
+
+    /**
+     * Try to sleep at the given location during daytime
+     *
+     * @param pos
+     * @return
+     */
+    EntityPlayer.EnumStatus trySleep(BlockPos pos);
 
 
     enum BITE_TYPE {

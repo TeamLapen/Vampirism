@@ -162,7 +162,6 @@ public class ModPlayerEventHandler {
 
         }
     }
-
     /**
      * Checks if the player is allowed to use that item ({@link IFactionLevelItem}) and cancels the event if not.
      *

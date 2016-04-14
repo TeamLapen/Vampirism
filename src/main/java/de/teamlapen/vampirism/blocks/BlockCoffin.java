@@ -1,83 +1,67 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.tileentity.TileCoffin;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockBed;
-import net.minecraft.block.BlockDirectional;
 import net.minecraft.block.material.EnumPushReaction;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyBool;
+import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Biomes;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemDye;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nullable;
+import java.util.Random;
 
 /**
- * Block coffin. Uses Properties from BlockBed: {@link BlockBed#OCCUPIED}, {@link BlockBed#FACING} {@link BlockBed#PART}
+ * Block coffin.
  */
 public class BlockCoffin extends VampirismBlockContainer {
 
     public static final String name = "blockCoffin";
     public final static Material material = Material.wood;
+    public static final PropertyEnum<EnumPartType> PART = PropertyEnum.create("part", EnumPartType.class);
+    public static final PropertyBool OCCUPIED = PropertyBool.create("occupied");
 
     public static boolean isOccupied(IBlockAccess world, BlockPos pos) {
-        return world.getBlockState(pos).getValue(BlockBed.OCCUPIED);
+        return world.getBlockState(pos).getValue(OCCUPIED);
     }
 
     public static void setCoffinOccupied(World world, BlockPos pos, boolean value) {
         IBlockState state = world.getBlockState(pos);
-        world.setBlockState(pos, state.withProperty(BlockBed.OCCUPIED, value), 4);
+        world.setBlockState(pos, state.withProperty(OCCUPIED, value), 4);
     }
 
     public static boolean isHead(IBlockAccess world, BlockPos pos) {
-        return world.getBlockState(pos).getValue(BlockBed.PART) == BlockBed.EnumPartType.HEAD;
+        return world.getBlockState(pos).getValue(PART) == EnumPartType.HEAD;
     }
 
-    private static void wakeUpPlayer(EntityPlayer player) {
-        //TODO
+    protected static boolean hasRoomForPlayer(World worldIn, BlockPos pos) {
+        return worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos, EnumFacing.UP) && !worldIn.getBlockState(pos).getMaterial().isSolid() && !worldIn.getBlockState(pos.up()).getMaterial().isSolid();
     }
-
-    private static EntityPlayer.EnumStatus tryToSleepInCoffin(EntityPlayer player, BlockPos pos) {
-        //TODO
-        return EntityPlayer.EnumStatus.OTHER_PROBLEM;
-    }
-
     private final String TAG = "BlockCoffin";
 
     public BlockCoffin() {
         super(name, material);
         this.setCreativeTab(null);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(BlockBed.OCCUPIED, false).withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT));
-    }
-
-    @Override
-    public void breakBlock(World world, BlockPos pos, IBlockState state) {
-        TileCoffin te = (TileCoffin) world.getTileEntity(pos);
-        if (te == null)
-            return;
-        world.setBlockToAir(te.otherPos);
-        world.removeTileEntity(te.otherPos);
-        if (state.getValue(BlockBed.PART) == BlockBed.EnumPartType.HEAD)
-            world.spawnEntityInWorld(new EntityItem(world, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(ModItems.itemCoffin, 1)));
-        if (state.getValue(BlockBed.OCCUPIED).booleanValue()) {
-            wakeSleepingPlayer(world, pos);
-        }
-        super.breakBlock(world, pos, state);
+        this.setDefaultState(this.blockState.getBaseState().withProperty(OCCUPIED, Boolean.valueOf(false)).withProperty(PART, EnumPartType.FOOT));
+        this.setHasFacing();
     }
 
     @Override
@@ -85,37 +69,57 @@ public class BlockCoffin extends VampirismBlockContainer {
         return new TileCoffin();
     }
 
-    @Override
-    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
-        if (state.getValue(BlockBed.PART) == BlockBed.EnumPartType.FOOT) {
-            IBlockState iblockstate1 = worldIn.getBlockState(pos.offset(state.getValue(BlockDirectional.FACING)));
+    public void dropBlockAsItemWithChance(World worldIn, BlockPos pos, IBlockState state, float chance, int fortune) {
+        if (state.getValue(PART) == EnumPartType.FOOT) {
+            super.dropBlockAsItemWithChance(worldIn, pos, state, chance, 0);
+        }
+    }
 
-            if (iblockstate1.getBlock() == this) {
-                state = state.withProperty(BlockBed.OCCUPIED, iblockstate1.getValue(BlockBed.OCCUPIED));
+    public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+        if (state.getValue(PART) == EnumPartType.FOOT) {
+            IBlockState iblockstate = worldIn.getBlockState(pos.offset(state.getValue(FACING)));
+
+            if (iblockstate.getBlock() == this) {
+                state = state.withProperty(OCCUPIED, iblockstate.getValue(OCCUPIED));
             }
         }
+
         return state;
     }
 
-    public EnumFacing getCoffinDirection(IBlockAccess world, BlockPos pos) {
-        return world.getBlockState(pos).getValue(BlockDirectional.FACING);
+    @Override
+    public EnumFacing getBedDirection(IBlockState state, IBlockAccess world, BlockPos pos) {
+        return getActualState(state, world, pos).getValue(FACING);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
+
+    public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
+        return new ItemStack(ModItems.itemCoffin);
+    }
+
+    public Item getItemDropped(IBlockState state, Random rand, int fortune) {
+        return state.getValue(PART) == EnumPartType.HEAD ? null : ModItems.itemCoffin;
     }
 
     @Override
     public int getMetaFromState(IBlockState state) {
-        byte b0 = 0;
-        int i = b0 | state.getValue(BlockDirectional.FACING).getHorizontalIndex();
-        if (state.getValue(BlockBed.PART) == BlockBed.EnumPartType.HEAD) {
+        int i = 0;
+        i = i | state.getValue(FACING).getHorizontalIndex();
+
+        if (state.getValue(PART) == EnumPartType.HEAD) {
             i |= 8;
-            if (state.getValue(BlockBed.OCCUPIED).booleanValue()) {
+
+            if (state.getValue(OCCUPIED).booleanValue()) {
                 i |= 4;
             }
         }
+
         return i;
     }
-
-    // Miscellaneous methods (rendertype etc.)
-
 
     @Override
     public EnumPushReaction getMobilityFlag(IBlockState state) {
@@ -127,11 +131,9 @@ public class BlockCoffin extends VampirismBlockContainer {
         return EnumBlockRenderType.INVISIBLE;
     }
 
-
-    @Override
     public IBlockState getStateFromMeta(int meta) {
-        EnumFacing enumFacing = EnumFacing.getHorizontal(meta);
-        return (meta & 8) > 0 ? this.getDefaultState().withProperty(BlockBed.PART, BlockBed.EnumPartType.HEAD).withProperty(BlockDirectional.FACING, enumFacing).withProperty(BlockBed.OCCUPIED, Boolean.valueOf((meta & 4) > 0)) : this.getDefaultState().withProperty(BlockBed.PART, BlockBed.EnumPartType.FOOT).withProperty(BlockDirectional.FACING, enumFacing);
+        EnumFacing enumfacing = EnumFacing.getHorizontal(meta);
+        return (meta & 8) > 0 ? this.getDefaultState().withProperty(PART, EnumPartType.HEAD).withProperty(FACING, enumfacing).withProperty(OCCUPIED, Boolean.valueOf((meta & 4) > 0)) : this.getDefaultState().withProperty(PART, EnumPartType.FOOT).withProperty(FACING, enumfacing);
     }
 
     @Override
@@ -140,49 +142,78 @@ public class BlockCoffin extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isFullBlock(IBlockState state) {
+    public boolean isBedFoot(IBlockAccess world, BlockPos pos) {
+        return getActualState(world.getBlockState(pos), world, pos).getValue(PART) == EnumPartType.FOOT;
+    }
+
+    public boolean isFullCube(IBlockState state) {
         return false;
     }
 
-    @Override
-    public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-        if (world.isRemote) {
+    public boolean isOpaqueCube(IBlockState state) {
+        return false;
+    }
+
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+
+        if (worldIn.isRemote) {
             return true;
         } else {
-            // Gets the coordinates of the primary block
-            if (state.getValue(BlockBed.PART) == BlockBed.EnumPartType.FOOT) {
-                TileCoffin te = (TileCoffin) world.getTileEntity(pos);
-                pos = te.otherPos;
-            }
-            if (player.isSneaking()) {
-                if (heldItem != null && heldItem.getItem() instanceof ItemDye) {
-                    return false;
-                }
-
-            }
-
-            if (world.provider.canRespawnHere() && world.getBiomeGenForCoords(pos) != Biomes.hell) {
-                if (state.getValue(BlockBed.OCCUPIED).booleanValue()) {
-                    player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.coffin.occupied"));
+            if (heldItem != null && heldItem.getItem() instanceof ItemDye) {
+                TileCoffin tile = (TileCoffin) worldIn.getTileEntity(pos);
+                TileEntity other = state.getValue(PART) == EnumPartType.HEAD ? worldIn.getTileEntity(pos.offset(state.getValue(FACING).getOpposite())) : worldIn.getTileEntity(pos.offset(state.getValue(FACING)));
+                if (!(other instanceof TileCoffin)) {
                     return true;
                 }
+                tile.changeColor(heldItem.getMetadata());
+                ((TileCoffin) other).changeColor(heldItem.getMetadata());
+                if (!playerIn.capabilities.isCreativeMode) {
+                    heldItem.stackSize--;
+                }
+                return true;
+            }
+            if (state.getValue(PART) != EnumPartType.HEAD) {
+                pos = pos.offset(state.getValue(FACING));
+                state = worldIn.getBlockState(pos);
 
-                EntityPlayer.EnumStatus enumstatus = tryToSleepInCoffin(player, pos);
+                if (state.getBlock() != this) {
+                    return true;
+                }
+            }
 
-                if (enumstatus == EntityPlayer.EnumStatus.OK) {
-                    setCoffinOccupied(world, pos, player, true);
-                    world.getTileEntity(pos).markDirty();
+
+            if (worldIn.provider.canRespawnHere() && worldIn.getBiomeGenForCoords(pos) != Biomes.hell) {
+                if (state.getValue(OCCUPIED).booleanValue()) {
+                    EntityPlayer entityplayer = this.getPlayerInCoffin(worldIn, pos);
+
+                    if (entityplayer != null) {
+                        playerIn.addChatComponentMessage(new TextComponentTranslation("text.vampirism.coffin.occupied"));
+                        return true;
+                    }
+
+                    state = state.withProperty(OCCUPIED, Boolean.valueOf(false));
+                    worldIn.setBlockState(pos, state, 2);
+                }
+
+                IVampirePlayer vampire = VReference.VAMPIRE_FACTION.getPlayerCapability(playerIn);
+
+                EntityPlayer.EnumStatus entityplayer$enumstatus = vampire.trySleep(pos);
+
+                if (entityplayer$enumstatus == EntityPlayer.EnumStatus.OK) {
+                    state = state.withProperty(OCCUPIED, Boolean.valueOf(true));
+                    worldIn.setBlockState(pos, state, 2);
                     return true;
                 } else {
-                    if (enumstatus == EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW) {
-                        player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.coffin.noSleep"));
-                    } else if (enumstatus == EntityPlayer.EnumStatus.NOT_SAFE) {
-                        player.addChatComponentMessage(new TextComponentTranslation("tile.bed.notSafe"));
+                    if (entityplayer$enumstatus == EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW) {
+                        playerIn.addChatComponentMessage(new TextComponentTranslation("text.vampirism.coffin.noSleep"));
+                    } else if (entityplayer$enumstatus == EntityPlayer.EnumStatus.NOT_SAFE) {
+                        playerIn.addChatComponentMessage(new TextComponentTranslation("tile.bed.notSafe"));
                     }
+
                     return true;
                 }
             } else {
-                player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.coffin.wrong_dimension"));
+                playerIn.addChatComponentMessage(new TextComponentTranslation("text.vampirism.coffin.wrong_dimension"));
                 return true;
             }
         }
@@ -190,52 +221,85 @@ public class BlockCoffin extends VampirismBlockContainer {
 
     @Override
     public void onBlockHarvested(World worldIn, BlockPos pos, IBlockState state, EntityPlayer player) {
-        this.breakBlock(worldIn, pos, state);
-    }
+        if (player.capabilities.isCreativeMode && state.getValue(PART) == EnumPartType.HEAD) {
+            BlockPos blockpos = pos.offset(state.getValue(FACING).getOpposite());
 
-    @Override
-    public void onNeighborBlockChange(World world, BlockPos pos, IBlockState state, Block neighborBlock) {
-        TileCoffin tileEntity = (TileCoffin) world.getTileEntity(pos);
-        if (tileEntity != null) {
-            if (!(world.getBlockState(tileEntity.otherPos).getBlock() instanceof BlockCoffin)) {
-                // Logger.d(TAG, "Other coffin block destroyed, removing this one");
-                this.breakBlock(world, pos, state);
-                // world.setBlockToAir(x, y, z);
-                // world.removeTileEntity(x, y, z);
+            if (worldIn.getBlockState(blockpos).getBlock() == this) {
+                worldIn.setBlockToAir(blockpos);
             }
         }
     }
 
-    public void setCoffinOccupied(World world, BlockPos pos, @Nullable EntityPlayer player, boolean flag) {
-        setBedOccupied(world, pos, player, flag);
-        ((TileCoffin) world.getTileEntity(pos)).occupied = flag;
-        // if(!world.isRemote)
-        // ((EntityPlayerMP)
-        // player).playerNetServerHandler.sendPacket(world.getTileEntity(x, y,
-        // z).getDescriptionPacket());
+    @Override
+    public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock) {
+        EnumFacing enumfacing = state.getValue(FACING);
+
+        if (state.getValue(PART) == EnumPartType.HEAD) {
+            if (worldIn.getBlockState(pos.offset(enumfacing.getOpposite())).getBlock() != this) {
+                worldIn.setBlockToAir(pos);
+            }
+        } else if (worldIn.getBlockState(pos.offset(enumfacing)).getBlock() != this) {
+            worldIn.setBlockToAir(pos);
+
+            if (!worldIn.isRemote) {
+                this.dropBlockAsItem(worldIn, pos, state, 0);
+            }
+        }
+    }
+
+    @Override
+    public void setBedOccupied(IBlockAccess world, BlockPos pos, EntityPlayer player, boolean occupied) {
+        if (world instanceof World) {
+            IBlockState state = world.getBlockState(pos);
+            state = state.getBlock().getActualState(state, world, pos);
+            state = state.withProperty(OCCUPIED, occupied);//In forge 12.16.0.1859-1.9 the vanilla method of this is even wrong, setting it always to true
+            ((World) world).setBlockState(pos, state, 2);
+        }
     }
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return new BlockStateContainer(this, BlockBed.OCCUPIED, BlockBed.PART, BlockDirectional.FACING);
+        return new BlockStateContainer(this, FACING, PART, OCCUPIED);
     }
 
-    private void wakeSleepingPlayer(World world, BlockPos pos) {
-        if (world.isRemote)
-            return;
-        WorldServer w = (WorldServer) world;
-        for (int i = 0; i < w.playerEntities.size(); i++) {
-            EntityPlayer p = w.playerEntities.get(i);
-            if (p.isPlayerSleeping()) {
-                // Logger.d("BlockCoffin", String.format(
-                // "Found sleeping player: x=%s, y=%s, z=%s",
-                // p.playerLocation.posX, p.playerLocation.posY,
-                // p.playerLocation.posZ));
-                if (p.playerLocation.equals(pos)) {
-                    wakeUpPlayer(p);//wakeUpPlayer(false, true, false, false);
-                }
+    /**
+     * Finds the player that is currently sleeping in this coffin
+     *
+     * @param worldIn
+     * @param pos
+     * @return
+     */
+    private EntityPlayer getPlayerInCoffin(World worldIn, BlockPos pos) {
+        for (EntityPlayer entityplayer : worldIn.playerEntities) {
+            if (VampirePlayer.get(entityplayer).isPlayerSleeping() && entityplayer.playerLocation.equals(pos)) {
+                return entityplayer;
             }
         }
+
+        return null;
     }
+
+
+    public enum EnumPartType implements IStringSerializable {
+        HEAD("head"),
+        FOOT("foot");
+
+        private final String name;
+
+        EnumPartType(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public String toString() {
+            return this.name;
+        }
+    }
+
+
+
 
 }
