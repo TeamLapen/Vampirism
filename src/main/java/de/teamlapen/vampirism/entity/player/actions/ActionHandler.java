@@ -28,18 +28,18 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
      */
     private final int[] actionTimer;
     private final T player;
-    private final ImmutableBiMap<String, IAction<T>> actionMap;
+
     private final ImmutableBiMap<Integer, IAction<T>> actionIdMap;
     private final List<IAction<T>> unlockedActions = new ArrayList<>();
     private boolean dirty = false;
 
     public ActionHandler(T player) {
         this.player = player;
-        actionMap = VampirismAPI.actionRegistry().getActionMapForFaction(player.getFaction());
+        ImmutableBiMap<String, IAction<T>> actionMap = VampirismAPI.actionRegistry().getActionMapForFaction(player.getFaction());
         ImmutableBiMap.Builder<Integer, IAction<T>> idBuilder = ImmutableBiMap.builder();
         int i = 0;
         for (IAction<T> action : actionMap.values()) {
-            idBuilder.put(Integer.valueOf(i++), action);
+            idBuilder.put(i++, action);
         }
         actionIdMap = idBuilder.build();
         this.actionTimer = new int[actionMap.size()];

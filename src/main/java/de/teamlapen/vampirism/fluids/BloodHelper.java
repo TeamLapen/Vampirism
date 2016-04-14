@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.fluids;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IBloodContainerItem;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModFluids;
@@ -61,20 +60,17 @@ public class BloodHelper {
      * @return Blood amount that could not be filled
      */
     public static int fillBloodIntoInventory(EntityPlayer player, int amt) {
-        VampirismMod.log.t("Filling %d", amt);
         if (amt <= 0) return 0;
         ItemStack stack = getBloodContainerInHotbar(player.inventory, true);
-        VampirismMod.log.t("Stack %s", stack);
         if (stack != null) {
-            amt = amt - ((IBloodContainerItem) stack.getItem()).fill(stack, new FluidStack(ModFluids.blood, amt), true);
-            VampirismMod.log.t("UnFilled %d", amt);
-            if (amt > 0) return fillBloodIntoInventory(player, amt);
+            int actualAmount = amt - ((IBloodContainerItem) stack.getItem()).fill(stack, new FluidStack(ModFluids.blood, amt), true);
+            if (actualAmount > 0) return fillBloodIntoInventory(player, actualAmount);
             return 0;
         }
         ItemStack glas = getGlassBottleInHotbar(player.inventory);
         if (glas != null && Configs.autoConvertGlasBottles) {
             ItemStack bloodBottle = new ItemStack(ModItems.bloodBottle, 1, 0);
-            amt = amt - (ModItems.bloodBottle).fill(bloodBottle, new FluidStack(ModFluids.blood, amt), true);
+            int actualAmount = amt - (ModItems.bloodBottle).fill(bloodBottle, new FluidStack(ModFluids.blood, amt), true);
             glas.stackSize--;
             if (glas.stackSize == 0) {
                 player.inventory.deleteStack(glas);
@@ -82,7 +78,7 @@ public class BloodHelper {
             if (!player.inventory.addItemStackToInventory(bloodBottle)) {
                 player.dropItem(bloodBottle, false);
             }
-            if (amt > 0) return fillBloodIntoInventory(player, amt);
+            if (actualAmount > 0) return fillBloodIntoInventory(player, actualAmount);
         }
         return amt;
 

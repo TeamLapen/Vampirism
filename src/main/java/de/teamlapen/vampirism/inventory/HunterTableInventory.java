@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.inventory;
 
-import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.inventory.SimpleInventory;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -10,7 +9,6 @@ import net.minecraft.item.Item;
  * Inventory for the hunter table. Simply sets the inventory slots up and handles item (temporary) storage
  */
 public class HunterTableInventory extends SimpleInventory {
-    private InventoryContainer container;
 
     public HunterTableInventory(Item[] items) {
         super(new InventorySlot[]{

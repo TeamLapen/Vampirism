@@ -92,7 +92,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
                 '}';
     }
 
-    int getId() {
+    protected int getId() {
         return id;
     }
 }

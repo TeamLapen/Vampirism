@@ -67,9 +67,6 @@ public class GuiSkills extends GuiScreen {
     private ISkill selected;
     private int field_146554_D;
 
-    public GuiSkills() {
-
-    }
 
     @Override
     public boolean doesGuiPauseGame() {

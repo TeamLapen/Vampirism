@@ -34,9 +34,7 @@ import net.minecraft.world.World;
 public class EntityBasicVampire extends EntityVampireBase implements IBasicVampire {
 
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(EntityBasicVampire.class, DataSerializers.VARINT);
-    private final int ID_LEVEL = 16;
     private final int MAX_LEVEL = 2;
-    private final int MOVE_TO_RESTRICT_PRIO = 3;
     private int bloodtimer = 100;
 
 

@@ -15,7 +15,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
- * Created by Max on 12.03.2016.
+ *   TileEntity for coffins. Handles coffin lid position and color
  */
 public class TileCoffin extends TileEntity implements ITickable {
     public int lidPos;
@@ -23,8 +23,6 @@ public class TileCoffin extends TileEntity implements ITickable {
 
     private boolean lastTickOccupied;
 
-    public TileCoffin() {
-    }
 
     public void changeColor(int color) {
         this.color = color;

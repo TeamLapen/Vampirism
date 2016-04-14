@@ -68,7 +68,7 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
             return true;
         }
         if (!playerIn.isSneaking()) {
-            if (!(te.getCurrentPhase() == TileAltarInfusion.PHASE.NOT_RUNNING) && playerIn.worldObj.isRemote) {
+            if (te.getCurrentPhase() != TileAltarInfusion.PHASE.NOT_RUNNING && playerIn.worldObj.isRemote) {
                 playerIn.addChatMessage(new TextComponentTranslation("text.vampirism.ritual_still_running"));
                 return false;
             }

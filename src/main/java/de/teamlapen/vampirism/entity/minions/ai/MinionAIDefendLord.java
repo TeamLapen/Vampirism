@@ -13,11 +13,11 @@ import net.minecraft.entity.ai.EntityAITarget;
  */
 public class MinionAIDefendLord extends EntityAITarget {
 
-    IMinion minion;
+    protected IMinion minion;
 
-    EntityLivingBase target;
+    protected EntityLivingBase target;
 
-    int lastUpdate = 0;
+    protected int lastUpdate = 0;
 
     public MinionAIDefendLord(IMinion minion) {
         super(MinionHelper.entity(minion), false, false);

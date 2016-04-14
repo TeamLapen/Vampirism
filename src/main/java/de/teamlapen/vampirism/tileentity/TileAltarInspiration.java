@@ -136,6 +136,8 @@ public class TileAltarInspiration extends TileFluidHandler implements ITickable 
                     IBlockState state = worldObj.getBlockState(getPos());
                     this.worldObj.notifyBlockUpdate(pos, state, state, 3);
                     break;
+                default:
+                    break;
             }
         }
 

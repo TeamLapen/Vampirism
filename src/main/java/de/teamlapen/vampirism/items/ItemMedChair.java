@@ -27,7 +27,6 @@ public class ItemMedChair extends VampirismItem {
 
     @Override
     public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
-        VampirismMod.log.t("Stack %s, Hand %s Side %s", stack, hand, side);
         if (side != EnumFacing.UP) {
             return EnumActionResult.FAIL;
         }

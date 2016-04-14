@@ -53,7 +53,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
 
             @Override
             public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-                return capability == CAP ? (T) (inst) : null;//TODO switch to something like SLEEP_CAP.<T>cast(inst) in 1.9
+                return CAP.equals(capability) ? CAP.<T>cast(inst) : null;
             }
 
             @Override

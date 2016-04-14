@@ -36,6 +36,8 @@ public class ModItems {
             case INIT:
                 registerCraftingRecipes();
                 break;
+            default:
+                break;
         }
 
     }

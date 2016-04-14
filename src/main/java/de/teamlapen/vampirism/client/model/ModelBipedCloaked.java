@@ -8,7 +8,7 @@ import net.minecraft.entity.Entity;
  * ModelBiped with a cloak
  */
 public class ModelBipedCloaked extends ModelBiped {
-    ModelRenderer bipedCloak;
+    protected ModelRenderer bipedCloak;
     private boolean skipCloakOnce = false;
 
     public ModelBipedCloaked(float f1, float f2, int texWidth, int texHeight) {

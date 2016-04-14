@@ -6,10 +6,10 @@ import net.minecraft.entity.Entity;
 public class ModelVampireBaron extends ModelBipedCloaked {
 
 
-    ModelRenderer rightwing1;
-    ModelRenderer rightwing2;
-    ModelRenderer leftwing1;
-    ModelRenderer leftwing2;
+    private ModelRenderer rightwing1;
+    private ModelRenderer rightwing2;
+    private ModelRenderer leftwing1;
+    private ModelRenderer leftwing2;
 
     public ModelVampireBaron() {
         super(0.0F, 0.0F, 64, 64, 38, 34);
@@ -53,14 +53,14 @@ public class ModelVampireBaron extends ModelBipedCloaked {
         leftwing2.render(f5);
     }
 
+    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
+        super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
+    }
+
     private void setRotation(ModelRenderer model, float x, float y, float z) {
         model.rotateAngleX = x;
         model.rotateAngleY = y;
         model.rotateAngleZ = z;
-    }
-
-    public void setRotationAngles(float f, float f1, float f2, float f3, float f4, float f5, Entity entity) {
-        super.setRotationAngles(f, f1, f2, f3, f4, f5, entity);
     }
 
 }

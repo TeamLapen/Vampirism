@@ -28,11 +28,6 @@ public class ClientProxy extends CommonProxy {
 
     private VampirismHUDOverlay overlay;
 
-    public ClientProxy() {
-
-    }
-
-
     @Override
     public boolean isClientPlayerNull() {
         return Minecraft.getMinecraft().thePlayer == null;

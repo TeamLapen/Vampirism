@@ -33,6 +33,7 @@ public class EntityDummyBittenAnimal extends EntityLiving {
                 break;
             default:
                 entity = "Cow";
+                break;
         }
         EntityCreature entity1 = (EntityCreature) EntityList.createEntityByName(entity, worldObj);
         if (entity1 != null) {

@@ -94,7 +94,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
             @Override
             public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-                return capability == CAP ? (T) (inst) : null;//TODO switch to something like SLEEP_CAP.<T>cast(inst) in 1.9
+                return CAP.equals(capability) ? CAP.<T>cast(inst) : null;//TODO switch to something like SLEEP_CAP.<T>cast(inst) in 1.9
             }
 
             @Override
@@ -171,9 +171,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public void consumeBlood(int amt, float saturationMod) {
-        amt = this.bloodStats.addBlood(amt, saturationMod);
-        if (amt > 0) {
-            handleSpareBlood(amt);
+        int left = this.bloodStats.addBlood(amt, saturationMod);
+        if (left > 0) {
+            handleSpareBlood(left);
         }
     }
 

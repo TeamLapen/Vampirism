@@ -34,7 +34,7 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
     }
 
 
-    public VillagePieceTrainer(StructureVillagePieces.Start start, int type, Random rand, StructureBoundingBox boundingBox, EnumFacing facing) {
+    public VillagePieceTrainer(StructureVillagePieces.Start start, int type, StructureBoundingBox boundingBox, EnumFacing facing) {
         super(start, type);
         this.setCoordBaseMode(facing);//Set facing
         this.boundingBox = boundingBox;
@@ -230,7 +230,7 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
         @Override
         public StructureVillagePieces.Village buildComponent(StructureVillagePieces.PieceWeight villagePiece, StructureVillagePieces.Start startPiece, List<StructureComponent> pieces, Random random, int p1, int p2, int p3, EnumFacing facing, int p5) {
             StructureBoundingBox structureboundingbox = StructureBoundingBox.getComponentToAddBoundingBox(p1, p2, p3, 0, 0, 0, 9, 7, 12, facing);
-            return canVillageGoDeeper(structureboundingbox) && StructureComponent.findIntersecting(pieces, structureboundingbox) == null ? new VillagePieceTrainer(startPiece, p5, random, structureboundingbox, facing) : null;
+            return canVillageGoDeeper(structureboundingbox) && StructureComponent.findIntersecting(pieces, structureboundingbox) == null ? new VillagePieceTrainer(startPiece, p5, structureboundingbox, facing) : null;
         }
 
         @Override

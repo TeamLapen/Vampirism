@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
  * Standard item for meta blocks. Blocks can implement {@link IMetaItemName} to provide a name for the item stack
  */
 public class ItemMetaBlock extends ItemBlock {
-    final boolean customName;
+    private final boolean customName;
 
     /**
      * Creates a item for a meta block

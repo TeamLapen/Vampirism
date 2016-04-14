@@ -23,11 +23,9 @@ import java.util.List;
  * Basic sword for vampire hunters
  */
 public abstract class VampirismHunterSword extends ItemSword implements IFactionLevelItem, IFactionSlayerItem {
-    private final String regName;
 
     public VampirismHunterSword(String regName, ToolMaterial material) {
         super(material);
-        this.regName = regName;
         this.setCreativeTab(VampirismMod.creativeTab);
         setRegistryName(REFERENCE.MODID, regName);
         this.setUnlocalizedName(REFERENCE.MODID + "." + regName);

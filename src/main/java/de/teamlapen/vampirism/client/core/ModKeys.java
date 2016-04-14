@@ -71,6 +71,8 @@ public class ModKeys {
                 ClientRegistry.registerKeyBinding(SUCK);
                 ClientRegistry.registerKeyBinding(SKILL);
                 break;
+            default:
+                break;
         }
 
     }

@@ -10,12 +10,12 @@ import net.minecraft.util.math.MathHelper;
  */
 public class ModelGhost extends ModelBase {
     // fields
-    ModelRenderer head;
-    ModelRenderer body;
-    ModelRenderer rightarm;
-    ModelRenderer leftarm;
-    ModelRenderer rightleg;
-    ModelRenderer leftleg;
+    private ModelRenderer head;
+    private ModelRenderer body;
+    private ModelRenderer rightarm;
+    private ModelRenderer leftarm;
+    private ModelRenderer rightleg;
+    private ModelRenderer leftleg;
 
     public ModelGhost() {
         textureWidth = 64;

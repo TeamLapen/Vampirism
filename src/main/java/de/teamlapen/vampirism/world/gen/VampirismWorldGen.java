@@ -36,6 +36,8 @@ public class VampirismWorldGen implements IWorldGenerator {
             case 1:
                 generateEnd(random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
                 break;
+            default:
+                break;
         }
     }
 

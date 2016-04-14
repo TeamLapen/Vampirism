@@ -54,8 +54,9 @@ public class HunterLevelingConf {
                 return new int[]{0, 2, 3, 0};
             case 14:
                 return new int[]{0, 2, 4, 0};
+            default:
+                return null;//Should never be reached
         }
-        return null;//Should never be reached
     }
 
     public int[] getItemRequirementsForTrainer(int targetLevel) {

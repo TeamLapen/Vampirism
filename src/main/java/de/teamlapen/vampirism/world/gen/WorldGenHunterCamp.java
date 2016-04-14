@@ -19,33 +19,35 @@ public class WorldGenHunterCamp extends WorldGenerator {
     @Override
     public boolean generate(World worldIn, Random rand, BlockPos position) {
         IBlockState ground = worldIn.getBlockState(position.down());
-        if (ground.getBlock().isSideSolid(ground, worldIn, position.down(), EnumFacing.UP)) ;
-        EnumFacing facing = EnumFacing.getHorizontal(rand.nextInt(EnumFacing.HORIZONTALS.length));
+        if (ground.getBlock().isSideSolid(ground, worldIn, position.down(), EnumFacing.UP)) {
+            EnumFacing facing = EnumFacing.getHorizontal(rand.nextInt(EnumFacing.HORIZONTALS.length));
 
-        BlockPos tl = worldIn.getHeight(position.offset(facing).offset(facing.rotateYCCW()));
-        BlockPos bl = worldIn.getHeight(position.offset(facing.rotateYCCW()));
-        BlockPos tr = worldIn.getHeight(position.offset(facing));
-        if (Math.abs(tl.getY() - position.getY()) < 2 && Math.abs(bl.getY() - position.getY()) < 2 && Math.abs(tr.getY() - position.getY()) < 2) {
-            tl = new BlockPos(tl.getX(), position.getY(), tl.getZ());
-            bl = new BlockPos(bl.getX(), position.getY(), bl.getZ());
-            tr = new BlockPos(tr.getX(), position.getY(), tr.getZ());
-            if (!checkGround(worldIn, tl.down(), ground)) return false;
-            if (!checkGround(worldIn, bl.down(), ground)) return false;
-            if (!checkGround(worldIn, tr.down(), ground)) return false;
-            ItemTent.placeAt(worldIn, position, facing, true, true);
-            BlockPos entrance1 = position.offset(facing.getOpposite());
-            BlockPos entrance2 = position.offset(facing.getOpposite()).offset(facing.rotateYCCW());
-            worldIn.setBlockToAir(entrance1);
-            worldIn.setBlockToAir(entrance2);
-            if (rand.nextInt(3) == 0) {
-                worldIn.setBlockState(worldIn.getHeight(entrance1.offset(facing.getOpposite())), Blocks.crafting_table.getDefaultState());
+            BlockPos tl = worldIn.getHeight(position.offset(facing).offset(facing.rotateYCCW()));
+            BlockPos bl = worldIn.getHeight(position.offset(facing.rotateYCCW()));
+            BlockPos tr = worldIn.getHeight(position.offset(facing));
+            if (Math.abs(tl.getY() - position.getY()) < 2 && Math.abs(bl.getY() - position.getY()) < 2 && Math.abs(tr.getY() - position.getY()) < 2) {
+                tl = new BlockPos(tl.getX(), position.getY(), tl.getZ());
+                bl = new BlockPos(bl.getX(), position.getY(), bl.getZ());
+                tr = new BlockPos(tr.getX(), position.getY(), tr.getZ());
+                if (!checkGround(worldIn, tl.down(), ground)) return false;
+                if (!checkGround(worldIn, bl.down(), ground)) return false;
+                if (!checkGround(worldIn, tr.down(), ground)) return false;
+                ItemTent.placeAt(worldIn, position, facing, true, true);
+                BlockPos entrance1 = position.offset(facing.getOpposite());
+                BlockPos entrance2 = position.offset(facing.getOpposite()).offset(facing.rotateYCCW());
+                worldIn.setBlockToAir(entrance1);
+                worldIn.setBlockToAir(entrance2);
+                if (rand.nextInt(3) == 0) {
+                    worldIn.setBlockState(worldIn.getHeight(entrance1.offset(facing.getOpposite())), Blocks.crafting_table.getDefaultState());
+                }
+                if (rand.nextInt(3) == 0) {
+                    worldIn.setBlockState(worldIn.getHeight(entrance2.offset(facing.getOpposite())), Blocks.torch.getDefaultState());
+                }
+
+
             }
-            if (rand.nextInt(3) == 0) {
-                worldIn.setBlockState(worldIn.getHeight(entrance2.offset(facing.getOpposite())), Blocks.torch.getDefaultState());
-            }
-
-
         }
+
         return false;
     }
 

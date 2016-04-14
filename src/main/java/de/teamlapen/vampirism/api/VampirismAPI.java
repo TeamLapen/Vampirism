@@ -6,9 +6,7 @@ import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionRegistry;
-import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillRegistry;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.common.capabilities.Capability;
@@ -23,10 +21,6 @@ public class VampirismAPI {
 
     @CapabilityInject(IExtendedCreatureVampirism.class)
     private static final Capability<IExtendedCreatureVampirism> CAP_CREATURE = null;
-    @CapabilityInject(IHunterPlayer.class)
-    private final static Capability<IHunterPlayer> CAP_HUNTER_PLAYER = null;
-    @CapabilityInject(IVampirePlayer.class)
-    private static final Capability<IVampirePlayer> CAP_VAMPIRE_PLAYER = null;
     @CapabilityInject(IFactionPlayerHandler.class)
     private final static Capability<IFactionPlayerHandler> CAP_FACTION_HANDLER_PLAYER = null;
     private static IFactionRegistry factionRegistry;

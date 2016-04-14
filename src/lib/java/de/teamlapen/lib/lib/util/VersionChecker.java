@@ -225,7 +225,7 @@ public class VersionChecker implements Runnable {
         public final
         @Nullable
         String extra;
-        final int main, major, minor;
+        private final int main, major, minor;
         private String url;
         private List<String> changes;
 

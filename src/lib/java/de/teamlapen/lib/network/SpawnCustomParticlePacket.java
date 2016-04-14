@@ -15,7 +15,7 @@ import java.util.Random;
 
 public class SpawnCustomParticlePacket implements IMessage {
 
-    NBTTagCompound nbt;
+    private NBTTagCompound nbt;
 
     public SpawnCustomParticlePacket() {
 
