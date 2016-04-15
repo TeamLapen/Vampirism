@@ -65,7 +65,6 @@ public class VampireSkills {
             public String getUnlocalizedName() {
                 return "text.vampirism.skill.night_vision";
             }
-            //TODO make night vision enable only if this is enabled
 
 
             @Override

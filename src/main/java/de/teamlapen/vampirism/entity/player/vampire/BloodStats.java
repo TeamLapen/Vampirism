@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.player.vampire;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.util.SRGNAMES;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -107,7 +108,7 @@ public class BloodStats {
             this.bloodExhaustionLevel -= 4.0F;
             if (bloodSaturationLevel > 0) {
                 bloodSaturationLevel = Math.max(bloodSaturationLevel - 1F, 0F);
-            } else if (enumDifficulty != EnumDifficulty.PEACEFUL) {
+            } else if (enumDifficulty != EnumDifficulty.PEACEFUL || Balance.vp.BLOOD_USAGE_PEACEFUL) {
                 this.bloodLevel = Math.max(bloodLevel - 1, 0);
             }
         }

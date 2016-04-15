@@ -30,8 +30,8 @@ public class ModKeys {
 //    private static final String SWITCH_VISION = "key.vampirism.vision";
 //    private static final String MINION_CONTROL = "key.vampirism.minion_control";
 
-    private static KeyBinding SUCK = new KeyBinding(SUCK_BLOOD, Keyboard.KEY_F, CATEGORY);
-    private static KeyBinding ACTION = new KeyBinding(TOGGLE_ACTIONS, -98, CATEGORY);
+    private static KeyBinding SUCK = new KeyBinding(SUCK_BLOOD, Keyboard.KEY_V, CATEGORY);
+    private static KeyBinding ACTION = new KeyBinding(TOGGLE_ACTIONS, Keyboard.KEY_R, CATEGORY);//Middle Mouse -98
     private static KeyBinding SKILL = new KeyBinding(SELECT_SKILLS, Keyboard.KEY_P, CATEGORY);
 
     /**

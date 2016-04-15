@@ -806,7 +806,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             ticksInSun++;
         }
         if (player.capabilities.isCreativeMode || player.capabilities.disableDamage) return;
-        if (Balance.vp.SUNDAMAGE_NAUSEA && player.ticksExisted % 300 == 1 && ticksInSun > 50) {
+        if (Balance.vp.SUNDAMAGE_NAUSEA && getLevel() >= Balance.vp.SUNDAMAGE_NAUSEA_MINLEVEL && player.ticksExisted % 300 == 1 && ticksInSun > 50) {
             player.addPotionEffect(new PotionEffect(MobEffects.confusion, 180));
         }
         if (getLevel() >= Balance.vp.SUNDAMAGE_WEAKNESS_MINLEVEL && player.ticksExisted % 150 == 3) {

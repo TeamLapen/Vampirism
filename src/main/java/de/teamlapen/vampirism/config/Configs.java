@@ -22,7 +22,6 @@ public class Configs {
     public static final String CATEGORY_BALANCE = "balance";
     public static final String CATEGORY_DISABLE = "disabled";
     private final static String TAG = "Configs";
-    private final static String BIOMEVFKEY = "vampire_forest_biome_id";
     public static boolean realism_mode;
     public static boolean resetConfigurationInDev;
     public static int gui_level_offset_x;
@@ -58,7 +57,7 @@ public class Configs {
             try {
                 Map<String, Integer> override = loadBloodValuesFromReader(new FileReader(bloodConfigFile), bloodConfigFile.getName());
                 VampirismAPI.biteableRegistry().overrideBloodValues(override);
-                VampirismMod.log.i(TAG, "Succesfully loaded additional blood value file");
+                VampirismMod.log.i(TAG, "Successfully loaded additional blood value file");
             } catch (IOException e) {
                 VampirismMod.log.e(TAG, "Could not read blood values from config file %s", bloodConfigFile.getName());
             }

@@ -13,6 +13,9 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerNotFoundException;
 import net.minecraft.command.WrongUsageException;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.profiler.Profiler;
@@ -154,7 +157,7 @@ public class TestCommand extends BasicCommand {
 
             @Override
             public String getCommandName() {
-                return "emtpyBloodBar";
+                return "emptyBloodBar";
             }
 
             @Override
@@ -167,6 +170,45 @@ public class TestCommand extends BasicCommand {
                 VampirePlayer player = VampirePlayer.get(getCommandSenderAsPlayer(var1));
                 if (player.getLevel() > 0) {
                     player.getBloodStats().setBloodLevel(0);
+                }
+            }
+        });
+
+        addSub(new SubCommand() {
+
+
+            @Override
+            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+                return null;
+            }
+
+            @Override
+            public boolean canSenderUseCommand(ICommandSender var1) {
+                return canCommandSenderUseCheatCommand(var1) && var1 instanceof EntityPlayer;
+            }
+
+            @Override
+            public String getCommandName() {
+                return "entity";
+            }
+
+            @Override
+            public String getCommandUsage(ICommandSender var1) {
+                return getCommandName();
+            }
+
+            @Override
+            public void processCommand(ICommandSender sender, String[] var2) throws CommandException {
+                EntityPlayer player = getCommandSenderAsPlayer(sender);
+                List l = player.worldObj.getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().expand(3, 2, 3));
+                for (Object o : l) {
+                    if (o instanceof EntityCreature) {
+
+                        String s = EntityList.getEntityString((Entity) o);
+                        sendMessage(sender, s);
+                    } else {
+                        sendMessage(sender, "Not biteable " + o.getClass().getName());
+                    }
                 }
             }
         });

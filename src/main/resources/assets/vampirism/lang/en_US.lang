@@ -211,6 +211,10 @@ item.vampirism.itemCoffin.name=Coffin
 item.vampirism.itemGarlic.name=Garlic
 item.vampirism.itemMedChair.name=Vaccination Chair
 
+#KEYS
+keys.vampirism.select_skills=Select Skills
+keys.vampirism.action=Use Actions
+
 #ETC
 text.vampirism.vampire=Vampire
 text.vampirism.vampires=Vampires

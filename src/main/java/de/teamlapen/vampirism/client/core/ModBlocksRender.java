@@ -65,12 +65,12 @@ public class ModBlocksRender {
                 return new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "fluids"), "blood");
             }
         });
-//        ModelLoader.setCustomStateMapper(ModBlocks.coffin, new StateMapperBase() {
-//            @Override
-//            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-//                return new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "blockCoffin"), "normal");
-//            }
-//        });
+        ModelLoader.setCustomStateMapper(ModBlocks.coffin, new StateMapperBase() {
+            @Override
+            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+                return new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "blockCoffin"), "normal");
+            }
+        });
 
     }
 

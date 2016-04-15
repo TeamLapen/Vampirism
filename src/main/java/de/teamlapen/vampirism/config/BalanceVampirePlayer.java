@@ -44,6 +44,8 @@ public class BalanceVampirePlayer extends BalanceValues {
     public double BLOOD_EXHAUSTION_BASIC_MOD;
     //    @DefaultBoolean(value = true, name = "blood_increase_exhaustion", comment = "Increase exhaustion modifier with higher levels")
 //    public boolean BLOOD_INCREASE_EXHAUSTION;
+    @DefaultBoolean(value = false, comment = "If the player should consume blood while in peaceful mode")
+    public boolean BLOOD_USAGE_PEACEFUL;
     @DefaultInt(value = 6, name = "bite_damage", minValue = 0)
     public int BITE_DMG;
     @DefaultInt(value = 15, name = "bite_cooldown", minValue = 1, comment = "Cooldown for vampire player bites in ticks")
@@ -52,11 +54,13 @@ public class BalanceVampirePlayer extends BalanceValues {
     public double PLAYER_BLOOD_SATURATION;
     @DefaultInt(value = 900, name = "sanguinare_avg_duration", minValue = 1, comment = "Average duration of player sanguinare effect, in seconds")
     public int SANGUINARE_AVG_DURATION;
-    @DefaultInt(value = 5, alternateValue = 3, name = "sundamage_min_level", minValue = 1, comment = "The vampire level as of the player receives damage from the sun")
+    @DefaultInt(value = 4, alternateValue = 2, name = "sundamage_min_level", minValue = 1, comment = "The vampire level as of the player receives damage from the sun")
     public int SUNDAMAGE_MINLEVEL;
     @DefaultBoolean(value = true, name = "sundamage_nausea", comment = "If the player should get a nausea effect if in sun")
     public boolean SUNDAMAGE_NAUSEA;
-    @DefaultInt(value = 3, alternateValue = 1, name = "sundamage_min_level", minValue = 1, comment = "The vampire level as of the player receives a weakness effect from the sun")
+    @DefaultInt(value = 3, alternateValue = 1, minValue = 1, comment = "The vampire level as of the player receives a nausea effect from the sun")
+    public int SUNDAMAGE_NAUSEA_MINLEVEL;
+    @DefaultInt(value = 2, alternateValue = 1, minValue = 1, comment = "The vampire level as of the player receives a weakness effect from the sun")
     public int SUNDAMAGE_WEAKNESS_MINLEVEL;
     @DefaultDouble(value = 7.0, alternateValue = 14, name = "sundamage_damage", minValue = 1, comment = "Damage a player receives every 2 seconds if in sun. Is multiplied with several factors.")
     public double SUNDAMAGE_DAMAGE;
