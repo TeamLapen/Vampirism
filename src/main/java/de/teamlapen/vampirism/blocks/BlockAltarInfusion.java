@@ -27,7 +27,7 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
     private final static String name = "altarInfusion";
 
     public BlockAltarInfusion() {
-        super(name, Material.rock);
+        super(name, Material.ROCK);
         this.setHardness(5.0F);
         this.setHarvestLevel("pickaxe", 2);
     }

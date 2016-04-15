@@ -77,14 +77,14 @@ public class ModBlocks {
     }
 
     private static void registerCraftingRecipes() {
-        GameRegistry.addRecipe(new ItemStack(altarInfusion, 1), "   ", "YZY", "ZZZ", 'Y', Items.gold_ingot, 'Z', Blocks.obsidian);
-        GameRegistry.addRecipe(new ItemStack(altarPillar, 4), "X X", "   ", "XXX", 'X', Blocks.stonebrick);
-        GameRegistry.addRecipe(new ItemStack(altarTip, 2), "   ", " X ", "XYX", 'X', Items.iron_ingot, 'Y', Blocks.iron_block);
-        GameRegistry.addRecipe(new ItemStack(castleBlock, 1, 0), "XXX", "XYX", "XXX", 'X', Blocks.stonebrick, 'Y', new ItemStack(vampirismFlower, 1, VampirismFlower.EnumFlowerType.ORCHID.getMeta()));
-        GameRegistry.addShapelessRecipe(new ItemStack(castleBlock, 8, 1), castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, new ItemStack(Items.dye, 1, 0));
-        GameRegistry.addRecipe(new ItemStack(hunterTable), "XY ", "ZZZ", "Z Z", 'X', ModItems.vampireFang, 'Y', Items.book, 'Z', Blocks.planks);//TODO maybe replace fangs with garlic
-        GameRegistry.addRecipe(new ItemStack(medChair), "XYX", "XXX", "XZX", 'X', Items.iron_ingot, 'Y', Blocks.wool, 'Z', Items.glass_bottle);
-        GameRegistry.addRecipe(new ItemStack(bloodContainer), "XYX", "YZY", "XYX", 'X', Blocks.planks, 'Y', Blocks.glass, 'Z', Items.iron_ingot);
+        GameRegistry.addRecipe(new ItemStack(altarInfusion, 1), "   ", "YZY", "ZZZ", 'Y', Items.GOLD_INGOT, 'Z', Blocks.OBSIDIAN);
+        GameRegistry.addRecipe(new ItemStack(altarPillar, 4), "X X", "   ", "XXX", 'X', Blocks.STONEBRICK);
+        GameRegistry.addRecipe(new ItemStack(altarTip, 2), "   ", " X ", "XYX", 'X', Items.IRON_INGOT, 'Y', Blocks.IRON_BLOCK);
+        GameRegistry.addRecipe(new ItemStack(castleBlock, 1, 0), "XXX", "XYX", "XXX", 'X', Blocks.STONEBRICK, 'Y', new ItemStack(vampirismFlower, 1, VampirismFlower.EnumFlowerType.ORCHID.getMeta()));
+        GameRegistry.addShapelessRecipe(new ItemStack(castleBlock, 8, 1), castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, castleBlock, new ItemStack(Items.DYE, 1, 0));
+        GameRegistry.addRecipe(new ItemStack(hunterTable), "XY ", "ZZZ", "Z Z", 'X', ModItems.vampireFang, 'Y', Items.BOOK, 'Z', Blocks.PLANKS);//TODO maybe replace fangs with garlic
+        GameRegistry.addRecipe(new ItemStack(medChair), "XYX", "XXX", "XZX", 'X', Items.IRON_INGOT, 'Y', Blocks.WOOL, 'Z', Items.GLASS_BOTTLE);
+        GameRegistry.addRecipe(new ItemStack(bloodContainer), "XYX", "YZY", "XYX", 'X', Blocks.PLANKS, 'Y', Blocks.GLASS, 'Z', Items.IRON_INGOT);
     }
 
 

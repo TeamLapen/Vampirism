@@ -74,7 +74,7 @@ public class VampirismWorldGen implements IWorldGenerator {
                 BlockPos pos = new BlockPos((chunkX << 4) + random.nextInt(16), 0, (chunkZ << 4) + random.nextInt(16));
                 pos = world.getHeight(pos);
                 Material material;
-                while (((material = world.getBlockState(pos).getMaterial()) == Material.leaves || material == Material.plants || world.isAirBlock(pos)) && pos.getY() > 50) {
+                while (((material = world.getBlockState(pos).getMaterial()) == Material.LEAVES || material == Material.PLANTS || world.isAirBlock(pos)) && pos.getY() > 50) {
                     pos = pos.down();
                 }
                 float temp = biome.getFloatTemperature(pos);

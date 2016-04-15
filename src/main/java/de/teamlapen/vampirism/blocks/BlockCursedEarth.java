@@ -23,7 +23,7 @@ public class BlockCursedEarth extends VampirismBlock implements IGrowable {
     private static final String name = "cursedEarth";
 
     public BlockCursedEarth() {
-        super(name, Material.ground);
+        super(name, Material.GROUND);
         this.setHardness(0.5F).setResistance(2.0F).setHarvestLevel("shovel", 0);
         setSoundType(SoundType.GROUND);
     }
@@ -63,9 +63,9 @@ public class BlockCursedEarth extends VampirismBlock implements IGrowable {
                                 worldIn.setBlockState(blockpos1, iblockstate, 3);
                             }
                         } else {
-                            IBlockState iblockstate1 = Blocks.tallgrass.getDefaultState().withProperty(BlockTallGrass.TYPE, BlockTallGrass.EnumType.GRASS);
+                            IBlockState iblockstate1 = Blocks.TALLGRASS.getDefaultState().withProperty(BlockTallGrass.TYPE, BlockTallGrass.EnumType.GRASS);
 
-                            if (Blocks.tallgrass.canBlockStay(worldIn, blockpos1, iblockstate1)) {
+                            if (Blocks.TALLGRASS.canBlockStay(worldIn, blockpos1, iblockstate1)) {
                                 worldIn.setBlockState(blockpos1, iblockstate1, 3);
                             }
                         }

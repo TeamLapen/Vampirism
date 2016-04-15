@@ -24,7 +24,7 @@ public class BlockTent extends VampirismBlock {
     }
 
     protected BlockTent(String name) {
-        super(name, Material.cloth);
+        super(name, Material.CLOTH);
         this.setCreativeTab(null);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(POSITION, 0));
     }

@@ -117,7 +117,7 @@ public class ModPlayerEventHandler {
             if (event.getWorld().getWorldBorder().contains(event.getPos()))
                 if (event.getItemStack() != null &&
                         event.getItemStack().getItem() != null &&
-                        event.getItemStack().getItem().equals(Items.glass_bottle) && event.getItemStack().stackSize == 1) {
+                        event.getItemStack().getItem().equals(Items.GLASS_BOTTLE) && event.getItemStack().stackSize == 1) {
                     Block block = event.getWorld().getBlockState(event.getPos()).getBlock();
                     boolean flag = false;
                     if (block instanceof IFluidTank) {

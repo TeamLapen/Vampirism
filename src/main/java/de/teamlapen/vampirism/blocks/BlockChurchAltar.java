@@ -24,7 +24,7 @@ public class BlockChurchAltar extends VampirismBlock {
     private final static String regName = "churchAltar";
 
     public BlockChurchAltar() {
-        super(regName, Material.wood);
+        super(regName, Material.WOOD);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
         this.setHasFacing();
     }

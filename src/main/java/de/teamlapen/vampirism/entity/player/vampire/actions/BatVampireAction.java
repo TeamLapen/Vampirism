@@ -123,9 +123,9 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         float newHealth = mult * oldHealth;
         player.setHealth(newHealth);
         if (player.onGround) {
-            player.addPotionEffect(new PotionEffect(MobEffects.resistance, 20, 100));
+            player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 20, 100));
         }
-        player.addPotionEffect(new PotionEffect(MobEffects.resistance, 60, 100));
+        player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 60, 100));
         setPlayerBat(player, false);
         ((VampirePlayer) vampire).getSpecialAttributes().bat=false;
     }

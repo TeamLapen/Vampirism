@@ -75,9 +75,9 @@ public class EntityConvertedSheep extends EntityConvertedCreature implements ISh
 
         java.util.List<ItemStack> ret = new java.util.ArrayList<ItemStack>();
         for (int j = 0; j < i; ++j)
-            ret.add(new ItemStack(Item.getItemFromBlock(Blocks.wool), 1, this.getFleeceColor().getMetadata()));
+            ret.add(new ItemStack(Item.getItemFromBlock(Blocks.WOOL), 1, this.getFleeceColor().getMetadata()));
 
-        this.playSound(SoundEvents.entity_sheep_shear, 1.0F, 1.0F);
+        this.playSound(SoundEvents.ENTITY_SHEEP_SHEAR, 1.0F, 1.0F);
         return ret;
     }
 

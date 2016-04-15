@@ -63,8 +63,8 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
                 tm = pld + 1;
                 mr = pld < 1.5f ? 1 : (pld < 3 ? 2 : 3);
             }
-            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.weakness, (int) (200 * tm), rand.nextInt(mr) + 1));
-            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.moveSlowdown, (int) (100 * tm), rand.nextInt(mr) + 1));
+            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, (int) (200 * tm), rand.nextInt(mr) + 1));
+            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, (int) (100 * tm), rand.nextInt(mr) + 1));
         }
         return flag;
     }

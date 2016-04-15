@@ -28,7 +28,7 @@ public class BlockAltarPillar extends VampirismBlock {
     private final static String name = "altarPillar";
 
     public BlockAltarPillar() {
-        super(name, Material.rock);
+        super(name, Material.ROCK);
         this.setHarvestLevel("pickaxe", 0);
         this.setHardness(0.9F);
         this.setDefaultState(this.blockState.getBaseState().withProperty(typeProperty, EnumPillarType.NONE));
@@ -98,7 +98,7 @@ public class BlockAltarPillar extends VampirismBlock {
     }
 
     public enum EnumPillarType implements IStringSerializable {
-        NONE(0, "none", Blocks.air), STONE(1, "stone", Blocks.stonebrick), IRON(2, "iron", Blocks.iron_block), GOLD(3, "gold", Blocks.gold_block);
+        NONE(0, "none", Blocks.AIR), STONE(1, "stone", Blocks.STONEBRICK), IRON(2, "iron", Blocks.IRON_BLOCK), GOLD(3, "gold", Blocks.GOLD_BLOCK);
         private static final EnumPillarType[] METADATA_LOOKUP = new EnumPillarType[values().length];
 
         static {

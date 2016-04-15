@@ -95,7 +95,7 @@ public class BlockStringProp extends Block {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        return Blocks.air.getBlockState();
+        return Blocks.AIR.getBlockState();
     }
 
     private BlockStateContainer createRealBlockState() {

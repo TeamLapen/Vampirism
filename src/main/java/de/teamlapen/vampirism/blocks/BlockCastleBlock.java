@@ -24,7 +24,7 @@ public class BlockCastleBlock extends VampirismBlockString {
     private static final String name = "castleBlock";
 
     public BlockCastleBlock() {
-        super(name, Material.rock, types);
+        super(name, Material.ROCK, types);
         this.setHardness(2.0F);
         setResistance(10.0F);
         setSoundType(SoundType.STONE);

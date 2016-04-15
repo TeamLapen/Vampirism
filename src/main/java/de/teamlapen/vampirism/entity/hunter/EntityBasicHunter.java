@@ -62,7 +62,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter 
         if (level >= 0) {
             this.updateEntityAttributes();
             if (level == 3) {
-                this.addPotionEffect(new PotionEffect(MobEffects.resistance, 1000000, 1));
+                this.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 1000000, 1));
             }
             getDataManager().set(LEVEL, level);
         }

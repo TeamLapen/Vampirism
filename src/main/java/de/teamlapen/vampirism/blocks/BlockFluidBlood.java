@@ -10,7 +10,7 @@ public class BlockFluidBlood extends BlockFluidFinite {
     private static final String name = "blockBloodFluid";
 
     public BlockFluidBlood() {
-        super(ModFluids.blood, Material.water);
+        super(ModFluids.blood, Material.WATER);
         setUnlocalizedName(ModFluids.blood.getUnlocalizedName());
         ModFluids.blood.setBlock(this);
         setRegistryName(REFERENCE.MODID, name);

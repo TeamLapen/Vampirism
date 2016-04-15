@@ -29,7 +29,7 @@ public class BlockHunterTable extends VampirismBlock {
     }
 
     public BlockHunterTable() {
-        super(name, Material.wood);
+        super(name, Material.WOOD);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
         this.setHasFacing();
 

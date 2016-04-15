@@ -39,7 +39,7 @@ public class BiomeGenVampireForest extends BiomeGenBase {
         this.theBiomeDecorator.treesPerChunk = 5;
         this.theBiomeDecorator.grassPerChunk = 4;
         this.theBiomeDecorator.deadBushPerChunk = 3;
-        this.worldGenTrees = new WorldGenTrees(false, 4, Blocks.log.getDefaultState().withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.SPRUCE), Blocks.leaves.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.OAK), false);
+        this.worldGenTrees = new WorldGenTrees(false, 4, Blocks.LOG.getDefaultState().withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.SPRUCE), Blocks.LEAVES.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.OAK), false);
 
     }
 

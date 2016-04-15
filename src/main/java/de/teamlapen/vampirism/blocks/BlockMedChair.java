@@ -32,7 +32,7 @@ public class BlockMedChair extends VampirismBlock {
     private final static String name = "medChair";
 
     public BlockMedChair() {
-        super(name, Material.iron);
+        super(name, Material.IRON);
         this.blockState.getBaseState().withProperty(PART, EnumPart.TOP).withProperty(FACING, EnumFacing.NORTH);
         this.setHasFacing();
 
@@ -85,7 +85,7 @@ public class BlockMedChair extends VampirismBlock {
                     VampirismMod.proxy.renderScreenFullColor(4, 30, 0xBBBBBBFF);
                 } else {
                     handler.joinFaction(VReference.HUNTER_FACTION);
-                    playerIn.addPotionEffect(new PotionEffect(MobEffects.poison, 200, 1));
+                    playerIn.addPotionEffect(new PotionEffect(MobEffects.POISON, 200, 1));
                 }
             } else {
                 if (!worldIn.isRemote) {

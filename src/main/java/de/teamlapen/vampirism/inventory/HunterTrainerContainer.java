@@ -4,11 +4,11 @@ import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.hunter.HunterLevelingConf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
-import net.minecraft.init.MobEffects;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
@@ -17,7 +17,7 @@ import net.minecraft.potion.PotionEffect;
  * Container which handles hunter levelup at an hunter trainer
  */
 public class HunterTrainerContainer extends InventoryContainer {
-    private final static Item[] items = new Item[]{Items.iron_ingot, Items.gold_ingot, ModItems.hunterIntel};
+    private final static Item[] items = new Item[]{Items.IRON_INGOT, Items.GOLD_INGOT, ModItems.hunterIntel};
     private final EntityPlayer player;
     private boolean changed = false;
     private ItemStack missing;
@@ -91,7 +91,7 @@ public class HunterTrainerContainer extends InventoryContainer {
             FactionPlayerHandler.get(player).setFactionLevel(VReference.HUNTER_FACTION, old + 1);
             int[] req = HunterLevelingConf.instance().getItemRequirementsForTrainer(old + 1);
             InventoryHelper.removeItems(tile, new int[]{req[0], req[1], 1});
-            player.addPotionEffect(new PotionEffect(MobEffects.saturation, 400, 2));
+            player.addPotionEffect(new PotionEffect(ModPotions.saturation, 400, 2));
         }
     }
 }

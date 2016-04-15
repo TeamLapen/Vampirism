@@ -15,7 +15,7 @@ public class FakeNightVisionPotionEffect extends PotionEffect {
     /**
      */
     public FakeNightVisionPotionEffect() {
-        super(MobEffects.nightVision, 10000, 0, false, false);
+        super(MobEffects.NIGHT_VISION, 10000, 0, false, false);
         setCurativeItems(new ArrayList<ItemStack>());
     }
 

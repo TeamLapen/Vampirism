@@ -230,9 +230,9 @@ public class GuiSkills extends GuiScreen {
         if (mouseButton == 0 && selected != null) {
             if (skillHandler.canSkillBeEnabled(selected) == ISkillHandler.Result.OK) {
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.UNLOCKSKILL, VampirismAPI.skillRegistry().getID(skillHandler.getPlayer().getFaction(), selected)));
-                playSoundEffect(SoundEvents.entity_player_levelup, 0.7F);
+                playSoundEffect(SoundEvents.ENTITY_PLAYER_LEVELUP, 0.7F);
             } else {
-                playSoundEffect(SoundEvents.block_note_bass, 0.5F);
+                playSoundEffect(SoundEvents.BLOCK_NOTE_BASS, 0.5F);
             }
         }
     }
@@ -299,31 +299,31 @@ public class GuiSkills extends GuiScreen {
             for (int x = 0; (float) x * f1 - (float) i2 < 224.0F; ++x) {
                 random.setSeed((long) (this.mc.getSession().getPlayerID().hashCode() + k1 + x + (l1 + y) * 16));
                 int j4 = random.nextInt(1 + l1 + y) + (l1 + y) / 2;
-                TextureAtlasSprite textureatlassprite = this.getTexture(Blocks.sand);
+                TextureAtlasSprite textureatlassprite = this.getTexture(Blocks.SAND);
 
                 if (j4 <= 37 && l1 + y != 35) {
                     if (j4 == 22) {
                         if (random.nextInt(2) == 0) {
-                            textureatlassprite = this.getTexture(Blocks.coal_block);
+                            textureatlassprite = this.getTexture(Blocks.COAL_BLOCK);
                         } else {
-                            textureatlassprite = this.getTexture(Blocks.redstone_block);
+                            textureatlassprite = this.getTexture(Blocks.REDSTONE_BLOCK);
                         }
                     } else if (j4 == 10) {
                         textureatlassprite = this.getTexture(ModBlocks.castleBlock.getDefaultState().withProperty(ModBlocks.castleBlock.getStringProp(), "dark_brick_bloody"));
                     } else if (j4 == 8) {
-                        textureatlassprite = this.getTexture(Blocks.stonebrick);
+                        textureatlassprite = this.getTexture(Blocks.STONEBRICK);
                     } else if (j4 > 4) {
                         textureatlassprite = this.getTexture(ModBlocks.castleBlock);
                     } else if (j4 > 0) {
-                        textureatlassprite = this.getTexture(Blocks.dirt);
+                        textureatlassprite = this.getTexture(Blocks.DIRT);
 
                     }
                 } else {
-                    Block block = Blocks.bedrock;
+                    Block block = Blocks.BEDROCK;
                     textureatlassprite = this.getTexture(block);
                 }
 
-                this.mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+                this.mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
                 this.drawTexturedModalRect(x * 16 - i2, y * 16 - j2, textureatlassprite, 16, 16);
             }
         }

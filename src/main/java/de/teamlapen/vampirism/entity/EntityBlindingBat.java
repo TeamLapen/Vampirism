@@ -36,7 +36,7 @@ public class EntityBlindingBat extends EntityBat {
             List l = worldObj.getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox());
             for (Object e : l) {
                 if (VampirePlayer.get((EntityPlayer) e).getLevel() == 0) {
-                    ((EntityPlayer) e).addPotionEffect(new PotionEffect(MobEffects.blindness, Balance.mobProps.BLINDING_BAT_EFFECT_DURATION));
+                    ((EntityPlayer) e).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, Balance.mobProps.BLINDING_BAT_EFFECT_DURATION));
                 }
             }
         }

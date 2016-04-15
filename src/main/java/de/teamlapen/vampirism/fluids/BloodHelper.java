@@ -45,7 +45,7 @@ public class BloodHelper {
         int hotbarSize = InventoryPlayer.getHotbarSize();
         for (int i = 0; i < hotbarSize; i++) {
             ItemStack itemStack = inventory.getStackInSlot(i);
-            if (itemStack != null && itemStack.getItem().equals(Items.glass_bottle)) {
+            if (itemStack != null && itemStack.getItem().equals(Items.GLASS_BOTTLE)) {
                 return itemStack;
             }
         }

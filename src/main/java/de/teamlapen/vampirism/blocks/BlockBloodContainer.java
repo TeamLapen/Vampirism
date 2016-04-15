@@ -45,7 +45,7 @@ public class BlockBloodContainer extends VampirismBlockContainer {
     public final static String regName = "bloodContainer";
 
     public BlockBloodContainer() {
-        super(regName, Material.glass);
+        super(regName, Material.GLASS);
         this.setHardness(1F);
     }
 

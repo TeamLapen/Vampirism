@@ -70,7 +70,7 @@ public class VampireSkills {
             @Override
             protected void onDisabled(IVampirePlayer player) {
                 ((VampirePlayer) player).getSpecialAttributes().night_vision = false;
-                PotionEffect nightVision = player.getRepresentingPlayer().getActivePotionEffect(MobEffects.nightVision);
+                PotionEffect nightVision = player.getRepresentingPlayer().getActivePotionEffect(MobEffects.NIGHT_VISION);
                 if (nightVision instanceof FakeNightVisionPotionEffect) {
                     player.getRepresentingPlayer().removePotionEffect(nightVision.getPotion());
                 }

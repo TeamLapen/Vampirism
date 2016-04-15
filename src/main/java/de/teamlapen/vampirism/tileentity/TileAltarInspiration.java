@@ -130,7 +130,7 @@ public class TileAltarInspiration extends TileFluidHandler implements ITickable 
                     int blood = levelingConf.getRequiredBloodForAltarInspiration(targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
                     super.drain(null, blood, true);
 
-                    ritualPlayer.addPotionEffect(new PotionEffect(MobEffects.regeneration, targetLevel * 10 * 20));
+                    ritualPlayer.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, targetLevel * 10 * 20));
                     FactionPlayerHandler.get(ritualPlayer).setFactionLevel(VReference.VAMPIRE_FACTION, targetLevel);
                     markDirty();
                     IBlockState state = worldObj.getBlockState(getPos());

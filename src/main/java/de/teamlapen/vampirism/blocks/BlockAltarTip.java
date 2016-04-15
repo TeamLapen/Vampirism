@@ -10,7 +10,7 @@ public class BlockAltarTip extends VampirismBlock {
     private final static String name = "altarTip";
 
     public BlockAltarTip() {
-        super(name, Material.iron);
+        super(name, Material.IRON);
         setHarvestLevel("pickaxe", 1);
         this.setHardness(1.0F);
     }

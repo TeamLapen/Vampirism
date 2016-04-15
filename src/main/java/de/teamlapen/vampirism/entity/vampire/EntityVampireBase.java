@@ -34,7 +34,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
 
     @Override
     public void consumeBlood(int amt, float saturationMod) {
-        this.addPotionEffect(new PotionEffect(MobEffects.regeneration, amt * 20));
+        this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, amt * 20));
     }
 
     @Override

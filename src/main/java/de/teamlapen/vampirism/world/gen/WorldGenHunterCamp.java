@@ -38,10 +38,10 @@ public class WorldGenHunterCamp extends WorldGenerator {
                 worldIn.setBlockToAir(entrance1);
                 worldIn.setBlockToAir(entrance2);
                 if (rand.nextInt(3) == 0) {
-                    worldIn.setBlockState(worldIn.getHeight(entrance1.offset(facing.getOpposite())), Blocks.crafting_table.getDefaultState());
+                    worldIn.setBlockState(worldIn.getHeight(entrance1.offset(facing.getOpposite())), Blocks.CRAFTING_TABLE.getDefaultState());
                 }
                 if (rand.nextInt(3) == 0) {
-                    worldIn.setBlockState(worldIn.getHeight(entrance2.offset(facing.getOpposite())), Blocks.torch.getDefaultState());
+                    worldIn.setBlockState(worldIn.getHeight(entrance2.offset(facing.getOpposite())), Blocks.TORCH.getDefaultState());
                 }
 
 

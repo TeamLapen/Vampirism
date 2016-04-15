@@ -26,7 +26,7 @@ public class ItemVampireFang extends VampirismItem {
 
         if (Helper.canBecomeVampire(playerIn)) {
             PotionSanguinare.addRandom(playerIn, true);
-            playerIn.addPotionEffect(new PotionEffect(MobEffects.poison, 60));
+            playerIn.addPotionEffect(new PotionEffect(MobEffects.POISON, 60));
         } else {
             if (Helper.isVampire(playerIn)) {
                 playerIn.addChatMessage(new TextComponentTranslation("text.vampirism.already_vampire"));

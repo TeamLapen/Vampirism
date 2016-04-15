@@ -60,7 +60,7 @@ public class ItemInjection extends VampirismItem {
                 playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_REVERT_BACK, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);
 
             } else {
-                playerIn.addPotionEffect(new PotionEffect(MobEffects.poison, 100));
+                playerIn.addPotionEffect(new PotionEffect(MobEffects.POISON, 100));
             }
             itemStackIn.stackSize--;
             return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);

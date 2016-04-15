@@ -33,20 +33,20 @@ public class DefaultConvertingHandler<T extends EntityCreature> implements IConv
                 int j = entity.getRNG().nextInt(3) + entity.getRNG().nextInt(1 + looting);
 
                 for (int k = 0; k < j; ++k) {
-                    entity.dropItem(Items.leather, 1);
+                    entity.dropItem(Items.LEATHER, 1);
                 }
 
                 j = entity.getRNG().nextInt(3) + entity.getRNG().nextInt(1 + looting);
 
                 for (int k = 0; k < j; ++k) {
-                    entity.dropItem(Items.rotten_flesh, 1);
+                    entity.dropItem(Items.ROTTEN_FLESH, 1);
                 }
 
             } else if (entity instanceof EntityPig) {
                 int j = entity.getRNG().nextInt(3) + entity.getRNG().nextInt(1 + looting);
 
                 for (int k = 0; k < j; ++k) {
-                    entity.dropItem(Items.rotten_flesh, 1);
+                    entity.dropItem(Items.ROTTEN_FLESH, 1);
                 }
             } else {
                 //TODO maybe call dropFewItems via reflection
@@ -98,7 +98,7 @@ public class DefaultConvertingHandler<T extends EntityCreature> implements IConv
     public IConvertedCreature<T> createFrom(T entity) {
         EntityConvertedCreature<T> convertedCreature = new EntityConvertedCreature<T>(entity.worldObj);
         copyImportantStuff(convertedCreature, entity);
-        convertedCreature.addPotionEffect(new PotionEffect(MobEffects.weakness, 200, 2));
+        convertedCreature.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 200, 2));
         return convertedCreature;
     }
 

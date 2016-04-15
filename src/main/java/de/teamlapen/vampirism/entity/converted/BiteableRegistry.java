@@ -88,7 +88,7 @@ public class BiteableRegistry implements IBiteableRegistry {
         }
         final IConvertingHandler defaultHandler = defaultConvertingHandlerCreator.create(null);
         for (Map.Entry<Class<? extends EntityCreature>, IConvertingHandler> entry : convertibles.entrySet()) {
-            String entity_name = EntityList.classToStringMapping.get(entry.getKey());
+            String entity_name = EntityList.CLASS_TO_NAME.get(entry.getKey());
             if (entity_name == null) {
                 VampirismMod.log.w(TAG, "Cannot register convertible %s since there is no EntityString for it", entry.getKey());
                 continue;

@@ -204,8 +204,8 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     public void onUpdate() {
         if (!entity.worldObj.isRemote) {
             if (blood > 0 && blood < getMaxBlood() && entity.ticksExisted % 40 == 8) {
-                entity.addPotionEffect(new PotionEffect(MobEffects.weakness, 41));
-                entity.addPotionEffect(new PotionEffect(MobEffects.moveSlowdown, 41, 2));
+                entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 41));
+                entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 41, 2));
                 if (entity.getRNG().nextInt(Balance.mobProps.BLOOD_REGEN_CHANCE) == 0) {
                     setBlood(getBlood() + 1);
                 }

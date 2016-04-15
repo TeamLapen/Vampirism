@@ -182,7 +182,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                         drawTexturedModalRect(x, top, 18, 0, 9, 9);
                     }
                 }
-                this.mc.getTextureManager().bindTexture(Gui.icons);
+                this.mc.getTextureManager().bindTexture(Gui.ICONS);
                 GlStateManager.disableBlend();
             }
         }

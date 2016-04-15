@@ -11,7 +11,7 @@ import net.minecraft.init.Items;
  */
 public class HunterTrainerInventory extends SimpleInventory {
     public HunterTrainerInventory() {
-        super(new InventorySlot[]{new InventorySlot(Items.iron_ingot, 27, 26), new InventorySlot(Items.gold_ingot, 57, 26), new InventorySlot(ModItems.hunterIntel, 86, 26)});
+        super(new InventorySlot[]{new InventorySlot(Items.IRON_INGOT, 27, 26), new InventorySlot(Items.GOLD_INGOT, 57, 26), new InventorySlot(ModItems.hunterIntel, 86, 26)});
     }
 
     @Override

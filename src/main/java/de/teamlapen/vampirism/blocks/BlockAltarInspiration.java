@@ -33,7 +33,7 @@ public class BlockAltarInspiration extends VampirismBlockContainer {
     public static final IUnlistedProperty<Integer> FLUID_LEVEL = new Properties.PropertyAdapter<>(PropertyInteger.create("fluidLevel", 0, 10));
 
     public BlockAltarInspiration() {
-        super(regName, Material.iron);
+        super(regName, Material.IRON);
         this.setHarvestLevel("pickaxe", 1);
         this.setHardness(40F);
     }

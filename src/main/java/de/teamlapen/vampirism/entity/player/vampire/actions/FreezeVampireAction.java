@@ -58,9 +58,9 @@ public class FreezeVampireAction extends DefaultVampireAction {
             if (o instanceof EntityBlindingBat) continue;
             if (!(o instanceof EntityLivingBase)) continue;
             EntityLivingBase e = (EntityLivingBase) o;
-            e.addPotionEffect(new PotionEffect(MobEffects.moveSlowdown, Balance.vpa.FREEZE_DURATION * 20, 10));
-            e.addPotionEffect(new PotionEffect(MobEffects.resistance, Balance.vpa.FREEZE_DURATION * 20, 10));
-            e.addPotionEffect(new PotionEffect(MobEffects.jump, Balance.vpa.FREEZE_DURATION * 20, 128));
+            e.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, Balance.vpa.FREEZE_DURATION * 20, 10));
+            e.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, Balance.vpa.FREEZE_DURATION * 20, 10));
+            e.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, Balance.vpa.FREEZE_DURATION * 20, 128));
             Helper.spawnParticlesAroundEntity(e, EnumParticleTypes.SNOW_SHOVEL, 1.5, 40);
         }
         return l.size() > 0;

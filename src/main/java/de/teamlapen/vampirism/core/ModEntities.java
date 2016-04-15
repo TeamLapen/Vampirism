@@ -90,9 +90,9 @@ public class ModEntities {
     }
 
     private static void init(FMLInitializationEvent event) {
-        Set<BiomeGenBase> allBiomes = BiomeGenBase.explorationBiomesList;
-        allBiomes.remove(Biomes.hell);
-        allBiomes.remove(Biomes.sky);
+        Set<BiomeGenBase> allBiomes = BiomeGenBase.EXPLORATION_BIOMES_LIST;
+        allBiomes.remove(Biomes.HELL);
+        allBiomes.remove(Biomes.SKY);
 
         /**
          * After setting this up this array will contain only biomes in which zombies can spawn.

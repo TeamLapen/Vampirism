@@ -85,10 +85,10 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         if (level >= 0) {
             this.updateEntityAttributes();
             if (level == 2) {
-                this.addPotionEffect(new PotionEffect(MobEffects.resistance, 1000000, 1));
+                this.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 1000000, 1));
             }
             if (level == 1) {
-                this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.iron_sword));
+                this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
             } else {
                 this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, null);
             }

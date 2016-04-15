@@ -35,7 +35,7 @@ import java.util.Random;
 public class BlockCoffin extends VampirismBlockContainer {
 
     public static final String name = "blockCoffin";
-    public final static Material material = Material.wood;
+    public final static Material material = Material.WOOD;
     public static final PropertyEnum<EnumPartType> PART = PropertyEnum.create("part", EnumPartType.class);
     public static final PropertyBool OCCUPIED = PropertyBool.create("occupied");
 
@@ -182,7 +182,7 @@ public class BlockCoffin extends VampirismBlockContainer {
             }
 
 
-            if (worldIn.provider.canRespawnHere() && worldIn.getBiomeGenForCoords(pos) != Biomes.hell) {
+            if (worldIn.provider.canRespawnHere() && worldIn.getBiomeGenForCoords(pos) != Biomes.HELL) {
                 if (state.getValue(OCCUPIED).booleanValue()) {
                     EntityPlayer entityplayer = this.getPlayerInCoffin(worldIn, pos);
 

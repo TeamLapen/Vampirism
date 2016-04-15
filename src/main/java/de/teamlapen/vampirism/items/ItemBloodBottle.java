@@ -62,7 +62,7 @@ public class ItemBloodBottle extends VampirismItem implements IBloodContainerIte
             //TODO might cause crashes with other mods, although this is probably legit
             if (getBlood(container) == 0 && Configs.autoConvertGlasBottles) {
                 VampirismMod.log.i("BloodBottle", "Replaced blood bottle by glas bottle, during IFluidContainerItem#drain. If there is a crash afterwards, please contact the authors of Vampirism");//TODO and remove at some point
-                container.setItem(Items.glass_bottle);
+                container.setItem(Items.GLASS_BOTTLE);
             }
         }
         return stack;

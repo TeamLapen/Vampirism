@@ -57,7 +57,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
         double oy = player.posY;
         double oz = player.posZ;
         if (target == null) {
-            player.playSound(SoundEvents.block_note_bass, 1, 1);
+            player.playSound(SoundEvents.BLOCK_NOTE_BASS, 1, 1);
             return false;
         }
         BlockPos pos = null;
@@ -79,7 +79,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
 
         if (pos == null) {
             player.setPosition(ox, oy, oz);
-            player.playSound(SoundEvents.block_note_basedrum, 1, 1);
+            player.playSound(SoundEvents.BLOCK_NOTE_BASEDRUM, 1, 1);
             return false;
         }
         if (player instanceof EntityPlayerMP) {
@@ -87,8 +87,8 @@ public class TeleportVampireAction extends DefaultVampireAction {
             playerMp.mountEntityAndWakeUp();
             playerMp.setPositionAndUpdate(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
         }
-        player.worldObj.playSound(ox, oy, oz, SoundEvents.entity_endermen_teleport, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
-        player.worldObj.playSound(player.posX, player.posY, player.posZ, SoundEvents.entity_endermen_teleport, SoundCategory.PLAYERS, 1, 1, false);
+        player.worldObj.playSound(ox, oy, oz, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
+        player.worldObj.playSound(player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.PLAYERS, 1, 1, false);
         return true;
     }
 }

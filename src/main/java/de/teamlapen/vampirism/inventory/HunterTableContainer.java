@@ -20,7 +20,7 @@ import net.minecraft.util.math.BlockPos;
  */
 public class HunterTableContainer extends InventoryContainer {
 
-    public final static Item[] items = new Item[]{Items.book, ModItems.vampireFang, ModItems.pureBlood, Items.apple};
+    public final static Item[] items = new Item[]{Items.BOOK, ModItems.vampireFang, ModItems.pureBlood, Items.APPLE};
     private final HunterTableInventory inventory;
     private final SlotResult slotResult;
     private final int hunterLevel;

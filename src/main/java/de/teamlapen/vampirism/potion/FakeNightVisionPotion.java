@@ -23,9 +23,9 @@ public class FakeNightVisionPotion extends Potion {
      */
     public static void replaceNightVision() {
         if (!Configs.disable_replaceVanillaNightVision) {
-            VampirismMod.log.d("FakeNVPotion", "Replacing vanilla night vision (%s) with custom", MobEffects.nightVision.getClass());
+            VampirismMod.log.d("FakeNVPotion", "Replacing vanilla night vision (%s) with custom", MobEffects.NIGHT_VISION.getClass());
             try {
-                Field field = ReflectionHelper.findField(MobEffects.class, "nightVision", SRGNAMES.MobEffects_nightVision);
+                Field field = ReflectionHelper.findField(MobEffects.class, "NIGHT_VISION", SRGNAMES.MobEffects_nightVision);
                 field.setAccessible(true);
 
                 Field modifierField = Field.class.getDeclaredField("modifiers");
@@ -33,10 +33,12 @@ public class FakeNightVisionPotion extends Potion {
                 modifierField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
 
                 field.set(null, instance);
-            } catch (NoSuchFieldException e) {
+            } catch (ReflectionHelper.UnableToFindFieldException e) {
                 VampirismMod.log.e("FakeNVPotion", e, "Failed to find night vision field, names might have changed");
             } catch (IllegalAccessException e) {
                 VampirismMod.log.e("FakeNVPotion", e, "Failed to replace night vision. ");
+            } catch (NoSuchFieldException e) {
+                VampirismMod.log.e("FakeNVPotion", e, "Failed to find night vision modifier field, names might have changed");
             }
 
         }

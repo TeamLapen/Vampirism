@@ -197,8 +197,8 @@ public class UtilLib {
             }
 
             if (sound) {
-                entity.worldObj.playSound(d3, d4, d5, SoundEvents.entity_endermen_teleport, SoundCategory.NEUTRAL, 1F, 1F, false);
-                entity.playSound(SoundEvents.entity_endermen_teleport, 1F, 1F);
+                entity.worldObj.playSound(d3, d4, d5, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.NEUTRAL, 1F, 1F, false);
+                entity.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1F, 1F);
             }
 
             return true;

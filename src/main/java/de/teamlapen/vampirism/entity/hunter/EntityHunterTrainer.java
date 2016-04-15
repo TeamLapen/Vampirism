@@ -97,7 +97,7 @@ public class EntityHunterTrainer extends EntityHunterBase {
 
     @Override
     protected boolean processInteract(EntityPlayer player, EnumHand p_184645_2_, ItemStack stack) {
-        boolean flag = stack != null && stack.getItem() == Items.spawn_egg;
+        boolean flag = stack != null && stack.getItem() == Items.SPAWN_EGG;
 
         if (!flag && this.isEntityAlive() && !player.isSneaking()) {
             if (!this.worldObj.isRemote) {
