@@ -1,13 +1,16 @@
 project.mod_version = "${config.main_version}.${config.major_version}.${config.minor_version}"
 if (hasProperty("beta")) {
     project.mod_version = project.mod_version + "-Beta." + beta
+    config.type = "beta"
 } else if (hasProperty("release")) {
-
+    config.type = "release"
 } else if (System.getenv().CI) {
     project.mod_version = project.mod_version + "-Test+" + System.getenv().GIT_BRANCH + "." + System.getenv().GIT_COMMIT
     writeVersion()
+    config.type = "test"
 } else {
     project.mod_version = project.mod_version + "-Alpha+" + getDate();
+    config.type = "alpha"
 }
 
 version = config.minecraft_version + "-" + project.mod_version

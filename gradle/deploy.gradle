@@ -4,14 +4,16 @@ curseforge {
     } else if (System.getenv().CI) {
         apiKey = System.getenv().CURSEFORGE_KEY_SECRET
     } else {
-        apiKey = ''
+        apiKey = project.CURSEFORGE_API
     }
     project {
         id = "233029"
 
-        if (System.getenv().RELEASE) {
+        if (config.type == "beta") {
             releaseType = 'beta'
             //changelog = new File("resources/changelog/${project.version}.txt").text
+        } else if (config.type == "release") {
+
         } else {
             releaseType = 'alpha'
             changelog = "This version should not be used in your 'productive' world. It contains the latest features, but also the latest bugs.\n Probably not all features are finished.\n To see what might have changed visit our Github page and browse the latest commits."
@@ -20,9 +22,7 @@ curseforge {
 
         mainArtifact(jar) {
             displayName = "Vampirism-${config.minecraft_version}-${project.mod_version}"
-            relations {
-                optionalLibrary 'guide-api'
-            }
+
 
         }
 

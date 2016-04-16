@@ -6,6 +6,7 @@ import com.google.gson.JsonSyntaxException;
 import de.teamlapen.lib.VampLib;
 import net.minecraftforge.common.MinecraftForge;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
@@ -49,6 +50,7 @@ public class VersionChecker implements Runnable {
 
     @Override
     public void run() {
+        VampLib.log.i(TAG, "Starting version check at %s", UPDATE_FILE_URL);
         try {
             URL url = new URL(UPDATE_FILE_URL);
             check(url);
@@ -137,6 +139,7 @@ public class VersionChecker implements Runnable {
         if (VampLib.inDev) {
             VampLib.log.d(TAG, "Found new version %s, but in dev", possibleTarget);
         } else {
+            VampLib.log.i(TAG, "Found new version %s", possibleTarget);
             versionInfo.newVersion = possibleTarget;
         }
 
@@ -246,7 +249,7 @@ public class VersionChecker implements Runnable {
          * @return
          */
         @Override
-        public int compareTo(Version version) {
+        public int compareTo(@Nonnull Version version) {
             if (version.main > this.main) return -1;
             if (version.main < this.main) return 1;
             if (version.major > this.major) return -1;
