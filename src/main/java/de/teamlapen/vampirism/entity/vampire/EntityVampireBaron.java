@@ -200,7 +200,6 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
                 worldObj.spawnEntityInWorld(e);
                 m = (IVampireMinion.Saveable) e;
             } else if (i == 2 && this.getAttackTarget() != null) {
-                VampirismMod.log.t("Spawning entity behind player");
                 m = (IVampireMinion.Saveable) UtilLib.spawnEntityBehindEntity(this.getAttackTarget(), ModEntities.VAMPIRE_MINION_SAVEABLE_NAME);
             }
             if (m == null) {
@@ -229,7 +228,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         int avg = Math.round(((d.avgPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
         int max = Math.round(((d.maxPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
         int min = Math.round(((d.minPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * (MAX_LEVEL));
-        VampirismMod.log.t("Dif %d %d %d", min, max, avg);
+        VampirismMod.log.d("VampireBaron", "Difficulty %d %d %d", min, max, avg);
         switch (rand.nextInt(6)) {
             case 0:
                 return min;

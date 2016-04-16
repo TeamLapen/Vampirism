@@ -11,17 +11,19 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.ModWorldEventListener;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.terraingen.InitMapGenEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.server.FMLServerHandler;
 
 /**
  * Handles all events used in central parts of the mod
@@ -63,7 +65,7 @@ public class ModEventHandler {
         VersionChecker.VersionInfo versionInfo = VampirismMod.instance.getVersionInfo();
         if (!versionInfo.isChecked()) VampirismMod.log.w(TAG, "Version check is not finished yet");
         if (!Configs.disable_versionCheck && versionInfo.isNewVersionAvailable()) {
-            if (!FMLServerHandler.instance().getServer().isDedicatedServer() || UtilLib.isPlayerOp(event.player) || event.player.getRNG().nextInt(5) == 0) {
+            if (!FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer() || UtilLib.isPlayerOp(event.player) || event.player.getRNG().nextInt(5) == 0) {
                 if (event.player.getRNG().nextInt(4) == 0) {
                     VersionChecker.Version newVersion = versionInfo.getNewVersion();
                     //Inspired by @Vazikii's useful message
@@ -75,6 +77,15 @@ public class ModEventHandler {
                 }
             }
 
+        }
+        if (Configs.updated_vampirism) {
+            if (!FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer() || UtilLib.isPlayerOp(event.player)) {
+
+
+                event.player.addChatComponentMessage(new TextComponentString("It looks like you have updated Vampirism"));
+                event.player.addChatComponentMessage(new TextComponentString("Please consider resetting the balance values to the updated ones, using " + TextFormatting.DARK_GREEN + "'/vampirism resetBalance all'" + TextFormatting.RESET));
+                event.player.addChatComponentMessage(new TextComponentString("For more information use " + TextFormatting.DARK_GREEN + "'/vampirism resetBalance help'" + TextFormatting.RESET));
+            }
         }
     }
 

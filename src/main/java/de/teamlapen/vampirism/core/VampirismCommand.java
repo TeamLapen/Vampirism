@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
@@ -25,7 +26,9 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.apache.commons.lang3.ArrayUtils;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -46,12 +49,12 @@ public class VampirismCommand extends BasicCommand {
         addSub(new SubCommand() {
             @Override
             public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-                return (args.length == 1) ? getListOfStringsMatchingLastWord(args, getCategories()) : null;
+                return (args.length == 1) ? getListOfStringsMatchingLastWord(args, getCategories()) : Collections.emptyList();
             }
 
             @Override
             public boolean canSenderUseCommand(ICommandSender var1) {
-                return var1.canCommandSenderUseCommand(3, getCommandName());
+                return !FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer() || var1.canCommandSenderUseCommand(3, getCommandName());
             }
 
             @Override
@@ -61,7 +64,7 @@ public class VampirismCommand extends BasicCommand {
 
             @Override
             public String getCommandUsage(ICommandSender var1) {
-                return getCommandName() + " <all/[category]>";
+                return getCommandName() + " <all/[category]/help>";
             }
 
             @Override
@@ -71,6 +74,10 @@ public class VampirismCommand extends BasicCommand {
                     cat = "all";
                 } else {
                     cat = var2[0];
+                }
+                if ("help".equals(cat)) {
+                    var1.addChatMessage(new TextComponentString("You can reset Vampirism balance values to the default values. If you have not modified them, this is recommend after every update of Vampirism"));
+                    var1.addChatMessage(new TextComponentString("Use '/vampirism resetBalance all' to reset all categories or specify a category with '/vampirism resetBalance <category>' (Tab completion is supported)"));
                 }
                 boolean p = Balance.resetAndReload(cat);
                 if (p) {
@@ -82,8 +89,9 @@ public class VampirismCommand extends BasicCommand {
 
             private String[] getCategories() {
                 Set<String> categories = Balance.getCategories().keySet();
-                String[] result = categories.toArray(new String[categories.size() + 1]);
+                String[] result = categories.toArray(new String[categories.size() + 2]);
                 result[result.length - 1] = "all";
+                result[result.length - 2] = "help";
                 return result;
             }
         });
@@ -91,7 +99,7 @@ public class VampirismCommand extends BasicCommand {
 
             @Override
             public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-                return args.length == 1 ? getListOfStringsMatchingLastWord(args, pfaction_names) : null;
+                return args.length == 1 ? getListOfStringsMatchingLastWord(args, pfaction_names) : Collections.emptyList();
             }
 
             @Override
@@ -194,7 +202,7 @@ public class VampirismCommand extends BasicCommand {
         addSub(new SubCommand() {
             @Override
             public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-                return null;
+                return Collections.emptyList();
             }
 
             @Override
@@ -249,7 +257,7 @@ public class VampirismCommand extends BasicCommand {
         addSub(new SubCommand() {
             @Override
             public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-                return null;
+                return Collections.emptyList();
             }
 
             @Override
@@ -292,7 +300,7 @@ public class VampirismCommand extends BasicCommand {
 
             @Override
             public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-                return null;
+                return Collections.emptyList();
             }
 
             @Override
@@ -318,6 +326,36 @@ public class VampirismCommand extends BasicCommand {
                         var1.addChatMessage(new TextComponentString("Dimension ID: " + p.worldObj.provider.getDimension()));
                     }
                 }
+            }
+        });
+        addSub(new SubCommand() {
+            @Nonnull
+            @Override
+            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+                return Collections.emptyList();
+            }
+
+            @Override
+            public boolean canSenderUseCommand(ICommandSender var1) {
+                return !FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer() || var1.canCommandSenderUseCommand(3, getCommandName());
+            }
+
+            @Override
+            public String getCommandName() {
+                return "debug";
+            }
+
+            @Override
+            public String getCommandUsage(ICommandSender var1) {
+                return getCommandName();
+            }
+
+            @Override
+            public void processCommand(ICommandSender var1, String[] var2) throws CommandException {
+                boolean enabled = VampirismMod.log.isDebug();
+                VampirismMod.log.setDebug(!enabled);
+                String msg = enabled ? "Disabled debug mode" : "Enabled debug mode";
+                var1.addChatMessage(new TextComponentString(msg));
             }
         });
     }

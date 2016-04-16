@@ -54,8 +54,7 @@ public class VampirismWorldGen implements IWorldGenerator {
         boolean generatedStructure = false;
         boolean mapFeatures = world.getWorldInfo().isMapFeaturesEnabled();
         BiomeGenBase biome = world.getBiomeGenForCoords(new BlockPos((chunkX << 4) + 8, 0, (chunkZ << 4) + 8));
-
-        if (!generatedStructure && mapFeatures && !ModBiomes.vampireForest.getRegistryName().equals(ModBiomes.vampireForest.getRegistryName())) {
+        if (!generatedStructure && mapFeatures && !ModBiomes.vampireForest.getRegistryName().equals(biome.getRegistryName())) {
             int chance = random.nextInt(1000);
             int trees = biome.theBiomeDecorator.treesPerChunk;
             float bh = biome.getBaseHeight() + biome.getHeightVariation();

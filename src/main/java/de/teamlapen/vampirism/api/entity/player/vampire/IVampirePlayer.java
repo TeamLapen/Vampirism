@@ -47,6 +47,15 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
      */
     EntityPlayer.EnumStatus trySleep(BlockPos pos);
 
+    /**
+     * Wake up the player if he is sleeping in a coffin
+     *
+     * @param immediately
+     * @param updateWorldFlag
+     * @param setSpawn
+     */
+    void wakeUpPlayer(boolean immediately, boolean updateWorldFlag, boolean setSpawn);
+
 
     enum BITE_TYPE {
         ATTACK, SUCK_BLOOD_CREATURE, SUCK_BLOOD_PLAYER, SUCK_BLOOD, NONE

@@ -95,12 +95,17 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter 
 
     @Override
     public int suggestLevel(Difficulty d) {
-        if (d.maxPercLevel == 100) {
-            if (this.rand.nextInt((d.maxPercLevel - d.avgPercLevel) / 10 + 2) == 0) {
-                return MAX_LEVEL;
-            }
+        switch (this.rand.nextInt(5)) {
+            case 0:
+                return (int) (d.minPercLevel / 100F * MAX_LEVEL);
+            case 1:
+                return (int) (d.avgPercLevel / 100F * MAX_LEVEL);
+            case 2:
+                return (int) (d.maxPercLevel / 100F * MAX_LEVEL);
+            default:
+                return this.rand.nextInt(MAX_LEVEL + 1);
         }
-        return this.rand.nextInt(MAX_LEVEL);
+
     }
 
     @Override
@@ -148,10 +153,10 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter 
         this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
         this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0, false));
 
-        this.tasks.addTask(6, new EntityAIWander(this, 0.7));
+        this.tasks.addTask(6, new EntityAIWander(this, 0.7, 50));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 13F));
-        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityVampireBase.class, 17F));
-        this.tasks.addTask(10, new EntityAILookIdle(this));
+        this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityVampireBase.class, 17F));
+        this.tasks.addTask(8, new EntityAILookIdle(this));
 
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 

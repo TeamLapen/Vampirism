@@ -99,7 +99,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     public void onUpdate() {
         super.onUpdate();
         if (!worldObj.isRemote && entityCreature == null) {
-            VampirismMod.log.t("Setting dead");
+            VampirismMod.log.d(TAG, "Setting dead, since creature is null");
             this.setDead();
         }
     }

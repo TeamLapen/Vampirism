@@ -9,8 +9,10 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import org.apache.commons.lang3.ArrayUtils;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -160,9 +162,12 @@ public abstract class BasicCommand extends CommandBase {
         return names;
     }
 
-    private List getSubcommandTabCompletion(ICommandSender sender, String[] args, BlockPos pos) {
-        if (args.length < 2) return null;
-        return getSub(args[0]).addTabCompletionOptions(sender, ArrayUtils.subarray(args, 1, args.length), pos);
+    private
+    @Nonnull
+    List getSubcommandTabCompletion(ICommandSender sender, String[] args, BlockPos pos) {
+        if (args.length < 2) return Collections.EMPTY_LIST;
+        List options = getSub(args[0]).addTabCompletionOptions(sender, ArrayUtils.subarray(args, 1, args.length), pos);
+        return options == null ? Collections.emptyList() : options;
     }
 
     public interface SubCommand {

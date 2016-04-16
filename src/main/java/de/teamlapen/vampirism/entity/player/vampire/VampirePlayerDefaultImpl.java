@@ -185,4 +185,9 @@ public class VampirePlayerDefaultImpl implements IVampirePlayer {
     public EntityPlayer.EnumStatus trySleep(BlockPos pos) {
         return null;
     }
+
+    @Override
+    public void wakeUpPlayer(boolean immediately, boolean updateWorldFlag, boolean setSpawn) {
+
+    }
 }

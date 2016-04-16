@@ -46,6 +46,7 @@ public class WorldGenHunterCamp extends WorldGenerator {
 
 
             }
+            return true;
         }
 
         return false;

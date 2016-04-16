@@ -44,7 +44,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
 
     @Override
     public boolean getCanSpawnHere() {
-        if (isGettingSundamage(true)) return false;
+        if (isGettingSundamage(true) || (worldObj.isDaytime() && rand.nextInt(5) != 0)) return false;
         if (isGettingGarlicDamage(true) != EnumGarlicStrength.NONE) return false;
         if (worldObj.getVillageCollection().getNearestVillage(getPosition(), 10) != null) {
             return getRNG().nextInt(5) == 0 && super.getCanSpawnHere();

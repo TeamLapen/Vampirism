@@ -35,6 +35,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     protected boolean saveHome = false;
     private AxisAlignedBB home;
     private boolean moveTowardsRestrictionAdded = false;
+    private int moveTowardsRestrictionPrio = -1;
 
     public EntityVampirism(World world) {
         super(world);
@@ -167,6 +168,9 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
             saveHome = true;
             int[] h = nbt.getIntArray("home");
             home = new AxisAlignedBB(h[0], h[1], h[2], h[3], h[4], h[5]);
+            if (nbt.hasKey("homeMovePrio")) {
+                this.setMoveTowardsRestriction(nbt.getInteger("moveHomePrio"));
+            }
         }
     }
 
@@ -185,6 +189,9 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         if (saveHome && hasHome()) {
             int[] h = {(int) home.minX, (int) home.minY, (int) home.minZ, (int) home.maxX, (int) home.maxY, (int) home.maxZ};
             nbt.setIntArray("home", h);
+            if (moveTowardsRestrictionAdded && moveTowardsRestrictionPrio > -1) {
+                nbt.setInteger("homeMovePrio", moveTowardsRestrictionPrio);
+            }
         }
     }
 
@@ -260,10 +267,12 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
      */
     protected void setMoveTowardsRestriction(int prio) {
         if (moveTowardsRestrictionAdded) {
+            if (moveTowardsRestrictionPrio == prio) return;
             this.tasks.removeTask(moveTowardsRestriction);
         }
         tasks.addTask(prio, moveTowardsRestriction);
         moveTowardsRestrictionAdded = true;
+        moveTowardsRestrictionPrio = prio;
     }
 
     /**

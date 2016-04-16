@@ -38,6 +38,7 @@ public class Configs {
     public static boolean disable_factionDisplayChat;
     public static boolean disable_versionCheck;
     public static boolean playerCanTurnPlayer;
+    public static boolean updated_vampirism;
 
     public static boolean autoConvertGlasBottles;
     private static Configuration main_config;
@@ -65,6 +66,7 @@ public class Configs {
 
         main_config = new Configuration(mainConfigFile, REFERENCE.VERSION);
         loadConfiguration();
+        if (updated_vampirism) VampirismMod.log.i(TAG, "Vampirism seems to have been updated");
         VampirismMod.log.i(TAG, "Loaded configuration");
     }
 
@@ -122,7 +124,10 @@ public class Configs {
         disable_factionDisplayChat = main_config.getBoolean("disable_faction_display_chat", CATEGORY_DISABLE, false, "Do not display the player's current faction in chat");
         disable_vampireForest = main_config.getBoolean("disable_vampire_forest", CATEGORY_DISABLE, false, "Disable vampire forest generation");
         disable_versionCheck = main_config.getBoolean("disable_version_check", CATEGORY_DISABLE, false, "Disable vampirism's version check");
-        if (main_config.hasChanged()) {
+
+        updated_vampirism = !main_config.getDefinedConfigVersion().equals(main_config.getLoadedConfigVersion());
+
+        if (main_config.hasChanged() || updated_vampirism) {
             main_config.save();
         }
     }

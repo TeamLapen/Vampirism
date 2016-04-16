@@ -49,6 +49,7 @@ public class TileTent extends TileEntity implements ITickable {
         spawnerLogic.setSpawnRange(6);
         spawnerLogic.setMinSpawnDelay(400);
         spawnerLogic.setMaxSpawnDelay(800);
+        spawnerLogic.setMaxNearbyEntities(2);
     }
 
     @Override

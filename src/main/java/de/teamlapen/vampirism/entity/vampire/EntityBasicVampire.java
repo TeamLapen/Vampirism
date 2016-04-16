@@ -125,12 +125,16 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
 
     @Override
     public int suggestLevel(Difficulty d) {
-        if (d.maxPercLevel == 100) {
-            if (this.rand.nextInt((d.maxPercLevel - d.avgPercLevel) / 10 + 2) == 0) {
-                return MAX_LEVEL;
-            }
+        switch (this.rand.nextInt(5)) {
+            case 0:
+                return (int) (d.minPercLevel / 100F * MAX_LEVEL);
+            case 1:
+                return (int) (d.avgPercLevel / 100F * MAX_LEVEL);
+            case 2:
+                return (int) (d.maxPercLevel / 100F * MAX_LEVEL);
+            default:
+                return this.rand.nextInt(MAX_LEVEL + 1);
         }
-        return this.rand.nextInt(MAX_LEVEL);
     }
 
     @Override

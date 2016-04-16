@@ -133,7 +133,7 @@ public class ItemBloodBottle extends VampirismItem implements IBloodContainerIte
 //            }
             if (vampire.getBloodStats().needsBlood()) {
                 if (drain(itemStackIn, VReference.FOOD_TO_FLUID_BLOOD, true) != null) {
-                    vampire.getBloodStats().addBlood(1, 0);
+                    vampire.getBloodStats().addBlood(1, 0.3F);//TODO Saturation
                     return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
                 }
             }

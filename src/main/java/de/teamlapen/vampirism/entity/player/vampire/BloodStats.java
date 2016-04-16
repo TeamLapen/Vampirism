@@ -37,10 +37,10 @@ public class BloodStats {
 
     /**
      * Adds blood to the stats
-     *
+     * Consider using {@link VampirePlayer#consumeBlood(int, float)} instead
      * @param amount
      * @param saturationModifier
-     * @return The amound which could not be added
+     * @return The amount which could not be added
      */
     public int addBlood(int amount, float saturationModifier) {
         int add = Math.min(amount, MAXBLOOD - bloodLevel);

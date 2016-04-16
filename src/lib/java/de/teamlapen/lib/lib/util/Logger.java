@@ -18,7 +18,7 @@ public class Logger {
     /**
      * Used to convert DEBUG levels to INFO level in dev, since it seems to be impossible to change the view level
      */
-    public boolean inDev = false;
+    private boolean debug = false;
     /**
      * Currently Forge automatically adds the mod id on server side, but not on client side. TODO remove
      */
@@ -31,7 +31,7 @@ public class Logger {
     }
 
     public void d(String tag, String format, Object... data) {
-        if (inDev) {
+        if (debug) {
             log(Level.INFO, tag, format, data);
         } else {
             log(Level.DEBUG, tag, format, data);
@@ -50,6 +50,19 @@ public class Logger {
 
     public void i(String tag, String format, Object... data) {
         log(Level.INFO, tag, format, data);
+    }
+
+    public boolean isDebug() {
+        return debug;
+    }
+
+    /**
+     * Makes debug messages appear on INFO level
+     *
+     * @param debug
+     */
+    public void setDebug(boolean debug) {
+        this.debug = debug;
     }
 
     /**

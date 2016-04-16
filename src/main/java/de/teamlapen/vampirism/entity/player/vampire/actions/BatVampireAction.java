@@ -122,7 +122,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         float mult = newMax / oldMax;
         float newHealth = mult * oldHealth;
         player.setHealth(newHealth);
-        if (player.onGround) {
+        if (!player.onGround) {
             player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 20, 100));
         }
         player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 60, 100));

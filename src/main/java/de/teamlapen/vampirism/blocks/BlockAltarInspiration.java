@@ -35,7 +35,7 @@ public class BlockAltarInspiration extends VampirismBlockContainer {
     public BlockAltarInspiration() {
         super(regName, Material.IRON);
         this.setHarvestLevel("pickaxe", 1);
-        this.setHardness(40F);
+        this.setHardness(2F);
     }
 
     @Override

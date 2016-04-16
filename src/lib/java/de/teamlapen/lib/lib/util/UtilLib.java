@@ -21,7 +21,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraftforge.fml.server.FMLServerHandler;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.util.List;
 import java.util.Random;
@@ -245,7 +245,7 @@ public class UtilLib {
      * @param message
      */
     public static void sendMessageToAllExcept(EntityPlayer player, ITextComponent message) {
-        for (Object o : FMLServerHandler.instance().getServer().getPlayerList().getPlayerList()) {
+        for (Object o : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerList()) {
             if (!o.equals(player)) {
                 ((EntityPlayer) o).addChatComponentMessage(message);
             }
@@ -415,6 +415,6 @@ public class UtilLib {
     }
 
     public static boolean isPlayerOp(EntityPlayer player) {
-        return FMLServerHandler.instance().getServer().getPlayerList().getOppedPlayers().getEntry(player.getGameProfile()) != null;
+        return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getOppedPlayers().getEntry(player.getGameProfile()) != null;
     }
 }

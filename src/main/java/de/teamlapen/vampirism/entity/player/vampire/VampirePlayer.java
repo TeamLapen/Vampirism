@@ -349,7 +349,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public boolean onEntityAttacked(DamageSource src, float amt) {
-        VampirismMod.log.t("Attacj %s %s", src.damageType, amt);
         if (isPlayerSleeping()) {
             wakeUpPlayer(true, true, false);
         }
@@ -679,8 +678,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return EntityPlayer.EnumStatus.OK;
     }
 
+    @Override
     public void wakeUpPlayer(boolean immediately, boolean updateWorldFlag, boolean setSpawn) {
-        VampirismMod.log.t("Waking player");
+        VampirismMod.log.d(TAG, "Waking up player");
         if (this.isPlayerSleeping() && player instanceof EntityPlayerMP) {
             ((EntityPlayerMP) player).getServerWorld().getEntityTracker().sendToTrackingAndSelf(player, new SPacketAnimation(player, 2));
         }
@@ -740,7 +740,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     /**
      * Bite the given entity.
-     * Does NOT chack reach distance
+     * Does NOT check reach distance
      *
      * @param entity
      */
@@ -810,7 +810,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 180));
         }
         if (getLevel() >= Balance.vp.SUNDAMAGE_WEAKNESS_MINLEVEL && player.ticksExisted % 150 == 3) {
-            player.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 152, 1));
+            player.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 152, 0));
         }
         if (getLevel() >= Balance.vp.SUNDAMAGE_MINLEVEL && ticksInSun >= 100 && player.ticksExisted % 40 == 5) {
             float damage = (float) (player.getEntityAttribute(VReference.sunDamage).getAttributeValue());

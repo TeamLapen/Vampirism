@@ -173,7 +173,6 @@ public class InputEventPacket implements IMessage {
                 player.attackEntityFrom(DamageSource.magic, 1000);
 
             } else if (message.action.equals(WAKEUP)) {
-                VampirismMod.log.t("adsf");
                 VampirePlayer.get(player).wakeUpPlayer(false, true, true);
             }
             return null;

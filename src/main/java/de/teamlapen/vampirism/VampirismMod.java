@@ -148,7 +148,7 @@ public class VampirismMod {
     private void checkDevEnv() {
         if ((Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment")) {
             inDev = true;
-            log.inDev = true;
+            log.setDebug(true);
         }
     }
 

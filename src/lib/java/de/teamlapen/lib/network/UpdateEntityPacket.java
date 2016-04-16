@@ -199,8 +199,8 @@ public class UpdateEntityPacket implements IMessage {
 
         @Override
         public IMessage handleClientMessage(EntityPlayer player, UpdateEntityPacket message, MessageContext ctx) {
-            if (player.getRNG().nextInt(10) == 0)
-                VampLib.log.t("Received %s %s %s", message.id, message.data, message.caps);//Log a few random message, just to see if everything is alright. TODO Remove later
+//            if (player.getRNG().nextInt(10) == 0)
+//                VampLib.log.t("Received %s %s %s", message.id, message.data, message.caps);//Log a few random message, just to see if everything is alright. TODO Remove later
             if (player.worldObj == null) {
                 VampLib.log.w(TAG, "World not loaded yet");
                 return null;

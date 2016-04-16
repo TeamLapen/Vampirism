@@ -126,7 +126,7 @@ public class ModEntities {
         registerEntity(EntityConvertedCreature.class, CONVERTED_CREATURE, false);
         registerEntity(EntityConvertedSheep.class, CONVERTED_SHEEP, false);
         registerEntity(EntityBasicHunter.class, BASIC_HUNTER_NAME, true);
-        registerEntity(EntityBasicVampire.class, BASIC_VAMPIRE_NAME, Balance.mobProps.VAMPIRE_SPAWN_PROBE, 1, 3, EnumCreatureType.MONSTER, zombieBiomes.toArray(new BiomeGenBase[zombieBiomes.size()]));
+        registerEntity(EntityBasicVampire.class, BASIC_VAMPIRE_NAME, Balance.mobProps.VAMPIRE_SPAWN_PROBE, 1, 2, EnumCreatureType.MONSTER, zombieBiomes.toArray(new BiomeGenBase[zombieBiomes.size()]));
         registerEntity(EntityHunterTrainer.class, HUNTER_TRAINER, true);
         registerEntity(EntityVampireBaron.class, VAMPIRE_BARON, true);
         registerEntity(EntityVampireMinionSaveable.class, VAMPIRE_MINION_SAVEABLE_NAME, false);
