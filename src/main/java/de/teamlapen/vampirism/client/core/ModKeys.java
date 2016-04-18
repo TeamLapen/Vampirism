@@ -27,12 +27,13 @@ public class ModKeys {
     //    private static final String AUTO_BLOOD = "keys.vampirism.auto";
     private static final String TOGGLE_ACTIONS = "keys.vampirism.action";
     private static final String SELECT_SKILLS = "keys.vampirism.select_skills";
-//    private static final String SWITCH_VISION = "key.vampirism.vision";
+    private static final String SWITCH_VISION = "key.vampirism.vision";
 //    private static final String MINION_CONTROL = "key.vampirism.minion_control";
 
     private static KeyBinding SUCK = new KeyBinding(SUCK_BLOOD, Keyboard.KEY_V, CATEGORY);
     private static KeyBinding ACTION = new KeyBinding(TOGGLE_ACTIONS, Keyboard.KEY_R, CATEGORY);//Middle Mouse -98
     private static KeyBinding SKILL = new KeyBinding(SELECT_SKILLS, Keyboard.KEY_P, CATEGORY);
+    private static KeyBinding VISION = new KeyBinding(SWITCH_VISION, Keyboard.KEY_N, CATEGORY);
 
     /**
      * @param key
@@ -46,6 +47,8 @@ public class ModKeys {
                 return ACTION.getKeyCode();
             case SKILL:
                 return SKILL.getKeyCode();
+            case VISION:
+                return VISION.getKeyCode();
             default:
                 return 0;
         }
@@ -70,6 +73,7 @@ public class ModKeys {
                 ClientRegistry.registerKeyBinding(ACTION);
                 ClientRegistry.registerKeyBinding(SUCK);
                 ClientRegistry.registerKeyBinding(SKILL);
+                ClientRegistry.registerKeyBinding(VISION);
                 break;
             default:
                 break;
@@ -100,6 +104,8 @@ public class ModKeys {
             if (FactionPlayerHandler.get(player).getCurrentFaction() != null) {
                 player.openGui(VampirismMod.instance, ModGuiHandler.ID_SKILL, player.worldObj, player.chunkCoordX, player.chunkCoordY, player.chunkCoordZ);
             }
+        } else if (keyPressed == KEY.VISION) {
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.VAMPIRE_VISION_TOGGLE, ""));
         }
     }
 
@@ -113,11 +119,13 @@ public class ModKeys {
             return KEY.ACTION;
         } else if (SKILL.isPressed()) {
             return KEY.SKILL;
+        } else if (VISION.isPressed()) {
+            return KEY.VISION;
         }
         return KEY.UNKNOWN;
     }
 
     public enum KEY {
-        SUCK, UNKNOWN, ACTION, SKILL
+        SUCK, UNKNOWN, ACTION, SKILL, VISION
     }
 }

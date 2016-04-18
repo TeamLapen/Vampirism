@@ -2,14 +2,16 @@
   "comment": "Placeholder until the first version is released",
   "homepage": "http://teamlapen.de/projects/vampirism",
   "promos": {
-    "1.9-latest": "1.0.0-Alpha+04-16-20-04",
-    "1.9-recommended": "1.0.0-Alpha+04-16-20-04"
+    "1.9-latest": "1.0.0-Alpha+04-18-23-18",
+    "1.9-recommended": "1.0.0-Alpha+04-18-23-18"
   },
   "1.9": {
+    "1.0.0-Alpha+04-18-23-18": "Implemented blood vision and made night vision toggleable",
     "1.0.0-Alpha+04-16-20-04": "Initial"
   },
   "downloads": {
     "1.9": {
+      "1.0.0-Alpha+04-18-23-18": "http://minecraft.curseforge.com/projects/vampirism-become-a-vampire/files/2294866",
       "1.0.0-Alpha+04-16-20-04": "http://download"
     }
   }

@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.Achievements;
@@ -55,7 +56,10 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -112,6 +116,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private final BloodStats bloodStats;
     private final String KEY_EYE = "eye_type";
     private final String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
+    private final String KEY_VISION = "vision";
     private final ActionHandler<IVampirePlayer> actionHandler;
     private final SkillHandler<IVampirePlayer> skillHandler;
     private final VampirePlayerSpecialAttributes specialAttributes = new VampirePlayerSpecialAttributes();
@@ -122,6 +127,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private int ticksInSun = 0;
     private boolean sleepingInCoffin = false;
     private int sleepTimer = 0;
+    private List<IVampireVision> unlockedVisions = new ArrayList<>();
+    private IVampireVision activatedVision = null;
 
     public VampirePlayer(EntityPlayer player) {
         super(player);
@@ -129,6 +136,28 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         bloodStats = new BloodStats(player);
         actionHandler = new ActionHandler(this);
         skillHandler = new SkillHandler<IVampirePlayer>(this);
+    }
+
+    @Override
+    public void activateVision(@Nullable IVampireVision vision) {
+        if (vision != null && !isRemote() && ((GeneralRegistryImpl) VampirismAPI.vampireVisionRegistry()).getIdOfVision(vision) == -1) {
+            throw new IllegalArgumentException("You have to register the vision first: " + vision);
+        }
+        if (activatedVision != vision) {
+            if (activatedVision != null) {
+                activatedVision.onDeactivated(this);
+            }
+            activatedVision = vision;
+            if (vision != null) {
+                vision.onActivated(this);
+            }
+            if (!isRemote()) {
+                NBTTagCompound nbt = new NBTTagCompound();
+                nbt.setInteger(KEY_VISION, activatedVision == null ? -1 : ((GeneralRegistryImpl) VampirismAPI.vampireVisionRegistry()).getIdOfVision(activatedVision));
+                this.sync(nbt, false);
+            }
+        }
+
     }
 
     /**
@@ -207,6 +236,12 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return actionHandler;
     }
 
+    @Nullable
+    @Override
+    public IVampireVision getActiveVision() {
+        return activatedVision;
+    }
+
     @Override
     public int getBloodLevel() {
         return bloodStats.getBloodLevel();
@@ -247,8 +282,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
 
     }
-
-
 
     @Override
     public ISkillHandler<IVampirePlayer> getSkillHandler() {
@@ -469,6 +502,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 this.sleepTimer = 0;
             }
         }
+        if (activatedVision != null) {
+            activatedVision.onUpdate(this);
+        }
 
         if (!isRemote()) {
             if (level > 0) {
@@ -506,9 +542,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
         } else {
             if (level > 0) {
-                if (player.ticksExisted % 50 == 8 && getSpecialAttributes().night_vision && player.getActivePotionEffect(MobEffects.NIGHT_VISION) == null) {
-                    player.addPotionEffect(new FakeNightVisionPotionEffect());
-                }
                 actionHandler.updateActions();
                 if (isGettingSundamage()) {
                     handleSunDamage();
@@ -587,6 +620,21 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
         }
         return true;
+    }
+
+    /**
+     * Switch to the next vision
+     */
+    public void switchVision() {
+        int id = -1;
+        if (activatedVision != null) {
+            id = unlockedVisions.indexOf(activatedVision);
+        }
+        id++;
+        if (id > unlockedVisions.size() - 1) {
+            id = -1;
+        }
+        activateVision(id == -1 ? null : unlockedVisions.get(id));
     }
 
     @Override
@@ -679,6 +727,22 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     @Override
+    public void unUnlockVision(@Nonnull IVampireVision vision) {
+        if (activatedVision == vision) {
+            activateVision(null);
+        }
+        unlockedVisions.remove(vision);
+    }
+
+    @Override
+    public void unlockVision(@Nonnull IVampireVision vision) {
+        if (((GeneralRegistryImpl) VampirismAPI.vampireVisionRegistry()).getIdOfVision(vision) == -1) {
+            throw new IllegalArgumentException("You have to register the vision first: " + vision);
+        }
+        unlockedVisions.add(vision);
+    }
+
+    @Override
     public void wakeUpPlayer(boolean immediately, boolean updateWorldFlag, boolean setSpawn) {
         VampirismMod.log.d(TAG, "Waking up player");
         if (this.isPlayerSleeping() && player instanceof EntityPlayerMP) {
@@ -721,6 +785,21 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         bloodStats.loadUpdate(nbt);
         actionHandler.readUpdateFromServer(nbt);
         skillHandler.readUpdateFromServer(nbt);
+        if (nbt.hasKey(KEY_VISION)) {
+            int id = nbt.getInteger(KEY_VISION);
+            IVampireVision vision;
+            if (id == -1) {
+                vision = null;
+            } else {
+                vision = ((GeneralRegistryImpl) VampirismAPI.vampireVisionRegistry()).getVisionOfId(id);
+                if (vision == null) {
+                    VampirismMod.log.w(TAG, "Failed to find vision with id %d", id);
+                }
+            }
+            activateVision(vision);
+
+        }
+
     }
 
     @Override
@@ -729,6 +808,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         bloodStats.writeUpdate(nbt);
         actionHandler.writeUpdateForClient(nbt);
         skillHandler.writeUpdateForClient(nbt);
+        nbt.setInteger(KEY_VISION, activatedVision == null ? -1 : ((GeneralRegistryImpl) VampirismAPI.vampireVisionRegistry()).getIdOfVision(activatedVision));
     }
 
     private void applyEntityAttributes() {

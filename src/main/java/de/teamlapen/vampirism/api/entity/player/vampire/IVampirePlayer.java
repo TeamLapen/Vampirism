@@ -9,11 +9,21 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 /**
  * Interface for the player vampire data.
  * Attached to all players as capability
  */
 public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>, IMinionLord, IBiteableEntity {
+
+    /**
+     * Force enables the vision
+     * Does NOT unlock the vision
+     * @param vision Null to disable all
+     */
+    void activateVision(@Nullable IVampireVision vision);
 
     /**
      * @return The bite type which would be applied to the give entity
@@ -24,6 +34,12 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
      * @return The players vampire skill handler
      */
     IActionHandler<IVampirePlayer> getActionHandler();
+
+    /**
+     * @return The currently active vision. May be null
+     */
+    @Nullable
+    IVampireVision getActiveVision();
 
     int getBloodLevel();
 
@@ -48,6 +64,20 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     EntityPlayer.EnumStatus trySleep(BlockPos pos);
 
     /**
+     * Locks the vision again, preventing the player from using it
+     * @param vision
+     */
+    void unUnlockVision(@Nonnull IVampireVision vision);
+
+    /**
+     * Unlocks the given vision, so the player can activate it.
+     * Is not saved to nbt
+     *
+     * @param vision
+     */
+    void unlockVision(@Nonnull IVampireVision vision);
+
+    /**
      * Wake up the player if he is sleeping in a coffin
      *
      * @param immediately
@@ -55,8 +85,6 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
      * @param setSpawn
      */
     void wakeUpPlayer(boolean immediately, boolean updateWorldFlag, boolean setSpawn);
-
-
     enum BITE_TYPE {
         ATTACK, SUCK_BLOOD_CREATURE, SUCK_BLOOD_PLAYER, SUCK_BLOOD, NONE
     }

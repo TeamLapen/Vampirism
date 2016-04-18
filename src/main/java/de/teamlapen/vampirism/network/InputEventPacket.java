@@ -37,6 +37,7 @@ public class InputEventPacket implements IMessage {
     public static String TRAINERLEVELUP = "tl";
     public static String REVERTBACK = "rb";
     public static String WAKEUP = "wu";
+    public static String VAMPIRE_VISION_TOGGLE = "vvt";
     private final String SPLIT = "-";
     private String param;
     private String action;
@@ -174,6 +175,8 @@ public class InputEventPacket implements IMessage {
 
             } else if (message.action.equals(WAKEUP)) {
                 VampirePlayer.get(player).wakeUpPlayer(false, true, true);
+            } else if (message.action.equals(VAMPIRE_VISION_TOGGLE)) {
+                VampirePlayer.get(player).switchVision();
             }
             return null;
         }

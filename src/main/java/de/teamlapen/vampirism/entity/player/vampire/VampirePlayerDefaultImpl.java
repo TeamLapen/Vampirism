@@ -7,12 +7,15 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 
@@ -24,6 +27,11 @@ public class VampirePlayerDefaultImpl implements IVampirePlayer {
 
     public VampirePlayerDefaultImpl() {
         VampirismMod.log.e("VampirePlayerCapability", "Created Default Implementation. THIS SHOULD NOT BE DONE. The default impl does absolutely nothing");
+    }
+
+    @Override
+    public void activateVision(@Nullable IVampireVision vision) {
+
     }
 
     @Override
@@ -53,6 +61,12 @@ public class VampirePlayerDefaultImpl implements IVampirePlayer {
 
     @Override
     public IActionHandler<IVampirePlayer> getActionHandler() {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    public IVampireVision getActiveVision() {
         return null;
     }
 
@@ -184,6 +198,16 @@ public class VampirePlayerDefaultImpl implements IVampirePlayer {
     @Override
     public EntityPlayer.EnumStatus trySleep(BlockPos pos) {
         return null;
+    }
+
+    @Override
+    public void unUnlockVision(@Nonnull IVampireVision vision) {
+
+    }
+
+    @Override
+    public void unlockVision(@Nonnull IVampireVision vision) {
+
     }
 
     @Override

@@ -10,10 +10,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
-import de.teamlapen.vampirism.potion.FakeNightVisionPotionEffect;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.init.MobEffects;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -69,19 +66,13 @@ public class VampireSkills {
 
             @Override
             protected void onDisabled(IVampirePlayer player) {
-                ((VampirePlayer) player).getSpecialAttributes().night_vision = false;
-                PotionEffect nightVision = player.getRepresentingPlayer().getActivePotionEffect(MobEffects.NIGHT_VISION);
-                if (nightVision instanceof FakeNightVisionPotionEffect) {
-                    player.getRepresentingPlayer().removePotionEffect(nightVision.getPotion());
-                }
+                player.unUnlockVision(VReference.vision_nightVision);
             }
 
             @Override
             protected void onEnabled(IVampirePlayer player) {
-                ((VampirePlayer) player).getSpecialAttributes().night_vision = true;
-                if (player.isRemote()) {
-                    player.getRepresentingPlayer().addPotionEffect(new FakeNightVisionPotionEffect());
-                }
+                player.unlockVision(VReference.vision_nightVision);
+                player.activateVision(VReference.vision_nightVision);
             }
         });
         SkillNode skill3 = new SkillNode(skill2, new ActionSkill(VampireActions.regenAction, "regen"));
@@ -318,7 +309,7 @@ public class VampireSkills {
         speed.registerAttributeModifier(SharedMonsterAttributes.MOVEMENT_SPEED, "96dc968d-818f-4271-8dbf-6b799d603ad8", Balance.vps.SPEED_BOOST, 2);
         SkillNode skill2 = new SkillNode(skill1, jump, speed);
 
-        SkillNode skill3 = new SkillNode(skill2, new DefaultSkill() {
+        SkillNode skill3 = new SkillNode(skill2, new DefaultSkill<IVampirePlayer>() {
             @Override
             public String getID() {
                 return "1bloodvision";
@@ -344,7 +335,16 @@ public class VampireSkills {
                 return "text.vampirism.skill.blood_vision";
             }
 
-            //TODO blood vision
+
+            @Override
+            protected void onDisabled(IVampirePlayer player) {
+                player.unUnlockVision(VReference.vision_bloodVision);
+            }
+
+            @Override
+            protected void onEnabled(IVampirePlayer player) {
+                player.unlockVision(VReference.vision_bloodVision);
+            }
         });
         SkillNode skill4 = new SkillNode(skill3, new DefaultSkill<IVampirePlayer>() {
             @Override

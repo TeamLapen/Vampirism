@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.api;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
@@ -65,4 +66,6 @@ public class VReference {
      */
     public static IPlayableFaction<IHunterPlayer> HUNTER_FACTION;
     public static int castleDimId = 1000;
+    public static IVampireVision vision_nightVision;
+    public static IVampireVision vision_bloodVision;
 }

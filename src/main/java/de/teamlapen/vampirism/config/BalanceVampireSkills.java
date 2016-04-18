@@ -34,6 +34,9 @@ public class BalanceVampireSkills extends BalanceValues {
     @DefaultDouble(value = 0.15, comment = "The max movementspeed is multiplied with (value+1)")
     public double SPEED_BOOST;
 
+    @DefaultInt(value = 40, minValue = 5, comment = "How far the blood vision reaches")
+    public int BLOOD_VISION_DISTANCE;
+
     public BalanceVampireSkills(File directory) {
         super("vampire_player_skills", directory);
     }

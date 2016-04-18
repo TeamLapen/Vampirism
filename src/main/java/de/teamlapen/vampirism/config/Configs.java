@@ -27,6 +27,8 @@ public class Configs {
     public static int gui_level_offset_x;
     public static int gui_level_offset_y;
     public static boolean renderVampireForestFog;
+    public static int blood_vision_recompile_ticks;
+
 
     public static int village_size;
     public static int village_density;
@@ -106,6 +108,8 @@ public class Configs {
 
         playerCanTurnPlayer = main_config.getBoolean("player_can_turn_player", CATEGORY_GENERAL, true, "If one player can bite infect a human player with sanguinare");
         renderVampireForestFog = main_config.getBoolean("vampire_forest_fog", CATEGORY_GENERAL, true, "");
+        blood_vision_recompile_ticks = main_config.getInt("blood_vision_recompile", CATEGORY_GENERAL, 3, 1, 100, "Every n tick the blood vision entities are recompiled - Might have a performance impact");
+
         autoConvertGlasBottles = main_config.getBoolean("auto_convert_glas_bottles", CATEGORY_GENERAL, true, "If glas bottles should automatically be converted to blood bottles if needed");
 
         //Village
