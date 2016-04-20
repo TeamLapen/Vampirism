@@ -39,6 +39,7 @@ public class Configs {
     public static boolean disable_vampireForest;
     public static boolean disable_factionDisplayChat;
     public static boolean disable_versionCheck;
+    public static boolean disable_advancedMobPlayerFaces;
     public static boolean playerCanTurnPlayer;
     public static boolean updated_vampirism;
 
@@ -128,6 +129,7 @@ public class Configs {
         disable_factionDisplayChat = main_config.getBoolean("disable_faction_display_chat", CATEGORY_DISABLE, false, "Do not display the player's current faction in chat");
         disable_vampireForest = main_config.getBoolean("disable_vampire_forest", CATEGORY_DISABLE, false, "Disable vampire forest generation");
         disable_versionCheck = main_config.getBoolean("disable_version_check", CATEGORY_DISABLE, false, "Disable vampirism's version check");
+        disable_advancedMobPlayerFaces = main_config.getBoolean("disable_advanced_mob_player_face", CATEGORY_DISABLE, false, "Disable the rendering of other player faces for the advanced hunter and advanced vampire");
 
         updated_vampirism = !main_config.getDefinedConfigVersion().equals(main_config.getLoadedConfigVersion());
 

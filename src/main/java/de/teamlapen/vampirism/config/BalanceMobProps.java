@@ -47,6 +47,28 @@ public class BalanceMobProps extends BalanceValues {
     @DefaultDouble(value = 0.28D, minValue = 0.1, maxValue = 2, name = "hunter_speed")
     public double VAMPIRE_HUNTER_SPEED;
 
+    @DefaultDouble(value = 60D, minValue = 10D, maxValue = 10000D, name = "advanced_hunter_max_health")
+    public double ADVANCED_HUNTER_MAX_HEALTH;
+    @DefaultDouble(value = 20D, minValue = 0D, maxValue = 10000, name = "advanced_hunter_max_health_pl", comment = "Max health is increased by this for every level the hunter has")
+    public double ADVANCED_HUNTER_MAX_HEALTH_PL;
+    @DefaultDouble(value = 4D, minValue = 0D, name = "advanced_hunter_attack_damage")
+    public double ADVANCED_HUNTER_ATTACK_DAMAGE;
+    @DefaultDouble(value = 2D, minValue = 0D, name = "advanced_hunter_attack_damage_pl")
+    public double ADVANCED_HUNTER_ATTACK_DAMAGE_PL;
+    @DefaultDouble(value = 0.28D, minValue = 0.1, maxValue = 2, name = "advanced_hunter_speed")
+    public double ADVANCED_HUNTER_SPEED;
+
+    @DefaultDouble(value = 60D, minValue = 10D, maxValue = 10000D, name = "advanced_vampire_max_health")
+    public double ADVANCED_VAMPIRE_MAX_HEALTH;
+    @DefaultDouble(value = 20D, minValue = 0D, maxValue = 10000, name = "advanced_vampire_max_health_pl", comment = "Max health is increased by this for every level the hunter has")
+    public double ADVANCED_VAMPIRE_MAX_HEALTH_PL;
+    @DefaultDouble(value = 4D, minValue = 0D, name = "advanced_vampire_attack_damage")
+    public double ADVANCED_VAMPIRE_ATTACK_DAMAGE;
+    @DefaultDouble(value = 2D, minValue = 0D, name = "advanced_vampire_attack_damage_pl")
+    public double ADVANCED_VAMPIRE_ATTACK_DAMAGE_PL;
+    @DefaultDouble(value = 0.28D, minValue = 0.1, maxValue = 2, name = "advanced_vampire_speed")
+    public double ADVANCED_VAMPIRE_SPEED;
+
     @DefaultDouble(value = 30D, minValue = 10D, maxValue = 10000D, name = "vampire_max_health")
     public double VAMPIRE_MAX_HEALTH;
     @DefaultDouble(value = 3D, minValue = 0D, maxValue = 10000, name = "vampire_max_health_pl", comment = "Max health is increased by this for every level the vampire has")

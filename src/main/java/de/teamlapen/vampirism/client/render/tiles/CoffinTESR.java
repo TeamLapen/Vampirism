@@ -6,10 +6,13 @@ import de.teamlapen.vampirism.tileentity.TileCoffin;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Created by Max on 12.03.2016.
+ * Render the coffin with it's different colors and the lid opening animation
  */
+@SideOnly(Side.CLIENT)
 public class CoffinTESR extends VampirismTESR<TileCoffin> {
 
     public static final String[] colors = new String[]{"black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange",

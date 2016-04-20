@@ -12,11 +12,14 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 /**
  * Renders the beams for the altar of infusion
  */
+@SideOnly(Side.CLIENT)
 public class AltarInfusionTESR extends VampirismTESR<TileAltarInfusion> {
 
 

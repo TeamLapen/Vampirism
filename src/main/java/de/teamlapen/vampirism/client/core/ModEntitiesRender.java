@@ -5,9 +5,11 @@ import de.teamlapen.vampirism.client.render.entities.*;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
+import de.teamlapen.vampirism.entity.hunter.EntityAdvancedHunter;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainer;
 import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionBase;
+import de.teamlapen.vampirism.entity.vampire.EntityAdvancedVampire;
 import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBaron;
 import net.minecraft.client.renderer.entity.Render;
@@ -82,6 +84,18 @@ public class ModEntitiesRender {
             @Override
             public Render<? super EntityVampireMinionBase> createRenderFor(RenderManager manager) {
                 return new RenderVampireMinion(manager);
+            }
+        });
+        RenderingRegistry.registerEntityRenderingHandler(EntityAdvancedHunter.class, new IRenderFactory<EntityAdvancedHunter>() {
+            @Override
+            public Render<? super EntityAdvancedHunter> createRenderFor(RenderManager manager) {
+                return new RenderAdvancedHunter(manager);
+            }
+        });
+        RenderingRegistry.registerEntityRenderingHandler(EntityAdvancedVampire.class, new IRenderFactory<EntityAdvancedVampire>() {
+            @Override
+            public Render<? super EntityAdvancedVampire> createRenderFor(RenderManager manager) {
+                return new RenderAdvancedVampire(manager);
             }
         });
     }

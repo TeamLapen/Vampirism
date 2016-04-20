@@ -5,10 +5,13 @@ import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Render the vampire overlay
  */
+@SideOnly(Side.CLIENT)
 public class LayerVampireEntity implements LayerRenderer<EntityCreature> {
 
     private final RenderLivingBase renderer;

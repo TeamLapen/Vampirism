@@ -37,6 +37,7 @@ import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.GeneralRegistryImpl;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.util.SupporterManager;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -109,6 +110,7 @@ public class VampirismMod {
         HelperRegistry.registerSyncablePlayerCapability(HunterPlayer.CAP, REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.class);
         HelperRegistry.registerSyncablePlayerCapability(FactionPlayerHandler.CAP, REFERENCE.FACTION_PLAYER_HANDLER_KEY, FactionPlayerHandler.class);
         Achievements.registerAchievement();
+        SupporterManager.getInstance().initAsync();
         proxy.onInitStep(IInitListener.Step.INIT, event);
     }
 

@@ -1,0 +1,49 @@
+{
+  "comment": "List of player of supporters of Vampirism. Status: 0-Dev,1-Contributer,2-Patreon",
+  "vampires": [
+    {
+      "name": "The powerful Bill",
+      "texture": "wildbill",
+      "type": 0,
+      "status": 0
+    },
+    {
+      "name": "Captain",
+      "texture": "Cptsprinkleface",
+      "type": 0,
+      "status": 1
+    },
+    {
+      "name": "Mazdallier",
+      "texture": "mazdallier",
+      "type": 0,
+      "status": 1
+    },
+    {
+      "name": "eZflaffer the Loquacious",
+      "texture": "ezflaffer",
+      "type": 0,
+      "status": 2
+    }
+  ],
+  "hunters": [
+    {
+      "name": "Dreaded Mistadon",
+      "texture": "mistadon",
+      "type": 0,
+      "status": 0
+    },
+    {
+      "name": "Paul the Hunter",
+      "texture": "cheaterpaul",
+      "type": 1,
+      "status": 1
+    },
+    {
+      "name": "Evernife",
+      "texture": "evernife",
+      "type": 2,
+      "status": 1
+    }
+  ]
+}

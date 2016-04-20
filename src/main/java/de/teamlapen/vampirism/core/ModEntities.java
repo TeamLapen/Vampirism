@@ -10,9 +10,11 @@ import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedSheep;
+import de.teamlapen.vampirism.entity.hunter.EntityAdvancedHunter;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainer;
 import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionSaveable;
+import de.teamlapen.vampirism.entity.vampire.EntityAdvancedVampire;
 import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
 import de.teamlapen.vampirism.entity.vampire.EntityDummyBittenAnimal;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBaron;
@@ -53,6 +55,8 @@ public class ModEntities {
     public static final String CONVERTED_VILLAGER = "vampirism.converted.villager";
     public static final String CONVERTED_SHEEP = "vampirism.converted.sheep";
     public static final String HUNTER_TRAINER = "vampirism.hunter_trainer";
+    public static final String ADVANCED_HUNTER = "vampirism.advanced_hunter";
+    public static final String ADVANCED_VAMPIRE = "vampirism.advanced_vampire";
 
     /**
      * List of entity names which should be spawnable
@@ -128,9 +132,11 @@ public class ModEntities {
         registerEntity(EntityBasicHunter.class, BASIC_HUNTER_NAME, true);
         registerEntity(EntityBasicVampire.class, BASIC_VAMPIRE_NAME, Balance.mobProps.VAMPIRE_SPAWN_PROBE, 1, 2, EnumCreatureType.MONSTER, zombieBiomes.toArray(new BiomeGenBase[zombieBiomes.size()]));
         registerEntity(EntityHunterTrainer.class, HUNTER_TRAINER, true);
+        registerEntity(EntityAdvancedHunter.class, ADVANCED_HUNTER, true);
         registerEntity(EntityVampireBaron.class, VAMPIRE_BARON, true);
         registerEntity(EntityVampireMinionSaveable.class, VAMPIRE_MINION_SAVEABLE_NAME, false);
         registerEntity(EntityDummyBittenAnimal.class, DUMMY_CREATURE, false);
+        registerEntity(EntityAdvancedVampire.class, ADVANCED_VAMPIRE, true);
         registerConvertibles();
     }
 
