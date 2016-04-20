@@ -33,6 +33,7 @@ public class ModBlocks {
     public static BlockChurchAltar churchAltar;
     public static BlockBloodContainer bloodContainer;
     public static BlockAltarInspiration altarInspiration;
+    public static BlockFirePlace firePlace;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
@@ -77,6 +78,7 @@ public class ModBlocks {
         itemBloodContainer.setMaxStackSize(1);
         registerBlock(bloodContainer, itemBloodContainer);
         altarInspiration = registerBlock(new BlockAltarInspiration());
+        firePlace = registerBlock(new BlockFirePlace());
 
     }
 

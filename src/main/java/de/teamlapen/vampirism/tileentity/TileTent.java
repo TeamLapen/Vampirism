@@ -69,6 +69,10 @@ public class TileTent extends TileEntity implements ITickable {
         return super.hasFastRenderer();
     }
 
+    public boolean isSpawner() {
+        return spawn;
+    }
+
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
         super.readFromNBT(nbt);

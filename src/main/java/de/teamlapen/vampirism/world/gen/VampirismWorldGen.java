@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.world.gen;
 
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBiomes;
-import net.minecraft.block.material.Material;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
@@ -70,12 +69,8 @@ public class VampirismWorldGen implements IWorldGenerator {
                 prop = 0.2F;
             }
             if (chance < Balance.general.HUNTER_CAMP_SPAWN_CHANCE * prop) {
-                BlockPos pos = new BlockPos((chunkX << 4) + random.nextInt(16), 0, (chunkZ << 4) + random.nextInt(16));
+                BlockPos pos = new BlockPos((chunkX << 4), 0, (chunkZ << 4));
                 pos = world.getHeight(pos);
-                Material material;
-                while (((material = world.getBlockState(pos).getMaterial()) == Material.LEAVES || material == Material.PLANTS || world.isAirBlock(pos)) && pos.getY() > 50) {
-                    pos = pos.down();
-                }
                 float temp = biome.getFloatTemperature(pos);
                 if (hunterCamp.isValidTemperature(temp)) {
                     generatedStructure = hunterCamp.generate(world, random, pos.up());
