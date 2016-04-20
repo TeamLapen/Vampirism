@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
 import de.teamlapen.vampirism.tileentity.TileCoffin;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
@@ -69,6 +70,13 @@ public class ModBlocksRender {
             @Override
             protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
                 return new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "blockCoffin"), "normal");
+            }
+        });
+        ModelLoader.setCustomStateMapper(ModBlocks.tentMain, new StateMapperBase() {
+            @Override
+            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+                return new ModelResourceLocation(Block.REGISTRY.getNameForObject(ModBlocks.tent), this.getPropertyString(state.getProperties()));
+
             }
         });
 

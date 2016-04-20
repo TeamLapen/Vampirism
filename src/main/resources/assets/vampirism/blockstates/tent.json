@@ -19,15 +19,35 @@
     },
     "position": {
       "0": {
+        "textures": {
+          "floor": "vampirism:blocks/tent/floor_br"
+        }
       },
       "1": {
+        "textures": {
+          "floor": "vampirism:blocks/tent/floor_bl"
+        }
       },
       "2": {
-        "submodel": "vampirism:tentback",
-        "y": 180
+        "textures": {
+          "floor": "vampirism:blocks/tent/floor_tl"
+        },
+        "submodel": {
+          "back": {
+            "model": "vampirism:tentback",
+            "y": 180
+          }
+        }
       },
       "3": {
-        "submodel": "vampirism:tentback_flipped"
+        "textures": {
+          "floor": "vampirism:blocks/tent/floor_tr"
+        },
+        "submodel": {
+          "back": {
+            "model": "vampirism:tentback_flipped"
+          }
+        }
       }
     }
   }

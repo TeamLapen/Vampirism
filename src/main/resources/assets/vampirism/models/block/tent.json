@@ -3,6 +3,7 @@
   "textures": {
     "light_wool": "blocks/wool_colored_white",
     "dark_wool": "blocks/wool_colored_silver",
+
     "particle": "blocks/wool_colored_white"
   },
   "elements": [
@@ -35,7 +36,7 @@
             16,
             16
           ],
-          "texture": "#dark_wool"
+          "texture": "#floor"
         },
         "north": {
           "uv": [

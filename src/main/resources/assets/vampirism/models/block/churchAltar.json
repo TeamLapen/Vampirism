@@ -1,7 +1,8 @@
 {
     "textures": {
     "particle": "blocks/planks_spruce",
-    "wood": "blocks/planks_spruce"
+        "wood": "blocks/planks_spruce",
+        "book": "vampirism:blocks/churchAltarBook"
     },
     "elements": [
         {
@@ -284,6 +285,74 @@
                     "texture": "#wood"
                 }
             }
+        },
+        {
+            "from": [
+                3,
+                10.5,
+                4.5
+            ],
+            "to": [
+                13,
+                11.5,
+                11.5
+            ],
+            "rotation": {
+                "origin": [
+                    3,
+                    11.5,
+                    4.5
+                ],
+                "axis": "x",
+                "angle": -22.5
+            },
+            "faces": {
+                "up": {
+                    "uv": [
+                        0,
+                        0,
+                        10,
+                        7
+                    ],
+                    "texture": "#book"
+                },
+                "north": {
+                    "uv": [
+                        0,
+                        7,
+                        10,
+                        8
+                    ],
+                    "texture": "#book"
+                },
+                "south": {
+                    "uv": [
+                        0,
+                        13,
+                        10,
+                        14
+                    ],
+                    "texture": "#book"
+                },
+                "west": {
+                    "uv": [
+                        0,
+                        7,
+                        1,
+                        14
+                    ],
+                    "texture": "#book"
+                },
+                "east": {
+                    "uv": [
+                        9,
+                        7,
+                        10,
+                        14
+                    ],
+                    "texture": "#book"
+                }
+            }
         }
     ],
     "display": {
@@ -354,7 +423,7 @@
                 0.5,
                 0.5
             ]
-        },
+    },
         "firstperson_righthand": {
             "rotation": [
                 0,
