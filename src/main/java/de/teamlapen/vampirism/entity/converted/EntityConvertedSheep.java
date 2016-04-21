@@ -22,7 +22,7 @@ import java.util.List;
  * {@link IConvertedCreature} for sheep
  * Allows converted sheep to be sheared
  */
-public class EntityConvertedSheep extends EntityConvertedCreature implements IShearable {
+public class EntityConvertedSheep extends EntityConvertedCreature<EntitySheep> implements IShearable {
 
 
     private final static DataParameter<Byte> COAT = EntityDataManager.createKey(EntityConvertedSheep.class, DataSerializers.BYTE);
@@ -33,7 +33,7 @@ public class EntityConvertedSheep extends EntityConvertedCreature implements ISh
     }
 
     public EnumDyeColor getFleeceColor() {
-        return nil() ? EnumDyeColor.WHITE : ((EntitySheep) this.getOldCreature()).getFleeceColor();
+        return nil() ? EnumDyeColor.WHITE : this.getOldCreature().getFleeceColor();
     }
 
 
@@ -62,7 +62,7 @@ public class EntityConvertedSheep extends EntityConvertedCreature implements ISh
         boolean t = getSheared();
         if (!nil() && (lastSheared == null || lastSheared.booleanValue() != t)) {
             lastSheared = t;
-            ((EntitySheep) getOldCreature()).setSheared(lastSheared);
+            getOldCreature().setSheared(lastSheared);
 
         }
     }
@@ -100,8 +100,8 @@ public class EntityConvertedSheep extends EntityConvertedCreature implements ISh
         this.dataManager.register(COAT, Byte.valueOf((byte) 0));
     }
 
-    public static class ConvertingSheepHandler extends DefaultConvertingHandler<EntitySheep> {
-        public ConvertingSheepHandler() {
+    public static class ConvertingHandler extends DefaultConvertingHandler<EntitySheep> {
+        public ConvertingHandler() {
             super(null);
         }
 

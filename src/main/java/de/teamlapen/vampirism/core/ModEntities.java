@@ -90,7 +90,7 @@ public class ModEntities {
         registry.addConvertible(EntityPig.class, String.format(base, "pig"));
         registry.addConvertible(EntityOcelot.class, String.format(base, "cat"));
         registry.addConvertible(EntityHorse.class, String.format(base, "horse"));
-        registry.addConvertible(EntitySheep.class, String.format(base, "sheep"), new EntityConvertedSheep.ConvertingSheepHandler());
+        registry.addConvertible(EntitySheep.class, String.format(base, "sheep"), new EntityConvertedSheep.ConvertingHandler());
     }
 
     private static void init(FMLInitializationEvent event) {
