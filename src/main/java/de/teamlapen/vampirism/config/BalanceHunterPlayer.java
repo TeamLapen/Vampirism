@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import java.io.File;
 
 public class BalanceHunterPlayer extends BalanceValues {
-    @DefaultDouble(value = 1.0D, minValue = 0.5D, maxValue = 2.0D, name = "Strength Max Modifier", comment = "")
+    @DefaultDouble(value = 2.0D, minValue = 0.5D, maxValue = 4.0D, name = "Strength Max Modifier", comment = "Strength =Old * (modifier+1)")
     public double STRENGTH_MAX_MOD;
     @DefaultInt(value = 20, minValue = 10, maxValue = 40, name = "Strength Level Cap", comment = "")
     public int STRENGTH_LCAP;

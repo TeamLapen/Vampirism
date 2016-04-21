@@ -506,6 +506,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             activatedVision.onUpdate(this);
         }
 
+        if (getSpecialAttributes().lessOxygen && player.getAir() < 300 && player.ticksExisted % 2 == 1) {
+            player.setAir(player.getAir() + 1);
+        }
+
         if (!isRemote()) {
             if (level > 0) {
                 boolean sync = false;

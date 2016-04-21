@@ -10,6 +10,7 @@ public class VampirePlayerSpecialAttributes {
     public boolean avoided_by_creepers = false;
     public boolean bat = false;
     public boolean blood_vision = false;
+    public boolean lessOxygen = false;
     private int jump_boost = 0;
 
     public int getJumpBoost() {

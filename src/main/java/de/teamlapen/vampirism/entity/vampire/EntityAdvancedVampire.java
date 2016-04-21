@@ -35,6 +35,11 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     private static final DataParameter<String> TEXTURE = EntityDataManager.createKey(EntityAdvancedVampire.class, DataSerializers.STRING);
 
     private final int MAX_LEVEL = 1;
+    /**
+     * Store the approximate count of entities that are following this advanced vampire.
+     * Not guaranteed to be exact and not saved to nbt
+     */
+    private int followingEntities = 0;
 
     public EntityAdvancedVampire(World world) {
         super(world, true);
@@ -42,6 +47,12 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
 
 
         this.setDontDropEquipment();
+    }
+
+
+    @Override
+    public void decreaseFollowerCount() {
+        followingEntities = Math.max(0, followingEntities - 1);
     }
 
     @Override
@@ -52,6 +63,11 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     @Override
     public int getEyeType() {
         return getDataManager().get(TYPE);
+    }
+
+    @Override
+    public int getFollowingCount() {
+        return followingEntities;
     }
 
     @Override
@@ -68,6 +84,11 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
             }
             getDataManager().set(LEVEL, level);
         }
+    }
+
+    @Override
+    public int getMaxFollowerCount() {
+        return Balance.mobProps.ADVANCED_VAMPIRE_MAX_FOLLOWER;
     }
 
     @Override
@@ -91,6 +112,15 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     public String getTextureName() {
         String texture = this.getDataManager().get(TEXTURE);
         return "none".equals(texture) ? null : texture;
+    }
+
+    @Override
+    public boolean increaseFollowerCount() {
+        if (followingEntities < getMaxFollowerCount()) {
+            followingEntities++;
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -161,7 +191,7 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         this.tasks.addTask(3, new VampireAIFleeSun(this, 0.9, false));
         this.tasks.addTask(3, new VampireAIFleeGarlic(this, 0.9, false));
         this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.0, false));
-        this.tasks.addTask(8, new EntityAIWander(this, 0.7));
+        this.tasks.addTask(8, new EntityAIWander(this, 0.9, 25));
         this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 13F));
         this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityHunterBase.class, 17F));
         this.tasks.addTask(11, new EntityAILookIdle(this));
@@ -176,5 +206,6 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH + Balance.mobProps.ADVANCED_VAMPIRE_MAX_HEALTH_PL * l);
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE + Balance.mobProps.ADVANCED_VAMPIRE_ATTACK_DAMAGE_PL * l);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.ADVANCED_VAMPIRE_SPEED);
+        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(13);
     }
 }

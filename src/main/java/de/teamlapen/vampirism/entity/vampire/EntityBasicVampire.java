@@ -7,10 +7,7 @@ import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModSounds;
-import de.teamlapen.vampirism.entity.ai.VampireAIBiteNearbyEntity;
-import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
-import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
-import de.teamlapen.vampirism.entity.ai.VampireAIMoveToBiteable;
+import de.teamlapen.vampirism.entity.ai.*;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -30,13 +27,18 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 
+/**
+ * Basic vampire mob.
+ * Follows nearby advanced hunters
+ */
 public class EntityBasicVampire extends EntityVampireBase implements IBasicVampire {
 
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(EntityBasicVampire.class, DataSerializers.VARINT);
     private final int MAX_LEVEL = 2;
     private int bloodtimer = 100;
-
+    private EntityAdvancedVampire advancedLeader = null;
 
     public EntityBasicVampire(World world) {
         super(world, true);
@@ -53,6 +55,24 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     public void consumeBlood(int amt, float saturationMod) {
         super.consumeBlood(amt, saturationMod);
         bloodtimer += amt * 40 + this.getRNG().nextInt(1000);
+    }
+
+    /**
+     * @return The advanced vampire this entity is following or null if none
+     */
+    public
+    @Nullable
+    EntityAdvancedVampire getAdvancedLeader() {
+        return advancedLeader;
+    }
+
+    /**
+     * Set an advanced vampire, this vampire should follow
+     *
+     * @param advancedLeader
+     */
+    public void setAdvancedLeader(@Nullable EntityAdvancedVampire advancedLeader) {
+        this.advancedLeader = advancedLeader;
     }
 
     @Override
@@ -95,12 +115,28 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     }
 
     @Override
+    public void onUpdate() {
+        super.onUpdate();
+        if (advancedLeader != null && !advancedLeader.isEntityAlive()) {
+            advancedLeader = null;
+        }
+    }
+
+    @Override
     public void readFromNBT(NBTTagCompound tagCompund) {
         super.readFromNBT(tagCompund);
         if (tagCompund.hasKey("level")) {
             setLevel(tagCompund.getInteger("level"));
         }
 
+    }
+
+    @Override
+    public void setDead() {
+        super.setDead();
+        if (advancedLeader != null) {
+            advancedLeader.decreaseFollowerCount();
+        }
     }
 
     @Override
@@ -173,12 +209,13 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         this.tasks.addTask(3, new VampireAIFleeGarlic(this, 0.9, false));
         this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.0, false));
         this.tasks.addTask(5, new VampireAIBiteNearbyEntity(this));
-        this.tasks.addTask(6, new VampireAIMoveToBiteable(this, 0.75));
-        this.tasks.addTask(7, new EntityAIMoveThroughVillage(this, 0.6, true));
-        this.tasks.addTask(8, new EntityAIWander(this, 0.7));
-        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 13F));
-        this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityHunterBase.class, 17F));
-        this.tasks.addTask(11, new EntityAILookIdle(this));
+        this.tasks.addTask(6, new VampireAIFollowAdvanced(this, 1.0));
+        this.tasks.addTask(7, new VampireAIMoveToBiteable(this, 0.75));
+        this.tasks.addTask(8, new EntityAIMoveThroughVillage(this, 0.6, true));
+        this.tasks.addTask(9, new EntityAIWander(this, 0.7));
+        this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityPlayer.class, 13F));
+        this.tasks.addTask(11, new EntityAIWatchClosest(this, EntityHunterBase.class, 17F));
+        this.tasks.addTask(12, new EntityAILookIdle(this));
 
         this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, false));
         this.targetTasks.addTask(4, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, null)));
@@ -192,5 +229,4 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.VAMPIRE_ATTACK_DAMAGE + Balance.mobProps.VAMPIRE_ATTACK_DAMAGE_PL * l);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.VAMPIRE_SPEED);
     }
-
 }

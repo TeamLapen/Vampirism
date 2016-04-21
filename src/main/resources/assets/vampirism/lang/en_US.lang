@@ -177,9 +177,13 @@ text.vampirism.skill.less_bloodthirst.desc=Decreases your thirst for blood
 text.vampirism.skill.less_garlicdamage=Reduce garlic damage
 text.vampirism.skill.less_sundamage=Reduce sun damage
 text.vampirism.skill.night_vision=Night Vision
+text.vampirism.skill.oxygen.desc=Use less oxygen under water
+text.vampirism.skill.oxygen=Oxygen
 
 #ENTITIES
 entity.vampirism.hunter_trainer.name=Vampire Hunter Trainer
+entity.vampirism.advanced_vampire.name=Advanced Vampire
+entity.vampirism.advanced_hunter.name=Advanced Hunter
 
 #RITUALS
 text.vampirism.ritual_missing_items=Missing %s of "%s" for this ritual

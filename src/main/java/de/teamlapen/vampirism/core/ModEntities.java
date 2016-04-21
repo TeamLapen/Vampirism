@@ -136,7 +136,7 @@ public class ModEntities {
         registerEntity(EntityVampireBaron.class, VAMPIRE_BARON, EntityLiving.SpawnPlacementType.ON_GROUND, true);
         registerEntity(EntityVampireMinionSaveable.class, VAMPIRE_MINION_SAVEABLE_NAME, EntityLiving.SpawnPlacementType.ON_GROUND, false);
         registerEntity(EntityDummyBittenAnimal.class, DUMMY_CREATURE, EntityLiving.SpawnPlacementType.ON_GROUND, false);
-        registerEntity(EntityAdvancedVampire.class, ADVANCED_VAMPIRE, EntityLiving.SpawnPlacementType.ON_GROUND, true);
+        registerEntity(EntityAdvancedVampire.class, ADVANCED_VAMPIRE, EntityLiving.SpawnPlacementType.ON_GROUND, Balance.mobProps.ADVANCED_VAMPIRE_SPAWN_PROBE, 1, 1, EnumCreatureType.MONSTER, zombieBiomes.toArray(new BiomeGenBase[zombieBiomes.size()]));
         registerConvertibles();
     }
 

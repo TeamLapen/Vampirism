@@ -233,15 +233,15 @@ public class VampireSkills {
     }
 
     private static void registerDefensiveSkills(SkillNode start) {
-        SkillNode skill1 = new SkillNode(start, new DefaultSkill() {
+        SkillNode skill1 = new SkillNode(start, new DefaultSkill<IVampirePlayer>() {
             @Override
             public String getID() {
-                return "1first";
+                return "1oxygen";
             }
 
             @Override
             public int getMinU() {
-                return 0;
+                return 208;
             }
 
             @Override
@@ -250,8 +250,23 @@ public class VampireSkills {
             }
 
             @Override
+            public String getUnlocDescription() {
+                return "text.vampirism.skill.oxygen.desc";
+            }
+
+            @Override
             public String getUnlocalizedName() {
-                return "unknown";
+                return "text.vampirism.skill.oxygen";
+            }
+
+            @Override
+            protected void onDisabled(IVampirePlayer player) {
+                ((VampirePlayer) player).getSpecialAttributes().lessOxygen = false;
+            }
+
+            @Override
+            protected void onEnabled(IVampirePlayer player) {
+                ((VampirePlayer) player).getSpecialAttributes().lessOxygen = true;
             }
         });
         DefaultSkill<IVampirePlayer> jump = new DefaultSkill<IVampirePlayer>() {

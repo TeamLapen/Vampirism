@@ -83,7 +83,7 @@ public class SupporterManager {
             VampirismMod.log.e(TAG, e, "Failed to retrieve supporters from url");
         } finally {
         }
-        if (supporters == null) {
+        if (supporters == null || VampirismMod.inDev) {
             try {
                 inputStream = VampirismMod.class.getResourceAsStream("/supporters.json");
                 String data = new String(ByteStreams.toByteArray(inputStream));
@@ -96,7 +96,7 @@ public class SupporterManager {
         }
         if (supporters != null) {
             this.supporters = supporters;
-            VampirismMod.log.t("Supporters %s", getDebugString());
+            VampirismMod.log.d(TAG, "Supporters %s", getDebugString());
         }
     }
 
@@ -160,7 +160,7 @@ public class SupporterManager {
 
         @Override
         public String toString() {
-            return "[" + textureName + " as '" + senderName + "']";
+            return "[" + textureName + " as '" + senderName + "' (" + typeId + ")]";
         }
     }
 }

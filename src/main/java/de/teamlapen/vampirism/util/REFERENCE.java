@@ -17,7 +17,7 @@ public class REFERENCE {
     public static final String VERSION_UPDATE_FILE = "https://raw.githubusercontent.com/TeamLapen/Vampirism/master/src/main/resources/versions.json";
     public static final String SUPPORTER_FILE = "https://raw.githubusercontent.com/TeamLapen/Vampirism/master/src/main/resources/supporters.json";
 
-    public static final int EYE_TYPE_COUNT = 6;
+    public static final int EYE_TYPE_COUNT = 7;
     /**
      * Check for vampire garlic damage every n ticks
      */
