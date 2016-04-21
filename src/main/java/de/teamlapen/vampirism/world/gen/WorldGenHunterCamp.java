@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.world.gen;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.hunter.EntityAdvancedHunter;
 import de.teamlapen.vampirism.items.ItemTent;
@@ -18,7 +17,6 @@ import java.util.Random;
 
 /**
  * Generate hunter camps
- * TODO fix hunter spawning
  */
 public class WorldGenHunterCamp extends WorldGenerator {
     /**
@@ -30,8 +28,7 @@ public class WorldGenHunterCamp extends WorldGenerator {
     @Override
     public boolean generate(World worldIn, Random rand, BlockPos position) {
 
-        if (worldIn.getBiomeGenForCoordsBody(position).getHeightVariation() < 0.3 && rand.nextInt(5) == 0) {
-            VampirismMod.log.t("Placing");
+        if (worldIn.getBiomeGenForCoordsBody(position).getHeightVariation() < 0.3 && rand.nextInt(7) == 0) {
             int r = rand.nextInt(2);
             int r1 = rand.nextInt(2);
             int r2 = rand.nextInt(2);
@@ -46,8 +43,6 @@ public class WorldGenHunterCamp extends WorldGenerator {
 
             boolean place = dif < 8 && placeFire(worldIn, findSolidPos(worldIn, center));
             if (place) {
-                VampirismMod.log.t("Pos %s ", position);
-                VampirismMod.log.t("Actual");
                 placeTent(worldIn, rand, pos1, EnumFacing.EAST);
                 placeTent(worldIn, rand, pos2, EnumFacing.WEST);
                 placeTent(worldIn, rand, pos3, EnumFacing.NORTH);

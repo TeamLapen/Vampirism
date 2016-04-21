@@ -58,12 +58,10 @@ public class VampirismWorldGen implements IWorldGenerator {
             int trees = biome.theBiomeDecorator.treesPerChunk;
             float bh = biome.getBaseHeight() + biome.getHeightVariation();
             float prop = 1;
-            if (trees > 2 && trees < 11) {
-                prop += trees;
-            }
-            prop += bh * 5;
+            prop += Math.min(trees, 8);
+            prop += bh * 3;
 
-            if (biome instanceof BiomeGenPlains) prop *= 0.7F;
+            if (biome instanceof BiomeGenPlains) prop *= 0.8F;
 
             if (world.getWorldType().equals(WorldType.FLAT)) {
                 prop = 0.2F;

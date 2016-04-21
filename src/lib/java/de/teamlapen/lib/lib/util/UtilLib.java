@@ -5,10 +5,7 @@ import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityList;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
@@ -20,6 +17,7 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.biome.BiomeGenBase;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
@@ -95,13 +93,13 @@ public class UtilLib {
 
         e.setPosition(x, p.posY, z);
 
-        if (e.getCanSpawnHere()) {
+        if (e.getCanSpawnHere() && e.isNotColliding()) {
             p.worldObj.spawnEntityInWorld(e);
             return e;
         } else {
             int y = p.worldObj.getHeight(new BlockPos(x, 0, z)).getY();
             e.setPosition(x, y, z);
-            if (e.getCanSpawnHere()) {
+            if (e.getCanSpawnHere() && e.isNotColliding()) {
                 p.worldObj.spawnEntityInWorld(e);
                 return e;
             }
@@ -115,9 +113,11 @@ public class UtilLib {
         int i = 0;
         while (!flag && i++ < maxTry) {
             BlockPos c = getRandomPosInBox(world, box);
-            e.setPosition(c.getX(), c.getY(), c.getZ());
-            if (!(e instanceof EntityLiving) || ((EntityLiving) e).getCanSpawnHere()) {
-                flag = true;
+            if (WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementForEntity(e.getClass()), world, c)) {
+                e.setPosition(c.getX(), c.getY(), c.getZ());
+                if (!(e instanceof EntityLiving) || (((EntityLiving) e).getCanSpawnHere() && ((EntityLiving) e).isNotColliding())) {
+                    flag = true;
+                }
             }
         }
         if (flag) {

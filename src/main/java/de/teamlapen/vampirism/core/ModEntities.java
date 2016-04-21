@@ -125,22 +125,22 @@ public class ModEntities {
         }
 
 
-        registerEntity(EntityBlindingBat.class, BLINDING_BAT_NAME, false);
-        registerEntity(EntityGhost.class, GHOST_NAME, true);
-        registerEntity(EntityConvertedCreature.class, CONVERTED_CREATURE, false);
-        registerEntity(EntityConvertedSheep.class, CONVERTED_SHEEP, false);
-        registerEntity(EntityBasicHunter.class, BASIC_HUNTER_NAME, true);
-        registerEntity(EntityBasicVampire.class, BASIC_VAMPIRE_NAME, Balance.mobProps.VAMPIRE_SPAWN_PROBE, 1, 2, EnumCreatureType.MONSTER, zombieBiomes.toArray(new BiomeGenBase[zombieBiomes.size()]));
-        registerEntity(EntityHunterTrainer.class, HUNTER_TRAINER, true);
-        registerEntity(EntityAdvancedHunter.class, ADVANCED_HUNTER, true);
-        registerEntity(EntityVampireBaron.class, VAMPIRE_BARON, true);
-        registerEntity(EntityVampireMinionSaveable.class, VAMPIRE_MINION_SAVEABLE_NAME, false);
-        registerEntity(EntityDummyBittenAnimal.class, DUMMY_CREATURE, false);
-        registerEntity(EntityAdvancedVampire.class, ADVANCED_VAMPIRE, true);
+        registerEntity(EntityBlindingBat.class, BLINDING_BAT_NAME, EntityLiving.SpawnPlacementType.IN_AIR, false);
+        registerEntity(EntityGhost.class, GHOST_NAME, EntityLiving.SpawnPlacementType.ON_GROUND, true);
+        registerEntity(EntityConvertedCreature.class, CONVERTED_CREATURE, EntityLiving.SpawnPlacementType.ON_GROUND, false);
+        registerEntity(EntityConvertedSheep.class, CONVERTED_SHEEP, EntityLiving.SpawnPlacementType.ON_GROUND, false);
+        registerEntity(EntityBasicHunter.class, BASIC_HUNTER_NAME, EntityLiving.SpawnPlacementType.ON_GROUND, true);
+        registerEntity(EntityBasicVampire.class, BASIC_VAMPIRE_NAME, EntityLiving.SpawnPlacementType.ON_GROUND, Balance.mobProps.VAMPIRE_SPAWN_PROBE, 1, 2, EnumCreatureType.MONSTER, zombieBiomes.toArray(new BiomeGenBase[zombieBiomes.size()]));
+        registerEntity(EntityHunterTrainer.class, HUNTER_TRAINER, EntityLiving.SpawnPlacementType.ON_GROUND, true);
+        registerEntity(EntityAdvancedHunter.class, ADVANCED_HUNTER, EntityLiving.SpawnPlacementType.ON_GROUND, true);
+        registerEntity(EntityVampireBaron.class, VAMPIRE_BARON, EntityLiving.SpawnPlacementType.ON_GROUND, true);
+        registerEntity(EntityVampireMinionSaveable.class, VAMPIRE_MINION_SAVEABLE_NAME, EntityLiving.SpawnPlacementType.ON_GROUND, false);
+        registerEntity(EntityDummyBittenAnimal.class, DUMMY_CREATURE, EntityLiving.SpawnPlacementType.ON_GROUND, false);
+        registerEntity(EntityAdvancedVampire.class, ADVANCED_VAMPIRE, EntityLiving.SpawnPlacementType.ON_GROUND, true);
         registerConvertibles();
     }
 
-    private static void registerEntity(Class<? extends Entity> clazz, String name, boolean egg) {
+    private static void registerEntity(Class<? extends Entity> clazz, String name, EntityLiving.SpawnPlacementType placementType, boolean egg) {
 
         VampirismMod.log.d("EntityRegister", "Adding " + name + "(" + clazz.getSimpleName() + ") with mod id %d", modEntityId);
         EntityRegistry.registerModEntity(clazz, name.replace("vampirism.", ""), modEntityId++, VampirismMod.instance, 80, 1, true);
@@ -162,8 +162,8 @@ public class ModEntities {
      * @param type
      * @param biomes
      */
-    private static void registerEntity(Class<? extends EntityLiving> clazz, String name, int probe, int min, int max, EnumCreatureType type, BiomeGenBase... biomes) {
-        registerEntity(clazz, name, true);
+    private static void registerEntity(Class<? extends EntityLiving> clazz, String name, EntityLiving.SpawnPlacementType placementType, int probe, int min, int max, EnumCreatureType type, BiomeGenBase... biomes) {
+        registerEntity(clazz, name, placementType, true);
         VampirismMod.log.d("EntityRegister", "Adding spawn with probe of " + probe);
         EntityRegistry.addSpawn(clazz, probe, min, max, type, biomes);
     }

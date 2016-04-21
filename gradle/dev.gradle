@@ -1,7 +1,7 @@
 task deobfJar(type: Jar, dependsOn: 'classes') {
     from(sourceSets.main.output)
     extension = 'jar'
-    classifier = 'dev'
+    classifier = 'deobf'
 }
 
 artifacts {

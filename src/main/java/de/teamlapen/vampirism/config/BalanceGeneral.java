@@ -18,7 +18,7 @@ public class BalanceGeneral extends BalanceValues {
     @DefaultInt(value = 10, name = "vampire_forest_weight", minValue = 1)
     public int VAMPIRE_FOREST_WEIGHT;
 
-    @DefaultInt(value = 20, minValue = 0, maxValue = 1000, name = "hunter_camp_spawn_chance", comment = "Chance that a camp is generated. n/1000 for each valid chunk")
+    @DefaultInt(value = 25, minValue = 0, maxValue = 1000, name = "hunter_camp_spawn_chance", comment = "Chance that a camp is generated. n/1000 for each valid chunk")
     public int HUNTER_CAMP_SPAWN_CHANCE;
 
     /**
