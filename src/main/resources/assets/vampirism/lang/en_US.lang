@@ -198,10 +198,12 @@ tile.vampirism.vampireOrchid.name=Vampire Orchid
 tile.vampirism.altarInfusion.name=Altar of Infusion
 tile.vampirism.altarPillar.name=Altar Pillar
 tile.vampirism.altarTip.name=Altar Tip
+tile.vampirism.altarInspiration.name=Altar of Inspiration
 tile.vampirism.tent.name=Tent
 tile.vampirism.churchAltar.name=Altar
 tile.vampirism.bloodContainer.name=Blood Container
-tile.vampirism.medChair.name=Vaccination Chair
+tile.vampirism.medChair.name=Injection Chair
+tile.vampirism.vampire_orchid.name=Vampire Orchid
 
 
 #ITEMS
@@ -214,6 +216,7 @@ item.vampirism.itemTent.name=Tent
 item.vampirism.itemCoffin.name=Coffin
 item.vampirism.itemGarlic.name=Garlic
 item.vampirism.itemMedChair.name=Vaccination Chair
+item.vampirism.battleAxe.name=Battle Axe
 
 #KEYS
 keys.vampirism.select_skills=Select Skills
@@ -229,3 +232,4 @@ text.vampirism.can_only_be_used_by=This can only be used by %s players
 text.vampirism.can_only_be_used_by_level=This can only be used by %s players of level %s or higher
 text.vampirism.med_chair_other_faction=You cannot become a Hunter since you already are a %s
 text.vampirism.need_item_to_use=You need %s to use this
+text.vampirism.immune_to_=You are immune to
