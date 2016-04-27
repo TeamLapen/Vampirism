@@ -1,14 +1,18 @@
 package de.teamlapen.vampirism.api;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.EnumPlantType;
+import net.minecraftforge.common.util.EnumHelper;
 
 /**
  * Holds constants (or at init set variables)
@@ -45,16 +49,16 @@ public class VReference {
     /**
      * Hunter creatures are of this creature type. But when they are counted for spawning they belong to {@link EnumCreatureType#MONSTER}
      */
-    public static EnumCreatureType hunterCreatureType;
+    public final static EnumCreatureType HUNTER_CREATURE_TYPE = EnumHelper.addCreatureType("VAMPIRISM_HUNTER", IHunter.class, 30, Material.AIR, false, false);
     /**
      * Vampire creatures are of this creature type. But when they are counted for spawning they belong to {@link EnumCreatureType#MONSTER}
      */
-    public static EnumCreatureType vampireCreatureType;
+    public static final EnumCreatureType VAMPIRE_CREATURE_TYPE = EnumHelper.addCreatureType("VAMPIRISM_VAMPIRE", IVampire.class, 30, Material.AIR, false, false);
     /**
      * Plant type for plants that grow on cursed earth;
      */
-    public static EnumPlantType vampirePlantType;
-    public static DamageSource sundamage = new DamageSource("sun").setDamageBypassesArmor().setMagicDamage();
+    public static final EnumPlantType VAMPIRE_PLANT_TYPE = EnumPlantType.getPlantType("VAMPIRISM_VAMPIRE");
+    public static final DamageSource SUNDAMAGE = new DamageSource("sun").setDamageBypassesArmor().setMagicDamage();
     /**
      * Vampire Player Faction
      * Filled during pre-init.

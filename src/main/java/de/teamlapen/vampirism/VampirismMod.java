@@ -8,10 +8,8 @@ import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
-import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.*;
@@ -39,14 +37,12 @@ import de.teamlapen.vampirism.util.GeneralRegistryImpl;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SupporterManager;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
-import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.item.Item;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.EnumPlantType;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -58,6 +54,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.awt.*;
 import java.io.File;
+import java.util.Arrays;
 
 /**
  * Main class for Vampirism
@@ -147,7 +144,7 @@ public class VampirismMod {
         HunterActions.registerDefaultActions();
         VampireSkills.registerVampireSkills();
 
-
+        VampirismMod.log.t("EnumCreatureTypes %s %s", EnumCreatureType.values().length, Arrays.toString(EnumCreatureType.values()));
     }
 
     private void checkDevEnv() {
@@ -186,9 +183,6 @@ public class VampirismMod {
             }
         });//DefaultConvertingHandler::new
 
-        VReference.hunterCreatureType = EnumHelper.addCreatureType("vampirism:hunter", IHunter.class, 30, Material.AIR, false, false);
-        VReference.vampireCreatureType = EnumHelper.addCreatureType("vampirism:vampire", IVampire.class, 30, Material.AIR, false, false);
-        VReference.vampirePlantType = EnumPlantType.getPlantType("vampirism_vampire");
     }
 
     /**

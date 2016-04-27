@@ -17,7 +17,7 @@ As a vampire you don't need to eat all that dry bread or eat these strange fruit
 [Help to translate](https://crowdin.com/project/vampirism)
 
 ## Team [![Join the chat at https://gitter.im/TeamLapen/Vampirism](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TeamLapen/Vampirism?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)  
-- maxanier _Code/Models_  
+- [maxanier](http://maxanier.de) _Code/Models_  
 
 #### Inactive 
 - Mistadon _Code/Models_  

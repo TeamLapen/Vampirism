@@ -35,7 +35,7 @@ public class BlockCursedEarth extends VampirismBlock implements IGrowable {
 
     @Override
     public boolean canSustainPlant(IBlockState state, IBlockAccess world, BlockPos pos, EnumFacing direction, IPlantable plantable) {
-        return plantable instanceof BlockBush || plantable.getPlantType(world, pos).equals(VReference.vampirePlantType);
+        return plantable instanceof BlockBush || plantable.getPlantType(world, pos).equals(VReference.VAMPIRE_PLANT_TYPE);
     }
 
 

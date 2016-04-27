@@ -898,7 +898,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
         if (getLevel() >= Balance.vp.SUNDAMAGE_MINLEVEL && ticksInSun >= 100 && player.ticksExisted % 40 == 5) {
             float damage = (float) (player.getEntityAttribute(VReference.sunDamage).getAttributeValue());
-            player.attackEntityFrom(VReference.sundamage, damage);
+            player.attackEntityFrom(VReference.SUNDAMAGE, damage);
         }
     }
 
