@@ -130,7 +130,7 @@ public class ModEntities {
         registerEntity(EntityConvertedCreature.class, CONVERTED_CREATURE, EntityLiving.SpawnPlacementType.ON_GROUND, false);
         registerEntity(EntityConvertedSheep.class, CONVERTED_SHEEP, EntityLiving.SpawnPlacementType.ON_GROUND, false);
         registerEntity(EntityBasicHunter.class, BASIC_HUNTER_NAME, EntityLiving.SpawnPlacementType.ON_GROUND, true);
-        registerEntity(EntityBasicVampire.class, BASIC_VAMPIRE_NAME, EntityLiving.SpawnPlacementType.ON_GROUND, Balance.mobProps.VAMPIRE_SPAWN_PROBE, 1, 2, EnumCreatureType.MONSTER, zombieBiomes.toArray(new BiomeGenBase[zombieBiomes.size()]));
+        registerEntity(EntityBasicVampire.class, BASIC_VAMPIRE_NAME, EntityLiving.SpawnPlacementType.ON_GROUND, Balance.mobProps.VAMPIRE_SPAWN_CHANCE, 1, 2, EnumCreatureType.MONSTER, zombieBiomes.toArray(new BiomeGenBase[zombieBiomes.size()]));
         registerEntity(EntityHunterTrainer.class, HUNTER_TRAINER, EntityLiving.SpawnPlacementType.ON_GROUND, true);
         registerEntity(EntityAdvancedHunter.class, ADVANCED_HUNTER, EntityLiving.SpawnPlacementType.ON_GROUND, true);
         registerEntity(EntityVampireBaron.class, VAMPIRE_BARON, EntityLiving.SpawnPlacementType.ON_GROUND, true);

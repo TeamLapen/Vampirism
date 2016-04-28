@@ -355,19 +355,22 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public int onBite(IVampire biter) {
+        float perc = biter instanceof EntityPlayer ? 1F : 0.4F;
         if (getLevel() == 0) {
             int amt = player.getFoodStats().getFoodLevel();
-            player.getFoodStats().setFoodLevel(0);
+            int sucked = (int) (amt * perc);
+            player.getFoodStats().setFoodLevel(amt - sucked);
             player.addExhaustion(1000F);
             if (!player.isPotionActive(ModPotions.sanguinare) && (!(biter instanceof EntityPlayer) || Permissions.canPlayerTurnPlayer((EntityPlayer) biter)) && Helper.canBecomeVampire(player)) {
                 PotionSanguinare.addRandom(player, true);
             }
-            return amt;
+            return sucked;
         }
         int amt = this.getBloodStats().getBloodLevel();
-        this.getBloodStats().consumeBlood(amt);
+        int sucked = (int) (amt * perc);
+        this.getBloodStats().consumeBlood(amt - sucked);
         sync(this.getBloodStats().writeUpdate(new NBTTagCompound()), false);
-        return amt;
+        return sucked;
     }
 
     @Override

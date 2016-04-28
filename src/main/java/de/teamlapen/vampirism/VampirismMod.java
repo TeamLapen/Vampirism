@@ -8,8 +8,10 @@ import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
+import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.*;
@@ -37,12 +39,14 @@ import de.teamlapen.vampirism.util.GeneralRegistryImpl;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SupporterManager;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
+import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.item.Item;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -54,7 +58,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.awt.*;
 import java.io.File;
-import java.util.Arrays;
 
 /**
  * Main class for Vampirism
@@ -64,6 +67,18 @@ import java.util.Arrays;
 public class VampirismMod {
 
     public final static Logger log = new Logger(REFERENCE.MODID, "de.teamlapen.vampirism");
+    /**
+     * Hunter creatures are of this creature type.
+     * Use the instance in {@link VReference} instead of this one.
+     * This is only here to init it as early as possible
+     */
+    private final static EnumCreatureType HUNTER_CREATURE_TYPE = EnumHelper.addCreatureType("VAMPIRISM_HUNTER", IHunter.class, 30, Material.AIR, false, false);
+    /**
+     * Vampire creatures are of this creature type.
+     * Use the instance in {@link VReference} instead of this one.
+     * This is only here to init it as early as possible
+     */
+    private static final EnumCreatureType VAMPIRE_CREATURE_TYPE = EnumHelper.addCreatureType("VAMPIRISM_VAMPIRE", IVampire.class, 30, Material.AIR, false, false);
     @Mod.Instance(value = REFERENCE.MODID)
     public static VampirismMod instance;
     @SidedProxy(clientSide = "de.teamlapen.vampirism.proxy.ClientProxy", serverSide = "de.teamlapen.vampirism.proxy.ServerProxy")
@@ -80,7 +95,6 @@ public class VampirismMod {
     public static boolean isRealism() {
         return Configs.realism_mode;
     }
-
     private VersionChecker.VersionInfo versionInfo;
 
     public VersionChecker.VersionInfo getVersionInfo() {
@@ -143,8 +157,6 @@ public class VampirismMod {
         VampireActions.registerDefaultActions();
         HunterActions.registerDefaultActions();
         VampireSkills.registerVampireSkills();
-
-        VampirismMod.log.t("EnumCreatureTypes %s %s", EnumCreatureType.values().length, Arrays.toString(EnumCreatureType.values()));
     }
 
     private void checkDevEnv() {
@@ -182,7 +194,8 @@ public class VampirismMod {
                 return new DefaultConvertingHandler(helper);
             }
         });//DefaultConvertingHandler::new
-
+        VReference.HUNTER_CREATURE_TYPE = HUNTER_CREATURE_TYPE;
+        VReference.VAMPIRE_CREATURE_TYPE = VAMPIRE_CREATURE_TYPE;
     }
 
     /**

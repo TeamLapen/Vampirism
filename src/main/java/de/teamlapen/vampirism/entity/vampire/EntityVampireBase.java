@@ -6,10 +6,13 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.EntityVampirism;
+import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.ai.EntityAISwimming;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.world.World;
@@ -29,7 +32,16 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
         this.countAsMonster = countAsMonster;
 
 
+    }
 
+    @Override
+    public boolean attackEntityAsMob(Entity entity) {
+        if (!worldObj.isRemote && entity instanceof EntityPlayer && rand.nextInt(Balance.mobProps.VAMPIRE_BITE_ATTACK_CHANCE) == 0) {
+            int amt = VampirePlayer.get((EntityPlayer) entity).onBite(this);
+            consumeBlood(amt, 1.0F);
+            return true;
+        }
+        return super.attackEntityAsMob(entity);
     }
 
     @Override
