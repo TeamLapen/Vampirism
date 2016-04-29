@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.ConnectException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Random;
@@ -80,7 +81,11 @@ public class SupporterManager {
             inputStream.close();
             supporters = retrieveSupporter(data);
         } catch (IOException e) {
-            VampirismMod.log.e(TAG, e, "Failed to retrieve supporters from url");
+            if (e instanceof ConnectException) {
+                VampirismMod.log.e(TAG, "Failed to connect to supporter url %s", REFERENCE.SUPPORTER_FILE);
+            } else {
+                VampirismMod.log.e(TAG, e, "Failed to retrieve supporters from url");
+            }
         } finally {
         }
         if (supporters == null || VampirismMod.inDev) {
@@ -117,7 +122,9 @@ public class SupporterManager {
     }
 
     @SuppressWarnings("unchecked")
-    private Supporter[][] retrieveSupporter(String data) {
+    private
+    @Nullable
+    Supporter[][] retrieveSupporter(String data) {
 
         try {
             Supporter[][] supporters = new Supporter[2][];
@@ -151,7 +158,7 @@ public class SupporterManager {
 
         public Supporter(@Nullable String senderName, @Nullable String textureName, int typeId) {
             this.typeId = typeId;
-            if (senderName.equals("null")) {
+            if (senderName != null && senderName.equals("null")) {
                 senderName = null;
             }
             this.textureName = textureName;

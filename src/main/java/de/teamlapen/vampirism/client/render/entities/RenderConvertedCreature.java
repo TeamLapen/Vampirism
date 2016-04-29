@@ -8,6 +8,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
+
 /**
  * Renders a converted creature, by rendering it's old creature
  */
@@ -33,7 +35,9 @@ public class RenderConvertedCreature extends Render<EntityConvertedCreature> {
     }
 
     @Override
-    protected ResourceLocation getEntityTexture(EntityConvertedCreature entity) {
+    protected
+    @Nullable
+    ResourceLocation getEntityTexture(EntityConvertedCreature entity) {
         return null;
     }
 }

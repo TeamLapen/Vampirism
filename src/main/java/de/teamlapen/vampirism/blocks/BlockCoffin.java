@@ -40,21 +40,22 @@ public class BlockCoffin extends VampirismBlockContainer {
     public static final PropertyBool OCCUPIED = PropertyBool.create("occupied");
 
     public static boolean isOccupied(IBlockAccess world, BlockPos pos) {
+        if (!(world.getBlockState(pos).getBlock() instanceof BlockCoffin)) return false;
         return world.getBlockState(pos).getValue(OCCUPIED);
     }
 
+
     public static void setCoffinOccupied(World world, BlockPos pos, boolean value) {
         IBlockState state = world.getBlockState(pos);
+        if (!(state.getBlock() instanceof BlockCoffin)) return;
         world.setBlockState(pos, state.withProperty(OCCUPIED, value), 4);
     }
 
     public static boolean isHead(IBlockAccess world, BlockPos pos) {
+        if (!(world.getBlockState(pos).getBlock() instanceof BlockCoffin)) return false;
         return world.getBlockState(pos).getValue(PART) == EnumPartType.HEAD;
     }
 
-    protected static boolean hasRoomForPlayer(World worldIn, BlockPos pos) {
-        return worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos, EnumFacing.UP) && !worldIn.getBlockState(pos).getMaterial().isSolid() && !worldIn.getBlockState(pos.up()).getMaterial().isSolid();
-    }
     private final String TAG = "BlockCoffin";
 
     public BlockCoffin() {

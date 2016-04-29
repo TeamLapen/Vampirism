@@ -14,6 +14,14 @@ public class ModelBipedShrinkable extends ModelBiped {
 
     private float size = 1F;
 
+    public ModelBipedShrinkable() {
+        super();
+    }
+
+    public ModelBipedShrinkable(float modelSize, float p_i1149_2_, int textureWidthIn, int textureHeightIn) {
+        super(modelSize, p_i1149_2_, textureWidthIn, textureHeightIn);
+    }
+
     @Override
     public void render(Entity p_78088_1_, float p_78088_2_, float p_78088_3_, float p_78088_4_, float p_78088_5_, float p_78088_6_, float p_78088_7_) {
         this.setRotationAngles(p_78088_2_, p_78088_3_, p_78088_4_, p_78088_5_, p_78088_6_, p_78088_7_, p_78088_1_);

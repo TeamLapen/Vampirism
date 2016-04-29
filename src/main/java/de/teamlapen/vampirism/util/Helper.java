@@ -40,13 +40,14 @@ public class Helper {
                             ResourceLocation biomeID = null;
                             try {
                                 biomeID = entity.worldObj.getBiomeGenForCoords(entity.getPosition()).getRegistryName();
+                                if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biomeID)) {
+                                    entity.worldObj.theProfiler.endSection();
+                                    return true;
+                                }
                             } catch (NullPointerException e) {
                                 //Strange thing which happen in 1.7.10, not sure about 1.8
                             }
-                            if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biomeID)) {
-                                entity.worldObj.theProfiler.endSection();
-                                return true;
-                            }
+
                         }
                     }
 

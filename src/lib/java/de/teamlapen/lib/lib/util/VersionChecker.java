@@ -10,6 +10,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -57,7 +58,11 @@ public class VersionChecker implements Runnable {
         } catch (MalformedURLException e) {
             VampLib.log.e(TAG, e, "Failed to parse update file url (%s)", UPDATE_FILE_URL);
         } catch (IOException e) {
-            VampLib.log.e(TAG, e, "Failed to perform version check");
+            if (e instanceof ConnectException) {
+                VampLib.log.e(TAG, "Failed to connect to version check url %s", UPDATE_FILE_URL);
+            } else {
+                VampLib.log.e(TAG, e, "Failed to perform version check");
+            }
         } catch (JsonSyntaxException e) {
             VampLib.log.e(TAG, e, "Failed to parse update file. It seems not well formatted");
         }
@@ -233,7 +238,7 @@ public class VersionChecker implements Runnable {
         private String url;
         private List<String> changes;
 
-        public Version(String name, int main, int major, int minor, TYPE type, String extra) {
+        public Version(String name, int main, int major, int minor, TYPE type, @Nullable String extra) {
             this.name = name;
             this.main = main;
             this.major = major;
