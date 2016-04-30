@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.util;
 
+import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import net.minecraft.entity.player.EntityPlayer;
@@ -64,11 +65,17 @@ public class DaySleepHelper {
      */
     public static void checkSleepWorld(World world) {
         if (allPlayersAsleep.get(Integer.valueOf(world.provider.getDimension())) == Boolean.TRUE) {
+            int sleeping = 0;
+            int total = 0;
             for (EntityPlayer entityplayer : world.playerEntities) {
-                if (!entityplayer.isSpectator() && !VampirePlayer.get(entityplayer).isPlayerFullyAsleep()) {
-                    return;
+                if (!entityplayer.isSpectator()) {
+                    total++;
+                    if (VampirePlayer.get(entityplayer).isPlayerFullyAsleep()) {
+                        sleeping++;
+                    }
                 }
             }
+            if (sleeping / (float) total * 100 < Configs.coffin_sleep_percentage) return;
             if (world.getGameRules().getBoolean("doDaylightCycle")) {
                 long i = world.getWorldInfo().getWorldTime() + 24000L;
                 world.getWorldInfo().setWorldTime(i - i % 24000L + 12700L);

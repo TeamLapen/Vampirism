@@ -86,6 +86,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         CapabilityManager.INSTANCE.register(IVampirePlayer.class, new Storage(), VampirePlayerDefaultImpl.class);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static ICapabilityProvider createNewCapability(final EntityPlayer player) {
         return new ICapabilitySerializable<NBTTagCompound>() {
 
@@ -219,6 +220,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 return BITE_TYPE.NONE;
             }
             if (!UtilLib.canReallySee(entity, player, false) && VampirePlayer.get((EntityPlayer) entity).canBeBitten(this)) {
+                if (FactionPlayerHandler.get(player).isInFaction(VReference.HUNTER_FACTION)) {
+                    return BITE_TYPE.SUCK_BLOOD_PLAYER_POISONOUS;
+                }
                 return BITE_TYPE.SUCK_BLOOD_PLAYER;
             }
             return BITE_TYPE.ATTACK;
@@ -841,9 +845,12 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (type == BITE_TYPE.SUCK_BLOOD_CREATURE) {
             blood = ExtendedCreature.get((EntityCreature) entity).onBite(this);
             saturationMod = ExtendedCreature.get((EntityCreature) entity).getBloodSaturation();
-        } else if (type == BITE_TYPE.SUCK_BLOOD_PLAYER) {
+        } else if (type == BITE_TYPE.SUCK_BLOOD_PLAYER || type == BITE_TYPE.SUCK_BLOOD_PLAYER_POISONOUS) {
             blood = VampirePlayer.get((EntityPlayer) entity).onBite(this);
             saturationMod = VampirePlayer.get((EntityPlayer) entity).getBloodSaturation();
+            if (type == BITE_TYPE.SUCK_BLOOD_PLAYER_POISONOUS) {
+                player.addPotionEffect(new PotionEffect(MobEffects.POISON, 15, 2));
+            }
         } else if (type == BITE_TYPE.SUCK_BLOOD) {
             blood = ((IBiteableEntity) entity).onBite(this);
             saturationMod = ((IBiteableEntity) entity).getBloodSaturation();

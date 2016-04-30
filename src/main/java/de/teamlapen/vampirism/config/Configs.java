@@ -28,6 +28,7 @@ public class Configs {
     public static int gui_level_offset_y;
     public static boolean renderVampireForestFog;
     public static int blood_vision_recompile_ticks;
+    public static int coffin_sleep_percentage;
 
 
     public static int village_size;
@@ -112,7 +113,7 @@ public class Configs {
         blood_vision_recompile_ticks = main_config.getInt("blood_vision_recompile", CATEGORY_GENERAL, 3, 1, 100, "Every n tick the blood vision entities are recompiled - Might have a performance impact");
 
         autoConvertGlasBottles = main_config.getBoolean("auto_convert_glas_bottles", CATEGORY_GENERAL, true, "If glas bottles should automatically be converted to blood bottles if needed");
-
+        coffin_sleep_percentage = main_config.getInt("coffin_sleep_percantage", CATEGORY_GENERAL, 100, 1, 100, "Percentage of players that have to lay in a coffin to make it night. Be careful with values below 51 if e.g. Morpheus is installed");
         //Village
         village_modify = main_config.getBoolean("village_modify_gen", CATEGORY_VILLAGE, true, "Whether to modify village generation chance or not");
         village_density = main_config.getInt("village_density", CATEGORY_VILLAGE, 22, 1, 1000, "Minecraft will try to generate 1 village per NxN chunk area. Vanilla: 32");

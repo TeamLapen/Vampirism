@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.config;
 
 import de.teamlapen.lib.lib.config.BalanceValues;
+import de.teamlapen.lib.lib.config.DefaultBoolean;
 import de.teamlapen.lib.lib.config.DefaultInt;
 import de.teamlapen.vampirism.VampirismMod;
 
@@ -20,6 +21,9 @@ public class BalanceGeneral extends BalanceValues {
 
     @DefaultInt(value = 40, minValue = 0, maxValue = 1000, name = "hunter_camp_spawn_chance", comment = "Chance that a camp is generated. n/1000 for each valid chunk")
     public int HUNTER_CAMP_SPAWN_CHANCE;
+
+    @DefaultBoolean(value = true, alternateValue = false, hasAlternate = true, comment = "If the sanguinare effect can be canceled by a milk bucket")
+    public boolean CAN_CANCEL_SANGUINARE;
 
     /**
      * Creates a configuration for balance values

@@ -41,6 +41,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         CapabilityManager.INSTANCE.register(IExtendedCreatureVampirism.class, new Storage(), ExtendedCreatureDefaultImpl.class);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static ICapabilityProvider createNewCapability(final EntityCreature creature) {
         return new ICapabilitySerializable<NBTTagCompound>() {
 

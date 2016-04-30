@@ -47,6 +47,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
         CapabilityManager.INSTANCE.register(IHunterPlayer.class, new Storage(), HunterPlayerDefaultImpl.class);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static ICapabilityProvider createNewCapability(final EntityPlayer player) {
         return new ICapabilitySerializable<NBTTagCompound>() {
 

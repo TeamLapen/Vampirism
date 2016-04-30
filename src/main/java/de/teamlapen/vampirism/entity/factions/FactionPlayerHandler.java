@@ -32,6 +32,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         CapabilityManager.INSTANCE.register(IFactionPlayerHandler.class, new Storage(), FactionPlayerHandlerDefaultImpl.class);
     }
 
+    @SuppressWarnings("ConstantConditions")
     public static ICapabilityProvider createNewCapability(final EntityPlayer player) {
         return new ICapabilitySerializable<NBTTagCompound>() {
 
@@ -232,11 +233,11 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
      */
     private void notifyFaction(IPlayableFaction oldFaction, int oldLevel) {
         if (oldFaction != currentFaction && oldFaction != null) {
-            VampirismMod.log.t("Leaving faction %s", oldFaction.getKey());
+            VampirismMod.log.d(TAG, "Leaving faction %s", oldFaction.getKey());
             oldFaction.getPlayerCapability(player).onLevelChanged(0, oldLevel);
         }
         if (currentFaction != null) {
-            VampirismMod.log.t("Changing to %s %d", currentFaction, currentLevel);
+            VampirismMod.log.d(TAG, "Changing to %s %d", currentFaction, currentLevel);
             currentFaction.getPlayerCapability(player).onLevelChanged(currentLevel, oldFaction == currentFaction ? oldLevel : 0);
         }
         if (currentFaction != oldFaction) {

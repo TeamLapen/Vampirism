@@ -10,9 +10,12 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.ArrayList;
 
 
 public class PotionSanguinare extends VampirismPotion {
@@ -23,7 +26,11 @@ public class PotionSanguinare extends VampirismPotion {
     public static void addRandom(EntityLivingBase entity, boolean player) {
         int avgDuration = 20 * (player ? Balance.vp.SANGUINARE_AVG_DURATION : Balance.mobProps.SANGUINARE_AVG_DURATION);
         int duration = (int) ((entity.getRNG().nextFloat() + 0.5F) * avgDuration);
-        entity.addPotionEffect(new PotionSanguinareEffect(ModPotions.sanguinare, duration));
+        PotionEffect effect = new PotionSanguinareEffect(ModPotions.sanguinare, duration);
+        if (!Balance.general.CAN_CANCEL_SANGUINARE) {
+            effect.setCurativeItems(new ArrayList<ItemStack>());
+        }
+        entity.addPotionEffect(effect);
 
     }
 
