@@ -1,17 +1,21 @@
 package de.teamlapen.vampirism.entity.ai;
 
-import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 
 public class VampireAIFleeSun extends EntityAIFlee {
-    private final EntityVampireBase theCreature;
+    private final IVampire theCreature;
 
 
-    public VampireAIFleeSun(EntityVampireBase theCreature, double movementSpeed, boolean restrictToHome) {
+    /**
+     * @param theCreature Has to implement  {@link IVampire}
+     */
+    public VampireAIFleeSun(EntityCreature theCreature, double movementSpeed, boolean restrictToHome) {
         super(theCreature, movementSpeed, restrictToHome);
-        this.theCreature = theCreature;
+        this.theCreature = (IVampire) theCreature;
     }
 
 

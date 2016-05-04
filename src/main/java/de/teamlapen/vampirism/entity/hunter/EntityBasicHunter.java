@@ -161,7 +161,13 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter 
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 
         this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, null)));
-        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, null)));
+        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<EntityCreature>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, null)) {
+
+            @Override
+            protected double getTargetDistance() {
+                return super.getTargetDistance() / 2;
+            }
+        });
     }
 
     protected void updateEntityAttributes() {

@@ -1,13 +1,20 @@
 package de.teamlapen.vampirism.entity.converted;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumGarlicStrength;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.entity.ai.EntityAIMoveIndoorsDay;
+import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
 import de.teamlapen.vampirism.items.ItemBloodBottle;
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.ai.*;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -87,6 +94,23 @@ public class EntityConvertedVillager extends EntityVillager implements IConverte
     }
 
     @Override
+    public void onLivingUpdate() {
+        if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 3) {
+            isGettingGarlicDamage(true);
+        }
+        if (this.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
+            isGettingSundamage(true);
+        }
+        if (!worldObj.isRemote) {
+            if (isGettingSundamage() && ticksExisted % 40 == 11) {
+                this.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 42));
+            }
+            //TODO handle garlic
+        }
+        super.onLivingUpdate();
+    }
+
+    @Override
     public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
         if (compound.hasKey("addedAdditionalRecipes")) {
@@ -103,6 +127,28 @@ public class EntityConvertedVillager extends EntityVillager implements IConverte
     public void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
         compound.setBoolean("addedAdditionalRecipes", addedAdditionalRecipes);
+    }
+
+    @Override
+    protected void initEntityAI() {
+        super.initEntityAI();
+
+        EntityAIBase moveIndoorsNight = null;
+        for (EntityAITasks.EntityAITaskEntry task : tasks.taskEntries) {
+            if (task.action instanceof EntityAIMoveIndoors) {
+                moveIndoorsNight = task.action;
+                break;
+            }
+        }
+        if (moveIndoorsNight != null) {
+            tasks.removeTask(moveIndoorsNight);
+        } else {
+            VampirismMod.log.w("VampireVillager", "Failed to find move indoors task to replace");
+        }
+        tasks.addTask(0, new EntityAIRestrictSun(this));
+        tasks.addTask(1, new EntityAIAvoidEntity<>(this, EntityCreature.class, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, true, false, VReference.HUNTER_FACTION), 10, 0.5F, 0.6F));
+        tasks.addTask(2, new EntityAIMoveIndoorsDay(this));
+        tasks.addTask(5, new VampireAIFleeSun(this, 0.6F, true));
     }
 
     private void addAdditionalRecipes(MerchantRecipeList list) {

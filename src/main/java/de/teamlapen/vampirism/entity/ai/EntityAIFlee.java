@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.entity.ai;
 
-import de.teamlapen.vampirism.entity.EntityVampirism;
+import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -12,7 +12,7 @@ import java.util.Random;
  * Basic Flee from anything ai
  */
 public abstract class EntityAIFlee extends EntityAIBase {
-    private final EntityVampirism theCreature;
+    private final EntityCreature theCreature;
     private final double movementSpeed;
     private final World world;
     private final boolean restrictToHome;
@@ -20,7 +20,7 @@ public abstract class EntityAIFlee extends EntityAIBase {
     private double shelterY;
     private double shelterZ;
 
-    public EntityAIFlee(EntityVampirism theCreature, double movementSpeed, boolean restrictToHome) {
+    public EntityAIFlee(EntityCreature theCreature, double movementSpeed, boolean restrictToHome) {
         this.theCreature = theCreature;
         this.movementSpeed = movementSpeed;
         this.restrictToHome = restrictToHome;
@@ -64,7 +64,8 @@ public abstract class EntityAIFlee extends EntityAIBase {
 
             if (isPositionAcceptable(world, blockpos1)) {
                 if (restrictToHome && theCreature.hasHome()) {
-                    if (!theCreature.isWithinHomeDistance(blockpos1)) continue;
+
+                    if (!theCreature.isWithinHomeDistanceFromPosition(blockpos1)) continue;
                 }
                 return new Vec3d((double) blockpos1.getX(), (double) blockpos1.getY(), (double) blockpos1.getZ());
             }
