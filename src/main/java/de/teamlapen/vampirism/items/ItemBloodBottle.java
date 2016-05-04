@@ -112,7 +112,6 @@ public class ItemBloodBottle extends VampirismItem implements IBloodContainerIte
         if (worldIn.isRemote) {
             return new ActionResult<>(EnumActionResult.PASS, itemStackIn);
         }
-        if (!worldIn.isRemote) {
             VampirePlayer vampire = VampirePlayer.get(playerIn);
             if (vampire.getLevel() == 0) return new ActionResult<>(EnumActionResult.PASS, itemStackIn);
 //            Cannot drain blood from the bar anymore
@@ -138,7 +137,7 @@ public class ItemBloodBottle extends VampirismItem implements IBloodContainerIte
                 }
             }
 
-        }
+
         return new ActionResult<>(EnumActionResult.FAIL, itemStackIn);
     }
 

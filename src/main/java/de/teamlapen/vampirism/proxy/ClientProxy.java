@@ -75,7 +75,7 @@ public class ClientProxy extends CommonProxy {
             return;
         }
         RenderLivingBase rendererLiving = (RenderLivingBase) render;
-        rendererLiving.addLayer(new LayerVampireEntity(rendererLiving, loc));
+        rendererLiving.addLayer(new LayerVampireEntity(rendererLiving, loc, true));
     }
 
     private void registerVampireEntityOverlays() {

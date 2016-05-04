@@ -20,30 +20,35 @@ public class EntityDummyBittenAnimal extends EntityLiving {
         return type == EnumCreatureType.CREATURE;
     }
 
-    @Override
-    public void onEntityUpdate() {
-        String entity;
-        int rand = this.rand.nextInt(3);
-        switch (rand) {
-            case 0:
-                entity = "Pig";
-                break;
-            case 1:
-                entity = "Sheep";
-                break;
-            default:
-                entity = "Cow";
-                break;
-        }
-        EntityCreature entity1 = (EntityCreature) EntityList.createEntityByName(entity, worldObj);
-        if (entity1 != null) {
-            entity1.copyLocationAndAnglesFrom(this);
-            if (ExtendedCreature.get(entity1).canBecomeVampire()) {
-                ExtendedCreature.get(entity1).makeVampire();
-            }
-            worldObj.spawnEntityInWorld(entity1);
-        }
-        this.setDead();
 
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+        if (this.ticksExisted > 2) {
+            String entity;
+            int rand = this.rand.nextInt(3);
+            switch (rand) {
+                case 0:
+                    entity = "Pig";
+                    break;
+                case 1:
+                    entity = "Sheep";
+                    break;
+                default:
+                    entity = "Cow";
+                    break;
+            }
+            EntityCreature entity1 = (EntityCreature) EntityList.createEntityByName(entity, worldObj);
+            if (entity1 != null) {
+                entity1.copyLocationAndAnglesFrom(this);
+                if (ExtendedCreature.get(entity1).canBecomeVampire()) {
+                    ExtendedCreature.get(entity1).makeVampire();
+                }
+                worldObj.spawnEntityInWorld(entity1);
+            }
+            this.setDead();
+
+        }
     }
+
 }

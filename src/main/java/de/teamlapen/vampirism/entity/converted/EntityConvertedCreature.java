@@ -124,7 +124,11 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
         }
     }
 
-    @Override
+    /**
+     * Set the old creature (the one before conversion)
+     *
+     * @param creature
+     */
     public void setEntityCreature(T creature) {
         if ((creature == null && entityCreature != null)) {
             entityChanged = true;

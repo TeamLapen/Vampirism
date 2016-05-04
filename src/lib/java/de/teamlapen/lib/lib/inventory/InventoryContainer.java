@@ -41,6 +41,13 @@ public class InventoryContainer extends Container {
         return tile.isUseableByPlayer(p_75145_1_);
     }
 
+    /**
+     * Should be called when the inventory is changed. If overriding this, make sure the inventory actually calls this.
+     */
+    public void onInventoryChanged() {
+
+    }
+
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
         ItemStack stack = null;
@@ -73,13 +80,6 @@ public class InventoryContainer extends Container {
             slotObject.onPickupFromSlot(player, stackInSlot);
         }
         return stack;
-    }
-
-    /**
-     * Should be called when the inventory is changed. If overriding this, make sure the inventory actually calls this.
-     */
-    public void onInventoryChanged() {
-
     }
 
     public static class FilterSlot extends net.minecraft.inventory.Slot {

@@ -5,14 +5,6 @@ import java.lang.reflect.Array;
 import java.util.Comparator;
 
 public class ValuedObject<T> {
-    public final T object;
-    public final int value;
-
-    public ValuedObject(T object, int value) {
-        this.object = object;
-        this.value = value;
-    }
-
     public static <Q> Comparator<ValuedObject<Q>> getComparator() {
         return new Comparator<ValuedObject<Q>>() {
 
@@ -47,6 +39,14 @@ public class ValuedObject<T> {
             a[i] = array[i].object;
         }
         return a;
+    }
+
+    public final T object;
+    public final int value;
+
+    public ValuedObject(T object, int value) {
+        this.object = object;
+        this.value = value;
     }
 
     @Override

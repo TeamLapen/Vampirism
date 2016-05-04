@@ -66,7 +66,7 @@ public class BiteableRegistry implements IBiteableRegistry {
     IConvertedCreature convert(EntityCreature entity) {
         String s = EntityList.getEntityString(entity);
         BiteableEntry b = biteables.get(s);
-        if (b != null && b.convertible) {
+        if (b != null && b.convertingHandler != null) {
             return b.convertingHandler.createFrom(entity);
         }
         VampirismMod.log.w(TAG, "Failed to find convertible entry for %s", entity);

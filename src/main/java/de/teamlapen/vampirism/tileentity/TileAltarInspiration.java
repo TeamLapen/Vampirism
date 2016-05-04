@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.lib.VampLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.client.render.particle.ModParticles;
 import de.teamlapen.vampirism.core.ModFluids;
@@ -113,7 +112,6 @@ public class TileAltarInspiration extends TileFluidHandler implements ITickable 
 
     @Override
     public void update() {
-        if (worldObj.isRemote) VampirismMod.log.t("Block %s", worldObj.getBlockState(pos));
         if (ritualTicksLeft == 0) return;
 
         if (!worldObj.isRemote) {

@@ -7,10 +7,13 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.*;
@@ -117,7 +120,6 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         return player.getEntityId();
     }
 
-
     @Override
     public boolean isInFaction(IPlayableFaction f) {
         return currentFaction == f;
@@ -161,6 +163,19 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             }
         }
         notifyFaction(old, oldLevel);
+    }
+
+    @Override
+    public boolean onEntityAttacked(DamageSource src, float amt) {
+        if (Configs.pvp_only_between_factions && src instanceof EntityDamageSource) {
+            if (src.getEntity() instanceof EntityPlayer) {
+                FactionPlayerHandler other = get((EntityPlayer) src.getEntity());
+                if (this.currentFaction != null && this.currentFaction.equals(other.currentFaction)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     public void saveNBTData(NBTTagCompound nbt) {

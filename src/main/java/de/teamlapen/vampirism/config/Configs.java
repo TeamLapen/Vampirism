@@ -29,6 +29,7 @@ public class Configs {
     public static boolean renderVampireForestFog;
     public static int blood_vision_recompile_ticks;
     public static int coffin_sleep_percentage;
+    public static boolean pvp_only_between_factions;
 
 
     public static int village_size;
@@ -114,6 +115,8 @@ public class Configs {
 
         autoConvertGlasBottles = main_config.getBoolean("auto_convert_glas_bottles", CATEGORY_GENERAL, true, "If glas bottles should automatically be converted to blood bottles if needed");
         coffin_sleep_percentage = main_config.getInt("coffin_sleep_percantage", CATEGORY_GENERAL, 100, 1, 100, "Percentage of players that have to lay in a coffin to make it night. Be careful with values below 51 if e.g. Morpheus is installed");
+        pvp_only_between_factions = main_config.getBoolean("pvp_only_between_factions", CATEGORY_GENERAL, false, "If PVP should only be allowed between factions. PVP has to be enabled in the server properties for this. Not guaranteed to always protect player from teammates");
+
         //Village
         village_modify = main_config.getBoolean("village_modify_gen", CATEGORY_VILLAGE, true, "Whether to modify village generation chance or not");
         village_density = main_config.getInt("village_density", CATEGORY_VILLAGE, 22, 1, 1000, "Minecraft will try to generate 1 village per NxN chunk area. Vanilla: 32");

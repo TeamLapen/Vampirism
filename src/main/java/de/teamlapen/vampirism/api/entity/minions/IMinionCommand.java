@@ -20,6 +20,35 @@ public interface IMinionCommand {
      */
     boolean canBeActivated();
 
+    /**
+     * Should return the location of the icon map where the icon is in
+     *
+     * @return null to use vampirism's default one
+     */
+    @SideOnly(Side.CLIENT)
+    @Nullable
+    ResourceLocation getIconLoc();
+
+    /**
+     * @return An id, which is unique for each command of a minion
+     */
+    int getId();
+
+    /**
+     * Should return the min U texture coordinate within the icon map
+     *
+     * @return
+     */
+    @SideOnly(Side.CLIENT)
+    int getMinU();
+
+    /**
+     * Should return the min V texture coordinate within the icon map
+     *
+     * @return
+     */
+    @SideOnly(Side.CLIENT)
+    int getMinV();
 
     String getUnlocalizedName();
 
@@ -40,34 +69,4 @@ public interface IMinionCommand {
      * @return
      */
     boolean shouldPickupItem(@Nonnull ItemStack item);
-
-    /**
-     * @return An id, which is unique for each command of a minion
-     */
-    int getId();
-
-    /**
-     * Should return the location of the icon map where the icon is in
-     *
-     * @return null to use vampirism's default one
-     */
-    @SideOnly(Side.CLIENT)
-    @Nullable
-    ResourceLocation getIconLoc();
-
-    /**
-     * Should return the min U texture coordinate within the icon map
-     *
-     * @return
-     */
-    @SideOnly(Side.CLIENT)
-    int getMinU();
-
-    /**
-     * Should return the min V texture coordinate within the icon map
-     *
-     * @return
-     */
-    @SideOnly(Side.CLIENT)
-    int getMinV();
 }

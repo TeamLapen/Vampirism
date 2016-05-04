@@ -43,7 +43,7 @@ public class PropertyString extends PropertyHelper<String> {
     public Optional<String> parseValue(String value) {
         try {
 
-            return this.allowedValues.contains(value) ? Optional.of(value) : Optional.<String>absent();
+            return this.allowedValues.contains(value) ? Optional.of(value) : Optional.absent();
         } catch (NumberFormatException var3) {
             return Optional.absent();
         }

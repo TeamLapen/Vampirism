@@ -22,6 +22,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
@@ -85,6 +86,15 @@ public class ModPlayerEventHandler {
         }
         if (event.getEntity() instanceof EntityPlayer && !checkItemUsePerm(event.getItem(), (EntityPlayer) event.getEntityLiving())) {
             event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onLivingAttack(LivingAttackEvent event) {
+        if (event.getEntity() instanceof EntityPlayer) {
+            if (!FactionPlayerHandler.get((EntityPlayer) event.getEntity()).onEntityAttacked(event.getSource(), event.getAmount())) {
+                event.setCanceled(true);
+            }
         }
     }
 

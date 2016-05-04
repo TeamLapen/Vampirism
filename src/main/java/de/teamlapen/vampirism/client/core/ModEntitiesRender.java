@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.client.render.entities.*;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
+import de.teamlapen.vampirism.entity.converted.EntityConvertedVillager;
 import de.teamlapen.vampirism.entity.hunter.EntityAdvancedHunter;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainer;
@@ -96,6 +97,12 @@ public class ModEntitiesRender {
             @Override
             public Render<? super EntityAdvancedVampire> createRenderFor(RenderManager manager) {
                 return new RenderAdvancedVampire(manager);
+            }
+        });
+        RenderingRegistry.registerEntityRenderingHandler(EntityConvertedVillager.class, new IRenderFactory<EntityConvertedVillager>() {
+            @Override
+            public Render<? super EntityConvertedVillager> createRenderFor(RenderManager manager) {
+                return new RenderConvertedVillager(manager);
             }
         });
     }

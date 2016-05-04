@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import net.minecraft.util.DamageSource;
 
 /**
  * Handles factions and levels for the player
@@ -61,6 +62,16 @@ public interface IFactionPlayerHandler {
      * @param faction
      */
     void joinFaction(IPlayableFaction faction);
+
+    /**
+     * Should be called if the entity attacked.
+     * If this returns false the attack should be canceled
+     *
+     * @param src
+     * @param amt
+     * @return
+     */
+    boolean onEntityAttacked(DamageSource src, float amt);
 
     /**
      * Set the players faction and it's level. Only use this if you are sure that you want to override the previous faction.

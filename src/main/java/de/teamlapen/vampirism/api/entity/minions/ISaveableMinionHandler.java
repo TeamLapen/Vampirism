@@ -11,9 +11,21 @@ import net.minecraft.entity.EntityLivingBase;
 public interface ISaveableMinionHandler<T extends ISaveableMinion> {
 
     /**
+     * Spawn the loaded (from NBT) minions to the lords world
+     */
+    void addLoadedMinions();
+
+    /**
      * Removes all minions are either dead or have found another lord
      */
     void checkMinions();
+
+    /**
+     * @return How many minions the lord is allowed to have in addition to the current ones
+     */
+    int getLeftMinionSlots();
+
+    int getMinionCount();
 
     /**
      * Returns a predicate which only accepts EntityLivingBases which are not minions of this lord or the lord itself
@@ -22,22 +34,12 @@ public interface ISaveableMinionHandler<T extends ISaveableMinion> {
      */
     Predicate<EntityLivingBase> getNonMinionSelector();
 
-    int getMinionCount();
-
-    /**
-     * @return How many minions the lord is allowed to have in addition to the current ones
-     */
-    int getLeftMinionSlots();
-
-
     /**
      * Kills all minions.
      *
      * @param instant If true, the entity is immediately set dead and no death animation is played
      */
     void killMinions(boolean instant);
-
-
 
     /**
      * Registers a minion to be saved
@@ -50,9 +52,4 @@ public interface ISaveableMinionHandler<T extends ISaveableMinion> {
     void teleportMinionsToLord();
 
     void unregisterMinion(T m);
-
-    /**
-     * Spawn the loaded (from NBT) minions to the lords world
-     */
-    void addLoadedMinions();
 }
