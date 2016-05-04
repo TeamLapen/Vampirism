@@ -28,7 +28,7 @@ public class ActionRegistry implements IActionRegistry {
             if (actionBuilder.containsKey(faction)) {
                 actionMap.put(faction, actionBuilder.get(faction).build());
             } else {
-                actionMap.put(faction, ImmutableBiMap.copyOf(HashBiMap.create()));
+                actionMap.put(faction, ImmutableBiMap.copyOf(HashBiMap.<String, IAction>create()));
             }
         }
         actionBuilder = null;
@@ -62,7 +62,7 @@ public class ActionRegistry implements IActionRegistry {
         }
         IPlayableFaction faction = action.getFaction();
         if (!actionBuilder.containsKey(faction)) {
-            actionBuilder.put(faction, ImmutableBiMap.builder());
+            actionBuilder.put(faction, ImmutableBiMap.<String, IAction>builder());
         }
         actionBuilder.get(faction).put(key, action);
 

@@ -103,7 +103,7 @@ public class SkillRegistry implements ISkillRegistry {
                 rootNodes.put(faction, rootNode);
             }
             if (!skillMap.containsKey(faction)) {
-                skillMap.put(faction, HashBiMap.create());
+                skillMap.put(faction, HashBiMap.<String, ISkill>create());
             }
             if (FMLCommonHandler.instance().getSide().isClient()) {
                 skillNodeSizeMap.put(faction, createDisplayInfo(rootNode));

@@ -394,7 +394,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
             int value = Math.min(j, 3) * (type == null ? 0 : type.getValue());
             valuedTips[i] = new ValuedObject<>(tips[i], value);
         }
-        Arrays.sort(valuedTips, ValuedObject.getInvertedComparator());
+        Arrays.sort(valuedTips, ValuedObject.<BlockPos>getInvertedComparator());
         int found = 0;
         int i = 0;
         while (found < required && i < valuedTips.length && i < 9) {
