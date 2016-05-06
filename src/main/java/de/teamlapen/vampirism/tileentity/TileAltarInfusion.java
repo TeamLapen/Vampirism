@@ -190,7 +190,6 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
             }
             player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, DURATION_TICK, 10));
             this.markDirty();
-            VampirismMod.log.t("Started");
             return;
         }
         tips = null;

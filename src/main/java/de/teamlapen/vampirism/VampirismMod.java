@@ -33,6 +33,7 @@ import de.teamlapen.vampirism.entity.player.vampire.NightVision;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
+import de.teamlapen.vampirism.modcompat.jei.JEIModCompat;
 import de.teamlapen.vampirism.modcompat.waila.WailaModCompat;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
@@ -173,6 +174,7 @@ public class VampirismMod {
 
     private void addModCompats() {
         modCompatLoader.addModCompat(new WailaModCompat());
+        modCompatLoader.addModCompat(new JEIModCompat());
     }
 
     private void checkDevEnv() {

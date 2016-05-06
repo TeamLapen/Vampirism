@@ -188,7 +188,7 @@ entity.vampirism.advanced_hunter.name=Advanced Hunter
 #RITUALS
 text.vampirism.ritual_missing_items=Missing %s of "%s" for this ritual
 text.vampirism.ritual_night_only=You can only perform this ritual at night
-text.vampirism.trainer_level_wrong=This trainer cannot train you at this level
+text.vampirism.trainer_level_wrong=This trainer cannot train you at your level
 
 #BLOCKS
 tile.vampirism.hunterTable.name=Hunter Research Table

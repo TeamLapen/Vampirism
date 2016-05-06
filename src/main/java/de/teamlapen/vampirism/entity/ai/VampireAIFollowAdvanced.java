@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.ai;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.vampire.EntityAdvancedVampire;
 import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -62,7 +61,6 @@ public class VampireAIFollowAdvanced extends EntityAIBase {
         if (leader == null) return false;
         else {
             entity.setAdvancedLeader(leader);
-            VampirismMod.log.t("Starting");
             leader.increaseFollowerCount();
             return this.entity.getDistanceSqToEntity(leader) > DIST;
         }
