@@ -13,7 +13,7 @@ repositories {
 
 dependencies {
     deobfCompile "mezz.jei:jei_" + config.minecraft_version + ":" + config.jei_version
-    //compile('mcp.mobius.waila:Waila:'+config.waila_version+":dev")
+    deobfCompile 'mcp.mobius.waila:Waila:' + config.waila_version
     //compile "info.amerifrance.guideapi:Guide-API:"+config.minecraft_version+"-"+config.guide_api_version+":deobf"
     //compile group: 'org.eclipse.jdt', name: 'org.eclipse.jdt.annotation', version: '1.1.0'
     //runtime "codechicken:CodeChickenCore:"+config.minecraft_version+"-"+config.chicken_core_version+":dev"

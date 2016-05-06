@@ -4,6 +4,7 @@ import de.teamlapen.lib.HelperRegistry;
 import de.teamlapen.lib.lib.network.AbstractPacketDispatcher;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.lib.lib.util.Logger;
+import de.teamlapen.lib.lib.util.ModCompatLoader;
 import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -32,6 +33,7 @@ import de.teamlapen.vampirism.entity.player.vampire.NightVision;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.entity.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.entity.player.vampire.skills.VampireSkills;
+import de.teamlapen.vampirism.modcompat.waila.WailaModCompat;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.proxy.IProxy;
@@ -96,6 +98,11 @@ public class VampirismMod {
         return Configs.realism_mode;
     }
     private VersionChecker.VersionInfo versionInfo;
+    private ModCompatLoader modCompatLoader = new ModCompatLoader(REFERENCE.MODID + "/vampirism_mod_compat");
+
+    public VampirismMod() {
+        addModCompats();
+    }
 
     public VersionChecker.VersionInfo getVersionInfo() {
         return versionInfo;
@@ -123,6 +130,8 @@ public class VampirismMod {
         Achievements.registerAchievement();
         SupporterManager.getInstance().initAsync();
         proxy.onInitStep(IInitListener.Step.INIT, event);
+        modCompatLoader.onInitStep(IInitListener.Step.INIT, event);
+
     }
 
     @Mod.EventHandler
@@ -135,6 +144,8 @@ public class VampirismMod {
     public void postInit(FMLPostInitializationEvent event) {
         finishAPI();
         proxy.onInitStep(IInitListener.Step.POST_INIT, event);
+        modCompatLoader.onInitStep(IInitListener.Step.POST_INIT, event);
+
     }
 
     @Mod.EventHandler
@@ -148,6 +159,7 @@ public class VampirismMod {
         setupAPI1();
         Configs.init(new File(event.getModConfigurationDirectory(), REFERENCE.MODID), inDev);
         Balance.init(new File(event.getModConfigurationDirectory(), REFERENCE.MODID), inDev);
+        modCompatLoader.onInitStep(IInitListener.Step.PRE_INIT, event);
         setupAPI2();
 
 
@@ -157,6 +169,10 @@ public class VampirismMod {
         VampireActions.registerDefaultActions();
         HunterActions.registerDefaultActions();
         VampireSkills.registerVampireSkills();
+    }
+
+    private void addModCompats() {
+        modCompatLoader.addModCompat(new WailaModCompat());
     }
 
     private void checkDevEnv() {

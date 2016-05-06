@@ -140,14 +140,6 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         return entity.getEntityId();
     }
 
-
-    public void loadNBTData(NBTTagCompound compound) {
-        if (compound.hasKey(KEY_BLOOD)) {
-            setBlood(compound.getInteger(KEY_BLOOD));
-        }
-
-    }
-
     @Override
     public void loadUpdateFromNBT(NBTTagCompound nbt) {
         if (nbt.hasKey(KEY_BLOOD)) {
@@ -214,10 +206,6 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         }
     }
 
-    public void saveNBTData(NBTTagCompound compound) {
-        compound.setInteger(KEY_BLOOD, blood);
-    }
-
     @Override
     public String toString() {
         return super.toString() + " for entity (" + entity.toString() + ") [B" + blood + ",MB" + maxBlood + ",CV" + canBecomeVampire + "]";
@@ -226,6 +214,17 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     @Override
     public void writeFullUpdateToNBT(NBTTagCompound nbt) {
         nbt.setInteger(KEY_BLOOD, getBlood());
+    }
+
+    private void loadNBTData(NBTTagCompound compound) {
+        if (compound.hasKey(KEY_BLOOD)) {
+            setBlood(compound.getInteger(KEY_BLOOD));
+        }
+
+    }
+
+    private void saveNBTData(NBTTagCompound compound) {
+        compound.setInteger(KEY_BLOOD, blood);
     }
 
     private void sync() {
