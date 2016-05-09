@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.potion.FakeNightVisionPotion;
 import de.teamlapen.vampirism.util.DaySleepHelper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.ModWorldEventListener;
+import de.teamlapen.vampirism.world.villages.VampirismVillageCollection;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
@@ -98,6 +99,7 @@ public class ModEventHandler {
     public void onWorldTick(TickEvent.WorldTickEvent event) {
         if (event.phase.equals(TickEvent.Phase.END)) {
             DaySleepHelper.checkSleepWorld(event.world);
+            VampirismVillageCollection.get(event.world).tick();
         }
     }
 }

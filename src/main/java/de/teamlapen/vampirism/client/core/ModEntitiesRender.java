@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.entity.converted.EntityConvertedVillager;
 import de.teamlapen.vampirism.entity.hunter.EntityAdvancedHunter;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainer;
+import de.teamlapen.vampirism.entity.hunter.EntityHunterVillager;
 import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionBase;
 import de.teamlapen.vampirism.entity.vampire.EntityAdvancedVampire;
 import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
@@ -103,6 +104,12 @@ public class ModEntitiesRender {
             @Override
             public Render<? super EntityConvertedVillager> createRenderFor(RenderManager manager) {
                 return new RenderConvertedVillager(manager);
+            }
+        });
+        RenderingRegistry.registerEntityRenderingHandler(EntityHunterVillager.class, new IRenderFactory<EntityHunterVillager>() {
+            @Override
+            public Render<? super EntityHunterVillager> createRenderFor(RenderManager manager) {
+                return new RenderHunterVillager(manager);
             }
         });
     }

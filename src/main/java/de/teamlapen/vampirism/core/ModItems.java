@@ -27,6 +27,7 @@ public class ModItems {
     public static ItemGarlic itemGarlic;
     public static ItemInjection injection;
     public static ItemMedChair itemMedChair;
+    public static ItemPitchfork pitchfork;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
@@ -67,6 +68,7 @@ public class ModItems {
         itemGarlic = registerItem(new ItemGarlic());
         itemMedChair = registerItem(new ItemMedChair());
         injection = registerItem(new ItemInjection());
+        pitchfork = registerItem(new ItemPitchfork());
     }
 
     private static <T extends Item> T registerItem(T item) {

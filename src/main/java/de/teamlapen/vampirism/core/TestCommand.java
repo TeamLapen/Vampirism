@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.hunter.EntityHunterVillager;
 import de.teamlapen.vampirism.entity.player.skills.SkillRegistry;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import net.minecraft.command.CommandException;
@@ -16,6 +17,7 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.profiler.Profiler;
@@ -212,6 +214,41 @@ public class TestCommand extends BasicCommand {
                 }
             }
         });
+        addSub(new SubCommand() {
+
+
+            @Override
+            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+                return null;
+            }
+
+            @Override
+            public boolean canSenderUseCommand(ICommandSender var1) {
+                return canCommandSenderUseCheatCommand(var1) && var1 instanceof EntityPlayer;
+            }
+
+            @Override
+            public String getCommandName() {
+                return "makeVillagerAgressive";
+            }
+
+            @Override
+            public String getCommandUsage(ICommandSender var1) {
+                return getCommandName();
+            }
+
+            @Override
+            public void processCommand(ICommandSender sender, String[] var2) throws CommandException {
+                EntityPlayer player = getCommandSenderAsPlayer(sender);
+                List<EntityVillager> l = player.worldObj.getEntitiesWithinAABB(EntityVillager.class, player.getEntityBoundingBox().expand(3, 2, 3));
+                for (EntityVillager v : l) {
+                    EntityHunterVillager hunter = EntityHunterVillager.makeHunter(v);
+                    v.setDead();
+                    v.worldObj.spawnEntityInWorld(hunter);
+                }
+            }
+        });
+
     }
 
     @Override

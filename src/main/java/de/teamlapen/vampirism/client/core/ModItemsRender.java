@@ -40,5 +40,6 @@ public class ModItemsRender {
         renderHelper.registerRender(ModItems.itemGarlic, "normal");
         renderHelper.registerRenderAllMeta(ModItems.injection, ItemInjection.META_COUNT);
         renderHelper.registerRender(ModItems.itemMedChair, "normal");
+        renderHelper.registerRender(ModItems.pitchfork, "normal");
     }
 }

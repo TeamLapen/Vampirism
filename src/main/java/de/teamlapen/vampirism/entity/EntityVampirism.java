@@ -96,18 +96,22 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         this.home = null;
     }
 
+    @Override
     public boolean getCanSpawnHere() {
         return (peaceful || this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL) && super.getCanSpawnHere();
     }
 
+    @Override
     public AxisAlignedBB getHome() {
         return home;
     }
 
+    @Override
     public void setHome(AxisAlignedBB home) {
         this.home = home;
     }
 
+    @Override
     public BlockPos getHomePosition() {
         if (!hasHome()) return new BlockPos(0, 0, 0);
         int posX, posY, posZ;
@@ -117,10 +121,12 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         return new BlockPos(posX, posY, posZ);
     }
 
+    @Override
     public boolean hasHome() {
         return home != null;
     }
 
+    @Override
     public boolean isWithinHomeDistance(double x, double y, double z) {
         if (home != null) {
             return home.isVecInside(new Vec3d(x, y, z));
@@ -128,10 +134,12 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         return true;
     }
 
+    @Override
     public boolean isWithinHomeDistance(BlockPos pos) {
         return this.isWithinHomeDistance(pos.getX(), pos.getY(), pos.getZ());
     }
 
+    @Override
     public boolean isWithinHomeDistance(int posX, int posY, int posZ) {
         return this.isWithinHomeDistance((double) posX, (double) posY, (double) posZ);
     }
@@ -146,6 +154,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         return this.isWithinHomeDistance(pos);
     }
 
+    @Override
     public void onLivingUpdate() {
         if (hasArms) {
             this.updateArmSwingProgress();
@@ -153,6 +162,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         super.onLivingUpdate();
     }
 
+    @Override
     public void onUpdate() {
         super.onUpdate();
 
@@ -174,6 +184,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         }
     }
 
+    @Override
     public void setHomeArea(BlockPos pos, int r) {
         this.setHome(new AxisAlignedBB(pos.add(-r, -r, -r), pos.add(r, r, r)));
     }
@@ -195,6 +206,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         }
     }
 
+    @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);

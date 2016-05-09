@@ -10,9 +10,12 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.world.villages.VampirismVillage;
+import de.teamlapen.vampirism.world.villages.VampirismVillageCollection;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -164,6 +167,8 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         if (getBlood() <= 0) return 0;
         int amt = Math.min(blood, (int) (getMaxBlood() / 2F));
         blood -= amt;
+        boolean killed = false;
+        boolean converted = false;
         if (blood < getMaxBlood() / 2) {
             if (blood == 0 || entity.getRNG().nextInt(blood + 1) == 0) {
 
@@ -173,9 +178,11 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
                     } else {
                         makeVampire();
                     }
+                    converted = true;
 
                 } else {
                     entity.attackEntityFrom(DamageSource.magic, 1000);
+                    killed = true;
                 }
             }
 
@@ -188,6 +195,18 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             }
         }
         this.sync();
+        if (amt > 0 && entity instanceof EntityVillager) {
+            VampirismVillage vv = VampirismVillageCollection.get((entity).worldObj).getNearestVillage(entity);
+            if (vv != null) {
+                vv.onVillagerBitten();
+                if (converted) {
+                    vv.onVillagerConverted();
+                }
+                if (killed) {
+                    vv.onVillagerBittenToDeath();
+                }
+            }
+        }
         return amt;
     }
 

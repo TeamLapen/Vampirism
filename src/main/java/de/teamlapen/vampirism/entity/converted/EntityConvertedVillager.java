@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.converted;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumGarlicStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -8,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.entity.EntityVillagerVampirism;
 import de.teamlapen.vampirism.entity.ai.EntityAIMoveIndoorsDay;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
 import de.teamlapen.vampirism.items.ItemBloodBottle;
@@ -28,12 +28,13 @@ import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Random;
 
 /**
  * Vampire Villager
  */
-public class EntityConvertedVillager extends EntityVillager implements IConvertedCreature<EntityVillager> {
+public class EntityConvertedVillager extends EntityVillagerVampirism implements IConvertedCreature<EntityVillager> {
 
     private EnumGarlicStrength garlicCache;
     private boolean sundamageCache;
@@ -133,22 +134,22 @@ public class EntityConvertedVillager extends EntityVillager implements IConverte
     protected void initEntityAI() {
         super.initEntityAI();
 
-        EntityAIBase moveIndoorsNight = null;
-        for (EntityAITasks.EntityAITaskEntry task : tasks.taskEntries) {
-            if (task.action instanceof EntityAIMoveIndoors) {
-                moveIndoorsNight = task.action;
-                break;
+        Iterator<EntityAITasks.EntityAITaskEntry> it = this.tasks.taskEntries.iterator();
+        while (it.hasNext()) {
+            EntityAITasks.EntityAITaskEntry entry = it.next();
+            if (entry.action instanceof EntityAIMoveIndoors || entry.action instanceof EntityAIVillagerMate) {
+                it.remove();
             }
         }
-        if (moveIndoorsNight != null) {
-            tasks.removeTask(moveIndoorsNight);
-        } else {
-            VampirismMod.log.w("VampireVillager", "Failed to find move indoors task to replace");
-        }
+
         tasks.addTask(0, new EntityAIRestrictSun(this));
         tasks.addTask(1, new EntityAIAvoidEntity<>(this, EntityCreature.class, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, true, false, VReference.HUNTER_FACTION), 10, 0.5F, 0.6F));
         tasks.addTask(2, new EntityAIMoveIndoorsDay(this));
         tasks.addTask(5, new VampireAIFleeSun(this, 0.6F, true));
+        tasks.addTask(6, new EntityAIAttackMelee(this, 0.6, false));
+
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+
     }
 
     private void addAdditionalRecipes(MerchantRecipeList list) {

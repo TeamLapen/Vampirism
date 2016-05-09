@@ -20,6 +20,7 @@ public class Balance {
     public static BalanceVampireActions vpa;
     public static BalanceVampireSkills vps;
     public static BalanceGeneral general;
+    public static BalanceVillage village;
 
     public static void init(File configDir, boolean inDev) {
         File balanceDir = new File(configDir, "balance");
@@ -30,6 +31,7 @@ public class Balance {
         vpa = addBalance(new BalanceVampireActions(balanceDir));
         general = addBalance(new BalanceGeneral(balanceDir));
         vps = addBalance(new BalanceVampireSkills(balanceDir));
+        village = addBalance(new BalanceVillage(balanceDir));
         if (inDev && Configs.resetConfigurationInDev) {
             resetAndReload(null);
         } else {
