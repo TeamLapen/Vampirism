@@ -59,7 +59,7 @@ public class LayerHeldItemVillager implements LayerRenderer<EntityHunterVillager
             GlStateManager.rotate(-90.0F, 1.0F, 0.0F, 0.0F);
             GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
             boolean flag = p_188358_4_ == EnumHandSide.LEFT;
-            GlStateManager.translate(flag ? -0.0625F : 0.0625F, 0.125F, -0.625F);
+            GlStateManager.translate(flag ? -0.0925F : 0.0925F, 0.125F, -0.525F);
             Minecraft.getMinecraft().getItemRenderer().renderItemSide(p_188358_1_, p_188358_2_, p_188358_3_, flag);
             GlStateManager.popMatrix();
         }
