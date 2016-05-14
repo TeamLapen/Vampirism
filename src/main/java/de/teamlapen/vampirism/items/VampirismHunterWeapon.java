@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.IFactionLevelItem;
 import de.teamlapen.vampirism.api.IFactionSlayerItem;
 import de.teamlapen.vampirism.api.VReference;
@@ -8,11 +7,13 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemSword;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -22,14 +23,21 @@ import java.util.List;
 /**
  * Basic sword for vampire hunters
  */
-public abstract class VampirismHunterSword extends ItemSword implements IFactionLevelItem, IFactionSlayerItem {
+public abstract class VampirismHunterWeapon extends VampirismItemWeapon implements IFactionLevelItem, IFactionSlayerItem {
 
-    public VampirismHunterSword(String regName, ToolMaterial material) {
-        super(material);
-        this.setCreativeTab(VampirismMod.creativeTab);
-        setRegistryName(REFERENCE.MODID, regName);
-        this.setUnlocalizedName(REFERENCE.MODID + "." + regName);
+    public VampirismHunterWeapon(String regName, ToolMaterial material) {
+        super(regName, material);
     }
+
+    public VampirismHunterWeapon(String regName, ToolMaterial material, float attackSpeedMod) {
+        super(regName, material, attackSpeedMod);
+    }
+
+    public VampirismHunterWeapon(String regName, ToolMaterial material, float attackSpeedMod, float attackDamage) {
+        super(regName, material, attackSpeedMod, attackDamage);
+    }
+
+
 
     @SideOnly(Side.CLIENT)
     @Override
@@ -54,7 +62,7 @@ public abstract class VampirismHunterSword extends ItemSword implements IFaction
         return VReference.HUNTER_FACTION;
     }
 
-    public static class SimpleHunterSword extends VampirismHunterSword {
+    public static class SimpleHunterSword extends VampirismHunterWeapon {
         private final int minLevel;
         private final float damageMult;
 
@@ -72,6 +80,18 @@ public abstract class VampirismHunterSword extends ItemSword implements IFaction
         @Override
         public int getMinLevel() {
             return minLevel;
+        }
+
+        @Override
+        public float getStrVsBlock(ItemStack stack, IBlockState state) {
+            Block block = state.getBlock();
+
+            if (block == Blocks.WEB) {
+                return 15.0F;
+            } else {
+                Material material = state.getMaterial();
+                return material != Material.PLANTS && material != Material.VINE && material != Material.CORAL && material != Material.LEAVES && material != Material.GOURD ? 1.0F : 1.5F;
+            }
         }
     }
 }

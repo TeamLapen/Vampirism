@@ -1,20 +1,14 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.item.ItemSword;
-
 /**
  * Mainly intended to be used by aggressive villagers.
  */
-public class ItemPitchfork extends ItemSword {
+public class ItemPitchfork extends VampirismItemWeapon {
 
     private final static String regName = "pitchfork";
 
     public ItemPitchfork() {
-        super(ToolMaterial.IRON);
-        this.setCreativeTab(VampirismMod.creativeTab);
-        setRegistryName(REFERENCE.MODID, regName);
-        this.setUnlocalizedName(REFERENCE.MODID + "." + regName);
+        super(regName, ToolMaterial.IRON, -2.9F, (ToolMaterial.IRON.getDamageVsEntity() * 1.2F));
+
     }
 }

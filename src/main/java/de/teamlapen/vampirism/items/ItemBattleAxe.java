@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.items;
 /**
  * Temporary axe for testing some stuff
  */
-public class ItemBattleAxe extends VampirismHunterSword.SimpleHunterSword {
+public class ItemBattleAxe extends VampirismHunterWeapon.SimpleHunterSword {
     private final static String name = "battleAxe";
 
     public ItemBattleAxe() {
