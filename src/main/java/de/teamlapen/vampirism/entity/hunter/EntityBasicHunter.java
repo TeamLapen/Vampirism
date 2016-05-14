@@ -5,7 +5,11 @@ import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.entity.ai.EntityAIMoveThroughVillageCustom;
+import de.teamlapen.vampirism.entity.ai.HunterAIDefendVillage;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
+import de.teamlapen.vampirism.world.villages.VampirismVillage;
+import de.teamlapen.vampirism.world.villages.VampirismVillageCollection;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -22,13 +26,28 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 /**
  * Exists in {@link EntityBasicHunter#MAX_LEVEL}+1 different levels
  */
-public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter {
+public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter, HunterAIDefendVillage.IVillageHunterCreature {
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(EntityBasicHunter.class, DataSerializers.VARINT);
     private final int MAX_LEVEL = 3;
     private final int MOVE_TO_RESTRICT_PRIO = 3;
+    private final int DEFEND_VILLAGE_PRIO = 3;
+    private final int WANDER_VILLAGE_PRIO = 5;
+    private EntityAIBase wanderVillage = new EntityAIMoveThroughVillageCustom(this, 0.7F, false, 400);
+    private boolean villageHunter = false;
+    private boolean defendVillageAdded = false;
+    private EntityAIBase defendVillage = new HunterAIDefendVillage(this);
+    /**
+     * Caches the village of this hunter if he is a villageHunter
+     */
+    private
+    @Nullable
+    VampirismVillage vampirismVillage;
+
 
 
     public EntityBasicHunter(World world) {
@@ -74,8 +93,45 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter 
     }
 
     @Override
+    public EntityCreature getRepresentingCreature() {
+        return this;
+    }
+
+    @Nullable
+    @Override
+    public VampirismVillage getVampirismVillage() {
+        return vampirismVillage;
+    }
+
+    @Override
     public boolean isLookingForHome() {
         return !hasHome();
+    }
+
+    @Override
+    public void makeCampHunter(AxisAlignedBB box) {
+        if (villageHunter) {
+            this.makeNormalHunter();
+        }
+        super.setHome(box);
+        this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
+    }
+
+    @Override
+    public void makeNormalHunter() {
+        super.setHome(null);
+        this.setMoveTowardsRestriction(0, false);
+        this.villageHunter = false;
+        this.setDefendVillage(false);
+    }
+
+    @Override
+    public void makeVillageHunter(VampirismVillage village) {
+        super.setHome(village.getBoundingBox());
+        this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
+        this.villageHunter = true;
+        this.vampirismVillage = village;
+        this.setDefendVillage(true);
     }
 
     @Override
@@ -84,13 +140,12 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter 
         if (tagCompund.hasKey("level")) {
             setLevel(tagCompund.getInteger("level"));
         }
+        this.villageHunter = tagCompund.getBoolean("villageHunter");
+        if (villageHunter) {
+            this.setDefendVillage(true);
+        }
 
-    }
 
-    @Override
-    public void setCampArea(AxisAlignedBB box) {
-        super.setHome(box);
-        this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO);
     }
 
     @Override
@@ -112,6 +167,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter 
     public void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
         nbt.setInteger("level", getLevel());
+        nbt.setBoolean("villageHunter", villageHunter);
     }
 
     @Override
@@ -153,21 +209,53 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter 
         this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
         this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0, false));
 
+
         this.tasks.addTask(6, new EntityAIWander(this, 0.7, 50));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 13F));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityVampireBase.class, 17F));
         this.tasks.addTask(8, new EntityAILookIdle(this));
 
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-
         this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, null)));
-        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<EntityCreature>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, null)) {
+        this.targetTasks.addTask(4, new EntityAINearestAttackableTarget<EntityCreature>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, null)) {
 
             @Override
             protected double getTargetDistance() {
                 return super.getTargetDistance() / 2;
             }
         });
+    }
+
+    @Override
+    protected void onRandomTick() {
+        super.onRandomTick();
+        if (villageHunter) {
+            this.vampirismVillage = VampirismVillageCollection.get(worldObj).getNearestVillage(getPosition(), 32);
+            if (this.vampirismVillage == null) {
+                this.makeNormalHunter();
+            }
+        } else {
+            vampirismVillage = null;
+        }
+    }
+
+    /**
+     * Add the DefendVillage task.
+     * * @param active If the task should be active or not
+     */
+    protected void setDefendVillage(boolean active) {
+        if (defendVillageAdded) {
+            if (active) return;
+            this.targetTasks.removeTask(defendVillage);
+            this.tasks.removeTask(wanderVillage);
+            defendVillageAdded = false;
+        }
+        if (active) {
+            targetTasks.addTask(DEFEND_VILLAGE_PRIO, defendVillage);
+            tasks.addTask(WANDER_VILLAGE_PRIO, wanderVillage);
+            defendVillageAdded = true;
+        }
+
     }
 
     protected void updateEntityAttributes() {

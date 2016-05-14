@@ -198,12 +198,12 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         if (amt > 0 && entity instanceof EntityVillager) {
             VampirismVillage vv = VampirismVillageCollection.get((entity).worldObj).getNearestVillage(entity);
             if (vv != null) {
-                vv.onVillagerBitten();
+                vv.onVillagerBitten(biter);
                 if (converted) {
-                    vv.onVillagerConverted();
+                    vv.onVillagerConverted(biter);
                 }
                 if (killed) {
-                    vv.onVillagerBittenToDeath();
+                    vv.onVillagerBittenToDeath(biter);
                 }
             }
         }

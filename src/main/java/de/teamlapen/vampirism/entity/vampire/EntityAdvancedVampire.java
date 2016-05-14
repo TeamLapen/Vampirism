@@ -61,6 +61,12 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     }
 
     @Override
+    public boolean getCanSpawnHere() {
+
+        return super.getCanSpawnHere();
+    }
+
+    @Override
     public int getEyeType() {
         return getDataManager().get(TYPE);
     }

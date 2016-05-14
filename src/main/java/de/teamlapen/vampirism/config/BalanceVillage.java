@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.config;
 
 import de.teamlapen.lib.lib.config.BalanceValues;
+import de.teamlapen.lib.lib.config.DefaultDouble;
 import de.teamlapen.lib.lib.config.DefaultInt;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
@@ -18,13 +19,23 @@ public class BalanceVillage extends BalanceValues {
     @DefaultInt(value = 2, minValue = 1, comment = "The chance that a new villager is spawned for a converted one. 1/n")
     public int VILLAGER_RESPAWN_RATE;
 
-    @DefaultInt(value = 4, minValue = 1, comment = "How many villagers can be bitten until the village get aggressive")
-    public int BITTEN_UNTIL_AGRESSIVE;
-    @DefaultInt(value = 4, minValue = 1, comment = "How many villagers have to be converted or killed by vampires until the village get aggressive")
-    public int CONVERTED_UNTIL_AGRESSIVE;
+    @DefaultInt(value = 15, minValue = 0, comment = "How much biting a villager counts towards the aggressive counter")
+    public int BITTEN_AGGRESSIVE_FACTOR;
 
-    @DefaultInt(value = 2, comment = "The number of hunters that should be in a village (approximately)")
-    public int MIN_HUNTER_COUNT_VILLAGE;
+    @DefaultInt(value = 30, minValue = 0, comment = "How much killing a villager with a vampire bite counts towards the aggressive counter")
+    public int BITTEN_TO_DEATH_AGGRESSIVE_FACTOR;
+
+    @DefaultInt(value = 40, minValue = 0, comment = "How much converting a villager with a vampire bite counts towards the aggressive counter")
+    public int CONVERTED_AGGRESSIVE_FACTOR;
+
+    @DefaultInt(value = 230, minValue = 1, comment = "As of which aggressive counter value, villagers become aggressive")
+    public int AGGRESSIVE_COUNTER_THRESHOLD;
+
+    @DefaultInt(value = 2, minValue = 1, comment = "If a village becomes aggressive this is the chance for a valid villager to turn into a hunter (1/n)")
+    public int VILLAGER_HUNTER_CHANCE;
+
+    @DefaultDouble(value = 0.1, minValue = 0, comment = "The number of hunters that should be in a village (approximately) per door. (There are around 0.35 villager per door)")
+    public double MIN_HUNTER_COUNT_VILLAGE_PER_DOOR;
 
     /**
      * Creates a configuration for balance values

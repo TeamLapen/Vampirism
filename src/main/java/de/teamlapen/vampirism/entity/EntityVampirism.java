@@ -21,6 +21,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 /**
  * Base class for most vampirism mobs
  */
@@ -36,6 +38,10 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     private AxisAlignedBB home;
     private boolean moveTowardsRestrictionAdded = false;
     private int moveTowardsRestrictionPrio = -1;
+    /**
+     * Counter which reaches zero every 70 to 120 ticks
+     */
+    private int randomTickDivider;
 
     public EntityVampirism(World world) {
         super(world);
@@ -101,13 +107,14 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         return (peaceful || this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL) && super.getCanSpawnHere();
     }
 
+    @Nullable
     @Override
     public AxisAlignedBB getHome() {
         return home;
     }
 
     @Override
-    public void setHome(AxisAlignedBB home) {
+    public void setHome(@Nullable AxisAlignedBB home) {
         this.home = home;
     }
 
@@ -179,7 +186,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
             int[] h = nbt.getIntArray("home");
             home = new AxisAlignedBB(h[0], h[1], h[2], h[3], h[4], h[5]);
             if (nbt.hasKey("homeMovePrio")) {
-                this.setMoveTowardsRestriction(nbt.getInteger("moveHomePrio"));
+                this.setMoveTowardsRestriction(nbt.getInteger("moveHomePrio"), true);
             }
         }
     }
@@ -261,6 +268,13 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         return SoundEvents.ENTITY_HOSTILE_SWIM;
     }
 
+    /**
+     * Called every 70 to 120 ticks during {@link EntityCreature#updateAITasks()}
+     */
+    protected void onRandomTick() {
+
+    }
+
     protected void setDontDropEquipment() {
         for (int i = 0; i < this.inventoryArmorDropChances.length; ++i) {
             this.inventoryArmorDropChances[i] = 0;
@@ -275,16 +289,21 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
      * Add the MoveTowardsRestriction task with the given priority.
      * Overrides prior priorities if existent
      *
-     * @param prio
+     * @param prio Priority of the task
+     * @param active If the task should be active or not
      */
-    protected void setMoveTowardsRestriction(int prio) {
+    protected void setMoveTowardsRestriction(int prio, boolean active) {
         if (moveTowardsRestrictionAdded) {
-            if (moveTowardsRestrictionPrio == prio) return;
+            if (active && moveTowardsRestrictionPrio == prio) return;
             this.tasks.removeTask(moveTowardsRestriction);
+            moveTowardsRestrictionAdded = false;
         }
-        tasks.addTask(prio, moveTowardsRestriction);
-        moveTowardsRestrictionAdded = true;
-        moveTowardsRestrictionPrio = prio;
+        if (active) {
+            tasks.addTask(prio, moveTowardsRestriction);
+            moveTowardsRestrictionAdded = true;
+            moveTowardsRestrictionPrio = prio;
+        }
+
     }
 
     /**
@@ -297,5 +316,14 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         this.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1, 1);
 
         this.setDead();
+    }
+
+    @Override
+    protected void updateAITasks() {
+        super.updateAITasks();
+        if (--this.randomTickDivider <= 0) {
+            this.randomTickDivider = 70 + rand.nextInt(50);
+            onRandomTick();
+        }
     }
 }

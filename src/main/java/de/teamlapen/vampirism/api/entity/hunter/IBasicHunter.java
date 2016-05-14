@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity.hunter;
 
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
+import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import net.minecraft.util.math.AxisAlignedBB;
 
 /**
@@ -9,5 +10,9 @@ import net.minecraft.util.math.AxisAlignedBB;
 public interface IBasicHunter extends IHunterMob, IAdjustableLevel {
     boolean isLookingForHome();
 
-    void setCampArea(AxisAlignedBB box);
+    void makeCampHunter(AxisAlignedBB box);
+
+    void makeNormalHunter();
+
+    void makeVillageHunter(VampirismVillage village);
 }

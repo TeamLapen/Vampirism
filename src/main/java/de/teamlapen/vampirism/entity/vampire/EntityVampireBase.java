@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.player.EntityPlayer;
@@ -58,8 +59,8 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     public boolean getCanSpawnHere() {
         if (isGettingSundamage(true) || (worldObj.isDaytime() && rand.nextInt(5) != 0)) return false;
         if (isGettingGarlicDamage(true) != EnumGarlicStrength.NONE) return false;
-        if (worldObj.getVillageCollection().getNearestVillage(getPosition(), 10) != null) {
-            return getRNG().nextInt(5) == 0 && super.getCanSpawnHere();
+        if (worldObj.getVillageCollection().getNearestVillage(getPosition(), 1) != null) {
+            return getRNG().nextInt(60) == 0 && super.getCanSpawnHere();
         }
         return super.getCanSpawnHere();
     }
@@ -67,6 +68,11 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     @Override
     public IFaction getFaction() {
         return VReference.VAMPIRE_FACTION;
+    }
+
+    @Override
+    public EntityLivingBase getRepresentingEntity() {
+        return this;
     }
 
     @Override

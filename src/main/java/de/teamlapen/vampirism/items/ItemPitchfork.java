@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.item.ItemSword;
 
 /**
- * Created by max on 08.05.16.
+ * Mainly intended to be used by aggressive villagers.
  */
 public class ItemPitchfork extends ItemSword {
 

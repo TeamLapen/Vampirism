@@ -4,19 +4,22 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nullable;
+
 /**
  * Extends {@link EntityCreature} home system with a way to set more accurate home positions
  * Implemented by EntityVampirism and thereby by most of Vampirism's.
  */
 public interface IEntityWithHome {
+    @Nullable
     AxisAlignedBB getHome();
 
     /**
-     * Sets the entity's home to the given bounding box
+     * Sets the entity's home to the given bounding box.
      *
-     * @param home
+     * @param home Can be null to unset the home
      */
-    void setHome(AxisAlignedBB home);
+    void setHome(@Nullable AxisAlignedBB home);
 
     /**
      * @return The center of the entity's home box or (0/0/0) if none exists

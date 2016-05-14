@@ -1,11 +1,15 @@
 package de.teamlapen.vampirism.world.villages;
 
+import com.google.common.collect.Lists;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
+import de.teamlapen.vampirism.entity.hunter.EntityHunterVillager;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -13,11 +17,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Created by max on 07.05.16.
+ * Vampirism's instance of a village
  */
 public class VampirismVillage {
     public static AxisAlignedBB getBoundingBox(Village v) {
@@ -32,24 +40,32 @@ public class VampirismVillage {
     private int recentlyBitten;
     private int recentlyConverted;
     private boolean agressive;
-
+    private List<VillageAggressorVampire> villageAggressorVampires = Lists.newArrayList();
     private boolean dirty;
     private int recentlyBittenToDeath;
+    private int tickCounter;
 
-//    private void checkHunterCount(Village v) {
-//        int count = getHunter(v).size();
-//        if (count < BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE || (agressive && count < BALANCE.MOBPROP.VAMPIRE_HUNTER_MAX_PER_VILLAGE * 1.4)) {
-//            for (Entity e : Helper.spawnEntityInVillage(v, 2, REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world)) {
-//                ((EntityVampireHunter) e).setVillageArea(v.getCenter().posX, v.getCenter().posY, v.getCenter().posZ, v.getVillageRadius());
-//                if (((EntityVampireHunter) e).getRNG().nextBoolean()) {
-//                    ((EntityVampireHunter) e).setLevel(1, true);
-//                } else if (agressive) {
-//                    ((EntityVampireHunter) e).setLevel(3, true);
-//                }
-//
-//            }
-//        }
-//    }
+    /**
+     * Finds the nearest aggressor to the given entity
+     */
+    public
+    @Nullable
+    IVampire findNearestVillageAggressor(@Nonnull EntityLivingBase entityCenter) {
+        double d0 = Double.MAX_VALUE;
+        VillageAggressorVampire aggressorVampire = null;
+
+        for (int i = 0; i < this.villageAggressorVampires.size(); ++i) {
+            VillageAggressorVampire vampire = this.villageAggressorVampires.get(i);
+            double d1 = vampire.aggressorEntity.getDistanceSqToEntity(entityCenter);
+
+            if (d1 <= d0) {
+                aggressorVampire = vampire;
+                d0 = d1;
+            }
+        }
+
+        return aggressorVampire != null ? aggressorVampire.aggressorVampire : null;
+    }
 
     public AxisAlignedBB getBoundingBox() {
         return getBoundingBox(this.getVillage());
@@ -81,7 +97,7 @@ public class VampirismVillage {
     public int isAnnihilated() {
         Village v = world.villageCollectionObj.getNearestVillage(center, 0);
         if (v == null) {
-            VampirismMod.log.i(TAG, "Can't find village at " + center.toString());
+            VampirismMod.log.i(TAG, "Can't find village at %s anymore", center);
             return -1;
         }
         if (!this.getCenter().equals(v.getCenter())) {
@@ -91,19 +107,39 @@ public class VampirismVillage {
         return 1;
     }
 
-    public void onVillagerBitten() {
+    /**
+     * Call this if a villager in this village has been bitten
+     *
+     * @param vampire The biter
+     */
+    public void onVillagerBitten(IVampire vampire) {
         recentlyBitten++;
         dirty = true;
+        addOrRenewAggressor(vampire);
     }
 
-    public void onVillagerBittenToDeath() {
+    /**
+     * Call this if a villager in this village has been killed by a bite
+     *
+     * @param vampire The biter
+     */
+    public void onVillagerBittenToDeath(IVampire vampire) {
         recentlyBittenToDeath++;
         dirty = true;
+        addOrRenewAggressor(vampire);
     }
 
-    public void onVillagerConverted() {
+    /**
+     * Call this if a villager in this village is converted by a vampire
+     *
+     * @param vampire The biter or null if unknown
+     */
+    public void onVillagerConverted(@Nullable IVampire vampire) {
         recentlyConverted++;
         dirty = true;
+        if (vampire != null) {
+            addOrRenewAggressor(vampire);
+        }
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
@@ -125,11 +161,13 @@ public class VampirismVillage {
      * @return dirty
      */
     public boolean tick(int tickCounter) {
+        this.tickCounter=tickCounter;
         if (tickCounter % 20 == 13) {
-            VampirismMod.log.t("Updating village %s", getCenter());
+            int tick = tickCounter / 20;
+            this.removeDeadAndOldAggressors();
             Village v = getVillage();
             if (v != null) {
-                if (tickCounter % (20 * Balance.village.REDUCE_RATE) == 0) {
+                if (tick % (Balance.village.REDUCE_RATE) == 0) {
                     if (recentlyBitten > 0) {
                         recentlyBitten--;
                         dirty = true;
@@ -150,21 +188,26 @@ public class VampirismVillage {
 
                     }
                 }
-                List<EntityVillager> villagers = getAllVillager(v);
+                List<EntityVillager> allVillagers = getAllVillager(v);
                 List<EntityBasicHunter> hunters = getHunter(v);
-                List<EntityVillager> hunterVillagers = filterHunterVillagers(villagers);
+                List<EntityHunterVillager> hunterVillagers = filterHunterVillagers(allVillagers);
+                List<EntityVillager> normalVillager = filterNormalVillagers(allVillagers);
                 if (world.rand.nextInt(30) == 0) {
-                    if ((hunters.size() + hunterVillagers.size()) < Balance.village.MIN_HUNTER_COUNT_VILLAGE) {
-                        //spawnHunter(v);
+//                    VampirismMod.log.t("Aggro Count %s",calculateAggressiveCounter());
+//                    VampirismMod.log.t("Count %s %s %s",normalVillager.size(),hunterVillagers.size(),hunters.size());
+
+                    if ((hunters.size() + hunterVillagers.size()) < (Math.round(Balance.village.MIN_HUNTER_COUNT_VILLAGE_PER_DOOR * v.getNumVillageDoors()) + 1)) {
+                        spawnHunter(v);
                     }
                 }
-                if (recentlyBitten > Balance.village.BITTEN_UNTIL_AGRESSIVE || recentlyConverted > Balance.village.CONVERTED_UNTIL_AGRESSIVE) {
+                int aggressiveCounter = calculateAggressiveCounter();
+                if (aggressiveCounter >= Balance.village.AGGRESSIVE_COUNTER_THRESHOLD) {
                     if (!agressive) {
-                        makeAgressive(v);
+                        spawnVillager(v);
+                        makeAgressive(selectVillagersToBecomeHunter(normalVillager));
                     }
-                } else if (agressive && (recentlyBitten == 0 || recentlyBitten < Balance.village.BITTEN_UNTIL_AGRESSIVE - 1)
-                        && (recentlyConverted == 0 || recentlyConverted < Balance.village.CONVERTED_UNTIL_AGRESSIVE - 1)) {
-                    makeCalm(v);
+                } else if (agressive && aggressiveCounter < (Balance.village.AGGRESSIVE_COUNTER_THRESHOLD / 2 + 1)) {
+                    makeCalm(hunterVillagers);
                 }
 
             }
@@ -185,14 +228,36 @@ public class VampirismVillage {
     }
 
     /**
-     * @param all List to filter
-     * @return A new list containing only hunter villagers
+     * Adds or updates the aggressor entry for the given vampire
+     *
+     * @param vampire
      */
-    private List<EntityVillager> filterHunterVillagers(List<EntityVillager> all) {
-        List<EntityVillager> filtered = new ArrayList<>();
+    private void addOrRenewAggressor(@Nonnull IVampire vampire) {
+        for (VillageAggressorVampire aggressor : this.villageAggressorVampires) {
+            if (aggressor.aggressorVampire.equals(vampire)) {
+                aggressor.agressionTime = this.tickCounter;
+                return;
+            }
+        }
+        this.villageAggressorVampires.add(new VillageAggressorVampire(vampire.getRepresentingEntity(), vampire, this.tickCounter));
+    }
+
+    /**
+     * Calculates the aggressive counter values from recently bitten/converted/killed villagers
+     */
+    private int calculateAggressiveCounter() {
+        return recentlyBitten * Balance.village.BITTEN_AGGRESSIVE_FACTOR + recentlyBittenToDeath * Balance.village.BITTEN_TO_DEATH_AGGRESSIVE_FACTOR + recentlyConverted * Balance.village.CONVERTED_AGGRESSIVE_FACTOR;
+    }
+
+    /**
+     * @param all List to filter
+     * @return A new list containing only {@link EntityHunterVillager}
+     */
+    private List<EntityHunterVillager> filterHunterVillagers(List<EntityVillager> all) {
+        List<EntityHunterVillager> filtered = new ArrayList<>();
         for (EntityVillager villager : all) {
-            if (villager instanceof IHunter) {
-                filtered.add(villager);
+            if (villager instanceof EntityHunterVillager) {
+                filtered.add((EntityHunterVillager) villager);
             }
         }
         return filtered;
@@ -214,7 +279,7 @@ public class VampirismVillage {
 
     /**
      * @param all List to filter
-     * @return A new list containing only vampire villagers
+     * @return A new list containing only {@link IVampire} villagers
      */
     private List<EntityVillager> filterVampireVillagers(List<EntityVillager> all) {
         List<EntityVillager> filtered = new ArrayList<>();
@@ -238,48 +303,114 @@ public class VampirismVillage {
         return world.getEntitiesWithinAABB(EntityBasicHunter.class, getBoundingBox(v));
     }
 
-    private void makeAgressive(Village v) {
-//        Logger.d(TAG, "Making agressive");
-//        agressive = true;
-//        for (EntityVillager e : getVillager(v)) {
-//            if (world.rand.nextInt(4) == 0) {
-//                EntityVampireHunter h = (EntityVampireHunter) EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_HUNTER_NAME, world);
-//                h.copyLocationAndAnglesFrom(e);
-//                world.spawnEntityInWorld(h);
-//                h.setLevel(1, true);
-//                e.setDead();
-//            }
-//
-//        }
-//        dirty = true;
+    private void makeAgressive(List<EntityVillager> villagers) {
+        VampirismMod.log.d(TAG, "Making villagers aggressive");
+        agressive = true;
+        dirty = true;
+        for (EntityVillager v : villagers) {
+            if (world.rand.nextInt(4) == 0) {
+                EntityHunterVillager hunter = EntityHunterVillager.makeHunter(v);
+                v.worldObj.spawnEntityInWorld(hunter);
+                v.setDead();
+
+            }
+        }
     }
 
-    private void makeCalm(Village v) {
-//        Logger.d(TAG, "Making calm");
-//        agressive = false;
-//        for (EntityVampireHunter e : getHunter(v)) {
-//            if (e.getLevel() == 1) {
-//                Entity ev = EntityList.createEntityByName("Villager", world);
-//                ev.copyLocationAndAnglesFrom(e);
-//                world.spawnEntityInWorld(ev);
-//                e.setDead();
-//            }
-//        }
-//        dirty = true;
+    private void makeCalm(List<EntityHunterVillager> hunters) {
+        VampirismMod.log.d(TAG, "Making villagers calm");
+        for (EntityHunterVillager h : hunters) {
+            EntityVillager villager = EntityHunterVillager.makeNormal(h);
+            h.worldObj.spawnEntityInWorld(villager);
+            h.setDead();
+        }
+        agressive=false;
+        dirty = true;
+    }
+
+    private void removeDeadAndOldAggressors() {
+        Iterator<VillageAggressorVampire> iterator = villageAggressorVampires.iterator();
+        while (iterator.hasNext()) {
+            VillageAggressorVampire aggressorVampire = iterator.next();
+            if (!aggressorVampire.aggressorEntity.isEntityAlive() || Math.abs(this.tickCounter - aggressorVampire.agressionTime) > 600) {
+                iterator.remove();
+            }
+
+        }
+
+    }
+
+    /**
+     * Creates a list of villagers that should become hunters. This considers things like childhood or trading. Also uses random.
+     *
+     * @param villagers
+     * @return
+     */
+    private List<EntityVillager> selectVillagersToBecomeHunter(List<EntityVillager> villagers) {
+        List<EntityVillager> selected = new LinkedList<>();
+        for (EntityVillager v : villagers) {
+            if (v.isChild() || !v.isEntityAlive()) {
+                continue;
+            }
+            if (v.isPotionActive(ModPotions.sanguinare)) {
+                continue;
+            }
+            if (v.isTrading() || v.isMating()) {
+                continue;
+            }
+            if (v.getRNG().nextInt(Balance.village.VILLAGER_HUNTER_CHANCE) == 0) {
+                selected.add(v);
+            }
+        }
+        return selected;
+    }
+
+    private void spawnHunter(Village v) {
+        EntityBasicHunter hunter = new EntityBasicHunter(world);
+        boolean flag = UtilLib.spawnEntityInWorld(world, getBoundingBox(v), hunter, 5);
+        if (flag) {
+            hunter.makeVillageHunter(this);
+        } else {
+            hunter.setDead();
+        }
+        VampirismMod.log.t("Spawning Vampire Hunter %s", flag);
     }
 
     private void spawnVillager(Village v) {
-
+        VampirismMod.log.t("Spawning villager at village %s",v.getCenter());
         @SuppressWarnings("rawtypes")
         List l = world.getEntitiesWithinAABB(EntityVillager.class, getBoundingBox(v));
         if (l.size() > 0) {
             EntityVillager ev = (EntityVillager) l.get(world.rand.nextInt(l.size()));
-            EntityVillager entityvillager = ev.createChild(ev);
-            ev.setGrowingAge(6000);
-            entityvillager.setGrowingAge(-24000);
+            EntityVillager entityvillager;
+            if (agressive && ev.getRNG().nextInt(Balance.village.VILLAGER_HUNTER_CHANCE) == 0) {
+                EntityVillager temp = new EntityVillager(ev.worldObj);
+                entityvillager = EntityHunterVillager.makeHunter(temp);
+                temp.setDead();
+            } else {
+                entityvillager = ev.createChild(ev);
+                entityvillager.setGrowingAge(-24000);
+                ev.setGrowingAge(6000);
+            }
             entityvillager.setLocationAndAngles(ev.posX, ev.posY, ev.posZ, 0.0F, 0.0F);
             world.spawnEntityInWorld(entityvillager);
             world.setEntityState(entityvillager, (byte) 12);
+        }
+    }
+
+
+    /**
+     * Keeps track of a vampire that bit a villager
+     */
+    private class VillageAggressorVampire {
+        final EntityLivingBase aggressorEntity;
+        final IVampire aggressorVampire;
+        int agressionTime;
+
+        private VillageAggressorVampire(EntityLivingBase aggressorEntity, IVampire aggressorVampire, int agressionTime) {
+            this.aggressorEntity = aggressorEntity;
+            this.aggressorVampire = aggressorVampire;
+            this.agressionTime = agressionTime;
         }
     }
 }

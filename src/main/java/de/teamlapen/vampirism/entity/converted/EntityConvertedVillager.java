@@ -9,11 +9,14 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.EntityVillagerVampirism;
 import de.teamlapen.vampirism.entity.ai.EntityAIMoveIndoorsDay;
+import de.teamlapen.vampirism.entity.ai.VampireAIBiteNearbyEntity;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
+import de.teamlapen.vampirism.entity.ai.VampireAIMoveToBiteable;
 import de.teamlapen.vampirism.items.ItemBloodBottle;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -39,6 +42,7 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
     private EnumGarlicStrength garlicCache;
     private boolean sundamageCache;
     private boolean addedAdditionalRecipes = false;
+    private int bloodTimer = 0;
 
     public EntityConvertedVillager(World worldIn) {
         super(worldIn);
@@ -47,6 +51,7 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
     @Override
     public void consumeBlood(int amt, float saturationMod) {
         this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, amt * 20));
+        bloodTimer = -1200 - rand.nextInt(1200);
     }
 
     @Override
@@ -68,6 +73,11 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
             addedAdditionalRecipes = true;
         }
         return list;
+    }
+
+    @Override
+    public EntityLivingBase getRepresentingEntity() {
+        return this;
     }
 
     @Override
@@ -108,6 +118,7 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
             }
             //TODO handle garlic
         }
+        bloodTimer++;
         super.onLivingUpdate();
     }
 
@@ -121,7 +132,7 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
 
     @Override
     public boolean wantsBlood() {
-        return false;
+        return bloodTimer > 0;
     }
 
     @Override
@@ -137,7 +148,7 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
         Iterator<EntityAITasks.EntityAITaskEntry> it = this.tasks.taskEntries.iterator();
         while (it.hasNext()) {
             EntityAITasks.EntityAITaskEntry entry = it.next();
-            if (entry.action instanceof EntityAIMoveIndoors || entry.action instanceof EntityAIVillagerMate) {
+            if (entry.action instanceof EntityAIMoveIndoors || entry.action instanceof EntityAIVillagerMate || entry.action instanceof EntityAIFollowGolem) {
                 it.remove();
             }
         }
@@ -146,7 +157,10 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
         tasks.addTask(1, new EntityAIAvoidEntity<>(this, EntityCreature.class, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, true, false, VReference.HUNTER_FACTION), 10, 0.5F, 0.6F));
         tasks.addTask(2, new EntityAIMoveIndoorsDay(this));
         tasks.addTask(5, new VampireAIFleeSun(this, 0.6F, true));
-        tasks.addTask(6, new EntityAIAttackMelee(this, 0.6, false));
+        tasks.addTask(6, new EntityAIAttackMelee(this, 0.6F, false));
+        tasks.addTask(7, new VampireAIBiteNearbyEntity(this));
+        tasks.addTask(9, new VampireAIMoveToBiteable(this, 0.55F));
+
 
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
 

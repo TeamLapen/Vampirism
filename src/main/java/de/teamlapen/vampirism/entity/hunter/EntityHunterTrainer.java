@@ -59,9 +59,10 @@ public class EntityHunterTrainer extends EntityHunterBase {
         }
     }
 
+    @Override
     public void setHome(AxisAlignedBB box) {
         super.setHome(box);
-        this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO);
+        this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
     }
 
     @Override

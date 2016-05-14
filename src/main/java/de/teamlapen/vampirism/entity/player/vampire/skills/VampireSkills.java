@@ -236,7 +236,7 @@ public class VampireSkills {
         SkillNode skill1 = new SkillNode(start, new DefaultSkill<IVampirePlayer>() {
             @Override
             public String getID() {
-                return "1oxygen";
+                return "1placeholder";
             }
 
             @Override
@@ -251,22 +251,22 @@ public class VampireSkills {
 
             @Override
             public String getUnlocDescription() {
-                return "text.vampirism.skill.oxygen.desc";
+                return "placeholder";
             }
 
             @Override
             public String getUnlocalizedName() {
-                return "text.vampirism.skill.oxygen";
+                return "placeholder";
             }
 
             @Override
             protected void onDisabled(IVampirePlayer player) {
-                ((VampirePlayer) player).getSpecialAttributes().lessOxygen = false;
+
             }
 
             @Override
             protected void onEnabled(IVampirePlayer player) {
-                ((VampirePlayer) player).getSpecialAttributes().lessOxygen = true;
+
             }
         });
         DefaultSkill<IVampirePlayer> jump = new DefaultSkill<IVampirePlayer>() {

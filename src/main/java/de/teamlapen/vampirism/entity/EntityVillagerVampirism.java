@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.world.villages.VampirismVillage;
+import de.teamlapen.vampirism.world.villages.VampirismVillageCollection;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -13,12 +15,21 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+
 /**
  * Villager extended with the ability to attack and some other things
  */
 public class EntityVillagerVampirism extends EntityVillager {
 
     protected boolean peaceful = false;
+    protected
+    @Nullable
+    VampirismVillage vampirismVillageObj;
+    /**
+     * A timer which reaches 0 every 70 to 120 ticks
+     */
+    private int randomTickDivider;
 
     public EntityVillagerVampirism(World worldIn) {
         super(worldIn);
@@ -79,6 +90,11 @@ public class EntityVillagerVampirism extends EntityVillager {
         return (peaceful || this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL) && super.getCanSpawnHere();
     }
 
+    @Nullable
+    public VampirismVillage getVampirismVillage() {
+        return vampirismVillageObj;
+    }
+
     @Override
     public void onLivingUpdate() {
         this.updateArmSwingProgress();
@@ -107,6 +123,16 @@ public class EntityVillagerVampirism extends EntityVillager {
         this.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1, 1);
 
         this.setDead();
+    }
+
+    @Override
+    protected void updateAITasks() {
+        super.updateAITasks();
+        if (--this.randomTickDivider <= 0) {
+            this.randomTickDivider = 70 + rand.nextInt(50);
+            this.vampirismVillageObj = VampirismVillageCollection.get(this.worldObj).getNearestVillage(getPosition(), 32);
+        }
+
     }
 
 }

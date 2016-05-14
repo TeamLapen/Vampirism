@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Created by max on 07.05.16.
+ * Stores all VampirismVillages
  */
 public class VampirismVillageCollection extends WorldSavedData {
 
@@ -65,7 +65,7 @@ public class VampirismVillageCollection extends WorldSavedData {
         Village v = worldObj.villageCollectionObj.getNearestVillage(pos, r);
         if (v == null)
             return null;
-        return getVillageVampire(v);
+        return getVampirismVillage(v);
     }
 
     /**
@@ -76,7 +76,7 @@ public class VampirismVillageCollection extends WorldSavedData {
      */
     public
     @Nullable
-    VampirismVillage getVillageVampire(Village v) {
+    VampirismVillage getVampirismVillage(Village v) {
         synchronized (villageList) {
             for (VampirismVillage vv : villageList) {
                 if (vv.getCenter().equals(v.getCenter())) {

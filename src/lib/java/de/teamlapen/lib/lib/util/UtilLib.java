@@ -75,7 +75,7 @@ public class UtilLib {
     public static BlockPos getRandomPosInBox(World w, AxisAlignedBB box) {
         int x = (int) box.minX + w.rand.nextInt((int) (box.maxX - box.minX) + 1);
         int z = (int) box.minZ + w.rand.nextInt((int) (box.maxZ - box.minZ) + 1);
-        int y = w.getHeight(new BlockPos(x, 0, z)).getY() + 1;
+        int y = w.getHeight(new BlockPos(x, 0, z)).getY();
         if (y < box.minX || y > box.maxY) {
             y = (int) box.minY + w.rand.nextInt((int) (box.maxY - box.minY) + 1);
         }

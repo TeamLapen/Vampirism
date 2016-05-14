@@ -184,6 +184,7 @@ text.vampirism.skill.oxygen=Oxygen
 entity.vampirism.hunter_trainer.name=Vampire Hunter Trainer
 entity.vampirism.advanced_vampire.name=Advanced Vampire
 entity.vampirism.advanced_hunter.name=Advanced Hunter
+entity.vampirism.hunter_villager.name=Angry Villager
 
 #RITUALS
 text.vampirism.ritual_missing_items=Missing %s of "%s" for this ritual

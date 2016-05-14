@@ -6,7 +6,10 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.EntityVillagerVampirism;
+import de.teamlapen.vampirism.entity.ai.EntityAIMoveThroughVillageCustom;
+import de.teamlapen.vampirism.entity.ai.HunterAIDefendVillage;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.passive.EntityVillager;
@@ -23,7 +26,13 @@ import java.util.Iterator;
 /**
  * Villager that is equipped with a fork and hunts vampires
  */
-public class EntityHunterVillager extends EntityVillagerVampirism implements IHunterMob {
+public class EntityHunterVillager extends EntityVillagerVampirism implements IHunterMob, HunterAIDefendVillage.IVillageHunterCreature {
+    /**
+     * Creates a hunter villager as an copy to the given villager
+     *
+     * @param villager Is not modified
+     * @return
+     */
     public static EntityHunterVillager makeHunter(EntityVillager villager) {
         EntityHunterVillager hunter = new EntityHunterVillager(villager.worldObj);
         NBTTagCompound nbt = new NBTTagCompound();
@@ -34,6 +43,11 @@ public class EntityHunterVillager extends EntityVillagerVampirism implements IHu
         return hunter;
     }
 
+    /**
+     * Creates a villager as an copy to the given hunter
+     * @param hunter Is not modified
+     * @return
+     */
     public static EntityVillager makeNormal(EntityHunterVillager hunter) {
         EntityVillager villager = new EntityVillager(hunter.worldObj);
         NBTTagCompound nbt = new NBTTagCompound();
@@ -54,6 +68,16 @@ public class EntityHunterVillager extends EntityVillagerVampirism implements IHu
     }
 
     @Override
+    public EntityCreature getRepresentingCreature() {
+        return this;
+    }
+
+    @Override
+    public EntityLivingBase getRepresentingEntity() {
+        return this;
+    }
+
+    @Override
     public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata) {
         IEntityLivingData data = super.onInitialSpawn(difficulty, livingdata);
         this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.pitchfork));
@@ -71,15 +95,18 @@ public class EntityHunterVillager extends EntityVillagerVampirism implements IHu
         Iterator<EntityAITasks.EntityAITaskEntry> it = this.tasks.taskEntries.iterator();
         while (it.hasNext()) {
             EntityAITasks.EntityAITaskEntry entry = it.next();
-            if (entry.action instanceof EntityAITradePlayer || entry.action instanceof EntityAILookAtTradePlayer || entry.action instanceof EntityAIVillagerMate) {
+            if (entry.action instanceof EntityAITradePlayer || entry.action instanceof EntityAILookAtTradePlayer || entry.action instanceof EntityAIVillagerMate || entry.action instanceof EntityAIFollowGolem) {
                 it.remove();
             }
         }
         this.tasks.addTask(6, new EntityAIAttackMelee(this, 0.6, false));
-        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
+        this.tasks.addTask(8, new EntityAIMoveThroughVillageCustom(this, 0.55, false,400));
 
+
+        this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
         this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, false, null)));
-        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<EntityCreature>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, null)) {
+        this.targetTasks.addTask(3, new HunterAIDefendVillage(this));
+        this.targetTasks.addTask(4, new EntityAINearestAttackableTarget<EntityCreature>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, null)) {
 
             @Override
             protected double getTargetDistance() {

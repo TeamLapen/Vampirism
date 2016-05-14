@@ -37,7 +37,7 @@ public class TileTent extends TileEntity implements ITickable {
         protected void onSpawned(Entity e) {
             super.onSpawned(e);
             if (e instanceof EntityBasicHunter) {
-                ((EntityBasicHunter) e).setCampArea(getSpawningBox());
+                ((EntityBasicHunter) e).makeCampHunter(getSpawningBox());
             }
         }
     };
