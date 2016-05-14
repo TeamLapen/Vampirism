@@ -1,9 +1,9 @@
 package de.teamlapen.vampirism.entity.player;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.IFactionLevelItem;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;

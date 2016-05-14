@@ -3,12 +3,12 @@ package de.teamlapen.vampirism.entity.hunter;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
+import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.ai.EntityAIMoveThroughVillageCustom;
 import de.teamlapen.vampirism.entity.ai.HunterAIDefendVillage;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
-import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageCollection;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -46,7 +46,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
      */
     private
     @Nullable
-    VampirismVillage vampirismVillage;
+    IVampirismVillage IVampirismVillage;
 
 
 
@@ -99,8 +99,8 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
 
     @Nullable
     @Override
-    public VampirismVillage getVampirismVillage() {
-        return vampirismVillage;
+    public IVampirismVillage getVampirismVillage() {
+        return IVampirismVillage;
     }
 
     @Override
@@ -126,11 +126,11 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     }
 
     @Override
-    public void makeVillageHunter(VampirismVillage village) {
+    public void makeVillageHunter(IVampirismVillage village) {
         super.setHome(village.getBoundingBox());
         this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
         this.villageHunter = true;
-        this.vampirismVillage = village;
+        this.IVampirismVillage = village;
         this.setDefendVillage(true);
     }
 
@@ -230,12 +230,12 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     protected void onRandomTick() {
         super.onRandomTick();
         if (villageHunter) {
-            this.vampirismVillage = VampirismVillageCollection.get(worldObj).getNearestVillage(getPosition(), 32);
-            if (this.vampirismVillage == null) {
+            this.IVampirismVillage = VampirismVillageCollection.get(worldObj).getNearestVillage(getPosition(), 32);
+            if (this.IVampirismVillage == null) {
                 this.makeNormalHunter();
             }
         } else {
-            vampirismVillage = null;
+            IVampirismVillage = null;
         }
     }
 

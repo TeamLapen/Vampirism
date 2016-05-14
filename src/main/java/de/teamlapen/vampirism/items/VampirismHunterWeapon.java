@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.api.IFactionLevelItem;
-import de.teamlapen.vampirism.api.IFactionSlayerItem;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.items.IFactionLevelItem;
+import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;

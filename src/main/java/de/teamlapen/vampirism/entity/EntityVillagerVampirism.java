@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageCollection;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -25,7 +25,7 @@ public class EntityVillagerVampirism extends EntityVillager {
     protected boolean peaceful = false;
     protected
     @Nullable
-    VampirismVillage vampirismVillageObj;
+    IVampirismVillage IVampirismVillageObj;
     /**
      * A timer which reaches 0 every 70 to 120 ticks
      */
@@ -91,8 +91,8 @@ public class EntityVillagerVampirism extends EntityVillager {
     }
 
     @Nullable
-    public VampirismVillage getVampirismVillage() {
-        return vampirismVillageObj;
+    public IVampirismVillage getVampirismVillage() {
+        return IVampirismVillageObj;
     }
 
     @Override
@@ -130,7 +130,7 @@ public class EntityVillagerVampirism extends EntityVillager {
         super.updateAITasks();
         if (--this.randomTickDivider <= 0) {
             this.randomTickDivider = 70 + rand.nextInt(50);
-            this.vampirismVillageObj = VampirismVillageCollection.get(this.worldObj).getNearestVillage(getPosition(), 32);
+            this.IVampirismVillageObj = VampirismVillageCollection.get(this.worldObj).getNearestVillage(getPosition(), 32);
         }
 
     }

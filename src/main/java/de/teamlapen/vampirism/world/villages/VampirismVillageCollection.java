@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world.villages;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.world.IVampirismVillageProvider;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
@@ -16,9 +17,9 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Stores all VampirismVillages
+ * Stores all Vampirism Villages
  */
-public class VampirismVillageCollection extends WorldSavedData {
+public class VampirismVillageCollection extends WorldSavedData implements IVampirismVillageProvider {
 
     private static final String IDENTIFIER = "vampirism_villages";
 
@@ -34,7 +35,7 @@ public class VampirismVillageCollection extends WorldSavedData {
         return data;
     }
 
-    public static String fileNameForProvider(WorldProvider provider) {
+    private static String fileNameForProvider(WorldProvider provider) {
         return IDENTIFIER + provider.getDimensionType().getSuffix();
     }
 
@@ -47,20 +48,23 @@ public class VampirismVillageCollection extends WorldSavedData {
     }
 
 
-    public VampirismVillageCollection(World world) {
+    private VampirismVillageCollection(World world) {
         this(fileNameForProvider(world.provider));
         this.worldObj = world;
         this.markDirty();
     }
 
-    public VampirismVillage getNearestVillage(Entity e) {
+    @Override
+    public
+    @Nullable
+    VampirismVillage getNearestVillage(Entity e) {
         return this.getNearestVillage(e.getPosition(), 5);
     }
 
-    /**
-     * Finds the nearest village, but only the given coordinates are withing it's bounding box plus the given the distance.
-     */
-    public VampirismVillage getNearestVillage(BlockPos pos, int r) {
+    @Override
+    public
+    @Nullable
+    VampirismVillage getNearestVillage(BlockPos pos, int r) {
 
         Village v = worldObj.villageCollectionObj.getNearestVillage(pos, r);
         if (v == null)
@@ -68,12 +72,7 @@ public class VampirismVillageCollection extends WorldSavedData {
         return getVampirismVillage(v);
     }
 
-    /**
-     * Gets or create the VillageVampire to the given village. Can be null if no vampire version can exist
-     *
-     * @param v
-     * @return
-     */
+    @Override
     public
     @Nullable
     VampirismVillage getVampirismVillage(Village v) {
@@ -130,9 +129,7 @@ public class VampirismVillageCollection extends WorldSavedData {
         nbt.setInteger("Tick", this.tickCounter);
 
         NBTTagList nbttaglist = new NBTTagList();
-        Iterator<VampirismVillage> iterator = this.villageList.iterator();
-        while (iterator.hasNext()) {
-            VampirismVillage village = iterator.next();
+        for (VampirismVillage village : this.villageList) {
             NBTTagCompound nbttagcompound1 = new NBTTagCompound();
             village.writeToNBT(nbttagcompound1);
             nbttaglist.appendTag(nbttagcompound1);

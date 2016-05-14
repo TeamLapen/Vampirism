@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.entity.hunter;
 
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
-import de.teamlapen.vampirism.world.villages.VampirismVillage;
+import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import net.minecraft.util.math.AxisAlignedBB;
 
 /**
@@ -14,5 +14,5 @@ public interface IBasicHunter extends IHunterMob, IAdjustableLevel {
 
     void makeNormalHunter();
 
-    void makeVillageHunter(VampirismVillage village);
+    void makeVillageHunter(IVampirismVillage village);
 }

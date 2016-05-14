@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.api.IGarlicItem;
+import de.teamlapen.vampirism.api.items.IGarlicItem;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;

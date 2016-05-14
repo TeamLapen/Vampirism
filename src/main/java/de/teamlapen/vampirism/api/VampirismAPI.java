@@ -8,8 +8,10 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionRegistry;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillRegistry;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVisionRegistry;
+import de.teamlapen.vampirism.api.world.IVampirismVillageProvider;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 
@@ -30,6 +32,7 @@ public class VampirismAPI {
     private static IActionRegistry actionRegistry;
     private static ISkillRegistry skillRegistry;
     private static IVampireVisionRegistry vampireVisionRegistry;
+    private static IVampirismVillageProvider.IProviderProvider vampirismVillageProviders;
 
 
     public static IVampireVisionRegistry vampireVisionRegistry() {
@@ -79,13 +82,14 @@ public class VampirismAPI {
      * @param factionReg
      * @param sundamageReg
      */
-    public static void setUp(IFactionRegistry factionReg, ISundamageRegistry sundamageReg, IBiteableRegistry biteableReg, IActionRegistry actionReg, ISkillRegistry skillReg, IVampireVisionRegistry vampireVisionReg) {
+    public static void setUp(IFactionRegistry factionReg, ISundamageRegistry sundamageReg, IBiteableRegistry biteableReg, IActionRegistry actionReg, ISkillRegistry skillReg, IVampireVisionRegistry vampireVisionReg, IVampirismVillageProvider.IProviderProvider villagePro) {
         factionRegistry = factionReg;
         sundamageRegistry = sundamageReg;
         biteableRegistry = biteableReg;
         actionRegistry = actionReg;
         skillRegistry = skillReg;
         vampireVisionRegistry = vampireVisionReg;
+        vampirismVillageProviders = villagePro;
     }
 
 
@@ -106,6 +110,13 @@ public class VampirismAPI {
      */
     public static IExtendedCreatureVampirism getExtendedCreatureVampirism(EntityCreature creature) {
         return creature.getCapability(CAP_CREATURE, null);
+    }
+
+    /**
+     * @return The {@link IVampirismVillageProvider} for the given world
+     */
+    public static IVampirismVillageProvider getVampirismVillageProvider(World world) {
+        return vampirismVillageProviders.getProviderForWorld(world);
     }
 
 

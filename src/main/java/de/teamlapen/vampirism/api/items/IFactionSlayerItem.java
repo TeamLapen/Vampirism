@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.api;
+package de.teamlapen.vampirism.api.items;
 
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import net.minecraft.item.ItemStack;

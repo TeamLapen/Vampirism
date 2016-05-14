@@ -5,6 +5,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
@@ -27,8 +28,8 @@ import java.util.List;
 /**
  * Vampirism's instance of a village
  */
-public class VampirismVillage {
-    public static AxisAlignedBB getBoundingBox(Village v) {
+public class VampirismVillage implements IVampirismVillage {
+    private static AxisAlignedBB getBoundingBox(Village v) {
         int r = v.getVillageRadius();
         BlockPos cc = v.getCenter();
         return new AxisAlignedBB(cc.getX() - r, cc.getY() - 10, cc.getZ() - r, cc.getX() + r, cc.getY() + 10, cc.getZ() + r);
@@ -45,9 +46,7 @@ public class VampirismVillage {
     private int recentlyBittenToDeath;
     private int tickCounter;
 
-    /**
-     * Finds the nearest aggressor to the given entity
-     */
+    @Override
     public
     @Nullable
     IVampire findNearestVillageAggressor(@Nonnull EntityLivingBase entityCenter) {
@@ -67,18 +66,21 @@ public class VampirismVillage {
         return aggressorVampire != null ? aggressorVampire.aggressorVampire : null;
     }
 
+    @Override
     public AxisAlignedBB getBoundingBox() {
         return getBoundingBox(this.getVillage());
     }
 
+    @Override
     public BlockPos getCenter() {
         return center;
     }
 
-    public void setCenter(BlockPos cc) {
+    void setCenter(BlockPos cc) {
         center = cc;
     }
 
+    @Override
     public Village getVillage() {
         Village v = world.villageCollectionObj.getNearestVillage(center, 0);
         if (v == null)
@@ -89,51 +91,21 @@ public class VampirismVillage {
         return v;
     }
 
-    /**
-     * Checks if the corrosponding village still exists
-     *
-     * @return -1 annihilated,0 center has been updated, 1 ok
-     */
-    public int isAnnihilated() {
-        Village v = world.villageCollectionObj.getNearestVillage(center, 0);
-        if (v == null) {
-            VampirismMod.log.i(TAG, "Can't find village at %s anymore", center);
-            return -1;
-        }
-        if (!this.getCenter().equals(v.getCenter())) {
-            this.setCenter(v.getCenter());
-            return 0;
-        }
-        return 1;
-    }
-
-    /**
-     * Call this if a villager in this village has been bitten
-     *
-     * @param vampire The biter
-     */
+    @Override
     public void onVillagerBitten(IVampire vampire) {
         recentlyBitten++;
         dirty = true;
         addOrRenewAggressor(vampire);
     }
 
-    /**
-     * Call this if a villager in this village has been killed by a bite
-     *
-     * @param vampire The biter
-     */
+    @Override
     public void onVillagerBittenToDeath(IVampire vampire) {
         recentlyBittenToDeath++;
         dirty = true;
         addOrRenewAggressor(vampire);
     }
 
-    /**
-     * Call this if a villager in this village is converted by a vampire
-     *
-     * @param vampire The biter or null if unknown
-     */
+    @Override
     public void onVillagerConverted(@Nullable IVampire vampire) {
         recentlyConverted++;
         dirty = true;
@@ -303,6 +275,24 @@ public class VampirismVillage {
         return world.getEntitiesWithinAABB(EntityBasicHunter.class, getBoundingBox(v));
     }
 
+    /**
+     * Checks if the corrosponding village still exists
+     *
+     * @return -1 annihilated,0 center has been updated, 1 ok
+     */
+    int isAnnihilated() {
+        Village v = world.villageCollectionObj.getNearestVillage(center, 0);
+        if (v == null) {
+            VampirismMod.log.i(TAG, "Can't find village at %s anymore", center);
+            return -1;
+        }
+        if (!this.getCenter().equals(v.getCenter())) {
+            this.setCenter(v.getCenter());
+            return 0;
+        }
+        return 1;
+    }
+
     private void makeAgressive(List<EntityVillager> villagers) {
         VampirismMod.log.d(TAG, "Making villagers aggressive");
         agressive = true;
@@ -342,9 +332,7 @@ public class VampirismVillage {
 
     /**
      * Creates a list of villagers that should become hunters. This considers things like childhood or trading. Also uses random.
-     *
-     * @param villagers
-     * @return
+
      */
     private List<EntityVillager> selectVillagersToBecomeHunter(List<EntityVillager> villagers) {
         List<EntityVillager> selected = new LinkedList<>();
