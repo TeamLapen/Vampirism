@@ -3,7 +3,7 @@
     "textures": {
     "particle": "blocks/planks_big_oak",
     "texture": "blocks/planks_big_oak",
-    "glass": "blocks/glass"
+        "glass": "vampirism:blocks/glass"
     },
     "elements": [
         {
