@@ -4,6 +4,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -100,16 +101,21 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     }
 
     @Override
+    public IFaction getDisguisedAs() {
+        return getFaction();//TODO
+    }
+
+    @Override
     public IPlayableFaction<IHunterPlayer> getFaction() {
         return VReference.HUNTER_FACTION;
     }
 
     @Override
-    public Predicate<? super Entity> getNonFriendlySelector(boolean otherFactionPlayers) {
+    public Predicate<? super Entity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise) {
         if (otherFactionPlayers) {
             return Predicates.alwaysTrue();
         } else {
-            return VampirismAPI.factionRegistry().getPredicate(getFaction());
+            return VampirismAPI.factionRegistry().getPredicate(getFaction(), ignoreDisguise);
         }
     }
 
@@ -122,7 +128,6 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     public int getTheEntityID() {
         return player.getEntityId();
     }
-
 
     @Override
     public boolean isDisguised() {

@@ -116,7 +116,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
         if (!worldObj.isRemote) {
             if (isGettingSundamage() && ticksExisted % 40 == 11) {
                 double dmg = getEntityAttribute(VReference.sunDamage).getAttributeValue();
-                this.attackEntityFrom(VReference.SUNDAMAGE, (float) dmg);
+                if (dmg > 0) this.attackEntityFrom(VReference.SUNDAMAGE, (float) dmg);
             }
             //TODO handle garlic
         }

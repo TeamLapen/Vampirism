@@ -154,7 +154,7 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
         }
 
         tasks.addTask(0, new EntityAIRestrictSun(this));
-        tasks.addTask(1, new EntityAIAvoidEntity<>(this, EntityCreature.class, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, true, false, VReference.HUNTER_FACTION), 10, 0.5F, 0.6F));
+        tasks.addTask(1, new EntityAIAvoidEntity<>(this, EntityCreature.class, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, true, false, false, VReference.HUNTER_FACTION), 10, 0.5F, 0.6F));
         tasks.addTask(2, new EntityAIMoveIndoorsDay(this));
         tasks.addTask(5, new VampireAIFleeSun(this, 0.6F, true));
         tasks.addTask(6, new EntityAIAttackMelee(this, 0.6F, false));

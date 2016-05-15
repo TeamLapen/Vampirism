@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.player.hunter;
 
 import com.google.common.base.Predicate;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -33,6 +34,11 @@ public class HunterPlayerDefaultImpl implements IHunterPlayer {
     }
 
     @Override
+    public IFaction getDisguisedAs() {
+        return null;
+    }
+
+    @Override
     public IPlayableFaction<IHunterPlayer> getFaction() {
         return null;
     }
@@ -58,7 +64,7 @@ public class HunterPlayerDefaultImpl implements IHunterPlayer {
     }
 
     @Override
-    public Predicate<? super Entity> getNonFriendlySelector(boolean otherFactionPlayers) {
+    public Predicate<? super Entity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise) {
         return null;
     }
 

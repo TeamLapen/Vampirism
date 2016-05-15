@@ -1,12 +1,15 @@
 package de.teamlapen.vampirism.api.entity.player;
 
 import com.google.common.base.Predicate;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+
+import javax.annotation.Nullable;
 
 /**
  * Basic interface for all of Vampirism's player types (VampirePlayer, HunterPlayer, ...)
@@ -27,6 +30,13 @@ public interface IFactionPlayer<T extends IFactionPlayer> extends IFactionEntity
     boolean canLeaveFaction();
 
     /**
+     * If not disguised this should return the ACTUAL FACTION of the player NOT NULL. Null represents neutral players
+     * @return The faction the player is disguised as.
+     */
+    @Nullable
+    IFaction getDisguisedAs();
+
+    /**
      * @return the faction this faction player belongs to
      */
     IPlayableFaction<T> getFaction();
@@ -41,14 +51,16 @@ public interface IFactionPlayer<T extends IFactionPlayer> extends IFactionEntity
     /**
      * Careful this selects all {@link Entity}'s including etc Items
      * @param otherFactionPlayers Whether other entities from the same faction that might be hostile should be included
+     * @param ignoreDisguise If disguised players should still be counted for their actual faction
      * @return A predicate that selects all non friendly entities
      */
-    Predicate<? super Entity> getNonFriendlySelector(boolean otherFactionPlayers);
+    Predicate<? super Entity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise);
 
     EntityPlayer getRepresentingPlayer();
 
     /**
-     * @return If this is true, the players faction shouldn't be easily detectable, e.g. chat color or vampire eyes
+     * You can also use {@link IFactionPlayer#getDisguisedAs()} to get the faction the player looks like
+     * @return If the player is disguised.
      */
     boolean isDisguised();
 

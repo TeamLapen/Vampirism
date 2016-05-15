@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.PotionThirst;
 import de.teamlapen.vampirism.potion.VampirismPotion;
@@ -17,6 +18,7 @@ public class ModPotions {
     public static Potion sanguinare;
     public static Potion thirst;
     public static Potion saturation;
+    public static Potion sunscreen;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
@@ -32,6 +34,9 @@ public class ModPotions {
 
         sanguinare = register(new PotionSanguinare("sanguinare", false, 0x6A0888));
         saturation = register(new VampirismPotion("saturation", false, 0xDCFF00));
+        sunscreen = register(new VampirismPotion("sunscreen", false, 0xFFF100));
+        sunscreen.registerPotionAttributeModifier(VReference.sunDamage, "9dc9420c-3e5e-41c7-9ba4-ff70e9dc69fc", -0.3, 2);
+
     }
 
     private static <T extends Potion> T register(T potion) {

@@ -31,18 +31,20 @@ public interface IFactionRegistry {
      * @param player        If players should be selected
      * @param mob     If non players should be selected
      * @param neutralPlayer If neutral playsers should be selected
+     * @param ignoreDisguise If disguised players should still be counted for their actual faction (disguised vampires will still be detected as vampires)
      * @param otherFaction  If this is not null, only entities of this faction are selected.
      * @return
      */
-    Predicate<Entity> getPredicate(IFaction thisFaction, boolean player, boolean mob, boolean neutralPlayer, IFaction otherFaction);
+    Predicate<Entity> getPredicate(IFaction thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, IFaction otherFaction);
 
     /**
      * Get a cached or create a predicate which selects all other faction entities
      * For all non EntityLivingBase entities the predicate is always false
      * @param thisFaction
+     * @param  ignoreDisguise  If disguised players should still be counted for their actual faction (disguised vampires will still be detected as vampires)
      * @return
      */
-    Predicate<Entity> getPredicate(IFaction thisFaction);
+    Predicate<Entity> getPredicate(IFaction thisFaction, boolean ignoreDisguise);
 
     /**
      * Create and register a non playable faction. Has to be called before post-init

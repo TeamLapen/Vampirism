@@ -148,7 +148,7 @@ public class ModEntities {
 
     private static void registerEntity(Class<? extends Entity> clazz, String name, EntityLiving.SpawnPlacementType placementType, boolean egg) {
 
-        VampirismMod.log.d("EntityRegister", "Adding " + name + "(" + clazz.getSimpleName() + ") with mod id %d", modEntityId);
+        //VampirismMod.log.d("EntityRegister", "Adding " + name + "(" + clazz.getSimpleName() + ") with mod id %d", modEntityId);
         EntityRegistry.registerModEntity(clazz, name.replace("vampirism.", ""), modEntityId++, VampirismMod.instance, 80, 1, true);
         if (egg) {
             EntityRegistry.registerEgg(clazz, 0x8B15A3, name.hashCode());

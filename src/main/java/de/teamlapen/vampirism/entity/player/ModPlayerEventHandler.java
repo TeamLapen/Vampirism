@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.player;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
@@ -162,10 +163,11 @@ public class ModPlayerEventHandler {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onPlayerName(PlayerEvent.NameFormat event) {
         if (event.getEntityPlayer() != null && !Configs.disable_factionDisplayChat) {
-            IFactionPlayer f = FactionPlayerHandler.get(event.getEntityPlayer()).getCurrentFactionPlayer();
-            if (f != null && !f.isDisguised()) {
-                event.setDisplayname(f.getFaction().getChatColor() + event.getDisplayname());
-                if (f instanceof IVampirePlayer && ((IVampirePlayer) f).isVampireLord()) {
+            IFactionPlayer fp = FactionPlayerHandler.get(event.getEntityPlayer()).getCurrentFactionPlayer();
+            IFaction f = fp == null ? null : fp.getDisguisedAs();
+            if (f != null) {
+                event.setDisplayname(f.getChatColor() + event.getDisplayname());
+                if (fp instanceof IVampirePlayer && !fp.isDisguised() && ((IVampirePlayer) fp).isVampireLord()) {
                     event.setDisplayname(TextFormatting.RED + "[" + I18n.translateToLocal("text.vampirism.lord") + "] " + TextFormatting.RESET + event.getDisplayname());
                 }
             }

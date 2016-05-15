@@ -51,22 +51,25 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public Predicate<Entity> getPredicate(IFaction thisFaction, boolean player, boolean mob, boolean neutralPlayer, IFaction otherFaction) {
+    public Predicate<Entity> getPredicate(IFaction thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, IFaction otherFaction) {
         int key = 0;
         if (otherFaction != null) {
             int id = ((Faction) thisFaction).getId();
             if (id > 63) {
                 VampirismMod.log.w(TAG, "Faction id over 64, predicates won't work");
             }
-            key |= ((id & 63) << 9);
+            key |= ((id & 63) << 10);
         }
         if (neutralPlayer) {
-            key |= (1 << 8);
+            key |= (1 << 9);
         }
         if (mob) {
-            key |= (1 << 7);
+            key |= (1 << 8);
         }
         if (neutralPlayer) {
+            key |= (1 << 7);
+        }
+        if (ignoreDisguise) {
             key |= (1 << 6);
         }
         int id = ((Faction) thisFaction).getId();
@@ -74,13 +77,12 @@ public class FactionRegistry implements IFactionRegistry {
             VampirismMod.log.w(TAG, "Faction id over 64, predicates won't work");
         }
         key |= id & 63;
-        Integer k = Integer.valueOf(key);
         Predicate<Entity> predicate;
-        if (predicateMap.containsKey(k)) {
-            predicate = predicateMap.get(k);
+        if (predicateMap.containsKey(key)) {
+            predicate = predicateMap.get(key);
         } else {
-            predicate = new PredicateFaction(thisFaction, player, mob, neutralPlayer, otherFaction);
-            predicateMap.put(k, predicate);
+            predicate = new PredicateFaction(thisFaction, player, mob, neutralPlayer, ignoreDisguise, otherFaction);
+            predicateMap.put(key, predicate);
         }
 //        VampirismMod.log.t("%s,%b,%b,%b,%s", thisFaction, player, mob, neutralPlayer, otherFaction);
 //        VampirismMod.log.t("%s", k);
@@ -89,9 +91,9 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
-    public Predicate<Entity> getPredicate(IFaction thisFaction) {
+    public Predicate<Entity> getPredicate(IFaction thisFaction, boolean ignoreDisguise) {
 
-        return getPredicate(thisFaction, true, true, true, null);
+        return getPredicate(thisFaction, true, true, true, ignoreDisguise, null);
     }
 
     @Override

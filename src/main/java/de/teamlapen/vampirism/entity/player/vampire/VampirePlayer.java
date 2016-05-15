@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.EnumGarlicStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
@@ -128,6 +129,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private int ticksInSun = 0;
     private boolean sleepingInCoffin = false;
     private int sleepTimer = 0;
+    private boolean wasDead = false;
     private List<IVampireVision> unlockedVisions = new ArrayList<>();
     private IVampireVision activatedVision = null;
 
@@ -265,6 +267,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return REFERENCE.VAMPIRE_PLAYER_KEY;
     }
 
+    @Override
+    public
+    @Nullable
+    IFaction getDisguisedAs() {
+        return isDisguised() ? specialAttributes.disguisedAs : getFaction();
+    }
+
     /**
      * @return Eyetype for rendering
      */
@@ -278,11 +287,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     @Override
-    public Predicate<? super Entity> getNonFriendlySelector(boolean otherFactionPlayers) {
+    public Predicate<? super Entity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise) {
         if (otherFactionPlayers) {
             return Predicates.alwaysTrue();
         } else {
-            return VampirismAPI.factionRegistry().getPredicate(getFaction());
+            return VampirismAPI.factionRegistry().getPredicate(getFaction(), ignoreDisguise);
         }
 
     }
@@ -385,6 +394,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public void onDeath(DamageSource src) {
         actionHandler.deactivateAllActions();
+        wasDead = true;
     }
 
     @Override
@@ -400,6 +410,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (getLevel() > 0) {
             actionHandler.onActionsReactivated();
             ticksInSun = 0;
+            if (wasDead) {
+                player.addPotionEffect(new PotionEffect(ModPotions.sunscreen, 400, 5));
+            }
         }
     }
 
@@ -774,6 +787,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         NBTTagCompound nbt = new NBTTagCompound();
         oldVampire.saveData(nbt);
         this.loadData(nbt);
+        this.wasDead = oldVampire.wasDead;
         return oldVampire;
     }
 
@@ -897,7 +911,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             ticksInSun++;
         }
         if (player.capabilities.isCreativeMode || player.capabilities.disableDamage) return;
-        if (Balance.vp.SUNDAMAGE_NAUSEA && getLevel() >= Balance.vp.SUNDAMAGE_NAUSEA_MINLEVEL && player.ticksExisted % 300 == 1 && ticksInSun > 50) {
+        if (Balance.vp.SUNDAMAGE_NAUSEA && getLevel() >= Balance.vp.SUNDAMAGE_NAUSEA_MINLEVEL && player.ticksExisted % 300 == 1 && ticksInSun > 50 && !player.isPotionActive(ModPotions.sunscreen)) {
             player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 180));
         }
         if (getLevel() >= Balance.vp.SUNDAMAGE_WEAKNESS_MINLEVEL && player.ticksExisted % 150 == 3) {
@@ -905,7 +919,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
         if (getLevel() >= Balance.vp.SUNDAMAGE_MINLEVEL && ticksInSun >= 100 && player.ticksExisted % 40 == 5) {
             float damage = (float) (player.getEntityAttribute(VReference.sunDamage).getAttributeValue());
-            player.attackEntityFrom(VReference.SUNDAMAGE, damage);
+            if (damage > 0) player.attackEntityFrom(VReference.SUNDAMAGE, damage);
         }
     }
 

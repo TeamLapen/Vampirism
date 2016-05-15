@@ -48,6 +48,7 @@ public class DisguiseVampireAction extends DefaultVampireAction implements ILast
     @Override
     public boolean onActivated(IVampirePlayer player) {
         ((VampirePlayer) player).getSpecialAttributes().disguised = true;
+        ((VampirePlayer) player).getSpecialAttributes().disguisedAs = null;
         player.getRepresentingPlayer().refreshDisplayName();
         return true;
     }
