@@ -15,10 +15,9 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.ChunkCoordIntPair;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEntitySpawner;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.util.List;
@@ -174,7 +173,7 @@ public class UtilLib {
             if (flag1) {
                 entity.setPosition(entity.posX, entity.posY, entity.posZ);
 
-                if (entity.worldObj.collidesWithAnyBlock(entity.getEntityBoundingBox()) && !entity.worldObj.isAnyLiquid(entity.getEntityBoundingBox()))
+                if (entity.worldObj.collidesWithAnyBlock(entity.getEntityBoundingBox()) && !entity.worldObj.containsAnyLiquid(entity.getEntityBoundingBox()))
                     flag = true;
             }
         }
@@ -353,10 +352,10 @@ public class UtilLib {
         return true;
     }
 
-    private static ChunkCoordIntPair isBiomeAt(World world, int x, int z, List<BiomeGenBase> biomes) {
+    private static ChunkPos isBiomeAt(World world, int x, int z, List<Biome> biomes) {
         BlockPos pos = world.getBiomeProvider().findBiomePosition(x, z, 32, biomes, new Random());
         if (pos != null) {
-            return new ChunkCoordIntPair(pos.getX() >> 4, pos.getZ() >> 4);
+            return new ChunkPos(pos.getX() >> 4, pos.getZ() >> 4);
         }
         return null;
     }
@@ -370,11 +369,11 @@ public class UtilLib {
      * @param listener Will be notified about status updates. Can be null
      * @return
      */
-    public static ChunkCoordIntPair findNearBiome(World world, BlockPos center, int maxDist, List<BiomeGenBase> biomes, ICommandSender listener) {
+    public static ChunkPos findNearBiome(World world, BlockPos center, int maxDist, List<Biome> biomes, ICommandSender listener) {
         long start = System.currentTimeMillis();
         maxDist = (maxDist / 20) * 20;//Round it
         long maxop = (((long) maxDist) * maxDist + maxDist) / 2;
-        ChunkCoordIntPair loc;
+        ChunkPos loc;
         for (int i = 0; i < maxDist; i += 4) {
             int cx = -i;
             for (int cz = -i; cz <= i; cz++) {

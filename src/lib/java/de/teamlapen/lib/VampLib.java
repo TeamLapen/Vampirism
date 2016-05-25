@@ -16,7 +16,7 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 /**
  * If the package is moved as own mod (probably refactored with a different package name to avoid conflicts) this will be the mod main class.
  */
-@Mod(modid = LIBREFERENCE.MODID, name = LIBREFERENCE.NAME, version = LIBREFERENCE.VERSION, acceptedMinecraftVersions = "[1.9]", dependencies = "required-after:Forge@[" + LIBREFERENCE.FORGE_VERSION_MIN + ",)")
+@Mod(modid = LIBREFERENCE.MODID, name = LIBREFERENCE.NAME, version = LIBREFERENCE.VERSION, acceptedMinecraftVersions = "[1.9.4]", dependencies = "required-after:Forge@[" + LIBREFERENCE.FORGE_VERSION_MIN + ",)")
 public class VampLib {
     public final static Logger log = new Logger(LIBREFERENCE.MODID, "de.teamlapen.lib");
     public static boolean inDev = false;

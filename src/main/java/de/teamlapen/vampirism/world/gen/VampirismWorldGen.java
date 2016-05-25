@@ -5,8 +5,8 @@ import de.teamlapen.vampirism.core.ModBiomes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
-import net.minecraft.world.biome.BiomeGenBase;
-import net.minecraft.world.biome.BiomeGenPlains;
+import net.minecraft.world.biome.Biome;
+import net.minecraft.world.biome.BiomePlains;
 import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.fml.common.IWorldGenerator;
@@ -52,7 +52,7 @@ public class VampirismWorldGen implements IWorldGenerator {
     public void generateOverworld(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
         boolean generatedStructure = false;
         boolean mapFeatures = world.getWorldInfo().isMapFeaturesEnabled();
-        BiomeGenBase biome = world.getBiomeGenForCoords(new BlockPos((chunkX << 4) + 8, 0, (chunkZ << 4) + 8));
+        Biome biome = world.getBiomeGenForCoords(new BlockPos((chunkX << 4) + 8, 0, (chunkZ << 4) + 8));
         if (!generatedStructure && mapFeatures && !ModBiomes.vampireForest.getRegistryName().equals(biome.getRegistryName())) {
             int chance = random.nextInt(1000);
             int trees = biome.theBiomeDecorator.treesPerChunk;
@@ -61,7 +61,7 @@ public class VampirismWorldGen implements IWorldGenerator {
             prop += Math.min(trees, 8);
             prop += bh * 3;
 
-            if (biome instanceof BiomeGenPlains) prop *= 0.8F;
+            if (biome instanceof BiomePlains) prop *= 0.8F;
 
             if (world.getWorldType().equals(WorldType.FLAT)) {
                 prop = 0.2F;

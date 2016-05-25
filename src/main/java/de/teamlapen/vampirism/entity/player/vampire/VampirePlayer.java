@@ -424,7 +424,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MAX_HEALTH, "Vampire", getLevel(), Balance.vp.HEALTH_LCAP, Balance.vp.HEALTH_MAX_MOD, Balance.vp.HEALTH_TYPE);
             LevelAttributeModifier.applyModifier(player, VReference.bloodExhaustion, "Vampire", getLevel(), getMaxLevel(), Balance.vp.EXAUSTION_MAX_MOD, Balance.vp.EXHAUSTION_TYPE);
             if (newLevel > 0) {
-                if (player instanceof EntityPlayerMP && ((EntityPlayerMP) player).playerNetServerHandler != null) {
+                if (player instanceof EntityPlayerMP && ((EntityPlayerMP) player).connection != null) {
                     //When loading from NBT the playerNetServerHandler is not always initialized, but that's required for achievements. So checking here
                     player.addStat(Achievements.becomingAVampire, 1);
                 }
@@ -659,23 +659,23 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     @Override
-    public EntityPlayer.EnumStatus trySleep(BlockPos bedLocation) {
+    public EntityPlayer.SleepResult trySleep(BlockPos bedLocation) {
 
         if (!player.worldObj.isRemote) {
             if (player.isPlayerSleeping() || !player.isEntityAlive()) {
-                return EntityPlayer.EnumStatus.OTHER_PROBLEM;
+                return EntityPlayer.SleepResult.OTHER_PROBLEM;
             }
 
             if (!player.worldObj.provider.isSurfaceWorld()) {
-                return EntityPlayer.EnumStatus.NOT_POSSIBLE_HERE;
+                return EntityPlayer.SleepResult.NOT_POSSIBLE_HERE;
             }
 
             if (!player.worldObj.isDaytime()) {
-                return EntityPlayer.EnumStatus.NOT_POSSIBLE_NOW;
+                return EntityPlayer.SleepResult.NOT_POSSIBLE_NOW;
             }
 
             if (Math.abs(player.posX - (double) bedLocation.getX()) > 3.0D || Math.abs(player.posY - (double) bedLocation.getY()) > 2.0D || Math.abs(player.posZ - (double) bedLocation.getZ()) > 3.0D) {
-                return EntityPlayer.EnumStatus.TOO_FAR_AWAY;
+                return EntityPlayer.SleepResult.TOO_FAR_AWAY;
             }
 
             double d0 = 8.0D;
@@ -683,14 +683,14 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             List<EntityMob> list = player.worldObj.getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB((double) bedLocation.getX() - d0, (double) bedLocation.getY() - d1, (double) bedLocation.getZ() - d0, (double) bedLocation.getX() + d0, (double) bedLocation.getY() + d1, (double) bedLocation.getZ() + d0));
 
             if (!list.isEmpty()) {
-                return EntityPlayer.EnumStatus.NOT_SAFE;
+                return EntityPlayer.SleepResult.NOT_SAFE;
             }
         }
 
         if (player.isRiding()) {
             player.dismountRidingEntity();
         }
-        if (!setEntitySize(0.2F, 0.2F)) return EntityPlayer.EnumStatus.OTHER_PROBLEM;
+        if (!setEntitySize(0.2F, 0.2F)) return EntityPlayer.SleepResult.OTHER_PROBLEM;
 
 
         IBlockState state = null;
@@ -718,7 +718,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 mSetSize.invoke(player, enumfacing);
             } catch (Exception e) {
                 VampirismMod.log.e(TAG, e, "Could set render offset for sleep! ");
-                return EntityPlayer.EnumStatus.OTHER_PROBLEM;
+                return EntityPlayer.SleepResult.OTHER_PROBLEM;
             }
 
             player.setPosition((double) ((float) bedLocation.getX() + f), (double) ((float) bedLocation.getY() + 0.6875F), (double) ((float) bedLocation.getZ() + f1));
@@ -740,11 +740,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             EntityPlayerMP playerMP = (EntityPlayerMP) player;
             Packet<?> packet = new SPacketUseBed(player, bedLocation);
             playerMP.getServerWorld().getEntityTracker().sendToAllTrackingEntity(playerMP, packet);
-            playerMP.playerNetServerHandler.setPlayerLocation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
-            playerMP.playerNetServerHandler.sendPacket(packet);
+            playerMP.connection.setPlayerLocation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
+            playerMP.connection.sendPacket(packet);
         }
 
-        return EntityPlayer.EnumStatus.OK;
+        return EntityPlayer.SleepResult.OK;
     }
 
     @Override
@@ -776,8 +776,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             DaySleepHelper.updateAllPlayersSleeping(player.worldObj);
         }
 
-        if (player instanceof EntityPlayerMP && ((EntityPlayerMP) player).playerNetServerHandler != null) {
-            ((EntityPlayerMP) player).playerNetServerHandler.setPlayerLocation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
+        if (player instanceof EntityPlayerMP && ((EntityPlayerMP) player).connection != null) {
+            ((EntityPlayerMP) player).connection.setPlayerLocation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
         }
     }
 

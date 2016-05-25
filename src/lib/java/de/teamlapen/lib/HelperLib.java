@@ -52,7 +52,7 @@ public class HelperLib {
         if (!entity.worldObj.isRemote) {
             IMessage m = UpdateEntityPacket.create(cap);
             if (entity instanceof EntityPlayerMP && !all) {
-                if (((EntityPlayerMP) entity).playerNetServerHandler != null) {
+                if (((EntityPlayerMP) entity).connection != null) {
                     VampLib.dispatcher.sendTo(m, (EntityPlayerMP) entity);
                 }
 
@@ -75,7 +75,7 @@ public class HelperLib {
         if (!entity.worldObj.isRemote) {
             IMessage m = UpdateEntityPacket.create(cap, data);
             if (entity instanceof EntityPlayerMP && !all) {
-                if (((EntityPlayerMP) entity).playerNetServerHandler != null) {
+                if (((EntityPlayerMP) entity).connection != null) {
                     VampLib.dispatcher.sendTo(m, (EntityPlayerMP) entity);
                 }
             } else {

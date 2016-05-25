@@ -2,7 +2,7 @@ package de.teamlapen.lib.util;
 
 import de.teamlapen.lib.VampLib;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -23,7 +23,7 @@ public class ParticleHandlerClient extends ParticleHandler {
             VampLib.log.w(TAG, "Particle %s is not registered", particle);
             return;
         }
-        EntityFX fx = factory.createParticle(world, posX, posY, posZ, param);
+        Particle fx = factory.createParticle(world, posX, posY, posZ, param);
         addParticleToWorld(fx);
     }
 
@@ -52,7 +52,7 @@ public class ParticleHandlerClient extends ParticleHandler {
         }
     }
 
-    private void addParticleToWorld(EntityFX particle) {
+    private void addParticleToWorld(Particle particle) {
         Minecraft.getMinecraft().effectRenderer.addEffect(particle);
     }
 

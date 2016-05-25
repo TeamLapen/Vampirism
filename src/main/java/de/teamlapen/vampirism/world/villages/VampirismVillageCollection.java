@@ -25,7 +25,7 @@ public class VampirismVillageCollection extends WorldSavedData implements IVampi
 
     public static VampirismVillageCollection get(World world) {
         String s = fileNameForProvider(world.provider);
-        VampirismVillageCollection data = (VampirismVillageCollection) world.getPerWorldStorage().loadData(VampirismVillageCollection.class, s);
+        VampirismVillageCollection data = (VampirismVillageCollection) world.getPerWorldStorage().getOrLoadData(VampirismVillageCollection.class, s);
         if (data == null) {
             data = new VampirismVillageCollection(world);
             world.getPerWorldStorage().setData(s, data);
@@ -125,7 +125,7 @@ public class VampirismVillageCollection extends WorldSavedData implements IVampi
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt) {
+    public NBTTagCompound writeToNBT(NBTTagCompound nbt) {
         nbt.setInteger("Tick", this.tickCounter);
 
         NBTTagList nbttaglist = new NBTTagList();
@@ -136,6 +136,7 @@ public class VampirismVillageCollection extends WorldSavedData implements IVampi
         }
 
         nbt.setTag("Villages", nbttaglist);
+        return nbt;
     }
 
     private void checkForAnnihilatedVillages() {

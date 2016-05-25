@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.core.ModSounds;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
@@ -13,6 +12,8 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 /**
  *   TileEntity for coffins. Handles coffin lid position and color
@@ -31,17 +32,19 @@ public class TileCoffin extends TileEntity implements ITickable {
     }
 
     @Override
-    public Packet getDescriptionPacket() {
-        NBTTagCompound nbtTag = new NBTTagCompound();
-        this.writeToNBT(nbtTag);
-        return new SPacketUpdateTileEntity(this.getPos(), 1, nbtTag);
-    }
-
-
-
-    @Override
     public AxisAlignedBB getRenderBoundingBox() {
         return new AxisAlignedBB(pos.getX() - 4, pos.getY(), pos.getZ() - 4, pos.getX() + 4, pos.getY() + 2, pos.getZ() + 4);
+    }
+
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(this.getPos(), 1, getUpdateTag());
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        return writeToNBT(new NBTTagCompound());
     }
 
     @Override
@@ -86,9 +89,9 @@ public class TileCoffin extends TileEntity implements ITickable {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
-        super.writeToNBT(par1NBTTagCompound);
-        par1NBTTagCompound.setInteger("color", color);
-
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        NBTTagCompound nbt = super.writeToNBT(compound);
+        nbt.setInteger("color", color);
+        return nbt;
     }
 }

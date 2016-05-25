@@ -28,7 +28,7 @@ public class WorldGenHunterCamp extends WorldGenerator {
     @Override
     public boolean generate(World worldIn, Random rand, BlockPos position) {
 
-        if (worldIn.getBiomeGenForCoordsBody(position).getHeightVariation() < 0.3 && rand.nextInt(7) == 0) {
+        if (worldIn.getBiomeForCoordsBody(position).getHeightVariation() < 0.3 && rand.nextInt(7) == 0) {
             int r = rand.nextInt(2);
             int r1 = rand.nextInt(2);
             int r2 = rand.nextInt(2);
@@ -79,7 +79,7 @@ public class WorldGenHunterCamp extends WorldGenerator {
         Material material;
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(position);
         while (((material = world.getBlockState(pos).getMaterial()) == Material.LEAVES || material == Material.PLANTS || world.isAirBlock(pos)) && pos.getY() > 50) {
-            pos.offsetMutable(EnumFacing.DOWN);
+            pos.move(EnumFacing.DOWN);
         }
         return pos.up();
     }

@@ -81,7 +81,7 @@ public class Helper {
         for (int x = minX; x < maxX; x++) {
             for (int y = minY; y < maxY; y++) {
                 for (int z = minZ; z < maxZ; z++) {
-                    if (entity.worldObj.getBlockState(blockpos.set(x, y, z)).getBlock() instanceof IGarlicBlock) {
+                    if (entity.worldObj.getBlockState(blockpos.setPos(x, y, z)).getBlock() instanceof IGarlicBlock) {
                         max = ((IGarlicBlock) entity.worldObj.getBlockState(blockpos).getBlock()).getGarlicStrength(entity.worldObj, blockpos);
                         if (max == EnumGarlicStrength.STRONG) {
                             entity.worldObj.theProfiler.endSection();

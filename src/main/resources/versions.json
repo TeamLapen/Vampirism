@@ -2,8 +2,13 @@
   "comment": "Stores version info and changelog",
   "homepage": "http://teamlapen.de/projects/vampirism",
   "promos": {
+    "1.9.4-latest": "1.0.0-Alpha+05-25-17-15",
+    "1.9.4-recommended": "1.0.0-Alpha+05-25-17-15",
     "1.9-latest": "1.0.0-Alpha+05-15-12-31",
     "1.9-recommended": "1.0.0-Alpha+05-15-12-31"
+  },
+  "1.9.4": {
+    "1.0.0-Alpha+05-25-17-15": "Updated to 1.9.4"
   },
   "1.9": {
     "1.0.0-Alpha+05-15-12-31": "Made disguise ability actually work\nSmall fixes\n\nAlpha+05-14-18-02 Changes:\nVillages are now protected by vampire hunters\nVillagers can be converted to vampire villagers who hide from the sun, offer special trades and suck blood from other villagers.\nIf to many villagers are bitten in a short amount of time the village turn aggressive and some villagers will equip their pitchfork and start hunting vampires in their village.",
@@ -12,6 +17,9 @@
     "1.0.0-Alpha+04-16-20-04": "Initial"
   },
   "downloads": {
+    "1.9.4": {
+      "1.0.0-Alpha+05-25-17-15": "http://minecraft.curseforge.com/projects/vampirism-become-a-vampire/files/2302783"
+    },
     "1.9": {
       "1.0.0-Alpha+05-15-12-31": "http://minecraft.curseforge.com/projects/vampirism-become-a-vampire/files/2300190",
       "1.0.0-Alpha+04-21-19-48":"http://minecraft.curseforge.com/projects/vampirism-become-a-vampire/files/2295305",

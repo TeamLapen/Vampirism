@@ -23,7 +23,7 @@ public class EntityBlindingBat extends EntityBat {
 
     @Override
     public boolean getCanSpawnHere() {
-        return this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox()) && this.worldObj.collidesWithAnyBlock(this.getEntityBoundingBox()) && !this.worldObj.isAnyLiquid(this.getEntityBoundingBox());
+        return this.worldObj.checkNoEntityCollision(this.getEntityBoundingBox()) && this.worldObj.collidesWithAnyBlock(this.getEntityBoundingBox()) && !this.worldObj.containsAnyLiquid(this.getEntityBoundingBox());
     }
 
     @Override

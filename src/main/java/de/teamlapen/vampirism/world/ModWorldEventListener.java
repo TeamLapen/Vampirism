@@ -52,7 +52,7 @@ public class ModWorldEventListener implements IWorldEventListener {
     }
 
     @Override
-    public void playAuxSFX(EntityPlayer player, int sfxType, BlockPos blockPosIn, int data) {
+    public void playEvent(EntityPlayer player, int type, BlockPos blockPosIn, int data) {
 
     }
 

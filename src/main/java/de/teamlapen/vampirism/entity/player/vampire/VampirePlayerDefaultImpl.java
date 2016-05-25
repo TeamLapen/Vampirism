@@ -202,7 +202,7 @@ public class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
-    public EntityPlayer.EnumStatus trySleep(BlockPos pos) {
+    public EntityPlayer.SleepResult trySleep(BlockPos pos) {
         return null;
     }
 

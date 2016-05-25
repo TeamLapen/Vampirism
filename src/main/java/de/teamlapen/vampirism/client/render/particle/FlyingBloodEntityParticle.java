@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.render.particle;
 
-import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
@@ -12,7 +12,7 @@ import org.apache.commons.lang3.Validate;
  * Follows an entity
  */
 @SideOnly(Side.CLIENT)
-public class FlyingBloodEntityParticle extends EntityFX {
+public class FlyingBloodEntityParticle extends Particle {
     private final int MAX_AGE = 60;
     private final String TAG = "FlyingBloodParticle";
 
@@ -34,13 +34,13 @@ public class FlyingBloodEntityParticle extends EntityFX {
 
         this.setParticleTextureIndex(65);
         if (direct) {
-            this.xSpeed = ((this.worldObj.rand.nextDouble() - 0.5F) / 5f);
-            this.ySpeed = (this.worldObj.rand.nextDouble() / 5f);
-            this.zSpeed = ((this.worldObj.rand.nextDouble() - 0.5F) / 5f);
+            this.motionX = ((this.worldObj.rand.nextDouble() - 0.5F) / 5f);
+            this.motionY = (this.worldObj.rand.nextDouble() / 5f);
+            this.motionZ = ((this.worldObj.rand.nextDouble() - 0.5F) / 5f);
         } else {
-            this.xSpeed = (this.worldObj.rand.nextDouble() - 0.5);
-            this.ySpeed = (this.worldObj.rand.nextDouble() + 0.2);
-            this.zSpeed = (this.worldObj.rand.nextDouble() - 0.5);
+            this.motionX = (this.worldObj.rand.nextDouble() - 0.5);
+            this.motionY = (this.worldObj.rand.nextDouble() + 0.2);
+            this.motionZ = (this.worldObj.rand.nextDouble() - 0.5);
         }
 
         this.onUpdate();
@@ -61,14 +61,12 @@ public class FlyingBloodEntityParticle extends EntityFX {
 
         int tleft = this.particleMaxAge - this.particleAge;
         if (tleft < this.particleMaxAge / 2) {
-            this.xSpeed = wayX / tleft;
-            this.ySpeed = wayY / tleft;
-            this.zSpeed = wayZ / tleft;
-        } else {
-
+            this.motionX = wayX / tleft;
+            this.motionY = wayY / tleft;
+            this.motionZ = wayZ / tleft;
         }
 
-        this.moveEntity(this.xSpeed, this.ySpeed, this.zSpeed);
+        this.moveEntity(this.motionX, this.motionY, this.motionZ);
     }
 
 }

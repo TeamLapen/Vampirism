@@ -4,7 +4,7 @@ package de.teamlapen.vampirism.client.render.particle;
 import de.teamlapen.lib.util.ParticleHandler;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -23,7 +23,7 @@ public class ModParticles {
         ParticleHandler.registerParticle(FLYING_BLOOD, new ParticleHandler.ICustomParticleFactory() {
             @SideOnly(Side.CLIENT)
             @Override
-            public EntityFX createParticle(World world, double posX, double posY, double posZ, Object... param) {
+            public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
                 return new FlyingBloodParticle(world, posX, posY, posZ, (double) param[0], (double) param[1], (double) param[2], (int) param[3]);
             }
 
@@ -53,7 +53,7 @@ public class ModParticles {
         ParticleHandler.registerParticle(FLYING_BLOOD_ENTITY, new ParticleHandler.ICustomParticleFactory() {
             @SideOnly(Side.CLIENT)
             @Override
-            public EntityFX createParticle(World world, double posX, double posY, double posZ, Object... param) {
+            public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
                 return new FlyingBloodEntityParticle(world, posX, posY, posZ, (Entity) param[0], (Boolean) param[1]);
             }
 

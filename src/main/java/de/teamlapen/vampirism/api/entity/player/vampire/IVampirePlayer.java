@@ -61,7 +61,7 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
      * @param pos
      * @return
      */
-    EntityPlayer.EnumStatus trySleep(BlockPos pos);
+    EntityPlayer.SleepResult trySleep(BlockPos pos);
 
     /**
      * Locks the vision again, preventing the player from using it

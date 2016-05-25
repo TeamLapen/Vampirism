@@ -53,9 +53,5 @@ public class BlockTentMain extends BlockTent implements ITileEntityProvider {
         return new TileTent();
     }
 
-    @Override
-    public boolean onBlockEventReceived(World worldIn, BlockPos pos, IBlockState state, int eventID, int eventParam) {
-        TileEntity tile = worldIn.getTileEntity(pos);
-        return tile != null && tile.receiveClientEvent(eventID, eventParam);
-    }
+
 }

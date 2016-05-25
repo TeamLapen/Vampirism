@@ -166,8 +166,8 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tagCompound) {
-        super.writeToNBT(tagCompound);
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        NBTTagCompound nbt = super.writeToNBT(compound);
 
         NBTTagList itemList = new NBTTagList();
         for (int i = 0; i < slots.length; i++) {
@@ -179,7 +179,9 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
                 itemList.appendTag(tag);
             }
         }
-        tagCompound.setTag("Inventory", itemList);
+        nbt.setTag("Inventory", itemList);
+
+        return nbt;
     }
 
 

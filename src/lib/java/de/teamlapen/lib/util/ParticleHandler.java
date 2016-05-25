@@ -1,7 +1,7 @@
 package de.teamlapen.lib.util;
 
 
-import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
@@ -61,7 +61,7 @@ public abstract class ParticleHandler {
          * @return
          */
         @SideOnly(Side.CLIENT)
-        EntityFX createParticle(World world, double posX, double posY, double posZ, Object... param);
+        Particle createParticle(World world, double posX, double posY, double posZ, Object... param);
 
         @Nonnull
         NBTTagCompound createParticleInfo(Object... param);

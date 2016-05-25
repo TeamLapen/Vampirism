@@ -12,13 +12,13 @@ import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import net.minecraft.world.gen.feature.WorldGenTrees;
 
 import java.util.Random;
 
-public class BiomeGenVampireForest extends BiomeGenBase {
+public class BiomeGenVampireForest extends Biome {
     public final static String name = "vampireForest";
     protected WorldGenTrees worldGenTrees;
 

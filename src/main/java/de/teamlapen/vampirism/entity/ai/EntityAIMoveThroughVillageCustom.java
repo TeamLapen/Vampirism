@@ -5,7 +5,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
 import net.minecraft.entity.ai.RandomPositionGenerator;
-import net.minecraft.pathfinding.PathEntity;
+import net.minecraft.pathfinding.Path;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -27,7 +27,7 @@ public class EntityAIMoveThroughVillageCustom extends EntityAIBase {
     /**
      * The PathNavigate of our entity.
      */
-    private PathEntity entityPathNavigate;
+    private Path entityPathNavigate;
     private VillageDoorInfo doorInfo;
     private boolean isNocturnal;
     private List<VillageDoorInfo> doorList = Lists.newArrayList();

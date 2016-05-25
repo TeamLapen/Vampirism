@@ -15,13 +15,13 @@ import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
-import net.minecraft.world.ChunkCoordIntPair;
-import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.apache.commons.lang3.ArrayUtils;
@@ -242,10 +242,10 @@ public class VampirismCommand extends BasicCommand {
                             }
                         }
                     }
-                    List<BiomeGenBase> biomes = new ArrayList<BiomeGenBase>();
+                    List<Biome> biomes = new ArrayList<Biome>();
                     biomes.add(ModBiomes.vampireForest);
                     var1.addChatMessage(new TextComponentTranslation("text.vampirism.biome.looking_for_biome"));
-                    ChunkCoordIntPair pos = UtilLib.findNearBiome(var1.getEntityWorld(), (var1).getPosition(), maxDist, biomes, var1);
+                    ChunkPos pos = UtilLib.findNearBiome(var1.getEntityWorld(), (var1).getPosition(), maxDist, biomes, var1);
                     if (pos == null) {
                         var1.addChatMessage(new TextComponentTranslation("text.vampirism.biome.not_found"));
                     } else {

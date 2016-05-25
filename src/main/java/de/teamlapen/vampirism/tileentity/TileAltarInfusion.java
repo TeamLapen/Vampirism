@@ -25,7 +25,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumParticleTypes;
@@ -38,6 +37,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -111,13 +111,6 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
     }
 
     @Override
-    public Packet getDescriptionPacket() {
-        NBTTagCompound nbtTag = new NBTTagCompound();
-        this.writeToNBT(nbtTag);
-        return new SPacketUpdateTileEntity(getPos(), 1, nbtTag);
-    }
-
-    @Override
     public String getName() {
         return "block.vampirism.bloodAltarTier4.name";
     }
@@ -152,6 +145,17 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         if (this.runningTick <= 1)
             return null;
         return this.tips;
+    }
+
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(getPos(), 1, getUpdateTag());
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        return writeToNBT(new NBTTagCompound());
     }
 
     public void onActivated(EntityPlayer player) {
@@ -285,12 +289,13 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound tagCompound) {
-        super.writeToNBT(tagCompound);
-        tagCompound.setInteger("tick", runningTick);
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        NBTTagCompound nbt = super.writeToNBT(compound);
+        nbt.setInteger("tick", runningTick);
         if (player != null) {
-            tagCompound.setInteger("playerId", player.getEntityId());
+            nbt.setInteger("playerId", player.getEntityId());
         }
+        return nbt;
     }
 
     private ItemStack checkAndRemoveItems(int bloodMeta, int blood, int heart, int par3) {
@@ -420,7 +425,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         for (int x = getPos().getX() - 4; x < getPos().getX() + 5; x++) {
             for (int y = getPos().getY() + 1; y < getPos().getY() + 4; y++) {
                 for (int z = getPos().getZ() - 4; z < getPos().getZ() + 5; z++) {
-                    if (getWorld().getBlockState(pos.set(x, y, z)).getBlock().equals(ModBlocks.altarTip)) {
+                    if (getWorld().getBlockState(pos.setPos(x, y, z)).getBlock().equals(ModBlocks.altarTip)) {
                         list.add(new BlockPos(x, y, z));
                     }
                 }

@@ -5,13 +5,14 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 /**
  * Tile entity which spawns hunters for tents
@@ -53,15 +54,19 @@ public class TileTent extends TileEntity implements ITickable {
     }
 
     @Override
-    public Packet getDescriptionPacket() {
-        NBTTagCompound nbttagcompound = new NBTTagCompound();
-        this.writeToNBT(nbttagcompound);
-        return new SPacketUpdateTileEntity(this.getPos(), 1, nbttagcompound);
+    public AxisAlignedBB getRenderBoundingBox() {
+        return super.getRenderBoundingBox().expand(1, 0, 1);
+    }
+
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return null;//new SPacketUpdateTileEntity(this.getPos(), 1, getUpdateTag());
     }
 
     @Override
-    public AxisAlignedBB getRenderBoundingBox() {
-        return super.getRenderBoundingBox().expand(1, 0, 1);
+    public NBTTagCompound getUpdateTag() {
+        return this.writeToNBT(new NBTTagCompound());
     }
 
     @Override
@@ -96,9 +101,10 @@ public class TileTent extends TileEntity implements ITickable {
     }
 
     @Override
-    public void writeToNBT(NBTTagCompound nbt) {
-        super.writeToNBT(nbt);
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        NBTTagCompound nbt = super.writeToNBT(compound);
         spawnerLogic.writeToNbt(nbt);
         nbt.setBoolean("spawn", spawn);
+        return nbt;
     }
 }

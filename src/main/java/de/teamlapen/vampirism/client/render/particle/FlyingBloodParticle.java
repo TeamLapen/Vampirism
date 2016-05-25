@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.client.render.particle;
 
-import net.minecraft.client.particle.EntityFX;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -11,7 +11,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * @author maxanier
  */
 @SideOnly(Side.CLIENT)
-public class FlyingBloodParticle extends EntityFX {
+public class FlyingBloodParticle extends Particle {
     private final String TAG = "FlyingBloodParticle";
     private final double destX, destY, destZ;
 
@@ -28,9 +28,9 @@ public class FlyingBloodParticle extends EntityFX {
         double wayX = destX - this.posX;
         double wayZ = destZ - this.posZ;
         double wayY = destY - this.posY;
-        this.xSpeed = (this.worldObj.rand.nextDouble() / 10 - 0.05) + wayX / particleMaxAge;
-        this.ySpeed = (this.worldObj.rand.nextDouble() / 10 - 0.01) + wayY / particleMaxAge;
-        this.zSpeed = (this.worldObj.rand.nextDouble() / 10 - 0.05) + wayZ / particleMaxAge;
+        this.motionX = (this.worldObj.rand.nextDouble() / 10 - 0.05) + wayX / particleMaxAge;
+        this.motionY = (this.worldObj.rand.nextDouble() / 10 - 0.01) + wayY / particleMaxAge;
+        this.motionZ = (this.worldObj.rand.nextDouble() / 10 - 0.05) + wayZ / particleMaxAge;
         this.onUpdate();
     }
 
@@ -51,11 +51,11 @@ public class FlyingBloodParticle extends EntityFX {
 
         int tleft = this.particleMaxAge - this.particleAge;
         if (tleft < this.particleMaxAge / 1.2) {
-            this.xSpeed = wayX / tleft;
-            this.ySpeed = wayY / tleft;
-            this.zSpeed = wayZ / tleft;
+            this.motionX = wayX / tleft;
+            this.motionY = wayY / tleft;
+            this.motionZ = wayZ / tleft;
         }
-        this.moveEntity(this.xSpeed, this.ySpeed, this.zSpeed);
+        this.moveEntity(this.motionX, this.motionY, this.motionZ);
     }
 
 }
