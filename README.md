@@ -1,7 +1,7 @@
 Vampirism for Minecraft 1.9 - REWRITE
 =========
 
-_This is WIP rewrite for Minecraft 1.9, check out the 1.7.10 branch for complete and stable code_
+_This is WIP rewrite for Minecraft 1.9, check out the 1.7.10 branch for complete and more stable code_
 
 ## Mod Description 
 
@@ -14,7 +14,7 @@ As a vampire you don't need to eat all that dry bread or eat these strange fruit
 ## Links 
 [Minecraft Forum Thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/2364443-vampirism-become-a-vampire)  
 [Downloads](http://minecraft.curseforge.com/mc-mods/233029-vampirism-become-a-vampire/files)  
-[Help to translate](https://crowdin.com/project/vampirism)
+~~[Help to translate](https://crowdin.com/project/vampirism)~~ Currently paused
 
 ## Team [![Join the chat at https://gitter.im/TeamLapen/Vampirism](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TeamLapen/Vampirism?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)  
 - [maxanier](http://maxanier.de) _Code/Models_  
@@ -48,19 +48,17 @@ The following instructions will setup a multi module setup for IntelliJ (Free co
 2. If you want to contribute to the development (via pull requests), fork Vampirism on Github.
 3. (Optionally) Install Git, so you can clone the repository and push changes.
 4. Create a folder for all Minecraft related development files.
-5. Create two folders ("Forge","Run") inside.
-6. Download the recommend Forge MDK [here](http://files.minecraftforge.net/) and extract the content to the "Forge" folder.
-7. Clone (`git clone https://github.com/TeamLapen/Vampirism`) or [download](https://github.com/TeamLapen/Vampirism/archive/master.zip) Vampirism to a new "Vampirism" folder next to the "Forge" one.
+5. Create one folders "Run" inside.
+7. Clone (`git clone https://github.com/TeamLapen/Vampirism`) or [download](https://github.com/TeamLapen/Vampirism/archive/master.zip) Vampirism to a new "Vampirism" folder next to the "Run" one.
 
-You should have a build.gradle along other files in the "Forge" as well as in the "Vampirism" folder now
+You should have a build.gradle along other files in the "Vampirism" folder now
 
 #### Import
-1. Open a console windows inside the "Forge" folder (on windows use shift-right click and select "Open in console")
+1. Open a console windows inside the "Vampirism" folder (on windows use shift-right click and select "Open in console")
 2. Run `gradlew.bat setupDecompWorkspace ideaModule` on Windows or `./gradlew setupDecompWorkspace ideaModule` on Linux
-3. Do the same thing inside the "Vampirism" folder
-4. Open IntelliJ and create an empty project in the top folder you've created
-5. Open "Project Structure", modules and import the `Forge.iml` in the "Forge" folder as well as the `Vampirism.iml` in the "Vampirism" folder. Make sure that src/main/java and src/lib/java are marked as source folders and /src/main/resources and src/lib/resources are marked as resource folders. Make sure you choose Java 7 as language level.
-6. Select the Vampirism module, open the dependency tab and add Forge as module dependency.
+4. Open IntelliJ and create an **empty** project in the top folder you've created
+5. Open "Project Structure", modules and import the `Vampirism.iml` in the "Vampirism" folder. Make sure that src/main/java and src/lib/java are marked as source folders and /src/main/resources and src/lib/resources are marked as resource folders. 
+6. Make sure you choose Java 7 as language level.
 
 You should have Vampirism's code in the project now and no errors should be displayed
 #### Run configurations
