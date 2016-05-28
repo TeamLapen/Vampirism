@@ -9,6 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -23,7 +24,9 @@ public class PredicateFaction implements Predicate<Entity> {
     /**
      * If null, all other faction are seen as hostile
      */
-    private final IFaction otherFaction;
+    private final
+    @Nullable
+    IFaction otherFaction;
 
     /**
      * Selects entities
@@ -35,7 +38,7 @@ public class PredicateFaction implements Predicate<Entity> {
      * @param ignoreDisguise If the disguise ability of players should be ignored.
      * @param otherFaction  If this is not null, only entities of this faction are selected.
      */
-    protected PredicateFaction(IFaction thisFaction, boolean player, boolean nonPlayer, boolean neutralPlayer, boolean ignoreDisguise, IFaction otherFaction) {
+    protected PredicateFaction(@Nonnull IFaction thisFaction, boolean player, boolean nonPlayer, boolean neutralPlayer, boolean ignoreDisguise, @Nullable IFaction otherFaction) {
         this.thisFaction = thisFaction;
         this.player = player;
         this.nonPlayer = nonPlayer;
@@ -58,7 +61,7 @@ public class PredicateFaction implements Predicate<Entity> {
         }
         if (player && input instanceof EntityPlayer) {
             IFactionPlayer fp = VampirismAPI.getFactionPlayerHandler((EntityPlayer) input).getCurrentFactionPlayer();
-            IFaction f = ignoreDisguise ? fp.getFaction() : fp.getDisguisedAs();
+            IFaction f = fp == null ? null : (ignoreDisguise ? fp.getFaction() : fp.getDisguisedAs());
             if (f == null) {
                 return neutralPlayer;
             } else {
