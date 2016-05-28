@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.api.entity.factions;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.util.DamageSource;
 
+import javax.annotation.Nullable;
+
 /**
  * Handles factions and levels for the player
  * Attached to all players as capability
@@ -25,11 +27,13 @@ public interface IFactionPlayerHandler {
     /**
      * @return The currently active faction. Can be null
      */
+    @Nullable
     IPlayableFaction getCurrentFaction();
 
     /**
      * @return The currently active faction player. Can be null
      */
+    @Nullable
     IFactionPlayer getCurrentFactionPlayer();
 
     /**
