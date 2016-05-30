@@ -6,9 +6,11 @@ import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockAltarInspiration;
 import de.teamlapen.vampirism.blocks.BlockBloodContainer;
+import de.teamlapen.vampirism.blocks.BlockWeaponTable;
 import de.teamlapen.vampirism.client.gui.GuiSleepCoffin;
 import de.teamlapen.vampirism.client.model.blocks.BakedAltarInspirationModel;
 import de.teamlapen.vampirism.client.model.blocks.BakedBloodContainerModel;
+import de.teamlapen.vampirism.client.model.blocks.BakedWeaponTableModel;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.state.IBlockState;
@@ -151,6 +153,42 @@ public class ClientEventHandler {
             }
         } catch (Exception e) {
             VampirismMod.log.e("ModelBake", e, "Failed to load fluid models for altar inspiration");
+
+        }
+
+        try {
+            Function<ResourceLocation, TextureAtlasSprite> textureGetter = new Function<ResourceLocation, TextureAtlasSprite>() {
+                @Override
+                public TextureAtlasSprite apply(ResourceLocation location) {
+                    return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
+                }
+            };
+            for (int x = 0; x < BakedWeaponTableModel.FLUID_LEVELS; x++) {
+                IModel model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/weaponTable/weaponTableLava" + String.valueOf(x + 1)));
+                BakedWeaponTableModel.FLUID_MODELS[x] = model.bake(model.getDefaultState(), Attributes.DEFAULT_BAKED_FORMAT, textureGetter);
+            }
+            RegistrySimple<ModelResourceLocation, IBakedModel> registry = (RegistrySimple) event.getModelRegistry();
+            ArrayList<ModelResourceLocation> modelLocations = Lists.newArrayList();
+
+            for (ModelResourceLocation modelLoc : registry.getKeys()) {
+                if (modelLoc.getResourceDomain().equals(REFERENCE.MODID)
+                        && modelLoc.getResourcePath().equals(BlockWeaponTable.regName)
+                        && !modelLoc.getVariant().equals("inventory")) {
+                    modelLocations.add(modelLoc);
+                }
+            }
+
+            // replace the registered tank block variants with TankModelFactories
+
+            IBakedModel registeredModel;
+            IBakedModel newModel;
+            for (ModelResourceLocation loc : modelLocations) {
+                registeredModel = event.getModelRegistry().getObject(loc);
+                newModel = new BakedWeaponTableModel(registeredModel);
+                event.getModelRegistry().putObject(loc, newModel);
+            }
+        } catch (Exception e) {
+            VampirismMod.log.e("ModelBake", e, "Failed to load fluid models for weapon crafting table");
 
         }
     }

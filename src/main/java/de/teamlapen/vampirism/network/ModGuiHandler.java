@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.network;
 import de.teamlapen.vampirism.blocks.BlockHunterTable;
 import de.teamlapen.vampirism.client.gui.*;
 import de.teamlapen.vampirism.inventory.HunterTrainerContainer;
+import de.teamlapen.vampirism.inventory.WeaponTableContainer;
 import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
@@ -19,11 +20,12 @@ public class ModGuiHandler implements IGuiHandler {
     public final static int ID_HUNTER_TABLE = 3;
     public final static int ID_HUNTER_TRAINER = 4;
     public final static int ID_REVERT_BACK = 5;
+    public final static int ID_WEAPON_TABLE = 6;
 
     @Override
-    public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
+    public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
 
-        switch (ID) {
+        switch (id) {
             case ID_ACTION:
                 return new GuiSelectAction();
             case ID_SKILL:
@@ -38,21 +40,26 @@ public class ModGuiHandler implements IGuiHandler {
                 return new GuiHunterTrainer(new HunterTrainerContainer(player));
             case ID_REVERT_BACK:
                 return new GuiRevertBack();
+            case ID_WEAPON_TABLE:
+                return new GuiWeaponTable(player.inventory, world, new BlockPos(x, y, z));
         }
         return null;
     }
 
     @Override
-    public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) {
-        if (ID == ID_ALTAR_INFUSION) {
+    public Object getServerGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
+        if (id == ID_ALTAR_INFUSION) {
             TileAltarInfusion tile = (TileAltarInfusion) world.getTileEntity(new BlockPos(x, y, z));
-            return tile.getNewInventoryContainer(player.inventory);
+            if (tile != null) return tile.getNewInventoryContainer(player.inventory);
         }
-        if (ID == ID_HUNTER_TABLE) {
+        if (id == ID_HUNTER_TABLE) {
             return BlockHunterTable.createInventoryContainer(player, new BlockPos(x, y, z));
         }
-        if (ID == ID_HUNTER_TRAINER) {
+        if (id == ID_HUNTER_TRAINER) {
             return new HunterTrainerContainer(player);
+        }
+        if (id == ID_WEAPON_TABLE) {
+            return new WeaponTableContainer(player.inventory, world, new BlockPos(x, y, z));
         }
         return null;
     }

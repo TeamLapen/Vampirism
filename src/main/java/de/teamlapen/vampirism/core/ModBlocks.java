@@ -34,6 +34,7 @@ public class ModBlocks {
     public static BlockBloodContainer bloodContainer;
     public static BlockAltarInspiration altarInspiration;
     public static BlockFirePlace firePlace;
+    public static BlockWeaponTable weaponTable;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
@@ -79,6 +80,7 @@ public class ModBlocks {
         registerBlock(bloodContainer, itemBloodContainer);
         altarInspiration = registerBlock(new BlockAltarInspiration());
         firePlace = registerBlock(new BlockFirePlace());
+        weaponTable = registerBlock(new BlockWeaponTable());
 
     }
 

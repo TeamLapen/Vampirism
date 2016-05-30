@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionRegistry;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillRegistry;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVisionRegistry;
+import de.teamlapen.vampirism.api.items.IHunterWeaponCraftingManager;
 import de.teamlapen.vampirism.api.world.IVampirismVillageProvider;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
@@ -33,6 +34,7 @@ public class VampirismAPI {
     private static ISkillRegistry skillRegistry;
     private static IVampireVisionRegistry vampireVisionRegistry;
     private static IVampirismVillageProvider.IProviderProvider vampirismVillageProviders;
+    private static IHunterWeaponCraftingManager weaponCraftingManager;
 
 
     public static IVampireVisionRegistry vampireVisionRegistry() {
@@ -77,19 +79,34 @@ public class VampirismAPI {
     }
 
     /**
-     * Setup the API
-     * FOR INTERNAL USAGE ONLY
-     * @param factionReg
-     * @param sundamageReg
+     *
+     * @return The crafting manager for the hunter weapon crafting table
      */
-    public static void setUp(IFactionRegistry factionReg, ISundamageRegistry sundamageReg, IBiteableRegistry biteableReg, IActionRegistry actionReg, ISkillRegistry skillReg, IVampireVisionRegistry vampireVisionReg, IVampirismVillageProvider.IProviderProvider villagePro) {
+    public static IHunterWeaponCraftingManager weaponCraftingManager() {
+        return weaponCraftingManager;
+    }
+
+    /**
+     * Setup the API registries
+     * FOR INTERNAL USAGE ONLY
+
+     */
+    public static void setUpRegistries(IFactionRegistry factionReg, ISundamageRegistry sundamageReg, IBiteableRegistry biteableReg, IActionRegistry actionReg, ISkillRegistry skillReg, IVampireVisionRegistry vampireVisionReg) {
         factionRegistry = factionReg;
         sundamageRegistry = sundamageReg;
         biteableRegistry = biteableReg;
         actionRegistry = actionReg;
         skillRegistry = skillReg;
         vampireVisionRegistry = vampireVisionReg;
+    }
+
+    /**
+     * Setup the API accessors
+     * FOR INTERNAL USAGE ONLY
+     */
+    public static void setUpAccessors(IVampirismVillageProvider.IProviderProvider villagePro, IHunterWeaponCraftingManager weaponCraftingMan) {
         vampirismVillageProviders = villagePro;
+        weaponCraftingManager = weaponCraftingMan;
     }
 
 

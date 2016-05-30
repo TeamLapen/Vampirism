@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.inventory.HunterWeaponCraftingManager;
 import de.teamlapen.vampirism.items.*;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
@@ -53,6 +54,7 @@ public class ModItems {
         GameRegistry.addShapelessRecipe(new ItemStack(injection, 1, ItemInjection.META_SANGUINARE), new ItemStack(injection, 1, 0), vampireFang, vampireFang, vampireFang, vampireFang, vampireFang, vampireFang, vampireFang, vampireFang);
         GameRegistry.addRecipe(new ItemStack(itemMedChair), "XYX", "XXX", "XZX", 'X', Items.IRON_INGOT, 'Y', Blocks.WOOL, 'Z', Items.GLASS_BOTTLE);
         GameRegistry.addRecipe(new ItemStack(itemCoffin), "XXX", "YYY", "XXX", 'X', Blocks.PLANKS, 'Y', Blocks.WOOL);
+        HunterWeaponCraftingManager.getInstance().addRecipe(new ItemStack(ModItems.pitchfork), 2, null, "XXXX", "YYYY", "    ", "XXXX", 'X', ModItems.humanHeart, 'Y', Items.APPLE);
     }
 
     private static void registerItems() {
