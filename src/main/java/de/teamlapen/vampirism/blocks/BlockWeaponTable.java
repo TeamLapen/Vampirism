@@ -1,17 +1,20 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -42,6 +45,11 @@ public class BlockWeaponTable extends VampirismBlock {
     @Override
     public int getMetaFromState(IBlockState state) {
         return state.getValue(LAVA);
+    }
+
+    @Override
+    public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
+        return new ItemStack(Item.getItemFromBlock(ModBlocks.weaponTable), 1);
     }
 
     @Override

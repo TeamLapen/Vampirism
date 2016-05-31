@@ -18,6 +18,12 @@ public interface IHunterWeaponRecipe extends IRecipe {
     int getMinHunterLevel();
 
     /**
+     * Measured in 1/5 buckets. Min value=0
+     * @return The amount of lava required for this recipe.
+     */
+    int getRequiredLavaUnits();
+
+    /**
      * @return The skill that has to be unlocked to craft this or null if none is required
      */
     @Nullable

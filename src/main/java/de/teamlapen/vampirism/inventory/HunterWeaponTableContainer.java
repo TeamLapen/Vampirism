@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.inventory;
 
-import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
+import de.teamlapen.vampirism.blocks.BlockWeaponTable;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.*;
@@ -14,18 +16,18 @@ import javax.annotation.Nullable;
 /**
  * Container to handle crafting in the hunter weapon crafting table
  */
-public class WeaponTableContainer extends Container {
+public class HunterWeaponTableContainer extends Container {
     private final World world;
     private final BlockPos pos;
     private final HunterPlayer hunterPlayer;
     private InventoryCrafting craftMatrix = new InventoryCrafting(this, 4, 4);
     private IInventory craftResult = new InventoryCraftResult();
 
-    public WeaponTableContainer(InventoryPlayer playerInventory, World world, BlockPos pos) {
+    public HunterWeaponTableContainer(InventoryPlayer playerInventory, World world, BlockPos pos) {
         this.world = world;
         this.pos = pos;
         this.hunterPlayer = HunterPlayer.get(playerInventory.player);
-        this.addSlotToContainer(new WeaponTableCraftingSlot(playerInventory.player, craftMatrix, craftResult, 0, 144, 46));
+        this.addSlotToContainer(new HunterWeaponTableCraftingSlot(playerInventory.player, world, pos, craftMatrix, craftResult, 0, 144, 46));
 
         for (int i = 0; i < 4; ++i) {
             for (int j = 0; j < 4; ++j) {
@@ -59,6 +61,23 @@ public class WeaponTableContainer extends Container {
         return slotIn.inventory != this.craftResult && super.canMergeSlot(stack, slotIn);
     }
 
+    /**
+     * Checks if there's a recipe available for the given setup, which requires more lava
+     *
+     * @return
+     */
+    public boolean isMissingLava() {
+        IHunterWeaponRecipe recipe = HunterWeaponCraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.world, hunterPlayer.getLevel(), hunterPlayer.getSkillHandler(), 100);
+        if (recipe != null) {
+            IBlockState blockState = world.getBlockState(pos);
+            if (blockState.getBlock() instanceof BlockWeaponTable) {
+                return blockState.getValue(BlockWeaponTable.LAVA) < recipe.getRequiredLavaUnits();
+            }
+        }
+        return false;
+
+    }
+
     public void onContainerClosed(EntityPlayer playerIn) {
         super.onContainerClosed(playerIn);
 
@@ -73,20 +92,25 @@ public class WeaponTableContainer extends Container {
         }
     }
 
+
+
     public void onCraftMatrixChanged(IInventory inventoryIn) {
-        this.craftResult.setInventorySlotContents(0, HunterWeaponCraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, this.world, hunterPlayer.getLevel(), hunterPlayer.getSkillHandler()));
+        int lava = 0;
+        IBlockState blockState = world.getBlockState(pos);
+        if (blockState.getBlock() instanceof BlockWeaponTable) {
+            lava = blockState.getValue(BlockWeaponTable.LAVA);
+        }
+        this.craftResult.setInventorySlotContents(0, HunterWeaponCraftingManager.getInstance().findMatchingRecipeResult(this.craftMatrix, this.world, hunterPlayer.getLevel(), hunterPlayer.getSkillHandler(),lava));
     }
 
     @Nullable
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-        //TODO
         ItemStack itemstack = null;
         Slot slot = this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack()) {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
-            VampirismMod.log.t("%s", index);
             if (index == 0) {
                 if (!this.mergeItemStack(itemstack1, 17, 53, true)) {
                     return null;

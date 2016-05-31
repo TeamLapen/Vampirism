@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.network;
 import de.teamlapen.vampirism.blocks.BlockHunterTable;
 import de.teamlapen.vampirism.client.gui.*;
 import de.teamlapen.vampirism.inventory.HunterTrainerContainer;
-import de.teamlapen.vampirism.inventory.WeaponTableContainer;
+import de.teamlapen.vampirism.inventory.HunterWeaponTableContainer;
 import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
@@ -41,9 +41,10 @@ public class ModGuiHandler implements IGuiHandler {
             case ID_REVERT_BACK:
                 return new GuiRevertBack();
             case ID_WEAPON_TABLE:
-                return new GuiWeaponTable(player.inventory, world, new BlockPos(x, y, z));
+                return new GuiHunterWeaponTable(player.inventory, world, new BlockPos(x, y, z));
+            default:
+                return null;
         }
-        return null;
     }
 
     @Override
@@ -59,7 +60,7 @@ public class ModGuiHandler implements IGuiHandler {
             return new HunterTrainerContainer(player);
         }
         if (id == ID_WEAPON_TABLE) {
-            return new WeaponTableContainer(player.inventory, world, new BlockPos(x, y, z));
+            return new HunterWeaponTableContainer(player.inventory, world, new BlockPos(x, y, z));
         }
         return null;
     }

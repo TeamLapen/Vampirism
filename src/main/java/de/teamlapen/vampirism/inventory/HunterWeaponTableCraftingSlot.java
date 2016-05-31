@@ -1,26 +1,35 @@
 package de.teamlapen.vampirism.inventory;
 
+import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
+import de.teamlapen.vampirism.blocks.BlockWeaponTable;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 
 /**
  * Result slot for the hunter weapon crafting table
  */
-public class WeaponTableCraftingSlot extends Slot {
+public class HunterWeaponTableCraftingSlot extends Slot {
     private final EntityPlayer player;
+    private final World world;
+    private final BlockPos pos;
     private final InventoryCrafting craftMatrix;
     private int amountCrafted = 0;
 
-    public WeaponTableCraftingSlot(EntityPlayer player, InventoryCrafting craftingInventory, IInventory inventoryIn, int index, int xPosition, int yPosition) {
+    public HunterWeaponTableCraftingSlot(EntityPlayer player, World world, BlockPos pos, InventoryCrafting craftingInventory, IInventory inventoryIn, int index, int xPosition, int yPosition) {
         super(inventoryIn, index, xPosition, yPosition);
         this.player = player;
         this.craftMatrix = craftingInventory;
+        this.world = world;
+        this.pos = pos;
     }
 
     @Override
@@ -40,9 +49,20 @@ public class WeaponTableCraftingSlot extends Slot {
     @Override
     public void onPickupFromSlot(EntityPlayer playerIn, ItemStack stack) {
         this.onCrafting(stack);
+        int lava = 0;
+        IBlockState blockState = world.getBlockState(pos);
+        if (blockState.getBlock() instanceof BlockWeaponTable) {
+            lava = blockState.getValue(BlockWeaponTable.LAVA);
+        }
         HunterPlayer hunterPlayer = HunterPlayer.get(playerIn);
-        ItemStack[] aitemstack = HunterWeaponCraftingManager.getInstance().getRemainingItems(this.craftMatrix, playerIn.worldObj, hunterPlayer.getLevel(), hunterPlayer.getSkillHandler());
-        net.minecraftforge.common.ForgeHooks.setCraftingPlayer(null);
+        IHunterWeaponRecipe recipe = HunterWeaponCraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, playerIn.worldObj, hunterPlayer.getLevel(), hunterPlayer.getSkillHandler(), lava);
+        if (recipe != null && recipe.getRequiredLavaUnits() > 0) {
+            lava = Math.max(0, lava - recipe.getRequiredLavaUnits());
+            if (blockState.getBlock() instanceof BlockWeaponTable) {
+                world.setBlockState(pos, blockState.withProperty(BlockWeaponTable.LAVA, lava));
+            }
+        }
+        ItemStack[] aitemstack = recipe == null ? HunterWeaponCraftingManager.getInstance().getRemainingItems(this.craftMatrix, playerIn.worldObj, hunterPlayer.getLevel(), hunterPlayer.getSkillHandler(), lava) : recipe.getRemainingItems(this.craftMatrix);
 
         for (int i = 0; i < aitemstack.length; ++i) {
             ItemStack itemstack = this.craftMatrix.getStackInSlot(i);

@@ -3,6 +3,7 @@ package de.teamlapen.lib.lib.util;
 import com.google.common.base.Predicate;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.VampirismMod;
+import mezz.jei.util.Log;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.*;
@@ -15,11 +16,13 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
+import java.util.IllegalFormatException;
 import java.util.List;
 import java.util.Random;
 
@@ -415,5 +418,24 @@ public class UtilLib {
 
     public static boolean isPlayerOp(EntityPlayer player) {
         return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getOppedPlayers().getEntry(player.getGameProfile()) != null;
+    }
+
+    public static String translateToLocal(String key) {
+        if (I18n.canTranslate(key)) {
+            return I18n.translateToLocal(key);
+        } else {
+            return I18n.translateToFallback(key);
+        }
+    }
+
+    public static String translateToLocalFormatted(String key, Object... format) {
+        String s = translateToLocal(key);
+        try {
+            return String.format(s, format);
+        } catch (IllegalFormatException e) {
+            String errorMessage = "Format error: " + s;
+            Log.error(errorMessage, e);
+            return errorMessage;
+        }
     }
 }

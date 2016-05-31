@@ -206,6 +206,7 @@ tile.vampirism.bloodContainer.name=Blood Container
 tile.vampirism.medChair.name=Injection Chair
 tile.vampirism.vampire_orchid.name=Vampire Orchid
 tile.vampirism.firePlace.name=Fire Place
+tile.vampirism.hunter.weaponTable.name=Hunter Weapon Table
 
 
 #ITEMS
@@ -229,6 +230,10 @@ keys.vampirism.action=Use Actions
 achievement.vampirism.sucking_blood=Sucking Blood
 achievement.vampirism.becoming_vampire
 
+#Gui
+gui.vampirism.hunter_weapon_table=Hunter Weapon Table
+gui.vampirism.hunter_weapon_table.level=Required Hunter Level: %s
+gui.vampirism.hunter_weapon_table.skill=Required Skill: %s
 
 #ETC
 text.vampirism.vampire=Vampire

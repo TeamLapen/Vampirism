@@ -54,7 +54,7 @@ public class ModItems {
         GameRegistry.addShapelessRecipe(new ItemStack(injection, 1, ItemInjection.META_SANGUINARE), new ItemStack(injection, 1, 0), vampireFang, vampireFang, vampireFang, vampireFang, vampireFang, vampireFang, vampireFang, vampireFang);
         GameRegistry.addRecipe(new ItemStack(itemMedChair), "XYX", "XXX", "XZX", 'X', Items.IRON_INGOT, 'Y', Blocks.WOOL, 'Z', Items.GLASS_BOTTLE);
         GameRegistry.addRecipe(new ItemStack(itemCoffin), "XXX", "YYY", "XXX", 'X', Blocks.PLANKS, 'Y', Blocks.WOOL);
-        HunterWeaponCraftingManager.getInstance().addRecipe(new ItemStack(ModItems.pitchfork), 2, null, "XXXX", "YYYY", "    ", "XXXX", 'X', ModItems.humanHeart, 'Y', Items.APPLE);
+        HunterWeaponCraftingManager.getInstance().addRecipe(new ItemStack(ModItems.pitchfork), 2, null, 2, "XXXX", "YYYY", "    ", "XXXX", 'X', ModItems.humanHeart, 'Y', Items.APPLE);
     }
 
     private static void registerItems() {

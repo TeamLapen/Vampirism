@@ -30,12 +30,8 @@ public class HunterWeaponCraftingManager implements IHunterWeaponCraftingManager
 
     private final List<IHunterWeaponRecipe> recipes = Lists.newLinkedList();
 
-    public HunterWeaponCraftingManager() {
-
-    }
-
     @Override
-    public ShapedHunterWeaponRecipe addRecipe(ItemStack output, int reqLevel, @Nullable ISkill<IHunterPlayer> reqSkill, Object... recipeComponents) {
+    public ShapedHunterWeaponRecipe addRecipe(ItemStack output, int reqLevel, @Nullable ISkill<IHunterPlayer> reqSkill, int reqLava, Object... recipeComponents) {
         String s = "";
         int i = 0;
         int j = 0;
@@ -89,7 +85,7 @@ public class HunterWeaponCraftingManager implements IHunterWeaponCraftingManager
             }
         }
 
-        ShapedHunterWeaponRecipe recipe = new ShapedHunterWeaponRecipe(aitemstack, output, reqLevel, reqSkill);
+        ShapedHunterWeaponRecipe recipe = new ShapedHunterWeaponRecipe(aitemstack, output, reqLevel, reqSkill, reqLava);
         this.recipes.add(recipe);
         return recipe;
     }
@@ -99,14 +95,13 @@ public class HunterWeaponCraftingManager implements IHunterWeaponCraftingManager
         this.recipes.add(recipe);
     }
 
-    @Override
-    public
     @Nullable
-    ItemStack findMatchingRecipe(InventoryCrafting craftMatrix, World world, int playerLevel, ISkillHandler<IHunterPlayer> skillHandler) {
+    @Override
+    public IHunterWeaponRecipe findMatchingRecipe(InventoryCrafting craftMatrix, World world, int playerLevel, ISkillHandler<IHunterPlayer> skillHandler, int lava) {
         for (IHunterWeaponRecipe iRecipe : this.recipes) {
             if (iRecipe.matches(craftMatrix, world)) {
-                if (playerLevel >= iRecipe.getMinHunterLevel() && (iRecipe.getRequiredSkill() == null || skillHandler.isSkillEnabled(iRecipe.getRequiredSkill()))) {
-                    return iRecipe.getCraftingResult(craftMatrix);
+                if (playerLevel >= iRecipe.getMinHunterLevel() && lava >= iRecipe.getRequiredLavaUnits() && (iRecipe.getRequiredSkill() == null || skillHandler.isSkillEnabled(iRecipe.getRequiredSkill()))) {
+                    return iRecipe;
                 }
             }
         }
@@ -114,16 +109,21 @@ public class HunterWeaponCraftingManager implements IHunterWeaponCraftingManager
     }
 
     @Override
-    public ItemStack[] getRemainingItems(InventoryCrafting craftMatrix, World world, int playerLevel, ISkillHandler<IHunterPlayer> skillHandler) {
-        for (IHunterWeaponRecipe iRecipe : this.recipes) {
-            if (iRecipe.matches(craftMatrix, world)) {
-                if (playerLevel >= iRecipe.getMinHunterLevel() && (iRecipe.getRequiredSkill() == null || skillHandler.isSkillEnabled(iRecipe.getRequiredSkill()))) {
-                    return iRecipe.getRemainingItems(craftMatrix);
+    public
+    @Nullable
+    ItemStack findMatchingRecipeResult(InventoryCrafting craftMatrix, World world, int playerLevel, ISkillHandler<IHunterPlayer> skillHandler, int lava) {
+        IHunterWeaponRecipe recipe = findMatchingRecipe(craftMatrix, world, playerLevel, skillHandler, lava);
+        return recipe == null ? null : recipe.getCraftingResult(craftMatrix);
+    }
 
-                }
-            }
-        }
+    public List<IHunterWeaponRecipe> getRecipes() {
+        return recipes;
+    }
 
+    @Override
+    public ItemStack[] getRemainingItems(InventoryCrafting craftMatrix, World world, int playerLevel, ISkillHandler<IHunterPlayer> skillHandler, int lava) {
+        IHunterWeaponRecipe recipe = findMatchingRecipe(craftMatrix, world, playerLevel, skillHandler, lava);
+        if (recipe != null) return recipe.getRemainingItems(craftMatrix);
         ItemStack[] aitemstack = new ItemStack[craftMatrix.getSizeInventory()];
 
         for (int i = 0; i < aitemstack.length; ++i) {
