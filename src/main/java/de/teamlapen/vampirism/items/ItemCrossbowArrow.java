@@ -88,7 +88,7 @@ public class ItemCrossbowArrow extends VampirismItem {
     /**
      * @return The {@link EnumArrowType} of this stack
      */
-    protected
+    public static
     @Nonnull
     EnumArrowType getType(@Nonnull ItemStack stack) {
         if (stack.hasTagCompound()) {
@@ -110,7 +110,7 @@ public class ItemCrossbowArrow extends VampirismItem {
      *
      * @return The same stack
      */
-    protected
+    public static
     @Nonnull
     ItemStack setType(@Nonnull ItemStack stack, EnumArrowType type) {
         NBTTagCompound nbt = stack.hasTagCompound() ? stack.getTagCompound() : new NBTTagCompound();

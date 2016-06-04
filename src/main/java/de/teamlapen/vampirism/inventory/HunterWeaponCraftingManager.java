@@ -85,7 +85,29 @@ public class HunterWeaponCraftingManager implements IHunterWeaponCraftingManager
             }
         }
 
-        ShapedHunterWeaponRecipe recipe = new ShapedHunterWeaponRecipe(aitemstack, output, reqLevel, reqSkill, reqLava);
+        ShapedHunterWeaponRecipe recipe = new ShapedHunterWeaponRecipe(j, k, aitemstack, output, reqLevel, reqSkill, reqLava);
+        this.recipes.add(recipe);
+        return recipe;
+    }
+
+    @Override
+    public IHunterWeaponRecipe addShapelessRecipe(ItemStack output, int reqLevel, @Nullable ISkill<IHunterPlayer> reqSkill, int reqLava, Object... recipeComponents) {
+        List<ItemStack> list = Lists.newArrayList();
+
+        for (Object object : recipeComponents) {
+            if (object instanceof ItemStack) {
+                list.add(((ItemStack) object).copy());
+            } else if (object instanceof Item) {
+                list.add(new ItemStack((Item) object));
+            } else {
+                if (!(object instanceof Block)) {
+                    throw new IllegalArgumentException("Invalid shapeless recipe: unknown type " + object.getClass().getName() + "!");
+                }
+
+                list.add(new ItemStack((Block) object));
+            }
+        }
+        IHunterWeaponRecipe recipe = new ShapelessHunterWeaponRecipe(list, output, reqLevel, reqSkill, reqLava);
         this.recipes.add(recipe);
         return recipe;
     }

@@ -10,18 +10,20 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 /**
- * Shaped recipe for the hunter weapon table. Only supports 4x4 recipes
+ * Shaped recipe for the hunter weapon table.
  */
 public class ShapedHunterWeaponRecipe implements IHunterWeaponRecipe {
-    public final int recipeWidth = 4;
-    public final int recipeHeight = 4;
+    public final int recipeWidth;
+    public final int recipeHeight;
     public final ItemStack[] recipeItems;
     private final int requiredHunterLevel;
     private final ISkill<IHunterPlayer> requiredHunterSkill;
     private final int requiredLavaUnits;
     private final ItemStack recipeOutput;
 
-    public ShapedHunterWeaponRecipe(ItemStack[] input, ItemStack output, int requiredHunterLevel, @Nullable ISkill<IHunterPlayer> requiredHunterSkill, int requiredLavaUnits) {
+    public ShapedHunterWeaponRecipe(int width, int height, ItemStack[] input, ItemStack output, int requiredHunterLevel, @Nullable ISkill<IHunterPlayer> requiredHunterSkill, int requiredLavaUnits) {
+        this.recipeWidth = width;
+        this.recipeHeight = height;
         recipeItems = input;
         recipeOutput = output;
         this.requiredHunterLevel = requiredHunterLevel;
@@ -80,30 +82,50 @@ public class ShapedHunterWeaponRecipe implements IHunterWeaponRecipe {
 
     @Override
     public boolean matches(InventoryCrafting inv, World worldIn) {
-        for (int i = 0; i < 4; ++i) {
-            for (int j = 0; j < 4; ++j) {
+        for (int x = 0; x <= 4 - this.recipeWidth; ++x) {
+            for (int y = 0; y <= 4 - this.recipeHeight; ++y) {
+                if (this.checkMatch(inv, x, y, true)) {
+                    return true;
+                }
 
-                ItemStack itemstack = this.recipeItems[i + j * this.recipeWidth];
+                if (this.checkMatch(inv, x, y, false)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
+    private boolean checkMatch(InventoryCrafting inv, int startRow, int startColumn, boolean flip) {
+        for (int x = 0; x < 4; x++) {
+            for (int y = 0; y < 4; y++) {
+                int k = x - startRow;
+                int l = y - startColumn;
+                ItemStack itemStack = null;
+                if (k >= 0 && l >= 0 && k < recipeWidth && l < recipeHeight) {
+                    if (flip) {
+                        itemStack = this.recipeItems[this.recipeWidth - k - 1 + l * this.recipeWidth];
+                    } else {
+                        itemStack = this.recipeItems[k + l * recipeWidth];
+                    }
+                }
+                ItemStack itemstack1 = inv.getStackInRowAndColumn(x, y);
 
-                ItemStack itemstack1 = inv.getStackInRowAndColumn(i, j);
-
-                if (itemstack1 != null || itemstack != null) {
-                    if (itemstack1 == null || itemstack == null) {
+                if (itemstack1 != null || itemStack != null) {
+                    if (itemstack1 == null || itemStack == null) {
                         return false;
                     }
 
-                    if (itemstack.getItem() != itemstack1.getItem()) {
+                    if (itemStack.getItem() != itemstack1.getItem()) {
                         return false;
                     }
 
-                    if (itemstack.getMetadata() != 32767 && itemstack.getMetadata() != itemstack1.getMetadata()) {
+                    if (itemStack.getMetadata() != 32767 && itemStack.getMetadata() != itemstack1.getMetadata()) {
                         return false;
                     }
                 }
             }
         }
-
         return true;
     }
 

@@ -20,10 +20,22 @@ public interface IHunterWeaponCraftingManager {
      * @param reqLevel         The required hunter level >=0
      * @param reqSkill         A skill that is required to craft this. Can be null
      * @param reqLava          The number of lava units required. (One unit equals 200mB)
-     * @param recipeComponents The components in the same way as vanilla crafting. Has to be 4x4.
+     * @param recipeComponents The components in the same way as vanilla crafting.
      * @return The created and registered recipe
      */
     IHunterWeaponRecipe addRecipe(ItemStack output, int reqLevel, @Nullable ISkill<IHunterPlayer> reqSkill, int reqLava, Object... recipeComponents);
+
+    /**
+     * Add a shapeless recipe for the hunter weapon crafting table
+     *
+     * @param output           The resulting itemstack
+     * @param reqLevel         The required hunter level >=0
+     * @param reqSkill         A skill that is required to craft this. Can be null
+     * @param reqLava          The number of lava units required. (One unit equals 200mB)
+     * @param recipeComponents The required components
+     * @return The created and registered recipe
+     */
+    IHunterWeaponRecipe addShapelessRecipe(ItemStack output, int reqLevel, @Nullable ISkill<IHunterPlayer> reqSkill, int reqLava, Object... recipeComponents);
 
     /**
      * Adds the given recipe

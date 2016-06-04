@@ -27,6 +27,7 @@ public class VampirismJEIPlugin extends BlankModPlugin {
 
         registry.addRecipeCategories(new HunterWeaponRecipeCategory(guiHelper));
         registry.addRecipeHandlers(new ShapedHunterWeaponRecipesHandler());
+        registry.addRecipeHandlers(new ShapelessHunterWeaponRecipeHandler());
         registry.addRecipeClickArea(GuiHunterWeaponTable.class, 113, 46, 28, 23, HUNTER_WEAPON_RECIPE_UID);
         registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.weaponTable), HUNTER_WEAPON_RECIPE_UID);
         registry.addRecipes(HunterWeaponCraftingManager.getInstance().getRecipes());

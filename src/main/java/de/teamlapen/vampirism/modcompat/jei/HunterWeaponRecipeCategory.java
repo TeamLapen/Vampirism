@@ -61,8 +61,23 @@ public class HunterWeaponRecipeCategory extends BlankRecipeCategory {
         }
         if (recipeWrapper instanceof ShapedHunterWeaponRecipesWrapper) {
             ShapedHunterWeaponRecipesWrapper wrapper = (ShapedHunterWeaponRecipesWrapper) recipeWrapper;
-            craftingGridHelper.setInput(guiItemStackGroup, wrapper.getInputs(), 4, 4);
+            craftingGridHelper.setInput(guiItemStackGroup, wrapper.getInputs(), wrapper.getWidth(), wrapper.getHeight());
             craftingGridHelper.setOutput(guiItemStackGroup, wrapper.getOutputs());
+        } else if (recipeWrapper instanceof ShapelessHunterWeaponRecipeWrapper) {
+//            int inputSize=recipeWrapper.getInputs().size();
+//            int width, height;
+//            if(inputSize > 9){
+//                width=height=4;
+//            }
+//            if (inputSize > 4) {
+//                width = height = 3;
+//            } else if (inputSize > 1) {
+//                width = height = 2;
+//            } else {
+//                width = height = 1;
+//            }
+            craftingGridHelper.setInput(guiItemStackGroup, recipeWrapper.getInputs(), 4, 4);
+            craftingGridHelper.setOutput(guiItemStackGroup, recipeWrapper.getOutputs());
         }
     }
 }
