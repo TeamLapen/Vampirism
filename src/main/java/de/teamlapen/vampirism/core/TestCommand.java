@@ -23,7 +23,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -246,6 +249,40 @@ public class TestCommand extends BasicCommand {
                     v.setDead();
                     v.worldObj.spawnEntityInWorld(hunter);
                 }
+            }
+        });
+        addSub(new SubCommand() {
+            @Override
+            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+                return null;
+            }
+
+            @Override
+            public boolean canSenderUseCommand(ICommandSender var1) {
+                return canCommandSenderUseCheatCommand(var1);
+            }
+
+            @Override
+            public String getCommandName() {
+                return "arrowTester";
+            }
+
+            @Override
+            public String getCommandUsage(ICommandSender var1) {
+                return getCommandName();
+            }
+
+            @Override
+            public void processCommand(ICommandSender var1, String[] var2) throws CommandException {
+                Object listener = new Object() {
+                    @SubscribeEvent
+                    public void onEntityDamage(LivingAttackEvent event) {
+                        if (event.getSource().isProjectile() && !event.getEntityLiving().worldObj.isRemote) {
+                            FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().sendChatMsg(new TextComponentString(event.getEntityLiving().getName() + " hit with " + event.getAmount()));
+                        }
+                    }
+                };
+                MinecraftForge.EVENT_BUS.register(listener);
             }
         });
 

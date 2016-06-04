@@ -1,8 +1,11 @@
 package de.teamlapen.vampirism.entity.player;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.config.Configs;
@@ -21,7 +24,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
@@ -76,6 +78,13 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
         if (VampirePlayer.get(event.getEntityPlayer()).getActionHandler().isActionActive(VampireActions.batAction)) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onItemRightClick(PlayerInteractEvent.RightClickItem event) {
+        if (!checkItemUsePerm(event.getItemStack(), event.getEntityPlayer())) {
             event.setCanceled(true);
         }
     }
@@ -168,7 +177,7 @@ public class ModPlayerEventHandler {
             if (f != null) {
                 event.setDisplayname(f.getChatColor() + event.getDisplayname());
                 if (fp instanceof IVampirePlayer && !fp.isDisguised() && ((IVampirePlayer) fp).isVampireLord()) {
-                    event.setDisplayname(TextFormatting.RED + "[" + I18n.translateToLocal("text.vampirism.lord") + "] " + TextFormatting.RESET + event.getDisplayname());
+                    event.setDisplayname(TextFormatting.RED + "[" + UtilLib.translateToLocal("text.vampirism.lord") + "] " + TextFormatting.RESET + event.getDisplayname());
                 }
             }
 
@@ -181,18 +190,26 @@ public class ModPlayerEventHandler {
      */
     private boolean checkItemUsePerm(ItemStack stack, EntityPlayer player) {
 
-
+        boolean message = !player.worldObj.isRemote;
         if (stack != null && stack.getItem() instanceof IFactionLevelItem) {
             IFactionLevelItem item = (IFactionLevelItem) stack.getItem();
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-            if (!handler.isInFaction(item.getUsingFaction())) {
+            IPlayableFaction usingFaction = item.getUsingFaction(stack);
+            ISkill requiredSkill = item.getRequiredSkill(stack);
+            if (usingFaction != null && !handler.isInFaction(usingFaction)) {
 
-                player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by", new TextComponentTranslation(item.getUsingFaction().getUnlocalizedNamePlural())));
+                if (message)
+                    player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by", new TextComponentTranslation(usingFaction.getUnlocalizedNamePlural())));
                 return false;
-            } else {
-                if (handler.getCurrentLevel() < item.getMinLevel() || !item.canUse(handler.getCurrentFactionPlayer(), stack)) {
-
-                    player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by_level", new TextComponentTranslation(item.getUsingFaction().getUnlocalizedNamePlural()), item.getMinLevel()));
+            } else if (handler.getCurrentLevel() < item.getMinLevel(stack)) {
+                if (message)
+                    player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by_level", new TextComponentTranslation(usingFaction == null ? "text.vampirism.all" : usingFaction.getUnlocalizedNamePlural()), item.getMinLevel(stack)));
+                return false;
+            } else if (requiredSkill != null) {
+                IFactionPlayer factionPlayer = handler.getCurrentFactionPlayer();
+                if (factionPlayer == null || !factionPlayer.getSkillHandler().isSkillEnabled(requiredSkill)) {
+                    if (message)
+                        player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_with_skill", new TextComponentTranslation(requiredSkill.getUnlocalizedName())));
                     return false;
                 }
             }

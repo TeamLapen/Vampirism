@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.core;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.client.render.entities.*;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
+import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
 import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedVillager;
@@ -110,6 +111,12 @@ public class ModEntitiesRender {
             @Override
             public Render<? super EntityHunterVillager> createRenderFor(RenderManager manager) {
                 return new RenderHunterVillager(manager);
+            }
+        });
+        RenderingRegistry.registerEntityRenderingHandler(EntityCrossbowArrow.class, new IRenderFactory<EntityCrossbowArrow>() {
+            @Override
+            public Render<? super EntityCrossbowArrow> createRenderFor(RenderManager manager) {
+                return new RenderCrossbowArrow(manager);
             }
         });
     }

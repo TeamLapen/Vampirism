@@ -5,12 +5,17 @@ import de.teamlapen.vampirism.api.EnumGarlicStrength;
 import de.teamlapen.vampirism.api.IGarlicBlock;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -116,5 +121,17 @@ public class Helper {
             VampirismMod.log.e("Helper", e1, "Nullpointer when checking biome. This is strange and should not happen");
             return false;
         }
+    }
+
+    /**
+     * Checks if the given {@link IFactionLevelItem} can be used by the given player
+     */
+    public static boolean canUseFactionItem(ItemStack stack, IFactionLevelItem item, IFactionPlayerHandler playerHandler) {
+        IPlayableFaction usingFaction = item.getUsingFaction(stack);
+        ISkill requiredSkill = item.getRequiredSkill(stack);
+        int reqLevel = item.getMinLevel(stack);
+        if (usingFaction != null && !playerHandler.isInFaction(usingFaction)) return false;
+        if (playerHandler.getCurrentLevel() < reqLevel) return false;
+        return !(requiredSkill != null && (playerHandler.getCurrentFactionPlayer() == null || !playerHandler.getCurrentFactionPlayer().getSkillHandler().isSkillEnabled(requiredSkill)));
     }
 }

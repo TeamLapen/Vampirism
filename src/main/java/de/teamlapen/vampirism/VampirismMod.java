@@ -28,6 +28,7 @@ import de.teamlapen.vampirism.entity.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.entity.player.actions.ActionRegistry;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.entity.player.hunter.actions.HunterActions;
+import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.entity.player.skills.SkillRegistry;
 import de.teamlapen.vampirism.entity.player.vampire.BloodVision;
 import de.teamlapen.vampirism.entity.player.vampire.NightVision;
@@ -175,6 +176,7 @@ public class VampirismMod {
         VampireActions.registerDefaultActions();
         HunterActions.registerDefaultActions();
         VampireSkills.registerVampireSkills();
+        HunterSkills.registerHunterSkills();
     }
 
     private void addModCompats() {

@@ -1,16 +1,17 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -18,6 +19,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -42,14 +44,21 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
     @SideOnly(Side.CLIENT)
     @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        FactionPlayerHandler handler = FactionPlayerHandler.get(playerIn);
-        TextFormatting color = handler.isInFaction(getUsingFaction()) && handler.getCurrentLevel() >= getMinLevel() ? TextFormatting.BLUE : TextFormatting.DARK_RED;
-        tooltip.add(color + I18n.format(getUsingFaction().getUnlocalizedNamePlural()) + ": " + getMinLevel() + "+");
+        if (getUsingFaction(stack) != null || getMinLevel(stack) > 0 || getRequiredSkill(stack) != null) {
+            FactionPlayerHandler handler = FactionPlayerHandler.get(playerIn);
+            TextFormatting color = Helper.canUseFactionItem(stack, this, handler) ? TextFormatting.BLUE : TextFormatting.DARK_RED;
+            tooltip.add(color + UtilLib.translateToLocalFormatted(getUsingFaction(stack) == null ? "text.vampirism.all" : getUsingFaction(stack).getUnlocalizedNamePlural()) + ": " + getMinLevel(stack) + "+");
+            ISkill reqSkill = this.getRequiredSkill(stack);
+            if (reqSkill != null) {
+                tooltip.add(color + UtilLib.translateToLocalFormatted("text.vampirism.required_skill", UtilLib.translateToLocal(reqSkill.getUnlocalizedName())));
+            }
+        }
     }
 
+    @Nullable
     @Override
-    public boolean canUse(IFactionPlayer player, ItemStack stack) {
-        return true;
+    public ISkill getRequiredSkill(ItemStack stack) {
+        return null;
     }
 
     @Override
@@ -58,7 +67,7 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
     }
 
     @Override
-    public IPlayableFaction getUsingFaction() {
+    public IPlayableFaction getUsingFaction(ItemStack stack) {
         return VReference.HUNTER_FACTION;
     }
 
@@ -78,7 +87,7 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
         }
 
         @Override
-        public int getMinLevel() {
+        public int getMinLevel(ItemStack stack) {
             return minLevel;
         }
 

@@ -75,15 +75,15 @@ public class VampireSkills {
                 player.activateVision(VReference.vision_nightVision);
             }
         });
-        SkillNode skill3 = new SkillNode(skill2, new ActionSkill(VampireActions.regenAction, "regen"));
-        SkillNode skill4 = new SkillNode(skill3, new ActionSkill(VampireActions.batAction, "bat"));
+        SkillNode skill3 = new SkillNode(skill2, new ActionSkill<>(VampireActions.regenAction, "regen"));
+        SkillNode skill4 = new SkillNode(skill3, new ActionSkill<>(VampireActions.batAction, "bat"));
         registerOffensiveSkills(skill4);
         registerUtilSkills(skill4);
         registerDefensiveSkills(skill4);
     }
 
     private static void registerUtilSkills(SkillNode start) {
-        SkillNode skill1 = new SkillNode(start, new ActionSkill(VampireActions.summonBatAction, "2summonbats"));
+        SkillNode skill1 = new SkillNode(start, new ActionSkill<>(VampireActions.summonBatAction, "2summonbats"));
         DefaultSkill<IVampirePlayer> damage = new DefaultSkill<IVampirePlayer>() {
             @Override
             public String getID() {
@@ -157,13 +157,13 @@ public class VampireSkills {
                 return "text.vampirism.skill.less_bloodthirst";
             }
         }).registerAttributeModifier(VReference.bloodExhaustion, "980ad86f-fe76-433b-b26a-c4060e0e6751", Balance.vps.BLOOD_THIRST_REDUCTION1, 2));
-        SkillNode skill4 = new SkillNode(skill3, new ActionSkill(VampireActions.disguiseAction, "2disguise"));
+        SkillNode skill4 = new SkillNode(skill3, new ActionSkill<>(VampireActions.disguiseAction, "2disguise"));
         //TODO add one more
-        SkillNode skill6 = new SkillNode(skill4, new ActionSkill(VampireActions.invisibilityAction, "2invisibility"));
+        SkillNode skill6 = new SkillNode(skill4, new ActionSkill<>(VampireActions.invisibilityAction, "2invisibility"));
     }
 
     private static void registerOffensiveSkills(SkillNode start) {
-        SkillNode skill1 = new SkillNode(start, new ActionSkill(VampireActions.rageAction, "3rage"));
+        SkillNode skill1 = new SkillNode(start, new ActionSkill<>(VampireActions.rageAction, "3rage"));
         DefaultSkill<IVampirePlayer> bite = new DefaultSkill<IVampirePlayer>() {
             @Override
             public String getID() {
@@ -398,8 +398,8 @@ public class VampireSkills {
             }
         });
 
-        SkillNode skill5 = new SkillNode(skill4, new ActionSkill(VampireActions.freezeAction, "1freeze"));
-        SkillNode skill6 = new SkillNode(skill5, new ActionSkill(VampireActions.teleportAction, "1teleport"));
+        SkillNode skill5 = new SkillNode(skill4, new ActionSkill<>(VampireActions.freezeAction, "1freeze"));
+        SkillNode skill6 = new SkillNode(skill5, new ActionSkill<>(VampireActions.teleportAction, "1teleport"));
 
 
     }

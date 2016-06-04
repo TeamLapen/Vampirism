@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.inventory.HunterWeaponCraftingManager;
 import de.teamlapen.vampirism.items.*;
 import net.minecraft.init.Blocks;
@@ -29,6 +30,10 @@ public class ModItems {
     public static ItemInjection injection;
     public static ItemMedChair itemMedChair;
     public static ItemPitchfork pitchfork;
+    public static ItemSimpleCrossbow basicCrossbow;
+    public static ItemDoubleCrossbow basicDoubleCrossbow;
+    public static ItemSimpleCrossbow enhancedCrossbow;
+    public static ItemCrossbowArrow crossbowArrow;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
@@ -45,6 +50,8 @@ public class ModItems {
     }
 
     private static void registerCraftingRecipes() {
+        HunterWeaponCraftingManager weaponCraftingManager = HunterWeaponCraftingManager.getInstance();
+
         if (!Configs.autoConvertGlasBottles) {
             GameRegistry.addRecipe(new ItemStack(bloodBottle, 1, 0), "   ", "XYX", " X ", 'X', Blocks.GLASS, 'Y', Items.ROTTEN_FLESH);
         }
@@ -54,7 +61,8 @@ public class ModItems {
         GameRegistry.addShapelessRecipe(new ItemStack(injection, 1, ItemInjection.META_SANGUINARE), new ItemStack(injection, 1, 0), vampireFang, vampireFang, vampireFang, vampireFang, vampireFang, vampireFang, vampireFang, vampireFang);
         GameRegistry.addRecipe(new ItemStack(itemMedChair), "XYX", "XXX", "XZX", 'X', Items.IRON_INGOT, 'Y', Blocks.WOOL, 'Z', Items.GLASS_BOTTLE);
         GameRegistry.addRecipe(new ItemStack(itemCoffin), "XXX", "YYY", "XXX", 'X', Blocks.PLANKS, 'Y', Blocks.WOOL);
-        HunterWeaponCraftingManager.getInstance().addRecipe(new ItemStack(ModItems.pitchfork), 2, null, 2, "XXXX", "YYYY", "    ", "XXXX", 'X', ModItems.humanHeart, 'Y', Items.APPLE);
+        weaponCraftingManager.addRecipe(new ItemStack(ModItems.basicDoubleCrossbow), 1, HunterSkills.doubleCrossbow, 0, "YXXY", "YXXY", " ZZ ", " ZZ ", 'X', Items.IRON_INGOT, 'Y', Items.STRING, 'Z', Blocks.PLANKS);
+        weaponCraftingManager.addRecipe(new ItemStack(ModItems.basicCrossbow), 1, null, 0, "    ", "YXXY", " ZZ ", " ZZ ", 'X', Items.IRON_INGOT, 'Y', Items.STRING, 'Z', Blocks.PLANKS);
     }
 
     private static void registerItems() {
@@ -71,6 +79,10 @@ public class ModItems {
         itemMedChair = registerItem(new ItemMedChair());
         injection = registerItem(new ItemInjection());
         pitchfork = registerItem(new ItemPitchfork());
+        basicCrossbow = registerItem(new ItemSimpleCrossbow("basicCrossbow", 1, 20));
+        basicDoubleCrossbow = registerItem(new ItemDoubleCrossbow("basicDoubleCrossbow", 1, 20));
+        enhancedCrossbow = registerItem(new ItemSimpleCrossbow("enhancedCrossbow", 1.5F, 15));
+        crossbowArrow = registerItem(new ItemCrossbowArrow());
     }
 
     private static <T extends Item> T registerItem(T item) {

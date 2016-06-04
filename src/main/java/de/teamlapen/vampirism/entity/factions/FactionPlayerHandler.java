@@ -18,6 +18,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.*;
 
+import javax.annotation.Nullable;
+
 /**
  * Extended entity property that handles factions and levels for the player
  */
@@ -121,7 +123,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     @Override
-    public boolean isInFaction(IPlayableFaction f) {
+    public boolean isInFaction(@Nullable IPlayableFaction f) {
         return currentFaction == f;
     }
 

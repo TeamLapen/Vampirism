@@ -166,6 +166,9 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
         if (!isRemote()) {
             LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Hunter", getLevel(), Balance.hp.STRENGTH_LCAP, Balance.hp.STRENGTH_MAX_MOD, Balance.hp.STRENGTH_TYPE);
             actionHandler.resetTimers();
+            if (level > 0 && old == 0) {
+                skillHandler.enableRootSkill();
+            }
         }
 
     }

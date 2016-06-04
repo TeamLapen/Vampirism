@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IBiteableRegistry;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
+import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
 import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedSheep;
@@ -60,6 +61,7 @@ public class ModEntities {
     public static final String ADVANCED_HUNTER = "vampirism.advanced_hunter";
     public static final String ADVANCED_VAMPIRE = "vampirism.advanced_vampire";
     public static final String HUNTER_VILLAGER = "vampirism.hunter_villager";
+    public static final String CROSSBOW_ARROW = "vampirism.crossbow_arrow";
 
     /**
      * List of entity names which should be spawnable
@@ -143,6 +145,7 @@ public class ModEntities {
         registerEntity(EntityAdvancedVampire.class, ADVANCED_VAMPIRE, EntityLiving.SpawnPlacementType.ON_GROUND, Balance.mobProps.ADVANCED_VAMPIRE_SPAWN_PROBE, 1, 1, EnumCreatureType.MONSTER, zombieBiomes.toArray(new Biome[zombieBiomes.size()]));
         registerEntity(EntityConvertedVillager.class, CONVERTED_VILLAGER, EntityLiving.SpawnPlacementType.ON_GROUND, false);
         registerEntity(EntityHunterVillager.class, HUNTER_VILLAGER, EntityLiving.SpawnPlacementType.ON_GROUND, false);
+        registerEntity(EntityCrossbowArrow.class, CROSSBOW_ARROW, EntityLiving.SpawnPlacementType.IN_AIR, false);
         registerConvertibles();
     }
 

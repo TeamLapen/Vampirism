@@ -41,5 +41,9 @@ public class ModItemsRender {
         renderHelper.registerRenderAllMeta(ModItems.injection, ItemInjection.META_COUNT);
         renderHelper.registerRender(ModItems.itemMedChair, "normal");
         renderHelper.registerRender(ModItems.pitchfork, "normal");
+        renderHelper.registerRender(ModItems.basicCrossbow, "normal");
+        renderHelper.registerRender(ModItems.crossbowArrow, "normal");
+        renderHelper.registerRender(ModItems.basicDoubleCrossbow, "normal");
+        renderHelper.registerRender(ModItems.enhancedCrossbow, "normal");
     }
 }
