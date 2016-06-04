@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.core.ModItems;
@@ -42,22 +41,15 @@ public class BlockCoffin extends VampirismBlockContainer {
     private final static String TAG = "BlockCoffin";
 
     public static boolean isOccupied(IBlockAccess world, BlockPos pos) {
-        if (!(world.getBlockState(pos).getBlock() instanceof BlockCoffin)) return false;
         return world.getBlockState(pos).getValue(OCCUPIED);
     }
 
     public static void setCoffinOccupied(World world, BlockPos pos, boolean value) {
         IBlockState state = world.getBlockState(pos);
-        if (!(state.getBlock() instanceof BlockCoffin)) return;
         world.setBlockState(pos, state.withProperty(OCCUPIED, value), 4);
     }
 
     public static boolean isHead(IBlockAccess world, BlockPos pos) {
-        if (!(world.getBlockState(pos).getBlock() instanceof BlockCoffin)) {
-            Throwable test = new Throwable().fillInStackTrace();
-            VampirismMod.log.e(TAG, test, "Block at check is not a coffin. %s", world.getBlockState(pos));
-            return false;
-        }
         return world.getBlockState(pos).getValue(PART) == EnumPartType.HEAD;
     }
 
