@@ -30,9 +30,16 @@ import java.util.Random;
 public abstract class VampirismItemCrossbow extends VampirismItem implements IFactionLevelItem<IHunterPlayer> {
     protected double heightOffset = 0.0;
 
-    public VampirismItemCrossbow(String regName) {
+    /**
+     * @param regName   Registration name
+     * @param maxDamage Max damage or 0 if unbreakable
+     */
+    public VampirismItemCrossbow(String regName, int maxDamage) {
         super(regName);
         this.maxStackSize = 1;
+        if (maxDamage > 0) {
+            this.setMaxDamage(maxDamage);
+        }
     }
 
     @Override
@@ -107,11 +114,13 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @return If successful
      */
     protected boolean shoot(EntityPlayer player, double heightOffset, World world, ItemStack stack) {
-        boolean flag = player.capabilities.isCreativeMode || isCrossbowInfinite(stack, player);
+        boolean creative = player.capabilities.isCreativeMode;
+        boolean bowInfinite = isCrossbowInfinite(stack, player);
+
         ItemStack itemstack = this.findAmmo(player);
 
 
-        if (itemstack != null || flag) {
+        if (itemstack != null || creative || bowInfinite) {
             if (itemstack == null) {
                 itemstack = new ItemStack(Items.ARROW);
             }
@@ -119,7 +128,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
             float f = getArrowVelocity();
 
             if ((double) f >= 0.1D) {
-                boolean flag1 = player.capabilities.isCreativeMode || canArrowBeInfinite(itemstack);
+                boolean consumeArrow = !(creative || bowInfinite && canArrowBeInfinite(itemstack));
 
                 if (!world.isRemote) {
                     ItemCrossbowArrow itemarrow = itemstack.getItem() instanceof ItemCrossbowArrow ? (ItemCrossbowArrow) itemstack.getItem() : ModItems.crossbowArrow;
@@ -148,7 +157,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
                     stack.damageItem(1, player);
 
-                    if (flag1) {
+                    if (!consumeArrow) {
                         entityarrow.pickupStatus = EntityArrow.PickupStatus.CREATIVE_ONLY;
                     }
 
@@ -157,7 +166,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
                 world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.NEUTRAL, 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
 
-                if (!flag1) {
+                if (consumeArrow) {
                     --itemstack.stackSize;
 
                     if (itemstack.stackSize == 0) {

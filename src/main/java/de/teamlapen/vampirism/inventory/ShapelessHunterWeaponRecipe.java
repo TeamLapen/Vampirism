@@ -8,6 +8,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -18,16 +19,22 @@ public class ShapelessHunterWeaponRecipe implements IHunterWeaponRecipe {
 
     public final List<ItemStack> recipeItems;
     private final int requiredHunterLevel;
-    private final ISkill<IHunterPlayer> requiredHunterSkill;
+    private final ISkill<IHunterPlayer>[] requiredHunterSkills;
     private final int requiredLavaUnits;
     private final ItemStack recipeOutput;
 
-    public ShapelessHunterWeaponRecipe(List<ItemStack> recipeItems, ItemStack recipeOutput, int requiredHunterLevel, ISkill<IHunterPlayer> requiredHunterSkill, int requiredLavaUnits) {
+    public ShapelessHunterWeaponRecipe(List<ItemStack> recipeItems, ItemStack recipeOutput, int requiredHunterLevel, ISkill<IHunterPlayer>[] requiredHunterSkills, int requiredLavaUnits) {
         this.recipeItems = recipeItems;
         this.requiredHunterLevel = requiredHunterLevel;
-        this.requiredHunterSkill = requiredHunterSkill;
+        this.requiredHunterSkills = requiredHunterSkills;
         this.requiredLavaUnits = requiredLavaUnits;
         this.recipeOutput = recipeOutput;
+    }
+
+    @Nullable
+    @Override
+    public ItemStack getCraftingResult(InventoryCrafting inv) {
+        return recipeOutput.copy();
     }
 
     @Override
@@ -35,15 +42,38 @@ public class ShapelessHunterWeaponRecipe implements IHunterWeaponRecipe {
         return requiredHunterLevel;
     }
 
+    @Nullable
+    @Override
+    public ItemStack getRecipeOutput() {
+        return recipeOutput;
+    }
+
+    @Override
+    public int getRecipeSize() {
+        return recipeItems.size();
+    }
+
+    @Override
+    public ItemStack[] getRemainingItems(InventoryCrafting inv) {
+        ItemStack[] aitemstack = new ItemStack[inv.getSizeInventory()];
+
+        for (int i = 0; i < aitemstack.length; ++i) {
+            ItemStack itemstack = inv.getStackInSlot(i);
+            aitemstack[i] = net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack);
+        }
+
+        return aitemstack;
+    }
+
     @Override
     public int getRequiredLavaUnits() {
         return requiredLavaUnits;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public ISkill<IHunterPlayer> getRequiredSkill() {
-        return requiredHunterSkill;
+    public ISkill<IHunterPlayer>[] getRequiredSkills() {
+        return requiredHunterSkills;
     }
 
     @Override
@@ -73,34 +103,5 @@ public class ShapelessHunterWeaponRecipe implements IHunterWeaponRecipe {
         }
 
         return list.isEmpty();
-    }
-
-    @Nullable
-    @Override
-    public ItemStack getCraftingResult(InventoryCrafting inv) {
-        return recipeOutput.copy();
-    }
-
-    @Override
-    public int getRecipeSize() {
-        return recipeItems.size();
-    }
-
-    @Nullable
-    @Override
-    public ItemStack getRecipeOutput() {
-        return recipeOutput;
-    }
-
-    @Override
-    public ItemStack[] getRemainingItems(InventoryCrafting inv) {
-        ItemStack[] aitemstack = new ItemStack[inv.getSizeInventory()];
-
-        for (int i = 0; i < aitemstack.length; ++i) {
-            ItemStack itemstack = inv.getStackInSlot(i);
-            aitemstack[i] = net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack);
-        }
-
-        return aitemstack;
     }
 }

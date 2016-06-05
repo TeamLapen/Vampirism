@@ -77,9 +77,15 @@ public abstract class DefaultSkill<T extends ISkillPlayer> implements ISkill<T> 
 
     }
 
+    /**
+     * Called when the skill is being disabled.
+     */
     protected void onDisabled(T player) {
     }
 
+    /**
+     * Called when the skill is being enabled
+     */
     protected void onEnabled(T player) {
     }
 

@@ -165,6 +165,8 @@ text.vampirism.skill.resetall=Reset skills
 text.vampirism.skill.unlocked=Unlocked
 text.vampirism.skill.unlocks_action=Unlocks action
 text.vampirism.skill.unlock_parent_first=Unlock parent first
+
+#Vampire Skills
 text.vampirism.skill.avoided_by_creepers=Avoided by creepers
 text.vampirism.skill.blood_vision=Blood vision
 text.vampirism.skill.blood_vision.desc=Allows you to see entities through walls in the dark. Toggle with key.
@@ -179,6 +181,18 @@ text.vampirism.skill.less_sundamage=Reduce sun damage
 text.vampirism.skill.night_vision=Night Vision
 text.vampirism.skill.oxygen.desc=Use less oxygen under water
 text.vampirism.skill.oxygen=Oxygen
+
+#Hunter Skills
+text.vampirism.skill.attack_speed=Increased Attack Speed
+text.vampirism.skill.weapon_table=Hunter Weapon Table
+text.vampirism.skill.weapon_table.desc=Learn how to use the Hunter Weapon Table
+text.vampirism.skill.double_crossbow=Double It
+text.vampirism.skill.double_crossbow.desc=Unlocks Double Crossbow
+text.vampirism.skill.enhanced_crossbow=Enhanced Crossbows
+text.vampirism.skill.enhanced_crossbow.desc=Learn how to enhance your crossbows
+text.vampirism.skill.advanced_attack_speed=Attack swift as the wind
+text.vampirism.skill.advanced_attack_speed.desc=Increase your attack speed even more
+
 
 #ENTITIES
 entity.vampirism.hunter_trainer.name=Vampire Hunter Trainer
@@ -223,6 +237,10 @@ item.vampirism.battleAxe.name=Battle Axe
 item.vampirism.crossbowArrow.name=Crossbow Arrow
 item.vampirism.crossbowArrow.vampireKiller.tooltip=Instantly kills low level vampire NPCs.
 item.vampirism.crossbowArrow.vampireKiller.name=Vampire Killer Arrow
+item.vampirism.basicCrossbow.name=Crossbow
+item.vampirism.enhancedCrossbow.name=Enhanced Crossbow
+item.vampirism.basicDoubleCrossbow.name=Double Crossbow
+item.vampirism.enhancedDoubleCrossbow.name=Enhanced Double Crossbow
 
 #KEYS
 keys.vampirism.select_skills=Select Skills

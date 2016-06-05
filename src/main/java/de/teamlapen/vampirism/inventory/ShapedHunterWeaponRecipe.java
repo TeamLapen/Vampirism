@@ -7,6 +7,7 @@ import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -17,19 +18,22 @@ public class ShapedHunterWeaponRecipe implements IHunterWeaponRecipe {
     public final int recipeHeight;
     public final ItemStack[] recipeItems;
     private final int requiredHunterLevel;
-    private final ISkill<IHunterPlayer> requiredHunterSkill;
+    private final
+    @Nonnull
+    ISkill<IHunterPlayer>[] requiredHunterSkills;
     private final int requiredLavaUnits;
     private final ItemStack recipeOutput;
 
-    public ShapedHunterWeaponRecipe(int width, int height, ItemStack[] input, ItemStack output, int requiredHunterLevel, @Nullable ISkill<IHunterPlayer> requiredHunterSkill, int requiredLavaUnits) {
+    public ShapedHunterWeaponRecipe(int width, int height, ItemStack[] input, ItemStack output, int requiredHunterLevel, @Nonnull ISkill<IHunterPlayer>[] requiredHunterSkills, int requiredLavaUnits) {
         this.recipeWidth = width;
         this.recipeHeight = height;
         recipeItems = input;
         recipeOutput = output;
         this.requiredHunterLevel = requiredHunterLevel;
-        this.requiredHunterSkill = requiredHunterSkill;
+        this.requiredHunterSkills = requiredHunterSkills;
         this.requiredLavaUnits = requiredLavaUnits;
     }
+
 
     /**
      * Returns an Item that is the result of this recipe
@@ -74,10 +78,10 @@ public class ShapedHunterWeaponRecipe implements IHunterWeaponRecipe {
         return requiredLavaUnits;
     }
 
-    @Nullable
+    @Nonnull
     @Override
-    public ISkill<IHunterPlayer> getRequiredSkill() {
-        return requiredHunterSkill;
+    public ISkill<IHunterPlayer>[] getRequiredSkills() {
+        return requiredHunterSkills;
     }
 
     @Override

@@ -8,12 +8,14 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.items.IHunterWeaponCraftingManager;
 import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +33,7 @@ public class HunterWeaponCraftingManager implements IHunterWeaponCraftingManager
     private final List<IHunterWeaponRecipe> recipes = Lists.newLinkedList();
 
     @Override
-    public ShapedHunterWeaponRecipe addRecipe(ItemStack output, int reqLevel, @Nullable ISkill<IHunterPlayer> reqSkill, int reqLava, Object... recipeComponents) {
+    public IHunterWeaponRecipe addRecipe(ItemStack output, int reqLevel, @Nonnull ISkill<IHunterPlayer>[] reqSkills, int reqLava, Object... recipeComponents) {
         String s = "";
         int i = 0;
         int j = 0;
@@ -85,13 +87,42 @@ public class HunterWeaponCraftingManager implements IHunterWeaponCraftingManager
             }
         }
 
-        ShapedHunterWeaponRecipe recipe = new ShapedHunterWeaponRecipe(j, k, aitemstack, output, reqLevel, reqSkill, reqLava);
+        ShapedHunterWeaponRecipe recipe = new ShapedHunterWeaponRecipe(j, k, aitemstack, output, reqLevel, reqSkills, reqLava);
         this.recipes.add(recipe);
         return recipe;
     }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public IHunterWeaponRecipe addRecipe(ItemStack output, int reqLevel, @Nullable ISkill<IHunterPlayer> reqSkill, int reqLava, Object... recipeComponents) {
+        ISkill<IHunterPlayer>[] reqSkills;
+        if (reqSkill == null) {
+            reqSkills = new ISkill[0];
+        } else {
+            reqSkills = new ISkill[]{reqSkill};
+        }
+        return addRecipe(output, reqLevel, reqSkills, reqLava, recipeComponents);
+    }
+
+    @Override
+    public void addRecipe(IHunterWeaponRecipe recipe) {
+        this.recipes.add(recipe);
+    }
+
+    @SuppressWarnings("unchecked")
     @Override
     public IHunterWeaponRecipe addShapelessRecipe(ItemStack output, int reqLevel, @Nullable ISkill<IHunterPlayer> reqSkill, int reqLava, Object... recipeComponents) {
+        ISkill<IHunterPlayer>[] reqSkills;
+        if (reqSkill == null) {
+            reqSkills = new ISkill[0];
+        } else {
+            reqSkills = new ISkill[]{reqSkill};
+        }
+        return addRecipe(output, reqLevel, reqSkills, reqLava, recipeComponents);
+    }
+
+    @Override
+    public IHunterWeaponRecipe addShapelessRecipe(ItemStack output, int reqLevel, @Nonnull ISkill<IHunterPlayer>[] reqSkills, int reqLava, Object... recipeComponents) {
         List<ItemStack> list = Lists.newArrayList();
 
         for (Object object : recipeComponents) {
@@ -107,14 +138,9 @@ public class HunterWeaponCraftingManager implements IHunterWeaponCraftingManager
                 list.add(new ItemStack((Block) object));
             }
         }
-        IHunterWeaponRecipe recipe = new ShapelessHunterWeaponRecipe(list, output, reqLevel, reqSkill, reqLava);
+        IHunterWeaponRecipe recipe = new ShapelessHunterWeaponRecipe(list, output, reqLevel, reqSkills, reqLava);
         this.recipes.add(recipe);
         return recipe;
-    }
-
-    @Override
-    public void addRecipe(IHunterWeaponRecipe recipe) {
-        this.recipes.add(recipe);
     }
 
     @Nullable
@@ -122,7 +148,7 @@ public class HunterWeaponCraftingManager implements IHunterWeaponCraftingManager
     public IHunterWeaponRecipe findMatchingRecipe(InventoryCrafting craftMatrix, World world, int playerLevel, ISkillHandler<IHunterPlayer> skillHandler, int lava) {
         for (IHunterWeaponRecipe iRecipe : this.recipes) {
             if (iRecipe.matches(craftMatrix, world)) {
-                if (playerLevel >= iRecipe.getMinHunterLevel() && lava >= iRecipe.getRequiredLavaUnits() && (iRecipe.getRequiredSkill() == null || skillHandler.isSkillEnabled(iRecipe.getRequiredSkill()))) {
+                if (playerLevel >= iRecipe.getMinHunterLevel() && lava >= iRecipe.getRequiredLavaUnits() && Helper.areSkillsEnabled(skillHandler, iRecipe.getRequiredSkills())) {
                     return iRecipe;
                 }
             }

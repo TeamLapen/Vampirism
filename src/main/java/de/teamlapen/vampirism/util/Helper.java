@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBiomes;
@@ -110,6 +111,18 @@ public class Helper {
 
     public static boolean isHunter(EntityPlayer player) {
         return FactionPlayerHandler.get(player).isInFaction(VReference.HUNTER_FACTION);
+    }
+
+    /**
+     * @return Checks if all given skills are enabled
+     */
+    public static boolean areSkillsEnabled(ISkillHandler skillHandler, ISkill... skills) {
+        for (ISkill skill : skills) {
+            if (!skillHandler.isSkillEnabled(skill)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public static boolean isEntityInVampireBiome(Entity e) {

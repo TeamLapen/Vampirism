@@ -4,7 +4,7 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import net.minecraft.item.crafting.IRecipe;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Recipe that can be used in the hunter weapon crafting table
@@ -24,8 +24,8 @@ public interface IHunterWeaponRecipe extends IRecipe {
     int getRequiredLavaUnits();
 
     /**
-     * @return The skill that has to be unlocked to craft this or null if none is required
+     * @return The skills that have to be unlocked to craft this. Can be empty
      */
-    @Nullable
-    ISkill<IHunterPlayer> getRequiredSkill();
+    @Nonnull
+    ISkill<IHunterPlayer>[] getRequiredSkills();
 }
