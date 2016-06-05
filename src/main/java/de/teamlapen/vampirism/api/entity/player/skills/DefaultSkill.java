@@ -5,7 +5,6 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.ResourceLocation;
 
 import java.util.*;
 
@@ -18,10 +17,6 @@ public abstract class DefaultSkill<T extends ISkillPlayer> implements ISkill<T> 
     private int renderRow;
     private int renderColumn;
 
-    @Override
-    public ResourceLocation getIconLoc() {
-        return null;
-    }
 
     @Override
     public int getRenderColumn() {
@@ -33,10 +28,6 @@ public abstract class DefaultSkill<T extends ISkillPlayer> implements ISkill<T> 
         return renderRow;
     }
 
-    @Override
-    public String getUnlocDescription() {
-        return null;
-    }
 
     @Override
     public final void onDisable(T player) {

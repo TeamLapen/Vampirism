@@ -25,6 +25,9 @@ public class BalanceGeneral extends BalanceValues {
     @DefaultBoolean(value = true, alternateValue = false, hasAlternate = true, comment = "If the sanguinare effect can be canceled by a milk bucket")
     public boolean CAN_CANCEL_SANGUINARE;
 
+    @DefaultInt(value = 40, alternateValue = 50, hasAlternate = true, comment = "The vampire killer arrow can only instant kill NPC vampires that have a max (not actual) health of this")
+    public int ARROW_VAMPIRE_KILLER_MAX_HEALTH;
+
     /**
      * Creates a configuration for balance values
      *

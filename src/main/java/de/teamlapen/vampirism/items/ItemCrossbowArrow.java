@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
+import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -25,66 +26,6 @@ public class ItemCrossbowArrow extends VampirismItem {
 
     private static final String regName = "crossbowArrow";
 
-    public ItemCrossbowArrow() {
-        super(regName);
-    }
-
-    /**
-     * @param stack        Is copied by {@link EntityCrossbowArrow}
-     * @param heightOffset An height offset for the position the entity is created
-     * @return An arrow entity at the players position using the given itemstack
-     */
-    public EntityCrossbowArrow createEntity(ItemStack stack, World world, EntityPlayer player, double heightOffset) {
-        EntityCrossbowArrow entity = new EntityCrossbowArrow(world, player, heightOffset, stack);
-        EnumArrowType type = getType(stack);
-        entity.setDamage(type.baseDamage);
-        return entity;
-    }
-
-
-    @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
-        for (EnumArrowType type : EnumArrowType.values()) {
-            subItems.add(setType(new ItemStack(itemIn), type));
-        }
-    }
-
-    /**
-     * @return If an arrow of this type can be used in an infinite crossbow
-     */
-    public boolean isCanBeInfinite(ItemStack stack) {
-        EnumArrowType type = getType(stack);
-        return type != EnumArrowType.VAMPIRE_KILLER;
-    }
-
-    @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        EnumArrowType type = getType(stack);
-        if (type != EnumArrowType.NORMAL) {
-            tooltip.add(UtilLib.translateToLocal("item.vampirism." + regName + "." + type.name + ".tooltip"));
-        }
-    }
-
-    /**
-     * Called when the {@link EntityCrossbowArrow} hits an entity
-     *
-     * @param arrow          The itemstack of the shot arrow
-     * @param entity         The hit entity
-     * @param arrowEntity    The arrow entity
-     * @param shootingEntity The shooting entity. Can be the arrow entity itself
-     */
-    public void onHitEntity(ItemStack arrow, EntityLivingBase entity, EntityArrow arrowEntity, Entity shootingEntity) {
-        EnumArrowType type = getType(arrow);
-        if (type == EnumArrowType.VAMPIRE_KILLER) {
-            if (entity instanceof IVampireMob) {
-                float max = entity.getMaxHealth();
-                if (max < 40) {
-                    entity.attackEntityFrom(DamageSource.causeArrowDamage(arrowEntity, shootingEntity), max);
-                }
-            }
-        }
-    }
-
     /**
      * @return The {@link EnumArrowType} of this stack
      */
@@ -104,7 +45,6 @@ public class ItemCrossbowArrow extends VampirismItem {
         return EnumArrowType.NORMAL;
     }
 
-
     /**
      * Set's the {@link EnumArrowType} of the stack
      *
@@ -117,13 +57,74 @@ public class ItemCrossbowArrow extends VampirismItem {
         nbt.setString("type", type.name);
         stack.setTagCompound(nbt);
         return stack;
-    }    @Override
+    }
+
+
+    public ItemCrossbowArrow() {
+        super(regName);
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+        EnumArrowType type = getType(stack);
+        if (type != EnumArrowType.NORMAL) {
+            tooltip.add(UtilLib.translateToLocal("item.vampirism." + regName + "." + type.name + ".tooltip"));
+        }
+    }
+
+    /**
+     * @param stack        Is copied by {@link EntityCrossbowArrow}
+     * @param heightOffset An height offset for the position the entity is created
+     * @return An arrow entity at the players position using the given itemstack
+     */
+    public EntityCrossbowArrow createEntity(ItemStack stack, World world, EntityPlayer player, double heightOffset) {
+        EntityCrossbowArrow entity = new EntityCrossbowArrow(world, player, heightOffset, stack);
+        EnumArrowType type = getType(stack);
+        entity.setDamage(type.baseDamage);
+        return entity;
+    }
+
+    @Override
     public String getItemStackDisplayName(ItemStack stack) {
         EnumArrowType type = getType(stack);
         if (type != EnumArrowType.NORMAL) {
             return UtilLib.translateToLocal("item.vampirism." + regName + "." + type.name + ".name");
         }
         return super.getItemStackDisplayName(stack);
+    }
+
+    @Override
+    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+        for (EnumArrowType type : EnumArrowType.values()) {
+            subItems.add(setType(new ItemStack(itemIn), type));
+        }
+    }
+
+    /**
+     * @return If an arrow of this type can be used in an infinite crossbow
+     */
+    public boolean isCanBeInfinite(ItemStack stack) {
+        EnumArrowType type = getType(stack);
+        return type != EnumArrowType.VAMPIRE_KILLER;
+    }
+    /**
+     * Called when the {@link EntityCrossbowArrow} hits an entity
+     *
+     * @param arrow          The itemstack of the shot arrow
+     * @param entity         The hit entity
+     * @param arrowEntity    The arrow entity
+     * @param shootingEntity The shooting entity. Can be the arrow entity itself
+     */
+    public void onHitEntity(ItemStack arrow, EntityLivingBase entity, EntityArrow arrowEntity, Entity shootingEntity) {
+        EnumArrowType type = getType(arrow);
+        if (type == EnumArrowType.VAMPIRE_KILLER) {
+            if (entity instanceof IVampireMob) {
+                float max = entity.getMaxHealth();
+                if (max < Balance.general.ARROW_VAMPIRE_KILLER_MAX_HEALTH) {
+                    entity.attackEntityFrom(DamageSource.causeArrowDamage(arrowEntity, shootingEntity), max);
+                }
+            }
+        }
     }
 
     private enum EnumArrowType {

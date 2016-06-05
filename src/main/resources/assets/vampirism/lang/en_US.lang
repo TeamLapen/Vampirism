@@ -167,22 +167,24 @@ text.vampirism.skill.unlocks_action=Unlocks action
 text.vampirism.skill.unlock_parent_first=Unlock parent first
 
 #Vampire Skills
+text.vampirism.skill.root_vampire=Becoming a vampire
 text.vampirism.skill.avoided_by_creepers=Avoided by creepers
-text.vampirism.skill.blood_vision=Blood vision
-text.vampirism.skill.blood_vision.desc=Allows you to see entities through walls in the dark. Toggle with key.
+text.vampirism.skill.1bloodvision=Blood vision
+text.vampirism.skill.1bloodvision.desc=Allows you to see entities through walls in the dark. Toggle with key.
 text.vampirism.skill.poisonous_bite=Poisonous Teeth
 text.vampirism.skill.poisonous_bite.desc=Poisons the creatures you bite
 text.vampirism.skill.more_bite_damage=Hardened Teeth
 text.vampirism.skill.more_bite_damage.desc=Deal more damage when biting
-text.vampirism.skill.less_bloodthirst=Frugal vampire
-text.vampirism.skill.less_bloodthirst.desc=Decreases your thirst for blood
+text.vampirism.skill.2lessbloodthirst=Frugal vampire
+text.vampirism.skill.2lessbloodthirst.desc=Decreases your thirst for blood
 text.vampirism.skill.less_garlicdamage=Reduce garlic damage
 text.vampirism.skill.less_sundamage=Reduce sun damage
 text.vampirism.skill.night_vision=Night Vision
-text.vampirism.skill.oxygen.desc=Use less oxygen under water
-text.vampirism.skill.oxygen=Oxygen
+text.vampirism.skill.disguise=Disguise
+
 
 #Hunter Skills
+text.vampirism.skill.root_hunter=Becoming an hunter
 text.vampirism.skill.attack_speed=Increased Attack Speed
 text.vampirism.skill.weapon_table=Hunter Weapon Table
 text.vampirism.skill.weapon_table.desc=Learn how to use the Hunter Weapon Table
@@ -192,6 +194,11 @@ text.vampirism.skill.enhanced_crossbow=Enhanced Crossbows
 text.vampirism.skill.enhanced_crossbow.desc=Learn how to enhance your crossbows
 text.vampirism.skill.advanced_attack_speed=Attack swift as the wind
 text.vampirism.skill.advanced_attack_speed.desc=Increase your attack speed even more
+text.vampirism.skill.stake1=How to use a stake
+text.vampirism.skill.stake1.desc=Instantly kill any vampire that has below %s percent of his max health with a stake
+text.vampirism.skill.stake2=How to actually use a stake
+text.vampirism.skill.stake2.desc_all=Instantly kill any vampire from behind with a stake as long as his max health is below %s
+text.vampirism.skill.stake2.desc_npc=Instantly kill any vampire NPC from behind with a stake as long as his max health is below %s
 
 
 #ENTITIES
@@ -220,7 +227,8 @@ tile.vampirism.bloodContainer.name=Blood Container
 tile.vampirism.medChair.name=Injection Chair
 tile.vampirism.vampire_orchid.name=Vampire Orchid
 tile.vampirism.firePlace.name=Fire Place
-tile.vampirism.hunter.weaponTable.name=Hunter Weapon Table
+tile.vampirism.weaponTable.name=Hunter Weapon Table
+tile.vampirism.weaponTable.cannot_use=You have not learned how to use this
 
 
 #ITEMS
@@ -241,6 +249,7 @@ item.vampirism.basicCrossbow.name=Crossbow
 item.vampirism.enhancedCrossbow.name=Enhanced Crossbow
 item.vampirism.basicDoubleCrossbow.name=Double Crossbow
 item.vampirism.enhancedDoubleCrossbow.name=Enhanced Double Crossbow
+item.vampirism.stake.name=Stake
 
 #KEYS
 keys.vampirism.select_skills=Select Skills
@@ -271,3 +280,4 @@ text.vampirism.can_only_be_used_with_skill=This can only be used with skill: %s
 text.vampirism.need_item_to_use=You need %s to use this
 text.vampirism.immune_to_=You are immune to
 text.vampirism.required_skill=Required Skill: %s
+text.vampirism.from_behind=From behind.

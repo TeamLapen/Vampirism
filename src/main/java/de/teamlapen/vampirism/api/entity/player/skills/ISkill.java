@@ -12,7 +12,7 @@ import javax.annotation.Nullable;
 public interface ISkill<T extends ISkillPlayer> {
 
     /**
-     * @return Unique id
+     * @return Unique lowercase id
      */
     String getID();
 
@@ -24,6 +24,14 @@ public interface ISkill<T extends ISkillPlayer> {
     @SideOnly(Side.CLIENT)
     @Nullable
     ResourceLocation getIconLoc();
+
+    /**
+     * The description for this skill. Can be null
+     *
+     * @return
+     */
+    @SideOnly(Side.CLIENT)
+    String getLocalizedDescription();
 
     /**
      * Should return the min U texture coordinate within the icon map
@@ -46,14 +54,6 @@ public interface ISkill<T extends ISkillPlayer> {
 
     @SideOnly(Side.CLIENT)
     int getRenderRow();
-
-    /**
-     * The description for this skill. Can be null
-     *
-     * @return
-     */
-    @SideOnly(Side.CLIENT)
-    String getUnlocDescription();
 
     String getUnlocalizedName();
 

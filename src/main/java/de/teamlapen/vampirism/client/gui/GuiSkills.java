@@ -463,11 +463,7 @@ public class GuiSkills extends GuiScreen {
             int m2MouseY = mouseY - 4;
 
             String name = I18n.format(selected.getUnlocalizedName());
-            String desc = selected.getUnlocDescription();
-            if (desc != null) {
-                desc = I18n.format(desc);
-            }
-
+            String desc = selected.getLocalizedDescription();
             ISkillHandler.Result result = skillHandler.canSkillBeEnabled(selected);
 
             int width_name = Math.max(this.fontRendererObj.getStringWidth(name), 110);

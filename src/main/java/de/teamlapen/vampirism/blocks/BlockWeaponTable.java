@@ -1,7 +1,11 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyInteger;
@@ -15,6 +19,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -22,6 +27,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 
 public class BlockWeaponTable extends VampirismBlock {
@@ -35,6 +41,11 @@ public class BlockWeaponTable extends VampirismBlock {
         this.setDefaultState(this.blockState.getBaseState().withProperty(LAVA, 0));
 
 
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+        super.addInformation(stack, player, tooltip, advanced);
     }
 
     @Override
@@ -95,8 +106,12 @@ public class BlockWeaponTable extends VampirismBlock {
                 }
             }
             if (!flag) {
-                playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_WEAPON_TABLE, worldIn, pos.getX(), pos.getY(), pos.getZ());
 
+                if (canUse(playerIn))
+                    playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_WEAPON_TABLE, worldIn, pos.getX(), pos.getY(), pos.getZ());
+                else {
+                    playerIn.addChatComponentMessage(new TextComponentTranslation("tile.vampirism." + regName + ".cannot_use"));
+                }
             }
         }
         return true;
@@ -105,5 +120,18 @@ public class BlockWeaponTable extends VampirismBlock {
     @Override
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, LAVA);
+    }
+
+    /**
+     * @return If the given player is allowed to use this.
+     */
+    private boolean canUse(EntityPlayer player) {
+        IPlayableFaction faction = FactionPlayerHandler.get(player).getCurrentFaction();
+        if (faction != null && faction.equals(VReference.HUNTER_FACTION)) {
+            if (faction.getPlayerCapability(player).getSkillHandler().isSkillEnabled(HunterSkills.weaponTable)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

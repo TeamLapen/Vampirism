@@ -1,0 +1,180 @@
+{
+  "__comment": "Designed by Maxanier",
+  "textures": {
+    "texture": "blocks/planks_spruce"
+  },
+  "elements": [
+    {
+      "from": [
+        7,
+        0,
+        0
+      ],
+      "to": [
+        9,
+        2,
+        16
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            9,
+            16,
+            7,
+            0
+          ],
+          "texture": "#texture"
+        },
+        "up": {
+          "uv": [
+            7,
+            0,
+            9,
+            16
+          ],
+          "texture": "#texture"
+        },
+        "north": {
+          "uv": [
+            7,
+            14,
+            9,
+            16
+          ],
+          "texture": "#texture"
+        },
+        "south": {
+          "uv": [
+            7,
+            14,
+            9,
+            16
+          ],
+          "texture": "#texture"
+        },
+        "west": {
+          "uv": [
+            0,
+            14,
+            16,
+            16
+          ],
+          "texture": "#texture"
+        },
+        "east": {
+          "uv": [
+            0,
+            14,
+            16,
+            16
+          ],
+          "texture": "#texture"
+        }
+      }
+    }
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        -101,
+        -7,
+        -6
+      ],
+      "translation": [
+        0.9,
+        0.94,
+        -3.1
+      ],
+      "scale": [
+        0.72,
+        0.76,
+        0.66
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        -101,
+        -7,
+        -6
+      ],
+      "translation": [
+        0.9,
+        0.94,
+        -3.1
+      ],
+      "scale": [
+        0.72,
+        0.76,
+        0.66
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        -90,
+        -45,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        -6.99
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        28,
+        16,
+        26
+      ],
+      "translation": [
+        6.99,
+        -2.08,
+        -9.83
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        28,
+        16,
+        26
+      ],
+      "translation": [
+        6.99,
+        -2.08,
+        -9.83
+      ],
+      "scale": [
+        1.5,
+        1.5,
+        1.5
+      ]
+    },
+    "gui": {
+      "rotation": [
+        -89,
+        -37,
+        -157
+      ],
+      "translation": [
+        2.46,
+        0.94,
+        0.76
+      ],
+      "scale": [
+        0.75,
+        0.75,
+        0.75
+      ]
+    }
+  }
+}

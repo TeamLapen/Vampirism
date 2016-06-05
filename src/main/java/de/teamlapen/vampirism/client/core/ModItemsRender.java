@@ -46,5 +46,6 @@ public class ModItemsRender {
         renderHelper.registerRender(ModItems.basicDoubleCrossbow, "normal");
         renderHelper.registerRender(ModItems.enhancedCrossbow, "normal");
         renderHelper.registerRender(ModItems.enhancedDoubleCrossbow, "normal");
+        renderHelper.registerRender(ModItems.stake, "normal");
     }
 }

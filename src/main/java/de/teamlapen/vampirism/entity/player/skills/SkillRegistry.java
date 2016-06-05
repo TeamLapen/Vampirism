@@ -4,7 +4,6 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import de.teamlapen.vampirism.api.entity.player.skills.DefaultSkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillRegistry;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillNode;
@@ -77,7 +76,7 @@ public class SkillRegistry implements ISkillRegistry {
         for (final IPlayableFaction faction : VampirismAPI.factionRegistry().getPlayableFactions()) {
             SkillNode rootNode = rootNodes.get(faction);
             if (rootNode == null) {
-                rootNode = new SkillNode(faction, new DefaultSkill() {
+                rootNode = new SkillNode(faction, new VampirismSkill() {
 
 
                     @Override
