@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.actions.ActionHandler;
 import de.teamlapen.vampirism.entity.player.skills.SkillHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.inventory.BloodPotionTableContainer;
 import de.teamlapen.vampirism.inventory.HunterTrainerContainer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -29,15 +30,16 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 public class InputEventPacket implements IMessage {
 
 
+    public static final String SUCKBLOOD = "sb";
+    public static final String TOGGLEACTION = "ta";
+    public static final String UNLOCKSKILL = "us";
+    public static final String RESETSKILL = "rs";
+    public static final String TRAINERLEVELUP = "tl";
+    public static final String REVERTBACK = "rb";
+    public static final String WAKEUP = "wu";
+    public static final String VAMPIRE_VISION_TOGGLE = "vvt";
+    public static final String BLOODPOTIONCRAFT = "cb";
     private final static String TAG = "InputEventPacket";
-    public static String SUCKBLOOD = "sb";
-    public static String TOGGLEACTION = "ta";
-    public static String UNLOCKSKILL = "us";
-    public static String RESETSKILL = "rs";
-    public static String TRAINERLEVELUP = "tl";
-    public static String REVERTBACK = "rb";
-    public static String WAKEUP = "wu";
-    public static String VAMPIRE_VISION_TOGGLE = "vvt";
     private final String SPLIT = "-";
     private String param;
     private String action;
@@ -177,6 +179,10 @@ public class InputEventPacket implements IMessage {
                 VampirePlayer.get(player).wakeUpPlayer(false, true, true);
             } else if (message.action.equals(VAMPIRE_VISION_TOGGLE)) {
                 VampirePlayer.get(player).switchVision();
+            } else if (message.action.equals(BLOODPOTIONCRAFT)) {
+                if (player.openContainer != null && player.openContainer instanceof BloodPotionTableContainer) {
+                    ((BloodPotionTableContainer) player.openContainer).onCraftingClicked();
+                }
             }
             return null;
         }

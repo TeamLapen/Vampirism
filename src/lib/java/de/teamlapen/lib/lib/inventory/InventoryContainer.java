@@ -6,6 +6,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nullable;
+
 /**
  * Used for handling the item exchange between player and block inventory. Should be created with InventoryTileEntity.getNewInventoryContainer()
  *
@@ -91,8 +93,8 @@ public class InventoryContainer extends Container {
         }
 
         @Override
-        public boolean isItemValid(ItemStack stack) {
-            if (selector != null) {
+        public boolean isItemValid(@Nullable ItemStack stack) {
+            if (selector != null && stack != null) {
                 return selector.isItemAllowed(stack);
             }
             return true;

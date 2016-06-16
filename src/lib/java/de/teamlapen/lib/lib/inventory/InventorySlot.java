@@ -4,6 +4,8 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 /**
  * Used for inventory slot description as well as for storing the actual inventory
  * Allows setting a item selector to restrict the item types that can co in here
@@ -51,7 +53,7 @@ public class InventorySlot {
          * @param item
          * @return whether the item is allowed or not
          */
-        boolean isItemAllowed(ItemStack item);
+        boolean isItemAllowed(@Nonnull ItemStack item);
     }
 
     /**

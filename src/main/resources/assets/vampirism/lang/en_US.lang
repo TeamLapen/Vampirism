@@ -264,6 +264,7 @@ achievement.vampirism.becoming_vampire
 gui.vampirism.hunter_weapon_table=Hunter Weapon Table
 gui.vampirism.hunter_weapon_table.level=Required Hunter Level: %s
 gui.vampirism.hunter_weapon_table.skill=Required Skill: %s
+gui.vampirism.blood_potion_table.create=Craft Potion
 
 #ETC
 text.vampirism.vampire=Vampire
