@@ -87,8 +87,8 @@ public class InventoryContainer extends Container {
     public static class FilterSlot extends net.minecraft.inventory.Slot {
         InventorySlot.IItemSelector selector;
 
-        public FilterSlot(IInventory p_i1824_1_, int p_i1824_2_, int p_i1824_3_, int p_i1824_4_, InventorySlot.IItemSelector selector) {
-            super(p_i1824_1_, p_i1824_2_, p_i1824_3_, p_i1824_4_);
+        public FilterSlot(IInventory inventory, int index, int xPosition, int yPosition, InventorySlot.IItemSelector selector) {
+            super(inventory, index, xPosition, yPosition);
             this.selector = selector;
         }
 

@@ -48,5 +48,6 @@ public class ModItemsRender {
         renderHelper.registerRender(ModItems.enhancedDoubleCrossbow, "normal");
         renderHelper.registerRender(ModItems.stake, "normal");
         renderHelper.registerRender(ModItems.vampireBlood, "normal");
+        renderHelper.registerRender(ModItems.bloodPotion, "normal");
     }
 }

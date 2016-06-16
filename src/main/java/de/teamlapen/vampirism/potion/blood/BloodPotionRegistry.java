@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.items.IBloodPotionCategory;
 import de.teamlapen.vampirism.api.items.IBloodPotionEffect;
+import de.teamlapen.vampirism.api.items.IBloodPotionPropertyRandomizer;
 import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
@@ -66,18 +67,23 @@ public class BloodPotionRegistry implements IBloodPotionRegistry {
     public IBloodPotionEffect getRandomEffect(@Nullable ItemStack item, boolean bad, Random rnd) {
         List<WeightedEffect> effects = Lists.newArrayList();
         List<BloodPotionCategory> categories = bad ? categoriesBad : categoriesGood;
+
         for (BloodPotionCategory category : categories) {
-            boolean match = category.containsItem(item);
-            for (WeightedEffect effect : category.getEffectsCopy()) {
-                if (match) effect.itemWeight *= 5;
-                effects.add(effect);
+            if (item != null && category.containsItem(item)) {
+                for (WeightedEffect effect : category.getEffectsCopy()) {
+                    effect.itemWeight *= 5;
+                    effects.add(effect);
+                }
+            } else {
+                effects.addAll(category.getEffectsCopy());
             }
+
         }
         return WeightedRandom.getRandomItem(rnd, effects).effect;
     }
 
     @Override
-    public IBloodPotionEffect registerPotionEffect(String id, IBloodPotionCategory category, boolean isBad, Potion potion, int weight, IBloodPotionEffect.IPropertyRandomizer randomizer) {
+    public IBloodPotionEffect registerPotionEffect(String id, IBloodPotionCategory category, boolean isBad, Potion potion, int weight, IBloodPotionPropertyRandomizer randomizer) {
         if (allEffects.containsKey(id)) {
             throw new IllegalArgumentException("Blood Potion Effect with id " + id + " is already registered: " + allEffects.get(id));
         }

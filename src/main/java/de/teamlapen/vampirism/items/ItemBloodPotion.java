@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.potion.blood.BloodPotions;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +19,7 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * Item blo
+ * Item blood potion
  */
 public class ItemBloodPotion extends VampirismItem {
     private final static String regName = "bloodPotion";
@@ -48,9 +50,12 @@ public class ItemBloodPotion extends VampirismItem {
         return true;
     }
 
+
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-        playerIn.setActiveHand(hand);
+        if (FactionPlayerHandler.get(playerIn).isInFaction(VReference.HUNTER_FACTION)) {
+            playerIn.setActiveHand(hand);
+        }
         return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
     }
 

@@ -80,7 +80,7 @@ public interface IBloodPotionRegistry {
      * @param propertyRandomizer randomizer for duration and amplifier
      * @return The created wrapper
      */
-    IBloodPotionEffect registerPotionEffect(String id, IBloodPotionCategory category, boolean isBad, Potion potion, int weight, IBloodPotionEffect.IPropertyRandomizer propertyRandomizer);
+    IBloodPotionEffect registerPotionEffect(String id, IBloodPotionCategory category, boolean isBad, Potion potion, int weight, IBloodPotionPropertyRandomizer propertyRandomizer);
 
     class WeightedEffect extends WeightedRandom.Item {
         public final IBloodPotionEffect effect;

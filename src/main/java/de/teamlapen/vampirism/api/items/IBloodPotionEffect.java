@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.items;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.Random;
 
@@ -20,42 +21,20 @@ public interface IBloodPotionEffect {
     String getLocName(int duration, int amplifier);
 
     /**
-     * Randomly selects duration and amplifier
+     * Randomly selects duration and amplifier etc
      *
-     * @param rnd
-     * @return An array with [0]duration and [1]amplifier
+     * @param rng
+     * @return A nbt tag containing all properties which can be used to store the effect with the item
      */
-    int[] getRandomProperties(Random rnd);
+    NBTTagCompound getRandomProperties(Random rng);
 
     boolean isBad();
 
     /**
      * Called when this effect is activated
+     * @param propertyNbt The nbt tag created in {@link IBloodPotionEffect#getRandomProperties(Random)}
      */
-    void onActivated(EntityLivingBase hunter, int duration, int amplifier);
+    void onActivated(EntityLivingBase hunter, NBTTagCompound propertyNbt);
 
-    interface IPropertyRandomizer {
-        /**
-         * Randomly selects duration and amplifier
-         *
-         * @param rnd
-         * @return An array with [0]duration and [1]amplifier
-         */
-        int[] getRandomProperties(Random rnd);
-    }
 
-    class SimpleRandomizer implements IPropertyRandomizer {
-        private final int minDuration, maxDuration, amplifier;
-
-        public SimpleRandomizer(int minDuration, int maxDuration, int amplifier) {
-            this.minDuration = minDuration;
-            this.maxDuration = maxDuration;
-            this.amplifier = amplifier;
-        }
-
-        @Override
-        public int[] getRandomProperties(Random rnd) {
-            return new int[]{(minDuration + rnd.nextInt(maxDuration - minDuration) + 1), amplifier};
-        }
-    }
 }

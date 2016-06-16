@@ -41,6 +41,7 @@ import de.teamlapen.vampirism.modcompat.waila.WailaModCompat;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.potion.blood.BloodPotionRegistry;
+import de.teamlapen.vampirism.potion.blood.BloodPotions;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.GeneralRegistryImpl;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -137,6 +138,7 @@ public class VampirismMod {
         HelperRegistry.registerSyncablePlayerCapability(FactionPlayerHandler.CAP, REFERENCE.FACTION_PLAYER_HANDLER_KEY, FactionPlayerHandler.class);
         Achievements.registerAchievement();
         SupporterManager.getInstance().initAsync();
+        BloodPotions.register();
         proxy.onInitStep(IInitListener.Step.INIT, event);
         modCompatLoader.onInitStep(IInitListener.Step.INIT, event);
 

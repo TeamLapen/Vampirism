@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.potion.blood;
 
 import de.teamlapen.vampirism.api.items.IBloodPotionEffect;
+import de.teamlapen.vampirism.api.items.IBloodPotionPropertyRandomizer;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
@@ -13,9 +15,9 @@ class BloodPotionEffect implements IBloodPotionEffect {
     private final String id;
     private final Potion potion;
     private final boolean isBad;
-    private final IPropertyRandomizer propertyRandomizer;
+    private final IBloodPotionPropertyRandomizer propertyRandomizer;
 
-    BloodPotionEffect(String id, Potion potion, boolean isBad, int weight, IPropertyRandomizer propertyRandomizer) {
+    BloodPotionEffect(String id, Potion potion, boolean isBad, int weight, IBloodPotionPropertyRandomizer propertyRandomizer) {
         this.id = id;
         this.potion = potion;
         this.isBad = isBad;
@@ -33,8 +35,8 @@ class BloodPotionEffect implements IBloodPotionEffect {
     }
 
     @Override
-    public int[] getRandomProperties(Random rnd) {
-        return propertyRandomizer.getRandomProperties(rnd);
+    public NBTTagCompound getRandomProperties(Random rng) {
+        return propertyRandomizer.getRandomProperties(rng);
     }
 
     @Override
@@ -43,8 +45,8 @@ class BloodPotionEffect implements IBloodPotionEffect {
     }
 
     @Override
-    public void onActivated(EntityLivingBase hunter, int duration, int amplifier) {
-        hunter.addPotionEffect(new PotionEffect(potion, duration, amplifier));
+    public void onActivated(EntityLivingBase hunter, NBTTagCompound nbt) {
+        hunter.addPotionEffect(new PotionEffect(potion, nbt.getInteger("duration"), nbt.getInteger("amplifier")));
     }
 
     @Override
