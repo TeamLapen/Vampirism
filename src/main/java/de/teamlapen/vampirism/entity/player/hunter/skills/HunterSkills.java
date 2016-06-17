@@ -42,6 +42,16 @@ public class HunterSkills {
             return desc;
         }
     };
+    public static final ISkill<IHunterPlayer> bloodPotionTable = new VampirismSkill.SimpleHunterSkill("blood_potion_table", 0, 0, true);
+    public static final ISkill<IHunterPlayer> bloodPotion_lessBad = new VampirismSkill.SimpleHunterSkill("blood_potion_less_bad", 0, 0, true);
+    public static final ISkill<IHunterPlayer> bloodPotion_goodOrBad = new VampirismSkill.SimpleHunterSkill("blood_potion_good_or_bad", 0, 0, true);
+    public static final ISkill<IHunterPlayer> bloodPotion_identifySome = new VampirismSkill.SimpleHunterSkill("blood_potion_identify_some", 0, 0, true);
+    public static final ISkill<IHunterPlayer> bloodPotion_categoryHint = new VampirismSkill.SimpleHunterSkill("blood_potion_category_hint", 0, 0, true);
+    public static final ISkill<IHunterPlayer> bloodPotion_lessBad2 = new VampirismSkill.SimpleHunterSkill("blood_potion_less_bad_2", 0, 0, true);
+    public static final ISkill<IHunterPlayer> bloodPotion_fasterCrafting = new VampirismSkill.SimpleHunterSkill("blood_potion_faster_crafting", 0, 0, false);
+    public static final ISkill<IHunterPlayer> bloodPotion_portableCrafting = new VampirismSkill.SimpleHunterSkill("blood_potion_portable_crafting", 0, 0, true);
+    public static final ISkill<IHunterPlayer> bloodPotion_increaseDuration = new VampirismSkill.SimpleHunterSkill("blood_potion_duration", 0, 0, true);
+
 
     public static void registerHunterSkills() {
         ISkillRegistry registry = VampirismAPI.skillRegistry();
@@ -68,7 +78,11 @@ public class HunterSkills {
     }
 
     private static void registerAlchemySkills(SkillNode root) {
-        ISkill<IHunterPlayer> s = new VampirismSkill.SimpleHunterSkill("1nothing", 0, 0, false);
-        SkillNode skill5 = new SkillNode(root, s);
+        SkillNode skill5 = new SkillNode(root, bloodPotionTable);
+        SkillNode skill6 = new SkillNode(skill5, bloodPotion_lessBad, bloodPotion_goodOrBad);
+        SkillNode skill7 = new SkillNode(skill6, bloodPotion_fasterCrafting, bloodPotion_categoryHint);
+        SkillNode skill8 = new SkillNode(skill7, bloodPotion_increaseDuration);
+        SkillNode skill9 = new SkillNode(skill8, bloodPotion_portableCrafting);
+        SkillNode skill10 = new SkillNode(skill9, bloodPotion_lessBad2, bloodPotion_identifySome);
     }
 }

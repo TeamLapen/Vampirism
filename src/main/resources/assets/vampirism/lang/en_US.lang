@@ -229,6 +229,7 @@ tile.vampirism.vampire_orchid.name=Vampire Orchid
 tile.vampirism.firePlace.name=Fire Place
 tile.vampirism.weaponTable.name=Hunter Weapon Table
 tile.vampirism.weaponTable.cannot_use=You have not learned how to use this
+tile.vampirism.bloodPotionTable.cannot_use=You have not leared how to use this
 
 
 #ITEMS
@@ -250,6 +251,8 @@ item.vampirism.enhancedCrossbow.name=Enhanced Crossbow
 item.vampirism.basicDoubleCrossbow.name=Double Crossbow
 item.vampirism.enhancedDoubleCrossbow.name=Enhanced Double Crossbow
 item.vampirism.stake.name=Stake
+item.vampirism.vampireBloodBottle.name=Vampire Blood
+item.vampirism.bloodPotion.name=Blood Potion
 
 #KEYS
 keys.vampirism.select_skills=Select Skills
@@ -264,7 +267,7 @@ achievement.vampirism.becoming_vampire
 gui.vampirism.hunter_weapon_table=Hunter Weapon Table
 gui.vampirism.hunter_weapon_table.level=Required Hunter Level: %s
 gui.vampirism.hunter_weapon_table.skill=Required Skill: %s
-gui.vampirism.blood_potion_table.create=Craft Potion
+gui.vampirism.blood_potion_table.create=Start Crafting
 
 #ETC
 text.vampirism.vampire=Vampire
@@ -282,3 +285,4 @@ text.vampirism.need_item_to_use=You need %s to use this
 text.vampirism.immune_to_=You are immune to
 text.vampirism.required_skill=Required Skill: %s
 text.vampirism.from_behind=From behind.
+text.vampirism.unknown=Unknown

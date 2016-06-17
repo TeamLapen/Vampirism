@@ -18,7 +18,7 @@ public interface IBloodPotionEffect {
     /**
      * @return The localized name
      */
-    String getLocName(int duration, int amplifier);
+    String getLocName(NBTTagCompound properties);
 
     /**
      * Randomly selects duration and amplifier etc
@@ -33,8 +33,9 @@ public interface IBloodPotionEffect {
     /**
      * Called when this effect is activated
      * @param propertyNbt The nbt tag created in {@link IBloodPotionEffect#getRandomProperties(Random)}
+     * @param durationMult The duration should be multiplied with this value
      */
-    void onActivated(EntityLivingBase hunter, NBTTagCompound propertyNbt);
+    void onActivated(EntityLivingBase hunter, NBTTagCompound propertyNbt, float durationMult);
 
 
 }

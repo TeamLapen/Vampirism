@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.potion.blood;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.items.IBloodPotionEffect;
 import de.teamlapen.vampirism.api.items.IBloodPotionPropertyRandomizer;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,8 +31,8 @@ class BloodPotionEffect implements IBloodPotionEffect {
     }
 
     @Override
-    public String getLocName(int duration, int amplifier) {
-        return potion.getName();
+    public String getLocName(NBTTagCompound properties) {
+        return UtilLib.translateToLocal(potion.getName());
     }
 
     @Override
@@ -45,8 +46,8 @@ class BloodPotionEffect implements IBloodPotionEffect {
     }
 
     @Override
-    public void onActivated(EntityLivingBase hunter, NBTTagCompound nbt) {
-        hunter.addPotionEffect(new PotionEffect(potion, nbt.getInteger("duration"), nbt.getInteger("amplifier")));
+    public void onActivated(EntityLivingBase hunter, NBTTagCompound nbt, float durationMult) {
+        hunter.addPotionEffect(new PotionEffect(potion, (int) (nbt.getInteger("duration") * durationMult), nbt.getInteger("amplifier")));
     }
 
     @Override

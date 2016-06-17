@@ -30,13 +30,14 @@ public class GuiBloodPotionTable extends GuiContainer {
     @Override
     public void initGui() {
         super.initGui();
-        this.buttonList.add(this.craftBtn = new GuiButton(0, 160, 55, 80, 20, UtilLib.translateToLocal("gui.vampirism.blood_potion_table.create")));
+        this.buttonList.add(this.craftBtn = new GuiButton(0, this.width / 2 - 77, this.height / 2 - 78, 80, 20, UtilLib.translateToLocal("gui.vampirism.blood_potion_table.create")));
+        craftBtn.enabled = false;
     }
 
     @Override
     public void updateScreen() {
         super.updateScreen();
-        this.craftBtn.enabled = container.canCurrentlyCraft();
+        this.craftBtn.enabled = container.canCurrentlyStartCrafting();
     }
 
     @Override
@@ -56,6 +57,17 @@ public class GuiBloodPotionTable extends GuiContainer {
         int j = (this.height - this.ySize) / 2;
         this.mc.getTextureManager().bindTexture(TABLE_GUI_TEXTURES);
         this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
+
+
+        if (container.getCraftingPercentage() > 0) {
+            int j1 = (int) (28.0F * container.getCraftingPercentage());
+
+            if (j1 > 0) {
+                this.drawTexturedModalRect(i + 145, j + 23, 176, 0, 9, j1);
+
+            }
+
+        }
 
     }
 }

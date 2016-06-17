@@ -2,19 +2,19 @@ package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.lib.lib.inventory.InventorySlot;
-import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.potion.blood.BloodPotions;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.InventoryBasic;
-import net.minecraft.inventory.Slot;
+import net.minecraft.inventory.*;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -32,14 +32,22 @@ public class BloodPotionTableContainer extends Container {
     private final BlockPos pos;
     private final HunterPlayer hunterPlayer;
     private final World world;
+    private final int max_crafting_time;
+    private final boolean portable;
     private final IInventory inventory = new InventoryBasic("vampirism.blood_potion_table", false, 4);
-
+    private int craftingTimer = 0;
+    private int prevCraftingTimer = 0;
     public BloodPotionTableContainer(InventoryPlayer playerInventory, BlockPos pos, World world) {
 
         this.pos = pos;
         this.hunterPlayer = HunterPlayer.get(playerInventory.player);
         this.world = world;
-
+        portable = !ModBlocks.bloodPotionTable.equals(world.getBlockState(pos).getBlock());
+        int crafting_time = portable ? 500 : 250;
+        if (hunterPlayer.getSkillHandler().isSkillEnabled(HunterSkills.bloodPotion_fasterCrafting)) {
+            crafting_time /= 2;
+        }
+        this.max_crafting_time = crafting_time;
 
         this.addSlotToContainer(new PotionSlot(inventory, 0, 115, 55));
         this.addSlotToContainer(new PotionSlot(inventory, 1, 137, 55));
@@ -62,13 +70,38 @@ public class BloodPotionTableContainer extends Container {
         }
     }
 
-    public boolean canCurrentlyCraft() {
-        return true;
+    /**
+     * @return If requirements met and not currently crafting
+     */
+    public boolean canCurrentlyStartCrafting() {
+        return craftingTimer <= 0 && areRequirementsMet();
+
     }
 
     @Override
     public boolean canInteractWith(EntityPlayer playerIn) {
         return playerIn.getDistanceSq((double) this.pos.getX() + 0.5D, (double) this.pos.getY() + 0.5D, (double) this.pos.getZ() + 0.5D) <= 64.0D;
+    }
+
+    @Override
+    public void detectAndSendChanges() {
+        super.detectAndSendChanges();
+        for (int i = 0; i < this.listeners.size(); ++i) {
+            IContainerListener icontainerlistener = this.listeners.get(i);
+
+            if (this.prevCraftingTimer != this.craftingTimer) {
+                icontainerlistener.sendProgressBarUpdate(this, 0, craftingTimer);
+            }
+
+        }
+        this.prevCraftingTimer = craftingTimer;
+    }
+
+    /**
+     * @return The current crafting progress in percent
+     */
+    public float getCraftingPercentage() {
+        return craftingTimer == 0 ? 0 : (1F - craftingTimer / (float) max_crafting_time);
     }
 
     @Override
@@ -87,28 +120,26 @@ public class BloodPotionTableContainer extends Container {
         }
     }
 
+    /**
+     * Called when the crafting button is clicked server side
+     */
     public void onCraftingClicked() {
-        VampirismMod.log.t("Crafting clicked");
-        if (!canCurrentlyCraft()) return;
-        ItemStack extraItem = inventory.getStackInSlot(3);
-        if (extraItem != null) {
-            extraItem = extraItem.copy();
-            extraItem.stackSize = 1;
-            inventory.decrStackSize(3, 1);
+        if (canCurrentlyStartCrafting()) {
+            craftingTimer = max_crafting_time;
         }
-        inventory.decrStackSize(2, 1);//Reduce garlic
-        ItemStack bottle1 = inventory.getStackInSlot(0);
-        ItemStack bottle2 = inventory.getStackInSlot(1);
-        if (bottle1 != null && bottle1.getItem().equals(ModItems.vampireBlood)) {
-            bottle1 = new ItemStack(ModItems.bloodPotion);
-            BloodPotions.chooseAndAddEffects(bottle1, hunterPlayer, extraItem);
+
+    }
+
+    /**
+     * Called via a player living update event every tick if the container is opened.
+     */
+    public void tick() {
+        if (craftingTimer > 0) {
+            craftingTimer--;
+            if (craftingTimer == 0) {
+                onCraftingTimerFinished();
+            }
         }
-        if (bottle2 != null && bottle2.getItem().equals(ModItems.vampireBlood)) {
-            bottle2 = new ItemStack(ModItems.bloodPotion);
-            BloodPotions.chooseAndAddEffects(bottle2, hunterPlayer, extraItem);
-        }
-        inventory.setInventorySlotContents(0, bottle1);
-        inventory.setInventorySlotContents(1, bottle2);
     }
 
     @Nullable
@@ -152,10 +183,58 @@ public class BloodPotionTableContainer extends Container {
         return itemstack;
     }
 
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void updateProgressBar(int id, int data) {
+        if (id == 0 && data >= 0 && data <= max_crafting_time) {
+            craftingTimer = data;
+        }
+    }
+
+    /**
+     * @return if all required items are in the container
+     */
+    private boolean areRequirementsMet() {
+        ItemStack garlic = inventory.getStackInSlot(2);
+        if (garlic == null || !ModItems.itemGarlic.equals(garlic.getItem())) return false;
+        boolean bottle = false;
+        ItemStack bottle1 = inventory.getStackInSlot(0);
+        ItemStack bottle2 = inventory.getStackInSlot(1);
+        if (bottle1 != null && bottle1.getItem().equals(ModItems.vampireBlood)) bottle = true;
+        if (bottle2 != null && bottle2.getItem().equals(ModItems.vampireBlood)) bottle = true;
+        return bottle;
+    }
+
+    /**
+     * Execute the crafting as long as the requirements are still met
+     */
+    private void onCraftingTimerFinished() {
+        if (!areRequirementsMet()) return;
+        ItemStack extraItem = inventory.getStackInSlot(3);
+        if (extraItem != null) {
+            extraItem = extraItem.copy();
+            extraItem.stackSize = 1;
+            inventory.decrStackSize(3, 1);
+        }
+        inventory.decrStackSize(2, 1);//Reduce garlic
+        ItemStack bottle1 = inventory.getStackInSlot(0);
+        ItemStack bottle2 = inventory.getStackInSlot(1);
+        if (bottle1 != null && bottle1.getItem().equals(ModItems.vampireBlood)) {
+            bottle1 = new ItemStack(ModItems.bloodPotion);
+            BloodPotions.chooseAndAddEffects(bottle1, hunterPlayer, extraItem);
+        }
+        if (bottle2 != null && bottle2.getItem().equals(ModItems.vampireBlood)) {
+            bottle2 = new ItemStack(ModItems.bloodPotion);
+            BloodPotions.chooseAndAddEffects(bottle2, hunterPlayer, extraItem);
+        }
+        inventory.setInventorySlotContents(0, bottle1);
+        inventory.setInventorySlotContents(1, bottle2);
+    }
+
     private class PotionSlot extends InventoryContainer.FilterSlot {
 
 
-        public PotionSlot(IInventory inventory, int index, int xPosition, int yPosition) {
+        private PotionSlot(IInventory inventory, int index, int xPosition, int yPosition) {
             super(inventory, index, xPosition, yPosition, bloodfilter);
         }
 
