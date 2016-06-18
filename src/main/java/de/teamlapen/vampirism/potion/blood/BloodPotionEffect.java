@@ -8,6 +8,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 
@@ -23,6 +24,15 @@ class BloodPotionEffect implements IBloodPotionEffect {
         this.potion = potion;
         this.isBad = isBad;
         this.propertyRandomizer = propertyRandomizer;
+    }
+
+    @Override
+    public boolean canCoexist(@Nonnull IBloodPotionEffect other) {
+        if (this.isBad() != other.isBad()) return true;
+        if (other instanceof BloodPotionEffect) {
+            return !this.potion.equals(((BloodPotionEffect) other).potion);
+        }
+        return true;
     }
 
     @Override

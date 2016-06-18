@@ -131,7 +131,7 @@ public class BloodPotionTableContainer extends Container {
     }
 
     /**
-     * Called via a player living update event every tick if the container is opened.
+     * Called via a player living update event every tick serverside while the container is opened.
      */
     public void tick() {
         if (craftingTimer > 0) {

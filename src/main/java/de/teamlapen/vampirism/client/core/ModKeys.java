@@ -2,18 +2,13 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.entity.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.common.MinecraftForge;
@@ -118,18 +113,7 @@ public class ModKeys {
         } else if (keyPressed == KEY.VISION) {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.VAMPIRE_VISION_TOGGLE, ""));
         } else if (keyPressed == KEY.BLOOD_POTION) {
-            EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-
-            IHunterPlayer hunter = HunterPlayer.get(player);
-            if (hunter.getLevel() > 0) {
-                if (hunter.getSkillHandler().isSkillEnabled(HunterSkills.bloodPotion_portableCrafting)) {
-                    player.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_POTION_TABLE, player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
-                } else {
-                    player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_with_skill", new TextComponentTranslation(HunterSkills.bloodPotion_portableCrafting.getUnlocalizedName())));
-                }
-            } else {
-                player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by", new TextComponentTranslation(VReference.HUNTER_FACTION.getUnlocalizedName())));
-            }
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.OPEN_BLOOD_POTION, ""));
         }
     }
 

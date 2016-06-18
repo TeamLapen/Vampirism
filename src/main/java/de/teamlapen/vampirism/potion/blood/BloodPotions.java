@@ -182,15 +182,18 @@ public class BloodPotions {
         } else {
             bad = (rnd.nextInt(10) == 0) ? 3 : rnd.nextInt(2) + 1;
         }
-        for (int i = 0; i < good; i++) {
-            IBloodPotionEffect effect = registry.getRandomEffect(extraItem, false, rnd);
-            effects.add(new ConfiguredEffect(effect, effect.getRandomProperties(rnd)));
+        int extra = 0;
+        for (int i = 0; i < good + bad + extra; i++) {
+            IBloodPotionEffect effect = registry.getRandomEffect(extraItem, i >= good + extra, rnd);
+            boolean valid = true;
+            for (ConfiguredEffect effect1 : effects) {
+                if (!effect1.getEffect().canCoexist(effect)) {
+                    extra = Math.min(good + 1, 5);
+                    valid = false;
+                }
+            }
+            if (valid) effects.add(new ConfiguredEffect(effect, effect.getRandomProperties(rnd)));
         }
-        for (int i = 0; i < bad; i++) {
-            IBloodPotionEffect effect = registry.getRandomEffect(extraItem, true, rnd);
-            effects.add(new ConfiguredEffect(effect, effect.getRandomProperties(rnd)));
-        }
-
 
         addEffects(stack, effects);
     }
@@ -228,6 +231,13 @@ public class BloodPotions {
             return properties;
         }
 
+        @Override
+        public String toString() {
+            return "ConfEffect{" +
+                    "effect=" + effect +
+                    ", properties=" + properties +
+                    '}';
+        }
     }
 }
 

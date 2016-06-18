@@ -98,7 +98,7 @@ public class ModEntityEventHandler {
         if (event.getEntity() instanceof EntityCreature) {
             ExtendedCreature.get((EntityCreature) event.getEntity()).onUpdate();
         }
-        if (event.getEntity() instanceof EntityPlayer) {
+        if (!event.getEntity().worldObj.isRemote && event.getEntity() instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) event.getEntity();
             if (player.openContainer instanceof BloodPotionTableContainer) {
                 ((BloodPotionTableContainer) player.openContainer).tick();

@@ -44,7 +44,7 @@ public class GuiBloodPotionTable extends GuiContainer {
     protected void actionPerformed(GuiButton button) throws IOException {
         if (button.enabled) {
             if (button.id == 0) {
-                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.BLOODPOTIONCRAFT, ""));
+                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.CRAFT_BLOOD_POTION, ""));
             }
         }
     }
