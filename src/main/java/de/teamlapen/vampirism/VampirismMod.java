@@ -40,6 +40,8 @@ import de.teamlapen.vampirism.modcompat.jei.JEIModCompat;
 import de.teamlapen.vampirism.modcompat.waila.WailaModCompat;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
+import de.teamlapen.vampirism.potion.blood.BloodPotionRegistry;
+import de.teamlapen.vampirism.potion.blood.BloodPotions;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.GeneralRegistryImpl;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -136,6 +138,7 @@ public class VampirismMod {
         HelperRegistry.registerSyncablePlayerCapability(FactionPlayerHandler.CAP, REFERENCE.FACTION_PLAYER_HANDLER_KEY, FactionPlayerHandler.class);
         Achievements.registerAchievement();
         SupporterManager.getInstance().initAsync();
+        BloodPotions.register();
         proxy.onInitStep(IInitListener.Step.INIT, event);
         modCompatLoader.onInitStep(IInitListener.Step.INIT, event);
 
@@ -215,7 +218,8 @@ public class VampirismMod {
                 return VampirismVillageCollection.get(world);
             }
         };
-        VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionRegistry, skillRegistry, generalRegistry);
+        BloodPotionRegistry bloodPotionRegistry = new BloodPotionRegistry();
+        VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionRegistry, skillRegistry, generalRegistry, bloodPotionRegistry);
         VampirismAPI.setUpAccessors(villageProviderProvider, HunterWeaponCraftingManager.getInstance());
         VReference.VAMPIRE_FACTION = factionRegistry.registerPlayableFaction("Vampire", IVampirePlayer.class, 0XFF780DA3, REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.CAP, REFERENCE.HIGHEST_VAMPIRE_LEVEL);
         VReference.VAMPIRE_FACTION.setChatColor(TextFormatting.DARK_PURPLE).setUnlocalizedName("text.vampirism.vampire", "text.vampirism.vampires");

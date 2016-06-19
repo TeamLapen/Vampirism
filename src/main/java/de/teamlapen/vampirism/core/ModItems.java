@@ -38,6 +38,8 @@ public class ModItems {
     public static ItemDoubleCrossbow enhancedDoubleCrossbow;
     public static ItemCrossbowArrow crossbowArrow;
     public static ItemStake stake;
+    public static ItemVampireBloodBottle vampireBlood;
+    public static ItemBloodPotion bloodPotion;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
@@ -91,6 +93,8 @@ public class ModItems {
         enhancedDoubleCrossbow = registerItem(new ItemDoubleCrossbow("enhancedDoubleCrossbow", 1.5F, 15, 350));
         crossbowArrow = registerItem(new ItemCrossbowArrow());
         stake = registerItem(new ItemStake());
+        vampireBlood = registerItem(new ItemVampireBloodBottle());
+        bloodPotion = registerItem(new ItemBloodPotion());
     }
 
     private static <T extends Item> T registerItem(T item) {

@@ -9,6 +9,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.client.settings.KeyConflictContext;
+import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
@@ -28,13 +30,14 @@ public class ModKeys {
     private static final String TOGGLE_ACTIONS = "keys.vampirism.action";
     private static final String SELECT_SKILLS = "keys.vampirism.select_skills";
     private static final String SWITCH_VISION = "key.vampirism.vision";
+    private static final String BLOOD_POTION_CRAFTING = "key.vampirism.blood_potion_crafting";
 //    private static final String MINION_CONTROL = "key.vampirism.minion_control";
 
-    private static KeyBinding SUCK = new KeyBinding(SUCK_BLOOD, Keyboard.KEY_V, CATEGORY);
+    private static KeyBinding SUCK = new KeyBinding(SUCK_BLOOD, KeyConflictContext.IN_GAME, Keyboard.KEY_V, CATEGORY);
     private static KeyBinding ACTION = new KeyBinding(TOGGLE_ACTIONS, Keyboard.KEY_R, CATEGORY);//Middle Mouse -98
     private static KeyBinding SKILL = new KeyBinding(SELECT_SKILLS, Keyboard.KEY_P, CATEGORY);
-    private static KeyBinding VISION = new KeyBinding(SWITCH_VISION, Keyboard.KEY_N, CATEGORY);
-
+    private static KeyBinding VISION = new KeyBinding(SWITCH_VISION, KeyConflictContext.IN_GAME, Keyboard.KEY_N, CATEGORY);
+    private static KeyBinding BLOOD_POTION = new KeyBinding(BLOOD_POTION_CRAFTING, KeyConflictContext.IN_GAME, KeyModifier.CONTROL, Keyboard.KEY_B, CATEGORY);
     /**
      * @param key
      * @return the key code which is currently bound to the given KEY_Action
@@ -49,6 +52,8 @@ public class ModKeys {
                 return SKILL.getKeyCode();
             case VISION:
                 return VISION.getKeyCode();
+            case BLOOD_POTION:
+                return BLOOD_POTION.getKeyCode();
             default:
                 return 0;
         }
@@ -74,6 +79,7 @@ public class ModKeys {
                 ClientRegistry.registerKeyBinding(SUCK);
                 ClientRegistry.registerKeyBinding(SKILL);
                 ClientRegistry.registerKeyBinding(VISION);
+                ClientRegistry.registerKeyBinding(BLOOD_POTION);
                 break;
             default:
                 break;
@@ -97,15 +103,17 @@ public class ModKeys {
         } else if (keyPressed == KEY.ACTION) {
             EntityPlayer player = Minecraft.getMinecraft().thePlayer;
             if (FactionPlayerHandler.get(player).getCurrentFaction() != null) {
-                player.openGui(VampirismMod.instance, ModGuiHandler.ID_ACTION, player.worldObj, player.chunkCoordX, player.chunkCoordY, player.chunkCoordZ);
+                player.openGui(VampirismMod.instance, ModGuiHandler.ID_ACTION, player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
             }
         } else if (keyPressed == KEY.SKILL) {
             EntityPlayer player = Minecraft.getMinecraft().thePlayer;
             if (FactionPlayerHandler.get(player).getCurrentFaction() != null) {
-                player.openGui(VampirismMod.instance, ModGuiHandler.ID_SKILL, player.worldObj, player.chunkCoordX, player.chunkCoordY, player.chunkCoordZ);
+                player.openGui(VampirismMod.instance, ModGuiHandler.ID_SKILL, player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
             }
         } else if (keyPressed == KEY.VISION) {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.VAMPIRE_VISION_TOGGLE, ""));
+        } else if (keyPressed == KEY.BLOOD_POTION) {
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.OPEN_BLOOD_POTION, ""));
         }
     }
 
@@ -121,11 +129,13 @@ public class ModKeys {
             return KEY.SKILL;
         } else if (VISION.isPressed()) {
             return KEY.VISION;
+        } else if (BLOOD_POTION.isPressed()) {
+            return KEY.BLOOD_POTION;
         }
         return KEY.UNKNOWN;
     }
 
     public enum KEY {
-        SUCK, UNKNOWN, ACTION, SKILL, VISION
+        SUCK, UNKNOWN, ACTION, SKILL, VISION, BLOOD_POTION
     }
 }

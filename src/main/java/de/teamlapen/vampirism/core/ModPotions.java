@@ -19,6 +19,7 @@ public class ModPotions {
     public static Potion thirst;
     public static Potion saturation;
     public static Potion sunscreen;
+    public static Potion disguiseAsVampire;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
@@ -36,6 +37,7 @@ public class ModPotions {
         saturation = register(new VampirismPotion("saturation", false, 0xDCFF00));
         sunscreen = register(new VampirismPotion("sunscreen", false, 0xFFF100));
         sunscreen.registerPotionAttributeModifier(VReference.sunDamage, "9dc9420c-3e5e-41c7-9ba4-ff70e9dc69fc", -0.3, 2);
+        disguiseAsVampire = register(new VampirismPotion("disguise_as_vampire", false, 0x999900));
 
     }
 

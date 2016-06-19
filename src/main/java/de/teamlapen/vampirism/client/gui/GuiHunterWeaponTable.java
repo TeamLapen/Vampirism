@@ -16,9 +16,9 @@ import net.minecraft.world.World;
  */
 public class GuiHunterWeaponTable extends GuiContainer {
 
-    private static final ResourceLocation CRAFTING_TABLE_GUI_TEXTURES = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table.png");
-    private static final ResourceLocation CRAFTING_TABLE_GUI_TEXTURES_LAVA = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table_lava.png");
-    private static final ResourceLocation CRAFTING_TABLE_GUI_TEXTURES_MISSING_LAVA = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table_missing_lava.png");
+    private static final ResourceLocation TABLE_GUI_TEXTURES = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table.png");
+    private static final ResourceLocation TABLE_GUI_TEXTURES_LAVA = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table_lava.png");
+    private static final ResourceLocation TABLE_GUI_TEXTURES_MISSING_LAVA = new ResourceLocation(REFERENCE.MODID, "textures/gui/weapon_table_missing_lava.png");
     private final BlockPos pos;
     private final World world;
     private int lava = 0;
@@ -54,14 +54,14 @@ public class GuiHunterWeaponTable extends GuiContainer {
 
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
-        this.mc.getTextureManager().bindTexture(CRAFTING_TABLE_GUI_TEXTURES);
+        this.mc.getTextureManager().bindTexture(TABLE_GUI_TEXTURES);
         this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
         if (lava > 0) {
-            this.mc.getTextureManager().bindTexture(CRAFTING_TABLE_GUI_TEXTURES_LAVA);
+            this.mc.getTextureManager().bindTexture(TABLE_GUI_TEXTURES_LAVA);
             this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
         }
         if (isMissingLava) {
-            this.mc.getTextureManager().bindTexture(CRAFTING_TABLE_GUI_TEXTURES_MISSING_LAVA);
+            this.mc.getTextureManager().bindTexture(TABLE_GUI_TEXTURES_MISSING_LAVA);
             this.drawTexturedModalRect(i, j, 0, 0, this.xSize, this.ySize);
         }
     }

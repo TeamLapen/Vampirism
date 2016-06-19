@@ -199,6 +199,30 @@ text.vampirism.skill.stake1.desc=Instantly kill any vampire that has below %s pe
 text.vampirism.skill.stake2=How to actually use a stake
 text.vampirism.skill.stake2.desc_all=Instantly kill any vampire from behind with a stake as long as his max health is below %s
 text.vampirism.skill.stake2.desc_npc=Instantly kill any vampire NPC from behind with a stake as long as his max health is below %s
+text.vampirism.skill.blood_potion_table=Blood Potion Table
+text.vampirism.skill.blood_potion_table.desc=Learn how to use the Blood Potion Table to create potions from vampire blood
+text.vampirism.skill.blood_potion_good_or_bad=Good or Bad?
+text.vampirism.skill.blood_potion_good_or_bad.desc=Find out how many bad effects your blood potions have
+text.vampirism.skill.blood_potion_less_bad=Improved Brewing
+text.vampirism.skill.blood_potion_less_bad.desc=Lower the chance of getting bad effects
+text.vampirism.skill.blood_potion_category_hint=Experienced brewer
+text.vampirism.skill.blood_potion_category_hint.desc=Get a hint what your extra item might effect
+text.vampirism.skill.blood_potion_faster_crafting=Swift brewing
+text.vampirism.skill.blood_potion_duration=Improved response
+text.vampirism.skill.blood_potion_duration.desc=Your body response better to the potions which makes them operate longer
+text.vampirism.skill.blood_potion_portable_crafting=Brewing on the go
+text.vampirism.skill.blood_potion_portable_crafting.desc=Learn how to brew blood potions without a Blood Potion Table
+text.vampirism.skill.blood_potion_identify_some=Brewing master
+text.vampirism.skill.blood_potion_identify_some.desc=Get to know some of the effects of a blood potion
+
+#BLOOD POTIONS
+text.vampirism.blood_potion.might_cause=Might cause:
+text.vampirism.blood_potion.any_effect=No special effect
+text.vampirism.blood_potion.category.normal_body_boost=Improved body fitness
+text.vampirism.blood_potion.category.special_body_boost=Strongly improved body fitness
+text.vampirism.blood_potion.category.normal_vampire_skills=Vampire skills
+text.vampirism.blood_potion.category.special_vampire_skills=Special vampire skills
+text.vampirism.blood_potion.category.bad_others=Unpredictable bad effects
 
 
 #ENTITIES
@@ -229,6 +253,7 @@ tile.vampirism.vampire_orchid.name=Vampire Orchid
 tile.vampirism.firePlace.name=Fire Place
 tile.vampirism.weaponTable.name=Hunter Weapon Table
 tile.vampirism.weaponTable.cannot_use=You have not learned how to use this
+tile.vampirism.bloodPotionTable.cannot_use=You have not leared how to use this
 
 
 #ITEMS
@@ -250,6 +275,8 @@ item.vampirism.enhancedCrossbow.name=Enhanced Crossbow
 item.vampirism.basicDoubleCrossbow.name=Double Crossbow
 item.vampirism.enhancedDoubleCrossbow.name=Enhanced Double Crossbow
 item.vampirism.stake.name=Stake
+item.vampirism.vampireBloodBottle.name=Vampire Blood
+item.vampirism.bloodPotion.name=Blood Potion
 
 #KEYS
 keys.vampirism.select_skills=Select Skills
@@ -264,6 +291,7 @@ achievement.vampirism.becoming_vampire
 gui.vampirism.hunter_weapon_table=Hunter Weapon Table
 gui.vampirism.hunter_weapon_table.level=Required Hunter Level: %s
 gui.vampirism.hunter_weapon_table.skill=Required Skill: %s
+gui.vampirism.blood_potion_table.create=Start Crafting
 
 #ETC
 text.vampirism.vampire=Vampire
@@ -281,3 +309,4 @@ text.vampirism.need_item_to_use=You need %s to use this
 text.vampirism.immune_to_=You are immune to
 text.vampirism.required_skill=Required Skill: %s
 text.vampirism.from_behind=From behind.
+text.vampirism.unknown=Unknown

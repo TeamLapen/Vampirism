@@ -108,7 +108,7 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        if (slots[slot].itemSelector != null) {
+        if (slots[slot].itemSelector != null && stack != null) {
             return slots[slot].itemSelector.isItemAllowed(stack);
         }
         return true;

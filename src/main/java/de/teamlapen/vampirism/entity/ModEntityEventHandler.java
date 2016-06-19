@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.entity.minions.IMinionLordWithSaveable;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.inventory.BloodPotionTableContainer;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.EntityCreature;
@@ -96,6 +97,12 @@ public class ModEntityEventHandler {
     public void onEntityUpdate(LivingEvent.LivingUpdateEvent event) {
         if (event.getEntity() instanceof EntityCreature) {
             ExtendedCreature.get((EntityCreature) event.getEntity()).onUpdate();
+        }
+        if (!event.getEntity().worldObj.isRemote && event.getEntity() instanceof EntityPlayer) {
+            EntityPlayer player = (EntityPlayer) event.getEntity();
+            if (player.openContainer instanceof BloodPotionTableContainer) {
+                ((BloodPotionTableContainer) player.openContainer).tick();
+            }
         }
     }
 }

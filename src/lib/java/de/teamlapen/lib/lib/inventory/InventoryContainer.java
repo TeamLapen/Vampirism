@@ -6,6 +6,8 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nullable;
+
 /**
  * Used for handling the item exchange between player and block inventory. Should be created with InventoryTileEntity.getNewInventoryContainer()
  *
@@ -85,14 +87,14 @@ public class InventoryContainer extends Container {
     public static class FilterSlot extends net.minecraft.inventory.Slot {
         InventorySlot.IItemSelector selector;
 
-        public FilterSlot(IInventory p_i1824_1_, int p_i1824_2_, int p_i1824_3_, int p_i1824_4_, InventorySlot.IItemSelector selector) {
-            super(p_i1824_1_, p_i1824_2_, p_i1824_3_, p_i1824_4_);
+        public FilterSlot(IInventory inventory, int index, int xPosition, int yPosition, InventorySlot.IItemSelector selector) {
+            super(inventory, index, xPosition, yPosition);
             this.selector = selector;
         }
 
         @Override
-        public boolean isItemValid(ItemStack stack) {
-            if (selector != null) {
+        public boolean isItemValid(@Nullable ItemStack stack) {
+            if (selector != null && stack != null) {
                 return selector.isItemAllowed(stack);
             }
             return true;
