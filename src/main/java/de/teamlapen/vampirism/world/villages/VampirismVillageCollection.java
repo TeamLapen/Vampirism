@@ -156,6 +156,7 @@ public class VampirismVillageCollection extends WorldSavedData implements IVampi
                     case 0:
                         markDirty();
                         break;
+                    default://Do nothing
                 }
             }
         }

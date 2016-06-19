@@ -62,6 +62,7 @@ import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Main class for Vampire Players.
@@ -98,12 +99,12 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
             @Override
             public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-                return CAP.equals(capability) ? CAP.<T>cast(inst) : null;//TODO switch to something like SLEEP_CAP.<T>cast(inst) in 1.9
+                return CAP.equals(capability) ? CAP.<T>cast(inst) : null;
             }
 
             @Override
             public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-                return capability == CAP;
+                return CAP.equals(capability);
             }
 
             @Override
@@ -144,7 +145,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (vision != null && !isRemote() && ((GeneralRegistryImpl) VampirismAPI.vampireVisionRegistry()).getIdOfVision(vision) == -1) {
             throw new IllegalArgumentException("You have to register the vision first: " + vision);
         }
-        if (activatedVision != vision) {
+        if (!Objects.equals(activatedVision, vision)) {
             if (activatedVision != null) {
                 activatedVision.onDeactivated(this);
             }
@@ -710,6 +711,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     break;
                 case EAST:
                     f = 0.9F;
+                    break;
+                default://Should not happen
             }
             try {
                 Method mSetSize = ReflectionHelper.findMethod(EntityPlayer.class, player, new String[]{"setRenderOffsetForSleep", SRGNAMES.EntityPlayer_setRenderOffsetForSleep}, EnumFacing.class);
@@ -747,7 +750,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public void unUnlockVision(@Nonnull IVampireVision vision) {
-        if (activatedVision == vision) {
+        if (vision.equals(activatedVision)) {
             activateVision(null);
         }
         unlockedVisions.remove(vision);

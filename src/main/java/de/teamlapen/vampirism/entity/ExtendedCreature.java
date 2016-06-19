@@ -62,7 +62,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
 
             @Override
             public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-                return capability == CAP;
+                return CAP.equals(capability);
             }
 
             @Override

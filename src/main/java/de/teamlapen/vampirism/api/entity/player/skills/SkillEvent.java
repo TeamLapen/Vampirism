@@ -13,7 +13,7 @@ import java.util.List;
 public class SkillEvent extends Event {
     public final IPlayableFaction faction;
 
-    public SkillEvent(IPlayableFaction faction) {
+    private SkillEvent(IPlayableFaction faction) {
         this.faction = faction;
     }
 
@@ -25,7 +25,7 @@ public class SkillEvent extends Event {
     public static class AddSkills extends SkillEvent {
         private final List<ISkill> skills;
 
-        public AddSkills(IPlayableFaction faction, List<ISkill> skills) {
+        AddSkills(IPlayableFaction faction, List<ISkill> skills) {
             super(faction);
             this.skills = skills;
         }

@@ -21,6 +21,8 @@ public class ModSounds {
             case PRE_INIT:
                 registerSounds();
                 break;
+            default://Do nothing
+
         }
 
     }

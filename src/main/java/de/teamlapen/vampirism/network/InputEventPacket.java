@@ -120,6 +120,7 @@ public class InputEventPacket implements IMessage {
                                 case COOLDOWN:
                                     player.addChatMessage(new TextComponentTranslation("text.vampirism.action.cooldown_not_over"));
                                     break;
+                                default://Everything alright
                             }
                         } else {
                             VampirismMod.log.e(TAG, "Failed to find action with id %d", id);

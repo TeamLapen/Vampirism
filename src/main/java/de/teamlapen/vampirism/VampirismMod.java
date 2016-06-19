@@ -119,7 +119,7 @@ public class VampirismMod {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        versionInfo = VersionChecker.executeVersionCheck(REFERENCE.VERSION_UPDATE_FILE, REFERENCE.VERSION.equals("@VERSION@") ? "0.0.0-Test" : REFERENCE.VERSION);
+        versionInfo = VersionChecker.executeVersionCheck(REFERENCE.VERSION_UPDATE_FILE, "@VERSION@".equals(REFERENCE.VERSION) ? "0.0.0-Test" : REFERENCE.VERSION);
 
         ModEventHandler eventHandler = new ModEventHandler();
         MinecraftForge.EVENT_BUS.register(eventHandler);

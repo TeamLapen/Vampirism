@@ -77,6 +77,8 @@ public class ModEntities {
             case INIT:
                 init((FMLInitializationEvent) event);
                 break;
+            default://Do nothing
+
         }
 
     }

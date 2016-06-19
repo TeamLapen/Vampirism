@@ -26,7 +26,7 @@ public class ItemMedChair extends VampirismItem {
     }
 
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos targetPos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (side != EnumFacing.UP) {
             return EnumActionResult.FAIL;
         }
@@ -35,13 +35,12 @@ public class ItemMedChair extends VampirismItem {
 
         // Increasing y, so the chair is placed on top of the block that was
         // clicked at except if the block is replaceable
-        IBlockState iblockstate = world.getBlockState(pos);
+        IBlockState iblockstate = world.getBlockState(targetPos);
         Block block = iblockstate.getBlock();
-        boolean replaceable = block.isReplaceable(world, pos);
+        boolean replaceable = block.isReplaceable(world, targetPos);
 
-        if (!replaceable) {
-            pos = pos.up();
-        }
+        BlockPos pos = replaceable ? targetPos : targetPos.up();
+
         // Direction the player is facing
         int direction = MathHelper.floor_double((player.rotationYaw * 4F) / 360F + 0.5D) & 3;
         EnumFacing facing = EnumFacing.getHorizontal(direction);

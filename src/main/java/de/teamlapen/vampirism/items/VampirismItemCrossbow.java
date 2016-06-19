@@ -101,7 +101,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @return If the crossbow can shoot without an arrow in the players inventory
      */
     protected boolean isCrossbowInfinite(ItemStack stack, EntityPlayer player) {
-        int enchant = net.minecraft.enchantment.EnchantmentHelper.getEnchantmentLevel(net.minecraft.init.Enchantments.INFINITY, stack);
+        int enchant = EnchantmentHelper.getEnchantmentLevel(net.minecraft.init.Enchantments.INFINITY, stack);
         return enchant > 0;
     }
 

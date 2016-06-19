@@ -30,15 +30,9 @@ public class SupporterManager {
 
     }
 
-    public String getDebugString() {
-        return "Vampires: " + Arrays.toString(supporters[0]) + " Hunters: " + Arrays.toString(supporters[1]);
-    }
-
     /**
      * Returns a randomly picked hunter
      *
-     * @param rnd
-     * @return
      */
     public Supporter getRandomHunter(Random rnd) {
         if (supporters[1].length > 0) {
@@ -50,8 +44,6 @@ public class SupporterManager {
     /**
      * Returns a randomly picked vampire
      *
-     * @param rnd
-     * @return
      */
     public Supporter getRandomVampire(Random rnd) {
         if (supporters[0].length > 0) {
@@ -69,6 +61,10 @@ public class SupporterManager {
         };
         thread.setDaemon(true);
         thread.start();
+    }
+
+    private String getDebugString() {
+        return "Vampires: " + Arrays.toString(supporters[0]) + " Hunters: " + Arrays.toString(supporters[1]);
     }
 
     private void init() {
@@ -156,13 +152,14 @@ public class SupporterManager {
         final String senderName;
         public final int typeId;
 
-        public Supporter(@Nullable String senderName, @Nullable String textureName, int typeId) {
+        private Supporter(@Nullable String senderName, @Nullable String textureName, int typeId) {
             this.typeId = typeId;
             if (senderName != null && senderName.equals("null")) {
-                senderName = null;
+                this.senderName = null;
+            } else {
+                this.senderName = senderName;
             }
             this.textureName = textureName;
-            this.senderName = senderName;
         }
 
         @Override

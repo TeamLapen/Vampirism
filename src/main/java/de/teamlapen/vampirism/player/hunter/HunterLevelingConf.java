@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.player.hunter;
 
+import de.teamlapen.vampirism.VampirismMod;
+
 /**
  * Stores values/informations about the leveling of hunters. Might be replaced by an actually configurable object at some point
  * All levels here are target levels, not the levels the player currently is on
@@ -85,6 +87,8 @@ public class HunterLevelingConf {
                 return new int[]{40, 20};
             case 14:
                 return new int[]{40, 40};
+            default:
+                VampirismMod.log.w("HunterLevelingConf", "Something is wrong with the hunter levels");
         }
         return null;//Should never be reached
     }

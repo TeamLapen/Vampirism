@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.api.entity.factions;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.util.DamageSource;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -65,7 +66,7 @@ public interface IFactionPlayerHandler {
      *
      * @param faction
      */
-    void joinFaction(IPlayableFaction faction);
+    void joinFaction(@Nonnull IPlayableFaction faction);
 
     /**
      * Should be called if the entity attacked.
@@ -94,5 +95,5 @@ public interface IFactionPlayerHandler {
      * @param level
      * @return If successful
      */
-    boolean setFactionLevel(IPlayableFaction faction, int level);
+    boolean setFactionLevel(@Nonnull IPlayableFaction faction, int level);
 }

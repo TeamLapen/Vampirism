@@ -45,6 +45,8 @@ public class ModBlocks {
                 break;
             case INIT:
                 registerCraftingRecipes();
+                break;
+            default://Do nothing
         }
 
     }

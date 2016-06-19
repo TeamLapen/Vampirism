@@ -340,6 +340,8 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
             case 14:
                 missing = checkAndRemoveItems(4, 2, 0, 0);
                 break;
+            default:
+                VampirismMod.log.w(TAG, "Checking for level %d, but this altar cannot be used at that level", newLevel);
         }
         if (missing != null) {
             ITextComponent item = missing.getItem().equals(ModItems.pureBlood) ? ModItems.pureBlood.getDisplayName(missing) : new TextComponentTranslation(missing.getUnlocalizedName() + ".name");

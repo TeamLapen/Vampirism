@@ -26,6 +26,7 @@ public class ModPotions {
             case PRE_INIT:
                 preInit((FMLPreInitializationEvent) event);
                 break;
+            default://Do nothing
         }
 
     }

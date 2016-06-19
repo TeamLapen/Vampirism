@@ -15,6 +15,7 @@ public class ModFluids {
             case PRE_INIT:
                 preInit((FMLPreInitializationEvent) event);
                 break;
+            default://Do nothing
         }
 
     }

@@ -73,7 +73,7 @@ public class VampirismFlower extends BlockBush implements ItemMetaBlock.IMetaIte
 
         public static EnumFlowerType getType(int meta) {
             if (meta >= TYPE_FOR_META.length) {
-                meta = 0;
+                return TYPE_FOR_META[0];
             }
             return TYPE_FOR_META[meta];
         }

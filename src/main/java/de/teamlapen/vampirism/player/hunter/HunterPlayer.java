@@ -62,12 +62,12 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
             @Override
             public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-                return capability == CAP ? (T) (inst) : null;//TODO switch to something like SLEEP_CAP.<T>cast(inst) in 1.9
+                return capability == CAP ? CAP.<T>cast(inst) : null;
             }
 
             @Override
             public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-                return capability == CAP;
+                return CAP.equals(capability);
             }
 
             @Override

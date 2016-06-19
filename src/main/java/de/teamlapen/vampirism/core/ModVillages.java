@@ -25,6 +25,7 @@ public class ModVillages {
                 registerCreationHandlers();
                 registerPieces();
                 break;
+            default://Do nothing
         }
 
     }

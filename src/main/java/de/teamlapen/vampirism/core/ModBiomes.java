@@ -23,6 +23,7 @@ public class ModBiomes {
             case PRE_INIT:
                 preInit();
                 break;
+            default://Do nothing
         }
 
     }
