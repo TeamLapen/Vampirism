@@ -60,10 +60,6 @@ public class WorldGenHunterCamp extends WorldGenerator {
         }
     }
 
-    public boolean isValidTemperature(float t) {
-        return t < 1.5F && t > 0.1F;
-    }
-
     private boolean checkGroundAndPos(World worldIn, BlockPos position, IBlockState ground) {
         if (worldIn.getBlockState(position).getMaterial().isLiquid()) return false;
         Material m = worldIn.getBlockState(position.down()).getMaterial();
@@ -82,6 +78,10 @@ public class WorldGenHunterCamp extends WorldGenerator {
             pos.move(EnumFacing.DOWN);
         }
         return pos.up();
+    }
+
+    boolean isValidTemperature(float t) {
+        return t < 1.5F && t > 0.1F;
     }
 
     private boolean placeFire(World worldIn, BlockPos position) {

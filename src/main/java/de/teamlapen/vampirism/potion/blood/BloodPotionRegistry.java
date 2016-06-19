@@ -31,19 +31,16 @@ public class BloodPotionRegistry implements IBloodPotionRegistry {
 
     @Nonnull
     @Override
-    public String getLocCategoryDescForItem(@Nonnull ItemStack item) {
+    public List<String> getLocCategoryDescForItem(@Nonnull ItemStack item) {
         List<IBloodPotionCategory> categories = Lists.newLinkedList();
         categories.addAll(categoriesBad);
         categories.addAll(categoriesGood);
-        String desc = "";
+        List<String> desc = Lists.newArrayList();
         for (IBloodPotionCategory category : categories) {
             if (category.containsItem(item)) {
-                desc += UtilLib.translateToLocal(category.getUnlocDescription()) + "\n";
+                desc.add(UtilLib.translateToLocal(category.getUnlocDescription()));
 
             }
-        }
-        if (desc.isEmpty()) {
-            desc += UtilLib.translateToLocal("text.vampirism.blood_potion.any_effect");
         }
         return desc;
     }

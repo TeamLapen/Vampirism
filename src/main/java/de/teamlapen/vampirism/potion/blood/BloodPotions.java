@@ -212,6 +212,16 @@ public class BloodPotions {
     }
 
     /**
+     * @return A localized hint about what the given extra stack might cause
+     */
+    public static
+    @Nonnull
+    List<String> getLocalizedCategoryHint(ItemStack extra) {
+        IBloodPotionRegistry registry = VampirismAPI.bloodPotionRegistry();
+        return registry.getLocCategoryDescForItem(extra);
+    }
+
+    /**
      * Simply stores an effect together with it's property nbt tag
      */
     private static class ConfiguredEffect {

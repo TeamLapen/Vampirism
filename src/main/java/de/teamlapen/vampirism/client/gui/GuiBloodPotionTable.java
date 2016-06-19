@@ -14,6 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.io.IOException;
+import java.util.List;
 
 
 public class GuiBloodPotionTable extends GuiContainer {
@@ -25,6 +26,20 @@ public class GuiBloodPotionTable extends GuiContainer {
     public GuiBloodPotionTable(InventoryPlayer playerInv, BlockPos pos, World world) {
         super(new BloodPotionTableContainer(playerInv, pos, world));
         this.container = (BloodPotionTableContainer) inventorySlots;
+    }
+
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        List<String> hints = container.getLocalizedCraftingHint();
+        if (hints != null) {
+            int i = (this.width - this.xSize) / 2;
+            int j = (this.height - this.ySize) / 2;
+            for (String hint : hints) {
+                this.fontRendererObj.drawSplitString(hint, i + 5, j + 28, 92, java.awt.Color.WHITE.getRGB());
+                j += this.fontRendererObj.splitStringWidth(hint, 92);
+            }
+        }
     }
 
     @Override

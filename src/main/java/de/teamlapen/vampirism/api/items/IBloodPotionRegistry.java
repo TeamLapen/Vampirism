@@ -6,6 +6,7 @@ import net.minecraft.util.WeightedRandom;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -42,11 +43,11 @@ public interface IBloodPotionRegistry {
     IBloodPotionEffect getEffectFromId(@Nonnull String id);
 
     /**
-     * Get a localized multiline (\n) description for the given item's category.
-     * Provides an "any" String if no category is belongs to that item.
+     * Get a localized multiline description for the given item's category.
+     * Empty if no category belongs to that item
      */
     @Nonnull
-    String getLocCategoryDescForItem(@Nonnull ItemStack item);
+    List<String> getLocCategoryDescForItem(@Nonnull ItemStack item);
 
     /**
      * Gets or creates a new category using given id and isBad.

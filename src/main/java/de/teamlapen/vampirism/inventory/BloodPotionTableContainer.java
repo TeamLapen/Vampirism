@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.lib.lib.inventory.InventorySlot;
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
@@ -18,6 +19,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * Table to create blood potions
@@ -102,6 +104,22 @@ public class BloodPotionTableContainer extends Container {
      */
     public float getCraftingPercentage() {
         return craftingTimer == 0 ? 0 : (1F - craftingTimer / (float) max_crafting_time);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public
+    @Nullable
+    List<String> getLocalizedCraftingHint() {
+        ItemStack extra = inventory.getStackInSlot(3);
+        if (extra == null) return null;
+        if (!hunterPlayer.getSkillHandler().isSkillEnabled(HunterSkills.bloodPotion_categoryHint)) return null;
+        List<String> hints = BloodPotions.getLocalizedCategoryHint(extra);
+        if (hints.isEmpty()) {
+            hints.add(UtilLib.translateToLocal("text.vampirism.blood_potion.any_effect"));
+        } else {
+            hints.add(0, UtilLib.translateToLocal("text.vampirism.blood_potion.might_cause"));
+        }
+        return hints;
     }
 
     @Override
