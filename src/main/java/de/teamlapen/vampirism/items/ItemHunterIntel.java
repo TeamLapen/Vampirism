@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.entity.player.hunter.HunterLevelingConf;
+import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;

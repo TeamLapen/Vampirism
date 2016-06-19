@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.potion;
 
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 

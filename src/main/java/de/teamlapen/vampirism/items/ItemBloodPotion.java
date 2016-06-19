@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.potion.blood.BloodPotions;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;

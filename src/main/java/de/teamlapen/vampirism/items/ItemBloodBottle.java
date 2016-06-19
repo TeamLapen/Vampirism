@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IBloodContainerItem;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModFluids;
-import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.creativetab.CreativeTabs;

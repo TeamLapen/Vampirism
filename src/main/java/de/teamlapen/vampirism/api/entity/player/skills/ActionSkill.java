@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.vampirism.entity.player.skills.VampirismSkill;
+import de.teamlapen.vampirism.player.skills.VampirismSkill;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.util.ResourceLocation;
 

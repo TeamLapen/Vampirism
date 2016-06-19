@@ -90,7 +90,7 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
 
     /**
      * Returns a list of entity NBTTags to save with the player Dead entitys are saves as alive, so in multiplayer entities removed by
-     * {@link de.teamlapen.vampirism.entity.player.vampire.VampirePlayer#onPlayerLoggedOut()} are saved as well
+     * {@link de.teamlapen.vampirism.player.vampire.VampirePlayer#onPlayerLoggedOut()} are saved as well
      *
      * @return
      */

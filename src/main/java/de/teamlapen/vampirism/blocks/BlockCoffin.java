@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.blocks;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.tileentity.TileCoffin;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.EnumPushReaction;

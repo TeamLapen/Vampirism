@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.modcompat.waila;
 
 import de.teamlapen.vampirism.entity.ExtendedCreature;
-import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaEntityAccessor;
 import mcp.mobius.waila.api.IWailaEntityProvider;

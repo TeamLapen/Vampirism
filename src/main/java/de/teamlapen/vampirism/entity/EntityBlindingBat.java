@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.entity.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.passive.EntityBat;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
