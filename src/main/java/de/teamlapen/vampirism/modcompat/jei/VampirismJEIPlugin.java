@@ -2,11 +2,13 @@ package de.teamlapen.vampirism.modcompat.jei;
 
 import de.teamlapen.vampirism.client.gui.GuiHunterWeaponTable;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.inventory.HunterWeaponCraftingManager;
 import de.teamlapen.vampirism.inventory.HunterWeaponTableContainer;
 import mezz.jei.api.*;
 import mezz.jei.api.recipe.transfer.IRecipeTransferRegistry;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nonnull;
 
@@ -22,7 +24,7 @@ public class VampirismJEIPlugin extends BlankModPlugin {
         IJeiHelpers jeiHelpers = registry.getJeiHelpers();
 
         jeiHelpers.getItemBlacklist().addItemToBlacklist(new ItemStack(ModBlocks.fluidBlood));
-
+        jeiHelpers.getItemBlacklist().addItemToBlacklist(new ItemStack(ModItems.bloodPotion, 1, OreDictionary.WILDCARD_VALUE));
         IGuiHelper guiHelper = jeiHelpers.getGuiHelper();
 
         registry.addRecipeCategories(new HunterWeaponRecipeCategory(guiHelper));

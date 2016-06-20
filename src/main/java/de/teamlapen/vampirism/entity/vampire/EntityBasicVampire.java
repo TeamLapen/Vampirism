@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.ai.*;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
+import de.teamlapen.vampirism.items.ItemStake;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
@@ -23,6 +24,8 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
@@ -50,6 +53,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
 
 
     }
+
 
     @Override
     public void consumeBlood(int amt, float saturationMod) {
@@ -175,6 +179,22 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         if (recentlyHit) {
             if (this.rand.nextInt(3) == 0) {
                 this.dropItem(ModItems.vampireFang, 1);
+            }
+        }
+    }
+
+    @Override
+    protected void dropLoot(boolean wasRecentlyHit, int lootingModifier, DamageSource source) {
+        super.dropLoot(wasRecentlyHit, lootingModifier, source);
+        if (source instanceof EntityDamageSource) {
+            if (source.getEntity() instanceof EntityPlayer) {
+                ItemStack active = ((EntityPlayer) source.getEntity()).getHeldItem(((EntityPlayer) source.getEntity()).getActiveHand());
+                if (active != null && active.getItem() instanceof ItemStake) {
+                    if (this.rand.nextInt(2) == 0) {
+                        this.dropItem(ModItems.vampireBlood, 1);
+
+                    }
+                }
             }
         }
     }

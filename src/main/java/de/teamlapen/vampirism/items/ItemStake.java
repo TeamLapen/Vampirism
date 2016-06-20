@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.Achievements;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.entity.EntityLivingBase;
@@ -60,6 +61,9 @@ public class ItemStake extends VampirismItemWeapon {
                 if (instaKill) {
                     DamageSource dmg = attacker instanceof EntityPlayer ? DamageSource.causePlayerDamage((EntityPlayer) attacker) : DamageSource.causeMobDamage(attacker);
                     target.attackEntityFrom(dmg, 10000F);
+                    if (attacker instanceof EntityPlayer) {
+                        ((EntityPlayer) attacker).addStat(Achievements.stake);
+                    }
                 }
 
             }

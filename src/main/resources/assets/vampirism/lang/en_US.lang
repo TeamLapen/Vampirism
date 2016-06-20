@@ -284,8 +284,19 @@ keys.vampirism.action=Use Actions
 
 
 #Achievements
-achievement.vampirism.sucking_blood=Sucking Blood
-achievement.vampirism.becoming_vampire
+achievement.vampirism.sucking_blood=Blood thirsty
+achievement.vampirism.sucking_blood.desc=Suck blood
+achievement.vampirism.becoming_vampire=Get some fangs
+achievement.vampirism.becoming_vampire.desc=Become a Vampire
+achievement.vampirism.becoming_hunter=Start Hunting
+achievement.vampirism.becoming_hunter.desc=Become a Vampire Hunter
+achievement.vampirism.stake=Into the heart
+achievement.vampirism.stake.desc=Kill a vampire with a stake
+achievement.vampirism.weapon_table=Advanced forging
+achievement.vampirism.weapon_table.desc=Use an Hunter Weapon Table
+achievement.vampirism.blood_table=Bloody business
+achievement.vampirism.blood_table.desc=Brew a blood potion
+
 
 #Gui
 gui.vampirism.hunter_weapon_table=Hunter Weapon Table

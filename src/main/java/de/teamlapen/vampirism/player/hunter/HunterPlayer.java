@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.Achievements;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.player.VampirismPlayer;
@@ -19,6 +20,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -167,9 +169,18 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
         if (!isRemote()) {
             LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Hunter", getLevel(), Balance.hp.STRENGTH_LCAP, Balance.hp.STRENGTH_MAX_MOD, Balance.hp.STRENGTH_TYPE);
             actionHandler.resetTimers();
-            if (level > 0 && old == 0) {
-                skillHandler.enableRootSkill();
+            if (level > 0) {
+                if (player instanceof EntityPlayerMP && ((EntityPlayerMP) player).connection != null) {
+                    //When loading from NBT the playerNetServerHandler is not always initialized, but that's required for achievements. So checking here
+                    player.addStat(Achievements.becomingAHunter, 1);
+                }
+
+                if (old == 0) {
+                    skillHandler.enableRootSkill();
+
+                }
             }
+
         }
 
     }
