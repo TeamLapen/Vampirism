@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.tileentity.TileTent;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
@@ -38,7 +39,12 @@ public class ItemTent extends VampirismItem {
                 world.setBlockState(new BlockPos(x1, y, z1), tent.getDefaultState().withProperty(BlockTent.FACING, dir).withProperty(BlockTent.POSITION, 1), 3);
                 world.setBlockState(new BlockPos(x2, y, z2), tent.getDefaultState().withProperty(BlockTent.FACING, dir).withProperty(BlockTent.POSITION, 2), 3);
                 world.setBlockState(new BlockPos(x3, y, z3), tent.getDefaultState().withProperty(BlockTent.FACING, dir.getOpposite()).withProperty(BlockTent.POSITION, 3), 3);
-                if (spawner) ((TileTent) world.getTileEntity(pos)).setSpawn(true);
+                if (spawner) {
+                    TileEntity tile = world.getTileEntity(pos);
+                    if (tile instanceof TileTent) {
+                        ((TileTent) tile).setSpawn(true);
+                    }
+                }
                 return true;
             }
         }

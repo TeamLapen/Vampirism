@@ -12,6 +12,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.gen.feature.WorldGenerator;
+import net.minecraftforge.fluids.IFluidBlock;
 
 import java.util.Random;
 
@@ -62,9 +63,9 @@ public class WorldGenHunterCamp extends WorldGenerator {
 
     private boolean checkGroundAndPos(World worldIn, BlockPos position, IBlockState ground) {
         if (worldIn.getBlockState(position).getMaterial().isLiquid()) return false;
-        Material m = worldIn.getBlockState(position.down()).getMaterial();
-        if (m.isLiquid()) return false;
-        if (ground != null && m.isReplaceable()) {
+        IBlockState b = worldIn.getBlockState(position.down());
+        if (b.getMaterial().isLiquid() || b.getBlock() instanceof IFluidBlock) return false;
+        if (ground != null && b.getMaterial().isReplaceable()) {
             worldIn.setBlockState(position.down(), ground);
             return true;
         }
@@ -120,8 +121,10 @@ public class WorldGenHunterCamp extends WorldGenerator {
                     this.setBlockAndNotifyAdequately(worldIn, worldIn.getHeight(entrance2.offset(facing.getOpposite())), Blocks.TORCH.getDefaultState());
                 }
 
+                return true;
+
             }
-            return true;
+
         }
 
         return false;
