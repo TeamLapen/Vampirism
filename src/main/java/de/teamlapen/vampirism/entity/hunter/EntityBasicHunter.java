@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.hunter;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
@@ -8,7 +9,12 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.ai.EntityAIMoveThroughVillageCustom;
 import de.teamlapen.vampirism.entity.ai.HunterAIDefendVillage;
+import de.teamlapen.vampirism.entity.ai.HunterAILookAtTrainee;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
+import de.teamlapen.vampirism.inventory.HunterBasicContainer;
+import de.teamlapen.vampirism.network.ModGuiHandler;
+import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
+import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.world.villages.VampirismVillageCollection;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -16,6 +22,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -24,6 +31,7 @@ import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -31,7 +39,7 @@ import javax.annotation.Nullable;
 /**
  * Exists in {@link EntityBasicHunter#MAX_LEVEL}+1 different levels
  */
-public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter, HunterAIDefendVillage.IVillageHunterCreature {
+public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter, HunterAIDefendVillage.IVillageHunterCreature, HunterAILookAtTrainee.ITrainer {
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(EntityBasicHunter.class, DataSerializers.VARINT);
     private final int MAX_LEVEL = 3;
     private final int MOVE_TO_RESTRICT_PRIO = 3;
@@ -41,6 +49,10 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     private boolean villageHunter = false;
     private boolean defendVillageAdded = false;
     private EntityAIBase defendVillage = new HunterAIDefendVillage(this);
+    /**
+     * Player currently being trained otherwise null
+     */
+    private EntityPlayer trainee;
     /**
      * Caches the village of this hunter if he is a villageHunter
      */
@@ -97,6 +109,11 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         return this;
     }
 
+    @Override
+    public EntityPlayer getTrainee() {
+        return trainee;
+    }
+
     @Nullable
     @Override
     public IVampirismVillage getVampirismVillage() {
@@ -132,6 +149,15 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         this.villageHunter = true;
         this.IVampirismVillage = village;
         this.setDefendVillage(true);
+    }
+
+    @Override
+    public void onLivingUpdate() {
+        super.onLivingUpdate();
+        if (trainee != null && !(trainee.openContainer instanceof HunterBasicContainer)) {
+            this.trainee = null;
+
+        }
     }
 
     @Override
@@ -208,7 +234,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
 
         this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
         this.tasks.addTask(2, new EntityAIAttackMelee(this, 1.0, false));
-
+        this.tasks.addTask(3, new HunterAILookAtTrainee(this));
 
         this.tasks.addTask(6, new EntityAIWander(this, 0.7, 50));
         this.tasks.addTask(8, new EntityAIWatchClosest(this, EntityPlayer.class, 13F));
@@ -237,6 +263,29 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         } else {
             IVampirismVillage = null;
         }
+    }
+
+    @Override
+    protected boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
+        int hunterLevel = HunterPlayer.get(player).getLevel();
+        if (this.isEntityAlive() && !player.isSneaking()) {
+            if (!worldObj.isRemote) {
+                if (HunterLevelingConf.instance().isLevelValidForBasicHunter(hunterLevel + 1)) {
+                    if (trainee == null) {
+                        player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_BASIC, this.worldObj, (int) posX, (int) posY, (int) posZ);
+                        trainee = player;
+                    } else {
+                        player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.i_am_busy_right_now"));
+                    }
+                } else if (hunterLevel > 0) {
+                    player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.basic_hunter.cannot_train_you_any_further"));
+                }
+            }
+            return true;
+        }
+
+
+        return super.processInteract(player, hand, stack);
     }
 
     /**

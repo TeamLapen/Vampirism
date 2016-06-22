@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.entity.ai;
 
-import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainer;
+import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -8,11 +8,17 @@ import net.minecraft.entity.player.EntityPlayer;
  * Makes the hunter trainer look at his trainee
  */
 public class HunterAILookAtTrainee extends EntityAIWatchClosest {
-    private final EntityHunterTrainer theTrainer;
+    private final ITrainer theTrainer;
 
-    public HunterAILookAtTrainee(EntityHunterTrainer theTrainer) {
+    /**
+     * @param theTrainer Has to be instance of ITrainer
+     */
+    public HunterAILookAtTrainee(EntityLiving theTrainer) {
         super(theTrainer, EntityPlayer.class, 8.0F);
-        this.theTrainer = theTrainer;
+        if (!(theTrainer instanceof ITrainer)) {
+            throw new IllegalArgumentException("The trainer has to implement ITrainer");
+        }
+        this.theTrainer = (ITrainer) theTrainer;
         this.setMutexBits(5);
     }
 
@@ -26,5 +32,15 @@ public class HunterAILookAtTrainee extends EntityAIWatchClosest {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Interface used by {@link HunterAILookAtTrainee}
+     */
+    public interface ITrainer {
+        /**
+         * @return The player currently being trained or null
+         */
+        EntityPlayer getTrainee();
     }
 }

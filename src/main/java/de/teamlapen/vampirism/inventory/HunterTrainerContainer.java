@@ -2,7 +2,10 @@ package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
+import de.teamlapen.lib.lib.inventory.InventorySlot;
+import de.teamlapen.lib.lib.inventory.SimpleInventory;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -92,6 +95,20 @@ public class HunterTrainerContainer extends InventoryContainer {
             int[] req = HunterLevelingConf.instance().getItemRequirementsForTrainer(old + 1);
             InventoryHelper.removeItems(tile, new int[]{req[0], req[1], 1});
             player.addPotionEffect(new PotionEffect(ModPotions.saturation, 400, 2));
+        }
+    }
+
+    /**
+     * Simple inventory for the Hunter Trainer
+     */
+    public static class HunterTrainerInventory extends SimpleInventory {
+        public HunterTrainerInventory() {
+            super(new InventorySlot[]{new InventorySlot(Items.IRON_INGOT, 27, 26), new InventorySlot(Items.GOLD_INGOT, 57, 26), new InventorySlot(ModItems.hunterIntel, 86, 26)});
+        }
+
+        @Override
+        public String getName() {
+            return "entity." + ModEntities.HUNTER_TRAINER + ".name";
         }
     }
 }

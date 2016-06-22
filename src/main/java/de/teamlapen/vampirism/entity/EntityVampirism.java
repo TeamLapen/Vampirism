@@ -219,6 +219,9 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
     }
 
+    /**
+     * Called after an EntityLivingBase has been attacked as mob
+     */
     protected void attackedEntityAsMob(EntityLivingBase entity) {
     }
 

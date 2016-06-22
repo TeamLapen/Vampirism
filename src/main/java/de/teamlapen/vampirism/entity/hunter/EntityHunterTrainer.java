@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.entity.ai.HunterAILookAtTrainee;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
+import de.teamlapen.vampirism.inventory.HunterTrainerContainer;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import net.minecraft.entity.EntityCreature;
@@ -23,7 +24,7 @@ import net.minecraft.world.World;
 /**
  * Hunter Trainer which allows Hunter players to level up
  */
-public class EntityHunterTrainer extends EntityHunterBase {
+public class EntityHunterTrainer extends EntityHunterBase implements HunterAILookAtTrainee.ITrainer {
     private final int MOVE_TO_RESTRICT_PRIO = 3;
     private EntityPlayer trainee;
 
@@ -47,6 +48,7 @@ public class EntityHunterTrainer extends EntityHunterBase {
     /**
      * @return The player which has the trainings gui open. Can be null
      */
+    @Override
     public EntityPlayer getTrainee() {
         return trainee;
     }
@@ -54,7 +56,7 @@ public class EntityHunterTrainer extends EntityHunterBase {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (trainee != null && trainee.openContainer == null) {
+        if (trainee != null && !(trainee.openContainer instanceof HunterTrainerContainer)) {
             this.trainee = null;
         }
     }
@@ -103,8 +105,13 @@ public class EntityHunterTrainer extends EntityHunterBase {
         if (!flag && this.isEntityAlive() && !player.isSneaking()) {
             if (!this.worldObj.isRemote) {
                 if (HunterLevelingConf.instance().isLevelValidForTrainer(FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION) + 1)) {
-                    this.trainee = player;
-                    player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_TRAINER, player.worldObj, getPosition().getX(), getPosition().getY(), getPosition().getZ());
+                    if (trainee == null) {
+                        this.trainee = player;
+                        player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_TRAINER, player.worldObj, getPosition().getX(), getPosition().getY(), getPosition().getZ());
+                    } else {
+                        player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.i_am_busy_right_now"));
+                    }
+
                 } else {
                     player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.trainer_level_wrong"));
                 }

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.network;
 import de.teamlapen.vampirism.blocks.BlockHunterTable;
 import de.teamlapen.vampirism.client.gui.*;
 import de.teamlapen.vampirism.inventory.BloodPotionTableContainer;
+import de.teamlapen.vampirism.inventory.HunterBasicContainer;
 import de.teamlapen.vampirism.inventory.HunterTrainerContainer;
 import de.teamlapen.vampirism.inventory.HunterWeaponTableContainer;
 import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
@@ -23,6 +24,7 @@ public class ModGuiHandler implements IGuiHandler {
     public final static int ID_REVERT_BACK = 5;
     public final static int ID_WEAPON_TABLE = 6;
     public final static int ID_BLOOD_POTION_TABLE = 7;
+    public final static int ID_HUNTER_BASIC = 8;
 
     @Override
     public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
@@ -46,6 +48,8 @@ public class ModGuiHandler implements IGuiHandler {
                 return new GuiHunterWeaponTable(player.inventory, world, new BlockPos(x, y, z));
             case ID_BLOOD_POTION_TABLE:
                 return new GuiBloodPotionTable(player.inventory, new BlockPos(x, y, z), world);
+            case ID_HUNTER_BASIC:
+                return new GuiHunterBasic(player);
             default:
                 return null;
         }
@@ -68,6 +72,9 @@ public class ModGuiHandler implements IGuiHandler {
         }
         if (id == ID_BLOOD_POTION_TABLE) {
             return new BloodPotionTableContainer(player.inventory, new BlockPos(x, y, z), world);
+        }
+        if (id == ID_HUNTER_BASIC) {
+            return new HunterBasicContainer(player.inventory);
         }
         return null;
     }

@@ -16,6 +16,8 @@ public class HunterLevelingConf {
         return instance;
     }
 
+    public final int BASIC_HUNTER_MIN_LEVEL = 2;
+    public final int BASIC_HUNTER_MAX_LEVEL = 4;
     public final int TABLE_MIN_LEVEL = 5;
     public final int TABLE_MAX_LEVEL = 14;
     public final int HUNTER_INTEL_COUNT = 9;
@@ -30,6 +32,9 @@ public class HunterLevelingConf {
         return isLevelValidForTable(level) ? level - TABLE_MIN_LEVEL : -1;
     }
 
+    /**
+     * @throws IllegalArgumentException If the altar cannot be used at that level
+     */
     public int[] getItemRequirementsForTable(int targetLevel) {
         if (!isLevelValidForTable(targetLevel)) {
             throw new IllegalArgumentException("Cannot use the table with the given target level " + targetLevel);
@@ -102,10 +107,36 @@ public class HunterLevelingConf {
     }
 
     /**
+     *
+     * @throws IllegalArgumentException If the basic hunter cannot be used at that level
+     */
+    public int getVampireBloodCountForBasicHunter(int targetLevel) {
+        if (!isLevelValidForBasicHunter(targetLevel)) {
+            throw new IllegalArgumentException("Cannot use the table with the given target level " + targetLevel);
+        }
+        switch (targetLevel) {
+            case 2:
+                return 4;
+            case 3:
+                return 8;
+            case 4:
+                return 12;
+            default:
+                return 100000;
+        }
+    }
+
+    /**
+     * Checks if a hunter player can be trained by an basic hunter to reach the target level
+     */
+    public boolean isLevelValidForBasicHunter(int targetLevel) {
+        return targetLevel >= BASIC_HUNTER_MIN_LEVEL && targetLevel <= BASIC_HUNTER_MAX_LEVEL;
+    }
+
+    /**
      * Checks if a hunter player can use the hunter table to obtain the target level book
      *
-     * @param targetLevel
-     * @return
+
      */
     public boolean isLevelValidForTable(int targetLevel) {
         return targetLevel >= TABLE_MIN_LEVEL && targetLevel <= TABLE_MAX_LEVEL;
@@ -113,9 +144,7 @@ public class HunterLevelingConf {
 
     /**
      * Checks if a hunter player can reach the given level using the hunter trainer
-     *
-     * @param targetLevel
-     * @return
+
      */
     public boolean isLevelValidForTrainer(int targetLevel) {
         return targetLevel >= TABLE_MIN_LEVEL && targetLevel <= TABLE_MAX_LEVEL;

@@ -321,3 +321,7 @@ text.vampirism.immune_to_=You are immune to
 text.vampirism.required_skill=Required Skill: %s
 text.vampirism.from_behind=From behind.
 text.vampirism.unknown=Unknown
+text.vampirism.basic_hunter.cannot_train_you_any_further=I cannot train you any further
+text.vampirism.basic_hunter.pay_n_vampire_blood_more=Please pay me %s more vampire blood bottles to train you
+text.vampirism.basic_hunter.i_will_train_you=Alright, I will train you
+text.vampirism.i_am_busy_right_now=I'm busy right now

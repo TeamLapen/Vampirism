@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.BloodPotionTableContainer;
+import de.teamlapen.vampirism.inventory.HunterBasicContainer;
 import de.teamlapen.vampirism.inventory.HunterTrainerContainer;
 import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
@@ -44,6 +45,7 @@ public class InputEventPacket implements IMessage {
     public static final String VAMPIRE_VISION_TOGGLE = "vvt";
     public static final String CRAFT_BLOOD_POTION = "cb";
     public static final String OPEN_BLOOD_POTION = "ob";
+    public static final String BASICHUNTERLEVELUP = "bl";
     private final static String TAG = "InputEventPacket";
     private final String SPLIT = "-";
     private String param;
@@ -200,6 +202,10 @@ public class InputEventPacket implements IMessage {
                     }
                 } else {
                     player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by", new TextComponentTranslation(VReference.HUNTER_FACTION.getUnlocalizedName())));
+                }
+            } else if (message.action.equals(BASICHUNTERLEVELUP)) {
+                if (player.openContainer instanceof HunterBasicContainer) {
+                    ((HunterBasicContainer) player.openContainer).onLevelUpClicked();
                 }
             }
             return null;

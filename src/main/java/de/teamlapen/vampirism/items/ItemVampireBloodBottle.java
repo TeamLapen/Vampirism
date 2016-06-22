@@ -6,6 +6,6 @@ public class ItemVampireBloodBottle extends VampirismItem {
 
     public ItemVampireBloodBottle() {
         super(regName);
-        this.setMaxStackSize(3);
+        this.setMaxStackSize(15);
     }
 }
