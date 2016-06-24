@@ -74,7 +74,7 @@ import java.io.File;
  * Main class for Vampirism
  * TODO readd "required-after:teamlapen-lib;"
  */
-@Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION, acceptedMinecraftVersions = "[1.9.4]", dependencies = "required-after:Forge@[" + REFERENCE.FORGE_VERSION_MIN + ",);", guiFactory = "de.teamlapen.vampirism.client.core.ModGuiFactory", updateJSON = REFERENCE.VERSION_UPDATE_FILE)
+@Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION, acceptedMinecraftVersions = "[1.9.4,1.10)", dependencies = "required-after:Forge@[" + REFERENCE.FORGE_VERSION_MIN + ",);", guiFactory = "de.teamlapen.vampirism.client.core.ModGuiFactory", updateJSON = REFERENCE.VERSION_UPDATE_FILE)
 public class VampirismMod {
 
     public final static Logger log = new Logger(REFERENCE.MODID, "de.teamlapen.vampirism");

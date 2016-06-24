@@ -106,8 +106,8 @@ public class ModItems {
         stake = registerItem(new ItemStake());
         vampireBlood = registerItem(new ItemVampireBloodBottle());
         bloodPotion = registerItem(new ItemBloodPotion());
-        basicTechCrossbow = registerItem(new ItemTechCrossbow("basicTechCrossbow", 1.6F, 4, 300));
-        enhancedTechCrossbow = registerItem(new ItemTechCrossbow("enhancedTechCrossbow", 1.7F, 2, 450));
+        basicTechCrossbow = registerItem(new ItemTechCrossbow("basicTechCrossbow", 1.6F, 6, 300));
+        enhancedTechCrossbow = registerItem(new ItemTechCrossbow("enhancedTechCrossbow", 1.7F, 4, 450));
         techCrossbowAmmoPackage = registerItem(new VampirismItem("techCrossbowAmmoPackage"));
     }
 

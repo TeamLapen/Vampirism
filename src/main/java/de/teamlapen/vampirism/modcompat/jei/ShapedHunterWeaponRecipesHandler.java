@@ -17,6 +17,12 @@ public class ShapedHunterWeaponRecipesHandler implements IRecipeHandler<ShapedHu
 
     @Nonnull
     @Override
+    public String getRecipeCategoryUid(@Nonnull ShapedHunterWeaponRecipe recipe) {
+        return VampirismJEIPlugin.HUNTER_WEAPON_RECIPE_UID;
+    }
+
+    @Nonnull
+    @Override
     public Class<ShapedHunterWeaponRecipe> getRecipeClass() {
         return ShapedHunterWeaponRecipe.class;
     }

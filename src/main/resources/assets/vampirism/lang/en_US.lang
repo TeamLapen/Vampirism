@@ -211,7 +211,7 @@ text.vampirism.skill.blood_potion_portable_crafting.desc=Learn how to brew blood
 text.vampirism.skill.blood_potion_identify_some=Brewing master
 text.vampirism.skill.blood_potion_identify_some.desc=Get to know some of the effects of a blood potion
 text.vampirism.skill.tech_weapons=Technology
-text.vampirism.skill.tech:weapons.desc=Learn how to build some advanced weapons
+text.vampirism.skill.tech_weapons.desc=Learn how to build some advanced weapons
 
 #BLOOD POTIONS
 text.vampirism.blood_potion.might_cause=Might cause:

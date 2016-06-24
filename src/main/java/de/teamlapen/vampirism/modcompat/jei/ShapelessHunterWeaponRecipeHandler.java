@@ -9,20 +9,24 @@ import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
 
-/**
- * Created by max on 04.06.16.
- */
-public class ShapelessHunterWeaponRecipeHandler implements IRecipeHandler<ShapelessHunterWeaponRecipe> {
-    @Nonnull
-    @Override
-    public Class<ShapelessHunterWeaponRecipe> getRecipeClass() {
-        return ShapelessHunterWeaponRecipe.class;
-    }
 
+public class ShapelessHunterWeaponRecipeHandler implements IRecipeHandler<ShapelessHunterWeaponRecipe> {
     @Nonnull
     @Override
     public String getRecipeCategoryUid() {
         return VampirismJEIPlugin.HUNTER_WEAPON_RECIPE_UID;
+    }
+
+    @Nonnull
+    @Override
+    public String getRecipeCategoryUid(@Nonnull ShapelessHunterWeaponRecipe recipe) {
+        return VampirismJEIPlugin.HUNTER_WEAPON_RECIPE_UID;
+    }
+
+    @Nonnull
+    @Override
+    public Class<ShapelessHunterWeaponRecipe> getRecipeClass() {
+        return ShapelessHunterWeaponRecipe.class;
     }
 
     @Nonnull
