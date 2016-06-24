@@ -10,6 +10,6 @@ public class VampirismPotion extends Potion {
     public VampirismPotion(String name, boolean badEffect, int potionColor) {
         super(badEffect, potionColor);
         this.setRegistryName(REFERENCE.MODID, name);
-        this.setPotionName("potion.vampirism." + name);
+        this.setPotionName("effect.vampirism." + name);
     }
 }

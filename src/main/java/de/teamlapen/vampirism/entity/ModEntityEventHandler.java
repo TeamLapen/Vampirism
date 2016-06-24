@@ -1,15 +1,18 @@
 package de.teamlapen.vampirism.entity;
 
 import com.google.common.base.Predicate;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLordWithSaveable;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
+import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.BloodPotionTableContainer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.potion.FakeNightVisionPotion;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.EntityCreature;
@@ -17,6 +20,7 @@ import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -104,5 +108,13 @@ public class ModEntityEventHandler {
                 ((BloodPotionTableContainer) player.openContainer).tick();
             }
         }
+        PotionEffect vanillaNightVision = null;
+        if (FakeNightVisionPotion.vanillaInstance != null && (vanillaNightVision = event.getEntityLiving().getActivePotionEffect(FakeNightVisionPotion.vanillaInstance)) != null) {
+            event.getEntityLiving().removePotionEffect(FakeNightVisionPotion.vanillaInstance);
+            event.getEntityLiving().addPotionEffect(new PotionEffect(ModPotions.fakeNightVisionPotion, vanillaNightVision.getDuration(), vanillaNightVision.getAmplifier(), vanillaNightVision.getIsAmbient(), vanillaNightVision.doesShowParticles()));
+            VampirismMod.log.d("EntityEventHandler", "Replacing vanilla night vision potion effect by modified potion effect");
+        }
+
+
     }
 }

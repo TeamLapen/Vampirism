@@ -41,11 +41,14 @@ public class BlockBloodPotionTable extends VampirismBlock {
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
 
-        if (canUse(playerIn))
-            playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_POTION_TABLE, worldIn, pos.getX(), pos.getY(), pos.getZ());
-        else {
-            playerIn.addChatComponentMessage(new TextComponentTranslation("tile.vampirism." + regName + ".cannot_use"));
+        if (!worldIn.isRemote) {
+            if (canUse(playerIn))
+                playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_POTION_TABLE, worldIn, pos.getX(), pos.getY(), pos.getZ());
+            else {
+                playerIn.addChatComponentMessage(new TextComponentTranslation("tile.vampirism." + regName + ".cannot_use"));
+            }
         }
+
         return true;
     }
 

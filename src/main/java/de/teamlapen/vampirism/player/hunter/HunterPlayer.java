@@ -165,7 +165,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     }
 
     @Override
-    public void onLevelChanged(int old, int level) {
+    public void onLevelChanged(int level, int oldLevel) {
         if (!isRemote()) {
             LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Hunter", getLevel(), Balance.hp.STRENGTH_LCAP, Balance.hp.STRENGTH_MAX_MOD, Balance.hp.STRENGTH_TYPE);
             actionHandler.resetTimers();
@@ -175,7 +175,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
                     player.addStat(Achievements.becomingAHunter, 1);
                 }
 
-                if (old == 0) {
+                if (oldLevel == 0) {
                     skillHandler.enableRootSkill();
 
                 }
@@ -207,6 +207,10 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
                     sync = true;
                     syncToAll = true;
                     actionHandler.writeUpdateForClient(syncPacket);
+                }
+                if (skillHandler.isDirty()) {
+                    sync = true;
+                    skillHandler.writeUpdateForClient(syncPacket);
                 }
                 if (sync) {
                     sync(syncPacket, syncToAll);

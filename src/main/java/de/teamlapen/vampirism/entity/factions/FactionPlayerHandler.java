@@ -254,7 +254,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
         if (currentFaction != null) {
             VampirismMod.log.d(TAG, "Changing to %s %d", currentFaction, currentLevel);
-            currentFaction.getPlayerCapability(player).onLevelChanged(currentLevel, oldFaction == currentFaction ? oldLevel : 0);
+            currentFaction.getPlayerCapability(player).onLevelChanged(currentLevel, Objects.equals(oldFaction, currentFaction) ? oldLevel : 0);
         }
         if (!Objects.equals(currentFaction, oldFaction)) {
             onChangedFaction();

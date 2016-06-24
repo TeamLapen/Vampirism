@@ -34,8 +34,16 @@ public class NightVision implements IVampireVision {
 
     @Override
     public void onUpdate(IVampirePlayer player) {
-        if (player.getRepresentingPlayer().ticksExisted % 50 == 8 && player.getRepresentingPlayer().getActivePotionEffect(MobEffects.NIGHT_VISION) == null) {
-            player.getRepresentingPlayer().addPotionEffect(new FakeNightVisionPotionEffect());
+        if (player.getRepresentingPlayer().ticksExisted % 50 == 8) {
+            PotionEffect effect = player.getRepresentingPlayer().getActivePotionEffect(MobEffects.NIGHT_VISION);
+            if (!(effect instanceof FakeNightVisionPotionEffect)) {
+                player.getRepresentingPlayer().removeActivePotionEffect(MobEffects.NIGHT_VISION);
+                effect = null;
+            }
+            if (effect == null) {
+                player.getRepresentingPlayer().addPotionEffect(new FakeNightVisionPotionEffect());
+
+            }
         }
     }
 }

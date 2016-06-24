@@ -62,10 +62,6 @@ key.vampirism.vision=Switch vision
 #General
 itemGroup.vampirism=Vampirism
 death.attack.sun=%1$s did not like the sun
-potion.vampirism.sunscreen=Sunscreen
-potion.vampirism.thirst=Thirst
-potion.vampirism.saturation=Saturation
-potion.vampirism.sanguinare=Sanguinare Vampiris
 text.vampirism.skill.level_to_low=Your vampire level is too low for that
 text.vampirism.skill.cooldown_not_over=Please wait until the cooldown is over
 text.vampirism.entity_level=Level
@@ -283,7 +279,7 @@ keys.vampirism.select_skills=Select Skills
 keys.vampirism.action=Use Actions
 
 
-#Achievements
+#ACHIEVEMENTS
 achievement.vampirism.sucking_blood=Blood thirsty
 achievement.vampirism.sucking_blood.desc=Suck blood
 achievement.vampirism.becoming_vampire=Get some fangs
@@ -297,8 +293,13 @@ achievement.vampirism.weapon_table.desc=Use an Hunter Weapon Table
 achievement.vampirism.blood_table=Bloody business
 achievement.vampirism.blood_table.desc=Brew a blood potion
 
+#POTIONS
+effect.vampirism.sunscreen=Sunscreen
+effect.vampirism.thirst=Thirst
+effect.vampirism.saturation=Saturation
+effect.vampirism.sanguinare=Sanguinare Vampiris
 
-#Gui
+#GUI
 gui.vampirism.hunter_weapon_table=Hunter Weapon Table
 gui.vampirism.hunter_weapon_table.level=Required Hunter Level: %s
 gui.vampirism.hunter_weapon_table.skill=Required Skill: %s

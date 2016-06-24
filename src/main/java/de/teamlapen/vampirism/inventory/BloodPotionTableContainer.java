@@ -157,7 +157,13 @@ public class BloodPotionTableContainer extends Container {
             craftingTimer--;
             if (craftingTimer == 0) {
                 onCraftingTimerFinished();
+            } else if (craftingTimer % 5 == 0) {
+                //Abort crafting if requirements are not met anymore
+                if (!areRequirementsMet()) {
+                    craftingTimer = 0;
+                }
             }
+
         }
     }
 

@@ -29,20 +29,6 @@ public class GuiBloodPotionTable extends GuiContainer {
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
-        List<String> hints = container.getLocalizedCraftingHint();
-        if (hints != null) {
-            int i = (this.width - this.xSize) / 2;
-            int j = (this.height - this.ySize) / 2;
-            for (String hint : hints) {
-                this.fontRendererObj.drawSplitString(hint, i + 5, j + 28, 92, java.awt.Color.WHITE.getRGB());
-                j += this.fontRendererObj.splitStringWidth(hint, 92);
-            }
-        }
-    }
-
-    @Override
     public void initGui() {
         super.initGui();
         this.buttonList.add(this.craftBtn = new GuiButton(0, this.width / 2 - 77, this.height / 2 - 78, 80, 20, UtilLib.translateToLocal("gui.vampirism.blood_potion_table.create")));
@@ -84,5 +70,19 @@ public class GuiBloodPotionTable extends GuiContainer {
 
         }
 
+    }
+
+    @Override
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        super.drawGuiContainerForegroundLayer(mouseX, mouseY);
+        List<String> hints = container.getLocalizedCraftingHint();
+        if (hints != null) {
+            int i = (this.width - this.xSize) / 2;
+            int j = (this.height - this.ySize) / 2;
+            for (String hint : hints) {
+                this.fontRendererObj.drawSplitString(hint, i + 5, j + 28, 92, java.awt.Color.WHITE.getRGB());
+                j += this.fontRendererObj.splitStringWidth(hint, 92);
+            }
+        }
     }
 }

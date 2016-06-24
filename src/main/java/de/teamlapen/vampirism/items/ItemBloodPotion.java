@@ -28,6 +28,7 @@ public class ItemBloodPotion extends VampirismItem {
     public ItemBloodPotion() {
         super(regName);
         this.setMaxDamage(1);
+        this.setMaxStackSize(1);
         this.setCreativeTab(null);
     }
 

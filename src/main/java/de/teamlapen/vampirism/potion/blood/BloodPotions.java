@@ -88,8 +88,6 @@ public class BloodPotions {
                 seed = nbt.getInteger("ident_seed");
             } else {
                 seed = stack.hashCode();
-                nbt.setInteger("ident_seed", seed);
-                stack.setTagCompound(nbt);
             }
             identifyRandom = new Random(seed);
 
@@ -188,7 +186,7 @@ public class BloodPotions {
             boolean valid = true;
             for (ConfiguredEffect effect1 : effects) {
                 if (!effect1.getEffect().canCoexist(effect)) {
-                    extra = Math.min(good + 1, 5);
+                    extra = Math.min(extra + 1, 5);
                     valid = false;
                 }
             }
@@ -208,6 +206,10 @@ public class BloodPotions {
             effectTag.setTag(effect.getEffect().getId(), effect.getProperties());
         }
         nbt.setTag("effects", effectTag);
+        if (!nbt.hasKey("ident_seed")) {
+            int seed = stack.hashCode();
+            nbt.setInteger("ident_seed", seed);
+        }
         stack.setTagCompound(nbt);
     }
 
