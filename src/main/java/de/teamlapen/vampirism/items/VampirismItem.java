@@ -7,7 +7,7 @@ import net.minecraft.item.Item;
 /**
  * Base class for most of Vampirism's items
  */
-public abstract class VampirismItem extends Item {
+public class VampirismItem extends Item {
     protected final String regName;
 
     /**

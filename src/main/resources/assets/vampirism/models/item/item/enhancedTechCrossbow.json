@@ -1,0 +1,6 @@
+{
+  "parent": "vampirism:item/item/techCrossbow",
+  "textures": {
+    "extra": "vampirism:items/techCrossbowExtraEnhanced"
+  }
+}

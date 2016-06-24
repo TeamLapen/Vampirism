@@ -210,6 +210,8 @@ text.vampirism.skill.blood_potion_portable_crafting=Brewing on the go
 text.vampirism.skill.blood_potion_portable_crafting.desc=Learn how to brew blood potions without a Blood Potion Table
 text.vampirism.skill.blood_potion_identify_some=Brewing master
 text.vampirism.skill.blood_potion_identify_some.desc=Get to know some of the effects of a blood potion
+text.vampirism.skill.tech_weapons=Technology
+text.vampirism.skill.tech:weapons.desc=Learn how to build some advanced weapons
 
 #BLOOD POTIONS
 text.vampirism.blood_potion.might_cause=Might cause:
@@ -273,6 +275,10 @@ item.vampirism.enhancedDoubleCrossbow.name=Enhanced Double Crossbow
 item.vampirism.stake.name=Stake
 item.vampirism.vampireBloodBottle.name=Vampire Blood
 item.vampirism.bloodPotion.name=Blood Potion
+item.vampirism.basicTechCrossbow.name=Semi-Auto Crossbow
+item.vampirism.enhancedTechCrossbow.name=Enhanced Semi-Auto Crossbow
+item.vampirism.techCrossbowAmmoPackage.name=Arrow clip
+
 
 #KEYS
 keys.vampirism.select_skills=Select Skills
@@ -326,3 +332,5 @@ text.vampirism.basic_hunter.cannot_train_you_any_further=I cannot train you any 
 text.vampirism.basic_hunter.pay_n_vampire_blood_more=Please pay me %s more vampire blood bottles to train you
 text.vampirism.basic_hunter.i_will_train_you=Alright, I will train you
 text.vampirism.i_am_busy_right_now=I'm busy right now
+text.vampirism.crossbow.not_loaded=Not loaded
+text.vampirism.crossbow.loaded_arrow_count=Loaded %s arrows

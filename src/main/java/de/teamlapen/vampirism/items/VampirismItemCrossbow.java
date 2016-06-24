@@ -11,7 +11,6 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Enchantments;
-import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
@@ -66,6 +65,32 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
     }
 
     /**
+     * Searches Offhand,Mainhand and the inventory afterwards for arrows
+     * @param player
+     * @param bowStack The itemstack of the bow
+     * @return The itemstack of the arrows or null
+     */
+    protected
+    @Nullable
+    ItemStack findAmmo(EntityPlayer player, ItemStack bowStack) {
+        if (this.isArrow(player.getHeldItem(EnumHand.OFF_HAND))) {
+            return player.getHeldItem(EnumHand.OFF_HAND);
+        } else if (this.isArrow(player.getHeldItem(EnumHand.MAIN_HAND))) {
+            return player.getHeldItem(EnumHand.MAIN_HAND);
+        } else {
+            for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
+                ItemStack itemstack = player.inventory.getStackInSlot(i);
+
+                if (this.isArrow(itemstack)) {
+                    return itemstack;
+                }
+            }
+
+            return null;
+        }
+    }
+
+    /**
      * Can be between 0.1 and 5
      *
      * @return The velocity of a shot arrow.
@@ -102,7 +127,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      */
     protected boolean isCrossbowInfinite(ItemStack stack, EntityPlayer player) {
         int enchant = EnchantmentHelper.getEnchantmentLevel(net.minecraft.init.Enchantments.INFINITY, stack);
-        return enchant > 0;
+        return enchant > 0 || player.isCreative();
     }
 
     /**
@@ -117,18 +142,18 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
         boolean creative = player.capabilities.isCreativeMode;
         boolean bowInfinite = isCrossbowInfinite(stack, player);
 
-        ItemStack itemstack = this.findAmmo(player);
+        ItemStack itemstack = this.findAmmo(player, stack);
 
 
-        if (itemstack != null || creative || bowInfinite) {
+        if (itemstack != null || bowInfinite) {
             if (itemstack == null) {
-                itemstack = new ItemStack(Items.ARROW);
+                itemstack = new ItemStack(ModItems.crossbowArrow);
             }
 
             float f = getArrowVelocity();
 
             if ((double) f >= 0.1D) {
-                boolean consumeArrow = !(creative || bowInfinite && canArrowBeInfinite(itemstack));
+                boolean consumeArrow = shouldConsumeArrow(itemstack, creative, bowInfinite);
 
                 if (!world.isRemote) {
                     ItemCrossbowArrow itemarrow = itemstack.getItem() instanceof ItemCrossbowArrow ? (ItemCrossbowArrow) itemstack.getItem() : ModItems.crossbowArrow;
@@ -183,6 +208,16 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
     }
 
     /**
+     * If an arrow should be consumed after being shot
+     * @param arrowStack The stack of the arrow
+     * @param playerCreative If the player is creative
+     * @param bowInfinite if the bow is infinite
+     */
+    protected boolean shouldConsumeArrow(ItemStack arrowStack, boolean playerCreative, boolean bowInfinite) {
+        return !(playerCreative || bowInfinite && canArrowBeInfinite(arrowStack));
+    }
+
+    /**
      * @return If the given arrow type can be used in an infinite crossbow
      */
     private boolean canArrowBeInfinite(ItemStack arrowStack) {
@@ -190,23 +225,5 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
             return ((ItemCrossbowArrow) arrowStack.getItem()).isCanBeInfinite(arrowStack);
         }
         return true;
-    }
-
-    private ItemStack findAmmo(EntityPlayer player) {
-        if (this.isArrow(player.getHeldItem(EnumHand.OFF_HAND))) {
-            return player.getHeldItem(EnumHand.OFF_HAND);
-        } else if (this.isArrow(player.getHeldItem(EnumHand.MAIN_HAND))) {
-            return player.getHeldItem(EnumHand.MAIN_HAND);
-        } else {
-            for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
-                ItemStack itemstack = player.inventory.getStackInSlot(i);
-
-                if (this.isArrow(itemstack)) {
-                    return itemstack;
-                }
-            }
-
-            return null;
-        }
     }
 }

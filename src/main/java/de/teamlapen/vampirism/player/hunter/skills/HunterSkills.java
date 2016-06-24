@@ -19,6 +19,7 @@ public class HunterSkills {
     public static final ISkill<IHunterPlayer> doubleCrossbow = new VampirismSkill.SimpleHunterSkill("double_crossbow", 192, 32, false);
     public static final ISkill<IHunterPlayer> weaponTable = new VampirismSkill.SimpleHunterSkill("weapon_table", 48, 32, true);
     public static final ISkill<IHunterPlayer> enhancedCrossbow = new VampirismSkill.SimpleHunterSkill("enhanced_crossbow", 208, 32, false);
+    public static final ISkill<IHunterPlayer> techWeapons = new VampirismSkill.SimpleHunterSkill("tech_weapons", 0, 0, true);
     public static final ISkill<IHunterPlayer> stake1 = new VampirismSkill.SimpleHunterSkill("stake1", 16, 32, false) {
         @Override
         public String getLocalizedDescription() {
@@ -84,7 +85,8 @@ public class HunterSkills {
 
         SkillNode skill6 = new SkillNode(skill5, doubleCrossbow);
         SkillNode skill7 = new SkillNode(skill6, advancedAttackSpeed, enhancedCrossbow);
-        SkillNode skill8 = new SkillNode(skill7, stake2);
+        SkillNode skill8 = new SkillNode(skill7, techWeapons);
+        SkillNode skill9 = new SkillNode(skill8, stake2);
     }
 
     private static void registerAlchemySkills(SkillNode root) {

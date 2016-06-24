@@ -127,7 +127,7 @@ public class ItemCrossbowArrow extends VampirismItem {
         }
     }
 
-    private enum EnumArrowType {
+    public enum EnumArrowType {
         NORMAL("normal", 2.0), VAMPIRE_KILLER("vampireKiller", 0.5);
         final String name;
         final double baseDamage;

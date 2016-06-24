@@ -49,5 +49,8 @@ public class ModItemsRender {
         renderHelper.registerRender(ModItems.stake, "normal");
         renderHelper.registerRender(ModItems.vampireBlood, "normal");
         renderHelper.registerRender(ModItems.bloodPotion, "normal");
+        renderHelper.registerRender(ModItems.basicTechCrossbow, "normal");
+        renderHelper.registerRender(ModItems.enhancedTechCrossbow, "normal");
+        renderHelper.registerRender(ModItems.techCrossbowAmmoPackage, "normal");
     }
 }
