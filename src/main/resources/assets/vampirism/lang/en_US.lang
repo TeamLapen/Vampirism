@@ -251,7 +251,7 @@ tile.vampirism.vampire_orchid.name=Vampire Orchid
 tile.vampirism.firePlace.name=Fire Place
 tile.vampirism.weaponTable.name=Hunter Weapon Table
 tile.vampirism.weaponTable.cannot_use=You have not learned how to use this
-tile.vampirism.bloodPotionTable.cannot_use=You have not leared how to use this
+tile.vampirism.bloodPotionTable.cannot_use=You have not learned how to use this
 
 
 #ITEMS

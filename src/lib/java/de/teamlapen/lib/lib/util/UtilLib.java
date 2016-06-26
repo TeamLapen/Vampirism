@@ -7,6 +7,7 @@ import mezz.jei.util.Log;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.*;
+import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
@@ -21,10 +22,9 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
-import java.util.IllegalFormatException;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * General Utility Class
@@ -436,6 +436,27 @@ public class UtilLib {
             String errorMessage = "Format error: " + s;
             Log.error(errorMessage, e);
             return errorMessage;
+        }
+    }
+
+    public static String aiTaskListToStringDebug(EntityAITasks tasks) {
+        Collection c = ReflectionHelper.getPrivateValue(EntityAITasks.class, tasks, "executingTaskEntries");
+        Iterator var1 = c.iterator();
+        if (!var1.hasNext()) {
+            return "[]";
+        } else {
+            StringBuilder var2 = new StringBuilder();
+            var2.append('[');
+
+            while (true) {
+                Object var3 = var1.next();
+                var2.append(var3 == c ? "(this Collection)" : ((EntityAITasks.EntityAITaskEntry) var3).action);
+                if (!var1.hasNext()) {
+                    return var2.append(']').toString();
+                }
+
+                var2.append(',').append(' ');
+            }
         }
     }
 }

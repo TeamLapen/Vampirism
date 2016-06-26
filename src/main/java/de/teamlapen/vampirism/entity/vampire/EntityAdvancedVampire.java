@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.entity.ai.EntityAIAttackMeleeNoSun;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
@@ -196,7 +197,7 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         this.tasks.addTask(2, new EntityAIRestrictSun(this));
         this.tasks.addTask(3, new VampireAIFleeSun(this, 0.9, false));
         this.tasks.addTask(3, new VampireAIFleeGarlic(this, 0.9, false));
-        this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.0, false));
+        this.tasks.addTask(4, new EntityAIAttackMeleeNoSun(this, 1.0, false));
         this.tasks.addTask(8, new EntityAIWander(this, 0.9, 25));
         this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 13F));
         this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityHunterBase.class, 17F));

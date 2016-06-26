@@ -32,7 +32,6 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
         super(world);
         this.countAsMonster = countAsMonster;
 
-
     }
 
     @Override

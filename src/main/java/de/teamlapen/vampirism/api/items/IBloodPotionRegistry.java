@@ -17,7 +17,12 @@ public interface IBloodPotionRegistry {
     /**
      * Other effects
      */
-    String CATEGORY_OTHERS = "others";
+    String CATEGORY_OTHERS = "o";
+
+    /**
+     * Special other effects
+     */
+    String CATEGORY_SPECIAL_OTHERS = "so";
     /**
      * Normal body boosts like speed 1
      */

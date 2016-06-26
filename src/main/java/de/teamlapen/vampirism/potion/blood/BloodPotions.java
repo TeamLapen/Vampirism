@@ -57,9 +57,15 @@ public class BloodPotions {
 
         //Special vampire skills
         IBloodPotionCategory specialVampireSkills = registry.getOrCreateCategory(IBloodPotionRegistry.CATEGORY_SPECIAL_VAMPIRE_SKILL, false, "text.vampirism.blood_potion.category.special_vampire_skills");
-        specialVampireSkills.addItems(ModItems.pureBlood, Items.DIAMOND);
+        specialVampireSkills.addItems(ModItems.pureBlood);
         registry.registerPotionEffect("vampirism:disguise", specialVampireSkills, false, ModPotions.disguiseAsVampire, 5, new IBloodPotionPropertyRandomizer.SimpleRandomizer(500, 1500, 0));
+        registry.registerPotionEffect("vampirism:specialNightVision", normalVampireSkills, false, MobEffects.NIGHT_VISION, 20, new IBloodPotionPropertyRandomizer.SimpleRandomizer(1000, 24000, 0));
 
+
+        //Special other effects
+        IBloodPotionCategory specialOtherEffects = registry.getOrCreateCategory(IBloodPotionRegistry.CATEGORY_SPECIAL_OTHERS, false, "text.vampirism.blood_potion.category.special_other");
+        specialOtherEffects.addItems(Items.DIAMOND);
+        registry.registerPotionEffect("vampirism:invisibility", specialOtherEffects, false, MobEffects.INVISIBILITY, 10, new IBloodPotionPropertyRandomizer.SimpleRandomizer(600, 6000, 0));
         //Negative--------------------------------------------------
         IBloodPotionCategory badOtherEffects = registry.getOrCreateCategory(IBloodPotionRegistry.CATEGORY_OTHERS, true, "text.vampirism.blood_potion.category.bad_others");
         registry.registerPotionEffect("vampirism:weakness", badOtherEffects, true, MobEffects.WEAKNESS, 30, new IBloodPotionPropertyRandomizer.SimpleRandomizer(600, 6000, 1));

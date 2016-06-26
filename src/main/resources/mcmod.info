@@ -5,12 +5,10 @@
   "description": "Adds vampirism features",
   "version": "${m_version}",
   "mcversion": "${mc_version}",
-  "url": "http://teamlapen.de/projects/vampirism",
-  "updateUrl": "http://teamlapen.de/projects/vampirism",
+  "url": "https://maxanier.de/projects/vampirism",
+  "updateUrl": "https://maxanier.de/projects/vampirism",
   "authors": [
-    "maxanier",
-	"Mistadon",
-	"wildbill22"
+    "maxanier"
   ],
   "credits": "maxanier, Mistadon, wildbill22, LRA10, freesound.org, freeSFX.co.uk",
   "logoFile": "logo.png",
@@ -29,7 +27,7 @@
   "description": "Library currently only used by Vampirism and thereby included in it",
   "version": "${m_version}",
   "mcversion": "${mc_version}",
-  "url": "http://teamlapen.de/projects/vampirism",
+  "url": "https://maxanier.de/projects/vampirism",
   "authors": [
     "maxanier"
 

@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.minions.ISaveableMinionHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireBaron;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMinion;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
@@ -24,6 +25,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
@@ -86,7 +88,9 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
 //        if (data.isPosAt(MathHelper.floor_double(posX), MathHelper.floor_double(posZ))) {
 //            return false;
 //        }
-        return super.getCanSpawnHere();
+        BlockPos blockpos = new BlockPos(this.posX, this.getEntityBoundingBox().minY, this.posZ);
+
+        return ModBlocks.cursedEarth.equals(worldObj.getBlockState(blockpos.down()).getBlock()) && super.getCanSpawnHere();
     }
 
     @Override
@@ -140,7 +144,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     }
 
     @Override
-    public ISaveableMinionHandler getSaveableMinionHandler() {
+    public ISaveableMinionHandler<IVampireMinion.Saveable> getSaveableMinionHandler() {
         return minionHandler;
     }
 
@@ -199,9 +203,14 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
 
             if (i == 1) {
                 EntityLiving e = (EntityLiving) EntityList.createEntityByName(ModEntities.VAMPIRE_MINION_SAVEABLE_NAME, this.worldObj);
-                e.copyLocationAndAnglesFrom(this);
-                worldObj.spawnEntityInWorld(e);
-                m = (IVampireMinion.Saveable) e;
+                if (e == null) {
+                    VampirismMod.log.w("VampireBaron", "Failed to create saveable minion");
+                } else {
+                    e.copyLocationAndAnglesFrom(this);
+                    worldObj.spawnEntityInWorld(e);
+                    m = (IVampireMinion.Saveable) e;
+                }
+
             } else if (i == 2 && this.getAttackTarget() != null) {
                 m = (IVampireMinion.Saveable) UtilLib.spawnEntityBehindEntity(this.getAttackTarget(), ModEntities.VAMPIRE_MINION_SAVEABLE_NAME);
             }
@@ -231,7 +240,6 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         int avg = Math.round(((d.avgPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
         int max = Math.round(((d.maxPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
         int min = Math.round(((d.minPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * (MAX_LEVEL));
-        VampirismMod.log.d("VampireBaron", "Difficulty %d %d %d", min, max, avg);
         switch (rand.nextInt(6)) {
             case 0:
                 return min;

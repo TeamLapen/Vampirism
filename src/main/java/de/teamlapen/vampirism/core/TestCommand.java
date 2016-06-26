@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.BasicCommand;
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -10,6 +11,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterVillager;
 import de.teamlapen.vampirism.player.skills.SkillRegistry;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.tileentity.TileTent;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerNotFoundException;
@@ -21,7 +23,9 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.profiler.Profiler;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -283,6 +287,42 @@ public class TestCommand extends BasicCommand {
                     }
                 };
                 MinecraftForge.EVENT_BUS.register(listener);
+            }
+        });
+        addSub(new SubCommand() {
+            @Override
+            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+                return null;
+            }
+
+            @Override
+            public boolean canSenderUseCommand(ICommandSender var1) {
+                return canCommandSenderUseCheatCommand(var1);
+            }
+
+            @Override
+            public String getCommandName() {
+                return "tent";
+            }
+
+            @Override
+            public String getCommandUsage(ICommandSender var1) {
+                return getCommandName();
+            }
+
+            @Override
+            public void processCommand(ICommandSender var1, String[] var2) throws CommandException {
+                EntityPlayer player = getCommandSenderAsPlayer(var1);
+                RayTraceResult result = UtilLib.getPlayerLookingSpot(player, 5);
+                if (result != null && result.typeOfHit == RayTraceResult.Type.BLOCK) {
+
+                    TileEntity tent = player.worldObj.getTileEntity(result.getBlockPos());
+                    if (tent != null && tent instanceof TileTent) {
+                        ((TileTent) tent).setSpawn(true);
+                        sendMessage(var1, "Success");
+                    }
+
+                }
             }
         });
 

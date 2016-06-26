@@ -12,4 +12,6 @@ public class SRGNAMES {
     public static final String EntityPlayer_setRenderOffsetForSleep = "func_175139_a";
     public static final String MapGenVillage_distance = "field_82665_g";
     public static final String MapGenVillage_minTownSeperation = "field_82666_h";
+    public static final String EntityAIAttackMelee_entityPathEntity = "field_75438_g";
+    public static final String PathNavigateGround_shouldAvoidSun = "field_179694_f";
 }
