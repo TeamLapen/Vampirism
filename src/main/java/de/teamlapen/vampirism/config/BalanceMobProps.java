@@ -90,7 +90,7 @@ public class BalanceMobProps extends BalanceValues {
     @DefaultInt(value = 6, minValue = 1, maxValue = 1000000, name = "vampire_bite_attack_chance", comment = "Chance that a vampire bites a player when attacking him (1/n)")
     public int VAMPIRE_BITE_ATTACK_CHANCE;
 
-    @DefaultDouble(value = 5.0, minValue = 0.0, maxValue = 1000, name = "vampire_mob_sun_damage")
+    @DefaultDouble(value = 7.0, minValue = 0.0, maxValue = 1000, name = "vampire_mob_sun_damage")
     public double VAMPIRE_MOB_SUN_DAMAGE;
 
 

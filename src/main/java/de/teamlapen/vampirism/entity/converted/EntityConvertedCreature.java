@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
+import de.teamlapen.vampirism.entity.ai.EntityAIAttackMeleeNoSun;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
@@ -197,7 +198,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
         this.tasks.addTask(1, new EntityAIAvoidEntity<>(this, EntityCreature.class, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION), 10, 1.0, 1.1));
         //this.tasks.addTask(3, new VampireAIFleeSun(this, 1F));
         this.tasks.addTask(4, new EntityAIRestrictSun(this));
-        tasks.addTask(5, new EntityAIAttackMelee(this, 0.9D, false));
+        tasks.addTask(5, new EntityAIAttackMeleeNoSun(this, 0.9D, false));
         this.experienceValue = 2;
 
         this.tasks.addTask(11, new EntityAIWander(this, 0.7));

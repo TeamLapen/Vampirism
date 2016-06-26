@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.minions.ISaveableMinionHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireBaron;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMinion;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
@@ -24,6 +25,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
@@ -86,7 +88,8 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
 //        if (data.isPosAt(MathHelper.floor_double(posX), MathHelper.floor_double(posZ))) {
 //            return false;
 //        }
-        return super.getCanSpawnHere();
+        BlockPos blockpos = new BlockPos(this.posX, this.getEntityBoundingBox().minY, this.posZ);
+        return ModBlocks.cursedEarth.equals(worldObj.getBlockState(blockpos.down()).getBlock()) && super.getCanSpawnHere();
     }
 
     @Override

@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.entity.ai.EntityAIAttackMeleeNoSun;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
@@ -20,7 +21,9 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumDifficulty;
+import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -63,7 +66,7 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     @Override
     public boolean getCanSpawnHere() {
 
-        return super.getCanSpawnHere();
+        return super.getCanSpawnHere() && isValidLightLevel();
     }
 
     @Override
@@ -196,15 +199,34 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         this.tasks.addTask(2, new EntityAIRestrictSun(this));
         this.tasks.addTask(3, new VampireAIFleeSun(this, 0.9, false));
         this.tasks.addTask(3, new VampireAIFleeGarlic(this, 0.9, false));
-        this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.0, false));
+        this.tasks.addTask(4, new EntityAIAttackMeleeNoSun(this, 1.0, false));
         this.tasks.addTask(8, new EntityAIWander(this, 0.9, 25));
-        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 13F));
+        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 13F, 0.9F));
         this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityHunterBase.class, 17F));
         this.tasks.addTask(11, new EntityAILookIdle(this));
 
         this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, false));
         this.targetTasks.addTask(4, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
         this.targetTasks.addTask(5, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
+    }
+
+    protected boolean isValidLightLevel() {
+        BlockPos blockpos = new BlockPos(this.posX, this.getEntityBoundingBox().minY, this.posZ);
+
+        if (this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)) {
+            return false;
+        } else {
+            int i = this.worldObj.getLightFromNeighbors(blockpos);
+
+            if (this.worldObj.isThundering()) {
+                int j = this.worldObj.getSkylightSubtracted();
+                this.worldObj.setSkylightSubtracted(10);
+                i = this.worldObj.getLightFromNeighbors(blockpos);
+                this.worldObj.setSkylightSubtracted(j);
+            }
+
+            return i <= this.rand.nextInt(8);
+        }
     }
 
     protected void updateEntityAttributes() {
