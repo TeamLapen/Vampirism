@@ -27,9 +27,7 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.SoundEvent;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumDifficulty;
-import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -82,7 +80,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
 
     @Override
     public boolean getCanSpawnHere() {
-        return super.getCanSpawnHere() && isValidLightLevel();
+        return super.getCanSpawnHere() && isBrightLightLevel();
     }
 
     @Override
@@ -249,24 +247,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
 
     }
 
-    protected boolean isValidLightLevel() {
-        BlockPos blockpos = new BlockPos(this.posX, this.getEntityBoundingBox().minY, this.posZ);
 
-        if (this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)) {
-            return false;
-        } else {
-            int i = this.worldObj.getLightFromNeighbors(blockpos);
-
-            if (this.worldObj.isThundering()) {
-                int j = this.worldObj.getSkylightSubtracted();
-                this.worldObj.setSkylightSubtracted(10);
-                i = this.worldObj.getLightFromNeighbors(blockpos);
-                this.worldObj.setSkylightSubtracted(j);
-            }
-
-            return i <= this.rand.nextInt(8);
-        }
-    }
 
     protected void updateEntityAttributes() {
         int l = Math.max(getLevel(), 0);

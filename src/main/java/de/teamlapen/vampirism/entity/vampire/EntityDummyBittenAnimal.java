@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.entity.vampire;
 
+import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
+import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -24,7 +26,7 @@ public class EntityDummyBittenAnimal extends EntityLiving {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (this.ticksExisted > 2) {
+        if (this.ticksExisted > 4 && !this.worldObj.isRemote) {
             String entity;
             int rand = this.rand.nextInt(3);
             switch (rand) {
@@ -42,9 +44,12 @@ public class EntityDummyBittenAnimal extends EntityLiving {
             if (entity1 != null) {
                 entity1.copyLocationAndAnglesFrom(this);
                 if (ExtendedCreature.get(entity1).canBecomeVampire()) {
-                    ExtendedCreature.get(entity1).makeVampire();
+                    IConvertedCreature c = ExtendedCreature.get(entity1).makeVampire();
+                    if (c instanceof EntityConvertedCreature) {
+                        ((EntityConvertedCreature) c).setCanDespawn();
+                    }
                 }
-                worldObj.spawnEntityInWorld(entity1);
+
             }
             this.setDead();
 

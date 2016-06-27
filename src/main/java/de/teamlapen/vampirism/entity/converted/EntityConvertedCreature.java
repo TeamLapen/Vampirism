@@ -26,6 +26,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     private final static String TAG = "ConvCreature";
     private T entityCreature;
     private boolean entityChanged = false;
+    private boolean canDespawn = false;
 
     public EntityConvertedCreature(World world) {
         super(world, false);
@@ -123,6 +124,16 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
         } else {
             VampirismMod.log.w(TAG, "Saved entity did not have a old entity");
         }
+        if (nbt.hasKey("converted_canDespawn")) {
+            canDespawn = nbt.getBoolean("converted_canDespawn");
+        }
+    }
+
+    /**
+     * Allows the entity to despawn
+     */
+    public void setCanDespawn() {
+        canDespawn = true;
     }
 
     /**
@@ -156,6 +167,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     public void writeEntityToNBT(NBTTagCompound nbt) {
         super.writeEntityToNBT(nbt);
         writeOldEntityToNBT(nbt);
+        nbt.setBoolean("converter_canDespawn", canDespawn);
 
     }
 
@@ -173,7 +185,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
 
     @Override
     protected boolean canDespawn() {
-        return true;//TODO maybe change to false
+        return canDespawn;
     }
 
     @Override

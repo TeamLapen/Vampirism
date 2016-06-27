@@ -23,7 +23,8 @@ import java.util.UUID;
 /**
  * Default Implementation of {@link IVampirePlayer} for the entity capability which is never used, since a default implementation, does not accept constructor parameter.
  */
-public class VampirePlayerDefaultImpl implements IVampirePlayer {
+@Deprecated
+class VampirePlayerDefaultImpl implements IVampirePlayer {
 
 
     public VampirePlayerDefaultImpl() {

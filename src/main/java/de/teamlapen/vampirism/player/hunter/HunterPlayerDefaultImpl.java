@@ -16,7 +16,8 @@ import java.util.UUID;
 /**
  * * Default Implementation of {@link IHunterPlayer} for the entity capability which is never used, since a default implementation, does not accept constructor parameter.
  */
-public class HunterPlayerDefaultImpl implements IHunterPlayer {
+@Deprecated
+class HunterPlayerDefaultImpl implements IHunterPlayer {
 
     public HunterPlayerDefaultImpl() {
         VampirismMod.log.e("HunterPlayerCapability", "Created Default Implementation. THIS SHOULD NOT BE DONE. The default impl does absolutely nothing");
