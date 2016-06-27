@@ -7,6 +7,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nonnull;
@@ -17,7 +19,6 @@ import java.util.List;
 
 /**
  * Basic command which manages subcommands
- * TODO maybe work with  {@link CommandException}
  */
 public abstract class BasicCommand extends CommandBase {
     public static void sendMessage(ICommandSender target, String message) {
@@ -45,7 +46,7 @@ public abstract class BasicCommand extends CommandBase {
             }
 
             @Override
-            public boolean canSenderUseCommand(ICommandSender var1) {
+            public boolean canSenderUseCommand(ICommandSender sender) {
                 return true;
             }
 
@@ -55,13 +56,13 @@ public abstract class BasicCommand extends CommandBase {
             }
 
             @Override
-            public String getCommandUsage(ICommandSender var1) {
-                return BasicCommand.this.getCommandUsage(var1);
+            public String getCommandUsage(ICommandSender sender) {
+                return BasicCommand.this.getCommandUsage(sender);
             }
 
             @Override
-            public void processCommand(ICommandSender var1, String[] var2) {
-                sendMessage(var1, "Unknown command");
+            public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+                sendMessage(sender, "Unknown command");
             }
         };
     }
@@ -99,16 +100,17 @@ public abstract class BasicCommand extends CommandBase {
         if (cmd.canSenderUseCommand(sender)) {
 
             try {
-                cmd.processCommand(sender, ArrayUtils.subarray(param, 1, param.length));
-            } catch (Exception e) {
-                if (!(e instanceof CommandException)) {
-                    VampLib.log.e("BasicCommand", e, "Failed to execute command %s with params %s", cmd, Arrays.toString(ArrayUtils.subarray(param, 1, param.length)));
-                }
+                cmd.processCommand(server, sender, ArrayUtils.subarray(param, 1, param.length));
+            } catch (CommandException e) {
                 throw e;
+            } catch (Exception e) {
+                VampLib.log.e("BasicCommand", e, "Failed to execute command %s with params %s", cmd, Arrays.toString(ArrayUtils.subarray(param, 1, param.length)));
+                throw new CommandException("commands.vampirism.failed_to_execute");
             }
-            return;
         } else {
-            sendMessage(sender, "You are not allowed to use this command");
+            TextComponentTranslation textcomponenttranslation1 = new TextComponentTranslation("commands.generic.permission");
+            textcomponenttranslation1.getStyle().setColor(TextFormatting.RED);
+            sender.addChatMessage(textcomponenttranslation1);
         }
     }
 
@@ -173,13 +175,13 @@ public abstract class BasicCommand extends CommandBase {
     public interface SubCommand {
         List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos);
 
-        boolean canSenderUseCommand(ICommandSender var1);
+        boolean canSenderUseCommand(ICommandSender sender);
 
         String getCommandName();
 
-        String getCommandUsage(ICommandSender var1);
+        String getCommandUsage(ICommandSender sender);
 
-        void processCommand(ICommandSender var1, String[] var2) throws CommandException;
+        void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException;
     }
 
 }

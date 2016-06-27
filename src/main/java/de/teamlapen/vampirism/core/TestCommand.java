@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.BasicCommand;
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -10,6 +11,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterVillager;
 import de.teamlapen.vampirism.player.skills.SkillRegistry;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.tileentity.TileTent;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerNotFoundException;
@@ -21,7 +23,10 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.profiler.Profiler;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
@@ -47,8 +52,8 @@ public class TestCommand extends BasicCommand {
             }
 
             @Override
-            public boolean canSenderUseCommand(ICommandSender var1) {
-                return canCommandSenderUseCommand(var1, PERMISSION_LEVEL_ADMIN, getCommandName());
+            public boolean canSenderUseCommand(ICommandSender sender) {
+                return canCommandSenderUseCommand(sender, PERMISSION_LEVEL_ADMIN, getCommandName());
             }
 
             @Override
@@ -57,16 +62,16 @@ public class TestCommand extends BasicCommand {
             }
 
             @Override
-            public String getCommandUsage(ICommandSender var1) {
+            public String getCommandUsage(ICommandSender sender) {
                 return getCommandName();
             }
 
             @Override
-            public void processCommand(ICommandSender var1, String[] var2) {
-                var1.addChatMessage(new TextComponentString("Tick"));
-                print(var1, "tick");
-                var1.addChatMessage(new TextComponentString("Garlic"));
-                print(var1, "vampirism_checkGarlic");
+            public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+                sender.addChatMessage(new TextComponentString("Tick"));
+                print(sender, "tick");
+                sender.addChatMessage(new TextComponentString("Garlic"));
+                print(sender, "vampirism_checkGarlic");
 
             }
 
@@ -84,8 +89,8 @@ public class TestCommand extends BasicCommand {
             }
 
             @Override
-            public boolean canSenderUseCommand(ICommandSender var1) {
-                return canCommandSenderUseCheatCommand(var1) && var1 instanceof EntityPlayerMP;
+            public boolean canSenderUseCommand(ICommandSender sender) {
+                return canCommandSenderUseCheatCommand(sender) && sender instanceof EntityPlayerMP;
             }
 
             @Override
@@ -94,44 +99,44 @@ public class TestCommand extends BasicCommand {
             }
 
             @Override
-            public String getCommandUsage(ICommandSender var1) {
+            public String getCommandUsage(ICommandSender sender) {
                 return getCommandName() + " <skillname>";
             }
 
             @Override
-            public void processCommand(ICommandSender var1, String[] var2) throws CommandException {
-                IFactionPlayer factionPlayer = FactionPlayerHandler.get(getCommandSenderAsPlayer(var1)).getCurrentFactionPlayer();
+            public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                IFactionPlayer factionPlayer = FactionPlayerHandler.get(getCommandSenderAsPlayer(sender)).getCurrentFactionPlayer();
                 if (factionPlayer == null) {
-                    var1.addChatMessage(new TextComponentString("You have to be in a faction"));
+                    sender.addChatMessage(new TextComponentString("You have to be in a faction"));
                     return;
                 }
-                if (var2.length == 0) {
-                    throw new WrongUsageException(getCommandUsage(var1));
+                if (args.length == 0) {
+                    throw new WrongUsageException(getCommandUsage(sender));
                 }
-                if ("list".equals(var2[0])) {
-                    ((SkillRegistry) VampirismAPI.skillRegistry()).printSkills(factionPlayer.getFaction(), var1);
+                if ("list".equals(args[0])) {
+                    ((SkillRegistry) VampirismAPI.skillRegistry()).printSkills(factionPlayer.getFaction(), sender);
                     return;
                 }
-                if ("disableall".equals(var2[0])) {
+                if ("disableall".equals(args[0])) {
                     (factionPlayer.getSkillHandler()).resetSkills();
                     return;
                 }
-                ISkill skill = VampirismAPI.skillRegistry().getSkill(factionPlayer.getFaction(), var2[0]);
+                ISkill skill = VampirismAPI.skillRegistry().getSkill(factionPlayer.getFaction(), args[0]);
                 if (skill == null) {
-                    var1.addChatMessage(new TextComponentString("Skill with id " + var2[0] + " could not be found for faction " + factionPlayer.getFaction().name()));
+                    sender.addChatMessage(new TextComponentString("Skill with id " + args[0] + " could not be found for faction " + factionPlayer.getFaction().name()));
                     return;
                 }
                 if (factionPlayer.getSkillHandler().isSkillEnabled(skill)) {
                     factionPlayer.getSkillHandler().disableSkill(skill);
-                    var1.addChatMessage(new TextComponentString("Disabled skill"));
+                    sender.addChatMessage(new TextComponentString("Disabled skill"));
                     return;
                 }
                 ISkillHandler.Result result = factionPlayer.getSkillHandler().canSkillBeEnabled(skill);
                 if (result == ISkillHandler.Result.OK) {
                     factionPlayer.getSkillHandler().enableSkill(skill);
-                    var1.addChatMessage(new TextComponentString("Enabled skill"));
+                    sender.addChatMessage(new TextComponentString("Enabled skill"));
                 } else {
-                    var1.addChatMessage(new TextComponentString("Could not enable skill " + result));
+                    sender.addChatMessage(new TextComponentString("Could not enable skill " + result));
                 }
 
             }
@@ -156,8 +161,8 @@ public class TestCommand extends BasicCommand {
             }
 
             @Override
-            public boolean canSenderUseCommand(ICommandSender var1) {
-                return canCommandSenderUseCheatCommand(var1) && var1 instanceof EntityPlayer;
+            public boolean canSenderUseCommand(ICommandSender sender) {
+                return canCommandSenderUseCheatCommand(sender) && sender instanceof EntityPlayer;
             }
 
             @Override
@@ -166,13 +171,13 @@ public class TestCommand extends BasicCommand {
             }
 
             @Override
-            public String getCommandUsage(ICommandSender var1) {
+            public String getCommandUsage(ICommandSender sender) {
                 return getCommandName();
             }
 
             @Override
-            public void processCommand(ICommandSender var1, String[] var2) throws CommandException {
-                VampirePlayer player = VampirePlayer.get(getCommandSenderAsPlayer(var1));
+            public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                VampirePlayer player = VampirePlayer.get(getCommandSenderAsPlayer(sender));
                 if (player.getLevel() > 0) {
                     player.getBloodStats().setBloodLevel(0);
                 }
@@ -188,8 +193,8 @@ public class TestCommand extends BasicCommand {
             }
 
             @Override
-            public boolean canSenderUseCommand(ICommandSender var1) {
-                return canCommandSenderUseCheatCommand(var1) && var1 instanceof EntityPlayer;
+            public boolean canSenderUseCommand(ICommandSender sender) {
+                return canCommandSenderUseCheatCommand(sender) && sender instanceof EntityPlayer;
             }
 
             @Override
@@ -198,12 +203,12 @@ public class TestCommand extends BasicCommand {
             }
 
             @Override
-            public String getCommandUsage(ICommandSender var1) {
+            public String getCommandUsage(ICommandSender sender) {
                 return getCommandName();
             }
 
             @Override
-            public void processCommand(ICommandSender sender, String[] var2) throws CommandException {
+            public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 EntityPlayer player = getCommandSenderAsPlayer(sender);
                 List l = player.worldObj.getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().expand(3, 2, 3));
                 for (Object o : l) {
@@ -226,8 +231,8 @@ public class TestCommand extends BasicCommand {
             }
 
             @Override
-            public boolean canSenderUseCommand(ICommandSender var1) {
-                return canCommandSenderUseCheatCommand(var1) && var1 instanceof EntityPlayer;
+            public boolean canSenderUseCommand(ICommandSender sender) {
+                return canCommandSenderUseCheatCommand(sender) && sender instanceof EntityPlayer;
             }
 
             @Override
@@ -236,12 +241,12 @@ public class TestCommand extends BasicCommand {
             }
 
             @Override
-            public String getCommandUsage(ICommandSender var1) {
+            public String getCommandUsage(ICommandSender sender) {
                 return getCommandName();
             }
 
             @Override
-            public void processCommand(ICommandSender sender, String[] var2) throws CommandException {
+            public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 EntityPlayer player = getCommandSenderAsPlayer(sender);
                 List<EntityVillager> l = player.worldObj.getEntitiesWithinAABB(EntityVillager.class, player.getEntityBoundingBox().expand(3, 2, 3));
                 for (EntityVillager v : l) {
@@ -258,8 +263,8 @@ public class TestCommand extends BasicCommand {
             }
 
             @Override
-            public boolean canSenderUseCommand(ICommandSender var1) {
-                return canCommandSenderUseCheatCommand(var1);
+            public boolean canSenderUseCommand(ICommandSender sender) {
+                return canCommandSenderUseCheatCommand(sender);
             }
 
             @Override
@@ -268,12 +273,12 @@ public class TestCommand extends BasicCommand {
             }
 
             @Override
-            public String getCommandUsage(ICommandSender var1) {
+            public String getCommandUsage(ICommandSender sender) {
                 return getCommandName();
             }
 
             @Override
-            public void processCommand(ICommandSender var1, String[] var2) throws CommandException {
+            public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 Object listener = new Object() {
                     @SubscribeEvent
                     public void onEntityDamage(LivingAttackEvent event) {
@@ -283,6 +288,42 @@ public class TestCommand extends BasicCommand {
                     }
                 };
                 MinecraftForge.EVENT_BUS.register(listener);
+            }
+        });
+        addSub(new SubCommand() {
+            @Override
+            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+                return null;
+            }
+
+            @Override
+            public boolean canSenderUseCommand(ICommandSender sender) {
+                return canCommandSenderUseCheatCommand(sender);
+            }
+
+            @Override
+            public String getCommandName() {
+                return "tent";
+            }
+
+            @Override
+            public String getCommandUsage(ICommandSender sender) {
+                return getCommandName();
+            }
+
+            @Override
+            public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                EntityPlayer player = getCommandSenderAsPlayer(sender);
+                RayTraceResult result = UtilLib.getPlayerLookingSpot(player, 5);
+                if (result != null && result.typeOfHit == RayTraceResult.Type.BLOCK) {
+
+                    TileEntity tent = player.worldObj.getTileEntity(result.getBlockPos());
+                    if (tent != null && tent instanceof TileTent) {
+                        ((TileTent) tent).setSpawn(true);
+                        sendMessage(sender, "Success");
+                    }
+
+                }
             }
         });
 

@@ -43,7 +43,6 @@ public class UtilLib {
 
     /**
      * Gets players looking spot (blocks only).
-     * TODO check if this still works in 1.8
      *
      * @param player
      * @param restriction Max distance or 0 for player reach distance or -1 for not restricted

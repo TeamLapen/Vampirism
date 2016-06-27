@@ -1,6 +1,9 @@
 package de.teamlapen.vampirism.api.entity;
 
+import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import net.minecraft.entity.EntityCreature;
+
+import javax.annotation.Nullable;
 
 /**
  * Interface for Vampirism's capability every {@link EntityCreature} has attached
@@ -35,6 +38,8 @@ public interface IExtendedCreatureVampirism extends IBiteableEntity {
 
     /**
      * Convert this creature into a vampire version if possible
+     * @return The converted creature
      */
-    void makeVampire();
+    @Nullable
+    IConvertedCreature makeVampire();
 }

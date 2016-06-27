@@ -46,7 +46,6 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     public EntityBasicVampire(World world) {
         super(world, true);
 
-
         hasArms = true;
 
         this.setSize(0.6F, 1.8F);
@@ -77,6 +76,11 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
      */
     public void setAdvancedLeader(@Nullable EntityAdvancedVampire advancedLeader) {
         this.advancedLeader = advancedLeader;
+    }
+
+    @Override
+    public boolean getCanSpawnHere() {
+        return super.getCanSpawnHere() && isBrightLightLevel();
     }
 
     @Override
@@ -227,13 +231,13 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         this.tasks.addTask(2, new EntityAIRestrictSun(this));
         this.tasks.addTask(3, new VampireAIFleeSun(this, 0.9, false));
         this.tasks.addTask(3, new VampireAIFleeGarlic(this, 0.9, false));
-        this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.0, false));
+        this.tasks.addTask(4, new EntityAIAttackMeleeNoSun(this, 1.0, false));
         this.tasks.addTask(5, new VampireAIBiteNearbyEntity(this));
         this.tasks.addTask(6, new VampireAIFollowAdvanced(this, 1.0));
         this.tasks.addTask(7, new VampireAIMoveToBiteable(this, 0.75));
         this.tasks.addTask(8, new EntityAIMoveThroughVillageCustom(this, 0.6, true, 600));
         this.tasks.addTask(9, new EntityAIWander(this, 0.7));
-        this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityPlayer.class, 13F));
+        this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityPlayer.class, 20F, 0.9F));
         this.tasks.addTask(11, new EntityAIWatchClosest(this, EntityHunterBase.class, 17F));
         this.tasks.addTask(12, new EntityAILookIdle(this));
 
@@ -243,10 +247,12 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
 
     }
 
+
     protected void updateEntityAttributes() {
         int l = Math.max(getLevel(), 0);
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_MAX_HEALTH + Balance.mobProps.VAMPIRE_MAX_HEALTH_PL * l);
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.VAMPIRE_ATTACK_DAMAGE + Balance.mobProps.VAMPIRE_ATTACK_DAMAGE_PL * l);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.VAMPIRE_SPEED);
     }
+
 }
