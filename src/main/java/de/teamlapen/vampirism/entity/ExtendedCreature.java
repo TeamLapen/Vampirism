@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
+import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
@@ -24,6 +25,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.*;
+
+import javax.annotation.Nullable;
 
 /**
  * Extended entity property which every {@link EntityCreature} has
@@ -151,15 +154,20 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     }
 
     @Override
-    public void makeVampire() {
+    public
+    @Nullable
+    IConvertedCreature makeVampire() {
         if (canBecomeVampire()) {
             blood = 0;
-            Entity e = (Entity) VampirismAPI.biteableRegistry().convert(entity);
-            if (e != null) {
+            IConvertedCreature c = VampirismAPI.biteableRegistry().convert(entity);
+            if (c != null) {
+                Entity e = (Entity) c;
                 entity.setDead();
                 entity.worldObj.spawnEntityInWorld(e);
             }
+            return c;
         }
+        return null;
     }
 
     @Override

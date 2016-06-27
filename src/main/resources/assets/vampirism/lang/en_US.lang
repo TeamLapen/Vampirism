@@ -311,6 +311,11 @@ gui.vampirism.hunter_weapon_table.level=Required Hunter Level: %s
 gui.vampirism.hunter_weapon_table.skill=Required Skill: %s
 gui.vampirism.blood_potion_table.create=Start Crafting
 
+
+#COMMANDS
+commands.vampirism.level.faction_not_found=Did not find faction %s
+commands.vampirism.failed_to_execute=Failed to execute command. Internal error.
+
 #ETC
 text.vampirism.vampire=Vampire
 text.vampirism.vampires=Vampires

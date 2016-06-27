@@ -9,7 +9,8 @@ import net.minecraft.util.DamageSource;
 /**
  * Default Implementation of {@link IFactionPlayerHandler} for the entity capability which is never used, since a default implementation, does not accept constructor parameter.
  */
-public class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
+@Deprecated
+class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
 
     public FactionPlayerHandlerDefaultImpl() {
         VampirismMod.log.e("FactionPlayerHandlerCapability", "Created Default Implementation. THIS SHOULD NOT BE DONE. The default impl does absolutely nothing");

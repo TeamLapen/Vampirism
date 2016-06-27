@@ -1,11 +1,14 @@
 package de.teamlapen.vampirism.client.render.tiles;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockCoffin;
 import de.teamlapen.vampirism.client.model.ModelCoffin;
 import de.teamlapen.vampirism.tileentity.TileCoffin;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -31,7 +34,7 @@ public class CoffinTESR extends VampirismTESR<TileCoffin> {
     @Override
     public void renderTileEntityAt(TileCoffin te, double x, double y, double z, float partialTicks, int destroyStage) {
         TileCoffin tile = te;
-        if (!BlockCoffin.isHead(te.getWorld(), te.getPos())) return;
+        if (!isHeadSafe(te.getWorld(), te.getPos())) return;
 
         // Calculate lid position
         boolean occupied = BlockCoffin.isOccupied(te.getWorld(), te.getPos());
@@ -59,5 +62,19 @@ public class CoffinTESR extends VampirismTESR<TileCoffin> {
         else if (pos == 0)
             return (float) (0.75F * Math.PI);
         return (float) (-Math.pow(1.02, pos) + 1 + 0.75 * Math.PI);
+    }
+
+    /**
+     * Checks if the coffin part at the given pos is the head of the coffin. Any exception is caught and false is returned
+     */
+    private boolean isHeadSafe(World world, BlockPos pos) {
+        try {
+            return BlockCoffin.isHead(world, pos);
+        } catch (IllegalArgumentException e) {
+            VampirismMod.log.e("CoffinTESR", "Failed to check coffin head at %s caused by wrong blockstate. Block at that pos: %s", pos, world.getBlockState(pos));
+        } catch (Exception e) {
+            VampirismMod.log.e("CoffinTESR", e, "Failed to check coffin head at %s.", pos);
+        }
+        return false;
     }
 }
