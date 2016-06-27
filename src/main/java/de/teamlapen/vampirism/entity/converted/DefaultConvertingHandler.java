@@ -111,7 +111,8 @@ public class DefaultConvertingHandler<T extends EntityCreature> implements IConv
 
     protected void copyImportantStuff(EntityConvertedCreature converted, T entity) {
         converted.copyLocationAndAnglesFrom(entity);
-        converted.setHealth(converted.getMaxHealth() / 3 * 2);
         converted.setEntityCreature(entity);
+        converted.updateEntityAttributes();
+        converted.setHealth(converted.getMaxHealth() / 3 * 2);
     }
 }

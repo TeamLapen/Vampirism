@@ -94,6 +94,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
         }
         if (entityChanged) {
             this.updateEntityAttributes();
+            entityChanged = false;
         }
     }
 
