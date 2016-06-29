@@ -90,7 +90,7 @@ public class ModEntityEventHandler {
                 public boolean apply(@Nullable EntityPlayer input) {
                     return VampirePlayer.get(input).getSpecialAttributes().avoided_by_creepers;
                 }
-            }, 6, 1, 1.2));
+            }, 15, 1.1, 1.3));
         }
         if (event.getEntity() instanceof IMinionLordWithSaveable) {
             ((IMinionLordWithSaveable) event.getEntity()).getSaveableMinionHandler().addLoadedMinions();

@@ -411,6 +411,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             ticksInSun = 0;
             if (wasDead) {
                 player.addPotionEffect(new PotionEffect(ModPotions.sunscreen, 400, 5));
+                player.setHealth(player.getMaxHealth());
+                bloodStats.setBloodLevel(bloodStats.MAXBLOOD);
             }
         }
     }

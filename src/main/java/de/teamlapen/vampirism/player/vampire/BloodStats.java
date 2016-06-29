@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.util.SRGNAMES;
+import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -22,7 +23,7 @@ public class BloodStats {
     public static final float MEDIUM_SATURATION = 0.7F;
     public static final float HIGH_SATURATION = 1.0F;
     private final static String TAG = "BloodStats";
-    private final int MAXBLOOD = 20;
+    protected final int MAXBLOOD = 20;
     private final EntityPlayer player;
     private int bloodLevel = 20;
     private float bloodSaturationLevel = 5.0F;
@@ -94,7 +95,7 @@ public class BloodStats {
         FoodStats foodStats = player.getFoodStats();
         foodStats.setFoodLevel(10);
         EnumDifficulty enumDifficulty = player.worldObj.getDifficulty();
-        float e = 0;
+        float e;
         try {
             e = ReflectionHelper.getPrivateValue(FoodStats.class, foodStats, "foodExhaustionLevel", SRGNAMES.FoodStats_foodExhaustionLevel);
             addExhaustion(e);
@@ -179,7 +180,15 @@ public class BloodStats {
     }
 
     protected void addExhaustion(float amount) {
-        this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount * (float) player.getEntityAttribute(VReference.bloodExhaustion).getAttributeValue(), 40F);
+        IAttributeInstance attribute = player.getEntityAttribute(VReference.bloodExhaustion);
+        float mult;
+        if (attribute == null) {
+            VampirismMod.log.w(TAG, "Blood exhaustion attribute is null");
+            mult = (float) VReference.bloodExhaustion.getDefaultValue();
+        } else {
+            mult = (float) attribute.getAttributeValue();
+        }
+        this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount * mult, 40F);
     }
 
     void loadUpdate(NBTTagCompound nbt) {
