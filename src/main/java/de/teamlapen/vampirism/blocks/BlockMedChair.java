@@ -87,6 +87,10 @@ public class BlockMedChair extends VampirismBlock {
                     handler.joinFaction(VReference.HUNTER_FACTION);
                     playerIn.addPotionEffect(new PotionEffect(MobEffects.POISON, 200, 1));
                 }
+                stack.stackSize--;
+                if (stack.stackSize == 0) {
+                    playerIn.inventory.deleteStack(stack);
+                }
             } else {
                 if (!worldIn.isRemote) {
                     playerIn.addChatComponentMessage(new TextComponentTranslation("text.vampirism.med_chair_other_faction", new TextComponentTranslation(faction.getUnlocalizedName())));

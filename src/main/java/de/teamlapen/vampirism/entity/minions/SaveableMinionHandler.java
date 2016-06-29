@@ -54,7 +54,7 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
             return;
         List<T> list = loadedMinions;
         loadedMinions = null;
-        VampirismMod.log.d(TAG, "Going to add " + list.size());
+        //VampirismMod.log.d(TAG, "Going to add " + list.size());
         World world = lord.getRepresentingEntity().worldObj;
         for (T m : list) {
             Entity entity = MinionHelper.entity(m);
@@ -62,7 +62,7 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
             world.spawnEntityInWorld(entity);
             m.setLord(lord);
         }
-        VampirismMod.log.d(TAG, "Added " + list.size() + " minions");
+        //VampirismMod.log.d(TAG, "Added " + list.size() + " minions");
         list.clear();
 
     }
@@ -106,7 +106,7 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
             if (dead)
                 e.isDead = true;
         }
-        VampirismMod.log.d(TAG, "Saved " + list.tagCount() + " minions");
+        //VampirismMod.log.d(TAG, "Saved " + list.tagCount() + " minions");
         return list;
     }
 

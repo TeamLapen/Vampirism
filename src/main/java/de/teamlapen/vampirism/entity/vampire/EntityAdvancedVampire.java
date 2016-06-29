@@ -4,9 +4,12 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.entity.ai.EntityAIAttackMeleeNoSun;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
+import de.teamlapen.vampirism.items.ItemBloodBottle;
 import de.teamlapen.vampirism.util.IPlayerFace;
 import de.teamlapen.vampirism.util.SupporterManager;
 import net.minecraft.entity.EntityCreature;
@@ -14,6 +17,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -168,6 +172,19 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
 
     }
 
+    @Override
+    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier) {
+        switch (getRNG().nextInt(3)) {
+            case 0:
+                this.dropItem(ModItems.vampireBlood, 1);
+                break;
+            case 1:
+                this.entityDropItem(new ItemStack(ModItems.bloodBottle, lootingModifier + 1, getRNG().nextInt(ItemBloodBottle.AMOUNT)), 0);
+                break;
+            default:
+                break;
+        }
+    }
 
     @Override
     protected void entityInit() {
@@ -196,7 +213,7 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         this.tasks.addTask(2, new EntityAIRestrictSun(this));
         this.tasks.addTask(3, new VampireAIFleeSun(this, 0.9, false));
         this.tasks.addTask(3, new VampireAIFleeGarlic(this, 0.9, false));
-        this.tasks.addTask(4, new EntityAIAttackMelee(this, 1.0, false));
+        this.tasks.addTask(4, new EntityAIAttackMeleeNoSun(this, 1.0, false));
         this.tasks.addTask(8, new EntityAIWander(this, 0.9, 25));
         this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 13F));
         this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityHunterBase.class, 17F));
