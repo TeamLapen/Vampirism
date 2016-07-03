@@ -45,7 +45,7 @@ public class Helper {
                         if (entity.worldObj.canBlockSeeSky(entity.getPosition())) {
                             ResourceLocation biomeID = null;
                             try {
-                                biomeID = entity.worldObj.getBiomeGenForCoords(entity.getPosition()).getRegistryName();
+                                biomeID = entity.worldObj.getBiome(entity.getPosition()).getRegistryName();
                                 if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biomeID)) {
                                     entity.worldObj.theProfiler.endSection();
                                     return true;
@@ -128,7 +128,7 @@ public class Helper {
     public static boolean isEntityInVampireBiome(Entity e) {
         if (e == null || e.worldObj == null) return false;
         try {
-            return ModBiomes.vampireForest.getRegistryName().equals(e.worldObj.getBiomeGenForCoords(e.getPosition()).getRegistryName());
+            return ModBiomes.vampireForest.getRegistryName().equals(e.worldObj.getBiome(e.getPosition()).getRegistryName());
         } catch (NullPointerException e1) {
             //http://openeye.openmods.info/crashes/8cef4d710e41adf9be8362e57ad70d28
             VampirismMod.log.e("Helper", e1, "Nullpointer when checking biome. This is strange and should not happen");
