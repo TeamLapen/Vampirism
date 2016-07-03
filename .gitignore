@@ -27,3 +27,6 @@ server.properties
 usercache.json
 whitelist.json
 hs*
+/.idea/
+/classes/
+/run/
