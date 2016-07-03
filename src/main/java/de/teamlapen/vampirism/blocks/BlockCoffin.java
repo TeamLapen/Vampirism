@@ -195,7 +195,7 @@ public class BlockCoffin extends VampirismBlockContainer {
             }
 
 
-            if (worldIn.provider.canRespawnHere() && worldIn.getBiomeGenForCoords(pos) != Biomes.HELL) {
+            if (worldIn.provider.canRespawnHere() && worldIn.getBiome(pos) != Biomes.HELL) {
                 if (state.getValue(OCCUPIED)) {
                     EntityPlayer entityplayer = this.getPlayerInCoffin(worldIn, pos);
 
