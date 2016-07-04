@@ -2,14 +2,20 @@
   "comment": "Stores version info and changelog",
   "homepage": "https://maxanier.de/projects/vampirism",
   "promos": {
-    "1.10-latest": "1.0.0-Alpha+06-26-19-33",
-    "1.10-recommend": "1.0.0-Alpha+06-26-19-33",
+    "1.10.2-latest": "1.0.0-Alpha+07-04-22-58",
+    "1.10.2-recommend": "1.0.0-Alpha+07-04-22-58",
+    "1.10-latest": "1.0.0-Alpha+07-04-22-58",
+    "1.10-recommend": "1.0.0-Alpha+07-04-22-58",
     "1.9.4-latest": "1.0.0-Alpha+06-26-19-50",
     "1.9.4-recommended": "1.0.0-Alpha+06-26-19-50",
     "1.9-latest": "1.0.0-Alpha+05-28-10-58",
     "1.9-recommended": "1.0.0-Alpha+05-28-10-58"
   },
+  "1.10.2": {
+    "1.0.0-Alpha+07-04-22-58": "Bugfixes\nUpdate to 1.10.2"
+  },
   "1.10": {
+    "1.0.0-Alpha+07-04-22-58": "Bugfixes\nUpdate to 1.10.2",
     "1.0.0-Alpha+06-26-19-33": "Added recipe for stake\nFixed vampire AI a little bit\nVampires now only spawn in dark areas\nMinor changes",
     "1.0.0-Alpha+06-25-00-29": "Updated to 1.10"
   },
@@ -27,7 +33,11 @@
     "1.0.0-Alpha+04-16-20-04": "Initial"
   },
   "downloads": {
+    "1.10.2": {
+      "1.0.0-Alpha+07-04-22-58": "http://minecraft.curseforge.com/projects/vampirism-become-a-vampire/files/2313283/download"
+    },
     "1.10": {
+      "1.0.0-Alpha+07-04-22-58": "http://minecraft.curseforge.com/projects/vampirism-become-a-vampire/files/2313283/download",
       "1.0.0-Alpha+06-26-19-33": "http://minecraft.curseforge.com/projects/vampirism-become-a-vampire/files/2310795/download",
       "1.0.0-Alpha+06-25-00-29": "http://minecraft.curseforge.com/projects/vampirism-become-a-vampire/files/2310245"
     },
