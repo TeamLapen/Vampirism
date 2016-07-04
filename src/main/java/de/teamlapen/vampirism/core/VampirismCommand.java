@@ -200,6 +200,44 @@ public class VampirismCommand extends BasicCommand {
         addSub(new SubCommand() {
             @Override
             public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+                return null;
+            }
+
+            @Override
+            public boolean canSenderUseCommand(ICommandSender sender) {
+                return sender instanceof EntityPlayer;
+            }
+
+            @Override
+            public String getCommandName() {
+                return "fang";
+            }
+
+            @Override
+            public String getCommandUsage(ICommandSender sender) {
+                return getCommandName() + " <id [0-" + (REFERENCE.FANG_TYPE_COUNT - 1) + "]> ";
+            }
+
+            @Override
+            public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                EntityPlayer player = (EntityPlayer) sender;
+                if (args.length != 1) {
+                    throw new WrongUsageException(getCommandUsage(sender));
+                }
+                try {
+                    int type = Integer.parseInt(args[0]);
+                    if (!VampirePlayer.get(player).setFangType(type)) {
+                        sendMessage(sender, "<id> has to be a valid number between 0 and " + (REFERENCE.FANG_TYPE_COUNT - 1));
+                    }
+                } catch (NumberFormatException e) {
+                    throw new NumberInvalidException();
+                }
+            }
+        });
+
+        addSub(new SubCommand() {
+            @Override
+            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
                 return Collections.emptyList();
             }
 

@@ -44,6 +44,7 @@ public class Configs {
     public static boolean disable_advancedMobPlayerFaces;
     public static boolean playerCanTurnPlayer;
     public static boolean updated_vampirism;
+    public static boolean disable_vampireEyes;
 
     public static boolean autoConvertGlasBottles;
     private static Configuration main_config;
@@ -134,6 +135,7 @@ public class Configs {
         disable_vampireForest = main_config.getBoolean("disable_vampire_forest", CATEGORY_DISABLE, false, "Disable vampire forest generation");
         disable_versionCheck = main_config.getBoolean("disable_version_check", CATEGORY_DISABLE, false, "Disable vampirism's version check");
         disable_advancedMobPlayerFaces = main_config.getBoolean("disable_advanced_mob_player_face", CATEGORY_DISABLE, false, "Disable the rendering of other player faces for the advanced hunter and advanced vampire");
+        disable_vampireEyes = main_config.getBoolean("disable_vampire_player_eyes", CATEGORY_DISABLE, false, "Disables the rendering of vampire eyes");
 
         updated_vampirism = !main_config.getDefinedConfigVersion().equals(main_config.getLoadedConfigVersion());
 
