@@ -18,6 +18,7 @@ public class REFERENCE {
     public static final String SUPPORTER_FILE = "https://maxanier.de/projects/vampirism/supporters.json";
 
     public static final int EYE_TYPE_COUNT = 7;
+    public static final int FANG_TYPE_COUNT = 6;
     /**
      * Check for vampire garlic damage every n ticks
      */
