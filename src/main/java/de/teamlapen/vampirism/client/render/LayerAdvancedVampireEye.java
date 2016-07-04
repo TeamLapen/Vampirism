@@ -23,7 +23,7 @@ public class LayerAdvancedVampireEye implements LayerRenderer<EntityAdvancedVamp
         this.renderer = renderer;
         overlays = new ResourceLocation[REFERENCE.EYE_TYPE_COUNT];
         for (int i = 0; i < overlays.length; i++) {
-            overlays[i] = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vanilla/steve" + (i + 1) + ".png");
+            overlays[i] = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vanilla/eyes" + (i) + ".png");
         }
     }
 

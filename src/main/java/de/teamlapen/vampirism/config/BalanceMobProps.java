@@ -60,17 +60,17 @@ public class BalanceMobProps extends BalanceValues {
 
     @DefaultDouble(value = 60D, minValue = 10D, maxValue = 10000D, name = "advanced_vampire_max_health")
     public double ADVANCED_VAMPIRE_MAX_HEALTH;
-    @DefaultDouble(value = 30D, minValue = 0D, maxValue = 10000, name = "advanced_vampire_max_health_pl", comment = "Max health is increased by this for every level the hunter has")
+    @DefaultDouble(value = 40D, minValue = 0D, maxValue = 10000, name = "advanced_vampire_max_health_pl", comment = "Max health is increased by this for every level the hunter has")
     public double ADVANCED_VAMPIRE_MAX_HEALTH_PL;
-    @DefaultDouble(value = 5D, minValue = 0D, name = "advanced_vampire_attack_damage")
+    @DefaultDouble(value = 7D, minValue = 0D, name = "advanced_vampire_attack_damage")
     public double ADVANCED_VAMPIRE_ATTACK_DAMAGE;
-    @DefaultDouble(value = 4D, minValue = 0D, name = "advanced_vampire_attack_damage_pl")
+    @DefaultDouble(value = 5D, minValue = 0D, name = "advanced_vampire_attack_damage_pl")
     public double ADVANCED_VAMPIRE_ATTACK_DAMAGE_PL;
     @DefaultDouble(value = 0.285D, minValue = 0.1, maxValue = 2, name = "advanced_vampire_speed")
     public double ADVANCED_VAMPIRE_SPEED;
-    @DefaultInt(value = 4, minValue = 0, maxValue = 100, comment = "Maximum number of vampires that will follow a advanced vampire")
+    @DefaultInt(value = 5, minValue = 0, maxValue = 100, comment = "Maximum number of vampires that will follow a advanced vampire")
     public int ADVANCED_VAMPIRE_MAX_FOLLOWER;
-    @DefaultInt(value = 10, minValue = 0, maxValue = 1000000, name = "advanced_vampire_spawn_probe", comment = "e.g. Zombie spawn probe: 100")
+    @DefaultInt(value = 7, minValue = 0, maxValue = 1000000, name = "advanced_vampire_spawn_probe", comment = "e.g. Zombie spawn probe: 100")
     public int ADVANCED_VAMPIRE_SPAWN_PROBE;
 
 

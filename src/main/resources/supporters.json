@@ -1,10 +1,10 @@
 {
-  "comment": "List of player of supporters of Vampirism. Status: 0-Dev,1-Contributer,2-Patreon",
+  "comment": "List of player of supporters of Vampirism. Status: 0-Dev,1-Contributor,2-Patreon",
   "vampires": [
     {
       "name": "The powerful Bill",
       "texture": "wildbill",
-      "type": 6,
+      "type": 2,
       "status": 0
     },
     {
