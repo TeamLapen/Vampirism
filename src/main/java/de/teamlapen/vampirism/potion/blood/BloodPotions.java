@@ -57,7 +57,7 @@ public class BloodPotions {
 
         //Special vampire skills
         IBloodPotionCategory specialVampireSkills = registry.getOrCreateCategory(IBloodPotionRegistry.CATEGORY_SPECIAL_VAMPIRE_SKILL, false, "text.vampirism.blood_potion.category.special_vampire_skills");
-        specialVampireSkills.addItems(ModItems.pureBlood, Items.DIAMOND);
+        specialVampireSkills.addItems(ModItems.pureBlood);
         registry.registerPotionEffect("vampirism:disguise", specialVampireSkills, false, ModPotions.disguiseAsVampire, 5, new IBloodPotionPropertyRandomizer.SimpleRandomizer(500, 1500, 0));
         registry.registerPotionEffect("vampirism:specialNightVision", specialVampireSkills, false, MobEffects.NIGHT_VISION, 20, new IBloodPotionPropertyRandomizer.SimpleRandomizer(1000, 24000, 0));
 

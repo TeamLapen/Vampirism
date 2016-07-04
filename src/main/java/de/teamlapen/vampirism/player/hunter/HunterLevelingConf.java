@@ -116,9 +116,9 @@ public class HunterLevelingConf {
         }
         switch (targetLevel) {
             case 2:
-                return 4;
+                return 1;
             case 3:
-                return 8;
+                return 5;
             case 4:
                 return 12;
             default:
