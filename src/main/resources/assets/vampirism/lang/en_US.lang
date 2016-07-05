@@ -1,159 +1,3 @@
-# Entitys
-entity.vampirism.vampireHunter.name=Vampire Hunter
-entity.vampirism.vampire.name=Vampire
-entity.vampirism.ghost.name=Ghost
-entity.vampirism.vampireBaron.name=Vampire Baron
-entity.vampirism.vampireMinionR.name=Vampire Minion
-entity.vampirism.vampireMinionS.name=Vampire Minion
-entity.vampirism.blinding_bat.name=Bat
-entity.vampirism.dracula.name=Dracula
-entity.vampirism.dead_mob.name=Dead mob
-entity.vampirism.portal_guard.name=Portal Guard
-
-# Items
-item.vampirism.vampiresFear.name=Vampire's fear
-item.vampirism.bloodBottle.name=Blood Bottle
-item.vampirism.vampireFang.name=Vampire Fang
-item.vampirism.pitchfork.name=Pitchfork
-item.vampirism.humanHeart.name=Human Heart
-item.vampirism.torch.name=Torch
-item.vampirism.pureBlood.name=Pure Blood
-item.vampirism.sunscreen.name=Sunscreen
-item.vampirism.leechSword.name=Leech
-item.vampirism.coffin.name=Coffin
-item.vampirism.vampireArmor_helmet.name=Vampire's helmet
-item.vampirism.vampireArmor_leggings.name=Vampire's leggings
-item.vampirism.vampireArmor_boots.name=Vampire's boots
-item.vampirism.vampireArmor_chestplate.name=Vampire's chestplate
-item.vampirism.minionNameTag.name=Minion name tag
-item.vampirism.gemOfBinding.name=Gem of Binding
-item.vampirism.bloodEye.name=Blood Eye
-item.vampirism.weakVampireFang.name=Weak Vampire Fang
-item.vampirism.weakHumanHeart.name=Weak Human Heart
-item.vampirism.item_tent.name=Tent
-
-# Blocks
-block.vampirism.bloodAltar.name=Blood Altar of Saturation
-block.vampirism.bloodAltarTier2.name=Blood Altar of Inspiration
-block.vampirism.bloodAltarTier4.name=Blood Altar of Infusion
-block.vampirism.bloodAltarTier4Tip.name=Blood Altar of Infusion Tip
-block.vampirism.churchAltar.name=Altar of Cleansing
-block.vampirism.cursedEarth.name=Cursed Earth
-block.vampirism.vampireOrchid.name=Vampire Orchid
-block.vampirism.blockCoffin.name=Coffin
-block.vampirism.castlePortal.name=Portal Block
-block.vampirism.castleBlock.name=Castle Block
-block.vampirism.castleSlab.name=Castle Slab
-block.vampirism.doubleCastleSlab.name=Double Castle Slab
-block.vampirism.castleStairs.name=Castle Stairs
-block.vampirism.tent.name=Tent
-
-#GUI
-gui.vampirism.revertback.head=Revert back to normal human
-gui.vampirism.revertback.desc=You will loose all your levels and die
-
-# Keys
-keys.vampirism.category=Vampirism
-keys.vampirism.suck=Suck blood
-keys.vampirism.auto=Auto Fill Blood Bottle
-keys.vampirism.skill=Activate vampire skills
-key.vampirism.vision=Switch vision
-
-#General
-itemGroup.vampirism=Vampirism
-death.attack.sun=%1$s did not like the sun
-text.vampirism.skill.level_to_low=Your vampire level is too low for that
-text.vampirism.skill.cooldown_not_over=Please wait until the cooldown is over
-text.vampirism.entity_level=Level
-text.vampirism.ritual_missing_times=You are missing items for this ritual
-text.vampirism.ritual_structure_wrong=The structure is wrong for this ritual
-text.vampirism.ritual_level_wrong=You cannot use this at your level
-text.vampirism.ritual_still_running=The ritual is still running
-text.vampirism.not_enough_blood=There is not enough blood in the altar
-text.vampirism.ritual_requirements_not_met=Not all requirements for this ritual were met
-text.vampirism.purity=Purity
-text.vampirism.auto_fill_enabled=Auto Fill Enabled
-text.vampirism.auto_fill_disabled=Auto Fill Disabled
-text.vampirism.skill.deactivated_by_serveradmin=This skill is deactivated by your serveradmin
-text.vampirism.ritual_no_vampire=You need to be a vampire for this ritual
-text.vampirism.cant_fly_day=You cannot fly at daytime
-text.vampirism.no_more_minions=You are not able to control any more minions
-text.vampirism.coffin.noSleep=You can only sleep at day
-text.vampirism.coffin.occupied=This coffin is occupied
-text.vampirism.coffin.stopsleeping=Leave coffin
-text.vampirism.blood_left=Blood left
-text.vampirism.blood=Blood
-text.vampirism.vampirelevel=Vampirelevel
-text.vampirism.entitysblood=Entity's blood
-text.vampirism.minion=Minion
-text.vampirism.lord=Lord
-text.vampirism.normal_vision=Normal Vision
-text.vampirism.night_vision=Night Vision
-text.vampirism.no_control_minion=You have no control over this minion
-text.vampirism.need_empty_bottle=My lord, I need an empty bottle to collect blood
-text.vampirism.thanks=Thanks
-text.vampirism.coming_back=I'm coming back, my lord
-text.vampirism.sorry_i_died_while_doing=My lord, I'm sorry but I died while fulfilling your task
-text.vampirism.current_task=Current task
-text.vampirism.lord.become=You are raised to the Vampire Lord
-text.vampirism.lord.other_player_become=has defeated the current Vampire Lord and replaces him
-text.vampirism.lord.vampire_replace=Another player has replaced you as Vampire Lord
-text.vampirism.lord.vampire_kill_replace=Another vampire has killed you and took your place as Vampire Lord
-text.vampirism.lord.new_lord_castle=A new Vampire Lord has risen and moved into his castle
-text.vampirism.lord.vampire_replace_absence=Another vampire has replaced you as Vampire Lord in your absence
-text.vampirism.lord.portal_disabled=This portal does not lead anywhere
-text.vampirism.lord.level_to_low=You vampire level is too low to be a Vampire Lord
-text.vampirism.guard_stay_away_level_low=Your vampire level is too low to travel to Dracula's castle. Stay away\!
-text.vampirism.coffin.wrong_dimension=You can't sleep in this dimension.
-text.vampirism.biome.looking_for_biome=Looking for a Vampire Forest Biome. Please wait
-text.vampirism.biome.not_found=No Vampire Forest Biome was found.
-text.vampirism.biome.found=Found a Vampire Forest Biome
-text.vampirism.castle_fail=Vampirism was not able to find a appropriate position for a Vampire Castle. It is recommend to generate a new world. You can also try "/vampirism checkForVampireBiome", if that does not find a biome, another mod is probably interfering.
-text.vampirism.structure=Structure
-text.vampirism.pillar_blocks=Pillar Blocks
-text.vampirism.no_dracula_to_call=Dracula is dead and cannot be called
-text.vampirism.outdated=You are running Vampirism %s, the latest version is %s.
-text.vampirism.update_message=["Click for... [",{"text":"Download","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the download page","color":"green"}},"clickEvent":{"action":"open_url","value":"@download@"}},"] [",{"text":"Website","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the mod's forum page","color":"green"}},"clickEvent":{"action":"open_url","value":"@forum@"}},"] [",{"text":"Changelog","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this see the version's Changelog","color":"green"}},"clickEvent":{"action":"run_command","value":"/vampirism changelog"}},"]"]
-
-#Skill
-skill.vampirism.bat_skill=Toggle Batmode
-skill.vampirism.change_weather=Weather
-skill.vampirism.cancel=Cancel
-skill.vampirism.freeze=Freeze
-skill.vampirism.invisibility=Invisibility
-skill.vampirism.regen=Regeneration
-skill.vampirism.revive_fallen=Revive Fallen
-skill.vampirism.summon_bats=Summon Bats
-skill.vampirism.teleport=Teleport
-skill.vampirism.vampire_rage=Vampire Rage
-
-#Minion command
-minioncommand.vampirism.attackhostilenoplayers=Attack hostile
-minioncommand.vampirism.attackhostile=Attack hostile including player
-minioncommand.vampirism.collectblood=Collect blood
-minioncommand.vampirism.defendlord=Defend lord
-minioncommand.vampirism.stayhere=Stay here
-minioncommand.vampirism.comeback=Come back (Remote minions)
-minioncommand.vampirism.justfollow=Just follow me
-minioncommand.vampirism.converttosaveable=Take Gem of Binding back
-minioncommand.vampirism.defendarea=Defend area
-
-#Config
-category.vampirism.village=Village settings
-category.vampirism.disable=Disable parts
-category.vampirism.gui=Gui settings
-category.vampirism.balance=Balance settings
-category.vampirism.balance.tooltip=Change almost any balance relevant property
-category.vampirism.balance_leveling=Levelup balance settings
-category.vampirism.balance_player_mod=Vampire player modifier settings
-category.vampirism.balance_player_skills=Vampire player skills settings
-category.vampirism.balance_mob_prop=Vampirism mob properties
-category.vampirism.balance_mob_prop.tooltip=Change properties of the mobs added by Vampirism
-category.vampirism.balance_vv_prop=Village Vampire properties
-category.vampirism.balance_vv_prop.tooltip=Change the way hunters in villages act and adjust other village related stuff
-
-############# REWRITE NEW ###########################
-
 #Skills
 text.vampirism.skills.gui_title=Your skills
 text.vampirism.skills.points_left=%d skill point(s) left
@@ -228,6 +72,16 @@ entity.vampirism.hunter_trainer.name=Vampire Hunter Trainer
 entity.vampirism.advanced_vampire.name=Advanced Vampire
 entity.vampirism.advanced_hunter.name=Advanced Hunter
 entity.vampirism.hunter_villager.name=Angry Villager
+entity.vampirism.vampireHunter.name=Vampire Hunter
+entity.vampirism.vampire.name=Vampire
+entity.vampirism.ghost.name=Ghost
+entity.vampirism.vampireBaron.name=Vampire Baron
+entity.vampirism.vampireMinionR.name=Vampire Minion
+entity.vampirism.vampireMinionS.name=Vampire Minion
+entity.vampirism.blinding_bat.name=Bat
+entity.vampirism.dracula.name=Dracula
+entity.vampirism.dead_mob.name=Dead mob
+entity.vampirism.portal_guard.name=Portal Guard
 
 #RITUALS
 text.vampirism.ritual_missing_items=Missing %s of "%s" for this ritual
@@ -238,19 +92,19 @@ text.vampirism.trainer_level_wrong=This trainer cannot train you at your level
 tile.vampirism.hunterTable.name=Hunter Research Table
 tile.vampirism.castleBlock.name=Castle Block
 tile.vampirism.cursedEarth.name=Cursed Earth
-tile.vampirism.vampireOrchid.name=Vampire Orchid
 tile.vampirism.altarInfusion.name=Altar of Infusion
 tile.vampirism.altarPillar.name=Altar Pillar
 tile.vampirism.altarTip.name=Altar Tip
 tile.vampirism.altarInspiration.name=Altar of Inspiration
 tile.vampirism.tent.name=Tent
-tile.vampirism.churchAltar.name=Altar
+tile.vampirism.churchAltar.name=Altar of Cleansing
 tile.vampirism.bloodContainer.name=Blood Container
 tile.vampirism.medChair.name=Injection Chair
 tile.vampirism.vampire_orchid.name=Vampire Orchid
 tile.vampirism.firePlace.name=Fire Place
 tile.vampirism.weaponTable.name=Hunter Weapon Table
 tile.vampirism.weaponTable.cannot_use=You have not learned how to use this
+tile.vampirism.bloodPotionTable.name=Blood Potion Table
 tile.vampirism.bloodPotionTable.cannot_use=You have not learned how to use this
 
 
@@ -278,12 +132,38 @@ item.vampirism.bloodPotion.name=Blood Potion
 item.vampirism.basicTechCrossbow.name=Semi-Auto Crossbow
 item.vampirism.enhancedTechCrossbow.name=Enhanced Semi-Auto Crossbow
 item.vampirism.techCrossbowAmmoPackage.name=Arrow clip
+item.vampirism.vampiresFear.name=Vampire's fear
+item.vampirism.bloodBottle.name=Blood Bottle
+item.vampirism.vampireFang.name=Vampire Fang
+item.vampirism.pitchfork.name=Pitchfork
+item.vampirism.humanHeart.name=Human Heart
+item.vampirism.torch.name=Torch
+item.vampirism.pureBlood.name=Pure Blood
+item.vampirism.sunscreen.name=Sunscreen
+item.vampirism.leechSword.name=Leech
+item.vampirism.coffin.name=Coffin
+item.vampirism.vampireArmor_helmet.name=Vampire's helmet
+item.vampirism.vampireArmor_leggings.name=Vampire's leggings
+item.vampirism.vampireArmor_boots.name=Vampire's boots
+item.vampirism.vampireArmor_chestplate.name=Vampire's chestplate
+item.vampirism.minionNameTag.name=Minion name tag
+item.vampirism.gemOfBinding.name=Gem of Binding
+item.vampirism.bloodEye.name=Blood Eye
+item.vampirism.weakVampireFang.name=Weak Vampire Fang
+item.vampirism.weakHumanHeart.name=Weak Human Heart
+item.vampirism.item_tent.name=Tent
+item.vampirism.concentratedGarlic.name=Concentrated Garlic
+item.vampirism.garlic_bomb.name=Garlic Bomb
 
 
 #KEYS
 keys.vampirism.select_skills=Select Skills
 keys.vampirism.action=Use Actions
-
+keys.vampirism.blood_potion_crafting=Portable Blood Potion crafting
+keys.vampirism.category=Vampirism
+keys.vampirism.suck=Suck blood
+keys.vampirism.auto=Auto Fill Blood Bottle
+keys.vampirism.vision=Switch vision
 
 #ACHIEVEMENTS
 achievement.vampirism.sucking_blood=Blood thirsty
@@ -310,6 +190,8 @@ gui.vampirism.hunter_weapon_table=Hunter Weapon Table
 gui.vampirism.hunter_weapon_table.level=Required Hunter Level: %s
 gui.vampirism.hunter_weapon_table.skill=Required Skill: %s
 gui.vampirism.blood_potion_table.create=Start Crafting
+gui.vampirism.revertback.head=Revert back to normal human
+gui.vampirism.revertback.desc=You will loose all your levels and die
 
 
 #COMMANDS
@@ -339,3 +221,81 @@ text.vampirism.basic_hunter.i_will_train_you=Alright, I will train you
 text.vampirism.i_am_busy_right_now=I'm busy right now
 text.vampirism.crossbow.not_loaded=Not loaded
 text.vampirism.crossbow.loaded_arrow_count=Loaded %s arrows
+itemGroup.vampirism=Vampirism
+death.attack.sun=%1$s did not like the sun
+death.attack.garlic=%1$s was poisoned by garlic
+text.vampirism.skill.level_to_low=Your vampire level is too low for that
+text.vampirism.skill.cooldown_not_over=Please wait until the cooldown is over
+text.vampirism.ritual_missing_times=You are missing items for this ritual
+text.vampirism.ritual_structure_wrong=The structure is wrong for this ritual
+text.vampirism.ritual_level_wrong=You cannot use this altar at this level
+text.vampirism.ritual_still_running=The ritual is still running
+text.vampirism.not_enough_blood=There is not enough blood in the altar
+text.vampirism.ritual_requirements_not_met=Not all requirements for this ritual were met
+text.vampirism.purity=Purity
+text.vampirism.skill.deactivated_by_serveradmin=This skill is deactivated by your serveradmin
+text.vampirism.ritual_no_vampire=You need to be a vampire for this ritual
+text.vampirism.cant_fly_day=You cannot fly at daytime
+text.vampirism.no_more_minions=You are not able to control any more minions
+text.vampirism.coffin.noSleep=You can only sleep at day
+text.vampirism.coffin.occupied=This coffin is occupied
+text.vampirism.coffin.stopsleeping=Leave coffin
+text.vampirism.coffin.cant_use=You can't sleep in a coffin
+text.vampirism.blood_left=Blood left
+text.vampirism.blood=blood
+text.vampirism.vampirelevel=Vampirelevel
+text.vampirism.entitysblood=Entity's blood
+text.vampirism.minion=Minion
+text.vampirism.normal_vision=Normal Vision
+text.vampirism.night_vision=Night Vision
+text.vampirism.no_control_minion=You have no control over this minion
+text.vampirism.need_empty_bottle=My lord, I need an empty bottle to collect blood
+text.vampirism.thanks=Thanks
+text.vampirism.coming_back=I'm coming back, my lord
+text.vampirism.sorry_i_died_while_doing=My lord, I'm sorry but I died while fulfilling your task
+text.vampirism.current_task=Current task
+text.vampirism.lord.become=You are raised to the Vampire Lord
+text.vampirism.lord.other_player_become=has defeated the current Vampire Lord and replaces him
+text.vampirism.lord.vampire_replace=Another player has replaced you as Vampire Lord
+text.vampirism.lord.vampire_kill_replace=Another vampire has killed you and took your place as Vampire Lord
+text.vampirism.lord.new_lord_castle=A new Vampire Lord has risen and moved into his castle
+text.vampirism.lord.vampire_replace_absence=Another vampire has replaced you as Vampire Lord in your absence
+text.vampirism.lord.portal_disabled=This portal does not lead anywhere
+text.vampirism.lord.level_to_low=You vampire level is too low to be a Vampire Lord
+text.vampirism.guard_stay_away_level_low=Your vampire level is too low to travel to Dracula's castle. Stay away\!
+text.vampirism.coffin.wrong_dimension=You can't sleep in this dimension.
+text.vampirism.biome.looking_for_biome=Looking for a Vampire Forest Biome. Please wait
+text.vampirism.biome.not_found=No Vampire Forest Biome was found.
+text.vampirism.biome.found=Found a Vampire Forest Biome
+text.vampirism.castle_fail=Vampirism was not able to find a appropriate position for a Vampire Castle. It is recommend to generate a new world. You can also try "/vampirism checkForVampireBiome", if that does not find a biome, another mod is probably interfering.
+text.vampirism.structure=Structure
+text.vampirism.pillar_blocks=Pillar Blocks
+text.vampirism.no_dracula_to_call=Dracula is dead and cannot be called
+text.vampirism.garlic_weapons=This weapon is coated with garlic and poisons vampires./nBut the garlic wears off.
+text.vampirism.no_dracula_to_call=Dracula is dead and cannot be called
+text.vampirism.outdated=You are running Vampirism %s, the latest version is %s.
+text.vampirism.update_message=["Click for... [",{"text":"Download","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the download page","color":"green"}},"clickEvent":{"action":"open_url","value":"@download@"}},"] [",{"text":"Website","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the mod's forum page","color":"green"}},"clickEvent":{"action":"open_url","value":"@forum@"}},"] [",{"text":"Changelog","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this see the version's Changelog","color":"green"}},"clickEvent":{"action":"run_command","value":"/vampirism changelog"}},"]"]
+
+#MINION COMMANDS
+minioncommand.vampirism.attackhostilenoplayers=Attack hostile
+minioncommand.vampirism.attackhostile=Attack hostile including player
+minioncommand.vampirism.collectblood=Collect blood
+minioncommand.vampirism.defendlord=Defend lord
+minioncommand.vampirism.stayhere=Stay here
+minioncommand.vampirism.comeback=Come back (Remote minions)
+minioncommand.vampirism.justfollow=Just follow me
+minioncommand.vampirism.converttosaveable=Take Gem of Binding back
+minioncommand.vampirism.defendarea=Defend area
+
+#CONFIG
+category.vampirism.balance=Balance settings
+category.vampirism.balance.tooltip=Change almost any balance relevant property
+category.vampirism.balance_level=Levelup balance settings
+category.vampirism.balance_player_mod=Vampire player modifier settings
+category.vampirism.balance_player_skills=Vampire player skills settings
+category.vampirism.balance_mob_prop=Vampirism mob properties
+category.vampirism.balance_mob_prop.tooltip=Change properties of the mobs added by Vampirism
+category.vampirism.balance_vv_prop=Village Vampire properties
+category.vampirism.balance_vv_prop.tooltip=Change the way hunters in villages act and adjust other village related stuff
+category.vampirism.disable.tooltip=Disable parts of the mod (Not recommend)
+

@@ -194,6 +194,11 @@ public class BlockCoffin extends VampirismBlockContainer {
                 }
             }
 
+            if (VampirePlayer.get(playerIn).getLevel() == 0) {
+                playerIn.addChatComponentMessage(new TextComponentTranslation("text.vampirism.coffin.cant_use"));
+                return true;
+            }
+
 
             if (worldIn.provider.canRespawnHere() && worldIn.getBiomeGenForCoords(pos) != Biomes.HELL) {
                 if (state.getValue(OCCUPIED)) {
