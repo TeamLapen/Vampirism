@@ -1,8 +1,6 @@
 curseforge {
-    if (project.hasProperty("curseforge_key")) {
-        apiKey = project.curseforge_key
-    } else if (project.hasProperty("CURSEFORGE_API")) {
-        apiKey = project.CURSEFORGE_API; //Not sure if I even used that anywhere
+    if (project.hasProperty("CURSEFORGE_API")) {
+        apiKey = project.CURSEFORGE_API;
     } else if (System.getenv().CI) {
         apiKey = System.getenv().CURSEFORGE_KEY_SECRET
     } else {

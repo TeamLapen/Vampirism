@@ -11,6 +11,18 @@ repositories {
     mavenCentral()
 }
 
+task crowdin(type: CrowdinDownload) {
+    outputs.upToDateWhen { false }
+    output = "build/crowdin.zip"
+    projectId = 'vampirism'
+    extract = false // we wanna keep it as a zip. not extract it to a folder named "crowdin.zip"
+
+    // task auomatically skips if this is null
+    if (project.hasProperty('CROWDIN_KEY'))
+        apiKey = project.CROWDIN_KEY
+}
+
+
 dependencies {
     deobfCompile "mezz.jei:jei_" + config.minecraft_version + ":" + config.jei_version
     deobfCompile 'mcp.mobius.waila:Waila:' + config.waila_version
@@ -53,8 +65,19 @@ processResources {
 jar {
     //Keep the jar as clean as possible
     includeEmptyDirs = false
+
+
+    dependsOn 'crowdin'
+    def translations = zipTree(crowdin.output).matching {
+        exclude "**/en_US.lang"
+    }
+    from { crowdin.getDidWork() ? translations : null }
+
+
+
     manifest {
         //attributes 'FMLCorePlugin': 'de.teamlapen.vampirism.coremod.VampirismFMLLoadingPlugin',
         //        'FMLCorePluginContainsFMLMod': 'true'
     }
+
 }
