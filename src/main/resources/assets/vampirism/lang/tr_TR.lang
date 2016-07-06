@@ -3,11 +3,13 @@
 entity.vampirism.vampireHunter.name=Vampir Avcısı
 entity.vampirism.vampire.name=Vampir
 entity.vampirism.ghost.name=Hayalet
+entity.vampirism.vampireBaron.name=Vampir Baron
 entity.vampirism.vampireMinionR.name=Vampir Kölesi
 entity.vampirism.vampireMinionS.name=Vampir Kölesi
 entity.vampirism.blinding_bat.name=Yarasa
 entity.vampirism.dracula.name=Drakula
 entity.vampirism.dead_mob.name=Ölü Mob
+entity.vampirism.vampireHunter2.name=Uzman Vampir Avcısı
 
 # Items
 item.vampirism.vampiresFear.name=Vampirin Korkusu
@@ -29,6 +31,8 @@ item.vampirism.weakVampireFang.name=Zayıf Vampir Azıdişi
 item.vampirism.weakHumanHeart.name=Zayıf İnsan Kalbi
 item.vampirism.item_tent.name=Çadır
 item.vampirism.garlic.name=Sarımsak
+item.vampirism.concentratedGarlic.name=Konsantre Sarımsak
+item.vampirism.garlic_bomb.name=Sarımsak Bombası
 
 # Blocks
 block.vampirism.bloodAltar.name=Doygunluğun Kan Altarı
@@ -38,27 +42,74 @@ block.vampirism.churchAltar.name=Temizleyici Altar
 block.vampirism.cursedEarth.name=Lanetli Toprak
 block.vampirism.vampireOrchid.name=Vampir Orkidesi
 block.vampirism.blockCoffin.name=Tabut
+block.vampirism.castlePortal.name=Portal Blok
 block.vampirism.castleBlock.name=Kale Bloğu
 block.vampirism.castleStairs.name=Şato Merdivenleri
+block.vampirism.tent.name=Çadır
+block.vampirism.garlic.name=Sarımsak
+tile.vampirism.garlicTorchWeak.name=Zayıf Sarımsak Meşale
+tile.vampirism.garlicTorchStrong.name=Güçlü Sarımsak Meşale
+tile.vampirism.garlicGas.name=Sarımsak Gazı
 
 #GUI
 gui.vampirism.revertback.head=Normal insana geri dönüşüm
+gui.vampirism.revertback.desc=Tüm seviyeni kaybedecek ve öleceksin
 
 # Keys
+keys.vampirism.category=Vampirlik
 
 #General
+itemGroup.vampirism=Vampirlik
+potion.vampirism.sunscreen=Güneş kremi
+potion.vampirism.thirst=Susuzluk
+potion.vampirism.garlic=Tabut
 text.vampirism.skill.level_to_low=Onun için vampirlik seviyeniz yeterli değil
+text.vampirism.skill.cooldown_not_over=Bekleme süresi bitinceye kadar bekleyin
 text.vampirism.entity_level=Seviye
+text.vampirism.ritual_missing_times=Bu ayin için öğeler eksik
 text.vampirism.ritual_level_wrong=Bu sunağı, bu seviyede kullanamazsın
 text.vampirism.ritual_still_running=Ayin devam etmekte
 text.vampirism.not_enough_blood=Sunağın içinde yeterince kan yok
+text.vampirism.purity=saflık
+text.vampirism.auto_fill_enabled=Otomatik Doldurma Etkin
+text.vampirism.auto_fill_disabled=Otomatik Doldurma Devre Dışı
+text.vampirism.skill.deactivated_by_serveradmin=Bu beceri,ServerAdmini tarafından devre dışı bırakılmış
+text.vampirism.ritual_no_vampire=Bu ayin için bir vampir olmak gerekir
+text.vampirism.cant_fly_day=Gündüz vakti uçamazsın
+text.vampirism.coffin.noSleep=Sadece sabah uyuyabilirsin
+text.vampirism.coffin.stopsleeping=Tabuttan çık
+text.vampirism.blood_left=Kalan kan
+text.vampirism.blood=kan
+text.vampirism.vampirelevel=Vampir level
+text.vampirism.entitysblood=Varlığın Kanı
+text.vampirism.minion=Minion
+text.vampirism.lord=Lord
+text.vampirism.normal_vision=Normal Görüş
 text.vampirism.night_vision=Gece Görüşü
+text.vampirism.thanks=Teşekkürler
+text.vampirism.coming_back=Geleceğim, Lordum
+text.vampirism.current_task=Geçerli görev
+text.vampirism.lord.vampire_replace=Başka bir oyuncu Vampir Lordu olarak yerini aldı
+text.vampirism.pillar_blocks=Sütun Bloğu
+text.vampirism.no_dracula_to_call=Drakula öldü ve çağrılamaz
+text.vampirism.outdated=Vampirlik %s çalıştırıyorsanız, en son sürümü %s.
 
 #Skill
+skill.vampirism.change_weather=Hava durumu
+skill.vampirism.cancel=İptal
+skill.vampirism.freeze=Donma
+skill.vampirism.invisibility=Görünmezlik
+skill.vampirism.regen=Yenilenme
+skill.vampirism.summon_bats=Yarasa Çağır
 skill.vampirism.teleport=Işınlan
+skill.vampirism.vampire_rage=Vampir Öfkesi
 
 #Minion command
 minioncommand.vampirism.collectblood=Kan topla
+minioncommand.vampirism.defendlord=Lordu Savun
+minioncommand.vampirism.stayhere=Burada kal
+minioncommand.vampirism.justfollow=Beni takip et
+minioncommand.vampirism.defendarea=Alanı Savun
 
 #Config
 

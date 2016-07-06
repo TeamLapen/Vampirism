@@ -1,0 +1,97 @@
+#X-Generator: crowdin.com
+# Entitys
+entity.vampirism.vampireHunter.name=ملاحق مصاصي الدماء
+entity.vampirism.vampire.name=مصاص الدماء
+entity.vampirism.ghost.name=شبح
+entity.vampirism.vampireMinionR.name=مساعد مصاص دماء
+entity.vampirism.vampireMinionS.name=مساعد مصاص دماء
+entity.vampirism.blinding_bat.name=خفاش
+entity.vampirism.dracula.name=مصاص دماء
+entity.vampirism.portal_guard.name=حارس البوابه
+entity.vampirism.vampireHunter2.name=ملاحق مصاصي الدماء المتطور
+
+# Items
+item.vampirism.vampiresFear.name=الخوف مصاص الدماء
+item.vampirism.bloodBottle.name=زجاجة الدم
+item.vampirism.vampireFang.name=ناب مصاص الدماء
+item.vampirism.pitchfork.name=مذراة
+item.vampirism.humanHeart.name=قلب الإنسان
+item.vampirism.torch.name=شعلة
+item.vampirism.pureBlood.name=الدم النقي
+item.vampirism.leechSword.name=علقة
+item.vampirism.coffin.name=تابوت
+item.vampirism.vampireArmor_helmet.name=خوذة مصاص دماء
+item.vampirism.vampireArmor_leggings.name=سيروال مصاص دماء
+item.vampirism.vampireArmor_boots.name=جزمة مصاص دماء
+item.vampirism.bloodEye.name=العين الدم
+item.vampirism.weakHumanHeart.name=قلب الإنسان ضعيف
+item.vampirism.item_tent.name=خيمة
+item.vampirism.garlic.name=ثوم
+item.vampirism.concentratedGarlic.name=الثوم مركزة
+item.vampirism.garlic_bomb.name=قنبلة الثوم
+
+# Blocks
+block.vampirism.bloodAltar.name=مذبح تشبع الدم
+block.vampirism.bloodAltarTier2.name=مذبح الدم الهام
+block.vampirism.bloodAltarTier4.name=مذبح ضخ الدم
+block.vampirism.cursedEarth.name=الارض الملعونة
+block.vampirism.blockCoffin.name=تابوت
+block.vampirism.tent.name=خيمة
+block.vampirism.garlic.name=ثوم
+tile.vampirism.garlicTorchWeak.name=الشعلة الثوم الضعيفة
+tile.vampirism.garlicTorchStrong.name=الشعلة الثوم القوي
+tile.vampirism.garlicGas.name=غاز الثوم
+
+#GUI
+gui.vampirism.revertback.head=العودة إلى الإنسان العادي
+gui.vampirism.revertback.desc=سوف تفقد كل مستوئ وتموت
+
+# Keys
+keys.vampirism.suck=تمتص الدم
+keys.vampirism.skill=تنشيط مهارات مصاص دماء
+key.vampirism.vision=تبديل الرؤية
+
+#General
+potion.vampirism.thirst=العطش
+potion.vampirism.saturation=التشبع
+potion.vampirism.garlic=ثوم
+text.vampirism.skill.level_to_low=مصاص دماء مستوى منخفض جداً لذلك
+text.vampirism.entity_level=مستوى
+text.vampirism.auto_fill_enabled=تشغيل التعبئة التلقائية
+text.vampirism.auto_fill_disabled=تعطيل التعبئة التلقائية
+text.vampirism.blood=الدم
+text.vampirism.minion=خادم
+text.vampirism.lord=السيد
+text.vampirism.normal_vision=رؤية عادية
+text.vampirism.night_vision=الرؤية الليلية
+text.vampirism.no_control_minion=ليس لديك أي سيطرة على هذا الخادم
+text.vampirism.need_empty_bottle=سيدي أحتاج زجاجة فارغة لجمع الدم
+text.vampirism.thanks=شكراً
+text.vampirism.coming_back=أنا قادم إلى الوراء، سيدي
+text.vampirism.current_task=المهمة الحالية
+text.vampirism.structure=مبنى
+
+#Skill
+skill.vampirism.change_weather=الطقس
+skill.vampirism.cancel=الغاء
+skill.vampirism.freeze=تجميد
+skill.vampirism.invisibility=الاختفاء
+skill.vampirism.regen=اعادة تجديد الدم
+skill.vampirism.revive_fallen=أحياء الساقط
+skill.vampirism.summon_bats=استدعاء الخفاش
+skill.vampirism.teleport=الإنتقال
+skill.vampirism.vampire_rage=غضب مصاص دماء
+
+#Minion command
+minioncommand.vampirism.attackhostilenoplayers=هجوم معاد
+minioncommand.vampirism.attackhostile=الهجوم العدائية بما في ذلك اللاعب
+minioncommand.vampirism.collectblood=جمع الدم
+minioncommand.vampirism.defendlord=الدفاع عن الرب
+minioncommand.vampirism.stayhere=ابق هنا
+minioncommand.vampirism.justfollow=فقط اتبعني
+minioncommand.vampirism.defendarea=الدفاع عن المنطقه
+
+#Config
+
+
+

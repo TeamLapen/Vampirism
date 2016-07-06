@@ -119,7 +119,7 @@ text.vampirism.lord.new_lord_castle=一個新的血族之王誕生於屬於他�
 text.vampirism.lord.vampire_replace_absence=另一隻吸血鬼在你不在的時候成為了新的血族之王
 text.vampirism.lord.portal_disabled=這個傳送門並不會帶你到哪去
 text.vampirism.lord.level_to_low=你的血族等級還未能達到成為血族之王的最低標準
-text.vampirism.guard_stay_away_level_low=你的血族等級太低了，不能傳送至德古拉的城堡. 滾\!
+text.vampirism.guard_stay_away_level_low=你的血族等級太低了，不能傳送至德古拉的城堡. 滾!
 text.vampirism.coffin.wrong_dimension=你不能再次空間睡覺
 text.vampirism.biome.looking_for_biome=正在尋找血族森林，請稍後。。。
 text.vampirism.biome.not_found=並無發現任何血族森林
@@ -130,7 +130,7 @@ text.vampirism.pillar_blocks=支柱方塊
 text.vampirism.no_dracula_to_call=德古拉已經死了，不能再被召喚。
 text.vampirism.garlic_weapons=這個武器被大蒜覆蓋著。大蒜可以讓吸血鬼中毒，不過大蒜的效果會漸漸消失.
 text.vampirism.outdated=您正在運行此遊戲的 %s，最新版本是 %s。
-text.vampirism.update_message=["Click for... [",{"text"\:"Download","color"\:"green","hoverEvent"\:{"action"\:"show_text","value"\:{"text"\:"Click this to go to the download page","color"\:"green"}},"clickEvent"\:{"action"\:"open_url","value"\:"@download@"}},"] [",{"text"\:"Website","color"\:"green","hoverEvent"\:{"action"\:"show_text","value"\:{"text"\:"Click this to go to the mod's forum page","color"\:"green"}},"clickEvent"\:{"action"\:"open_url","value"\:"@forum@"}},"] [",{"text"\:"Changelog","color"\:"green","hoverEvent"\:{"action"\:"show_text","value"\:{"text"\:"Click this see the version's Changelog","color"\:"green"}},"clickEvent"\:{"action"\:"run_command","value"\:"/vampirism changelog"}},"]"]
+text.vampirism.update_message=["Click for... [",{"text":"Download","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the download page","color":"green"}},"clickEvent":{"action":"open_url","value":"@download@"}},"] [",{"text":"Website","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the mod's forum page","color":"green"}},"clickEvent":{"action":"open_url","value":"@forum@"}},"] [",{"text":"Changelog","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this see the version's Changelog","color":"green"}},"clickEvent":{"action":"run_command","value":"/vampirism changelog"}},"]"]
 
 #Skill
 skill.vampirism.bat_skill=啟動蝙蝠模式

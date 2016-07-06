@@ -3,11 +3,14 @@
 entity.vampirism.vampireHunter.name=Cacciatore di Vampiri
 entity.vampirism.vampire.name=Vampiro
 entity.vampirism.ghost.name=Fantasma
-entity.vampirism.vampireMinionR.name=Schiavo vampirico
-entity.vampirism.vampireMinionS.name=Schiavo vampirico
+entity.vampirism.vampireBaron.name=Signore dei vampiri
+entity.vampirism.vampireMinionR.name=Schiavo vampiro
+entity.vampirism.vampireMinionS.name=Schiavo vampiro
 entity.vampirism.blinding_bat.name=Pipistrello
 entity.vampirism.dracula.name=Dracula
 entity.vampirism.dead_mob.name=Mob Morto
+entity.vampirism.portal_guard.name=Guardia del portale
+entity.vampirism.vampireHunter2.name=Cacciatore di vampiri avanzato
 
 # Items
 item.vampirism.vampiresFear.name=Paura del vampiro
@@ -25,6 +28,14 @@ item.vampirism.vampireArmor_leggings.name=Pantaloni vampirici
 item.vampirism.vampireArmor_boots.name=Scarpe vampiriche\n
 item.vampirism.vampireArmor_chestplate.name=Pettorale vampirico
 item.vampirism.minionNameTag.name=Etichetta del Minion
+item.vampirism.gemOfBinding.name=Gemma di associazione
+item.vampirism.bloodEye.name=Occhio di Sangue
+item.vampirism.weakVampireFang.name=Denti da vampiro rotti
+item.vampirism.weakHumanHeart.name=Cuore umano rotto
+item.vampirism.item_tent.name=Tenda
+item.vampirism.garlic.name=Aglio
+item.vampirism.concentratedGarlic.name=Aglio concentrato
+item.vampirism.garlic_bomb.name=Bomba di aglio
 
 # Blocks
 block.vampirism.bloodAltar.name=Altare del sangue per Saturazione
@@ -35,9 +46,17 @@ block.vampirism.churchAltar.name=Altare della pulizia
 block.vampirism.cursedEarth.name=Terra maledetta
 block.vampirism.vampireOrchid.name=Orchidea Vampirica
 block.vampirism.blockCoffin.name=Bara
+block.vampirism.castlePortal.name=Blocco del portale
 block.vampirism.castleBlock.name=Blocco del castello
 block.vampirism.castleSlab.name=Lastra del castello
+block.vampirism.doubleCastleSlab.name=Doppi lastra di castello
 block.vampirism.castleStairs.name=scale del castello
+block.vampirism.tent.name=Tenda
+block.vampirism.gildedIronBlock.name=Blocco di ferro dorato
+block.vampirism.garlic.name=Aglio
+tile.vampirism.garlicTorchWeak.name=Torcia di aglio debole
+tile.vampirism.garlicTorchStrong.name=Torcia di aglio forte
+tile.vampirism.garlicGas.name=Gas di aglio
 
 #GUI
 gui.vampirism.revertback.head=Tornare allo stato umano
@@ -53,10 +72,12 @@ key.vampirism.vision=Cambia la visuale
 #General
 itemGroup.vampirism=Vampirismo
 death.attack.sun=%1$s non piaceva il sole
+death.attack.garlic=%1$s fu avvelenato dall'aglio
 potion.vampirism.sunscreen=Protezione per il sole
 potion.vampirism.thirst=Sete
 potion.vampirism.saturation=Saturazione
 potion.vampirism.sanguinare=Sanguinamento
+potion.vampirism.garlic=Aglio
 text.vampirism.skill.level_to_low=Il tuo livello vampirico è troppo basso per questo
 text.vampirism.skill.cooldown_not_over=Si prega di attendere fino a quando il tempo di recupero non finirà
 text.vampirism.entity_level=Livello
@@ -90,6 +111,26 @@ text.vampirism.thanks=Grazie
 text.vampirism.coming_back=Sto tornando, mio Signore
 text.vampirism.sorry_i_died_while_doing=Mio Signore, mi dispiace ma sono morto soddisfando il vostro compito
 text.vampirism.current_task=Attività corrente
+text.vampirism.lord.become=Sono sollevate per il vampiro Lord
+text.vampirism.lord.other_player_become=ha sconfitto il Signore dei vampiri corrente e lo sostituisce
+text.vampirism.lord.vampire_replace=Un altro giocatore ha sostituito te come Signore Vampiro
+text.vampirism.lord.vampire_kill_replace=Un altro vampiro ti ha ucciso e preso il tuo posto come Signore dei vampiri
+text.vampirism.lord.new_lord_castle=Un nuovo vampiro Lord ha risorto e si trasferì nel suo castello
+text.vampirism.lord.vampire_replace_absence=Un altro vampiro ha sostituito come Vampire Lord in vostra assenza
+text.vampirism.lord.portal_disabled=Questo portale non porta da nessuna parte
+text.vampirism.lord.level_to_low=Si vampiro livello è troppo basso per essere un signore dei vampiri
+text.vampirism.guard_stay_away_level_low=Il tuo livello di vampiro è troppo basso per entrare nel Castello di Dracula. Sta lontano!
+text.vampirism.coffin.wrong_dimension=Non puoi dormire in questa dimensione.
+text.vampirism.biome.looking_for_biome=Alla ricerca di un bioma Foresta di vampiri. Attendere prego
+text.vampirism.biome.not_found=È stato trovato nessun bioma Foresta di vampiri.
+text.vampirism.biome.found=Trovato un bioma Foresta di vampiri
+text.vampirism.castle_fail=Vampirismo non era in grado di trovare una posizione appropriata per un castello del vampiro. Si consiglia di generare un nuovo mondo. È anche possibile provare "/ vampirismo checkForVampireBiome", se non che trovare un bioma, un altro mod probabilmente interferisce.
+text.vampirism.structure=Struttura
+text.vampirism.pillar_blocks=Blocchi di pilastro
+text.vampirism.no_dracula_to_call=Dracula è morto e non può essere chiamato
+text.vampirism.garlic_weapons=Quest'arma è rivestito con aglio e veleni vampiri. / ma l'aglio svanisce.
+text.vampirism.outdated=Si eseguono %s di vampirismo, l'ultima versione è %s.
+text.vampirism.update_message=["Clicca per... [", {"testo":"Scaricare","colore":"verde","hoverEvent": {"azione":"show_text","valore": {"testo":" Clicca qui per visualizzare la page","color":"green"}},"clickEvent":{"action":"open_url","value":"@download Scarica @"}},"] [", {"testo":"Sito Web","colore":"verde","hoverEvent": {"azione":"show_text","valore": {"testo":" fare clic qui per andare al forum page","color":"green"}},"clickEvent":{"action":"open_url","value":"@forum di mod @"}},"] [", {"testo":"Changelog","colore":"verde","hoverEvent": {"azione":"show_text","valore": {"testo":"Scegliere questo Vedi il Changelog della versione","colore":"verde"}},"clickEvent": {"azione":"run_command","valore":" / changelog di vampirismo "}},"] "]
 
 #Skill
 skill.vampirism.bat_skill=Togli la modalità pipistrello
@@ -111,6 +152,8 @@ minioncommand.vampirism.defendlord=Difendere il Signore
 minioncommand.vampirism.stayhere=Resta qui
 minioncommand.vampirism.comeback=Torna indietro (Remote Minion)
 minioncommand.vampirism.justfollow=Seguimi e basta
+minioncommand.vampirism.converttosaveable=Riprendere il gioiello di associazione
+minioncommand.vampirism.defendarea=Zona difesa
 
 #Config
 category.vampirism.balance=Impostazioni bilanciate

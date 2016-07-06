@@ -71,7 +71,7 @@ key.vampirism.vision=Mudar a visão
 
 #General
 itemGroup.vampirism=Vampirismo
-death.attack.sun=%1$s parece nao gostar muito de sol \:D
+death.attack.sun=%1$s parece nao gostar muito de sol :D
 death.attack.garlic=%1$s Foi envenenado por alho
 potion.vampirism.sunscreen=Protetor Solar
 potion.vampirism.thirst=Sede
@@ -119,7 +119,7 @@ text.vampirism.lord.new_lord_castle=Um novo Lorde Vampiro ressuscitou e se mudou
 text.vampirism.lord.vampire_replace_absence=Outro vampiro substituiu você como Senhor Vampiro na sua ausência
 text.vampirism.lord.portal_disabled=Este portal não leva a lugar algum
 text.vampirism.lord.level_to_low=Seu nível vampiro é muito baixo para se tornar um Lorde Vampiro
-text.vampirism.guard_stay_away_level_low=Seu nível vampiro é muito baixo para viajar ao castelo do Drácula. Afaste-se\!
+text.vampirism.guard_stay_away_level_low=Seu nível vampiro é muito baixo para viajar ao castelo do Drácula. Afaste-se!
 text.vampirism.coffin.wrong_dimension=Você não pode dormir nessa dimensão.
 text.vampirism.biome.looking_for_biome=Procurando por um bioma floresta de vampiro. Por favor, espere
 text.vampirism.biome.not_found=Nenhum bioma floresta de vampiro encontrado.

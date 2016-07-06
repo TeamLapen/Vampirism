@@ -1,0 +1,71 @@
+#X-Generator: crowdin.com
+# Entitys
+entity.vampirism.vampireHunter.name=Κυνηγός βαμπίρ
+entity.vampirism.vampire.name=Βαμπίρ
+entity.vampirism.ghost.name=Φάντασμα
+entity.vampirism.vampireBaron.name=Βαμπίρ βαρόνος
+entity.vampirism.vampireMinionR.name=Τσιράκι βαμπίρ
+entity.vampirism.vampireMinionS.name=Τσιράκι βαμπίρ
+entity.vampirism.blinding_bat.name=Νυχτερίδα
+entity.vampirism.dracula.name=Δράκουλας
+entity.vampirism.dead_mob.name=Νεκρό όν
+entity.vampirism.portal_guard.name=Φρουρός Πύλης
+entity.vampirism.vampireHunter2.name=Προηγμένος κυνηγός βαμπίρ
+
+# Items
+item.vampirism.vampiresFear.name=Φόβος του Βαμπίρ
+item.vampirism.bloodBottle.name=Φιάλη αίματος
+item.vampirism.vampireFang.name=Δόντι βαμπίρ
+item.vampirism.pitchfork.name=Δίκρανο
+item.vampirism.humanHeart.name=Ανθρώπινη καρδιά
+item.vampirism.torch.name=Πυρσός
+item.vampirism.pureBlood.name=Καθαρό αίμα
+item.vampirism.sunscreen.name=Αντιηλιακό
+item.vampirism.leechSword.name=Βδέλλα
+item.vampirism.coffin.name=Φέρετρο
+item.vampirism.vampireArmor_helmet.name=Κράνος του βαμπίρ
+item.vampirism.vampireArmor_leggings.name=Κολάν του βαμπίρ
+item.vampirism.vampireArmor_boots.name=Μπότες του βαμπίρ
+item.vampirism.vampireArmor_chestplate.name=Πανοπλία του βαμπίρ
+item.vampirism.minionNameTag.name=Τσιράκι όνομα ετικέτας
+item.vampirism.gemOfBinding.name=Πετράδι της σύνδεσης
+item.vampirism.bloodEye.name=Αιματώδες μάτι
+item.vampirism.weakVampireFang.name=Αδύναμο δόντι βαμπίρ
+item.vampirism.weakHumanHeart.name=Αδύναμη ανθρώπινη καρδιά
+item.vampirism.item_tent.name=Σκηνή
+item.vampirism.garlic.name=Σκόρδο
+item.vampirism.concentratedGarlic.name=Συμπυκνωμένο σκόρδο
+item.vampirism.garlic_bomb.name=Βόμβα Σκόρδου
+
+# Blocks
+block.vampirism.bloodAltar.name=Αγία Τράπεζα αίματος κορεσμού
+block.vampirism.bloodAltarTier2.name=Αίμα βωμόυ έμπνευσης
+block.vampirism.bloodAltarTier4.name=Αίμα βωμός της έγχυσης
+block.vampirism.bloodAltarTier4Tip.name=Αίμα βωμός της έγχυσης συμβουλής
+block.vampirism.churchAltar.name=Βωμός καθαρισμού
+block.vampirism.cursedEarth.name=Καταραμένη γη
+block.vampirism.vampireOrchid.name=Βαμπίρ ορχιδέα
+block.vampirism.blockCoffin.name=Φέρετρο
+block.vampirism.castlePortal.name=Πύλης μπλοκ
+block.vampirism.castleBlock.name=Κάστρο μπλοκ
+block.vampirism.castleSlab.name=Πλάκα Κάστρου
+block.vampirism.doubleCastleSlab.name=Διπλή πλάκα κάστρου
+block.vampirism.castleStairs.name=Σκάλες κάστρου
+block.vampirism.tent.name=Σκηνή
+block.vampirism.gildedIronBlock.name=Επιχρυσωμένο σιδήρου μπλοκ
+block.vampirism.garlic.name=Σκόρδο
+
+#GUI
+
+# Keys
+
+#General
+
+#Skill
+
+#Minion command
+
+#Config
+
+
+
