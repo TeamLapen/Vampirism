@@ -240,7 +240,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         int avg = Math.round(((d.avgPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
         int max = Math.round(((d.maxPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
         int min = Math.round(((d.minPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * (MAX_LEVEL));
-        switch (rand.nextInt(6)) {
+        switch (rand.nextInt(7)) {
             case 0:
                 return min;
             case 1:
@@ -250,6 +250,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
             case 3:
                 return avg + 1;
             case 4:
+            case 5:
                 return rand.nextInt(MAX_LEVEL + 1);
             default:
                 return rand.nextInt(max + 2 - min) + min;

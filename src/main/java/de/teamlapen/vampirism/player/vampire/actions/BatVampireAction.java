@@ -82,7 +82,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public String getUnlocalizedName() {
-        return "skill.vampirism.bat_skill";
+        return "action.vampirism.vampire.bat_skill";
     }
 
     @Override

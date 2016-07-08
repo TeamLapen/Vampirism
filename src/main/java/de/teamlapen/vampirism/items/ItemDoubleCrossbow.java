@@ -36,4 +36,9 @@ public class ItemDoubleCrossbow extends ItemSimpleCrossbow {
         shoot(playerIn, heightOffset - 0.2, worldIn, itemStackIn);
         return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
     }
+
+    @Override
+    protected boolean isIgnoreHurtTime(ItemStack crossbow) {
+        return true;
+    }
 }

@@ -5,6 +5,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -28,10 +29,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -264,12 +262,12 @@ public class TestCommand extends BasicCommand {
 
             @Override
             public boolean canSenderUseCommand(ICommandSender sender) {
-                return canCommandSenderUseCheatCommand(sender);
+                return canCommandSenderUseCheatCommand(sender) && sender instanceof EntityPlayer;
             }
 
             @Override
             public String getCommandName() {
-                return "arrowTester";
+                return "resetActions";
             }
 
             @Override
@@ -279,15 +277,15 @@ public class TestCommand extends BasicCommand {
 
             @Override
             public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-                Object listener = new Object() {
-                    @SubscribeEvent
-                    public void onEntityDamage(LivingAttackEvent event) {
-                        if (event.getSource().isProjectile() && !event.getEntityLiving().worldObj.isRemote) {
-                            FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().sendChatMsg(new TextComponentString(event.getEntityLiving().getName() + " hit with " + event.getAmount()));
-                        }
+                EntityPlayer player = getCommandSenderAsPlayer(sender);
+                IFactionPlayer factionPlayer = FactionPlayerHandler.get(player).getCurrentFactionPlayer();
+                if (factionPlayer != null) {
+                    IActionHandler handler = factionPlayer.getActionHandler();
+                    if (handler != null) {
+                        handler.resetTimers();
+                        sendMessage(sender, "Reset Timers");
                     }
-                };
-                MinecraftForge.EVENT_BUS.register(listener);
+                }
             }
         });
         addSub(new SubCommand() {

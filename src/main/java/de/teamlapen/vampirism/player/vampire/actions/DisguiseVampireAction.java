@@ -37,7 +37,7 @@ public class DisguiseVampireAction extends DefaultVampireAction implements ILast
 
     @Override
     public String getUnlocalizedName() {
-        return "skill.vampirism.disguise";
+        return "action.vampirism.vampire.disguise";
     }
 
     @Override

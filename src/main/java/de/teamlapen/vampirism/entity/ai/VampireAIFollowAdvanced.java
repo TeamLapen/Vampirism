@@ -16,7 +16,7 @@ public class VampireAIFollowAdvanced extends EntityAIBase {
     /**
      * Maximum distance before the entity starts following the advanced vampire
      */
-    private final int DIST = 12;
+    private final int DIST = 20;
     private int delayCounter;
 
     public VampireAIFollowAdvanced(EntityBasicVampire entity, double speed) {

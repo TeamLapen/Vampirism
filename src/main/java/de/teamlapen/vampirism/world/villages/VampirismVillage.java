@@ -165,10 +165,11 @@ public class VampirismVillage implements IVampirismVillage {
                 List<EntityHunterVillager> hunterVillagers = filterHunterVillagers(allVillagers);
                 List<EntityVillager> normalVillager = filterNormalVillagers(allVillagers);
                 if (world.rand.nextInt(30) == 0) {
-//                    VampirismMod.log.t("Aggro Count %s",calculateAggressiveCounter());
-//                    VampirismMod.log.t("Count %s %s %s",normalVillager.size(),hunterVillagers.size(),hunters.size());
+                    VampirismMod.log.t("Aggro Count %s", calculateAggressiveCounter());
+                    VampirismMod.log.t("Count %s %s %s", normalVillager.size(), hunterVillagers.size(), hunters.size());
 
-                    if ((hunters.size() + hunterVillagers.size()) < (Math.round(Balance.village.MIN_HUNTER_COUNT_VILLAGE_PER_DOOR * v.getNumVillageDoors()) + 1)) {
+                    VampirismMod.log.t("%s", v.getNumVillageDoors());
+                    if ((hunters.size() + hunterVillagers.size() / 2) < (Balance.village.MIN_HUNTER_COUNT_VILLAGE_PER_DOOR * v.getNumVillageDoors() + 1)) {
                         spawnHunter(v);
                     }
                 }

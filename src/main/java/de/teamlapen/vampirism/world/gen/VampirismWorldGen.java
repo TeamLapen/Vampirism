@@ -70,7 +70,7 @@ public class VampirismWorldGen implements IWorldGenerator {
                 BlockPos pos = new BlockPos((chunkX << 4), 0, (chunkZ << 4));
                 pos = world.getHeight(pos);
                 float temp = biome.getFloatTemperature(pos);
-                if (hunterCamp.isValidTemperature(temp)) {
+                if (hunterCamp.isValidTemperature(temp) && world.getVillageCollection().getNearestVillage(pos, 20) == null) {
                     generatedStructure = hunterCamp.generate(world, random, pos.up());
                 }
             }

@@ -44,7 +44,7 @@ public class GuiSelectAction extends GuiPieMenu<IAction> {
 
         @Override
         public String getUnlocalizedName() {
-            return "skill.vampirism.cancel";
+            return "action.vampirism.cancel";
         }
 
         @Override

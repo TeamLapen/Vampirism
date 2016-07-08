@@ -42,7 +42,7 @@ public class FreezeVampireAction extends DefaultVampireAction {
 
     @Override
     public String getUnlocalizedName() {
-        return "skill.vampirism.freeze";
+        return "action.vampirism.vampire.freeze";
     }
 
     @Override
