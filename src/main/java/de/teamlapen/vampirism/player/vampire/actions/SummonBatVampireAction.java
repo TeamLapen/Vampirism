@@ -39,7 +39,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
 
     @Override
     public String getUnlocalizedName() {
-        return "skill.vampirism.summon_bats";
+        return "action.vampirism.vampire.summon_bats";
     }
 
     @Override

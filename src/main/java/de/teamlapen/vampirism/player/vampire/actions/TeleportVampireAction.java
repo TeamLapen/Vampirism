@@ -41,7 +41,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
 
     @Override
     public String getUnlocalizedName() {
-        return "skill.vampirism.teleport";
+        return "action.vampirism.vampire.teleport";
     }
 
     @Override

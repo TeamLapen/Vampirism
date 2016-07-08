@@ -20,6 +20,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
+import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.item.ItemStack;
@@ -45,10 +46,12 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     private final int MOVE_TO_RESTRICT_PRIO = 3;
     private final int DEFEND_VILLAGE_PRIO = 3;
     private final int WANDER_VILLAGE_PRIO = 5;
-    private EntityAIBase wanderVillage = new EntityAIMoveThroughVillageCustom(this, 0.7F, false, 400);
+    private final int ATTACK_ZOMBIE_PRIO = 5;
+    private EntityAIBase wanderVillage = new EntityAIMoveThroughVillageCustom(this, 0.7F, false, 300);
     private boolean villageHunter = false;
     private boolean defendVillageAdded = false;
     private EntityAIBase defendVillage = new HunterAIDefendVillage(this);
+    private EntityAIBase attackZombie = new EntityAINearestAttackableTarget<>(this, EntityZombie.class, true, true);
     /**
      * Player currently being trained otherwise null
      */
@@ -250,6 +253,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
                 return super.getTargetDistance() / 2;
             }
         });
+        //Also check the priority of tasks that are dynamically added. See top of class
     }
 
     @Override
@@ -297,11 +301,13 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
             if (active) return;
             this.targetTasks.removeTask(defendVillage);
             this.tasks.removeTask(wanderVillage);
+            this.targetTasks.removeTask(attackZombie);
             defendVillageAdded = false;
         }
         if (active) {
             targetTasks.addTask(DEFEND_VILLAGE_PRIO, defendVillage);
             tasks.addTask(WANDER_VILLAGE_PRIO, wanderVillage);
+            targetTasks.addTask(ATTACK_ZOMBIE_PRIO, attackZombie);
             defendVillageAdded = true;
         }
 

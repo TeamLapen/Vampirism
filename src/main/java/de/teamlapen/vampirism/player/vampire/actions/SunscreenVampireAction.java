@@ -4,28 +4,32 @@ import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModPotions;
+import net.minecraft.potion.PotionEffect;
 
+/**
+ * Adds sunscreen
+ */
+public class SunscreenVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
-public class InvisibilityVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
-    public InvisibilityVampireAction() {
+    public SunscreenVampireAction() {
         super(null);
     }
 
 
     @Override
     public int getCooldown() {
-        return Balance.vpa.INVISIBILITY_COOLDOWN * 20;
+        return Balance.vpa.SUNSCREEN_COOLDOWN * 20;
     }
 
     @Override
     public int getDuration(int level) {
-        return Balance.vpa.INVISIBILITY_DURATION * 20;
+        return 20 * (Balance.vpa.SUNSCREEN_DURATION);
     }
-
 
     @Override
     public int getMinU() {
-        return 128;
+        return 176;
     }
 
     @Override
@@ -35,17 +39,17 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
 
     @Override
     public String getUnlocalizedName() {
-        return "action.vampirism.vampire.invisibility";
+        return "action.vampirism.vampire.sunscreen";
     }
 
     @Override
     public boolean isEnabled() {
-        return Balance.vpa.INVISIBILITY_ENABLED;
+        return Balance.vpa.SUNSCREEN_ENABLED;
     }
 
     @Override
     public boolean onActivated(IVampirePlayer vampire) {
-        vampire.getRepresentingPlayer().setInvisible(true);
+        vampire.getRepresentingPlayer().addPotionEffect(new PotionEffect(ModPotions.sunscreen, getDuration(vampire.getLevel()), 3, false, false));
         return true;
     }
 
@@ -56,19 +60,16 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
 
     @Override
     public void onDeactivated(IVampirePlayer vampire) {
-        vampire.getRepresentingPlayer().setInvisible(false);
+        vampire.getRepresentingPlayer().removePotionEffect(ModPotions.sunscreen);
     }
 
     @Override
     public void onReActivated(IVampirePlayer vampire) {
-        onActivated(vampire);
+
     }
 
     @Override
     public boolean onUpdate(IVampirePlayer vampire) {
-        if (!vampire.getRepresentingPlayer().isInvisible()) {
-            vampire.getRepresentingPlayer().setInvisible(true);
-        }
         return false;
     }
 }

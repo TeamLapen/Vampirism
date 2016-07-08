@@ -502,7 +502,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (level > 0) {
             if (player.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 1) {
                 isGettingSundamage(true);
-                VampirismMod.log.t("Ticking player %s %s %s", player.getEntityId(), player.getUniqueID(), player.getAttributeMap());
+                //TODO remove test for sponge forge VampirismMod.log.t("Ticking player %s %s %s", player.getEntityId(), player.getUniqueID(), player.getAttributeMap());
             }
             if (player.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 6) {
                 isGettingGarlicDamage(true);
@@ -937,12 +937,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             saturationMod = ((IBiteableEntity) entity).getBloodSaturation();
         } else if (type == BITE_TYPE.ATTACK) {
             checkAttributes(VReference.biteDamage);
-            entity.attackEntityFrom(DamageSource.causePlayerDamage(player), (float) player.getEntityAttribute(VReference.biteDamage).getAttributeValue());
+            float damage = getSpecialAttributes().bat ? 0.1F : (float) player.getEntityAttribute(VReference.biteDamage).getAttributeValue();
+            entity.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
             if (entity.isEntityUndead() && player.getRNG().nextInt(4) == 0) {
                 player.addPotionEffect(new PotionEffect(MobEffects.POISON, 60));
             }
             if (specialAttributes.poisonous_bite) {
-                entity.addPotionEffect(new PotionEffect(MobEffects.POISON, Balance.vps.POISONOUS_BITE_DURATION * 20, 1));
+                entity.addPotionEffect(new PotionEffect(MobEffects.POISON, (int) (Balance.vps.POISONOUS_BITE_DURATION * 20 * (getSpecialAttributes().bat ? 0.2F : 1F)), 1));
             }
         } else if (type == BITE_TYPE.NONE) {
             return;

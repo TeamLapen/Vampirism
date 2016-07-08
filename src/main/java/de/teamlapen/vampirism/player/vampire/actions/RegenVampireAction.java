@@ -33,7 +33,7 @@ public class RegenVampireAction extends DefaultVampireAction {
 
     @Override
     public String getUnlocalizedName() {
-        return "skill.vampirism.regen";
+        return "action.vampirism.vampire.regen";
     }
 
     @Override

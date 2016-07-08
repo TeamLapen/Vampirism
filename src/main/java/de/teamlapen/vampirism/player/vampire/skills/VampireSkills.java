@@ -189,39 +189,7 @@ public class VampireSkills {
     }
 
     private static void registerDefensiveSkills(SkillNode start) {
-        SkillNode skill1 = new SkillNode(start, new VampirismSkill<IVampirePlayer>() {
-            @Override
-            public String getID() {
-                return "1placeholder";
-            }
-
-            @Override
-            public int getMinU() {
-                return 208;
-            }
-
-            @Override
-            public int getMinV() {
-                return 0;
-            }
-
-
-
-            @Override
-            public String getUnlocalizedName() {
-                return "placeholder";
-            }
-
-            @Override
-            protected void onDisabled(IVampirePlayer player) {
-
-            }
-
-            @Override
-            protected void onEnabled(IVampirePlayer player) {
-
-            }
-        });
+        SkillNode skill1 = new SkillNode(start, new ActionSkill<>(VampireActions.sunscreenVampireAction, "1sunscreen"));
         DefaultSkill<IVampirePlayer> jump = new VampirismSkill<IVampirePlayer>() {
             @Override
             public String getID() {

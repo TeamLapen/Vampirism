@@ -1,4 +1,4 @@
-#Skills
+#SKILLS
 text.vampirism.skills.gui_title=Your skills
 text.vampirism.skills.points_left=%d skill point(s) left
 text.vampirism.skill.resetall=Reset skills
@@ -6,7 +6,7 @@ text.vampirism.skill.unlocked=Unlocked
 text.vampirism.skill.unlocks_action=Unlocks action
 text.vampirism.skill.unlock_parent_first=Unlock parent first
 
-#Vampire Skills
+#VAMPIRE SKILLS
 text.vampirism.skill.root_vampire=Becoming a vampire
 text.vampirism.skill.avoided_by_creepers=Avoided by creepers
 text.vampirism.skill.1bloodvision=Blood vision
@@ -22,8 +22,20 @@ text.vampirism.skill.less_sundamage=Reduce sun damage
 text.vampirism.skill.night_vision=Night Vision
 text.vampirism.skill.disguise=Disguise
 
+#VAMPIRE ACTIONS
+action.vampirism.cancel=Cancel
+action.vampirism.vampire.bat_skill=Toggle Batmode
+action.vampirism.vampire.freeze=Freeze
+action.vampirism.vampire.invisibility=Invisibility
+action.vampirism.vampire.regen=Regeneration
+action.vampirism.vampire.revive_fallen=Revive Fallen
+action.vampirism.vampire.summon_bats=Summon Bats
+action.vampirism.vampire.teleport=Teleport
+action.vampirism.vampire.vampire_rage=Vampire Rage
+action.vampirism.vampire.sunscreen=Sunscreen
+action.vampirism.vampire.disguise=Disguise
 
-#Hunter Skills
+#HUNTER SKILLS
 text.vampirism.skill.root_hunter=Becoming an hunter
 text.vampirism.skill.attack_speed=Increased Attack Speed
 text.vampirism.skill.weapon_table=Hunter Weapon Table
@@ -82,6 +94,7 @@ entity.vampirism.blinding_bat.name=Bat
 entity.vampirism.dracula.name=Dracula
 entity.vampirism.dead_mob.name=Dead mob
 entity.vampirism.portal_guard.name=Portal Guard
+entity.vampirism.converted.villager.name=Vampire Villager
 
 #RITUALS
 text.vampirism.ritual_missing_items=Missing %s of "%s" for this ritual

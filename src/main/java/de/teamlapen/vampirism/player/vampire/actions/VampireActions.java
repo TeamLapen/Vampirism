@@ -15,6 +15,7 @@ public class VampireActions {
     public static BatVampireAction batAction;
     public static SummonBatVampireAction summonBatAction;
     public static DisguiseVampireAction disguiseAction;
+    public static SunscreenVampireAction sunscreenVampireAction;
 
     public static void registerDefaultActions() {
         IActionRegistry registry = VampirismAPI.actionRegistry();
@@ -26,5 +27,6 @@ public class VampireActions {
         batAction = registry.registerAction(new BatVampireAction(), "bat");
         disguiseAction = registry.registerAction(new DisguiseVampireAction(), "disguise");
         summonBatAction = registry.registerAction(new SummonBatVampireAction(), "summonbat");
+        sunscreenVampireAction = registry.registerAction(new SunscreenVampireAction(), "sunscreen");
     }
 }

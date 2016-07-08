@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
+import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.EntityVillagerVampirism;
 import de.teamlapen.vampirism.entity.ai.EntityAIMoveThroughVillageCustom;
@@ -11,6 +12,7 @@ import de.teamlapen.vampirism.entity.ai.HunterAIDefendVillage;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.IEntityLivingData;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -87,6 +89,14 @@ public class EntityHunterVillager extends EntityVillagerVampirism implements IHu
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
+    }
+
+    @Override
+    protected void applyEntityAttributes() {
+        super.applyEntityAttributes();
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_SPEED).setBaseValue(Balance.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE);
+        this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(32);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_HUNTER_MAX_HEALTH);
     }
 
     @Override

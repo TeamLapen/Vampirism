@@ -29,6 +29,7 @@ import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nullable;
 
@@ -57,7 +58,8 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     @Override
     public void consumeBlood(int amt, float saturationMod) {
         super.consumeBlood(amt, saturationMod);
-        bloodtimer += amt * 40 + this.getRNG().nextInt(1000);
+        boolean dedicated = FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer();
+        bloodtimer += amt * 40 + this.getRNG().nextInt(1000) * (dedicated ? 2 : 1);
     }
 
     /**
