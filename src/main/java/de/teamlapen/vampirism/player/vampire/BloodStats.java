@@ -180,10 +180,12 @@ public class BloodStats {
     }
 
     protected void addExhaustion(float amount) {
+        VampirePlayer.get(player).checkAttributes(VReference.bloodExhaustion);
         IAttributeInstance attribute = player.getEntityAttribute(VReference.bloodExhaustion);
         float mult;
         if (attribute == null) {
-            VampirismMod.log.w(TAG, "Blood exhaustion attribute is null");
+            //Probably not needed anymore TODO remove
+            VampirismMod.log.w(TAG, "Blood exhaustion attribute is null for player %s (%s)", player, player == null ? null : player.getAttributeMap());
             mult = (float) VReference.bloodExhaustion.getDefaultValue();
         } else {
             mult = (float) attribute.getAttributeValue();
