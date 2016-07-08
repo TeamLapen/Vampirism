@@ -105,14 +105,15 @@ public class ModEntities {
 
     private static void init(FMLInitializationEvent event) {
         Set<Biome> allBiomes = Biome.EXPLORATION_BIOMES_LIST;
-        allBiomes.remove(Biomes.HELL);
-        allBiomes.remove(Biomes.SKY);
-
         /**
          * After setting this up this array will contain only biomes in which zombies can spawn.
          */
         Set<Biome> zombieBiomes = Sets.newHashSet();
         zombieBiomes.addAll(allBiomes);
+        zombieBiomes.remove(Biomes.MUSHROOM_ISLAND);
+        zombieBiomes.remove(Biomes.MUSHROOM_ISLAND_SHORE);
+        zombieBiomes.remove(Biomes.HELL);
+        zombieBiomes.remove(Biomes.SKY);
         Iterator<Biome> iterator = zombieBiomes.iterator();
         while (iterator.hasNext()) {
             Biome b = iterator.next();
@@ -177,7 +178,7 @@ public class ModEntities {
      */
     private static void registerEntity(Class<? extends EntityLiving> clazz, String name, EntityLiving.SpawnPlacementType placementType, int probe, int min, int max, EnumCreatureType type, Biome... biomes) {
         registerEntity(clazz, name, placementType, true);
-        VampirismMod.log.d("EntityRegister", "Adding spawn with probe of " + probe);
+        //VampirismMod.log.d("EntityRegister", "Adding spawn with probe of %d in %s", probe, Arrays.toString(biomes));
         EntityRegistry.addSpawn(clazz, probe, min, max, type, biomes);
     }
 }
