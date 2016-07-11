@@ -9,8 +9,10 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
@@ -87,7 +89,7 @@ public class ItemBloodBottle extends VampirismItem implements IBloodContainerIte
     }
 
     public int getBlood(ItemStack stack) {
-        return stack.getItemDamage() * MULTIPLIER;
+        return stack.getItem() instanceof ItemBloodBottle ? stack.getItemDamage() * MULTIPLIER : 0;
     }
 
     @Override
@@ -101,6 +103,16 @@ public class ItemBloodBottle extends VampirismItem implements IBloodContainerIte
     }
 
     @Override
+    public EnumAction getItemUseAction(ItemStack stack) {
+        return EnumAction.DRINK;
+    }
+
+    @Override
+    public int getMaxItemUseDuration(ItemStack stack) {
+        return 15;
+    }
+
+    @Override
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
         subItems.add(new ItemStack(itemIn, 1));
         subItems.add(new ItemStack(itemIn, 1, AMOUNT));
@@ -108,39 +120,48 @@ public class ItemBloodBottle extends VampirismItem implements IBloodContainerIte
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-        //Won't be called when the player is sneaking since {@link ItemBloodBottle#doesSneakBypassUse} returns true to allow blood container interaction
-        if (worldIn.isRemote) {
-            return new ActionResult<>(EnumActionResult.PASS, itemStackIn);
-        }
+
             VampirePlayer vampire = VampirePlayer.get(playerIn);
             if (vampire.getLevel() == 0) return new ActionResult<>(EnumActionResult.PASS, itemStackIn);
-//            Cannot drain blood from the bar anymore
-//            if (playerIn.isSneaking()) {//Remove blood from bar
-//                int playerBlood = vampire.getBloodLevel();
-//                if (playerBlood > 0) {
-//                    int i = fill(itemStackIn, new FluidStack(ModFluids.blood, VReference.FOOD_TO_FLUID_BLOOD), true);
-//                    if (i > 0) {
-//                        vampire.getBloodStats().consumeBlood(1);
-//                    }
-//                }
-//            } else {//Fill blood bar
-//                if (vampire.getBloodStats().needsBlood()) {
-//                    if (drain(itemStackIn, VReference.FOOD_TO_FLUID_BLOOD, true) != null) {
-//                        vampire.getBloodStats().addBlood(1, 0);
-//                    }
-//                }
-//            }
-            if (vampire.getBloodStats().needsBlood()) {
-                if (drain(itemStackIn, VReference.FOOD_TO_FLUID_BLOOD, true) != null) {
-                    vampire.getBloodStats().addBlood(1, 0.3F);//TODO Saturation
-                    return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
-                }
+
+
+        if (vampire.getBloodStats().needsBlood()) {
+            playerIn.setActiveHand(hand);
+            return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
             }
 
-
-        return new ActionResult<>(EnumActionResult.FAIL, itemStackIn);
+        return new ActionResult<>(EnumActionResult.PASS, itemStackIn);
     }
 
+    @Override
+    public void onUsingTick(ItemStack stack, EntityLivingBase player, int count) {
+        if (!(player instanceof EntityPlayer)) {
+            player.stopActiveHand();
+            return;
+        }
+        int blood = getBlood(stack);
+        VampirePlayer vampire = VampirePlayer.get((EntityPlayer) player);
+        if (vampire.getLevel() == 0 || blood == 0 || !vampire.getBloodStats().needsBlood()) {
+            player.stopActiveHand();
+            return;
+        }
+
+
+        if (blood > 0 && count == 1) {
+            EnumHand activeHand = player.getActiveHand();
+            int drink = Math.min(blood, 3 * MULTIPLIER);
+            if (drain(stack, drink, true) != null) {
+                vampire.getBloodStats().addBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.3F);//TODO Saturation
+
+            }
+            player.setHeldItem(activeHand, stack);
+
+            blood = getBlood(stack);
+            if (blood > 0) {
+                player.setActiveHand(player.getActiveHand());
+            }
+        }
+    }
 
     public void setBlood(ItemStack stack, int amt) {
         stack.setItemDamage(amt / MULTIPLIER);
