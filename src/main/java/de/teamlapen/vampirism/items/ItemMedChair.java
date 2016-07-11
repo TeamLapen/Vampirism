@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockMedChair;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.block.Block;
@@ -49,7 +48,7 @@ public class ItemMedChair extends VampirismItem {
         boolean flag1 = world.isAirBlock(pos) || replaceable;
         boolean flag2 = world.isAirBlock(other) || other_replaceable;
         if (player.canPlayerEdit(pos, side, stack) && player.canPlayerEdit(other, side, stack)) {
-            VampirismMod.log.t("%b %b %b %b", flag1, flag2, UtilLib.doesBlockHaveSolidTopSurface(world, pos.down()), UtilLib.doesBlockHaveSolidTopSurface(world, other.down()));
+//            VampirismMod.log.t("%b %b %b %b", flag1, flag2, UtilLib.doesBlockHaveSolidTopSurface(world, pos.down()), UtilLib.doesBlockHaveSolidTopSurface(world, other.down()));
 
             if (flag1 && flag2 && UtilLib.doesBlockHaveSolidTopSurface(world, pos.down()) && UtilLib.doesBlockHaveSolidTopSurface(world, other.down())) {
                 IBlockState state1 = ModBlocks.medChair.getDefaultState().withProperty(BlockMedChair.PART, BlockMedChair.EnumPart.BOTTOM).withProperty(BlockMedChair.FACING, facing.getOpposite());
