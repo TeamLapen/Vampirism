@@ -82,7 +82,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
 
     @Override
     public boolean getCanSpawnHere() {
-        return super.getCanSpawnHere() && isBrightLightLevel();
+        return super.getCanSpawnHere() && isLowLightLevel();
     }
 
     @Override

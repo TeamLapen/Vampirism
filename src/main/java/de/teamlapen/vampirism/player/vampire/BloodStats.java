@@ -113,12 +113,21 @@ public class BloodStats {
                 this.bloodLevel = Math.max(bloodLevel - 1, 0);
             }
         }
-        if (player.worldObj.getGameRules().getBoolean("naturalRegeneration") && this.bloodLevel >= 18 && player.shouldHeal()) {
+        boolean regen = player.worldObj.getGameRules().getBoolean("naturalRegeneration");
+        if (regen && this.bloodSaturationLevel > 0 && player.shouldHeal() && this.bloodLevel >= 20) {
+            ++this.bloodTimer;
+            if (this.bloodTimer >= 10) {
+                float f = Math.min(this.bloodSaturationLevel, 4F);
+                player.heal(f / 4F);
+                this.addExhaustion(f, true);
+                this.bloodTimer = 0;
+            }
+        } else if (regen && this.bloodLevel >= 18 && player.shouldHeal()) {
             ++this.bloodTimer;
 
             if (this.bloodTimer >= 80) {
                 player.heal(1.0F);
-                this.addExhaustion(3.0F);
+                this.addExhaustion(3.0F, true);
                 this.bloodTimer = 0;
             }
         } else if (this.bloodLevel <= 0) {
@@ -179,17 +188,37 @@ public class BloodStats {
         nbt.setInteger("bloodLevel", bloodLevel);
     }
 
+    /**
+     * Add exhaustion. Value is multiplied with the EntityAttribute {@link VReference#bloodExhaustion}
+     *
+     * @param amount
+     */
     protected void addExhaustion(float amount) {
+        this.addExhaustion(amount, false);
+    }
+
+    /**
+     * Add exhaustion
+     *
+     * @param amount
+     * @param ignoreModifier If the entity exhaustion attribute {@link VReference#bloodExhaustion} should be ignored
+     */
+    protected void addExhaustion(float amount, boolean ignoreModifier) {
         VampirePlayer.get(player).checkAttributes(VReference.bloodExhaustion);
         IAttributeInstance attribute = player.getEntityAttribute(VReference.bloodExhaustion);
         float mult;
-        if (attribute == null) {
-            //Probably not needed anymore TODO remove
-            VampirismMod.log.w(TAG, "Blood exhaustion attribute is null for player %s (%s)", player, player == null ? null : player.getAttributeMap());
-            mult = (float) VReference.bloodExhaustion.getDefaultValue();
+        if (ignoreModifier) {
+            mult= 1F;
         } else {
-            mult = (float) attribute.getAttributeValue();
+            if (attribute == null) {
+                //Probably not needed anymore TODO remove
+                VampirismMod.log.w(TAG, "Blood exhaustion attribute is null for player %s (%s)", player, player == null ? null : player.getAttributeMap());
+                mult = (float) VReference.bloodExhaustion.getDefaultValue();
+            } else {
+                mult = (float) attribute.getAttributeValue();
+            }
         }
+
         this.bloodExhaustionLevel = Math.min(bloodExhaustionLevel + amount * mult, 40F);
     }
 
