@@ -86,7 +86,7 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
         if (timer == 1) {
             int amount = creature.onBite(vampire);
             vampireEntity.playSound(ModSounds.player_bite, 1, 1);
-            vampire.consumeBlood(amount, creature.getBloodSaturation());
+            vampire.drinkBlood(amount, creature.getBloodSaturation());
         }
     }
 }

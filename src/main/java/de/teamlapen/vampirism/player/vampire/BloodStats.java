@@ -38,7 +38,7 @@ public class BloodStats {
 
     /**
      * Adds blood to the stats
-     * Consider using {@link VampirePlayer#consumeBlood(int, float)} instead
+     * Consider using {@link VampirePlayer#drinkBlood(int, float)} instead
      * @param amount
      * @param saturationModifier
      * @return The amount which could not be added

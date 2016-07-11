@@ -48,7 +48,7 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     public EntityAdvancedVampire(World world) {
         super(world, true);
         this.setSize(0.6F, 1.8F);
-
+        this.canSuckBloodFromPlayer = true;
 
         this.setDontDropEquipment();
     }

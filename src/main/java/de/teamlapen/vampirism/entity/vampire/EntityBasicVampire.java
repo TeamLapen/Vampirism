@@ -46,7 +46,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
 
     public EntityBasicVampire(World world) {
         super(world, true);
-
+        this.canSuckBloodFromPlayer = true;
         hasArms = true;
 
         this.setSize(0.6F, 1.8F);
@@ -56,8 +56,8 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
 
 
     @Override
-    public void consumeBlood(int amt, float saturationMod) {
-        super.consumeBlood(amt, saturationMod);
+    public void drinkBlood(int amt, float saturationMod) {
+        super.drinkBlood(amt, saturationMod);
         boolean dedicated = FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer();
         bloodtimer += amt * 40 + this.getRNG().nextInt(1000) * (dedicated ? 2 : 1);
     }

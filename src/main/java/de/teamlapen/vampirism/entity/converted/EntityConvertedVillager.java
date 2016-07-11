@@ -49,14 +49,14 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
     }
 
     @Override
-    public void consumeBlood(int amt, float saturationMod) {
-        this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, amt * 20));
-        bloodTimer = -1200 - rand.nextInt(1200);
+    public boolean doesResistGarlic(EnumGarlicStrength strength) {
+        return false;
     }
 
     @Override
-    public boolean doesResistGarlic(EnumGarlicStrength strength) {
-        return false;
+    public void drinkBlood(int amt, float saturationMod) {
+        this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, amt * 20));
+        bloodTimer = -1200 - rand.nextInt(1200);
     }
 
     @Override

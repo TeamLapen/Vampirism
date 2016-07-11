@@ -95,6 +95,7 @@ entity.vampirism.dracula.name=Dracula
 entity.vampirism.dead_mob.name=Dead mob
 entity.vampirism.portal_guard.name=Portal Guard
 entity.vampirism.converted.villager.name=Vampire Villager
+entity.vampirism.entity_level=2
 
 #RITUALS
 text.vampirism.ritual_missing_items=Missing %s of "%s" for this ritual

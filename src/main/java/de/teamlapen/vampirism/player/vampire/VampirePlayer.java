@@ -203,14 +203,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return true;
     }
 
-    @Override
-    public void consumeBlood(int amt, float saturationMod) {
-        int left = this.bloodStats.addBlood(amt, saturationMod);
-        if (left > 0) {
-            handleSpareBlood(left);
-        }
-    }
-
     public BITE_TYPE determineBiteType(EntityLivingBase entity) {
         if (entity instanceof IBiteableEntity) {
             if (((IBiteableEntity) entity).canBeBitten(this)) return BITE_TYPE.SUCK_BLOOD;
@@ -237,6 +229,14 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public boolean doesResistGarlic(EnumGarlicStrength strength) {
         return false;
+    }
+
+    @Override
+    public void drinkBlood(int amt, float saturationMod) {
+        int left = this.bloodStats.addBlood(amt, saturationMod);
+        if (left > 0) {
+            handleSpareBlood(left);
+        }
     }
 
     @Override
@@ -949,7 +949,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
         biteCooldown = Balance.vp.BITE_COOLDOWN;
         if (blood > 0) {
-            consumeBlood(blood, saturationMod);
+            drinkBlood(blood, saturationMod);
             player.addStat(Achievements.suckingBlood, 1);
             NBTTagCompound updatePacket = bloodStats.writeUpdate(new NBTTagCompound());
             updatePacket.setInteger(KEY_SPAWN_BITE_PARTICLE, entity.getEntityId());

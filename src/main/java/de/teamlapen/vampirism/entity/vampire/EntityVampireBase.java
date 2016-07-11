@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.vampire;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumGarlicStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -24,6 +25,7 @@ import net.minecraft.world.World;
 public abstract class EntityVampireBase extends EntityVampirism implements IVampireMob {
     private final boolean countAsMonster;
     protected EnumGarlicStrength garlicResist = EnumGarlicStrength.NONE;
+    protected boolean canSuckBloodFromPlayer = false;
     private boolean sundamageCache;
     private EnumGarlicStrength garlicCache = EnumGarlicStrength.NONE;
 
@@ -36,22 +38,22 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
 
     @Override
     public boolean attackEntityAsMob(Entity entity) {
-        if (!worldObj.isRemote && entity instanceof EntityPlayer && rand.nextInt(Balance.mobProps.VAMPIRE_BITE_ATTACK_CHANCE) == 0) {
+        if (canSuckBloodFromPlayer && !worldObj.isRemote && entity instanceof EntityPlayer && !UtilLib.canReallySee((EntityLivingBase) entity, this, true) && rand.nextInt(Balance.mobProps.VAMPIRE_BITE_ATTACK_CHANCE) == 0) {
             int amt = VampirePlayer.get((EntityPlayer) entity).onBite(this);
-            consumeBlood(amt, 1.0F);
+            drinkBlood(amt, 1.0F);
             return true;
         }
         return super.attackEntityAsMob(entity);
     }
 
     @Override
-    public void consumeBlood(int amt, float saturationMod) {
-        this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, amt * 20));
+    public boolean doesResistGarlic(EnumGarlicStrength strength) {
+        return !strength.isStrongerThan(garlicResist);
     }
 
     @Override
-    public boolean doesResistGarlic(EnumGarlicStrength strength) {
-        return !strength.isStrongerThan(garlicResist);
+    public void drinkBlood(int amt, float saturationMod) {
+        this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, amt * 20));
     }
 
     @Override
