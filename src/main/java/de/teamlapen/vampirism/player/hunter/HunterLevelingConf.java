@@ -20,7 +20,7 @@ public class HunterLevelingConf {
     public final int BASIC_HUNTER_MAX_LEVEL = 4;
     public final int TABLE_MIN_LEVEL = 5;
     public final int TABLE_MAX_LEVEL = 14;
-    public final int HUNTER_INTEL_COUNT = 9;
+    public final int HUNTER_INTEL_COUNT = 10;
 
     /**
      * Converts hunter level to metadata for hunter intel. Returns -1 if there is no hunter intel for he given level

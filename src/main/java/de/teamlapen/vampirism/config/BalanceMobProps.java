@@ -87,7 +87,7 @@ public class BalanceMobProps extends BalanceValues {
     @DefaultInt(value = 75, minValue = 0, maxValue = 1000000, name = "vampire_spawn_chance", comment = "e.g. Zombie spawn chance: 100")
     public int VAMPIRE_SPAWN_CHANCE;
 
-    @DefaultInt(value = 6, minValue = 1, maxValue = 1000000, name = "vampire_bite_attack_chance", comment = "Chance that a vampire bites a player when attacking him (1/n)")
+    @DefaultInt(value = 3, minValue = 1, maxValue = 1000000, name = "vampire_bite_attack_chance", comment = "Chance that a vampire bites a player when attacking him (1/n)")
     public int VAMPIRE_BITE_ATTACK_CHANCE;
 
     @DefaultDouble(value = 7.0, minValue = 0.0, maxValue = 1000, name = "vampire_mob_sun_damage")

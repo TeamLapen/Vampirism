@@ -68,8 +68,8 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
             if (entity instanceof EntityVampireBaron) {
                 ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 40, 5));
             }
-            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, (int) (200 * tm), rand.nextInt(mr) + 1));
-            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, (int) (100 * tm), rand.nextInt(mr) + 1));
+            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, (int) (200 * tm), rand.nextInt(mr)));
+            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, (int) (100 * tm), rand.nextInt(mr)));
         }
         return flag;
     }
@@ -303,10 +303,10 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     protected boolean shouldSpawnMinion() {
         if (this.ticksExisted % 30 == 7) {
             int count = getSaveableMinionHandler().getMinionCount();
-            if (count < getLevel() + 2) {
+            if (count < getLevel() + 1) {
                 return true;
             }
-            if (recentlyHit > 0 && count < 4 + getLevel()) {
+            if (recentlyHit > 0 && count < 2 + getLevel()) {
                 return true;
             }
         }

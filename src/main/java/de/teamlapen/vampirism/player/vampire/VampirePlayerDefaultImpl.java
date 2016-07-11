@@ -47,11 +47,6 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
-    public void consumeBlood(int amt, float saturationMod) {
-
-    }
-
-    @Override
     public BITE_TYPE determineBiteType(EntityLivingBase entity) {
         return null;
     }
@@ -59,6 +54,11 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     @Override
     public boolean doesResistGarlic(EnumGarlicStrength strength) {
         return false;
+    }
+
+    @Override
+    public void drinkBlood(int amt, float saturationMod) {
+
     }
 
     @Override

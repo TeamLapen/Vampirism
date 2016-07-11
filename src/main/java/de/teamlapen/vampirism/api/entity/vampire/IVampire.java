@@ -9,19 +9,19 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 public interface IVampire extends IFactionEntity {
 
     /**
-     * Consume blood
-     *
-     * @param amt           In blood food unit, not mB. See {@link de.teamlapen.vampirism.api.VReference#FOOD_TO_FLUID_BLOOD} for conversion
-     * @param saturationMod
-     */
-    void consumeBlood(int amt, float saturationMod);
-
-    /**
      *
      * @param strength
      * @return True if the entity is not affected by that garlic level
      */
     boolean doesResistGarlic(EnumGarlicStrength strength);
+
+    /**
+     * Consume blood
+     *
+     * @param amt           In blood food unit, not mB. See {@link de.teamlapen.vampirism.api.VReference#FOOD_TO_FLUID_BLOOD} for conversion
+     * @param saturationMod
+     */
+    void drinkBlood(int amt, float saturationMod);
 
     /**
      * Checks if the player is being affected by garlic.

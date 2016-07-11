@@ -32,7 +32,7 @@ public class VampirismItemBloodFood extends ItemFood {
         --stack.stackSize;
         if (entityLiving instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entityLiving;
-            VampirePlayer.get(player).consumeBlood(bloodAmount, saturation);
+            VampirePlayer.get(player).drinkBlood(bloodAmount, saturation);
             worldIn.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_PLAYER_BURP, SoundCategory.PLAYERS, 0.5F, worldIn.rand.nextFloat() * 0.1F + 0.9F);
 
             this.onFoodEaten(stack, worldIn, player);
