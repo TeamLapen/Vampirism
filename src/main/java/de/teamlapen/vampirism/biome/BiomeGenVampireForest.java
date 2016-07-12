@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.biome;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.VampirismFlower;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
@@ -7,13 +8,17 @@ import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
 import de.teamlapen.vampirism.entity.vampire.EntityDummyBittenAnimal;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBaron;
+import net.minecraft.block.BlockFlower;
 import net.minecraft.block.BlockOldLeaf;
 import net.minecraft.block.BlockOldLog;
 import net.minecraft.block.BlockPlanks;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
+import net.minecraft.world.gen.feature.WorldGenFlowers;
 import net.minecraft.world.gen.feature.WorldGenTrees;
 
 import java.util.Random;
@@ -21,6 +26,7 @@ import java.util.Random;
 public class BiomeGenVampireForest extends Biome {
     public final static String name = "vampireForest";
     protected WorldGenTrees worldGenTrees;
+    private WorldGenVampireOrchid orchidGen = new WorldGenVampireOrchid();
 
     public BiomeGenVampireForest() {
         super(new BiomeProperties(name).setWaterColor(0xEE2505).setBaseHeight(0.1F).setHeightVariation(0.025F));
@@ -40,12 +46,17 @@ public class BiomeGenVampireForest extends Biome {
         this.theBiomeDecorator.grassPerChunk = 4;
         this.theBiomeDecorator.deadBushPerChunk = 3;
         this.worldGenTrees = new WorldGenTrees(false, 4, Blocks.LOG.getDefaultState().withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.SPRUCE), Blocks.LEAVES.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.OAK), false);
-
     }
 
     @Override
     public void addDefaultFlowers() {
         addFlower(ModBlocks.vampirismFlower.getDefaultState().withProperty(VampirismFlower.TYPE, VampirismFlower.EnumFlowerType.ORCHID), 10);
+    }
+
+    @Override
+    public void decorate(World worldIn, Random rand, BlockPos pos) {
+        this.theBiomeDecorator.yellowFlowerGen = orchidGen;//setting this in the constructor is not enough, really not sure why
+        super.decorate(worldIn, rand, pos);
     }
 
     @Override
@@ -72,5 +83,32 @@ public class BiomeGenVampireForest extends Biome {
     @Override
     public int getWaterColorMultiplier() {
         return super.getWaterColorMultiplier();
+    }
+
+    /**
+     * Generates vampire orchids instead of normal flowers
+     */
+    private class WorldGenVampireOrchid extends WorldGenFlowers {
+
+        private VampirismFlower flower = ModBlocks.vampirismFlower;
+        private IBlockState state = ModBlocks.vampirismFlower.getDefaultState().withProperty(VampirismFlower.TYPE, VampirismFlower.EnumFlowerType.ORCHID);
+
+        private WorldGenVampireOrchid() {
+            super(Blocks.YELLOW_FLOWER, BlockFlower.EnumFlowerType.DANDELION);
+        }
+
+        @Override
+        public boolean generate(World worldIn, Random rand, BlockPos position) {
+            VampirismMod.log.t("Gen");
+            for (int i = 0; i < 64; ++i) {
+                BlockPos blockpos = position.add(rand.nextInt(8) - rand.nextInt(8), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(8) - rand.nextInt(8));
+
+                if (worldIn.isAirBlock(blockpos) && (!worldIn.provider.getHasNoSky() || blockpos.getY() < 255) && this.flower.canBlockStay(worldIn, blockpos, this.state)) {
+                    worldIn.setBlockState(blockpos, this.state, 2);
+                }
+            }
+
+            return true;
+        }
     }
 }
