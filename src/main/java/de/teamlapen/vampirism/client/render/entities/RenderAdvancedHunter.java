@@ -36,7 +36,7 @@ public class RenderAdvancedHunter extends RenderBiped<EntityAdvancedHunter> {
 
     @Override
     protected void renderLivingLabel(EntityAdvancedHunter entityIn, String str, double x, double y, double z, int maxDistance) {
-        super.renderLivingLabel(entityIn, str, x, y, z, maxDistance / 3);
+        super.renderLivingLabel(entityIn, str, x, y, z, maxDistance / 4);
     }
 
     @Override

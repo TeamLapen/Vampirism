@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
@@ -107,6 +108,11 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     }
 
     @Override
+    public boolean isIgnoringSundamage() {
+        return this.isPotionActive(ModPotions.sunscreen);
+    }
+
+    @Override
     public void onLivingUpdate() {
         if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 3) {
             isGettingGarlicDamage(true);
@@ -142,5 +148,4 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
         super.initEntityAI();
         this.tasks.addTask(0, new EntityAISwimming(this));
     }
-
 }

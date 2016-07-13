@@ -105,6 +105,11 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
     }
 
     @Override
+    public boolean isIgnoringSundamage() {
+        return false;
+    }
+
+    @Override
     public void onLivingUpdate() {
         if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 3) {
             isGettingGarlicDamage(true);

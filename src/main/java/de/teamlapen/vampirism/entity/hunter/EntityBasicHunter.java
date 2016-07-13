@@ -94,11 +94,11 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     @Override
     public void setLevel(int level) {
         if (level >= 0) {
+            getDataManager().set(LEVEL, level);
             this.updateEntityAttributes();
             if (level == 3) {
                 this.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 1000000, 1));
             }
-            getDataManager().set(LEVEL, level);
         }
     }
 

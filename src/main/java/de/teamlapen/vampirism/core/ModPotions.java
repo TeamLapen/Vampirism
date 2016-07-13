@@ -39,7 +39,7 @@ public class ModPotions {
         sanguinare = register(new PotionSanguinare("sanguinare", false, 0x6A0888));
         saturation = register(new VampirismPotion("saturation", false, 0xDCFF00).setBeneficial());
         sunscreen = register(new VampirismPotion("sunscreen", false, 0xFFF100).setBeneficial());
-        sunscreen.registerPotionAttributeModifier(VReference.sunDamage, "9dc9420c-3e5e-41c7-9ba4-ff70e9dc69fc", -0.3, 2);
+        sunscreen.registerPotionAttributeModifier(VReference.sunDamage, "9dc9420c-3e5e-41c7-9ba4-ff70e9dc69fc", -0.5, 2);
         disguiseAsVampire = register(new VampirismPotion("disguise_as_vampire", false, 0x999900).setBeneficial());
 
     }

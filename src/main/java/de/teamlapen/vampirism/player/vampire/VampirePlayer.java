@@ -355,6 +355,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return isGettingSundamage(false);
     }
 
+    @Override
+    public boolean isIgnoringSundamage() {
+        return false;
+    }
+
     public boolean isPlayerFullyAsleep() {
         return sleepingInCoffin && sleepTimer >= 100;
     }

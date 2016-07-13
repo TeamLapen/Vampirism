@@ -75,11 +75,12 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     @Override
     public void setLevel(int level) {
         if (level >= 0) {
+            getDataManager().set(LEVEL, level);
             this.updateEntityAttributes();
             if (level == 1) {
                 this.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 1000000, 1));
             }
-            getDataManager().set(LEVEL, level);
+
         }
     }
 
