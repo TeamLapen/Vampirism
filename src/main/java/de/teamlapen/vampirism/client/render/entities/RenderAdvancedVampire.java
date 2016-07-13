@@ -35,7 +35,7 @@ public class RenderAdvancedVampire extends RenderBiped<EntityAdvancedVampire> {
 
     @Override
     protected void renderLivingLabel(EntityAdvancedVampire entityIn, String str, double x, double y, double z, int maxDistance) {
-        super.renderLivingLabel(entityIn, str, x, y, z, maxDistance / 3);
+        super.renderLivingLabel(entityIn, str, x, y, z, maxDistance / 4);
     }
 
 

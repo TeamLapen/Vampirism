@@ -106,10 +106,11 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     @Override
     public void setLevel(int level) {
         if (level >= 0) {
+            getDataManager().set(LEVEL, level);
             this.updateEntityAttributes(false);
             float hp = this.getHealth() / this.getMaxHealth();
             this.setHealth(this.getMaxHealth() * hp);
-            getDataManager().set(LEVEL, level);
+
         }
     }
 

@@ -178,6 +178,11 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
+    public boolean isIgnoringSundamage() {
+        return false;
+    }
+
+    @Override
     public boolean isRemote() {
         return false;
     }

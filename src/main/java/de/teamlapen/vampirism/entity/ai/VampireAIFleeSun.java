@@ -7,15 +7,15 @@ import net.minecraft.world.World;
 
 
 public class VampireAIFleeSun extends EntityAIFlee {
-    private final IVampire theCreature;
+    private final IVampire vampire;
 
 
     /**
-     * @param theCreature Has to implement  {@link IVampire}
+     * @param vampire Has to implement  {@link IVampire}
      */
-    public VampireAIFleeSun(EntityCreature theCreature, double movementSpeed, boolean restrictToHome) {
-        super(theCreature, movementSpeed, restrictToHome);
-        this.theCreature = (IVampire) theCreature;
+    public VampireAIFleeSun(EntityCreature vampire, double movementSpeed, boolean restrictToHome) {
+        super(vampire, movementSpeed, restrictToHome);
+        this.vampire = (IVampire) vampire;
     }
 
 
@@ -26,6 +26,6 @@ public class VampireAIFleeSun extends EntityAIFlee {
 
     @Override
     protected boolean shouldFlee() {
-        return theCreature.isGettingSundamage();
+        return vampire.isGettingSundamage() && !vampire.isIgnoringSundamage();
     }
 }

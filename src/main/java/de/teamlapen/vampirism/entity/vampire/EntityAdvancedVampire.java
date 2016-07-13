@@ -5,9 +5,11 @@ import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ai.EntityAIAttackMeleeNoSun;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
+import de.teamlapen.vampirism.entity.ai.VampireAIRestrictSun;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
 import de.teamlapen.vampirism.items.ItemBloodBottle;
 import de.teamlapen.vampirism.util.IPlayerFace;
@@ -24,6 +26,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
@@ -53,6 +56,14 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         this.setDontDropEquipment();
     }
 
+    @Override
+    public boolean attackEntityFrom(DamageSource damageSource, float amount) {
+        boolean flag = super.attackEntityFrom(damageSource, amount);
+        if (flag && damageSource.getSourceOfDamage() instanceof EntityPlayer && this.rand.nextInt(4) == 0) {
+            this.addPotionEffect(new PotionEffect(ModPotions.sunscreen, 150, 2));
+        }
+        return flag;
+    }
 
     @Override
     public void decreaseFollowerCount() {
@@ -88,11 +99,11 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     @Override
     public void setLevel(int level) {
         if (level >= 0) {
+            getDataManager().set(LEVEL, level);
             this.updateEntityAttributes();
             if (level == 1) {
-                this.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 1000000, 1));
+                this.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 1000000, 0));
             }
-            getDataManager().set(LEVEL, level);
         }
     }
 
@@ -210,7 +221,7 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
             this.tasks.addTask(1, new EntityAIBreakDoor(this));
             ((PathNavigateGround) this.getNavigator()).setBreakDoors(true);
         }
-        this.tasks.addTask(2, new EntityAIRestrictSun(this));
+        this.tasks.addTask(2, new VampireAIRestrictSun(this));
         this.tasks.addTask(3, new VampireAIFleeSun(this, 0.9, false));
         this.tasks.addTask(3, new VampireAIFleeGarlic(this, 0.9, false));
         this.tasks.addTask(4, new EntityAIAttackMeleeNoSun(this, 1.0, false));

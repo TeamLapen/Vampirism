@@ -82,6 +82,9 @@ public class ModEntityEventHandler {
                     event.setCanceled(true);
                 }
                 entity.setLevel(l);
+                if (entity instanceof EntityCreature) {
+                    ((EntityCreature) entity).setHealth(((EntityCreature) entity).getMaxHealth());
+                }
             }
         }
         if (event.getEntity() instanceof EntityCreeper) {

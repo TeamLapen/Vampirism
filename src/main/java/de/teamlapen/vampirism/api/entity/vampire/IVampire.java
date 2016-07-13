@@ -52,7 +52,6 @@ public interface IVampire extends IFactionEntity {
      *
      * For VampirePlayer instances for players with vampire level 0 this returns false
      * @param forcerefresh
-     * @return
      */
     boolean isGettingSundamage(boolean forcerefresh);
 
@@ -62,8 +61,11 @@ public interface IVampire extends IFactionEntity {
      * Recommend implementation: Just call isGettingSundamage(false)
      *
      * For VampirePlayer instances for players with vampire level 0 this returns false
-     *
-     * @return
      */
     boolean isGettingSundamage();
+
+    /**
+     * If the entity currently does not care about being damaged by the sun, because it is e.g. angry or has sunscreen
+     */
+    boolean isIgnoringSundamage();
 }
