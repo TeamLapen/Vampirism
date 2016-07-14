@@ -120,6 +120,7 @@ tile.vampirism.weaponTable.name=Hunter Weapon Table
 tile.vampirism.weaponTable.cannot_use=You have not learned how to use this
 tile.vampirism.bloodPotionTable.name=Blood Potion Table
 tile.vampirism.bloodPotionTable.cannot_use=You have not learned how to use this
+tile.vampirism.sunscreenBeacon.name=Sunscreen Beacon
 
 
 #ITEMS
