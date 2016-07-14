@@ -983,14 +983,19 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * Handle sun damage
      */
     private void handleSunDamage() {
+        PotionEffect potionEffect = player.getActivePotionEffect(ModPotions.sunscreen);
+        int sunscreen = potionEffect == null ? -1 : potionEffect.getAmplifier();
         if (ticksInSun < 100) {
             ticksInSun++;
         }
+        if (sunscreen >= 5 && ticksInSun > 50) {
+            ticksInSun = 50;
+        }
         if (player.capabilities.isCreativeMode || player.capabilities.disableDamage) return;
-        if (Balance.vp.SUNDAMAGE_NAUSEA && getLevel() >= Balance.vp.SUNDAMAGE_NAUSEA_MINLEVEL && player.ticksExisted % 300 == 1 && ticksInSun > 50 && !player.isPotionActive(ModPotions.sunscreen)) {
+        if (Balance.vp.SUNDAMAGE_NAUSEA && getLevel() >= Balance.vp.SUNDAMAGE_NAUSEA_MINLEVEL && player.ticksExisted % 300 == 1 && ticksInSun > 50 && sunscreen == -1) {
             player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 180));
         }
-        if (getLevel() >= Balance.vp.SUNDAMAGE_WEAKNESS_MINLEVEL && player.ticksExisted % 150 == 3) {
+        if (getLevel() >= Balance.vp.SUNDAMAGE_WEAKNESS_MINLEVEL && player.ticksExisted % 150 == 3 && sunscreen < 5) {
             player.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 152, 0));
         }
         if (getLevel() >= Balance.vp.SUNDAMAGE_MINLEVEL && ticksInSun >= 100 && player.ticksExisted % 40 == 5) {

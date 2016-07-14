@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.vampire.BloodStats;
@@ -23,6 +24,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.client.GuiIngameForge;
@@ -71,8 +73,13 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 screenColor = 0xfff00000;
                 fullScreen = false;
             } else if ((screenPercentage = ((IVampirePlayer) player).getTicksInSun()) > 0) {
-                screenColor = 0xffffe700;
-                fullScreen = false;
+                PotionEffect effect = mc.thePlayer.getActivePotionEffect(ModPotions.sunscreen);
+                if (effect == null || effect.getAmplifier() < 5) {
+                    screenColor = 0xffffe700;
+                    fullScreen = false;
+                } else {
+                    screenPercentage = 0;
+                }
             }
         } else {
             screenPercentage = 0;
