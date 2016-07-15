@@ -14,7 +14,7 @@ As a vampire you don't need to eat all that dry bread or eat these strange fruit
 ## Links 
 [Minecraft Forum Thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/2364443-vampirism-become-a-vampire)  
 [Downloads](http://minecraft.curseforge.com/mc-mods/233029-vampirism-become-a-vampire/files)  
-~~[Help to translate](https://crowdin.com/project/vampirism)~~ Currently paused
+[Help to translate](https://crowdin.com/project/vampirism)
 
 ## Team [![Join the chat at https://gitter.im/TeamLapen/Vampirism](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TeamLapen/Vampirism?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)  
 - [maxanier](http://maxanier.de) _Code/Models_  

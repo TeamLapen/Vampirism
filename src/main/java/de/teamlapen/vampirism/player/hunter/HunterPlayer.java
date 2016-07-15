@@ -38,9 +38,6 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     public final static Capability<IHunterPlayer> CAP = null;
     /**
      * Don't call before the construction event of the player entity is finished
-     *
-     * @param player
-     * @return
      */
     public static HunterPlayer get(EntityPlayer player) {
         return (HunterPlayer) player.getCapability(CAP, null);
@@ -168,7 +165,6 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     public void onLevelChanged(int level, int oldLevel) {
         if (!isRemote()) {
             LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Hunter", getLevel(), Balance.hp.STRENGTH_LCAP, Balance.hp.STRENGTH_MAX_MOD, Balance.hp.STRENGTH_TYPE, 2, false);
-            actionHandler.resetTimers();
             if (level > 0) {
                 if (player instanceof EntityPlayerMP && ((EntityPlayerMP) player).connection != null) {
                     //When loading from NBT the playerNetServerHandler is not always initialized, but that's required for achievements. So checking here
@@ -179,8 +175,15 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
                     skillHandler.enableRootSkill();
 
                 }
+            } else {
+                skillHandler.disableAllSkills();
+                actionHandler.resetTimers();
             }
 
+        } else {
+            if (level == 0) {
+                actionHandler.resetTimers();
+            }
         }
 
     }
@@ -236,7 +239,11 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     @Override
     protected VampirismPlayer copyFromPlayer(EntityPlayer old) {
-        return get(old);//TODO
+        HunterPlayer oldHunter = get(old);
+        NBTTagCompound nbt = new NBTTagCompound();
+        oldHunter.saveData(nbt);
+        this.loadData(nbt);
+        return oldHunter;
     }
 
     @Override
