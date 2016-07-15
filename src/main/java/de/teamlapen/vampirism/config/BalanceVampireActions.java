@@ -35,10 +35,10 @@ public class BalanceVampireActions extends BalanceValues {
     @DefaultBoolean(value = true, name = "regeneration_enabled")
     public boolean REGEN_ENABLED;
 
-    @DefaultInt(value = 60, minValue = 1, name = "Lord teleport max distance")
+    @DefaultInt(value = 40, minValue = 1, name = "Lord teleport max distance")
     public int TELEPORT_MAX_DISTANCE;
 
-    @DefaultInt(value = 15, minValue = 1, name = "Lord teleport cooldown")
+    @DefaultInt(value = 8, minValue = 1, name = "Lord teleport cooldown")
     public int TELEPORT_COOLDOWN;
 
     @DefaultBoolean(value = true, name = "teleport_enabled")

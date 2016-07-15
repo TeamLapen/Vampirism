@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.client.core;
 
+import de.teamlapen.lib.lib.client.render.RenderAreaParticleCloud;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.client.render.entities.*;
+import de.teamlapen.vampirism.entity.EntityAreaParticleCloud;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
 import de.teamlapen.vampirism.entity.EntityGhost;
@@ -117,6 +119,12 @@ public class ModEntitiesRender {
             @Override
             public Render<? super EntityCrossbowArrow> createRenderFor(RenderManager manager) {
                 return new RenderCrossbowArrow(manager);
+            }
+        });
+        RenderingRegistry.registerEntityRenderingHandler(EntityAreaParticleCloud.class, new IRenderFactory<EntityAreaParticleCloud>() {
+            @Override
+            public Render<? super EntityAreaParticleCloud> createRenderFor(RenderManager manager) {
+                return new RenderAreaParticleCloud(manager);
             }
         });
     }

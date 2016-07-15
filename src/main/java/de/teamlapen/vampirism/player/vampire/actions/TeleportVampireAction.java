@@ -4,6 +4,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.entity.EntityAreaParticleCloud;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
@@ -67,7 +68,6 @@ public class TeleportVampireAction extends DefaultVampireAction {
 
         if (pos != null) {
             player.setPosition(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
-//TODO check if collision stuff works here
             if (player.worldObj.getCollisionBoxes(player.getEntityBoundingBox()).isEmpty() && !player.worldObj.containsAnyLiquid(player.getEntityBoundingBox())) {
 
             } else {
@@ -87,6 +87,13 @@ public class TeleportVampireAction extends DefaultVampireAction {
             playerMp.mountEntityAndWakeUp();
             playerMp.setPositionAndUpdate(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
         }
+        EntityAreaParticleCloud particleCloud = new EntityAreaParticleCloud(player.worldObj);
+        particleCloud.setPosition(ox, oy, oz);
+        particleCloud.setRadius(0.7F);
+        particleCloud.setHeight(player.height);
+        particleCloud.setDuration(5);
+        particleCloud.setSpawnRate(15);
+        player.worldObj.spawnEntityInWorld(particleCloud);
         player.worldObj.playSound(ox, oy, oz, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
         player.worldObj.playSound(player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.PLAYERS, 1, 1, false);
         return true;

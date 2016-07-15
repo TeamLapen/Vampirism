@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IBiteableRegistry;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.entity.EntityAreaParticleCloud;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
 import de.teamlapen.vampirism.entity.EntityGhost;
@@ -63,6 +64,7 @@ public class ModEntities {
     public static final String ADVANCED_VAMPIRE = "vampirism.advanced_vampire";
     public static final String HUNTER_VILLAGER = "vampirism.hunter_villager";
     public static final String CROSSBOW_ARROW = "vampirism.crossbow_arrow";
+    public static final String PARTICLE_CLOUD = "vampirism.particle_cloud";
 
     /**
      * List of entity names which should be spawnable
@@ -151,6 +153,7 @@ public class ModEntities {
         registerEntity(EntityConvertedVillager.class, CONVERTED_VILLAGER, EntityLiving.SpawnPlacementType.ON_GROUND, false);
         registerEntity(EntityHunterVillager.class, HUNTER_VILLAGER, EntityLiving.SpawnPlacementType.ON_GROUND, false);
         registerEntity(EntityCrossbowArrow.class, CROSSBOW_ARROW, EntityLiving.SpawnPlacementType.IN_AIR, false);
+        registerEntity(EntityAreaParticleCloud.class, PARTICLE_CLOUD, EntityLiving.SpawnPlacementType.IN_AIR, false);
         registerConvertibles();
     }
 
