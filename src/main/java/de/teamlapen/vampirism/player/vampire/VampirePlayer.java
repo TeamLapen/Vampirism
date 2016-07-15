@@ -22,6 +22,7 @@ import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.fluids.BloodHelper;
+import de.teamlapen.vampirism.modcompat.sponge.SpongeModCompat;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.actions.ActionHandler;
@@ -53,6 +54,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -426,6 +428,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             actionHandler.onActionsReactivated();
             ticksInSun = 0;
             if (wasDead) {
+                if (Loader.isModLoaded(SpongeModCompat.MODID)) {
+                    //Workaround for issue caused by https://github.com/SpongePowered/SpongeForge/issues/736
+                    int level = getLevel();
+                    onLevelChanged(level, level);
+                }
                 player.addPotionEffect(new PotionEffect(ModPotions.sunscreen, 400, 4));
                 player.setHealth(player.getMaxHealth());
                 bloodStats.setBloodLevel(bloodStats.MAXBLOOD);
@@ -828,6 +835,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * Check if the given attribute is currently registered, if not it registers it
      * Only necessary because SpongeForge currently does not recreate the player on death but resets the attribute map
      * TODO maybe remove once fixed
+     * https://github.com/SpongePowered/SpongeForge/issues/736
      *
      * @param attributes
      */
