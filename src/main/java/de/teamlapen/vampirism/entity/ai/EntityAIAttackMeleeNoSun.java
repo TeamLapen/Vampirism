@@ -29,7 +29,7 @@ public class EntityAIAttackMeleeNoSun extends EntityAIAttackMelee {
             if (entitylivingbase != null) {
                 double distance = this.attacker.getDistanceSq(entitylivingbase.posX, entitylivingbase.getEntityBoundingBox().minY, entitylivingbase.posZ);
                 if (distance <= this.getAttackReachSqr(entitylivingbase)) {
-                    return true;//TODO remove again and implement angry vampires
+                    return true;
                 }
             }
             boolean avoidSun = true;
