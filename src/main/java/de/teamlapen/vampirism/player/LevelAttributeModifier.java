@@ -48,9 +48,9 @@ public class LevelAttributeModifier {
      * @param max       the max modifier value
      * @param type      the exponent used to calculate the actual value depending on level, levelcap and max value
      * @param operation The operation applied to the attribute
-     * @param intOnly   If the modifier should be rounded to a integer
+     * @param evenIntOnly   If the modifier should be rounded to an even integer TODO maybe move this
      */
-    public static void applyModifier(EntityPlayer player, IAttribute attribute, String name, int level, int lcap, double max, double type, int operation, boolean intOnly) {
+    public static void applyModifier(EntityPlayer player, IAttribute attribute, String name, int level, int lcap, double max, double type, int operation, boolean evenIntOnly) {
         UUID mod = modifiers.get(attribute);
         if (mod == null) {
             VampirismMod.log.w(TAG, "Cannot modify %s, no modifier is registered", attribute);
@@ -59,8 +59,8 @@ public class LevelAttributeModifier {
         double m = calculateModifierValue(level, lcap, max, type);
         IAttributeInstance instance = player.getEntityAttribute(attribute);
         rmMod(instance, mod);
-        if (intOnly) {
-            m = Math.round(m);
+        if (evenIntOnly) {
+            m = Math.round(m / 2) * 2;
         }
         instance.applyModifier(new AttributeModifier(mod, (attribute.getAttributeUnlocalizedName() + " " + name + " Boost"), m, operation));
     }
