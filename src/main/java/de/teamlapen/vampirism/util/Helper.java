@@ -42,10 +42,12 @@ public class Helper {
                     float angle = entity.worldObj.getCelestialAngle(1.0F);
                     //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
                     if (angle > 0.78 || angle < 0.24) {
-                        if (entity.worldObj.canBlockSeeSky(entity.getPosition())) {
+                        BlockPos pos = new BlockPos(entity.posX + 0.5, entity.posY + 0.3, entity.posZ + 0.5);
+                        if (entity.worldObj.canBlockSeeSky(pos)) {
+
                             ResourceLocation biomeID = null;
                             try {
-                                biomeID = entity.worldObj.getBiomeGenForCoords(entity.getPosition()).getRegistryName();
+                                biomeID = entity.worldObj.getBiomeGenForCoords(pos).getRegistryName();
                                 if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biomeID)) {
                                     entity.worldObj.theProfiler.endSection();
                                     return true;
