@@ -75,7 +75,7 @@ public interface IFactionPlayer<T extends IFactionPlayer> extends IFactionEntity
      * Is called when the players faction level changed.
      * Is called on world load.
      * Is called on client and server side.
-     *
+     * Might be called with oldLevel=newLevel to reset things
      * @param newLevel
      * @param oldLevel
      */

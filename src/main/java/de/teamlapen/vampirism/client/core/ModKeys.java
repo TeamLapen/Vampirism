@@ -29,8 +29,8 @@ public class ModKeys {
     //    private static final String AUTO_BLOOD = "keys.vampirism.auto";
     private static final String TOGGLE_ACTIONS = "keys.vampirism.action";
     private static final String SELECT_SKILLS = "keys.vampirism.select_skills";
-    private static final String SWITCH_VISION = "key.vampirism.vision";
-    private static final String BLOOD_POTION_CRAFTING = "key.vampirism.blood_potion_crafting";
+    private static final String SWITCH_VISION = "keys.vampirism.vision";
+    private static final String BLOOD_POTION_CRAFTING = "keys.vampirism.blood_potion_crafting";
 //    private static final String MINION_CONTROL = "key.vampirism.minion_control";
 
     private static KeyBinding SUCK = new KeyBinding(SUCK_BLOOD, KeyConflictContext.IN_GAME, Keyboard.KEY_V, CATEGORY);

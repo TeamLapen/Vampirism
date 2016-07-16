@@ -40,7 +40,7 @@ public class VampireRageVampireAction extends DefaultVampireAction implements IL
 
     @Override
     public String getUnlocalizedName() {
-        return "skill.vampirism.vampire_rage";
+        return "action.vampirism.vampire.vampire_rage";
     }
 
     @Override

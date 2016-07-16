@@ -22,6 +22,7 @@ import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.fluids.BloodHelper;
+import de.teamlapen.vampirism.modcompat.sponge.SpongeModCompat;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.actions.ActionHandler;
@@ -35,6 +36,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -52,6 +54,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
@@ -202,14 +205,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return true;
     }
 
-    @Override
-    public void consumeBlood(int amt, float saturationMod) {
-        int left = this.bloodStats.addBlood(amt, saturationMod);
-        if (left > 0) {
-            handleSpareBlood(left);
-        }
-    }
-
     public BITE_TYPE determineBiteType(EntityLivingBase entity) {
         if (entity instanceof IBiteableEntity) {
             if (((IBiteableEntity) entity).canBeBitten(this)) return BITE_TYPE.SUCK_BLOOD;
@@ -236,6 +231,14 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public boolean doesResistGarlic(EnumGarlicStrength strength) {
         return false;
+    }
+
+    @Override
+    public void drinkBlood(int amt, float saturationMod) {
+        int left = this.bloodStats.addBlood(amt, saturationMod);
+        if (left > 0) {
+            handleSpareBlood(left);
+        }
     }
 
     @Override
@@ -354,6 +357,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return isGettingSundamage(false);
     }
 
+    @Override
+    public boolean isIgnoringSundamage() {
+        return false;
+    }
+
     public boolean isPlayerFullyAsleep() {
         return sleepingInCoffin && sleepTimer >= 100;
     }
@@ -420,7 +428,12 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             actionHandler.onActionsReactivated();
             ticksInSun = 0;
             if (wasDead) {
-                player.addPotionEffect(new PotionEffect(ModPotions.sunscreen, 400, 5));
+                if (Loader.isModLoaded(SpongeModCompat.MODID)) {
+                    //Workaround for issue caused by https://github.com/SpongePowered/SpongeForge/issues/736
+                    int level = getLevel();
+                    onLevelChanged(level, level);
+                }
+                player.addPotionEffect(new PotionEffect(ModPotions.sunscreen, 400, 4));
                 player.setHealth(player.getMaxHealth());
                 bloodStats.setBloodLevel(bloodStats.MAXBLOOD);
             }
@@ -430,10 +443,12 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public void onLevelChanged(int newLevel, int oldLevel) {
         if (!isRemote()) {
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MOVEMENT_SPEED, "Vampire", getLevel(), Balance.vp.SPEED_LCAP, Balance.vp.SPEED_MAX_MOD, Balance.vp.SPEED_TYPE);
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Vampire", getLevel(), Balance.vp.STRENGTH_LCAP, Balance.vp.STRENGTH_MAX_MOD, Balance.vp.STRENGTH_TYPE);
-            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MAX_HEALTH, "Vampire", getLevel(), Balance.vp.HEALTH_LCAP, Balance.vp.HEALTH_MAX_MOD, Balance.vp.HEALTH_TYPE);
-            LevelAttributeModifier.applyModifier(player, VReference.bloodExhaustion, "Vampire", getLevel(), getMaxLevel(), Balance.vp.EXAUSTION_MAX_MOD, Balance.vp.EXHAUSTION_TYPE);
+            checkAttributes(VReference.bloodExhaustion);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MOVEMENT_SPEED, "Vampire", getLevel(), Balance.vp.SPEED_LCAP, Balance.vp.SPEED_MAX_MOD, Balance.vp.SPEED_TYPE, 2, false);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Vampire", getLevel(), Balance.vp.STRENGTH_LCAP, Balance.vp.STRENGTH_MAX_MOD, Balance.vp.STRENGTH_TYPE, 2, false);
+            LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MAX_HEALTH, "Vampire", getLevel(), Balance.vp.HEALTH_LCAP, Balance.vp.HEALTH_MAX_MOD, Balance.vp.HEALTH_TYPE, 0, true);
+            if (player.getHealth() > player.getMaxHealth()) player.setHealth(player.getMaxHealth());
+            LevelAttributeModifier.applyModifier(player, VReference.bloodExhaustion, "Vampire", getLevel(), getMaxLevel(), Balance.vp.EXAUSTION_MAX_MOD, Balance.vp.EXHAUSTION_TYPE, 2, false);
             if (newLevel > 0) {
                 if (player instanceof EntityPlayerMP && ((EntityPlayerMP) player).connection != null) {
                     //When loading from NBT the playerNetServerHandler is not always initialized, but that's required for achievements. So checking here
@@ -499,6 +514,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (level > 0) {
             if (player.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 1) {
                 isGettingSundamage(true);
+                //TODO remove test for sponge forge VampirismMod.log.t("Ticking player %s %s %s", player.getEntityId(), player.getUniqueID(), player.getAttributeMap());
             }
             if (player.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 6) {
                 isGettingGarlicDamage(true);
@@ -815,6 +831,24 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
     }
 
+    /**
+     * Check if the given attribute is currently registered, if not it registers it
+     * Only necessary because SpongeForge currently does not recreate the player on death but resets the attribute map
+     * TODO maybe remove once fixed
+     * https://github.com/SpongePowered/SpongeForge/issues/736
+     *
+     * @param attributes
+     */
+    protected void checkAttributes(IAttribute... attributes) {
+        for (IAttribute attribute : attributes) {
+            if (player.getEntityAttribute(attribute) == null) {
+                applyEntityAttributes();
+                return;//apply entity attributes also readds all others
+            }
+        }
+
+    }
+
     @Override
     protected VampirismPlayer copyFromPlayer(EntityPlayer old) {
         VampirePlayer oldVampire = get(old);
@@ -872,10 +906,21 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     private void applyEntityAttributes() {
-        player.getAttributeMap().registerAttribute(VReference.sunDamage).setBaseValue(Balance.vp.SUNDAMAGE_DAMAGE);
-        player.getAttributeMap().registerAttribute(VReference.bloodExhaustion).setBaseValue(Balance.vp.BLOOD_EXHAUSTION_BASIC_MOD);
-        player.getAttributeMap().registerAttribute(VReference.biteDamage).setBaseValue(Balance.vp.BITE_DMG);
-        player.getAttributeMap().registerAttribute(VReference.garlicDamage).setBaseValue(Balance.vp.GARLIC_DAMAGE);
+        //Checking if already registered, since this method has to be called multiple times due to SpongeForge not recreating the player, but resetting the attribute map
+        if (player.getAttributeMap().getAttributeInstance(VReference.sunDamage) == null) {
+            player.getAttributeMap().registerAttribute(VReference.sunDamage).setBaseValue(Balance.vp.SUNDAMAGE_DAMAGE);
+        }
+        if (player.getAttributeMap().getAttributeInstance(VReference.bloodExhaustion) == null) {
+            player.getAttributeMap().registerAttribute(VReference.bloodExhaustion).setBaseValue(Balance.vp.BLOOD_EXHAUSTION_BASIC_MOD);
+        }
+        if (player.getAttributeMap().getAttributeInstance(VReference.biteDamage) == null) {
+            player.getAttributeMap().registerAttribute(VReference.biteDamage).setBaseValue(Balance.vp.BITE_DMG);
+
+        }
+        if (player.getAttributeMap().registerAttribute(VReference.garlicDamage) == null) {
+            player.getAttributeMap().registerAttribute(VReference.garlicDamage).setBaseValue(Balance.vp.GARLIC_DAMAGE);
+
+        }
     }
 
     /**
@@ -904,19 +949,21 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             blood = ((IBiteableEntity) entity).onBite(this);
             saturationMod = ((IBiteableEntity) entity).getBloodSaturation();
         } else if (type == BITE_TYPE.ATTACK) {
-            entity.attackEntityFrom(DamageSource.causePlayerDamage(player), (float) player.getEntityAttribute(VReference.biteDamage).getAttributeValue());
+            checkAttributes(VReference.biteDamage);
+            float damage = getSpecialAttributes().bat ? 0.1F : (float) player.getEntityAttribute(VReference.biteDamage).getAttributeValue();
+            entity.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
             if (entity.isEntityUndead() && player.getRNG().nextInt(4) == 0) {
                 player.addPotionEffect(new PotionEffect(MobEffects.POISON, 60));
             }
             if (specialAttributes.poisonous_bite) {
-                entity.addPotionEffect(new PotionEffect(MobEffects.POISON, Balance.vps.POISONOUS_BITE_DURATION * 20, 1));
+                entity.addPotionEffect(new PotionEffect(MobEffects.POISON, (int) (Balance.vps.POISONOUS_BITE_DURATION * 20 * (getSpecialAttributes().bat ? 0.2F : 1F)), 1));
             }
         } else if (type == BITE_TYPE.NONE) {
             return;
         }
         biteCooldown = Balance.vp.BITE_COOLDOWN;
         if (blood > 0) {
-            consumeBlood(blood, saturationMod);
+            drinkBlood(blood, saturationMod);
             player.addStat(Achievements.suckingBlood, 1);
             NBTTagCompound updatePacket = bloodStats.writeUpdate(new NBTTagCompound());
             updatePacket.setInteger(KEY_SPAWN_BITE_PARTICLE, entity.getEntityId());
@@ -945,17 +992,23 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * Handle sun damage
      */
     private void handleSunDamage() {
+        PotionEffect potionEffect = player.getActivePotionEffect(ModPotions.sunscreen);
+        int sunscreen = potionEffect == null ? -1 : potionEffect.getAmplifier();
         if (ticksInSun < 100) {
             ticksInSun++;
         }
+        if (sunscreen >= 5 && ticksInSun > 50) {
+            ticksInSun = 50;
+        }
         if (player.capabilities.isCreativeMode || player.capabilities.disableDamage) return;
-        if (Balance.vp.SUNDAMAGE_NAUSEA && getLevel() >= Balance.vp.SUNDAMAGE_NAUSEA_MINLEVEL && player.ticksExisted % 300 == 1 && ticksInSun > 50 && !player.isPotionActive(ModPotions.sunscreen)) {
+        if (Balance.vp.SUNDAMAGE_NAUSEA && getLevel() >= Balance.vp.SUNDAMAGE_NAUSEA_MINLEVEL && player.ticksExisted % 300 == 1 && ticksInSun > 50 && sunscreen == -1) {
             player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 180));
         }
-        if (getLevel() >= Balance.vp.SUNDAMAGE_WEAKNESS_MINLEVEL && player.ticksExisted % 150 == 3) {
+        if (getLevel() >= Balance.vp.SUNDAMAGE_WEAKNESS_MINLEVEL && player.ticksExisted % 150 == 3 && sunscreen < 5) {
             player.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 152, 0));
         }
         if (getLevel() >= Balance.vp.SUNDAMAGE_MINLEVEL && ticksInSun >= 100 && player.ticksExisted % 40 == 5) {
+            checkAttributes(VReference.sunDamage);
             float damage = (float) (player.getEntityAttribute(VReference.sunDamage).getAttributeValue());
             if (damage > 0) player.attackEntityFrom(VReference.SUNDAMAGE, damage);
         }

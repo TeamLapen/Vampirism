@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillNode;
+import de.teamlapen.vampirism.blocks.BlockCastleBlock;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -309,7 +310,7 @@ public class GuiSkills extends GuiScreen {
                             textureatlassprite = this.getTexture(Blocks.REDSTONE_BLOCK);
                         }
                     } else if (j4 == 10) {
-                        textureatlassprite = this.getTexture(ModBlocks.castleBlock.getDefaultState().withProperty(ModBlocks.castleBlock.getStringProp(), "dark_brick_bloody"));
+                        textureatlassprite = this.getTexture(ModBlocks.castleBlock.getDefaultState().withProperty(BlockCastleBlock.VARIANT, BlockCastleBlock.EnumType.DARK_BRICK_BLOODY));
                     } else if (j4 == 8) {
                         textureatlassprite = this.getTexture(Blocks.STONEBRICK);
                     } else if (j4 > 4) {

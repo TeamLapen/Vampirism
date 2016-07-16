@@ -85,6 +85,10 @@ public class HunterWeaponTableCraftingSlot extends Slot {
                 }
             }
         }
+        if (recipe != null && !world.isRemote) {
+            //Play anvil sound
+            world.playEvent(1030, pos, 0);
+        }
         playerIn.addStat(Achievements.weaponTable);
 
     }

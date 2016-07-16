@@ -27,10 +27,6 @@ public interface IBloodPotionRegistry {
      */
     String CATEGORY_SPECIAL_BODY_BOOSTS = "sbb";
 
-    /**
-     * Special other effects
-     */
-    String CATEGORY_SPECIAL_OTHERS = "so";
 
     /**
      * Normal  vampire skills like night vision

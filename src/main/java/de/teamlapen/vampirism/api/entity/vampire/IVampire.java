@@ -9,19 +9,19 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 public interface IVampire extends IFactionEntity {
 
     /**
-     * Consume blood
-     *
-     * @param amt           In blood food unit, not mB. See {@link de.teamlapen.vampirism.api.VReference#FOOD_TO_FLUID_BLOOD} for conversion
-     * @param saturationMod
-     */
-    void consumeBlood(int amt, float saturationMod);
-
-    /**
      *
      * @param strength
      * @return True if the entity is not affected by that garlic level
      */
     boolean doesResistGarlic(EnumGarlicStrength strength);
+
+    /**
+     * Consume blood
+     *
+     * @param amt           In blood food unit, not mB. See {@link de.teamlapen.vampirism.api.VReference#FOOD_TO_FLUID_BLOOD} for conversion
+     * @param saturationMod
+     */
+    void drinkBlood(int amt, float saturationMod);
 
     /**
      * Checks if the player is being affected by garlic.
@@ -52,7 +52,6 @@ public interface IVampire extends IFactionEntity {
      *
      * For VampirePlayer instances for players with vampire level 0 this returns false
      * @param forcerefresh
-     * @return
      */
     boolean isGettingSundamage(boolean forcerefresh);
 
@@ -62,8 +61,11 @@ public interface IVampire extends IFactionEntity {
      * Recommend implementation: Just call isGettingSundamage(false)
      *
      * For VampirePlayer instances for players with vampire level 0 this returns false
-     *
-     * @return
      */
     boolean isGettingSundamage();
+
+    /**
+     * If the entity currently does not care about being damaged by the sun, because it is e.g. angry or has sunscreen
+     */
+    boolean isIgnoringSundamage();
 }

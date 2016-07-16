@@ -272,7 +272,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         return SoundEvents.ENTITY_HOSTILE_SWIM;
     }
 
-    protected boolean isBrightLightLevel() {
+    protected boolean isLowLightLevel() {
         BlockPos blockpos = new BlockPos(this.posX, this.getEntityBoundingBox().minY, this.posZ);
 
         if (this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)) {

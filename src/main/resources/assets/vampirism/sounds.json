@@ -38,15 +38,32 @@
     "category": "ambient",
     "sounds": [
       {
-        "name": "vampirism:ambient/ghosty_ambient",
-        "stream": true
+        "name": "vampirism:ambient/ghosty_ambient"
       }
     ]
   },
   "coffin_lid": {
-    "category": "ambient",
+    "category": "block",
     "sounds": [
       "vampirism:fx/coffin_lid_slide"
+    ]
+  },
+  "crossbow": {
+    "category": "player",
+    "sounds": [
+      "vampirism:fx/crossbow"
+    ]
+  },
+  "bat_swarm": {
+    "category": "player",
+    "sounds": [
+      "vampirism:fx/bat_swarm"
+    ]
+  },
+  "boiling": {
+    "category": "block",
+    "sounds": [
+      "vampirism:fx/boiling"
     ]
   }
 }

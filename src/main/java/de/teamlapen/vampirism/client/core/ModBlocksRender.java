@@ -44,7 +44,7 @@ public class ModBlocksRender {
 
     private static void registerRenderer() {
         InventoryRenderHelper renderHelper = new InventoryRenderHelper(REFERENCE.MODID);
-        renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.castleBlock), BlockCastleBlock.types);
+        renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.castleBlock), BlockCastleBlock.EnumType.values());
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.altarPillar), BlockAltarPillar.EnumPillarType.values());
         renderHelper.registerRender(ModBlocks.altarTip);
         renderHelper.registerRender(ModBlocks.altarInfusion);
@@ -53,6 +53,7 @@ public class ModBlocksRender {
         renderHelper.registerRender(ModBlocks.altarInspiration);
         renderHelper.registerRender(ModBlocks.firePlace);
         renderHelper.registerRender(ModBlocks.bloodPotionTable);
+        renderHelper.registerRender(ModBlocks.sunscreenBeacon);
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.hunterTable), EnumFacing.HORIZONTALS);
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.vampirismFlower), VampirismFlower.EnumFlowerType.values());
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.churchAltar), EnumFacing.HORIZONTALS);

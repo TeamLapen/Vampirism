@@ -68,8 +68,8 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
             if (entity instanceof EntityVampireBaron) {
                 ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 40, 5));
             }
-            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, (int) (200 * tm), rand.nextInt(mr) + 1));
-            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, (int) (100 * tm), rand.nextInt(mr) + 1));
+            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, (int) (200 * tm), rand.nextInt(mr)));
+            ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, (int) (100 * tm), rand.nextInt(mr)));
         }
         return flag;
     }
@@ -89,6 +89,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
 //            return false;
 //        }
         BlockPos blockpos = new BlockPos(this.posX, this.getEntityBoundingBox().minY, this.posZ);
+
         return ModBlocks.cursedEarth.equals(worldObj.getBlockState(blockpos.down()).getBlock()) && super.getCanSpawnHere();
     }
 
@@ -105,10 +106,11 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     @Override
     public void setLevel(int level) {
         if (level >= 0) {
+            getDataManager().set(LEVEL, level);
             this.updateEntityAttributes(false);
             float hp = this.getHealth() / this.getMaxHealth();
             this.setHealth(this.getMaxHealth() * hp);
-            getDataManager().set(LEVEL, level);
+
         }
     }
 
@@ -143,7 +145,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     }
 
     @Override
-    public ISaveableMinionHandler getSaveableMinionHandler() {
+    public ISaveableMinionHandler<IVampireMinion.Saveable> getSaveableMinionHandler() {
         return minionHandler;
     }
 
@@ -202,9 +204,14 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
 
             if (i == 1) {
                 EntityLiving e = (EntityLiving) EntityList.createEntityByName(ModEntities.VAMPIRE_MINION_SAVEABLE_NAME, this.worldObj);
-                e.copyLocationAndAnglesFrom(this);
-                worldObj.spawnEntityInWorld(e);
-                m = (IVampireMinion.Saveable) e;
+                if (e == null) {
+                    VampirismMod.log.w("VampireBaron", "Failed to create saveable minion");
+                } else {
+                    e.copyLocationAndAnglesFrom(this);
+                    worldObj.spawnEntityInWorld(e);
+                    m = (IVampireMinion.Saveable) e;
+                }
+
             } else if (i == 2 && this.getAttackTarget() != null) {
                 m = (IVampireMinion.Saveable) UtilLib.spawnEntityBehindEntity(this.getAttackTarget(), ModEntities.VAMPIRE_MINION_SAVEABLE_NAME);
             }
@@ -234,8 +241,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         int avg = Math.round(((d.avgPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
         int max = Math.round(((d.maxPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
         int min = Math.round(((d.minPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * (MAX_LEVEL));
-        VampirismMod.log.d("VampireBaron", "Difficulty %d %d %d", min, max, avg);
-        switch (rand.nextInt(6)) {
+        switch (rand.nextInt(7)) {
             case 0:
                 return min;
             case 1:
@@ -245,6 +251,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
             case 3:
                 return avg + 1;
             case 4:
+            case 5:
                 return rand.nextInt(MAX_LEVEL + 1);
             default:
                 return rand.nextInt(max + 2 - min) + min;
@@ -297,10 +304,10 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     protected boolean shouldSpawnMinion() {
         if (this.ticksExisted % 30 == 7) {
             int count = getSaveableMinionHandler().getMinionCount();
-            if (count < getLevel() + 2) {
+            if (count < getLevel() + 1) {
                 return true;
             }
-            if (recentlyHit > 0 && count < 4 + getLevel()) {
+            if (recentlyHit > 0 && count < 2 + getLevel()) {
                 return true;
             }
         }

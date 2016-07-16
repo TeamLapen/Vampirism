@@ -7,11 +7,12 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModSounds;
+import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Enchantments;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.ActionResult;
@@ -131,6 +132,14 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
     }
 
     /**
+     * If the hurt timer the hit entity should be ignored.
+     * This allows double crossbows to hit twice at once
+     */
+    protected boolean isIgnoreHurtTime(ItemStack crossbow) {
+        return false;
+    }
+
+    /**
      * Shoots an arrow.
      *
      * @param player       The shooting player
@@ -157,11 +166,15 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
                 if (!world.isRemote) {
                     ItemCrossbowArrow itemarrow = itemstack.getItem() instanceof ItemCrossbowArrow ? (ItemCrossbowArrow) itemstack.getItem() : ModItems.crossbowArrow;
-                    EntityArrow entityarrow = itemarrow.createEntity(itemstack, world, player, heightOffset);
+                    EntityCrossbowArrow entityarrow = itemarrow.createEntity(itemstack, world, player, heightOffset);
                     entityarrow.setAim(player, player.rotationPitch, player.rotationYaw, 0.0F, f * 3.0F, 1.0F);
 
                     if (isCritical(player.getRNG())) {
                         entityarrow.setIsCritical(true);
+                    }
+
+                    if (isIgnoreHurtTime(stack)) {
+                        entityarrow.setIgnoreHurtTimer();
                     }
 
                     int j = EnchantmentHelper.getEnchantmentLevel(Enchantments.POWER, stack);
@@ -187,9 +200,10 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
                     }
 
                     world.spawnEntityInWorld(entityarrow);
+                    world.playSound(null, player.posX, player.posY + 0.5, player.posZ, ModSounds.crossbow, SoundCategory.PLAYERS, 1F, world.rand.nextFloat() * 0.1F + 0.9F);
+
                 }
 
-                world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.NEUTRAL, 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
 
                 if (consumeArrow) {
                     --itemstack.stackSize;

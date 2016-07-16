@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IBiteableRegistry;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.entity.EntityAreaParticleCloud;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
 import de.teamlapen.vampirism.entity.EntityGhost;
@@ -62,6 +63,7 @@ public class ModEntities {
     public static final String ADVANCED_VAMPIRE = "vampirism.advanced_vampire";
     public static final String HUNTER_VILLAGER = "vampirism.hunter_villager";
     public static final String CROSSBOW_ARROW = "vampirism.crossbow_arrow";
+    public static final String PARTICLE_CLOUD = "vampirism.particle_cloud";
 
     /**
      * List of entity names which should be spawnable
@@ -103,14 +105,15 @@ public class ModEntities {
 
     private static void init(FMLInitializationEvent event) {
         Set<Biome> allBiomes = Biome.EXPLORATION_BIOMES_LIST;
-        allBiomes.remove(Biomes.HELL);
-        allBiomes.remove(Biomes.SKY);
-
         /**
          * After setting this up this array will contain only biomes in which zombies can spawn.
          */
         Set<Biome> zombieBiomes = Sets.newHashSet();
         zombieBiomes.addAll(allBiomes);
+        zombieBiomes.remove(Biomes.MUSHROOM_ISLAND);
+        zombieBiomes.remove(Biomes.MUSHROOM_ISLAND_SHORE);
+        zombieBiomes.remove(Biomes.HELL);
+        zombieBiomes.remove(Biomes.SKY);
         Iterator<Biome> iterator = zombieBiomes.iterator();
         while (iterator.hasNext()) {
             Biome b = iterator.next();
@@ -148,6 +151,7 @@ public class ModEntities {
         registerEntity(EntityConvertedVillager.class, CONVERTED_VILLAGER, EntityLiving.SpawnPlacementType.ON_GROUND, false);
         registerEntity(EntityHunterVillager.class, HUNTER_VILLAGER, EntityLiving.SpawnPlacementType.ON_GROUND, false);
         registerEntity(EntityCrossbowArrow.class, CROSSBOW_ARROW, EntityLiving.SpawnPlacementType.IN_AIR, false);
+        registerEntity(EntityAreaParticleCloud.class, PARTICLE_CLOUD, EntityLiving.SpawnPlacementType.IN_AIR, false);
         registerConvertibles();
     }
 
@@ -175,7 +179,7 @@ public class ModEntities {
      */
     private static void registerEntity(Class<? extends EntityLiving> clazz, String name, EntityLiving.SpawnPlacementType placementType, int probe, int min, int max, EnumCreatureType type, Biome... biomes) {
         registerEntity(clazz, name, placementType, true);
-        VampirismMod.log.d("EntityRegister", "Adding spawn with probe of " + probe);
+        //VampirismMod.log.d("EntityRegister", "Adding spawn with probe of %d in %s", probe, Arrays.toString(biomes));
         EntityRegistry.addSpawn(clazz, probe, min, max, type, biomes);
     }
 }

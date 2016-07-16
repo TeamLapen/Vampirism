@@ -38,11 +38,11 @@ public class BalanceMobProps extends BalanceValues {
 
     @DefaultDouble(value = 30D, minValue = 10D, maxValue = 10000D, name = "hunter_max_health")
     public double VAMPIRE_HUNTER_MAX_HEALTH;
-    @DefaultDouble(value = 3D, minValue = 0D, maxValue = 10000, name = "hunter_max_health_pl", comment = "Max health is increased by this for every level the hunter has")
+    @DefaultDouble(value = 4D, minValue = 0D, maxValue = 10000, name = "hunter_max_health_pl", comment = "Max health is increased by this for every level the hunter has")
     public double VAMPIRE_HUNTER_MAX_HEALTH_PL;
     @DefaultDouble(value = 3D, minValue = 0D, name = "hunter_attack_damage")
     public double VAMPIRE_HUNTER_ATTACK_DAMAGE;
-    @DefaultDouble(value = 1D, minValue = 0D, name = "hunter_attack_damage_pl")
+    @DefaultDouble(value = 1.5D, minValue = 0D, name = "hunter_attack_damage_pl")
     public double VAMPIRE_HUNTER_ATTACK_DAMAGE_PL;
     @DefaultDouble(value = 0.28D, minValue = 0.1, maxValue = 2, name = "hunter_speed")
     public double VAMPIRE_HUNTER_SPEED;
@@ -87,7 +87,7 @@ public class BalanceMobProps extends BalanceValues {
     @DefaultInt(value = 75, minValue = 0, maxValue = 1000000, name = "vampire_spawn_chance", comment = "e.g. Zombie spawn chance: 100")
     public int VAMPIRE_SPAWN_CHANCE;
 
-    @DefaultInt(value = 6, minValue = 1, maxValue = 1000000, name = "vampire_bite_attack_chance", comment = "Chance that a vampire bites a player when attacking him (1/n)")
+    @DefaultInt(value = 3, minValue = 1, maxValue = 1000000, name = "vampire_bite_attack_chance", comment = "Chance that a vampire bites a player when attacking him (1/n)")
     public int VAMPIRE_BITE_ATTACK_CHANCE;
 
     @DefaultDouble(value = 7.0, minValue = 0.0, maxValue = 1000, name = "vampire_mob_sun_damage")

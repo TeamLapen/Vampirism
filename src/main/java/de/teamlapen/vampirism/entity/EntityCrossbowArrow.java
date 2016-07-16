@@ -19,6 +19,9 @@ public class EntityCrossbowArrow extends EntityArrow {
     @Nonnull
     ItemStack arrowStack = new ItemStack(ModItems.crossbowArrow);
 
+    private boolean ignoreHurtTimer = false;
+
+
     public EntityCrossbowArrow(World world) {
         super(world);
     }
@@ -52,6 +55,13 @@ public class EntityCrossbowArrow extends EntityArrow {
         arrowStack.readFromNBT(compound.getCompoundTag("arrowStack"));
     }
 
+    /**
+     * Allows the arrow to ignore the hurt timer of the hit entity
+     */
+    public void setIgnoreHurtTimer() {
+        this.ignoreHurtTimer = true;
+    }
+
     @Override
     public void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
@@ -63,6 +73,9 @@ public class EntityCrossbowArrow extends EntityArrow {
         super.arrowHit(living);
         Item item = arrowStack.getItem();
         if (item instanceof ItemCrossbowArrow) {
+            if (ignoreHurtTimer && living.hurtResistantTime > 0) {
+                living.hurtResistantTime = 0;
+            }
             ((ItemCrossbowArrow) item).onHitEntity(arrowStack, living, this, this.shootingEntity == null ? this : this.shootingEntity);
         }
     }

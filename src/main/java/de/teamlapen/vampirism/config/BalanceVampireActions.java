@@ -35,10 +35,10 @@ public class BalanceVampireActions extends BalanceValues {
     @DefaultBoolean(value = true, name = "regeneration_enabled")
     public boolean REGEN_ENABLED;
 
-    @DefaultInt(value = 60, minValue = 1, name = "Lord teleport max distance")
+    @DefaultInt(value = 40, minValue = 1, name = "Lord teleport max distance")
     public int TELEPORT_MAX_DISTANCE;
 
-    @DefaultInt(value = 15, minValue = 1, name = "Lord teleport cooldown")
+    @DefaultInt(value = 8, minValue = 1, name = "Lord teleport cooldown")
     public int TELEPORT_COOLDOWN;
 
     @DefaultBoolean(value = true, name = "teleport_enabled")
@@ -46,12 +46,19 @@ public class BalanceVampireActions extends BalanceValues {
 
     @DefaultInt(value = 20, minValue = 0, name = "Vampire Rage Cool Down", comment = "Vampire Rage cooldown duration")
     public int RAGE_COOLDOWN;
-    @DefaultInt(value = 10, minValue = 1, name = "Vampire Rage Duration", comment = "Standard Vampire Rage duration")
+    @DefaultInt(value = 13, minValue = 1, name = "Vampire Rage Duration", comment = "Standard Vampire Rage duration")
     public int RAGE_MIN_DURATION;
     @DefaultInt(value = 5, minValue = 0, name = "Vampire Rage Duration Increase", comment = "Vampire Rage duration increase per level")
     public int RAGE_DUR_PL;
     @DefaultBoolean(value = true, name = "rage_enabled")
     public boolean RAGE_ENABLED;
+
+    @DefaultInt(value = 1200, minValue = 0, comment = "Sunscreen action cooldown duration")
+    public int SUNSCREEN_COOLDOWN;
+    @DefaultInt(value = 30, minValue = 1, comment = "Sunscreen action duration")
+    public int SUNSCREEN_DURATION;
+    @DefaultBoolean(value = true, name = "sunscreen_enabled")
+    public boolean SUNSCREEN_ENABLED;
 
     @DefaultBoolean(value = true, name = "bat_enabled")
     public boolean BAT_ENABLED;

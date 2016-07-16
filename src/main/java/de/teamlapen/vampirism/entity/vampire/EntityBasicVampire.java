@@ -29,6 +29,7 @@ import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nullable;
 
@@ -40,12 +41,14 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
 
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(EntityBasicVampire.class, DataSerializers.VARINT);
     private final int MAX_LEVEL = 2;
+    private final int ANGRY_TICKS_PER_ATTACK = 120;
     private int bloodtimer = 100;
     private EntityAdvancedVampire advancedLeader = null;
+    private int angryTimer = 0;
 
     public EntityBasicVampire(World world) {
         super(world, true);
-
+        this.canSuckBloodFromPlayer = true;
         hasArms = true;
 
         this.setSize(0.6F, 1.8F);
@@ -53,11 +56,18 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
 
     }
 
+    @Override
+    public boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_) {
+        boolean flag = super.attackEntityFrom(p_70097_1_, p_70097_2_);
+        if (flag) angryTimer += ANGRY_TICKS_PER_ATTACK;
+        return flag;
+    }
 
     @Override
-    public void consumeBlood(int amt, float saturationMod) {
-        super.consumeBlood(amt, saturationMod);
-        bloodtimer += amt * 40 + this.getRNG().nextInt(1000);
+    public void drinkBlood(int amt, float saturationMod) {
+        super.drinkBlood(amt, saturationMod);
+        boolean dedicated = FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer();
+        bloodtimer += amt * 40 + this.getRNG().nextInt(1000) * (dedicated ? 2 : 1);
     }
 
     /**
@@ -80,7 +90,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
 
     @Override
     public boolean getCanSpawnHere() {
-        return super.getCanSpawnHere() && isBrightLightLevel();
+        return super.getCanSpawnHere() && isLowLightLevel();
     }
 
     @Override
@@ -91,6 +101,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     @Override
     public void setLevel(int level) {
         if (level >= 0) {
+            getDataManager().set(LEVEL, level);
             this.updateEntityAttributes();
             if (level == 2) {
                 this.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 1000000, 1));
@@ -100,7 +111,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
             } else {
                 this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, null);
             }
-            getDataManager().set(LEVEL, level);
+
         }
     }
 
@@ -115,10 +126,19 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     }
 
     @Override
+    public boolean isIgnoringSundamage() {
+        float health = this.getHealth() / this.getMaxHealth();
+        return super.isIgnoringSundamage() || angryTimer > 0 && health < 0.7f || health < 0.3f;
+    }
+
+    @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
         if (bloodtimer > 0) {
             bloodtimer--;
+        }
+        if (angryTimer > 0) {
+            angryTimer--;
         }
     }
 
@@ -228,7 +248,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
             ((PathNavigateGround) this.getNavigator()).setBreakDoors(true);
         }
         this.tasks.addTask(2, new EntityAIAvoidEntity<>(this, EntityCreature.class, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, VReference.HUNTER_FACTION), 10, 1.0, 1.1));
-        this.tasks.addTask(2, new EntityAIRestrictSun(this));
+        this.tasks.addTask(2, new VampireAIRestrictSun(this));
         this.tasks.addTask(3, new VampireAIFleeSun(this, 0.9, false));
         this.tasks.addTask(3, new VampireAIFleeGarlic(this, 0.9, false));
         this.tasks.addTask(4, new EntityAIAttackMeleeNoSun(this, 1.0, false));

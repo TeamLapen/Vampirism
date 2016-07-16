@@ -14,7 +14,7 @@ As a vampire you don't need to eat all that dry bread or eat these strange fruit
 ## Links 
 [Minecraft Forum Thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/2364443-vampirism-become-a-vampire)  
 [Downloads](http://minecraft.curseforge.com/mc-mods/233029-vampirism-become-a-vampire/files)  
-~~[Help to translate](https://crowdin.com/project/vampirism)~~ Currently paused
+[Help to translate](https://crowdin.com/project/vampirism)
 
 ## Team [![Join the chat at https://gitter.im/TeamLapen/Vampirism](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TeamLapen/Vampirism?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)  
 - [maxanier](http://maxanier.de) _Code/Models_  
@@ -81,3 +81,6 @@ This mod is licenced under [LGPLv3](https://raw.githubusercontent.com/TeamLapen/
 This mod uses these sounds from freesound:  
 DST-VampireMonk.mp3 by Striderjapan -- http://www.freesound.org/people/Striderjapan/sounds/141368/ -- License: CC Attribution  
 vampire bites by Bernuy -- http://www.freesound.org/people/Bernuy/sounds/268501/ -- License: CC Attribution  
+bow02.ogg by Erdie https://www.freesound.org/people/Erdie/sounds/65734/ -- Licence: CC Attribution
+the swarm v31m3 by Setuniman https://www.freesound.org/people/Setuniman/sounds/130695/ -- Licence: CC Attribution
+Boiling Towel by unfa https://www.freesound.org/people/unfa/sounds/174499/ -- Licence: CC Attribution
