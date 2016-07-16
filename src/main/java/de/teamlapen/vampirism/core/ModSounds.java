@@ -16,6 +16,8 @@ public class ModSounds {
     public static SoundEvent ambient_castle;
     public static SoundEvent block_coffin_lid;
     public static SoundEvent crossbow;
+    public static SoundEvent bat_swarm;
+    public static SoundEvent boiling;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
@@ -34,6 +36,8 @@ public class ModSounds {
         ambient_castle = registerSound("ambient.castle");
         block_coffin_lid = registerSound("coffin_lid");
         crossbow = registerSound("crossbow");
+        bat_swarm = registerSound("bat_swarm");
+        boiling = registerSound("boiling");
     }
 
     private static SoundEvent registerSound(String soundNameIn) {
