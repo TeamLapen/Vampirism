@@ -38,8 +38,7 @@
     "category": "ambient",
     "sounds": [
       {
-        "name": "vampirism:ambient/ghosty_ambient",
-        "stream": true
+        "name": "vampirism:ambient/ghosty_ambient"
       }
     ]
   },
@@ -47,6 +46,12 @@
     "category": "ambient",
     "sounds": [
       "vampirism:fx/coffin_lid_slide"
+    ]
+  },
+  "crossbow": {
+    "category": "player",
+    "sounds": [
+      "vampirism:fx/crossbow"
     ]
   }
 }

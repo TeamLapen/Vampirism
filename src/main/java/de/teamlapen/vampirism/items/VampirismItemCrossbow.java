@@ -7,12 +7,12 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Enchantments;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.ActionResult;
@@ -200,9 +200,10 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
                     }
 
                     world.spawnEntityInWorld(entityarrow);
+                    world.playSound(null, player.posX, player.posY + 0.5, player.posZ, ModSounds.crossbow, SoundCategory.PLAYERS, 1F, world.rand.nextFloat() * 0.1F + 0.9F);
+
                 }
 
-                world.playSound(null, player.posX, player.posY, player.posZ, SoundEvents.ENTITY_ARROW_SHOOT, SoundCategory.NEUTRAL, 1.0F, 1.0F / (itemRand.nextFloat() * 0.4F + 1.2F) + f * 0.5F);
 
                 if (consumeArrow) {
                     --itemstack.stackSize;
