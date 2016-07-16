@@ -38,6 +38,11 @@ public interface IBloodPotionRegistry {
     String CATEGORY_SPECIAL_VAMPIRE_SKILL = "svs";
 
     /**
+     * Special other effects
+     */
+    String CATEGORY_SPECIAL_OTHERS = "so";
+
+    /**
      * Retrieves the potion effect for the given id if registered
      */
     @Nullable
