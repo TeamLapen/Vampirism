@@ -44,7 +44,7 @@ public class ModBlocksRender {
 
     private static void registerRenderer() {
         InventoryRenderHelper renderHelper = new InventoryRenderHelper(REFERENCE.MODID);
-        renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.castleBlock), BlockCastleBlock.types);
+        renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.castleBlock), BlockCastleBlock.EnumType.values());
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.altarPillar), BlockAltarPillar.EnumPillarType.values());
         renderHelper.registerRender(ModBlocks.altarTip);
         renderHelper.registerRender(ModBlocks.altarInfusion);

@@ -44,9 +44,6 @@ public class Helper {
                     if (angle > 0.78 || angle < 0.24) {
                         BlockPos pos = new BlockPos(entity.posX + 0.5, entity.posY + 0, entity.posZ + 0.5);
 
-                        if (entity instanceof EntityPlayer)
-                            VampirismMod.log.t("sky %s %b", pos, entity.worldObj.canBlockSeeSky(pos));
-
                         if (entity.worldObj.canBlockSeeSky(pos)) {
                             ResourceLocation biomeID = null;
                             try {

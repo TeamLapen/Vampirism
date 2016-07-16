@@ -5,7 +5,7 @@
     "uvlock": true
   },
   "variants": {
-    "type": {
+    "variant": {
       "dark_brick": {
         "textures": {
           "all": "vampirism:blocks/castleBlock_darkBrick"
