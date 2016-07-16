@@ -42,9 +42,12 @@ public class Helper {
                     float angle = entity.worldObj.getCelestialAngle(1.0F);
                     //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
                     if (angle > 0.78 || angle < 0.24) {
-                        BlockPos pos = new BlockPos(entity.posX + 0.5, entity.posY + 0.3, entity.posZ + 0.5);
-                        if (entity.worldObj.canBlockSeeSky(pos)) {
+                        BlockPos pos = new BlockPos(entity.posX + 0.5, entity.posY + 0, entity.posZ + 0.5);
 
+                        if (entity instanceof EntityPlayer)
+                            VampirismMod.log.t("sky %s %b", pos, entity.worldObj.canBlockSeeSky(pos));
+
+                        if (entity.worldObj.canBlockSeeSky(pos)) {
                             ResourceLocation biomeID = null;
                             try {
                                 biomeID = entity.worldObj.getBiomeGenForCoords(pos).getRegistryName();
