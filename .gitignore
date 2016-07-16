@@ -27,3 +27,4 @@ server.properties
 usercache.json
 whitelist.json
 hs*
+.directory
