@@ -2,14 +2,18 @@ package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.inventory.BloodPotionTableContainer;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.client.audio.ISound;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -22,6 +26,7 @@ public class GuiBloodPotionTable extends GuiContainer {
     private final ResourceLocation TABLE_GUI_TEXTURES = new ResourceLocation(REFERENCE.MODID, "textures/gui/blood_potion_table.png");
     private final BloodPotionTableContainer container;
     private GuiButton craftBtn;
+    private ISound sound;
 
     public GuiBloodPotionTable(InventoryPlayer playerInv, BlockPos pos, World world) {
         super(new BloodPotionTableContainer(playerInv, pos, world));
@@ -36,9 +41,21 @@ public class GuiBloodPotionTable extends GuiContainer {
     }
 
     @Override
+    public void onGuiClosed() {
+        super.onGuiClosed();
+        stopSound();
+
+    }
+
+    @Override
     public void updateScreen() {
         super.updateScreen();
         this.craftBtn.enabled = container.canCurrentlyStartCrafting();
+        if (container.getCraftingPercentage() == 0 || container.getCraftingPercentage() == 1) {
+            stopSound();
+        } else {
+            startSound();
+        }
     }
 
     @Override
@@ -83,6 +100,20 @@ public class GuiBloodPotionTable extends GuiContainer {
                 this.fontRendererObj.drawSplitString(hint, i + 5, j + 28, 92, java.awt.Color.WHITE.getRGB());
                 j += this.fontRendererObj.splitStringWidth(hint, 92);
             }
+        }
+    }
+
+    private void startSound() {
+        if (sound == null) {
+            sound = new PositionedSoundRecord(ModSounds.boiling, SoundCategory.BLOCKS, 1, 1, container.getBlockPos());
+            this.mc.getSoundHandler().playSound(sound);
+        }
+    }
+
+    private void stopSound() {
+        if (sound != null) {
+            this.mc.getSoundHandler().stopSound(sound);
+            sound = null;
         }
     }
 }

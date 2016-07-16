@@ -43,7 +43,7 @@
     ]
   },
   "coffin_lid": {
-    "category": "ambient",
+    "category": "block",
     "sounds": [
       "vampirism:fx/coffin_lid_slide"
     ]
@@ -52,6 +52,18 @@
     "category": "player",
     "sounds": [
       "vampirism:fx/crossbow"
+    ]
+  },
+  "bat_swarm": {
+    "category": "player",
+    "sounds": [
+      "vampirism:fx/bat_swarm"
+    ]
+  },
+  "boiling": {
+    "category": "block",
+    "sounds": [
+      "vampirism:fx/boiling"
     ]
   }
 }

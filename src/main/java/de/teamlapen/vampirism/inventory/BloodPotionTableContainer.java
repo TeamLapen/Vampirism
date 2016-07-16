@@ -100,8 +100,12 @@ public class BloodPotionTableContainer extends Container {
         this.prevCraftingTimer = craftingTimer;
     }
 
+    public BlockPos getBlockPos() {
+        return pos;
+    }
+
     /**
-     * @return The current crafting progress in percent
+     * @return The current crafting progress in 0..1
      */
     public float getCraftingPercentage() {
         return craftingTimer == 0 ? 0 : (1F - craftingTimer / (float) max_crafting_time);
