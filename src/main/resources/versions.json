@@ -2,24 +2,27 @@
   "comment": "Stores version info and changelog",
   "homepage": "https://maxanier.de/projects/vampirism",
   "promos": {
-    "1.10.2-latest": "1.0.0-Alpha+07-04-22-58",
-    "1.10.2-recommend": "1.0.0-Alpha+07-04-22-58",
-    "1.10-latest": "1.0.0-Alpha+07-04-22-58",
-    "1.10-recommend": "1.0.0-Alpha+07-04-22-58",
-    "1.9.4-latest": "1.0.0-Alpha+06-26-19-50",
-    "1.9.4-recommended": "1.0.0-Alpha+06-26-19-50",
+    "1.10.2-latest": "1.0.0-Alpha+07-16-13-04",
+    "1.10.2-recommend": "1.0.0-Alpha+07-16-13-04",
+    "1.10-latest": "1.0.0-Alpha+07-16-13-04",
+    "1.10-recommend": "1.0.0-Alpha+07-16-13-04",
+    "1.9.4-latest": "1.0.0-Alpha+07-16-13-22",
+    "1.9.4-recommended": "1.0.0-Alpha+07-16-13-22",
     "1.9-latest": "1.0.0-Alpha+05-28-10-58",
     "1.9-recommended": "1.0.0-Alpha+05-28-10-58"
   },
   "1.10.2": {
+    "1.0.0-Alpha+07-16-13-04": "+Added a few sound effects\n+Added particle effect to teleport action\n+Fixed major bug in relation to NPC balancing, might make them really strong now\n+Fixed vampire players having half hearts\n+Added sunscreen beacon for server admins and testers\n+Changed blood bottle usage animation\n+Balancing\n+Moar fixes",
     "1.0.0-Alpha+07-04-22-58": "Bugfixes\nUpdate to 1.10.2"
   },
   "1.10": {
+    "1.0.0-Alpha+07-16-13-04": "+Added a few sound effects\n+Added particle effect to teleport action\n+Fixed major bug in relation to NPC balancing, might make them really strong now\n+Fixed vampire players having half hearts\n+Added sunscreen beacon for server admins and testers\n+Changed blood bottle usage animation\n+Balancing\n+Moar fixes",
     "1.0.0-Alpha+07-04-22-58": "Bugfixes\nUpdate to 1.10.2",
     "1.0.0-Alpha+06-26-19-33": "Added recipe for stake\nFixed vampire AI a little bit\nVampires now only spawn in dark areas\nMinor changes",
     "1.0.0-Alpha+06-25-00-29": "Updated to 1.10"
   },
   "1.9.4": {
+    "1.0.0-Alpha+07-16-13-22": "+Added a few sound effects\n+Added particle effect to teleport action\n+Fixed major bug in relation to NPC balancing, might make them really strong now\n+Fixed vampire players having half hearts\n+Added sunscreen beacon for server admins and testers\n+Changed blood bottle usage animation\n+Balancing\n+Moar fixes",
     "1.0.0-Alpha+06-26-19-50": "Added recipe for stake\nFixed vampire AI a little bit\nVampires now only spawn in dark areas\nMinor changes",
     "1.0.0-Alpha+06-25-00-29": "Added player hunter leveling between 2 and 5\nAdded several hunter skills including blood potions and weapon tables\nAdded crossbows as hunter wepons\nBugfixes",
     "1.0.0-Alpha+05-28-10-48": "Fixed crash",
@@ -34,14 +37,17 @@
   },
   "downloads": {
     "1.10.2": {
+      "1.0.0-Alpha+07-16-13-04": "http://minecraft.curseforge.com/projects/vampirism-become-a-vampire/files/2316368/download",
       "1.0.0-Alpha+07-04-22-58": "http://minecraft.curseforge.com/projects/vampirism-become-a-vampire/files/2313283/download"
     },
     "1.10": {
+      "1.0.0-Alpha+07-16-13-04": "http://minecraft.curseforge.com/projects/vampirism-become-a-vampire/files/2316368/download",
       "1.0.0-Alpha+07-04-22-58": "http://minecraft.curseforge.com/projects/vampirism-become-a-vampire/files/2313283/download",
       "1.0.0-Alpha+06-26-19-33": "http://minecraft.curseforge.com/projects/vampirism-become-a-vampire/files/2310795/download",
       "1.0.0-Alpha+06-25-00-29": "http://minecraft.curseforge.com/projects/vampirism-become-a-vampire/files/2310245"
     },
     "1.9.4": {
+      "1.0.0-Alpha+07-16-13-22": "http://minecraft.curseforge.com/projects/vampirism-become-a-vampire/files/2316385/download",
       "1.0.0-Alpha+06-26-19-50": "http://minecraft.curseforge.com/projects/vampirism-become-a-vampire/files/2310805/download",
       "1.0.0-Alpha+06-25-00-29": "http://minecraft.curseforge.com/projects/vampirism-become-a-vampire/files/2310245/download",
       "1.0.0-Alpha+05-28-10-48": "http://minecraft.curseforge.com/projects/vampirism-become-a-vampire/files/2303363/download",
