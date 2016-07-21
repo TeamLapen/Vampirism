@@ -84,11 +84,9 @@ public class EntityEventHandler {
 
     @SubscribeEvent
     public void onPlayerClone(PlayerEvent.Clone event) {
-        if (event.isWasDeath()) {
             for (int i = 0; i < listeners.length; i++) {
-                ((IPlayerEventListener) event.getEntity().getCapability(listeners[i], null)).onPlayerClone(event.getOriginal());
+                ((IPlayerEventListener) event.getEntity().getCapability(listeners[i], null)).onPlayerClone(event.getOriginal(), event.isWasDeath());
             }
-        }
 
     }
 
