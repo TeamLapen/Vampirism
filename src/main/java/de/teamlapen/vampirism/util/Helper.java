@@ -37,6 +37,7 @@ public class Helper {
     public static boolean gettingSundamge(EntityLivingBase entity) {
         if (entity.worldObj != null) {
             entity.worldObj.theProfiler.startSection("vampirism_checkSundamage");
+            if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isSpectator()) return false;
             if (VampirismAPI.sundamageRegistry().getSundamageInDim(entity.worldObj.provider.getDimension())) {
                 if (!entity.worldObj.isRaining()) {
                     float angle = entity.worldObj.getCelestialAngle(1.0F);

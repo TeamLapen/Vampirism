@@ -97,7 +97,7 @@ public class ModKeys {
         // get value here!
         if (keyPressed == KEY.SUCK) {
             RayTraceResult mouseOver = Minecraft.getMinecraft().objectMouseOver;
-            if (mouseOver != null && mouseOver.entityHit != null) {
+            if (mouseOver != null && mouseOver.entityHit != null && !Minecraft.getMinecraft().thePlayer.isSpectator()) {
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + mouseOver.entityHit.getEntityId()));
             }
         } else if (keyPressed == KEY.ACTION) {

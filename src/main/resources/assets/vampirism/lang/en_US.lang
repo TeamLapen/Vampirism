@@ -95,7 +95,7 @@ entity.vampirism.dracula.name=Dracula
 entity.vampirism.dead_mob.name=Dead mob
 entity.vampirism.portal_guard.name=Portal Guard
 entity.vampirism.converted.villager.name=Vampire Villager
-entity.vampirism.entity_level=2
+entity.vampirism.entity_level=Level
 
 #RITUALS
 text.vampirism.ritual_missing_items=Missing %s of "%s" for this ritual
@@ -290,7 +290,7 @@ text.vampirism.garlic_weapons=This weapon is coated with garlic and poisons vamp
 text.vampirism.no_dracula_to_call=Dracula is dead and cannot be called
 text.vampirism.outdated=You are running Vampirism %s, the latest version is %s.
 text.vampirism.update_message=["Click for... [",{"text":"Download","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the download page","color":"green"}},"clickEvent":{"action":"open_url","value":"@download@"}},"] [",{"text":"Website","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the mod's forum page","color":"green"}},"clickEvent":{"action":"open_url","value":"@forum@"}},"] [",{"text":"Changelog","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this see the version's Changelog","color":"green"}},"clickEvent":{"action":"run_command","value":"/vampirism changelog"}},"]"]
-text.vampirism.action.cooldown_not_over=Cooldown is not finished yet
+text.vampirism.action.cooldown_not_over=Cooldown is not over yet
 
 #MINION COMMANDS
 minioncommand.vampirism.attackhostilenoplayers=Attack hostile

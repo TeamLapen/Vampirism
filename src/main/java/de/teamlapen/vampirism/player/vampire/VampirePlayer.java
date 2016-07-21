@@ -186,6 +186,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      */
     public void biteEntity(int entityId) {
         Entity e = player.worldObj.getEntityByID(entityId);
+        if (player.isSpectator()) {
+            VampirismMod.log.w(TAG, "Player can't bite in spectator mode");
+            return;
+        }
         if (e != null && e instanceof EntityLivingBase) {
             if (e.getDistanceToEntity(player) <= ((EntityPlayerMP) player).interactionManager.getBlockReachDistance() + 2) {
                 biteEntity((EntityLivingBase) e);
@@ -197,7 +201,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public boolean canBeBitten(IVampire biter) {
-        return true;
+        return !(player.isSpectator() || player.isCreative());
     }
 
     @Override
