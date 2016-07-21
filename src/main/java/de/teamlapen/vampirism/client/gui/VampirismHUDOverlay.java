@@ -107,7 +107,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
         if (p != null && p.typeOfHit == RayTraceResult.Type.ENTITY && p.entityHit != null) {
             IVampirePlayer player = VampirePlayer.get(mc.thePlayer);
-            if (player.getLevel() > 0) {
+            if (player.getLevel() > 0 && !mc.thePlayer.isSpectator()) {
                 Entity entity = p.entityHit;
                 IBiteableEntity biteable = null;
                 if (entity instanceof EntityCreature) {
