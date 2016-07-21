@@ -102,7 +102,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
     }
 
     @Override
-    public void onPlayerClone(EntityPlayer original) {
+    public void onPlayerClone(EntityPlayer original, boolean wasDeath) {
         copyFrom(original);
     }
 

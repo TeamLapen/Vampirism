@@ -25,7 +25,7 @@ public interface IPlayerEventListener {
 
     void onJoinWorld();
 
-    void onPlayerClone(EntityPlayer original);
+    void onPlayerClone(EntityPlayer original, boolean wasDeath);
 
     void onPlayerLoggedIn();
 
