@@ -61,6 +61,7 @@ public class RenderHandler {
     private EntityBat entityBat;
     private int vampireBiomeTicks = 0;
     private int bloodVisionTicks = 0;
+    private float vampireBiomeFogDistanceMultiplier = 1;
 
     private boolean doShaders = true;
 
@@ -77,7 +78,8 @@ public class RenderHandler {
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (mc.theWorld == null) return;
         if (event.phase == TickEvent.Phase.END) return;
-        if (VampirePlayer.get(mc.thePlayer).getSpecialAttributes().blood_vision && !VampirePlayer.get(mc.thePlayer).isGettingSundamage()) {
+        VampirePlayer vampire = VampirePlayer.get(mc.thePlayer);
+        if (vampire.getSpecialAttributes().blood_vision && !VampirePlayer.get(mc.thePlayer).isGettingSundamage()) {
 
             if (bloodVisionTicks < BLOOD_VISION_FADE_TICKS) {
                 bloodVisionTicks++;
@@ -102,6 +104,7 @@ public class RenderHandler {
             if (vampireBiomeTicks < VAMPIRE_BIOME_FADE_TICKS) {
                 vampireBiomeTicks++;
             }
+            vampireBiomeFogDistanceMultiplier = vampire.getSpecialAttributes().increasedVampireFogDistance ? 2 : 1;
         } else {
             if (vampireBiomeTicks > 0) {
                 vampireBiomeTicks--;
@@ -349,13 +352,14 @@ public class RenderHandler {
     private void renderVampireBiomeFog(int ticks) {
 
         float f = ((float) VAMPIRE_BIOME_FADE_TICKS) / (float) ticks / 1.5F;
+        f *= vampireBiomeFogDistanceMultiplier;
         GlStateManager.pushMatrix();
         boolean fog = GL11.glIsEnabled(GL11.GL_FOG);
         if (!fog)
             GlStateManager.enableFog();
         GlStateManager.setFog(GlStateManager.FogMode.LINEAR);
-        GlStateManager.setFogStart(15.0F * f);
-        GlStateManager.setFogEnd(50F * f);
+        GlStateManager.setFogStart(6.0F * f);
+        GlStateManager.setFogEnd(75F * f);
         GlStateManager.glNormal3f(0F, -1F, 0F);
         GlStateManager.color(1F, 1F, 1F, 1F);
         GlStateManager.setFogDensity(1);

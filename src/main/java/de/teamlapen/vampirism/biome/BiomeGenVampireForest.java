@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.biome;
 
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.VampirismFlower;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
@@ -99,7 +98,6 @@ public class BiomeGenVampireForest extends Biome {
 
         @Override
         public boolean generate(World worldIn, Random rand, BlockPos position) {
-            VampirismMod.log.t("Gen");
             for (int i = 0; i < 64; ++i) {
                 BlockPos blockpos = position.add(rand.nextInt(8) - rand.nextInt(8), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(8) - rand.nextInt(8));
 

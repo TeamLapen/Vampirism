@@ -184,6 +184,8 @@ public class VampireSkills {
             }
         };
         SkillNode skill2 = new SkillNode(skill1, bite, bite2);
+        SkillNode skill3 = new SkillNode(skill2, new ActionSkill<>(VampireActions.freezeAction, "1freeze"));
+
         //TODO add lighting or so
 
     }
@@ -289,8 +291,18 @@ public class VampireSkills {
                 ((VampirePlayer) player).getSpecialAttributes().avoided_by_creepers = true;
             }
         });
+        SkillNode skill5 = new SkillNode(skill4, new VampirismSkill.SimpleVampireSkill("1forestfog", 0, 48, true) {
+            @Override
+            protected void onDisabled(IVampirePlayer player) {
+                ((VampirePlayer) player).getSpecialAttributes().increasedVampireFogDistance = false;
+            }
 
-        SkillNode skill5 = new SkillNode(skill4, new ActionSkill<>(VampireActions.freezeAction, "1freeze"));
+            @Override
+            protected void onEnabled(IVampirePlayer player) {
+                ((VampirePlayer) player).getSpecialAttributes().increasedVampireFogDistance = true;
+
+            }
+        });
         SkillNode skill6 = new SkillNode(skill5, new ActionSkill<>(VampireActions.teleportAction, "1teleport"));
 
 

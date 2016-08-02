@@ -21,6 +21,8 @@ text.vampirism.skill.less_garlicdamage=Reduce garlic damage
 text.vampirism.skill.less_sundamage=Reduce sun damage
 text.vampirism.skill.night_vision=Night Vision
 text.vampirism.skill.disguise=Disguise
+text.vampirism.skill.1forestfog=Vista
+text.vampirism.skill.1forestfog.desc=Increase the fog distance in the Vampire Forest
 
 #VAMPIRE ACTIONS
 action.vampirism.cancel=Cancel
@@ -95,7 +97,7 @@ entity.vampirism.dracula.name=Dracula
 entity.vampirism.dead_mob.name=Dead mob
 entity.vampirism.portal_guard.name=Portal Guard
 entity.vampirism.converted.villager.name=Vampire Villager
-entity.vampirism.entity_level=Level
+text.vampirism.entity_level=Level
 
 #RITUALS
 text.vampirism.ritual_missing_items=Missing %s of "%s" for this ritual
