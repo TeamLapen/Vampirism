@@ -155,6 +155,19 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
         @Nullable
         @Override
         public ItemStack getCraftingResult(InventoryCrafting inv) {
+            for (int i = 0; i < inv.getHeight(); ++i) {
+                for (int j = 0; j < inv.getWidth(); ++j) {
+                    ItemStack itemstack = inv.getStackInRowAndColumn(j, i);
+
+                    if (itemstack != null) {
+                        if (this.crossbowItem.equals(itemstack.getItem())) {
+                            ItemStack result = loadedCrossbow.copy();
+                            result.setItemDamage(itemstack.getItemDamage());
+                            return result;
+                        }
+                    }
+                }
+            }
             return loadedCrossbow.copy();
         }
 
