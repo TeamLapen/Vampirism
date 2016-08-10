@@ -47,6 +47,7 @@ import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.util.GeneralRegistryImpl;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SupporterManager;
+import de.teamlapen.vampirism.util.VampireBookManager;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import de.teamlapen.vampirism.world.villages.VampirismVillageCollection;
 import net.minecraft.block.material.Material;
@@ -143,6 +144,7 @@ public class VampirismMod {
         HelperRegistry.registerSyncablePlayerCapability(FactionPlayerHandler.CAP, REFERENCE.FACTION_PLAYER_HANDLER_KEY, FactionPlayerHandler.class);
         Achievements.registerAchievement();
         SupporterManager.getInstance().initAsync();
+        VampireBookManager.getInstance().init();
         BloodPotions.register();
         proxy.onInitStep(IInitListener.Step.INIT, event);
         modCompatLoader.onInitStep(IInitListener.Step.INIT, event);

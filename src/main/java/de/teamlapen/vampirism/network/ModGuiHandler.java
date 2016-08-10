@@ -6,8 +6,12 @@ import de.teamlapen.vampirism.inventory.BloodPotionTableContainer;
 import de.teamlapen.vampirism.inventory.HunterBasicContainer;
 import de.teamlapen.vampirism.inventory.HunterTrainerContainer;
 import de.teamlapen.vampirism.inventory.HunterWeaponTableContainer;
+import de.teamlapen.vampirism.items.ItemVampireBook;
 import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
+import net.minecraft.client.gui.GuiScreenBook;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.network.IGuiHandler;
@@ -25,6 +29,7 @@ public class ModGuiHandler implements IGuiHandler {
     public final static int ID_WEAPON_TABLE = 6;
     public final static int ID_BLOOD_POTION_TABLE = 7;
     public final static int ID_HUNTER_BASIC = 8;
+    public final static int ID_VAMPIRE_BOOK = 9;
 
     @Override
     public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
@@ -50,6 +55,11 @@ public class ModGuiHandler implements IGuiHandler {
                 return new GuiBloodPotionTable(player.inventory, new BlockPos(x, y, z), world);
             case ID_HUNTER_BASIC:
                 return new GuiHunterBasic(player);
+            case ID_VAMPIRE_BOOK:
+                ItemStack itemStack = player.getHeldItem(EnumHand.MAIN_HAND);
+                if (itemStack != null && itemStack.getItem() instanceof ItemVampireBook) {
+                    return new GuiScreenBook(player, itemStack, false);
+                }
             default:
                 return null;
         }
