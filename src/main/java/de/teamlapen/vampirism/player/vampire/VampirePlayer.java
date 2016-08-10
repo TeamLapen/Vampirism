@@ -612,7 +612,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (phase == TickEvent.Phase.END) {
             //Update blood stats
             if (getLevel() > 0) {
-                if (this.bloodStats.onUpdate()) {
+                if (!player.worldObj.isRemote && this.bloodStats.onUpdate()) {
                     sync(this.bloodStats.writeUpdate(new NBTTagCompound()), false);
                 }
             }

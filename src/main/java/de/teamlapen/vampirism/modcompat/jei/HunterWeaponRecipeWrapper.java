@@ -39,7 +39,7 @@ public abstract class HunterWeaponRecipeWrapper extends BlankRecipeWrapper {
         }
         int x = 2;
         int y = 80;
-        if (recipe.getMinHunterLevel() > 0) {
+        if (recipe.getMinHunterLevel() > 1) {
             String level = UtilLib.translateToLocalFormatted("gui.vampirism.hunter_weapon_table.level", recipe.getMinHunterLevel());
 
             minecraft.fontRendererObj.drawString(level, x, y, Color.gray.getRGB());

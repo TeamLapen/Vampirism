@@ -52,5 +52,6 @@ public class ModItemsRender {
         renderHelper.registerRender(ModItems.basicTechCrossbow, "normal");
         renderHelper.registerRender(ModItems.enhancedTechCrossbow, "normal");
         renderHelper.registerRender(ModItems.techCrossbowAmmoPackage, "normal");
+        renderHelper.registerRender(ModItems.vampireBook, "normal");
     }
 }

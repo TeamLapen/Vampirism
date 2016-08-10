@@ -44,6 +44,7 @@ public class ModItems {
     public static ItemTechCrossbow basicTechCrossbow;
     public static ItemTechCrossbow enhancedTechCrossbow;
     public static VampirismItem techCrossbowAmmoPackage;
+    public static ItemVampireBook vampireBook;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
@@ -112,6 +113,7 @@ public class ModItems {
         basicTechCrossbow = registerItem(new ItemTechCrossbow("basicTechCrossbow", 1.6F, 6, 300));
         enhancedTechCrossbow = registerItem(new ItemTechCrossbow("enhancedTechCrossbow", 1.7F, 4, 450));
         techCrossbowAmmoPackage = registerItem(new VampirismItem("techCrossbowAmmoPackage"));
+        vampireBook = registerItem(new ItemVampireBook());
     }
 
     private static <T extends Item> T registerItem(T item) {
