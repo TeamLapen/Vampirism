@@ -1,0 +1,46 @@
+{
+  "pools": [
+    {
+      "name": "main",
+      "rolls": 7,
+      "entries": [
+        {
+          "type": "item",
+          "name": "vampirism:vampireFang",
+          "weight": 35
+        },
+        {
+          "type": "item",
+          "name": "vampirism:bloodBottle",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "set_data",
+              "data": 9
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "book",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "vampirism:vampireBook",
+          "weight": 70,
+          "functions": [
+            {
+              "function": "vampirism:add_book_nbt"
+            }
+          ]
+        },
+        {
+          "type": "empty",
+          "weight": 30
+        }
+      ]
+    }
+  ]
+}

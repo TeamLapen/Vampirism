@@ -7,24 +7,16 @@
   "variants": {
     "type": {
       "none": {
-        "textures": {
-          "all": "vampirism:blocks/castleBlock_darkBrick"
-        }
+
       },
       "gold": {
-        "textures": {
-          "all": "vampirism:blocks/castleBlock_darkBrickBloody"
-        }
       },
       "iron": {
-        "textures": {
-          "all": "vampirism:blocks/castleBlock_purpleBrick"
-        }
       },
       "stone": {
-        "textures": {
-          "all": "vampirism:blocks/castleBlock_purpleBrick"
-        }
+      },
+      "bone": {
+
       }
     }
   }

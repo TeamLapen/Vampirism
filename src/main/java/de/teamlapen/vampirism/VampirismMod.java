@@ -49,6 +49,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SupporterManager;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
+import de.teamlapen.vampirism.world.loot.LootHandler;
 import de.teamlapen.vampirism.world.villages.VampirismVillageCollection;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
@@ -61,10 +62,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -134,6 +132,8 @@ public class VampirismMod {
         MinecraftForge.EVENT_BUS.register(new ModPlayerEventHandler());
 
         MinecraftForge.EVENT_BUS.register(new ModEntityEventHandler());
+        MinecraftForge.EVENT_BUS.register(LootHandler.getInstance());
+
 
         GameRegistry.registerWorldGenerator(new VampirismWorldGen(), 1000);
         HelperRegistry.registerPlayerEventReceivingCapability(VampirePlayer.CAP, VampirePlayer.class);
@@ -155,6 +155,15 @@ public class VampirismMod {
     public void onServerStart(FMLServerStartingEvent event) {
         event.registerServerCommand(new VampirismCommand());
         event.registerServerCommand(new TestCommand());
+    }
+
+    @Mod.EventHandler
+    public void onServerStarted(FMLServerStartedEvent event) {
+        if (!LootHandler.getInstance().didInjectAll()) {
+            VampirismMod.log.w("LootTables", "-------------------------------");
+            VampirismMod.log.w("LootTables", "Failed to inject all loottables");
+            VampirismMod.log.w("LootTables", "-------------------------------");
+        }
     }
 
     @Mod.EventHandler

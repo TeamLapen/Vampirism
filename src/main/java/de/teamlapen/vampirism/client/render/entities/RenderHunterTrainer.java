@@ -30,6 +30,11 @@ public class RenderHunterTrainer extends RenderBiped<EntityHunterTrainer> {
     }
 
     @Override
+    protected void renderLivingLabel(EntityHunterTrainer entityIn, String str, double x, double y, double z, int maxDistance) {
+        super.renderLivingLabel(entityIn, str, x, y, z, maxDistance / 4);
+    }
+
+    @Override
     protected void renderModel(EntityHunterTrainer entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float partTicks) {
         super.renderModel(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, partTicks);
         bindTexture(textureExtra);
