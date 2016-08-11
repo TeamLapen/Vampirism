@@ -18,7 +18,6 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
@@ -50,7 +49,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
 
     private final static String TAG = "TEAltarInfusion";
     private static final Item[] items = new Item[]{
-            ModItems.pureBlood, ModItems.humanHeart, Items.APPLE
+            ModItems.pureBlood, ModItems.humanHeart, ModItems.vampireBook
     };
     private final int DURATION_TICK = 450;
     /**
@@ -69,15 +68,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
     private int targetLevel;
 
     public TileAltarInfusion() {
-        super(new InventorySlot[]{new InventorySlot(items[0], 44, 34), new InventorySlot(items[1], 80, 34), new InventorySlot(new InventorySlot.IItemSelector() {
-
-
-            @Override
-            public boolean isItemAllowed(ItemStack item) {
-                // Placeholder
-                return false;
-            }
-        }, 116, 34)});
+        super(new InventorySlot[]{new InventorySlot(items[0], 44, 34), new InventorySlot(items[1], 80, 34), new InventorySlot(items[2], 116, 34)});
     }
 
     /**
@@ -112,7 +103,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
 
     @Override
     public String getName() {
-        return "block.vampirism.bloodAltarTier4.name";
+        return "tile.vampirism.altarInfusion.name";
     }
 
     /**
@@ -311,34 +302,34 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         ItemStack missing = null;
         switch (newLevel) {
             case 5:
-                missing = checkAndRemoveItems(0, 0, 5, 0);
+                missing = checkAndRemoveItems(0, 0, 5, 1);
                 break;
             case 6:
-                missing = checkAndRemoveItems(0, 1, 0, 0);
+                missing = checkAndRemoveItems(0, 1, 5, 1);
                 break;
             case 7:
-                missing = checkAndRemoveItems(0, 1, 5, 0);
+                missing = checkAndRemoveItems(0, 1, 10, 1);
                 break;
             case 8:
-                missing = checkAndRemoveItems(1, 1, 0, 0);
+                missing = checkAndRemoveItems(1, 1, 10, 1);
                 break;
             case 9:
-                missing = checkAndRemoveItems(1, 1, 5, 0);
+                missing = checkAndRemoveItems(1, 1, 10, 1);
                 break;
             case 10:
-                missing = checkAndRemoveItems(2, 1, 5, 0);
+                missing = checkAndRemoveItems(2, 1, 15, 1);
                 break;
             case 11:
-                missing = checkAndRemoveItems(2, 1, 10, 0);
+                missing = checkAndRemoveItems(2, 1, 15, 1);
                 break;
             case 12:
-                missing = checkAndRemoveItems(3, 1, 10, 0);
+                missing = checkAndRemoveItems(3, 1, 20, 1);
                 break;
             case 13:
-                missing = checkAndRemoveItems(3, 2, 0, 0);
+                missing = checkAndRemoveItems(3, 2, 20, 1);
                 break;
             case 14:
-                missing = checkAndRemoveItems(4, 2, 0, 0);
+                missing = checkAndRemoveItems(4, 2, 25, 1);
                 break;
             default:
                 VampirismMod.log.w(TAG, "Checking for level %d, but this altar cannot be used at that level", newLevel);
@@ -397,13 +388,14 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
                 }
             }
 
-            int value = Math.min(j, 3) * (type == null ? 0 : type.getValue());
+            int value = (int) (10 * Math.min(j, 3) * (type == null ? 0 : type.getValue()));
             valuedTips[i] = new ValuedObject<>(tips[i], value);
         }
         Arrays.sort(valuedTips, ValuedObject.<BlockPos>getInvertedComparator());
         int found = 0;
         int i = 0;
-        while (found < required && i < valuedTips.length && i < 9) {
+        //Valued tips are multiplied by 10, so have to multiply required with 10 as well
+        while (found < required * 10 && i < valuedTips.length && i < 9) {
             int v = valuedTips[i].value;
             if (v == 0) break;
             found += v;
@@ -412,7 +404,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         valuedTips = Arrays.copyOfRange(valuedTips, 0, i);
         this.tips = ValuedObject.extract(BlockPos.class, valuedTips);
 
-        return found >= required;
+        return found >= required * 10;
 
     }
 

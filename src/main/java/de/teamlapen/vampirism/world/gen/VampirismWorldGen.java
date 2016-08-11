@@ -18,9 +18,11 @@ import java.util.Random;
  */
 public class VampirismWorldGen implements IWorldGenerator {
     private final WorldGenHunterCamp hunterCamp;
+    private final WorldGenVampireDungeon vampireDungeon;
 
     public VampirismWorldGen() {
         this.hunterCamp = new WorldGenHunterCamp();
+        this.vampireDungeon = new WorldGenVampireDungeon();
     }
 
     @Override
@@ -50,30 +52,40 @@ public class VampirismWorldGen implements IWorldGenerator {
     }
 
     public void generateOverworld(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
-        boolean generatedStructure = false;
         boolean mapFeatures = world.getWorldInfo().isMapFeaturesEnabled();
         Biome biome = world.getBiomeGenForCoords(new BlockPos((chunkX << 4) + 8, 0, (chunkZ << 4) + 8));
-        if (!generatedStructure && mapFeatures && !ModBiomes.vampireForest.getRegistryName().equals(biome.getRegistryName())) {
-            int chance = random.nextInt(1000);
-            int trees = biome.theBiomeDecorator.treesPerChunk;
-            float bh = biome.getBaseHeight() + biome.getHeightVariation();
-            float prop = 1;
-            prop += Math.min(trees, 8);
-            prop += bh * 3;
+        if (mapFeatures) {
+            if (!ModBiomes.vampireForest.getRegistryName().equals(biome.getRegistryName())) {
+                int chance = random.nextInt(1000);
+                int trees = biome.theBiomeDecorator.treesPerChunk;
+                float bh = biome.getBaseHeight() + biome.getHeightVariation();
+                float prop = 1;
+                prop += Math.min(trees, 8);
+                prop += bh * 3;
 
-            if (biome instanceof BiomePlains) prop *= 0.8F;
+                if (biome instanceof BiomePlains) prop *= 0.8F;
 
-            if (world.getWorldType().equals(WorldType.FLAT)) {
-                prop = 0.2F;
-            }
-            if (chance < Balance.general.HUNTER_CAMP_SPAWN_CHANCE * prop) {
-                BlockPos pos = new BlockPos((chunkX << 4), 0, (chunkZ << 4));
-                pos = world.getHeight(pos);
-                float temp = biome.getFloatTemperature(pos);
-                if (hunterCamp.isValidTemperature(temp) && world.getVillageCollection().getNearestVillage(pos, 20) == null) {
-                    generatedStructure = hunterCamp.generate(world, random, pos.up());
+                if (world.getWorldType().equals(WorldType.FLAT)) {
+                    prop = 0.2F;
+                }
+                if (chance < Balance.general.HUNTER_CAMP_SPAWN_CHANCE * prop) {
+                    BlockPos pos = new BlockPos((chunkX << 4), 0, (chunkZ << 4));
+                    pos = world.getHeight(pos);
+                    float temp = biome.getFloatTemperature(pos);
+                    if (hunterCamp.isValidTemperature(temp) && world.getVillageCollection().getNearestVillage(pos, 20) == null) {
+                        hunterCamp.generate(world, random, pos.up());
+                    }
                 }
             }
+            for (int j2 = 0; j2 < 5; ++j2) {
+                BlockPos pos = new BlockPos((chunkX << 4), 0, (chunkZ << 4));
+                int i3 = random.nextInt(16) + 8;
+                int l3 = random.nextInt(256);
+                int l1 = random.nextInt(16) + 8;
+                (vampireDungeon).generate(world, random, pos.add(i3, l3, l1));
+            }
+
+
         }
 
 

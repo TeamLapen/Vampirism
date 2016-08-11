@@ -22,6 +22,11 @@
         "textures": {
           "filler": "blocks/stonebrick"
         }
+      },
+      "bone": {
+        "textures": {
+          "filler": "blocks/bone_block_side"
+        }
       }
     }
   }

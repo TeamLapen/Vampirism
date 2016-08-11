@@ -1,0 +1,44 @@
+{
+  "__comment": "This table is injected as its own pool into minecraft:chests/abandoned_mineshaft",
+  "pools": [
+    {
+      "name": "main",
+      "rolls": {
+        "min": 0,
+        "max": 4
+      },
+      "entries": [
+        {
+          "type": "item",
+          "name": "vampirism:vampireFang",
+          "weight": 35
+        },
+        {
+          "type": "item",
+          "name": "vampirism:bloodBottle",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "set_data",
+              "data": 9
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "name": "vampirism:vampireBook",
+          "weight": 5,
+          "functions": [
+            {
+              "function": "vampirism:add_book_nbt"
+            }
+          ]
+        },
+        {
+          "type": "empty",
+          "weight": 40
+        }
+      ]
+    }
+  ]
+}

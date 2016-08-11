@@ -98,7 +98,7 @@ public class BlockAltarPillar extends VampirismBlock {
     }
 
     public enum EnumPillarType implements IStringSerializable {
-        NONE(0, "none", Blocks.AIR), STONE(1, "stone", Blocks.STONEBRICK), IRON(2, "iron", Blocks.IRON_BLOCK), GOLD(3, "gold", Blocks.GOLD_BLOCK);
+        NONE(0, "none", 0, Blocks.AIR), STONE(1, "stone", 1, Blocks.STONEBRICK), IRON(2, "iron", 2, Blocks.IRON_BLOCK), GOLD(3, "gold", 3, Blocks.GOLD_BLOCK), BONE(4, "bone", 1.5F, Blocks.field_189880_di);
         private static final EnumPillarType[] METADATA_LOOKUP = new EnumPillarType[values().length];
 
         static {
@@ -117,11 +117,13 @@ public class BlockAltarPillar extends VampirismBlock {
         public final String name;
         public final Block fillerBlock;
         public final int meta;
+        private final float value;
 
-        EnumPillarType(int meta, String name, Block fillerBlock) {
+        EnumPillarType(int meta, String name, float value, Block fillerBlock) {
             this.meta = meta;
             this.name = name;
             this.fillerBlock = fillerBlock;
+            this.value = value;
         }
 
         @Override
@@ -130,12 +132,11 @@ public class BlockAltarPillar extends VampirismBlock {
         }
 
         /**
-         * Currently this is just the metadata, but in case some other type is added and the meta has to stay unchanged, this can be changed.
          *
          * @return The "value" or level of this material.
          */
-        public int getValue() {
-            return meta;
+        public float getValue() {
+            return value;
         }
     }
 }

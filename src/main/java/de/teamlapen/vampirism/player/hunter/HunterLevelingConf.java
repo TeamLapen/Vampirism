@@ -42,25 +42,25 @@ public class HunterLevelingConf {
         switch (targetLevel) {
             //fangs,blood,blood_meta,par3
             case 5:
-                return new int[]{5, 0, 0, 0};
+                return new int[]{10, 0, 0, 1};
             case 6:
-                return new int[]{0, 1, 0, 0};
+                return new int[]{0, 1, 0, 1};
             case 7:
-                return new int[]{5, 1, 0, 0};
+                return new int[]{10, 1, 0, 1};
             case 8:
-                return new int[]{0, 1, 1, 0};
+                return new int[]{0, 1, 1, 1};
             case 9:
-                return new int[]{5, 1, 1, 0};
+                return new int[]{15, 1, 1, 1};
             case 10:
-                return new int[]{5, 1, 2, 0};
+                return new int[]{20, 1, 2, 1};
             case 11:
-                return new int[]{10, 1, 2, 0};
+                return new int[]{20, 1, 2, 1};
             case 12:
-                return new int[]{10, 1, 3, 0};
+                return new int[]{20, 1, 3, 1};
             case 13:
-                return new int[]{0, 2, 3, 0};
+                return new int[]{25, 2, 3, 1};
             case 14:
-                return new int[]{0, 2, 4, 0};
+                return new int[]{25, 2, 4, 1};
             default:
                 return null;//Should never be reached
         }

@@ -29,6 +29,11 @@ public class VampireBookManager {
     private VampireBookManager() {
     }
 
+    public void applyRandomBook(ItemStack stack, Random rnd) {
+        NBTTagCompound nbt = (bookTags == null || bookTags.length == 0) ? new NBTTagCompound() : bookTags[rnd.nextInt(bookTags.length)];
+        stack.setTagCompound(nbt);
+    }
+
     /**
      * Return a vampire book with a randomly selected text and title
      *
@@ -36,9 +41,8 @@ public class VampireBookManager {
      * @return
      */
     public ItemStack getRandomBook(Random rnd) {
-        NBTTagCompound nbt = (bookTags == null || bookTags.length == 0) ? new NBTTagCompound() : bookTags[rnd.nextInt(bookTags.length)];
         ItemStack book = new ItemStack(ModItems.vampireBook, 1);
-        book.setTagCompound(nbt);
+        applyRandomBook(book, rnd);
         return book;
     }
 
