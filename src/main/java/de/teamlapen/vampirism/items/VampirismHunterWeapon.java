@@ -82,7 +82,7 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
         }
 
         @Override
-        public float getDamageMultiplier(ItemStack stack) {
+        public float getDamageMultiplierForFaction(ItemStack stack) {
             return damageMult;
         }
 

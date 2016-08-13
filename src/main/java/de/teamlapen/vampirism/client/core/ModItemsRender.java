@@ -4,10 +4,7 @@ import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.lib.lib.util.InventoryRenderHelper;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.items.ItemArmorOfSwiftness;
-import de.teamlapen.vampirism.items.ItemBloodBottle;
-import de.teamlapen.vampirism.items.ItemInjection;
-import de.teamlapen.vampirism.items.ItemPureBlood;
+import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
@@ -15,6 +12,7 @@ import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
@@ -92,6 +90,17 @@ public class ModItemsRender {
         renderHelper.registerRender(ModItems.hunterHat0, "normal");
         renderHelper.registerRender(ModItems.hunterHat1, "normal");
 
+        //ItemHunterAxe
+        final ResourceLocation hunterAxeLoc = new ResourceLocation(REFERENCE.MODID, "item/hunterAxe");
+        ItemMeshDefinition hunterAxe_meshDefinition = new ItemMeshDefinition() {
+            @Override
+            public ModelResourceLocation getModelLocation(ItemStack stack) {
+                return new ModelResourceLocation(hunterAxeLoc, "type=" + ItemHunterAxe.getType(stack).getName());
+            }
+        };
+        ModelLoader.setCustomMeshDefinition(ModItems.hunterAxe, hunterAxe_meshDefinition);
+        registerVariants(ModItems.hunterAxe, hunterAxeLoc, (IStringSerializable[]) ItemHunterAxe.TYPE.values());
+
         //Swiftness Armor
         final ResourceLocation swiftnessArmorLoc = new ResourceLocation(REFERENCE.MODID, "item/swiftnessArmor");
         ItemMeshDefinition swiftnessArmor_meshDefinition = new ItemMeshDefinition() {
@@ -112,6 +121,12 @@ public class ModItemsRender {
         registerArmorVariants(ModItems.armorOfSwiftness_boots, swiftnessArmorLoc, EntityEquipmentSlot.FEET, (IStringSerializable[]) ItemArmorOfSwiftness.TYPE.values());
 
         //----------------------
+    }
+
+    private static void registerVariants(Item item, ResourceLocation base, IStringSerializable... types) {
+        for (IStringSerializable s : types) {
+            ModelLoader.registerItemVariants(item, new ModelResourceLocation(base, "type=" + s.getName()));
+        }
     }
 
     private static void registerArmorVariants(ItemArmor item, ResourceLocation base, EntityEquipmentSlot slot, IStringSerializable... types) {

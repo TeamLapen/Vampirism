@@ -57,7 +57,7 @@ public class ModEntityEventHandler {
                     faction = FactionPlayerHandler.get((EntityPlayer) event.getEntity()).getCurrentFaction();
                 }
                 if (faction != null && faction.equals(item.getSlayedFaction())) {
-                    float amt = event.getAmount() * item.getDamageMultiplier(stack);
+                    float amt = event.getAmount() * item.getDamageMultiplierForFaction(stack);
                     skipAttackDamageOnce = true;
                     boolean result = net.minecraftforge.common.ForgeHooks.onLivingAttack(event.getEntityLiving(), event.getSource(), amt);
                     skipAttackDamageOnce = false;

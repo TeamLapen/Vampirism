@@ -56,6 +56,8 @@ public class ModItems {
     public static ItemHunterHat hunterHat0;
     public static ItemHunterHat hunterHat1;
 
+    public static ItemHunterAxe hunterAxe;
+
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
             case PRE_INIT:
@@ -106,6 +108,8 @@ public class ModItems {
         weaponCraftingManager.addRecipe(ItemArmorOfSwiftness.setType(new ItemStack(armorOfSwiftness_boots), ItemArmorOfSwiftness.TYPE.NORMAL), 1, HunterSkills.enhancedArmor, 3, "    ", "XXXX", "XYYX", "XZZX", 'X', Items.LEATHER, 'Y', ModItems.itemGarlic, 'Z', Items.GOLD_INGOT);
         weaponCraftingManager.addRecipe(new ItemStack(ModItems.hunterHat0), 1, (ISkill<IHunterPlayer>) null, 0, "    ", " XX ", "YYYY", "    ", 'X', new ItemStack(Blocks.WOOL, 1, EnumDyeColor.BLACK.getMetadata()), 'Y', Items.IRON_INGOT);
         weaponCraftingManager.addRecipe(new ItemStack(ModItems.hunterHat1), 1, (ISkill<IHunterPlayer>) null, 0, "    ", " XX ", " XX ", "YYYY", 'X', new ItemStack(Blocks.WOOL, 1, EnumDyeColor.BLACK.getMetadata()), 'Y', Items.IRON_INGOT);
+        weaponCraftingManager.addRecipe(ItemHunterAxe.setType(new ItemStack(ModItems.hunterAxe), ItemHunterAxe.TYPE.NORMAL), 1, (ISkill<IHunterPlayer>) null, 3, "XYX ", "XYX ", "XYX ", " Y  ", 'X', Items.IRON_INGOT, 'Y', Items.STICK);
+        weaponCraftingManager.addRecipe(ItemHunterAxe.setType(new ItemStack(ModItems.hunterAxe), ItemHunterAxe.TYPE.ENHANCED), 1, (ISkill<IHunterPlayer>) null, 5, "XZX ", "XZX ", "XYX ", " Y  ", 'X', Items.IRON_INGOT, 'Y', Items.STICK, 'Z', Items.DIAMOND);
 
     }
 
@@ -143,6 +147,8 @@ public class ModItems {
 
         hunterHat0 = registerItem(new ItemHunterHat(0));
         hunterHat1 = registerItem(new ItemHunterHat(1));
+
+        hunterAxe = registerItem(new ItemHunterAxe());
     }
 
     private static <T extends Item> T registerItem(T item) {
