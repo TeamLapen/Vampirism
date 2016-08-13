@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
+import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
@@ -51,6 +52,9 @@ public class ModItems {
     public static ItemArmorOfSwiftness armorOfSwiftness_chest;
     public static ItemArmorOfSwiftness armorOfSwiftness_legs;
     public static ItemArmorOfSwiftness armorOfSwiftness_boots;
+
+    public static ItemHunterHat hunterHat0;
+    public static ItemHunterHat hunterHat1;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
@@ -100,6 +104,9 @@ public class ModItems {
         weaponCraftingManager.addRecipe(ItemArmorOfSwiftness.setType(new ItemStack(armorOfSwiftness_chest), ItemArmorOfSwiftness.TYPE.NORMAL), 1, HunterSkills.enhancedArmor, 3, "XZZX", "XXXX", "XYYX", "XXXX", 'X', Items.LEATHER, 'Y', ModItems.itemGarlic, 'Z', Items.GOLD_INGOT);
         weaponCraftingManager.addRecipe(ItemArmorOfSwiftness.setType(new ItemStack(armorOfSwiftness_legs), ItemArmorOfSwiftness.TYPE.NORMAL), 1, HunterSkills.enhancedArmor, 3, "XXXX", "XYYX", "XZZX", "X  X", 'X', Items.LEATHER, 'Y', ModItems.itemGarlic, 'Z', Items.GOLD_INGOT);
         weaponCraftingManager.addRecipe(ItemArmorOfSwiftness.setType(new ItemStack(armorOfSwiftness_boots), ItemArmorOfSwiftness.TYPE.NORMAL), 1, HunterSkills.enhancedArmor, 3, "    ", "XXXX", "XYYX", "XZZX", 'X', Items.LEATHER, 'Y', ModItems.itemGarlic, 'Z', Items.GOLD_INGOT);
+        weaponCraftingManager.addRecipe(new ItemStack(ModItems.hunterHat0), 1, (ISkill<IHunterPlayer>) null, 0, "    ", " XX ", "YYYY", "    ", 'X', new ItemStack(Blocks.WOOL, 1, EnumDyeColor.BLACK.getMetadata()), 'Y', Items.IRON_INGOT);
+        weaponCraftingManager.addRecipe(new ItemStack(ModItems.hunterHat1), 1, (ISkill<IHunterPlayer>) null, 0, "    ", " XX ", " XX ", "YYYY", 'X', new ItemStack(Blocks.WOOL, 1, EnumDyeColor.BLACK.getMetadata()), 'Y', Items.IRON_INGOT);
+
     }
 
     private static void registerItems() {
@@ -133,6 +140,9 @@ public class ModItems {
         armorOfSwiftness_chest = registerItem(new ItemArmorOfSwiftness(EntityEquipmentSlot.CHEST));
         armorOfSwiftness_legs = registerItem(new ItemArmorOfSwiftness(EntityEquipmentSlot.LEGS));
         armorOfSwiftness_boots = registerItem(new ItemArmorOfSwiftness(EntityEquipmentSlot.FEET));
+
+        hunterHat0 = registerItem(new ItemHunterHat(0));
+        hunterHat1 = registerItem(new ItemHunterHat(1));
     }
 
     private static <T extends Item> T registerItem(T item) {
