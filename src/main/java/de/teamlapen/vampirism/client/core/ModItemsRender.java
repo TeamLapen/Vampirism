@@ -89,6 +89,8 @@ public class ModItemsRender {
         renderHelper.registerRender(ModItems.enhancedTechCrossbow, "normal");
         renderHelper.registerRender(ModItems.techCrossbowAmmoPackage, "normal");
         renderHelper.registerRender(ModItems.vampireBook, "normal");
+        renderHelper.registerRender(ModItems.hunterHat0, "normal");
+        renderHelper.registerRender(ModItems.hunterHat1, "normal");
 
         //Swiftness Armor
         final ResourceLocation swiftnessArmorLoc = new ResourceLocation(REFERENCE.MODID, "item/swiftnessArmor");
