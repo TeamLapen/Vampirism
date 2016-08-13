@@ -20,6 +20,7 @@ public class HunterSkills {
     public static final ISkill<IHunterPlayer> weaponTable = new VampirismSkill.SimpleHunterSkill("weapon_table", 48, 32, true);
     public static final ISkill<IHunterPlayer> enhancedCrossbow = new VampirismSkill.SimpleHunterSkill("enhanced_crossbow", 208, 32, false);
     public static final ISkill<IHunterPlayer> enhancedArmor = new VampirismSkill.SimpleHunterSkill("enhanced_armor", 0, 0, false);
+    public static final ISkill<IHunterPlayer> enhancedWeapons = new VampirismSkill.SimpleHunterSkill("enhanced_weapons", 0, 0, false);
     public static final ISkill<IHunterPlayer> techWeapons = new VampirismSkill.SimpleHunterSkill("tech_weapons", 240, 32, true);
     public static final ISkill<IHunterPlayer> stake1 = new VampirismSkill.SimpleHunterSkill("stake1", 16, 32, false) {
         @Override
@@ -84,8 +85,8 @@ public class HunterSkills {
         DefaultSkill<IHunterPlayer> advancedAttackSpeed = new VampirismSkill.SimpleHunterSkill("advanced_attack_speed", 32, 32, false);
         advancedAttackSpeed.registerAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, "d9311f44-a4ba-4ef4-83f2-9274ae1a827e", Balance.hps.MAJOR_ATTACK_SPEED_MODIFIER, 2);
 
-        SkillNode skill6 = new SkillNode(skill5, doubleCrossbow);
-        SkillNode skill7 = new SkillNode(skill6, advancedAttackSpeed, enhancedCrossbow);
+        SkillNode skill6 = new SkillNode(skill5, advancedAttackSpeed, doubleCrossbow);
+        SkillNode skill7 = new SkillNode(skill6, enhancedWeapons, enhancedCrossbow);
         SkillNode skill8 = new SkillNode(skill7, enhancedArmor);
         SkillNode skill9 = new SkillNode(skill8, techWeapons);
         SkillNode skill10 = new SkillNode(skill9, stake2);

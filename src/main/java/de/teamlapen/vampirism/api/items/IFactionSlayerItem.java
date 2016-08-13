@@ -12,7 +12,7 @@ public interface IFactionSlayerItem {
      * @param stack
      * @return Damage modifier for attacking the specific faction
      */
-    float getDamageMultiplier(ItemStack stack);
+    float getDamageMultiplierForFaction(ItemStack stack);
 
     /**
      * Modify damage for this faction
