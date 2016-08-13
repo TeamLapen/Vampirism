@@ -26,7 +26,7 @@ public class BalanceHunterSkills extends BalanceValues {
     @DefaultDouble(value = 0.3, minValue = 0, maxValue = 1, comment = "The maximal relative health (actual/max) a entity may have to be instantly killed")
     public double INSTANT_KILL_SKILL_1_MAX_HEALTH_PERC;
 
-    @DefaultInt(value = 170, minValue = 0, comment = "Second stake skill - The max (not the actual) health a entity that can be one hit killed from behind may have")
+    @DefaultInt(value = 200, minValue = 0, comment = "Second stake skill - The max (not the actual) health a entity that can be one hit killed from behind may have")
     public int INSTANT_KILL_SKILL_2_MAX_HEALTH;
 
     @DefaultBoolean(value = false, comment = "Second stake skill - If only NPCs can be one hit killed with this skill")

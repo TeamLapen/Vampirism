@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
@@ -45,6 +46,11 @@ public class ModItems {
     public static ItemTechCrossbow enhancedTechCrossbow;
     public static VampirismItem techCrossbowAmmoPackage;
     public static ItemVampireBook vampireBook;
+
+    public static ItemArmorOfSwiftness armorOfSwiftness_helmet;
+    public static ItemArmorOfSwiftness armorOfSwiftness_chest;
+    public static ItemArmorOfSwiftness armorOfSwiftness_legs;
+    public static ItemArmorOfSwiftness armorOfSwiftness_boots;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
@@ -86,6 +92,14 @@ public class ModItems {
         weaponCraftingManager.addRecipe(new ItemStack(enhancedTechCrossbow), 1, HunterSkills.techWeapons, 5, "XYYX", "YZZY", "YZZY", " YY ", 'X', Items.STRING, 'Y', Items.IRON_INGOT, 'Z', Items.DIAMOND);
         GameRegistry.addShapedRecipe(new ItemStack(stake), " X ", " Y ", " X ", 'X', Items.STICK, 'Y', Blocks.PLANKS);
         weaponCraftingManager.addRecipe(new ItemStack(pitchfork), 1, (ISkill<IHunterPlayer>) null, 0, "X X ", "YYY ", " Y  ", " Y  ", 'X', Items.IRON_INGOT, 'Y', Items.STICK);
+        weaponCraftingManager.addRecipe(ItemArmorOfSwiftness.setType(new ItemStack(armorOfSwiftness_helmet), ItemArmorOfSwiftness.TYPE.NORMAL), 1, (ISkill<IHunterPlayer>) null, 0, "XXXX", "XYYX", "XZZX", "    ", 'X', Items.LEATHER, 'Y', ModItems.itemGarlic, 'Z', Items.POTIONITEM);
+        weaponCraftingManager.addRecipe(ItemArmorOfSwiftness.setType(new ItemStack(armorOfSwiftness_chest), ItemArmorOfSwiftness.TYPE.NORMAL), 1, (ISkill<IHunterPlayer>) null, 0, "XZZX", "XXXX", "XYYX", "XXXX", 'X', Items.LEATHER, 'Y', ModItems.itemGarlic, 'Z', Items.POTIONITEM);
+        weaponCraftingManager.addRecipe(ItemArmorOfSwiftness.setType(new ItemStack(armorOfSwiftness_legs), ItemArmorOfSwiftness.TYPE.NORMAL), 1, (ISkill<IHunterPlayer>) null, 0, "XXXX", "XYYX", "XZZX", "X  X", 'X', Items.LEATHER, 'Y', ModItems.itemGarlic, 'Z', Items.POTIONITEM);
+        weaponCraftingManager.addRecipe(ItemArmorOfSwiftness.setType(new ItemStack(armorOfSwiftness_boots), ItemArmorOfSwiftness.TYPE.NORMAL), 1, (ISkill<IHunterPlayer>) null, 0, "    ", "XXXX", "XYYX", "XZZX", 'X', Items.LEATHER, 'Y', ModItems.itemGarlic, 'Z', Items.POTIONITEM);
+        weaponCraftingManager.addRecipe(ItemArmorOfSwiftness.setType(new ItemStack(armorOfSwiftness_helmet), ItemArmorOfSwiftness.TYPE.ENHANCED), 1, HunterSkills.enhancedArmor, 3, "XXXX", "XYYX", "XZZX", "    ", 'X', Items.LEATHER, 'Y', ModItems.itemGarlic, 'Z', Items.GOLD_INGOT);
+        weaponCraftingManager.addRecipe(ItemArmorOfSwiftness.setType(new ItemStack(armorOfSwiftness_chest), ItemArmorOfSwiftness.TYPE.NORMAL), 1, HunterSkills.enhancedArmor, 3, "XZZX", "XXXX", "XYYX", "XXXX", 'X', Items.LEATHER, 'Y', ModItems.itemGarlic, 'Z', Items.GOLD_INGOT);
+        weaponCraftingManager.addRecipe(ItemArmorOfSwiftness.setType(new ItemStack(armorOfSwiftness_legs), ItemArmorOfSwiftness.TYPE.NORMAL), 1, HunterSkills.enhancedArmor, 3, "XXXX", "XYYX", "XZZX", "X  X", 'X', Items.LEATHER, 'Y', ModItems.itemGarlic, 'Z', Items.GOLD_INGOT);
+        weaponCraftingManager.addRecipe(ItemArmorOfSwiftness.setType(new ItemStack(armorOfSwiftness_boots), ItemArmorOfSwiftness.TYPE.NORMAL), 1, HunterSkills.enhancedArmor, 3, "    ", "XXXX", "XYYX", "XZZX", 'X', Items.LEATHER, 'Y', ModItems.itemGarlic, 'Z', Items.GOLD_INGOT);
     }
 
     private static void registerItems() {
@@ -114,6 +128,11 @@ public class ModItems {
         enhancedTechCrossbow = registerItem(new ItemTechCrossbow("enhancedTechCrossbow", 1.7F, 4, 450));
         techCrossbowAmmoPackage = registerItem(new VampirismItem("techCrossbowAmmoPackage"));
         vampireBook = registerItem(new ItemVampireBook());
+
+        armorOfSwiftness_helmet = registerItem(new ItemArmorOfSwiftness(EntityEquipmentSlot.HEAD));
+        armorOfSwiftness_chest = registerItem(new ItemArmorOfSwiftness(EntityEquipmentSlot.CHEST));
+        armorOfSwiftness_legs = registerItem(new ItemArmorOfSwiftness(EntityEquipmentSlot.LEGS));
+        armorOfSwiftness_boots = registerItem(new ItemArmorOfSwiftness(EntityEquipmentSlot.FEET));
     }
 
     private static <T extends Item> T registerItem(T item) {

@@ -11,6 +11,7 @@ import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
@@ -457,5 +458,18 @@ public class UtilLib {
                 var2.append(',').append(' ');
             }
         }
+    }
+
+    /**
+     * Makes sure the given stack has a NBT Tag Compound
+     *
+     * @param stack
+     * @return The stacks NBT Tag
+     */
+    public static NBTTagCompound checkNBT(ItemStack stack) {
+        if (!stack.hasTagCompound()) {
+            stack.setTagCompound(new NBTTagCompound());
+        }
+        return stack.getTagCompound();
     }
 }

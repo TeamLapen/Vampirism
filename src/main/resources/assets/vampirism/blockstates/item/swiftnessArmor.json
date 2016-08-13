@@ -1,0 +1,83 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "builtin/generated",
+    "transform": "forge:default-item"
+  },
+  "variants": {
+    "type": {
+      "feet_normal": {
+        "textures": {
+          "layer0": "items/leather_boots",
+          "layer1": "vampirism:items/swiftness_boots_overlay"
+        }
+      },
+      "feet_enhanced": {
+        "textures": {
+          "layer0": "items/leather_boots",
+          "layer1": "vampirism:items/swiftness_boots_overlay"
+        }
+      },
+      "feet_ultimate": {
+        "textures": {
+          "layer0": "items/leather_boots",
+          "layer1": "vampirism:items/swiftness_boots_overlay"
+        }
+      },
+      "chest_normal": {
+        "textures": {
+          "layer0": "items/leather_chestplate",
+          "layer1": "vampirism:items/swiftness_chestplate_overlay"
+        }
+      },
+      "chest_enhanced": {
+        "textures": {
+          "layer0": "items/leather_chestplate",
+          "layer1": "vampirism:items/swiftness_chestplate_overlay"
+        }
+      },
+      "chest_ultimate": {
+        "textures": {
+          "layer0": "items/leather_chestplate",
+          "layer1": "vampirism:items/swiftness_chestplate_overlay"
+        }
+      },
+      "legs_normal": {
+        "textures": {
+          "layer0": "items/leather_leggings",
+          "layer1": "vampirism:items/swiftness_leggings_overlay"
+        }
+      },
+      "legs_enhanced": {
+        "textures": {
+          "layer0": "items/leather_leggings",
+          "layer1": "vampirism:items/swiftness_leggings_overlay"
+        }
+      },
+      "legs_ultimate": {
+        "textures": {
+          "layer0": "items/leather_leggings",
+          "layer1": "vampirism:items/swiftness_leggings_overlay"
+        }
+      },
+      "head_normal": {
+        "textures": {
+          "layer0": "items/leather_helmet",
+          "layer1": "vampirism:items/swiftness_helmet_overlay"
+        }
+      },
+      "head_enhanced": {
+        "textures": {
+          "layer0": "items/leather_helmet",
+          "layer1": "vampirism:items/swiftness_helmet_overlay"
+        }
+      },
+      "head_ultimate": {
+        "textures": {
+          "layer0": "items/leather_helmet",
+          "layer1": "vampirism:items/swiftness_helmet_overlay"
+        }
+      }
+    }
+  }
+}
