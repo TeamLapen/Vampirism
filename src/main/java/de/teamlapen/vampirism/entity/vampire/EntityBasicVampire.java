@@ -122,7 +122,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
 
     @Override
     public int getTalkInterval() {
-        return 400;
+        return 600;
     }
 
     @Override

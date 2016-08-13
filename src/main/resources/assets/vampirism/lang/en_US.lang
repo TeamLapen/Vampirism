@@ -70,6 +70,7 @@ text.vampirism.skill.blood_potion_identify_some=Brewing master
 text.vampirism.skill.blood_potion_identify_some.desc=Get to know some of the effects of a blood potion
 text.vampirism.skill.tech_weapons=Technology
 text.vampirism.skill.tech_weapons.desc=Learn how to build some advanced weapons
+text.vampirism.skill.enhanced_armor=Enhanced armor
 
 #BLOOD POTIONS
 text.vampirism.blood_potion.might_cause=Might cause:
@@ -172,6 +173,12 @@ item.vampirism.item_tent.name=Tent
 item.vampirism.concentratedGarlic.name=Concentrated Garlic
 item.vampirism.garlic_bomb.name=Garlic Bomb
 item.vampirism.vampireBook.name=Vampire Book
+item.vampirism.armorOfSwiftness.head.name=Helmet of Swiftness
+item.vampirism.armorOfSwiftness.chest.name=Chestplate of Swiftness
+item.vampirism.armorOfSwiftness.legs.name=Leggings of Swiftness
+item.vampirism.armorOfSwiftness.feet.name=Boots of Swiftness
+
+
 
 
 #KEYS
@@ -294,6 +301,9 @@ text.vampirism.no_dracula_to_call=Dracula is dead and cannot be called
 text.vampirism.outdated=You are running Vampirism %s, the latest version is %s.
 text.vampirism.update_message=["Click for... [",{"text":"Download","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the download page","color":"green"}},"clickEvent":{"action":"open_url","value":"@download@"}},"] [",{"text":"Website","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the mod's forum page","color":"green"}},"clickEvent":{"action":"open_url","value":"@forum@"}},"] [",{"text":"Changelog","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this see the version's Changelog","color":"green"}},"clickEvent":{"action":"run_command","value":"/vampirism changelog"}},"]"]
 text.vampirism.action.cooldown_not_over=Cooldown is not over yet
+text.vampirism.armor.enhanced=Enhanced
+text.vampirism.armor.ultimate=Ultimate
+text.vampirism.poisonous_to_vampires=Poisonous to vampires
 
 #MINION COMMANDS
 minioncommand.vampirism.attackhostilenoplayers=Attack hostile

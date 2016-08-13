@@ -159,7 +159,7 @@ public class VampirismMod {
 
     @Mod.EventHandler
     public void onServerStarted(FMLServerStartedEvent event) {
-        if (!LootHandler.getInstance().didInjectAll()) {
+        if (!LootHandler.getInstance().checkAndResetInsertedAll()) {
             VampirismMod.log.w("LootTables", "-------------------------------");
             VampirismMod.log.w("LootTables", "Failed to inject all loottables");
             VampirismMod.log.w("LootTables", "-------------------------------");

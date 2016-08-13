@@ -38,10 +38,13 @@ public class LootHandler {
             LootTableList.register(new ResourceLocation(REFERENCE.MODID, s));
         }
         LootFunctionManager.registerFunction(new AddBookNbt.Serializer());
+        LootFunctionManager.registerFunction(new SetSwiftnessArmorType.Serializer());
     }
 
-    public boolean didInjectAll() {
-        return injected == INJECTION_TABLES.size();
+    public boolean checkAndResetInsertedAll() {
+        int i = injected;
+        injected = 0;
+        return i == INJECTION_TABLES.size();
     }
 
     @SubscribeEvent
