@@ -90,7 +90,7 @@ public class ModItems {
         weaponCraftingManager.addRecipe(new ItemStack(ModItems.enhancedDoubleCrossbow), 1, new ISkill[]{HunterSkills.doubleCrossbow, HunterSkills.enhancedCrossbow}, 3, "YXXY", "YXXY", " XX ", " XX ", 'X', Items.IRON_INGOT, 'Y', Items.STRING);
         GameRegistry.addShapedRecipe(new ItemStack(ModItems.crossbowArrow, 6), "X", "Y", 'X', Items.IRON_INGOT, 'Y', Items.STICK);
         weaponCraftingManager.addRecipe(ItemCrossbowArrow.setType(new ItemStack(crossbowArrow, 2), ItemCrossbowArrow.EnumArrowType.VAMPIRE_KILLER), 1, (ISkill<IHunterPlayer>) null, 1, " X  ", "XYX ", " Z  ", " W  ", 'X', itemGarlic, 'Y', Items.GOLD_INGOT, 'Z', Items.STICK, 'W', Items.FEATHER);
-        weaponCraftingManager.addRecipe(new ItemStack(techCrossbowAmmoPackage), 1, (ISkill<IHunterPlayer>) null, 1, "XYYZ", " YY ", " YY ", " YY ", 'X', Items.IRON_INGOT, 'Y', crossbowArrow, 'Z', Blocks.PLANKS);
+        weaponCraftingManager.addRecipe(new ItemStack(techCrossbowAmmoPackage), 1, (ISkill<IHunterPlayer>) null, 1, " XZ ", "YYYY", "YYYY", "YYYY", 'X', Items.IRON_INGOT, 'Y', crossbowArrow, 'Z', Blocks.PLANKS);
         RecipeSorter.register("vampirism:shapelessFillCrossbow", ItemTechCrossbow.ShapelessFillRecipe.class, RecipeSorter.Category.SHAPELESS, "after:minecraft:shapeless");
         GameRegistry.addRecipe(new ItemTechCrossbow.ShapelessFillRecipe(basicTechCrossbow, new ItemStack(techCrossbowAmmoPackage)));
         GameRegistry.addRecipe(new ItemTechCrossbow.ShapelessFillRecipe(enhancedTechCrossbow, new ItemStack(techCrossbowAmmoPackage)));
@@ -128,15 +128,21 @@ public class ModItems {
         injection = registerItem(new ItemInjection());
         pitchfork = registerItem(new ItemPitchfork());
         basicCrossbow = registerItem(new ItemSimpleCrossbow("basicCrossbow", 1, 20, 300));
+        basicCrossbow.setEnchantability(Item.ToolMaterial.WOOD);
         basicDoubleCrossbow = registerItem(new ItemDoubleCrossbow("basicDoubleCrossbow", 1, 20, 300));
+        basicDoubleCrossbow.setEnchantability(Item.ToolMaterial.WOOD);
         enhancedCrossbow = registerItem(new ItemSimpleCrossbow("enhancedCrossbow", 1.5F, 15, 350));
+        enhancedCrossbow.setEnchantability(Item.ToolMaterial.IRON);
         enhancedDoubleCrossbow = registerItem(new ItemDoubleCrossbow("enhancedDoubleCrossbow", 1.5F, 15, 350));
+        enhancedDoubleCrossbow.setEnchantability(Item.ToolMaterial.IRON);
         crossbowArrow = registerItem(new ItemCrossbowArrow());
         stake = registerItem(new ItemStake());
         vampireBlood = registerItem(new ItemVampireBloodBottle());
         bloodPotion = registerItem(new ItemBloodPotion());
         basicTechCrossbow = registerItem(new ItemTechCrossbow("basicTechCrossbow", 1.6F, 6, 300));
+        basicTechCrossbow.setEnchantability(Item.ToolMaterial.DIAMOND);
         enhancedTechCrossbow = registerItem(new ItemTechCrossbow("enhancedTechCrossbow", 1.7F, 4, 450));
+        enhancedTechCrossbow.setEnchantability(Item.ToolMaterial.DIAMOND);
         techCrossbowAmmoPackage = registerItem(new VampirismItem("techCrossbowAmmoPackage"));
         vampireBook = registerItem(new ItemVampireBook());
 

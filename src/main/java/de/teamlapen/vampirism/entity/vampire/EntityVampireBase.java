@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.player.EntityPlayer;
@@ -65,6 +66,11 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
             return getRNG().nextInt(60) == 0 && super.getCanSpawnHere();
         }
         return super.getCanSpawnHere();
+    }
+
+    @Override
+    public EnumCreatureAttribute getCreatureAttribute() {
+        return super.getCreatureAttribute();
     }
 
     @Override

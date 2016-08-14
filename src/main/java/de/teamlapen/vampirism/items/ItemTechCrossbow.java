@@ -3,9 +3,11 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.core.ModEnchantments;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
 import net.minecraft.inventory.InventoryCrafting;
@@ -13,11 +15,13 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Random;
 
 /**
  * A set of arrows can be loaded into this crossbow.
@@ -25,7 +29,7 @@ import java.util.List;
  */
 public class ItemTechCrossbow extends ItemSimpleCrossbow {
 
-    public static final int MAX_ARROW_COUNT = 8;
+    public static final int MAX_ARROW_COUNT = 12;
 
     /**
      * @return The loaded arrows or -1 if infinite
@@ -55,12 +59,14 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
      * @param bowStack
      * @return If there was an arrow
      */
-    private static boolean reduceArrowCount(@Nonnull ItemStack bowStack) {
+    private static boolean reduceArrowCount(@Nonnull ItemStack bowStack, Random rnd) {
         NBTTagCompound nbt = bowStack.getTagCompound();
         if (nbt == null || !nbt.hasKey("arrows")) return false;
         int count = nbt.getInteger("arrows");
         if (count == -1) return true;
         if (count == 0) return false;
+        int frugal = isCrossbowFrugal(bowStack);
+        if (rnd.nextInt(frugal + 1) != 0) return true;
         nbt.setInteger("arrows", count - 1);
         bowStack.setTagCompound(nbt);
         return true;
@@ -80,6 +86,17 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
         return setArrowsLeft(new ItemStack(crossbow, 1), 0);
     }
 
+    /**
+     * Checks for Frugality enchanment on the crossbow
+     *
+     * @param crossbowStack
+     * @return the enchantmen level
+     */
+    protected static int isCrossbowFrugal(ItemStack crossbowStack) {
+        int enchant = EnchantmentHelper.getEnchantmentLevel(ModEnchantments.crossbowFrugality, crossbowStack);
+        return enchant;
+    }
+
     public ItemTechCrossbow(String regName, float speed, int cooldown, int maxDamage) {
         super(regName, speed, cooldown, maxDamage);
     }
@@ -89,11 +106,11 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
         super.addInformation(stack, playerIn, tooltip, advanced);
         int arrows = getArrowsLeft(stack);
         if (arrows == -1) {
-            tooltip.add(UtilLib.translateToLocal(Enchantments.INFINITY.getName()));
+            tooltip.add(TextFormatting.DARK_GRAY + UtilLib.translateToLocal(Enchantments.INFINITY.getName()));
         } else if (arrows == 0) {
-            tooltip.add(UtilLib.translateToLocal("text.vampirism.crossbow.not_loaded"));
+            tooltip.add(TextFormatting.DARK_GRAY + UtilLib.translateToLocal("text.vampirism.crossbow.not_loaded"));
         } else {
-            tooltip.add(UtilLib.translateToLocalFormatted("text.vampirism.crossbow.loaded_arrow_count", arrows));
+            tooltip.add(TextFormatting.DARK_GRAY + UtilLib.translateToLocalFormatted("text.vampirism.crossbow.loaded_arrow_count", arrows));
         }
     }
 
@@ -107,14 +124,14 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
         subItems.add(setArrowsLeft(new ItemStack(itemIn), 0));
         subItems.add(setArrowsLeft(new ItemStack(itemIn), MAX_ARROW_COUNT));
-        subItems.add(setArrowsLeft(new ItemStack(itemIn), -1));
+        //subItems.add(setArrowsLeft(new ItemStack(itemIn), -1));
 
     }
 
     @Nullable
     @Override
     protected ItemStack findAmmo(EntityPlayer player, ItemStack bowStack) {
-        boolean arrow = reduceArrowCount(bowStack);
+        boolean arrow = reduceArrowCount(bowStack, player.getRNG());
         return arrow ? new ItemStack(ModItems.crossbowArrow) : null;
     }
 

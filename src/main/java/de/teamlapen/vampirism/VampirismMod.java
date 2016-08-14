@@ -53,6 +53,7 @@ import de.teamlapen.vampirism.world.loot.LootHandler;
 import de.teamlapen.vampirism.world.villages.VampirismVillageCollection;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.item.Item;
 import net.minecraft.launchwrapper.Launch;
@@ -90,6 +91,14 @@ public class VampirismMod {
      * This is only here to init it as early as possible
      */
     private static final EnumCreatureType VAMPIRE_CREATURE_TYPE = EnumHelper.addCreatureType("VAMPIRISM_VAMPIRE", IVampire.class, 30, Material.AIR, false, false);
+    /**
+     * Vampire creatures have this attribute
+     * Vampire creatures are of this creature type.
+     * Use the instance in {@link VReference} instead of this one.
+     * This is only here to init it as early as possible
+     */
+    private static final EnumCreatureAttribute VAMPIRE_CREATURE_ATTRIBUTE = EnumHelper.addCreatureAttribute("VAMPIRISM_VAMPIRE");
+
     @Mod.Instance(value = REFERENCE.MODID)
     public static VampirismMod instance;
     @SidedProxy(clientSide = "de.teamlapen.vampirism.proxy.ClientProxy", serverSide = "de.teamlapen.vampirism.proxy.ServerProxy")
@@ -250,6 +259,7 @@ public class VampirismMod {
         });//DefaultConvertingHandler::new
         VReference.HUNTER_CREATURE_TYPE = HUNTER_CREATURE_TYPE;
         VReference.VAMPIRE_CREATURE_TYPE = VAMPIRE_CREATURE_TYPE;
+        VReference.VAMPIRE_CREATURE_ATTRIBUTE = VAMPIRE_CREATURE_ATTRIBUTE;
     }
 
     /**

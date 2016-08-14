@@ -224,6 +224,10 @@ gui.vampirism.revertback.desc=You will loose all your levels and die
 commands.vampirism.level.faction_not_found=Did not find faction %s
 commands.vampirism.failed_to_execute=Failed to execute command. Internal error.
 
+#ENCHANMENTS
+enchantment.vampirism.arrowFrugality=Arrow Frugality
+enchantment.vampirism.vampireSlayer=Vampire Slayer
+
 #ETC
 text.vampirism.vampire=Vampire
 text.vampirism.vampires=Vampires

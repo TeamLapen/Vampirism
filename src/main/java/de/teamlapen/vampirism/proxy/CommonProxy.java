@@ -15,6 +15,7 @@ public abstract class CommonProxy implements IProxy {
     public void onInitStep(Step step, FMLStateEvent event) {
         ModFluids.onInitStep(step, event);
         ModPotions.onInitStep(step, event);
+        ModEnchantments.onInitStep(step, event);
         ModSounds.onInitStep(step, event);
         ModBlocks.onInitStep(step, event);
         ModItems.onInitStep(step, event);

@@ -4,11 +4,14 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
+import net.minecraft.enchantment.EnumEnchantmentType;
+import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.RangedAttribute;
 import net.minecraft.util.DamageSource;
 import net.minecraftforge.common.EnumPlantType;
+import net.minecraftforge.common.util.EnumHelper;
 
 /**
  * Holds constants (or at init set variables)
@@ -48,6 +51,10 @@ public class VReference {
     public static final EnumPlantType VAMPIRE_PLANT_TYPE = EnumPlantType.getPlantType("VAMPIRISM_VAMPIRE");
     public static final DamageSource SUNDAMAGE = new DamageSource("sun").setDamageBypassesArmor().setMagicDamage();
     /**
+     * Enchantment type for crossbows
+     */
+    public static final EnumEnchantmentType CROSSBOW_ENCHANTMENT = EnumHelper.addEnchantmentType("vampirism:crossbow");
+    /**
      * Hunter creatures are of this creature type. But when they are counted for spawning they belong to {@link EnumCreatureType#MONSTER}
      */
     public static EnumCreatureType HUNTER_CREATURE_TYPE;
@@ -55,6 +62,11 @@ public class VReference {
      * Vampire creatures are of this creature type. But when they are counted for spawning they belong to {@link EnumCreatureType#MONSTER}
      */
     public static EnumCreatureType VAMPIRE_CREATURE_TYPE;
+    /**
+     * Vampire creatures have this creature attribute.
+     * Don't know why this exists alongside EnumCreatureType, but this is used by enchanments
+     */
+    public static EnumCreatureAttribute VAMPIRE_CREATURE_ATTRIBUTE;
     /**
      * Vampire Player Faction
      * Filled during pre-init.
