@@ -5,7 +5,7 @@
     "transform": "forge:default-item"
   },
   "variants": {
-    "type": {
+    "part": {
       "feet_normal": {
         "textures": {
           "layer0": "items/leather_boots",

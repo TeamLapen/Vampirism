@@ -42,6 +42,34 @@
       ]
     },
     {
+      "name": "hunterWeapons",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "vampirism:hunterAxe",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "vampirism:set_item_tier",
+              "tier": "ultimate"
+            },
+            {
+              "function": "set_damage",
+              "damage": {
+                "min": 0.3,
+                "max": 0.9
+              }
+            }
+          ]
+        },
+        {
+          "type": "empty",
+          "weight": 95
+        }
+      ]
+    },
+    {
       "name": "swiftness_armor",
       "rolls": 1,
       "entries": [
@@ -51,8 +79,8 @@
           "weight": 10,
           "functions": [
             {
-              "function": "vampirism:set_swiftness_armor_type",
-              "type": "ultimate"
+              "function": "vampirism:set_item_tier",
+              "tier": "ultimate"
             },
             {
               "function": "set_damage",
@@ -69,8 +97,8 @@
           "weight": 10,
           "functions": [
             {
-              "function": "vampirism:set_swiftness_armor_type",
-              "type": "ultimate"
+              "function": "vampirism:set_item_tier",
+              "tier": "ultimate"
             },
             {
               "function": "set_damage",
@@ -87,8 +115,8 @@
           "weight": 10,
           "functions": [
             {
-              "function": "vampirism:set_swiftness_armor_type",
-              "type": "ultimate"
+              "function": "vampirism:set_item_tier",
+              "tier": "ultimate"
             },
             {
               "function": "set_damage",
@@ -105,8 +133,8 @@
           "weight": 10,
           "functions": [
             {
-              "function": "vampirism:set_swiftness_armor_type",
-              "type": "ultimate"
+              "function": "vampirism:set_item_tier",
+              "tier": "ultimate"
             },
             {
               "function": "set_damage",

@@ -1,0 +1,16 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "vampirism:item/item/hunterAxe"
+  },
+  "variants": {
+    "tier": {
+      "normal": {
+      },
+      "enhanced": {
+      },
+      "ultimate": {
+      }
+    }
+  }
+}
