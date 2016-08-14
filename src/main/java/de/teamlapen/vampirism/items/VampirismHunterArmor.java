@@ -55,4 +55,8 @@ abstract class VampirismHunterArmor extends ItemArmor implements ISpecialArmor {
             }
         }
     }
+
+    protected String getTextureLocation(String name, EntityEquipmentSlot slot, String type) {
+        return String.format(REFERENCE.MODID + ":textures/models/armor/%s_layer_%d%s.png", name, slot == EntityEquipmentSlot.LEGS ? 2 : 1, type == null ? "" : "_overlay");
+    }
 }

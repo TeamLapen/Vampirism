@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
 import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler;
+import de.teamlapen.vampirism.items.ItemHunterCoat;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
@@ -64,6 +65,9 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
                 float pld = (this.getLevel() + 1) - VampirePlayer.get((EntityPlayer) entity).getLevel() / 3f;
                 tm = pld + 1;
                 mr = pld < 1.5f ? 1 : (pld < 3 ? 2 : 3);
+                if (ItemHunterCoat.isFullyEquipped((EntityPlayer) entity)) {
+                    tm *= 0.5F;
+                }
             }
             if (entity instanceof EntityVampireBaron) {
                 ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 40, 5));

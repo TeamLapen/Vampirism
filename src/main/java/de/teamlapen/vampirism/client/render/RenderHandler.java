@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
+import de.teamlapen.vampirism.items.ItemHunterCoat;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.Helper;
@@ -275,6 +276,7 @@ public class RenderHandler {
         for (Object o : list) {
             if (o instanceof EntityCreature || o instanceof EntityPlayer) {
                 EntityLivingBase e = (EntityLivingBase) o;
+                if (o instanceof EntityPlayer && ItemHunterCoat.isFullyEquipped((EntityPlayer) o)) continue;
                 int distance = (int) e.getDistanceSqToEntity(player);
                 if (distance <= ENTITY_NEAR_SQ_DISTANCE && (distance >= ENTITY_MIN_SQ_RADIUS)) {
                     // ||!player.canEntityBeSeen(e)
