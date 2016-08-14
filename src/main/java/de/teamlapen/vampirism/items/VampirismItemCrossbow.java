@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
+import de.teamlapen.vampirism.core.ModEnchantments;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
@@ -29,6 +30,7 @@ import java.util.Random;
  */
 public abstract class VampirismItemCrossbow extends VampirismItem implements IFactionLevelItem<IHunterPlayer> {
     protected double heightOffset = 0.0;
+    private int enchantability = 0;
 
     /**
      * @param regName   Registration name
@@ -40,6 +42,11 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
         if (maxDamage > 0) {
             this.setMaxDamage(maxDamage);
         }
+    }
+
+    @Override
+    public int getItemEnchantability(ItemStack stack) {
+        return enchantability;
     }
 
     @Override
@@ -63,6 +70,14 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
     public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
         shoot(playerIn, heightOffset, worldIn, itemStackIn);
         return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
+    }
+
+    public void setEnchantability(int enchantability) {
+        this.enchantability = enchantability;
+    }
+
+    public void setEnchantability(ToolMaterial material) {
+        this.enchantability = material.getEnchantability();
     }
 
     /**
@@ -127,7 +142,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @return If the crossbow can shoot without an arrow in the players inventory
      */
     protected boolean isCrossbowInfinite(ItemStack stack, EntityPlayer player) {
-        int enchant = EnchantmentHelper.getEnchantmentLevel(net.minecraft.init.Enchantments.INFINITY, stack);
+        int enchant = EnchantmentHelper.getEnchantmentLevel(ModEnchantments.crossbowInfinite, stack);
         return enchant > 0 || player.isCreative();
     }
 
@@ -240,4 +255,6 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
         }
         return true;
     }
+
+
 }
