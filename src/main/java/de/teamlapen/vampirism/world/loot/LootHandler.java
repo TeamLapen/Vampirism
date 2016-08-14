@@ -38,7 +38,7 @@ public class LootHandler {
             LootTableList.register(new ResourceLocation(REFERENCE.MODID, s));
         }
         LootFunctionManager.registerFunction(new AddBookNbt.Serializer());
-        LootFunctionManager.registerFunction(new SetSwiftnessArmorType.Serializer());
+        LootFunctionManager.registerFunction(new SetItemTier.Serializer());
     }
 
     public boolean checkAndResetInsertedAll() {

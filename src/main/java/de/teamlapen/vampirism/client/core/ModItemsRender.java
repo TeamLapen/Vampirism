@@ -3,15 +3,16 @@ package de.teamlapen.vampirism.client.core;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.lib.lib.util.InventoryRenderHelper;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.items.*;
+import de.teamlapen.vampirism.items.ItemBloodBottle;
+import de.teamlapen.vampirism.items.ItemInjection;
+import de.teamlapen.vampirism.items.ItemPureBlood;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
@@ -46,7 +47,7 @@ public class ModItemsRender {
                 if (tintIndex == 0) {
                     return ((ItemArmor) stack.getItem()).getColor(stack);
                 } else {
-                    switch (ItemArmorOfSwiftness.getType(stack)) {
+                    switch (ModItems.armorOfSwiftness_boots.getTier(stack)) {
                         case ENHANCED:
                             return 0x007CFF;
                         case ULTIMATE:
@@ -90,49 +91,41 @@ public class ModItemsRender {
         renderHelper.registerRender(ModItems.hunterHat0, "normal");
         renderHelper.registerRender(ModItems.hunterHat1, "normal");
 
-        //ItemHunterAxe
-        final ResourceLocation hunterAxeLoc = new ResourceLocation(REFERENCE.MODID, "item/hunterAxe");
-        ItemMeshDefinition hunterAxe_meshDefinition = new ItemMeshDefinition() {
-            @Override
-            public ModelResourceLocation getModelLocation(ItemStack stack) {
-                return new ModelResourceLocation(hunterAxeLoc, "type=" + ItemHunterAxe.getType(stack).getName());
-            }
-        };
-        ModelLoader.setCustomMeshDefinition(ModItems.hunterAxe, hunterAxe_meshDefinition);
-        registerVariants(ModItems.hunterAxe, hunterAxeLoc, (IStringSerializable[]) ItemHunterAxe.TYPE.values());
+        registerSimpleItemWithTier(ModItems.hunterAxe);
 
-        //Swiftness Armor
-        final ResourceLocation swiftnessArmorLoc = new ResourceLocation(REFERENCE.MODID, "item/swiftnessArmor");
-        ItemMeshDefinition swiftnessArmor_meshDefinition = new ItemMeshDefinition() {
-            @Override
-            public ModelResourceLocation getModelLocation(ItemStack stack) {
-                String type = ItemArmorOfSwiftness.getType(stack).getName();
-                String part = ((ItemArmor) stack.getItem()).armorType.getName();
-                return new ModelResourceLocation(swiftnessArmorLoc, "type=" + part + "_" + type);
-            }
-        };
-        ModelLoader.setCustomMeshDefinition(ModItems.armorOfSwiftness_helmet, swiftnessArmor_meshDefinition);
-        ModelLoader.setCustomMeshDefinition(ModItems.armorOfSwiftness_chest, swiftnessArmor_meshDefinition);
-        ModelLoader.setCustomMeshDefinition(ModItems.armorOfSwiftness_legs, swiftnessArmor_meshDefinition);
-        ModelLoader.setCustomMeshDefinition(ModItems.armorOfSwiftness_boots, swiftnessArmor_meshDefinition);
-        registerArmorVariants(ModItems.armorOfSwiftness_helmet, swiftnessArmorLoc, EntityEquipmentSlot.HEAD, (IStringSerializable[]) ItemArmorOfSwiftness.TYPE.values());
-        registerArmorVariants(ModItems.armorOfSwiftness_chest, swiftnessArmorLoc, EntityEquipmentSlot.CHEST, (IStringSerializable[]) ItemArmorOfSwiftness.TYPE.values());
-        registerArmorVariants(ModItems.armorOfSwiftness_legs, swiftnessArmorLoc, EntityEquipmentSlot.LEGS, (IStringSerializable[]) ItemArmorOfSwiftness.TYPE.values());
-        registerArmorVariants(ModItems.armorOfSwiftness_boots, swiftnessArmorLoc, EntityEquipmentSlot.FEET, (IStringSerializable[]) ItemArmorOfSwiftness.TYPE.values());
+        registerArmorItemWithTier(ModItems.armorOfSwiftness_helmet, "swiftnessArmor");
+        registerArmorItemWithTier(ModItems.armorOfSwiftness_chest, "swiftnessArmor");
+        registerArmorItemWithTier(ModItems.armorOfSwiftness_legs, "swiftnessArmor");
+        registerArmorItemWithTier(ModItems.armorOfSwiftness_boots, "swiftnessArmor");
 
         //----------------------
     }
 
-    private static void registerVariants(Item item, ResourceLocation base, IStringSerializable... types) {
-        for (IStringSerializable s : types) {
-            ModelLoader.registerItemVariants(item, new ModelResourceLocation(base, "type=" + s.getName()));
+    /**
+     * Registers all variants of an {@link IItemWithTier} as well as the custom mesh definition
+     * Only works with items that only have variants based on tier
+     */
+    private static void registerSimpleItemWithTier(IItemWithTier itemWithTier) {
+        Item item = (Item) itemWithTier;
+        ResourceLocation loc = new ResourceLocation(REFERENCE.MODID, "item/" + item.getRegistryName().getResourcePath());
+        ModelLoader.setCustomMeshDefinition(item, new IItemWithTier.SimpleMeshDefinition(loc));
+        for (IStringSerializable s : IItemWithTier.TIER.values()) {
+            ModelLoader.registerItemVariants(item, new ModelResourceLocation(loc, "tier=" + s.getName()));
         }
     }
 
-    private static void registerArmorVariants(ItemArmor item, ResourceLocation base, EntityEquipmentSlot slot, IStringSerializable... types) {
-
-        for (IStringSerializable s : types) {
-            ModelLoader.registerItemVariants(item, new ModelResourceLocation(base, String.format("type=%s_%s", slot.getName(), s.getName())));
+    /**
+     * Registers all variants of an {@link IItemWithTier} ItemArmor as well as the custom mesh definition
+     * Only works with items that only have variants based on tier
+     */
+    private static void registerArmorItemWithTier(IItemWithTier armorWithTier, String baseName) {
+        ItemArmor item = (ItemArmor) armorWithTier;
+        ResourceLocation loc = new ResourceLocation(REFERENCE.MODID, "item/" + baseName);
+        ModelLoader.setCustomMeshDefinition(item, new IItemWithTier.ArmorMeshDefinition(loc));
+        for (IStringSerializable s : IItemWithTier.TIER.values()) {
+            ModelLoader.registerItemVariants(item, new ModelResourceLocation(loc, "part=" + item.armorType.getName() + "_" + s.getName()));
         }
     }
+
+
 }

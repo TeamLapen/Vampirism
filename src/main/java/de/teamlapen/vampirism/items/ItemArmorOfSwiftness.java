@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.items;
 import com.google.common.collect.Multimap;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -17,44 +18,18 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
 import java.util.List;
 
 
-public class ItemArmorOfSwiftness extends VampirismHunterArmor {
+public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemWithTier {
 
     private final static String baseRegName = "armorOfSwiftness";
-
-    public static TYPE getType(ItemStack stack) {
-        NBTTagCompound tag = UtilLib.checkNBT(stack);
-        if (tag.hasKey("type")) {
-            try {
-                return TYPE.valueOf(tag.getString("type"));
-            } catch (IllegalArgumentException e) {
-                VampirismMod.log.e("ArmorOfSwiftness", e, "Invalid armor type specified in nbt");
-            }
-
-        }
-        return TYPE.NORMAL;
-
-    }
-
-    /**
-     * Set the swiftness armor type
-     *
-     * @param stack
-     * @param type
-     * @return the same stack for chaining
-     */
-    public static ItemStack setType(ItemStack stack, TYPE type) {
-        NBTTagCompound tag = UtilLib.checkNBT(stack);
-        tag.setString("type", type.name());
-        return stack;
-    }
-
+    private final int[] DAMAGE_REDUCTION_ULTIMATE = new int[]{2, 5, 6, 2};
+    private final int[] DAMAGE_REDUCTION_ENHANCED = new int[]{2, 3, 4, 2};
+    private final int[] DAMAGE_REDUCTION_NORMAL = new int[]{1, 2, 3, 1};
 
     public ItemArmorOfSwiftness(EntityEquipmentSlot equipmentSlotIn) {
         super(ArmorMaterial.LEATHER, equipmentSlotIn, baseRegName);
@@ -63,16 +38,15 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         super.addInformation(stack, playerIn, tooltip, advanced);
-        TYPE t = getType(stack);
-        if (t != TYPE.NORMAL) {
-            tooltip.add(TextFormatting.AQUA + UtilLib.translateToLocal("text.vampirism.itemType." + t.name().toLowerCase()));
+        TIER t = getTier(stack);
+        if (t != TIER.NORMAL) {
+            tooltip.add(TextFormatting.AQUA + UtilLib.translateToLocal("text.vampirism.itemTier." + t.name().toLowerCase()));
         }
     }
 
     @Override
     public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slot) {
-        TYPE type = getType(armor);
-        return type.damageReduction[slot];
+        return getDamageReduction(getTier(armor), slot);
     }
 
     @Override
@@ -80,7 +54,7 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor {
         if (type == null) {
             return getTextureLocationLeather(slot);
         }
-        switch (getType(stack)) {
+        switch (getTier(stack)) {
             case ENHANCED:
                 return getTextureLocation("swiftness_enhanced", slot, type);
             case ULTIMATE:
@@ -95,8 +69,8 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor {
         Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(equipmentSlot, stack);
 
         if (equipmentSlot == this.armorType) {
-            TYPE type = getType(stack);
-            multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor Swiftness", type.speedBoost, 2));
+            TIER tier = getTier(stack);
+            multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor Swiftness", getSpeedBoost(tier), 2));
         }
 
         return multimap;
@@ -109,15 +83,28 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor {
 
     @Override
     public ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage, int slot) {
-        TYPE type = getType(armor);
-        return new ArmorProperties(0, type.damageReduction[slot] / 25D, Integer.MAX_VALUE);
+        return new ArmorProperties(0, getDamageReduction(getTier(armor), slot) / 25D, Integer.MAX_VALUE);
     }
 
     @Override
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
-        for (TYPE t : TYPE.values()) {
-            subItems.add(setType(new ItemStack(itemIn), t));
+        for (TIER t : TIER.values()) {
+            subItems.add(setTier(new ItemStack(itemIn), t));
         }
+    }
+
+    @Override
+    public TIER getTier(ItemStack stack) {
+        NBTTagCompound tag = UtilLib.checkNBT(stack);
+        if (tag.hasKey("tier")) {
+            try {
+                return TIER.valueOf(tag.getString("tier"));
+            } catch (IllegalArgumentException e) {
+                VampirismMod.log.e("ArmorOfSwiftness", e, "Unknown item tier %s", tag.getString("tier"));
+            }
+
+        }
+        return TIER.NORMAL;
     }
 
     @Override
@@ -134,7 +121,7 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor {
                 int boost = Integer.MAX_VALUE;
                 for (ItemStack stack : player.inventory.armorInventory) {
                     if (stack != null && stack.getItem() instanceof ItemArmorOfSwiftness) {
-                        int b = getType(stack).jumpBoost;
+                        int b = getJumpBoost(getTier(stack));
                         if (b < boost) {
                             boost = b;
                         }
@@ -144,9 +131,58 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor {
                     }
                 }
                 if (flag && boost > -1) {
-                    player.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 50, boost));
+                    player.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, 50, boost, false, false));
                 }
             }
+        }
+    }
+
+    @Override
+    public ItemStack setTier(ItemStack stack, TIER tier) {
+        NBTTagCompound tag = UtilLib.checkNBT(stack);
+        tag.setString("tier", tier.name());
+        return stack;
+    }
+
+    private int getDamageReduction(TIER tier, int slot) {
+        switch (tier) {
+            case ULTIMATE:
+                return DAMAGE_REDUCTION_ULTIMATE[slot];
+            case ENHANCED:
+                return DAMAGE_REDUCTION_ENHANCED[slot];
+            default:
+                return DAMAGE_REDUCTION_NORMAL[slot];
+        }
+    }
+
+    /**
+     * Applied if complete armor is worn
+
+     * @return -1 if none
+     */
+    private int getJumpBoost(TIER tier) {
+        switch (tier) {
+            case ULTIMATE:
+                return 1;
+            case ENHANCED:
+                return 0;
+            default:
+                return -1;
+        }
+    }
+
+    /**
+     * Applied per piece
+
+     */
+    private double getSpeedBoost(TIER tier) {
+        switch (tier) {
+            case ULTIMATE:
+                return 0.1;
+            case ENHANCED:
+                return 0.075;
+            default:
+                return 0.035;
         }
     }
 
@@ -158,31 +194,5 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor {
         return String.format("minecraft:textures/models/armor/leather_layer_%d.png", slot == EntityEquipmentSlot.LEGS ? 2 : 1);
     }
 
-    public enum TYPE implements IStringSerializable {
-        NORMAL(0.035, -1, new int[]{1, 2, 3, 1}), ENHANCED(0.075, 0, new int[]{2, 3, 4, 2}), ULTIMATE(0.1, 1, new int[]{2, 5, 6, 2});
-        /**
-         * Applied per piece
-         */
-        final double speedBoost;
-        /**
-         * Applied if complete armor is worn
-         * -1 if none
-         */
-        final int jumpBoost;
-        final int[] damageReduction;
-
-
-        TYPE(double speedBoost, int jumpBoost, int[] damageReduction) {
-            this.speedBoost = speedBoost;
-            this.jumpBoost = jumpBoost;
-            this.damageReduction = damageReduction;
-        }
-
-
-        @Override
-        public String getName() {
-            return name().toLowerCase();
-        }
-    }
 
 }
