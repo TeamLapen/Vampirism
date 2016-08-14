@@ -22,6 +22,7 @@ import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.fluids.BloodHelper;
+import de.teamlapen.vampirism.items.ItemHunterCoat;
 import de.teamlapen.vampirism.modcompat.sponge.SpongeModCompat;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.player.VampirismPlayer;
@@ -221,13 +222,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             if (((EntityPlayer) entity).capabilities.isCreativeMode || !Permissions.getPermission("pvp", player)) {
                 return BITE_TYPE.NONE;
             }
+            boolean hunter = Helper.isHunter(player);
             if (!UtilLib.canReallySee(entity, player, false) && VampirePlayer.get((EntityPlayer) entity).canBeBitten(this)) {
-                if (FactionPlayerHandler.get(player).isInFaction(VReference.HUNTER_FACTION)) {
-                    return BITE_TYPE.SUCK_BLOOD_PLAYER_POISONOUS;
-                }
-                return BITE_TYPE.SUCK_BLOOD_PLAYER;
-            }
-            return BITE_TYPE.ATTACK;
+                return hunter ? BITE_TYPE.SUCK_BLOOD_HUNTER_PLAYER : BITE_TYPE.SUCK_BLOOD_PLAYER;
+
+            } else return hunter ? BITE_TYPE.ATTACK_HUNTER : BITE_TYPE.ATTACK;
         }
         return BITE_TYPE.ATTACK;
     }
@@ -943,21 +942,25 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (type == BITE_TYPE.SUCK_BLOOD_CREATURE) {
             blood = ExtendedCreature.get((EntityCreature) entity).onBite(this);
             saturationMod = ExtendedCreature.get((EntityCreature) entity).getBloodSaturation();
-        } else if (type == BITE_TYPE.SUCK_BLOOD_PLAYER || type == BITE_TYPE.SUCK_BLOOD_PLAYER_POISONOUS) {
+        } else if (type == BITE_TYPE.SUCK_BLOOD_PLAYER || type == BITE_TYPE.SUCK_BLOOD_HUNTER_PLAYER) {
             blood = VampirePlayer.get((EntityPlayer) entity).onBite(this);
             saturationMod = VampirePlayer.get((EntityPlayer) entity).getBloodSaturation();
-            if (type == BITE_TYPE.SUCK_BLOOD_PLAYER_POISONOUS) {
+            if (type == BITE_TYPE.SUCK_BLOOD_HUNTER_PLAYER) {
                 player.addPotionEffect(new PotionEffect(MobEffects.POISON, 15, 2));
             }
         } else if (type == BITE_TYPE.SUCK_BLOOD) {
             blood = ((IBiteableEntity) entity).onBite(this);
             saturationMod = ((IBiteableEntity) entity).getBloodSaturation();
-        } else if (type == BITE_TYPE.ATTACK) {
+        } else if (type == BITE_TYPE.ATTACK || type == BITE_TYPE.ATTACK_HUNTER) {
             checkAttributes(VReference.biteDamage);
             float damage = getSpecialAttributes().bat ? 0.1F : (float) player.getEntityAttribute(VReference.biteDamage).getAttributeValue();
             entity.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
             if (entity.isEntityUndead() && player.getRNG().nextInt(4) == 0) {
                 player.addPotionEffect(new PotionEffect(MobEffects.POISON, 60));
+            } else if (type == BITE_TYPE.ATTACK_HUNTER) {
+                if (entity instanceof EntityPlayer && ItemHunterCoat.isFullyEquipped((EntityPlayer) entity)) {
+                    player.attackEntityFrom(DamageSource.causeThornsDamage(entity), damage);
+                }
             }
             if (specialAttributes.poisonous_bite) {
                 entity.addPotionEffect(new PotionEffect(MobEffects.POISON, (int) (Balance.vps.POISONOUS_BITE_DURATION * 20 * (getSpecialAttributes().bat ? 0.2F : 1F)), 1));

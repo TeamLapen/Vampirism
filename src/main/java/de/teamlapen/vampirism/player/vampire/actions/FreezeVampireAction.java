@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
+import de.teamlapen.vampirism.items.ItemHunterCoat;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -57,6 +58,7 @@ public class FreezeVampireAction extends DefaultVampireAction {
         for (Object o : l) {
             if (o instanceof EntityBlindingBat) continue;
             if (!(o instanceof EntityLivingBase)) continue;
+            if (o instanceof EntityPlayer && ItemHunterCoat.isFullyEquipped((EntityPlayer) o)) continue;
             EntityLivingBase e = (EntityLivingBase) o;
             e.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, Balance.vpa.FREEZE_DURATION * 20, 10));
             e.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, Balance.vpa.FREEZE_DURATION * 20, 10));

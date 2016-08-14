@@ -43,5 +43,6 @@ public class VampirismJEIPlugin extends BlankModPlugin {
     private void registerNBTSubtypes(ISubtypeRegistry registry) {
         registry.useNbtForSubtypes(ModItems.armorOfSwiftness_boots, ModItems.armorOfSwiftness_chest, ModItems.armorOfSwiftness_helmet, ModItems.armorOfSwiftness_legs);
         registry.useNbtForSubtypes(ModItems.hunterAxe);
+        registry.useNbtForSubtypes(ModItems.hunterCoat_boots, ModItems.hunterCoat_chest, ModItems.hunterCoat_helmet, ModItems.hunterCoat_legs);
     }
 }

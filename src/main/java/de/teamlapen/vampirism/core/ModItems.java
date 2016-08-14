@@ -54,6 +54,11 @@ public class ModItems {
     public static ItemArmorOfSwiftness armorOfSwiftness_legs;
     public static ItemArmorOfSwiftness armorOfSwiftness_boots;
 
+    public static ItemHunterCoat hunterCoat_helmet;
+    public static ItemHunterCoat hunterCoat_chest;
+    public static ItemHunterCoat hunterCoat_legs;
+    public static ItemHunterCoat hunterCoat_boots;
+
     public static ItemHunterHat hunterHat0;
     public static ItemHunterHat hunterHat1;
 
@@ -111,7 +116,14 @@ public class ModItems {
         weaponCraftingManager.addRecipe(new ItemStack(ModItems.hunterHat1), 1, (ISkill<IHunterPlayer>) null, 0, "    ", " XX ", " XX ", "YYYY", 'X', new ItemStack(Blocks.WOOL, 1, EnumDyeColor.BLACK.getMetadata()), 'Y', Items.IRON_INGOT);
         weaponCraftingManager.addRecipe(createStack(hunterAxe, IItemWithTier.TIER.NORMAL), 1, (ISkill<IHunterPlayer>) null, 3, "XYX ", "XYX ", "XYX ", " Y  ", 'X', Items.IRON_INGOT, 'Y', Items.STICK);
         weaponCraftingManager.addRecipe(createStack(hunterAxe, IItemWithTier.TIER.ENHANCED), 1, (ISkill<IHunterPlayer>) null, 5, "XZX ", "XZX ", "XYX ", " Y  ", 'X', Items.IRON_INGOT, 'Y', Items.STICK, 'Z', Items.DIAMOND);
-
+        weaponCraftingManager.addRecipe(createStack(hunterCoat_helmet, IItemWithTier.TIER.NORMAL), 1, (ISkill<IHunterPlayer>) null, 2, "YXXY", "YZZY", "YZZY", "    ", 'X', Items.LEATHER, 'Y', Items.IRON_INGOT, 'Z', ModItems.itemGarlic);
+        weaponCraftingManager.addRecipe(createStack(hunterCoat_chest, IItemWithTier.TIER.NORMAL), 1, (ISkill<IHunterPlayer>) null, 2, "YWWY", "YZZY", "YZZY", "YXXY", 'X', Items.LEATHER, 'Y', Items.IRON_INGOT, 'Z', ModItems.itemGarlic, 'W', ModItems.vampireFang);
+        weaponCraftingManager.addRecipe(createStack(hunterCoat_legs, IItemWithTier.TIER.NORMAL), 1, (ISkill<IHunterPlayer>) null, 2, "YYYY", "YZZY", "YZZY", "Y  Y", 'X', Items.LEATHER, 'Y', Items.IRON_INGOT, 'Z', ModItems.itemGarlic);
+        weaponCraftingManager.addRecipe(createStack(hunterCoat_boots, IItemWithTier.TIER.NORMAL), 1, (ISkill<IHunterPlayer>) null, 2, "    ", "YYYY", "YZZY", "YXXY", 'X', Items.LEATHER, 'Y', Items.IRON_INGOT, 'Z', ModItems.itemGarlic);
+        weaponCraftingManager.addRecipe(createStack(hunterCoat_helmet, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhancedArmor, 5, "YXXY", "YZZY", "YZZY", "    ", 'X', Items.DIAMOND, 'Y', Items.IRON_INGOT, 'Z', ModItems.itemGarlic);
+        weaponCraftingManager.addRecipe(createStack(hunterCoat_chest, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhancedArmor, 5, "YWWY", "YZZY", "YXXY", "YXXY", 'X', Items.DIAMOND, 'Y', Items.IRON_INGOT, 'Z', ModItems.itemGarlic, 'W', ModItems.vampireFang);
+        weaponCraftingManager.addRecipe(createStack(hunterCoat_legs, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhancedArmor, 5, "YWWY", "YZZY", "YZZY", "YWWY", 'X', Items.LEATHER, 'Y', Items.IRON_INGOT, 'Z', ModItems.itemGarlic, 'W', Items.DIAMOND);
+        weaponCraftingManager.addRecipe(createStack(hunterCoat_boots, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhancedArmor, 5, "    ", "YYYY", "YZZY", "YXXY", 'X', Items.DIAMOND, 'Y', Items.IRON_INGOT, 'Z', ModItems.itemGarlic);
     }
 
     private static ItemStack createStack(IItemWithTier item, IItemWithTier.TIER tier) {
@@ -160,6 +172,11 @@ public class ModItems {
         hunterHat1 = registerItem(new ItemHunterHat(1));
 
         hunterAxe = registerItem(new ItemHunterAxe());
+
+        hunterCoat_helmet = registerItem(new ItemHunterCoat(EntityEquipmentSlot.HEAD));
+        hunterCoat_chest = registerItem(new ItemHunterCoat(EntityEquipmentSlot.CHEST));
+        hunterCoat_legs = registerItem(new ItemHunterCoat(EntityEquipmentSlot.LEGS));
+        hunterCoat_boots = registerItem(new ItemHunterCoat(EntityEquipmentSlot.FEET));
     }
 
     private static <T extends Item> T registerItem(T item) {

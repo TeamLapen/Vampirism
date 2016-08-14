@@ -4,7 +4,6 @@ import com.google.common.collect.Multimap;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -76,10 +75,6 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
         return multimap;
     }
 
-    @Override
-    public int getItemEnchantability() {
-        return 0;
-    }
 
     @Override
     public ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage, int slot) {
@@ -107,10 +102,6 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
         return TIER.NORMAL;
     }
 
-    @Override
-    public boolean hasEffect(ItemStack stack) {
-        return true;
-    }
 
     @Override
     public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
@@ -184,10 +175,6 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
             default:
                 return 0.035;
         }
-    }
-
-    private String getTextureLocation(String name, EntityEquipmentSlot slot, String type) {
-        return String.format(REFERENCE.MODID + ":textures/models/armor/%s_layer_%d%s.png", name, slot == EntityEquipmentSlot.LEGS ? 2 : 1, type == null ? "" : "_overlay");
     }
 
     private String getTextureLocationLeather(EntityEquipmentSlot slot) {

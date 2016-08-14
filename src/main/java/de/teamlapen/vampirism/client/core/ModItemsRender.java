@@ -98,6 +98,12 @@ public class ModItemsRender {
         registerArmorItemWithTier(ModItems.armorOfSwiftness_legs, "swiftnessArmor");
         registerArmorItemWithTier(ModItems.armorOfSwiftness_boots, "swiftnessArmor");
 
+        registerArmorItemWithTier(ModItems.hunterCoat_helmet, "hunterCoat");
+        registerArmorItemWithTier(ModItems.hunterCoat_chest, "hunterCoat");
+        registerArmorItemWithTier(ModItems.hunterCoat_legs, "hunterCoat");
+        registerArmorItemWithTier(ModItems.hunterCoat_boots, "hunterCoat");
+
+
         //----------------------
     }
 
