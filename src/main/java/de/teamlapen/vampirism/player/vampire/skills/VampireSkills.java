@@ -128,7 +128,7 @@ public class VampireSkills {
 
             @Override
             public String getLocalizedDescription() {
-                return UtilLib.translateToLocal("text.vampirism.skill.more_bite_damage.desc");
+                return UtilLib.translate("text.vampirism.skill.more_bite_damage.desc");
             }
 
             @Override
@@ -155,7 +155,7 @@ public class VampireSkills {
 
             @Override
             public String getLocalizedDescription() {
-                return UtilLib.translateToLocal("text.vampirism.skill.poisonous_bite.desc");
+                return UtilLib.translate("text.vampirism.skill.poisonous_bite.desc");
             }
 
             @Override

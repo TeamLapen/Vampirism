@@ -26,7 +26,7 @@ public class HunterWeaponRecipeCategory extends BlankRecipeCategory {
     private final ICraftingGridHelper craftingGridHelper;
 
     public HunterWeaponRecipeCategory(IGuiHelper guiHelper) {
-        localizedName = UtilLib.translateToLocal("gui.vampirism.hunter_weapon_table");
+        localizedName = UtilLib.translate("gui.vampirism.hunter_weapon_table");
         background = guiHelper.createDrawable(location, 32, 14, 134, 77, 0, 30, 0, 0);
         craftingGridHelper = guiHelper.createCraftingGridHelper(1, 0);
 

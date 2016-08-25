@@ -37,7 +37,7 @@ abstract class VampirismHunterArmor extends ItemArmor implements ISpecialArmor {
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         super.addInformation(stack, playerIn, tooltip, advanced);
         if (Helper.isVampire(playerIn)) {
-            tooltip.add(TextFormatting.RED + UtilLib.translateToLocal("text.vampirism.poisonous_to_vampires"));
+            tooltip.add(TextFormatting.RED + UtilLib.translate("text.vampirism.poisonous_to_vampires"));
         }
     }
 

@@ -63,28 +63,28 @@ public class GuideBook {
         String base = "guide.vampirism.overview.";
 
         List<IPage> introPages = new ArrayList<>();
-        introPages.addAll(PageHelper.pagesForLongText(UtilLib.translateToLocal(base + "intro.text"), 340));
+        introPages.addAll(PageHelper.pagesForLongText(UtilLib.translate(base + "intro.text"), 340));
         PageHelper.setPagesToUnicode(introPages);
-        entries.put(new ResourceLocation(base + "intro"), new EntryText(introPages, UtilLib.translateToLocal(base + "intro")));
+        entries.put(new ResourceLocation(base + "intro"), new EntryText(introPages, UtilLib.translate(base + "intro")));
 
         List<IPage> gettingStartedPages = new ArrayList<>();
         PageHelper.setPagesToUnicode(gettingStartedPages);
-        entries.put(new ResourceLocation(base + "gettingStarted"), new EntryText(gettingStartedPages, UtilLib.translateToLocal(base + "gettingStarted")));
+        entries.put(new ResourceLocation(base + "gettingStarted"), new EntryText(gettingStartedPages, UtilLib.translate(base + "gettingStarted")));
 
         List<IPage> configPages = new ArrayList<>();
-        configPages.addAll(PageHelper.pagesForLongText(UtilLib.translateToLocal(base + "config.text"), 340));
+        configPages.addAll(PageHelper.pagesForLongText(UtilLib.translate(base + "config.text"), 340));
         PageHelper.setPagesToUnicode(configPages);
-        entries.put(new ResourceLocation(base + "config"), new EntryText(configPages, UtilLib.translateToLocal(base + "config")));
+        entries.put(new ResourceLocation(base + "config"), new EntryText(configPages, UtilLib.translate(base + "config")));
 
         List<IPage> troublePages = new ArrayList<>();
-        troublePages.addAll(PageHelper.pagesForLongText(UtilLib.translateToLocal(base + "trouble.text"), 340));
+        troublePages.addAll(PageHelper.pagesForLongText(UtilLib.translate(base + "trouble.text"), 340));
         PageHelper.setPagesToUnicode(troublePages);
-        entries.put(new ResourceLocation(base + "trouble"), new EntryText(troublePages, UtilLib.translateToLocal(base + "trouble")));
+        entries.put(new ResourceLocation(base + "trouble"), new EntryText(troublePages, UtilLib.translate(base + "trouble")));
 
         List<IPage> devPages = new ArrayList<>();
-        devPages.addAll(PageHelper.pagesForLongText(UtilLib.translateToLocal(base + "dev.text"), 340));
+        devPages.addAll(PageHelper.pagesForLongText(UtilLib.translate(base + "dev.text"), 340));
         PageHelper.setPagesToUnicode(devPages);
-        entries.put(new ResourceLocation(base + "dev"), new EntryText(devPages, UtilLib.translateToLocal(base + "dev")));
+        entries.put(new ResourceLocation(base + "dev"), new EntryText(devPages, UtilLib.translate(base + "dev")));
 
 
         return entries;

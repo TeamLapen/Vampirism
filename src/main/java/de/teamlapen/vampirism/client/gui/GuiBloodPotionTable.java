@@ -36,7 +36,7 @@ public class GuiBloodPotionTable extends GuiContainer {
     @Override
     public void initGui() {
         super.initGui();
-        this.buttonList.add(this.craftBtn = new GuiButton(0, this.width / 2 - 77, this.height / 2 - 78, 80, 20, UtilLib.translateToLocal("gui.vampirism.blood_potion_table.create")));
+        this.buttonList.add(this.craftBtn = new GuiButton(0, this.width / 2 - 77, this.height / 2 - 78, 80, 20, UtilLib.translate("gui.vampirism.blood_potion_table.create")));
         craftBtn.enabled = false;
     }
 

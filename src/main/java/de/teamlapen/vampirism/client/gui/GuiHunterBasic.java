@@ -72,9 +72,9 @@ public class GuiHunterBasic extends GuiContainer {
         super.drawGuiContainerForegroundLayer(mouseX, mouseY);
         String text = null;
         if (missing == 0) {
-            text = UtilLib.translateToLocal("text.vampirism.basic_hunter.i_will_train_you");
+            text = UtilLib.translate("text.vampirism.basic_hunter.i_will_train_you");
         } else if (missing > 0) {
-            text = UtilLib.translateToLocalFormatted("text.vampirism.basic_hunter.pay_n_vampire_blood_more", missing);
+            text = UtilLib.translateFormatted("text.vampirism.basic_hunter.pay_n_vampire_blood_more", missing);
         }
         if (text != null) {
             this.fontRendererObj.drawSplitString(text, 50, 12, 120, 0);

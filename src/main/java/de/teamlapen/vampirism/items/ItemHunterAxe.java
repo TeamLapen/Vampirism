@@ -32,10 +32,10 @@ public class ItemHunterAxe extends VampirismHunterWeapon implements IItemWithTie
         super.addInformation(stack, playerIn, tooltip, advanced);
         TIER tier = getTier(stack);
         if (tier != TIER.NORMAL) {
-            tooltip.add(TextFormatting.AQUA + UtilLib.translateToLocal("text.vampirism.itemTier." + tier.name().toLowerCase()));
+            tooltip.add(TextFormatting.AQUA + UtilLib.translate("text.vampirism.itemTier." + tier.name().toLowerCase()));
 
         }
-        tooltip.add(UtilLib.translateToLocalFormatted("text.vampirism.deals_more_damage_to", Math.round((getVampireMult(tier) - 1) * 100)) + " " + UtilLib.translateToLocal(VReference.VAMPIRE_FACTION.getUnlocalizedNamePlural()));
+        tooltip.add(UtilLib.translateFormatted("text.vampirism.deals_more_damage_to", Math.round((getVampireMult(tier) - 1) * 100)) + " " + UtilLib.translate(VReference.VAMPIRE_FACTION.getUnlocalizedNamePlural()));
     }
 
     @Override

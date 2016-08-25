@@ -25,9 +25,9 @@ public class HunterSkills {
     public static final ISkill<IHunterPlayer> stake1 = new VampirismSkill.SimpleHunterSkill("stake1", 16, 32, false) {
         @Override
         public String getLocalizedDescription() {
-            String desc = UtilLib.translateToLocalFormatted("text.vampirism.skill.stake1.desc", (int) (Balance.hps.INSTANT_KILL_SKILL_1_MAX_HEALTH_PERC * 100));
+            String desc = UtilLib.translateFormatted("text.vampirism.skill.stake1.desc", (int) (Balance.hps.INSTANT_KILL_SKILL_1_MAX_HEALTH_PERC * 100));
             if (Balance.hps.INSTANT_KILL_SKILL_1_FROM_BEHIND) {
-                desc += " " + UtilLib.translateToLocal("text.vampirism.from_behind");
+                desc += " " + UtilLib.translate("text.vampirism.from_behind");
             }
             return desc;
         }
@@ -37,9 +37,9 @@ public class HunterSkills {
         public String getLocalizedDescription() {
             String desc = null;
             if (Balance.hps.INSTANT_KILL_SKILL_2_ONLY_NPC) {
-                desc = UtilLib.translateToLocalFormatted("text.vampirism.skill.stake2.desc_npc", (int) Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH);
+                desc = UtilLib.translateFormatted("text.vampirism.skill.stake2.desc_npc", (int) Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH);
             } else {
-                desc = UtilLib.translateToLocalFormatted("text.vampirism.skill.stake2.desc_all", (int) Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH);
+                desc = UtilLib.translateFormatted("text.vampirism.skill.stake2.desc_all", (int) Balance.hps.INSTANT_KILL_SKILL_2_MAX_HEALTH);
 
             }
             return desc;
@@ -53,7 +53,7 @@ public class HunterSkills {
     public static final ISkill<IHunterPlayer> bloodPotion_lessBad2 = new VampirismSkill.SimpleHunterSkill("blood_potion_less_bad_2", 80, 32, true) {
         @Override
         public String getLocalizedDescription() {
-            return UtilLib.translateToLocal("text.vampirism.skill.blood_potion_less_bad.desc");
+            return UtilLib.translate("text.vampirism.skill.blood_potion_less_bad.desc");
         }
 
         @Override

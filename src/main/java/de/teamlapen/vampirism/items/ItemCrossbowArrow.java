@@ -68,7 +68,7 @@ public class ItemCrossbowArrow extends VampirismItem {
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         EnumArrowType type = getType(stack);
         if (type != EnumArrowType.NORMAL) {
-            tooltip.add(UtilLib.translateToLocal("item.vampirism." + regName + "." + type.name + ".tooltip"));
+            tooltip.add(UtilLib.translate("item.vampirism." + regName + "." + type.name + ".tooltip"));
         }
     }
 
@@ -88,7 +88,7 @@ public class ItemCrossbowArrow extends VampirismItem {
     public String getItemStackDisplayName(ItemStack stack) {
         EnumArrowType type = getType(stack);
         if (type != EnumArrowType.NORMAL) {
-            return UtilLib.translateToLocal("item.vampirism." + regName + "." + type.name + ".name");
+            return UtilLib.translate("item.vampirism." + regName + "." + type.name + ".name");
         }
         return super.getItemStackDisplayName(stack);
     }

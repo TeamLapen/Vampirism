@@ -120,9 +120,9 @@ public class BloodPotionTableContainer extends Container {
         if (!hunterPlayer.getSkillHandler().isSkillEnabled(HunterSkills.bloodPotion_categoryHint)) return null;
         List<String> hints = BloodPotions.getLocalizedCategoryHint(extra);
         if (hints.isEmpty()) {
-            hints.add(UtilLib.translateToLocal("text.vampirism.blood_potion.any_effect"));
+            hints.add(UtilLib.translate("text.vampirism.blood_potion.any_effect"));
         } else {
-            hints.add(0, UtilLib.translateToLocal("text.vampirism.blood_potion.might_cause"));
+            hints.add(0, UtilLib.translate("text.vampirism.blood_potion.might_cause"));
         }
         return hints;
     }

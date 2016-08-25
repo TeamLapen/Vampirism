@@ -42,7 +42,7 @@ class BloodPotionEffect implements IBloodPotionEffect {
 
     @Override
     public String getLocName(NBTTagCompound properties) {
-        return UtilLib.translateToLocal(potion.getName());
+        return UtilLib.translate(potion.getName());
     }
 
     @Override

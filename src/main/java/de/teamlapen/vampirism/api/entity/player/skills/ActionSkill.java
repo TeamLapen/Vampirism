@@ -33,7 +33,7 @@ public class ActionSkill<T extends ISkillPlayer> extends VampirismSkill<T> {
 
     @Override
     public String getLocalizedDescription() {
-        return UtilLib.translateToLocal("text.vampirism.skill.unlocks_action");
+        return UtilLib.translate("text.vampirism.skill.unlocks_action");
     }
 
     @Override

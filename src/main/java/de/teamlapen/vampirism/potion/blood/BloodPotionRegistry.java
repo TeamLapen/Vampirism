@@ -38,7 +38,7 @@ public class BloodPotionRegistry implements IBloodPotionRegistry {
         List<String> desc = Lists.newArrayList();
         for (IBloodPotionCategory category : categories) {
             if (category.containsItem(item)) {
-                desc.add(UtilLib.translateToLocal(category.getUnlocDescription()));
+                desc.add(UtilLib.translate(category.getUnlocDescription()));
 
             }
         }
