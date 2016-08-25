@@ -6,6 +6,8 @@ import amerifrance.guideapi.api.impl.Book;
 import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
 import amerifrance.guideapi.api.util.PageHelper;
 import amerifrance.guideapi.category.CategoryItemStack;
+import amerifrance.guideapi.page.PageText;
+import com.google.common.collect.Maps;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModItems;
@@ -18,7 +20,9 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 
+import javax.annotation.Nullable;
 import java.awt.*;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -27,9 +31,11 @@ import java.util.Map;
 
 public class GuideBook {
 
-    private final static String TAG = "GuideBook";
+    public final static String TAG = "GuideBook";
+    private final static String IMAGE_BASE = "vampirismguide:textures/images/";
     public static ItemStack bookStack;
     private static Book guideBook;
+    private static Map<ResourceLocation, EntryAbstract> links = Maps.newHashMap();
 
     static void initBook() {
         guideBook = new Book();
@@ -39,6 +45,7 @@ public class GuideBook {
         guideBook.setAuthor("Maxanier");
         guideBook.setColor(Color.getHSBColor(0.5f, 0.2f, 0.5f));
         guideBook.setRegistryName(REFERENCE.MODID, "guide");
+        guideBook.setOutlineTexture(new ResourceLocation("vampirismguide", "textures/gui/book_violet_border.png"));
         GameRegistry.register(guideBook);
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
             GuideAPI.setModel(guideBook);
@@ -58,6 +65,15 @@ public class GuideBook {
         VampirismMod.log.d(TAG, "Finished building categories after %d ms", System.currentTimeMillis() - start);
     }
 
+    /**
+     * @return The entry registered with the given location. Can be null
+     */
+    public static
+    @Nullable
+    EntryAbstract getLinkedEntry(ResourceLocation location) {
+        return links.get(location);
+    }
+
     private static Map<ResourceLocation, EntryAbstract> buildOverview() {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.overview.";
@@ -68,17 +84,23 @@ public class GuideBook {
         entries.put(new ResourceLocation(base + "intro"), new EntryText(introPages, UtilLib.translate(base + "intro")));
 
         List<IPage> gettingStartedPages = new ArrayList<>();
+        IPage p = new PageText(UtilLib.translate(base + "gettingStarted.text"));
+        p = new PageHolderWithLinks(p).addLink("guide.vampirism.vampire.gettingStarted").addLink("guide.vampirism.hunter.gettingStarted");
+        gettingStartedPages.add(p);
         PageHelper.setPagesToUnicode(gettingStartedPages);
         entries.put(new ResourceLocation(base + "gettingStarted"), new EntryText(gettingStartedPages, UtilLib.translate(base + "gettingStarted")));
 
         List<IPage> configPages = new ArrayList<>();
         configPages.addAll(PageHelper.pagesForLongText(UtilLib.translate(base + "config.text"), 340));
+        configPages.addAll(PageHelper.pagesForLongText(GuideHelper.append(base + "config.general.text", base + "config.general.examples"), 340));
+        configPages.addAll(PageHelper.pagesForLongText(UtilLib.translate(base + "config.balance.text"), 340));
         PageHelper.setPagesToUnicode(configPages);
         entries.put(new ResourceLocation(base + "config"), new EntryText(configPages, UtilLib.translate(base + "config")));
 
         List<IPage> troublePages = new ArrayList<>();
         troublePages.addAll(PageHelper.pagesForLongText(UtilLib.translate(base + "trouble.text"), 340));
         PageHelper.setPagesToUnicode(troublePages);
+        GuideHelper.addLinks(troublePages, new PageHolderWithLinks.URLLink(UtilLib.translate(base + "trouble"), URI.create("https://github.com/TeamLapen/Vampirism/wiki/Troubleshooting")));
         entries.put(new ResourceLocation(base + "trouble"), new EntryText(troublePages, UtilLib.translate(base + "trouble")));
 
         List<IPage> devPages = new ArrayList<>();
@@ -86,7 +108,16 @@ public class GuideBook {
         PageHelper.setPagesToUnicode(devPages);
         entries.put(new ResourceLocation(base + "dev"), new EntryText(devPages, UtilLib.translate(base + "dev")));
 
+        List<IPage> supportPages = new ArrayList<>();
+        supportPages.addAll(PageHelper.pagesForLongText(UtilLib.translate(base + "support.text"), 300));
+        PageHolderWithLinks.URLLink linkPatreon = new PageHolderWithLinks.URLLink("Patreon", URI.create(REFERENCE.PATREON_LINK));
+        PageHolderWithLinks.URLLink linkCurseForge = new PageHolderWithLinks.URLLink("CurseForge", URI.create(REFERENCE.CURSEFORGE_LINK));
 
+        GuideHelper.addLinks(supportPages, linkPatreon, linkCurseForge, new ResourceLocation(base + "dev"));
+        PageHelper.setPagesToUnicode(supportPages);
+        entries.put(new ResourceLocation(base + "support"), new EntryText(supportPages, UtilLib.translate(base + "support")));
+
+        links.putAll(entries);
         return entries;
     }
 

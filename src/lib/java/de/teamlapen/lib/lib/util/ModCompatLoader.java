@@ -59,7 +59,9 @@ public class ModCompatLoader implements IInitListener {
             try {
                 next.onInitStep(step, event);
             } catch (Exception e) {
-                VampLib.log.e(TAG, "Mod Compat %s threw an exception during %s. Unloading.", next.getModID(), step);
+                VampLib.log.e(TAG, "---------------------------------------------------------");
+                VampLib.log.e(TAG, e, "Mod Compat %s threw an exception during %s. Unloading.", next.getModID(), step);
+                VampLib.log.e(TAG, "---------------------------------------------------------");
                 it.remove();
             }
         }
