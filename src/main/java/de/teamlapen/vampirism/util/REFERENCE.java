@@ -16,6 +16,8 @@ public class REFERENCE {
     public static final String FORGE_VERSION = "@FVERSION@";
     public static final String VERSION_UPDATE_FILE = "http://maxanier.de/projects/vampirism/versions.json";
     public static final String SUPPORTER_FILE = "http://maxanier.de/projects/vampirism/supporters.json";//TODO maybe switch back to HTTPS when most java version trust let's encrypt
+    public static final String CURSEFORGE_LINK = "https://minecraft.curseforge.com/projects/vampirism-become-a-vampire";
+    public static final String PATREON_LINK = "https://www.patreon.com/maxanier";
 
     public static final int EYE_TYPE_COUNT = 7;
     public static final int FANG_TYPE_COUNT = 6;
