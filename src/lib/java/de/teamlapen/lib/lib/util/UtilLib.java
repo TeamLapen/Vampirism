@@ -3,7 +3,6 @@ package de.teamlapen.lib.lib.util;
 import com.google.common.base.Predicate;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.VampirismMod;
-import mezz.jei.util.Log;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.*;
@@ -420,7 +419,7 @@ public class UtilLib {
         return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getOppedPlayers().getEntry(player.getGameProfile()) != null;
     }
 
-    public static String translateToLocal(String key) {
+    public static String translate(String key) {
         if (I18n.canTranslate(key)) {
             return I18n.translateToLocal(key);
         } else {
@@ -428,14 +427,13 @@ public class UtilLib {
         }
     }
 
-    public static String translateToLocalFormatted(String key, Object... format) {
-        String s = translateToLocal(key);
+    public static String translateFormatted(String key, Object... format) {
+        String s = translate(key);
         try {
             return String.format(s, format);
         } catch (IllegalFormatException e) {
-            String errorMessage = "Format error: " + s;
-            Log.error(errorMessage, e);
-            return errorMessage;
+            VampLib.log.e("Translate", e, "Formatting Error");
+            return "Formatting Error: " + e.getMessage();
         }
     }
 

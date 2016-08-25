@@ -177,7 +177,7 @@ public class ModPlayerEventHandler {
             if (f != null) {
                 event.setDisplayname(f.getChatColor() + event.getDisplayname());
                 if (fp instanceof IVampirePlayer && !fp.isDisguised() && ((IVampirePlayer) fp).isVampireLord()) {
-                    event.setDisplayname(TextFormatting.RED + "[" + UtilLib.translateToLocal("text.vampirism.lord") + "] " + TextFormatting.RESET + event.getDisplayname());
+                    event.setDisplayname(TextFormatting.RED + "[" + UtilLib.translate("text.vampirism.lord") + "] " + TextFormatting.RESET + event.getDisplayname());
                 }
             }
 

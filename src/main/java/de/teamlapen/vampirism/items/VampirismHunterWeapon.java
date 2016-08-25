@@ -47,10 +47,10 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
         if (getUsingFaction(stack) != null || getMinLevel(stack) > 0 || getRequiredSkill(stack) != null) {
             FactionPlayerHandler handler = FactionPlayerHandler.get(playerIn);
             TextFormatting color = Helper.canUseFactionItem(stack, this, handler) ? TextFormatting.BLUE : TextFormatting.DARK_RED;
-            tooltip.add(color + UtilLib.translateToLocalFormatted(getUsingFaction(stack) == null ? "text.vampirism.all" : getUsingFaction(stack).getUnlocalizedNamePlural()) + ": " + getMinLevel(stack) + "+");
+            tooltip.add(color + UtilLib.translateFormatted(getUsingFaction(stack) == null ? "text.vampirism.all" : getUsingFaction(stack).getUnlocalizedNamePlural()) + ": " + getMinLevel(stack) + "+");
             ISkill reqSkill = this.getRequiredSkill(stack);
             if (reqSkill != null) {
-                tooltip.add(color + UtilLib.translateToLocalFormatted("text.vampirism.required_skill", UtilLib.translateToLocal(reqSkill.getUnlocalizedName())));
+                tooltip.add(color + UtilLib.translateFormatted("text.vampirism.required_skill", UtilLib.translate(reqSkill.getUnlocalizedName())));
             }
         }
     }

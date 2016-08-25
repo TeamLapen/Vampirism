@@ -21,7 +21,7 @@ public abstract class VampirismSkill<T extends ISkillPlayer> extends DefaultSkil
 
     @Override
     public String getLocalizedDescription() {
-        return description == null ? null : UtilLib.translateToLocal(description);
+        return description == null ? null : UtilLib.translate(description);
     }
 
     @Override

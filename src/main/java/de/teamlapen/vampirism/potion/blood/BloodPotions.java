@@ -104,7 +104,7 @@ public class BloodPotions {
             if (identifyRandom != null && identifyRandom.nextBoolean()) {
                 text = effect.getEffect().getLocName(effect.properties);
             } else {
-                text = UtilLib.translateToLocal("text.vampirism.unknown");
+                text = UtilLib.translate("text.vampirism.unknown");
 
             }
             if (skillHandler.isSkillEnabled(HunterSkills.bloodPotion_goodOrBad)) {

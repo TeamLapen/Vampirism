@@ -39,7 +39,7 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
         super.addInformation(stack, playerIn, tooltip, advanced);
         TIER t = getTier(stack);
         if (t != TIER.NORMAL) {
-            tooltip.add(TextFormatting.AQUA + UtilLib.translateToLocal("text.vampirism.itemTier." + t.name().toLowerCase()));
+            tooltip.add(TextFormatting.AQUA + UtilLib.translate("text.vampirism.itemTier." + t.name().toLowerCase()));
         }
     }
 

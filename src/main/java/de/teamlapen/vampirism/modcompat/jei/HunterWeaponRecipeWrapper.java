@@ -40,7 +40,7 @@ public abstract class HunterWeaponRecipeWrapper extends BlankRecipeWrapper {
         int x = 2;
         int y = 80;
         if (recipe.getMinHunterLevel() > 1) {
-            String level = UtilLib.translateToLocalFormatted("gui.vampirism.hunter_weapon_table.level", recipe.getMinHunterLevel());
+            String level = UtilLib.translateFormatted("gui.vampirism.hunter_weapon_table.level", recipe.getMinHunterLevel());
 
             minecraft.fontRendererObj.drawString(level, x, y, Color.gray.getRGB());
             y += minecraft.fontRendererObj.FONT_HEIGHT + 2;
@@ -48,10 +48,10 @@ public abstract class HunterWeaponRecipeWrapper extends BlankRecipeWrapper {
         if (recipe.getRequiredSkills().length > 0) {
             String skills = "";
             for (ISkill<IHunterPlayer> skill : recipe.getRequiredSkills()) {
-                skills += UtilLib.translateToLocal(skill.getUnlocalizedName()) + " ";
+                skills += UtilLib.translate(skill.getUnlocalizedName()) + " ";
 
             }
-            String skillText = UtilLib.translateToLocalFormatted("gui.vampirism.hunter_weapon_table.skill", skills);
+            String skillText = UtilLib.translateFormatted("gui.vampirism.hunter_weapon_table.skill", skills);
             minecraft.fontRendererObj.drawSplitString(skillText, x, y, 132, Color.gray.getRGB());
 
 

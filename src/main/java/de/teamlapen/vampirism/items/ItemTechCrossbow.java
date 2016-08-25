@@ -106,11 +106,11 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
         super.addInformation(stack, playerIn, tooltip, advanced);
         int arrows = getArrowsLeft(stack);
         if (arrows == -1) {
-            tooltip.add(TextFormatting.DARK_GRAY + UtilLib.translateToLocal(Enchantments.INFINITY.getName()));
+            tooltip.add(TextFormatting.DARK_GRAY + UtilLib.translate(Enchantments.INFINITY.getName()));
         } else if (arrows == 0) {
-            tooltip.add(TextFormatting.DARK_GRAY + UtilLib.translateToLocal("text.vampirism.crossbow.not_loaded"));
+            tooltip.add(TextFormatting.DARK_GRAY + UtilLib.translate("text.vampirism.crossbow.not_loaded"));
         } else {
-            tooltip.add(TextFormatting.DARK_GRAY + UtilLib.translateToLocalFormatted("text.vampirism.crossbow.loaded_arrow_count", arrows));
+            tooltip.add(TextFormatting.DARK_GRAY + UtilLib.translateFormatted("text.vampirism.crossbow.loaded_arrow_count", arrows));
         }
     }
 
