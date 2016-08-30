@@ -22,7 +22,45 @@ guide.vampirism.overview.support.text=Developing this mod takes a lot of time an
 
 #Vampire
 guide.vampirism.vampire.title=Vampire
+guide.vampirism.vampire.gettingStarted=Getting Started as Vampire
+guide.vampirism.vampire.gettingStarted.become=To become a vampire you have to be bitten by a vampire. So either let them hit you on purpose or just wait until it happens by accident. When they hit you there is a chance, you receive a potion effect called "Sanguinare Vampiris" which lasts about a Minecraft day. After the potion has ended, you become a vampire.\nIn case you don't want to become one, you can always cancel the effect with a milk bucket.\n§lAlternatively§r you can right-click with vampire fangs in you hand to inject some blood into you and get the same effect as above.
+guide.vampirism.vampire.gettingStarted.asVampire=Once you become a Vampire, one of your main sources of blood (at least the best source) are villagers and you should find plenty of those. Watch out though, Vampire Hunter will not attack you and try to protect the villagers.\nYou will already notice that you do not feel very good in the sun, but the sunlight won't hurt such a weak vampire as you are at this point.
+guide.vampirism.vampire.gettingStarted.blood=As a Vampire, you need to watch how much blood you have. Suck blood by pressing '%s' from villagers and some animals to get more blood. Extra blood will be stored in Glas Bottles/Blood Bottles on your hotbar. You might even be able to suck blood from other players, as long as you are coming from behind so they can't defend themselves. If you bite a mob, that does not have blood, you will deal some damage to them.
+guide.vampirism.vampire.gettingStarted.level=In the beginning you will be a level 1 vampire (the level is displayed above your XP-level) and have improved speed, health and strength.\nTo get to higher vampire levels you have to perform different rituals. As you advance through levels your abilities improve, but some disadvantages like sun damage might appear.
 
+guide.vampirism.vampire.blood=Blood
+guide.vampirism.vampire.blood.text=As a vampire you need blood like normal humans need food. With higher levels your blood usage will even increase.\nYou already know how to get it (see "Getting Started"), but you can also store it).\nIt is recommend to always have a few %s with you. You can fill them be having them on you hotbar when biting mobs with a full blood bar.\nAlternatively you can use %s which are automatically converted when biting.
+guide.vampirism.vampire.blood.storage=You can also store blood in you base in %s by (sneak-) right-clicking them with a blood bottle in your hand. You should also be able to store the blood in other mod's fluid tanks.
+guide.vampirism.vampire.blood.biteableCreatures=If you want to make creatures from other mods biteable, checkout the link on the side.
+
+guide.vampirism.vampire.leveling=Leveling
+guide.vampirism.vampire.leveling.intro=After becoming a vampire you probably want to reach higher levels. To level up you have perform more rituals at different altars, but always during night time.
+guide.vampirism.vampire.leveling.inspiration.reach=To reach level 2-4
+guide.vampirism.vampire.leveling.inspiration.text=Craft Altar of Inspiration and place it somewhere. To use this one you have to fill it with blood (right-click with filled blood bottles). If there is enough blood inside you can sneak - right-click with an empty hand and the blood will be infused into you, making you even stronger.
+guide.vampirism.vampire.leveling.inspiration.requirements=§oRequired blood amount:§r\nFor level 2: %s\nFor level 3: %s\nFor level 4:%s
+
+guide.vampirism.vampire.leveling.infusion.intro=This altar requires a multiblock structure. First craft the main block (%s) and place it down, then build %s around it and fill them with special blocks by right clicking a pillar. Place a %s at the top of each pillar. The pillar count as well as the required pillar filling depends on the level (more information below). After the structure is complete, put the required amount of items into the altar, sneak right click and wait for the magic to happen.
+guide.vampirism.vampire.leveling.infusion.reach=To reach level 5+
+guide.vampirism.vampire.leveling.infusion.structure=§lStructure§r\nDepending on the level you want to reach you need a specific amount of "structure points". The actual value of the structure is calculated after the following rules: Each pillar has to be either 2 or 3 blocks high and must be filled by the same material. Each pillar adds <height>*<material> points. Possible materials are: %s.\nAs a simple rule you could say: If the altar says "structure wrong", build more pillars or fill the exiting with more valuable materials.\n§oAt the end of this chapter there are a few example images.§r
+guide.vampirism.vampire.leveling.infusion.items=§lRequired items§r\nTo level up you also need a few items: %s.\nFor more information on how to get them, check the links on the side. Also check the next page for the required amounts.
+guide.vampirism.vampire.leveling.infusion.req=Requirements
+guide.vampirism.vampire.leveling.infusion.req.forLevel=For level
+guide.vampirism.vampire.leveling.infusion.req.structurePoints=Struct
+guide.vampirism.vampire.leveling.infusion.req.heart=Heart
+guide.vampirism.vampire.leveling.infusion.req.book=Book
+guide.vampirism.vampire.leveling.infusion.image1=The first empty structure
+guide.vampirism.vampire.leveling.infusion.image2=The first structure with stone bricks to reach level 5
+guide.vampirism.vampire.leveling.infusion.image3=The first structure with iron blocks to reach level 6 and 7
+guide.vampirism.vampire.leveling.infusion.image4=The first structure with gold blocks to reach levels 8 to 11
+guide.vampirism.vampire.leveling.infusion.image5=The second structure with gold blocks to reach level 12 to 14
+
+guide.vampirism.vampire.skills=Skills
+guide.vampirism.vampire.skills.text=As a vampire you can unlock skills. With each levelup you receive one skill point you can use.\nOpen the skill GUI with %s.\nBe careful, you won't be able to unlock all, so decide which are worth it.
+guide.vampirism.vampire.skills.actions=Some of the skills are "actions" (e.g. Bat Mode). To use them press %s and keep it pressed. A "skill rose" will pop up. Move the mouse in the direction of the desired action until it is highlighted. Then release the button. You might want to set the key binding to the middle mouse button.
+guide.vampirism.vampire.skills.actions2=Most actions have a cooldown time, you can only activate them if they are not in cooldown mode.\nSome actions also have a duration, then you can deactivate the action if you do not need it anymore by selecting it again to decrease the cooldown time.
+
+guide.vampirism.vampire.unvampire=Un-Vampire
+guide.vampirism.vampire.unvampire.text=If you want to become a normal human again, you have to look for a %s. It can be found in the church of some villages. But be careful, you will loose all your levels.
 #Hunter
 guide.vampirism.hunter.title=Hunter
 
