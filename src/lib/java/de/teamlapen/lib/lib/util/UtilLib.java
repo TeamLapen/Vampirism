@@ -432,7 +432,7 @@ public class UtilLib {
         try {
             return String.format(s, format);
         } catch (IllegalFormatException e) {
-            VampLib.log.e("Translate", e, "Formatting Error");
+            VampLib.log.e("Translate", e, "Formatting Error for %s and arguments(%s)", key, format);
             return "Formatting Error: " + e.getMessage();
         }
     }

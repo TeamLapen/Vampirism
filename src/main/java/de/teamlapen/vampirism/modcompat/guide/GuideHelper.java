@@ -29,8 +29,9 @@ public class GuideHelper {
 
     /**
      * Converts the given pages to {@link PageHolderWithLinks} and adds the given links
+     * @return The SAME list
      */
-    public static void addLinks(List<IPage> pages, Object... links) {
+    public static List<IPage> addLinks(List<IPage> pages, Object... links) {
         List<PageHolderWithLinks> linkPages = Lists.newArrayList();
         for (IPage p : pages) {
             linkPages.add(new PageHolderWithLinks(p));
@@ -55,6 +56,7 @@ public class GuideHelper {
         }
         pages.clear();
         pages.addAll(linkPages);
+        return pages;
     }
 
 }
