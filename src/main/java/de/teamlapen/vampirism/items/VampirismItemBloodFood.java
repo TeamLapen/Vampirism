@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -25,6 +26,10 @@ public class VampirismItemBloodFood extends ItemFood {
         setCreativeTab(VampirismMod.creativeTab);
         setRegistryName(REFERENCE.MODID, regName);
         this.setUnlocalizedName(REFERENCE.MODID + "." + regName);
+    }
+
+    public String getLocalizedName() {
+        return UtilLib.translate(getUnlocalizedName() + ".name");
     }
 
     @Override

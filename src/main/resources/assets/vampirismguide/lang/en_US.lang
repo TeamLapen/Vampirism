@@ -61,8 +61,55 @@ guide.vampirism.vampire.skills.actions2=Most actions have a cooldown time, you c
 
 guide.vampirism.vampire.unvampire=Un-Vampire
 guide.vampirism.vampire.unvampire.text=If you want to become a normal human again, you have to look for a %s. It can be found in the church of some villages. But be careful, you will loose all your levels.
+
 #Hunter
 guide.vampirism.hunter.title=Hunter
 
+#Creatures
+guide.vampirism.entity.title=Creatures
+guide.vampirism.entity.general=General
+guide.vampirism.entity.general.text=Vampirism adds several new creatures to the game. Some are vampires, others hunt them. A few are hostile to everybody.\nSome of these creatures (e.g. normal vampires, normal hunters and more) spawn in different levels. Higher level ones are usually stronger and sometimes have special abilities. When a new creature spawns, the vampire/hunter level of nearby players is checked to decide which level the creatures should have.
+guide.vampirism.entity.hunter.text=Hunts vampires ;)\n Spawns in villages or in small camps all over the world.\nAppears in different outfits and levels\nVampire Hunters near villages try to defend their village. Drops %s.
+guide.vampirism.entity.vampire.text=Attacks neutral players as well as hunter players. Can infect players and drops %s. Also drops %s if killed with a %s.
+guide.vampirism.entity.minion.text=Are subordinated to their lord/baron.
+guide.vampirism.entity.advancedHunter.text=Advanced version of a vampire hunter.\n Is quite a lot stronger and calls normal hunters to help him. They have individual names and skins of Vampirism's supporters as well as some more random names.
+guide.vampirism.entity.advancedVampire.text=Experienced vampire. Spawns rarely in the world and sometimes is followed by subordinated vampires. Drops %s and %s.\nThey have individual names and skins of Vampirism's supporters as well as some more random names.
+guide.vampirism.entity.ghost.text=Spawns in the vampire biome.
+guide.vampirism.entity.vampireBaron.text=Spawns rarely in vampire biomes.\nOccurs in different levels partially depending on the players level.\nDrops %s.\nIs very strong and summons minions which help him.
+
 #World
-guide.vampirism.world.title=Creatures and world generation
+guide.vampirism.world.title=World generation
+
+#Item
+guide.vampirism.items.title=Items
+guide.vampirism.items.vampireFang.text=Dropped by vampires. Can be right-clicked to infect yourself with "Sanguinare Vampiris".
+guide.vampirism.items.humanHeart.text=Dropped by vampire hunter. Can be consumed by vampires to fill their blood bar.
+guide.vampirism.items.injection.text=The garlic version can be used to make yourself immune to "Sanguinare Vampiris" and to become a hunter.\nThe "Sanguinare" version can be used to get rid of the immunity in case you want to become a vampire later.
+guide.vampirism.items.bloodBottle.text=Can store blood. Vampires can right-click it to drink blood from it. Can be filled by keeping it on the hotbar when biting a creature. Glas bottles on your hotbar are also automatically converted to blood bottles then.
+guide.vampirism.items.pureBlood.text=Dropped by %s. Exists in different levels.
+guide.vampirism.items.hunterIntel.text=Can be crafted in %s. Required to level up as a Vampire Hunter.
+guide.vampirism.items.itemGarlic.text=Can be found in some villages. You can cultivate it similar to carrots.
+guide.vampirism.items.pitchfork.text=Deals a lot of damage
+guide.vampirism.items.vampireBook.text=Can be found in dungeons, mineshafts, pyramids and other loot chests. Required to level up as a Vampire.
+guide.vampirism.items.vampireBlood.text=Dropped by %s if killed with a %s or by %s. Can be used for blood potions and more.
+guide.vampirism.items.crossbows=Crossbows
+guide.vampirism.items.crossbows.text=There are several different crossbows, some of them require special skills to be crafted or used. They use %s. (The tech bows use %s).\n§4Crossbows can only be used by Vampire Hunters.§r
+guide.vampirism.items.crossbowArrow.text=Used in crossbows.
+guide.vampirism.items.armorOfSwiftness=Armor of Swiftness
+guide.vampirism.items.armorOfSwiftness.text=This armor is very light and therby allows you to run faster. It exists in different versions and the better ones even give you a jump boost. §4Can only be used by Vampire Hunters$r
+guide.vampirism.items.hunterCoat=Hunter Coat
+guide.vampirism.items.hunterCoat.text=Armor specifically designed for Vampire Hunters. If fully equipped it hides your from vampire's blood vision and protects you from the "Freeze" skill. A vampire baron is still able to slow down you a little bit. Also causes extra damage to any vampire that bites you. §4Can only be used by Vampire Hunters$r
+guide.vampirism.items.hunterAxe.text=Has a high knockback and deals extra damage to vampires. §4Can only be used by Vampire Hunters$r
+
+#Blocks
+guide.vampirism.blocks.title=Blocks
+guide.vampirism.blocks.castleBlock.text=Decorative block.
+guide.vampirism.blocks.vampirismFlower.text=Flower. Can be found in vampire biome.
+guide.vampirism.blocks.altarInfusion.text=Multiblock structure. Used to level up as a Vampire.
+guide.vampirism.blocks.hunterTable.text=Used to craft %s
+guide.vampirism.blocks.churchAltar.text=Found in the church of some villages. Can be used to become a normal human again if you are a vampire.
+guide.vampirism.blocks.weaponTable.text=Used to craft several hunter weapons and tools. Some recipes use lava, so you have to fill it by right clicking with a lava bucket.\n§4Can only be used by Vampire Hunters$r and requires a special skill.
+guide.vampirism.blocks.bloodPotionTable.text=Used to craft blood potions. Insert vampire blood bottles, garlic and optionally another item. §4Can only be used by Vampire Hunters$r and requires a special skill.
+guide.vampirism.blocks.itemCoffin.text=Can be used by vampires to sleep through the day.
+guide.vampirism.blocks.itemMedChair.text=Used to infuse %s and %s.
+

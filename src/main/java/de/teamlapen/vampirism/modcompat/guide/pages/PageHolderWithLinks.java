@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.modcompat.guide;
+package de.teamlapen.vampirism.modcompat.guide.pages;
 
 import amerifrance.guideapi.api.IPage;
 import amerifrance.guideapi.api.impl.Book;
@@ -9,6 +9,7 @@ import amerifrance.guideapi.gui.GuiBase;
 import amerifrance.guideapi.gui.GuiEntry;
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.modcompat.guide.GuideBook;
 import de.teamlapen.vampirism.modcompat.guide.client.GuiLinkedEntry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;

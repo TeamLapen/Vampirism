@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.modcompat.guide;
+package de.teamlapen.vampirism.modcompat.guide.pages;
 
 
 import amerifrance.guideapi.api.impl.Book;

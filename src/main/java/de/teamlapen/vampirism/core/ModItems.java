@@ -126,7 +126,7 @@ public class ModItems {
         weaponCraftingManager.addRecipe(createStack(hunterCoat_boots, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhancedArmor, 5, "    ", "YYYY", "YZZY", "YXXY", 'X', Items.DIAMOND, 'Y', Items.IRON_INGOT, 'Z', ModItems.itemGarlic);
     }
 
-    private static ItemStack createStack(IItemWithTier item, IItemWithTier.TIER tier) {
+    public static ItemStack createStack(IItemWithTier item, IItemWithTier.TIER tier) {
         return item.setTier(new ItemStack((Item) item), tier);
     }
 
