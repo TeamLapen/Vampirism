@@ -6,6 +6,7 @@ import amerifrance.guideapi.api.impl.Book;
 import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
 import amerifrance.guideapi.api.util.PageHelper;
 import amerifrance.guideapi.category.CategoryItemStack;
+import amerifrance.guideapi.page.PageImage;
 import amerifrance.guideapi.page.PageText;
 import amerifrance.guideapi.page.PageTextImage;
 import com.google.common.collect.Maps;
@@ -14,8 +15,12 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockAltarPillar;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.ItemBloodBottle;
+import de.teamlapen.vampirism.items.ItemInjection;
+import de.teamlapen.vampirism.modcompat.guide.pages.PageHolderWithLinks;
+import de.teamlapen.vampirism.modcompat.guide.pages.PageTable;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.init.Blocks;
@@ -34,6 +39,11 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+
+import static de.teamlapen.vampirism.modcompat.guide.GuideHelper.RECIPE_TYPE.WEAPON_TABLE;
+import static de.teamlapen.vampirism.modcompat.guide.GuideHelper.RECIPE_TYPE.WORKBENCH;
+import static de.teamlapen.vampirism.modcompat.guide.GuideHelper.addArmorWithTier;
+import static de.teamlapen.vampirism.modcompat.guide.GuideHelper.addItemWithTier;
 
 
 public class GuideBook {
@@ -68,7 +78,10 @@ public class GuideBook {
         guideBook.addCategory(new CategoryItemStack(buildOverview(), "guide.vampirism.overview.title", new ItemStack(ModItems.vampireFang)));
         guideBook.addCategory(new CategoryItemStack(buildVampire(), "guide.vampirism.vampire.title", new ItemStack(ModItems.bloodBottle, 1, ItemBloodBottle.AMOUNT)));
         guideBook.addCategory(new CategoryItemStack(buildHunter(), "guide.vampirism.hunter.title", new ItemStack(ModItems.humanHeart)));
+        guideBook.addCategory(new CategoryItemStack(buildCreatures(), "guide.vampirism.entity.title", new ItemStack(Items.SKULL)));
         guideBook.addCategory(new CategoryItemStack(buildWorld(), "guide.vampirism.world.title", new ItemStack(Blocks.GRASS)));
+        guideBook.addCategory(new CategoryItemStack(buildItems(), "guide.vampirism.items.title", new ItemStack(Items.APPLE)));
+        guideBook.addCategory(new CategoryItemStack(buildBlocks(), "guide.vampirism.blocks.title", new ItemStack(Blocks.STONE)));
         VampirismMod.log.d(TAG, "Finished building categories after %d ms", System.currentTimeMillis() - start);
     }
 
@@ -152,11 +165,11 @@ public class GuideBook {
         String altarOfInspiration = "§l" + ModBlocks.altarInspiration.getLocalizedName() + "§r\n§o" + UtilLib.translate(base + "leveling.inspiration.reach") + "§r\n";
         altarOfInspiration += UtilLib.translate(base + "leveling.inspiration.text") + "\n";
         altarOfInspiration += UtilLib.translateFormatted(base + "leveling.inspiration.requirements", levelingConf.getRequiredBloodForAltarInspiration(2), levelingConf.getRequiredBloodForAltarInspiration(3), levelingConf.getRequiredBloodForAltarInspiration(4));
-        levelingPages.addAll(PageHelper.pagesForLongText(altarOfInspiration, 250));
+        levelingPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(altarOfInspiration, 250), new ResourceLocation("guide.vampirism.blocks.altarInspiration")));
 
         String altarOfInfusion = "§l" + ModBlocks.altarInfusion.getLocalizedName() + "§r\n§o" + UtilLib.translate(base + "leveling.infusion.reach") + "§r\n";
         altarOfInfusion += UtilLib.translateFormatted(base + "leveling.infusion.intro", ModBlocks.altarInfusion.getLocalizedName(), ModBlocks.altarPillar.getLocalizedName(), ModBlocks.altarTip.getLocalizedName());
-        levelingPages.addAll(PageHelper.pagesForLongText(altarOfInfusion, 300));
+        levelingPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(altarOfInfusion, 300), new ResourceLocation("guide.vampirism.blocks.altarInfusion")));
         String blocks = "";
         for (BlockAltarPillar.EnumPillarType t : BlockAltarPillar.EnumPillarType.values()) {
             if (t == BlockAltarPillar.EnumPillarType.NONE) continue;
@@ -211,6 +224,54 @@ public class GuideBook {
         return entries;
     }
 
+    private static Map<ResourceLocation, EntryAbstract> buildCreatures() {
+        Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
+        String base = "guide.vampirism.entity.";
+
+        ArrayList<IPage> generalPages = new ArrayList<>();
+        generalPages.addAll(PageHelper.pagesForLongText(UtilLib.translate(base + "general.text")));
+        entries.put(new ResourceLocation(base + "general"), new EntryText(generalPages, base + "general"));
+
+        ArrayList<IPage> hunterPages = new ArrayList<>();
+        hunterPages.add(new PageImage(new ResourceLocation(IMAGE_BASE + "hunter.png")));
+        hunterPages.addAll(PageHelper.pagesForLongText(UtilLib.translateFormatted(base + "hunter.text", ModItems.humanHeart.getLocalizedName())));
+        entries.put(new ResourceLocation(base + "hunter"), new EntryText(hunterPages, "entity." + ModEntities.BASIC_HUNTER_NAME + ".name"));
+
+        ArrayList<IPage> vampirePages = new ArrayList<>();
+        vampirePages.add(new PageImage(new ResourceLocation(IMAGE_BASE + "vampire.png")));
+        vampirePages.addAll(PageHelper.pagesForLongText(UtilLib.translateFormatted(base + "vampire.text", ModItems.vampireFang.getLocalizedName(), ModItems.vampireBlood.getLocalizedName(), ModItems.stake.getLocalizedName())));
+        entries.put(new ResourceLocation(base + "vampire"), new EntryText(vampirePages, "entity." + ModEntities.BASIC_VAMPIRE_NAME + ".name"));
+
+        ArrayList<IPage> advancedHunterPages = new ArrayList<>();
+        advancedHunterPages.add(new PageImage(new ResourceLocation(IMAGE_BASE + "advancedHunter.png")));
+        advancedHunterPages.addAll(PageHelper.pagesForLongText(UtilLib.translate(base + "advancedHunter.text")));
+        entries.put(new ResourceLocation(base + "advancedHunter"), new EntryText(advancedHunterPages, "entity." + ModEntities.ADVANCED_HUNTER + ".name"));
+
+        ArrayList<IPage> advancedVampirePages = new ArrayList<>();
+        advancedVampirePages.add(new PageImage(new ResourceLocation(IMAGE_BASE + "advancedVampire.png")));
+        advancedVampirePages.addAll(PageHelper.pagesForLongText(UtilLib.translateFormatted(base + "advancedVampire.text", ModItems.bloodBottle.getLocalizedName(), ModItems.vampireBlood.getLocalizedName())));
+        entries.put(new ResourceLocation(base + "advancedVampire"), new EntryText(advancedVampirePages, "entity." + ModEntities.ADVANCED_VAMPIRE + ".name"));
+
+        ArrayList<IPage> vampireBaronPages = new ArrayList<>();
+        vampireBaronPages.add(new PageImage(new ResourceLocation(IMAGE_BASE + "vampireBaron.png")));
+        vampireBaronPages.addAll(PageHelper.pagesForLongText(UtilLib.translateFormatted(base + "vampireBaron.text", ModItems.pureBlood.getLocalizedName())));
+        GuideHelper.addLinks(vampireBaronPages, new ResourceLocation("guide.vampirism.world.vampireForest"));
+        entries.put(new ResourceLocation(base + "vampireBaron"), new EntryText(vampireBaronPages, "entity." + ModEntities.VAMPIRE_BARON + ".name"));
+
+        ArrayList<IPage> minionPages = new ArrayList<>();
+        minionPages.add(new PageImage(new ResourceLocation(IMAGE_BASE + "minion.png")));
+        minionPages.addAll(PageHelper.pagesForLongText(UtilLib.translate(base + "minion.text")));
+        entries.put(new ResourceLocation(base + "minion"), new EntryText(minionPages, "entity." + ModEntities.VAMPIRE_MINION_SAVEABLE_NAME + ".name"));
+
+        ArrayList<IPage> ghostPages = new ArrayList<>();
+        ghostPages.add(new PageImage(new ResourceLocation(IMAGE_BASE + "ghost.png")));
+        ghostPages.addAll(PageHelper.pagesForLongText(UtilLib.translate(base + "ghost.text")));
+        entries.put(new ResourceLocation(base + "ghost"), new EntryText(ghostPages, "entity." + ModEntities.GHOST_NAME + ".name"));
+
+        links.putAll(entries);
+        return entries;
+    }
+
     private static Map<ResourceLocation, EntryAbstract> buildWorld() {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.world.";
@@ -218,4 +279,50 @@ public class GuideBook {
         links.putAll(entries);
         return entries;
     }
+
+    private static Map<ResourceLocation, EntryAbstract> buildItems() {
+        Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
+        String base = "guide.vampirism.items.";
+        new ItemInfoBuilder(ModItems.vampireFang).build(entries);
+        new ItemInfoBuilder(ModItems.humanHeart).build(entries);
+        new ItemInfoBuilder(ModItems.injection).craftable(WORKBENCH).craftableStacks(new ItemStack(ModItems.injection, 1, 0), new ItemStack(ModItems.injection, 1, ItemInjection.META_GARLIC), new ItemStack(ModItems.injection, 1, ItemInjection.META_SANGUINARE)).build(entries);
+        new ItemInfoBuilder(new ItemStack(ModItems.bloodBottle, 1, ItemBloodBottle.AMOUNT), false).build(entries);
+        new ItemInfoBuilder(ModItems.pureBlood).setFormats(UtilLib.translate("entity." + ModEntities.VAMPIRE_BARON + ".name")).build(entries);
+        new ItemInfoBuilder(ModItems.hunterIntel).setLinks(new ResourceLocation("guide.vampirism.blocks.hunterTable")).setFormats(ModBlocks.hunterTable.getLocalizedName()).build(entries);
+        new ItemInfoBuilder(ModItems.itemGarlic).build(entries);
+        new ItemInfoBuilder(ModItems.pitchfork).craftable(WEAPON_TABLE).build(entries);
+        new ItemInfoBuilder(ModItems.vampireBook).build(entries);
+        new ItemInfoBuilder(ModItems.vampireBlood).setFormats(UtilLib.translate("entity." + ModEntities.BASIC_VAMPIRE_NAME + ".name"), ModItems.stake.getLocalizedName(), UtilLib.translate("entity." + ModEntities.ADVANCED_VAMPIRE + ".name")).build(entries);
+
+        new ItemInfoBuilder(ModItems.basicCrossbow).setFormats(ModItems.crossbowArrow.getLocalizedName(), ModItems.techCrossbowAmmoPackage.getLocalizedName()).setLinks(new ResourceLocation("guide.vampirism.items.crossbowArrow")).craftable(WEAPON_TABLE).craftableStacks(ModItems.basicCrossbow, ModItems.basicDoubleCrossbow, ModItems.enhancedCrossbow, ModItems.enhancedDoubleCrossbow, ModItems.basicTechCrossbow, ModItems.techCrossbowAmmoPackage).setName("crossbows").customName().build(entries);
+        new ItemInfoBuilder(ModItems.crossbowArrow).craftable(WORKBENCH).build(entries);
+        addArmorWithTier(entries, "armorOfSwiftness", ModItems.armorOfSwiftness_helmet, ModItems.armorOfSwiftness_chest, ModItems.armorOfSwiftness_legs, ModItems.armorOfSwiftness_boots, WEAPON_TABLE);
+        addArmorWithTier(entries, "hunterCoat", ModItems.hunterCoat_helmet, ModItems.hunterCoat_chest, ModItems.hunterCoat_legs, ModItems.hunterCoat_boots, WEAPON_TABLE);
+        addItemWithTier(entries, ModItems.hunterAxe, WEAPON_TABLE);
+        links.putAll(entries);
+        return entries;
+    }
+
+    private static Map<ResourceLocation, EntryAbstract> buildBlocks() {
+        Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
+        String base = "guide.vampirism.blocks.";
+        new ItemInfoBuilder(ModBlocks.castleBlock).craftable(WORKBENCH).craftableStacks(new ItemStack(ModBlocks.castleBlock, 1, 0), new ItemStack(ModBlocks.castleBlock, 1, 1)).build(entries);
+        new ItemInfoBuilder(ModBlocks.vampirismFlower).build(entries);
+        new ItemInfoBuilder(ModBlocks.altarInfusion).setLinks(new ResourceLocation("guide.vampirism.vampire.leveling")).craftable(WORKBENCH).craftableStacks(new ItemStack(ModBlocks.altarInfusion), new ItemStack(ModBlocks.altarPillar), new ItemStack(ModBlocks.altarTip)).build(entries);
+        new ItemInfoBuilder(ModBlocks.hunterTable).setFormats(ModItems.hunterIntel.getLocalizedName()).setLinks(new ResourceLocation("guide.vampirism.hunter.leveling"), new ResourceLocation("guide.vampirism.items.hunterIntel")).craftable(WORKBENCH).build(entries);
+        new ItemInfoBuilder(ModBlocks.churchAltar).build(entries);
+        new ItemInfoBuilder(ModBlocks.altarInspiration).setLinks(new ResourceLocation("guide.vampirism.vampire.leveling")).craftable(WORKBENCH).build(entries);
+        new ItemInfoBuilder(ModBlocks.weaponTable).craftable(WORKBENCH).build(entries);
+        new ItemInfoBuilder(ModBlocks.bloodPotionTable).craftable(WORKBENCH).build(entries);
+        new ItemInfoBuilder(new ItemStack(ModItems.itemCoffin), true).craftable(WORKBENCH).build(entries);
+        new ItemInfoBuilder(new ItemStack(ModItems.itemMedChair), true).setFormats((new ItemStack(ModItems.injection, 1, 1)).getDisplayName(), (new ItemStack(ModItems.injection, 1, 2)).getDisplayName()).craftable(WORKBENCH).build(entries);
+
+
+        links.putAll(entries);
+        return entries;
+    }
+
+
+
+
 }
