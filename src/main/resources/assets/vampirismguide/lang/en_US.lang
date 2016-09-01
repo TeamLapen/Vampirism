@@ -64,6 +64,23 @@ guide.vampirism.vampire.unvampire.text=If you want to become a normal human agai
 
 #Hunter
 guide.vampirism.hunter.title=Hunter
+guide.vampirism.hunter.gettingStarted=Getting Started as Hunter
+guide.vampirism.hunter.gettingStarted.become=To become a Vampire Hunter you will have to find a village, in which a "%s" lives. You will find some garlic plants behind his house. Use them to craft a %s. You also should replant some garlic because it will be useful later. Go inside the trainer's house and use the special chair inside to inject that garlic vaccination. It will make you immune to the vampire's poisonous Sanguinare Vampiris
+guide.vampirism.hunter.gettingStarted.asHunter=This is the main advantage you will have at that level. By leveling up, you will become stronger and learn some useful skills.
+guide.vampirism.hunter.leveling=Leveling
+guide.vampirism.hunter.leveling.intro=After becoming a Vampire Hunter you probably want to reach higher levels to learn some cool skills. To level up you have to train yourself somehow.
+guide.vampirism.hunter.leveling.toReach=To reach level %s
+guide.vampirism.hunter.leveling.train1.text=You have to collect some vampire blood by killing normal vampire NPCs with a stake.\nIf you have collected enough look around for a normal hunter NPC. Interact with him and a GUI will open.\nRequired items:\nLevel 2: %d Vampire Blood\nLevel 3: %d Vampire Blood\nLevel 4: %d Vampire Blood
+guide.vampirism.hunter.leveling.train2.text=To level up further you will have to do some research first.\nCraft yourself a %s and open it's GUI. By inserting some special items (see table at the end) and investigating them you can gain some intel about vampires.\nWhen you got the intel, visit a Hunter Trainer. He will be able to train you for the next level, but you will have to pay him a fee for that.\nJust open the GUI and take a look.
+guide.vampirism.hunter.leveling.train2.req=Hunter Table Items
+guide.vampirism.hunter.leveling.train2.fang=Fang
+guide.vampirism.hunter.skills=Skills
+guide.vampirism.hunter.skills.intro=As a Vampire Hunter you can unlock one skill per level. Open the GUI by pressing %s and take a look at what you can unlock.\nBe careful, you won't be able to unlock all, so decide which are worth it.\nMost skills are self explanatory, but the two main skills will be explained on the following pages.
+guide.vampirism.hunter.skills.bloodPotion.text=Using a Blood Potion Table you will be able to use some Vampire abilities for your advantage.\nBy mixing the Vampire Blood with garlic, you reduce it's toxicity, allowing you to drink it without dying.\nCaused by the strange nature of vampires the blood potion will have a random and unknown set of effects. Some of them will even be bad for you.\nBy learning more about vampires and unlocking new skills, you might to be able to tell how many bad effects are in a potion or maybe identify some of the effects. With advanced techniques you also will be able to reduce the chance of bad effects.\n\nThe Blood Potion Table also offers another slot. You can insert any item in there, which is then mixed into your potion. Thereby you might be able to affect the "direction" in which the effects might go.\nIf you unlock a special skill you can also open a portable brewing GUI by pressing %s, but it will be a lot slower.
+guide.vampirism.hunter.skills.weaponTable.text=The Weapon Table allows you to craft advanced weapons including crossbows and more.\Some of the recipe require lava so fill the table with a lava bucket by right clicking it. To see all recipes use the mod "Just Enough Items" or browse the Guide Book, but let me tell you there are some interesting things like double crossbows or even a "Van Helsing style" crossbow.
+guide.vampirism.hunter.unhunter=Un-Hunter
+guide.vampirism.hunter.unhunter.text=If you decide to become a vampire, you have to get rid of the garlic in your blood. To do that craft yourself a %s and inject it.
+
 
 #Creatures
 guide.vampirism.entity.title=Creatures
@@ -79,6 +96,10 @@ guide.vampirism.entity.vampireBaron.text=Spawns rarely in vampire biomes.\nOccur
 
 #World
 guide.vampirism.world.title=World generation
+guide.vampirism.world.vampireForest=Vampire Forest
+guide.vampirism.world.vampireForest.text=The Vampire Forest is a rare biome. It is foggy and occupied by vampire creatures, because they do not receive sun damage due to the fog.
+guide.vampirism.world.wip=WIP
+guide.vampirism.world.wip.text=This GuideBook is not completely finished yet
 
 #Item
 guide.vampirism.items.title=Items
@@ -100,7 +121,7 @@ guide.vampirism.items.armorOfSwiftness.text=This armor is very light and therby 
 guide.vampirism.items.hunterCoat=Hunter Coat
 guide.vampirism.items.hunterCoat.text=Armor specifically designed for Vampire Hunters. If fully equipped it hides your from vampire's blood vision and protects you from the "Freeze" skill. A vampire baron is still able to slow down you a little bit. Also causes extra damage to any vampire that bites you. §4Can only be used by Vampire Hunters$r
 guide.vampirism.items.hunterAxe.text=Has a high knockback and deals extra damage to vampires. §4Can only be used by Vampire Hunters$r
-
+guide.vampirism.items.stake.text=Useful for trained Vampire Hunters. If they have the respective skill unlocked, they can e.g. instant kill vampires with below %s health with this.
 #Blocks
 guide.vampirism.blocks.title=Blocks
 guide.vampirism.blocks.castleBlock.text=Decorative block.
