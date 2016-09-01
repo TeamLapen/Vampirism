@@ -69,7 +69,7 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
 
         if (equipmentSlot == this.armorType) {
             TIER tier = getTier(stack);
-            multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(ARMOR_MODIFIERS[equipmentSlot.getIndex()], "Armor Swiftness", getSpeedBoost(tier), 2));
+            multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(VAMIRISM_ARMOR_MODIFIER[equipmentSlot.getIndex()], "Armor Swiftness", getSpeedBoost(tier), 2));
         }
 
         return multimap;
