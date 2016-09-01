@@ -30,6 +30,7 @@ public class PageHolderWithLinks implements IPage {
     private final IPage page;
     private final List<ResourceLocation> lateLinks = Lists.newArrayList();
     private final List<Link> links = Lists.newArrayList();
+    private long lastLinkClick = 0;
 
     public PageHolderWithLinks(IPage page) {
         this.page = page;
@@ -116,12 +117,18 @@ public class PageHolderWithLinks implements IPage {
     @Override
     public void onLeftClicked(Book book, CategoryAbstract category, EntryAbstract entry, int mouseX, int mouseY, EntityPlayer player, GuiEntry guiEntry) {
         if (mouseX > guiEntry.guiLeft + guiEntry.xSize) {
-            for (int i = 0; i < links.size(); i++) {
-                if (GuiHelper.isMouseBetween(mouseX, mouseY, guiEntry.guiLeft + guiEntry.xSize, guiEntry.guiTop + 10 + 20 * i, links.get(i).width, 20)) {
-                    links.get(i).onClicked(book, category, entry, player, guiEntry.bookStack, guiEntry.pageNumber);
-                    return;
+            //Avoid double/triple execution per click
+            long lastClock = System.currentTimeMillis() / 4;
+            if (lastClock != lastLinkClick) {
+                lastLinkClick = lastClock;
+                for (int i = 0; i < links.size(); i++) {
+                    if (GuiHelper.isMouseBetween(mouseX, mouseY, guiEntry.guiLeft + guiEntry.xSize, guiEntry.guiTop + 10 + 20 * i, links.get(i).width, 20)) {
+                        links.get(i).onClicked(book, category, entry, player, guiEntry.bookStack, guiEntry.pageNumber);
+                        return;
+                    }
                 }
             }
+
         }
         page.onLeftClicked(book, category, entry, mouseX, mouseY, player, guiEntry);
     }

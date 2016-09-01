@@ -25,7 +25,6 @@ import de.teamlapen.vampirism.modcompat.guide.pages.PageTable;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -65,6 +64,7 @@ public class GuideBook {
         guideBook.setColor(Color.getHSBColor(0.5f, 0.2f, 0.5f));
         guideBook.setRegistryName(REFERENCE.MODID, "guide");
         guideBook.setOutlineTexture(new ResourceLocation("vampirismguide", "textures/gui/book_violet_border.png"));
+        guideBook.setSpawnWithBook(true);
         GameRegistry.register(guideBook);
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
             GuideAPI.setModel(guideBook);
@@ -81,9 +81,9 @@ public class GuideBook {
         guideBook.addCategory(new CategoryItemStack(buildVampire(), "guide.vampirism.vampire.title", new ItemStack(ModItems.bloodBottle, 1, ItemBloodBottle.AMOUNT)));
         guideBook.addCategory(new CategoryItemStack(buildHunter(), "guide.vampirism.hunter.title", new ItemStack(ModItems.humanHeart)));
         guideBook.addCategory(new CategoryItemStack(buildCreatures(), "guide.vampirism.entity.title", new ItemStack(Items.SKULL)));
-        guideBook.addCategory(new CategoryItemStack(buildWorld(), "guide.vampirism.world.title", new ItemStack(Blocks.GRASS)));
+        guideBook.addCategory(new CategoryItemStack(buildWorld(), "guide.vampirism.world.title", new ItemStack(ModBlocks.cursedEarth)));
         guideBook.addCategory(new CategoryItemStack(buildItems(), "guide.vampirism.items.title", new ItemStack(Items.APPLE)));
-        guideBook.addCategory(new CategoryItemStack(buildBlocks(), "guide.vampirism.blocks.title", new ItemStack(Blocks.STONE)));
+        guideBook.addCategory(new CategoryItemStack(buildBlocks(), "guide.vampirism.blocks.title", new ItemStack(ModBlocks.castleBlock)));
         VampirismMod.log.d(TAG, "Finished building categories after %d ms", System.currentTimeMillis() - start);
     }
 
@@ -126,7 +126,8 @@ public class GuideBook {
         entries.put(new ResourceLocation(base + "trouble"), new EntryText(troublePages, UtilLib.translate(base + "trouble")));
 
         List<IPage> devPages = new ArrayList<>();
-        devPages.addAll(PageHelper.pagesForLongText(UtilLib.translate(base + "dev.text"), 340));
+        PageHolderWithLinks.URLLink helpLink = new PageHolderWithLinks.URLLink("How to help", URI.create("https://github.com/TeamLapen/Vampirism/wiki#how-you-can-help"));
+        devPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(UtilLib.translate(base + "dev.text"), 340), helpLink));
         PageHelper.setPagesToUnicode(devPages);
         entries.put(new ResourceLocation(base + "dev"), new EntryText(devPages, UtilLib.translate(base + "dev")));
 
@@ -157,7 +158,7 @@ public class GuideBook {
 
         List<IPage> bloodPages = new ArrayList<>();
         bloodPages.addAll(PageHelper.pagesForLongText(UtilLib.translateFormatted(base + "blood.text", UtilLib.translate(ModItems.bloodBottle.getUnlocalizedName() + ".name"), UtilLib.translate(Items.GLASS_BOTTLE.getUnlocalizedName() + ".name")), 250));
-        bloodPages.addAll(PageHelper.pagesForLongText(UtilLib.translateFormatted(base + "blood.storage", ModBlocks.bloodContainer.getLocalizedName()), 250));
+        bloodPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(UtilLib.translateFormatted(base + "blood.storage", ModBlocks.bloodContainer.getLocalizedName()), 250), new ResourceLocation("guide.vampirism.blocks.bloodContainer")));
         bloodPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(UtilLib.translate(base + "blood.biteableCreatures")), new PageHolderWithLinks.URLLink("Biteable Creatures", URI.create("https://github.com/TeamLapen/Vampirism/wiki/Biteable-Creatures"))));
         entries.put(new ResourceLocation(base + "blood"), new EntryText(bloodPages, UtilLib.translate(base + "blood")));
 
@@ -287,7 +288,7 @@ public class GuideBook {
         String base = "guide.vampirism.entity.";
 
         ArrayList<IPage> generalPages = new ArrayList<>();
-        generalPages.addAll(PageHelper.pagesForLongText(UtilLib.translate(base + "general.text")));
+        generalPages.addAll(PageHelper.pagesForLongText(UtilLib.translate(base + "general.text"), 250));
         entries.put(new ResourceLocation(base + "general"), new EntryText(generalPages, base + "general"));
 
         ArrayList<IPage> hunterPages = new ArrayList<>();
@@ -349,16 +350,19 @@ public class GuideBook {
     private static Map<ResourceLocation, EntryAbstract> buildItems() {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.items.";
+        //General
         new ItemInfoBuilder(ModItems.vampireFang).build(entries);
         new ItemInfoBuilder(ModItems.humanHeart).build(entries);
-        new ItemInfoBuilder(ModItems.injection).craftable(WORKBENCH).craftableStacks(new ItemStack(ModItems.injection, 1, 0), new ItemStack(ModItems.injection, 1, ItemInjection.META_GARLIC), new ItemStack(ModItems.injection, 1, ItemInjection.META_SANGUINARE)).build(entries);
-        new ItemInfoBuilder(new ItemStack(ModItems.bloodBottle, 1, ItemBloodBottle.AMOUNT), false).build(entries);
         new ItemInfoBuilder(ModItems.pureBlood).setFormats(UtilLib.translate("entity." + ModEntities.VAMPIRE_BARON + ".name")).build(entries);
+        new ItemInfoBuilder(ModItems.vampireBlood).setFormats(UtilLib.translate("entity." + ModEntities.BASIC_VAMPIRE_NAME + ".name"), ModItems.stake.getLocalizedName(), UtilLib.translate("entity." + ModEntities.ADVANCED_VAMPIRE + ".name")).build(entries);
+        new ItemInfoBuilder(ModItems.vampireBook).build(entries);
+        //Vampire
+        new ItemInfoBuilder(new ItemStack(ModItems.bloodBottle, 1, ItemBloodBottle.AMOUNT), false).build(entries);
+        //Hunter
+        new ItemInfoBuilder(ModItems.injection).craftable(WORKBENCH).craftableStacks(new ItemStack(ModItems.injection, 1, 0), new ItemStack(ModItems.injection, 1, ItemInjection.META_GARLIC), new ItemStack(ModItems.injection, 1, ItemInjection.META_SANGUINARE)).build(entries);
         new ItemInfoBuilder(ModItems.hunterIntel).setLinks(new ResourceLocation("guide.vampirism.blocks.hunterTable")).setFormats(ModBlocks.hunterTable.getLocalizedName()).build(entries);
         new ItemInfoBuilder(ModItems.itemGarlic).build(entries);
         new ItemInfoBuilder(ModItems.pitchfork).craftable(WEAPON_TABLE).build(entries);
-        new ItemInfoBuilder(ModItems.vampireBook).build(entries);
-        new ItemInfoBuilder(ModItems.vampireBlood).setFormats(UtilLib.translate("entity." + ModEntities.BASIC_VAMPIRE_NAME + ".name"), ModItems.stake.getLocalizedName(), UtilLib.translate("entity." + ModEntities.ADVANCED_VAMPIRE + ".name")).build(entries);
         new ItemInfoBuilder(ModItems.stake).setFormats(((int) (Balance.hps.INSTANT_KILL_SKILL_1_MAX_HEALTH_PERC * 100)) + "%").craftable(WORKBENCH).build(entries);
         new ItemInfoBuilder(ModItems.basicCrossbow).setFormats(ModItems.crossbowArrow.getLocalizedName(), ModItems.techCrossbowAmmoPackage.getLocalizedName()).setLinks(new ResourceLocation("guide.vampirism.items.crossbowArrow")).craftable(WEAPON_TABLE).craftableStacks(ModItems.basicCrossbow, ModItems.basicDoubleCrossbow, ModItems.enhancedCrossbow, ModItems.enhancedDoubleCrossbow, ModItems.basicTechCrossbow, ModItems.techCrossbowAmmoPackage).setName("crossbows").customName().build(entries);
         new ItemInfoBuilder(ModItems.crossbowArrow).craftable(WORKBENCH).build(entries);
@@ -372,16 +376,20 @@ public class GuideBook {
     private static Map<ResourceLocation, EntryAbstract> buildBlocks() {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.blocks.";
+        //General
         new ItemInfoBuilder(ModBlocks.castleBlock).craftable(WORKBENCH).craftableStacks(new ItemStack(ModBlocks.castleBlock, 1, 0), new ItemStack(ModBlocks.castleBlock, 1, 1)).build(entries);
         new ItemInfoBuilder(ModBlocks.vampirismFlower).build(entries);
-        new ItemInfoBuilder(ModBlocks.altarInfusion).setLinks(new ResourceLocation("guide.vampirism.vampire.leveling")).craftable(WORKBENCH).craftableStacks(new ItemStack(ModBlocks.altarInfusion), new ItemStack(ModBlocks.altarPillar), new ItemStack(ModBlocks.altarTip)).build(entries);
-        new ItemInfoBuilder(ModBlocks.hunterTable).setFormats(ModItems.hunterIntel.getLocalizedName()).setLinks(new ResourceLocation("guide.vampirism.hunter.leveling"), new ResourceLocation("guide.vampirism.items.hunterIntel")).craftable(WORKBENCH).build(entries);
-        new ItemInfoBuilder(ModBlocks.churchAltar).build(entries);
+        //Vampire
+        new ItemInfoBuilder(ModBlocks.bloodContainer).craftable(WORKBENCH).build(entries);
         new ItemInfoBuilder(ModBlocks.altarInspiration).setLinks(new ResourceLocation("guide.vampirism.vampire.leveling")).craftable(WORKBENCH).build(entries);
+        new ItemInfoBuilder(ModBlocks.altarInfusion).setLinks(new ResourceLocation("guide.vampirism.vampire.leveling")).craftable(WORKBENCH).craftableStacks(new ItemStack(ModBlocks.altarInfusion), new ItemStack(ModBlocks.altarPillar), new ItemStack(ModBlocks.altarTip)).build(entries);
+        new ItemInfoBuilder(new ItemStack(ModItems.itemCoffin), true).craftable(WORKBENCH).build(entries);
+        new ItemInfoBuilder(ModBlocks.churchAltar).build(entries);
+        //Hunter
+        new ItemInfoBuilder(new ItemStack(ModItems.itemMedChair), true).setFormats((new ItemStack(ModItems.injection, 1, 1)).getDisplayName(), (new ItemStack(ModItems.injection, 1, 2)).getDisplayName()).craftable(WORKBENCH).build(entries);
+        new ItemInfoBuilder(ModBlocks.hunterTable).setFormats(ModItems.hunterIntel.getLocalizedName()).setLinks(new ResourceLocation("guide.vampirism.hunter.leveling"), new ResourceLocation("guide.vampirism.items.hunterIntel")).craftable(WORKBENCH).build(entries);
         new ItemInfoBuilder(ModBlocks.weaponTable).craftable(WORKBENCH).build(entries);
         new ItemInfoBuilder(ModBlocks.bloodPotionTable).craftable(WORKBENCH).build(entries);
-        new ItemInfoBuilder(new ItemStack(ModItems.itemCoffin), true).craftable(WORKBENCH).build(entries);
-        new ItemInfoBuilder(new ItemStack(ModItems.itemMedChair), true).setFormats((new ItemStack(ModItems.injection, 1, 1)).getDisplayName(), (new ItemStack(ModItems.injection, 1, 2)).getDisplayName()).craftable(WORKBENCH).build(entries);
 
 
         links.putAll(entries);
