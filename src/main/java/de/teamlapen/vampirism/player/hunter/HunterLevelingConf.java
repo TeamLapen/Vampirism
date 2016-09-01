@@ -40,7 +40,7 @@ public class HunterLevelingConf {
             throw new IllegalArgumentException("Cannot use the table with the given target level " + targetLevel);
         }
         switch (targetLevel) {
-            //fangs,blood,blood_meta,par3
+            //fangs,blood,blood_meta,vampire book
             case 5:
                 return new int[]{10, 0, 0, 1};
             case 6:
