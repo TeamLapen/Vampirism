@@ -112,6 +112,8 @@ public class WorldGenVampireDungeon extends WorldGenerator {
 
                             if (tileentity1 instanceof TileEntityChest) {
                                 ((TileEntityChest) tileentity1).setLootTable(new ResourceLocation(REFERENCE.MODID, "vampire_dungeon"), rand.nextLong());
+                            } else {
+                                VampirismMod.log.w(TAG, "Failed to generate dungeon chest at (%s)", VampirismWorldGen.debug ? blockpos2 : "hidden");
                             }
 
                             break;
@@ -140,6 +142,8 @@ public class WorldGenVampireDungeon extends WorldGenerator {
 
                             if (tileentity1 instanceof TileBloodContainer) {
                                 ((TileBloodContainer) tileentity1).setFluidStack(new FluidStack(ModFluids.blood, (int) (TileBloodContainer.CAPACITY * rand.nextFloat())));
+                            } else {
+                                VampirismMod.log.w(TAG, "Failed to generate blood container in dungeon at (%s)", VampirismWorldGen.debug ? blockpos2 : "hidden");
                             }
 
                             break;
@@ -170,9 +174,10 @@ public class WorldGenVampireDungeon extends WorldGenerator {
             if (tileentity instanceof TileAltarInspiration) {
                 ((TileAltarInspiration) tileentity).fill(null, new FluidStack(ModFluids.blood, (int) (TileAltarInspiration.CAPACITY * rand.nextFloat())), true);
             } else {
-                VampirismMod.log.e(TAG, "Failed to place altar of inspiration in vampire dungeon");
+                VampirismMod.log.w(TAG, "Failed to generate altar of inspiration in dungeon at (%s)", VampirismWorldGen.debug ? position : "hidden");
             }
 
+            if (VampirismWorldGen.debug) VampirismMod.log.i(TAG, "Generated vampire dungeon at %s", position);
             return true;
         } else {
             return false;

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world.gen;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.hunter.EntityAdvancedHunter;
 import de.teamlapen.vampirism.items.ItemTent;
@@ -52,6 +53,8 @@ public class WorldGenHunterCamp extends WorldGenerator {
                 AxisAlignedBB box = new AxisAlignedBB(center.add(-6, 0, -6), center.add(6, 0, 6));
                 UtilLib.spawnEntityInWorld(worldIn, box, hunter, 5);
                 hunter.setCampArea(box);
+                if (VampirismWorldGen.debug)
+                    VampirismMod.log.i("HunterCamp", "Generated advanced hunter camp at %s", center);
                 return true;
             }
             return false;

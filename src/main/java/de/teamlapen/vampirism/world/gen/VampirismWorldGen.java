@@ -17,6 +17,7 @@ import java.util.Random;
  * Handles Vampirism's world gen
  */
 public class VampirismWorldGen implements IWorldGenerator {
+    public static boolean debug = false;
     private final WorldGenHunterCamp hunterCamp;
     private final WorldGenVampireDungeon vampireDungeon;
 

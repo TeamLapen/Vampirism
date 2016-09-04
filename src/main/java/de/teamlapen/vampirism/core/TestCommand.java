@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.player.skills.SkillRegistry;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.tileentity.TileTent;
 import de.teamlapen.vampirism.util.VampireBookManager;
+import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.command.PlayerNotFoundException;
@@ -353,6 +354,38 @@ public class TestCommand extends BasicCommand {
             }
         });
 
+        addSub(new SubCommand() {
+            @Override
+            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+                return null;
+            }
+
+            @Override
+            public boolean canSenderUseCommand(ICommandSender sender) {
+                return canCommandSenderUseCheatCommand(sender) && sender instanceof EntityPlayer;
+            }
+
+            @Override
+            public String getCommandName() {
+                return "debugGen";
+            }
+
+            @Override
+            public String getCommandUsage(ICommandSender sender) {
+                return getCommandName();
+            }
+
+            @Override
+            public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                if (VampirismWorldGen.debug) {
+                    VampirismWorldGen.debug = false;
+                    sendMessage(sender, "Disabled world gen debug");
+                } else {
+                    VampirismWorldGen.debug = true;
+                    sendMessage(sender, "Enabled world gen debug");
+                }
+            }
+        });
     }
 
     @Override
