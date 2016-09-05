@@ -419,9 +419,10 @@ public class GuiSkills extends GuiScreen {
                     this.mc.getTextureManager().bindTexture(getIconLoc(skill));
 
                     GlStateManager.disableLighting();
-                    GlStateManager.enableCull();
+                    //GlStateManager.enableCull();
+                    GlStateManager.enableBlend();
                     this.drawTexturedModalRect(x + 3, y + 3, skill.getMinU(), skill.getMinV(), 16, 16);
-                    GlStateManager.blendFunc(770, 771);
+                    //GlStateManager.blendFunc(770, 771);
                     GlStateManager.disableLighting();
 
 

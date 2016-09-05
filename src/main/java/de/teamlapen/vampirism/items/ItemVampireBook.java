@@ -2,9 +2,12 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.ModGuiHandler;
+import de.teamlapen.vampirism.util.VampireBookManager;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemWritableBook;
 import net.minecraft.nbt.NBTTagCompound;
@@ -22,6 +25,9 @@ import net.minecraft.util.text.TextComponentUtils;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
+import java.util.Random;
 
 
 public class ItemVampireBook extends VampirismItem {
@@ -54,6 +60,11 @@ public class ItemVampireBook extends VampirismItem {
         }
 
         return super.getItemStackDisplayName(stack);
+    }
+
+    @Override
+    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+        subItems.add(VampireBookManager.getInstance().getRandomBook(new Random()));
     }
 
     @SideOnly(Side.CLIENT)
@@ -103,6 +114,4 @@ public class ItemVampireBook extends VampirismItem {
         }
 
     }
-
-
 }
