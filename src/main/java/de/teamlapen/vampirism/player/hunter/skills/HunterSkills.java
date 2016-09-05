@@ -19,8 +19,8 @@ public class HunterSkills {
     public static final ISkill<IHunterPlayer> doubleCrossbow = new VampirismSkill.SimpleHunterSkill("double_crossbow", 192, 32, false);
     public static final ISkill<IHunterPlayer> weaponTable = new VampirismSkill.SimpleHunterSkill("weapon_table", 48, 32, true);
     public static final ISkill<IHunterPlayer> enhancedCrossbow = new VampirismSkill.SimpleHunterSkill("enhanced_crossbow", 208, 32, false);
-    public static final ISkill<IHunterPlayer> enhancedArmor = new VampirismSkill.SimpleHunterSkill("enhanced_armor", 0, 0, false);
-    public static final ISkill<IHunterPlayer> enhancedWeapons = new VampirismSkill.SimpleHunterSkill("enhanced_weapons", 0, 0, false);
+    public static final ISkill<IHunterPlayer> enhancedArmor = new VampirismSkill.SimpleHunterSkill("enhanced_armor", 0, 48, false);
+    public static final ISkill<IHunterPlayer> enhancedWeapons = new VampirismSkill.SimpleHunterSkill("enhanced_weapons", 16, 48, false);
     public static final ISkill<IHunterPlayer> techWeapons = new VampirismSkill.SimpleHunterSkill("tech_weapons", 240, 32, true);
     public static final ISkill<IHunterPlayer> stake1 = new VampirismSkill.SimpleHunterSkill("stake1", 16, 32, false) {
         @Override

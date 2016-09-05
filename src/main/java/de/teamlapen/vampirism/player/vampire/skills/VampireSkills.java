@@ -291,7 +291,7 @@ public class VampireSkills {
                 ((VampirePlayer) player).getSpecialAttributes().avoided_by_creepers = true;
             }
         });
-        SkillNode skill5 = new SkillNode(skill4, new VampirismSkill.SimpleVampireSkill("1forestfog", 0, 48, true) {
+        SkillNode skill5 = new SkillNode(skill4, new VampirismSkill.SimpleVampireSkill("1forestfog", 224, 0, true) {
             @Override
             protected void onDisabled(IVampirePlayer player) {
                 ((VampirePlayer) player).getSpecialAttributes().increasedVampireFogDistance = false;
