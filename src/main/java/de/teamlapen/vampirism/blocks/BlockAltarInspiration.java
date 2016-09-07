@@ -21,9 +21,8 @@ import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 /**
  * Altar of inspiration used for vampire levels 1-4
@@ -82,10 +81,10 @@ public class BlockAltarInspiration extends VampirismBlockContainer {
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         ItemStack stack = heldItem;
         if (stack != null && !worldIn.isRemote) {
-            if (stack.getItem() instanceof IFluidContainerItem || FluidContainerRegistry.isContainer(stack)) {
+            if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
                 TileAltarInspiration tileEntity = (TileAltarInspiration) worldIn.getTileEntity(pos);
-                if (FluidContainerRegistry.isFilledContainer(stack) || (stack.getItem() instanceof IFluidContainerItem && !playerIn.isSneaking())) {
-                    FluidLib.drainContainerIntoTank(playerIn, stack, tileEntity, null);
+                if (!playerIn.isSneaking()) {
+                    FluidLib.drainContainerIntoTank(stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null));
                 }
                 worldIn.notifyBlockUpdate(pos, state, state, 3);
                 tileEntity.markDirty();

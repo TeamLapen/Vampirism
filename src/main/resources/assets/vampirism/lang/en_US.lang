@@ -217,6 +217,9 @@ effect.vampirism.thirst=Thirst
 effect.vampirism.saturation=Saturation
 effect.vampirism.sanguinare=Sanguinare Vampiris
 
+#FLUIDS
+fluid.vampirism.vampirismblood=Blood
+
 #GUI
 gui.vampirism.hunter_weapon_table=Hunter Weapon Table
 gui.vampirism.hunter_weapon_table.level=Required Hunter Level: %s
