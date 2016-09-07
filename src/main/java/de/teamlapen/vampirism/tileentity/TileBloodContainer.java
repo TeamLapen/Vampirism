@@ -8,13 +8,12 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.TileFluidHandler;
 
 /**
  * Stores blood and other liquids in a {@link FluidTank}
  * Tank is synced if the block is marked for update
  */
-public class TileBloodContainer extends TileFluidHandler {
+public class TileBloodContainer extends net.minecraftforge.fluids.capability.TileFluidHandler {
 
     public static final int LEVEL_AMOUNT = ItemBloodBottle.AMOUNT * VReference.FOOD_TO_FLUID_BLOOD;
     public static final int CAPACITY = LEVEL_AMOUNT * 14;

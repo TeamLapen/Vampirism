@@ -33,9 +33,9 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.fluids.FluidTankInfo;
-import net.minecraftforge.fluids.IFluidHandler;
 import net.minecraftforge.fluids.IFluidTank;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -148,22 +148,20 @@ public class ModPlayerEventHandler {
                         }
                     } else if (block instanceof ITileEntityProvider) {
                         TileEntity entity = event.getWorld().getTileEntity(event.getPos());
-                        if (entity instanceof IFluidHandler) {
-                            FluidTankInfo[] infos = ((IFluidHandler) entity).getTankInfo(event.getFace());
-                            if (infos != null) {
-                                for (FluidTankInfo info : infos) {
-                                    if (info.fluid != null && ModFluids.blood.equals(info.fluid.getFluid())) {
+                        if (entity != null && entity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, event.getFace())) {
+                            net.minecraftforge.fluids.capability.IFluidHandler fluidHandler = entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, event.getFace());
+                            for (IFluidTankProperties info : fluidHandler.getTankProperties()) {
+                                if (info.getContents() != null && ModFluids.blood.equals(info.getContents().getFluid())) {
                                         flag = true;
                                         break;
                                     }
                                 }
-                            }
+
 
                         }
                     }
                     if (flag) {
-                        event.getItemStack().setItem(ModItems.bloodBottle);
-                        event.getItemStack().setItemDamage(0);
+                        event.getItemStack().deserializeNBT(new ItemStack(ModItems.bloodBottle).serializeNBT());
                     }
                 }
         }

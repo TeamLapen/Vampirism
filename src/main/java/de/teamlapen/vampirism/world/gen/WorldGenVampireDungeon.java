@@ -21,6 +21,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import java.util.Random;
 
@@ -171,8 +172,8 @@ public class WorldGenVampireDungeon extends WorldGenerator {
             worldIn.setBlockState(position, ModBlocks.altarInspiration.getDefaultState(), 2);
             TileEntity tileentity = worldIn.getTileEntity(position);
 
-            if (tileentity instanceof TileAltarInspiration) {
-                ((TileAltarInspiration) tileentity).fill(null, new FluidStack(ModFluids.blood, (int) (TileAltarInspiration.CAPACITY * rand.nextFloat())), true);
+            if (tileentity instanceof TileAltarInspiration && tileentity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
+                tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).fill(new FluidStack(ModFluids.blood, (int) (TileAltarInspiration.CAPACITY * rand.nextFloat())), true);
             } else {
                 VampirismMod.log.w(TAG, "Failed to generate altar of inspiration in dungeon at (%s)", VampirismWorldGen.debug ? position : "hidden");
             }

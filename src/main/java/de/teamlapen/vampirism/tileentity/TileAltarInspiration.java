@@ -15,55 +15,27 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraftforge.fluids.*;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidTank;
+import net.minecraftforge.fluids.FluidTankInfo;
 
 /**
  * Handle blood storage and leveling
  */
-public class TileAltarInspiration extends TileFluidHandler implements ITickable {
+public class TileAltarInspiration extends net.minecraftforge.fluids.capability.TileFluidHandler implements ITickable {
     public static final int CAPACITY = 100 * VReference.FOOD_TO_FLUID_BLOOD;
     private final int RITUAL_TIME = 60;
     private int ritualTicksLeft = 0;
     private EntityPlayer ritualPlayer;
 
     public TileAltarInspiration() {
-        this.tank = new FluidTank(CAPACITY);
-    }
-
-    @Override
-    public boolean canDrain(EnumFacing from, Fluid fluid) {
-        return false;
-    }
-
-    @Override
-    public boolean canFill(EnumFacing from, Fluid fluid) {
-        return ModFluids.blood.equals(fluid);
-    }
-
-    @Override
-    public FluidStack drain(EnumFacing from, FluidStack resource, boolean doDrain) {
-        return null;
-    }
-
-    @Override
-    public FluidStack drain(EnumFacing from, int maxDrain, boolean doDrain) {
-        return null;
-    }
-
-    @Override
-    public int fill(EnumFacing from, FluidStack resource, boolean doFill) {
-        if (canFill(from, resource == null ? null : resource.getFluid())) {
-            return super.fill(from, resource, doFill);
-
-        }
-        return 0;
+        this.tank = new InternalTank(CAPACITY);
     }
 
     public FluidTankInfo getTankInfo() {
-        return super.getTankInfo(null)[0];
+        return tank.getInfo();
     }
 
     @Override
@@ -105,7 +77,7 @@ public class TileAltarInspiration extends TileFluidHandler implements ITickable 
         if (!p.worldObj.isRemote) {
             VampLib.proxy.getParticleHandler().spawnParticles(p.worldObj, ModParticles.FLYING_BLOOD_ENTITY, this.pos.getX() + 0.5, this.pos.getY() + 0.5, this.pos.getZ() + 0.5, 40, 0.1F, p.getRNG(), player.getRepresentingPlayer(), false);
         } else {
-            super.drain(null, neededBlood, true);
+            ((InternalTank) tank).doDrain(neededBlood, true);
             IBlockState state = worldObj.getBlockState(getPos());
 
             worldObj.notifyBlockUpdate(pos, state, state, 3);
@@ -132,7 +104,7 @@ public class TileAltarInspiration extends TileFluidHandler implements ITickable 
                     int targetLevel = player.getLevel() + 1;
                     VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
                     int blood = levelingConf.getRequiredBloodForAltarInspiration(targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
-                    super.drain(null, blood, true);
+                    ((InternalTank) tank).doDrain(blood, true);
 
                     ritualPlayer.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, targetLevel * 10 * 20));
                     FactionPlayerHandler.get(ritualPlayer).setFactionLevel(VReference.VAMPIRE_FACTION, targetLevel);
@@ -147,5 +119,25 @@ public class TileAltarInspiration extends TileFluidHandler implements ITickable 
 
 
         ritualTicksLeft--;
+    }
+
+    private class InternalTank extends FluidTank {
+
+        public InternalTank(int capacity) {
+            super(capacity);
+            setCanDrain(false);
+        }
+
+        @Override
+        public boolean canFillFluidType(FluidStack fluid) {
+            return fluid != null && canFill() && ModFluids.blood.equals(fluid.getFluid());
+        }
+
+        public FluidStack doDrain(int maxDrain, boolean doDrain) {
+            this.setCanDrain(true);
+            FluidStack s = super.drain(maxDrain, doDrain);
+            this.setCanDrain(false);
+            return s;
+        }
     }
 }

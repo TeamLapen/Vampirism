@@ -29,15 +29,13 @@ import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 
 import java.util.List;
 
 /**
  * Tileentity container that can store liquids.
- * Supports {@link IFluidContainerItem} as well as containers registered in {@link FluidContainerRegistry}
  */
 public class BlockBloodContainer extends VampirismBlockContainer {
     public static final IUnlistedProperty<Integer> FLUID_LEVEL = new Properties.PropertyAdapter<>(PropertyInteger.create("fluidLevel", 0, 14));
@@ -110,10 +108,9 @@ public class BlockBloodContainer extends VampirismBlockContainer {
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!worldIn.isRemote) {
             ItemStack stack = heldItem;
-            if (stack != null) {
-                if (stack.getItem() instanceof IFluidContainerItem || FluidContainerRegistry.isContainer(stack)) {
+            if (stack != null && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
                     TileBloodContainer bloodContainer = (TileBloodContainer) worldIn.getTileEntity(pos);
-                    if (FluidContainerRegistry.isEmptyContainer(stack) || (stack.getItem() instanceof IFluidContainerItem && playerIn.isSneaking())) {
+                if (playerIn.isSneaking()) {
                         fillContainerFromTank(worldIn, pos, playerIn, stack, bloodContainer);
                     } else {
                         drainContainerIntoTank(worldIn, pos, playerIn, stack, bloodContainer);
@@ -123,7 +120,7 @@ public class BlockBloodContainer extends VampirismBlockContainer {
                     return true;
                 }
             }
-        }
+
         return true;
 
     }
@@ -149,12 +146,19 @@ public class BlockBloodContainer extends VampirismBlockContainer {
         return new ExtendedBlockState(this, new IProperty[]{}, new IUnlistedProperty[]{FLUID_LEVEL, FLUID_NAME});
     }
 
+    /**
+     * Does NOT check if capabilties exist
+     */
     private void drainContainerIntoTank(World worldIn, BlockPos pos, EntityPlayer playerIn, ItemStack stack, TileBloodContainer bloodContainer) {
-        FluidLib.drainContainerIntoTank(playerIn, stack, bloodContainer, null);
+
+        FluidLib.drainContainerIntoTank(stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), bloodContainer.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null));
     }
 
+    /**
+     * Does NOT check if capabilties exist
+     */
     private void fillContainerFromTank(World worldIn, BlockPos pos, EntityPlayer playerIn, ItemStack stack, TileBloodContainer bloodContainer) {
-        FluidLib.fillContainerFromTank(playerIn, stack, bloodContainer, null);
+        FluidLib.drainContainerIntoTank(bloodContainer.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null));
     }
 
 }
