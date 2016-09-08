@@ -1,10 +1,9 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.inventory.ShapelessHunterWeaponRecipe;
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
-import mezz.jei.util.ErrorUtil;
-import mezz.jei.util.Log;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -42,14 +41,12 @@ public class ShapelessHunterWeaponRecipeHandler implements IRecipeHandler<Shapel
             if (input instanceof ItemStack) {
                 inputCount++;
             } else {
-                String recipeInfo = ErrorUtil.getInfoFromBrokenRecipe(recipe, this);
-                Log.error("Recipe has an input that is not an ItemStack. {}", recipeInfo);
+                VampirismMod.log.w("JeiCompat", "Recipe has an input that is not an ItemStack. {Output:%s,Inputs:%s}", recipe.getRecipeOutput(), recipe.recipeItems);
                 return false;
             }
         }
         if (inputCount > 16) {
-            String recipeInfo = ErrorUtil.getInfoFromBrokenRecipe(recipe, this);
-            Log.error("Recipe has too many inputs. {}", recipeInfo);
+            VampirismMod.log.w("JeiCompat", "Recipe has too many inputs. {Output:%s,Inputs:%s}", recipe.getRecipeOutput(), recipe.recipeItems);
             return false;
         }
         return inputCount > 0;
