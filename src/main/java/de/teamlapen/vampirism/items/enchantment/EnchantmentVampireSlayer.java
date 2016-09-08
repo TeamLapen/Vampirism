@@ -35,7 +35,7 @@ public class EnchantmentVampireSlayer extends Enchantment {
 
     @Override
     public boolean canApplyTogether(Enchantment ench) {
-        return !(ench instanceof EnchantmentDamage);
+        return super.canApplyTogether(ench) && !(ench instanceof EnchantmentDamage);
     }
 
     @Override

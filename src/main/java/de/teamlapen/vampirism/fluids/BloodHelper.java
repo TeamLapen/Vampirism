@@ -70,16 +70,20 @@ public class BloodHelper {
     public static int getBlood(@Nonnull ItemStack stack) {
         if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
             IFluidHandler cap = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-            int l = 0;
-            for (IFluidTankProperties p : cap.getTankProperties()) {
-                FluidStack s = p.getContents();
-                if (ModFluids.blood.equals(s.getFluid())) {
-                    l += s.amount;
-                }
-            }
-            return l;
+            return getBlood(cap);
         }
         return 0;
+    }
+
+    public static int getBlood(@Nonnull IFluidHandler cap) {
+        int l = 0;
+        for (IFluidTankProperties p : cap.getTankProperties()) {
+            FluidStack s = p.getContents();
+            if (ModFluids.blood.equals(s.getFluid())) {
+                l += s.amount;
+            }
+        }
+        return l;
     }
 
     /**
