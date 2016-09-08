@@ -1,15 +1,15 @@
 project.mod_version = "${config.main_version}.${config.major_version}.${config.minor_version}"
 if (hasProperty("beta")) {
-    project.mod_version = project.mod_version + "-Beta." + beta
+    project.mod_version = project.mod_version + "-beta." + beta
     config.type = "beta"
 } else if (hasProperty("release")) {
     config.type = "release"
 } else if (System.getenv().CI) {
-    project.mod_version = project.mod_version + "-Test+" + System.getenv().GIT_BRANCH + "." + System.getenv().GIT_COMMIT
+    project.mod_version = project.mod_version + "-test+" + System.getenv().GIT_BRANCH + "." + System.getenv().GIT_COMMIT
     writeVersion()
     config.type = "test"
 } else {
-    project.mod_version = project.mod_version + "-Alpha+" + getDate();
+    project.mod_version = project.mod_version + "-alpha+" + getDate();
     config.type = "alpha"
 }
 

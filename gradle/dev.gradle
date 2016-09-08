@@ -4,6 +4,19 @@ task deobfJar(type: Jar, dependsOn: 'classes') {
     classifier = 'deobf'
 }
 
+task apiJar(type: Jar, dependsOn: 'classes') {
+    from sourceSets.main.allSource
+    from sourceSets.main.output
+    include 'de/teamlapen/vampirism/api/**/*'
+    classifier 'api'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier = 'sources'
+}
+
 artifacts {
-    archives deobfJar
+    archives sourcesJar
+    archives apiJar
 }
