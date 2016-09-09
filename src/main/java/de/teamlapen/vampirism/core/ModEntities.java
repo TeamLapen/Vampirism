@@ -31,7 +31,6 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.*;
 import net.minecraft.init.Biomes;
 import net.minecraft.world.biome.Biome;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
@@ -78,7 +77,6 @@ public class ModEntities {
                 preInit((FMLPreInitializationEvent) event);
                 break;
             case INIT:
-                init((FMLInitializationEvent) event);
                 break;
             default://Do nothing
 
@@ -86,9 +84,6 @@ public class ModEntities {
 
     }
 
-    private static void preInit(FMLPreInitializationEvent event) {
-
-    }
 
     /**
      * Register convertibles for vanilla creatures and maybe for future vampirism creature as well
@@ -105,7 +100,7 @@ public class ModEntities {
         registry.addConvertible(EntityVillager.class, null, new EntityConvertedVillager.ConvertingHandler());
     }
 
-    private static void init(FMLInitializationEvent event) {
+    private static void preInit(FMLPreInitializationEvent event) {
         Set<Biome> allBiomes = Biome.EXPLORATION_BIOMES_LIST;
         /**
          * After setting this up this array will contain only biomes in which zombies can spawn.

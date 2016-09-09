@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -18,9 +19,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiOptionButton;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.achievement.GuiAchievements;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -43,7 +42,7 @@ import java.util.Random;
  * Gui screen which displays the skills available to the players and allows him to unlock some.
  * Inspired by Minecraft's {@link GuiAchievements}
  */
-public class GuiSkills extends GuiScreen {
+public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
     private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/achievement/achievement_background.png");
     private static final ResourceLocation defaultIcons = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills.png");
     private final int area_min_y = -77;
@@ -68,6 +67,18 @@ public class GuiSkills extends GuiScreen {
     private ISkill selected;
     private int field_146554_D;
 
+    @Override
+    public void confirmClicked(boolean result, int id) {
+        super.confirmClicked(result, id);
+        if (id == 10) {
+            if (result) {
+                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESETSKILL, ""));
+                this.mc.displayGuiScreen(null);
+            } else {
+                this.mc.displayGuiScreen(this);
+            }
+        }
+    }
 
     @Override
     public boolean doesGuiPauseGame() {
@@ -170,9 +181,16 @@ public class GuiSkills extends GuiScreen {
             addToList(skillNodes, skillHandler.getRootNode());
         }
         this.buttonList.clear();
-        this.buttonList.add(new GuiOptionButton(1, this.width / 2 + 24, this.height / 2 + 74, 80, 20, I18n.format("gui.done")));
-        if (display)
-            this.buttonList.add(new GuiButton(2, (this.width - display_width) / 2 + 24, this.height / 2 + 74, 125, 20, I18n.format("text.vampirism.skill.resetall")));
+        this.buttonList.add(new GuiOptionButton(1, this.width / 2 + 24, this.height / 2 + 74, 80, 20, UtilLib.translate("gui.done")));
+        if (display) {
+            GuiButton resetSkills = new GuiButton(2, (this.width - display_width) / 2 + 24, this.height / 2 + 74, 125, 20, UtilLib.translate("text.vampirism.skill.resetall"));
+
+            if (factionPlayer.getLevel() < 2) {
+                resetSkills.enabled = false;
+            }
+            this.buttonList.add(resetSkills);
+        }
+
 
     }
 
@@ -199,8 +217,9 @@ public class GuiSkills extends GuiScreen {
             this.mc.displayGuiScreen(null);
         }
         if (button.id == 2) {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.RESETSKILL, ""));
-            //TODO make this "cost" something
+            boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
+            GuiYesNo resetGui = new GuiYesNo(this, UtilLib.translate("gui.vampirism.resetSkills.title"), UtilLib.translate("gui.vampirism.resetSkills." + (test ? "descTest" : "test")), 10);
+            this.mc.displayGuiScreen(resetGui);
         }
     }
 

@@ -28,3 +28,4 @@ usercache.json
 whitelist.json
 hs*
 .directory
+run/*

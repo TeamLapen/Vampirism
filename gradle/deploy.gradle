@@ -15,7 +15,7 @@ curseforge {
             releaseType = 'beta'
             //changelog = new File("resources/changelog/${project.version}.txt").text
         } else if (config.type == "release") {
-
+            releaseType = 'release'
         } else {
             releaseType = 'alpha'
             changelog = "This version should not be used in your 'productive' world. It contains the latest features, but also the latest bugs.\n Probably not all features are finished.\n To see what might have changed visit our Github page and browse the latest commits."

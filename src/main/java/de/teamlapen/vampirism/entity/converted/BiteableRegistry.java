@@ -23,7 +23,7 @@ public class BiteableRegistry implements IBiteableRegistry {
     /**
      * Used to store overriding values during init. Will override entries in {@link #bloodValues} after init
      */
-    private final Map<String, Integer> overridingValues = new HashMap();
+    private final Map<String, Integer> overridingValues = new HashMap<>();
     /**
      * Used to store convertible handlers during init
      */
@@ -36,6 +36,11 @@ public class BiteableRegistry implements IBiteableRegistry {
     private final Map<String, BiteableEntry> biteables = new HashMap<>();
     private boolean finished = false;
     private ICreateDefaultConvertingHandler defaultConvertingHandlerCreator;
+
+    @Override
+    public void addBloodValue(String entityId, int value) {
+        bloodValues.put(entityId, value);
+    }
 
     @Override
     public void addBloodValues(Map<String, Integer> values) {

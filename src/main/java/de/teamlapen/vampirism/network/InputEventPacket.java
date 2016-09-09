@@ -164,12 +164,19 @@ public class InputEventPacket implements IMessage {
                 if (factionPlayer != null) {
                     ISkillHandler skillHandler = factionPlayer.getSkillHandler();
                     skillHandler.resetSkills();
+                    if (!VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion()) {
+                        int l = factionPlayer.getLevel();
+                        if (l > 1) {
+                            FactionPlayerHandler.get(player).setFactionLevel(factionPlayer.getFaction(), l - 1);
+                        }
+                    }
                     if (factionPlayer instanceof ISyncable.ISyncableEntityCapabilityInst && skillHandler instanceof SkillHandler) {
                         //TODO does this cause problems with addons?
                         NBTTagCompound sync = new NBTTagCompound();
                         ((SkillHandler) skillHandler).writeUpdateForClient(sync);
                         HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
                     }
+                    player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.skill.skillsReset"));
                 } else {
                     VampirismMod.log.e(TAG, "Player %s is in no faction, so he cannot reset skills");
                 }

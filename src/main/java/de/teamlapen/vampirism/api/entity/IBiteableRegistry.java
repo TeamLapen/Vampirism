@@ -13,11 +13,23 @@ import java.util.Map;
  * Registration of blood values and converting handler for {@link EntityCreature}'s
  */
 public interface IBiteableRegistry {
+
+    /**
+     * Add a blood value for an creature
+     *
+     * @param entityId Entity id
+     * @param value    blood value
+     */
+    void addBloodValue(String entityId, int value);
+
+    /**
+     * Add a set of entity id -> blood value pairs
+     */
     void addBloodValues(Map<String, Integer> values);
 
     /**
      * Register a entity class which can be converted using Vampirism's default {@link IConvertingHandler} and thereby being turned into Vampirim's default {@link IConvertedCreature}
-     *
+     * Requires a blood value to be registered for that creature
      * @param clazz
      * @param overlay_loc Location of the overlay texture file
      */
@@ -25,7 +37,7 @@ public interface IBiteableRegistry {
 
     /**
      * Register a entity class which can be converted using a default {@link IConvertingHandler} and thereby being turned into Vampirim's default {@link IConvertedCreature}
-     *
+     * Requires a blood value to be registered for that creature
      * @param clazz
      * @param helper      Helper instance for the DefaultHandler to specify some values for the converted creature
      * @param overlay_loc Location of the overlay texture file
@@ -34,7 +46,7 @@ public interface IBiteableRegistry {
 
     /**
      * Register a entity class which can be converted
-     *
+     * Requires a blood value to be registered for that creature
      * @param clazz
      * @param overlay_loc Location of the overlay texture file. Only required if Vampirism's default Converted Creature renderer is used, if you handle that stuff yourself, null is just fine.
      * @param handler     Handles the conversion
