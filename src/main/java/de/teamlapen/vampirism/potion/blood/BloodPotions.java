@@ -85,7 +85,7 @@ public class BloodPotions {
     public static void addTooltip(ItemStack stack, List<String> tooltip, IHunterPlayer player) {
 
         ISkillHandler<IHunterPlayer> skillHandler = player.getSkillHandler();
-        List<ConfiguredEffect> effects = stack.hasTagCompound() ? readEffectsFromNBT(stack.getTagCompound()) : Lists.newArrayList();
+        List<ConfiguredEffect> effects = stack.hasTagCompound() ? readEffectsFromNBT(stack.getTagCompound()) : Lists.<ConfiguredEffect>newArrayList();
         Random identifyRandom = null;
         if (skillHandler.isSkillEnabled(HunterSkills.bloodPotion_identifySome)) {
             NBTTagCompound nbt = stack.hasTagCompound() ? stack.getTagCompound() : new NBTTagCompound();
