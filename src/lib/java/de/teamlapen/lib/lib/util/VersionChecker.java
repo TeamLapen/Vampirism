@@ -46,7 +46,7 @@ public class VersionChecker implements Runnable {
     protected VersionChecker(String update_file_url, String currentVersion) {
         UPDATE_FILE_URL = update_file_url;
         this.currentVersion = currentVersion;
-        versionInfo = new VersionInfo();
+        versionInfo = new VersionInfo(currentVersion);
     }
 
     @Override
@@ -160,15 +160,28 @@ public class VersionChecker implements Runnable {
         private boolean checked = false;
         private String homePage;
 
-        public Version getCurrentVersion() {
+        public VersionInfo(String current) {
+            currentVersion = Version.parse(current);
+            if (currentVersion == null) {
+                currentVersion = new Version("current", 0, 0, 0, Version.TYPE.TEST, null);
+            }
+        }
+
+        public
+        @Nonnull
+        Version getCurrentVersion() {
             return currentVersion;
         }
 
-        public String getHomePage() {
+        public
+        @Nullable
+        String getHomePage() {
             return homePage;
         }
 
-        public Version getNewVersion() {
+        public
+        @Nullable
+        Version getNewVersion() {
             return newVersion;
         }
 
@@ -228,12 +241,11 @@ public class VersionChecker implements Runnable {
                 return null;
             }
         }
-
-        public final TYPE type;
         public final String name;
         public final
         @Nullable
         String extra;
+        private final TYPE type;
         private final int main, major, minor;
         private String url;
         private List<String> changes;
@@ -295,6 +307,13 @@ public class VersionChecker implements Runnable {
 
         public void setUrl(String url) {
             this.url = url;
+        }
+
+        /**
+         * @return If this is an alpha or test version
+         */
+        public boolean isTestVersion() {
+            return type == TYPE.ALPHA || type == TYPE.TEST;
         }
 
         @Override

@@ -5,6 +5,7 @@ text.vampirism.skill.resetall=Reset skills
 text.vampirism.skill.unlocked=Unlocked
 text.vampirism.skill.unlocks_action=Unlocks action
 text.vampirism.skill.unlock_parent_first=Unlock parent first
+text.vampirism.skill.skillsReset=Your skills have been reset
 
 #VAMPIRE SKILLS
 text.vampirism.skill.root_vampire=Becoming a vampire
@@ -227,6 +228,9 @@ gui.vampirism.hunter_weapon_table.skill=Required Skill: %s
 gui.vampirism.blood_potion_table.create=Start Crafting
 gui.vampirism.revertback.head=Revert back to normal human
 gui.vampirism.revertback.desc=You will loose all your levels and die
+gui.vampirism.resetSkills.title=Reset skills
+gui.vampirism.resetSkills.desc=If you reset your skills you will loose one level. Do you want to reset your skills?
+gui.vampirism.resetSkills.descTest=Do you want to reset your skills? (You do not loose a level, because you are using an alpha version of Vampirism)
 
 
 #COMMANDS
