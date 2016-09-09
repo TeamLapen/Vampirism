@@ -24,7 +24,7 @@ task crowdin(type: CrowdinDownload) {
 
 
 dependencies {
-    deobfProvided "mezz.jei:jei_" + config.minecraft_version + ":" + config.jei_version + ":api"
+    deobfProvided "mezz.jei:jei_" + config.minecraft_version + ":" + config.jei_version
     deobfProvided 'mcp.mobius.waila:Waila:' + config.waila_version
     deobfProvided 'info.amerifrance.guideapi:Guide-API:' + config.guide_api_version
 }
