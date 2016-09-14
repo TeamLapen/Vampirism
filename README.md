@@ -1,7 +1,5 @@
-Vampirism for Minecraft 1.10 - REWRITE
-======================================
-
-_This is WIP rewrite for Minecraft 1.10, check out the 1.7.10 branch for complete and more stable code_
+Vampirism for Minecraft 1.10
+============================
 
 ## Mod Description 
 
@@ -24,6 +22,24 @@ As a vampire you don't need to eat all that dry bread or eat these strange fruit
 - wildbill22 _Code_  
 - LRA_10 _Models/Textures_
 
+## API
+Vampirism has an API you can use to add blood values to your mod's creatures or make them convertible and more.
+You should be able to include it with the following in your build.gradle:
+```gradle
+repositories {
+    //Maven repo for Vampirism
+    maven {
+        url = "https://maxanier.de/maven2"
+    }
+}
+dependencies {
+    deobfProvided 'de.teamlapen.vampirism:Vampirism:1.10.2-1.0.0:api'//Adjust version
+}
+```
+Checkout this example project: https://github.com/TeamLapen/VampirismAPIExample
+
+If you want to create an addon, checkout this https://github.com/TeamLapen/VampirismAddonExample and consider contacting maxanier.
+
 ## Code Structure 
 The source code is currently divided into three parts, which might be split in the future.
 #### Vampirism 
@@ -32,7 +48,6 @@ Contains the mod source code. Depends on the other two parts.
 #### Vampirism API 
 Located in de.teamlapen.vampirism.api  
 Designed to be used by mods that only optionally interact with Vampirism as well as addon mods depending on Vampirism.  
-Not final yet. Contact maxanier, if you want to see something in the api or plan on interacting with Vampirism.  
 #### VampLib/TeamLapen Lib 
 Located in de.teamlapen.lib 
 Independent mod (Contains @Mod).  
