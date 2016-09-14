@@ -249,11 +249,16 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
      */
     private void writeOldEntityToNBT(NBTTagCompound nbt) {
         if (!nil()) {
-            NBTTagCompound entity = new NBTTagCompound();
-            entityCreature.isDead = false;
-            entityCreature.writeToNBTOptional(entity);
-            entityCreature.isDead = true;
-            nbt.setTag("entity_old", entity);
+            try {
+                NBTTagCompound entity = new NBTTagCompound();
+                entityCreature.isDead = false;
+                entityCreature.writeToNBTOptional(entity);
+                entityCreature.isDead = true;
+                nbt.setTag("entity_old", entity);
+            } catch (Exception e) {
+                VampirismMod.log.e(TAG, e, "Failed to write old entity (%s) to NBT. If this happens more often please report this to the mod author.", entityCreature);
+                this.setEntityCreature(null);
+            }
         }
 
     }
