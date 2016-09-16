@@ -19,7 +19,7 @@
         {
           "type": "item",
           "name": "vampirism:vampireBook",
-          "weight": 15,
+          "weight": 8,
           "functions": [
             {
               "function": "vampirism:add_book_nbt"

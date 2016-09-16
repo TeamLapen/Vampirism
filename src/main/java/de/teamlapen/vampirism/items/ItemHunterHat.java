@@ -4,10 +4,8 @@ import de.teamlapen.vampirism.client.model.ModelHunterHat;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.DamageSource;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -23,10 +21,6 @@ public class ItemHunterHat extends VampirismHunterArmor {
         this.type = type;
     }
 
-    @Override
-    public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slot) {
-        return 2;
-    }
 
     @SideOnly(Side.CLIENT)
     @Override
@@ -41,9 +35,9 @@ public class ItemHunterHat extends VampirismHunterArmor {
         return "vampirism:textures/entity/vampireHunterExtra.png";
     }
 
-    @Override
-    public ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage, int slot) {
-        return new ArmorProperties(0, 2 / 25F, Integer.MAX_VALUE);
-    }
 
+    @Override
+    protected int getDamageReduction(int slot, ItemStack stack) {
+        return 2;
+    }
 }

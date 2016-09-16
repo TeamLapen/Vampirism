@@ -8,10 +8,13 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
+import de.teamlapen.vampirism.blocks.BlockAltarInspiration;
+import de.teamlapen.vampirism.blocks.BlockBloodContainer;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
@@ -33,9 +36,9 @@ import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -150,14 +153,16 @@ public class ModPlayerEventHandler {
                         TileEntity entity = event.getWorld().getTileEntity(event.getPos());
                         if (entity != null && entity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, event.getFace())) {
                             net.minecraftforge.fluids.capability.IFluidHandler fluidHandler = entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, event.getFace());
-                            for (IFluidTankProperties info : fluidHandler.getTankProperties()) {
-                                if (info.getContents() != null && ModFluids.blood.equals(info.getContents().getFluid())) {
-                                        flag = true;
-                                        break;
-                                    }
-                                }
-
-
+                            FluidStack drain = fluidHandler.drain(new FluidStack(ModFluids.blood, 1000), false);
+                            if (drain != null && drain.amount >= BloodBottleFluidHandler.MULTIPLIER) {
+                                flag = true;
+                            }
+                        }
+                        if (flag && block instanceof BlockAltarInspiration) {
+                            flag = false;
+                        }
+                        if (flag && block instanceof BlockBloodContainer) {
+                            flag = event.getEntityPlayer().isSneaking();
                         }
                     }
                     if (flag) {
