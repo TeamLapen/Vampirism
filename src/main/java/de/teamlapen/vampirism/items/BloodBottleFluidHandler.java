@@ -24,7 +24,17 @@ import javax.annotation.Nullable;
  */
 public class BloodBottleFluidHandler implements IFluidHandler, ICapabilityProvider {
 
-    private static final int MULTIPLIER = VReference.FOOD_TO_FLUID_BLOOD;
+    public static final int MULTIPLIER = VReference.FOOD_TO_FLUID_BLOOD;
+
+    /**
+     * Returns a amount which is a multiple of capacity%10
+     *
+     * @param amt
+     * @return
+     */
+    public static int getAdjustedAmount(int amt) {
+        return amt - amt % MULTIPLIER;
+    }
     protected final ItemStack container;
     private final ItemStack GLAS_BOTTLE = new ItemStack(Items.GLASS_BOTTLE);
     private final int capacity;
@@ -99,15 +109,5 @@ public class BloodBottleFluidHandler implements IFluidHandler, ICapabilityProvid
 
     public void setBlood(ItemStack stack, int amt) {
         stack.setItemDamage(amt / MULTIPLIER);
-    }
-
-    /**
-     * Returns a amount which is a multiple of capacity%10
-     *
-     * @param amt
-     * @return
-     */
-    private int getAdjustedAmount(int amt) {
-        return amt - amt % MULTIPLIER;
     }
 }

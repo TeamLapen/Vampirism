@@ -1,10 +1,14 @@
 package de.teamlapen.vampirism.items;
 
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -23,7 +27,7 @@ import java.util.UUID;
  * Base class for all hunter only armor items
  */
 abstract class VampirismHunterArmor extends ItemArmor implements ISpecialArmor {
-    protected static final UUID[] VAMIRISM_ARMOR_MODIFIER = new UUID[]{UUID.fromString("f0b9a417-0cec-4629-8623-053cd0feec3c"), UUID.fromString("e54474a9-62a0-48ee-baaf-7efddca3d711"), UUID.fromString("ac0c33f4-ebbf-44fe-9be3-a729f7633329"), UUID.fromString("8839e157-d576-4cff-bf34-0a788131fe0f")};
+    protected static final UUID[] VAMPIRISM_ARMOR_MODIFIER = new UUID[]{UUID.fromString("f0b9a417-0cec-4629-8623-053cd0feec3c"), UUID.fromString("e54474a9-62a0-48ee-baaf-7efddca3d711"), UUID.fromString("ac0c33f4-ebbf-44fe-9be3-a729f7633329"), UUID.fromString("8839e157-d576-4cff-bf34-0a788131fe0f")};
 
     public VampirismHunterArmor(ArmorMaterial materialIn, EntityEquipmentSlot equipmentSlotIn, String baseRegName) {
         super(materialIn, 0, equipmentSlotIn);
@@ -47,6 +51,26 @@ abstract class VampirismHunterArmor extends ItemArmor implements ISpecialArmor {
     }
 
     @Override
+    public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slot) {
+        return getDamageReduction(slot, armor);
+    }
+
+    @Override
+    public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot slot, ItemStack stack) {
+        Multimap<String, AttributeModifier> map = HashMultimap.create();
+        if (slot == this.armorType) {
+            map.put(SharedMonsterAttributes.ARMOR.getAttributeUnlocalizedName(), new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor modifier", (double) this.getDamageReduction(slot.getIndex(), stack), 0));
+            map.put(SharedMonsterAttributes.ARMOR_TOUGHNESS.getAttributeUnlocalizedName(), new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[slot.getIndex()], "Armor toughness", this.getToughness(slot.getIndex(), stack), 0));
+        }
+        return map;
+    }
+
+    @Override
+    public ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage, int slot) {
+        return new ArmorProperties(0, getDamageReduction(slot, armor) / 25D, Integer.MAX_VALUE);
+    }
+
+    @Override
     public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
         super.onArmorTick(world, player, itemStack);
         if (player.ticksExisted % 16 == 8) {
@@ -56,7 +80,20 @@ abstract class VampirismHunterArmor extends ItemArmor implements ISpecialArmor {
         }
     }
 
+    /**
+     * @param stack Armor stack
+     * @return The damage reduction the given stack gives
+     */
+    protected abstract int getDamageReduction(int slot, ItemStack stack);
+
     protected String getTextureLocation(String name, EntityEquipmentSlot slot, String type) {
         return String.format(REFERENCE.MODID + ":textures/models/armor/%s_layer_%d%s.png", name, slot == EntityEquipmentSlot.LEGS ? 2 : 1, type == null ? "" : "_overlay");
+    }
+
+    /**
+     * @return The toughness of the given stack
+     */
+    protected double getToughness(int slot, ItemStack stack) {
+        return this.toughness;
     }
 }

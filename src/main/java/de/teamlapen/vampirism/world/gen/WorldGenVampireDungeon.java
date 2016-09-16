@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.blocks.BlockCastleBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.entity.vampire.EntityAdvancedVampire;
+import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.tileentity.TileAltarInspiration;
 import de.teamlapen.vampirism.tileentity.TileBloodContainer;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -142,7 +143,7 @@ public class WorldGenVampireDungeon extends WorldGenerator {
                             TileEntity tileentity1 = worldIn.getTileEntity(blockpos2);
 
                             if (tileentity1 instanceof TileBloodContainer) {
-                                ((TileBloodContainer) tileentity1).setFluidStack(new FluidStack(ModFluids.blood, (int) (TileBloodContainer.CAPACITY * rand.nextFloat())));
+                                ((TileBloodContainer) tileentity1).setFluidStack(new FluidStack(ModFluids.blood, BloodBottleFluidHandler.getAdjustedAmount((int) (TileBloodContainer.CAPACITY * rand.nextFloat()))));
                             } else {
                                 VampirismMod.log.w(TAG, "Failed to generate blood container in dungeon at (%s)", VampirismWorldGen.debug ? blockpos2 : "hidden");
                             }

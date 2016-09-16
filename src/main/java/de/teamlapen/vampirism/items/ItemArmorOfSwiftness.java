@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +15,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
@@ -43,10 +41,7 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
         }
     }
 
-    @Override
-    public int getArmorDisplay(EntityPlayer player, ItemStack armor, int slot) {
-        return getDamageReduction(getTier(armor), slot);
-    }
+
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
@@ -69,17 +64,13 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
 
         if (equipmentSlot == this.armorType) {
             TIER tier = getTier(stack);
-            multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(VAMIRISM_ARMOR_MODIFIER[equipmentSlot.getIndex()], "Armor Swiftness", getSpeedBoost(tier), 2));
+            multimap.put(SharedMonsterAttributes.MOVEMENT_SPEED.getAttributeUnlocalizedName(), new AttributeModifier(VAMPIRISM_ARMOR_MODIFIER[equipmentSlot.getIndex()], "Armor Swiftness", getSpeedBoost(tier), 2));
         }
 
         return multimap;
     }
 
 
-    @Override
-    public ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage, int slot) {
-        return new ArmorProperties(0, getDamageReduction(getTier(armor), slot) / 25D, Integer.MAX_VALUE);
-    }
 
     @Override
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
@@ -135,7 +126,9 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
         return stack;
     }
 
-    private int getDamageReduction(TIER tier, int slot) {
+    @Override
+    protected int getDamageReduction(int slot, ItemStack stack) {
+        TIER tier = getTier(stack);
         switch (tier) {
             case ULTIMATE:
                 return DAMAGE_REDUCTION_ULTIMATE[slot];
