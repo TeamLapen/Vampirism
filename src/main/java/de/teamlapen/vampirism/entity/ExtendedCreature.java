@@ -16,7 +16,9 @@ import de.teamlapen.vampirism.world.villages.VampirismVillageCollection;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.entity.passive.HorseType;
 import net.minecraft.init.MobEffects;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
@@ -51,7 +53,8 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     public static ICapabilityProvider createNewCapability(final EntityCreature creature) {
         return new ICapabilitySerializable<NBTTagCompound>() {
 
-            IExtendedCreatureVampirism inst = new ExtendedCreature(creature);
+            //TODO generalize in version 1.1 and add API?
+            IExtendedCreatureVampirism inst = creature instanceof EntityHorse ? new ExtendedHorse((EntityHorse) creature) : new ExtendedCreature(creature);
 
             @Override
             public void deserializeNBT(NBTTagCompound nbt) {
@@ -274,6 +277,47 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             NBTTagCompound nbt = new NBTTagCompound();
             ((ExtendedCreature) instance).saveNBTData(nbt);
             return nbt;
+        }
+    }
+
+    /**
+     * Class so skeleton horses cannot be bitten. Should be moved in 1.1
+     */
+    public static class ExtendedHorse extends ExtendedCreature {
+
+        private final EntityHorse horse;
+
+        public ExtendedHorse(EntityHorse entity) {
+            super(entity);
+            horse = entity;
+        }
+
+        @Override
+        public boolean canBeBitten(IVampire biter) {
+            if (isUndead()) return false;
+            return super.canBeBitten(biter);
+        }
+
+        @Override
+        public boolean canBecomeVampire() {
+            if (isUndead()) return false;
+            return super.canBecomeVampire();
+        }
+
+        @Override
+        public int getBlood() {
+            if (isUndead()) return -1;
+            return super.getBlood();
+        }
+
+        @Override
+        public int getMaxBlood() {
+            if (isUndead()) return -1;
+            return super.getMaxBlood();
+        }
+
+        private boolean isUndead() {
+            return horse.getType().equals(HorseType.SKELETON) || horse.getType().equals(HorseType.ZOMBIE);
         }
     }
 }
