@@ -23,9 +23,9 @@ public class ShapedHunterWeaponRecipesWrapper extends HunterWeaponRecipeWrapper 
         this.recipe = recipe;
     }
 
-
-
-
+    public int getHeight() {
+        return recipe.recipeHeight;
+    }
 
     @Nonnull
     @Override
@@ -41,9 +41,5 @@ public class ShapedHunterWeaponRecipesWrapper extends HunterWeaponRecipeWrapper 
 
     public int getWidth() {
         return recipe.recipeWidth;
-    }
-
-    public int getHeight() {
-        return recipe.recipeHeight;
     }
 }
