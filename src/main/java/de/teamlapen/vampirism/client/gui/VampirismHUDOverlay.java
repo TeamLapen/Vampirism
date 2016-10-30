@@ -30,6 +30,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import org.lwjgl.opengl.GL11;
@@ -195,7 +196,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOW)
     public void onRenderWorldLast(RenderWorldLastEvent event) {
         if (screenPercentage > 0) {
             //Set the working matrix/layer to a layer directly on the screen/in front of the player
