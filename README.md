@@ -1,5 +1,5 @@
-Vampirism for Minecraft 1.10
-============================
+Vampirism for Minecraft 1.10 - Latest branch
+============================================
 [![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
 ## Mod Description
 
@@ -41,6 +41,8 @@ Checkout this example project: https://github.com/TeamLapen/VampirismAPIExample
 If you want to create an addon, checkout this https://github.com/TeamLapen/VampirismAddonExample and consider contacting maxanier.
 
 ## Code Structure
+The _master branch_ serves as the main development branch. Besides that there is a branch with the latest stable release code, it receives bugfixes which are usually cherry-pick merged in to the master branch.
+There also is a 1.9 branch which might be up-to-date with the latest release branch (for 1.10).
 The source code is currently divided into three parts, which might be split in the future.
 #### Vampirism
 Located in de.teamlapen.vampirism  
