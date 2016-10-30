@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
-import com.google.common.collect.Lists;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
 import de.teamlapen.vampirism.blocks.BlockWeaponTable;
+import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.init.Items;
@@ -15,8 +15,6 @@ import net.minecraftforge.fluids.FluidStack;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
-import java.util.Collections;
-import java.util.List;
 
 /**
  * Base class for hunter weapon recipe wrapper
@@ -58,15 +56,13 @@ public abstract class HunterWeaponRecipeWrapper extends BlankRecipeWrapper {
         }
     }
 
-    @Nonnull
     @Override
-    public List<FluidStack> getFluidInputs() {
+    public void getIngredients(IIngredients ingredients) {
         if (recipe.getRequiredLavaUnits() > 0) {
-            List<FluidStack> l = Lists.newArrayList();
-            l.add(new FluidStack(FluidRegistry.LAVA, recipe.getRequiredLavaUnits() * BlockWeaponTable.MB_PER_META));
-            return l;
+            FluidStack fluidInput = new FluidStack(FluidRegistry.LAVA, recipe.getRequiredLavaUnits() * BlockWeaponTable.MB_PER_META);
+
+            ingredients.setInput(FluidStack.class, fluidInput);
         }
 
-        return Collections.emptyList();
     }
 }

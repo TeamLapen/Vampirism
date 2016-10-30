@@ -1,11 +1,10 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
-import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.inventory.ShapelessHunterWeaponRecipe;
+import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.item.ItemStack;
 
 import javax.annotation.Nonnull;
-import java.util.List;
 
 
 public class ShapelessHunterWeaponRecipeWrapper extends HunterWeaponRecipeWrapper {
@@ -26,15 +25,14 @@ public class ShapelessHunterWeaponRecipeWrapper extends HunterWeaponRecipeWrappe
         }
     }
 
-    @Nonnull
     @Override
-    public List getInputs() {
-        return Lists.newArrayList(recipe.recipeItems);
+    public void getIngredients(IIngredients ingredients) {
+        super.getIngredients(ingredients);
+        ingredients.setInputs(ItemStack.class, recipe.recipeItems);
+        ItemStack recipeOutput = recipe.getRecipeOutput();
+        if (recipeOutput != null) {
+            ingredients.setOutput(ItemStack.class, recipeOutput);
+        }
     }
 
-    @Nonnull
-    @Override
-    public List getOutputs() {
-        return super.getOutputs();
-    }
 }

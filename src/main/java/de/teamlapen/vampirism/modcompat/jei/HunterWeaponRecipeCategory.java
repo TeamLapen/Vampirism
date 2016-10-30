@@ -8,11 +8,14 @@ import mezz.jei.api.gui.ICraftingGridHelper;
 import mezz.jei.api.gui.IDrawable;
 import mezz.jei.api.gui.IGuiItemStackGroup;
 import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.BlankRecipeCategory;
 import mezz.jei.api.recipe.IRecipeWrapper;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * Recipe category for {@link IHunterWeaponRecipe}
@@ -50,8 +53,9 @@ public class HunterWeaponRecipeCategory extends BlankRecipeCategory {
         return VampirismJEIPlugin.HUNTER_WEAPON_RECIPE_UID;
     }
 
+
     @Override
-    public void setRecipe(@Nonnull IRecipeLayout recipeLayout, @Nonnull IRecipeWrapper recipeWrapper) {
+    public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients) {
         IGuiItemStackGroup guiItemStackGroup = recipeLayout.getItemStacks();
         guiItemStackGroup.init(0, false, 111, 31);
         for (int y = 0; y < 4; ++y) {
@@ -59,10 +63,14 @@ public class HunterWeaponRecipeCategory extends BlankRecipeCategory {
                 guiItemStackGroup.init(1 + x + y * 4, true, 1 + x * 19, 1 + y * 19);
             }
         }
+
+        List<List<ItemStack>> inputs = ingredients.getInputs(ItemStack.class);
+        List<ItemStack> outputs = ingredients.getOutputs(ItemStack.class);
+
         if (recipeWrapper instanceof ShapedHunterWeaponRecipesWrapper) {
             ShapedHunterWeaponRecipesWrapper wrapper = (ShapedHunterWeaponRecipesWrapper) recipeWrapper;
-            craftingGridHelper.setInput(guiItemStackGroup, wrapper.getInputs(), wrapper.getWidth(), wrapper.getHeight());
-            craftingGridHelper.setOutput(guiItemStackGroup, wrapper.getOutputs());
+            craftingGridHelper.setInputStacks(guiItemStackGroup, inputs, wrapper.getWidth(), wrapper.getHeight());
+            craftingGridHelper.setOutput(guiItemStackGroup, outputs);
         } else if (recipeWrapper instanceof ShapelessHunterWeaponRecipeWrapper) {
 //            int inputSize=recipeWrapper.getInputs().size();
 //            int width, height;
@@ -76,8 +84,8 @@ public class HunterWeaponRecipeCategory extends BlankRecipeCategory {
 //            } else {
 //                width = height = 1;
 //            }
-            craftingGridHelper.setInput(guiItemStackGroup, recipeWrapper.getInputs(), 4, 4);
-            craftingGridHelper.setOutput(guiItemStackGroup, recipeWrapper.getOutputs());
+            craftingGridHelper.setInputStacks(guiItemStackGroup, inputs, 4, 4);
+            craftingGridHelper.setOutput(guiItemStackGroup, outputs);
         }
     }
 }
