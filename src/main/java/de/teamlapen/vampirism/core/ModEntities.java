@@ -5,11 +5,9 @@ import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IBiteableRegistry;
+import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.entity.EntityAreaParticleCloud;
-import de.teamlapen.vampirism.entity.EntityBlindingBat;
-import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
-import de.teamlapen.vampirism.entity.EntityGhost;
+import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedSheep;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedVillager;
@@ -86,6 +84,18 @@ public class ModEntities {
 
 
     /**
+     * Registers special extended creature classes
+     */
+    private static void registerCustomExtendedCreatures() {
+        IBiteableRegistry registry = VampirismAPI.biteableRegistry();
+        registry.addCustomExtendedCreature(EntityHorse.class, new IBiteableRegistry.IExtendedCreatureConstructor<EntityHorse>() {
+            @Override
+            public IExtendedCreatureVampirism create(EntityHorse creature) {
+                return new ExtendedHorse(creature);
+            }
+        });
+    }
+    /**
      * Register convertibles for vanilla creatures and maybe for future vampirism creature as well
      */
     private static void registerConvertibles() {
@@ -150,6 +160,7 @@ public class ModEntities {
         registerEntity(EntityCrossbowArrow.class, CROSSBOW_ARROW, EntityLiving.SpawnPlacementType.IN_AIR, false);
         registerEntity(EntityAreaParticleCloud.class, PARTICLE_CLOUD, EntityLiving.SpawnPlacementType.IN_AIR, false);
         registerConvertibles();
+        registerCustomExtendedCreatures();
     }
 
     private static void registerEntity(Class<? extends Entity> clazz, String name, EntityLiving.SpawnPlacementType placementType, boolean egg) {

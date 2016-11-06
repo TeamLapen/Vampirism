@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.ai;
 
+import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
@@ -16,7 +17,7 @@ import java.util.List;
 public class VampireAIBiteNearbyEntity extends EntityAIBase {
     private final IVampireMob vampire;
     private final EntityLivingBase vampireEntity;
-    private ExtendedCreature creature;
+    private IExtendedCreatureVampirism creature;
     private int timer;
 
     public VampireAIBiteNearbyEntity(IVampireMob vampire) {

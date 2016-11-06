@@ -11,6 +11,7 @@ import java.util.Map;
 
 /**
  * Registration of blood values and converting handler for {@link EntityCreature}'s
+ * TODO maybe rename to VampirismEntityRegistry or similar at some point
  */
 public interface IBiteableRegistry {
 
@@ -53,6 +54,15 @@ public interface IBiteableRegistry {
      */
     void addConvertible(Class<? extends EntityCreature> clazz, String overlay_loc, IConvertingHandler handler);
 
+    /**
+     * Registers a custom {@link IExtendedCreatureVampirism} for a entity class
+     *
+     * @param clazz       The entity class that should use the given constructor
+     * @param constructor A 'constructor' that can be used to create the {@link IExtendedCreatureVampirism} object from the entity's object
+     * @param <T>         The base class type
+     */
+    <T extends EntityCreature> void addCustomExtendedCreature(Class<? extends T> clazz, IExtendedCreatureConstructor<T> constructor);
+
     @Nullable
     IConvertedCreature convert(EntityCreature entity);
 
@@ -61,6 +71,12 @@ public interface IBiteableRegistry {
      */
     @SideOnly(Side.CLIENT)
     Map<Class<? extends EntityCreature>, String> getConvertibleOverlay();
+
+    /**
+     * @return The custom constructor registered for the given entity's class. Can be null if none is registered
+     */
+    @Nullable
+    <T extends EntityCreature> IExtendedCreatureConstructor<T> getCustomExtendedCreatureConstructor(T entity);
 
     BiteableEntry getEntry(EntityCreature creature);
 
@@ -72,6 +88,15 @@ public interface IBiteableRegistry {
      * @param values
      */
     void overrideBloodValues(Map<String, Integer> values);
+
+    /**
+     * Creates a {@link IExtendedCreatureVampirism}
+     *
+     * @param <T>
+     */
+    interface IExtendedCreatureConstructor<T extends EntityCreature> {
+        IExtendedCreatureVampirism create(T creature);
+    }
 
     interface ICreateDefaultConvertingHandler {
         IConvertingHandler create(IConvertingHandler.IDefaultHelper helper);

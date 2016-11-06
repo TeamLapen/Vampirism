@@ -65,4 +65,9 @@ class ExtendedCreatureDefaultImpl implements IExtendedCreatureVampirism {
     public int onBite(IVampire biter) {
         return 0;
     }
+
+    @Override
+    public void onUpdate() {
+
+    }
 }

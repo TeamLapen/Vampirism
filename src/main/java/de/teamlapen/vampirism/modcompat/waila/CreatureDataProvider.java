@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.modcompat.waila;
 
+import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import mcp.mobius.waila.api.IWailaConfigHandler;
@@ -28,7 +29,7 @@ class CreatureDataProvider implements IWailaEntityProvider {
     public List<String> getWailaBody(Entity entity, List<String> currenttip, IWailaEntityAccessor accessor, IWailaConfigHandler config) {
         if (config.getConfig(WailaHandler.getShowCreatureInfoConf())) {
             if (entity instanceof EntityCreature && VampirePlayer.get(accessor.getPlayer()).getLevel() > 0) {
-                ExtendedCreature extendedCreature = ExtendedCreature.get((EntityCreature) entity);
+                IExtendedCreatureVampirism extendedCreature = ExtendedCreature.get((EntityCreature) entity);
                 int blood = extendedCreature.getBlood();
                 if (blood > 0) {
                     currenttip.add(String.format("%s%s: %d", SpecialChars.RED, I18n.translateToLocal("text.vampirism.entitysblood"), blood));

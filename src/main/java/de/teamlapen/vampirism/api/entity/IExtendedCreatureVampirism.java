@@ -42,4 +42,9 @@ public interface IExtendedCreatureVampirism extends IBiteableEntity {
      */
     @Nullable
     IConvertedCreature makeVampire();
+
+    /**
+     * Called every tick
+     */
+    void onUpdate();
 }

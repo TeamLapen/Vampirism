@@ -29,6 +29,10 @@ public class BiteableRegistry implements IBiteableRegistry {
      */
     private final Map<Class<? extends EntityCreature>, IConvertingHandler> convertibles = new HashMap<>();
     private final Map<Class<? extends EntityCreature>, String> convertibleOverlay = new HashMap<>();
+    /**
+     * Stores custom extended creature constructors
+     */
+    private final Map<Class<? extends EntityCreature>, IExtendedCreatureConstructor> extendedCreatureConstructors = new HashMap<>();
     private final String TAG = "BiteableRegistry";
     /**
      * Stores biteable entries after init
@@ -63,6 +67,11 @@ public class BiteableRegistry implements IBiteableRegistry {
         if (FMLCommonHandler.instance().getSide().isClient() && overlay_loc != null) {
             convertibleOverlay.put(clazz, overlay_loc);
         }
+    }
+
+    @Override
+    public <T extends EntityCreature> void addCustomExtendedCreature(Class<? extends T> clazz, IExtendedCreatureConstructor<T> constructor) {
+        extendedCreatureConstructors.put(clazz, constructor);
     }
 
     @Override
@@ -121,6 +130,13 @@ public class BiteableRegistry implements IBiteableRegistry {
     @SideOnly(Side.CLIENT)
     public Map<Class<? extends EntityCreature>, String> getConvertibleOverlay() {
         return convertibleOverlay;
+    }
+
+    @Nullable
+    @Override
+    @SuppressWarnings("unchecked")
+    public <T extends EntityCreature> IExtendedCreatureConstructor<T> getCustomExtendedCreatureConstructor(T entity) {
+        return extendedCreatureConstructors.get(entity.getClass());
     }
 
     @Override

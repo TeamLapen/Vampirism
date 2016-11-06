@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.potion;
 
+import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
@@ -48,7 +49,7 @@ public class PotionSanguinare extends VampirismPotion {
     public void performEffect(EntityLivingBase entity, int p_76394_2_) {
 
         if (entity instanceof EntityCreature) {
-            ExtendedCreature creature = ExtendedCreature.get((EntityCreature) entity);
+            IExtendedCreatureVampirism creature = ExtendedCreature.get((EntityCreature) entity);
             creature.makeVampire();
         }
         if (entity instanceof EntityPlayer) {
