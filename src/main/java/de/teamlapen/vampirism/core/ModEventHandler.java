@@ -1,16 +1,13 @@
 package de.teamlapen.vampirism.core;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Lists;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.entity.VampirismEntitySelectors;
 import de.teamlapen.vampirism.potion.FakeNightVisionPotion;
 import de.teamlapen.vampirism.util.DaySleepHelper;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -34,8 +31,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
-import javax.annotation.Nullable;
-import java.util.Map;
+import java.util.List;
 
 /**
  * Handles all events used in central parts of the mod
@@ -54,47 +50,10 @@ public class ModEventHandler {
 
     @SubscribeEvent
     public void onEntitySelector(EntitySelectorEvent event) {
-        Map<String, String> arguments = event.getMap();
-        String faction = arguments.get("vampirism:faction");
-
-        if (faction != null) {
-            final boolean invert = faction.startsWith("!");
-
-            if (invert) {
-                faction = faction.substring(1);
-            }
-
-            IFaction[] factions = VampirismAPI.factionRegistry().getFactions();
-            boolean found = false;
-            for (final IFaction f : factions) {
-                if (f.name().equalsIgnoreCase(faction)) {
-                    event.addPredicate(new Predicate<Entity>() {
-                        @Override
-                        public boolean apply(@Nullable Entity input) {
-                            if (input instanceof IFactionEntity) {
-                                boolean flag1 = f.equals(((IFactionEntity) input).getFaction());
-                                return invert != flag1;
-                            } else if (f instanceof IPlayableFaction && input instanceof EntityPlayer) {
-                                boolean flag1 = FactionPlayerHandler.get((EntityPlayer) input).isInFaction((IPlayableFaction) f);
-                                return invert != flag1;
-                            }
-                            return invert;
-                        }
-                    });
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                //Prevents selection of all entities if mistyped
-                event.addPredicate(new Predicate<Entity>() {
-                    @Override
-                    public boolean apply(@Nullable Entity input) {
-                        return false;
-                    }
-                });
-                event.getSender().addChatMessage(new TextComponentString("Unknown faction: " + faction));
-            }
+        List<Predicate<Entity>> selectors = Lists.newArrayList();
+        VampirismEntitySelectors.gatherEntitySelectors(selectors, event.getArgumentMap(), event.getMainSelector(), event.getSender(), event.getPosition());
+        for (Predicate<Entity> p : selectors) {//Workaround because I was stupid and did not add a list add method to the event
+            event.addPredicate(p);
         }
     }
 

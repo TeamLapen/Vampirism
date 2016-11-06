@@ -9,8 +9,10 @@ repositories {
         url "http://dvs1.progwml6.com/files/maven"
     }
     maven {
+        //Local repo for custom forge builds.
+        //Is not required to exist
         name = "LocalForge"
-        url = "../../MinecraftForge/repo/"
+        url = "../../te/MinecraftForge/repo/"
     }
     mavenCentral()
 }
