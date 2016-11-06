@@ -223,13 +223,13 @@ public class VersionChecker implements Runnable {
                 if (i == -1) i = version.length();
                 int minor = Integer.parseInt(version.substring(0, i));
                 TYPE type = TYPE.RELEASE;
-                if (version.contains("Alpha")) {
+                if (version.contains("alpha")) {
                     type = TYPE.ALPHA;
-                } else if (version.contains("Beta")) {
+                } else if (version.contains("beta")) {
                     type = TYPE.BETA;
-                    i = version.indexOf('.', version.indexOf("Beta"));
+                    i = version.indexOf('.', version.indexOf("beta"));
                     extra = version.substring(i + 1);
-                } else if (version.contains("Test")) {
+                } else if (version.contains("test")) {
                     type = TYPE.TEST;
                 }
                 return new Version(name, main, major, minor, type, extra);
