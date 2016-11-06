@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.gson.JsonSyntaxException;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
@@ -176,11 +177,10 @@ public class RenderHandler {
 
             boolean flag = true;
             if (entity instanceof EntityPlayer && ItemHunterCoat.isFullyEquipped((EntityPlayer) entity)) flag = false;
-//            int distance= (int) entity.getDistanceSqToEntity(this.mc.thePlayer);
-//            if (distance <= ENTITY_NEAR_SQ_DISTANCE && (distance >= ENTITY_MIN_SQ_RADIUS)) {
-//
-//            }
 
+            if (mc.thePlayer.getDistanceSqToEntity(entity) > Balance.vps.BLOOD_VISION_DISTANCE_SQUARED) {
+                flag = false;
+            }
             if (flag) {
                 if (entity instanceof EntityCreature && ExtendedCreature.get((EntityCreature) entity).getBlood() > 0) {
                     renderedEntitiesWithBlood.add(event.getEntity());
@@ -349,13 +349,17 @@ public class RenderHandler {
 
         blurShader.loadShaderGroup(partialTicks);
 
+
         if (!renderedEntitiesWithBlood.isEmpty() || this.bloodVision1Rendered) {
             bloodVision1Rendered = renderEntityOutlines(renderedEntitiesWithBlood, bloodVisionShader1, bloodVisionFrameBuffer1, partialTicks);
         }
+        renderedEntitiesWithBlood.clear();
 
         if (!renderedEntitiesWithoutBlood.isEmpty() || this.bloodVision2Rendered) {
             bloodVision2Rendered = renderEntityOutlines(renderedEntitiesWithoutBlood, bloodVisionShader2, bloodVisionFrameBuffer2, partialTicks);
         }
+
+        renderedEntitiesWithoutBlood.clear();
 
 
         GlStateManager.enableBlend();
@@ -363,9 +367,9 @@ public class RenderHandler {
 
 
         this.bloodVisionFrameBuffer1.framebufferRenderExt(this.mc.displayWidth, this.mc.displayHeight, false);
-        this.mc.getFramebuffer().bindFramebuffer(false);
-
+        //this.mc.getFramebuffer().bindFramebuffer(false);
         this.bloodVisionFrameBuffer2.framebufferRenderExt(this.mc.displayWidth, this.mc.displayHeight, false);
+
         this.mc.getFramebuffer().bindFramebuffer(false);
 
 
@@ -398,28 +402,30 @@ public class RenderHandler {
             framebuffer.bindFramebuffer(false);
 
             RenderHelper.disableStandardItemLighting();
+
             renderManager.setRenderOutlines(true);
-
-
             for (int j = 0; j < entities.size(); ++j) {
+
 
                 renderManager.renderEntityStatic(entities.get(j), partialTicks, false);
 
             }
-            renderManager.setRenderOutlines(false);
-            RenderHelper.enableStandardItemLighting();
-            GlStateManager.depthMask(false);
 
+            renderManager.setRenderOutlines(false);
+
+            RenderHelper.enableStandardItemLighting();
+
+            GlStateManager.depthMask(false);
             shader.loadShaderGroup(partialTicks);
-            GlStateManager.enableLighting();
             GlStateManager.depthMask(true);
-            GlStateManager.enableBlend();
+
+            //GlStateManager.enableLighting();
+            //GlStateManager.enableBlend();
             GlStateManager.enableColorMaterial();
             GlStateManager.depthFunc(515);
             GlStateManager.enableDepth();
-            GlStateManager.enableAlpha();
+            //GlStateManager.enableAlpha();
             this.mc.entityRenderer.disableLightmap();
-            entities.clear();
             renderingBloodVision = false;
         }
 
