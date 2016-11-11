@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
@@ -13,6 +14,7 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.WorldProviderEnd;
 
 import java.util.UUID;
 
@@ -57,7 +59,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.isGettingSundamage() && !vampire.getActionHandler().isActionActive(VampireActions.rageAction);
+        return !vampire.isGettingSundamage() && !vampire.getActionHandler().isActionActive(VampireActions.rageAction) && (Configs.bat_mode_in_end || !(vampire.getRepresentingPlayer().worldObj != null && vampire.getRepresentingPlayer().worldObj.provider instanceof WorldProviderEnd));
     }
 
     @Override
@@ -142,6 +144,9 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         if (vampire.isGettingSundamage() && !vampire.isRemote()) {
             vampire.getRepresentingPlayer().addChatMessage(new TextComponentTranslation("text.vampirism.cant_fly_day"));
             return true;
+        } else if (!Configs.bat_mode_in_end && vampire.getRepresentingPlayer().worldObj != null && vampire.getRepresentingPlayer().worldObj.provider instanceof WorldProviderEnd) {
+            vampire.getRepresentingPlayer().addChatMessage(new TextComponentTranslation("text.vampirism.cant_fly_end"));
+            return true;
         }
         return false;
     }
@@ -156,6 +161,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
             player.capabilities.allowFlying = true;
             player.capabilities.isFlying = true;
+            player.capabilities.setFlySpeed(0.025F);
             player.sendPlayerAbilities();
         } else {
 
@@ -170,6 +176,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
                 player.capabilities.allowFlying = false;
             }
             player.capabilities.isFlying = false;
+            player.capabilities.setFlySpeed(0.05F);
             player.sendPlayerAbilities();
         }
 
