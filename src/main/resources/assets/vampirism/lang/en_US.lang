@@ -252,6 +252,7 @@ text.vampirism.level_up=Level Up
 text.vampirism.can_only_be_used_by=This can only be used by %s players
 text.vampirism.can_only_be_used_by_level=This can only be used by %s players of level %s or higher
 text.vampirism.med_chair_other_faction=You cannot become a Hunter since you already are a %s
+text.vampirism.already_vampire=You are already a vampire
 text.vampirism.can_only_be_used_with_skill=This can only be used with skill: %s
 text.vampirism.need_item_to_use=You need %s to use this
 text.vampirism.immune_to_=You are immune to
