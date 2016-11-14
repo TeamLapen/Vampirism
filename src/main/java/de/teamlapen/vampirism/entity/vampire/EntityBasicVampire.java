@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.ai.*;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
@@ -140,6 +141,14 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         if (angryTimer > 0) {
             angryTimer--;
         }
+
+        if (this.ticksExisted % 9 == 3) {
+            if (this.isPotionActive(MobEffects.FIRE_RESISTANCE)) {
+                PotionEffect fireResistance = this.removeActivePotionEffect(MobEffects.FIRE_RESISTANCE);
+                onFinishedPotionEffect(fireResistance);
+                this.addPotionEffect(new PotionEffect(ModPotions.fireProtection, fireResistance.getDuration(), fireResistance.getAmplifier()));
+            }
+        }
     }
 
     @Override
@@ -196,6 +205,17 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.updateEntityAttributes();
+    }
+
+    @Override
+    protected float calculateFireDamage(float amount) {
+        float protectionMod = 1F;
+        PotionEffect protection = this.getActivePotionEffect(ModPotions.fireProtection);
+        if (protection != null) {
+            protectionMod = 1F / (2F + protection.getAmplifier());
+        }
+
+        return (float) (amount * protectionMod * Balance.mobProps.VAMPIRE_FIRE_VULNERABILITY) * (getLevel() * 0.5F + 1);
     }
 
     @Override

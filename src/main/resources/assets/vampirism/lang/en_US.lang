@@ -217,6 +217,7 @@ effect.vampirism.sunscreen=Sunscreen
 effect.vampirism.thirst=Thirst
 effect.vampirism.saturation=Saturation
 effect.vampirism.sanguinare=Sanguinare Vampiris
+effect.vampirism.fire_protection=Fire Protection
 
 #FLUIDS
 fluid.vampirism.vampirismblood=Blood
@@ -268,6 +269,10 @@ text.vampirism.crossbow.loaded_arrow_count=Loaded %s arrows
 itemGroup.vampirism=Vampirism
 death.attack.sun=%1$s did not like the sun
 death.attack.garlic=%1$s was poisoned by garlic
+death.attack.vampire_on_fire=%1$s burned to ashes
+death.attack.vampire_on_fire.player=%2$s scorched %1$s
+death.attack.vampire_in_fire=%1$s burned to ashes
+death.attack.vampire_in_fire.player=%1$s was incinerated by %2$s
 text.vampirism.skill.level_to_low=Your vampire level is too low for that
 text.vampirism.skill.cooldown_not_over=Please wait until the cooldown is over
 text.vampirism.ritual_missing_times=You are missing items for this ritual

@@ -50,9 +50,6 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
 
 
         this.garlicResist = EnumGarlicStrength.MEDIUM;
-
-
-
     }
 
     @Override
@@ -273,6 +270,11 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.updateEntityAttributes(false);
+    }
+
+    @Override
+    protected float calculateFireDamage(float amount) {
+        return (float) (amount * Balance.mobProps.VAMPIRE_BARON_FIRE_VULNERABILITY);
     }
 
     @Override

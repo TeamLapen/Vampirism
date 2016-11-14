@@ -72,6 +72,8 @@ public class BalanceMobProps extends BalanceValues {
     public int ADVANCED_VAMPIRE_MAX_FOLLOWER;
     @DefaultInt(value = 7, minValue = 0, maxValue = 1000000, name = "advanced_vampire_spawn_probe", comment = "e.g. Zombie spawn probe: 100")
     public int ADVANCED_VAMPIRE_SPAWN_PROBE;
+    @DefaultDouble(value = 3, minValue = 0, comment = "Any fire damage that is received by a advanced vampire is multiplied by this")
+    public double ADVANCED_VAMPIRE_FIRE_VULNERABILITY;
 
 
     @DefaultDouble(value = 30D, minValue = 10D, maxValue = 10000D, name = "vampire_max_health")
@@ -86,6 +88,8 @@ public class BalanceMobProps extends BalanceValues {
     public double VAMPIRE_SPEED;
     @DefaultInt(value = 75, minValue = 0, maxValue = 1000000, name = "vampire_spawn_chance", comment = "e.g. Zombie spawn chance: 100")
     public int VAMPIRE_SPAWN_CHANCE;
+    @DefaultDouble(value = 2, minValue = 0, comment = "Any fire damage that is received by a basic vampire is multiplied by this")
+    public double VAMPIRE_FIRE_VULNERABILITY;
 
     @DefaultInt(value = 3, minValue = 1, maxValue = 1000000, name = "vampire_bite_attack_chance", comment = "Chance that a vampire bites a player when attacking him (1/n)")
     public int VAMPIRE_BITE_ATTACK_CHANCE;
@@ -102,6 +106,8 @@ public class BalanceMobProps extends BalanceValues {
     public double VAMPIRE_BARON_MOVEMENT_SPEED;
     @DefaultDouble(value = 1.27D, minValue = 1.0D, maxValue = 2.0D, comment = "For each higher level the stats are multiplied with this factor")
     public double VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL;
+    @DefaultDouble(value = 3, minValue = 0, comment = "Any fire damage that is received by a baron is multiplied by this")
+    public double VAMPIRE_BARON_FIRE_VULNERABILITY;
 
     @DefaultDouble(value = 20.0D, minValue = 5.0D, maxValue = 200.0D, name = "Vampire Minion Max Health", comment = "")
     public double VAMPIRE_MINION_MAX_HEALTH;

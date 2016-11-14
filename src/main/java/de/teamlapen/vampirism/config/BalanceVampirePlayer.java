@@ -68,6 +68,12 @@ public class BalanceVampirePlayer extends BalanceValues {
     @DefaultDouble(value = 2.0, name = "garlic_damage", minValue = 1, comment = "Damage the player receives every 2 seconds if in garlic")
     public double GARLIC_DAMAGE;
 
+    @DefaultInt(value = 14, minValue = 1, comment = "Level as of the fire vulnerability will not be increased")
+    public int FIRE_VULNERABILITY_LCAP;
+    @DefaultDouble(value = 0.5, minValue = 0, comment = "Type of value calculation, 0.5 for square root, 1 for linear")
+    public double FIRE_VULNERABILITY_TYPE;
+    @DefaultDouble(value = 4, minValue = 0.1, comment = "Max modifier for fire damage. Old value is multiplied with this.")
+    public double FIRE_VULNERABILITY_MAX_MOD;
 
     /**
      * Creates a configuration for balance values

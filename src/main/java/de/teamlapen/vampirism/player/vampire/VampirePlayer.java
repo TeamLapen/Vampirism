@@ -201,6 +201,17 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     @Override
+    public float calculateFireDamage(float amount) {
+        float protectionMod = 1F;
+        PotionEffect protection = player.getActivePotionEffect(ModPotions.fireProtection);
+        if (protection != null) {
+            protectionMod = 1F / (2F + protection.getAmplifier());
+        }
+
+        return amount * protectionMod * (float) LevelAttributeModifier.calculateModifierValue(getLevel(), Balance.vp.FIRE_VULNERABILITY_LCAP, Balance.vp.FIRE_VULNERABILITY_MAX_MOD, Balance.vp.FIRE_VULNERABILITY_TYPE);
+    }
+
+    @Override
     public boolean canBeBitten(IVampire biter) {
         return !(player.isSpectator() || player.isCreative());
     }
@@ -422,6 +433,17 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (isPlayerSleeping()) {
             wakeUpPlayer(true, true, false);
         }
+        if (getLevel() > 0) {
+            if (DamageSource.onFire.equals(src)) {
+
+                player.attackEntityFrom(VReference.VAMPIRE_ON_FIRE, calculateFireDamage(amt));
+                return true;
+            } else if (DamageSource.inFire.equals(src) || DamageSource.lava.equals(src)) {
+                player.attackEntityFrom(VReference.VAMPIRE_IN_FIRE, calculateFireDamage(amt));
+                return true;
+            }
+        }
+
         return false;
     }
 
@@ -571,6 +593,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 }
                 if (isGettingGarlicDamage() != EnumGarlicStrength.NONE) {
                     handleGarlicDamage();
+                }
+                if (player.ticksExisted % 9 == 3 && player.isPotionActive(MobEffects.FIRE_RESISTANCE)) {
+                    PotionEffect fireResistance = player.getActivePotionEffect(MobEffects.FIRE_RESISTANCE);
+                    player.addPotionEffect(new PotionEffect(ModPotions.fireProtection, fireResistance.getDuration(), fireResistance.getAmplifier()));
+                    player.removePotionEffect(MobEffects.FIRE_RESISTANCE);
                 }
                 if (actionHandler.updateActions()) {
                     sync = true;

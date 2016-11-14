@@ -184,6 +184,11 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     }
 
     @Override
+    protected float calculateFireDamage(float amount) {
+        return (float) (amount * Balance.mobProps.ADVANCED_VAMPIRE_FIRE_VULNERABILITY);
+    }
+
+    @Override
     protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier) {
         switch (getRNG().nextInt(3)) {
             case 0:

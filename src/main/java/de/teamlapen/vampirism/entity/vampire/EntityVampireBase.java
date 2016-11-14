@@ -19,6 +19,7 @@ import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
 /**
@@ -28,6 +29,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     private final boolean countAsMonster;
     protected EnumGarlicStrength garlicResist = EnumGarlicStrength.NONE;
     protected boolean canSuckBloodFromPlayer = false;
+    protected boolean vulnerableToFire = true;
     private boolean sundamageCache;
     private EnumGarlicStrength garlicCache = EnumGarlicStrength.NONE;
 
@@ -46,6 +48,18 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
             return true;
         }
         return super.attackEntityAsMob(entity);
+    }
+
+    @Override
+    public boolean attackEntityFrom(DamageSource src, float amount) {
+        if (vulnerableToFire) {
+            if (DamageSource.inFire.equals(src)) {
+                return this.attackEntityFrom(VReference.VAMPIRE_IN_FIRE, calculateFireDamage(amount));
+            } else if (DamageSource.onFire.equals(src)) {
+                return this.attackEntityFrom(VReference.VAMPIRE_ON_FIRE, calculateFireDamage(amount));
+            }
+        }
+        return super.attackEntityFrom(src, amount);
     }
 
     @Override
@@ -147,6 +161,16 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
         getAttributeMap().registerAttribute(VReference.sunDamage).setBaseValue(Balance.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
         getAttributeMap().registerAttribute(VReference.garlicDamage).setBaseValue(Balance.mobProps.VAMPIRE_MOB_GARLIC_DAMAGE);
 
+    }
+
+    /**
+     * Calculates the increased fire damage is this vampire creature is especially vulnerable to fire
+     *
+     * @param amount
+     * @return
+     */
+    protected float calculateFireDamage(float amount) {
+        return amount;
     }
 
     @Override

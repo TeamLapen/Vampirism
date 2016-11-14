@@ -37,6 +37,11 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
+    public float calculateFireDamage(float amount) {
+        return amount;
+    }
+
+    @Override
     public boolean canBeBitten(IVampire biter) {
         return false;
     }

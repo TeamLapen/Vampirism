@@ -26,6 +26,14 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     void activateVision(@Nullable IVampireVision vision);
 
     /**
+     * Vampires receive increased damage from fire.
+     * This method will be used to convert {@link net.minecraft.util.DamageSource#inFire} and {@link net.minecraft.util.DamageSource#onFire} to {@link de.teamlapen.vampirism.api.VReference#VAMPIRE_IN_FIRE} or respectivly {@link de.teamlapen.vampirism.api.VReference#VAMPIRE_ON_FIRE}
+     * @param amount the unmodified fire damage amount
+     * @return The modified amount
+     */
+    float calculateFireDamage(float amount);
+
+    /**
      * @return The bite type which would be applied to the give entity
      */
     BITE_TYPE determineBiteType(EntityLivingBase entity);

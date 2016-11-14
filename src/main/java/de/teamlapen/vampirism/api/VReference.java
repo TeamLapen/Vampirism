@@ -50,6 +50,9 @@ public class VReference {
      */
     public static final EnumPlantType VAMPIRE_PLANT_TYPE = EnumPlantType.getPlantType("VAMPIRISM_VAMPIRE");
     public static final DamageSource SUNDAMAGE = new DamageSource("sun").setDamageBypassesArmor().setMagicDamage();
+    public static final DamageSource VAMPIRE_ON_FIRE = new DamageSource("vampire_on_fire").setDamageBypassesArmor().setMagicDamage();
+    public static final DamageSource VAMPIRE_IN_FIRE = new DamageSource("vampire_in_fire").setMagicDamage();
+
     /**
      * Enchantment type for crossbows
      */
