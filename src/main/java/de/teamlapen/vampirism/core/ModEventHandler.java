@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.entity.VampirismEntitySelectors;
+import de.teamlapen.vampirism.network.SyncConfigPacket;
 import de.teamlapen.vampirism.potion.FakeNightVisionPotion;
 import de.teamlapen.vampirism.util.DaySleepHelper;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -15,6 +16,7 @@ import de.teamlapen.vampirism.world.ModWorldEventListener;
 import de.teamlapen.vampirism.world.villages.VampirismVillageCollection;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -30,6 +32,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 
 import java.util.List;
 
@@ -38,6 +41,12 @@ import java.util.List;
  */
 public class ModEventHandler {
     private final static String TAG = "EventHandler";
+
+    @SubscribeEvent
+    public void onClientDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+        Configs.onDisconnectedFromServer();
+
+    }
 
     @SubscribeEvent
     public void onConfigurationChanged(ConfigChangedEvent.OnConfigChangedEvent e) {
@@ -102,6 +111,14 @@ public class ModEventHandler {
                 event.player.addChatComponentMessage(new TextComponentString("It looks like you have updated Vampirism"));
                 event.player.addChatComponentMessage(new TextComponentString("Please consider resetting the balance values to the updated ones, using " + TextFormatting.DARK_GREEN + "'/vampirism resetBalance all'" + TextFormatting.RESET));
                 event.player.addChatComponentMessage(new TextComponentString("For more information use " + TextFormatting.DARK_GREEN + "'/vampirism resetBalance help'" + TextFormatting.RESET));
+            }
+        }
+
+        if (!Configs.disable_config_sync) {
+            if (event.player != null && (event.player instanceof EntityPlayerMP) && FMLCommonHandler.instance().getSide()
+                    .isServer()) {
+                VampirismMod.log.d(TAG, "Sending configuration to client (%s)", event.player);
+                VampirismMod.dispatcher.sendTo(SyncConfigPacket.createSyncConfigPacket(), (EntityPlayerMP) event.player);
             }
         }
     }

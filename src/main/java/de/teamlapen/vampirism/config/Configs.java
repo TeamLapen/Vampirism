@@ -4,8 +4,11 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.*;
 import java.util.HashMap;
@@ -46,9 +49,11 @@ public class Configs {
     public static boolean playerCanTurnPlayer;
     public static boolean updated_vampirism;
     public static boolean disable_vampireEyes;
+    public static boolean disable_config_sync;
 
     public static boolean autoConvertGlasBottles;
     private static Configuration main_config;
+    private static boolean overriddenByServer = false;
 
     public static void init(File configDir, boolean inDev) {
         File mainConfigFile = new File(configDir, REFERENCE.MODID + ".cfg");
@@ -138,6 +143,7 @@ public class Configs {
         disable_versionCheck = main_config.getBoolean("disable_version_check", CATEGORY_DISABLE, false, "Disable vampirism's version check");
         disable_advancedMobPlayerFaces = main_config.getBoolean("disable_advanced_mob_player_face", CATEGORY_DISABLE, false, "Disable the rendering of other player faces for the advanced hunter and advanced vampire");
         disable_vampireEyes = main_config.getBoolean("disable_vampire_player_eyes", CATEGORY_DISABLE, false, "Disables the rendering of vampire eyes");
+        disable_config_sync = main_config.getBoolean("disable_config_sync", CATEGORY_DISABLE, false, "Disable syncing config between server and client. (Note: Only a few settings are synced anyway)");
 
         updated_vampirism = !main_config.getDefinedConfigVersion().equals(main_config.getLoadedConfigVersion());
 
@@ -192,5 +198,24 @@ public class Configs {
         }
         return bloodValues;
 
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void onDisconnectedFromServer() {
+        if (overriddenByServer) {
+            VampirismMod.log.d(TAG, "Disconnected from server -> Reloading config");
+            loadConfiguration();
+            overriddenByServer = false;
+        }
+    }
+
+    @SideOnly(Side.SERVER)
+    public static void writeToNBTServer(NBTTagCompound nbt) {
+
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void readFromNBTClient(NBTTagCompound nbt) {
+        overriddenByServer = true;
     }
 }

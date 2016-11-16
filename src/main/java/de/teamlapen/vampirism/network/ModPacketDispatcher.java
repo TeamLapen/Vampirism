@@ -15,5 +15,6 @@ public class ModPacketDispatcher extends AbstractPacketDispatcher {
     @Override
     public void registerPackets() {
         registerMessage(InputEventPacket.Handler.class, InputEventPacket.class, Side.SERVER);
+        registerMessage(SyncConfigPacket.Handler.class, SyncConfigPacket.class, Side.CLIENT);
     }
 }
