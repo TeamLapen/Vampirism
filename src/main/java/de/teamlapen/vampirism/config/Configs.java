@@ -30,6 +30,7 @@ public class Configs {
     public static int gui_level_offset_x;
     public static int gui_level_offset_y;
     public static boolean renderVampireForestFog;
+    public static boolean renderVampireForestFogEnforce;
     public static int blood_vision_recompile_ticks;
     public static int coffin_sleep_percentage;
     public static boolean pvp_only_between_factions;
@@ -77,12 +78,12 @@ public class Configs {
         }
 
         main_config = new Configuration(mainConfigFile, REFERENCE.VERSION);
-        loadConfiguration();
+        loadConfiguration(false);
         if (updated_vampirism) VampirismMod.log.i(TAG, "Vampirism seems to have been updated");
         VampirismMod.log.i(TAG, "Loaded configuration");
     }
 
-    private static void loadConfiguration() {
+    private static void loadConfiguration(boolean saveIfChanged) {
         // Categories
         ConfigCategory cat_village = main_config.getCategory(CATEGORY_VILLAGE);
         cat_village.setComment("Here you can configure the village generation");
@@ -118,6 +119,7 @@ public class Configs {
 
         playerCanTurnPlayer = main_config.getBoolean("player_can_turn_player", CATEGORY_GENERAL, true, "If one player can bite infect a human player with sanguinare");
         renderVampireForestFog = main_config.getBoolean("vampire_forest_fog", CATEGORY_GENERAL, true, "");
+        renderVampireForestFogEnforce = main_config.getBoolean("vampire_forest_fog_enforce", CATEGORY_GENERAL, true, "Prevents clients from disabling the fog client side");
         blood_vision_recompile_ticks = main_config.getInt("blood_vision_recompile", CATEGORY_GENERAL, 3, 1, 100, "Every n tick the blood vision entities are recompiled - Might have a performance impact");
 
         autoConvertGlasBottles = main_config.getBoolean("auto_convert_glas_bottles", CATEGORY_GENERAL, true, "If glas bottles should automatically be converted to blood bottles if needed");
@@ -147,14 +149,14 @@ public class Configs {
 
         updated_vampirism = !main_config.getDefinedConfigVersion().equals(main_config.getLoadedConfigVersion());
 
-        if (main_config.hasChanged() || updated_vampirism) {
+        if (!saveIfChanged && (main_config.hasChanged() || updated_vampirism)) {
             main_config.save();
         }
     }
 
     public static void onConfigurationChanged() {
         VampirismMod.log.i(TAG, "Reloading changed configuration");
-        loadConfiguration();
+        loadConfiguration(false);
     }
 
     public static Configuration getMainConfig() {
@@ -204,18 +206,25 @@ public class Configs {
     public static void onDisconnectedFromServer() {
         if (overriddenByServer) {
             VampirismMod.log.d(TAG, "Disconnected from server -> Reloading config");
-            loadConfiguration();
+            loadConfiguration(true);
             overriddenByServer = false;
         }
     }
 
-    @SideOnly(Side.SERVER)
-    public static void writeToNBTServer(NBTTagCompound nbt) {
 
+    public static void writeToNBTServer(NBTTagCompound nbt) {
+        if (renderVampireForestFogEnforce) {
+            nbt.setBoolean("vampire_forest_fog", renderVampireForestFog);
+        }
+        nbt.setBoolean("pvp_only_between_factions", pvp_only_between_factions);
     }
 
     @SideOnly(Side.CLIENT)
     public static void readFromNBTClient(NBTTagCompound nbt) {
         overriddenByServer = true;
+        if (nbt.hasKey("vampire_forest_fog")) {
+            renderVampireForestFog = nbt.getBoolean("vampire_forest_fog");
+        }
+        pvp_only_between_factions = nbt.getBoolean("pvp_only_between_factions");
     }
 }

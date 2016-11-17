@@ -115,8 +115,7 @@ public class ModEventHandler {
         }
 
         if (!Configs.disable_config_sync) {
-            if (event.player != null && (event.player instanceof EntityPlayerMP) && FMLCommonHandler.instance().getSide()
-                    .isServer()) {
+            if (event.player != null && (event.player instanceof EntityPlayerMP)) {
                 VampirismMod.log.d(TAG, "Sending configuration to client (%s)", event.player);
                 VampirismMod.dispatcher.sendTo(SyncConfigPacket.createSyncConfigPacket(), (EntityPlayerMP) event.player);
             }

@@ -95,7 +95,6 @@ public class SundamageRegistry implements ISundamageRegistry {
         sundamageDims.put(dimensionId, sundamage);
     }
 
-    @SideOnly(Side.SERVER)
     public void writeToNBTServer(NBTTagCompound nbt) {
         NBTTagCompound sundamage = new NBTTagCompound();
         for (Map.Entry<Integer, Boolean> entry : sundamageConfiguredDims.entrySet()) {
