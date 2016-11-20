@@ -4,11 +4,9 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
-import de.teamlapen.vampirism.api.entity.player.skills.DefaultSkill;
-import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
-import de.teamlapen.vampirism.api.entity.player.skills.ISkillRegistry;
-import de.teamlapen.vampirism.api.entity.player.skills.SkillNode;
+import de.teamlapen.vampirism.api.entity.player.skills.*;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.skills.VampirismSkill;
 import net.minecraft.entity.SharedMonsterAttributes;
 
@@ -76,8 +74,9 @@ public class HunterSkills {
         attackSpeed.registerAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, "8dd2f8cc-6ae1-4db1-9e14-96b4c74d7bf2", Balance.hps.SMALL_ATTACK_SPEED_MODIFIER, 2);
 
         SkillNode skill3 = new SkillNode(skill2, attackSpeed);
-        registerAlchemySkills(skill3);
-        registerWeaponSkills(skill3);
+        SkillNode skill4 = new SkillNode(skill3, new ActionSkill<>(HunterActions.disguiseAction, "disguise"));
+        registerAlchemySkills(skill4);
+        registerWeaponSkills(skill4);
     }
 
     private static void registerWeaponSkills(SkillNode root) {

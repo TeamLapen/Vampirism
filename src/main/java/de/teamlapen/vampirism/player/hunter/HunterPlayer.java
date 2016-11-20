@@ -78,11 +78,13 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     private final ActionHandler<IHunterPlayer> actionHandler;
     private final SkillHandler<IHunterPlayer> skillHandler;
+    private final HunterPlayerSpecialAttribute specialAttributes;
 
     public HunterPlayer(EntityPlayer player) {
         super(player);
         actionHandler = new ActionHandler<IHunterPlayer>(this);
         skillHandler = new SkillHandler<IHunterPlayer>(this);
+        specialAttributes = new HunterPlayerSpecialAttribute();
     }
 
     @Override
@@ -122,6 +124,10 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     @Override
     public ISkillHandler<IHunterPlayer> getSkillHandler() {
         return skillHandler;
+    }
+
+    public HunterPlayerSpecialAttribute getSpecialAttributes() {
+        return this.specialAttributes;
     }
 
     @Override

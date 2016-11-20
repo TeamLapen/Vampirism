@@ -300,7 +300,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
      */
     public static class ActionNotRegisteredException extends RuntimeException {
         public ActionNotRegisteredException(String name) {
-            super("Action " + name + " is not registed. You cannot use it otherwise");
+            super("Action " + name + " is not registered. You cannot use it otherwise");
         }
 
         public ActionNotRegisteredException(IAction action) {

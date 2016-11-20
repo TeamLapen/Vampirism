@@ -9,7 +9,10 @@ import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.items.ItemHunterCoat;
+import de.teamlapen.vampirism.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.player.hunter.HunterPlayerSpecialAttribute;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -78,6 +81,10 @@ public class RenderHandler {
     private int displayHeight, displayWidth;
     private boolean renderingBloodVision = false;
     private Shader blur1, blur2, blit0, blit1, blit2;
+    /**
+     * Temporarily stores if the hunter disguise blend profile has been enabled. (From RenderPlayer.Pre to RenderPlayer.Post)
+     */
+    private boolean hunterDisguiseEnabled;
 
     public RenderHandler(Minecraft mc) {
         this.mc = mc;
@@ -194,14 +201,26 @@ public class RenderHandler {
     }
 
     @SubscribeEvent
+    public void onRenderLivingSpecialPre(RenderLivingEvent.Specials.Pre event) {
+        EntityLivingBase entity = event.getEntity();
+        if (entity instanceof EntityPlayer && HunterPlayer.get((EntityPlayer) entity).getSpecialAttributes().isDisguised()) {
+            if (entity.getDistanceSqToEntity(this.mc.thePlayer) > 4) {
+                event.setCanceled(true);
+            }
+        }
+    }
+
+    @SubscribeEvent
     public void onRenderPlayer(RenderPlayerEvent.Pre event) {
-        if (VampirePlayer.get(event.getEntityPlayer()).getActionHandler().isActionActive(VampireActions.batAction)) {
+        EntityPlayer player = event.getEntityPlayer();
+        VampirePlayerSpecialAttributes vampireAttributes = VampirePlayer.get(player).getSpecialAttributes();
+        HunterPlayerSpecialAttribute hunterAttributes = HunterPlayer.get(player).getSpecialAttributes();
+        if (vampireAttributes.bat) {
             event.setCanceled(true);
             if (entityBat == null) {
                 entityBat = new EntityBat(event.getEntity().worldObj);
                 entityBat.setIsBatHanging(false);
             }
-            EntityPlayer player = event.getEntityPlayer();
 
             float parTick = event.getPartialRenderTick();
             Render renderer = mc.getRenderManager().getEntityRenderObject(entityBat);
@@ -229,6 +248,21 @@ public class RenderHandler {
             double d5 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double) parTick;
             mc.getRenderManager().doRenderEntity(entityBat, d0 - d3, d1 - d4, d2 - d5, f1, event.getPartialRenderTick(), false);
 
+        } else if (hunterAttributes.isDisguised()) {
+            if (!player.equals(this.mc.thePlayer) && player.getDistanceSqToEntity(this.mc.thePlayer) > Balance.hpa.DISGUISE_DISTANCE_INVISIBLE_SQ) {
+                event.setCanceled(true);
+            } else {
+                hunterDisguiseEnabled = true;
+                enableProfile(Profile.HUNTER_DISGUISE, hunterAttributes.getDisguiseProgress());
+            }
+
+        }
+    }
+
+    @SubscribeEvent
+    public void onRenderPlayerPost(RenderPlayerEvent.Post event) {
+        if (hunterDisguiseEnabled) {
+            disableProfile(Profile.HUNTER_DISGUISE);
         }
     }
 
@@ -275,9 +309,42 @@ public class RenderHandler {
         renderedEntitiesWithBlood.clear();
     }
 
+    private void disableProfile(Profile profile) {
+        profile.clean();
+    }
+
+    private void enableProfile(Profile profile) {
+        profile.apply(1);
+    }
+
+    private void enableProfile(Profile profile, float progress) {
+        progress = MathHelper.clamp_float(progress, 0, 1);
+        profile.apply(progress);
+    }
+
     private boolean isRenderEntityOutlines() {
         return this.bloodVisionFrameBuffer1 != null && this.bloodVisionShader1 != null && this.bloodVisionFrameBuffer2 != null && this.bloodVisionShader2 != null && this.mc.thePlayer != null;
     }
+
+
+//    private void renderBloodVisionFog(int ticks) {
+//        float f = ((float) BLOOD_VISION_FADE_TICKS) / (float) ticks;
+//
+//        GlStateManager.pushMatrix();
+//        boolean fog = GL11.glIsEnabled(GL11.GL_FOG);
+//        if (!fog)
+//            GlStateManager.enableFog();
+//        GlStateManager.setFog(GlStateManager.FogMode.LINEAR);
+//        GlStateManager.setFogStart(4.0F * f);
+//        GlStateManager.setFogEnd(5.5F * f);
+//        GlStateManager.glNormal3f(0F, -1F, 0F);
+//        GlStateManager.color(1F, 1F, 1F, 1F);
+//
+//        GlStateManager.setFogDensity(1);
+//        if (!fog)
+//            GlStateManager.disableFog();
+//        GlStateManager.popMatrix();
+//    }
 
     private void makeBloodVisionShader() {
         if (OpenGlHelper.shadersSupported) {
@@ -436,26 +503,6 @@ public class RenderHandler {
         return flag;
     }
 
-
-//    private void renderBloodVisionFog(int ticks) {
-//        float f = ((float) BLOOD_VISION_FADE_TICKS) / (float) ticks;
-//
-//        GlStateManager.pushMatrix();
-//        boolean fog = GL11.glIsEnabled(GL11.GL_FOG);
-//        if (!fog)
-//            GlStateManager.enableFog();
-//        GlStateManager.setFog(GlStateManager.FogMode.LINEAR);
-//        GlStateManager.setFogStart(4.0F * f);
-//        GlStateManager.setFogEnd(5.5F * f);
-//        GlStateManager.glNormal3f(0F, -1F, 0F);
-//        GlStateManager.color(1F, 1F, 1F, 1F);
-//
-//        GlStateManager.setFogDensity(1);
-//        if (!fog)
-//            GlStateManager.disableFog();
-//        GlStateManager.popMatrix();
-//    }
-
     private void renderVampireBiomeFog(int ticks) {
 
         float f = ((float) VAMPIRE_BIOME_FADE_TICKS) / (float) ticks / 1.5F;
@@ -474,6 +521,39 @@ public class RenderHandler {
             GlStateManager.disableFog();
         GlStateManager.popMatrix();
 
+    }
+
+    private enum Profile {
+        HUNTER_DISGUISE {
+            @Override
+            public void apply(float progress) {
+                GlStateManager.color(1F, 1F, 1F, 1 - progress * 0.65F);
+                if (progress >= 0.2F) {
+                    GlStateManager.depthMask(false);
+                }
+                GlStateManager.enableBlend();
+                GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+                GlStateManager.alphaFunc(516, 0.003921569F);
+            }
+
+            @Override
+            public void clean() {
+                GlStateManager.disableBlend();
+                GlStateManager.alphaFunc(516, 0.1F);
+                GlStateManager.depthMask(true);
+                GlStateManager.color(1F, 1F, 1F, 1F);
+            }
+        };
+
+        Profile() {
+        }
+
+        /**
+         * @param progress If dynamic this can be a value between 0 and 1 to fade the effect.
+         */
+        public abstract void apply(float progress);
+
+        public abstract void clean();
     }
 
 }

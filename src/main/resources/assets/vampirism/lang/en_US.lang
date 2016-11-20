@@ -74,6 +74,9 @@ text.vampirism.skill.tech_weapons.desc=Learn how to build some advanced weapons
 text.vampirism.skill.enhanced_armor=Enhanced armor
 text.vampirism.skill.enhanced_weapons=Enhanced weapons
 
+#HUNTER ACTIONS
+action.vampirism.hunter.disguise=Disguise
+
 #BLOOD POTIONS
 text.vampirism.blood_potion.might_cause=Might cause:
 text.vampirism.blood_potion.any_effect=No special effect

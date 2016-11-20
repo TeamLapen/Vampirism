@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.blocks.BlockAltarInspiration;
 import de.teamlapen.vampirism.blocks.BlockBloodContainer;
+import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
@@ -186,6 +187,14 @@ public class ModPlayerEventHandler {
 
         }
     }
+
+    @SubscribeEvent
+    public void onPlayerVisibilityCheck(PlayerEvent.Visibility event) {
+        if (HunterPlayer.get(event.getEntityPlayer()).getSpecialAttributes().isDisguised()) {
+            event.modifyVisibility(Balance.hpa.DISGUISE_VISIBILITY_MOD);
+        }
+    }
+
     /**
      * Checks if the player is allowed to use that item ({@link IFactionLevelItem}) and cancels the event if not.
      *

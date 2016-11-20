@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.DefaultAction;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * Reference implementation of IVampireAction. It is recommend to extend this
+ * Basic implementation of IAction<IVampirePlayer>. It is recommend to extend this
  */
 public abstract class DefaultVampireAction extends DefaultAction<IVampirePlayer> {
 

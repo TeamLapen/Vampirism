@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.vampire.BloodStats;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
@@ -82,6 +83,10 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     screenPercentage = 0;
                 }
             }
+        } else if (player != null && player instanceof HunterPlayer && ((HunterPlayer) player).getSpecialAttributes().isDisguised()) {
+            screenPercentage = (int) (100 * ((HunterPlayer) player).getSpecialAttributes().getDisguiseProgress());
+            screenColor = 0xff111111;
+            fullScreen = false;
         } else {
             screenPercentage = 0;
         }

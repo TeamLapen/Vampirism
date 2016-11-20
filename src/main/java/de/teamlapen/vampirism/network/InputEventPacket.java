@@ -111,7 +111,7 @@ public class InputEventPacket implements IMessage {
                         IActionHandler actionHandler = VampirismAPI.getFactionPlayerHandler(player).getCurrentFactionPlayer().getActionHandler();
                         IAction action = ((ActionHandler) actionHandler).getActionFromId(id);
                         if (action != null) {
-                            IAction.PERM r = VampirePlayer.get(player).getActionHandler().toggleAction(action);
+                            IAction.PERM r = actionHandler.toggleAction(action);
                             switch (r) {
                                 case NOT_UNLOCKED:
                                     player.addChatMessage(new TextComponentTranslation("text.vampirism.action.not_unlocked"));
