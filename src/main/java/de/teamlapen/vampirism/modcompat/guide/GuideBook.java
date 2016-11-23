@@ -23,6 +23,7 @@ import de.teamlapen.vampirism.items.ItemInjection;
 import de.teamlapen.vampirism.modcompat.guide.pages.PageHolderWithLinks;
 import de.teamlapen.vampirism.modcompat.guide.pages.PageTable;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
+import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.init.Items;
@@ -267,6 +268,9 @@ public class GuideBook {
 
         List<IPage> skillPages = new ArrayList<>();
         skillPages.addAll(PageHelper.pagesForLongText(UtilLib.translateFormatted(base + "skills.intro", Keyboard.getKeyName(ModKeys.getKeyCode(ModKeys.KEY.SKILL))), 250));
+        String disguise = String.format("§l%s§r\n", UtilLib.translate(HunterActions.disguiseAction.getUnlocalizedName()));
+        disguise += UtilLib.translateFormatted(base + "skills.disguise.text", Keyboard.getKeyName(ModKeys.getKeyCode(ModKeys.KEY.ACTION)));
+        skillPages.addAll(PageHelper.pagesForLongText(disguise, 250));
         String bloodPotion = String.format("§l%s§r\n", ModBlocks.bloodPotionTable.getLocalizedName());
         bloodPotion += UtilLib.translateFormatted(base + "skills.bloodPotion.text", Keyboard.getKeyName(ModKeys.getKeyCode(ModKeys.KEY.BLOOD_POTION)));
         skillPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(bloodPotion, 250), new ResourceLocation("guide.vampirism.blocks.bloodPotionTable")));

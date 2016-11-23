@@ -33,7 +33,7 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
 
     @Override
     public int getMinV() {
-        return 0;
+        return 48;
     }
 
     @Override

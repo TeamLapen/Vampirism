@@ -74,7 +74,12 @@ public class HunterSkills {
         attackSpeed.registerAttributeModifier(SharedMonsterAttributes.ATTACK_SPEED, "8dd2f8cc-6ae1-4db1-9e14-96b4c74d7bf2", Balance.hps.SMALL_ATTACK_SPEED_MODIFIER, 2);
 
         SkillNode skill3 = new SkillNode(skill2, attackSpeed);
-        SkillNode skill4 = new SkillNode(skill3, new ActionSkill<>(HunterActions.disguiseAction, "disguise"));
+        SkillNode skill4 = new SkillNode(skill3, new ActionSkill<IHunterPlayer>(HunterActions.disguiseAction, "disguise") {
+            @Override
+            public String getLocalizedDescription() {
+                return UtilLib.translate("text.vampirism.skill.disguiseHunter.desc");
+            }
+        });
         registerAlchemySkills(skill4);
         registerWeaponSkills(skill4);
     }
