@@ -27,6 +27,7 @@ public class BlockTent extends VampirismBlock {
         super(name, Material.CLOTH);
         this.setCreativeTab(null);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(POSITION, 0));
+        this.setHardness(0.6F);
     }
 
     @Override
