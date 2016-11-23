@@ -249,12 +249,16 @@ public class RenderHandler {
             mc.getRenderManager().doRenderEntity(entityBat, d0 - d3, d1 - d4, d2 - d5, f1, event.getPartialRenderTick(), false);
 
         } else if (hunterAttributes.isDisguised()) {
-            if (!player.equals(this.mc.thePlayer) && player.getDistanceSqToEntity(this.mc.thePlayer) > Balance.hpa.DISGUISE_DISTANCE_INVISIBLE_SQ) {
-                event.setCanceled(true);
-            } else {
-                hunterDisguiseEnabled = true;
-                enableProfile(Profile.HUNTER_DISGUISE, hunterAttributes.getDisguiseProgress());
+            if (!player.equals(this.mc.thePlayer)) {
+                double distSq = player.getDistanceSqToEntity(this.mc.thePlayer);
+                if (distSq > Balance.hpa.DISGUISE_DISTANCE_INVISIBLE_SQ) {
+                    event.setCanceled(true);
+                } else {
+                    hunterDisguiseEnabled = true;
+                    enableProfile(Profile.HUNTER_DISGUISE, MathHelper.clamp_float((float) (distSq / Balance.hpa.DISGUISE_DISTANCE_INVISIBLE_SQ * 25), 0, 1) * hunterAttributes.getDisguiseProgress());
+                }
             }
+
 
         }
     }
@@ -527,8 +531,8 @@ public class RenderHandler {
         HUNTER_DISGUISE {
             @Override
             public void apply(float progress) {
-                GlStateManager.color(1F, 1F, 1F, 1 - progress * 0.65F);
-                if (progress >= 0.2F) {
+                GlStateManager.color(1F, 1F, 1F, 1 - progress * 0.8F);
+                if (progress >= 1F) {
                     GlStateManager.depthMask(false);
                 }
                 GlStateManager.enableBlend();

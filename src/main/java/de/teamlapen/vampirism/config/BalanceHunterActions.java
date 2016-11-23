@@ -18,11 +18,6 @@ public class BalanceHunterActions extends BalanceValues {
     @DefaultBoolean(value = true)
     public boolean DISGUISE_ENABLED;
 
-    @DefaultInt(value = 120)
-    public int DISGUISE_DURATION;//TODO
-    @DefaultInt(value = 5)
-    public int DISGUISE_COOLDOWN;//TODO change
-
     @DefaultInt(value = 1024, minValue = 1, comment = "Squared distance as of which a disguised hunter is invisible")
     public int DISGUISE_DISTANCE_INVISIBLE_SQ;
 

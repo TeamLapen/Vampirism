@@ -18,12 +18,12 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
 
     @Override
     public int getCooldown() {
-        return Balance.hpa.DISGUISE_COOLDOWN * 20;
+        return 0;
     }
 
     @Override
     public int getDuration(int level) {
-        return Balance.hpa.DISGUISE_DURATION * 20;
+        return Integer.MAX_VALUE;
     }
 
     @Override

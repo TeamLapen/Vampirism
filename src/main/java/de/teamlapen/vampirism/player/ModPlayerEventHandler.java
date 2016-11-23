@@ -18,7 +18,6 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
@@ -60,7 +59,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onAttackEntity(AttackEntityEvent event) {
-        if (VampirePlayer.get(event.getEntityPlayer()).getActionHandler().isActionActive(VampireActions.batAction)) {
+        if (VampirePlayer.get(event.getEntityPlayer()).getSpecialAttributes().bat || HunterPlayer.get(event.getEntityPlayer()).getSpecialAttributes().isDisguised()) {
             event.setCanceled(true);
         }
         if (!checkItemUsePerm(event.getEntityPlayer().getHeldItemMainhand(), event.getEntityPlayer())) {
@@ -71,7 +70,7 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onBlockPlaced(BlockEvent.PlaceEvent event) {
         try {
-            if (VampirePlayer.get(event.getPlayer()).getActionHandler().isActionActive(VampireActions.batAction)) {
+            if (VampirePlayer.get(event.getPlayer()).getSpecialAttributes().bat || HunterPlayer.get(event.getPlayer()).getSpecialAttributes().isDisguised()) {
                 event.setCanceled(true);
             }
         } catch (Exception e) {
@@ -81,7 +80,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-        if (VampirePlayer.get(event.getEntityPlayer()).getActionHandler().isActionActive(VampireActions.batAction)) {
+        if (VampirePlayer.get(event.getEntityPlayer()).getSpecialAttributes().bat || HunterPlayer.get(event.getEntityPlayer()).getSpecialAttributes().isDisguised()) {
             event.setCanceled(true);
         }
     }
@@ -95,7 +94,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onItemUse(LivingEntityUseItemEvent.Start event) {
-        if (event.getEntity() instanceof EntityPlayer && VampirePlayer.get((EntityPlayer) event.getEntityLiving()).getActionHandler().isActionActive(VampireActions.batAction)) {
+        if (event.getEntity() instanceof EntityPlayer && (VampirePlayer.get((EntityPlayer) event.getEntityLiving()).getSpecialAttributes().bat || HunterPlayer.get((EntityPlayer) event.getEntityLiving()).getSpecialAttributes().isDisguised())) {
             event.setCanceled(true);
         }
         if (event.getEntity() instanceof EntityPlayer && !checkItemUsePerm(event.getItem(), (EntityPlayer) event.getEntityLiving())) {
