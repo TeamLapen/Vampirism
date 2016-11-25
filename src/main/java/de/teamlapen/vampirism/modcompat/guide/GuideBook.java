@@ -153,7 +153,7 @@ public class GuideBook {
         gettingStarted.addAll(PageHelper.pagesForLongText(UtilLib.translate(base + "gettingStarted.become"), 300));
         gettingStarted.addAll(PageHelper.pagesForLongText(UtilLib.translate(base + "gettingStarted.asVampire"), 300));
         gettingStarted.addAll(PageHelper.pagesForLongText(UtilLib.translateFormatted(base + "gettingStarted.blood", Keyboard.getKeyName(ModKeys.getKeyCode(ModKeys.KEY.SUCK))), 300));
-        gettingStarted.addAll(PageHelper.pagesForLongText(UtilLib.translate(base + "gettingStarted.level"), 300));
+        gettingStarted.addAll(PageHelper.pagesForLongText(UtilLib.translate(base + "gettingStarted.level") + "\n" + UtilLib.translate(base + "gettingStarted.level2"), 300));
 
         entries.put(new ResourceLocation(base + "gettingStarted"), new EntryText(gettingStarted, UtilLib.translate(base + "gettingStarted")));
 

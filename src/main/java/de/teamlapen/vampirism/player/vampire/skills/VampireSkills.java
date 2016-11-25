@@ -87,29 +87,18 @@ public class VampireSkills {
             }
         };
         damage.registerAttributeModifier(VReference.sunDamage, "EB47EDC1-ED4E-4CD8-BDDC-BE40956042A2", Balance.vps.SUNDAMAGE_REDUCTION1, 2);
-        DefaultSkill<IVampirePlayer> damage2 = new VampirismSkill<IVampirePlayer>() {
+        DefaultSkill<IVampirePlayer> damage2 = new VampirismSkill.SimpleVampireSkill("2waterresistance", 208, 0, true) {
             @Override
-            public String getID() {
-                return "2lessgarlicdamage";
+            protected void onDisabled(IVampirePlayer player) {
+                ((VampirePlayer) player).getSpecialAttributes().waterResistance = false;
             }
 
             @Override
-            public int getMinU() {
-                return 64;
+            protected void onEnabled(IVampirePlayer player) {
+                ((VampirePlayer) player).getSpecialAttributes().waterResistance = true;
             }
-
-            @Override
-            public int getMinV() {
-                return 0;
-            }
-
-            @Override
-            public String getUnlocalizedName() {
-                return "text.vampirism.skill.less_garlicdamage";
-            }
-
         };
-        damage2.registerAttributeModifier(VReference.garlicDamage, "155DF42A-9CA4-43BC-9F80-F0716CA43DA9", Balance.vps.GARLIC_REDUCTION1, 2);
+
         SkillNode skill2 = new SkillNode(skill1, damage, damage2);
 
         SkillNode skill3 = new SkillNode(skill2, (new VampirismSkill.SimpleVampireSkill("2lessbloodthirst", 80, 0, true)).registerAttributeModifier(VReference.bloodExhaustion, "980ad86f-fe76-433b-b26a-c4060e0e6751", Balance.vps.BLOOD_THIRST_REDUCTION1, 2));

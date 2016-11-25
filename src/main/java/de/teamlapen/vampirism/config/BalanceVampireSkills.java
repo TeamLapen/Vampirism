@@ -15,8 +15,7 @@ public class BalanceVampireSkills extends BalanceValues {
 
     @DefaultDouble(value = -0.3, comment = "The sundamage is multiplied with (value+1)")
     public double SUNDAMAGE_REDUCTION1;
-    @DefaultDouble(value = -0.5, comment = "The garlic damage is multiplied with (value+1)")
-    public double GARLIC_REDUCTION1;
+
 
     @DefaultDouble(value = -0.4, comment = "The blood exhaustion is multiplied with (value+1)")
     public double BLOOD_THIRST_REDUCTION1;

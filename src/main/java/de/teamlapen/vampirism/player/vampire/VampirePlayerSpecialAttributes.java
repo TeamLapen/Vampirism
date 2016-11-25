@@ -14,6 +14,7 @@ public class VampirePlayerSpecialAttributes {
     public boolean bat = false;
     public boolean blood_vision = false;
     public boolean increasedVampireFogDistance;
+    public boolean waterResistance;
     private int jump_boost = 0;
 
     public int getJumpBoost() {
