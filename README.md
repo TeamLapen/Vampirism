@@ -1,6 +1,6 @@
-Vampirism for Minecraft 1.10 - Latest branch
+Vampirism for Minecraft 1.10 - Latest branch [![](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
 ============================================
-[![forthebadge](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
+[![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire)
 ## Mod Description
 
 Vampires are fast, strong and blood-thirsty entities, which do not like the sun, but don't fear the night, and the best thing is: You can become one!
@@ -24,7 +24,8 @@ As a vampire you don't need to eat all that dry bread or eat these strange fruit
 
 ## API
 Vampirism has an API you can use to add blood values to your mod's creatures or make them convertible and more.
-You should be able to include it with the following in your build.gradle:
+#### Setup Gradle build script
+You should be able to include it with the following in your `build.gradle`:
 ```gradle
 repositories {
     //Maven repo for Vampirism
@@ -33,12 +34,34 @@ repositories {
     }
 }
 dependencies {
-    deobfProvided 'de.teamlapen.vampirism:Vampirism:1.10.2-1.0.0:api'//Adjust version
+    //compile against the Vampirism API
+    deobfCompile 'de.teamlapen.vampirism:Vampirism:${mc_version}-${vampirism_version}:api'//Adjust version
+    //at runtime (in your development environment) use the full Vampirism jar
+    runtime 'de.teamlapen.vampirism:Vampirism:${mc_version}-${vampirism_version}:api'
 }
 ```
+
+#### Choose a version
+`${mc_version}` gets replaced by the current Minecraft version. (i.e. `1.10.2`)
+`${vampirism_version}` gets replaced by the version of Vampirism you want to use (i.e `1.0.3`)
+
+For a list of available Vampirism version, see [CurseForge](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire/files) or the [maven listing](https://maxanier.de/maven2/de/teamlapen/vampirism/Vampirism/) .
+
+These properties can be set in a file named `gradle.properties`, placed in the same directory as your `build.gradle` file.
+Example `gradle.properties`:
+```
+mc_version=1.10.2
+vampirism_version=1.0.3
+```
+
+#### Rerun Gradle setup commands
+Please run the commands that you used to setup your development environment again.
+E.g. `gradlew setupDecompWorkspace eclipse` or `gradlew setupDecompWorkspace ideaModule`
+
+#### Examples
 Checkout this example project: https://github.com/TeamLapen/VampirismAPIExample
 
-If you want to create an addon, checkout this https://github.com/TeamLapen/VampirismAddonExample and consider contacting maxanier.
+If you want to create an addon which access all of Vampirism's classes, not just the API, checkout this https://github.com/TeamLapen/VampirismAddonExample and consider contacting maxanier.
 
 ## Code Structure
 The _master branch_ serves as the main development branch. Besides that there is a branch with the latest stable release code, it receives bugfixes which are usually cherry-pick merged in to the master branch.
@@ -86,10 +109,10 @@ You should have Vampirism's code in the project now and no errors should be disp
 That's it.
 
 #### Setting up Vampirism in another environment
-If you would like to setup Vampirism in another way or another IDE, you should pay regard to the following points.
-1. Make sure `src/main/java` and `src/lib/java` are marked as source folders and `src/main/resources` and `src/lib/resources` are marked as resource folders.
-2. Vampirism might have a few dependencies (e.g. Waila), which are specified in the gradle files and should be automatically downloaded and added when you run `ideaModule` or `eclipse`.
-3. Vampirism requires at least Java 7
+If you would like to setup Vampirism in another way or another IDE, you should pay regard to the following points.  
+1. Make sure `src/main/java` and `src/lib/java` are marked as source folders and `src/main/resources` and `src/lib/resources` are marked as resource folders.  
+2. Vampirism might have a few dependencies (e.g. Waila), which are specified in the gradle files and should be automatically downloaded and added when you run `ideaModule` or `eclipse`.  
+3. Vampirism requires at least Java 7  
 
 
 ## Licence
@@ -98,6 +121,6 @@ This mod is licenced under [LGPLv3](https://raw.githubusercontent.com/TeamLapen/
 This mod uses these sounds from freesound:  
 DST-VampireMonk.mp3 by Striderjapan -- http://www.freesound.org/people/Striderjapan/sounds/141368/ -- License: CC Attribution  
 vampire bites by Bernuy -- http://www.freesound.org/people/Bernuy/sounds/268501/ -- License: CC Attribution  
-bow02.ogg by Erdie https://www.freesound.org/people/Erdie/sounds/65734/ -- Licence: CC Attribution
-the swarm v31m3 by Setuniman https://www.freesound.org/people/Setuniman/sounds/130695/ -- Licence: CC Attribution
-Boiling Towel by unfa https://www.freesound.org/people/unfa/sounds/174499/ -- Licence: CC Attribution
+bow02.ogg by Erdie https://www.freesound.org/people/Erdie/sounds/65734/ -- Licence: CC Attribution  
+the swarm v31m3 by Setuniman https://www.freesound.org/people/Setuniman/sounds/130695/ -- Licence: CC Attribution  
+Boiling Towel by unfa https://www.freesound.org/people/unfa/sounds/174499/ -- Licence: CC Attribution  
