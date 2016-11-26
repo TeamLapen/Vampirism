@@ -1,6 +1,6 @@
-Vampirism for Minecraft 1.10 - Latest branch [![](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
+Vampirism for Minecraft 1.10 - Latest branch [![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire)
 ============================================
-[![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire)
+[![](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
 ## Mod Description
 
 Vampires are fast, strong and blood-thirsty entities, which do not like the sun, but don't fear the night, and the best thing is: You can become one!
@@ -35,9 +35,9 @@ repositories {
 }
 dependencies {
     //compile against the Vampirism API
-    deobfCompile 'de.teamlapen.vampirism:Vampirism:${mc_version}-${vampirism_version}:api'//Adjust version
+    deobfCompile "de.teamlapen.vampirism:Vampirism:${mc_version}-${vampirism_version}:api"
     //at runtime (in your development environment) use the full Vampirism jar
-    runtime 'de.teamlapen.vampirism:Vampirism:${mc_version}-${vampirism_version}:api'
+    runtime "de.teamlapen.vampirism:Vampirism:${mc_version}-${vampirism_version}"
 }
 ```
 
@@ -56,7 +56,8 @@ vampirism_version=1.0.3
 
 #### Rerun Gradle setup commands
 Please run the commands that you used to setup your development environment again.
-E.g. `gradlew setupDecompWorkspace eclipse` or `gradlew setupDecompWorkspace ideaModule`
+E.g. `gradlew setupDecompWorkspace eclipse --refresh-dependencies` or `gradlew setupDecompWorkspace ideaModule --refresh-dependencies`
+Refresh/Restart your IDE afterwards.
 
 #### Examples
 Checkout this example project: https://github.com/TeamLapen/VampirismAPIExample
