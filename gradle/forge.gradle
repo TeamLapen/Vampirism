@@ -12,7 +12,7 @@ repositories {
         //Local repo for custom forge builds.
         //Is not required to exist
         name = "LocalForge"
-        url = "../../te/MinecraftForge/repo/"
+        url = "../../MinecraftForge/repo/"
     }
     mavenCentral()
 }
