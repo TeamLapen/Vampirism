@@ -8,9 +8,11 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import java.util.Random;
 
 
 public class EntityCrossbowArrow extends EntityArrow {
@@ -49,6 +51,10 @@ public class EntityCrossbowArrow extends EntityArrow {
         }
     }
 
+    public Random getRNG() {
+        return this.rand;
+    }
+
     @Override
     public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
@@ -83,5 +89,16 @@ public class EntityCrossbowArrow extends EntityArrow {
     @Override
     protected ItemStack getArrowStack() {
         return arrowStack;
+    }
+
+    @Override
+    protected void onHit(RayTraceResult raytraceResultIn) {
+        if (raytraceResultIn.entityHit == null) {
+            Item item = arrowStack.getItem();
+            if (item instanceof ItemCrossbowArrow) {
+                ((ItemCrossbowArrow) item).onHitBlock(arrowStack, raytraceResultIn.getBlockPos(), this, this.shootingEntity == null ? this : this.shootingEntity);
+            }
+        }
+        super.onHit(raytraceResultIn);
     }
 }

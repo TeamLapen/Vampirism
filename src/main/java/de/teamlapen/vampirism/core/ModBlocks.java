@@ -37,6 +37,7 @@ public class ModBlocks {
     public static BlockWeaponTable weaponTable;
     public static BlockBloodPotionTable bloodPotionTable;
     public static BlockSunscreenBeacon sunscreenBeacon;
+    public static BlockAlchemicalFire alchemicFire;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
@@ -88,6 +89,7 @@ public class ModBlocks {
         weaponTable = registerBlock(new BlockWeaponTable());
         bloodPotionTable = registerBlock(new BlockBloodPotionTable());
         sunscreenBeacon = registerBlock(new BlockSunscreenBeacon());
+        alchemicFire = registerBlock(new BlockAlchemicalFire());
 
     }
 

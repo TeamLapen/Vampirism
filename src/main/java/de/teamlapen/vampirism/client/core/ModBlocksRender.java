@@ -14,17 +14,23 @@ import de.teamlapen.vampirism.tileentity.TileCoffin;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
+import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
+
+import javax.annotation.Nullable;
 
 /**
  * Handles all block render registration including TileEntities
@@ -38,6 +44,18 @@ public class ModBlocksRender {
                 registerRenderer();
                 registerTileRenderer();
                 break;
+            case POST_INIT:
+                Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new IBlockColor() {
+                    @Override
+                    public int colorMultiplier(IBlockState state, @Nullable IBlockAccess worldIn, @Nullable BlockPos pos, int tintIndex) {
+                        if (tintIndex == 1) {
+                            return 0x9966FF;
+                        }
+                        return 0x8855FF;
+                    }
+                }, ModBlocks.alchemicFire);
+                break;
+
         }
 
     }
@@ -90,6 +108,14 @@ public class ModBlocksRender {
 
             }
         });
+        ModelLoader.setCustomStateMapper(ModBlocks.alchemicFire, new StateMapperBase() {
+            @Override
+            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+                return new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "alchemicalFire"), "normal");
+            }
+        });
+
+
 
     }
 

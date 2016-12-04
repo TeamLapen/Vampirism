@@ -132,6 +132,7 @@ tile.vampirism.weaponTable.cannot_use=You have not learned how to use this
 tile.vampirism.bloodPotionTable.name=Blood Potion Table
 tile.vampirism.bloodPotionTable.cannot_use=You have not learned how to use this
 tile.vampirism.sunscreenBeacon.name=Sunscreen Beacon
+tile.vampirism.alchemicalFire.name=Alchemical Fire
 
 
 #ITEMS
@@ -148,6 +149,8 @@ item.vampirism.battleAxe.name=Battle Axe
 item.vampirism.crossbowArrow.name=Crossbow Arrow
 item.vampirism.crossbowArrow.vampireKiller.tooltip=Instantly kills low level vampire NPCs.
 item.vampirism.crossbowArrow.vampireKiller.name=Vampire Killer Arrow
+item.vampirism.crossbowArrow.spitfire.name=Spitfire
+item.vampirism.crossbowArrow.spitfire.tooltip=Creates a alchemical fire on impact
 item.vampirism.basicCrossbow.name=Crossbow
 item.vampirism.enhancedCrossbow.name=Enhanced Crossbow
 item.vampirism.basicDoubleCrossbow.name=Double Crossbow
@@ -158,6 +161,7 @@ item.vampirism.bloodPotion.name=Blood Potion
 item.vampirism.basicTechCrossbow.name=Semi-Auto Crossbow
 item.vampirism.enhancedTechCrossbow.name=Enhanced Semi-Auto Crossbow
 item.vampirism.techCrossbowAmmoPackage.name=Arrow clip
+item.vampirism.techCrossbowAmmoPackage.tooltip=Can be used to fill a %s
 item.vampirism.vampiresFear.name=Vampire's fear
 item.vampirism.bloodBottle.name=Blood Bottle
 item.vampirism.vampireFang.name=Vampire Fang

@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
@@ -8,6 +9,7 @@ import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.inventory.HunterWeaponCraftingManager;
 import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.inventory.EntityEquipmentSlot;
@@ -17,6 +19,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.RecipeSorter;
+
+import java.util.List;
 
 /**
  * Handles all item registrations and reference.
@@ -160,7 +164,12 @@ public class ModItems {
         basicTechCrossbow.setEnchantability(Item.ToolMaterial.DIAMOND);
         enhancedTechCrossbow = registerItem(new ItemTechCrossbow("enhancedTechCrossbow", 1.7F, 4, 450));
         enhancedTechCrossbow.setEnchantability(Item.ToolMaterial.DIAMOND);
-        techCrossbowAmmoPackage = registerItem(new VampirismItem("techCrossbowAmmoPackage"));
+        techCrossbowAmmoPackage = registerItem(new VampirismItem("techCrossbowAmmoPackage") {
+            @Override
+            public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+                tooltip.add(UtilLib.translateFormatted("item.vampirism." + regName + ".tooltip", basicTechCrossbow.getLocalizedName()));
+            }
+        });
         vampireBook = registerItem(new ItemVampireBook());
 
         armorOfSwiftness_helmet = registerItem(new ItemArmorOfSwiftness(EntityEquipmentSlot.HEAD));

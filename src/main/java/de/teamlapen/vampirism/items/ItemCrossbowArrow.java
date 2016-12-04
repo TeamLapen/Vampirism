@@ -4,16 +4,18 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
+import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -81,6 +83,9 @@ public class ItemCrossbowArrow extends VampirismItem {
         EntityCrossbowArrow entity = new EntityCrossbowArrow(world, player, heightOffset, stack);
         EnumArrowType type = getType(stack);
         entity.setDamage(type.baseDamage);
+        if (type == EnumArrowType.SPITFIRE) {
+            entity.setFire(100);
+        }
         return entity;
     }
 
@@ -101,12 +106,46 @@ public class ItemCrossbowArrow extends VampirismItem {
     }
 
     /**
+     *
+     * @param arrow Arrow stack
+     * @return If the arrow entity that belongs to this arrow should be burning
+     */
+    public boolean isBurning(ItemStack arrow) {
+        EnumArrowType type = getType(arrow);
+        return type == EnumArrowType.SPITFIRE;
+    }
+
+    /**
      * @return If an arrow of this type can be used in an infinite crossbow
      */
     public boolean isCanBeInfinite(ItemStack stack) {
         EnumArrowType type = getType(stack);
-        return type != EnumArrowType.VAMPIRE_KILLER;
+        return type != EnumArrowType.VAMPIRE_KILLER && type != EnumArrowType.SPITFIRE;
     }
+
+    /**
+     * Called when the {@link EntityCrossbowArrow} hits a block
+     * @param arrow The itemstack of the shot arrow
+     * @param blockPos The position of the hit block
+     * @param arrowEntity The arrow entity
+     * @param shootingEntity The shooting entity. Can be the arrow entity itself
+     */
+    public void onHitBlock(ItemStack arrow, BlockPos blockPos, EntityCrossbowArrow arrowEntity, Entity shootingEntity) {
+        EnumArrowType type = getType(arrow);
+        if (type == EnumArrowType.SPITFIRE) {
+            for (int dx = -1; dx < 2; dx++) {
+                for (int dy = -2; dy < 2; dy++) {
+                    for (int dz = -1; dz < 2; dz++) {
+                        BlockPos pos = blockPos.add(dx, dy, dz);
+                        if ((arrowEntity.worldObj.getBlockState(pos).getMaterial() == Material.AIR || arrowEntity.worldObj.getBlockState(pos).getBlock().isReplaceable(arrowEntity.worldObj, pos)) && arrowEntity.worldObj.getBlockState(pos.down()).isFullBlock() && arrowEntity.getRNG().nextInt(4) != 0) {
+                            arrowEntity.worldObj.setBlockState(pos, ModBlocks.alchemicFire.getDefaultState());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     /**
      * Called when the {@link EntityCrossbowArrow} hits an entity
      *
@@ -115,7 +154,7 @@ public class ItemCrossbowArrow extends VampirismItem {
      * @param arrowEntity    The arrow entity
      * @param shootingEntity The shooting entity. Can be the arrow entity itself
      */
-    public void onHitEntity(ItemStack arrow, EntityLivingBase entity, EntityArrow arrowEntity, Entity shootingEntity) {
+    public void onHitEntity(ItemStack arrow, EntityLivingBase entity, EntityCrossbowArrow arrowEntity, Entity shootingEntity) {
         EnumArrowType type = getType(arrow);
         if (type == EnumArrowType.VAMPIRE_KILLER) {
             if (entity instanceof IVampireMob) {
@@ -128,7 +167,7 @@ public class ItemCrossbowArrow extends VampirismItem {
     }
 
     public enum EnumArrowType {
-        NORMAL("normal", 2.0), VAMPIRE_KILLER("vampireKiller", 0.5);
+        NORMAL("normal", 2.0), VAMPIRE_KILLER("vampireKiller", 0.5), SPITFIRE("spitfire", 0.5);
         final String name;
         final double baseDamage;
 
