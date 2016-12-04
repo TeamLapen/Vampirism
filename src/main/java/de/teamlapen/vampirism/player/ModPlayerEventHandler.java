@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.blocks.BlockAltarInspiration;
 import de.teamlapen.vampirism.blocks.BlockBloodContainer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -25,6 +26,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -125,7 +127,6 @@ public class ModPlayerEventHandler {
         }
     }
 
-
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onPlayerClone(PlayerEvent.Clone event) {
         if (!event.getEntityPlayer().worldObj.isRemote) {
@@ -169,6 +170,17 @@ public class ModPlayerEventHandler {
                         event.getItemStack().deserializeNBT(new ItemStack(ModItems.bloodBottle).serializeNBT());
                     }
                 }
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerLeftLickedBlock(PlayerInteractEvent.LeftClickBlock event) {
+        BlockPos pos = event.getPos().offset(event.getFace());
+
+        if (event.getWorld().getBlockState(pos).getBlock() == ModBlocks.alchemicalFire) {
+            event.getWorld().playEvent(null, 1009, pos, 0);
+            event.getWorld().setBlockToAir(pos);
+            event.setCanceled(true);
         }
     }
 

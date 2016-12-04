@@ -53,7 +53,7 @@ public class ModBlocksRender {
                         }
                         return 0x8855FF;
                     }
-                }, ModBlocks.alchemicFire);
+                }, ModBlocks.alchemicalFire);
                 break;
 
         }
@@ -108,7 +108,7 @@ public class ModBlocksRender {
 
             }
         });
-        ModelLoader.setCustomStateMapper(ModBlocks.alchemicFire, new StateMapperBase() {
+        ModelLoader.setCustomStateMapper(ModBlocks.alchemicalFire, new StateMapperBase() {
             @Override
             protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
                 return new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "alchemicalFire"), "normal");
