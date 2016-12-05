@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.Achievements;
 import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.items.ItemObsidianArmor;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.actions.ActionHandler;
@@ -157,6 +158,11 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     @Override
     public boolean onEntityAttacked(DamageSource src, float amt) {
+        if (DamageSource.onFire.equals(src) || DamageSource.inFire.equals(src)) {
+            if (ItemObsidianArmor.isFullyEquipped(player)) {
+                return true;
+            }
+        }
         return false;
     }
 

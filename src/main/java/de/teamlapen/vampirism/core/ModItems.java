@@ -63,6 +63,11 @@ public class ModItems {
     public static ItemHunterCoat hunterCoat_legs;
     public static ItemHunterCoat hunterCoat_boots;
 
+    public static ItemObsidianArmor obsidianArmor_helmet;
+    public static ItemObsidianArmor obsidianArmor_chest;
+    public static ItemObsidianArmor obsidianArmor_legs;
+    public static ItemObsidianArmor obsidianArmor_boots;
+
     public static ItemHunterHat hunterHat0;
     public static ItemHunterHat hunterHat1;
 
@@ -186,6 +191,11 @@ public class ModItems {
         hunterCoat_chest = registerItem(new ItemHunterCoat(EntityEquipmentSlot.CHEST));
         hunterCoat_legs = registerItem(new ItemHunterCoat(EntityEquipmentSlot.LEGS));
         hunterCoat_boots = registerItem(new ItemHunterCoat(EntityEquipmentSlot.FEET));
+
+        obsidianArmor_helmet = registerItem(new ItemObsidianArmor(EntityEquipmentSlot.HEAD));
+        obsidianArmor_chest = registerItem(new ItemObsidianArmor(EntityEquipmentSlot.CHEST));
+        obsidianArmor_legs = registerItem(new ItemObsidianArmor(EntityEquipmentSlot.LEGS));
+        obsidianArmor_boots = registerItem(new ItemObsidianArmor(EntityEquipmentSlot.FEET));
     }
 
     private static <T extends Item> T registerItem(T item) {

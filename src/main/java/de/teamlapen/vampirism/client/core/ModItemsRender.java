@@ -103,6 +103,11 @@ public class ModItemsRender {
         registerArmorItemWithTier(ModItems.hunterCoat_legs, "hunterCoat");
         registerArmorItemWithTier(ModItems.hunterCoat_boots, "hunterCoat");
 
+        registerArmorItemWithTier(ModItems.obsidianArmor_helmet, "obsidianArmor");
+        registerArmorItemWithTier(ModItems.obsidianArmor_chest, "obsidianArmor");
+        registerArmorItemWithTier(ModItems.obsidianArmor_legs, "obsidianArmor");
+        registerArmorItemWithTier(ModItems.obsidianArmor_boots, "obsidianArmor");
+
 
         //----------------------
     }

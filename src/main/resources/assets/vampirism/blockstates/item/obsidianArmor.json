@@ -1,0 +1,71 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "builtin/generated",
+    "transform": "forge:default-item"
+  },
+  "variants": {
+    "part": {
+      "feet_normal": {
+        "textures": {
+          "layer0": "vampirism:items/obsidianArmor_boots"
+        }
+      },
+      "feet_enhanced": {
+        "textures": {
+          "layer0": "vampirism:items/obsidianArmor_boots_enhanced"
+        }
+      },
+      "feet_ultimate": {
+        "textures": {
+          "layer0": "vampirism:items/obsidianArmor_boots_ultimate"
+        }
+      },
+      "chest_normal": {
+        "textures": {
+          "layer0": "vampirism:items/obsidianArmor_chestplate"
+        }
+      },
+      "chest_enhanced": {
+        "textures": {
+          "layer0": "vampirism:items/obsidianArmor_chestplate_enhanced"
+        }
+      },
+      "chest_ultimate": {
+        "textures": {
+          "layer0": "vampirism:items/obsidianArmor_chestplate_ultimate"
+        }
+      },
+      "legs_normal": {
+        "textures": {
+          "layer0": "vampirism:items/obsidianArmor_leggings"
+        }
+      },
+      "legs_enhanced": {
+        "textures": {
+          "layer0": "vampirism:items/obsidianArmor_leggings_enhanced"
+        }
+      },
+      "legs_ultimate": {
+        "textures": {
+          "layer0": "vampirism:items/obsidianArmor_leggings_ultimate"
+        }
+      },
+      "head_normal": {
+        "textures": {
+          "layer0": "vampirism:items/obsidianArmor_helmet"
+        }
+      },
+      "head_enhanced": {
+        "textures": {
+          "layer0": "vampirism:items/obsidianArmor_helmet_enhanced"
+        }
+      },
+      "head_ultimate": {
+        "textures": {
+          "layer0": "vampirism:items/obsidianArmor_helmet_ultimate"
+        }
+      }
+    }
+  }
+}
