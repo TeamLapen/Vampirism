@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.util.IPlayerFace;
 import de.teamlapen.vampirism.util.SupporterManager;
@@ -161,6 +162,20 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     @Override
     protected boolean canDespawn() {
         return isLookingForHome() && super.canDespawn();
+    }
+
+    @Override
+    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier) {
+        switch (getRNG().nextInt(3)) {
+            case 0:
+                this.dropItem(ModItems.vampireBlood, 1);
+                break;
+            case 1:
+                this.dropItem(ModItems.itemGarlic, 1 + getRNG().nextInt(lootingModifier + 1));
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
