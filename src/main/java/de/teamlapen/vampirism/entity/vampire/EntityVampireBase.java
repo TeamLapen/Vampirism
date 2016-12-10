@@ -6,11 +6,14 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModBiomes;
+import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -20,6 +23,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 /**
@@ -27,6 +31,10 @@ import net.minecraft.world.World;
  */
 public abstract class EntityVampireBase extends EntityVampirism implements IVampireMob {
     private final boolean countAsMonster;
+    /**
+     * If this creature is only allowed to spawn at low light level or in the vampire biome on cursed earth
+     */
+    protected boolean restrictedSpawn = false;
     protected EnumGarlicStrength garlicResist = EnumGarlicStrength.NONE;
     protected boolean canSuckBloodFromPlayer = false;
     protected boolean vulnerableToFire = true;
@@ -77,9 +85,11 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
         if (isGettingSundamage(true) || (worldObj.isDaytime() && rand.nextInt(5) != 0)) return false;
         if (isGettingGarlicDamage(true) != EnumGarlicStrength.NONE) return false;
         if (worldObj.getVillageCollection().getNearestVillage(getPosition(), 1) != null) {
-            return getRNG().nextInt(60) == 0 && super.getCanSpawnHere();
+            if (getRNG().nextInt(60) != 0) {
+                return false;
+            }
         }
-        return super.getCanSpawnHere();
+        return super.getCanSpawnHere() && (!restrictedSpawn || getCanSpawnHereRestricted());
     }
 
     @Override
@@ -177,5 +187,16 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     protected void initEntityAI() {
         super.initEntityAI();
         this.tasks.addTask(0, new EntityAISwimming(this));
+    }
+
+    /**
+     * Checks if light level is low enough
+     * Only exception is the vampire biome in which it returns true if ontop of {@link ModBlocks#cursedEarth}
+     */
+    private boolean getCanSpawnHereRestricted() {
+        boolean vampireBiome = ModBiomes.vampireForest.equals(this.worldObj.getBiomeGenForCoords(this.getPosition()));
+        if (!vampireBiome) return isLowLightLevel();
+        IBlockState iblockstate = this.worldObj.getBlockState((new BlockPos(this)).down());
+        return ModBlocks.cursedEarth.equals(iblockstate.getBlock());
     }
 }

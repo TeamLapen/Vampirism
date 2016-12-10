@@ -51,7 +51,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         super(world, true);
         this.canSuckBloodFromPlayer = true;
         hasArms = true;
-
+        this.restrictedSpawn = true;
         this.setSize(0.6F, 1.8F);
 
 
@@ -89,10 +89,6 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         this.advancedLeader = advancedLeader;
     }
 
-    @Override
-    public boolean getCanSpawnHere() {
-        return super.getCanSpawnHere() && isLowLightLevel();
-    }
 
     @Override
     public int getLevel() {

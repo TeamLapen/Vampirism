@@ -52,7 +52,7 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         super(world, true);
         this.setSize(0.6F, 1.8F);
         this.canSuckBloodFromPlayer = true;
-
+        this.restrictedSpawn = true;
         this.setDontDropEquipment();
     }
 
@@ -75,11 +75,6 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         return true;
     }
 
-    @Override
-    public boolean getCanSpawnHere() {
-
-        return super.getCanSpawnHere();
-    }
 
     @Override
     public int getEyeType() {
