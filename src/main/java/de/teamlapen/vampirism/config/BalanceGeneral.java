@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.config;
 
 import de.teamlapen.lib.lib.config.BalanceValues;
 import de.teamlapen.lib.lib.config.DefaultBoolean;
+import de.teamlapen.lib.lib.config.DefaultDouble;
 import de.teamlapen.lib.lib.config.DefaultInt;
 import de.teamlapen.vampirism.VampirismMod;
 
@@ -27,6 +28,11 @@ public class BalanceGeneral extends BalanceValues {
 
     @DefaultInt(value = 40, alternateValue = 50, hasAlternate = true, comment = "The vampire killer arrow can only instant kill NPC vampires that have a max (not actual) health of this")
     public int ARROW_VAMPIRE_KILLER_MAX_HEALTH;
+
+    @DefaultInt(value = 5, minValue = 0, comment = "Damage a normal holy water splash bottle does when directly hitting a vampire")
+    public int HOLY_WATER_SPLASH_DAMAGE;
+    @DefaultDouble(value = 1.5, minValue = 1, comment = "Holy water damage is multiplied with this value for each tier above normal")
+    public double HOLY_WATER_TIER_DAMAGE_INC;
 
     /**
      * Creates a configuration for balance values

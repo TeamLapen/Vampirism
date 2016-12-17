@@ -1,0 +1,41 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "builtin/generated",
+    "transform": "forge:default-item"
+  },
+  "variants": {
+    "tier": {
+      "normal": {
+        "textures": {
+          "layer0": "vampirism:items/holy_water"
+        }
+      },
+      "enhanced": {
+        "textures": {
+          "layer0": "vampirism:items/holy_water_enhanced"
+        }
+      },
+      "ultimate": {
+        "textures": {
+          "layer0": "vampirism:items/holy_water_ultimate"
+        }
+      },
+      "normal,splash": {
+        "textures": {
+          "layer0": "vampirism:items/holy_water_splash"
+        }
+      },
+      "enhanced,splash": {
+        "textures": {
+          "layer0": "vampirism:items/holy_water_splash"
+        }
+      },
+      "ultimate,splash": {
+        "textures": {
+          "layer0": "vampirism:items/holy_water_splash"
+        }
+      }
+    }
+  }
+}

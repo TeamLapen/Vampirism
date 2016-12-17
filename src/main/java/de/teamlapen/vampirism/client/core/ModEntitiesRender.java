@@ -3,10 +3,7 @@ package de.teamlapen.vampirism.client.core;
 import de.teamlapen.lib.lib.client.render.RenderAreaParticleCloud;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.client.render.entities.*;
-import de.teamlapen.vampirism.entity.EntityAreaParticleCloud;
-import de.teamlapen.vampirism.entity.EntityBlindingBat;
-import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
-import de.teamlapen.vampirism.entity.EntityGhost;
+import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedVillager;
 import de.teamlapen.vampirism.entity.hunter.EntityAdvancedHunter;
@@ -17,6 +14,7 @@ import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionBase;
 import de.teamlapen.vampirism.entity.vampire.EntityAdvancedVampire;
 import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBaron;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderBat;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -125,6 +123,12 @@ public class ModEntitiesRender {
             @Override
             public Render<? super EntityAreaParticleCloud> createRenderFor(RenderManager manager) {
                 return new RenderAreaParticleCloud(manager);
+            }
+        });
+        RenderingRegistry.registerEntityRenderingHandler(EntityThrowableItem.class, new IRenderFactory<EntityThrowableItem>() {
+            @Override
+            public Render<? super EntityThrowableItem> createRenderFor(RenderManager manager) {
+                return new RenderThrowableItem(manager, Minecraft.getMinecraft().getRenderItem());
             }
         });
     }

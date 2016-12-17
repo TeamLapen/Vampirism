@@ -62,6 +62,7 @@ public class ModEntities {
     public static final String HUNTER_VILLAGER = "vampirism.hunter_villager";
     public static final String CROSSBOW_ARROW = "vampirism.crossbow_arrow";
     public static final String PARTICLE_CLOUD = "vampirism.particle_cloud";
+    public static final String THROWABLE_ITEM = "vampirism.throwable_item";
 
     /**
      * List of entity names which should be spawnable
@@ -159,6 +160,7 @@ public class ModEntities {
         registerEntity(EntityHunterVillager.class, HUNTER_VILLAGER, EntityLiving.SpawnPlacementType.ON_GROUND, false);
         registerEntity(EntityCrossbowArrow.class, CROSSBOW_ARROW, EntityLiving.SpawnPlacementType.IN_AIR, false);
         registerEntity(EntityAreaParticleCloud.class, PARTICLE_CLOUD, EntityLiving.SpawnPlacementType.IN_AIR, false);
+        registerEntity(EntityThrowableItem.class, THROWABLE_ITEM, EntityLiving.SpawnPlacementType.IN_AIR, false);
         registerConvertibles();
         registerCustomExtendedCreatures();
     }

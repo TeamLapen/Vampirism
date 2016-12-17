@@ -108,12 +108,17 @@ public class Helper {
         return FactionPlayerHandler.get(player).canJoin(VReference.VAMPIRE_FACTION);
     }
 
-    public static boolean isVampire(EntityPlayer player) {
-        return FactionPlayerHandler.get(player).isInFaction(VReference.VAMPIRE_FACTION);
+    /**
+     * Checks if
+     *
+     * @return If the given entity is a vampire (Either a player in the vampire faction or a vampire entity
+     */
+    public static boolean isVampire(Entity entity) {
+        return VReference.VAMPIRE_FACTION.equals(VampirismAPI.factionRegistry().getFaction(entity));
     }
 
-    public static boolean isHunter(EntityPlayer player) {
-        return FactionPlayerHandler.get(player).isInFaction(VReference.HUNTER_FACTION);
+    public static boolean isHunter(Entity entity) {
+        return VReference.HUNTER_FACTION.equals(VampirismAPI.factionRegistry().getFaction(entity));
     }
 
     /**

@@ -6,11 +6,13 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.ItemBloodBottle;
+import de.teamlapen.vampirism.items.ItemHolyWaterBottle;
 import de.teamlapen.vampirism.items.ItemInjection;
 import de.teamlapen.vampirism.items.ItemPureBlood;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.Item;
@@ -90,6 +92,20 @@ public class ModItemsRender {
         renderHelper.registerRender(ModItems.vampireBook, "normal");
         renderHelper.registerRender(ModItems.hunterHat0, "normal");
         renderHelper.registerRender(ModItems.hunterHat1, "normal");
+        registerSimpleItemWithTier(ModItems.holyWaterBottle);
+
+        final ResourceLocation holyWaterSplash = new ResourceLocation(REFERENCE.MODID, "item/" + ModItems.holyWaterBottle.getRegistryName().getResourcePath());
+        ModelLoader.setCustomMeshDefinition(ModItems.holyWaterBottle, new ItemMeshDefinition() {
+            @Override
+            public ModelResourceLocation getModelLocation(ItemStack stack) {
+                return new ModelResourceLocation(holyWaterSplash, "tier=" + ((IItemWithTier) stack.getItem()).getTier(stack) + (((ItemHolyWaterBottle) stack.getItem()).isSplash(stack) ? ",splash" : ""));
+            }
+        });
+        for (IStringSerializable s : IItemWithTier.TIER.values()) {
+            ModelLoader.registerItemVariants(ModItems.holyWaterBottle, new ModelResourceLocation(holyWaterSplash, "tier=" + s.getName() + ",splash"));
+            ModelLoader.registerItemVariants(ModItems.holyWaterBottle, new ModelResourceLocation(holyWaterSplash, "tier=" + s.getName()));
+
+        }
 
         registerSimpleItemWithTier(ModItems.hunterAxe);
 

@@ -6,6 +6,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 
+import javax.annotation.Nullable;
+
 /**
  * Faction registry.
  * Register all extended properties that extend {@link IFactionPlayer} here
@@ -13,6 +15,14 @@ import net.minecraftforge.common.capabilities.Capability;
  */
 public interface IFactionRegistry {
 
+
+    /**
+     *
+     * @param entity Can check any entity
+     * @return The faction of the given entity or null
+     */
+    @Nullable
+    IFaction getFaction(Entity entity);
 
     /**
      * @return All factions after post init
@@ -23,6 +33,15 @@ public interface IFactionRegistry {
      * @return All playable factions after post init
      */
     IPlayableFaction[] getPlayableFactions();
+
+    /**
+     * Get a cached or create a predicate which selects all other faction entities
+     * For all non EntityLivingBase entities the predicate is always false
+     * @param thisFaction
+     * @param  ignoreDisguise  If disguised players should still be counted for their actual faction (disguised vampires will still be detected as vampires)
+     * @return
+     */
+    Predicate<Entity> getPredicate(IFaction thisFaction, boolean ignoreDisguise);
 
     /**
      * Get a cached or create a predicate which selects entities from other factions.
@@ -36,15 +55,6 @@ public interface IFactionRegistry {
      * @return
      */
     Predicate<Entity> getPredicate(IFaction thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, IFaction otherFaction);
-
-    /**
-     * Get a cached or create a predicate which selects all other faction entities
-     * For all non EntityLivingBase entities the predicate is always false
-     * @param thisFaction
-     * @param  ignoreDisguise  If disguised players should still be counted for their actual faction (disguised vampires will still be detected as vampires)
-     * @return
-     */
-    Predicate<Entity> getPredicate(IFaction thisFaction, boolean ignoreDisguise);
 
     /**
      * Create and register a non playable faction. Has to be called before post-init

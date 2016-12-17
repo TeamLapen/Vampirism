@@ -52,6 +52,7 @@ public class ModItems {
     public static ItemTechCrossbow enhancedTechCrossbow;
     public static VampirismItem techCrossbowAmmoPackage;
     public static ItemVampireBook vampireBook;
+    public static ItemHolyWaterBottle holyWaterBottle;
 
     public static ItemArmorOfSwiftness armorOfSwiftness_helmet;
     public static ItemArmorOfSwiftness armorOfSwiftness_chest;
@@ -176,6 +177,7 @@ public class ModItems {
             }
         });
         vampireBook = registerItem(new ItemVampireBook());
+        holyWaterBottle = registerItem(new ItemHolyWaterBottle());
 
         armorOfSwiftness_helmet = registerItem(new ItemArmorOfSwiftness(EntityEquipmentSlot.HEAD));
         armorOfSwiftness_chest = registerItem(new ItemArmorOfSwiftness(EntityEquipmentSlot.CHEST));

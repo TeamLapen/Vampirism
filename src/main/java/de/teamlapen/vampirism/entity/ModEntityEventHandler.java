@@ -2,14 +2,13 @@ package de.teamlapen.vampirism.entity;
 
 import com.google.common.base.Predicate;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLordWithSaveable;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.core.ModPotions;
-import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.BloodPotionTableContainer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.potion.FakeNightVisionPotion;
@@ -50,12 +49,8 @@ public class ModEntityEventHandler {
             ItemStack stack = ((EntityPlayer) event.getSource().getEntity()).getHeldItemMainhand();
             if (stack != null && stack.getItem() instanceof IFactionSlayerItem) {
                 IFactionSlayerItem item = (IFactionSlayerItem) stack.getItem();
-                IFaction faction = null;
-                if (event.getEntity() instanceof IFactionEntity) {
-                    faction = ((IFactionEntity) event.getEntity()).getFaction();
-                } else if (event.getEntity() instanceof EntityPlayer) {
-                    faction = FactionPlayerHandler.get((EntityPlayer) event.getEntity()).getCurrentFaction();
-                }
+                IFaction faction = VampirismAPI.factionRegistry().getFaction(event.getEntity());
+
                 if (faction != null && faction.equals(item.getSlayedFaction())) {
                     float amt = event.getAmount() * item.getDamageMultiplierForFaction(stack);
                     skipAttackDamageOnce = true;

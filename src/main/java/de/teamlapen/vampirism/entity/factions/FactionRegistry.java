@@ -3,15 +3,18 @@ package de.teamlapen.vampirism.entity.factions;
 import com.google.common.base.Predicate;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -41,6 +44,18 @@ public class FactionRegistry implements IFactionRegistry {
     }
 
     @Override
+    public
+    @Nullable
+    IFaction getFaction(Entity entity) {
+        if (entity instanceof IFactionEntity) {
+            return ((IFactionEntity) entity).getFaction();
+        } else if (entity instanceof EntityPlayer) {
+            return VampirismAPI.getFactionPlayerHandler(((EntityPlayer) entity)).getCurrentFaction();
+        }
+        return null;
+    }
+
+    @Override
     public Faction[] getFactions() {
         return allFactions;
     }
@@ -48,6 +63,12 @@ public class FactionRegistry implements IFactionRegistry {
     @Override
     public PlayableFaction[] getPlayableFactions() {
         return playableFactions;
+    }
+
+    @Override
+    public Predicate<Entity> getPredicate(IFaction thisFaction, boolean ignoreDisguise) {
+
+        return getPredicate(thisFaction, true, true, true, ignoreDisguise, null);
     }
 
     @Override
@@ -88,12 +109,6 @@ public class FactionRegistry implements IFactionRegistry {
 //        VampirismMod.log.t("%s", k);
 //        VampirismMod.log.t("%s", predicate);
         return predicate;
-    }
-
-    @Override
-    public Predicate<Entity> getPredicate(IFaction thisFaction, boolean ignoreDisguise) {
-
-        return getPredicate(thisFaction, true, true, true, ignoreDisguise, null);
     }
 
     @Override
