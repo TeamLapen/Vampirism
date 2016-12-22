@@ -93,6 +93,8 @@ public class ModItemsRender {
         renderHelper.registerRender(ModItems.hunterHat0, "normal");
         renderHelper.registerRender(ModItems.hunterHat1, "normal");
         registerSimpleItemWithTier(ModItems.holyWaterBottle);
+        renderHelper.registerRender(ModItems.holySalt, "normal");
+        renderHelper.registerRender(ModItems.holySaltWater, "normal");
 
         final ResourceLocation holyWaterSplash = new ResourceLocation(REFERENCE.MODID, "item/" + ModItems.holyWaterBottle.getRegistryName().getResourcePath());
         ModelLoader.setCustomMeshDefinition(ModItems.holyWaterBottle, new ItemMeshDefinition() {

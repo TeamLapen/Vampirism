@@ -2,10 +2,15 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.util.SRGNAMES;
 import de.teamlapen.vampirism.world.gen.village.VillagePieceModChurch;
 import de.teamlapen.vampirism.world.gen.village.VillagePieceTrainer;
+import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.MapGenBase;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraft.world.gen.structure.MapGenVillage;
@@ -24,6 +29,7 @@ public class ModVillages {
             case INIT:
                 registerCreationHandlers();
                 registerPieces();
+                registerTrades();
                 break;
             default://Do nothing
         }
@@ -68,5 +74,16 @@ public class ModVillages {
             //Should not be possible
             VampirismMod.log.e(TAG, "VillageGen (%s) is not an instance of MapGenVillage, can't modify gen", mapGenVillage);
         }
+    }
+
+    private static void registerTrades() {
+        VillagerRegistry.VillagerProfession priest = VillagerRegistry.instance().getRegistry().getValue(new ResourceLocation("minecraft", "priest"));
+        VillagerRegistry.VillagerCareer hunterPriest = new VillagerRegistry.VillagerCareer(priest, "vampire_hunter");
+        hunterPriest.addTrade(1, new EntityVillager.EmeraldForItems(Items.GOLD_INGOT, new EntityVillager.PriceInfo(8, 10)));
+        hunterPriest.addTrade(1, new EntityVillager.EmeraldForItems(ModItems.vampireFang, new EntityVillager.PriceInfo(20, 30)));
+        hunterPriest.addTrade(2, new EntityVillager.ListItemForEmeralds(ModItems.holyWaterBottle, new EntityVillager.PriceInfo(-2, -8)));
+        hunterPriest.addTrade(3, new EntityVillager.ListItemForEmeralds(ModItems.holyWaterBottle.setTier(new ItemStack(ModItems.holyWaterBottle), IItemWithTier.TIER.ENHANCED), new EntityVillager.PriceInfo(-1, -5)));
+        hunterPriest.addTrade(3, new EntityVillager.ListItemForEmeralds(ModItems.holySalt, new EntityVillager.PriceInfo(-3, -10)));
+        hunterPriest.addTrade(4, new EntityVillager.ListItemForEmeralds(Items.EXPERIENCE_BOTTLE, new EntityVillager.PriceInfo(3, 11)));
     }
 }

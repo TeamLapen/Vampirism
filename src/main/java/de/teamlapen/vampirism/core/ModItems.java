@@ -53,6 +53,8 @@ public class ModItems {
     public static VampirismItem techCrossbowAmmoPackage;
     public static ItemVampireBook vampireBook;
     public static ItemHolyWaterBottle holyWaterBottle;
+    public static VampirismItem holySalt;
+    public static VampirismItem holySaltWater;
 
     public static ItemArmorOfSwiftness armorOfSwiftness_helmet;
     public static ItemArmorOfSwiftness armorOfSwiftness_chest;
@@ -134,6 +136,10 @@ public class ModItems {
         weaponCraftingManager.addRecipe(createStack(hunterCoat_chest, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhancedArmor, 5, "YWWY", "YZZY", "YXXY", "YXXY", 'X', Items.DIAMOND, 'Y', Items.IRON_INGOT, 'Z', ModItems.itemGarlic, 'W', ModItems.vampireFang);
         weaponCraftingManager.addRecipe(createStack(hunterCoat_legs, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhancedArmor, 5, "YWWY", "YZZY", "YZZY", "YWWY", 'X', Items.LEATHER, 'Y', Items.IRON_INGOT, 'Z', ModItems.itemGarlic, 'W', Items.DIAMOND);
         weaponCraftingManager.addRecipe(createStack(hunterCoat_boots, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhancedArmor, 5, "    ", "YYYY", "YZZY", "YXXY", 'X', Items.DIAMOND, 'Y', Items.IRON_INGOT, 'Z', ModItems.itemGarlic);
+        ItemHolyWaterBottle.registerSplashRecipes(holyWaterBottle, IItemWithTier.TIER.NORMAL);
+        ItemHolyWaterBottle.registerSplashRecipes(holyWaterBottle, IItemWithTier.TIER.ENHANCED);
+        ItemHolyWaterBottle.registerSplashRecipes(holyWaterBottle, IItemWithTier.TIER.ULTIMATE);
+
     }
 
     public static ItemStack createStack(IItemWithTier item, IItemWithTier.TIER tier) {
@@ -178,6 +184,19 @@ public class ModItems {
         });
         vampireBook = registerItem(new ItemVampireBook());
         holyWaterBottle = registerItem(new ItemHolyWaterBottle());
+        holySalt = registerItem(new VampirismItem("holy_salt") {
+            @Override
+            public boolean hasEffect(ItemStack stack) {
+                return true;
+            }
+        });
+
+        holySaltWater = registerItem(new VampirismItem("holy_salt_water") {
+            @Override
+            public boolean hasEffect(ItemStack stack) {
+                return true;
+            }
+        });
 
         armorOfSwiftness_helmet = registerItem(new ItemArmorOfSwiftness(EntityEquipmentSlot.HEAD));
         armorOfSwiftness_chest = registerItem(new ItemArmorOfSwiftness(EntityEquipmentSlot.CHEST));

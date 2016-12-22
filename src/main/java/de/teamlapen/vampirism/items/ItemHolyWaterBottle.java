@@ -3,13 +3,19 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.EntityThrowableItem;
+import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.init.PotionTypes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
@@ -26,17 +32,39 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.List;
 
 /**
- * 1.10
- *
- * @author maxanier
+ * HolyWaterBottle
+ * Exists in different tiers and as splash versions.
  */
 public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier, EntityThrowableItem.IVampirismThrowableItem {
 
     private static final String regName = "holy_water_bottle";
+
+    /**
+     * Registers the splash recipes for the given holywater bottle tier stack.
+     * Should only be used once and after the item has been registed
+     *
+     * @param item The item
+     * @param tier The tier
+     */
+    @Deprecated
+    public static void registerSplashRecipes(ItemHolyWaterBottle item, TIER tier) {
+        ItemStack base = item.setTier(new ItemStack(item), tier);
+        ItemStack splash = item.setSplash(base.copy(), true);
+        GameRegistry.addShapelessRecipe(splash.copy(), base, Items.GUNPOWDER);
+        splash.stackSize++;
+        GameRegistry.addShapelessRecipe(splash.copy(), base, base, Items.GUNPOWDER);
+        splash.stackSize++;
+        GameRegistry.addShapelessRecipe(splash.copy(), base, base, base, Items.GUNPOWDER);
+        splash.stackSize++;
+        GameRegistry.addShapelessRecipe(splash.copy(), base, base, base, base, Items.GUNPOWDER);
+        splash.stackSize++;
+        GameRegistry.addShapelessRecipe(splash.copy(), base, base, base, base, base, Items.GUNPOWDER);
+    }
 
     public ItemHolyWaterBottle() {
         super(regName);
@@ -107,8 +135,8 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
 
             if (!list1.isEmpty()) {
                 for (EntityLivingBase entitylivingbase : list1) {
-
-                    if (entitylivingbase.canBeHitWithPotion() && Helper.isVampire(entitylivingbase)) {
+                    boolean vampire = Helper.isVampire(entitylivingbase);
+                    if (entitylivingbase.canBeHitWithPotion() && (vampire || EnumCreatureAttribute.UNDEAD.equals(entitylivingbase.getCreatureAttribute()))) {
                         double dist = entity.getDistanceSqToEntity(entitylivingbase);
 
                         if (dist < 16.0D) {
@@ -117,11 +145,22 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
                             if (entitylivingbase == result.entityHit) {
                                 affect = 1.0D;
                             }
+                            if (!vampire) {
+                                affect *= 0.5D;
+                            }
 
 
                             int amount = (int) (affect * (Balance.general.HOLY_WATER_SPLASH_DAMAGE * (tier == TIER.NORMAL ? 1 : tier == TIER.ENHANCED ? Balance.general.HOLY_WATER_TIER_DAMAGE_INC : (Balance.general.HOLY_WATER_TIER_DAMAGE_INC * Balance.general.HOLY_WATER_TIER_DAMAGE_INC))) + 0.5D);
-
                             entitylivingbase.attackEntityFrom(VReference.HOLY_WATER, amount);
+                        }
+                    }
+                    if (vampire && entitylivingbase instanceof EntityPlayer) {
+                        IActionHandler<IVampirePlayer> actionHandler = VampirePlayer.get((EntityPlayer) entitylivingbase).getActionHandler();
+                        if (actionHandler.isActionActive(VampireActions.disguiseAction)) {
+                            actionHandler.toggleAction(VampireActions.disguiseAction);
+                        }
+                        if (actionHandler.isActionActive(VampireActions.invisibilityAction)) {
+                            actionHandler.toggleAction(VampireActions.invisibilityAction);
                         }
                     }
                 }
@@ -132,6 +171,7 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
 
     }
 
+    @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
         if (isSplash(itemStackIn)) {
             if (!playerIn.capabilities.isCreativeMode) {
