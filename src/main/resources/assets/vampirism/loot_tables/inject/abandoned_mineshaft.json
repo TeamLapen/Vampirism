@@ -172,6 +172,7 @@
         },
         {
           "type": "item",
+          "entryName": "vampirism:holy_water_bottle_enhanced",
           "name": "vampirism:holy_water_bottle",
           "weight": 20,
           "functions": [
@@ -183,6 +184,7 @@
         },
         {
           "type": "item",
+          "entryName": "vampirism:holy_water_bottle_ultimate",
           "name": "vampirism:holy_water_bottle",
           "weight": 10,
           "functions": [

@@ -1,9 +1,10 @@
 {
   "forge_marker": 1,
   "defaults": {
+    "model": "cube_all",
     "textures": {
-      "particle": "blocks/wool_colored_white",
-      "model": "cube/all"
+      "all": "blocks/wool_colored_white"
+
     }
   },
   "variants": {

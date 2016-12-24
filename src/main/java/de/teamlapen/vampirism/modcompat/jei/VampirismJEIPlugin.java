@@ -44,7 +44,7 @@ public class VampirismJEIPlugin extends BlankModPlugin {
         registry.useNbtForSubtypes(ModItems.armorOfSwiftness_boots, ModItems.armorOfSwiftness_chest, ModItems.armorOfSwiftness_helmet, ModItems.armorOfSwiftness_legs);
         registry.useNbtForSubtypes(ModItems.hunterAxe);
         registry.useNbtForSubtypes(ModItems.hunterCoat_boots, ModItems.hunterCoat_chest, ModItems.hunterCoat_helmet, ModItems.hunterCoat_legs);
-        registry.useNbtForSubtypes(ModItems.obsidianArmor_boots, ModItems.armorOfSwiftness_chest, ModItems.obsidianArmor_legs, ModItems.obsidianArmor_helmet);
+        registry.useNbtForSubtypes(ModItems.obsidianArmor_boots, ModItems.obsidianArmor_chest, ModItems.obsidianArmor_legs, ModItems.obsidianArmor_helmet);
         registry.useNbtForSubtypes(ModItems.holyWaterBottle);
     }
 }
