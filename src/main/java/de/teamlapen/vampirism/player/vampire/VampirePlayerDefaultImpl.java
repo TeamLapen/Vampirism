@@ -213,6 +213,11 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
+    public int getMaxLevel() {
+        return 0;
+    }
+
+    @Override
     public EntityPlayer.SleepResult trySleep(BlockPos pos) {
         return null;
     }

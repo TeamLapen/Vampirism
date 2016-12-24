@@ -113,4 +113,9 @@ class HunterPlayerDefaultImpl implements IHunterPlayer {
     public void onLevelChanged(int newLevel, int oldLevel) {
 
     }
+
+    @Override
+    public int getMaxLevel() {
+        return 0;
+    }
 }

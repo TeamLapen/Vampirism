@@ -82,4 +82,9 @@ public interface IFactionPlayer<T extends IFactionPlayer> extends IFactionEntity
     void onLevelChanged(int newLevel, int oldLevel);
 
 
+    /**
+     * @return Max level this player type can reach
+     */
+    int getMaxLevel();
+
 }

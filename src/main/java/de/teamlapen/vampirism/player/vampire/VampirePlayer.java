@@ -76,15 +76,39 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @CapabilityInject(IVampirePlayer.class)
     public static final Capability<IVampirePlayer> CAP = null;
     private final static String TAG = "VampirePlayer";
+    private final BloodStats bloodStats;
+    private final String KEY_EYE = "eye_type";
+    private final String KEY_FANGS = "fang_type";
+    private final String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
+    private final String KEY_VISION = "vision";
+    private final ActionHandler<IVampirePlayer> actionHandler;
+    private final SkillHandler<IVampirePlayer> skillHandler;
+    private final VampirePlayerSpecialAttributes specialAttributes = new VampirePlayerSpecialAttributes();
+    private boolean sundamage_cache = false;
+    private EnumGarlicStrength garlic_cache = EnumGarlicStrength.NONE;
+    private int biteCooldown = 0;
+    private int eyeType = 0;
+    private int fangType = 0;
+    private int ticksInSun = 0;
+    private boolean sleepingInCoffin = false;
+    private int sleepTimer = 0;
+    private boolean wasDead = false;
+    private List<IVampireVision> unlockedVisions = new ArrayList<>();
+    private IVampireVision activatedVision = null;
+    public VampirePlayer(EntityPlayer player) {
+        super(player);
+        applyEntityAttributes();
+        bloodStats = new BloodStats(player);
+        actionHandler = new ActionHandler(this);
+        skillHandler = new SkillHandler<IVampirePlayer>(this);
+    }
 
     /**
      * Don't call before the construction event of the player entity is finished
-     *
      */
     public static VampirePlayer get(EntityPlayer player) {
         return (VampirePlayer) player.getCapability(CAP, null);
     }
-
 
     public static void registerCapability() {
         CapabilityManager.INSTANCE.register(IVampirePlayer.class, new Storage(), VampirePlayerDefaultImpl.class);
@@ -116,34 +140,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 return (NBTTagCompound) CAP.getStorage().writeNBT(CAP, inst, null);
             }
         };
-    }
-
-    private final BloodStats bloodStats;
-    private final String KEY_EYE = "eye_type";
-    private final String KEY_FANGS = "fang_type";
-    private final String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
-    private final String KEY_VISION = "vision";
-    private final ActionHandler<IVampirePlayer> actionHandler;
-    private final SkillHandler<IVampirePlayer> skillHandler;
-    private final VampirePlayerSpecialAttributes specialAttributes = new VampirePlayerSpecialAttributes();
-    private boolean sundamage_cache = false;
-    private EnumGarlicStrength garlic_cache = EnumGarlicStrength.NONE;
-    private int biteCooldown = 0;
-    private int eyeType = 0;
-    private int fangType = 0;
-    private int ticksInSun = 0;
-    private boolean sleepingInCoffin = false;
-    private int sleepTimer = 0;
-    private boolean wasDead = false;
-    private List<IVampireVision> unlockedVisions = new ArrayList<>();
-    private IVampireVision activatedVision = null;
-
-    public VampirePlayer(EntityPlayer player) {
-        super(player);
-        applyEntityAttributes();
-        bloodStats = new BloodStats(player);
-        actionHandler = new ActionHandler(this);
-        skillHandler = new SkillHandler<IVampirePlayer>(this);
     }
 
     @Override
@@ -897,7 +893,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     @Override
-    protected int getMaxLevel() {
+    public int getMaxLevel() {
         return REFERENCE.HIGHEST_VAMPIRE_LEVEL;
     }
 

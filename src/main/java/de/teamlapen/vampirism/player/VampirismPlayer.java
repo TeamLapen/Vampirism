@@ -130,13 +130,6 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
      */
     protected abstract VampirismPlayer copyFromPlayer(EntityPlayer old);
 
-    /**
-     * Max level this player type can reach
-     *
-     * @return
-     */
-    protected abstract int getMaxLevel();
-
 
     /**
      * Can be overridden to load data from updates in subclasses

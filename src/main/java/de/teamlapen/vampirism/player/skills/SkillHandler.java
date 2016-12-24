@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillNode;
+import de.teamlapen.vampirism.config.Configs;
 import net.minecraft.nbt.NBTTagCompound;
 
 import java.util.ArrayList;
@@ -100,6 +101,10 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
 
     @Override
     public int getLeftSkillPoints() {
+        int level = player.getLevel();
+        if (Configs.unlock_all_skills && level == player.getMaxLevel()) {
+            return 1;
+        }
         return player.getLevel() - enabledSkills.size();
     }
 

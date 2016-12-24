@@ -37,13 +37,23 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     @CapabilityInject(IHunterPlayer.class)
     public final static Capability<IHunterPlayer> CAP = null;
+    private final ActionHandler<IHunterPlayer> actionHandler;
+    private final SkillHandler<IHunterPlayer> skillHandler;
+    private final HunterPlayerSpecialAttribute specialAttributes;
+
+    public HunterPlayer(EntityPlayer player) {
+        super(player);
+        actionHandler = new ActionHandler<IHunterPlayer>(this);
+        skillHandler = new SkillHandler<IHunterPlayer>(this);
+        specialAttributes = new HunterPlayerSpecialAttribute();
+    }
+
     /**
      * Don't call before the construction event of the player entity is finished
      */
     public static HunterPlayer get(EntityPlayer player) {
         return (HunterPlayer) player.getCapability(CAP, null);
     }
-
 
     public static void registerCapability() {
         CapabilityManager.INSTANCE.register(IHunterPlayer.class, new Storage(), HunterPlayerDefaultImpl.class);
@@ -75,17 +85,6 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
                 return (NBTTagCompound) CAP.getStorage().writeNBT(CAP, inst, null);
             }
         };
-    }
-
-    private final ActionHandler<IHunterPlayer> actionHandler;
-    private final SkillHandler<IHunterPlayer> skillHandler;
-    private final HunterPlayerSpecialAttribute specialAttributes;
-
-    public HunterPlayer(EntityPlayer player) {
-        super(player);
-        actionHandler = new ActionHandler<IHunterPlayer>(this);
-        skillHandler = new SkillHandler<IHunterPlayer>(this);
-        specialAttributes = new HunterPlayerSpecialAttribute();
     }
 
     @Override
@@ -259,7 +258,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     }
 
     @Override
-    protected int getMaxLevel() {
+    public int getMaxLevel() {
         return REFERENCE.HIGHEST_HUNTER_LEVEL;
     }
 
