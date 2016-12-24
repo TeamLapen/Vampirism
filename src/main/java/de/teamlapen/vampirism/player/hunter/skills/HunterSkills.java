@@ -62,7 +62,7 @@ public class HunterSkills {
     public static final ISkill<IHunterPlayer> bloodPotion_fasterCrafting = new VampirismSkill.SimpleHunterSkill("blood_potion_faster_crafting", 144, 32, false);
     public static final ISkill<IHunterPlayer> bloodPotion_portableCrafting = new VampirismSkill.SimpleHunterSkill("blood_potion_portable_crafting", 176, 32, true);
     public static final ISkill<IHunterPlayer> bloodPotion_increaseDuration = new VampirismSkill.SimpleHunterSkill("blood_potion_duration", 160, 32, true);
-
+    public static final ISkill<IHunterPlayer> holyWater_enhanced = new VampirismSkill.SimpleHunterSkill("holy_water_enhanced", 0, 0, true);
 
     public static void registerHunterSkills() {
         ISkillRegistry registry = VampirismAPI.skillRegistry();

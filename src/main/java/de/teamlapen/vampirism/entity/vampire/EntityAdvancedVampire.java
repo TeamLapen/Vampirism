@@ -185,7 +185,7 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
 
     @Override
     protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier) {
-        switch (getRNG().nextInt(3)) {
+        switch (getRNG().nextInt(2)) {
             case 0:
                 this.dropItem(ModItems.vampireBlood, 1);
                 break;

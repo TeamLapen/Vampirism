@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.hunter;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
+import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
@@ -14,6 +15,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -166,12 +168,20 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
 
     @Override
     protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier) {
-        switch (getRNG().nextInt(3)) {
+        switch (getRNG().nextInt(4)) {
             case 0:
                 this.dropItem(ModItems.vampireBlood, 1);
                 break;
             case 1:
                 this.dropItem(ModItems.itemGarlic, 1 + getRNG().nextInt(lootingModifier + 1));
+                break;
+            case 2:
+                ItemStack stack = ModItems.holyWaterBottle.setTier(new ItemStack(ModItems.holyWaterBottle), getRNG().nextInt(4) == 0 ? IItemWithTier.TIER.ULTIMATE : IItemWithTier.TIER.ENHANCED);
+                stack = ModItems.holyWaterBottle.setSplash(stack, getRNG().nextBoolean());
+                this.entityDropItem(stack, 0);
+                break;
+            case 3:
+                this.dropItem(ModItems.holySalt, getRNG().nextInt(4) + 1);
                 break;
             default:
                 break;

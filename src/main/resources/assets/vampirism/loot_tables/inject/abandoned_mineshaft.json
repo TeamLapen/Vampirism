@@ -149,6 +149,50 @@
           "weight": 95
         }
       ]
+    },
+    {
+      "name": "holy_water",
+      "rolls": 2,
+      "entries": [
+        {
+          "type": "item",
+          "name": "vampirism:holy_salt",
+          "weight": 50
+        },
+        {
+          "type": "item",
+          "name": "vampirism:holy_water_bottle",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "vampirism:set_item_tier",
+              "tier": "normal"
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "name": "vampirism:holy_water_bottle",
+          "weight": 20,
+          "functions": [
+            {
+              "function": "vampirism:set_item_tier",
+              "tier": "enhanced"
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "name": "vampirism:holy_water_bottle",
+          "weight": 10,
+          "functions": [
+            {
+              "function": "vampirism:set_item_tier",
+              "tier": "ultimate"
+            }
+          ]
+        }
+      ]
     }
   ]
 }

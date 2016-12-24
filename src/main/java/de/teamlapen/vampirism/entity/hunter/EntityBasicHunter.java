@@ -217,7 +217,10 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
             if (this.rand.nextInt(3) == 0) {
                 this.dropItem(ModItems.humanHeart, 1);
             }
+            if (this.rand.nextInt(4) == 0) {
+                this.dropItem(ModItems.holySalt, 1);
             }
+        }
     }
 
     @Override
