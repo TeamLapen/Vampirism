@@ -22,6 +22,7 @@ public class ModPotions {
     public static Potion sunscreen;
     public static Potion disguiseAsVampire;
     public static Potion fireProtection;
+    public static Potion garlic;
     public static FakeNightVisionPotion fakeNightVisionPotion;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
@@ -43,7 +44,7 @@ public class ModPotions {
         sunscreen.registerPotionAttributeModifier(VReference.sunDamage, "9dc9420c-3e5e-41c7-9ba4-ff70e9dc69fc", -0.5, 2);
         fireProtection = register(new VampirismPotion("fire_protection", false, 14981690).setIconIndex(7, 1).setBeneficial());
         disguiseAsVampire = register(new VampirismPotion("disguise_as_vampire", false, 0x999900).setBeneficial());
-
+        garlic = register(new VampirismPotion("garlic", true, 0xFFFFFF));
     }
 
     private static <T extends Potion> T register(T potion) {

@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.entity.converted;
 
-import de.teamlapen.vampirism.api.EnumGarlicStrength;
+import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
@@ -39,7 +39,7 @@ import java.util.Random;
  */
 public class EntityConvertedVillager extends EntityVillagerVampirism implements IConvertedCreature<EntityVillager> {
 
-    private EnumGarlicStrength garlicCache;
+    private EnumStrength garlicCache;
     private boolean sundamageCache;
     private boolean addedAdditionalRecipes = false;
     private int bloodTimer = 0;
@@ -49,7 +49,7 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
     }
 
     @Override
-    public boolean doesResistGarlic(EnumGarlicStrength strength) {
+    public boolean doesResistGarlic(EnumStrength strength) {
         return false;
     }
 
@@ -81,14 +81,14 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
     }
 
     @Override
-    public EnumGarlicStrength isGettingGarlicDamage() {
+    public EnumStrength isGettingGarlicDamage() {
         return isGettingGarlicDamage(false);
     }
 
     @Override
-    public EnumGarlicStrength isGettingGarlicDamage(boolean forceRefresh) {
+    public EnumStrength isGettingGarlicDamage(boolean forceRefresh) {
         if (forceRefresh) {
-            garlicCache = Helper.gettingGarlicDamage(this);
+            garlicCache = Helper.getGarlicStrength(this);
         }
         return garlicCache;
     }

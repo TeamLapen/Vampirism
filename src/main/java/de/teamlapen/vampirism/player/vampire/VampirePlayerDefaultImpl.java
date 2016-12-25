@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.player.vampire;
 
 import com.google.common.base.Predicate;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.EnumGarlicStrength;
+import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
@@ -57,7 +57,7 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
-    public boolean doesResistGarlic(EnumGarlicStrength strength) {
+    public boolean doesResistGarlic(EnumStrength strength) {
         return false;
     }
 
@@ -163,12 +163,12 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
-    public EnumGarlicStrength isGettingGarlicDamage() {
+    public EnumStrength isGettingGarlicDamage() {
         return null;
     }
 
     @Override
-    public EnumGarlicStrength isGettingGarlicDamage(boolean forcerefresh) {
+    public EnumStrength isGettingGarlicDamage(boolean forcerefresh) {
         return null;
     }
 

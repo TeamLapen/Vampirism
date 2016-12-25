@@ -12,7 +12,7 @@ import java.io.File;
  */
 public class BalanceMobProps extends BalanceValues {
 
-    @DefaultDouble(value = 1.0, minValue = 0.0, maxValue = 1000, name = "vampire_mob_garlic_damage")
+    @DefaultDouble(value = 1.0, minValue = 0.0, maxValue = 1000, name = "vampire_mob_garlic_damage", comment = "UNUSED")
     public double VAMPIRE_MOB_GARLIC_DAMAGE;
     @DefaultInt(value = 600, name = "blinding_bat_live_spawn", minValue = 1, comment = "Livespan in ticks")
     public int BLINDING_BAT_LIVE_SPAWN;

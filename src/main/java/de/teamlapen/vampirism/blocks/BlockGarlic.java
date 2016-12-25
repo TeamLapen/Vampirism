@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.api.EnumGarlicStrength;
-import de.teamlapen.vampirism.api.IGarlicBlock;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.BlockCrops;
@@ -20,7 +18,7 @@ import java.util.List;
  *
  * @author Maxanier
  */
-public class BlockGarlic extends BlockCrops implements IGarlicBlock {
+public class BlockGarlic extends BlockCrops {
 
 
     public static final String regName = "garlic";
@@ -36,10 +34,6 @@ public class BlockGarlic extends BlockCrops implements IGarlicBlock {
         return super.getDrops(world, pos, state, fortune - 1);
     }
 
-    @Override
-    public EnumGarlicStrength getGarlicStrength(IBlockAccess world, BlockPos pos) {
-        return EnumGarlicStrength.WEAK;
-    }
 
     @Override
     protected Item getCrop() {

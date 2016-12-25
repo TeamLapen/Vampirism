@@ -1,8 +1,7 @@
 package de.teamlapen.vampirism.util;
 
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.EnumGarlicStrength;
-import de.teamlapen.vampirism.api.IGarlicBlock;
+import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
@@ -10,7 +9,6 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
-import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.entity.Entity;
@@ -20,6 +18,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.World;
 
 
 public class Helper {
@@ -67,41 +67,12 @@ public class Helper {
         return false;
     }
 
-    public static EnumGarlicStrength getGarlicStrength(BlockPos pos) {
-        return EnumGarlicStrength.NONE;//TODO
+    public static EnumStrength getGarlicStrength(Entity e) {
+        return getGarlicStrengthAt(e.getEntityWorld(), e.getPosition());
     }
 
-    public static EnumGarlicStrength gettingGarlicDamage(EntityLivingBase entity) {
-        //TODO Check performance
-        if (entity.worldObj == null) return EnumGarlicStrength.NONE;
-        entity.worldObj.theProfiler.startSection("vampirism_checkGarlic");
-        EnumGarlicStrength max = EnumGarlicStrength.NONE;
-        BlockPos middle = entity.getPosition();
-        int dist = Balance.general.GARLIC_CHECK_RANGE;
-        int minX = middle.getX() - dist;
-        int minY = middle.getY() - Balance.general.GARLIC_CHECK_VERTICAL_RANGE;
-        if (minY < 0) minY = 0;
-        int minZ = middle.getZ() - dist;
-        int maxX = middle.getX() + dist + 1;
-        int maxY = middle.getY() + Balance.general.GARLIC_CHECK_VERTICAL_RANGE + 1 + 1;
-        int maxZ = middle.getZ() + dist + 1;
-        BlockPos.MutableBlockPos blockpos = new BlockPos.MutableBlockPos();
-
-        for (int x = minX; x < maxX; x++) {
-            for (int y = minY; y < maxY; y++) {
-                for (int z = minZ; z < maxZ; z++) {
-                    if (entity.worldObj.getBlockState(blockpos.setPos(x, y, z)).getBlock() instanceof IGarlicBlock) {
-                        max = ((IGarlicBlock) entity.worldObj.getBlockState(blockpos).getBlock()).getGarlicStrength(entity.worldObj, blockpos);
-                        if (max == EnumGarlicStrength.STRONG) {
-                            entity.worldObj.theProfiler.endSection();
-                            return max;
-                        }
-                    }
-                }
-            }
-        }
-        entity.worldObj.theProfiler.endSection();
-        return max;
+    public static EnumStrength getGarlicStrengthAt(World world, BlockPos pos) {
+        return VampirismAPI.getGarlicChunkHandler(world).getStrengthAtChunk(new ChunkPos(pos));
     }
 
     public static boolean canBecomeVampire(EntityPlayer player) {

@@ -10,12 +10,15 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkillRegistry;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVisionRegistry;
 import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
 import de.teamlapen.vampirism.api.items.IHunterWeaponCraftingManager;
+import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import de.teamlapen.vampirism.api.world.IVampirismVillageProvider;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+
+import javax.annotation.Nonnull;
 
 /**
  * Class for core api methods
@@ -37,6 +40,7 @@ public class VampirismAPI {
     private static IVampirismVillageProvider.IProviderProvider vampirismVillageProviders;
     private static IHunterWeaponCraftingManager weaponCraftingManager;
     private static IBloodPotionRegistry bloodPotionRegistry;
+    private static IGarlicChunkHandler.Provider garlicHandlerProvider;
 
 
     public static IVampireVisionRegistry vampireVisionRegistry() {
@@ -115,9 +119,10 @@ public class VampirismAPI {
      * Setup the API accessors
      * FOR INTERNAL USAGE ONLY
      */
-    public static void setUpAccessors(IVampirismVillageProvider.IProviderProvider villagePro, IHunterWeaponCraftingManager weaponCraftingMan) {
+    public static void setUpAccessors(IVampirismVillageProvider.IProviderProvider villagePro, IHunterWeaponCraftingManager weaponCraftingMan, IGarlicChunkHandler.Provider garlicChunkHandlerProv) {
         vampirismVillageProviders = villagePro;
         weaponCraftingManager = weaponCraftingMan;
+        garlicHandlerProvider = garlicChunkHandlerProv;
     }
 
 
@@ -145,6 +150,14 @@ public class VampirismAPI {
      */
     public static IVampirismVillageProvider getVampirismVillageProvider(World world) {
         return vampirismVillageProviders.getProviderForWorld(world);
+    }
+
+    /**
+     * @return The {@link IGarlicChunkHandler} for the given world
+     */
+    @Nonnull
+    public static IGarlicChunkHandler getGarlicChunkHandler(World world) {
+        return garlicHandlerProvider.getHandler(world);
     }
 
 

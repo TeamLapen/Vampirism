@@ -1,20 +1,20 @@
 package de.teamlapen.vampirism.api;
 
 /**
- * Represents garlic strength
+ * Can be used to determine which strength/tier something is of. e.g. used for holy water and garlic
  */
-public enum EnumGarlicStrength {
+public enum EnumStrength {
     NONE(0), WEAK(1), MEDIUM(2), STRONG(3);
     final int strength;
 
-    EnumGarlicStrength(int strength) {
+    EnumStrength(int strength) {
         this.strength = strength;
     }
 
     /**
      * If this strength is stronger than the given one.
      */
-    public boolean isStrongerThan(EnumGarlicStrength compare) {
+    public boolean isStrongerThan(EnumStrength compare) {
         return this.strength > compare.strength;
     }
 }

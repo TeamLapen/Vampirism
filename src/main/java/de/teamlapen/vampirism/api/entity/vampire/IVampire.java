@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.api.entity.vampire;
 
-import de.teamlapen.vampirism.api.EnumGarlicStrength;
+import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 
 /**
@@ -13,7 +13,7 @@ public interface IVampire extends IFactionEntity {
      * @param strength
      * @return True if the entity is not affected by that garlic level
      */
-    boolean doesResistGarlic(EnumGarlicStrength strength);
+    boolean doesResistGarlic(EnumStrength strength);
 
     /**
      * Consume blood
@@ -28,11 +28,11 @@ public interface IVampire extends IFactionEntity {
      * Result is cached for a few ticks
      * Recommend implementation: Just call isGettingGarlicDamage(false)
      * <p>
-     * For VampirePlayer instances for players with vampire level 0 this returns {@link EnumGarlicStrength#NONE}
+     * For VampirePlayer instances for players with vampire level 0 this returns {@link EnumStrength#NONE}
      *
-     * @return The strength of the garlic or {@link EnumGarlicStrength#NONE}
+     * @return The strength of the garlic or {@link EnumStrength#NONE}
      */
-    EnumGarlicStrength isGettingGarlicDamage();
+    EnumStrength isGettingGarlicDamage();
 
 
     /**
@@ -40,11 +40,11 @@ public interface IVampire extends IFactionEntity {
      * The result is cached for several ticks unless you use forcerefresh
      * Careful, this checks quite a large area of blocks and should not be refreshed to often
      * <p>
-     * For VampirePlayer instances for players with vampire level 0 this returns {@link EnumGarlicStrength#NONE}
+     * For VampirePlayer instances for players with vampire level 0 this returns {@link EnumStrength#NONE}
      *
-     * @return The strength of the garlic or {@link EnumGarlicStrength#NONE}
+     * @return The strength of the garlic or {@link EnumStrength#NONE}
      */
-    EnumGarlicStrength isGettingGarlicDamage(boolean forcerefresh);
+    EnumStrength isGettingGarlicDamage(boolean forcerefresh);
 
     /**
      * Checks if all requirements are met for the entity to be damaged by the sun, e.g. standing in the sun and not raining.

@@ -65,7 +65,7 @@ public class BalanceVampirePlayer extends BalanceValues {
     @DefaultDouble(value = 7.0, alternateValue = 14, name = "sundamage_damage", minValue = 1, comment = "Damage a player receives every 2 seconds if in sun. Is multiplied with several factors.")
     public double SUNDAMAGE_DAMAGE;
 
-    @DefaultDouble(value = 2.0, name = "garlic_damage", minValue = 1, comment = "Damage the player receives every 2 seconds if in garlic")
+    @DefaultDouble(value = 2.0, name = "garlic_damage", minValue = 1, comment = "UNUSED - Damage the player receives every 2 seconds if in garlic")
     public double GARLIC_DAMAGE;
 
     @DefaultInt(value = 14, minValue = 1, comment = "Level as of the fire vulnerability will not be increased")

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.entity.vampire;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.EnumGarlicStrength;
+import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.minions.ISaveableMinionHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireBaron;
@@ -49,7 +49,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         this.setSize(0.6F, 1.8F);
 
 
-        this.garlicResist = EnumGarlicStrength.MEDIUM;
+        this.garlicResist = EnumStrength.MEDIUM;
     }
 
     @Override

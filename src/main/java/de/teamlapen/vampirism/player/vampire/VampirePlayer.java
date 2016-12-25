@@ -4,7 +4,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.EnumGarlicStrength;
+import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
@@ -19,6 +19,7 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.Achievements;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.core.ModSounds;
+import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.fluids.BloodHelper;
@@ -85,7 +86,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private final SkillHandler<IVampirePlayer> skillHandler;
     private final VampirePlayerSpecialAttributes specialAttributes = new VampirePlayerSpecialAttributes();
     private boolean sundamage_cache = false;
-    private EnumGarlicStrength garlic_cache = EnumGarlicStrength.NONE;
+    private EnumStrength garlic_cache = EnumStrength.NONE;
     private int biteCooldown = 0;
     private int eyeType = 0;
     private int fangType = 0;
@@ -239,7 +240,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     @Override
-    public boolean doesResistGarlic(EnumGarlicStrength strength) {
+    public boolean doesResistGarlic(EnumStrength strength) {
         return false;
     }
 
@@ -342,14 +343,14 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     @Override
-    public EnumGarlicStrength isGettingGarlicDamage() {
+    public EnumStrength isGettingGarlicDamage() {
         return isGettingGarlicDamage(false);
     }
 
     @Override
-    public EnumGarlicStrength isGettingGarlicDamage(boolean forcerefresh) {
+    public EnumStrength isGettingGarlicDamage(boolean forcerefresh) {
         if (forcerefresh) {
-            garlic_cache = Helper.gettingGarlicDamage(player);
+            garlic_cache = Helper.getGarlicStrength(player);
         }
         return garlic_cache;
     }
@@ -535,14 +536,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (level > 0) {
             if (player.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 1) {
                 isGettingSundamage(true);
-                //TODO remove test for sponge forge VampirismMod.log.t("Ticking player %s %s %s", player.getEntityId(), player.getUniqueID(), player.getAttributeMap());
             }
-            if (player.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 6) {
+            if (player.worldObj.isRemote && player.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 6) {
                 isGettingGarlicDamage(true);
             }
         } else {
             sundamage_cache = false;
-            garlic_cache = EnumGarlicStrength.NONE;
+            garlic_cache = EnumStrength.NONE;
         }
 
         if (this.isPlayerSleeping()) {
@@ -587,8 +587,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 } else if (ticksInSun > 0) {
                     ticksInSun--;
                 }
-                if (isGettingGarlicDamage() != EnumGarlicStrength.NONE) {
-                    handleGarlicDamage();
+                if (isGettingGarlicDamage() != EnumStrength.NONE) {
+                    DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage());
                 }
                 if (player.isEntityAlive() && player.isInWater()) {
                     player.setAir(300);
@@ -950,10 +950,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             player.getAttributeMap().registerAttribute(VReference.biteDamage).setBaseValue(Balance.vp.BITE_DMG);
 
         }
-        if (player.getAttributeMap().registerAttribute(VReference.garlicDamage) == null) {
-            player.getAttributeMap().registerAttribute(VReference.garlicDamage).setBaseValue(Balance.vp.GARLIC_DAMAGE);
-
-        }
     }
 
     /**
@@ -1006,14 +1002,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             updatePacket.setInteger(KEY_SPAWN_BITE_PARTICLE, entity.getEntityId());
             sync(updatePacket, true);
         }
-    }
-
-    /**
-     * Handle garlic damage
-     */
-    private void handleGarlicDamage() {
-        //TODO
-        VReference.garlicDamage.getDefaultValue();
     }
 
     /**

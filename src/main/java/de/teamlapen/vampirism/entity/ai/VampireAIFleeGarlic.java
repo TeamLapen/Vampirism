@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.entity.ai;
 
-import de.teamlapen.vampirism.api.EnumGarlicStrength;
+import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.util.math.BlockPos;
@@ -16,13 +16,14 @@ public class VampireAIFleeGarlic extends EntityAIFlee {
         this.theCreature = theCreature;
     }
 
+
     @Override
     protected boolean isPositionAcceptable(World world, BlockPos pos) {
-        return theCreature.doesResistGarlic(Helper.getGarlicStrength(pos));
+        return theCreature.doesResistGarlic(Helper.getGarlicStrengthAt(world, pos));
     }
 
     @Override
     protected boolean shouldFlee() {
-        return theCreature.isGettingGarlicDamage() != EnumGarlicStrength.NONE;
+        return theCreature.isGettingGarlicDamage() != EnumStrength.NONE;
     }
 }

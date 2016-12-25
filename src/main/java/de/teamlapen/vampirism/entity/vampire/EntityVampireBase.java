@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.entity.vampire;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.api.EnumGarlicStrength;
+import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModPotions;
+import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
@@ -35,11 +36,11 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
      * If this creature is only allowed to spawn at low light level or in the vampire biome on cursed earth
      */
     protected boolean restrictedSpawn = false;
-    protected EnumGarlicStrength garlicResist = EnumGarlicStrength.NONE;
+    protected EnumStrength garlicResist = EnumStrength.NONE;
     protected boolean canSuckBloodFromPlayer = false;
     protected boolean vulnerableToFire = true;
     private boolean sundamageCache;
-    private EnumGarlicStrength garlicCache = EnumGarlicStrength.NONE;
+    private EnumStrength garlicCache = EnumStrength.NONE;
 
 
     public EntityVampireBase(World world, boolean countAsMonster) {
@@ -71,7 +72,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     }
 
     @Override
-    public boolean doesResistGarlic(EnumGarlicStrength strength) {
+    public boolean doesResistGarlic(EnumStrength strength) {
         return !strength.isStrongerThan(garlicResist);
     }
 
@@ -83,7 +84,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     @Override
     public boolean getCanSpawnHere() {
         if (isGettingSundamage(true) || (worldObj.isDaytime() && rand.nextInt(5) != 0)) return false;
-        if (isGettingGarlicDamage(true) != EnumGarlicStrength.NONE) return false;
+        if (isGettingGarlicDamage(true) != EnumStrength.NONE) return false;
         if (worldObj.getVillageCollection().getNearestVillage(getPosition(), 1) != null) {
             if (getRNG().nextInt(60) != 0) {
                 return false;
@@ -114,14 +115,14 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     }
 
     @Override
-    public EnumGarlicStrength isGettingGarlicDamage() {
+    public EnumStrength isGettingGarlicDamage() {
         return isGettingGarlicDamage(false);
     }
 
     @Override
-    public EnumGarlicStrength isGettingGarlicDamage(boolean forcerefresh) {
+    public EnumStrength isGettingGarlicDamage(boolean forcerefresh) {
         if (forcerefresh) {
-            garlicCache = Helper.gettingGarlicDamage(this);
+            garlicCache = Helper.getGarlicStrength(this);
         }
         return garlicCache;
     }
@@ -155,7 +156,9 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
                 double dmg = getEntityAttribute(VReference.sunDamage).getAttributeValue();
                 if (dmg > 0) this.attackEntityFrom(VReference.SUNDAMAGE, (float) dmg);
             }
-            //TODO handle garlic
+            if (isGettingGarlicDamage() != EnumStrength.NONE) {
+                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage());
+            }
         }
         super.onLivingUpdate();
     }
@@ -169,8 +172,6 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         getAttributeMap().registerAttribute(VReference.sunDamage).setBaseValue(Balance.mobProps.VAMPIRE_MOB_SUN_DAMAGE);
-        getAttributeMap().registerAttribute(VReference.garlicDamage).setBaseValue(Balance.mobProps.VAMPIRE_MOB_GARLIC_DAMAGE);
-
     }
 
     /**

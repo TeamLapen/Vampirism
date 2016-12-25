@@ -40,13 +40,7 @@ public class VReference {
      */
     public final static IAttribute biteDamage = (new RangedAttribute(null, "vampirism.bite_damage", 0.0, 0.0, 100));
 
-    /**
-     * Attribute which defines garlic. Registered for all IVampire mobs as well as the EntityPlayer.
-     * Applied every 2 seconds if in garlic
-     * Won't be used probably
-     */
-    @Deprecated
-    public final static IAttribute garlicDamage = (new RangedAttribute(null, "vampirism.garlicdamage", 0.0D, 0.0D, 1000D));
+
     /**
      * Plant type for plants that grow on cursed earth;
      */

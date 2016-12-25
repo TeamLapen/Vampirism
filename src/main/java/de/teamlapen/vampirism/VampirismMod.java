@@ -49,6 +49,7 @@ import de.teamlapen.vampirism.util.GeneralRegistryImpl;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SupporterManager;
 import de.teamlapen.vampirism.util.VampireBookManager;
+import de.teamlapen.vampirism.world.GarlicChunkHandler;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import de.teamlapen.vampirism.world.villages.VampirismVillageCollection;
@@ -112,15 +113,14 @@ public class VampirismMod {
             return ModItems.vampireFang;
         }
     };
+    private VersionChecker.VersionInfo versionInfo;
+    private ModCompatLoader modCompatLoader = new ModCompatLoader(REFERENCE.MODID + "/vampirism_mod_compat");
+    public VampirismMod() {
+        addModCompats();
+    }
 
     public static boolean isRealism() {
         return Configs.realism_mode;
-    }
-    private VersionChecker.VersionInfo versionInfo;
-    private ModCompatLoader modCompatLoader = new ModCompatLoader(REFERENCE.MODID + "/vampirism_mod_compat");
-
-    public VampirismMod() {
-        addModCompats();
     }
 
     public VersionChecker.VersionInfo getVersionInfo() {
@@ -249,7 +249,7 @@ public class VampirismMod {
         };
         BloodPotionRegistry bloodPotionRegistry = new BloodPotionRegistry();
         VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionRegistry, skillRegistry, generalRegistry, bloodPotionRegistry);
-        VampirismAPI.setUpAccessors(villageProviderProvider, HunterWeaponCraftingManager.getInstance());
+        VampirismAPI.setUpAccessors(villageProviderProvider, HunterWeaponCraftingManager.getInstance(), new GarlicChunkHandler.Provider());
         VReference.VAMPIRE_FACTION = factionRegistry.registerPlayableFaction("Vampire", IVampirePlayer.class, 0XFF780DA3, REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.CAP, REFERENCE.HIGHEST_VAMPIRE_LEVEL);
         VReference.VAMPIRE_FACTION.setChatColor(TextFormatting.DARK_PURPLE).setUnlocalizedName("text.vampirism.vampire", "text.vampirism.vampires");
         VReference.HUNTER_FACTION = factionRegistry.registerPlayableFaction("Hunter", IHunterPlayer.class, Color.BLUE.getRGB(), REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.CAP, REFERENCE.HIGHEST_HUNTER_LEVEL);

@@ -2,18 +2,12 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
-import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
-import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.EntityThrowableItem;
-import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
-import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.PotionTypes;
@@ -44,6 +38,10 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
 
     private static final String regName = "holy_water_bottle";
 
+    public ItemHolyWaterBottle() {
+        super(regName);
+    }
+
     /**
      * Registers the splash recipes for the given holywater bottle tier stack.
      * Should only be used once and after the item has been registed
@@ -66,8 +64,9 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
         GameRegistry.addShapelessRecipe(splash.copy(), base, base, base, base, base, Items.GUNPOWDER);
     }
 
-    public ItemHolyWaterBottle() {
-        super(regName);
+    @Override
+    public int getItemStackLimit(ItemStack stack) {
+        return isSplash(stack) ? 1 : 64;
     }
 
     @Override
@@ -135,40 +134,31 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
 
             if (!list1.isEmpty()) {
                 for (EntityLivingBase entitylivingbase : list1) {
-                    boolean vampire = Helper.isVampire(entitylivingbase);
-                    if (entitylivingbase.canBeHitWithPotion() && (vampire || EnumCreatureAttribute.UNDEAD.equals(entitylivingbase.getCreatureAttribute()))) {
-                        double dist = entity.getDistanceSqToEntity(entitylivingbase);
-
-                        if (dist < 16.0D) {
-                            double affect = 1.0D - Math.sqrt(dist) / 4.0D;
-
-                            if (entitylivingbase == result.entityHit) {
-                                affect = 1.0D;
-                            }
-                            if (!vampire) {
-                                affect *= 0.5D;
-                            }
-
-
-                            int amount = (int) (affect * (Balance.general.HOLY_WATER_SPLASH_DAMAGE * (tier == TIER.NORMAL ? 1 : tier == TIER.ENHANCED ? Balance.general.HOLY_WATER_TIER_DAMAGE_INC : (Balance.general.HOLY_WATER_TIER_DAMAGE_INC * Balance.general.HOLY_WATER_TIER_DAMAGE_INC))) + 0.5D);
-                            entitylivingbase.attackEntityFrom(VReference.HOLY_WATER, amount);
-                        }
-                    }
-                    if (vampire && entitylivingbase instanceof EntityPlayer) {
-                        IActionHandler<IVampirePlayer> actionHandler = VampirePlayer.get((EntityPlayer) entitylivingbase).getActionHandler();
-                        if (actionHandler.isActionActive(VampireActions.disguiseAction)) {
-                            actionHandler.toggleAction(VampireActions.disguiseAction);
-                        }
-                        if (actionHandler.isActionActive(VampireActions.invisibilityAction)) {
-                            actionHandler.toggleAction(VampireActions.invisibilityAction);
-                        }
-                    }
+                    DamageHandler.affectEntityHolyWaterSplash(entitylivingbase, getStrength(tier), entity.getDistanceSqToEntity(entitylivingbase), result.entityHit != null);
                 }
             }
 
             entity.worldObj.playEvent(2002, new BlockPos(entity), PotionType.getID(PotionTypes.MUNDANE));
         }
 
+    }
+
+    /**
+     * Converts the tier of this bottle into the strength of the applied holy water
+     *
+     * @param tier
+     * @return
+     */
+    public EnumStrength getStrength(TIER tier) {
+        switch (tier) {
+            case NORMAL:
+                return EnumStrength.WEAK;
+            case ENHANCED:
+                return EnumStrength.MEDIUM;
+            case ULTIMATE:
+                return EnumStrength.STRONG;
+        }
+        return EnumStrength.NONE;
     }
 
     @Override
