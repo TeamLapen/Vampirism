@@ -1,0 +1,31 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "vampirism:alchemyCauldron"
+  },
+  "variants": {
+    "filled": {
+      "true": {
+        "submodel": "vampirism:alchemyCauldronLiquid"
+      },
+      "false": {
+      }
+    },
+    "facing": {
+      "north": {
+      },
+      "east": {
+        "y": 90
+      },
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 270
+      }
+    },
+    "inventory": {
+      "transform": "forge:default-block"
+    }
+  }
+}

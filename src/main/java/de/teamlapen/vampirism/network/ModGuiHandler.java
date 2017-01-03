@@ -2,11 +2,9 @@ package de.teamlapen.vampirism.network;
 
 import de.teamlapen.vampirism.blocks.BlockHunterTable;
 import de.teamlapen.vampirism.client.gui.*;
-import de.teamlapen.vampirism.inventory.BloodPotionTableContainer;
-import de.teamlapen.vampirism.inventory.HunterBasicContainer;
-import de.teamlapen.vampirism.inventory.HunterTrainerContainer;
-import de.teamlapen.vampirism.inventory.HunterWeaponTableContainer;
+import de.teamlapen.vampirism.inventory.*;
 import de.teamlapen.vampirism.items.ItemVampireBook;
+import de.teamlapen.vampirism.tileentity.TileAlchemicalCauldron;
 import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
 import net.minecraft.client.gui.GuiScreenBook;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,6 +28,7 @@ public class ModGuiHandler implements IGuiHandler {
     public final static int ID_BLOOD_POTION_TABLE = 7;
     public final static int ID_HUNTER_BASIC = 8;
     public final static int ID_VAMPIRE_BOOK = 9;
+    public final static int ID_ALCHEMICAL_CAULDRON = 10;
 
     @Override
     public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
@@ -60,6 +59,10 @@ public class ModGuiHandler implements IGuiHandler {
                 if (itemStack != null && itemStack.getItem() instanceof ItemVampireBook) {
                     return new GuiScreenBook(player, itemStack, false);
                 }
+                return null;
+            case ID_ALCHEMICAL_CAULDRON:
+                TileAlchemicalCauldron alchemicalCauldron = (TileAlchemicalCauldron) world.getTileEntity(new BlockPos(x, y, z));
+                return new GuiAlchemicalCauldron(player.inventory, alchemicalCauldron);
             default:
                 return null;
         }
@@ -85,6 +88,10 @@ public class ModGuiHandler implements IGuiHandler {
         }
         if (id == ID_HUNTER_BASIC) {
             return new HunterBasicContainer(player.inventory);
+        }
+        if (id == ID_ALCHEMICAL_CAULDRON) {
+            TileAlchemicalCauldron alchemicalCauldron = (TileAlchemicalCauldron) world.getTileEntity(new BlockPos(x, y, z));
+            return new AlchemicalCauldronContainer(player.inventory, alchemicalCauldron);
         }
         return null;
     }
