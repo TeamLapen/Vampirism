@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionRegistry;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillRegistry;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVisionRegistry;
+import de.teamlapen.vampirism.api.items.IAlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
 import de.teamlapen.vampirism.api.items.IHunterWeaponCraftingManager;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
@@ -41,6 +42,7 @@ public class VampirismAPI {
     private static IHunterWeaponCraftingManager weaponCraftingManager;
     private static IBloodPotionRegistry bloodPotionRegistry;
     private static IGarlicChunkHandler.Provider garlicHandlerProvider;
+    private static IAlchemicalCauldronCraftingManager alchemicalCauldronCraftingManager;
 
 
     public static IVampireVisionRegistry vampireVisionRegistry() {
@@ -101,6 +103,14 @@ public class VampirismAPI {
     }
 
     /**
+     *
+     * @return The crafting manager for the alchemical cauldron (hunter)
+     */
+    public static IAlchemicalCauldronCraftingManager alchemicalCauldronCraftingManager() {
+        return alchemicalCauldronCraftingManager;
+    }
+
+    /**
      * Setup the API registries
      * FOR INTERNAL USAGE ONLY
 
@@ -119,10 +129,11 @@ public class VampirismAPI {
      * Setup the API accessors
      * FOR INTERNAL USAGE ONLY
      */
-    public static void setUpAccessors(IVampirismVillageProvider.IProviderProvider villagePro, IHunterWeaponCraftingManager weaponCraftingMan, IGarlicChunkHandler.Provider garlicChunkHandlerProv) {
+    public static void setUpAccessors(IVampirismVillageProvider.IProviderProvider villagePro, IHunterWeaponCraftingManager weaponCraftingMan, IGarlicChunkHandler.Provider garlicChunkHandlerProv, IAlchemicalCauldronCraftingManager alchemicalCauldronCraftingMan) {
         vampirismVillageProviders = villagePro;
         weaponCraftingManager = weaponCraftingMan;
         garlicHandlerProvider = garlicChunkHandlerProv;
+        alchemicalCauldronCraftingManager = alchemicalCauldronCraftingMan;
     }
 
 

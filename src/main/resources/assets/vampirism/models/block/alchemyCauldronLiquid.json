@@ -1,78 +1,73 @@
 {
-  "__comment": "Designed by Maxanier with Cubik Studio - https://cubik.studio",
-  "textures": {
-    "particle": "blocks/e_particle",
-    "texture": "blocks/e_texture"
-  },
-  "elements": [
-    {
-      "__comment": "Cube1",
-      "from": [
-        2,
-        10,
-        2
-      ],
-      "to": [
-        14,
-        13,
-        14
-      ],
-      "faces": {
-        "down": {
-          "uv": [
-            2,
-            2,
-            14,
-            14
-          ],
-          "texture": "#texture"
-        },
-        "up": {
-          "uv": [
-            2,
-            2,
-            14,
-            14
-          ],
-          "texture": "#texture"
-        },
-        "north": {
-          "uv": [
-            2,
-            3,
-            14,
-            6
-          ],
-          "texture": "#texture"
-        },
-        "south": {
-          "uv": [
-            2,
-            3,
-            14,
-            6
-          ],
-          "texture": "#texture"
-        },
-        "west": {
-          "uv": [
-            2,
-            3,
-            14,
-            6
-          ],
-          "texture": "#texture"
-        },
-        "east": {
-          "uv": [
-            2,
-            3,
-            14,
-            6
-          ],
-          "texture": "#texture"
-        }
-      }
-    }
-  ]
+	"__comment": "Designed by Maxanier with Cubik Studio - https://cubik.studio",
+	"textures": {
+		"liquid": "vampirism:blocks/blank_liquid_still"
+	},
+	"elements": [
+		{
+			"__comment": "Cube1",
+			"from": [
+				2,
+				10,
+				2
+			],
+			"to": [
+				14,
+				13,
+				14
+			],
+			"faces": {
+				"up": {
+					"uv": [
+						2,
+						2,
+						14,
+						14
+					],
+					"texture": "#liquid",
+					"tintindex": 255
+				},
+				"north": {
+					"uv": [
+						2,
+						3,
+						14,
+						6
+					],
+					"texture": "#liquid",
+					"tintindex": 255
+				},
+				"south": {
+					"uv": [
+						2,
+						3,
+						14,
+						6
+					],
+					"texture": "#liquid",
+					"tintindex": 255
+				},
+				"west": {
+					"uv": [
+						2,
+						3,
+						14,
+						6
+					],
+					"texture": "#liquid",
+					"tintindex": 255
+				},
+				"east": {
+					"uv": [
+						2,
+						3,
+						14,
+						6
+					],
+					"texture": "#liquid",
+					"tintindex": 255
+				}
+			}
+		}
+	]
 }

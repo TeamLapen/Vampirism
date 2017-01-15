@@ -1,0 +1,269 @@
+{
+  "__comment": "Designed by Maxanier with Cubik Studio",
+  "textures": {
+    "fire": "blocks/fire_layer_0",
+    "fire1": "blocks/fire_layer_1"
+  },
+  "elements": [
+    {
+      "__comment": "Fire",
+      "from": [
+        4.45,
+        1.4,
+        5.3
+      ],
+      "to": [
+        11.45,
+        5.4,
+        5.3437
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            2.5,
+            16,
+            16
+          ],
+          "texture": "#fire",
+          "cullface": "east"
+        }
+      }
+    },
+    {
+      "__comment": "Fire1",
+      "from": [
+        4.45,
+        1.4,
+        7.4
+      ],
+      "to": [
+        11.45,
+        6.4,
+        7.401
+      ],
+      "faces": {
+        "south": {
+          "uv": [
+            0,
+            2,
+            16,
+            16
+          ],
+          "texture": "#fire1",
+          "cullface": "east"
+        }
+      }
+    },
+    {
+      "__comment": "Fire2",
+      "from": [
+        4.5,
+        1.5,
+        11.5
+      ],
+      "to": [
+        11.5,
+        5.5,
+        11.501
+      ],
+      "faces": {
+        "south": {
+          "uv": [
+            0,
+            2,
+            16,
+            16
+          ],
+          "texture": "#fire"
+        }
+      }
+    },
+    {
+      "__comment": "Fire3",
+      "from": [
+        4.5,
+        1.5,
+        9
+      ],
+      "to": [
+        11.5,
+        5.5,
+        9.0437
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            2,
+            16,
+            16
+          ],
+          "texture": "#fire1",
+          "cullface": "east"
+        }
+      }
+    },
+    {
+      "__comment": "Fire4",
+      "from": [
+        4.45,
+        1.4,
+        4.6
+      ],
+      "to": [
+        4.451,
+        5.4,
+        11.6
+      ],
+      "faces": {
+        "west": {
+          "uv": [
+            0,
+            2,
+            16,
+            16
+          ],
+          "texture": "#fire"
+        }
+      }
+    },
+    {
+      "__comment": "Fire5",
+      "from": [
+        8.65,
+        1.4,
+        4.6
+      ],
+      "to": [
+        8.651,
+        5.4,
+        11.6
+      ],
+      "faces": {
+        "west": {
+          "uv": [
+            0,
+            2,
+            16,
+            16
+          ],
+          "texture": "#fire1",
+          "cullface": "south"
+        }
+      }
+    },
+    {
+      "__comment": "Fire6",
+      "from": [
+        7.25,
+        1.4,
+        4.6
+      ],
+      "to": [
+        7.2937,
+        5.4,
+        11.6
+      ],
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            2,
+            16,
+            16
+          ],
+          "texture": "#fire1",
+          "cullface": "south"
+        }
+      }
+    },
+    {
+      "__comment": "Fire7",
+      "from": [
+        11.45,
+        1.4,
+        4.6
+      ],
+      "to": [
+        11.4937,
+        5.4,
+        11.6
+      ],
+      "faces": {
+        "east": {
+          "uv": [
+            0,
+            2,
+            16,
+            16
+          ],
+          "texture": "#fire",
+          "cullface": "south"
+        }
+      }
+    }
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        30,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        1.3913,
+        -1.391
+      ],
+      "scale": [
+        0.4,
+        0.4,
+        0.4
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        30,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        1.3913,
+        -1.391
+      ],
+      "scale": [
+        0.4,
+        0.4,
+        0.4
+      ]
+    },
+    "firstperson_righthand": {
+      "scale": [
+        0.4,
+        0.4,
+        0.4
+      ]
+    },
+    "firstperson_lefthand": {
+      "scale": [
+        0.4,
+        0.4,
+        0.4
+      ]
+    },
+    "ground": {
+      "translation": [
+        0,
+        1,
+        0
+      ],
+      "scale": [
+        0.4,
+        0.4,
+        0.4
+      ]
+    }
+  }
+}

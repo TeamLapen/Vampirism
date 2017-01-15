@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.inventory.HunterWeaponCraftingManager;
 import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
@@ -94,7 +95,7 @@ public class ModItems {
 
     private static void registerCraftingRecipes() {
         HunterWeaponCraftingManager weaponCraftingManager = HunterWeaponCraftingManager.getInstance();
-
+        AlchemicalCauldronCraftingManager cauldronCraftingManager = AlchemicalCauldronCraftingManager.getInstance();
         if (!Configs.autoConvertGlasBottles) {
             GameRegistry.addRecipe(new ItemStack(bloodBottle, 1, 0), "   ", "XYX", " X ", 'X', Blocks.GLASS, 'Y', Items.ROTTEN_FLESH);
         }
@@ -143,6 +144,9 @@ public class ModItems {
         ItemHolyWaterBottle.registerSplashRecipes(holyWaterBottle, IItemWithTier.TIER.ULTIMATE);
         GameRegistry.addShapelessRecipe(new ItemStack(holySaltWater), holySalt, PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.WATER));
         weaponCraftingManager.addRecipe(ItemCrossbowArrow.setType(new ItemStack(crossbowArrow), ItemCrossbowArrow.EnumArrowType.SPITFIRE), 1, HunterSkills.basic_alchemy, 2, "    ", "    ", "YZZY", "XXXX", 'X', crossbowArrow, 'Y', Items.REDSTONE, 'Z', holyWaterBottle);
+        cauldronCraftingManager.addRecipe(ModItems.holyWaterBottle.getStack(IItemWithTier.TIER.NORMAL), Items.GUNPOWDER, ModItems.holySalt);
+        cauldronCraftingManager.registerLiquidColor(ModItems.holyWaterBottle, 0x6666FF);
+        cauldronCraftingManager.registerLiquidColor(Items.GUNPOWDER, 0xFF0033);
     }
 
     public static ItemStack createStack(IItemWithTier item, IItemWithTier.TIER tier) {

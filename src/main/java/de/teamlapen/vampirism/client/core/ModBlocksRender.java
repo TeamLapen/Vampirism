@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.blocks.VampirismFlower;
 import de.teamlapen.vampirism.client.render.tiles.AltarInfusionTESR;
 import de.teamlapen.vampirism.client.render.tiles.CoffinTESR;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.tileentity.TileAlchemicalCauldron;
 import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
 import de.teamlapen.vampirism.tileentity.TileCoffin;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -22,6 +23,7 @@ import net.minecraft.client.renderer.block.statemap.StateMapperBase;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -45,19 +47,35 @@ public class ModBlocksRender {
                 registerTileRenderer();
                 break;
             case POST_INIT:
-                Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new IBlockColor() {
-                    @Override
-                    public int colorMultiplier(IBlockState state, @Nullable IBlockAccess worldIn, @Nullable BlockPos pos, int tintIndex) {
-                        if (tintIndex == 1) {
-                            return 0x9966FF;
-                        }
-                        return 0x8855FF;
-                    }
-                }, ModBlocks.alchemicalFire);
+                registerColors();
                 break;
 
         }
 
+    }
+
+    private static void registerColors() {
+        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new IBlockColor() {
+            @Override
+            public int colorMultiplier(IBlockState state, @Nullable IBlockAccess worldIn, @Nullable BlockPos pos, int tintIndex) {
+                if (tintIndex == 1) {
+                    return 0x9966FF;
+                }
+                return 0x8855FF;
+            }
+        }, ModBlocks.alchemicalFire);
+        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new IBlockColor() {
+            @Override
+            public int colorMultiplier(IBlockState state, @Nullable IBlockAccess worldIn, @Nullable BlockPos pos, int tintIndex) {
+                if (tintIndex == 255) {
+                    TileEntity tile = (worldIn == null || pos == null) ? null : worldIn.getTileEntity(pos);
+                    if (tile != null && tile instanceof TileAlchemicalCauldron) {
+                        return ((TileAlchemicalCauldron) tile).getLiquidColor();
+                    }
+                }
+                return 0xFFFFFF;
+            }
+        }, ModBlocks.alchemicalCauldron);
     }
 
     private static void registerRenderer() {

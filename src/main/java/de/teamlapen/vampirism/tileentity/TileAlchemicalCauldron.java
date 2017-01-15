@@ -3,17 +3,29 @@ package de.teamlapen.vampirism.tileentity;
 import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.tile.InventoryTileEntity;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.items.IAlchemicalCauldronRecipe;
 import de.teamlapen.vampirism.blocks.BlockAlchemicalCauldron;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.world.WorldServer;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * 1.10
@@ -30,7 +42,13 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     private static final int[] SLOTS_WEST = new int[]{SLOT_LIQUID};
     private static final int[] SLOTS_EAST = new int[]{SLOT_INGREDIENT};
     private static final int[] SLOTS_BOTTOM = new int[]{SLOT_FUEL};
-    private int burnTime, cookTime = 0, totalCookTime = 0;
+    private int totalBurnTime = 0, burnTime = 0, cookTime = 0, totalCookTime = 0;
+    @SideOnly(Side.CLIENT)
+    private boolean cooking;
+    @SideOnly(Side.CLIENT)
+    private boolean burning;
+    @SideOnly(Side.CLIENT)
+    private int liquidColor = 0;
 
     public TileAlchemicalCauldron() {
         super(new InventorySlot[]{new InventorySlot(new InventorySlot.IItemSelector() {
@@ -57,6 +75,32 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     }
 
     @Override
+    public int getField(int id) {
+        switch (id) {
+            case 0:
+                return this.totalBurnTime;
+            case 1:
+                return this.burnTime;
+            case 2:
+                return this.totalCookTime;
+            case 3:
+                return this.cookTime;
+            default:
+                return 0;
+        }
+    }
+
+    @Override
+    public int getFieldCount() {
+        return 4;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public int getLiquidColor() {
+        return liquidColor;
+    }
+
+    @Override
     public String getName() {
         return "vampirism.container." + BlockAlchemicalCauldron.regName;
     }
@@ -77,15 +121,59 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         }
     }
 
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(getPos(), 1, getUpdateTag());
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setBoolean("cooking", cookTime > 0 && isBurning());
+        nbt.setBoolean("burning", burnTime > 0);
+        ItemStack liquidItem = getStackInSlot(SLOT_LIQUID);
+        if (liquidItem != null) {
+            nbt.setTag("liquidItem", liquidItem.writeToNBT(new NBTTagCompound()));
+        }
+        return nbt;
+    }
+
     public boolean isBurning() {
         return burnTime > 0;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public boolean isBurningClient() {
+        return burning;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public boolean isCookingClient() {
+        return cooking;
     }
 
     /**
      * @return If there is a liquid inside
      */
     public boolean isFilled() {
-        return getStackInSlot(SLOT_LIQUID) != null;//TODO 1.11 null
+        return liquidColor != -1 && getStackInSlot(SLOT_LIQUID) != null;//TODO 1.11 null
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        NBTTagCompound nbt = pkt.getNbtCompound();
+        cooking = nbt.getBoolean("cooking");
+        burning = nbt.getBoolean("burning");
+        if (nbt.hasKey("liquidItem")) {
+            this.setInventorySlotContents(SLOT_LIQUID, ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("liquidItem")));
+        } else {
+            this.setInventorySlotContents(SLOT_LIQUID, null);
+        }
+        this.updateLiquidColor();
+        this.worldObj.markBlockRangeForRenderUpdate(pos, pos);
+
     }
 
     @Override
@@ -94,8 +182,36 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     }
 
     @Override
+    public void setField(int id, int value) {
+        switch (id) {
+            case 0:
+                this.totalBurnTime = value;
+                break;
+            case 1:
+                this.burnTime = value;
+                break;
+            case 2:
+                this.totalCookTime = value;
+                break;
+            case 3:
+                this.cookTime = value;
+                break;
+        }
+    }
+
+    @Override
+    public void setInventorySlotContents(int slot, ItemStack stack) {
+        super.setInventorySlotContents(slot, stack);
+        if (slot == SLOT_LIQUID && worldObj instanceof WorldServer) {
+            ((WorldServer) worldObj).getPlayerChunkMap().markBlockForUpdate(pos);
+        }
+
+    }
+
+    @Override
     public void update() {
         boolean wasBurning = isBurning();
+        boolean wasCooking = cookTime > 0;
         boolean dirty = false;
         if (wasBurning) {
             burnTime--;
@@ -105,18 +221,16 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
             if (isBurning() || isStackInSlot(SLOT_LIQUID) && isStackInSlot(SLOT_INGREDIENT) && isStackInSlot(SLOT_FUEL)) {
                 if (!isBurning() && canCook()) {
                     this.burnTime = TileEntityFurnace.getItemBurnTime(getStackInSlot(SLOT_FUEL));
-                    VampirismMod.log.t("Start burning");
                     if (isBurning()) {
                         decrStackSize(SLOT_FUEL, 1);
                         dirty = true;
                         VampirismMod.log.t("Started burning");
-
                     }
+                    totalBurnTime = burnTime;
                 }
                 if (isBurning() && this.canCook()) {
                     cookTime++;
-                    VampirismMod.log.t("Cooking");
-                    if (cookTime == totalCookTime) {
+                    if (cookTime >= totalCookTime) {
                         cookTime = 0;
                         this.totalCookTime = getCookTime();
                         this.finishCooking();
@@ -131,9 +245,20 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
             }
             if (wasBurning != this.isBurning()) {
                 dirty = true;
+            } else if (wasCooking != this.cookTime > 0) {
+                dirty = true;
+            }
+
+        } else {
+            if (isCookingClient() && worldObj.getWorldTime() % 3 == 0) {
+                //TODO particles
             }
         }
-        if (dirty) this.markDirty();
+        if (dirty) {
+            this.markDirty();
+            IBlockState state = worldObj.getBlockState(pos);
+            this.worldObj.notifyBlockUpdate(pos, state, state, 3);
+        }
     }
 
     @Override
@@ -142,24 +267,43 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     }
 
     private boolean canCook() {
-        if (!isStackInSlot(SLOT_LIQUID) || !isStackInSlot(SLOT_INGREDIENT)) return false;
-        ItemStack stack = AlchemicalCauldronCraftingManager.getInstance().getCookingResult(getStackInSlot(SLOT_LIQUID), getStackInSlot(SLOT_INGREDIENT));
-        if (stack == null) return false;
+        if (!isStackInSlot(SLOT_LIQUID)) return false;
+        EntityPlayer owner = getOwner();
+        //if(owner==null)return false;
+        IAlchemicalCauldronRecipe recipe = AlchemicalCauldronCraftingManager.getInstance().findRecipe(getStackInSlot(SLOT_LIQUID), getStackInSlot(SLOT_INGREDIENT));
+        if (recipe == null) return false;
+        totalCookTime = recipe.getCookingTime();
+        if (!canPlayerCook(recipe)) return false;
         if (!isStackInSlot(SLOT_RESULT)) return true;
-        if (!getStackInSlot(SLOT_RESULT).isItemEqual(stack)) return false;
-        int size = getStackInSlot(SLOT_RESULT).stackSize + stack.stackSize;
+        if (!getStackInSlot(SLOT_RESULT).isItemEqual(recipe.getOutput())) return false;
+        int size = getStackInSlot(SLOT_RESULT).stackSize + recipe.getOutput().stackSize;
         return size <= getInventoryStackLimit() && size <= getStackInSlot(SLOT_RESULT).getMaxStackSize();
+    }
+
+    private boolean canPlayerCook(IAlchemicalCauldronRecipe recipe) {
+        return true;
     }
 
     private void finishCooking() {
         if (canCook()) {
-            ItemStack stack = AlchemicalCauldronCraftingManager.getInstance().getCookingResult(getStackInSlot(SLOT_LIQUID), getStackInSlot(SLOT_INGREDIENT));
+            IAlchemicalCauldronRecipe recipe = AlchemicalCauldronCraftingManager.getInstance().findRecipe(getStackInSlot(SLOT_LIQUID), getStackInSlot(SLOT_INGREDIENT));
             if (!isStackInSlot(SLOT_RESULT)) {
-                setInventorySlotContents(SLOT_RESULT, stack.copy());
-            } else if (getStackInSlot(SLOT_RESULT).isItemEqual(stack)) {
-                getStackInSlot(SLOT_RESULT).stackSize += stack.stackSize;
+                setInventorySlotContents(SLOT_RESULT, recipe.getOutput().copy());
+            } else if (getStackInSlot(SLOT_RESULT).isItemEqual(recipe.getOutput())) {
+                getStackInSlot(SLOT_RESULT).stackSize += recipe.getOutput().stackSize;
             }
-            decrStackSize(SLOT_LIQUID, 1);
+            if (recipe.isValidLiquidItem(getStackInSlot(SLOT_LIQUID))) {
+                decrStackSize(SLOT_LIQUID, 1);
+            } else {
+                ItemStack fluidContainer = getStackInSlot(SLOT_LIQUID);
+                FluidStack s = recipe.isValidFluidItem(fluidContainer);
+                if (s != null) {
+                    IFluidHandler handler = fluidContainer.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+                    handler.drain(s, true);
+                } else {
+                    VampirismMod.log.w("AlchemicalCauldron", "Cooked item without valid input liquid (Recipe %s, Input %s)", recipe, fluidContainer);
+                }
+            }
             decrStackSize(SLOT_INGREDIENT, 1);
             VampirismMod.log.t("Finished cooking");
         }
@@ -169,8 +313,33 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         return 200;
     }
 
+    private
+    @Nullable
+    EntityPlayer getOwner() {
+        return null;
+    }
+
     private boolean isStackInSlot(int slot) {
         return getStackInSlot(slot) != null;//TODO 1.11 null
+    }
+
+    /**
+     * Updates the liquid color used for the model based on the item in the liquid slot
+     */
+    @SideOnly(Side.CLIENT)
+    private void updateLiquidColor() {
+        ItemStack s = getStackInSlot(SLOT_LIQUID);
+        if (s != null) {
+            if (s.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
+                IFluidHandler handler = s.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+                FluidStack fluid = handler.drain(100, false);
+                if (fluid != null) {
+                    liquidColor = fluid.getFluid().getColor(fluid);
+                    return;
+                }
+            }
+        }
+        liquidColor = AlchemicalCauldronCraftingManager.getInstance().getLiquidColor(s);
     }
 
 }

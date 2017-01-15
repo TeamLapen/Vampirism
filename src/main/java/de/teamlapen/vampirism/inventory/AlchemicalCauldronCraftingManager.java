@@ -1,103 +1,134 @@
 package de.teamlapen.vampirism.inventory;
 
 import com.google.common.collect.Lists;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModItems;
+import com.google.common.collect.Maps;
+import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.items.IAlchemicalCauldronCraftingManager;
+import de.teamlapen.vampirism.api.items.IAlchemicalCauldronRecipe;
 import net.minecraft.block.Block;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fluids.FluidStack;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 1.10
  *
  * @author maxanier
  */
-public class AlchemicalCauldronCraftingManager {
-    private final static String TAG = "AlchemicalCauldronCraftingManager";
+public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCraftingManager {
+
+    private final static String TAG = "ACCraftingManager";
     private static AlchemicalCauldronCraftingManager ourInstance = new AlchemicalCauldronCraftingManager();
 
     public static AlchemicalCauldronCraftingManager getInstance() {
         return ourInstance;
     }
 
-    private final List<Recipe> recipes = Lists.newLinkedList();
+    private final List<IAlchemicalCauldronRecipe> recipes = Lists.newLinkedList();
+    private Map<Object, Integer> liquidColors = Maps.newHashMap();
 
     private AlchemicalCauldronCraftingManager() {
-        this.addCookingRecipe(new ItemStack(ModItems.holyWaterBottle), Items.COAL, Item.getItemFromBlock(ModBlocks.alchemicalFire), 0.35F);
     }
 
-    public void addCookingRecipe(ItemStack liquid, ItemStack ingredient, ItemStack output, float exp) {
-        addCookingRecipe(new Recipe(liquid, ingredient, output, exp));
-    }
-
-    public void addCookingRecipe(ItemStack liquid, ItemStack ingredient, Item output, float exp) {
-        addCookingRecipe(new Recipe(liquid, ingredient, new ItemStack(output), exp));
-    }
-
-    public void addCookingRecipe(ItemStack liquid, Item ingredient, ItemStack output, float exp) {
-        addCookingRecipe(new Recipe(liquid, new ItemStack(ingredient, 1, 32767), output, exp));
-    }
-
-    public void addCookingRecipe(ItemStack liquid, Item ingredient, Item output, float exp) {
-        addCookingRecipe(new Recipe(liquid, new ItemStack(ingredient, 1, 32767), new ItemStack(output), exp));
-    }
-
-    public void addCookingRecipe(ItemStack liquid, Block ingredient, ItemStack output, float exp) {
-        addCookingRecipe(liquid, Item.getItemFromBlock(ingredient), output, exp);
-    }
-
-    public float getCookingExperience(ItemStack liquid, ItemStack ingredient) {
-        for (Recipe r : recipes) {
-            if (r.isSameInput(liquid, ingredient)) {
-                return r.exp;
+    @Override
+    public void addRecipe(IAlchemicalCauldronRecipe recipe) {
+        for (IAlchemicalCauldronRecipe r : recipes) {
+            if (r.areSameIngredients(recipe)) {
+                throw new IllegalArgumentException(TAG + ": Duplicate recipe " + r + " and " + recipe);
             }
         }
-        return 0F;
+        recipes.add(recipe);
+    }
+
+    @Override
+    public IAlchemicalCauldronRecipe addRecipe(Object liquid, Object ingredient, Object output) {
+        IAlchemicalCauldronRecipe recipe;
+        if (liquid instanceof Item) {
+            liquid = new ItemStack((Item) liquid);
+        } else if (liquid instanceof Block) {
+            liquid = new ItemStack((Block) liquid);
+        }
+        if (liquid instanceof ItemStack) {
+            recipe = new AlchemicalCauldronRecipe(((ItemStack) liquid).copy(), getItemStackCopy(ingredient), getItemStackCopy(output));
+        } else if (liquid instanceof FluidStack) {
+            recipe = new AlchemicalCauldronRecipe(((FluidStack) liquid).copy(), getItemStackCopy(ingredient), getItemStackCopy(output));
+        } else {
+            throw new IllegalArgumentException(TAG + ": Liquid has to be either a ItemStack or a FluidStack");
+        }
+        addRecipe(recipe);
+        return recipe;
+    }
+
+    @Override
+    public IAlchemicalCauldronRecipe addRecipe(Object liquid, Object ingredient, Object output, int ticks, int exp, int reqLevel, ISkill<IHunterPlayer>... reqSkills) {
+        IAlchemicalCauldronRecipe recipe = addRecipe(liquid, ingredient, output);
+        recipe.configure(ticks, exp, reqLevel, reqSkills);
+        return recipe;
     }
 
     @Nullable
-    public ItemStack getCookingResult(ItemStack liquid, ItemStack ingredient) {
-        for (Recipe r : recipes) {
-            if (r.isSameInput(liquid, ingredient)) {
-                return r.output;
+    @Override
+    public IAlchemicalCauldronRecipe findRecipe(ItemStack liquid, ItemStack ingredient) {
+        for (IAlchemicalCauldronRecipe r : recipes) {
+            if (r.isValidLiquidItem(liquid) || r.isValidFluidItem(liquid) != null) {
+                if (UtilLib.doesStackContain(ingredient, r.getIngredient())) {
+                    return r;
+                }
             }
         }
         return null;
     }
 
-    private void addCookingRecipe(Recipe r) {
-        if (getCookingResult(r.liquid, r.ingredient) != null) {
-            VampirismMod.log.w(TAG, "Ingnoring cooking recipe with conflicting input (L: %s, I: %s, O: %s)", r.liquid, r.ingredient, r.output);
-            return;
+    @Nullable
+    @Override
+    public IAlchemicalCauldronRecipe findRecipe(FluidStack liquid, ItemStack ingredient) {
+
+        for (IAlchemicalCauldronRecipe r : recipes) {
+            if (r.isValidFluidStack(liquid) != null) {
+                if (UtilLib.doesStackContain(ingredient, r.getIngredient())) {
+                    return r;
+                }
+            }
         }
-        recipes.add(r);
+        return null;
     }
 
-    private boolean compareItemStacks(ItemStack stack1, ItemStack stack2) {
-        return stack2.getItem() == stack1.getItem() && (stack2.getMetadata() == 32767 || stack2.getMetadata() == stack1.getMetadata());
+    @Override
+    public int getLiquidColor(@Nullable ItemStack stack) {
+        if (stack != null) {
+            if (liquidColors.containsKey(stack)) {
+                return liquidColors.get(stack);
+            }
+            if (liquidColors.containsKey(stack.getItem())) {
+                return liquidColors.get(stack.getItem());
+            }
+        }
+        return -1;
     }
 
-    private class Recipe {
-        public final ItemStack liquid;
-        public final ItemStack ingredient;
-        public final ItemStack output;
-        public final float exp;
+    @Override
+    public void registerLiquidColor(@Nonnull ItemStack stack, int color) {
+        liquidColors.put(stack, color);
+    }
 
-        private Recipe(ItemStack liquid, ItemStack ingredient, ItemStack output, float exp) {
-            this.liquid = liquid;
-            this.ingredient = ingredient;
-            this.output = output;
-            this.exp = exp;
-        }
+    @Override
+    public void registerLiquidColor(Item item, int color) {
+        liquidColors.put(item, color);
+    }
 
-        private boolean isSameInput(ItemStack liquid, ItemStack ingredient) {
-            return compareItemStacks(liquid, this.liquid) && compareItemStacks(ingredient, this.ingredient);
-        }
+    private ItemStack getItemStackCopy(Object o) {
+        if (o == null) return null;
+        if (o instanceof ItemStack) return ((ItemStack) o).copy();
+        if (o instanceof Item) return new ItemStack((Item) o);
+        if (o instanceof Block) return new ItemStack((Block) o);
+        throw new IllegalArgumentException(TAG + ": Argument has to be one of the following: ItemStack, Item or Block");
 
     }
 }

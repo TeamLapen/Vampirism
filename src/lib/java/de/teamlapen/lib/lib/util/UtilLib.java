@@ -24,6 +24,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -39,6 +40,25 @@ public class UtilLib {
 
     public static boolean doesBlockHaveSolidTopSurface(World worldIn, BlockPos pos) {
         return worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos, EnumFacing.UP) && worldIn.getBlockState(pos).getMaterial().isSolid() && !worldIn.getBlockState(pos.up()).getMaterial().isSolid();
+    }
+
+    /**
+     * Checks if stackA contains stackB
+     * True if A !=null and B == null
+     */
+    public static boolean doesStackContain(@Nullable ItemStack stackA, @Nullable ItemStack stackB) {
+        return stackA != null && (stackB == null || (areStacksEqualIgnoreAmount(stackA, stackB) && stackA.stackSize >= stackB.stackSize));
+    }
+
+    /**
+     * compares ItemStack argument to the instance ItemStack; returns true if both ItemStacks are equal. ignores stack size
+     */
+    public static boolean areStacksEqualIgnoreAmount(@Nullable ItemStack stackA, @Nullable ItemStack stackB) {
+        if (stackA == null && stackB == null) return true;
+        if (stackA == null || stackB == null) return false;
+        if (stackA.getItem() != stackB.getItem()) return false;
+        if (stackA.getItemDamage() != stackB.getItemDamage()) return false;
+        return ItemStack.areItemStackTagsEqual(stackA, stackB);
     }
 
     /**
@@ -209,16 +229,16 @@ public class UtilLib {
     /**
      * Spawn multiple particles, with a small offset between
      */
-    public static void spawnParticles(World world, EnumParticleTypes particleType, double xCoord, double yCoord, double zCoord, double xOffset, double yOffset, double zOffset, int amount, int... extra) {
+    public static void spawnParticles(World world, EnumParticleTypes particleType, double xCoord, double yCoord, double zCoord, double xSpeed, double ySpeed, double zSpeed, int amount, float maxOffset, int... extra) {
         double x = xCoord;
         double y = yCoord;
         double z = zCoord;
         for (int i = 0; i < amount; i++) {
-            world.spawnParticle(particleType, x, y, z, xOffset, yOffset, zOffset, extra);
+            world.spawnParticle(particleType, x, y, z, xSpeed, ySpeed, zSpeed, extra);
             Random ran = world.rand;
-            x = xCoord + (ran.nextGaussian());
-            y = yCoord + (ran.nextGaussian());
-            z = zCoord + (ran.nextGaussian());
+            x = xCoord + (ran.nextGaussian() * maxOffset);
+            y = yCoord + (ran.nextGaussian() * maxOffset);
+            z = zCoord + (ran.nextGaussian() * maxOffset);
         }
     }
 

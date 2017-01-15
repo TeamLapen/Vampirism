@@ -4,7 +4,6 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.tileentity.TileAlchemicalCauldron;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyInteger;
 import net.minecraft.block.state.BlockStateContainer;
@@ -13,16 +12,13 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.common.property.ExtendedBlockState;
-import net.minecraftforge.common.property.IExtendedBlockState;
-import net.minecraftforge.common.property.IUnlistedProperty;
-import net.minecraftforge.common.property.Properties;
 
 import javax.annotation.Nullable;
 
@@ -35,13 +31,18 @@ import javax.annotation.Nullable;
 public class BlockAlchemicalCauldron extends VampirismBlockContainer {
 
     public final static String regName = "alchemicalCauldron";
-    public static final PropertyBool FILLED = PropertyBool.create("filled");
-    public static final IUnlistedProperty<Integer> COLOR = new Properties.PropertyAdapter<>(PropertyInteger.create("color", 0, 7));
+    /**
+     * 0: No liquid,
+     * 1: Liquid,
+     * 2: Boiling liquid
+     */
+    public static final PropertyInteger LIQUID = PropertyInteger.create("liquid", 0, 2);
+    public static final PropertyBool BURNING = PropertyBool.create("burning");
 
     public BlockAlchemicalCauldron() {
         super(regName, Material.IRON);
         this.setHasFacing();
-        this.setDefaultState(this.blockState.getBaseState().withProperty(FILLED, false).withProperty(FACING, EnumFacing.NORTH));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(LIQUID, 0).withProperty(FACING, EnumFacing.NORTH).withProperty(BURNING, false));
     }
 
 
@@ -52,16 +53,18 @@ public class BlockAlchemicalCauldron extends VampirismBlockContainer {
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
+        VampirismMod.log.t("tes");
         TileAlchemicalCauldron t = getTile(worldIn, pos);
-        if (t != null && t.isFilled()) state = state.withProperty(FILLED, true);
+        if (t != null) {
+            state = state.withProperty(LIQUID, !t.isFilled() ? 0 : t.isCookingClient() ? 2 : 1).withProperty(BURNING, t.isBurningClient());
+        }
         return state;
     }
 
-    @Override
-    public IBlockState getExtendedState(IBlockState state, IBlockAccess world, BlockPos pos) {
 
-        IExtendedBlockState extendedState = (IExtendedBlockState) state;
-        return extendedState.withProperty(COLOR, 0);//TODO
+    @Override
+    public BlockRenderLayer getBlockLayer() {
+        return BlockRenderLayer.CUTOUT;
     }
 
     @Override
@@ -99,8 +102,7 @@ public class BlockAlchemicalCauldron extends VampirismBlockContainer {
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         TileAlchemicalCauldron tile = getTile(worldIn, pos);
         if (tile != null) {
-            VampirismMod.log.t("Opening container");
-            playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_BASIC, worldIn, pos.getX(), pos.getY(), pos.getZ());
+            playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_ALCHEMICAL_CAULDRON, worldIn, pos.getX(), pos.getY(), pos.getZ());
         }
         return true;
     }
@@ -112,8 +114,7 @@ public class BlockAlchemicalCauldron extends VampirismBlockContainer {
 
     @Override
     protected BlockStateContainer createBlockState() {
-        BlockStateContainer c = new ExtendedBlockState(this, new IProperty[]{FACING, FILLED}, new IUnlistedProperty[]{COLOR});
-        return c;
+        return new BlockStateContainer(this, FACING, LIQUID, BURNING);
     }
 
     @Nullable

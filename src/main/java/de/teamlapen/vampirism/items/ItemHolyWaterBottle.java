@@ -38,10 +38,6 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
 
     private static final String regName = "holy_water_bottle";
 
-    public ItemHolyWaterBottle() {
-        super(regName);
-    }
-
     /**
      * Registers the splash recipes for the given holywater bottle tier stack.
      * Should only be used once and after the item has been registed
@@ -64,9 +60,8 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
         GameRegistry.addShapelessRecipe(splash.copy(), base, base, base, base, base, Items.GUNPOWDER);
     }
 
-    @Override
-    public int getItemStackLimit(ItemStack stack) {
-        return isSplash(stack) ? 1 : 64;
+    public ItemHolyWaterBottle() {
+        super(regName);
     }
 
     @Override
@@ -76,6 +71,37 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
         if (t != TIER.NORMAL) {
             tooltip.add(TextFormatting.AQUA + UtilLib.translate("text.vampirism.itemTier." + t.name().toLowerCase()));
         }
+    }
+
+    @Override
+    public int getItemStackLimit(ItemStack stack) {
+        return isSplash(stack) ? 1 : 64;
+    }
+
+    /**
+     * @param tier
+     * @return A stack of this item with the given tier
+     */
+    public ItemStack getStack(TIER tier) {
+        return setTier(new ItemStack(this), tier);
+    }
+
+    /**
+     * Converts the tier of this bottle into the strength of the applied holy water
+     *
+     * @param tier
+     * @return
+     */
+    public EnumStrength getStrength(TIER tier) {
+        switch (tier) {
+            case NORMAL:
+                return EnumStrength.WEAK;
+            case ENHANCED:
+                return EnumStrength.MEDIUM;
+            case ULTIMATE:
+                return EnumStrength.STRONG;
+        }
+        return EnumStrength.NONE;
     }
 
     @Override
@@ -141,24 +167,6 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
             entity.worldObj.playEvent(2002, new BlockPos(entity), PotionType.getID(PotionTypes.MUNDANE));
         }
 
-    }
-
-    /**
-     * Converts the tier of this bottle into the strength of the applied holy water
-     *
-     * @param tier
-     * @return
-     */
-    public EnumStrength getStrength(TIER tier) {
-        switch (tier) {
-            case NORMAL:
-                return EnumStrength.WEAK;
-            case ENHANCED:
-                return EnumStrength.MEDIUM;
-            case ULTIMATE:
-                return EnumStrength.STRONG;
-        }
-        return EnumStrength.NONE;
     }
 
     @Override
