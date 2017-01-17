@@ -1,10 +1,13 @@
 package de.teamlapen.vampirism.tileentity;
 
+import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.tile.InventoryTileEntity;
+import de.teamlapen.lib.util.ISoundReference;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IAlchemicalCauldronRecipe;
 import de.teamlapen.vampirism.blocks.BlockAlchemicalCauldron;
+import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,6 +19,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.WorldServer;
 import net.minecraftforge.fluids.FluidStack;
@@ -49,6 +53,11 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     private boolean burning;
     @SideOnly(Side.CLIENT)
     private int liquidColor = 0;
+
+    @SideOnly(Side.CLIENT)
+    private ISoundReference boilingSound;
+    @SideOnly(Side.CLIENT)
+    private boolean isBoilingSoundPlaying = false;
 
     public TileAlchemicalCauldron() {
         super(new InventorySlot[]{new InventorySlot(new InventorySlot.IItemSelector() {
@@ -224,7 +233,6 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
                     if (isBurning()) {
                         decrStackSize(SLOT_FUEL, 1);
                         dirty = true;
-                        VampirismMod.log.t("Started burning");
                     }
                     totalBurnTime = burnTime;
                 }
@@ -250,9 +258,19 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
             }
 
         } else {
-            if (isCookingClient() && worldObj.getWorldTime() % 3 == 0) {
-                //TODO particles
+            //TODO particles
+            //Do not check ISoundReference#isSoundPlaying for performance reason here. Also should not make any difference
+            if (isCookingClient() && !isBoilingSoundPlaying && this.worldObj.rand.nextInt(25) == 0) {
+                if (boilingSound == null) {
+                    boilingSound = VampLib.proxy.createSoundReference(ModSounds.boiling, SoundCategory.BLOCKS, getPos(), 0.015F, 7);
+                }
+                boilingSound.startPlaying();
+                isBoilingSoundPlaying = true;
+            } else if (!isCookingClient() && isBoilingSoundPlaying) {
+                boilingSound.stopPlaying();
+                isBoilingSoundPlaying = false;
             }
+
         }
         if (dirty) {
             this.markDirty();
