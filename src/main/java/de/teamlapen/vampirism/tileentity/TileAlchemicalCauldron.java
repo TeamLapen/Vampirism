@@ -56,8 +56,6 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
 
     @SideOnly(Side.CLIENT)
     private ISoundReference boilingSound;
-    @SideOnly(Side.CLIENT)
-    private boolean isBoilingSoundPlaying = false;
 
     public TileAlchemicalCauldron() {
         super(new InventorySlot[]{new InventorySlot(new InventorySlot.IItemSelector() {
@@ -138,7 +136,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
 
     @Override
     public NBTTagCompound getUpdateTag() {
-        NBTTagCompound nbt = new NBTTagCompound();
+        NBTTagCompound nbt = super.getUpdateTag();
         nbt.setBoolean("cooking", cookTime > 0 && isBurning());
         nbt.setBoolean("burning", burnTime > 0);
         ItemStack liquidItem = getStackInSlot(SLOT_LIQUID);
@@ -146,6 +144,20 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
             nbt.setTag("liquidItem", liquidItem.writeToNBT(new NBTTagCompound()));
         }
         return nbt;
+    }
+
+    @Override
+    public void handleUpdateTag(NBTTagCompound nbt) {
+        super.handleUpdateTag(nbt);
+        cooking = nbt.getBoolean("cooking");
+        burning = nbt.getBoolean("burning");
+        if (nbt.hasKey("liquidItem")) {
+            this.setInventorySlotContents(SLOT_LIQUID, ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("liquidItem")));
+        } else {
+            this.setInventorySlotContents(SLOT_LIQUID, null);
+        }
+        this.updateLiquidColor();
+        this.worldObj.markBlockRangeForRenderUpdate(pos, pos);
     }
 
     public boolean isBurning() {
@@ -173,21 +185,16 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
         NBTTagCompound nbt = pkt.getNbtCompound();
-        cooking = nbt.getBoolean("cooking");
-        burning = nbt.getBoolean("burning");
-        if (nbt.hasKey("liquidItem")) {
-            this.setInventorySlotContents(SLOT_LIQUID, ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("liquidItem")));
-        } else {
-            this.setInventorySlotContents(SLOT_LIQUID, null);
-        }
-        this.updateLiquidColor();
-        this.worldObj.markBlockRangeForRenderUpdate(pos, pos);
+        handleUpdateTag(nbt);
 
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tagCompound) {
         super.readFromNBT(tagCompound);
+        this.burnTime = tagCompound.getInteger("burntime");
+        this.cookTime = tagCompound.getInteger("cooktime");
+        this.totalBurnTime = tagCompound.getInteger("cooktime_total");
     }
 
     @Override
@@ -260,15 +267,13 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         } else {
             //TODO particles
             //Do not check ISoundReference#isSoundPlaying for performance reason here. Also should not make any difference
-            if (isCookingClient() && !isBoilingSoundPlaying && this.worldObj.rand.nextInt(25) == 0) {
-                if (boilingSound == null) {
-                    boilingSound = VampLib.proxy.createSoundReference(ModSounds.boiling, SoundCategory.BLOCKS, getPos(), 0.015F, 7);
-                }
+            if (isCookingClient() && boilingSound == null && this.worldObj.rand.nextInt(25) == 0) {
+                boilingSound = VampLib.proxy.createSoundReference(ModSounds.boiling, SoundCategory.BLOCKS, getPos(), 0.015F, 7);
+
                 boilingSound.startPlaying();
-                isBoilingSoundPlaying = true;
-            } else if (!isCookingClient() && isBoilingSoundPlaying) {
+            } else if (!isCookingClient() && boilingSound != null) {
                 boilingSound.stopPlaying();
-                isBoilingSoundPlaying = false;
+                boilingSound = null;
             }
 
         }
@@ -281,7 +286,11 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        return super.writeToNBT(compound);
+        super.writeToNBT(compound);
+        compound.setInteger("burntime", this.burnTime);
+        compound.setInteger("cooktime", this.cookTime);
+        compound.setInteger("cooktime_total", this.totalCookTime);
+        return compound;
     }
 
     private boolean canCook() {
