@@ -22,7 +22,7 @@ loadProperties()
 group = "de.teamlapen.vampirism"
 archivesBaseName = "Vampirism"
 sourceCompatibility = 1.7
-targetCompatibility = 1.8
+targetCompatibility = 1.7
 
 def loadProperties() {
     ext.configFile = file "build.properties"
