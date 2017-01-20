@@ -70,7 +70,7 @@ public class ModBlocksRender {
                 if (tintIndex == 255) {
                     TileEntity tile = (worldIn == null || pos == null) ? null : worldIn.getTileEntity(pos);
                     if (tile != null && tile instanceof TileAlchemicalCauldron) {
-                        return ((TileAlchemicalCauldron) tile).getLiquidColor();
+                        return ((TileAlchemicalCauldron) tile).getLiquidColorClient();
                     }
                 }
                 return 0xFFFFFF;

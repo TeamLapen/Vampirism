@@ -118,7 +118,7 @@ public class HunterWeaponCraftingManager implements IHunterWeaponCraftingManager
         } else {
             reqSkills = new ISkill[]{reqSkill};
         }
-        return addRecipe(output, reqLevel, reqSkills, reqLava, recipeComponents);
+        return addShapelessRecipe(output, reqLevel, reqSkills, reqLava, recipeComponents);
     }
 
     @Override

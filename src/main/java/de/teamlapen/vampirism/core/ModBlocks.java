@@ -91,7 +91,7 @@ public class ModBlocks {
         weaponTable = registerBlock(new BlockWeaponTable());
         bloodPotionTable = registerBlock(new BlockBloodPotionTable());
         sunscreenBeacon = registerBlock(new BlockSunscreenBeacon());
-        alchemicalFire = registerBlock(new BlockAlchemicalFire());
+        alchemicalFire = registerBlock(new BlockAlchemicalFire(), null);
         alchemicalCauldron = registerBlock(new BlockAlchemicalCauldron());
 
     }

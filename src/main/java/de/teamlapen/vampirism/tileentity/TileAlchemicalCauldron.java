@@ -54,16 +54,37 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     private static final int[] SLOTS_WEST = new int[]{SLOT_LIQUID};
     private static final int[] SLOTS_EAST = new int[]{SLOT_INGREDIENT};
     private static final int[] SLOTS_BOTTOM = new int[]{SLOT_FUEL};
+
+    /**
+     * @return The liquid color of the given stack. -1 if not a (registered) liquid stack
+     */
+    private static int getLiquidColor(ItemStack s) {
+        if (s != null) {
+            if (s.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
+                IFluidHandler handler = s.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+                FluidStack fluid = handler.drain(100, false);
+                if (fluid != null) {
+                    return fluid.getFluid().getColor(fluid);
+                }
+            }
+        }
+        return AlchemicalCauldronCraftingManager.getInstance().getLiquidColor(s);
+    }
+
+    /**
+     * @return f the given stack is a (registed) liquid stack
+     */
+    private static boolean isLiquidStack(ItemStack stack) {
+        return getLiquidColor(stack) != -1;
+    }
     private int totalBurnTime = 0, burnTime = 0, cookTime = 0, totalCookTime = 0;
     @SideOnly(Side.CLIENT)
     private boolean cookingClient;
     @SideOnly(Side.CLIENT)
     private boolean burningClient;
     private int liquidColor;
-
     @SideOnly(Side.CLIENT)
     private ISoundReference boilingSound;
-
     /**
      * Can contain a recipe which can be cooked by the owner.
      * Is set when a {@link IAlchemicalCauldronRecipe#canBeCooked(int, ISkillHandler)} check succeeds.
@@ -72,8 +93,6 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
      */
     @Nullable
     private IAlchemicalCauldronRecipe checkedRecipe;
-
-
     /**
      * The username of the owner.
      */
@@ -89,7 +108,13 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
             public boolean isItemAllowed(@Nonnull ItemStack item) {
                 return false;
             }
-        }, 116, 35), new InventorySlot(44, 17), new InventorySlot(68, 17), new InventorySlot(new InventorySlot.IItemSelector() {
+        }, 116, 35), new InventorySlot(new InventorySlot.IItemSelector() {
+
+            @Override
+            public boolean isItemAllowed(@Nonnull ItemStack item) {
+                return isLiquidStack(item);
+            }
+        }, 44, 17), new InventorySlot(68, 17), new InventorySlot(new InventorySlot.IItemSelector() {
             @Override
             public boolean isItemAllowed(@Nonnull ItemStack item) {
                 return TileEntityFurnace.isItemFuel(item);
@@ -147,7 +172,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     }
 
     @SideOnly(Side.CLIENT)
-    public int getLiquidColor() {
+    public int getLiquidColorClient() {
         return liquidColor;
     }
 
@@ -218,7 +243,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
             this.setInventorySlotContents(SLOT_LIQUID, null);
         }
         username = nbt.getString("username");
-        this.updateLiquidColor();
+        liquidColor = getLiquidColor(getStackInSlot(SLOT_LIQUID));
         this.worldObj.markBlockRangeForRenderUpdate(pos, pos);
     }
 
@@ -483,24 +508,5 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
 
     private boolean isStackInSlot(int slot) {
         return getStackInSlot(slot) != null;//TODO 1.11 null
-    }
-
-    /**
-     * Updates the liquid color used for the model based on the item in the liquid slot
-     */
-    @SideOnly(Side.CLIENT)
-    private void updateLiquidColor() {
-        ItemStack s = getStackInSlot(SLOT_LIQUID);
-        if (s != null) {
-            if (s.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
-                IFluidHandler handler = s.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-                FluidStack fluid = handler.drain(100, false);
-                if (fluid != null) {
-                    liquidColor = fluid.getFluid().getColor(fluid);
-                    return;
-                }
-            }
-        }
-        liquidColor = AlchemicalCauldronCraftingManager.getInstance().getLiquidColor(s);
     }
 }

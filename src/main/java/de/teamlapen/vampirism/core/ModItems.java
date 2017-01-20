@@ -58,6 +58,7 @@ public class ModItems {
     public static ItemHolyWaterBottle holyWaterBottle;
     public static VampirismItem holySalt;
     public static VampirismItem holySaltWater;
+    public static ItemAlchemicalFire itemAlchemicalFire;
 
     public static ItemArmorOfSwiftness armorOfSwiftness_helmet;
     public static ItemArmorOfSwiftness armorOfSwiftness_chest;
@@ -143,10 +144,9 @@ public class ModItems {
         ItemHolyWaterBottle.registerSplashRecipes(holyWaterBottle, IItemWithTier.TIER.ENHANCED);
         ItemHolyWaterBottle.registerSplashRecipes(holyWaterBottle, IItemWithTier.TIER.ULTIMATE);
         GameRegistry.addShapelessRecipe(new ItemStack(holySaltWater), holySalt, PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.WATER));
-        weaponCraftingManager.addRecipe(ItemCrossbowArrow.setType(new ItemStack(crossbowArrow), ItemCrossbowArrow.EnumArrowType.SPITFIRE), 1, HunterSkills.basic_alchemy, 2, "    ", "    ", "YZZY", "XXXX", 'X', crossbowArrow, 'Y', Items.REDSTONE, 'Z', holyWaterBottle);
-
+        weaponCraftingManager.addShapelessRecipe(ItemCrossbowArrow.setType(new ItemStack(crossbowArrow, 2), ItemCrossbowArrow.EnumArrowType.SPITFIRE), 1, (ISkill<IHunterPlayer>) null, 2, ModItems.crossbowArrow, ModItems.itemAlchemicalFire, ModItems.crossbowArrow);
         cauldronCraftingManager.registerLiquidColor(ModItems.holyWaterBottle, 0x6666FF);
-        cauldronCraftingManager.registerLiquidColor(Items.GUNPOWDER, 0xFF0033);
+        cauldronCraftingManager.addRecipe(ModItems.holyWaterBottle.getStack(IItemWithTier.TIER.NORMAL), Items.GUNPOWDER, new ItemStack(ModItems.itemAlchemicalFire, 4));
     }
 
     public static ItemStack createStack(IItemWithTier item, IItemWithTier.TIER tier) {
@@ -204,6 +204,7 @@ public class ModItems {
                 return true;
             }
         });
+        itemAlchemicalFire = registerItem(new ItemAlchemicalFire());
 
         armorOfSwiftness_helmet = registerItem(new ItemArmorOfSwiftness(EntityEquipmentSlot.HEAD));
         armorOfSwiftness_chest = registerItem(new ItemArmorOfSwiftness(EntityEquipmentSlot.CHEST));

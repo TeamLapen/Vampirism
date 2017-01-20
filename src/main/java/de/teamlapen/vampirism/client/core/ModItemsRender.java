@@ -95,6 +95,7 @@ public class ModItemsRender {
         registerSimpleItemWithTier(ModItems.holyWaterBottle);
         renderHelper.registerRender(ModItems.holySalt, "normal");
         renderHelper.registerRender(ModItems.holySaltWater, "normal");
+        renderHelper.registerRender(ModItems.itemAlchemicalFire, "normal");
 
         final ResourceLocation holyWaterSplash = new ResourceLocation(REFERENCE.MODID, "item/" + ModItems.holyWaterBottle.getRegistryName().getResourcePath());
         ModelLoader.setCustomMeshDefinition(ModItems.holyWaterBottle, new ItemMeshDefinition() {
