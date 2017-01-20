@@ -190,7 +190,7 @@ public class ModPlayerEventHandler {
             IFactionPlayer fp = FactionPlayerHandler.get(event.getEntityPlayer()).getCurrentFactionPlayer();
             IFaction f = fp == null ? null : fp.getDisguisedAs();
             if (f != null) {
-                event.setDisplayname(f.getChatColor() + event.getDisplayname());
+                event.setDisplayname(f.getChatColor() + event.getDisplayname() + TextFormatting.RESET);
                 if (fp instanceof IVampirePlayer && !fp.isDisguised() && ((IVampirePlayer) fp).isVampireLord()) {
                     event.setDisplayname(TextFormatting.RED + "[" + UtilLib.translate("text.vampirism.lord") + "] " + TextFormatting.RESET + event.getDisplayname());
                 }
