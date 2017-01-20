@@ -144,7 +144,7 @@ public class ModItems {
         ItemHolyWaterBottle.registerSplashRecipes(holyWaterBottle, IItemWithTier.TIER.ULTIMATE);
         GameRegistry.addShapelessRecipe(new ItemStack(holySaltWater), holySalt, PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.WATER));
         weaponCraftingManager.addRecipe(ItemCrossbowArrow.setType(new ItemStack(crossbowArrow), ItemCrossbowArrow.EnumArrowType.SPITFIRE), 1, HunterSkills.basic_alchemy, 2, "    ", "    ", "YZZY", "XXXX", 'X', crossbowArrow, 'Y', Items.REDSTONE, 'Z', holyWaterBottle);
-        cauldronCraftingManager.addRecipe(ModItems.holyWaterBottle.getStack(IItemWithTier.TIER.NORMAL), Items.GUNPOWDER, ModItems.holySalt);
+
         cauldronCraftingManager.registerLiquidColor(ModItems.holyWaterBottle, 0x6666FF);
         cauldronCraftingManager.registerLiquidColor(Items.GUNPOWDER, 0xFF0033);
     }

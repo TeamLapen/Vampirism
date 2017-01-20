@@ -17,12 +17,13 @@ public class GuiAlchemicalCauldron extends GuiContainer {
     private static final ResourceLocation BACKGROUND = new ResourceLocation("vampirism:textures/gui/alchemicalCauldron.png");
 
     private final IInventory cauldron;
+    private final InventoryPlayer playerInventory;
 
     public GuiAlchemicalCauldron(InventoryPlayer inventoryPlayer, InventorySlot.IInventorySlotInventory tile) {
         super(new AlchemicalCauldronContainer(inventoryPlayer, tile));
         cauldron = tile;
+        playerInventory = inventoryPlayer;
     }
-
 
     @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
@@ -39,6 +40,13 @@ public class GuiAlchemicalCauldron extends GuiContainer {
         this.drawTexturedModalRect(i + 79, j + 34, 176, 14, l + 1, 16);
         l = getCookProgressScaled(30);
         this.drawTexturedModalRect(i + 142, j + 28 + 30 - l, 176, 60 - l, 12, l);
+    }
+
+    @Override
+    protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+        String s = this.cauldron.getDisplayName().getUnformattedText();
+        this.fontRendererObj.drawString(s, this.xSize / 2 - this.fontRendererObj.getStringWidth(s) / 2, 6, 4210752);
+        this.fontRendererObj.drawString(this.playerInventory.getDisplayName().getUnformattedText(), 8, this.ySize - 96 + 2, 4210752);
     }
 
     private int getBurnLeftScaled(int pixels) {

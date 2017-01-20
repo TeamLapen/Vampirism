@@ -53,10 +53,9 @@ public class BlockAlchemicalCauldron extends VampirismBlockContainer {
 
     @Override
     public IBlockState getActualState(IBlockState state, IBlockAccess worldIn, BlockPos pos) {
-        VampirismMod.log.t("tes");
         TileAlchemicalCauldron t = getTile(worldIn, pos);
         if (t != null) {
-            state = state.withProperty(LIQUID, !t.isFilled() ? 0 : t.isCookingClient() ? 2 : 1).withProperty(BURNING, t.isBurningClient());
+            state = state.withProperty(LIQUID, !t.isFilled() ? 0 : t.isCooking() ? 2 : 1).withProperty(BURNING, t.isBurning());
         }
         return state;
     }
@@ -100,9 +99,13 @@ public class BlockAlchemicalCauldron extends VampirismBlockContainer {
 
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-        TileAlchemicalCauldron tile = getTile(worldIn, pos);
-        if (tile != null) {
-            playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_ALCHEMICAL_CAULDRON, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        if (!worldIn.isRemote) {
+            TileAlchemicalCauldron tile = getTile(worldIn, pos);
+            if (tile != null) {
+                if (tile.canUse(playerIn)) {
+                    playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_ALCHEMICAL_CAULDRON, worldIn, pos.getX(), pos.getY(), pos.getZ());
+                }
+            }
         }
         return true;
     }
@@ -110,6 +113,10 @@ public class BlockAlchemicalCauldron extends VampirismBlockContainer {
     @Override
     public void onBlockPlacedBy(World worldIn, BlockPos pos, IBlockState state, EntityLivingBase placer, ItemStack stack) {
         super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
+        TileAlchemicalCauldron tile = getTile(worldIn, pos);
+        if (tile != null && placer instanceof EntityPlayer) {
+            tile.setOwner((EntityPlayer) placer);
+        }
     }
 
     @Override
