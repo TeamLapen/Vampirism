@@ -28,6 +28,8 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.WorldServer;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -62,13 +64,32 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         if (s != null) {
             if (s.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
                 IFluidHandler handler = s.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-                FluidStack fluid = handler.drain(100, false);
+                FluidStack fluid = handler.drain(10000, false);
                 if (fluid != null) {
-                    return fluid.getFluid().getColor(fluid);
+
+                    return getFluidColor(fluid);
                 }
             }
         }
         return AlchemicalCauldronCraftingManager.getInstance().getLiquidColor(s);
+    }
+
+    /**
+     * Retrieves the color of the given fluid stack.
+     * Never returns -1 (0xFFFFFFFF)
+     */
+    private static int getFluidColor(FluidStack stack) {
+        Fluid fluid = stack.getFluid();
+        if (fluid.equals(FluidRegistry.WATER)) {
+            return 0xC03040FF;
+        } else if (fluid.equals(FluidRegistry.LAVA)) {
+            return 0xFFFF5010;
+        }
+        int color = fluid.getColor(stack);
+        if (color == 0xFFFFFFFF) {
+            color = 0xFFFFFFFE; //0xFFFFFFFF == -1 which makes our isLiquidCheck fail
+        }
+        return color;
     }
 
     /**
@@ -321,7 +342,12 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
             username = tagCompound.getString("ownername");
         }
         if (tagCompound.hasKey("bypass_recipecheck")) {
-            checkedRecipe = AlchemicalCauldronCraftingManager.getInstance().findRecipe(getStackInSlot(SLOT_LIQUID), getStackInSlot(SLOT_INGREDIENT));
+            ItemStack liquid = getStackInSlot(SLOT_LIQUID);
+            ItemStack ingredient = getStackInSlot(SLOT_INGREDIENT);
+            if (liquid != null) {
+                checkedRecipe = AlchemicalCauldronCraftingManager.getInstance().findRecipe(getStackInSlot(SLOT_LIQUID), getStackInSlot(SLOT_INGREDIENT));
+
+            }
         }
     }
 
@@ -426,7 +452,6 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
 
     private boolean canCook() {
         if (!isStackInSlot(SLOT_LIQUID)) return false;
-
         IAlchemicalCauldronRecipe recipe = AlchemicalCauldronCraftingManager.getInstance().findRecipe(getStackInSlot(SLOT_LIQUID), getStackInSlot(SLOT_INGREDIENT));
         if (recipe == null) return false;
         totalCookTime = recipe.getCookingTime();

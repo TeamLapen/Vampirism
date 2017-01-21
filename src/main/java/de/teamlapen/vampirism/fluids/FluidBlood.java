@@ -16,4 +16,9 @@ public class FluidBlood extends Fluid {
         this.setRarity(EnumRarity.UNCOMMON);
         this.setUnlocalizedName(REFERENCE.MODID + "." + VReference.FLUID_BLOOD_NAME);
     }
+
+    @Override
+    public int getColor() {
+        return 0xEEFF1111;
+    }
 }

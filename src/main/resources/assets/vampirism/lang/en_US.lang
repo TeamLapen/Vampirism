@@ -257,7 +257,8 @@ gui.vampirism.revertback.desc=You will loose all your levels and die
 gui.vampirism.resetSkills.title=Reset skills
 gui.vampirism.resetSkills.desc=If you reset your skills you will loose one level. Do you want to reset your skills?
 gui.vampirism.resetSkills.descTest=Do you want to reset your skills? (You do not loose a level, because you are using an alpha version of Vampirism)
-
+gui.vampirism.alchemical_cauldron.level=Required Hunter Level: %s
+gui.vampirism.alchemical_cauldron.skill=Required Skill: %s
 
 #COMMANDS
 commands.vampirism.level.faction_not_found=Did not find faction %s
@@ -358,6 +359,7 @@ text.vampirism.itemTier.enhanced=Enhanced
 text.vampirism.itemTier.ultimate=Special
 text.vampirism.poisonous_to_vampires=Poisonous to vampires
 text.vampirism.deals_more_damage_to=Deals %s percent more damage against
+text.vampirism.liquid_container=Any liquid container
 
 #MINION COMMANDS
 minioncommand.vampirism.attackhostilenoplayers=Attack hostile

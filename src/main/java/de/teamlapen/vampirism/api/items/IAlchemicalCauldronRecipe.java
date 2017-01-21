@@ -43,6 +43,12 @@ public interface IAlchemicalCauldronRecipe {
     IAlchemicalCauldronRecipe setCookingTime(int ticks);
 
     /**
+     *
+     * @return A stack that describes the required fluid stack. E.g. a bucket with a custom text
+     */
+    ItemStack getDescriptiveFluidStack();
+
+    /**
      * Either the default value or a custom set one.
      *
      * @return The experience this recipe gives

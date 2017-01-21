@@ -7,7 +7,12 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.items.IAlchemicalCauldronRecipe;
+import net.minecraft.init.Enchantments;
+import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.nbt.NBTTagList;
+import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -30,8 +35,10 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     @Nullable
     private ISkill<IHunterPlayer>[] skills = null;
     private int reqLevel = 0;
-    private int cookingTime = 200;
+    private int cookingTime = 400;
     private int experience;
+    @Nullable
+    private ItemStack descriptiveStack;
 
 
     AlchemicalCauldronRecipe(ItemStack liquid, ItemStack ingredient, ItemStack output) {
@@ -42,6 +49,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
                 VampirismMod.log.d("AlchemicalCauldron", "Replaced %s liquid item with %s fluid stack", liquid, stack);
                 fluidStack = stack;
                 fluidItem = null;
+                descriptiveStack = liquid;
             } else {
                 VampirismMod.log.d("AlchemicalCauldron", "Could not extract fluid from fluid container item %s", liquid);
                 fluidStack = null;
@@ -96,6 +104,15 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     @Override
     public int getCookingTime() {
         return cookingTime;
+    }
+
+    @Override
+    public ItemStack getDescriptiveFluidStack() {
+        if (descriptiveStack != null) return descriptiveStack;
+        if (fluidItem != null) return fluidItem;
+        descriptiveStack = new ItemStack(Items.BUCKET);
+        addFluidStackDescription(descriptiveStack, fluidStack);
+        return descriptiveStack;
     }
 
     @Override
@@ -184,5 +201,20 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
                 ", fluidStack=" + fluidStack +
                 ", fluidItem=" + fluidItem +
                 '}';
+    }
+
+    private void addFluidStackDescription(ItemStack stack, FluidStack fluidStack) {
+
+        NBTTagCompound nbt = stack.getTagCompound();
+        if (nbt == null) nbt = new NBTTagCompound();
+        NBTTagCompound display = nbt.hasKey("display", 10) ? nbt.getCompoundTag("display") : new NBTTagCompound();
+        NBTTagList lore = nbt.hasKey("Lore", 0) ? nbt.getTagList("Lore", 9) : new NBTTagList();
+        lore.appendTag(new NBTTagString(UtilLib.translate("text.vampirism.liquid_container")));
+        display.setTag("Lore", lore);
+        nbt.setTag("display", display);
+        stack.setTagCompound(nbt);
+
+        stack.addEnchantment(Enchantments.UNBREAKING, 1);
+        stack.setStackDisplayName(fluidStack.getLocalizedName() + ": " + fluidStack.amount + "mB");
     }
 }

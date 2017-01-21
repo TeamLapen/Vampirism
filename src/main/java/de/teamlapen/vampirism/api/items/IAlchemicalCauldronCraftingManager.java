@@ -39,7 +39,7 @@ public interface IAlchemicalCauldronCraftingManager {
      * Finds the recipe that fits to the given inputs. Does not check level or skill requirements
      */
     @Nullable
-    IAlchemicalCauldronRecipe findRecipe(ItemStack liquid, ItemStack ingredient);
+    IAlchemicalCauldronRecipe findRecipe(@Nonnull ItemStack liquid, @Nullable ItemStack ingredient);
 
     /**
      * Finds the recipe that fits to the given inputs. Does not check level or skill requirements

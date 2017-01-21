@@ -98,6 +98,14 @@ public class ItemCrossbowArrow extends VampirismItem {
         return super.getItemStackDisplayName(stack);
     }
 
+    /**
+     * @param type
+     * @return A stack of this item with the given tier
+     */
+    public ItemStack getStack(EnumArrowType type) {
+        return setType(new ItemStack(this), type);
+    }
+
     @Override
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
         for (EnumArrowType type : EnumArrowType.values()) {

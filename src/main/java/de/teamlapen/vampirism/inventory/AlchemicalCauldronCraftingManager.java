@@ -30,10 +30,8 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
     public static AlchemicalCauldronCraftingManager getInstance() {
         return ourInstance;
     }
-
     private final List<IAlchemicalCauldronRecipe> recipes = Lists.newLinkedList();
     private Map<Object, Integer> liquidColors = Maps.newHashMap();
-
     private AlchemicalCauldronCraftingManager() {
     }
 
@@ -75,7 +73,7 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
 
     @Nullable
     @Override
-    public IAlchemicalCauldronRecipe findRecipe(ItemStack liquid, ItemStack ingredient) {
+    public IAlchemicalCauldronRecipe findRecipe(@Nonnull ItemStack liquid, @Nullable ItemStack ingredient) {
         for (IAlchemicalCauldronRecipe r : recipes) {
             if (r.isValidLiquidItem(liquid) || r.isValidFluidItem(liquid) != null) {
                 if (UtilLib.doesStackContain(ingredient, r.getIngredient())) {
@@ -111,6 +109,10 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
             }
         }
         return -1;
+    }
+
+    public List<IAlchemicalCauldronRecipe> getRecipes() {
+        return recipes;
     }
 
     @Override
