@@ -29,7 +29,6 @@ public interface IBloodPotionEffect {
     /**
      * Randomly selects duration and amplifier etc
      *
-     * @param rng
      * @return A nbt tag containing all properties which can be used to store the effect with the item
      */
     NBTTagCompound getRandomProperties(Random rng);
@@ -38,7 +37,8 @@ public interface IBloodPotionEffect {
 
     /**
      * Called when this effect is activated
-     * @param propertyNbt The nbt tag created in {@link IBloodPotionEffect#getRandomProperties(Random)}
+     *
+     * @param propertyNbt  The nbt tag created in {@link IBloodPotionEffect#getRandomProperties(Random)}
      * @param durationMult The duration should be multiplied with this value
      */
     void onActivated(EntityLivingBase hunter, NBTTagCompound propertyNbt, float durationMult);

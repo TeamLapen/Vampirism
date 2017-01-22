@@ -21,6 +21,7 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     /**
      * Force enables the vision
      * Does NOT unlock the vision
+     *
      * @param vision Null to disable all
      */
     void activateVision(@Nullable IVampireVision vision);
@@ -28,6 +29,7 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
     /**
      * Vampires receive increased damage from fire.
      * This method will be used to convert {@link net.minecraft.util.DamageSource#inFire} and {@link net.minecraft.util.DamageSource#onFire} to {@link de.teamlapen.vampirism.api.VReference#VAMPIRE_IN_FIRE} or respectivly {@link de.teamlapen.vampirism.api.VReference#VAMPIRE_ON_FIRE}
+     *
      * @param amount the unmodified fire damage amount
      * @return The modified amount
      */
@@ -73,6 +75,7 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
 
     /**
      * Locks the vision again, preventing the player from using it
+     *
      * @param vision
      */
     void unUnlockVision(@Nonnull IVampireVision vision);
@@ -93,6 +96,7 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
      * @param setSpawn
      */
     void wakeUpPlayer(boolean immediately, boolean updateWorldFlag, boolean setSpawn);
+
     enum BITE_TYPE {
         ATTACK, ATTACK_HUNTER, SUCK_BLOOD_CREATURE, SUCK_BLOOD_PLAYER, SUCK_BLOOD_HUNTER_PLAYER, SUCK_BLOOD, NONE
     }

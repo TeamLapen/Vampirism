@@ -38,6 +38,7 @@ public interface IExtendedCreatureVampirism extends IBiteableEntity {
 
     /**
      * Convert this creature into a vampire version if possible
+     *
      * @return The converted creature
      */
     @Nullable

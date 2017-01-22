@@ -48,6 +48,7 @@ public class VampirismAPI {
     public static IVampireVisionRegistry vampireVisionRegistry() {
         return vampireVisionRegistry;
     }
+
     /**
      * @return The faction registry
      */
@@ -63,7 +64,6 @@ public class VampirismAPI {
     }
 
     /**
-     *
      * @return The biteable registry
      */
     public static IBiteableRegistry biteableRegistry() {
@@ -71,7 +71,6 @@ public class VampirismAPI {
     }
 
     /**
-     *
      * @return The skill registry
      */
     public static ISkillRegistry skillRegistry() {
@@ -79,7 +78,6 @@ public class VampirismAPI {
     }
 
     /**
-     *
      * @return The action registry
      */
     public static IActionRegistry actionRegistry() {
@@ -87,7 +85,6 @@ public class VampirismAPI {
     }
 
     /**
-     *
      * @return The crafting manager for the hunter weapon crafting table
      */
     public static IHunterWeaponCraftingManager weaponCraftingManager() {
@@ -95,7 +92,6 @@ public class VampirismAPI {
     }
 
     /**
-     *
      * @return The blood potion registry
      */
     public static IBloodPotionRegistry bloodPotionRegistry() {
@@ -103,7 +99,6 @@ public class VampirismAPI {
     }
 
     /**
-     *
      * @return The crafting manager for the alchemical cauldron (hunter)
      */
     public static IAlchemicalCauldronCraftingManager alchemicalCauldronCraftingManager() {
@@ -113,7 +108,6 @@ public class VampirismAPI {
     /**
      * Setup the API registries
      * FOR INTERNAL USAGE ONLY
-
      */
     public static void setUpRegistries(IFactionRegistry factionReg, ISundamageRegistry sundamageReg, IBiteableRegistry biteableReg, IActionRegistry actionReg, ISkillRegistry skillReg, IVampireVisionRegistry vampireVisionReg, IBloodPotionRegistry bloodPotionReg) {
         factionRegistry = factionReg;
@@ -144,7 +138,6 @@ public class VampirismAPI {
     public static IFactionPlayerHandler getFactionPlayerHandler(EntityPlayer player) {
         return player.getCapability(CAP_FACTION_HANDLER_PLAYER, null);
     }
-
 
 
     /**

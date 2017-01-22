@@ -7,6 +7,7 @@ import java.util.UUID;
 
 /**
  * Interface for classes that can control minions. E.g. VampirePlayer
+ *
  * @param <T> Interface that all minions of this lord implement. Can be {@link IMinion}
  */
 public interface IMinionLord<T extends IMinion> {

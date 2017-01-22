@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.vampirism.api.items.IGarlicItem;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -17,7 +16,7 @@ import net.minecraftforge.common.IPlantable;
 /**
  * Item for the garlic plant
  */
-public class ItemGarlic extends VampirismItem implements IGarlicItem, IPlantable {
+public class ItemGarlic extends VampirismItem implements IPlantable {
     private final static String regName = "itemGarlic";
 
     public ItemGarlic() {

@@ -68,9 +68,7 @@ public interface IBloodPotionRegistry {
     /**
      * Retrieve a random effect (under consideration  of the given item)
      *
-     * @param item
-     * @param bad  If the effect should be bad
-     * @param rng
+     * @param bad If the effect should be bad
      */
     @Nonnull
     IBloodPotionEffect getRandomEffect(@Nullable ItemStack item, boolean bad, Random rng);

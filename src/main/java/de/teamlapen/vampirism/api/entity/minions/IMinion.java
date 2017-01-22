@@ -17,9 +17,9 @@ public interface IMinion {
     void activateMinionCommand(IMinionCommand command);
 
 
-
     /**
      * All commands should have unique ids
+     *
      * @return The list of available minion commands
      */
     ArrayList<IMinionCommand> getAvailableCommands(IMinionLord lord);
@@ -31,8 +31,6 @@ public interface IMinion {
     IMinionCommand getCommand(int id);
 
     /**
-     *
-     *
      * @return The boss or null if none exist
      */
     @Nullable

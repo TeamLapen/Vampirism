@@ -21,6 +21,7 @@ public interface ISkillHandler<T extends ISkillPlayer> {
 
     /**
      * Enable the given skill. Check canSkillBeEnabled first
+     *
      * @param skill
      */
     void enableSkill(ISkill skill);

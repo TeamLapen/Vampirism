@@ -22,7 +22,6 @@ public interface IFactionLevelItem<T extends IFactionPlayer> {
     int getMinLevel(ItemStack stack);
 
     /**
-     *
      * @return The skill required to use this or null if none
      */
     @Nullable

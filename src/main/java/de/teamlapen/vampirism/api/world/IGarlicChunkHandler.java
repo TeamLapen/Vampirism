@@ -12,7 +12,11 @@ import javax.annotation.Nonnull;
 public interface IGarlicChunkHandler {
 
     /**
-     * @param pos
+     * Clear all emitters. E.g. at world unload
+     */
+    void clear();
+
+    /**
      * @return The garlic strength at the given position
      */
     @Nonnull
@@ -34,23 +38,17 @@ public interface IGarlicChunkHandler {
      */
     void removeGarlicBlock(int id);
 
-
-    /**
-     * Clear all emitters. E.g. at world unload
-     */
-    void clear();
-
     /**
      * FOR INTERNAL USAGE ONLY
      */
     @Deprecated
     interface Provider {
-        @Nonnull
-        IGarlicChunkHandler getHandler(World world);
-
         /**
          * Clear all garlic chunk handlers. E.g. at client stop.
          */
         void clear();
+
+        @Nonnull
+        IGarlicChunkHandler getHandler(World world);
     }
 }

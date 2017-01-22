@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 
 /**
@@ -17,19 +18,13 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
     private final HashMap<ChunkPos, EnumStrength> strengthHashMap = Maps.newHashMap();
     private final HashMap<Integer, Emitter> emitterHashMap = Maps.newHashMap();
 
-    private void rebuildStrengthMap() {
+    @Override
+    public void clear() {
         strengthHashMap.clear();
-        for (Emitter e : emitterHashMap.values()) {
-            for (ChunkPos pos : e.pos) {
-                EnumStrength old = strengthHashMap.get(pos);
-                if (old == null || e.strength.isStrongerThan(old)) {
-                    strengthHashMap.put(pos, e.strength);
-                }
-
-            }
-        }
+        emitterHashMap.clear();
     }
 
+    @Nonnull
     @Override
     public EnumStrength getStrengthAtChunk(ChunkPos pos) {
         EnumStrength s = strengthHashMap.get(pos);
@@ -52,16 +47,32 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
         rebuildStrengthMap();
     }
 
-    @Override
-    public void clear() {
+    private void rebuildStrengthMap() {
         strengthHashMap.clear();
-        emitterHashMap.clear();
+        for (Emitter e : emitterHashMap.values()) {
+            for (ChunkPos pos : e.pos) {
+                EnumStrength old = strengthHashMap.get(pos);
+                if (old == null || e.strength.isStrongerThan(old)) {
+                    strengthHashMap.put(pos, e.strength);
+                }
+
+            }
+        }
     }
 
     public static class Provider implements IGarlicChunkHandler.Provider {
 
         private final HashMap<Integer, IGarlicChunkHandler> handlers = Maps.newHashMap();
 
+        @Override
+        public void clear() {
+            for (IGarlicChunkHandler handler : handlers.values()) {
+                handler.clear();
+            }
+            handlers.clear();
+        }
+
+        @Nonnull
         @Override
         public IGarlicChunkHandler getHandler(World world) {
             IGarlicChunkHandler handler = handlers.get(world.provider.getDimension());
@@ -70,14 +81,6 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
                 handlers.put(world.provider.getDimension(), handler);
             }
             return handler;
-        }
-
-        @Override
-        public void clear() {
-            for (IGarlicChunkHandler handler : handlers.values()) {
-                handler.clear();
-            }
-            handlers.clear();
         }
     }
 

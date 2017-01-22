@@ -43,7 +43,6 @@ public interface IAlchemicalCauldronRecipe {
     IAlchemicalCauldronRecipe setCookingTime(int ticks);
 
     /**
-     *
      * @return A stack that describes the required fluid stack. E.g. a bucket with a custom text
      */
     ItemStack getDescriptiveFluidStack();
@@ -96,9 +95,6 @@ public interface IAlchemicalCauldronRecipe {
 
     /**
      * Checks if the given stack contains the required stack and if so, returns the required fluid stack
-     *
-     * @param stack
-     * @return
      */
     @Nullable
     FluidStack isValidFluidStack(FluidStack stack);

@@ -9,15 +9,13 @@ import net.minecraft.item.ItemStack;
 public interface IFactionSlayerItem {
 
     /**
-     * @param stack
+     * @param stack The used item stack
      * @return Damage modifier for attacking the specific faction
      */
     float getDamageMultiplierForFaction(ItemStack stack);
 
     /**
-     * Modify damage for this faction
-     *
-     * @return
+     * @return Modify damage for this faction
      */
     IFaction getSlayedFaction();
 }

@@ -30,6 +30,7 @@ public interface IAdvancedVampire extends IVampireMob, IAdjustableLevel {
 
     /**
      * Call this if a new entity starts following this one
+     *
      * @return If this entity allows more followers
      */
     boolean increaseFollowerCount();

@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 public interface IVampire extends IFactionEntity {
 
     /**
-     *
      * @param strength
      * @return True if the entity is not affected by that garlic level
      */
@@ -49,8 +48,9 @@ public interface IVampire extends IFactionEntity {
     /**
      * Checks if all requirements are met for the entity to be damaged by the sun, e.g. standing in the sun and not raining.
      * The result is cached for a few ticks unless you use forcerefresh
-     *
+     * <p>
      * For VampirePlayer instances for players with vampire level 0 this returns false
+     *
      * @param forcerefresh
      */
     boolean isGettingSundamage(boolean forcerefresh);
@@ -59,7 +59,7 @@ public interface IVampire extends IFactionEntity {
      * Checks if all requirements are met for the entity to be damaged by the sun, e.g. standing in the sun and not raining.
      * The result is cached for a few ticks.
      * Recommend implementation: Just call isGettingSundamage(false)
-     *
+     * <p>
      * For VampirePlayer instances for players with vampire level 0 this returns false
      */
     boolean isGettingSundamage();

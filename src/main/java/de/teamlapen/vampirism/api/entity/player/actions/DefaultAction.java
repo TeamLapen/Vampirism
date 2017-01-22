@@ -40,7 +40,6 @@ public abstract class DefaultAction<T extends IFactionPlayer> implements IAction
     }
 
     /**
-     *
      * @return Should return false if deactivated in configs
      */
     public abstract boolean isEnabled();

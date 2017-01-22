@@ -31,6 +31,7 @@ public interface IFactionPlayer<T extends IFactionPlayer> extends IFactionEntity
 
     /**
      * If not disguised this should return the ACTUAL FACTION of the player NOT NULL. Null represents neutral players
+     *
      * @return The faction the player is disguised as.
      */
     @Nullable
@@ -49,9 +50,15 @@ public interface IFactionPlayer<T extends IFactionPlayer> extends IFactionEntity
     int getLevel();
 
     /**
+     * @return Max level this player type can reach
+     */
+    int getMaxLevel();
+
+    /**
      * Careful this selects all {@link Entity}'s including etc Items
+     *
      * @param otherFactionPlayers Whether other entities from the same faction that might be hostile should be included
-     * @param ignoreDisguise If disguised players should still be counted for their actual faction
+     * @param ignoreDisguise      If disguised players should still be counted for their actual faction
      * @return A predicate that selects all non friendly entities
      */
     Predicate<? super Entity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise);
@@ -60,6 +67,7 @@ public interface IFactionPlayer<T extends IFactionPlayer> extends IFactionEntity
 
     /**
      * You can also use {@link IFactionPlayer#getDisguisedAs()} to get the faction the player looks like
+     *
      * @return If the player is disguised.
      */
     boolean isDisguised();
@@ -76,15 +84,10 @@ public interface IFactionPlayer<T extends IFactionPlayer> extends IFactionEntity
      * Is called on world load.
      * Is called on client and server side.
      * Might be called with oldLevel=newLevel to reset things
+     *
      * @param newLevel
      * @param oldLevel
      */
     void onLevelChanged(int newLevel, int oldLevel);
-
-
-    /**
-     * @return Max level this player type can reach
-     */
-    int getMaxLevel();
 
 }

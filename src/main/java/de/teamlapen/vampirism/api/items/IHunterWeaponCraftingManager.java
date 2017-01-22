@@ -73,5 +73,5 @@ public interface IHunterWeaponCraftingManager {
     @Nullable
     ItemStack findMatchingRecipeResult(InventoryCrafting craftMatrix, World world, int playerLevel, ISkillHandler<IHunterPlayer> skillHandler, int lava);
 
-    ItemStack[] getRemainingItems(InventoryCrafting craftMatrix, World world, int playerLevel, ISkillHandler<IHunterPlayer> skillHandler,int lava);
+    ItemStack[] getRemainingItems(InventoryCrafting craftMatrix, World world, int playerLevel, ISkillHandler<IHunterPlayer> skillHandler, int lava);
 }
