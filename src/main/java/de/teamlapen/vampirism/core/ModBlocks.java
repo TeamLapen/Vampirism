@@ -39,6 +39,7 @@ public class ModBlocks {
     public static BlockSunscreenBeacon sunscreenBeacon;
     public static BlockAlchemicalFire alchemicalFire;
     public static BlockAlchemicalCauldron alchemicalCauldron;
+    public static BlockGarlicBeacon garlicBeacon;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
@@ -62,6 +63,7 @@ public class ModBlocks {
         GameRegistry.registerTileEntity(TileAltarInspiration.class, "VampirismAltarInspiration");
         GameRegistry.registerTileEntity(TileSunscreenBeacon.class, "VampirismSunscreenBeacon");
         GameRegistry.registerTileEntity(TileAlchemicalCauldron.class, "VampirismAlchemicalCauldron");
+        GameRegistry.registerTileEntity(TileGarlicBeacon.class, "VampirismGarlicBeacon");
     }
 
     private static void registerBlocks() {
@@ -93,6 +95,7 @@ public class ModBlocks {
         sunscreenBeacon = registerBlock(new BlockSunscreenBeacon());
         alchemicalFire = registerBlock(new BlockAlchemicalFire(), null);
         alchemicalCauldron = registerBlock(new BlockAlchemicalCauldron());
+        garlicBeacon = registerBlock(new BlockGarlicBeacon());
 
     }
 

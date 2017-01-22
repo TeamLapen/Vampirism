@@ -1,0 +1,420 @@
+{
+  "__comment": "Designed by Maxanier with Cubik Studio",
+  "parent": "block/block",
+  "textures": {
+    "particle": "blocks/glass",
+    "obsidian": "blocks/obsidian",
+    "wood": "blocks/planks_oak",
+    "wood_garlic_symbol": "vampirism:blocks/garlic_beacon_top",
+    "side": "vampirism:blocks/garlic_beacon_side",
+    "garlic": "vampirism:blocks/garlic_beacon_inside"
+  },
+  "elements": [
+    {
+      "__comment": "Obsidian base",
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        3,
+        15
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            2,
+            2,
+            14,
+            14
+          ],
+          "texture": "#obsidian",
+          "cullface": "down"
+        },
+        "up": {
+          "uv": [
+            2,
+            2,
+            14,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "north": {
+          "uv": [
+            2,
+            13,
+            14,
+            16
+          ],
+          "texture": "#obsidian"
+        },
+        "south": {
+          "uv": [
+            2,
+            13,
+            14,
+            16
+          ],
+          "texture": "#obsidian"
+        },
+        "west": {
+          "uv": [
+            2,
+            13,
+            14,
+            16
+          ],
+          "texture": "#obsidian"
+        },
+        "east": {
+          "uv": [
+            2,
+            13,
+            14,
+            16
+          ],
+          "texture": "#obsidian"
+        }
+      }
+    },
+    {
+      "__comment": "outer_wood",
+      "from": [
+        3,
+        3,
+        3
+      ],
+      "to": [
+        13,
+        12,
+        13
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#wood_garlic_symbol"
+        },
+        "north": {
+          "uv": [
+            3,
+            4,
+            13,
+            13
+          ],
+          "texture": "#side"
+        },
+        "south": {
+          "uv": [
+            3,
+            4,
+            13,
+            13
+          ],
+          "texture": "#side"
+        },
+        "west": {
+          "uv": [
+            3,
+            4,
+            13,
+            13
+          ],
+          "texture": "#side"
+        },
+        "east": {
+          "uv": [
+            3,
+            4,
+            13,
+            13
+          ],
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "__comment": "inner_garlic",
+      "from": [
+        5,
+        3,
+        5
+      ],
+      "to": [
+        11,
+        10,
+        11
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            5,
+            5,
+            11,
+            11
+          ],
+          "texture": "#garlic"
+        },
+        "north": {
+          "uv": [
+            5,
+            6,
+            11,
+            13
+          ],
+          "texture": "#garlic"
+        },
+        "south": {
+          "uv": [
+            5,
+            6,
+            11,
+            13
+          ],
+          "texture": "#garlic"
+        },
+        "west": {
+          "uv": [
+            5,
+            6,
+            11,
+            13
+          ],
+          "texture": "#garlic"
+        },
+        "east": {
+          "uv": [
+            5,
+            6,
+            11,
+            13
+          ],
+          "texture": "#garlic"
+        }
+      }
+    },
+    {
+      "__comment": "PlaneX4",
+      "from": [
+        12.5,
+        3,
+        3
+      ],
+      "to": [
+        12.501,
+        12,
+        13
+      ],
+      "faces": {
+        "west": {
+          "uv": [
+            3,
+            4,
+            13,
+            13
+          ],
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "__comment": "PlaneX4",
+      "from": [
+        3.5,
+        3,
+        3
+      ],
+      "to": [
+        3.501,
+        12,
+        13
+      ],
+      "faces": {
+        "east": {
+          "uv": [
+            3,
+            4,
+            13,
+            13
+          ],
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "__comment": "PlaneZ6",
+      "from": [
+        3,
+        3,
+        12.5
+      ],
+      "to": [
+        13,
+        12,
+        12.501
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            3,
+            4,
+            13,
+            13
+          ],
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "__comment": "PlaneZ6",
+      "from": [
+        3,
+        3,
+        3.5
+      ],
+      "to": [
+        13,
+        12,
+        3.501
+      ],
+      "faces": {
+        "south": {
+          "uv": [
+            3,
+            4,
+            13,
+            13
+          ],
+          "texture": "#side"
+        }
+      }
+    },
+    {
+      "__comment": "PlaneY8",
+      "from": [
+        3,
+        11.5,
+        3
+      ],
+      "to": [
+        13,
+        11.501,
+        13
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            3,
+            3,
+            13,
+            13
+          ],
+          "texture": "#wood"
+        }
+      }
+    }
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        28,
+        54,
+        0
+      ],
+      "translation": [
+        0,
+        3.8913,
+        0
+      ],
+      "scale": [
+        0.375,
+        0.375,
+        0.375
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        28,
+        54,
+        0
+      ],
+      "translation": [
+        0,
+        3.8913,
+        0
+      ],
+      "scale": [
+        0.375,
+        0.375,
+        0.375
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        1.3913,
+        0
+      ],
+      "scale": [
+        0.4,
+        0.4,
+        0.4
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        1.3913,
+        0
+      ],
+      "scale": [
+        0.4,
+        0.4,
+        0.4
+      ]
+    },
+    "gui": {
+      "rotation": [
+        30,
+        225,
+        0
+      ],
+      "scale": [
+        0.625,
+        0.625,
+        0.625
+      ]
+    },
+    "ground": {
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.25,
+        0.25,
+        0.25
+      ]
+    }
+  },
+  "overrides": [
+  ]
+}
