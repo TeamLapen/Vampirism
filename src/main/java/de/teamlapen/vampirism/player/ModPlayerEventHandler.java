@@ -15,20 +15,25 @@ import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
@@ -82,8 +87,12 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onBreakSpeed(PlayerEvent.BreakSpeed event) {
-        if (VampirePlayer.get(event.getEntityPlayer()).getSpecialAttributes().bat || HunterPlayer.get(event.getEntityPlayer()).getSpecialAttributes().isDisguised()) {
+        VampirePlayer vampire = VampirePlayer.get(event.getEntityPlayer());
+        HunterPlayer hunter = HunterPlayer.get(event.getEntityPlayer());
+        if (vampire.getSpecialAttributes().bat || hunter.getSpecialAttributes().isDisguised()) {
             event.setCanceled(true);
+        } else if (ModBlocks.garlicBeacon.equals(event.getState().getBlock()) && vampire.getLevel() > 0) {
+            event.setNewSpeed(event.getOriginalSpeed() * 0.1F);
         }
     }
 
@@ -175,12 +184,17 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent
     public void onPlayerLeftLickedBlock(PlayerInteractEvent.LeftClickBlock event) {
+        assert event.getFace() != null;
         BlockPos pos = event.getPos().offset(event.getFace());
+        World world = event.getWorld();
+        IBlockState state = world.getBlockState(pos);
 
-        if (event.getWorld().getBlockState(pos).getBlock() == ModBlocks.alchemicalFire) {
-            event.getWorld().playEvent(null, 1009, pos, 0);
-            event.getWorld().setBlockToAir(pos);
+        if (state.getBlock() == ModBlocks.alchemicalFire) {
+            world.playEvent(null, 1009, pos, 0);
+            world.setBlockToAir(pos);
             event.setCanceled(true);
+        } else if (ModBlocks.garlicBeacon.equals(state.getBlock()) && Helper.isVampire(event.getEntityPlayer())) {
+            event.getEntityPlayer().addPotionEffect(new PotionEffect(ModPotions.garlic));
         }
     }
 

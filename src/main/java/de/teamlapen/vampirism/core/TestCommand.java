@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.tileentity.TileTent;
 import de.teamlapen.vampirism.util.VampireBookManager;
+import de.teamlapen.vampirism.world.GarlicChunkHandler;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -30,6 +31,7 @@ import net.minecraft.profiler.Profiler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -413,6 +415,39 @@ public class TestCommand extends BasicCommand {
             public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 EntityPlayer p = getCommandSenderAsPlayer(sender);
                 Tests.runTests(p.worldObj, p);
+            }
+        });
+
+        addSub(new SubCommand() {
+            @Override
+            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+                return null;
+            }
+
+            @Override
+            public boolean canSenderUseCommand(ICommandSender sender) {
+                return canCommandSenderUseCheatCommand(sender) && sender instanceof EntityPlayer;
+            }
+
+            @Override
+            public String getCommandName() {
+                return "garlicCheck";
+            }
+
+            @Override
+            public String getCommandUsage(ICommandSender sender) {
+                return getCommandName();
+            }
+
+            @Override
+            public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                if (sender instanceof EntityPlayer) {
+                    ((EntityPlayer) sender).addChatComponentMessage(new TextComponentString("Garlic strength: " + VampirismAPI.getGarlicChunkHandler(((EntityPlayer) sender).worldObj).getStrengthAtChunk(new ChunkPos(sender.getPosition()))));
+                }
+                if (args != null && args.length > 0 && "print".equals(args[0])) {
+                    ((GarlicChunkHandler) VampirismAPI.getGarlicChunkHandler(sender.getEntityWorld())).printDebug(sender);
+                }
+
             }
         });
     }

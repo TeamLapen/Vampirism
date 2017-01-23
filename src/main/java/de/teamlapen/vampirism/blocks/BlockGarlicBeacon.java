@@ -1,11 +1,13 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.vampirism.tileentity.TileGarlicBeacon;
+import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -33,9 +35,11 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
     private final static AxisAlignedBB COLLISION_BOX_2 = new AxisAlignedBB(0.07, 0, 0.07, 0.93, 0.19, 0.93);
 
     public BlockGarlicBeacon() {
-        super(regName, Material.WOOD);
+        super(regName, Material.ROCK);
         this.setHasFacing();
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+        this.setHardness(3);
+        this.setSoundType(SoundType.STONE);
     }
 
     @Override
@@ -82,6 +86,14 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
     }
 
     @Override
+    public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, @Nullable TileEntity te, @Nullable ItemStack stack) {
+        super.harvestBlock(worldIn, player, pos, state, te, stack);
+        if (te != null && te instanceof TileGarlicBeacon) {
+            ((TileGarlicBeacon) te).onTouched(player);
+        }
+    }
+
+    @Override
     public boolean isFullCube(IBlockState state) {
         return false;
     }
@@ -92,7 +104,24 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
     }
 
     @Override
+    public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn) {
+        TileGarlicBeacon tile = getTile(worldIn, pos);
+        if (tile != null) {
+            tile.onTouched(playerIn);
+        }
+    }
+
+    @Override
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, FACING);
+    }
+
+    @Nullable
+    private TileGarlicBeacon getTile(IBlockAccess world, BlockPos pos) {
+        TileEntity t = world.getTileEntity(pos);
+        if (t instanceof TileGarlicBeacon) {
+            return (TileGarlicBeacon) t;
+        }
+        return null;
     }
 }

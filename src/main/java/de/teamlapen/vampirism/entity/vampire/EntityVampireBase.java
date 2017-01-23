@@ -157,7 +157,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
                 if (dmg > 0) this.attackEntityFrom(VReference.SUNDAMAGE, (float) dmg);
             }
             if (isGettingGarlicDamage() != EnumStrength.NONE) {
-                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage());
+                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(), this.ticksExisted);
             }
         }
         super.onLivingUpdate();

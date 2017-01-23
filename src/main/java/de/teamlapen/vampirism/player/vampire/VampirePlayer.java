@@ -126,7 +126,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private final SkillHandler<IVampirePlayer> skillHandler;
     private final VampirePlayerSpecialAttributes specialAttributes = new VampirePlayerSpecialAttributes();
     private boolean sundamage_cache = false;
-    private EnumStrength garlic_cache = EnumStrength.NONE;
+    private EnumStrength garlic_cache;
     private int biteCooldown = 0;
     private int eyeType = 0;
     private int fangType = 0;
@@ -143,6 +143,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         bloodStats = new BloodStats(player);
         actionHandler = new ActionHandler(this);
         skillHandler = new SkillHandler<IVampirePlayer>(this);
+        garlic_cache = EnumStrength.NONE;
     }
 
     @Override
@@ -541,10 +542,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public void onUpdate() {
         int level = getLevel();
         if (level > 0) {
-            if (player.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 1) {
+            if (player.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 0) {
                 isGettingSundamage(true);
             }
-            if (player.worldObj.isRemote && player.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 6) {
+            if (player.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 0) {
                 isGettingGarlicDamage(true);
             }
         } else {
@@ -595,7 +596,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     ticksInSun--;
                 }
                 if (isGettingGarlicDamage() != EnumStrength.NONE) {
-                    DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage());
+                    DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(), player.ticksExisted);
                 }
                 if (player.isEntityAlive() && player.isInWater()) {
                     player.setAir(300);

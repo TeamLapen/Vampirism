@@ -2,7 +2,7 @@
   "__comment": "Designed by Maxanier with Cubik Studio",
   "parent": "block/block",
   "textures": {
-    "particle": "blocks/glass",
+    "particle": "blocks/obsidian",
     "obsidian": "blocks/obsidian",
     "wood": "blocks/planks_oak",
     "wood_garlic_symbol": "vampirism:blocks/garlic_beacon_top",

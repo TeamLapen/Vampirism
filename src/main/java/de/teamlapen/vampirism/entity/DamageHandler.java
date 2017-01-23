@@ -40,32 +40,23 @@ public class DamageHandler {
                 affect = 1.0D;
             }
 
-            EntityLivingBase entity = vampire.getRepresentingEntity();
-            entity.addPotionEffect(new PotionEffect(ModPotions.garlic, 5 * 20));
-            entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, (int) (affect * 10 * 20), 1));
-            if (strength == EnumStrength.MEDIUM || strength == EnumStrength.STRONG) {
-                entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, (int) (affect * 10 * 20), 1));
-                if (strength == EnumStrength.STRONG) {
-                    entity.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, (int) (affect * 5 * 20)));
-                }
-            }
-            if (vampire instanceof IVampirePlayer) {
-                IActionHandler<IVampirePlayer> actionHandler = ((IVampirePlayer) vampire).getActionHandler();
-                if (actionHandler.isActionActive(VampireActions.disguiseAction)) {
-                    actionHandler.toggleAction(VampireActions.disguiseAction);
-                }
-            }
+            affectVampireGarlic(vampire, strength, (float) (10 * affect), false);
         }
     }
 
-    public static void affectVampireGarlicAmbient(IVampire vampire, EnumStrength strength) {
+    public static void affectVampireGarlicDirect(IVampire vampire, EnumStrength strength) {
+        affectVampireGarlic(vampire, strength, 20, false);
+    }
+
+    private static void affectVampireGarlic(IVampire vampire, EnumStrength strength, float multiplier, boolean ambient) {
         EntityLivingBase entity = vampire.getRepresentingEntity();
-        entity.addPotionEffect(new PotionEffect(ModPotions.garlic, 5 * 20));
-        entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 5 * 20));
+        entity.addPotionEffect(new PotionEffect(ModPotions.garlic, (int) (multiplier * 20), 0, ambient, true));
+        if (entity instanceof EntityPlayer && ((EntityPlayer) entity).capabilities.isCreativeMode) return;
+        entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, (int) (multiplier * 20), 1, ambient, false));
         if (strength == EnumStrength.MEDIUM || strength == EnumStrength.STRONG) {
-            entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 5 * 20));
+            entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, (int) (multiplier * 20), 1, ambient, false));
             if (strength == EnumStrength.STRONG) {
-                entity.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 5 * 20));
+                entity.addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, (int) (multiplier / 2 * 20), 0, ambient, false));
             }
         }
         if (vampire instanceof IVampirePlayer) {
@@ -73,6 +64,17 @@ public class DamageHandler {
             if (actionHandler.isActionActive(VampireActions.disguiseAction)) {
                 actionHandler.toggleAction(VampireActions.disguiseAction);
             }
+        }
+    }
+
+    /**
+     * @param vampire  The affected vampire
+     * @param strength The strength of the ambient garlic
+     * @param ticks    A tick related value like ticksExisted
+     */
+    public static void affectVampireGarlicAmbient(IVampire vampire, EnumStrength strength, int ticks) {
+        if (ticks % 20 == 7) {
+            affectVampireGarlic(vampire, strength, 5, true);
         }
     }
 

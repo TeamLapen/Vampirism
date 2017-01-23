@@ -4,11 +4,15 @@ import com.google.common.collect.Maps;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
+import net.minecraft.command.ICommandSender;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Implements {@link IGarlicChunkHandler} using maps to store
@@ -31,8 +35,22 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
         return s == null ? EnumStrength.NONE : s;
     }
 
+    public void printDebug(ICommandSender sender) {
+        for (Emitter e : emitterHashMap.values()) {
+            sender.addChatMessage(new TextComponentString("E: " + e.toString()));
+        }
+        for (Map.Entry e : strengthHashMap.entrySet()) {
+            sender.addChatMessage(new TextComponentString("S: " + e.toString()));
+        }
+    }
+
     @Override
     public int registerGarlicBlock(EnumStrength strength, ChunkPos... pos) {
+        for (ChunkPos p : pos) {
+            if (p == null) {
+                throw new IllegalArgumentException("Garlic emitter position should not be null");
+            }
+        }
         Emitter e = new Emitter(strength, pos);
         int hash = e.hashCode();
         emitterHashMap.put(hash, e);
@@ -43,7 +61,7 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
     @Override
     public void removeGarlicBlock(int id) {
         Emitter e = emitterHashMap.remove(id);
-        if (e == null) VampirismMod.log.t("Emitter was null");
+        if (e == null) VampirismMod.log.d("GarlicChunkHandler", "Removed emitter did not exist");
         rebuildStrengthMap();
     }
 
@@ -91,6 +109,14 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
         private Emitter(EnumStrength strength, ChunkPos[] pos) {
             this.strength = strength;
             this.pos = pos;
+        }
+
+        @Override
+        public String toString() {
+            return "Emitter{" +
+                    "pos=" + Arrays.toString(pos) +
+                    ", strength=" + strength +
+                    '}';
         }
     }
 }

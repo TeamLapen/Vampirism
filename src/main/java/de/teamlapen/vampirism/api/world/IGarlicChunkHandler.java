@@ -26,7 +26,7 @@ public interface IGarlicChunkHandler {
      * Registers a garlic "emitter".
      *
      * @param strength Strength
-     * @param pos      All affected chunk pos
+     * @param pos      All affected chunk pos. Cannot be null
      * @return A unique hash which is required to remove the registration again
      */
     int registerGarlicBlock(EnumStrength strength, ChunkPos... pos);

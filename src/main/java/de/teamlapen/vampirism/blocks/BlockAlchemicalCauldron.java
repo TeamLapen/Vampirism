@@ -16,6 +16,7 @@ import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -38,11 +39,13 @@ public class BlockAlchemicalCauldron extends VampirismBlockContainer {
      */
     public static final PropertyInteger LIQUID = PropertyInteger.create("liquid", 0, 2);
     public static final PropertyBool BURNING = PropertyBool.create("burning");
+    private static final AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(0.07, 0, 0.07, 0.93, 0.87, 0.93);
 
     public BlockAlchemicalCauldron() {
         super(regName, Material.IRON);
         this.setHasFacing();
         this.setDefaultState(this.blockState.getBaseState().withProperty(LIQUID, 0).withProperty(FACING, EnumFacing.NORTH).withProperty(BURNING, false));
+        this.setHardness(4);
     }
 
 
@@ -60,10 +63,15 @@ public class BlockAlchemicalCauldron extends VampirismBlockContainer {
         return state;
     }
 
-
     @Override
     public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;
+    }
+
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+
+        return BOUNDING_BOX;
     }
 
     @Override

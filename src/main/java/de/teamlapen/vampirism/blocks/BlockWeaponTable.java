@@ -17,9 +17,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -35,11 +37,12 @@ public class BlockWeaponTable extends VampirismBlock {
     public static final int MAX_LAVA = 5;
     public static final int MB_PER_META = 200;
     public static final PropertyInteger LAVA = PropertyInteger.create("lava", 0, MAX_LAVA);
+    private static final AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(0, 0, 0, 0.93, 0.6, 1);
 
     public BlockWeaponTable() {
         super(regName, Material.IRON);
         this.setDefaultState(this.blockState.getBaseState().withProperty(LAVA, 0));
-
+        this.setHardness(3);
 
     }
 
@@ -51,6 +54,11 @@ public class BlockWeaponTable extends VampirismBlock {
     @Override
     public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;
+    }
+
+    @Override
+    public AxisAlignedBB getBoundingBox(IBlockState state, IBlockAccess source, BlockPos pos) {
+        return BOUNDING_BOX;
     }
 
     @Override

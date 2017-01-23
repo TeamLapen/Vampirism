@@ -138,6 +138,7 @@ tile.vampirism.alchemicalCauldron.other=This cauldron belongs to %s. You should 
 tile.vampirism.alchemicalCauldron.name=Alchemical Cauldron
 tile.vampirism.alchemicalCauldron.display=%s's %s
 tile.vampirism.alchemicalCauldron.cannot_use=You have not leared how to use this
+tile.vampirism.garlicBeacon.name=Garlic Beacon
 
 #ITEMS
 item.vampirism.hunterIntel.name=Hunter Intel
@@ -243,6 +244,7 @@ effect.vampirism.thirst=Thirst
 effect.vampirism.saturation=Saturation
 effect.vampirism.sanguinare=Sanguinare Vampiris
 effect.vampirism.fire_protection=Fire Protection
+effect.vampirism.garlic=Garlic
 
 #FLUIDS
 fluid.vampirism.vampirismblood=Blood
