@@ -16,6 +16,15 @@
       "west": {
         "y": 270
       }
+    },
+    "type": {
+      "standard": {
+      },
+      "improved": {
+        "textures": {
+          "garlic": "vampirism:blocks/garlic_beacon_inside_improved"
+        }
+      }
     }
   }
 }

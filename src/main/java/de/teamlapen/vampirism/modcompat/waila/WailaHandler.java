@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.modcompat.waila;
 
+import de.teamlapen.vampirism.blocks.BlockGarlicBeacon;
 import de.teamlapen.vampirism.blocks.BlockWeaponTable;
 import de.teamlapen.vampirism.tileentity.TileAltarInspiration;
 import de.teamlapen.vampirism.tileentity.TileBloodContainer;
@@ -34,6 +35,9 @@ public class WailaHandler {
         registrar.registerBodyProvider(tankDataProvider, TileBloodContainer.class);
         StackProviderIgnoreMeta stackProviderIgnoreMeta = new StackProviderIgnoreMeta();
         registrar.registerStackProvider(stackProviderIgnoreMeta, BlockWeaponTable.class);
+        GarlicBeaconProvider garlicBeaconProvider = new GarlicBeaconProvider();
+        registrar.registerBodyProvider(garlicBeaconProvider, BlockGarlicBeacon.class);
+        registrar.registerStackProvider(garlicBeaconProvider, BlockGarlicBeacon.class);
     }
 
     static String getShowCreatureInfoConf() {

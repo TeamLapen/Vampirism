@@ -2,10 +2,7 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.lib.lib.util.InventoryRenderHelper;
-import de.teamlapen.vampirism.blocks.BlockAltarPillar;
-import de.teamlapen.vampirism.blocks.BlockCastleBlock;
-import de.teamlapen.vampirism.blocks.BlockWeaponTable;
-import de.teamlapen.vampirism.blocks.VampirismFlower;
+import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.client.render.tiles.AltarInfusionTESR;
 import de.teamlapen.vampirism.client.render.tiles.CoffinTESR;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -95,7 +92,12 @@ public class ModBlocksRender {
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.churchAltar), EnumFacing.HORIZONTALS);
         renderHelper.registerRender(Item.getItemFromBlock(ModBlocks.weaponTable), "inventory");
         renderHelper.registerRender(ModBlocks.alchemicalCauldron);
-        renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.garlicBeacon), EnumFacing.HORIZONTALS);
+
+        for (EnumFacing f : EnumFacing.HORIZONTALS) {
+            for (BlockGarlicBeacon.Type t : BlockGarlicBeacon.Type.values()) {
+                ModelLoader.setCustomModelResourceLocation(Item.getItemFromBlock(ModBlocks.garlicBeacon), f.getHorizontalIndex() | t.getId() << 2, new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, BlockGarlicBeacon.regName), "facing=" + f.getName() + ",type=" + t.getName()));
+            }
+        }
 
         ModelLoader.setCustomStateMapper(ModBlocks.weaponTable, new StateMapperBase() {
             @Override

@@ -183,7 +183,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     }
 
     @Override
-    public IAlchemicalCauldronRecipe setRequirements(int reqLevel, @Nullable ISkill<IHunterPlayer>... reqSkills) {
+    public IAlchemicalCauldronRecipe setRequirements(int reqLevel, @Nullable ISkill... reqSkills) {
         this.reqLevel = reqLevel;
         this.skills = reqSkills;
         return this;

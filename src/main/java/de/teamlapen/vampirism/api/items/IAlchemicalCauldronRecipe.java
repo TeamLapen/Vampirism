@@ -108,8 +108,8 @@ public interface IAlchemicalCauldronRecipe {
 
     /**
      * Set the requirements
-     *
+     * Only accepts ISkill<IHunterPlayer>.
      * @return This
      */
-    IAlchemicalCauldronRecipe setRequirements(int reqLevel, @Nullable ISkill<IHunterPlayer>... reqSkills);
+    IAlchemicalCauldronRecipe setRequirements(int reqLevel, @Nullable ISkill... reqSkills);
 }
