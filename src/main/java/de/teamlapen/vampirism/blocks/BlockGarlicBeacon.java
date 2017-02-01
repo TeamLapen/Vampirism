@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.tileentity.TileGarlicBeacon;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -15,13 +16,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -64,7 +63,9 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
 
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new TileGarlicBeacon();
+        TileGarlicBeacon tile = new TileGarlicBeacon();
+        tile.setType(Type.fromId(meta >> 2));
+        return tile;
     }
 
     @Override
@@ -137,6 +138,27 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
     }
 
     @Override
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+        if (heldItem != null && ModItems.purifiedGarlic.equals(heldItem.getItem())) {
+            if (!worldIn.isRemote) {
+                TileGarlicBeacon t = getTile(worldIn, pos);
+                if (t != null) {
+                    if (t.getFuelTime() > 0) {
+                        playerIn.addChatComponentMessage(new TextComponentTranslation("tile.vampirism.garlicBeacon.already_fueled"));
+                    } else {
+                        t.onFueled();
+                        if (!playerIn.capabilities.isCreativeMode) heldItem.stackSize--;
+                        playerIn.addChatComponentMessage(new TextComponentTranslation("tile.vampirism.garlicBeacon.successfully_fueled"));
+                    }
+
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public void onBlockClicked(World worldIn, BlockPos pos, EntityPlayer playerIn) {
         TileGarlicBeacon tile = getTile(worldIn, pos);
         if (tile != null) {
@@ -159,7 +181,7 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
     }
 
     public enum Type implements IStringSerializable {
-        NORMAL("standard", 0), IMPROVED("improved", 1);
+        NORMAL("standard", 0), IMPROVED("improved", 1), WEAK("weak", 2);
 
         private static Type fromId(int id) {
             for (Type t : values()) {

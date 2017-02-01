@@ -24,6 +24,9 @@
         "textures": {
           "garlic": "vampirism:blocks/garlic_beacon_inside_improved"
         }
+      },
+      "weak": {
+
       }
     }
   }

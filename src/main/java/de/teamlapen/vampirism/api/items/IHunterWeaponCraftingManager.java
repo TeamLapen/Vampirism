@@ -20,7 +20,7 @@ public interface IHunterWeaponCraftingManager {
      * @param output           The resulting itemstack
      * @param reqLevel         The required hunter level >=0
      * @param reqSkill         A skill that is required to craft this. Can be null
-     * @param reqLava          The number of lava units required. (One unit equals 200mB)
+     * @param reqLava          The number of lava units required. (One unit equals 200mB). Max is 5
      * @param recipeComponents The components in the same way as vanilla crafting.
      * @return The created and registered recipe
      */
@@ -32,7 +32,7 @@ public interface IHunterWeaponCraftingManager {
      * @param output           The resulting itemstack
      * @param reqLevel         The required hunter level >=0
      * @param reqSkills        An array of required skills. Can be empty but not null
-     * @param reqLava          The number of lava units required. (One unit equals 200mB)
+     * @param reqLava          The number of lava units required. (One unit equals 200mB). Max is 5
      * @param recipeComponents The components in the same way as vanilla crafting.
      * @return The created and registered recipe
      */
@@ -49,7 +49,7 @@ public interface IHunterWeaponCraftingManager {
      * @param output           The resulting itemstack
      * @param reqLevel         The required hunter level >=0
      * @param reqSkills        An array of required skills. Can be empty but not null
-     * @param reqLava          The number of lava units required. (One unit equals 200mB)
+     * @param reqLava          The number of lava units required. (One unit equals 200mB). Max is 5
      * @param recipeComponents The required components
      * @return The created and registered recipe
      */

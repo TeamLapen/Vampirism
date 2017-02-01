@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.inventory;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IAlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.api.items.IAlchemicalCauldronRecipe;
@@ -46,7 +45,7 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
     }
 
     @Override
-    public IAlchemicalCauldronRecipe addRecipe(Object liquid, Object ingredient, Object output) {
+    public IAlchemicalCauldronRecipe addRecipe(@Nonnull Object output, @Nonnull Object liquid, @Nullable Object ingredient) {
         IAlchemicalCauldronRecipe recipe;
         if (liquid instanceof Item) {
             liquid = new ItemStack((Item) liquid);
@@ -54,9 +53,9 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
             liquid = new ItemStack((Block) liquid);
         }
         if (liquid instanceof ItemStack) {
-            recipe = new AlchemicalCauldronRecipe(((ItemStack) liquid).copy(), getItemStackCopy(ingredient), getItemStackCopy(output));
+            recipe = new AlchemicalCauldronRecipe(getItemStackCopy(output), ((ItemStack) liquid).copy(), getItemStackCopy(ingredient));
         } else if (liquid instanceof FluidStack) {
-            recipe = new AlchemicalCauldronRecipe(((FluidStack) liquid).copy(), getItemStackCopy(ingredient), getItemStackCopy(output));
+            recipe = new AlchemicalCauldronRecipe(getItemStackCopy(output), ((FluidStack) liquid).copy(), getItemStackCopy(ingredient));
         } else {
             throw new IllegalArgumentException(TAG + ": Liquid has to be either a ItemStack or a FluidStack");
         }
@@ -65,8 +64,8 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
     }
 
     @Override
-    public IAlchemicalCauldronRecipe addRecipe(Object liquid, Object ingredient, Object output, int ticks, int exp, int reqLevel, ISkill<IHunterPlayer>... reqSkills) {
-        IAlchemicalCauldronRecipe recipe = addRecipe(liquid, ingredient, output);
+    public IAlchemicalCauldronRecipe addRecipe(@Nonnull Object output, @Nonnull Object liquid, @Nullable Object ingredient, int ticks, int exp, int reqLevel, ISkill... reqSkills) {
+        IAlchemicalCauldronRecipe recipe = addRecipe(output, liquid, ingredient);
         recipe.configure(ticks, exp, reqLevel, reqSkills);
         return recipe;
     }

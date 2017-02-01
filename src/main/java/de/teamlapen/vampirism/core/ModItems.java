@@ -19,6 +19,9 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionUtils;
+import net.minecraftforge.fluids.Fluid;
+import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.RecipeSorter;
@@ -62,6 +65,7 @@ public class ModItems {
     public static VampirismItem garlicBeaconCore;
     public static VampirismItem garlicBeaconCoreImproved;
     public static VampirismItem purifiedGarlic;
+    public static VampirismItem pureSalt;
 
     public static ItemArmorOfSwiftness armorOfSwiftness_helmet;
     public static ItemArmorOfSwiftness armorOfSwiftness_chest;
@@ -123,26 +127,43 @@ public class ModItems {
         weaponCraftingManager.addRecipe(new ItemStack(enhancedTechCrossbow), 1, HunterSkills.techWeapons, 5, "XYYX", "YZZY", "YZZY", " YY ", 'X', Items.STRING, 'Y', Items.IRON_INGOT, 'Z', Items.DIAMOND);
         GameRegistry.addShapedRecipe(new ItemStack(stake), " X ", " Y ", " X ", 'X', Items.STICK, 'Y', Blocks.PLANKS);
         weaponCraftingManager.addRecipe(new ItemStack(pitchfork), 1, (ISkill<IHunterPlayer>) null, 0, "X X ", "YYY ", " Y  ", " Y  ", 'X', Items.IRON_INGOT, 'Y', Items.STICK);
+        //Armor of Swiftness
         weaponCraftingManager.addRecipe(createStack(armorOfSwiftness_helmet, IItemWithTier.TIER.NORMAL), 1, (ISkill<IHunterPlayer>) null, 0, "XXXX", "XYYX", "XZZX", "    ", 'X', Items.LEATHER, 'Y', ModItems.itemGarlic, 'Z', Items.POTIONITEM);
         weaponCraftingManager.addRecipe(createStack(armorOfSwiftness_chest, IItemWithTier.TIER.NORMAL), 1, (ISkill<IHunterPlayer>) null, 0, "XZZX", "XXXX", "XYYX", "XXXX", 'X', Items.LEATHER, 'Y', ModItems.itemGarlic, 'Z', Items.POTIONITEM);
         weaponCraftingManager.addRecipe(createStack(armorOfSwiftness_legs, IItemWithTier.TIER.NORMAL), 1, (ISkill<IHunterPlayer>) null, 0, "XXXX", "XYYX", "XZZX", "X  X", 'X', Items.LEATHER, 'Y', ModItems.itemGarlic, 'Z', Items.POTIONITEM);
         weaponCraftingManager.addRecipe(createStack(armorOfSwiftness_boots, IItemWithTier.TIER.NORMAL), 1, (ISkill<IHunterPlayer>) null, 0, "    ", "XXXX", "XYYX", "XZZX", 'X', Items.LEATHER, 'Y', ModItems.itemGarlic, 'Z', Items.POTIONITEM);
+        //Armor of Swiftness Enhanced
         weaponCraftingManager.addRecipe(createStack(armorOfSwiftness_helmet, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhancedArmor, 3, "XXXX", "XYYX", "XZZX", "    ", 'X', Items.LEATHER, 'Y', ModItems.itemGarlic, 'Z', Items.GOLD_INGOT);
         weaponCraftingManager.addRecipe(createStack(armorOfSwiftness_chest, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhancedArmor, 3, "XZZX", "XXXX", "XYYX", "XXXX", 'X', Items.LEATHER, 'Y', ModItems.itemGarlic, 'Z', Items.GOLD_INGOT);
         weaponCraftingManager.addRecipe(createStack(armorOfSwiftness_legs, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhancedArmor, 3, "XXXX", "XYYX", "XZZX", "X  X", 'X', Items.LEATHER, 'Y', ModItems.itemGarlic, 'Z', Items.GOLD_INGOT);
         weaponCraftingManager.addRecipe(createStack(armorOfSwiftness_boots, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhancedArmor, 3, "    ", "XXXX", "XYYX", "XZZX", 'X', Items.LEATHER, 'Y', ModItems.itemGarlic, 'Z', Items.GOLD_INGOT);
+        //Hunter hats
         weaponCraftingManager.addRecipe(new ItemStack(ModItems.hunterHat0), 1, (ISkill<IHunterPlayer>) null, 0, "    ", " XX ", "YYYY", "    ", 'X', new ItemStack(Blocks.WOOL, 1, EnumDyeColor.BLACK.getMetadata()), 'Y', Items.IRON_INGOT);
         weaponCraftingManager.addRecipe(new ItemStack(ModItems.hunterHat1), 1, (ISkill<IHunterPlayer>) null, 0, "    ", " XX ", " XX ", "YYYY", 'X', new ItemStack(Blocks.WOOL, 1, EnumDyeColor.BLACK.getMetadata()), 'Y', Items.IRON_INGOT);
+        //Hunter Axe
         weaponCraftingManager.addRecipe(createStack(hunterAxe, IItemWithTier.TIER.NORMAL), 1, (ISkill<IHunterPlayer>) null, 3, "XYX ", "XYX ", "XYX ", " Y  ", 'X', Items.IRON_INGOT, 'Y', Items.STICK);
         weaponCraftingManager.addRecipe(createStack(hunterAxe, IItemWithTier.TIER.ENHANCED), 1, (ISkill<IHunterPlayer>) null, 5, "XZX ", "XZX ", "XYX ", " Y  ", 'X', Items.IRON_INGOT, 'Y', Items.STICK, 'Z', Items.DIAMOND);
+        //Hunter Coat
         weaponCraftingManager.addRecipe(createStack(hunterCoat_helmet, IItemWithTier.TIER.NORMAL), 1, (ISkill<IHunterPlayer>) null, 2, "YXXY", "YZZY", "YZZY", "    ", 'X', Items.LEATHER, 'Y', Items.IRON_INGOT, 'Z', ModItems.itemGarlic);
         weaponCraftingManager.addRecipe(createStack(hunterCoat_chest, IItemWithTier.TIER.NORMAL), 1, (ISkill<IHunterPlayer>) null, 2, "YWWY", "YZZY", "YZZY", "YXXY", 'X', Items.LEATHER, 'Y', Items.IRON_INGOT, 'Z', ModItems.itemGarlic, 'W', ModItems.vampireFang);
         weaponCraftingManager.addRecipe(createStack(hunterCoat_legs, IItemWithTier.TIER.NORMAL), 1, (ISkill<IHunterPlayer>) null, 2, "YYYY", "YZZY", "YZZY", "Y  Y", 'X', Items.LEATHER, 'Y', Items.IRON_INGOT, 'Z', ModItems.itemGarlic);
-        weaponCraftingManager.addRecipe(createStack(hunterCoat_boots, IItemWithTier.TIER.NORMAL), 1, (ISkill<IHunterPlayer>) null, 2, "    ", "YYYY", "YZZY", "YXXY", 'X', Items.LEATHER, 'Y', Items.IRON_INGOT, 'Z', ModItems.itemGarlic);
+        weaponCraftingManager.addRecipe(createStack(hunterCoat_boots, IItemWithTier.TIER.NORMAL), 1, (ISkill<IHunterPlayer>) null, 2, "    ", "Y  Y", "YZZY", "YXXY", 'X', Items.LEATHER, 'Y', Items.IRON_INGOT, 'Z', ModItems.itemGarlic);
+        //Hunter Coat Enhanced
         weaponCraftingManager.addRecipe(createStack(hunterCoat_helmet, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhancedArmor, 5, "YXXY", "YZZY", "YZZY", "    ", 'X', Items.DIAMOND, 'Y', Items.IRON_INGOT, 'Z', ModItems.itemGarlic);
         weaponCraftingManager.addRecipe(createStack(hunterCoat_chest, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhancedArmor, 5, "YWWY", "YZZY", "YXXY", "YXXY", 'X', Items.DIAMOND, 'Y', Items.IRON_INGOT, 'Z', ModItems.itemGarlic, 'W', ModItems.vampireFang);
         weaponCraftingManager.addRecipe(createStack(hunterCoat_legs, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhancedArmor, 5, "YWWY", "YZZY", "YZZY", "YWWY", 'X', Items.LEATHER, 'Y', Items.IRON_INGOT, 'Z', ModItems.itemGarlic, 'W', Items.DIAMOND);
-        weaponCraftingManager.addRecipe(createStack(hunterCoat_boots, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhancedArmor, 5, "    ", "YYYY", "YZZY", "YXXY", 'X', Items.DIAMOND, 'Y', Items.IRON_INGOT, 'Z', ModItems.itemGarlic);
+        weaponCraftingManager.addRecipe(createStack(hunterCoat_boots, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhancedArmor, 5, "    ", "Y  Y", "YZZY", "YXXY", 'X', Items.DIAMOND, 'Y', Items.IRON_INGOT, 'Z', ModItems.itemGarlic);
+        //Obsidian Armor
+        weaponCraftingManager.addRecipe(createStack(obsidianArmor_helmet, IItemWithTier.TIER.NORMAL), 1, (ISkill<IHunterPlayer>) null, 5, "XXXX", "XYYX", "XYYX", "    ", 'X', Items.IRON_INGOT, 'Y', Blocks.OBSIDIAN);
+        weaponCraftingManager.addRecipe(createStack(obsidianArmor_chest, IItemWithTier.TIER.NORMAL), 1, (ISkill<IHunterPlayer>) null, 5, "ZXXZ", "XYYX", "XYYX", "XYYX", 'X', Items.IRON_INGOT, 'Y', Blocks.OBSIDIAN, 'Z', Items.LEATHER);
+        weaponCraftingManager.addRecipe(createStack(obsidianArmor_legs, IItemWithTier.TIER.NORMAL), 1, (ISkill<IHunterPlayer>) null, 5, "XXXX", "XYYX", "XYYX", "XYYX", 'X', Items.IRON_INGOT, 'Y', Blocks.OBSIDIAN);
+        weaponCraftingManager.addRecipe(createStack(obsidianArmor_boots, IItemWithTier.TIER.NORMAL), 1, (ISkill<IHunterPlayer>) null, 5, "    ", "X  X", "XYYX", "XYYX", 'X', Items.IRON_INGOT, 'Y', Blocks.OBSIDIAN);
+        //Obsidian Armor Enhanced
+        weaponCraftingManager.addRecipe(createStack(obsidianArmor_helmet, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhancedArmor, 5, "XDDX", "XYYX", "XYYX", "    ", 'X', Items.IRON_INGOT, 'Y', Blocks.OBSIDIAN, 'D', Items.DIAMOND);
+        weaponCraftingManager.addRecipe(createStack(obsidianArmor_chest, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhancedArmor, 5, "ZXXZ", "DYYD", "XYYX", "DYYD", 'X', Items.IRON_INGOT, 'Y', Blocks.OBSIDIAN, 'Z', Items.LEATHER, 'D', Items.DIAMOND);
+        weaponCraftingManager.addRecipe(createStack(obsidianArmor_legs, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhancedArmor, 5, "XDDX", "XYYX", "XYYX", "XYYX", 'X', Items.IRON_INGOT, 'Y', Blocks.OBSIDIAN, 'D', Items.DIAMOND);
+        weaponCraftingManager.addRecipe(createStack(obsidianArmor_boots, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhancedArmor, 5, "    ", "XDDX", "XYYX", "XYYX", 'X', Items.IRON_INGOT, 'Y', Blocks.OBSIDIAN, 'D', Items.DIAMOND);
+
         ItemHolyWaterBottle.registerSplashRecipes(holyWaterBottle, IItemWithTier.TIER.NORMAL);
         ItemHolyWaterBottle.registerSplashRecipes(holyWaterBottle, IItemWithTier.TIER.ENHANCED);
         ItemHolyWaterBottle.registerSplashRecipes(holyWaterBottle, IItemWithTier.TIER.ULTIMATE);
@@ -151,10 +172,11 @@ public class ModItems {
 
         cauldronCraftingManager.registerLiquidColor(ModItems.holyWaterBottle, 0x6666FF);
         cauldronCraftingManager.registerLiquidColor(ModItems.itemGarlic, 0xBBBBBB);
-        cauldronCraftingManager.addRecipe(ModItems.holyWaterBottle.getStack(IItemWithTier.TIER.NORMAL), Items.GUNPOWDER, new ItemStack(ModItems.itemAlchemicalFire, 4));
-        cauldronCraftingManager.addRecipe(ModItems.holyWaterBottle.getStack(IItemWithTier.TIER.NORMAL), new ItemStack(ModItems.itemGarlic, 4), new ItemStack(ModItems.purifiedGarlic, 2));
-        cauldronCraftingManager.addRecipe(ModItems.itemGarlic, Blocks.WOOL, new ItemStack(ModItems.garlicBeaconCore)).setRequirements(1, HunterSkills.garlicBeacon);
-
+        cauldronCraftingManager.addRecipe(new ItemStack(ModItems.itemAlchemicalFire, 4), ModItems.holyWaterBottle.getStack(IItemWithTier.TIER.NORMAL), Items.GUNPOWDER).setRequirements(1, HunterSkills.basic_alchemy);
+        cauldronCraftingManager.addRecipe(new ItemStack(ModItems.purifiedGarlic, 2), ModItems.holyWaterBottle.getStack(IItemWithTier.TIER.NORMAL), new ItemStack(ModItems.itemGarlic, 4)).setRequirements(1, HunterSkills.purifiedGarlic);
+        cauldronCraftingManager.addRecipe(new ItemStack(ModItems.garlicBeaconCore), ModItems.itemGarlic, Blocks.WOOL).setRequirements(1, HunterSkills.garlicBeacon);
+        cauldronCraftingManager.addRecipe(ModItems.garlicBeaconCoreImproved, ModItems.holyWaterBottle.getStack(IItemWithTier.TIER.ULTIMATE), ModItems.garlicBeaconCore).setRequirements(1, HunterSkills.garlicBeacon_improved).setExperience(2F);
+        cauldronCraftingManager.addRecipe(new ItemStack(ModItems.pureSalt, 4), new FluidStack(FluidRegistry.WATER, Fluid.BUCKET_VOLUME), null).setRequirements(1, HunterSkills.basic_alchemy).setCookingTime(20 * 60);
     }
 
     public static ItemStack createStack(IItemWithTier item, IItemWithTier.TIER tier) {
@@ -205,6 +227,7 @@ public class ModItems {
                 return true;
             }
         });
+        pureSalt = registerItem(new VampirismItem("pure_salt"));
 
         holySaltWater = registerItem(new VampirismItem("holy_salt_water") {
             @Override

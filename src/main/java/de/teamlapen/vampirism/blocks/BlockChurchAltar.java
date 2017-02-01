@@ -66,6 +66,9 @@ public class BlockChurchAltar extends VampirismBlock {
                 ModItems.holyWaterBottle.setTier(newStack, enhanced ? IItemWithTier.TIER.ENHANCED : IItemWithTier.TIER.NORMAL);
                 playerIn.setHeldItem(hand, newStack);
                 return true;
+            } else if (ModItems.pureSalt.equals(heldItem.getItem())) {
+                if (worldIn.isRemote) return true;
+                playerIn.setHeldItem(hand, new ItemStack(ModItems.holySalt, heldItem.stackSize));
             }
         }
         return false;

@@ -76,6 +76,16 @@ text.vampirism.skill.tech_weapons.desc=Learn how to build some advanced weapons
 text.vampirism.skill.enhanced_armor=Enhanced armor
 text.vampirism.skill.enhanced_weapons=Enhanced weapons
 text.vampirism.skill.disguiseHunter.desc=Allows you to hide from mobs and become far less visible to other players
+text.vampirism.skill.basic_alchemy=Basic Alchemy
+text.vampirism.skill.basic_alchemy.desc=Learn how to use the Alchemical Cauldron to craft awesome things.
+text.vampirism.skill.garlic_beacon=Vampire repelling
+text.vampirism.skill.garlic_beacon.desc=Learn how to craft a garlic diffuser to keep those vampires away.
+text.vampirism.skill.purified_garlic=Purified Garlic
+text.vampirism.skill.purified_garlic.desc=Purify your garlic to increase it's effect. Boost your garlic diffusor with it.
+text.vampirism.skill.holy_water_enhanced=Enhanced Holy Water
+text.vampirism.skill.holy_water_enhanced.desc=Create enhanced Holy Water instead of normal one.
+text.vampirism.skill.garlic_beacon_improved=Improved diffuser
+text.vampirism.skill.garlic_beacon_improved.desc=Learn how to craft a garlic diffuser with a higher range
 
 #HUNTER ACTIONS
 action.vampirism.hunter.disguise=Disguise
@@ -137,9 +147,12 @@ tile.vampirism.alchemicalFire.name=Alchemical Fire
 tile.vampirism.alchemicalCauldron.other=This cauldron belongs to %s. You should not use it.
 tile.vampirism.alchemicalCauldron.name=Alchemical Cauldron
 tile.vampirism.alchemicalCauldron.display=%s's %s
-tile.vampirism.alchemicalCauldron.cannot_use=You have not leared how to use this
-tile.vampirism.garlicBeacon.name=Garlic Beacon
+tile.vampirism.alchemicalCauldron.cannot_use=You have not learned how to use this
+tile.vampirism.garlicBeacon.name=Garlic Diffusor
 tile.vampirism.garlicBeacon.improved=Improved
+tile.vampirism.garlicBeacon.weak=Weak
+tile.vampirism.garlicBeacon.already_fueled=Already fueled
+tile.vampirism.garlicBeacon.successfully_fueled=Successfully fueled
 
 #ITEMS
 item.vampirism.hunterIntel.name=Hunter Intel
@@ -216,6 +229,7 @@ item.vampirism.itemAlchemicalFire.desc2=Burns indefinitely
 item.vampirism.purified_garlic.name=Purified Garlic
 item.vampirism.garlic_beacon_core.name=Garlic Beacon Core
 item.vampirism.garlic_beacon_core_improved.name=Improved Garlic Beacon Core
+item.vampirism.pure_salt.name=Pure Salt
 
 #KEYS
 keys.vampirism.select_skills=Select Skills

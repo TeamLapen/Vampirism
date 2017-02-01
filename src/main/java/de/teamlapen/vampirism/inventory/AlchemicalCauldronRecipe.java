@@ -28,7 +28,9 @@ import java.util.Arrays;
  */
 public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     private static final ISkill[] EMPTY_SKILLS = {};
+    @Nonnull
     private final ItemStack output;
+    @Nullable
     private final ItemStack ingredient;
     private final FluidStack fluidStack;
     private final ItemStack fluidItem;
@@ -36,12 +38,12 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     private ISkill<IHunterPlayer>[] skills = null;
     private int reqLevel = 0;
     private int cookingTime = 400;
-    private int experience;
+    private float experience = 0.2F;
     @Nullable
     private ItemStack descriptiveStack;
 
 
-    AlchemicalCauldronRecipe(ItemStack liquid, ItemStack ingredient, ItemStack output) {
+    AlchemicalCauldronRecipe(@Nonnull ItemStack output, ItemStack liquid, @Nullable ItemStack ingredient) {
         if (liquid.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
             IFluidHandler handler = liquid.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
             FluidStack stack = handler.drain(Integer.MAX_VALUE, false);
@@ -65,7 +67,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
         this.output = output;
     }
 
-    AlchemicalCauldronRecipe(FluidStack fluidStack, ItemStack ingredient, ItemStack output) {
+    AlchemicalCauldronRecipe(@Nonnull ItemStack output, FluidStack fluidStack, @Nullable ItemStack ingredient) {
         this.fluidStack = fluidStack;
         this.fluidItem = null;
         this.ingredient = ingredient;
@@ -97,7 +99,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     }
 
     @Override
-    public IAlchemicalCauldronRecipe configure(int ticks, int exp, int reqLevel, @Nullable ISkill<IHunterPlayer>... reqSkills) {
+    public IAlchemicalCauldronRecipe configure(int ticks, float exp, int reqLevel, @Nullable ISkill<IHunterPlayer>... reqSkills) {
         return setCookingTime(ticks).setExperience(exp).setRequirements(reqLevel, reqSkills);
     }
 
@@ -177,7 +179,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     }
 
     @Override
-    public IAlchemicalCauldronRecipe setExperience(int exp) {
+    public IAlchemicalCauldronRecipe setExperience(float exp) {
         experience = exp;
         return this;
     }

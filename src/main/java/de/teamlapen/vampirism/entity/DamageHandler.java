@@ -49,8 +49,9 @@ public class DamageHandler {
     }
 
     private static void affectVampireGarlic(IVampire vampire, EnumStrength strength, float multiplier, boolean ambient) {
+        if (strength == EnumStrength.NONE) return;
         EntityLivingBase entity = vampire.getRepresentingEntity();
-        entity.addPotionEffect(new PotionEffect(ModPotions.garlic, (int) (multiplier * 20), 0, ambient, true));
+        entity.addPotionEffect(new PotionEffect(ModPotions.garlic, (int) (multiplier * 20), strength.getStrength() - 1, ambient, true));
         if (entity instanceof EntityPlayer && ((EntityPlayer) entity).capabilities.isCreativeMode) return;
         entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, (int) (multiplier * 20), 1, ambient, false));
         if (strength == EnumStrength.MEDIUM || strength == EnumStrength.STRONG) {
@@ -73,7 +74,7 @@ public class DamageHandler {
      * @param ticks    A tick related value like ticksExisted
      */
     public static void affectVampireGarlicAmbient(IVampire vampire, EnumStrength strength, int ticks) {
-        if (ticks % 20 == 7) {
+        if (ticks % 37 == 7) {
             affectVampireGarlic(vampire, strength, 5, true);
         }
     }

@@ -175,13 +175,15 @@ public class ItemCrossbowArrow extends VampirismItem {
     }
 
     public enum EnumArrowType {
-        NORMAL("normal", 2.0), VAMPIRE_KILLER("vampireKiller", 0.5), SPITFIRE("spitfire", 0.5);
+        NORMAL("normal", 2.0, 0xFFFFFF), VAMPIRE_KILLER("vampireKiller", 0.5, 0x7A0073), SPITFIRE("spitfire", 0.5, 0xFF2211);
+        public final int color;
         final String name;
         final double baseDamage;
 
-        EnumArrowType(String name, double baseDamage) {
+        EnumArrowType(String name, double baseDamage, int color) {
             this.name = name;
             this.baseDamage = baseDamage;
+            this.color = color;
         }
     }
 }

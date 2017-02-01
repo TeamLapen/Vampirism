@@ -113,6 +113,9 @@ public class ModBlocks {
         GameRegistry.addRecipe(new ItemStack(bloodPotionTable, 1), "XXX", "Y Y", "ZZZ", 'X', Items.GLASS_BOTTLE, 'Y', Blocks.PLANKS, 'Z', Items.IRON_INGOT);
         GameRegistry.addRecipe(new ItemStack(churchAltar), " X ", "YYY", " Y ", 'X', ModItems.vampireBook, 'Y', Blocks.PLANKS);
         GameRegistry.addRecipe(new ItemStack(alchemicalCauldron), "XZX", "XXX", "Y Y", 'X', Items.IRON_INGOT, 'Y', Blocks.STONEBRICK, 'Z', ModItems.itemGarlic);
+        GameRegistry.addRecipe(new ItemStack(garlicBeacon), "XYX", "YZY", "OOO", 'X', Blocks.PLANKS, 'Y', Items.DIAMOND, 'Z', ModItems.garlicBeaconCore, 'O', Blocks.OBSIDIAN);
+        GameRegistry.addRecipe(new ItemStack(garlicBeacon, 1, 1), "XYX", "YZY", "OOO", 'X', Blocks.PLANKS, 'Y', Items.DIAMOND, 'Z', ModItems.garlicBeaconCoreImproved, 'O', Blocks.OBSIDIAN);
+
     }
 
 

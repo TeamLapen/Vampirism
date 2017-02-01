@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.api.items;
 
-import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -26,14 +25,14 @@ public interface IAlchemicalCauldronCraftingManager {
      * @param output     ItemStack, Item or Block
      * @return This recipe for further configuration
      */
-    IAlchemicalCauldronRecipe addRecipe(Object liquid, Object ingredient, Object output);
+    IAlchemicalCauldronRecipe addRecipe(@Nonnull Object output, @Nonnull Object liquid, @Nullable Object ingredient);
 
     /**
      * Same as {@link IAlchemicalCauldronCraftingManager#addRecipe(Object, Object, Object)} but calls {@link IAlchemicalCauldronRecipe#configure(int, int, int, ISkill[])} on it
      *
      * @return This recipe
      */
-    IAlchemicalCauldronRecipe addRecipe(Object liquid, Object ingredient, Object output, int ticks, int exp, int reqLevel, ISkill<IHunterPlayer>... reqSkills);
+    IAlchemicalCauldronRecipe addRecipe(@Nonnull Object output, @Nonnull Object liquid, @Nullable Object ingredient, int ticks, int exp, int reqLevel, ISkill... reqSkills);
 
     /**
      * Finds the recipe that fits to the given inputs. Does not check level or skill requirements

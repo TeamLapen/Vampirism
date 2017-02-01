@@ -62,10 +62,12 @@ public class HunterSkills {
     public static final ISkill<IHunterPlayer> bloodPotion_fasterCrafting = new VampirismSkill.SimpleHunterSkill("blood_potion_faster_crafting", 144, 32, false);
     public static final ISkill<IHunterPlayer> bloodPotion_portableCrafting = new VampirismSkill.SimpleHunterSkill("blood_potion_portable_crafting", 176, 32, true);
     public static final ISkill<IHunterPlayer> bloodPotion_increaseDuration = new VampirismSkill.SimpleHunterSkill("blood_potion_duration", 160, 32, true);
-    public static final ISkill<IHunterPlayer> holyWater_enhanced = new VampirismSkill.SimpleHunterSkill("holy_water_enhanced", 0, 0, true);
 
     public static final ISkill<IHunterPlayer> basic_alchemy = new VampirismSkill.SimpleHunterSkill("basic_alchemy", 0, 0, true);
     public static final ISkill<IHunterPlayer> garlicBeacon = new VampirismSkill.SimpleHunterSkill("garlic_beacon", 0, 0, true);
+    public static final ISkill<IHunterPlayer> holyWater_enhanced = new VampirismSkill.SimpleHunterSkill("holy_water_enhanced", 0, 0, true);
+    public static final ISkill<IHunterPlayer> purifiedGarlic = new VampirismSkill.SimpleHunterSkill("purified_garlic", 0, 0, true);
+    public static final ISkill<IHunterPlayer> garlicBeacon_improved = new VampirismSkill.SimpleHunterSkill("garlic_beacon_improved", 0, 0, true);
 
     public static void registerHunterSkills() {
         ISkillRegistry registry = VampirismAPI.skillRegistry();
@@ -103,6 +105,8 @@ public class HunterSkills {
     private static void registerAlchemy(SkillNode root) {
         SkillNode skill5 = new SkillNode(root, basic_alchemy);
         SkillNode skill6 = new SkillNode(skill5, garlicBeacon);
+        SkillNode skill7 = new SkillNode(skill6, purifiedGarlic, holyWater_enhanced);
+        SkillNode skill8 = new SkillNode(skill7, garlicBeacon_improved);
     }
 
     private static void registerBloodAlchemy(SkillNode root) {

@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.entity.VampirismEntitySelectors;
@@ -133,5 +134,10 @@ public class ModEventHandler {
             DaySleepHelper.checkSleepWorld(event.world);
             VampirismVillageCollection.get(event.world).tick();
         }
+    }
+
+    @SubscribeEvent
+    public void onWorldUnload(WorldEvent.Unload event) {
+        VampirismAPI.getGarlicChunkHandler(event.getWorld()).clear();
     }
 }

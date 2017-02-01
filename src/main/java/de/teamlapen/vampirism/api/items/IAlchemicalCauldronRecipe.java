@@ -27,7 +27,7 @@ public interface IAlchemicalCauldronRecipe {
     /**
      * @return This
      */
-    IAlchemicalCauldronRecipe configure(int ticks, int exp, int reqLevel, @Nullable ISkill<IHunterPlayer>... reqSkills);
+    IAlchemicalCauldronRecipe configure(int ticks, float exp, int reqLevel, @Nullable ISkill<IHunterPlayer>... reqSkills);
 
     /**
      * Either the default value or a custom set one.
@@ -57,7 +57,7 @@ public interface IAlchemicalCauldronRecipe {
     /**
      * @return This
      */
-    IAlchemicalCauldronRecipe setExperience(int exp);
+    IAlchemicalCauldronRecipe setExperience(float exp);
 
     /**
      * Allows META wildcard

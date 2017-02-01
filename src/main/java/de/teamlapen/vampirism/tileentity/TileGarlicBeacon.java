@@ -2,27 +2,74 @@ package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.blocks.BlockGarlicBeacon;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ITickable;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import javax.annotation.Nullable;
 
 /**
  * 1.10
  *
  * @author maxanier
  */
-public class TileGarlicBeacon extends TileEntity {
+public class TileGarlicBeacon extends TileEntity implements ITickable {
     private int id;
     private EnumStrength strength = EnumStrength.MEDIUM;
+    private EnumStrength defaultStrength = EnumStrength.MEDIUM;
     private int r = 1;
     private boolean registered = false;
+    private int fueled = 0;
+
+    public int getFuelTime() {
+        return fueled;
+    }
+
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(getPos(), 1, getUpdateTag());
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        return this.writeToNBT(new NBTTagCompound());
+    }
 
     @Override
     public void invalidate() {
         super.invalidate();
         unregister();
+    }
+
+    @Override
+    public void markDirty() {
+        super.markDirty();
+        IBlockState state = worldObj.getBlockState(pos);
+        this.worldObj.notifyBlockUpdate(pos, state, state, 3);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        NBTTagCompound nbt = pkt.getNbtCompound();
+        handleUpdateTag(nbt);
+    }
+
+    public void onFueled() {
+        setFueledTime(20 * 60);//*20);
+        this.markDirty();
     }
 
     public void onTouched(EntityPlayer player) {
@@ -33,9 +80,61 @@ public class TileGarlicBeacon extends TileEntity {
     }
 
     @Override
+    public void readFromNBT(NBTTagCompound compound) {
+        super.readFromNBT(compound);
+        r = compound.getInteger("radius");
+        defaultStrength = EnumStrength.getFromStrenght(compound.getInteger("strength"));
+        setFueledTime(compound.getInteger("fueled"));
+    }
+
+    public void setType(BlockGarlicBeacon.Type type) {
+        switch (type) {
+            case WEAK:
+                r = 2;
+                defaultStrength = EnumStrength.WEAK;
+                break;
+            case NORMAL:
+                r = 1;
+                defaultStrength = EnumStrength.MEDIUM;
+                break;
+            case IMPROVED:
+                defaultStrength = EnumStrength.MEDIUM;
+                r = 2;
+                break;
+        }
+        strength = defaultStrength;
+    }
+
+    @Override
+    public void update() {
+        if (fueled > 0) {
+            if (fueled == 1) {
+                setFueledTime(0);
+                this.markDirty();
+            } else {
+                fueled--;
+            }
+        }
+    }
+
+    @Override
     public void validate() {
         super.validate();
         register();
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        super.writeToNBT(compound);
+        compound.setInteger("radius", r);
+        compound.setInteger("strength", defaultStrength.getStrength());
+        compound.setInteger("fueled", fueled);
+        return compound;
+    }
+
+    @Override
+    protected void func_190201_b(World p_190201_1_) {
+        this.setWorldObj(p_190201_1_);
     }
 
     private void register() {
@@ -56,9 +155,26 @@ public class TileGarlicBeacon extends TileEntity {
 
     }
 
+    private void setFueledTime(int time) {
+        int old = fueled;
+        fueled = time;
+        if (fueled > 0) {
+            strength = EnumStrength.STRONG;
+        } else {
+            strength = defaultStrength;
+        }
+        if (time > 0 && old == 0 || time == 0 && old > 0) {
+            if (!isInvalid()) {
+                unregister();
+                register();
+            }
+        }
+    }
+
     private void unregister() {
         if (registered) {
             VampirismAPI.getGarlicChunkHandler(getWorld()).removeGarlicBlock(id);
+            registered = false;
         }
     }
 }

@@ -5,10 +5,7 @@ import de.teamlapen.lib.lib.util.InventoryRenderHelper;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.items.ItemBloodBottle;
-import de.teamlapen.vampirism.items.ItemHolyWaterBottle;
-import de.teamlapen.vampirism.items.ItemInjection;
-import de.teamlapen.vampirism.items.ItemPureBlood;
+import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
@@ -22,6 +19,8 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
+
+import javax.annotation.Nonnull;
 
 /**
  * Handles item render registration
@@ -45,7 +44,7 @@ public class ModItemsRender {
         //Swiftness armor
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new IItemColor() {
             @Override
-            public int getColorFromItemstack(ItemStack stack, int tintIndex) {
+            public int getColorFromItemstack(@Nonnull ItemStack stack, int tintIndex) {
                 if (tintIndex == 0) {
                     return ((ItemArmor) stack.getItem()).getColor(stack);
                 } else {
@@ -60,6 +59,15 @@ public class ModItemsRender {
                 }
             }
         }, ModItems.armorOfSwiftness_boots, ModItems.armorOfSwiftness_chest, ModItems.armorOfSwiftness_helmet, ModItems.armorOfSwiftness_legs);
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new IItemColor() {
+            @Override
+            public int getColorFromItemstack(@Nonnull ItemStack stack, int tintIndex) {
+                if (tintIndex == 1) {
+                    return ItemCrossbowArrow.getType(stack).color;
+                }
+                return 0xFFFFFF;
+            }
+        }, ModItems.crossbowArrow);
     }
 
     private static void registerRenderers() {
@@ -94,6 +102,7 @@ public class ModItemsRender {
         renderHelper.registerRender(ModItems.hunterHat1, "normal");
         registerSimpleItemWithTier(ModItems.holyWaterBottle);
         renderHelper.registerRender(ModItems.holySalt, "normal");
+        renderHelper.registerRender(ModItems.pureSalt, "normal");
         renderHelper.registerRender(ModItems.holySaltWater, "normal");
         renderHelper.registerRender(ModItems.itemAlchemicalFire, "normal");
         renderHelper.registerRender(ModItems.garlicBeaconCore, "normal");

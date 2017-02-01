@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.modcompat.waila;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.blocks.BlockGarlicBeacon;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.tileentity.TileGarlicBeacon;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
@@ -28,6 +30,13 @@ public class GarlicBeaconProvider implements IWailaDataProvider {
     @Override
     public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         itemStack.getItem().addInformation(itemStack, accessor.getPlayer(), currenttip, false);
+        TileEntity t = accessor.getTileEntity();
+        if (t != null && t instanceof TileGarlicBeacon) {
+            int fueled = ((TileGarlicBeacon) t).getFuelTime();
+            if (fueled > 0) {
+                currenttip.add(UtilLib.translateFormatted("Fueled for %s min.", fueled / 20 / 20));
+            }
+        }
         return currenttip;
     }
 
