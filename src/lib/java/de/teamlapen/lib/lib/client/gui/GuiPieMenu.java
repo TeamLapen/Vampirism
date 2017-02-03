@@ -3,6 +3,7 @@ package de.teamlapen.lib.lib.client.gui;
 
 import de.teamlapen.lib.LIBREFERENCE;
 import de.teamlapen.lib.VampLib;
+import de.teamlapen.lib.lib.util.UtilLib;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.translation.I18n;
@@ -15,6 +16,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
+
 
 /**
  * Radial/pie menu which can be used as screen overlay to select stuff The angles (in radiant) used in this class are used to describe the direction from the screen center. 0/2Pi shows right, Pi/2 up
@@ -48,6 +50,8 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
      * Size of the images for the center
      */
     private final int CS = 100;
+    private final int textureWidth;
+    private final int textureHeight;
     private int selectedElement = -1;
     private int elementCount;
     /**
@@ -55,7 +59,7 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
      */
     private double radDiff;
 
-    public GuiPieMenu(long backgroundColor, String name) {
+    public GuiPieMenu(int textureWidth, int textureHeight, long backgroundColor, String name) {
         this.allowUserInput = true;
         this.bgred = (backgroundColor >> 16 & 255) / 255.0F;
         this.bgblue = (backgroundColor >> 8 & 255) / 255.0F;
@@ -63,6 +67,8 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
         this.bgalpha = (backgroundColor >> 24 & 255) / 255.0F;
         this.name = name;
         this.elements = new ArrayList<>();
+        this.textureHeight = textureHeight;
+        this.textureWidth = textureWidth;
     }
 
     @Override
@@ -115,7 +121,7 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
             }
             // Draw Icon
             this.mc.getTextureManager().bindTexture(getIconLoc(element));
-            this.drawTexturedModalRect(x, y, getMinU(element), getMinV(element), IS, IS);
+            UtilLib.drawTexturedModalRect(this.zLevel, x, y, getMinU(element), getMinV(element), IS, IS, textureWidth, textureHeight);
 
             this.afterIconDraw(element, x, y);
 

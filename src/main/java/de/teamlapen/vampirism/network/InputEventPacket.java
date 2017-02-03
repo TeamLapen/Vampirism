@@ -164,7 +164,7 @@ public class InputEventPacket implements IMessage {
                 if (factionPlayer != null) {
                     ISkillHandler skillHandler = factionPlayer.getSkillHandler();
                     skillHandler.resetSkills();
-                    if (!VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion()) {
+                    if (!VampirismMod.inDev && !VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion()) {
                         int l = factionPlayer.getLevel();
                         if (l > 1) {
                             FactionPlayerHandler.get(player).setFactionLevel(factionPlayer.getFaction(), l - 1);

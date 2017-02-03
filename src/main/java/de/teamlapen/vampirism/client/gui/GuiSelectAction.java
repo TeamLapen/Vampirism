@@ -21,6 +21,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public class GuiSelectAction extends GuiPieMenu<IAction> {
+    private final static int ICON_TEXTURE_WIDTH = 256;
+    private final static int ICON_TEXTURE_HEIGHT = 80;
     private final static ResourceLocation defaultIcons = new ResourceLocation(REFERENCE.MODID + ":textures/gui/actions.png");
     private IActionHandler actionHandler;
     /**
@@ -60,7 +62,7 @@ public class GuiSelectAction extends GuiPieMenu<IAction> {
     };
 
     public GuiSelectAction() {
-        super(2298478591L, "selectAction");
+        super(ICON_TEXTURE_WIDTH, ICON_TEXTURE_HEIGHT, 2298478591L, "selectAction");
     }
 
     @Override

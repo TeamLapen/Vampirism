@@ -37,7 +37,7 @@ public class PotionSanguinare extends VampirismPotion {
 
     public PotionSanguinare(String name, boolean badEffect, int potionColor) {
         super(name, badEffect, potionColor);
-        setIconIndex(7, 1).registerPotionAttributeModifier(SharedMonsterAttributes.ATTACK_DAMAGE, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, 0);
+        setIconIndex(1, 0).registerPotionAttributeModifier(SharedMonsterAttributes.ATTACK_DAMAGE, "22663B89-116E-49DC-9B6B-9971489B5BE5", 2.0D, 0);
     }
 
     @Override

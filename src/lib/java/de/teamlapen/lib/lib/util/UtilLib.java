@@ -4,6 +4,9 @@ import com.google.common.base.Predicate;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.VertexBuffer;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.EntityAITasks;
@@ -23,6 +26,8 @@ import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -61,6 +66,19 @@ public class UtilLib {
         return ItemStack.areItemStackTagsEqual(stackA, stackB);
     }
 
+    @SideOnly(Side.CLIENT)
+    public static void drawTexturedModalRect(float zLevel, int x, int y, int textureX, int textureY, int width, int height, int texWidth, int texHeight) {
+        float f = 1 / (float) texWidth;
+        float f1 = 1 / (float) texHeight;
+        Tessellator tessellator = Tessellator.getInstance();
+        VertexBuffer vertexbuffer = tessellator.getBuffer();
+        vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
+        vertexbuffer.pos((double) (x), (double) (y + height), (double) zLevel).tex((double) ((float) (textureX) * f), (double) ((float) (textureY + height) * f1)).endVertex();
+        vertexbuffer.pos((double) (x + width), (double) (y + height), (double) zLevel).tex((double) ((float) (textureX + width) * f), (double) ((float) (textureY + height) * f1)).endVertex();
+        vertexbuffer.pos((double) (x + width), (double) (y), (double) zLevel).tex((double) ((float) (textureX + width) * f), (double) ((float) (textureY) * f1)).endVertex();
+        vertexbuffer.pos((double) (x), (double) (y), (double) zLevel).tex((double) ((float) (textureX) * f), (double) ((float) (textureY) * f1)).endVertex();
+        tessellator.draw();
+    }
     /**
      * Gets players looking spot (blocks only).
      *

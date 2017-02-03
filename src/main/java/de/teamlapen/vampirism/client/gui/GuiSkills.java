@@ -45,6 +45,8 @@ import java.util.Random;
 public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
     private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/achievement/achievement_background.png");
     private static final ResourceLocation defaultIcons = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills.png");
+    private final static int ICON_TEXTURE_WIDTH = 256;
+    private final static int ICON_TEXTURE_HEIGHT = 80;
     private final int area_min_y = -77;
     private final int skill_width = 24;
     private final List<SkillNode> skillNodes = new ArrayList<>();
@@ -440,7 +442,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
                     GlStateManager.disableLighting();
                     //GlStateManager.enableCull();
                     GlStateManager.enableBlend();
-                    this.drawTexturedModalRect(x + 3, y + 3, skill.getMinU(), skill.getMinV(), 16, 16);
+                    UtilLib.drawTexturedModalRect(this.zLevel, x + 3, y + 3, skill.getMinU(), skill.getMinV(), 16, 16, ICON_TEXTURE_WIDTH, ICON_TEXTURE_HEIGHT);
                     //GlStateManager.blendFunc(770, 771);
                     GlStateManager.disableLighting();
 
