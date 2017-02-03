@@ -63,11 +63,11 @@ public class HunterSkills {
     public static final ISkill<IHunterPlayer> bloodPotion_portableCrafting = new VampirismSkill.SimpleHunterSkill("blood_potion_portable_crafting", 176, 32, true);
     public static final ISkill<IHunterPlayer> bloodPotion_increaseDuration = new VampirismSkill.SimpleHunterSkill("blood_potion_duration", 160, 32, true);
 
-    public static final ISkill<IHunterPlayer> basic_alchemy = new VampirismSkill.SimpleHunterSkill("basic_alchemy", 0, 0, true);
-    public static final ISkill<IHunterPlayer> garlicBeacon = new VampirismSkill.SimpleHunterSkill("garlic_beacon", 0, 0, true);
-    public static final ISkill<IHunterPlayer> holyWater_enhanced = new VampirismSkill.SimpleHunterSkill("holy_water_enhanced", 0, 0, true);
-    public static final ISkill<IHunterPlayer> purifiedGarlic = new VampirismSkill.SimpleHunterSkill("purified_garlic", 0, 0, true);
-    public static final ISkill<IHunterPlayer> garlicBeacon_improved = new VampirismSkill.SimpleHunterSkill("garlic_beacon_improved", 0, 0, true);
+    public static final ISkill<IHunterPlayer> basic_alchemy = new VampirismSkill.SimpleHunterSkill("basic_alchemy", 32, 48, true);
+    public static final ISkill<IHunterPlayer> garlicBeacon = new VampirismSkill.SimpleHunterSkill("garlic_beacon", 48, 48, true);
+    public static final ISkill<IHunterPlayer> holyWater_enhanced = new VampirismSkill.SimpleHunterSkill("holy_water_enhanced", 80, 48, true);
+    public static final ISkill<IHunterPlayer> purifiedGarlic = new VampirismSkill.SimpleHunterSkill("purified_garlic", 64, 48, true);
+    public static final ISkill<IHunterPlayer> garlicBeacon_improved = new VampirismSkill.SimpleHunterSkill("garlic_beacon_improved", 96, 48, true);
 
     public static void registerHunterSkills() {
         ISkillRegistry registry = VampirismAPI.skillRegistry();

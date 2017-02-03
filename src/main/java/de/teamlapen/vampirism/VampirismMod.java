@@ -131,7 +131,7 @@ public class VampirismMod {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
-        String currentVersion = "@VERSION@".equals(REFERENCE.VERSION) ? "0.0.0-Test" : REFERENCE.VERSION;
+        String currentVersion = "@VERSION@".equals(REFERENCE.VERSION) ? "0.0.0-test" : REFERENCE.VERSION;
         if (Configs.disable_versionCheck) {
             versionInfo = new VersionChecker.VersionInfo(currentVersion);
         } else {
