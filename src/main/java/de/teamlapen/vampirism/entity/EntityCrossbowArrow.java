@@ -17,16 +17,37 @@ import java.util.Random;
 
 public class EntityCrossbowArrow extends EntityArrow {
 
+    /**
+     * Create a entity arrow for a shooting entity (with offset)
+     *
+     * @param heightOffset An height offset for the position the entity is created
+     * @param rightHanded  If the entiy is right handed
+     * @param arrow        ItemStack of the represented arrow. Is copied.
+     * @param centerOffset An offset from the center of the entity
+     */
+    public static EntityCrossbowArrow createWithShooter(World world, EntityLivingBase shooter, double heightOffset, double centerOffset, boolean rightHanded, ItemStack arrow) {
+        double yaw = ((shooter.rotationYaw - 90)) / 180 * Math.PI;
+        if (rightHanded) {
+            yaw += Math.PI;
+        }
+        double posX = shooter.posX - Math.sin(yaw) * centerOffset;
+        double posZ = shooter.posZ + Math.cos(yaw) * centerOffset;
+        EntityCrossbowArrow entityArrow = new EntityCrossbowArrow(world, posX, shooter.posY + (double) shooter.getEyeHeight() - 0.10000000149011612D + heightOffset, posZ, arrow);
+        entityArrow.shootingEntity = shooter;
+        if (shooter instanceof EntityPlayer) {
+            entityArrow.pickupStatus = EntityArrow.PickupStatus.ALLOWED;
+        }
+        return entityArrow;
+    }
     private
     @Nonnull
     ItemStack arrowStack = new ItemStack(ModItems.crossbowArrow);
-
     private boolean ignoreHurtTimer = false;
-
 
     public EntityCrossbowArrow(World world) {
         super(world);
     }
+
 
     /**
      * @param arrow ItemStack of the represented arrow. Is copied.
@@ -36,19 +57,6 @@ public class EntityCrossbowArrow extends EntityArrow {
         this.setPosition(x, y, z);
         this.arrowStack = arrow.copy();
         this.arrowStack.stackSize = 1;
-    }
-
-    /**
-     * @param heightOffset An height offset for the position the entity is created
-     * @param arrow        ItemStack of the represented arrow. Is copied.
-     */
-    public EntityCrossbowArrow(World worldIn, EntityLivingBase shooter, double heightOffset, ItemStack arrow) {
-        this(worldIn, shooter.posX, shooter.posY + (double) shooter.getEyeHeight() - 0.10000000149011612D + heightOffset, shooter.posZ, arrow);
-        this.shootingEntity = shooter;
-
-        if (shooter instanceof EntityPlayer) {
-            this.pickupStatus = EntityArrow.PickupStatus.ALLOWED;
-        }
     }
 
     public Random getRNG() {

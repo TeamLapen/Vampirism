@@ -32,8 +32,8 @@ public class ItemDoubleCrossbow extends ItemSimpleCrossbow {
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-        shoot(playerIn, heightOffset, worldIn, itemStackIn);
-        shoot(playerIn, heightOffset - 0.2, worldIn, itemStackIn);
+        shoot(playerIn, 0, 0, worldIn, itemStackIn, hand);
+        shoot(playerIn, -0.2F, 0, worldIn, itemStackIn, hand);
         return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
     }
 

@@ -79,8 +79,8 @@ public class ItemCrossbowArrow extends VampirismItem {
      * @param heightOffset An height offset for the position the entity is created
      * @return An arrow entity at the players position using the given itemstack
      */
-    public EntityCrossbowArrow createEntity(ItemStack stack, World world, EntityPlayer player, double heightOffset) {
-        EntityCrossbowArrow entity = new EntityCrossbowArrow(world, player, heightOffset, stack);
+    public EntityCrossbowArrow createEntity(ItemStack stack, World world, EntityPlayer player, double heightOffset, double centerOffset, boolean rightHand) {
+        EntityCrossbowArrow entity = EntityCrossbowArrow.createWithShooter(world, player, heightOffset, centerOffset, rightHand, stack);
         EnumArrowType type = getType(stack);
         entity.setDamage(type.baseDamage);
         if (type == EnumArrowType.SPITFIRE) {

@@ -1,13 +1,22 @@
 package de.teamlapen.vampirism.client.model;
 
+import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
+import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.EnumHandSide;
 
 /**
  * Model for Basic Vampire Hunter
  */
 public class ModelBasicHunter extends ModelBipedCloaked {
-    ModelRenderer hatTop, hatRim, axeShaft, axeBlade1, axeBlade2, stake, stakeRight, secondHead, hatTop2, hatRim2, hatRim3;
+    private ModelRenderer hatTop, hatRim, axeShaft, axeBlade1, axeBlade2, stake, stakeRight, secondHead, hatTop2, hatRim2, hatRim3;
+    private boolean targetingLeft = false;
+    private boolean targetingRight = false;
+    private float xAngle = 0;
 
     public ModelBasicHunter() {
         super(0.0F, 0.0F, 64, 64, 0, 28);
@@ -131,6 +140,24 @@ public class ModelBasicHunter extends ModelBipedCloaked {
     }
 
     @Override
+    public void setLivingAnimations(EntityLivingBase entitylivingbaseIn, float p_78086_2_, float p_78086_3_, float partialTickTime) {
+        this.targetingRight = false;
+        this.targetingLeft = false;
+        ItemStack itemStack = entitylivingbaseIn.getHeldItem(EnumHand.MAIN_HAND);
+        if (itemStack != null && itemStack.getItem() instanceof VampirismItemCrossbow && entitylivingbaseIn instanceof EntityBasicHunter && ((EntityBasicHunter) entitylivingbaseIn).isSwingingArms()) {
+            if (entitylivingbaseIn.getPrimaryHand() == EnumHandSide.RIGHT) {
+                this.targetingRight = true;
+            } else {
+                this.targetingLeft = true;
+            }
+            xAngle = -((EntityBasicHunter) entitylivingbaseIn).getTargetAngle() - (float) Math.PI / 3;
+        }
+
+        super.setLivingAnimations(entitylivingbaseIn, p_78086_2_, p_78086_3_, partialTickTime);
+
+    }
+
+    @Override
     public void setRotationAngles(float f1, float f2, float f3, float f4, float f5, float f6, Entity e) {
         super.setRotationAngles(f1, f2, f3, f4, f5, f6, e);
         hatRim.rotateAngleX = super.bipedHead.rotateAngleX;
@@ -166,5 +193,16 @@ public class ModelBasicHunter extends ModelBipedCloaked {
         secondHead.rotateAngleX = super.bipedHead.rotateAngleX;
         secondHead.rotateAngleY = super.bipedHead.rotateAngleY;
         secondHead.rotateAngleZ = super.bipedHead.rotateAngleZ;
+
+        if (targetingRight) {
+            this.bipedRightArm.rotateAngleY = -0.1F + this.bipedHead.rotateAngleY;
+            this.bipedRightArm.rotateAngleX = xAngle;
+            this.bipedLeftArm.rotateAngleX = xAngle / 2F;
+        } else if (targetingLeft) {
+            this.bipedLeftArm.rotateAngleY = 0.1F + this.bipedHead.rotateAngleY;
+            this.bipedRightArm.rotateAngleX = xAngle / 2F;
+            this.bipedLeftArm.rotateAngleX = xAngle;
+        }
+
     }
 }

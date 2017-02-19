@@ -16,10 +16,7 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.init.Enchantments;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.StatList;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
@@ -29,7 +26,7 @@ import java.util.Random;
  * Base class for crossbows
  */
 public abstract class VampirismItemCrossbow extends VampirismItem implements IFactionLevelItem<IHunterPlayer> {
-    protected double heightOffset = 0.0;
+
     private int enchantability = 0;
 
     /**
@@ -68,7 +65,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-        shoot(playerIn, heightOffset, worldIn, itemStackIn);
+        shoot(playerIn, 0, 0, worldIn, itemStackIn, hand);
         return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
     }
 
@@ -159,10 +156,9 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      *
      * @param player       The shooting player
      * @param stack        The crossbow item stack
-     * @param heightOffset An height offset for the position the entity is created
      * @return If successful
      */
-    protected boolean shoot(EntityPlayer player, double heightOffset, World world, ItemStack stack) {
+    protected boolean shoot(EntityPlayer player, float heightOffset, float centerOffset, World world, ItemStack stack, EnumHand hand) {
         boolean creative = player.capabilities.isCreativeMode;
         boolean bowInfinite = isCrossbowInfinite(stack, player);
 
@@ -180,8 +176,9 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
                 boolean consumeArrow = shouldConsumeArrow(itemstack, creative, bowInfinite);
 
                 if (!world.isRemote) {
+                    boolean rightHand = player.getPrimaryHand() == EnumHandSide.RIGHT && hand == EnumHand.MAIN_HAND || player.getPrimaryHand() == EnumHandSide.LEFT && hand == EnumHand.OFF_HAND;
                     ItemCrossbowArrow itemarrow = itemstack.getItem() instanceof ItemCrossbowArrow ? (ItemCrossbowArrow) itemstack.getItem() : ModItems.crossbowArrow;
-                    EntityCrossbowArrow entityarrow = itemarrow.createEntity(itemstack, world, player, heightOffset);
+                    EntityCrossbowArrow entityarrow = itemarrow.createEntity(itemstack, world, player, heightOffset, 0.3F + centerOffset, rightHand);
                     entityarrow.setAim(player, player.rotationPitch, player.rotationYaw, 0.0F, f * 3.0F, 1.0F);
 
                     if (isCritical(player.getRNG())) {

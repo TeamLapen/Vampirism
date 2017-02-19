@@ -90,7 +90,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
             return false;
         } else if (super.attackEntityFrom(p_70097_1_, p_70097_2_)) {
             Entity entity = p_70097_1_.getEntity();
-            if (entity instanceof EntityLivingBase) {
+            if (entity instanceof EntityLivingBase && !this.equals(entity)) {
                 this.setAttackTarget((EntityLivingBase) entity);
             }
             return true;
