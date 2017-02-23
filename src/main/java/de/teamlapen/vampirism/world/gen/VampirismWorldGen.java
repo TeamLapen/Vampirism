@@ -78,7 +78,7 @@ public class VampirismWorldGen implements IWorldGenerator {
                     }
                 }
             }
-            for (int j2 = 0; j2 < 5; ++j2) {
+            for (int j2 = 0; j2 < 10; ++j2) {
                 BlockPos pos = new BlockPos((chunkX << 4), 0, (chunkZ << 4));
                 int i3 = random.nextInt(16) + 8;
                 int l3 = random.nextInt(256);

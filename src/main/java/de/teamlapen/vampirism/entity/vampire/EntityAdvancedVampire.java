@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
 import de.teamlapen.vampirism.items.ItemBloodBottle;
 import de.teamlapen.vampirism.util.IPlayerFace;
 import de.teamlapen.vampirism.util.SupporterManager;
+import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
@@ -194,6 +195,9 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
                 break;
             default:
                 break;
+        }
+        if (getRNG().nextInt(20) == 0) {//TODO think of another way
+            this.entityDropItem(VampireBookManager.getInstance().getRandomBook(getRNG()), 0);
         }
     }
 

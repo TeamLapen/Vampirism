@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.util.IPlayerFace;
 import de.teamlapen.vampirism.util.SupporterManager;
+import de.teamlapen.vampirism.util.VampireBookManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -185,6 +186,9 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
                 break;
             default:
                 break;
+        }
+        if (getRNG().nextInt(20) == 0) {//TODO think of another way
+            this.entityDropItem(VampireBookManager.getInstance().getRandomBook(getRNG()), 0);
         }
     }
 

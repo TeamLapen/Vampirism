@@ -10,7 +10,7 @@ public class REFERENCE {
     public static final String NAME = "Vampirism";
     public static final String VERSION = "@VERSION@";
     public static final String MINECRAFT_VERSION = "@MVERSION@";
-    public static final String FORGE_VERSION_MIN = "12.18.2.2139";
+    public static final String FORGE_VERSION_MIN = "12.18.3.2185";
     public static final int HIGHEST_VAMPIRE_LEVEL = 14;
     public static final int HIGHEST_HUNTER_LEVEL = 14;
     public static final String FORGE_VERSION = "@FVERSION@";
