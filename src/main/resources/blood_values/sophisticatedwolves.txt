@@ -1,0 +1,4 @@
+#Sophisticated wolves, replaces all normal wolves
+#Blood values set by @spraaq
+
+SophisticatedWolves.SWWolf=10

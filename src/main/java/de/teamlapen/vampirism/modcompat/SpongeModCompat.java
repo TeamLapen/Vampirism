@@ -1,4 +1,4 @@
-package de.teamlapen.vampirism.modcompat.sponge;
+package de.teamlapen.vampirism.modcompat;
 
 import de.teamlapen.lib.lib.util.IModCompat;
 import net.minecraftforge.common.config.ConfigCategory;

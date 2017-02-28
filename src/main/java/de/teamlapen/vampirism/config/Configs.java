@@ -63,7 +63,7 @@ public class Configs {
 
         try {
 
-            Map<String, Integer> defaultValues = loadBloodValuesFromReader(new InputStreamReader(Configs.class.getResourceAsStream("/default_blood_values.txt")), "default_blood_values.txt");
+            Map<String, Integer> defaultValues = loadBloodValuesFromReader(new InputStreamReader(Configs.class.getResourceAsStream("/blood_values/default_blood_values.txt")), "default_blood_values.txt");
             VampirismAPI.biteableRegistry().addBloodValues(defaultValues);
         } catch (IOException e) {
             VampirismMod.log.e(TAG, e, "Could not read default blood values, this should not happen and destroys the mod experience");
@@ -202,6 +202,20 @@ public class Configs {
         }
         return bloodValues;
 
+    }
+
+    /**
+     * Reads blood values for another mod from the Vampirism jar.
+     */
+    public static void loadBloodValuesModCompat(String modid) {
+        try {
+            Map<String, Integer> defaultValues = Configs.loadBloodValuesFromReader(new InputStreamReader(Configs.class.getResourceAsStream("/blood_values/" + modid + ".txt")), modid + ".txt");
+            VampirismAPI.biteableRegistry().addBloodValues(defaultValues);
+        } catch (IOException e) {
+            VampirismMod.log.e(TAG, e, "[ModCompat]Could not read default blood values for mod %s, this should not happen", modid);
+        } catch (NullPointerException e) {
+            VampirismMod.log.e(TAG, e, "[ModCompat]Could not find packed (in JAR) blood value file for mod %s", modid);
+        }
     }
 
     @SideOnly(Side.CLIENT)
