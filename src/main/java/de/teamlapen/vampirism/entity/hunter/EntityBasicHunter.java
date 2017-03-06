@@ -76,7 +76,6 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     /**
      * Stores the x axis angle between when targeting an enemy with the crossbow
      */
-    @SideOnly(Side.CLIENT)
     private float targetAngle = 0;
 
     public EntityBasicHunter(World world) {
