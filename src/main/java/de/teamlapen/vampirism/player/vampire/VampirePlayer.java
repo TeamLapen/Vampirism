@@ -77,46 +77,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @CapabilityInject(IVampirePlayer.class)
     public static final Capability<IVampirePlayer> CAP = null;
     private final static String TAG = "VampirePlayer";
-
-    /**
-     * Don't call before the construction event of the player entity is finished
-     */
-    public static VampirePlayer get(EntityPlayer player) {
-        return (VampirePlayer) player.getCapability(CAP, null);
-    }
-
-    public static void registerCapability() {
-        CapabilityManager.INSTANCE.register(IVampirePlayer.class, new Storage(), VampirePlayerDefaultImpl.class);
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    public static ICapabilityProvider createNewCapability(final EntityPlayer player) {
-        return new ICapabilitySerializable<NBTTagCompound>() {
-
-            IVampirePlayer inst = new VampirePlayer(player);
-
-            @Override
-            public void deserializeNBT(NBTTagCompound nbt) {
-                CAP.getStorage().readNBT(CAP, inst, null, nbt);
-            }
-
-            @Override
-            public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
-                return CAP.equals(capability) ? CAP.<T>cast(inst) : null;
-            }
-
-            @Override
-            public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
-                return CAP.equals(capability);
-            }
-
-            @Override
-            public NBTTagCompound serializeNBT() {
-                return (NBTTagCompound) CAP.getStorage().writeNBT(CAP, inst, null);
-            }
-        };
-    }
-
     private final BloodStats bloodStats;
     private final String KEY_EYE = "eye_type";
     private final String KEY_FANGS = "fang_type";
@@ -136,7 +96,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private boolean wasDead = false;
     private List<IVampireVision> unlockedVisions = new ArrayList<>();
     private IVampireVision activatedVision = null;
-
     public VampirePlayer(EntityPlayer player) {
         super(player);
         applyEntityAttributes();
@@ -144,6 +103,53 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         actionHandler = new ActionHandler(this);
         skillHandler = new SkillHandler<IVampirePlayer>(this);
         garlic_cache = EnumStrength.NONE;
+    }
+
+    /**
+     * Don't call before the construction event of the player entity is finished
+     */
+    public static VampirePlayer get(EntityPlayer player)
+    {
+        return (VampirePlayer) player.getCapability(CAP, null);
+    }
+
+    public static void registerCapability()
+    {
+        CapabilityManager.INSTANCE.register(IVampirePlayer.class, new Storage(), VampirePlayerDefaultImpl.class);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    public static ICapabilityProvider createNewCapability(final EntityPlayer player)
+    {
+        return new ICapabilitySerializable<NBTTagCompound>()
+        {
+
+            IVampirePlayer inst = new VampirePlayer(player);
+
+            @Override
+            public void deserializeNBT(NBTTagCompound nbt)
+            {
+                CAP.getStorage().readNBT(CAP, inst, null, nbt);
+            }
+
+            @Override
+            public <T> T getCapability(Capability<T> capability, EnumFacing facing)
+            {
+                return CAP.equals(capability) ? CAP.<T>cast(inst) : null;
+            }
+
+            @Override
+            public boolean hasCapability(Capability<?> capability, EnumFacing facing)
+            {
+                return CAP.equals(capability);
+            }
+
+            @Override
+            public NBTTagCompound serializeNBT()
+            {
+                return (NBTTagCompound) CAP.getStorage().writeNBT(CAP, inst, null);
+            }
+        };
     }
 
     @Override
@@ -649,9 +655,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (phase == TickEvent.Phase.END) {
             //Update blood stats
             if (getLevel() > 0) {
+                player.worldObj.theProfiler.startSection("vampirism_bloodupdate");
                 if (!player.worldObj.isRemote && this.bloodStats.onUpdate()) {
                     sync(this.bloodStats.writeUpdate(new NBTTagCompound()), false);
                 }
+                player.worldObj.theProfiler.endSection();
             }
             if (getSpecialAttributes().bat) {
                 BatVampireAction.updatePlayerBatSize(player);

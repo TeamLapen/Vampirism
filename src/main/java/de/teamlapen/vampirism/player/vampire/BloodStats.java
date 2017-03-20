@@ -14,6 +14,8 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.lang.reflect.Field;
+
 /**
  * Handles VP's blood stats. Very similar to {@link FoodStats}
  * TODO maybe make a api interface for this
@@ -31,6 +33,10 @@ public class BloodStats {
     private int bloodTimer;
     private int prevBloodLevel = 20;
     private boolean changed = false;
+    /**
+     * Caches an accessor to {@link FoodStats#foodExhaustionLevel}
+     */
+    private Field field_foodExhaustionLevel = null;
 
     public BloodStats(EntityPlayer player) {
         this.player = player;
@@ -95,14 +101,20 @@ public class BloodStats {
         FoodStats foodStats = player.getFoodStats();
         foodStats.setFoodLevel(10);
         EnumDifficulty enumDifficulty = player.worldObj.getDifficulty();
-        float e;
+        float exhaustion;
         try {
-            e = ReflectionHelper.getPrivateValue(FoodStats.class, foodStats, "foodExhaustionLevel", SRGNAMES.FoodStats_foodExhaustionLevel);
-            addExhaustion(e);
-            ReflectionHelper.setPrivateValue(FoodStats.class, foodStats, 0, "foodExhaustionLevel", SRGNAMES.FoodStats_foodExhaustionLevel);
-        } catch (Exception e1) {
-            VampirismMod.log.e(TAG, e1, "Failed to access foodExhaustionLevel");
-            throw e1;
+            if (field_foodExhaustionLevel == null)
+            {
+                field_foodExhaustionLevel = ReflectionHelper.findField(FoodStats.class, "foodExhaustionLevel", SRGNAMES.FoodStats_foodExhaustionLevel);
+            }
+            exhaustion = (float) field_foodExhaustionLevel.get(foodStats);
+            addExhaustion(exhaustion);
+            field_foodExhaustionLevel.set(foodStats, 0);
+        }
+        catch (Exception e)
+        {
+            VampirismMod.log.e(TAG, e, "Failed to access foodExhaustionLevel (%s)", SRGNAMES.FoodStats_foodExhaustionLevel);
+            throw new RuntimeException(e);
         }
         this.prevBloodLevel = bloodLevel;
         if (this.bloodExhaustionLevel > 4.0F) {
