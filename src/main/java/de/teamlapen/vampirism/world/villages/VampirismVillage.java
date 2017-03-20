@@ -29,12 +29,6 @@ import java.util.List;
  * Vampirism's instance of a village
  */
 public class VampirismVillage implements IVampirismVillage {
-    private static AxisAlignedBB getBoundingBox(Village v) {
-        int r = v.getVillageRadius();
-        BlockPos cc = v.getCenter();
-        return new AxisAlignedBB(cc.getX() - r, cc.getY() - 10, cc.getZ() - r, cc.getX() + r, cc.getY() + 10, cc.getZ() + r);
-    }
-
     private final String TAG = "VampirismVillage";
     private World world;
     private BlockPos center = new BlockPos(0, 0, 0);
@@ -45,6 +39,13 @@ public class VampirismVillage implements IVampirismVillage {
     private boolean dirty;
     private int recentlyBittenToDeath;
     private int tickCounter;
+
+    private static AxisAlignedBB getBoundingBox(Village v)
+    {
+        int r = v.getVillageRadius();
+        BlockPos cc = v.getCenter();
+        return new AxisAlignedBB(cc.getX() - r, cc.getY() - 10, cc.getZ() - r, cc.getX() + r, cc.getY() + 10, cc.getZ() + r);
+    }
 
     @Override
     public
@@ -160,14 +161,13 @@ public class VampirismVillage implements IVampirismVillage {
 
                     }
                 }
+
+                world.theProfiler.startSection("checkVillagersHunters");
                 List<EntityVillager> allVillagers = getAllVillager(v);
                 List<EntityBasicHunter> hunters = getHunter(v);
                 List<EntityHunterVillager> hunterVillagers = filterHunterVillagers(allVillagers);
                 List<EntityVillager> normalVillager = filterNormalVillagers(allVillagers);
                 if (world.rand.nextInt(30) == 0) {
-
-
-                    VampirismMod.log.t("%s", v.getNumVillageDoors());
                     int hunterCount = hunters.size() + hunterVillagers.size() / 2;
                     boolean spawn = hunterCount < (Balance.village.MIN_HUNTER_COUNT_VILLAGE_PER_DOOR * v.getNumVillageDoors() + 1);
                     if (spawn || world.rand.nextInt(30) == 0) {
@@ -184,6 +184,7 @@ public class VampirismVillage implements IVampirismVillage {
                         spawnHunter(v);
                     }
                 }
+                world.theProfiler.endSection();
                 int aggressiveCounter = calculateAggressiveCounter();
                 if (aggressiveCounter >= Balance.village.AGGRESSIVE_COUNTER_THRESHOLD) {
                     if (!agressive) {

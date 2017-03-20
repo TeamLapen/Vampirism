@@ -211,6 +211,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     @Override
     public void onUpdate() {
+        player.worldObj.theProfiler.startSection("vampirism_hunterPlayer");
         int level = getLevel();
         if (!isRemote()) {
             if (level > 0) {
@@ -235,6 +236,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
                 actionHandler.updateActions();
             }
         }
+        player.worldObj.theProfiler.endSection();
     }
 
     @Override

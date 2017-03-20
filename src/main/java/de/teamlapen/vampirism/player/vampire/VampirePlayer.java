@@ -546,6 +546,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public void onUpdate() {
+        player.worldObj.theProfiler.startSection("vampirism_vampirePlayer");
         int level = getLevel();
         if (level > 0) {
             if (player.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 0) {
@@ -648,6 +649,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
 
         }
+        player.worldObj.theProfiler.endSection();
     }
 
     @Override
