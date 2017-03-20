@@ -79,6 +79,10 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 if (effect == null || effect.getAmplifier() < 5) {
                     screenColor = 0xffffe700;
                     fullScreen = false;
+                    if (player.getRepresentingPlayer().capabilities.isCreativeMode)
+                    {
+                        screenPercentage = Math.min(20, screenPercentage);
+                    }
                 } else {
                     screenPercentage = 0;
                 }
