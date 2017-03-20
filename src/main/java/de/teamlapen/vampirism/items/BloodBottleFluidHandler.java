@@ -25,6 +25,13 @@ import javax.annotation.Nullable;
 public class BloodBottleFluidHandler implements IFluidHandler, ICapabilityProvider {
 
     public static final int MULTIPLIER = VReference.FOOD_TO_FLUID_BLOOD;
+    protected final ItemStack container;
+    private final ItemStack GLAS_BOTTLE = new ItemStack(Items.GLASS_BOTTLE);
+    private final int capacity;
+    public BloodBottleFluidHandler(ItemStack container, int capacity) {
+        this.container = container;
+        this.capacity = capacity;
+    }
 
     /**
      * Returns a amount which is a multiple of capacity%10
@@ -32,16 +39,9 @@ public class BloodBottleFluidHandler implements IFluidHandler, ICapabilityProvid
      * @param amt
      * @return
      */
-    public static int getAdjustedAmount(int amt) {
+    public static int getAdjustedAmount(int amt)
+    {
         return amt - amt % MULTIPLIER;
-    }
-    protected final ItemStack container;
-    private final ItemStack GLAS_BOTTLE = new ItemStack(Items.GLASS_BOTTLE);
-    private final int capacity;
-
-    public BloodBottleFluidHandler(ItemStack container, int capacity) {
-        this.container = container;
-        this.capacity = capacity;
     }
 
     @Nullable
@@ -65,7 +65,7 @@ public class BloodBottleFluidHandler implements IFluidHandler, ICapabilityProvid
              might cause crashes with other mods, although this is probably legit as forge does something similar in {@link net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack.SwapEmpty}
              */
             if (getBlood(container) == 0 && Configs.autoConvertGlasBottles) {
-                VampirismMod.log.i("BloodBottle", "Replaced blood bottle by glas bottle, during IFluidContainerItem#drain. If there is a crash afterwards, please contact the authors of Vampirism");//TODO and remove at some point
+                VampirismMod.log.d("BloodBottle", "Replaced blood bottle by glas bottle, during IFluidContainerItem#drain.");
                 container.deserializeNBT(GLAS_BOTTLE.serializeNBT());
             }
         }
