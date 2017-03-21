@@ -3,16 +3,17 @@ package de.teamlapen.vampirism.modcompat.guide;
 import amerifrance.guideapi.api.IPage;
 import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
 import amerifrance.guideapi.entry.EntryItemStack;
+import com.google.common.collect.Lists;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Utility class to build item or block info pages
@@ -23,10 +24,10 @@ public class ItemInfoBuilder {
     private String name;
     private Object[] formats = new Object[0];
     private Object[] links = null;
-    private GuideHelper.RECIPE_TYPE recipe_type = null;
-    private ItemStack[] craftableStacks = null;
     private boolean ignoreMissingRecipes = false;
     private boolean customName;
+
+    private List<Pair<ItemStack, GuideHelper.RECIPE_TYPE>> craftableStacks = null;
 
     /**
      * @param stack The relevant item stack. Used for display and strings.
@@ -53,21 +54,19 @@ public class ItemInfoBuilder {
         ArrayList<IPage> pages = new ArrayList<>();
         String base = "guide.vampirism." + (block ? "blocks" : "items") + "." + name;
         pages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + ".text", formats), stack));
-        if (links != null) GuideHelper.addLinks(pages, links);
-        if (recipe_type != null) {
-            if (craftableStacks == null) {
-                craftableStacks = new ItemStack[]{stack};
-            }
-            for (ItemStack s : craftableStacks) {
-                IPage p = GuideHelper.getRecipePage(s, recipe_type);
+        if (craftableStacks != null) {
+
+            for (Pair<ItemStack, GuideHelper.RECIPE_TYPE> craft : craftableStacks) {
+                IPage p = GuideHelper.getRecipePage(craft.getLeft(), craft.getRight());
                 if (p != null) {
                     pages.add(p);
                 } else {
                     if (!ignoreMissingRecipes)
-                        VampirismMod.log.e(GuideBook.TAG, "Failed to find %s recipe for %s", recipe_type, s);
+                        VampirismMod.log.e(GuideBook.TAG, "Failed to find %s recipe for %s", craft.getRight(), craft.getLeft());
                 }
             }
         }
+        if (links != null) GuideHelper.addLinks(pages, links);
         entries.put(new ResourceLocation(base), new EntryItemStack(pages, customName ? base : stack.getUnlocalizedName() + ".name", stack));
     }
 
@@ -77,40 +76,56 @@ public class ItemInfoBuilder {
      * @param type The crafting type
      */
     public ItemInfoBuilder craftable(GuideHelper.RECIPE_TYPE type) {
-        this.recipe_type = type;
+        this.craftableStacks = Collections.<Pair<ItemStack, GuideHelper.RECIPE_TYPE>>singletonList(ImmutablePair.of(stack, type));
         return this;
     }
 
     /**
-     * Sets the stacks that recipes should be shown.
-     * You have to call {@link ItemInfoBuilder#craftable(GuideHelper.RECIPE_TYPE)} to make this have an effect
+     * Sets the craftable stacks/blocks/items whose recipes should be shown in this item entry.
+     * You have to specify the recipe type for each craftable.
+     * Pass Itemstack,RecipeType,ItemStack,RecipeType... or Item,RecipeType... or Block,RecipeType...
      */
-    public ItemInfoBuilder craftableStacks(ItemStack... craftableStacks) {
-        this.craftableStacks = craftableStacks;
-        return this;
-    }
-
-    /**
-     * Sets the stacks that recipes should be shown.
-     * You have to call {@link ItemInfoBuilder#craftable(GuideHelper.RECIPE_TYPE)} to make this have an effect
-     */
-    public ItemInfoBuilder craftableStacks(List<ItemStack> craftableStacks) {
-        this.craftableStacks = craftableStacks.toArray(new ItemStack[craftableStacks.size()]);
-        return this;
-    }
-
-    /**
-     * Sets the stacks that recipes should be shown.
-     * You have to call {@link ItemInfoBuilder#craftable(GuideHelper.RECIPE_TYPE)} to make this have an effect
-     */
-    public ItemInfoBuilder craftableStacks(Item... craftableItems) {
-        ItemStack[] stacks = new ItemStack[craftableItems.length];
-        for (int i = 0; i < stacks.length; i++) {
-            stacks[i] = new ItemStack(craftableItems[i]);
+    public ItemInfoBuilder craftableStacks(List<Object> list) {
+        int length = list.size();
+        if (length % 2 != 0) {
+            VampirismMod.log.w("GuideBook", "Arguments: %s", list);
+            throw new IllegalArgumentException("You have to provide a recipe type after each craftable");
         }
-        craftableStacks(stacks);
+        this.craftableStacks = Lists.newArrayList();
+        Iterator it = list.iterator();
+        while (it.hasNext()) {
+            ItemStack stack;
+            Object craftable = it.next();
+            if (craftable instanceof ItemStack) {
+                stack = (ItemStack) craftable;
+            } else if (craftable instanceof Item) {
+                stack = new ItemStack((Item) craftable);
+            } else if (craftable instanceof Block) {
+                stack = new ItemStack((Block) craftable);
+            } else {
+                VampirismMod.log.w("GuideBook", "Arguments: %s", list);
+                throw new IllegalArgumentException("Inputs have to be items or blocks or stacks");
+            }
+            Object type = it.next();
+            if (!(type instanceof GuideHelper.RECIPE_TYPE)) {
+                VampirismMod.log.w("GuideBook", "Arguments: %s", list);
+                throw new IllegalArgumentException("You have to provide a recipe type after each craftable");
+            }
+            craftableStacks.add(ImmutablePair.of(stack, (GuideHelper.RECIPE_TYPE) type));
+
+        }
         return this;
     }
+
+    /**
+     * Sets the craftable stacks/blocks/items whose recipes should be shown in this item entry.
+     * You have to specify the recipe type for each craftable.
+     * Pass Itemstack,RecipeType,ItemStack,RecipeType... or Item,RecipeType... or Block,RecipeType...
+     */
+    public ItemInfoBuilder craftableStacks(Object... stacks) {
+        return craftableStacks(Arrays.asList(stacks));
+    }
+
 
     /**
      * Use a custom name (guide.vampirism....) instead of the translated Item/Block name

@@ -45,6 +45,7 @@ public interface IAlchemicalCauldronRecipe {
     /**
      * @return A stack that describes the required fluid stack. E.g. a bucket with a custom text
      */
+    @Nonnull
     ItemStack getDescriptiveFluidStack();
 
     /**

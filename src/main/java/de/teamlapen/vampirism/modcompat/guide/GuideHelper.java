@@ -11,12 +11,15 @@ import amerifrance.guideapi.page.PageText;
 import com.google.common.collect.Lists;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.items.IAlchemicalCauldronRecipe;
 import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.inventory.HunterWeaponCraftingManager;
 import de.teamlapen.vampirism.inventory.ShapedHunterWeaponRecipe;
 import de.teamlapen.vampirism.inventory.ShapelessHunterWeaponRecipe;
+import de.teamlapen.vampirism.modcompat.guide.pages.AlchemicalCauldronRecipePage;
 import de.teamlapen.vampirism.modcompat.guide.pages.PageHolderWithLinks;
 import de.teamlapen.vampirism.modcompat.guide.pages.ShapedWeaponTableRecipeRenderer;
 import de.teamlapen.vampirism.modcompat.guide.pages.ShapelessWeaponTableRecipeRenderer;
@@ -94,6 +97,13 @@ public class GuideHelper {
         return null;
     }
 
+    public static IAlchemicalCauldronRecipe getAlchemicalCauldronRecipeForOutput(ItemStack stack) {
+        for (IAlchemicalCauldronRecipe recipe : AlchemicalCauldronCraftingManager.getInstance().getRecipes()) {
+            if (checkOutput(recipe.getOutput(), stack, true)) return recipe;
+        }
+        return null;
+    }
+
     public static IHunterWeaponRecipe getWeaponTableRecipeForOutput(ItemStack stack) {
         for (IHunterWeaponRecipe recipe : HunterWeaponCraftingManager.getInstance().getRecipes()) {
             if (checkRecipeOutput(recipe, stack, true)) return recipe;
@@ -113,11 +123,16 @@ public class GuideHelper {
     private static boolean checkRecipeOutput(IRecipe recipe, ItemStack stack, boolean checkNBT) {
         if (recipe != null) {
             ItemStack resultStack = recipe.getRecipeOutput();
-            if (resultStack != null && resultStack.getItem() != null) {
-                if (resultStack.getItem() == stack.getItem() && resultStack.getItemDamage() == stack.getItemDamage()) {
-                    if (!checkNBT || resultStack.getTagCompound() == null && stack.getTagCompound() == null || resultStack.getTagCompound() != null && resultStack.getTagCompound().equals(stack.getTagCompound())) {
-                        return true;
-                    }
+            return checkOutput(resultStack, stack, checkNBT);
+        }
+        return false;
+    }
+
+    private static boolean checkOutput(ItemStack resultStack, ItemStack stack, boolean checkNBT) {
+        if (resultStack != null && resultStack.getItem() != null) {
+            if (resultStack.getItem() == stack.getItem() && resultStack.getItemDamage() == stack.getItemDamage()) {
+                if (!checkNBT || resultStack.getTagCompound() == null && stack.getTagCompound() == null || resultStack.getTagCompound() != null && resultStack.getTagCompound().equals(stack.getTagCompound())) {
+                    return true;
                 }
             }
         }
@@ -145,6 +160,9 @@ public class GuideHelper {
                     }
                     checkNotNull(renderer);
                     return new PageIRecipe(r2, renderer);
+                case ALCHEMICAL_CAULDRON:
+                    IAlchemicalCauldronRecipe r3 = checkNotNull(getAlchemicalCauldronRecipeForOutput(stack));
+                    return new AlchemicalCauldronRecipePage(r3);
                 default:
                     throw new IllegalArgumentException("Type unknown " + type);
             }
@@ -154,25 +172,30 @@ public class GuideHelper {
     }
 
     public static void addArmorWithTier(Map<ResourceLocation, EntryAbstract> entries, String name, IItemWithTier helmet, IItemWithTier chest, IItemWithTier legs, IItemWithTier boots, RECIPE_TYPE recipeType) {
-        List<ItemStack> items = new ArrayList<>();
+        List<Object> craftable = new ArrayList<>();
         for (IItemWithTier.TIER t : IItemWithTier.TIER.values()) {
-            items.add(ModItems.createStack(helmet, t));
-            items.add(ModItems.createStack(chest, t));
-            items.add(ModItems.createStack(legs, t));
-            items.add(ModItems.createStack(boots, t));
+            craftable.add(ModItems.createStack(helmet, t));
+            craftable.add(RECIPE_TYPE.WEAPON_TABLE);
+            craftable.add(ModItems.createStack(chest, t));
+            craftable.add(RECIPE_TYPE.WEAPON_TABLE);
+            craftable.add(ModItems.createStack(legs, t));
+            craftable.add(RECIPE_TYPE.WEAPON_TABLE);
+            craftable.add(ModItems.createStack(boots, t));
+            craftable.add(RECIPE_TYPE.WEAPON_TABLE);
         }
         ItemInfoBuilder builder = new ItemInfoBuilder(ModItems.createStack(helmet, IItemWithTier.TIER.NORMAL), false);
-        builder.setName(name).ignoreMissingRecipes().craftable(RECIPE_TYPE.WEAPON_TABLE).craftableStacks(items).customName();
+        builder.setName(name).ignoreMissingRecipes().craftableStacks(craftable).customName();
         builder.build(entries);
     }
 
     public static void addItemWithTier(Map<ResourceLocation, EntryAbstract> entries, IItemWithTier item, RECIPE_TYPE recipeType) {
-        List<ItemStack> items = new ArrayList<>();
+        List<Object> craftable = new ArrayList<>();
         for (IItemWithTier.TIER t : IItemWithTier.TIER.values()) {
-            items.add(ModItems.createStack(item, t));
+            craftable.add(ModItems.createStack(item, t));
+            craftable.add(RECIPE_TYPE.WEAPON_TABLE);
         }
         ItemInfoBuilder builder = new ItemInfoBuilder(ModItems.createStack(item, IItemWithTier.TIER.NORMAL), false);
-        builder.craftable(RECIPE_TYPE.WEAPON_TABLE).craftableStacks(items).ignoreMissingRecipes();
+        builder.craftableStacks(craftable).ignoreMissingRecipes();
         builder.build(entries);
     }
 
@@ -194,7 +217,7 @@ public class GuideHelper {
     }
 
     public enum RECIPE_TYPE {
-        WORKBENCH, FURNACE, WEAPON_TABLE
+        WORKBENCH, FURNACE, WEAPON_TABLE, ALCHEMICAL_CAULDRON
     }
 
 

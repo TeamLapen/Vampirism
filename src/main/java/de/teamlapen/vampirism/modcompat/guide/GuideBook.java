@@ -13,12 +13,14 @@ import com.google.common.collect.Maps;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockAltarPillar;
+import de.teamlapen.vampirism.blocks.BlockGarlicBeacon;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.ItemBloodBottle;
+import de.teamlapen.vampirism.items.ItemCrossbowArrow;
 import de.teamlapen.vampirism.items.ItemInjection;
 import de.teamlapen.vampirism.modcompat.guide.pages.PageHolderWithLinks;
 import de.teamlapen.vampirism.modcompat.guide.pages.PageTable;
@@ -26,6 +28,7 @@ import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -42,8 +45,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import static de.teamlapen.vampirism.modcompat.guide.GuideHelper.RECIPE_TYPE.WEAPON_TABLE;
-import static de.teamlapen.vampirism.modcompat.guide.GuideHelper.RECIPE_TYPE.WORKBENCH;
+import static de.teamlapen.vampirism.modcompat.guide.GuideHelper.RECIPE_TYPE.*;
 import static de.teamlapen.vampirism.modcompat.guide.GuideHelper.addArmorWithTier;
 import static de.teamlapen.vampirism.modcompat.guide.GuideHelper.addItemWithTier;
 
@@ -279,6 +281,19 @@ public class GuideBook {
         skillPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(weaponTable, 250), new ResourceLocation("guide.vampirism.blocks.weaponTable")));
         entries.put(new ResourceLocation(base + "skills"), new EntryText(skillPages, base + "skills"));
 
+        List<IPage> vampSlayerPages = new ArrayList<>();
+        vampSlayerPages.addAll(PageHelper.pagesForLongText(UtilLib.translate(base + "vamp_slayer.intro")));
+        String garlic = String.format("§l%s§r\n", ModItems.itemGarlic.getLocalizedName());
+        garlic += UtilLib.translate(base + "vamp_slayer.garlic") + "\n" + UtilLib.translate(base + "vamp_slayer.garlic2") + "\n" + UtilLib.translate(base + "vamp_slayer.garlic.diffusor");
+        vampSlayerPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(garlic, 250), new ResourceLocation("guide.vampirism.blocks.garlicBeacon")));
+        String holyWater = String.format("§l%s§r\n", ModItems.holyWaterBottle.getLocalizedName());
+        holyWater += UtilLib.translate(base + "vamp_slayer.holy_water");
+        vampSlayerPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(holyWater, 250), new ResourceLocation("guide.vampirism.items.holy_water_bottle")));
+        String fire = String.format("§l%s§r\n", Blocks.FIRE.getLocalizedName());
+        fire += UtilLib.translate(base + "vamp_slayer.fire");
+        vampSlayerPages.addAll(GuideHelper.addLinks(PageHelper.pagesForLongText(fire, 250), new ResourceLocation("guide.vampirism.items.itemAlchemicalFire"), new ResourceLocation("guide.vampirism.items.crossbowArrow")));
+        entries.put(new ResourceLocation(base + "vamp_slayer"), new EntryText(vampSlayerPages, base + "vamp_slayer"));
+
         List<IPage> unHunterPages = new ArrayList<>();
         unHunterPages.addAll(PageHelper.pagesForLongText(UtilLib.translateFormatted(base + "unhunter.text", new ItemStack(ModItems.injection, 1, ItemInjection.META_SANGUINARE).getDisplayName()), 250));
         entries.put(new ResourceLocation(base + "unhunter"), new EntryText(unHunterPages, base + "unhunter"));
@@ -363,13 +378,17 @@ public class GuideBook {
         //Vampire
         new ItemInfoBuilder(new ItemStack(ModItems.bloodBottle, 1, ItemBloodBottle.AMOUNT), false).build(entries);
         //Hunter
-        new ItemInfoBuilder(ModItems.injection).craftable(WORKBENCH).craftableStacks(new ItemStack(ModItems.injection, 1, 0), new ItemStack(ModItems.injection, 1, ItemInjection.META_GARLIC), new ItemStack(ModItems.injection, 1, ItemInjection.META_SANGUINARE)).build(entries);
+        new ItemInfoBuilder(ModItems.injection).craftableStacks(new ItemStack(ModItems.injection, 1, 0), WORKBENCH, new ItemStack(ModItems.injection, 1, ItemInjection.META_GARLIC), WORKBENCH, new ItemStack(ModItems.injection, 1, ItemInjection.META_SANGUINARE), WORKBENCH).build(entries);
         new ItemInfoBuilder(ModItems.hunterIntel).setLinks(new ResourceLocation("guide.vampirism.blocks.hunterTable")).setFormats(ModBlocks.hunterTable.getLocalizedName()).build(entries);
         new ItemInfoBuilder(ModItems.itemGarlic).build(entries);
+        new ItemInfoBuilder(ModItems.purifiedGarlic).craftable(ALCHEMICAL_CAULDRON).build(entries);
         new ItemInfoBuilder(ModItems.pitchfork).craftable(WEAPON_TABLE).build(entries);
         new ItemInfoBuilder(ModItems.stake).setFormats(((int) (Balance.hps.INSTANT_KILL_SKILL_1_MAX_HEALTH_PERC * 100)) + "%").craftable(WORKBENCH).build(entries);
-        new ItemInfoBuilder(ModItems.basicCrossbow).setFormats(ModItems.crossbowArrow.getLocalizedName(), ModItems.techCrossbowAmmoPackage.getLocalizedName()).setLinks(new ResourceLocation("guide.vampirism.items.crossbowArrow")).craftable(WEAPON_TABLE).craftableStacks(ModItems.basicCrossbow, ModItems.basicDoubleCrossbow, ModItems.enhancedCrossbow, ModItems.enhancedDoubleCrossbow, ModItems.basicTechCrossbow, ModItems.techCrossbowAmmoPackage).setName("crossbows").customName().build(entries);
-        new ItemInfoBuilder(ModItems.crossbowArrow).craftable(WORKBENCH).build(entries);
+        new ItemInfoBuilder(ModItems.basicCrossbow).setFormats(ModItems.crossbowArrow.getLocalizedName(), ModItems.techCrossbowAmmoPackage.getLocalizedName()).setLinks(new ResourceLocation("guide.vampirism.items.crossbowArrow")).craftableStacks(ModItems.basicCrossbow, WEAPON_TABLE, ModItems.basicDoubleCrossbow, WEAPON_TABLE, ModItems.enhancedCrossbow, WEAPON_TABLE, ModItems.enhancedDoubleCrossbow, WEAPON_TABLE, ModItems.basicTechCrossbow, WEAPON_TABLE, ModItems.techCrossbowAmmoPackage, WEAPON_TABLE).setName("crossbows").customName().build(entries);
+        new ItemInfoBuilder(ModItems.crossbowArrow).craftableStacks(ModItems.crossbowArrow.getStack(ItemCrossbowArrow.EnumArrowType.NORMAL), WORKBENCH, ModItems.crossbowArrow.getStack(ItemCrossbowArrow.EnumArrowType.VAMPIRE_KILLER), WEAPON_TABLE, ModItems.crossbowArrow.getStack(ItemCrossbowArrow.EnumArrowType.SPITFIRE), WEAPON_TABLE).build(entries);
+        new ItemInfoBuilder(ModItems.holyWaterBottle).build(entries);
+        new ItemInfoBuilder(ModItems.itemAlchemicalFire).craftable(ALCHEMICAL_CAULDRON).build(entries);
+
         addArmorWithTier(entries, "armorOfSwiftness", ModItems.armorOfSwiftness_helmet, ModItems.armorOfSwiftness_chest, ModItems.armorOfSwiftness_legs, ModItems.armorOfSwiftness_boots, WEAPON_TABLE);
         addArmorWithTier(entries, "hunterCoat", ModItems.hunterCoat_helmet, ModItems.hunterCoat_chest, ModItems.hunterCoat_legs, ModItems.hunterCoat_boots, WEAPON_TABLE);
         addItemWithTier(entries, ModItems.hunterAxe, WEAPON_TABLE);
@@ -381,12 +400,12 @@ public class GuideBook {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.blocks.";
         //General
-        new ItemInfoBuilder(ModBlocks.castleBlock).craftable(WORKBENCH).craftableStacks(new ItemStack(ModBlocks.castleBlock, 1, 0), new ItemStack(ModBlocks.castleBlock, 1, 1)).build(entries);
+        new ItemInfoBuilder(ModBlocks.castleBlock).craftableStacks(new ItemStack(ModBlocks.castleBlock, 1, 0), WORKBENCH, new ItemStack(ModBlocks.castleBlock, 1, 1), WORKBENCH).build(entries);
         new ItemInfoBuilder(ModBlocks.vampirismFlower).build(entries);
         //Vampire
         new ItemInfoBuilder(ModBlocks.bloodContainer).craftable(WORKBENCH).build(entries);
         new ItemInfoBuilder(ModBlocks.altarInspiration).setLinks(new ResourceLocation("guide.vampirism.vampire.leveling")).craftable(WORKBENCH).build(entries);
-        new ItemInfoBuilder(ModBlocks.altarInfusion).setLinks(new ResourceLocation("guide.vampirism.vampire.leveling")).craftable(WORKBENCH).craftableStacks(new ItemStack(ModBlocks.altarInfusion), new ItemStack(ModBlocks.altarPillar), new ItemStack(ModBlocks.altarTip)).build(entries);
+        new ItemInfoBuilder(ModBlocks.altarInfusion).setLinks(new ResourceLocation("guide.vampirism.vampire.leveling")).craftableStacks(new ItemStack(ModBlocks.altarInfusion), WORKBENCH, new ItemStack(ModBlocks.altarPillar), WORKBENCH, new ItemStack(ModBlocks.altarTip), WORKBENCH).build(entries);
         new ItemInfoBuilder(new ItemStack(ModItems.itemCoffin), true).craftable(WORKBENCH).build(entries);
         new ItemInfoBuilder(ModBlocks.churchAltar).build(entries);
         //Hunter
@@ -394,7 +413,8 @@ public class GuideBook {
         new ItemInfoBuilder(ModBlocks.hunterTable).setFormats(ModItems.hunterIntel.getLocalizedName()).setLinks(new ResourceLocation("guide.vampirism.hunter.leveling"), new ResourceLocation("guide.vampirism.items.hunterIntel")).craftable(WORKBENCH).build(entries);
         new ItemInfoBuilder(ModBlocks.weaponTable).craftable(WORKBENCH).build(entries);
         new ItemInfoBuilder(ModBlocks.bloodPotionTable).craftable(WORKBENCH).build(entries);
-
+        new ItemInfoBuilder(ModBlocks.alchemicalCauldron).craftable(WORKBENCH).build(entries);
+        new ItemInfoBuilder(ModBlocks.garlicBeacon).setFormats(ModItems.purifiedGarlic.getLocalizedName()).setLinks(new ResourceLocation("guide.vampirism.items.itemGarlic"), new ResourceLocation("guide.vampirism.items.purified_garlic"), new ResourceLocation("guide.vampirism.items.holy_water_bottle")).craftableStacks(ModBlocks.garlicBeacon, WORKBENCH, new ItemStack(ModBlocks.garlicBeacon, 1, BlockGarlicBeacon.Type.IMPROVED.getId()), WORKBENCH, ModItems.garlicBeaconCore, ALCHEMICAL_CAULDRON, ModItems.garlicBeaconCoreImproved, ALCHEMICAL_CAULDRON).build(entries);
 
         links.putAll(entries);
         return entries;

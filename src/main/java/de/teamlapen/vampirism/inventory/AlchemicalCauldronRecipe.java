@@ -108,6 +108,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
         return cookingTime;
     }
 
+    @Nonnull
     @Override
     public ItemStack getDescriptiveFluidStack() {
         if (descriptiveStack != null) return descriptiveStack;
