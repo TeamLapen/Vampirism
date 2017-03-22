@@ -131,7 +131,12 @@ guide.vampirism.items.hunterCoat=Hunter Coat
 guide.vampirism.items.hunterCoat.text=Armor specifically designed for Vampire Hunters. If fully equipped it hides your from vampire's blood vision and protects you from the "Freeze" skill. A vampire baron is still able to slow down you a little bit. Also causes extra damage to any vampire that bites you. §4Can only be used by Vampire Hunters$r
 guide.vampirism.items.hunterAxe.text=Has a high knockback and deals extra damage to vampires. §4Can only be used by Vampire Hunters§r
 guide.vampirism.items.stake.text=Useful for trained Vampire Hunters. If they have the respective skill unlocked, they can e.g. instant kill vampires with below %s health with this.
-
+guide.vampirism.items.holy_water_bottle.text=Holy Water Bottles is an important weapon against vampires.\nIt can be either converted to splash bottles to directly damage vampires or used in further recipes.\n\nThere are two ways to obtain this.\nIt can be bought from a priest villager that specialised in vampire hunting or, if you learned how and have unlocked the respective skill, by blessing %s at a church altar (right-clicking the altar).\n%s can be obtained by adding %s to a water bottle.
+guide.vampirism.items.holy_salt.text=Holy Salt is the main ingredient for Holy Water.\nYou can buy it from some priest villagers or create it by blessing %s at a church altar (right-click the altar with it).\n %s again can be found in chests or, if you have learned how, by cooking water in the %s for a long time.
+guide.vampirism.items.purified_garlic.text=By filtering the most important parts out of the garlic bulb you get purified garlic.\nWhich can be used for powerful recipes or to boost the effect of a %s.
+guide.vampirism.items.itemAlchemicalFire.text=This carefully crafted complex powder creates a fire which burns indefinitely, but does not spread.\nYou can use it for decoration or defense, alternatively you can craft fire spreading crossbow arrows with it.
+guide.vampirism.items.obsidianArmor=Obsidian Armor of Hell
+guide.vampirism.items.obsidianArmor.text=This armor is crafted using solidified lava.\nIt is very protecting, but also very heavy and thereby slows you down.\nDue to it's nature it is fire proof, so if fully equipped you do not have to fear fire.\nBut be careful, lave might still get through it.
 #Blocks
 guide.vampirism.blocks.title=Blocks
 guide.vampirism.blocks.castleBlock.text=Decorative block.

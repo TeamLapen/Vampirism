@@ -381,16 +381,18 @@ public class GuideBook {
         new ItemInfoBuilder(ModItems.injection).craftableStacks(new ItemStack(ModItems.injection, 1, 0), WORKBENCH, new ItemStack(ModItems.injection, 1, ItemInjection.META_GARLIC), WORKBENCH, new ItemStack(ModItems.injection, 1, ItemInjection.META_SANGUINARE), WORKBENCH).build(entries);
         new ItemInfoBuilder(ModItems.hunterIntel).setLinks(new ResourceLocation("guide.vampirism.blocks.hunterTable")).setFormats(ModBlocks.hunterTable.getLocalizedName()).build(entries);
         new ItemInfoBuilder(ModItems.itemGarlic).build(entries);
-        new ItemInfoBuilder(ModItems.purifiedGarlic).craftable(ALCHEMICAL_CAULDRON).build(entries);
+        new ItemInfoBuilder(ModItems.purifiedGarlic).setFormats(ModBlocks.garlicBeacon.getLocalizedName()).setLinks("guide.vampirism.blocks.garlicBeacon").craftable(ALCHEMICAL_CAULDRON).build(entries);
         new ItemInfoBuilder(ModItems.pitchfork).craftable(WEAPON_TABLE).build(entries);
         new ItemInfoBuilder(ModItems.stake).setFormats(((int) (Balance.hps.INSTANT_KILL_SKILL_1_MAX_HEALTH_PERC * 100)) + "%").craftable(WORKBENCH).build(entries);
         new ItemInfoBuilder(ModItems.basicCrossbow).setFormats(ModItems.crossbowArrow.getLocalizedName(), ModItems.techCrossbowAmmoPackage.getLocalizedName()).setLinks(new ResourceLocation("guide.vampirism.items.crossbowArrow")).craftableStacks(ModItems.basicCrossbow, WEAPON_TABLE, ModItems.basicDoubleCrossbow, WEAPON_TABLE, ModItems.enhancedCrossbow, WEAPON_TABLE, ModItems.enhancedDoubleCrossbow, WEAPON_TABLE, ModItems.basicTechCrossbow, WEAPON_TABLE, ModItems.techCrossbowAmmoPackage, WEAPON_TABLE).setName("crossbows").customName().build(entries);
         new ItemInfoBuilder(ModItems.crossbowArrow).craftableStacks(ModItems.crossbowArrow.getStack(ItemCrossbowArrow.EnumArrowType.NORMAL), WORKBENCH, ModItems.crossbowArrow.getStack(ItemCrossbowArrow.EnumArrowType.VAMPIRE_KILLER), WEAPON_TABLE, ModItems.crossbowArrow.getStack(ItemCrossbowArrow.EnumArrowType.SPITFIRE), WEAPON_TABLE).build(entries);
-        new ItemInfoBuilder(ModItems.holyWaterBottle).build(entries);
-        new ItemInfoBuilder(ModItems.itemAlchemicalFire).craftable(ALCHEMICAL_CAULDRON).build(entries);
+        new ItemInfoBuilder(ModItems.holyWaterBottle).setLinks(new ResourceLocation("guide.vampirism.hunter.vamp_slayer"), new ResourceLocation("guide.vampirism.items.holy_salt")).setFormats(ModItems.holySaltWater.getLocalizedName(), ModItems.holySaltWater.getLocalizedName(), ModItems.holySalt.getLocalizedName()).craftableStacks(ModItems.holySaltWater, WORKBENCH).build(entries);
+        new ItemInfoBuilder(ModItems.holySalt).setLinks(new ResourceLocation("guide.vampirism.items.holy_water_bottle")).setFormats(ModItems.pureSalt.getLocalizedName(), ModItems.pureSalt.getLocalizedName(), ModBlocks.alchemicalCauldron.getLocalizedName()).craftableStacks(ModItems.pureSalt, ALCHEMICAL_CAULDRON).build(entries);
+        new ItemInfoBuilder(ModItems.itemAlchemicalFire).setLinks(new ResourceLocation("guide.vampirism.items.crossbowArrow")).craftable(ALCHEMICAL_CAULDRON).build(entries);
 
         addArmorWithTier(entries, "armorOfSwiftness", ModItems.armorOfSwiftness_helmet, ModItems.armorOfSwiftness_chest, ModItems.armorOfSwiftness_legs, ModItems.armorOfSwiftness_boots, WEAPON_TABLE);
         addArmorWithTier(entries, "hunterCoat", ModItems.hunterCoat_helmet, ModItems.hunterCoat_chest, ModItems.hunterCoat_legs, ModItems.hunterCoat_boots, WEAPON_TABLE);
+        addArmorWithTier(entries, "obsidianArmor", ModItems.obsidianArmor_helmet, ModItems.obsidianArmor_chest, ModItems.obsidianArmor_legs, ModItems.obsidianArmor_boots, WEAPON_TABLE);
         addItemWithTier(entries, ModItems.hunterAxe, WEAPON_TABLE);
         links.putAll(entries);
         return entries;
