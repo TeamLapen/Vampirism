@@ -378,6 +378,7 @@ text.vampirism.itemTier.ultimate=Special
 text.vampirism.poisonous_to_vampires=Poisonous to vampires
 text.vampirism.deals_more_damage_to=Deals %s percent more damage against
 text.vampirism.liquid_container=Any liquid container
+text.vampirism.translators=None
 
 #MINION COMMANDS
 minioncommand.vampirism.attackhostilenoplayers=Attack hostile

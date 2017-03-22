@@ -43,4 +43,9 @@ public class ClientProxy extends CommonProxy {
         //Need to double check the side for some reason
         return (ctx.side.isClient() ? Minecraft.getMinecraft().thePlayer : super.getPlayerEntity(ctx));
     }
+
+    @Override
+    public String getActiveLanguage() {
+        return Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().toString();
+    }
 }

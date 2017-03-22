@@ -34,4 +34,6 @@ public interface IProxy {
 
     EntityPlayer getPlayerEntity(MessageContext context);
 
+    String getActiveLanguage();
+
 }

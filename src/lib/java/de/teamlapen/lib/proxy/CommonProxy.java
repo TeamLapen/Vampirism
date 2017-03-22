@@ -41,5 +41,8 @@ public class CommonProxy implements IProxy {
         return ctx.getServerHandler().playerEntity;
     }
 
-
+    @Override
+    public String getActiveLanguage() {
+        return "English";
+    }
 }

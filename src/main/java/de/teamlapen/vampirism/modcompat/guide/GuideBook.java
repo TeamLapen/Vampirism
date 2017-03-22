@@ -10,6 +10,7 @@ import amerifrance.guideapi.page.PageImage;
 import amerifrance.guideapi.page.PageText;
 import amerifrance.guideapi.page.PageTextImage;
 import com.google.common.collect.Maps;
+import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockAltarPillar;
@@ -143,6 +144,11 @@ public class GuideBook {
         PageHelper.setPagesToUnicode(supportPages);
         entries.put(new ResourceLocation(base + "support"), new EntryText(supportPages, UtilLib.translate(base + "support")));
 
+        List<IPage> creditsPages = new ArrayList<>();
+        String lang = VampLib.proxy.getActiveLanguage();
+        String credits = "§lDeveloper:§r\nMaxanier\n\n§lInactive Developer:§r\nMistadon\nwildbill22\n\n§lTranslators:§r\n§b" + lang + "§r\n" + UtilLib.translate("text.vampirism.translators");
+        creditsPages.addAll(PageHelper.pagesForLongText(UtilLib.translate(credits), 250));
+        entries.put(new ResourceLocation(base + "credits"), new EntryText(creditsPages, UtilLib.translate(base + "credits")));
         links.putAll(entries);
         return entries;
     }
@@ -381,7 +387,7 @@ public class GuideBook {
         new ItemInfoBuilder(ModItems.injection).craftableStacks(new ItemStack(ModItems.injection, 1, 0), WORKBENCH, new ItemStack(ModItems.injection, 1, ItemInjection.META_GARLIC), WORKBENCH, new ItemStack(ModItems.injection, 1, ItemInjection.META_SANGUINARE), WORKBENCH).build(entries);
         new ItemInfoBuilder(ModItems.hunterIntel).setLinks(new ResourceLocation("guide.vampirism.blocks.hunterTable")).setFormats(ModBlocks.hunterTable.getLocalizedName()).build(entries);
         new ItemInfoBuilder(ModItems.itemGarlic).build(entries);
-        new ItemInfoBuilder(ModItems.purifiedGarlic).setFormats(ModBlocks.garlicBeacon.getLocalizedName()).setLinks("guide.vampirism.blocks.garlicBeacon").craftable(ALCHEMICAL_CAULDRON).build(entries);
+        new ItemInfoBuilder(ModItems.purifiedGarlic).setFormats(ModBlocks.garlicBeacon.getLocalizedName()).setLinks(new ResourceLocation("guide.vampirism.blocks.garlicBeacon")).craftable(ALCHEMICAL_CAULDRON).build(entries);
         new ItemInfoBuilder(ModItems.pitchfork).craftable(WEAPON_TABLE).build(entries);
         new ItemInfoBuilder(ModItems.stake).setFormats(((int) (Balance.hps.INSTANT_KILL_SKILL_1_MAX_HEALTH_PERC * 100)) + "%").craftable(WORKBENCH).build(entries);
         new ItemInfoBuilder(ModItems.basicCrossbow).setFormats(ModItems.crossbowArrow.getLocalizedName(), ModItems.techCrossbowAmmoPackage.getLocalizedName()).setLinks(new ResourceLocation("guide.vampirism.items.crossbowArrow")).craftableStacks(ModItems.basicCrossbow, WEAPON_TABLE, ModItems.basicDoubleCrossbow, WEAPON_TABLE, ModItems.enhancedCrossbow, WEAPON_TABLE, ModItems.enhancedDoubleCrossbow, WEAPON_TABLE, ModItems.basicTechCrossbow, WEAPON_TABLE, ModItems.techCrossbowAmmoPackage, WEAPON_TABLE).setName("crossbows").customName().build(entries);

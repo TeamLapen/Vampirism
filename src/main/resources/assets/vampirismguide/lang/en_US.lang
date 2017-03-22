@@ -19,6 +19,7 @@ guide.vampirism.overview.dev=Development
 guide.vampirism.overview.dev.text=This mod is currently developed by Maxanier and translate by many helpful users. If you have some good Java knowledge and want to help please contact him. If not you still can help by translating, giving feedback or creating textures. For more information checkout the link on the side.
 guide.vampirism.overview.support=Support the development
 guide.vampirism.overview.support.text=Developing this mod takes a lot of time and even I like it most of the time, there are a few things that are absolutly boring and sometimes I wonder if it is worth the trouble.\n\nIf you want to support the development and help me motivate myself please consider donating.\nThere is a Patreon page where you can make a monthly donation and also can get some rewards, like appearing in the mod as advanced hunter or vampire. It is also possible to make one time donations on the CurseForge page.\nIf you cannot or don't want to donate money, you can still checkout the "Development" section on how to help.
+guide.vampirism.overview.credits=Credits
 
 #Vampire
 guide.vampirism.vampire.title=Vampire
@@ -137,6 +138,7 @@ guide.vampirism.items.purified_garlic.text=By filtering the most important parts
 guide.vampirism.items.itemAlchemicalFire.text=This carefully crafted complex powder creates a fire which burns indefinitely, but does not spread.\nYou can use it for decoration or defense, alternatively you can craft fire spreading crossbow arrows with it.
 guide.vampirism.items.obsidianArmor=Obsidian Armor of Hell
 guide.vampirism.items.obsidianArmor.text=This armor is crafted using solidified lava.\nIt is very protecting, but also very heavy and thereby slows you down.\nDue to it's nature it is fire proof, so if fully equipped you do not have to fear fire.\nBut be careful, lave might still get through it.
+
 #Blocks
 guide.vampirism.blocks.title=Blocks
 guide.vampirism.blocks.castleBlock.text=Decorative block.
