@@ -221,14 +221,14 @@ item.vampirism.obsidianArmor.legs.name=Obsidian Leggings of Hell
 item.vampirism.obsidianArmor.feet.name=Obsidian Boots of Hell
 item.vampirism.holy_water_bottle.name=Holy Water
 item.vampirism.holy_water_bottle.splash.name=Splash Bottle of Holy Water
-item.vampirism.holy_salt.name=Holy Salt
-item.vampirism.holy_salt_water.name=Holy Salt Water
+item.vampirism.holy_salt.name=Blessed Salt
+item.vampirism.holy_salt_water.name=Blessed Salt Water
 item.vampirism.itemAlchemicalFire.name=Alchemical Fire
 item.vampirism.itemAlchemicalFire.desc1=Does not spread
 item.vampirism.itemAlchemicalFire.desc2=Burns indefinitely
 item.vampirism.purified_garlic.name=Purified Garlic
-item.vampirism.garlic_beacon_core.name=Garlic Beacon Core
-item.vampirism.garlic_beacon_core_improved.name=Improved Garlic Beacon Core
+item.vampirism.garlic_beacon_core.name=Garlic Diffusor Core
+item.vampirism.garlic_beacon_core_improved.name=Improved Garlic Diffusor Core
 item.vampirism.pure_salt.name=Pure Salt
 
 #KEYS

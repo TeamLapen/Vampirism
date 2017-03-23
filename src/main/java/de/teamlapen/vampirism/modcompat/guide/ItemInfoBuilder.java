@@ -67,7 +67,7 @@ public class ItemInfoBuilder {
             }
         }
         if (links != null) GuideHelper.addLinks(pages, links);
-        entries.put(new ResourceLocation(base), new EntryItemStack(pages, customName ? base : stack.getUnlocalizedName() + ".name", stack));
+        entries.put(new ResourceLocation(base), new EntryItemStack(pages, customName ? base : stack.getUnlocalizedName() + ".name", stack, true));
     }
 
     /**

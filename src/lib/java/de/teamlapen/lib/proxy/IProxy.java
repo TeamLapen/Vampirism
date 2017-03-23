@@ -9,6 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 
 public interface IProxy {
@@ -34,6 +35,14 @@ public interface IProxy {
 
     EntityPlayer getPlayerEntity(MessageContext context);
 
+    /**
+     * @return The string describing the currently active language. "English" on server side
+     */
     String getActiveLanguage();
+
+    /**
+     * Uses font rendere on client side to wrap the given string to the given width
+     */
+    List<String> listFormattedStringToWidth(String str, int wrapWidth);
 
 }

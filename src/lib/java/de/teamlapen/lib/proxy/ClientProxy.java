@@ -15,6 +15,7 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 public class ClientProxy extends CommonProxy {
 
@@ -47,5 +48,10 @@ public class ClientProxy extends CommonProxy {
     @Override
     public String getActiveLanguage() {
         return Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().toString();
+    }
+
+    @Override
+    public List<String> listFormattedStringToWidth(String str, int wrapWidth) {
+        return Minecraft.getMinecraft().fontRendererObj.listFormattedStringToWidth(str, wrapWidth);
     }
 }

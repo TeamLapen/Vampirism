@@ -9,8 +9,11 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import org.apache.commons.lang3.text.WordUtils;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
+import java.util.List;
 
 
 public class CommonProxy implements IProxy {
@@ -44,5 +47,10 @@ public class CommonProxy implements IProxy {
     @Override
     public String getActiveLanguage() {
         return "English";
+    }
+
+    @Override
+    public List<String> listFormattedStringToWidth(String str, int wrapWidth) {
+        return Arrays.asList(WordUtils.wrap(str, wrapWidth / 6));
     }
 }

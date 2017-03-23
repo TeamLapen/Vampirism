@@ -3,12 +3,12 @@ package de.teamlapen.vampirism.modcompat.guide;
 import amerifrance.guideapi.api.IPage;
 import amerifrance.guideapi.api.IRecipeRenderer;
 import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
-import amerifrance.guideapi.api.util.PageHelper;
 import amerifrance.guideapi.page.PageFurnaceRecipe;
 import amerifrance.guideapi.page.PageIRecipe;
 import amerifrance.guideapi.page.PageItemStack;
 import amerifrance.guideapi.page.PageText;
 import com.google.common.collect.Lists;
+import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IAlchemicalCauldronRecipe;
@@ -29,11 +29,9 @@ import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
-import org.apache.commons.lang3.text.WordUtils;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -199,21 +197,59 @@ public class GuideHelper {
         builder.build(entries);
     }
 
-    public static List<IPage> pagesForLongText(String locText, ItemStack stack, int length) {
-        List<IPage> pageList = new ArrayList<IPage>();
-        String[] strings = WordUtils.wrap(locText, Math.max(length - 150, 50), "/cut", false).split("/cut");
-        pageList.add(new PageItemStack(strings[0], stack));
-        if (strings.length > 2) {
-            String s = Strings.join(Arrays.copyOfRange(strings, 1, strings.length), "");
-            pageList.addAll(PageHelper.pagesForLongText(s, length));
-        } else if (strings.length == 2) {
-            pageList.add(new PageText(strings[1]));
+    /**
+     * Creates as many pages as required to display the given string while displaying the given stack on the first page.
+     * Displays the given maximum of lines of text on the first page and maximum+5  on the following
+     *
+     * @param pageLength The maximum number of text lines on the first page
+     */
+    public static List<IPage> pagesForLongText(String locText, ItemStack stack, int pageLength) {
+        List<IPage> pageList = new ArrayList<>();
+        List<String> lines = new ArrayList<>(VampLib.proxy.listFormattedStringToWidth(locText, 115));
+        List<String> page1 = lines.size() > pageLength ? lines.subList(0, pageLength) : lines;
+        pageList.add(new PageItemStack(Strings.join(page1, "\n"), stack));
+        page1.clear();
+        pageLength += 5;
+        while (lines.size() > 0) {
+            List<String> page = lines.size() > pageLength ? lines.subList(0, pageLength) : lines;
+            pageList.add(new PageText(Strings.join(page, "\n")));
+            page.clear();
         }
         return pageList;
     }
 
+    /**
+     * Creates as many pages as required to display the given string while displaying the given stack on the first page.
+     * Displays a maximum of 8 lines of text on the first page and 13 on the following
+     */
     public static List<IPage> pagesForLongText(String locText, ItemStack stack) {
-        return pagesForLongText(locText, stack, 290);
+        return pagesForLongText(locText, stack, 8);
+    }
+
+    /**
+     * Creates as many pages as required to display the given string.
+     * Displays the given maximum number of lines per page
+     *
+     * @param s
+     * @param pageLength
+     */
+    public static List<IPage> pagesForLongText(String s, int pageLength) {
+        List<IPage> pageList = new ArrayList<>();
+        List<String> lines = new ArrayList<>(VampLib.proxy.listFormattedStringToWidth(s, 115));
+        while (lines.size() > 0) {
+            List<String> page = lines.size() > pageLength ? lines.subList(0, pageLength) : lines;
+            pageList.add(new PageText(Strings.join(page, "\n")));
+            page.clear();
+        }
+        return pageList;
+    }
+
+    /**
+     * Creates as many pages as required to display the given string.
+     * Displays a maximum of 13  lines per page
+     */
+    public static List<IPage> pagesForLongText(String s) {
+        return pagesForLongText(s,13);
     }
 
     public enum RECIPE_TYPE {

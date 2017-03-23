@@ -107,7 +107,7 @@ public class AlchemicalCauldronRecipePage extends Page {
         int y = guiTop + 120;
         if (recipe.getRequiredLevel() > 1) {
             String level = UtilLib.translateFormatted("gui.vampirism.hunter_weapon_table.level", recipe.getRequiredLevel());
-            guiBase.drawString(fontRendererObj, level, guiLeft + 40, y, Color.gray.getRGB());
+            guiBase.drawString(fontRendererObj, level, guiLeft + 50, y, Color.gray.getRGB());
             y += fontRendererObj.FONT_HEIGHT + 2;
         }
         if (recipe.getRequiredSkills().length > 0) {
@@ -117,7 +117,7 @@ public class AlchemicalCauldronRecipePage extends Page {
 
             }
             String skillText = UtilLib.translateFormatted("gui.vampirism.hunter_weapon_table.skill", skills);
-            guiBase.drawSplitString(skillText, guiLeft + 40, y, 110, Color.gray.getRGB());
+            guiBase.drawSplitString(skillText, guiLeft + 50, y, 100, Color.gray.getRGB());
         }
     }
 
