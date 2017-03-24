@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.vampire;
 
+import com.google.common.base.Predicate;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
@@ -12,6 +13,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler;
 import de.teamlapen.vampirism.items.ItemHunterCoat;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -31,6 +33,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
@@ -298,7 +301,14 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         this.tasks.addTask(10, new EntityAILookIdle(this));
 
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget(this, EntityPlayer.class, true, false));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 10, true, false, new Predicate<EntityPlayer>() {
+            @Override
+            public boolean apply(@Nullable EntityPlayer input) {
+                if (input == null) return false;
+                int playerLevel = FactionPlayerHandler.get(input).getCurrentLevel();
+                return (playerLevel - 10) / 2 - EntityVampireBaron.this.getLevel() <= 0;
+            }
+        }));//TODO test
         this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVampireBaron.class, true, false));
     }
 
