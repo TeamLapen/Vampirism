@@ -296,7 +296,13 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         super.initEntityAI();
         this.tasks.addTask(4, new VampireAIFleeGarlic(this, 0.9F, false));
         this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.0F, false));
-        this.tasks.addTask(6, new EntityAIWander(this, 0.2));
+        this.tasks.addTask(6, new EntityAIAvoidEntity<>(this, EntityPlayer.class, new Predicate<EntityPlayer>() {
+            @Override
+            public boolean apply(@Nullable EntityPlayer input) {
+                return input != null && !isLowerLevel(input);
+            }
+        }, 6.0F, 0.6, 0.7F));//TODO Works only partially. Pathfinding somehow does not find escape routes
+        this.tasks.addTask(7, new EntityAIWander(this, 0.2));
         this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(10, new EntityAILookIdle(this));
 
@@ -304,18 +310,15 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 10, true, false, new Predicate<EntityPlayer>() {
             @Override
             public boolean apply(@Nullable EntityPlayer input) {
-                if (input == null) return false;
-                int playerLevel = FactionPlayerHandler.get(input).getCurrentLevel();
-                return (playerLevel - 10) / 2 - EntityVampireBaron.this.getLevel() <= 0;
+                return input != null && isLowerLevel(input);
             }
-        }));//TODO test
-        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget(this, EntityVampireBaron.class, true, false));
+        }));
+        this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityVampireBaron.class, true, false));
     }
 
     /**
      * Decides if a new minion should be spawned. Therefore randomly checks the existing minion count
      *
-     * @return
      */
     protected boolean shouldSpawnMinion() {
         if (this.ticksExisted % 30 == 7) {
@@ -343,5 +346,10 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_BARON_MAX_HEALTH * Math.pow(Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE)
                 .setBaseValue(Balance.mobProps.VAMPIRE_BARON_ATTACK_DAMAGE * Math.pow(Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL, getLevel()));
+    }
+
+    private boolean isLowerLevel(EntityPlayer player) {
+        int playerLevel = FactionPlayerHandler.get(player).getCurrentLevel();
+        return (playerLevel - 8) / 2F - EntityVampireBaron.this.getLevel() <= 0;
     }
 }
