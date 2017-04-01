@@ -13,6 +13,7 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -34,6 +35,11 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
+    public String getActiveLanguage() {
+        return Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().toString();
+    }
+
+    @Override
     public ParticleHandler getParticleHandler() {
         return FMLCommonHandler.instance().getEffectiveSide().isClient() ? clientParticleHandler : serverParticleHandler;
     }
@@ -46,12 +52,8 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
-    public String getActiveLanguage() {
-        return Minecraft.getMinecraft().getLanguageManager().getCurrentLanguage().toString();
-    }
-
-    @Override
     public List<String> listFormattedStringToWidth(String str, int wrapWidth) {
+        str = StringEscapeUtils.unescapeJava(str);
         return Minecraft.getMinecraft().fontRendererObj.listFormattedStringToWidth(str, wrapWidth);
     }
 }

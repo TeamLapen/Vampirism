@@ -265,7 +265,7 @@ public class GuideBook {
             builder.addLine(i, req[0], pure, req[3]);
         }
 
-        builder.setHeadline(base + "leveling.train2.req");
+        builder.setHeadline(UtilLib.translate(base + "leveling.train2.req"));
         PageHolderWithLinks requirementsTable = new PageHolderWithLinks(builder.build());
         requirementsTable.addLink(new ResourceLocation("guide.vampirism.items.vampireFang"));
         requirementsTable.addLink(new ResourceLocation("guide.vampirism.items.pureBlood"));
