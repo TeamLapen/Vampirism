@@ -123,6 +123,7 @@ public class BlockMedChair extends VampirismBlock {
             }
             return TOP;
         }
+
         public final String name;
         public final int meta;
 

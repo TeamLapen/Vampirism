@@ -81,6 +81,7 @@ public class BlockTent extends VampirismBlock {
     public boolean isOpaqueCube(IBlockState state) {
         return false;
     }
+
     @Override
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, FACING, POSITION);

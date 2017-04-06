@@ -16,7 +16,7 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 
 /**
- *   TileEntity for coffins. Handles coffin lid position and color
+ * TileEntity for coffins. Handles coffin lid position and color
  */
 public class TileCoffin extends TileEntity implements ITickable {
     public int lidPos;
@@ -84,7 +84,6 @@ public class TileCoffin extends TileEntity implements ITickable {
             this.world.playSound(pos.getX(), (double) this.pos.getY() + 0.5D, pos.getZ(), ModSounds.block_coffin_lid, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F, true);
             lastTickOccupied = occupied;
         }
-
 
 
     }

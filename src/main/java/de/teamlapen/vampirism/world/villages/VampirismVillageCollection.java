@@ -22,21 +22,6 @@ import java.util.List;
 public class VampirismVillageCollection extends WorldSavedData implements IVampirismVillageProvider {
 
     private static final String IDENTIFIER = "vampirism_villages";
-    private final List<VampirismVillage> villageList = new ArrayList<>();
-    private World worldObj;
-    private int tickCounter;
-
-    public VampirismVillageCollection(String name)
-    {
-        super(name);
-    }
-
-    private VampirismVillageCollection(World world)
-    {
-        this(fileNameForProvider(world.provider));
-        this.worldObj = world;
-        this.markDirty();
-    }
 
     public static VampirismVillageCollection get(World world) {
         String s = fileNameForProvider(world.provider);
@@ -52,6 +37,20 @@ public class VampirismVillageCollection extends WorldSavedData implements IVampi
 
     private static String fileNameForProvider(WorldProvider provider) {
         return IDENTIFIER + provider.getDimensionType().getSuffix();
+    }
+
+    private final List<VampirismVillage> villageList = new ArrayList<>();
+    private World worldObj;
+    private int tickCounter;
+
+    public VampirismVillageCollection(String name) {
+        super(name);
+    }
+
+    private VampirismVillageCollection(World world) {
+        this(fileNameForProvider(world.provider));
+        this.worldObj = world;
+        this.markDirty();
     }
 
     @Override

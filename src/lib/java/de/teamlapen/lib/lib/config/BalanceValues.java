@@ -33,6 +33,7 @@ public abstract class BalanceValues {
             VampLib.log.e("Configs", "Failed to reset config file");
         }
     }
+
     private final String name;
     private Configuration configuration;
 

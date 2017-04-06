@@ -39,6 +39,7 @@ public class EntityCrossbowArrow extends EntityArrow {
         }
         return entityArrow;
     }
+
     private
     @Nonnull
     ItemStack arrowStack = new ItemStack(ModItems.crossbowArrow);

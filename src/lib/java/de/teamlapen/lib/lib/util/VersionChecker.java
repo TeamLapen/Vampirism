@@ -241,6 +241,7 @@ public class VersionChecker implements Runnable {
                 return null;
             }
         }
+
         public final String name;
         public final
         @Nullable

@@ -80,7 +80,6 @@ public class BloodPotions {
 
     /**
      * Adds a tooltip to the given blood potion itemstack
-     *
      */
     public static void addTooltip(ItemStack stack, List<String> tooltip, IHunterPlayer player) {
 
@@ -122,8 +121,6 @@ public class BloodPotions {
 
     /**
      * Applies the blood potion's effects on the entity as long as he is an hunter
-     *
-
      */
     public static void applyEffects(ItemStack stack, EntityLivingBase entity) {
         if (!stack.hasTagCompound()) return;
@@ -154,12 +151,12 @@ public class BloodPotions {
         NBTTagCompound effectsTag = nbt.getCompoundTag("effects");
         for (String id : effectsTag.getKeySet()) {
             NBTTagCompound properties = effectsTag.getCompoundTag(id);
-                IBloodPotionEffect effect = VampirismAPI.bloodPotionRegistry().getEffectFromId(id);
-                if (effect == null) {
-                    VampirismMod.log.w("BloodPotions", "Cannot find effect with id %s", id);
-                } else {
-                    effects.add(new ConfiguredEffect(effect, properties));
-                }
+            IBloodPotionEffect effect = VampirismAPI.bloodPotionRegistry().getEffectFromId(id);
+            if (effect == null) {
+                VampirismMod.log.w("BloodPotions", "Cannot find effect with id %s", id);
+            } else {
+                effects.add(new ConfiguredEffect(effect, properties));
+            }
 
         }
         return effects;

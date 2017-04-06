@@ -114,6 +114,7 @@ public class BlockAltarPillar extends VampirismBlock {
 
             return METADATA_LOOKUP[metadata];
         }
+
         public final String name;
         public final Block fillerBlock;
         public final int meta;
@@ -132,7 +133,6 @@ public class BlockAltarPillar extends VampirismBlock {
         }
 
         /**
-         *
          * @return The "value" or level of this material.
          */
         public float getValue() {

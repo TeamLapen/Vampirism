@@ -59,9 +59,10 @@ public class HelperRegistry {
     /**
      * Register a entity {@link Capability} which instances should be synced on world join
      * Only works for entities extending {@link net.minecraft.entity.EntityCreature}
+     *
      * @param clz Class of the object returned, when {@link EntityPlayer#getCapability(Capability, EnumFacing)} is called on the entity with the given capability
      * @param key Unique key for the capability. Preferably the key the cap was registered with.
-     * Has to be called before post init.
+     *            Has to be called before post init.
      */
     public static void registerSyncableEntityCapability(Capability capability, ResourceLocation key, Class<? extends ISyncable.ISyncableEntityCapabilityInst> clz) {
         if (syncableEntityCaps == null) {
@@ -73,9 +74,10 @@ public class HelperRegistry {
 
     /**
      * Register a player {@link Capability} which instances should be synced on world join
+     *
      * @param key Unique key for the capability. Preferably the key the cap was registered with.
      * @param clz Class of the object returned, when {@link EntityPlayer#getCapability(Capability, EnumFacing)} is called on the player with the given capability
-     * Has to be called before post init.
+     *            Has to be called before post init.
      */
     public static void registerSyncablePlayerCapability(Capability capability, ResourceLocation key, Class<? extends ISyncable.ISyncableEntityCapabilityInst> clz) {
         if (syncablePlayerCaps == null) {
@@ -88,8 +90,9 @@ public class HelperRegistry {
     /**
      * Key of a {@link Capability} which implementation implements {@link IPlayerEventListener} and which instances should receive the events.
      * Has to be called before post init.
+     *
      * @param capability
-     * @param clz Class of the object returned, when {@link EntityPlayer#getCapability(Capability, EnumFacing)} is called on the player with the given capability
+     * @param clz        Class of the object returned, when {@link EntityPlayer#getCapability(Capability, EnumFacing)} is called on the player with the given capability
      */
     public static void registerPlayerEventReceivingCapability(Capability capability, Class<? extends IPlayerEventListener> clz) {
         if (playerEventListenerCaps == null) {

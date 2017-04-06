@@ -30,7 +30,6 @@ public class FreezeVampireAction extends DefaultVampireAction {
     }
 
 
-
     @Override
     public int getMinU() {
         return 144;

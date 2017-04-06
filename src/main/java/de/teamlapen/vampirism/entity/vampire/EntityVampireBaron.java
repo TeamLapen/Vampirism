@@ -320,7 +320,6 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
 
     /**
      * Decides if a new minion should be spawned. Therefore randomly checks the existing minion count
-     *
      */
     protected boolean shouldSpawnMinion() {
         if (this.ticksExisted % 30 == 7) {

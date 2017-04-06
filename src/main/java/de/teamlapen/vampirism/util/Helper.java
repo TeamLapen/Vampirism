@@ -36,31 +36,31 @@ public class Helper {
      */
     public static boolean gettingSundamge(EntityLivingBase entity) {
         entity.getEntityWorld().theProfiler.startSection("vampirism_checkSundamage");
-            if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isSpectator()) return false;
+        if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isSpectator()) return false;
         if (VampirismAPI.sundamageRegistry().getSundamageInDim(entity.getEntityWorld().provider.getDimension())) {
             if (!entity.getEntityWorld().isRaining()) {
                 float angle = entity.getEntityWorld().getCelestialAngle(1.0F);
-                    //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
-                    if (angle > 0.78 || angle < 0.24) {
-                        BlockPos pos = new BlockPos(entity.posX + 0.5, entity.posY + 0, entity.posZ + 0.5);
+                //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
+                if (angle > 0.78 || angle < 0.24) {
+                    BlockPos pos = new BlockPos(entity.posX + 0.5, entity.posY + 0, entity.posZ + 0.5);
 
-                        if (entity.getEntityWorld().canBlockSeeSky(pos)) {
-                            ResourceLocation biomeID = null;
-                            try {
-                                biomeID = entity.getEntityWorld().getBiome(pos).getRegistryName();
-                                if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biomeID)) {
-                                    entity.getEntityWorld().theProfiler.endSection();
-                                    return true;
-                                }
-                            } catch (NullPointerException e) {
-                                //Strange thing which happen in 1.7.10, not sure about 1.8
+                    if (entity.getEntityWorld().canBlockSeeSky(pos)) {
+                        ResourceLocation biomeID = null;
+                        try {
+                            biomeID = entity.getEntityWorld().getBiome(pos).getRegistryName();
+                            if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biomeID)) {
+                                entity.getEntityWorld().theProfiler.endSection();
+                                return true;
                             }
-
+                        } catch (NullPointerException e) {
+                            //Strange thing which happen in 1.7.10, not sure about 1.8
                         }
-                    }
 
+                    }
                 }
+
             }
+        }
         entity.getEntityWorld().theProfiler.endSection();
 
         return false;

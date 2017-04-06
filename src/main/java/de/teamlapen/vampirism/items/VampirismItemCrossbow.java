@@ -79,6 +79,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
     /**
      * Searches Offhand,Mainhand and the inventory afterwards for arrows
+     *
      * @param player
      * @param bowStack The itemstack of the bow
      * @return The itemstack of the arrows or null
@@ -154,8 +155,8 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
     /**
      * Shoots an arrow.
      *
-     * @param player       The shooting player
-     * @param stack        The crossbow item stack
+     * @param player The shooting player
+     * @param stack  The crossbow item stack
      * @return If successful
      */
     protected boolean shoot(EntityPlayer player, float heightOffset, float centerOffset, World world, ItemStack stack, EnumHand hand) {
@@ -235,9 +236,10 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
     /**
      * If an arrow should be consumed after being shot
-     * @param arrowStack The stack of the arrow
+     *
+     * @param arrowStack     The stack of the arrow
      * @param playerCreative If the player is creative
-     * @param bowInfinite if the bow is infinite
+     * @param bowInfinite    if the bow is infinite
      */
     protected boolean shouldConsumeArrow(ItemStack arrowStack, boolean playerCreative, boolean bowInfinite) {
         return !(playerCreative || bowInfinite && canArrowBeInfinite(arrowStack));

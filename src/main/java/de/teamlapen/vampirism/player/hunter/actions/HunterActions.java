@@ -8,6 +8,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IActionRegistry;
  */
 public class HunterActions {
     public static DisguiseHunterAction disguiseAction;
+
     public static void registerDefaultActions() {
         IActionRegistry registry = VampirismAPI.actionRegistry();
         disguiseAction = registry.registerAction(new DisguiseHunterAction(), "disguise");

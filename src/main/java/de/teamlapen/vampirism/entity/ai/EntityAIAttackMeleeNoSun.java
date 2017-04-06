@@ -23,11 +23,13 @@ public class EntityAIAttackMeleeNoSun extends EntityAIAttackMelee {
     /**
      * Caches accessor for {@link PathNavigateGround#shouldAvoidSun}
      */
-    private @Nullable Field field_shouldAvoidSun = null;
+    private @Nullable
+    Field field_shouldAvoidSun = null;
     /**
      * Caches accessor for {@link EntityAIAttackMelee#entityPathEntity}
      */
-    private @Nullable Field field_entityPathEntity = null;
+    private @Nullable
+    Field field_entityPathEntity = null;
 
     public EntityAIAttackMeleeNoSun(EntityCreature creature, double speedIn, boolean useLongMemory) {
         super(creature, speedIn, useLongMemory);
@@ -47,8 +49,7 @@ public class EntityAIAttackMeleeNoSun extends EntityAIAttackMelee {
             boolean avoidSun = true;
             try {
                 if (attacker.getNavigator() instanceof PathNavigateGround) {
-                    if (field_shouldAvoidSun == null)
-                    {
+                    if (field_shouldAvoidSun == null) {
                         field_shouldAvoidSun = ReflectionHelper
                                 .findField(PathNavigateGround.class, "shouldAvoidSun", SRGNAMES.PathNavigateGround_shouldAvoidSun);
                     }
@@ -60,8 +61,7 @@ public class EntityAIAttackMeleeNoSun extends EntityAIAttackMelee {
             }
             if (avoidSun) {
                 try {
-                    if (field_entityPathEntity == null)
-                    {
+                    if (field_entityPathEntity == null) {
                         field_entityPathEntity = ReflectionHelper
                                 .findField(EntityAIAttackMelee.class, "entityPathEntity", SRGNAMES.EntityAIAttackMelee_entityPathEntity);
                     }

@@ -57,6 +57,7 @@ public class GuideHelper {
 
     /**
      * Converts the given pages to {@link PageHolderWithLinks} and adds the given links
+     *
      * @return The SAME list
      */
     public static List<IPage> addLinks(List<IPage> pages, Object... links) {
@@ -249,7 +250,7 @@ public class GuideHelper {
      * Displays a maximum of 13  lines per page
      */
     public static List<IPage> pagesForLongText(String s) {
-        return pagesForLongText(s,13);
+        return pagesForLongText(s, 13);
     }
 
     public enum RECIPE_TYPE {

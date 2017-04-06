@@ -31,14 +31,14 @@ public interface IProxy {
     @Nonnull
     ISoundReference createSoundReference(SoundEvent event, SoundCategory category, double x, double y, double z, float volume, float pinch);
 
-    ParticleHandler getParticleHandler();
-
-    EntityPlayer getPlayerEntity(MessageContext context);
-
     /**
      * @return The string describing the currently active language. "English" on server side
      */
     String getActiveLanguage();
+
+    ParticleHandler getParticleHandler();
+
+    EntityPlayer getPlayerEntity(MessageContext context);
 
     /**
      * Uses font rendere on client side to wrap the given string to the given width

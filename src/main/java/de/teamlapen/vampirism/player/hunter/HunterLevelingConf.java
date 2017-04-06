@@ -107,7 +107,6 @@ public class HunterLevelingConf {
     }
 
     /**
-     *
      * @throws IllegalArgumentException If the basic hunter cannot be used at that level
      */
     public int getVampireBloodCountForBasicHunter(int targetLevel) {
@@ -135,8 +134,6 @@ public class HunterLevelingConf {
 
     /**
      * Checks if a hunter player can use the hunter table to obtain the target level book
-     *
-
      */
     public boolean isLevelValidForTable(int targetLevel) {
         return targetLevel >= TABLE_MIN_LEVEL && targetLevel <= TABLE_MAX_LEVEL;
@@ -144,7 +141,6 @@ public class HunterLevelingConf {
 
     /**
      * Checks if a hunter player can reach the given level using the hunter trainer
-
      */
     public boolean isLevelValidForTrainer(int targetLevel) {
         return targetLevel >= TABLE_MIN_LEVEL && targetLevel <= TABLE_MAX_LEVEL;

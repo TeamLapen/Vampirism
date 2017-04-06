@@ -77,6 +77,7 @@ public class VampirismFlower extends BlockBush implements ItemMetaBlock.IMetaIte
             }
             return TYPE_FOR_META[meta];
         }
+
         private final int meta;
         private final String name;
         private final String unlocalizedName;

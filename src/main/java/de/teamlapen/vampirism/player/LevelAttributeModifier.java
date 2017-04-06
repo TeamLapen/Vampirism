@@ -40,15 +40,15 @@ public class LevelAttributeModifier {
     }
 
     /**
-     * @param player    The player to be modified
-     * @param attribute The attribute to be modified
-     * @param name      the name of the modifier
-     * @param level     the player level
-     * @param lcap      the level cap of the modifier
-     * @param max       the max modifier value
-     * @param type      the exponent used to calculate the actual value depending on level, levelcap and max value
-     * @param operation The operation applied to the attribute
-     * @param evenIntOnly   If the modifier should be rounded to an even integer TODO maybe move this
+     * @param player      The player to be modified
+     * @param attribute   The attribute to be modified
+     * @param name        the name of the modifier
+     * @param level       the player level
+     * @param lcap        the level cap of the modifier
+     * @param max         the max modifier value
+     * @param type        the exponent used to calculate the actual value depending on level, levelcap and max value
+     * @param operation   The operation applied to the attribute
+     * @param evenIntOnly If the modifier should be rounded to an even integer TODO maybe move this
      */
     public static void applyModifier(EntityPlayer player, IAttribute attribute, String name, int level, int lcap, double max, double type, int operation, boolean evenIntOnly) {
         UUID mod = modifiers.get(attribute);

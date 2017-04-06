@@ -40,6 +40,7 @@ public class BloodPotionTableContainer extends Container {
     private final IInventory inventory = new InventoryBasic("vampirism.blood_potion_table", false, 4);
     private int craftingTimer = 0;
     private int prevCraftingTimer = 0;
+
     public BloodPotionTableContainer(InventoryPlayer playerInventory, BlockPos pos, World world) {
 
         this.pos = pos;

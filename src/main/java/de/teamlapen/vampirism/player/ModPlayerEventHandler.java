@@ -223,7 +223,7 @@ public class ModPlayerEventHandler {
     /**
      * Checks if the player is allowed to use that item ({@link IFactionLevelItem}) and cancels the event if not.
      *
-     *@return If it is allowed to use the item
+     * @return If it is allowed to use the item
      */
     private boolean checkItemUsePerm(ItemStack stack, EntityPlayer player) {
 

@@ -35,6 +35,11 @@ public class CommonProxy implements IProxy {
     }
 
     @Override
+    public String getActiveLanguage() {
+        return "English";
+    }
+
+    @Override
     public ParticleHandler getParticleHandler() {
         return serverParticleHandler;
     }
@@ -42,11 +47,6 @@ public class CommonProxy implements IProxy {
     @Override
     public EntityPlayer getPlayerEntity(MessageContext ctx) {
         return ctx.getServerHandler().playerEntity;
-    }
-
-    @Override
-    public String getActiveLanguage() {
-        return "English";
     }
 
     @Override

@@ -120,6 +120,7 @@ public class VampirismMod {
     public static boolean isRealism() {
         return Configs.realism_mode;
     }
+
     private VersionChecker.VersionInfo versionInfo;
     private ModCompatLoader modCompatLoader = new ModCompatLoader(REFERENCE.MODID + "/vampirism_mod_compat");
 

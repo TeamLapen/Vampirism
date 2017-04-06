@@ -284,7 +284,6 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     }
 
 
-
     protected void updateEntityAttributes() {
         int l = Math.max(getLevel(), 0);
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_MAX_HEALTH + Balance.mobProps.VAMPIRE_MAX_HEALTH_PL * l);

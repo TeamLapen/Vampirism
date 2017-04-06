@@ -114,7 +114,6 @@ public class ItemCrossbowArrow extends VampirismItem {
     }
 
     /**
-     *
      * @param arrow Arrow stack
      * @return If the arrow entity that belongs to this arrow should be burning
      */
@@ -133,9 +132,10 @@ public class ItemCrossbowArrow extends VampirismItem {
 
     /**
      * Called when the {@link EntityCrossbowArrow} hits a block
-     * @param arrow The itemstack of the shot arrow
-     * @param blockPos The position of the hit block
-     * @param arrowEntity The arrow entity
+     *
+     * @param arrow          The itemstack of the shot arrow
+     * @param blockPos       The position of the hit block
+     * @param arrowEntity    The arrow entity
      * @param shootingEntity The shooting entity. Can be the arrow entity itself
      */
     public void onHitBlock(ItemStack arrow, BlockPos blockPos, EntityCrossbowArrow arrowEntity, Entity shootingEntity) {

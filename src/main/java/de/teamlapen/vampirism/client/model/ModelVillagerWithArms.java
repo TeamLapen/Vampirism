@@ -13,6 +13,7 @@ import net.minecraft.util.math.MathHelper;
 public class ModelVillagerWithArms extends ModelVillager {
     protected ModelRenderer leftArm;
     protected ModelRenderer rightArm;
+
     public ModelVillagerWithArms(float scale) {
         this(scale, 0F, 64, 64);
 

@@ -51,6 +51,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             }
         }
     }
+
     public final UUID healthModifierUUID = UUID.fromString("4392fccb-4bfd-4290-b2e6-5cc91429053c");
     private final float PLAYER_WIDTH = 0.6F;
     private final float PLAYER_HEIGHT = 1.8F;
@@ -106,14 +107,14 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         if (newHealth < 1) newHealth = 1;
         player.setHealth(newHealth);
         setPlayerBat(player, true);
-        ((VampirePlayer) vampire).getSpecialAttributes().bat=true;
+        ((VampirePlayer) vampire).getSpecialAttributes().bat = true;
         return true;
     }
 
     @Override
     public void onActivatedClient(IVampirePlayer vampire) {
         setPlayerBat(vampire.getRepresentingPlayer(), true);
-        ((VampirePlayer) vampire).getSpecialAttributes().bat=true;
+        ((VampirePlayer) vampire).getSpecialAttributes().bat = true;
     }
 
     @Override
@@ -131,14 +132,14 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         }
         player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 2, false, false));
         setPlayerBat(player, false);
-        ((VampirePlayer) vampire).getSpecialAttributes().bat=false;
+        ((VampirePlayer) vampire).getSpecialAttributes().bat = false;
     }
 
     @Override
     public void onReActivated(IVampirePlayer vampire) {
         setModifier(vampire.getRepresentingPlayer(), true);
         setPlayerBat(vampire.getRepresentingPlayer(), true);
-        ((VampirePlayer) vampire).getSpecialAttributes().bat=true;
+        ((VampirePlayer) vampire).getSpecialAttributes().bat = true;
     }
 
     @Override

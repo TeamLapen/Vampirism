@@ -23,6 +23,7 @@ public class BloodHelper {
 
     /**
      * Returns the first stack on the players hotbar that can store blood
+     *
      * @param inventory
      * @return
      */
@@ -64,6 +65,7 @@ public class BloodHelper {
 
     /**
      * Returns the amount of blood stored in the given stack
+     *
      * @param stack
      * @return
      */

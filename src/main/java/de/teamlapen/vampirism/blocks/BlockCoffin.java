@@ -306,6 +306,4 @@ public class BlockCoffin extends VampirismBlockContainer {
     }
 
 
-
-
 }

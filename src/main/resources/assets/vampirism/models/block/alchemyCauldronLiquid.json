@@ -1,73 +1,73 @@
 {
-	"__comment": "Designed by Maxanier with Cubik Studio - https://cubik.studio",
-	"textures": {
-		"liquid": "vampirism:blocks/blank_liquid_still"
-	},
-	"elements": [
-		{
-			"__comment": "Cube1",
-			"from": [
-				2,
-				10,
-				2
-			],
-			"to": [
-				14,
-				13,
-				14
-			],
-			"faces": {
-				"up": {
-					"uv": [
-						2,
-						2,
-						14,
-						14
-					],
-					"texture": "#liquid",
-					"tintindex": 255
-				},
-				"north": {
-					"uv": [
-						2,
-						3,
-						14,
-						6
-					],
-					"texture": "#liquid",
-					"tintindex": 255
-				},
-				"south": {
-					"uv": [
-						2,
-						3,
-						14,
-						6
-					],
-					"texture": "#liquid",
-					"tintindex": 255
-				},
-				"west": {
-					"uv": [
-						2,
-						3,
-						14,
-						6
-					],
-					"texture": "#liquid",
-					"tintindex": 255
-				},
-				"east": {
-					"uv": [
-						2,
-						3,
-						14,
-						6
-					],
-					"texture": "#liquid",
-					"tintindex": 255
-				}
-			}
-		}
-	]
+  "__comment": "Designed by Maxanier with Cubik Studio - https://cubik.studio",
+  "textures": {
+    "liquid": "vampirism:blocks/blank_liquid_still"
+  },
+  "elements": [
+    {
+      "__comment": "Cube1",
+      "from": [
+        2,
+        10,
+        2
+      ],
+      "to": [
+        14,
+        13,
+        14
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            2,
+            2,
+            14,
+            14
+          ],
+          "texture": "#liquid",
+          "tintindex": 255
+        },
+        "north": {
+          "uv": [
+            2,
+            3,
+            14,
+            6
+          ],
+          "texture": "#liquid",
+          "tintindex": 255
+        },
+        "south": {
+          "uv": [
+            2,
+            3,
+            14,
+            6
+          ],
+          "texture": "#liquid",
+          "tintindex": 255
+        },
+        "west": {
+          "uv": [
+            2,
+            3,
+            14,
+            6
+          ],
+          "texture": "#liquid",
+          "tintindex": 255
+        },
+        "east": {
+          "uv": [
+            2,
+            3,
+            14,
+            6
+          ],
+          "texture": "#liquid",
+          "tintindex": 255
+        }
+      }
+    }
+  ]
 }

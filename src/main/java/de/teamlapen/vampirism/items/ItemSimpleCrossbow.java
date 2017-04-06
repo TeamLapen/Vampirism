@@ -13,7 +13,7 @@ public class ItemSimpleCrossbow extends VampirismItemCrossbow {
      * @param regName       Registry name
      * @param speed         Speed of the shot arrows (0.1F-20F)
      * @param coolDownTicks Cooldown ticks >0
-     * @param maxDamage Max usages or 0 if unbreakable
+     * @param maxDamage     Max usages or 0 if unbreakable
      */
     public ItemSimpleCrossbow(String regName, float speed, int coolDownTicks, int maxDamage) {
         super(regName, maxDamage);

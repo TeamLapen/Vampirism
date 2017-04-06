@@ -14,6 +14,7 @@ public enum EnumStrength {
         }
         return NONE;
     }
+
     final int strength;
 
     EnumStrength(int strength) {

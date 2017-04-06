@@ -1,4 +1,3 @@
-
 package de.teamlapen.lib.lib.item;
 
 import net.minecraft.block.Block;
@@ -30,7 +29,7 @@ public class ItemMetaBlock extends ItemBlock {
      * @param block
      */
     public ItemMetaBlock(Block block) {
-        this(block,true);
+        this(block, true);
     }
 
     @Override

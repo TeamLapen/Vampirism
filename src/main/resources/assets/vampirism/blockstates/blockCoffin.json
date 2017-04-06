@@ -4,7 +4,6 @@
     "model": "cube_all",
     "textures": {
       "all": "blocks/wool_colored_white"
-
     }
   },
   "variants": {

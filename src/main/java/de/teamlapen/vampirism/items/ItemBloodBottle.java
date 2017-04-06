@@ -74,14 +74,14 @@ public class ItemBloodBottle extends VampirismItem {
     @Override
     public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
 
-            VampirePlayer vampire = VampirePlayer.get(playerIn);
-            if (vampire.getLevel() == 0) return new ActionResult<>(EnumActionResult.PASS, itemStackIn);
+        VampirePlayer vampire = VampirePlayer.get(playerIn);
+        if (vampire.getLevel() == 0) return new ActionResult<>(EnumActionResult.PASS, itemStackIn);
 
 
         if (vampire.getBloodStats().needsBlood()) {
             playerIn.setActiveHand(hand);
             return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
-            }
+        }
 
         return new ActionResult<>(EnumActionResult.PASS, itemStackIn);
     }

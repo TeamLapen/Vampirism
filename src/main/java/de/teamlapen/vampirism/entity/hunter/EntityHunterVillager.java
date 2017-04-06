@@ -47,6 +47,7 @@ public class EntityHunterVillager extends EntityVillagerVampirism implements IHu
 
     /**
      * Creates a villager as an copy to the given hunter
+     *
      * @param hunter Is not modified
      * @return
      */
@@ -110,7 +111,7 @@ public class EntityHunterVillager extends EntityVillagerVampirism implements IHu
             }
         }
         this.tasks.addTask(6, new EntityAIAttackMelee(this, 0.6, false));
-        this.tasks.addTask(8, new EntityAIMoveThroughVillageCustom(this, 0.55, false,400));
+        this.tasks.addTask(8, new EntityAIMoveThroughVillageCustom(this, 0.55, false, 400));
 
 
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));

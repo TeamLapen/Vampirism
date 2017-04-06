@@ -34,6 +34,7 @@ public class VampirismVillage implements IVampirismVillage {
         BlockPos cc = v.getCenter();
         return new AxisAlignedBB(cc.getX() - r, cc.getY() - 10, cc.getZ() - r, cc.getX() + r, cc.getY() + 10, cc.getZ() + r);
     }
+
     private final String TAG = "VampirismVillage";
     private World world;
     private BlockPos center = new BlockPos(0, 0, 0);
@@ -132,7 +133,7 @@ public class VampirismVillage implements IVampirismVillage {
      * @return dirty
      */
     public boolean tick(int tickCounter) {
-        this.tickCounter=tickCounter;
+        this.tickCounter = tickCounter;
         if (tickCounter % 20 == 13) {
             int tick = tickCounter / 20;
             this.removeDeadAndOldAggressors();
@@ -325,7 +326,7 @@ public class VampirismVillage implements IVampirismVillage {
             h.getEntityWorld().spawnEntity(villager);
             h.setDead();
         }
-        agressive=false;
+        agressive = false;
         dirty = true;
     }
 
@@ -343,7 +344,6 @@ public class VampirismVillage implements IVampirismVillage {
 
     /**
      * Creates a list of villagers that should become hunters. This considers things like childhood or trading. Also uses random.
-
      */
     private List<EntityVillager> selectVillagersToBecomeHunter(List<EntityVillager> villagers) {
         List<EntityVillager> selected = new LinkedList<>();
@@ -376,7 +376,7 @@ public class VampirismVillage implements IVampirismVillage {
     }
 
     private void spawnVillager(Village v) {
-        VampirismMod.log.t("Spawning villager at village %s",v.getCenter());
+        VampirismMod.log.t("Spawning villager at village %s", v.getCenter());
         @SuppressWarnings("rawtypes")
         List l = world.getEntitiesWithinAABB(EntityVillager.class, getBoundingBox(v));
         if (l.size() > 0) {

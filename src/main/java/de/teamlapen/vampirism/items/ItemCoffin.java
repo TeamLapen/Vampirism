@@ -66,5 +66,4 @@ public class ItemCoffin extends VampirismItem {
     }
 
 
-
 }

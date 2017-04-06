@@ -66,7 +66,6 @@ public class Balance {
      * Resets the matching balance category and reloads it
      *
      * @param category False if category is not found
-
      * @return
      */
     public static boolean resetAndReload(String category) {

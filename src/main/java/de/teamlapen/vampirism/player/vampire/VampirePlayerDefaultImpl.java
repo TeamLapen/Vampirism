@@ -108,6 +108,11 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
+    public int getMaxLevel() {
+        return 0;
+    }
+
+    @Override
     public int getMaxMinionCount() {
         return 0;
     }
@@ -210,11 +215,6 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     @Override
     public void onLevelChanged(int newLevel, int oldLevel) {
 
-    }
-
-    @Override
-    public int getMaxLevel() {
-        return 0;
     }
 
     @Override

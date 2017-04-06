@@ -33,7 +33,6 @@ public class BalanceHunterSkills extends BalanceValues {
     public boolean INSTANT_KILL_SKILL_2_ONLY_NPC;
 
 
-
     /**
      * Creates a configuration for balance values
      *

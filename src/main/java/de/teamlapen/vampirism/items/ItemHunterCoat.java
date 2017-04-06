@@ -60,7 +60,6 @@ public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTie
     }
 
 
-
     @Override
     public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
         for (TIER t : TIER.values()) {

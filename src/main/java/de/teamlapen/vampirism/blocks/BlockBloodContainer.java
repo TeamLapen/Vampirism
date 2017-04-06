@@ -109,17 +109,17 @@ public class BlockBloodContainer extends VampirismBlockContainer {
         if (!worldIn.isRemote) {
             ItemStack stack = heldItem;
             if (stack != null && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
-                    TileBloodContainer bloodContainer = (TileBloodContainer) worldIn.getTileEntity(pos);
+                TileBloodContainer bloodContainer = (TileBloodContainer) worldIn.getTileEntity(pos);
                 if (playerIn.isSneaking()) {
-                        fillContainerFromTank(worldIn, pos, playerIn, stack, bloodContainer);
-                    } else {
-                        drainContainerIntoTank(worldIn, pos, playerIn, stack, bloodContainer);
-                    }
-                    worldIn.notifyBlockUpdate(pos, state, state, 3);
-                    bloodContainer.markDirty();
-                    return true;
+                    fillContainerFromTank(worldIn, pos, playerIn, stack, bloodContainer);
+                } else {
+                    drainContainerIntoTank(worldIn, pos, playerIn, stack, bloodContainer);
                 }
+                worldIn.notifyBlockUpdate(pos, state, state, 3);
+                bloodContainer.markDirty();
+                return true;
             }
+        }
 
         return true;
 

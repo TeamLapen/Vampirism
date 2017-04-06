@@ -47,7 +47,7 @@ public class UpdateEntityPacket implements IMessage {
      * Create one sync packet for the given syncable entity containing firstly the data from it's {@link ISyncable} implementations and secondly all given capability instances
      *
      * @param entity EntityLiving which implements ISyncable
-     * @param caps  Have to belong to the given entity
+     * @param caps   Have to belong to the given entity
      * @return
      */
     public static UpdateEntityPacket create(EntityLiving entity, ISyncable.ISyncableEntityCapabilityInst... caps) {

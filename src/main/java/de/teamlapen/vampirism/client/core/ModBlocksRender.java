@@ -139,7 +139,6 @@ public class ModBlocksRender {
         });
 
 
-
     }
 
     private static void registerTileRenderer() {

@@ -217,7 +217,7 @@ public class SkillRegistry implements ISkillRegistry {
         int max = start.getElements().length;
         for (SkillNode node : start.getChildren()) {
             int n = calculateMaxSkillsPerNode(node);
-            if(n>max)max = n;
+            if (n > max) max = n;
         }
         return max;
     }
@@ -226,7 +226,7 @@ public class SkillRegistry implements ISkillRegistry {
         Integer[] info = new Integer[3];
         info[0] = calculateEndPoints(root);
         info[1] = calculateMaxSkillsPerNode(root);
-        info[2] = calculateMaxSkillDepth(root)+1;
+        info[2] = calculateMaxSkillDepth(root) + 1;
         return info;
     }
 
@@ -237,16 +237,16 @@ public class SkillRegistry implements ISkillRegistry {
      * @param column
      */
     private void setRenderPos(SkillNode base, int column) {
-        int left = -(base.getElements().length * 2 -1) / 2;
+        int left = -(base.getElements().length * 2 - 1) / 2;
         for (ISkill skill : base.getElements()) {
             skill.setRenderPos(base.getDepth() * 2, column + left);
-            left+=2;
+            left += 2;
         }
         int[] widths = new int[base.getChildren().size()];
         int total = 0;
         for (int i = 0; i < widths.length; i++) {
             SkillNode node = base.getChildren().get(i);
-            widths[i] = calculateMaxSkillsPerNode(node) * calculateEndPoints(node)*2;
+            widths[i] = calculateMaxSkillsPerNode(node) * calculateEndPoints(node) * 2;
             total += widths[i];
         }
         left = -(total) / 2;

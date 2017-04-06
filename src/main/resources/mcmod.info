@@ -1,40 +1,40 @@
 [
-{
-  "modid": "vampirism",
-  "name": "Vampirism",
-  "description": "Adds vampirism features",
-  "version": "${m_version}",
-  "mcversion": "${mc_version}",
-  "url": "https://maxanier.de/projects/vampirism",
-  "updateUrl": "https://maxanier.de/projects/vampirism",
-  "authors": [
-    "maxanier"
-  ],
-  "credits": "maxanier, Mistadon, wildbill22, LRA10, freesound.org, freeSFX.co.uk",
-  "logoFile": "logo.png",
-  "screenshots": [
-  ],
-  "parent":"",
-  "requiredMods":[ "teamlapen-lib"
+  {
+    "modid": "vampirism",
+    "name": "Vampirism",
+    "description": "Adds vampirism features",
+    "version": "${m_version}",
+    "mcversion": "${mc_version}",
+    "url": "https://maxanier.de/projects/vampirism",
+    "updateUrl": "https://maxanier.de/projects/vampirism",
+    "authors": [
+      "maxanier"
     ],
-  "dependencies": [ "teamlapen-lib"
+    "credits": "maxanier, Mistadon, wildbill22, LRA10, freesound.org, freeSFX.co.uk",
+    "logoFile": "logo.png",
+    "screenshots": [
     ],
-   "useDependencyInformation":false
-},
-{
-  "modid": "teamlapen-lib",
-  "name": "TeamLapen Library",
-  "description": "Library currently only used by Vampirism and thereby included in it",
-  "version": "${m_version}",
-  "mcversion": "${mc_version}",
-  "url": "https://maxanier.de/projects/vampirism",
-  "authors": [
-    "maxanier"
-
-  ],
-  "credits": "maxanier",
-  "screenshots": [
-  ]
-}
-
+    "parent": "",
+    "requiredMods": [
+      "teamlapen-lib"
+    ],
+    "dependencies": [
+      "teamlapen-lib"
+    ],
+    "useDependencyInformation": false
+  },
+  {
+    "modid": "teamlapen-lib",
+    "name": "TeamLapen Library",
+    "description": "Library currently only used by Vampirism and thereby included in it",
+    "version": "${m_version}",
+    "mcversion": "${mc_version}",
+    "url": "https://maxanier.de/projects/vampirism",
+    "authors": [
+      "maxanier"
+    ],
+    "credits": "maxanier",
+    "screenshots": [
+    ]
+  }
 ]

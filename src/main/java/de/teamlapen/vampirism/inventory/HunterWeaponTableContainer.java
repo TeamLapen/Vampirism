@@ -93,14 +93,13 @@ public class HunterWeaponTableContainer extends Container {
     }
 
 
-
     public void onCraftMatrixChanged(IInventory inventoryIn) {
         int lava = 0;
         IBlockState blockState = world.getBlockState(pos);
         if (blockState.getBlock() instanceof BlockWeaponTable) {
             lava = blockState.getValue(BlockWeaponTable.LAVA);
         }
-        this.craftResult.setInventorySlotContents(0, HunterWeaponCraftingManager.getInstance().findMatchingRecipeResult(this.craftMatrix, this.world, hunterPlayer.getLevel(), hunterPlayer.getSkillHandler(),lava));
+        this.craftResult.setInventorySlotContents(0, HunterWeaponCraftingManager.getInstance().findMatchingRecipeResult(this.craftMatrix, this.world, hunterPlayer.getLevel(), hunterPlayer.getSkillHandler(), lava));
     }
 
     @Nullable

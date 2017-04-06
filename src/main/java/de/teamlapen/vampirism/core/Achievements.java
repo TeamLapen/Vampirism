@@ -17,6 +17,7 @@ public class Achievements {
     public static Achievement stake = new Achievement("achievement.stake", REFERENCE.MODID + ".stake", 0, -3, ModItems.stake, becomingAHunter);
     public static Achievement weaponTable = new Achievement("achievement.weapon_table", REFERENCE.MODID + ".weapon_table", 1, -4, ModBlocks.weaponTable, stake);
     public static Achievement bloodTable = new Achievement("achievement.blood_table", REFERENCE.MODID + ".blood_table", -1, -4, ModBlocks.bloodPotionTable, stake);
+
     public static void registerAchievement() {
         becomingAVampire.registerStat();
         suckingBlood.registerStat();

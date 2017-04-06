@@ -96,6 +96,7 @@ public class ModEntities {
             }
         });
     }
+
     /**
      * Register convertibles for vanilla creatures and maybe for future vampirism creature as well
      */

@@ -447,7 +447,6 @@ public class RenderHandler {
         GlStateManager.disableBlend();
 
 
-
     }
 
     private boolean renderEntityOutlines(List<? extends Entity> entities, ShaderGroup shader, Framebuffer framebuffer, float partialTicks) {

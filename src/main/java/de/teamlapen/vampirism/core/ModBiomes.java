@@ -18,6 +18,7 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class ModBiomes {
 
     public static BiomeGenVampireForest vampireForest;
+
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
         switch (step) {
             case PRE_INIT:
@@ -41,7 +42,6 @@ public class ModBiomes {
             BiomeManager.addBiome(BiomeManager.BiomeType.WARM, new BiomeManager.BiomeEntry(vampireForest, weight));
             VampirismMod.log.d("ModBiomes", "Registered vampire forest with weight %d", weight);
         }
-
 
 
     }

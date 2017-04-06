@@ -114,6 +114,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
         };
     }
+
     private final BloodStats bloodStats;
     private final String KEY_EYE = "eye_type";
     private final String KEY_FANGS = "fang_type";
@@ -675,6 +676,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     /**
      * Set's the players entity size via reflection.
      * Attention: This is reset by EntityPlayer every tick
+     *
      * @param width
      * @param height
      * @return

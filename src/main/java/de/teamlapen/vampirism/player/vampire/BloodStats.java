@@ -45,6 +45,7 @@ public class BloodStats {
     /**
      * Adds blood to the stats
      * Consider using {@link VampirePlayer#drinkBlood(int, float)} instead
+     *
      * @param amount
      * @param saturationModifier
      * @return The amount which could not be added
@@ -103,16 +104,13 @@ public class BloodStats {
         EnumDifficulty enumDifficulty = player.getEntityWorld().getDifficulty();
         float exhaustion;
         try {
-            if (field_foodExhaustionLevel == null)
-            {
+            if (field_foodExhaustionLevel == null) {
                 field_foodExhaustionLevel = ReflectionHelper.findField(FoodStats.class, "foodExhaustionLevel", SRGNAMES.FoodStats_foodExhaustionLevel);
             }
             exhaustion = (float) field_foodExhaustionLevel.get(foodStats);
             addExhaustion(exhaustion);
             field_foodExhaustionLevel.set(foodStats, 0);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             VampirismMod.log.e(TAG, e, "Failed to access foodExhaustionLevel (%s)", SRGNAMES.FoodStats_foodExhaustionLevel);
             throw new RuntimeException(e);
         }
@@ -220,7 +218,7 @@ public class BloodStats {
         IAttributeInstance attribute = player.getEntityAttribute(VReference.bloodExhaustion);
         float mult;
         if (ignoreModifier) {
-            mult= 1F;
+            mult = 1F;
         } else {
             if (attribute == null) {
                 //Probably not needed anymore TODO remove

@@ -16,6 +16,7 @@ import net.minecraft.util.Rotation;
 public class VampirismBlock extends Block {
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
     private boolean hasFacing = false;
+
     public VampirismBlock(String regName, Material materialIn) {
         super(materialIn);
         setCreativeTab(VampirismMod.creativeTab);

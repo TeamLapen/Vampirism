@@ -44,8 +44,9 @@ public class HelperLib {
      * Syncs the given capability instance.
      * If the entity is a player and "all" is false it will only be send to the respective player
      * Otherwise it will we send to all players tracking the entity radius using the given data
-     *
+     * <p>
      * CAREFUL: If this is a player and it is not connected yet, no message is send, but no exception is thrown.
+     *
      * @param entity
      */
     public static void sync(ISyncable.ISyncableEntityCapabilityInst cap, Entity entity, boolean all) {
@@ -67,8 +68,9 @@ public class HelperLib {
      * Syncs the given capability instance using the given data.
      * If the entity is a player and "all" is false it will only be send to the respective player
      * Otherwise it will we send to all players tracking this entity using the given data
-     *
+     * <p>
      * CAREFUL: If this is a player and it is not connected yet, no message is send, but no exception is thrown.
+     *
      * @param entity
      */
     public static void sync(ISyncable.ISyncableEntityCapabilityInst cap, NBTTagCompound data, Entity entity, boolean all) {

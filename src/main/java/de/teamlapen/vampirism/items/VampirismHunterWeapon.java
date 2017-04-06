@@ -40,7 +40,6 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
     }
 
 
-
     @SideOnly(Side.CLIENT)
     @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {

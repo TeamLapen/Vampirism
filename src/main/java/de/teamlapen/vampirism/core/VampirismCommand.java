@@ -128,33 +128,33 @@ public class VampirismCommand extends BasicCommand {
                 }
                 EntityPlayer player = args.length == 3 ? getPlayer(server, sender, args[2]) : getCommandSenderAsPlayer(sender);
                 int level;
-                    try {
-                        level = Integer.parseInt(args[1]);
-                    } catch (NumberFormatException e) {
-                        throw new NumberInvalidException();
-                    }
-                    //Search factions
-                    for (int i = 0; i < pfaction_names.length; i++) {
-                        if (pfaction_names[i].equalsIgnoreCase(args[0])) {
-                            IPlayableFaction newFaction = pfactions[i];
-                            FactionPlayerHandler handler = FactionPlayerHandler.get(player);
-                            if (level == 0 && !handler.canLeaveFaction()) {
-                                sender.sendMessage(new TextComponentTranslation("text.vampirism.faction.cant_leave").appendSibling(new TextComponentString("(" + handler.getCurrentFaction().name() + ")")));
-                                return;
-                            }
-                            if (level > newFaction.getHighestReachableLevel()) {
-                                level = newFaction.getHighestReachableLevel();
-                            }
-                            if (handler.setFactionAndLevel(newFaction, level)) {
-                                ITextComponent msg = player.getDisplayName().appendSibling(new TextComponentString(" is now a " + pfaction_names[i] + " level " + level));
-                                FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().sendChatMsg(msg);
-                            } else {
-                                sender.sendMessage(new TextComponentTranslation("text.vampirism.faction.failed_to_change"));
-                            }
-
+                try {
+                    level = Integer.parseInt(args[1]);
+                } catch (NumberFormatException e) {
+                    throw new NumberInvalidException();
+                }
+                //Search factions
+                for (int i = 0; i < pfaction_names.length; i++) {
+                    if (pfaction_names[i].equalsIgnoreCase(args[0])) {
+                        IPlayableFaction newFaction = pfactions[i];
+                        FactionPlayerHandler handler = FactionPlayerHandler.get(player);
+                        if (level == 0 && !handler.canLeaveFaction()) {
+                            sender.sendMessage(new TextComponentTranslation("text.vampirism.faction.cant_leave").appendSibling(new TextComponentString("(" + handler.getCurrentFaction().name() + ")")));
                             return;
                         }
+                        if (level > newFaction.getHighestReachableLevel()) {
+                            level = newFaction.getHighestReachableLevel();
+                        }
+                        if (handler.setFactionAndLevel(newFaction, level)) {
+                            ITextComponent msg = player.getDisplayName().appendSibling(new TextComponentString(" is now a " + pfaction_names[i] + " level " + level));
+                            FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().sendChatMsg(msg);
+                        } else {
+                            sender.sendMessage(new TextComponentTranslation("text.vampirism.faction.failed_to_change"));
+                        }
+
+                        return;
                     }
+                }
                 throw new CommandException("commands.vampirism.level.faction_not_found", args[0]);
 
 

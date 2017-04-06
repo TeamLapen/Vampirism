@@ -55,6 +55,11 @@ class HunterPlayerDefaultImpl implements IHunterPlayer {
     }
 
     @Override
+    public int getMaxLevel() {
+        return 0;
+    }
+
+    @Override
     public int getMaxMinionCount() {
         return 0;
     }
@@ -112,10 +117,5 @@ class HunterPlayerDefaultImpl implements IHunterPlayer {
     @Override
     public void onLevelChanged(int newLevel, int oldLevel) {
 
-    }
-
-    @Override
-    public int getMaxLevel() {
-        return 0;
     }
 }

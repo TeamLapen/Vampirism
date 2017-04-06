@@ -29,6 +29,7 @@ public interface IAction<T extends IActionPlayer> {
     /**
      * Should return the location of the icon map where the icon is in
      * Texture has to be 256x80
+     *
      * @return
      */
     @SideOnly(Side.CLIENT)

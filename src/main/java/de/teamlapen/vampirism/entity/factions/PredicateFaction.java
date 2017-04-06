@@ -31,12 +31,12 @@ public class PredicateFaction implements Predicate<Entity> {
     /**
      * Selects entities
      *
-     * @param thisFaction   The friendly faction
-     * @param player        If players should be selected
-     * @param nonPlayer     If non players should be selected
-     * @param neutralPlayer If neutral playsers should be selected
+     * @param thisFaction    The friendly faction
+     * @param player         If players should be selected
+     * @param nonPlayer      If non players should be selected
+     * @param neutralPlayer  If neutral playsers should be selected
      * @param ignoreDisguise If the disguise ability of players should be ignored.
-     * @param otherFaction  If this is not null, only entities of this faction are selected.
+     * @param otherFaction   If this is not null, only entities of this faction are selected.
      */
     protected PredicateFaction(@Nonnull IFaction thisFaction, boolean player, boolean nonPlayer, boolean neutralPlayer, boolean ignoreDisguise, @Nullable IFaction otherFaction) {
         this.thisFaction = thisFaction;

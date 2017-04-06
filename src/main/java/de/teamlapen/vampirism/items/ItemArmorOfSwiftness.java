@@ -42,7 +42,6 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
     }
 
 
-
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
         if (type == null) {
@@ -69,7 +68,6 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
 
         return multimap;
     }
-
 
 
     @Override
@@ -141,7 +139,7 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
 
     /**
      * Applied if complete armor is worn
-
+     *
      * @return -1 if none
      */
     private int getJumpBoost(TIER tier) {
@@ -157,7 +155,6 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
 
     /**
      * Applied per piece
-
      */
     private double getSpeedBoost(TIER tier) {
         switch (tier) {

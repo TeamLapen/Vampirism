@@ -13,7 +13,6 @@ public class FluidLib {
 
     /**
      * Moves as much fluid as possible from the container into the tank
-     *
      */
     public static void drainContainerIntoTank(IFluidHandler container, IFluidHandler tank) {
         FluidStack fluidStack = container.drain(Integer.MAX_VALUE, false);

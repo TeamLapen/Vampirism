@@ -19,6 +19,7 @@ public interface ISkill<T extends ISkillPlayer> {
     /**
      * Should return the location of the icon map where the icon is in
      * Texture must be 256x80
+     *
      * @return null to use vampirism's default one
      */
     @SideOnly(Side.CLIENT)

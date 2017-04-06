@@ -429,6 +429,4 @@ public class GuideBook {
     }
 
 
-
-
 }

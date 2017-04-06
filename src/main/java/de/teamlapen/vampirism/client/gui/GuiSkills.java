@@ -526,6 +526,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
     private TextureAtlasSprite getTexture(IBlockState blockstate) {
         return Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getTexture(blockstate);
     }
+
     private TextureAtlasSprite getTexture(Block block) {
         return getTexture(block.getDefaultState());
     }

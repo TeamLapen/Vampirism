@@ -63,7 +63,6 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     }
 
 
-
     @Override
     public List<IAction<T>> getAvailableActions() {
         ArrayList<IAction<T>> actions = new ArrayList<>();

@@ -312,7 +312,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
      * Add the MoveTowardsRestriction task with the given priority.
      * Overrides prior priorities if existent
      *
-     * @param prio Priority of the task
+     * @param prio   Priority of the task
      * @param active If the task should be active or not
      */
     protected void setMoveTowardsRestriction(int prio, boolean active) {

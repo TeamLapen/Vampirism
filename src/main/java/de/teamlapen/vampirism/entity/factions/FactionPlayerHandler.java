@@ -139,12 +139,12 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     public void loadNBTData(NBTTagCompound nbt) {
 
         currentFaction = getFactionFromKey(new ResourceLocation(nbt.getString("faction")));
-            if (currentFaction == null) {
-                VampirismMod.log.w(TAG, "Could not find faction %s. Did mods change?", nbt.getString("faction"));
-            } else {
-                currentLevel = nbt.getInteger("level");
-                notifyFaction(null, 0);
-            }
+        if (currentFaction == null) {
+            VampirismMod.log.w(TAG, "Could not find faction %s. Did mods change?", nbt.getString("faction"));
+        } else {
+            currentLevel = nbt.getInteger("level");
+            notifyFaction(null, 0);
+        }
 
 
     }

@@ -98,6 +98,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     private static boolean isLiquidStack(ItemStack stack) {
         return getLiquidColor(stack) != -1;
     }
+
     private int totalBurnTime = 0, burnTime = 0, cookTime = 0, totalCookTime = 0;
     private boolean cookingClient;
     private boolean burningClient;

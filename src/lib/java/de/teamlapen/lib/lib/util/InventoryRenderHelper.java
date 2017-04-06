@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 /**
  * Helper for item/block model registration.
  * Inspired by @TehNut https://github.com/WayofTime/BloodMagic/blob/1.8/src/main/java/WayofTime/bloodmagic/util/helper/InventoryRenderHelperV2.java
- *
+ * <p>
  * For blocks that only have the "normal" type, you can use the block methods to declare the item properties in the same file as the block one using "inventory".
  * For blocks that have multiple types, you have to use the item methods using Item.getItemForBlock and specifiy the item models in blockstates/item
  */
@@ -81,9 +81,10 @@ public class InventoryRenderHelper {
     /**
      * Register a item for a block which only has the normal property.
      * Specify the model in the same file as the block under "inventory"
+     *
      * @param block
      */
-    public void registerRender(Block block){
+    public void registerRender(Block block) {
         registerRender(block, 0, block.getRegistryName().getResourcePath());
     }
 
@@ -122,9 +123,9 @@ public class InventoryRenderHelper {
      * {@link InventoryRenderHelper#registerRender(Item, int, String, String)} with registry name for every variant.
      * each variant represents one meta value
      */
-    public void registerRenderAllMeta(Item item, IStringSerializable[] variants){
-        for (int i=0;i<variants.length;i++){
-            registerRender(item,i,variants[i].getName());
+    public void registerRenderAllMeta(Item item, IStringSerializable[] variants) {
+        for (int i = 0; i < variants.length; i++) {
+            registerRender(item, i, variants[i].getName());
         }
     }
 

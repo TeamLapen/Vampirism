@@ -29,8 +29,10 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
     public static AlchemicalCauldronCraftingManager getInstance() {
         return ourInstance;
     }
+
     private final List<IAlchemicalCauldronRecipe> recipes = Lists.newLinkedList();
     private Map<Object, Integer> liquidColors = Maps.newHashMap();
+
     private AlchemicalCauldronCraftingManager() {
     }
 

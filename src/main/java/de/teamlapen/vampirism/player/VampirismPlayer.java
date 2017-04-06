@@ -107,7 +107,6 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
     }
 
 
-
     /**
      * Sync all data
      *

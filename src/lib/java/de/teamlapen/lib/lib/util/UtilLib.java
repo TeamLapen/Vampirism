@@ -79,6 +79,7 @@ public class UtilLib {
         vertexbuffer.pos((double) (x), (double) (y), (double) zLevel).tex((double) ((float) (textureX) * f), (double) ((float) (textureY) * f1)).endVertex();
         tessellator.draw();
     }
+
     /**
      * Gets players looking spot (blocks only).
      *
@@ -376,12 +377,13 @@ public class UtilLib {
 
     /**
      * Return a square bounding box around the given center with the given distance
+     *
      * @param center
      * @param distance
-     * @param fullY If it should reach from y 0 to 265 or use the distance for y as well
+     * @param fullY    If it should reach from y 0 to 265 or use the distance for y as well
      * @return
      */
-    public static AxisAlignedBB createBB(BlockPos center,int distance,boolean fullY){
+    public static AxisAlignedBB createBB(BlockPos center, int distance, boolean fullY) {
         return new AxisAlignedBB(center.getX() - distance, fullY ? 0 : center.getY() - distance, center.getZ() - distance, center.getX() + distance, fullY ? 256 : center.getY() + distance, center.getZ() + distance);
     }
 

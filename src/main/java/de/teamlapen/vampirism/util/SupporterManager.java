@@ -32,7 +32,6 @@ public class SupporterManager {
 
     /**
      * Returns a randomly picked hunter
-     *
      */
     public Supporter getRandomHunter(Random rnd) {
         if (supporters[1].length > 0) {
@@ -43,7 +42,6 @@ public class SupporterManager {
 
     /**
      * Returns a randomly picked vampire
-     *
      */
     public Supporter getRandomVampire(Random rnd) {
         if (supporters[0].length > 0) {

@@ -22,7 +22,6 @@ public class ItemHunterAxe extends VampirismHunterWeapon implements IItemWithTie
     private static final String regName = "hunterAxe";
 
 
-
     public ItemHunterAxe() {
         super(regName, ToolMaterial.IRON, -2.5F);
     }

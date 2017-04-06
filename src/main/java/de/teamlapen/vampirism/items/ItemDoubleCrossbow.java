@@ -18,7 +18,7 @@ public class ItemDoubleCrossbow extends ItemSimpleCrossbow {
      * @param regName       Registry name
      * @param speed         Speed of the shot arrows (0.1F-20F)
      * @param coolDownTicks Cooldown ticks >0
-     * @param maxDamage Max amount of shot arrrows or 0 if unbreakable
+     * @param maxDamage     Max amount of shot arrrows or 0 if unbreakable
      */
     public ItemDoubleCrossbow(String regName, float speed, int coolDownTicks, int maxDamage) {
         super(regName, speed, coolDownTicks, maxDamage);
