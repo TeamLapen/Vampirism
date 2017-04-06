@@ -16,6 +16,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.awt.*;
@@ -38,16 +40,17 @@ public class AlchemicalCauldronRecipePage extends Page {
         this.recipe = recipe;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void draw(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, GuiBase guiBase, FontRenderer fontRendererObj) {
         Minecraft mc = Minecraft.getMinecraft();
-        long time = mc.theWorld.getTotalWorldTime();
+        long time = mc.world.getTotalWorldTime();
         if (lastCycle < 0 || lastCycle < time - 20) {
             if (lastCycle > 0) {
                 cycleIdx++;
                 cycleIdx = Math.max(0, cycleIdx);
             }
-            lastCycle = mc.theWorld.getTotalWorldTime();
+            lastCycle = mc.world.getTotalWorldTime();
         }
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation("vampirismguide", "textures/gui/alchemicalCauldronRecipe.png"));
@@ -121,6 +124,13 @@ public class AlchemicalCauldronRecipePage extends Page {
         }
     }
 
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void drawExtras(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, GuiBase guiBase, FontRenderer fontRendererObj) {
+        guiBase.drawHoveringText(tooltips, mouseX, mouseY);
+        tooltips.clear();
+    }
+
     protected int getRandomizedCycle(int index, int max) {
         rand.setSeed(index);
         return (index + rand.nextInt(max) + cycleIdx) % max;
@@ -128,11 +138,5 @@ public class AlchemicalCauldronRecipePage extends Page {
 
     protected String getRecipeName() {
         return UtilLib.translate("text.shaped.crafting");
-    }
-
-    @Override
-    public void drawExtras(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, GuiBase guiBase, FontRenderer fontRendererObj) {
-        guiBase.drawHoveringText(tooltips, mouseX, mouseY);
-        tooltips.clear();
     }
 }

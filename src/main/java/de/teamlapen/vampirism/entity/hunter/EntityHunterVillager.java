@@ -36,11 +36,11 @@ public class EntityHunterVillager extends EntityVillagerVampirism implements IHu
      * @return
      */
     public static EntityHunterVillager makeHunter(EntityVillager villager) {
-        EntityHunterVillager hunter = new EntityHunterVillager(villager.worldObj);
+        EntityHunterVillager hunter = new EntityHunterVillager(villager.world);
         NBTTagCompound nbt = new NBTTagCompound();
         villager.writeToNBT(nbt);
         hunter.readFromNBT(nbt);
-        hunter.setUniqueId(MathHelper.getRandomUuid(hunter.rand));
+        hunter.setUniqueId(MathHelper.getRandomUUID(hunter.rand));
         hunter.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.pitchfork));
         return hunter;
     }
@@ -51,11 +51,11 @@ public class EntityHunterVillager extends EntityVillagerVampirism implements IHu
      * @return
      */
     public static EntityVillager makeNormal(EntityHunterVillager hunter) {
-        EntityVillager villager = new EntityVillager(hunter.worldObj);
+        EntityVillager villager = new EntityVillager(hunter.world);
         NBTTagCompound nbt = new NBTTagCompound();
         hunter.writeToNBT(nbt);
         villager.readFromNBT(nbt);
-        villager.setUniqueId(MathHelper.getRandomUuid(villager.getRNG()));
+        villager.setUniqueId(MathHelper.getRandomUUID(villager.getRNG()));
 
         return villager;
     }

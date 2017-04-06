@@ -162,7 +162,7 @@ public class WorldGenVampireDungeon extends WorldGenerator {
                         EntityAdvancedVampire vampire = new EntityAdvancedVampire(worldIn);
                         vampire.setPosition(l4, i5 + 0.3, j5);
                         if (vampire.getCanSpawnHere()) {
-                            worldIn.spawnEntityInWorld(vampire);
+                            worldIn.spawnEntity(vampire);
                             break;
                         } else {
                             vampire.setDead();

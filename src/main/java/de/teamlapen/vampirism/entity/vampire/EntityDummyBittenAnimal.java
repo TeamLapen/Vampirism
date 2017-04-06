@@ -26,7 +26,7 @@ public class EntityDummyBittenAnimal extends EntityLiving {
     @Override
     public void onLivingUpdate() {
         super.onLivingUpdate();
-        if (this.ticksExisted > 4 && !this.worldObj.isRemote) {
+        if (this.ticksExisted > 4 && !this.getEntityWorld().isRemote) {
             String entity;
             int rand = this.rand.nextInt(3);
             switch (rand) {
@@ -40,7 +40,7 @@ public class EntityDummyBittenAnimal extends EntityLiving {
                     entity = "Cow";
                     break;
             }
-            EntityCreature entity1 = (EntityCreature) EntityList.createEntityByName(entity, worldObj);
+            EntityCreature entity1 = (EntityCreature) EntityList.createEntityByName(entity, world);
             if (entity1 != null) {
                 entity1.copyLocationAndAnglesFrom(this);
                 if (ExtendedCreature.get(entity1).canBecomeVampire()) {

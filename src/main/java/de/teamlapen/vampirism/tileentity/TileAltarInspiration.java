@@ -21,6 +21,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidTank;
 import net.minecraftforge.fluids.FluidTankInfo;
 
+import javax.annotation.Nonnull;
+
 /**
  * Handle blood storage and leveling
  */
@@ -45,6 +47,7 @@ public class TileAltarInspiration extends net.minecraftforge.fluids.capability.T
         return new SPacketUpdateTileEntity(getPos(), 1, getUpdateTag());
     }
 
+    @Nonnull
     @Override
     public NBTTagCompound getUpdateTag() {
         return writeToNBT(new NBTTagCompound());
@@ -55,7 +58,7 @@ public class TileAltarInspiration extends net.minecraftforge.fluids.capability.T
         FluidStack old = tank.getFluid();
         this.readFromNBT(pkt.getNbtCompound());
         if (old != null && !old.isFluidStackIdentical(tank.getFluid()) || old == null && tank.getFluid() != null) {
-            this.worldObj.notifyBlockUpdate(getPos(), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 3);
+            this.world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
         }
     }
 
@@ -65,22 +68,22 @@ public class TileAltarInspiration extends net.minecraftforge.fluids.capability.T
         int targetLevel = player.getLevel() + 1;
         VampireLevelingConf levelingConf = VampireLevelingConf.getInstance();
         if (!levelingConf.isLevelValidForAltarInspiration(targetLevel)) {
-            if (p.worldObj.isRemote)
-                p.addChatMessage(new TextComponentTranslation("text.vampirism.ritual_level_wrong"));
+            if (p.world.isRemote)
+                p.sendMessage(new TextComponentTranslation("text.vampirism.ritual_level_wrong"));
             return;
         }
         int neededBlood = levelingConf.getRequiredBloodForAltarInspiration(targetLevel) * VReference.FOOD_TO_FLUID_BLOOD;
         if (tank.getFluidAmount() + 99 < neededBlood) {//Since the container can only be filled in 100th steps
-            if (p.worldObj.isRemote) p.addChatMessage(new TextComponentTranslation("text.vampirism.not_enough_blood"));
+            if (p.world.isRemote) p.sendMessage(new TextComponentTranslation("text.vampirism.not_enough_blood"));
             return;
         }
-        if (!p.worldObj.isRemote) {
-            VampLib.proxy.getParticleHandler().spawnParticles(p.worldObj, ModParticles.FLYING_BLOOD_ENTITY, this.pos.getX() + 0.5, this.pos.getY() + 0.5, this.pos.getZ() + 0.5, 40, 0.1F, p.getRNG(), player.getRepresentingPlayer(), false);
+        if (!p.world.isRemote) {
+            VampLib.proxy.getParticleHandler().spawnParticles(p.world, ModParticles.FLYING_BLOOD_ENTITY, this.pos.getX() + 0.5, this.pos.getY() + 0.5, this.pos.getZ() + 0.5, 40, 0.1F, p.getRNG(), player.getRepresentingPlayer(), false);
         } else {
             ((InternalTank) tank).doDrain(neededBlood, true);
-            IBlockState state = worldObj.getBlockState(getPos());
+            IBlockState state = world.getBlockState(getPos());
 
-            worldObj.notifyBlockUpdate(pos, state, state, 3);
+            world.notifyBlockUpdate(pos, state, state, 3);
         }
         ritualPlayer = p;
         ritualTicksLeft = RITUAL_TIME;
@@ -90,10 +93,10 @@ public class TileAltarInspiration extends net.minecraftforge.fluids.capability.T
     public void update() {
         if (ritualTicksLeft == 0) return;
 
-        if (!worldObj.isRemote) {
+        if (!world.isRemote) {
             switch (ritualTicksLeft) {
                 case 5:
-                    worldObj.addWeatherEffect(new EntityLightningBolt(worldObj, this.pos.getX(), this.pos.getY(), this.pos.getZ(), true));
+                    world.addWeatherEffect(new EntityLightningBolt(world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), true));
                     ritualPlayer.setHealth(ritualPlayer.getMaxHealth());
 
                     VampirePlayer.get(ritualPlayer).getBloodStats().addBlood(100, 0);
@@ -109,8 +112,8 @@ public class TileAltarInspiration extends net.minecraftforge.fluids.capability.T
                     ritualPlayer.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, targetLevel * 10 * 20));
                     FactionPlayerHandler.get(ritualPlayer).setFactionLevel(VReference.VAMPIRE_FACTION, targetLevel);
                     markDirty();
-                    IBlockState state = worldObj.getBlockState(getPos());
-                    this.worldObj.notifyBlockUpdate(pos, state, state, 3);
+                    IBlockState state = world.getBlockState(getPos());
+                    this.world.notifyBlockUpdate(pos, state, state, 3);
                     break;
                 default:
                     break;

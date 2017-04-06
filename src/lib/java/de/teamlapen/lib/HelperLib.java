@@ -19,7 +19,7 @@ public class HelperLib {
      * @param entity
      */
     public static void sync(Entity entity) {
-        if (!entity.worldObj.isRemote) {
+        if (!entity.getEntityWorld().isRemote) {
             IMessage m = UpdateEntityPacket.create(entity);
             VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);
         }
@@ -33,7 +33,7 @@ public class HelperLib {
      * @param entity
      */
     public static void sync(Entity entity, NBTTagCompound data) {
-        if (!entity.worldObj.isRemote) {
+        if (!entity.getEntityWorld().isRemote) {
             IMessage m = UpdateEntityPacket.create(entity, data);
             VampLib.dispatcher.sendToAllTrackingPlayers(m, entity);
         }
@@ -49,7 +49,7 @@ public class HelperLib {
      * @param entity
      */
     public static void sync(ISyncable.ISyncableEntityCapabilityInst cap, Entity entity, boolean all) {
-        if (!entity.worldObj.isRemote) {
+        if (!entity.getEntityWorld().isRemote) {
             IMessage m = UpdateEntityPacket.create(cap);
             if (entity instanceof EntityPlayerMP && !all) {
                 if (((EntityPlayerMP) entity).connection != null) {
@@ -72,7 +72,7 @@ public class HelperLib {
      * @param entity
      */
     public static void sync(ISyncable.ISyncableEntityCapabilityInst cap, NBTTagCompound data, Entity entity, boolean all) {
-        if (!entity.worldObj.isRemote) {
+        if (!entity.getEntityWorld().isRemote) {
             IMessage m = UpdateEntityPacket.create(cap, data);
             if (entity instanceof EntityPlayerMP && !all) {
                 if (((EntityPlayerMP) entity).connection != null) {

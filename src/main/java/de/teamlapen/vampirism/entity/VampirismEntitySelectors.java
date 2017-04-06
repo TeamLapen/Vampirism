@@ -59,7 +59,7 @@ public class VampirismEntitySelectors {
                     return false;
                 }
             });
-            sender.addChatMessage(new TextComponentString("Unknown faction: " + faction));
+            sender.sendMessage(new TextComponentString("Unknown faction: " + faction));
 
         }
     }

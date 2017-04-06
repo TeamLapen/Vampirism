@@ -107,7 +107,7 @@ public class EntityConvertedSheep extends EntityConvertedCreature<EntitySheep> i
 
         @Override
         public EntityConvertedCreature createFrom(EntitySheep entity) {
-            EntityConvertedSheep creature = new EntityConvertedSheep(entity.worldObj);
+            EntityConvertedSheep creature = new EntityConvertedSheep(entity.getEntityWorld());
             this.copyImportantStuff(creature, entity);
             creature.setSheared(entity.getSheared());
             return creature;

@@ -50,8 +50,9 @@ public class TileCoffin extends TileEntity implements ITickable {
     @Override
     public void markDirty() {
         super.markDirty();
-        worldObj.notifyBlockUpdate(getPos(), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 3);
+        world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
     }
+
 
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity packet) {
@@ -74,13 +75,13 @@ public class TileCoffin extends TileEntity implements ITickable {
 
     @Override
     public void update() {
-        if (!worldObj.isRemote) return;
-        if (!BlockCoffin.isHead(worldObj, pos))
+        if (!world.isRemote) return;
+        if (!BlockCoffin.isHead(world, pos))
             return;
 
-        boolean occupied = BlockCoffin.isOccupied(worldObj, pos);
+        boolean occupied = BlockCoffin.isOccupied(world, pos);
         if (lastTickOccupied != occupied) {
-            this.worldObj.playSound(pos.getX(), (double) this.pos.getY() + 0.5D, pos.getZ(), ModSounds.block_coffin_lid, SoundCategory.BLOCKS, 0.5F, this.worldObj.rand.nextFloat() * 0.1F + 0.9F, true);
+            this.world.playSound(pos.getX(), (double) this.pos.getY() + 0.5D, pos.getZ(), ModSounds.block_coffin_lid, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F, true);
             lastTickOccupied = occupied;
         }
 

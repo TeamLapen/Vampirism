@@ -47,7 +47,7 @@ public class GuiHunterTrainer extends GuiContainer {
     @Override
     public void updateScreen() {
         super.updateScreen();
-        if (container.hasChanged() || this.mc.thePlayer.getRNG().nextInt(40) == 6) {
+        if (container.hasChanged() || this.mc.player.getRNG().nextInt(40) == 6) {
             buttonLevelup.enabled = container.canLevelup();
         }
 
@@ -57,8 +57,8 @@ public class GuiHunterTrainer extends GuiContainer {
     protected void actionPerformed(GuiButton button) throws IOException {
         if (button.id == 1) {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TRAINERLEVELUP, ""));
-            EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-            UtilLib.spawnParticles(player.worldObj, EnumParticleTypes.ENCHANTMENT_TABLE, player.posX, player.posY, player.posZ, 1, 1, 1, 100, 1);
+            EntityPlayer player = Minecraft.getMinecraft().player;
+            UtilLib.spawnParticles(player.getEntityWorld(), EnumParticleTypes.ENCHANTMENT_TABLE, player.posX, player.posY, player.posZ, 1, 1, 1, 100, 1);
             player.playSound(SoundEvents.BLOCK_NOTE_HARP, 4.0F, (1.0F + (player.getRNG().nextFloat() - player.getRNG().nextFloat()) * 0.2F) * 0.7F);
         } else {
             super.actionPerformed(button);

@@ -57,7 +57,7 @@ public class VampirismCommand extends BasicCommand {
 
             @Override
             public boolean canSenderUseCommand(ICommandSender sender) {
-                return !FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer() || sender.canCommandSenderUseCommand(3, getCommandName());
+                return !FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer() || sender.canUseCommand(3, getCommandName());
             }
 
             @Override
@@ -79,14 +79,14 @@ public class VampirismCommand extends BasicCommand {
                     cat = args[0];
                 }
                 if ("help".equals(cat)) {
-                    sender.addChatMessage(new TextComponentString("You can reset Vampirism balance values to the default values. If you have not modified them, this is recommend after every update of Vampirism"));
-                    sender.addChatMessage(new TextComponentString("Use '/vampirism resetBalance all' to reset all categories or specify a category with '/vampirism resetBalance <category>' (Tab completion is supported)"));
+                    sender.sendMessage(new TextComponentString("You can reset Vampirism balance values to the default values. If you have not modified them, this is recommend after every update of Vampirism"));
+                    sender.sendMessage(new TextComponentString("Use '/vampirism resetBalance all' to reset all categories or specify a category with '/vampirism resetBalance <category>' (Tab completion is supported)"));
                 }
                 boolean p = Balance.resetAndReload(cat);
                 if (p) {
-                    sender.addChatMessage(new TextComponentString("Successfully reset " + cat + " balance category. Please restart MC."));
+                    sender.sendMessage(new TextComponentString("Successfully reset " + cat + " balance category. Please restart MC."));
                 } else {
-                    sender.addChatMessage(new TextComponentString("Did not find " + cat + " balance category."));
+                    sender.sendMessage(new TextComponentString("Did not find " + cat + " balance category."));
                 }
             }
 
@@ -139,7 +139,7 @@ public class VampirismCommand extends BasicCommand {
                             IPlayableFaction newFaction = pfactions[i];
                             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
                             if (level == 0 && !handler.canLeaveFaction()) {
-                                sender.addChatMessage(new TextComponentTranslation("text.vampirism.faction.cant_leave").appendSibling(new TextComponentString("(" + handler.getCurrentFaction().name() + ")")));
+                                sender.sendMessage(new TextComponentTranslation("text.vampirism.faction.cant_leave").appendSibling(new TextComponentString("(" + handler.getCurrentFaction().name() + ")")));
                                 return;
                             }
                             if (level > newFaction.getHighestReachableLevel()) {
@@ -149,7 +149,7 @@ public class VampirismCommand extends BasicCommand {
                                 ITextComponent msg = player.getDisplayName().appendSibling(new TextComponentString(" is now a " + pfaction_names[i] + " level " + level));
                                 FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().sendChatMsg(msg);
                             } else {
-                                sender.addChatMessage(new TextComponentTranslation("text.vampirism.faction.failed_to_change"));
+                                sender.sendMessage(new TextComponentTranslation("text.vampirism.faction.failed_to_change"));
                             }
 
                             return;
@@ -259,7 +259,7 @@ public class VampirismCommand extends BasicCommand {
             @Override
             public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) {
                 if (Configs.disable_vampireForest) {
-                    sender.addChatMessage(new TextComponentString("The Vampire Biome is disabled in the config file"));
+                    sender.sendMessage(new TextComponentString("The Vampire Biome is disabled in the config file"));
                 } else {
                     int maxDist = 150;
                     if (args.length > 0) {
@@ -267,25 +267,25 @@ public class VampirismCommand extends BasicCommand {
                             maxDist = Integer.parseInt(args[0]);
                         } catch (NumberFormatException e) {
                             VampirismMod.log.w("CheckVampireBiome", "Failed to parse max dist %s", args[0]);
-                            sender.addChatMessage(new TextComponentString("Failed to parse max distance. Using " + maxDist));
+                            sender.sendMessage(new TextComponentString("Failed to parse max distance. Using " + maxDist));
                         }
                         if (maxDist > 500) {
                             if (args.length > 1 && "yes".equals(args[1])) {
 
                             } else {
-                                sender.addChatMessage(new TextComponentString("This will take a long time. Please use '/" + getCommandUsage(sender) + " yes', if you are sure"));
+                                sender.sendMessage(new TextComponentString("This will take a long time. Please use '/" + getCommandUsage(sender) + " yes', if you are sure"));
                                 return;
                             }
                         }
                     }
                     List<Biome> biomes = new ArrayList<Biome>();
                     biomes.add(ModBiomes.vampireForest);
-                    sender.addChatMessage(new TextComponentTranslation("text.vampirism.biome.looking_for_biome"));
+                    sender.sendMessage(new TextComponentTranslation("text.vampirism.biome.looking_for_biome"));
                     ChunkPos pos = UtilLib.findNearBiome(sender.getEntityWorld(), (sender).getPosition(), maxDist, biomes, sender);
                     if (pos == null) {
-                        sender.addChatMessage(new TextComponentTranslation("text.vampirism.biome.not_found"));
+                        sender.sendMessage(new TextComponentTranslation("text.vampirism.biome.not_found"));
                     } else {
-                        sender.addChatMessage(new TextComponentTranslation("text.vampirism.biome.found").appendSibling(new TextComponentString("[" + (pos.chunkXPos << 4) + "," + (pos.chunkZPos << 4) + "]")));
+                        sender.sendMessage(new TextComponentTranslation("text.vampirism.biome.found").appendSibling(new TextComponentString("[" + (pos.chunkXPos << 4) + "," + (pos.chunkZPos << 4) + "]")));
                     }
                 }
             }
@@ -314,21 +314,21 @@ public class VampirismCommand extends BasicCommand {
             @Override
             public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) {
                 if (!VampirismMod.instance.getVersionInfo().isNewVersionAvailable()) {
-                    sender.addChatMessage(new TextComponentString("There is no new version available"));
+                    sender.sendMessage(new TextComponentString("There is no new version available"));
                     return;
                 }
                 VersionChecker.Version newVersion = VampirismMod.instance.getVersionInfo().getNewVersion();
                 List<String> changes = newVersion.getChanges();
-                sender.addChatMessage(new TextComponentString(TextFormatting.GREEN + "Vampirism " + newVersion.name + "(" + MinecraftForge.MC_VERSION + ")"));
+                sender.sendMessage(new TextComponentString(TextFormatting.GREEN + "Vampirism " + newVersion.name + "(" + MinecraftForge.MC_VERSION + ")"));
                 for (String c : changes) {
-                    sender.addChatMessage(new TextComponentString("-" + c));
+                    sender.sendMessage(new TextComponentString("-" + c));
                 }
-                sender.addChatMessage(new TextComponentString(""));
+                sender.sendMessage(new TextComponentString(""));
                 String template = I18n.translateToLocal("text.vampirism.update_message");
                 String homepage = VampirismMod.instance.getVersionInfo().getHomePage();
                 template = template.replaceAll("@download@", newVersion.getUrl() == null ? homepage : newVersion.getUrl()).replaceAll("@forum@", homepage);
                 ITextComponent component = ITextComponent.Serializer.jsonToComponent(template);
-                sender.addChatMessage(component);
+                sender.sendMessage(component);
             }
         });
         addSub(new SubCommand() {
@@ -358,9 +358,7 @@ public class VampirismCommand extends BasicCommand {
             public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) {
                 if (sender instanceof EntityPlayer) {
                     EntityPlayer p = (EntityPlayer) sender;
-                    if (p.worldObj != null) {
-                        sender.addChatMessage(new TextComponentString("Dimension ID: " + p.worldObj.provider.getDimension()));
-                    }
+                    sender.sendMessage(new TextComponentString("Dimension ID: " + p.getEntityWorld().provider.getDimension()));
                 }
             }
         });
@@ -373,7 +371,7 @@ public class VampirismCommand extends BasicCommand {
 
             @Override
             public boolean canSenderUseCommand(ICommandSender sender) {
-                return !FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer() || sender.canCommandSenderUseCommand(3, getCommandName());
+                return !FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer() || sender.canUseCommand(3, getCommandName());
             }
 
             @Override
@@ -391,13 +389,14 @@ public class VampirismCommand extends BasicCommand {
                 boolean enabled = VampirismMod.log.isDebug();
                 VampirismMod.log.setDebug(!enabled);
                 String msg = enabled ? "Disabled debug mode" : "Enabled debug mode";
-                sender.addChatMessage(new TextComponentString(msg));
+                sender.sendMessage(new TextComponentString(msg));
             }
         });
     }
 
+
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "vampirism";
     }
 
@@ -413,6 +412,6 @@ public class VampirismCommand extends BasicCommand {
         if (VampirismMod.inDev) {
             return true;
         }
-        return sender.canCommandSenderUseCommand(perm, command);
+        return sender.canUseCommand(perm, command);
     }
 }

@@ -51,7 +51,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     @Override
     public void loadUpdateFromNBT(NBTTagCompound nbt) {
         if (nbt.hasKey("entity_old")) {
-            setEntityCreature((T) EntityList.createEntityFromNBT(nbt.getCompoundTag("entity_old"), worldObj));
+            setEntityCreature((T) EntityList.createEntityFromNBT(nbt.getCompoundTag("entity_old"), getEntityWorld()));
         }
     }
 
@@ -85,7 +85,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
             entityCreature.prevRenderYawOffset = this.prevRenderYawOffset;
             entityCreature.deathTime = this.deathTime;
 
-            if (worldObj.isRemote) {
+            if (world.isRemote) {
                 entityCreature.serverPosX = this.serverPosX;
                 entityCreature.serverPosY = this.serverPosY;
                 entityCreature.serverPosZ = this.serverPosZ;
@@ -101,7 +101,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     @Override
     public void onUpdate() {
         super.onUpdate();
-        if (!worldObj.isRemote && entityCreature == null) {
+        if (!world.isRemote && entityCreature == null) {
             VampirismMod.log.d(TAG, "Setting dead, since creature is null");
             this.setDead();
         }
@@ -118,7 +118,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
     public void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
         if (nbt.hasKey("entity_old")) {
-            setEntityCreature((T) EntityList.createEntityFromNBT(nbt.getCompoundTag("entity_old"), worldObj));
+            setEntityCreature((T) EntityList.createEntityFromNBT(nbt.getCompoundTag("entity_old"), world));
             if (nil()) {
                 VampirismMod.log.w(TAG, "Failed to create old entity %s. Maybe the entity does not exist anymore", nbt.getCompoundTag("entity_old"));
             }

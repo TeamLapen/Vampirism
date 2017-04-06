@@ -211,7 +211,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
                         entityarrow.pickupStatus = EntityArrow.PickupStatus.CREATIVE_ONLY;
                     }
 
-                    world.spawnEntityInWorld(entityarrow);
+                    world.spawnEntity(entityarrow);
                     world.playSound(null, player.posX, player.posY + 0.5, player.posZ, ModSounds.crossbow, SoundCategory.PLAYERS, 1F, world.rand.nextFloat() * 0.1F + 0.9F);
 
                 }
@@ -247,10 +247,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @return If the given arrow type can be used in an infinite crossbow
      */
     private boolean canArrowBeInfinite(ItemStack arrowStack) {
-        if (arrowStack.getItem() instanceof ItemCrossbowArrow) {
-            return ((ItemCrossbowArrow) arrowStack.getItem()).isCanBeInfinite(arrowStack);
-        }
-        return true;
+        return !(arrowStack.getItem() instanceof ItemCrossbowArrow) || ((ItemCrossbowArrow) arrowStack.getItem()).isCanBeInfinite(arrowStack);
     }
 
 

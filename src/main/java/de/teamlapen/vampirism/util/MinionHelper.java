@@ -154,7 +154,7 @@ public class MinionHelper {
             }
             c1.appendSibling(c2);
             c2.getStyle().setColor(TextFormatting.WHITE);
-            ((EntityPlayer) l.getRepresentingEntity()).addChatComponentMessage(c1);
+            l.getRepresentingEntity().sendMessage(c1);
         }
     }
 

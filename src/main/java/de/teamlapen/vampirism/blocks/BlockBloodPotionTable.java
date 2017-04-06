@@ -45,7 +45,7 @@ public class BlockBloodPotionTable extends VampirismBlock {
             if (canUse(playerIn))
                 playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_POTION_TABLE, worldIn, pos.getX(), pos.getY(), pos.getZ());
             else {
-                playerIn.addChatComponentMessage(new TextComponentTranslation("tile.vampirism." + regName + ".cannot_use"));
+                playerIn.sendMessage(new TextComponentTranslation("tile.vampirism." + regName + ".cannot_use"));
             }
         }
 

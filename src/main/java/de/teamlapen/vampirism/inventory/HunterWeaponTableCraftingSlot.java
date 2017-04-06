@@ -56,14 +56,14 @@ public class HunterWeaponTableCraftingSlot extends Slot {
             lava = blockState.getValue(BlockWeaponTable.LAVA);
         }
         HunterPlayer hunterPlayer = HunterPlayer.get(playerIn);
-        IHunterWeaponRecipe recipe = HunterWeaponCraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, playerIn.worldObj, hunterPlayer.getLevel(), hunterPlayer.getSkillHandler(), lava);
+        IHunterWeaponRecipe recipe = HunterWeaponCraftingManager.getInstance().findMatchingRecipe(this.craftMatrix, playerIn.getEntityWorld(), hunterPlayer.getLevel(), hunterPlayer.getSkillHandler(), lava);
         if (recipe != null && recipe.getRequiredLavaUnits() > 0) {
             lava = Math.max(0, lava - recipe.getRequiredLavaUnits());
             if (blockState.getBlock() instanceof BlockWeaponTable) {
                 world.setBlockState(pos, blockState.withProperty(BlockWeaponTable.LAVA, lava));
             }
         }
-        ItemStack[] aitemstack = recipe == null ? HunterWeaponCraftingManager.getInstance().getRemainingItems(this.craftMatrix, playerIn.worldObj, hunterPlayer.getLevel(), hunterPlayer.getSkillHandler(), lava) : recipe.getRemainingItems(this.craftMatrix);
+        ItemStack[] aitemstack = recipe == null ? HunterWeaponCraftingManager.getInstance().getRemainingItems(this.craftMatrix, playerIn.getEntityWorld(), hunterPlayer.getLevel(), hunterPlayer.getSkillHandler(), lava) : recipe.getRemainingItems(this.craftMatrix);
 
         for (int i = 0; i < aitemstack.length; ++i) {
             ItemStack itemstack = this.craftMatrix.getStackInSlot(i);
@@ -96,7 +96,7 @@ public class HunterWeaponTableCraftingSlot extends Slot {
     @Override
     protected void onCrafting(ItemStack stack) {
         if (this.amountCrafted > 0) {
-            stack.onCrafting(this.player.worldObj, this.player, this.amountCrafted);
+            stack.onCrafting(this.player.getEntityWorld(), this.player, this.amountCrafted);
         }
 
         this.amountCrafted = 0;

@@ -53,8 +53,8 @@ public class AltarInfusionTESR extends VampirismTESR<TileAltarInfusion> {
                         /**
                          * Work around for other players seeing the ritual
                          */
-                        if (!p.equals(Minecraft.getMinecraft().thePlayer)) {
-                            Entity e = Minecraft.getMinecraft().thePlayer;
+                        if (!p.equals(Minecraft.getMinecraft().player)) {
+                            Entity e = Minecraft.getMinecraft().player;
                             rX += p.posX - e.posX;
                             rY += p.posY - e.posY + 1.5D;
                             rZ += p.posZ - e.posZ;
@@ -93,8 +93,8 @@ public class AltarInfusionTESR extends VampirismTESR<TileAltarInfusion> {
         float wayX = (float) (targetX - centerX);
         float wayY = (float) (targetY - centerY);
         float wayZ = (float) (targetZ - centerZ);
-        float distFlat = MathHelper.sqrt_float(wayX * wayX + wayZ * wayZ);
-        float dist = MathHelper.sqrt_float(wayX * wayX + wayY * wayY + wayZ * wayZ);
+        float distFlat = MathHelper.sqrt(wayX * wayX + wayZ * wayZ);
+        float dist = MathHelper.sqrt(wayX * wayX + wayY * wayY + wayZ * wayZ);
         GlStateManager.pushMatrix();
         GlStateManager.translate(relX, relY, relZ);
         GlStateManager.rotate((float) (-Math.atan2(wayZ, wayX)) * 180.0F / (float) Math.PI - 90.0F, 0.0F, 1.0F, 0.0F);
@@ -109,7 +109,7 @@ public class AltarInfusionTESR extends VampirismTESR<TileAltarInfusion> {
         }
         GlStateManager.shadeModel(GL11.GL_SMOOTH);
         float f9 = -(tickStuff * 0.005F);
-        float f10 = MathHelper.sqrt_float(wayX * wayX + wayY * wayY + wayZ * wayZ) / 32.0F + f9;
+        float f10 = MathHelper.sqrt(wayX * wayX + wayY * wayY + wayZ * wayZ) / 32.0F + f9;
         Tessellator tessellator = Tessellator.getInstance();
         VertexBuffer worldRenderer = tessellator.getBuffer();
         worldRenderer.begin(GL11.GL_TRIANGLE_STRIP, DefaultVertexFormats.POSITION_TEX_COLOR);

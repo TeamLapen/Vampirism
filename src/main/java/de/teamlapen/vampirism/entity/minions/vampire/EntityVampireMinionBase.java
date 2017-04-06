@@ -79,7 +79,7 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
 
     @Override
     public float getBlockPathWeight(BlockPos pos) {
-        float i = 0.5F - this.worldObj.getLightBrightness(pos);
+        float i = 0.5F - this.world.getLightBrightness(pos);
         if (i > 0)
             return i;
         return 0.01F;
@@ -120,12 +120,12 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
         if (getOldVampireTexture() != -1 && this.ticksExisted > 50) {
             setOldVampireTexture(-1);
         }
-        if (getOldVampireTexture() != -1 && worldObj.isRemote) {
+        if (getOldVampireTexture() != -1 && world.isRemote) {
             UtilLib.spawnParticlesAroundEntity(this, EnumParticleTypes.SPELL_WITCH, 1.0F, 3);
         }
-        if (!this.worldObj.isRemote && !this.dead) {
+        if (!this.world.isRemote && !this.dead) {
 
-            List<EntityItem> list = this.worldObj.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D));
+            List<EntityItem> list = this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D));
             Iterator<EntityItem> iterator = list.iterator();
 
             while (iterator.hasNext()) {

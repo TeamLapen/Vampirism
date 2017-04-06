@@ -87,7 +87,7 @@ public class EntityVillagerVampirism extends EntityVillager {
 
     @Override
     public boolean getCanSpawnHere() {
-        return (peaceful || this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL) && super.getCanSpawnHere();
+        return (peaceful || this.world.getDifficulty() != EnumDifficulty.PEACEFUL) && super.getCanSpawnHere();
     }
 
     @Nullable
@@ -105,7 +105,7 @@ public class EntityVillagerVampirism extends EntityVillager {
     public void onUpdate() {
         super.onUpdate();
 
-        if (!this.worldObj.isRemote && !peaceful && this.worldObj.getDifficulty() == EnumDifficulty.PEACEFUL) {
+        if (!this.world.isRemote && !peaceful && this.world.getDifficulty() == EnumDifficulty.PEACEFUL) {
             this.setDead();
         }
     }
@@ -130,7 +130,7 @@ public class EntityVillagerVampirism extends EntityVillager {
         super.updateAITasks();
         if (--this.randomTickDivider <= 0) {
             this.randomTickDivider = 70 + rand.nextInt(50);
-            this.IVampirismVillageObj = VampirismVillageCollection.get(this.worldObj).getNearestVillage(getPosition(), 32);
+            this.IVampirismVillageObj = VampirismVillageCollection.get(this.world).getNearestVillage(getPosition(), 32);
         }
 
     }

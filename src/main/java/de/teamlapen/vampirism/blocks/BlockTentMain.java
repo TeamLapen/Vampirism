@@ -12,6 +12,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 /**
  * Main block for the 2x2 block tent. Handles spawning
  */
@@ -41,15 +43,16 @@ public class BlockTentMain extends BlockTent implements ITileEntityProvider {
                 default:
                     stack = new ItemStack(Items.APPLE, 1);
             }
-            worldIn.spawnEntityInWorld(new EntityItem(worldIn, pos.getX(), pos.getY() + 0.3, pos.getZ(), stack));
+            worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY() + 0.3, pos.getZ(), stack));
         }
         super.breakBlock(worldIn, pos, state);
-        worldIn.spawnEntityInWorld(new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(ModItems.itemTent, 1)));
+        worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(ModItems.itemTent, 1)));
 
     }
 
+    @Nonnull
     @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
+    public TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
         return new TileTent();
     }
 

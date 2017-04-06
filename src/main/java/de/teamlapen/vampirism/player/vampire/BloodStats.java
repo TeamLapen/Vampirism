@@ -100,7 +100,7 @@ public class BloodStats {
     public boolean onUpdate() {
         FoodStats foodStats = player.getFoodStats();
         foodStats.setFoodLevel(10);
-        EnumDifficulty enumDifficulty = player.worldObj.getDifficulty();
+        EnumDifficulty enumDifficulty = player.getEntityWorld().getDifficulty();
         float exhaustion;
         try {
             if (field_foodExhaustionLevel == null)
@@ -125,7 +125,7 @@ public class BloodStats {
                 this.bloodLevel = Math.max(bloodLevel - 1, 0);
             }
         }
-        boolean regen = player.worldObj.getGameRules().getBoolean("naturalRegeneration");
+        boolean regen = player.getEntityWorld().getGameRules().getBoolean("naturalRegeneration");
         if (regen && this.bloodSaturationLevel > 0 && player.shouldHeal() && this.bloodLevel >= 20) {
             ++this.bloodTimer;
             if (this.bloodTimer >= 10) {

@@ -16,12 +16,15 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 /**
  * Handles all key/input related stuff
  */
+@SideOnly(Side.CLIENT)
 public class ModKeys {
 
     private static final String CATEGORY = "keys.vampirism.category";
@@ -97,18 +100,18 @@ public class ModKeys {
         // get value here!
         if (keyPressed == KEY.SUCK) {
             RayTraceResult mouseOver = Minecraft.getMinecraft().objectMouseOver;
-            if (mouseOver != null && mouseOver.entityHit != null && !Minecraft.getMinecraft().thePlayer.isSpectator()) {
+            if (mouseOver != null && mouseOver.entityHit != null && !Minecraft.getMinecraft().player.isSpectator()) {
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + mouseOver.entityHit.getEntityId()));
             }
         } else if (keyPressed == KEY.ACTION) {
-            EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+            EntityPlayer player = Minecraft.getMinecraft().player;
             if (FactionPlayerHandler.get(player).getCurrentFaction() != null) {
-                player.openGui(VampirismMod.instance, ModGuiHandler.ID_ACTION, player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+                player.openGui(VampirismMod.instance, ModGuiHandler.ID_ACTION, player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
             }
         } else if (keyPressed == KEY.SKILL) {
-            EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+            EntityPlayer player = Minecraft.getMinecraft().player;
             if (FactionPlayerHandler.get(player).getCurrentFaction() != null) {
-                player.openGui(VampirismMod.instance, ModGuiHandler.ID_SKILL, player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+                player.openGui(VampirismMod.instance, ModGuiHandler.ID_SKILL, player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
             }
         } else if (keyPressed == KEY.VISION) {
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.VAMPIRE_VISION_TOGGLE, ""));

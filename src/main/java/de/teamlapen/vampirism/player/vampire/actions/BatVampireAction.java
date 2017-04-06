@@ -15,6 +15,8 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.WorldProviderEnd;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.UUID;
 
@@ -44,7 +46,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             AxisAlignedBB axisalignedbb = player.getEntityBoundingBox();
             axisalignedbb = new AxisAlignedBB(axisalignedbb.minX, axisalignedbb.minY, axisalignedbb.minZ, axisalignedbb.minX + (double) width, axisalignedbb.minY + (double) height, axisalignedbb.minZ + (double) width);
 
-            if (!player.worldObj.collidesWithAnyBlock(axisalignedbb)) {
+            if (!player.getEntityWorld().collidesWithAnyBlock(axisalignedbb)) {
                 if (!VampirePlayer.get(player).setEntitySize(width, height)) return;
             }
         }
@@ -59,7 +61,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.isGettingSundamage() && !vampire.getActionHandler().isActionActive(VampireActions.rageAction) && (Configs.bat_mode_in_end || !(vampire.getRepresentingPlayer().worldObj != null && vampire.getRepresentingPlayer().worldObj.provider instanceof WorldProviderEnd));
+        return !vampire.isGettingSundamage() && !vampire.getActionHandler().isActionActive(VampireActions.rageAction) && (Configs.bat_mode_in_end || !(vampire.getRepresentingPlayer().getEntityWorld().provider instanceof WorldProviderEnd));
     }
 
     @Override
@@ -142,10 +144,10 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     @Override
     public boolean onUpdate(IVampirePlayer vampire) {
         if (vampire.isGettingSundamage() && !vampire.isRemote()) {
-            vampire.getRepresentingPlayer().addChatMessage(new TextComponentTranslation("text.vampirism.cant_fly_day"));
+            vampire.getRepresentingPlayer().sendMessage(new TextComponentTranslation("text.vampirism.cant_fly_day"));
             return true;
-        } else if (!Configs.bat_mode_in_end && vampire.getRepresentingPlayer().worldObj != null && vampire.getRepresentingPlayer().worldObj.provider instanceof WorldProviderEnd) {
-            vampire.getRepresentingPlayer().addChatMessage(new TextComponentTranslation("text.vampirism.cant_fly_end"));
+        } else if (!Configs.bat_mode_in_end && vampire.getRepresentingPlayer().getEntityWorld().provider instanceof WorldProviderEnd) {
+            vampire.getRepresentingPlayer().sendMessage(new TextComponentTranslation("text.vampirism.cant_fly_end"));
             return true;
         }
         return false;
@@ -154,6 +156,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     /**
      * Only call client side
      */
+    @SideOnly(Side.CLIENT)
     private void setFlightSpeed(EntityPlayer player, float speed) {
         player.capabilities.setFlySpeed(0.05F);
     }
@@ -168,7 +171,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
             player.capabilities.allowFlying = true;
             player.capabilities.isFlying = true;
-            if (player.worldObj.isRemote) setFlightSpeed(player, 0.025F);
+            if (player.getEntityWorld().isRemote) setFlightSpeed(player, 0.025F);
             player.sendPlayerAbilities();
         } else {
 
@@ -183,7 +186,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
                 player.capabilities.allowFlying = false;
             }
             player.capabilities.isFlying = false;
-            if (player.worldObj.isRemote) setFlightSpeed(player, 0.05F);
+            if (player.getEntityWorld().isRemote) setFlightSpeed(player, 0.05F);
             player.sendPlayerAbilities();
         }
 

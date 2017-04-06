@@ -144,11 +144,11 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
                 TileGarlicBeacon t = getTile(worldIn, pos);
                 if (t != null) {
                     if (t.getFuelTime() > 0) {
-                        playerIn.addChatComponentMessage(new TextComponentTranslation("tile.vampirism.garlicBeacon.already_fueled"));
+                        playerIn.sendMessage(new TextComponentTranslation("tile.vampirism.garlicBeacon.already_fueled"));
                     } else {
                         t.onFueled();
                         if (!playerIn.capabilities.isCreativeMode) heldItem.stackSize--;
-                        playerIn.addChatComponentMessage(new TextComponentTranslation("tile.vampirism.garlicBeacon.successfully_fueled"));
+                        playerIn.sendMessage(new TextComponentTranslation("tile.vampirism.garlicBeacon.successfully_fueled"));
                     }
 
                 }

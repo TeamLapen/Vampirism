@@ -148,7 +148,7 @@ public class SkillRegistry implements ISkillRegistry {
      */
     public void printSkills(IPlayableFaction faction, ICommandSender sender) {
         for (Map.Entry e : skillMap.get(faction).entrySet()) {
-            sender.addChatMessage(new TextComponentString("ID: " + e.getKey() + " Skill: " + e.getValue()));
+            sender.sendMessage(new TextComponentString("ID: " + e.getKey() + " Skill: " + e.getValue()));
         }
     }
 

@@ -61,10 +61,10 @@ public class SpawnCustomParticlePacket implements IMessage {
                 int count = nbt.getInteger("count");
                 double maxDist = nbt.getDouble("maxdist");
                 Random random = player.getRNG();
-                VampLib.proxy.getParticleHandler().spawnParticles(player.worldObj, particle, posX, posY, posZ, count, maxDist, random, data);
+                VampLib.proxy.getParticleHandler().spawnParticles(player.getEntityWorld(), particle, posX, posY, posZ, count, maxDist, random, data);
 
             } else {
-                VampLib.proxy.getParticleHandler().spawnParticle(player.worldObj, particle, posX, posY, posZ, data);
+                VampLib.proxy.getParticleHandler().spawnParticle(player.getEntityWorld(), particle, posX, posY, posZ, data);
             }
             return null;
         }

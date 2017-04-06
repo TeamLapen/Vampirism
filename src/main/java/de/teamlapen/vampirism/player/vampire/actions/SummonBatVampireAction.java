@@ -54,13 +54,13 @@ public class SummonBatVampireAction extends DefaultVampireAction {
     public boolean onActivated(IVampirePlayer player) {
         EntityPlayer entityPlayer = player.getRepresentingPlayer();
         for (int i = 0; i < Balance.vpa.SUMMON_BAT_COUNT; i++) {
-            Entity e = EntityList.createEntityByName(ModEntities.BLINDING_BAT_NAME, entityPlayer.worldObj);
+            Entity e = EntityList.createEntityByName(ModEntities.BLINDING_BAT_NAME, entityPlayer.getEntityWorld());
             ((EntityBlindingBat) e).restrictLiveSpan();
             ((EntityBlindingBat) e).setIsBatHanging(false);
             e.copyLocationAndAnglesFrom(player.getRepresentingPlayer());
-            player.getRepresentingPlayer().worldObj.spawnEntityInWorld(e);
+            player.getRepresentingPlayer().getEntityWorld().spawnEntity(e);
         }
-        entityPlayer.worldObj.playSound(null, entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, ModSounds.bat_swarm, SoundCategory.PLAYERS, 1.3F, entityPlayer.worldObj.rand.nextFloat() * 0.2F + 1.3F);
+        entityPlayer.getEntityWorld().playSound(null, entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, ModSounds.bat_swarm, SoundCategory.PLAYERS, 1.3F, entityPlayer.getEntityWorld().rand.nextFloat() * 0.2F + 1.3F);
         return true;
     }
 }

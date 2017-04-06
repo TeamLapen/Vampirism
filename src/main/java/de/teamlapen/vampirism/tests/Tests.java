@@ -66,7 +66,7 @@ public class Tests {
     }
 
     private static void sendMsg(EntityPlayer player, String msg) {
-        player.addChatComponentMessage(new TextComponentString("§1[V-TEST]§r " + msg));
+        player.sendMessage(new TextComponentString("§1[V-TEST]§r " + msg));
     }
 
     private static void clearArea(World world) {

@@ -28,7 +28,7 @@ public class ItemStake extends VampirismItemWeapon {
 
     @Override
     public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
-        if (!attacker.worldObj.isRemote) {
+        if (!attacker.getEntityWorld().isRemote) {
             if (target instanceof IVampireMob) {
                 boolean instaKillFromBehind = false;
                 boolean instaKillLowHealth = false;

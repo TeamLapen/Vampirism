@@ -39,7 +39,7 @@ public class EntityEventHandler {
 
     @SubscribeEvent
     public void onEntityJoinWorld(EntityJoinWorldEvent event) {
-        if (event.getEntity().worldObj.isRemote) {
+        if (event.getEntity().getEntityWorld().isRemote) {
             if ((event.getEntity() instanceof EntityPlayerSP && HelperRegistry.getSyncablePlayerCaps().size() > 0)) {
                 VampLib.dispatcher.sendToServer(new RequestPlayerUpdatePacket());
             }

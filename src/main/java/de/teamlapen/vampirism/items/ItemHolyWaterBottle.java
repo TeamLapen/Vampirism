@@ -27,7 +27,10 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -64,6 +67,7 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
         super(regName);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         super.addInformation(stack, playerIn, tooltip, advanced);
@@ -105,7 +109,7 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
     }
 
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+    public void getSubItems(@Nonnull Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
         for (TIER t : TIER.values()) {
             subItems.add(setTier(new ItemStack(itemIn), t));
             subItems.add(setSplash(setTier(new ItemStack(itemIn), t), true));
@@ -127,6 +131,7 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
         return TIER.NORMAL;
     }
 
+    @Nonnull
     @Override
     public String getUnlocalizedName(ItemStack stack) {
         String unloc = super.getUnlocalizedName(stack);
@@ -138,10 +143,7 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
      */
     public boolean isSplash(ItemStack stack) {
         NBTTagCompound tag = UtilLib.checkNBT(stack);
-        if (tag.hasKey("splash")) {
-            return tag.getBoolean("splash");
-        }
-        return false;
+        return tag.hasKey("splash") && tag.getBoolean("splash");
     }
 
     @Override
@@ -155,7 +157,7 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
 
 
             AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().expand(4.0D, 2.0D, 4.0D);
-            List<EntityLivingBase> list1 = entity.worldObj.getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
+            List<EntityLivingBase> list1 = entity.getEntityWorld().getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
 
 
             if (!list1.isEmpty()) {
@@ -164,13 +166,14 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
                 }
             }
 
-            entity.worldObj.playEvent(2002, new BlockPos(entity), PotionType.getID(PotionTypes.MUNDANE));
+            entity.getEntityWorld().playEvent(2002, new BlockPos(entity), PotionType.getID(PotionTypes.MUNDANE));
         }
 
     }
 
+    @Nonnull
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(@Nonnull ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
         if (isSplash(itemStackIn)) {
             if (!playerIn.capabilities.isCreativeMode) {
                 --itemStackIn.stackSize;
@@ -182,7 +185,7 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
                 EntityThrowableItem entityThrowable = new EntityThrowableItem(worldIn, playerIn);
                 entityThrowable.setItem(itemStackIn);
                 entityThrowable.setHeadingFromThrower(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, -20.0F, 0.5F, 1.0F);
-                worldIn.spawnEntityInWorld(entityThrowable);
+                worldIn.spawnEntity(entityThrowable);
             }
 
             playerIn.addStat(StatList.getObjectUseStats(this));

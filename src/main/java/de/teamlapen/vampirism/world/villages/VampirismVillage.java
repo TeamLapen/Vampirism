@@ -29,6 +29,11 @@ import java.util.List;
  * Vampirism's instance of a village
  */
 public class VampirismVillage implements IVampirismVillage {
+    private static AxisAlignedBB getBoundingBox(Village v) {
+        int r = v.getVillageRadius();
+        BlockPos cc = v.getCenter();
+        return new AxisAlignedBB(cc.getX() - r, cc.getY() - 10, cc.getZ() - r, cc.getX() + r, cc.getY() + 10, cc.getZ() + r);
+    }
     private final String TAG = "VampirismVillage";
     private World world;
     private BlockPos center = new BlockPos(0, 0, 0);
@@ -39,13 +44,6 @@ public class VampirismVillage implements IVampirismVillage {
     private boolean dirty;
     private int recentlyBittenToDeath;
     private int tickCounter;
-
-    private static AxisAlignedBB getBoundingBox(Village v)
-    {
-        int r = v.getVillageRadius();
-        BlockPos cc = v.getCenter();
-        return new AxisAlignedBB(cc.getX() - r, cc.getY() - 10, cc.getZ() - r, cc.getX() + r, cc.getY() + 10, cc.getZ() + r);
-    }
 
     @Override
     public
@@ -313,7 +311,7 @@ public class VampirismVillage implements IVampirismVillage {
         for (EntityVillager v : villagers) {
             if (world.rand.nextInt(4) == 0) {
                 EntityHunterVillager hunter = EntityHunterVillager.makeHunter(v);
-                v.worldObj.spawnEntityInWorld(hunter);
+                v.getEntityWorld().spawnEntity(hunter);
                 v.setDead();
 
             }
@@ -324,7 +322,7 @@ public class VampirismVillage implements IVampirismVillage {
         VampirismMod.log.d(TAG, "Making villagers calm");
         for (EntityHunterVillager h : hunters) {
             EntityVillager villager = EntityHunterVillager.makeNormal(h);
-            h.worldObj.spawnEntityInWorld(villager);
+            h.getEntityWorld().spawnEntity(villager);
             h.setDead();
         }
         agressive=false;
@@ -385,7 +383,7 @@ public class VampirismVillage implements IVampirismVillage {
             EntityVillager ev = (EntityVillager) l.get(world.rand.nextInt(l.size()));
             EntityVillager entityvillager;
             if (agressive && ev.getRNG().nextInt(Balance.village.VILLAGER_HUNTER_CHANCE) == 0) {
-                EntityVillager temp = new EntityVillager(ev.worldObj);
+                EntityVillager temp = new EntityVillager(ev.getEntityWorld());
                 entityvillager = EntityHunterVillager.makeHunter(temp);
                 temp.setDead();
             } else {
@@ -394,7 +392,7 @@ public class VampirismVillage implements IVampirismVillage {
                 ev.setGrowingAge(6000);
             }
             entityvillager.setLocationAndAngles(ev.posX, ev.posY, ev.posZ, 0.0F, 0.0F);
-            world.spawnEntityInWorld(entityvillager);
+            world.spawnEntity(entityvillager);
             world.setEntityState(entityvillager, (byte) 12);
         }
     }

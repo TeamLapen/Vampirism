@@ -43,12 +43,12 @@ public class ModWorldEventListener implements IWorldEventListener {
 
     @Override
     public void onEntityAdded(Entity entityIn) {
-        if (entityIn instanceof EntityPlayer) DaySleepHelper.updateAllPlayersSleeping(entityIn.worldObj);
+        if (entityIn instanceof EntityPlayer) DaySleepHelper.updateAllPlayersSleeping(entityIn.getEntityWorld());
     }
 
     @Override
     public void onEntityRemoved(Entity entityIn) {
-        if (entityIn instanceof EntityPlayer) DaySleepHelper.updateAllPlayersSleeping(entityIn.worldObj);
+        if (entityIn instanceof EntityPlayer) DaySleepHelper.updateAllPlayersSleeping(entityIn.getEntityWorld());
     }
 
     @Override

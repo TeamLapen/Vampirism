@@ -24,7 +24,7 @@ public abstract class BasicCommand extends CommandBase {
     public static void sendMessage(ICommandSender target, String message) {
         String[] lines = message.split("\\n");
         for (String line : lines) {
-            target.addChatMessage(new TextComponentString(line));
+            target.sendMessage(new TextComponentString(line));
         }
 
     }
@@ -57,7 +57,7 @@ public abstract class BasicCommand extends CommandBase {
 
             @Override
             public String getCommandUsage(ICommandSender sender) {
-                return BasicCommand.this.getCommandUsage(sender);
+                return BasicCommand.this.getUsage(sender);
             }
 
             @Override
@@ -80,17 +80,17 @@ public abstract class BasicCommand extends CommandBase {
     @Override
     public void execute(MinecraftServer server, ICommandSender sender, String[] param) throws CommandException {
         if (param == null || param.length == 0) {
-            throw new WrongUsageException(getCommandUsage(sender));
+            throw new WrongUsageException(getUsage(sender));
         }
         if ("help".equals(param[0])) {
             if (param.length > 1) {
-                sendMessage(sender, String.format("/%s %s", this.getCommandName(), getSub(param[1]).getCommandUsage(sender)));
+                sendMessage(sender, String.format("/%s %s", this.getName(), getSub(param[1]).getCommandUsage(sender)));
             } else {
                 String t = "Available subcommands: ";
                 for (SubCommand s : subCommands) {
                     t += s.getCommandName() + ", ";
                 }
-                t += "Use /" + getCommandName() + " help <subcommand> to get more informations";
+                t += "Use /" + getName() + " help <subcommand> to get more informations";
                 sendMessage(sender, t);
             }
             return;
@@ -110,23 +110,25 @@ public abstract class BasicCommand extends CommandBase {
         } else {
             TextComponentTranslation textcomponenttranslation1 = new TextComponentTranslation("commands.generic.permission");
             textcomponenttranslation1.getStyle().setColor(TextFormatting.RED);
-            sender.addChatMessage(textcomponenttranslation1);
+            sender.sendMessage(textcomponenttranslation1);
         }
     }
 
+
+    @Nonnull
     @Override
-    public List getCommandAliases() {
+    public List getAliases() {
         return aliases;
     }
 
     @Override
-    public String getCommandUsage(ICommandSender p_71518_1_) {
-        return String.format("/%s <subcommand> <params> | Use /%s help to get all available subcommands", this.getCommandName(), this.getCommandName());
+    public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
+        return (args.length == 1) ? getListOfStringsMatchingLastWord(args, getSubNames()) : getSubcommandTabCompletion(sender, args, pos);
     }
 
     @Override
-    public List<String> getTabCompletionOptions(MinecraftServer server, ICommandSender sender, String[] args, BlockPos pos) {
-        return (args.length == 1) ? getListOfStringsMatchingLastWord(args, getSubNames()) : getSubcommandTabCompletion(sender, args, pos);
+    public String getUsage(@Nonnull ICommandSender sender) {
+        return String.format("/%s <subcommand> <params> | Use /%s help to get all available subcommands", this.getName(), this.getName());
     }
 
     @Override
@@ -139,7 +141,7 @@ public abstract class BasicCommand extends CommandBase {
     }
 
     protected boolean canCommandSenderUseCheatCommand(ICommandSender sender) {
-        return sender.canCommandSenderUseCommand(PERMISSION_LEVEL_CHEAT, this.getCommandName()) || (sender instanceof EntityPlayer) && ((EntityPlayer) sender).capabilities.isCreativeMode;
+        return sender.canUseCommand(PERMISSION_LEVEL_CHEAT, this.getName()) || (sender instanceof EntityPlayer) && ((EntityPlayer) sender).capabilities.isCreativeMode;
     }
 
     /**

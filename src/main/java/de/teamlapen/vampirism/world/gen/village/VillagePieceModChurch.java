@@ -10,6 +10,7 @@ import net.minecraft.world.gen.structure.StructureComponent;
 import net.minecraft.world.gen.structure.StructureVillagePieces;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Random;
 
@@ -27,7 +28,7 @@ public class VillagePieceModChurch extends StructureVillagePieces.Church {
     }
 
     @Override
-    public boolean addComponentParts(World worldIn, Random random, StructureBoundingBox structureBoundingBoxIn) {
+    public boolean addComponentParts(@Nonnull World worldIn, @Nonnull Random random, @Nonnull StructureBoundingBox structureBoundingBoxIn) {
         super.addComponentParts(worldIn, random, structureBoundingBoxIn);
         this.setBlockState(worldIn, ModBlocks.churchAltar.getDefaultState().withProperty(BlockChurchAltar.FACING, EnumFacing.SOUTH), 2, 2, 7, structureBoundingBoxIn);
         return true;
@@ -53,7 +54,7 @@ public class VillagePieceModChurch extends StructureVillagePieces.Church {
          */
         @Override
         public StructureVillagePieces.PieceWeight getVillagePieceWeight(Random random, int terrainType) {
-            return new StructureVillagePieces.PieceWeight(VillagePieceModChurch.class, 20, MathHelper.getRandomIntegerInRange(random, 0, 1 + terrainType));
+            return new StructureVillagePieces.PieceWeight(VillagePieceModChurch.class, 20, MathHelper.getInt(random, 0, 1 + terrainType));
         }
     }
 }

@@ -77,10 +77,10 @@ public class EntityAIMoveThroughVillageCustom extends EntityAIBase {
     public boolean shouldExecute() {
         this.resizeDoorList();
 
-        if (this.isNocturnal && this.theEntity.worldObj.isDaytime()) {
+        if (this.isNocturnal && this.theEntity.getEntityWorld().isDaytime()) {
             return false;
         } else {
-            Village village = this.theEntity.worldObj.getVillageCollection().getNearestVillage(new BlockPos(this.theEntity), 0);
+            Village village = this.theEntity.getEntityWorld().getVillageCollection().getNearestVillage(new BlockPos(this.theEntity), 0);
 
             if (village == null) {
                 return false;
@@ -140,7 +140,7 @@ public class EntityAIMoveThroughVillageCustom extends EntityAIBase {
         int i = Integer.MAX_VALUE;
 
         for (VillageDoorInfo villagedoorinfo1 : villageIn.getVillageDoorInfoList()) {
-            int j = villagedoorinfo1.getDistanceSquared(MathHelper.floor_double(this.theEntity.posX), MathHelper.floor_double(this.theEntity.posY), MathHelper.floor_double(this.theEntity.posZ));
+            int j = villagedoorinfo1.getDistanceSquared(MathHelper.floor(this.theEntity.posX), MathHelper.floor(this.theEntity.posY), MathHelper.floor(this.theEntity.posZ));
 
             if (j < i && !this.doesDoorListContain(villagedoorinfo1)) {
                 villagedoorinfo = villagedoorinfo1;

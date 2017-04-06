@@ -34,13 +34,13 @@ public class FlyingBloodEntityParticle extends Particle {
 
         this.setParticleTextureIndex(65);
         if (direct) {
-            this.motionX = ((this.worldObj.rand.nextDouble() - 0.5F) / 5f);
-            this.motionY = (this.worldObj.rand.nextDouble() / 5f);
-            this.motionZ = ((this.worldObj.rand.nextDouble() - 0.5F) / 5f);
+            this.motionX = ((this.world.rand.nextDouble() - 0.5F) / 5f);
+            this.motionY = (this.world.rand.nextDouble() / 5f);
+            this.motionZ = ((this.world.rand.nextDouble() - 0.5F) / 5f);
         } else {
-            this.motionX = (this.worldObj.rand.nextDouble() - 0.5);
-            this.motionY = (this.worldObj.rand.nextDouble() + 0.2);
-            this.motionZ = (this.worldObj.rand.nextDouble() - 0.5);
+            this.motionX = (this.world.rand.nextDouble() - 0.5);
+            this.motionY = (this.world.rand.nextDouble() + 0.2);
+            this.motionZ = (this.world.rand.nextDouble() - 0.5);
         }
 
         this.onUpdate();
@@ -66,7 +66,7 @@ public class FlyingBloodEntityParticle extends Particle {
             this.motionZ = wayZ / tleft;
         }
 
-        this.moveEntity(this.motionX, this.motionY, this.motionZ);
+        this.move(this.motionX, this.motionY, this.motionZ);
     }
 
 }

@@ -28,10 +28,10 @@ public class VampireAIRestrictSun extends EntityAIBase {
     @Override
     public boolean shouldExecute() {
         if (creature.ticksExisted % 10 == 3) {
-            ResourceLocation biome = creature.worldObj.getBiomeGenForCoords(creature.getPosition()).getRegistryName();
-            cache = VampirismAPI.sundamageRegistry().getSundamageInDim(creature.worldObj.provider.getDimension()) && VampirismAPI.sundamageRegistry().getSundamageInBiome(biome);
+            ResourceLocation biome = creature.getEntityWorld().getBiome(creature.getPosition()).getRegistryName();
+            cache = VampirismAPI.sundamageRegistry().getSundamageInDim(creature.getEntityWorld().provider.getDimension()) && VampirismAPI.sundamageRegistry().getSundamageInBiome(biome);
         }
-        return cache && creature.worldObj.isDaytime() && !vampire.isIgnoringSundamage();
+        return cache && creature.getEntityWorld().isDaytime() && !vampire.isIgnoringSundamage();
     }
 
     public void startExecuting() {

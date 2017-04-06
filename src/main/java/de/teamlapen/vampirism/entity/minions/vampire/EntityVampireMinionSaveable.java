@@ -54,7 +54,7 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
 //     * Converts this minion to a remote minion
 //     */
 //    public void convertToRemote() {
-//        EntityRemoteVampireMinion remote = (EntityRemoteVampireMinion) EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_MINION_REMOTE_NAME, worldObj);
+//        EntityRemoteVampireMinion remote = (EntityRemoteVampireMinion) EntityList.createEntityByName(REFERENCE.ENTITY.VAMPIRE_MINION_REMOTE_NAME, world);
 //        remote.copyDataFromMinion(this);
 //        remote.setHealth(this.getHealth());
 //        remote.copyLocationAndAnglesFrom(this);
@@ -68,7 +68,7 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
 //            }
 //
 //        }
-//        worldObj.spawnEntityInWorld(remote);
+//        world.spawnEntityInWorld(remote);
 //        this.setDead();
 //    }
 
@@ -106,7 +106,7 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
 
     @Override
     public void onLivingUpdate() {
-        if (!this.worldObj.isRemote) {
+        if (!this.world.isRemote) {
             if (lord == null) {
 
             } else if (!lord.isTheEntityAlive()) {

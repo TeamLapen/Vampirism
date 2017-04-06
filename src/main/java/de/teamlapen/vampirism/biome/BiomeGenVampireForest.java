@@ -103,7 +103,7 @@ public class BiomeGenVampireForest extends Biome {
             for (int i = 0; i < 64; ++i) {
                 BlockPos blockpos = position.add(rand.nextInt(8) - rand.nextInt(8), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(8) - rand.nextInt(8));
 
-                if (worldIn.isAirBlock(blockpos) && (!worldIn.provider.getHasNoSky() || blockpos.getY() < 255) && this.flower.canBlockStay(worldIn, blockpos, this.state)) {
+                if (worldIn.isAirBlock(blockpos) && (!worldIn.provider.hasNoSky() || blockpos.getY() < 255) && this.flower.canBlockStay(worldIn, blockpos, this.state)) {
                     if (VampirismWorldGen.debug)
                         VampirismMod.log.i(name, "Placed vampire orchid in vampire forest at %s", blockpos);
                     worldIn.setBlockState(blockpos, this.state, 2);

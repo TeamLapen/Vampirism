@@ -43,13 +43,13 @@ public class EntityAIMoveIndoorsDay extends EntityAIBase {
     public boolean shouldExecute() {
         BlockPos blockpos = new BlockPos(this.entityObj);
 
-        if (this.entityObj.worldObj.isDaytime() && !this.entityObj.worldObj.provider.getHasNoSky()) {
+        if (this.entityObj.getEntityWorld().isDaytime() && !this.entityObj.getEntityWorld().provider.hasNoSky()) {
             if (this.entityObj.getRNG().nextInt(50) != 0) {
                 return false;
             } else if (this.insidePosX != -1 && this.entityObj.getDistanceSq((double) this.insidePosX, this.entityObj.posY, (double) this.insidePosZ) < 4.0D) {
                 return false;
             } else {
-                Village village = this.entityObj.worldObj.getVillageCollection().getNearestVillage(blockpos, 14);
+                Village village = this.entityObj.getEntityWorld().getVillageCollection().getNearestVillage(blockpos, 14);
 
                 if (village == null) {
                     return false;

@@ -97,7 +97,7 @@ public abstract class SimpleInventory implements InventorySlot.IInventorySlotInv
     }
 
     @Override
-    public boolean isUseableByPlayer(EntityPlayer player) {
+    public boolean isUsableByPlayer(EntityPlayer player) {
         return true;
     }
 

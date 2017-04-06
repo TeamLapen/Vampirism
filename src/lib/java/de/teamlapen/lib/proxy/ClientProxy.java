@@ -13,11 +13,14 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import javax.annotation.Nonnull;
 import java.util.List;
 
+@SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
 
     private ParticleHandler clientParticleHandler = new ParticleHandlerClient();
@@ -48,7 +51,7 @@ public class ClientProxy extends CommonProxy {
     public EntityPlayer getPlayerEntity(MessageContext ctx) {
 
         //Need to double check the side for some reason
-        return (ctx.side.isClient() ? Minecraft.getMinecraft().thePlayer : super.getPlayerEntity(ctx));
+        return (ctx.side.isClient() ? Minecraft.getMinecraft().player : super.getPlayerEntity(ctx));
     }
 
     @Override

@@ -33,6 +33,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
@@ -85,16 +86,16 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
 
     @Override
     public boolean getCanSpawnHere() {
-        int i = MathHelper.floor_double(this.getEntityBoundingBox().minY);
+        int i = MathHelper.floor(this.getEntityBoundingBox().minY);
         //Only spawn on the surface
         if (i < 60) return false;
-//        CastlePositionData data = CastlePositionData.get(worldObj);
+//        CastlePositionData data = CastlePositionData.get(world);
 //        if (data.isPosAt(MathHelper.floor_double(posX), MathHelper.floor_double(posZ))) {
 //            return false;
 //        }
         BlockPos blockpos = new BlockPos(this.posX, this.getEntityBoundingBox().minY, this.posZ);
 
-        return ModBlocks.cursedEarth.equals(worldObj.getBlockState(blockpos.down()).getBlock()) && super.getCanSpawnHere();
+        return ModBlocks.cursedEarth.equals(world.getBlockState(blockpos.down()).getBlock()) && super.getCanSpawnHere();
     }
 
     @Override
@@ -138,6 +139,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         return this.getAttackTarget();
     }
 
+    @Nonnull
     @Override
     public String getName() {
         return super.getName() + " " + I18n.translateToLocal("text.vampirism.entity_level") + " " + (getLevel() + 1);
@@ -169,9 +171,9 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     }
 
     @Override
-    public void onDeath(DamageSource s) {
+    public void onDeath(@Nonnull DamageSource s) {
         super.onDeath(s);
-        if (this.recentlyHit > 0 && this.worldObj.getGameRules().getBoolean("doMobLoot")) {
+        if (this.recentlyHit > 0 && this.world.getGameRules().getBoolean("doMobLoot")) {
             if (getLevel() >= 0 && getLevel() < 5) {
                 this.entityDropItem(new ItemStack(ModItems.pureBlood, 1, getLevel()), 0.3F);
             } else if (getLevel() > 5) {
@@ -199,7 +201,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
             updateEntityAttributes(false);
         }
         this.getSaveableMinionHandler().checkMinions();
-        if (!worldObj.isRemote && shouldSpawnMinion()) {
+        if (!world.isRemote && shouldSpawnMinion()) {
             int i = 0;
             if (this.recentlyHit > 0) {
                 i = this.rand.nextInt(3);
@@ -207,12 +209,12 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
             IVampireMinion.Saveable m = null;
 
             if (i == 1) {
-                EntityLiving e = (EntityLiving) EntityList.createEntityByName(ModEntities.VAMPIRE_MINION_SAVEABLE_NAME, this.worldObj);
+                EntityLiving e = (EntityLiving) EntityList.createEntityByName(ModEntities.VAMPIRE_MINION_SAVEABLE_NAME, this.world);
                 if (e == null) {
                     VampirismMod.log.w("VampireBaron", "Failed to create saveable minion");
                 } else {
                     e.copyLocationAndAnglesFrom(this);
-                    worldObj.spawnEntityInWorld(e);
+                    world.spawnEntity(e);
                     m = (IVampireMinion.Saveable) e;
                 }
 
@@ -220,13 +222,13 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
                 m = (IVampireMinion.Saveable) UtilLib.spawnEntityBehindEntity(this.getAttackTarget(), ModEntities.VAMPIRE_MINION_SAVEABLE_NAME);
             }
             if (m == null) {
-                m = (IVampireMinion.Saveable) UtilLib.spawnEntityInWorld(worldObj, this.getEntityBoundingBox().expand(19, 4, 19), ModEntities.VAMPIRE_MINION_SAVEABLE_NAME, 3);
+                m = (IVampireMinion.Saveable) UtilLib.spawnEntityInWorld(world, this.getEntityBoundingBox().expand(19, 4, 19), ModEntities.VAMPIRE_MINION_SAVEABLE_NAME, 3);
             }
             if (m != null) {
                 m.setLord(this);
             }
         }
-        if (!this.worldObj.isRemote && this.isGettingSundamage()) {
+        if (!this.world.isRemote && this.isGettingSundamage()) {
             this.teleportAway();
 
         }

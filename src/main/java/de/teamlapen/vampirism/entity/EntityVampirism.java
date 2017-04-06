@@ -105,7 +105,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
 
     @Override
     public boolean getCanSpawnHere() {
-        return (peaceful || this.worldObj.getDifficulty() != EnumDifficulty.PEACEFUL) && super.getCanSpawnHere();
+        return (peaceful || this.world.getDifficulty() != EnumDifficulty.PEACEFUL) && super.getCanSpawnHere();
     }
 
     @Nullable
@@ -174,7 +174,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     public void onUpdate() {
         super.onUpdate();
 
-        if (!this.worldObj.isRemote && !peaceful && this.worldObj.getDifficulty() == EnumDifficulty.PEACEFUL) {
+        if (!this.world.isRemote && !peaceful && this.world.getDifficulty() == EnumDifficulty.PEACEFUL) {
             this.setDead();
         }
     }
@@ -275,16 +275,16 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     protected boolean isLowLightLevel() {
         BlockPos blockpos = new BlockPos(this.posX, this.getEntityBoundingBox().minY, this.posZ);
 
-        if (this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)) {
+        if (this.world.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)) {
             return false;
         } else {
-            int i = this.worldObj.getLightFromNeighbors(blockpos);
+            int i = this.world.getLightFromNeighbors(blockpos);
 
-            if (this.worldObj.isThundering()) {
-                int j = this.worldObj.getSkylightSubtracted();
-                this.worldObj.setSkylightSubtracted(10);
-                i = this.worldObj.getLightFromNeighbors(blockpos);
-                this.worldObj.setSkylightSubtracted(j);
+            if (this.world.isThundering()) {
+                int j = this.world.getSkylightSubtracted();
+                this.world.setSkylightSubtracted(10);
+                i = this.world.getLightFromNeighbors(blockpos);
+                this.world.setSkylightSubtracted(j);
             }
 
             return i <= this.rand.nextInt(8);

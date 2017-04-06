@@ -35,22 +35,21 @@ public class Helper {
      * @return
      */
     public static boolean gettingSundamge(EntityLivingBase entity) {
-        if (entity.worldObj != null) {
-            entity.worldObj.theProfiler.startSection("vampirism_checkSundamage");
+        entity.getEntityWorld().theProfiler.startSection("vampirism_checkSundamage");
             if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isSpectator()) return false;
-            if (VampirismAPI.sundamageRegistry().getSundamageInDim(entity.worldObj.provider.getDimension())) {
-                if (!entity.worldObj.isRaining()) {
-                    float angle = entity.worldObj.getCelestialAngle(1.0F);
+        if (VampirismAPI.sundamageRegistry().getSundamageInDim(entity.getEntityWorld().provider.getDimension())) {
+            if (!entity.getEntityWorld().isRaining()) {
+                float angle = entity.getEntityWorld().getCelestialAngle(1.0F);
                     //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
                     if (angle > 0.78 || angle < 0.24) {
                         BlockPos pos = new BlockPos(entity.posX + 0.5, entity.posY + 0, entity.posZ + 0.5);
 
-                        if (entity.worldObj.canBlockSeeSky(pos)) {
+                        if (entity.getEntityWorld().canBlockSeeSky(pos)) {
                             ResourceLocation biomeID = null;
                             try {
-                                biomeID = entity.worldObj.getBiomeGenForCoords(pos).getRegistryName();
+                                biomeID = entity.getEntityWorld().getBiome(pos).getRegistryName();
                                 if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biomeID)) {
-                                    entity.worldObj.theProfiler.endSection();
+                                    entity.getEntityWorld().theProfiler.endSection();
                                     return true;
                                 }
                             } catch (NullPointerException e) {
@@ -62,8 +61,8 @@ public class Helper {
 
                 }
             }
-            entity.worldObj.theProfiler.endSection();
-        }
+        entity.getEntityWorld().theProfiler.endSection();
+
         return false;
     }
 
@@ -105,9 +104,9 @@ public class Helper {
     }
 
     public static boolean isEntityInVampireBiome(Entity e) {
-        if (e == null || e.worldObj == null) return false;
+        if (e == null) return false;
         try {
-            return ModBiomes.vampireForest.getRegistryName().equals(e.worldObj.getBiomeGenForCoords(e.getPosition()).getRegistryName());
+            return ModBiomes.vampireForest.getRegistryName().equals(e.getEntityWorld().getBiome(e.getPosition()).getRegistryName());
         } catch (NullPointerException e1) {
             //http://openeye.openmods.info/crashes/8cef4d710e41adf9be8362e57ad70d28
             VampirismMod.log.e("Helper", e1, "Nullpointer when checking biome. This is strange and should not happen");

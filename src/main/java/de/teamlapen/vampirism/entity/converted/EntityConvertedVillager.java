@@ -117,7 +117,7 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
         if (this.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
             isGettingSundamage(true);
         }
-        if (!worldObj.isRemote) {
+        if (!world.isRemote) {
             if (isGettingSundamage() && ticksExisted % 40 == 11) {
                 this.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 42));
             }
@@ -204,9 +204,9 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
         public IConvertedCreature<EntityVillager> createFrom(EntityVillager entity) {
             NBTTagCompound nbt = new NBTTagCompound();
             entity.writeToNBT(nbt);
-            EntityConvertedVillager converted = new EntityConvertedVillager(entity.worldObj);
+            EntityConvertedVillager converted = new EntityConvertedVillager(entity.world);
             converted.readFromNBT(nbt);
-            converted.setUniqueId(MathHelper.getRandomUuid(converted.rand));
+            converted.setUniqueId(MathHelper.getRandomUUID(converted.rand));
             return converted;
         }
     }

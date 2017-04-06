@@ -116,7 +116,7 @@ public class GuiSelectAction extends GuiPieMenu<IAction> {
 
     @Override
     protected void onGuiInit() {
-        IFactionPlayer player = FactionPlayerHandler.get(mc.thePlayer).getCurrentFactionPlayer();
+        IFactionPlayer player = FactionPlayerHandler.get(mc.player).getCurrentFactionPlayer();
         if (player != null) {
             actionHandler = player.getActionHandler();
             elements.addAll(actionHandler.getAvailableActions());

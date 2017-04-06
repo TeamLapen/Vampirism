@@ -166,7 +166,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             if (c != null) {
                 Entity e = (Entity) c;
                 entity.setDead();
-                entity.worldObj.spawnEntityInWorld(e);
+                entity.getEntityWorld().spawnEntity(e);
             }
             return c;
         }
@@ -207,7 +207,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         }
         this.sync();
         if (amt > 0 && entity instanceof EntityVillager) {
-            IVampirismVillage vv = VampirismVillageCollection.get((entity).worldObj).getNearestVillage(entity);
+            IVampirismVillage vv = VampirismVillageCollection.get((entity).getEntityWorld()).getNearestVillage(entity);
             if (vv != null) {
                 vv.onVillagerBitten(biter);
                 if (converted) {
@@ -223,7 +223,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
 
     @Override
     public void onUpdate() {
-        if (!entity.worldObj.isRemote) {
+        if (!entity.getEntityWorld().isRemote) {
             if (blood > 0 && blood < getMaxBlood() && entity.ticksExisted % 40 == 8) {
                 entity.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 41));
                 entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 41, 2));

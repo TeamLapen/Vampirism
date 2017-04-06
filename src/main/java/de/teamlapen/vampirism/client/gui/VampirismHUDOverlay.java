@@ -66,16 +66,16 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (mc.thePlayer == null) return;
+        if (mc.player == null) return;
         if (event.phase == TickEvent.Phase.END) return;
-        IFactionPlayer player = FactionPlayerHandler.get(mc.thePlayer).getCurrentFactionPlayer();
+        IFactionPlayer player = FactionPlayerHandler.get(mc.player).getCurrentFactionPlayer();
         if (player != null && player instanceof IVampirePlayer) {
             if (((IVampirePlayer) player).getActionHandler().isActionActive(VampireActions.rageAction)) {
                 screenPercentage = 100;
                 screenColor = 0xfff00000;
                 fullScreen = false;
             } else if ((screenPercentage = ((IVampirePlayer) player).getTicksInSun()) > 0) {
-                PotionEffect effect = mc.thePlayer.getActivePotionEffect(ModPotions.sunscreen);
+                PotionEffect effect = mc.player.getActivePotionEffect(ModPotions.sunscreen);
                 if (effect == null || effect.getAmplifier() < 5) {
                     screenColor = 0xffffe700;
                     fullScreen = false;
@@ -116,8 +116,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
         RayTraceResult p = Minecraft.getMinecraft().objectMouseOver;
 
         if (p != null && p.typeOfHit == RayTraceResult.Type.ENTITY && p.entityHit != null) {
-            IVampirePlayer player = VampirePlayer.get(mc.thePlayer);
-            if (player.getLevel() > 0 && !mc.thePlayer.isSpectator()) {
+            IVampirePlayer player = VampirePlayer.get(mc.player);
+            if (player.getLevel() > 0 && !mc.player.isSpectator()) {
                 Entity entity = p.entityHit;
                 IBiteableEntity biteable = null;
                 if (entity instanceof EntityCreature) {
@@ -152,11 +152,11 @@ public class VampirismHUDOverlay extends ExtendedGui {
         }
         GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
         GL11.glDisable(GL11.GL_LIGHTING);
-        IPlayableFaction faction = FactionPlayerHandler.get(mc.thePlayer).getCurrentFaction();
+        IPlayableFaction faction = FactionPlayerHandler.get(mc.player).getCurrentFaction();
         if (mc.playerController.gameIsSurvivalOrAdventure() && faction != null && faction.renderLevel()) {
             // boolean flag1 = false;
             int color = faction.getColor();
-            String text = "" + FactionPlayerHandler.get(mc.thePlayer).getCurrentLevel();
+            String text = "" + FactionPlayerHandler.get(mc.player).getCurrentLevel();
             int x = (event.getResolution().getScaledWidth() - mc.fontRendererObj.getStringWidth(text)) / 2 + Configs.gui_level_offset_x;
             int y = event.getResolution().getScaledHeight() - Configs.gui_level_offset_y;
             mc.fontRendererObj.drawString(text, x + 1, y, 0);
@@ -173,11 +173,11 @@ public class VampirismHUDOverlay extends ExtendedGui {
             return;
         }
 
-        if (Helper.isVampire(mc.thePlayer)) {
+        if (Helper.isVampire(mc.player)) {
             event.setCanceled(true);
 
             if (mc.playerController.gameIsSurvivalOrAdventure()) {
-                BloodStats stats = VampirePlayer.get(mc.thePlayer).getBloodStats();
+                BloodStats stats = VampirePlayer.get(mc.player).getBloodStats();
 
                 GlStateManager.enableBlend();
 

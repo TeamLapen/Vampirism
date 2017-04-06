@@ -108,7 +108,7 @@ public class UtilLib {
         }
 
         Vec3d vector2 = vector1.addVector(pitchAdjustedSinYaw * distance, sinPitch * distance, pitchAdjustedCosYaw * distance);
-        return player.worldObj.rayTraceBlocks(vector1, vector2);
+        return player.getEntityWorld().rayTraceBlocks(vector1, vector2);
     }
 
     public static BlockPos getRandomPosInBox(World w, AxisAlignedBB box) {
@@ -122,7 +122,7 @@ public class UtilLib {
     }
 
     public static Entity spawnEntityBehindEntity(EntityLivingBase p, String name) {
-        EntityLiving e = (EntityLiving) EntityList.createEntityByName(name, p.worldObj);
+        EntityLiving e = (EntityLiving) EntityList.createEntityByName(name, p.getEntityWorld());
         float yaw = p.rotationYawHead;
         float cosYaw = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
         float sinYaw = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
@@ -133,13 +133,13 @@ public class UtilLib {
         e.setPosition(x, p.posY, z);
 
         if (e.getCanSpawnHere() && e.isNotColliding()) {
-            p.worldObj.spawnEntityInWorld(e);
+            p.getEntityWorld().spawnEntity(e);
             return e;
         } else {
-            int y = p.worldObj.getHeight(new BlockPos(x, 0, z)).getY();
+            int y = p.getEntityWorld().getHeight(new BlockPos(x, 0, z)).getY();
             e.setPosition(x, y, z);
             if (e.getCanSpawnHere() && e.isNotColliding()) {
-                p.worldObj.spawnEntityInWorld(e);
+                p.getEntityWorld().spawnEntity(e);
                 return e;
             }
         }
@@ -160,7 +160,7 @@ public class UtilLib {
             }
         }
         if (flag) {
-            world.spawnEntityInWorld(e);
+            world.spawnEntity(e);
             return true;
         }
         return false;
@@ -197,11 +197,11 @@ public class UtilLib {
         BlockPos blockPos = entity.getPosition();
 
 
-        if (entity.worldObj.isBlockLoaded(blockPos)) {
+        if (entity.getEntityWorld().isBlockLoaded(blockPos)) {
             boolean flag1 = false;
 
             while (!flag1 && blockPos.getY() > 0) {
-                IBlockState blockState = entity.worldObj.getBlockState(blockPos.down());
+                IBlockState blockState = entity.getEntityWorld().getBlockState(blockPos.down());
                 if (blockState.getMaterial().blocksMovement())
                     flag1 = true;
                 else {
@@ -213,7 +213,7 @@ public class UtilLib {
             if (flag1) {
                 entity.setPosition(entity.posX, entity.posY, entity.posZ);
 
-                if (entity.worldObj.collidesWithAnyBlock(entity.getEntityBoundingBox()) && !entity.worldObj.containsAnyLiquid(entity.getEntityBoundingBox()))
+                if (entity.getEntityWorld().collidesWithAnyBlock(entity.getEntityBoundingBox()) && !entity.getEntityWorld().containsAnyLiquid(entity.getEntityBoundingBox()))
                     flag = true;
             }
         }
@@ -232,11 +232,11 @@ public class UtilLib {
                 double d7 = d3 + (entity.posX - d3) * d6 + (entity.getRNG().nextDouble() - 0.5D) * entity.width * 2.0D;
                 double d8 = d4 + (entity.posY - d4) * d6 + entity.getRNG().nextDouble() * entity.height;
                 double d9 = d5 + (entity.posZ - d5) * d6 + (entity.getRNG().nextDouble() - 0.5D) * entity.width * 2.0D;
-                entity.worldObj.spawnParticle(EnumParticleTypes.PORTAL, d7, d8, d9, f, f1, f2);
+                entity.getEntityWorld().spawnParticle(EnumParticleTypes.PORTAL, d7, d8, d9, f, f1, f2);
             }
 
             if (sound) {
-                entity.worldObj.playSound(d3, d4, d5, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.NEUTRAL, 1F, 1F, false);
+                entity.getEntityWorld().playSound(d3, d4, d5, SoundEvents.ENTITY_ENDERMEN_TELEPORT, SoundCategory.NEUTRAL, 1F, 1F, false);
                 entity.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1F, 1F);
             }
 
@@ -272,7 +272,7 @@ public class UtilLib {
             double d7 = e.posX + (maxDistance) * d6 + (e.getRNG().nextDouble() - 0.5D) * e.width * 2.0D;
             double d8 = e.posY + (maxDistance / 2) * d6 + e.getRNG().nextDouble() * e.height;
             double d9 = e.posZ + (maxDistance) * d6 + (e.getRNG().nextDouble() - 0.5D) * e.width * 2.0D;
-            e.worldObj.spawnParticle(particleType, d7, d8, d9, f, f1, f2);
+            e.getEntityWorld().spawnParticle(particleType, d7, d8, d9, f, f1, f2);
         }
     }
 
@@ -284,9 +284,9 @@ public class UtilLib {
      * @param message
      */
     public static void sendMessageToAllExcept(EntityPlayer player, ITextComponent message) {
-        for (Object o : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerList()) {
+        for (Object o : FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayers()) {
             if (!o.equals(player)) {
-                ((EntityPlayer) o).addChatComponentMessage(message);
+                ((EntityPlayer) o).sendMessage(message);
             }
         }
     }

@@ -99,9 +99,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         return getLiquidColor(stack) != -1;
     }
     private int totalBurnTime = 0, burnTime = 0, cookTime = 0, totalCookTime = 0;
-    @SideOnly(Side.CLIENT)
     private boolean cookingClient;
-    @SideOnly(Side.CLIENT)
     private boolean burningClient;
     private int liquidColor;
     @SideOnly(Side.CLIENT)
@@ -158,14 +156,15 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
             if (isOwner(player)) {
                 return true;
             } else {
-                player.addChatComponentMessage(new TextComponentTranslation("tile.vampirism.alchemicalCauldron.other", getOwnerName()));
+                player.sendMessage(new TextComponentTranslation("tile.vampirism.alchemicalCauldron.other", getOwnerName()));
                 return false;
             }
         }
-        player.addChatComponentMessage(new TextComponentTranslation("tile.vampirism.alchemicalCauldron.cannot_use", getOwnerName()));
+        player.sendMessage(new TextComponentTranslation("tile.vampirism.alchemicalCauldron.cannot_use", getOwnerName()));
         return false;
     }
 
+    @Nonnull
     @Override
     public ITextComponent getDisplayName() {
         return new TextComponentTranslation("tile.vampirism.alchemicalCauldron.display", getOwnerName(), new TextComponentTranslation("tile.vampirism.alchemicalCauldron.name"));
@@ -197,6 +196,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         return liquidColor;
     }
 
+    @Nonnull
     @Override
     public String getName() {
         return "vampirism.container." + BlockAlchemicalCauldron.regName;
@@ -218,6 +218,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         return username;
     }
 
+    @Nonnull
     @Override
     public int[] getSlotsForFace(EnumFacing side) {
         switch (side) {
@@ -240,6 +241,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         return new SPacketUpdateTileEntity(getPos(), 1, getUpdateTag());
     }
 
+    @Nonnull
     @Override
     public NBTTagCompound getUpdateTag() {
         NBTTagCompound nbt = super.writeToNBT(new NBTTagCompound());
@@ -253,8 +255,9 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         return nbt;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
-    public void handleUpdateTag(NBTTagCompound nbt) {
+    public void handleUpdateTag(@Nonnull NBTTagCompound nbt) {
         super.handleUpdateTag(nbt);
         cookingClient = nbt.getBoolean("cooking");
         burningClient = nbt.getBoolean("burning");
@@ -265,14 +268,14 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         }
         username = nbt.getString("username");
         liquidColor = getLiquidColor(getStackInSlot(SLOT_LIQUID));
-        this.worldObj.markBlockRangeForRenderUpdate(pos, pos);
+        this.world.markBlockRangeForRenderUpdate(pos, pos);
     }
 
     /**
      * @return burnTime>0 on server and cached boolean on client
      */
     public boolean isBurning() {
-        if (worldObj.isRemote) {
+        if (world.isRemote) {
             return burningClient;
         }
         return burnTime > 0;
@@ -282,7 +285,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
      * @return cookTime>0 on server and cached boolean on client
      */
     public boolean isCooking() {
-        if (worldObj.isRemote) {
+        if (world.isRemote) {
             return cookingClient;
         }
         return cookTime > 0;
@@ -292,7 +295,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
      * @return If there is a liquid inside
      */
     public boolean isFilled() {
-        if (worldObj.isRemote) {
+        if (world.isRemote) {
             if (liquidColor == -1) return false;
         }
         return getStackInSlot(SLOT_LIQUID) != null;//TODO 1.11 null
@@ -314,8 +317,8 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     public void markDirty(boolean sync) {
         super.markDirty();
         if (sync) {
-            IBlockState state = worldObj.getBlockState(pos);
-            this.worldObj.notifyBlockUpdate(pos, state, state, 3);
+            IBlockState state = world.getBlockState(pos);
+            this.world.notifyBlockUpdate(pos, state, state, 3);
         }
     }
 
@@ -372,8 +375,8 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack) {
         super.setInventorySlotContents(slot, stack);
-        if (slot == SLOT_LIQUID && worldObj instanceof WorldServer) {
-            ((WorldServer) worldObj).getPlayerChunkMap().markBlockForUpdate(pos);
+        if (slot == SLOT_LIQUID && world instanceof WorldServer) {
+            ((WorldServer) world).getPlayerChunkMap().markBlockForUpdate(pos);
         }
 
     }
@@ -387,7 +390,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
             burnTime--;
         }
 
-        if (!worldObj.isRemote) {
+        if (!world.isRemote) {
             if (isBurning() || isStackInSlot(SLOT_LIQUID) && isStackInSlot(SLOT_INGREDIENT) && isStackInSlot(SLOT_FUEL)) {
                 if (!isBurning() && canCook()) {
                     this.burnTime = TileEntityFurnace.getItemBurnTime(getStackInSlot(SLOT_FUEL));
@@ -410,7 +413,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
                 }
 
             } else if (!isBurning() && this.cookTime > 0) {
-                this.cookTime = MathHelper.clamp_int(this.cookTime - 2, 0, this.totalCookTime);
+                this.cookTime = MathHelper.clamp(this.cookTime - 2, 0, this.totalCookTime);
             }
             if (wasBurning != this.isBurning()) {
                 dirty = true;
@@ -421,7 +424,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         } else {
             //TODO particles
             //Do not check ISoundReference#isSoundPlaying for performance reason here. Also should not make any difference
-            if (isCooking() && boilingSound == null && this.worldObj.rand.nextInt(25) == 0) {
+            if (isCooking() && boilingSound == null && this.world.rand.nextInt(25) == 0) {
                 boilingSound = VampLib.proxy.createSoundReference(ModSounds.boiling, SoundCategory.BLOCKS, getPos(), 0.015F, 7);
 
                 boilingSound.startPlaying();
@@ -520,7 +523,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     private
     @Nullable
     EntityPlayer getOwner() {
-        if (ownerID != null && !worldObj.isRemote) {
+        if (ownerID != null && !world.isRemote) {
             return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getPlayerByUUID(ownerID);
         }
         return null;

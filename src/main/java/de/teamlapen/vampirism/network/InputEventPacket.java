@@ -114,13 +114,13 @@ public class InputEventPacket implements IMessage {
                             IAction.PERM r = actionHandler.toggleAction(action);
                             switch (r) {
                                 case NOT_UNLOCKED:
-                                    player.addChatMessage(new TextComponentTranslation("text.vampirism.action.not_unlocked"));
+                                    player.sendMessage(new TextComponentTranslation("text.vampirism.action.not_unlocked"));
                                     break;
                                 case DISABLED:
-                                    player.addChatMessage(new TextComponentTranslation("text.vampirism.action.deactivated_by_serveradmin"));
+                                    player.sendMessage(new TextComponentTranslation("text.vampirism.action.deactivated_by_serveradmin"));
                                     break;
                                 case COOLDOWN:
-                                    player.addChatMessage(new TextComponentTranslation("text.vampirism.action.cooldown_not_over"));
+                                    player.sendMessage(new TextComponentTranslation("text.vampirism.action.cooldown_not_over"));
                                     break;
                                 default://Everything alright
                             }
@@ -176,7 +176,7 @@ public class InputEventPacket implements IMessage {
                         ((SkillHandler) skillHandler).writeUpdateForClient(sync);
                         HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
                     }
-                    player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.skill.skillsReset"));
+                    player.sendMessage(new TextComponentTranslation("text.vampirism.skill.skillsReset"));
                 } else {
                     VampirismMod.log.e(TAG, "Player %s is in no faction, so he cannot reset skills");
                 }
@@ -203,12 +203,12 @@ public class InputEventPacket implements IMessage {
                 IHunterPlayer hunter = HunterPlayer.get(player);
                 if (hunter.getLevel() > 0) {
                     if (hunter.getSkillHandler().isSkillEnabled(HunterSkills.bloodPotion_portableCrafting)) {
-                        player.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_POTION_TABLE, player.worldObj, player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
+                        player.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_POTION_TABLE, player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
                     } else {
-                        player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_with_skill", new TextComponentTranslation(HunterSkills.bloodPotion_portableCrafting.getUnlocalizedName())));
+                        player.sendMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_with_skill", new TextComponentTranslation(HunterSkills.bloodPotion_portableCrafting.getUnlocalizedName())));
                     }
                 } else {
-                    player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by", new TextComponentTranslation(VReference.HUNTER_FACTION.getUnlocalizedName())));
+                    player.sendMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by", new TextComponentTranslation(VReference.HUNTER_FACTION.getUnlocalizedName())));
                 }
             } else if (message.action.equals(BASICHUNTERLEVELUP)) {
                 if (player.openContainer instanceof HunterBasicContainer) {

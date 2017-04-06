@@ -138,7 +138,7 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onPlayerClone(PlayerEvent.Clone event) {
-        if (!event.getEntityPlayer().worldObj.isRemote) {
+        if (!event.getEntityPlayer().getEntityWorld().isRemote) {
             FactionPlayerHandler.get(event.getEntityPlayer()).copyFrom(event.getOriginal());
         }
     }
@@ -227,7 +227,7 @@ public class ModPlayerEventHandler {
      */
     private boolean checkItemUsePerm(ItemStack stack, EntityPlayer player) {
 
-        boolean message = !player.worldObj.isRemote;
+        boolean message = !player.getEntityWorld().isRemote;
         if (stack != null && stack.getItem() instanceof IFactionLevelItem) {
             IFactionLevelItem item = (IFactionLevelItem) stack.getItem();
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
@@ -236,17 +236,17 @@ public class ModPlayerEventHandler {
             if (usingFaction != null && !handler.isInFaction(usingFaction)) {
 
                 if (message)
-                    player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by", new TextComponentTranslation(usingFaction.getUnlocalizedNamePlural())));
+                    player.sendMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by", new TextComponentTranslation(usingFaction.getUnlocalizedNamePlural())));
                 return false;
             } else if (handler.getCurrentLevel() < item.getMinLevel(stack)) {
                 if (message)
-                    player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by_level", new TextComponentTranslation(usingFaction == null ? "text.vampirism.all" : usingFaction.getUnlocalizedNamePlural()), item.getMinLevel(stack)));
+                    player.sendMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by_level", new TextComponentTranslation(usingFaction == null ? "text.vampirism.all" : usingFaction.getUnlocalizedNamePlural()), item.getMinLevel(stack)));
                 return false;
             } else if (requiredSkill != null) {
                 IFactionPlayer factionPlayer = handler.getCurrentFactionPlayer();
                 if (factionPlayer == null || !factionPlayer.getSkillHandler().isSkillEnabled(requiredSkill)) {
                     if (message)
-                        player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_with_skill", new TextComponentTranslation(requiredSkill.getUnlocalizedName())));
+                        player.sendMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_with_skill", new TextComponentTranslation(requiredSkill.getUnlocalizedName())));
                     return false;
                 }
             }

@@ -43,7 +43,7 @@ public class TileBloodContainer extends net.minecraftforge.fluids.capability.Til
         FluidStack old = tank.getFluid();
         this.readFromNBT(pkt.getNbtCompound());
         if (old != null && !old.isFluidStackIdentical(tank.getFluid()) || old == null && tank.getFluid() != null) {
-            this.worldObj.notifyBlockUpdate(getPos(), worldObj.getBlockState(pos), worldObj.getBlockState(pos), 3);
+            this.world.notifyBlockUpdate(getPos(), world.getBlockState(pos), world.getBlockState(pos), 3);
         }
     }
 

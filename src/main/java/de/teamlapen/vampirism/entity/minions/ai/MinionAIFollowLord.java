@@ -95,8 +95,8 @@ public class MinionAIFollowLord extends EntityAIBase {
                 for (int dx = 0; dx <= 4; ++dx) {
                     for (int dz = 0; dz <= 4; ++dz) {
                         BlockPos pos1 = pos.add(dx, 0, dz);
-                        if ((dx < 1 || dz < 1 || dx > 3 || dz > 3) && UtilLib.doesBlockHaveSolidTopSurface(lord.worldObj, pos1.down())
-                                && !lord.worldObj.getBlockState(pos1).isNormalCube() && !lord.worldObj.getBlockState(pos.up()).isNormalCube()) {
+                        if ((dx < 1 || dz < 1 || dx > 3 || dz > 3) && UtilLib.doesBlockHaveSolidTopSurface(lord.getEntityWorld(), pos1.down())
+                                && !lord.getEntityWorld().getBlockState(pos1).isNormalCube() && !lord.getEntityWorld().getBlockState(pos.up()).isNormalCube()) {
                             minionEntity.setLocationAndAngles(pos1.getX() + 0.5F, pos1.getY() + 0.1, pos1.getZ() + 0.5F,
                                     MathHelper.wrapDegrees(lord.rotationYaw + 180F), MathHelper.wrapDegrees(lord.rotationPitch + 180F));
                             minionEntity.getNavigator().clearPathEntity();

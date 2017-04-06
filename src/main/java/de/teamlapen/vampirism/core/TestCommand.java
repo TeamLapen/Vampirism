@@ -71,9 +71,9 @@ public class TestCommand extends BasicCommand {
 
             @Override
             public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) {
-                sender.addChatMessage(new TextComponentString("Tick"));
+                sender.sendMessage(new TextComponentString("Tick"));
                 print(sender, "tick");
-                sender.addChatMessage(new TextComponentString("Garlic"));
+                sender.sendMessage(new TextComponentString("Garlic"));
                 print(sender, "vampirism_checkGarlic");
 
             }
@@ -81,7 +81,7 @@ public class TestCommand extends BasicCommand {
             private void print(ICommandSender var1, String id) {
                 List<Profiler.Result> l = FMLCommonHandler.instance().getMinecraftServerInstance().theProfiler.getProfilingData(id);
                 for (Profiler.Result r : l) {
-                    var1.addChatMessage(new TextComponentString("" + r.profilerName + ": " + r.usePercentage + "|" + r.totalUsePercentage));
+                    var1.sendMessage(new TextComponentString("" + r.profilerName + ": " + r.usePercentage + "|" + r.totalUsePercentage));
                 }
             }
         });
@@ -110,7 +110,7 @@ public class TestCommand extends BasicCommand {
             public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 IFactionPlayer factionPlayer = FactionPlayerHandler.get(getCommandSenderAsPlayer(sender)).getCurrentFactionPlayer();
                 if (factionPlayer == null) {
-                    sender.addChatMessage(new TextComponentString("You have to be in a faction"));
+                    sender.sendMessage(new TextComponentString("You have to be in a faction"));
                     return;
                 }
                 if (args.length == 0) {
@@ -126,20 +126,20 @@ public class TestCommand extends BasicCommand {
                 }
                 ISkill skill = VampirismAPI.skillRegistry().getSkill(factionPlayer.getFaction(), args[0]);
                 if (skill == null) {
-                    sender.addChatMessage(new TextComponentString("Skill with id " + args[0] + " could not be found for faction " + factionPlayer.getFaction().name()));
+                    sender.sendMessage(new TextComponentString("Skill with id " + args[0] + " could not be found for faction " + factionPlayer.getFaction().name()));
                     return;
                 }
                 if (factionPlayer.getSkillHandler().isSkillEnabled(skill)) {
                     factionPlayer.getSkillHandler().disableSkill(skill);
-                    sender.addChatMessage(new TextComponentString("Disabled skill"));
+                    sender.sendMessage(new TextComponentString("Disabled skill"));
                     return;
                 }
                 ISkillHandler.Result result = factionPlayer.getSkillHandler().canSkillBeEnabled(skill);
                 if (result == ISkillHandler.Result.OK) {
                     factionPlayer.getSkillHandler().enableSkill(skill);
-                    sender.addChatMessage(new TextComponentString("Enabled skill"));
+                    sender.sendMessage(new TextComponentString("Enabled skill"));
                 } else {
-                    sender.addChatMessage(new TextComponentString("Could not enable skill " + result));
+                    sender.sendMessage(new TextComponentString("Could not enable skill " + result));
                 }
 
             }
@@ -213,7 +213,7 @@ public class TestCommand extends BasicCommand {
             @Override
             public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 EntityPlayer player = getCommandSenderAsPlayer(sender);
-                List l = player.worldObj.getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().expand(3, 2, 3));
+                List l = player.getEntityWorld().getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().expand(3, 2, 3));
                 for (Object o : l) {
                     if (o instanceof EntityCreature) {
 
@@ -251,11 +251,11 @@ public class TestCommand extends BasicCommand {
             @Override
             public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 EntityPlayer player = getCommandSenderAsPlayer(sender);
-                List<EntityVillager> l = player.worldObj.getEntitiesWithinAABB(EntityVillager.class, player.getEntityBoundingBox().expand(3, 2, 3));
+                List<EntityVillager> l = player.getEntityWorld().getEntitiesWithinAABB(EntityVillager.class, player.getEntityBoundingBox().expand(3, 2, 3));
                 for (EntityVillager v : l) {
                     EntityHunterVillager hunter = EntityHunterVillager.makeHunter(v);
                     v.setDead();
-                    v.worldObj.spawnEntityInWorld(hunter);
+                    v.getEntityWorld().spawnEntity(hunter);
                 }
             }
         });
@@ -320,7 +320,7 @@ public class TestCommand extends BasicCommand {
                 RayTraceResult result = UtilLib.getPlayerLookingSpot(player, 5);
                 if (result != null && result.typeOfHit == RayTraceResult.Type.BLOCK) {
 
-                    TileEntity tent = player.worldObj.getTileEntity(result.getBlockPos());
+                    TileEntity tent = player.getEntityWorld().getTileEntity(result.getBlockPos());
                     if (tent != null && tent instanceof TileTent) {
                         ((TileTent) tent).setSpawn(true);
                         sendMessage(sender, "Success");
@@ -414,7 +414,7 @@ public class TestCommand extends BasicCommand {
             @Override
             public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 EntityPlayer p = getCommandSenderAsPlayer(sender);
-                Tests.runTests(p.worldObj, p);
+                Tests.runTests(p.getEntityWorld(), p);
             }
         });
 
@@ -442,7 +442,7 @@ public class TestCommand extends BasicCommand {
             @Override
             public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 if (sender instanceof EntityPlayer) {
-                    ((EntityPlayer) sender).addChatComponentMessage(new TextComponentString("Garlic strength: " + VampirismAPI.getGarlicChunkHandler(((EntityPlayer) sender).worldObj).getStrengthAtChunk(new ChunkPos(sender.getPosition()))));
+                    sender.sendMessage(new TextComponentString("Garlic strength: " + VampirismAPI.getGarlicChunkHandler(sender.getEntityWorld()).getStrengthAtChunk(new ChunkPos(sender.getPosition()))));
                 }
                 if (args != null && args.length > 0 && "print".equals(args[0])) {
                     ((GarlicChunkHandler) VampirismAPI.getGarlicChunkHandler(sender.getEntityWorld())).printDebug(sender);
@@ -453,7 +453,7 @@ public class TestCommand extends BasicCommand {
     }
 
     @Override
-    public String getCommandName() {
+    public String getName() {
         return "vampirism-test";
     }
 
@@ -469,6 +469,6 @@ public class TestCommand extends BasicCommand {
         if (VampirismMod.inDev) {
             return true;
         }
-        return sender.canCommandSenderUseCommand(perm, command);
+        return sender.canUseCommand(perm, command);
     }
 }

@@ -90,12 +90,12 @@ public class EntityThrowableItem extends EntityThrowable {
         if (stack != null) {
             Item item = stack.getItem();
             if (item instanceof IVampirismThrowableItem) {
-                ((IVampirismThrowableItem) item).onImpact(this, stack, result, this.worldObj.isRemote);
+                ((IVampirismThrowableItem) item).onImpact(this, stack, result, this.world.isRemote);
             } else {
                 VampirismMod.log.w("EntityThrowableItem", "Saved item (%s) is not an instance of IVampirismThrowableItem. This should not be able to happen", stack);
             }
         }
-        if (!this.worldObj.isRemote) this.setDead();
+        if (!this.world.isRemote) this.setDead();
     }
 
     /**

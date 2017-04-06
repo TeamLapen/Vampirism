@@ -60,13 +60,13 @@ public abstract class AbstractPacketDispatcher {
      * Sends a message to everyone within a certain range of the player provided.
      */
     public final void sendToAllAround(IMessage message, EntityPlayer player, double range) {
-        sendToAllAround(message, player.worldObj.provider.getDimension(), player.posX,
+        sendToAllAround(message, player.getEntityWorld().provider.getDimension(), player.posX,
 
                 player.posY, player.posZ, range);
     }
 
     public final void sendToAllTrackingPlayers(IMessage message, Entity target) {
-        EntityTracker et = ((WorldServer) target.worldObj).getEntityTracker();
+        EntityTracker et = ((WorldServer) target.getEntityWorld()).getEntityTracker();
         // does not send it to the player himself it target is a player et.sendToAllTrackingEntity(target, dispatcher.getPacketFrom(message));
         et.sendToTrackingAndSelf(target, dispatcher.getPacketFrom(message));
     }

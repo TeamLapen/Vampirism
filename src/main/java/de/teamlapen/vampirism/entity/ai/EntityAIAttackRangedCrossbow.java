@@ -122,14 +122,14 @@ public class EntityAIAttackRangedCrossbow extends EntityAIBase {
 
     protected void attackWithCrossbow(EntityLivingBase target) {
         ItemStack arrows = attacker.getArrowStackForAttack(target);
-        EntityCrossbowArrow entityArrow = EntityCrossbowArrow.createWithShooter(entity.worldObj, entity, 0, 0.3F, !entity.isLeftHanded(), arrows);
+        EntityCrossbowArrow entityArrow = EntityCrossbowArrow.createWithShooter(entity.getEntityWorld(), entity, 0, 0.3F, !entity.isLeftHanded(), arrows);
         double sx = target.posX - entityArrow.posX;
         double sy = target.getEntityBoundingBox().minY + (double) (target.height / 3.0F) - entityArrow.posY;
         double sz = target.posZ - entityArrow.posZ;
-        double dist = MathHelper.sqrt_double(sx * sx + sz * sz);
-        entityArrow.setThrowableHeading(sx, sy + dist * 0.2, sz, 1.6F, (float) (13 - target.worldObj.getDifficulty().getDifficultyId() * 4));
+        double dist = MathHelper.sqrt(sx * sx + sz * sz);
+        entityArrow.setThrowableHeading(sx, sy + dist * 0.2, sz, 1.6F, (float) (13 - target.getEntityWorld().getDifficulty().getDifficultyId() * 4));
         this.entity.playSound(ModSounds.crossbow, 0.5F, 1);
-        this.entity.worldObj.spawnEntityInWorld(entityArrow);
+        this.entity.getEntityWorld().spawnEntity(entityArrow);
     }
 
     public interface IAttackWithCrossbow {

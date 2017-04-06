@@ -38,8 +38,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 
@@ -155,7 +153,6 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         return !hasHome();
     }
 
-    @SideOnly(Side.CLIENT)
     public boolean isSwingingArms() {
         return this.getDataManager().get(SWINGING_ARMS);
     }
@@ -214,7 +211,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         if (trainee != null && !(trainee.openContainer instanceof HunterBasicContainer)) {
             this.trainee = null;
         }
-        if (!worldObj.isRemote) {
+        if (!world.isRemote) {
             EntityLivingBase target = getAttackTarget();
             int id = target == null ? 0 : target.getEntityId();
             this.updateWatchedId(id);
@@ -223,13 +220,13 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
             if (isSwingingArms()) {
                 int id = getWatchedId();
                 if (id != 0) {
-                    Entity target = worldObj.getEntityByID(id);
+                    Entity target = world.getEntityByID(id);
                     if (target instanceof EntityLivingBase) {
 
                         double dx = target.posX - (this).posX;
                         double dy = target.posY - this.posY;
                         double dz = target.posZ - this.posZ;
-                        float dist = MathHelper.sqrt_double(dx * dx + dz * dz);
+                        float dist = MathHelper.sqrt(dx * dx + dz * dz);
                         targetAngle = (float) Math.atan(dy / dist);
                     }
                 }
@@ -286,7 +283,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     }
 
     public void updateCombatTask() {
-        if (this.worldObj != null && !this.worldObj.isRemote) {
+        if (this.world != null && !this.world.isRemote) {
             this.tasks.removeTask(attackMelee);
             this.tasks.removeTask(attackRange);
             ItemStack stack = this.getHeldItemMainhand();
@@ -372,7 +369,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     protected void onRandomTick() {
         super.onRandomTick();
         if (villageHunter) {
-            this.IVampirismVillage = VampirismVillageCollection.get(worldObj).getNearestVillage(getPosition(), 32);
+            this.IVampirismVillage = VampirismVillageCollection.get(world).getNearestVillage(getPosition(), 32);
             if (this.IVampirismVillage == null) {
                 this.makeNormalHunter();
             }
@@ -385,16 +382,16 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     protected boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
         int hunterLevel = HunterPlayer.get(player).getLevel();
         if (this.isEntityAlive() && !player.isSneaking()) {
-            if (!worldObj.isRemote) {
+            if (!world.isRemote) {
                 if (HunterLevelingConf.instance().isLevelValidForBasicHunter(hunterLevel + 1)) {
                     if (trainee == null) {
-                        player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_BASIC, this.worldObj, (int) posX, (int) posY, (int) posZ);
+                        player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_BASIC, this.world, (int) posX, (int) posY, (int) posZ);
                         trainee = player;
                     } else {
-                        player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.i_am_busy_right_now"));
+                        player.sendMessage(new TextComponentTranslation("text.vampirism.i_am_busy_right_now"));
                     }
                 } else if (hunterLevel > 0) {
-                    player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.basic_hunter.cannot_train_you_any_further"));
+                    player.sendMessage(new TextComponentTranslation("text.vampirism.basic_hunter.cannot_train_you_any_further"));
                 }
             }
             return true;

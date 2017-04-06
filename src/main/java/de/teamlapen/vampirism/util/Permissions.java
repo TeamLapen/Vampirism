@@ -14,7 +14,7 @@ public class Permissions {
 
     public static boolean getPermission(String permission, EntityPlayer player) {
         if ("pvp".equals(permission)) {
-            if (!player.worldObj.isRemote) {
+            if (!player.getEntityWorld().isRemote) {
                 return FMLCommonHandler.instance().getMinecraftServerInstance().isPVPEnabled();
             }
         }

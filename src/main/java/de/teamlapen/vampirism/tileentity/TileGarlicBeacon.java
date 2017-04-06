@@ -56,8 +56,8 @@ public class TileGarlicBeacon extends TileEntity implements ITickable {
     @Override
     public void markDirty() {
         super.markDirty();
-        IBlockState state = worldObj.getBlockState(pos);
-        this.worldObj.notifyBlockUpdate(pos, state, state, 3);
+        IBlockState state = world.getBlockState(pos);
+        this.world.notifyBlockUpdate(pos, state, state, 3);
     }
 
     @SideOnly(Side.CLIENT)
@@ -133,8 +133,8 @@ public class TileGarlicBeacon extends TileEntity implements ITickable {
     }
 
     @Override
-    protected void func_190201_b(World p_190201_1_) {
-        this.setWorldObj(p_190201_1_);
+    protected void setWorldCreate(World world) {
+        this.setWorld(world);
     }
 
     private void register() {

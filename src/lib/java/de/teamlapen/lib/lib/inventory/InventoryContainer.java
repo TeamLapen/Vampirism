@@ -39,8 +39,8 @@ public class InventoryContainer extends Container {
     }
 
     @Override
-    public boolean canInteractWith(EntityPlayer p_75145_1_) {
-        return tile.isUseableByPlayer(p_75145_1_);
+    public boolean canInteractWith(EntityPlayer player) {
+        return tile.isUsableByPlayer(player);
     }
 
     /**

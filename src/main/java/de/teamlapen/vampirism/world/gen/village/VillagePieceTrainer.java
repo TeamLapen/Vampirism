@@ -161,7 +161,7 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
         if (structureBoundingBoxIn.isVecInside(itemFramePos)) {
             EntityItemFrame itemFrame = new EntityItemFrame(worldIn, itemFramePos, getCoordBaseMode().getOpposite());
             itemFrame.setDisplayedItem(new ItemStack(ModItems.vampireFang));
-            worldIn.spawnEntityInWorld(itemFrame);
+            worldIn.spawnEntity(itemFrame);
         }
 
         //Place garlic plants
@@ -225,7 +225,7 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
         EntityHunterTrainer hunterTrainer = new EntityHunterTrainer(worldIn);
         hunterTrainer.setHome(box.expand(-1, 0, -1));
         hunterTrainer.setLocationAndAngles((double) j + 0.5D, (double) k, (double) l + 0.5D, 0.0F, 0.0F);
-        worldIn.spawnEntityInWorld(hunterTrainer);
+        worldIn.spawnEntity(hunterTrainer);
     }
 
     public static class CreationHandler implements VillagerRegistry.IVillageCreationHandler {
@@ -248,7 +248,7 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
          */
         @Override
         public StructureVillagePieces.PieceWeight getVillagePieceWeight(Random random, int terrainType) {
-            return new StructureVillagePieces.PieceWeight(VillagePieceTrainer.class, 20, MathHelper.getRandomIntegerInRange(random, 0, 1 + terrainType));
+            return new StructureVillagePieces.PieceWeight(VillagePieceTrainer.class, 20, MathHelper.getInt(random, 0, 1 + terrainType));
         }
     }
 

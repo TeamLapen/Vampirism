@@ -71,7 +71,7 @@ public class ModParticles {
             @Override
             public Object[] readParticleInfo(NBTTagCompound nbt) {
                 int i = nbt.getInteger("0");
-                World world = Minecraft.getMinecraft().theWorld;
+                World world = Minecraft.getMinecraft().world;
                 if (world == null) return null;
                 Entity e = world.getEntityByID(i);
                 if (e == null) return null;

@@ -27,6 +27,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 /**
@@ -83,17 +84,19 @@ public class BlockCoffin extends VampirismBlockContainer {
         return state;
     }
 
+    @Nonnull
     @Override
-    public EnumFacing getBedDirection(IBlockState state, IBlockAccess world, BlockPos pos) {
+    public EnumFacing getBedDirection(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
         return getActualState(state, world, pos).getValue(FACING);
     }
 
+    @Nonnull
     @SideOnly(Side.CLIENT)
     public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;
     }
 
-    public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state) {
+    public ItemStack getItem(World worldIn, BlockPos pos, @Nonnull IBlockState state) {
         return new ItemStack(ModItems.itemCoffin);
     }
 
@@ -122,6 +125,7 @@ public class BlockCoffin extends VampirismBlockContainer {
         return EnumPushReaction.DESTROY;
     }
 
+    @Nonnull
     @Override
     public EnumBlockRenderType getRenderType(IBlockState state) {
         return EnumBlockRenderType.INVISIBLE;
@@ -138,7 +142,7 @@ public class BlockCoffin extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean isBedFoot(IBlockAccess world, BlockPos pos) {
+    public boolean isBedFoot(IBlockAccess world, @Nonnull BlockPos pos) {
         return getActualState(world.getBlockState(pos), world, pos).getValue(PART) == EnumPartType.FOOT;
     }
 
@@ -195,17 +199,17 @@ public class BlockCoffin extends VampirismBlockContainer {
             }
 
             if (VampirePlayer.get(playerIn).getLevel() == 0) {
-                playerIn.addChatComponentMessage(new TextComponentTranslation("text.vampirism.coffin.cant_use"));
+                playerIn.sendMessage(new TextComponentTranslation("text.vampirism.coffin.cant_use"));
                 return true;
             }
 
 
-            if (worldIn.provider.canRespawnHere() && worldIn.getBiomeGenForCoords(pos) != Biomes.HELL) {
+            if (worldIn.provider.canRespawnHere() && worldIn.getBiome(pos) != Biomes.HELL) {
                 if (state.getValue(OCCUPIED)) {
                     EntityPlayer entityplayer = this.getPlayerInCoffin(worldIn, pos);
 
                     if (entityplayer != null) {
-                        playerIn.addChatComponentMessage(new TextComponentTranslation("text.vampirism.coffin.occupied"));
+                        playerIn.sendMessage(new TextComponentTranslation("text.vampirism.coffin.occupied"));
                         return true;
                     }
 
@@ -223,15 +227,15 @@ public class BlockCoffin extends VampirismBlockContainer {
                     return true;
                 } else {
                     if (entityplayer$enumstatus == EntityPlayer.SleepResult.NOT_POSSIBLE_NOW) {
-                        playerIn.addChatComponentMessage(new TextComponentTranslation("text.vampirism.coffin.noSleep"));
+                        playerIn.sendMessage(new TextComponentTranslation("text.vampirism.coffin.noSleep"));
                     } else if (entityplayer$enumstatus == EntityPlayer.SleepResult.NOT_SAFE) {
-                        playerIn.addChatComponentMessage(new TextComponentTranslation("tile.bed.notSafe"));
+                        playerIn.sendMessage(new TextComponentTranslation("tile.bed.notSafe"));
                     }
 
                     return true;
                 }
             } else {
-                playerIn.addChatComponentMessage(new TextComponentTranslation("text.vampirism.coffin.wrong_dimension"));
+                playerIn.sendMessage(new TextComponentTranslation("text.vampirism.coffin.wrong_dimension"));
                 return true;
             }
         }
@@ -258,6 +262,7 @@ public class BlockCoffin extends VampirismBlockContainer {
         }
     }
 
+    @Nonnull
     @Override
     protected BlockStateContainer createBlockState() {
         return new BlockStateContainer(this, FACING, PART, OCCUPIED);
@@ -272,7 +277,7 @@ public class BlockCoffin extends VampirismBlockContainer {
      */
     private EntityPlayer getPlayerInCoffin(World worldIn, BlockPos pos) {
         for (EntityPlayer entityplayer : worldIn.playerEntities) {
-            if (VampirePlayer.get(entityplayer).isPlayerSleeping() && entityplayer.playerLocation.equals(pos)) {
+            if (VampirePlayer.get(entityplayer).isPlayerSleeping() && entityplayer.bedLocation.equals(pos)) {
                 return entityplayer;
             }
         }

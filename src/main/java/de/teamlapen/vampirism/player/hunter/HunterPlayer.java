@@ -37,16 +37,6 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     @CapabilityInject(IHunterPlayer.class)
     public final static Capability<IHunterPlayer> CAP = null;
-    private final ActionHandler<IHunterPlayer> actionHandler;
-    private final SkillHandler<IHunterPlayer> skillHandler;
-    private final HunterPlayerSpecialAttribute specialAttributes;
-
-    public HunterPlayer(EntityPlayer player) {
-        super(player);
-        actionHandler = new ActionHandler<IHunterPlayer>(this);
-        skillHandler = new SkillHandler<IHunterPlayer>(this);
-        specialAttributes = new HunterPlayerSpecialAttribute();
-    }
 
     /**
      * Don't call before the construction event of the player entity is finished
@@ -87,6 +77,17 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
         };
     }
 
+    private final ActionHandler<IHunterPlayer> actionHandler;
+    private final SkillHandler<IHunterPlayer> skillHandler;
+    private final HunterPlayerSpecialAttribute specialAttributes;
+
+    public HunterPlayer(EntityPlayer player) {
+        super(player);
+        actionHandler = new ActionHandler<IHunterPlayer>(this);
+        skillHandler = new SkillHandler<IHunterPlayer>(this);
+        specialAttributes = new HunterPlayerSpecialAttribute();
+    }
+
     @Override
     public boolean canLeaveFaction() {
         return true;
@@ -110,6 +111,11 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     @Override
     public IPlayableFaction<IHunterPlayer> getFaction() {
         return VReference.HUNTER_FACTION;
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return REFERENCE.HIGHEST_HUNTER_LEVEL;
     }
 
     @Override
@@ -211,7 +217,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     @Override
     public void onUpdate() {
-        player.worldObj.theProfiler.startSection("vampirism_hunterPlayer");
+        player.getEntityWorld().theProfiler.startSection("vampirism_hunterPlayer");
         int level = getLevel();
         if (!isRemote()) {
             if (level > 0) {
@@ -236,7 +242,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
                 actionHandler.updateActions();
             }
         }
-        player.worldObj.theProfiler.endSection();
+        player.getEntityWorld().theProfiler.endSection();
     }
 
     @Override
@@ -249,7 +255,6 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
         skillHandler.saveToNbt(compound);
     }
 
-
     @Override
     protected VampirismPlayer copyFromPlayer(EntityPlayer old) {
         HunterPlayer oldHunter = get(old);
@@ -257,11 +262,6 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
         oldHunter.saveData(nbt);
         this.loadData(nbt);
         return oldHunter;
-    }
-
-    @Override
-    public int getMaxLevel() {
-        return REFERENCE.HIGHEST_HUNTER_LEVEL;
     }
 
     @Override

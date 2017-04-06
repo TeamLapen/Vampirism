@@ -37,10 +37,10 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
 
     public void printDebug(ICommandSender sender) {
         for (Emitter e : emitterHashMap.values()) {
-            sender.addChatMessage(new TextComponentString("E: " + e.toString()));
+            sender.sendMessage(new TextComponentString("E: " + e.toString()));
         }
         for (Map.Entry e : strengthHashMap.entrySet()) {
-            sender.addChatMessage(new TextComponentString("S: " + e.toString()));
+            sender.sendMessage(new TextComponentString("S: " + e.toString()));
         }
     }
 

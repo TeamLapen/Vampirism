@@ -14,6 +14,8 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 
+import javax.annotation.Nonnull;
+
 
 /**
  * Basic abstract class for TileEntitys which need a small inventory (with an gui)
@@ -63,6 +65,7 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
         return null;
     }
 
+    @Nonnull
     public ITextComponent getDisplayName() {
         return this.hasCustomName() ? new TextComponentString(this.getName()) : new TextComponentTranslation(this.getName());
     }
@@ -114,8 +117,9 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
         return true;
     }
 
+
     @Override
-    public boolean isUseableByPlayer(EntityPlayer player) {
+    public boolean isUsableByPlayer(EntityPlayer player) {
         return player.getDistanceSq(getPos()) < MAX_DIST_SQRT;
     }
 

@@ -11,7 +11,10 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -26,7 +29,7 @@ public class TileTent extends TileEntity implements ITickable {
 
         @Override
         public World getSpawnerWorld() {
-            return TileTent.this.worldObj;
+            return TileTent.this.world;
         }
 
         @Override
@@ -53,6 +56,8 @@ public class TileTent extends TileEntity implements ITickable {
         spawnerLogic.setMaxNearbyEntities(2);
     }
 
+    @Nonnull
+    @SideOnly(Side.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
         return super.getRenderBoundingBox().expand(1, 0, 1);
@@ -64,6 +69,7 @@ public class TileTent extends TileEntity implements ITickable {
         return null;//new SPacketUpdateTileEntity(this.getPos(), 1, getUpdateTag());
     }
 
+    @Nonnull
     @Override
     public NBTTagCompound getUpdateTag() {
         return this.writeToNBT(new NBTTagCompound());
@@ -100,6 +106,7 @@ public class TileTent extends TileEntity implements ITickable {
         }
     }
 
+    @Nonnull
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         NBTTagCompound nbt = super.writeToNBT(compound);

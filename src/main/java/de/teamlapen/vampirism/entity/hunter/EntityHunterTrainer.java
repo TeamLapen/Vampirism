@@ -103,17 +103,17 @@ public class EntityHunterTrainer extends EntityHunterBase implements HunterAILoo
         boolean flag = stack != null && stack.getItem() == Items.SPAWN_EGG;
 
         if (!flag && this.isEntityAlive() && !player.isSneaking()) {
-            if (!this.worldObj.isRemote) {
+            if (!this.world.isRemote) {
                 if (HunterLevelingConf.instance().isLevelValidForTrainer(FactionPlayerHandler.get(player).getCurrentLevel(VReference.HUNTER_FACTION) + 1)) {
                     if (trainee == null) {
                         this.trainee = player;
-                        player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_TRAINER, player.worldObj, getPosition().getX(), getPosition().getY(), getPosition().getZ());
+                        player.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_TRAINER, player.getEntityWorld(), getPosition().getX(), getPosition().getY(), getPosition().getZ());
                     } else {
-                        player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.i_am_busy_right_now"));
+                        player.sendMessage(new TextComponentTranslation("text.vampirism.i_am_busy_right_now"));
                     }
 
                 } else {
-                    player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.trainer_level_wrong"));
+                    player.sendMessage(new TextComponentTranslation("text.vampirism.trainer_level_wrong"));
                 }
 
             }

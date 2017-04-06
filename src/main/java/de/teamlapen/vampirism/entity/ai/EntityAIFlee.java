@@ -24,7 +24,7 @@ public abstract class EntityAIFlee extends EntityAIBase {
         this.theCreature = theCreature;
         this.movementSpeed = movementSpeed;
         this.restrictToHome = restrictToHome;
-        world = theCreature.worldObj;
+        world = theCreature.getEntityWorld();
         this.setMutexBits(1);
     }
 

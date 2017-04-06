@@ -45,7 +45,7 @@ public class BlockMedChair extends VampirismBlock {
         BlockPos other;
         if (state.getValue(PART) == EnumPart.TOP) {
             other = pos.offset(dir);
-            worldIn.spawnEntityInWorld(new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(ModItems.itemMedChair, 1)));
+            worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(ModItems.itemMedChair, 1)));
         } else {
             other = pos.offset(dir.getOpposite());
         }
@@ -58,6 +58,11 @@ public class BlockMedChair extends VampirismBlock {
     }
 
     @Override
+    public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack) {
+        return super.getStateForPlacement(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer, stack).withProperty(FACING, placer.getHorizontalFacing().rotateY().rotateY()).withProperty(PART, EnumPart.fromMeta(placer.getRNG().nextInt(2)));//TODO
+    }
+
+    @Override
     public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(PART, EnumPart.fromMeta(meta >> 2)).withProperty(FACING, EnumFacing.getHorizontal(meta));
     }
@@ -66,7 +71,6 @@ public class BlockMedChair extends VampirismBlock {
     public boolean isFullCube(IBlockState state) {
         return false;
     }
-
 
     @Override
     public boolean isOpaqueCube(IBlockState state) {
@@ -93,21 +97,16 @@ public class BlockMedChair extends VampirismBlock {
                 }
             } else {
                 if (!worldIn.isRemote) {
-                    playerIn.addChatComponentMessage(new TextComponentTranslation("text.vampirism.med_chair_other_faction", new TextComponentTranslation(faction.getUnlocalizedName())));
+                    playerIn.sendMessage(new TextComponentTranslation("text.vampirism.med_chair_other_faction", new TextComponentTranslation(faction.getUnlocalizedName())));
                 }
 
             }
         } else {
             if (worldIn.isRemote)
-                playerIn.addChatComponentMessage(new TextComponentTranslation("text.vampirism.need_item_to_use", new TextComponentTranslation((new ItemStack(ModItems.injection, 1, ItemInjection.META_GARLIC)).getUnlocalizedName() + ".name")));
+                playerIn.sendMessage(new TextComponentTranslation("text.vampirism.need_item_to_use", new TextComponentTranslation((new ItemStack(ModItems.injection, 1, ItemInjection.META_GARLIC)).getUnlocalizedName() + ".name")));
         }
 
         return true;
-    }
-
-    @Override
-    public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
-        return super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer).withProperty(FACING, placer.getHorizontalFacing().rotateY().rotateY()).withProperty(PART, EnumPart.fromMeta(placer.getRNG().nextInt(2)));//TODO
     }
 
     @Override

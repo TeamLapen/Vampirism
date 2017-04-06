@@ -43,7 +43,7 @@ public class VampireAIFollowAdvanced extends EntityAIBase {
             return leader.isEntityAlive() && this.entity.getDistanceSqToEntity(leader) > DIST;
         }
 
-        List<EntityAdvancedVampire> list = this.entity.worldObj.getEntitiesWithinAABB(EntityAdvancedVampire.class, this.entity.getEntityBoundingBox().expand(8, 4, 8));
+        List<EntityAdvancedVampire> list = this.entity.getEntityWorld().getEntitiesWithinAABB(EntityAdvancedVampire.class, this.entity.getEntityBoundingBox().expand(8, 4, 8));
 
         double d0 = Double.MAX_VALUE;
 

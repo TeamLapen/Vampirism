@@ -17,12 +17,15 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Map;
 
 /**
  * Clientside Proxy
  */
+@SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
     private final static String TAG = "ClientProxy";
 
@@ -30,12 +33,12 @@ public class ClientProxy extends CommonProxy {
 
     @Override
     public boolean isClientPlayerNull() {
-        return Minecraft.getMinecraft().thePlayer == null;
+        return Minecraft.getMinecraft().player == null;
     }
 
     @Override
     public boolean isPlayerThePlayer(EntityPlayer player) {
-        return Minecraft.getMinecraft().thePlayer.equals(player);
+        return Minecraft.getMinecraft().player.equals(player);
     }
 
     @Override

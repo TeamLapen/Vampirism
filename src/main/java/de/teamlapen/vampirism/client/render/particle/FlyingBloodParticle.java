@@ -28,9 +28,9 @@ public class FlyingBloodParticle extends Particle {
         double wayX = destX - this.posX;
         double wayZ = destZ - this.posZ;
         double wayY = destY - this.posY;
-        this.motionX = (this.worldObj.rand.nextDouble() / 10 - 0.05) + wayX / particleMaxAge;
-        this.motionY = (this.worldObj.rand.nextDouble() / 10 - 0.01) + wayY / particleMaxAge;
-        this.motionZ = (this.worldObj.rand.nextDouble() / 10 - 0.05) + wayZ / particleMaxAge;
+        this.motionX = (this.world.rand.nextDouble() / 10 - 0.05) + wayX / particleMaxAge;
+        this.motionY = (this.world.rand.nextDouble() / 10 - 0.01) + wayY / particleMaxAge;
+        this.motionZ = (this.world.rand.nextDouble() / 10 - 0.05) + wayZ / particleMaxAge;
         this.onUpdate();
     }
 
@@ -55,7 +55,7 @@ public class FlyingBloodParticle extends Particle {
             this.motionY = wayY / tleft;
             this.motionZ = wayZ / tleft;
         }
-        this.moveEntity(this.motionX, this.motionY, this.motionZ);
+        this.move(this.motionX, this.motionY, this.motionZ);
     }
 
 }

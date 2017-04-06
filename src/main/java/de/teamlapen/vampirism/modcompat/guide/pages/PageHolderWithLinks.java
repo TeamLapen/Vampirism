@@ -81,11 +81,13 @@ public class PageHolderWithLinks implements IPage {
         return page.canSee(book, category, entry, player, bookStack, guiEntry);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void draw(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, GuiBase guiBase, FontRenderer fontRendererObj) {
         page.draw(book, category, entry, guiLeft, guiTop, mouseX, mouseY, guiBase, fontRendererObj);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void drawExtras(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, GuiBase guiBase, FontRenderer fontRendererObj) {
         int ll = guiLeft + guiBase.xSize - 5;
@@ -100,6 +102,7 @@ public class PageHolderWithLinks implements IPage {
         page.drawExtras(book, category, entry, guiLeft, guiTop, mouseX, mouseY, guiBase, fontRendererObj);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void onInit(Book book, CategoryAbstract category, EntryAbstract entry, EntityPlayer player, ItemStack bookStack, GuiEntry guiEntry) {
         while (lateLinks.size() > 0) {
@@ -114,6 +117,7 @@ public class PageHolderWithLinks implements IPage {
         page.onInit(book, category, entry, player, bookStack, guiEntry);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void onLeftClicked(Book book, CategoryAbstract category, EntryAbstract entry, int mouseX, int mouseY, EntityPlayer player, GuiEntry guiEntry) {
         if (mouseX > guiEntry.guiLeft + guiEntry.xSize) {
@@ -133,6 +137,7 @@ public class PageHolderWithLinks implements IPage {
         page.onLeftClicked(book, category, entry, mouseX, mouseY, player, guiEntry);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void onRightClicked(Book book, CategoryAbstract category, EntryAbstract entry, int mouseX, int mouseY, EntityPlayer player, GuiEntry guiEntry) {
         page.onRightClicked(book, category, entry, mouseX, mouseY, player, guiEntry);
@@ -143,6 +148,7 @@ public class PageHolderWithLinks implements IPage {
 
         public abstract String getDisplayName();
 
+        @SideOnly(Side.CLIENT)
         public abstract void onClicked(Book book, CategoryAbstract category, EntryAbstract entry, EntityPlayer player, ItemStack bookStack, int page);
     }
 
@@ -169,7 +175,7 @@ public class PageHolderWithLinks implements IPage {
             } catch (Throwable throwable1) {
                 Throwable throwable = throwable1.getCause();
                 VampirismMod.log.e(GuideBook.TAG, throwable, "Couldn\'t open link: {%s}", link);
-                player.addChatComponentMessage(ForgeHooks.newChatWithLinks("Couldn\'t open link: " + link.toString()));
+                player.sendMessage(ForgeHooks.newChatWithLinks("Couldn\'t open link: " + link.toString()));
             }
         }
     }
@@ -186,6 +192,7 @@ public class PageHolderWithLinks implements IPage {
             return linkedEntry.getLocalizedName();
         }
 
+        @SideOnly(Side.CLIENT)
         @Override
         public void onClicked(Book book, CategoryAbstract category, EntryAbstract entry, EntityPlayer player, ItemStack bookStack, int page) {
             openLinkedEntry(book, category, linkedEntry, player, bookStack, entry, page);

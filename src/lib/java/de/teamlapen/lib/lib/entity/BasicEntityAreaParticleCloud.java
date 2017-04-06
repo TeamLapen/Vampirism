@@ -64,7 +64,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
         this.setSize(getRadius() * 2, height);
         this.setPosition(d0, d1, d2);
 
-        if (!this.worldObj.isRemote) {
+        if (!this.world.isRemote) {
             this.getDataManager().set(HEIGHT, height);
         }
     }
@@ -100,7 +100,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
         this.setSize(radius * 2.0F, getHeight());
         this.setPosition(d0, d1, d2);
 
-        if (!this.worldObj.isRemote) {
+        if (!this.world.isRemote) {
             this.getDataManager().set(RADIUS, radius);
         }
     }
@@ -125,7 +125,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
     public void onUpdate() {
         super.onUpdate();
         float radius = this.getRadius();
-        if (this.worldObj.isRemote) {
+        if (this.world.isRemote) {
             EnumParticleTypes enumParticleTypes = getParticle();
             int[] aint = new int[enumParticleTypes.getArgumentCount()];
             if (aint.length > 0) {
@@ -137,7 +137,7 @@ public class BasicEntityAreaParticleCloud extends Entity {
             float amount = (float) (Math.PI * radius * radius) * getSpawnRate();
             for (int i = 0; i < amount; i++) {
                 float phi = this.rand.nextFloat() * (float) Math.PI * 2;
-                float r = MathHelper.sqrt_float(this.rand.nextFloat()) * radius;
+                float r = MathHelper.sqrt(this.rand.nextFloat()) * radius;
                 float dx = MathHelper.cos(phi) * r;
                 float dz = MathHelper.sin(phi) * r;
                 float dy = this.rand.nextFloat() * getHeight();
@@ -148,9 +148,9 @@ public class BasicEntityAreaParticleCloud extends Entity {
                     int cr = rgb >> 16 & 255;
                     int cg = rgb >> 8 & 255;
                     int cb = rgb & 255;
-                    this.worldObj.spawnParticle(EnumParticleTypes.SPELL_MOB, this.posX + (double) dx, this.posY + dy, this.posZ + (double) dz, (double) ((float) cr / 255.0F), (double) ((float) cg / 255.0F), (double) ((float) cb / 255.0F));
+                    this.world.spawnParticle(EnumParticleTypes.SPELL_MOB, this.posX + (double) dx, this.posY + dy, this.posZ + (double) dz, (double) ((float) cr / 255.0F), (double) ((float) cg / 255.0F), (double) ((float) cb / 255.0F));
                 } else {
-                    this.worldObj.spawnParticle(enumParticleTypes, this.posX + (double) dx, this.posY + dy, this.posZ + (double) dz, (0.5D - this.rand.nextDouble()) * 0.15D, 0.009999999776482582D, (0.5D - this.rand.nextDouble()) * 0.15D, aint);
+                    this.world.spawnParticle(enumParticleTypes, this.posX + (double) dx, this.posY + dy, this.posZ + (double) dz, (0.5D - this.rand.nextDouble()) * 0.15D, 0.009999999776482582D, (0.5D - this.rand.nextDouble()) * 0.15D, aint);
                 }
             }
         } else {

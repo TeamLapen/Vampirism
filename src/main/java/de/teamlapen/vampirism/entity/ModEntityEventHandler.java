@@ -98,12 +98,11 @@ public class ModEntityEventHandler {
     @SubscribeEvent
     public void onEntityUpdate(LivingEvent.LivingUpdateEvent event) {
         if (event.getEntity() instanceof EntityCreature) {
-            event.getEntity().worldObj.theProfiler.startSection("vampirism_extended_creature");
+            event.getEntity().getEntityWorld().theProfiler.startSection("vampirism_extended_creature");
             ExtendedCreature.get((EntityCreature) event.getEntity()).onUpdate();
-            event.getEntity().worldObj.theProfiler.endSection();
+            event.getEntity().getEntityWorld().theProfiler.endSection();
 
-        }
-        else if (!event.getEntity().worldObj.isRemote && event.getEntity() instanceof EntityPlayer)
+        } else if (!event.getEntity().getEntityWorld().isRemote && event.getEntity() instanceof EntityPlayer)
         {
             EntityPlayer player = (EntityPlayer) event.getEntity();
             if (player.openContainer instanceof BloodPotionTableContainer) {

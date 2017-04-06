@@ -16,6 +16,8 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.awt.*;
@@ -38,16 +40,17 @@ public abstract class BasicWeaponTableRecipeRenderer<T extends IHunterWeaponReci
         super(recipe);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void draw(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, GuiBase guiBase, FontRenderer fontRendererObj) {
         Minecraft mc = Minecraft.getMinecraft();
-        long time = mc.theWorld.getTotalWorldTime();
+        long time = mc.world.getTotalWorldTime();
         if (lastCycle < 0 || lastCycle < time - 20) {
             if (lastCycle > 0) {
                 cycleIdx++;
                 cycleIdx = Math.max(0, cycleIdx);
             }
-            lastCycle = mc.theWorld.getTotalWorldTime();
+            lastCycle = mc.world.getTotalWorldTime();
         }
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation("vampirismguide", "textures/gui/weaponTableRecipe.png"));

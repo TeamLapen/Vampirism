@@ -30,6 +30,8 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -37,18 +39,19 @@ import java.util.Map;
 /**
  * Handle general client side events
  */
+@SideOnly(Side.CLIENT)
 public class ClientEventHandler {
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
         if (event.phase == TickEvent.Phase.START) {
             Minecraft mc = Minecraft.getMinecraft();
-            if (mc.thePlayer != null && mc.theWorld != null) {
-                if ((mc.currentScreen == null || mc.currentScreen instanceof GuiSleepMP) && mc.thePlayer.isPlayerSleeping()) {
-                    IBlockState state = mc.thePlayer.worldObj.getBlockState(mc.thePlayer.playerLocation);
+            if (mc.world != null && mc.world != null) {
+                if ((mc.currentScreen == null || mc.currentScreen instanceof GuiSleepMP) && mc.player.isPlayerSleeping()) {
+                    IBlockState state = mc.player.getEntityWorld().getBlockState(mc.player.bedLocation);
                     if (state.getBlock().equals(ModBlocks.coffin)) {
                         mc.displayGuiScreen(new GuiSleepCoffin());
                     }
-                } else if (mc.currentScreen != null && mc.currentScreen instanceof GuiSleepCoffin && !mc.thePlayer.isPlayerSleeping()) {
+                } else if (mc.currentScreen != null && mc.currentScreen instanceof GuiSleepCoffin && !mc.player.isPlayerSleeping()) {
                     mc.displayGuiScreen(null);
                 }
             }

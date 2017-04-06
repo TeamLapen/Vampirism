@@ -127,7 +127,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
             this.zoomOut -= 0.25F;
         }
 
-        this.zoomOut = MathHelper.clamp_float(this.zoomOut, 1.0F, 2.0F);
+        this.zoomOut = MathHelper.clamp(this.zoomOut, 1.0F, 2.0F);
 
         if (this.zoomOut != zoomOutOld) {
             float f5 = zoomOutOld - this.zoomOut;
@@ -168,7 +168,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
 
     @Override
     public void initGui() {
-        IFactionPlayer factionPlayer = FactionPlayerHandler.get(mc.thePlayer).getCurrentFactionPlayer();
+        IFactionPlayer factionPlayer = FactionPlayerHandler.get(mc.player).getCurrentFactionPlayer();
         if (factionPlayer != null) {
             display = true;
             skillHandler = (SkillHandler) factionPlayer.getSkillHandler();
@@ -274,8 +274,8 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
     }
 
     private void drawSkills(int mouseX, int mouseY, float partialTicks) {
-        int offsetX = MathHelper.floor_double(this.displayX + (this.displayXNew - this.displayX) * (double) partialTicks);
-        int offsetY = MathHelper.floor_double(this.displayY + (this.displayYNew - this.displayY) * (double) partialTicks);
+        int offsetX = MathHelper.floor(this.displayX + (this.displayXNew - this.displayX) * (double) partialTicks);
+        int offsetY = MathHelper.floor(this.displayY + (this.displayYNew - this.displayY) * (double) partialTicks);
 
         if (offsetX < area_min_x) {
             offsetX = area_min_x;

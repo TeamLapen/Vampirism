@@ -34,6 +34,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -43,6 +45,7 @@ import java.util.List;
 public class ModEventHandler {
     private final static String TAG = "EventHandler";
 
+    @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onClientDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
         Configs.onDisconnectedFromServer();
@@ -96,11 +99,11 @@ public class ModEventHandler {
                 if (event.player.getRNG().nextInt(4) == 0) {
                     VersionChecker.Version newVersion = versionInfo.getNewVersion();
                     //Inspired by @Vazikii's useful message
-                    event.player.addChatComponentMessage(new TextComponentTranslation("text.vampirism.outdated", versionInfo.getCurrentVersion().name, newVersion.name));
+                    event.player.sendMessage(new TextComponentTranslation("text.vampirism.outdated", versionInfo.getCurrentVersion().name, newVersion.name));
                     String template = I18n.translateToLocal("text.vampirism.update_message");
                     template = template.replaceAll("@download@", newVersion.getUrl() == null ? versionInfo.getHomePage() : newVersion.getUrl()).replaceAll("@forum@", versionInfo.getHomePage());
                     ITextComponent component = ITextComponent.Serializer.jsonToComponent(template);
-                    event.player.addChatComponentMessage(component);
+                    event.player.sendMessage(component);
                 }
             }
 
@@ -109,9 +112,9 @@ public class ModEventHandler {
             if (!FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer() || UtilLib.isPlayerOp(event.player)) {
 
 
-                event.player.addChatComponentMessage(new TextComponentString("It looks like you have updated Vampirism"));
-                event.player.addChatComponentMessage(new TextComponentString("Please consider resetting the balance values to the updated ones, using " + TextFormatting.DARK_GREEN + "'/vampirism resetBalance all'" + TextFormatting.RESET));
-                event.player.addChatComponentMessage(new TextComponentString("For more information use " + TextFormatting.DARK_GREEN + "'/vampirism resetBalance help'" + TextFormatting.RESET));
+                event.player.sendMessage(new TextComponentString("It looks like you have updated Vampirism"));
+                event.player.sendMessage(new TextComponentString("Please consider resetting the balance values to the updated ones, using " + TextFormatting.DARK_GREEN + "'/vampirism resetBalance all'" + TextFormatting.RESET));
+                event.player.sendMessage(new TextComponentString("For more information use " + TextFormatting.DARK_GREEN + "'/vampirism resetBalance help'" + TextFormatting.RESET));
             }
         }
 

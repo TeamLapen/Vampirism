@@ -9,7 +9,6 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -68,8 +67,8 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
             return true;
         }
         if (!playerIn.isSneaking()) {
-            if (te.getCurrentPhase() != TileAltarInfusion.PHASE.NOT_RUNNING && playerIn.worldObj.isRemote) {
-                playerIn.addChatMessage(new TextComponentTranslation("text.vampirism.ritual_still_running"));
+            if (te.getCurrentPhase() != TileAltarInfusion.PHASE.NOT_RUNNING && playerIn.getEntityWorld().isRemote) {
+                playerIn.sendMessage(new TextComponentTranslation("text.vampirism.ritual_still_running"));
                 return false;
             }
             playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_ALTAR_INFUSION, worldIn, pos.getX(), pos.getY(), pos.getZ());
@@ -99,14 +98,14 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
                 EntityItem entityItem = new EntityItem(world, pos.getX() + rx, pos.getY() + ry, pos.getZ() + rz, item.copy());
 
                 if (item.hasTagCompound()) {
-                    entityItem.getEntityItem().setTagCompound((NBTTagCompound) item.getTagCompound().copy());
+                    entityItem.getEntityItem().setTagCompound(item.getTagCompound().copy());
                 }
 
                 float factor = 0.05F;
                 entityItem.motionX = rand.nextGaussian() * factor;
                 entityItem.motionY = rand.nextGaussian() * factor + 0.2F;
                 entityItem.motionZ = rand.nextGaussian() * factor;
-                world.spawnEntityInWorld(entityItem);
+                world.spawnEntity(entityItem);
                 item.stackSize = 0;
             }
         }

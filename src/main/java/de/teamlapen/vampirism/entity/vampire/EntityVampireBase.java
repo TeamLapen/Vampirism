@@ -51,7 +51,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
 
     @Override
     public boolean attackEntityAsMob(Entity entity) {
-        if (canSuckBloodFromPlayer && !worldObj.isRemote && entity instanceof EntityPlayer && !UtilLib.canReallySee((EntityLivingBase) entity, this, true) && rand.nextInt(Balance.mobProps.VAMPIRE_BITE_ATTACK_CHANCE) == 0) {
+        if (canSuckBloodFromPlayer && !world.isRemote && entity instanceof EntityPlayer && !UtilLib.canReallySee((EntityLivingBase) entity, this, true) && rand.nextInt(Balance.mobProps.VAMPIRE_BITE_ATTACK_CHANCE) == 0) {
             int amt = VampirePlayer.get((EntityPlayer) entity).onBite(this);
             drinkBlood(amt, 1.0F);
             return true;
@@ -83,9 +83,9 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
 
     @Override
     public boolean getCanSpawnHere() {
-        if (isGettingSundamage(true) || (worldObj.isDaytime() && rand.nextInt(5) != 0)) return false;
+        if (isGettingSundamage(true) || (world.isDaytime() && rand.nextInt(5) != 0)) return false;
         if (isGettingGarlicDamage(true) != EnumStrength.NONE) return false;
-        if (worldObj.getVillageCollection().getNearestVillage(getPosition(), 1) != null) {
+        if (world.getVillageCollection().getNearestVillage(getPosition(), 1) != null) {
             if (getRNG().nextInt(60) != 0) {
                 return false;
             }
@@ -151,7 +151,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
         if (this.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
             isGettingSundamage(true);
         }
-        if (!worldObj.isRemote) {
+        if (!world.isRemote) {
             if (isGettingSundamage() && ticksExisted % 40 == 11) {
                 double dmg = getEntityAttribute(VReference.sunDamage).getAttributeValue();
                 if (dmg > 0) this.attackEntityFrom(VReference.SUNDAMAGE, (float) dmg);
@@ -195,9 +195,9 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
      * Only exception is the vampire biome in which it returns true if ontop of {@link ModBlocks#cursedEarth}
      */
     private boolean getCanSpawnHereRestricted() {
-        boolean vampireBiome = ModBiomes.vampireForest.equals(this.worldObj.getBiomeGenForCoords(this.getPosition()));
+        boolean vampireBiome = ModBiomes.vampireForest.equals(this.world.getBiome(this.getPosition()));
         if (!vampireBiome) return isLowLightLevel();
-        IBlockState iblockstate = this.worldObj.getBlockState((new BlockPos(this)).down());
+        IBlockState iblockstate = this.world.getBlockState((new BlockPos(this)).down());
         return ModBlocks.cursedEarth.equals(iblockstate.getBlock());
     }
 }

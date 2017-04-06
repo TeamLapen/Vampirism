@@ -165,7 +165,7 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
     @Override
     public void updateScreen() {
         super.updateScreen();
-        this.mc.thePlayer.movementInput.updatePlayerMoveState();
+        this.mc.player.movementInput.updatePlayerMoveState();
         if (!isKeyDown(getMenuKeyCode())) {
             if (selectedElement >= 0) {
                 this.onElementSelected(elements.get(selectedElement));

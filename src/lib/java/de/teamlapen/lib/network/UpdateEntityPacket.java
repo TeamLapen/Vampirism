@@ -16,6 +16,8 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -197,15 +199,13 @@ public class UpdateEntityPacket implements IMessage {
 
     public static class Handler extends AbstractClientMessageHandler<UpdateEntityPacket> {
 
+        @SideOnly(Side.CLIENT)
         @Override
         public IMessage handleClientMessage(EntityPlayer player, UpdateEntityPacket message, MessageContext ctx) {
 //            if (player.getRNG().nextInt(10) == 0)
 //                VampLib.log.t("Received %s %s %s", message.id, message.data, message.caps);//Log a few random message, just to see if everything is alright.
-            if (player.worldObj == null) {
-                VampLib.log.w(TAG, "World not loaded yet");
-                return null;
-            }
-            Entity e = player.worldObj.getEntityByID(message.id);
+
+            Entity e = player.getEntityWorld().getEntityByID(message.id);
             if (e == null) {
                 VampLib.log.e(TAG, "Did not find entity %s", message.id);
                 return null;
@@ -243,6 +243,7 @@ public class UpdateEntityPacket implements IMessage {
             return true;
         }
 
+        @SideOnly(Side.CLIENT)
         private void handleCapability(Entity e, ResourceLocation key, NBTTagCompound data) {
             ISyncable syncable;
             Capability cap = HelperRegistry.getSyncableEntityCaps().get(key);

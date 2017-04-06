@@ -66,14 +66,14 @@ public class EntityAIAttackMeleeNoSun extends EntityAIAttackMelee {
                                 .findField(EntityAIAttackMelee.class, "entityPathEntity", SRGNAMES.EntityAIAttackMelee_entityPathEntity);
                     }
                     Path path = (Path) field_entityPathEntity.get(this);
-                    if (attacker.worldObj.canSeeSky(new BlockPos(MathHelper.floor_double(this.attacker.posX), (int) (this.attacker.getEntityBoundingBox().minY + 0.5D), MathHelper.floor_double(this.attacker.posZ)))) {
+                    if (attacker.getEntityWorld().canSeeSky(new BlockPos(MathHelper.floor(this.attacker.posX), (int) (this.attacker.getEntityBoundingBox().minY + 0.5D), MathHelper.floor(this.attacker.posZ)))) {
                         return false;
                     }
 
                     for (int j = 0; j < path.getCurrentPathLength(); ++j) {
                         PathPoint pathpoint2 = path.getPathPointFromIndex(j);
 
-                        if (this.attacker.worldObj.canSeeSky(new BlockPos(pathpoint2.xCoord, pathpoint2.yCoord, pathpoint2.zCoord))) {
+                        if (this.attacker.getEntityWorld().canSeeSky(new BlockPos(pathpoint2.xCoord, pathpoint2.yCoord, pathpoint2.zCoord))) {
                             path.setCurrentPathLength(j - 1);
                             return path.getCurrentPathLength() > 1;
                         }

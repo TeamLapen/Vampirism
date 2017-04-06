@@ -59,8 +59,6 @@ import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -77,6 +75,45 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @CapabilityInject(IVampirePlayer.class)
     public static final Capability<IVampirePlayer> CAP = null;
     private final static String TAG = "VampirePlayer";
+
+    /**
+     * Don't call before the construction event of the player entity is finished
+     */
+    public static VampirePlayer get(EntityPlayer player) {
+        return (VampirePlayer) player.getCapability(CAP, null);
+    }
+
+    public static void registerCapability() {
+        CapabilityManager.INSTANCE.register(IVampirePlayer.class, new Storage(), VampirePlayerDefaultImpl.class);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    public static ICapabilityProvider createNewCapability(final EntityPlayer player) {
+        return new ICapabilitySerializable<NBTTagCompound>() {
+
+            IVampirePlayer inst = new VampirePlayer(player);
+
+            @Override
+            public void deserializeNBT(NBTTagCompound nbt) {
+                CAP.getStorage().readNBT(CAP, inst, null, nbt);
+            }
+
+            @Override
+            public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+                return CAP.equals(capability) ? CAP.<T>cast(inst) : null;
+            }
+
+            @Override
+            public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+                return CAP.equals(capability);
+            }
+
+            @Override
+            public NBTTagCompound serializeNBT() {
+                return (NBTTagCompound) CAP.getStorage().writeNBT(CAP, inst, null);
+            }
+        };
+    }
     private final BloodStats bloodStats;
     private final String KEY_EYE = "eye_type";
     private final String KEY_FANGS = "fang_type";
@@ -96,6 +133,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private boolean wasDead = false;
     private List<IVampireVision> unlockedVisions = new ArrayList<>();
     private IVampireVision activatedVision = null;
+
     public VampirePlayer(EntityPlayer player) {
         super(player);
         applyEntityAttributes();
@@ -103,53 +141,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         actionHandler = new ActionHandler(this);
         skillHandler = new SkillHandler<IVampirePlayer>(this);
         garlic_cache = EnumStrength.NONE;
-    }
-
-    /**
-     * Don't call before the construction event of the player entity is finished
-     */
-    public static VampirePlayer get(EntityPlayer player)
-    {
-        return (VampirePlayer) player.getCapability(CAP, null);
-    }
-
-    public static void registerCapability()
-    {
-        CapabilityManager.INSTANCE.register(IVampirePlayer.class, new Storage(), VampirePlayerDefaultImpl.class);
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    public static ICapabilityProvider createNewCapability(final EntityPlayer player)
-    {
-        return new ICapabilitySerializable<NBTTagCompound>()
-        {
-
-            IVampirePlayer inst = new VampirePlayer(player);
-
-            @Override
-            public void deserializeNBT(NBTTagCompound nbt)
-            {
-                CAP.getStorage().readNBT(CAP, inst, null, nbt);
-            }
-
-            @Override
-            public <T> T getCapability(Capability<T> capability, EnumFacing facing)
-            {
-                return CAP.equals(capability) ? CAP.<T>cast(inst) : null;
-            }
-
-            @Override
-            public boolean hasCapability(Capability<?> capability, EnumFacing facing)
-            {
-                return CAP.equals(capability);
-            }
-
-            @Override
-            public NBTTagCompound serializeNBT()
-            {
-                return (NBTTagCompound) CAP.getStorage().writeNBT(CAP, inst, null);
-            }
-        };
     }
 
     @Override
@@ -192,7 +183,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * @param entityId
      */
     public void biteEntity(int entityId) {
-        Entity e = player.worldObj.getEntityByID(entityId);
+        Entity e = player.getEntityWorld().getEntityByID(entityId);
         if (player.isSpectator()) {
             VampirismMod.log.w(TAG, "Player can't bite in spectator mode");
             return;
@@ -532,7 +523,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             handler.joinFaction(getFaction());
             player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 300));//TODO add saturation as well
-//            ((WorldServer) player.worldObj).addScheduledTask(new Runnable() {
+//            ((WorldServer) player.world).addScheduledTask(new Runnable() {
 //                @Override
 //                public void run() {
 //                    if (player != null && player.isEntityAlive()) {
@@ -546,7 +537,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public void onUpdate() {
-        player.worldObj.theProfiler.startSection("vampirism_vampirePlayer");
+        player.getEntityWorld().theProfiler.startSection("vampirism_vampirePlayer");
         int level = getLevel();
         if (level > 0) {
             if (player.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 0) {
@@ -569,12 +560,12 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 this.sleepTimer = 100;
             }
 
-            if (!player.worldObj.isRemote) {
-                IBlockState state = player.worldObj.getBlockState(player.playerLocation);
-                boolean bed = state.getBlock().isBed(state, player.worldObj, player.playerLocation, player);
+            if (!player.getEntityWorld().isRemote) {
+                IBlockState state = player.getEntityWorld().getBlockState(player.bedLocation);
+                boolean bed = state.getBlock().isBed(state, player.getEntityWorld(), player.bedLocation, player);
                 if (!bed) {
                     player.wakeUpPlayer(true, true, false);
-                } else if (!player.worldObj.isDaytime()) {
+                } else if (!player.getEntityWorld().isDaytime()) {
                     player.wakeUpPlayer(false, true, true);
                 }
             }
@@ -649,7 +640,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
 
         }
-        player.worldObj.theProfiler.endSection();
+        player.world.theProfiler.endSection();
     }
 
     @Override
@@ -657,11 +648,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (phase == TickEvent.Phase.END) {
             //Update blood stats
             if (getLevel() > 0) {
-                player.worldObj.theProfiler.startSection("vampirism_bloodupdate");
-                if (!player.worldObj.isRemote && this.bloodStats.onUpdate()) {
+                player.world.theProfiler.startSection("vampirism_bloodupdate");
+                if (!player.world.isRemote && this.bloodStats.onUpdate()) {
                     sync(this.bloodStats.writeUpdate(new NBTTagCompound()), false);
                 }
-                player.worldObj.theProfiler.endSection();
+                player.world.theProfiler.endSection();
             }
             if (getSpecialAttributes().bat) {
                 BatVampireAction.updatePlayerBatSize(player);
@@ -760,16 +751,16 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public EntityPlayer.SleepResult trySleep(BlockPos bedLocation) {
 
-        if (!player.worldObj.isRemote) {
+        if (!player.world.isRemote) {
             if (player.isPlayerSleeping() || !player.isEntityAlive()) {
                 return EntityPlayer.SleepResult.OTHER_PROBLEM;
             }
 
-            if (!player.worldObj.provider.isSurfaceWorld()) {
+            if (!player.world.provider.isSurfaceWorld()) {
                 return EntityPlayer.SleepResult.NOT_POSSIBLE_HERE;
             }
 
-            if (!player.worldObj.isDaytime()) {
+            if (!player.world.isDaytime()) {
                 return EntityPlayer.SleepResult.NOT_POSSIBLE_NOW;
             }
 
@@ -779,7 +770,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
             double d0 = 8.0D;
             double d1 = 5.0D;
-            List<EntityMob> list = player.worldObj.getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB((double) bedLocation.getX() - d0, (double) bedLocation.getY() - d1, (double) bedLocation.getZ() - d0, (double) bedLocation.getX() + d0, (double) bedLocation.getY() + d1, (double) bedLocation.getZ() + d0));
+            List<EntityMob> list = player.world.getEntitiesWithinAABB(EntityMob.class, new AxisAlignedBB((double) bedLocation.getX() - d0, (double) bedLocation.getY() - d1, (double) bedLocation.getZ() - d0, (double) bedLocation.getX() + d0, (double) bedLocation.getY() + d1, (double) bedLocation.getZ() + d0));
 
             if (!list.isEmpty()) {
                 return EntityPlayer.SleepResult.NOT_SAFE;
@@ -793,9 +784,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
 
         IBlockState state = null;
-        if (player.worldObj.isBlockLoaded(bedLocation)) state = player.worldObj.getBlockState(bedLocation);
-        if (state != null && state.getBlock().isBed(state, player.worldObj, bedLocation, player)) {
-            EnumFacing enumfacing = state.getBlock().getBedDirection(state, player.worldObj, bedLocation);
+        if (player.world.isBlockLoaded(bedLocation)) state = player.world.getBlockState(bedLocation);
+        if (state != null && state.getBlock().isBed(state, player.world, bedLocation, player)) {
+            EnumFacing enumfacing = state.getBlock().getBedDirection(state, player.world, bedLocation);
             float f = 0.5F;
             float f1 = 0.5F;
 
@@ -831,16 +822,16 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         sleepTimer = 0;
         sleepingInCoffin = true;
         player.noClip = true;
-        player.playerLocation = bedLocation;
+        player.bedLocation = bedLocation;
         player.motionX = player.motionZ = player.motionY = 0.0D;
 
-        if (!player.worldObj.isRemote) {
-            DaySleepHelper.updateAllPlayersSleeping(player.worldObj);
+        if (!player.world.isRemote) {
+            DaySleepHelper.updateAllPlayersSleeping(player.world);
         }
         if (player instanceof EntityPlayerMP) {
             EntityPlayerMP playerMP = (EntityPlayerMP) player;
             Packet<?> packet = new SPacketUseBed(player, bedLocation);
-            playerMP.getServerWorld().getEntityTracker().sendToAllTrackingEntity(playerMP, packet);
+            playerMP.getServerWorld().getEntityTracker().sendToTracking(playerMP, packet);
             playerMP.connection.setPlayerLocation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
             playerMP.connection.sendPacket(packet);
         }
@@ -874,7 +865,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         this.sleepingInCoffin = false;
         player.noClip = true;
         if (updateWorldFlag) {
-            DaySleepHelper.updateAllPlayersSleeping(player.worldObj);
+            DaySleepHelper.updateAllPlayersSleeping(player.world);
         }
 
         if (player instanceof EntityPlayerMP && ((EntityPlayerMP) player).connection != null) {
@@ -1057,11 +1048,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      *
      * @param entityId Id of the entity
      */
-    @SideOnly(Side.CLIENT)
     private void spawnBiteParticle(int entityId) {
-        Entity entity = player.worldObj.getEntityByID(entityId);
+        Entity entity = player.world.getEntityByID(entityId);
         if (entity != null) {
-            UtilLib.spawnParticles(player.worldObj, EnumParticleTypes.CRIT_MAGIC, entity.posX, entity.posY, entity.posZ, player.posX - entity.posX, player.posY - entity.posY, player.posZ - entity.posZ, 10, 1);
+            UtilLib.spawnParticles(player.world, EnumParticleTypes.CRIT_MAGIC, entity.posX, entity.posY, entity.posZ, player.posX - entity.posX, player.posY - entity.posY, player.posZ - entity.posZ, 10, 1);
         }
         for (int j = 0; j < 16; ++j) {
             Vec3d vec3 = new Vec3d((player.getRNG().nextFloat() - 0.5D) * 0.1D, Math.random() * 0.1D + 0.1D, 0.0D);
@@ -1073,10 +1063,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             vec31 = vec31.rotateYaw(-player.rotationYaw * (float) Math.PI / 180.0F);
             vec31 = vec31.addVector(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ);
 
-            player.worldObj.spawnParticle(EnumParticleTypes.ITEM_CRACK, vec31.xCoord, vec31.yCoord, vec31.zCoord, vec3.xCoord, vec3.yCoord + 0.05D, vec3.zCoord, Item.getIdFromItem(Items.APPLE));
+            player.world.spawnParticle(EnumParticleTypes.ITEM_CRACK, vec31.xCoord, vec31.yCoord, vec31.zCoord, vec3.xCoord, vec3.yCoord + 0.05D, vec3.zCoord, Item.getIdFromItem(Items.APPLE));
         }
         //Play bite sounds. Using this method since it is the only client side method. And this is called on every relevant client anyway
-        player.worldObj.playSound(player.posX, player.posY, player.posZ, ModSounds.player_bite, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
+        player.world.playSound(player.posX, player.posY, player.posZ, ModSounds.player_bite, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
     }
 
     private static class Storage implements net.minecraftforge.common.capabilities.Capability.IStorage<IVampirePlayer> {

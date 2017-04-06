@@ -62,7 +62,7 @@ public abstract class AbstractMessageHandler<T extends IMessage> implements IMes
         } else {
             if (handleOnMainThread()) {
                 final AbstractPacketDispatcher dispatcher = getDispatcher();
-                IThreadListener mainThread = (WorldServer) ctx.getServerHandler().playerEntity.worldObj;
+                IThreadListener mainThread = (WorldServer) ctx.getServerHandler().playerEntity.getEntityWorld();
                 mainThread.addScheduledTask(new Runnable() {
                     @Override
                     public void run() {

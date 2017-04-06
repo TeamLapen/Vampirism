@@ -154,24 +154,24 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         if (runningTick > 0) {
             return;
         }
-        if (player.worldObj.isRemote) return;
+        if (player.getEntityWorld().isRemote) return;
 
-        if (player.worldObj.isDaytime()) {
-            player.addChatMessage(new TextComponentTranslation("text.vampirism.ritual_night_only"));
+        if (player.getEntityWorld().isDaytime()) {
+            player.sendMessage(new TextComponentTranslation("text.vampirism.ritual_night_only"));
             return;
         }
         targetLevel = VampirePlayer.get(player).getLevel() + 1;
         int requiredLevel = checkRequiredLevel();
         if (requiredLevel == -1) {
-            player.addChatMessage(new TextComponentTranslation("text.vampirism.ritual_level_wrong"));
+            player.sendMessage(new TextComponentTranslation("text.vampirism.ritual_level_wrong"));
         } else if (!checkStructureLevel(requiredLevel)) {
-            player.addChatMessage(new TextComponentTranslation("text.vampirism.ritual_structure_wrong"));
+            player.sendMessage(new TextComponentTranslation("text.vampirism.ritual_structure_wrong"));
         } else if (!checkItemRequirements(player)) {
         } else {
             this.player = player;
             runningTick = DURATION_TICK;
 
-            if (!this.worldObj.isRemote) {
+            if (!this.getWorld().isRemote) {
 //                for (int i = 0; i < tips.length; i++) {
 //                    NBTTagCompound data = new NBTTagCompound();
 //                    data.setInteger("destX", tips[i].posX);
@@ -180,8 +180,8 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
 //                    data.setInteger("age", 100);
 //                    VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(1, this.xCoord, this.yCoord, this.zCoord, 5, data));
 //                }
-                IBlockState state = worldObj.getBlockState(getPos());
-                this.worldObj.notifyBlockUpdate(getPos(), state, state, 3);
+                IBlockState state = getWorld().getBlockState(getPos());
+                this.getWorld().notifyBlockUpdate(getPos(), state, state, 3);
             }
             player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, DURATION_TICK, 10));
             this.markDirty();
@@ -204,7 +204,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         int tick = tagCompound.getInteger("tick");
         if (tick > 0 && player == null) {
             try {
-                this.player = (EntityPlayer) this.worldObj.getEntityByID(tagCompound.getInteger("playerId"));
+                this.player = (EntityPlayer) this.getWorld().getEntityByID(tagCompound.getInteger("playerId"));
                 this.runningTick = tick;
                 this.targetLevel = VampirePlayer.get(player).getLevel() + 1;
             } catch (NullPointerException e) {
@@ -237,13 +237,13 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         }
 
         PHASE phase = getCurrentPhase();
-        if (this.worldObj.isRemote) {
+        if (this.world.isRemote) {
             if (phase.equals(PHASE.PARTICLE_SPREAD)) {
                 if (runningTick % 15 == 0) {
                     BlockPos pos = getPos();
                     for (int i = 0; i < tips.length; i++) {
                         BlockPos pTip = tips[i];
-                        VampLib.proxy.getParticleHandler().spawnParticles(worldObj, ModParticles.FLYING_BLOOD, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 5, 0.1, new Random(), pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5, 60);
+                        VampLib.proxy.getParticleHandler().spawnParticles(world, ModParticles.FLYING_BLOOD, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 5, 0.1, new Random(), pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5, 60);
                     }
                 }
             }
@@ -261,7 +261,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
             this.markDirty();
         }
         if (phase.equals(PHASE.LEVELUP)) {
-            if (!worldObj.isRemote) {
+            if (!world.isRemote) {
                 IFactionPlayerHandler handler = FactionPlayerHandler.get(player);
                 if (handler.getCurrentLevel(VReference.VAMPIRE_FACTION) != targetLevel - 1) {
                     VampirismMod.log.w(TAG, "Player %s changed level while the ritual was running. Cannot levelup.", player);
@@ -269,8 +269,8 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
                 }
                 handler.setFactionLevel(VReference.VAMPIRE_FACTION, handler.getCurrentLevel(VReference.VAMPIRE_FACTION) + 1);
             } else {
-                this.worldObj.playSound(player.posX, player.posY, player.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.worldObj.rand.nextFloat() - this.worldObj.rand.nextFloat()) * 0.2F) * 0.7F, true);
-                this.worldObj.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);
+                this.world.playSound(player.posX, player.posY, player.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F, true);
+                this.world.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);
             }
             player.addPotionEffect(new PotionEffect(ModPotions.saturation, 400, 2));
 
@@ -337,7 +337,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         if (missing != null) {
             ITextComponent item = missing.getItem().equals(ModItems.pureBlood) ? ModItems.pureBlood.getDisplayName(missing) : new TextComponentTranslation(missing.getUnlocalizedName() + ".name");
             ITextComponent main = new TextComponentTranslation("text.vampirism.ritual_missing_items", missing.stackSize, item);
-            player.addChatComponentMessage(main);
+            player.sendMessage(main);
             return false;
         }
         return true;
