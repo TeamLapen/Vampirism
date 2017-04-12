@@ -23,7 +23,7 @@ public class WailaModCompat implements IModCompat {
     @Override
     public void onInitStep(Step step, FMLStateEvent event) {
         if (step == Step.INIT) {
-            FMLInterModComms.sendMessage(getModID(), "register", WailaHandler.class.getName() + ".onRegister");
+            //FMLInterModComms.sendMessage(getModID(), "register", WailaHandler.class.getName() + ".onRegister");
         }
     }
 }
