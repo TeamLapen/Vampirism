@@ -9,10 +9,10 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.inventory.ShapelessHunterWeaponRecipe;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Renders the items of a shapeless  weapon table recipe into the GUI rendered by {@link BasicWeaponTableRecipeRenderer}
@@ -22,6 +22,7 @@ public class ShapelessWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRe
         super(recipe);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void draw(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, GuiBase guiBase, FontRenderer fontRendererObj) {
         super.draw(book, category, entry, guiLeft, guiTop, mouseX, mouseY, guiBase, fontRendererObj);
@@ -34,7 +35,7 @@ public class ShapelessWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRe
                     ItemStack stack = recipe.recipeItems.get(i);
                     if (stack != null) {
                         if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-                            List<ItemStack> subItems = new ArrayList<ItemStack>();
+                            NonNullList<ItemStack> subItems = NonNullList.create();
                             stack.getItem().getSubItems(stack.getItem(), stack.getItem().getCreativeTab(), subItems);
                             stack = subItems.get(getRandomizedCycle(x, subItems.size()));
                         }

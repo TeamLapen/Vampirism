@@ -18,10 +18,6 @@ public class AlchemicalCauldronRecipesHandler implements IRecipeHandler<IAlchemi
         this.stackHelper = stackHelper;
     }
 
-    @Override
-    public String getRecipeCategoryUid() {
-        return VampirismJEIPlugin.ALCHEMICAL_CAULDRON_RECIPE_UID;
-    }
 
     @Override
     public String getRecipeCategoryUid(IAlchemicalCauldronRecipe recipe) {

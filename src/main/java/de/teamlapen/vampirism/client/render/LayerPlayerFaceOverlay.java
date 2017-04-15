@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.render;
 
 import de.teamlapen.vampirism.util.IPlayerFace;
 import net.minecraft.client.entity.AbstractClientPlayer;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
@@ -37,7 +38,7 @@ public class LayerPlayerFaceOverlay<T extends EntityCreature, Q extends IPlayerF
             if (entitylivingbaseIn.isSneaking()) {
                 GlStateManager.translate(0.0F, 0.2F, 0.0F);
             }
-            this.renderBiped.modelBipedMain.bipedHead.render(scale);
+            ((ModelBiped) this.renderBiped.getMainModel()).bipedHead.render(scale);
             GlStateManager.popMatrix();
         }
 

@@ -379,7 +379,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     }
 
     @Override
-    protected boolean processInteract(EntityPlayer player, EnumHand hand, @Nullable ItemStack stack) {
+    protected boolean processInteract(EntityPlayer player, EnumHand hand) {
         int hunterLevel = HunterPlayer.get(player).getLevel();
         if (this.isEntityAlive() && !player.isSneaking()) {
             if (!world.isRemote) {
@@ -398,7 +398,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         }
 
 
-        return super.processInteract(player, hand, stack);
+        return super.processInteract(player, hand);
     }
 
     /**

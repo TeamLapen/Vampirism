@@ -49,6 +49,17 @@ public abstract class SimpleInventory implements InventorySlot.IInventorySlotInv
     }
 
     @Override
+    public boolean isEmpty() {
+        for (InventorySlot slot : this.slots) {
+            if (!slot.stack.isEmpty()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @Override
     public ITextComponent getDisplayName() {
         return this.hasCustomName() ? new TextComponentString(this.getName()) : new TextComponentTranslation(this.getName());
     }

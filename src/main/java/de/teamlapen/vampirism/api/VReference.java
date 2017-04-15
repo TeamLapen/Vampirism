@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
+import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import net.minecraft.enchantment.EnumEnchantmentType;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.EnumCreatureType;
@@ -53,7 +54,7 @@ public class VReference {
     /**
      * Enchantment type for crossbows
      */
-    public static final EnumEnchantmentType CROSSBOW_ENCHANTMENT = EnumHelper.addEnchantmentType("vampirism:crossbow");
+    public static final EnumEnchantmentType CROSSBOW_ENCHANTMENT = EnumHelper.addEnchantmentType("vampirism:crossbow", input -> input instanceof VampirismItemCrossbow);
     /**
      * Hunter creatures are of this creature type. But when they are counted for spawning they belong to {@link EnumCreatureType#MONSTER}
      */

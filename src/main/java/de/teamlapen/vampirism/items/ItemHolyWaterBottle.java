@@ -15,7 +15,7 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.PotionType;
+import net.minecraft.potion.PotionUtils;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -163,7 +163,7 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
                 }
             }
 
-            entity.getEntityWorld().playEvent(2002, new BlockPos(entity), PotionType.getID(PotionTypes.MUNDANE));
+            entity.getEntityWorld().playEvent(2002, new BlockPos(entity), PotionUtils.getPotionColor(PotionTypes.MUNDANE));
         }
 
     }

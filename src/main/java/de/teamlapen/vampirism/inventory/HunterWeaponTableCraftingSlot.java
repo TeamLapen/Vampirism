@@ -10,6 +10,7 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -47,8 +48,9 @@ public class HunterWeaponTableCraftingSlot extends Slot {
         return false;
     }
 
+
     @Override
-    public void onPickupFromSlot(EntityPlayer playerIn, ItemStack stack) {
+    public ItemStack onTake(EntityPlayer playerIn, ItemStack stack) {
         this.onCrafting(stack);
         int lava = 0;
         IBlockState blockState = world.getBlockState(pos);
@@ -63,11 +65,11 @@ public class HunterWeaponTableCraftingSlot extends Slot {
                 world.setBlockState(pos, blockState.withProperty(BlockWeaponTable.LAVA, lava));
             }
         }
-        ItemStack[] aitemstack = recipe == null ? HunterWeaponCraftingManager.getInstance().getRemainingItems(this.craftMatrix, playerIn.getEntityWorld(), hunterPlayer.getLevel(), hunterPlayer.getSkillHandler(), lava) : recipe.getRemainingItems(this.craftMatrix);
+        NonNullList<ItemStack> remaining = recipe == null ? HunterWeaponCraftingManager.getInstance().getRemainingItems(this.craftMatrix, playerIn.getEntityWorld(), hunterPlayer.getLevel(), hunterPlayer.getSkillHandler(), lava) : recipe.getRemainingItems(this.craftMatrix);
 
-        for (int i = 0; i < aitemstack.length; ++i) {
+        for (int i = 0; i < remaining.size(); ++i) {
             ItemStack itemstack = this.craftMatrix.getStackInSlot(i);
-            ItemStack itemstack1 = aitemstack[i];
+            ItemStack itemstack1 = remaining.get(i);
 
             if (itemstack != null) {
                 this.craftMatrix.decrStackSize(i, 1);
@@ -90,7 +92,7 @@ public class HunterWeaponTableCraftingSlot extends Slot {
             world.playEvent(1030, pos, 0);
         }
         playerIn.addStat(Achievements.weaponTable);
-
+        return stack;
     }
 
     @Override

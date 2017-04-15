@@ -145,7 +145,7 @@ public class BloodStats {
 
             if (this.bloodTimer >= 80) {
                 if (player.getHealth() > 10.0F || enumDifficulty == EnumDifficulty.HARD || player.getHealth() > 1.0F && enumDifficulty == EnumDifficulty.NORMAL) {
-                    player.attackEntityFrom(DamageSource.starve, 1.0F);
+                    player.attackEntityFrom(DamageSource.STARVE, 1.0F);
                 }
 
                 this.bloodTimer = 0;

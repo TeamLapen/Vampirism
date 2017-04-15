@@ -437,11 +437,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             wakeUpPlayer(true, true, false);
         }
         if (getLevel() > 0) {
-            if (DamageSource.onFire.equals(src)) {
+            if (DamageSource.ON_FIRE.equals(src)) {
 
                 player.attackEntityFrom(VReference.VAMPIRE_ON_FIRE, calculateFireDamage(amt));
                 return true;
-            } else if (DamageSource.inFire.equals(src) || DamageSource.lava.equals(src)) {
+            } else if (DamageSource.IN_FIRE.equals(src) || DamageSource.LAVA.equals(src)) {
                 player.attackEntityFrom(VReference.VAMPIRE_IN_FIRE, calculateFireDamage(amt));
                 return true;
             }

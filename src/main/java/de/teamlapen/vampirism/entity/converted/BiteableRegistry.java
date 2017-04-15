@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -19,11 +20,11 @@ public class BiteableRegistry implements IBiteableRegistry {
     /**
      * Used to store blood values during init
      */
-    private final Map<String, Integer> bloodValues = new HashMap<>();
+    private final Map<ResourceLocation, Integer> bloodValues = new HashMap<>();
     /**
      * Used to store overriding values during init. Will override entries in {@link #bloodValues} after init
      */
-    private final Map<String, Integer> overridingValues = new HashMap<>();
+    private final Map<ResourceLocation, Integer> overridingValues = new HashMap<>();
     /**
      * Used to store convertible handlers during init
      */
@@ -37,17 +38,17 @@ public class BiteableRegistry implements IBiteableRegistry {
     /**
      * Stores biteable entries after init
      */
-    private final Map<String, BiteableEntry> biteables = new HashMap<>();
+    private final Map<ResourceLocation, BiteableEntry> biteables = new HashMap<>();
     private boolean finished = false;
     private ICreateDefaultConvertingHandler defaultConvertingHandlerCreator;
 
     @Override
-    public void addBloodValue(String entityId, int value) {
+    public void addBloodValue(ResourceLocation entityId, int value) {
         bloodValues.put(entityId, value);
     }
 
     @Override
-    public void addBloodValues(Map<String, Integer> values) {
+    public void addBloodValues(Map<ResourceLocation, Integer> values) {
         bloodValues.putAll(values);
     }
 
@@ -96,28 +97,28 @@ public class BiteableRegistry implements IBiteableRegistry {
         if (finished) return;
         bloodValues.putAll(overridingValues);
         float bloodValueMultiplier = 1;
-        Integer i = bloodValues.get("multiplier");
+        Integer i = bloodValues.get(new ResourceLocation("multiplier"));
         if (i != null) {
             bloodValueMultiplier = i / 10F;
         }
         final IConvertingHandler defaultHandler = defaultConvertingHandlerCreator.create(null);
         for (Map.Entry<Class<? extends EntityCreature>, IConvertingHandler> entry : convertibles.entrySet()) {
-            String entity_name = EntityList.CLASS_TO_NAME.get(entry.getKey());
-            if (entity_name == null) {
+            ResourceLocation id = EntityList.getKey(entry.getKey());
+            if (id == null) {
                 VampirismMod.log.w(TAG, "Cannot register convertible %s since there is no EntityString for it", entry.getKey());
                 continue;
             }
-            Integer blood = bloodValues.remove(entity_name);
+            Integer blood = bloodValues.remove(id);
             if (blood == null) {
-                VampirismMod.log.w(TAG, "Missing blood value for convertible creature %s (%s)", entry.getKey().getName(), entity_name);
+                VampirismMod.log.w(TAG, "Missing blood value for convertible creature %s (%s)", entry.getKey().getName(), id);
                 continue;
             }
             blood = Math.round(blood * bloodValueMultiplier);
             VampirismMod.log.i(TAG, " Registering convertible %s with blood %d and handler %s", entry.getKey().getName(), blood, entry.getValue());
             BiteableEntry biteEntry = new BiteableEntry(blood, (entry.getValue() == null ? defaultHandler : entry.getValue()));
-            biteables.put(entity_name, biteEntry);
+            biteables.put(id, biteEntry);
         }
-        for (Map.Entry<String, Integer> entry : bloodValues.entrySet()) {
+        for (Map.Entry<ResourceLocation, Integer> entry : bloodValues.entrySet()) {
             biteables.put(entry.getKey(), new BiteableEntry(Math.abs(Math.round(entry.getValue() * bloodValueMultiplier))));
         }
         bloodValues.clear();
@@ -141,16 +142,16 @@ public class BiteableRegistry implements IBiteableRegistry {
 
     @Override
     public BiteableEntry getEntry(EntityCreature creature) {
-        return getEntry(EntityList.getEntityString(creature));
+        return getEntry(EntityList.getKey(creature));
     }
 
     @Override
-    public BiteableEntry getEntry(String entity_name) {
-        return biteables.get(entity_name);
+    public BiteableEntry getEntry(ResourceLocation entity_id) {
+        return biteables.get(entity_id);
     }
 
     @Override
-    public void overrideBloodValues(Map<String, Integer> values) {
+    public void overrideBloodValues(Map<ResourceLocation, Integer> values) {
         overridingValues.putAll(values);
     }
 

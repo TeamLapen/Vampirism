@@ -263,7 +263,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         cookingClient = nbt.getBoolean("cooking");
         burningClient = nbt.getBoolean("burning");
         if (nbt.hasKey("liquidItem")) {
-            this.setInventorySlotContents(SLOT_LIQUID, ItemStack.loadItemStackFromNBT(nbt.getCompoundTag("liquidItem")));
+            this.setInventorySlotContents(SLOT_LIQUID, new ItemStack(nbt.getCompoundTag("liquidItem")));
         } else {
             this.setInventorySlotContents(SLOT_LIQUID, null);
         }
@@ -372,6 +372,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
                 break;
         }
     }
+
 
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack) {

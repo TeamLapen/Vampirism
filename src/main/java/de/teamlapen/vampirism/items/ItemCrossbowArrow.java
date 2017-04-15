@@ -15,6 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -107,7 +108,7 @@ public class ItemCrossbowArrow extends VampirismItem {
     }
 
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         for (EnumArrowType type : EnumArrowType.values()) {
             subItems.add(setType(new ItemStack(itemIn), type));
         }

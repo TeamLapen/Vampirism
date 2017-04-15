@@ -25,8 +25,9 @@ public class ItemVampireFang extends VampirismItem {
 
     @Nonnull
     @Override
-    public ActionResult<ItemStack> onItemRightClick(@Nonnull ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
 
+        ItemStack stack = playerIn.getHeldItem(handIn);
         if (!worldIn.isRemote) {
             if (Helper.canBecomeVampire(playerIn)) {
                 PotionSanguinare.addRandom(playerIn, true);
@@ -38,9 +39,9 @@ public class ItemVampireFang extends VampirismItem {
                     playerIn.sendMessage(new TextComponentTranslation("text.vampirism.immune_to_").appendSibling(new TextComponentTranslation(ModPotions.sanguinare.getName())));
                 }
             }
-            itemStackIn.stackSize--;
+            stack.stackSize--;
         }
-        return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
+        return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }
 
 }

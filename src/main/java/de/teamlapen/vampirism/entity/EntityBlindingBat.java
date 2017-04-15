@@ -30,7 +30,7 @@ public class EntityBlindingBat extends EntityBat {
     public void onUpdate() {
         super.onUpdate();
         if (restrictLiveSpan && this.ticksExisted > Balance.mobProps.BLINDING_BAT_LIVE_SPAWN) {
-            this.attackEntityFrom(DamageSource.magic, 10F);
+            this.attackEntityFrom(DamageSource.MAGIC, 10F);
         }
         if (!this.world.isRemote) {
             List l = world.getEntitiesWithinAABB(EntityPlayer.class, this.getEntityBoundingBox());

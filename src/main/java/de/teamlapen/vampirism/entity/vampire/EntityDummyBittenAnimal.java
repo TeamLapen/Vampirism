@@ -4,9 +4,11 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
 import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.passive.EntityCow;
+import net.minecraft.entity.passive.EntityPig;
+import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.world.World;
 
 /**
@@ -27,30 +29,28 @@ public class EntityDummyBittenAnimal extends EntityLiving {
     public void onLivingUpdate() {
         super.onLivingUpdate();
         if (this.ticksExisted > 4 && !this.getEntityWorld().isRemote) {
-            String entity;
+            EntityCreature entity;
             int rand = this.rand.nextInt(3);
             switch (rand) {
                 case 0:
-                    entity = "Pig";
+                    entity = new EntityPig(world);
                     break;
                 case 1:
-                    entity = "Sheep";
+                    entity = new EntitySheep(world);
                     break;
                 default:
-                    entity = "Cow";
+                    entity = new EntityCow(world);
                     break;
             }
-            EntityCreature entity1 = (EntityCreature) EntityList.createEntityByName(entity, world);
-            if (entity1 != null) {
-                entity1.copyLocationAndAnglesFrom(this);
-                if (ExtendedCreature.get(entity1).canBecomeVampire()) {
-                    IConvertedCreature c = ExtendedCreature.get(entity1).makeVampire();
+            entity.copyLocationAndAnglesFrom(this);
+            if (ExtendedCreature.get(entity).canBecomeVampire()) {
+                IConvertedCreature c = ExtendedCreature.get(entity).makeVampire();
                     if (c instanceof EntityConvertedCreature) {
                         ((EntityConvertedCreature) c).setCanDespawn();
                     }
                 }
 
-            }
+
             this.setDead();
 
         }

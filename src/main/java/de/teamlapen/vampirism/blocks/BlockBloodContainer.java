@@ -18,10 +18,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.BlockRenderLayer;
-import net.minecraft.util.EnumBlockRenderType;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
+import net.minecraft.util.*;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
@@ -31,8 +28,8 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-
-import java.util.List;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Tileentity container that can store liquids.
@@ -75,8 +72,9 @@ public class BlockBloodContainer extends VampirismBlockContainer {
         return EnumBlockRenderType.MODEL;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
         super.getSubBlocks(itemIn, tab, list);
         ItemStack stack = new ItemStack(itemIn, 1);
         FluidStack fluid = new FluidStack(ModFluids.blood, TileBloodContainer.CAPACITY);

@@ -147,7 +147,7 @@ public class VampirismCommand extends BasicCommand {
                         }
                         if (handler.setFactionAndLevel(newFaction, level)) {
                             ITextComponent msg = player.getDisplayName().appendSibling(new TextComponentString(" is now a " + pfaction_names[i] + " level " + level));
-                            FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().sendChatMsg(msg);
+                            FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().sendMessage(msg);
                         } else {
                             sender.sendMessage(new TextComponentTranslation("text.vampirism.faction.failed_to_change"));
                         }

@@ -98,7 +98,7 @@ public class GuiBloodPotionTable extends GuiContainer {
             int j = (this.height - this.ySize) / 2;
             for (String hint : hints) {
                 this.fontRendererObj.drawSplitString(hint, i + 5, j + 28, 92, java.awt.Color.WHITE.getRGB());
-                j += this.fontRendererObj.splitStringWidth(hint, 92);
+                j += this.fontRendererObj.getWordWrappedHeight(hint, 92);
             }
         }
     }

@@ -18,7 +18,11 @@ import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler;
 import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionSaveable;
 import de.teamlapen.vampirism.items.ItemHunterCoat;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.entity.*;
+import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -29,6 +33,7 @@ import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.translation.I18n;
@@ -220,10 +225,10 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
                 }
 
             } else if (i == 2 && this.getAttackTarget() != null) {
-                m = (IVampireMinion.Saveable) UtilLib.spawnEntityBehindEntity(this.getAttackTarget(), ModEntities.VAMPIRE_MINION_SAVEABLE_NAME);
+                m = (IVampireMinion.Saveable) UtilLib.spawnEntityBehindEntity(this.getAttackTarget(), new ResourceLocation(REFERENCE.MODID, ModEntities.VAMPIRE_MINION_SAVEABLE_NAME));
             }
             if (m == null) {
-                m = (IVampireMinion.Saveable) UtilLib.spawnEntityInWorld(world, this.getEntityBoundingBox().expand(19, 4, 19), ModEntities.VAMPIRE_MINION_SAVEABLE_NAME, 3);
+                m = (IVampireMinion.Saveable) UtilLib.spawnEntityInWorld(world, this.getEntityBoundingBox().expand(19, 4, 19), new ResourceLocation(REFERENCE.MODID, ModEntities.VAMPIRE_MINION_SAVEABLE_NAME), 3);
             }
             if (m != null) {
                 m.setLord(this);

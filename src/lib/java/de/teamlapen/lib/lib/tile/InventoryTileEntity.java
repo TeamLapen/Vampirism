@@ -44,6 +44,16 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
     }
 
     @Override
+    public boolean isEmpty() {
+        for (InventorySlot slot : slots) {
+            if (!slot.stack.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
     public void closeInventory(EntityPlayer player) {
 
     }
@@ -139,7 +149,7 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
             NBTTagCompound tag = tagList.getCompoundTagAt(i);
             byte slot = tag.getByte("Slot");
             if (slot >= 0 && slot < slots.length) {
-                slots[slot].stack = ItemStack.loadItemStackFromNBT(tag);
+                slots[slot].stack = new ItemStack(tag);
             }
         }
     }

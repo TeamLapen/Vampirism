@@ -15,6 +15,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
@@ -121,7 +122,7 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
     }
 
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         subItems.add(setArrowsLeft(new ItemStack(itemIn), 0));
         subItems.add(setArrowsLeft(new ItemStack(itemIn), MAX_ARROW_COUNT));
         //subItems.add(setArrowsLeft(new ItemStack(itemIn), -1));
@@ -200,8 +201,8 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
         }
 
         @Override
-        public ItemStack[] getRemainingItems(InventoryCrafting inv) {
-            return new ItemStack[inv.getSizeInventory()];
+        public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
+            return NonNullList.create();
         }
 
         @Override

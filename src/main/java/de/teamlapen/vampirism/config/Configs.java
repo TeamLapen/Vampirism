@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.relauncher.Side;
@@ -63,14 +64,14 @@ public class Configs {
 
         try {
 
-            Map<String, Integer> defaultValues = loadBloodValuesFromReader(new InputStreamReader(Configs.class.getResourceAsStream("/blood_values/default_blood_values.txt")), "default_blood_values.txt");
+            Map<ResourceLocation, Integer> defaultValues = loadBloodValuesFromReader(new InputStreamReader(Configs.class.getResourceAsStream("/blood_values/default_blood_values.txt")), "default_blood_values.txt");
             VampirismAPI.biteableRegistry().addBloodValues(defaultValues);
         } catch (IOException e) {
             VampirismMod.log.e(TAG, e, "Could not read default blood values, this should not happen and destroys the mod experience");
         }
         if (bloodConfigFile.exists()) {
             try {
-                Map<String, Integer> override = loadBloodValuesFromReader(new FileReader(bloodConfigFile), bloodConfigFile.getName());
+                Map<ResourceLocation, Integer> override = loadBloodValuesFromReader(new FileReader(bloodConfigFile), bloodConfigFile.getName());
                 VampirismAPI.biteableRegistry().overrideBloodValues(override);
                 VampirismMod.log.i(TAG, "Successfully loaded additional blood value file");
             } catch (IOException e) {
@@ -171,8 +172,8 @@ public class Configs {
      * @throws FileNotFoundException
      * @throws IOException
      */
-    private static Map<String, Integer> loadBloodValuesFromReader(Reader r, String file) throws IOException {
-        Map<String, Integer> bloodValues = new HashMap<>();
+    private static Map<ResourceLocation, Integer> loadBloodValuesFromReader(Reader r, String file) throws IOException {
+        Map<ResourceLocation, Integer> bloodValues = new HashMap<>();
         BufferedReader br = null;
         try {
             br = new BufferedReader(r);
@@ -192,7 +193,7 @@ public class Configs {
                     VampirismMod.log.w("ReadBlood", "Line %s  in %s is not formatted properly", line, file);
                     continue;
                 }
-                bloodValues.put(p[0], val);
+                bloodValues.put(new ResourceLocation(p[0]), val);
             }
         } finally {
             if (br != null) {
@@ -209,7 +210,7 @@ public class Configs {
      */
     public static void loadBloodValuesModCompat(String modid) {
         try {
-            Map<String, Integer> defaultValues = Configs.loadBloodValuesFromReader(new InputStreamReader(Configs.class.getResourceAsStream("/blood_values/" + modid + ".txt")), modid + ".txt");
+            Map<ResourceLocation, Integer> defaultValues = Configs.loadBloodValuesFromReader(new InputStreamReader(Configs.class.getResourceAsStream("/blood_values/" + modid + ".txt")), modid + ".txt");
             VampirismAPI.biteableRegistry().addBloodValues(defaultValues);
         } catch (IOException e) {
             VampirismMod.log.e(TAG, e, "[ModCompat]Could not read default blood values for mod %s, this should not happen", modid);

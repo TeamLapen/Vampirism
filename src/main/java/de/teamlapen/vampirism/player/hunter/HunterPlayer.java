@@ -163,7 +163,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     @Override
     public boolean onEntityAttacked(DamageSource src, float amt) {
-        if (DamageSource.onFire.equals(src) || DamageSource.inFire.equals(src)) {
+        if (DamageSource.ON_FIRE.equals(src) || DamageSource.IN_FIRE.equals(src)) {
             if (ItemObsidianArmor.isFullyEquipped(player)) {
                 return true;
             }

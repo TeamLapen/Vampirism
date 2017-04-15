@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity;
 
-import com.google.common.base.Optional;
 import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
@@ -22,7 +21,7 @@ import javax.annotation.Nullable;
  */
 public class EntityThrowableItem extends EntityThrowable {
 
-    private static final DataParameter<Optional<ItemStack>> ITEM = EntityDataManager.createKey(EntityThrowableItem.class, DataSerializers.OPTIONAL_ITEM_STACK);
+    private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityThrowableItem.class, DataSerializers.OPTIONAL_ITEM_STACK);
 
     public EntityThrowableItem(World worldIn) {
         super(worldIn);
@@ -38,7 +37,7 @@ public class EntityThrowableItem extends EntityThrowable {
     public
     @Nullable
     ItemStack getItem() {
-        return (ItemStack) ((Optional) this.getDataManager().get(ITEM)).orNull();
+        return this.getDataManager().get(ITEM);
     }
 
     /**
@@ -50,7 +49,7 @@ public class EntityThrowableItem extends EntityThrowable {
     public void setItem(@Nullable ItemStack stack) {
         if (stack != null && !(stack.getItem() instanceof IVampirismThrowableItem))
             throw new IllegalArgumentException("EntityThrowable only accepts IVampirismThrowableItem, but not " + stack);
-        this.getDataManager().set(ITEM, Optional.fromNullable(stack));
+        this.getDataManager().set(ITEM, stack);
         this.getDataManager().setDirty(ITEM);
     }
 
@@ -77,7 +76,7 @@ public class EntityThrowableItem extends EntityThrowable {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.getDataManager().register(ITEM, Optional.absent());
+        this.getDataManager().register(ITEM, ItemStack.EMPTY);
     }
 
     protected float getGravityVelocity() {

@@ -75,7 +75,7 @@ public class HunterBasicContainer extends InventoryContainer {
 
         @Override
         public String getName() {
-            return "entity." + ModEntities.BASIC_HUNTER_NAME + ".name";
+            return "entity.vampirism." + ModEntities.BASIC_HUNTER_NAME + ".name";
         }
     }
 }

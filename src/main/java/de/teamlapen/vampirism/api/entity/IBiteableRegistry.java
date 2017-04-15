@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.api.entity;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -21,12 +22,12 @@ public interface IBiteableRegistry {
      * @param entityId Entity id
      * @param value    blood value
      */
-    void addBloodValue(String entityId, int value);
+    void addBloodValue(ResourceLocation entityId, int value);
 
     /**
      * Add a set of entity id -> blood value pairs
      */
-    void addBloodValues(Map<String, Integer> values);
+    void addBloodValues(Map<ResourceLocation, Integer> values);
 
     /**
      * Register a entity class which can be converted using Vampirism's default {@link IConvertingHandler} and thereby being turned into Vampirim's default {@link IConvertedCreature}
@@ -83,14 +84,14 @@ public interface IBiteableRegistry {
 
     BiteableEntry getEntry(EntityCreature creature);
 
-    BiteableEntry getEntry(String entity_name);
+    BiteableEntry getEntry(ResourceLocation entity_id);
 
     /**
      * Add blood values that override previously registered values. E.g. used for making the values configurable
      *
      * @param values
      */
-    void overrideBloodValues(Map<String, Integer> values);
+    void overrideBloodValues(Map<ResourceLocation, Integer> values);
 
     /**
      * Creates a {@link IExtendedCreatureVampirism}

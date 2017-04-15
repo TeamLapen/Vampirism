@@ -138,7 +138,7 @@ public class HunterWeaponTableContainer extends Container {
                 return null;
             }
 
-            slot.onPickupFromSlot(playerIn, itemstack1);
+            slot.onTake(playerIn, itemstack1);
         }
 
         return itemstack;

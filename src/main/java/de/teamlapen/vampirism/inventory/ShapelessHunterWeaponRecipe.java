@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -54,15 +55,18 @@ public class ShapelessHunterWeaponRecipe implements IHunterWeaponRecipe {
     }
 
     @Override
-    public ItemStack[] getRemainingItems(InventoryCrafting inv) {
-        ItemStack[] aitemstack = new ItemStack[inv.getSizeInventory()];
+    public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
+        NonNullList<ItemStack> list = NonNullList.create();
 
-        for (int i = 0; i < aitemstack.length; ++i) {
+        for (int i = 0; i < inv.getSizeInventory(); ++i) {
             ItemStack itemstack = inv.getStackInSlot(i);
-            aitemstack[i] = net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack);
+            itemstack = net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack);
+            if (!itemstack.isEmpty()) {
+                list.add(itemstack);
+            }
         }
 
-        return aitemstack;
+        return list;
     }
 
     @Override

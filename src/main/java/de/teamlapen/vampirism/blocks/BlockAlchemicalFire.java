@@ -86,7 +86,7 @@ public class BlockAlchemicalFire extends VampirismBlock {
     }
 
     @Override
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn) {
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         if (!canPlaceBlockAt(worldIn, pos)) {
             worldIn.setBlockToAir(pos);
         }

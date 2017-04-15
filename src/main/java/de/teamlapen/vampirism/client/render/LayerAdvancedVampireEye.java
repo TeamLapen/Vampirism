@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.client.render;
 import de.teamlapen.vampirism.client.render.entities.RenderAdvancedVampire;
 import de.teamlapen.vampirism.entity.vampire.EntityAdvancedVampire;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.util.ResourceLocation;
@@ -39,7 +40,7 @@ public class LayerAdvancedVampireEye implements LayerRenderer<EntityAdvancedVamp
         if (entitylivingbaseIn.isSneaking()) {
             GlStateManager.translate(0.0F, 0.2F, 0.0F);
         }
-        this.renderer.modelBipedMain.bipedHead.render(scale);
+        ((ModelBiped) this.renderer.getMainModel()).bipedHead.render(scale);
         GlStateManager.popMatrix();
     }
 

@@ -108,7 +108,12 @@ public class HunterTrainerContainer extends InventoryContainer {
 
         @Override
         public String getName() {
-            return "entity." + ModEntities.HUNTER_TRAINER + ".name";
+            return "entity.vampirism." + ModEntities.HUNTER_TRAINER + ".name";
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return false;
         }
     }
 }

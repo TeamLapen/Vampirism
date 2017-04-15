@@ -17,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
@@ -122,8 +123,8 @@ public class UtilLib {
         return new BlockPos(x, y, z);
     }
 
-    public static Entity spawnEntityBehindEntity(EntityLivingBase p, String name) {
-        EntityLiving e = (EntityLiving) EntityList.createEntityByName(name, p.getEntityWorld());
+    public static Entity spawnEntityBehindEntity(EntityLivingBase p, ResourceLocation id) {
+        EntityLiving e = (EntityLiving) EntityList.createEntityByIDFromName(id, p.getEntityWorld());
         float yaw = p.rotationYawHead;
         float cosYaw = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
         float sinYaw = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
@@ -167,8 +168,8 @@ public class UtilLib {
         return false;
     }
 
-    public static Entity spawnEntityInWorld(World world, AxisAlignedBB box, String name, int maxTry) {
-        Entity e = EntityList.createEntityByName(name, world);
+    public static Entity spawnEntityInWorld(World world, AxisAlignedBB box, ResourceLocation id, int maxTry) {
+        Entity e = EntityList.createEntityByIDFromName(id, world);
         if (spawnEntityInWorld(world, box, e, maxTry)) {
             return e;
         } else {

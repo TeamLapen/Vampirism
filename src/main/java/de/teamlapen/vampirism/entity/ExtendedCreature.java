@@ -192,7 +192,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
                     converted = true;
 
                 } else {
-                    entity.attackEntityFrom(DamageSource.magic, 1000);
+                    entity.attackEntityFrom(DamageSource.MAGIC, 1000);
                     killed = true;
                 }
             }

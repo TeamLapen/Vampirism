@@ -1,10 +1,14 @@
 package de.teamlapen.lib.lib.util;
 
+import de.teamlapen.vampirism.util.REFERENCE;
+import jline.internal.Nullable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.MobSpawnerBaseLogic;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.StringUtils;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -14,7 +18,8 @@ import net.minecraft.world.World;
  */
 public abstract class SimpleSpawnerLogic {
 
-    private String entityName = "Pig";
+    @Nullable
+    private ResourceLocation entityName = null;
     private int minSpawnDelay = 200;
     private int maxSpawnDelay = 800;
     private int activateRange = 16;
@@ -23,11 +28,12 @@ public abstract class SimpleSpawnerLogic {
     private int spawnRange = 4;
     private int spawnDelay = 20;
 
-    public String getEntityName() {
+    @Nullable
+    public ResourceLocation getEntityName() {
         return entityName;
     }
 
-    public void setEntityName(String entityName) {
+    public void setEntityName(@Nullable ResourceLocation entityName) {
         this.entityName = entityName;
     }
 
@@ -36,12 +42,24 @@ public abstract class SimpleSpawnerLogic {
     public abstract World getSpawnerWorld();
 
     public boolean isActivated() {
+        if (entityName == null) return false;
         BlockPos blockpos = this.getSpawnerPosition();
         return this.getSpawnerWorld().isAnyPlayerWithinRangeAt((double) blockpos.getX() + 0.5D, (double) blockpos.getY() + 0.5D, (double) blockpos.getZ() + 0.5D, (double) this.activateRange);
     }
 
     public void readFromNbt(NBTTagCompound nbt) {
-        entityName = nbt.getString("entity_name");
+        //Compat for 1.10 worlds
+        if (nbt.hasKey("entity_name")) {
+            String n = nbt.getString("entity_name");
+            if (n.contains("vampirism.")) {
+                entityName = new ResourceLocation(REFERENCE.MODID, n.replace("vampirism.", ""));
+            } else {
+                entityName = null;
+            }
+        } else {
+            String s = nbt.getString("id");
+            entityName = StringUtils.isNullOrEmpty(s) ? null : new ResourceLocation(s);
+        }
         minSpawnDelay = nbt.getInteger("min_delay");
         maxSpawnDelay = nbt.getInteger("max_delay");
         maxNearbyEntities = nbt.getInteger("max_nearby");
@@ -100,7 +118,7 @@ public abstract class SimpleSpawnerLogic {
                 boolean flag = false;
 
                 for (int i = 0; i < this.spawnCount; ++i) {
-                    Entity entity = EntityList.createEntityByName(this.getEntityName(), this.getSpawnerWorld());
+                    Entity entity = EntityList.createEntityByIDFromName(this.getEntityName(), this.getSpawnerWorld());
 
                     if (entity == null) {
                         break;
@@ -126,7 +144,7 @@ public abstract class SimpleSpawnerLogic {
     }
 
     public void writeToNbt(NBTTagCompound nbt) {
-        nbt.setString("entity_name", entityName);
+        if (entityName != null) nbt.setString("id", entityName.toString());
         nbt.setInteger("min_delay", minSpawnDelay);
         nbt.setInteger("max_delay", maxSpawnDelay);
         nbt.setInteger("max_nearby", maxNearbyEntities);

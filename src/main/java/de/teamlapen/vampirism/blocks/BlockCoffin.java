@@ -154,8 +154,9 @@ public class BlockCoffin extends VampirismBlockContainer {
         return false;
     }
 
+
     @Override
-    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn) {
+    public void neighborChanged(IBlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos) {
         EnumFacing enumfacing = state.getValue(FACING);
 
         if (state.getValue(PART) == EnumPartType.HEAD) {

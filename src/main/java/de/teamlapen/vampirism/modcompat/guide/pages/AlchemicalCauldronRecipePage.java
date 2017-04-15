@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -82,7 +83,7 @@ public class AlchemicalCauldronRecipePage extends Page {
 
         if (input != null) {
             if (input.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-                List<ItemStack> subItems = new ArrayList<ItemStack>();
+                NonNullList<ItemStack> subItems = NonNullList.create();
                 input.getItem().getSubItems(input.getItem(), input.getItem().getCreativeTab(), subItems);
                 input = subItems.get(getRandomizedCycle(0, subItems.size()));
             }
@@ -96,7 +97,7 @@ public class AlchemicalCauldronRecipePage extends Page {
         ItemStack liquid = recipe.getDescriptiveFluidStack();
 
         if (liquid != null && liquid.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-            List<ItemStack> subItems = new ArrayList<ItemStack>();
+            NonNullList<ItemStack> subItems = NonNullList.create();
             liquid.getItem().getSubItems(liquid.getItem(), liquid.getItem().getCreativeTab(), subItems);
             liquid = subItems.get(getRandomizedCycle(0, subItems.size()));
         }

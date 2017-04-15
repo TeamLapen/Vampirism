@@ -13,6 +13,7 @@ import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -169,15 +170,18 @@ public class HunterWeaponCraftingManager implements IHunterWeaponCraftingManager
     }
 
     @Override
-    public ItemStack[] getRemainingItems(InventoryCrafting craftMatrix, World world, int playerLevel, ISkillHandler<IHunterPlayer> skillHandler, int lava) {
+    public NonNullList<ItemStack> getRemainingItems(InventoryCrafting craftMatrix, World world, int playerLevel, ISkillHandler<IHunterPlayer> skillHandler, int lava) {
         IHunterWeaponRecipe recipe = findMatchingRecipe(craftMatrix, world, playerLevel, skillHandler, lava);
         if (recipe != null) return recipe.getRemainingItems(craftMatrix);
-        ItemStack[] aitemstack = new ItemStack[craftMatrix.getSizeInventory()];
+        NonNullList<ItemStack> remaining = NonNullList.create();
 
-        for (int i = 0; i < aitemstack.length; ++i) {
-            aitemstack[i] = craftMatrix.getStackInSlot(i);
+        for (int i = 0; i < craftMatrix.getSizeInventory(); ++i) {
+            ItemStack stack = craftMatrix.getStackInSlot(i);
+            if (!stack.isEmpty()) {
+                remaining.add(stack);
+            }
         }
 
-        return aitemstack;
+        return remaining;
     }
 }

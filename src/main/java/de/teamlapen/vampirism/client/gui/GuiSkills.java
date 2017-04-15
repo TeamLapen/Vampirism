@@ -490,7 +490,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
             ISkillHandler.Result result = skillHandler.canSkillBeEnabled(selected);
 
             int width_name = Math.max(this.fontRendererObj.getStringWidth(name), 110);
-            int height_desc = desc == null ? 0 : fontRendererObj.splitStringWidth(desc, width_name);
+            int height_desc = desc == null ? 0 : fontRendererObj.getWordWrappedHeight(desc, width_name);
 
             if (result == ISkillHandler.Result.ALREADY_ENABLED || result == ISkillHandler.Result.PARENT_NOT_ENABLED) {
                 height_desc += 12;

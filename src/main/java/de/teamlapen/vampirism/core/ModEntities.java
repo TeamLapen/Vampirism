@@ -42,27 +42,27 @@ import java.util.Set;
  * Handles all entity registrations and reference.
  */
 public class ModEntities {
-    public static final String BASIC_HUNTER_NAME = "vampirism.vampireHunter";
-    public static final String BASIC_VAMPIRE_NAME = "vampirism.vampire";
-    public static final String DRACULA_NAME = "vampirism.dracula";
-    public static final String GHOST_NAME = "vampirism.ghost";
-    public static final String VAMPIRE_BARON = "vampirism.vampireBaron";
-    public static final String VAMPIRE_MINION_REMOTE_NAME = "vampirism.vampireMinionR";
-    public static final String VAMPIRE_MINION_SAVEABLE_NAME = "vampirism.vampireMinionS";
-    public static final String DEAD_MOB_NAME = "vampirism.dead_mob";
-    public static final String BLINDING_BAT_NAME = "vampirism.blinding_bat";
-    public static final String DUMMY_CREATURE = "vampirism.dummy_creature";
-    public static final String PORTAL_GUARD = "vampirism.portal_guard";
-    public static final String CONVERTED_CREATURE = "vampirism.converted.creature";
-    public static final String CONVERTED_VILLAGER = "vampirism.converted.villager";
-    public static final String CONVERTED_SHEEP = "vampirism.converted.sheep";
-    public static final String HUNTER_TRAINER = "vampirism.hunter_trainer";
-    public static final String ADVANCED_HUNTER = "vampirism.advanced_hunter";
-    public static final String ADVANCED_VAMPIRE = "vampirism.advanced_vampire";
-    public static final String HUNTER_VILLAGER = "vampirism.hunter_villager";
-    public static final String CROSSBOW_ARROW = "vampirism.crossbow_arrow";
-    public static final String PARTICLE_CLOUD = "vampirism.particle_cloud";
-    public static final String THROWABLE_ITEM = "vampirism.throwable_item";
+    public static final String BASIC_HUNTER_NAME = "vampireHunter";
+    public static final String BASIC_VAMPIRE_NAME = "vampire";
+    public static final String DRACULA_NAME = "dracula";
+    public static final String GHOST_NAME = "ghost";
+    public static final String VAMPIRE_BARON = "vampireBaron";
+    public static final String VAMPIRE_MINION_REMOTE_NAME = "vampireMinionR";
+    public static final String VAMPIRE_MINION_SAVEABLE_NAME = "vampireMinionS";
+    public static final String DEAD_MOB_NAME = "dead_mob";
+    public static final String BLINDING_BAT_NAME = "blinding_bat";
+    public static final String DUMMY_CREATURE = "dummy_creature";
+    public static final String PORTAL_GUARD = "portal_guard";
+    public static final String CONVERTED_CREATURE = "converted.creature";
+    public static final String CONVERTED_VILLAGER = "converted.villager";
+    public static final String CONVERTED_SHEEP = "converted.sheep";
+    public static final String HUNTER_TRAINER = "hunter_trainer";
+    public static final String ADVANCED_HUNTER = "advanced_hunter";
+    public static final String ADVANCED_VAMPIRE = "advanced_vampire";
+    public static final String HUNTER_VILLAGER = "hunter_villager";
+    public static final String CROSSBOW_ARROW = "crossbow_arrow";
+    public static final String PARTICLE_CLOUD = "particle_cloud";
+    public static final String THROWABLE_ITEM = "throwable_item";
 
     /**
      * List of entity names which should be spawnable
@@ -163,8 +163,8 @@ public class ModEntities {
     private static void registerEntity(Class<? extends Entity> clazz, String name, EntityLiving.SpawnPlacementType placementType, boolean egg) {
 
         //VampirismMod.log.d("EntityRegister", "Adding " + name + "(" + clazz.getSimpleName() + ") with mod id %d", modEntityId);
-        ResourceLocation n=new ResourceLocation(REFERENCE.MODID,name.replace("vampirism.",""));
-        EntityRegistry.registerModEntity(n,clazz, name.replace("vampirism.", ""), modEntityId++, VampirismMod.instance, 80, 1, true);
+        ResourceLocation n = new ResourceLocation(REFERENCE.MODID, name);
+        EntityRegistry.registerModEntity(n, clazz, name, modEntityId++, VampirismMod.instance, 80, 1, true);
         if (egg) {
             EntityRegistry.registerEgg(n,0x8B15A3, name.hashCode());
             spawnableEntityNames.add(name);

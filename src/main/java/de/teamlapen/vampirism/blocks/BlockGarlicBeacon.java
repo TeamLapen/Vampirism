@@ -49,10 +49,11 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
     }
 
     @Override
-    public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn) {
+    public void addCollisionBoxToList(IBlockState state, World worldIn, BlockPos pos, AxisAlignedBB entityBox, List<AxisAlignedBB> collidingBoxes, @Nullable Entity entityIn, boolean p_185477_7_) {
         addCollisionBoxToList(pos, entityBox, collidingBoxes, COLLISION_BOX_1);
         addCollisionBoxToList(pos, entityBox, collidingBoxes, COLLISION_BOX_2);
     }
+
 
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
@@ -100,8 +101,8 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
     }
 
     @Override
-    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack) {
-        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(TYPE, Type.fromId(stack.getMetadata()));
+    public IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing().getOpposite()).withProperty(TYPE, Type.fromId(placer.getHeldItem(hand).getMetadata()));
     }
 
     @Override
@@ -112,7 +113,7 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
     }
 
     @Override
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
         for (Type t : Type.values()) {
             list.add(new ItemStack(itemIn, 1, t.id));
 

@@ -11,8 +11,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
-
-import java.util.List;
+import net.minecraft.util.NonNullList;
 
 /**
  * Vampirism's flowers. To add one add it to {@link EnumFlowerType}
@@ -49,7 +48,7 @@ public class VampirismFlower extends BlockBush implements ItemMetaBlock.IMetaIte
     }
 
     @Override
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+    public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
         for (EnumFlowerType type : EnumFlowerType.values()) {
             list.add(new ItemStack(itemIn, 1, type.getMeta()));
         }

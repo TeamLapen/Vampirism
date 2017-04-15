@@ -188,7 +188,7 @@ public class InputEventPacket implements IMessage {
 
                 FactionPlayerHandler.get(player).setFactionAndLevel(null, 0);
                 VampirismMod.log.d(TAG, "Player %s left faction", player);
-                player.attackEntityFrom(DamageSource.magic, 1000);
+                player.attackEntityFrom(DamageSource.MAGIC, 1000);
 
             } else if (message.action.equals(WAKEUP)) {
                 VampirePlayer.get(player).wakeUpPlayer(false, true, true);

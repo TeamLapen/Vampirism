@@ -9,11 +9,6 @@ import javax.annotation.Nonnull;
 
 
 public class ShapedHunterWeaponRecipesHandler implements IRecipeHandler<ShapedHunterWeaponRecipe> {
-    @Nonnull
-    @Override
-    public String getRecipeCategoryUid() {
-        return VampirismJEIPlugin.HUNTER_WEAPON_RECIPE_UID;
-    }
 
     @Nonnull
     @Override

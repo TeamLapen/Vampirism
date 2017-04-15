@@ -3,11 +3,13 @@ package de.teamlapen.vampirism.tileentity;
 import de.teamlapen.lib.lib.util.SimpleSpawnerLogic;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -48,7 +50,7 @@ public class TileTent extends TileEntity implements ITickable {
     private boolean spawn = false;
 
     public TileTent() {
-        spawnerLogic.setEntityName(ModEntities.BASIC_HUNTER_NAME);
+        spawnerLogic.setEntityName(new ResourceLocation(REFERENCE.MODID, ModEntities.BASIC_HUNTER_NAME));
         spawnerLogic.setActivateRange(64);
         spawnerLogic.setSpawnRange(6);
         spawnerLogic.setMinSpawnDelay(400);

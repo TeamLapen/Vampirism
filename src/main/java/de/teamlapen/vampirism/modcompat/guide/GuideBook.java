@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.modcompat.guide;
 
 import amerifrance.guideapi.api.GuideAPI;
+import amerifrance.guideapi.api.IGuideBook;
 import amerifrance.guideapi.api.IPage;
 import amerifrance.guideapi.api.impl.Book;
 import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
@@ -36,6 +37,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nullable;
@@ -51,32 +53,14 @@ import static de.teamlapen.vampirism.modcompat.guide.GuideHelper.addArmorWithTie
 import static de.teamlapen.vampirism.modcompat.guide.GuideHelper.addItemWithTier;
 
 
-public class GuideBook {
+@amerifrance.guideapi.api.GuideBook
+public class GuideBook implements IGuideBook {
 
     public final static String TAG = "GuideBook";
     private final static String IMAGE_BASE = "vampirismguide:textures/images/";
-    public static ItemStack bookStack;
     private static Book guideBook;
     private static Map<ResourceLocation, EntryAbstract> links = Maps.newHashMap();
 
-    static void initBook() {
-        guideBook = new Book();
-        guideBook.setTitle("guide.vampirism.title");
-        guideBook.setDisplayName("guide.vampirism.name");
-        guideBook.setWelcomeMessage("guide.vampirism.welcome");
-        guideBook.setAuthor("Maxanier");
-        guideBook.setColor(Color.getHSBColor(0.5f, 0.2f, 0.5f));
-        guideBook.setRegistryName(REFERENCE.MODID, "guide");
-        guideBook.setOutlineTexture(new ResourceLocation("vampirismguide", "textures/gui/book_violet_border.png"));
-        guideBook.setSpawnWithBook(true);
-        GameRegistry.register(guideBook);
-        if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
-            GuideAPI.setModel(guideBook);
-        }
-        bookStack = GuideAPI.getStackFromBook(guideBook);
-        VampirismMod.log.i(TAG, "Registered Guide Book");
-
-    }
 
     static void buildCategories() {
         VampirismMod.log.d(TAG, "Building categories");
@@ -319,38 +303,38 @@ public class GuideBook {
         ArrayList<IPage> hunterPages = new ArrayList<>();
         hunterPages.add(new PageImage(new ResourceLocation(IMAGE_BASE + "hunter.png")));
         hunterPages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "hunter.text", ModItems.humanHeart.getLocalizedName())));
-        entries.put(new ResourceLocation(base + "hunter"), new EntryText(hunterPages, "entity." + ModEntities.BASIC_HUNTER_NAME + ".name"));
+        entries.put(new ResourceLocation(base + "hunter"), new EntryText(hunterPages, "entity.vampirism." + ModEntities.BASIC_HUNTER_NAME + ".name"));
 
         ArrayList<IPage> vampirePages = new ArrayList<>();
         vampirePages.add(new PageImage(new ResourceLocation(IMAGE_BASE + "vampire.png")));
         vampirePages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "vampire.text", ModItems.vampireFang.getLocalizedName(), ModItems.vampireBlood.getLocalizedName(), ModItems.stake.getLocalizedName())));
-        entries.put(new ResourceLocation(base + "vampire"), new EntryText(vampirePages, "entity." + ModEntities.BASIC_VAMPIRE_NAME + ".name"));
+        entries.put(new ResourceLocation(base + "vampire"), new EntryText(vampirePages, "entity.vampirism." + ModEntities.BASIC_VAMPIRE_NAME + ".name"));
 
         ArrayList<IPage> advancedHunterPages = new ArrayList<>();
         advancedHunterPages.add(new PageImage(new ResourceLocation(IMAGE_BASE + "advancedHunter.png")));
         advancedHunterPages.addAll(GuideHelper.pagesForLongText(UtilLib.translate(base + "advancedHunter.text")));
-        entries.put(new ResourceLocation(base + "advancedHunter"), new EntryText(advancedHunterPages, "entity." + ModEntities.ADVANCED_HUNTER + ".name"));
+        entries.put(new ResourceLocation(base + "advancedHunter"), new EntryText(advancedHunterPages, "entity.vampirism." + ModEntities.ADVANCED_HUNTER + ".name"));
 
         ArrayList<IPage> advancedVampirePages = new ArrayList<>();
         advancedVampirePages.add(new PageImage(new ResourceLocation(IMAGE_BASE + "advancedVampire.png")));
         advancedVampirePages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "advancedVampire.text", ModItems.bloodBottle.getLocalizedName(), ModItems.vampireBlood.getLocalizedName())));
-        entries.put(new ResourceLocation(base + "advancedVampire"), new EntryText(advancedVampirePages, "entity." + ModEntities.ADVANCED_VAMPIRE + ".name"));
+        entries.put(new ResourceLocation(base + "advancedVampire"), new EntryText(advancedVampirePages, "entity.vampirism." + ModEntities.ADVANCED_VAMPIRE + ".name"));
 
         ArrayList<IPage> vampireBaronPages = new ArrayList<>();
         vampireBaronPages.add(new PageImage(new ResourceLocation(IMAGE_BASE + "vampireBaron.png")));
         vampireBaronPages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "vampireBaron.text", ModItems.pureBlood.getLocalizedName())));
         GuideHelper.addLinks(vampireBaronPages, new ResourceLocation("guide.vampirism.world.vampireForest"));
-        entries.put(new ResourceLocation(base + "vampireBaron"), new EntryText(vampireBaronPages, "entity." + ModEntities.VAMPIRE_BARON + ".name"));
+        entries.put(new ResourceLocation(base + "vampireBaron"), new EntryText(vampireBaronPages, "entity.vampirism." + ModEntities.VAMPIRE_BARON + ".name"));
 
         ArrayList<IPage> minionPages = new ArrayList<>();
         minionPages.add(new PageImage(new ResourceLocation(IMAGE_BASE + "minion.png")));
         minionPages.addAll(GuideHelper.pagesForLongText(UtilLib.translate(base + "minion.text")));
-        entries.put(new ResourceLocation(base + "minion"), new EntryText(minionPages, "entity." + ModEntities.VAMPIRE_MINION_SAVEABLE_NAME + ".name"));
+        entries.put(new ResourceLocation(base + "minion"), new EntryText(minionPages, "entity.vampirism." + ModEntities.VAMPIRE_MINION_SAVEABLE_NAME + ".name"));
 
         ArrayList<IPage> ghostPages = new ArrayList<>();
         ghostPages.add(new PageImage(new ResourceLocation(IMAGE_BASE + "ghost.png")));
         ghostPages.addAll(GuideHelper.pagesForLongText(UtilLib.translate(base + "ghost.text")));
-        entries.put(new ResourceLocation(base + "ghost"), new EntryText(ghostPages, "entity." + ModEntities.GHOST_NAME + ".name"));
+        entries.put(new ResourceLocation(base + "ghost"), new EntryText(ghostPages, "entity.vampirism." + ModEntities.GHOST_NAME + ".name"));
 
         links.putAll(entries);
         return entries;
@@ -378,8 +362,8 @@ public class GuideBook {
         //General
         new ItemInfoBuilder(ModItems.vampireFang).build(entries);
         new ItemInfoBuilder(ModItems.humanHeart).build(entries);
-        new ItemInfoBuilder(ModItems.pureBlood).setFormats(UtilLib.translate("entity." + ModEntities.VAMPIRE_BARON + ".name")).build(entries);
-        new ItemInfoBuilder(ModItems.vampireBlood).setFormats(UtilLib.translate("entity." + ModEntities.BASIC_VAMPIRE_NAME + ".name"), ModItems.stake.getLocalizedName(), UtilLib.translate("entity." + ModEntities.ADVANCED_VAMPIRE + ".name")).build(entries);
+        new ItemInfoBuilder(ModItems.pureBlood).setFormats(UtilLib.translate("entity.vampirism." + ModEntities.VAMPIRE_BARON + ".name")).build(entries);
+        new ItemInfoBuilder(ModItems.vampireBlood).setFormats(UtilLib.translate("entity." + ModEntities.BASIC_VAMPIRE_NAME + ".name"), ModItems.stake.getLocalizedName(), UtilLib.translate("entity.vampirism." + ModEntities.ADVANCED_VAMPIRE + ".name")).build(entries);
         new ItemInfoBuilder(ModItems.vampireBook).build(entries);
         //Vampire
         new ItemInfoBuilder(new ItemStack(ModItems.bloodBottle, 1, ItemBloodBottle.AMOUNT), false).build(entries);
@@ -429,4 +413,36 @@ public class GuideBook {
     }
 
 
+    @Nullable
+    @Override
+    public Book buildBook() {
+        guideBook = new Book();
+        guideBook.setTitle("guide.vampirism.title");
+        guideBook.setDisplayName("guide.vampirism.name");
+        guideBook.setWelcomeMessage("guide.vampirism.welcome");
+        guideBook.setAuthor("Maxanier");
+        guideBook.setColor(Color.getHSBColor(0.5f, 0.2f, 0.5f));
+        guideBook.setRegistryName(new ResourceLocation(REFERENCE.MODID, "guide"));
+        guideBook.setOutlineTexture(new ResourceLocation("vampirismguide", "textures/gui/book_violet_border.png"));
+        guideBook.setSpawnWithBook(true);
+
+        VampirismMod.log.i(TAG, "Finished Building Guide Book");
+        return guideBook;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void handleModel(ItemStack bookStack) {
+        GuideAPI.setModel(guideBook);
+    }
+
+    @Override
+    public void handlePost(ItemStack bookStack) {
+        GameRegistry.addShapelessRecipe(bookStack, new ItemStack(Items.BOOK), new ItemStack(ModItems.vampireFang));
+        GameRegistry.addShapelessRecipe(bookStack, new ItemStack(Items.BOOK), new ItemStack(ModItems.humanHeart));
+
+        if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+            GuideBook.buildCategories();
+        }
+    }
 }

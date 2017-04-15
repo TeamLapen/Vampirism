@@ -60,7 +60,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.EnumCreatureType;
-import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
@@ -112,8 +112,8 @@ public class VampirismMod {
     public static AbstractPacketDispatcher dispatcher = new ModPacketDispatcher();
     public static CreativeTabs creativeTab = new CreativeTabs(REFERENCE.MODID) {
         @Override
-        public Item getTabIconItem() {
-            return ModItems.vampireFang;
+        public ItemStack getTabIconItem() {
+            return new ItemStack(ModItems.vampireFang);
         }
     };
 
