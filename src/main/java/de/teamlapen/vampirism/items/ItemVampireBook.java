@@ -72,14 +72,16 @@ public class ItemVampireBook extends VampirismItem {
         return true;
     }
 
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+        ItemStack stack = playerIn.getHeldItem(handIn);
         if (!worldIn.isRemote) {
-            this.resolveContents(itemStackIn, playerIn);
+            this.resolveContents(stack, playerIn);
         }
 
         playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_VAMPIRE_BOOK, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);
         playerIn.addStat(StatList.getObjectUseStats(this));
-        return new ActionResult(EnumActionResult.SUCCESS, itemStackIn);
+        return new ActionResult(EnumActionResult.SUCCESS, stack);
     }
 
     private void resolveContents(ItemStack stack, EntityPlayer player) {

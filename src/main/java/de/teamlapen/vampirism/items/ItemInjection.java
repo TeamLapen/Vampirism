@@ -53,8 +53,9 @@ public class ItemInjection extends VampirismItem {
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-        if (itemStackIn.getMetadata() == META_SANGUINARE) {
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+        ItemStack stack = playerIn.getHeldItem(handIn);
+        if (stack.getMetadata() == META_SANGUINARE) {
             IFactionPlayerHandler handler = VampirismAPI.getFactionPlayerHandler(playerIn);
             if (handler.getCurrentLevel(VReference.HUNTER_FACTION) > 0) {
                 playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_REVERT_BACK, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);
@@ -62,10 +63,10 @@ public class ItemInjection extends VampirismItem {
             } else {
                 playerIn.addPotionEffect(new PotionEffect(MobEffects.POISON, 100));
             }
-            itemStackIn.stackSize--;
-            return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
+            stack.stackSize--;
+            return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         }
-        return new ActionResult<>(EnumActionResult.PASS, itemStackIn);
+        return new ActionResult<>(EnumActionResult.PASS, stack);
     }
 
 

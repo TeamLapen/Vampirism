@@ -64,9 +64,10 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-        shoot(playerIn, 0, 0, worldIn, itemStackIn, hand);
-        return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+        ItemStack stack = playerIn.getHeldItem(handIn);
+        shoot(playerIn, 0, 0, worldIn, stack, handIn);
+        return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }
 
     public void setEnchantability(int enchantability) {

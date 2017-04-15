@@ -27,6 +27,8 @@ import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import java.util.List;
 
@@ -92,7 +94,22 @@ public class BlockWeaponTable extends VampirismBlock {
             boolean flag = false;
             ItemStack heldItem = playerIn.getHeldItem(hand);
             if (lava < MAX_LAVA) {
-                if (heldItem != null && FluidContainerRegistry.isFilledContainer(heldItem)) {
+                if (lava < MAX_LAVA) { //TODO TEST
+                    if (heldItem != null && heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
+                        IFluidHandler fluidHandler = heldItem.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+                        FluidStack missing = new FluidStack(FluidRegistry.LAVA, (MAX_LAVA - lava) * MB_PER_META);
+                        FluidStack drainable = fluidHandler.drain(missing, false);
+                        if (drainable != null && drainable.amount >= MB_PER_META) {
+                            FluidStack drained = fluidHandler.drain(missing, true);
+                            if (drained != null) {
+                                IBlockState changed = state.withProperty(LAVA, Math.min(MAX_LAVA, lava + drained.amount / MB_PER_META));
+                                worldIn.setBlockState(pos, changed);
+                                flag = true;
+                            }
+                        }
+
+                    }
+                } else if (heldItem != null && FluidContainerRegistry.isFilledContainer(heldItem)) {
                     FluidStack fluidStack = FluidContainerRegistry.getFluidForFilledItem(heldItem);
                     if (fluidStack.getFluid().equals(FluidRegistry.LAVA) && fluidStack.amount >= MB_PER_META) {
                         IBlockState changed = state.withProperty(LAVA, Math.min(MAX_LAVA, lava + fluidStack.amount / MB_PER_META));
