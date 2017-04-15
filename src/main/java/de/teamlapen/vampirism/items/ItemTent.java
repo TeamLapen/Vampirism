@@ -60,14 +60,16 @@ public class ItemTent extends VampirismItem {
     }
 
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+
         if (facing != EnumFacing.UP)
             return EnumActionResult.PASS;
         if (world.isRemote) return EnumActionResult.PASS;
 
-        EnumFacing dir = EnumFacing.fromAngle(playerIn.rotationYaw);
+        EnumFacing dir = EnumFacing.fromAngle(player.rotationYaw);
         boolean flag = placeAt(world, pos.up(), dir, false, false);
-        if (flag && !playerIn.capabilities.isCreativeMode) {
+        if (flag && !player.capabilities.isCreativeMode) {
+            ItemStack stack = player.getHeldItem(hand);
             stack.stackSize--;
         }
         return flag ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;

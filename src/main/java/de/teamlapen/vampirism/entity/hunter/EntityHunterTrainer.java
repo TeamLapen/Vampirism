@@ -98,8 +98,10 @@ public class EntityHunterTrainer extends EntityHunterBase implements HunterAILoo
         this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));
     }
 
+
     @Override
-    protected boolean processInteract(EntityPlayer player, EnumHand p_184645_2_, ItemStack stack) {
+    protected boolean processInteract(EntityPlayer player, EnumHand hand) {
+        ItemStack stack = player.getHeldItem(hand);
         boolean flag = stack != null && stack.getItem() == Items.SPAWN_EGG;
 
         if (!flag && this.isEntityAlive() && !player.isSneaking()) {
@@ -122,7 +124,7 @@ public class EntityHunterTrainer extends EntityHunterBase implements HunterAILoo
         }
 
 
-        return super.processInteract(player, p_184645_2_, stack);
+        return super.processInteract(player, hand);
     }
 
 

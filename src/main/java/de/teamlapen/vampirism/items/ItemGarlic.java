@@ -35,10 +35,11 @@ public class ItemGarlic extends VampirismItem implements IPlantable {
 
 
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+        ItemStack stack = player.getHeldItem(hand);
         if (side != EnumFacing.UP) {
             return EnumActionResult.FAIL;
-        } else if (!playerIn.canPlayerEdit(pos.offset(side), side, stack)) {
+        } else if (!player.canPlayerEdit(pos.offset(side), side, stack)) {
             return EnumActionResult.FAIL;
         } else if (worldIn.getBlockState(pos).getBlock().canSustainPlant(worldIn.getBlockState(pos), worldIn, pos, EnumFacing.UP, this) && worldIn.isAirBlock(pos.up())) {
             worldIn.setBlockState(pos.up(), getPlant(worldIn, pos));

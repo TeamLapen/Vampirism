@@ -17,10 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionType;
 import net.minecraft.stats.StatList;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -109,7 +106,7 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
     }
 
     @Override
-    public void getSubItems(@Nonnull Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+    public void getSubItems(@Nonnull Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         for (TIER t : TIER.values()) {
             subItems.add(setTier(new ItemStack(itemIn), t));
             subItems.add(setSplash(setTier(new ItemStack(itemIn), t), true));
@@ -173,25 +170,26 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
 
     @Nonnull
     @Override
-    public ActionResult<ItemStack> onItemRightClick(@Nonnull ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-        if (isSplash(itemStackIn)) {
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+        ItemStack stack = playerIn.getHeldItem(handIn);
+        if (isSplash(stack)) {
             if (!playerIn.capabilities.isCreativeMode) {
-                --itemStackIn.stackSize;
+                --stack.stackSize;
             }
 
             worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SPLASH_POTION_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
             if (!worldIn.isRemote) {
                 EntityThrowableItem entityThrowable = new EntityThrowableItem(worldIn, playerIn);
-                entityThrowable.setItem(itemStackIn);
+                entityThrowable.setItem(stack);
                 entityThrowable.setHeadingFromThrower(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, -20.0F, 0.5F, 1.0F);
                 worldIn.spawnEntity(entityThrowable);
             }
 
             playerIn.addStat(StatList.getObjectUseStats(this));
-            return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
+            return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         }
-        return new ActionResult<>(EnumActionResult.PASS, itemStackIn);
+        return new ActionResult<>(EnumActionResult.PASS, stack);
     }
 
     /**

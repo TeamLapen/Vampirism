@@ -56,8 +56,9 @@ public class HunterWeaponRecipeCategory extends BlankRecipeCategory {
 
     @Override
     public void setRecipe(IRecipeLayout recipeLayout, IRecipeWrapper recipeWrapper, IIngredients ingredients) {
+        int craftOutputSlot = 0;
         IGuiItemStackGroup guiItemStackGroup = recipeLayout.getItemStacks();
-        guiItemStackGroup.init(0, false, 111, 31);
+        guiItemStackGroup.init(craftOutputSlot, false, 111, 31);
         for (int y = 0; y < 4; ++y) {
             for (int x = 0; x < 4; ++x) {
                 guiItemStackGroup.init(1 + x + y * 4, true, 1 + x * 19, 1 + y * 19);
@@ -65,27 +66,15 @@ public class HunterWeaponRecipeCategory extends BlankRecipeCategory {
         }
 
         List<List<ItemStack>> inputs = ingredients.getInputs(ItemStack.class);
-        List<ItemStack> outputs = ingredients.getOutputs(ItemStack.class);
+        List<List<ItemStack>> outputs = ingredients.getOutputs(ItemStack.class);
 
         if (recipeWrapper instanceof ShapedHunterWeaponRecipesWrapper) {
             ShapedHunterWeaponRecipesWrapper wrapper = (ShapedHunterWeaponRecipesWrapper) recipeWrapper;
-            craftingGridHelper.setInputStacks(guiItemStackGroup, inputs, wrapper.getWidth(), wrapper.getHeight());
-            craftingGridHelper.setOutput(guiItemStackGroup, outputs);
+            craftingGridHelper.setInputs(guiItemStackGroup, inputs, ((ShapedHunterWeaponRecipesWrapper) recipeWrapper).getWidth(), ((ShapedHunterWeaponRecipesWrapper) recipeWrapper).getHeight());
+
         } else if (recipeWrapper instanceof ShapelessHunterWeaponRecipeWrapper) {
-//            int inputSize=recipeWrapper.getInputs().size();
-//            int width, height;
-//            if(inputSize > 9){
-//                width=height=4;
-//            }
-//            if (inputSize > 4) {
-//                width = height = 3;
-//            } else if (inputSize > 1) {
-//                width = height = 2;
-//            } else {
-//                width = height = 1;
-//            }
-            craftingGridHelper.setInputStacks(guiItemStackGroup, inputs, 4, 4);
-            craftingGridHelper.setOutput(guiItemStackGroup, outputs);
+            recipeLayout.setShapeless();
         }
+        guiItemStackGroup.set(craftOutputSlot, outputs.get(0));
     }
 }

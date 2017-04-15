@@ -15,14 +15,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 
@@ -64,7 +63,7 @@ public abstract class BasicWeaponTableRecipeRenderer<T extends IHunterWeaponReci
         ItemStack stack = recipe.getRecipeOutput();
 
         if (stack != null && stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-            List<ItemStack> subItems = new ArrayList<ItemStack>();
+            NonNullList<ItemStack> subItems = NonNullList.create();
             stack.getItem().getSubItems(stack.getItem(), stack.getItem().getCreativeTab(), subItems);
             stack = subItems.get(getRandomizedCycle(0, subItems.size()));
         }

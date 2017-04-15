@@ -5,7 +5,6 @@ import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IBiteableRegistry;
-import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
@@ -90,12 +89,6 @@ public class ModEntities {
      */
     private static void registerCustomExtendedCreatures() {
         IBiteableRegistry registry = VampirismAPI.biteableRegistry();
-        registry.addCustomExtendedCreature(EntityHorse.class, new IBiteableRegistry.IExtendedCreatureConstructor<EntityHorse>() {
-            @Override
-            public IExtendedCreatureVampirism create(EntityHorse creature) {
-                return new ExtendedHorse(creature);
-            }
-        });
     }
 
     /**

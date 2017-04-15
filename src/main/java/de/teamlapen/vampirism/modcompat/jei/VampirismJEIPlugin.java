@@ -49,11 +49,11 @@ public class VampirismJEIPlugin extends BlankModPlugin {
         recipeTransferRegistry.addRecipeTransferHandler(AlchemicalCauldronContainer.class, ALCHEMICAL_CAULDRON_RECIPE_UID, 1, 2, 4, 36);
 
 
-        registerNBTSubtypes(jeiHelpers.getSubtypeRegistry());
         //TODO add recipe handler for hunter table
     }
 
-    private void registerNBTSubtypes(ISubtypeRegistry registry) {
+    @Override
+    public void registerItemSubtypes(ISubtypeRegistry registry) {
         registry.useNbtForSubtypes(ModItems.armorOfSwiftness_boots, ModItems.armorOfSwiftness_chest, ModItems.armorOfSwiftness_helmet, ModItems.armorOfSwiftness_legs);
         registry.useNbtForSubtypes(ModItems.hunterAxe);
         registry.useNbtForSubtypes(ModItems.hunterCoat_boots, ModItems.hunterCoat_chest, ModItems.hunterCoat_helmet, ModItems.hunterCoat_legs);

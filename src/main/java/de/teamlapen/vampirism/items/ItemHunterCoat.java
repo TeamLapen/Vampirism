@@ -10,6 +10,7 @@ import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 
 import java.util.List;
@@ -61,7 +62,7 @@ public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTie
 
 
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, List<ItemStack> subItems) {
+    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         for (TIER t : TIER.values()) {
             subItems.add(setTier(new ItemStack(itemIn), t));
         }

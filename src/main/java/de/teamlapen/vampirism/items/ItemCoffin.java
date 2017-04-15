@@ -26,13 +26,15 @@ public class ItemCoffin extends VampirismItem {
     }
 
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer player, World world, BlockPos targetPos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos targetPos, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 
         if (side != EnumFacing.UP) {
             return EnumActionResult.FAIL;
         }
         if (world.isRemote)
             return EnumActionResult.PASS;
+
+        ItemStack stack = player.getHeldItem(hand);
         // Increasing y, so the coffin is placed on top of the block that was
         // clicked at except if the block is replaceable
         IBlockState iblockstate = world.getBlockState(targetPos);

@@ -79,7 +79,7 @@ public class InventoryContainer extends Container {
             if (stackInSlot.stackSize == stack.stackSize) {
                 return null;
             }
-            slotObject.onPickupFromSlot(player, stackInSlot);
+            slotObject.onTake(player, stackInSlot);
         }
         return stack;
     }

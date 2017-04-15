@@ -44,8 +44,8 @@ public class RenderAdvancedHunter extends RenderBiped<EntityAdvancedHunter> {
 
         super.renderModel(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, partTicks);
         bindTexture(textureExtra);
-        ((ModelBasicHunter) modelBipedMain).renderHat(partTicks, entitylivingbaseIn.getHunterType());
-        ((ModelBasicHunter) modelBipedMain).renderWeapons(partTicks, false);
+        ((ModelBasicHunter) mainModel).renderHat(partTicks, entitylivingbaseIn.getHunterType());
+        ((ModelBasicHunter) mainModel).renderWeapons(partTicks, false);
 
     }
 }

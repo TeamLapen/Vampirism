@@ -12,6 +12,8 @@ import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.List;
 
@@ -28,6 +30,7 @@ public class ItemAlchemicalFire extends VampirismItem {
         super(regName);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         super.addInformation(stack, playerIn, tooltip, advanced);
@@ -36,18 +39,20 @@ public class ItemAlchemicalFire extends VampirismItem {
     }
 
     @Override
-    public EnumActionResult onItemUse(ItemStack stack, EntityPlayer playerIn, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+    public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         pos = pos.offset(facing);
 
-        if (!playerIn.canPlayerEdit(pos, facing, stack)) {
+        if (!player.canPlayerEdit(pos, facing, player.getHeldItem(hand))) {
             return EnumActionResult.FAIL;
         } else {
             if (worldIn.isAirBlock(pos)) {
-                worldIn.playSound(playerIn, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, itemRand.nextFloat() * 0.4F + 0.8F);
+                worldIn.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, itemRand.nextFloat() * 0.4F + 0.8F);
                 worldIn.setBlockState(pos, ModBlocks.alchemicalFire.getDefaultState().withProperty(BlockAlchemicalFire.AGE, 15), 11);
             }
 
             return EnumActionResult.SUCCESS;
         }
     }
+
+
 }

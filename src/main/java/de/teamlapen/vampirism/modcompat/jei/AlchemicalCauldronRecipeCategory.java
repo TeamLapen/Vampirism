@@ -41,8 +41,9 @@ public class AlchemicalCauldronRecipeCategory extends BlankRecipeCategory<Alchem
 
     }
 
+
     @Override
-    public void drawAnimations(Minecraft minecraft) {
+    public void drawExtras(Minecraft minecraft) {
         flame.draw(minecraft, 29, 27);
         arrow.draw(minecraft, 51, 25);
         bubbles.draw(minecraft, 114, 19);

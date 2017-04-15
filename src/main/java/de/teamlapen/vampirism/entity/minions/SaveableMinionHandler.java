@@ -122,7 +122,7 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
             if (instant) {
                 e.setDead();
             } else {
-                e.attackEntityFrom(DamageSource.magic, 100);
+                e.attackEntityFrom(DamageSource.MAGIC, 100);
             }
         }
     }

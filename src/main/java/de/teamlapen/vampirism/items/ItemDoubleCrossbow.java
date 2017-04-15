@@ -30,11 +30,13 @@ public class ItemDoubleCrossbow extends ItemSimpleCrossbow {
         return HunterSkills.doubleCrossbow;
     }
 
+
     @Override
-    public ActionResult<ItemStack> onItemRightClick(ItemStack itemStackIn, World worldIn, EntityPlayer playerIn, EnumHand hand) {
-        shoot(playerIn, 0, 0, worldIn, itemStackIn, hand);
-        shoot(playerIn, -0.2F, 0, worldIn, itemStackIn, hand);
-        return new ActionResult<>(EnumActionResult.SUCCESS, itemStackIn);
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+        ItemStack stack = playerIn.getHeldItem(handIn);
+        shoot(playerIn, 0, 0, worldIn, stack, handIn);
+        shoot(playerIn, -0.2F, 0, worldIn, stack, handIn);
+        return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }
 
     @Override

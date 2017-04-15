@@ -67,7 +67,7 @@ public class EntityCrossbowArrow extends EntityArrow {
     @Override
     public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
-        arrowStack.readFromNBT(compound.getCompoundTag("arrowStack"));
+        arrowStack.deserializeNBT(compound.getCompoundTag("arrowStack"));
     }
 
     /**

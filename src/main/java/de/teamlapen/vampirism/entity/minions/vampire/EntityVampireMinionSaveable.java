@@ -38,7 +38,7 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
 
     @Override
     public boolean attackEntityFrom(DamageSource src, float value) {
-        if (DamageSource.inWall.equals(src)) {
+        if (DamageSource.IN_WALL.equals(src)) {
             return false;
         } else {
             return super.attackEntityFrom(src, value);
@@ -111,7 +111,7 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
 
             } else if (!lord.isTheEntityAlive()) {
                 lord = null;
-                this.attackEntityFrom(DamageSource.magic, 1000);
+                this.attackEntityFrom(DamageSource.MAGIC, 1000);
             }
 
         }

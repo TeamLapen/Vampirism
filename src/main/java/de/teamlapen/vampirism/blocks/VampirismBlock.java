@@ -6,16 +6,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumHand;
 import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-
-import javax.annotation.Nullable;
 
 /**
  * Vampirism default block with set creative tab, registry name and unloc name
@@ -31,10 +24,6 @@ public class VampirismBlock extends Block {
         this.setUnlocalizedName(REFERENCE.MODID + "." + regName);
     }
 
-    @Override
-    public final boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
-        return onBlockActivated(worldIn, pos, state, playerIn, hand, side, hitX, hitY, hitZ);
-    }
 
     @Override
     public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
@@ -54,13 +43,6 @@ public class VampirismBlock extends Block {
         return state;
     }
 
-    /**
-     * For compat with 1.11
-     */
-    protected boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-
-        return super.onBlockActivated(worldIn, pos, state, playerIn, hand, playerIn.getHeldItem(hand), facing, hitX, hitY, hitZ);
-    }
 
     /**
      * Call this if the block is using {@link VampirismBlock#FACING} in it's block state

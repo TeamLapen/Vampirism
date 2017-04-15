@@ -57,7 +57,7 @@ public class EntityThrowableItem extends EntityThrowable {
     @Override
     public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
-        ItemStack stack = ItemStack.loadItemStackFromNBT(compound.getCompoundTag("thrownItem"));
+        ItemStack stack = new ItemStack(compound.getCompoundTag("thrownItem"));
         if (stack == null) {
             this.setDead();
         } else {
@@ -77,7 +77,7 @@ public class EntityThrowableItem extends EntityThrowable {
     @Override
     protected void entityInit() {
         super.entityInit();
-        this.getDataManager().register(ITEM, Optional.<ItemStack>absent());
+        this.getDataManager().register(ITEM, Optional.absent());
     }
 
     protected float getGravityVelocity() {

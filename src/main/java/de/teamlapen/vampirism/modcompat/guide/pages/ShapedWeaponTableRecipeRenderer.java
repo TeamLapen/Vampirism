@@ -8,10 +8,10 @@ import amerifrance.guideapi.gui.GuiBase;
 import de.teamlapen.vampirism.inventory.ShapedHunterWeaponRecipe;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -22,6 +22,7 @@ public class ShapedWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRende
         super(recipe);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void draw(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, GuiBase guiBase, FontRenderer fontRendererObj) {
         super.draw(book, category, entry, guiLeft, guiTop, mouseX, mouseY, guiBase, fontRendererObj);
@@ -32,7 +33,7 @@ public class ShapedWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRende
                 ItemStack stack = recipe.recipeItems[y * recipe.recipeWidth + x];
                 if (stack != null) {
                     if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-                        List<ItemStack> subItems = new ArrayList<ItemStack>();
+                        NonNullList<ItemStack> subItems = NonNullList.create();
                         stack.getItem().getSubItems(stack.getItem(), stack.getItem().getCreativeTab(), subItems);
                         stack = subItems.get(getRandomizedCycle(x, subItems.size()));
                     }

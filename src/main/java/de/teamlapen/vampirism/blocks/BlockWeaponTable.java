@@ -23,14 +23,10 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
-import net.minecraftforge.fluids.FluidContainerRegistry;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidContainerItem;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 
 public class BlockWeaponTable extends VampirismBlock {
@@ -48,11 +44,6 @@ public class BlockWeaponTable extends VampirismBlock {
     }
 
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, player, tooltip, advanced);
-    }
 
     @Override
     public BlockRenderLayer getBlockLayer() {
@@ -95,26 +86,20 @@ public class BlockWeaponTable extends VampirismBlock {
             int lava = state.getValue(LAVA);
             boolean flag = false;
             ItemStack heldItem = playerIn.getHeldItem(hand);
-            if (lava < MAX_LAVA) {
-                if (heldItem != null && FluidContainerRegistry.isFilledContainer(heldItem)) {
-                    FluidStack fluidStack = FluidContainerRegistry.getFluidForFilledItem(heldItem);
-                    if (fluidStack.getFluid().equals(FluidRegistry.LAVA) && fluidStack.amount >= MB_PER_META) {
-                        IBlockState changed = state.withProperty(LAVA, Math.min(MAX_LAVA, lava + fluidStack.amount / MB_PER_META));
-                        worldIn.setBlockState(pos, changed);
-                        playerIn.setHeldItem(hand, FluidContainerRegistry.drainFluidContainer(heldItem));
-                        flag = true;
+            if (lava < MAX_LAVA) { //TODO TEST
+                if (heldItem != null && heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+                    IFluidHandlerItem fluidHandler = heldItem.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+                    FluidStack missing = new FluidStack(FluidRegistry.LAVA, (MAX_LAVA - lava) * MB_PER_META);
+                    FluidStack drainable = fluidHandler.drain(missing, false);
+                    if (drainable != null && drainable.amount >= MB_PER_META) {
+                        FluidStack drained = fluidHandler.drain(missing, true);
+                        if (drained != null) {
+                            IBlockState changed = state.withProperty(LAVA, Math.min(MAX_LAVA, lava + drained.amount / MB_PER_META));
+                            worldIn.setBlockState(pos, changed);
+                            flag = true;
+                        }
                     }
-                } else if (heldItem != null && heldItem.getItem() instanceof IFluidContainerItem) {
-                    IFluidContainerItem item = (IFluidContainerItem) heldItem.getItem();
-                    FluidStack fluidStack = item.getFluid(heldItem);
-                    int missing = (MAX_LAVA - lava) * MB_PER_META;
-                    if (fluidStack.getFluid().equals(FluidRegistry.LAVA) && fluidStack.amount >= MB_PER_META) {
-                        FluidStack drained = item.drain(heldItem, missing, true);
-                        IBlockState changed = state.withProperty(LAVA, Math.min(MAX_LAVA, lava + drained.amount / MB_PER_META));
-                        worldIn.setBlockState(pos, changed);
-                        playerIn.setHeldItem(hand, FluidContainerRegistry.drainFluidContainer(heldItem));
-                        flag = true;
-                    }
+
                 }
             }
             if (!flag) {
