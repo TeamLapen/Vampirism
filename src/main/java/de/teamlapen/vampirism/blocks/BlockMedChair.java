@@ -78,9 +78,9 @@ public class BlockMedChair extends VampirismBlock {
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 
-        ItemStack stack = heldItem;
+        ItemStack stack = playerIn.getHeldItem(hand);
         if (stack != null && stack.getItem().equals(ModItems.injection) && stack.getMetadata() == ItemInjection.META_GARLIC) {
             IFactionPlayerHandler handler = VampirismAPI.getFactionPlayerHandler(playerIn);
             IPlayableFaction faction = handler.getCurrentFaction();

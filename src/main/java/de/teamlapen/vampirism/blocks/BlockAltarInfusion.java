@@ -60,9 +60,9 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
 
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing faing, float hitX, float hitY, float hitZ) {
         TileAltarInfusion te = (TileAltarInfusion) worldIn.getTileEntity(pos);
-        if (playerIn.isSneaking() && heldItem == null) {
+        if (playerIn.isSneaking() && playerIn.getHeldItem(hand) == null) {
             te.onActivated(playerIn);
             return true;
         }

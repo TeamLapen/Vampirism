@@ -28,7 +28,6 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidContainerItem;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 
@@ -87,10 +86,11 @@ public class BlockWeaponTable extends VampirismBlock {
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         if (!worldIn.isRemote) {
             int lava = state.getValue(LAVA);
             boolean flag = false;
+            ItemStack heldItem = playerIn.getHeldItem(hand);
             if (lava < MAX_LAVA) {
                 if (heldItem != null && FluidContainerRegistry.isFilledContainer(heldItem)) {
                     FluidStack fluidStack = FluidContainerRegistry.getFluidForFilledItem(heldItem);
