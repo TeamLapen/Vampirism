@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler;
+import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionSaveable;
 import de.teamlapen.vampirism.items.ItemHunterCoat;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.*;
@@ -209,7 +210,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
             IVampireMinion.Saveable m = null;
 
             if (i == 1) {
-                EntityLiving e = (EntityLiving) EntityList.createEntityByName(ModEntities.VAMPIRE_MINION_SAVEABLE_NAME, this.world);
+                EntityLiving e = new EntityVampireMinionSaveable(world);
                 if (e == null) {
                     VampirismMod.log.w("VampireBaron", "Failed to create saveable minion");
                 } else {

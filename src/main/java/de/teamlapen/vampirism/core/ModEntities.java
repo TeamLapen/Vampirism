@@ -28,6 +28,7 @@ import net.minecraft.entity.monster.EntityPolarBear;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.*;
 import net.minecraft.init.Biomes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
@@ -169,9 +170,10 @@ public class ModEntities {
     private static void registerEntity(Class<? extends Entity> clazz, String name, EntityLiving.SpawnPlacementType placementType, boolean egg) {
 
         //VampirismMod.log.d("EntityRegister", "Adding " + name + "(" + clazz.getSimpleName() + ") with mod id %d", modEntityId);
-        EntityRegistry.registerModEntity(clazz, name.replace("vampirism.", ""), modEntityId++, VampirismMod.instance, 80, 1, true);
+        ResourceLocation n=new ResourceLocation(REFERENCE.MODID,name.replace("vampirism.",""));
+        EntityRegistry.registerModEntity(n,clazz, name.replace("vampirism.", ""), modEntityId++, VampirismMod.instance, 80, 1, true);
         if (egg) {
-            EntityRegistry.registerEgg(clazz, 0x8B15A3, name.hashCode());
+            EntityRegistry.registerEgg(n,0x8B15A3, name.hashCode());
             spawnableEntityNames.add(name);
         }
 

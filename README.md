@@ -1,4 +1,4 @@
-Vampirism for Minecraft 1.10 - Latest branch [![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire)
+Vampirism for Minecraft 1.11 - Latest branch [![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire)
 ============================================
 [![](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com)
 ## Mod Description

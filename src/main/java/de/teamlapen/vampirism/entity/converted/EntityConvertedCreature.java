@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.converted;
 
 import de.teamlapen.lib.lib.network.ISyncable;
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -35,7 +36,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
 
     @Override
     public String getName() {
-        return I18n.translateToLocal("entity.vampirism.vampire.name") + " " + (nil() ? super.getName() : entityCreature.getName());
+        return UtilLib.translate("entity.vampirism.vampire.name") + " " + (nil() ? super.getName() : entityCreature.getName());
     }
 
     public T getOldCreature() {

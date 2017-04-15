@@ -100,7 +100,7 @@ public class ModEventHandler {
                     VersionChecker.Version newVersion = versionInfo.getNewVersion();
                     //Inspired by @Vazikii's useful message
                     event.player.sendMessage(new TextComponentTranslation("text.vampirism.outdated", versionInfo.getCurrentVersion().name, newVersion.name));
-                    String template = I18n.translateToLocal("text.vampirism.update_message");
+                    String template = UtilLib.translate("text.vampirism.update_message");
                     template = template.replaceAll("@download@", newVersion.getUrl() == null ? versionInfo.getHomePage() : newVersion.getUrl()).replaceAll("@forum@", versionInfo.getHomePage());
                     ITextComponent component = ITextComponent.Serializer.jsonToComponent(template);
                     event.player.sendMessage(component);
