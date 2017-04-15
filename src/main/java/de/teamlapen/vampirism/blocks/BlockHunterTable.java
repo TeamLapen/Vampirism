@@ -66,7 +66,7 @@ public class BlockHunterTable extends VampirismBlock {
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_HUNTER_TABLE, worldIn, pos.getX(), pos.getY(), pos.getZ());
         return true;
     }

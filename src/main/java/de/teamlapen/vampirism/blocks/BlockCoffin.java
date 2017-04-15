@@ -171,11 +171,12 @@ public class BlockCoffin extends VampirismBlockContainer {
         }
     }
 
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 
         if (worldIn.isRemote) {
             return true;
         } else {
+            ItemStack heldItem = playerIn.getHeldItem(hand);
             if (heldItem != null && heldItem.getItem() instanceof ItemDye) {
                 TileCoffin tile = (TileCoffin) worldIn.getTileEntity(pos);
                 TileEntity other = state.getValue(PART) == EnumPartType.HEAD ? worldIn.getTileEntity(pos.offset(state.getValue(FACING).getOpposite())) : worldIn.getTileEntity(pos.offset(state.getValue(FACING)));

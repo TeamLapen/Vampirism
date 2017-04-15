@@ -66,8 +66,9 @@ public class BlockAltarPillar extends VampirismBlock {
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         EnumPillarType type = state.getValue(typeProperty);
+        ItemStack heldItem = playerIn.getHeldItem(hand);
         if (type != EnumPillarType.NONE && heldItem == null) {
             if (!playerIn.capabilities.isCreativeMode) {
                 playerIn.setItemStackToSlot(hand == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, new ItemStack(Item.getItemFromBlock(type.fillerBlock)));

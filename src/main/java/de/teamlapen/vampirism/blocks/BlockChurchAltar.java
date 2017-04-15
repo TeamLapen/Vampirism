@@ -62,8 +62,9 @@ public class BlockChurchAltar extends VampirismBlock {
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
         IFactionPlayerHandler handler = VampirismAPI.getFactionPlayerHandler(playerIn);
+        ItemStack heldItem = playerIn.getHeldItem(hand);
         if (handler.isInFaction(VReference.VAMPIRE_FACTION)) {
             playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_REVERT_BACK, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);
             return true;

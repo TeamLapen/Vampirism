@@ -138,7 +138,8 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing faing, float hitX, float hitY, float hitZ) {
+        ItemStack heldItem = playerIn.getHeldItem(hand);
         if (heldItem != null && ModItems.purifiedGarlic.equals(heldItem.getItem())) {
             if (!worldIn.isRemote) {
                 TileGarlicBeacon t = getTile(worldIn, pos);

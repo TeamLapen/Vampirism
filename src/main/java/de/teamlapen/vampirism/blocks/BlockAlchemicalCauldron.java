@@ -106,7 +106,7 @@ public class BlockAlchemicalCauldron extends VampirismBlockContainer {
     }
 
     @Override
-    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing faing, float hitX, float hitY, float hitZ) {
         if (!worldIn.isRemote) {
             TileAlchemicalCauldron tile = getTile(worldIn, pos);
             if (tile != null) {
