@@ -7,6 +7,7 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -33,6 +34,11 @@ public abstract class VampirismBlockContainer extends BlockContainer {
     }
 
     @Override
+    public final IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack) {
+        return getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, placer.getActiveHand());
+    }
+
+    @Override
     public final boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         return onBlockActivated(worldIn, pos, state, playerIn, hand, side, hitX, hitY, hitZ);
     }
@@ -53,6 +59,13 @@ public abstract class VampirismBlockContainer extends BlockContainer {
             return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
         }
         return state;
+    }
+
+    /**
+     * For compat with 1.11
+     */
+    protected IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
+        return super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, placer.getHeldItem(hand));
     }
 
     /**
