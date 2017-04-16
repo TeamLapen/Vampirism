@@ -25,7 +25,7 @@ task crowdin(type: CrowdinDownload) {
 
     // task auomatically skips if this is null
     if (project.hasProperty('CROWDIN_KEY'))
-        apiKey = project.CROWDIN_KEY
+        apiKey = project.CROWDIN_KEY+"&branch=1.10"
 }
 
 
