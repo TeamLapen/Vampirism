@@ -27,7 +27,7 @@ import javax.annotation.Nonnull;
  */
 public class BlockChurchAltar extends VampirismBlock {
 
-    private final static String regName = "churchAltar";
+    private final static String regName = "church_altar";
 
     public BlockChurchAltar() {
         super(regName, Material.WOOD);

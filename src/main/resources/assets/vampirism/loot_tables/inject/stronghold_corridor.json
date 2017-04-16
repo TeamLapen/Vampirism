@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:vampireBook",
+          "name": "vampirism:vampire_book",
           "weight": 23,
           "functions": [
             {
@@ -27,7 +27,7 @@
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:armorOfSwiftness_head",
+          "name": "vampirism:armor_of_swiftness_head",
           "weight": 5,
           "functions": [
             {
@@ -45,7 +45,7 @@
         },
         {
           "type": "item",
-          "name": "vampirism:armorOfSwiftness_chest",
+          "name": "vampirism:armor_of_swiftness_chest",
           "weight": 5,
           "functions": [
             {
@@ -63,7 +63,7 @@
         },
         {
           "type": "item",
-          "name": "vampirism:armorOfSwiftness_legs",
+          "name": "vampirism:armor_of_swiftness_legs",
           "weight": 5,
           "functions": [
             {
@@ -81,7 +81,7 @@
         },
         {
           "type": "item",
-          "name": "vampirism:armorOfSwiftness_feet",
+          "name": "vampirism:armor_of_swiftness_feet",
           "weight": 5,
           "functions": [
             {
@@ -109,7 +109,7 @@
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:obsidianArmor_head",
+          "name": "vampirism:obsidian_armor_head",
           "weight": 7,
           "functions": [
             {
@@ -127,7 +127,7 @@
         },
         {
           "type": "item",
-          "name": "vampirism:obsidianArmor_chest",
+          "name": "vampirism:obsidian_armor_chest",
           "weight": 7,
           "functions": [
             {
@@ -145,7 +145,7 @@
         },
         {
           "type": "item",
-          "name": "vampirism:obsidianArmor_legs",
+          "name": "vampirism:obsidian_armor_legs",
           "weight": 7,
           "functions": [
             {
@@ -163,7 +163,7 @@
         },
         {
           "type": "item",
-          "name": "vampirism:obsidianArmor_feet",
+          "name": "vampirism:obsidian_armor_feet",
           "weight": 7,
           "functions": [
             {

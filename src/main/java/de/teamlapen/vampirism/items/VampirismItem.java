@@ -31,6 +31,14 @@ public class VampirismItem extends Item {
         this.setUnlocalizedName(REFERENCE.MODID + "." + regName);
     }
 
+    /**
+     *
+     * @return The name this item is registered in the GameRegistry
+     */
+    public String getRegisteredName(){
+        return regName;
+    }
+
     public String getLocalizedName() {
         return UtilLib.translate(getUnlocalizedName() + ".name");
     }

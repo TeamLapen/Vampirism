@@ -22,7 +22,7 @@ import java.util.List;
 
 public class ItemObsidianArmor extends VampirismHunterArmor implements IItemWithTier {
 
-    private final static String baseRegName = "obsidianArmor";
+    private final static String baseRegName = "obsidian_armor";
 
     public static boolean isFullyEquipped(EntityPlayer player) {
         for (ItemStack stack : player.inventory.armorInventory) {
@@ -49,7 +49,7 @@ public class ItemObsidianArmor extends VampirismHunterArmor implements IItemWith
         super.addInformation(stack, playerIn, tooltip, advanced);
         TIER t = getTier(stack);
         if (t != TIER.NORMAL) {
-            tooltip.add(TextFormatting.AQUA + UtilLib.translate("text.vampirism.itemTier." + t.name().toLowerCase()));
+            tooltip.add(TextFormatting.AQUA + UtilLib.translate("text.vampirism.item_tier." + t.name().toLowerCase()));
         }
     }
 

@@ -27,7 +27,7 @@ import java.util.Random;
 public class BlockAlchemicalFire extends VampirismBlock {
     public static final PropertyInteger AGE = PropertyInteger.create("age", 0, 15);
 
-    private static final String name = "alchemicalFire";
+    private static final String name = "alchemical_fire";
 
     public BlockAlchemicalFire() {
         super(name, Material.FIRE);

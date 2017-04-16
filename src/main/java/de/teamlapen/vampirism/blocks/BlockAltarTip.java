@@ -7,7 +7,7 @@ import net.minecraft.block.state.IBlockState;
  * Part of the Altar of Infusion structure
  */
 public class BlockAltarTip extends VampirismBlock {
-    private final static String name = "altarTip";
+    private final static String name = "altar_tip";
 
     public BlockAltarTip() {
         super(name, Material.IRON);

@@ -220,7 +220,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
         }
         if (button.id == 2) {
             boolean test = VampirismMod.inDev || VampirismMod.instance.getVersionInfo().getCurrentVersion().isTestVersion();
-            GuiYesNo resetGui = new GuiYesNo(this, UtilLib.translate("gui.vampirism.resetSkills.title"), UtilLib.translate("gui.vampirism.resetSkills." + (test ? "descTest" : "test")), 10);
+            GuiYesNo resetGui = new GuiYesNo(this, UtilLib.translate("gui.vampirism.reset_skills.title"), UtilLib.translate("gui.vampirism.reset_skills." + (test ? "desc_test" : "test")), 10);
             this.mc.displayGuiScreen(resetGui);
         }
     }

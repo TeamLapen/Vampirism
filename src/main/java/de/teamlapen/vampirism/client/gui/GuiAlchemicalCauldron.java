@@ -14,7 +14,7 @@ import net.minecraft.util.ResourceLocation;
  * @author maxanier
  */
 public class GuiAlchemicalCauldron extends GuiContainer {
-    private static final ResourceLocation BACKGROUND = new ResourceLocation("vampirism:textures/gui/alchemicalCauldron.png");
+    private static final ResourceLocation BACKGROUND = new ResourceLocation("vampirism:textures/gui/alchemical_cauldron.png");
 
     private final IInventory cauldron;
     private final InventoryPlayer playerInventory;

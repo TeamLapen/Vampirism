@@ -29,7 +29,7 @@ import net.minecraft.world.World;
  */
 public class BlockMedChair extends VampirismBlock {
     public static final PropertyEnum<EnumPart> PART = PropertyEnum.create("part", EnumPart.class);
-    private final static String name = "medChair";
+    private final static String name = "med_chair";
 
     public BlockMedChair() {
         super(name, Material.IRON);

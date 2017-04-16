@@ -11,12 +11,12 @@
         },
         {
           "type": "item",
-          "name": "vampirism:vampireBloodBottle",
+          "name": "vampirism:vampire_blood_bottle",
           "weight": 20
         },
         {
           "type": "item",
-          "name": "vampirism:itemGarlic",
+          "name": "vampirism:item_garlic",
           "weight": 40
         }
       ]
@@ -27,7 +27,7 @@
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:vampireBook",
+          "name": "vampirism:vampire_book",
           "weight": 50,
           "functions": [
             {
@@ -42,12 +42,12 @@
       ]
     },
     {
-      "name": "hunterWeapons",
+      "name": "hunter_weapons",
       "rolls": 1,
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:hunterAxe",
+          "name": "vampirism:hunter_axe",
           "weight": 10,
           "functions": [
             {
@@ -75,7 +75,7 @@
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:armorOfSwiftness_head",
+          "name": "vampirism:armor_of_swiftness_head",
           "weight": 10,
           "functions": [
             {
@@ -93,7 +93,7 @@
         },
         {
           "type": "item",
-          "name": "vampirism:armorOfSwiftness_chest",
+          "name": "vampirism:armor_of_swiftness_chest",
           "weight": 10,
           "functions": [
             {
@@ -111,7 +111,7 @@
         },
         {
           "type": "item",
-          "name": "vampirism:armorOfSwiftness_legs",
+          "name": "vampirism:armor_of_swiftness_legs",
           "weight": 10,
           "functions": [
             {
@@ -129,7 +129,7 @@
         },
         {
           "type": "item",
-          "name": "vampirism:armorOfSwiftness_feet",
+          "name": "vampirism:armor_of_swiftness_feet",
           "weight": 10,
           "functions": [
             {
@@ -157,7 +157,7 @@
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:hunterCoat_head",
+          "name": "vampirism:hunter_coat_head",
           "weight": 10,
           "functions": [
             {
@@ -175,7 +175,7 @@
         },
         {
           "type": "item",
-          "name": "vampirism:hunterCoat_chest",
+          "name": "vampirism:hunter_coat_chest",
           "weight": 10,
           "functions": [
             {
@@ -193,7 +193,7 @@
         },
         {
           "type": "item",
-          "name": "vampirism:hunterCoat_legs",
+          "name": "vampirism:hunter_coat_legs",
           "weight": 10,
           "functions": [
             {
@@ -211,7 +211,7 @@
         },
         {
           "type": "item",
-          "name": "vampirism:hunterCoat_feet",
+          "name": "vampirism:hunter_coat_feet",
           "weight": 10,
           "functions": [
             {
@@ -239,7 +239,7 @@
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:obsidianArmor_head",
+          "name": "vampirism:obsidian_armor_head",
           "weight": 7,
           "functions": [
             {
@@ -257,7 +257,7 @@
         },
         {
           "type": "item",
-          "name": "vampirism:obsidianArmor_chest",
+          "name": "vampirism:obsidian_armor_chest",
           "weight": 7,
           "functions": [
             {
@@ -275,7 +275,7 @@
         },
         {
           "type": "item",
-          "name": "vampirism:obsidianArmor_legs",
+          "name": "vampirism:obsidian_armor_legs",
           "weight": 7,
           "functions": [
             {
@@ -293,7 +293,7 @@
         },
         {
           "type": "item",
-          "name": "vampirism:obsidianArmor_feet",
+          "name": "vampirism:obsidian_armor_feet",
           "weight": 7,
           "functions": [
             {

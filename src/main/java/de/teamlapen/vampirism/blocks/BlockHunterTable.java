@@ -21,7 +21,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * TODO create a unique texture for the top side
  */
 public class BlockHunterTable extends VampirismBlock {
-    public static final String name = "hunterTable";
+    public static final String name = "hunter_table";
 
     public static HunterTableContainer createInventoryContainer(EntityPlayer player, BlockPos pos) {
         return new HunterTableContainer(player, pos);

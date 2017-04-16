@@ -21,7 +21,7 @@ import java.util.List;
 public class ItemHunterIntel extends VampirismItem {
 
 
-    private final static String name = "hunterIntel";
+    private final static String name = "hunter_intel";
 
     public ItemHunterIntel() {
         super(name);

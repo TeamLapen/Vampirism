@@ -19,7 +19,7 @@ import java.util.List;
 
 public class BlockSunscreenBeacon extends VampirismBlockContainer {
 
-    private static final String regName = "sunscreenBeacon";
+    private static final String regName = "sunscreen_beacon";
 
     public BlockSunscreenBeacon() {
         super(regName, Material.IRON);

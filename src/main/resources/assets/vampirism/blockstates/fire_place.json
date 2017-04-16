@@ -1,0 +1,15 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "vampirism:fire_place"
+  },
+  "variants": {
+    "normal": [
+      {
+      }
+    ],
+    "inventory": {
+      "transform": "forge:default-block"
+    }
+  }
+}

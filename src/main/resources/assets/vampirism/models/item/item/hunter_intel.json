@@ -1,0 +1,197 @@
+{
+  "__comment": "Designed by Maxanier",
+  "textures": {
+    "texture": "vampirism:items/hunter_table_book"
+  },
+  "elements": [
+    {
+      "from": [
+        3,
+        0,
+        0
+      ],
+      "to": [
+        13,
+        16,
+        3
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            13,
+            0,
+            16,
+            7
+          ],
+          "texture": "#texture"
+        },
+        "up": {
+          "uv": [
+            13,
+            0,
+            16,
+            7
+          ],
+          "texture": "#texture"
+        },
+        "north": {
+          "uv": [
+            3,
+            0,
+            13,
+            16
+          ],
+          "texture": "#texture"
+        },
+        "south": {
+          "uv": [
+            3,
+            0,
+            13,
+            16
+          ],
+          "texture": "#texture"
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            3,
+            16
+          ],
+          "texture": "#texture"
+        },
+        "east": {
+          "uv": [
+            13,
+            0,
+            16,
+            16
+          ],
+          "texture": "#texture"
+        }
+      }
+    }
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        7,
+        -180,
+        -1
+      ],
+      "translation": [
+        -0.1,
+        0.7,
+        -3.5
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        7,
+        -180,
+        -1
+      ],
+      "translation": [
+        -0.1,
+        0.7,
+        -3.5
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "ground": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        2.65,
+        0
+      ],
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        5.48
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        -1,
+        -28,
+        1
+      ],
+      "translation": [
+        0,
+        -1.7,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        0.76
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        -1,
+        -28,
+        1
+      ],
+      "translation": [
+        0,
+        -1.7,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        0.76
+      ]
+    },
+    "gui": {
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "translation": [
+        0,
+        0,
+        0
+      ],
+      "scale": [
+        1,
+        1,
+        1
+      ]
+    }
+  }
+}

@@ -20,7 +20,7 @@ import java.util.Random;
 
 public class BlockCursedEarth extends VampirismBlock implements IGrowable {
 
-    private static final String name = "cursedEarth";
+    private static final String name = "cursed_earth";
 
     public BlockCursedEarth() {
         super(name, Material.GROUND);

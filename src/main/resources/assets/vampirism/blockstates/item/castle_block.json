@@ -1,0 +1,26 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "cube_all",
+    "transform": "forge:default-block"
+  },
+  "variants": {
+    "type": {
+      "dark_brick": {
+        "textures": {
+          "all": "vampirism:blocks/castle_block_dark_brick"
+        }
+      },
+      "dark_brick_bloody": {
+        "textures": {
+          "all": "vampirism:blocks/castle_block_dark_brick_bloody"
+        }
+      },
+      "purple_brick": {
+        "textures": {
+          "all": "vampirism:blocks/castle_block_purple_brick"
+        }
+      }
+    }
+  }
+}

@@ -30,7 +30,7 @@ import java.util.List;
 public class ItemBloodBottle extends VampirismItem {
 
     public static final int AMOUNT = 9;
-    private static final String name = "bloodBottle";
+    private static final String name = "blood_bottle";
     private static final int MULTIPLIER = VReference.FOOD_TO_FLUID_BLOOD;
     private static final int capacity = AMOUNT * MULTIPLIER;
 

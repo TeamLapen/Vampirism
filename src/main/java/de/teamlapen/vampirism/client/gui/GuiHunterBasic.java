@@ -16,7 +16,7 @@ import java.io.IOException;
 
 
 public class GuiHunterBasic extends GuiContainer {
-    private static final ResourceLocation guiTexture = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunterBasic.png");
+    private static final ResourceLocation guiTexture = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunter_basic.png");
 
     private GuiButton buttonLevelup;
     private HunterBasicContainer container;

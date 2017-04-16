@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:vampireBook",
+          "name": "vampirism:vampire_book",
           "weight": 1,
           "functions": [
             {

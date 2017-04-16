@@ -28,6 +28,14 @@ public class VampirismItemBloodFood extends ItemFood {
         this.setUnlocalizedName(REFERENCE.MODID + "." + regName);
     }
 
+    /**
+     *
+     * @return The name this item is registered with in the GameRegistry
+     */
+    public String getRegisteredName(){
+        return regName;
+    }
+
     public String getLocalizedName() {
         return UtilLib.translate(getUnlocalizedName() + ".name");
     }

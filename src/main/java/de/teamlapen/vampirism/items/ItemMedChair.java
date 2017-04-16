@@ -18,7 +18,7 @@ import net.minecraft.world.World;
  * Item which places the two med chair blocks
  */
 public class ItemMedChair extends VampirismItem {
-    private final static String regName = "itemMedChair";
+    private final static String regName = "item_med_chair";
 
     public ItemMedChair() {
         super(regName);

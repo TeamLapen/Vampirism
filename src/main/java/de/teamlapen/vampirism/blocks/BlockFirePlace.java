@@ -20,7 +20,7 @@ import java.util.Random;
 
 public class BlockFirePlace extends VampirismBlock {
     protected static final AxisAlignedBB BBOX = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 0.5D, 1.0D);
-    private final static String regName = "firePlace";
+    private final static String regName = "fire_place";
 
     public BlockFirePlace() {
         super(regName, Material.WOOD);

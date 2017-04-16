@@ -23,7 +23,7 @@ import java.util.Random;
  * Altar of infusion
  */
 public class BlockAltarInfusion extends VampirismBlockContainer {
-    private final static String name = "altarInfusion";
+    private final static String name = "altar_infusion";
 
     public BlockAltarInfusion() {
         super(name, Material.ROCK);

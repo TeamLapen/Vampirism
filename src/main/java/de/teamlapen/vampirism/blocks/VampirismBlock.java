@@ -24,12 +24,22 @@ import javax.annotation.Nullable;
 public class VampirismBlock extends Block {
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
     private boolean hasFacing = false;
+    private final String registeredName;
 
     public VampirismBlock(String regName, Material materialIn) {
         super(materialIn);
         setCreativeTab(VampirismMod.creativeTab);
         setRegistryName(REFERENCE.MODID, regName);
         this.setUnlocalizedName(REFERENCE.MODID + "." + regName);
+        this.registeredName=regName;
+    }
+
+    /**
+     *
+     * @return The name this block is registered in the GameRegistry
+     */
+    public String getRegisteredName() {
+        return registeredName;
     }
 
     @Override

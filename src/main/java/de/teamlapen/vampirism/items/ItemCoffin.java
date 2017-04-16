@@ -18,8 +18,7 @@ import net.minecraft.world.World;
  * Used to place coffings
  */
 public class ItemCoffin extends VampirismItem {
-    public static final String name = "itemCoffin";
-    private static final String TAG = "ItemCoffin";
+    public static final String name = "item_coffin";
 
     public ItemCoffin() {
         super(name);

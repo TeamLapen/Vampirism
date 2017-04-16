@@ -34,7 +34,7 @@ import java.util.List;
 
 
 public class BlockWeaponTable extends VampirismBlock {
-    public final static String regName = "weaponTable";
+    public final static String regName = "weapon_table";
     public static final int MAX_LAVA = 5;
     public static final int MB_PER_META = 200;
     public static final PropertyInteger LAVA = PropertyInteger.create("lava", 0, MAX_LAVA);

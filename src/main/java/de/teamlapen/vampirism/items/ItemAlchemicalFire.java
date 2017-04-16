@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class ItemAlchemicalFire extends VampirismItem {
 
-    private static final String regName = "itemAlchemicalFire";
+    private static final String regName = "item_alchemical_fire";
 
     public ItemAlchemicalFire() {
         super(regName);
@@ -34,8 +34,8 @@ public class ItemAlchemicalFire extends VampirismItem {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         super.addInformation(stack, playerIn, tooltip, advanced);
-        tooltip.add(UtilLib.translate("item.vampirism.itemAlchemicalFire.desc1"));
-        tooltip.add(UtilLib.translate("item.vampirism.itemAlchemicalFire.desc2"));
+        tooltip.add(UtilLib.translate("item.vampirism.item_alchemical_fire.desc1"));
+        tooltip.add(UtilLib.translate("item.vampirism.item_alchemical_fire.desc2"));
     }
 
     @Override
