@@ -95,13 +95,14 @@ public class ModEntities {
      * Register convertibles for vanilla creatures and maybe for future vampirism creature as well
      */
     private static void registerConvertibles() {
-        String base = REFERENCE.MODID + ":textures/entity/vanilla/%sOverlay.png";
+        String base = REFERENCE.MODID + ":textures/entity/vanilla/%s_overlay.png";
         IBiteableRegistry registry = VampirismAPI.biteableRegistry();
         registry.addConvertible(EntityCow.class, String.format(base, "cow"));
         registry.addConvertible(EntityPig.class, String.format(base, "pig"));
         registry.addConvertible(EntityOcelot.class, String.format(base, "cat"));
         registry.addConvertible(EntityHorse.class, String.format(base, "horse"));
         registry.addConvertible(EntityPolarBear.class, String.format(base, "polarbear"));
+        registry.addConvertible(EntityRabbit.class, String.format(base, "rabbit"));
         registry.addConvertible(EntitySheep.class, String.format(base, "sheep"), new EntityConvertedSheep.ConvertingHandler());
         registry.addConvertible(EntityVillager.class, null, new EntityConvertedVillager.ConvertingHandler());
     }

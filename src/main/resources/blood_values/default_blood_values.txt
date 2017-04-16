@@ -10,6 +10,7 @@ Ozelot=5
 Wolf=5
 MushroomCow=10
 PolarBear=10
+Rabbit=2
 
 #MCA
 mca:EntityHuman=15
