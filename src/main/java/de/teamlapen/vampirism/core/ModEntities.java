@@ -107,6 +107,7 @@ public class ModEntities {
         registry.addConvertible(EntityOcelot.class, String.format(base, "cat"));
         registry.addConvertible(EntityHorse.class, String.format(base, "horse"));
         registry.addConvertible(EntityPolarBear.class, String.format(base, "polarbear"));
+        registry.addConvertible(EntityRabbit.class, String.format(base, "rabbit"));
         registry.addConvertible(EntitySheep.class, String.format(base, "sheep"), new EntityConvertedSheep.ConvertingHandler());
         registry.addConvertible(EntityVillager.class, null, new EntityConvertedVillager.ConvertingHandler());
     }
