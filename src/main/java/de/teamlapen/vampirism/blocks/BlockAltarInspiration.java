@@ -28,7 +28,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
  * Altar of inspiration used for vampire levels 1-4
  */
 public class BlockAltarInspiration extends VampirismBlockContainer {
-    public final static String regName = "altarInspiration";
+    public final static String regName = "altar_inspiration";
     public static final IUnlistedProperty<Integer> FLUID_LEVEL = new Properties.PropertyAdapter<>(PropertyInteger.create("fluidLevel", 0, 10));
 
     public BlockAltarInspiration() {

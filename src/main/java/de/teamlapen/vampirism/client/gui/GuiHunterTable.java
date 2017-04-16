@@ -15,7 +15,7 @@ import net.minecraft.util.text.TextComponentTranslation;
  * Gui for the hunter table
  */
 public class GuiHunterTable extends GuiContainer {
-    private static final ResourceLocation altarGuiTextures = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunterTable.png");
+    private static final ResourceLocation altarGuiTextures = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunter_table.png");
     private final HunterTableContainer container;
 
     public GuiHunterTable(HunterTableContainer inventorySlotsIn) {

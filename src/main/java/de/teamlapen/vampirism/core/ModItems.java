@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.core;
 
+import com.google.common.base.CaseFormat;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -22,6 +23,7 @@ import net.minecraft.potion.PotionUtils;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.RecipeSorter;
@@ -38,7 +40,6 @@ public class ModItems {
     public static ItemHumanHeartWeak humanHeartWeak;
     public static ItemBloodBottle bloodBottle;
     public static ItemTent itemTent;
-    public static ItemBattleAxe battleAxe;
     public static ItemCoffin itemCoffin;
     public static ItemPureBlood pureBlood;
     public static ItemHunterIntel hunterIntel;
@@ -189,7 +190,6 @@ public class ModItems {
         humanHeartWeak = registerItem(new ItemHumanHeartWeak());
         bloodBottle = registerItem(new ItemBloodBottle());
         itemTent = registerItem(new ItemTent());
-        battleAxe = registerItem(new ItemBattleAxe());
         itemCoffin = registerItem(new ItemCoffin());
         pureBlood = registerItem(new ItemPureBlood());
         hunterIntel = registerItem(new ItemHunterIntel());
@@ -197,23 +197,23 @@ public class ModItems {
         itemMedChair = registerItem(new ItemMedChair());
         injection = registerItem(new ItemInjection());
         pitchfork = registerItem(new ItemPitchfork());
-        basicCrossbow = registerItem(new ItemSimpleCrossbow("basicCrossbow", 1, 20, 300));
+        basicCrossbow = registerItem(new ItemSimpleCrossbow("basic_crossbow", 1, 20, 300));
         basicCrossbow.setEnchantability(Item.ToolMaterial.WOOD);
-        basicDoubleCrossbow = registerItem(new ItemDoubleCrossbow("basicDoubleCrossbow", 1, 20, 300));
+        basicDoubleCrossbow = registerItem(new ItemDoubleCrossbow("basic_double_crossbow", 1, 20, 300));
         basicDoubleCrossbow.setEnchantability(Item.ToolMaterial.WOOD);
-        enhancedCrossbow = registerItem(new ItemSimpleCrossbow("enhancedCrossbow", 1.5F, 15, 350));
+        enhancedCrossbow = registerItem(new ItemSimpleCrossbow("enhanced_crossbow", 1.5F, 15, 350));
         enhancedCrossbow.setEnchantability(Item.ToolMaterial.IRON);
-        enhancedDoubleCrossbow = registerItem(new ItemDoubleCrossbow("enhancedDoubleCrossbow", 1.5F, 15, 350));
+        enhancedDoubleCrossbow = registerItem(new ItemDoubleCrossbow("enhanced_double_crossbow", 1.5F, 15, 350));
         enhancedDoubleCrossbow.setEnchantability(Item.ToolMaterial.IRON);
         crossbowArrow = registerItem(new ItemCrossbowArrow());
         stake = registerItem(new ItemStake());
         vampireBlood = registerItem(new ItemVampireBloodBottle());
         bloodPotion = registerItem(new ItemBloodPotion());
-        basicTechCrossbow = registerItem(new ItemTechCrossbow("basicTechCrossbow", 1.6F, 6, 300));
+        basicTechCrossbow = registerItem(new ItemTechCrossbow("basic_tech_crossbow", 1.6F, 6, 300));
         basicTechCrossbow.setEnchantability(Item.ToolMaterial.DIAMOND);
-        enhancedTechCrossbow = registerItem(new ItemTechCrossbow("enhancedTechCrossbow", 1.7F, 4, 450));
+        enhancedTechCrossbow = registerItem(new ItemTechCrossbow("enhanced_tech_crossbow", 1.7F, 4, 450));
         enhancedTechCrossbow.setEnchantability(Item.ToolMaterial.DIAMOND);
-        techCrossbowAmmoPackage = registerItem(new VampirismItem("techCrossbowAmmoPackage") {
+        techCrossbowAmmoPackage = registerItem(new VampirismItem("tech_crossbow_ammo_package") {
             @Override
             public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
                 tooltip.add(UtilLib.translateFormatted("item.vampirism." + regName + ".tooltip", basicTechCrossbow.getLocalizedName()));
@@ -264,5 +264,36 @@ public class ModItems {
     private static <T extends Item> T registerItem(T item) {
         GameRegistry.register(item);
         return item;
+    }
+
+
+    /**
+     * Fix item mappings
+     */
+    public static boolean fixMapping(FMLMissingMappingsEvent.MissingMapping mapping) {
+
+        //Removed battle Axe
+        if ("battleAxe".equals(mapping.resourceLocation.getResourcePath())) {
+            mapping.ignore();
+            return true;
+        }
+        //Check for mappings changed for 1.11 CamelCase to lower underscore
+        String converted = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, mapping.resourceLocation.getResourcePath());
+        boolean r = checkMapping(mapping, converted, armorOfSwiftness_boots, armorOfSwiftness_chest, armorOfSwiftness_helmet, armorOfSwiftness_legs, basicCrossbow, basicDoubleCrossbow, basicTechCrossbow, bloodBottle, bloodPotion, crossbowArrow, enhancedCrossbow, enhancedDoubleCrossbow);
+        if (!r)
+            r = checkMapping(mapping, converted, enhancedTechCrossbow, humanHeart, humanHeartWeak, hunterAxe, hunterCoat_boots, hunterCoat_chest, hunterCoat_helmet, hunterCoat_legs, hunterHat0, hunterHat1, hunterIntel, injection, itemAlchemicalFire, itemCoffin, itemGarlic, itemMedChair);
+        if (!r)
+            r = checkMapping(mapping, converted, itemTent, obsidianArmor_boots, obsidianArmor_chest, obsidianArmor_helmet, obsidianArmor_legs, pitchfork, pureBlood, techCrossbowAmmoPackage, vampireBlood, vampireBook, vampireFang);
+        return r;
+    }
+
+    private static boolean checkMapping(FMLMissingMappingsEvent.MissingMapping mapping, String converted, Item... items) {
+        for (Item i : items) {
+            if (i instanceof VampirismItem && ((VampirismItem) i).getRegisteredName().equals(converted) || i instanceof VampirismItemBloodFood && ((VampirismItemBloodFood) i).getRegisteredName().equals(converted) || i instanceof VampirismHunterArmor && ((VampirismHunterArmor) i).getRegisteredName().equals(converted)) {
+                mapping.remap(i);
+                return true;
+            }
+        }
+        return false;
     }
 }

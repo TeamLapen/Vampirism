@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class BlockGarlicBeacon extends VampirismBlockContainer {
 
-    public final static String regName = "garlicBeacon";
+    public final static String regName = "garlic_beacon";
     public final static PropertyEnum<Type> TYPE = PropertyEnum.create("type", Type.class);
     private final static AxisAlignedBB BOUNDING_BOX = new AxisAlignedBB(0.07, 0, 0.07, 0.93, 0.75, 0.93);
     private final static AxisAlignedBB COLLISION_BOX_1 = new AxisAlignedBB(0.19, 0, 0.19, 0.81, 0.75, 0.81);

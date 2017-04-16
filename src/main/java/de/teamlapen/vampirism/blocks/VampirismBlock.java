@@ -15,6 +15,7 @@ import net.minecraft.util.Rotation;
  */
 public class VampirismBlock extends Block {
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+    private final String registeredName;
     private boolean hasFacing = false;
 
     public VampirismBlock(String regName, Material materialIn) {
@@ -22,6 +23,14 @@ public class VampirismBlock extends Block {
         setCreativeTab(VampirismMod.creativeTab);
         setRegistryName(REFERENCE.MODID, regName);
         this.setUnlocalizedName(REFERENCE.MODID + "." + regName);
+        this.registeredName = regName;
+    }
+
+    /**
+     * @return The name this block is registered in the GameRegistry
+     */
+    public String getRegisteredName() {
+        return registeredName;
     }
 
 

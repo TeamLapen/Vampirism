@@ -78,7 +78,6 @@ public class ModItemsRender {
         renderHelper.registerRender(ModItems.humanHeartWeak, "normal");
         renderHelper.registerRender(ModItems.itemTent, "normal");
         renderHelper.registerRenderAllMeta(ModItems.bloodBottle, ItemBloodBottle.AMOUNT + 1);
-        renderHelper.registerRender(ModItems.battleAxe, "normal");
         renderHelper.registerRender(ModItems.itemCoffin, "normal");
         renderHelper.registerRenderAllMeta(ModItems.pureBlood, ItemPureBlood.COUNT);
         renderHelper.registerRenderAllMeta(ModItems.hunterIntel, HunterLevelingConf.instance().HUNTER_INTEL_COUNT, "normal");
@@ -124,20 +123,20 @@ public class ModItemsRender {
 
         registerSimpleItemWithTier(ModItems.hunterAxe);
 
-        registerArmorItemWithTier(ModItems.armorOfSwiftness_helmet, "swiftnessArmor");
-        registerArmorItemWithTier(ModItems.armorOfSwiftness_chest, "swiftnessArmor");
-        registerArmorItemWithTier(ModItems.armorOfSwiftness_legs, "swiftnessArmor");
-        registerArmorItemWithTier(ModItems.armorOfSwiftness_boots, "swiftnessArmor");
+        registerArmorItemWithTier(ModItems.armorOfSwiftness_helmet, "swiftness_armor");
+        registerArmorItemWithTier(ModItems.armorOfSwiftness_chest, "swiftness_armor");
+        registerArmorItemWithTier(ModItems.armorOfSwiftness_legs, "swiftness_armor");
+        registerArmorItemWithTier(ModItems.armorOfSwiftness_boots, "swiftness_armor");
 
-        registerArmorItemWithTier(ModItems.hunterCoat_helmet, "hunterCoat");
-        registerArmorItemWithTier(ModItems.hunterCoat_chest, "hunterCoat");
-        registerArmorItemWithTier(ModItems.hunterCoat_legs, "hunterCoat");
-        registerArmorItemWithTier(ModItems.hunterCoat_boots, "hunterCoat");
+        registerArmorItemWithTier(ModItems.hunterCoat_helmet, "hunter_coat");
+        registerArmorItemWithTier(ModItems.hunterCoat_chest, "hunter_coat");
+        registerArmorItemWithTier(ModItems.hunterCoat_legs, "hunter_coat");
+        registerArmorItemWithTier(ModItems.hunterCoat_boots, "hunter_coat");
 
-        registerArmorItemWithTier(ModItems.obsidianArmor_helmet, "obsidianArmor");
-        registerArmorItemWithTier(ModItems.obsidianArmor_chest, "obsidianArmor");
-        registerArmorItemWithTier(ModItems.obsidianArmor_legs, "obsidianArmor");
-        registerArmorItemWithTier(ModItems.obsidianArmor_boots, "obsidianArmor");
+        registerArmorItemWithTier(ModItems.obsidianArmor_helmet, "obsidian_armor");
+        registerArmorItemWithTier(ModItems.obsidianArmor_chest, "obsidian_armor");
+        registerArmorItemWithTier(ModItems.obsidianArmor_legs, "obsidian_armor");
+        registerArmorItemWithTier(ModItems.obsidianArmor_boots, "obsidian_armor");
 
 
         //----------------------

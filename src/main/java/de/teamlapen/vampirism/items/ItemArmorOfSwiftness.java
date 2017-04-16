@@ -24,7 +24,7 @@ import java.util.List;
 
 public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemWithTier {
 
-    private final static String baseRegName = "armorOfSwiftness";
+    private final static String baseRegName = "armor_of_swiftness";
     private final int[] DAMAGE_REDUCTION_ULTIMATE = new int[]{2, 5, 6, 2};
     private final int[] DAMAGE_REDUCTION_ENHANCED = new int[]{2, 3, 4, 2};
     private final int[] DAMAGE_REDUCTION_NORMAL = new int[]{1, 2, 3, 1};
@@ -38,7 +38,7 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
         super.addInformation(stack, playerIn, tooltip, advanced);
         TIER t = getTier(stack);
         if (t != TIER.NORMAL) {
-            tooltip.add(TextFormatting.AQUA + UtilLib.translate("text.vampirism.itemTier." + t.name().toLowerCase()));
+            tooltip.add(TextFormatting.AQUA + UtilLib.translate("text.vampirism.item_tier." + t.name().toLowerCase()));
         }
     }
 

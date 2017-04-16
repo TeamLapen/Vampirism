@@ -19,7 +19,7 @@ import java.util.List;
 public class ItemPureBlood extends VampirismItem {
 
     public static final int COUNT = 5;
-    private final static String name = "pureBlood";
+    private final static String name = "pure_blood";
 
     public ItemPureBlood() {
         super(name);

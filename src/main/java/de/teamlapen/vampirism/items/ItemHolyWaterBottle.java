@@ -70,7 +70,7 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
         super.addInformation(stack, playerIn, tooltip, advanced);
         TIER t = getTier(stack);
         if (t != TIER.NORMAL) {
-            tooltip.add(TextFormatting.AQUA + UtilLib.translate("text.vampirism.itemTier." + t.name().toLowerCase()));
+            tooltip.add(TextFormatting.AQUA + UtilLib.translate("text.vampirism.item_tier." + t.name().toLowerCase()));
         }
     }
 

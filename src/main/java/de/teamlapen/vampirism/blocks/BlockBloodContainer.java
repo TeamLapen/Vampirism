@@ -37,7 +37,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockBloodContainer extends VampirismBlockContainer {
     public static final IUnlistedProperty<Integer> FLUID_LEVEL = new Properties.PropertyAdapter<>(PropertyInteger.create("fluidLevel", 0, 14));
     public static final IUnlistedProperty<String> FLUID_NAME = new PropertyStringUnlisted("fluidName");
-    public final static String regName = "bloodContainer";
+    public final static String regName = "blood_container";
 
     public BlockBloodContainer() {
         super(regName, Material.GLASS);

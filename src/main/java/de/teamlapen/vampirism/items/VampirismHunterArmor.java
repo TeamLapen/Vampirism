@@ -28,8 +28,10 @@ import java.util.UUID;
 /**
  * Base class for all hunter only armor items
  */
-abstract class VampirismHunterArmor extends ItemArmor implements ISpecialArmor {
+public abstract class VampirismHunterArmor extends ItemArmor implements ISpecialArmor {
     protected static final UUID[] VAMPIRISM_ARMOR_MODIFIER = new UUID[]{UUID.fromString("f0b9a417-0cec-4629-8623-053cd0feec3c"), UUID.fromString("e54474a9-62a0-48ee-baaf-7efddca3d711"), UUID.fromString("ac0c33f4-ebbf-44fe-9be3-a729f7633329"), UUID.fromString("8839e157-d576-4cff-bf34-0a788131fe0f")};
+
+    private final String registeredName;
 
     public VampirismHunterArmor(ArmorMaterial materialIn, EntityEquipmentSlot equipmentSlotIn, String baseRegName) {
         super(materialIn, 0, equipmentSlotIn);
@@ -37,6 +39,7 @@ abstract class VampirismHunterArmor extends ItemArmor implements ISpecialArmor {
         String regName = baseRegName + "_" + equipmentSlotIn.getName();
         setRegistryName(REFERENCE.MODID, regName);
         this.setUnlocalizedName(REFERENCE.MODID + "." + baseRegName + "." + equipmentSlotIn.getName());
+        registeredName = regName;
     }
 
     @SideOnly(Side.CLIENT)
@@ -71,6 +74,13 @@ abstract class VampirismHunterArmor extends ItemArmor implements ISpecialArmor {
     @Override
     public ArmorProperties getProperties(EntityLivingBase player, ItemStack armor, DamageSource source, double damage, int slot) {
         return new ArmorProperties(0, getDamageReduction(slot, armor) / 25D, Integer.MAX_VALUE);
+    }
+
+    /**
+     * @return The name this armor piece is registered in the GameRegistry
+     */
+    public String getRegisteredName() {
+        return registeredName;
     }
 
     @Override

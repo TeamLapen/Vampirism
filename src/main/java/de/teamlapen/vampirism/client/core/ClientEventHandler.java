@@ -66,7 +66,7 @@ public class ClientEventHandler {
             // load the fluid models for the different levels from the .json files
 
             for (int x = 0; x < BakedBloodContainerModel.FLUID_LEVELS; x++) {
-                containerFluidModels[x] = (IRetexturableModel) ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/bloodContainer/fluid_" + String.valueOf(x + 1)));
+                containerFluidModels[x] = (IRetexturableModel) ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/blood_container/fluid_" + String.valueOf(x + 1)));
             }
 
             Function<ResourceLocation, TextureAtlasSprite> textureGetter = new Function<ResourceLocation, TextureAtlasSprite>() {
@@ -131,7 +131,7 @@ public class ClientEventHandler {
                 }
             };
             for (int x = 0; x < BakedAltarInspirationModel.FLUID_LEVELS; x++) {
-                IModel model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/altarInspiration/blood" + String.valueOf(x + 1)));
+                IModel model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/altar_inspiration/blood" + String.valueOf(x + 1)));
                 BakedAltarInspirationModel.FLUID_MODELS[x] = model.bake(model.getDefaultState(), Attributes.DEFAULT_BAKED_FORMAT, textureGetter);
             }
             RegistrySimple<ModelResourceLocation, IBakedModel> registry = (RegistrySimple) event.getModelRegistry();
@@ -167,7 +167,7 @@ public class ClientEventHandler {
                 }
             };
             for (int x = 0; x < BakedWeaponTableModel.FLUID_LEVELS; x++) {
-                IModel model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/weaponTable/weaponTableLava" + String.valueOf(x + 1)));
+                IModel model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/weapon_table/weapon_table_lava" + String.valueOf(x + 1)));
                 BakedWeaponTableModel.FLUID_MODELS[x] = model.bake(model.getDefaultState(), Attributes.DEFAULT_BAKED_FORMAT, textureGetter);
             }
             RegistrySimple<ModelResourceLocation, IBakedModel> registry = (RegistrySimple) event.getModelRegistry();

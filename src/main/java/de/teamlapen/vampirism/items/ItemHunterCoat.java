@@ -18,7 +18,7 @@ import java.util.List;
 
 public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTier {
 
-    private final static String baseRegName = "hunterCoat";
+    private final static String baseRegName = "hunter_coat";
 
     public static boolean isFullyEquipped(EntityPlayer player) {
         for (ItemStack stack : player.inventory.armorInventory) {
@@ -42,7 +42,7 @@ public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTie
         super.addInformation(stack, playerIn, tooltip, advanced);
         TIER t = getTier(stack);
         if (t != TIER.NORMAL) {
-            tooltip.add(TextFormatting.AQUA + UtilLib.translate("text.vampirism.itemTier." + t.name().toLowerCase()));
+            tooltip.add(TextFormatting.AQUA + UtilLib.translate("text.vampirism.item_tier." + t.name().toLowerCase()));
         }
     }
 

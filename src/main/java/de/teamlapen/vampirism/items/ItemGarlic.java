@@ -17,7 +17,7 @@ import net.minecraftforge.common.IPlantable;
  * Item for the garlic plant
  */
 public class ItemGarlic extends VampirismItem implements IPlantable {
-    private final static String regName = "itemGarlic";
+    private final static String regName = "item_garlic";
 
     public ItemGarlic() {
         super(regName);

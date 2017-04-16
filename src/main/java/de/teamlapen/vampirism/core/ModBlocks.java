@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.core;
 
+import com.google.common.base.CaseFormat;
 import de.teamlapen.lib.lib.item.ItemMetaBlock;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.blocks.*;
@@ -10,6 +11,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
@@ -129,6 +131,43 @@ public class ModBlocks {
         Item item = new ItemBlock(block);
         item.setRegistryName(block.getRegistryName());
         return registerBlock(block, item);
+    }
+
+    /**
+     * Fix block mappings
+     *
+     * @return if it was fixed
+     */
+    public static boolean fixMapping(FMLMissingMappingsEvent.MissingMapping mapping) {
+
+        //Check for mappings changed for 1.11 CamelCase to lower underscore
+        String converted = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, mapping.resourceLocation.getResourcePath());
+        return checkMapping(mapping, converted, alchemicalCauldron, alchemicalFire, altarInfusion, altarInspiration, altarPillar, altarTip, bloodContainer, bloodPotionTable, castleBlock, churchAltar, coffin, cursedEarth, firePlace, fluidBlood, garlicBeacon, hunterTable, medChair, sunscreenBeacon, tentMain, vampirismFlower, weaponTable);
+    }
+
+    private static boolean checkMapping(FMLMissingMappingsEvent.MissingMapping mapping, String converted, Block... blocks) {
+        for (Block b : blocks) {
+            if (b instanceof VampirismBlock && ((VampirismBlock) b).getRegisteredName().equals(converted) || b instanceof VampirismBlockContainer && ((VampirismBlockContainer) b).getRegisteredName().equals(converted) || b instanceof VampirismFlower && ((VampirismFlower) b).getRegisteredName().equals(converted) || b instanceof BlockFluidBlood && ((BlockFluidBlood) b).getRegisteredName().equals(converted)) {
+                if (mapping.type == GameRegistry.Type.ITEM) {
+                    mapping.remap(Item.getItemFromBlock(b));
+                } else {
+                    mapping.remap(b);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Fix item block mappings
+     *
+     * @return if it was fixed
+     */
+    public static boolean fixMappingItemBlock(FMLMissingMappingsEvent.MissingMapping mapping) {
+        //Check for mappings changed for 1.11 CamelCase to lower underscore
+        String converted = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, mapping.resourceLocation.getResourcePath());
+        return checkMapping(mapping, converted, alchemicalCauldron, altarInfusion, altarInspiration, altarPillar, altarTip, bloodContainer, bloodPotionTable, castleBlock, churchAltar, cursedEarth, firePlace, fluidBlood, garlicBeacon, hunterTable, sunscreenBeacon, vampirismFlower, weaponTable);
     }
 
 

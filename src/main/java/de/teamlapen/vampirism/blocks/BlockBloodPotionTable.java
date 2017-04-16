@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 
 public class BlockBloodPotionTable extends VampirismBlock {
 
-    private final static String regName = "bloodPotionTable";
+    private final static String regName = "blood_potion_table";
 
 
     public BlockBloodPotionTable() {

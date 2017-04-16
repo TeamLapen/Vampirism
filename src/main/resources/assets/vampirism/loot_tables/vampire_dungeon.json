@@ -6,12 +6,12 @@
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:vampireFang",
+          "name": "vampirism:vampire_fang",
           "weight": 35
         },
         {
           "type": "item",
-          "name": "vampirism:bloodBottle",
+          "name": "vampirism:blood_bottle",
           "weight": 20,
           "functions": [
             {
@@ -28,7 +28,7 @@
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:vampireBook",
+          "name": "vampirism:vampire_book",
           "weight": 70,
           "functions": [
             {

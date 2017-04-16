@@ -121,7 +121,7 @@ public class ModBlocksRender {
         ModelLoader.setCustomStateMapper(ModBlocks.coffin, new StateMapperBase() {
             @Override
             protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                return new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "blockCoffin"), "normal");
+                return new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "block_coffin"), "normal");
             }
         });
         ModelLoader.setCustomStateMapper(ModBlocks.tentMain, new StateMapperBase() {
@@ -134,7 +134,7 @@ public class ModBlocksRender {
         ModelLoader.setCustomStateMapper(ModBlocks.alchemicalFire, new StateMapperBase() {
             @Override
             protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                return new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "alchemicalFire"), "normal");
+                return new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "alchemical_fire"), "normal");
             }
         });
 

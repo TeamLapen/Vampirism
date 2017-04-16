@@ -35,7 +35,7 @@ import java.util.Random;
  */
 public class BlockCoffin extends VampirismBlockContainer {
 
-    public static final String name = "blockCoffin";
+    public static final String name = "block_coffin";
     public final static Material material = Material.WOOD;
     public static final PropertyEnum<EnumPartType> PART = PropertyEnum.create("part", EnumPartType.class);
     public static final PropertyBool OCCUPIED = PropertyBool.create("occupied");

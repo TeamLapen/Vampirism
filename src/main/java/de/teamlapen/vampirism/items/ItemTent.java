@@ -18,7 +18,7 @@ import net.minecraft.world.World;
  * Item used to place a tent
  */
 public class ItemTent extends VampirismItem {
-    private static final String name = "itemTent";
+    private static final String name = "item_tent";
 
     public static boolean placeAt(World world, BlockPos pos, EnumFacing dir, boolean force, boolean spawner) {
         int x = pos.getX();

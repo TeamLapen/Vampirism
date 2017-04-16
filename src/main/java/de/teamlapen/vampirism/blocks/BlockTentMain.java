@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
  * Main block for the 2x2 block tent. Handles spawning
  */
 public class BlockTentMain extends BlockTent implements ITileEntityProvider {
-    private static final String name = "tentMain";
+    private static final String name = "tent_main";
 
     public BlockTentMain() {
         super(name);

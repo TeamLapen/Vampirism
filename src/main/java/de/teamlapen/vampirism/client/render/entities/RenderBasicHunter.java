@@ -16,14 +16,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public class RenderBasicHunter extends RenderBiped<EntityBasicHunter> {
-    private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampireHunterBase1.png");
+    private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_base1.png");
     private final ResourceLocation textures[] = {
-            new ResourceLocation(REFERENCE.MODID, "textures/entity/vampireHunterBase2.png"),
-            new ResourceLocation(REFERENCE.MODID, "textures/entity/vampireHunterBase3.png"),
-            new ResourceLocation(REFERENCE.MODID, "textures/entity/vampireHunterBase4.png"),
-            new ResourceLocation(REFERENCE.MODID, "textures/entity/vampireHunterBase5.png")
+            new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_base2.png"),
+            new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_base3.png"),
+            new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_base4.png"),
+            new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_base5.png")
     };
-    private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampireHunterExtra.png");
+    private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_extra.png");
 
     public RenderBasicHunter(RenderManager renderManagerIn) {
         super(renderManagerIn, new ModelBasicHunter(), 0.5F);

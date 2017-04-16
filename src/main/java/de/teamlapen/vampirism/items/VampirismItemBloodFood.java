@@ -32,6 +32,13 @@ public class VampirismItemBloodFood extends ItemFood {
         return UtilLib.translate(getUnlocalizedName() + ".name");
     }
 
+    /**
+     * @return The name this item is registered with in the GameRegistry
+     */
+    public String getRegisteredName() {
+        return regName;
+    }
+
     @Override
     public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
         --stack.stackSize;

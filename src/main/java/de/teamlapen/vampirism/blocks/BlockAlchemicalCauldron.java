@@ -31,7 +31,7 @@ import javax.annotation.Nullable;
  */
 public class BlockAlchemicalCauldron extends VampirismBlockContainer {
 
-    public final static String regName = "alchemicalCauldron";
+    public final static String regName = "alchemical_cauldron";
     /**
      * 0: No liquid,
      * 1: Liquid,

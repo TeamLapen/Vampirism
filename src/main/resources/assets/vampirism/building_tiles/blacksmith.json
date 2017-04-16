@@ -1,7 +1,7 @@
 {
   "blocks": [
     {
-      "blockId": "vampirism:doubleCastleSlab",
+      "blockId": "vampirism:double_castle_slab",
       "meta": [
         1,
         1,
@@ -507,7 +507,7 @@
       ]
     },
     {
-      "blockId": "vampirism:castleBlock",
+      "blockId": "vampirism:castle_block",
       "meta": [
         1,
         1,

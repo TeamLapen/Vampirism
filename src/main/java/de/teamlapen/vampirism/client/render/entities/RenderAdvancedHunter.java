@@ -17,8 +17,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public class RenderAdvancedHunter extends RenderBiped<EntityAdvancedHunter> {
-    private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampireHunterBase1.png");
-    private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampireHunterExtra.png");
+    private final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_base1.png");
+    private final ResourceLocation textureExtra = new ResourceLocation(REFERENCE.MODID, "textures/entity/vampire_hunter_extra.png");
 
 
     public RenderAdvancedHunter(RenderManager renderManagerIn) {

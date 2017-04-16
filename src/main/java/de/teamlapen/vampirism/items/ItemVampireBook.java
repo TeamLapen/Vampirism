@@ -27,7 +27,7 @@ import java.util.Random;
 
 
 public class ItemVampireBook extends VampirismItem {
-    private static final String regName = "vampireBook";
+    private static final String regName = "vampire_book";
 
     public static boolean validBookTagContents(NBTTagCompound nbt) {
         if (!ItemWritableBook.isNBTValid(nbt)) {

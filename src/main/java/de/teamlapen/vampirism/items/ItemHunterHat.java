@@ -13,7 +13,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Simple headwear that look like a hunter head
  */
 public class ItemHunterHat extends VampirismHunterArmor {
-    private static final String baseRegName = "hunterHat";
+    private static final String baseRegName = "hunter_hat";
     private final int type;
 
     public ItemHunterHat(int type) {

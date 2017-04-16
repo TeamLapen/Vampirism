@@ -1,0 +1,44 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "vampirism:alchemy_cauldron"
+  },
+  "variants": {
+    "liquid": {
+      "2": {
+        "submodel": "vampirism:alchemy_cauldron_liquid",
+        "textures": {
+          "liquid": "vampirism:blocks/blank_liquid_boiling"
+        }
+      },
+      "1": {
+        "submodel": "vampirism:alchemy_cauldron_liquid"
+      },
+      "0": {
+      }
+    },
+    "facing": {
+      "north": {
+      },
+      "east": {
+        "y": 90
+      },
+      "south": {
+        "y": 180
+      },
+      "west": {
+        "y": 270
+      }
+    },
+    "burning": {
+      "true": {
+        "submodel": "vampirism:alchemy_cauldron_fire"
+      },
+      "false": {
+      }
+    },
+    "inventory": {
+      "transform": "forge:default-block"
+    }
+  }
+}

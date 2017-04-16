@@ -17,7 +17,7 @@ import javax.annotation.Nonnull;
 
 public class ItemVampireFang extends VampirismItem {
 
-    private static final String name = "vampireFang";
+    private static final String name = "vampire_fang";
 
     public ItemVampireFang() {
         super(name);

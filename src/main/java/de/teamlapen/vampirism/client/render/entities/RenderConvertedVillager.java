@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderConvertedVillager extends RenderVillager {
 
-    private final ResourceLocation overlay = new ResourceLocation(REFERENCE.MODID, "textures/entity/vanilla/villagerOverlay.png");
+    private final ResourceLocation overlay = new ResourceLocation(REFERENCE.MODID, "textures/entity/vanilla/villager_overlay.png");
 
     public RenderConvertedVillager(RenderManager renderManagerIn) {
         super(renderManagerIn);

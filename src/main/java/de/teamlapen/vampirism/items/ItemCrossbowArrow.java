@@ -27,7 +27,7 @@ import java.util.List;
  */
 public class ItemCrossbowArrow extends VampirismItem {
 
-    private static final String regName = "crossbowArrow";
+    private static final String regName = "crossbow_arrow";
 
     /**
      * @return The {@link EnumArrowType} of this stack
@@ -176,7 +176,7 @@ public class ItemCrossbowArrow extends VampirismItem {
     }
 
     public enum EnumArrowType {
-        NORMAL("normal", 2.0, 0xFFFFFF), VAMPIRE_KILLER("vampireKiller", 0.5, 0x7A0073), SPITFIRE("spitfire", 0.5, 0xFF2211);
+        NORMAL("normal", 2.0, 0xFFFFFF), VAMPIRE_KILLER("vampire_killer", 0.5, 0x7A0073), SPITFIRE("spitfire", 0.5, 0xFF2211);
         public final int color;
         final String name;
         final double baseDamage;

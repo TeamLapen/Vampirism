@@ -22,7 +22,7 @@ import java.util.List;
  * Item blood potion
  */
 public class ItemBloodPotion extends VampirismItem {
-    private final static String regName = "bloodPotion";
+    private final static String regName = "blood_potion";
 
     public ItemBloodPotion() {
         super(regName);

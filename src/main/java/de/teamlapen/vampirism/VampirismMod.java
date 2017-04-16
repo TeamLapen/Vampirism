@@ -168,6 +168,21 @@ public class VampirismMod {
     }
 
     @Mod.EventHandler
+    public void onMissingMapping(FMLMissingMappingsEvent event) {
+        VampirismMod.log.d("Main", "Fixing missing mappings");
+        for (FMLMissingMappingsEvent.MissingMapping mapping : event.get()) {
+            if (mapping.type == GameRegistry.Type.BLOCK) {
+                ModBlocks.fixMapping(mapping);
+            } else if (mapping.type == GameRegistry.Type.ITEM) {
+                if (!ModItems.fixMapping(mapping)) {
+                    ModBlocks.fixMappingItemBlock(mapping);
+
+                }
+            }
+        }
+    }
+
+    @Mod.EventHandler
     public void onServerStart(FMLServerStartingEvent event) {
         event.registerServerCommand(new VampirismCommand());
         event.registerServerCommand(new TestCommand());

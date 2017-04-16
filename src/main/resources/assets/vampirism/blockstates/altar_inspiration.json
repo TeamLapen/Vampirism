@@ -1,0 +1,15 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "vampirism:altar_inspiration/altar_inspiration"
+  },
+  "variants": {
+    "normal": [
+      {
+      }
+    ],
+    "inventory": {
+      "transform": "forge:default-block"
+    }
+  }
+}

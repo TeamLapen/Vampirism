@@ -82,7 +82,7 @@ public class HunterSkills {
         SkillNode skill4 = new SkillNode(skill3, new ActionSkill<IHunterPlayer>(HunterActions.disguiseAction, "disguise") {
             @Override
             public String getLocalizedDescription() {
-                return UtilLib.translate("text.vampirism.skill.disguiseHunter.desc");
+                return UtilLib.translate("text.vampirism.skill.disguise_hunter.desc");
             }
         });
         registerAlchemy(skill4);

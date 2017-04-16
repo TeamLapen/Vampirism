@@ -12,7 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderVampireBaron extends RenderBiped<EntityVampireBaron> {
 
-    private static final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vampireBaron.png");
+    private static final ResourceLocation texture = new ResourceLocation(REFERENCE.MODID + ":textures/entity/vampire_baron.png");
 
     public RenderVampireBaron(RenderManager renderManagerIn) {
         super(renderManagerIn, new ModelVampireBaron(), 0.5F);

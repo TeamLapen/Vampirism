@@ -7,7 +7,7 @@
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:bloodBottle",
+          "name": "vampirism:blood_bottle",
           "weight": 25,
           "functions": [
             {
@@ -18,7 +18,7 @@
         },
         {
           "type": "item",
-          "name": "vampirism:vampireBook",
+          "name": "vampirism:vampire_book",
           "weight": 8,
           "functions": [
             {
@@ -38,7 +38,7 @@
       "entries": [
         {
           "type": "item",
-          "name": "vampirism:obsidianArmor_head",
+          "name": "vampirism:obsidian_armor_head",
           "weight": 7,
           "functions": [
             {
@@ -56,7 +56,7 @@
         },
         {
           "type": "item",
-          "name": "vampirism:obsidianArmor_chest",
+          "name": "vampirism:obsidian_armor_chest",
           "weight": 7,
           "functions": [
             {
@@ -74,7 +74,7 @@
         },
         {
           "type": "item",
-          "name": "vampirism:obsidianArmor_legs",
+          "name": "vampirism:obsidian_armor_legs",
           "weight": 7,
           "functions": [
             {
@@ -92,7 +92,7 @@
         },
         {
           "type": "item",
-          "name": "vampirism:obsidianArmor_feet",
+          "name": "vampirism:obsidian_armor_feet",
           "weight": 7,
           "functions": [
             {

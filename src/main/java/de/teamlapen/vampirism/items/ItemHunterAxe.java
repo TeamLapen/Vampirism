@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ItemHunterAxe extends VampirismHunterWeapon implements IItemWithTier {
-    private static final String regName = "hunterAxe";
+    private static final String regName = "hunter_axe";
 
 
     public ItemHunterAxe() {
@@ -35,7 +35,7 @@ public class ItemHunterAxe extends VampirismHunterWeapon implements IItemWithTie
         super.addInformation(stack, playerIn, tooltip, advanced);
         TIER tier = getTier(stack);
         if (tier != TIER.NORMAL) {
-            tooltip.add(TextFormatting.AQUA + UtilLib.translate("text.vampirism.itemTier." + tier.name().toLowerCase()));
+            tooltip.add(TextFormatting.AQUA + UtilLib.translate("text.vampirism.item_tier." + tier.name().toLowerCase()));
 
         }
         tooltip.add(UtilLib.translateFormatted("text.vampirism.deals_more_damage_to", Math.round((getVampireMult(tier) - 1) * 100)) + " " + UtilLib.translate(VReference.VAMPIRE_FACTION.getUnlocalizedNamePlural()));

@@ -25,7 +25,7 @@ import java.io.IOException;
  * Gui for the Hunter Trainer interaction
  */
 public class GuiHunterTrainer extends GuiContainer {
-    private static final ResourceLocation altarGuiTextures = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunterTrainer.png");
+    private static final ResourceLocation altarGuiTextures = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunter_trainer.png");
     private final HunterTrainerContainer container;
     private GuiButton buttonLevelup;
 

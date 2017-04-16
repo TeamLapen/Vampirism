@@ -28,7 +28,7 @@ import java.util.Random;
 
 public class BlockCastleBlock extends VampirismBlock {
     public static final PropertyEnum<BlockCastleBlock.EnumType> VARIANT = PropertyEnum.create("variant", BlockCastleBlock.EnumType.class);
-    private static final String name = "castleBlock";
+    private static final String name = "castle_block";
 
     public BlockCastleBlock() {
         super(name, Material.ROCK);

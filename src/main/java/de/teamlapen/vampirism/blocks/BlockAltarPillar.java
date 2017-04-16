@@ -25,7 +25,7 @@ import java.util.List;
  */
 public class BlockAltarPillar extends VampirismBlock {
     public final static PropertyEnum<EnumPillarType> typeProperty = PropertyEnum.create("type", EnumPillarType.class);
-    private final static String name = "altarPillar";
+    private final static String name = "altar_pillar";
 
     public BlockAltarPillar() {
         super(name, Material.ROCK);

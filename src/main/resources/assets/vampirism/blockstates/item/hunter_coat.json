@@ -1,0 +1,71 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "builtin/generated",
+    "transform": "forge:default-item"
+  },
+  "variants": {
+    "part": {
+      "feet_normal": {
+        "textures": {
+          "layer0": "vampirism:items/hunter_coat_boots"
+        }
+      },
+      "feet_enhanced": {
+        "textures": {
+          "layer0": "vampirism:items/hunter_coat_boots"
+        }
+      },
+      "feet_ultimate": {
+        "textures": {
+          "layer0": "vampirism:items/hunter_coat_boots"
+        }
+      },
+      "chest_normal": {
+        "textures": {
+          "layer0": "vampirism:items/hunter_coat_chestplate"
+        }
+      },
+      "chest_enhanced": {
+        "textures": {
+          "layer0": "vampirism:items/hunter_coat_chestplate"
+        }
+      },
+      "chest_ultimate": {
+        "textures": {
+          "layer0": "vampirism:items/hunter_coat_chestplate"
+        }
+      },
+      "legs_normal": {
+        "textures": {
+          "layer0": "vampirism:items/hunter_coat_leggings"
+        }
+      },
+      "legs_enhanced": {
+        "textures": {
+          "layer0": "vampirism:items/hunter_coat_leggings"
+        }
+      },
+      "legs_ultimate": {
+        "textures": {
+          "layer0": "vampirism:items/hunter_coat_leggings"
+        }
+      },
+      "head_normal": {
+        "textures": {
+          "layer0": "vampirism:items/hunter_coat_helmet"
+        }
+      },
+      "head_enhanced": {
+        "textures": {
+          "layer0": "vampirism:items/hunter_coat_helmet"
+        }
+      },
+      "head_ultimate": {
+        "textures": {
+          "layer0": "vampirism:items/hunter_coat_helmet"
+        }
+      }
+    }
+  }
+}

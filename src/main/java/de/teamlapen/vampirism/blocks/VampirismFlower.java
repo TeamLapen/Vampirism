@@ -18,7 +18,7 @@ import net.minecraft.util.NonNullList;
  */
 public class VampirismFlower extends BlockBush implements ItemMetaBlock.IMetaItemName {
     public final static PropertyEnum<EnumFlowerType> TYPE = PropertyEnum.create("type", EnumFlowerType.class);
-    private final static String regName = "vampirismFlower";
+    private final static String regName = "vampirism_flower";
 
     public VampirismFlower() {
         this.setDefaultState(this.blockState.getBaseState().withProperty(TYPE, EnumFlowerType.ORCHID));
@@ -40,6 +40,10 @@ public class VampirismFlower extends BlockBush implements ItemMetaBlock.IMetaIte
     @Override
     public int getMetaFromState(IBlockState state) {
         return state.getValue(TYPE).getMeta();
+    }
+
+    public String getRegisteredName() {
+        return regName;
     }
 
     @Override

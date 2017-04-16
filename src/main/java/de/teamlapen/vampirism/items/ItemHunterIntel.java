@@ -11,7 +11,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -23,7 +22,7 @@ import java.util.List;
 public class ItemHunterIntel extends VampirismItem {
 
 
-    private final static String name = "hunterIntel";
+    private final static String name = "hunter_intel";
 
     public ItemHunterIntel() {
         super(name);
