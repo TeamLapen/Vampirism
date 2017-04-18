@@ -54,7 +54,7 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
         } else if (liquid instanceof Block) {
             liquid = new ItemStack((Block) liquid);
         }
-        if (liquid instanceof ItemStack) {
+        if (liquid instanceof ItemStack && !ItemStackUtil.isEmpty((ItemStack) liquid)) {
             recipe = new AlchemicalCauldronRecipe(getItemStackCopy(output), ((ItemStack) liquid).copy(), getItemStackCopy(ingredient));
         } else if (liquid instanceof FluidStack) {
             recipe = new AlchemicalCauldronRecipe(getItemStackCopy(output), ((FluidStack) liquid).copy(), getItemStackCopy(ingredient));
@@ -74,7 +74,8 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
 
     @Nullable
     @Override
-    public IAlchemicalCauldronRecipe findRecipe(@Nonnull ItemStack liquid, @Nullable ItemStack ingredient) {
+    public IAlchemicalCauldronRecipe findRecipe(@Nonnull ItemStack liquid, @Nonnull ItemStack ingredient) {
+        assert !ItemStackUtil.isEmpty(liquid);
         for (IAlchemicalCauldronRecipe r : recipes) {
             if (r.isValidLiquidItem(liquid) || r.isValidFluidItem(liquid) != null) {
                 if (ItemStackUtil.doesStackContain(ingredient, r.getIngredient())) {
@@ -87,7 +88,7 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
 
     @Nullable
     @Override
-    public IAlchemicalCauldronRecipe findRecipe(FluidStack liquid, ItemStack ingredient) {
+    public IAlchemicalCauldronRecipe findRecipe(FluidStack liquid, @Nonnull ItemStack ingredient) {
 
         for (IAlchemicalCauldronRecipe r : recipes) {
             if (r.isValidFluidStack(liquid) != null) {
@@ -100,8 +101,8 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
     }
 
     @Override
-    public int getLiquidColor(@Nullable ItemStack stack) {
-        if (stack != null) {
+    public int getLiquidColor(@Nonnull ItemStack stack) {
+        if (!ItemStackUtil.isEmpty(stack)) {
             if (liquidColors.containsKey(stack)) {
                 return liquidColors.get(stack);
             }
@@ -118,6 +119,7 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
 
     @Override
     public void registerLiquidColor(@Nonnull ItemStack stack, int color) {
+        assert !ItemStackUtil.isEmpty(stack);
         liquidColors.put(stack, color);
     }
 

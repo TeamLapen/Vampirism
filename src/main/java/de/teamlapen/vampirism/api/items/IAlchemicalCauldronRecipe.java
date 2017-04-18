@@ -63,9 +63,9 @@ public interface IAlchemicalCauldronRecipe {
     /**
      * Allows META wildcard
      *
-     * @return The input item
+     * @return The input item, can be EMPTY
      */
-    @Nullable
+    @Nonnull
     ItemStack getIngredient();
 
     /**
@@ -88,11 +88,11 @@ public interface IAlchemicalCauldronRecipe {
     /**
      * Checks if the given stack has a {@link CapabilityFluidHandler#FLUID_HANDLER_CAPABILITY} and contains the required fluid, if so it returns the required Fluid Stack otherwise null.
      *
-     * @param stack
+     * @param stack may be EMPTY
      * @return If nonnull the ItemStack has a {@link CapabilityFluidHandler#FLUID_HANDLER_CAPABILITY} and contains the required (and returned) fluid.
      */
     @Nullable
-    FluidStack isValidFluidItem(ItemStack stack);
+    FluidStack isValidFluidItem(@Nonnull ItemStack stack);
 
     /**
      * Checks if the given stack contains the required stack and if so, returns the required fluid stack
@@ -102,10 +102,10 @@ public interface IAlchemicalCauldronRecipe {
 
     /**
      * Used for items without {@link CapabilityFluidHandler#FLUID_HANDLER_CAPABILITY}
-     *
+     *@param stack may be EMPTY
      * @return If the given stack contains the required 'liquid' item stack
      */
-    boolean isValidLiquidItem(ItemStack stack);
+    boolean isValidLiquidItem(@Nonnull ItemStack stack);
 
     /**
      * Set the requirements

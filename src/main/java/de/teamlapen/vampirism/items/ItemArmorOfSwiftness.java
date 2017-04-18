@@ -20,6 +20,7 @@ import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 
@@ -80,7 +81,7 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
     }
 
     @Override
-    public TIER getTier(ItemStack stack) {
+    public TIER getTier(@Nonnull ItemStack stack) {
         NBTTagCompound tag = UtilLib.checkNBT(stack);
         if (tag.hasKey("tier")) {
             try {
@@ -119,8 +120,9 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
         }
     }
 
+    @Nonnull
     @Override
-    public ItemStack setTier(ItemStack stack, TIER tier) {
+    public ItemStack setTier(@Nonnull ItemStack stack, TIER tier) {
         NBTTagCompound tag = UtilLib.checkNBT(stack);
         tag.setString("tier", tier.name());
         return stack;

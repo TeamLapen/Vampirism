@@ -24,9 +24,11 @@ public class ShapedHunterWeaponRecipe implements IHunterWeaponRecipe {
     @Nonnull
     ISkill<IHunterPlayer>[] requiredHunterSkills;
     private final int requiredLavaUnits;
-    private final ItemStack recipeOutput;
+    private final @Nonnull
+    ItemStack recipeOutput;
 
-    public ShapedHunterWeaponRecipe(int width, int height, ItemStack[] input, ItemStack output, int requiredHunterLevel, @Nonnull ISkill<IHunterPlayer>[] requiredHunterSkills, int requiredLavaUnits) {
+    public ShapedHunterWeaponRecipe(int width, int height, ItemStack[] input, @Nonnull ItemStack output, int requiredHunterLevel, @Nonnull ISkill<IHunterPlayer>[] requiredHunterSkills, int requiredLavaUnits) {
+        assert !ItemStackUtil.isEmpty(output);
         this.recipeWidth = width;
         this.recipeHeight = height;
         recipeItems = input;

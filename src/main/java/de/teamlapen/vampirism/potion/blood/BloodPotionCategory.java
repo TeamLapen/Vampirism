@@ -8,7 +8,9 @@ import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.NonNullList;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Iterator;
 import java.util.List;
@@ -20,7 +22,7 @@ class BloodPotionCategory implements IBloodPotionCategory {
     @Nullable
     String unlocDesc;
     private final String id;
-    private final List<ItemStack> exactItems = Lists.newLinkedList();
+    private final List<ItemStack> exactItems = NonNullList.create();
     private final List<Item> items = Lists.newLinkedList();
     private final List<IBloodPotionRegistry.WeightedEffect> effects = Lists.newArrayList();
 
@@ -46,7 +48,7 @@ class BloodPotionCategory implements IBloodPotionCategory {
     }
 
     @Override
-    public void addItemExact(ItemStack stack) {
+    public void addItemExact(@Nonnull ItemStack stack) {
         exactItems.add(stack);
     }
 
@@ -66,7 +68,7 @@ class BloodPotionCategory implements IBloodPotionCategory {
     }
 
     @Override
-    public boolean containsItem(ItemStack stack) {
+    public boolean containsItem(@Nonnull ItemStack stack) {
         Item item = stack.getItem();
         if (items.contains(item)) {
             return true;

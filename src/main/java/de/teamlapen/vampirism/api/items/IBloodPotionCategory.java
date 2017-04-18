@@ -4,6 +4,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -24,14 +25,17 @@ public interface IBloodPotionCategory {
     /**
      * Adds an item to this category NOT ignoring meta and nbt
      */
-    void addItemExact(ItemStack stack);
+    void addItemExact(@Nonnull ItemStack stack);
 
     /**
      * Adds all items in the list. See {@link IBloodPotionCategory#addItem(Item)},{@link IBloodPotionCategory#addItem(Block)},{@link IBloodPotionCategory#addItemExact(ItemStack)}
      */
     void addItems(Object... items);
 
-    boolean containsItem(ItemStack stack);
+    /**
+     * @param stack may be EMPTY
+     */
+    boolean containsItem(@Nonnull ItemStack stack);
 
     /**
      * @return A list containing copied {@link IBloodPotionRegistry.WeightedEffect}s

@@ -116,7 +116,7 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
     }
 
     @Override
-    public TIER getTier(ItemStack stack) {
+    public TIER getTier(@Nonnull ItemStack stack) {
         NBTTagCompound tag = UtilLib.checkNBT(stack);
         if (tag.hasKey("tier")) {
             try {
@@ -204,8 +204,9 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
         return stack;
     }
 
+    @Nonnull
     @Override
-    public ItemStack setTier(ItemStack stack, TIER tier) {
+    public ItemStack setTier(@Nonnull ItemStack stack, TIER tier) {
         NBTTagCompound tag = UtilLib.checkNBT(stack);
         tag.setString("tier", tier.name());
         return stack;

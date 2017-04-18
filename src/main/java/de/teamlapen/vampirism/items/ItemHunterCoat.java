@@ -14,6 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 
@@ -70,7 +71,7 @@ public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTie
     }
 
     @Override
-    public TIER getTier(ItemStack stack) {
+    public TIER getTier(@Nonnull ItemStack stack) {
         NBTTagCompound tag = UtilLib.checkNBT(stack);
         if (tag.hasKey("tier")) {
             try {
@@ -83,8 +84,9 @@ public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTie
         return TIER.NORMAL;
     }
 
+    @Nonnull
     @Override
-    public ItemStack setTier(ItemStack stack, TIER tier) {
+    public ItemStack setTier(@Nonnull ItemStack stack, TIER tier) {
         NBTTagCompound tag = UtilLib.checkNBT(stack);
         tag.setString("tier", tier.name());
         return stack;

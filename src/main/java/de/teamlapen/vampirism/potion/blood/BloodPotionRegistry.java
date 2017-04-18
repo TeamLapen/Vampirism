@@ -33,6 +33,7 @@ public class BloodPotionRegistry implements IBloodPotionRegistry {
     @Nonnull
     @Override
     public List<String> getLocCategoryDescForItem(@Nonnull ItemStack item) {
+        assert !ItemStackUtil.isEmpty(item);
         List<IBloodPotionCategory> categories = Lists.newLinkedList();
         categories.addAll(categoriesBad);
         categories.addAll(categoriesGood);
@@ -62,7 +63,7 @@ public class BloodPotionRegistry implements IBloodPotionRegistry {
 
     @Nonnull
     @Override
-    public IBloodPotionEffect getRandomEffect(@Nullable ItemStack item, boolean bad, Random rnd) {
+    public IBloodPotionEffect getRandomEffect(@Nonnull ItemStack item, boolean bad, Random rnd) {
         List<WeightedEffect> effects = Lists.newArrayList();
         List<BloodPotionCategory> categories = bad ? categoriesBad : categoriesGood;
 

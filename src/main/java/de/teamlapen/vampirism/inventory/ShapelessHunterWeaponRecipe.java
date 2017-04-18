@@ -23,9 +23,11 @@ public class ShapelessHunterWeaponRecipe implements IHunterWeaponRecipe {
     private final int requiredHunterLevel;
     private final ISkill<IHunterPlayer>[] requiredHunterSkills;
     private final int requiredLavaUnits;
-    private final ItemStack recipeOutput;
+    private final @Nonnull
+    ItemStack recipeOutput;
 
-    public ShapelessHunterWeaponRecipe(List<ItemStack> recipeItems, ItemStack recipeOutput, int requiredHunterLevel, ISkill<IHunterPlayer>[] requiredHunterSkills, int requiredLavaUnits) {
+    public ShapelessHunterWeaponRecipe(List<ItemStack> recipeItems, @Nonnull ItemStack recipeOutput, int requiredHunterLevel, ISkill<IHunterPlayer>[] requiredHunterSkills, int requiredLavaUnits) {
+        assert !ItemStackUtil.isEmpty(recipeOutput);
         this.recipeItems = recipeItems;
         this.requiredHunterLevel = requiredHunterLevel;
         this.requiredHunterSkills = requiredHunterSkills;

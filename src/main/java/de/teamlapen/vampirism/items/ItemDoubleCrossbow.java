@@ -10,6 +10,7 @@ import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 
@@ -26,7 +27,7 @@ public class ItemDoubleCrossbow extends ItemSimpleCrossbow {
 
     @Nullable
     @Override
-    public ISkill<IHunterPlayer> getRequiredSkill(ItemStack stack) {
+    public ISkill<IHunterPlayer> getRequiredSkill(@Nonnull ItemStack stack) {
         return HunterSkills.doubleCrossbow;
     }
 

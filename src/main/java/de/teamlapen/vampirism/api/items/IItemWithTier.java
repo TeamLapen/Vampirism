@@ -9,6 +9,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 /**
  * Simple interface for items that exist in different tiers.
  * This is usually used for hunter weapons and armor.
@@ -20,14 +22,15 @@ public interface IItemWithTier {
     /**
      * @return The tier of the item stack
      */
-    TIER getTier(ItemStack stack);
+    TIER getTier(@Nonnull ItemStack stack);
 
     /**
      * Set's the tier of the given item stack
      *
      * @return the same stack for chaining
      */
-    ItemStack setTier(ItemStack stack, TIER tier);
+    @Nonnull
+    ItemStack setTier(@Nonnull ItemStack stack, TIER tier);
 
     enum TIER implements IStringSerializable {
         NORMAL, ENHANCED, ULTIMATE;
@@ -53,8 +56,9 @@ public interface IItemWithTier {
             this.base = base;
         }
 
+        @Nonnull
         @Override
-        public ModelResourceLocation getModelLocation(ItemStack stack) {
+        public ModelResourceLocation getModelLocation(@Nonnull ItemStack stack) {
             return new ModelResourceLocation(base, "tier=" + ((IItemWithTier) stack.getItem()).getTier(stack));
         }
     }
@@ -72,8 +76,9 @@ public interface IItemWithTier {
             this.base = base;
         }
 
+        @Nonnull
         @Override
-        public ModelResourceLocation getModelLocation(ItemStack stack) {
+        public ModelResourceLocation getModelLocation(@Nonnull ItemStack stack) {
             String tier = ((IItemWithTier) stack.getItem()).getTier(stack).getName();
             String part = ((ItemArmor) stack.getItem()).armorType.getName();
             return new ModelResourceLocation(base, "part=" + part + "_" + tier);

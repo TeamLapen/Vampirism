@@ -35,7 +35,7 @@ public class HunterWeaponCraftingManager implements IHunterWeaponCraftingManager
     private final List<IHunterWeaponRecipe> recipes = Lists.newLinkedList();
 
     @Override
-    public IHunterWeaponRecipe addRecipe(ItemStack output, int reqLevel, @Nonnull ISkill<IHunterPlayer>[] reqSkills, int reqLava, Object... recipeComponents) {
+    public IHunterWeaponRecipe addRecipe(@Nonnull ItemStack output, int reqLevel, @Nonnull ISkill<IHunterPlayer>[] reqSkills, int reqLava, Object... recipeComponents) {
         String s = "";
         int i = 0;
         int j = 0;
@@ -96,7 +96,7 @@ public class HunterWeaponCraftingManager implements IHunterWeaponCraftingManager
 
     @SuppressWarnings("unchecked")
     @Override
-    public IHunterWeaponRecipe addRecipe(ItemStack output, int reqLevel, @Nullable ISkill<IHunterPlayer> reqSkill, int reqLava, Object... recipeComponents) {
+    public IHunterWeaponRecipe addRecipe(@Nonnull ItemStack output, int reqLevel, @Nullable ISkill<IHunterPlayer> reqSkill, int reqLava, Object... recipeComponents) {
         ISkill<IHunterPlayer>[] reqSkills;
         if (reqSkill == null) {
             reqSkills = new ISkill[0];
@@ -113,7 +113,7 @@ public class HunterWeaponCraftingManager implements IHunterWeaponCraftingManager
 
     @SuppressWarnings("unchecked")
     @Override
-    public IHunterWeaponRecipe addShapelessRecipe(ItemStack output, int reqLevel, @Nullable ISkill<IHunterPlayer> reqSkill, int reqLava, Object... recipeComponents) {
+    public IHunterWeaponRecipe addShapelessRecipe(@Nonnull ItemStack output, int reqLevel, @Nullable ISkill<IHunterPlayer> reqSkill, int reqLava, Object... recipeComponents) {
         ISkill<IHunterPlayer>[] reqSkills;
         if (reqSkill == null) {
             reqSkills = new ISkill[0];
@@ -124,7 +124,7 @@ public class HunterWeaponCraftingManager implements IHunterWeaponCraftingManager
     }
 
     @Override
-    public IHunterWeaponRecipe addShapelessRecipe(ItemStack output, int reqLevel, @Nonnull ISkill<IHunterPlayer>[] reqSkills, int reqLava, Object... recipeComponents) {
+    public IHunterWeaponRecipe addShapelessRecipe(@Nonnull ItemStack output, int reqLevel, @Nonnull ISkill<IHunterPlayer>[] reqSkills, int reqLava, Object... recipeComponents) {
         List<ItemStack> list = Lists.newArrayList();
 
         for (Object object : recipeComponents) {
@@ -160,10 +160,10 @@ public class HunterWeaponCraftingManager implements IHunterWeaponCraftingManager
 
     @Override
     public
-    @Nullable
+    @Nonnull
     ItemStack findMatchingRecipeResult(InventoryCrafting craftMatrix, World world, int playerLevel, ISkillHandler<IHunterPlayer> skillHandler, int lava) {
         IHunterWeaponRecipe recipe = findMatchingRecipe(craftMatrix, world, playerLevel, skillHandler, lava);
-        return recipe == null ? null : recipe.getCraftingResult(craftMatrix);
+        return recipe == null ? ItemStackUtil.getEmptyStack() : recipe.getCraftingResult(craftMatrix);
     }
 
     public List<IHunterWeaponRecipe> getRecipes() {

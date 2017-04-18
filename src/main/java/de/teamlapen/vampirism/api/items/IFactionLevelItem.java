@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -19,17 +20,17 @@ public interface IFactionLevelItem<T extends IFactionPlayer> {
     /**
      * @return The level the player has to be to use this item
      */
-    int getMinLevel(ItemStack stack);
+    int getMinLevel(@Nonnull ItemStack stack);
 
     /**
      * @return The skill required to use this or null if none
      */
     @Nullable
-    ISkill<T> getRequiredSkill(ItemStack stack);
+    ISkill<T> getRequiredSkill(@Nonnull ItemStack stack);
 
     /**
      * @return The faction that can use this item or null if any
      */
     @Nullable
-    IPlayableFaction<T> getUsingFaction(ItemStack stack);
+    IPlayableFaction<T> getUsingFaction(@Nonnull ItemStack stack);
 }

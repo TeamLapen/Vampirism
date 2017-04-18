@@ -17,6 +17,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,12 +43,12 @@ public class ItemHunterAxe extends VampirismHunterWeapon implements IItemWithTie
     }
 
     @Override
-    public float getDamageMultiplierForFaction(ItemStack stack) {
+    public float getDamageMultiplierForFaction(@Nonnull ItemStack stack) {
         return getVampireMult(getTier(stack));
     }
 
     @Override
-    public int getMinLevel(ItemStack stack) {
+    public int getMinLevel(@Nonnull ItemStack stack) {
         return getMinLevel(getTier(stack));
     }
 
@@ -59,7 +60,7 @@ public class ItemHunterAxe extends VampirismHunterWeapon implements IItemWithTie
     }
 
     @Override
-    public TIER getTier(ItemStack stack) {
+    public TIER getTier(@Nonnull ItemStack stack) {
         NBTTagCompound nbt = UtilLib.checkNBT(stack);
         if (nbt.hasKey("tier")) {
             try {
@@ -76,8 +77,9 @@ public class ItemHunterAxe extends VampirismHunterWeapon implements IItemWithTie
         return false;
     }
 
+    @Nonnull
     @Override
-    public ItemStack setTier(ItemStack stack, TIER tier) {
+    public ItemStack setTier(@Nonnull ItemStack stack, TIER tier) {
         NBTTagCompound nbt = UtilLib.checkNBT(stack);
         nbt.setString("tier", tier.name());
         Map<Enchantment, Integer> map = new HashMap<>();

@@ -31,7 +31,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     private static final ISkill[] EMPTY_SKILLS = {};
     @Nonnull
     private final ItemStack output;
-    @Nullable
+    @Nonnull
     private final ItemStack ingredient;
     private final FluidStack fluidStack;
     private final ItemStack fluidItem;
@@ -40,8 +40,8 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     private int reqLevel = 0;
     private int cookingTime = 400;
     private float experience = 0.2F;
-    @Nullable
-    private ItemStack descriptiveStack;
+    @Nonnull
+    private ItemStack descriptiveStack = ItemStackUtil.getEmptyStack();
 
 
     AlchemicalCauldronRecipe(@Nonnull ItemStack output, ItemStack liquid, @Nullable ItemStack ingredient) {
@@ -124,7 +124,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
         return experience;
     }
 
-    @Nullable
+    @Nonnull
     @Override
     public ItemStack getIngredient() {
         return ingredient;
@@ -150,7 +150,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
 
     @Nullable
     @Override
-    public FluidStack isValidFluidItem(ItemStack stack) {
+    public FluidStack isValidFluidItem(@Nonnull ItemStack stack) {
         if (fluidStack == null) return null;
         if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
             IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
@@ -170,7 +170,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     }
 
     @Override
-    public boolean isValidLiquidItem(ItemStack stack) {
+    public boolean isValidLiquidItem(@Nonnull ItemStack stack) {
         return !ItemStackUtil.isEmpty(fluidItem) && !ItemStackUtil.isEmpty(stack) && ItemStackUtil.doesStackContain(stack, fluidItem);
     }
 

@@ -20,6 +20,7 @@ import net.minecraft.stats.StatList;
 import net.minecraft.util.*;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
@@ -48,19 +49,19 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
     }
 
     @Override
-    public int getMinLevel(ItemStack stack) {
+    public int getMinLevel(@Nonnull ItemStack stack) {
         return 0;
     }
 
     @Nullable
     @Override
-    public ISkill<IHunterPlayer> getRequiredSkill(ItemStack stack) {
+    public ISkill<IHunterPlayer> getRequiredSkill(@Nonnull ItemStack stack) {
         return null;
     }
 
     @Nullable
     @Override
-    public IPlayableFaction<IHunterPlayer> getUsingFaction(ItemStack stack) {
+    public IPlayableFaction<IHunterPlayer> getUsingFaction(@Nonnull ItemStack stack) {
         return VReference.HUNTER_FACTION;
     }
 

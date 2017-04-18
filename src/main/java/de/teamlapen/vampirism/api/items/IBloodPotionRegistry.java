@@ -68,10 +68,11 @@ public interface IBloodPotionRegistry {
     /**
      * Retrieve a random effect (under consideration  of the given item)
      *
+     * @param item may be EMPTY
      * @param bad If the effect should be bad
      */
     @Nonnull
-    IBloodPotionEffect getRandomEffect(@Nullable ItemStack item, boolean bad, Random rng);
+    IBloodPotionEffect getRandomEffect(@Nonnull ItemStack item, boolean bad, Random rng);
 
     /**
      * Register a new potion effect.

@@ -19,6 +19,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -56,7 +57,7 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
 
     @Nullable
     @Override
-    public ISkill getRequiredSkill(ItemStack stack) {
+    public ISkill getRequiredSkill(@Nonnull ItemStack stack) {
         return null;
     }
 
@@ -66,7 +67,7 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
     }
 
     @Override
-    public IPlayableFaction getUsingFaction(ItemStack stack) {
+    public IPlayableFaction getUsingFaction(@Nonnull ItemStack stack) {
         return VReference.HUNTER_FACTION;
     }
 
@@ -81,12 +82,12 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
         }
 
         @Override
-        public float getDamageMultiplierForFaction(ItemStack stack) {
+        public float getDamageMultiplierForFaction(@Nonnull ItemStack stack) {
             return damageMult;
         }
 
         @Override
-        public int getMinLevel(ItemStack stack) {
+        public int getMinLevel(@Nonnull ItemStack stack) {
             return minLevel;
         }
 

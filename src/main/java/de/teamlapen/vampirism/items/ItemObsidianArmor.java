@@ -19,6 +19,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 
@@ -85,7 +86,7 @@ public class ItemObsidianArmor extends VampirismHunterArmor implements IItemWith
     }
 
     @Override
-    public TIER getTier(ItemStack stack) {
+    public TIER getTier(@Nonnull ItemStack stack) {
         NBTTagCompound tag = UtilLib.checkNBT(stack);
         if (tag.hasKey("tier")) {
             try {
@@ -98,8 +99,9 @@ public class ItemObsidianArmor extends VampirismHunterArmor implements IItemWith
         return TIER.NORMAL;
     }
 
+    @Nonnull
     @Override
-    public ItemStack setTier(ItemStack stack, TIER tier) {
+    public ItemStack setTier(@Nonnull ItemStack stack, TIER tier) {
         NBTTagCompound tag = UtilLib.checkNBT(stack);
         tag.setString("tier", tier.name());
         return stack;
