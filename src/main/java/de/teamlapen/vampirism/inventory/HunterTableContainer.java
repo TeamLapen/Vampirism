@@ -122,9 +122,9 @@ public class HunterTableContainer extends InventoryContainer {
         }
 
         @Override
-        public void onPickupFromSlot(EntityPlayer playerIn, ItemStack stack) {
+        public ItemStack onTake(EntityPlayer playerIn, ItemStack stack) {
             container.onPickupResult();
-
+            return stack;
         }
     }
 }

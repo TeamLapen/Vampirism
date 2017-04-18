@@ -23,7 +23,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -70,7 +69,7 @@ public class AlchemicalCauldronRecipePage extends Page {
         ItemStack stack = recipe.getOutput();
 
         if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-            List<ItemStack> subItems = new ArrayList<ItemStack>();
+            NonNullList<ItemStack> subItems = NonNullList.create();
             stack.getItem().getSubItems(stack.getItem(), stack.getItem().getCreativeTab(), subItems);
             stack = subItems.get(getRandomizedCycle(0, subItems.size()));
         }
