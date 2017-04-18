@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.hunter;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -100,7 +101,7 @@ public class EntityHunterTrainer extends EntityHunterBase implements HunterAILoo
 
     @Override
     protected boolean processInteract(EntityPlayer player, EnumHand p_184645_2_, ItemStack stack) {
-        boolean flag = stack != null && stack.getItem() == Items.SPAWN_EGG;
+        boolean flag = !ItemStackUtil.isEmpty(stack) && stack.getItem() == Items.SPAWN_EGG;
 
         if (!flag && this.isEntityAlive() && !player.isSneaking()) {
             if (!this.world.isRemote) {

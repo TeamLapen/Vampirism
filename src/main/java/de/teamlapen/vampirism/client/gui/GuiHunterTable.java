@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.gui;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.inventory.HunterTableContainer;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -44,7 +45,7 @@ public class GuiHunterTable extends GuiContainer {
         } else if (container.getMissingItems() != null) {
             ItemStack missing = container.getMissingItems();
             ITextComponent item = missing.getItem().equals(ModItems.pureBlood) ? ModItems.pureBlood.getDisplayName(missing) : new TextComponentTranslation(missing.getUnlocalizedName() + ".name");
-            text = I18n.format("text.vampirism.ritual_missing_items", missing.stackSize, item.getUnformattedText());
+            text = I18n.format("text.vampirism.ritual_missing_items", ItemStackUtil.getCount(missing), item.getUnformattedText());
         }
         if (text != null) this.fontRendererObj.drawSplitString(text, 8, 50, this.xSize - 10, 0x000000);
     }

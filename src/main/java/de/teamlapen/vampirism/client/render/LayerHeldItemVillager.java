@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.render;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.client.model.ModelVillagerWithArms;
 import de.teamlapen.vampirism.client.render.entities.RenderHunterVillager;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterVillager;
@@ -27,7 +28,7 @@ public class LayerHeldItemVillager implements LayerRenderer<EntityHunterVillager
         ItemStack itemstack = flag ? entitylivingbaseIn.getHeldItemOffhand() : entitylivingbaseIn.getHeldItemMainhand();
         ItemStack itemstack1 = flag ? entitylivingbaseIn.getHeldItemMainhand() : entitylivingbaseIn.getHeldItemOffhand();
 
-        if (itemstack != null || itemstack1 != null) {
+        if (!ItemStackUtil.isEmpty(itemstack) || !ItemStackUtil.isEmpty(itemstack1)) {
             GlStateManager.pushMatrix();
 
             if (this.renderer.getMainModel().isChild) {
@@ -47,8 +48,8 @@ public class LayerHeldItemVillager implements LayerRenderer<EntityHunterVillager
         return false;
     }
 
-    private void renderHeldItem(EntityHunterVillager p_188358_1_, ItemStack p_188358_2_, ItemCameraTransforms.TransformType p_188358_3_, EnumHandSide p_188358_4_) {
-        if (p_188358_2_ != null) {
+    private void renderHeldItem(EntityHunterVillager p_188358_1_, ItemStack stack, ItemCameraTransforms.TransformType p_188358_3_, EnumHandSide p_188358_4_) {
+        if (!ItemStackUtil.isEmpty(stack)) {
             GlStateManager.pushMatrix();
             ((ModelVillagerWithArms) this.renderer.getMainModel()).postRenderArm(0.0625F, p_188358_4_);
 
@@ -60,7 +61,7 @@ public class LayerHeldItemVillager implements LayerRenderer<EntityHunterVillager
             GlStateManager.rotate(180.0F, 0.0F, 1.0F, 0.0F);
             boolean flag = p_188358_4_ == EnumHandSide.LEFT;
             GlStateManager.translate(flag ? -0.0925F : 0.0925F, 0.125F, -0.525F);
-            Minecraft.getMinecraft().getItemRenderer().renderItemSide(p_188358_1_, p_188358_2_, p_188358_3_, flag);
+            Minecraft.getMinecraft().getItemRenderer().renderItemSide(p_188358_1_, stack, p_188358_3_, flag);
             GlStateManager.popMatrix();
         }
     }

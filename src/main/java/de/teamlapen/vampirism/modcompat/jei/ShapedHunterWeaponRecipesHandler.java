@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.inventory.ShapedHunterWeaponRecipe;
 import mezz.jei.api.recipe.IRecipeHandler;
 import mezz.jei.api.recipe.IRecipeWrapper;
@@ -40,7 +41,7 @@ public class ShapedHunterWeaponRecipesHandler implements IRecipeHandler<ShapedHu
         }
         int inputCount = 0;
         for (ItemStack input : recipe.recipeItems) {
-            if (input != null) {
+            if (!ItemStackUtil.isEmpty(input)) {
                 inputCount++;
             }
         }

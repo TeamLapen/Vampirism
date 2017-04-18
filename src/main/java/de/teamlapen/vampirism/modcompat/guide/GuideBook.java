@@ -11,6 +11,7 @@ import amerifrance.guideapi.page.PageText;
 import amerifrance.guideapi.page.PageTextImage;
 import com.google.common.collect.Maps;
 import de.teamlapen.lib.VampLib;
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockAltarPillar;
@@ -55,7 +56,7 @@ public class GuideBook {
 
     public final static String TAG = "GuideBook";
     private final static String IMAGE_BASE = "vampirismguide:textures/images/";
-    public static ItemStack bookStack;
+    public static ItemStack bookStack = ItemStackUtil.getEmptyStack();
     private static Book guideBook;
     private static Map<ResourceLocation, EntryAbstract> links = Maps.newHashMap();
 

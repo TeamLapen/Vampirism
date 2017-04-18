@@ -9,6 +9,7 @@ import amerifrance.guideapi.page.PageItemStack;
 import amerifrance.guideapi.page.PageText;
 import com.google.common.collect.Lists;
 import de.teamlapen.lib.VampLib;
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IAlchemicalCauldronRecipe;
@@ -128,7 +129,7 @@ public class GuideHelper {
     }
 
     private static boolean checkOutput(ItemStack resultStack, ItemStack stack, boolean checkNBT) {
-        if (resultStack != null && resultStack.getItem() != null) {
+        if (!ItemStackUtil.isEmpty(stack) && resultStack.getItem() != null) {
             if (resultStack.getItem() == stack.getItem() && resultStack.getItemDamage() == stack.getItemDamage()) {
                 if (!checkNBT || resultStack.getTagCompound() == null && stack.getTagCompound() == null || resultStack.getTagCompound() != null && resultStack.getTagCompound().equals(stack.getTagCompound())) {
                     return true;

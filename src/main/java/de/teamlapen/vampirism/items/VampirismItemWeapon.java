@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.Multimap;
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -40,7 +41,8 @@ public class VampirismItemWeapon extends VampirismItem {
     @Override
     public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
         ItemStack mat = this.material.getRepairItemStack();
-        if (mat != null && net.minecraftforge.oredict.OreDictionary.itemMatches(mat, repair, false)) return true;
+        if (!ItemStackUtil.isEmpty(mat) && net.minecraftforge.oredict.OreDictionary.itemMatches(mat, repair, false))
+            return true;
         return super.getIsRepairable(toRepair, repair);
     }
 

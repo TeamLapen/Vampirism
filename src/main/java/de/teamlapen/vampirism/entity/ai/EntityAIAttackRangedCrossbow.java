@@ -8,6 +8,8 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 
+import javax.annotation.Nonnull;
+
 /**
  * Similar to vanilla ranged bow.
  *
@@ -133,6 +135,7 @@ public class EntityAIAttackRangedCrossbow extends EntityAIBase {
     }
 
     public interface IAttackWithCrossbow {
+        @Nonnull
         ItemStack getArrowStackForAttack(EntityLivingBase target);
 
         boolean isCrossbowInMainhand();

@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.player;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -147,10 +148,10 @@ public class ModPlayerEventHandler {
     public void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
         //Replace glas bottle by empty blood bottle, if interacting with a fluid container that contains blood
         if (Configs.autoConvertGlasBottles) {
-            if (event.getWorld().getWorldBorder().contains(event.getPos()))
-                if (event.getItemStack() != null &&
-                        event.getItemStack().getItem() != null &&
-                        event.getItemStack().getItem().equals(Items.GLASS_BOTTLE) && event.getItemStack().stackSize == 1) {
+            if (event.getWorld().getWorldBorder().contains(event.getPos())) {
+                ItemStack stack = event.getItemStack();
+                if (!ItemStackUtil.isEmpty(stack) &&
+                        stack.getItem().equals(Items.GLASS_BOTTLE) && ItemStackUtil.getCount(stack) == 1) {
                     Block block = event.getWorld().getBlockState(event.getPos()).getBlock();
                     boolean flag = false;
                     if (block instanceof IFluidTank) {
@@ -176,9 +177,10 @@ public class ModPlayerEventHandler {
                         }
                     }
                     if (flag) {
-                        event.getItemStack().deserializeNBT(new ItemStack(ModItems.bloodBottle).serializeNBT());
+                        stack.deserializeNBT(new ItemStack(ModItems.bloodBottle).serializeNBT());
                     }
                 }
+            }
         }
     }
 
@@ -228,7 +230,7 @@ public class ModPlayerEventHandler {
     private boolean checkItemUsePerm(ItemStack stack, EntityPlayer player) {
 
         boolean message = !player.getEntityWorld().isRemote;
-        if (stack != null && stack.getItem() instanceof IFactionLevelItem) {
+        if (!ItemStackUtil.isEmpty(stack) && stack.getItem() instanceof IFactionLevelItem) {
             IFactionLevelItem item = (IFactionLevelItem) stack.getItem();
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             IPlayableFaction usingFaction = item.getUsingFaction(stack);

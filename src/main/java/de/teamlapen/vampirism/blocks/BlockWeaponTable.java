@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -95,7 +96,7 @@ public class BlockWeaponTable extends VampirismBlock {
             ItemStack heldItem = playerIn.getHeldItem(hand);
             if (lava < MAX_LAVA) {
                 if (lava < MAX_LAVA) { //TODO TEST
-                    if (heldItem != null && heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
+                    if (!ItemStackUtil.isEmpty(heldItem) && heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
                         IFluidHandler fluidHandler = heldItem.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
                         FluidStack missing = new FluidStack(FluidRegistry.LAVA, (MAX_LAVA - lava) * MB_PER_META);
                         FluidStack drainable = fluidHandler.drain(missing, false);
@@ -109,7 +110,7 @@ public class BlockWeaponTable extends VampirismBlock {
                         }
 
                     }
-                } else if (heldItem != null && FluidContainerRegistry.isFilledContainer(heldItem)) {
+                } else if (!ItemStackUtil.isEmpty(heldItem) && FluidContainerRegistry.isFilledContainer(heldItem)) {
                     FluidStack fluidStack = FluidContainerRegistry.getFluidForFilledItem(heldItem);
                     if (fluidStack.getFluid().equals(FluidRegistry.LAVA) && fluidStack.amount >= MB_PER_META) {
                         IBlockState changed = state.withProperty(LAVA, Math.min(MAX_LAVA, lava + fluidStack.amount / MB_PER_META));
@@ -117,7 +118,7 @@ public class BlockWeaponTable extends VampirismBlock {
                         playerIn.setHeldItem(hand, FluidContainerRegistry.drainFluidContainer(heldItem));
                         flag = true;
                     }
-                } else if (heldItem != null && heldItem.getItem() instanceof IFluidContainerItem) {
+                } else if (!ItemStackUtil.isEmpty(heldItem) && heldItem.getItem() instanceof IFluidContainerItem) {
                     IFluidContainerItem item = (IFluidContainerItem) heldItem.getItem();
                     FluidStack fluidStack = item.getFluid(heldItem);
                     int missing = (MAX_LAVA - lava) * MB_PER_META;

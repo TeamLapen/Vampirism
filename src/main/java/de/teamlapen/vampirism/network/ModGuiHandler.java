@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.network;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.blocks.BlockHunterTable;
 import de.teamlapen.vampirism.client.gui.*;
 import de.teamlapen.vampirism.inventory.*;
@@ -56,7 +57,7 @@ public class ModGuiHandler implements IGuiHandler {
                 return new GuiHunterBasic(player);
             case ID_VAMPIRE_BOOK:
                 ItemStack itemStack = player.getHeldItem(EnumHand.MAIN_HAND);
-                if (itemStack != null && itemStack.getItem() instanceof ItemVampireBook) {
+                if (!ItemStackUtil.isEmpty(itemStack) && itemStack.getItem() instanceof ItemVampireBook) {
                     return new GuiScreenBook(player, itemStack, false);
                 }
                 return null;
