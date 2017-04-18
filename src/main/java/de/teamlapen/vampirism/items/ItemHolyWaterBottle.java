@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
@@ -50,13 +51,13 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
         ItemStack base = item.setTier(new ItemStack(item), tier);
         ItemStack splash = item.setSplash(base.copy(), true);
         GameRegistry.addShapelessRecipe(splash.copy(), base, Items.GUNPOWDER);
-        splash.stackSize++;
+        ItemStackUtil.grow(splash, 1);
         GameRegistry.addShapelessRecipe(splash.copy(), base, base, Items.GUNPOWDER);
-        splash.stackSize++;
+        ItemStackUtil.grow(splash, 1);
         GameRegistry.addShapelessRecipe(splash.copy(), base, base, base, Items.GUNPOWDER);
-        splash.stackSize++;
+        ItemStackUtil.grow(splash, 1);
         GameRegistry.addShapelessRecipe(splash.copy(), base, base, base, base, Items.GUNPOWDER);
-        splash.stackSize++;
+        ItemStackUtil.grow(splash, 1);
         GameRegistry.addShapelessRecipe(splash.copy(), base, base, base, base, base, Items.GUNPOWDER);
     }
 
@@ -174,7 +175,7 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
         ItemStack stack = playerIn.getHeldItem(handIn);
         if (isSplash(stack)) {
             if (!playerIn.capabilities.isCreativeMode) {
-                --stack.stackSize;
+                ItemStackUtil.decr(stack);
             }
 
             worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SPLASH_POTION_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));

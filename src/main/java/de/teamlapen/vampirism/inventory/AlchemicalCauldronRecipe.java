@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.lib.lib.util.FluidLib;
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -50,7 +51,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
             if (stack != null) {
                 VampirismMod.log.d("AlchemicalCauldron", "Replaced %s liquid item with %s fluid stack", liquid, stack);
                 fluidStack = stack;
-                fluidItem = null;
+                fluidItem = ItemStackUtil.getEmptyStack();
                 descriptiveStack = liquid;
             } else {
                 VampirismMod.log.d("AlchemicalCauldron", "Could not extract fluid from fluid container item %s", liquid);
@@ -62,17 +63,17 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
             fluidStack = null;
         }
         this.ingredient = ingredient;
-        if (output == null)
-            throw new IllegalArgumentException("AlchemicalCauldron: Output cannot be null (" + liquid + "," + ingredient + ")");
+        if (ItemStackUtil.isEmpty(output))
+            throw new IllegalArgumentException("AlchemicalCauldron: Output cannot be null/empty (" + liquid + "," + ingredient + ")");
         this.output = output;
     }
 
     AlchemicalCauldronRecipe(@Nonnull ItemStack output, FluidStack fluidStack, @Nullable ItemStack ingredient) {
         this.fluidStack = fluidStack;
-        this.fluidItem = null;
+        this.fluidItem = ItemStackUtil.getEmptyStack();
         this.ingredient = ingredient;
-        if (output == null)
-            throw new IllegalArgumentException("AlchemicalCauldron: Output cannot be null (" + fluidStack + "," + ingredient + ")");
+        if (ItemStackUtil.isEmpty(output))
+            throw new IllegalArgumentException("AlchemicalCauldron: Output cannot be null/empty (" + fluidStack + "," + ingredient + ")");
         this.output = output;
     }
 
@@ -170,7 +171,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
 
     @Override
     public boolean isValidLiquidItem(ItemStack stack) {
-        return fluidItem != null && stack != null && UtilLib.doesStackContain(stack, fluidItem);
+        return !ItemStackUtil.isEmpty(fluidItem) && !ItemStackUtil.isEmpty(stack) && ItemStackUtil.doesStackContain(stack, fluidItem);
     }
 
     @Override

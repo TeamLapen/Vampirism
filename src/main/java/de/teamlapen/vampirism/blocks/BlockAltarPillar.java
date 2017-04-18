@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
@@ -69,7 +70,7 @@ public class BlockAltarPillar extends VampirismBlock {
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         EnumPillarType type = state.getValue(typeProperty);
         ItemStack heldItem = playerIn.getHeldItem(hand);
-        if (type != EnumPillarType.NONE && heldItem == null) {
+        if (type != EnumPillarType.NONE && ItemStackUtil.isEmpty(heldItem)) {
             if (!playerIn.capabilities.isCreativeMode) {
                 playerIn.setItemStackToSlot(hand == EnumHand.MAIN_HAND ? EntityEquipmentSlot.MAINHAND : EntityEquipmentSlot.OFFHAND, new ItemStack(Item.getItemFromBlock(type.fillerBlock)));
             }
@@ -77,12 +78,12 @@ public class BlockAltarPillar extends VampirismBlock {
             worldIn.setBlockState(pos, state.withProperty(typeProperty, EnumPillarType.NONE));
             return true;
         }
-        if (type == EnumPillarType.NONE && heldItem != null) {
+        if (type == EnumPillarType.NONE && !ItemStackUtil.isEmpty(heldItem)) {
             ItemStack stack = heldItem;
             for (EnumPillarType t : EnumPillarType.values()) {
                 if (stack.getItem().equals(Item.getItemFromBlock(t.fillerBlock))) {
                     if (!playerIn.capabilities.isCreativeMode) {
-                        stack.stackSize--;
+                        stack = ItemStackUtil.decr(stack);
                     }
 
                     worldIn.setBlockState(pos, state.withProperty(typeProperty, t));

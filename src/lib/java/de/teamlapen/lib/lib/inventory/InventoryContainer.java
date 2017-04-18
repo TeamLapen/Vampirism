@@ -1,5 +1,6 @@
 package de.teamlapen.lib.lib.inventory;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -52,12 +53,12 @@ public class InventoryContainer extends Container {
 
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
-        ItemStack stack = null;
+        ItemStack stack = ItemStackUtil.getEmptyStack();
         net.minecraft.inventory.Slot slotObject = inventorySlots.get(slot);
 
         // null checks and checks if the item can be stacked (maxStackSize > 1)
-        if (slotObject != null && slotObject.getHasStack()) {
-            ItemStack stackInSlot = slotObject.getStack();
+        ItemStack stackInSlot;
+        if (slotObject != null && !ItemStackUtil.isEmpty(stackInSlot = slotObject.getStack())) {
             stack = stackInSlot.copy();
             // merges the item into player inventory since its in the tileEntity
             if (slot < tile.getSlots().length) {
@@ -70,14 +71,14 @@ public class InventoryContainer extends Container {
                 return null;
             }
 
-            if (stackInSlot.stackSize == 0) {
-                slotObject.putStack(null);
+            if (ItemStackUtil.getCount(stack) == 0) {
+                slotObject.putStack(ItemStackUtil.getEmptyStack());
             } else {
                 slotObject.onSlotChanged();
             }
 
-            if (stackInSlot.stackSize == stack.stackSize) {
-                return null;
+            if (ItemStackUtil.getCount(stackInSlot) == ItemStackUtil.getCount(stack)) {
+                return ItemStackUtil.getEmptyStack();
             }
             slotObject.onTake(player, stackInSlot);
         }
@@ -94,10 +95,7 @@ public class InventoryContainer extends Container {
 
         @Override
         public boolean isItemValid(@Nullable ItemStack stack) {
-            if (selector != null && stack != null) {
-                return selector.isItemAllowed(stack);
-            }
-            return true;
+            return !(selector != null && stack != null) || selector.isItemAllowed(stack);
         }
 
     }

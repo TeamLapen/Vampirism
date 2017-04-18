@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
@@ -47,7 +48,7 @@ public class EntityThrowableItem extends EntityThrowable {
      * @param stack Corresponding item has to be instance of {@link IVampirismThrowableItem}
      */
     public void setItem(@Nullable ItemStack stack) {
-        if (stack != null && !(stack.getItem() instanceof IVampirismThrowableItem))
+        if (!ItemStackUtil.isEmpty(stack) && !(stack.getItem() instanceof IVampirismThrowableItem))
             throw new IllegalArgumentException("EntityThrowable only accepts IVampirismThrowableItem, but not " + stack);
         this.getDataManager().set(ITEM, stack);
         this.getDataManager().setDirty(ITEM);
@@ -56,8 +57,8 @@ public class EntityThrowableItem extends EntityThrowable {
     @Override
     public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
-        ItemStack stack = new ItemStack(compound.getCompoundTag("thrownItem"));
-        if (stack == null) {
+        ItemStack stack = ItemStackUtil.loadFromNBT(compound.getCompoundTag("thrownItem"));
+        if (ItemStackUtil.isEmpty(stack)) {
             this.setDead();
         } else {
             this.setItem(stack);
@@ -68,7 +69,7 @@ public class EntityThrowableItem extends EntityThrowable {
     public void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
         ItemStack stack = getItem();
-        if (stack != null) {
+        if (!ItemStackUtil.isEmpty(stack)) {
             compound.setTag("thrownItem", stack.writeToNBT(new NBTTagCompound()));
         }
     }
@@ -86,7 +87,7 @@ public class EntityThrowableItem extends EntityThrowable {
     @Override
     protected void onImpact(RayTraceResult result) {
         ItemStack stack = getItem();
-        if (stack != null) {
+        if (!ItemStackUtil.isEmpty(stack)) {
             Item item = stack.getItem();
             if (item instanceof IVampirismThrowableItem) {
                 ((IVampirismThrowableItem) item).onImpact(this, stack, result, this.world.isRemote);

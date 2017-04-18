@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
@@ -141,7 +142,7 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing faing, float hitX, float hitY, float hitZ) {
         ItemStack heldItem = playerIn.getHeldItem(hand);
-        if (heldItem != null && ModItems.purifiedGarlic.equals(heldItem.getItem())) {
+        if (!ItemStackUtil.isEmpty(heldItem) && ModItems.purifiedGarlic.equals(heldItem.getItem())) {
             if (!worldIn.isRemote) {
                 TileGarlicBeacon t = getTile(worldIn, pos);
                 if (t != null) {
@@ -149,7 +150,7 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
                         playerIn.sendMessage(new TextComponentTranslation("tile.vampirism.garlicBeacon.already_fueled"));
                     } else {
                         t.onFueled();
-                        if (!playerIn.capabilities.isCreativeMode) heldItem.stackSize--;
+                        if (!playerIn.capabilities.isCreativeMode) ItemStackUtil.decr(heldItem);
                         playerIn.sendMessage(new TextComponentTranslation("tile.vampirism.garlicBeacon.successfully_fueled"));
                     }
 

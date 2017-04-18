@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -133,7 +134,7 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
     @Override
     protected ItemStack findAmmo(EntityPlayer player, ItemStack bowStack) {
         boolean arrow = reduceArrowCount(bowStack, player.getRNG());
-        return arrow ? new ItemStack(ModItems.crossbowArrow) : null;
+        return arrow ? new ItemStack(ModItems.crossbowArrow) : ItemStackUtil.getEmptyStack();
     }
 
     @Override
@@ -165,6 +166,7 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
         private final ItemStack loadedCrossbow;
 
         public ShapelessFillRecipe(@Nonnull ItemTechCrossbow crossbowItem, @Nonnull ItemStack arrowPackage) {
+            assert !ItemStackUtil.isEmpty(arrowPackage) : "Empty arrow stack package";
             this.crossbowItem = crossbowItem;
             this.arrowPackage = arrowPackage;
             loadedCrossbow = getLoadedItemStack(crossbowItem);
@@ -177,7 +179,7 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
                 for (int j = 0; j < inv.getWidth(); ++j) {
                     ItemStack itemstack = inv.getStackInRowAndColumn(j, i);
 
-                    if (itemstack != null) {
+                    if (!ItemStackUtil.isEmpty(itemstack)) {
                         if (this.crossbowItem.equals(itemstack.getItem())) {
                             ItemStack result = loadedCrossbow.copy();
                             result.setItemDamage(itemstack.getItemDamage());
@@ -213,7 +215,7 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
                 for (int j = 0; j < inv.getWidth(); ++j) {
                     ItemStack itemstack = inv.getStackInRowAndColumn(j, i);
 
-                    if (itemstack != null) {
+                    if (!ItemStackUtil.isEmpty(itemstack)) {
                         boolean flag = false;
 
                         if (!crossbow && this.crossbowItem.equals(itemstack.getItem())) {

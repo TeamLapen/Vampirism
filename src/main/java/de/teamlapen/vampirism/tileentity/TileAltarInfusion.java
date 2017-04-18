@@ -4,6 +4,7 @@ import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.tile.InventoryTileEntity;
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.ValuedObject;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
@@ -292,7 +293,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
 
     private ItemStack checkAndRemoveItems(int bloodMeta, int blood, int heart, int par3) {
         ItemStack missing = InventoryHelper.checkItems(this, items, new int[]{blood, heart, par3}, new int[]{bloodMeta == 0 ? Integer.MIN_VALUE : -bloodMeta, Integer.MIN_VALUE, Integer.MIN_VALUE});
-        if (missing == null) {
+        if (!ItemStackUtil.isEmpty(missing)) {
             InventoryHelper.removeItems(this, new int[]{blood, heart, par3});
         }
         return missing;
@@ -300,7 +301,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
 
     private boolean checkItemRequirements(EntityPlayer player) {
         int newLevel = targetLevel;
-        ItemStack missing = null;
+        ItemStack missing = ItemStackUtil.getEmptyStack();
         switch (newLevel) {
             case 5:
                 missing = checkAndRemoveItems(0, 0, 5, 1);
@@ -335,9 +336,9 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
             default:
                 VampirismMod.log.w(TAG, "Checking for level %d, but this altar cannot be used at that level", newLevel);
         }
-        if (missing != null) {
+        if (!ItemStackUtil.isEmpty(missing)) {
             ITextComponent item = missing.getItem().equals(ModItems.pureBlood) ? ModItems.pureBlood.getDisplayName(missing) : new TextComponentTranslation(missing.getUnlocalizedName() + ".name");
-            ITextComponent main = new TextComponentTranslation("text.vampirism.ritual_missing_items", missing.stackSize, item);
+            ITextComponent main = new TextComponentTranslation("text.vampirism.ritual_missing_items", ItemStackUtil.getCount(missing), item);
             player.sendMessage(main);
             return false;
         }

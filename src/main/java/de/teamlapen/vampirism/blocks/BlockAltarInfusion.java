@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
@@ -90,7 +91,7 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack item = inventory.getStackInSlot(i);
 
-            if (item != null && item.stackSize > 0) {
+            if (!ItemStackUtil.isEmpty(item)) {
                 float rx = rand.nextFloat() * 0.8F + 0.1F;
                 float ry = rand.nextFloat() * 0.8F + 0.1F;
                 float rz = rand.nextFloat() * 0.8F + 0.1F;
@@ -106,7 +107,7 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
                 entityItem.motionY = rand.nextGaussian() * factor + 0.2F;
                 entityItem.motionZ = rand.nextGaussian() * factor;
                 world.spawnEntity(entityItem);
-                item.stackSize = 0;
+                ItemStackUtil.makeEmpty(item);
             }
         }
     }

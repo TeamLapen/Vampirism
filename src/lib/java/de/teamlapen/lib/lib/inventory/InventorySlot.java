@@ -1,5 +1,6 @@
 package de.teamlapen.lib.lib.inventory;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -15,13 +16,13 @@ import javax.annotation.Nonnull;
 public class InventorySlot {
     public final IItemSelector itemSelector;
     public final int xDisplay, yDisplay;
-    public ItemStack stack;
+    public ItemStack stack = ItemStackUtil.getEmptyStack();
 
     public InventorySlot(final Class<? extends Item> cls, int xDisplay, int yDisplay) {
         this(new IItemSelector() {
 
             @Override
-            public boolean isItemAllowed(ItemStack item) {
+            public boolean isItemAllowed(@Nonnull ItemStack item) {
                 return cls.isInstance(item.getItem());
             }
 
@@ -41,7 +42,7 @@ public class InventorySlot {
     public InventorySlot(final Item item, int xDisplay, int yDisplay) {
         this(new IItemSelector() {
             @Override
-            public boolean isItemAllowed(ItemStack stack) {
+            public boolean isItemAllowed(@Nonnull ItemStack stack) {
                 return item.equals(stack.getItem());
             }
 

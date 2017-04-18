@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.tileentity;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.tile.InventoryTileEntity;
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.util.ISoundReference;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -263,9 +264,9 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         cookingClient = nbt.getBoolean("cooking");
         burningClient = nbt.getBoolean("burning");
         if (nbt.hasKey("liquidItem")) {
-            this.setInventorySlotContents(SLOT_LIQUID, new ItemStack(nbt.getCompoundTag("liquidItem")));
+            this.setInventorySlotContents(SLOT_LIQUID, ItemStackUtil.loadFromNBT(nbt.getCompoundTag("liquidItem")));
         } else {
-            this.setInventorySlotContents(SLOT_LIQUID, null);
+            this.setInventorySlotContents(SLOT_LIQUID, ItemStackUtil.getEmptyStack());
         }
         username = nbt.getString("username");
         liquidColor = getLiquidColor(getStackInSlot(SLOT_LIQUID));
@@ -299,7 +300,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         if (world.isRemote) {
             if (liquidColor == -1) return false;
         }
-        return getStackInSlot(SLOT_LIQUID) != null;//TODO 1.11 null
+        return isStackInSlot(SLOT_LIQUID);
     }
 
     /**
@@ -348,8 +349,8 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         if (tagCompound.hasKey("bypass_recipecheck")) {
             ItemStack liquid = getStackInSlot(SLOT_LIQUID);
             ItemStack ingredient = getStackInSlot(SLOT_INGREDIENT);
-            if (liquid != null) {
-                checkedRecipe = AlchemicalCauldronCraftingManager.getInstance().findRecipe(getStackInSlot(SLOT_LIQUID), getStackInSlot(SLOT_INGREDIENT));
+            if (!ItemStackUtil.isEmpty(liquid)) {
+                checkedRecipe = AlchemicalCauldronCraftingManager.getInstance().findRecipe(liquid, ingredient);
 
             }
         }
@@ -373,9 +374,9 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         }
     }
 
-
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack) {
+        assert ItemStackUtil.isValid(stack);
         super.setInventorySlotContents(slot, stack);
         if (slot == SLOT_LIQUID && world instanceof WorldServer) {
             ((WorldServer) world).getPlayerChunkMap().markBlockForUpdate(pos);
@@ -463,7 +464,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         if (!canPlayerCook(recipe)) return false;
         if (!isStackInSlot(SLOT_RESULT)) return true;
         if (!getStackInSlot(SLOT_RESULT).isItemEqual(recipe.getOutput())) return false;
-        int size = getStackInSlot(SLOT_RESULT).stackSize + recipe.getOutput().stackSize;
+        int size = ItemStackUtil.getCount(getStackInSlot(SLOT_RESULT)) + ItemStackUtil.getCount(recipe.getOutput());
         return size <= getInventoryStackLimit() && size <= getStackInSlot(SLOT_RESULT).getMaxStackSize();
     }
 
@@ -495,7 +496,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
             if (!isStackInSlot(SLOT_RESULT)) {
                 setInventorySlotContents(SLOT_RESULT, recipe.getOutput().copy());
             } else if (getStackInSlot(SLOT_RESULT).isItemEqual(recipe.getOutput())) {
-                getStackInSlot(SLOT_RESULT).stackSize += recipe.getOutput().stackSize;
+                ItemStackUtil.grow(getStackInSlot(SLOT_RESULT), ItemStackUtil.getCount(recipe.getOutput()));
             }
             if (recipe.isValidLiquidItem(getStackInSlot(SLOT_LIQUID))) {
                 decrStackSize(SLOT_LIQUID, 1);
@@ -537,6 +538,6 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     }
 
     private boolean isStackInSlot(int slot) {
-        return getStackInSlot(slot) != null;//TODO 1.11 null
+        return !ItemStackUtil.isEmpty(getStackInSlot(slot));
     }
 }

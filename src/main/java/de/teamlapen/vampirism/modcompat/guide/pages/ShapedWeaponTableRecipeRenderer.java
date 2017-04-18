@@ -5,6 +5,7 @@ import amerifrance.guideapi.api.impl.abstraction.CategoryAbstract;
 import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
 import amerifrance.guideapi.api.util.GuiHelper;
 import amerifrance.guideapi.gui.GuiBase;
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.inventory.ShapedHunterWeaponRecipe;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.item.ItemStack;
@@ -31,7 +32,7 @@ public class ShapedWeaponTableRecipeRenderer extends BasicWeaponTableRecipeRende
                 int stackX = (x + 1) * 17 + (guiLeft + 29);
                 int stackY = (y + 1) * 17 + (guiTop + 30);
                 ItemStack stack = recipe.recipeItems[y * recipe.recipeWidth + x];
-                if (stack != null) {
+                if (!ItemStackUtil.isEmpty(stack)) {
                     if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
                         NonNullList<ItemStack> subItems = NonNullList.create();
                         stack.getItem().getSubItems(stack.getItem(), stack.getItem().getCreativeTab(), subItems);

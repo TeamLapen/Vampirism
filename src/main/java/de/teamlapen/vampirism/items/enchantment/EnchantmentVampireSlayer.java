@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items.enchantment;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.items.ItemPitchfork;
 import de.teamlapen.vampirism.util.Helper;
@@ -30,7 +31,7 @@ public class EnchantmentVampireSlayer extends Enchantment {
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return stack != null && stack.getItem() instanceof ItemPitchfork || super.canApplyAtEnchantingTable(stack);
+        return !ItemStackUtil.isEmpty(stack) && stack.getItem() instanceof ItemPitchfork || super.canApplyAtEnchantingTable(stack);
     }
 
     @Override
@@ -57,7 +58,7 @@ public class EnchantmentVampireSlayer extends Enchantment {
     public void onEntityDamaged(EntityLivingBase user, Entity target, int level) {
         super.onEntityDamaged(user, target, level);
         if (target instanceof EntityPlayer) {
-            if (Helper.isVampire((EntityPlayer) target)) {
+            if (Helper.isVampire(target)) {
                 user.attackEntityFrom(DamageSource.causePlayerDamage((EntityPlayer) user), 2F);
             }
         }

@@ -30,7 +30,6 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nullable;
 import java.util.*;
 
 /**
@@ -48,24 +47,7 @@ public class UtilLib {
         return worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos, EnumFacing.UP) && worldIn.getBlockState(pos).getMaterial().isSolid() && !worldIn.getBlockState(pos.up()).getMaterial().isSolid();
     }
 
-    /**
-     * Checks if stackA contains stackB
-     * True if A !=null and B == null
-     */
-    public static boolean doesStackContain(@Nullable ItemStack stackA, @Nullable ItemStack stackB) {
-        return stackA != null && (stackB == null || (areStacksEqualIgnoreAmount(stackA, stackB) && stackA.stackSize >= stackB.stackSize));
-    }
 
-    /**
-     * compares ItemStack argument to the instance ItemStack; returns true if both ItemStacks are equal. ignores stack size
-     */
-    public static boolean areStacksEqualIgnoreAmount(@Nullable ItemStack stackA, @Nullable ItemStack stackB) {
-        if (stackA == null && stackB == null) return true;
-        if (stackA == null || stackB == null) return false;
-        if (stackA.getItem() != stackB.getItem()) return false;
-        if (stackA.getItemDamage() != stackB.getItemDamage()) return false;
-        return ItemStack.areItemStackTagsEqual(stackA, stackB);
-    }
 
     @SideOnly(Side.CLIENT)
     public static void drawTexturedModalRect(float zLevel, int x, int y, int textureX, int textureY, int width, int height, int texWidth, int texHeight) {

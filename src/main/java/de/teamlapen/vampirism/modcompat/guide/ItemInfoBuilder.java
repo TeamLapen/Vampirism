@@ -4,6 +4,7 @@ import amerifrance.guideapi.api.IPage;
 import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
 import amerifrance.guideapi.entry.EntryItemStack;
 import com.google.common.collect.Lists;
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.block.Block;
@@ -34,6 +35,7 @@ public class ItemInfoBuilder {
      * @param block If this entry is a about a block or not
      */
     public ItemInfoBuilder(ItemStack stack, boolean block) {
+        assert !ItemStackUtil.isEmpty(stack);
         this.stack = stack;
         this.block = block;
         name = stack.getItem().getRegistryName().getResourcePath();
@@ -76,7 +78,7 @@ public class ItemInfoBuilder {
      * @param type The crafting type
      */
     public ItemInfoBuilder craftable(GuideHelper.RECIPE_TYPE type) {
-        this.craftableStacks = Collections.<Pair<ItemStack, GuideHelper.RECIPE_TYPE>>singletonList(ImmutablePair.of(stack, type));
+        this.craftableStacks = Collections.singletonList(ImmutablePair.of(stack, type));
         return this;
     }
 

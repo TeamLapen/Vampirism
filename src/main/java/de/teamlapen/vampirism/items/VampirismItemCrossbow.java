@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -128,7 +129,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * Can be overridden to use other items as arrows. Could cause problems though.
      */
     protected boolean isArrow(@Nullable ItemStack stack) {
-        return stack != null && stack.getItem() instanceof ItemCrossbowArrow;
+        return !ItemStackUtil.isEmpty(stack) && stack.getItem() instanceof ItemCrossbowArrow;
     }
 
     /**
@@ -168,8 +169,8 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
         ItemStack itemstack = this.findAmmo(player, stack);
 
 
-        if (itemstack != null || bowInfinite) {
-            if (itemstack == null) {
+        if (!ItemStackUtil.isEmpty(itemstack) || bowInfinite) {
+            if (ItemStackUtil.isEmpty(itemstack)) {
                 itemstack = new ItemStack(ModItems.crossbowArrow);
             }
 
@@ -221,9 +222,9 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
 
                 if (consumeArrow) {
-                    --itemstack.stackSize;
+                    ItemStackUtil.decr(itemstack);
 
-                    if (itemstack.stackSize == 0) {
+                    if (ItemStackUtil.isEmpty(itemstack)) {
                         player.inventory.deleteStack(itemstack);
                     }
                 }

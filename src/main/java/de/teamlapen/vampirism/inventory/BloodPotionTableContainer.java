@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.lib.lib.inventory.InventorySlot;
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.core.Achievements;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -57,7 +58,7 @@ public class BloodPotionTableContainer extends Container {
         this.addSlotToContainer(new PotionSlot(inventory, 1, 137, 55));
         this.addSlotToContainer(new InventoryContainer.FilterSlot(inventory, 2, 126, 14, new InventorySlot.IItemSelector() {
             @Override
-            public boolean isItemAllowed(ItemStack item) {
+            public boolean isItemAllowed(@Nonnull ItemStack item) {
                 return ModItems.itemGarlic.equals(item.getItem());
             }
         }));
@@ -117,7 +118,7 @@ public class BloodPotionTableContainer extends Container {
     @Nullable
     List<String> getLocalizedCraftingHint() {
         ItemStack extra = inventory.getStackInSlot(3);
-        if (extra == null) return null;
+        if (ItemStackUtil.isEmpty(extra)) return null;
         if (!hunterPlayer.getSkillHandler().isSkillEnabled(HunterSkills.bloodPotion_categoryHint)) return null;
         List<String> hints = BloodPotions.getLocalizedCategoryHint(extra);
         if (hints.isEmpty()) {
@@ -137,7 +138,7 @@ public class BloodPotionTableContainer extends Container {
             for (int i = 0; i < inventory.getSizeInventory(); ++i) {
                 ItemStack itemstack = this.inventory.removeStackFromSlot(i);
 
-                if (itemstack != null) {
+                if (!ItemStackUtil.isEmpty(itemstack)) {
                     playerIn.dropItem(itemstack, false);
                 }
             }
@@ -174,7 +175,7 @@ public class BloodPotionTableContainer extends Container {
 
     @Nullable
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-        ItemStack itemstack = null;
+        ItemStack itemstack = ItemStackUtil.getEmptyStack();
         Slot slot = this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack()) {
@@ -197,14 +198,14 @@ public class BloodPotionTableContainer extends Container {
                 return null;
             }
 
-            if (itemstack1.stackSize == 0) {
-                slot.putStack(null);
+            if (ItemStackUtil.isEmpty(itemstack1)) {
+                slot.putStack(ItemStackUtil.getEmptyStack());
             } else {
                 slot.onSlotChanged();
             }
 
-            if (itemstack1.stackSize == itemstack.stackSize) {
-                return null;
+            if (ItemStackUtil.getCount(itemstack) == ItemStackUtil.getCount(itemstack1)) {
+                return ItemStackUtil.getEmptyStack();
             }
 
             slot.onTake(playerIn, itemstack1);
@@ -226,7 +227,7 @@ public class BloodPotionTableContainer extends Container {
      */
     private boolean areRequirementsMet() {
         ItemStack garlic = inventory.getStackInSlot(2);
-        if (garlic == null || !ModItems.itemGarlic.equals(garlic.getItem())) return false;
+        if (ItemStackUtil.isEmpty(garlic) || !ModItems.itemGarlic.equals(garlic.getItem())) return false;
         boolean bottle = false;
         ItemStack bottle1 = inventory.getStackInSlot(0);
         ItemStack bottle2 = inventory.getStackInSlot(1);
@@ -241,19 +242,19 @@ public class BloodPotionTableContainer extends Container {
     private void onCraftingTimerFinished() {
         if (!areRequirementsMet()) return;
         ItemStack extraItem = inventory.getStackInSlot(3);
-        if (extraItem != null) {
+        if (!ItemStackUtil.isEmpty(extraItem)) {
             extraItem = extraItem.copy();
-            extraItem.stackSize = 1;
+            ItemStackUtil.setCount(extraItem, 1);
             inventory.decrStackSize(3, 1);
         }
         inventory.decrStackSize(2, 1);//Reduce garlic
         ItemStack bottle1 = inventory.getStackInSlot(0);
         ItemStack bottle2 = inventory.getStackInSlot(1);
-        if (bottle1 != null && bottle1.getItem().equals(ModItems.vampireBlood)) {
+        if (!ItemStackUtil.isEmpty(bottle1) && bottle1.getItem().equals(ModItems.vampireBlood)) {
             bottle1 = new ItemStack(ModItems.bloodPotion);
             BloodPotions.chooseAndAddEffects(bottle1, hunterPlayer, extraItem);
         }
-        if (bottle2 != null && bottle2.getItem().equals(ModItems.vampireBlood)) {
+        if (!ItemStackUtil.isEmpty(bottle2) && bottle2.getItem().equals(ModItems.vampireBlood)) {
             bottle2 = new ItemStack(ModItems.bloodPotion);
             BloodPotions.chooseAndAddEffects(bottle2, hunterPlayer, extraItem);
         }

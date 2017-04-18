@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.fluids;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModFluids;
@@ -31,9 +32,9 @@ public class BloodHelper {
         int hotbarSize = InventoryPlayer.getHotbarSize();
         for (int i = 0; i < hotbarSize; i++) {
             ItemStack stack = inventory.getStackInSlot(i);
-            if (stack != null && canStoreBlood(stack)) return stack;
+            if (!ItemStackUtil.isEmpty(stack) && canStoreBlood(stack)) return stack;
         }
-        return null;
+        return ItemStackUtil.getEmptyStack();
     }
 
     /**
@@ -56,11 +57,11 @@ public class BloodHelper {
         int hotbarSize = InventoryPlayer.getHotbarSize();
         for (int i = 0; i < hotbarSize; i++) {
             ItemStack itemStack = inventory.getStackInSlot(i);
-            if (itemStack != null && itemStack.getItem().equals(Items.GLASS_BOTTLE)) {
+            if (!ItemStackUtil.isEmpty(itemStack) && itemStack.getItem().equals(Items.GLASS_BOTTLE)) {
                 return itemStack;
             }
         }
-        return null;
+        return ItemStackUtil.getEmptyStack();
     }
 
     /**
@@ -95,7 +96,7 @@ public class BloodHelper {
      * @param exact   If only the exact amount should be drained or if less is ok too
      * @return Drained amount
      */
-    public static int drain(ItemStack stack, int amount, boolean doDrain, boolean exact) {
+    public static int drain(@Nonnull ItemStack stack, int amount, boolean doDrain, boolean exact) {
         if (exact && doDrain) {
             if (drain(stack, amount, false, false) != amount) return 0;
         }
@@ -106,7 +107,7 @@ public class BloodHelper {
         return 0;
     }
 
-    public static int fill(ItemStack stack, int amount, boolean doFill) {
+    public static int fill(@Nonnull ItemStack stack, int amount, boolean doFill) {
         if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
             return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).fill(new FluidStack(ModFluids.blood, amount), doFill);
         }
@@ -123,7 +124,7 @@ public class BloodHelper {
     public static int fillBloodIntoInventory(EntityPlayer player, int amt) {
         if (amt <= 0) return 0;
         ItemStack stack = getBloodContainerInHotbar(player.inventory);
-        if (stack != null) {
+        if (!ItemStackUtil.isEmpty(stack)) {
             int filled = fill(stack, amt, true);
             if (filled > 0) {
                 if (filled < amt) {
@@ -135,14 +136,14 @@ public class BloodHelper {
             }
         }
         ItemStack glas = getGlassBottleInHotbar(player.inventory);
-        if (glas != null && Configs.autoConvertGlasBottles) {
+        if (!ItemStackUtil.isEmpty(glas) && Configs.autoConvertGlasBottles) {
             ItemStack bloodBottle = new ItemStack(ModItems.bloodBottle, 1, 0);
             int filled = fill(bloodBottle, amt, true);
             if (filled == 0) {
                 VampirismMod.log.w("BloodHelper", "Failed to fill blood bottle with blood");
             }
-            glas.stackSize--;
-            if (glas.stackSize == 0) {
+            ItemStackUtil.decr(glas);
+            if (ItemStackUtil.isEmpty(glas)) {
                 player.inventory.deleteStack(glas);
             }
             if (!player.inventory.addItemStackToInventory(bloodBottle)) {

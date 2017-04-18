@@ -2,6 +2,7 @@ package de.teamlapen.lib.lib.tile;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.lib.lib.inventory.InventorySlot;
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -44,35 +45,13 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
     }
 
     @Override
-    public boolean isEmpty() {
-        for (InventorySlot slot : slots) {
-            if (!slot.stack.isEmpty()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    @Override
     public void closeInventory(EntityPlayer player) {
 
     }
 
     @Override
     public ItemStack decrStackSize(int slot, int amt) {
-        ItemStack stack = getStackInSlot(slot);
-        if (stack != null) {
-            if (stack.stackSize <= amt) {
-                setInventorySlotContents(slot, null);
-            } else {
-                stack = stack.splitStack(amt);
-                if (stack.stackSize == 0) {
-                    setInventorySlotContents(slot, null);
-                }
-            }
-            return stack;
-        }
-        return null;
+        return ItemStackUtil.decrIInventoryStackSize(this, slot, amt);
     }
 
     @Nonnull
@@ -120,8 +99,18 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
     }
 
     @Override
+    public boolean isEmpty() {
+        for (InventorySlot slot : slots) {
+            if (!slot.stack.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        if (slots[slot].itemSelector != null && stack != null) {
+        if (slots[slot].itemSelector != null && !ItemStackUtil.isEmpty(stack)) {
             return slots[slot].itemSelector.isItemAllowed(stack);
         }
         return true;
@@ -149,7 +138,7 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
             NBTTagCompound tag = tagList.getCompoundTagAt(i);
             byte slot = tag.getByte("Slot");
             if (slot >= 0 && slot < slots.length) {
-                slots[slot].stack = new ItemStack(tag);
+                slots[slot].stack = ItemStackUtil.loadFromNBT(tag);
             }
         }
     }
@@ -158,10 +147,10 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
     public ItemStack removeStackFromSlot(int index) {
         if (this.slots[index] != null) {
             ItemStack itemstack = this.slots[index].stack;
-            this.slots[index].stack = null;
+            this.slots[index].stack = ItemStackUtil.getEmptyStack();
             return itemstack;
         } else {
-            return null;
+            return ItemStackUtil.getEmptyStack();
         }
     }
 
@@ -173,8 +162,8 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack) {
         slots[slot].stack = stack;
-        if (stack != null && stack.stackSize > getInventoryStackLimit()) {
-            stack.stackSize = getInventoryStackLimit();
+        if (ItemStackUtil.getCount(stack) > getInventoryStackLimit()) {
+            ItemStackUtil.setCount(stack, getInventoryStackLimit());
         }
 
     }
@@ -186,7 +175,7 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
         NBTTagList itemList = new NBTTagList();
         for (int i = 0; i < slots.length; i++) {
             ItemStack stack = slots[i].stack;
-            if (stack != null) {
+            if (!ItemStackUtil.isEmpty(stack)) {
                 NBTTagCompound tag = new NBTTagCompound();
                 tag.setByte("Slot", (byte) i);
                 stack.writeToNBT(tag);

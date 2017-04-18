@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.Multimap;
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
@@ -101,7 +102,7 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
                 boolean flag = true;
                 int boost = Integer.MAX_VALUE;
                 for (ItemStack stack : player.inventory.armorInventory) {
-                    if (stack != null && stack.getItem() instanceof ItemArmorOfSwiftness) {
+                    if (!ItemStackUtil.isEmpty(stack) && stack.getItem() instanceof ItemArmorOfSwiftness) {
                         int b = getJumpBoost(getTier(stack));
                         if (b < boost) {
                             boost = b;

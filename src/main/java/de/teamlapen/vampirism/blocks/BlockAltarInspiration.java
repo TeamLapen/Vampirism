@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.util.FluidLib;
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.tileentity.TileAltarInspiration;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
@@ -23,6 +24,8 @@ import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Altar of inspiration used for vampire levels 1-4
@@ -80,7 +83,7 @@ public class BlockAltarInspiration extends VampirismBlockContainer {
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         ItemStack stack = playerIn.getHeldItem(hand);
-        if (stack != null && !worldIn.isRemote) {
+        if (!ItemStackUtil.isEmpty(stack) && !worldIn.isRemote) {
             if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
                 TileAltarInspiration tileEntity = (TileAltarInspiration) worldIn.getTileEntity(pos);
                 if (!playerIn.isSneaking()) {
@@ -91,7 +94,7 @@ public class BlockAltarInspiration extends VampirismBlockContainer {
                 return true;
             }
         }
-        if (stack == null && playerIn.isSneaking()) {
+        if (ItemStackUtil.isEmpty(stack) && playerIn.isSneaking()) {
             TileAltarInspiration tileEntity = (TileAltarInspiration) worldIn.getTileEntity(pos);
             tileEntity.startRitual(playerIn);
         }
@@ -99,6 +102,7 @@ public class BlockAltarInspiration extends VampirismBlockContainer {
         return true;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public boolean shouldSideBeRendered(IBlockState blockState, IBlockAccess blockAccess, BlockPos pos, EnumFacing side) {
         return super.shouldSideBeRendered(blockState, blockAccess, pos, side);

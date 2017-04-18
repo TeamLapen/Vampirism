@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.inventory;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -62,7 +63,7 @@ public class HunterWeaponCraftingManager implements IHunterWeaponCraftingManager
 
         for (map = Maps.newHashMap(); i < recipeComponents.length; i += 2) {
             Character character = (Character) recipeComponents[i];
-            ItemStack itemstack = null;
+            ItemStack itemstack = ItemStackUtil.getEmptyStack();
 
             if (recipeComponents[i + 1] instanceof Item) {
                 itemstack = new ItemStack((Item) recipeComponents[i + 1]);
@@ -84,7 +85,7 @@ public class HunterWeaponCraftingManager implements IHunterWeaponCraftingManager
             if (map.containsKey(c0)) {
                 aitemstack[i1] = (map.get(c0)).copy();
             } else {
-                aitemstack[i1] = null;
+                aitemstack[i1] = ItemStackUtil.getEmptyStack();
             }
         }
 

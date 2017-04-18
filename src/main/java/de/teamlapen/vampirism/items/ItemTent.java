@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.blocks.BlockTent;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.tileentity.TileTent;
@@ -70,7 +71,7 @@ public class ItemTent extends VampirismItem {
         boolean flag = placeAt(world, pos.up(), dir, false, false);
         if (flag && !player.capabilities.isCreativeMode) {
             ItemStack stack = player.getHeldItem(hand);
-            stack.stackSize--;
+            ItemStackUtil.decr(stack);
         }
         return flag ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
     }

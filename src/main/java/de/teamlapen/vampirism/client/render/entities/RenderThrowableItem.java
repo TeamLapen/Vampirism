@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.client.render.entities;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.entity.EntityThrowableItem;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -18,6 +19,6 @@ public class RenderThrowableItem extends RenderSnowball<EntityThrowableItem> {
     @Override
     public ItemStack getStackToRender(EntityThrowableItem entityIn) {
         ItemStack stack = entityIn.getItem();
-        return stack == null ? new ItemStack(item) : stack;
+        return ItemStackUtil.isEmpty(stack) ? new ItemStack(item) : stack;
     }
 }

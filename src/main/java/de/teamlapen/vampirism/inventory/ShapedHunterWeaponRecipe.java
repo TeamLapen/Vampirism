@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.inventory;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
@@ -106,7 +107,7 @@ public class ShapedHunterWeaponRecipe implements IHunterWeaponRecipe {
             for (int y = 0; y < 4; y++) {
                 int k = x - startRow;
                 int l = y - startColumn;
-                ItemStack itemStack = null;
+                ItemStack itemStack = ItemStackUtil.getEmptyStack();
                 if (k >= 0 && l >= 0 && k < recipeWidth && l < recipeHeight) {
                     if (flip) {
                         itemStack = this.recipeItems[this.recipeWidth - k - 1 + l * this.recipeWidth];
@@ -116,8 +117,8 @@ public class ShapedHunterWeaponRecipe implements IHunterWeaponRecipe {
                 }
                 ItemStack itemstack1 = inv.getStackInRowAndColumn(x, y);
 
-                if (itemstack1 != null || itemStack != null) {
-                    if (itemstack1 == null || itemStack == null) {
+                if (!ItemStackUtil.isEmpty(itemStack) || !ItemStackUtil.isEmpty(itemstack1)) {
+                    if (ItemStackUtil.isEmpty(itemStack) || ItemStackUtil.isEmpty(itemstack1)) {
                         return false;
                     }
 

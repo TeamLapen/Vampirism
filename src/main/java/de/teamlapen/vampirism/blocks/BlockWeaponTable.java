@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -87,7 +88,7 @@ public class BlockWeaponTable extends VampirismBlock {
             boolean flag = false;
             ItemStack heldItem = playerIn.getHeldItem(hand);
             if (lava < MAX_LAVA) { //TODO TEST
-                if (heldItem != null && heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+                if (!ItemStackUtil.isEmpty(heldItem) && heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
                     IFluidHandlerItem fluidHandler = heldItem.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
                     FluidStack missing = new FluidStack(FluidRegistry.LAVA, (MAX_LAVA - lava) * MB_PER_META);
                     FluidStack drainable = fluidHandler.drain(missing, false);

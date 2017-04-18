@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -62,7 +63,7 @@ public class ItemInjection extends VampirismItem {
             } else {
                 playerIn.addPotionEffect(new PotionEffect(MobEffects.POISON, 100));
             }
-            stack.stackSize--;
+            ItemStackUtil.decr(stack);
             return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         }
         return new ActionResult<>(EnumActionResult.PASS, stack);

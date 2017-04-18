@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.entity.hunter;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
@@ -39,6 +40,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 
@@ -98,7 +100,8 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     }
 
     @Override
-    public ItemStack getArrowStackForAttack(EntityLivingBase target) {
+    public @Nonnull
+    ItemStack getArrowStackForAttack(EntityLivingBase target) {
         return new ItemStack(ModItems.crossbowArrow);
     }
 
@@ -250,7 +253,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
             this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.basicCrossbow));
         } else {
             this.setLeftHanded(false);
-            this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, null);
+            this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, ItemStackUtil.getEmptyStack());
         }
         this.updateCombatTask();
 
@@ -287,7 +290,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
             this.tasks.removeTask(attackMelee);
             this.tasks.removeTask(attackRange);
             ItemStack stack = this.getHeldItemMainhand();
-            if (stack != null && stack.getItem() instanceof VampirismItemCrossbow) {
+            if (!ItemStackUtil.isEmpty(stack) && stack.getItem() instanceof VampirismItemCrossbow) {
                 this.tasks.addTask(2, this.attackRange);
             } else {
                 this.tasks.addTask(2, this.attackMelee);

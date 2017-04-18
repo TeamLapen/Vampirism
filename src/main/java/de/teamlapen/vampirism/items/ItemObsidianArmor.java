@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.Multimap;
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
@@ -27,7 +28,7 @@ public class ItemObsidianArmor extends VampirismHunterArmor implements IItemWith
 
     public static boolean isFullyEquipped(EntityPlayer player) {
         for (ItemStack stack : player.inventory.armorInventory) {
-            if (stack == null || !(stack.getItem() instanceof ItemObsidianArmor)) {
+            if (ItemStackUtil.isEmpty(stack) || !(stack.getItem() instanceof ItemObsidianArmor)) {
                 return false;
             }
         }

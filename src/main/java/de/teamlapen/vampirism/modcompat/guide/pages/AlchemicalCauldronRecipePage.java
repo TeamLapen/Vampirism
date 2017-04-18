@@ -7,6 +7,7 @@ import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
 import amerifrance.guideapi.api.util.GuiHelper;
 import amerifrance.guideapi.gui.GuiBase;
 import com.google.common.collect.Lists;
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -81,7 +82,7 @@ public class AlchemicalCauldronRecipePage extends Page {
 
         ItemStack input = recipe.getIngredient();
 
-        if (input != null) {
+        if (!ItemStackUtil.isEmpty(input)) {
             if (input.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
                 NonNullList<ItemStack> subItems = NonNullList.create();
                 input.getItem().getSubItems(input.getItem(), input.getItem().getCreativeTab(), subItems);
@@ -96,7 +97,7 @@ public class AlchemicalCauldronRecipePage extends Page {
 
         ItemStack liquid = recipe.getDescriptiveFluidStack();
 
-        if (liquid != null && liquid.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
+        if (!ItemStackUtil.isEmpty(liquid) && liquid.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
             NonNullList<ItemStack> subItems = NonNullList.create();
             liquid.getItem().getSubItems(liquid.getItem(), liquid.getItem().getCreativeTab(), subItems);
             liquid = subItems.get(getRandomizedCycle(0, subItems.size()));

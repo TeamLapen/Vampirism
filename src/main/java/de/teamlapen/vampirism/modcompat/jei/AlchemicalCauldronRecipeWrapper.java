@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
 import com.google.common.collect.Lists;
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -29,7 +30,7 @@ public class AlchemicalCauldronRecipeWrapper extends BlankRecipeWrapper {
         ItemStack ingred = recipe.getIngredient();
         inputs = Lists.newLinkedList();
         inputs.add(Collections.singletonList(recipe.getDescriptiveFluidStack()));
-        inputs.add(ingred == null ? Collections.<ItemStack>emptyList() : stackHelper.getSubtypes(ingred));
+        inputs.add(!ItemStackUtil.isEmpty(ingred) ? Collections.emptyList() : stackHelper.getSubtypes(ingred));
         this.recipe = recipe;
         this.output = recipe.getOutput();
     }

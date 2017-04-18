@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.inventory;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
 import de.teamlapen.vampirism.blocks.BlockWeaponTable;
 import de.teamlapen.vampirism.core.Achievements;
@@ -37,7 +38,7 @@ public class HunterWeaponTableCraftingSlot extends Slot {
     @Override
     public ItemStack decrStackSize(int amount) {
         if (this.getHasStack()) {
-            this.amountCrafted += Math.min(amount, this.getStack().stackSize);
+            this.amountCrafted += Math.min(amount, ItemStackUtil.getCount(this.getStack()));
 
         }
         return super.decrStackSize(amount);
@@ -71,16 +72,16 @@ public class HunterWeaponTableCraftingSlot extends Slot {
             ItemStack itemstack = this.craftMatrix.getStackInSlot(i);
             ItemStack itemstack1 = remaining.get(i);
 
-            if (itemstack != null) {
+            if (!ItemStackUtil.isEmpty(itemstack)) {
                 this.craftMatrix.decrStackSize(i, 1);
                 itemstack = this.craftMatrix.getStackInSlot(i);
             }
 
-            if (itemstack1 != null) {
-                if (itemstack == null) {
+            if (!ItemStackUtil.isEmpty(itemstack1)) {
+                if (ItemStackUtil.isEmpty(itemstack)) {
                     this.craftMatrix.setInventorySlotContents(i, itemstack1);
                 } else if (ItemStack.areItemsEqual(itemstack, itemstack1) && ItemStack.areItemStackTagsEqual(itemstack, itemstack1)) {
-                    itemstack1.stackSize += itemstack.stackSize;
+                    ItemStackUtil.grow(itemstack1, ItemStackUtil.getCount(itemstack));
                     this.craftMatrix.setInventorySlotContents(i, itemstack1);
                 } else if (!this.player.inventory.addItemStackToInventory(itemstack1)) {
                     this.player.dropItem(itemstack1, false);

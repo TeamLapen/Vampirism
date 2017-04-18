@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.blocks.BlockMedChair;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -57,7 +58,7 @@ public class ItemMedChair extends VampirismItem {
                     IBlockState state2 = state1.withProperty(BlockMedChair.PART, BlockMedChair.EnumPart.TOP).withProperty(BlockMedChair.FACING, facing.getOpposite());
                     world.setBlockState(other, state2, 3);
                 }
-                stack.setCount(stack.getCount() - 1);
+                ItemStackUtil.decr(stack);
                 return EnumActionResult.SUCCESS;
             }
         }

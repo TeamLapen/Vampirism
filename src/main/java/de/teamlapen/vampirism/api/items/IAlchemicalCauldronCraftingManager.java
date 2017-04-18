@@ -18,7 +18,7 @@ public interface IAlchemicalCauldronCraftingManager {
     void addRecipe(IAlchemicalCauldronRecipe recipe);
 
     /**
-     * Add a recipe. Only accepts  as ingre
+     * Add a recipe.
      *
      * @param liquid     Item, ItemStack or FluidStack
      * @param ingredient ItemStack (WILDCARD allowed), Item or Block
@@ -28,7 +28,7 @@ public interface IAlchemicalCauldronCraftingManager {
     IAlchemicalCauldronRecipe addRecipe(@Nonnull Object output, @Nonnull Object liquid, @Nullable Object ingredient);
 
     /**
-     * Same as {@link IAlchemicalCauldronCraftingManager#addRecipe(Object, Object, Object)} but calls {@link IAlchemicalCauldronRecipe#configure(int, int, int, ISkill[])} on it
+     * Same as {@link IAlchemicalCauldronCraftingManager#addRecipe(Object, Object, Object)} but calls {@link IAlchemicalCauldronRecipe#configure(int, float, int, ISkill[])} on it
      *
      * @return This recipe
      */

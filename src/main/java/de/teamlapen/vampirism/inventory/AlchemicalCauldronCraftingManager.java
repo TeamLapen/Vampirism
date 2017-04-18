@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.inventory;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IAlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.api.items.IAlchemicalCauldronRecipe;
@@ -77,7 +77,7 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
     public IAlchemicalCauldronRecipe findRecipe(@Nonnull ItemStack liquid, @Nullable ItemStack ingredient) {
         for (IAlchemicalCauldronRecipe r : recipes) {
             if (r.isValidLiquidItem(liquid) || r.isValidFluidItem(liquid) != null) {
-                if (UtilLib.doesStackContain(ingredient, r.getIngredient())) {
+                if (ItemStackUtil.doesStackContain(ingredient, r.getIngredient())) {
                     return r;
                 }
             }
@@ -91,7 +91,7 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
 
         for (IAlchemicalCauldronRecipe r : recipes) {
             if (r.isValidFluidStack(liquid) != null) {
-                if (UtilLib.doesStackContain(ingredient, r.getIngredient())) {
+                if (ItemStackUtil.doesStackContain(ingredient, r.getIngredient())) {
                     return r;
                 }
             }
@@ -127,7 +127,7 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
     }
 
     private ItemStack getItemStackCopy(Object o) {
-        if (o == null) return null;
+        if (o == null) return ItemStackUtil.getEmptyStack();
         if (o instanceof ItemStack) return ((ItemStack) o).copy();
         if (o instanceof Item) return new ItemStack((Item) o);
         if (o instanceof Block) return new ItemStack((Block) o);

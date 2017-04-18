@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -26,7 +27,7 @@ public class HunterTableContainer extends InventoryContainer {
     private final int hunterLevel;
     private final HunterLevelingConf levelingConf = HunterLevelingConf.instance();
     private final BlockPos pos;
-    private ItemStack missing;
+    private ItemStack missing = ItemStackUtil.getEmptyStack();
 
     public HunterTableContainer(EntityPlayer player, BlockPos pos) {
         super(player.inventory, new HunterTableInventory(items));
@@ -66,7 +67,7 @@ public class HunterTableContainer extends InventoryContainer {
             for (int i = 0; i < 4; ++i) {
                 ItemStack itemstack = this.inventory.removeStackFromSlot(i);
 
-                if (itemstack != null) {
+                if (!ItemStackUtil.isEmpty(itemstack)) {
                     playerIn.dropItem(itemstack, false);
                 }
             }
@@ -78,7 +79,7 @@ public class HunterTableContainer extends InventoryContainer {
         if (inventory != null && isLevelValid()) {
             int[] req = levelingConf.getItemRequirementsForTable(hunterLevel + 1);
             missing = checkItems(req[0], req[1], req[2], req[3]);
-            if (missing == null) {
+            if (ItemStackUtil.isEmpty(missing)) {
                 slotResult.inventory.setInventorySlotContents(0, new ItemStack(ModItems.hunterIntel, 1, levelingConf.getHunterIntelMetaForLevel(hunterLevel + 1)));
             }
         }

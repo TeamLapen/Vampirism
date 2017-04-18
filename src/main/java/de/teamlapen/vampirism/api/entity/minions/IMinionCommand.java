@@ -63,7 +63,7 @@ public interface IMinionCommand {
     void onDeactivated();
 
     /**
-     * If this returns true, while the command is activated, minions (at least the RemoteVampireMinion) picksup such an item, if he stands on it.
+     * If this returns true, while the command is activated, minions (at least the RemoteVampireMinion) pick up such an item, if they stand on it.
      *
      * @param item
      * @return

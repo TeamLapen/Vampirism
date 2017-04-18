@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.inventory;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
 import de.teamlapen.vampirism.blocks.BlockWeaponTable;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
@@ -85,7 +86,7 @@ public class HunterWeaponTableContainer extends Container {
             for (int i = 0; i < 9; ++i) {
                 ItemStack itemstack = this.craftMatrix.removeStackFromSlot(i);
 
-                if (itemstack != null) {
+                if (!ItemStackUtil.isEmpty(itemstack)) {
                     playerIn.dropItem(itemstack, false);
                 }
             }
@@ -104,7 +105,7 @@ public class HunterWeaponTableContainer extends Container {
 
     @Nullable
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-        ItemStack itemstack = null;
+        ItemStack itemstack = ItemStackUtil.getEmptyStack();
         Slot slot = this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack()) {
@@ -128,14 +129,14 @@ public class HunterWeaponTableContainer extends Container {
                 return null;
             }
 
-            if (itemstack1.stackSize == 0) {
-                slot.putStack(null);
+            if (ItemStackUtil.isEmpty(itemstack)) {
+                slot.putStack(ItemStackUtil.getEmptyStack());
             } else {
                 slot.onSlotChanged();
             }
 
-            if (itemstack1.stackSize == itemstack.stackSize) {
-                return null;
+            if (ItemStackUtil.getCount(itemstack) == ItemStackUtil.getCount(itemstack1)) {
+                return ItemStackUtil.getEmptyStack();
             }
 
             slot.onTake(playerIn, itemstack1);
