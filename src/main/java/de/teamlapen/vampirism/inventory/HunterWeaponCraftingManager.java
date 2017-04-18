@@ -162,7 +162,7 @@ public class HunterWeaponCraftingManager implements IHunterWeaponCraftingManager
     @Nullable
     ItemStack findMatchingRecipeResult(InventoryCrafting craftMatrix, World world, int playerLevel, ISkillHandler<IHunterPlayer> skillHandler, int lava) {
         IHunterWeaponRecipe recipe = findMatchingRecipe(craftMatrix, world, playerLevel, skillHandler, lava);
-        return recipe == null ? null : recipe.getCraftingResult(craftMatrix);
+        return recipe == null ? ItemStackUtil.getEmptyStack() : recipe.getCraftingResult(craftMatrix);
     }
 
     public List<IHunterWeaponRecipe> getRecipes() {

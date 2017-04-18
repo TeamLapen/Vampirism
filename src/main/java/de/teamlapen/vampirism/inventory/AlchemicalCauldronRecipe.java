@@ -41,7 +41,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     private int cookingTime = 400;
     private float experience = 0.2F;
     @Nullable
-    private ItemStack descriptiveStack;
+    private ItemStack descriptiveStack = ItemStackUtil.getEmptyStack();
 
 
     AlchemicalCauldronRecipe(@Nonnull ItemStack output, ItemStack liquid, @Nullable ItemStack ingredient) {

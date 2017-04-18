@@ -101,7 +101,7 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
 
     @Override
     public int getLiquidColor(@Nullable ItemStack stack) {
-        if (stack != null) {
+        if (!ItemStackUtil.isEmpty(stack)) {
             if (liquidColors.containsKey(stack)) {
                 return liquidColors.get(stack);
             }
