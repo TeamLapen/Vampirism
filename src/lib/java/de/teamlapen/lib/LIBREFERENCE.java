@@ -10,6 +10,6 @@ public class LIBREFERENCE {
     public static final String NAME = "TeamLapen Library";
     public static final String VERSION = REFERENCE.VERSION;//"@VERSION@";
     public static final String MINECRAFT_VERSION = REFERENCE.MINECRAFT_VERSION;//"@MVERSION@";
-    public static final String FORGE_VERSION_MIN = "12.16.0.1859";
+    public static final String FORGE_VERSION_MIN = REFERENCE.FORGE_VERSION_MIN;
     private static final String FORGE_VERSION = REFERENCE.FORGE_VERSION;//"@FVERSION@";
 }
