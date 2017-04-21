@@ -4,8 +4,8 @@ import com.google.common.collect.Sets;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.IBiteableRegistry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
+import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
@@ -88,8 +88,8 @@ public class ModEntities {
      * Registers special extended creature classes
      */
     private static void registerCustomExtendedCreatures() {
-        IBiteableRegistry registry = VampirismAPI.biteableRegistry();
-        registry.addCustomExtendedCreature(EntityHorse.class, new IBiteableRegistry.IExtendedCreatureConstructor<EntityHorse>() {
+        IVampirismEntityRegistry registry = VampirismAPI.biteableRegistry();
+        registry.addCustomExtendedCreature(EntityHorse.class, new IVampirismEntityRegistry.IExtendedCreatureConstructor<EntityHorse>() {
             @Override
             public IExtendedCreatureVampirism create(EntityHorse creature) {
                 return new ExtendedHorse(creature);
@@ -102,7 +102,7 @@ public class ModEntities {
      */
     private static void registerConvertibles() {
         String base = REFERENCE.MODID + ":textures/entity/vanilla/%s_overlay.png";
-        IBiteableRegistry registry = VampirismAPI.biteableRegistry();
+        IVampirismEntityRegistry registry = VampirismAPI.biteableRegistry();
         registry.addConvertible(EntityCow.class, String.format(base, "cow"));
         registry.addConvertible(EntityPig.class, String.format(base, "pig"));
         registry.addConvertible(EntityOcelot.class, String.format(base, "cat"));

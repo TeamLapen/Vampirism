@@ -5,8 +5,8 @@ import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
-import de.teamlapen.vampirism.api.entity.IBiteableRegistry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
+import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
@@ -52,7 +52,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     public static <Q extends EntityCreature> ICapabilityProvider createNewCapability(final Q creature) {
         return new ICapabilitySerializable<NBTTagCompound>() {
 
-            IBiteableRegistry.IExtendedCreatureConstructor<Q> constructor = VampirismAPI.biteableRegistry().getCustomExtendedCreatureConstructor(creature);
+            IVampirismEntityRegistry.IExtendedCreatureConstructor<Q> constructor = VampirismAPI.biteableRegistry().getCustomExtendedCreatureConstructor(creature);
             IExtendedCreatureVampirism inst = constructor == null ? new ExtendedCreature(creature) : constructor.create(creature);
 
 
