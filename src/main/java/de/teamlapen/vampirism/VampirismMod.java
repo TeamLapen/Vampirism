@@ -20,8 +20,8 @@ import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
-import de.teamlapen.vampirism.entity.converted.BiteableRegistry;
 import de.teamlapen.vampirism.entity.converted.DefaultConvertingHandler;
+import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
@@ -62,10 +62,13 @@ import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
+import net.minecraft.util.datafix.FixTypes;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
+import net.minecraftforge.common.util.ModFixs;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.*;
@@ -220,6 +223,13 @@ public class VampirismMod {
         setupAPI2();
 
 
+        //Data Fixer
+        ModFixs fixer = FMLCommonHandler.instance().getDataFixer().init(REFERENCE.MODID, 2);
+        fixer.registerFix(FixTypes.ENTITY, ModEntities.getEntityIDFixer());
+        fixer.registerFix(FixTypes.BLOCK_ENTITY, ModBlocks.getTileEntityIDFixer());
+        fixer.registerFix(FixTypes.ENTITY, ModEntities.getEntityCapabilityFixer());
+        fixer.registerFix(FixTypes.PLAYER, ModEntities.getPlayerCapabilityFixer());
+
         dispatcher.registerPackets();
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new ModGuiHandler());
         proxy.onInitStep(IInitListener.Step.PRE_INIT, event);
@@ -247,7 +257,7 @@ public class VampirismMod {
 
     private void finishAPI() {
         ((FactionRegistry) VampirismAPI.factionRegistry()).finish();
-        ((BiteableRegistry) VampirismAPI.biteableRegistry()).finishRegistration(Balance.mobProps.CONVERTED_MOB_DEFAULT_DMG);
+        ((VampirismEntityRegistry) VampirismAPI.biteableRegistry()).finishRegistration();
         ((ActionRegistry) VampirismAPI.actionRegistry()).finish();
         ((SkillRegistry) VampirismAPI.skillRegistry()).finish();
     }
@@ -258,7 +268,7 @@ public class VampirismMod {
     private void setupAPI1() {
         FactionRegistry factionRegistry = new FactionRegistry();
         SundamageRegistry sundamageRegistry = new SundamageRegistry();
-        BiteableRegistry biteableRegistry = new BiteableRegistry();
+        VampirismEntityRegistry biteableRegistry = new VampirismEntityRegistry();
         ActionRegistry actionRegistry = new ActionRegistry();
         SkillRegistry skillRegistry = new SkillRegistry();
         GeneralRegistryImpl generalRegistry = new GeneralRegistryImpl();
@@ -276,7 +286,7 @@ public class VampirismMod {
         VReference.VAMPIRE_FACTION.setChatColor(TextFormatting.DARK_PURPLE).setUnlocalizedName("text.vampirism.vampire", "text.vampirism.vampires");
         VReference.HUNTER_FACTION = factionRegistry.registerPlayableFaction("Hunter", IHunterPlayer.class, Color.BLUE.getRGB(), REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.CAP, REFERENCE.HIGHEST_HUNTER_LEVEL);
         VReference.HUNTER_FACTION.setChatColor(TextFormatting.DARK_BLUE).setUnlocalizedName("text.vampirism.hunter", "text.vampirism.hunters");
-        biteableRegistry.setDefaultConvertingHandlerCreator(new BiteableRegistry.ICreateDefaultConvertingHandler() {
+        biteableRegistry.setDefaultConvertingHandlerCreator(new VampirismEntityRegistry.ICreateDefaultConvertingHandler() {
             @Override
             public IConvertingHandler create(IConvertingHandler.IDefaultHelper helper) {
                 return new DefaultConvertingHandler(helper);

@@ -55,7 +55,6 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         this.restrictedSpawn = true;
         this.setSize(0.6F, 1.8F);
 
-
     }
 
     @Override

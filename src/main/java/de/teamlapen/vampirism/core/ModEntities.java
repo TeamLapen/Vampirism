@@ -1,10 +1,11 @@
 package de.teamlapen.vampirism.core;
 
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.IBiteableRegistry;
+import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
@@ -27,35 +28,36 @@ import net.minecraft.entity.monster.EntityPolarBear;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.*;
 import net.minecraft.init.Biomes;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.datafix.IFixableData;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.*;
 
 /**
  * Handles all entity registrations and reference.
  */
 public class ModEntities {
-    public static final String BASIC_HUNTER_NAME = "vampireHunter";
+    public static final String BASIC_HUNTER_NAME = "vampire_hunter";
     public static final String BASIC_VAMPIRE_NAME = "vampire";
     public static final String DRACULA_NAME = "dracula";
     public static final String GHOST_NAME = "ghost";
-    public static final String VAMPIRE_BARON = "vampireBaron";
-    public static final String VAMPIRE_MINION_REMOTE_NAME = "vampireMinionR";
-    public static final String VAMPIRE_MINION_SAVEABLE_NAME = "vampireMinionS";
+    public static final String VAMPIRE_BARON = "vampire_baron";
+    public static final String VAMPIRE_MINION_REMOTE_NAME = "vampire_minion_r";
+    public static final String VAMPIRE_MINION_SAVEABLE_NAME = "vampire_minion_s";
     public static final String DEAD_MOB_NAME = "dead_mob";
     public static final String BLINDING_BAT_NAME = "blinding_bat";
     public static final String DUMMY_CREATURE = "dummy_creature";
     public static final String PORTAL_GUARD = "portal_guard";
-    public static final String CONVERTED_CREATURE = "converted.creature";
-    public static final String CONVERTED_VILLAGER = "converted.villager";
-    public static final String CONVERTED_SHEEP = "converted.sheep";
+    public static final String CONVERTED_CREATURE = "converted_creature";
+    public static final String CONVERTED_VILLAGER = "converted_villager";
+    public static final String CONVERTED_SHEEP = "converted_sheep";
     public static final String HUNTER_TRAINER = "hunter_trainer";
     public static final String ADVANCED_HUNTER = "advanced_hunter";
     public static final String ADVANCED_VAMPIRE = "advanced_vampire";
@@ -63,11 +65,11 @@ public class ModEntities {
     public static final String CROSSBOW_ARROW = "crossbow_arrow";
     public static final String PARTICLE_CLOUD = "particle_cloud";
     public static final String THROWABLE_ITEM = "throwable_item";
-
     /**
      * List of entity names which should be spawnable
      */
-    public static final List<String> spawnableEntityNames = new ArrayList<String>();
+    public static final List<String> spawnableEntityNames = new ArrayList<>();
+    private static final Map<String, String> OLD_TO_NEW_MAP = Maps.newHashMap();
     private static int modEntityId = 0;
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
@@ -88,7 +90,7 @@ public class ModEntities {
      * Registers special extended creature classes
      */
     private static void registerCustomExtendedCreatures() {
-        IBiteableRegistry registry = VampirismAPI.biteableRegistry();
+        IVampirismEntityRegistry registry = VampirismAPI.biteableRegistry();
     }
 
     /**
@@ -96,7 +98,7 @@ public class ModEntities {
      */
     private static void registerConvertibles() {
         String base = REFERENCE.MODID + ":textures/entity/vanilla/%s_overlay.png";
-        IBiteableRegistry registry = VampirismAPI.biteableRegistry();
+        IVampirismEntityRegistry registry = VampirismAPI.biteableRegistry();
         registry.addConvertible(EntityCow.class, String.format(base, "cow"));
         registry.addConvertible(EntityPig.class, String.format(base, "pig"));
         registry.addConvertible(EntityOcelot.class, String.format(base, "cat"));
@@ -109,7 +111,7 @@ public class ModEntities {
 
     private static void preInit(FMLPreInitializationEvent event) {
         Set<Biome> allBiomes = Biome.EXPLORATION_BIOMES_LIST;
-        /**
+        /*
          * After setting this up this array will contain only biomes in which zombies can spawn.
          */
         Set<Biome> zombieBiomes = Sets.newHashSet();
@@ -140,35 +142,123 @@ public class ModEntities {
         }
 
 
-        registerEntity(EntityBlindingBat.class, BLINDING_BAT_NAME, EntityLiving.SpawnPlacementType.IN_AIR, false);
-        registerEntity(EntityGhost.class, GHOST_NAME, EntityLiving.SpawnPlacementType.ON_GROUND, true);
-        registerEntity(EntityConvertedCreature.class, CONVERTED_CREATURE, EntityLiving.SpawnPlacementType.ON_GROUND, false);
-        registerEntity(EntityConvertedSheep.class, CONVERTED_SHEEP, EntityLiving.SpawnPlacementType.ON_GROUND, false);
-        registerEntity(EntityBasicHunter.class, BASIC_HUNTER_NAME, EntityLiving.SpawnPlacementType.ON_GROUND, true);
-        registerEntity(EntityBasicVampire.class, BASIC_VAMPIRE_NAME, EntityLiving.SpawnPlacementType.ON_GROUND, Balance.mobProps.VAMPIRE_SPAWN_CHANCE, 1, 2, EnumCreatureType.MONSTER, zombieBiomes.toArray(new Biome[zombieBiomes.size()]));
-        registerEntity(EntityHunterTrainer.class, HUNTER_TRAINER, EntityLiving.SpawnPlacementType.ON_GROUND, true);
-        registerEntity(EntityAdvancedHunter.class, ADVANCED_HUNTER, EntityLiving.SpawnPlacementType.ON_GROUND, true);
-        registerEntity(EntityVampireBaron.class, VAMPIRE_BARON, EntityLiving.SpawnPlacementType.ON_GROUND, true);
-        registerEntity(EntityVampireMinionSaveable.class, VAMPIRE_MINION_SAVEABLE_NAME, EntityLiving.SpawnPlacementType.ON_GROUND, false);
-        registerEntity(EntityDummyBittenAnimal.class, DUMMY_CREATURE, EntityLiving.SpawnPlacementType.ON_GROUND, false);
-        registerEntity(EntityAdvancedVampire.class, ADVANCED_VAMPIRE, EntityLiving.SpawnPlacementType.ON_GROUND, Balance.mobProps.ADVANCED_VAMPIRE_SPAWN_PROBE, 1, 1, EnumCreatureType.MONSTER, zombieBiomes.toArray(new Biome[zombieBiomes.size()]));
-        registerEntity(EntityConvertedVillager.class, CONVERTED_VILLAGER, EntityLiving.SpawnPlacementType.ON_GROUND, false);
-        registerEntity(EntityHunterVillager.class, HUNTER_VILLAGER, EntityLiving.SpawnPlacementType.ON_GROUND, false);
-        registerEntity(EntityCrossbowArrow.class, CROSSBOW_ARROW, EntityLiving.SpawnPlacementType.IN_AIR, false);
-        registerEntity(EntityAreaParticleCloud.class, PARTICLE_CLOUD, EntityLiving.SpawnPlacementType.IN_AIR, false);
-        registerEntity(EntityThrowableItem.class, THROWABLE_ITEM, EntityLiving.SpawnPlacementType.IN_AIR, false);
+        registerEntity(EntityBlindingBat.class, BLINDING_BAT_NAME, "blinding_bat", EntityLiving.SpawnPlacementType.IN_AIR, false);
+        registerEntity(EntityGhost.class, GHOST_NAME, "ghost", EntityLiving.SpawnPlacementType.ON_GROUND, true);
+        registerEntity(EntityConvertedCreature.class, CONVERTED_CREATURE, "converted.creature", EntityLiving.SpawnPlacementType.ON_GROUND, false);
+        registerEntity(EntityConvertedSheep.class, CONVERTED_SHEEP, "converted.sheep", EntityLiving.SpawnPlacementType.ON_GROUND, false);
+        registerEntity(EntityBasicHunter.class, BASIC_HUNTER_NAME, "vampireHunter", EntityLiving.SpawnPlacementType.ON_GROUND, true);
+        registerEntity(EntityBasicVampire.class, BASIC_VAMPIRE_NAME, "vampire", EntityLiving.SpawnPlacementType.ON_GROUND, Balance.mobProps.VAMPIRE_SPAWN_CHANCE, 1, 2, EnumCreatureType.MONSTER, zombieBiomes.toArray(new Biome[zombieBiomes.size()]));
+        registerEntity(EntityHunterTrainer.class, HUNTER_TRAINER, "hunter_trainer", EntityLiving.SpawnPlacementType.ON_GROUND, true);
+        registerEntity(EntityAdvancedHunter.class, ADVANCED_HUNTER, "advanced_hunter", EntityLiving.SpawnPlacementType.ON_GROUND, true);
+        registerEntity(EntityVampireBaron.class, VAMPIRE_BARON, "vampireBaron", EntityLiving.SpawnPlacementType.ON_GROUND, true);
+        registerEntity(EntityVampireMinionSaveable.class, VAMPIRE_MINION_SAVEABLE_NAME, "vampireMinionS", EntityLiving.SpawnPlacementType.ON_GROUND, false);
+        registerEntity(EntityDummyBittenAnimal.class, DUMMY_CREATURE, "dummy_creature", EntityLiving.SpawnPlacementType.ON_GROUND, false);
+        registerEntity(EntityAdvancedVampire.class, ADVANCED_VAMPIRE, "advanced_vampire", EntityLiving.SpawnPlacementType.ON_GROUND, Balance.mobProps.ADVANCED_VAMPIRE_SPAWN_PROBE, 1, 1, EnumCreatureType.MONSTER, zombieBiomes.toArray(new Biome[zombieBiomes.size()]));
+        registerEntity(EntityConvertedVillager.class, CONVERTED_VILLAGER, "converted.villager", EntityLiving.SpawnPlacementType.ON_GROUND, false);
+        registerEntity(EntityHunterVillager.class, HUNTER_VILLAGER, "hunter_villager", EntityLiving.SpawnPlacementType.ON_GROUND, false);
+        registerEntity(EntityCrossbowArrow.class, CROSSBOW_ARROW, "crossbow_arrow", EntityLiving.SpawnPlacementType.IN_AIR, false);
+        registerEntity(EntityAreaParticleCloud.class, PARTICLE_CLOUD, "particle_cloud", EntityLiving.SpawnPlacementType.IN_AIR, false);
+        registerEntity(EntityThrowableItem.class, THROWABLE_ITEM, "throwable_item", EntityLiving.SpawnPlacementType.IN_AIR, false);
         registerConvertibles();
         registerCustomExtendedCreatures();
     }
 
-    private static void registerEntity(Class<? extends Entity> clazz, String name, EntityLiving.SpawnPlacementType placementType, boolean egg) {
+
+    //TODO 1.11 check if fixer versioning working
+    public static IFixableData getEntityIDFixer() {
+        return new IFixableData() {
+            @Nonnull
+            @Override
+            public NBTTagCompound fixTagCompound(@Nonnull NBTTagCompound compound) {
+                String s = OLD_TO_NEW_MAP.get(compound.getString("id"));
+
+                if (s != null) {
+                    compound.setString("id", s);
+                }
+
+                return compound;
+            }
+
+            @Override
+            public int getFixVersion() {
+                return 1;
+            }
+        };
+    }
+
+    public static IFixableData getPlayerCapabilityFixer() {
+        return new IFixableData() {
+            @Nonnull
+            @Override
+            public NBTTagCompound fixTagCompound(@Nonnull NBTTagCompound compound) {
+                if (compound.hasKey("ForgeCaps")) {
+                    NBTTagCompound caps = compound.getCompoundTag("ForgeCaps");
+                    if (caps.hasKey("vampirism:IVampirePlayer")) {
+                        NBTTagCompound vampire = caps.getCompoundTag("vampirism:IVampirePlayer");
+                        caps.setTag(REFERENCE.VAMPIRE_PLAYER_KEY.toString(), vampire);
+                        caps.removeTag("vampirism:IVampirePlayer");
+
+                    }
+                    if (caps.hasKey("vampirism:IHunterPlayer")) {
+                        NBTTagCompound vampire = compound.getCompoundTag("vampirism:IHunterPlayer");
+                        compound.setTag(REFERENCE.HUNTER_PLAYER_KEY.toString(), vampire);
+                        compound.removeTag("vampirism:IHunterPlayer");
+
+                    }
+                    if (caps.hasKey("vampirism:IFactionPlayerHandler")) {
+                        NBTTagCompound vampire = caps.getCompoundTag("vampirism:IFactionPlayerHandler");
+                        caps.setTag(REFERENCE.FACTION_PLAYER_HANDLER_KEY.toString(), vampire);
+                        caps.removeTag("vampirism:IFactionPlayerHandler");
+
+                    }
+
+                }
+                return compound;
+            }
+
+            @Override
+            public int getFixVersion() {
+                return 1;
+            }
+        };
+    }
+
+    public static IFixableData getEntityCapabilityFixer() {
+        return new IFixableData() {
+            @Nonnull
+            @Override
+            public NBTTagCompound fixTagCompound(@Nonnull NBTTagCompound compound) {
+                if (compound.hasKey("ForgeCaps")) {
+                    NBTTagCompound caps = compound.getCompoundTag("ForgeCaps");
+                    if (caps.hasKey("vampirism:IExtendedCreature")) {
+                        NBTTagCompound vampire = caps.getCompoundTag("vampirism:IExtendedCreature");
+                        caps.setTag(REFERENCE.EXTENDED_CREATURE_KEY.toString(), vampire);
+                        caps.removeTag("vampirism:IExtendedCreature");
+
+                    }
+
+                }
+                return compound;
+            }
+
+            @Override
+            public int getFixVersion() {
+                return 1;
+            }
+        };
+    }
+
+    private static void registerEntity(Class<? extends Entity> clazz, String id, @Nullable String oldName, EntityLiving.SpawnPlacementType placementType, boolean egg) {
 
         //VampirismMod.log.d("EntityRegister", "Adding " + name + "(" + clazz.getSimpleName() + ") with mod id %d", modEntityId);
-        ResourceLocation n = new ResourceLocation(REFERENCE.MODID, name);
-        EntityRegistry.registerModEntity(n, clazz, name, modEntityId++, VampirismMod.instance, 80, 1, true);
+        ResourceLocation n = new ResourceLocation(REFERENCE.MODID, id);
+        EntityRegistry.registerModEntity(n, clazz, "vampirism." + id, modEntityId++, VampirismMod.instance, 80, 1, true);
+        if (oldName != null) {
+            OLD_TO_NEW_MAP.put("vampirism." + oldName, n.toString());
+        }
         if (egg) {
-            EntityRegistry.registerEgg(n,0x8B15A3, name.hashCode());
-            spawnableEntityNames.add(name);
+            EntityRegistry.registerEgg(n, 0x8B15A3, id.hashCode());
+            spawnableEntityNames.add(id);
         }
 
     }
@@ -176,16 +266,9 @@ public class ModEntities {
     /**
      * Registers the entity and add a spawn entry for it
      *
-     * @param clazz
-     * @param name
-     * @param probe
-     * @param min
-     * @param max
-     * @param type
-     * @param biomes
      */
-    private static void registerEntity(Class<? extends EntityLiving> clazz, String name, EntityLiving.SpawnPlacementType placementType, int probe, int min, int max, EnumCreatureType type, Biome... biomes) {
-        registerEntity(clazz, name, placementType, true);
+    private static void registerEntity(Class<? extends EntityLiving> clazz, String id, @Nullable String oldName, EntityLiving.SpawnPlacementType placementType, int probe, int min, int max, EnumCreatureType type, Biome... biomes) {
+        registerEntity(clazz, id, oldName, placementType, true);
         //VampirismMod.log.d("EntityRegister", "Adding spawn with probe of %d in %s", probe, Arrays.toString(biomes));
         EntityRegistry.addSpawn(clazz, probe, min, max, type, biomes);
     }

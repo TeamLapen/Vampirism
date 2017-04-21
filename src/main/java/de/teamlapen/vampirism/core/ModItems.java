@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.core;
 
-import com.google.common.base.CaseFormat;
 import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
@@ -273,23 +273,35 @@ public class ModItems {
     public static boolean fixMapping(FMLMissingMappingsEvent.MissingMapping mapping) {
 
         //Removed battle Axe
-        if ("battleAxe".equals(mapping.resourceLocation.getResourcePath())) {
+        if ("battleaxe".equals(mapping.resourceLocation.getResourcePath())) {
             mapping.ignore();
             return true;
         }
         //Check for mappings changed for 1.11 CamelCase to lower underscore
-        String converted = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, mapping.resourceLocation.getResourcePath());
-        boolean r = checkMapping(mapping, converted, armorOfSwiftness_boots, armorOfSwiftness_chest, armorOfSwiftness_helmet, armorOfSwiftness_legs, basicCrossbow, basicDoubleCrossbow, basicTechCrossbow, bloodBottle, bloodPotion, crossbowArrow, enhancedCrossbow, enhancedDoubleCrossbow);
+        String old = mapping.resourceLocation.getResourcePath();
+        boolean r = checkMapping(mapping, old, armorOfSwiftness_boots, armorOfSwiftness_chest, armorOfSwiftness_helmet, armorOfSwiftness_legs, basicCrossbow, basicDoubleCrossbow, basicTechCrossbow, bloodBottle, bloodPotion, crossbowArrow, enhancedCrossbow, enhancedDoubleCrossbow);
         if (!r)
-            r = checkMapping(mapping, converted, enhancedTechCrossbow, humanHeart, humanHeartWeak, hunterAxe, hunterCoat_boots, hunterCoat_chest, hunterCoat_helmet, hunterCoat_legs, hunterHat0, hunterHat1, hunterIntel, injection, itemAlchemicalFire, itemCoffin, itemGarlic, itemMedChair);
+            r = checkMapping(mapping, old, enhancedTechCrossbow, humanHeart, humanHeartWeak, hunterAxe, hunterCoat_boots, hunterCoat_chest, hunterCoat_helmet, hunterCoat_legs, hunterHat0, hunterHat1, hunterIntel, injection, itemAlchemicalFire, itemCoffin, itemGarlic, itemMedChair);
         if (!r)
-            r = checkMapping(mapping, converted, itemTent, obsidianArmor_boots, obsidianArmor_chest, obsidianArmor_helmet, obsidianArmor_legs, pitchfork, pureBlood, techCrossbowAmmoPackage, vampireBlood, vampireBook, vampireFang);
+            r = checkMapping(mapping, old, itemTent, obsidianArmor_boots, obsidianArmor_chest, obsidianArmor_helmet, obsidianArmor_legs, pitchfork, pureBlood, techCrossbowAmmoPackage, vampireBlood, vampireBook, vampireFang);
         return r;
     }
 
-    private static boolean checkMapping(FMLMissingMappingsEvent.MissingMapping mapping, String converted, Item... items) {
+    private static boolean checkMapping(FMLMissingMappingsEvent.MissingMapping mapping, String name, Item... items) {
         for (Item i : items) {
-            if (i instanceof VampirismItem && ((VampirismItem) i).getRegisteredName().equals(converted) || i instanceof VampirismItemBloodFood && ((VampirismItemBloodFood) i).getRegisteredName().equals(converted) || i instanceof VampirismHunterArmor && ((VampirismHunterArmor) i).getRegisteredName().equals(converted)) {
+            String oldRegisteredName;
+            if (i instanceof VampirismHunterArmor) {
+                oldRegisteredName = ((VampirismHunterArmor) i).getOldRegisteredName();
+            } else {
+                String newRegisteredName = i instanceof VampirismItem ? ((VampirismItem) i).getRegisteredName() : (i instanceof VampirismItemBloodFood ? ((VampirismItemBloodFood) i).getRegisteredName() : null);
+                if (newRegisteredName == null) {
+                    VampirismMod.log.w("ModItems", "Unknown item class. Unable to determine new registered name during mapping fix", i.getClass());
+                    continue;
+                }
+                oldRegisteredName = newRegisteredName.replaceAll("_", "");
+            }
+
+            if (oldRegisteredName.equals(name)) {
                 mapping.remap(i);
                 return true;
             }

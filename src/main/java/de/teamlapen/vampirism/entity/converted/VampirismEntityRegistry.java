@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.entity.converted;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
-import de.teamlapen.vampirism.api.entity.IBiteableRegistry;
+import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import net.minecraft.entity.EntityCreature;
@@ -16,7 +16,7 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BiteableRegistry implements IBiteableRegistry {
+public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     /**
      * Used to store blood values during init
      */
@@ -34,7 +34,7 @@ public class BiteableRegistry implements IBiteableRegistry {
      * Stores custom extended creature constructors
      */
     private final Map<Class<? extends EntityCreature>, IExtendedCreatureConstructor> extendedCreatureConstructors = new HashMap<>();
-    private final String TAG = "BiteableRegistry";
+    private final String TAG = "VampirismEntityRegistry";
     /**
      * Stores biteable entries after init
      */
@@ -79,8 +79,8 @@ public class BiteableRegistry implements IBiteableRegistry {
     public
     @Nullable
     IConvertedCreature convert(EntityCreature entity) {
-        String s = EntityList.getEntityString(entity);
-        BiteableEntry b = biteables.get(s);
+        ResourceLocation id = EntityList.getKey(entity);
+        BiteableEntry b = biteables.get(id);
         if (b != null && b.convertingHandler != null) {
             return b.convertingHandler.createFrom(entity);
         }
@@ -91,9 +91,8 @@ public class BiteableRegistry implements IBiteableRegistry {
     /**
      * Finished registration
      *
-     * @param defaultDamage Damage that will be used for converted entities that did not have any attack damage before
      */
-    public void finishRegistration(int defaultDamage) {
+    public void finishRegistration() {
         if (finished) return;
         bloodValues.putAll(overridingValues);
         float bloodValueMultiplier = 1;

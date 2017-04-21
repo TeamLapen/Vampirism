@@ -81,9 +81,9 @@ public class ModVillages {
         VillagerRegistry.VillagerCareer hunterPriest = new VillagerRegistry.VillagerCareer(priest, "vampire_hunter");
         hunterPriest.addTrade(1, new EntityVillager.EmeraldForItems(Items.GOLD_INGOT, new EntityVillager.PriceInfo(8, 10)));
         hunterPriest.addTrade(1, new EntityVillager.EmeraldForItems(ModItems.vampireFang, new EntityVillager.PriceInfo(20, 30)));
-        hunterPriest.addTrade(2, new EntityVillager.ListItemForEmeralds(ModItems.holyWaterBottle, new EntityVillager.PriceInfo(-2, -8)));
-        hunterPriest.addTrade(3, new EntityVillager.ListItemForEmeralds(ModItems.holyWaterBottle.setTier(new ItemStack(ModItems.holyWaterBottle), IItemWithTier.TIER.ENHANCED), new EntityVillager.PriceInfo(-1, -5)));
-        hunterPriest.addTrade(3, new EntityVillager.ListItemForEmeralds(ModItems.holySalt, new EntityVillager.PriceInfo(-3, -10)));
+        hunterPriest.addTrade(2, new EntityVillager.ListItemForEmeralds(ModItems.holyWaterBottle, new EntityVillager.PriceInfo(-8, -2)));
+        hunterPriest.addTrade(3, new EntityVillager.ListItemForEmeralds(ModItems.holyWaterBottle.setTier(new ItemStack(ModItems.holyWaterBottle), IItemWithTier.TIER.ENHANCED), new EntityVillager.PriceInfo(-5, -1)));
+        hunterPriest.addTrade(3, new EntityVillager.ListItemForEmeralds(ModItems.holySalt, new EntityVillager.PriceInfo(-10, -3)));
         hunterPriest.addTrade(4, new EntityVillager.ListItemForEmeralds(Items.EXPERIENCE_BOTTLE, new EntityVillager.PriceInfo(3, 11)));
     }
 }

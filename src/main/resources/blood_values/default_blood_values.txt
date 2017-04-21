@@ -1,16 +1,17 @@
 #General Multiplier. Is divided by 10.
-multiplier=10
+minecraft:multiplier=10
+
 #Vanilla
-Cow=10
-EntityHorse=10
-Villager=15
-Pig=5
-Sheep=5
-Ozelot=5
-Wolf=5
-MushroomCow=10
-PolarBear=10
-Rabbit=2
+minecraft:cow=10
+minecraft:horse=10
+minecraft:villager=15
+minecraft:pig=5
+minecraft:sheep=5
+minecraft:ocelot=5
+minecraft:wolf=5
+minecraft:mooshroom=10
+minecraft:polar_bear=10
+minecraft:rabbit=2
 
 #MCA
 mca:EntityHuman=15

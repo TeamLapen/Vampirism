@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.api;
 
-import de.teamlapen.vampirism.api.entity.IBiteableRegistry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
+import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionRegistry;
@@ -34,7 +34,7 @@ public class VampirismAPI {
     private final static Capability<IFactionPlayerHandler> CAP_FACTION_HANDLER_PLAYER = null;
     private static IFactionRegistry factionRegistry;
     private static ISundamageRegistry sundamageRegistry;
-    private static IBiteableRegistry biteableRegistry;
+    private static IVampirismEntityRegistry biteableRegistry;
     private static IActionRegistry actionRegistry;
     private static ISkillRegistry skillRegistry;
     private static IVampireVisionRegistry vampireVisionRegistry;
@@ -66,7 +66,7 @@ public class VampirismAPI {
     /**
      * @return The biteable registry
      */
-    public static IBiteableRegistry biteableRegistry() {
+    public static IVampirismEntityRegistry biteableRegistry() {
         return biteableRegistry;
     }
 
@@ -109,7 +109,7 @@ public class VampirismAPI {
      * Setup the API registries
      * FOR INTERNAL USAGE ONLY
      */
-    public static void setUpRegistries(IFactionRegistry factionReg, ISundamageRegistry sundamageReg, IBiteableRegistry biteableReg, IActionRegistry actionReg, ISkillRegistry skillReg, IVampireVisionRegistry vampireVisionReg, IBloodPotionRegistry bloodPotionReg) {
+    public static void setUpRegistries(IFactionRegistry factionReg, ISundamageRegistry sundamageReg, IVampirismEntityRegistry biteableReg, IActionRegistry actionReg, ISkillRegistry skillReg, IVampireVisionRegistry vampireVisionReg, IBloodPotionRegistry bloodPotionReg) {
         factionRegistry = factionReg;
         sundamageRegistry = sundamageReg;
         biteableRegistry = biteableReg;

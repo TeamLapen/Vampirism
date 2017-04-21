@@ -30,6 +30,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
@@ -217,8 +218,8 @@ public class TestCommand extends BasicCommand {
                 for (Object o : l) {
                     if (o instanceof EntityCreature) {
 
-                        String s = EntityList.getEntityString((Entity) o);
-                        sendMessage(sender, s);
+                        ResourceLocation id = EntityList.getKey((Entity) o);
+                        sendMessage(sender, id.toString());
                     } else {
                         sendMessage(sender, "Not biteable " + o.getClass().getName());
                     }

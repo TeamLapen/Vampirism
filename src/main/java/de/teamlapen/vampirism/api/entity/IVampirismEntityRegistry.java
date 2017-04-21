@@ -12,9 +12,8 @@ import java.util.Map;
 
 /**
  * Registration of blood values and converting handler for {@link EntityCreature}'s
- * TODO maybe rename to VampirismEntityRegistry or similar at some point
  */
-public interface IBiteableRegistry {
+public interface IVampirismEntityRegistry {
 
     /**
      * Add a blood value for an creature
