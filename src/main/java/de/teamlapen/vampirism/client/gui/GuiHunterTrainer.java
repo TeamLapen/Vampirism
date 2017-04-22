@@ -19,12 +19,15 @@ import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.io.IOException;
 
 /**
  * Gui for the Hunter Trainer interaction
  */
+@SideOnly(Side.CLIENT)
 public class GuiHunterTrainer extends GuiContainer {
     private static final ResourceLocation altarGuiTextures = new ResourceLocation(REFERENCE.MODID, "textures/gui/hunter_trainer.png");
     private final HunterTrainerContainer container;

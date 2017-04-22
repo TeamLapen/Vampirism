@@ -9,10 +9,13 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.EnumHandSide;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Model for Basic Vampire Hunter
  */
+@SideOnly(Side.CLIENT)
 public class ModelBasicHunter extends ModelBipedCloaked {
     private ModelRenderer hatTop, hatRim, axeShaft, axeBlade1, axeBlade2, stake, stakeRight, secondHead, hatTop2, hatRim2, hatRim3;
     private boolean targetingLeft = false;

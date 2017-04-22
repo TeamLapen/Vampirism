@@ -32,12 +32,12 @@ public abstract class BasicCommand extends CommandBase {
     protected final int PERMISSION_LEVEL_CHEAT = 2;
     protected final int PERMISSION_LEVEL_ADMIN = 3;
     protected final int PERMISSION_LEVEL_FULL = 4;
-    protected List aliases;
+    protected List<String> aliases;
     private List<SubCommand> subCommands;
     private SubCommand unknown;
 
     public BasicCommand() {
-        aliases = new ArrayList();
+        aliases = new ArrayList<>();
         subCommands = new ArrayList<SubCommand>();
         unknown = new SubCommand() {
             @Override
@@ -78,20 +78,21 @@ public abstract class BasicCommand extends CommandBase {
     }
 
     @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] param) throws CommandException {
-        if (param == null || param.length == 0) {
+    public void execute(@Nonnull MinecraftServer server, @Nonnull ICommandSender sender, @Nonnull String[] param) throws CommandException {
+        if (param.length == 0) {
             throw new WrongUsageException(getUsage(sender));
         }
         if ("help".equals(param[0])) {
             if (param.length > 1) {
                 sendMessage(sender, String.format("/%s %s", this.getName(), getSub(param[1]).getCommandUsage(sender)));
             } else {
-                String t = "Available subcommands: ";
+                StringBuilder builder = new StringBuilder(UtilLib.translate("text.vampirism.command.available_subcommands"));
+                builder.append(' ');
                 for (SubCommand s : subCommands) {
-                    t += s.getCommandName() + ", ";
+                    builder.append(s.getCommandName()).append(", ");
                 }
-                t += "Use /" + getName() + " help <subcommand> to get more informations";
-                sendMessage(sender, t);
+                builder.append(UtilLib.translateFormatted("text.vampirism.command.subcommand_help", getName()));
+                sendMessage(sender, builder.toString());
             }
             return;
 
@@ -117,7 +118,7 @@ public abstract class BasicCommand extends CommandBase {
 
     @Nonnull
     @Override
-    public List getAliases() {
+    public List<String> getAliases() {
         return aliases;
     }
 
@@ -126,9 +127,10 @@ public abstract class BasicCommand extends CommandBase {
         return (args.length == 1) ? getListOfStringsMatchingLastWord(args, getSubNames()) : getSubcommandTabCompletion(sender, args, pos);
     }
 
+    @Nonnull
     @Override
     public String getUsage(@Nonnull ICommandSender sender) {
-        return String.format("/%s <subcommand> <params> | Use /%s help to get all available subcommands", this.getName(), this.getName());
+        return UtilLib.translateFormatted("text.vampirism.command.usage", this.getName(), this.getName());
     }
 
     @Override
@@ -148,8 +150,6 @@ public abstract class BasicCommand extends CommandBase {
      * Returns the subcommand matching the given name.
      * If no command is found, returns a default "unknown" command.
      *
-     * @param name
-     * @return
      */
     private SubCommand getSub(String name) {
         for (SubCommand s : subCommands) {

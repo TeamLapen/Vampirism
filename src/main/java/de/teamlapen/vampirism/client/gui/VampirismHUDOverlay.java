@@ -34,11 +34,14 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 /**
  * Handles general Overlay thingies
  */
+@SideOnly(Side.CLIENT)
 public class VampirismHUDOverlay extends ExtendedGui {
 
     private final Minecraft mc;

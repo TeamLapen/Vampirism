@@ -32,8 +32,8 @@ public class EntityEventHandler {
 
     @SubscribeEvent
     public void onChangedDimension(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent event) {
-        for (int i = 0; i < listeners.length; i++) {
-            ((IPlayerEventListener) event.player.getCapability(listeners[i], null)).onChangedDimension(event.fromDim, event.toDim);
+        for (Capability listener : listeners) {
+            ((IPlayerEventListener) event.player.getCapability(listener, null)).onChangedDimension(event.fromDim, event.toDim);
         }
     }
 
@@ -46,8 +46,8 @@ public class EntityEventHandler {
         }
 
         if (event.getEntity() instanceof EntityPlayer) {
-            for (int i = 0; i < listeners.length; i++) {
-                ((IPlayerEventListener) event.getEntity().getCapability(listeners[i], null)).onJoinWorld();
+            for (Capability listener : listeners) {
+                ((IPlayerEventListener) event.getEntity().getCapability(listener, null)).onJoinWorld();
             }
         }
     }
@@ -55,8 +55,8 @@ public class EntityEventHandler {
     @SubscribeEvent
     public void onLivingAttack(LivingAttackEvent event) {
         if (event.getEntity() instanceof EntityPlayer) {
-            for (int i = 0; i < listeners.length; i++) {
-                boolean cancel = ((IPlayerEventListener) event.getEntity().getCapability(listeners[i], null)).onEntityAttacked(event.getSource(), event.getAmount());
+            for (Capability listener : listeners) {
+                boolean cancel = ((IPlayerEventListener) event.getEntity().getCapability(listener, null)).onEntityAttacked(event.getSource(), event.getAmount());
                 if (cancel) {
                     event.setCanceled(true);
                 }
@@ -67,8 +67,8 @@ public class EntityEventHandler {
     @SubscribeEvent
     public void onLivingDeath(LivingDeathEvent event) {
         if (event.getEntity() instanceof EntityPlayer) {
-            for (int i = 0; i < listeners.length; i++) {
-                ((IPlayerEventListener) event.getEntity().getCapability(listeners[i], null)).onDeath(event.getSource());
+            for (Capability listener : listeners) {
+                ((IPlayerEventListener) event.getEntity().getCapability(listener, null)).onDeath(event.getSource());
             }
         }
     }
@@ -76,38 +76,38 @@ public class EntityEventHandler {
     @SubscribeEvent
     public void onLivingUpdate(LivingEvent.LivingUpdateEvent event) {
         if (event.getEntity() instanceof EntityPlayer) {
-            for (int i = 0; i < listeners.length; i++) {
-                ((IPlayerEventListener) event.getEntity().getCapability(listeners[i], null)).onUpdate();
+            for (Capability listener : listeners) {
+                ((IPlayerEventListener) event.getEntity().getCapability(listener, null)).onUpdate();
             }
         }
     }
 
     @SubscribeEvent
     public void onPlayerClone(PlayerEvent.Clone event) {
-        for (int i = 0; i < listeners.length; i++) {
-            ((IPlayerEventListener) event.getEntity().getCapability(listeners[i], null)).onPlayerClone(event.getOriginal(), event.isWasDeath());
+        for (Capability listener : listeners) {
+            ((IPlayerEventListener) event.getEntity().getCapability(listener, null)).onPlayerClone(event.getOriginal(), event.isWasDeath());
         }
 
     }
 
     @SubscribeEvent
     public void onPlayerLoggedIn(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent event) {
-        for (int i = 0; i < listeners.length; i++) {
-            ((IPlayerEventListener) event.player.getCapability(listeners[i], null)).onPlayerLoggedIn();
+        for (Capability listener : listeners) {
+            ((IPlayerEventListener) event.player.getCapability(listener, null)).onPlayerLoggedIn();
         }
     }
 
     @SubscribeEvent
     public void onPlayerLoggedOut(net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent event) {
-        for (int i = 0; i < listeners.length; i++) {
-            ((IPlayerEventListener) event.player.getCapability(listeners[i], null)).onPlayerLoggedOut();
+        for (Capability listener : listeners) {
+            ((IPlayerEventListener) event.player.getCapability(listener, null)).onPlayerLoggedOut();
         }
     }
 
     @SubscribeEvent
     public void onPlayerUpdate(TickEvent.PlayerTickEvent event) {
-        for (int i = 0; i < listeners.length; i++) {
-            ((IPlayerEventListener) event.player.getCapability(listeners[i], null)).onUpdatePlayer(event.phase);
+        for (Capability listener : listeners) {
+            ((IPlayerEventListener) event.player.getCapability(listener, null)).onUpdatePlayer(event.phase);
         }
     }
 

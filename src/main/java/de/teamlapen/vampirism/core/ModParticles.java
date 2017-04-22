@@ -1,7 +1,9 @@
-package de.teamlapen.vampirism.client.render.particle;
+package de.teamlapen.vampirism.core;
 
 
 import de.teamlapen.lib.util.ParticleHandler;
+import de.teamlapen.vampirism.client.render.particle.FlyingBloodEntityParticle;
+import de.teamlapen.vampirism.client.render.particle.FlyingBloodParticle;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;

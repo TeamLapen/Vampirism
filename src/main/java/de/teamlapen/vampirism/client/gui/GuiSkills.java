@@ -31,6 +31,8 @@ import net.minecraft.init.SoundEvents;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
@@ -42,6 +44,7 @@ import java.util.Random;
  * Gui screen which displays the skills available to the players and allows him to unlock some.
  * Inspired by Minecraft's {@link GuiAchievements}
  */
+@SideOnly(Side.CLIENT)
 public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
     private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/achievement/achievement_background.png");
     private static final ResourceLocation defaultIcons = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills.png");

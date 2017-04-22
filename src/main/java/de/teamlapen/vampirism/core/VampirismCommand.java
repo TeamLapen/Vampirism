@@ -23,7 +23,6 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
@@ -324,7 +323,7 @@ public class VampirismCommand extends BasicCommand {
                     sender.sendMessage(new TextComponentString("-" + c));
                 }
                 sender.sendMessage(new TextComponentString(""));
-                String template = I18n.translateToLocal("text.vampirism.update_message");
+                String template = UtilLib.translate("text.vampirism.update_message");
                 String homepage = VampirismMod.instance.getVersionInfo().getHomePage();
                 template = template.replaceAll("@download@", newVersion.getUrl() == null ? homepage : newVersion.getUrl()).replaceAll("@forum@", homepage);
                 ITextComponent component = ITextComponent.Serializer.jsonToComponent(template);

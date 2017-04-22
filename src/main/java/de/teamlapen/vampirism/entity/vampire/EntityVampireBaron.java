@@ -34,7 +34,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
@@ -146,7 +145,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     @Nonnull
     @Override
     public String getName() {
-        return super.getName() + " " + I18n.translateToLocal("text.vampirism.entity_level") + " " + (getLevel() + 1);
+        return super.getName() + " " + UtilLib.translate("text.vampirism.entity_level") + " " + (getLevel() + 1);
     }
 
     @Override

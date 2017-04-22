@@ -242,6 +242,9 @@ public class VampirismMod {
         if ((Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment")) {
             inDev = true;
             log.setDebug(true);
+            if (FMLCommonHandler.instance().getSide().isClient()) {
+                log.displayModID();
+            }
         }
     }
 

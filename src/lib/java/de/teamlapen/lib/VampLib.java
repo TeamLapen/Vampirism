@@ -7,6 +7,7 @@ import de.teamlapen.lib.network.LibraryPacketDispatcher;
 import de.teamlapen.lib.proxy.IProxy;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -46,6 +47,9 @@ public class VampLib {
         if ((Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment")) {
             inDev = true;
             log.setDebug(true);
+            if (FMLCommonHandler.instance().getSide().isClient()) {
+                log.displayModID();
+            }
         }
     }
 }

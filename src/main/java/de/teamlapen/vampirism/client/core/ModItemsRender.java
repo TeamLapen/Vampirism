@@ -19,12 +19,15 @@ import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 
 /**
  * Handles item render registration
  */
+@SideOnly(Side.CLIENT)
 public class ModItemsRender {
 
     public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {

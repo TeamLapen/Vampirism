@@ -6,6 +6,8 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.Random;
@@ -15,6 +17,7 @@ import java.util.Random;
  * Actually creates the particles.
  * Deserializes nbts send from server
  */
+@SideOnly(Side.CLIENT)
 public class ParticleHandlerClient extends ParticleHandler {
     @Override
     public void spawnParticle(World world, ResourceLocation particle, double posX, double posY, double posZ, Object... param) {

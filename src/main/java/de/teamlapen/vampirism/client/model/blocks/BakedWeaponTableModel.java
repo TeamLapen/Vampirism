@@ -10,6 +10,8 @@ import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.LinkedList;
@@ -18,6 +20,7 @@ import java.util.List;
 /**
  * Extends the basic weapon table model, by a variable lava fluid level
  */
+@SideOnly(Side.CLIENT)
 public class BakedWeaponTableModel implements IBakedModel {
 
     public static final int FLUID_LEVELS = 5;

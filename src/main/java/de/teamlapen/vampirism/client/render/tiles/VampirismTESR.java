@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
  * TESR with a few util methods
  */
 @SideOnly(Side.CLIENT)
-public abstract class VampirismTESR<T extends TileEntity> extends TileEntitySpecialRenderer<T> {
+abstract class VampirismTESR<T extends TileEntity> extends TileEntitySpecialRenderer<T> {
 
     /**
      * Rotates the block to fit the enum facing.
