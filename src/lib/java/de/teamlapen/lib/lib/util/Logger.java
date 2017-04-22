@@ -20,7 +20,7 @@ public class Logger {
      */
     private boolean debug = false;
     /**
-     * Currently Forge automatically adds the mod id on server side, but not on client side. TODO remove
+     * Currently Forge automatically adds the mod id on server side, but not on client side.
      */
     private boolean displayId = false;
 
