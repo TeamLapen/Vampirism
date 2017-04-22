@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.block.PropertyStringUnlisted;
-import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -27,8 +26,11 @@ import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
+import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -107,12 +109,21 @@ public class BlockBloodContainer extends VampirismBlockContainer {
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (!worldIn.isRemote) {
             ItemStack stack = playerIn.getHeldItem(hand);
-            if (!ItemStackUtil.isEmpty(stack) && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
+            if (!ItemStackUtil.isEmpty(stack) && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
                 TileBloodContainer bloodContainer = (TileBloodContainer) worldIn.getTileEntity(pos);
+                IFluidHandler source = bloodContainer.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
                 if (playerIn.isSneaking()) {
-                    fillContainerFromTank(worldIn, pos, playerIn, stack, bloodContainer);
+                    FluidActionResult result = FluidUtil.tryFillContainer(stack, source, Integer.MAX_VALUE, playerIn, true);
+                    if (result.isSuccess()) {
+                        playerIn.setHeldItem(hand, result.getResult());
+                    }
+                    //fillContainerFromTank(worldIn, pos, playerIn, stack, bloodContainer);
                 } else {
-                    drainContainerIntoTank(worldIn, pos, playerIn, stack, bloodContainer);
+                    FluidActionResult result = FluidUtil.tryEmptyContainer(stack, source, Integer.MAX_VALUE, playerIn, true);
+                    //drainContainerIntoTank(worldIn, pos, playerIn, stack, bloodContainer);
+                    if (result.isSuccess()) {
+                        playerIn.setHeldItem(hand, result.getResult());
+                    }
                 }
                 worldIn.notifyBlockUpdate(pos, state, state, 3);
                 bloodContainer.markDirty();
@@ -145,19 +156,5 @@ public class BlockBloodContainer extends VampirismBlockContainer {
         return new ExtendedBlockState(this, new IProperty[]{}, new IUnlistedProperty[]{FLUID_LEVEL, FLUID_NAME});
     }
 
-    /**
-     * Does NOT check if capabilties exist
-     */
-    private void drainContainerIntoTank(World worldIn, BlockPos pos, EntityPlayer playerIn, ItemStack stack, TileBloodContainer bloodContainer) {
-
-        FluidLib.drainContainerIntoTank(stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), bloodContainer.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null));
-    }
-
-    /**
-     * Does NOT check if capabilties exist
-     */
-    private void fillContainerFromTank(World worldIn, BlockPos pos, EntityPlayer playerIn, ItemStack stack, TileBloodContainer bloodContainer) {
-        FluidLib.drainContainerIntoTank(bloodContainer.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null));
-    }
 
 }

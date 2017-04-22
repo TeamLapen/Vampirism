@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.tileentity.TileAltarInspiration;
 import net.minecraft.block.material.Material;
@@ -22,7 +21,9 @@ import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 import net.minecraftforge.common.property.Properties;
+import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -90,7 +91,10 @@ public class BlockAltarInspiration extends VampirismBlockContainer {
             if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
                 TileAltarInspiration tileEntity = (TileAltarInspiration) worldIn.getTileEntity(pos);
                 if (!playerIn.isSneaking()) {
-                    FluidLib.drainContainerIntoTank(stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null));
+                    FluidActionResult result = FluidUtil.tryEmptyContainer(stack, tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), Integer.MAX_VALUE, playerIn, true);
+                    if (result.isSuccess()) {
+                        playerIn.setHeldItem(hand, result.getResult());
+                    }
                 }
                 worldIn.notifyBlockUpdate(pos, state, state, 3);
                 tileEntity.markDirty();

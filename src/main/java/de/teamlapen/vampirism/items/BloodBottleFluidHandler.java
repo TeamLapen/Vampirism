@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.ItemStackUtil;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModFluids;
@@ -13,9 +12,10 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.FluidTankProperties;
-import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fluids.capability.IFluidTankProperties;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 
@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
  * Fluid handler capability for blood bottles.
  * Only allows storing fluid amounts that are a multiple of {@link VReference#FOOD_TO_FLUID_BLOOD}
  */
-public class BloodBottleFluidHandler implements IFluidHandler, ICapabilityProvider {
+public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityProvider {
 
     public static final int MULTIPLIER = VReference.FOOD_TO_FLUID_BLOOD;
 
@@ -36,11 +36,11 @@ public class BloodBottleFluidHandler implements IFluidHandler, ICapabilityProvid
     public static int getAdjustedAmount(int amt) {
         return amt - amt % MULTIPLIER;
     }
-    protected final ItemStack container;
-    private final ItemStack GLAS_BOTTLE = new ItemStack(Items.GLASS_BOTTLE);
     private final int capacity;
+    @Nonnull
+    protected ItemStack container;
 
-    public BloodBottleFluidHandler(ItemStack container, int capacity) {
+    public BloodBottleFluidHandler(@Nonnull ItemStack container, int capacity) {
         this.container = container;
         this.capacity = capacity;
     }
@@ -62,12 +62,11 @@ public class BloodBottleFluidHandler implements IFluidHandler, ICapabilityProvid
         FluidStack stack = new FluidStack(ModFluids.blood, Math.min(currentAmt, getAdjustedAmount(maxDrain)));
         if (doDrain) {
             setBlood(container, currentAmt - stack.amount);
-            /**
+            /*
              might cause crashes with other mods, although this is probably legit as forge does something similar in {@link net.minecraftforge.fluids.capability.templates.FluidHandlerItemStack.SwapEmpty}
              */
             if (getBlood(container) == 0 && Configs.autoConvertGlasBottles) {
-                VampirismMod.log.d("BloodBottle", "Replaced blood bottle by glas bottle, during IFluidContainerItem#drain.");
-                container.deserializeNBT(GLAS_BOTTLE.serializeNBT());
+                container = new ItemStack(Items.GLASS_BOTTLE);
             }
         }
         return stack;
@@ -95,7 +94,13 @@ public class BloodBottleFluidHandler implements IFluidHandler, ICapabilityProvid
 
     @Override
     public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY ? (T) this : null;
+        return capability == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY ? (T) this : null;
+    }
+
+    @Nonnull
+    @Override
+    public ItemStack getContainer() {
+        return container;
     }
 
     @Override
@@ -105,7 +110,7 @@ public class BloodBottleFluidHandler implements IFluidHandler, ICapabilityProvid
 
     @Override
     public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        return capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY;
+        return capability == CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY;
     }
 
     public void setBlood(ItemStack stack, int amt) {

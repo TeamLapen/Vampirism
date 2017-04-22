@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
@@ -26,7 +25,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 
@@ -87,9 +86,9 @@ public class BlockWeaponTable extends VampirismBlock {
             int lava = state.getValue(LAVA);
             boolean flag = false;
             ItemStack heldItem = playerIn.getHeldItem(hand);
-            if (lava < MAX_LAVA) { //TODO TEST
-                if (!ItemStackUtil.isEmpty(heldItem) && heldItem.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
-                    IFluidHandlerItem fluidHandler = heldItem.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+            if (lava < MAX_LAVA) {
+                IFluidHandlerItem fluidHandler = FluidUtil.getFluidHandler(heldItem);
+                if (fluidHandler != null) {
                     FluidStack missing = new FluidStack(FluidRegistry.LAVA, (MAX_LAVA - lava) * MB_PER_META);
                     FluidStack drainable = fluidHandler.drain(missing, false);
                     if (drainable != null && drainable.amount >= MB_PER_META) {
@@ -98,6 +97,7 @@ public class BlockWeaponTable extends VampirismBlock {
                             IBlockState changed = state.withProperty(LAVA, Math.min(MAX_LAVA, lava + drained.amount / MB_PER_META));
                             worldIn.setBlockState(pos, changed);
                             flag = true;
+                            playerIn.setHeldItem(hand, fluidHandler.getContainer());
                         }
                     }
 

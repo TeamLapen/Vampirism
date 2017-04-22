@@ -10,9 +10,9 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidTankProperties;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import javax.annotation.Nonnull;
 
@@ -41,8 +41,9 @@ public class BloodHelper {
      * Checks if the given stack can store blood
      */
     public static boolean canStoreBlood(@Nonnull ItemStack stack) {
-        if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
-            return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).fill(new FluidStack(ModFluids.blood, 1000), false) > 0;
+        IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);
+        if (handler != null) {
+            return handler.fill(new FluidStack(ModFluids.blood, 1000), false) > 0;
         }
         return false;
     }
@@ -67,26 +68,17 @@ public class BloodHelper {
     /**
      * Returns the amount of blood stored in the given stack
      *
-     * @param stack
-     * @return
+
      */
     public static int getBlood(@Nonnull ItemStack stack) {
-        if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
-            IFluidHandler cap = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
-            return getBlood(cap);
-        }
-        return 0;
+        FluidStack stack1 = FluidUtil.getFluidContained(stack);
+        return stack1 == null ? 0 : stack1.amount;
+
     }
 
     public static int getBlood(@Nonnull IFluidHandler cap) {
-        int l = 0;
-        for (IFluidTankProperties p : cap.getTankProperties()) {
-            FluidStack s = p.getContents();
-            if (ModFluids.blood.equals(s.getFluid())) {
-                l += s.amount;
-            }
-        }
-        return l;
+        FluidStack stack = cap.drain(new FluidStack(ModFluids.blood, Integer.MAX_VALUE), false);
+        return stack == null ? 0 : stack.amount;
     }
 
     /**
@@ -100,16 +92,18 @@ public class BloodHelper {
         if (exact && doDrain) {
             if (drain(stack, amount, false, false) != amount) return 0;
         }
-        if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
-            FluidStack fluidStack = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).drain(amount, doDrain);
+        IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);
+        if (handler != null) {
+            FluidStack fluidStack = handler.drain(amount, doDrain);
             return fluidStack == null ? 0 : fluidStack.amount;
         }
         return 0;
     }
 
     public static int fill(@Nonnull ItemStack stack, int amount, boolean doFill) {
-        if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
-            return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).fill(new FluidStack(ModFluids.blood, amount), doFill);
+        IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack);
+        if (handler != null) {
+            return handler.fill(new FluidStack(ModFluids.blood, amount), doFill);
         }
         return 0;
     }

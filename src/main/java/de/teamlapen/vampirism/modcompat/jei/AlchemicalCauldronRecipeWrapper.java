@@ -11,16 +11,14 @@ import mezz.jei.api.recipe.BlankRecipeWrapper;
 import mezz.jei.api.recipe.IStackHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * 1.10
- *
- * @author maxanier
- */
+
 public class AlchemicalCauldronRecipeWrapper extends BlankRecipeWrapper {
     private final List<List<ItemStack>> inputs;
     private final ItemStack output;
@@ -30,11 +28,12 @@ public class AlchemicalCauldronRecipeWrapper extends BlankRecipeWrapper {
         ItemStack ingred = recipe.getIngredient();
         inputs = Lists.newLinkedList();
         inputs.add(Collections.singletonList(recipe.getDescriptiveFluidStack()));
-        inputs.add(!ItemStackUtil.isEmpty(ingred) ? Collections.emptyList() : stackHelper.getSubtypes(ingred));
+        inputs.add(ItemStackUtil.isEmpty(ingred) ? Collections.emptyList() : stackHelper.getSubtypes(ingred));
         this.recipe = recipe;
         this.output = recipe.getOutput();
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void drawInfo(Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
         int x = 0;
@@ -46,12 +45,12 @@ public class AlchemicalCauldronRecipeWrapper extends BlankRecipeWrapper {
             y += minecraft.fontRendererObj.FONT_HEIGHT + 2;
         }
         if (recipe.getRequiredSkills().length > 0) {
-            String skills = "";
+            StringBuilder skills = new StringBuilder();
             for (ISkill<IHunterPlayer> skill : recipe.getRequiredSkills()) {
-                skills += UtilLib.translate(skill.getUnlocalizedName()) + " ";
+                skills.append(UtilLib.translate(skill.getUnlocalizedName())).append(" ");
 
             }
-            String skillText = UtilLib.translateFormatted("gui.vampirism.alchemical_cauldron.skill", skills);
+            String skillText = UtilLib.translateFormatted("gui.vampirism.alchemical_cauldron.skill", skills.toString());
             minecraft.fontRendererObj.drawSplitString(skillText, x, y, 132, Color.gray.getRGB());
 
 

@@ -27,8 +27,8 @@ import java.util.ArrayList;
  */
 @SideOnly(Side.CLIENT)
 public abstract class GuiPieMenu<T> extends GuiScreen {
-    private final static ResourceLocation backgroundTex = new ResourceLocation(LIBREFERENCE.MODID + ":textures/gui/pie-menu-bg.png");
-    private final static ResourceLocation centerTex = new ResourceLocation(LIBREFERENCE.MODID + ":textures/gui/pie-menu-center.png");
+    private final static ResourceLocation backgroundTex = new ResourceLocation(LIBREFERENCE.MODID + ":textures/gui/pie_menu_bg.png");
+    private final static ResourceLocation centerTex = new ResourceLocation(LIBREFERENCE.MODID + ":textures/gui/pie_menu_center.png");
     private static final ResourceLocation WIDGETS = new ResourceLocation("textures/gui/widgets.png");
     protected final ArrayList<T> elements;
     /**

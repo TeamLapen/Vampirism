@@ -27,7 +27,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
 
     @Override
     public int getCooldown() {
-        return Balance.vpa.TELEPORT_COOLDOWN * 20;
+        return 10;//return Balance.vpa.TELEPORT_COOLDOWN * 20;
     }
 
     @Override
@@ -69,7 +69,7 @@ public class TeleportVampireAction extends DefaultVampireAction {
         if (pos != null) {
             player.setPosition(pos.getX() + 0.5, pos.getY() + 0.1, pos.getZ() + 0.5);
             //TODO TEST with player instead of null for getCOllisionBoxies
-            if (player.getEntityWorld().getCollisionBoxes(null, player.getEntityBoundingBox()).isEmpty() && !player.getEntityWorld().containsAnyLiquid(player.getEntityBoundingBox())) {
+            if (player.getEntityWorld().getCollisionBoxes(player, player.getEntityBoundingBox()).isEmpty() && !player.getEntityWorld().containsAnyLiquid(player.getEntityBoundingBox())) {
 
             } else {
                 pos = null;
