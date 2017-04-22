@@ -27,6 +27,8 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
+
 /**
  * Altar of inspiration used for vampire levels 1-4
  */
@@ -65,6 +67,7 @@ public class BlockAltarInspiration extends VampirismBlockContainer {
         return extendedBlockState.withProperty(FLUID_LEVEL, 0);
     }
 
+    @Nonnull
     @Override
     public EnumBlockRenderType getRenderType(IBlockState state) {
         return EnumBlockRenderType.MODEL;

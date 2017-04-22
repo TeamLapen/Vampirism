@@ -11,10 +11,13 @@ import net.minecraft.client.renderer.entity.layers.LayerHeldItem;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Same as {@link LayerHeldItem} but for {@link ModelVillagerWithArms} model
  */
+@SideOnly(Side.CLIENT)
 public class LayerHeldItemVillager implements LayerRenderer<EntityHunterVillager> {
 
     private final RenderHunterVillager renderer;

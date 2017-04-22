@@ -5,15 +5,15 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Adds additional methods to vanilla Gui
  */
+@SideOnly(Side.CLIENT)
 public class ExtendedGui extends Gui {
 
-    /**
-     * Draws a rectangle with a horizontal gradient between the specified colors. Just changed the coloring from the {@link #drawGradientRect(int, int, int, int, int, int)}
-     */
     /**
      * Draws a rectangle with a vertical gradient between the specified colors (ARGB format). Args : x1, y1, x2, y2,
      * topColor, bottomColor

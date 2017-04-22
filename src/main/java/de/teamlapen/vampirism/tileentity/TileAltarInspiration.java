@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.client.render.particle.ModParticles;
 import de.teamlapen.vampirism.core.ModFluids;
+import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;

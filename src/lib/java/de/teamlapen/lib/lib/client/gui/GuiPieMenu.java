@@ -6,8 +6,9 @@ import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.client.GuiIngameForge;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Cursor;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
  *
  * @author maxanier
  */
+@SideOnly(Side.CLIENT)
 public abstract class GuiPieMenu<T> extends GuiScreen {
     private final static ResourceLocation backgroundTex = new ResourceLocation(LIBREFERENCE.MODID + ":textures/gui/pie-menu-bg.png");
     private final static ResourceLocation centerTex = new ResourceLocation(LIBREFERENCE.MODID + ":textures/gui/pie-menu-center.png");
@@ -129,7 +131,7 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
         if (selectedElement == -1) {
             this.drawUnselectedCenter(cX, cY);
         } else {
-            String name = I18n.translateToLocal(getUnlocalizedName(elements.get(selectedElement)));
+            String name = UtilLib.translate(getUnlocalizedName(elements.get(selectedElement)));
             int tx = cX - mc.fontRendererObj.getStringWidth(name) / 2;
             int ty = this.height / 7;
             mc.fontRendererObj.drawStringWithShadow(name, tx, ty, 16777215);
@@ -181,11 +183,7 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
 
     /**
      * Draws a line between the given coordinates
-     *
-     * @param x1
-     * @param y1
-     * @param x2
-     * @param y2
+
      */
     protected void drawLine(double x1, double y1, double x2, double y2) {
         GL11.glPushMatrix();

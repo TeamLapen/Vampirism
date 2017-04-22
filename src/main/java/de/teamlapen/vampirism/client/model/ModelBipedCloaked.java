@@ -3,10 +3,13 @@ package de.teamlapen.vampirism.client.model;
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * ModelBiped with a cloak
  */
+@SideOnly(Side.CLIENT)
 public class ModelBipedCloaked extends ModelBiped {
     protected ModelRenderer bipedCloak;
     private boolean skipCloakOnce = false;

@@ -6,13 +6,16 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Villager Model with usable arms
  */
+@SideOnly(Side.CLIENT)
 public class ModelVillagerWithArms extends ModelVillager {
-    protected ModelRenderer leftArm;
-    protected ModelRenderer rightArm;
+    private ModelRenderer leftArm;
+    private ModelRenderer rightArm;
 
     public ModelVillagerWithArms(float scale) {
         this(scale, 0F, 64, 64);

@@ -12,9 +12,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public interface ISyncable {
     /**
      * This method should load all included information. It might contain some or all syncable information.
-     *
-     * @param nbt
-     */
+     **/
     @SideOnly(Side.CLIENT)
     void loadUpdateFromNBT(NBTTagCompound nbt);
 
@@ -34,10 +32,8 @@ public interface ISyncable {
          */
         ResourceLocation getCapKey();
 
-        /**
-         * Returns the entity id of the representing entity
-         *
-         * @return
+        /***
+         * @return the entity id of the representing entity
          */
         int getTheEntityID();
     }

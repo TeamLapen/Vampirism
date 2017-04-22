@@ -7,10 +7,13 @@ import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Renders the vampirism throwable entity item
  */
+@SideOnly(Side.CLIENT)
 public class RenderThrowableItem extends RenderSnowball<EntityThrowableItem> {
     public RenderThrowableItem(RenderManager renderManagerIn, RenderItem itemRendererIn) {
         super(renderManagerIn, Items.SNOWBALL, itemRendererIn);

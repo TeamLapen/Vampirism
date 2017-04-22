@@ -13,6 +13,8 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -21,6 +23,7 @@ import java.util.List;
 /**
  * Extends the basic (JSON) baked blood container model, by the textured model that fits to the specified fluid and fluid level
  */
+@SideOnly(Side.CLIENT)
 public class BakedBloodContainerModel implements IBakedModel {
 
     public static final int FLUID_LEVELS = 14;

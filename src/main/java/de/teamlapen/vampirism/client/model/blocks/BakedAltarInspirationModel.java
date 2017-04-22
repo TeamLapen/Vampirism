@@ -11,6 +11,8 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -19,6 +21,7 @@ import java.util.List;
 /**
  * Extends the basic (JSON) baked altar inspiration model, by the textured model that fits to the fluid level
  */
+@SideOnly(Side.CLIENT)
 public class BakedAltarInspirationModel implements IBakedModel {
 
     public static final int FLUID_LEVELS = 10;

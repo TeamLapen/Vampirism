@@ -3,19 +3,22 @@ package de.teamlapen.vampirism.client.model;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.model.ModelRenderer;
 import net.minecraft.entity.Entity;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class ModelCoffin extends ModelBase {
 
     // fields
-    ModelRenderer leftPlate;
-    ModelRenderer rightPlate;
-    ModelRenderer backPlate;
-    ModelRenderer topPlate;
-    ModelRenderer bottomPlate;
-    ModelRenderer leftLid;
-    ModelRenderer rightLid;
-    ModelRenderer leftHandle;
-    ModelRenderer rightHandle;
+    private ModelRenderer leftPlate;
+    private ModelRenderer rightPlate;
+    private ModelRenderer backPlate;
+    private ModelRenderer topPlate;
+    private ModelRenderer bottomPlate;
+    private ModelRenderer leftLid;
+    private ModelRenderer rightLid;
+    private ModelRenderer leftHandle;
+    private ModelRenderer rightHandle;
 
     public ModelCoffin() {
         textureWidth = 256;

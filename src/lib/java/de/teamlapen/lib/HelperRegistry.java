@@ -106,7 +106,7 @@ public class HelperRegistry {
      * Finishes registration.
      * FOR INTERNAL USAGE ONLY
      */
-    public static void finish() {
+    static void finish() {
         syncableEntityCapsFinal = ImmutableMap.copyOf(syncableEntityCaps);
         syncableEntityCaps = null;
         syncablePlayerCapsFinal = ImmutableMap.copyOf(syncablePlayerCaps);

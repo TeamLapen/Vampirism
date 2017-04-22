@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.proxy;
 
-import de.teamlapen.vampirism.client.render.particle.ModParticles;
 import de.teamlapen.vampirism.core.*;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 

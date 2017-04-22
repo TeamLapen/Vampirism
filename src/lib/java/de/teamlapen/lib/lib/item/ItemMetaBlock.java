@@ -4,6 +4,8 @@ import net.minecraft.block.Block;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
+
 /**
  * Standard item for meta blocks. Blocks can implement {@link IMetaItemName} to provide a name for the item stack
  */
@@ -37,6 +39,7 @@ public class ItemMetaBlock extends ItemBlock {
         return damage;
     }
 
+    @Nonnull
     @Override
     public String getUnlocalizedName(ItemStack stack) {
         if (customName) {
@@ -50,8 +53,7 @@ public class ItemMetaBlock extends ItemBlock {
         /**
          * Get the special name, which is added to the default unloc name (<unlocname>.<special name>)
          *
-         * @param stack
-         * @return
+         * @return the special name
          */
         String getItemstackName(ItemStack stack);
     }

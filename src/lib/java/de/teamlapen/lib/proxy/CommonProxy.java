@@ -18,7 +18,7 @@ import java.util.List;
 
 public class CommonProxy implements IProxy {
 
-    protected ParticleHandler serverParticleHandler = new ParticleHandlerServer();//Not required on client side, but since on an integrated server only client proxy exist we need it here
+    ParticleHandler serverParticleHandler = new ParticleHandlerServer();//Not required on client side, but since on an integrated server only client proxy exist we need it here
 
     @Nonnull
     @Override
@@ -51,6 +51,6 @@ public class CommonProxy implements IProxy {
 
     @Override
     public List<String> listFormattedStringToWidth(String str, int wrapWidth) {
-        return Arrays.asList(WordUtils.wrap(str, wrapWidth / 6));
+        return Arrays.asList(WordUtils.wrap(str, wrapWidth / 6, "\n", false).split("\n"));
     }
 }
