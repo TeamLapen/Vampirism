@@ -20,8 +20,11 @@ public class BalanceGeneral extends BalanceValues {
     @DefaultInt(value = 10, name = "vampire_forest_weight", minValue = 1)
     public int VAMPIRE_FOREST_WEIGHT;
 
-    @DefaultInt(value = 40, minValue = 0, maxValue = 1000, name = "hunter_camp_spawn_chance", comment = "Chance that a camp is generated. n/1000 for each valid chunk")
+    @DefaultInt(value = 40, minValue = 0, maxValue = 1000, name = "hunter_camp_spawn_chance", comment = "UNUSED")
     public int HUNTER_CAMP_SPAWN_CHANCE;
+
+    @DefaultInt(value = 6, minValue = 3, maxValue = 1000, name = "hunter_camp_density", comment = "Minecraft will try to generate 1 camp per NxN chunk area.")
+    public int HUNTER_CAMP_DENSITY;
 
     @DefaultBoolean(value = true, alternateValue = false, hasAlternate = true, comment = "If the sanguinare effect can be canceled by a milk bucket")
     public boolean CAN_CANCEL_SANGUINARE;
