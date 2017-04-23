@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockMedChair;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.block.Block;
@@ -45,22 +46,29 @@ public class ItemMedChair extends VampirismItem {
         // Direction the player is facing
         int direction = MathHelper.floor((player.rotationYaw * 4F) / 360F + 0.5D) & 3;
         EnumFacing facing = EnumFacing.getHorizontal(direction);
-        BlockPos other = pos.offset(facing);
-        boolean other_replaceable = block.isReplaceable(world, other);
+        BlockPos otherPos = pos.offset(facing);
+        Block otherBlock = world.getBlockState(otherPos).getBlock();
+        boolean other_replaceable = otherBlock.isReplaceable(world, otherPos);
         boolean flag1 = world.isAirBlock(pos) || replaceable;
-        boolean flag2 = world.isAirBlock(other) || other_replaceable;
-        if (player.canPlayerEdit(pos, side, stack) && player.canPlayerEdit(other, side, stack)) {
-//            VampirismMod.log.t("%b %b %b %b", flag1, flag2, UtilLib.doesBlockHaveSolidTopSurface(world, pos.down()), UtilLib.doesBlockHaveSolidTopSurface(world, other.down()));
+        boolean flag2 = world.isAirBlock(otherPos) || other_replaceable;
+        VampirismMod.log.d(regName, "Trying to place itemMedChair. Targeted Block %s (at %s, replaceable %b) -> Final Target %s (at %s, %b air) ", block, targetPos, replaceable, world.getBlockState(pos).getBlock(), pos, world.isAirBlock(pos));
+        VampirismMod.log.d(regName, "Looking to %s so adjacent block is %s (at %s, replaceable %b, air %b)", facing, otherBlock, otherPos, other_replaceable, world.isAirBlock(otherPos));
+        if (player.canPlayerEdit(pos, side, stack) && player.canPlayerEdit(otherPos, side, stack)) {
 
-            if (flag1 && flag2 && UtilLib.doesBlockHaveSolidTopSurface(world, pos.down()) && UtilLib.doesBlockHaveSolidTopSurface(world, other.down())) {
+            VampirismMod.log.d(regName, "F1 %b, F2 %b, S1 %b, S2 %b", flag1, flag2, UtilLib.doesBlockHaveSolidTopSurface(world, pos.down()), UtilLib.doesBlockHaveSolidTopSurface(world, otherPos.down()));
+            if (flag1 && flag2 && UtilLib.doesBlockHaveSolidTopSurface(world, pos.down()) && UtilLib.doesBlockHaveSolidTopSurface(world, otherPos.down())) {
                 IBlockState state1 = ModBlocks.medChair.getDefaultState().withProperty(BlockMedChair.PART, BlockMedChair.EnumPart.BOTTOM).withProperty(BlockMedChair.FACING, facing.getOpposite());
                 if (world.setBlockState(pos, state1, 3)) {
                     IBlockState state2 = state1.withProperty(BlockMedChair.PART, BlockMedChair.EnumPart.TOP).withProperty(BlockMedChair.FACING, facing.getOpposite());
-                    world.setBlockState(other, state2, 3);
+                    world.setBlockState(otherPos, state2, 3);
                 }
                 ItemStackUtil.decr(stack);
                 return EnumActionResult.SUCCESS;
+            } else {
+                VampirismMod.log.d(regName, "Failed. First down %s, Second down %s  ", world.getBlockState(pos.down()).getBlock(), world.getBlockState(otherPos.down()).getBlock());
             }
+        } else {
+            VampirismMod.log.d(regName, "Player cannot edit %b %b", player.canPlayerEdit(pos, side, stack), player.canPlayerEdit(otherPos, side, stack));
         }
         return EnumActionResult.FAIL;
     }

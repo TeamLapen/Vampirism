@@ -8,7 +8,6 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.*;
 import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -18,7 +17,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
@@ -43,7 +41,7 @@ public class UtilLib {
     }
 
     public static boolean doesBlockHaveSolidTopSurface(World worldIn, BlockPos pos) {
-        return worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos, EnumFacing.UP) && worldIn.getBlockState(pos).getMaterial().isSolid() && !worldIn.getBlockState(pos.up()).getMaterial().isSolid();
+        return worldIn.getBlockState(pos).isSideSolid(worldIn, pos, EnumFacing.UP);
     }
 
 
