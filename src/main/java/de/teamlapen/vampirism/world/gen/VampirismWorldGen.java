@@ -1,12 +1,10 @@
 package de.teamlapen.vampirism.world.gen;
 
-import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.ModBiomes;
+import de.teamlapen.vampirism.VampirismMod;
+import net.minecraft.init.Biomes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldType;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.biome.BiomePlains;
 import net.minecraft.world.chunk.IChunkGenerator;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraftforge.fml.common.IWorldGenerator;
@@ -54,29 +52,26 @@ public class VampirismWorldGen implements IWorldGenerator {
 
     public void generateOverworld(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
         boolean mapFeatures = world.getWorldInfo().isMapFeaturesEnabled();
-        Biome biome = world.getBiome(new BlockPos((chunkX << 4) + 8, 0, (chunkZ << 4) + 8));
         if (mapFeatures) {
-            if (!ModBiomes.vampireForest.getRegistryName().equals(biome.getRegistryName())) {
-                int chance = random.nextInt(1000);
-                int trees = biome.theBiomeDecorator.treesPerChunk;
-                float bh = biome.getBaseHeight() + biome.getHeightVariation();
-                float prop = 1;
-                prop += Math.min(trees, 8);
-                prop += bh * 3;
+            Biome biome = world.getBiome(new BlockPos((chunkX << 4) + 8, 0, (chunkZ << 4) + 8));
+            if (hunterCamp.canCampSpawnAt(world, biome, chunkX, chunkZ)) {
+                BlockPos pos = new BlockPos(chunkX << 4, 1, chunkZ << 4);
 
-                if (biome instanceof BiomePlains) prop *= 0.8F;
-
-                if (world.getWorldType().equals(WorldType.FLAT)) {
-                    prop = 0.2F;
-                }
-                if (chance < Balance.general.HUNTER_CAMP_SPAWN_CHANCE * prop) {
-                    BlockPos pos = new BlockPos((chunkX << 4), 0, (chunkZ << 4));
-                    pos = world.getHeight(pos);
-                    float temp = biome.getFloatTemperature(pos);
-                    if (hunterCamp.isValidTemperature(temp) && world.getVillageCollection().getNearestVillage(pos, 20) == null) {
-                        hunterCamp.generate(world, random, pos.up());
+                int tries = 5;
+                int max = random.nextInt(3) + 1;
+                tries += Math.min(Math.max(biome.theBiomeDecorator.treesPerChunk, 0), 5);
+                tries += 10 * (biome.getHeightVariation());
+                if (Biomes.ROOFED_FOREST.equals(biome)) tries += 4;
+                if (debug) VampirismMod.log.i("WorldGen", "Trying to generate camp at %s with %d tries", pos, tries);
+                for (int j = 0; j < max; j++) {
+                    for (int i = 0; i < tries; i++) {
+                        if (hunterCamp.generate(world, random, pos)) {
+                            break;
+                        }
                     }
                 }
+
+
             }
             for (int j2 = 0; j2 < 10; ++j2) {
                 BlockPos pos = new BlockPos((chunkX << 4), 0, (chunkZ << 4));

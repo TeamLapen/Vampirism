@@ -132,7 +132,7 @@ public class Configs {
 
         //Village
         village_modify = main_config.getBoolean("village_modify_gen", CATEGORY_VILLAGE, true, "Whether to modify village generation chance or not");
-        village_density = main_config.getInt("village_density", CATEGORY_VILLAGE, 18, 1, 1000, "Minecraft will try to generate 1 village per NxN chunk area. Vanilla: 32");
+        village_density = main_config.getInt("village_density", CATEGORY_VILLAGE, 18, 9, 1000, "Minecraft will try to generate 1 village per NxN chunk area. Vanilla: 32");
         village_min_dist = main_config.getInt("village_minimum_distance", CATEGORY_VILLAGE, 6, 1, 1000, "Village centers will be at least N chunks apart. Must be smaller than density. Vanilla: 8");
         village_size = main_config.getInt("village_size", CATEGORY_VILLAGE, 0, 0, 10, "A higher size increases the overall spawn weight of buildings.");
 
