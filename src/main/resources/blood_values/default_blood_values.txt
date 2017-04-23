@@ -12,6 +12,7 @@ minecraft:wolf=5
 minecraft:mooshroom=10
 minecraft:polar_bear=10
 minecraft:rabbit=2
+minecraft:llama=8
 
 #MCA
 mca:EntityHuman=15

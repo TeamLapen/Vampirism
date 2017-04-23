@@ -107,6 +107,7 @@ public class ModEntities {
         registry.addConvertible(EntityRabbit.class, String.format(base, "rabbit"));
         registry.addConvertible(EntitySheep.class, String.format(base, "sheep"), new EntityConvertedSheep.ConvertingHandler());
         registry.addConvertible(EntityVillager.class, null, new EntityConvertedVillager.ConvertingHandler());
+        registry.addConvertible(EntityLlama.class, String.format(base, "llama"));
     }
 
     private static void preInit(FMLPreInitializationEvent event) {

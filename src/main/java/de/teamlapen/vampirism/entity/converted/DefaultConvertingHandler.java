@@ -6,8 +6,8 @@ import de.teamlapen.vampirism.config.Balance;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
-import net.minecraft.entity.passive.EntityCow;
-import net.minecraft.entity.passive.EntityPig;
+import net.minecraft.entity.monster.EntityPolarBear;
+import net.minecraft.entity.passive.*;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
@@ -42,12 +42,23 @@ public class DefaultConvertingHandler<T extends EntityCreature> implements IConv
                     entity.dropItem(Items.ROTTEN_FLESH, 1);
                 }
 
-            } else if (entity instanceof EntityPig) {
-                int j = entity.getRNG().nextInt(3) + entity.getRNG().nextInt(1 + looting);
+            } else if (entity instanceof EntityPig || entity instanceof EntityHorse) {
+                int j = entity.getRNG().nextInt(2) + entity.getRNG().nextInt(1 + looting);
 
                 for (int k = 0; k < j; ++k) {
                     entity.dropItem(Items.ROTTEN_FLESH, 1);
                 }
+            } else if (entity instanceof EntityLlama) {
+                int j = entity.getRNG().nextInt(3);
+                if (j > 0) entity.dropItem(Items.LEATHER, j);
+            } else if (entity instanceof EntityPolarBear) {
+                int j = entity.getRNG().nextInt(3);
+                if (j > 0) entity.dropItem(Items.FISH, j);
+                int k = entity.getRNG().nextInt(2);
+                if (k > 0) entity.dropItem(Items.ROTTEN_FLESH, k);
+            } else if (entity instanceof EntityRabbit) {
+                int j = entity.getRNG().nextInt(2);
+                if (j > 0) entity.dropItem(Items.RABBIT_HIDE, j);
             } else {
                 //TODO maybe call dropFewItems via reflection
             }
