@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.world.gen;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.hunter.EntityAdvancedHunter;
 import de.teamlapen.vampirism.items.ItemTent;
@@ -12,6 +14,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.WorldGenerator;
 import net.minecraftforge.fluids.IFluidBlock;
 
@@ -21,6 +24,48 @@ import java.util.Random;
  * Generate hunter camps
  */
 public class WorldGenHunterCamp extends WorldGenerator {
+
+    private int distance = Balance.general.HUNTER_CAMP_DENSITY;
+
+    public boolean canCampSpawnAt(World world, Biome biome, int chunkX, int chunkZ) {
+        //Check Biome
+        if (ModBiomes.vampireForest.getRegistryName().equals(biome.getRegistryName())) {
+            return false;
+        }
+
+        //Check temperature
+        BlockPos pos = new BlockPos((chunkX << 4), 0, (chunkZ << 4));
+        pos = world.getHeight(pos);
+        float t = biome.getFloatTemperature(pos);
+        if (t > 1.5F || t < 0.1F) return false;
+
+        int i = chunkX;
+        int j = chunkZ;
+
+        if (chunkX < 0) {
+            chunkX -= this.distance - 1;
+        }
+
+        if (chunkZ < 0) {
+            chunkZ -= this.distance - 1;
+        }
+
+        int k = chunkX / this.distance;
+        int l = chunkZ / this.distance;
+        Random random = world.setRandomSeed(k, l, 10387312);
+        k = k * this.distance;
+        l = l * this.distance;
+        k = k + random.nextInt(this.distance - 2);
+        l = l + random.nextInt(this.distance - 2);
+
+        if (i == k && j == l) {
+            return world.getVillageCollection().getNearestVillage(new BlockPos(i << 4, 10, j << 4), 20) == null;
+
+        }
+
+        return false;
+    }
+
     /**
      * @param worldIn
      * @param rand
@@ -29,13 +74,12 @@ public class WorldGenHunterCamp extends WorldGenerator {
      */
     @Override
     public boolean generate(World worldIn, Random rand, BlockPos position) {
-
         if (worldIn.getBiomeForCoordsBody(position).getHeightVariation() < 0.3 && rand.nextInt(7) == 0) {
             int r = rand.nextInt(2);
             int r1 = rand.nextInt(2);
             int r2 = rand.nextInt(2);
             int r3 = rand.nextInt(2);
-            BlockPos center = position.add(8, 0, 8);
+            BlockPos center = findSolidPos(worldIn, position.add(8, 0, 8));
             BlockPos pos1 = findSolidPos(worldIn, center.add(4 + r, 5, r1 - 1));
             BlockPos pos2 = findSolidPos(worldIn, center.add(-4 - r1, 5, r2 - 1));
             BlockPos pos3 = findSolidPos(worldIn, center.add(r2 - 1, 5, -4 - r3));
@@ -60,7 +104,10 @@ public class WorldGenHunterCamp extends WorldGenerator {
             return false;
         } else {
             BlockPos pos = position.add(rand.nextInt(16), 0, rand.nextInt(16));
-            return placeTent(worldIn, rand, findSolidPos(worldIn, pos), EnumFacing.getHorizontal(rand.nextInt(EnumFacing.HORIZONTALS.length)));
+            boolean flag = placeTent(worldIn, rand, findSolidPos(worldIn, pos), EnumFacing.getHorizontal(rand.nextInt(EnumFacing.HORIZONTALS.length)));
+            if (flag && VampirismWorldGen.debug)
+                VampirismMod.log.i("HunterCamp", "Generated normal hunter camp at %s", pos);
+            return flag;
         }
     }
 
@@ -77,16 +124,13 @@ public class WorldGenHunterCamp extends WorldGenerator {
 
     private BlockPos findSolidPos(World world, BlockPos position) {
         Material material;
-        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(position);
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(world.getHeight(position).up(30));
         while (((material = world.getBlockState(pos).getMaterial()) == Material.LEAVES || material == Material.PLANTS || world.isAirBlock(pos)) && pos.getY() > 50) {
             pos.move(EnumFacing.DOWN);
         }
         return pos.up();
     }
 
-    boolean isValidTemperature(float t) {
-        return t < 1.5F && t > 0.1F;
-    }
 
     private boolean placeFire(World worldIn, BlockPos position) {
         if (checkGroundAndPos(worldIn, position, null)) {
