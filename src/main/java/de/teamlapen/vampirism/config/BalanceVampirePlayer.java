@@ -65,6 +65,9 @@ public class BalanceVampirePlayer extends BalanceValues {
     @DefaultDouble(value = 7.0, alternateValue = 14, name = "sundamage_damage", minValue = 1, comment = "Damage a player receives every 2 seconds if in sun. Is multiplied with several factors.")
     public double SUNDAMAGE_DAMAGE;
 
+    @DefaultInt(value = 4, alternateValue = 8, name = "sundamage_water_blocks", minValue = 1, comment = "How many blocks deep into the water has a vampire to be to not receive sundamage. Due to performance optimisation only used when player below sea level")
+    public int SUNDAMAGE_WATER_BLOCKS;
+
     @DefaultDouble(value = 2.0, name = "garlic_damage", minValue = 1, comment = "UNUSED - Damage the player receives every 2 seconds if in garlic")
     public double GARLIC_DAMAGE;
 
