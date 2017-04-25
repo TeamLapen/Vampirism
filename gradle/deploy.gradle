@@ -2,11 +2,11 @@ apply plugin: 'maven'
 
 curseforge {
     if (project.hasProperty("CURSEFORGE_API")) {
-        apiKey = project.CURSEFORGE_API;
+        apiKey = project.CURSEFORGE_API
     } else if (System.getenv().CI) {
         apiKey = System.getenv().CURSEFORGE_KEY_SECRET
     } else {
-        apiKey = "DUMMY";
+        apiKey = "DUMMY"
     }
     project {
         id = "233029"
@@ -29,7 +29,6 @@ curseforge {
         }
 
 
-        addArtifact deobfJar
     }
 
 
