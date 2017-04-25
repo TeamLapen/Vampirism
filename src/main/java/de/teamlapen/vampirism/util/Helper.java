@@ -9,8 +9,10 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
+import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -44,7 +46,7 @@ public class Helper {
                 if (angle > 0.78 || angle < 0.24) {
                     BlockPos pos = new BlockPos(entity.posX + 0.5, entity.posY + 0, entity.posZ + 0.5);
 
-                    if (entity.getEntityWorld().canBlockSeeSky(pos)) {
+                    if (canBlockSeeSun(entity.getEntityWorld(), pos)) {
                         ResourceLocation biomeID = null;
                         try {
                             biomeID = entity.getEntityWorld().getBiome(pos).getRegistryName();
@@ -64,6 +66,37 @@ public class Helper {
         entity.getEntityWorld().theProfiler.endSection();
 
         return false;
+    }
+
+    public static boolean canBlockSeeSun(World world, BlockPos pos) {
+        if (pos.getY() >= world.getSeaLevel()) {
+            return world.canSeeSky(pos);
+        } else {
+            BlockPos blockpos = new BlockPos(pos.getX(), world.getSeaLevel(), pos.getZ());
+
+            if (!world.canSeeSky(blockpos)) {
+                return false;
+            } else {
+                int liquidBlocks = 0;
+                for (blockpos = blockpos.down(); blockpos.getY() > pos.getY(); blockpos = blockpos.down()) {
+                    IBlockState iblockstate = world.getBlockState(blockpos);
+
+                    if (iblockstate.getBlock().getLightOpacity(iblockstate, world, blockpos) > 0) {
+                        if (iblockstate.getMaterial().isLiquid()) {
+                            liquidBlocks++;
+                            if (liquidBlocks >= Balance.vp.SUNDAMAGE_WATER_BLOCKS) {
+                                return false;
+                            }
+                        } else {
+                            return false;
+                        }
+                    }
+
+                }
+
+                return true;
+            }
+        }
     }
 
     public static EnumStrength getGarlicStrength(Entity e) {
