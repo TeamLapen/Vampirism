@@ -156,7 +156,7 @@ public class ModPlayerEventHandler {
                     if (block instanceof IFluidTank) {
                         //Probably never happens
                         VampirismMod.log.d("Fluid", "Found block that is instanceof IFluidTank %s", block.getClass());
-                        if (ModFluids.blood.equals(((IFluidTank) block).getFluid())) {
+                        if (((IFluidTank) block).getFluid() != null && ModFluids.blood.equals(((IFluidTank) block).getFluid().getFluid())) {
                             flag = true;
                         }
                     } else if (block instanceof ITileEntityProvider) {
