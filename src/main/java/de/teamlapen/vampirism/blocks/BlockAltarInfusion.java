@@ -9,6 +9,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -62,23 +63,20 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
         TileAltarInfusion te = (TileAltarInfusion) worldIn.getTileEntity(pos);
-        //If empty hand and can start -> Start
-        if (worldIn.isRemote) return true;
-        int result = 0;
-        if (heldItem == null && (result = te.canActivate(playerIn, true)) == 1) {
-            te.startRitual(playerIn);
+        if (playerIn.isSneaking() && heldItem == null) {
+            te.onActivated(playerIn);
             return true;
         }
-        //If non empty hand or missing items -> open GUI
-        else if (heldItem != null || result == -4) {
-            if (te.getCurrentPhase() != TileAltarInfusion.PHASE.NOT_RUNNING) {
+        if (!playerIn.isSneaking()) {
+            if (te.getCurrentPhase() != TileAltarInfusion.PHASE.NOT_RUNNING && playerIn.worldObj.isRemote) {
                 playerIn.addChatMessage(new TextComponentTranslation("text.vampirism.ritual_still_running"));
                 return false;
             }
             playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_ALTAR_INFUSION, worldIn, pos.getX(), pos.getY(), pos.getZ());
             return true;
         }
-        return true;
+
+        return false;
     }
 
     private void dropItems(World world, BlockPos pos) {
@@ -101,7 +99,7 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
                 EntityItem entityItem = new EntityItem(world, pos.getX() + rx, pos.getY() + ry, pos.getZ() + rz, item.copy());
 
                 if (item.hasTagCompound()) {
-                    entityItem.getEntityItem().setTagCompound(item.getTagCompound().copy());
+                    entityItem.getEntityItem().setTagCompound((NBTTagCompound) item.getTagCompound().copy());
                 }
 
                 float factor = 0.05F;
