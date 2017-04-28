@@ -60,23 +60,28 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
     }
 
 
+
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing faing, float hitX, float hitY, float hitZ) {
+        ItemStack heldItem = playerIn.getHeldItem(hand);
         TileAltarInfusion te = (TileAltarInfusion) worldIn.getTileEntity(pos);
-        if (playerIn.isSneaking() && playerIn.getHeldItem(hand) == null) {
-            te.onActivated(playerIn);
+        //If empty hand and can start -> Start
+        if (worldIn.isRemote) return true;
+        int result = 0;
+        if (ItemStackUtil.isEmpty(heldItem) && (result = te.canActivate(playerIn, true)) == 1) {
+            te.startRitual(playerIn);
             return true;
         }
-        if (!playerIn.isSneaking()) {
-            if (te.getCurrentPhase() != TileAltarInfusion.PHASE.NOT_RUNNING && playerIn.getEntityWorld().isRemote) {
+        //If non empty hand or missing items -> open GUI
+        else if (!ItemStackUtil.isEmpty(heldItem) || result == -4) {
+            if (te.getCurrentPhase() != TileAltarInfusion.PHASE.NOT_RUNNING) {
                 playerIn.sendMessage(new TextComponentTranslation("text.vampirism.ritual_still_running"));
                 return false;
             }
             playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_ALTAR_INFUSION, worldIn, pos.getX(), pos.getY(), pos.getZ());
             return true;
         }
-
-        return false;
+        return true;
     }
 
     private void dropItems(World world, BlockPos pos) {

@@ -101,7 +101,7 @@ public class BlockAltarInspiration extends VampirismBlockContainer {
                 return true;
             }
         }
-        if (ItemStackUtil.isEmpty(stack) && playerIn.isSneaking()) {
+        if (ItemStackUtil.isEmpty(stack)) {
             TileAltarInspiration tileEntity = (TileAltarInspiration) worldIn.getTileEntity(pos);
             tileEntity.startRitual(playerIn);
         }

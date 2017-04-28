@@ -73,6 +73,43 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
     }
 
     /**
+     * Checks all the requirements
+     *
+     * @param player        trying to execute the ritual
+     * @param messagePlayer If the player should be notified on fail
+     * @return 1 if it can start, 0 if still running, -1 if wrong level, -2 if night only, -3 if structure wrong, -4 if items missing
+     */
+    public int canActivate(EntityPlayer player, boolean messagePlayer) {
+        if (runningTick > 0) {
+            if (messagePlayer)
+                player.sendMessage(new TextComponentTranslation("text.vampirism.ritual_still_running"));
+
+            return 0;
+        }
+        this.player = null;
+        if (player.getEntityWorld().isDaytime()) {
+            if (messagePlayer) player.sendMessage(new TextComponentTranslation("text.vampirism.ritual_night_only"));
+            return -2;
+        }
+        targetLevel = VampirePlayer.get(player).getLevel() + 1;
+        int requiredLevel = checkRequiredLevel();
+        if (requiredLevel == -1) {
+            if (messagePlayer) player.sendMessage(new TextComponentTranslation("text.vampirism.ritual_level_wrong"));
+            return -1;
+        } else if (!checkStructureLevel(requiredLevel)) {
+            if (messagePlayer)
+                player.sendMessage(new TextComponentTranslation("text.vampirism.ritual_structure_wrong"));
+            tips = null;
+            return -3;
+        } else if (!checkItemRequirements(player, messagePlayer)) {
+            tips = null;
+            return -4;
+        }
+        return 1;
+
+    }
+
+    /**
      * Returns the phase the ritual is in
      *
      * @return
@@ -150,50 +187,6 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         return writeToNBT(new NBTTagCompound());
     }
 
-    public void onActivated(EntityPlayer player) {
-
-        if (runningTick > 0) {
-            return;
-        }
-        if (player.getEntityWorld().isRemote) return;
-
-        if (player.getEntityWorld().isDaytime()) {
-            player.sendMessage(new TextComponentTranslation("text.vampirism.ritual_night_only"));
-            return;
-        }
-        targetLevel = VampirePlayer.get(player).getLevel() + 1;
-        int requiredLevel = checkRequiredLevel();
-        if (requiredLevel == -1) {
-            player.sendMessage(new TextComponentTranslation("text.vampirism.ritual_level_wrong"));
-        } else if (!checkStructureLevel(requiredLevel)) {
-            player.sendMessage(new TextComponentTranslation("text.vampirism.ritual_structure_wrong"));
-        } else if (!checkItemRequirements(player)) {
-        } else {
-            this.player = player;
-            runningTick = DURATION_TICK;
-
-            if (!this.getWorld().isRemote) {
-//                for (int i = 0; i < tips.length; i++) {
-//                    NBTTagCompound data = new NBTTagCompound();
-//                    data.setInteger("destX", tips[i].posX);
-//                    data.setInteger("destY", tips[i].posY);
-//                    data.setInteger("destZ", tips[i].posZ);
-//                    data.setInteger("age", 100);
-//                    VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(1, this.xCoord, this.yCoord, this.zCoord, 5, data));
-//                }
-                IBlockState state = getWorld().getBlockState(getPos());
-                this.getWorld().notifyBlockUpdate(getPos(), state, state, 3);
-            }
-            player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, DURATION_TICK, 10));
-            this.markDirty();
-            return;
-        }
-        tips = null;
-        runningTick = 0;
-        this.player = null;
-
-    }
-
     @SideOnly(Side.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
@@ -219,6 +212,30 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         } else {
             checkStructureLevel(checkRequiredLevel());
         }
+    }
+
+    /**
+     * Starts the ritual.
+     * ONLY call if {@link TileAltarInfusion#canActivate(EntityPlayer, boolean)} returned 1
+     */
+    public void startRitual(EntityPlayer player) {
+        this.player = player;
+        runningTick = DURATION_TICK;
+
+        if (!this.getWorld().isRemote) {
+//                for (int i = 0; i < tips.length; i++) {
+//                    NBTTagCompound data = new NBTTagCompound();
+//                    data.setInteger("destX", tips[i].posX);
+//                    data.setInteger("destY", tips[i].posY);
+//                    data.setInteger("destZ", tips[i].posZ);
+//                    data.setInteger("age", 100);
+//                    VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(1, this.xCoord, this.yCoord, this.zCoord, 5, data));
+//                }
+            IBlockState state = this.getWorld().getBlockState(getPos());
+            this.getWorld().notifyBlockUpdate(getPos(), state, state, 3);
+        }
+        player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, DURATION_TICK, 10));
+        this.markDirty();
     }
 
     @Override
@@ -299,7 +316,12 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         return missing;
     }
 
-    private boolean checkItemRequirements(EntityPlayer player) {
+    /**
+     * Checks for the requirements for the give player to level up
+     *
+     * @param messagePlayer If the player should be notified about missing ones
+     */
+    private boolean checkItemRequirements(EntityPlayer player, boolean messagePlayer) {
         int newLevel = targetLevel;
         ItemStack missing = ItemStackUtil.getEmptyStack();
         switch (newLevel) {
@@ -337,9 +359,12 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
                 VampirismMod.log.w(TAG, "Checking for level %d, but this altar cannot be used at that level", newLevel);
         }
         if (!ItemStackUtil.isEmpty(missing)) {
-            ITextComponent item = missing.getItem().equals(ModItems.pureBlood) ? ModItems.pureBlood.getDisplayName(missing) : new TextComponentTranslation(missing.getUnlocalizedName() + ".name");
-            ITextComponent main = new TextComponentTranslation("text.vampirism.ritual_missing_items", ItemStackUtil.getCount(missing), item);
-            player.sendMessage(main);
+            if (messagePlayer) {
+                ITextComponent item = missing.getItem().equals(ModItems.pureBlood) ? ModItems.pureBlood.getDisplayName(missing) : new TextComponentTranslation(missing.getUnlocalizedName() + ".name");
+                ITextComponent main = new TextComponentTranslation("text.vampirism.ritual_missing_items", ItemStackUtil.getCount(missing), item);
+                player.sendMessage(main);
+            }
+
             return false;
         }
         return true;
