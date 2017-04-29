@@ -1,11 +1,8 @@
-/*
- * Copyright (c) 2016. @maxanier
- * Published under LGPLv3
- *
- */
+
 
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.core.ModSounds;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -13,6 +10,7 @@ import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
@@ -22,6 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Random;
 
@@ -36,6 +35,15 @@ public class BlockCastleBlock extends VampirismBlock {
         setResistance(10.0F);
         setSoundType(SoundType.STONE);
         this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, EnumType.DARK_BRICK));
+    }
+
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+        super.addInformation(stack, player, tooltip, advanced);
+        int meta = stack.getMetadata();
+        if (meta < EnumType.META_LOOKUP.length) {
+            tooltip.add(UtilLib.translate(getUnlocalizedName() + "." + EnumType.META_LOOKUP[meta].getUnlocalizedName()));
+        }
     }
 
     @Override
@@ -54,7 +62,7 @@ public class BlockCastleBlock extends VampirismBlock {
     }
 
     @Override
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, List<ItemStack> list) {
+    public void getSubBlocks(@Nonnull Item itemIn, CreativeTabs tab, List<ItemStack> list) {
         for (EnumType type : EnumType.values()) {
             list.add(new ItemStack(itemIn, 1, type.getMetadata()));
         }
@@ -79,7 +87,9 @@ public class BlockCastleBlock extends VampirismBlock {
     public enum EnumType implements IStringSerializable {
         DARK_BRICK(0, "dark_brick"),
         PURPLE_BRICK(1, "purple_brick"),
-        DARK_BRICK_BLOODY(2, "dark_brick_bloody");
+        DARK_BRICK_BLOODY(2, "dark_brick_bloody"),
+        NORMAL_BRICK(3, "normal_brick"),
+        DARK_STONE(4, "dark_stone");
 
         /**
          * Array of the Block's BlockStates
@@ -104,6 +114,7 @@ public class BlockCastleBlock extends VampirismBlock {
          * The BlockState's metadata.
          */
         private final int meta;
+
         /**
          * The EnumType's name.
          */

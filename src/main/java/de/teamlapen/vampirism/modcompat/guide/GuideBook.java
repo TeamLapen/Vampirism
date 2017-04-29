@@ -409,7 +409,7 @@ public class GuideBook {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.blocks.";
         //General
-        new ItemInfoBuilder(ModBlocks.castleBlock).craftableStacks(new ItemStack(ModBlocks.castleBlock, 1, 0), WORKBENCH, new ItemStack(ModBlocks.castleBlock, 1, 1), WORKBENCH).build(entries);
+        new ItemInfoBuilder(ModBlocks.castleBlock).craftableStacks(new ItemStack(ModBlocks.castleBlock, 1, 3), WORKBENCH, new ItemStack(ModBlocks.castleBlock, 1, 0), WORKBENCH, new ItemStack(ModBlocks.castleBlock, 1, 1), WORKBENCH, new ItemStack(ModBlocks.castleBlock, 1, 4), WORKBENCH).build(entries);
         new ItemInfoBuilder(ModBlocks.vampirismFlower).build(entries);
         //Vampire
         new ItemInfoBuilder(ModBlocks.bloodContainer).craftable(WORKBENCH).build(entries);
