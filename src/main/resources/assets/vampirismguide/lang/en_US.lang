@@ -141,7 +141,7 @@ guide.vampirism.items.obsidian_armor.text=This armor is crafted using solidified
 
 #Blocks
 guide.vampirism.blocks.title=Blocks
-guide.vampirism.blocks.castle_block.text=Decorative block.
+guide.vampirism.blocks.castle_block.text=Decorative block. Prevents non vampire mobs from spawning on it. The Dark Stone variant allows no entity to spawn on it.
 guide.vampirism.blocks.vampirism_flower.text=Flower. Can be found in vampire biome.
 guide.vampirism.blocks.altar_infusion.text=Multiblock structure. Used to level up as a Vampire.
 guide.vampirism.blocks.hunter_table.text=Used to craft %s

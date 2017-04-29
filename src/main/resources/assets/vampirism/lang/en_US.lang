@@ -130,6 +130,11 @@ text.vampirism.trainer_level_wrong=This trainer cannot train you at your level
 #BLOCKS
 tile.vampirism.hunter_table.name=Hunter Research Table
 tile.vampirism.castle_block.name=Castle Block
+tile.vampirism.castle_block.dark_stone=Dark Stone
+tile.vampirism.castle_block.normal_brick=Stone Brick
+tile.vampirism.castle_block.dark_brick=Dark Stone Brick
+tile.vampirism.castle_block.purple_brick=Purple Stone Brick
+tile.vampirism.castle_block.bloody_dark_brick=Bloody Dark Stone Brick
 tile.vampirism.cursed_earth.name=Cursed Earth
 tile.vampirism.altar_infusion.name=Altar of Infusion
 tile.vampirism.altar_pillar.name=Altar Pillar

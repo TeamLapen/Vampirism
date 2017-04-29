@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.tests;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.blocks.BlockCastleBlock;
 import de.teamlapen.vampirism.blocks.BlockWeaponTable;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
@@ -116,7 +117,7 @@ public class Tests {
         for (int x = -21; x < 22; x++) {
             for (int y = 1; y < 22; y++) {
                 for (int z = -21; z < 22; z++) {
-                    IBlockState s = (y == 1 || x == -21 || x == 21 || z == -21 || z == 21 || y == 21) ? Blocks.STONE.getDefaultState() : Blocks.AIR.getDefaultState();
+                    IBlockState s = (y == 1 || x == -21 || x == 21 || z == -21 || z == 21 || y == 21) ? ModBlocks.castleBlock.getDefaultState().withProperty(BlockCastleBlock.VARIANT, BlockCastleBlock.EnumType.DARK_STONE) : Blocks.AIR.getDefaultState();
                     world.setBlockState(new BlockPos(x, y, z), s);
                 }
             }

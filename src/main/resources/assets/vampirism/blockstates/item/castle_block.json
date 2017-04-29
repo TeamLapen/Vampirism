@@ -20,6 +20,16 @@
         "textures": {
           "all": "vampirism:blocks/castle_block_purple_brick"
         }
+      },
+      "normal_brick": {
+        "textures": {
+          "all": "vampirism:blocks/castle_block_normal_brick"
+        }
+      },
+      "dark_stone": {
+        "textures": {
+          "all": "vampirism:blocks/castle_block_dark_stone"
+        }
       }
     }
   }
