@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
@@ -23,8 +24,8 @@ import javax.annotation.Nullable;
  */
 public class VampirismBlock extends Block {
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
-    private boolean hasFacing = false;
     private final String registeredName;
+    private boolean hasFacing = false;
 
     public VampirismBlock(String regName, Material materialIn) {
         super(materialIn);
@@ -44,7 +45,29 @@ public class VampirismBlock extends Block {
 
     @Override
     public final IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack) {
-        return getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, placer.getActiveHand());
+        /*
+        *Lots of stupid unnecessary code for 1.11 compat
+         */
+        EnumHand hand;
+        boolean mainHandEmpty = ItemStackUtil.isEmpty(placer.getHeldItemMainhand());
+        if (!mainHandEmpty && placer.getHeldItemMainhand().equals(stack)) {
+            hand = EnumHand.MAIN_HAND;
+        } else {
+            boolean secondHandEmpty = ItemStackUtil.isEmpty(placer.getHeldItemOffhand());
+            if (!secondHandEmpty && placer.getHeldItemOffhand().equals(stack)) {
+                hand = EnumHand.OFF_HAND;
+            } else {
+                if (!mainHandEmpty) {
+                    hand = EnumHand.MAIN_HAND;
+                } else if (!secondHandEmpty) {
+                    hand = EnumHand.OFF_HAND;
+                } else {
+                    VampirismMod.log.w("VampirismBlock", "Placing item without held item (%s)", placer);
+                    hand = EnumHand.MAIN_HAND;
+                }
+            }
+        }
+        return getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, hand);
     }
 
     @Override
