@@ -46,6 +46,8 @@ public class BlockCastleBlock extends VampirismBlock {
         if (meta < EnumType.META_LOOKUP.length) {
             tooltip.add(UtilLib.translate(getUnlocalizedName() + "." + EnumType.META_LOOKUP[meta].getUnlocalizedName()));
         }
+        tooltip.add("§o" + UtilLib.translate(getUnlocalizedName() + (meta == EnumType.DARK_STONE.getMetadata() ? ".no_spawn" : ".vampire_spawn")) + "§r");
+
     }
 
     @Override
