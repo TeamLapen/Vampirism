@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.lib.lib.util.SimpleSpawnerLogic;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -53,9 +54,10 @@ public class TileTent extends TileEntity implements ITickable {
         spawnerLogic.setEntityName(new ResourceLocation(REFERENCE.MODID, ModEntities.BASIC_HUNTER_NAME));
         spawnerLogic.setActivateRange(64);
         spawnerLogic.setSpawnRange(6);
-        spawnerLogic.setMinSpawnDelay(400);
-        spawnerLogic.setMaxSpawnDelay(800);
+        spawnerLogic.setMinSpawnDelay(600);
+        spawnerLogic.setMaxSpawnDelay(1000);
         spawnerLogic.setMaxNearbyEntities(2);
+        spawnerLogic.setLimitTotalEntities(VReference.HUNTER_CREATURE_TYPE);
     }
 
     @Nonnull

@@ -5,6 +5,7 @@ import jline.internal.Nullable;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.MobSpawnerBaseLogic;
 import net.minecraft.util.ResourceLocation;
@@ -27,6 +28,7 @@ public abstract class SimpleSpawnerLogic {
     private int maxNearbyEntities = 4;
     private int spawnRange = 4;
     private int spawnDelay = 20;
+    private EnumCreatureType limitType;
 
     @Nullable
     public ResourceLocation getEntityName() {
@@ -82,6 +84,13 @@ public abstract class SimpleSpawnerLogic {
         }
     }
 
+    /**
+     * Checks if any more creatures of the given type are allowed in the world before spawning
+     */
+    public void setLimitTotalEntities(EnumCreatureType creatureType) {
+        limitType = creatureType;
+    }
+
     public void setMaxNearbyEntities(int maxNearbyEntities) {
         this.maxNearbyEntities = maxNearbyEntities;
     }
@@ -129,6 +138,14 @@ public abstract class SimpleSpawnerLogic {
                     if (j >= this.maxNearbyEntities) {
                         this.resetTimer();
                         break;
+                    }
+
+                    if (limitType != null) {
+                        int total = this.getSpawnerWorld().countEntities(limitType, true);
+                        if (total > limitType.getMaxNumberOfCreature()) {
+                            this.resetTimer();
+                            break;
+                        }
                     }
 
                     if (UtilLib.spawnEntityInWorld(getSpawnerWorld(), getSpawningBox(), entity, 1)) {
