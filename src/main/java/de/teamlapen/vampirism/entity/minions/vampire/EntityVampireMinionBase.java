@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.entity.vampire.EntityVampireBaron;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.util.MinionHelper;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
 import net.minecraft.entity.ai.EntityAIWander;
@@ -34,6 +35,7 @@ import java.util.List;
 
 /**
  * Base class for small vampire minions
+ * Does not count as entity for spawning algorithm
  */
 public abstract class EntityVampireMinionBase extends EntityVampireBase implements IVampireMinion {
 
@@ -50,7 +52,7 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
 
 
     public EntityVampireMinionBase(World world) {
-        super(world, true);
+        super(world, false);
         // this.setSize(0.5F, 1.1F);
         //this.func_110163_bv(); TODO check if this was relevant
 
@@ -102,6 +104,12 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
     @Override
     public boolean isChild() {
         return true;
+    }
+
+    @Override
+    public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount) {
+        //Don't count as entity for spawning
+        return !forSpawnCount && super.isCreatureType(type, forSpawnCount);
     }
 
     @Override
