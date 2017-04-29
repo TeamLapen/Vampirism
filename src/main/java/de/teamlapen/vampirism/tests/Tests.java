@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.tests;
 
-import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockCastleBlock;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -17,6 +16,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
@@ -51,11 +51,15 @@ public class Tests {
 
         ItemStack bloodBottle1 = new ItemStack(ModItems.bloodBottle);
         ItemStack bloodBottle2 = new ItemStack(ModItems.bloodBottle);
-        FluidLib.drainContainerIntoTank(handler, bloodBottle1.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null));
-        FluidLib.drainContainerIntoTank(handler, bloodBottle2.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null));
-        assert BloodHelper.getBlood(handler) < blood : "Failed to train from container into bottles";
-        FluidLib.drainContainerIntoTank(bloodBottle1.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), handler);
-        //FluidLib.drainContainerIntoTank(bloodBottle2.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,null),handler);
+        bloodBottle1 = FluidUtil.tryFillContainer(bloodBottle1, handler, Integer.MAX_VALUE, null, true);
+        assert bloodBottle1 != null : "Transaction 1 failed";
+        bloodBottle2 = FluidUtil.tryFillContainer(bloodBottle2, handler, Integer.MAX_VALUE, null, true);
+        assert bloodBottle2 != null : "Transaction 2 failed";
+        assert BloodHelper.getBlood(handler) < blood : "Failed to drain from container into bottles";
+        bloodBottle1 = FluidUtil.tryEmptyContainer(bloodBottle1, handler, Integer.MAX_VALUE, null, true);
+        assert bloodBottle1 != null : "Transaction 3 failed";
+        bloodBottle2 = FluidUtil.tryEmptyContainer(bloodBottle2, handler, Integer.MAX_VALUE, null, true);
+        assert bloodBottle2 != null : "Transaction 4 failed";
         log("%d %d", BloodHelper.getBlood(handler), blood);
         assert BloodHelper.getBlood(handler) == blood : "Lost blood somewhere";
         return true;
