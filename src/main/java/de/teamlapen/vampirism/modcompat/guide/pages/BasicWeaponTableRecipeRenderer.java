@@ -53,7 +53,7 @@ public abstract class BasicWeaponTableRecipeRenderer<T extends IHunterWeaponReci
             lastCycle = mc.world.getTotalWorldTime();
         }
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation("vampirismguide", "textures/gui/weaponTableRecipe.png"));
+        Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation("vampirismguide", "textures/gui/weapon_table_recipe.png"));
         guiBase.drawTexturedModalRect(guiLeft + 42, guiTop + 43, 0, 0, 110, 75);
         guiBase.drawCenteredString(fontRendererObj, ModBlocks.weaponTable.getLocalizedName(), guiLeft + guiBase.xSize / 2, guiTop + 12, 0);
         guiBase.drawCenteredString(fontRendererObj, "§o" + getRecipeName() + "§r", guiLeft + guiBase.xSize / 2, guiTop + 14 + fontRendererObj.FONT_HEIGHT, 0);
@@ -92,6 +92,26 @@ public abstract class BasicWeaponTableRecipeRenderer<T extends IHunterWeaponReci
             }
             String skillText = UtilLib.translateFormatted("gui.vampirism.hunter_weapon_table.skill", skills);
             guiBase.drawSplitString(skillText, guiLeft + 40, y, 110, Color.gray.getRGB());
+        }
+    }
+
+    /**
+     * Draws the given stack and mouse tooltip
+     *
+     * @param stack Can be empty (1.11) or null (1.10)
+     */
+    @SideOnly(Side.CLIENT)
+    protected void drawStack(ItemStack stack, int index, int stackX, int stackY, int mouseX, int mouseY) {
+        if (!ItemStackUtil.isEmpty(stack)) {
+            if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
+                List<ItemStack> subItems = new ArrayList<ItemStack>();
+                stack.getItem().getSubItems(stack.getItem(), stack.getItem().getCreativeTab(), subItems);
+                stack = subItems.get(getRandomizedCycle(index, subItems.size()));
+            }
+            GuiHelper.drawItemStack(stack, stackX, stackY);
+            if (GuiHelper.isMouseBetween(mouseX, mouseY, stackX, stackY, 15, 15)) {
+                tooltips = GuiHelper.getTooltip(stack);
+            }
         }
     }
 
