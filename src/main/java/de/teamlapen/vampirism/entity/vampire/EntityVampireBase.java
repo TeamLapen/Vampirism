@@ -31,7 +31,7 @@ import net.minecraft.world.World;
  * Base class for Vampirism's vampire entities
  */
 public abstract class EntityVampireBase extends EntityVampirism implements IVampireMob {
-    private final boolean countAsMonster;
+    private final boolean countAsMonsterForSpawn;
     /**
      * If this creature is only allowed to spawn at low light level or in the vampire biome on cursed earth
      */
@@ -43,9 +43,12 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     private EnumStrength garlicCache = EnumStrength.NONE;
 
 
-    public EntityVampireBase(World world, boolean countAsMonster) {
+    /**
+     * @param countAsMonsterForSpawn If this entity should be counted as vampire and as monster during spawning
+     */
+    public EntityVampireBase(World world, boolean countAsMonsterForSpawn) {
         super(world);
-        this.countAsMonster = countAsMonster;
+        this.countAsMonsterForSpawn = countAsMonsterForSpawn;
 
     }
 
@@ -110,7 +113,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
 
     @Override
     public boolean isCreatureType(EnumCreatureType type, boolean forSpawnCount) {
-        if (forSpawnCount && countAsMonster && type == EnumCreatureType.MONSTER) return true;
+        if (forSpawnCount && countAsMonsterForSpawn && type == EnumCreatureType.MONSTER) return true;
         return super.isCreatureType(type, forSpawnCount);
     }
 

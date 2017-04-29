@@ -29,7 +29,6 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
 
     public EntityVampireMinionSaveable(World world) {
         super(world);
-
         commands.add(getActiveCommand());
 //        commands.add(new AttackHostileExceptPlayer(1, this));
 //        commands.add(new AttackHostileIncludingPlayer(2, this));
