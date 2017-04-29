@@ -104,7 +104,7 @@ public abstract class BasicWeaponTableRecipeRenderer<T extends IHunterWeaponReci
     protected void drawStack(ItemStack stack, int index, int stackX, int stackY, int mouseX, int mouseY) {
         if (!ItemStackUtil.isEmpty(stack)) {
             if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-                List<ItemStack> subItems = new ArrayList<ItemStack>();
+                NonNullList<ItemStack> subItems = NonNullList.create();
                 stack.getItem().getSubItems(stack.getItem(), stack.getItem().getCreativeTab(), subItems);
                 stack = subItems.get(getRandomizedCycle(index, subItems.size()));
             }
