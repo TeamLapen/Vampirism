@@ -28,7 +28,7 @@ public class BlockTentMain extends BlockTent implements ITileEntityProvider {
     @Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
         TileTent tile = (TileTent) worldIn.getTileEntity(pos);
-        if (tile.isSpawner()) {
+        if (tile != null && tile.isSpawner()) {
             ItemStack stack;
             switch (worldIn.rand.nextInt(4)) {
                 case 0:
