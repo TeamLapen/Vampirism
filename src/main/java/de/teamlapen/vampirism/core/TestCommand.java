@@ -16,6 +16,7 @@ import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.tileentity.TileTent;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import de.teamlapen.vampirism.world.GarlicChunkHandler;
+import de.teamlapen.vampirism.world.VampirismWorldData;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -27,6 +28,8 @@ import net.minecraft.entity.EntityList;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.item.ItemMap;
+import net.minecraft.item.ItemStack;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
@@ -35,6 +38,9 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraft.world.World;
+import net.minecraft.world.storage.MapData;
+import net.minecraft.world.storage.MapDecoration;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import java.util.ArrayList;
@@ -49,6 +55,38 @@ public class TestCommand extends BasicCommand {
         if (VampirismMod.inDev) {
             aliases.add("vtest");
         }
+        addSub(new SubCommand() {
+            @Override
+            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+                return null;
+            }
+
+            @Override
+            public boolean canSenderUseCommand(ICommandSender sender) {
+                return true;
+            }
+
+            @Override
+            public String getCommandName() {
+                return "giveTestTargetMap";
+            }
+
+            @Override
+            public String getCommandUsage(ICommandSender sender) {
+                return getCommandName();
+            }
+
+            @Override
+            public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                World w = getCommandSenderAsPlayer(sender).getEntityWorld();
+                VampirismWorldData worldData = VampirismWorldData.get(w);
+                BlockPos dungeonPos = worldData.getRandomVampireDungeon(getCommandSenderAsPlayer(sender).getRNG());
+                ItemStack itemstack = ItemMap.setupNewMap(w, (double) dungeonPos.getX(), (double) dungeonPos.getZ(), (byte) 2, true, true);
+                ItemMap.renderBiomePreviewMap(w, itemstack);
+                MapData.addTargetDecoration(itemstack, dungeonPos, "+", MapDecoration.Type.TARGET_X);
+                getCommandSenderAsPlayer(sender).dropItem(itemstack, false);
+            }
+        });
         addSub(new SubCommand() {
             @Override
             public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {

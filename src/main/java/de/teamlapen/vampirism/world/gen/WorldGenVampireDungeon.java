@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.tileentity.TileAltarInspiration;
 import de.teamlapen.vampirism.tileentity.TileBloodContainer;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.world.VampirismWorldData;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
@@ -175,6 +176,7 @@ public class WorldGenVampireDungeon extends WorldGenerator {
 
             if (tileentity instanceof TileAltarInspiration && tileentity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
                 tileentity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null).fill(new FluidStack(ModFluids.blood, (int) (TileAltarInspiration.CAPACITY * rand.nextFloat())), true);
+                VampirismWorldData.get(worldIn).addNewVampireDungeon(position);
             } else {
                 VampirismMod.log.w(TAG, "Failed to generate altar of inspiration in dungeon at (%s)", VampirismWorldGen.debug ? position : "hidden");
             }

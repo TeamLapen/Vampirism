@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.tileentity.TileAltarInspiration;
+import de.teamlapen.vampirism.world.VampirismWorldData;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyInteger;
@@ -41,6 +42,13 @@ public class BlockAltarInspiration extends VampirismBlockContainer {
         super(regName, Material.IRON);
         this.setHarvestLevel("pickaxe", 1);
         this.setHardness(2F);
+    }
+
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        super.breakBlock(worldIn, pos, state);
+        VampirismWorldData.get(worldIn).onAltarInspirationDestroyed(pos);
+
     }
 
     @Override
