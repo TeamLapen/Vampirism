@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.player;
 
 import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -45,8 +44,8 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
@@ -146,38 +145,40 @@ public class ModPlayerEventHandler {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent.RightClickBlock event) {
-        //Replace glas bottle by empty blood bottle, if interacting with a fluid container that contains blood
-        if (Configs.autoConvertGlasBottles) {
-            if (event.getWorld().getWorldBorder().contains(event.getPos())) {
-                ItemStack stack = event.getItemStack();
-                if (!ItemStackUtil.isEmpty(stack) &&
-                        stack.getItem().equals(Items.GLASS_BOTTLE) && ItemStackUtil.getCount(stack) == 1) {
+
+        //To replace glas bottles with blood bottles if interacting with a blood container
+        //Also used to force block interaction with blood container if sneaking
+        //DoesSneakByPassUse on the blood bottle is not enough, since the item in the offhand can still block
+        if (event.getWorld().getWorldBorder().contains(event.getPos())) {
+            ItemStack heldStack = event.getItemStack();
+            if (!ItemStackUtil.isEmpty(heldStack) && ItemStackUtil.getCount(heldStack) == 1) {
+                boolean glasBottle = Items.GLASS_BOTTLE.equals(heldStack.getItem());
+                boolean bloodBottle = ModItems.bloodBottle.equals(heldStack.getItem());
+                if (bloodBottle || (glasBottle && Configs.autoConvertGlasBottles)) {
                     Block block = event.getWorld().getBlockState(event.getPos()).getBlock();
-                    boolean flag = false;
-                    if (block instanceof IFluidTank) {
-                        //Probably never happens
-                        VampirismMod.log.d("Fluid", "Found block that is instanceof IFluidTank %s", block.getClass());
-                        if (ModFluids.blood.equals(((IFluidTank) block).getFluid())) {
-                            flag = true;
-                        }
-                    } else if (block instanceof ITileEntityProvider) {
+
+                    boolean convert = false;
+                    if (glasBottle && block instanceof ITileEntityProvider) {
                         TileEntity entity = event.getWorld().getTileEntity(event.getPos());
                         if (entity != null && entity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, event.getFace())) {
                             net.minecraftforge.fluids.capability.IFluidHandler fluidHandler = entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, event.getFace());
                             FluidStack drain = fluidHandler.drain(new FluidStack(ModFluids.blood, 1000), false);
                             if (drain != null && drain.amount >= BloodBottleFluidHandler.MULTIPLIER) {
-                                flag = true;
+                                convert = true;
+                            }
+                            if (convert && block instanceof BlockAltarInspiration) {
+                                convert = false;
+                            }
+                            if (convert && block instanceof BlockBloodContainer) {
+                                convert = event.getEntityPlayer().isSneaking();
                             }
                         }
-                        if (flag && block instanceof BlockAltarInspiration) {
-                            flag = false;
-                        }
-                        if (flag && block instanceof BlockBloodContainer) {
-                            flag = event.getEntityPlayer().isSneaking();
-                        }
                     }
-                    if (flag) {
-                        stack.deserializeNBT(new ItemStack(ModItems.bloodBottle).serializeNBT());
+                    if ((bloodBottle || convert) && block instanceof BlockBloodContainer) {
+                        event.setUseBlock(Event.Result.ALLOW);
+                    }
+                    if (convert) {
+                        heldStack.deserializeNBT(new ItemStack(ModItems.bloodBottle).serializeNBT());
                     }
                 }
             }
