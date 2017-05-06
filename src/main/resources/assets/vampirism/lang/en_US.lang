@@ -165,6 +165,8 @@ tile.vampirism.garlic_beacon.improved=Improved
 tile.vampirism.garlic_beacon.weak=Weak
 tile.vampirism.garlic_beacon.already_fueled=Already fueled
 tile.vampirism.garlic_beacon.successfully_fueled=Successfully fueled
+tile.vampirism.garlic_beacon.tooltip1=Diffuses garlic particles.
+tile.vampirism.garlic_beacon.tooltip2=Affects a %s by %s chunk area.
 
 #ITEMS
 item.vampirism.hunter_intel.name=Hunter Intel
@@ -322,7 +324,7 @@ text.vampirism.basic_hunter.i_will_train_you=Alright, I will train you
 text.vampirism.i_am_busy_right_now=I'm busy right now
 text.vampirism.crossbow.not_loaded=Not loaded
 text.vampirism.crossbow.loaded_arrow_count=Loaded %s arrows
-item_group.vampirism=Vampirism
+itemGroup.vampirism=Vampirism
 death.attack.sun=%1$s did not like the sun
 death.attack.garlic=%1$s was poisoned by garlic
 death.attack.vampire_on_fire=%1$s burned to ashes

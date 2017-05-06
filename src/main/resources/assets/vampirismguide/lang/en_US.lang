@@ -151,6 +151,6 @@ guide.vampirism.blocks.blood_potion_table.text=Used to craft blood potions. Inse
 guide.vampirism.blocks.item_coffin.text=Can be used by vampires to sleep through the day.
 guide.vampirism.blocks.item_med_chair.text=Used to infuse %s and %s.
 guide.vampirism.blocks.alchemical_cauldron.text=Used to craft a few alchemical recipes. §4Can only be used by Vampire Hunters§r and requires a special skill.
-guide.vampirism.blocks.garlic_beacon.text=Diffuses garlic particles into the air to weaken nearby vampires. The normal versions affects an area of 3x3 chunk around it, the improved one a 5x5. It's effect on vampires can be temporarily boosted by right-clicking it with %s. When boosted it even blinds nearby vampire players.
+guide.vampirism.blocks.garlic_beacon.text=Diffuses garlic particles into the air to prevent vampires from spawning and to weaken nearby vampires. The normal versions affects an area of %s by %s chunks from bedrock to sky around it, the improved one a %s by %s area. It's effect on vampires can be temporarily boosted by right-clicking it with %s. When boosted it even blinds nearby vampire players.
 guide.vampirism.blocks.altar_inspiration.text=Used to level up as a vampire.
 guide.vampirism.blocks.blood_container.text=Can store a lot of blood. (Sneak-) Rightclick it with a blood bottle to put blood in or take blood out of it.

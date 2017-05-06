@@ -33,6 +33,15 @@ public class BalanceHunterSkills extends BalanceValues {
     public boolean INSTANT_KILL_SKILL_2_ONLY_NPC;
 
 
+    @DefaultInt(value = 0, comment = "The chunk radius a normal diffusor affects. 0 results in a one chunk area. Changing this only affects newly placed blocks", minValue = 0, maxValue = 5)
+    public int GARLIC_DIFFUSOR_NORMAL_DISTANCE;
+
+    @DefaultInt(value = 1, comment = "The chunk radius a enhanced diffusor affects. 1 results in a 3 by 3 chunk area", minValue = 0, maxValue = 5)
+    public int GARLIC_DIFFUSOR_ENHANCED_DISTANCE;
+
+    @DefaultInt(value = 2, comment = "The chunk radius a weak diffusor (only creative, only prevents spawns) affects. 2 results in a 5 by 5 chunk area", minValue = 0, maxValue = 5)
+    public int GARLIC_DIFFUSOR_WEAK_DISTANCE;
+
     /**
      * Creates a configuration for balance values
      *

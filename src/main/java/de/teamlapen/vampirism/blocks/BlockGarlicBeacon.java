@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.tileentity.TileGarlicBeacon;
@@ -22,6 +23,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 
@@ -59,8 +61,11 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
         if ((stack.getMetadata()) > 0) {
-            tooltip.add(UtilLib.translate(getUnlocalizedName() + "." + Type.fromId(stack.getMetadata()).getName()));
+            tooltip.add(TextFormatting.AQUA + UtilLib.translate(getUnlocalizedName() + "." + Type.fromId(stack.getMetadata()).getName()));
         }
+        tooltip.add(UtilLib.translateFormatted(getUnlocalizedName() + ".tooltip1"));
+        int c = 1 + 2 * (stack.getMetadata() == Type.IMPROVED.getId() ? Balance.hps.GARLIC_DIFFUSOR_ENHANCED_DISTANCE : (stack.getMetadata() == Type.WEAK.getId() ? Balance.hps.GARLIC_DIFFUSOR_WEAK_DISTANCE : Balance.hps.GARLIC_DIFFUSOR_NORMAL_DISTANCE));
+        tooltip.add(UtilLib.translateFormatted(getUnlocalizedName() + ".tooltip2", c, c));
     }
 
     @Override

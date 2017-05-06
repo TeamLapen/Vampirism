@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.tileentity;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.blocks.BlockGarlicBeacon;
+import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.block.state.IBlockState;
@@ -90,16 +91,16 @@ public class TileGarlicBeacon extends TileEntity implements ITickable {
     public void setType(BlockGarlicBeacon.Type type) {
         switch (type) {
             case WEAK:
-                r = 2;
+                r = Balance.hps.GARLIC_DIFFUSOR_WEAK_DISTANCE;
                 defaultStrength = EnumStrength.WEAK;
                 break;
             case NORMAL:
-                r = 1;
+                r = Balance.hps.GARLIC_DIFFUSOR_NORMAL_DISTANCE;
                 defaultStrength = EnumStrength.MEDIUM;
                 break;
             case IMPROVED:
                 defaultStrength = EnumStrength.MEDIUM;
-                r = 2;
+                r = Balance.hps.GARLIC_DIFFUSOR_ENHANCED_DISTANCE;
                 break;
         }
         strength = defaultStrength;
