@@ -153,6 +153,8 @@ tile.vampirism.garlicBeacon.improved=Improved
 tile.vampirism.garlicBeacon.weak=Weak
 tile.vampirism.garlicBeacon.already_fueled=Already fueled
 tile.vampirism.garlicBeacon.successfully_fueled=Successfully fueled
+tile.vampirism.garlicBeacon.tooltip1=Diffuses garlic particles.
+tile.vampirism.garlicBeacon.tooltip2=Affects a %s by %s chunk area.
 
 #ITEMS
 item.vampirism.hunterIntel.name=Hunter Intel

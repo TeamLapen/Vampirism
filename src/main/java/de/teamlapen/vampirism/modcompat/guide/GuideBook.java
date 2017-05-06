@@ -182,12 +182,12 @@ public class GuideBook {
         String altarOfInfusion = "§l" + ModBlocks.altarInfusion.getLocalizedName() + "§r\n§o" + UtilLib.translate(base + "leveling.infusion.reach") + "§r\n";
         altarOfInfusion += UtilLib.translateFormatted(base + "leveling.infusion.intro", ModBlocks.altarInfusion.getLocalizedName(), ModBlocks.altarPillar.getLocalizedName(), ModBlocks.altarTip.getLocalizedName());
         levelingPages.addAll(GuideHelper.addLinks(GuideHelper.pagesForLongText(altarOfInfusion), new ResourceLocation("guide.vampirism.blocks.altarInfusion")));
-        String blocks = "";
+        StringBuilder blocks = new StringBuilder();
         for (BlockAltarPillar.EnumPillarType t : BlockAltarPillar.EnumPillarType.values()) {
             if (t == BlockAltarPillar.EnumPillarType.NONE) continue;
-            blocks += t.fillerBlock.getLocalizedName() + "(" + t.getValue() + "),";
+            blocks.append(t.fillerBlock.getLocalizedName()).append("(").append(t.getValue()).append("),");
         }
-        levelingPages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "leveling.infusion.structure", blocks)));
+        levelingPages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "leveling.infusion.structure", blocks.toString())));
         String items = UtilLib.translate(ModItems.humanHeart.getUnlocalizedName() + ".name") + ", " + UtilLib.translate(ModItems.pureBlood.getUnlocalizedName() + ".name") + ", " + UtilLib.translate(ModItems.vampireBook.getUnlocalizedName() + ".name");
         levelingPages.addAll(GuideHelper.addLinks(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "leveling.infusion.items", items)), new ResourceLocation("guide.vampirism.items.humanHeart"), new ResourceLocation("guide.vampirism.items.pureBlood"), new ResourceLocation("guide.vampirism.items.vampireBook")));
         PageTable.Builder requirementsBuilder = new PageTable.Builder(5);
@@ -422,7 +422,9 @@ public class GuideBook {
         new ItemInfoBuilder(ModBlocks.weaponTable).craftable(WORKBENCH).build(entries);
         new ItemInfoBuilder(ModBlocks.bloodPotionTable).craftable(WORKBENCH).build(entries);
         new ItemInfoBuilder(ModBlocks.alchemicalCauldron).craftable(WORKBENCH).build(entries);
-        new ItemInfoBuilder(ModBlocks.garlicBeacon).setFormats(ModItems.purifiedGarlic.getLocalizedName()).setLinks(new ResourceLocation("guide.vampirism.items.itemGarlic"), new ResourceLocation("guide.vampirism.items.purified_garlic"), new ResourceLocation("guide.vampirism.items.holy_water_bottle")).craftableStacks(ModBlocks.garlicBeacon, WORKBENCH, new ItemStack(ModBlocks.garlicBeacon, 1, BlockGarlicBeacon.Type.IMPROVED.getId()), WORKBENCH, ModItems.garlicBeaconCore, ALCHEMICAL_CAULDRON, ModItems.garlicBeaconCoreImproved, ALCHEMICAL_CAULDRON).build(entries);
+        int cn = Balance.hps.GARLIC_DIFFUSOR_NORMAL_DISTANCE * 2 + 1;
+        int ce = Balance.hps.GARLIC_DIFFUSOR_ENHANCED_DISTANCE * 2 + 1;
+        new ItemInfoBuilder(ModBlocks.garlicBeacon).setFormats(cn, cn, ce, ce, ModItems.purifiedGarlic.getLocalizedName()).setLinks(new ResourceLocation("guide.vampirism.items.itemGarlic"), new ResourceLocation("guide.vampirism.items.purified_garlic"), new ResourceLocation("guide.vampirism.items.holy_water_bottle")).craftableStacks(ModBlocks.garlicBeacon, WORKBENCH, new ItemStack(ModBlocks.garlicBeacon, 1, BlockGarlicBeacon.Type.IMPROVED.getId()), WORKBENCH, ModItems.garlicBeaconCore, ALCHEMICAL_CAULDRON, ModItems.garlicBeaconCoreImproved, ALCHEMICAL_CAULDRON).build(entries);
 
         links.putAll(entries);
         return entries;
