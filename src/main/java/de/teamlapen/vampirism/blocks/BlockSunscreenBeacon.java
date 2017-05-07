@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.tileentity.TileSunscreenBeacon;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -29,7 +31,8 @@ public class BlockSunscreenBeacon extends VampirismBlockContainer {
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);
-        tooltip.add("Intended to be used by server admins");
+        tooltip.add(UtilLib.translate(getUnlocalizedName() + ".tooltip1"));
+        tooltip.add(UtilLib.translateFormatted(getUnlocalizedName() + ".tooltip2", Configs.sunscreen_beacon_distance));
     }
 
     @Override

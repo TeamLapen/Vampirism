@@ -37,7 +37,7 @@ public class Configs {
     public static boolean pvp_only_between_factions;
     public static boolean bat_mode_in_end;
     public static boolean unlock_all_skills;
-
+    public static int sunscreen_beacon_distance;
 
     public static int village_size;
     public static int village_density;
@@ -129,6 +129,7 @@ public class Configs {
         pvp_only_between_factions = main_config.getBoolean("pvp_only_between_factions", CATEGORY_GENERAL, false, "If PVP should only be allowed between factions. PVP has to be enabled in the server properties for this. Not guaranteed to always protect player from teammates");
         bat_mode_in_end = main_config.getBoolean("bat_mode_in_end", CATEGORY_GENERAL, false, "If vampires can convert to a bat in the end");
         unlock_all_skills = main_config.getBoolean("unlock_all_skills_at_max", CATEGORY_GENERAL, false, "CHEAT: If enabled, you will be able to unlock all skills at max level");
+        sunscreen_beacon_distance = main_config.getInt("sunscreen_beacon_distance", CATEGORY_GENERAL, 32, 1, Integer.MAX_VALUE, "Block radius, the sunscreen beacon affects");
 
         //Village
         village_modify = main_config.getBoolean("village_modify_gen", CATEGORY_VILLAGE, true, "Whether to modify village generation chance or not");
