@@ -565,9 +565,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 IBlockState state = player.getEntityWorld().getBlockState(player.bedLocation);
                 boolean bed = state.getBlock().isBed(state, player.getEntityWorld(), player.bedLocation, player);
                 if (!bed) {
-                    player.wakeUpPlayer(true, true, false);
+                    wakeUpPlayer(true, true, false);
                 } else if (!player.getEntityWorld().isDaytime()) {
-                    player.wakeUpPlayer(false, true, true);
+                    wakeUpPlayer(false, true, true);
                 }
             }
         } else if (this.sleepTimer > 0) {
@@ -820,7 +820,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             player.setPosition((double) ((float) bedLocation.getX() + 0.5F), (double) ((float) bedLocation.getY() + 0.6875F), (double) ((float) bedLocation.getZ() + 0.5F));
         }
 
-
+        player.capabilities.isFlying = false;
+        player.sendPlayerAbilities();
         sleepTimer = 0;
         sleepingInCoffin = true;
         player.noClip = true;
