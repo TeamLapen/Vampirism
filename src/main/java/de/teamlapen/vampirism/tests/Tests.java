@@ -54,7 +54,7 @@ public class Tests {
         FluidLib.drainContainerIntoTank(handler, bloodBottle2.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null));
         assert BloodHelper.getBlood(handler) < blood : "Failed to train from container into bottles";
         FluidLib.drainContainerIntoTank(bloodBottle1.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), handler);
-        //FluidLib.drainContainerIntoTank(bloodBottle2.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY,null),handler);
+        FluidLib.drainContainerIntoTank(bloodBottle2.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), handler);
         log("%d %d", BloodHelper.getBlood(handler), blood);
         assert BloodHelper.getBlood(handler) == blood : "Lost blood somewhere";
         return true;
