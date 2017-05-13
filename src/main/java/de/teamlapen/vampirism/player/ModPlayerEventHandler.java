@@ -30,6 +30,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
@@ -178,7 +179,11 @@ public class ModPlayerEventHandler {
                         event.setUseBlock(Event.Result.ALLOW);
                     }
                     if (convert) {
-                        heldStack.deserializeNBT(new ItemStack(ModItems.bloodBottle).serializeNBT());
+                        //Dangerous, but only solution I found so far
+                        //Changes the held stack while {@link NetHandlerPlayServer#processRightClickBlock} is running which has a hard reference to the old stack
+                        EnumHand hand = heldStack.equals(event.getEntityPlayer().getHeldItemMainhand()) ? EnumHand.MAIN_HAND : (heldStack.equals(event.getEntityPlayer().getHeldItemOffhand()) ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
+                        heldStack = new ItemStack(ModItems.bloodBottle);
+                        event.getEntityPlayer().setHeldItem(hand, heldStack);
                     }
                 }
             }
