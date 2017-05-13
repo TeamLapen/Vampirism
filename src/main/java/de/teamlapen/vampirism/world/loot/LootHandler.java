@@ -44,7 +44,7 @@ public class LootHandler {
     public boolean checkAndResetInsertedAll() {
         int i = injected;
         injected = 0;
-        return i == INJECTION_TABLES.size();
+        return i >= INJECTION_TABLES.size(); //Sponge loads the loot tables for all worlds at start. Which makes this test not work anyway.
     }
 
     @SubscribeEvent
