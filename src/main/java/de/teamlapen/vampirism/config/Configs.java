@@ -103,6 +103,7 @@ public class Configs {
         ((SundamageRegistry) VampirismAPI.sundamageRegistry()).resetConfiguredSundamgeDims();
         String[] sundamageDims = main_config.getStringList("sundamage_dims", CATEGORY_GENERAL, new String[0], "Specify if individual dimensions should have sundamage. Use e.g. '5:1' to enable sundamage for dimension 5 or '5:0' to disable it");
         for (String s : sundamageDims) {
+            if (s.isEmpty()) continue;
             String[] t = s.split(":");
             if (t.length != 2) {
                 VampirismMod.log.w(TAG, "Cannot understand sundamage dimension line '%s'. Missing separator", s);
@@ -113,7 +114,7 @@ public class Configs {
                 boolean type = Integer.valueOf(t[1]) != 0;
                 ((SundamageRegistry) VampirismAPI.sundamageRegistry()).specifyConfiguredSundamageForDim(dim, type);
             } catch (NumberFormatException e) {
-                VampirismMod.log.w(TAG, "Cannot understand sundamge dimension line '%s'. Failed to convert numbers", s);
+                VampirismMod.log.w(TAG, "Cannot understand sundamage dimension line '%s'. Failed to convert numbers", s);
                 continue;
             }
         }
