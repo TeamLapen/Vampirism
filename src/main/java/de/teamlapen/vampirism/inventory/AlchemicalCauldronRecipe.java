@@ -112,8 +112,8 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     @Nonnull
     @Override
     public ItemStack getDescriptiveFluidStack() {
-        if (descriptiveStack != null) return descriptiveStack;
-        if (fluidItem != null) return fluidItem;
+        if (!ItemStackUtil.isEmpty(descriptiveStack)) return descriptiveStack;
+        if (!ItemStackUtil.isEmpty(fluidItem)) return fluidItem;
         descriptiveStack = new ItemStack(Items.BUCKET);
         addFluidStackDescription(descriptiveStack, fluidStack);
         return descriptiveStack;
