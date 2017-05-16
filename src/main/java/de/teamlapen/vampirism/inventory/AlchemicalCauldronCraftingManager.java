@@ -128,7 +128,8 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
         liquidColors.put(item, color);
     }
 
-    private ItemStack getItemStackCopy(Object o) {
+    private @Nonnull
+    ItemStack getItemStackCopy(Object o) {
         if (o == null) return ItemStackUtil.getEmptyStack();
         if (o instanceof ItemStack) return ((ItemStack) o).copy();
         if (o instanceof Item) return new ItemStack((Item) o);

@@ -44,7 +44,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     private ItemStack descriptiveStack = ItemStackUtil.getEmptyStack();
 
 
-    AlchemicalCauldronRecipe(@Nonnull ItemStack output, ItemStack liquid, @Nullable ItemStack ingredient) {
+    AlchemicalCauldronRecipe(@Nonnull ItemStack output, ItemStack liquid, @Nonnull ItemStack ingredient) {
         if (liquid.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
             IFluidHandler handler = liquid.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
             FluidStack stack = handler.drain(Integer.MAX_VALUE, false);
@@ -68,7 +68,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
         this.output = output;
     }
 
-    AlchemicalCauldronRecipe(@Nonnull ItemStack output, FluidStack fluidStack, @Nullable ItemStack ingredient) {
+    AlchemicalCauldronRecipe(@Nonnull ItemStack output, FluidStack fluidStack, @Nonnull ItemStack ingredient) {
         this.fluidStack = fluidStack;
         this.fluidItem = ItemStackUtil.getEmptyStack();
         this.ingredient = ingredient;
@@ -112,8 +112,8 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     @Nonnull
     @Override
     public ItemStack getDescriptiveFluidStack() {
-        if (descriptiveStack != null) return descriptiveStack;
-        if (fluidItem != null) return fluidItem;
+        if (!ItemStackUtil.isEmpty(descriptiveStack)) return descriptiveStack;
+        if (!ItemStackUtil.isEmpty(fluidItem)) return fluidItem;
         descriptiveStack = new ItemStack(Items.BUCKET);
         addFluidStackDescription(descriptiveStack, fluidStack);
         return descriptiveStack;

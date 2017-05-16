@@ -21,7 +21,7 @@ public interface IAlchemicalCauldronCraftingManager {
      * Add a recipe.
      *
      * @param liquid     Item, ItemStack or FluidStack
-     * @param ingredient ItemStack (WILDCARD allowed), Item or Block
+     * @param ingredient ItemStack (WILDCARD allowed), Item or Block. If no ingredient is required, this can be null
      * @param output     ItemStack, Item or Block
      * @return This recipe for further configuration
      */

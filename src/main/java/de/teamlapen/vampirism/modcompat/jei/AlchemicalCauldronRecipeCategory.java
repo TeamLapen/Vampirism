@@ -19,7 +19,7 @@ public class AlchemicalCauldronRecipeCategory extends BlankRecipeCategory<Alchem
 
     private final String localizedName;
     private final IDrawable background;
-    private final ResourceLocation location = new ResourceLocation(REFERENCE.MODID, "textures/gui/alchemicalCauldron.png");
+    private final ResourceLocation location = new ResourceLocation(REFERENCE.MODID, "textures/gui/alchemical_cauldron.png");
 
     private final IDrawableAnimated flame;
     private final IDrawableAnimated arrow;
