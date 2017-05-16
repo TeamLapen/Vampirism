@@ -32,7 +32,7 @@ public class ItemHunterHat extends VampirismHunterArmor {
 
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-        return "vampirism:textures/entity/vampireHunterExtra.png";
+        return "vampirism:textures/entity/vampire_hunter_extra.png";
     }
 
 

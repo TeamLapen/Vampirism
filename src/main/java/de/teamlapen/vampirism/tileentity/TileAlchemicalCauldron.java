@@ -158,18 +158,18 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
             if (isOwner(player)) {
                 return true;
             } else {
-                player.sendMessage(new TextComponentTranslation("tile.vampirism.alchemicalCauldron.other", getOwnerName()));
+                player.sendMessage(new TextComponentTranslation("tile.vampirism.alchemical_cauldron.other", getOwnerName()));
                 return false;
             }
         }
-        player.sendMessage(new TextComponentTranslation("tile.vampirism.alchemicalCauldron.cannot_use", getOwnerName()));
+        player.sendMessage(new TextComponentTranslation("tile.vampirism.alchemical_cauldron.cannot_use", getOwnerName()));
         return false;
     }
 
     @Nonnull
     @Override
     public ITextComponent getDisplayName() {
-        return new TextComponentTranslation("tile.vampirism.alchemicalCauldron.display", getOwnerName(), new TextComponentTranslation("tile.vampirism.alchemicalCauldron.name"));
+        return new TextComponentTranslation("tile.vampirism.alchemical_cauldron.display", getOwnerName(), new TextComponentTranslation("tile.vampirism.alchemical_cauldron.name"));
     }
 
     @Override

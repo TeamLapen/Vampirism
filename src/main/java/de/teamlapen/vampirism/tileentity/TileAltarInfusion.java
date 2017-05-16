@@ -141,7 +141,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
 
     @Override
     public String getName() {
-        return "tile.vampirism.altarInfusion.name";
+        return "tile.vampirism.altar_infusion.name";
     }
 
     /**
