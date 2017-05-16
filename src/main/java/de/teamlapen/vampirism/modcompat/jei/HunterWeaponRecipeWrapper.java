@@ -12,6 +12,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -30,6 +32,7 @@ public abstract class HunterWeaponRecipeWrapper extends BlankRecipeWrapper {
         this.recipe = recipe;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
         if (recipe.getRequiredLavaUnits() > 0) {
