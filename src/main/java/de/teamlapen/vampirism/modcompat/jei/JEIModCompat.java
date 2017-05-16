@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.event.FMLStateEvent;
 public class JEIModCompat implements IModCompat {
     @Override
     public String getModID() {
-        return "JEI";
+        return "jei";
     }
 
     @Override
