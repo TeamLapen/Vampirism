@@ -295,8 +295,25 @@ gui.vampirism.alchemical_cauldron.level=Required Hunter Level: %s
 gui.vampirism.alchemical_cauldron.skill=Required Skill: %s
 
 #COMMANDS
-commands.vampirism.level.faction_not_found=Did not find faction %s
+command.vampirism.base.level.faction_not_found=Did not find faction %s
 commands.vampirism.failed_to_execute=Failed to execute command. Internal error.
+command.vampirism.base.reset_balance.success=Successfully reset %s balance category. Please restart MC.
+command.vampirism.base.reset_balance.not_found=Did not find %s balance category.
+command.vampirism.base.level.cant_leave=Cannot leave faction %s
+command.vampirism.base.eye.types=<id> has to be a valid number between 0 and %s
+command.vampirism.base.eye.success=Successfully changed eye type to %s
+command.vampirism.base.fang.types=<id> has to be a valid number between 0 and %s
+command.vampirism.base.fang.success=Successfully changed fang type to %s
+command.vampirism.base.vampire_biome.disabled=The Vampire Biome is disabled in the config file
+command.vampirism.base.vampire_biome.parse_dist=Failed to parse max distance. Using %s.
+command.vampirism.base.vampire_biome.time_warning=This will take a long time. Please use '/%s %s yes', if you are sure
+command.vampirism.base.vampire_biome.searching=Looking for a Vampire Forest Biome. Please wait
+command.vampirism.base.vampire_biome.not_found=No Vampire Forest Biome was found.
+command.vampirism.base.vampire_biome.found=Found a Vampire Forest Biome %s
+command.vampirism.base.debug.true=Enabled Debug Mode
+command.vampirism.base.debug.false=Disabled Debug Mode
+command.vampirism.test.gen_debug.true=Enabled Worldgen Debug
+command.vampirism.test.gen_debug.false=Disabled Worldgen Debug
 
 #ENCHANMENTS
 enchantment.vampirism.arrow_frugality=Arrow Frugality
@@ -376,9 +393,7 @@ text.vampirism.lord.portal_disabled=This portal does not lead anywhere
 text.vampirism.lord.level_to_low=You vampire level is too low to be a Vampire Lord
 text.vampirism.guard_stay_away_level_low=Your vampire level is too low to travel to Dracula's castle. Stay away\!
 text.vampirism.coffin.wrong_dimension=You can't sleep in this dimension.
-text.vampirism.biome.looking_for_biome=Looking for a Vampire Forest Biome. Please wait
-text.vampirism.biome.not_found=No Vampire Forest Biome was found.
-text.vampirism.biome.found=Found a Vampire Forest Biome
+
 text.vampirism.castle_fail=Vampirism was not able to find a appropriate position for a Vampire Castle. It is recommend to generate a new world. You can also try "/vampirism checkForVampireBiome", if that does not find a biome, another mod is probably interfering.
 text.vampirism.structure=Structure
 text.vampirism.pillar_blocks=Pillar Blocks

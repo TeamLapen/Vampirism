@@ -11,10 +11,7 @@ import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.command.CommandException;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.command.NumberInvalidException;
-import net.minecraft.command.WrongUsageException;
+import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.math.BlockPos;
@@ -28,9 +25,8 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import org.apache.commons.lang3.ArrayUtils;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -38,6 +34,7 @@ import java.util.Set;
  * Central command for this mod
  */
 public class VampirismCommand extends BasicCommand {
+
 
     public VampirismCommand() {
         if (VampirismMod.inDev) {
@@ -48,29 +45,10 @@ public class VampirismCommand extends BasicCommand {
         for (int i = 0; i < pfactions.length; i++) {
             pfaction_names[i] = pfactions[i].name();
         }
-        addSub(new SubCommand() {
-            @Override
-            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-                return (args.length == 1) ? getListOfStringsMatchingLastWord(args, getCategories()) : Collections.emptyList();
-            }
+        addSubcommand(new SubCommand(PERMISSION_LEVEL_ADMIN) {
 
             @Override
-            public boolean canSenderUseCommand(ICommandSender sender) {
-                return !FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer() || sender.canUseCommand(3, getCommandName());
-            }
-
-            @Override
-            public String getCommandName() {
-                return "resetBalance";
-            }
-
-            @Override
-            public String getCommandUsage(ICommandSender sender) {
-                return getCommandName() + " <all/[category]/help>";
-            }
-
-            @Override
-            public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
                 String cat;
                 if (args == null || args.length == 0) {
                     cat = "all";
@@ -80,13 +58,29 @@ public class VampirismCommand extends BasicCommand {
                 if ("help".equals(cat)) {
                     sender.sendMessage(new TextComponentString("You can reset Vampirism balance values to the default values. If you have not modified them, this is recommend after every update of Vampirism"));
                     sender.sendMessage(new TextComponentString("Use '/vampirism resetBalance all' to reset all categories or specify a category with '/vampirism resetBalance <category>' (Tab completion is supported)"));
+                    return;
                 }
                 boolean p = Balance.resetAndReload(cat);
                 if (p) {
-                    sender.sendMessage(new TextComponentString("Successfully reset " + cat + " balance category. Please restart MC."));
+                    notifyCommandListener(sender, this, "command.vampirism.base.reset_balance.success", cat);
                 } else {
-                    sender.sendMessage(new TextComponentString("Did not find " + cat + " balance category."));
+                    notifyCommandListener(sender, this, "command.vampirism.base.reset_balance.not_found", cat);
                 }
+            }
+
+            @Override
+            public String getName() {
+                return "resetBalance";
+            }
+
+            @Override
+            public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
+                return (args.length == 1) ? getListOfStringsMatchingLastWord(args, getCategories()) : java.util.Arrays.asList(getCategories());
+            }
+
+            @Override
+            public String getUsage(ICommandSender sender) {
+                return getName() + " <all/[category]/help>";
             }
 
             private String[] getCategories() {
@@ -97,33 +91,13 @@ public class VampirismCommand extends BasicCommand {
                 return result;
             }
         });
-        addSub(new SubCommand() {
+
+        addSubcommand(new SubCommand(PERMISSION_LEVEL_CHEAT) {
 
             @Override
-            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-                return args.length == 1 ? getListOfStringsMatchingLastWord(args, pfaction_names) : Collections.emptyList();
-            }
-
-            @Override
-            public boolean canSenderUseCommand(ICommandSender sender) {
-                return canCommandSenderUseCheatCommand(sender);
-            }
-
-            @Override
-            public String getCommandName() {
-                return "level";
-            }
-
-            @Override
-            public String getCommandUsage(ICommandSender sender) {
-
-                return getCommandName() + " " + ArrayUtils.toString(pfaction_names) + " <level> [<player>]";
-            }
-
-            @Override
-            public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 if (args.length < 2 || args.length > 3) {
-                    throw new WrongUsageException(getCommandUsage(sender));
+                    throw new WrongUsageException(getUsage(sender));
                 }
                 EntityPlayer player = args.length == 3 ? getPlayer(server, sender, args[2]) : getCommandSenderAsPlayer(sender);
                 int level;
@@ -138,8 +112,7 @@ public class VampirismCommand extends BasicCommand {
                         IPlayableFaction newFaction = pfactions[i];
                         FactionPlayerHandler handler = FactionPlayerHandler.get(player);
                         if (level == 0 && !handler.canLeaveFaction()) {
-                            sender.sendMessage(new TextComponentTranslation("text.vampirism.faction.cant_leave").appendSibling(new TextComponentString("(" + handler.getCurrentFaction().name() + ")")));
-                            return;
+                            throw new CommandException("command.vampirism.base.level.cant_leave", new TextComponentTranslation(handler.getCurrentFaction().getUnlocalizedName()));
                         }
                         if (level > newFaction.getHighestReachableLevel()) {
                             level = newFaction.getHighestReachableLevel();
@@ -148,117 +121,103 @@ public class VampirismCommand extends BasicCommand {
                             ITextComponent msg = player.getDisplayName().appendSibling(new TextComponentString(" is now a " + pfaction_names[i] + " level " + level));
                             FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().sendMessage(msg);
                         } else {
-                            sender.sendMessage(new TextComponentTranslation("text.vampirism.faction.failed_to_change"));
+                            throw new CommandException("commands.vampirism.failed_to_execute");
                         }
 
                         return;
                     }
                 }
-                throw new CommandException("commands.vampirism.level.faction_not_found", args[0]);
+                throw new CommandException("command.vampirism.base.level.faction_not_found", args[0]);
 
 
+            }
+
+            @Override
+            public String getName() {
+                return "level";
+            }
+
+            @Override
+            public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
+                return args.length == 1 ? getListOfStringsMatchingLastWord(args, pfaction_names) : java.util.Arrays.asList(pfaction_names);
+            }
+
+            @Override
+            public String getUsage(ICommandSender sender) {
+
+                return getName() + " " + ArrayUtils.toString(pfaction_names) + " <level> [<player>]";
             }
         });
-        addSub(new SubCommand() {
-            @Override
-            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-                return null;
-            }
+        addSubcommand(new SubCommand(0) {
+
 
             @Override
-            public boolean canSenderUseCommand(ICommandSender sender) {
-                return sender instanceof EntityPlayer;
-            }
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 
-            @Override
-            public String getCommandName() {
-                return "eye";
-            }
-
-            @Override
-            public String getCommandUsage(ICommandSender sender) {
-                return getCommandName() + " <id [0-" + (REFERENCE.EYE_TYPE_COUNT - 1) + "]> ";
-            }
-
-            @Override
-            public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-                EntityPlayer player = (EntityPlayer) sender;
+                EntityPlayer player = getCommandSenderAsPlayer(sender);
                 if (args.length != 1) {
-                    throw new WrongUsageException(getCommandUsage(sender));
+                    throw new WrongUsageException(getUsage(sender));
                 }
                 try {
                     int type = Integer.parseInt(args[0]);
                     if (!VampirePlayer.get(player).setEyeType(type)) {
-                        sendMessage(sender, "<id> has to be a valid number between 0 and " + (REFERENCE.EYE_TYPE_COUNT - 1));
+                        throw new NumberInvalidException("command.vampirism.base.eye.types", REFERENCE.EYE_TYPE_COUNT - 1);
                     }
+                    notifyCommandListener(sender, this, "command.vampirism.base.eye.success", type);
+
                 } catch (NumberFormatException e) {
                     throw new NumberInvalidException();
                 }
             }
+
+            @Override
+            public String getName() {
+                return "eye";
+            }
+
+            @Override
+            public String getUsage(ICommandSender sender) {
+                return getName() + " <id [0-" + (REFERENCE.EYE_TYPE_COUNT - 1) + "]> ";
+            }
         });
-        addSub(new SubCommand() {
-            @Override
-            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-                return null;
-            }
+        addSubcommand(new SubCommand(0) {
+
 
             @Override
-            public boolean canSenderUseCommand(ICommandSender sender) {
-                return sender instanceof EntityPlayer;
-            }
-
-            @Override
-            public String getCommandName() {
-                return "fang";
-            }
-
-            @Override
-            public String getCommandUsage(ICommandSender sender) {
-                return getCommandName() + " <id [0-" + (REFERENCE.FANG_TYPE_COUNT - 1) + "]> ";
-            }
-
-            @Override
-            public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-                EntityPlayer player = (EntityPlayer) sender;
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                EntityPlayer player = getCommandSenderAsPlayer(sender);
                 if (args.length != 1) {
-                    throw new WrongUsageException(getCommandUsage(sender));
+                    throw new WrongUsageException(getUsage(sender));
                 }
                 try {
                     int type = Integer.parseInt(args[0]);
                     if (!VampirePlayer.get(player).setFangType(type)) {
-                        sendMessage(sender, "<id> has to be a valid number between 0 and " + (REFERENCE.FANG_TYPE_COUNT - 1));
+                        throw new NumberInvalidException("command.vampirism.base.fang.types", REFERENCE.FANG_TYPE_COUNT - 1);
                     }
+                    notifyCommandListener(sender, this, "command.vampirism.base.fang.success", type);
                 } catch (NumberFormatException e) {
                     throw new NumberInvalidException();
                 }
             }
+
+            @Override
+            public String getName() {
+                return "fang";
+            }
+
+            @Override
+            public String getUsage(ICommandSender sender) {
+                return getName() + " <id [0-" + (REFERENCE.FANG_TYPE_COUNT - 1) + "]> ";
+            }
         });
 
-        addSub(new SubCommand() {
-            @Override
-            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-                return Collections.emptyList();
-            }
+        addSubcommand(new SubCommand(PERMISSION_LEVEL_ADMIN) {
+
 
             @Override
-            public boolean canSenderUseCommand(ICommandSender sender) {
-                return canCommandSenderUseCommand(sender, PERMISSION_LEVEL_FULL, getCommandName());
-            }
-
-            @Override
-            public String getCommandName() {
-                return "checkForVampireBiome";
-            }
-
-            @Override
-            public String getCommandUsage(ICommandSender sender) {
-                return getCommandName() + " <maxRadius in chunks>";
-            }
-
-            @Override
-            public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
                 if (Configs.disable_vampireForest) {
-                    sender.sendMessage(new TextComponentString("The Vampire Biome is disabled in the config file"));
+                    notifyCommandListener(sender, this, "command.vampirism.base.vampire_biome.disabled");
                 } else {
                     int maxDist = 150;
                     if (args.length > 0) {
@@ -266,52 +225,42 @@ public class VampirismCommand extends BasicCommand {
                             maxDist = Integer.parseInt(args[0]);
                         } catch (NumberFormatException e) {
                             VampirismMod.log.w("CheckVampireBiome", "Failed to parse max dist %s", args[0]);
-                            sender.sendMessage(new TextComponentString("Failed to parse max distance. Using " + maxDist));
+                            notifyCommandListener(sender, this, "command.vampirism.base.vampire_biome.parse_dist", maxDist);
                         }
                         if (maxDist > 500) {
-                            if (args.length > 1 && "yes".equals(args[1])) {
-
-                            } else {
-                                sender.sendMessage(new TextComponentString("This will take a long time. Please use '/" + getCommandUsage(sender) + " yes', if you are sure"));
+                            if (args.length <= 1 || !"yes".equals(args[1])) {
+                                notifyCommandListener(sender, this, "command.vampirism.base.vampire_biome.time_warning", getName(), maxDist);
                                 return;
                             }
                         }
                     }
                     List<Biome> biomes = new ArrayList<Biome>();
                     biomes.add(ModBiomes.vampireForest);
-                    sender.sendMessage(new TextComponentTranslation("text.vampirism.biome.looking_for_biome"));
+                    notifyCommandListener(sender, this, "command.vampirism.base.vampire_biome.searching");
                     ChunkPos pos = UtilLib.findNearBiome(sender.getEntityWorld(), (sender).getPosition(), maxDist, biomes, sender);
                     if (pos == null) {
-                        sender.sendMessage(new TextComponentTranslation("text.vampirism.biome.not_found"));
+                        notifyCommandListener(sender, this, "command.vampirism.base.vampire_biome.not_found");
                     } else {
-                        sender.sendMessage(new TextComponentTranslation("text.vampirism.biome.found").appendSibling(new TextComponentString("[" + (pos.chunkXPos << 4) + "," + (pos.chunkZPos << 4) + "]")));
+                        notifyCommandListener(sender, this, "command.vampirism.base.vampire_biome.found", new TextComponentString("[" + (pos.chunkXPos << 4) + "," + (pos.chunkZPos << 4) + "]"));
                     }
                 }
             }
+
+            @Override
+            public String getName() {
+                return "checkForVampireBiome";
+            }
+
+            @Override
+            public String getUsage(ICommandSender sender) {
+                return getName() + " <maxRadius in chunks>";
+            }
         });
-        addSub(new SubCommand() {
-            @Override
-            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-                return Collections.emptyList();
-            }
+        addSubcommand(new SubCommand(0) {
+
 
             @Override
-            public boolean canSenderUseCommand(ICommandSender sender) {
-                return true;
-            }
-
-            @Override
-            public String getCommandName() {
-                return "changelog";
-            }
-
-            @Override
-            public String getCommandUsage(ICommandSender sender) {
-                return getCommandName();
-            }
-
-            @Override
-            public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
                 if (!VampirismMod.instance.getVersionInfo().isNewVersionAvailable()) {
                     sender.sendMessage(new TextComponentString("There is no new version available"));
                     return;
@@ -329,66 +278,56 @@ public class VampirismCommand extends BasicCommand {
                 ITextComponent component = ITextComponent.Serializer.jsonToComponent(template);
                 sender.sendMessage(component);
             }
+
+            @Override
+            public String getName() {
+                return "changelog";
+            }
+
+            @Override
+            public String getUsage(ICommandSender sender) {
+                return getName();
+            }
         });
-        addSub(new SubCommand() {
-
-
-            @Override
-            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-                return Collections.emptyList();
-            }
+        addSubcommand(new SubCommand(0) {
 
             @Override
-            public boolean canSenderUseCommand(ICommandSender sender) {
-                return true;
-            }
-
-            @Override
-            public String getCommandName() {
-                return "currentDimension";
-            }
-
-            @Override
-            public String getCommandUsage(ICommandSender sender) {
-                return getCommandName();
-            }
-
-            @Override
-            public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) {
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) {
                 if (sender instanceof EntityPlayer) {
                     EntityPlayer p = (EntityPlayer) sender;
                     sender.sendMessage(new TextComponentString("Dimension ID: " + p.getEntityWorld().provider.getDimension()));
                 }
             }
+
+            @Override
+            public String getName() {
+                return "currentDimension";
+            }
+
+            @Override
+            public String getUsage(ICommandSender sender) {
+                return getName();
+            }
         });
-        addSub(new SubCommand() {
-            @Nonnull
+        addSubcommand(new SubCommand(PERMISSION_LEVEL_ADMIN) {
+
+
             @Override
-            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
-                return Collections.emptyList();
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                boolean enabled = VampirismMod.log.isDebug();
+                VampirismMod.log.setDebug(!enabled);
+                String msg = enabled ? "command.vampirism.base.debug.true" : "command.vampirism.base.debug.false";
+                notifyCommandListener(sender, this, msg);
             }
 
             @Override
-            public boolean canSenderUseCommand(ICommandSender sender) {
-                return !FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer() || sender.canUseCommand(3, getCommandName());
-            }
-
-            @Override
-            public String getCommandName() {
+            public String getName() {
                 return "debug";
             }
 
             @Override
-            public String getCommandUsage(ICommandSender sender) {
-                return getCommandName();
-            }
-
-            @Override
-            public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-                boolean enabled = VampirismMod.log.isDebug();
-                VampirismMod.log.setDebug(!enabled);
-                String msg = enabled ? "Disabled debug mode" : "Enabled debug mode";
-                sender.sendMessage(new TextComponentString(msg));
+            public String getUsage(ICommandSender sender) {
+                return getName();
             }
         });
     }
@@ -400,17 +339,26 @@ public class VampirismCommand extends BasicCommand {
     }
 
     @Override
-    protected boolean canCommandSenderUseCheatCommand(ICommandSender sender) {
-        if (VampirismMod.inDev) {
-            return true;
-        }
-        return super.canCommandSenderUseCheatCommand(sender);
+    public String getUsage(ICommandSender sender) {
+        return "/vampirism <sub>";
     }
 
-    protected boolean canCommandSenderUseCommand(ICommandSender sender, int perm, String command) {
-        if (VampirismMod.inDev) {
-            return true;
+
+    public abstract static class SubCommand extends CommandBase {
+        private final int perm;
+
+        private SubCommand(int perm) {
+            this.perm = perm;
         }
-        return sender.canUseCommand(perm, command);
+
+        @Override
+        public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+            return VampirismMod.inDev || super.checkPermission(server, sender);
+        }
+
+        @Override
+        public int getRequiredPermissionLevel() {
+            return perm;
+        }
     }
 }
