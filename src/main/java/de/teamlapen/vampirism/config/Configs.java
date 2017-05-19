@@ -100,7 +100,7 @@ public class Configs {
         realism_mode = main_config.getBoolean("vampire_realism_mode", CATEGORY_GENERAL, false, "Changes a few things and changes some default balance values to make it more 'realistic'. You have to reset the balance values and restart MC after changing this.");
         resetConfigurationInDev = main_config.getBoolean("reset_configuration_in_dev", CATEGORY_GENERAL, true, "Only relevant for developers");
         ((SundamageRegistry) VampirismAPI.sundamageRegistry()).setDefaultDimsSundamage(main_config.getBoolean("sundamage_default", CATEGORY_GENERAL, false, "Whether you should receive sundamge in unknown dimension or not"));
-        ((SundamageRegistry) VampirismAPI.sundamageRegistry()).resetConfiguredSundamgeDims();
+        ((SundamageRegistry) VampirismAPI.sundamageRegistry()).resetConfigurations();
         String[] sundamageDims = main_config.getStringList("sundamage_dims", CATEGORY_GENERAL, new String[0], "Specify if individual dimensions should have sundamage. Use e.g. '5:1' to enable sundamage for dimension 5 or '5:0' to disable it");
         for (String s : sundamageDims) {
             if (s.isEmpty()) continue;
@@ -118,7 +118,17 @@ public class Configs {
                 continue;
             }
         }
+        String[] sundamageDisabledBiomes = main_config.getStringList("sundamage_disabled_biomes", CATEGORY_GENERAL, new String[0], "Specifiy biomes in which players should not get sundamage. Use e.g. 'minecraft:mesa' to disable sundamage in Mesa biome. Use '/vampirism-test biome' to find out the current biome id");
+        for (String s : sundamageDisabledBiomes) {
+            if (s.isEmpty()) continue;
+            try {
+                ResourceLocation res = new ResourceLocation(s);
+                ((SundamageRegistry) VampirismAPI.sundamageRegistry()).addNoSundamageBiomeConfigured(res);
+            } catch (Exception e) {
+                VampirismMod.log.e(TAG, e, "Failed to parse no sundamage biome id %s", s);
+            }
 
+        }
 
         playerCanTurnPlayer = main_config.getBoolean("player_can_turn_player", CATEGORY_GENERAL, true, "If one player can bite infect a human player with sanguinare");
         renderVampireForestFog = main_config.getBoolean("vampire_forest_fog", CATEGORY_GENERAL, true, "");

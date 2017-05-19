@@ -33,7 +33,7 @@ public class ModBiomes {
 
         vampireForest = new BiomeGenVampireForest();
         vampireForest.setRegistryName(REFERENCE.MODID, "vampireForest");
-        VampirismAPI.sundamageRegistry().addNoSundamageBiome(vampireForest.getRegistryName());
+        VampirismAPI.sundamageRegistry().addNoSundamageBiome(vampireForest.getBiomeClass());
         GameRegistry.register(vampireForest);
         BiomeDictionary.addTypes(vampireForest, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY);
         if (!Configs.disable_vampireForest) {

@@ -231,6 +231,30 @@ public class TestCommand extends BasicCommand {
                 return getName();
             }
         });
+
+        addSubcommand(new SubCommand() {
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                EntityPlayer player = getCommandSenderAsPlayer(sender);
+                ResourceLocation res = player.getEntityWorld().getBiome(player.getPosition()).getRegistryName();
+                sender.sendMessage(new TextComponentString(res.toString()));
+            }
+
+            @Override
+            public String getName() {
+                return "biome";
+            }
+
+            @Override
+            public int getRequiredPermissionLevel() {
+                return 0;
+            }
+
+            @Override
+            public String getUsage(ICommandSender sender) {
+                return getName();
+            }
+        });
         addSubcommand(new SubCommand() {
 
 
