@@ -4,7 +4,10 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
+
+import javax.annotation.Nonnull;
 
 /**
  * Default Implementation of {@link IFactionPlayerHandler} for the entity capability which is never used, since a default implementation, does not accept constructor parameter.
@@ -48,12 +51,17 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
     }
 
     @Override
+    public EntityPlayer getPlayer() {
+        return null;
+    }
+
+    @Override
     public boolean isInFaction(IPlayableFaction f) {
         return false;
     }
 
     @Override
-    public void joinFaction(IPlayableFaction faction) {
+    public void joinFaction(@Nonnull IPlayableFaction faction) {
 
     }
 
@@ -68,7 +76,7 @@ class FactionPlayerHandlerDefaultImpl implements IFactionPlayerHandler {
     }
 
     @Override
-    public boolean setFactionLevel(IPlayableFaction faction, int level) {
+    public boolean setFactionLevel(@Nonnull IPlayableFaction faction, int level) {
         return false;
     }
 }

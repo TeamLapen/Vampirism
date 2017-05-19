@@ -85,7 +85,7 @@ public class BlockMedChair extends VampirismBlock {
         if (!ItemStackUtil.isEmpty(stack) && stack.getItem().equals(ModItems.injection) && stack.getMetadata() == ItemInjection.META_GARLIC) {
             IFactionPlayerHandler handler = VampirismAPI.getFactionPlayerHandler(playerIn);
             IPlayableFaction faction = handler.getCurrentFaction();
-            if (faction == null) {
+            if (handler.canJoin(faction)) {
                 if (worldIn.isRemote) {
                     VampirismMod.proxy.renderScreenFullColor(4, 30, 0xBBBBBBFF);
                 } else {
@@ -96,7 +96,7 @@ public class BlockMedChair extends VampirismBlock {
                 if (ItemStackUtil.isEmpty(stack)) {
                     playerIn.inventory.deleteStack(stack);
                 }
-            } else {
+            } else if (faction != null) {
                 if (!worldIn.isRemote) {
                     playerIn.sendMessage(new TextComponentTranslation("text.vampirism.med_chair_other_faction", new TextComponentTranslation(faction.getUnlocalizedName())));
                 }

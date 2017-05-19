@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity.factions;
 
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.DamageSource;
 
 import javax.annotation.Nonnull;
@@ -53,6 +54,11 @@ public interface IFactionPlayerHandler {
      * @return If the faction is active: The faction level, otherwise 0
      */
     int getCurrentLevel(IPlayableFaction f);
+
+    /**
+     * @return The player represented by this handler
+     */
+    EntityPlayer getPlayer();
 
     /**
      * @param f
