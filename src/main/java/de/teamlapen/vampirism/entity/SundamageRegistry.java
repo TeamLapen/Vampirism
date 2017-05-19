@@ -4,9 +4,11 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -17,7 +19,9 @@ public class SundamageRegistry implements ISundamageRegistry {
     private static final String TAG = "SundamageRegistry";
     private HashMap<Integer, Boolean> sundamageDims = new HashMap<>();
     private HashMap<Integer, Boolean> sundamageConfiguredDims = new HashMap<>();
-    private Set<ResourceLocation> noSundamageBiomes = new CopyOnWriteArraySet<>();
+    private Set<ResourceLocation> noSundamageBiomesIDs = new CopyOnWriteArraySet<>();
+    private Set<ResourceLocation> noSundamageConfiguredBiomesIDs = new CopyOnWriteArraySet<>();
+    private Set<Class<? extends Biome>> noSundamageBiomes = new CopyOnWriteArraySet<>();
     private boolean defaultSundamage = false;
 
     public SundamageRegistry() {
@@ -28,12 +32,33 @@ public class SundamageRegistry implements ISundamageRegistry {
 
     @Override
     public void addNoSundamageBiome(ResourceLocation registryName) {
-        noSundamageBiomes.add(registryName);
+        noSundamageBiomesIDs.add(registryName);
     }
 
     @Override
+    public void addNoSundamageBiome(Class<? extends Biome> clazz) {
+        noSundamageBiomes.add(clazz);
+    }
+
+    public void addNoSundamageBiomeConfigured(ResourceLocation id) {
+        noSundamageConfiguredBiomesIDs.add(id);
+    }
+
+    @Deprecated
+    @Override
     public boolean getSundamageInBiome(ResourceLocation registryName) {
-        return !noSundamageBiomes.contains(registryName);
+        return !noSundamageBiomesIDs.contains(registryName) && !noSundamageConfiguredBiomesIDs.contains(registryName);
+    }
+
+    @Override
+    public boolean getSundamageInBiome(@Nonnull Biome biome) {
+        if (!getSundamageInBiome(biome.getRegistryName())) return false;
+        for (Class<? extends Biome> clazz : noSundamageBiomes) {
+            if (clazz.isAssignableFrom(biome.getBiomeClass())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -50,9 +75,9 @@ public class SundamageRegistry implements ISundamageRegistry {
         if (nbt.hasKey("sundamage")) {
             NBTTagCompound sundamage = nbt.getCompoundTag("sundamage");
             defaultSundamage = sundamage.getBoolean("default");
-            sundamage.removeTag("default");
             sundamageConfiguredDims.clear();
-            for (String s : sundamage.getKeySet()) {
+            NBTTagCompound dimensions = sundamage.getCompoundTag("dimensions");
+            for (String s : dimensions.getKeySet()) {
                 try {
                     int dim = Integer.parseInt(s);
                     boolean value = sundamage.getBoolean(s);
@@ -61,14 +86,21 @@ public class SundamageRegistry implements ISundamageRegistry {
                     VampirismMod.log.e(TAG, "Failed to parse dimension id (%s) in update packet ", s);
                 }
             }
+            noSundamageConfiguredBiomesIDs.clear();
+            NBTTagCompound biomes = sundamage.getCompoundTag("biomes");
+            for (String s : biomes.getKeySet()) {
+                ResourceLocation res = new ResourceLocation(s);
+                addNoSundamageBiomeConfigured(res);
+            }
         }
     }
 
     /**
      * Resets the configured sundamage dims. E.G. on configuration reload
      */
-    public void resetConfiguredSundamgeDims() {
+    public void resetConfigurations() {
         sundamageConfiguredDims.clear();
+        noSundamageConfiguredBiomesIDs.clear();
     }
 
     /**
@@ -97,9 +129,16 @@ public class SundamageRegistry implements ISundamageRegistry {
 
     public void writeToNBTServer(NBTTagCompound nbt) {
         NBTTagCompound sundamage = new NBTTagCompound();
+        NBTTagCompound dimensions = new NBTTagCompound();
         for (Map.Entry<Integer, Boolean> entry : sundamageConfiguredDims.entrySet()) {
-            sundamage.setBoolean(entry.getKey().toString(), entry.getValue());
+            dimensions.setBoolean(entry.getKey().toString(), entry.getValue());
         }
+        sundamage.setTag("dimensions", dimensions);
+        NBTTagCompound biomes = new NBTTagCompound();
+        for (ResourceLocation s : noSundamageConfiguredBiomesIDs) {
+            biomes.setBoolean(s.toString(), true);
+        }
+        sundamage.setTag("biomes", biomes);
         sundamage.setBoolean("default", defaultSundamage);
         nbt.setTag("sundamage", sundamage);
     }

@@ -18,10 +18,10 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
+import net.minecraft.world.biome.Biome;
 
 
 public class Helper {
@@ -47,10 +47,9 @@ public class Helper {
                     BlockPos pos = new BlockPos(entity.posX + 0.5, entity.posY + 0, entity.posZ + 0.5);
 
                     if (canBlockSeeSun(entity.getEntityWorld(), pos)) {
-                        ResourceLocation biomeID = null;
                         try {
-                            biomeID = entity.getEntityWorld().getBiome(pos).getRegistryName();
-                            if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biomeID)) {
+                            Biome biome = entity.getEntityWorld().getBiome(pos);
+                            if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biome)) {
                                 entity.getEntityWorld().theProfiler.endSection();
                                 return true;
                             }
