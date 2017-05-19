@@ -21,7 +21,7 @@ public class SundamageRegistry implements ISundamageRegistry {
     private HashMap<Integer, Boolean> sundamageConfiguredDims = new HashMap<>();
     private Set<ResourceLocation> noSundamageBiomesIDs = new CopyOnWriteArraySet<>();
     private Set<ResourceLocation> noSundamageConfiguredBiomesIDs = new CopyOnWriteArraySet<>();
-    private Set<Class<? extends Biome>> noSundamageBiomes = new CopyOnWriteArraySet<>();
+    private Set<Class> noSundamageBiomes = new CopyOnWriteArraySet<>();
     private boolean defaultSundamage = false;
 
     public SundamageRegistry() {
@@ -36,12 +36,19 @@ public class SundamageRegistry implements ISundamageRegistry {
     }
 
     @Override
-    public void addNoSundamageBiome(Class<? extends Biome> clazz) {
+    public void addNoSundamageBiome(Class clazz) {
         noSundamageBiomes.add(clazz);
     }
 
     public void addNoSundamageBiomeConfigured(ResourceLocation id) {
         noSundamageConfiguredBiomesIDs.add(id);
+    }
+
+    @Override
+    public void addNoSundamageBiomes(Biome... biomes) {
+        for (Biome b : biomes) {
+            addNoSundamageBiome(b.getBiomeClass());
+        }
     }
 
     @Deprecated
@@ -53,7 +60,7 @@ public class SundamageRegistry implements ISundamageRegistry {
     @Override
     public boolean getSundamageInBiome(@Nonnull Biome biome) {
         if (!getSundamageInBiome(biome.getRegistryName())) return false;
-        for (Class<? extends Biome> clazz : noSundamageBiomes) {
+        for (Class clazz : noSundamageBiomes) {
             if (clazz.isAssignableFrom(biome.getBiomeClass())) {
                 return false;
             }
