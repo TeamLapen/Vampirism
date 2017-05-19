@@ -29,6 +29,8 @@ import de.teamlapen.vampirism.inventory.HunterWeaponCraftingManager;
 import de.teamlapen.vampirism.modcompat.GrimoireOfGaiaModCompat;
 import de.teamlapen.vampirism.modcompat.SophisticatedWolvesModCompat;
 import de.teamlapen.vampirism.modcompat.SpongeModCompat;
+import de.teamlapen.vampirism.modcompat.abyssalcraft.AbyssalCraftModCompat;
+import de.teamlapen.vampirism.modcompat.bop.BoPModCompat;
 import de.teamlapen.vampirism.modcompat.guide.GuideAPICompat;
 import de.teamlapen.vampirism.modcompat.jei.JEIModCompat;
 import de.teamlapen.vampirism.modcompat.waila.WailaModCompat;
@@ -125,7 +127,7 @@ public class VampirismMod {
     }
 
     private VersionChecker.VersionInfo versionInfo;
-    private ModCompatLoader modCompatLoader = new ModCompatLoader(REFERENCE.MODID + "/vampirism_mod_compat");
+    private ModCompatLoader modCompatLoader = new ModCompatLoader(REFERENCE.MODID + "/vampirism_mod_compat.cfg");
 
     public VampirismMod() {
         addModCompats();
@@ -246,6 +248,8 @@ public class VampirismMod {
         modCompatLoader.addModCompat(new GuideAPICompat());
         modCompatLoader.addModCompat(new GrimoireOfGaiaModCompat());
         modCompatLoader.addModCompat(new SophisticatedWolvesModCompat());
+        modCompatLoader.addModCompat(new AbyssalCraftModCompat());
+        modCompatLoader.addModCompat(new BoPModCompat());
     }
 
     private void checkDevEnv() {
