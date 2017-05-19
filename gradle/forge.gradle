@@ -14,6 +14,14 @@ repositories {
         name = "LocalForge"
         url = "../../MinecraftForge/repo/"
     }
+    maven {
+        name = "CurseForge"
+        url = "https://minecraft.curseforge.com/api/maven/"
+    }
+    maven {
+        name 'shinoow'
+        url 'https://dl.bintray.com/shinoow/maven/'
+    }
     mavenCentral()
 }
 
@@ -34,6 +42,13 @@ dependencies {
     runtime "mezz.jei:jei_" + config.minecraft_version + ":" + config.jei_version
     deobfCompile 'mcp.mobius.waila:Waila:' + config.waila_version
     deobfCompile 'info.amerifrance.guideapi:Guide-API:' + config.guide_api_version
+
+    deobfCompile 'com.github.glitchfiend.biomesoplenty:BiomesOPlenty:'+config.minecraft_version+'-'+config.biomesoplenty_version+':api'
+    //runtime 'com.github.glitchfiend.biomesoplenty:BiomesOPlenty:'+config.minecraft_version+'-'+config.biomesoplenty_version+':universal'
+
+    deobfCompile 'com.shinoow.abyssalcraft:AbyssalCraft:'+config.minecraft_version+'-'+config.abyssalcraft_version+':api'
+    //runtime 'com.shinoow.abyssalcraft:AbyssalCraft:'+config.minecraft_version+'-'+config.abyssalcraft_version+':dev'
+
 }
 
 minecraft {
