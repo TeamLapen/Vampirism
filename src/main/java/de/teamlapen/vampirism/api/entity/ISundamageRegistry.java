@@ -19,9 +19,17 @@ public interface ISundamageRegistry {
      * Register a biome by class in which no sundamage applies to vampires
      * Also affects subclasses
      *
-     * @param clazz
+     * @param clazz Biome class or interface
      */
-    void addNoSundamageBiome(Class<? extends Biome> clazz);
+    void addNoSundamageBiome(Class clazz);
+
+    /**
+     * Register a biome by instance in which no sundamage applies to vampires.
+     * Also effects subclasses of given biomes
+     *
+     * @param biomes
+     */
+    void addNoSundamageBiomes(Biome... biomes);
 
     /**
      * Checkd if vampirs can get sundamage in that biome
