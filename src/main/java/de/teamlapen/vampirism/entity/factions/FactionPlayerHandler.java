@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.event.FactionEvent;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.player.EntityPlayer;
@@ -16,7 +17,9 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSource;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -78,7 +81,12 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
     @Override
     public boolean canJoin(IPlayableFaction faction) {
-        return currentFaction == null;
+        FactionEvent.CanJoinFaction event = new FactionEvent.CanJoinFaction(this, currentFaction, faction);
+        MinecraftForge.EVENT_BUS.post(event);
+        if (event.getResult() == Event.Result.DEFAULT) {
+            return currentFaction == null;
+        }
+        return event.getResult() == Event.Result.ALLOW;
     }
 
     @Override
@@ -117,6 +125,11 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     @Override
     public int getCurrentLevel(IPlayableFaction f) {
         return isInFaction(f) ? currentLevel : 0;
+    }
+
+    @Override
+    public EntityPlayer getPlayer() {
+        return player;
     }
 
     @Override
@@ -200,14 +213,19 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
                 return false;
             }
         }
+        if (faction != null && (level < 0 || level > faction.getHighestReachableLevel())) {
+            VampirismMod.log.w(TAG, "Level %d in faction %s cannot be reached", level, faction.getKey());
+            return false;
+        }
+        FactionEvent.ChangeLevelOrFaction event = new FactionEvent.ChangeLevelOrFaction(this, old, oldLevel, faction, faction == null ? 0 : level);
+        if (MinecraftForge.EVENT_BUS.post(event)) {
+            VampirismMod.log.d(TAG, "Faction or Level change event canceled");
+            return false;
+        }
         if (faction == null) {
             currentFaction = null;
             currentLevel = 0;
         } else {
-            if (level < 0 || level > faction.getHighestReachableLevel()) {
-                VampirismMod.log.w(TAG, "Level %d in faction %s cannot be reached", level, faction.getKey());
-                return false;
-            }
             currentFaction = faction;
             currentLevel = level;
         }
