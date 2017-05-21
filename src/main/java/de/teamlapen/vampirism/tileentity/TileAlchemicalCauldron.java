@@ -388,7 +388,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         }
 
         if (!worldObj.isRemote) {
-            if (isBurning() || isStackInSlot(SLOT_LIQUID) && isStackInSlot(SLOT_INGREDIENT) && isStackInSlot(SLOT_FUEL)) {
+            if (isBurning() || isStackInSlot(SLOT_LIQUID) && isStackInSlot(SLOT_FUEL)) {
                 if (!isBurning() && canCook()) {
                     this.burnTime = TileEntityFurnace.getItemBurnTime(getStackInSlot(SLOT_FUEL));
                     if (isBurning()) {
