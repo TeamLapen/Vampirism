@@ -87,7 +87,7 @@ public class BlockAltarInspiration extends VampirismBlockContainer {
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         ItemStack stack = playerIn.getHeldItem(hand);
         if (!ItemStackUtil.isEmpty(stack) && !worldIn.isRemote) {
-            if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
+            if (FluidLib.hasFluidItemCap(stack)) {
                 TileAltarInspiration tileEntity = (TileAltarInspiration) worldIn.getTileEntity(pos);
                 if (!playerIn.isSneaking()) {
                     FluidLib.drainContainerIntoTank(stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null));
