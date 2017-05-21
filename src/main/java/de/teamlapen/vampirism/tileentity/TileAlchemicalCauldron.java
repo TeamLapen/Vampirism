@@ -34,6 +34,7 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -394,7 +395,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         }
 
         if (!world.isRemote) {
-            if (isBurning() || isStackInSlot(SLOT_LIQUID) && isStackInSlot(SLOT_INGREDIENT) && isStackInSlot(SLOT_FUEL)) {
+            if (isBurning() || isStackInSlot(SLOT_LIQUID) && isStackInSlot(SLOT_FUEL)) {
                 if (!isBurning() && canCook()) {
                     this.burnTime = TileEntityFurnace.getItemBurnTime(getStackInSlot(SLOT_FUEL));
                     if (isBurning()) {
@@ -504,8 +505,9 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
                 ItemStack fluidContainer = getStackInSlot(SLOT_LIQUID);
                 FluidStack s = recipe.isValidFluidItem(fluidContainer);
                 if (s != null) {
-                    IFluidHandler handler = FluidLib.getFluidItemCap(fluidContainer);
+                    IFluidHandlerItem handler = (IFluidHandlerItem) FluidLib.getFluidItemCap(fluidContainer);
                     handler.drain(s, true);
+                    setInventorySlotContents(SLOT_LIQUID, handler.getContainer());
                 } else {
                     VampirismMod.log.w("AlchemicalCauldron", "Cooked item without valid input liquid (Recipe %s, Input %s)", recipe, fluidContainer);
                 }

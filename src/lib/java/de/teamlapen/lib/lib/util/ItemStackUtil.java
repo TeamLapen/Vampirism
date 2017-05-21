@@ -89,7 +89,7 @@ public class ItemStackUtil {
      * True if A !=null and B == null
      */
     public static boolean doesStackContain(@Nonnull ItemStack stackA, @Nonnull ItemStack stackB) {
-        return !stackA.isEmpty() && (stackB.isEmpty() || (areStacksEqualIgnoreAmount(stackA, stackB) && stackA.getCount() >= stackB.getCount()));
+        return (stackB.isEmpty() || !stackA.isEmpty() && (areStacksEqualIgnoreAmount(stackA, stackB) && stackA.getCount() >= stackB.getCount()));
     }
 
     /**
