@@ -22,6 +22,10 @@ repositories {
         name 'shinoow'
         url 'https://dl.bintray.com/shinoow/maven/'
     }
+    maven {
+        name 'maxanier'
+        url 'https://maxanier.de/maven2'
+    }
     mavenCentral()
 }
 
@@ -35,7 +39,6 @@ task crowdin(type: CrowdinDownload) {
     if (project.hasProperty('CROWDIN_KEY'))
         apiKey = project.CROWDIN_KEY
 }
-
 
 dependencies {
     deobfCompile "mezz.jei:jei_" + config.minecraft_version + ":" + config.jei_version + ":api"
