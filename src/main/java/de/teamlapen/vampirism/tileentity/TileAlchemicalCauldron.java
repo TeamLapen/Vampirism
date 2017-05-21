@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.tileentity;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.tile.InventoryTileEntity;
+import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.util.ISoundReference;
 import de.teamlapen.vampirism.VampirismMod;
@@ -32,7 +33,6 @@ import net.minecraft.world.WorldServer;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
@@ -63,8 +63,8 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
      */
     private static int getLiquidColor(ItemStack s) {
         if (s != null) {
-            if (s.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
-                IFluidHandler handler = s.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+            if (FluidLib.hasFluidItemCap(s)) {
+                IFluidHandler handler = FluidLib.getFluidItemCap(s);
                 FluidStack fluid = handler.drain(10000, false);
                 if (fluid != null) {
 
@@ -504,7 +504,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
                 ItemStack fluidContainer = getStackInSlot(SLOT_LIQUID);
                 FluidStack s = recipe.isValidFluidItem(fluidContainer);
                 if (s != null) {
-                    IFluidHandler handler = fluidContainer.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+                    IFluidHandler handler = FluidLib.getFluidItemCap(fluidContainer);
                     handler.drain(s, true);
                 } else {
                     VampirismMod.log.w("AlchemicalCauldron", "Cooked item without valid input liquid (Recipe %s, Input %s)", recipe, fluidContainer);

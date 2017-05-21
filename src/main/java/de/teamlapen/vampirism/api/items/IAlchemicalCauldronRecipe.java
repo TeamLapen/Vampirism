@@ -86,10 +86,10 @@ public interface IAlchemicalCauldronRecipe {
     ISkill<IHunterPlayer>[] getRequiredSkills();
 
     /**
-     * Checks if the given stack has a {@link CapabilityFluidHandler#FLUID_HANDLER_CAPABILITY} and contains the required fluid, if so it returns the required Fluid Stack otherwise null.
+     * Checks if the given stack has a {@link CapabilityFluidHandler#FLUID_HANDLER_ITEM_CAPABILITY} and contains the required fluid, if so it returns the required Fluid Stack otherwise null.
      *
      * @param stack may be EMPTY
-     * @return If nonnull the ItemStack has a {@link CapabilityFluidHandler#FLUID_HANDLER_CAPABILITY} and contains the required (and returned) fluid.
+     * @return If nonnull the ItemStack has a {@link CapabilityFluidHandler#FLUID_HANDLER_ITEM_CAPABILITY} and contains the required (and returned) fluid.
      */
     @Nullable
     FluidStack isValidFluidItem(@Nonnull ItemStack stack);
@@ -101,7 +101,7 @@ public interface IAlchemicalCauldronRecipe {
     FluidStack isValidFluidStack(FluidStack stack);
 
     /**
-     * Used for items without {@link CapabilityFluidHandler#FLUID_HANDLER_CAPABILITY}
+     * Used for items without {@link CapabilityFluidHandler#FLUID_HANDLER_ITEM_CAPABILITY}
      *@param stack may be EMPTY
      * @return If the given stack contains the required 'liquid' item stack
      */

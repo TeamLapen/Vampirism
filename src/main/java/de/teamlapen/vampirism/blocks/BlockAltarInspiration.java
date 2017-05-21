@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.tileentity.TileAltarInspiration;
 import de.teamlapen.vampirism.world.VampirismWorldData;
@@ -96,7 +97,7 @@ public class BlockAltarInspiration extends VampirismBlockContainer {
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         ItemStack stack = playerIn.getHeldItem(hand);
         if (!ItemStackUtil.isEmpty(stack) && !worldIn.isRemote) {
-            if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
+            if (FluidLib.hasFluidItemCap(stack)) {
                 TileAltarInspiration tileEntity = (TileAltarInspiration) worldIn.getTileEntity(pos);
                 if (!playerIn.isSneaking()) {
                     FluidActionResult result = FluidUtil.tryEmptyContainer(stack, tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), Integer.MAX_VALUE, playerIn, true);

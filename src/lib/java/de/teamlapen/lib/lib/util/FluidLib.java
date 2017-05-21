@@ -1,7 +1,11 @@
 package de.teamlapen.lib.lib.util;
 
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -31,6 +35,14 @@ public class FluidLib {
      */
     public static boolean areFluidStacksIdentical(@Nullable FluidStack stackA, @Nullable FluidStack stackB) {
         return stackA == null && stackB == null || ((stackA != null && stackB != null) && stackA.isFluidStackIdentical(stackB));
+    }
+
+    public static boolean hasFluidItemCap(@Nonnull ItemStack stack) {
+        return stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
+    }
+
+    public static IFluidHandler getFluidItemCap(@Nonnull ItemStack stack) {
+        return stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null);
     }
 
 }

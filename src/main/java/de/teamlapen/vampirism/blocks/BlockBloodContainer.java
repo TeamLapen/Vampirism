@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.block.PropertyStringUnlisted;
+import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -109,7 +110,7 @@ public class BlockBloodContainer extends VampirismBlockContainer {
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (!worldIn.isRemote) {
             ItemStack stack = playerIn.getHeldItem(hand);
-            if (!ItemStackUtil.isEmpty(stack) && stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY, null)) {
+            if (!ItemStackUtil.isEmpty(stack) && FluidLib.hasFluidItemCap(stack)) {
                 TileBloodContainer bloodContainer = (TileBloodContainer) worldIn.getTileEntity(pos);
                 IFluidHandler source = bloodContainer.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
                 if (playerIn.isSneaking()) {

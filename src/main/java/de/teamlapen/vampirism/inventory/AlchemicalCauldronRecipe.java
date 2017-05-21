@@ -15,7 +15,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
 import javax.annotation.Nonnull;
@@ -45,8 +44,8 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
 
 
     AlchemicalCauldronRecipe(@Nonnull ItemStack output, ItemStack liquid, @Nonnull ItemStack ingredient) {
-        if (liquid.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
-            IFluidHandler handler = liquid.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+        if (FluidLib.hasFluidItemCap(liquid)) {
+            IFluidHandler handler = FluidLib.getFluidItemCap(liquid);
             FluidStack stack = handler.drain(Integer.MAX_VALUE, false);
             if (stack != null) {
                 VampirismMod.log.d("AlchemicalCauldron", "Replaced %s liquid item with %s fluid stack", liquid, stack);
@@ -152,8 +151,8 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     @Override
     public FluidStack isValidFluidItem(@Nonnull ItemStack stack) {
         if (fluidStack == null) return null;
-        if (stack.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
-            IFluidHandler handler = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+        if (FluidLib.hasFluidItemCap(stack)) {
+            IFluidHandler handler = FluidLib.getFluidItemCap(stack);
             FluidStack drained = handler.drain(fluidStack, false);
             if (drained == null || !drained.isFluidStackIdentical(fluidStack)) {
                 return null;
