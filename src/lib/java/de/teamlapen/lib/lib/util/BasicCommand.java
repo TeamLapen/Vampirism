@@ -26,8 +26,8 @@ public abstract class BasicCommand extends CommandTreeBase {
     }
 
 
-
-
-
-
+    @Override
+    public int getRequiredPermissionLevel() {
+        return 0;
+    }
 }

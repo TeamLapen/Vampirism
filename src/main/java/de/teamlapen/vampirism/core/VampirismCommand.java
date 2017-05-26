@@ -353,7 +353,7 @@ public class VampirismCommand extends BasicCommand {
 
         @Override
         public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
-            return VampirismMod.inDev || super.checkPermission(server, sender);
+            return VampirismMod.inDev || sender.canUseCommand(getRequiredPermissionLevel(), "vampirism." + getName());
         }
 
         @Override
