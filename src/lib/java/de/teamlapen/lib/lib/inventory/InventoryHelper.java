@@ -46,7 +46,7 @@ public class InventoryHelper {
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack stack = inventory.getStackInSlot(i);
             if (!ItemStackUtil.isEmpty(stack) && amounts[i] > 0) {
-                stack = ItemStackUtil.grow(stack, amounts[i]);
+                stack = ItemStackUtil.grow(stack, -amounts[i]);
                 if (ItemStackUtil.isEmpty(stack)) {
                     inventory.removeStackFromSlot(i);
                 }
