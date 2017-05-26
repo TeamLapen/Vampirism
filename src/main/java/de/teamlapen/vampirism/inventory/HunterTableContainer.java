@@ -80,6 +80,8 @@ public class HunterTableContainer extends InventoryContainer {
             missing = checkItems(req[0], req[1], req[2], req[3]);
             if (missing == null) {
                 slotResult.inventory.setInventorySlotContents(0, new ItemStack(ModItems.hunterIntel, 1, levelingConf.getHunterIntelMetaForLevel(hunterLevel + 1)));
+            } else {
+                slotResult.inventory.setInventorySlotContents(0, null);
             }
         }
     }
