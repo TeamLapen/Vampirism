@@ -21,6 +21,9 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
+import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -100,14 +103,38 @@ public class ModEntityEventHandler {
                 }
             }
         }
-        if (event.getEntity() instanceof EntityCreeper) {
-            ((EntityCreeper) event.getEntity()).tasks.addTask(3, new EntityAIAvoidEntity<>((EntityCreeper) event.getEntity(), EntityPlayer.class, new Predicate<EntityPlayer>() {
-                @Override
-                public boolean apply(@Nullable EntityPlayer input) {
-                    return VampirePlayer.get(input).getSpecialAttributes().avoided_by_creepers;
+
+        //Creeper AI changes for AvoidedByCreepers Skill
+        if (!event.getWorld().isRemote) {
+            if (event.getEntity() instanceof EntityCreeper) {
+                ((EntityCreeper) event.getEntity()).tasks.addTask(3, new EntityAIAvoidEntity<>((EntityCreeper) event.getEntity(), EntityPlayer.class, new Predicate<EntityPlayer>() {
+                    @Override
+                    public boolean apply(@Nullable EntityPlayer input) {
+                        return input != null && VampirePlayer.get(input).getSpecialAttributes().avoided_by_creepers;
+                    }
+                }, 20, 1.1, 1.3));
+
+                EntityAIBase target = null;
+                for (EntityAITasks.EntityAITaskEntry t : ((EntityCreeper) event.getEntity()).targetTasks.taskEntries) {
+                    if (t.action instanceof EntityAINearestAttackableTarget && t.priority == 1) {
+                        target = t.action;
+                    }
                 }
-            }, 15, 1.1, 1.3));
+                if (target != null) {
+                    ((EntityCreeper) event.getEntity()).targetTasks.removeTask(target);
+                    ((EntityCreeper) event.getEntity()).targetTasks.addTask(1, new EntityAINearestAttackableTarget<>((EntityCreeper) event.getEntity(), EntityPlayer.class, 10, true, false, new Predicate<EntityPlayer>() {
+                        @Override
+                        public boolean apply(@Nullable EntityPlayer input) {
+                            return input != null && !VampirePlayer.get(input).getSpecialAttributes().avoided_by_creepers;
+                        }
+                    }));
+                } else {
+                    VampirismMod.log.w("EntityEventHandler", "Could not replace creeper target task");
+                }
+            }
         }
+        //------------------
+
         if (event.getEntity() instanceof IMinionLordWithSaveable) {
             ((IMinionLordWithSaveable) event.getEntity()).getSaveableMinionHandler().addLoadedMinions();
         }
