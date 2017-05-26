@@ -90,6 +90,9 @@ public class RenderHandler {
         this.mc = mc;
         this.displayHeight = mc.displayHeight;
         this.displayWidth = mc.displayWidth;
+        if (OpenGlHelper.areShadersSupported()) {
+            VampirismMod.log.w(TAG, "Shaders are not supported, Blood vision won't work");
+        }
     }
 
     @SubscribeEvent
@@ -389,7 +392,7 @@ public class RenderHandler {
 
             } catch (IOException | JsonSyntaxException ioexception) {
 
-                VampirismMod.log.t("Failed to load shader: {%s,%s}", resourcelocationOutline, ioexception);
+                VampirismMod.log.e(TAG, ioexception, "Failed to load shader: {%s}", resourcelocationOutline);
                 this.bloodVisionShader1 = null;
                 this.bloodVisionFrameBuffer1 = null;
                 this.bloodVisionShader2 = null;
