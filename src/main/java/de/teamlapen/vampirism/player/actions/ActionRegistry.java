@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.player.actions;
 
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableBiMap;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
@@ -45,7 +46,12 @@ public class ActionRegistry implements IActionRegistry {
     }
 
     public ImmutableBiMap<String, IAction> getActionMapForFaction(IPlayableFaction faction) {
-        return actionMap.get(faction);
+        ImmutableBiMap<String, IAction> map = actionMap.get(faction);
+        if (map == null) {
+            VampirismMod.log.w("ActionRegistry", "Gathering action map before post init has finished");
+            return ImmutableBiMap.copyOf(HashBiMap.<String, IAction>create());
+        }
+        return map;
     }
 
     @Override
