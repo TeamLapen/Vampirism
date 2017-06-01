@@ -7,7 +7,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Provides an interface to sync entities
+ * Provides an interface to sync entities (Subclasses of EntityLiving)
  */
 public interface ISyncable {
     /**

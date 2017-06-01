@@ -34,7 +34,7 @@ public class RequestPlayerUpdatePacket implements IMessage {
 
         @Override
         public IMessage handleServerMessage(EntityPlayer player, RequestPlayerUpdatePacket message, MessageContext ctx) {
-            return UpdateEntityPacket.createJoinWorldPacket(player);
+            return UpdateEntityPacket.createJoinWorldPacket(player).markAsPlayerItself();
         }
 
         @Override
