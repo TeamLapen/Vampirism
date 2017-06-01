@@ -56,6 +56,37 @@ public class TestCommand extends BasicCommand {
 
             @Override
             public boolean canSenderUseCommand(ICommandSender sender) {
+                return canCommandSenderUseCommand(sender, 0, getCommandName());
+            }
+
+            @Override
+            public String getCommandName() {
+                return "marker";
+            }
+
+            @Override
+            public String getCommandUsage(ICommandSender sender) {
+                return getCommandName();
+            }
+
+            @Override
+            public void processCommand(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                VampirismMod.log.t("************************************************************");
+                VampirismMod.log.t("");
+                VampirismMod.log.t("Marker %s");
+                if (args.length > 0) VampirismMod.log.t(joinNiceString(args));
+                VampirismMod.log.t("");
+                VampirismMod.log.t("***********************************************************");
+            }
+        });
+        addSub(new SubCommand() {
+            @Override
+            public List addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+                return null;
+            }
+
+            @Override
+            public boolean canSenderUseCommand(ICommandSender sender) {
                 return canCommandSenderUseCommand(sender, PERMISSION_LEVEL_ADMIN, getCommandName());
             }
 
