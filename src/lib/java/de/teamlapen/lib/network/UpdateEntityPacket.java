@@ -19,6 +19,7 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -127,7 +128,13 @@ public class UpdateEntityPacket implements IMessage {
         return packet;
     }
 
-    public static UpdateEntityPacket createJoinWorldPacket(Entity entity) {
+    /**
+     * Create a packet that contains all relevant information the client needs to know about a newly joined entity.
+     *
+     * @return If nothing to update -> null
+     */
+    public static @Nullable
+    UpdateEntityPacket createJoinWorldPacket(Entity entity) {
         List<ISyncable.ISyncableEntityCapabilityInst> capsToSync = null;
         Collection<Capability> allCaps = null;
         if (entity instanceof EntityCreature) {
@@ -164,6 +171,7 @@ public class UpdateEntityPacket implements IMessage {
     private int id;
     private NBTTagCompound data;
     private NBTTagCompound caps;
+    private boolean playerItself = false;
 
     /**
      * Dont use
@@ -182,6 +190,14 @@ public class UpdateEntityPacket implements IMessage {
         if (tag.hasKey("caps")) {
             caps = tag.getCompoundTag("caps");
         }
+        if (tag.hasKey("itself")) {
+            playerItself = tag.getBoolean("itself");
+        }
+    }
+
+    public UpdateEntityPacket markAsPlayerItself() {
+        playerItself = true;
+        return this;
     }
 
     @Override
@@ -193,6 +209,9 @@ public class UpdateEntityPacket implements IMessage {
         }
         if (caps != null) {
             tag.setTag("caps", caps);
+        }
+        if (playerItself) {
+            tag.setBoolean("itself", true);
         }
         ByteBufUtils.writeTag(buf, tag);
     }
@@ -208,7 +227,12 @@ public class UpdateEntityPacket implements IMessage {
             Entity e = player.getEntityWorld().getEntityByID(message.id);
             if (e == null) {
                 VampLib.log.e(TAG, "Did not find entity %s", message.id);
-                return null;
+                if (message.playerItself) {
+                    VampLib.log.e(TAG, "Message is meant for player itself, but id mismatch %s %s. Loading anyway.", player.getEntityId(), message.id);
+                    e = player;
+                } else {
+                    return null;
+                }
             }
 
             if (message.data != null) {
