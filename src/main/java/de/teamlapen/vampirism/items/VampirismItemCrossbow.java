@@ -89,7 +89,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @return The itemstack of the arrows or null
      */
     protected
-    @Nullable
+    @Nonnull
     ItemStack findAmmo(EntityPlayer player, ItemStack bowStack) {
         if (this.isArrow(player.getHeldItem(EnumHand.OFF_HAND))) {
             return player.getHeldItem(EnumHand.OFF_HAND);
@@ -104,7 +104,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
                 }
             }
 
-            return null;
+            return ItemStack.EMPTY;
         }
     }
 
@@ -129,7 +129,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
     /**
      * Can be overridden to use other items as arrows. Could cause problems though.
      */
-    protected boolean isArrow(@Nullable ItemStack stack) {
+    protected boolean isArrow(@Nonnull ItemStack stack) {
         return !ItemStackUtil.isEmpty(stack) && stack.getItem() instanceof ItemCrossbowArrow;
     }
 
