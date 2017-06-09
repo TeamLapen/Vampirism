@@ -43,11 +43,28 @@ apply from: 'gradle/deploy.gradle'
 
 sourceSets
         {
-            main
-                    {
-                        java { srcDirs = ["$projectDir/src/main/java", "$projectDir/src/lib/java"] } resources {
-                            srcDirs = ["$projectDir/src/main/resources", "$projectDir/src/lib/resources"]
-                        }
+            main {
+                java {
+                        srcDirs = ["$projectDir/src/main/java", "$projectDir/src/lib/java"] }
+                resources {
+                        srcDirs = ["$projectDir/src/main/resources", "$projectDir/src/lib/resources"]
                     }
+            }
+            api {
+                java {
+                    srcDir "$projectDir/src/api/java"
+                }
+                resources {
+                    srcDir "$projectDir/src/api/resources"
+                }
+            }
+            test {
+                java {
+                    srcDir "$projectDir/src/test/java"
+                }
+                resources {
+                    srcDir "$projectDir/src/test/resources"
+                }
+            }
 
-        }
+}

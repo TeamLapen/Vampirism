@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
+import de.teamlapen.vampirism.api.items.IVampirismCrossbow;
 import de.teamlapen.vampirism.core.ModEnchantments;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModSounds;
@@ -27,7 +28,7 @@ import java.util.Random;
 /**
  * Base class for crossbows
  */
-public abstract class VampirismItemCrossbow extends VampirismItem implements IFactionLevelItem<IHunterPlayer> {
+public abstract class VampirismItemCrossbow extends VampirismItem implements IFactionLevelItem<IHunterPlayer>, IVampirismCrossbow {
 
     private int enchantability = 0;
 
