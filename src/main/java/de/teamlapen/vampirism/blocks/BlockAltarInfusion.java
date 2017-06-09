@@ -76,7 +76,7 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
         else if (!ItemStackUtil.isEmpty(heldItem) || result == -4) {
             if (te.getCurrentPhase() != TileAltarInfusion.PHASE.NOT_RUNNING) {
                 playerIn.sendMessage(new TextComponentTranslation("text.vampirism.ritual_still_running"));
-                return false;
+                return true;
             }
             playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_ALTAR_INFUSION, worldIn, pos.getX(), pos.getY(), pos.getZ());
             return true;
