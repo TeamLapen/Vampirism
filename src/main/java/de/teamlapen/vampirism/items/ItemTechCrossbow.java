@@ -19,6 +19,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,7 +33,8 @@ import java.util.Random;
  */
 public class ItemTechCrossbow extends ItemSimpleCrossbow {
 
-    public static final int MAX_ARROW_COUNT = 12;
+    public static final int MAX_ARROW_COUNT = 24;
+    public static final int MAG_SIZE = 12;
 
     /**
      * @return The loaded arrows or -1 if infinite
@@ -103,6 +106,7 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
         super(regName, speed, cooldown, maxDamage);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         super.addInformation(stack, playerIn, tooltip, advanced);
@@ -169,7 +173,7 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
             assert !ItemStackUtil.isEmpty(arrowPackage) : "Empty arrow stack package";
             this.crossbowItem = crossbowItem;
             this.arrowPackage = arrowPackage;
-            loadedCrossbow = getLoadedItemStack(crossbowItem);
+            loadedCrossbow = ItemTechCrossbow.getLoadedItemStack(crossbowItem);
         }
 
         @Nullable
@@ -183,12 +187,13 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
                         if (this.crossbowItem.equals(itemstack.getItem())) {
                             ItemStack result = loadedCrossbow.copy();
                             result.setItemDamage(itemstack.getItemDamage());
+                            ItemTechCrossbow.setArrowsLeft(result, ItemTechCrossbow.getArrowsLeft(itemstack) + MAG_SIZE);
                             return result;
                         }
                     }
                 }
             }
-            return loadedCrossbow.copy();
+            return ItemStackUtil.getEmptyStack();
         }
 
         @Nonnull
@@ -226,7 +231,7 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
                         boolean flag = false;
 
                         if (!crossbow && this.crossbowItem.equals(itemstack.getItem())) {
-                            if (getArrowsLeft(itemstack) == 0) {
+                            if (getArrowsLeft(itemstack) < MAX_ARROW_COUNT) {
                                 crossbow = true;
                                 flag = true;
                             }
