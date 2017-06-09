@@ -191,7 +191,7 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
             return loadedCrossbow.copy();
         }
 
-        @Nullable
+        @Nonnull
         @Override
         public ItemStack getRecipeOutput() {
             return loadedCrossbow;
@@ -204,7 +204,14 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
 
         @Override
         public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
-            return NonNullList.create();
+            NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+
+            for (int i = 0; i < nonnulllist.size(); ++i) {
+                ItemStack itemstack = inv.getStackInSlot(i);
+                nonnulllist.set(i, net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack));
+            }
+
+            return nonnulllist;
         }
 
         @Override
