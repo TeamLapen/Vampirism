@@ -1,7 +1,9 @@
 package de.teamlapen.vampirism.player;
 
+import com.google.common.base.Throwables;
 import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -59,9 +61,14 @@ public class ModPlayerEventHandler {
     @SubscribeEvent
     public void onAttachCapability(AttachCapabilitiesEvent.Entity event) {
         if (event.getEntity() instanceof EntityPlayer) {
-            event.addCapability(REFERENCE.FACTION_PLAYER_HANDLER_KEY, FactionPlayerHandler.createNewCapability((EntityPlayer) event.getEntity()));
-            event.addCapability(REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.createNewCapability((EntityPlayer) event.getEntity()));
-            event.addCapability(REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.createNewCapability((EntityPlayer) event.getEntity()));
+            try {
+                event.addCapability(REFERENCE.FACTION_PLAYER_HANDLER_KEY, FactionPlayerHandler.createNewCapability((EntityPlayer) event.getEntity()));
+                event.addCapability(REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.createNewCapability((EntityPlayer) event.getEntity()));
+                event.addCapability(REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.createNewCapability((EntityPlayer) event.getEntity()));
+            } catch (Exception e) {
+                VampirismMod.log.e("ModPlayerEventHandler", "Failed to attach capabilities to player. Player: %s", event.getEntity());
+                Throwables.propagate(e);
+            }
         }
     }
 

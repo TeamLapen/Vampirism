@@ -57,6 +57,27 @@ public class TestCommand extends BasicCommand {
             aliases.add("vtest");
         }
         addSubcommand(new SubCommand() {
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                VampirismMod.log.t("************************************************************");
+                VampirismMod.log.t("");
+                VampirismMod.log.t("Marker %s");
+                if (args.length > 0) VampirismMod.log.t(joinNiceString(args));
+                VampirismMod.log.t("");
+                VampirismMod.log.t("***********************************************************");
+            }
+
+            @Override
+            public String getName() {
+                return "marker";
+            }
+
+            @Override
+            public String getUsage(ICommandSender sender) {
+                return getName();
+            }
+        });
+        addSubcommand(new SubCommand() {
 
 
             @Override
