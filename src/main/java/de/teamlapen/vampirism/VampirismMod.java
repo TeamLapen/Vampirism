@@ -94,7 +94,7 @@ public class VampirismMod {
      * Use the instance in {@link VReference} instead of this one.
      * This is only here to init it as early as possible
      */
-    private final static EnumCreatureType HUNTER_CREATURE_TYPE = EnumHelper.addCreatureType("VAMPIRISM_HUNTER", IHunter.class, 30, Material.AIR, false, false);
+    private final static EnumCreatureType HUNTER_CREATURE_TYPE = EnumHelper.addCreatureType("VAMPIRISM_HUNTER", IHunter.class, 25, Material.AIR, false, false);
     /**
      * Vampire creatures are of this creature type.
      * Use the instance in {@link VReference} instead of this one.
