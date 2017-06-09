@@ -15,8 +15,8 @@ import net.minecraft.item.ItemStack;
 public class EnchantmentCrossbowInfinite extends Enchantment {
     public EnchantmentCrossbowInfinite(Rarity rarityIn) {
         super(rarityIn, VReference.CROSSBOW_ENCHANTMENT, new EntityEquipmentSlot[]{EntityEquipmentSlot.MAINHAND});
-        this.setName("arrowInfinite");
-        this.setRegistryName(REFERENCE.MODID, "crossbowInfinite");
+        this.setName("arrow_infinite");
+        this.setRegistryName(REFERENCE.MODID, "crossbowinfinite");
 
     }
 
