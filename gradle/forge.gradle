@@ -1,8 +1,8 @@
 repositories {
-    maven { // The repo from which to get waila
-        name "Mobius Repo"
-        url "http://mobiusstrip.eu/maven"
-    }
+    //maven {
+    //    name "Mobius Repo"
+    //    url "http://mobiusstrip.eu/maven"
+    //}
     maven { url 'http://tehnut.info/maven/' }
     maven { url 'http://chickenbones.net/maven' }
     maven {
@@ -89,6 +89,8 @@ jar {
     //Keep the jar as clean as possible
     includeEmptyDirs = false
 
+    from sourceSets.main.output
+    from sourceSets.api.output
 
     dependsOn 'crowdin'
     def translations = zipTree(crowdin.output).matching {
