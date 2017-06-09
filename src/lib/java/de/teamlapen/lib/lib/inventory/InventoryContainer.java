@@ -7,6 +7,7 @@ import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -51,6 +52,7 @@ public class InventoryContainer extends Container {
 
     }
 
+    @Nonnull
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
         ItemStack stack = ItemStackUtil.getEmptyStack();
@@ -63,12 +65,12 @@ public class InventoryContainer extends Container {
             // merges the item into player inventory since its in the tileEntity
             if (slot < tile.getSlots().length) {
                 if (!this.mergeItemStack(stackInSlot, tile.getSlots().length, tile.getSlots().length + 36, true)) {
-                    return null;
+                    return ItemStackUtil.getEmptyStack();
                 }
             }
             // places it into the tileEntity is possible since its in the player inventory
             else if (!this.mergeItemStack(stackInSlot, 0, tile.getSlots().length, false)) {
-                return null;
+                return ItemStackUtil.getEmptyStack();
             }
 
             if (ItemStackUtil.getCount(stack) == 0) {

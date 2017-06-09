@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * Container to handle crafting in the hunter weapon crafting table
@@ -103,7 +103,7 @@ public class HunterWeaponTableContainer extends Container {
         this.craftResult.setInventorySlotContents(0, HunterWeaponCraftingManager.getInstance().findMatchingRecipeResult(this.craftMatrix, this.world, hunterPlayer.getLevel(), hunterPlayer.getSkillHandler(), lava));
     }
 
-    @Nullable
+    @Nonnull
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
         ItemStack itemstack = ItemStackUtil.getEmptyStack();
         Slot slot = this.inventorySlots.get(index);
@@ -113,20 +113,20 @@ public class HunterWeaponTableContainer extends Container {
             itemstack = itemstack1.copy();
             if (index == 0) {
                 if (!this.mergeItemStack(itemstack1, 17, 53, true)) {
-                    return null;
+                    return ItemStackUtil.getEmptyStack();
                 }
 
                 slot.onSlotChange(itemstack1, itemstack);
             } else if (index >= 17 && index < 44) {
                 if (!this.mergeItemStack(itemstack1, 44, 53, false)) {
-                    return null;
+                    return ItemStackUtil.getEmptyStack();
                 }
             } else if (index >= 44 && index < 53) {
                 if (!this.mergeItemStack(itemstack1, 17, 44, false)) {
-                    return null;
+                    return ItemStackUtil.getEmptyStack();
                 }
             } else if (!this.mergeItemStack(itemstack1, 17, 53, false)) {
-                return null;
+                return ItemStackUtil.getEmptyStack();
             }
 
             if (ItemStackUtil.isEmpty(itemstack)) {
