@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.config;
 
 import de.teamlapen.lib.lib.config.BalanceValues;
+import de.teamlapen.lib.lib.config.DefaultBoolean;
 import de.teamlapen.lib.lib.config.DefaultDouble;
 import de.teamlapen.lib.lib.config.DefaultInt;
 import de.teamlapen.vampirism.VampirismMod;
@@ -35,6 +36,9 @@ public class BalanceVampireSkills extends BalanceValues {
 
     @DefaultInt(value = 1600, minValue = 5, comment = "How far the blood vision reaches (Squared distance, so for 20 blocks enter 400)")
     public int BLOOD_VISION_DISTANCE_SQUARED;
+
+    @DefaultBoolean(value = false, comment = "Disables the effect of 'Avoided by creepers' if it causes problems. Still can be unlocked though.")
+    public boolean DISABLE_AVOIDED_BY_CREEPERS;
 
     public BalanceVampireSkills(File directory) {
         super("vampire_player_skills", directory);
