@@ -209,7 +209,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onRenderWorldLast(RenderWorldLastEvent event) {
-        if (screenPercentage > 0 && !Configs.disable_vampire_overlay) {
+        if (screenPercentage > 0 && !Configs.disable_screen_overlay) {
             //Set the working matrix/layer to a layer directly on the screen/in front of the player
             ScaledResolution scaledresolution = new ScaledResolution(this.mc);
             // int factor=scaledresolution.getScaleFactor();
