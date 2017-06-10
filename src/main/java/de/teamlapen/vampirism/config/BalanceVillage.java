@@ -31,7 +31,7 @@ public class BalanceVillage extends BalanceValues {
     @DefaultInt(value = 210, minValue = 1, comment = "As of which aggressive counter value, villagers become aggressive")
     public int AGGRESSIVE_COUNTER_THRESHOLD;
 
-    @DefaultInt(value = 2, minValue = 1, comment = "If a village becomes aggressive this is the chance for a valid villager to turn into a hunter (1/n)")
+    @DefaultInt(value = 4, minValue = 1, comment = "If a village becomes aggressive this is the chance for a valid villager to turn into a hunter (1/n)")
     public int VILLAGER_HUNTER_CHANCE;
 
     @DefaultDouble(value = 0.4, minValue = 0, comment = "The number of hunters that should be in a village (approximately) per door. (There are around 0.35 villager per door)")

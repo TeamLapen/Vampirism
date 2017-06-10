@@ -3,11 +3,13 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.world.IVampirismVillageProvider;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterVillager;
 import de.teamlapen.vampirism.player.skills.SkillRegistry;
@@ -18,6 +20,7 @@ import de.teamlapen.vampirism.util.VampireBookManager;
 import de.teamlapen.vampirism.world.GarlicChunkHandler;
 import de.teamlapen.vampirism.world.VampirismWorldData;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
+import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -25,6 +28,7 @@ import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemMap;
@@ -56,6 +60,54 @@ public class TestCommand extends BasicCommand {
         if (VampirismMod.inDev) {
             aliases.add("vtest");
         }
+        addSubcommand(new SubCommand() {
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                EntityPlayer player = getCommandSenderAsPlayer(sender);
+                IVampirismVillageProvider provider = VampirismAPI.getVampirismVillageProvider(player.getEntityWorld());
+                VampirismVillage v = (VampirismVillage) provider.getNearestVillage(player);
+                if (v == null) {
+                    sender.sendMessage(new TextComponentString("No village found"));
+                } else {
+                    sender.sendMessage(new TextComponentString(v.makeDebugString(player.getPosition())));
+
+                }
+            }
+
+            @Override
+            public String getName() {
+                return "info-village";
+            }
+
+            @Override
+            public String getUsage(ICommandSender sender) {
+                return getName();
+            }
+        });
+        addSubcommand(new SubCommand() {
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                EntityPlayer player = getCommandSenderAsPlayer(sender);
+                int entityMonster = player.getEntityWorld().countEntities(EnumCreatureType.MONSTER, false);
+                int entityMonsterSpawn = player.getEntityWorld().countEntities(EnumCreatureType.MONSTER, true);
+                int entityHunter = player.getEntityWorld().countEntities(VReference.HUNTER_CREATURE_TYPE, false);
+                int entityHunterSpawn = player.getEntityWorld().countEntities(VReference.HUNTER_CREATURE_TYPE, true);
+                int entityVampire = player.getEntityWorld().countEntities(VReference.VAMPIRE_CREATURE_TYPE, false);
+                int entityVampireSpawn = player.getEntityWorld().countEntities(VReference.VAMPIRE_CREATURE_TYPE, true);
+                sender.sendMessage(new TextComponentString(String.format("Monster: %s (%s), Hunter: %s (%s), Vampire: %s (%s)", entityMonster, entityMonsterSpawn, entityHunter, entityHunterSpawn, entityVampire, entityVampireSpawn)));
+
+            }
+
+            @Override
+            public String getName() {
+                return "info-entity";
+            }
+
+            @Override
+            public String getUsage(ICommandSender sender) {
+                return getName();
+            }
+        });
         addSubcommand(new SubCommand() {
             @Override
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
