@@ -19,6 +19,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
@@ -63,6 +64,7 @@ public class EntityHunterVillager extends EntityVillagerVampirism implements IHu
 
     public EntityHunterVillager(World worldIn) {
         super(worldIn);
+        ((PathNavigateGround) getNavigator()).setEnterDoors(true);
     }
 
     @Override

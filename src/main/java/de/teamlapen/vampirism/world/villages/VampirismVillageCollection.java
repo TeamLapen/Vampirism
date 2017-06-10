@@ -57,7 +57,7 @@ public class VampirismVillageCollection extends WorldSavedData implements IVampi
     public
     @Nullable
     VampirismVillage getNearestVillage(Entity e) {
-        return this.getNearestVillage(e.getPosition(), 5);
+        return this.getNearestVillage(e.getPosition(), 10);
     }
 
     @Override

@@ -120,7 +120,7 @@ entity.vampirism.blinding_bat.name=Bat
 entity.vampirism.dracula.name=Dracula
 entity.vampirism.dead_mob.name=Dead mob
 entity.vampirism.portal_guard.name=Portal Guard
-entity.vampirism.converted.villager.name=Vampire Villager
+entity.vampirism.converted_villager.name=Vampire Villager
 text.vampirism.entity_level=Level
 entity._villager.vampire_hunter=Alchemic Priest
 

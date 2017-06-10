@@ -15,15 +15,13 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.village.Village;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Vampirism's instance of a village
@@ -53,8 +51,7 @@ public class VampirismVillage implements IVampirismVillage {
         double d0 = Double.MAX_VALUE;
         VillageAggressorVampire aggressorVampire = null;
 
-        for (int i = 0; i < this.villageAggressorVampires.size(); ++i) {
-            VillageAggressorVampire vampire = this.villageAggressorVampires.get(i);
+        for (VillageAggressorVampire vampire : this.villageAggressorVampires) {
             double d1 = vampire.aggressorEntity.getDistanceSqToEntity(entityCenter);
 
             if (d1 <= d0) {
@@ -89,6 +86,28 @@ public class VampirismVillage implements IVampirismVillage {
             return null;
         }
         return v;
+    }
+
+    public String makeDebugString(BlockPos pos) {
+        Village v = getVillage();
+        if (v == null) {
+            return "MC Village does not exist" + getCenter();
+        } else {
+            StringBuilder builder = new StringBuilder();
+            builder.append("Center: ").append(getCenter().toString());
+            builder.append("\nIs inside: ").append(v.isBlockPosWithinSqVillageRadius(pos)).append(" (").append(getBoundingBox().isVecInside(new Vec3d(pos))).append(')');
+            builder.append("\n").append(String.format("RBitten: %s, RConv: %s, RBDeath: %s, Agrr: %s", recentlyBitten, recentlyConverted, recentlyBittenToDeath, agressive));
+            List<EntityVillager> allVillagers = getAllVillager(v);
+            List<EntityBasicHunter> hunters = getHunter(v);
+            List<EntityHunterVillager> hunterVillagers = filterHunterVillagers(allVillagers);
+            List<EntityVillager> normalVillager = filterNormalVillagers(allVillagers);
+            builder.append("\n").append(String.format("Stats: Doors: %s, Aggro: %s, v: %s, vh: %s, h: %s", v.getNumVillageDoors(), calculateAggressiveCounter(), normalVillager.size(), hunterVillagers.size(), hunters.size()));
+            int hunterCount = hunters.size() + hunterVillagers.size() / 2;
+            boolean spawn = hunterCount < (Balance.village.MIN_HUNTER_COUNT_VILLAGE_PER_DOOR * v.getNumVillageDoors() + 1);
+            builder.append("\nShould Spawn: ").append(hunterCount).append('(').append(spawn).append(')');
+            builder.append("\nAgressors: ").append(villageAggressorVampires.toString());
+            return builder.toString();
+        }
     }
 
     @Override
@@ -188,6 +207,7 @@ public class VampirismVillage implements IVampirismVillage {
                 if (aggressiveCounter >= Balance.village.AGGRESSIVE_COUNTER_THRESHOLD) {
                     if (!agressive) {
                         spawnVillager(v);
+                        Collections.shuffle(normalVillager);
                         makeAgressive(selectVillagersToBecomeHunter(normalVillager));
                     }
                 } else if (agressive && aggressiveCounter < (Balance.village.AGGRESSIVE_COUNTER_THRESHOLD / 2 + 1)) {
@@ -310,12 +330,10 @@ public class VampirismVillage implements IVampirismVillage {
         agressive = true;
         dirty = true;
         for (EntityVillager v : villagers) {
-            if (world.rand.nextInt(4) == 0) {
                 EntityHunterVillager hunter = EntityHunterVillager.makeHunter(v);
                 v.getEntityWorld().spawnEntity(hunter);
                 v.setDead();
 
-            }
         }
     }
 
@@ -410,6 +428,14 @@ public class VampirismVillage implements IVampirismVillage {
             this.aggressorEntity = aggressorEntity;
             this.aggressorVampire = aggressorVampire;
             this.agressionTime = agressionTime;
+        }
+
+        @Override
+        public String toString() {
+            return "VillageAggressorVampire{" +
+                    "aggressorEntity=" + aggressorEntity +
+                    ", agressionTime=" + agressionTime +
+                    '}';
         }
     }
 }
