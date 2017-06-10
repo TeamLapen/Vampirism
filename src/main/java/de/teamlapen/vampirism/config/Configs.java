@@ -53,7 +53,7 @@ public class Configs {
     public static boolean updated_vampirism;
     public static boolean disable_vampireEyes;
     public static boolean disable_config_sync;
-    public static boolean disable_vampire_overlay;
+    public static boolean disable_screen_overlay;
 
     public static boolean autoConvertGlasBottles;
     private static Configuration main_config;
@@ -162,7 +162,7 @@ public class Configs {
         disable_advancedMobPlayerFaces = main_config.getBoolean("disable_advanced_mob_player_face", CATEGORY_DISABLE, false, "Disable the rendering of other player faces for the advanced hunter and advanced vampire");
         disable_vampireEyes = main_config.getBoolean("disable_vampire_player_eyes", CATEGORY_DISABLE, false, "Disables the rendering of vampire eyes");
         disable_config_sync = main_config.getBoolean("disable_config_sync", CATEGORY_DISABLE, false, "Disable syncing config between server and client. (Note: Only a few settings are synced anyway)");
-        disable_vampire_overlay = main_config.getBoolean("disable_hud_overlay", CATEGORY_DISABLE, false, "disable HUD overlay if they cause problems.");
+        disable_screen_overlay = main_config.getBoolean("disable_screen_overlay", CATEGORY_DISABLE, false, "Disable the colored overlay (sunindicator, disguise or rage)  if they cause problems.");
 
         updated_vampirism = !main_config.getDefinedConfigVersion().equals(main_config.getLoadedConfigVersion());
 
