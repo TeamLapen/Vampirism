@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.player.skills.VampirismSkill;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.util.text.TextFormatting;
 
 /**
  * Registers the default vampire skills
@@ -253,6 +254,14 @@ public class VampireSkills {
             @Override
             public String getID() {
                 return "1creeper";
+            }
+
+            @Override
+            public String getLocalizedDescription() {
+                if (Balance.vps.DISABLE_AVOIDED_BY_CREEPERS) {
+                    return TextFormatting.RED + "Disabled by admin" + TextFormatting.RESET;
+                }
+                return super.getLocalizedDescription();
             }
 
             @Override

@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLordWithSaveable;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.blocks.BlockCastleBlock;
+import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.inventory.BloodPotionTableContainer;
@@ -105,7 +106,7 @@ public class ModEntityEventHandler {
         }
 
         //Creeper AI changes for AvoidedByCreepers Skill
-        if (!event.getWorld().isRemote) {
+        if (!event.getWorld().isRemote && !Balance.vps.DISABLE_AVOIDED_BY_CREEPERS) {
             if (event.getEntity() instanceof EntityCreeper) {
                 ((EntityCreeper) event.getEntity()).tasks.addTask(3, new EntityAIAvoidEntity<>((EntityCreeper) event.getEntity(), EntityPlayer.class, new Predicate<EntityPlayer>() {
                     @Override
