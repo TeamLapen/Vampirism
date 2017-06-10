@@ -199,7 +199,7 @@ public class TestCommand extends BasicCommand {
 
             @Override
             public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
-                return sender instanceof EntityPlayer ? (args.length == 1 ? getListOfStringsMatchingLastWord(args, getOptions((EntityPlayer) sender)) : getOptions((EntityPlayer) sender)) : Collections.emptyList();
+                return sender instanceof EntityPlayer ? (args.length == 1 ? getListOfStringsMatchingLastWord(args, getOptions((EntityPlayer) sender)) : getOptions((EntityPlayer) sender)) : Collections.<String>emptyList();
             }
 
             @Override
