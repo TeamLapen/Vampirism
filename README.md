@@ -82,38 +82,29 @@ Provides abstract classes/default implementations/interfaces to simplify things 
 
 ## Setting up the development environment
 If you would like to compile your own versions or even contribute to Vampirism's development you need to setup a dev environment.
-The following instructions will setup a multi module setup for IntelliJ (Free community edition or Non-Free Ultimate edition). If you already have a setup or want to use another IDE, jump [here](#setting-up-vampirism-in-another-environment).
+The following example instructions will setup IntelliJ (Free community edition or Non-Free Ultimate edition). If you already have a setup or want to use another IDE, jump [here](#setting-up-vampirism-in-another-environment).
 
-#### Preperations
-1. Make sure you have the Java **JDK** (minimum Java 7) as well as the IntelliJ IDE installed.
+#### IntelliJ
+1. Make sure you have the Java **JDK** (minimum Java 8) as well as the IntelliJ IDE installed.
 2. If you want to contribute to the development (via pull requests), fork Vampirism on Github.
 3. (Optionally) Install Git, so you can clone the repository and push changes.
-4. Create a folder for all Minecraft related development files.
-5. Create one folders "Run" inside.
-7. Clone (`git clone https://github.com/TeamLapen/Vampirism`) or [download](https://github.com/TeamLapen/Vampirism/archive/master.zip) Vampirism to a new "Vampirism" folder next to the "Run" one.
+4. Clone (`git clone https://github.com/TeamLapen/Vampirism`) or [download](https://github.com/TeamLapen/Vampirism/archive/master.zip) Vampirism to a new "Vampirism" folder.
+5. In IntelliJ use `New...` -> `New from Version Control` -> Fill out repo, directory and name
+6. After cloning is done IntelliJ offers you to import a unlinked Gradle Project. Click this.
+7. Select `Create directories for empty content roots` and __deselect__ `Create seperate module per source set` [Image](https://picload.org/image/ripradpa/importprojectfromgradle_001.png)  
+8. Select the gradle task `setupDecompWorkspace` in the IntelliJ Gradle window and add the following arguments `-Xmx4g -Xms4g`. Run it.  
+9. Refresh the gradle project  
+10. Run `genIntellijRuns`
+11. You might have to modify the projets compiler output path  
 
-You should have a build.gradle along other files in the "Vampirism" folder now
-
-#### Import
-1. Open a console windows inside the "Vampirism" folder (on windows use shift-right click and select "Open in console")
-2. Run `gradlew.bat setupDecompWorkspace ideaModule` on Windows or `./gradlew setupDecompWorkspace ideaModule` on Linux
-4. Open IntelliJ and create an **empty** project in the top folder you've created
-5. Open "Project Structure", modules and import the `Vampirism.iml` in the "Vampirism" folder. Make sure that src/main/java and src/lib/java are marked as source folders and /src/main/resources and src/lib/resources are marked as resource folders.
-6. Make sure you choose Java 7 as language level.
-
-You should have Vampirism's code in the project now and no errors should be displayed
-#### Run configurations
-1. Click `Run->Edit Configurations` and create a new one.
-2. Set it up like [this](http://picload.org/image/wpoaicg/run_config.png) use the second folder "Run" you've created as working directory. It will store your world and configs etc.
-3. If you want run a server use GradleStartServer instead of GradleStart
 
 That's it.
 
 #### Setting up Vampirism in another environment
 If you would like to setup Vampirism in another way or another IDE, you should pay regard to the following points.  
-1. Make sure `src/main/java` and `src/lib/java` are marked as source folders and `src/main/resources` and `src/lib/resources` are marked as resource folders.  
+1. Make sure `src/main/java`, `src/api/java´ and `src/lib/java` are marked as source folders and `src/main/resources` and `src/lib/resources` are marked as resource folders.  
 2. Vampirism might have a few dependencies (e.g. Waila), which are specified in the gradle files and should be automatically downloaded and added when you run `ideaModule` or `eclipse`.  
-3. Vampirism requires at least Java 7  
+3. Vampirism requires at least Java 8 
 
 
 ## Licence
