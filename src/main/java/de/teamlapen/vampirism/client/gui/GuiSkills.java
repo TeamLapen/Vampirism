@@ -186,7 +186,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
             addToList(skillNodes, skillHandler.getRootNode());
         }
         this.buttonList.clear();
-        this.buttonList.add(new GuiOptionButton(1, this.width / 2 + 24, this.height / 2 + 74, 80, 20, UtilLib.translate("gui.done")));
+        this.buttonList.add(new GuiButton(1, this.width / 2 + 24, this.height / 2 + 74, 80, 20, UtilLib.translate("gui.done")));
         if (display) {
             GuiButton resetSkills = new GuiButton(2, (this.width - display_width) / 2 + 24, this.height / 2 + 74, 125, 20, UtilLib.translate("text.vampirism.skill.resetall"));
 
