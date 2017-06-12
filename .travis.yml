@@ -29,6 +29,7 @@ notifications:
     on_failure: change
   irc:
     channels:
-      - "irc.espernet.net#vampirism"
+      - "irc.esper.net#vampirism"
     on_success: always
     on_failure: always
+    skip_join: true
