@@ -20,6 +20,7 @@ import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.ModEntityEventHandler;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
+import de.teamlapen.vampirism.entity.VampirismEntitySelectors;
 import de.teamlapen.vampirism.entity.converted.DefaultConvertingHandler;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -167,6 +168,7 @@ public class VampirismMod {
         SupporterManager.getInstance().initAsync();
         VampireBookManager.getInstance().init();
         BloodPotions.register();
+        VampirismEntitySelectors.registerSelectors();
         proxy.onInitStep(IInitListener.Step.INIT, event);
         modCompatLoader.onInitStep(IInitListener.Step.INIT, event);
 
