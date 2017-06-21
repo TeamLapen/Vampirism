@@ -98,7 +98,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
 
     @Override
     public EnumCreatureAttribute getCreatureAttribute() {
-        return super.getCreatureAttribute();
+        return VReference.VAMPIRE_CREATURE_ATTRIBUTE;
     }
 
     @Override
