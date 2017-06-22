@@ -185,8 +185,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     @Override
     public boolean onEntityAttacked(DamageSource src, float amt) {
         if (Configs.pvp_only_between_factions && src instanceof EntityDamageSource) {
-            if (src.getEntity() instanceof EntityPlayer) {
-                FactionPlayerHandler other = get((EntityPlayer) src.getEntity());
+            if (src.getTrueSource() instanceof EntityPlayer) {
+                FactionPlayerHandler other = get((EntityPlayer) src.getTrueSource());
                 if (this.currentFaction != null && this.currentFaction.equals(other.currentFaction)) {
                     return false;
                 }

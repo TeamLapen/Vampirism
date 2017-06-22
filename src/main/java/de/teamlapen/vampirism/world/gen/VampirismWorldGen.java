@@ -43,7 +43,7 @@ public class VampirismWorldGen implements IWorldGenerator {
 
                 int tries = 5;
                 int max = random.nextInt(3) + 1;
-                tries += Math.min(Math.max(biome.theBiomeDecorator.treesPerChunk, 0), 5);
+                tries += Math.min(Math.max(biome.decorator.treesPerChunk, 0), 5);
                 tries += 10 * (biome.getHeightVariation());
                 if (Biomes.ROOFED_FOREST.equals(biome)) tries += 4;
                 if (debug) VampirismMod.log.i("WorldGen", "Trying to generate camp at %s with %d tries", pos, tries);

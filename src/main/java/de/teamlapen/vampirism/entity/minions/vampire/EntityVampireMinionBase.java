@@ -140,8 +140,8 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
             while (iterator.hasNext()) {
                 EntityItem entityitem = iterator.next();
 
-                if (!entityitem.isDead && entityitem.getEntityItem() != null) {
-                    ItemStack itemstack = entityitem.getEntityItem();
+                if (!entityitem.isDead && !ItemStackUtil.isEmpty(entityitem.getItem())) {
+                    ItemStack itemstack = entityitem.getItem();
                     if (activeCommand.shouldPickupItem(itemstack)) {
                         ItemStack stack1 = this.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
                         if (!ItemStackUtil.isEmpty(stack1)) {
@@ -154,7 +154,7 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
                 }
             }
         }
-        if (Balance.mobProps.VAMPIRE_MINION_REGENERATE_SECS >= 0 && this.ticksExisted % (Balance.mobProps.VAMPIRE_MINION_REGENERATE_SECS * 20) == 0 && (this.getLastAttackerTime() == 0 || this.getLastAttackerTime() - ticksExisted > 100)) {
+        if (Balance.mobProps.VAMPIRE_MINION_REGENERATE_SECS >= 0 && this.ticksExisted % (Balance.mobProps.VAMPIRE_MINION_REGENERATE_SECS * 20) == 0 && (this.getLastAttackedEntityTime() == 0 || this.getLastAttackedEntityTime() - ticksExisted > 100)) {
             this.heal(2F);
         }
         super.onLivingUpdate();

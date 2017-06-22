@@ -40,9 +40,9 @@ public abstract class EntityAIFlee extends EntityAIBase {
         if (vec3 == null) {
             return false;
         } else {
-            this.shelterX = vec3.xCoord;
-            this.shelterY = vec3.yCoord;
-            this.shelterZ = vec3.zCoord;
+            this.shelterX = vec3.x;
+            this.shelterY = vec3.y;
+            this.shelterZ = vec3.z;
             return true;
         }
     }

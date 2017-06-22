@@ -19,7 +19,10 @@ import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
-import net.minecraft.client.gui.*;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiYesNo;
+import net.minecraft.client.gui.GuiYesNoCallback;
 import net.minecraft.client.gui.achievement.GuiAchievements;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -232,10 +235,10 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
         String title = I18n.format("text.vampirism.skills.gui_title");
         int x = (this.width - display_width) / 2;
         int y = (this.height - display_height) / 2;
-        this.fontRendererObj.drawString(title, x + 15, y + 5, 0xFFFFFFFF);
+        this.fontRenderer.drawString(title, x + 15, y + 5, 0xFFFFFFFF);
         String points = I18n.format("text.vampirism.skills.points_left", skillHandler.getLeftSkillPoints());
-        x = (this.width + display_width) / 2 - fontRendererObj.getStringWidth(points);
-        this.fontRendererObj.drawString(points, x - 15, y + 5, 0xFFFFFFFF);
+        x = (this.width + display_width) / 2 - fontRenderer.getStringWidth(points);
+        this.fontRenderer.drawString(points, x - 15, y + 5, 0xFFFFFFFF);
     }
 
     @Override
@@ -457,7 +460,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
                     }
 
                     if (i + 1 < elements.length) {
-                        this.drawCenteredString(fontRendererObj, "OR", x + skill_width + skill_width / 2, y + 1 + (skill_width - fontRendererObj.FONT_HEIGHT) / 2, 0xFFFFFF);
+                        this.drawCenteredString(fontRenderer, "OR", x + skill_width + skill_width / 2, y + 1 + (skill_width - fontRenderer.FONT_HEIGHT) / 2, 0xFFFFFF);
                     }
                 }
             }
@@ -492,21 +495,21 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
             String desc = selected.getLocalizedDescription();
             ISkillHandler.Result result = skillHandler.canSkillBeEnabled(selected);
 
-            int width_name = Math.max(this.fontRendererObj.getStringWidth(name), 110);
-            int height_desc = desc == null ? 0 : fontRendererObj.getWordWrappedHeight(desc, width_name);
+            int width_name = Math.max(this.fontRenderer.getStringWidth(name), 110);
+            int height_desc = desc == null ? 0 : fontRenderer.getWordWrappedHeight(desc, width_name);
 
             if (result == ISkillHandler.Result.ALREADY_ENABLED || result == ISkillHandler.Result.PARENT_NOT_ENABLED) {
                 height_desc += 12;
             }
             this.drawGradientRect(m2MouseX - 3, m2MouseY - 3, m2MouseX + width_name + 3, m2MouseY + height_desc + 3 + 12, -1073741824, -1073741824);
 
-            this.fontRendererObj.drawStringWithShadow(name, (float) m2MouseX, (float) m2MouseY, 0xff808080);
+            this.fontRenderer.drawStringWithShadow(name, (float) m2MouseX, (float) m2MouseY, 0xff808080);
             if (desc != null)
-                this.fontRendererObj.drawSplitString(desc, m2MouseX, m2MouseY + 12, width_name, 0xff505050);
+                this.fontRenderer.drawSplitString(desc, m2MouseX, m2MouseY + 12, width_name, 0xff505050);
             if (result == ISkillHandler.Result.ALREADY_ENABLED) {
-                this.fontRendererObj.drawStringWithShadow(I18n.format("text.vampirism.skill.unlocked"), m2MouseX, m2MouseY + height_desc + 3, 0xFFFBAE00);
+                this.fontRenderer.drawStringWithShadow(I18n.format("text.vampirism.skill.unlocked"), m2MouseX, m2MouseY + height_desc + 3, 0xFFFBAE00);
             } else if (result == ISkillHandler.Result.PARENT_NOT_ENABLED) {
-                this.fontRendererObj.drawStringWithShadow(I18n.format("text.vampirism.skill.unlock_parent_first"), m2MouseX, m2MouseY + height_desc + 3, 0xFFA32228);
+                this.fontRenderer.drawStringWithShadow(I18n.format("text.vampirism.skill.unlock_parent_first"), m2MouseX, m2MouseY + height_desc + 3, 0xFFA32228);
             }
         }
 

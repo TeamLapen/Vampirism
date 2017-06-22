@@ -241,7 +241,7 @@ public class VampirismCommand extends BasicCommand {
                     if (pos == null) {
                         notifyCommandListener(sender, this, "command.vampirism.base.vampire_biome.not_found");
                     } else {
-                        notifyCommandListener(sender, this, "command.vampirism.base.vampire_biome.found", new TextComponentString("[" + (pos.chunkXPos << 4) + "," + (pos.chunkZPos << 4) + "]"));
+                        notifyCommandListener(sender, this, "command.vampirism.base.vampire_biome.found", new TextComponentString("[" + (pos.getXStart()) + "," + (pos.getZStart()) + "]"));
                     }
                 }
             }

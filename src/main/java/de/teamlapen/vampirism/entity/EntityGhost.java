@@ -29,8 +29,8 @@ public class EntityGhost extends EntityVampirism implements IMob {
      * Entity becomes invisible (5 sec) after being damaged.
      */
     @Override
-    public boolean attackEntityFrom(DamageSource source, float par2) {
-        if (!super.attackEntityFrom(source, par2)) {
+    public boolean attackEntityFrom(DamageSource damageSource, float par2) {
+        if (!super.attackEntityFrom(damageSource, par2)) {
             return false;
         } else {
             addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 20 * 5, 1));

@@ -26,7 +26,7 @@ public class VampireAIFollowAdvanced extends EntityAIBase {
     }
 
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         if (this.entity.getAdvancedLeader() == null) {
             return false;
         } else {

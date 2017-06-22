@@ -36,11 +36,11 @@ public class EntityVampireMinionSaveable extends EntityVampireMinionBase impleme
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource src, float value) {
-        if (DamageSource.IN_WALL.equals(src)) {
+    public boolean attackEntityFrom(DamageSource damageSource, float value) {
+        if (DamageSource.IN_WALL.equals(damageSource)) {
             return false;
         } else {
-            return super.attackEntityFrom(src, value);
+            return super.attackEntityFrom(damageSource, value);
         }
     }
 

@@ -421,7 +421,7 @@ public class RenderHandler {
 
         adjustBloodVisionShaders(progress);
 
-        blurShader.loadShaderGroup(partialTicks);
+        blurShader.render(partialTicks);
 
 
         if (!renderedEntitiesWithBlood.isEmpty() || this.bloodVision1Rendered) {
@@ -454,7 +454,7 @@ public class RenderHandler {
 
     private boolean renderEntityOutlines(List<? extends Entity> entities, ShaderGroup shader, Framebuffer framebuffer, float partialTicks) {
         RenderManager renderManager = mc.getRenderManager();
-        mc.world.theProfiler.startSection("bloodVision");
+        mc.world.profiler.startSection("bloodVision");
         framebuffer.framebufferClear();
         boolean flag = !entities.isEmpty();
         if (flag) {
@@ -489,7 +489,7 @@ public class RenderHandler {
             RenderHelper.enableStandardItemLighting();
 
             GlStateManager.depthMask(false);
-            shader.loadShaderGroup(partialTicks);
+            shader.render(partialTicks);
             GlStateManager.depthMask(true);
 
             //GlStateManager.enableLighting();
@@ -504,7 +504,7 @@ public class RenderHandler {
 
         this.mc.getFramebuffer().bindFramebuffer(false);
 
-        mc.world.theProfiler.endSection();
+        mc.world.profiler.endSection();
 
         return flag;
     }

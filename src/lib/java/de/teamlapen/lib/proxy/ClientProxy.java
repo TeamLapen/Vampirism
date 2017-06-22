@@ -57,6 +57,6 @@ public class ClientProxy extends CommonProxy {
     @Override
     public List<String> listFormattedStringToWidth(String str, int wrapWidth) {
         str = StringEscapeUtils.unescapeJava(str);
-        return Minecraft.getMinecraft().fontRendererObj.listFormattedStringToWidth(str, wrapWidth);
+        return Minecraft.getMinecraft().fontRenderer.listFormattedStringToWidth(str, wrapWidth);
     }
 }

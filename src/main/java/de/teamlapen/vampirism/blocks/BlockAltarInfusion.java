@@ -104,7 +104,7 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
                 EntityItem entityItem = new EntityItem(world, pos.getX() + rx, pos.getY() + ry, pos.getZ() + rz, item.copy());
 
                 if (item.hasTagCompound()) {
-                    entityItem.getEntityItem().setTagCompound(item.getTagCompound().copy());
+                    entityItem.getItem().setTagCompound(item.getTagCompound().copy());
                 }
 
                 float factor = 0.05F;

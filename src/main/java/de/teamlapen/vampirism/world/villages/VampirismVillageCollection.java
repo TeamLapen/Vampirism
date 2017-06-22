@@ -65,7 +65,7 @@ public class VampirismVillageCollection extends WorldSavedData implements IVampi
     @Nullable
     VampirismVillage getNearestVillage(BlockPos pos, int r) {
 
-        Village v = worldObj.villageCollectionObj.getNearestVillage(pos, r);
+        Village v = worldObj.villageCollection.getNearestVillage(pos, r);
         if (v == null)
             return null;
         return getVampirismVillage(v);
@@ -110,17 +110,17 @@ public class VampirismVillageCollection extends WorldSavedData implements IVampi
      * Called world tick by an EventHandler
      */
     public void tick() {
-        if (worldObj == null || worldObj.villageCollectionObj == null) return;
+        if (worldObj == null || worldObj.villageCollection == null) return;
         tickCounter++;
         boolean dirty = false;
-        worldObj.theProfiler.startSection("vampirism_vampireVillages_checkAnnihilated");
+        worldObj.profiler.startSection("vampirism_vampireVillages_checkAnnihilated");
         this.checkForAnnihilatedVillages();
-        worldObj.theProfiler.endStartSection("vampirism_vampireVillages_tick");
+        worldObj.profiler.endStartSection("vampirism_vampireVillages_tick");
         for (VampirismVillage v : villageList) {
             if (v.tick(tickCounter))
                 dirty = true;
         }
-        worldObj.theProfiler.endSection();
+        worldObj.profiler.endSection();
 
         if (dirty)
             this.markDirty();

@@ -538,7 +538,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public void onUpdate() {
-        player.getEntityWorld().theProfiler.startSection("vampirism_vampirePlayer");
+        player.getEntityWorld().profiler.startSection("vampirism_vampirePlayer");
         int level = getLevel();
         if (level > 0) {
             if (player.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 0) {
@@ -641,7 +641,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
 
         }
-        player.world.theProfiler.endSection();
+        player.world.profiler.endSection();
     }
 
     @Override
@@ -649,11 +649,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (phase == TickEvent.Phase.END) {
             //Update blood stats
             if (getLevel() > 0) {
-                player.world.theProfiler.startSection("vampirism_bloodupdate");
+                player.world.profiler.startSection("vampirism_bloodupdate");
                 if (!player.world.isRemote && this.bloodStats.onUpdate()) {
                     sync(this.bloodStats.writeUpdate(new NBTTagCompound()), false);
                 }
-                player.world.theProfiler.endSection();
+                player.world.profiler.endSection();
             }
             if (getSpecialAttributes().bat) {
                 BatVampireAction.updatePlayerBatSize(player);
@@ -1066,7 +1066,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             vec31 = vec31.rotateYaw(-player.rotationYaw * (float) Math.PI / 180.0F);
             vec31 = vec31.addVector(player.posX, player.posY + (double) player.getEyeHeight(), player.posZ);
 
-            player.world.spawnParticle(EnumParticleTypes.ITEM_CRACK, vec31.xCoord, vec31.yCoord, vec31.zCoord, vec3.xCoord, vec3.yCoord + 0.05D, vec3.zCoord, Item.getIdFromItem(Items.APPLE));
+            player.world.spawnParticle(EnumParticleTypes.ITEM_CRACK, vec31.x, vec31.y, vec31.z, vec3.x, vec3.y + 0.05D, vec3.z, Item.getIdFromItem(Items.APPLE));
         }
         //Play bite sounds. Using this method since it is the only client side method. And this is called on every relevant client anyway
         player.world.playSound(player.posX, player.posY, player.posZ, ModSounds.player_bite, SoundCategory.PLAYERS, 1.0F, 1.0F, false);

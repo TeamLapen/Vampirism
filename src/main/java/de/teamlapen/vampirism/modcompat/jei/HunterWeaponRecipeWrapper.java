@@ -12,6 +12,8 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import java.awt.*;
@@ -30,6 +32,7 @@ public abstract class HunterWeaponRecipeWrapper extends BlankRecipeWrapper {
         this.recipe = recipe;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void drawInfo(@Nonnull Minecraft minecraft, int recipeWidth, int recipeHeight, int mouseX, int mouseY) {
         if (recipe.getRequiredLavaUnits() > 0) {
@@ -40,8 +43,8 @@ public abstract class HunterWeaponRecipeWrapper extends BlankRecipeWrapper {
         if (recipe.getMinHunterLevel() > 1) {
             String level = UtilLib.translateFormatted("gui.vampirism.hunter_weapon_table.level", recipe.getMinHunterLevel());
 
-            minecraft.fontRendererObj.drawString(level, x, y, Color.gray.getRGB());
-            y += minecraft.fontRendererObj.FONT_HEIGHT + 2;
+            minecraft.fontRenderer.drawString(level, x, y, Color.gray.getRGB());
+            y += minecraft.fontRenderer.FONT_HEIGHT + 2;
         }
         if (recipe.getRequiredSkills().length > 0) {
             String skills = "";
@@ -50,7 +53,7 @@ public abstract class HunterWeaponRecipeWrapper extends BlankRecipeWrapper {
 
             }
             String skillText = UtilLib.translateFormatted("gui.vampirism.hunter_weapon_table.skill", skills);
-            minecraft.fontRendererObj.drawSplitString(skillText, x, y, 132, Color.gray.getRGB());
+            minecraft.fontRenderer.drawSplitString(skillText, x, y, 132, Color.gray.getRGB());
 
 
         }

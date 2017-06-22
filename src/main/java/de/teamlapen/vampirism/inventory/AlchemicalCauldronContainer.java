@@ -37,19 +37,19 @@ public class AlchemicalCauldronContainer extends InventoryContainer {
             IContainerListener icontainerlistener = this.listeners.get(i);
 
             if (this.cookTime != this.tile.getField(2)) {
-                icontainerlistener.sendProgressBarUpdate(this, 2, this.tile.getField(2));
+                icontainerlistener.sendWindowProperty(this, 2, this.tile.getField(2));
             }
 
             if (this.furnaceBurnTime != this.tile.getField(0)) {
-                icontainerlistener.sendProgressBarUpdate(this, 0, this.tile.getField(0));
+                icontainerlistener.sendWindowProperty(this, 0, this.tile.getField(0));
             }
 
             if (this.currentItemBurnTime != this.tile.getField(1)) {
-                icontainerlistener.sendProgressBarUpdate(this, 1, this.tile.getField(1));
+                icontainerlistener.sendWindowProperty(this, 1, this.tile.getField(1));
             }
 
             if (this.totalCookTime != this.tile.getField(3)) {
-                icontainerlistener.sendProgressBarUpdate(this, 3, this.tile.getField(3));
+                icontainerlistener.sendWindowProperty(this, 3, this.tile.getField(3));
             }
         }
 

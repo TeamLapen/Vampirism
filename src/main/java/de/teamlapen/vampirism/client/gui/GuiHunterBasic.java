@@ -80,7 +80,7 @@ public class GuiHunterBasic extends GuiContainer {
             text = UtilLib.translateFormatted("text.vampirism.basic_hunter.pay_n_vampire_blood_more", missing);
         }
         if (text != null) {
-            this.fontRendererObj.drawSplitString(text, 50, 12, 120, 0);
+            this.fontRenderer.drawSplitString(text, 50, 12, 120, 0);
         }
     }
 }

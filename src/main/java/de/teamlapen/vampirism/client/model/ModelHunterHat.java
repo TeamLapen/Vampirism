@@ -52,16 +52,6 @@ public class ModelHunterHat extends ModelBiped {
         hatRim.render(scale);
     }
 
-    /**
-     * @param invisible Named wrong true makes it visible, false invisible (13th August 2016)
-     */
-    @Override
-    public void setInvisible(boolean invisible) {
-        super.setInvisible(false);
-        hatRim.showModel = true;
-        hatTop.showModel = true;
-    }
-
     @Override
     public void setRotationAngles(float f1, float f2, float f3, float f4, float f5, float f6, Entity e) {
         super.setRotationAngles(f1, f2, f3, f4, f5, f6, e);
@@ -71,5 +61,12 @@ public class ModelHunterHat extends ModelBiped {
         hatTop.rotateAngleX = super.bipedHead.rotateAngleX;
         hatTop.rotateAngleY = super.bipedHead.rotateAngleY;
         hatTop.rotateAngleZ = super.bipedHead.rotateAngleZ;
+    }
+
+    @Override
+    public void setVisible(boolean invisible) {
+        super.setVisible(false);
+        hatRim.showModel = true;
+        hatTop.showModel = true;
     }
 }

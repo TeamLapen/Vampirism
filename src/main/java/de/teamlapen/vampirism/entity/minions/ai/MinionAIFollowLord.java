@@ -36,10 +36,18 @@ public class MinionAIFollowLord extends EntityAIBase {
     }
 
     /**
+     * Resets the task
+     */
+    @Override
+    public void resetTask() {
+        this.boss = null;
+    }
+
+    /**
      * Returns whether an in-progress EntityAIBase should continue executing
      */
     @Override
-    public boolean continueExecuting() {
+    public boolean shouldContinueExecuting() {
         if (!this.boss.isTheEntityAlive()) {
             boss = null;
             return false;
@@ -47,14 +55,6 @@ public class MinionAIFollowLord extends EntityAIBase {
             double d0 = this.boss.getTheDistanceSquared(minionEntity);
             return d0 >= MINDIST;
         }
-    }
-
-    /**
-     * Resets the task
-     */
-    @Override
-    public void resetTask() {
-        this.boss = null;
     }
 
     /**

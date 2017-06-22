@@ -43,9 +43,9 @@ public class BiomeGenVampireForest extends Biome {
 
         this.topBlock = ModBlocks.cursedEarth.getDefaultState();
         this.fillerBlock = ModBlocks.cursedEarth.getDefaultState();
-        this.theBiomeDecorator.treesPerChunk = 5;
-        this.theBiomeDecorator.grassPerChunk = 4;
-        this.theBiomeDecorator.deadBushPerChunk = 3;
+        this.decorator.treesPerChunk = 5;
+        this.decorator.grassPerChunk = 4;
+        this.decorator.deadBushPerChunk = 3;
         this.worldGenTrees = new WorldGenTrees(false, 4, Blocks.LOG.getDefaultState().withProperty(BlockOldLog.VARIANT, BlockPlanks.EnumType.SPRUCE), Blocks.LEAVES.getDefaultState().withProperty(BlockOldLeaf.VARIANT, BlockPlanks.EnumType.OAK), false);
     }
 
@@ -56,13 +56,8 @@ public class BiomeGenVampireForest extends Biome {
 
     @Override
     public void decorate(World worldIn, Random rand, BlockPos pos) {
-        this.theBiomeDecorator.yellowFlowerGen = orchidGen;//setting this in the constructor is not enough, really not sure why
+        this.decorator.flowerGen = orchidGen;//setting this in the constructor is not enough, really not sure why
         super.decorate(worldIn, rand, pos);
-    }
-
-    @Override
-    public WorldGenAbstractTree genBigTreeChance(Random rand) {
-        return worldGenTrees;
     }
 
     @Override
@@ -74,6 +69,11 @@ public class BiomeGenVampireForest extends Biome {
     public int getGrassColorAtPos(BlockPos pos) {
         // 0x7A317A; dark purple
         return 0x1E1F1F;
+    }
+
+    @Override
+    public WorldGenAbstractTree getRandomTreeFeature(Random rand) {
+        return worldGenTrees;
     }
 
     @Override
@@ -103,7 +103,7 @@ public class BiomeGenVampireForest extends Biome {
             for (int i = 0; i < 64; ++i) {
                 BlockPos blockpos = position.add(rand.nextInt(8) - rand.nextInt(8), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(8) - rand.nextInt(8));
 
-                if (worldIn.isAirBlock(blockpos) && (!worldIn.provider.hasNoSky() || blockpos.getY() < 255) && this.flower.canBlockStay(worldIn, blockpos, this.state)) {
+                if (worldIn.isAirBlock(blockpos) && (worldIn.provider.hasSkyLight() || blockpos.getY() < 255) && this.flower.canBlockStay(worldIn, blockpos, this.state)) {
                     if (VampirismWorldGen.debug)
                         VampirismMod.log.i(name, "Placed vampire orchid in vampire forest at %s", blockpos);
                     worldIn.setBlockState(blockpos, this.state, 2);

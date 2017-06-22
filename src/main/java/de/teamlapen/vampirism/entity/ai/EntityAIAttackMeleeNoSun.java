@@ -73,7 +73,7 @@ public class EntityAIAttackMeleeNoSun extends EntityAIAttackMelee {
                     for (int j = 0; j < path.getCurrentPathLength(); ++j) {
                         PathPoint pathpoint2 = path.getPathPointFromIndex(j);
 
-                        if (this.attacker.getEntityWorld().canSeeSky(new BlockPos(pathpoint2.xCoord, pathpoint2.yCoord, pathpoint2.zCoord))) {
+                        if (this.attacker.getEntityWorld().canSeeSky(new BlockPos(pathpoint2.x, pathpoint2.y, pathpoint2.z))) {
                             path.setCurrentPathLength(j - 1);
                             return path.getCurrentPathLength() > 1;
                         }

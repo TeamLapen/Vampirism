@@ -30,16 +30,15 @@ public class VampireAIMoveToBiteable extends EntityAIBase {
     }
 
     @Override
-    public boolean continueExecuting() {
-        return (!this.vampireEntity.getNavigator().noPath() && !target.isDead);
-    }
-
-    @Override
     public void resetTask() {
         target = null;
         timeout = (vampireEntity.getRNG().nextInt(5) == 0 ? 80 : 3);
     }
 
+    @Override
+    public boolean shouldContinueExecuting() {
+        return (!this.vampireEntity.getNavigator().noPath() && !target.isDead);
+    }
 
     @Override
     public boolean shouldExecute() {

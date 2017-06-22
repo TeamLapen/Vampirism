@@ -39,16 +39,8 @@ public class VampirismItemWeapon extends VampirismItem {
     }
 
     @Override
-    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
-        ItemStack mat = this.material.getRepairItemStack();
-        if (!ItemStackUtil.isEmpty(mat) && net.minecraftforge.oredict.OreDictionary.itemMatches(mat, repair, false))
-            return true;
-        return super.getIsRepairable(toRepair, repair);
-    }
-
-    @Override
-    public Multimap<String, AttributeModifier> getItemAttributeModifiers(EntityEquipmentSlot equipmentSlot) {
-        Multimap<String, AttributeModifier> multimap = super.getItemAttributeModifiers(equipmentSlot);
+    public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot equipmentSlot, ItemStack stack) {
+        Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(equipmentSlot, stack);
 
         if (equipmentSlot == EntityEquipmentSlot.MAINHAND) {
             multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", (double) this.attackDamage, 0));
@@ -56,6 +48,14 @@ public class VampirismItemWeapon extends VampirismItem {
         }
 
         return multimap;
+    }
+
+    @Override
+    public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
+        ItemStack mat = this.material.getRepairItemStack();
+        if (!ItemStackUtil.isEmpty(mat) && net.minecraftforge.oredict.OreDictionary.itemMatches(mat, repair, false))
+            return true;
+        return super.getIsRepairable(toRepair, repair);
     }
 
     @Override

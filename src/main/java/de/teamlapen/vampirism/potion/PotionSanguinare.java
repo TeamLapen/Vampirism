@@ -63,9 +63,9 @@ public class PotionSanguinare extends VampirismPotion {
 //        https://github.com/MinecraftForge/MinecraftForge/issues/2473
         String s1 = I18n.format(getName());
 
-        mc.fontRendererObj.drawStringWithShadow(s1, (float) (x + 10 + 18), (float) (y + 6), 16777215);
+        mc.fontRenderer.drawStringWithShadow(s1, (float) (x + 10 + 18), (float) (y + 6), 16777215);
         String s = "Unknown";
-        mc.fontRendererObj.drawStringWithShadow(s, (float) (x + 10 + 18), (float) (y + 6 + 10), 8355711);
+        mc.fontRenderer.drawStringWithShadow(s, (float) (x + 10 + 18), (float) (y + 6 + 10), 8355711);
 
     }
 

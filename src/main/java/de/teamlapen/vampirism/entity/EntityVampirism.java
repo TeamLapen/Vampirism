@@ -85,11 +85,11 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_) {
-        if (this.isEntityInvulnerable(p_70097_1_)) {
+    public boolean attackEntityFrom(DamageSource damageSource, float p_70097_2_) {
+        if (this.isEntityInvulnerable(damageSource)) {
             return false;
-        } else if (super.attackEntityFrom(p_70097_1_, p_70097_2_)) {
-            Entity entity = p_70097_1_.getEntity();
+        } else if (super.attackEntityFrom(damageSource, p_70097_2_)) {
+            Entity entity = damageSource.getTrueSource();
             if (entity instanceof EntityLivingBase && !this.equals(entity)) {
                 this.setAttackTarget((EntityLivingBase) entity);
             }
@@ -137,7 +137,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     @Override
     public boolean isWithinHomeDistance(double x, double y, double z) {
         if (home != null) {
-            return home.isVecInside(new Vec3d(x, y, z));
+            return home.contains(new Vec3d(x, y, z));
         }
         return true;
     }

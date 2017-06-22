@@ -39,16 +39,16 @@ public class EntityAIAttackRangedCrossbow extends EntityAIBase {
     }
 
     @Override
-    public boolean continueExecuting() {
-        return (this.shouldExecute() || !this.entity.getNavigator().noPath()) && attacker.isCrossbowInMainhand();
-    }
-
-    @Override
     public void resetTask() {
         super.resetTask();
         this.seeTime = 0;
         this.attackTime = -1;
         attacker.stopTargeting();
+    }
+
+    @Override
+    public boolean shouldContinueExecuting() {
+        return (this.shouldExecute() || !this.entity.getNavigator().noPath()) && attacker.isCrossbowInMainhand();
     }
 
     @Override

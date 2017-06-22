@@ -95,7 +95,7 @@ public class BloodPotionTableContainer extends Container {
             IContainerListener icontainerlistener = this.listeners.get(i);
 
             if (this.prevCraftingTimer != this.craftingTimer) {
-                icontainerlistener.sendProgressBarUpdate(this, 0, craftingTimer);
+                icontainerlistener.sendWindowProperty(this, 0, craftingTimer);
             }
 
         }

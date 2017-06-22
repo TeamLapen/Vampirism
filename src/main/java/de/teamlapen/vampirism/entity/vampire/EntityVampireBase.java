@@ -63,15 +63,15 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource src, float amount) {
+    public boolean attackEntityFrom(DamageSource damageSource, float amount) {
         if (vulnerableToFire) {
-            if (DamageSource.IN_FIRE.equals(src)) {
+            if (DamageSource.IN_FIRE.equals(damageSource)) {
                 return this.attackEntityFrom(VReference.VAMPIRE_IN_FIRE, calculateFireDamage(amount));
-            } else if (DamageSource.ON_FIRE.equals(src)) {
+            } else if (DamageSource.ON_FIRE.equals(damageSource)) {
                 return this.attackEntityFrom(VReference.VAMPIRE_ON_FIRE, calculateFireDamage(amount));
             }
         }
-        return super.attackEntityFrom(src, amount);
+        return super.attackEntityFrom(damageSource, amount);
     }
 
     @Override

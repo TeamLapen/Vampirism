@@ -72,11 +72,11 @@ public class EntityVillagerVampirism extends EntityVillager {
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_) {
-        if (this.isEntityInvulnerable(p_70097_1_)) {
+    public boolean attackEntityFrom(DamageSource src, float p_70097_2_) {
+        if (this.isEntityInvulnerable(src)) {
             return false;
-        } else if (super.attackEntityFrom(p_70097_1_, p_70097_2_)) {
-            Entity entity = p_70097_1_.getEntity();
+        } else if (super.attackEntityFrom(src, p_70097_2_)) {
+            Entity entity = src.getTrueSource();
             if (entity instanceof EntityLivingBase) {
                 this.setAttackTarget((EntityLivingBase) entity);
             }

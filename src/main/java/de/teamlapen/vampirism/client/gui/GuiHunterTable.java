@@ -39,8 +39,8 @@ public class GuiHunterTable extends GuiContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         String string = container.getHunterInventory().hasCustomName() ? this.container.getHunterInventory().getName() : I18n.format(this.container.getHunterInventory().getName());
-        this.fontRendererObj.drawString(string, 8, 6, 0x404040);
-        this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 94, 0x404040);
+        this.fontRenderer.drawString(string, 8, 6, 0x404040);
+        this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 94, 0x404040);
 
         String text = null;
         if (!container.isLevelValid()) {
@@ -50,6 +50,6 @@ public class GuiHunterTable extends GuiContainer {
             ITextComponent item = missing.getItem().equals(ModItems.pureBlood) ? ModItems.pureBlood.getDisplayName(missing) : new TextComponentTranslation(missing.getUnlocalizedName() + ".name");
             text = I18n.format("text.vampirism.ritual_missing_items", ItemStackUtil.getCount(missing), item.getUnformattedText());
         }
-        if (text != null) this.fontRendererObj.drawSplitString(text, 8, 50, this.xSize - 10, 0x000000);
+        if (text != null) this.fontRenderer.drawSplitString(text, 8, 50, this.xSize - 10, 0x000000);
     }
 }

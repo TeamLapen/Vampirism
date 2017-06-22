@@ -27,14 +27,14 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
     }
 
     @Override
-    public boolean continueExecuting() {
-        return creature.getEntity().isEntityAlive() && vampireEntity.getDistanceSqToEntity(creature.getEntity()) < 7 && this.timer > 0;
-    }
-
-    @Override
     public void resetTask() {
         creature = null;
 
+    }
+
+    @Override
+    public boolean shouldContinueExecuting() {
+        return creature.getEntity().isEntityAlive() && vampireEntity.getDistanceSqToEntity(creature.getEntity()) < 7 && this.timer > 0;
     }
 
     @Override

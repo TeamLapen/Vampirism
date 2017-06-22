@@ -44,7 +44,7 @@ public class GuiHunterTrainer extends GuiContainer {
         int i = (this.width - this.xSize) / 2;
         int j = (this.height - this.ySize) / 2;
         String name = I18n.format("text.vampirism.level_up");
-        this.buttonList.add(this.buttonLevelup = new GuiButton(1, i + 120, j + 24, fontRendererObj.getStringWidth(name) + 5, 20, name));
+        this.buttonList.add(this.buttonLevelup = new GuiButton(1, i + 120, j + 24, fontRenderer.getStringWidth(name) + 5, 20, name));
         this.buttonLevelup.enabled = false;
     }
 
@@ -81,8 +81,8 @@ public class GuiHunterTrainer extends GuiContainer {
     @Override
     protected void drawGuiContainerForegroundLayer(int par1, int par2) {
         String string = container.getHunterTrainerInventory().hasCustomName() ? this.container.getHunterTrainerInventory().getName() : I18n.format(this.container.getHunterTrainerInventory().getName());
-        this.fontRendererObj.drawString(string, 8, 6, 0x404040);
-        this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 94, 0x404040);
+        this.fontRenderer.drawString(string, 8, 6, 0x404040);
+        this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 94, 0x404040);
 
         String text = null;
         if (container.getMissingItems() != null) {
@@ -90,6 +90,6 @@ public class GuiHunterTrainer extends GuiContainer {
             ITextComponent item = missing.getItem().equals(ModItems.hunterIntel) ? ModItems.hunterIntel.getDisplayName(missing) : new TextComponentTranslation(missing.getUnlocalizedName() + ".name");
             text = I18n.format("text.vampirism.ritual_missing_items", ItemStackUtil.getCount(missing), item.getUnformattedText());
         }
-        if (text != null) this.fontRendererObj.drawSplitString(text, 8, 50, this.xSize - 10, 0x000000);
+        if (text != null) this.fontRenderer.drawSplitString(text, 8, 50, this.xSize - 10, 0x000000);
     }
 }

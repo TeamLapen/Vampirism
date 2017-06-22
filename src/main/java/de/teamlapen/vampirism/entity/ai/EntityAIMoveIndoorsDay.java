@@ -43,7 +43,7 @@ public class EntityAIMoveIndoorsDay extends EntityAIBase {
     public boolean shouldExecute() {
         BlockPos blockpos = new BlockPos(this.entityObj);
 
-        if (this.entityObj.getEntityWorld().isDaytime() && !this.entityObj.getEntityWorld().provider.hasNoSky()) {
+        if (this.entityObj.getEntityWorld().isDaytime() && this.entityObj.getEntityWorld().provider.hasSkyLight()) {
             if (this.entityObj.getRNG().nextInt(50) != 0) {
                 return false;
             } else if (this.insidePosX != -1 && this.entityObj.getDistanceSq((double) this.insidePosX, this.entityObj.posY, (double) this.insidePosZ) < 4.0D) {
@@ -77,7 +77,7 @@ public class EntityAIMoveIndoorsDay extends EntityAIBase {
             Vec3d vec3d = RandomPositionGenerator.findRandomTargetBlockTowards(this.entityObj, 14, 3, new Vec3d((double) i + 0.5D, (double) j, (double) k + 0.5D));
 
             if (vec3d != null) {
-                this.entityObj.getNavigator().tryMoveToXYZ(vec3d.xCoord, vec3d.yCoord, vec3d.zCoord, 1.0D);
+                this.entityObj.getNavigator().tryMoveToXYZ(vec3d.x, vec3d.y, vec3d.z, 1.0D);
             }
         } else {
             this.entityObj.getNavigator().tryMoveToXYZ((double) i + 0.5D, (double) j, (double) k + 0.5D, 1.0D);

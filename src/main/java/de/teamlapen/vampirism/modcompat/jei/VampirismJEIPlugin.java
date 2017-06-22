@@ -27,8 +27,8 @@ public class VampirismJEIPlugin extends BlankModPlugin {
     public void register(@Nonnull IModRegistry registry) {
         IJeiHelpers jeiHelpers = registry.getJeiHelpers();
 
-        jeiHelpers.getItemBlacklist().addItemToBlacklist(new ItemStack(ModBlocks.fluidBlood));
-        jeiHelpers.getItemBlacklist().addItemToBlacklist(new ItemStack(ModItems.bloodPotion, 1, OreDictionary.WILDCARD_VALUE));
+        jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(ModBlocks.fluidBlood));
+        jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(ModItems.bloodPotion, 1, OreDictionary.WILDCARD_VALUE));
         IGuiHelper guiHelper = jeiHelpers.getGuiHelper();
         IRecipeTransferRegistry recipeTransferRegistry = registry.getRecipeTransferRegistry();
 

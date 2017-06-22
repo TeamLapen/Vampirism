@@ -176,7 +176,7 @@ public class TestCommand extends BasicCommand {
             }
 
             private void print(ICommandSender var1, String id) {
-                List<Profiler.Result> l = FMLCommonHandler.instance().getMinecraftServerInstance().theProfiler.getProfilingData(id);
+                List<Profiler.Result> l = FMLCommonHandler.instance().getMinecraftServerInstance().profiler.getProfilingData(id);
                 for (Profiler.Result r : l) {
                     var1.sendMessage(new TextComponentString("" + r.profilerName + ": " + r.usePercentage + "|" + r.totalUsePercentage));
                 }

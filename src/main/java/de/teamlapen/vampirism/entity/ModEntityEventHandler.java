@@ -57,8 +57,8 @@ public class ModEntityEventHandler {
     @SubscribeEvent
     public void onEntityAttacked(LivingAttackEvent event) {
         //Probably not a very "clean" solution, but the only one I found
-        if (!skipAttackDamageOnce && "player".equals(event.getSource().getDamageType()) && event.getSource().getEntity() instanceof EntityPlayer) {
-            ItemStack stack = ((EntityPlayer) event.getSource().getEntity()).getHeldItemMainhand();
+        if (!skipAttackDamageOnce && "player".equals(event.getSource().getDamageType()) && event.getSource().getTrueSource() instanceof EntityPlayer) {
+            ItemStack stack = ((EntityPlayer) event.getSource().getTrueSource()).getHeldItemMainhand();
             if (!ItemStackUtil.isEmpty(stack) && stack.getItem() instanceof IFactionSlayerItem) {
                 IFactionSlayerItem item = (IFactionSlayerItem) stack.getItem();
                 IFaction faction = VampirismAPI.factionRegistry().getFaction(event.getEntity());
@@ -144,9 +144,9 @@ public class ModEntityEventHandler {
     @SubscribeEvent
     public void onEntityUpdate(LivingEvent.LivingUpdateEvent event) {
         if (event.getEntity() instanceof EntityCreature) {
-            event.getEntity().getEntityWorld().theProfiler.startSection("vampirism_extended_creature");
+            event.getEntity().getEntityWorld().profiler.startSection("vampirism_extended_creature");
             ExtendedCreature.get((EntityCreature) event.getEntity()).onUpdate();
-            event.getEntity().getEntityWorld().theProfiler.endSection();
+            event.getEntity().getEntityWorld().profiler.endSection();
 
         } else if (!event.getEntity().getEntityWorld().isRemote && event.getEntity() instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) event.getEntity();

@@ -46,7 +46,7 @@ public class CommonProxy implements IProxy {
 
     @Override
     public EntityPlayer getPlayerEntity(MessageContext ctx) {
-        return ctx.getServerHandler().playerEntity;
+        return ctx.getServerHandler().player;
     }
 
     @Override

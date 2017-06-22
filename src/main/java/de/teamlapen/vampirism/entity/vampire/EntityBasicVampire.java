@@ -58,8 +58,8 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource p_70097_1_, float p_70097_2_) {
-        boolean flag = super.attackEntityFrom(p_70097_1_, p_70097_2_);
+    public boolean attackEntityFrom(DamageSource damageSource, float p_70097_2_) {
+        boolean flag = super.attackEntityFrom(damageSource, p_70097_2_);
         if (flag) angryTimer += ANGRY_TICKS_PER_ATTACK;
         return flag;
     }
@@ -227,8 +227,8 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     protected void dropLoot(boolean wasRecentlyHit, int lootingModifier, DamageSource source) {
         super.dropLoot(wasRecentlyHit, lootingModifier, source);
         if (source instanceof EntityDamageSource) {
-            if (source.getEntity() instanceof EntityPlayer) {
-                ItemStack active = ((EntityPlayer) source.getEntity()).getHeldItem(((EntityPlayer) source.getEntity()).getActiveHand());
+            if (source.getTrueSource() instanceof EntityPlayer) {
+                ItemStack active = ((EntityPlayer) source.getTrueSource()).getHeldItem(((EntityPlayer) source.getTrueSource()).getActiveHand());
                 if (!ItemStackUtil.isEmpty(active) && active.getItem() instanceof ItemStake) {
                     if (this.rand.nextInt(2) == 0) {
                         this.dropItem(ModItems.vampireBlood, 1);

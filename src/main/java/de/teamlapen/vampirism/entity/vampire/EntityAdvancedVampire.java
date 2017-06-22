@@ -60,7 +60,7 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     @Override
     public boolean attackEntityFrom(DamageSource damageSource, float amount) {
         boolean flag = super.attackEntityFrom(damageSource, amount);
-        if (flag && damageSource.getSourceOfDamage() instanceof EntityPlayer && this.rand.nextInt(4) == 0) {
+        if (flag && damageSource.getTrueSource() instanceof EntityPlayer && this.rand.nextInt(4) == 0) {
             this.addPotionEffect(new PotionEffect(ModPotions.sunscreen, 150, 2));
         }
         return flag;

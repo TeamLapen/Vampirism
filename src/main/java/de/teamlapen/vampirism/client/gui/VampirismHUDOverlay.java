@@ -159,13 +159,13 @@ public class VampirismHUDOverlay extends ExtendedGui {
             // boolean flag1 = false;
             int color = faction.getColor();
             String text = "" + FactionPlayerHandler.get(mc.player).getCurrentLevel();
-            int x = (event.getResolution().getScaledWidth() - mc.fontRendererObj.getStringWidth(text)) / 2 + Configs.gui_level_offset_x;
+            int x = (event.getResolution().getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2 + Configs.gui_level_offset_x;
             int y = event.getResolution().getScaledHeight() - Configs.gui_level_offset_y;
-            mc.fontRendererObj.drawString(text, x + 1, y, 0);
-            mc.fontRendererObj.drawString(text, x - 1, y, 0);
-            mc.fontRendererObj.drawString(text, x, y + 1, 0);
-            mc.fontRendererObj.drawString(text, x, y - 1, 0);
-            mc.fontRendererObj.drawString(text, x, y, color);
+            mc.fontRenderer.drawString(text, x + 1, y, 0);
+            mc.fontRenderer.drawString(text, x - 1, y, 0);
+            mc.fontRenderer.drawString(text, x, y + 1, 0);
+            mc.fontRenderer.drawString(text, x, y - 1, 0);
+            mc.fontRenderer.drawString(text, x, y, color);
         }
     }
 

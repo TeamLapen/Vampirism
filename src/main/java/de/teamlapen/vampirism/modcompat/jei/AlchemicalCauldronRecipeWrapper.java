@@ -41,8 +41,8 @@ public class AlchemicalCauldronRecipeWrapper extends BlankRecipeWrapper {
         if (recipe.getRequiredLevel() > 1) {
             String level = UtilLib.translateFormatted("gui.vampirism.alchemical_cauldron.level", recipe.getRequiredLevel());
 
-            minecraft.fontRendererObj.drawString(level, x, y, Color.gray.getRGB());
-            y += minecraft.fontRendererObj.FONT_HEIGHT + 2;
+            minecraft.fontRenderer.drawString(level, x, y, Color.gray.getRGB());
+            y += minecraft.fontRenderer.FONT_HEIGHT + 2;
         }
         if (recipe.getRequiredSkills().length > 0) {
             StringBuilder skills = new StringBuilder();
@@ -51,7 +51,7 @@ public class AlchemicalCauldronRecipeWrapper extends BlankRecipeWrapper {
 
             }
             String skillText = UtilLib.translateFormatted("gui.vampirism.alchemical_cauldron.skill", skills.toString());
-            minecraft.fontRendererObj.drawSplitString(skillText, x, y, 132, Color.gray.getRGB());
+            minecraft.fontRenderer.drawSplitString(skillText, x, y, 132, Color.gray.getRGB());
 
 
         }

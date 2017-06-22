@@ -37,7 +37,7 @@ public class Helper {
      * @return
      */
     public static boolean gettingSundamge(EntityLivingBase entity) {
-        entity.getEntityWorld().theProfiler.startSection("vampirism_checkSundamage");
+        entity.getEntityWorld().profiler.startSection("vampirism_checkSundamage");
         if (entity instanceof EntityPlayer && ((EntityPlayer) entity).isSpectator()) return false;
         if (VampirismAPI.sundamageRegistry().getSundamageInDim(entity.getEntityWorld().provider.getDimension())) {
             if (!entity.getEntityWorld().isRaining()) {
@@ -50,7 +50,7 @@ public class Helper {
                         try {
                             Biome biome = entity.getEntityWorld().getBiome(pos);
                             if (VampirismAPI.sundamageRegistry().getSundamageInBiome(biome)) {
-                                entity.getEntityWorld().theProfiler.endSection();
+                                entity.getEntityWorld().profiler.endSection();
                                 return true;
                             }
                         } catch (NullPointerException e) {
@@ -62,7 +62,7 @@ public class Helper {
 
             }
         }
-        entity.getEntityWorld().theProfiler.endSection();
+        entity.getEntityWorld().profiler.endSection();
 
         return false;
     }

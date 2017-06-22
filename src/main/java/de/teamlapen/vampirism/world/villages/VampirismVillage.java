@@ -79,7 +79,7 @@ public class VampirismVillage implements IVampirismVillage {
 
     @Override
     public Village getVillage() {
-        Village v = world.villageCollectionObj.getNearestVillage(center, 0);
+        Village v = world.villageCollection.getNearestVillage(center, 0);
         if (v == null)
             return null;
         if (!v.getCenter().equals(center)) {
@@ -95,7 +95,7 @@ public class VampirismVillage implements IVampirismVillage {
         } else {
             StringBuilder builder = new StringBuilder();
             builder.append("Center: ").append(getCenter().toString());
-            builder.append("\nIs inside: ").append(v.isBlockPosWithinSqVillageRadius(pos)).append(" (").append(getBoundingBox().isVecInside(new Vec3d(pos))).append(')');
+            builder.append("\nIs inside: ").append(v.isBlockPosWithinSqVillageRadius(pos)).append(" (").append(getBoundingBox().contains(new Vec3d(pos))).append(')');
             builder.append("\n").append(String.format("RBitten: %s, RConv: %s, RBDeath: %s, Agrr: %s", recentlyBitten, recentlyConverted, recentlyBittenToDeath, agressive));
             List<EntityVillager> allVillagers = getAllVillager(v);
             List<EntityBasicHunter> hunters = getHunter(v);
@@ -180,7 +180,7 @@ public class VampirismVillage implements IVampirismVillage {
                     }
                 }
 
-                world.theProfiler.startSection("checkVillagersHunters");
+                world.profiler.startSection("checkVillagersHunters");
                 List<EntityVillager> allVillagers = getAllVillager(v);
                 List<EntityBasicHunter> hunters = getHunter(v);
                 List<EntityHunterVillager> hunterVillagers = filterHunterVillagers(allVillagers);
@@ -202,7 +202,7 @@ public class VampirismVillage implements IVampirismVillage {
                         spawnHunter(v);
                     }
                 }
-                world.theProfiler.endSection();
+                world.profiler.endSection();
                 int aggressiveCounter = calculateAggressiveCounter();
                 if (aggressiveCounter >= Balance.village.AGGRESSIVE_COUNTER_THRESHOLD) {
                     if (!agressive) {
@@ -313,7 +313,7 @@ public class VampirismVillage implements IVampirismVillage {
      * @return -1 annihilated,0 center has been updated, 1 ok
      */
     int isAnnihilated() {
-        Village v = world.villageCollectionObj.getNearestVillage(center, 0);
+        Village v = world.villageCollection.getNearestVillage(center, 0);
         if (v == null) {
             VampirismMod.log.i(TAG, "Can't find village at %s anymore", center);
             return -1;
