@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api;
 
+import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
@@ -20,6 +21,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
 
 import javax.annotation.Nonnull;
+import java.util.Set;
 
 /**
  * Class for core api methods
@@ -43,6 +45,7 @@ public class VampirismAPI {
     private static IBloodPotionRegistry bloodPotionRegistry;
     private static IGarlicChunkHandler.Provider garlicHandlerProvider;
     private static IAlchemicalCauldronCraftingManager alchemicalCauldronCraftingManager;
+    private static Set<Integer> worldGenDimensions = Sets.newHashSet();
 
 
     public static IVampireVisionRegistry vampireVisionRegistry() {
@@ -103,6 +106,27 @@ public class VampirismAPI {
      */
     public static IAlchemicalCauldronCraftingManager alchemicalCauldronCraftingManager() {
         return alchemicalCauldronCraftingManager;
+    }
+
+    /**
+     * Makes Vampirism execute it's worldgen in this dimension
+     */
+    public static void addDimensionForWorldgen(int id) {
+        worldGenDimensions.add(id);
+    }
+
+    /**
+     * Removes a dimensions from Vampirism's worldgen if it has been added before
+     */
+    public static void removeDimensionFromWorldgen(int id) {
+        worldGenDimensions.remove(id);
+    }
+
+    /**
+     * If Vampirism's world gen is enabled in this dimension
+     */
+    public static boolean isWorldGenEnabledFor(int dim) {
+        return worldGenDimensions.contains(dim);
     }
 
     /**
