@@ -11,6 +11,7 @@ import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +26,7 @@ public class Configs {
     public static final String CATEGORY_VILLAGE = "village_settings";
     public static final String CATEGORY_BALANCE = "balance";
     public static final String CATEGORY_DISABLE = "disabled";
+    public static final String CATEGORY_WORLDGEN = "world_gen";
     private final static String TAG = "Configs";
     public static boolean realism_mode;
     public static boolean resetConfigurationInDev;
@@ -54,6 +56,8 @@ public class Configs {
     public static boolean disable_vampireEyes;
     public static boolean disable_config_sync;
     public static boolean disable_screen_overlay;
+    public static @Nonnull
+    int[] worldGenDimensions = new int[0];
 
     public static boolean autoConvertGlasBottles;
     private static Configuration main_config;
@@ -96,6 +100,8 @@ public class Configs {
         cat_disabled.setComment("You can disable some features here, but it is not recommend and might cause problems (e.g. you can't get certain items");
         ConfigCategory cat_gui = main_config.getCategory(CATEGORY_GUI);
         cat_gui.setComment("Adjust some of Vampirism's gui elements");
+        ConfigCategory cat_world_gen = main_config.getCategory(CATEGORY_WORLDGEN);
+        cat_world_gen.setComment("Adjust Vampirism's world generation features");
 
         //General
         realism_mode = main_config.getBoolean("vampire_realism_mode", CATEGORY_GENERAL, false, "Changes a few things and changes some default balance values to make it more 'realistic'. You have to reset the balance values and restart MC after changing this.");
@@ -153,6 +159,9 @@ public class Configs {
         gui_level_offset_x = main_config.getInt("level_offset_x", CATEGORY_GUI, 0, -250, 250, "X-Offset of the level indicator from the center in pixels");
         gui_level_offset_y = main_config.getInt("level_offset_y", CATEGORY_GUI, 47, 0, 270, "Y-Offset of the level indicator from the bottom in pixels");
 
+
+        //WorldGen
+        worldGenDimensions = main_config.get(CATEGORY_WORLDGEN, "world_gen_dimensions", new int[0], "List of dimensions ids Vampirism tries to execute worldgen besides DIM0").getIntList();
 
         //Disable
         disable_replaceVanillaNightVision = main_config.getBoolean("disable_replace_night_vision", CATEGORY_DISABLE, false, "Disable replacing vanilla night vision, if disabled the potion is shown to the player all the time");

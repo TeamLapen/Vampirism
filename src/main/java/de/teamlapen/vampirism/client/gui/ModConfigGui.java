@@ -25,10 +25,11 @@ public class ModConfigGui extends GuiConfig {
     private static List<IConfigElement> getConfigElements() {
         List<IConfigElement> list = new ArrayList<IConfigElement>();
         list.addAll(new ConfigElement(Configs.getMainConfig().getCategory(Configs.CATEGORY_GENERAL)).getChildElements());
+        list.add(new DummyConfigElement.DummyCategoryElement("worldgen", "category.vampirism.worldgen", new ConfigElement(Configs.getMainConfig().getCategory(Configs.CATEGORY_WORLDGEN)).getChildElements()));
         list.add(new DummyConfigElement.DummyCategoryElement("village", "category.vampirism.village", new ConfigElement(Configs.getMainConfig().getCategory(Configs.CATEGORY_VILLAGE)).getChildElements()));
-        list.add(new DummyConfigElement.DummyCategoryElement("disable", "category.vampirism.disable", new ConfigElement(Configs.getMainConfig().getCategory(Configs.CATEGORY_DISABLE)).getChildElements()));
         list.add(new DummyConfigElement.DummyCategoryElement("gui", "category.vampirism.gui", new ConfigElement(Configs.getMainConfig().getCategory(Configs.CATEGORY_GUI)).getChildElements()));
         list.add(new DummyConfigElement.DummyCategoryElement("balance", "category.vampirism.balance", BalanceEntry.class));
+        list.add(new DummyConfigElement.DummyCategoryElement("disable", "category.vampirism.disable", new ConfigElement(Configs.getMainConfig().getCategory(Configs.CATEGORY_DISABLE)).getChildElements()));
         return list;
     }
 
