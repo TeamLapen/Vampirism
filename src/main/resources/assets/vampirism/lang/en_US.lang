@@ -452,4 +452,5 @@ category.vampirism.village=Village Configuration
 category.vampirism.village.tooltip=Configure Vampirism's village modifications
 category.vampirism.gui=GUI Configuration
 category.vampirism.gui.tooltip=Configure display
+category.vampirism.worldgen=World Generation
 

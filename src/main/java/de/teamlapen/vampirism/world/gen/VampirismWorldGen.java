@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world.gen;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.config.Configs;
 import net.minecraft.init.Biomes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -26,28 +27,10 @@ public class VampirismWorldGen implements IWorldGenerator {
 
     @Override
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
-        switch (world.provider.getDimension()) {
-            case -1:
-                generateNether(random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
-                break;
-            case 0:
-                generateOverworld(random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
-                break;
-            case 1:
-                generateEnd(random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
-                break;
-            default:
-                break;
+        int dim = world.provider.getDimension();
+        if (dim == 0 || dim != -1 && dim != 1 && contains(Configs.worldGenDimensions, dim)) {
+            generateOverworld(random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
         }
-    }
-
-
-    public void generateEnd(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
-
-    }
-
-    public void generateNether(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
-
     }
 
     public void generateOverworld(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
@@ -85,5 +68,12 @@ public class VampirismWorldGen implements IWorldGenerator {
         }
 
 
+    }
+
+    private boolean contains(int[] array, int value) {
+        for (int i : array) {
+            if (i == value) return true;
+        }
+        return false;
     }
 }
