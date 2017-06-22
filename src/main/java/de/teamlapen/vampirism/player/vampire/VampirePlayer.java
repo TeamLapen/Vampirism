@@ -807,13 +807,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     break;
                 default://Should not happen
             }
-            try {
-                Method mSetSize = ReflectionHelper.findMethod(EntityPlayer.class, player, new String[]{"setRenderOffsetForSleep", SRGNAMES.EntityPlayer_setRenderOffsetForSleep}, EnumFacing.class);
-                mSetSize.invoke(player, enumfacing);
-            } catch (Exception e) {
-                VampirismMod.log.e(TAG, e, "Could set render offset for sleep! ");
-                return EntityPlayer.SleepResult.OTHER_PROBLEM;
-            }
+            player.setRenderOffsetForSleep(enumfacing);
 
             player.setPosition((double) ((float) bedLocation.getX() + f), (double) ((float) bedLocation.getY() + 0.6875F), (double) ((float) bedLocation.getZ() + f1));
         } else {

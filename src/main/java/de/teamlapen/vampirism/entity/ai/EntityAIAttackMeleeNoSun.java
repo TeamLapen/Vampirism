@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.entity.ai;
 
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.util.SRGNAMES;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIAttackMelee;
@@ -10,26 +8,12 @@ import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.pathfinding.PathPoint;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
-
-import javax.annotation.Nullable;
-import java.lang.reflect.Field;
 
 /**
  * Checks paths of {@link EntityAIAttackMelee} for sunny parts. Uses reflection twice each tick TODO
  */
 public class EntityAIAttackMeleeNoSun extends EntityAIAttackMelee {
 
-    /**
-     * Caches accessor for {@link PathNavigateGround#shouldAvoidSun}
-     */
-    private @Nullable
-    Field field_shouldAvoidSun = null;
-    /**
-     * Caches accessor for {@link EntityAIAttackMelee#entityPathEntity}
-     */
-    private @Nullable
-    Field field_entityPathEntity = null;
 
     public EntityAIAttackMeleeNoSun(EntityCreature creature, double speedIn, boolean useLongMemory) {
         super(creature, speedIn, useLongMemory);
@@ -46,26 +30,14 @@ public class EntityAIAttackMeleeNoSun extends EntityAIAttackMelee {
                     return true;
                 }
             }
-            boolean avoidSun = true;
-            try {
-                if (attacker.getNavigator() instanceof PathNavigateGround) {
-                    if (field_shouldAvoidSun == null) {
-                        field_shouldAvoidSun = ReflectionHelper
-                                .findField(PathNavigateGround.class, "shouldAvoidSun", SRGNAMES.PathNavigateGround_shouldAvoidSun);
-                    }
-                    avoidSun = (boolean) field_shouldAvoidSun.get(attacker.getNavigator());
-                }
-            } catch (Exception e) {
-                VampirismMod.log.e("AttackMeleeNoSun", e, "Failed to check for 'shouldAvoidSun' (%s)", SRGNAMES.PathNavigateGround_shouldAvoidSun);
-                avoidSun = false;
+            boolean avoidSun = false;
+            if (attacker.getNavigator() instanceof PathNavigateGround) {
+                avoidSun = ((PathNavigateGround) attacker.getNavigator()).shouldAvoidSun;
             }
+
             if (avoidSun) {
-                try {
-                    if (field_entityPathEntity == null) {
-                        field_entityPathEntity = ReflectionHelper
-                                .findField(EntityAIAttackMelee.class, "entityPathEntity", SRGNAMES.EntityAIAttackMelee_entityPathEntity);
-                    }
-                    Path path = (Path) field_entityPathEntity.get(this);
+
+                Path path = this.entityPathEntity;
                     if (attacker.getEntityWorld().canSeeSky(new BlockPos(MathHelper.floor(this.attacker.posX), (int) (this.attacker.getEntityBoundingBox().minY + 0.5D), MathHelper.floor(this.attacker.posZ)))) {
                         return false;
                     }
@@ -79,9 +51,7 @@ public class EntityAIAttackMeleeNoSun extends EntityAIAttackMelee {
                         }
 
                     }
-                } catch (Exception e) {
-                    VampirismMod.log.e("AttackMeleeNoSun", e, "Failed to retrieve path from EntityAIAttackMelee");
-                }
+
             }
 
         }

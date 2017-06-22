@@ -3,14 +3,12 @@ package de.teamlapen.vampirism.player.vampire;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.util.SRGNAMES;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.FoodStats;
 import net.minecraft.world.EnumDifficulty;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -102,18 +100,9 @@ public class BloodStats {
         FoodStats foodStats = player.getFoodStats();
         foodStats.setFoodLevel(10);
         EnumDifficulty enumDifficulty = player.getEntityWorld().getDifficulty();
-        float exhaustion;
-        try {
-            if (field_foodExhaustionLevel == null) {
-                field_foodExhaustionLevel = ReflectionHelper.findField(FoodStats.class, "foodExhaustionLevel", SRGNAMES.FoodStats_foodExhaustionLevel);
-            }
-            exhaustion = (float) field_foodExhaustionLevel.get(foodStats);
-            addExhaustion(exhaustion);
-            field_foodExhaustionLevel.set(foodStats, 0);
-        } catch (Exception e) {
-            VampirismMod.log.e(TAG, e, "Failed to access foodExhaustionLevel (%s)", SRGNAMES.FoodStats_foodExhaustionLevel);
-            throw new RuntimeException(e);
-        }
+        float exhaustion = foodStats.foodExhaustionLevel;
+        foodStats.foodExhaustionLevel = 0;
+        addExhaustion(exhaustion);
         this.prevBloodLevel = bloodLevel;
         if (this.bloodExhaustionLevel > 4.0F) {
             this.bloodExhaustionLevel -= 4.0F;

@@ -16,7 +16,6 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayerSpecialAttributes;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.util.SRGNAMES;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -40,13 +39,11 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.GL11;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.List;
 
 /**
@@ -138,14 +135,7 @@ public class RenderHandler {
                 boolean active = pe != null && pe.getAmplifier() >= 2;
                 EntityRenderer renderer = mc.entityRenderer;
                 if (active && !renderer.isShaderActive()) {
-                    //Load saturation shader if not active
-                    try {
-                        Method method = ReflectionHelper.findMethod(EntityRenderer.class, renderer, new String[]{"loadShader", SRGNAMES.EntityRenderer_loadShader}, ResourceLocation.class);
-                        method.invoke(renderer, saturation1);
-                    } catch (Exception e) {
-                        doSaturationShader = false;
-                        VampirismMod.log.e("RenderHandler", e, "Failed to activate saturation shader");
-                    }
+                    renderer.loadShader(saturation1);
                 } else if (!active && renderer.isShaderActive() && renderer.getShaderGroup().getShaderGroupName().equals(saturation1.toString())) {
                     renderer.stopUseShader();
                 }
