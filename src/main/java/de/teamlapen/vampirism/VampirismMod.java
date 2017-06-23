@@ -25,14 +25,10 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.inventory.HunterWeaponCraftingManager;
-import de.teamlapen.vampirism.modcompat.GrimoireOfGaiaModCompat;
-import de.teamlapen.vampirism.modcompat.SophisticatedWolvesModCompat;
 import de.teamlapen.vampirism.modcompat.SpongeModCompat;
 import de.teamlapen.vampirism.modcompat.abyssalcraft.AbyssalCraftModCompat;
-import de.teamlapen.vampirism.modcompat.bop.BoPModCompat;
 import de.teamlapen.vampirism.modcompat.guide.GuideAPICompat;
 import de.teamlapen.vampirism.modcompat.jei.JEIModCompat;
-import de.teamlapen.vampirism.modcompat.waila.WailaModCompat;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.player.ModPlayerEventHandler;
@@ -246,14 +242,10 @@ public class VampirismMod {
     }
 
     private void addModCompats() {
-        modCompatLoader.addModCompat(new WailaModCompat());
         modCompatLoader.addModCompat(new JEIModCompat());
         modCompatLoader.addModCompat(new SpongeModCompat());
         modCompatLoader.addModCompat(new GuideAPICompat());
-        modCompatLoader.addModCompat(new GrimoireOfGaiaModCompat());
-        modCompatLoader.addModCompat(new SophisticatedWolvesModCompat());
         modCompatLoader.addModCompat(new AbyssalCraftModCompat());
-        modCompatLoader.addModCompat(new BoPModCompat());
     }
 
     private void checkDevEnv() {

@@ -1,6 +1,0 @@
-#Sophisticated wolves, replaces all normal wolves
-#Blood values set by @spraaq
-#TODO check if this are the correct ids once mod is updated to 1.11
-
-
-sophisticatedwolves:SWWolf=10
