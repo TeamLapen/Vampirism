@@ -20,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -68,7 +69,7 @@ public class ItemCrossbowArrow extends VampirismItem {
     }
 
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+    public void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         EnumArrowType type = getType(stack);
         if (type != EnumArrowType.NORMAL) {
             tooltip.add(UtilLib.translate("item.vampirism." + regName + "." + type.name + ".tooltip"));

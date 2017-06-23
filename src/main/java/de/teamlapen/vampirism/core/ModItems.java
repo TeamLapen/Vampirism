@@ -26,6 +26,7 @@ import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.RecipeSorter;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -200,7 +201,7 @@ public class ModItems {
         enhancedTechCrossbow.setEnchantability(Item.ToolMaterial.DIAMOND);
         techCrossbowAmmoPackage = registerItem(new VampirismItem("tech_crossbow_ammo_package") {
             @Override
-            public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+            public void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
                 tooltip.add(UtilLib.translateFormatted("item.vampirism." + regName + ".tooltip", basicTechCrossbow.getLocalizedName()));
             }
         });

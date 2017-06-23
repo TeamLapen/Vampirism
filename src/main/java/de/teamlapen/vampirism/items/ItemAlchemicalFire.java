@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -32,7 +33,7 @@ public class ItemAlchemicalFire extends VampirismItem {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+    public void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         super.addInformation(stack, playerIn, tooltip, advanced);
         tooltip.add(UtilLib.translate("item.vampirism.item_alchemical_fire.desc1"));
         tooltip.add(UtilLib.translate("item.vampirism.item_alchemical_fire.desc2"));

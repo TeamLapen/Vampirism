@@ -14,6 +14,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -30,7 +31,7 @@ public class ItemHunterIntel extends VampirismItem {
     }
 
     @Override
-    public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean par4) {
+    public void addInformation(ItemStack itemStack, @Nullable EntityPlayer player, List list, boolean par4) {
         list.add(TextFormatting.RED + UtilLib.translate("text.vampirism.for_level") + ": " + HunterLevelingConf.instance().getLevelForHunterIntelMeta(itemStack.getMetadata()));
     }
 
