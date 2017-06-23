@@ -20,6 +20,7 @@ import de.teamlapen.vampirism.potion.FakeNightVisionPotion;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIAvoidEntity;
 import net.minecraft.entity.ai.EntityAIBase;
@@ -48,9 +49,9 @@ public class ModEntityEventHandler {
     private boolean skipAttackDamageOnce = false;
 
     @SubscribeEvent
-    public void onAttachCapability(AttachCapabilitiesEvent.Entity event) {
-        if (event.getEntity() instanceof EntityCreature) {
-            event.addCapability(REFERENCE.EXTENDED_CREATURE_KEY, ExtendedCreature.createNewCapability((EntityCreature) event.getEntity()));
+    public void onAttachCapabilityEntity(AttachCapabilitiesEvent<Entity> event) {
+        if (event.getObject() instanceof EntityCreature) {
+            event.addCapability(REFERENCE.EXTENDED_CREATURE_KEY, ExtendedCreature.createNewCapability((EntityCreature) event.getObject()));
         }
     }
 

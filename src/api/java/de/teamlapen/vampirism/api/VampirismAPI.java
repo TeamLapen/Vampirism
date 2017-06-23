@@ -13,9 +13,10 @@ import de.teamlapen.vampirism.api.items.IAlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
 import de.teamlapen.vampirism.api.items.IHunterWeaponCraftingManager;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
-import de.teamlapen.vampirism.api.world.IVampirismVillageProvider;
+import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.village.Village;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -34,13 +35,14 @@ public class VampirismAPI {
     private static final Capability<IExtendedCreatureVampirism> CAP_CREATURE = null;
     @CapabilityInject(IFactionPlayerHandler.class)
     private final static Capability<IFactionPlayerHandler> CAP_FACTION_HANDLER_PLAYER = null;
+    @CapabilityInject(IVampirismVillage.class)
+    private final static Capability<IVampirismVillage> CAP_VILLAGE = null;
     private static IFactionRegistry factionRegistry;
     private static ISundamageRegistry sundamageRegistry;
     private static IVampirismEntityRegistry biteableRegistry;
     private static IActionRegistry actionRegistry;
     private static ISkillRegistry skillRegistry;
     private static IVampireVisionRegistry vampireVisionRegistry;
-    private static IVampirismVillageProvider.IProviderProvider vampirismVillageProviders;
     private static IHunterWeaponCraftingManager weaponCraftingManager;
     private static IBloodPotionRegistry bloodPotionRegistry;
     private static IGarlicChunkHandler.Provider garlicHandlerProvider;
@@ -147,8 +149,7 @@ public class VampirismAPI {
      * Setup the API accessors
      * FOR INTERNAL USAGE ONLY
      */
-    public static void setUpAccessors(IVampirismVillageProvider.IProviderProvider villagePro, IHunterWeaponCraftingManager weaponCraftingMan, IGarlicChunkHandler.Provider garlicChunkHandlerProv, IAlchemicalCauldronCraftingManager alchemicalCauldronCraftingMan) {
-        vampirismVillageProviders = villagePro;
+    public static void setUpAccessors(IHunterWeaponCraftingManager weaponCraftingMan, IGarlicChunkHandler.Provider garlicChunkHandlerProv, IAlchemicalCauldronCraftingManager alchemicalCauldronCraftingMan) {
         weaponCraftingManager = weaponCraftingMan;
         garlicHandlerProvider = garlicChunkHandlerProv;
         alchemicalCauldronCraftingManager = alchemicalCauldronCraftingMan;
@@ -166,18 +167,16 @@ public class VampirismAPI {
 
     /**
      * Get the {@link IExtendedCreatureVampirism} instance for the given creature
-     *
-     * @return
      */
     public static IExtendedCreatureVampirism getExtendedCreatureVampirism(EntityCreature creature) {
         return creature.getCapability(CAP_CREATURE, null);
     }
 
     /**
-     * @return The {@link IVampirismVillageProvider} for the given world
+     * Get the {@link IVampirismVillage} instance for the given village
      */
-    public static IVampirismVillageProvider getVampirismVillageProvider(World world) {
-        return vampirismVillageProviders.getProviderForWorld(world);
+    public static IVampirismVillage getVampirismVillage(Village village) {
+        return village.getCapability(CAP_VILLAGE, null);
     }
 
     /**

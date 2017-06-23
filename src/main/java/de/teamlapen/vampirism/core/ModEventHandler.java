@@ -11,13 +11,16 @@ import de.teamlapen.vampirism.potion.FakeNightVisionPotion;
 import de.teamlapen.vampirism.util.DaySleepHelper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.ModWorldEventListener;
-import de.teamlapen.vampirism.world.villages.VampirismVillageCollection;
+import de.teamlapen.vampirism.world.villages.VampirismVillage;
+import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.village.Village;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.terraingen.InitMapGenEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -37,6 +40,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ModEventHandler {
     private final static String TAG = "EventHandler";
 
+    @SubscribeEvent
+    public void onAttachCapabilitiesVillage(AttachCapabilitiesEvent<Village> event) {
+        event.addCapability(REFERENCE.VAMPIRISM_VILLAGE_KEY, VampirismVillage.createNewCapability(event.getObject()));
+    }
+
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onClientDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
@@ -52,7 +60,6 @@ public class ModEventHandler {
             Balance.onConfigurationChanged();
         }
     }
-
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onInitMapGen(InitMapGenEvent event) {
@@ -119,7 +126,7 @@ public class ModEventHandler {
     public void onWorldTick(TickEvent.WorldTickEvent event) {
         if (event.phase.equals(TickEvent.Phase.END)) {
             DaySleepHelper.checkSleepWorld(event.world);
-            VampirismVillageCollection.get(event.world).tick();
+            VampirismVillageHelper.tick(event.world);
         }
     }
 

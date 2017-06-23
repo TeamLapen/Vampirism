@@ -18,7 +18,7 @@ import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.world.villages.VampirismVillageCollection;
+import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.monster.EntityZombie;
@@ -372,7 +372,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     protected void onRandomTick() {
         super.onRandomTick();
         if (villageHunter) {
-            this.IVampirismVillage = VampirismVillageCollection.get(world).getNearestVillage(getPosition(), 32);
+            this.IVampirismVillage = VampirismVillageHelper.getNearestVillage(world, getPosition(), 32);
             if (this.IVampirismVillage == null) {
                 this.makeNormalHunter();
             }

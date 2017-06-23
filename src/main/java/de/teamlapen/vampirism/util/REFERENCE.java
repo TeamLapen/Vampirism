@@ -30,8 +30,9 @@ public class REFERENCE {
      */
     public final static int REFRESH_SUNDAMAGE_TICKS = 8;
 
-    public final static ResourceLocation FACTION_PLAYER_HANDLER_KEY = new ResourceLocation(MODID, "IFactionPlayerHandler");
-    public final static ResourceLocation VAMPIRE_PLAYER_KEY = new ResourceLocation(MODID, "IVampirePlayer");
-    public final static ResourceLocation HUNTER_PLAYER_KEY = new ResourceLocation(MODID, "IHunterPlayer");
-    public final static ResourceLocation EXTENDED_CREATURE_KEY = new ResourceLocation(MODID, "IExtendedCreature");
+    public final static ResourceLocation FACTION_PLAYER_HANDLER_KEY = new ResourceLocation(MODID, "ifactionplayerhandler");
+    public final static ResourceLocation VAMPIRE_PLAYER_KEY = new ResourceLocation(MODID, "ivampireplayer");
+    public final static ResourceLocation HUNTER_PLAYER_KEY = new ResourceLocation(MODID, "ihunterplayer");
+    public final static ResourceLocation EXTENDED_CREATURE_KEY = new ResourceLocation(MODID, "iextendedcreature");
+    public final static ResourceLocation VAMPIRISM_VILLAGE_KEY = new ResourceLocation(MODID, "ivampirismvillage");
 }

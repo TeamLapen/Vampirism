@@ -12,12 +12,14 @@ import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterVillager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityVillager;
+import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.village.Village;
-import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,22 +29,64 @@ import java.util.*;
  * Vampirism's instance of a village
  */
 public class VampirismVillage implements IVampirismVillage {
-    private static AxisAlignedBB getBoundingBox(Village v) {
-        int r = v.getVillageRadius();
-        BlockPos cc = v.getCenter();
-        return new AxisAlignedBB(cc.getX() - r, cc.getY() - 10, cc.getZ() - r, cc.getX() + r, cc.getY() + 10, cc.getZ() + r);
+
+
+    @CapabilityInject(IVampirismVillage.class)
+    public final static Capability<IVampirismVillage> CAP = null;
+
+    public static VampirismVillage get(Village v) {
+        return (VampirismVillage) v.getCapability(CAP, null);
     }
 
+    public static void registerCapability() {
+        CapabilityManager.INSTANCE.register(IVampirismVillage.class, new VampirismVillage.Storage(), VampirismVillageDefaultImpl.class);
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    public static ICapabilityProvider createNewCapability(final Village village) {
+        return new ICapabilitySerializable<NBTTagCompound>() {
+
+            IVampirismVillage inst = new VampirismVillage(village);
+
+            @Override
+            public void deserializeNBT(NBTTagCompound nbt) {
+                CAP.getStorage().readNBT(CAP, inst, null, nbt);
+            }
+
+            @Override
+            public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
+
+                return CAP.equals(capability) ? CAP.<T>cast(inst) : null;
+            }
+
+            @Override
+            public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
+                return CAP.equals(capability);
+            }
+
+            @Override
+            public NBTTagCompound serializeNBT() {
+                return (NBTTagCompound) CAP.getStorage().writeNBT(CAP, inst, null);
+            }
+        };
+    }
     private final String TAG = "VampirismVillage";
-    private World world;
+    private final Village village;
     private BlockPos center = new BlockPos(0, 0, 0);
     private int recentlyBitten;
     private int recentlyConverted;
     private boolean agressive;
     private List<VillageAggressorVampire> villageAggressorVampires = Lists.newArrayList();
+    /**
+     * Currently unused
+     */
     private boolean dirty;
     private int recentlyBittenToDeath;
     private int tickCounter;
+
+    public VampirismVillage(Village village) {
+        this.village = village;
+    }
 
     @Override
     public
@@ -65,7 +109,9 @@ public class VampirismVillage implements IVampirismVillage {
 
     @Override
     public AxisAlignedBB getBoundingBox() {
-        return getBoundingBox(this.getVillage());
+        int r = village.getVillageRadius();
+        BlockPos cc = village.getCenter();
+        return new AxisAlignedBB(cc.getX() - r, cc.getY() - 10, cc.getZ() - r, cc.getX() + r, cc.getY() + 10, cc.getZ() + r);
     }
 
     @Override
@@ -79,13 +125,7 @@ public class VampirismVillage implements IVampirismVillage {
 
     @Override
     public Village getVillage() {
-        Village v = world.villageCollection.getNearestVillage(center, 0);
-        if (v == null)
-            return null;
-        if (!v.getCenter().equals(center)) {
-            return null;
-        }
-        return v;
+        return village;
     }
 
     public String makeDebugString(BlockPos pos) {
@@ -97,8 +137,8 @@ public class VampirismVillage implements IVampirismVillage {
             builder.append("Center: ").append(getCenter().toString());
             builder.append("\nIs inside: ").append(v.isBlockPosWithinSqVillageRadius(pos)).append(" (").append(getBoundingBox().contains(new Vec3d(pos))).append(')');
             builder.append("\n").append(String.format("RBitten: %s, RConv: %s, RBDeath: %s, Agrr: %s", recentlyBitten, recentlyConverted, recentlyBittenToDeath, agressive));
-            List<EntityVillager> allVillagers = getAllVillager(v);
-            List<EntityBasicHunter> hunters = getHunter(v);
+            List<EntityVillager> allVillagers = getAllVillager();
+            List<EntityBasicHunter> hunters = getHunter();
             List<EntityHunterVillager> hunterVillagers = filterHunterVillagers(allVillagers);
             List<EntityVillager> normalVillager = filterNormalVillagers(allVillagers);
             builder.append("\n").append(String.format("Stats: Doors: %s, Aggro: %s, v: %s, vh: %s, h: %s", v.getNumVillageDoors(), calculateAggressiveCounter(), normalVillager.size(), hunterVillagers.size(), hunters.size()));
@@ -141,23 +181,18 @@ public class VampirismVillage implements IVampirismVillage {
         recentlyBittenToDeath = nbt.getInteger("KILLED");
     }
 
-    public void setWorld(World world) {
-        this.world = world;
-    }
-
     /**
      * Updates the VillageVampire
      *
-     * @param tickCounter
+     * @param worldTime
      * @return dirty
      */
-    public boolean tick(int tickCounter) {
-        this.tickCounter = tickCounter;
-        if (tickCounter % 20 == 13) {
-            int tick = tickCounter / 20;
+    public boolean tick(long worldTime) {
+        this.tickCounter = (int) worldTime;
+        if (worldTime % 20 == 13) {
+            int tick = (int) (worldTime / 20);
             this.removeDeadAndOldAggressors();
             Village v = getVillage();
-            if (v != null) {
                 if (tick % (Balance.village.REDUCE_RATE) == 0) {
                     if (recentlyBitten > 0) {
                         recentlyBitten--;
@@ -174,21 +209,21 @@ public class VampirismVillage implements IVampirismVillage {
                         dirty = true;
                         respawn = true;
                     }
-                    if (respawn && world.rand.nextInt(Balance.village.VILLAGER_RESPAWN_RATE) == 0) {
-                        spawnVillager(v);
+                    if (respawn && v.world.rand.nextInt(Balance.village.VILLAGER_RESPAWN_RATE) == 0) {
+                        spawnVillager();
 
                     }
                 }
 
-                world.profiler.startSection("checkVillagersHunters");
-                List<EntityVillager> allVillagers = getAllVillager(v);
-                List<EntityBasicHunter> hunters = getHunter(v);
+            v.world.profiler.startSection("checkVillagersHunters");
+            List<EntityVillager> allVillagers = getAllVillager();
+            List<EntityBasicHunter> hunters = getHunter();
                 List<EntityHunterVillager> hunterVillagers = filterHunterVillagers(allVillagers);
                 List<EntityVillager> normalVillager = filterNormalVillagers(allVillagers);
-                if (world.rand.nextInt(30) == 0) {
+            if (v.world.rand.nextInt(30) == 0) {
                     int hunterCount = hunters.size() + hunterVillagers.size() / 2;
                     boolean spawn = hunterCount < (Balance.village.MIN_HUNTER_COUNT_VILLAGE_PER_DOOR * v.getNumVillageDoors() + 1);
-                    if (spawn || world.rand.nextInt(30) == 0) {
+                if (spawn || v.world.rand.nextInt(30) == 0) {
                         VampirismMod.log.d(TAG, "Stats: Doors: %s, Aggro: %s, v: %s, vh: %s, h: %s", v.getNumVillageDoors(), calculateAggressiveCounter(), normalVillager.size(), hunterVillagers.size(), hunters.size());
                     }
                     if (spawn && hunterCount > 20) {
@@ -199,14 +234,14 @@ public class VampirismVillage implements IVampirismVillage {
                         spawn = false;
                     }
                     if (spawn) {
-                        spawnHunter(v);
+                        spawnHunter();
                     }
                 }
-                world.profiler.endSection();
+            v.world.profiler.endSection();
                 int aggressiveCounter = calculateAggressiveCounter();
                 if (aggressiveCounter >= Balance.village.AGGRESSIVE_COUNTER_THRESHOLD) {
                     if (!agressive) {
-                        spawnVillager(v);
+                        spawnVillager();
                         Collections.shuffle(normalVillager);
                         makeAgressive(selectVillagersToBecomeHunter(normalVillager));
                     }
@@ -215,7 +250,7 @@ public class VampirismVillage implements IVampirismVillage {
                 }
 
             }
-        }
+
         if (dirty) {
             dirty = false;
             return true;
@@ -296,33 +331,14 @@ public class VampirismVillage implements IVampirismVillage {
     }
 
     /**
-     * @param v
      * @return A list of all villagers in the given village
      */
-    private List<EntityVillager> getAllVillager(Village v) {
-        return world.getEntitiesWithinAABB(EntityVillager.class, getBoundingBox(v));
+    private List<EntityVillager> getAllVillager() {
+        return village.world.getEntitiesWithinAABB(EntityVillager.class, getBoundingBox());
     }
 
-    private List<EntityBasicHunter> getHunter(Village v) {
-        return world.getEntitiesWithinAABB(EntityBasicHunter.class, getBoundingBox(v));
-    }
-
-    /**
-     * Checks if the corrosponding village still exists
-     *
-     * @return -1 annihilated,0 center has been updated, 1 ok
-     */
-    int isAnnihilated() {
-        Village v = world.villageCollection.getNearestVillage(center, 0);
-        if (v == null) {
-            VampirismMod.log.i(TAG, "Can't find village at %s anymore", center);
-            return -1;
-        }
-        if (!this.getCenter().equals(v.getCenter())) {
-            this.setCenter(v.getCenter());
-            return 0;
-        }
-        return 1;
+    private List<EntityBasicHunter> getHunter() {
+        return village.world.getEntitiesWithinAABB(EntityBasicHunter.class, getBoundingBox());
     }
 
     private void makeAgressive(List<EntityVillager> villagers) {
@@ -382,9 +398,9 @@ public class VampirismVillage implements IVampirismVillage {
         return selected;
     }
 
-    private void spawnHunter(Village v) {
-        EntityBasicHunter hunter = new EntityBasicHunter(world);
-        boolean flag = UtilLib.spawnEntityInWorld(world, getBoundingBox(v), hunter, 5);
+    private void spawnHunter() {
+        EntityBasicHunter hunter = new EntityBasicHunter(village.world);
+        boolean flag = UtilLib.spawnEntityInWorld(village.world, getBoundingBox(), hunter, 5);
         if (flag) {
             hunter.makeVillageHunter(this);
         } else {
@@ -393,12 +409,12 @@ public class VampirismVillage implements IVampirismVillage {
         VampirismMod.log.t("Spawning Vampire Hunter %s", flag);
     }
 
-    private void spawnVillager(Village v) {
-        VampirismMod.log.t("Spawning villager at village %s", v.getCenter());
+    private void spawnVillager() {
+        VampirismMod.log.t("Spawning villager at village %s", village.getCenter());
         @SuppressWarnings("rawtypes")
-        List l = world.getEntitiesWithinAABB(EntityVillager.class, getBoundingBox(v));
+        List l = village.world.getEntitiesWithinAABB(EntityVillager.class, getBoundingBox());
         if (l.size() > 0) {
-            EntityVillager ev = (EntityVillager) l.get(world.rand.nextInt(l.size()));
+            EntityVillager ev = (EntityVillager) l.get(village.world.rand.nextInt(l.size()));
             EntityVillager entityvillager;
             if (agressive && ev.getRNG().nextInt(Balance.village.VILLAGER_HUNTER_CHANCE) == 0) {
                 EntityVillager temp = new EntityVillager(ev.getEntityWorld());
@@ -410,11 +426,25 @@ public class VampirismVillage implements IVampirismVillage {
                 ev.setGrowingAge(6000);
             }
             entityvillager.setLocationAndAngles(ev.posX, ev.posY, ev.posZ, 0.0F, 0.0F);
-            world.spawnEntity(entityvillager);
-            world.setEntityState(entityvillager, (byte) 12);
+            village.world.spawnEntity(entityvillager);
+            village.world.setEntityState(entityvillager, (byte) 12);
         }
     }
 
+    private static class Storage implements Capability.IStorage<IVampirismVillage> {
+
+        @Override
+        public void readNBT(Capability<IVampirismVillage> capability, IVampirismVillage instance, EnumFacing side, NBTBase nbt) {
+            ((VampirismVillage) instance).readFromNBT((NBTTagCompound) nbt);
+        }
+
+        @Override
+        public NBTBase writeNBT(Capability<IVampirismVillage> capability, IVampirismVillage instance, EnumFacing side) {
+            NBTTagCompound nbt = new NBTTagCompound();
+            ((VampirismVillage) instance).writeToNBT(nbt);
+            return nbt;
+        }
+    }
 
     /**
      * Keeps track of a vampire that bit a villager

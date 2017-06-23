@@ -9,7 +9,6 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
-import de.teamlapen.vampirism.api.world.IVampirismVillageProvider;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterVillager;
 import de.teamlapen.vampirism.player.skills.SkillRegistry;
@@ -21,6 +20,7 @@ import de.teamlapen.vampirism.world.GarlicChunkHandler;
 import de.teamlapen.vampirism.world.VampirismWorldData;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
+import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -64,8 +64,7 @@ public class TestCommand extends BasicCommand {
             @Override
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 EntityPlayer player = getCommandSenderAsPlayer(sender);
-                IVampirismVillageProvider provider = VampirismAPI.getVampirismVillageProvider(player.getEntityWorld());
-                VampirismVillage v = (VampirismVillage) provider.getNearestVillage(player);
+                VampirismVillage v = VampirismVillageHelper.getNearestVillage(player);
                 if (v == null) {
                     sender.sendMessage(new TextComponentString("No village found"));
                 } else {

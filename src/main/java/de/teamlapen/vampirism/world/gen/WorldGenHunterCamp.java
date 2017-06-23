@@ -59,7 +59,7 @@ public class WorldGenHunterCamp extends WorldGenerator {
         l = l + random.nextInt(this.distance - 2);
 
         if (i == k && j == l) {
-            return world.getVillageCollection().getNearestVillage(new BlockPos(i << 4, 10, j << 4), 20) == null;
+            return world.getVillageCollection().getNearestVillage(world.getHeight(new BlockPos(i << 4, 0, j << 4)), 20) == null;
 
         }
 

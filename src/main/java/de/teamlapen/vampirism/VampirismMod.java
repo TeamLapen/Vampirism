@@ -13,7 +13,6 @@ import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import de.teamlapen.vampirism.api.world.IVampirismVillageProvider;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.*;
@@ -58,7 +57,7 @@ import de.teamlapen.vampirism.util.VampireBookManager;
 import de.teamlapen.vampirism.world.GarlicChunkHandler;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import de.teamlapen.vampirism.world.loot.LootHandler;
-import de.teamlapen.vampirism.world.villages.VampirismVillageCollection;
+import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -67,7 +66,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraft.util.datafix.FixTypes;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.EnumHelper;
 import net.minecraftforge.common.util.ModFixs;
@@ -78,7 +76,6 @@ import net.minecraftforge.fml.common.event.*;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
-import javax.annotation.Nonnull;
 import java.awt.*;
 import java.io.File;
 
@@ -219,6 +216,7 @@ public class VampirismMod {
         VampirePlayer.registerCapability();
         FactionPlayerHandler.registerCapability();
         ExtendedCreature.registerCapability();
+        VampirismVillage.registerCapability();
 
         setupAPI1();
         Configs.init(new File(event.getModConfigurationDirectory(), REFERENCE.MODID), inDev);
@@ -281,16 +279,10 @@ public class VampirismMod {
         ActionRegistry actionRegistry = new ActionRegistry();
         SkillRegistry skillRegistry = new SkillRegistry();
         GeneralRegistryImpl generalRegistry = new GeneralRegistryImpl();
-        IVampirismVillageProvider.IProviderProvider villageProviderProvider = new IVampirismVillageProvider.IProviderProvider() {
-            @Nonnull
-            @Override
-            public IVampirismVillageProvider getProviderForWorld(World world) {
-                return VampirismVillageCollection.get(world);
-            }
-        };
+
         BloodPotionRegistry bloodPotionRegistry = new BloodPotionRegistry();
         VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionRegistry, skillRegistry, generalRegistry, bloodPotionRegistry);
-        VampirismAPI.setUpAccessors(villageProviderProvider, HunterWeaponCraftingManager.getInstance(), new GarlicChunkHandler.Provider(), AlchemicalCauldronCraftingManager.getInstance());
+        VampirismAPI.setUpAccessors(HunterWeaponCraftingManager.getInstance(), new GarlicChunkHandler.Provider(), AlchemicalCauldronCraftingManager.getInstance());
         VReference.VAMPIRE_FACTION = factionRegistry.registerPlayableFaction("Vampire", IVampirePlayer.class, 0XFF780DA3, REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.CAP, REFERENCE.HIGHEST_VAMPIRE_LEVEL);
         VReference.VAMPIRE_FACTION.setChatColor(TextFormatting.DARK_PURPLE).setUnlocalizedName("text.vampirism.vampire", "text.vampirism.vampires");
         VReference.HUNTER_FACTION = factionRegistry.registerPlayableFaction("Hunter", IHunterPlayer.class, Color.BLUE.getRGB(), REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.CAP, REFERENCE.HIGHEST_HUNTER_LEVEL);

@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.util.Helper;
-import de.teamlapen.vampirism.world.villages.VampirismVillageCollection;
+import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -130,7 +130,7 @@ public class EntityVillagerVampirism extends EntityVillager {
         super.updateAITasks();
         if (--this.randomTickDivider <= 0) {
             this.randomTickDivider = 70 + rand.nextInt(50);
-            this.IVampirismVillageObj = VampirismVillageCollection.get(this.world).getNearestVillage(getPosition(), 32);
+            this.IVampirismVillageObj = VampirismVillageHelper.getNearestVillage(world, getPosition(), 32);
         }
 
     }

@@ -13,7 +13,7 @@ import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.world.villages.VampirismVillageCollection;
+import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityCreature;
@@ -207,7 +207,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         }
         this.sync();
         if (amt > 0 && entity instanceof EntityVillager) {
-            IVampirismVillage vv = VampirismVillageCollection.get((entity).getEntityWorld()).getNearestVillage(entity);
+            IVampirismVillage vv = VampirismVillageHelper.getNearestVillage(entity);
             if (vv != null) {
                 vv.onVillagerBitten(biter);
                 if (converted) {
