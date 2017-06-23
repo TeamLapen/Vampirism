@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.core;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
@@ -32,10 +32,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.datafix.IFixableData;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.common.registry.EntityRegistry;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Handles all entity registrations and reference.
@@ -117,11 +121,11 @@ public class ModEntities {
     }
 
     static void registerSpawns() {
-        Set<Biome> allBiomes = Biome.EXPLORATION_BIOMES_LIST;
+        List<Biome> allBiomes = ForgeRegistries.BIOMES.getValues();
         /*
          * After setting this up this array will contain only biomes in which zombies can spawn.
          */
-        Set<Biome> zombieBiomes = Sets.newHashSet();
+        List<Biome> zombieBiomes = Lists.newArrayList();
         zombieBiomes.addAll(allBiomes);
         zombieBiomes.remove(Biomes.MUSHROOM_ISLAND);
         zombieBiomes.remove(Biomes.MUSHROOM_ISLAND_SHORE);
