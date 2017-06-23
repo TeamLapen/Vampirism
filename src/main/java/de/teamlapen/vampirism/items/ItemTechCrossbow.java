@@ -105,7 +105,7 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+    public void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         super.addInformation(stack, playerIn, tooltip, advanced);
         int arrows = getArrowsLeft(stack);
         if (arrows == -1) {

@@ -61,7 +61,7 @@ public class VampirismItem extends Item {
      * For compat with 1.11 and below
      */
     @SideOnly(Side.CLIENT)
-    protected void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+    protected void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
 
     }
 
