@@ -28,6 +28,7 @@ import de.teamlapen.vampirism.inventory.HunterWeaponCraftingManager;
 import de.teamlapen.vampirism.modcompat.SpongeModCompat;
 import de.teamlapen.vampirism.modcompat.guide.GuideAPICompat;
 import de.teamlapen.vampirism.modcompat.jei.JEIModCompat;
+import de.teamlapen.vampirism.modcompat.waila.WailaModCompat;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.player.ModPlayerEventHandler;
@@ -244,6 +245,7 @@ public class VampirismMod {
         modCompatLoader.addModCompat(new JEIModCompat());
         modCompatLoader.addModCompat(new SpongeModCompat());
         modCompatLoader.addModCompat(new GuideAPICompat());
+        modCompatLoader.addModCompat(new WailaModCompat());
     }
 
     private void checkDevEnv() {
