@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.core;
 
-import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.lib.lib.util.InventoryRenderHelper;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.client.render.tiles.AltarInfusionTESR;
@@ -13,25 +12,17 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelBakery;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.block.statemap.StateMapperBase;
-import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockAccess;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nullable;
 
 /**
  * Handles all block render registration including TileEntities
@@ -40,41 +31,26 @@ import javax.annotation.Nullable;
 public class ModBlocksRender {
 
 
-    public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
-        switch (step) {
-            case PRE_INIT:
-                registerRenderer();
-                registerTileRenderer();
-                break;
-            case POST_INIT:
-                registerColors();
-                break;
-
-        }
-
+    public static void register() {
+        registerRenderer();
+        registerTileRenderer();
     }
 
-    private static void registerColors() {
-        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new IBlockColor() {
-            @Override
-            public int colorMultiplier(IBlockState state, @Nullable IBlockAccess worldIn, @Nullable BlockPos pos, int tintIndex) {
-                if (tintIndex == 1) {
-                    return 0x9966FF;
-                }
-                return 0x8855FF;
+    static void registerColors() {
+        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((state, worldIn, pos, tintIndex) -> {
+            if (tintIndex == 1) {
+                return 0x9966FF;
             }
+            return 0x8855FF;
         }, ModBlocks.alchemicalFire);
-        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new IBlockColor() {
-            @Override
-            public int colorMultiplier(IBlockState state, @Nullable IBlockAccess worldIn, @Nullable BlockPos pos, int tintIndex) {
-                if (tintIndex == 255) {
-                    TileEntity tile = (worldIn == null || pos == null) ? null : worldIn.getTileEntity(pos);
-                    if (tile != null && tile instanceof TileAlchemicalCauldron) {
-                        return ((TileAlchemicalCauldron) tile).getLiquidColorClient();
-                    }
+        Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler((state, worldIn, pos, tintIndex) -> {
+            if (tintIndex == 255) {
+                TileEntity tile = (worldIn == null || pos == null) ? null : worldIn.getTileEntity(pos);
+                if (tile != null && tile instanceof TileAlchemicalCauldron) {
+                    return ((TileAlchemicalCauldron) tile).getLiquidColorClient();
                 }
-                return 0xFFFFFF;
             }
+            return 0xFFFFFF;
         }, ModBlocks.alchemicalCauldron);
     }
 
@@ -109,12 +85,7 @@ public class ModBlocksRender {
             }
         });
         ModelBakery.registerItemVariants(Item.getItemFromBlock(ModBlocks.fluidBlood));
-        ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(ModBlocks.fluidBlood), new ItemMeshDefinition() {
-            @Override
-            public ModelResourceLocation getModelLocation(ItemStack stack) {
-                return new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "fluids"), "blood");
-            }
-        });
+        ModelLoader.setCustomMeshDefinition(Item.getItemFromBlock(ModBlocks.fluidBlood), stack -> new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "fluids"), "blood"));
         ModelLoader.setCustomStateMapper(ModBlocks.fluidBlood, new StateMapperBase() {
             @Override
             protected ModelResourceLocation getModelResourceLocation(IBlockState state) {

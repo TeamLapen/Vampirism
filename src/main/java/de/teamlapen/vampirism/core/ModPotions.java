@@ -1,14 +1,11 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.potion.FakeNightVisionPotion;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.PotionThirst;
 import de.teamlapen.vampirism.potion.VampirismPotion;
 import net.minecraft.potion.Potion;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
@@ -25,17 +22,8 @@ public class ModPotions {
     public static Potion garlic;
     public static FakeNightVisionPotion fakeNightVisionPotion;
 
-    public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
-        switch (step) {
-            case PRE_INIT:
-                preInit((FMLPreInitializationEvent) event);
-                break;
-            default://Do nothing
-        }
 
-    }
-
-    private static void preInit(FMLPreInitializationEvent event) {
+    static void registerPotions() {
         thirst = register(new PotionThirst("thirst", true, 859494));
         fakeNightVisionPotion = register(new FakeNightVisionPotion());
         sanguinare = register(new PotionSanguinare("sanguinare", false, 0x6A0888));

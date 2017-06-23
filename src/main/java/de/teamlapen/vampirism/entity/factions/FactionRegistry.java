@@ -124,7 +124,7 @@ public class FactionRegistry implements IFactionRegistry {
     @Override
     public <T extends IFactionPlayer> IPlayableFaction registerPlayableFaction(String name, Class<T> entityInterface, int color, ResourceLocation key, Capability<T> playerCapabiltiy, int highestLevel) {
         if (!UtilLib.isNonNull(name, entityInterface, playerCapabiltiy)) {
-            throw new IllegalArgumentException("[Vampirism]Parameter for faction cannot be null");
+            throw new IllegalArgumentException("[Vampirism]Parameters for faction cannot be null");
         }
         PlayableFaction<T> f = new PlayableFaction<>(name, entityInterface, color, key, playerCapabiltiy, highestLevel);
         addFaction(f);

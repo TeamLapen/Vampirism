@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.core;
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.Maps;
 import de.teamlapen.lib.lib.item.ItemMetaBlock;
-import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.tileentity.*;
@@ -18,7 +17,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.datafix.IFixableData;
 import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
-import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.Map;
@@ -52,19 +50,6 @@ public class ModBlocks {
     public static BlockAlchemicalCauldron alchemicalCauldron;
     public static BlockGarlicBeacon garlicBeacon;
 
-    public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
-        switch (step) {
-            case PRE_INIT:
-                registerBlocks();
-                registerTiles();
-                break;
-            case INIT:
-                registerCraftingRecipes();
-                break;
-            default://Do nothing
-        }
-
-    }
 
     private static void registerTiles() {
         registerTileEntity(TileTent.class, "tent", "VampirismTent");
@@ -118,7 +103,7 @@ public class ModBlocks {
         GameRegistry.registerTileEntity(clazz, REFERENCE.MODID + ":" + id);
     }
 
-    private static void registerBlocks() {
+    static void registerBlocks() {
         fluidBlood = registerBlock(new BlockFluidBlood());//TODO Maybe remove blood block later
         castleBlock = new BlockCastleBlock();
         registerBlock(castleBlock, new ItemMetaBlock(castleBlock));
@@ -149,9 +134,10 @@ public class ModBlocks {
         alchemicalCauldron = registerBlock(new BlockAlchemicalCauldron());
         garlicBeacon = registerBlock(new BlockGarlicBeacon());
 
+        registerTiles();
     }
 
-    private static void registerCraftingRecipes() {
+    static void registerCraftingRecipes() {
         GameRegistry.addRecipe(new ItemStack(altarInfusion, 1), "   ", "YZY", "ZZZ", 'Y', Items.GOLD_INGOT, 'Z', Blocks.OBSIDIAN);
         GameRegistry.addRecipe(new ItemStack(altarPillar, 4), "X X", "   ", "XXX", 'X', Blocks.STONEBRICK);
         GameRegistry.addRecipe(new ItemStack(altarTip, 2), "   ", " X ", "XYX", 'X', Items.IRON_INGOT, 'Y', Blocks.IRON_BLOCK);

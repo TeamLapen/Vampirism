@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.Configs;
@@ -14,7 +13,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.gen.MapGenBase;
 import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraft.world.gen.structure.MapGenVillage;
-import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
@@ -24,16 +22,11 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 public class ModVillages {
     private final static String TAG = "ModVillages";
 
-    public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
-        switch (step) {
-            case INIT:
-                registerCreationHandlers();
-                registerPieces();
-                registerTrades();
-                break;
-            default://Do nothing
-        }
 
+    static void init() {
+        registerCreationHandlers();
+        registerPieces();
+        registerTrades();
     }
 
     private static void registerPieces() {

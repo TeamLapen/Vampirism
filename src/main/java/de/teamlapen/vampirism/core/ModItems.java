@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -24,7 +23,6 @@ import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
-import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.RecipeSorter;
 
@@ -88,21 +86,8 @@ public class ModItems {
 
     public static ItemHunterAxe hunterAxe;
 
-    public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
-        switch (step) {
-            case PRE_INIT:
-                registerItems();
-                break;
-            case INIT:
-                registerCraftingRecipes();
-                break;
-            default:
-                break;
-        }
 
-    }
-
-    private static void registerCraftingRecipes() {
+    static void registerCraftingRecipes() {
         HunterWeaponCraftingManager weaponCraftingManager = HunterWeaponCraftingManager.getInstance();
         AlchemicalCauldronCraftingManager cauldronCraftingManager = AlchemicalCauldronCraftingManager.getInstance();
         if (!Configs.autoConvertGlasBottles) {
@@ -184,7 +169,7 @@ public class ModItems {
         return item.setTier(new ItemStack((Item) item), tier);
     }
 
-    private static void registerItems() {
+    static void registerItems() {
         vampireFang = registerItem(new ItemVampireFang());
         humanHeart = registerItem(new ItemHumanHeart());
         humanHeartWeak = registerItem(new ItemHumanHeartWeak());

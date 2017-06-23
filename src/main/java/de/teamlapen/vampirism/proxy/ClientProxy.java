@@ -2,11 +2,13 @@ package de.teamlapen.vampirism.proxy;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.client.core.*;
+import de.teamlapen.vampirism.client.core.ClientEventHandler;
+import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.client.gui.VampirismHUDOverlay;
 import de.teamlapen.vampirism.client.render.LayerVampireEntity;
 import de.teamlapen.vampirism.client.render.LayerVampirePlayerHead;
 import de.teamlapen.vampirism.client.render.RenderHandler;
+import de.teamlapen.vampirism.core.RegistryManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
@@ -31,6 +33,10 @@ public class ClientProxy extends CommonProxy {
 
     private VampirismHUDOverlay overlay;
 
+    public ClientProxy() {
+        RegistryManager.setupClientRegistryManager();
+    }
+
     @Override
     public boolean isClientPlayerNull() {
         return Minecraft.getMinecraft().player == null;
@@ -44,14 +50,17 @@ public class ClientProxy extends CommonProxy {
     @Override
     public void onInitStep(Step step, FMLStateEvent event) {
         super.onInitStep(step, event);
-        ModBlocksRender.onInitStep(step, event);
-        ModItemsRender.onInitStep(step, event);
-        ModEntitiesRender.onInitStep(step, event);
-        ModKeys.onInitStep(step, event);
-        if (step == Step.INIT) {
-            registerSubscriptions();
-        } else if (step == Step.POST_INIT) {
-            registerVampireEntityOverlays();
+        RegistryManager.getRegistryManagerClient().onInitStep(step, event);
+        switch (step) {
+            case PRE_INIT:
+                ModKeys.register();
+                break;
+            case INIT:
+                registerSubscriptions();
+                break;
+            case POST_INIT:
+                registerVampireEntityOverlays();
+                break;
         }
     }
 

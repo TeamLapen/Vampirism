@@ -1,10 +1,8 @@
 package de.teamlapen.vampirism.core;
 
-import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 
 /**
@@ -19,18 +17,8 @@ public class ModSounds {
     public static SoundEvent bat_swarm;
     public static SoundEvent boiling;
 
-    public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
-        switch (step) {
-            case PRE_INIT:
-                registerSounds();
-                break;
-            default://Do nothing
 
-        }
-
-    }
-
-    private static void registerSounds() {
+    static void registerSounds() {
         entity_vampire_ambient = registerSound("entity.vampire.scream");
         player_bite = registerSound("player.bite");
         ambient_castle = registerSound("ambient.castle");

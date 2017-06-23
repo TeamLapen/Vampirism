@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.lib.lib.client.render.RenderAreaParticleCloud;
-import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.client.render.entities.*;
 import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
@@ -15,12 +14,8 @@ import de.teamlapen.vampirism.entity.vampire.EntityAdvancedVampire;
 import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBaron;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderBat;
-import net.minecraft.client.renderer.entity.RenderManager;
-import net.minecraftforge.fml.client.registry.IRenderFactory;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -30,109 +25,22 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class ModEntitiesRender {
 
-    public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
-        switch (step) {
-            case PRE_INIT:
-                registerEntityRenderer();
-                break;
-            case INIT:
 
-                break;
-        }
-
-    }
-
-
-    private static void registerEntityRenderer() {
-        RenderingRegistry.registerEntityRenderingHandler(EntityBlindingBat.class, new IRenderFactory<EntityBlindingBat>() {
-            @Override
-            public Render<? super EntityBlindingBat> createRenderFor(RenderManager manager) {
-                return new RenderBat(manager);
-            }
-        });//RenderBat::new
-        RenderingRegistry.registerEntityRenderingHandler(EntityGhost.class, new IRenderFactory<EntityGhost>() {
-            @Override
-            public Render<? super EntityGhost> createRenderFor(RenderManager manager) {
-                return new RenderGhost(manager);
-            }
-        });
-        RenderingRegistry.registerEntityRenderingHandler(EntityConvertedCreature.class, new IRenderFactory<EntityConvertedCreature>() {
-            @Override
-            public Render<? super EntityConvertedCreature> createRenderFor(RenderManager manager) {
-                return new RenderConvertedCreature(manager);
-            }
-        });
-        RenderingRegistry.registerEntityRenderingHandler(EntityBasicHunter.class, new IRenderFactory<EntityBasicHunter>() {
-            @Override
-            public Render<? super EntityBasicHunter> createRenderFor(RenderManager manager) {
-                return new RenderBasicHunter(manager);
-            }
-        });
-        RenderingRegistry.registerEntityRenderingHandler(EntityBasicVampire.class, new IRenderFactory<EntityBasicVampire>() {
-            @Override
-            public Render<? super EntityBasicVampire> createRenderFor(RenderManager manager) {
-                return new RenderBasicVampire(manager);
-            }
-        });
-        RenderingRegistry.registerEntityRenderingHandler(EntityHunterTrainer.class, new IRenderFactory<EntityHunterTrainer>() {
-            @Override
-            public Render<? super EntityHunterTrainer> createRenderFor(RenderManager manager) {
-                return new RenderHunterTrainer(manager);
-            }
-        });
-        RenderingRegistry.registerEntityRenderingHandler(EntityVampireBaron.class, new IRenderFactory<EntityVampireBaron>() {
-            @Override
-            public Render<? super EntityVampireBaron> createRenderFor(RenderManager manager) {
-                return new RenderVampireBaron(manager);
-            }
-        });
-        RenderingRegistry.registerEntityRenderingHandler(EntityVampireMinionBase.class, new IRenderFactory<EntityVampireMinionBase>() {
-            @Override
-            public Render<? super EntityVampireMinionBase> createRenderFor(RenderManager manager) {
-                return new RenderVampireMinion(manager);
-            }
-        });
-        RenderingRegistry.registerEntityRenderingHandler(EntityAdvancedHunter.class, new IRenderFactory<EntityAdvancedHunter>() {
-            @Override
-            public Render<? super EntityAdvancedHunter> createRenderFor(RenderManager manager) {
-                return new RenderAdvancedHunter(manager);
-            }
-        });
-        RenderingRegistry.registerEntityRenderingHandler(EntityAdvancedVampire.class, new IRenderFactory<EntityAdvancedVampire>() {
-            @Override
-            public Render<? super EntityAdvancedVampire> createRenderFor(RenderManager manager) {
-                return new RenderAdvancedVampire(manager);
-            }
-        });
-        RenderingRegistry.registerEntityRenderingHandler(EntityConvertedVillager.class, new IRenderFactory<EntityConvertedVillager>() {
-            @Override
-            public Render<? super EntityConvertedVillager> createRenderFor(RenderManager manager) {
-                return new RenderConvertedVillager(manager);
-            }
-        });
-        RenderingRegistry.registerEntityRenderingHandler(EntityHunterVillager.class, new IRenderFactory<EntityHunterVillager>() {
-            @Override
-            public Render<? super EntityHunterVillager> createRenderFor(RenderManager manager) {
-                return new RenderHunterVillager(manager);
-            }
-        });
-        RenderingRegistry.registerEntityRenderingHandler(EntityCrossbowArrow.class, new IRenderFactory<EntityCrossbowArrow>() {
-            @Override
-            public Render<? super EntityCrossbowArrow> createRenderFor(RenderManager manager) {
-                return new RenderCrossbowArrow(manager);
-            }
-        });
-        RenderingRegistry.registerEntityRenderingHandler(EntityAreaParticleCloud.class, new IRenderFactory<EntityAreaParticleCloud>() {
-            @Override
-            public Render<? super EntityAreaParticleCloud> createRenderFor(RenderManager manager) {
-                return new RenderAreaParticleCloud(manager);
-            }
-        });
-        RenderingRegistry.registerEntityRenderingHandler(EntityThrowableItem.class, new IRenderFactory<EntityThrowableItem>() {
-            @Override
-            public Render<? super EntityThrowableItem> createRenderFor(RenderManager manager) {
-                return new RenderThrowableItem(manager, Minecraft.getMinecraft().getRenderItem());
-            }
-        });
+    public static void registerEntityRenderer() {
+        RenderingRegistry.registerEntityRenderingHandler(EntityBlindingBat.class, RenderBat::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityGhost.class, RenderGhost::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityConvertedCreature.class, RenderConvertedCreature::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityBasicHunter.class, RenderBasicHunter::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityBasicVampire.class, RenderBasicVampire::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityHunterTrainer.class, RenderHunterTrainer::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityVampireBaron.class, RenderVampireBaron::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityVampireMinionBase.class, RenderVampireMinion::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityAdvancedHunter.class, RenderAdvancedHunter::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityAdvancedVampire.class, RenderAdvancedVampire::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityConvertedVillager.class, RenderConvertedVillager::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityHunterVillager.class, RenderHunterVillager::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityCrossbowArrow.class, RenderCrossbowArrow::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityAreaParticleCloud.class, RenderAreaParticleCloud::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityThrowableItem.class, manager -> new RenderThrowableItem(manager, Minecraft.getMinecraft().getRenderItem()));
     }
 }

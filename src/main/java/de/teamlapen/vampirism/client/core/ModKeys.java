@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.core;
 
-import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
@@ -13,7 +12,6 @@ import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -75,20 +73,14 @@ public class ModKeys {
         }
     }
 
-    public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
-        switch (step) {
-            case PRE_INIT:
-                MinecraftForge.EVENT_BUS.register(new ModKeys());
-                ClientRegistry.registerKeyBinding(ACTION);
-                ClientRegistry.registerKeyBinding(SUCK);
-                ClientRegistry.registerKeyBinding(SKILL);
-                ClientRegistry.registerKeyBinding(VISION);
-                ClientRegistry.registerKeyBinding(BLOOD_POTION);
-                break;
-            default:
-                break;
-        }
 
+    public static void register() {
+        MinecraftForge.EVENT_BUS.register(new ModKeys());
+        ClientRegistry.registerKeyBinding(ACTION);
+        ClientRegistry.registerKeyBinding(SUCK);
+        ClientRegistry.registerKeyBinding(SKILL);
+        ClientRegistry.registerKeyBinding(VISION);
+        ClientRegistry.registerKeyBinding(BLOOD_POTION);
     }
 
     private ModKeys() {

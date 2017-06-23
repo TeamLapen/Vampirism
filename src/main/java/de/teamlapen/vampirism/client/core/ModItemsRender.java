@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.core;
 
-import de.teamlapen.lib.lib.util.IInitListener;
 import de.teamlapen.lib.lib.util.InventoryRenderHelper;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
@@ -9,20 +8,14 @@ import de.teamlapen.vampirism.items.*;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.client.renderer.color.IItemColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nonnull;
 
 /**
  * Handles item render registration
@@ -30,46 +23,33 @@ import javax.annotation.Nonnull;
 @SideOnly(Side.CLIENT)
 public class ModItemsRender {
 
-    public static void onInitStep(IInitListener.Step step, FMLStateEvent event) {
-        switch (step) {
-            case PRE_INIT:
-                registerRenderers();
-                break;
-            case INIT:
-                registerColors();
-                break;
-        }
 
+    public static void register() {
+        registerRenderers();
     }
 
-    private static void registerColors() {
+    static void registerColors() {
 
         //Swiftness armor
-        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new IItemColor() {
-            @Override
-            public int getColorFromItemstack(@Nonnull ItemStack stack, int tintIndex) {
-                if (tintIndex == 0) {
-                    return ((ItemArmor) stack.getItem()).getColor(stack);
-                } else {
-                    switch (ModItems.armorOfSwiftness_boots.getTier(stack)) {
-                        case ENHANCED:
-                            return 0x007CFF;
-                        case ULTIMATE:
-                            return 0x07F8FF;
-                        default:
-                            return 0xFFF100;
-                    }
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler((stack, tintIndex) -> {
+            if (tintIndex == 0) {
+                return ((ItemArmor) stack.getItem()).getColor(stack);
+            } else {
+                switch (ModItems.armorOfSwiftness_boots.getTier(stack)) {
+                    case ENHANCED:
+                        return 0x007CFF;
+                    case ULTIMATE:
+                        return 0x07F8FF;
+                    default:
+                        return 0xFFF100;
                 }
             }
         }, ModItems.armorOfSwiftness_boots, ModItems.armorOfSwiftness_chest, ModItems.armorOfSwiftness_helmet, ModItems.armorOfSwiftness_legs);
-        Minecraft.getMinecraft().getItemColors().registerItemColorHandler(new IItemColor() {
-            @Override
-            public int getColorFromItemstack(@Nonnull ItemStack stack, int tintIndex) {
-                if (tintIndex == 1) {
-                    return ItemCrossbowArrow.getType(stack).color;
-                }
-                return 0xFFFFFF;
+        Minecraft.getMinecraft().getItemColors().registerItemColorHandler((stack, tintIndex) -> {
+            if (tintIndex == 1) {
+                return ItemCrossbowArrow.getType(stack).color;
             }
+            return 0xFFFFFF;
         }, ModItems.crossbowArrow);
     }
 
@@ -112,12 +92,7 @@ public class ModItemsRender {
         renderHelper.registerRender(ModItems.purifiedGarlic, "normal");
 
         final ResourceLocation holyWaterSplash = new ResourceLocation(REFERENCE.MODID, "item/" + ModItems.holyWaterBottle.getRegistryName().getResourcePath());
-        ModelLoader.setCustomMeshDefinition(ModItems.holyWaterBottle, new ItemMeshDefinition() {
-            @Override
-            public ModelResourceLocation getModelLocation(ItemStack stack) {
-                return new ModelResourceLocation(holyWaterSplash, "tier=" + ((IItemWithTier) stack.getItem()).getTier(stack) + (((ItemHolyWaterBottle) stack.getItem()).isSplash(stack) ? ",splash" : ""));
-            }
-        });
+        ModelLoader.setCustomMeshDefinition(ModItems.holyWaterBottle, stack -> new ModelResourceLocation(holyWaterSplash, "tier=" + ((IItemWithTier) stack.getItem()).getTier(stack) + (((ItemHolyWaterBottle) stack.getItem()).isSplash(stack) ? ",splash" : "")));
         for (IStringSerializable s : IItemWithTier.TIER.values()) {
             ModelLoader.registerItemVariants(ModItems.holyWaterBottle, new ModelResourceLocation(holyWaterSplash, "tier=" + s.getName() + ",splash"));
             ModelLoader.registerItemVariants(ModItems.holyWaterBottle, new ModelResourceLocation(holyWaterSplash, "tier=" + s.getName()));

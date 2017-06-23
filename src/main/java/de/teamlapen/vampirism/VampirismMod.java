@@ -8,7 +8,6 @@ import de.teamlapen.lib.lib.util.ModCompatLoader;
 import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
@@ -124,11 +123,14 @@ public class VampirismMod {
         return Configs.realism_mode;
     }
 
+    public final RegistryManager registryManager;
     private VersionChecker.VersionInfo versionInfo;
     private ModCompatLoader modCompatLoader = new ModCompatLoader(REFERENCE.MODID + "/vampirism_mod_compat.cfg");
 
     public VampirismMod() {
         addModCompats();
+        registryManager = new RegistryManager();
+        MinecraftForge.EVENT_BUS.register(registryManager);
     }
 
     public VersionChecker.VersionInfo getVersionInfo() {
@@ -161,11 +163,11 @@ public class VampirismMod {
         HelperRegistry.registerSyncablePlayerCapability(VampirePlayer.CAP, REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.class);
         HelperRegistry.registerSyncablePlayerCapability(HunterPlayer.CAP, REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.class);
         HelperRegistry.registerSyncablePlayerCapability(FactionPlayerHandler.CAP, REFERENCE.FACTION_PLAYER_HANDLER_KEY, FactionPlayerHandler.class);
-        Achievements.registerAchievement();
         SupporterManager.getInstance().initAsync();
         VampireBookManager.getInstance().init();
         BloodPotions.register();
         VampirismEntitySelectors.registerSelectors();
+        registryManager.onInitStep(IInitListener.Step.INIT, event);
         proxy.onInitStep(IInitListener.Step.INIT, event);
         modCompatLoader.onInitStep(IInitListener.Step.INIT, event);
 
@@ -204,6 +206,7 @@ public class VampirismMod {
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         finishAPI();
+        registryManager.onInitStep(IInitListener.Step.POST_INIT, event);
         proxy.onInitStep(IInitListener.Step.POST_INIT, event);
         modCompatLoader.onInitStep(IInitListener.Step.POST_INIT, event);
 
@@ -234,6 +237,7 @@ public class VampirismMod {
 
         dispatcher.registerPackets();
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new ModGuiHandler());
+        registryManager.onInitStep(IInitListener.Step.PRE_INIT, event);
         proxy.onInitStep(IInitListener.Step.PRE_INIT, event);
         VampireActions.registerDefaultActions();
         HunterActions.registerDefaultActions();
@@ -287,15 +291,12 @@ public class VampirismMod {
         VReference.VAMPIRE_FACTION.setChatColor(TextFormatting.DARK_PURPLE).setUnlocalizedName("text.vampirism.vampire", "text.vampirism.vampires");
         VReference.HUNTER_FACTION = factionRegistry.registerPlayableFaction("Hunter", IHunterPlayer.class, Color.BLUE.getRGB(), REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.CAP, REFERENCE.HIGHEST_HUNTER_LEVEL);
         VReference.HUNTER_FACTION.setChatColor(TextFormatting.DARK_BLUE).setUnlocalizedName("text.vampirism.hunter", "text.vampirism.hunters");
-        biteableRegistry.setDefaultConvertingHandlerCreator(new VampirismEntityRegistry.ICreateDefaultConvertingHandler() {
-            @Override
-            public IConvertingHandler create(IConvertingHandler.IDefaultHelper helper) {
-                return new DefaultConvertingHandler(helper);
-            }
-        });//DefaultConvertingHandler::new
+        biteableRegistry.setDefaultConvertingHandlerCreator(DefaultConvertingHandler::new);
         VReference.HUNTER_CREATURE_TYPE = HUNTER_CREATURE_TYPE;
         VReference.VAMPIRE_CREATURE_TYPE = VAMPIRE_CREATURE_TYPE;
         VReference.VAMPIRE_CREATURE_ATTRIBUTE = VAMPIRE_CREATURE_ATTRIBUTE;
+        VampirismAPI.sundamageRegistry().addNoSundamageBiome(ModBiomes.vampireForest.getBiomeClass());
+
     }
 
     /**

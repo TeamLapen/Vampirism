@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.proxy;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.fml.common.event.FMLStateEvent;
 
 /**
  * Serverside proxy
@@ -19,10 +18,6 @@ public class ServerProxy extends CommonProxy {
         return false;
     }
 
-    @Override
-    public void onInitStep(Step step, FMLStateEvent event) {
-        super.onInitStep(step, event);
-    }
 
     @Override
     public void renderScreenFullColor(int ticksOn, int ticksOff, int color) {
