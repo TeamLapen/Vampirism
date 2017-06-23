@@ -26,7 +26,6 @@ import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.inventory.HunterWeaponCraftingManager;
 import de.teamlapen.vampirism.modcompat.SpongeModCompat;
-import de.teamlapen.vampirism.modcompat.abyssalcraft.AbyssalCraftModCompat;
 import de.teamlapen.vampirism.modcompat.guide.GuideAPICompat;
 import de.teamlapen.vampirism.modcompat.jei.JEIModCompat;
 import de.teamlapen.vampirism.network.ModGuiHandler;
@@ -245,7 +244,6 @@ public class VampirismMod {
         modCompatLoader.addModCompat(new JEIModCompat());
         modCompatLoader.addModCompat(new SpongeModCompat());
         modCompatLoader.addModCompat(new GuideAPICompat());
-        modCompatLoader.addModCompat(new AbyssalCraftModCompat());
     }
 
     private void checkDevEnv() {
