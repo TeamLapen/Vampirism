@@ -7,9 +7,18 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Mirror;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.Rotation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 /**
  * Vampirism default block container with set creative tab, registry name and unloc name
@@ -60,6 +69,33 @@ public abstract class VampirismBlockContainer extends BlockContainer {
      */
     protected void setHasFacing() {
         hasFacing = true;
+    }
+
+    /**
+     * For compat with 1.11 and below
+     */
+    @SideOnly(Side.CLIENT)
+    @Override
+    public final void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> tab) {
+        this.getSubBlocks(Item.getItemFromBlock(this), itemIn, tab);
+    }
+
+    /**
+     * For compat with 1.11 and below
+
+     */
+    @SideOnly(Side.CLIENT)
+    protected void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+
+    }
+
+    /**
+     * For compat with 1.11 and below
+     *
+     */
+    @SideOnly(Side.CLIENT)
+    protected void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+
     }
 
 }

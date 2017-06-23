@@ -8,11 +8,8 @@ import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.tileentity.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
-import net.minecraft.init.Blocks;
-import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.datafix.IFixableData;
@@ -138,24 +135,25 @@ public class ModBlocks {
     }
 
     static void registerCraftingRecipes() {
-        GameRegistry.addRecipe(new ItemStack(altarInfusion, 1), "   ", "YZY", "ZZZ", 'Y', Items.GOLD_INGOT, 'Z', Blocks.OBSIDIAN);
-        GameRegistry.addRecipe(new ItemStack(altarPillar, 4), "X X", "   ", "XXX", 'X', Blocks.STONEBRICK);
-        GameRegistry.addRecipe(new ItemStack(altarTip, 2), "   ", " X ", "XYX", 'X', Items.IRON_INGOT, 'Y', Blocks.IRON_BLOCK);
-        GameRegistry.addShapelessRecipe(new ItemStack(castleBlock, 8, 3), Blocks.STONEBRICK, Blocks.STONEBRICK, Blocks.STONEBRICK, Blocks.STONEBRICK, Blocks.STONEBRICK, Blocks.STONEBRICK, Blocks.STONEBRICK, Blocks.STONEBRICK, new ItemStack(vampirismFlower, 1, VampirismFlower.EnumFlowerType.ORCHID.getMeta()));
-        GameRegistry.addShapelessRecipe(new ItemStack(castleBlock, 8, 0), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(Items.DYE, 1, 0));
-        GameRegistry.addShapelessRecipe(new ItemStack(castleBlock, 8, 1), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(vampirismFlower, 1, VampirismFlower.EnumFlowerType.ORCHID.getMeta()));
-        GameRegistry.addShapelessRecipe(new ItemStack(castleBlock, 7, 0), Blocks.STONEBRICK, Blocks.STONEBRICK, Blocks.STONEBRICK, Blocks.STONEBRICK, Blocks.STONEBRICK, Blocks.STONEBRICK, Blocks.STONEBRICK, new ItemStack(Items.DYE, 1, 0), new ItemStack(vampirismFlower, 1, VampirismFlower.EnumFlowerType.ORCHID.getMeta()));
-        GameRegistry.addShapelessRecipe(new ItemStack(castleBlock, 7, 4), Blocks.STONE, Blocks.STONE, Blocks.STONE, Blocks.STONE, Blocks.STONE, Blocks.STONE, Blocks.STONE, new ItemStack(Items.DYE, 1, 0), new ItemStack(vampirismFlower, 1, VampirismFlower.EnumFlowerType.ORCHID.getMeta()));
-        GameRegistry.addRecipe(new ItemStack(hunterTable), "XYW", "ZZZ", "Z Z", 'X', ModItems.vampireFang, 'Y', Items.BOOK, 'Z', Blocks.PLANKS, 'W', ModItems.itemGarlic);
-        GameRegistry.addRecipe(new ItemStack(bloodContainer), "XYX", "YZY", "XYX", 'X', Blocks.PLANKS, 'Y', Blocks.GLASS, 'Z', Items.IRON_INGOT);
-        GameRegistry.addRecipe(new ItemStack(altarInspiration, 1), " X ", "XYX", "ZZZ", 'X', Blocks.GLASS, 'Y', Items.GLASS_BOTTLE, 'Z', Items.IRON_INGOT);
-        GameRegistry.addRecipe(new ItemStack(firePlace, 1), "   ", " X ", "XYX", 'X', Blocks.LOG, 'Y', Items.COAL);
-        GameRegistry.addRecipe(new ItemStack(weaponTable, 1), "X  ", "YYY", " Z ", 'X', Items.BUCKET, 'Y', Items.IRON_INGOT, 'Z', Blocks.IRON_BLOCK);
-        GameRegistry.addRecipe(new ItemStack(bloodPotionTable, 1), "XXX", "Y Y", "ZZZ", 'X', Items.GLASS_BOTTLE, 'Y', Blocks.PLANKS, 'Z', Items.IRON_INGOT);
-        GameRegistry.addRecipe(new ItemStack(churchAltar), " X ", "YYY", " Y ", 'X', ModItems.vampireBook, 'Y', Blocks.PLANKS);
-        GameRegistry.addRecipe(new ItemStack(alchemicalCauldron), "XZX", "XXX", "Y Y", 'X', Items.IRON_INGOT, 'Y', Blocks.STONEBRICK, 'Z', ModItems.itemGarlic);
-        GameRegistry.addRecipe(new ItemStack(garlicBeacon), "XYX", "YZY", "OOO", 'X', Blocks.PLANKS, 'Y', Items.DIAMOND, 'Z', ModItems.garlicBeaconCore, 'O', Blocks.OBSIDIAN);
-        GameRegistry.addRecipe(new ItemStack(garlicBeacon, 1, 1), "XYX", "YZY", "OOO", 'X', Blocks.PLANKS, 'Y', Items.DIAMOND, 'Z', ModItems.garlicBeaconCoreImproved, 'O', Blocks.OBSIDIAN);
+        //TODO CRAFTING
+//        GameRegistry.addRecipe(new ItemStack(altarInfusion, 1), "   ", "YZY", "ZZZ", 'Y', Items.GOLD_INGOT, 'Z', Blocks.OBSIDIAN);
+//        GameRegistry.addRecipe(new ItemStack(altarPillar, 4), "X X", "   ", "XXX", 'X', Blocks.STONEBRICK);
+//        GameRegistry.addRecipe(new ItemStack(altarTip, 2), "   ", " X ", "XYX", 'X', Items.IRON_INGOT, 'Y', Blocks.IRON_BLOCK);
+//        GameRegistry.addShapelessRecipe(new ItemStack(castleBlock, 8, 3), Blocks.STONEBRICK, Blocks.STONEBRICK, Blocks.STONEBRICK, Blocks.STONEBRICK, Blocks.STONEBRICK, Blocks.STONEBRICK, Blocks.STONEBRICK, Blocks.STONEBRICK, new ItemStack(vampirismFlower, 1, VampirismFlower.EnumFlowerType.ORCHID.getMeta()));
+//        GameRegistry.addShapelessRecipe(new ItemStack(castleBlock, 8, 0), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(Items.DYE, 1, 0));
+//        GameRegistry.addShapelessRecipe(new ItemStack(castleBlock, 8, 1), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(castleBlock, 1, 3), new ItemStack(vampirismFlower, 1, VampirismFlower.EnumFlowerType.ORCHID.getMeta()));
+//        GameRegistry.addShapelessRecipe(new ItemStack(castleBlock, 7, 0), Blocks.STONEBRICK, Blocks.STONEBRICK, Blocks.STONEBRICK, Blocks.STONEBRICK, Blocks.STONEBRICK, Blocks.STONEBRICK, Blocks.STONEBRICK, new ItemStack(Items.DYE, 1, 0), new ItemStack(vampirismFlower, 1, VampirismFlower.EnumFlowerType.ORCHID.getMeta()));
+//        GameRegistry.addShapelessRecipe(new ItemStack(castleBlock, 7, 4), Blocks.STONE, Blocks.STONE, Blocks.STONE, Blocks.STONE, Blocks.STONE, Blocks.STONE, Blocks.STONE, new ItemStack(Items.DYE, 1, 0), new ItemStack(vampirismFlower, 1, VampirismFlower.EnumFlowerType.ORCHID.getMeta()));
+//        GameRegistry.addRecipe(new ItemStack(hunterTable), "XYW", "ZZZ", "Z Z", 'X', ModItems.vampireFang, 'Y', Items.BOOK, 'Z', Blocks.PLANKS, 'W', ModItems.itemGarlic);
+//        GameRegistry.addRecipe(new ItemStack(bloodContainer), "XYX", "YZY", "XYX", 'X', Blocks.PLANKS, 'Y', Blocks.GLASS, 'Z', Items.IRON_INGOT);
+//        GameRegistry.addRecipe(new ItemStack(altarInspiration, 1), " X ", "XYX", "ZZZ", 'X', Blocks.GLASS, 'Y', Items.GLASS_BOTTLE, 'Z', Items.IRON_INGOT);
+//        GameRegistry.addRecipe(new ItemStack(firePlace, 1), "   ", " X ", "XYX", 'X', Blocks.LOG, 'Y', Items.COAL);
+//        GameRegistry.addRecipe(new ItemStack(weaponTable, 1), "X  ", "YYY", " Z ", 'X', Items.BUCKET, 'Y', Items.IRON_INGOT, 'Z', Blocks.IRON_BLOCK);
+//        GameRegistry.addRecipe(new ItemStack(bloodPotionTable, 1), "XXX", "Y Y", "ZZZ", 'X', Items.GLASS_BOTTLE, 'Y', Blocks.PLANKS, 'Z', Items.IRON_INGOT);
+//        GameRegistry.addRecipe(new ItemStack(churchAltar), " X ", "YYY", " Y ", 'X', ModItems.vampireBook, 'Y', Blocks.PLANKS);
+//        GameRegistry.addRecipe(new ItemStack(alchemicalCauldron), "XZX", "XXX", "Y Y", 'X', Items.IRON_INGOT, 'Y', Blocks.STONEBRICK, 'Z', ModItems.itemGarlic);
+//        GameRegistry.addRecipe(new ItemStack(garlicBeacon), "XYX", "YZY", "OOO", 'X', Blocks.PLANKS, 'Y', Items.DIAMOND, 'Z', ModItems.garlicBeaconCore, 'O', Blocks.OBSIDIAN);
+//        GameRegistry.addRecipe(new ItemStack(garlicBeacon, 1, 1), "XYX", "YZY", "OOO", 'X', Blocks.PLANKS, 'Y', Items.DIAMOND, 'Z', ModItems.garlicBeaconCoreImproved, 'O', Blocks.OBSIDIAN);
 
     }
 

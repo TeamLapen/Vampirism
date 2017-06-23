@@ -24,7 +24,7 @@ script:
 notifications:
   email:
     recipients:
-      - dev@maxgb.de
+      - vampirism@maxanier.de
     on_success: never
     on_failure: change
   irc:

@@ -65,7 +65,7 @@ public abstract class BasicWeaponTableRecipeRenderer<T extends IHunterWeaponReci
 
         if (!ItemStackUtil.isEmpty(stack) && stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
             NonNullList<ItemStack> subItems = NonNullList.create();
-            stack.getItem().getSubItems(stack.getItem(), stack.getItem().getCreativeTab(), subItems);
+            stack.getItem().getSubItems( stack.getItem().getCreativeTab(), subItems);
             stack = subItems.get(getRandomizedCycle(0, subItems.size()));
         }
 
@@ -105,7 +105,7 @@ public abstract class BasicWeaponTableRecipeRenderer<T extends IHunterWeaponReci
         if (!ItemStackUtil.isEmpty(stack)) {
             if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
                 NonNullList<ItemStack> subItems = NonNullList.create();
-                stack.getItem().getSubItems(stack.getItem(), stack.getItem().getCreativeTab(), subItems);
+                stack.getItem().getSubItems( stack.getItem().getCreativeTab(), subItems);
                 stack = subItems.get(getRandomizedCycle(index, subItems.size()));
             }
             GuiHelper.drawItemStack(stack, stackX, stackY);

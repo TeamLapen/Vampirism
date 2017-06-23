@@ -17,7 +17,8 @@ import java.util.List;
 /**
  * Shapeless recipe for the hunter weapon table
  */
-public class ShapelessHunterWeaponRecipe implements IHunterWeaponRecipe {
+//TODO CRAFTING
+public abstract class ShapelessHunterWeaponRecipe implements IHunterWeaponRecipe {
 
     public final List<ItemStack> recipeItems;
     private final int requiredHunterLevel;
@@ -50,11 +51,6 @@ public class ShapelessHunterWeaponRecipe implements IHunterWeaponRecipe {
     @Override
     public ItemStack getRecipeOutput() {
         return recipeOutput;
-    }
-
-    @Override
-    public int getRecipeSize() {
-        return recipeItems.size();
     }
 
     @Override

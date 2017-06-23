@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.inventory;
 import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
 import de.teamlapen.vampirism.blocks.BlockWeaponTable;
-import de.teamlapen.vampirism.core.Achievements;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -92,7 +91,7 @@ public class HunterWeaponTableCraftingSlot extends Slot {
             //Play anvil sound
             world.playEvent(1030, pos, 0);
         }
-        playerIn.addStat(Achievements.weaponTable);
+        //TODO playerIn.addStat(Achievements.weaponTable);
         return stack;
     }
 

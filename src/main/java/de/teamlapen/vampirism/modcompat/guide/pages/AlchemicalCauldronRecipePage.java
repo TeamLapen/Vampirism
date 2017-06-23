@@ -70,7 +70,7 @@ public class AlchemicalCauldronRecipePage extends Page {
 
         if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
             NonNullList<ItemStack> subItems = NonNullList.create();
-            stack.getItem().getSubItems(stack.getItem(), stack.getItem().getCreativeTab(), subItems);
+            stack.getItem().getSubItems( stack.getItem().getCreativeTab(), subItems);
             stack = subItems.get(getRandomizedCycle(0, subItems.size()));
         }
 
@@ -84,7 +84,7 @@ public class AlchemicalCauldronRecipePage extends Page {
         if (!ItemStackUtil.isEmpty(input)) {
             if (input.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
                 NonNullList<ItemStack> subItems = NonNullList.create();
-                input.getItem().getSubItems(input.getItem(), input.getItem().getCreativeTab(), subItems);
+                input.getItem().getSubItems( input.getItem().getCreativeTab(), subItems);
                 input = subItems.get(getRandomizedCycle(0, subItems.size()));
             }
             GuiHelper.drawItemStack(input, in2X, in2Y);
@@ -98,7 +98,7 @@ public class AlchemicalCauldronRecipePage extends Page {
 
         if (!ItemStackUtil.isEmpty(liquid) && liquid.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
             NonNullList<ItemStack> subItems = NonNullList.create();
-            liquid.getItem().getSubItems(liquid.getItem(), liquid.getItem().getCreativeTab(), subItems);
+            liquid.getItem().getSubItems( liquid.getItem().getCreativeTab(), subItems);
             liquid = subItems.get(getRandomizedCycle(0, subItems.size()));
         }
 

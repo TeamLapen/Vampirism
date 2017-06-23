@@ -2,10 +2,10 @@ package de.teamlapen.vampirism.client.render.tiles;
 
 import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,7 +28,7 @@ public class AltarInfusionTESR extends VampirismTESR<TileAltarInfusion> {
 
 
     @Override
-    public void renderTileEntityAt(TileAltarInfusion te, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void render(TileAltarInfusion te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         // Render the beams if the ritual is running
         TileAltarInfusion.PHASE phase = te.getCurrentPhase();
         if (phase == TileAltarInfusion.PHASE.BEAM1 || phase == TileAltarInfusion.PHASE.BEAM2) {
@@ -111,7 +111,7 @@ public class AltarInfusionTESR extends VampirismTESR<TileAltarInfusion> {
         float f9 = -(tickStuff * 0.005F);
         float f10 = MathHelper.sqrt(wayX * wayX + wayY * wayY + wayZ * wayZ) / 32.0F + f9;
         Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer worldRenderer = tessellator.getBuffer();
+        BufferBuilder worldRenderer = tessellator.getBuffer();
         worldRenderer.begin(GL11.GL_TRIANGLE_STRIP, DefaultVertexFormats.POSITION_TEX_COLOR);
         // Add all 2*8 vertex/corners
         byte b0 = 8;

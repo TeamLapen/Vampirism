@@ -31,8 +31,9 @@ public class CoffinTESR extends VampirismTESR<TileCoffin> {
         }
     }
 
+
     @Override
-    public void renderTileEntityAt(TileCoffin te, double x, double y, double z, float partialTicks, int destroyStage) {
+    public void render(TileCoffin te, double x, double y, double z, float partialTicks, int destroyStage, float alpha) {
         TileCoffin tile = te;
         if (!isHeadSafe(te.getWorld(), te.getPos())) return;
 

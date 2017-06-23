@@ -15,7 +15,8 @@ import javax.annotation.Nullable;
 /**
  * Shaped recipe for the hunter weapon table.
  */
-public class ShapedHunterWeaponRecipe implements IHunterWeaponRecipe {
+//TODO CRAFTING
+public abstract class ShapedHunterWeaponRecipe implements IHunterWeaponRecipe {
     public final int recipeWidth;
     public final int recipeHeight;
     public final ItemStack[] recipeItems;

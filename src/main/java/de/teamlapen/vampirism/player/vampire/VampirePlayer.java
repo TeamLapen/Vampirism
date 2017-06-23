@@ -16,7 +16,6 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.Achievements;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.DamageHandler;
@@ -480,7 +479,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             if (newLevel > 0) {
                 if (player instanceof EntityPlayerMP && ((EntityPlayerMP) player).connection != null) {
                     //When loading from NBT the playerNetServerHandler is not always initialized, but that's required for achievements. So checking here
-                    player.addStat(Achievements.becomingAVampire, 1);
+                    //TODO player.addStat(Achievements.becomingAVampire, 1);
                 }
 
                 if (oldLevel == 0) {
@@ -998,7 +997,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         biteCooldown = Balance.vp.BITE_COOLDOWN;
         if (blood > 0) {
             drinkBlood(blood, saturationMod);
-            player.addStat(Achievements.suckingBlood, 1);
+            //TODO player.addStat(Achievements.suckingBlood, 1);
             NBTTagCompound updatePacket = bloodStats.writeUpdate(new NBTTagCompound());
             updatePacket.setInteger(KEY_SPAWN_BITE_PARTICLE, entity.getEntityId());
             sync(updatePacket, true);

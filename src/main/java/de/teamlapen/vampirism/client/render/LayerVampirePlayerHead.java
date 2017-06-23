@@ -79,7 +79,7 @@ public class LayerVampirePlayerHead implements LayerRenderer<AbstractClientPlaye
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j, (float) k);
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         this.playerRenderer.getMainModel().bipedHead.render(scale);
-        i = player.getBrightnessForRender(partialTicks);
+        i = player.getBrightnessForRender();
         j = i % 65536;
         k = i / 65536;
         OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j, (float) k);

@@ -47,6 +47,11 @@ public class HunterWeaponRecipeCategory extends BlankRecipeCategory {
         return localizedName;
     }
 
+    @Override
+    public String getModName() {
+        return REFERENCE.NAME;
+    }
+
     @Nonnull
     @Override
     public String getUid() {

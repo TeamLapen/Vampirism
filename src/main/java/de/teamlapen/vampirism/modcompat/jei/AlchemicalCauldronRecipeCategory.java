@@ -9,11 +9,7 @@ import mezz.jei.api.recipe.BlankRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
-/**
- * 1.10
- *
- * @author maxanier
- */
+
 public class AlchemicalCauldronRecipeCategory extends BlankRecipeCategory<AlchemicalCauldronRecipeWrapper> {
 
 
@@ -57,6 +53,11 @@ public class AlchemicalCauldronRecipeCategory extends BlankRecipeCategory<Alchem
     @Override
     public String getTitle() {
         return localizedName;
+    }
+
+    @Override
+    public String getModName() {
+        return REFERENCE.NAME;
     }
 
     @Override

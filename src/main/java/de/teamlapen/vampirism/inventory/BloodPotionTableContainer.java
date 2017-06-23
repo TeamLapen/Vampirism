@@ -4,7 +4,6 @@ import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.core.Achievements;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
@@ -260,7 +259,7 @@ public class BloodPotionTableContainer extends Container {
         }
         inventory.setInventorySlotContents(0, bottle1);
         inventory.setInventorySlotContents(1, bottle2);
-        hunterPlayer.getRepresentingPlayer().addStat(Achievements.bloodTable);
+        //TODO hunterPlayer.getRepresentingPlayer().addStat(Achievements.bloodTable);
     }
 
     private class PotionSlot extends InventoryContainer.FilterSlot {

@@ -26,7 +26,6 @@ import de.teamlapen.vampirism.modcompat.guide.pages.ShapedWeaponTableRecipeRende
 import de.teamlapen.vampirism.modcompat.guide.pages.ShapelessWeaponTableRecipeRenderer;
 import joptsimple.internal.Strings;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.CraftingManager;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
@@ -90,9 +89,10 @@ public class GuideHelper {
     }
 
     public static IRecipe getRecipeForOutput(ItemStack stack) {
-        for (IRecipe recipe : CraftingManager.getInstance().getRecipeList()) {
-            if (checkRecipeOutput(recipe, stack, true)) return recipe;
-        }
+        //TODO CRAFTING
+//        for (IRecipe recipe : CraftingManager.getInstance().getRecipeList()) {
+//            if (checkRecipeOutput(recipe, stack, true)) return recipe;
+//        }
 
         return null;
     }

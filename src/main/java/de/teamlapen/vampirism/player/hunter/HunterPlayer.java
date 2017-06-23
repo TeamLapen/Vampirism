@@ -10,7 +10,6 @@ import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.Achievements;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.items.ItemObsidianArmor;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
@@ -185,7 +184,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
             if (level > 0) {
                 if (player instanceof EntityPlayerMP && ((EntityPlayerMP) player).connection != null) {
                     //When loading from NBT the playerNetServerHandler is not always initialized, but that's required for achievements. So checking here
-                    player.addStat(Achievements.becomingAHunter, 1);
+                    //TODO player.addStat(Achievements.becomingAHunter, 1);
                 }
 
                 if (oldLevel == 0) {

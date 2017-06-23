@@ -11,14 +11,11 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
-import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -160,97 +157,97 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
     protected boolean shouldConsumeArrow(ItemStack arrowStack, boolean playerCreative, boolean bowInfinite) {
         return false;
     }
-
-    /**
-     * Recipe which accepts an unloaded bow and an additional item and outputs the loaded bow
-     */
-    public static class ShapelessFillRecipe implements IRecipe {
-        private final ItemTechCrossbow crossbowItem;
-        private final ItemStack arrowPackage;
-        private final ItemStack loadedCrossbow;
-
-        public ShapelessFillRecipe(@Nonnull ItemTechCrossbow crossbowItem, @Nonnull ItemStack arrowPackage) {
-            assert !ItemStackUtil.isEmpty(arrowPackage) : "Empty arrow stack package";
-            this.crossbowItem = crossbowItem;
-            this.arrowPackage = arrowPackage;
-            loadedCrossbow = ItemTechCrossbow.getLoadedItemStack(crossbowItem);
-        }
-
-        @Nullable
-        @Override
-        public ItemStack getCraftingResult(InventoryCrafting inv) {
-            for (int i = 0; i < inv.getHeight(); ++i) {
-                for (int j = 0; j < inv.getWidth(); ++j) {
-                    ItemStack itemstack = inv.getStackInRowAndColumn(j, i);
-
-                    if (!ItemStackUtil.isEmpty(itemstack)) {
-                        if (this.crossbowItem.equals(itemstack.getItem())) {
-                            ItemStack result = loadedCrossbow.copy();
-                            result.setItemDamage(itemstack.getItemDamage());
-                            ItemTechCrossbow.setArrowsLeft(result, ItemTechCrossbow.getArrowsLeft(itemstack) + MAG_SIZE);
-                            return result;
-                        }
-                    }
-                }
-            }
-            return ItemStackUtil.getEmptyStack();
-        }
-
-        @Nonnull
-        @Override
-        public ItemStack getRecipeOutput() {
-            return loadedCrossbow;
-        }
-
-        @Override
-        public int getRecipeSize() {
-            return 2;
-        }
-
-        @Override
-        public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
-            NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
-
-            for (int i = 0; i < nonnulllist.size(); ++i) {
-                ItemStack itemstack = inv.getStackInSlot(i);
-                nonnulllist.set(i, net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack));
-            }
-
-            return nonnulllist;
-        }
-
-        @Override
-        public boolean matches(InventoryCrafting inv, World worldIn) {
-            boolean crossbow = false;
-            boolean arrows = false;
-            for (int i = 0; i < inv.getHeight(); ++i) {
-                for (int j = 0; j < inv.getWidth(); ++j) {
-                    ItemStack itemstack = inv.getStackInRowAndColumn(j, i);
-
-                    if (!ItemStackUtil.isEmpty(itemstack)) {
-                        boolean flag = false;
-
-                        if (!crossbow && this.crossbowItem.equals(itemstack.getItem())) {
-                            if (getArrowsLeft(itemstack) < MAX_ARROW_COUNT) {
-                                crossbow = true;
-                                flag = true;
-                            }
-                        } else if (!arrows && itemstack.getItem() == arrowPackage.getItem() && (arrowPackage.getMetadata() == 32767 || itemstack.getMetadata() == arrowPackage.getMetadata())) {
-                            flag = true;
-                            arrows = true;
-
-                        }
-
-                        if (!flag) {
-                            return false;
-                        }
-                    }
-                }
-            }
-
-            return arrows && crossbow;
-        }
-    }
+// TODO CRAFTING
+//    /**
+//     * Recipe which accepts an unloaded bow and an additional item and outputs the loaded bow
+//     */
+//    public static class ShapelessFillRecipe implements IRecipe {
+//        private final ItemTechCrossbow crossbowItem;
+//        private final ItemStack arrowPackage;
+//        private final ItemStack loadedCrossbow;
+//
+//        public ShapelessFillRecipe(@Nonnull ItemTechCrossbow crossbowItem, @Nonnull ItemStack arrowPackage) {
+//            assert !ItemStackUtil.isEmpty(arrowPackage) : "Empty arrow stack package";
+//            this.crossbowItem = crossbowItem;
+//            this.arrowPackage = arrowPackage;
+//            loadedCrossbow = ItemTechCrossbow.getLoadedItemStack(crossbowItem);
+//        }
+//
+//        @Nullable
+//        @Override
+//        public ItemStack getCraftingResult(InventoryCrafting inv) {
+//            for (int i = 0; i < inv.getHeight(); ++i) {
+//                for (int j = 0; j < inv.getWidth(); ++j) {
+//                    ItemStack itemstack = inv.getStackInRowAndColumn(j, i);
+//
+//                    if (!ItemStackUtil.isEmpty(itemstack)) {
+//                        if (this.crossbowItem.equals(itemstack.getItem())) {
+//                            ItemStack result = loadedCrossbow.copy();
+//                            result.setItemDamage(itemstack.getItemDamage());
+//                            ItemTechCrossbow.setArrowsLeft(result, ItemTechCrossbow.getArrowsLeft(itemstack) + MAG_SIZE);
+//                            return result;
+//                        }
+//                    }
+//                }
+//            }
+//            return ItemStackUtil.getEmptyStack();
+//        }
+//
+//        @Nonnull
+//        @Override
+//        public ItemStack getRecipeOutput() {
+//            return loadedCrossbow;
+//        }
+//
+//        @Override
+//        public int getRecipeSize() {
+//            return 2;
+//        }
+//
+//        @Override
+//        public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
+//            NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
+//
+//            for (int i = 0; i < nonnulllist.size(); ++i) {
+//                ItemStack itemstack = inv.getStackInSlot(i);
+//                nonnulllist.set(i, net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack));
+//            }
+//
+//            return nonnulllist;
+//        }
+//
+//        @Override
+//        public boolean matches(InventoryCrafting inv, World worldIn) {
+//            boolean crossbow = false;
+//            boolean arrows = false;
+//            for (int i = 0; i < inv.getHeight(); ++i) {
+//                for (int j = 0; j < inv.getWidth(); ++j) {
+//                    ItemStack itemstack = inv.getStackInRowAndColumn(j, i);
+//
+//                    if (!ItemStackUtil.isEmpty(itemstack)) {
+//                        boolean flag = false;
+//
+//                        if (!crossbow && this.crossbowItem.equals(itemstack.getItem())) {
+//                            if (getArrowsLeft(itemstack) < MAX_ARROW_COUNT) {
+//                                crossbow = true;
+//                                flag = true;
+//                            }
+//                        } else if (!arrows && itemstack.getItem() == arrowPackage.getItem() && (arrowPackage.getMetadata() == 32767 || itemstack.getMetadata() == arrowPackage.getMetadata())) {
+//                            flag = true;
+//                            arrows = true;
+//
+//                        }
+//
+//                        if (!flag) {
+//                            return false;
+//                        }
+//                    }
+//                }
+//            }
+//
+//            return arrows && crossbow;
+//        }
+//    }
 
 
 }

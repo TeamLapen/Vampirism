@@ -23,7 +23,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiYesNo;
 import net.minecraft.client.gui.GuiYesNoCallback;
-import net.minecraft.client.gui.achievement.GuiAchievements;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -45,7 +44,7 @@ import java.util.Random;
 
 /**
  * Gui screen which displays the skills available to the players and allows him to unlock some.
- * Inspired by Minecraft's {@link GuiAchievements}
+ * Inspired by Minecraft's old GuiAchievement
  */
 @SideOnly(Side.CLIENT)
 public class GuiSkills extends GuiScreen implements GuiYesNoCallback {

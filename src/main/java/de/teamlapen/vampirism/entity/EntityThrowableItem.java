@@ -13,7 +13,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 
 /**
  * 1.10
@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
  */
 public class EntityThrowableItem extends EntityThrowable {
 
-    private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityThrowableItem.class, DataSerializers.OPTIONAL_ITEM_STACK);
+    private static final DataParameter<ItemStack> ITEM = EntityDataManager.createKey(EntityThrowableItem.class, DataSerializers.ITEM_STACK);
 
     public EntityThrowableItem(World worldIn) {
         super(worldIn);
@@ -36,7 +36,7 @@ public class EntityThrowableItem extends EntityThrowable {
      * @return Itemstack represented by this entity. Corresponding item is instance of {@link IVampirismThrowableItem}
      */
     public
-    @Nullable
+    @Nonnull
     ItemStack getItem() {
         return this.getDataManager().get(ITEM);
     }
@@ -47,7 +47,7 @@ public class EntityThrowableItem extends EntityThrowable {
      *
      * @param stack Corresponding item has to be instance of {@link IVampirismThrowableItem}
      */
-    public void setItem(@Nullable ItemStack stack) {
+    public void setItem(@Nonnull ItemStack stack) {
         if (!ItemStackUtil.isEmpty(stack) && !(stack.getItem() instanceof IVampirismThrowableItem))
             throw new IllegalArgumentException("EntityThrowable only accepts IVampirismThrowableItem, but not " + stack);
         this.getDataManager().set(ITEM, stack);
