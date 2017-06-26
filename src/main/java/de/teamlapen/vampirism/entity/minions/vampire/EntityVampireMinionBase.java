@@ -154,7 +154,7 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
                 }
             }
         }
-        if (Balance.mobProps.VAMPIRE_MINION_REGENERATE_SECS >= 0 && this.ticksExisted % (Balance.mobProps.VAMPIRE_MINION_REGENERATE_SECS * 20) == 0 && (this.getLastAttackerTime() == 0 || this.getLastAttackerTime() - ticksExisted > 100)) {
+        if (Balance.mobProps.VAMPIRE_MINION_REGENERATE_SECS >= 0 && this.ticksExisted % (Balance.mobProps.VAMPIRE_MINION_REGENERATE_SECS * 20) == 0 && (this.getRevengeTimer() == 0 || this.getRevengeTimer() - ticksExisted > 100)) {
             this.heal(2F);
         }
         super.onLivingUpdate();
