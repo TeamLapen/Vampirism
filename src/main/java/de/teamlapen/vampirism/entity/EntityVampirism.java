@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.api.entity.IEntityWithHome;
+import de.teamlapen.vampirism.api.entity.IVampirismEntity;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -27,7 +28,7 @@ import javax.annotation.Nullable;
 /**
  * Base class for most vampirism mobs
  */
-public abstract class EntityVampirism extends EntityCreature implements IEntityWithHome {
+public abstract class EntityVampirism extends EntityCreature implements IEntityWithHome, IVampirismEntity {
 
     private final EntityAIBase moveTowardsRestriction;
     protected boolean hasArms = true;
