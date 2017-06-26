@@ -8,10 +8,10 @@ import de.teamlapen.lib.lib.util.ModCompatLoader;
 import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.hunter.IHunter;
+import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
-import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.*;
@@ -86,13 +86,13 @@ public class VampirismMod {
      * Use the instance in {@link VReference} instead of this one.
      * This is only here to init it as early as possible
      */
-    private final static EnumCreatureType HUNTER_CREATURE_TYPE = EnumHelper.addCreatureType("VAMPIRISM_HUNTER", IHunter.class, 25, Material.AIR, false, false);
+    private final static EnumCreatureType HUNTER_CREATURE_TYPE = EnumHelper.addCreatureType("VAMPIRISM_HUNTER", IHunterMob.class, 25, Material.AIR, false, false);
     /**
      * Vampire creatures are of this creature type.
      * Use the instance in {@link VReference} instead of this one.
      * This is only here to init it as early as possible
      */
-    private static final EnumCreatureType VAMPIRE_CREATURE_TYPE = EnumHelper.addCreatureType("VAMPIRISM_VAMPIRE", IVampire.class, 30, Material.AIR, false, false);
+    private static final EnumCreatureType VAMPIRE_CREATURE_TYPE = EnumHelper.addCreatureType("VAMPIRISM_VAMPIRE", IVampireMob.class, 30, Material.AIR, false, false);
     /**
      * Vampire creatures have this attribute
      * Vampire creatures are of this creature type.
