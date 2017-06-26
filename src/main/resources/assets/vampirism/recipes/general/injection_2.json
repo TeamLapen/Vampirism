@@ -1,0 +1,37 @@
+{
+  "result": {
+    "item": "vampirism:injection",
+    "data": 2
+  },
+  "ingredients": [
+    {
+      "item": "vampirism:injection",
+      "data": 0
+    },
+    {
+      "item": "vampirism:vampire_fang"
+    },
+    {
+      "item": "vampirism:vampire_fang"
+    },
+    {
+      "item": "vampirism:vampire_fang"
+    },
+    {
+      "item": "vampirism:vampire_fang"
+    },
+    {
+      "item": "vampirism:vampire_fang"
+    },
+    {
+      "item": "vampirism:vampire_fang"
+    },
+    {
+      "item": "vampirism:vampire_fang"
+    },
+    {
+      "item": "vampirism:vampire_fang"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless"
+}

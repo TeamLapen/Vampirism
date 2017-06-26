@@ -1,0 +1,22 @@
+{
+  "result": {
+    "nbt": {
+      "type": "spitfire"
+    },
+    "item": "vampirism:crossbow_arrow",
+    "count": 6
+  },
+  "pattern": [
+    "X",
+    "Y"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "item": "#IRON"
+    },
+    "Y": {
+      "item": "minecraft:stick"
+    }
+  }
+}

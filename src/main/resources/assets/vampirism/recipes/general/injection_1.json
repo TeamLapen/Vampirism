@@ -1,0 +1,16 @@
+{
+  "result": {
+    "item": "vampirism:injection",
+    "data": 1
+  },
+  "ingredients": [
+    {
+      "item": "vampirism:injection",
+      "data": 0
+    },
+    {
+      "item": "vampirism:item_garlic"
+    }
+  ],
+  "type": "minecraft:crafting_shapeless"
+}

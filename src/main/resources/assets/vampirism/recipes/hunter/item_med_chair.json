@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "vampirism:item_med_chair"
+  },
+  "pattern": [
+    "XYX",
+    "XXX",
+    "XZX"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "item": "#IRON"
+    },
+    "Y": {
+      "item": "minecraft:wool",
+      "data": 32767
+    },
+    "Z": {
+      "item": "minecraft:glass_bottle"
+    }
+  }
+}

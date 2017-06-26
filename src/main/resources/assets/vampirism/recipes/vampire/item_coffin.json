@@ -1,0 +1,20 @@
+{
+  "result": {
+    "item": "vampirism:item_coffin"
+  },
+  "pattern": [
+    "XXX",
+    "YYY",
+    "XXX"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "item": "#PLANKS"
+    },
+    "Y": {
+      "item": "minecraft:wool",
+      "data": 32767
+    }
+  }
+}

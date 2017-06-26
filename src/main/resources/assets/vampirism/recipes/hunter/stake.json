@@ -1,0 +1,19 @@
+{
+  "result": {
+    "item": "vampirism:stake"
+  },
+  "pattern": [
+    " X ",
+    " Y ",
+    " X "
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "item": "minecraft:stick"
+    },
+    "Y": {
+      "item": "#PLANKS"
+    }
+  }
+}

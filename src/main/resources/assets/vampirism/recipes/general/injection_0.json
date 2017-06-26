@@ -1,0 +1,20 @@
+{
+  "result": {
+    "item": "vampirism:injection",
+    "data": 0
+  },
+  "pattern": [
+    " X ",
+    " X ",
+    " Y "
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "item": "minecraft:glass"
+    },
+    "Y": {
+      "item": "minecraft:glass_pane"
+    }
+  }
+}
