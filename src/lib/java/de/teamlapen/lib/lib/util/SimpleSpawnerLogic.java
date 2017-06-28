@@ -19,6 +19,8 @@ import net.minecraft.world.World;
  */
 public abstract class SimpleSpawnerLogic {
 
+    private static final int MOB_COUNT_DIV = (int) Math.pow(17.0D, 2.0D);
+
     @Nullable
     private ResourceLocation entityName = null;
     private int minSpawnDelay = 200;
@@ -142,6 +144,7 @@ public abstract class SimpleSpawnerLogic {
 
                     if (limitType != null) {
                         int total = this.getSpawnerWorld().countEntities(limitType, true);
+                        total = total * UtilLib.countPlayerLoadedChunks(this.getSpawnerWorld()) / MOB_COUNT_DIV;
                         if (total > limitType.getMaxNumberOfCreature()) {
                             this.resetTimer();
                             break;

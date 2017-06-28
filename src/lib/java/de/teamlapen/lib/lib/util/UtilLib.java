@@ -1,6 +1,7 @@
 package de.teamlapen.lib.lib.util;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Lists;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.block.state.IBlockState;
@@ -103,6 +104,35 @@ public class UtilLib {
             y = (int) box.minY + w.rand.nextInt((int) (box.maxY - box.minY) + 1);
         }
         return new BlockPos(x, y, z);
+    }
+
+    /**
+     * @return Number of chunks loaded by players
+     */
+    public static int countPlayerLoadedChunks(World world) {
+        List<ChunkPos> chunks = Lists.newArrayList();
+        int i = 0;
+
+        for (EntityPlayer entityplayer : world.playerEntities) {
+            if (!entityplayer.isSpectator()) {
+                int x = MathHelper.floor(entityplayer.posX / 16.0D);
+                int z = MathHelper.floor(entityplayer.posZ / 16.0D);
+
+                for (int dx = -8; dx <= 8; ++dx) {
+                    for (int dz = -8; dz <= 8; ++dz) {
+                        ChunkPos chunkpos = new ChunkPos(dx + x, dz + z);
+
+                        if (!chunks.contains(chunkpos)) {
+                            ++i;
+                            chunks.add(chunkpos);
+
+
+                        }
+                    }
+                }
+            }
+        }
+        return i;
     }
 
     public static Entity spawnEntityBehindEntity(EntityLivingBase p, ResourceLocation id) {
