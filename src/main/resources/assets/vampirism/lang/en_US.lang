@@ -145,6 +145,7 @@ tile.vampirism.altar_pillar.name=Altar Pillar
 tile.vampirism.altar_tip.name=Altar Tip
 tile.vampirism.altar_inspiration.name=Altar of Inspiration
 tile.vampirism.tent.name=Tent
+tile.vampirism.tent.spawner=Spawns Hunter
 tile.vampirism.church_altar.name=Altar of Cleansing
 tile.vampirism.blood_container.name=Blood Container
 tile.vampirism.med_chair.name=Injection Chair
