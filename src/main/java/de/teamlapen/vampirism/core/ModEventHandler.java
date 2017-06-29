@@ -1,28 +1,23 @@
 package de.teamlapen.vampirism.core;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.Lists;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
-import de.teamlapen.vampirism.entity.VampirismEntitySelectors;
 import de.teamlapen.vampirism.network.SyncConfigPacket;
 import de.teamlapen.vampirism.potion.FakeNightVisionPotion;
 import de.teamlapen.vampirism.util.DaySleepHelper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.ModWorldEventListener;
 import de.teamlapen.vampirism.world.villages.VampirismVillageCollection;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.event.EntitySelectorEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.terraingen.InitMapGenEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -35,8 +30,6 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
-import java.util.List;
 
 /**
  * Handles all events used in central parts of the mod
@@ -60,14 +53,6 @@ public class ModEventHandler {
         }
     }
 
-    @SubscribeEvent
-    public void onEntitySelector(EntitySelectorEvent event) {
-        List<Predicate<Entity>> selectors = Lists.newArrayList();
-        VampirismEntitySelectors.gatherEntitySelectors(selectors, event.getArgumentMap(), event.getMainSelector(), event.getSender(), event.getPosition());
-        for (Predicate<Entity> p : selectors) {//Workaround because I was stupid and did not add a list add method to the event
-            event.addPredicate(p);
-        }
-    }
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onInitMapGen(InitMapGenEvent event) {

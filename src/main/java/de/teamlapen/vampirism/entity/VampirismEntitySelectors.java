@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -12,8 +13,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.common.IEntitySelectorFactory;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
-import javax.annotation.Nullable;
+import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Map;
 
@@ -22,9 +25,14 @@ import java.util.Map;
  */
 public class VampirismEntitySelectors {
 
+    private static final String FACTION = "vampirism:faction";
+    private static final String LEVEL = "vampirism:level";
+    private static final String MIN_LEVEL = "vampirism:minLevel";
+    private static final String MAX_LEVEL = "vampirism:maxLevel";
+
 
     private static void addFactionSelector(List<Predicate<Entity>> list, Map<String, String> arguments, ICommandSender sender) {
-        String faction = arguments.get("vampirism:faction");
+        String faction = arguments.get(FACTION);
 
         if (faction != null) {
             final boolean invert = faction.startsWith("!");
@@ -36,96 +44,74 @@ public class VampirismEntitySelectors {
             IFaction[] factions = VampirismAPI.factionRegistry().getFactions();
             for (final IFaction f : factions) {
                 if (f.name().equalsIgnoreCase(faction)) {
-                    list.add(new Predicate<Entity>() {
-                        @Override
-                        public boolean apply(@Nullable Entity input) {
-                            if (input instanceof IFactionEntity) {
-                                boolean flag1 = f.equals(((IFactionEntity) input).getFaction());
-                                return invert != flag1;
-                            } else if (f instanceof IPlayableFaction && input instanceof EntityPlayer) {
-                                boolean flag1 = FactionPlayerHandler.get((EntityPlayer) input).isInFaction((IPlayableFaction) f);
-                                return invert != flag1;
-                            }
-                            return invert;
+                    list.add(input -> {
+                        if (input instanceof IFactionEntity) {
+                            boolean flag1 = f.equals(((IFactionEntity) input).getFaction());
+                            return invert != flag1;
+                        } else if (f instanceof IPlayableFaction && input instanceof EntityPlayer) {
+                            boolean flag1 = FactionPlayerHandler.get((EntityPlayer) input).isInFaction((IPlayableFaction) f);
+                            return invert != flag1;
                         }
+                        return invert;
                     });
                     return;
                 }
             }
             //Prevents selection of all entities if mistyped
-            list.add(new Predicate<Entity>() {
-                @Override
-                public boolean apply(@Nullable Entity input) {
-                    return false;
-                }
-            });
+            list.add(input -> false);
             sender.sendMessage(new TextComponentString("Unknown faction: " + faction));
 
         }
     }
 
     private static void addLevelSelector(List<Predicate<Entity>> list, Map<String, String> arguments) {
-        String level = arguments.get("vampirism:level");
+        String level = arguments.get(LEVEL);
         if (level != null) {
             try {
                 final int l = Integer.parseInt(level);
-                list.add(new Predicate<Entity>() {
-                    @Override
-                    public boolean apply(@Nullable Entity input) {
-                        if (input instanceof EntityPlayer) {
-                            return FactionPlayerHandler.get((EntityPlayer) input).getCurrentLevel() == l;
-                        }
-                        return false;
-                    }
-                });
+                list.add(input -> input instanceof EntityPlayer && FactionPlayerHandler.get((EntityPlayer) input).getCurrentLevel() == l);
             } catch (NumberFormatException e) {
                 VampirismMod.log.w("EntitySelectors", "Failed to parse level (%s)", level);
+                list.add(input -> false);
             }
 
         }
 
-        String minLevel = arguments.get("vampirism:minLevel");
+        String minLevel = arguments.get(MIN_LEVEL);
         if (minLevel != null) {
             try {
                 final int l = Integer.parseInt(minLevel);
-                list.add(new Predicate<Entity>() {
-                    @Override
-                    public boolean apply(@Nullable Entity input) {
-                        if (input instanceof EntityPlayer) {
-                            return FactionPlayerHandler.get((EntityPlayer) input).getCurrentLevel() >= l;
-                        }
-                        return false;
-                    }
-                });
+                list.add(input -> input instanceof EntityPlayer && FactionPlayerHandler.get((EntityPlayer) input).getCurrentLevel() >= l);
             } catch (NumberFormatException e) {
                 VampirismMod.log.w("EntitySelectors", "Failed to parse level (%s)", level);
+                list.add(input -> false);
             }
 
         }
 
-        String maxLevel = arguments.get("vampirism:maxLevel");
+        String maxLevel = arguments.get(MAX_LEVEL);
         if (maxLevel != null) {
             try {
                 final int l = Integer.parseInt(maxLevel);
-                list.add(new Predicate<Entity>() {
-                    @Override
-                    public boolean apply(@Nullable Entity input) {
-                        if (input instanceof EntityPlayer) {
-                            return FactionPlayerHandler.get((EntityPlayer) input).getCurrentLevel() <= l;
-                        }
-                        return false;
-                    }
-                });
+                list.add(input -> input instanceof EntityPlayer && FactionPlayerHandler.get((EntityPlayer) input).getCurrentLevel() <= l);
             } catch (NumberFormatException e) {
                 VampirismMod.log.w("EntitySelectors", "Failed to parse level (%s)", level);
+                list.add(input -> false);
             }
 
         }
     }
 
-
-    public static void gatherEntitySelectors(List<Predicate<Entity>> list, Map<String, String> map, String mainSelector, ICommandSender sender, Vec3d position) {
-        addFactionSelector(list, map, sender);
-        addLevelSelector(list, map);
+    public static void registerSelectors() {
+        GameRegistry.registerEntitySelector(new IEntitySelectorFactory() {
+            @Nonnull
+            @Override
+            public List<Predicate<Entity>> createPredicates(Map<String, String> arguments, String mainSelector, ICommandSender sender, Vec3d position) {
+                List<Predicate<Entity>> list = Lists.newArrayList();
+                addFactionSelector(list, arguments, sender);
+                addLevelSelector(list, arguments);
+                return list;
+            }
+        }, FACTION, LEVEL, MIN_LEVEL, MAX_LEVEL);
     }
 }

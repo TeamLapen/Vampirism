@@ -12,8 +12,18 @@ import java.util.Set;
 @SideOnly(Side.CLIENT)
 public class ModGuiFactory implements IModGuiFactory {
     @Override
+    public GuiScreen createConfigGui(GuiScreen parentScreen) {
+        return new ModConfigGui(parentScreen);
+    }
+
+    @Override
     public RuntimeOptionGuiHandler getHandlerFor(RuntimeOptionCategoryElement element) {
         return null;
+    }
+
+    @Override
+    public boolean hasConfigGui() {
+        return true;
     }
 
     @Override
