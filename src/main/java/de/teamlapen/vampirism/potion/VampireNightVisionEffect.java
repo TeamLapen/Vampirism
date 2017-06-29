@@ -9,12 +9,11 @@ import net.minecraft.potion.PotionEffect;
 import java.util.ArrayList;
 
 /**
- * Potion effect which pretends to be night vision.
+ * Night vision effect for vampire players which is not displayed
  */
-public class FakeNightVisionPotionEffect extends PotionEffect {
-    /**
-     */
-    public FakeNightVisionPotionEffect() {
+public class VampireNightVisionEffect extends PotionEffect {
+
+    public VampireNightVisionEffect() {
         super(MobEffects.NIGHT_VISION, 10000, 0, false, false);
         setCurativeItems(new ArrayList<ItemStack>());
     }
@@ -31,7 +30,7 @@ public class FakeNightVisionPotionEffect extends PotionEffect {
 
     @Override
     public String getEffectName() {
-        return "Vampire " + "effect.nightVision";
+        return "effect.vampirism.nightVision";
     }
 
     @Override

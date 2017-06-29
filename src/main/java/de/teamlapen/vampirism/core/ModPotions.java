@@ -1,11 +1,13 @@
 package de.teamlapen.vampirism.core;
 
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.potion.FakeNightVisionPotion;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.PotionThirst;
+import de.teamlapen.vampirism.potion.VampirismNightVisionPotion;
 import de.teamlapen.vampirism.potion.VampirismPotion;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.init.MobEffects;
 import net.minecraft.potion.Potion;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -26,8 +28,6 @@ public class ModPotions {
     public static final Potion disguise_as_vampire = getNull();
     public static final Potion fire_protection = getNull();
     public static final Potion garlic = getNull();
-    @GameRegistry.ObjectHolder("minecraft:night_vision")
-    public static final Potion fakeNightVisionPotion = getNull();
 
     @SuppressWarnings("ConstantConditions")
     private static @Nonnull
@@ -37,7 +37,7 @@ public class ModPotions {
 
     static void registerPotions(IForgeRegistry<Potion> registry) {
         registry.register(new PotionThirst("thirst", true, 859494));
-        registry.register(new FakeNightVisionPotion());
+        registry.register(new VampirismNightVisionPotion());
         registry.register(new PotionSanguinare("sanguinare", false, 0x6A0888));
         registry.register(new VampirismPotion("saturation", false, 0xDCFF00).setIconIndex(2, 0).setBeneficial());
         Potion sunscreen = new VampirismPotion("sunscreen", false, 0xFFF100).setIconIndex(3, 0).setBeneficial();
@@ -52,6 +52,12 @@ public class ModPotions {
     static void fixMapping(RegistryEvent.MissingMappings.Mapping<Potion> m) {
         if ("night_vision".equals(m.key.getResourcePath())) {
             m.ignore();
+        }
+    }
+
+    static void checkNightVision() {
+        if (!(MobEffects.NIGHT_VISION instanceof VampirismNightVisionPotion)) {
+            VampirismMod.log.w("Potion", "Vampirism was not able to register it's night vision potion");
         }
     }
 }

@@ -56,6 +56,8 @@ public class RegistryManager implements IInitListener {
                 ModEntities.registerConvertibles();
                 ModEntities.registerCustomExtendedCreatures();
                 break;
+            case POST_INIT:
+                ModPotions.checkNightVision();
             default:
                 break;
         }

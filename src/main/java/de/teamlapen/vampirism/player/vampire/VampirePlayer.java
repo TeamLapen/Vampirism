@@ -29,8 +29,8 @@ import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.vampire.actions.BatVampireAction;
-import de.teamlapen.vampirism.potion.FakeNightVisionPotionEffect;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
+import de.teamlapen.vampirism.potion.VampireNightVisionEffect;
 import de.teamlapen.vampirism.util.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
@@ -496,7 +496,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     player.removePotionEffect(MobEffects.NIGHT_VISION);
                 }
             } else if (newLevel == 0) {
-                if (player.getActivePotionEffect(MobEffects.NIGHT_VISION) instanceof FakeNightVisionPotionEffect) {
+                if (player.getActivePotionEffect(MobEffects.NIGHT_VISION) instanceof VampireNightVisionEffect) {
                     player.removePotionEffect(MobEffects.NIGHT_VISION);
                 }
                 actionHandler.resetTimers();
