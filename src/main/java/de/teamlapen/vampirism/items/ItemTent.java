@@ -1,18 +1,27 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.ItemStackUtil;
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.blocks.BlockTent;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.tileentity.TileTent;
 import net.minecraft.block.Block;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 
 /**
@@ -60,6 +69,25 @@ public class ItemTent extends VampirismItem {
         super(name);
     }
 
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+        super.addInformation(stack, playerIn, tooltip, advanced);
+        if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("spawner")) {
+            tooltip.add(UtilLib.translate("tile.vampirism.tent.spawner"));
+        }
+    }
+
+    @Override
+    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+        super.getSubItems(itemIn, tab, subItems);
+        ItemStack spawner = new ItemStack(this);
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setBoolean("spawner", true);
+        spawner.setTagCompound(nbt);
+        subItems.add(spawner);
+    }
+
     @Override
     public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
 
@@ -67,11 +95,21 @@ public class ItemTent extends VampirismItem {
             return EnumActionResult.PASS;
         if (world.isRemote) return EnumActionResult.PASS;
 
+        ItemStack stack = player.getHeldItem(hand);
+
         EnumFacing dir = EnumFacing.fromAngle(player.rotationYaw);
         boolean flag = placeAt(world, pos.up(), dir, false, false);
-        if (flag && !player.capabilities.isCreativeMode) {
-            ItemStack stack = player.getHeldItem(hand);
-            ItemStackUtil.decr(stack);
+        if (flag) {
+            if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("spawner")) {
+                TileEntity tile = world.getTileEntity(pos.up());
+                if (tile instanceof TileTent) {
+                    ((TileTent) tile).setSpawn(true);
+                }
+            }
+
+            if (!player.capabilities.isCreativeMode) {
+                ItemStackUtil.decr(stack);
+            }
         }
         return flag ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
     }
