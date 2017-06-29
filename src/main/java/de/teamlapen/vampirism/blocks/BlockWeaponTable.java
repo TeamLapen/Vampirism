@@ -62,7 +62,7 @@ public class BlockWeaponTable extends VampirismBlock {
 
     @Override
     public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
-        return new ItemStack(Item.getItemFromBlock(ModBlocks.weaponTable), 1);
+        return new ItemStack(Item.getItemFromBlock(ModBlocks.weapon_table), 1);
     }
 
     @Override

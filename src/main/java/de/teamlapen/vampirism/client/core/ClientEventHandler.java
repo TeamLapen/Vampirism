@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.client.core;
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.VampirismMod;
@@ -24,7 +23,6 @@ import net.minecraft.util.registry.RegistrySimple;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.model.Attributes;
 import net.minecraftforge.client.model.IModel;
-import net.minecraftforge.client.model.IRetexturableModel;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -35,6 +33,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Handle general client side events
@@ -48,7 +47,7 @@ public class ClientEventHandler {
             if (mc.world != null && mc.world != null) {
                 if ((mc.currentScreen == null || mc.currentScreen instanceof GuiSleepMP) && mc.player.isPlayerSleeping()) {
                     IBlockState state = mc.player.getEntityWorld().getBlockState(mc.player.bedLocation);
-                    if (state.getBlock().equals(ModBlocks.coffin)) {
+                    if (state.getBlock().equals(ModBlocks.block_coffin)) {
                         mc.displayGuiScreen(new GuiSleepCoffin());
                     }
                 } else if (mc.currentScreen != null && mc.currentScreen instanceof GuiSleepCoffin && !mc.player.isPlayerSleeping()) {
@@ -61,20 +60,15 @@ public class ClientEventHandler {
 
     @SubscribeEvent
     public void onModelBakeEvent(ModelBakeEvent event) {
-        IRetexturableModel[] containerFluidModels = new IRetexturableModel[BakedBloodContainerModel.FLUID_LEVELS];
+        IModel[] containerFluidModels = new IModel[BakedBloodContainerModel.FLUID_LEVELS];
         try {
             // load the fluid models for the different levels from the .json files
 
             for (int x = 0; x < BakedBloodContainerModel.FLUID_LEVELS; x++) {
-                containerFluidModels[x] = (IRetexturableModel) ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/blood_container/fluid_" + String.valueOf(x + 1)));
+                containerFluidModels[x] = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/blood_container/fluid_" + String.valueOf(x + 1)));
             }
 
-            Function<ResourceLocation, TextureAtlasSprite> textureGetter = new Function<ResourceLocation, TextureAtlasSprite>() {
-                @Override
-                public TextureAtlasSprite apply(ResourceLocation location) {
-                    return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
-                }
-            };
+            Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
 
             IModel retexturedModel;
 
@@ -82,7 +76,7 @@ public class ClientEventHandler {
 
             for (Map.Entry<String, Fluid> entry : FluidRegistry.getRegisteredFluids().entrySet()) {
                 for (int x = 0; x < containerFluidModels.length; x++) {
-                    retexturedModel = containerFluidModels[x].retexture(new ImmutableMap.Builder()
+                    retexturedModel = containerFluidModels[x].retexture(new ImmutableMap.Builder<String, String>()
                             .put("fluid", entry.getValue().getStill().toString())
                             .build());
 
@@ -95,7 +89,7 @@ public class ClientEventHandler {
 
             // get ModelResourceLocations of all tank block variants from the registry
 
-            RegistrySimple<ModelResourceLocation, IBakedModel> registry = (RegistrySimple) event.getModelRegistry();
+            RegistrySimple<ModelResourceLocation, IBakedModel> registry = (RegistrySimple<ModelResourceLocation, IBakedModel>) event.getModelRegistry();
             ArrayList<ModelResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ModelResourceLocation modelLoc : registry.getKeys()) {
@@ -124,17 +118,12 @@ public class ClientEventHandler {
 
 
         try {
-            Function<ResourceLocation, TextureAtlasSprite> textureGetter = new Function<ResourceLocation, TextureAtlasSprite>() {
-                @Override
-                public TextureAtlasSprite apply(ResourceLocation location) {
-                    return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
-                }
-            };
+            Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
             for (int x = 0; x < BakedAltarInspirationModel.FLUID_LEVELS; x++) {
                 IModel model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/altar_inspiration/blood" + String.valueOf(x + 1)));
                 BakedAltarInspirationModel.FLUID_MODELS[x] = model.bake(model.getDefaultState(), Attributes.DEFAULT_BAKED_FORMAT, textureGetter);
             }
-            RegistrySimple<ModelResourceLocation, IBakedModel> registry = (RegistrySimple) event.getModelRegistry();
+            RegistrySimple<ModelResourceLocation, IBakedModel> registry = (RegistrySimple<ModelResourceLocation, IBakedModel>) event.getModelRegistry();
             ArrayList<ModelResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ModelResourceLocation modelLoc : registry.getKeys()) {
@@ -160,17 +149,12 @@ public class ClientEventHandler {
         }
 
         try {
-            Function<ResourceLocation, TextureAtlasSprite> textureGetter = new Function<ResourceLocation, TextureAtlasSprite>() {
-                @Override
-                public TextureAtlasSprite apply(ResourceLocation location) {
-                    return Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
-                }
-            };
+            Function<ResourceLocation, TextureAtlasSprite> textureGetter = location -> Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(location.toString());
             for (int x = 0; x < BakedWeaponTableModel.FLUID_LEVELS; x++) {
                 IModel model = ModelLoaderRegistry.getModel(new ResourceLocation(REFERENCE.MODID + ":block/weapon_table/weapon_table_lava" + String.valueOf(x + 1)));
                 BakedWeaponTableModel.FLUID_MODELS[x] = model.bake(model.getDefaultState(), Attributes.DEFAULT_BAKED_FORMAT, textureGetter);
             }
-            RegistrySimple<ModelResourceLocation, IBakedModel> registry = (RegistrySimple) event.getModelRegistry();
+            RegistrySimple<ModelResourceLocation, IBakedModel> registry = (RegistrySimple<ModelResourceLocation, IBakedModel>) event.getModelRegistry();
             ArrayList<ModelResourceLocation> modelLocations = Lists.newArrayList();
 
             for (ModelResourceLocation modelLoc : registry.getKeys()) {

@@ -56,7 +56,7 @@ public class AlchemicalCauldronRecipePage extends Page {
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation("vampirismguide", "textures/gui/alchemical_cauldron_recipe.png"));
         guiBase.drawTexturedModalRect(guiLeft + 32, guiTop + 43, 0, 0, 110, 75);
-        guiBase.drawCenteredString(fontRendererObj, ModBlocks.alchemicalCauldron.getLocalizedName(), guiLeft + guiBase.xSize / 2, guiTop + 12, 0);
+        guiBase.drawCenteredString(fontRendererObj, ModBlocks.alchemical_cauldron.getLocalizedName(), guiLeft + guiBase.xSize / 2, guiTop + 12, 0);
         guiBase.drawCenteredString(fontRendererObj, "§o" + getRecipeName() + "§r", guiLeft + guiBase.xSize / 2, guiTop + 14 + fontRendererObj.FONT_HEIGHT, 0);
 
         int outputX = 95 + (guiLeft + guiBase.xSize / 7);

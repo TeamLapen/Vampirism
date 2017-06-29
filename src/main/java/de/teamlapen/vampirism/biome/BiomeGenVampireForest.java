@@ -42,8 +42,8 @@ public class BiomeGenVampireForest extends Biome {
         this.spawnableCaveCreatureList.add(new SpawnListEntry(EntityBlindingBat.class, 8, 2, 4));
         this.spawnableCreatureList.add(new SpawnListEntry(EntityDummyBittenAnimal.class, 15, 3, 6));
 
-        this.topBlock = ModBlocks.cursedEarth.getDefaultState();
-        this.fillerBlock = ModBlocks.cursedEarth.getDefaultState();
+        this.topBlock = ModBlocks.cursed_earth.getDefaultState();
+        this.fillerBlock = ModBlocks.cursed_earth.getDefaultState();
         this.decorator.treesPerChunk = 5;
         this.decorator.grassPerChunk = 4;
         this.decorator.deadBushPerChunk = 3;
@@ -52,7 +52,7 @@ public class BiomeGenVampireForest extends Biome {
 
     @Override
     public void addDefaultFlowers() {
-        addFlower(ModBlocks.vampirismFlower.getDefaultState().withProperty(VampirismFlower.TYPE, VampirismFlower.EnumFlowerType.ORCHID), 10);
+        addFlower(ModBlocks.vampirism_flower.getDefaultState().withProperty(VampirismFlower.TYPE, VampirismFlower.EnumFlowerType.ORCHID), 10);
     }
 
     @Override
@@ -92,8 +92,8 @@ public class BiomeGenVampireForest extends Biome {
      */
     private class WorldGenVampireOrchid extends WorldGenFlowers {
 
-        private VampirismFlower flower = ModBlocks.vampirismFlower;
-        private IBlockState state = ModBlocks.vampirismFlower.getDefaultState().withProperty(VampirismFlower.TYPE, VampirismFlower.EnumFlowerType.ORCHID);
+        private VampirismFlower flower = ModBlocks.vampirism_flower;
+        private IBlockState state = ModBlocks.vampirism_flower.getDefaultState().withProperty(VampirismFlower.TYPE, VampirismFlower.EnumFlowerType.ORCHID);
 
         private WorldGenVampireOrchid() {
             super(Blocks.YELLOW_FLOWER, BlockFlower.EnumFlowerType.DANDELION);

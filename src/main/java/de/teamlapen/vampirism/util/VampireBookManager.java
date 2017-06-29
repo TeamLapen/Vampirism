@@ -41,7 +41,7 @@ public class VampireBookManager {
      * @return
      */
     public ItemStack getRandomBook(Random rnd) {
-        ItemStack book = new ItemStack(ModItems.vampireBook, 1);
+        ItemStack book = new ItemStack(ModItems.vampire_book, 1);
         applyRandomBook(book, rnd);
         return book;
     }

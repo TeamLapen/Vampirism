@@ -4,75 +4,85 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.items.*;
+import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.IForgeRegistry;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
 /**
  * Handles all item registrations and reference.
  */
+@GameRegistry.ObjectHolder(REFERENCE.MODID)
 public class ModItems {
 
-    public static ItemVampireFang vampireFang;
-    public static ItemHumanHeart humanHeart;
-    public static ItemHumanHeartWeak humanHeartWeak;
-    public static ItemBloodBottle bloodBottle;
-    public static ItemTent itemTent;
-    public static ItemCoffin itemCoffin;
-    public static ItemPureBlood pureBlood;
-    public static ItemHunterIntel hunterIntel;
-    public static ItemGarlic itemGarlic;
-    public static ItemInjection injection;
-    public static ItemMedChair itemMedChair;
-    public static ItemPitchfork pitchfork;
-    public static ItemSimpleCrossbow basicCrossbow;
-    public static ItemDoubleCrossbow basicDoubleCrossbow;
-    public static ItemSimpleCrossbow enhancedCrossbow;
-    public static ItemDoubleCrossbow enhancedDoubleCrossbow;
-    public static ItemCrossbowArrow crossbowArrow;
-    public static ItemStake stake;
-    public static ItemVampireBloodBottle vampireBlood;
-    public static ItemBloodPotion bloodPotion;
-    public static ItemTechCrossbow basicTechCrossbow;
-    public static ItemTechCrossbow enhancedTechCrossbow;
-    public static VampirismItem techCrossbowAmmoPackage;
-    public static ItemVampireBook vampireBook;
-    public static ItemHolyWaterBottle holyWaterBottle;
-    public static VampirismItem holySalt;
-    public static VampirismItem holySaltWater;
-    public static ItemAlchemicalFire itemAlchemicalFire;
-    public static VampirismItem garlicBeaconCore;
-    public static VampirismItem garlicBeaconCoreImproved;
-    public static VampirismItem purifiedGarlic;
-    public static VampirismItem pureSalt;
+    public static final ItemVampireFang vampire_fang = getNull();
+    public static final ItemHumanHeart human_heart = getNull();
+    public static final ItemHumanHeartWeak weak_human_heart = getNull();
+    public static final ItemBloodBottle blood_bottle = getNull();
+    public static final ItemTent item_tent = getNull();
+    public static final ItemCoffin item_coffin = getNull();
+    public static final ItemPureBlood pure_blood = getNull();
+    public static final ItemHunterIntel hunter_intel = getNull();
+    public static final ItemGarlic item_garlic = getNull();
+    public static final ItemInjection injection = getNull();
+    public static final ItemMedChair item_med_chair = getNull();
+    public static final ItemPitchfork pitchfork = getNull();
+    public static final ItemSimpleCrossbow basic_crossbow = getNull();
+    public static final ItemDoubleCrossbow basic_double_crossbow = getNull();
+    public static final ItemSimpleCrossbow enhanced_crossbow = getNull();
+    public static final ItemDoubleCrossbow enhanced_double_crossbow = getNull();
+    public static final ItemCrossbowArrow crossbow_arrow = getNull();
+    public static final ItemStake stake = getNull();
+    public static final ItemVampireBloodBottle vampire_blood_bottle = getNull();
+    public static final ItemBloodPotion blood_potion = getNull();
+    public static final ItemTechCrossbow basic_tech_crossbow = getNull();
+    public static final ItemTechCrossbow enhanced_tech_crossbow = getNull();
+    public static final VampirismItem tech_crossbow_ammo_package = getNull();
+    public static final ItemVampireBook vampire_book = getNull();
+    public static final ItemHolyWaterBottle holy_water_bottle = getNull();
+    public static final VampirismItem holy_salt = getNull();
+    public static final VampirismItem holy_salt_water = getNull();
+    public static final ItemAlchemicalFire item_alchemical_fire = getNull();
+    public static final VampirismItem garlic_beacon_core = getNull();
+    public static final VampirismItem garlic_beacon_core_improved = getNull();
+    public static final VampirismItem purified_garlic = getNull();
+    public static final VampirismItem pure_salt = getNull();
 
-    public static ItemArmorOfSwiftness armorOfSwiftness_helmet;
-    public static ItemArmorOfSwiftness armorOfSwiftness_chest;
-    public static ItemArmorOfSwiftness armorOfSwiftness_legs;
-    public static ItemArmorOfSwiftness armorOfSwiftness_boots;
+    public static final ItemArmorOfSwiftness armor_of_swiftness_head = getNull();
+    public static final ItemArmorOfSwiftness armor_of_swiftness_chest = getNull();
+    public static final ItemArmorOfSwiftness armor_of_swiftness_legs = getNull();
+    public static final ItemArmorOfSwiftness armor_of_swiftness_feet = getNull();
 
-    public static ItemHunterCoat hunterCoat_helmet;
-    public static ItemHunterCoat hunterCoat_chest;
-    public static ItemHunterCoat hunterCoat_legs;
-    public static ItemHunterCoat hunterCoat_boots;
+    public static final ItemHunterCoat hunter_coat_head = getNull();
+    public static final ItemHunterCoat hunter_coat_chest = getNull();
+    public static final ItemHunterCoat hunter_coat_legs = getNull();
+    public static final ItemHunterCoat hunter_coat_feet = getNull();
 
-    public static ItemObsidianArmor obsidianArmor_helmet;
-    public static ItemObsidianArmor obsidianArmor_chest;
-    public static ItemObsidianArmor obsidianArmor_legs;
-    public static ItemObsidianArmor obsidianArmor_boots;
+    public static final ItemObsidianArmor obsidian_armor_head = getNull();
+    public static final ItemObsidianArmor obsidian_armor_chest = getNull();
+    public static final ItemObsidianArmor obsidian_armor_legs = getNull();
+    public static final ItemObsidianArmor obsidian_armor_feet = getNull();
 
-    public static ItemHunterHat hunterHat0;
-    public static ItemHunterHat hunterHat1;
+    public static final ItemHunterHat hunter_hat0_head = getNull();
+    public static final ItemHunterHat hunter_hat1_head = getNull();
 
-    public static ItemHunterAxe hunterAxe;
+    public static final ItemHunterAxe hunter_axe = getNull();
 
 
+    @SuppressWarnings("ConstantConditions")
+    private static @Nonnull
+    <T> T getNull() {
+        return null;
+    }
+    
     static void registerCraftingRecipes() {
         //TODO CRAFTING
 //        HunterWeaponCraftingManager weaponCraftingManager = HunterWeaponCraftingManager.getInstance();
@@ -150,110 +160,112 @@ public class ModItems {
         return item.setTier(new ItemStack((Item) item), tier);
     }
 
-    static void registerItems() {
-        vampireFang = registerItem(new ItemVampireFang());
-        humanHeart = registerItem(new ItemHumanHeart());
-        humanHeartWeak = registerItem(new ItemHumanHeartWeak());
-        bloodBottle = registerItem(new ItemBloodBottle());
-        itemTent = registerItem(new ItemTent());
-        itemCoffin = registerItem(new ItemCoffin());
-        pureBlood = registerItem(new ItemPureBlood());
-        hunterIntel = registerItem(new ItemHunterIntel());
-        itemGarlic = registerItem(new ItemGarlic());
-        itemMedChair = registerItem(new ItemMedChair());
-        injection = registerItem(new ItemInjection());
-        pitchfork = registerItem(new ItemPitchfork());
-        basicCrossbow = registerItem(new ItemSimpleCrossbow("basic_crossbow", 1, 20, 300));
-        basicCrossbow.setEnchantability(Item.ToolMaterial.WOOD);
-        basicDoubleCrossbow = registerItem(new ItemDoubleCrossbow("basic_double_crossbow", 1, 20, 300));
-        basicDoubleCrossbow.setEnchantability(Item.ToolMaterial.WOOD);
-        enhancedCrossbow = registerItem(new ItemSimpleCrossbow("enhanced_crossbow", 1.5F, 15, 350));
-        enhancedCrossbow.setEnchantability(Item.ToolMaterial.IRON);
-        enhancedDoubleCrossbow = registerItem(new ItemDoubleCrossbow("enhanced_double_crossbow", 1.5F, 15, 350));
-        enhancedDoubleCrossbow.setEnchantability(Item.ToolMaterial.IRON);
-        crossbowArrow = registerItem(new ItemCrossbowArrow());
-        stake = registerItem(new ItemStake());
-        vampireBlood = registerItem(new ItemVampireBloodBottle());
-        bloodPotion = registerItem(new ItemBloodPotion());
-        basicTechCrossbow = registerItem(new ItemTechCrossbow("basic_tech_crossbow", 1.6F, 6, 300));
-        basicTechCrossbow.setEnchantability(Item.ToolMaterial.DIAMOND);
-        enhancedTechCrossbow = registerItem(new ItemTechCrossbow("enhanced_tech_crossbow", 1.7F, 4, 450));
-        enhancedTechCrossbow.setEnchantability(Item.ToolMaterial.DIAMOND);
-        techCrossbowAmmoPackage = registerItem(new VampirismItem("tech_crossbow_ammo_package") {
+    static void registerItems(IForgeRegistry<Item> registry) {
+        registry.register(new ItemVampireFang());
+        registry.register(new ItemHumanHeart());
+        registry.register(new ItemHumanHeartWeak());
+        registry.register(new ItemBloodBottle());
+        registry.register(new ItemTent());
+        registry.register(new ItemCoffin());
+        registry.register(new ItemPureBlood());
+        registry.register(new ItemHunterIntel());
+        registry.register(new ItemGarlic());
+        registry.register(new ItemMedChair());
+        registry.register(new ItemInjection());
+        registry.register(new ItemPitchfork());
+        ItemSimpleCrossbow basic_crossbow = new ItemSimpleCrossbow("basic_crossbow", 1, 20, 300);
+        basic_crossbow.setEnchantability(Item.ToolMaterial.WOOD);
+        registry.register(basic_crossbow);
+        ItemDoubleCrossbow basic_double_crossbow = new ItemDoubleCrossbow("basic_double_crossbow", 1, 20, 300);
+        basic_double_crossbow.setEnchantability(Item.ToolMaterial.WOOD);
+        registry.register(basic_double_crossbow);
+        ItemSimpleCrossbow enhanced_crossbow = new ItemSimpleCrossbow("enhanced_crossbow", 1.5F, 15, 350);
+        enhanced_crossbow.setEnchantability(Item.ToolMaterial.IRON);
+        registry.register(enhanced_crossbow);
+        ItemDoubleCrossbow enhanced_double_crossbow = new ItemDoubleCrossbow("enhanced_double_crossbow", 1.5F, 15, 350);
+        enhanced_double_crossbow.setEnchantability(Item.ToolMaterial.IRON);
+        registry.register(enhanced_double_crossbow);
+        registry.register(new ItemCrossbowArrow());
+        registry.register(new ItemStake());
+        registry.register(new ItemVampireBloodBottle());
+        registry.register(new ItemBloodPotion());
+        ItemTechCrossbow basic_tech_crossbow = new ItemTechCrossbow("basic_tech_crossbow", 1.6F, 6, 300);
+        basic_tech_crossbow.setEnchantability(Item.ToolMaterial.DIAMOND);
+        registry.register(basic_tech_crossbow);
+        ItemTechCrossbow enhanced_tech_crossbow = new ItemTechCrossbow("enhanced_tech_crossbow", 1.7F, 4, 450);
+        enhanced_tech_crossbow.setEnchantability(Item.ToolMaterial.DIAMOND);
+        registry.register(enhanced_tech_crossbow);
+        registry.register(new VampirismItem("tech_crossbow_ammo_package") {
             @Override
             public void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-                tooltip.add(UtilLib.translateFormatted("item.vampirism." + regName + ".tooltip", basicTechCrossbow.getLocalizedName()));
+                tooltip.add(UtilLib.translateFormatted("item.vampirism." + regName + ".tooltip", basic_tech_crossbow.getLocalizedName()));
             }
         });
-        vampireBook = registerItem(new ItemVampireBook());
-        holyWaterBottle = registerItem(new ItemHolyWaterBottle());
-        holySalt = registerItem(new VampirismItem("holy_salt") {
+        registry.register(new ItemVampireBook());
+        registry.register(new ItemHolyWaterBottle());
+        registry.register(new VampirismItem("holy_salt") {
             @Override
             public boolean hasEffect(ItemStack stack) {
                 return true;
             }
         });
-        pureSalt = registerItem(new VampirismItem("pure_salt"));
+        registry.register(new VampirismItem("pure_salt"));
 
-        holySaltWater = registerItem(new VampirismItem("holy_salt_water") {
+        registry.register(new VampirismItem("holy_salt_water") {
             @Override
             public boolean hasEffect(ItemStack stack) {
                 return true;
             }
         });
-        itemAlchemicalFire = registerItem(new ItemAlchemicalFire());
-        garlicBeaconCore = registerItem(new VampirismItem("garlic_beacon_core"));
-        garlicBeaconCoreImproved = registerItem(new VampirismItem("garlic_beacon_core_improved"));
-        purifiedGarlic = registerItem(new VampirismItem("purified_garlic"));
+        registry.register(new ItemAlchemicalFire());
+        registry.register(new VampirismItem("garlic_beacon_core"));
+        registry.register(new VampirismItem("garlic_beacon_core_improved"));
+        registry.register(new VampirismItem("purified_garlic"));
 
-        armorOfSwiftness_helmet = registerItem(new ItemArmorOfSwiftness(EntityEquipmentSlot.HEAD));
-        armorOfSwiftness_chest = registerItem(new ItemArmorOfSwiftness(EntityEquipmentSlot.CHEST));
-        armorOfSwiftness_legs = registerItem(new ItemArmorOfSwiftness(EntityEquipmentSlot.LEGS));
-        armorOfSwiftness_boots = registerItem(new ItemArmorOfSwiftness(EntityEquipmentSlot.FEET));
+        registry.register(new ItemArmorOfSwiftness(EntityEquipmentSlot.HEAD));
+        registry.register(new ItemArmorOfSwiftness(EntityEquipmentSlot.CHEST));
+        registry.register(new ItemArmorOfSwiftness(EntityEquipmentSlot.LEGS));
+        registry.register(new ItemArmorOfSwiftness(EntityEquipmentSlot.FEET));
 
-        hunterHat0 = registerItem(new ItemHunterHat(0));
-        hunterHat1 = registerItem(new ItemHunterHat(1));
+        registry.register(new ItemHunterHat(0));
+        registry.register(new ItemHunterHat(1));
 
-        hunterAxe = registerItem(new ItemHunterAxe());
+        registry.register(new ItemHunterAxe());
 
-        hunterCoat_helmet = registerItem(new ItemHunterCoat(EntityEquipmentSlot.HEAD));
-        hunterCoat_chest = registerItem(new ItemHunterCoat(EntityEquipmentSlot.CHEST));
-        hunterCoat_legs = registerItem(new ItemHunterCoat(EntityEquipmentSlot.LEGS));
-        hunterCoat_boots = registerItem(new ItemHunterCoat(EntityEquipmentSlot.FEET));
+        registry.register(new ItemHunterCoat(EntityEquipmentSlot.HEAD));
+        registry.register(new ItemHunterCoat(EntityEquipmentSlot.CHEST));
+        registry.register(new ItemHunterCoat(EntityEquipmentSlot.LEGS));
+        registry.register(new ItemHunterCoat(EntityEquipmentSlot.FEET));
 
-        obsidianArmor_helmet = registerItem(new ItemObsidianArmor(EntityEquipmentSlot.HEAD));
-        obsidianArmor_chest = registerItem(new ItemObsidianArmor(EntityEquipmentSlot.CHEST));
-        obsidianArmor_legs = registerItem(new ItemObsidianArmor(EntityEquipmentSlot.LEGS));
-        obsidianArmor_boots = registerItem(new ItemObsidianArmor(EntityEquipmentSlot.FEET));
+        registry.register(new ItemObsidianArmor(EntityEquipmentSlot.HEAD));
+        registry.register(new ItemObsidianArmor(EntityEquipmentSlot.CHEST));
+        registry.register(new ItemObsidianArmor(EntityEquipmentSlot.LEGS));
+        registry.register(new ItemObsidianArmor(EntityEquipmentSlot.FEET));
     }
 
-    private static <T extends Item> T registerItem(T item) {
-        GameRegistry.register(item);
-        return item;
-    }
 
 
     /**
      * Fix item mappings
      */
-    public static boolean fixMapping(FMLMissingMappingsEvent.MissingMapping mapping) {
+    static boolean fixMapping(RegistryEvent.MissingMappings.Mapping<Item> mapping) {
 
         //Removed battle Axe
-        if ("battleaxe".equals(mapping.resourceLocation.getResourcePath())) {
+        if ("battleaxe".equals(mapping.key.getResourcePath())) {
             mapping.ignore();
             return true;
         }
         //Check for mappings changed for 1.11 CamelCase to lower underscore
-        String old = mapping.resourceLocation.getResourcePath();
-        boolean r = checkMapping(mapping, old, armorOfSwiftness_boots, armorOfSwiftness_chest, armorOfSwiftness_helmet, armorOfSwiftness_legs, basicCrossbow, basicDoubleCrossbow, basicTechCrossbow, bloodBottle, bloodPotion, crossbowArrow, enhancedCrossbow, enhancedDoubleCrossbow);
+        String old = mapping.key.getResourcePath();
+        boolean r = checkMapping(mapping, old, armor_of_swiftness_feet, armor_of_swiftness_chest, armor_of_swiftness_head, armor_of_swiftness_legs, basic_crossbow, basic_double_crossbow, basic_tech_crossbow, blood_bottle, blood_potion, crossbow_arrow, enhanced_crossbow, enhanced_double_crossbow);
         if (!r)
-            r = checkMapping(mapping, old, enhancedTechCrossbow, humanHeart, humanHeartWeak, hunterAxe, hunterCoat_boots, hunterCoat_chest, hunterCoat_helmet, hunterCoat_legs, hunterHat0, hunterHat1, hunterIntel, injection, itemAlchemicalFire, itemCoffin, itemGarlic, itemMedChair);
+            r = checkMapping(mapping, old, enhanced_tech_crossbow, human_heart, weak_human_heart, hunter_axe, hunter_coat_feet, hunter_coat_chest, hunter_coat_head, hunter_coat_legs, hunter_hat0_head, hunter_hat1_head, hunter_intel, injection, item_alchemical_fire, item_coffin, item_garlic, item_med_chair);
         if (!r)
-            r = checkMapping(mapping, old, itemTent, obsidianArmor_boots, obsidianArmor_chest, obsidianArmor_helmet, obsidianArmor_legs, pitchfork, pureBlood, techCrossbowAmmoPackage, vampireBlood, vampireBook, vampireFang);
+            r = checkMapping(mapping, old, item_tent, obsidian_armor_feet, obsidian_armor_chest, obsidian_armor_head, obsidian_armor_legs, pitchfork, pure_blood, tech_crossbow_ammo_package, vampire_blood_bottle, vampire_book, vampire_fang);
         return r;
     }
 
-    private static boolean checkMapping(FMLMissingMappingsEvent.MissingMapping mapping, String name, Item... items) {
+    private static boolean checkMapping(RegistryEvent.MissingMappings.Mapping<Item> mapping, String name, Item... items) {
         for (Item i : items) {
             String oldRegisteredName;
             if (i instanceof VampirismHunterArmor) {

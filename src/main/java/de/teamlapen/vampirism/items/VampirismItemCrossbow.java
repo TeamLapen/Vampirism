@@ -145,7 +145,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
      * @return If the crossbow can shoot without an arrow in the players inventory
      */
     protected boolean isCrossbowInfinite(ItemStack stack, EntityPlayer player) {
-        int enchant = EnchantmentHelper.getEnchantmentLevel(ModEnchantments.crossbowInfinite, stack);
+        int enchant = EnchantmentHelper.getEnchantmentLevel(ModEnchantments.crossbowinfinite, stack);
         return enchant > 0 || player.isCreative();
     }
 
@@ -173,7 +173,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
         if (!ItemStackUtil.isEmpty(itemstack) || bowInfinite) {
             if (ItemStackUtil.isEmpty(itemstack)) {
-                itemstack = new ItemStack(ModItems.crossbowArrow);
+                itemstack = new ItemStack(ModItems.crossbow_arrow);
             }
 
             float f = getArrowVelocity();
@@ -183,7 +183,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
                 if (!world.isRemote) {
                     boolean rightHand = player.getPrimaryHand() == EnumHandSide.RIGHT && hand == EnumHand.MAIN_HAND || player.getPrimaryHand() == EnumHandSide.LEFT && hand == EnumHand.OFF_HAND;
-                    ItemCrossbowArrow itemarrow = itemstack.getItem() instanceof ItemCrossbowArrow ? (ItemCrossbowArrow) itemstack.getItem() : ModItems.crossbowArrow;
+                    ItemCrossbowArrow itemarrow = itemstack.getItem() instanceof ItemCrossbowArrow ? (ItemCrossbowArrow) itemstack.getItem() : ModItems.crossbow_arrow;
                     EntityCrossbowArrow entityarrow = itemarrow.createEntity(itemstack, world, player, heightOffset, 0.3F + centerOffset, rightHand);
                     entityarrow.setAim(player, player.rotationPitch, player.rotationYaw, 0.0F, f * 3.0F, 1.0F);
 

@@ -110,7 +110,7 @@ public class VampirismMod {
     public static CreativeTabs creativeTab = new CreativeTabs(REFERENCE.MODID) {
         @Override
         public ItemStack getTabIconItem() {
-            return new ItemStack(ModItems.vampireFang);
+            return new ItemStack(ModItems.vampire_fang);
         }
     };
 
@@ -166,21 +166,6 @@ public class VampirismMod {
         proxy.onInitStep(IInitListener.Step.INIT, event);
         modCompatLoader.onInitStep(IInitListener.Step.INIT, event);
 
-    }
-
-    @Mod.EventHandler
-    public void onMissingMapping(FMLMissingMappingsEvent event) {
-        VampirismMod.log.d("Main", "Fixing missing mappings");
-        for (FMLMissingMappingsEvent.MissingMapping mapping : event.get()) {
-            if (mapping.type == GameRegistry.Type.BLOCK) {
-                ModBlocks.fixMapping(mapping);
-            } else if (mapping.type == GameRegistry.Type.ITEM) {
-                if (!ModItems.fixMapping(mapping)) {
-                    ModBlocks.fixMappingItemBlock(mapping);
-
-                }
-            }
-        }
     }
 
     @Mod.EventHandler
@@ -285,8 +270,6 @@ public class VampirismMod {
         VReference.HUNTER_CREATURE_TYPE = HUNTER_CREATURE_TYPE;
         VReference.VAMPIRE_CREATURE_TYPE = VAMPIRE_CREATURE_TYPE;
         VReference.VAMPIRE_CREATURE_ATTRIBUTE = VAMPIRE_CREATURE_ATTRIBUTE;
-        VampirismAPI.sundamageRegistry().addNoSundamageBiome(ModBiomes.vampireForest.getBiomeClass());
-
     }
 
     /**

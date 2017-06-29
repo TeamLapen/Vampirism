@@ -35,6 +35,15 @@ public class VampirismItem extends Item {
         this.setUnlocalizedName(REFERENCE.MODID + "." + regName);
     }
 
+    /**
+     * For compat with 1.11 and below
+     */
+    @SideOnly(Side.CLIENT)
+    @Override
+    public final void addInformation(ItemStack stack, @Nullable World playerIn, List<String> tooltip, ITooltipFlag advanced) {
+        this.addInformation(stack, Minecraft.getMinecraft().player, tooltip, advanced.isAdvanced());
+    }
+
     public String getLocalizedName() {
         return UtilLib.translate(getUnlocalizedName() + ".name");
     }
@@ -49,7 +58,6 @@ public class VampirismItem extends Item {
     /**
      * For compat with 1.11 and below
      */
-    @SideOnly(Side.CLIENT)
     @Override
     public final void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
         if(isInCreativeTab(tab)){
@@ -69,17 +77,7 @@ public class VampirismItem extends Item {
      * Only called if this item is in the given tab
      * For compat with 1.11 and below
      */
-    @SideOnly(Side.CLIENT)
     protected void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
 
-    }
-
-    /**
-     * For compat with 1.11 and below
-     */
-    @SideOnly(Side.CLIENT)
-    @Override
-    public final void addInformation(ItemStack stack, @Nullable World playerIn, List<String> tooltip, ITooltipFlag advanced) {
-        this.addInformation(stack, Minecraft.getMinecraft().player, tooltip, advanced.isAdvanced());
     }
 }

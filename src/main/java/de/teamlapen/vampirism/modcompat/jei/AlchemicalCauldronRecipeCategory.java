@@ -23,7 +23,7 @@ public class AlchemicalCauldronRecipeCategory extends BlankRecipeCategory<Alchem
 
 
     public AlchemicalCauldronRecipeCategory(IGuiHelper guiHelper) {
-        this.localizedName = ModBlocks.alchemicalCauldron.getLocalizedName();
+        this.localizedName = ModBlocks.alchemical_cauldron.getLocalizedName();
         background = guiHelper.createDrawable(location, 38, 10, 120, 70, 0, 30, 10, 0);
 
         IDrawableStatic flameDrawable = guiHelper.createDrawable(location, 176, 0, 14, 14);
@@ -51,13 +51,13 @@ public class AlchemicalCauldronRecipeCategory extends BlankRecipeCategory<Alchem
     }
 
     @Override
-    public String getTitle() {
-        return localizedName;
+    public String getModName() {
+        return REFERENCE.NAME;
     }
 
     @Override
-    public String getModName() {
-        return REFERENCE.NAME;
+    public String getTitle() {
+        return localizedName;
     }
 
     @Override

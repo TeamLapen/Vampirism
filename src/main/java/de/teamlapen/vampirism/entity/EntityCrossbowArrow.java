@@ -43,7 +43,7 @@ public class EntityCrossbowArrow extends EntityArrow {
 
     private
     @Nonnull
-    ItemStack arrowStack = new ItemStack(ModItems.crossbowArrow);
+    ItemStack arrowStack = new ItemStack(ModItems.crossbow_arrow);
     private boolean ignoreHurtTimer = false;
 
     public EntityCrossbowArrow(World world) {

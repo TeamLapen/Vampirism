@@ -52,13 +52,13 @@ public class BloodPotions {
 
         //Normal vampire skills
         IBloodPotionCategory normalVampireSkills = registry.getOrCreateCategory(IBloodPotionRegistry.CATEGORY_NORMAL_VAMPIRE_SKILLS, false, "text.vampirism.blood_potion.category.normal_vampire_skills");
-        normalVampireSkills.addItems(ModItems.vampireFang, ModItems.bloodBottle, ModItems.itemCoffin);
+        normalVampireSkills.addItems(ModItems.vampire_fang, ModItems.blood_bottle, ModItems.item_coffin);
         registry.registerPotionEffect("vampirism:nightVision", normalVampireSkills, false, MobEffects.NIGHT_VISION, 20, new IBloodPotionPropertyRandomizer.SimpleRandomizer(600, 6000, 0));
 
         //Special vampire skills
         IBloodPotionCategory specialVampireSkills = registry.getOrCreateCategory(IBloodPotionRegistry.CATEGORY_SPECIAL_VAMPIRE_SKILL, false, "text.vampirism.blood_potion.category.special_vampire_skills");
-        specialVampireSkills.addItems(ModItems.pureBlood);
-        registry.registerPotionEffect("vampirism:disguise", specialVampireSkills, false, ModPotions.disguiseAsVampire, 5, new IBloodPotionPropertyRandomizer.SimpleRandomizer(500, 1500, 0));
+        specialVampireSkills.addItems(ModItems.pure_blood);
+        registry.registerPotionEffect("vampirism:disguise", specialVampireSkills, false, ModPotions.disguise_as_vampire, 5, new IBloodPotionPropertyRandomizer.SimpleRandomizer(500, 1500, 0));
         registry.registerPotionEffect("vampirism:specialNightVision", specialVampireSkills, false, MobEffects.NIGHT_VISION, 20, new IBloodPotionPropertyRandomizer.SimpleRandomizer(1000, 24000, 0));
 
 
@@ -84,7 +84,7 @@ public class BloodPotions {
     public static void addTooltip(ItemStack stack, List<String> tooltip, IHunterPlayer player) {
 
         ISkillHandler<IHunterPlayer> skillHandler = player.getSkillHandler();
-        List<ConfiguredEffect> effects = stack.hasTagCompound() ? readEffectsFromNBT(stack.getTagCompound()) : Lists.<ConfiguredEffect>newArrayList();
+        List<ConfiguredEffect> effects = stack.hasTagCompound() ? readEffectsFromNBT(stack.getTagCompound()) : Lists.newArrayList();
         Random identifyRandom = null;
         if (skillHandler.isSkillEnabled(HunterSkills.bloodPotion_identifySome)) {
             NBTTagCompound nbt = stack.hasTagCompound() ? stack.getTagCompound() : new NBTTagCompound();

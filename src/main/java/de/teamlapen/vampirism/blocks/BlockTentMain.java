@@ -46,7 +46,7 @@ public class BlockTentMain extends BlockTent implements ITileEntityProvider {
             worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY() + 0.3, pos.getZ(), stack));
         }
         super.breakBlock(worldIn, pos, state);
-        worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(ModItems.itemTent, 1)));
+        worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(ModItems.item_tent, 1)));
 
     }
 

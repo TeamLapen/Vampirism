@@ -42,7 +42,7 @@ public class HunterBasicContainer extends InventoryContainer {
         HunterLevelingConf conf = HunterLevelingConf.instance();
         if (!conf.isLevelValidForBasicHunter(targetLevel)) return -1;
         int required = conf.getVampireBloodCountForBasicHunter(targetLevel);
-        return (ItemStackUtil.isEmpty(blood) || !blood.getItem().equals(ModItems.vampireBlood)) ? required : Math.max(0, required - ItemStackUtil.getCount(blood));
+        return (ItemStackUtil.isEmpty(blood) || !blood.getItem().equals(ModItems.vampire_blood_bottle)) ? required : Math.max(0, required - ItemStackUtil.getCount(blood));
     }
 
     @Override
@@ -71,7 +71,7 @@ public class HunterBasicContainer extends InventoryContainer {
 
 
         public HunterBasicInventory() {
-            super(new InventorySlot[]{new InventorySlot(ModItems.vampireBlood, 27, 32)});
+            super(new InventorySlot[]{new InventorySlot(ModItems.vampire_blood_bottle, 27, 32)});
         }
 
         @Override

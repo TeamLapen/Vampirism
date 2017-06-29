@@ -33,7 +33,7 @@ public class ItemTent extends VampirismItem {
         int z3 = z + (dir == EnumFacing.SOUTH ? 1 : (dir == EnumFacing.NORTH ? -1 : 0));
 
         Block tent = ModBlocks.tent;
-        Block main = ModBlocks.tentMain;
+        Block main = ModBlocks.tent_main;
         if (force || canPlaceAt(tent, world, x, y, z) && canPlaceAt(tent, world, x1, y, z1) && canPlaceAt(tent, world, x2, y, z2) && canPlaceAt(tent, world, x3, y, z3)) {
             boolean flag = world.setBlockState(pos, main.getDefaultState().withProperty(BlockTent.FACING, dir.getOpposite()), 3);
             if (flag) {

@@ -336,11 +336,11 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
                             textureatlassprite = this.getTexture(Blocks.REDSTONE_BLOCK);
                         }
                     } else if (j4 == 10) {
-                        textureatlassprite = this.getTexture(ModBlocks.castleBlock.getDefaultState().withProperty(BlockCastleBlock.VARIANT, BlockCastleBlock.EnumType.DARK_BRICK_BLOODY));
+                        textureatlassprite = this.getTexture(ModBlocks.castle_block.getDefaultState().withProperty(BlockCastleBlock.VARIANT, BlockCastleBlock.EnumType.DARK_BRICK_BLOODY));
                     } else if (j4 == 8) {
                         textureatlassprite = this.getTexture(Blocks.STONEBRICK);
                     } else if (j4 > 4) {
-                        textureatlassprite = this.getTexture(ModBlocks.castleBlock);
+                        textureatlassprite = this.getTexture(ModBlocks.castle_block);
                     } else if (j4 > 0) {
                         textureatlassprite = this.getTexture(Blocks.DIRT);
 

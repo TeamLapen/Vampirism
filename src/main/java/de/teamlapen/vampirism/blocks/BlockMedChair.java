@@ -46,7 +46,7 @@ public class BlockMedChair extends VampirismBlock {
         BlockPos other;
         if (state.getValue(PART) == EnumPart.TOP) {
             other = pos.offset(dir);
-            worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(ModItems.itemMedChair, 1)));
+            worldIn.spawnEntity(new EntityItem(worldIn, pos.getX(), pos.getY() + 1, pos.getZ(), new ItemStack(ModItems.item_med_chair, 1)));
         } else {
             other = pos.offset(dir.getOpposite());
         }

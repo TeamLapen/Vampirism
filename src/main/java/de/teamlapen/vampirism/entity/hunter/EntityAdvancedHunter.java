@@ -171,18 +171,18 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
     protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier) {
         switch (getRNG().nextInt(4)) {
             case 0:
-                this.dropItem(ModItems.vampireBlood, 1);
+                this.dropItem(ModItems.vampire_blood_bottle, 1);
                 break;
             case 1:
-                this.dropItem(ModItems.itemGarlic, 1 + getRNG().nextInt(lootingModifier + 1));
+                this.dropItem(ModItems.item_garlic, 1 + getRNG().nextInt(lootingModifier + 1));
                 break;
             case 2:
-                ItemStack stack = ModItems.holyWaterBottle.setTier(new ItemStack(ModItems.holyWaterBottle), getRNG().nextInt(4) == 0 ? IItemWithTier.TIER.ULTIMATE : IItemWithTier.TIER.ENHANCED);
-                stack = ModItems.holyWaterBottle.setSplash(stack, getRNG().nextBoolean());
+                ItemStack stack = ModItems.holy_water_bottle.setTier(new ItemStack(ModItems.holy_water_bottle), getRNG().nextInt(4) == 0 ? IItemWithTier.TIER.ULTIMATE : IItemWithTier.TIER.ENHANCED);
+                stack = ModItems.holy_water_bottle.setSplash(stack, getRNG().nextBoolean());
                 this.entityDropItem(stack, 0);
                 break;
             case 3:
-                this.dropItem(ModItems.holySalt, getRNG().nextInt(4) + 1);
+                this.dropItem(ModItems.holy_salt, getRNG().nextInt(4) + 1);
                 break;
             default:
                 break;

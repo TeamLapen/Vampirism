@@ -32,8 +32,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Tileentity container that can store liquids.
@@ -76,7 +74,6 @@ public class BlockBloodContainer extends VampirismBlockContainer {
         return EnumBlockRenderType.MODEL;
     }
 
-    @SideOnly(Side.CLIENT)
     @Override
     public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
         super.getSubBlocks(itemIn, tab, list);
@@ -88,7 +85,7 @@ public class BlockBloodContainer extends VampirismBlockContainer {
 
     @Override
     public void harvestBlock(World worldIn, EntityPlayer player, BlockPos pos, IBlockState state, TileEntity te, ItemStack heldStack) {
-        ItemStack stack = new ItemStack(ModBlocks.bloodContainer, 1);
+        ItemStack stack = new ItemStack(ModBlocks.blood_container, 1);
         FluidStack fluid = ((TileBloodContainer) te).getTankInfo().fluid;
         if (fluid != null && fluid.amount > 0) {
             stack.setTagInfo("fluid", fluid.writeToNBT(new NBTTagCompound()));
@@ -141,14 +138,16 @@ public class BlockBloodContainer extends VampirismBlockContainer {
         super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
         if (stack.hasTagCompound() && stack.getTagCompound().hasKey("fluid")) {
             NBTTagCompound nbt = stack.getTagCompound().getCompoundTag("fluid");
-            if (nbt != null) {
                 FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
                 if (fluid == null) {
                     VampirismMod.log.w("BloodContainer", "Failed to load fluid from item nbt %s", nbt);
                 } else {
-                    ((TileBloodContainer) worldIn.getTileEntity(pos)).setFluidStack(fluid);
+                    TileEntity tile = (worldIn.getTileEntity(pos));
+                    if (tile instanceof TileBloodContainer) {
+                        ((TileBloodContainer) tile).setFluidStack(fluid);
+                    }
                 }
-            }
+
         }
     }
 

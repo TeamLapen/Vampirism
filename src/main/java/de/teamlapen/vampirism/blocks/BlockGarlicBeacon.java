@@ -98,7 +98,7 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
 
     @Override
     public ItemStack getPickBlock(IBlockState state, RayTraceResult target, World world, BlockPos pos, EntityPlayer player) {
-        return new ItemStack(ModBlocks.garlicBeacon, 1, state.getValue(TYPE).getId());
+        return new ItemStack(ModBlocks.garlic_beacon, 1, state.getValue(TYPE).getId());
     }
 
     @Override
@@ -147,7 +147,7 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing faing, float hitX, float hitY, float hitZ) {
         ItemStack heldItem = playerIn.getHeldItem(hand);
-        if (!ItemStackUtil.isEmpty(heldItem) && ModItems.purifiedGarlic.equals(heldItem.getItem())) {
+        if (!ItemStackUtil.isEmpty(heldItem) && ModItems.purified_garlic.equals(heldItem.getItem())) {
             if (!worldIn.isRemote) {
                 TileGarlicBeacon t = getTile(worldIn, pos);
                 if (t != null) {

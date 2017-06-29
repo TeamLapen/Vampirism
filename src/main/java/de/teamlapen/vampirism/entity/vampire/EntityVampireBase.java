@@ -195,12 +195,12 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
 
     /**
      * Checks if light level is low enough
-     * Only exception is the vampire biome in which it returns true if ontop of {@link ModBlocks#cursedEarth}
+     * Only exception is the vampire biome in which it returns true if ontop of {@link ModBlocks#cursed_earth}
      */
     private boolean getCanSpawnHereRestricted() {
         boolean vampireBiome = ModBiomes.vampireForest.equals(this.world.getBiome(this.getPosition()));
         if (!vampireBiome) return isLowLightLevel();
         IBlockState iblockstate = this.world.getBlockState((new BlockPos(this)).down());
-        return ModBlocks.cursedEarth.equals(iblockstate.getBlock());
+        return ModBlocks.cursed_earth.equals(iblockstate.getBlock());
     }
 }

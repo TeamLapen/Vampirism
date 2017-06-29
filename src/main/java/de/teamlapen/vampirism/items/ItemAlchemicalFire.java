@@ -48,7 +48,7 @@ public class ItemAlchemicalFire extends VampirismItem {
         } else {
             if (worldIn.isAirBlock(pos)) {
                 worldIn.playSound(player, pos, SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 1.0F, itemRand.nextFloat() * 0.4F + 0.8F);
-                worldIn.setBlockState(pos, ModBlocks.alchemicalFire.getDefaultState().withProperty(BlockAlchemicalFire.AGE, 15), 11);
+                worldIn.setBlockState(pos, ModBlocks.alchemical_fire.getDefaultState().withProperty(BlockAlchemicalFire.AGE, 15), 11);
             }
 
             return EnumActionResult.SUCCESS;

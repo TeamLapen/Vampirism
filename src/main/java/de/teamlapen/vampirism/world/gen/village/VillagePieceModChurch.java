@@ -30,7 +30,7 @@ public class VillagePieceModChurch extends StructureVillagePieces.Church {
     @Override
     public boolean addComponentParts(@Nonnull World worldIn, @Nonnull Random random, @Nonnull StructureBoundingBox structureBoundingBoxIn) {
         super.addComponentParts(worldIn, random, structureBoundingBoxIn);
-        this.setBlockState(worldIn, ModBlocks.churchAltar.getDefaultState().withProperty(BlockChurchAltar.FACING, EnumFacing.SOUTH), 2, 2, 7, structureBoundingBoxIn);
+        this.setBlockState(worldIn, ModBlocks.church_altar.getDefaultState().withProperty(BlockChurchAltar.FACING, EnumFacing.SOUTH), 2, 2, 7, structureBoundingBoxIn);
         return true;
     }
 

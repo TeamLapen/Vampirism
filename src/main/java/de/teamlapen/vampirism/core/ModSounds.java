@@ -3,36 +3,42 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.IForgeRegistry;
+
+import javax.annotation.Nonnull;
 
 /**
  * Handle all sound related stuff
  */
 public class ModSounds {
-    public static SoundEvent entity_vampire_ambient;
-    public static SoundEvent player_bite;
-    public static SoundEvent ambient_castle;
-    public static SoundEvent block_coffin_lid;
-    public static SoundEvent crossbow;
-    public static SoundEvent bat_swarm;
-    public static SoundEvent boiling;
+    public static final SoundEvent entity_vampire_ambient = getNull();
+    public static final SoundEvent player_bite = getNull();
+    public static final SoundEvent ambient_castle = getNull();
+    public static final SoundEvent block_coffin_lid = getNull();
+    public static final SoundEvent crossbow = getNull();
+    public static final SoundEvent bat_swarm = getNull();
+    public static final SoundEvent boiling = getNull();
 
-
-    static void registerSounds() {
-        entity_vampire_ambient = registerSound("entity.vampire.scream");
-        player_bite = registerSound("player.bite");
-        ambient_castle = registerSound("ambient.castle");
-        block_coffin_lid = registerSound("coffin_lid");
-        crossbow = registerSound("crossbow");
-        bat_swarm = registerSound("bat_swarm");
-        boiling = registerSound("boiling");
+    @SuppressWarnings("ConstantConditions")
+    private static @Nonnull
+    <T> T getNull() {
+        return null;
     }
 
-    private static SoundEvent registerSound(String soundNameIn) {
+    static void registerSounds(IForgeRegistry<SoundEvent> registry) {
+        registry.register(create("entity.vampire.scream"));
+        registry.register(create("player.bite"));
+        registry.register(create("ambient.castle"));
+        registry.register(create("coffin_lid"));
+        registry.register(create("crossbow"));
+        registry.register(create("bat_swarm"));
+        registry.register(create("boiling"));
+    }
+
+    private static SoundEvent create(String soundNameIn) {
         ResourceLocation resourcelocation = new ResourceLocation(REFERENCE.MODID, soundNameIn);
         SoundEvent event = new SoundEvent(resourcelocation);
-        event.setRegistryName(resourcelocation);
-        GameRegistry.register(event);
+        event.setRegistryName(REFERENCE.MODID, soundNameIn.replaceAll("\\.", "_"));
         return event;
     }
 }

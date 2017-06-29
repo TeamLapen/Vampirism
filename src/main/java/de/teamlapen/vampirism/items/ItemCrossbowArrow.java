@@ -148,7 +148,7 @@ public class ItemCrossbowArrow extends VampirismItem {
                     for (int dz = -1; dz < 2; dz++) {
                         BlockPos pos = blockPos.add(dx, dy, dz);
                         if ((arrowEntity.getEntityWorld().getBlockState(pos).getMaterial() == Material.AIR || arrowEntity.getEntityWorld().getBlockState(pos).getBlock().isReplaceable(arrowEntity.getEntityWorld(), pos)) && arrowEntity.getEntityWorld().getBlockState(pos.down()).isFullBlock() && arrowEntity.getRNG().nextInt(4) != 0) {
-                            arrowEntity.getEntityWorld().setBlockState(pos, ModBlocks.alchemicalFire.getDefaultState());
+                            arrowEntity.getEntityWorld().setBlockState(pos, ModBlocks.alchemical_fire.getDefaultState());
                         }
                     }
                 }

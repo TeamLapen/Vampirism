@@ -35,7 +35,7 @@ public class ModItemsRender {
             if (tintIndex == 0) {
                 return ((ItemArmor) stack.getItem()).getColor(stack);
             } else {
-                switch (ModItems.armorOfSwiftness_boots.getTier(stack)) {
+                switch (ModItems.armor_of_swiftness_feet.getTier(stack)) {
                     case ENHANCED:
                         return 0x007CFF;
                     case ULTIMATE:
@@ -44,77 +44,77 @@ public class ModItemsRender {
                         return 0xFFF100;
                 }
             }
-        }, ModItems.armorOfSwiftness_boots, ModItems.armorOfSwiftness_chest, ModItems.armorOfSwiftness_helmet, ModItems.armorOfSwiftness_legs);
+        }, ModItems.armor_of_swiftness_feet, ModItems.armor_of_swiftness_chest, ModItems.armor_of_swiftness_head, ModItems.armor_of_swiftness_legs);
         Minecraft.getMinecraft().getItemColors().registerItemColorHandler((stack, tintIndex) -> {
             if (tintIndex == 1) {
                 return ItemCrossbowArrow.getType(stack).color;
             }
             return 0xFFFFFF;
-        }, ModItems.crossbowArrow);
+        }, ModItems.crossbow_arrow);
     }
 
     private static void registerRenderers() {
         VampirismMod.log.d("ModItemsRender", "Registering renderer");
         InventoryRenderHelper renderHelper = new InventoryRenderHelper(REFERENCE.MODID);
-        renderHelper.registerRender(ModItems.vampireFang, "normal");
-        renderHelper.registerRender(ModItems.humanHeart, "normal");
-        renderHelper.registerRender(ModItems.humanHeartWeak, "normal");
-        renderHelper.registerRender(ModItems.itemTent, "normal");
-        renderHelper.registerRenderAllMeta(ModItems.bloodBottle, ItemBloodBottle.AMOUNT + 1);
-        renderHelper.registerRender(ModItems.itemCoffin, "normal");
-        renderHelper.registerRenderAllMeta(ModItems.pureBlood, ItemPureBlood.COUNT);
-        renderHelper.registerRenderAllMeta(ModItems.hunterIntel, HunterLevelingConf.instance().HUNTER_INTEL_COUNT, "normal");
-        renderHelper.registerRender(ModItems.itemGarlic, "normal");
+        renderHelper.registerRender(ModItems.vampire_fang, "normal");
+        renderHelper.registerRender(ModItems.human_heart, "normal");
+        renderHelper.registerRender(ModItems.weak_human_heart, "normal");
+        renderHelper.registerRender(ModItems.item_tent, "normal");
+        renderHelper.registerRenderAllMeta(ModItems.blood_bottle, ItemBloodBottle.AMOUNT + 1);
+        renderHelper.registerRender(ModItems.item_coffin, "normal");
+        renderHelper.registerRenderAllMeta(ModItems.pure_blood, ItemPureBlood.COUNT);
+        renderHelper.registerRenderAllMeta(ModItems.hunter_intel, HunterLevelingConf.instance().HUNTER_INTEL_COUNT, "normal");
+        renderHelper.registerRender(ModItems.item_garlic, "normal");
         renderHelper.registerRenderAllMeta(ModItems.injection, ItemInjection.META_COUNT);
-        renderHelper.registerRender(ModItems.itemMedChair, "normal");
+        renderHelper.registerRender(ModItems.item_med_chair, "normal");
         renderHelper.registerRender(ModItems.pitchfork, "normal");
-        renderHelper.registerRender(ModItems.basicCrossbow, "normal");
-        renderHelper.registerRender(ModItems.crossbowArrow, "normal");
-        renderHelper.registerRender(ModItems.basicDoubleCrossbow, "normal");
-        renderHelper.registerRender(ModItems.enhancedCrossbow, "normal");
-        renderHelper.registerRender(ModItems.enhancedDoubleCrossbow, "normal");
+        renderHelper.registerRender(ModItems.basic_crossbow, "normal");
+        renderHelper.registerRender(ModItems.crossbow_arrow, "normal");
+        renderHelper.registerRender(ModItems.basic_double_crossbow, "normal");
+        renderHelper.registerRender(ModItems.enhanced_crossbow, "normal");
+        renderHelper.registerRender(ModItems.enhanced_double_crossbow, "normal");
         renderHelper.registerRender(ModItems.stake, "normal");
-        renderHelper.registerRender(ModItems.vampireBlood, "normal");
-        renderHelper.registerRender(ModItems.bloodPotion, "normal");
-        renderHelper.registerRender(ModItems.basicTechCrossbow, "normal");
-        renderHelper.registerRender(ModItems.enhancedTechCrossbow, "normal");
-        renderHelper.registerRender(ModItems.techCrossbowAmmoPackage, "normal");
-        renderHelper.registerRender(ModItems.vampireBook, "normal");
-        renderHelper.registerRender(ModItems.hunterHat0, "normal");
-        renderHelper.registerRender(ModItems.hunterHat1, "normal");
-        registerSimpleItemWithTier(ModItems.holyWaterBottle);
-        renderHelper.registerRender(ModItems.holySalt, "normal");
-        renderHelper.registerRender(ModItems.pureSalt, "normal");
-        renderHelper.registerRender(ModItems.holySaltWater, "normal");
-        renderHelper.registerRender(ModItems.itemAlchemicalFire, "normal");
-        renderHelper.registerRender(ModItems.garlicBeaconCore, "normal");
-        renderHelper.registerRender(ModItems.garlicBeaconCoreImproved, "normal");
-        renderHelper.registerRender(ModItems.purifiedGarlic, "normal");
+        renderHelper.registerRender(ModItems.vampire_blood_bottle, "normal");
+        renderHelper.registerRender(ModItems.blood_potion, "normal");
+        renderHelper.registerRender(ModItems.basic_tech_crossbow, "normal");
+        renderHelper.registerRender(ModItems.enhanced_tech_crossbow, "normal");
+        renderHelper.registerRender(ModItems.tech_crossbow_ammo_package, "normal");
+        renderHelper.registerRender(ModItems.vampire_book, "normal");
+        renderHelper.registerRender(ModItems.hunter_hat0_head, "normal");
+        renderHelper.registerRender(ModItems.hunter_hat1_head, "normal");
+        registerSimpleItemWithTier(ModItems.holy_water_bottle);
+        renderHelper.registerRender(ModItems.holy_salt, "normal");
+        renderHelper.registerRender(ModItems.pure_salt, "normal");
+        renderHelper.registerRender(ModItems.holy_salt_water, "normal");
+        renderHelper.registerRender(ModItems.item_alchemical_fire, "normal");
+        renderHelper.registerRender(ModItems.garlic_beacon_core, "normal");
+        renderHelper.registerRender(ModItems.garlic_beacon_core_improved, "normal");
+        renderHelper.registerRender(ModItems.purified_garlic, "normal");
 
-        final ResourceLocation holyWaterSplash = new ResourceLocation(REFERENCE.MODID, "item/" + ModItems.holyWaterBottle.getRegistryName().getResourcePath());
-        ModelLoader.setCustomMeshDefinition(ModItems.holyWaterBottle, stack -> new ModelResourceLocation(holyWaterSplash, "tier=" + ((IItemWithTier) stack.getItem()).getTier(stack) + (((ItemHolyWaterBottle) stack.getItem()).isSplash(stack) ? ",splash" : "")));
+        final ResourceLocation holyWaterSplash = new ResourceLocation(REFERENCE.MODID, "item/" + ModItems.holy_water_bottle.getRegistryName().getResourcePath());
+        ModelLoader.setCustomMeshDefinition(ModItems.holy_water_bottle, stack -> new ModelResourceLocation(holyWaterSplash, "tier=" + ((IItemWithTier) stack.getItem()).getTier(stack) + (((ItemHolyWaterBottle) stack.getItem()).isSplash(stack) ? ",splash" : "")));
         for (IStringSerializable s : IItemWithTier.TIER.values()) {
-            ModelLoader.registerItemVariants(ModItems.holyWaterBottle, new ModelResourceLocation(holyWaterSplash, "tier=" + s.getName() + ",splash"));
-            ModelLoader.registerItemVariants(ModItems.holyWaterBottle, new ModelResourceLocation(holyWaterSplash, "tier=" + s.getName()));
+            ModelLoader.registerItemVariants(ModItems.holy_water_bottle, new ModelResourceLocation(holyWaterSplash, "tier=" + s.getName() + ",splash"));
+            ModelLoader.registerItemVariants(ModItems.holy_water_bottle, new ModelResourceLocation(holyWaterSplash, "tier=" + s.getName()));
 
         }
 
-        registerSimpleItemWithTier(ModItems.hunterAxe);
+        registerSimpleItemWithTier(ModItems.hunter_axe);
 
-        registerArmorItemWithTier(ModItems.armorOfSwiftness_helmet, "swiftness_armor");
-        registerArmorItemWithTier(ModItems.armorOfSwiftness_chest, "swiftness_armor");
-        registerArmorItemWithTier(ModItems.armorOfSwiftness_legs, "swiftness_armor");
-        registerArmorItemWithTier(ModItems.armorOfSwiftness_boots, "swiftness_armor");
+        registerArmorItemWithTier(ModItems.armor_of_swiftness_head, "swiftness_armor");
+        registerArmorItemWithTier(ModItems.armor_of_swiftness_chest, "swiftness_armor");
+        registerArmorItemWithTier(ModItems.armor_of_swiftness_legs, "swiftness_armor");
+        registerArmorItemWithTier(ModItems.armor_of_swiftness_feet, "swiftness_armor");
 
-        registerArmorItemWithTier(ModItems.hunterCoat_helmet, "hunter_coat");
-        registerArmorItemWithTier(ModItems.hunterCoat_chest, "hunter_coat");
-        registerArmorItemWithTier(ModItems.hunterCoat_legs, "hunter_coat");
-        registerArmorItemWithTier(ModItems.hunterCoat_boots, "hunter_coat");
+        registerArmorItemWithTier(ModItems.hunter_coat_head, "hunter_coat");
+        registerArmorItemWithTier(ModItems.hunter_coat_chest, "hunter_coat");
+        registerArmorItemWithTier(ModItems.hunter_coat_legs, "hunter_coat");
+        registerArmorItemWithTier(ModItems.hunter_coat_feet, "hunter_coat");
 
-        registerArmorItemWithTier(ModItems.obsidianArmor_helmet, "obsidian_armor");
-        registerArmorItemWithTier(ModItems.obsidianArmor_chest, "obsidian_armor");
-        registerArmorItemWithTier(ModItems.obsidianArmor_legs, "obsidian_armor");
-        registerArmorItemWithTier(ModItems.obsidianArmor_boots, "obsidian_armor");
+        registerArmorItemWithTier(ModItems.obsidian_armor_head, "obsidian_armor");
+        registerArmorItemWithTier(ModItems.obsidian_armor_chest, "obsidian_armor");
+        registerArmorItemWithTier(ModItems.obsidian_armor_legs, "obsidian_armor");
+        registerArmorItemWithTier(ModItems.obsidian_armor_feet, "obsidian_armor");
 
 
         //----------------------

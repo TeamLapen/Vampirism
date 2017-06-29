@@ -141,7 +141,7 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
         this.setBlockState(worldIn, Blocks.OAK_DOOR.getDefaultState().withProperty(BlockDoor.FACING, EnumFacing.NORTH).withProperty(BlockDoor.HALF, BlockDoor.EnumDoorHalf.UPPER), 2, 2, 0, structureBoundingBoxIn);
         this.fillWithBlocks(worldIn, structureBoundingBoxIn, 1, 0, -1, 3, 2, -1, Blocks.AIR.getDefaultState(), Blocks.AIR.getDefaultState(), false);
         //Place decoration etc
-        this.setBlockState(worldIn, ModBlocks.hunterTable.getDefaultState().withProperty(BlockHunterTable.FACING, EnumFacing.NORTH), 5, 1, 7, structureBoundingBoxIn);
+        this.setBlockState(worldIn, ModBlocks.hunter_table.getDefaultState().withProperty(BlockHunterTable.FACING, EnumFacing.NORTH), 5, 1, 7, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.BOOKSHELF.getDefaultState(), 7, 1, 9, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.BOOKSHELF.getDefaultState(), 7, 2, 9, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.BOOKSHELF.getDefaultState(), 3, 1, 9, structureBoundingBoxIn);
@@ -149,8 +149,8 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
 
 
         EnumFacing medChairFacing = EnumFacing.WEST;
-        this.setBlockState(worldIn, ModBlocks.medChair.getDefaultState().withProperty(BlockMedChair.PART, BlockMedChair.EnumPart.TOP).withProperty(BlockMedChair.FACING, medChairFacing), 7, 1, 3, structureBoundingBoxIn);
-        this.setBlockState(worldIn, ModBlocks.medChair.getDefaultState().withProperty(BlockMedChair.PART, BlockMedChair.EnumPart.BOTTOM).withProperty(BlockMedChair.FACING, medChairFacing), 6, 1, 3, structureBoundingBoxIn);
+        this.setBlockState(worldIn, ModBlocks.med_chair.getDefaultState().withProperty(BlockMedChair.PART, BlockMedChair.EnumPart.TOP).withProperty(BlockMedChair.FACING, medChairFacing), 7, 1, 3, structureBoundingBoxIn);
+        this.setBlockState(worldIn, ModBlocks.med_chair.getDefaultState().withProperty(BlockMedChair.PART, BlockMedChair.EnumPart.BOTTOM).withProperty(BlockMedChair.FACING, medChairFacing), 6, 1, 3, structureBoundingBoxIn);
 
         this.generateChest(worldIn, structureBoundingBoxIn, randomIn, 7, 1, 2, new ResourceLocation(REFERENCE.MODID, "village_trainer"));
 
@@ -160,7 +160,7 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
         BlockPos itemFramePos = new BlockPos(getXWithOffset(1, -1), getYWithOffset(2), getZWithOffset(1, -1));
         if (structureBoundingBoxIn.isVecInside(itemFramePos)) {
             EntityItemFrame itemFrame = new EntityItemFrame(worldIn, itemFramePos, getCoordBaseMode().getOpposite());
-            itemFrame.setDisplayedItem(new ItemStack(ModItems.vampireFang));
+            itemFrame.setDisplayedItem(new ItemStack(ModItems.vampire_fang));
             worldIn.spawnEntity(itemFrame);
         }
 

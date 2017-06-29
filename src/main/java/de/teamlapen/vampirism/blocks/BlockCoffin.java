@@ -98,11 +98,11 @@ public class BlockCoffin extends VampirismBlockContainer {
     }
 
     public ItemStack getItem(World worldIn, BlockPos pos, @Nonnull IBlockState state) {
-        return new ItemStack(ModItems.itemCoffin);
+        return new ItemStack(ModItems.item_coffin);
     }
 
     public Item getItemDropped(IBlockState state, Random rand, int fortune) {
-        return state.getValue(PART) == EnumPartType.HEAD ? null : ModItems.itemCoffin;
+        return state.getValue(PART) == EnumPartType.HEAD ? null : ModItems.item_coffin;
     }
 
     @Override

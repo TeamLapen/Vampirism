@@ -100,7 +100,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
 //        }
         BlockPos blockpos = new BlockPos(this.posX, this.getEntityBoundingBox().minY, this.posZ);
 
-        return ModBlocks.cursedEarth.equals(world.getBlockState(blockpos.down()).getBlock()) && super.getCanSpawnHere();
+        return ModBlocks.cursed_earth.equals(world.getBlockState(blockpos.down()).getBlock()) && super.getCanSpawnHere();
     }
 
     @Override
@@ -180,9 +180,9 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         super.onDeath(s);
         if (this.recentlyHit > 0 && this.world.getGameRules().getBoolean("doMobLoot")) {
             if (getLevel() >= 0 && getLevel() < 5) {
-                this.entityDropItem(new ItemStack(ModItems.pureBlood, 1, getLevel()), 0.3F);
+                this.entityDropItem(new ItemStack(ModItems.pure_blood, 1, getLevel()), 0.3F);
             } else if (getLevel() > 5) {
-                this.entityDropItem(new ItemStack(ModItems.pureBlood, 1, 4), 0.3F);
+                this.entityDropItem(new ItemStack(ModItems.pure_blood, 1, 4), 0.3F);
             }
         }
     }

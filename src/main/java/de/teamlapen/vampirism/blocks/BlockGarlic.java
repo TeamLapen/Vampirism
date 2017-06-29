@@ -37,11 +37,11 @@ public class BlockGarlic extends BlockCrops {
 
     @Override
     protected Item getCrop() {
-        return ModItems.itemGarlic;
+        return ModItems.item_garlic;
     }
 
     @Override
     protected Item getSeed() {
-        return ModItems.itemGarlic;
+        return ModItems.item_garlic;
     }
 }

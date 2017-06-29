@@ -200,7 +200,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     @Override
     public float calculateFireDamage(float amount) {
         float protectionMod = 1F;
-        PotionEffect protection = player.getActivePotionEffect(ModPotions.fireProtection);
+        PotionEffect protection = player.getActivePotionEffect(ModPotions.fire_protection);
         if (protection != null) {
             protectionMod = 1F / (2F + protection.getAmplifier());
         }
@@ -605,7 +605,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
                 if (player.ticksExisted % 9 == 3 && player.isPotionActive(MobEffects.FIRE_RESISTANCE)) {
                     PotionEffect fireResistance = player.getActivePotionEffect(MobEffects.FIRE_RESISTANCE);
-                    player.addPotionEffect(new PotionEffect(ModPotions.fireProtection, fireResistance.getDuration(), fireResistance.getAmplifier()));
+                    player.addPotionEffect(new PotionEffect(ModPotions.fire_protection, fireResistance.getDuration(), fireResistance.getAmplifier()));
                     player.removePotionEffect(MobEffects.FIRE_RESISTANCE);
                 }
                 if (actionHandler.updateActions()) {
@@ -683,7 +683,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public boolean setEntitySize(float width, float height) {
 
         try {
-            Method mSetSize = ReflectionHelper.findMethod(Entity.class, player, new String[]{"setSize", SRGNAMES.Entity_setSize}, float.class, float.class);
+            Method mSetSize = ReflectionHelper.findMethod(Entity.class, "setSize", SRGNAMES.Entity_setSize, float.class, float.class);
             mSetSize.invoke(player, width, height);
             return true;
         } catch (Exception e) {

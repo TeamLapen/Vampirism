@@ -100,7 +100,7 @@ public class ModPlayerEventHandler {
         HunterPlayer hunter = HunterPlayer.get(event.getEntityPlayer());
         if (vampire.getSpecialAttributes().bat || hunter.getSpecialAttributes().isDisguised()) {
             event.setCanceled(true);
-        } else if (ModBlocks.garlicBeacon.equals(event.getState().getBlock()) && vampire.getLevel() > 0) {
+        } else if (ModBlocks.garlic_beacon.equals(event.getState().getBlock()) && vampire.getLevel() > 0) {
             event.setNewSpeed(event.getOriginalSpeed() * 0.1F);
         }
     }
@@ -162,7 +162,7 @@ public class ModPlayerEventHandler {
             ItemStack heldStack = event.getItemStack();
             if (!ItemStackUtil.isEmpty(heldStack) && ItemStackUtil.getCount(heldStack) == 1) {
                 boolean glasBottle = Items.GLASS_BOTTLE.equals(heldStack.getItem());
-                boolean bloodBottle = ModItems.bloodBottle.equals(heldStack.getItem());
+                boolean bloodBottle = ModItems.blood_bottle.equals(heldStack.getItem());
                 if (bloodBottle || (glasBottle && Configs.autoConvertGlasBottles)) {
                     Block block = event.getWorld().getBlockState(event.getPos()).getBlock();
 
@@ -190,7 +190,7 @@ public class ModPlayerEventHandler {
                         //Dangerous, but only solution I found so far
                         //Changes the held stack while {@link NetHandlerPlayServer#processRightClickBlock} is running which has a hard reference to the old stack
                         EnumHand hand = heldStack.equals(event.getEntityPlayer().getHeldItemMainhand()) ? EnumHand.MAIN_HAND : (heldStack.equals(event.getEntityPlayer().getHeldItemOffhand()) ? EnumHand.OFF_HAND : EnumHand.MAIN_HAND);
-                        heldStack = new ItemStack(ModItems.bloodBottle);
+                        heldStack = new ItemStack(ModItems.blood_bottle);
                         event.getEntityPlayer().setHeldItem(hand, heldStack);
                     }
                 }
@@ -205,11 +205,11 @@ public class ModPlayerEventHandler {
         World world = event.getWorld();
         IBlockState state = world.getBlockState(pos);
 
-        if (state.getBlock() == ModBlocks.alchemicalFire) {
+        if (state.getBlock() == ModBlocks.alchemical_fire) {
             world.playEvent(null, 1009, pos, 0);
             world.setBlockToAir(pos);
             event.setCanceled(true);
-        } else if (ModBlocks.garlicBeacon.equals(state.getBlock()) && Helper.isVampire(event.getEntityPlayer())) {
+        } else if (ModBlocks.garlic_beacon.equals(state.getBlock()) && Helper.isVampire(event.getEntityPlayer())) {
             event.getEntityPlayer().addPotionEffect(new PotionEffect(ModPotions.garlic));
         }
     }

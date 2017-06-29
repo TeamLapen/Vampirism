@@ -27,8 +27,8 @@ public class VampirismJEIPlugin extends BlankModPlugin {
     public void register(@Nonnull IModRegistry registry) {
         IJeiHelpers jeiHelpers = registry.getJeiHelpers();
 
-        jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(ModBlocks.fluidBlood));
-        jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(ModItems.bloodPotion, 1, OreDictionary.WILDCARD_VALUE));
+        jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(ModBlocks.block_blood_fluid));
+        jeiHelpers.getIngredientBlacklist().addIngredientToBlacklist(new ItemStack(ModItems.blood_potion, 1, OreDictionary.WILDCARD_VALUE));
         IGuiHelper guiHelper = jeiHelpers.getGuiHelper();
         IRecipeTransferRegistry recipeTransferRegistry = registry.getRecipeTransferRegistry();
 
@@ -37,14 +37,14 @@ public class VampirismJEIPlugin extends BlankModPlugin {
         registry.addRecipeHandlers(new ShapedHunterWeaponRecipesHandler());
         registry.addRecipeHandlers(new ShapelessHunterWeaponRecipeHandler());
         registry.addRecipeClickArea(GuiHunterWeaponTable.class, 113, 46, 28, 23, HUNTER_WEAPON_RECIPE_UID);
-        registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.weaponTable), HUNTER_WEAPON_RECIPE_UID);
+        registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.weapon_table), HUNTER_WEAPON_RECIPE_UID);
         registry.addRecipes(HunterWeaponCraftingManager.getInstance().getRecipes());
         recipeTransferRegistry.addRecipeTransferHandler(HunterWeaponTableContainer.class, HUNTER_WEAPON_RECIPE_UID, 1, 16, 17, 36);
         //Alchemical cauldron
         registry.addRecipeCategories(new AlchemicalCauldronRecipeCategory(guiHelper));
         registry.addRecipeHandlers(new AlchemicalCauldronRecipesHandler(jeiHelpers.getStackHelper()));
         registry.addRecipes(AlchemicalCauldronCraftingManager.getInstance().getRecipes());
-        registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.alchemicalCauldron), ALCHEMICAL_CAULDRON_RECIPE_UID);
+        registry.addRecipeCategoryCraftingItem(new ItemStack(ModBlocks.alchemical_cauldron), ALCHEMICAL_CAULDRON_RECIPE_UID);
         registry.addRecipeClickArea(GuiAlchemicalCauldron.class, 80, 35, 25, 16, ALCHEMICAL_CAULDRON_RECIPE_UID);
         recipeTransferRegistry.addRecipeTransferHandler(AlchemicalCauldronContainer.class, ALCHEMICAL_CAULDRON_RECIPE_UID, 1, 2, 4, 36);
 
@@ -54,11 +54,11 @@ public class VampirismJEIPlugin extends BlankModPlugin {
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistry registry) {
-        registry.useNbtForSubtypes(ModItems.armorOfSwiftness_boots, ModItems.armorOfSwiftness_chest, ModItems.armorOfSwiftness_helmet, ModItems.armorOfSwiftness_legs);
-        registry.useNbtForSubtypes(ModItems.hunterAxe);
-        registry.useNbtForSubtypes(ModItems.hunterCoat_boots, ModItems.hunterCoat_chest, ModItems.hunterCoat_helmet, ModItems.hunterCoat_legs);
-        registry.useNbtForSubtypes(ModItems.obsidianArmor_boots, ModItems.obsidianArmor_chest, ModItems.obsidianArmor_legs, ModItems.obsidianArmor_helmet);
-        registry.useNbtForSubtypes(ModItems.holyWaterBottle);
-        registry.useNbtForSubtypes(ModItems.crossbowArrow);
+        registry.useNbtForSubtypes(ModItems.armor_of_swiftness_feet, ModItems.armor_of_swiftness_chest, ModItems.armor_of_swiftness_head, ModItems.armor_of_swiftness_legs);
+        registry.useNbtForSubtypes(ModItems.hunter_axe);
+        registry.useNbtForSubtypes(ModItems.hunter_coat_feet, ModItems.hunter_coat_chest, ModItems.hunter_coat_head, ModItems.hunter_coat_legs);
+        registry.useNbtForSubtypes(ModItems.obsidian_armor_feet, ModItems.obsidian_armor_chest, ModItems.obsidian_armor_legs, ModItems.obsidian_armor_head);
+        registry.useNbtForSubtypes(ModItems.holy_water_bottle);
+        registry.useNbtForSubtypes(ModItems.crossbow_arrow);
     }
 }

@@ -39,6 +39,12 @@ public class VampirismBlock extends Block {
         this.registeredName = regName;
     }
 
+    @SideOnly(Side.CLIENT)
+    @Override
+    public final void addInformation(ItemStack stack, @Nullable World playerIn, List<String> tooltip, ITooltipFlag advanced) {
+        this.addInformation(stack, Minecraft.getMinecraft().player, tooltip, advanced.isAdvanced());
+    }
+
     /**
      * @return The name this block is registered in the GameRegistry
      */
@@ -46,6 +52,13 @@ public class VampirismBlock extends Block {
         return registeredName;
     }
 
+    /**
+     * For compat with 1.11 and below
+     */
+    @Override
+    public final void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> tab) {
+        this.getSubBlocks(Item.getItemFromBlock(this), itemIn, tab);
+    }
 
     @Override
     public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
@@ -65,30 +78,6 @@ public class VampirismBlock extends Block {
         return state;
     }
 
-
-    /**
-     * Call this if the block is using {@link VampirismBlock#FACING} in it's block state
-     * This will e.g. make the block rotate with {@link Block#withRotation(IBlockState, Rotation)}
-     */
-    protected void setHasFacing() {
-        hasFacing = true;
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public final void addInformation(ItemStack stack, @Nullable World playerIn, List<String> tooltip, ITooltipFlag advanced) {
-        this.addInformation(stack, Minecraft.getMinecraft().player, tooltip, advanced.isAdvanced());
-    }
-
-    /**
-     * For compat with 1.11 and below
-     */
-    @SideOnly(Side.CLIENT)
-    @Override
-    public final void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> tab) {
-        this.getSubBlocks(Item.getItemFromBlock(this), itemIn, tab);
-    }
-
     /**
   * For compat with 1.11 and below
 
@@ -102,9 +91,16 @@ public class VampirismBlock extends Block {
  * For compat with 1.11 and below
      *
      */
-    @SideOnly(Side.CLIENT)
     protected void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+        subItems.add(new ItemStack(this));
+    }
 
+    /**
+     * Call this if the block is using {@link VampirismBlock#FACING} in it's block state
+     * This will e.g. make the block rotate with {@link Block#withRotation(IBlockState, Rotation)}
+     */
+    protected void setHasFacing() {
+        hasFacing = true;
     }
 
 }

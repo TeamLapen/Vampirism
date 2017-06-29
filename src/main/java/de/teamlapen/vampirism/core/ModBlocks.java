@@ -13,40 +13,48 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.datafix.IFixableData;
-import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
+import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.IForgeRegistry;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 
 /**
  * Handles all block registrations and reference.
  */
+@GameRegistry.ObjectHolder(REFERENCE.MODID)
 public class ModBlocks {
+    public static final BlockFluidBlood block_blood_fluid = getNull();
+    public static final BlockCastleBlock castle_block = getNull();
+    public static final BlockCursedEarth cursed_earth = getNull();
+    public static final VampirismFlower vampirism_flower = getNull();
+    public static final BlockTent tent = getNull();
+    public static final BlockTentMain tent_main = getNull();
+    public static final BlockCoffin block_coffin = getNull();
+    public static final BlockAltarInfusion altar_infusion = getNull();
+    public static final BlockAltarPillar altar_pillar = getNull();
+    public static final BlockAltarTip altar_tip = getNull();
+    public static final BlockHunterTable hunter_table = getNull();
+    public static final BlockMedChair med_chair = getNull();
+    public static final BlockGarlic garlic = getNull();
+    public static final BlockChurchAltar church_altar = getNull();
+    public static final BlockBloodContainer blood_container = getNull();
+    public static final BlockAltarInspiration altar_inspiration = getNull();
+    public static final BlockFirePlace fire_place = getNull();
+    public static final BlockWeaponTable weapon_table = getNull();
+    public static final BlockBloodPotionTable blood_potion_table = getNull();
+    public static final BlockSunscreenBeacon sunscreen_beacon = getNull();
+    public static final BlockAlchemicalFire alchemical_fire = getNull();
+    public static final BlockAlchemicalCauldron alchemical_cauldron = getNull();
+    public static final BlockGarlicBeacon garlic_beacon = getNull();
     private static final Map<String, String> OLD_TO_NEW_TILE_MAP = Maps.newHashMap();
-    public static BlockFluidBlood fluidBlood;
-    public static BlockCastleBlock castleBlock;
-    public static BlockCursedEarth cursedEarth;
-    public static VampirismFlower vampirismFlower;
-    public static BlockTent tent;
-    public static BlockTentMain tentMain;
-    public static BlockCoffin coffin;
-    public static BlockAltarInfusion altarInfusion;
-    public static BlockAltarPillar altarPillar;
-    public static BlockAltarTip altarTip;
-    public static BlockHunterTable hunterTable;
-    public static BlockMedChair medChair;
-    public static BlockGarlic garlic;
-    public static BlockChurchAltar churchAltar;
-    public static BlockBloodContainer bloodContainer;
-    public static BlockAltarInspiration altarInspiration;
-    public static BlockFirePlace firePlace;
-    public static BlockWeaponTable weaponTable;
-    public static BlockBloodPotionTable bloodPotionTable;
-    public static BlockSunscreenBeacon sunscreenBeacon;
-    public static BlockAlchemicalFire alchemicalFire;
-    public static BlockAlchemicalCauldron alchemicalCauldron;
-    public static BlockGarlicBeacon garlicBeacon;
 
+    @SuppressWarnings("ConstantConditions")
+    private static @Nonnull
+    <T> T getNull() {
+        return null;
+    }
 
     private static void registerTiles() {
         registerTileEntity(TileTent.class, "tent", "VampirismTent");
@@ -79,7 +87,6 @@ public class ModBlocks {
                 if (s != null) {
                     compound.setString("id", s);
                 }
-
                 return compound;
             }
 
@@ -100,36 +107,62 @@ public class ModBlocks {
         GameRegistry.registerTileEntity(clazz, REFERENCE.MODID + ":" + id);
     }
 
-    static void registerBlocks() {
-        fluidBlood = registerBlock(new BlockFluidBlood());//TODO Maybe remove blood block later
-        castleBlock = new BlockCastleBlock();
-        registerBlock(castleBlock, new ItemMetaBlock(castleBlock));
-        cursedEarth = registerBlock(new BlockCursedEarth());
-        vampirismFlower = new VampirismFlower();
-        registerBlock(vampirismFlower, new ItemMetaBlock(vampirismFlower));
-        tent = registerBlock(new BlockTent(), null);
-        tentMain = registerBlock(new BlockTentMain(), null);
-        coffin = registerBlock(new BlockCoffin(), null);
-        altarInfusion = registerBlock(new BlockAltarInfusion());
-        altarPillar = registerBlock(new BlockAltarPillar());
-        altarTip = registerBlock(new BlockAltarTip());
-        hunterTable = registerBlock(new BlockHunterTable());
-        medChair = registerBlock(new BlockMedChair(), null);
-        garlic = registerBlock(new BlockGarlic(), null);
-        churchAltar = registerBlock(new BlockChurchAltar());
-        bloodContainer = new BlockBloodContainer();
-        Item itemBloodContainer = new ItemBlock(bloodContainer);
-        itemBloodContainer.setRegistryName(bloodContainer.getRegistryName());
+    static void registerItemBlocks(IForgeRegistry<Item> registry) {
+        registry.register(new ItemMetaBlock(castle_block));
+        Item itemBloodContainer = new ItemBlock(blood_container);
+        itemBloodContainer.setRegistryName(blood_container.getRegistryName());
         itemBloodContainer.setMaxStackSize(1);
-        registerBlock(bloodContainer, itemBloodContainer);
-        altarInspiration = registerBlock(new BlockAltarInspiration());
-        firePlace = registerBlock(new BlockFirePlace());
-        weaponTable = registerBlock(new BlockWeaponTable());
-        bloodPotionTable = registerBlock(new BlockBloodPotionTable());
-        sunscreenBeacon = registerBlock(new BlockSunscreenBeacon());
-        alchemicalFire = registerBlock(new BlockAlchemicalFire(), null);
-        alchemicalCauldron = registerBlock(new BlockAlchemicalCauldron());
-        garlicBeacon = registerBlock(new BlockGarlicBeacon());
+        registry.register(itemBloodContainer);
+        registry.register(itemBlock(block_blood_fluid));
+        registry.register(itemBlock(cursed_earth));
+        registry.register(new ItemMetaBlock(vampirism_flower));
+        registry.register(itemBlock(altar_infusion));
+        registry.register(itemBlock(altar_pillar));
+        registry.register(itemBlock(altar_tip));
+        registry.register(itemBlock(hunter_table));
+        registry.register(itemBlock(church_altar));
+        registry.register(itemBlock(altar_inspiration));
+        registry.register(itemBlock(fire_place));
+        registry.register(itemBlock(weapon_table));
+        registry.register(itemBlock(blood_potion_table));
+        registry.register(itemBlock(sunscreen_beacon));
+        registry.register(itemBlock(alchemical_cauldron));
+        registry.register(itemBlock(garlic_beacon));
+    }
+
+    private static @Nonnull
+    ItemBlock itemBlock(@Nonnull Block b) {
+        ItemBlock item = new ItemBlock(b);
+        //noinspection ConstantConditions
+        item.setRegistryName(b.getRegistryName());
+        return item;
+    }
+
+    static void registerBlocks(IForgeRegistry<Block> registry) {
+
+        registry.register(new BlockFluidBlood());//TODO maybe remove blood block later
+        registry.register(new BlockCastleBlock());
+        registry.register(new VampirismFlower());
+        registry.register(new BlockCursedEarth());
+        registry.register(new BlockTent());
+        registry.register(new BlockTentMain());
+        registry.register(new BlockCoffin());
+        registry.register(new BlockAltarInfusion());
+        registry.register(new BlockAltarPillar());
+        registry.register(new BlockAltarTip());
+        registry.register(new BlockHunterTable());
+        registry.register(new BlockMedChair());
+        registry.register(new BlockGarlic());
+        registry.register(new BlockChurchAltar());
+        registry.register(new BlockBloodContainer());
+        registry.register(new BlockAltarInspiration());
+        registry.register(new BlockFirePlace());
+        registry.register(new BlockWeaponTable());
+        registry.register(new BlockBloodPotionTable());
+        registry.register(new BlockSunscreenBeacon());
+        registry.register(new BlockAlchemicalFire());
+        registry.register(new BlockAlchemicalCauldron());
+        registry.register(new BlockGarlicBeacon());
 
         registerTiles();
     }
@@ -158,30 +191,17 @@ public class ModBlocks {
     }
 
 
-    private static <T extends Block> T registerBlock(T block, Item item) {
-        GameRegistry.register(block);
-        if (item != null) GameRegistry.register(item);
-        return block;
-    }
-
-    private static <T extends Block> T registerBlock(T block) {
-        Item item = new ItemBlock(block);
-        item.setRegistryName(block.getRegistryName());
-        return registerBlock(block, item);
-    }
-
     /**
      * Fix block mappings
      *
      * @return if it was fixed
      */
-    public static boolean fixMapping(FMLMissingMappingsEvent.MissingMapping mapping) {
-
+    static boolean fixMapping(RegistryEvent.MissingMappings.Mapping<Block> mapping) {
         //Check for mappings changed for 1.11 CamelCase to lower underscore
-        return checkMapping(mapping, mapping.resourceLocation.getResourcePath(), alchemicalCauldron, alchemicalFire, altarInfusion, altarInspiration, altarPillar, altarTip, bloodContainer, bloodPotionTable, castleBlock, churchAltar, coffin, cursedEarth, firePlace, fluidBlood, garlicBeacon, hunterTable, medChair, sunscreenBeacon, tentMain, vampirismFlower, weaponTable);
+        return checkMapping(mapping, mapping.key.getResourcePath(), false, alchemical_cauldron, alchemical_fire, altar_infusion, altar_inspiration, altar_pillar, altar_tip, blood_container, blood_potion_table, castle_block, church_altar, block_coffin, cursed_earth, fire_place, block_blood_fluid, garlic_beacon, hunter_table, med_chair, sunscreen_beacon, tent_main, vampirism_flower, weapon_table);
     }
 
-    private static boolean checkMapping(FMLMissingMappingsEvent.MissingMapping mapping, String name, Block... blocks) {
+    private static boolean checkMapping(RegistryEvent.MissingMappings.Mapping mapping, String name, boolean itemBlock, Block... blocks) {
         for (Block b : blocks) {
             String newRegisteredName = b instanceof VampirismBlock ? ((VampirismBlock) b).getRegisteredName() : (b instanceof VampirismBlockContainer ? ((VampirismBlockContainer) b).getRegisteredName() : (b instanceof VampirismFlower ? ((VampirismFlower) b).getRegisteredName() : (b instanceof BlockFluidBlood ? ((BlockFluidBlood) b).getRegisteredName() : null)));
             if (newRegisteredName == null) {
@@ -191,7 +211,7 @@ public class ModBlocks {
             String oldRegisteredName = newRegisteredName.replaceAll("_", "");
 
             if (oldRegisteredName.equals(name)){
-                if (mapping.type == GameRegistry.Type.ITEM) {
+                if (itemBlock) {
                     mapping.remap(Item.getItemFromBlock(b));
                 } else {
                     mapping.remap(b);
@@ -207,10 +227,10 @@ public class ModBlocks {
      *
      * @return if it was fixed
      */
-    public static boolean fixMappingItemBlock(FMLMissingMappingsEvent.MissingMapping mapping) {
+    static boolean fixMappingItemBlock(RegistryEvent.MissingMappings.Mapping<Item> mapping) {
         //Check for mappings changed for 1.11 CamelCase to lower underscore
-        String converted = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, mapping.resourceLocation.getResourcePath());
-        return checkMapping(mapping, converted, alchemicalCauldron, altarInfusion, altarInspiration, altarPillar, altarTip, bloodContainer, bloodPotionTable, castleBlock, churchAltar, cursedEarth, firePlace, fluidBlood, garlicBeacon, hunterTable, sunscreenBeacon, vampirismFlower, weaponTable);
+        String converted = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, mapping.key.getResourcePath());
+        return checkMapping(mapping, converted, true, alchemical_cauldron, altar_infusion, altar_inspiration, altar_pillar, altar_tip, blood_container, blood_potion_table, castle_block, church_altar, cursed_earth, fire_place, block_blood_fluid, garlic_beacon, hunter_table, sunscreen_beacon, vampirism_flower, weapon_table);
     }
 
 

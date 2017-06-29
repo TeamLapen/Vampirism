@@ -50,7 +50,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
 
     private final static String TAG = "TEAltarInfusion";
     private static final Item[] items = new Item[]{
-            ModItems.pureBlood, ModItems.humanHeart, ModItems.vampireBook
+            ModItems.pure_blood, ModItems.human_heart, ModItems.vampire_book
     };
     private final int DURATION_TICK = 450;
     /**
@@ -360,7 +360,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         }
         if (!ItemStackUtil.isEmpty(missing)) {
             if (messagePlayer) {
-                ITextComponent item = missing.getItem().equals(ModItems.pureBlood) ? ModItems.pureBlood.getDisplayName(missing) : new TextComponentTranslation(missing.getUnlocalizedName() + ".name");
+                ITextComponent item = missing.getItem().equals(ModItems.pure_blood) ? ModItems.pure_blood.getDisplayName(missing) : new TextComponentTranslation(missing.getUnlocalizedName() + ".name");
                 ITextComponent main = new TextComponentTranslation("text.vampirism.ritual_missing_items", ItemStackUtil.getCount(missing), item);
                 player.sendMessage(main);
             }
@@ -403,7 +403,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
             int j = 0;
             BlockAltarPillar.EnumPillarType type = null;
             IBlockState temp;
-            while ((temp = getWorld().getBlockState(pPos.add(0, -j - 1, 0))).getBlock().equals(ModBlocks.altarPillar)) {
+            while ((temp = getWorld().getBlockState(pPos.add(0, -j - 1, 0))).getBlock().equals(ModBlocks.altar_pillar)) {
                 BlockAltarPillar.EnumPillarType t = temp.getValue(BlockAltarPillar.typeProperty);
                 if (type == null) {
                     type = t;
@@ -446,7 +446,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         for (int x = getPos().getX() - 4; x < getPos().getX() + 5; x++) {
             for (int y = getPos().getY() + 1; y < getPos().getY() + 4; y++) {
                 for (int z = getPos().getZ() - 4; z < getPos().getZ() + 5; z++) {
-                    if (getWorld().getBlockState(pos.setPos(x, y, z)).getBlock().equals(ModBlocks.altarTip)) {
+                    if (getWorld().getBlockState(pos.setPos(x, y, z)).getBlock().equals(ModBlocks.altar_tip)) {
                         list.add(new BlockPos(x, y, z));
                     }
                 }

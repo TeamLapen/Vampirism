@@ -142,7 +142,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
             if (this.isPotionActive(MobEffects.FIRE_RESISTANCE)) {
                 PotionEffect fireResistance = this.removeActivePotionEffect(MobEffects.FIRE_RESISTANCE);
                 onFinishedPotionEffect(fireResistance);
-                this.addPotionEffect(new PotionEffect(ModPotions.fireProtection, fireResistance.getDuration(), fireResistance.getAmplifier()));
+                this.addPotionEffect(new PotionEffect(ModPotions.fire_protection, fireResistance.getDuration(), fireResistance.getAmplifier()));
             }
         }
     }
@@ -206,7 +206,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     @Override
     protected float calculateFireDamage(float amount) {
         float protectionMod = 1F;
-        PotionEffect protection = this.getActivePotionEffect(ModPotions.fireProtection);
+        PotionEffect protection = this.getActivePotionEffect(ModPotions.fire_protection);
         if (protection != null) {
             protectionMod = 1F / (2F + protection.getAmplifier());
         }
@@ -218,7 +218,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     protected void dropFewItems(boolean recentlyHit, int lootingLevel) {
         if (recentlyHit) {
             if (this.rand.nextInt(3) == 0) {
-                this.dropItem(ModItems.vampireFang, 1);
+                this.dropItem(ModItems.vampire_fang, 1);
             }
         }
     }
@@ -231,7 +231,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
                 ItemStack active = ((EntityPlayer) source.getTrueSource()).getHeldItem(((EntityPlayer) source.getTrueSource()).getActiveHand());
                 if (!ItemStackUtil.isEmpty(active) && active.getItem() instanceof ItemStake) {
                     if (this.rand.nextInt(2) == 0) {
-                        this.dropItem(ModItems.vampireBlood, 1);
+                        this.dropItem(ModItems.vampire_blood_bottle, 1);
 
                     }
                 }

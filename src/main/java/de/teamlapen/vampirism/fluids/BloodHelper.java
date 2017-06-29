@@ -131,7 +131,7 @@ public class BloodHelper {
         }
         ItemStack glas = getGlassBottleInHotbar(player.inventory);
         if (!ItemStackUtil.isEmpty(glas) && Configs.autoConvertGlasBottles) {
-            ItemStack bloodBottle = new ItemStack(ModItems.bloodBottle, 1, 0);
+            ItemStack bloodBottle = new ItemStack(ModItems.blood_bottle, 1, 0);
             int filled = fill(bloodBottle, amt, true);
             if (filled == 0) {
                 VampirismMod.log.w("BloodHelper", "Failed to fill blood bottle with blood");

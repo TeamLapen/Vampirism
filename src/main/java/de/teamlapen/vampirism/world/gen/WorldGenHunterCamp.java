@@ -134,7 +134,7 @@ public class WorldGenHunterCamp extends WorldGenerator {
 
     private boolean placeFire(World worldIn, BlockPos position) {
         if (checkGroundAndPos(worldIn, position, null)) {
-            setBlockAndNotifyAdequately(worldIn, position, ModBlocks.firePlace.getDefaultState());
+            setBlockAndNotifyAdequately(worldIn, position, ModBlocks.fire_place.getDefaultState());
             return true;
         }
         return false;

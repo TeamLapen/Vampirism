@@ -95,7 +95,7 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
      * @return the enchantmen level
      */
     protected static int isCrossbowFrugal(ItemStack crossbowStack) {
-        int enchant = EnchantmentHelper.getEnchantmentLevel(ModEnchantments.crossbowFrugality, crossbowStack);
+        int enchant = EnchantmentHelper.getEnchantmentLevel(ModEnchantments.crossbowfrugality, crossbowStack);
         return enchant;
     }
 
@@ -135,7 +135,7 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
     @Override
     protected ItemStack findAmmo(EntityPlayer player, ItemStack bowStack) {
         boolean arrow = reduceArrowCount(bowStack, player.getRNG());
-        return arrow ? new ItemStack(ModItems.crossbowArrow) : ItemStackUtil.getEmptyStack();
+        return arrow ? new ItemStack(ModItems.crossbow_arrow) : ItemStackUtil.getEmptyStack();
     }
 
     @Override

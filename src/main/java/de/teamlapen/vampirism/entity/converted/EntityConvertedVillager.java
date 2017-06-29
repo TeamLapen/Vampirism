@@ -175,9 +175,9 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
         if (list.size() > 0) {
             list.remove(rand.nextInt(list.size()));
         }
-        addRecipe(list, new ItemStack(ModItems.humanHeart, 9), 2, this.getRNG(), 0.5F);
-        addRecipe(list, 3, new ItemStack(ModItems.humanHeart, 9), this.getRNG(), 0.5F);
-        addRecipe(list, 1, new ItemStack(ModItems.bloodBottle, 3, ItemBloodBottle.AMOUNT), rand, 0.9F);
+        addRecipe(list, new ItemStack(ModItems.human_heart, 9), 2, this.getRNG(), 0.5F);
+        addRecipe(list, 3, new ItemStack(ModItems.human_heart, 9), this.getRNG(), 0.5F);
+        addRecipe(list, 1, new ItemStack(ModItems.blood_bottle, 3, ItemBloodBottle.AMOUNT), rand, 0.9F);
     }
 
     /**

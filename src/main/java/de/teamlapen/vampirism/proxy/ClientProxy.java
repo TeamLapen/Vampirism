@@ -54,9 +54,10 @@ public class ClientProxy extends CommonProxy {
         switch (step) {
             case PRE_INIT:
                 ModKeys.register();
+                registerSubscriptions();
                 break;
             case INIT:
-                registerSubscriptions();
+
                 break;
             case POST_INIT:
                 registerVampireEntityOverlays();

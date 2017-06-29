@@ -65,15 +65,15 @@ public class Tests {
     }
 
     private static boolean bloodFluidHandler(TestInfo info) throws Throwable {
-        info.world.setBlockState(info.pos, ModBlocks.bloodContainer.getDefaultState());
+        info.world.setBlockState(info.pos, ModBlocks.blood_container.getDefaultState());
         TileEntity t = info.world.getTileEntity(info.pos);
         IFluidHandler handler = t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.random(info.world.rand));
         handler.fill(new FluidStack(ModFluids.blood, 10000000), true);
         int blood = BloodHelper.getBlood(handler);
         assert blood > 0 : "Could not fill blood container";
 
-        ItemStack bloodBottle1 = new ItemStack(ModItems.bloodBottle);
-        ItemStack bloodBottle2 = new ItemStack(ModItems.bloodBottle);
+        ItemStack bloodBottle1 = new ItemStack(ModItems.blood_bottle);
+        ItemStack bloodBottle2 = new ItemStack(ModItems.blood_bottle);
         FluidActionResult result1 = FluidUtil.tryFillContainer(bloodBottle1, handler, Integer.MAX_VALUE, null, true);
         assert result1.isSuccess() : "Transaction 1 failed";
         bloodBottle1 = result1.getResult();
@@ -94,7 +94,7 @@ public class Tests {
     }
 
     private static boolean blockWeaponTableFluids(TestInfo info) throws Throwable {
-        info.world.setBlockState(info.pos, ModBlocks.weaponTable.getDefaultState());
+        info.world.setBlockState(info.pos, ModBlocks.weapon_table.getDefaultState());
         info.player.setHeldItem(info.player.getActiveHand(), new ItemStack(Items.LAVA_BUCKET));
         IBlockState block = info.world.getBlockState(info.pos);
         block.getBlock().onBlockActivated(info.world, info.pos, block, info.player, info.player.getActiveHand(), EnumFacing.random(info.world.rand), 0, 0, 0);
@@ -117,7 +117,7 @@ public class Tests {
         for (int x = -21; x < 22; x++) {
             for (int y = 1; y < 22; y++) {
                 for (int z = -21; z < 22; z++) {
-                    IBlockState s = (y == 1 || x == -21 || x == 21 || z == -21 || z == 21 || y == 21) ? ModBlocks.castleBlock.getDefaultState().withProperty(BlockCastleBlock.VARIANT, BlockCastleBlock.EnumType.DARK_STONE) : Blocks.AIR.getDefaultState();
+                    IBlockState s = (y == 1 || x == -21 || x == 21 || z == -21 || z == 21 || y == 21) ? ModBlocks.castle_block.getDefaultState().withProperty(BlockCastleBlock.VARIANT, BlockCastleBlock.EnumType.DARK_STONE) : Blocks.AIR.getDefaultState();
                     world.setBlockState(new BlockPos(x, y, z), s);
                 }
             }

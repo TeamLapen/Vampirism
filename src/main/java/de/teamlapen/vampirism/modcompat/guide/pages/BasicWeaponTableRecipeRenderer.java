@@ -55,7 +55,7 @@ public abstract class BasicWeaponTableRecipeRenderer<T extends IHunterWeaponReci
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(new ResourceLocation("vampirismguide", "textures/gui/weapon_table_recipe.png"));
         guiBase.drawTexturedModalRect(guiLeft + 42, guiTop + 43, 0, 0, 110, 75);
-        guiBase.drawCenteredString(fontRendererObj, ModBlocks.weaponTable.getLocalizedName(), guiLeft + guiBase.xSize / 2, guiTop + 12, 0);
+        guiBase.drawCenteredString(fontRendererObj, ModBlocks.weapon_table.getLocalizedName(), guiLeft + guiBase.xSize / 2, guiTop + 12, 0);
         guiBase.drawCenteredString(fontRendererObj, "§o" + getRecipeName() + "§r", guiLeft + guiBase.xSize / 2, guiTop + 14 + fontRendererObj.FONT_HEIGHT, 0);
 
         int outputX = 3 + (6 * 17) + (guiLeft + guiBase.xSize / 7);

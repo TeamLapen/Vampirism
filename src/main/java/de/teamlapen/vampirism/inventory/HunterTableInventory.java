@@ -20,7 +20,7 @@ public class HunterTableInventory extends SimpleInventory {
 
     @Override
     public String getName() {
-        return ModBlocks.hunterTable.getUnlocalizedName() + ".name";
+        return ModBlocks.hunter_table.getUnlocalizedName() + ".name";
     }
 
 

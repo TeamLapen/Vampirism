@@ -43,6 +43,13 @@ public abstract class VampirismBlockContainer extends BlockContainer {
         return registeredName;
     }
 
+    /**
+     * For compat with 1.11 and below
+     */
+    @Override
+    public final void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> tab) {
+        this.getSubBlocks(Item.getItemFromBlock(this), itemIn, tab);
+    }
 
     @Override
     public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
@@ -62,24 +69,6 @@ public abstract class VampirismBlockContainer extends BlockContainer {
         return state;
     }
 
-
-    /**
-     * Call this if the block is using {@link VampirismBlockContainer#FACING} in it's block state
-     * This will e.g. make the block rotate with {@link Block#withRotation(IBlockState, Rotation)}
-     */
-    protected void setHasFacing() {
-        hasFacing = true;
-    }
-
-    /**
-     * For compat with 1.11 and below
-     */
-    @SideOnly(Side.CLIENT)
-    @Override
-    public final void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> tab) {
-        this.getSubBlocks(Item.getItemFromBlock(this), itemIn, tab);
-    }
-
     /**
      * For compat with 1.11 and below
 
@@ -93,9 +82,16 @@ public abstract class VampirismBlockContainer extends BlockContainer {
      * For compat with 1.11 and below
      *
      */
-    @SideOnly(Side.CLIENT)
     protected void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
+        subItems.add(new ItemStack(this));
+    }
 
+    /**
+     * Call this if the block is using {@link VampirismBlockContainer#FACING} in it's block state
+     * This will e.g. make the block rotate with {@link Block#withRotation(IBlockState, Rotation)}
+     */
+    protected void setHasFacing() {
+        hasFacing = true;
     }
 
 }

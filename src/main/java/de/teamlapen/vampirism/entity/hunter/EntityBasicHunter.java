@@ -102,7 +102,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     @Override
     public @Nonnull
     ItemStack getArrowStackForAttack(EntityLivingBase target) {
-        return new ItemStack(ModItems.crossbowArrow);
+        return new ItemStack(ModItems.crossbow_arrow);
     }
 
     @Override
@@ -197,7 +197,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
 
         if (this.getRNG().nextInt(4) == 0) {
             this.setLeftHanded(true);
-            Item crossBow = getLevel() > 1 ? ModItems.enhancedCrossbow : ModItems.basicCrossbow;
+            Item crossBow = getLevel() > 1 ? ModItems.enhanced_crossbow : ModItems.basic_crossbow;
             this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(crossBow));
 
         } else {
@@ -250,7 +250,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         }
         if (tagCompund.hasKey("crossbow") && tagCompund.getBoolean("crossbow")) {
             this.setLeftHanded(true);
-            this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.basicCrossbow));
+            this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.basic_crossbow));
         } else {
             this.setLeftHanded(false);
             this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, ItemStackUtil.getEmptyStack());
@@ -322,10 +322,10 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     protected void dropFewItems(boolean recentlyHit, int lootingLevel) {
         if (recentlyHit) {
             if (this.rand.nextInt(3) == 0) {
-                this.dropItem(ModItems.humanHeart, 1);
+                this.dropItem(ModItems.human_heart, 1);
             }
             if (this.rand.nextInt(4) == 0) {
-                this.dropItem(ModItems.holySalt, 1);
+                this.dropItem(ModItems.holy_salt, 1);
             }
         }
     }

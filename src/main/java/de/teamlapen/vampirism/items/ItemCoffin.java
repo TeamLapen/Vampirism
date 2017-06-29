@@ -53,7 +53,7 @@ public class ItemCoffin extends VampirismItem {
 
         if (player.canPlayerEdit(pos, side, stack) && player.canPlayerEdit(other, side, stack)) {
             if (flag1 && flag2 && UtilLib.doesBlockHaveSolidTopSurface(world, pos.down()) && UtilLib.doesBlockHaveSolidTopSurface(world, other.down())) {
-                IBlockState state1 = ModBlocks.coffin.getDefaultState().withProperty(BlockCoffin.OCCUPIED, Boolean.FALSE).withProperty(BlockCoffin.PART, BlockCoffin.EnumPartType.FOOT).withProperty(BlockCoffin.FACING, facing);
+                IBlockState state1 = ModBlocks.block_coffin.getDefaultState().withProperty(BlockCoffin.OCCUPIED, Boolean.FALSE).withProperty(BlockCoffin.PART, BlockCoffin.EnumPartType.FOOT).withProperty(BlockCoffin.FACING, facing);
                 if (world.setBlockState(pos, state1, 3)) {
                     IBlockState state2 = state1.withProperty(BlockCoffin.PART, BlockCoffin.EnumPartType.HEAD).withProperty(BlockCoffin.FACING, facing);
                     world.setBlockState(other, state2, 3);

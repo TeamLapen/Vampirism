@@ -13,10 +13,8 @@ import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.blocks.BlockCastleBlock;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.inventory.BloodPotionTableContainer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.potion.FakeNightVisionPotion;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.state.IBlockState;
@@ -29,7 +27,6 @@ import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.entity.monster.EntityCreeper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
@@ -80,7 +77,7 @@ public class ModEntityEventHandler {
     @SubscribeEvent
     public void onEntityCheckSpawn(LivingSpawnEvent.CheckSpawn event) {
         IBlockState blockState = event.getWorld().getBlockState(new BlockPos(event.getX() - 0.4F, event.getY(), event.getZ() - 0.4F).down());
-        if (blockState.getBlock().equals(ModBlocks.castleBlock)) {
+        if (blockState.getBlock().equals(ModBlocks.castle_block)) {
             if (BlockCastleBlock.EnumType.DARK_STONE.equals(blockState.getValue(BlockCastleBlock.VARIANT)) || !event.getEntity().isCreatureType(VReference.VAMPIRE_CREATURE_TYPE, false)) {
                 event.setResult(Event.Result.DENY);
             }
@@ -155,13 +152,6 @@ public class ModEntityEventHandler {
                 ((BloodPotionTableContainer) player.openContainer).tick();
             }
         }
-        PotionEffect vanillaNightVision = null;
-        if (FakeNightVisionPotion.vanillaInstance != null && (vanillaNightVision = event.getEntityLiving().getActivePotionEffect(FakeNightVisionPotion.vanillaInstance)) != null) {
-            event.getEntityLiving().removePotionEffect(FakeNightVisionPotion.vanillaInstance);
-            event.getEntityLiving().addPotionEffect(new PotionEffect(ModPotions.fakeNightVisionPotion, vanillaNightVision.getDuration(), vanillaNightVision.getAmplifier(), vanillaNightVision.getIsAmbient(), vanillaNightVision.doesShowParticles()));
-            VampirismMod.log.d("EntityEventHandler", "Replacing vanilla night vision potion effect by modified potion effect");
-        }
-
 
     }
 }

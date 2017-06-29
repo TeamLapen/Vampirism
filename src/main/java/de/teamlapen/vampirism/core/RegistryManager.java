@@ -62,39 +62,69 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
-    public void onRegisterBiomes(RegistryEvent<Biome> event) {
-        ModBiomes.registerBiomes();
+    public void onMissinMappingsPotion(RegistryEvent.MissingMappings<SoundEvent> event) {
+        for (RegistryEvent.MissingMappings.Mapping<SoundEvent> m : event.getMappings()) {
+            m.ignore();
+        }
     }
 
     @SubscribeEvent
-    public void onRegisterBlocks(RegistryEvent<Block> event) {
-        ModBlocks.registerBlocks();
+    public void onMissingMappingsBlock(RegistryEvent.MissingMappings<Block> event) {
+        for (RegistryEvent.MissingMappings.Mapping<Block> m : event.getMappings()) {
+            ModBlocks.fixMapping(m);
+        }
     }
 
     @SubscribeEvent
-    public void onRegisterEnchantments(RegistryEvent<Enchantment> event) {
-        ModEnchantments.registerEnchantments();
+    public void onMissingMappingsItem(RegistryEvent.MissingMappings<Item> event) {
+        for (RegistryEvent.MissingMappings.Mapping<Item> m : event.getMappings()) {
+            if (!ModItems.fixMapping(m)) {
+                ModBlocks.fixMappingItemBlock(m);
+            }
+        }
     }
 
     @SubscribeEvent
-    public void onRegisterEntities(RegistryEvent<EntityEntry> event) {
-        //ModEntities.registerEntities(); moved to pre-init again due to Forge complaining
+    public void onMissingMappingsPotion(RegistryEvent.MissingMappings<Potion> event) {
+        for (RegistryEvent.MissingMappings.Mapping<Potion> m : event.getMappings()) {
+            ModPotions.fixMapping(m);
+        }
     }
 
     @SubscribeEvent
-    public void onRegisterItems(RegistryEvent<Item> event) {
-        ModItems.registerItems();
+    public void onRegisterBiomes(RegistryEvent.Register<Biome> event) {
+        ModBiomes.registerBiomes(event.getRegistry());
     }
 
     @SubscribeEvent
-    public void onRegisterPotions(RegistryEvent<Potion> event) {
-        ModPotions.registerPotions();
+    public void onRegisterBlocks(RegistryEvent.Register<Block> event) {
+        ModBlocks.registerBlocks(event.getRegistry());
     }
 
     @SubscribeEvent
-    public void onRegisterSounds(RegistryEvent<SoundEvent> event) {
-        ModSounds.registerSounds();
+    public void onRegisterEnchantments(RegistryEvent.Register<Enchantment> event) {
+        ModEnchantments.registerEnchantments(event.getRegistry());
     }
 
+    @SubscribeEvent
+    public void onRegisterEntities(RegistryEvent.Register<EntityEntry> event) {
+        //ModEntities.registerEntities(); moved to pre-init again due to Forge complaining TODO
+    }
+
+    @SubscribeEvent
+    public void onRegisterItems(RegistryEvent.Register<Item> event) {
+        ModItems.registerItems(event.getRegistry());
+        ModBlocks.registerItemBlocks(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterPotions(RegistryEvent.Register<Potion> event) {
+        ModPotions.registerPotions(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterSounds(RegistryEvent.Register<SoundEvent> event) {
+        ModSounds.registerSounds(event.getRegistry());
+    }
 
 }

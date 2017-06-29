@@ -188,10 +188,10 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier) {
         switch (getRNG().nextInt(2)) {
             case 0:
-                this.dropItem(ModItems.vampireBlood, 1);
+                this.dropItem(ModItems.vampire_blood_bottle, 1);
                 break;
             case 1:
-                this.entityDropItem(new ItemStack(ModItems.bloodBottle, lootingModifier + 1, getRNG().nextInt(ItemBloodBottle.AMOUNT)), 0);
+                this.entityDropItem(new ItemStack(ModItems.blood_bottle, lootingModifier + 1, getRNG().nextInt(ItemBloodBottle.AMOUNT)), 0);
                 break;
             default:
                 break;

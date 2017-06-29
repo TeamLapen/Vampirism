@@ -4,7 +4,6 @@ package de.teamlapen.vampirism.util;
  * Collection of mcp to srg name translations
  */
 public class SRGNAMES {
-    public static final String MobEffects_nightVision = "field_76439_r";
     public static final String MapGenVillage_size = "field_75054_f";
     public static final String MapGenVillage_distance = "field_82665_g";
     public static final String MapGenVillage_minTownSeperation = "field_82666_h";

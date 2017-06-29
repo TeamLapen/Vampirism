@@ -81,9 +81,9 @@ public class WorldGenVampireDungeon extends WorldGenerator {
                         } else if (worldIn.getBlockState(blockpos1).getMaterial().isSolid() && worldIn.getBlockState(blockpos1).getBlock() != Blocks.CHEST) {
                             if (ay == -1 || ay == 4) {
                                 if (rand.nextInt(40) == 0) {
-                                    worldIn.setBlockState(blockpos1, ModBlocks.castleBlock.getDefaultState().withProperty(BlockCastleBlock.VARIANT, BlockCastleBlock.EnumType.DARK_BRICK_BLOODY), 2);
+                                    worldIn.setBlockState(blockpos1, ModBlocks.castle_block.getDefaultState().withProperty(BlockCastleBlock.VARIANT, BlockCastleBlock.EnumType.DARK_BRICK_BLOODY), 2);
                                 } else {
-                                    worldIn.setBlockState(blockpos1, ModBlocks.castleBlock.getDefaultState().withProperty(BlockCastleBlock.VARIANT, BlockCastleBlock.EnumType.DARK_BRICK), 2);
+                                    worldIn.setBlockState(blockpos1, ModBlocks.castle_block.getDefaultState().withProperty(BlockCastleBlock.VARIANT, BlockCastleBlock.EnumType.DARK_BRICK), 2);
                                 }
                             } else {
                                 worldIn.setBlockState(blockpos1, Blocks.PLANKS.getDefaultState().withProperty(BlockPlanks.VARIANT, BlockPlanks.EnumType.SPRUCE), 2);
@@ -139,7 +139,7 @@ public class WorldGenVampireDungeon extends WorldGenerator {
                         }
 
                         if (solidSides == 2) {
-                            worldIn.setBlockState(blockpos2, ModBlocks.bloodContainer.getDefaultState(), 2);
+                            worldIn.setBlockState(blockpos2, ModBlocks.blood_container.getDefaultState(), 2);
 
                             TileEntity tileentity1 = worldIn.getTileEntity(blockpos2);
 
@@ -171,7 +171,7 @@ public class WorldGenVampireDungeon extends WorldGenerator {
                     }
                 }
             }
-            worldIn.setBlockState(position, ModBlocks.altarInspiration.getDefaultState(), 2);
+            worldIn.setBlockState(position, ModBlocks.altar_inspiration.getDefaultState(), 2);
             TileEntity tileentity = worldIn.getTileEntity(position);
 
             if (tileentity instanceof TileAltarInspiration && tileentity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {

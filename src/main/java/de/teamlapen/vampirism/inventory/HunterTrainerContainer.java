@@ -21,7 +21,7 @@ import net.minecraft.potion.PotionEffect;
  * Container which handles hunter levelup at an hunter trainer
  */
 public class HunterTrainerContainer extends InventoryContainer {
-    private final static Item[] items = new Item[]{Items.IRON_INGOT, Items.GOLD_INGOT, ModItems.hunterIntel};
+    private final static Item[] items = new Item[]{Items.IRON_INGOT, Items.GOLD_INGOT, ModItems.hunter_intel};
     private final EntityPlayer player;
     private boolean changed = false;
     private ItemStack missing = ItemStackUtil.getEmptyStack();
@@ -104,7 +104,7 @@ public class HunterTrainerContainer extends InventoryContainer {
      */
     public static class HunterTrainerInventory extends SimpleInventory {
         public HunterTrainerInventory() {
-            super(new InventorySlot[]{new InventorySlot(Items.IRON_INGOT, 27, 26), new InventorySlot(Items.GOLD_INGOT, 57, 26), new InventorySlot(ModItems.hunterIntel, 86, 26)});
+            super(new InventorySlot[]{new InventorySlot(Items.IRON_INGOT, 27, 26), new InventorySlot(Items.GOLD_INGOT, 57, 26), new InventorySlot(ModItems.hunter_intel, 86, 26)});
         }
 
         @Override

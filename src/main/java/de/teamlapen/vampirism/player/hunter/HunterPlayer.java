@@ -104,7 +104,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     @Override
     public IFaction getDisguisedAs() {
-        return player.isPotionActive(ModPotions.disguiseAsVampire) ? VReference.VAMPIRE_FACTION : getFaction();
+        return player.isPotionActive(ModPotions.disguise_as_vampire) ? VReference.VAMPIRE_FACTION : getFaction();
     }
 
     @Override
@@ -142,7 +142,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     @Override
     public boolean isDisguised() {
-        return player.isPotionActive(ModPotions.disguiseAsVampire);
+        return player.isPotionActive(ModPotions.disguise_as_vampire);
     }
 
     public void loadData(NBTTagCompound compound) {

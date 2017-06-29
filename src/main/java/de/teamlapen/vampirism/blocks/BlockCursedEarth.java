@@ -56,7 +56,7 @@ public class BlockCursedEarth extends VampirismBlock implements IGrowable {
                 if (j >= i / 16) {
                     if (worldIn.isAirBlock(blockpos1)) {
                         if (rand.nextInt(8) == 0) {
-                            VampirismFlower blockflower = ModBlocks.vampirismFlower;
+                            VampirismFlower blockflower = ModBlocks.vampirism_flower;
                             IBlockState iblockstate = blockflower.getDefaultState().withProperty(VampirismFlower.TYPE, VampirismFlower.EnumFlowerType.ORCHID);
 
                             if (blockflower.canBlockStay(worldIn, blockpos1, iblockstate)) {
@@ -76,7 +76,7 @@ public class BlockCursedEarth extends VampirismBlock implements IGrowable {
 
                 blockpos1 = blockpos1.add(rand.nextInt(3) - 1, (rand.nextInt(3) - 1) * rand.nextInt(3) / 2, rand.nextInt(3) - 1);
 
-                if (worldIn.getBlockState(blockpos1.down()).getBlock() != ModBlocks.cursedEarth || worldIn.getBlockState(blockpos1).isNormalCube()) {
+                if (worldIn.getBlockState(blockpos1.down()).getBlock() != ModBlocks.cursed_earth || worldIn.getBlockState(blockpos1).isNormalCube()) {
                     break;
                 }
 
