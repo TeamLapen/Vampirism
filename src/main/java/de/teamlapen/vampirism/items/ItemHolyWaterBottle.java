@@ -7,13 +7,16 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.EntityThrowableItem;
+import de.teamlapen.vampirism.inventory.crafting.IngredientNBT;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
 import net.minecraft.init.PotionTypes;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionUtils;
 import net.minecraft.stats.StatList;
@@ -23,6 +26,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -38,28 +42,29 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
 
     private static final String regName = "holy_water_bottle";
 
-    //TODO CRAFTING
-//    /**
-//     * Registers the splash recipes for the given holywater bottle tier stack.
-//     * Should only be used once and after the item has been registed
-//     *
-//     * @param item The item
-//     * @param tier The tier
-//     */
-//    @Deprecated
-//    public static void registerSplashRecipes(ItemHolyWaterBottle item, TIER tier) {
-//        ItemStack base = item.setTier(new ItemStack(item), tier);
-//        ItemStack splash = item.setSplash(base.copy(), true);
-//        GameRegistry.addShapelessRecipe(splash.copy(), base, Items.GUNPOWDER);
-//        ItemStackUtil.grow(splash, 1);
-//        GameRegistry.addShapelessRecipe(splash.copy(), base, base, Items.GUNPOWDER);
-//        ItemStackUtil.grow(splash, 1);
-//        GameRegistry.addShapelessRecipe(splash.copy(), base, base, base, Items.GUNPOWDER);
-//        ItemStackUtil.grow(splash, 1);
-//        GameRegistry.addShapelessRecipe(splash.copy(), base, base, base, base, Items.GUNPOWDER);
-//        ItemStackUtil.grow(splash, 1);
-//        GameRegistry.addShapelessRecipe(splash.copy(), base, base, base, base, base, Items.GUNPOWDER);
-//    }
+    /**
+     * Registers the splash recipes for the given holywater bottle tier stack.
+     * Should only be used once and after the item has been registed
+     *
+     * @param item The item
+     * @param tier The tier
+     */
+    @Deprecated
+    public static void registerSplashRecipes(ItemHolyWaterBottle item, TIER tier) {
+        ItemStack base = item.setTier(new ItemStack(item), tier);
+        Ingredient bottle = new IngredientNBT(base);
+        Ingredient g = Ingredient.fromItem(Items.GUNPOWDER);
+        ItemStack splash = item.setSplash(base.copy(), true);
+        GameRegistry.addShapelessRecipe(new ResourceLocation("vampirism:holy_water_splash_" + tier + "_"), null, splash.copy(), bottle, g);
+        ItemStackUtil.grow(splash, 1);
+        GameRegistry.addShapelessRecipe(new ResourceLocation("vampirism:holy_water_splash_" + tier + "_"), null, splash.copy(), bottle, bottle, g);
+        ItemStackUtil.grow(splash, 1);
+        GameRegistry.addShapelessRecipe(new ResourceLocation("vampirism:holy_water_splash_" + tier + "_"), null, splash.copy(), bottle, bottle, bottle, g);
+        ItemStackUtil.grow(splash, 1);
+        GameRegistry.addShapelessRecipe(new ResourceLocation("vampirism:holy_water_splash_" + tier + "_"), null, splash.copy(), bottle, bottle, bottle, bottle, g);
+        ItemStackUtil.grow(splash, 1);
+        GameRegistry.addShapelessRecipe(new ResourceLocation("vampirism:holy_water_splash_" + tier + "_"), null, splash.copy(), bottle, bottle, bottle, bottle, bottle, g);
+    }
 
     public ItemHolyWaterBottle() {
         super(regName);

@@ -6,6 +6,7 @@ import amerifrance.guideapi.api.impl.abstraction.CategoryAbstract;
 import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
 import amerifrance.guideapi.api.util.GuiHelper;
 import amerifrance.guideapi.gui.GuiBase;
+import com.google.common.collect.Lists;
 import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -31,13 +32,15 @@ import java.util.Random;
  *
  * @param <T>
  */
-public abstract class BasicWeaponTableRecipeRenderer<T extends IHunterWeaponRecipe> extends IRecipeRenderer.RecipeRendererBase<T> {
+public abstract class BasicWeaponTableRecipeRenderer<T extends IHunterWeaponRecipe> implements IRecipeRenderer {
     private final Random rand = new Random();
+    protected T recipe;
+    protected java.util.List<String> tooltips = Lists.newArrayList();
     private long lastCycle = -1;
     private int cycleIdx = 0;
 
     public BasicWeaponTableRecipeRenderer(T recipe) {
-        super(recipe);
+        this.recipe = recipe;
     }
 
     @SideOnly(Side.CLIENT)
@@ -93,6 +96,13 @@ public abstract class BasicWeaponTableRecipeRenderer<T extends IHunterWeaponReci
             String skillText = UtilLib.translateFormatted("gui.vampirism.hunter_weapon_table.skill", skills.toString());
             guiBase.drawSplitString(skillText, guiLeft + 40, y, 110, Color.gray.getRGB());
         }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void drawExtras(Book book, CategoryAbstract category, EntryAbstract entry, int guiLeft, int guiTop, int mouseX, int mouseY, GuiBase guiBase, FontRenderer fontRendererObj) {
+        guiBase.drawHoveringText(tooltips, mouseX, mouseY);
+        tooltips.clear();
     }
 
     /**

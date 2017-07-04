@@ -1,0 +1,22 @@
+{
+  "result": {
+    "item": "vampirism:alchemical_cauldron"
+  },
+  "pattern": [
+    "XZX",
+    "XXX",
+    "Y Y"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "item": "#IRON"
+    },
+    "Y": {
+      "item": "#STONEBRICK"
+    },
+    "Z": {
+      "item": "vampirism:item_garlic"
+    }
+  }
+}

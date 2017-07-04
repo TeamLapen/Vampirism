@@ -1,0 +1,20 @@
+{
+  "result": {
+    "item": "vampirism:fire_place"
+  },
+  "pattern": [
+    " X ",
+    "XYX"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "type": "forge:ore_dict",
+      "ore": "logWood"
+    },
+    "Y": {
+      "type": "forge:ore_dict",
+      "ore": "blockCoal"
+    }
+  }
+}

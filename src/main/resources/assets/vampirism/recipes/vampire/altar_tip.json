@@ -1,14 +1,10 @@
 {
   "result": {
-    "nbt": {
-      "type": "normal"
-    },
-    "item": "vampirism:crossbow_arrow",
-    "count": 6
+    "item": "vampirism:altar_tip"
   },
   "pattern": [
-    "X",
-    "Y"
+    " X ",
+    "XYX"
   ],
   "type": "minecraft:crafting_shaped",
   "key": {
@@ -16,7 +12,8 @@
       "item": "#IRON"
     },
     "Y": {
-      "item": "minecraft:stick"
+      "type": "forge:ore_dict",
+      "ore": "minecraft:ironBlock"
     }
   }
 }

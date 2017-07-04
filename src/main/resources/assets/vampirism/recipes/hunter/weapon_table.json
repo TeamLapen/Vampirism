@@ -1,0 +1,23 @@
+{
+  "result": {
+    "item": "vampirism:weapon_table"
+  },
+  "pattern": [
+    "X  ",
+    "YYY",
+    " Z "
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "item": "minecraft:bucket"
+    },
+    "Y": {
+      "item": "#IRON"
+    },
+    "Z": {
+      "type": "forge:ore_dict",
+      "ore": "blockIron"
+    }
+  }
+}

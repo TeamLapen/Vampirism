@@ -20,15 +20,13 @@ import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.inventory.HunterWeaponCraftingManager;
 import de.teamlapen.vampirism.inventory.ShapedHunterWeaponRecipe;
 import de.teamlapen.vampirism.inventory.ShapelessHunterWeaponRecipe;
-import de.teamlapen.vampirism.modcompat.guide.pages.AlchemicalCauldronRecipePage;
-import de.teamlapen.vampirism.modcompat.guide.pages.PageHolderWithLinks;
-import de.teamlapen.vampirism.modcompat.guide.pages.ShapedWeaponTableRecipeRenderer;
-import de.teamlapen.vampirism.modcompat.guide.pages.ShapelessWeaponTableRecipeRenderer;
+import de.teamlapen.vampirism.modcompat.guide.pages.*;
 import joptsimple.internal.Strings;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.registry.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -89,10 +87,10 @@ public class GuideHelper {
     }
 
     public static IRecipe getRecipeForOutput(ItemStack stack) {
-        //TODO CRAFTING
-//        for (IRecipe recipe : CraftingManager.getInstance().getRecipeList()) {
-//            if (checkRecipeOutput(recipe, stack, true)) return recipe;
-//        }
+
+        for (IRecipe recipe : ForgeRegistries.RECIPES) {
+            if (checkRecipeOutput(recipe, stack, true)) return recipe;
+        }
 
         return null;
     }
@@ -121,6 +119,14 @@ public class GuideHelper {
     }
 
     private static boolean checkRecipeOutput(IRecipe recipe, ItemStack stack, boolean checkNBT) {
+        if (recipe != null) {
+            ItemStack resultStack = recipe.getRecipeOutput();
+            return checkOutput(resultStack, stack, checkNBT);
+        }
+        return false;
+    }
+
+    private static boolean checkRecipeOutput(IHunterWeaponRecipe recipe, ItemStack stack, boolean checkNBT) {
         if (recipe != null) {
             ItemStack resultStack = recipe.getRecipeOutput();
             return checkOutput(resultStack, stack, checkNBT);
@@ -159,7 +165,7 @@ public class GuideHelper {
                         renderer = new ShapelessWeaponTableRecipeRenderer((ShapelessHunterWeaponRecipe) r2);
                     }
                     checkNotNull(renderer);
-                    return new PageIRecipe(r2, renderer);
+                    return new PageRecipe<>(r2, renderer);
                 case ALCHEMICAL_CAULDRON:
                     IAlchemicalCauldronRecipe r3 = checkNotNull(getAlchemicalCauldronRecipeForOutput(stack));
                     return new AlchemicalCauldronRecipePage(r3);
@@ -192,7 +198,7 @@ public class GuideHelper {
         List<Object> craftable = new ArrayList<>();
         for (IItemWithTier.TIER t : IItemWithTier.TIER.values()) {
             craftable.add(ModItems.createStack(item, t));
-            craftable.add(RECIPE_TYPE.WEAPON_TABLE);
+            craftable.add(recipeType);
         }
         ItemInfoBuilder builder = new ItemInfoBuilder(ModItems.createStack(item, IItemWithTier.TIER.NORMAL), false);
         builder.craftableStacks(craftable).ignoreMissingRecipes();

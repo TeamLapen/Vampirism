@@ -6,17 +6,14 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
  * Shaped recipe for the hunter weapon table.
  */
-//TODO CRAFTING
-public abstract class ShapedHunterWeaponRecipe implements IHunterWeaponRecipe {
+public class ShapedHunterWeaponRecipe implements IHunterWeaponRecipe {
     public final int recipeWidth;
     public final int recipeHeight;
     public final ItemStack[] recipeItems;
@@ -40,43 +37,20 @@ public abstract class ShapedHunterWeaponRecipe implements IHunterWeaponRecipe {
     }
 
 
-    /**
-     * Returns an Item that is the result of this recipe
-     */
-    @Nullable
-    public ItemStack getCraftingResult(InventoryCrafting inv) {
-        ItemStack itemstack = this.getRecipeOutput().copy();
 
-        return itemstack;
-    }
 
     @Override
     public int getMinHunterLevel() {
         return requiredHunterLevel;
     }
 
-    @Nullable
+    @Nonnull
     public ItemStack getRecipeOutput() {
         return this.recipeOutput;
     }
 
-    /**
-     * Returns the size of the recipe area
-     */
-    public int getRecipeSize() {
-        return this.recipeWidth * this.recipeHeight;
-    }
 
-    public NonNullList<ItemStack> getRemainingItems(InventoryCrafting inv) {
-        NonNullList<ItemStack> nonnulllist = NonNullList.withSize(inv.getSizeInventory(), ItemStack.EMPTY);
 
-        for (int i = 0; i < nonnulllist.size(); ++i) {
-            ItemStack itemstack = inv.getStackInSlot(i);
-            nonnulllist.set(i, net.minecraftforge.common.ForgeHooks.getContainerItem(itemstack));
-        }
-
-        return nonnulllist;
-    }
 
     @Override
     public int getRequiredLavaUnits() {

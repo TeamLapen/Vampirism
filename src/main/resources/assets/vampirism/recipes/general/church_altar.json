@@ -1,16 +1,16 @@
 {
   "result": {
-    "item": "vampirism:stake"
+    "item": "vampirism:church_altar"
   },
   "pattern": [
-    "X",
-    "Y",
-    "X"
+    " X ",
+    "YYY",
+    " Y "
   ],
   "type": "minecraft:crafting_shaped",
   "key": {
     "X": {
-      "item": "minecraft:stick"
+      "item": "vampirism:vampire_book"
     },
     "Y": {
       "item": "#PLANKS"

@@ -12,5 +12,21 @@
       "type": "forge:ore_dict",
       "ore": "ingotIron"
     }
+  },
+  {
+    "name": "STONEBRICK",
+    "ingredient": {
+      "type": "minecraft:item",
+      "item": "minecraft:stonebrick",
+      "data": 0
+    }
+  },
+  {
+    "name": "STONE",
+    "ingredient": {
+      "type": "minecraft:item",
+      "item": "minecraft:stone",
+      "data": 0
+    }
   }
 ]
