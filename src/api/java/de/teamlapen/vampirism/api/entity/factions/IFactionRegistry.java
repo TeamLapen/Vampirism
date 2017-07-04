@@ -41,6 +41,7 @@ public interface IFactionRegistry {
      * @param ignoreDisguise If disguised players should still be counted for their actual faction (disguised vampires will still be detected as vampires)
      * @return
      */
+    @SuppressWarnings("Guava")
     Predicate<Entity> getPredicate(IFaction thisFaction, boolean ignoreDisguise);
 
     /**
@@ -55,6 +56,7 @@ public interface IFactionRegistry {
      * @param otherFaction   If this is not null, only entities of this faction are selected.
      * @return
      */
+    @SuppressWarnings("Guava")
     Predicate<Entity> getPredicate(IFaction thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, IFaction otherFaction);
 
     /**

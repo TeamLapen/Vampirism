@@ -23,7 +23,7 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class ClientProxy extends CommonProxy {
 
-    private ParticleHandler clientParticleHandler = new ParticleHandlerClient();
+    private final ParticleHandler clientParticleHandler = new ParticleHandlerClient();
 
     @Nonnull
     @Override

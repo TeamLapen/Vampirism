@@ -11,6 +11,8 @@ import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Packet that syncs selected config values
@@ -40,11 +42,8 @@ public class SyncConfigPacket implements IMessage {
         ByteBufUtils.writeTag(buf, nbt);
     }
 
+    @SideOnly(Side.CLIENT)
     private void applyConfig() {
-        if (!FMLCommonHandler.instance().getSide().isClient()) {
-            VampirismMod.log.e(null, "Trying to apply synced configs on server side");
-            return;
-        }
         Configs.readFromNBTClient(nbt);
         ((SundamageRegistry) VampirismAPI.sundamageRegistry()).readFromNBTClient(nbt);
     }
@@ -60,6 +59,10 @@ public class SyncConfigPacket implements IMessage {
         @Override
         public IMessage handleClientMessage(EntityPlayer player, SyncConfigPacket message, MessageContext ctx) {
             VampirismMod.log.d("SyncConfigPacket", "Received config packet");
+            if (!FMLCommonHandler.instance().getSide().isClient()) {
+                VampirismMod.log.e(null, "Trying to apply synced configs on server side");
+                return null;
+            }
             message.applyConfig();
             return null;
         }

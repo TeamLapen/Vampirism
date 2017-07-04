@@ -23,10 +23,10 @@ import java.util.Map;
 
 public class FactionRegistry implements IFactionRegistry {
     private final static String TAG = "FactionRegistry";
-    private List<Faction> temp = new ArrayList<Faction>();
+    private List<Faction> temp = new ArrayList<>();
     private Faction[] allFactions;
     private PlayableFaction[] playableFactions;
-    private Map<Integer, Predicate<Entity>> predicateMap = new HashMap<>();
+    private Map<Integer, Predicate<Entity>> predicateMap = new HashMap<Integer, Predicate<Entity>>();
 
     /**
      * Finishes registrations during post init.
@@ -35,9 +35,9 @@ public class FactionRegistry implements IFactionRegistry {
         allFactions = temp.toArray(new Faction[temp.size()]);
         temp = null;
         List<PlayableFaction> temp2 = new ArrayList<>();
-        for (int i = 0; i < allFactions.length; i++) {
-            if (allFactions[i] instanceof PlayableFaction) {
-                temp2.add((PlayableFaction) allFactions[i]);
+        for (Faction allFaction : allFactions) {
+            if (allFaction instanceof PlayableFaction) {
+                temp2.add((PlayableFaction) allFaction);
             }
         }
         playableFactions = temp2.toArray(new PlayableFaction[temp2.size()]);

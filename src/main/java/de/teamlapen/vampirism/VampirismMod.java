@@ -81,6 +81,13 @@ import java.io.File;
 public class VampirismMod {
 
     public final static Logger log = new Logger(REFERENCE.MODID, "de.teamlapen.vampirism");
+    public static final AbstractPacketDispatcher dispatcher = new ModPacketDispatcher();
+    public static final CreativeTabs creativeTab = new CreativeTabs(REFERENCE.MODID) {
+        @Override
+        public ItemStack getTabIconItem() {
+            return new ItemStack(ModItems.vampire_fang);
+        }
+    };
     /**
      * Hunter creatures are of this creature type.
      * Use the instance in {@link VReference} instead of this one.
@@ -100,27 +107,19 @@ public class VampirismMod {
      * This is only here to init it as early as possible
      */
     private static final EnumCreatureAttribute VAMPIRE_CREATURE_ATTRIBUTE = EnumHelper.addCreatureAttribute("VAMPIRISM_VAMPIRE");
-
     @Mod.Instance(value = REFERENCE.MODID)
     public static VampirismMod instance;
     @SidedProxy(clientSide = "de.teamlapen.vampirism.proxy.ClientProxy", serverSide = "de.teamlapen.vampirism.proxy.ServerProxy")
     public static IProxy proxy;
     public static boolean inDev = false;
-    public static AbstractPacketDispatcher dispatcher = new ModPacketDispatcher();
-    public static CreativeTabs creativeTab = new CreativeTabs(REFERENCE.MODID) {
-        @Override
-        public ItemStack getTabIconItem() {
-            return new ItemStack(ModItems.vampire_fang);
-        }
-    };
 
     public static boolean isRealism() {
         return Configs.realism_mode;
     }
 
     public final RegistryManager registryManager;
+    private final ModCompatLoader modCompatLoader = new ModCompatLoader(REFERENCE.MODID + "/vampirism_mod_compat.cfg");
     private VersionChecker.VersionInfo versionInfo;
-    private ModCompatLoader modCompatLoader = new ModCompatLoader(REFERENCE.MODID + "/vampirism_mod_compat.cfg");
 
     public VampirismMod() {
         addModCompats();

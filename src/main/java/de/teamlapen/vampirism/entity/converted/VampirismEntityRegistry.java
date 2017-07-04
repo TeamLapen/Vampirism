@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.converted;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
+import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
@@ -15,6 +16,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     /**
@@ -33,7 +35,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     /**
      * Stores custom extended creature constructors
      */
-    private final Map<Class<? extends EntityCreature>, IExtendedCreatureConstructor> extendedCreatureConstructors = new HashMap<>();
+    private final Map<Class<? extends EntityCreature>, Function> extendedCreatureConstructors = new HashMap<>();
     private final String TAG = "VampirismEntityRegistry";
     /**
      * Stores biteable entries after init
@@ -71,7 +73,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     }
 
     @Override
-    public <T extends EntityCreature> void addCustomExtendedCreature(Class<? extends T> clazz, IExtendedCreatureConstructor<T> constructor) {
+    public <T extends EntityCreature> void addCustomExtendedCreature(Class<? extends T> clazz, Function<T, IExtendedCreatureVampirism> constructor) {
         extendedCreatureConstructors.put(clazz, constructor);
     }
 
@@ -90,7 +92,6 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
 
     /**
      * Finished registration
-     *
      */
     public void finishRegistration() {
         if (finished) return;
@@ -132,10 +133,10 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         return convertibleOverlay;
     }
 
+    @SuppressWarnings("unchecked")
     @Nullable
     @Override
-    @SuppressWarnings("unchecked")
-    public <T extends EntityCreature> IExtendedCreatureConstructor<T> getCustomExtendedCreatureConstructor(T entity) {
+    public <T extends EntityCreature> Function<T, IExtendedCreatureVampirism> getCustomExtendedCreatureConstructor(T entity) {
         return extendedCreatureConstructors.get(entity.getClass());
     }
 

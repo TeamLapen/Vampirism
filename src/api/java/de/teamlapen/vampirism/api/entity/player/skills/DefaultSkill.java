@@ -32,7 +32,7 @@ public abstract class DefaultSkill<T extends ISkillPlayer> implements ISkill<T> 
     @Override
     public final void onDisable(T player) {
         removeAttributesModifiersFromEntity(player.getRepresentingPlayer());
-        player.getActionHandler().ununlockActions(getActions());
+        player.getActionHandler().relockActions(getActions());
         onDisabled(player);
     }
 

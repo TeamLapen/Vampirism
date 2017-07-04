@@ -165,12 +165,12 @@ public class GuideBook implements IGuideBook {
         String altarOfInfusion = "§l" + ModBlocks.altar_infusion.getLocalizedName() + "§r\n§o" + UtilLib.translate(base + "leveling.infusion.reach") + "§r\n";
         altarOfInfusion += UtilLib.translateFormatted(base + "leveling.infusion.intro", ModBlocks.altar_infusion.getLocalizedName(), ModBlocks.altar_pillar.getLocalizedName(), ModBlocks.altar_tip.getLocalizedName());
         levelingPages.addAll(GuideHelper.addLinks(GuideHelper.pagesForLongText(altarOfInfusion), new ResourceLocation("guide.vampirism.blocks.altar_infusion")));
-        String blocks = "";
+        StringBuilder blocks = new StringBuilder();
         for (BlockAltarPillar.EnumPillarType t : BlockAltarPillar.EnumPillarType.values()) {
             if (t == BlockAltarPillar.EnumPillarType.NONE) continue;
-            blocks += t.fillerBlock.getLocalizedName() + "(" + t.getValue() + "),";
+            blocks.append(t.fillerBlock.getLocalizedName()).append("(").append(t.getValue()).append("),");
         }
-        levelingPages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "leveling.infusion.structure", blocks)));
+        levelingPages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "leveling.infusion.structure", blocks.toString())));
         String items = UtilLib.translate(ModItems.human_heart.getUnlocalizedName() + ".name") + ", " + UtilLib.translate(ModItems.pure_blood.getUnlocalizedName() + ".name") + ", " + UtilLib.translate(ModItems.vampire_book.getUnlocalizedName() + ".name");
         levelingPages.addAll(GuideHelper.addLinks(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "leveling.infusion.items", items)), new ResourceLocation("guide.vampirism.items.human_heart"), new ResourceLocation("guide.vampirism.items.pure_blood"), new ResourceLocation("guide.vampirism.items.vampire_book")));
         PageTable.Builder requirementsBuilder = new PageTable.Builder(5);

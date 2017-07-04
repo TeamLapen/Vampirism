@@ -31,6 +31,7 @@ import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
@@ -47,7 +48,6 @@ public class UtilLib {
     public static boolean doesBlockHaveSolidTopSurface(World worldIn, BlockPos pos) {
         return worldIn.getBlockState(pos).isSideSolid(worldIn, pos, EnumFacing.UP);
     }
-
 
 
     @SideOnly(Side.CLIENT)
@@ -334,6 +334,15 @@ public class UtilLib {
     }
 
     /**
+     * Returns null, but makes it look like non null
+     */
+    @SuppressWarnings("ConstantConditions")
+    public static @Nonnull
+    <T> T getNull() {
+        return null;
+    }
+
+    /**
      * Stores the given pos with in the tagcompound using base.
      * Can be retrieved again with {@link UtilLib#readPos(NBTTagCompound, String)}
      *
@@ -380,12 +389,7 @@ public class UtilLib {
      * @return
      */
     public static Predicate getPredicateForClass(final Class clazz) {
-        return new Predicate() {
-            @Override
-            public boolean apply(Object input) {
-                return clazz.isInstance(input);
-            }
-        };
+        return clazz::isInstance;
     }
 
     /**

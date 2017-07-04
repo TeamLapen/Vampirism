@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.player.vampire;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
@@ -65,6 +63,9 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Predicate;
+
+import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 /**
  * Main class for Vampire Players.
@@ -72,7 +73,7 @@ import java.util.Objects;
 public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IVampirePlayer {
 
     @CapabilityInject(IVampirePlayer.class)
-    public static final Capability<IVampirePlayer> CAP = null;
+    public static final Capability<IVampirePlayer> CAP = getNull();
     private final static String TAG = "VampirePlayer";
 
     /**
@@ -90,7 +91,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public static ICapabilityProvider createNewCapability(final EntityPlayer player) {
         return new ICapabilitySerializable<NBTTagCompound>() {
 
-            IVampirePlayer inst = new VampirePlayer(player);
+            final IVampirePlayer inst = new VampirePlayer(player);
 
             @Override
             public void deserializeNBT(NBTTagCompound nbt) {
@@ -98,12 +99,12 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
 
             @Override
-            public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+            public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
                 return CAP.equals(capability) ? CAP.<T>cast(inst) : null;
             }
 
             @Override
-            public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+            public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
                 return CAP.equals(capability);
             }
 
@@ -139,7 +140,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         applyEntityAttributes();
         bloodStats = new BloodStats(player);
         actionHandler = new ActionHandler(this);
-        skillHandler = new SkillHandler<IVampirePlayer>(this);
+        skillHandler = new SkillHandler<>(this);
         garlic_cache = EnumStrength.NONE;
     }
 
@@ -314,9 +315,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     @Override
-    public Predicate<? super Entity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise) {
+    public Predicate<Entity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise) {
         if (otherFactionPlayers) {
-            return Predicates.alwaysTrue();
+            return entity -> true;
         } else {
             return VampirismAPI.factionRegistry().getPredicate(getFaction(), ignoreDisguise);
         }
@@ -1065,7 +1066,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         player.world.playSound(player.posX, player.posY, player.posZ, ModSounds.player_bite, SoundCategory.PLAYERS, 1.0F, 1.0F, false);
     }
 
-    private static class Storage implements net.minecraftforge.common.capabilities.Capability.IStorage<IVampirePlayer> {
+    private static class Storage implements Capability.IStorage<IVampirePlayer> {
         @Override
         public void readNBT(Capability<IVampirePlayer> capability, IVampirePlayer instance, EnumFacing side, NBTBase nbt) {
             ((VampirePlayer) instance).loadData((NBTTagCompound) nbt);

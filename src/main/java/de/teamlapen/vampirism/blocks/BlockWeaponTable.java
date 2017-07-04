@@ -44,7 +44,6 @@ public class BlockWeaponTable extends VampirismBlock {
     }
 
 
-
     @Override
     public BlockRenderLayer getBlockLayer() {
         return BlockRenderLayer.CUTOUT;

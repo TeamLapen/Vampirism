@@ -11,7 +11,6 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -29,7 +28,7 @@ public class PotionSanguinare extends VampirismPotion {
         int duration = (int) ((entity.getRNG().nextFloat() + 0.5F) * avgDuration);
         PotionEffect effect = new PotionSanguinareEffect(ModPotions.sanguinare, duration);
         if (!Balance.general.CAN_CANCEL_SANGUINARE) {
-            effect.setCurativeItems(new ArrayList<ItemStack>());
+            effect.setCurativeItems(new ArrayList<>());
         }
         entity.addPotionEffect(effect);
 

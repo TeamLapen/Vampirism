@@ -6,6 +6,8 @@ import de.teamlapen.vampirism.api.entity.player.skills.DefaultSkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
  * Extension of {@link DefaultSkill} with vampirism default unloc names/descriptions
@@ -14,6 +16,7 @@ public abstract class VampirismSkill<T extends ISkillPlayer> extends DefaultSkil
     private String description = null;
 
 
+    @SideOnly(Side.CLIENT)
     @Override
     public ResourceLocation getIconLoc() {
         return null;

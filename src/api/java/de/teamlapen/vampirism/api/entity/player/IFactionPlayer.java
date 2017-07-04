@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.api.entity.player;
 
-import com.google.common.base.Predicate;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
@@ -10,6 +9,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 
 import javax.annotation.Nullable;
+import java.util.function.Predicate;
 
 /**
  * Basic interface for all of Vampirism's player types (VampirePlayer, HunterPlayer, ...)
@@ -61,7 +61,7 @@ public interface IFactionPlayer<T extends IFactionPlayer> extends IFactionEntity
      * @param ignoreDisguise      If disguised players should still be counted for their actual faction
      * @return A predicate that selects all non friendly entities
      */
-    Predicate<? super Entity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise);
+    Predicate<Entity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise);
 
     EntityPlayer getRepresentingPlayer();
 

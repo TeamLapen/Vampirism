@@ -13,7 +13,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import javax.annotation.Nonnull;
+import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 /**
  * Handles all potion registrations and reference.
@@ -29,11 +29,6 @@ public class ModPotions {
     public static final Potion fire_protection = getNull();
     public static final Potion garlic = getNull();
 
-    @SuppressWarnings("ConstantConditions")
-    private static @Nonnull
-    <T> T getNull() {
-        return null;
-    }
 
     static void registerPotions(IForgeRegistry<Potion> registry) {
         registry.register(new PotionThirst("thirst", true, 859494));

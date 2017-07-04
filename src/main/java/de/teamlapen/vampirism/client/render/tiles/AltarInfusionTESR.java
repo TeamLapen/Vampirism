@@ -41,8 +41,8 @@ public class AltarInfusionTESR extends VampirismTESR<TileAltarInfusion> {
             double cZ = te.getPos().getZ() + 0.5;
             try {
                 BlockPos[] tips = te.getTips();
-                for (int i = 0; i < tips.length; i++) {
-                    this.renderBeam(x, y, z, cX, cY, cZ, tips[i].getX() + 0.5, tips[i].getY() + 0.5, tips[i].getZ() + 0.5, te.getRunningTick() + partialTicks, false);
+                for (BlockPos tip : tips) {
+                    this.renderBeam(x, y, z, cX, cY, cZ, tip.getX() + 0.5, tip.getY() + 0.5, tip.getZ() + 0.5, te.getRunningTick() + partialTicks, false);
                 }
                 if (phase == TileAltarInfusion.PHASE.BEAM2) {
                     EntityPlayer p = te.getPlayer();
@@ -50,7 +50,7 @@ public class AltarInfusionTESR extends VampirismTESR<TileAltarInfusion> {
                         double rX = 0, rZ = 0;
                         double rY = -0.3;
                         double playerY = p.posY;
-                        /**
+                        /*
                          * Work around for other players seeing the ritual
                          */
                         if (!p.equals(Minecraft.getMinecraft().player)) {

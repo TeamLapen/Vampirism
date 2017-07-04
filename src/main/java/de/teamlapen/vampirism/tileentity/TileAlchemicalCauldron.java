@@ -125,23 +125,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     private UUID ownerID;
 
     public TileAlchemicalCauldron() {
-        super(new InventorySlot[]{new InventorySlot(new InventorySlot.IItemSelector() {
-            @Override
-            public boolean isItemAllowed(@Nonnull ItemStack item) {
-                return false;
-            }
-        }, 116, 35), new InventorySlot(new InventorySlot.IItemSelector() {
-
-            @Override
-            public boolean isItemAllowed(@Nonnull ItemStack item) {
-                return isLiquidStack(item);
-            }
-        }, 44, 17), new InventorySlot(68, 17), new InventorySlot(new InventorySlot.IItemSelector() {
-            @Override
-            public boolean isItemAllowed(@Nonnull ItemStack item) {
-                return TileEntityFurnace.isItemFuel(item);
-            }
-        }, 56, 53)});
+        super(new InventorySlot[]{new InventorySlot(item -> false, 116, 35), new InventorySlot(TileAlchemicalCauldron::isLiquidStack, 44, 17), new InventorySlot(68, 17), new InventorySlot(TileEntityFurnace::isItemFuel, 56, 53)});
     }
 
     @Override

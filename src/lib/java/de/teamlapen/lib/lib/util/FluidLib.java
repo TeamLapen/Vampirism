@@ -14,7 +14,6 @@ import javax.annotation.Nullable;
 public class FluidLib {
 
 
-
     /**
      * Checks if either both stacks are null or if they are equal. DOES NOT CHECK AMOUNTS
      *

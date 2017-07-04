@@ -6,7 +6,6 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
-import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
@@ -28,6 +27,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.*;
 
 import javax.annotation.Nullable;
+import java.util.function.Function;
 
 /**
  * Extended entity property which every {@link EntityCreature} has
@@ -52,8 +52,8 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     public static <Q extends EntityCreature> ICapabilityProvider createNewCapability(final Q creature) {
         return new ICapabilitySerializable<NBTTagCompound>() {
 
-            IVampirismEntityRegistry.IExtendedCreatureConstructor<Q> constructor = VampirismAPI.biteableRegistry().getCustomExtendedCreatureConstructor(creature);
-            IExtendedCreatureVampirism inst = constructor == null ? new ExtendedCreature(creature) : constructor.create(creature);
+            Function<Q, IExtendedCreatureVampirism> constructor = VampirismAPI.biteableRegistry().getCustomExtendedCreatureConstructor(creature);
+            IExtendedCreatureVampirism inst = constructor == null ? new ExtendedCreature(creature) : constructor.apply(creature);
 
 
             @Override

@@ -19,14 +19,7 @@ public class InventorySlot {
     public ItemStack stack = ItemStackUtil.getEmptyStack();
 
     public InventorySlot(final Class<? extends Item> cls, int xDisplay, int yDisplay) {
-        this(new IItemSelector() {
-
-            @Override
-            public boolean isItemAllowed(@Nonnull ItemStack item) {
-                return cls.isInstance(item.getItem());
-            }
-
-        }, xDisplay, yDisplay);
+        this(item -> cls.isInstance(item.getItem()), xDisplay, yDisplay);
     }
 
     public InventorySlot(IItemSelector selector, int xDisplay, int yDisplay) {
@@ -40,13 +33,7 @@ public class InventorySlot {
     }
 
     public InventorySlot(final Item item, int xDisplay, int yDisplay) {
-        this(new IItemSelector() {
-            @Override
-            public boolean isItemAllowed(@Nonnull ItemStack stack) {
-                return item.equals(stack.getItem());
-            }
-
-        }, xDisplay, yDisplay);
+        this(stack -> item.equals(stack.getItem()), xDisplay, yDisplay);
     }
 
     public interface IItemSelector {

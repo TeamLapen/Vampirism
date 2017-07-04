@@ -18,7 +18,7 @@ import java.util.List;
 
 public class CommonProxy implements IProxy {
 
-    ParticleHandler serverParticleHandler = new ParticleHandlerServer();//Not required on client side, but since on an integrated server only client proxy exist we need it here
+    final ParticleHandler serverParticleHandler = new ParticleHandlerServer();//Not required on client side, but since on an integrated server only client proxy exist we need it here
 
     @Nonnull
     @Override

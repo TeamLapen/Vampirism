@@ -33,9 +33,7 @@ public class AlchemicalCauldronContainer extends InventoryContainer {
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
 
-        for (int i = 0; i < this.listeners.size(); ++i) {
-            IContainerListener icontainerlistener = this.listeners.get(i);
-
+        for (IContainerListener icontainerlistener : this.listeners) {
             if (this.cookTime != this.tile.getField(2)) {
                 icontainerlistener.sendWindowProperty(this, 2, this.tile.getField(2));
             }

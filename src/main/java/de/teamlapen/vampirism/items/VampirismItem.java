@@ -60,7 +60,7 @@ public class VampirismItem extends Item {
      */
     @Override
     public final void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if(isInCreativeTab(tab)){
+        if (isInCreativeTab(tab)) {
             this.getSubItems(this, tab, items);
         }
     }

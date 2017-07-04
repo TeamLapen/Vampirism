@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.potion;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.PotionEffect;
 
@@ -15,7 +14,7 @@ public class VampireNightVisionEffect extends PotionEffect {
 
     public VampireNightVisionEffect() {
         super(MobEffects.NIGHT_VISION, 10000, 0, false, false);
-        setCurativeItems(new ArrayList<ItemStack>());
+        setCurativeItems(new ArrayList<>());
     }
 
     @Override

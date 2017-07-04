@@ -77,8 +77,8 @@ public class VampireBookManager {
 
         ArrayList<NBTTagCompound> books = new ArrayList<>();
         String[] lines = data.split("\n");
-        for (int i = 0; i < lines.length; i++) {
-            NBTTagCompound nbt = JsonToNBT.getTagFromJson(lines[i]);
+        for (String line : lines) {
+            NBTTagCompound nbt = JsonToNBT.getTagFromJson(line);
             books.add(nbt);
         }
         bookTags = books.toArray(new NBTTagCompound[books.size()]);

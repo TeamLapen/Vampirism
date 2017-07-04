@@ -35,10 +35,8 @@ public class SkillRegistry implements ISkillRegistry {
      * @param faction
      * @param list
      */
-    public void addSkills(IPlayableFaction faction, List list) {
-        for (String s : skillMap.get(faction).keySet()) {
-            list.add(s);
-        }
+    public void addSkills(IPlayableFaction faction, List<String> list) {
+        list.addAll(skillMap.get(faction).keySet());
     }
 
 //    /**
@@ -102,7 +100,7 @@ public class SkillRegistry implements ISkillRegistry {
                 rootNodes.put(faction, rootNode);
             }
             if (!skillMap.containsKey(faction)) {
-                skillMap.put(faction, HashBiMap.<String, ISkill>create());
+                skillMap.put(faction, HashBiMap.create());
             }
             if (FMLCommonHandler.instance().getSide().isClient()) {
                 skillNodeSizeMap.put(faction, createDisplayInfo(rootNode));
@@ -154,11 +152,7 @@ public class SkillRegistry implements ISkillRegistry {
 
     @Override
     public void registerNode(SkillNode node) {
-        BiMap<String, ISkill> map = skillMap.get(node.getFaction());
-        if (map == null) {
-            map = HashBiMap.create();
-            skillMap.put(node.getFaction(), map);
-        }
+        BiMap<String, ISkill> map = skillMap.computeIfAbsent(node.getFaction(), k -> HashBiMap.create());
         ISkill[] skills = node.getElements();
         for (ISkill skill : skills) {
             if (map.put(skill.getID(), skill) != null) {

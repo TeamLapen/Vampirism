@@ -44,6 +44,13 @@ public interface IActionHandler<T extends IActionPlayer> {
     boolean isActionUnlocked(IAction action);
 
     /**
+     * Locks the given actions again
+     *
+     * @param actions
+     */
+    void relockActions(Collection<IAction<T>> actions);
+
+    /**
      * Set all timers to 0
      */
     void resetTimers();
@@ -62,11 +69,4 @@ public interface IActionHandler<T extends IActionPlayer> {
      * @param actions
      */
     void unlockActions(Collection<IAction<T>> actions);
-
-    /**
-     * Locks the given actions again
-     *
-     * @param actions
-     */
-    void ununlockActions(Collection<IAction<T>> actions);
 }

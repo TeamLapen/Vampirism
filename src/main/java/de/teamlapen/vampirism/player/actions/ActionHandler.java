@@ -127,7 +127,6 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
      */
     public void loadFromNbt(NBTTagCompound nbt) {
         NBTTagCompound actions = nbt.getCompoundTag("actions");
-        if (actions != null) {
             for (String key : actions.getKeySet()) {
                 IAction action = VampirismAPI.actionRegistry().getActionFromKey(player.getFaction(), key);
                 if (action == null) {
@@ -136,7 +135,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
                     actionTimer[getIdFromAction(action)] = actions.getInteger(key);
                 }
             }
-        }
+
     }
 
     /**
@@ -170,6 +169,16 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
                     ((ILastingAction) getActionFromId(i)).onDeactivated(player);//Called here if the skill is deactivated
                 }
 
+            }
+        }
+    }
+
+    @Override
+    public void relockActions(Collection<IAction<T>> actions) {
+        unlockedActions.removeAll(actions);
+        for (IAction action : actions) {
+            if (action instanceof ILastingAction && isActionActive((ILastingAction) action)) {
+                toggleAction(action);
             }
         }
     }
@@ -237,16 +246,6 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     @Override
     public void unlockActions(Collection<IAction<T>> actions) {
         unlockedActions.addAll(actions);
-    }
-
-    @Override
-    public void ununlockActions(Collection<IAction<T>> actions) {
-        unlockedActions.removeAll(actions);
-        for (IAction action : actions) {
-            if (action instanceof ILastingAction && isActionActive((ILastingAction) action)) {
-                toggleAction(action);
-            }
-        }
     }
 
     /**

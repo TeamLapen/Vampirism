@@ -233,10 +233,7 @@ public class VersionChecker implements Runnable {
                     type = TYPE.TEST;
                 }
                 return new Version(name, main, major, minor, type, extra);
-            } catch (NumberFormatException e) {
-                VampLib.log.e(TAG, e, "Failed to parse version %s", name);
-                return null;
-            } catch (StringIndexOutOfBoundsException e) {
+            } catch (NumberFormatException | StringIndexOutOfBoundsException e) {
                 VampLib.log.e(TAG, e, "Failed to parse version %s", name);
                 return null;
             }

@@ -25,12 +25,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
 
+import static de.teamlapen.lib.lib.util.UtilLib.getNull;
+
 /**
  * Extended entity property that handles factions and levels for the player
  */
 public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapabilityInst, IFactionPlayerHandler {
     @CapabilityInject(IFactionPlayerHandler.class)
-    public final static Capability<IFactionPlayerHandler> CAP = null;
+    public final static Capability<IFactionPlayerHandler> CAP = getNull();
     private final static String TAG = "FactionPlayerHandler";
 
     public static FactionPlayerHandler get(EntityPlayer player) {
@@ -46,7 +48,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     public static ICapabilityProvider createNewCapability(final EntityPlayer player) {
         return new ICapabilitySerializable<NBTTagCompound>() {
 
-            IFactionPlayerHandler inst = new FactionPlayerHandler(player);
+            final IFactionPlayerHandler inst = new FactionPlayerHandler(player);
 
             @Override
             public void deserializeNBT(NBTTagCompound nbt) {
@@ -54,13 +56,13 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             }
 
             @Override
-            public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+            public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
 
                 return CAP.equals(capability) ? CAP.<T>cast(inst) : null;
             }
 
             @Override
-            public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+            public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
                 return CAP.equals(capability);
             }
 
@@ -91,8 +93,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
 
     @Override
     public boolean canLeaveFaction() {
-        if (currentFaction == null) return true;
-        return currentFaction.getPlayerCapability(player).canLeaveFaction();
+        return currentFaction == null || currentFaction.getPlayerCapability(player).canLeaveFaction();
     }
 
     public void copyFrom(EntityPlayer old) {

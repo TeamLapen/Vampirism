@@ -20,9 +20,8 @@ public interface IAction<T extends IActionPlayer> {
     int getCooldown();
 
     /**
-     * Return the faction, which players can use this action
-     *
-     * @return
+
+     * @return the faction, which players can use this action
      */
     IPlayableFaction<? extends IActionPlayer> getFaction();
 
@@ -36,17 +35,15 @@ public interface IAction<T extends IActionPlayer> {
     ResourceLocation getIconLoc();
 
     /**
-     * Should return the min U texture coordinate within the icon map
-     *
-     * @return
+
+     * @return the min U texture coordinate within the icon map
      */
     @SideOnly(Side.CLIENT)
     int getMinU();
 
     /**
-     * Should return the min V texture coordinate within the icon map
-     *
-     * @return
+
+     * @return the min V texture coordinate within the icon map
      */
     @SideOnly(Side.CLIENT)
     int getMinV();

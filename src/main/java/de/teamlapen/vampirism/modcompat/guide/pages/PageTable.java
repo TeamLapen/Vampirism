@@ -91,7 +91,7 @@ public class PageTable extends Page {
 
         public Builder(int columns) {
             this.columns = columns;
-            lines = new ArrayList<String[]>();
+            lines = new ArrayList<>();
         }
 
         public Builder addLine(Object... objects) {

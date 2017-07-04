@@ -71,7 +71,6 @@ public abstract class VampirismBlockContainer extends BlockContainer {
 
     /**
      * For compat with 1.11 and below
-
      */
     @SideOnly(Side.CLIENT)
     protected void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
@@ -80,7 +79,6 @@ public abstract class VampirismBlockContainer extends BlockContainer {
 
     /**
      * For compat with 1.11 and below
-     *
      */
     protected void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         subItems.add(new ItemStack(this));

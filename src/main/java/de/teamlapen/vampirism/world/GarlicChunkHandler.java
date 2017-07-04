@@ -93,12 +93,7 @@ public class GarlicChunkHandler implements IGarlicChunkHandler {
         @Nonnull
         @Override
         public IGarlicChunkHandler getHandler(World world) {
-            IGarlicChunkHandler handler = handlers.get(world.provider.getDimension());
-            if (handler == null) {
-                handler = new GarlicChunkHandler();
-                handlers.put(world.provider.getDimension(), handler);
-            }
-            return handler;
+            return handlers.computeIfAbsent(world.provider.getDimension(), k -> new GarlicChunkHandler());
         }
     }
 

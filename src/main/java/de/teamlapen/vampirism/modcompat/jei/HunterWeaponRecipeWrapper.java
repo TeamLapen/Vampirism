@@ -47,12 +47,12 @@ public abstract class HunterWeaponRecipeWrapper extends BlankRecipeWrapper {
             y += minecraft.fontRenderer.FONT_HEIGHT + 2;
         }
         if (recipe.getRequiredSkills().length > 0) {
-            String skills = "";
+            StringBuilder skills = new StringBuilder();
             for (ISkill<IHunterPlayer> skill : recipe.getRequiredSkills()) {
-                skills += UtilLib.translate(skill.getUnlocalizedName()) + " ";
+                skills.append(UtilLib.translate(skill.getUnlocalizedName())).append(" ");
 
             }
-            String skillText = UtilLib.translateFormatted("gui.vampirism.hunter_weapon_table.skill", skills);
+            String skillText = UtilLib.translateFormatted("gui.vampirism.hunter_weapon_table.skill", skills.toString());
             minecraft.fontRenderer.drawSplitString(skillText, x, y, 132, Color.gray.getRGB());
 
 

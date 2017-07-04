@@ -32,9 +32,9 @@ import java.util.Random;
  * @param <T>
  */
 public abstract class BasicWeaponTableRecipeRenderer<T extends IHunterWeaponRecipe> extends IRecipeRenderer.RecipeRendererBase<T> {
+    private final Random rand = new Random();
     private long lastCycle = -1;
     private int cycleIdx = 0;
-    private Random rand = new Random();
 
     public BasicWeaponTableRecipeRenderer(T recipe) {
         super(recipe);
@@ -65,7 +65,7 @@ public abstract class BasicWeaponTableRecipeRenderer<T extends IHunterWeaponReci
 
         if (!ItemStackUtil.isEmpty(stack) && stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
             NonNullList<ItemStack> subItems = NonNullList.create();
-            stack.getItem().getSubItems( stack.getItem().getCreativeTab(), subItems);
+            stack.getItem().getSubItems(stack.getItem().getCreativeTab(), subItems);
             stack = subItems.get(getRandomizedCycle(0, subItems.size()));
         }
 
@@ -85,12 +85,12 @@ public abstract class BasicWeaponTableRecipeRenderer<T extends IHunterWeaponReci
             y += fontRendererObj.FONT_HEIGHT + 2;
         }
         if (recipe.getRequiredSkills().length > 0) {
-            String skills = "";
+            StringBuilder skills = new StringBuilder();
             for (ISkill<IHunterPlayer> skill : recipe.getRequiredSkills()) {
-                skills += "\n§o" + UtilLib.translate(skill.getUnlocalizedName()) + "§r ";
+                skills.append("\n§o").append(UtilLib.translate(skill.getUnlocalizedName())).append("§r ");
 
             }
-            String skillText = UtilLib.translateFormatted("gui.vampirism.hunter_weapon_table.skill", skills);
+            String skillText = UtilLib.translateFormatted("gui.vampirism.hunter_weapon_table.skill", skills.toString());
             guiBase.drawSplitString(skillText, guiLeft + 40, y, 110, Color.gray.getRGB());
         }
     }
@@ -105,7 +105,7 @@ public abstract class BasicWeaponTableRecipeRenderer<T extends IHunterWeaponReci
         if (!ItemStackUtil.isEmpty(stack)) {
             if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
                 NonNullList<ItemStack> subItems = NonNullList.create();
-                stack.getItem().getSubItems( stack.getItem().getCreativeTab(), subItems);
+                stack.getItem().getSubItems(stack.getItem().getCreativeTab(), subItems);
                 stack = subItems.get(getRandomizedCycle(index, subItems.size()));
             }
             GuiHelper.drawItemStack(stack, stackX, stackY);

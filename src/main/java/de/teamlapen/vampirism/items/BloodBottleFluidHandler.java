@@ -36,6 +36,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
     public static int getAdjustedAmount(int amt) {
         return amt - amt % MULTIPLIER;
     }
+
     private final int capacity;
     @Nonnull
     protected ItemStack container;

@@ -32,10 +32,10 @@ import java.util.Random;
  */
 public class AlchemicalCauldronRecipePage extends Page {
     protected final IAlchemicalCauldronRecipe recipe;
+    private final Random rand = new Random();
     protected List<String> tooltips = Lists.newArrayList();
     private long lastCycle = -1;
     private int cycleIdx = 0;
-    private Random rand = new Random();
 
     public AlchemicalCauldronRecipePage(IAlchemicalCauldronRecipe recipe) {
         this.recipe = recipe;
@@ -70,7 +70,7 @@ public class AlchemicalCauldronRecipePage extends Page {
 
         if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
             NonNullList<ItemStack> subItems = NonNullList.create();
-            stack.getItem().getSubItems( stack.getItem().getCreativeTab(), subItems);
+            stack.getItem().getSubItems(stack.getItem().getCreativeTab(), subItems);
             stack = subItems.get(getRandomizedCycle(0, subItems.size()));
         }
 
@@ -84,7 +84,7 @@ public class AlchemicalCauldronRecipePage extends Page {
         if (!ItemStackUtil.isEmpty(input)) {
             if (input.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
                 NonNullList<ItemStack> subItems = NonNullList.create();
-                input.getItem().getSubItems( input.getItem().getCreativeTab(), subItems);
+                input.getItem().getSubItems(input.getItem().getCreativeTab(), subItems);
                 input = subItems.get(getRandomizedCycle(0, subItems.size()));
             }
             GuiHelper.drawItemStack(input, in2X, in2Y);
@@ -98,7 +98,7 @@ public class AlchemicalCauldronRecipePage extends Page {
 
         if (!ItemStackUtil.isEmpty(liquid) && liquid.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
             NonNullList<ItemStack> subItems = NonNullList.create();
-            liquid.getItem().getSubItems( liquid.getItem().getCreativeTab(), subItems);
+            liquid.getItem().getSubItems(liquid.getItem().getCreativeTab(), subItems);
             liquid = subItems.get(getRandomizedCycle(0, subItems.size()));
         }
 
@@ -115,12 +115,12 @@ public class AlchemicalCauldronRecipePage extends Page {
             y += fontRendererObj.FONT_HEIGHT + 2;
         }
         if (recipe.getRequiredSkills().length > 0) {
-            String skills = "";
+            StringBuilder skills = new StringBuilder();
             for (ISkill<IHunterPlayer> skill : recipe.getRequiredSkills()) {
-                skills += "\n§o" + UtilLib.translate(skill.getUnlocalizedName()) + "§r ";
+                skills.append("\n§o").append(UtilLib.translate(skill.getUnlocalizedName())).append("§r ");
 
             }
-            String skillText = UtilLib.translateFormatted("gui.vampirism.hunter_weapon_table.skill", skills);
+            String skillText = UtilLib.translateFormatted("gui.vampirism.hunter_weapon_table.skill", skills.toString());
             guiBase.drawSplitString(skillText, guiLeft + 50, y, 100, Color.gray.getRGB());
         }
     }

@@ -10,6 +10,7 @@ import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
 import java.io.*;
@@ -203,7 +204,7 @@ public class Configs {
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.startsWith("#")) continue;
-                if (line.isEmpty()) continue;
+                if (StringUtils.isBlank(line)) continue;
                 String[] p = line.split("=");
                 if (p.length != 2) {
                     VampirismMod.log.w("ReadBlood", "Line %s  in %s is not formatted properly", line, file);

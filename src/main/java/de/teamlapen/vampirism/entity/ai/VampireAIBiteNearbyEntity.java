@@ -10,8 +10,6 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class VampireAIBiteNearbyEntity extends EntityAIBase {
@@ -44,12 +42,7 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
             if (list.size() > 1) {
 
                 try {
-                    Collections.sort(list, new Comparator() {
-                        @Override
-                        public int compare(Object o1, Object o2) {
-                            return vampireEntity.getDistanceSqToEntity((Entity) o1) > vampireEntity.getDistanceSqToEntity((Entity) o2) ? 1 : -1;
-                        }
-                    });
+                    list.sort((o1, o2) -> vampireEntity.getDistanceSqToEntity((Entity) o1) > vampireEntity.getDistanceSqToEntity((Entity) o2) ? 1 : -1);
                 } catch (Exception e) {
                     //TODO investigate issue
                     //java.lang.IllegalArgumentException: Comparison method violates its general contract!

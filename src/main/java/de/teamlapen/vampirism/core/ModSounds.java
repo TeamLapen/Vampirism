@@ -5,7 +5,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import javax.annotation.Nonnull;
+import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 /**
  * Handle all sound related stuff
@@ -19,11 +19,6 @@ public class ModSounds {
     public static final SoundEvent bat_swarm = getNull();
     public static final SoundEvent boiling = getNull();
 
-    @SuppressWarnings("ConstantConditions")
-    private static @Nonnull
-    <T> T getNull() {
-        return null;
-    }
 
     static void registerSounds(IForgeRegistry<SoundEvent> registry) {
         registry.register(create("entity.vampire.scream"));

@@ -38,19 +38,19 @@ public class EntityAIAttackMeleeNoSun extends EntityAIAttackMelee {
             if (avoidSun) {
 
                 Path path = this.entityPathEntity;
-                    if (attacker.getEntityWorld().canSeeSky(new BlockPos(MathHelper.floor(this.attacker.posX), (int) (this.attacker.getEntityBoundingBox().minY + 0.5D), MathHelper.floor(this.attacker.posZ)))) {
-                        return false;
+                if (attacker.getEntityWorld().canSeeSky(new BlockPos(MathHelper.floor(this.attacker.posX), (int) (this.attacker.getEntityBoundingBox().minY + 0.5D), MathHelper.floor(this.attacker.posZ)))) {
+                    return false;
+                }
+
+                for (int j = 0; j < path.getCurrentPathLength(); ++j) {
+                    PathPoint pathpoint2 = path.getPathPointFromIndex(j);
+
+                    if (this.attacker.getEntityWorld().canSeeSky(new BlockPos(pathpoint2.x, pathpoint2.y, pathpoint2.z))) {
+                        path.setCurrentPathLength(j - 1);
+                        return path.getCurrentPathLength() > 1;
                     }
 
-                    for (int j = 0; j < path.getCurrentPathLength(); ++j) {
-                        PathPoint pathpoint2 = path.getPathPointFromIndex(j);
-
-                        if (this.attacker.getEntityWorld().canSeeSky(new BlockPos(pathpoint2.x, pathpoint2.y, pathpoint2.z))) {
-                            path.setCurrentPathLength(j - 1);
-                            return path.getCurrentPathLength() > 1;
-                        }
-
-                    }
+                }
 
             }
 

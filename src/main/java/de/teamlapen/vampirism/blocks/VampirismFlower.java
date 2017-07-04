@@ -51,7 +51,7 @@ public class VampirismFlower extends BlockBush implements ItemMetaBlock.IMetaIte
     }
 
     @Override
-    public void getSubBlocks( CreativeTabs tab, NonNullList<ItemStack> list) {
+    public void getSubBlocks(CreativeTabs tab, NonNullList<ItemStack> list) {
         for (EnumFlowerType type : EnumFlowerType.values()) {
             list.add(new ItemStack(this, 1, type.getMeta()));
         }

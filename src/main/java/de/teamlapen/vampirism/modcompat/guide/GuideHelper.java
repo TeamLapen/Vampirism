@@ -48,11 +48,11 @@ public class GuideHelper {
      * @param unlocalized Unlocalized strings
      */
     public static String append(String... unlocalized) {
-        String s = "";
+        StringBuilder s = new StringBuilder();
         for (String u : unlocalized) {
-            s += UtilLib.translate(u) + "\n\n";
+            s.append(UtilLib.translate(u)).append("\n\n");
         }
-        return s;
+        return s.toString();
     }
 
     /**

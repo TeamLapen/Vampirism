@@ -38,16 +38,16 @@ public class EntityConvertedSheep extends EntityConvertedCreature<EntitySheep> i
 
 
     public boolean getSheared() {
-        return ((this.dataManager.get(COAT)).byteValue() & 16) != 0;
+        return (this.dataManager.get(COAT) & 16) != 0;
     }
 
     public void setSheared(boolean sheared) {
-        byte b0 = this.dataManager.get(COAT).byteValue();
+        byte b0 = this.dataManager.get(COAT);
 
         if (sheared) {
-            this.dataManager.set(COAT, Byte.valueOf((byte) (b0 | 16)));
+            this.dataManager.set(COAT, (byte) (b0 | 16));
         } else {
-            this.dataManager.set(COAT, Byte.valueOf((byte) (b0 & -17)));
+            this.dataManager.set(COAT, (byte) (b0 & -17));
         }
     }
 
@@ -60,7 +60,7 @@ public class EntityConvertedSheep extends EntityConvertedCreature<EntitySheep> i
     public void onEntityUpdate() {
         super.onEntityUpdate();
         boolean t = getSheared();
-        if (!nil() && (lastSheared == null || lastSheared.booleanValue() != t)) {
+        if (!nil() && (lastSheared == null || lastSheared != t)) {
             lastSheared = t;
             getOldCreature().setSheared(lastSheared);
 
@@ -73,7 +73,7 @@ public class EntityConvertedSheep extends EntityConvertedCreature<EntitySheep> i
         this.setSheared(true);
         int i = 1 + this.rand.nextInt(3);
 
-        java.util.List<ItemStack> ret = new java.util.ArrayList<ItemStack>();
+        java.util.List<ItemStack> ret = new java.util.ArrayList<>();
         for (int j = 0; j < i; ++j)
             ret.add(new ItemStack(Item.getItemFromBlock(Blocks.WOOL), 1, this.getFleeceColor().getMetadata()));
 
@@ -97,7 +97,7 @@ public class EntityConvertedSheep extends EntityConvertedCreature<EntitySheep> i
     protected void entityInit() {
         super.entityInit();
 
-        this.dataManager.register(COAT, Byte.valueOf((byte) 0));
+        this.dataManager.register(COAT, (byte) 0);
     }
 
     public static class ConvertingHandler extends DefaultConvertingHandler<EntitySheep> {

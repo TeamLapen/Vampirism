@@ -80,7 +80,6 @@ public class SupporterManager {
             } else {
                 VampirismMod.log.e(TAG, e, "Failed to retrieve supporters from url");
             }
-        } finally {
         }
         if (supporters == null || VampirismMod.inDev) {
             try {

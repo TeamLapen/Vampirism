@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.vampire;
 
-import com.google.common.base.Predicate;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
@@ -39,7 +38,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
@@ -303,23 +301,13 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         super.initEntityAI();
         this.tasks.addTask(4, new VampireAIFleeGarlic(this, 0.9F, false));
         this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.0F, false));
-        this.tasks.addTask(6, new EntityAIAvoidEntity<>(this, EntityPlayer.class, new Predicate<EntityPlayer>() {
-            @Override
-            public boolean apply(@Nullable EntityPlayer input) {
-                return input != null && !isLowerLevel(input);
-            }
-        }, 6.0F, 0.6, 0.7F));//TODO Works only partially. Pathfinding somehow does not find escape routes
+        this.tasks.addTask(6, new EntityAIAvoidEntity<>(this, EntityPlayer.class, input -> input != null && !isLowerLevel(input), 6.0F, 0.6, 0.7F));//TODO Works only partially. Pathfinding somehow does not find escape routes
         this.tasks.addTask(7, new EntityAIWander(this, 0.2));
         this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
         this.tasks.addTask(10, new EntityAILookIdle(this));
 
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
-        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 10, true, false, new Predicate<EntityPlayer>() {
-            @Override
-            public boolean apply(@Nullable EntityPlayer input) {
-                return input != null && isLowerLevel(input);
-            }
-        }));
+        this.targetTasks.addTask(2, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 10, true, false, input -> input != null && isLowerLevel(input)));
         this.targetTasks.addTask(3, new EntityAINearestAttackableTarget<>(this, EntityVampireBaron.class, true, false));
     }
 

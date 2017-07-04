@@ -5,6 +5,8 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.Collection;
 
@@ -26,6 +28,7 @@ public class ActionSkill<T extends ISkillPlayer> extends VampirismSkill<T> {
         return id;
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public ResourceLocation getIconLoc() {
         return action.getIconLoc() == null ? defaultIcons : action.getIconLoc();
@@ -36,11 +39,13 @@ public class ActionSkill<T extends ISkillPlayer> extends VampirismSkill<T> {
         return UtilLib.translate("text.vampirism.skill.unlocks_action");
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public int getMinU() {
         return action.getMinU();
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public int getMinV() {
         return action.getMinV();

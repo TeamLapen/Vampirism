@@ -108,7 +108,7 @@ public class InputEventPacket implements IMessage {
                 }
                 if (id != -1) {
                     if (factionPlayer != null) {
-                        IActionHandler actionHandler = VampirismAPI.getFactionPlayerHandler(player).getCurrentFactionPlayer().getActionHandler();
+                        IActionHandler actionHandler = factionPlayer.getActionHandler();
                         IAction action = ((ActionHandler) actionHandler).getActionFromId(id);
                         if (action != null) {
                             IAction.PERM r = actionHandler.toggleAction(action);

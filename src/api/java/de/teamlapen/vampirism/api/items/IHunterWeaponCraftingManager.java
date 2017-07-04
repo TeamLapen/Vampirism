@@ -66,7 +66,6 @@ public interface IHunterWeaponCraftingManager {
      * @return The created and registered recipe
      */
     //TODO CRAFTING IHunterWeaponRecipe addShapelessRecipe(@Nonnull ItemStack output, int reqLevel, @Nullable ISkill<IHunterPlayer> reqSkill, int reqLava, Object... recipeComponents);
-
     @Nullable
     IHunterWeaponRecipe findMatchingRecipe(InventoryCrafting craftMatrix, World world, int playerLevel, ISkillHandler<IHunterPlayer> skillHandler, int lava);
 

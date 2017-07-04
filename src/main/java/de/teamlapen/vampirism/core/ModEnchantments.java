@@ -8,7 +8,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import javax.annotation.Nonnull;
+import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 
 @GameRegistry.ObjectHolder(REFERENCE.MODID)
@@ -18,11 +18,6 @@ public class ModEnchantments {
     public static final EnchantmentArrowFrugality crossbowfrugality = getNull();
     public static final EnchantmentVampireSlayer vampireslayer = getNull();
 
-    @SuppressWarnings("ConstantConditions")
-    private static @Nonnull
-    <T> T getNull() {
-        return null;
-    }
 
     static void registerEnchantments(IForgeRegistry<Enchantment> registry) {
         registry.register(new EnchantmentCrossbowInfinite(Enchantment.Rarity.VERY_RARE));

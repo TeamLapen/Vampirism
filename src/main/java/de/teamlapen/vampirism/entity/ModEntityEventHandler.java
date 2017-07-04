@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity;
 
-import com.google.common.base.Predicate;
 import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
@@ -35,8 +34,6 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
-import javax.annotation.Nullable;
 
 /**
  * Event handler for all entity related events
@@ -106,12 +103,7 @@ public class ModEntityEventHandler {
         //Creeper AI changes for AvoidedByCreepers Skill
         if (!event.getWorld().isRemote && !Balance.vps.DISABLE_AVOIDED_BY_CREEPERS) {
             if (event.getEntity() instanceof EntityCreeper) {
-                ((EntityCreeper) event.getEntity()).tasks.addTask(3, new EntityAIAvoidEntity<>((EntityCreeper) event.getEntity(), EntityPlayer.class, new Predicate<EntityPlayer>() {
-                    @Override
-                    public boolean apply(@Nullable EntityPlayer input) {
-                        return input != null && VampirePlayer.get(input).getSpecialAttributes().avoided_by_creepers;
-                    }
-                }, 20, 1.1, 1.3));
+                ((EntityCreeper) event.getEntity()).tasks.addTask(3, new EntityAIAvoidEntity<>((EntityCreeper) event.getEntity(), EntityPlayer.class, input -> input != null && VampirePlayer.get(input).getSpecialAttributes().avoided_by_creepers, 20, 1.1, 1.3));
 
                 EntityAIBase target = null;
                 for (EntityAITasks.EntityAITaskEntry t : ((EntityCreeper) event.getEntity()).targetTasks.taskEntries) {
@@ -121,12 +113,7 @@ public class ModEntityEventHandler {
                 }
                 if (target != null) {
                     ((EntityCreeper) event.getEntity()).targetTasks.removeTask(target);
-                    ((EntityCreeper) event.getEntity()).targetTasks.addTask(1, new EntityAINearestAttackableTarget<>((EntityCreeper) event.getEntity(), EntityPlayer.class, 10, true, false, new Predicate<EntityPlayer>() {
-                        @Override
-                        public boolean apply(@Nullable EntityPlayer input) {
-                            return input != null && !VampirePlayer.get(input).getSpecialAttributes().avoided_by_creepers;
-                        }
-                    }));
+                    ((EntityCreeper) event.getEntity()).targetTasks.addTask(1, new EntityAINearestAttackableTarget<>((EntityCreeper) event.getEntity(), EntityPlayer.class, 10, true, false, input -> input != null && !VampirePlayer.get(input).getSpecialAttributes().avoided_by_creepers));
                 } else {
                     VampirismMod.log.w("EntityEventHandler", "Could not replace creeper target task");
                 }

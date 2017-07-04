@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class GeneralRegistryImpl implements IVampireVisionRegistry {
 
-    private ArrayList<IVampireVision> visionList = new ArrayList<>();
+    private final ArrayList<IVampireVision> visionList = new ArrayList<>();
 
     /**
      * Return the id of the given vision.

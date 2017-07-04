@@ -21,13 +21,14 @@ import net.minecraft.world.biome.Biome;
 import net.minecraft.world.gen.feature.WorldGenAbstractTree;
 import net.minecraft.world.gen.feature.WorldGenFlowers;
 import net.minecraft.world.gen.feature.WorldGenTrees;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 
 import java.util.Random;
 
 public class BiomeGenVampireForest extends Biome {
     public final static String name = "vampireForest";
     public static final int GEN_WEIGHT = 10;
-    protected WorldGenTrees worldGenTrees;
+    private WorldGenTrees worldGenTrees;
     private WorldGenVampireOrchid orchidGen = new WorldGenVampireOrchid();
 
     public BiomeGenVampireForest() {
@@ -90,9 +91,10 @@ public class BiomeGenVampireForest extends Biome {
     /**
      * Generates vampire orchids instead of normal flowers
      */
-    private class WorldGenVampireOrchid extends WorldGenFlowers {
+    private static class WorldGenVampireOrchid extends WorldGenFlowers {
 
-        private VampirismFlower flower = ModBlocks.vampirism_flower;
+        @GameRegistry.ObjectHolder("vampirism:vampirism_flower")
+        private static VampirismFlower flower = null;
         private IBlockState state = ModBlocks.vampirism_flower.getDefaultState().withProperty(VampirismFlower.TYPE, VampirismFlower.EnumFlowerType.ORCHID);
 
         private WorldGenVampireOrchid() {
@@ -104,7 +106,7 @@ public class BiomeGenVampireForest extends Biome {
             for (int i = 0; i < 64; ++i) {
                 BlockPos blockpos = position.add(rand.nextInt(8) - rand.nextInt(8), rand.nextInt(4) - rand.nextInt(4), rand.nextInt(8) - rand.nextInt(8));
 
-                if (worldIn.isAirBlock(blockpos) && (worldIn.provider.hasSkyLight() || blockpos.getY() < 255) && this.flower.canBlockStay(worldIn, blockpos, this.state)) {
+                if (worldIn.isAirBlock(blockpos) && (worldIn.provider.hasSkyLight() || blockpos.getY() < 255) && flower.canBlockStay(worldIn, blockpos, this.state)) {
                     if (VampirismWorldGen.debug)
                         VampirismMod.log.i(name, "Placed vampire orchid in vampire forest at %s", blockpos);
                     worldIn.setBlockState(blockpos, this.state, 2);

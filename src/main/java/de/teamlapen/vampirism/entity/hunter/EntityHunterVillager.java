@@ -24,8 +24,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 
-import java.util.Iterator;
-
 /**
  * Villager that is equipped with a fork and hunts vampires
  */
@@ -105,13 +103,7 @@ public class EntityHunterVillager extends EntityVillagerVampirism implements IHu
     @Override
     protected void initEntityAI() {
         super.initEntityAI();
-        Iterator<EntityAITasks.EntityAITaskEntry> it = this.tasks.taskEntries.iterator();
-        while (it.hasNext()) {
-            EntityAITasks.EntityAITaskEntry entry = it.next();
-            if (entry.action instanceof EntityAITradePlayer || entry.action instanceof EntityAILookAtTradePlayer || entry.action instanceof EntityAIVillagerMate || entry.action instanceof EntityAIFollowGolem) {
-                it.remove();
-            }
-        }
+        this.tasks.taskEntries.removeIf(entry -> entry.action instanceof EntityAITradePlayer || entry.action instanceof EntityAILookAtTradePlayer || entry.action instanceof EntityAIVillagerMate || entry.action instanceof EntityAIFollowGolem);
         this.tasks.addTask(6, new EntityAIAttackMelee(this, 0.6, false));
         this.tasks.addTask(8, new EntityAIMoveThroughVillageCustom(this, 0.55, false, 400));
 

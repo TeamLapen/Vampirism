@@ -234,7 +234,7 @@ public class VampirismCommand extends BasicCommand {
                             }
                         }
                     }
-                    List<Biome> biomes = new ArrayList<Biome>();
+                    List<Biome> biomes = new ArrayList<>();
                     biomes.add(ModBiomes.vampireForest);
                     notifyCommandListener(sender, this, "command.vampirism.base.vampire_biome.searching");
                     ChunkPos pos = UtilLib.findNearBiome(sender.getEntityWorld(), (sender).getPosition(), maxDist, biomes, sender);

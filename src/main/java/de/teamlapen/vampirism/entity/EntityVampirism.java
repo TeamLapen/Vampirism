@@ -143,15 +143,6 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         return true;
     }
 
-    @Override
-    public boolean isWithinHomeDistance(BlockPos pos) {
-        return this.isWithinHomeDistance(pos.getX(), pos.getY(), pos.getZ());
-    }
-
-    @Override
-    public boolean isWithinHomeDistance(int posX, int posY, int posZ) {
-        return this.isWithinHomeDistance((double) posX, (double) posY, (double) posZ);
-    }
 
     @Override
     public boolean isWithinHomeDistanceCurrentPosition() {

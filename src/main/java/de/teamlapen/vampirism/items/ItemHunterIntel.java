@@ -47,7 +47,6 @@ public class ItemHunterIntel extends VampirismItem {
     }
 
 
-
     @SideOnly(Side.CLIENT)
     public boolean hasEffect(ItemStack stack) {
         return true;

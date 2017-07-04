@@ -102,7 +102,8 @@ public interface IAlchemicalCauldronRecipe {
 
     /**
      * Used for items without {@link CapabilityFluidHandler#FLUID_HANDLER_ITEM_CAPABILITY}
-     *@param stack may be EMPTY
+     *
+     * @param stack may be EMPTY
      * @return If the given stack contains the required 'liquid' item stack
      */
     boolean isValidLiquidItem(@Nonnull ItemStack stack);

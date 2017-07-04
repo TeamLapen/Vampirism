@@ -20,6 +20,8 @@ import net.minecraftforge.registries.IForgeRegistry;
 import javax.annotation.Nonnull;
 import java.util.Map;
 
+import static de.teamlapen.lib.lib.util.UtilLib.getNull;
+
 /**
  * Handles all block registrations and reference.
  */
@@ -50,11 +52,7 @@ public class ModBlocks {
     public static final BlockGarlicBeacon garlic_beacon = getNull();
     private static final Map<String, String> OLD_TO_NEW_TILE_MAP = Maps.newHashMap();
 
-    @SuppressWarnings("ConstantConditions")
-    private static @Nonnull
-    <T> T getNull() {
-        return null;
-    }
+
 
     private static void registerTiles() {
         registerTileEntity(TileTent.class, "tent", "VampirismTent");
@@ -210,7 +208,7 @@ public class ModBlocks {
             }
             String oldRegisteredName = newRegisteredName.replaceAll("_", "");
 
-            if (oldRegisteredName.equals(name)){
+            if (oldRegisteredName.equals(name)) {
                 if (itemBlock) {
                     mapping.remap(Item.getItemFromBlock(b));
                 } else {

@@ -31,7 +31,6 @@ import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Random;
 
 /**
@@ -150,13 +149,7 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
     protected void initEntityAI() {
         super.initEntityAI();
 
-        Iterator<EntityAITasks.EntityAITaskEntry> it = this.tasks.taskEntries.iterator();
-        while (it.hasNext()) {
-            EntityAITasks.EntityAITaskEntry entry = it.next();
-            if (entry.action instanceof EntityAIMoveIndoors || entry.action instanceof EntityAIVillagerMate || entry.action instanceof EntityAIFollowGolem) {
-                it.remove();
-            }
-        }
+        this.tasks.taskEntries.removeIf(entry -> entry.action instanceof EntityAIMoveIndoors || entry.action instanceof EntityAIVillagerMate || entry.action instanceof EntityAIFollowGolem);
 
         tasks.addTask(0, new EntityAIRestrictSun(this));
         tasks.addTask(1, new EntityAIAvoidEntity<>(this, EntityCreature.class, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, true, false, false, VReference.HUNTER_FACTION), 10, 0.45F, 0.55F));

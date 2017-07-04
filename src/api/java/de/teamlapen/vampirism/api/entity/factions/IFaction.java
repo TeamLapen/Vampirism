@@ -10,8 +10,6 @@ public interface IFaction<T extends IFactionEntity> {
 
     /**
      * If not set returns white
-     *
-     * @return
      */
     TextFormatting getChatColor();
 
@@ -34,15 +32,12 @@ public interface IFaction<T extends IFactionEntity> {
 
     /**
      * If set returns unlocalized name. Otherwise returns {@link IFaction#name()}
-     *
-     * @return
+
      */
     String getUnlocalizedName();
 
     /**
      * If set returns unlocalized name in the plural form. Otherwise returns {@link IFaction#name()}
-     *
-     * @return
      */
     String getUnlocalizedNamePlural();
 

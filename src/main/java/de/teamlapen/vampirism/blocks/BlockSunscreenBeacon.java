@@ -28,6 +28,7 @@ public class BlockSunscreenBeacon extends VampirismBlockContainer {
         this.setCreativeTab(null);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
     public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
         super.addInformation(stack, player, tooltip, advanced);

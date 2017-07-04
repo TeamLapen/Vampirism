@@ -13,9 +13,10 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
-import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
+
+import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 /**
  * Handles all item registrations and reference.
@@ -77,12 +78,6 @@ public class ModItems {
     public static final ItemHunterAxe hunter_axe = getNull();
 
 
-    @SuppressWarnings("ConstantConditions")
-    private static @Nonnull
-    <T> T getNull() {
-        return null;
-    }
-    
     static void registerCraftingRecipes() {
         //TODO CRAFTING
 //        HunterWeaponCraftingManager weaponCraftingManager = HunterWeaponCraftingManager.getInstance();
@@ -242,7 +237,6 @@ public class ModItems {
         registry.register(new ItemObsidianArmor(EntityEquipmentSlot.LEGS));
         registry.register(new ItemObsidianArmor(EntityEquipmentSlot.FEET));
     }
-
 
 
     /**

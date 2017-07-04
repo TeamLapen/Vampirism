@@ -9,6 +9,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Registration of blood values and converting handler for {@link EntityCreature}'s
@@ -64,7 +65,7 @@ public interface IVampirismEntityRegistry {
      * @param constructor A 'constructor' that can be used to create the {@link IExtendedCreatureVampirism} object from the entity's object
      * @param <T>         The base class type
      */
-    <T extends EntityCreature> void addCustomExtendedCreature(Class<? extends T> clazz, IExtendedCreatureConstructor<T> constructor);
+    <T extends EntityCreature> void addCustomExtendedCreature(Class<? extends T> clazz, Function<T, IExtendedCreatureVampirism> constructor);
 
     @Nullable
     IConvertedCreature convert(EntityCreature entity);
@@ -79,7 +80,7 @@ public interface IVampirismEntityRegistry {
      * @return The custom constructor registered for the given entity's class. Can be null if none is registered
      */
     @Nullable
-    <T extends EntityCreature> IExtendedCreatureConstructor<T> getCustomExtendedCreatureConstructor(T entity);
+    <T extends EntityCreature> Function<T, IExtendedCreatureVampirism> getCustomExtendedCreatureConstructor(T entity);
 
     BiteableEntry getEntry(EntityCreature creature);
 
@@ -92,14 +93,6 @@ public interface IVampirismEntityRegistry {
      */
     void overrideBloodValues(Map<ResourceLocation, Integer> values);
 
-    /**
-     * Creates a {@link IExtendedCreatureVampirism}
-     *
-     * @param <T>
-     */
-    interface IExtendedCreatureConstructor<T extends EntityCreature> {
-        IExtendedCreatureVampirism create(T creature);
-    }
 
     interface ICreateDefaultConvertingHandler {
         IConvertingHandler create(IConvertingHandler.IDefaultHelper helper);

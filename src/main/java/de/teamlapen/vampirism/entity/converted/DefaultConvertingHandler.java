@@ -107,7 +107,7 @@ public class DefaultConvertingHandler<T extends EntityCreature> implements IConv
 
     @Override
     public IConvertedCreature<T> createFrom(T entity) {
-        EntityConvertedCreature<T> convertedCreature = new EntityConvertedCreature<T>(entity.getEntityWorld());
+        EntityConvertedCreature<T> convertedCreature = new EntityConvertedCreature<>(entity.getEntityWorld());
         copyImportantStuff(convertedCreature, entity);
         convertedCreature.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 200, 2));
         return convertedCreature;

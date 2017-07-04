@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class EntityAIMoveThroughVillageCustom extends EntityAIBase {
     private final int randomTicksToResize;
-    private EntityCreature theEntity;
+    private final EntityCreature theEntity;
     private double movementSpeed;
     /**
      * The PathNavigate of our entity.

@@ -12,7 +12,6 @@ import net.minecraft.util.NonNullList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Iterator;
 import java.util.List;
 
 
@@ -73,9 +72,7 @@ class BloodPotionCategory implements IBloodPotionCategory {
         if (items.contains(item)) {
             return true;
         }
-        Iterator<ItemStack> iterator = exactItems.iterator();
-        while (iterator.hasNext()) {
-            ItemStack next = iterator.next();
+        for (ItemStack next : exactItems) {
             if (stack.getItem() != next.getItem()) continue;
             if (stack.getItemDamage() != next.getItemDamage()) continue;
             if (!ItemStack.areItemStackTagsEqual(stack, next)) continue;

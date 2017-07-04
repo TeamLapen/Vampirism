@@ -98,8 +98,9 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
         return true;
     }
 
+    @SafeVarargs
     @Override
-    public IAlchemicalCauldronRecipe configure(int ticks, float exp, int reqLevel, @Nullable ISkill<IHunterPlayer>... reqSkills) {
+    public final IAlchemicalCauldronRecipe configure(int ticks, float exp, int reqLevel, @Nullable ISkill<IHunterPlayer>... reqSkills) {
         return setCookingTime(ticks).setExperience(exp).setRequirements(reqLevel, reqSkills);
     }
 

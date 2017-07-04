@@ -183,7 +183,6 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
 
     /**
      * Draws a line between the given coordinates
-
      */
     protected void drawLine(double x1, double y1, double x2, double y2) {
         GL11.glPushMatrix();

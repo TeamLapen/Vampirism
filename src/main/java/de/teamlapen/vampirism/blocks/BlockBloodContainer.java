@@ -138,15 +138,15 @@ public class BlockBloodContainer extends VampirismBlockContainer {
         super.onBlockPlacedBy(worldIn, pos, state, placer, stack);
         if (stack.hasTagCompound() && stack.getTagCompound().hasKey("fluid")) {
             NBTTagCompound nbt = stack.getTagCompound().getCompoundTag("fluid");
-                FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
-                if (fluid == null) {
-                    VampirismMod.log.w("BloodContainer", "Failed to load fluid from item nbt %s", nbt);
-                } else {
-                    TileEntity tile = (worldIn.getTileEntity(pos));
-                    if (tile instanceof TileBloodContainer) {
-                        ((TileBloodContainer) tile).setFluidStack(fluid);
-                    }
+            FluidStack fluid = FluidStack.loadFluidStackFromNBT(nbt);
+            if (fluid == null) {
+                VampirismMod.log.w("BloodContainer", "Failed to load fluid from item nbt %s", nbt);
+            } else {
+                TileEntity tile = (worldIn.getTileEntity(pos));
+                if (tile instanceof TileBloodContainer) {
+                    ((TileBloodContainer) tile).setFluidStack(fluid);
                 }
+            }
 
         }
     }

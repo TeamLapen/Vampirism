@@ -20,9 +20,8 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 @Mod(modid = LIBREFERENCE.MODID, name = LIBREFERENCE.NAME, version = LIBREFERENCE.VERSION, acceptedMinecraftVersions = "[1.11.2,)", dependencies = "required-after:forge@[" + LIBREFERENCE.FORGE_VERSION_MIN + ",)")
 public class VampLib {
     public final static Logger log = new Logger(LIBREFERENCE.MODID, "de.teamlapen.lib");
+    public static final AbstractPacketDispatcher dispatcher = new LibraryPacketDispatcher();
     public static boolean inDev = false;
-    public static AbstractPacketDispatcher dispatcher = new LibraryPacketDispatcher();
-
     @SidedProxy(clientSide = "de.teamlapen.lib.proxy.ClientProxy", serverSide = "de.teamlapen.lib.proxy.CommonProxy")
     public static IProxy proxy;
 

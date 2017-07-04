@@ -30,7 +30,6 @@ import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -135,11 +134,8 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
         if (!this.world.isRemote && !this.dead) {
 
             List<EntityItem> list = this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D));
-            Iterator<EntityItem> iterator = list.iterator();
 
-            while (iterator.hasNext()) {
-                EntityItem entityitem = iterator.next();
-
+            for (EntityItem entityitem : list) {
                 if (!entityitem.isDead && !ItemStackUtil.isEmpty(entityitem.getItem())) {
                     ItemStack itemstack = entityitem.getItem();
                     if (activeCommand.shouldPickupItem(itemstack)) {

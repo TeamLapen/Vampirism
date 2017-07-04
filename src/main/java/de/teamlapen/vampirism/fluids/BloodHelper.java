@@ -67,8 +67,6 @@ public class BloodHelper {
 
     /**
      * Returns the amount of blood stored in the given stack
-     *
-
      */
     public static int getBlood(@Nonnull ItemStack stack) {
         FluidStack stack1 = FluidUtil.getFluidContained(stack);

@@ -21,8 +21,8 @@ public class CoffinTESR extends VampirismTESR<TileCoffin> {
     public static final String[] colors = new String[]{"black", "red", "green", "brown", "blue", "purple", "cyan", "silver", "gray", "pink", "lime", "yellow", "lightBlue", "magenta", "orange",
             "white"};
     private final int maxLidPos = 61;
-    private ModelCoffin model;
-    private ResourceLocation[] textures = new ResourceLocation[16];
+    private final ModelCoffin model;
+    private final ResourceLocation[] textures = new ResourceLocation[16];
 
     public CoffinTESR() {
         this.model = new ModelCoffin();

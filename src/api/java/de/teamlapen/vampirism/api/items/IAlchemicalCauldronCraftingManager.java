@@ -36,7 +36,8 @@ public interface IAlchemicalCauldronCraftingManager {
 
     /**
      * Finds the recipe that fits to the given inputs. Does not check level or skill requirements
-     * @param liquid must not be EMPTY
+     *
+     * @param liquid     must not be EMPTY
      * @param ingredient may be EMPTY
      */
     @Nullable
@@ -44,6 +45,7 @@ public interface IAlchemicalCauldronCraftingManager {
 
     /**
      * Finds the recipe that fits to the given inputs. Does not check level or skill requirements
+     *
      * @param ingredient may be EMPTY
      */
     @Nullable
@@ -57,6 +59,7 @@ public interface IAlchemicalCauldronCraftingManager {
 
     /**
      * A color for this itemstack used to render the liquid in the alchemical cauldron
+     *
      * @param stack must not be EMPTY
      */
     void registerLiquidColor(@Nonnull ItemStack stack, int color);

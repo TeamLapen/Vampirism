@@ -30,6 +30,7 @@ import net.minecraft.world.World;
 /**
  * Base class for Vampirism's vampire entities
  */
+@SuppressWarnings("EntityConstructor")
 public abstract class EntityVampireBase extends EntityVampirism implements IVampireMob {
     private final boolean countAsMonsterForSpawn;
     /**

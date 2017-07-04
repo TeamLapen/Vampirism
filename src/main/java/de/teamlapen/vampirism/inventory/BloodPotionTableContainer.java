@@ -26,12 +26,7 @@ import java.util.List;
  * Table to create blood potions
  */
 public class BloodPotionTableContainer extends Container {
-    private static final InventorySlot.IItemSelector bloodfilter = new InventorySlot.IItemSelector() {
-        @Override
-        public boolean isItemAllowed(@Nonnull ItemStack item) {
-            return ModItems.vampire_blood_bottle.equals(item.getItem());
-        }
-    };
+    private static final InventorySlot.IItemSelector bloodfilter = item -> ModItems.vampire_blood_bottle.equals(item.getItem());
     private final BlockPos pos;
     private final HunterPlayer hunterPlayer;
     private final World world;
@@ -55,12 +50,7 @@ public class BloodPotionTableContainer extends Container {
 
         this.addSlotToContainer(new PotionSlot(inventory, 0, 115, 55));
         this.addSlotToContainer(new PotionSlot(inventory, 1, 137, 55));
-        this.addSlotToContainer(new InventoryContainer.FilterSlot(inventory, 2, 126, 14, new InventorySlot.IItemSelector() {
-            @Override
-            public boolean isItemAllowed(@Nonnull ItemStack item) {
-                return ModItems.item_garlic.equals(item.getItem());
-            }
-        }));
+        this.addSlotToContainer(new InventoryContainer.FilterSlot(inventory, 2, 126, 14, item -> ModItems.item_garlic.equals(item.getItem())));
         this.addSlotToContainer(new Slot(inventory, 3, 101, 22));
 
         for (int k = 0; k < 3; ++k) {
@@ -90,9 +80,7 @@ public class BloodPotionTableContainer extends Container {
     @Override
     public void detectAndSendChanges() {
         super.detectAndSendChanges();
-        for (int i = 0; i < this.listeners.size(); ++i) {
-            IContainerListener icontainerlistener = this.listeners.get(i);
-
+        for (IContainerListener icontainerlistener : this.listeners) {
             if (this.prevCraftingTimer != this.craftingTimer) {
                 icontainerlistener.sendWindowProperty(this, 0, craftingTimer);
             }

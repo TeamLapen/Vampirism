@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.player.hunter;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -29,13 +27,18 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 
+import javax.annotation.Nonnull;
+import java.util.function.Predicate;
+
+import static de.teamlapen.lib.lib.util.UtilLib.getNull;
+
 /**
  * Main class for hunter players
  */
 public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHunterPlayer {
 
     @CapabilityInject(IHunterPlayer.class)
-    public final static Capability<IHunterPlayer> CAP = null;
+    public final static Capability<IHunterPlayer> CAP = getNull();
 
     /**
      * Don't call before the construction event of the player entity is finished
@@ -60,12 +63,12 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
             }
 
             @Override
-            public <T> T getCapability(Capability<T> capability, EnumFacing facing) {
+            public <T> T getCapability(@Nonnull Capability<T> capability, EnumFacing facing) {
                 return capability == CAP ? CAP.<T>cast(inst) : null;
             }
 
             @Override
-            public boolean hasCapability(Capability<?> capability, EnumFacing facing) {
+            public boolean hasCapability(@Nonnull Capability<?> capability, EnumFacing facing) {
                 return CAP.equals(capability);
             }
 
@@ -82,8 +85,8 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
 
     public HunterPlayer(EntityPlayer player) {
         super(player);
-        actionHandler = new ActionHandler<IHunterPlayer>(this);
-        skillHandler = new SkillHandler<IHunterPlayer>(this);
+        actionHandler = new ActionHandler<>(this);
+        skillHandler = new SkillHandler<>(this);
         specialAttributes = new HunterPlayerSpecialAttribute();
     }
 
@@ -118,9 +121,9 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     }
 
     @Override
-    public Predicate<? super Entity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise) {
+    public Predicate<Entity> getNonFriendlySelector(boolean otherFactionPlayers, boolean ignoreDisguise) {
         if (otherFactionPlayers) {
-            return Predicates.alwaysTrue();
+            return entity -> true;
         } else {
             return VampirismAPI.factionRegistry().getPredicate(getFaction(), ignoreDisguise);
         }

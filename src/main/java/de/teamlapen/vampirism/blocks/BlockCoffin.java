@@ -29,6 +29,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Random;
 
 /**
@@ -113,7 +114,7 @@ public class BlockCoffin extends VampirismBlockContainer {
         if (state.getValue(PART) == EnumPartType.HEAD) {
             i |= 8;
 
-            if (state.getValue(OCCUPIED).booleanValue()) {
+            if (state.getValue(OCCUPIED)) {
                 i |= 4;
             }
         }
@@ -134,7 +135,7 @@ public class BlockCoffin extends VampirismBlockContainer {
 
     public IBlockState getStateFromMeta(int meta) {
         EnumFacing enumfacing = EnumFacing.getHorizontal(meta);
-        return (meta & 8) > 0 ? this.getDefaultState().withProperty(PART, EnumPartType.HEAD).withProperty(FACING, enumfacing).withProperty(OCCUPIED, Boolean.valueOf((meta & 4) > 0)) : this.getDefaultState().withProperty(PART, EnumPartType.FOOT).withProperty(FACING, enumfacing);
+        return (meta & 8) > 0 ? this.getDefaultState().withProperty(PART, EnumPartType.HEAD).withProperty(FACING, enumfacing).withProperty(OCCUPIED, (meta & 4) > 0) : this.getDefaultState().withProperty(PART, EnumPartType.FOOT).withProperty(FACING, enumfacing);
     }
 
     @Override
@@ -278,7 +279,8 @@ public class BlockCoffin extends VampirismBlockContainer {
      * @param pos
      * @return
      */
-    private EntityPlayer getPlayerInCoffin(World worldIn, BlockPos pos) {
+    private @Nullable
+    EntityPlayer getPlayerInCoffin(World worldIn, BlockPos pos) {
         for (EntityPlayer entityplayer : worldIn.playerEntities) {
             if (VampirePlayer.get(entityplayer).isPlayerSleeping() && entityplayer.bedLocation.equals(pos)) {
                 return entityplayer;

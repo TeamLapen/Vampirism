@@ -1,11 +1,11 @@
 package de.teamlapen.vampirism.entity.minions;
 
-import com.google.common.base.Predicate;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.minions.IMinion;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.api.entity.minions.ISaveableMinion;
 import de.teamlapen.vampirism.api.entity.minions.ISaveableMinionHandler;
+import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.MinionHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -15,10 +15,10 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Implementation of saveableminion handler
@@ -33,18 +33,15 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
     public SaveableMinionHandler(IMinionLord lord) {
         this.lord = lord;
         this.minions = new ArrayList<>();
-        entityPredicate = new Predicate<EntityLivingBase>() {
-            @Override
-            public boolean apply(@Nullable EntityLivingBase e) {
-                if (e == null) return false;
-                if (e instanceof IMinion) {
-                    if (SaveableMinionHandler.this.lord.equals(((IMinion) e).getLord())) {
-                        return false;
-                    }
+        entityPredicate = e -> {
+            if (e == null) return false;
+            if (e instanceof IMinion) {
+                if (SaveableMinionHandler.this.lord.equals(((IMinion) e).getLord())) {
+                    return false;
                 }
-                return !e.equals(SaveableMinionHandler.this.lord);
-
             }
+            return !e.equals(SaveableMinionHandler.this.lord);
+
         };
     }
 
@@ -69,13 +66,7 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
 
     @Override
     public void checkMinions() {
-        Iterator<T> it = minions.iterator();
-        while (it.hasNext()) {
-            T m = it.next();
-            if (MinionHelper.entity(m).isDead || !lord.equals(m.getLord())) {
-                it.remove();
-            }
-        }
+        minions.removeIf(m -> MinionHelper.entity(m).isDead || !lord.equals(m.getLord()));
     }
 
     @Override
@@ -90,7 +81,7 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
 
     /**
      * Returns a list of entity NBTTags to save with the player Dead entitys are saves as alive, so in multiplayer entities removed by
-     * {@link de.teamlapen.vampirism.player.vampire.VampirePlayer#onPlayerLoggedOut()} are saved as well
+     * {@link VampirePlayer#onPlayerLoggedOut()} are saved as well
      *
      * @return
      */
@@ -111,7 +102,7 @@ public class SaveableMinionHandler<T extends ISaveableMinion> implements ISaveab
     }
 
     @Override
-    public Predicate<EntityLivingBase> getNonMinionSelector() {
+    public java.util.function.Predicate<EntityLivingBase> getNonMinionSelector() {
         return entityPredicate;
     }
 

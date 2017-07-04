@@ -23,7 +23,10 @@ import net.minecraftforge.common.capabilities.*;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Vampirism's instance of a village
@@ -70,6 +73,7 @@ public class VampirismVillage implements IVampirismVillage {
             }
         };
     }
+
     private final String TAG = "VampirismVillage";
     private final Village village;
     private BlockPos center = new BlockPos(0, 0, 0);
@@ -193,63 +197,63 @@ public class VampirismVillage implements IVampirismVillage {
             int tick = (int) (worldTime / 20);
             this.removeDeadAndOldAggressors();
             Village v = getVillage();
-                if (tick % (Balance.village.REDUCE_RATE) == 0) {
-                    if (recentlyBitten > 0) {
-                        recentlyBitten--;
-                        dirty = true;
-                    }
-                    boolean respawn = false;
-                    if (recentlyConverted > 0) {
-                        recentlyConverted--;
-                        dirty = true;
-                        respawn = true;
-
-                    } else if (recentlyBittenToDeath > 0) {
-                        recentlyBittenToDeath--;
-                        dirty = true;
-                        respawn = true;
-                    }
-                    if (respawn && v.world.rand.nextInt(Balance.village.VILLAGER_RESPAWN_RATE) == 0) {
-                        spawnVillager();
-
-                    }
+            if (tick % (Balance.village.REDUCE_RATE) == 0) {
+                if (recentlyBitten > 0) {
+                    recentlyBitten--;
+                    dirty = true;
                 }
+                boolean respawn = false;
+                if (recentlyConverted > 0) {
+                    recentlyConverted--;
+                    dirty = true;
+                    respawn = true;
+
+                } else if (recentlyBittenToDeath > 0) {
+                    recentlyBittenToDeath--;
+                    dirty = true;
+                    respawn = true;
+                }
+                if (respawn && v.world.rand.nextInt(Balance.village.VILLAGER_RESPAWN_RATE) == 0) {
+                    spawnVillager();
+
+                }
+            }
 
             v.world.profiler.startSection("checkVillagersHunters");
             List<EntityVillager> allVillagers = getAllVillager();
             List<EntityBasicHunter> hunters = getHunter();
-                List<EntityHunterVillager> hunterVillagers = filterHunterVillagers(allVillagers);
-                List<EntityVillager> normalVillager = filterNormalVillagers(allVillagers);
+            List<EntityHunterVillager> hunterVillagers = filterHunterVillagers(allVillagers);
+            List<EntityVillager> normalVillager = filterNormalVillagers(allVillagers);
             if (v.world.rand.nextInt(30) == 0) {
-                    int hunterCount = hunters.size() + hunterVillagers.size() / 2;
-                    boolean spawn = hunterCount < (Balance.village.MIN_HUNTER_COUNT_VILLAGE_PER_DOOR * v.getNumVillageDoors() + 1);
+                int hunterCount = hunters.size() + hunterVillagers.size() / 2;
+                boolean spawn = hunterCount < (Balance.village.MIN_HUNTER_COUNT_VILLAGE_PER_DOOR * v.getNumVillageDoors() + 1);
                 if (spawn || v.world.rand.nextInt(30) == 0) {
-                        VampirismMod.log.d(TAG, "Stats: Doors: %s, Aggro: %s, v: %s, vh: %s, h: %s", v.getNumVillageDoors(), calculateAggressiveCounter(), normalVillager.size(), hunterVillagers.size(), hunters.size());
-                    }
-                    if (spawn && hunterCount > 20) {
-                        //TODO maybe remove or downgrade these logs
-                        VampirismMod.log.w(TAG, "Too many hunters spawning. Canceling");
-                        VampirismMod.log.w(TAG, "Stats: Doors: %s, Aggro: %s, v: %s, vh: %s, h: %s", v.getNumVillageDoors(), calculateAggressiveCounter(), normalVillager.size(), hunterVillagers.size(), hunters.size());
-                        VampirismMod.log.w(TAG, "Hunter Count: %s, Spawn Config: %s", hunterCount, Balance.village.MIN_HUNTER_COUNT_VILLAGE_PER_DOOR);
-                        spawn = false;
-                    }
-                    if (spawn) {
-                        spawnHunter();
-                    }
+                    VampirismMod.log.d(TAG, "Stats: Doors: %s, Aggro: %s, v: %s, vh: %s, h: %s", v.getNumVillageDoors(), calculateAggressiveCounter(), normalVillager.size(), hunterVillagers.size(), hunters.size());
                 }
-            v.world.profiler.endSection();
-                int aggressiveCounter = calculateAggressiveCounter();
-                if (aggressiveCounter >= Balance.village.AGGRESSIVE_COUNTER_THRESHOLD) {
-                    if (!agressive) {
-                        spawnVillager();
-                        Collections.shuffle(normalVillager);
-                        makeAgressive(selectVillagersToBecomeHunter(normalVillager));
-                    }
-                } else if (agressive && aggressiveCounter < (Balance.village.AGGRESSIVE_COUNTER_THRESHOLD / 2 + 1)) {
-                    makeCalm(hunterVillagers);
+                if (spawn && hunterCount > 20) {
+                    //TODO maybe remove or downgrade these logs
+                    VampirismMod.log.w(TAG, "Too many hunters spawning. Canceling");
+                    VampirismMod.log.w(TAG, "Stats: Doors: %s, Aggro: %s, v: %s, vh: %s, h: %s", v.getNumVillageDoors(), calculateAggressiveCounter(), normalVillager.size(), hunterVillagers.size(), hunters.size());
+                    VampirismMod.log.w(TAG, "Hunter Count: %s, Spawn Config: %s", hunterCount, Balance.village.MIN_HUNTER_COUNT_VILLAGE_PER_DOOR);
+                    spawn = false;
                 }
-
+                if (spawn) {
+                    spawnHunter();
+                }
             }
+            v.world.profiler.endSection();
+            int aggressiveCounter = calculateAggressiveCounter();
+            if (aggressiveCounter >= Balance.village.AGGRESSIVE_COUNTER_THRESHOLD) {
+                if (!agressive) {
+                    spawnVillager();
+                    Collections.shuffle(normalVillager);
+                    makeAgressive(selectVillagersToBecomeHunter(normalVillager));
+                }
+            } else if (agressive && aggressiveCounter < (Balance.village.AGGRESSIVE_COUNTER_THRESHOLD / 2 + 1)) {
+                makeCalm(hunterVillagers);
+            }
+
+        }
 
         if (dirty) {
             dirty = false;
@@ -346,9 +350,9 @@ public class VampirismVillage implements IVampirismVillage {
         agressive = true;
         dirty = true;
         for (EntityVillager v : villagers) {
-                EntityHunterVillager hunter = EntityHunterVillager.makeHunter(v);
-                v.getEntityWorld().spawnEntity(hunter);
-                v.setDead();
+            EntityHunterVillager hunter = EntityHunterVillager.makeHunter(v);
+            v.getEntityWorld().spawnEntity(hunter);
+            v.setDead();
 
         }
     }
@@ -365,14 +369,7 @@ public class VampirismVillage implements IVampirismVillage {
     }
 
     private void removeDeadAndOldAggressors() {
-        Iterator<VillageAggressorVampire> iterator = villageAggressorVampires.iterator();
-        while (iterator.hasNext()) {
-            VillageAggressorVampire aggressorVampire = iterator.next();
-            if (!aggressorVampire.aggressorEntity.isEntityAlive() || Math.abs(this.tickCounter - aggressorVampire.agressionTime) > 600) {
-                iterator.remove();
-            }
-
-        }
+        villageAggressorVampires.removeIf(aggressorVampire -> !aggressorVampire.aggressorEntity.isEntityAlive() || Math.abs(this.tickCounter - aggressorVampire.agressionTime) > 600);
 
     }
 

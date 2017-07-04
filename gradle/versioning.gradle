@@ -9,7 +9,7 @@ if (hasProperty("beta")) {
     writeVersion()
     config.type = "test"
 } else {
-    project.mod_version = project.mod_version + "-alpha+" + getDate();
+    project.mod_version = project.mod_version + "-alpha+" + getDate()
     config.type = "alpha"
 }
 

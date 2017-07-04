@@ -48,14 +48,11 @@ public abstract class AbstractMessageHandler<T extends IMessage> implements IMes
             if (handleOnMainThread()) {
                 final AbstractPacketDispatcher dispatcher = getDispatcher();
                 IThreadListener mainThread = Minecraft.getMinecraft();
-                mainThread.addScheduledTask(new Runnable() {
-                    @Override
-                    public void run() {
-                        EntityPlayer player = getPlayerEntityByProxy(ctx);
-                        IMessage response = handleClientMessage(player, message, ctx);
-                        if (response != null) {
-                            dispatcher.sendToServer(response);
-                        }
+                mainThread.addScheduledTask(() -> {
+                    EntityPlayer player = getPlayerEntityByProxy(ctx);
+                    IMessage response = handleClientMessage(player, message, ctx);
+                    if (response != null) {
+                        dispatcher.sendToServer(response);
                     }
                 });
                 return null;
@@ -66,15 +63,12 @@ public abstract class AbstractMessageHandler<T extends IMessage> implements IMes
             if (handleOnMainThread()) {
                 final AbstractPacketDispatcher dispatcher = getDispatcher();
                 IThreadListener mainThread = (WorldServer) ctx.getServerHandler().player.getEntityWorld();
-                mainThread.addScheduledTask(new Runnable() {
-                    @Override
-                    public void run() {
-                        EntityPlayer player = getPlayerEntityByProxy(ctx);
+                mainThread.addScheduledTask(() -> {
+                    EntityPlayer player = getPlayerEntityByProxy(ctx);
 
-                        IMessage response = handleServerMessage(player, message, ctx);
-                        if (response != null) {
-                            dispatcher.sendTo(response, (EntityPlayerMP) player);
-                        }
+                    IMessage response = handleServerMessage(player, message, ctx);
+                    if (response != null) {
+                        dispatcher.sendTo(response, (EntityPlayerMP) player);
                     }
                 });
                 return null;

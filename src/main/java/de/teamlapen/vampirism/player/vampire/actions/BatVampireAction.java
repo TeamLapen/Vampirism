@@ -15,8 +15,6 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.WorldProviderEnd;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.UUID;
 
@@ -157,7 +155,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     /**
      * Only call client side
      */
-    @SideOnly(Side.CLIENT)
+    @SuppressWarnings("MethodCallSideOnly")
     private void setFlightSpeed(EntityPlayer player, float speed) {
         player.capabilities.setFlySpeed(0.05F);
     }

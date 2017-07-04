@@ -45,10 +45,10 @@ public class EntityDummyBittenAnimal extends EntityLiving {
             entity.copyLocationAndAnglesFrom(this);
             if (ExtendedCreature.get(entity).canBecomeVampire()) {
                 IConvertedCreature c = ExtendedCreature.get(entity).makeVampire();
-                    if (c instanceof EntityConvertedCreature) {
-                        ((EntityConvertedCreature) c).setCanDespawn();
-                    }
+                if (c instanceof EntityConvertedCreature) {
+                    ((EntityConvertedCreature) c).setCanDespawn();
                 }
+            }
 
 
             this.setDead();

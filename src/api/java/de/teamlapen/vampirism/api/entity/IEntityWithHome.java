@@ -28,31 +28,23 @@ public interface IEntityWithHome {
 
     /**
      * Checks if the given position i within the entity's home area
-     *
-     * @param posX
-     * @param posY
-     * @param posZ
-     * @return
      */
-    boolean isWithinHomeDistance(int posX, int posY, int posZ);
+    default boolean isWithinHomeDistance(int posX, int posY, int posZ) {
+
+        return this.isWithinHomeDistance((double) posX, (double) posY, (double) posZ);
+    }
 
     /**
      * Checks if the given position i within the entity's home area
-     *
-     * @param x
-     * @param y
-     * @param z
-     * @return
      */
     boolean isWithinHomeDistance(double x, double y, double z);
 
     /**
      * Checks if the given position i within the entity's home area
-     *
-     * @param pos
-     * @return
      */
-    boolean isWithinHomeDistance(BlockPos pos);
+    default boolean isWithinHomeDistance(BlockPos pos) {
+        return this.isWithinHomeDistance(pos.getX(), pos.getY(), pos.getZ());
+    }
 
     /**
      * Sets the entity's home bounding box to an area that extends r blocks in every direction from pos

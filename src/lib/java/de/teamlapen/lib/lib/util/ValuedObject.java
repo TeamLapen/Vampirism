@@ -6,23 +6,11 @@ import java.util.Comparator;
 
 public class ValuedObject<T> {
     public static <Q> Comparator<ValuedObject<Q>> getComparator() {
-        return new Comparator<ValuedObject<Q>>() {
-
-            @Override
-            public int compare(ValuedObject<Q> qValuedObject, ValuedObject<Q> t1) {
-                return qValuedObject.value - t1.value;
-            }
-        };
+        return (qValuedObject, t1) -> qValuedObject.value - t1.value;
     }
 
     public static <Q> Comparator<ValuedObject<Q>> getInvertedComparator() {
-        return new Comparator<ValuedObject<Q>>() {
-
-            @Override
-            public int compare(ValuedObject<Q> qValuedObject, ValuedObject<Q> t1) {
-                return t1.value - qValuedObject.value;
-            }
-        };
+        return (qValuedObject, t1) -> t1.value - qValuedObject.value;
     }
 
     /**

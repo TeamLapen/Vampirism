@@ -20,7 +20,9 @@ public interface IBiteableEntity {
      *
      * @return Saturation modifier of this entities blood
      */
-    float getBloodSaturation();
+    default float getBloodSaturation() {
+        return 1;
+    }
 
     /**
      * @param biter The biting entity

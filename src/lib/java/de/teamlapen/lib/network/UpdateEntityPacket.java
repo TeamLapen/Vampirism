@@ -71,10 +71,10 @@ public class UpdateEntityPacket implements IMessage {
         UpdateEntityPacket packet = new UpdateEntityPacket();
         packet.id = caps[0].getTheEntityID();
         packet.caps = new NBTTagCompound();
-        for (int i = 0; i < caps.length; i++) {
+        for (ISyncable.ISyncableEntityCapabilityInst cap : caps) {
             NBTTagCompound data = new NBTTagCompound();
-            caps[i].writeFullUpdateToNBT(data);
-            packet.caps.setTag(caps[i].getCapKey().toString(), data);
+            cap.writeFullUpdateToNBT(data);
+            packet.caps.setTag(cap.getCapKey().toString(), data);
         }
         return packet;
     }

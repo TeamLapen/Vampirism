@@ -19,7 +19,7 @@ public class LevelAttributeModifier {
 
     private static final String TAG = "LevelAttributeModifier";
 
-    private static final Map<IAttribute, UUID> modifiers = new HashMap<IAttribute, UUID>();
+    private static final Map<IAttribute, UUID> modifiers = new HashMap<>();
 
     static {
         modifiers.put(SharedMonsterAttributes.ATTACK_DAMAGE, UUID.fromString("7600D8C4-3517-40BE-8CB1-359D46705A0F"));

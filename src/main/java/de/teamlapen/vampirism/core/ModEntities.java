@@ -74,7 +74,6 @@ public class ModEntities {
     private static int modEntityId = 0;
 
 
-
     /**
      * Registers special extended creature classes
      */

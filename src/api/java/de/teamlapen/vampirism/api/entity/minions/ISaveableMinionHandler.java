@@ -1,7 +1,8 @@
 package de.teamlapen.vampirism.api.entity.minions;
 
-import com.google.common.base.Predicate;
 import net.minecraft.entity.EntityLivingBase;
+
+import java.util.function.Predicate;
 
 /**
  * Used in {@link IMinionLord} classes to manage their {@link ISaveableMinion}s

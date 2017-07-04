@@ -467,10 +467,10 @@ public class RenderHandler {
             RenderHelper.disableStandardItemLighting();
 
             renderManager.setRenderOutlines(true);
-            for (int j = 0; j < entities.size(); ++j) {
+            for (Entity entity1 : entities) {
 
 
-                renderManager.renderEntityStatic(entities.get(j), partialTicks, false);
+                renderManager.renderEntityStatic(entity1, partialTicks, false);
 
             }
 

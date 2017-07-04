@@ -260,8 +260,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
             if (phase.equals(PHASE.PARTICLE_SPREAD)) {
                 if (runningTick % 15 == 0) {
                     BlockPos pos = getPos();
-                    for (int i = 0; i < tips.length; i++) {
-                        BlockPos pTip = tips[i];
+                    for (BlockPos pTip : tips) {
                         VampLib.proxy.getParticleHandler().spawnParticles(world, ModParticles.FLYING_BLOOD, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, 5, 0.1, new Random(), pTip.getX() + 0.5, pTip.getY() + 0.3, pTip.getZ() + 0.5, 60);
                     }
                 }

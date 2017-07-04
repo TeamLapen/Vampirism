@@ -54,7 +54,7 @@ public class DaySleepHelper {
             }
 
             boolean all = j > 0 && j >= world.playerEntities.size() - i - ignorePlayers;
-            allPlayersAsleep.put(Integer.valueOf(world.provider.getDimension()), Boolean.valueOf(all));
+            allPlayersAsleep.put(world.provider.getDimension(), all);
         }
     }
 
@@ -64,7 +64,7 @@ public class DaySleepHelper {
      * @param world
      */
     public static void checkSleepWorld(World world) {
-        if (allPlayersAsleep.get(Integer.valueOf(world.provider.getDimension())) == Boolean.TRUE) {
+        if (allPlayersAsleep.get(world.provider.getDimension()) == Boolean.TRUE) {
             int sleeping = 0;
             int total = 0;
             for (EntityPlayer entityplayer : world.playerEntities) {
@@ -91,7 +91,7 @@ public class DaySleepHelper {
      * @param world
      */
     public static void wakeAllPlayers(World world) {
-        allPlayersAsleep.put(Integer.valueOf(world.provider.getDimension()), Boolean.valueOf(false));
+        allPlayersAsleep.put(world.provider.getDimension(), Boolean.FALSE);
 
         for (EntityPlayer entityplayer : world.playerEntities) {
             VampirePlayer vampirePlayer = VampirePlayer.get(entityplayer);

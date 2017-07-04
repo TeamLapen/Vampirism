@@ -49,7 +49,14 @@ public abstract class VampirismHunterArmor extends ItemArmor implements ISpecial
         oldRegisteredName = baseRegName.replaceAll("_", "") + "_" + equipmentSlotIn.getName();
     }
 
-
+    /**
+     * For compat with 1.11 and below
+     */
+    @SideOnly(Side.CLIENT)
+    @Override
+    public final void addInformation(ItemStack stack, @Nullable World playerIn, List<String> tooltip, ITooltipFlag advanced) {
+        this.addInformation(stack, Minecraft.getMinecraft().player, tooltip, advanced.isAdvanced());
+    }
 
     @Override
     public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot) {
@@ -90,6 +97,17 @@ public abstract class VampirismHunterArmor extends ItemArmor implements ISpecial
         return registeredName;
     }
 
+    /**
+     * For compat with 1.11 and below
+     */
+    @SideOnly(Side.CLIENT)
+    @Override
+    public final void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        if (isInCreativeTab(tab)) {
+            this.getSubItems(this, tab, items);
+        }
+    }
+
     @Override
     public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
         super.onArmorTick(world, player, itemStack);
@@ -99,45 +117,6 @@ public abstract class VampirismHunterArmor extends ItemArmor implements ISpecial
             }
         }
     }
-
-    /**
-     * @param stack Armor stack
-     * @return The damage reduction the given stack gives
-     */
-    protected abstract int getDamageReduction(int slot, ItemStack stack);
-
-    protected String getTextureLocation(String name, EntityEquipmentSlot slot, String type) {
-        return String.format(REFERENCE.MODID + ":textures/models/armor/%s_layer_%d%s.png", name, slot == EntityEquipmentSlot.LEGS ? 2 : 1, type == null ? "" : "_overlay");
-    }
-
-    /**
-     * @return The toughness of the given stack
-     */
-    protected double getToughness(int slot, ItemStack stack) {
-        return this.toughness;
-    }
-
-
-    /**
-     * For compat with 1.11 and below
-     */
-    @SideOnly(Side.CLIENT)
-    @Override
-    public final void addInformation(ItemStack stack, @Nullable World playerIn, List<String> tooltip, ITooltipFlag advanced) {
-        this.addInformation(stack, Minecraft.getMinecraft().player, tooltip, advanced.isAdvanced());
-    }
-
-    /**
-     * For compat with 1.11 and below
-     */
-    @SideOnly(Side.CLIENT)
-    @Override
-    public final void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if(isInCreativeTab(tab)){
-            this.getSubItems(this, tab, items);
-        }
-    }
-
 
     /**
      * For compat with 1.11 and below
@@ -150,11 +129,28 @@ public abstract class VampirismHunterArmor extends ItemArmor implements ISpecial
     }
 
     /**
+     * @param stack Armor stack
+     * @return The damage reduction the given stack gives
+     */
+    protected abstract int getDamageReduction(int slot, ItemStack stack);
+
+    /**
      * Only called if the item is in the given tab
      * For compat with 1.11 and below
      */
     @SideOnly(Side.CLIENT)
     protected void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
 
+    }
+
+    protected String getTextureLocation(String name, EntityEquipmentSlot slot, String type) {
+        return String.format(REFERENCE.MODID + ":textures/models/armor/%s_layer_%d%s.png", name, slot == EntityEquipmentSlot.LEGS ? 2 : 1, type == null ? "" : "_overlay");
+    }
+
+    /**
+     * @return The toughness of the given stack
+     */
+    protected double getToughness(int slot, ItemStack stack) {
+        return this.toughness;
     }
 }

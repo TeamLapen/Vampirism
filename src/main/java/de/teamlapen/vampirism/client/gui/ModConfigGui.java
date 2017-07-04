@@ -23,7 +23,7 @@ import java.util.List;
 @SideOnly(Side.CLIENT)
 public class ModConfigGui extends GuiConfig {
     private static List<IConfigElement> getConfigElements() {
-        List<IConfigElement> list = new ArrayList<IConfigElement>();
+        List<IConfigElement> list = new ArrayList<>();
         list.addAll(new ConfigElement(Configs.getMainConfig().getCategory(Configs.CATEGORY_GENERAL)).getChildElements());
         list.add(new DummyConfigElement.DummyCategoryElement("worldgen", "category.vampirism.worldgen", new ConfigElement(Configs.getMainConfig().getCategory(Configs.CATEGORY_WORLDGEN)).getChildElements()));
         list.add(new DummyConfigElement.DummyCategoryElement("village", "category.vampirism.village", new ConfigElement(Configs.getMainConfig().getCategory(Configs.CATEGORY_VILLAGE)).getChildElements()));
@@ -41,7 +41,7 @@ public class ModConfigGui extends GuiConfig {
 
         @SuppressWarnings("rawtypes")
         private static List<IConfigElement> getConfigElements() {
-            List<IConfigElement> list = new ArrayList<IConfigElement>();
+            List<IConfigElement> list = new ArrayList<>();
             Collection<BalanceValues> categories = Balance.getCategories().values();
             for (BalanceValues values : categories) {
                 list.add(createDummyElement(values));

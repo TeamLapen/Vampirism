@@ -29,7 +29,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 
 /**
  * Since I'm not familiar with JUnit or similar and it does not work that well with Minecraft anyway, this is a some kind of ingame test which is executed via command
- *
+ * <p>
  * Usage of lambda and stuff is probably unnecessary and stuff, but fun.
  */
 public class Tests {
@@ -64,7 +64,7 @@ public class Tests {
         sendMsg(info.player, info.name + " test " + (result ? "§2was successful§r" : "§4failed§r"));
     }
 
-    private static boolean bloodFluidHandler(TestInfo info) throws Throwable {
+    private static boolean bloodFluidHandler(TestInfo info) {
         info.world.setBlockState(info.pos, ModBlocks.blood_container.getDefaultState());
         TileEntity t = info.world.getTileEntity(info.pos);
         IFluidHandler handler = t.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, EnumFacing.random(info.world.rand));
@@ -93,7 +93,7 @@ public class Tests {
 
     }
 
-    private static boolean blockWeaponTableFluids(TestInfo info) throws Throwable {
+    private static boolean blockWeaponTableFluids(TestInfo info) {
         info.world.setBlockState(info.pos, ModBlocks.weapon_table.getDefaultState());
         info.player.setHeldItem(info.player.getActiveHand(), new ItemStack(Items.LAVA_BUCKET));
         IBlockState block = info.world.getBlockState(info.pos);

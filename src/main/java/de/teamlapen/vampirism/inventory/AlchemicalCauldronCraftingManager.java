@@ -16,22 +16,18 @@ import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 
-/**
- * 1.10
- *
- * @author maxanier
- */
+
 public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCraftingManager {
 
     private final static String TAG = "ACCraftingManager";
-    private static AlchemicalCauldronCraftingManager ourInstance = new AlchemicalCauldronCraftingManager();
+    private final static AlchemicalCauldronCraftingManager ourInstance = new AlchemicalCauldronCraftingManager();
 
     public static AlchemicalCauldronCraftingManager getInstance() {
         return ourInstance;
     }
 
     private final List<IAlchemicalCauldronRecipe> recipes = Lists.newLinkedList();
-    private Map<Object, Integer> liquidColors = Maps.newHashMap();
+    private final Map<Object, Integer> liquidColors = Maps.newHashMap();
 
     private AlchemicalCauldronCraftingManager() {
     }
@@ -129,7 +125,7 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
     }
 
     private @Nonnull
-    ItemStack getItemStackCopy(Object o) {
+    ItemStack getItemStackCopy(@Nullable Object o) {
         if (o == null) return ItemStackUtil.getEmptyStack();
         if (o instanceof ItemStack) return ((ItemStack) o).copy();
         if (o instanceof Item) return new ItemStack((Item) o);

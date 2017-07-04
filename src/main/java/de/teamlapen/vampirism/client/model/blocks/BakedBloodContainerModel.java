@@ -4,7 +4,10 @@ import de.teamlapen.vampirism.blocks.BlockBloodContainer;
 import de.teamlapen.vampirism.client.core.ClientEventHandler;
 import de.teamlapen.vampirism.tileentity.TileBloodContainer;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.IBakedModel;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.block.model.ItemOverrideList;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -111,8 +114,8 @@ public class BakedBloodContainerModel implements IBakedModel {
 
     private static class CustomItemOverride extends ItemOverrideList {
 
-        public CustomItemOverride() {
-            super(new LinkedList<ItemOverride>());
+        CustomItemOverride() {
+            super(new LinkedList<>());
         }
 
         @Override
