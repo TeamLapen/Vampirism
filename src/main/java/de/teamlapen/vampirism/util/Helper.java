@@ -16,7 +16,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
@@ -80,7 +79,6 @@ public class Helper {
                 int liquidBlocks = 0;
                 for (blockpos = blockpos.down(); blockpos.getY() > pos.getY(); blockpos = blockpos.down()) {
                     IBlockState iblockstate = world.getBlockState(blockpos);
-                    Blocks.STAINED_GLASS.setLightOpacity(0);
                     if (iblockstate.getBlock().getLightOpacity(iblockstate, world, blockpos) > 0) {
                         if (iblockstate.getMaterial().isLiquid()) {
                             liquidBlocks++;
