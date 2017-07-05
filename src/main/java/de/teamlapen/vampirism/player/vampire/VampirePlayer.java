@@ -53,6 +53,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -457,11 +458,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             ticksInSun = 0;
             if (wasDead) {
                 if (Loader.isModLoaded(SpongeModCompat.MODID)) {
-                    //Workaround for issue caused by https://github.com/SpongePowered/SpongeForge/issues/736
+                    //Workaround for issue caused by https://github.com/SpongePowered/SpongeForge/issues/736 TODO remove?
                     int level = getLevel();
                     onLevelChanged(level, level);
                 }
-                player.addPotionEffect(new PotionEffect(ModPotions.sunscreen, 400, 4));
+                player.addPotionEffect(new PotionEffect(ModPotions.sunscreen, 400, 4, true, false));
                 player.setHealth(player.getMaxHealth());
                 bloodStats.setBloodLevel(bloodStats.MAXBLOOD);
             }
@@ -507,7 +508,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public void onPlayerLoggedIn() {
-
+        if (getLevel() > 0 && FMLCommonHandler.instance().getSide().isServer()) {
+            player.addPotionEffect(new PotionEffect(ModPotions.sunscreen, 200, 4, true, false));
+        }
     }
 
     @Override
