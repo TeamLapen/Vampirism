@@ -16,6 +16,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
@@ -44,7 +45,7 @@ public class Helper {
                 float angle = entity.getEntityWorld().getCelestialAngle(1.0F);
                 //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
                 if (angle > 0.78 || angle < 0.24) {
-                    BlockPos pos = new BlockPos(entity.posX + 0.5, entity.posY + 0, entity.posZ + 0.5);
+                    BlockPos pos = new BlockPos(entity.posX, entity.posY + 0, entity.posZ);
 
                     if (canBlockSeeSun(entity.getEntityWorld(), pos)) {
                         try {
@@ -79,7 +80,7 @@ public class Helper {
                 int liquidBlocks = 0;
                 for (blockpos = blockpos.down(); blockpos.getY() > pos.getY(); blockpos = blockpos.down()) {
                     IBlockState iblockstate = world.getBlockState(blockpos);
-
+                    Blocks.STAINED_GLASS.setLightOpacity(0);
                     if (iblockstate.getBlock().getLightOpacity(iblockstate, world, blockpos) > 0) {
                         if (iblockstate.getMaterial().isLiquid()) {
                             liquidBlocks++;
