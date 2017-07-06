@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.lib.lib.util.SimpleSpawnerLogic;
+import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
@@ -11,6 +12,7 @@ import net.minecraft.network.play.server.SPacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.datafix.IFixableData;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -24,6 +26,48 @@ import javax.annotation.Nullable;
  * Tile entity which spawns hunters for tents
  */
 public class TileTent extends TileEntity implements ITickable {
+    public static IFixableData getTentFixer() {
+        return new IFixableData() {
+            @Nonnull
+            @Override
+            public NBTTagCompound fixTagCompound(NBTTagCompound compound) {
+                String id = compound.getString("id");
+                if ("vampirism:vampire_hunter".equals(id) || "vampirism:vampireHunter".equals(id)) { //Fix spawner id overwriting tile entity id
+
+                    VampirismMod.log.t("Fixing %s", compound);
+                    compound.setString("id", "vampirism:tent");
+
+                    NBTTagCompound logic = new NBTTagCompound();
+                    logic.setString("id", "vampirism:vampire_hunter");
+                    logic.setInteger("min_delay", compound.getInteger("min_delay"));
+                    logic.setInteger("max_delay", compound.getInteger("max_delay"));
+                    logic.setInteger("max_nearby", compound.getInteger("max_nearby"));
+                    logic.setInteger("delay", compound.getInteger("delay"));
+                    logic.setInteger("activate_range", compound.getInteger("activate_range"));
+                    logic.setInteger("spawn_range", compound.getInteger("spawn_range"));
+                    logic.setInteger("spawn_count", compound.getInteger("spawn_count"));
+                    compound.setTag("spawner_logic", logic);
+                    compound.removeTag("min_delay");
+                    compound.removeTag("max_delay");
+                    compound.removeTag("max_nearby");
+                    compound.removeTag("delay");
+                    compound.removeTag("activate_range");
+                    compound.removeTag("spawn_range");
+                    compound.removeTag("spawn_count");
+
+                    VampirismMod.log.t("Fixed %s", compound);
+                }
+
+
+                return compound;
+            }
+
+            @Override
+            public int getFixVersion() {
+                return 4;
+            }
+        };
+    }
     private SimpleSpawnerLogic spawnerLogic = new SimpleSpawnerLogic() {
         @Override
         public BlockPos getSpawnerPosition() {
@@ -90,8 +134,11 @@ public class TileTent extends TileEntity implements ITickable {
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
+        VampirismMod.log.t("Loading %s", nbt);
         super.readFromNBT(nbt);
-        spawnerLogic.readFromNbt(nbt);
+        if (nbt.hasKey("spawner_logic")) {
+            spawnerLogic.readFromNbt(nbt.getCompoundTag("spawner_logic"));
+        }
         spawn = nbt.getBoolean("spawn");
     }
 
@@ -114,7 +161,9 @@ public class TileTent extends TileEntity implements ITickable {
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         NBTTagCompound nbt = super.writeToNBT(compound);
-        spawnerLogic.writeToNbt(nbt);
+        NBTTagCompound logic = new NBTTagCompound();
+        spawnerLogic.writeToNbt(logic);
+        nbt.setTag("spawner_logic", logic);
         nbt.setBoolean("spawn", spawn);
         return nbt;
     }

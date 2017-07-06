@@ -44,6 +44,7 @@ import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.potion.blood.BloodPotionRegistry;
 import de.teamlapen.vampirism.potion.blood.BloodPotions;
 import de.teamlapen.vampirism.proxy.IProxy;
+import de.teamlapen.vampirism.tileentity.TileTent;
 import de.teamlapen.vampirism.util.GeneralRegistryImpl;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.SupporterManager;
@@ -208,9 +209,11 @@ public class VampirismMod {
 
 
         //Data Fixer
-        ModFixs fixer = FMLCommonHandler.instance().getDataFixer().init(REFERENCE.MODID, 2);
+        ModFixs fixer = FMLCommonHandler.instance().getDataFixer().init(REFERENCE.MODID, 4);//Fixes that should have the id of the ModFix version when added.
+        //If adding new fixes to this, bump ModFix version and use the same one for the fixer
         fixer.registerFix(FixTypes.ENTITY, ModEntities.getEntityIDFixer());
         fixer.registerFix(FixTypes.BLOCK_ENTITY, ModBlocks.getTileEntityIDFixer());
+        fixer.registerFix(FixTypes.BLOCK_ENTITY, TileTent.getTentFixer());
         fixer.registerFix(FixTypes.ENTITY, ModEntities.getEntityCapabilityFixer());
         fixer.registerFix(FixTypes.PLAYER, ModEntities.getPlayerCapabilityFixer());
 

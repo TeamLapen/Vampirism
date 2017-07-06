@@ -11,8 +11,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Random;
 
 /**
  * Main block for the 2x2 block tent. Handles spawning
@@ -23,6 +25,7 @@ public class BlockTentMain extends BlockTent implements ITileEntityProvider {
     public BlockTentMain() {
         super(name);
         isBlockContainer = true;
+        this.setTickRandomly(true);
     }
 
     @Override
@@ -50,11 +53,22 @@ public class BlockTentMain extends BlockTent implements ITileEntityProvider {
 
     }
 
-    @Nonnull
+    @Nullable
     @Override
-    public TileEntity createNewTileEntity(@Nonnull World worldIn, int meta) {
+    public TileEntity createNewTileEntity(World worldIn, int meta) {
         return new TileTent();
     }
 
-
+    @Override
+    public void randomTick(World worldIn, BlockPos pos, IBlockState state, Random random) {
+        //Fix related to #210
+        //Tents with no tileentity set, create a new one and enable spawn
+        //TODO remove sometime
+        if (worldIn.getChunkFromBlockCoords(pos).getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK) == null) {
+            TileEntity tile = worldIn.getTileEntity(pos);
+            if (tile instanceof TileTent) {
+                ((TileTent) tile).setSpawn(true);
+            }
+        }
+    }
 }

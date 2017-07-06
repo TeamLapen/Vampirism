@@ -78,6 +78,6 @@ public class VampirismItem extends Item {
      * For compat with 1.11 and below
      */
     protected void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-
+        subItems.add(new ItemStack(itemIn));
     }
 }

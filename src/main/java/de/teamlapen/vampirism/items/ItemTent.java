@@ -100,9 +100,9 @@ public class ItemTent extends VampirismItem {
         EnumFacing dir = EnumFacing.fromAngle(player.rotationYaw);
         boolean flag = placeAt(world, pos.up(), dir, false, false);
         if (flag) {
-            if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("spawner")) {
-                TileEntity tile = world.getTileEntity(pos.up());
-                if (tile instanceof TileTent) {
+            TileEntity tile = world.getTileEntity(pos.up());
+            if (tile instanceof TileTent) {
+                if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("spawner")) {
                     ((TileTent) tile).setSpawn(true);
                 }
             }

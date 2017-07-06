@@ -78,12 +78,14 @@ public class ModBlocks {
 
     public static IFixableData getTileEntityIDFixer() {
         return new IFixableData() {
+            @Nonnull
             @Override
-            public NBTTagCompound fixTagCompound(NBTTagCompound compound) {
-                String s = OLD_TO_NEW_TILE_MAP.get(compound.getString("id"));
+            public NBTTagCompound fixTagCompound(@Nonnull NBTTagCompound compound) {
+                String id = compound.getString("id");
+                String newId = OLD_TO_NEW_TILE_MAP.get(id);
 
-                if (s != null) {
-                    compound.setString("id", s);
+                if (newId != null) {
+                    compound.setString("id", newId);
                 }
                 return compound;
             }

@@ -248,6 +248,7 @@ public class TestCommand extends BasicCommand {
                 return list;
             }
         });
+
         addSubcommand(new SubCommand() {
 
 
