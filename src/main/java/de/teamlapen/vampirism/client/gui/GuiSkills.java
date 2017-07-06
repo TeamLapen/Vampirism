@@ -48,7 +48,7 @@ import java.util.Random;
  */
 @SideOnly(Side.CLIENT)
 public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
-    private static final ResourceLocation BACKGROUND = new ResourceLocation("textures/gui/achievement/achievement_background.png");
+    private static final ResourceLocation BACKGROUND = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills_window.png");
     private static final ResourceLocation defaultIcons = new ResourceLocation(REFERENCE.MODID, "textures/gui/skills.png");
     private final static int ICON_TEXTURE_WIDTH = 256;
     private final static int ICON_TEXTURE_HEIGHT = 80;
