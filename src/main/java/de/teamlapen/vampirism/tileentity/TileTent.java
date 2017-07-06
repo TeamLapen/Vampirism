@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.lib.lib.util.SimpleSpawnerLogic;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
@@ -34,7 +33,6 @@ public class TileTent extends TileEntity implements ITickable {
                 String id = compound.getString("id");
                 if ("vampirism:vampire_hunter".equals(id) || "vampirism:vampireHunter".equals(id)) { //Fix spawner id overwriting tile entity id
 
-                    VampirismMod.log.t("Fixing %s", compound);
                     compound.setString("id", "vampirism:tent");
 
                     NBTTagCompound logic = new NBTTagCompound();
@@ -55,7 +53,6 @@ public class TileTent extends TileEntity implements ITickable {
                     compound.removeTag("spawn_range");
                     compound.removeTag("spawn_count");
 
-                    VampirismMod.log.t("Fixed %s", compound);
                 }
 
 
@@ -134,7 +131,6 @@ public class TileTent extends TileEntity implements ITickable {
 
     @Override
     public void readFromNBT(NBTTagCompound nbt) {
-        VampirismMod.log.t("Loading %s", nbt);
         super.readFromNBT(nbt);
         if (nbt.hasKey("spawner_logic")) {
             spawnerLogic.readFromNbt(nbt.getCompoundTag("spawner_logic"));
