@@ -176,7 +176,7 @@ public class InputEventPacket implements IMessage {
                         ((SkillHandler) skillHandler).writeUpdateForClient(sync);
                         HelperLib.sync((ISyncable.ISyncableEntityCapabilityInst) factionPlayer, sync, factionPlayer.getRepresentingPlayer(), false);
                     }
-                    player.sendMessage(new TextComponentTranslation("text.vampirism.skill.skillsReset"));
+                    player.sendMessage(new TextComponentTranslation("text.vampirism.skill.skills_reset"));
                 } else {
                     VampirismMod.log.e(TAG, "Player %s is in no faction, so he cannot reset skills");
                 }
