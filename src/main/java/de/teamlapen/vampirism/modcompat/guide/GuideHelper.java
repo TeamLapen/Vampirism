@@ -21,12 +21,12 @@ import de.teamlapen.vampirism.inventory.HunterWeaponCraftingManager;
 import de.teamlapen.vampirism.inventory.ShapedHunterWeaponRecipe;
 import de.teamlapen.vampirism.inventory.ShapelessHunterWeaponRecipe;
 import de.teamlapen.vampirism.modcompat.guide.pages.*;
-import joptsimple.internal.Strings;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -215,12 +215,12 @@ public class GuideHelper {
         List<IPage> pageList = new ArrayList<>();
         List<String> lines = new ArrayList<>(VampLib.proxy.listFormattedStringToWidth(locText, 115));
         List<String> page1 = lines.size() > pageLength ? lines.subList(0, pageLength) : lines;
-        pageList.add(new PageItemStack(Strings.join(page1, "\n"), stack));
+        pageList.add(new PageItemStack(StringUtils.join(page1, "\n"), stack));
         page1.clear();
         pageLength += 5;
         while (lines.size() > 0) {
             List<String> page = lines.size() > pageLength ? lines.subList(0, pageLength) : lines;
-            pageList.add(new PageText(Strings.join(page, "\n")));
+            pageList.add(new PageText(StringUtils.join(page, "\n")));
             page.clear();
         }
         return pageList;
@@ -246,7 +246,7 @@ public class GuideHelper {
         List<String> lines = new ArrayList<>(VampLib.proxy.listFormattedStringToWidth(s, 115));
         while (lines.size() > 0) {
             List<String> page = lines.size() > pageLength ? lines.subList(0, pageLength) : lines;
-            pageList.add(new PageText(Strings.join(page, "\n")));
+            pageList.add(new PageText(StringUtils.join(page, "\n")));
             page.clear();
         }
         return pageList;
