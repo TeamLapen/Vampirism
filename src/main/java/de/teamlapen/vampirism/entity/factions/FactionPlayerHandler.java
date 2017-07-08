@@ -150,19 +150,6 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         }
     }
 
-    public void loadNBTData(NBTTagCompound nbt) {
-
-        currentFaction = getFactionFromKey(new ResourceLocation(nbt.getString("faction")));
-        if (currentFaction == null) {
-            VampirismMod.log.w(TAG, "Could not find faction %s. Did mods change?", nbt.getString("faction"));
-        } else {
-            currentLevel = nbt.getInteger("level");
-            notifyFaction(null, 0);
-        }
-
-
-    }
-
     @Override
     public void loadUpdateFromNBT(NBTTagCompound nbt) {
         IPlayableFaction old = currentFaction;
@@ -194,14 +181,6 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             }
         }
         return true;
-    }
-
-    public void saveNBTData(NBTTagCompound nbt) {
-        if (currentFaction != null) {
-
-            nbt.setString("faction", currentFaction.getKey().toString());
-            nbt.setInteger("level", currentLevel);
-        }
     }
 
     @Override
@@ -259,6 +238,19 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         return null;
     }
 
+    private void loadNBTData(NBTTagCompound nbt) {
+
+        if (nbt.hasKey("faction")) {
+            currentFaction = getFactionFromKey(new ResourceLocation(nbt.getString("faction")));
+            if (currentFaction == null) {
+                VampirismMod.log.w(TAG, "Could not find faction %s. Did mods change?", nbt.getString("faction"));
+            } else {
+                currentLevel = nbt.getInteger("level");
+                notifyFaction(null, 0);
+            }
+        }
+    }
+
     /**
      * Notify faction about changes.
      * {@link FactionPlayerHandler#currentFaction} and {@link FactionPlayerHandler#currentLevel} will be used as the new ones
@@ -285,6 +277,13 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
      */
     private void onChangedFaction() {
         player.refreshDisplayName();
+    }
+
+    private void saveNBTData(NBTTagCompound nbt) {
+        if (currentFaction != null) {
+            nbt.setString("faction", currentFaction.getKey().toString());
+            nbt.setInteger("level", currentLevel);
+        }
     }
 
     private void sync(boolean all) {
