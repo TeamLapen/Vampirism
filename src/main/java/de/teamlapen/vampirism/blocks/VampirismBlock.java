@@ -1,13 +1,11 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -43,32 +41,6 @@ public class VampirismBlock extends Block {
         return registeredName;
     }
 
-    @Override
-    public final IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack) {
-        /*
-        *Lots of stupid unnecessary code for 1.11 compat
-         */
-        EnumHand hand;
-        boolean mainHandEmpty = ItemStackUtil.isEmpty(placer.getHeldItemMainhand());
-        if (!mainHandEmpty && placer.getHeldItemMainhand().equals(stack)) {
-            hand = EnumHand.MAIN_HAND;
-        } else {
-            boolean secondHandEmpty = ItemStackUtil.isEmpty(placer.getHeldItemOffhand());
-            if (!secondHandEmpty && placer.getHeldItemOffhand().equals(stack)) {
-                hand = EnumHand.OFF_HAND;
-            } else {
-                if (!mainHandEmpty) {
-                    hand = EnumHand.MAIN_HAND;
-                } else if (!secondHandEmpty) {
-                    hand = EnumHand.OFF_HAND;
-                } else {
-                    VampirismMod.log.w("VampirismBlock", "Placing item without held item (%s)", placer);
-                    hand = EnumHand.MAIN_HAND;
-                }
-            }
-        }
-        return getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, hand);
-    }
 
     @Override
     public final boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
@@ -93,12 +65,6 @@ public class VampirismBlock extends Block {
         return state;
     }
 
-    /**
-     * For compat with 1.11
-     */
-    protected IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-        return super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, placer.getHeldItem(hand));
-    }
 
     /**
      * For compat with 1.11

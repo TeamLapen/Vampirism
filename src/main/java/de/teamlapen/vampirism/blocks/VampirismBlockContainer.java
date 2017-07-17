@@ -7,7 +7,6 @@ import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -24,8 +23,8 @@ import javax.annotation.Nullable;
  */
 public abstract class VampirismBlockContainer extends BlockContainer {
     public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
-    private boolean hasFacing = false;
     private final String registeredName;
+    private boolean hasFacing = false;
 
     public VampirismBlockContainer(String regName, Material materialIn) {
         super(materialIn);
@@ -43,10 +42,6 @@ public abstract class VampirismBlockContainer extends BlockContainer {
         return registeredName;
     }
 
-    @Override
-    public final IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, ItemStack stack) {
-        return getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, placer.getActiveHand());
-    }
 
     @Override
     public final boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, @Nullable ItemStack heldItem, EnumFacing side, float hitX, float hitY, float hitZ) {
@@ -71,12 +66,6 @@ public abstract class VampirismBlockContainer extends BlockContainer {
         return state;
     }
 
-    /**
-     * For compat with 1.11
-     */
-    protected IBlockState getStateForPlacement(World world, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer, EnumHand hand) {
-        return super.getStateForPlacement(world, pos, facing, hitX, hitY, hitZ, meta, placer, placer.getHeldItem(hand));
-    }
 
     /**
      * For compat with 1.11
