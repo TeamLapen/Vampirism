@@ -82,7 +82,7 @@ public class BloodHelper {
         int l = 0;
         for (IFluidTankProperties p : cap.getTankProperties()) {
             FluidStack s = p.getContents();
-            if (ModFluids.blood.equals(s.getFluid())) {
+            if (s != null && ModFluids.blood.equals(s.getFluid())) {
                 l += s.amount;
             }
         }
