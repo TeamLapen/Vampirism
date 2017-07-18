@@ -184,7 +184,7 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
     public void saveToNbt(NBTTagCompound nbt) {
         NBTTagCompound skills = new NBTTagCompound();
         for (ISkill skill : enabledSkills) {
-            skills.setBoolean(skill.getID(), true);
+            skills.setBoolean(skill.getRegistryName().toString(), true);
         }
         nbt.setTag("skills", skills);
 
@@ -193,7 +193,7 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
     public void writeUpdateForClient(NBTTagCompound nbt) {
         NBTTagCompound skills = new NBTTagCompound();
         for (ISkill skill : enabledSkills) {
-            skills.setBoolean(skill.getID(), true);
+            skills.setBoolean(skill.getRegistryName().toString(), true);
         }
         nbt.setTag("skills", skills);
         dirty = false;

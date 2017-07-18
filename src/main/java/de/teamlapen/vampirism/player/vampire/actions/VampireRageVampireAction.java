@@ -14,6 +14,13 @@ public class VampireRageVampireAction extends DefaultVampireAction implements IL
     }
 
     @Override
+    public boolean activate(IVampirePlayer vampire) {
+        vampire.getRepresentingPlayer().addPotionEffect(new PotionEffect(MobEffects.SPEED, getDuration(vampire.getLevel()), 2, false, false));
+        vampire.getRepresentingPlayer().addPotionEffect(new PotionEffect(MobEffects.STRENGTH, getDuration(vampire.getLevel()), 0, false, false));
+        return true;
+    }
+
+    @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
         return !vampire.getActionHandler().isActionActive(VampireActions.batAction);
     }
@@ -46,13 +53,6 @@ public class VampireRageVampireAction extends DefaultVampireAction implements IL
     @Override
     public boolean isEnabled() {
         return Balance.vpa.RAGE_ENABLED;
-    }
-
-    @Override
-    public boolean onActivated(IVampirePlayer vampire) {
-        vampire.getRepresentingPlayer().addPotionEffect(new PotionEffect(MobEffects.SPEED, getDuration(vampire.getLevel()), 2, false, false));
-        vampire.getRepresentingPlayer().addPotionEffect(new PotionEffect(MobEffects.STRENGTH, getDuration(vampire.getLevel()), 0, false, false));
-        return true;
     }
 
     @Override

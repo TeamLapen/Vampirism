@@ -18,13 +18,13 @@ import net.minecraft.entity.SharedMonsterAttributes;
  * Registers the default hunter skills
  */
 public class HunterSkills {
-    public static final ISkill<IHunterPlayer> doubleCrossbow = new VampirismSkill.SimpleHunterSkill("double_crossbow", 192, 32, false);
-    public static final ISkill<IHunterPlayer> weaponTable = new VampirismSkill.SimpleHunterSkill("weapon_table", 48, 32, true);
-    public static final ISkill<IHunterPlayer> enhancedCrossbow = new VampirismSkill.SimpleHunterSkill("enhanced_crossbow", 208, 32, false);
-    public static final ISkill<IHunterPlayer> enhancedArmor = new VampirismSkill.SimpleHunterSkill("enhanced_armor", 0, 48, false);
-    public static final ISkill<IHunterPlayer> enhancedWeapons = new VampirismSkill.SimpleHunterSkill("enhanced_weapons", 16, 48, false);
-    public static final ISkill<IHunterPlayer> techWeapons = new VampirismSkill.SimpleHunterSkill("tech_weapons", 240, 32, true);
-    public static final ISkill<IHunterPlayer> stake1 = new VampirismSkill.SimpleHunterSkill("stake1", 16, 32, false) {
+    public static final ISkill doubleCrossbow = new VampirismSkill.SimpleHunterSkill("double_crossbow", 192, 32, false);
+    public static final ISkill weaponTable = new VampirismSkill.SimpleHunterSkill("weapon_table", 48, 32, true);
+    public static final ISkill enhancedCrossbow = new VampirismSkill.SimpleHunterSkill("enhanced_crossbow", 208, 32, false);
+    public static final ISkill enhancedArmor = new VampirismSkill.SimpleHunterSkill("enhanced_armor", 0, 48, false);
+    public static final ISkill enhancedWeapons = new VampirismSkill.SimpleHunterSkill("enhanced_weapons", 16, 48, false);
+    public static final ISkill techWeapons = new VampirismSkill.SimpleHunterSkill("tech_weapons", 240, 32, true);
+    public static final ISkill stake1 = new VampirismSkill.SimpleHunterSkill("stake1", 16, 32, false) {
         @Override
         public String getLocalizedDescription() {
             String desc = UtilLib.translateFormatted("text.vampirism.skill.stake1.desc", (int) (Balance.hps.INSTANT_KILL_SKILL_1_MAX_HEALTH_PERC * 100));
@@ -34,7 +34,7 @@ public class HunterSkills {
             return desc;
         }
     };
-    public static final ISkill<IHunterPlayer> stake2 = new VampirismSkill.SimpleHunterSkill("stake2", 224, 32, false) {
+    public static final ISkill stake2 = new VampirismSkill.SimpleHunterSkill("stake2", 224, 32, false) {
         @Override
         public String getLocalizedDescription() {
             String desc = null;
@@ -47,12 +47,12 @@ public class HunterSkills {
             return desc;
         }
     };
-    public static final ISkill<IHunterPlayer> bloodPotionTable = new VampirismSkill.SimpleHunterSkill("blood_potion_table", 64, 32, true);
-    public static final ISkill<IHunterPlayer> bloodPotion_lessBad = new VampirismSkill.SimpleHunterSkill("blood_potion_less_bad", 80, 32, true);
-    public static final ISkill<IHunterPlayer> bloodPotion_goodOrBad = new VampirismSkill.SimpleHunterSkill("blood_potion_good_or_bad", 96, 32, true);
-    public static final ISkill<IHunterPlayer> bloodPotion_identifySome = new VampirismSkill.SimpleHunterSkill("blood_potion_identify_some", 112, 32, true);
-    public static final ISkill<IHunterPlayer> bloodPotion_categoryHint = new VampirismSkill.SimpleHunterSkill("blood_potion_category_hint", 128, 32, true);
-    public static final ISkill<IHunterPlayer> bloodPotion_lessBad2 = new VampirismSkill.SimpleHunterSkill("blood_potion_less_bad_2", 80, 32, true) {
+    public static final ISkill bloodPotionTable = new VampirismSkill.SimpleHunterSkill("blood_potion_table", 64, 32, true);
+    public static final ISkill bloodPotion_lessBad = new VampirismSkill.SimpleHunterSkill("blood_potion_less_bad", 80, 32, true);
+    public static final ISkill bloodPotion_goodOrBad = new VampirismSkill.SimpleHunterSkill("blood_potion_good_or_bad", 96, 32, true);
+    public static final ISkill bloodPotion_identifySome = new VampirismSkill.SimpleHunterSkill("blood_potion_identify_some", 112, 32, true);
+    public static final ISkill bloodPotion_categoryHint = new VampirismSkill.SimpleHunterSkill("blood_potion_category_hint", 128, 32, true);
+    public static final ISkill bloodPotion_lessBad2 = new VampirismSkill.SimpleHunterSkill("blood_potion_less_bad_2", 80, 32, true) {
         @Override
         public String getLocalizedDescription() {
             return UtilLib.translate("text.vampirism.skill.blood_potion_less_bad.desc");
@@ -63,15 +63,15 @@ public class HunterSkills {
             return "text.vampirism.skill.blood_potion_less_bad";
         }
     };
-    public static final ISkill<IHunterPlayer> bloodPotion_fasterCrafting = new VampirismSkill.SimpleHunterSkill("blood_potion_faster_crafting", 144, 32, false);
-    public static final ISkill<IHunterPlayer> bloodPotion_portableCrafting = new VampirismSkill.SimpleHunterSkill("blood_potion_portable_crafting", 176, 32, true);
-    public static final ISkill<IHunterPlayer> bloodPotion_increaseDuration = new VampirismSkill.SimpleHunterSkill("blood_potion_duration", 160, 32, true);
+    public static final ISkill bloodPotion_fasterCrafting = new VampirismSkill.SimpleHunterSkill("blood_potion_faster_crafting", 144, 32, false);
+    public static final ISkill bloodPotion_portableCrafting = new VampirismSkill.SimpleHunterSkill("blood_potion_portable_crafting", 176, 32, true);
+    public static final ISkill bloodPotion_increaseDuration = new VampirismSkill.SimpleHunterSkill("blood_potion_duration", 160, 32, true);
 
-    public static final ISkill<IHunterPlayer> basic_alchemy = new VampirismSkill.SimpleHunterSkill("basic_alchemy", 32, 48, true);
-    public static final ISkill<IHunterPlayer> garlicBeacon = new VampirismSkill.SimpleHunterSkill("garlic_beacon", 48, 48, true);
-    public static final ISkill<IHunterPlayer> holyWater_enhanced = new VampirismSkill.SimpleHunterSkill("holy_water_enhanced", 80, 48, true);
-    public static final ISkill<IHunterPlayer> purifiedGarlic = new VampirismSkill.SimpleHunterSkill("purified_garlic", 64, 48, true);
-    public static final ISkill<IHunterPlayer> garlicBeacon_improved = new VampirismSkill.SimpleHunterSkill("garlic_beacon_improved", 96, 48, true);
+    public static final ISkill basic_alchemy = new VampirismSkill.SimpleHunterSkill("basic_alchemy", 32, 48, true);
+    public static final ISkill garlicBeacon = new VampirismSkill.SimpleHunterSkill("garlic_beacon", 48, 48, true);
+    public static final ISkill holyWater_enhanced = new VampirismSkill.SimpleHunterSkill("holy_water_enhanced", 80, 48, true);
+    public static final ISkill purifiedGarlic = new VampirismSkill.SimpleHunterSkill("purified_garlic", 64, 48, true);
+    public static final ISkill garlicBeacon_improved = new VampirismSkill.SimpleHunterSkill("garlic_beacon_improved", 96, 48, true);
 
     public static void registerHunterSkills() {
         ISkillRegistry registry = VampirismAPI.skillRegistry();

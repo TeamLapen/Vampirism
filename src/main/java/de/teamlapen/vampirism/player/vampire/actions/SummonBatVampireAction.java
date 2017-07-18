@@ -18,6 +18,20 @@ public class SummonBatVampireAction extends DefaultVampireAction {
     }
 
     @Override
+    public boolean activate(IVampirePlayer player) {
+        EntityPlayer entityPlayer = player.getRepresentingPlayer();
+        for (int i = 0; i < Balance.vpa.SUMMON_BAT_COUNT; i++) {
+            EntityBlindingBat e = new EntityBlindingBat(entityPlayer.getEntityWorld());
+            e.restrictLiveSpan();
+            e.setIsBatHanging(false);
+            e.copyLocationAndAnglesFrom(player.getRepresentingPlayer());
+            player.getRepresentingPlayer().getEntityWorld().spawnEntity(e);
+        }
+        entityPlayer.getEntityWorld().playSound(null, entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, ModSounds.bat_swarm, SoundCategory.PLAYERS, 1.3F, entityPlayer.getEntityWorld().rand.nextFloat() * 0.2F + 1.3F);
+        return true;
+    }
+
+    @Override
     public boolean canBeUsedBy(IVampirePlayer player) {
         return player.getActionHandler().isActionActive(VampireActions.batAction);
     }
@@ -45,19 +59,5 @@ public class SummonBatVampireAction extends DefaultVampireAction {
     @Override
     public boolean isEnabled() {
         return Balance.vpa.SUMMON_BAT_ENABLED;
-    }
-
-    @Override
-    public boolean onActivated(IVampirePlayer player) {
-        EntityPlayer entityPlayer = player.getRepresentingPlayer();
-        for (int i = 0; i < Balance.vpa.SUMMON_BAT_COUNT; i++) {
-            EntityBlindingBat e = new EntityBlindingBat(entityPlayer.getEntityWorld());
-            e.restrictLiveSpan();
-            e.setIsBatHanging(false);
-            e.copyLocationAndAnglesFrom(player.getRepresentingPlayer());
-            player.getRepresentingPlayer().getEntityWorld().spawnEntity(e);
-        }
-        entityPlayer.getEntityWorld().playSound(null, entityPlayer.posX, entityPlayer.posY, entityPlayer.posZ, ModSounds.bat_swarm, SoundCategory.PLAYERS, 1.3F, entityPlayer.getEntityWorld().rand.nextFloat() * 0.2F + 1.3F);
-        return true;
     }
 }

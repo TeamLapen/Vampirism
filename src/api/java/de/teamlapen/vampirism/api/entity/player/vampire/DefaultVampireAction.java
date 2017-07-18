@@ -15,7 +15,7 @@ public abstract class DefaultVampireAction extends DefaultAction<IVampirePlayer>
      * @param icons If null Vampirism's default one will be used
      */
     public DefaultVampireAction(ResourceLocation icons) {
-        super(icons);
+        super(faction, icons);
     }
 
     @Override

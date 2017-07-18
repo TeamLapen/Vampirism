@@ -28,7 +28,7 @@ public interface IFaction<T extends IFactionEntity> {
     /**
      * @return The interface all entities of this faction implement (or for players the IExtendedEntityProperty) implements
      */
-    Class<T> getEntityInterface();
+    Class<T> getFactionEntityInterface();
 
     /**
      * If set returns unlocalized name. Otherwise returns {@link IFaction#name()}

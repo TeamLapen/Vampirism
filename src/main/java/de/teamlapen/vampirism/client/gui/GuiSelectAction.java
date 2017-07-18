@@ -30,6 +30,11 @@ public class GuiSelectAction extends GuiPieMenu<IAction> {
      */
     private IAction fakeAction = new DefaultVampireAction(null) {
         @Override
+        public boolean activate(IVampirePlayer vampire) {
+            return true;
+        }
+
+        @Override
         public int getCooldown() {
             return 0;
         }
@@ -51,11 +56,6 @@ public class GuiSelectAction extends GuiPieMenu<IAction> {
 
         @Override
         public boolean isEnabled() {
-            return true;
-        }
-
-        @Override
-        public boolean onActivated(IVampirePlayer vampire) {
             return true;
         }
 

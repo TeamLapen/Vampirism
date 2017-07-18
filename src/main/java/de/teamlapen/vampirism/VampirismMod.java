@@ -31,11 +31,11 @@ import de.teamlapen.vampirism.modcompat.jei.JEIModCompat;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.player.ModPlayerEventHandler;
-import de.teamlapen.vampirism.player.actions.ActionRegistry;
+import de.teamlapen.vampirism.player.actions.ActionManager;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
-import de.teamlapen.vampirism.player.skills.SkillRegistry;
+import de.teamlapen.vampirism.player.skills.SkillManager;
 import de.teamlapen.vampirism.player.vampire.BloodVision;
 import de.teamlapen.vampirism.player.vampire.NightVision;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -246,8 +246,6 @@ public class VampirismMod {
     private void finishAPI() {
         ((FactionRegistry) VampirismAPI.factionRegistry()).finish();
         ((VampirismEntityRegistry) VampirismAPI.biteableRegistry()).finishRegistration();
-        ((ActionRegistry) VampirismAPI.actionRegistry()).finish();
-        ((SkillRegistry) VampirismAPI.skillRegistry()).finish();
     }
 
     /**
@@ -257,12 +255,12 @@ public class VampirismMod {
         FactionRegistry factionRegistry = new FactionRegistry();
         SundamageRegistry sundamageRegistry = new SundamageRegistry();
         VampirismEntityRegistry biteableRegistry = new VampirismEntityRegistry();
-        ActionRegistry actionRegistry = new ActionRegistry();
-        SkillRegistry skillRegistry = new SkillRegistry();
+        ActionManager actionManager = new ActionManager();
+        SkillManager skillManager = new SkillManager();
         GeneralRegistryImpl generalRegistry = new GeneralRegistryImpl();
 
         BloodPotionRegistry bloodPotionRegistry = new BloodPotionRegistry();
-        VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionRegistry, skillRegistry, generalRegistry, bloodPotionRegistry);
+        VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionManager, skillManager, generalRegistry, bloodPotionRegistry);
         VampirismAPI.setUpAccessors(HunterWeaponCraftingManager.getInstance(), new GarlicChunkHandler.Provider(), AlchemicalCauldronCraftingManager.getInstance());
         VReference.VAMPIRE_FACTION = factionRegistry.registerPlayableFaction("Vampire", IVampirePlayer.class, 0XFF780DA3, REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.CAP, REFERENCE.HIGHEST_VAMPIRE_LEVEL);
         VReference.VAMPIRE_FACTION.setChatColor(TextFormatting.DARK_PURPLE).setUnlocalizedName("text.vampirism.vampire", "text.vampirism.vampires");

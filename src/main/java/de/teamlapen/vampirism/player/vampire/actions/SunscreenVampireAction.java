@@ -16,6 +16,11 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
         super(null);
     }
 
+    @Override
+    public boolean activate(IVampirePlayer vampire) {
+        vampire.getRepresentingPlayer().addPotionEffect(new PotionEffect(ModPotions.sunscreen, getDuration(vampire.getLevel()), 3, false, false));
+        return true;
+    }
 
     @Override
     public int getCooldown() {
@@ -45,12 +50,6 @@ public class SunscreenVampireAction extends DefaultVampireAction implements ILas
     @Override
     public boolean isEnabled() {
         return Balance.vpa.SUNSCREEN_ENABLED;
-    }
-
-    @Override
-    public boolean onActivated(IVampirePlayer vampire) {
-        vampire.getRepresentingPlayer().addPotionEffect(new PotionEffect(ModPotions.sunscreen, getDuration(vampire.getLevel()), 3, false, false));
-        return true;
     }
 
     @Override

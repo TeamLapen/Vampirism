@@ -24,21 +24,7 @@ public class VampireSkills {
         ISkillRegistry registry = VampirismAPI.skillRegistry();
         SkillNode root = registry.setRootSkill(VReference.VAMPIRE_FACTION, new VampirismSkill.SimpleVampireSkill("root_vampire", 32, 0, false));
 
-        SkillNode skill2 = new SkillNode(root, new VampirismSkill<IVampirePlayer>() {
-            @Override
-            public String getID() {
-                return "second";
-            }
-
-            @Override
-            public int getMinU() {
-                return 48;
-            }
-
-            @Override
-            public int getMinV() {
-                return 0;
-            }
+        SkillNode skill2 = new SkillNode(root, new VampirismSkill.SimpleVampireSkill("second", 48, 0, false) {
 
             @Override
             public String getUnlocalizedName() {
@@ -66,21 +52,7 @@ public class VampireSkills {
 
     private static void registerUtilSkills(SkillNode start) {
         SkillNode skill1 = new SkillNode(start, new ActionSkill<>(VampireActions.summonBatAction, "2summonbats"));
-        DefaultSkill<IVampirePlayer> damage = new VampirismSkill<IVampirePlayer>() {
-            @Override
-            public String getID() {
-                return "2lesssundamage";
-            }
-
-            @Override
-            public int getMinU() {
-                return 96;
-            }
-
-            @Override
-            public int getMinV() {
-                return 0;
-            }
+        DefaultSkill<IVampirePlayer> damage = new VampirismSkill.SimpleVampireSkill("2lesssundamage", 96, 0, false) {
 
             @Override
             public String getUnlocalizedName() {
@@ -110,25 +82,11 @@ public class VampireSkills {
 
     private static void registerOffensiveSkills(SkillNode start) {
         SkillNode skill1 = new SkillNode(start, new ActionSkill<>(VampireActions.rageAction, "3rage"));
-        DefaultSkill<IVampirePlayer> bite = new VampirismSkill<IVampirePlayer>() {
-            @Override
-            public String getID() {
-                return "3bite1";
-            }
+        DefaultSkill<IVampirePlayer> bite = new VampirismSkill.SimpleVampireSkill("3bite1", 128, 0, false) {
 
             @Override
             public String getLocalizedDescription() {
                 return UtilLib.translate("text.vampirism.skill.more_bite_damage.desc");
-            }
-
-            @Override
-            public int getMinU() {
-                return 128;
-            }
-
-            @Override
-            public int getMinV() {
-                return 0;
             }
 
             @Override
@@ -137,26 +95,12 @@ public class VampireSkills {
             }
         };
         bite.registerAttributeModifier(VReference.biteDamage, "A08CAB62-EE88-4DB9-8F62-E9EF108A4E87", Balance.vps.BITE_DAMAGE_MULT, 1);
-        DefaultSkill<IVampirePlayer> bite2 = new VampirismSkill<IVampirePlayer>() {
-            @Override
-            public String getID() {
-                return "3bite2";
-            }
-
+        DefaultSkill<IVampirePlayer> bite2 = new VampirismSkill.SimpleVampireSkill("3bite2", 112, 0, false) {
             @Override
             public String getLocalizedDescription() {
                 return UtilLib.translate("text.vampirism.skill.poisonous_bite.desc");
             }
 
-            @Override
-            public int getMinU() {
-                return 112;
-            }
-
-            @Override
-            public int getMinV() {
-                return 0;
-            }
 
             @Override
             public String getUnlocalizedName() {
@@ -182,21 +126,7 @@ public class VampireSkills {
 
     private static void registerDefensiveSkills(SkillNode start) {
         SkillNode skill1 = new SkillNode(start, new ActionSkill<>(VampireActions.sunscreenVampireAction, "1sunscreen"));
-        DefaultSkill<IVampirePlayer> jump = new VampirismSkill<IVampirePlayer>() {
-            @Override
-            public String getID() {
-                return "1jump";
-            }
-
-            @Override
-            public int getMinU() {
-                return 160;
-            }
-
-            @Override
-            public int getMinV() {
-                return 0;
-            }
+        DefaultSkill<IVampirePlayer> jump = new VampirismSkill.SimpleVampireSkill("1jump", 160, 0, false) {
 
             @Override
             public String getUnlocalizedName() {
@@ -213,21 +143,7 @@ public class VampireSkills {
                 ((VampirePlayer) player).getSpecialAttributes().setJumpBoost(Balance.vps.JUMP_BOOST + 1);
             }
         };
-        DefaultSkill<IVampirePlayer> speed = new VampirismSkill<IVampirePlayer>() {
-            @Override
-            public String getID() {
-                return "1speed";
-            }
-
-            @Override
-            public int getMinU() {
-                return 144;
-            }
-
-            @Override
-            public int getMinV() {
-                return 0;
-            }
+        DefaultSkill<IVampirePlayer> speed = new VampirismSkill.SimpleVampireSkill("1speed", 144, 0, false) {
 
             @Override
             public String getUnlocalizedName() {
@@ -250,11 +166,8 @@ public class VampireSkills {
                 player.unlockVision(VReference.vision_bloodVision);
             }
         });
-        SkillNode skill4 = new SkillNode(skill3, new VampirismSkill<IVampirePlayer>() {
-            @Override
-            public String getID() {
-                return "1creeper";
-            }
+        SkillNode skill4 = new SkillNode(skill3, new VampirismSkill.SimpleVampireSkill("1creeper", 192, 0, false) {
+
 
             @Override
             public String getLocalizedDescription() {
@@ -264,15 +177,6 @@ public class VampireSkills {
                 return super.getLocalizedDescription();
             }
 
-            @Override
-            public int getMinU() {
-                return 192;
-            }
-
-            @Override
-            public int getMinV() {
-                return 0;
-            }
 
             @Override
             public String getUnlocalizedName() {

@@ -14,7 +14,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,22 +21,12 @@ import java.util.Map;
  */
 public class SkillRegistry implements ISkillRegistry {
     private final Map<IPlayableFaction, SkillNode> rootNodes = new HashMap<>();
-    private final Map<IPlayableFaction, BiMap<String, ISkill>> skillMap = new HashMap<>();
+
     /**
      * Stores values relevant for rendering the skill menu. Only filled on client
      */
     private final Map<IPlayableFaction, Integer[]> skillNodeSizeMap = new HashMap<>();
 
-    /**
-     * For debug purpose only.
-     * Adds all available skill ids to the list
-     *
-     * @param faction
-     * @param list
-     */
-    public void addSkills(IPlayableFaction faction, List<String> list) {
-        list.addAll(skillMap.get(faction).keySet());
-    }
 
 //    /**
 //     * Calculate and set the render position for the given node using the given column as center
@@ -122,20 +111,12 @@ public class SkillRegistry implements ISkillRegistry {
         return skillNodeSizeMap.get(faction);
     }
 
-    @Override
-    public String getID(IPlayableFaction faction, ISkill skill) {
-        return skillMap.get(faction).inverse().get(skill);
-    }
 
     @Override
     public SkillNode getRootSkillNode(IPlayableFaction faction) {
         return rootNodes.get(faction);
     }
 
-    @Override
-    public ISkill getSkill(IPlayableFaction faction, String id) {
-        return skillMap.get(faction).get(id);
-    }
 
     /**
      * For debug purpose only.

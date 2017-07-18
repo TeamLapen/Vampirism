@@ -1,20 +1,24 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
  * Skill that can be unlocked
  */
-public interface ISkill<T extends ISkillPlayer> {
-
+public interface ISkill extends IForgeRegistryEntry<ISkill> {
     /**
-     * @return Unique lowercase id
+     * @return The faction this skill belongs to
      */
-    String getID();
+    @Nonnull
+    IPlayableFaction getFaction();
 
     /**
      * Should return the location of the icon map where the icon is in
@@ -54,15 +58,17 @@ public interface ISkill<T extends ISkillPlayer> {
 
     /**
      * Called when the skill is disenabled (Server: on load from nbt/on disabling all skills e.g. via the gui. Client: on update from server)
+     * @param player Must be of the type that {@link ISkill#getFaction()} belongs to
+
      */
-    void onDisable(T player);
+    void onDisable(IFactionPlayer player);
 
     /**
      * Called when the skill is enabled (Server: on load from nbt/on enabling it via the gui. Client: on update from server)
      *
-     * @param player
+     * @param player Must be of the type that {@link ISkill#getFaction()} belongs to
      */
-    void onEnable(T player);
+    void onEnable(IFactionPlayer player);
 
     /**
      * Save this. It's required for rendering

@@ -11,6 +11,11 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
         super(null);
     }
 
+    @Override
+    public boolean activate(IVampirePlayer vampire) {
+        vampire.getRepresentingPlayer().setInvisible(true);
+        return true;
+    }
 
     @Override
     public int getCooldown() {
@@ -21,7 +26,6 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
     public int getDuration(int level) {
         return Balance.vpa.INVISIBILITY_DURATION * 20;
     }
-
 
     @Override
     public int getMinU() {
@@ -44,12 +48,6 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
     }
 
     @Override
-    public boolean onActivated(IVampirePlayer vampire) {
-        vampire.getRepresentingPlayer().setInvisible(true);
-        return true;
-    }
-
-    @Override
     public void onActivatedClient(IVampirePlayer vampire) {
 
     }
@@ -61,7 +59,7 @@ public class InvisibilityVampireAction extends DefaultVampireAction implements I
 
     @Override
     public void onReActivated(IVampirePlayer vampire) {
-        onActivated(vampire);
+        activate(vampire);
     }
 
     @Override

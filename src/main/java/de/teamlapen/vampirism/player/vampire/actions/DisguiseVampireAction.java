@@ -16,6 +16,14 @@ public class DisguiseVampireAction extends DefaultVampireAction implements ILast
     }
 
     @Override
+    public boolean activate(IVampirePlayer player) {
+        ((VampirePlayer) player).getSpecialAttributes().disguised = true;
+        ((VampirePlayer) player).getSpecialAttributes().disguisedAs = null;
+        player.getRepresentingPlayer().refreshDisplayName();
+        return true;
+    }
+
+    @Override
     public int getCooldown() {
         return Balance.vpa.DISGUISE_COOLDOWN * 20;
     }
@@ -46,16 +54,8 @@ public class DisguiseVampireAction extends DefaultVampireAction implements ILast
     }
 
     @Override
-    public boolean onActivated(IVampirePlayer player) {
-        ((VampirePlayer) player).getSpecialAttributes().disguised = true;
-        ((VampirePlayer) player).getSpecialAttributes().disguisedAs = null;
-        player.getRepresentingPlayer().refreshDisplayName();
-        return true;
-    }
-
-    @Override
     public void onActivatedClient(IVampirePlayer player) {
-        onActivated(player);
+        activate(player);
     }
 
     @Override
@@ -66,7 +66,7 @@ public class DisguiseVampireAction extends DefaultVampireAction implements ILast
 
     @Override
     public void onReActivated(IVampirePlayer player) {
-        onActivated(player);
+        activate(player);
     }
 
     @Override
