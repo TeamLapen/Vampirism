@@ -33,14 +33,10 @@ import de.teamlapen.vampirism.network.ModPacketDispatcher;
 import de.teamlapen.vampirism.player.ModPlayerEventHandler;
 import de.teamlapen.vampirism.player.actions.ActionManager;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
-import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.skills.SkillManager;
 import de.teamlapen.vampirism.player.vampire.BloodVision;
 import de.teamlapen.vampirism.player.vampire.NightVision;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
-import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.potion.blood.BloodPotionRegistry;
 import de.teamlapen.vampirism.potion.blood.BloodPotions;
 import de.teamlapen.vampirism.proxy.IProxy;
@@ -118,7 +114,7 @@ public class VampirismMod {
         return Configs.realism_mode;
     }
 
-    public final RegistryManager registryManager;
+    private final RegistryManager registryManager;
     private final ModCompatLoader modCompatLoader = new ModCompatLoader(REFERENCE.MODID + "/vampirism_mod_compat.cfg");
     private VersionChecker.VersionInfo versionInfo;
 
@@ -126,6 +122,7 @@ public class VampirismMod {
         addModCompats();
         registryManager = new RegistryManager();
         MinecraftForge.EVENT_BUS.register(registryManager);
+        setupAPI1();
     }
 
     public VersionChecker.VersionInfo getVersionInfo() {
@@ -134,6 +131,8 @@ public class VampirismMod {
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+        finishAPI1();
+
         String currentVersion = "@VERSION@".equals(REFERENCE.VERSION) ? "0.0.0-test" : REFERENCE.VERSION;
         if (Configs.disable_versionCheck) {
             versionInfo = new VersionChecker.VersionInfo(currentVersion);
@@ -165,7 +164,6 @@ public class VampirismMod {
         registryManager.onInitStep(IInitListener.Step.INIT, event);
         proxy.onInitStep(IInitListener.Step.INIT, event);
         modCompatLoader.onInitStep(IInitListener.Step.INIT, event);
-
     }
 
     @Mod.EventHandler
@@ -185,7 +183,7 @@ public class VampirismMod {
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        finishAPI();
+        finishAPI2();
         registryManager.onInitStep(IInitListener.Step.POST_INIT, event);
         proxy.onInitStep(IInitListener.Step.POST_INIT, event);
         modCompatLoader.onInitStep(IInitListener.Step.POST_INIT, event);
@@ -201,11 +199,11 @@ public class VampirismMod {
         ExtendedCreature.registerCapability();
         VampirismVillage.registerCapability();
 
-        setupAPI1();
+        setupAPI2();
         Configs.init(new File(event.getModConfigurationDirectory(), REFERENCE.MODID), inDev);
         Balance.init(new File(event.getModConfigurationDirectory(), REFERENCE.MODID), inDev);
         modCompatLoader.onInitStep(IInitListener.Step.PRE_INIT, event);
-        setupAPI2();
+        setupAPI3();
 
 
         //Data Fixer
@@ -221,10 +219,7 @@ public class VampirismMod {
         NetworkRegistry.INSTANCE.registerGuiHandler(instance, new ModGuiHandler());
         registryManager.onInitStep(IInitListener.Step.PRE_INIT, event);
         proxy.onInitStep(IInitListener.Step.PRE_INIT, event);
-        VampireActions.registerDefaultActions();
-        HunterActions.registerDefaultActions();
-        VampireSkills.registerVampireSkills();
-        HunterSkills.registerHunterSkills();
+
     }
 
     private void addModCompats() {
@@ -243,13 +238,24 @@ public class VampirismMod {
         }
     }
 
-    private void finishAPI() {
+    /**
+     * Finish during init
+     */
+    private void finishAPI1() {
         ((FactionRegistry) VampirismAPI.factionRegistry()).finish();
-        ((VampirismEntityRegistry) VampirismAPI.biteableRegistry()).finishRegistration();
+        ((SkillManager) VampirismAPI.skillManager()).buildSkillTrees();
     }
 
     /**
-     * Setup API during pre-init before configs are loaded
+     * Finish during post-init
+     */
+    private void finishAPI2() {
+        ((VampirismEntityRegistry) VampirismAPI.biteableRegistry()).finishRegistration();
+    }
+
+
+    /**
+     * Called during construction
      */
     private void setupAPI1() {
         FactionRegistry factionRegistry = new FactionRegistry();
@@ -259,14 +265,20 @@ public class VampirismMod {
         SkillManager skillManager = new SkillManager();
         GeneralRegistryImpl generalRegistry = new GeneralRegistryImpl();
 
+        biteableRegistry.setDefaultConvertingHandlerCreator(DefaultConvertingHandler::new);
         BloodPotionRegistry bloodPotionRegistry = new BloodPotionRegistry();
         VampirismAPI.setUpRegistries(factionRegistry, sundamageRegistry, biteableRegistry, actionManager, skillManager, generalRegistry, bloodPotionRegistry);
         VampirismAPI.setUpAccessors(HunterWeaponCraftingManager.getInstance(), new GarlicChunkHandler.Provider(), AlchemicalCauldronCraftingManager.getInstance());
-        VReference.VAMPIRE_FACTION = factionRegistry.registerPlayableFaction("Vampire", IVampirePlayer.class, 0XFF780DA3, REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.CAP, REFERENCE.HIGHEST_VAMPIRE_LEVEL);
+    }
+
+    /**
+     * Setup API during pre-init before configs are loaded
+     */
+    private void setupAPI2() {
+        VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction("Vampire", IVampirePlayer.class, 0XFF780DA3, REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.CAP, REFERENCE.HIGHEST_VAMPIRE_LEVEL);
         VReference.VAMPIRE_FACTION.setChatColor(TextFormatting.DARK_PURPLE).setUnlocalizedName("text.vampirism.vampire", "text.vampirism.vampires");
-        VReference.HUNTER_FACTION = factionRegistry.registerPlayableFaction("Hunter", IHunterPlayer.class, Color.BLUE.getRGB(), REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.CAP, REFERENCE.HIGHEST_HUNTER_LEVEL);
+        VReference.HUNTER_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction("Hunter", IHunterPlayer.class, Color.BLUE.getRGB(), REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.CAP, REFERENCE.HIGHEST_HUNTER_LEVEL);
         VReference.HUNTER_FACTION.setChatColor(TextFormatting.DARK_BLUE).setUnlocalizedName("text.vampirism.hunter", "text.vampirism.hunters");
-        biteableRegistry.setDefaultConvertingHandlerCreator(DefaultConvertingHandler::new);
         VReference.HUNTER_CREATURE_TYPE = HUNTER_CREATURE_TYPE;
         VReference.VAMPIRE_CREATURE_TYPE = VAMPIRE_CREATURE_TYPE;
         VReference.VAMPIRE_CREATURE_ATTRIBUTE = VAMPIRE_CREATURE_ATTRIBUTE;
@@ -275,7 +287,7 @@ public class VampirismMod {
     /**
      * Setup API during pre-init after configs are loaded
      */
-    private void setupAPI2() {
+    private void setupAPI3() {
         VReference.vision_nightVision = VampirismAPI.vampireVisionRegistry().registerVision("nightVision", new NightVision());
         VReference.vision_bloodVision = VampirismAPI.vampireVisionRegistry().registerVision("bloodVision", new BloodVision());
     }

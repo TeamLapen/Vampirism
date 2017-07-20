@@ -48,6 +48,15 @@ public interface ISkill extends IForgeRegistryEntry<ISkill> {
     @SideOnly(Side.CLIENT)
     int getMinV();
 
+    /**
+     * Can return null if not registered, but since this has to be registered, we don't want annoying null warnings everywhere
+     *
+     * @return
+     */
+    @Nonnull
+    @Override
+    ResourceLocation getRegistryName();
+
     @SideOnly(Side.CLIENT)
     int getRenderColumn();
 

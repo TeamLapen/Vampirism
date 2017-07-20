@@ -125,7 +125,7 @@ public class BlockWeaponTable extends VampirismBlock {
     private boolean canUse(EntityPlayer player) {
         IPlayableFaction faction = FactionPlayerHandler.get(player).getCurrentFaction();
         if (faction != null && faction.equals(VReference.HUNTER_FACTION)) {
-            if (faction.getPlayerCapability(player).getSkillHandler().isSkillEnabled(HunterSkills.weaponTable)) {
+            if (faction.getPlayerCapability(player).getSkillHandler().isSkillEnabled(HunterSkills.weapon_table)) {
                 return true;
             }
         }

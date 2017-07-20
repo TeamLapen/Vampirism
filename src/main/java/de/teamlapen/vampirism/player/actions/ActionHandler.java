@@ -37,7 +37,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
 
     public ActionHandler(T player) {
         this.player = player;
-        List<IAction> actions = VampirismAPI.actionRegistry().getActionMapForFaction(player.getFaction());
+        List<IAction> actions = VampirismAPI.actionManager().getActionsForFaction(player.getFaction());
         ImmutableBiMap.Builder<Integer, IAction> idBuilder = ImmutableBiMap.builder();
         int i = 0;
         for (IAction action : actions) {

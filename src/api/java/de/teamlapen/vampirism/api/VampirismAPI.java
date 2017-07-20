@@ -49,11 +49,11 @@ public class VampirismAPI {
     private static ISkillManager skillManager;
     private static IActionManager actionManager;
 
-    public static ISkillManager getSkillManager() {
+    public static ISkillManager skillManager() {
         return skillManager;
     }
 
-    public static IActionManager getActionManager() {
+    public static IActionManager actionManager() {
         return actionManager;
     }
 

@@ -24,6 +24,11 @@ public class PlayableFaction<T extends IFactionPlayer> extends Faction<T> implem
     }
 
     @Override
+    public Class<T> getFactionPlayerInterface() {
+        return entityInterface;
+    }
+
+    @Override
     public int getHighestReachableLevel() {
         return highestLevel;
     }

@@ -7,9 +7,9 @@ import de.teamlapen.vampirism.config.Balance;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 
-public class VampireRageVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
+public class RageVampireAction extends DefaultVampireAction implements ILastingAction<IVampirePlayer> {
 
-    public VampireRageVampireAction() {
+    public RageVampireAction() {
         super(null);
     }
 
@@ -22,7 +22,7 @@ public class VampireRageVampireAction extends DefaultVampireAction implements IL
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.getActionHandler().isActionActive(VampireActions.batAction);
+        return !vampire.getActionHandler().isActionActive(VampireActions.bat);
     }
 
     @Override

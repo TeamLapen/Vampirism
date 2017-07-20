@@ -5,13 +5,14 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterVillager;
-import de.teamlapen.vampirism.player.skills.SkillRegistry;
+import de.teamlapen.vampirism.player.skills.SkillManager;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.tileentity.TileTent;
@@ -194,14 +195,14 @@ public class TestCommand extends BasicCommand {
                     throw new WrongUsageException(getUsage(sender));
                 }
                 if ("list".equals(args[0])) {
-                    ((SkillRegistry) VampirismAPI.skillRegistry()).printSkills(factionPlayer.getFaction(), sender);
+                    ((SkillManager) VampirismAPI.skillManager()).printSkills(factionPlayer.getFaction(), sender);
                     return;
                 }
                 if ("disableall".equals(args[0])) {
                     (factionPlayer.getSkillHandler()).resetSkills();
                     return;
                 }
-                ISkill skill = VampirismAPI.skillRegistry().getSkill(factionPlayer.getFaction(), args[0]);
+                ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(args[0]));
                 if (skill == null) {
                     sender.sendMessage(new TextComponentString("Skill with id " + args[0] + " could not be found for faction " + factionPlayer.getFaction().name()));
                     return;
@@ -241,8 +242,10 @@ public class TestCommand extends BasicCommand {
                 list.add("list");
                 list.add("disableall");
 
-                IFactionPlayer factionPlayer = FactionPlayerHandler.get(sender).getCurrentFactionPlayer();
-                ((SkillRegistry) VampirismAPI.skillRegistry()).addSkills(factionPlayer.getFaction(), list);
+                IPlayableFaction faction = FactionPlayerHandler.get(sender).getCurrentFaction();
+                VampirismAPI.skillManager().getSkillsForFaction(faction).forEach(skill -> {
+                    list.add(skill.getRegistryName().toString());
+                });
 
 
                 return list;

@@ -4,6 +4,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.DefaultSkill;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import net.minecraft.util.ResourceLocation;
@@ -47,7 +48,7 @@ public abstract class VampirismSkill<T extends IFactionPlayer> extends DefaultSk
     /**
      * Simple hunter skill implementation. Does nothing by itself
      */
-    public static class SimpleHunterSkill extends VampirismSkill {
+    public static class SimpleHunterSkill extends VampirismSkill<IHunterPlayer> {
         private final int u, v;
 
         /**

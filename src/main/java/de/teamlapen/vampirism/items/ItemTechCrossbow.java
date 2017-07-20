@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModEnchantments;
 import de.teamlapen.vampirism.core.ModItems;
@@ -119,8 +118,8 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
 
     @Nullable
     @Override
-    public ISkill<IHunterPlayer> getRequiredSkill(@Nonnull ItemStack stack) {
-        return HunterSkills.techWeapons;
+    public ISkill getRequiredSkill(@Nonnull ItemStack stack) {
+        return HunterSkills.tech_weapons;
     }
 
     @Override

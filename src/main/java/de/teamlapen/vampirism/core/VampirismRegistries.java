@@ -25,6 +25,10 @@ public class VampirismRegistries {
         ACTIONS = makeRegistry(ACTIONS_ID, IAction.class, Integer.MAX_VALUE >> 5);
     }
 
+    static void init() {
+
+    }
+
     private static <T extends IForgeRegistryEntry<T>> IForgeRegistry<T> makeRegistry(ResourceLocation name, Class<T> type, int max) {
         return new RegistryBuilder<T>().setName(name).setType(type).setMaxID(max).create();
     }

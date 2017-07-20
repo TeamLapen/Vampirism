@@ -30,6 +30,18 @@ public class Logger {
         this.modid = modid;
     }
 
+    /**
+     * Print a large warning. Should only be used to notify developers about important "hardcoded" problems.
+     */
+    public void bigWarning(String tag, String format, Object... data) {
+        log(Level.WARN, tag, "*************************************************************");
+        log(Level.WARN, tag, "-------------- %s --------------", tag);
+        w(tag, format, data);
+        log(Level.WARN, tag, "*************************************************************");
+
+
+    }
+
     public void d(String tag, String format, Object... data) {
         if (debug) {
             log(Level.INFO, tag, format, data);
@@ -46,13 +58,13 @@ public class Logger {
         this.displayId = true;
     }
 
-    public void e(String tag, String format, Object... data) {
-        log(Level.ERROR, tag, format, data);
-    }
-
     public void e(String tag, Throwable t, String format, Object... data) {
         log(Level.ERROR, tag, format, data);
         logger.catching(Level.ERROR, t);
+    }
+
+    public void e(String tag, String format, Object... data) {
+        log(Level.ERROR, tag, format, data);
     }
 
     public void i(String tag, String format, Object... data) {

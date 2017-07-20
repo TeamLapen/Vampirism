@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.api.entity.player.skills;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
@@ -13,6 +14,14 @@ public interface ISkillManager {
 
 
     /**
+     * Creates a new child node for the given parent
+     * @param skills One or more xor skills
+     * @return The created skill node
+     */
+    SkillNode createSkillNode(@Nonnull SkillNode parent, ISkill... skills);
+
+    /**
+     * DO NOT CALL BEFORE INIT IS FINISHED
      * @param faction
      * @return The root skill node for the given faction
      */

@@ -7,6 +7,8 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
+import javax.annotation.Nonnull;
+
 /**
  * Interface for player actions
  */
@@ -26,7 +28,8 @@ public interface IAction extends IForgeRegistryEntry<IAction> {
 
      * @return the faction, which players can use this action
      */
-    IPlayableFaction<? extends IActionPlayer> getFaction();
+    @Nonnull
+    IPlayableFaction getFaction();
 
     /**
      * Should return the location of the icon map where the icon is in

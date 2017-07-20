@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.inventory;
 
 import de.teamlapen.lib.lib.util.ItemStackUtil;
-import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
 import net.minecraft.inventory.InventoryCrafting;
@@ -20,12 +19,12 @@ public class ShapedHunterWeaponRecipe implements IHunterWeaponRecipe {
     private final int requiredHunterLevel;
     private final
     @Nonnull
-    ISkill<IHunterPlayer>[] requiredHunterSkills;
+    ISkill[] requiredHunterSkills;
     private final int requiredLavaUnits;
     private final @Nonnull
     ItemStack recipeOutput;
 
-    public ShapedHunterWeaponRecipe(int width, int height, ItemStack[] input, @Nonnull ItemStack output, int requiredHunterLevel, @Nonnull ISkill<IHunterPlayer>[] requiredHunterSkills, int requiredLavaUnits) {
+    public ShapedHunterWeaponRecipe(int width, int height, ItemStack[] input, @Nonnull ItemStack output, int requiredHunterLevel, @Nonnull ISkill[] requiredHunterSkills, int requiredLavaUnits) {
         assert !ItemStackUtil.isEmpty(output);
         this.recipeWidth = width;
         this.recipeHeight = height;
@@ -59,7 +58,7 @@ public class ShapedHunterWeaponRecipe implements IHunterWeaponRecipe {
 
     @Nonnull
     @Override
-    public ISkill<IHunterPlayer>[] getRequiredSkills() {
+    public ISkill[] getRequiredSkills() {
         return requiredHunterSkills;
     }
 

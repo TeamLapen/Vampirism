@@ -26,7 +26,7 @@ public interface IFactionLevelItem<T extends IFactionPlayer> {
      * @return The skill required to use this or null if none
      */
     @Nullable
-    ISkill<T> getRequiredSkill(@Nonnull ItemStack stack);
+    ISkill getRequiredSkill(@Nonnull ItemStack stack);
 
     /**
      * @return The faction that can use this item or null if any

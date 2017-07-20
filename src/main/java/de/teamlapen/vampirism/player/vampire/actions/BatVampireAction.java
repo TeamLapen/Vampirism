@@ -76,7 +76,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.isGettingSundamage() && !vampire.getActionHandler().isActionActive(VampireActions.rageAction) && (Configs.bat_mode_in_end || !(vampire.getRepresentingPlayer().getEntityWorld().provider instanceof WorldProviderEnd));
+        return !vampire.isGettingSundamage() && !vampire.getActionHandler().isActionActive(VampireActions.vampire_rage) && (Configs.bat_mode_in_end || !(vampire.getRepresentingPlayer().getEntityWorld().provider instanceof WorldProviderEnd));
     }
 
     @Override

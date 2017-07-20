@@ -165,7 +165,7 @@ public class RenderHandler {
 
     @SubscribeEvent
     public void onRenderHand(RenderHandEvent event) {
-        if (VampirePlayer.get(mc.player).getActionHandler().isActionActive(VampireActions.batAction)) {
+        if (VampirePlayer.get(mc.player).getActionHandler().isActionActive(VampireActions.bat)) {
             event.setCanceled(true);
         }
     }

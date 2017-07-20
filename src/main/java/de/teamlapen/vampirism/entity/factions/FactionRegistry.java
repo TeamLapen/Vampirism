@@ -13,6 +13,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.LoaderState;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -116,6 +118,9 @@ public class FactionRegistry implements IFactionRegistry {
         if (!UtilLib.isNonNull(name, entityInterface)) {
             throw new IllegalArgumentException("[Vampirism]Parameter for faction cannot be null");
         }
+        if (!Loader.instance().isInState(LoaderState.PREINITIALIZATION)) {
+            throw new IllegalStateException("Factions have to be registered during PRE-INIT");
+        }
         Faction<T> f = new Faction<>(name, entityInterface, color);
         addFaction(f);
         return f;
@@ -125,6 +130,9 @@ public class FactionRegistry implements IFactionRegistry {
     public <T extends IFactionPlayer> IPlayableFaction registerPlayableFaction(String name, Class<T> entityInterface, int color, ResourceLocation key, Capability<T> playerCapabiltiy, int highestLevel) {
         if (!UtilLib.isNonNull(name, entityInterface, playerCapabiltiy)) {
             throw new IllegalArgumentException("[Vampirism]Parameters for faction cannot be null");
+        }
+        if (!Loader.instance().isInState(LoaderState.PREINITIALIZATION)) {
+            throw new IllegalStateException("Factions have to be registered during PRE-INIT");
         }
         PlayableFaction<T> f = new PlayableFaction<>(name, entityInterface, color, key, playerCapabiltiy, highestLevel);
         addFaction(f);

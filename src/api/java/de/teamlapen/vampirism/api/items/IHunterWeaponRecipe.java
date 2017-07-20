@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.api.items;
 
-import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
@@ -49,7 +48,7 @@ public interface IHunterWeaponRecipe {
      * @return The skills that have to be unlocked to craft this. Can be empty
      */
     @Nonnull
-    ISkill<IHunterPlayer>[] getRequiredSkills();
+    ISkill[] getRequiredSkills();
 
     default boolean isHidden() {
         return false;

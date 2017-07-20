@@ -5,6 +5,8 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistryEntry;
 
+import javax.annotation.Nonnull;
+
 /**
  * Default implementation for an action
  */
@@ -41,6 +43,12 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends IForgeRegi
             throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + faction.getFactionPlayerInterface());
         }
 
+    }
+
+    @Nonnull
+    @Override
+    public IPlayableFaction getFaction() {
+        return faction;
     }
 
     @Override

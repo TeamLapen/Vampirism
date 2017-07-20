@@ -33,7 +33,7 @@ public class SummonBatVampireAction extends DefaultVampireAction {
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer player) {
-        return player.getActionHandler().isActionActive(VampireActions.batAction);
+        return player.getActionHandler().isActionActive(VampireActions.bat);
     }
 
     @Override
