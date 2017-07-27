@@ -231,7 +231,7 @@ public class BlockCoffin extends VampirismBlockContainer {
                     return true;
                 } else {
                     if (entityplayer$enumstatus == EntityPlayer.SleepResult.NOT_POSSIBLE_NOW) {
-                        playerIn.sendMessage(new TextComponentTranslation("text.vampirism.coffin.noSleep"));
+                        playerIn.sendMessage(new TextComponentTranslation("text.vampirism.coffin.no_sleep"));
                     } else if (entityplayer$enumstatus == EntityPlayer.SleepResult.NOT_SAFE) {
                         playerIn.sendMessage(new TextComponentTranslation("tile.bed.notSafe"));
                     }
