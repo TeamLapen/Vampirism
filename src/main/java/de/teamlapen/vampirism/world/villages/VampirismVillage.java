@@ -403,11 +403,11 @@ public class VampirismVillage implements IVampirismVillage {
         } else {
             hunter.setDead();
         }
-        VampirismMod.log.t("Spawning Vampire Hunter %s", flag);
+        //VampirismMod.log.t("Spawning Vampire Hunter %s", flag);
     }
 
     private void spawnVillager() {
-        VampirismMod.log.t("Spawning villager at village %s", village.getCenter());
+        //VampirismMod.log.t("Spawning villager at village %s", village.getCenter());
         @SuppressWarnings("rawtypes")
         List l = village.world.getEntitiesWithinAABB(EntityVillager.class, getBoundingBox());
         if (l.size() > 0) {

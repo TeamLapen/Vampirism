@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -30,8 +29,7 @@ import java.util.Random;
  */
 public class ItemTechCrossbow extends ItemSimpleCrossbow {
 
-    public static final int MAX_ARROW_COUNT = 24;
-    public static final int MAG_SIZE = 12;
+    public static final int MAX_ARROW_COUNT = 12;
 
     /**
      * @return The loaded arrows or -1 if infinite
@@ -68,7 +66,7 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
         if (count == -1) return true;
         if (count == 0) return false;
         int frugal = isCrossbowFrugal(bowStack);
-        if (rnd.nextInt(frugal + 1) != 0) return true;
+        if (frugal > 0 && rnd.nextInt(frugal + 2) == 0) return true;
         nbt.setInteger("arrows", count - 1);
         bowStack.setTagCompound(nbt);
         return true;
@@ -135,7 +133,21 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
     @Override
     protected ItemStack findAmmo(EntityPlayer player, ItemStack bowStack) {
         boolean arrow = reduceArrowCount(bowStack, player.getRNG());
-        return arrow ? new ItemStack(ModItems.crossbow_arrow) : ItemStackUtil.getEmptyStack();
+        if (!arrow) {
+            for (int i = 0; i < player.inventory.getSizeInventory(); ++i) {
+                ItemStack itemstack = player.inventory.getStackInSlot(i);
+
+                if (!itemstack.isEmpty() && this.isArrowPackage(itemstack)) {
+                    setArrowsLeft(bowStack, MAX_ARROW_COUNT);
+                    if (!player.capabilities.isCreativeMode) {
+                        player.inventory.decrStackSize(i, 1);
+                    }
+                    player.getCooldownTracker().setCooldown(bowStack.getItem(), getReloadCooldown(player, bowStack));
+                }
+            }
+            return ItemStack.EMPTY;
+        }
+        return new ItemStack(ModItems.crossbow_arrow);
     }
 
     @Override
@@ -156,6 +168,14 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
     @Override
     protected boolean shouldConsumeArrow(ItemStack arrowStack, boolean playerCreative, boolean bowInfinite) {
         return false;
+    }
+
+    private int getReloadCooldown(EntityPlayer player, ItemStack bowStack) {
+        return 100;
+    }
+
+    private boolean isArrowPackage(@Nonnull ItemStack stack) {
+        return ModItems.tech_crossbow_ammo_package.equals(stack.getItem());
     }
 
 
