@@ -15,8 +15,8 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.player.vampire.VampireLevelingConf;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -36,6 +36,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -219,9 +220,11 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
      * ONLY call if {@link TileAltarInfusion#canActivate(EntityPlayer, boolean)} returned 1
      */
     public void startRitual(EntityPlayer player) {
+        VampirismMod.log.d(TAG, "Starting ritual for %s", player);
         this.player = player;
         runningTick = DURATION_TICK;
 
+        this.markDirty();
         if (!this.getWorld().isRemote) {
 //                for (int i = 0; i < tips.length; i++) {
 //                    NBTTagCompound data = new NBTTagCompound();
@@ -232,7 +235,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
 //                    VampirismMod.modChannel.sendToAll(new SpawnCustomParticlePacket(1, this.xCoord, this.yCoord, this.zCoord, 5, data));
 //                }
             IBlockState state = this.getWorld().getBlockState(getPos());
-            this.getWorld().notifyBlockUpdate(getPos(), state, state, 3);
+            this.getWorld().notifyBlockUpdate(getPos(), state, state, 3); //Notify client about started ritual
         }
         player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, DURATION_TICK, 10));
         this.markDirty();
@@ -240,6 +243,11 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
 
     @Override
     public void update() {
+        if (runningTick == DURATION_TICK) {
+            VampirismMod.log.d(TAG, "Ritual started");
+            consumeItems();
+            this.markDirty();
+        }
         runningTick--;
         if (runningTick <= 0)
             return;
@@ -272,7 +280,6 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
                 }
             }
         }
-
         if (phase.equals(PHASE.CLEAN_UP)) {
             player = null;
             tips = null;
@@ -307,14 +314,6 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         return nbt;
     }
 
-    private ItemStack checkAndRemoveItems(int bloodMeta, int blood, int heart, int par3) {
-        ItemStack missing = InventoryHelper.checkItems(this, items, new int[]{blood, heart, par3}, new int[]{bloodMeta == 0 ? Integer.MIN_VALUE : -bloodMeta, Integer.MIN_VALUE, Integer.MIN_VALUE});
-        if (!ItemStackUtil.isEmpty(missing)) {
-            InventoryHelper.removeItems(this, new int[]{blood, heart, par3});
-        }
-        return missing;
-    }
-
     /**
      * Checks for the requirements for the give player to level up
      *
@@ -322,41 +321,8 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
      */
     private boolean checkItemRequirements(EntityPlayer player, boolean messagePlayer) {
         int newLevel = targetLevel;
-        ItemStack missing = ItemStackUtil.getEmptyStack();
-        switch (newLevel) {
-            case 5:
-                missing = checkAndRemoveItems(0, 0, 5, 1);
-                break;
-            case 6:
-                missing = checkAndRemoveItems(0, 1, 5, 1);
-                break;
-            case 7:
-                missing = checkAndRemoveItems(0, 1, 10, 1);
-                break;
-            case 8:
-                missing = checkAndRemoveItems(1, 1, 10, 1);
-                break;
-            case 9:
-                missing = checkAndRemoveItems(1, 1, 10, 1);
-                break;
-            case 10:
-                missing = checkAndRemoveItems(2, 1, 15, 1);
-                break;
-            case 11:
-                missing = checkAndRemoveItems(2, 1, 15, 1);
-                break;
-            case 12:
-                missing = checkAndRemoveItems(3, 1, 20, 1);
-                break;
-            case 13:
-                missing = checkAndRemoveItems(3, 2, 20, 1);
-                break;
-            case 14:
-                missing = checkAndRemoveItems(4, 2, 25, 1);
-                break;
-            default:
-                VampirismMod.log.w(TAG, "Checking for level %d, but this altar cannot be used at that level", newLevel);
-        }
+        VampireLevelingConf.AltarInfusionRequirements requirements = VampireLevelingConf.getInstance().getAltarInfusionRequirements(newLevel);
+        ItemStack missing = InventoryHelper.checkItems(this, items, new int[]{requirements.blood, requirements.heart, requirements.vampireBook}, new int[]{requirements.getBloodMetaForCheck(), OreDictionary.WILDCARD_VALUE, OreDictionary.WILDCARD_VALUE});
         if (!ItemStackUtil.isEmpty(missing)) {
             if (messagePlayer) {
                 ITextComponent item = missing.getItem().equals(ModItems.pure_blood) ? ModItems.pure_blood.getDisplayName(missing) : new TextComponentTranslation(missing.getUnlocalizedName() + ".name");
@@ -378,11 +344,11 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
      */
     private int checkRequiredLevel() {
         int newLevel = targetLevel;
-        if (newLevel < 5 || newLevel > REFERENCE.HIGHEST_VAMPIRE_LEVEL) {
+
+        if (!VampireLevelingConf.getInstance().isLevelValidForAltarInfusion(newLevel)) {
             return -1;
         }
-        int t = (newLevel - 4) / 2;
-        return (int) (8 + (54 - 8) * t / 5f);
+        return VampireLevelingConf.getInstance().getRequiredStructureLevelAltarInfusion(newLevel);
 
     }
 
@@ -432,6 +398,14 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
 
         return found >= required * 10;
 
+    }
+
+    /**
+     * Consume the required items
+     */
+    private void consumeItems() {
+        VampireLevelingConf.AltarInfusionRequirements requirements = VampireLevelingConf.getInstance().getAltarInfusionRequirements(targetLevel);
+        InventoryHelper.removeItems(this, new int[]{requirements.blood, requirements.heart, requirements.vampireBook});
     }
 
     /**
