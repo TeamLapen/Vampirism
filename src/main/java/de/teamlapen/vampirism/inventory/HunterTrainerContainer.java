@@ -71,7 +71,7 @@ public class HunterTrainerContainer extends InventoryContainer {
     public void onContainerClosed(EntityPlayer playerIn) {
         super.onContainerClosed(playerIn);
         if (!playerIn.getEntityWorld().isRemote) {
-            for (int i = 0; i < 3; ++i) {
+            for (int i = 0; i < tile.getSizeInventory(); ++i) {
                 ItemStack itemstack = this.tile.removeStackFromSlot(i);
 
                 if (!ItemStackUtil.isEmpty(itemstack)) {
