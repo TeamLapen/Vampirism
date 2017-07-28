@@ -14,6 +14,7 @@ import net.minecraft.inventory.InventoryCraftResult;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * Container for the hunter table.
@@ -106,7 +107,7 @@ public class HunterTableContainer extends InventoryContainer {
      * @return
      */
     private ItemStack checkItems(int fangs, int blood, int bloodMeta, int par3) {
-        return InventoryHelper.checkItems(inventory, items, new int[]{1, fangs, blood, par3}, new int[]{Integer.MIN_VALUE, Integer.MIN_VALUE, bloodMeta == 0 ? Integer.MIN_VALUE : -bloodMeta, Integer.MIN_VALUE});
+        return InventoryHelper.checkItems(inventory, items, new int[]{1, fangs, blood, par3}, new int[]{OreDictionary.WILDCARD_VALUE, OreDictionary.WILDCARD_VALUE, bloodMeta == 0 ? OreDictionary.WILDCARD_VALUE : -bloodMeta, OreDictionary.WILDCARD_VALUE});
     }
 
     private class SlotResult extends net.minecraft.inventory.Slot {

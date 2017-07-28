@@ -12,6 +12,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.oredict.OreDictionary;
 
 import java.util.List;
 
@@ -32,7 +33,11 @@ public class ItemPureBlood extends VampirismItem {
     }
 
     public ITextComponent getDisplayName(ItemStack stack) {
-        return new TextComponentTranslation(getUnlocalizedName() + ".name").appendSibling(new TextComponentString(" ")).appendSibling(new TextComponentTranslation("text.vampirism.purity")).appendSibling(new TextComponentString(" " + (stack.getItemDamage() + 1)));
+        ITextComponent t = new TextComponentTranslation(getUnlocalizedName() + ".name");
+        if (stack.getMetadata() != OreDictionary.WILDCARD_VALUE) {
+            t.appendSibling(new TextComponentString(" ")).appendSibling(new TextComponentTranslation("text.vampirism.purity")).appendSibling(new TextComponentString(" " + (stack.getItemDamage() + 1)));
+        }
+        return t;
     }
 
     @SideOnly(Side.CLIENT)

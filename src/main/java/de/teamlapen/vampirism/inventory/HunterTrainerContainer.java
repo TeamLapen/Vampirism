@@ -16,6 +16,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
+import net.minecraftforge.oredict.OreDictionary;
 
 /**
  * Container which handles hunter levelup at an hunter trainer
@@ -41,7 +42,7 @@ public class HunterTrainerContainer extends InventoryContainer {
         HunterLevelingConf levelingConf = HunterLevelingConf.instance();
         if (!levelingConf.isLevelValidForTrainer(targetLevel)) return false;
         int[] req = levelingConf.getItemRequirementsForTrainer(targetLevel);
-        missing = InventoryHelper.checkItems(tile, items, new int[]{req[0], req[1], 1}, new int[]{Integer.MIN_VALUE, Integer.MIN_VALUE, levelingConf.getHunterIntelMetaForLevel(targetLevel) == 0 ? Integer.MIN_VALUE : -levelingConf.getHunterIntelMetaForLevel(targetLevel)});
+        missing = InventoryHelper.checkItems(tile, items, new int[]{req[0], req[1], 1}, new int[]{OreDictionary.WILDCARD_VALUE, OreDictionary.WILDCARD_VALUE, levelingConf.getHunterIntelMetaForLevel(targetLevel) == 0 ? OreDictionary.WILDCARD_VALUE : -levelingConf.getHunterIntelMetaForLevel(targetLevel)});
         return ItemStackUtil.isEmpty(missing);
     }
 
