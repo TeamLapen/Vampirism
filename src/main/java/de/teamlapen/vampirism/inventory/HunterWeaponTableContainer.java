@@ -83,7 +83,7 @@ public class HunterWeaponTableContainer extends Container {
         super.onContainerClosed(playerIn);
 
         if (!this.world.isRemote) {
-            for (int i = 0; i < 9; ++i) {
+            for (int i = 0; i < this.craftMatrix.getSizeInventory(); ++i) {
                 ItemStack itemstack = this.craftMatrix.removeStackFromSlot(i);
 
                 if (!ItemStackUtil.isEmpty(itemstack)) {
