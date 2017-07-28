@@ -28,6 +28,13 @@ public class GuiHunterTable extends GuiContainer {
     }
 
     @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
+
+    }
+
+    @Override
     protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(altarGuiTextures);

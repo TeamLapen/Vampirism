@@ -36,6 +36,13 @@ public class GuiHunterWeaponTable extends GuiContainer {
     }
 
     @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
+
+    }
+
+    @Override
     public void updateScreen() {
         super.updateScreen();
         IBlockState blockState = this.world.getBlockState(pos);

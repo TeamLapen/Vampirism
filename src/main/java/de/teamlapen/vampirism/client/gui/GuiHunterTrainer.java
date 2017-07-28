@@ -39,6 +39,13 @@ public class GuiHunterTrainer extends GuiContainer {
     }
 
     @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
+
+    }
+
+    @Override
     public void initGui() {
         super.initGui();
         int i = (this.width - this.xSize) / 2;
