@@ -68,7 +68,7 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
         //If empty hand and can start -> Start
         if (worldIn.isRemote) return true;
         int result = te.canActivate(playerIn, true);
-        VampirismMod.log.d("AltarInfusion", "Trying to activate. Result: %s", result);
+        VampirismMod.log.d("AltarInfusion", "Trying to activate. Result: %s. Stack empty: %s", result, ItemStackUtil.isEmpty(heldItem));
         if (ItemStackUtil.isEmpty(heldItem) && (result == 1)) {
             te.startRitual(playerIn);
             return true;
