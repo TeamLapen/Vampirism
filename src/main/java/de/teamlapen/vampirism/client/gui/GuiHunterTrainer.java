@@ -92,7 +92,7 @@ public class GuiHunterTrainer extends GuiContainer {
         this.fontRenderer.drawString(I18n.format("container.inventory"), 8, this.ySize - 94, 0x404040);
 
         String text = null;
-        if (container.getMissingItems() != null) {
+        if (!container.getMissingItems().isEmpty()) {
             ItemStack missing = container.getMissingItems();
             ITextComponent item = missing.getItem().equals(ModItems.hunter_intel) ? ModItems.hunter_intel.getDisplayName(missing) : new TextComponentTranslation(missing.getUnlocalizedName() + ".name");
             text = I18n.format("text.vampirism.ritual_missing_items", ItemStackUtil.getCount(missing), item.getUnformattedText());

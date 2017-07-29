@@ -52,7 +52,7 @@ public class GuiHunterTable extends GuiContainer {
         String text = null;
         if (!container.isLevelValid()) {
             text = I18n.format("text.vampirism.ritual_level_wrong");
-        } else if (container.getMissingItems() != null) {
+        } else if (!container.getMissingItems().isEmpty()) {
             ItemStack missing = container.getMissingItems();
             ITextComponent item = missing.getItem().equals(ModItems.pure_blood) ? ModItems.pure_blood.getDisplayName(missing) : new TextComponentTranslation(missing.getUnlocalizedName() + ".name");
             text = I18n.format("text.vampirism.ritual_missing_items", ItemStackUtil.getCount(missing), item.getUnformattedText());
