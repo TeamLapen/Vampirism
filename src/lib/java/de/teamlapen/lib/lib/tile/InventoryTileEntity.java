@@ -165,6 +165,7 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
         if (ItemStackUtil.getCount(stack) > getInventoryStackLimit()) {
             ItemStackUtil.setCount(stack, getInventoryStackLimit());
         }
+        this.markDirty();//Not sure
 
     }
 
