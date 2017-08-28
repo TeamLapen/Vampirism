@@ -6,12 +6,14 @@ text.vampirism.skill.unlocked=Unlocked
 text.vampirism.skill.unlocks_action=Unlocks action
 text.vampirism.skill.unlock_parent_first=Unlock parent first
 text.vampirism.skill.skills_reset=Your skills have been reset
+text.vampirism.skill.deactivated_by_serveradmin=This skill is deactivated by your serveradmin
+
 
 #VAMPIRE SKILLS
 text.vampirism.skill.root_vampire=Becoming a vampire
 text.vampirism.skill.avoided_by_creepers=Avoided by creepers
-text.vampirism.skill.1bloodvision=Blood vision
-text.vampirism.skill.1bloodvision.desc=Allows you to see entities through walls in the dark. Toggle with key.
+text.vampirism.skill.blood_vision=Blood vision
+text.vampirism.skill.blood_vision.desc=Allows you to see entities through walls in the dark. Toggle with key.
 text.vampirism.skill.poisonous_bite=Poisonous Teeth
 text.vampirism.skill.poisonous_bite.desc=Poisons the creatures you bite
 text.vampirism.skill.more_bite_damage=Hardened Teeth
@@ -26,19 +28,6 @@ text.vampirism.skill.1forestfog=Vista
 text.vampirism.skill.1forestfog.desc=Increase the fog distance in the Vampire Forest
 text.vampirism.skill.2waterresistance=Water Resistance
 text.vampirism.skill.2waterresistance.desc=Your body will not be weakened by water anymore
-
-#VAMPIRE ACTIONS
-action.vampirism.cancel=Cancel
-action.vampirism.vampire.bat_skill=Toggle Batmode
-action.vampirism.vampire.freeze=Freeze
-action.vampirism.vampire.invisibility=Invisibility
-action.vampirism.vampire.regen=Regeneration
-action.vampirism.vampire.revive_fallen=Revive Fallen
-action.vampirism.vampire.summon_bats=Summon Bats
-action.vampirism.vampire.teleport=Teleport
-action.vampirism.vampire.vampire_rage=Vampire Rage
-action.vampirism.vampire.sunscreen=Sunscreen
-action.vampirism.vampire.disguise=Disguise
 
 #HUNTER SKILLS
 text.vampirism.skill.root_hunter=Becoming an hunter
@@ -90,6 +79,24 @@ text.vampirism.command.available_subcommands=Available Subcommands:
 text.vampirism.command.subcommand_help=Use '/%s help <subcommand>' to get more information
 text.vampirism.command.usage=/%s <subcommand> <params> | Use /%s help to get all available subcommands
 
+#ACTIONS
+action.vampirism.cancel=Cancel
+text.vampirism.action.not_unlocked=This action is not unlocked
+text.vampirism.action.deactivated_by_serveradmin=This action is deactivated by your serveradmin
+
+
+#VAMPIRE ACTIONS
+action.vampirism.vampire.bat_skill=Toggle Batmode
+action.vampirism.vampire.freeze=Freeze
+action.vampirism.vampire.invisibility=Invisibility
+action.vampirism.vampire.regen=Regeneration
+action.vampirism.vampire.revive_fallen=Revive Fallen
+action.vampirism.vampire.summon_bats=Summon Bats
+action.vampirism.vampire.teleport=Teleport
+action.vampirism.vampire.vampire_rage=Vampire Rage
+action.vampirism.vampire.sunscreen=Sunscreen
+action.vampirism.vampire.disguise=Disguise
+
 #HUNTER ACTIONS
 action.vampirism.hunter.disguise=Disguise
 
@@ -101,6 +108,7 @@ text.vampirism.blood_potion.category.special_body_boost=Strongly improved body f
 text.vampirism.blood_potion.category.normal_vampire_skills=Vampire skills
 text.vampirism.blood_potion.category.special_vampire_skills=Special vampire skills
 text.vampirism.blood_potion.category.bad_others=Unpredictable bad effects
+text.vampirism.blood_potion.category.special_other=Special other effects
 
 
 #ENTITIES
@@ -109,11 +117,9 @@ entity.vampirism.advanced_vampire.name=Advanced Vampire
 entity.vampirism.advanced_hunter.name=Advanced Hunter
 entity.vampirism.hunter_villager.name=Angry Villager
 entity.vampirism.vampire_hunter.name=Vampire Hunter
-entity.vampirism.vampireHunter.name=Vampire Hunter
 entity.vampirism.vampire.name=Vampire
 entity.vampirism.ghost.name=Ghost
 entity.vampirism.vampire_baron.name=Vampire Baron
-entity.vampirism.vampireBaron.name=Vampire Baron
 entity.vampirism.vampire_minion_r.name=Vampire Minion
 entity.vampirism.vampire_minion_s.name=Vampire Minion
 entity.vampirism.blinding_bat.name=Bat
@@ -122,7 +128,7 @@ entity.vampirism.dead_mob.name=Dead mob
 entity.vampirism.portal_guard.name=Portal Guard
 entity.vampirism.converted_villager.name=Vampire Villager
 text.vampirism.entity_level=Level
-entity._villager.vampire_hunter=Alchemic Priest
+entity.villager.vampire_hunter=Alchemic Priest
 
 #RITUALS
 text.vampirism.ritual_missing_items=Missing %s of "%s" for this ritual
@@ -327,6 +333,7 @@ text.vampirism.all=All
 text.vampirism.hunter=Hunter
 text.vampirism.hunters=Hunter
 text.vampirism.level=Level
+text.vampirism.lord=Lord
 text.vampirism.level_up=Level Up
 text.vampirism.can_only_be_used_by=This can only be used by %s players
 text.vampirism.can_only_be_used_by_level=This can only be used by %s players of level %s or higher
@@ -334,7 +341,7 @@ text.vampirism.med_chair_other_faction=You cannot become a Hunter since you alre
 text.vampirism.already_vampire=You are already a vampire
 text.vampirism.can_only_be_used_with_skill=This can only be used with skill: %s
 text.vampirism.need_item_to_use=You need %s to use this
-text.vampirism.immune_to_=You are immune to
+text.vampirism.immune_to=You are immune to
 text.vampirism.required_skill=Required Skill: %s
 text.vampirism.from_behind=From behind.
 text.vampirism.unknown=Unknown
@@ -362,7 +369,6 @@ text.vampirism.ritual_still_running=The ritual is still running
 text.vampirism.not_enough_blood=There is not enough blood in the altar
 text.vampirism.ritual_requirements_not_met=Not all requirements for this ritual were met
 text.vampirism.purity=Purity
-text.vampirism.skill.deactivated_by_serveradmin=This skill is deactivated by your serveradmin
 text.vampirism.ritual_no_vampire=You need to be a vampire for this ritual
 text.vampirism.cant_fly_day=You cannot fly at daytime
 text.vampirism.cant_fly_end=You are not able to transfrom into a bat in the End
