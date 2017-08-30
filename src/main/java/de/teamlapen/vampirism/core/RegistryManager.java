@@ -133,7 +133,7 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onRegisterEntities(RegistryEvent.Register<EntityEntry> event) {
-        //ModEntities.registerEntities(); moved to pre-init again due to Forge complaining TODO
+        //ModEntities.registerEntities(); TODO moved to pre-init again due to Forge complaining TODO
     }
 
     @SubscribeEvent

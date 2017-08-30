@@ -15,14 +15,16 @@ import net.minecraftforge.registries.RegistryBuilder;
 public class VampirismRegistries {
     public static final ResourceLocation SKILLS_ID = new ResourceLocation("vampirism:skills");
     public static final ResourceLocation ACTIONS_ID = new ResourceLocation("vampirism:actions");
-    public static final ResourceLocation HUNTER_WEAPON_RECIPE_ID = new ResourceLocation("vampirism:hunter_weapon_recipe");
+    //public static final ResourceLocation WEAPON_RECIPES_ID = new ResourceLocation("vampirism:weapon_recipe");
 
     public static final IForgeRegistry<ISkill> SKILLS;
     public static final IForgeRegistry<IAction> ACTIONS;
+    //public static final IForgeRegistry<IHunterWeaponRecipe> WEAPON_RECIPES;
 
     static {
         SKILLS = makeRegistry(SKILLS_ID, ISkill.class, Integer.MAX_VALUE >> 5);
         ACTIONS = makeRegistry(ACTIONS_ID, IAction.class, Integer.MAX_VALUE >> 5);
+        //WEAPON_RECIPES = makeRegistry(WEAPON_RECIPES_ID, IHunterWeaponRecipe.class, Integer.MAX_VALUE >>5);
     }
 
     static void init() {
