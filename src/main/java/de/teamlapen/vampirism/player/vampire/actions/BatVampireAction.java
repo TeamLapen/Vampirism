@@ -59,8 +59,24 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     }
 
     @Override
+    public boolean activate(IVampirePlayer vampire) {
+        EntityPlayer player = vampire.getRepresentingPlayer();
+        float oldMax = player.getMaxHealth();
+        float oldHealth = player.getHealth();
+        setModifier(player, true);
+        float newMax = player.getMaxHealth();
+        float mult = newMax / oldMax;
+        float newHealth = mult * oldHealth;
+        if (newHealth < 1) newHealth = 1;
+        player.setHealth(newHealth);
+        setPlayerBat(player, true);
+        ((VampirePlayer) vampire).getSpecialAttributes().bat = true;
+        return true;
+    }
+
+    @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.isGettingSundamage() && !vampire.getActionHandler().isActionActive(VampireActions.rageAction) && (Configs.bat_mode_in_end || !(vampire.getRepresentingPlayer().getEntityWorld().provider instanceof WorldProviderEnd));
+        return !vampire.isGettingSundamage() && !vampire.getActionHandler().isActionActive(VampireActions.vampire_rage) && (Configs.bat_mode_in_end || !(vampire.getRepresentingPlayer().getEntityWorld().provider instanceof WorldProviderEnd));
     }
 
     @Override
@@ -91,22 +107,6 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     @Override
     public boolean isEnabled() {
         return Balance.vpa.BAT_ENABLED;
-    }
-
-    @Override
-    public boolean onActivated(IVampirePlayer vampire) {
-        EntityPlayer player = vampire.getRepresentingPlayer();
-        float oldMax = player.getMaxHealth();
-        float oldHealth = player.getHealth();
-        setModifier(player, true);
-        float newMax = player.getMaxHealth();
-        float mult = newMax / oldMax;
-        float newHealth = mult * oldHealth;
-        if (newHealth < 1) newHealth = 1;
-        player.setHealth(newHealth);
-        setPlayerBat(player, true);
-        ((VampirePlayer) vampire).getSpecialAttributes().bat = true;
-        return true;
     }
 
     @Override

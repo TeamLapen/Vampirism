@@ -9,7 +9,6 @@ import amerifrance.guideapi.gui.GuiBase;
 import com.google.common.collect.Lists;
 import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -89,7 +88,7 @@ public abstract class BasicWeaponTableRecipeRenderer<T extends IHunterWeaponReci
         }
         if (recipe.getRequiredSkills().length > 0) {
             StringBuilder skills = new StringBuilder();
-            for (ISkill<IHunterPlayer> skill : recipe.getRequiredSkills()) {
+            for (ISkill skill : recipe.getRequiredSkills()) {
                 skills.append("\n§o").append(UtilLib.translate(skill.getUnlocalizedName())).append("§r ");
 
             }

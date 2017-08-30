@@ -35,7 +35,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     private final FluidStack fluidStack;
     private final ItemStack fluidItem;
     @Nullable
-    private ISkill<IHunterPlayer>[] skills = null;
+    private ISkill[] skills = null;
     private int reqLevel = 0;
     private int cookingTime = 400;
     private float experience = 0.2F;
@@ -92,7 +92,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     public boolean canBeCooked(int level, ISkillHandler<IHunterPlayer> skillHandler) {
         if (level < reqLevel) return false;
         if (skills == null) return true;
-        for (ISkill<IHunterPlayer> s : skills) {
+        for (ISkill s : skills) {
             if (!skillHandler.isSkillEnabled(s)) return false;
         }
         return true;
@@ -100,7 +100,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
 
     @SafeVarargs
     @Override
-    public final IAlchemicalCauldronRecipe configure(int ticks, float exp, int reqLevel, @Nullable ISkill<IHunterPlayer>... reqSkills) {
+    public final IAlchemicalCauldronRecipe configure(int ticks, float exp, int reqLevel, @Nullable ISkill... reqSkills) {
         return setCookingTime(ticks).setExperience(exp).setRequirements(reqLevel, reqSkills);
     }
 
@@ -144,7 +144,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     @SuppressWarnings("unchecked")
     @Nonnull
     @Override
-    public ISkill<IHunterPlayer>[] getRequiredSkills() {
+    public ISkill[] getRequiredSkills() {
         return (skills == null) ? EMPTY_SKILLS : skills;
     }
 

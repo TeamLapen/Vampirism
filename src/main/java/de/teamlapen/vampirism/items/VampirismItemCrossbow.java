@@ -56,7 +56,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
     @Nullable
     @Override
-    public ISkill<IHunterPlayer> getRequiredSkill(@Nonnull ItemStack stack) {
+    public ISkill getRequiredSkill(@Nonnull ItemStack stack) {
         return null;
     }
 

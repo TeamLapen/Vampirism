@@ -25,7 +25,7 @@ public interface IHunterWeaponCraftingManager {
      * @param recipeComponents The components in the same way as vanilla crafting.
      * @return The created and registered recipe
      */
-    IHunterWeaponRecipe addRecipe(@Nonnull ItemStack output, int reqLevel, @Nullable ISkill<IHunterPlayer> reqSkill, int reqLava, Object... recipeComponents);
+    IHunterWeaponRecipe addRecipe(@Nonnull ItemStack output, int reqLevel, @Nullable ISkill reqSkill, int reqLava, Object... recipeComponents);
 
     /**
      * Add a recipe for the hunter weapon crafting table
@@ -37,7 +37,7 @@ public interface IHunterWeaponCraftingManager {
      * @param recipeComponents The components in the same way as vanilla crafting.
      * @return The created and registered recipe
      */
-    IHunterWeaponRecipe addRecipe(@Nonnull ItemStack output, int reqLevel, @Nonnull ISkill<IHunterPlayer>[] reqSkills, int reqLava, Object... recipeComponents);
+    IHunterWeaponRecipe addRecipe(@Nonnull ItemStack output, int reqLevel, @Nonnull ISkill[] reqSkills, int reqLava, Object... recipeComponents);
 
     /**
      * Adds the given recipe
@@ -54,7 +54,7 @@ public interface IHunterWeaponCraftingManager {
      * @param recipeComponents The required components
      * @return The created and registered recipe
      */
-    IHunterWeaponRecipe addShapelessRecipe(@Nonnull ItemStack output, int reqLevel, @Nonnull ISkill<IHunterPlayer>[] reqSkills, int reqLava, Object... recipeComponents);
+    IHunterWeaponRecipe addShapelessRecipe(@Nonnull ItemStack output, int reqLevel, @Nonnull ISkill[] reqSkills, int reqLava, Object... recipeComponents);
 
     /**
      * Add a shapeless recipe for the hunter weapon crafting table
@@ -66,7 +66,7 @@ public interface IHunterWeaponCraftingManager {
      * @param recipeComponents The required components
      * @return The created and registered recipe
      */
-    IHunterWeaponRecipe addShapelessRecipe(@Nonnull ItemStack output, int reqLevel, @Nullable ISkill<IHunterPlayer> reqSkill, int reqLava, Object... recipeComponents);
+    IHunterWeaponRecipe addShapelessRecipe(@Nonnull ItemStack output, int reqLevel, @Nullable ISkill reqSkill, int reqLava, Object... recipeComponents);
     @Nullable
     IHunterWeaponRecipe findMatchingRecipe(InventoryCrafting craftMatrix, World world, int playerLevel, ISkillHandler<IHunterPlayer> skillHandler, int lava);
 

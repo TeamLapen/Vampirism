@@ -27,7 +27,7 @@ public interface IAlchemicalCauldronRecipe {
     /**
      * @return This
      */
-    IAlchemicalCauldronRecipe configure(int ticks, float exp, int reqLevel, @Nullable ISkill<IHunterPlayer>... reqSkills);
+    IAlchemicalCauldronRecipe configure(int ticks, float exp, int reqLevel, @Nullable ISkill... reqSkills);
 
     /**
      * Either the default value or a custom set one.
@@ -83,7 +83,7 @@ public interface IAlchemicalCauldronRecipe {
      * @return The skills required for this recipe
      */
     @Nonnull
-    ISkill<IHunterPlayer>[] getRequiredSkills();
+    ISkill[] getRequiredSkills();
 
     /**
      * Checks if the given stack has a {@link CapabilityFluidHandler#FLUID_HANDLER_ITEM_CAPABILITY} and contains the required fluid, if so it returns the required Fluid Stack otherwise null.

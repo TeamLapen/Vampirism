@@ -7,7 +7,9 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.SkillNode;
 import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.core.VampirismRegistries;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +35,7 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
         if (isSkillEnabled(skill)) {
             return Result.ALREADY_ENABLED;
         }
-        SkillNode node = VampirismAPI.skillRegistry().getRootSkillNode(player.getFaction());
+        SkillNode node = VampirismAPI.skillManager().getRootSkillNode(player.getFaction());
         node = findSkillNode(node, skill);
         if (node != null) {
             if (node.isRoot() || isNodeEnabled(node.getParent())) {
@@ -71,7 +73,7 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
     }
 
     public void enableRootSkill() {
-        enableSkill(VampirismAPI.skillRegistry().getRootSkillNode(player.getFaction()).getElements()[0]);
+        enableSkill(VampirismAPI.skillManager().getRootSkillNode(player.getFaction()).getElements()[0]);
     }
 
     @Override
@@ -116,7 +118,7 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
      * @return The root node of the faction this handler belongs to
      */
     public SkillNode getRootNode() {
-        return VampirismAPI.skillRegistry().getRootSkillNode(player.getFaction());
+        return VampirismAPI.skillManager().getRootSkillNode(player.getFaction());
     }
 
     /**
@@ -142,7 +144,7 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
     public void loadFromNbt(NBTTagCompound nbt) {
         if (!nbt.hasKey("skills")) return;
         for (String id : nbt.getCompoundTag("skills").getKeySet()) {
-            ISkill skill = VampirismAPI.skillRegistry().getSkill(player.getFaction(), id);
+            ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(id));
             if (skill == null) {
                 VampirismMod.log.w(TAG, "Skill %s does not exist anymore", id);
                 continue;
@@ -157,7 +159,7 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
         if (!nbt.hasKey("skills")) return;
         List<ISkill> old = (List<ISkill>) enabledSkills.clone();
         for (String id : nbt.getCompoundTag("skills").getKeySet()) {
-            ISkill skill = VampirismAPI.skillRegistry().getSkill(player.getFaction(), id);
+            ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(id));
             if (skill == null) {
                 VampirismMod.log.e(TAG, "Skill %s does not exist on client!!!", id);
                 continue;
@@ -184,7 +186,7 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
     public void saveToNbt(NBTTagCompound nbt) {
         NBTTagCompound skills = new NBTTagCompound();
         for (ISkill skill : enabledSkills) {
-            skills.setBoolean(skill.getID(), true);
+            skills.setBoolean(skill.getRegistryName().toString(), true);
         }
         nbt.setTag("skills", skills);
 
@@ -193,7 +195,7 @@ public class SkillHandler<T extends IFactionPlayer> implements ISkillHandler<T> 
     public void writeUpdateForClient(NBTTagCompound nbt) {
         NBTTagCompound skills = new NBTTagCompound();
         for (ISkill skill : enabledSkills) {
-            skills.setBoolean(skill.getID(), true);
+            skills.setBoolean(skill.getRegistryName().toString(), true);
         }
         nbt.setTag("skills", skills);
         dirty = false;

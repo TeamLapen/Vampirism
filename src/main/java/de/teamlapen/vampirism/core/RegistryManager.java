@@ -1,6 +1,15 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.entity.player.skills.SkillEvent;
+import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
+import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
+import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
+import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
@@ -14,6 +23,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.ObjectHolderRegistry;
 
 
 /**
@@ -37,6 +47,11 @@ public class RegistryManager implements IInitListener {
     @SideOnly(Side.CLIENT)
     public static de.teamlapen.vampirism.client.core.RegistryManagerClient getRegistryManagerClient() {
         return registryManagerClient;
+    }
+
+    @SubscribeEvent
+    public void onBuildRegistries(RegistryEvent.NewRegistry event) {
+        VampirismRegistries.init();
     }
 
     @Override
@@ -94,6 +109,14 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
+    public void onRegisterActions(RegistryEvent.Register<IAction> event) {
+        VampirismMod.log.t("Registering Actions");
+        VampireActions.registerDefaultActions(event.getRegistry());
+        HunterActions.registerDefaultActions(event.getRegistry());
+        ObjectHolderRegistry.INSTANCE.applyObjectHolders();
+    }
+
+    @SubscribeEvent
     public void onRegisterBiomes(RegistryEvent.Register<Biome> event) {
         ModBiomes.registerBiomes(event.getRegistry());
     }
@@ -110,7 +133,7 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onRegisterEntities(RegistryEvent.Register<EntityEntry> event) {
-        //ModEntities.registerEntities(); moved to pre-init again due to Forge complaining TODO
+        //ModEntities.registerEntities(); TODO moved to pre-init again due to Forge complaining TODO
     }
 
     @SubscribeEvent
@@ -125,8 +148,28 @@ public class RegistryManager implements IInitListener {
     }
 
     @SubscribeEvent
+    public void onRegisterSkills(RegistryEvent.Register<ISkill> event) {
+        VampirismMod.log.t("Registering Skills");
+        HunterSkills.registerHunterSkills(event.getRegistry());
+        VampireSkills.registerVampireSkills(event.getRegistry());
+    }
+
+    @SubscribeEvent
     public void onRegisterSounds(RegistryEvent.Register<SoundEvent> event) {
         ModSounds.registerSounds(event.getRegistry());
     }
+
+    @SubscribeEvent
+    public void onSkillNodeCreated(SkillEvent.CreatedNode event) {
+        if (event.getNode().isRoot()) {
+            if (event.getNode().getFaction().equals(VReference.HUNTER_FACTION)) {
+                HunterSkills.buildSkillTree(event.getNode());
+            } else if (event.getNode().getFaction().equals(VReference.VAMPIRE_FACTION)) {
+                VampireSkills.buildSkillTree(event.getNode());
+            }
+        }
+    }
+
+
 
 }

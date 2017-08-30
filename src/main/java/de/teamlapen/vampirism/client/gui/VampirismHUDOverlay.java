@@ -73,7 +73,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
         if (event.phase == TickEvent.Phase.END) return;
         IFactionPlayer player = FactionPlayerHandler.get(mc.player).getCurrentFactionPlayer();
         if (player != null && player instanceof IVampirePlayer) {
-            if (((IVampirePlayer) player).getActionHandler().isActionActive(VampireActions.rageAction)) {
+            if (((IVampirePlayer) player).getActionHandler().isActionActive(VampireActions.vampire_rage)) {
                 screenPercentage = 100;
                 screenColor = 0xfff00000;
                 fullScreen = false;

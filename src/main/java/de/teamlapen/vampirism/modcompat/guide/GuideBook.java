@@ -259,7 +259,7 @@ public class GuideBook implements IGuideBook {
 
         List<IPage> skillPages = new ArrayList<>();
         skillPages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "skills.intro", Keyboard.getKeyName(ModKeys.getKeyCode(ModKeys.KEY.SKILL)))));
-        String disguise = String.format("§l%s§r\n", UtilLib.translate(HunterActions.disguiseAction.getUnlocalizedName()));
+        String disguise = String.format("§l%s§r\n", UtilLib.translate(HunterActions.disguise_hunter.getUnlocalizedName()));
         disguise += UtilLib.translateFormatted(base + "skills.disguise.text", Keyboard.getKeyName(ModKeys.getKeyCode(ModKeys.KEY.ACTION)));
         skillPages.addAll(GuideHelper.pagesForLongText(disguise));
         String bloodPotion = String.format("§l%s§r\n", ModBlocks.blood_potion_table.getLocalizedName());

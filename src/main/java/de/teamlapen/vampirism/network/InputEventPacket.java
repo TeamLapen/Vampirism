@@ -4,13 +4,13 @@ import de.teamlapen.lib.HelperLib;
 import de.teamlapen.lib.lib.network.ISyncable;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.core.VampirismRegistries;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.BloodPotionTableContainer;
 import de.teamlapen.vampirism.inventory.HunterBasicContainer;
@@ -24,6 +24,7 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -136,7 +137,7 @@ public class InputEventPacket implements IMessage {
 
             } else if (message.action.equals(UNLOCKSKILL)) {
                 if (factionPlayer != null) {
-                    ISkill skill = VampirismAPI.skillRegistry().getSkill(factionPlayer.getFaction(), message.param);
+                    ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(message.param));
                     if (skill != null) {
                         ISkillHandler skillHandler = factionPlayer.getSkillHandler();
                         ISkillHandler.Result result = skillHandler.canSkillBeEnabled(skill);
@@ -202,10 +203,10 @@ public class InputEventPacket implements IMessage {
 
                 IHunterPlayer hunter = HunterPlayer.get(player);
                 if (hunter.getLevel() > 0) {
-                    if (hunter.getSkillHandler().isSkillEnabled(HunterSkills.bloodPotion_portableCrafting)) {
+                    if (hunter.getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_portable_crafting)) {
                         player.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_POTION_TABLE, player.getEntityWorld(), player.getPosition().getX(), player.getPosition().getY(), player.getPosition().getZ());
                     } else {
-                        player.sendMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_with_skill", new TextComponentTranslation(HunterSkills.bloodPotion_portableCrafting.getUnlocalizedName())));
+                        player.sendMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_with_skill", new TextComponentTranslation(HunterSkills.blood_potion_portable_crafting.getUnlocalizedName())));
                     }
                 } else {
                     player.sendMessage(new TextComponentTranslation("text.vampirism.can_only_be_used_by", new TextComponentTranslation(VReference.HUNTER_FACTION.getUnlocalizedName())));

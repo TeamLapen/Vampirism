@@ -7,7 +7,9 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
+import de.teamlapen.vampirism.core.VampirismRegistries;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,20 +31,20 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     private final int[] actionTimer;
     private final T player;
 
-    private final ImmutableBiMap<Integer, IAction<T>> actionIdMap;
-    private final List<IAction<T>> unlockedActions = new ArrayList<>();
+    private final ImmutableBiMap<Integer, IAction> actionIdMap;
+    private final List<IAction> unlockedActions = new ArrayList<>();
     private boolean dirty = false;
 
     public ActionHandler(T player) {
         this.player = player;
-        ImmutableBiMap<String, IAction<T>> actionMap = VampirismAPI.actionRegistry().getActionMapForFaction(player.getFaction());
-        ImmutableBiMap.Builder<Integer, IAction<T>> idBuilder = ImmutableBiMap.builder();
+        List<IAction> actions = VampirismAPI.actionManager().getActionsForFaction(player.getFaction());
+        ImmutableBiMap.Builder<Integer, IAction> idBuilder = ImmutableBiMap.builder();
         int i = 0;
-        for (IAction<T> action : actionMap.values()) {
+        for (IAction action : actions) {
             idBuilder.put(i++, action);
         }
         actionIdMap = idBuilder.build();
-        this.actionTimer = new int[actionMap.size()];
+        this.actionTimer = new int[actions.size()];
     }
 
     public void deactivateAllActions() {
@@ -56,17 +58,18 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     }
 
     /**
+     * INTERNAL USE ONLY
      * @return The skill currently mapped to this id. Could be different after a restart
      */
-    public IAction<T> getActionFromId(int id) {
+    public IAction getActionFromId(int id) {
         return actionIdMap.get(id);
     }
 
 
     @Override
-    public List<IAction<T>> getAvailableActions() {
-        ArrayList<IAction<T>> actions = new ArrayList<>();
-        for (IAction<T> action : unlockedActions) {
+    public List<IAction> getAvailableActions() {
+        ArrayList<IAction> actions = new ArrayList<>();
+        for (IAction action : unlockedActions) {
             if (action.canUse(player) == IAction.PERM.ALLOWED) {
                 actions.add(action);
             }
@@ -78,6 +81,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     /**
      * Throws an exception if action is not registered
      *
+     * INTERNAL USE ONLY
      * @param action
      * @return The id currently mapped to this action. Could be different after a restart.
      */
@@ -104,12 +108,12 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     }
 
     @Override
-    public boolean isActionActive(String id) {
-        IAction skill = VampirismAPI.actionRegistry().getActionFromKey(player.getFaction(), id);
-        if (skill != null) {
-            return isActionActive((ILastingAction) skill);
+    public boolean isActionActive(ResourceLocation id) {
+        IAction action = VampirismRegistries.ACTIONS.getValue(id);
+        if (action != null) {
+            return isActionActive((ILastingAction) action);
         } else {
-            VampirismMod.log.w(TAG, "Skill with id %s is not registered");
+            VampirismMod.log.w(TAG, "Action with id %s is not registered");
             return false;
         }
 
@@ -128,7 +132,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     public void loadFromNbt(NBTTagCompound nbt) {
         NBTTagCompound actions = nbt.getCompoundTag("actions");
             for (String key : actions.getKeySet()) {
-                IAction action = VampirismAPI.actionRegistry().getActionFromKey(player.getFaction(), key);
+                IAction action = VampirismRegistries.ACTIONS.getValue(new ResourceLocation(key));
                 if (action == null) {
                     VampirismMod.log.w(TAG, "Did not find action with key %s", key);
                 } else {
@@ -174,7 +178,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     }
 
     @Override
-    public void relockActions(Collection<IAction<T>> actions) {
+    public void relockActions(Collection<IAction> actions) {
         unlockedActions.removeAll(actions);
         for (IAction action : actions) {
             if (action instanceof ILastingAction && isActionActive((ILastingAction) action)) {
@@ -204,7 +208,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         NBTTagCompound actions = new NBTTagCompound();
         for (int i = 0; i < actionTimer.length; i++) {
             IAction a = getActionFromId(i);
-            String key = VampirismAPI.actionRegistry().getKeyFromAction(a);
+            String key = VampirismRegistries.ACTIONS.getKey(a).toString();
             actions.setInteger(key, actionTimer[i]);
         }
         nbt.setTag("actions", actions);
@@ -244,7 +248,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     }
 
     @Override
-    public void unlockActions(Collection<IAction<T>> actions) {
+    public void unlockActions(Collection<IAction> actions) {
         unlockedActions.addAll(actions);
     }
 
@@ -294,7 +298,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     }
 
     /**
-     * Is thrown if an unregistered skill is used
+     * Is thrown if an unregistered action is used
      */
     public static class ActionNotRegisteredException extends RuntimeException {
         public ActionNotRegisteredException(String name) {

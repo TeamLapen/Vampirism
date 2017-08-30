@@ -37,7 +37,7 @@ public class ItemVampireFang extends VampirismItem {
                 if (Helper.isVampire(playerIn)) {
                     playerIn.sendMessage(new TextComponentTranslation("text.vampirism.already_vampire"));
                 } else {
-                    playerIn.sendMessage(new TextComponentTranslation("text.vampirism.immune_to_").appendSibling(new TextComponentTranslation(ModPotions.sanguinare.getName())));
+                    playerIn.sendMessage(new TextComponentTranslation("text.vampirism.immune_to").appendSibling(new TextComponentTranslation(ModPotions.sanguinare.getName())));
                 }
             }
             ItemStackUtil.decr(stack);

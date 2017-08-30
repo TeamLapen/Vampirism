@@ -1,8 +1,6 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
-import net.minecraftforge.common.MinecraftForge;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.ArrayList;
@@ -25,39 +23,26 @@ public class SkillNode {
         this.faction = faction;
         this.depth = depth;
         this.children = new ArrayList<>();
-        if (parent == null) {
-            //Do not allow modify if this is the root node
-            this.elements = elements;
-        } else {
-            SkillEvent.AddSkills event = new SkillEvent.AddSkills(faction, Arrays.asList(elements));
-            MinecraftForge.EVENT_BUS.post(event);
-            this.elements = event.getSkills().toArray(new ISkill[event.getSkills().size()]);
-            if (elements.length == 0) {
-                throw new IllegalArgumentException("Cannot remove all skills from a skill node");
-            }
-        }
-        VampirismAPI.skillRegistry().registerNode(this);
+        this.elements = elements;
     }
 
     /**
-     * Creates a root node for the given faction
-     * DO NOTE CREATE  BEFORE VAMPIRISM'S PRE-INIT
      *
-     * @param faction
-     * @param element
+     * DO NOT USE. Register your factions root skill with the same reg name as the faction and it will be created automatically
+     * Creates a root node for the given faction
      */
+    @Deprecated
     public SkillNode(IPlayableFaction faction, ISkill element) {
         this(faction, null, 0, element);
 
     }
 
     /**
+     * DO NOT USE. Use {@link ISkillManager#createSkillNode(SkillNode, ISkill...)} instead
      * Creates a child nodes with one or multiple xor skills.
-     * DO NOTE CREATE  BEFORE VAMPIRISM'S PRE-INIT
-     *
-     * @param parent
-     * @param elements
+     * @param elements One or more xor skills
      */
+    @Deprecated
     public SkillNode(SkillNode parent, ISkill... elements) {
         this(parent.getFaction(), parent, parent.depth + 1, elements);
         parent.children.add(this);

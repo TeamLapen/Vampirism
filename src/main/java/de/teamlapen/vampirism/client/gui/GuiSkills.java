@@ -13,7 +13,7 @@ import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
-import de.teamlapen.vampirism.player.skills.SkillRegistry;
+import de.teamlapen.vampirism.player.skills.SkillManager;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -177,7 +177,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
         if (factionPlayer != null) {
             display = true;
             skillHandler = (SkillHandler) factionPlayer.getSkillHandler();
-            Integer[] info = ((SkillRegistry) VampirismAPI.skillRegistry()).getDisplayInfo(factionPlayer.getFaction());
+            Integer[] info = ((SkillManager) VampirismAPI.skillManager()).getDisplayInfo(factionPlayer.getFaction());
             int w = info[0] * info[1] * skill_width * 2;
             area_max_x = w + 10 - display_width;
             area_min_x = -w - 10 - display_width;
@@ -256,7 +256,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
         super.mouseClicked(mouseX, mouseY, mouseButton);
         if (mouseButton == 0 && selected != null) {
             if (skillHandler.canSkillBeEnabled(selected) == ISkillHandler.Result.OK) {
-                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.UNLOCKSKILL, VampirismAPI.skillRegistry().getID(skillHandler.getPlayer().getFaction(), selected)));
+                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.UNLOCKSKILL, selected.getRegistryName().toString()));
                 playSoundEffect(SoundEvents.ENTITY_PLAYER_LEVELUP, 0.7F);
             } else {
                 playSoundEffect(SoundEvents.BLOCK_NOTE_BASS, 0.5F);

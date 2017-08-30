@@ -1,32 +1,36 @@
 package de.teamlapen.vampirism.player.vampire.actions;
 
-import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.player.actions.IActionRegistry;
+import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.api.entity.player.actions.IAction;
+import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.registries.IForgeRegistry;
 
 /**
  * Registers and holds all skills for vampire player
  */
+@GameRegistry.ObjectHolder(REFERENCE.MODID)
 public class VampireActions {
-    public static FreezeVampireAction freezeAction;
-    public static InvisibilityVampireAction invisibilityAction;
-    public static RegenVampireAction regenAction;
-    public static TeleportVampireAction teleportAction;
-    public static VampireRageVampireAction rageAction;
-    public static BatVampireAction batAction;
-    public static SummonBatVampireAction summonBatAction;
-    public static DisguiseVampireAction disguiseAction;
-    public static SunscreenVampireAction sunscreenVampireAction;
+    public static final FreezeVampireAction freeze = UtilLib.getNull();
+    public static final InvisibilityVampireAction vampire_invisibility = UtilLib.getNull();
+    public static final RegenVampireAction regen = UtilLib.getNull();
+    public static final TeleportVampireAction teleport = UtilLib.getNull();
+    public static final RageVampireAction vampire_rage = UtilLib.getNull();
+    public static final BatVampireAction bat = UtilLib.getNull();
+    public static final SummonBatVampireAction summon_bat = UtilLib.getNull();
+    public static final DisguiseVampireAction disguise_vampire = UtilLib.getNull();
+    public static final SunscreenVampireAction sunscreen = UtilLib.getNull();
 
-    public static void registerDefaultActions() {
-        IActionRegistry registry = VampirismAPI.actionRegistry();
-        freezeAction = registry.registerAction(new FreezeVampireAction(), "freeze");
-        invisibilityAction = registry.registerAction(new InvisibilityVampireAction(), "invisible");
-        regenAction = registry.registerAction(new RegenVampireAction(), "regen");
-        teleportAction = registry.registerAction(new TeleportVampireAction(), "teleport");
-        rageAction = registry.registerAction(new VampireRageVampireAction(), "rage");
-        batAction = registry.registerAction(new BatVampireAction(), "bat");
-        disguiseAction = registry.registerAction(new DisguiseVampireAction(), "disguise");
-        summonBatAction = registry.registerAction(new SummonBatVampireAction(), "summonbat");
-        sunscreenVampireAction = registry.registerAction(new SunscreenVampireAction(), "sunscreen");
+    public static void registerDefaultActions(IForgeRegistry<IAction> registry) {
+        registry.register(new FreezeVampireAction().setRegistryName("vampirism", "freeze"));
+        registry.register(new InvisibilityVampireAction().setRegistryName("vampirism", "vampire_invisibility"));
+        registry.register(new RegenVampireAction().setRegistryName("vampirism", "regen"));
+        registry.register(new TeleportVampireAction().setRegistryName("vampirism", "teleport"));
+        registry.register(new RageVampireAction().setRegistryName("vampirism", "vampire_rage"));
+        registry.register(new BatVampireAction().setRegistryName("vampirism", "bat"));
+        registry.register(new DisguiseVampireAction().setRegistryName("vampirism", "disguise_vampire"));
+        registry.register(new SummonBatVampireAction().setRegistryName("vampirism", "summon_bat"));
+        registry.register(new SunscreenVampireAction().setRegistryName("vampirism", "sunscreen"));
+
     }
 }

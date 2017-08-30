@@ -17,6 +17,12 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
     }
 
     @Override
+    public boolean activate(IHunterPlayer player) {
+        ((HunterPlayer) player).getSpecialAttributes().activateDisguise();
+        return true;
+    }
+
+    @Override
     public int getCooldown() {
         return 0;
     }
@@ -44,12 +50,6 @@ public class DisguiseHunterAction extends DefaultHunterAction implements ILastin
     @Override
     public boolean isEnabled() {
         return Balance.hpa.DISGUISE_ENABLED;
-    }
-
-    @Override
-    public boolean onActivated(IHunterPlayer player) {
-        ((HunterPlayer) player).getSpecialAttributes().activateDisguise();
-        return true;
     }
 
     @Override
