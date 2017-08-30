@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvent;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
@@ -10,11 +11,12 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 /**
  * Handle all sound related stuff
  */
+@GameRegistry.ObjectHolder(REFERENCE.MODID)
 public class ModSounds {
-    public static final SoundEvent entity_vampire_ambient = getNull();
+    public static final SoundEvent entity_vampire_scream = getNull();
     public static final SoundEvent player_bite = getNull();
     public static final SoundEvent ambient_castle = getNull();
-    public static final SoundEvent block_coffin_lid = getNull();
+    public static final SoundEvent coffin_lid = getNull();
     public static final SoundEvent crossbow = getNull();
     public static final SoundEvent bat_swarm = getNull();
     public static final SoundEvent boiling = getNull();

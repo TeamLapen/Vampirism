@@ -78,13 +78,14 @@ public class TileCoffin extends TileEntity implements ITickable {
 
     @Override
     public void update() {
-        if (!world.isRemote) return;
-        if (!BlockCoffin.isHead(world, pos))
+        if (!hasWorld() || !world.isRemote || !BlockCoffin.isHead(world, pos)) {
             return;
+
+        }
 
         boolean occupied = BlockCoffin.isOccupied(world, pos);
         if (lastTickOccupied != occupied) {
-            this.world.playSound(pos.getX(), (double) this.pos.getY() + 0.5D, pos.getZ(), ModSounds.block_coffin_lid, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F, true);
+            this.world.playSound(pos.getX(), (double) this.pos.getY() + 0.5D, pos.getZ(), ModSounds.coffin_lid, SoundCategory.BLOCKS, 0.5F, this.world.rand.nextFloat() * 0.1F + 0.9F, true);
             lastTickOccupied = occupied;
         }
 

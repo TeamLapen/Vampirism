@@ -1,11 +1,10 @@
 package de.teamlapen.vampirism.tests;
 
+import com.google.common.base.Stopwatch;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.BlockCastleBlock;
 import de.teamlapen.vampirism.blocks.BlockWeaponTable;
-import de.teamlapen.vampirism.core.ModBlocks;
-import de.teamlapen.vampirism.core.ModFluids;
-import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,6 +26,12 @@ import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.concurrent.TimeUnit;
+
 /**
  * Since I'm not familiar with JUnit or similar and it does not work that well with Minecraft anyway, this is a some kind of ingame test which is executed via command
  * <p>
@@ -46,6 +51,7 @@ public class Tests {
 
         runTest(Tests::bloodFluidHandler, info);
         runTest(Tests::blockWeaponTableFluids, info.next("BlockWeaponTableFluids"));
+        runLightTest(Tests::checkObjectHolders, "Object holders", player);
 
         log("Finished tests -> teleporting player");
         player.attemptTeleport(0, 5, 0);
@@ -62,6 +68,66 @@ public class Tests {
             result = false;
         }
         sendMsg(info.player, info.name + " test " + (result ? "§2was successful§r" : "§4failed§r"));
+    }
+
+    private static void runLightTest(LightTester tester, String name, @Nullable EntityPlayer player) {
+        boolean result;
+        try {
+            result = tester.run();
+        } catch (Throwable t) {
+            log(name + " failed with exception %s", t);
+            result = false;
+        }
+        if (player != null) {
+            sendMsg(player, name + " test " + (result ? "§2was successful§r" : "§4failed§r"));
+        } else {
+            log(name + "test " + (result ? "was successful" : "failed"));
+        }
+    }
+
+    /**
+     * Should be run in POST INIT
+     */
+    public static void runBackgroundTests() {
+        log("Running background tests");
+        Stopwatch w = Stopwatch.createStarted();
+        runLightTest(Tests::checkObjectHolders, "Object holders", null);
+        log("Finished background tests after %s ms", w.stop().elapsed(TimeUnit.MILLISECONDS));
+    }
+
+    private static boolean checkObjectHolders() {
+        boolean failed;
+        failed = !checkObjectHolders(ModBiomes.class);
+        failed |= !checkObjectHolders(ModBlocks.class);
+        failed |= !checkObjectHolders(ModEnchantments.class);
+        failed |= !checkObjectHolders(ModEntities.class);
+        failed |= !checkObjectHolders(ModFluids.class);
+        failed |= !checkObjectHolders(ModItems.class);
+        failed |= !checkObjectHolders(ModPotions.class);
+        failed |= !checkObjectHolders(ModSounds.class);
+        return !failed;
+    }
+
+    private static boolean checkObjectHolders(@Nonnull Class clazz) {
+        boolean failed = false;
+        for (Field f : clazz.getFields()) {
+            int mods = f.getModifiers();
+            boolean isMatch = Modifier.isPublic(mods) && Modifier.isStatic(mods) && Modifier.isFinal(mods);
+            if (!isMatch) {
+                continue;
+            }
+            try {
+                if (f.get(null) == null) {
+                    log("Field %s in class %s is null", f.getName(), clazz.getName());
+                    failed = true;
+                }
+            } catch (IllegalAccessException e) {
+                VampirismMod.log.e("TEST", e, "Failed to check fields of class %s", clazz.getName());
+                return false;
+            }
+
+        }
+        return !failed;
     }
 
     private static boolean bloodFluidHandler(TestInfo info) {
@@ -133,6 +199,17 @@ public class Tests {
          * @return the function result
          */
         Boolean run(TestInfo t) throws Throwable;
+    }
+
+    @FunctionalInterface
+    private interface LightTester {
+        /**
+         * Runs the given test
+         *
+         * @return Success
+         * @throws Throwable any exception
+         */
+        Boolean run() throws Throwable;
     }
 
     private static class TestInfo {

@@ -82,6 +82,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
         this.enchantability = material.getEnchantability();
     }
 
+
     /**
      * Searches Offhand,Mainhand and the inventory afterwards for arrows
      *

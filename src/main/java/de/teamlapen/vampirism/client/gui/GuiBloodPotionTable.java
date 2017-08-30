@@ -36,6 +36,13 @@ public class GuiBloodPotionTable extends GuiContainer {
     }
 
     @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
+
+    }
+
+    @Override
     public void initGui() {
         super.initGui();
         this.buttonList.add(this.craftBtn = new GuiButton(0, this.width / 2 - 77, this.height / 2 - 78, 80, 20, UtilLib.translate("gui.vampirism.blood_potion_table.create")));

@@ -1,18 +1,20 @@
 package de.teamlapen.vampirism.entity.ai;
 
-import com.google.common.collect.Lists;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIMoveThroughVillage;
 import net.minecraft.entity.ai.RandomPositionGenerator;
 import net.minecraft.pathfinding.Path;
 import net.minecraft.pathfinding.PathNavigateGround;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.village.Village;
 import net.minecraft.village.VillageDoorInfo;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -28,9 +30,10 @@ public class EntityAIMoveThroughVillageCustom extends EntityAIBase {
      * The PathNavigate of our entity.
      */
     private Path entityPathNavigate;
-    private VillageDoorInfo doorInfo;
+    private @Nullable
+    VillageDoorInfo doorInfo;
     private boolean isNocturnal;
-    private List<VillageDoorInfo> doorList = Lists.newArrayList();
+    private List<VillageDoorInfo> doorList = NonNullList.create();
 
     /**
      * @param theEntityIn         The entity
@@ -51,10 +54,21 @@ public class EntityAIMoveThroughVillageCustom extends EntityAIBase {
     }
 
     /**
+     * Resets the task
+     */
+    @Override
+    public void resetTask() {
+        if (doorInfo != null && (this.theEntity.getNavigator().noPath() || this.theEntity.getDistanceSq(this.doorInfo.getDoorBlockPos()) < 16.0D)) {
+            this.doorList.add(this.doorInfo);
+        }
+    }
+
+    /**
      * Returns whether an in-progress EntityAIBase should continue executing
      */
-    public boolean continueExecuting() {
-        if (this.theEntity.getNavigator().noPath()) {
+    @Override
+    public boolean shouldContinueExecuting() {
+        if (this.theEntity.getNavigator().noPath() || this.doorInfo == null) {
             return false;
         } else {
             float f = this.theEntity.width + 4.0F;
@@ -63,24 +77,17 @@ public class EntityAIMoveThroughVillageCustom extends EntityAIBase {
     }
 
     /**
-     * Resets the task
-     */
-    public void resetTask() {
-        if (this.theEntity.getNavigator().noPath() || this.theEntity.getDistanceSq(this.doorInfo.getDoorBlockPos()) < 16.0D) {
-            this.doorList.add(this.doorInfo);
-        }
-    }
-
-    /**
      * Returns whether the EntityAIBase should begin execution.
      */
+    @Override
     public boolean shouldExecute() {
         this.resizeDoorList();
 
         if (this.isNocturnal && this.theEntity.getEntityWorld().isDaytime()) {
             return false;
         } else {
-            Village village = this.theEntity.getEntityWorld().getVillageCollection().getNearestVillage(new BlockPos(this.theEntity), 0);
+
+            @Nullable Village village = this.theEntity.getEntityWorld().getVillageCollection().getNearestVillage(new BlockPos(this.theEntity), 0);
 
             if (village == null) {
                 return false;
@@ -121,11 +128,12 @@ public class EntityAIMoveThroughVillageCustom extends EntityAIBase {
     /**
      * Execute a one shot task or start executing a continuous task
      */
+    @Override
     public void startExecuting() {
         this.theEntity.getNavigator().setPath(this.entityPathNavigate, this.movementSpeed);
     }
 
-    private boolean doesDoorListContain(VillageDoorInfo doorInfoIn) {
+    private boolean doesDoorListContain(@Nonnull VillageDoorInfo doorInfoIn) {
         for (VillageDoorInfo villagedoorinfo : this.doorList) {
             if (doorInfoIn.getDoorBlockPos().equals(villagedoorinfo.getDoorBlockPos())) {
                 return true;

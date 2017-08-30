@@ -28,6 +28,13 @@ public class GuiHunterTable extends GuiContainer {
     }
 
     @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        this.renderHoveredToolTip(mouseX, mouseY);
+
+    }
+
+    @Override
     protected void drawGuiContainerBackgroundLayer(float var1, int var2, int var3) {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         this.mc.getTextureManager().bindTexture(altarGuiTextures);
@@ -45,7 +52,7 @@ public class GuiHunterTable extends GuiContainer {
         String text = null;
         if (!container.isLevelValid()) {
             text = I18n.format("text.vampirism.ritual_level_wrong");
-        } else if (container.getMissingItems() != null) {
+        } else if (!container.getMissingItems().isEmpty()) {
             ItemStack missing = container.getMissingItems();
             ITextComponent item = missing.getItem().equals(ModItems.pure_blood) ? ModItems.pure_blood.getDisplayName(missing) : new TextComponentTranslation(missing.getUnlocalizedName() + ".name");
             text = I18n.format("text.vampirism.ritual_missing_items", ItemStackUtil.getCount(missing), item.getUnformattedText());

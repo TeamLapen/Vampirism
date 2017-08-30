@@ -40,6 +40,7 @@ import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.potion.blood.BloodPotionRegistry;
 import de.teamlapen.vampirism.potion.blood.BloodPotions;
 import de.teamlapen.vampirism.proxy.IProxy;
+import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.tileentity.TileTent;
 import de.teamlapen.vampirism.util.GeneralRegistryImpl;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -187,6 +188,10 @@ public class VampirismMod {
         registryManager.onInitStep(IInitListener.Step.POST_INIT, event);
         proxy.onInitStep(IInitListener.Step.POST_INIT, event);
         modCompatLoader.onInitStep(IInitListener.Step.POST_INIT, event);
+
+        if (inDev) {
+            Tests.runBackgroundTests();
+        }
 
     }
 
