@@ -403,13 +403,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public int onBite(IVampire biter) {
-        float perc = biter instanceof EntityPlayer ? 1F : 0.4F;
+        float perc = biter instanceof IVampirePlayer ? 1F : 0.4F;
         if (getLevel() == 0) {
             int amt = player.getFoodStats().getFoodLevel();
             int sucked = (int) (amt * perc);
             player.getFoodStats().setFoodLevel(amt - sucked);
             player.addExhaustion(1000F);
-            if (!player.isPotionActive(ModPotions.sanguinare) && (!(biter instanceof EntityPlayer) || Permissions.canPlayerTurnPlayer((EntityPlayer) biter)) && Helper.canBecomeVampire(player)) {
+            if (!player.isPotionActive(ModPotions.sanguinare) && (!(biter instanceof IVampirePlayer) || Permissions.canPlayerTurnPlayer(((IVampirePlayer) biter).getRepresentingPlayer())) && Helper.canBecomeVampire(player)) {
                 PotionSanguinare.addRandom(player, true);
             }
             return sucked;
