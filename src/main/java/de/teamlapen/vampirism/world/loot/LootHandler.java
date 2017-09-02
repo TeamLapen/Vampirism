@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.world.loot;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.*;
@@ -22,6 +23,7 @@ public class LootHandler {
             "inject/abandoned_mineshaft", "inject/jungle_temple", "inject/stronghold_corridor", "inject/desert_pyramid", "inject/stronghold_library");
     private static final List<String> TABLES = ImmutableList.of("vampire_dungeon", "village_trainer");
 
+    private static final List<String> STRUCTURE_TABLES = Lists.newArrayList();
     private static final LootHandler instance = new LootHandler();
 
     public static LootHandler getInstance() {
@@ -67,6 +69,19 @@ public class LootHandler {
             }
         }
 
+    }
+
+    /**
+     * Add a loot structure loot table to the list
+     *
+     * @param name
+     */
+    public static ResourceLocation addStructureLootTable(String name) {
+        String rs_id = "structure/" + name;
+        STRUCTURE_TABLES.add(rs_id);
+        ResourceLocation id = new ResourceLocation(rs_id);
+        LootTableList.register(id);
+        return id;
     }
 
     private LootEntryTable getInjectEntry(String name, int weight) {

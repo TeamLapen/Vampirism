@@ -9,4 +9,5 @@ public class SRGNAMES {
     public static final String MapGenVillage_minTownSeperation = "field_82666_h";
     public static final String Entity_setSize = "func_70105_a";
 
+    public static final String Template_blocks = "field_186270_a";
 }
