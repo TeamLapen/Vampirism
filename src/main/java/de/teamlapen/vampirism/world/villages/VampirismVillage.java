@@ -3,13 +3,16 @@ package de.teamlapen.vampirism.world.villages;
 import com.google.common.collect.Lists;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterVillager;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.nbt.NBTBase;
@@ -19,6 +22,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.village.Village;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.*;
 
 import javax.annotation.Nonnull;
@@ -143,7 +147,7 @@ public class VampirismVillage implements IVampirismVillage {
             builder.append("\n").append(String.format("RBitten: %s, RConv: %s, RBDeath: %s, Agrr: %s", recentlyBitten, recentlyConverted, recentlyBittenToDeath, agressive));
             List<EntityVillager> allVillagers = getAllVillager();
             List<EntityBasicHunter> hunters = getHunter();
-            List<EntityHunterVillager> hunterVillagers = filterHunterVillagers(allVillagers);
+            List<IAggressiveVillager> hunterVillagers = filterHunterVillagers(allVillagers);
             List<EntityVillager> normalVillager = filterNormalVillagers(allVillagers);
             builder.append("\n").append(String.format("Stats: Doors: %s, Aggro: %s, v: %s, vh: %s, h: %s", v.getNumVillageDoors(), calculateAggressiveCounter(), normalVillager.size(), hunterVillagers.size(), hunters.size()));
             int hunterCount = hunters.size() + hunterVillagers.size() / 2;
@@ -222,7 +226,7 @@ public class VampirismVillage implements IVampirismVillage {
             v.world.profiler.startSection("checkVillagersHunters");
             List<EntityVillager> allVillagers = getAllVillager();
             List<EntityBasicHunter> hunters = getHunter();
-            List<EntityHunterVillager> hunterVillagers = filterHunterVillagers(allVillagers);
+            List<IAggressiveVillager> hunterVillagers = filterHunterVillagers(allVillagers);
             List<EntityVillager> normalVillager = filterNormalVillagers(allVillagers);
             if (v.world.rand.nextInt(30) == 0) {
                 int hunterCount = hunters.size() + hunterVillagers.size() / 2;
@@ -294,13 +298,13 @@ public class VampirismVillage implements IVampirismVillage {
 
     /**
      * @param all List to filter
-     * @return A new list containing only {@link EntityHunterVillager}
+     * @return A new list containing only {@link IAggressiveVillager}
      */
-    private List<EntityHunterVillager> filterHunterVillagers(List<EntityVillager> all) {
-        List<EntityHunterVillager> filtered = new ArrayList<>();
+    private List<IAggressiveVillager> filterHunterVillagers(List<EntityVillager> all) {
+        List<IAggressiveVillager> filtered = new ArrayList<>();
         for (EntityVillager villager : all) {
-            if (villager instanceof EntityHunterVillager) {
-                filtered.add((EntityHunterVillager) villager);
+            if (villager instanceof IAggressiveVillager) {
+                filtered.add((IAggressiveVillager) villager);
             }
         }
         return filtered;
@@ -350,19 +354,25 @@ public class VampirismVillage implements IVampirismVillage {
         agressive = true;
         dirty = true;
         for (EntityVillager v : villagers) {
-            EntityHunterVillager hunter = EntityHunterVillager.makeHunter(v);
-            v.getEntityWorld().spawnEntity(hunter);
+            VampirismVillageEvent.MakeAggressive event = new VampirismVillageEvent.MakeAggressive(this, v);
+            if (MinecraftForge.EVENT_BUS.post(event) && event.getAggressiveVillager() != null) {
+                v.getEntityWorld().spawnEntity((Entity) event.getAggressiveVillager());
+            } else {
+                EntityHunterVillager hunter = EntityHunterVillager.makeHunter(v);
+                v.getEntityWorld().spawnEntity(hunter);
+            }
+
             v.setDead();
 
         }
     }
 
-    private void makeCalm(List<EntityHunterVillager> hunters) {
+    private void makeCalm(List<IAggressiveVillager> hunters) {
         VampirismMod.log.d(TAG, "Making villagers calm");
-        for (EntityHunterVillager h : hunters) {
-            EntityVillager villager = EntityHunterVillager.makeNormal(h);
-            h.getEntityWorld().spawnEntity(villager);
-            h.setDead();
+        for (IAggressiveVillager h : hunters) {
+            Entity calm = h.makeCalm();
+            h.getRepresentingEntity().getEntityWorld().spawnEntity(calm);
+            h.getRepresentingEntity().setDead();
         }
         agressive = false;
         dirty = true;
@@ -415,7 +425,12 @@ public class VampirismVillage implements IVampirismVillage {
             EntityVillager entityvillager;
             if (agressive && ev.getRNG().nextInt(Balance.village.VILLAGER_HUNTER_CHANCE) == 0) {
                 EntityVillager temp = new EntityVillager(ev.getEntityWorld());
-                entityvillager = EntityHunterVillager.makeHunter(temp);
+                VampirismVillageEvent.MakeAggressive event = new VampirismVillageEvent.MakeAggressive(this, temp);
+                if (MinecraftForge.EVENT_BUS.post(event) && event.getAggressiveVillager() != null) {
+                    entityvillager = (EntityVillager) event.getAggressiveVillager();
+                } else {
+                    entityvillager = EntityHunterVillager.makeHunter(temp);
+                }
                 temp.setDead();
             } else {
                 entityvillager = ev.createChild(ev);

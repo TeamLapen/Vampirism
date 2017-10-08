@@ -6,10 +6,13 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterVillager;
 import de.teamlapen.vampirism.player.skills.SkillManager;
@@ -20,6 +23,8 @@ import de.teamlapen.vampirism.util.VampireBookManager;
 import de.teamlapen.vampirism.world.GarlicChunkHandler;
 import de.teamlapen.vampirism.world.VampirismWorldData;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
+import de.teamlapen.vampirism.world.gen.structure.StructureManager;
+import de.teamlapen.vampirism.world.gen.structure.VampirismTemplate;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.command.CommandBase;
@@ -37,14 +42,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.structure.template.PlacementSettings;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.MapDecoration;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nullable;
@@ -339,9 +347,17 @@ public class TestCommand extends BasicCommand {
                 EntityPlayer player = getCommandSenderAsPlayer(sender);
                 List<EntityVillager> l = player.getEntityWorld().getEntitiesWithinAABB(EntityVillager.class, player.getEntityBoundingBox().expand(3, 2, 3));
                 for (EntityVillager v : l) {
-                    EntityHunterVillager hunter = EntityHunterVillager.makeHunter(v);
+                    if (v instanceof IHunter || v instanceof IVampire) continue;
+                    VampirismVillageEvent.MakeAggressive event = new VampirismVillageEvent.MakeAggressive(null, v);
+                    if (MinecraftForge.EVENT_BUS.post(event) && event.getAggressiveVillager() != null) {
+                        v.getEntityWorld().spawnEntity((Entity) event.getAggressiveVillager());
+                    } else {
+                        EntityHunterVillager hunter = EntityHunterVillager.makeHunter(v);
+                        v.getEntityWorld().spawnEntity(hunter);
+                    }
+
                     v.setDead();
-                    v.getEntityWorld().spawnEntity(hunter);
+
                 }
             }
 
@@ -506,6 +522,38 @@ public class TestCommand extends BasicCommand {
             @Override
             public String getUsage(ICommandSender sender) {
                 return getName() + "(print)";
+            }
+        });
+        addSubcommand(new SubCommand() {
+            @Override
+            public String getName() {
+                return "place";
+            }
+
+            @Override
+            public String getUsage(ICommandSender sender) {
+                return "place <structure>";
+            }
+
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                if (args.length == 0) {
+                    throw new WrongUsageException("Missing structure name");
+                }
+                EntityPlayer p = getCommandSenderAsPlayer(sender);
+                try {
+                    StructureManager.Structure s = StructureManager.Structure.valueOf(args[0]);
+                    VampirismTemplate template = StructureManager.get(s);
+                    if (template == null) {
+                        throw new CommandException("Structure " + s + " was not loaded");
+                    }
+                    template.addBlocksToWorld(p.world, p.getPosition().offset(EnumFacing.NORTH), new PlacementSettings());
+
+                } catch (IllegalArgumentException e) {
+                    throw new CommandException("Structure " + args[0] + " not found.");
+                }
+
+
             }
         });
     }
