@@ -11,10 +11,12 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterVillager;
+import de.teamlapen.vampirism.entity.special.EntityDraculaHalloween;
 import de.teamlapen.vampirism.player.skills.SkillRegistry;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.tileentity.TileTent;
+import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.util.VampireBookManager;
 import de.teamlapen.vampirism.world.GarlicChunkHandler;
 import de.teamlapen.vampirism.world.VampirismWorldData;
@@ -503,6 +505,25 @@ public class TestCommand extends BasicCommand {
             @Override
             public String getUsage(ICommandSender sender) {
                 return getName() + "(print)";
+            }
+        });
+
+        addSubcommand(new SubCommand() {
+            @Override
+            public String getName() {
+                return "halloween";
+            }
+
+            @Override
+            public String getUsage(ICommandSender sender) {
+                return getName();
+            }
+
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                EntityPlayer p = getCommandSenderAsPlayer(sender);
+                EntityDraculaHalloween draculaHalloween = (EntityDraculaHalloween) UtilLib.spawnEntityBehindEntity(p, new ResourceLocation(REFERENCE.MODID, ModEntities.SPECIAL_DRACULA_HALLOWEEN));
+                draculaHalloween.setOwnerId(p.getUniqueID());
             }
         });
     }

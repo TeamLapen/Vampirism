@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainer;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterVillager;
 import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionSaveable;
+import de.teamlapen.vampirism.entity.special.EntityDraculaHalloween;
 import de.teamlapen.vampirism.entity.vampire.EntityAdvancedVampire;
 import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
 import de.teamlapen.vampirism.entity.vampire.EntityDummyBittenAnimal;
@@ -66,6 +67,8 @@ public class ModEntities {
     public static final String CROSSBOW_ARROW = "crossbow_arrow";
     public static final String PARTICLE_CLOUD = "particle_cloud";
     public static final String THROWABLE_ITEM = "throwable_item";
+    public static final String SPECIAL_DRACULA_HALLOWEEN = "special_dracula_halloween";
+
     /**
      * List of entity names which should be spawnable
      */
@@ -117,6 +120,7 @@ public class ModEntities {
         registerEntity(EntityCrossbowArrow.class, CROSSBOW_ARROW, "crossbow_arrow", EntityLiving.SpawnPlacementType.IN_AIR, false);
         registerEntity(EntityAreaParticleCloud.class, PARTICLE_CLOUD, "particle_cloud", EntityLiving.SpawnPlacementType.IN_AIR, false);
         registerEntity(EntityThrowableItem.class, THROWABLE_ITEM, "throwable_item", EntityLiving.SpawnPlacementType.IN_AIR, false);
+        registerEntity(EntityDraculaHalloween.class, SPECIAL_DRACULA_HALLOWEEN, null, EntityLiving.SpawnPlacementType.ON_GROUND, false);
     }
 
     static void registerSpawns() {
