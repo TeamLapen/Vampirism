@@ -104,7 +104,7 @@ public class VampirismVillage implements IVampirismVillage {
         VillageAggressorVampire aggressorVampire = null;
 
         for (VillageAggressorVampire vampire : this.villageAggressorVampires) {
-            double d1 = vampire.aggressorEntity.getDistanceSqToEntity(entityCenter);
+            double d1 = vampire.aggressorEntity.getDistanceSq(entityCenter);
 
             if (d1 <= d0) {
                 aggressorVampire = vampire;

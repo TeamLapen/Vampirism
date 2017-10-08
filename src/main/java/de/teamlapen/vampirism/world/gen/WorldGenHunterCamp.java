@@ -36,7 +36,7 @@ public class WorldGenHunterCamp extends WorldGenerator {
         //Check temperature
         BlockPos pos = new BlockPos((chunkX << 4), 0, (chunkZ << 4));
         pos = world.getHeight(pos);
-        float t = biome.getFloatTemperature(pos);
+        float t = biome.getTemperature(pos);
         if (t > 1.5F || t < 0.1F) return false;
 
         int i = chunkX;

@@ -24,7 +24,7 @@ public class BlockTentMain extends BlockTent implements ITileEntityProvider {
 
     public BlockTentMain() {
         super(name);
-        isBlockContainer = true;
+        hasTileEntity = true;
         this.setTickRandomly(true);
     }
 

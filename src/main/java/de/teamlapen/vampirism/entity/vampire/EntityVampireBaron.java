@@ -160,7 +160,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
 
     @Override
     public double getTheDistanceSquared(Entity e) {
-        return this.getDistanceSqToEntity(e);
+        return this.getDistanceSq(e);
     }
 
     @Override
@@ -225,7 +225,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
                 m = (IVampireMinion.Saveable) UtilLib.spawnEntityBehindEntity(this.getAttackTarget(), new ResourceLocation(REFERENCE.MODID, ModEntities.VAMPIRE_MINION_SAVEABLE_NAME));
             }
             if (m == null) {
-                m = (IVampireMinion.Saveable) UtilLib.spawnEntityInWorld(world, this.getEntityBoundingBox().expand(19, 4, 19), new ResourceLocation(REFERENCE.MODID, ModEntities.VAMPIRE_MINION_SAVEABLE_NAME), 3);
+                m = (IVampireMinion.Saveable) UtilLib.spawnEntityInWorld(world, this.getEntityBoundingBox().grow(19, 4, 19), new ResourceLocation(REFERENCE.MODID, ModEntities.VAMPIRE_MINION_SAVEABLE_NAME), 3);
             }
             if (m != null) {
                 m.setLord(this);

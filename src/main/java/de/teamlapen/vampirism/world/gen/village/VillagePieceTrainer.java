@@ -223,7 +223,7 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
 
         AxisAlignedBB box = new AxisAlignedBB(structureBoundingBoxIn.minX, structureBoundingBoxIn.minY, structureBoundingBoxIn.minZ, structureBoundingBoxIn.maxX, structureBoundingBoxIn.maxY, structureBoundingBoxIn.maxZ);
         EntityHunterTrainer hunterTrainer = new EntityHunterTrainer(worldIn);
-        hunterTrainer.setHome(box.expand(-1, 0, -1));
+        hunterTrainer.setHome(box.grow(-1, 0, -1));
         hunterTrainer.setLocationAndAngles((double) j + 0.5D, (double) k, (double) l + 0.5D, 0.0F, 0.0F);
         worldIn.spawnEntity(hunterTrainer);
     }

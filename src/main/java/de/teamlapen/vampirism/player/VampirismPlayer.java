@@ -67,7 +67,7 @@ public abstract class VampirismPlayer<T extends IFactionPlayer> implements IFact
     @Override
     public double getTheDistanceSquared(Entity e) {
         if (e == null) return Double.MAX_VALUE;
-        return player.getDistanceSqToEntity(e);
+        return player.getDistanceSq(e);
     }
 
     @Override

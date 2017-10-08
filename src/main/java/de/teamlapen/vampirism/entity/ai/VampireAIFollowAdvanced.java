@@ -30,7 +30,7 @@ public class VampireAIFollowAdvanced extends EntityAIBase {
         if (this.entity.getAdvancedLeader() == null) {
             return false;
         } else {
-            double d0 = this.entity.getDistanceSqToEntity(this.entity.getAdvancedLeader());
+            double d0 = this.entity.getDistanceSq(this.entity.getAdvancedLeader());
             return d0 >= DIST && d0 <= 256.0D;
         }
     }
@@ -40,16 +40,16 @@ public class VampireAIFollowAdvanced extends EntityAIBase {
 
         EntityAdvancedVampire leader = entity.getAdvancedLeader();
         if (leader != null) {
-            return leader.isEntityAlive() && this.entity.getDistanceSqToEntity(leader) > DIST;
+            return leader.isEntityAlive() && this.entity.getDistanceSq(leader) > DIST;
         }
 
-        List<EntityAdvancedVampire> list = this.entity.getEntityWorld().getEntitiesWithinAABB(EntityAdvancedVampire.class, this.entity.getEntityBoundingBox().expand(8, 4, 8));
+        List<EntityAdvancedVampire> list = this.entity.getEntityWorld().getEntitiesWithinAABB(EntityAdvancedVampire.class, this.entity.getEntityBoundingBox().grow(8, 4, 8));
 
         double d0 = Double.MAX_VALUE;
 
         for (EntityAdvancedVampire entity1 : list) {
             if (entity1.isEntityAlive() && entity1.getFollowingCount() < entity1.getMaxFollowerCount()) {
-                double d1 = this.entity.getDistanceSqToEntity(entity1);
+                double d1 = this.entity.getDistanceSq(entity1);
 
                 if (d1 <= d0) {
                     d0 = d1;
@@ -62,7 +62,7 @@ public class VampireAIFollowAdvanced extends EntityAIBase {
         else {
             entity.setAdvancedLeader(leader);
             leader.increaseFollowerCount();
-            return this.entity.getDistanceSqToEntity(leader) > DIST;
+            return this.entity.getDistanceSq(leader) > DIST;
         }
     }
 

@@ -288,7 +288,7 @@ public class TestCommand extends BasicCommand {
             @Override
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 EntityPlayer player = getCommandSenderAsPlayer(sender);
-                List l = player.getEntityWorld().getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().expand(3, 2, 3));
+                List l = player.getEntityWorld().getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().grow(3, 2, 3));
                 for (Object o : l) {
                     if (o instanceof EntityCreature) {
 
@@ -345,7 +345,7 @@ public class TestCommand extends BasicCommand {
             @Override
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 EntityPlayer player = getCommandSenderAsPlayer(sender);
-                List<EntityVillager> l = player.getEntityWorld().getEntitiesWithinAABB(EntityVillager.class, player.getEntityBoundingBox().expand(3, 2, 3));
+                List<EntityVillager> l = player.getEntityWorld().getEntitiesWithinAABB(EntityVillager.class, player.getEntityBoundingBox().grow(3, 2, 3));
                 for (EntityVillager v : l) {
                     if (v instanceof IHunter || v instanceof IVampire) continue;
                     VampirismVillageEvent.MakeAggressive event = new VampirismVillageEvent.MakeAggressive(null, v);

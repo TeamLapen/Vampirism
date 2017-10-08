@@ -22,7 +22,7 @@ public class VampirismItemWeapon extends VampirismItem {
     private final float attackSpeed;
 
     public VampirismItemWeapon(String regName, Item.ToolMaterial material, float attackSpeedModifier) {
-        this(regName, material, attackSpeedModifier, 3F + material.getDamageVsEntity());
+        this(regName, material, attackSpeedModifier, 3F + material.getAttackDamage());
     }
 
     public VampirismItemWeapon(String regName, Item.ToolMaterial material) {

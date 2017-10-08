@@ -37,7 +37,7 @@ public class EntityAIAttackMeleeNoSun extends EntityAIAttackMelee {
 
             if (avoidSun) {
 
-                Path path = this.entityPathEntity;
+                Path path = this.path;
                 if (attacker.getEntityWorld().canSeeSky(new BlockPos(MathHelper.floor(this.attacker.posX), (int) (this.attacker.getEntityBoundingBox().minY + 0.5D), MathHelper.floor(this.attacker.posZ)))) {
                     return false;
                 }

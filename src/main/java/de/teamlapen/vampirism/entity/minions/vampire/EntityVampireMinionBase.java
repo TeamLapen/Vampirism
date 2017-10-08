@@ -133,7 +133,7 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
         }
         if (!this.world.isRemote && !this.dead) {
 
-            List<EntityItem> list = this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().expand(1.0D, 0.0D, 1.0D));
+            List<EntityItem> list = this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().grow(1.0D, 0.0D, 1.0D));
 
             for (EntityItem entityitem : list) {
                 if (!entityitem.isDead && !ItemStackUtil.isEmpty(entityitem.getItem())) {

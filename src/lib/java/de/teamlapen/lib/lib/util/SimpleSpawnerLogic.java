@@ -176,7 +176,7 @@ public abstract class SimpleSpawnerLogic {
 
     protected AxisAlignedBB getSpawningBox() {
         BlockPos blockpos = getSpawnerPosition();
-        return (new AxisAlignedBB((double) blockpos.getX(), (double) blockpos.getY(), (double) blockpos.getZ(), (double) (blockpos.getX() + 1), (double) (blockpos.getY() + 1), (double) (blockpos.getZ() + 1))).expand((double) this.spawnRange, (double) this.spawnRange, (double) this.spawnRange);
+        return (new AxisAlignedBB((double) blockpos.getX(), (double) blockpos.getY(), (double) blockpos.getZ(), (double) (blockpos.getX() + 1), (double) (blockpos.getY() + 1), (double) (blockpos.getZ() + 1))).grow((double) this.spawnRange, (double) this.spawnRange, (double) this.spawnRange);
 
     }
 

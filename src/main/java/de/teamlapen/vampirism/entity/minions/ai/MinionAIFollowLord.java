@@ -87,7 +87,7 @@ public class MinionAIFollowLord extends EntityAIBase {
         if (--this.timer <= 0) {
             this.timer = 10;
             minionEntity.getNavigator().tryMoveToEntityLiving(this.boss.getRepresentingEntity(), this.speed);
-            if (this.minionEntity.getDistanceSqToEntity(boss.getRepresentingEntity()) > TELEPORT_DIST) {
+            if (this.minionEntity.getDistanceSq(boss.getRepresentingEntity()) > TELEPORT_DIST) {
                 EntityLivingBase lord = boss.getRepresentingEntity();
                 BlockPos pos = lord.getPosition().add(-4, 0, -4);
 
@@ -99,7 +99,7 @@ public class MinionAIFollowLord extends EntityAIBase {
                                 && !lord.getEntityWorld().getBlockState(pos1).isNormalCube() && !lord.getEntityWorld().getBlockState(pos.up()).isNormalCube()) {
                             minionEntity.setLocationAndAngles(pos1.getX() + 0.5F, pos1.getY() + 0.1, pos1.getZ() + 0.5F,
                                     MathHelper.wrapDegrees(lord.rotationYaw + 180F), MathHelper.wrapDegrees(lord.rotationPitch + 180F));
-                            minionEntity.getNavigator().clearPathEntity();
+                            minionEntity.getNavigator().clearPath();
                             return;
                         }
                     }

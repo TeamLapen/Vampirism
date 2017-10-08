@@ -159,13 +159,13 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
         if (!remote) {
 
 
-            AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().expand(4.0D, 2.0D, 4.0D);
+            AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().grow(4.0D, 2.0D, 4.0D);
             List<EntityLivingBase> list1 = entity.getEntityWorld().getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
 
 
             if (!list1.isEmpty()) {
                 for (EntityLivingBase entitylivingbase : list1) {
-                    DamageHandler.affectEntityHolyWaterSplash(entitylivingbase, getStrength(tier), entity.getDistanceSqToEntity(entitylivingbase), result.entityHit != null);
+                    DamageHandler.affectEntityHolyWaterSplash(entitylivingbase, getStrength(tier), entity.getDistanceSq(entitylivingbase), result.entityHit != null);
                 }
             }
 
@@ -188,7 +188,7 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
             if (!worldIn.isRemote) {
                 EntityThrowableItem entityThrowable = new EntityThrowableItem(worldIn, playerIn);
                 entityThrowable.setItem(stack);
-                entityThrowable.setHeadingFromThrower(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, -20.0F, 0.5F, 1.0F);
+                entityThrowable.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, -20.0F, 0.5F, 1.0F);
                 worldIn.spawnEntity(entityThrowable);
             }
 
