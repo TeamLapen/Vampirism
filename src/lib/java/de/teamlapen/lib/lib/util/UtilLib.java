@@ -136,22 +136,18 @@ public class UtilLib {
     }
 
     public static Entity spawnEntityBehindEntity(EntityLivingBase p, ResourceLocation id) {
-        EntityLiving e = (EntityLiving) EntityList.createEntityByIDFromName(id, p.getEntityWorld());
-        float yaw = p.rotationYawHead;
-        float cosYaw = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
-        float sinYaw = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
-        int distance = 2;
-        double x = p.posX + sinYaw * distance;
-        double z = p.posZ + cosYaw * distance;
 
-        e.setPosition(x, p.posY, z);
+        BlockPos behind = getPositionBehindEntity(p, 2);
+        EntityLiving e = (EntityLiving) EntityList.createEntityByIDFromName(id, p.getEntityWorld());
+
+        e.setPosition(behind.getX(), p.posY, behind.getZ());
 
         if (e.getCanSpawnHere() && e.isNotColliding()) {
             p.getEntityWorld().spawnEntity(e);
             return e;
         } else {
-            int y = p.getEntityWorld().getHeight(new BlockPos(x, 0, z)).getY();
-            e.setPosition(x, y, z);
+            int y = p.getEntityWorld().getHeight(behind).getY();
+            e.setPosition(behind.getX(), y, behind.getZ());
             if (e.getCanSpawnHere() && e.isNotColliding()) {
                 p.getEntityWorld().spawnEntity(e);
                 return e;
@@ -159,6 +155,15 @@ public class UtilLib {
         }
         e.setDead();
         return null;
+    }
+
+    public static BlockPos getPositionBehindEntity(EntityLivingBase p, float distance) {
+        float yaw = p.rotationYawHead;
+        float cosYaw = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
+        float sinYaw = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
+        double x = p.posX + sinYaw * distance;
+        double z = p.posZ + cosYaw * distance;
+        return new BlockPos(x, p.posY, z);
     }
 
     public static boolean spawnEntityInWorld(World world, AxisAlignedBB box, Entity e, int maxTry) {
@@ -329,12 +334,18 @@ public class UtilLib {
 
         //Check if the vector is left or right of look1
         double alpha = Math.acos(look1.dotProduct(dist));
-        return alpha < Math.PI / 2;
+        return alpha < Math.PI / 1.8;
 
     }
 
     /**
      * Returns null, but makes it look like non null
+     *
+     * If this causes issues when compiling with IntelliJ check the following link and rebuild the entire project afterwards
+     *
+     * https://github.com/TeamLapen/Vampirism#intellij
+     *
+     * Make sure Settings -> Build, Execution, Deployment -> Compiler -> 'Add runtime assertions for not-null-annotated methods and parameters' is disabled (Unfortunately required)
      */
     @SuppressWarnings("ConstantConditions")
     public static @Nonnull
