@@ -53,7 +53,8 @@ public class FreezeVampireAction extends DefaultVampireAction {
     @Override
     public boolean onActivated(final IVampirePlayer vampire) {
         EntityPlayer player = vampire.getRepresentingPlayer();
-        List l = player.getEntityWorld().getEntitiesInAABBexcluding(player, player.getEntityBoundingBox().expand(10, 5, 10), vampire.getNonFriendlySelector(true, false)::test);
+        List l = player.getEntityWorld()
+                .getEntitiesInAABBexcluding(player, player.getEntityBoundingBox().grow(10, 5, 10), vampire.getNonFriendlySelector(true, false)::test);
         for (Object o : l) {
             if (o instanceof EntityBlindingBat) continue;
             if (!(o instanceof EntityLivingBase)) continue;

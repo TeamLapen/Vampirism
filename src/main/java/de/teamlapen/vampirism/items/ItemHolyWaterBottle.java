@@ -158,8 +158,7 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
         TIER tier = getTier(stack);
         if (!remote) {
 
-
-            AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().expand(4.0D, 2.0D, 4.0D);
+            AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().grow(4.0D, 2.0D, 4.0D);
             List<EntityLivingBase> list1 = entity.getEntityWorld().getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
 
 
