@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.vampire.BloodStats;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
+import de.teamlapen.vampirism.util.HalloweenSpecial;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
@@ -270,6 +271,40 @@ public class VampirismHUDOverlay extends ExtendedGui {
             GL11.glEnable(GL11.GL_DEPTH_TEST);
             GlStateManager.popMatrix();
         }
+
+        if (HalloweenSpecial.shouldRenderOverlay()) {
+            renderHalloweenOverlay();
+        }
+    }
+
+    /**
+     * Halloween (temporary) overlay
+     */
+    private void renderHalloweenOverlay() {
+
+        GlStateManager.pushMatrix();
+        //Set the working matrix/layer to a layer directly on the screen/in front of the player
+        ScaledResolution scaledresolution = new ScaledResolution(this.mc);
+        // int factor=scaledresolution.getScaleFactor();
+        int w = (scaledresolution.getScaledWidth());
+        int h = (scaledresolution.getScaledHeight());
+
+        Minecraft.getMinecraft().entityRenderer.setupOverlayRendering();
+
+        Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(REFERENCE.MODID, "textures/gui/special_halloween.png"));
+
+        int width = 507;
+        int height = 102;
+
+        int x = (w - width) / 2;
+        int y = (h - height) / 2;
+
+        GlStateManager.color(1, 1, 1, 1);
+        GlStateManager.enableBlend();
+        drawModalRectWithCustomSizedTexture(x, y, 0, 0, width, height, width, height);
+        GlStateManager.disableBlend();
+
+        GlStateManager.popMatrix();
     }
 
 

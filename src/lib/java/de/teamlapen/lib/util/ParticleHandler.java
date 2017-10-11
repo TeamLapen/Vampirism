@@ -39,12 +39,17 @@ public abstract class ParticleHandler {
 
     public abstract void spawnParticle(World world, ResourceLocation particle, double posX, double posY, double posZ, Object... param);
 
+    /**
+     * Client side only
+     */
     public void spawnParticle(World world, ResourceLocation particle, double posX, double posY, double posZ, NBTTagCompound nbt) {
 
     }
 
     public abstract void spawnParticles(World world, ResourceLocation particle, double posX, double posY, double posZ, int count, double maxDist, Random random, Object... param);
 
+    /**
+     */
     public void spawnParticles(World world, ResourceLocation particle, double posX, double posY, double posZ, int count, double maxDist, Random random, NBTTagCompound nbt) {
 
     }

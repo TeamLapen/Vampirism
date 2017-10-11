@@ -43,6 +43,12 @@ public class ModelBipedCloaked extends ModelBiped {
         bipedCloak.rotateAngleX = f2;
     }
 
+    @Override
+    public void setVisible(boolean visible) {
+        super.setVisible(visible);
+        bipedCloak.showModel = visible;
+    }
+
     public void setSkipCloakOnce() {
         skipCloakOnce = true;
     }
