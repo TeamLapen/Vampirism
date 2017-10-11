@@ -24,11 +24,17 @@ import net.minecraft.world.World;
 import javax.annotation.Nullable;
 import java.util.UUID;
 
+
+/**
+ * Quick and dirty
+ * Only used on halloween
+ */
 public class EntityDraculaHalloween extends EntityVampirism {
 
     protected static final DataParameter<Optional<UUID>> OWNER_UNIQUE_ID = EntityDataManager.createKey(EntityTameable.class, DataSerializers.OPTIONAL_UNIQUE_ID);
     private int seen = 0;
     private int hiding = 0;
+    private boolean particle = false;
 
     public EntityDraculaHalloween(World world) {
         super(world);
@@ -72,12 +78,18 @@ public class EntityDraculaHalloween extends EntityVampirism {
             this.setDead();
             return;
         }
+        if (this.getEntityWorld().isDaytime()) {
+            if (hiding == 0) {
+                makeHide(this.getRNG().nextInt(1000));
+            }
+            return;
+        }
         if (hiding == 0) {
             if (UtilLib.canReallySee(owner, this, true)) {
                 seen++;
                 if (seen == 1) {
                     if (owner instanceof EntityPlayerMP) {
-                        ((EntityPlayerMP) owner).connection.sendPacket(new SPacketSoundEffect(ModSounds.entity_vampire_scream, SoundCategory.NEUTRAL, posX, posY, posZ, 1, 1));
+                        ((EntityPlayerMP) owner).connection.sendPacket(new SPacketSoundEffect(ModSounds.entity_vampire_scream, SoundCategory.NEUTRAL, posX, posY, posZ, 2, 1));
                     }
                 }
             } else if (this.getDistanceSq(owner) > 5) {
@@ -98,10 +110,7 @@ public class EntityDraculaHalloween extends EntityVampirism {
                 if (this.getRNG().nextInt(3) == 0) {
                     teleportBehind(owner);
                 } else {
-                    this.setInvisible(true);
-                    BlockPos spawn = world.getSpawnPoint();
-                    this.setPosition(spawn.getX(), 3, spawn.getZ());
-                    hiding = this.getRNG().nextInt(6000);
+                    makeHide(this.getRNG().nextInt(3000));
                 }
                 this.seen = 0;
             }
@@ -109,13 +118,20 @@ public class EntityDraculaHalloween extends EntityVampirism {
             hiding--;
             if (hiding == 0) {
                 teleportBehind(owner);
-                this.setInvisible(true);
-
+                this.setInvisible(false);
             }
 
         }
 
 
+    }
+
+    public void makeHide(int time) {
+        seen = 0;
+        this.setInvisible(true);
+        BlockPos spawn = world.getSpawnPoint();
+        this.setPosition(spawn.getX(), 3, spawn.getZ());
+        hiding = time;
     }
 
     private void teleportBehind(EntityLivingBase target) {
@@ -165,5 +181,13 @@ public class EntityDraculaHalloween extends EntityVampirism {
     public void readEntityFromNBT(NBTTagCompound compound) {
         super.readEntityFromNBT(compound);
         this.setDead();
+    }
+
+    public boolean isParticle() {
+        return particle;
+    }
+
+    public void setParticle(boolean particle) {
+        this.particle = particle;
     }
 }

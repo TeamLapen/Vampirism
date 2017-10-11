@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.client.model.ModelBipedCloaked;
 import de.teamlapen.vampirism.client.render.LayerGlowingEyes;
 import de.teamlapen.vampirism.entity.special.EntityDraculaHalloween;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.entity.RenderLiving;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.util.ResourceLocation;
@@ -23,5 +24,24 @@ public class RenderSpecialDraculaHalloween extends RenderLiving<EntityDraculaHal
     @Override
     protected ResourceLocation getEntityTexture(EntityDraculaHalloween entity) {
         return texture;
+    }
+
+    @Override
+    public void doRender(EntityDraculaHalloween entity, double x, double y, double z, float entityYaw, float partialTicks) {
+        super.doRender(entity, x, y, z, entityYaw, partialTicks);
+    }
+
+    @Override
+    protected void renderModel(EntityDraculaHalloween entitylivingbaseIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch, float scaleFactor) {
+
+        if (entitylivingbaseIn.isParticle()) {
+            ModelBiped model = (ModelBiped) getMainModel();
+            model.setVisible(false);
+            model.bipedHead.showModel = true;
+            super.renderModel(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
+            model.setVisible(true);
+        } else {
+            super.renderModel(entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch, scaleFactor);
+        }
     }
 }

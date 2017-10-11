@@ -4,6 +4,7 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.lib.util.ParticleHandler;
 import de.teamlapen.vampirism.client.render.particle.FlyingBloodEntityParticle;
 import de.teamlapen.vampirism.client.render.particle.FlyingBloodParticle;
+import de.teamlapen.vampirism.client.render.particle.HalloweenParticle;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
@@ -20,6 +21,7 @@ import javax.annotation.Nullable;
 public class ModParticles {
     public static final ResourceLocation FLYING_BLOOD = new ResourceLocation(REFERENCE.MODID, "flying_blood");
     public static final ResourceLocation FLYING_BLOOD_ENTITY = new ResourceLocation(REFERENCE.MODID, "flying_blood_entity");
+    public static final ResourceLocation HALLOWEEN = new ResourceLocation(REFERENCE.MODID, "halloween");
 
     public static void init() {
         ParticleHandler.registerParticle(FLYING_BLOOD, new ParticleHandler.ICustomParticleFactory() {
@@ -81,6 +83,26 @@ public class ModParticles {
                 data[0] = e;
                 data[1] = nbt.getBoolean("1");
                 return data;
+            }
+        });
+
+        ParticleHandler.registerParticle(HALLOWEEN, new ParticleHandler.ICustomParticleFactory() {
+            @SideOnly(Side.CLIENT)
+            @Override
+            public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
+                return new HalloweenParticle(world, posX, posY, posZ);
+            }
+
+            @Nonnull
+            @Override
+            public NBTTagCompound createParticleInfo(Object... param) {
+                return new NBTTagCompound();
+            }
+
+            @Nullable
+            @Override
+            public Object[] readParticleInfo(NBTTagCompound nbt) {
+                return new Object[0];
             }
         });
     }

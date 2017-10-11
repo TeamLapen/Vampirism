@@ -42,10 +42,7 @@ import de.teamlapen.vampirism.potion.blood.BloodPotions;
 import de.teamlapen.vampirism.proxy.IProxy;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.tileentity.TileTent;
-import de.teamlapen.vampirism.util.GeneralRegistryImpl;
-import de.teamlapen.vampirism.util.REFERENCE;
-import de.teamlapen.vampirism.util.SupporterManager;
-import de.teamlapen.vampirism.util.VampireBookManager;
+import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.GarlicChunkHandler;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import de.teamlapen.vampirism.world.gen.structure.StructureManager;
@@ -167,6 +164,12 @@ public class VampirismMod {
         registryManager.onInitStep(IInitListener.Step.INIT, event);
         proxy.onInitStep(IInitListener.Step.INIT, event);
         modCompatLoader.onInitStep(IInitListener.Step.INIT, event);
+
+        //Check for halloween special
+        if (HalloweenSpecial.shouldEnable()) {
+            HalloweenSpecial.enable();
+            MinecraftForge.EVENT_BUS.register(new HalloweenSpecial());
+        }
     }
 
     @Mod.EventHandler
