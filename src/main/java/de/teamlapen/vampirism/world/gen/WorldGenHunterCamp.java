@@ -25,9 +25,9 @@ import java.util.Random;
  */
 public class WorldGenHunterCamp extends WorldGenerator {
 
-    private int distance = Balance.general.HUNTER_CAMP_DENSITY;
 
     public boolean canCampSpawnAt(World world, Biome biome, int chunkX, int chunkZ) {
+        int distance = Balance.general.HUNTER_CAMP_DENSITY;
         //Check Biome
         if (ModBiomes.vampireForest.getRegistryName().equals(biome.getRegistryName())) {
             return false;
@@ -43,20 +43,20 @@ public class WorldGenHunterCamp extends WorldGenerator {
         int j = chunkZ;
 
         if (chunkX < 0) {
-            chunkX -= this.distance - 1;
+            chunkX -= distance - 1;
         }
 
         if (chunkZ < 0) {
-            chunkZ -= this.distance - 1;
+            chunkZ -= distance - 1;
         }
 
-        int k = chunkX / this.distance;
-        int l = chunkZ / this.distance;
+        int k = chunkX / distance;
+        int l = chunkZ / distance;
         Random random = world.setRandomSeed(k, l, 10387312);
-        k = k * this.distance;
-        l = l * this.distance;
-        k = k + random.nextInt(this.distance - 2);
-        l = l + random.nextInt(this.distance - 2);
+        k = k * distance;
+        l = l * distance;
+        k = k + random.nextInt(distance - 2);
+        l = l + random.nextInt(distance - 2);
 
         if (i == k && j == l) {
             return world.getVillageCollection().getNearestVillage(world.getHeight(new BlockPos(i << 4, 0, j << 4)), 20) == null;

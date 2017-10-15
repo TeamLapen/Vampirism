@@ -13,17 +13,11 @@ import java.io.File;
  */
 public class BalanceGeneral extends BalanceValues {
 
-    @DefaultInt(value = 6, name = "garlic_check_range", minValue = 1, maxValue = 20, comment = "UNUSED")
-    public int GARLIC_CHECK_RANGE;
-    @DefaultInt(value = 3, name = "garlic_check_range_vertical", minValue = 1, maxValue = 20, comment = "UNUSED")
-    public int GARLIC_CHECK_VERTICAL_RANGE;
     @DefaultInt(value = 10, name = "vampire_forest_weight", minValue = 1)
     public int VAMPIRE_FOREST_WEIGHT;
 
-    @DefaultInt(value = 40, minValue = 0, maxValue = 1000, name = "hunter_camp_spawn_chance", comment = "UNUSED")
-    public int HUNTER_CAMP_SPAWN_CHANCE;
 
-    @DefaultInt(value = 6, minValue = 3, maxValue = 1000, name = "hunter_camp_density", comment = "Minecraft will try to generate 1 camp per NxN chunk area.")
+    @DefaultInt(value = 6, minValue = 3, maxValue = 10000, name = "hunter_camp_density", comment = "Minecraft will try to generate 1 camp per NxN chunk area.")
     public int HUNTER_CAMP_DENSITY;
 
     @DefaultBoolean(value = true, alternateValue = false, hasAlternate = true, comment = "If the sanguinare effect can be canceled by a milk bucket")
