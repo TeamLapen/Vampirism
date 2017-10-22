@@ -117,10 +117,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     private final BloodStats bloodStats;
-    private final String KEY_EYE = "eye_type";
-    private final String KEY_FANGS = "fang_type";
-    private final String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
-    private final String KEY_VISION = "vision";
+    private final static String KEY_EYE = "eye_type";
+    private final static String KEY_FANGS = "fang_type";
+    private final static String KEY_GLOWING_EYES = "glowing_eyes";
+    private final static String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
+    private final static String KEY_VISION = "vision";
     private final ActionHandler<IVampirePlayer> actionHandler;
     private final SkillHandler<IVampirePlayer> skillHandler;
     private final VampirePlayerSpecialAttributes specialAttributes = new VampirePlayerSpecialAttributes();
@@ -129,6 +130,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private int biteCooldown = 0;
     private int eyeType = 0;
     private int fangType = 0;
+    private boolean glowingEyes = true;
     private int ticksInSun = 0;
     private boolean sleepingInCoffin = false;
     private int sleepTimer = 0;
@@ -298,6 +300,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return eyeType;
     }
 
+    /**
+     * @return Render eyes glowing
+     */
+    public boolean getGlowingEyes() {
+        return glowingEyes;
+    }
+
     @Override
     public IPlayableFaction<IVampirePlayer> getFaction() {
         return VReference.VAMPIRE_FACTION;
@@ -393,12 +402,21 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return false;
     }
 
-    public void loadData(NBTTagCompound nbt) {
-        bloodStats.readNBT(nbt);
-        eyeType = nbt.getInteger(KEY_EYE);
-        fangType = nbt.getInteger(KEY_FANGS);
-        actionHandler.loadFromNbt(nbt);
-        skillHandler.loadFromNbt(nbt);
+    /**
+     * Sets glowing eyes.
+     * Also sends a sync packet if on server
+     *
+     * @param value
+     */
+    public void setGlowingEyes(boolean value) {
+        if (value != this.glowingEyes) {
+            this.glowingEyes = value;
+            if (!isRemote()) {
+                NBTTagCompound nbt = new NBTTagCompound();
+                nbt.setBoolean(KEY_GLOWING_EYES, glowingEyes);
+                sync(nbt, true);
+            }
+        }
     }
 
     @Override
@@ -667,13 +685,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
     }
 
-    public void saveData(NBTTagCompound nbt) {
-        bloodStats.writeNBT(nbt);
-        nbt.setInteger(KEY_EYE, eyeType);
-        nbt.setInteger(KEY_FANGS, fangType);
-        actionHandler.saveToNbt(nbt);
-        skillHandler.saveToNbt(nbt);
-
+    public void loadData(NBTTagCompound nbt) {
+        bloodStats.readNBT(nbt);
+        eyeType = nbt.getInteger(KEY_EYE);
+        fangType = nbt.getInteger(KEY_FANGS);
+        glowingEyes = !nbt.hasKey(KEY_GLOWING_EYES) || nbt.getBoolean(KEY_GLOWING_EYES);
+        actionHandler.loadFromNbt(nbt);
+        skillHandler.loadFromNbt(nbt);
     }
 
     /**
@@ -715,6 +733,16 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
         }
         return true;
+    }
+
+    public void saveData(NBTTagCompound nbt) {
+        bloodStats.writeNBT(nbt);
+        nbt.setInteger(KEY_EYE, eyeType);
+        nbt.setInteger(KEY_FANGS, fangType);
+        nbt.setBoolean(KEY_GLOWING_EYES, glowingEyes);
+        actionHandler.saveToNbt(nbt);
+        skillHandler.saveToNbt(nbt);
+
     }
 
     /**
@@ -912,6 +940,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (nbt.hasKey(KEY_SPAWN_BITE_PARTICLE)) {
             spawnBiteParticle(nbt.getInteger(KEY_SPAWN_BITE_PARTICLE));
         }
+        if (nbt.hasKey(KEY_GLOWING_EYES)) {
+            setGlowingEyes(nbt.getBoolean(KEY_GLOWING_EYES));
+        }
         bloodStats.loadUpdate(nbt);
         actionHandler.readUpdateFromServer(nbt);
         skillHandler.readUpdateFromServer(nbt);
@@ -936,6 +967,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     protected void writeFullUpdate(NBTTagCompound nbt) {
         nbt.setInteger(KEY_EYE, getEyeType());
         nbt.setInteger(KEY_FANGS, getFangType());
+        nbt.setBoolean(KEY_GLOWING_EYES, getGlowingEyes());
         bloodStats.writeUpdate(nbt);
         actionHandler.writeUpdateForClient(nbt);
         skillHandler.writeUpdateForClient(nbt);

@@ -1,14 +1,13 @@
 package de.teamlapen.vampirism.client.render;
 
+import de.teamlapen.lib.lib.client.render.RenderUtil;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.entity.RenderPlayer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -32,7 +31,8 @@ public class LayerVampirePlayerHead implements LayerRenderer<AbstractClientPlaye
         }
     }
 
-    public void doRenderLayer(AbstractClientPlayer player, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scale) {
+    @Override
+    public void doRenderLayer(AbstractClientPlayer player, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         if (Configs.disable_vampireEyes) return;
         VampirePlayer vampirePlayer = VampirePlayer.get(player);
         if (vampirePlayer.getLevel() > 0 && !vampirePlayer.isDisguised() && !player.isInvisible()) {
@@ -46,47 +46,24 @@ public class LayerVampirePlayerHead implements LayerRenderer<AbstractClientPlaye
             this.playerRenderer.bindTexture(fangOverlays[fangType]);
             this.playerRenderer.getMainModel().bipedHead.render(scale);
 
-            //renderGlowingEyes(player,eyeType,partialTicks,scale);
-            renderNormalEyes(eyeType, scale);
+            if (vampirePlayer.getGlowingEyes()) {
+                RenderUtil.renderGlowing(playerRenderer, playerRenderer.getMainModel().bipedHead, eyeOverlays[eyeType], 240f, player, scale);
+
+            } else {
+                renderNormalEyes(eyeType, scale);
+            }
 
             GlStateManager.popMatrix();
 
         }
     }
 
+
     public boolean shouldCombineTextures() {
         return true;
     }
 
-    /**
-     * Fix or delete
-     */
-    private void renderGlowingEyes(EntityPlayer player, int eyeType, float partialTicks, float scale) {
-        this.playerRenderer.bindTexture(eyeOverlays[eyeType]);
-        GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
-        GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
 
-        if (player.isInvisible()) {
-            GlStateManager.depthMask(false);
-        } else {
-            GlStateManager.depthMask(true);
-        }
-
-        int i = 61680;
-        int j = i % 65536;
-        int k = i / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j, (float) k);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        this.playerRenderer.getMainModel().bipedHead.render(scale);
-        i = player.getBrightnessForRender();
-        j = i % 65536;
-        k = i / 65536;
-        OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j, (float) k);
-        GlStateManager.disableBlend();
-        GlStateManager.enableAlpha();
-
-    }
 
     private void renderNormalEyes(int eyeType, float scale) {
         this.playerRenderer.bindTexture(eyeOverlays[eyeType]);

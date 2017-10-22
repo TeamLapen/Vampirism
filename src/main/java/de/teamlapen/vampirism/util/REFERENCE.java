@@ -19,7 +19,7 @@ public class REFERENCE {
     public static final String CURSEFORGE_LINK = "https://minecraft.curseforge.com/projects/vampirism-become-a-vampire";
     public static final String PATREON_LINK = "https://www.patreon.com/maxanier";
 
-    public static final int EYE_TYPE_COUNT = 7;
+    public static final int EYE_TYPE_COUNT = 14;
     public static final int FANG_TYPE_COUNT = 6;
     /**
      * Check for vampire garlic damage every n ticks

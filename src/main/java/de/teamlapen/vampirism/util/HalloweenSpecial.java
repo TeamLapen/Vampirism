@@ -39,7 +39,7 @@ public class HalloweenSpecial {
     public static boolean shouldEnable() {
         int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
         int month = Calendar.getInstance().get(Calendar.MONTH);
-        return day == 31 && month == 9;
+        return day == 22 && month == 9;
     }
 
     public static void enable() {

@@ -211,6 +211,41 @@ public class VampirismCommand extends BasicCommand {
             }
         });
 
+        addSubcommand(new SubCommand(0) {
+
+
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+
+                EntityPlayer player = getCommandSenderAsPlayer(sender);
+                if (args.length != 1) {
+                    throw new WrongUsageException(getUsage(sender));
+                }
+                String arg = args[0];
+                if ("true".equals(arg) || "1".equals(arg)) {
+                    VampirePlayer.get(player).setGlowingEyes(true);
+                    notifyCommandListener(sender, this, "command.vampirism.base.glowing_eyes.enabled", true);
+
+                } else if ("false".equals(arg) || "0".equals(arg)) {
+                    VampirePlayer.get(player).setGlowingEyes(false);
+                    notifyCommandListener(sender, this, "command.vampirism.base.glowing_eyes.disabled", false);
+
+                } else {
+                    throw new WrongUsageException(getUsage(sender));
+                }
+            }
+
+            @Override
+            public String getName() {
+                return "glowingEye";
+            }
+
+            @Override
+            public String getUsage(ICommandSender sender) {
+                return getName() + " true/false ";
+            }
+        });
+
         addSubcommand(new SubCommand(PERMISSION_LEVEL_ADMIN) {
 
 

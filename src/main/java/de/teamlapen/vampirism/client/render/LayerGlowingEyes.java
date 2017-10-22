@@ -17,8 +17,8 @@ public class LayerGlowingEyes<T extends EntityLivingBase> implements LayerRender
     private final RenderLivingBase<T> render;
     private float brightness = 120f;
 
-    public LayerGlowingEyes(RenderLivingBase<T> spiderRendererIn, ResourceLocation eyes) {
-        this.render = spiderRendererIn;
+    public LayerGlowingEyes(RenderLivingBase<T> render, ResourceLocation eyes) {
+        this.render = render;
         this.RESOURCE_LOCATION = eyes;
     }
 
