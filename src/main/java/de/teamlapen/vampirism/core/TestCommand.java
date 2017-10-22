@@ -24,7 +24,7 @@ import de.teamlapen.vampirism.util.VampireBookManager;
 import de.teamlapen.vampirism.world.GarlicChunkHandler;
 import de.teamlapen.vampirism.world.VampirismWorldData;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
-import de.teamlapen.vampirism.world.gen.structure.StructureManager;
+import de.teamlapen.vampirism.world.gen.structure.TemplateManager;
 import de.teamlapen.vampirism.world.gen.structure.VampirismTemplate;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
@@ -543,8 +543,8 @@ public class TestCommand extends BasicCommand {
                 }
                 EntityPlayer p = getCommandSenderAsPlayer(sender);
                 try {
-                    StructureManager.Structure s = StructureManager.Structure.valueOf(args[0]);
-                    VampirismTemplate template = StructureManager.get(s);
+                    TemplateManager.Structure s = TemplateManager.Structure.valueOf(args[0]);
+                    VampirismTemplate template = TemplateManager.get(s);
                     if (template == null) {
                         throw new CommandException("Structure " + s + " was not loaded");
                     }

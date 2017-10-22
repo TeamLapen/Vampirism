@@ -10,12 +10,15 @@ import de.teamlapen.vampirism.player.hunter.actions.HunterActions;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
+import de.teamlapen.vampirism.world.gen.structure.MapGenVampirismFeatures;
+import de.teamlapen.vampirism.world.gen.structure.VampirismComponentFeaturePiece;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.biome.Biome;
+import net.minecraft.world.gen.structure.MapGenStructureIO;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
@@ -63,6 +66,8 @@ public class RegistryManager implements IInitListener {
                 ModVillages.init();
                 Achievements.registerAchievement();
                 ModParticles.init();
+                MapGenStructureIO.registerStructure(MapGenVampirismFeatures.Start.class, "Vampirism-Feature");
+                VampirismComponentFeaturePiece.registerFeaturePieces();
                 break;
             case PRE_INIT:
                 ModFluids.registerFluids();

@@ -10,6 +10,8 @@ import de.teamlapen.vampirism.network.SyncConfigPacket;
 import de.teamlapen.vampirism.util.DaySleepHelper;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.ModWorldEventListener;
+import de.teamlapen.vampirism.world.gen.structure.MapGenVampirismFeatures;
+import de.teamlapen.vampirism.world.gen.structure.ScattedFeatureWrapper;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -18,6 +20,7 @@ import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.village.Village;
+import net.minecraft.world.gen.structure.MapGenScatteredFeature;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.terraingen.InitMapGenEvent;
 import net.minecraftforge.event.world.WorldEvent;
@@ -65,6 +68,8 @@ public class ModEventHandler {
                 VampirismMod.log.w("VillageGen", "The village map generator was overwritten by another mod. There might be a problem! \n The new generator class is " + event.getNewGen().getClass().getCanonicalName());
             }
             ModVillages.modifyVillageSize(event.getNewGen());
+        } else if (event.getType().equals(InitMapGenEvent.EventType.SCATTERED_FEATURE)) {
+            event.setNewGen(new ScattedFeatureWrapper((MapGenScatteredFeature) event.getNewGen(), new MapGenVampirismFeatures()));
         }
     }
 

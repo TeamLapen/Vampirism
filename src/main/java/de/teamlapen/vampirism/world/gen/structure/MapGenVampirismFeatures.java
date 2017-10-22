@@ -1,10 +1,13 @@
 package de.teamlapen.vampirism.world.gen.structure;
 
+import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.init.Biomes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
-import net.minecraft.world.gen.structure.ComponentScatteredFeaturePieces;
+import net.minecraft.world.chunk.ChunkPrimer;
+import net.minecraft.world.gen.ChunkGeneratorOverworld;
+import net.minecraft.world.gen.ChunkProviderServer;
 import net.minecraft.world.gen.structure.MapGenStructure;
 import net.minecraft.world.gen.structure.StructureStart;
 
@@ -12,6 +15,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+/*
+ * TODO consider adding spawns
+ */
 public class MapGenVampirismFeatures extends MapGenStructure {
     private static final List<Biome> BIOMELIST = Arrays.asList(Biomes.MESA, Biomes.PLAINS, Biomes.TAIGA, Biomes.DESERT, Biomes.DESERT_HILLS, Biomes.COLD_TAIGA);
     /**
@@ -28,8 +34,8 @@ public class MapGenVampirismFeatures extends MapGenStructure {
     private int maxDistanceBetweenScatteredFeatures;
 
     public MapGenVampirismFeatures() {
-        this.maxDistanceBetweenScatteredFeatures = 32;
-        this.minDistanceBetweenScatteredFeatures = 8;
+        this.maxDistanceBetweenScatteredFeatures = 9;
+        this.minDistanceBetweenScatteredFeatures = 2;
     }
 
     @Override
@@ -84,9 +90,6 @@ public class MapGenVampirismFeatures extends MapGenStructure {
         return new MapGenVampirismFeatures.Start(this.world, this.rand, chunkX, chunkZ);
     }
 
-    /*
-     * TODO consider adding spawns
-     */
 
     public static class Start extends StructureStart {
         public Start() {
@@ -98,25 +101,20 @@ public class MapGenVampirismFeatures extends MapGenStructure {
 
         public Start(World worldIn, Random random, int chunkX, int chunkZ, Biome biomeIn) {
             super(chunkX, chunkZ);
+            int i = 5;
+            int j = 5;
+            ChunkPrimer chunkprimer = new ChunkPrimer();
+            ((ChunkGeneratorOverworld) ((ChunkProviderServer) worldIn.getChunkProvider()).chunkGenerator).setBlocksInChunk(chunkX, chunkZ, chunkprimer);
+            int k = chunkprimer.findGroundBlockIdx(7, 7);
+            int l = chunkprimer.findGroundBlockIdx(7, 7 + j);
+            int i1 = chunkprimer.findGroundBlockIdx(7 + i, 7);
+            int j1 = chunkprimer.findGroundBlockIdx(7 + i, 7 + j);
+            int k1 = Math.min(Math.min(k, l), Math.min(i1, j1));
 
+            VampirismMod.log.bigWarning("TEST", "START");
+            VampirismComponentFeaturePiece piece = new VampirismComponentFeaturePiece.VampireHouse1();
+            piece.setup(new BlockPos(chunkX << 2, k1, chunkZ << 2));
 
-            if (biomeIn != Biomes.JUNGLE && biomeIn != Biomes.JUNGLE_HILLS) {
-                if (biomeIn == Biomes.SWAMPLAND) {
-                    ComponentScatteredFeaturePieces.SwampHut componentscatteredfeaturepieces$swamphut = new ComponentScatteredFeaturePieces.SwampHut(random, chunkX * 16, chunkZ * 16);
-                    this.components.add(componentscatteredfeaturepieces$swamphut);
-                } else if (biomeIn != Biomes.DESERT && biomeIn != Biomes.DESERT_HILLS) {
-                    if (biomeIn == Biomes.ICE_PLAINS || biomeIn == Biomes.COLD_TAIGA) {
-                        ComponentScatteredFeaturePieces.Igloo componentscatteredfeaturepieces$igloo = new ComponentScatteredFeaturePieces.Igloo(random, chunkX * 16, chunkZ * 16);
-                        this.components.add(componentscatteredfeaturepieces$igloo);
-                    }
-                } else {
-                    ComponentScatteredFeaturePieces.DesertPyramid componentscatteredfeaturepieces$desertpyramid = new ComponentScatteredFeaturePieces.DesertPyramid(random, chunkX * 16, chunkZ * 16);
-                    this.components.add(componentscatteredfeaturepieces$desertpyramid);
-                }
-            } else {
-                ComponentScatteredFeaturePieces.JunglePyramid componentscatteredfeaturepieces$junglepyramid = new ComponentScatteredFeaturePieces.JunglePyramid(random, chunkX * 16, chunkZ * 16);
-                this.components.add(componentscatteredfeaturepieces$junglepyramid);
-            }
 
             this.updateBoundingBox();
         }
