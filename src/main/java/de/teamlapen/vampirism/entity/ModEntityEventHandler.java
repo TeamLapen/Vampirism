@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLordWithSaveable;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.blocks.BlockCastleBlock;
+import de.teamlapen.vampirism.blocks.BlockCastleStairs;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.inventory.BloodPotionTableContainer;
@@ -76,6 +77,10 @@ public class ModEntityEventHandler {
         IBlockState blockState = event.getWorld().getBlockState(new BlockPos(event.getX() - 0.4F, event.getY(), event.getZ() - 0.4F).down());
         if (blockState.getBlock().equals(ModBlocks.castle_block)) {
             if (BlockCastleBlock.EnumType.DARK_STONE.equals(blockState.getValue(BlockCastleBlock.VARIANT)) || !event.getEntity().isCreatureType(VReference.VAMPIRE_CREATURE_TYPE, false)) {
+                event.setResult(Event.Result.DENY);
+            }
+        } else if (blockState.getBlock() instanceof BlockCastleStairs) {
+            if (ModBlocks.castle_stairs_dark_stone.equals(blockState.getBlock()) || !event.getEntity().isCreatureType(VReference.VAMPIRE_CREATURE_TYPE, false)) {
                 event.setResult(Event.Result.DENY);
             }
         }

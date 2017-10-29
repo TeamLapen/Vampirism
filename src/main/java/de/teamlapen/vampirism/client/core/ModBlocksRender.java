@@ -66,11 +66,16 @@ public class ModBlocksRender {
         renderHelper.registerRender(ModBlocks.fire_place);
         renderHelper.registerRender(ModBlocks.blood_potion_table);
         renderHelper.registerRender(ModBlocks.sunscreen_beacon);
+        renderHelper.registerRender(ModBlocks.castle_stairs_dark);
+        renderHelper.registerRender(ModBlocks.castle_stairs_dark_stone);
+        renderHelper.registerRender(ModBlocks.castle_stairs_purple);
+        renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.castle_slab), BlockCastleSlab.EnumType.values());
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.hunter_table), EnumFacing.HORIZONTALS);
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.vampirism_flower), VampirismFlower.EnumFlowerType.values());
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.church_altar), EnumFacing.HORIZONTALS);
         renderHelper.registerRender(Item.getItemFromBlock(ModBlocks.weapon_table), "inventory");
         renderHelper.registerRender(ModBlocks.alchemical_cauldron);
+
 
         for (EnumFacing f : EnumFacing.HORIZONTALS) {
             for (BlockGarlicBeacon.Type t : BlockGarlicBeacon.Type.values()) {

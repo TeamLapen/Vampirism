@@ -8,8 +8,10 @@ import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.tileentity.*;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockStairs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemSlab;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.datafix.IFixableData;
@@ -50,6 +52,11 @@ public class ModBlocks {
     public static final BlockAlchemicalFire alchemical_fire = getNull();
     public static final BlockAlchemicalCauldron alchemical_cauldron = getNull();
     public static final BlockGarlicBeacon garlic_beacon = getNull();
+    public static final BlockStairs castle_stairs_dark = getNull();
+    public static final BlockStairs castle_stairs_dark_stone = getNull();
+    public static final BlockStairs castle_stairs_purple = getNull();
+    public static final BlockCastleSlab castle_slab = getNull();
+    public static final BlockCastleSlab castle_slab_double = getNull();
     private static final Map<String, String> OLD_TO_NEW_TILE_MAP = Maps.newHashMap();
 
 
@@ -128,6 +135,10 @@ public class ModBlocks {
         registry.register(itemBlock(sunscreen_beacon));
         registry.register(itemBlock(alchemical_cauldron));
         registry.register(itemBlock(garlic_beacon));
+        registry.register(itemBlock(castle_stairs_dark));
+        registry.register(itemBlock(castle_stairs_dark_stone));
+        registry.register(itemBlock(castle_stairs_purple));
+        registry.register(new ItemSlab(castle_slab, castle_slab, castle_slab_double).setRegistryName(castle_slab.getRegistryName()));
     }
 
     private static @Nonnull
@@ -141,7 +152,8 @@ public class ModBlocks {
     static void registerBlocks(IForgeRegistry<Block> registry) {
 
         registry.register(new BlockFluidBlood());//TODO maybe remove blood block later
-        registry.register(new BlockCastleBlock());
+        BlockCastleBlock castleBlock = new BlockCastleBlock();
+        registry.register(castleBlock);
         registry.register(new VampirismFlower());
         registry.register(new BlockCursedEarth());
         registry.register(new BlockTent());
@@ -163,7 +175,11 @@ public class ModBlocks {
         registry.register(new BlockAlchemicalFire());
         registry.register(new BlockAlchemicalCauldron());
         registry.register(new BlockGarlicBeacon());
-
+        registry.register(new BlockCastleStairs(castleBlock, BlockCastleBlock.EnumType.DARK_BRICK, "dark"));
+        registry.register(new BlockCastleStairs(castleBlock, BlockCastleBlock.EnumType.DARK_STONE, "dark_stone"));
+        registry.register(new BlockCastleStairs(castleBlock, BlockCastleBlock.EnumType.PURPLE_BRICK, "purple"));
+        registry.register(new BlockCastleSlab.Single());
+        registry.register(new BlockCastleSlab.Double());
         registerTiles();
     }
 

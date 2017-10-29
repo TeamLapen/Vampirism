@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "#  ",
+    "## ",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "vampirism:castle_block",
+      "data": 0
+    }
+  },
+  "result": {
+    "item": "vampirism:castle_stairs_dark",
+    "count": 4
+  }
+}
