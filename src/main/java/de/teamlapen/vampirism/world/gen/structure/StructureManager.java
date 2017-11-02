@@ -12,7 +12,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-public class TemplateManager {
+public class StructureManager
+{
 
     private final static Map<Structure, VampirismTemplate> templates = Maps.newHashMap();
     private final static String TAG = "StructureManager";
@@ -26,7 +27,7 @@ public class TemplateManager {
     }
 
     private static void loadTemplate(Structure structure) {
-        InputStream input = TemplateManager.class.getResourceAsStream("/structures/" + structure.name + ".nbt");
+        InputStream input = StructureManager.class.getResourceAsStream("/structures/" + structure.name + ".nbt");
         if (input == null) {
             VampirismMod.log.e(TAG, "Failed to locate structure file %s", structure.name);
             return;

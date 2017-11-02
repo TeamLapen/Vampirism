@@ -45,7 +45,7 @@ import de.teamlapen.vampirism.tileentity.TileTent;
 import de.teamlapen.vampirism.util.*;
 import de.teamlapen.vampirism.world.GarlicChunkHandler;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
-import de.teamlapen.vampirism.world.gen.structure.TemplateManager;
+import de.teamlapen.vampirism.world.gen.structure.StructureManager;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import net.minecraft.block.material.Material;
@@ -159,7 +159,7 @@ public class VampirismMod {
         SupporterManager.getInstance().initAsync();
         VampireBookManager.getInstance().init();
         BloodPotions.register();
-        TemplateManager.init();
+        StructureManager.init();
         VampirismEntitySelectors.registerSelectors();
         registryManager.onInitStep(IInitListener.Step.INIT, event);
         proxy.onInitStep(IInitListener.Step.INIT, event);
