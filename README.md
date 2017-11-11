@@ -1,4 +1,4 @@
-Vampirism for Minecraft 1.12 - Latest branch [![](http://cf.way2muchnoise.eu/short_vampirism_become_a_vampire_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism) [![Build Status](https://travis-ci.org/TeamLapen/Vampirism.svg?branch=1.12)](https://travis-ci.org/TeamLapen/Vampirism) 
+Vampirism for Minecraft 1.12 - Latest branch [![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire) [![Build Status](https://travis-ci.org/TeamLapen/Vampirism.svg?branch=1.12)](https://travis-ci.org/TeamLapen/Vampirism) 
 ============================================
 [![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://maxanier.de) 
 ## Mod Description
