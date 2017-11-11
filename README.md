@@ -1,6 +1,6 @@
-Vampirism for Minecraft 1.12 - Latest branch [![](http://cf.way2muchnoise.eu/short_233029_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire) [![Build Status](https://travis-ci.org/TeamLapen/Vampirism.svg?branch=1.12)](https://travis-ci.org/TeamLapen/Vampirism) 
+Vampirism for Minecraft 1.12 - Latest branch [![](https://cf.way2muchnoise.eu/short_vampirism_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism) [![Build Status](https://travis-ci.org/TeamLapen/Vampirism.svg?branch=1.12)](https://travis-ci.org/TeamLapen/Vampirism) 
 ============================================
-[![](http://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com) 
+[![](https://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com) 
 ## Mod Description
 
 Vampires are fast, strong and blood-thirsty entities, which do not like the sun, but don't fear the night, and the best thing is: You can become one!
@@ -10,8 +10,8 @@ This mod adds several rituals which allow you to first become a vampire and then
 As a vampire you don't need to eat all that dry bread or eat these strange fruits called "apples", you prefer some red and tasty blood, which you have to suck from animals or better villagers, but be careful not every animal likes to give blood.
 
 ## Links
-[Minecraft Forum Thread](http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/wip-mods/2364443-vampirism-become-a-vampire)  
-[Downloads](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire/files)  
+[Minecraft Forum Thread](http://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2756555-vampirism-become-a-vampire)  
+[Downloads](https://minecraft.curseforge.com/projects/vampirism/files)  
 [Help to translate](https://crowdin.com/project/vampirism)
 
 ## Team [![Join the chat at https://gitter.im/TeamLapen/Vampirism](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TeamLapen/Vampirism?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)  
@@ -45,7 +45,7 @@ dependencies {
 `${mc_version}` gets replaced by the current Minecraft version. (i.e. `1.10.2`)
 `${vampirism_version}` gets replaced by the version of Vampirism you want to use (i.e `1.0.3`)
 
-For a list of available Vampirism version, see [CurseForge](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire/files) or the [maven listing](https://maxanier.de/maven2/de/teamlapen/vampirism/Vampirism/) .
+For a list of available Vampirism version, see [CurseForge](https://minecraft.curseforge.com/projects/vampirism/files) or the [maven listing](https://maxanier.de/maven2/de/teamlapen/vampirism/Vampirism/) .
 
 These properties can be set in a file named `gradle.properties`, placed in the same directory as your `build.gradle` file.
 Example `gradle.properties`:
