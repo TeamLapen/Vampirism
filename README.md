@@ -1,21 +1,23 @@
-Vampirism for Minecraft 1.12 - Latest branch [![](https://cf.way2muchnoise.eu/short_vampirism_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism) [![Build Status](https://travis-ci.org/TeamLapen/Vampirism.svg?branch=1.12)](https://travis-ci.org/TeamLapen/Vampirism) 
+Vampirism for Minecraft 1.12 - Latest branch [![](http://cf.way2muchnoise.eu/short_vampirism_downloads.svg)](https://minecraft.curseforge.com/projects/vampirism) [![Build Status](https://travis-ci.org/TeamLapen/Vampirism.svg?branch=1.12)](https://travis-ci.org/TeamLapen/Vampirism) 
 ============================================
-[![](https://forthebadge.com/images/badges/built-with-love.svg)](http://forthebadge.com) 
+[![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://maxanier.de) 
 ## Mod Description
 
 Vampires are fast, strong and blood-thirsty entities, which do not like the sun, but don't fear the night, and the best thing is: You can become one!
 
-This mod adds several rituals which allow you to first become a vampire and then level up as a vampire, with higher levels you will get faster, stronger, better night vision etc, but it brings disadvantages with it, you take sun damage or are hunted by vampire hunters.
+This mod allows you to become a vampire with all it's benefits and drawbacks.
 
-As a vampire you don't need to eat all that dry bread or eat these strange fruits called "apples", you prefer some red and tasty blood, which you have to suck from animals or better villagers, but be careful not every animal likes to give blood.
+After being bitten by a vampire or manually injecting some vampire blood you get an effect called "Sanguinare Vampiris" which eventually turns you into a vampire.
 
+For a more detailed description head over to the Minecraft forums or the Curseforge page.
 ## Links
+[Curseforge Project](https://minecraft.curseforge.com/projects/vampirism-become-a-vampire)
 [Minecraft Forum Thread](http://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/2756555-vampirism-become-a-vampire)  
 [Downloads](https://minecraft.curseforge.com/projects/vampirism/files)  
 [Help to translate](https://crowdin.com/project/vampirism)
 
-## Team [![Join the chat at https://gitter.im/TeamLapen/Vampirism](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/TeamLapen/Vampirism?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)  
-- [maxanier](http://maxanier.de) _Code/Models_  
+## Team
+- [maxanier](http://maxanier.de) _Everything_  
 
 #### Inactive
 - Mistadon _Code/Models_  
