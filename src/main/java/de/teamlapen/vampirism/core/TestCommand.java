@@ -13,9 +13,7 @@ import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import de.teamlapen.vampirism.api.event.VampirismVillageEvent;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.hunter.EntityHunterVillager;
 import de.teamlapen.vampirism.player.skills.SkillManager;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.tests.Tests;
@@ -53,7 +51,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.gen.structure.template.PlacementSettings;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.MapDecoration;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 
 import javax.annotation.Nullable;
@@ -349,15 +346,7 @@ public class TestCommand extends BasicCommand {
                 List<EntityVillager> l = player.getEntityWorld().getEntitiesWithinAABB(EntityVillager.class, player.getEntityBoundingBox().grow(3, 2, 3));
                 for (EntityVillager v : l) {
                     if (v instanceof IHunter || v instanceof IVampire) continue;
-                    VampirismVillageEvent.MakeAggressive event = new VampirismVillageEvent.MakeAggressive(null, v);
-                    if (MinecraftForge.EVENT_BUS.post(event) && event.getAggressiveVillager() != null) {
-                        v.getEntityWorld().spawnEntity((Entity) event.getAggressiveVillager());
-                    } else {
-                        EntityHunterVillager hunter = EntityHunterVillager.makeHunter(v);
-                        v.getEntityWorld().spawnEntity(hunter);
-                    }
-
-                    v.setDead();
+                    VampirismVillage.makeAggressive(v, null);
 
                 }
             }

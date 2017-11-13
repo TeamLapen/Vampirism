@@ -24,6 +24,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.village.Village;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -349,20 +350,37 @@ public class VampirismVillage implements IVampirismVillage {
         return village.world.getEntitiesWithinAABB(EntityBasicHunter.class, getBoundingBox());
     }
 
+    /**
+     * Try to replace the given villager with a aggressive version.
+     * Posts the relevant event.
+     * If the event is canceled and no aggressive villager is set, nothing happens
+     *
+     * @return The aggressive version, if converted
+     */
+    public static @Nullable
+    IAggressiveVillager makeAggressive(EntityVillager villager, @Nullable VampirismVillage v) {
+        VampirismVillageEvent.MakeAggressive event = new VampirismVillageEvent.MakeAggressive(v, villager);
+        if (MinecraftForge.EVENT_BUS.post(event)) {
+            IAggressiveVillager aggressive = event.getAggressiveVillager();
+            if (aggressive != null) {
+                villager.getEntityWorld().spawnEntity((Entity) aggressive);
+                villager.setDead();
+            }
+            return aggressive;
+        } else {
+            EntityHunterVillager hunter = EntityHunterVillager.makeHunter(villager);
+            villager.getEntityWorld().spawnEntity(hunter);
+            villager.setDead();
+            return hunter;
+        }
+    }
+
     private void makeAgressive(List<EntityVillager> villagers) {
         VampirismMod.log.d(TAG, "Making villagers aggressive");
         agressive = true;
         dirty = true;
         for (EntityVillager v : villagers) {
-            VampirismVillageEvent.MakeAggressive event = new VampirismVillageEvent.MakeAggressive(this, v);
-            if (MinecraftForge.EVENT_BUS.post(event) && event.getAggressiveVillager() != null) {
-                v.getEntityWorld().spawnEntity((Entity) event.getAggressiveVillager());
-            } else {
-                EntityHunterVillager hunter = EntityHunterVillager.makeHunter(v);
-                v.getEntityWorld().spawnEntity(hunter);
-            }
-
-            v.setDead();
+            makeAggressive(v,this);
 
         }
     }
@@ -418,28 +436,34 @@ public class VampirismVillage implements IVampirismVillage {
 
     private void spawnVillager() {
         //VampirismMod.log.t("Spawning villager at village %s", village.getCenter());
-        @SuppressWarnings("rawtypes")
-        List l = village.world.getEntitiesWithinAABB(EntityVillager.class, getBoundingBox());
+        List<EntityVillager> l = village.world.getEntitiesWithinAABB(EntityVillager.class, getBoundingBox());
         if (l.size() > 0) {
-            EntityVillager ev = (EntityVillager) l.get(village.world.rand.nextInt(l.size()));
-            EntityVillager entityvillager;
-            if (agressive && ev.getRNG().nextInt(Balance.village.VILLAGER_HUNTER_CHANCE) == 0) {
-                EntityVillager temp = new EntityVillager(ev.getEntityWorld());
-                VampirismVillageEvent.MakeAggressive event = new VampirismVillageEvent.MakeAggressive(this, temp);
-                if (MinecraftForge.EVENT_BUS.post(event) && event.getAggressiveVillager() != null) {
-                    entityvillager = (EntityVillager) event.getAggressiveVillager();
-                } else {
-                    entityvillager = EntityHunterVillager.makeHunter(temp);
-                }
-                temp.setDead();
+            EntityVillager ev = l.get(village.world.rand.nextInt(l.size()));
+            boolean willBeAggressive = agressive && ev.getRNG().nextInt(Balance.village.VILLAGER_HUNTER_CHANCE) == 0;
+            VampirismVillageEvent.SpawnNewVillager event = new VampirismVillageEvent.SpawnNewVillager(this, ev, willBeAggressive);
+            MinecraftForge.EVENT_BUS.post(event);
+            if (event.getResult() == Event.Result.DENY) return;
+            EntityVillager newVillager;
+            willBeAggressive = event.isWillBeAggressive();
+            if (event.getResult() == Event.Result.ALLOW && event.getNewVillager() != null) {
+                newVillager = event.getNewVillager();
             } else {
-                entityvillager = ev.createChild(ev);
-                entityvillager.setGrowingAge(-24000);
-                ev.setGrowingAge(6000);
+                newVillager = new EntityVillager(ev.getEntityWorld());
+                newVillager.setLocationAndAngles(ev.posX, ev.posY, ev.posZ, 0.0F, 0.0F);
+                if (!willBeAggressive) {
+                    newVillager.setGrowingAge(-24000);
+                    ev.setGrowingAge(6000);
+                }
             }
-            entityvillager.setLocationAndAngles(ev.posX, ev.posY, ev.posZ, 0.0F, 0.0F);
-            village.world.spawnEntity(entityvillager);
-            village.world.setEntityState(entityvillager, (byte) 12);
+            if (willBeAggressive) {
+                VampirismVillage.makeAggressive(newVillager, this);
+            } else {
+
+                village.world.spawnEntity(newVillager);
+                village.world.setEntityState(newVillager, (byte) 12);
+
+            }
+
         }
     }
 
