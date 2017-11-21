@@ -193,7 +193,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             return;
         }
         if (e != null && e instanceof EntityLivingBase) {
-            if (e.getDistance(player) <= ((EntityPlayerMP) player).interactionManager.getBlockReachDistance() + 2) {
+
+            if (e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 2) {
                 biteEntity((EntityLivingBase) e);
             } else {
                 VampirismMod.log.w(TAG, "Entity sent by client is not in reach " + entityId);
@@ -358,11 +359,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return specialAttributes.disguised;
     }
 
-    @Nonnull
-    @Override
-    public EnumStrength isGettingGarlicDamage() {
-        return isGettingGarlicDamage(false);
-    }
 
     @Nonnull
     @Override
@@ -379,11 +375,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             sundamage_cache = Helper.gettingSundamge(player);
         }
         return sundamage_cache;
-    }
-
-    @Override
-    public boolean isGettingSundamage() {
-        return isGettingSundamage(false);
     }
 
     @Override

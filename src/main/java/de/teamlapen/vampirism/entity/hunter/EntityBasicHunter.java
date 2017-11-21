@@ -176,7 +176,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     @Override
     public void makeNormalHunter() {
         super.setHome(null);
-        this.setMoveTowardsRestriction(0, false);
+        this.disableMoveTowardsRestriction();
         this.villageHunter = false;
         this.setDefendVillage(false);
     }

@@ -81,11 +81,6 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
         return this;
     }
 
-    @Nonnull
-    @Override
-    public EnumStrength isGettingGarlicDamage() {
-        return isGettingGarlicDamage(false);
-    }
 
     @Nonnull
     @Override
@@ -102,10 +97,6 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
         return (sundamageCache = Helper.gettingSundamge(this));
     }
 
-    @Override
-    public boolean isGettingSundamage() {
-        return isGettingSundamage(false);
-    }
 
     @Override
     public boolean isIgnoringSundamage() {

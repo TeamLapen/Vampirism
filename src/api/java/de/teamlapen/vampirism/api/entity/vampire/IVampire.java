@@ -27,14 +27,15 @@ public interface IVampire extends IFactionEntity {
     /**
      * Checks if the player is being affected by garlic.
      * Result is cached for a few ticks
-     * Recommend implementation: Just call isGettingGarlicDamage(false)
      * <p>
      * For VampirePlayer instances for players with vampire level 0 this returns {@link EnumStrength#NONE}
      *
      * @return The strength of the garlic or {@link EnumStrength#NONE}
      */
     @Nonnull
-    EnumStrength isGettingGarlicDamage();
+    default EnumStrength isGettingGarlicDamage() {
+        return isGettingGarlicDamage(false);
+    }
 
 
     /**
@@ -63,11 +64,12 @@ public interface IVampire extends IFactionEntity {
     /**
      * Checks if all requirements are met for the entity to be damaged by the sun, e.g. standing in the sun and not raining.
      * The result is cached for a few ticks.
-     * Recommend implementation: Just call isGettingSundamage(false)
      * <p>
      * For VampirePlayer instances for players with vampire level 0 this returns false
      */
-    boolean isGettingSundamage();
+    default boolean isGettingSundamage() {
+        return isGettingSundamage(false);
+    }
 
     /**
      * If the entity currently does not care about being damaged by the sun, because it is e.g. angry or has sunscreen

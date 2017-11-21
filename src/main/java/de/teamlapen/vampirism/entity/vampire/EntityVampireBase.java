@@ -120,11 +120,6 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
         return super.isCreatureType(type, forSpawnCount);
     }
 
-    @Nonnull
-    @Override
-    public EnumStrength isGettingGarlicDamage() {
-        return isGettingGarlicDamage(false);
-    }
 
     @Nonnull
     @Override
@@ -139,11 +134,6 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     public boolean isGettingSundamage(boolean forceRefresh) {
         if (!forceRefresh) return sundamageCache;
         return (sundamageCache = Helper.gettingSundamge(this));
-    }
-
-    @Override
-    public boolean isGettingSundamage() {
-        return isGettingSundamage(false);
     }
 
     @Override

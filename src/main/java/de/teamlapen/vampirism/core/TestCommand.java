@@ -38,6 +38,7 @@ import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
@@ -85,10 +86,6 @@ public class TestCommand extends BasicCommand {
                 return "info-village";
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
         });
         addSubcommand(new SubCommand() {
             @Override
@@ -106,13 +103,9 @@ public class TestCommand extends BasicCommand {
 
             @Override
             public String getName() {
-                return "info-entity";
+                return "info-entities";
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
         });
         addSubcommand(new SubCommand() {
             @Override
@@ -130,10 +123,6 @@ public class TestCommand extends BasicCommand {
                 return "marker";
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
         });
         addSubcommand(new SubCommand() {
 
@@ -154,10 +143,6 @@ public class TestCommand extends BasicCommand {
                 return "giveTestTargetMap";
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
         });
         addSubcommand(new SubCommand() {
 
@@ -176,10 +161,6 @@ public class TestCommand extends BasicCommand {
                 return "garlic_profiler";
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
 
             private void print(ICommandSender var1, String id) {
                 List<Profiler.Result> l = FMLCommonHandler.instance().getMinecraftServerInstance().profiler.getProfilingData(id);
@@ -274,10 +255,6 @@ public class TestCommand extends BasicCommand {
                 return "emptyBloodBar";
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
         });
 
         addSubcommand(new SubCommand() {
@@ -313,7 +290,25 @@ public class TestCommand extends BasicCommand {
                 return getName();
             }
         });
+        addSubcommand(new SubCommand() {
+            @Override
+            public String getName() {
+                return "info-entity";
+            }
 
+
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                EntityPlayer player = getCommandSenderAsPlayer(sender);
+                List<Entity> l = player.getEntityWorld().getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().grow(3, 2, 3));
+                for (Entity o : l) {
+                    NBTTagCompound nbt = new NBTTagCompound();
+                    o.writeToNBT(nbt);
+                    VampirismMod.log.i("InfoEntity", "Data %s", nbt);
+                }
+                sender.sendMessage(new TextComponentString("Printed info to log"));
+            }
+        });
         addSubcommand(new SubCommand() {
             @Override
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
@@ -332,10 +327,6 @@ public class TestCommand extends BasicCommand {
                 return 0;
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
         });
         addSubcommand(new SubCommand() {
 
@@ -356,10 +347,6 @@ public class TestCommand extends BasicCommand {
                 return "makeVillagerAgressive";
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
         });
         addSubcommand(new SubCommand() {
 
@@ -382,10 +369,6 @@ public class TestCommand extends BasicCommand {
                 return "resetActions";
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
         });
         addSubcommand(new SubCommand() {
 
@@ -410,10 +393,6 @@ public class TestCommand extends BasicCommand {
                 return "tent";
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
         });
         addSubcommand(new SubCommand() {
 
@@ -432,11 +411,6 @@ public class TestCommand extends BasicCommand {
             @Override
             public int getRequiredPermissionLevel() {
                 return PERMISSION_LEVEL_CHEAT;
-            }
-
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
             }
         });
 
@@ -459,10 +433,6 @@ public class TestCommand extends BasicCommand {
                 return "debugGen";
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
         });
 
         addSubcommand(new SubCommand() {
@@ -479,10 +449,6 @@ public class TestCommand extends BasicCommand {
                 return "runTests";
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
         });
 
         addSubcommand(new SubCommand() {
@@ -554,11 +520,6 @@ public class TestCommand extends BasicCommand {
             }
 
             @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
-
-            @Override
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 EntityPlayer p = getCommandSenderAsPlayer(sender);
                 //EntityDraculaHalloween draculaHalloween = (EntityDraculaHalloween) UtilLib.spawnEntityBehindEntity(p, new ResourceLocation(REFERENCE.MODID, ModEntities.SPECIAL_DRACULA_HALLOWEEN));
@@ -582,6 +543,11 @@ public class TestCommand extends BasicCommand {
     public abstract static class SubCommand extends CommandBase {
 
         private SubCommand() {
+        }
+
+        @Override
+        public String getUsage(ICommandSender sender) {
+            return getName();
         }
 
         @Override
