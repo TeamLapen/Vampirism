@@ -9,6 +9,7 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.util.math.AxisAlignedBB;
 
 import java.util.List;
 
@@ -30,15 +31,19 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
 
     }
 
+    protected AxisAlignedBB getBiteBoundingBox() {
+        return vampireEntity.getEntityBoundingBox().grow(1.0, 1.3, 1.0);
+    }
+
     @Override
     public boolean shouldContinueExecuting() {
-        return creature.getEntity().isEntityAlive() && vampireEntity.getDistanceSq(creature.getEntity()) < 7 && this.timer > 0;
+        return creature.getEntity().isEntityAlive() && creature.getEntity().getEntityBoundingBox().intersects(getBiteBoundingBox()) && this.timer > 0;
     }
 
     @Override
     public boolean shouldExecute() {
         if (vampire.wantsBlood()) {
-            List list = vampireEntity.getEntityWorld().getEntitiesWithinAABB(EntityCreature.class, vampireEntity.getEntityBoundingBox().grow(2.1, 1.5, 2.1));
+            List list = vampireEntity.getEntityWorld().getEntitiesWithinAABB(EntityCreature.class, getBiteBoundingBox());
             if (list.size() > 1) {
 
                 try {
