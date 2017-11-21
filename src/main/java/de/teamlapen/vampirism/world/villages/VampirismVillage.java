@@ -154,7 +154,7 @@ public class VampirismVillage implements IVampirismVillage {
             int hunterCount = hunters.size() + hunterVillagers.size() / 2;
             boolean spawn = hunterCount < (Balance.village.MIN_HUNTER_COUNT_VILLAGE_PER_DOOR * v.getNumVillageDoors() + 1);
             builder.append("\nShould Spawn: ").append(hunterCount).append('(').append(spawn).append(')');
-            builder.append("\nAgressors: ").append(villageAggressorVampires.toString());
+            builder.append("\nAggressors: ").append(villageAggressorVampires.toString());
             return builder.toString();
         }
     }
@@ -233,12 +233,12 @@ public class VampirismVillage implements IVampirismVillage {
                 int hunterCount = hunters.size() + hunterVillagers.size() / 2;
                 boolean spawn = hunterCount < (Balance.village.MIN_HUNTER_COUNT_VILLAGE_PER_DOOR * v.getNumVillageDoors() + 1);
                 if (spawn || v.world.rand.nextInt(30) == 0) {
-                    VampirismMod.log.d(TAG, "Stats: Doors: %s, Aggro: %s, v: %s, vh: %s, h: %s", v.getNumVillageDoors(), calculateAggressiveCounter(), normalVillager.size(), hunterVillagers.size(), hunters.size());
+                    VampirismMod.log.d(TAG, "Stats:  Doors: %s, Aggro: %s, v: %s, vh: %s, h: %s. Pos %s", v.getNumVillageDoors(), calculateAggressiveCounter(), normalVillager.size(), hunterVillagers.size(), hunters.size(), this.getCenter());
                 }
                 if (spawn && hunterCount > 20) {
                     //TODO maybe remove or downgrade these logs
-                    VampirismMod.log.w(TAG, "Too many hunters spawning. Canceling");
-                    VampirismMod.log.w(TAG, "Stats: Doors: %s, Aggro: %s, v: %s, vh: %s, h: %s", v.getNumVillageDoors(), calculateAggressiveCounter(), normalVillager.size(), hunterVillagers.size(), hunters.size());
+                    VampirismMod.log.w(TAG, "Too many hunters spawning. Canceling. Pos %s", getCenter());
+                    VampirismMod.log.w(TAG, "Stats:  Doors: %s, Aggro: %s, v: %s, vh: %s, h: %s", v.getNumVillageDoors(), calculateAggressiveCounter(), normalVillager.size(), hunterVillagers.size(), hunters.size());
                     VampirismMod.log.w(TAG, "Hunter Count: %s, Spawn Config: %s", hunterCount, Balance.village.MIN_HUNTER_COUNT_VILLAGE_PER_DOOR);
                     spawn = false;
                 }
@@ -427,6 +427,7 @@ public class VampirismVillage implements IVampirismVillage {
         EntityBasicHunter hunter = new EntityBasicHunter(village.world);
         boolean flag = UtilLib.spawnEntityInWorld(village.world, getBoundingBox(), hunter, 5);
         if (flag) {
+            hunter.onInitialSpawn(village.world.getDifficultyForLocation(new BlockPos(hunter)), null);
             hunter.makeVillageHunter(this);
         } else {
             hunter.setDead();

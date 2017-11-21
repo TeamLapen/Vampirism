@@ -23,10 +23,12 @@ public class REFERENCE {
     public static final int FANG_TYPE_COUNT = 6;
     /**
      * Check for vampire garlic damage every n ticks
+     * Must be higher than 1, due to implementation
      */
     public final static int REFRESH_GARLIC_TICKS = 40;
     /**
-     * Check for vampire sundamage every n ticks
+     * Check for vampire sun damage every n ticks
+     * Must be higher than 2 due to implementation
      */
     public final static int REFRESH_SUNDAMAGE_TICKS = 8;
 

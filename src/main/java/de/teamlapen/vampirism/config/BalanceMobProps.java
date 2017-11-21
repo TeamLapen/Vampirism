@@ -47,6 +47,11 @@ public class BalanceMobProps extends BalanceValues {
     @DefaultDouble(value = 0.28D, minValue = 0.1, maxValue = 2, name = "hunter_speed")
     public double VAMPIRE_HUNTER_SPEED;
 
+    @DefaultDouble(value = 20D, minValue = 10D, maxValue = 10000D, name = "hunter_villager_max_health")
+    public double HUNTER_VILLAGER_MAX_HEALTH;
+    @DefaultDouble(value = 2D, minValue = 0D, name = "hunter_villager_attack_damage")
+    public double HUNTER_VILLAGER_ATTACK_DAMAGE;
+
     @DefaultDouble(value = 60D, minValue = 10D, maxValue = 10000D, name = "advanced_hunter_max_health")
     public double ADVANCED_HUNTER_MAX_HEALTH;
     @DefaultDouble(value = 30D, minValue = 0D, maxValue = 10000, name = "advanced_hunter_max_health_pl", comment = "Max health is increased by this for every level the hunter has")

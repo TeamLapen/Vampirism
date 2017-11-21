@@ -167,14 +167,16 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
         return false;
     }
 
+    @Nonnull
     @Override
     public EnumStrength isGettingGarlicDamage() {
-        return null;
+        return EnumStrength.NONE;
     }
 
+    @Nonnull
     @Override
     public EnumStrength isGettingGarlicDamage(boolean forcerefresh) {
-        return null;
+        return EnumStrength.NONE;
     }
 
     @Override

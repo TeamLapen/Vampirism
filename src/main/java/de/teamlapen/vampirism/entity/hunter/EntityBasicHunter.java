@@ -409,14 +409,12 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
      * * @param active If the task should be active or not
      */
     protected void setDefendVillage(boolean active) {
-        if (defendVillageAdded) {
-            if (active) return;
+        if (defendVillageAdded && !active) {
             this.targetTasks.removeTask(defendVillage);
             this.tasks.removeTask(wanderVillage);
             this.targetTasks.removeTask(targetZombies);
             defendVillageAdded = false;
-        }
-        if (active) {
+        } else if (active && !defendVillageAdded) {
             targetTasks.addTask(DEFEND_VILLAGE_PRIO, defendVillage);
             tasks.addTask(WANDER_VILLAGE_PRIO, wanderVillage);
             targetTasks.addTask(ATTACK_ZOMBIE_PRIO, targetZombies);

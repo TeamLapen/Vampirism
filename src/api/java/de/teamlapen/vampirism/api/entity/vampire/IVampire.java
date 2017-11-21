@@ -3,6 +3,8 @@ package de.teamlapen.vampirism.api.entity.vampire;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 
+import javax.annotation.Nonnull;
+
 /**
  * Implemented by all vampire entities
  */
@@ -31,6 +33,7 @@ public interface IVampire extends IFactionEntity {
      *
      * @return The strength of the garlic or {@link EnumStrength#NONE}
      */
+    @Nonnull
     EnumStrength isGettingGarlicDamage();
 
 
@@ -42,8 +45,10 @@ public interface IVampire extends IFactionEntity {
      * For VampirePlayer instances for players with vampire level 0 this returns {@link EnumStrength#NONE}
      *
      * @return The strength of the garlic or {@link EnumStrength#NONE}
+     * @param forceRefresh Don't use cached value
      */
-    EnumStrength isGettingGarlicDamage(boolean forcerefresh);
+    @Nonnull
+    EnumStrength isGettingGarlicDamage(boolean forceRefresh);
 
     /**
      * Checks if all requirements are met for the entity to be damaged by the sun, e.g. standing in the sun and not raining.
@@ -51,9 +56,9 @@ public interface IVampire extends IFactionEntity {
      * <p>
      * For VampirePlayer instances for players with vampire level 0 this returns false
      *
-     * @param forcerefresh
+     * @param forceRefresh Don't use cached value
      */
-    boolean isGettingSundamage(boolean forcerefresh);
+    boolean isGettingSundamage(boolean forceRefresh);
 
     /**
      * Checks if all requirements are met for the entity to be damaged by the sun, e.g. standing in the sun and not raining.

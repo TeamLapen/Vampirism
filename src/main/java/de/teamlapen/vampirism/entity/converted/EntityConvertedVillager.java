@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.EntityVillagerVampirism;
 import de.teamlapen.vampirism.entity.ai.EntityAIMoveIndoorsDay;
 import de.teamlapen.vampirism.entity.ai.VampireAIBiteNearbyEntity;
@@ -30,6 +31,7 @@ import net.minecraft.village.MerchantRecipe;
 import net.minecraft.village.MerchantRecipeList;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.Random;
 
@@ -79,11 +81,13 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
         return this;
     }
 
+    @Nonnull
     @Override
     public EnumStrength isGettingGarlicDamage() {
         return isGettingGarlicDamage(false);
     }
 
+    @Nonnull
     @Override
     public EnumStrength isGettingGarlicDamage(boolean forceRefresh) {
         if (forceRefresh) {
@@ -110,7 +114,7 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
 
     @Override
     public void onLivingUpdate() {
-        if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 3) {
+        if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 1) {
             isGettingGarlicDamage(true);
         }
         if (this.ticksExisted % REFERENCE.REFRESH_SUNDAMAGE_TICKS == 2) {
@@ -120,7 +124,9 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
             if (isGettingSundamage() && ticksExisted % 40 == 11) {
                 this.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 42));
             }
-            //TODO handle garlic
+            if (isGettingGarlicDamage() != EnumStrength.NONE) {
+                DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(), this.ticksExisted);
+            }
         }
         bloodTimer++;
         super.onLivingUpdate();

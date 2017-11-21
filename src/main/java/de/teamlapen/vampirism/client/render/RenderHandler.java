@@ -87,9 +87,6 @@ public class RenderHandler {
         this.mc = mc;
         this.displayHeight = mc.displayHeight;
         this.displayWidth = mc.displayWidth;
-        if (OpenGlHelper.areShadersSupported()) {
-            VampirismMod.log.w(TAG, "Shaders are not supported, Blood vision won't work");
-        }
     }
 
     @SubscribeEvent

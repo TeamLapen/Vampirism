@@ -23,6 +23,8 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
+import javax.annotation.Nonnull;
+
 
 public class Helper {
     public static void spawnParticlesAroundEntity(EntityLivingBase e, EnumParticleTypes particle, double maxDistance, int amount) {
@@ -97,10 +99,12 @@ public class Helper {
         }
     }
 
+    @Nonnull
     public static EnumStrength getGarlicStrength(Entity e) {
         return getGarlicStrengthAt(e.getEntityWorld(), e.getPosition());
     }
 
+    @Nonnull
     public static EnumStrength getGarlicStrengthAt(World world, BlockPos pos) {
         return VampirismAPI.getGarlicChunkHandler(world).getStrengthAtChunk(new ChunkPos(pos));
     }

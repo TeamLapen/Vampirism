@@ -27,6 +27,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 /**
  * Base class for Vampirism's vampire entities
  */
@@ -118,11 +120,13 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
         return super.isCreatureType(type, forSpawnCount);
     }
 
+    @Nonnull
     @Override
     public EnumStrength isGettingGarlicDamage() {
         return isGettingGarlicDamage(false);
     }
 
+    @Nonnull
     @Override
     public EnumStrength isGettingGarlicDamage(boolean forcerefresh) {
         if (forcerefresh) {

@@ -358,11 +358,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return specialAttributes.disguised;
     }
 
+    @Nonnull
     @Override
     public EnumStrength isGettingGarlicDamage() {
         return isGettingGarlicDamage(false);
     }
 
+    @Nonnull
     @Override
     public EnumStrength isGettingGarlicDamage(boolean forcerefresh) {
         if (forcerefresh) {
