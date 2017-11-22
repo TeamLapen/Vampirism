@@ -1,5 +1,6 @@
 package de.teamlapen.lib.lib.util;
 
+import com.google.common.collect.ImmutableList;
 import de.teamlapen.lib.VampLib;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
@@ -95,5 +96,9 @@ public class ModCompatLoader implements IInitListener {
         }
         loadedModCompats = loaded;
         availableModCompats = null;
+    }
+
+    public List<IModCompat> getLoadedModCompats() {
+        return ImmutableList.copyOf(loadedModCompats);
     }
 }
