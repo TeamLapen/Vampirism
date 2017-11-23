@@ -1,0 +1,24 @@
+{
+  "display": {
+    "icon": {
+      "item": "vampirism:item_garlic"
+    },
+    "title": {
+      "translate": "advancement.vampirism.become_hunter"
+    },
+    "description": {
+      "translate": "advancement.vampirism.become_hunter.desc"
+    },
+    "announce_to_chat": false
+  },
+  "parent": "vampirism:main/root",
+  "criteria": {
+    "flower": {
+      "trigger": "vampirism:faction",
+      "conditions": {
+        "faction": "Hunter",
+        "level": 1
+      }
+    }
+  }
+}

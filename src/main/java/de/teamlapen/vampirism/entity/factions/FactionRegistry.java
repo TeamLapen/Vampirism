@@ -67,6 +67,20 @@ public class FactionRegistry implements IFactionRegistry {
         return playableFactions;
     }
 
+    @Nullable
+    @Override
+    public IFaction getFactionByName(String name) {
+        if (allFactions == null) {
+            return null;
+        }
+        for (IFaction f : allFactions) {
+            if (f.name().equals(name)) {
+                return f;
+            }
+        }
+        return null;
+    }
+
     @Override
     public Predicate<Entity> getPredicate(IFaction thisFaction, boolean ignoreDisguise) {
 

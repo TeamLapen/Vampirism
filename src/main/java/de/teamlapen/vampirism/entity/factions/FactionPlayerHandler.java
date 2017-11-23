@@ -9,8 +9,10 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.event.FactionEvent;
 import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -213,7 +215,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         else if (currentLevel == 0) currentFaction = null;
         notifyFaction(old, oldLevel);
         sync(!Objects.equals(old, currentFaction));
-
+        if (player instanceof EntityPlayerMP) {
+            ModAdvancements.TRIGGER_FACTION.trigger((EntityPlayerMP) player, currentFaction, currentLevel);
+        }
         return true;
 
     }

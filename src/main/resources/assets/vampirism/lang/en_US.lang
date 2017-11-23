@@ -273,16 +273,19 @@ keys.vampirism.vision=Switch vision
 #ACHIEVEMENTS
 achievement.vampirism.sucking_blood=Blood thirsty
 achievement.vampirism.sucking_blood.desc=Suck blood
-achievement.vampirism.becoming_vampire=Get some fangs
-achievement.vampirism.becoming_vampire.desc=Become a Vampire
-achievement.vampirism.becoming_hunter=Start Hunting
-achievement.vampirism.becoming_hunter.desc=Become a Vampire Hunter
 achievement.vampirism.stake=Into the heart
 achievement.vampirism.stake.desc=Kill a vampire with a stake
 achievement.vampirism.weapon_table=Advanced forging
 achievement.vampirism.weapon_table.desc=Use an Hunter Weapon Table
 achievement.vampirism.blood_table=Bloody business
 achievement.vampirism.blood_table.desc=Brew a blood potion
+
+#ADVANCEMENTS
+advancement.vampirism.desc=Get started with Vampirism
+advancement.vampirism.become_vampire=Get some fangs
+advancement.vampirism.become_vampire.desc=Become a Vampire
+advancement.vampirism.become_hunter=Start Hunting
+advancement.vampirism.become_hunter.desc=Become a Vampire Hunter
 
 #POTIONS
 effect.vampirism.sunscreen=Sunscreen

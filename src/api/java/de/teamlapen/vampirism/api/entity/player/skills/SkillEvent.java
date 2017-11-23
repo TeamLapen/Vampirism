@@ -51,7 +51,7 @@ public class SkillEvent extends Event {
         }
 
         /**
-         * Allows you to directly register a child node.
+         * Allows you to directly registerAdvancements a child node.
          * If you have access to the node outside of this event consider using {@link ISkillManager#createSkillNode(SkillNode, ISkill...)} to prevent long (stacktrace) chains.
          *
          * @param skills One or more xor skills

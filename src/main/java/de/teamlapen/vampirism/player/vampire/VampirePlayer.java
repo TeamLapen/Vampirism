@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.player.vampire;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.advancements.VampireActionTrigger;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -14,6 +15,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.DamageHandler;
@@ -1030,6 +1032,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             NBTTagCompound updatePacket = bloodStats.writeUpdate(new NBTTagCompound());
             updatePacket.setInteger(KEY_SPAWN_BITE_PARTICLE, entity.getEntityId());
             sync(updatePacket, true);
+        }
+        if (type == BITE_TYPE.SUCK_BLOOD || type == BITE_TYPE.SUCK_BLOOD_CREATURE || type == BITE_TYPE.SUCK_BLOOD_PLAYER) {
+            if (player instanceof EntityPlayerMP) {
+                ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((EntityPlayerMP) player, VampireActionTrigger.Action.SUCK_BLOOD);
+            }
         }
     }
 
