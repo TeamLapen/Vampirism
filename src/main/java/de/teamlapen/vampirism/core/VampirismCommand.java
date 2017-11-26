@@ -23,6 +23,7 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.server.command.CommandTreeHelp;
 import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nullable;
@@ -365,6 +366,10 @@ public class VampirismCommand extends BasicCommand {
                 return getName();
             }
         });
+
+
+        //Add last
+        addSubcommand(new CommandTreeHelp(this));
     }
 
 

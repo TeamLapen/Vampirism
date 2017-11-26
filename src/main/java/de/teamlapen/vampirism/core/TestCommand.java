@@ -53,6 +53,7 @@ import net.minecraft.world.gen.structure.template.PlacementSettings;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.MapDecoration;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.server.command.CommandTreeHelp;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -527,6 +528,10 @@ public class TestCommand extends BasicCommand {
                 VampLib.proxy.getParticleHandler().spawnParticle(p.world, ModParticles.HALLOWEEN, p.posX, p.posY, p.posZ);
             }
         });
+
+
+        //Add last
+        addSubcommand(new CommandTreeHelp(this));
     }
 
     @Override
