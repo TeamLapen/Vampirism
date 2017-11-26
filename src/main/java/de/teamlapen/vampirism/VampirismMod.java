@@ -8,7 +8,6 @@ import de.teamlapen.lib.lib.util.ModCompatLoader;
 import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
-import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
@@ -26,6 +25,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.factions.FactionRegistry;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.inventory.HunterWeaponCraftingManager;
+import de.teamlapen.vampirism.modcompat.IMCHandler;
 import de.teamlapen.vampirism.modcompat.SpongeModCompat;
 import de.teamlapen.vampirism.modcompat.guide.GuideAPICompat;
 import de.teamlapen.vampirism.modcompat.jei.JEIModCompat;
@@ -55,8 +55,6 @@ import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.datafix.FixTypes;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
@@ -205,30 +203,7 @@ public class VampirismMod {
 
     @Mod.EventHandler
     public void interModComm(FMLInterModComms.IMCEvent event) {
-        IVampirismEntityRegistry entityRegistry = VampirismAPI.entityRegistry();
-        for (FMLInterModComms.IMCMessage m : event.getMessages()) {
-            try {
-                if ("blood-value".equals(m.key)) {
-                    if (m.isNBTMessage()) {
-                        NBTTagCompound nbt = m.getNBTValue();
-                        if (nbt.hasKey("id") && nbt.hasKey("value")) {
-                            ResourceLocation id = new ResourceLocation(nbt.getString("id"));
-                            int value = nbt.getInteger("value");
-                            VampirismMod.log.i("InterModComm", "Received blood value of %s for %s from %s", value, id, m.getSender());
-                            entityRegistry.addBloodValue(id, value);
-                        } else {
-                            VampirismMod.log.w("InterModComm", "Received invalid blood value nbt from %s", m.getSender());
-                        }
-                    } else {
-                        VampirismMod.log.w("InterModComm", "Received invalid blood value message type from %s", m.getSender());
-                    }
-                } else {
-                    VampirismMod.log.w("InterModComm", "Received unknown message (%s) from %s", m.key, m.getSender());
-                }
-            } catch (Exception e) {
-                VampirismMod.log.e("InterModComm", e, "Failed to parse message from %s", m.getSender());
-            }
-        }
+        IMCHandler.handleInterModMessage(event.getMessages());
     }
 
     @Mod.EventHandler
