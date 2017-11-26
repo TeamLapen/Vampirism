@@ -5,7 +5,6 @@ import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonObject;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.advancements.ICriterionTrigger;
 import net.minecraft.advancements.PlayerAdvancements;
 import net.minecraft.advancements.critereon.AbstractCriterionInstance;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -15,13 +14,13 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
- * Collection of several vampire related triggers
+ * Collection of several hunter related triggers
  */
-public class VampireActionTrigger extends AbstractCriterionTrigger<VampireActionTrigger.Instance> {
+public class HunterActionTrigger extends AbstractCriterionTrigger<HunterActionTrigger.Instance> {
 
-    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "vampire_action");
+    public static final ResourceLocation ID = new ResourceLocation(REFERENCE.MODID, "hunter_action");
 
-    public VampireActionTrigger() {
+    public HunterActionTrigger() {
         super(ID, Listeners::new);
     }
 
@@ -35,10 +34,10 @@ public class VampireActionTrigger extends AbstractCriterionTrigger<VampireAction
             try {
                 action = Action.valueOf(name.toUpperCase());
             } catch (IllegalArgumentException e) {
-                VampirismMod.log.w("VampireActionTrigger", "Action %s does not exist", name);
+                VampirismMod.log.w("HunterActionTrigger", "Action %s does not exist", name);
             }
         } else {
-            VampirismMod.log.w("VampireActionTrigger", "Action not specified");
+            VampirismMod.log.w("HunterActionTrigger", "Action not specified");
         }
         return new Instance(action);
     }
@@ -51,7 +50,7 @@ public class VampireActionTrigger extends AbstractCriterionTrigger<VampireAction
     }
 
     public enum Action {
-        BAT, SUCK_BLOOD, NONE
+        STAKE, NONE
     }
 
     static class Instance extends AbstractCriterionInstance {
@@ -68,7 +67,7 @@ public class VampireActionTrigger extends AbstractCriterionTrigger<VampireAction
         }
     }
 
-    static class Listeners extends GenericListeners<VampireActionTrigger.Instance> {
+    static class Listeners extends GenericListeners<HunterActionTrigger.Instance> {
 
         Listeners(PlayerAdvancements playerAdvancementsIn) {
             super(playerAdvancementsIn);
@@ -77,7 +76,7 @@ public class VampireActionTrigger extends AbstractCriterionTrigger<VampireAction
         void trigger(Action action) {
             List<Listener<Instance>> list = null;
 
-            for (ICriterionTrigger.Listener<Instance> listener : this.playerListeners) {
+            for (Listener<Instance> listener : this.playerListeners) {
                 if ((listener.getCriterionInstance()).trigger(action)) {
                     if (list == null) {
                         list = Lists.newArrayList();
@@ -88,7 +87,7 @@ public class VampireActionTrigger extends AbstractCriterionTrigger<VampireAction
             }
 
             if (list != null) {
-                for (ICriterionTrigger.Listener<Instance> listener1 : list) {
+                for (Listener<Instance> listener1 : list) {
                     listener1.grantCriterion(this.playerAdvancements);
                 }
             }

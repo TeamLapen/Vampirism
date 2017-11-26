@@ -10,7 +10,7 @@ text.vampirism.skill.deactivated_by_serveradmin=This skill is deactivated by you
 
 
 #VAMPIRE SKILLS
-text.vampirism.skill.root_vampire=Becoming a vampire
+text.vampirism.skill.ivampireplayer=Becoming a vampire
 text.vampirism.skill.avoided_by_creepers=Avoided by creepers
 text.vampirism.skill.blood_vision=Blood vision
 text.vampirism.skill.blood_vision.desc=Allows you to see entities through walls in the dark. Toggle with key.
@@ -18,28 +18,28 @@ text.vampirism.skill.poisonous_bite=Poisonous Teeth
 text.vampirism.skill.poisonous_bite.desc=Poisons the creatures you bite
 text.vampirism.skill.more_bite_damage=Hardened Teeth
 text.vampirism.skill.more_bite_damage.desc=Deal more damage when biting
-text.vampirism.skill.2lessbloodthirst=Frugal vampire
-text.vampirism.skill.2lessbloodthirst.desc=Decreases your thirst for blood
+text.vampirism.skill.less_blood_thirst=Frugal vampire
+text.vampirism.skill.less_blood_thirst.desc=Decreases your thirst for blood
 text.vampirism.skill.less_garlicdamage=Reduce garlic damage
 text.vampirism.skill.less_sundamage=Reduce sun damage
 text.vampirism.skill.night_vision=Night Vision
 text.vampirism.skill.disguise=Disguise
 text.vampirism.skill.1forestfog=Vista
 text.vampirism.skill.1forestfog.desc=Increase the fog distance in the Vampire Forest
-text.vampirism.skill.2waterresistance=Water Resistance
-text.vampirism.skill.2waterresistance.desc=Your body will not be weakened by water anymore
+text.vampirism.skill.water_resistance=Water Resistance
+text.vampirism.skill.water_resistance.desc=Your body will not be weakened by water anymore
 
 #HUNTER SKILLS
-text.vampirism.skill.root_hunter=Becoming an hunter
-text.vampirism.skill.attack_speed=Increased Attack Speed
+text.vampirism.skill.ihunterplayer=Becoming an hunter
+text.vampirism.skill.hunter_attack_speed=Increased Attack Speed
 text.vampirism.skill.weapon_table=Hunter Weapon Table
 text.vampirism.skill.weapon_table.desc=Learn how to use the Hunter Weapon Table
 text.vampirism.skill.double_crossbow=Double It
 text.vampirism.skill.double_crossbow.desc=Unlocks Double Crossbow
 text.vampirism.skill.enhanced_crossbow=Enhanced Crossbows
 text.vampirism.skill.enhanced_crossbow.desc=Learn how to enhance your crossbows
-text.vampirism.skill.advanced_attack_speed=Attack swift as the wind
-text.vampirism.skill.advanced_attack_speed.desc=Increase your attack speed even more
+text.vampirism.skill.hunter_advanced_attack_speed=Attack swift as the wind
+text.vampirism.skill.hunter_advanced_attack_speed.desc=Increase your attack speed even more
 text.vampirism.skill.stake1=How to use a stake
 text.vampirism.skill.stake1.desc=Instantly kill any vampire that has below %s percent of his max health with a stake
 text.vampirism.skill.stake2=How to actually use a stake
@@ -270,15 +270,6 @@ keys.vampirism.suck=Suck blood
 keys.vampirism.auto=Auto Fill Blood Bottle
 keys.vampirism.vision=Switch vision
 
-#ACHIEVEMENTS
-achievement.vampirism.sucking_blood=Blood thirsty
-achievement.vampirism.sucking_blood.desc=Suck blood
-achievement.vampirism.stake=Into the heart
-achievement.vampirism.stake.desc=Kill a vampire with a stake
-achievement.vampirism.weapon_table=Advanced forging
-achievement.vampirism.weapon_table.desc=Use an Hunter Weapon Table
-achievement.vampirism.blood_table=Bloody business
-achievement.vampirism.blood_table.desc=Brew a blood potion
 
 #ADVANCEMENTS
 advancement.vampirism.desc=Get started with Vampirism
@@ -286,6 +277,25 @@ advancement.vampirism.become_vampire=Get some fangs
 advancement.vampirism.become_vampire.desc=Become a Vampire
 advancement.vampirism.become_hunter=Start Hunting
 advancement.vampirism.become_hunter.desc=Become a Vampire Hunter
+advancement.vampirism.sucking_blood=First Blood
+advancement.vampirism.sucking_blood.desc=Suck blood from a creature
+advancement.vampirism.stake=Through the heart
+advancement.vampirism.stake.desc=Spear a vampire with a stake
+advancement.vampirism.vampire_forest=Vampire Forest
+advancement.vampirism.vampire_forest.desc=Explore the new Vampire Forest
+advancement.vampirism.bat=Bat mode
+advancement.vampirism.bat.desc=Become a bat
+advancement.vampirism.max_level_vampire=As bloody as it gets
+advancement.vampirism.max_level_vampire.desc=Reach the highest vampire level
+advancement.vampirism.max_level_hunter=As deadly as it gets
+advancement.vampirism.max_level_hunter.desc=Reach the highest hunter level
+advancement.vampirism.technology=Modern technology
+advancement.vampirism.technology.desc=Get yourself an advanced crossbow
+advancement.vampirism.extra_storage=Extra storage
+advancement.vampirism.extra_storage.desc=Get yourself a blood container for all that blood
+advancement.vampirism.ancient_knowledge=Ancient knowledge
+advancement.vampirism.ancient_knowledge.desc=Find a old vampire book
+
 
 #POTIONS
 effect.vampirism.sunscreen=Sunscreen

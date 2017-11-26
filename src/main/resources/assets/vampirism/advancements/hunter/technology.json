@@ -1,0 +1,42 @@
+{
+  "display": {
+    "icon": {
+      "item": "vampirism:basic_tech_crossbow"
+    },
+    "title": {
+      "translate": "advancement.vampirism.technology"
+    },
+    "description": {
+      "translate": "advancement.vampirism.technology.desc"
+    }
+  },
+  "parent": "vampirism:hunter/become_hunter",
+  "criteria": {
+    "basic": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:basic_tech_crossbow"
+          }
+        ]
+      }
+    },
+    "advanced": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:enhanced_tech_crossbow"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "basic",
+      "advanced"
+    ]
+  ]
+}

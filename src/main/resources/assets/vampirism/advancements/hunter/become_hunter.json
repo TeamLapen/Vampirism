@@ -13,7 +13,7 @@
   },
   "parent": "vampirism:main/root",
   "criteria": {
-    "flower": {
+    "main": {
       "trigger": "vampirism:faction",
       "conditions": {
         "faction": "Hunter",

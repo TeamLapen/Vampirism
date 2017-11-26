@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "vampirism:vampire_book"
+    },
+    "title": {
+      "translate": "advancement.vampirism.ancient_knowledge"
+    },
+    "description": {
+      "translate": "advancement.vampirism.ancient_knowledge.desc"
+    }
+  },
+  "parent": "vampirism:main/vampire_forest",
+  "criteria": {
+    "blood_container": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:vampire_book"
+          }
+        ]
+      }
+    }
+  }
+}

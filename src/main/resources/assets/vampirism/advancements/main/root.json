@@ -14,7 +14,7 @@
     "announce_to_chat": false
   },
   "criteria": {
-    "flower": {
+    "main": {
       "trigger": "minecraft:inventory_changed",
       "conditions": {
         "items": [

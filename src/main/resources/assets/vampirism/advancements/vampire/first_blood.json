@@ -1,0 +1,23 @@
+{
+  "display": {
+    "icon": {
+      "item": "vampirism:blood_bottle",
+      "data": 9
+    },
+    "title": {
+      "translate": "advancement.vampirism.sucking_blood"
+    },
+    "description": {
+      "translate": "advancement.vampirism.sucking_blood.desc"
+    }
+  },
+  "parent": "vampirism:vampire/become_vampire",
+  "criteria": {
+    "flower": {
+      "trigger": "vampirism:vampire_action",
+      "conditions": {
+        "action": "suck_blood"
+      }
+    }
+  }
+}

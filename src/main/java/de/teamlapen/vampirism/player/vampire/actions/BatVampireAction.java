@@ -1,15 +1,18 @@
 package de.teamlapen.vampirism.player.vampire.actions;
 
+import de.teamlapen.vampirism.advancements.VampireActionTrigger;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -71,6 +74,9 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         player.setHealth(newHealth);
         setPlayerBat(player, true);
         ((VampirePlayer) vampire).getSpecialAttributes().bat = true;
+        if (player instanceof EntityPlayerMP) {
+            ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((EntityPlayerMP) player, VampireActionTrigger.Action.BAT);
+        }
         return true;
     }
 

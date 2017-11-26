@@ -11,6 +11,15 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
 
+
+/**
+ * Implements some general function used in most criterion triggers.
+ * The concept is more or less copied from vanilla.
+ * <p>
+ * It is quite complex/strange but I guess MC has it's reasons
+ *
+ * @param <T>
+ */
 public abstract class AbstractCriterionTrigger<T extends ICriterionInstance> implements ICriterionTrigger<T> {
 
     protected final Map<PlayerAdvancements, GenericListeners<T>> listenersForPlayers = Maps.newHashMap();

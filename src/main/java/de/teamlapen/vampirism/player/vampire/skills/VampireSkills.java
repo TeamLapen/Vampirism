@@ -70,7 +70,7 @@ public class VampireSkills {
         registry.register(new ActionSkill<>("vampire_regeneration", VampireActions.regen));
         registry.register(new ActionSkill<>("bat", VampireActions.bat));
         registry.register(new ActionSkill<>("summon_bats", VampireActions.summon_bat));
-        DefaultSkill<IVampirePlayer> damage = new VampirismSkill.SimpleVampireSkill("less_sundamage", 96, 0, true);
+        DefaultSkill<IVampirePlayer> damage = new VampirismSkill.SimpleVampireSkill("less_sundamage", 96, 0, false);
         damage.registerAttributeModifier(VReference.sunDamage, "EB47EDC1-ED4E-4CD8-BDDC-BE40956042A2", Balance.vps.SUNDAMAGE_REDUCTION1, 2);
         registry.register(damage);
         DefaultSkill<IVampirePlayer> damage2 = new VampirismSkill.SimpleVampireSkill("water_resistance", 208, 0, true) {
