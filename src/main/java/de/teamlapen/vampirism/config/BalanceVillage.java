@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.config;
 
 import de.teamlapen.lib.lib.config.BalanceValues;
+import de.teamlapen.lib.lib.config.DefaultBoolean;
 import de.teamlapen.lib.lib.config.DefaultDouble;
 import de.teamlapen.lib.lib.config.DefaultInt;
 import de.teamlapen.vampirism.VampirismMod;
@@ -36,6 +37,9 @@ public class BalanceVillage extends BalanceValues {
 
     @DefaultDouble(value = 0.25, minValue = 0, comment = "The number of hunters that should be in a village (approximately) per door. (There are around 0.35 villager per door)")
     public double MIN_HUNTER_COUNT_VILLAGE_PER_DOOR;
+
+    @DefaultBoolean(value = true, comment = "Spawn vampires instead of hunters in overtaken villages")
+    public boolean SPAWN_VAMPIRE_IN_OVERTAKEN;
 
     /**
      * Creates a configuration for balance values

@@ -46,10 +46,13 @@ public abstract class VampirismVillageEvent extends Event {
         private @Nullable
         EntityVillager newVillager;
         private boolean willBeAggressive;
+        private boolean willBeVampire;
 
-        public SpawnNewVillager(@Nonnull IVampirismVillage village, @Nonnull EntityVillager seedVillager, boolean willBeAggressive) {
+        public SpawnNewVillager(@Nonnull IVampirismVillage village, @Nonnull EntityVillager seedVillager, boolean willBeAggressive, boolean willBeVampire) {
             super(village);
             this.seedVillager = seedVillager;
+            this.willBeAggressive = willBeAggressive;
+            this.willBeVampire = willBeVampire;
         }
 
         public EntityVillager getNewVillager() {
@@ -79,7 +82,9 @@ public abstract class VampirismVillageEvent extends Event {
         /**
          * If the villager will be converted to a aggressive version afterwards
          *
-         * @return
+         * Default: Is true if the village is angry. Can be overriden by {@link #setWillBeAggressive(boolean)}
+         *
+         * If villager becomes vampire this is ignored
          */
         public boolean isWillBeAggressive() {
             return willBeAggressive;
@@ -87,6 +92,21 @@ public abstract class VampirismVillageEvent extends Event {
 
         public void setWillBeAggressive(boolean willBeAggressive) {
             this.willBeAggressive = willBeAggressive;
+        }
+
+        /**
+         * If the villager will be converted to a vampire version afterwards.
+         * Default: Is true when the village is overtaken. Can be overridden by {@link #setWillBeVampire}
+         */
+        public boolean isWillBeVampire() {
+            return willBeVampire;
+        }
+
+        /**
+         * Overwrite the default value.
+         */
+        public void setWillBeVampire(boolean willBeVampire) {
+            this.willBeVampire = willBeVampire;
         }
     }
     /**

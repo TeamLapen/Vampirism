@@ -51,4 +51,14 @@ class VampirismVillageDefaultImpl implements IVampirismVillage {
     public void onVillagerConverted(@Nullable IVampire vampire) {
 
     }
+
+    @Override
+    public boolean isOvertaken() {
+        return false;
+    }
+
+    @Override
+    public void setIsOvertaken(boolean overtaken) {
+
+    }
 }

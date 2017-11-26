@@ -529,6 +529,25 @@ public class TestCommand extends BasicCommand {
             }
         });
 
+        addSubcommand(new SubCommand() {
+            @Override
+            public String getName() {
+                return "overtakeVillage";
+            }
+
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                EntityPlayer p = getCommandSenderAsPlayer(sender);
+                VampirismVillage v = VampirismVillageHelper.getNearestVillage(p);
+                if (v == null) {
+                    sender.sendMessage(new TextComponentString("Could not find any village near you"));
+                } else {
+                    v.forcefullyOvertake();
+                    sender.sendMessage(new TextComponentString("Forcefully overtook village"));
+                }
+            }
+        });
+
 
         //Add last
         addSubcommand(new CommandTreeHelp(this));
