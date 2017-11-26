@@ -81,7 +81,7 @@ public class ModEntities {
      * Registers special extended creature classes
      */
     static void registerCustomExtendedCreatures() {
-        IVampirismEntityRegistry registry = VampirismAPI.biteableRegistry();
+        IVampirismEntityRegistry registry = VampirismAPI.entityRegistry();
     }
 
     /**
@@ -89,7 +89,7 @@ public class ModEntities {
      */
     static void registerConvertibles() {
         String base = REFERENCE.MODID + ":textures/entity/vanilla/%s_overlay.png";
-        IVampirismEntityRegistry registry = VampirismAPI.biteableRegistry();
+        IVampirismEntityRegistry registry = VampirismAPI.entityRegistry();
         registry.addConvertible(EntityCow.class, String.format(base, "cow"));
         registry.addConvertible(EntityPig.class, String.format(base, "pig"));
         registry.addConvertible(EntityOcelot.class, String.format(base, "cat"));

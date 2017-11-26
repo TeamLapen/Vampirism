@@ -39,7 +39,7 @@ public class VampirismAPI {
     private final static Capability<IVampirismVillage> CAP_VILLAGE = null;
     private static IFactionRegistry factionRegistry;
     private static ISundamageRegistry sundamageRegistry;
-    private static IVampirismEntityRegistry biteableRegistry;
+    private static IVampirismEntityRegistry entityRegistry;
     private static IVampireVisionRegistry vampireVisionRegistry;
     private static IHunterWeaponCraftingManager weaponCraftingManager;
     private static IBloodPotionRegistry bloodPotionRegistry;
@@ -75,13 +75,25 @@ public class VampirismAPI {
         return sundamageRegistry;
     }
 
+
     /**
-     * @return The biteable registry
+     * @return The vampirism entity registry
      */
-    public static IVampirismEntityRegistry biteableRegistry() {
-        return biteableRegistry;
+    public static IVampirismEntityRegistry entityRegistry() {
+        return entityRegistry;
     }
 
+
+    /**
+     * TODO REMOVE
+     * Use {@link #entityRegistry()}
+     *
+     * @return The biteable registry
+     */
+    @Deprecated
+    public static IVampirismEntityRegistry biteableRegistry() {
+        return entityRegistry;
+    }
 
     /**
      * @return The crafting manager for the hunter weapon crafting table
@@ -132,7 +144,7 @@ public class VampirismAPI {
     public static void setUpRegistries(IFactionRegistry factionReg, ISundamageRegistry sundamageReg, IVampirismEntityRegistry biteableReg, IActionManager actionMan, ISkillManager skillMan, IVampireVisionRegistry vampireVisionReg, IBloodPotionRegistry bloodPotionReg) {
         factionRegistry = factionReg;
         sundamageRegistry = sundamageReg;
-        biteableRegistry = biteableReg;
+        entityRegistry = biteableReg;
         actionManager = actionMan;
         skillManager = skillMan;
         vampireVisionRegistry = vampireVisionReg;

@@ -94,7 +94,7 @@ public class ClientProxy extends CommonProxy {
     private void registerVampireEntityOverlays() {
         RenderManager manager = Minecraft.getMinecraft().getRenderManager();
         registerVampirePlayerHead(manager);
-        for (Map.Entry<Class<? extends EntityCreature>, String> entry : VampirismAPI.biteableRegistry().getConvertibleOverlay().entrySet()) {
+        for (Map.Entry<Class<? extends EntityCreature>, String> entry : VampirismAPI.entityRegistry().getConvertibleOverlay().entrySet()) {
             registerVampireEntityOverlay(manager, entry.getKey(), new ResourceLocation(entry.getValue()));
         }
     }

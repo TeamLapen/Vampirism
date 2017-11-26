@@ -48,11 +48,33 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         CapabilityManager.INSTANCE.register(IExtendedCreatureVampirism.class, new Storage(), ExtendedCreatureDefaultImpl.class);
     }
 
+    public ExtendedCreature(EntityCreature entity) {
+        this.entity = entity;
+        BiteableEntry entry = VampirismAPI.entityRegistry().getEntry(entity);
+        if (entry != null) {
+            maxBlood = entry.blood;
+            canBecomeVampire = entry.convertible;
+        } else {
+            maxBlood = -1;
+            canBecomeVampire = false;
+        }
+        blood = maxBlood;
+    }
+
+    private final EntityCreature entity;
+    private final int maxBlood;
+    private final boolean canBecomeVampire;
+    /**
+     * Stores the current blood value.
+     * If this is -1, this entity never had any blood and this value cannot be changed
+     */
+    private int blood;
+
     @SuppressWarnings("ConstantConditions")
     public static <Q extends EntityCreature> ICapabilityProvider createNewCapability(final Q creature) {
         return new ICapabilitySerializable<NBTTagCompound>() {
 
-            Function<Q, IExtendedCreatureVampirism> constructor = VampirismAPI.biteableRegistry().getCustomExtendedCreatureConstructor(creature);
+            Function<Q, IExtendedCreatureVampirism> constructor = VampirismAPI.entityRegistry().getCustomExtendedCreatureConstructor(creature);
             IExtendedCreatureVampirism inst = constructor == null ? new ExtendedCreature(creature) : constructor.apply(creature);
 
 
@@ -76,28 +98,6 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
                 return (NBTTagCompound) CAP.getStorage().writeNBT(CAP, inst, null);
             }
         };
-    }
-
-    private final EntityCreature entity;
-    private final int maxBlood;
-    private final boolean canBecomeVampire;
-    /**
-     * Stores the current blood value.
-     * If this is -1, this entity never had any blood and this value cannot be changed
-     */
-    private int blood;
-
-    public ExtendedCreature(EntityCreature entity) {
-        this.entity = entity;
-        BiteableEntry entry = VampirismAPI.biteableRegistry().getEntry(entity);
-        if (entry != null) {
-            maxBlood = entry.blood;
-            canBecomeVampire = entry.convertible;
-        } else {
-            maxBlood = -1;
-            canBecomeVampire = false;
-        }
-        blood = maxBlood;
     }
 
     @Override
@@ -162,7 +162,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     IConvertedCreature makeVampire() {
         if (canBecomeVampire()) {
             blood = 0;
-            IConvertedCreature c = VampirismAPI.biteableRegistry().convert(entity);
+            IConvertedCreature c = VampirismAPI.entityRegistry().convert(entity);
             if (c != null) {
                 Entity e = (Entity) c;
                 entity.setDead();

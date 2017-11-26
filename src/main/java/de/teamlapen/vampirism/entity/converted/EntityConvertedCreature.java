@@ -198,7 +198,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
      * @return The {@link de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler.IDefaultHelper} for this creature
      */
     protected IConvertingHandler.IDefaultHelper getConvertedHelper() {
-        IConvertingHandler handler = VampirismAPI.biteableRegistry().getEntry(entityCreature).convertingHandler;
+        IConvertingHandler handler = VampirismAPI.entityRegistry().getEntry(entityCreature).convertingHandler;
         if (handler instanceof DefaultConvertingHandler) {
             return ((DefaultConvertingHandler) handler).getHelper();
         }

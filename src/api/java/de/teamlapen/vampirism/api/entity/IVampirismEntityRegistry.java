@@ -13,6 +13,7 @@ import java.util.function.Function;
 
 /**
  * Registration of blood values and converting handler for {@link EntityCreature}'s
+ * Adding entries is only possible during init.
  */
 public interface IVampirismEntityRegistry {
 

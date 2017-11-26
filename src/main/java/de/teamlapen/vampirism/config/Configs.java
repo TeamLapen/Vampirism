@@ -71,14 +71,14 @@ public class Configs {
         try {
 
             Map<ResourceLocation, Integer> defaultValues = loadBloodValuesFromReader(new InputStreamReader(Configs.class.getResourceAsStream("/blood_values/default_blood_values.txt")), "default_blood_values.txt");
-            VampirismAPI.biteableRegistry().addBloodValues(defaultValues);
+            VampirismAPI.entityRegistry().addBloodValues(defaultValues);
         } catch (IOException e) {
             VampirismMod.log.e(TAG, e, "Could not read default blood values, this should not happen and destroys the mod experience");
         }
         if (bloodConfigFile.exists()) {
             try {
                 Map<ResourceLocation, Integer> override = loadBloodValuesFromReader(new FileReader(bloodConfigFile), bloodConfigFile.getName());
-                VampirismAPI.biteableRegistry().overrideBloodValues(override);
+                VampirismAPI.entityRegistry().overrideBloodValues(override);
                 VampirismMod.log.i(TAG, "Successfully loaded additional blood value file");
             } catch (IOException e) {
                 VampirismMod.log.e(TAG, "Could not read blood values from config file %s", bloodConfigFile.getName());
@@ -235,7 +235,7 @@ public class Configs {
     public static void loadBloodValuesModCompat(String modid) {
         try {
             Map<ResourceLocation, Integer> defaultValues = Configs.loadBloodValuesFromReader(new InputStreamReader(Configs.class.getResourceAsStream("/blood_values/" + modid + ".txt")), modid + ".txt");
-            VampirismAPI.biteableRegistry().addBloodValues(defaultValues);
+            VampirismAPI.entityRegistry().addBloodValues(defaultValues);
         } catch (IOException e) {
             VampirismMod.log.e(TAG, e, "[ModCompat]Could not read default blood values for mod %s, this should not happen", modid);
         } catch (NullPointerException e) {

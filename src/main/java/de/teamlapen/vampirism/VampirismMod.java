@@ -8,6 +8,7 @@ import de.teamlapen.lib.lib.util.ModCompatLoader;
 import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
@@ -54,6 +55,8 @@ import net.minecraft.entity.EnumCreatureAttribute;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.item.ItemStack;
 import net.minecraft.launchwrapper.Launch;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.datafix.FixTypes;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.MinecraftForge;
@@ -201,6 +204,34 @@ public class VampirismMod {
     }
 
     @Mod.EventHandler
+    public void interModComm(FMLInterModComms.IMCEvent event) {
+        IVampirismEntityRegistry entityRegistry = VampirismAPI.entityRegistry();
+        for (FMLInterModComms.IMCMessage m : event.getMessages()) {
+            try {
+                if ("blood-value".equals(m.key)) {
+                    if (m.isNBTMessage()) {
+                        NBTTagCompound nbt = m.getNBTValue();
+                        if (nbt.hasKey("id") && nbt.hasKey("value")) {
+                            ResourceLocation id = new ResourceLocation(nbt.getString("id"));
+                            int value = nbt.getInteger("value");
+                            VampirismMod.log.i("InterModComm", "Received blood value of %s for %s from %s", value, id, m.getSender());
+                            entityRegistry.addBloodValue(id, value);
+                        } else {
+                            VampirismMod.log.w("InterModComm", "Received invalid blood value nbt from %s", m.getSender());
+                        }
+                    } else {
+                        VampirismMod.log.w("InterModComm", "Received invalid blood value message type from %s", m.getSender());
+                    }
+                } else {
+                    VampirismMod.log.w("InterModComm", "Received unknown message (%s) from %s", m.key, m.getSender());
+                }
+            } catch (Exception e) {
+                VampirismMod.log.e("InterModComm", e, "Failed to parse message from %s", m.getSender());
+            }
+        }
+    }
+
+    @Mod.EventHandler
     public void preInit(FMLPreInitializationEvent event) {
         checkDevEnv();
         HunterPlayer.registerCapability();
@@ -260,7 +291,7 @@ public class VampirismMod {
      * Finish during post-init
      */
     private void finishAPI2() {
-        ((VampirismEntityRegistry) VampirismAPI.biteableRegistry()).finishRegistration();
+        ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).finishRegistration();
     }
 
 
