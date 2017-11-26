@@ -66,8 +66,6 @@ public class RegistryManager implements IInitListener {
                 break;
             case PRE_INIT:
                 ModFluids.registerFluids();
-                ModEntities.registerEntities();
-                ModEntities.registerSpawns();
                 ModEntities.registerConvertibles();
                 ModEntities.registerCustomExtendedCreatures();
                 break;
@@ -133,7 +131,7 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onRegisterEntities(RegistryEvent.Register<EntityEntry> event) {
-        //ModEntities.registerEntities(); TODO moved to pre-init again due to Forge complaining TODO
+        ModEntities.registerEntities(event.getRegistry());
     }
 
     @SubscribeEvent
