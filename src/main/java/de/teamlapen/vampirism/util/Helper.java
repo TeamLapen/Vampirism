@@ -20,6 +20,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
 
@@ -46,7 +47,7 @@ public class Helper {
                 float angle = entity.getEntityWorld().getCelestialAngle(1.0F);
                 //TODO maybe use this.worldObj.getLightFor(EnumSkyBlock.SKY, blockpos) > this.rand.nextInt(32)
                 if (angle > 0.78 || angle < 0.24) {
-                    BlockPos pos = new BlockPos(entity.posX, entity.posY + 0, entity.posZ);
+                    BlockPos pos = new BlockPos(entity.posX, entity.posY + MathHelper.clamp(entity.height / 2.0F, 0F, 2F), entity.posZ);
 
                     if (canBlockSeeSun(entity.getEntityWorld(), pos)) {
                         try {
