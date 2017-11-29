@@ -78,10 +78,10 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 screenPercentage = 100;
                 screenColor = 0xfff00000;
                 fullScreen = false;
-            } else if ((screenPercentage = ((IVampirePlayer) player).getTicksInSun()) > 0) {
+            } else if ((screenPercentage = ((IVampirePlayer) player).getTicksInSun() / 2) > 0) {
                 PotionEffect effect = mc.player.getActivePotionEffect(ModPotions.sunscreen);
                 if (effect == null || effect.getAmplifier() < 5) {
-                    screenColor = 0xffffe700;
+                    screenColor = 0xfffff755;
                     fullScreen = false;
                     if (player.getRepresentingPlayer().capabilities.isCreativeMode) {
                         screenPercentage = Math.min(20, screenPercentage);
