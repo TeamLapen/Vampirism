@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.config;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
+import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -41,6 +42,7 @@ public class Configs {
     public static boolean bat_mode_in_end;
     public static boolean unlock_all_skills;
     public static int sunscreen_beacon_distance;
+    public static boolean autoCalculateEntityBlood;
 
     public static int village_size;
     public static int village_density;
@@ -149,6 +151,7 @@ public class Configs {
         bat_mode_in_end = main_config.getBoolean("bat_mode_in_end", CATEGORY_GENERAL, false, "If vampires can convert to a bat in the end");
         unlock_all_skills = main_config.getBoolean("unlock_all_skills_at_max", CATEGORY_GENERAL, false, "CHEAT: If enabled, you will be able to unlock all skills at max level");
         sunscreen_beacon_distance = main_config.getInt("sunscreen_beacon_distance", CATEGORY_GENERAL, 32, 1, Integer.MAX_VALUE, "Block radius, the sunscreen beacon affects");
+        autoCalculateEntityBlood = main_config.getBoolean("auto_calculate_entit_blood", CATEGORY_GENERAL, true, "Calculate the blood level for unknown creatures based on their size");
 
         //Village
         village_modify = main_config.getBoolean("village_modify_gen", CATEGORY_VILLAGE, true, "Whether to modify village generation chance or not");
@@ -242,6 +245,27 @@ public class Configs {
             VampirismMod.log.e(TAG, e, "[ModCompat]Could not find packed (in JAR) blood value file for mod %s", modid);
         }
     }
+
+    /**
+     * Reads automatically calculated values from world file
+     */
+    public static void loadBloodValuesFromWorldfile(File f) {
+        try {
+            Map<ResourceLocation, Integer> saved = Configs.loadBloodValuesFromReader(new InputStreamReader(new FileInputStream(f)), f.getName());
+            ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).addSavedBloodValues(saved);
+        } catch (IOException e) {
+            VampirismMod.log.e(TAG, e, "[ModCompat]Could not read saved blood values from world from file  %s", f);
+        }
+    }
+
+
+    /**
+     * Saves blood values to file to be saved in world dir
+     */
+    public static void saveBloodValues(File f) {
+
+    }
+
 
     @SideOnly(Side.CLIENT)
     public static void onDisconnectedFromServer() {

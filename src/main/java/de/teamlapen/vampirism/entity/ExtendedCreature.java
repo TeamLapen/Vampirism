@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
@@ -48,18 +49,10 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         CapabilityManager.INSTANCE.register(IExtendedCreatureVampirism.class, new Storage(), ExtendedCreatureDefaultImpl.class);
     }
 
-    public ExtendedCreature(EntityCreature entity) {
-        this.entity = entity;
-        BiteableEntry entry = VampirismAPI.entityRegistry().getEntry(entity);
-        if (entry != null) {
-            maxBlood = entry.blood;
-            canBecomeVampire = entry.convertible;
-        } else {
-            maxBlood = -1;
-            canBecomeVampire = false;
-        }
-        blood = maxBlood;
-    }
+    /**
+     * If the blood value of this creatures should be calculated
+     */
+    private boolean markForBloodCalculation = false;
 
     private final EntityCreature entity;
     private final int maxBlood;
@@ -69,6 +62,21 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
      * If this is -1, this entity never had any blood and this value cannot be changed
      */
     private int blood;
+    public ExtendedCreature(EntityCreature entity) {
+        this.entity = entity;
+        BiteableEntry entry = VampirismAPI.entityRegistry().getEntry(entity);
+        if (entry != null && entry.blood > 0) {
+            maxBlood = entry.blood;
+            canBecomeVampire = entry.convertible;
+        } else {
+            if (entry == null) {
+                markForBloodCalculation = true;
+            }
+            maxBlood = -1;
+            canBecomeVampire = false;
+        }
+        blood = maxBlood;
+    }
 
     @SuppressWarnings("ConstantConditions")
     public static <Q extends EntityCreature> ICapabilityProvider createNewCapability(final Q creature) {
@@ -231,6 +239,9 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
                     setBlood(getBlood() + 1);
                 }
             }
+        }
+        if (markForBloodCalculation) {
+            ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).calculateBloodEntry(entity);
         }
     }
 

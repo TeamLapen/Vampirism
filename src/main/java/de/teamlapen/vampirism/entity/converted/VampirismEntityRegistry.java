@@ -1,18 +1,23 @@
 package de.teamlapen.vampirism.entity.converted;
 
+import com.google.common.collect.Maps;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
+import de.teamlapen.vampirism.config.Configs;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
+import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +32,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
      * Used to store overriding values during init. Will override entries in {@link #bloodValues} after init
      */
     private final Map<ResourceLocation, Integer> overridingValues = new HashMap<>();
+
     /**
      * Used to store convertible handlers during init
      */
@@ -41,6 +47,12 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
      * Stores biteable entries after init
      */
     private final Map<ResourceLocation, BiteableEntry> biteables = new HashMap<>();
+
+    /**
+     * Store biteable entries loaded from world or dynamically generated
+     */
+    private final Map<ResourceLocation, BiteableEntry> generatedBiteables = Maps.newHashMap();
+
     private boolean finished = false;
     private ICreateDefaultConvertingHandler defaultConvertingHandlerCreator;
 
@@ -92,6 +104,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
 
     /**
      * Finished registration
+     * Should be called during post init
      */
     public void finishRegistration() {
         if (finished) return;
@@ -140,11 +153,40 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         return extendedCreatureConstructors.get(entity.getClass());
     }
 
+
+    @Nullable
     @Override
     public BiteableEntry getEntry(EntityCreature creature) {
         return getEntry(EntityList.getKey(creature));
     }
 
+    public void calculateBloodEntry(EntityCreature creature) {
+        ResourceLocation id = EntityList.getKey(creature);
+        BiteableEntry entry = getEntry(id);
+        if (entry != null) return;
+        if (!Configs.autoCalculateEntityBlood || !(creature instanceof EntityAnimal)) {
+            biteables.put(id, BiteableEntry.NOT_BITEABLE);
+            return;
+        }
+        AxisAlignedBB bb = creature.getEntityBoundingBox();
+        double v = bb.maxX - bb.minX;
+        v *= bb.maxY - bb.minY;
+        v *= bb.maxZ - bb.minZ;
+        if (creature.isChild()) {
+            v *= 8; //Rough approximation. Should work for most vanilla animals. Avoids having to change the entities scale
+        }
+        int blood = 0;
+
+        if (v > 0.0) {
+            blood = (int) v;
+            blood = Math.min(20, blood);
+        }
+        entry = blood == 0 ? BiteableEntry.NOT_BITEABLE : new BiteableEntry(blood);
+        biteables.put(id, entry);
+        VampirismMod.log.d(TAG, "Calculated size %s and blood value %s for entity %s", v, blood, id);
+    }
+
+    @Nullable
     @Override
     public BiteableEntry getEntry(ResourceLocation entity_id) {
         return biteables.get(entity_id);
@@ -163,5 +205,23 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
      */
     public void setDefaultConvertingHandlerCreator(ICreateDefaultConvertingHandler creator) {
         defaultConvertingHandlerCreator = creator;
+    }
+
+    public void addSavedBloodValues(@Nonnull Map<ResourceLocation, Integer> values) {
+        for (Map.Entry<ResourceLocation, Integer> entry : values.entrySet()) {
+            generatedBiteables.put(entry.getKey(), new BiteableEntry(entry.getValue()));
+        }
+    }
+
+    @Nonnull
+    public Map<ResourceLocation, Integer> getBloodValuesToSave() {
+        Map<ResourceLocation, Integer> values = Maps.newHashMap();
+        for (Map.Entry<ResourceLocation, BiteableEntry> entry : generatedBiteables.entrySet()) {
+            int blood = entry.getValue().blood;
+            if (blood > 0) {
+                values.put(entry.getKey(), blood);
+            }
+        }
+        return values;
     }
 }
