@@ -21,7 +21,7 @@ public class PotionThirst extends VampirismPotion {
     @Override
     public void performEffect(EntityLivingBase entity, int amplifier) {
         if (entity instanceof EntityPlayer) {
-            VampirePlayer.get((EntityPlayer) entity).addExhaustion(0.010F * (amplifier + 1));
+            VampirePlayer.get((EntityPlayer) entity).addExhaustion(0.005F * (amplifier + 1));
         }
     }
 }
