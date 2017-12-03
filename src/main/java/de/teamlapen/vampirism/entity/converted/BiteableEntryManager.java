@@ -164,7 +164,7 @@ public class BiteableEntryManager {
 //    }
 
 
-    private Map<ResourceLocation, Integer> getDynamicAll() {
+    public Map<ResourceLocation, Integer> getDynamicAll() {
         Map<ResourceLocation, Integer> map = Maps.newHashMap();
 
         for (Map.Entry<ResourceLocation, BiteableEntry> entry : dynamic.entrySet()) {
