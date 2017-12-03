@@ -88,7 +88,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     /**
      * Only available after post init
      *
-     * @return
+     * Biteable entries are stored here
      */
     public static BiteableEntryManager getBiteableEntryManager() {
         return biteableEntryManager;

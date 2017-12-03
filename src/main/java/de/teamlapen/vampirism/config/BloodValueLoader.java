@@ -14,11 +14,50 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Handle loading and saving of blood values.
+ */
 public class BloodValueLoader {
 
     private static final String TAG = "BloodValueLoader";
+    /**
+     * File to save dynamically calculated values to
+     */
     private static @Nullable
     File bloodValueWorldFile;
+
+    /**
+     * Load Vampirism's built-in blood values including any values for third party mods.
+     * Also loads config values
+     *
+     * @param configDir
+     */
+    public static void init(File configDir) {
+        File bloodConfigFile = new File(configDir, REFERENCE.MODID + "_blood_values.txt");
+
+        try {
+
+            Map<ResourceLocation, Integer> defaultValues = loadBloodValuesFromReader(new InputStreamReader(BloodValueLoader.class.getResourceAsStream("/blood_values/default_blood_values.txt")), "default_blood_values.txt");
+            VampirismAPI.entityRegistry().addBloodValues(defaultValues);
+        } catch (IOException e) {
+            VampirismMod.log.bigWarning(TAG, "Could not read default blood values, this should not happen and destroys the mod experience");
+            VampirismMod.log.e(TAG, e, "Exception");
+        }
+
+        if (bloodConfigFile.exists()) {
+            try {
+                Map<ResourceLocation, Integer> override = loadBloodValuesFromReader(new FileReader(bloodConfigFile), bloodConfigFile.getName());
+                VampirismAPI.entityRegistry().overrideBloodValues(override);
+                VampirismMod.log.i(TAG, "Successfully loaded additional blood value file");
+            } catch (IOException e) {
+                VampirismMod.log.e(TAG, "Could not read blood values from config file %s", bloodConfigFile.getName());
+            }
+        }
+
+        loadBloodValuesModCompat("animania");
+        loadBloodValuesModCompat("ancientwarfarenpc");
+    }
+
 
     /**
      * @param r    Reader the values should be read from
@@ -128,31 +167,6 @@ public class BloodValueLoader {
         }
     }
 
-    public static void init(File configDir) {
-        File bloodConfigFile = new File(configDir, REFERENCE.MODID + "_blood_values.txt");
-
-        try {
-
-            Map<ResourceLocation, Integer> defaultValues = loadBloodValuesFromReader(new InputStreamReader(BloodValueLoader.class.getResourceAsStream("/blood_values/default_blood_values.txt")), "default_blood_values.txt");
-            VampirismAPI.entityRegistry().addBloodValues(defaultValues);
-        } catch (IOException e) {
-            VampirismMod.log.bigWarning(TAG, "Could not read default blood values, this should not happen and destroys the mod experience");
-            VampirismMod.log.e(TAG, e, "Exception");
-        }
-
-        if (bloodConfigFile.exists()) {
-            try {
-                Map<ResourceLocation, Integer> override = loadBloodValuesFromReader(new FileReader(bloodConfigFile), bloodConfigFile.getName());
-                VampirismAPI.entityRegistry().overrideBloodValues(override);
-                VampirismMod.log.i(TAG, "Successfully loaded additional blood value file");
-            } catch (IOException e) {
-                VampirismMod.log.e(TAG, "Could not read blood values from config file %s", bloodConfigFile.getName());
-            }
-        }
-
-        loadBloodValuesModCompat("animania");
-        loadBloodValuesModCompat("ancientwarfarenpc");
-    }
 
     public static void onServerStarting(MinecraftServer server) {
         bloodValueWorldFile = new File(new File(server.getWorld(0).getSaveHandler().getWorldDirectory(), REFERENCE.MODID), "vampirism-dynamic-blood");

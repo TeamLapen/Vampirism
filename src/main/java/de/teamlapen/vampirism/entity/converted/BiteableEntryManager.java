@@ -16,6 +16,19 @@ import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.Set;
 
+
+/**
+ * Manages biteable entries.
+ * Get's values from various sources
+ * Static values (included in Vampirism jar) from {@link VampirismEntityRegistry}
+ * Dynamically calculated values from itself
+ * Dynamically saved values on world load from {@link de.teamlapen.vampirism.config.BloodValueLoader}
+ * <p>
+ * <p>
+ * Dynamic values are reset on starting (server)/ on connecting (client).
+ * Dynamic values are calculated during gameplay and saved on stopping (server).
+ * Values are currently not synced between server and client, however, ExtendedCreatures do so.
+ */
 public class BiteableEntryManager {
 
     private static final String TAG = "BiteableEntryManager";
@@ -25,6 +38,10 @@ public class BiteableEntryManager {
     private final Set<ResourceLocation> blacklist = Sets.newHashSet();
     private boolean init;
 
+    /**
+     * @param hardcoded Values added from JAR or API
+     * @param blacklist IDs for which no dynamic values should be calculated
+     */
     public BiteableEntryManager(Map<ResourceLocation, BiteableEntry> hardcoded, Set<ResourceLocation> blacklist) {
         this.hardcoded = ImmutableMap.copyOf(hardcoded);
         this.blacklist.addAll(blacklist);
@@ -36,12 +53,21 @@ public class BiteableEntryManager {
         dynamic.clear();
     }
 
+    /**
+     * Prepare the dynamic list
+     */
     public void initDynamic() {
         dynamic.clear();
         dynamic.putAll(hardcoded);
         init = true;
     }
 
+    /**
+     * Adds a dynamic value.
+     * Respects the convertible status from the hardcoded list
+     *
+     * @return The created entry
+     */
     public BiteableEntry addDynamic(ResourceLocation id, int blood) {
         BiteableEntry existing = dynamic.get(id);
         if (existing != null) {
@@ -105,6 +131,11 @@ public class BiteableEntryManager {
         }
     }
 
+    /**
+     * Get all dynamic values which id's are not present in the hardcoded list
+     *
+     * @return
+     */
     public Map<ResourceLocation, Integer> getValuesToSave() {
         Map<ResourceLocation, Integer> map = Maps.newHashMap();
         for (Map.Entry<ResourceLocation, BiteableEntry> entry : dynamic.entrySet()) {
@@ -131,6 +162,7 @@ public class BiteableEntryManager {
 //        BloodValuePacket packet = new BloodValuePacket(getDynamicAll());
 //        VampirismMod.dispatcher.sendTo(packet,player);
 //    }
+
 
     private Map<ResourceLocation, Integer> getDynamicAll() {
         Map<ResourceLocation, Integer> map = Maps.newHashMap();
