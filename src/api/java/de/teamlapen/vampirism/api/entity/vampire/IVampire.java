@@ -25,6 +25,11 @@ public interface IVampire extends IFactionEntity {
     void drinkBlood(int amt, float saturationMod);
 
     /**
+     * @return If the creature wants blood or could use some
+     */
+    boolean wantsBlood();
+
+    /**
      * Checks if the player is being affected by garlic.
      * Result is cached for a few ticks
      * <p>

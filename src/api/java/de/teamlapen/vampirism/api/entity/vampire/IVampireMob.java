@@ -8,5 +8,4 @@ import de.teamlapen.vampirism.api.entity.IVampirismEntity;
 public interface IVampireMob extends IVampire, IVampirismEntity {
 
 
-    boolean wantsBlood();
 }

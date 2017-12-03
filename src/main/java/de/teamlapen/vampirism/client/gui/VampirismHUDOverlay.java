@@ -1,11 +1,14 @@
 package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.lib.lib.client.gui.ExtendedGui;
+import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -16,6 +19,7 @@ import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.HalloweenSpecial;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -27,11 +31,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -131,18 +137,37 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     biteable = VampirePlayer.get((EntityPlayer) entity);
                 }
                 if (biteable != null && biteable.canBeBitten(player)) {
-                    this.mc.getTextureManager().bindTexture(icons);
-                    int left = event.getResolution().getScaledWidth() / 2 - 8;
-                    int top = event.getResolution().getScaledHeight() / 2 - 4;
-                    GL11.glEnable(GL11.GL_BLEND);
-                    GL11.glColor4f(1F, 0F, 0F, 0.8F);
-                    drawTexturedModalRect(left, top, 27, 0, 16, 16);
-                    GL11.glColor4f(1F, 1F, 1F, 1F);
-                    GL11.glDisable(GL11.GL_BLEND);
+                    renderBloodFangs(event.getResolution().getScaledWidth(), event.getResolution().getScaledHeight(), 1);
                     event.setCanceled(true);
                 }
             }
+        } else if (p != null && p.typeOfHit == RayTraceResult.Type.BLOCK) {
+            IBlockState block = Minecraft.getMinecraft().world.getBlockState(p.getBlockPos());
+            if (ModBlocks.blood_container.equals(block.getBlock())) {
+                IVampirePlayer player = VampirePlayer.get(mc.player);
+                if (player.wantsBlood()) {
+                    TileEntity tile = Minecraft.getMinecraft().world.getTileEntity(p.getBlockPos());
+                    if (tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
+                        if (FluidLib.getFluidAmount(tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), ModFluids.blood) > 0) {
+                            renderBloodFangs(event.getResolution().getScaledWidth(), event.getResolution().getScaledHeight(), 1);
+                            event.setCanceled(true);
+                        }
+                    }
+                }
+            }
         }
+    }
+
+    private void renderBloodFangs(int width, int height, float perc) {
+        this.mc.getTextureManager().bindTexture(icons);
+        int left = width / 2 - 8;
+        int top = height / 2 - 4;
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glColor4f(1F, 0F, 0F, 0.8F);
+        drawTexturedModalRect(left, top, 27, 0, 16, 16);
+        GL11.glColor4f(1F, 1F, 1F, 1F);
+        GL11.glDisable(GL11.GL_BLEND);
+
     }
 
     /**

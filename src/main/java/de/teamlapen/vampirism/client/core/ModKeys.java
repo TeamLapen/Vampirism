@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.network.ModGuiHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.client.settings.KeyModifier;
@@ -92,8 +93,13 @@ public class ModKeys {
         // get value here!
         if (keyPressed == KEY.SUCK) {
             RayTraceResult mouseOver = Minecraft.getMinecraft().objectMouseOver;
-            if (mouseOver != null && mouseOver.entityHit != null && !Minecraft.getMinecraft().player.isSpectator()) {
-                VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + mouseOver.entityHit.getEntityId()));
+            if (mouseOver != null && !Minecraft.getMinecraft().player.isSpectator()) {
+                if (mouseOver.entityHit != null) {
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + mouseOver.entityHit.getEntityId()));
+                } else if (mouseOver.typeOfHit == RayTraceResult.Type.BLOCK) {
+                    BlockPos pos = mouseOver.getBlockPos();
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.DRINK_BLOOD_BLOCK, "" + pos.getX() + ":" + pos.getY() + ":" + pos.getZ()));
+                }
             }
         } else if (keyPressed == KEY.ACTION) {
             EntityPlayer player = Minecraft.getMinecraft().player;

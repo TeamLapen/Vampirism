@@ -15,9 +15,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.ModAdvancements;
-import de.teamlapen.vampirism.core.ModPotions;
-import de.teamlapen.vampirism.core.ModSounds;
+import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -50,11 +48,15 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketAnimation;
 import net.minecraft.network.play.server.SPacketUseBed;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.common.capabilities.*;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -196,12 +198,64 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
         if (e != null && e instanceof EntityLivingBase) {
 
-            if (e.getDistance(player) <= ((EntityPlayerMP) player).interactionManager.getBlockReachDistance()) {
+            if (e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) {
                 biteEntity((EntityLivingBase) e);
             } else {
                 VampirismMod.log.w(TAG, "Entity sent by client is not in reach " + entityId);
             }
         }
+    }
+
+    /**
+     * Try to drink blood from the given block
+     * <p>
+     * Named like this to match biteEntity
+     */
+    public void biteBlock(BlockPos pos) {
+        if (player.isSpectator()) {
+            VampirismMod.log.w(TAG, "Player can't bite in spectator mode");
+            return;
+        }
+        double dist = player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1;
+        if (player.getDistanceSq(pos) > dist * dist) {
+            VampirismMod.log.w(TAG, "Block sent by client is not in reach" + pos);
+        } else {
+            biteBlock(pos, player.world.getBlockState(pos), player.world.getTileEntity(pos));
+        }
+    }
+
+    private void biteBlock(@Nonnull BlockPos pos, @Nonnull IBlockState blockState, @Nullable TileEntity tileEntity) {
+        if (isRemote()) return;
+        if (getLevel() == 0) return;
+        if (biteCooldown > 0) return;
+        if (!bloodStats.needsBlood()) return;
+
+        int blood = 0;
+        int need = Math.min(8, bloodStats.MAXBLOOD - bloodStats.getBloodLevel());
+        if (ModBlocks.blood_container.equals(blockState.getBlock())) {
+            if (tileEntity != null && tileEntity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
+                IFluidHandler handler = tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
+                FluidStack drainable = handler.drain(new FluidStack(ModFluids.blood, need * VReference.FOOD_TO_FLUID_BLOOD), false);
+                if (drainable != null && drainable.amount > VReference.FOOD_TO_FLUID_BLOOD) {
+                    FluidStack drained = handler.drain((drainable.amount / VReference.FOOD_TO_FLUID_BLOOD) * VReference.FOOD_TO_FLUID_BLOOD, true);
+                    blood = drained.amount / VReference.FOOD_TO_FLUID_BLOOD;
+
+                    player.world.notifyBlockUpdate(pos, blockState, blockState, 3);
+                    tileEntity.markDirty();
+                }
+            }
+        }
+
+        if (blood > 0) {
+            drinkBlood(blood, 0.3F);
+
+            NBTTagCompound updatePacket = bloodStats.writeUpdate(new NBTTagCompound());
+            sync(updatePacket, true);
+
+            biteCooldown = Balance.vp.BITE_COOLDOWN;
+
+        }
+
     }
 
     @Override
@@ -257,6 +311,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (left > 0) {
             handleSpareBlood(left);
         }
+    }
+
+    @Override
+    public boolean wantsBlood() {
+        return bloodStats.needsBlood();
     }
 
     @Override

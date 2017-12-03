@@ -25,6 +25,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.fml.common.network.ByteBufUtils;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
@@ -47,6 +48,7 @@ public class InputEventPacket implements IMessage {
     public static final String CRAFT_BLOOD_POTION = "cb";
     public static final String OPEN_BLOOD_POTION = "ob";
     public static final String BASICHUNTERLEVELUP = "bl";
+    public static final String DRINK_BLOOD_BLOCK = "db";
     private final static String TAG = "InputEventPacket";
     private final String SPLIT = "-";
     private String param;
@@ -135,6 +137,14 @@ public class InputEventPacket implements IMessage {
 
                 }
 
+            } else if (message.action.equals(DRINK_BLOOD_BLOCK)) {
+                String[] coords = message.param.split(":");
+                if (coords.length == 3) {
+                    BlockPos pos = new BlockPos(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2]));
+                    VampirePlayer.get(player).biteBlock(pos);
+                } else {
+                    VampirismMod.log.w(TAG, "Received invalid %s parameter", DRINK_BLOOD_BLOCK);
+                }
             } else if (message.action.equals(UNLOCKSKILL)) {
                 if (factionPlayer != null) {
                     ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(message.param));

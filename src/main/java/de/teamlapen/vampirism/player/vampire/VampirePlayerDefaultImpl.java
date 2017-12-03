@@ -67,6 +67,11 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
+    public boolean wantsBlood() {
+        return false;
+    }
+
+    @Override
     public IActionHandler<IVampirePlayer> getActionHandler() {
         return null;
     }
