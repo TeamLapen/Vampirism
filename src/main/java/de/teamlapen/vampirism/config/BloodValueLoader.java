@@ -136,8 +136,10 @@ public class BloodValueLoader {
             Map<ResourceLocation, Integer> defaultValues = loadBloodValuesFromReader(new InputStreamReader(BloodValueLoader.class.getResourceAsStream("/blood_values/default_blood_values.txt")), "default_blood_values.txt");
             VampirismAPI.entityRegistry().addBloodValues(defaultValues);
         } catch (IOException e) {
-            VampirismMod.log.e(TAG, e, "Could not read default blood values, this should not happen and destroys the mod experience");
+            VampirismMod.log.bigWarning(TAG, "Could not read default blood values, this should not happen and destroys the mod experience");
+            VampirismMod.log.e(TAG, e, "Exception");
         }
+
         if (bloodConfigFile.exists()) {
             try {
                 Map<ResourceLocation, Integer> override = loadBloodValuesFromReader(new FileReader(bloodConfigFile), bloodConfigFile.getName());
@@ -147,6 +149,9 @@ public class BloodValueLoader {
                 VampirismMod.log.e(TAG, "Could not read blood values from config file %s", bloodConfigFile.getName());
             }
         }
+
+        loadBloodValuesModCompat("animania");
+        loadBloodValuesModCompat("ancientwarfarenpc");
     }
 
     public static void onServerStarting(MinecraftServer server) {
