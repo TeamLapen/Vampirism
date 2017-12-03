@@ -56,6 +56,10 @@ public abstract class AbstractPacketDispatcher {
                 range));
     }
 
+    public final void sendToAll(IMessage message) {
+        dispatcher.sendToAll(message);
+    }
+
     /**
      * Sends a message to everyone within a certain range of the player provided.
      */

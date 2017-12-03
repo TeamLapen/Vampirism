@@ -39,6 +39,8 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     public static final Capability<IExtendedCreatureVampirism> CAP = null;
     private static final String TAG = "ExtendedCreature";
     private final static String KEY_BLOOD = "bloodLevel";
+    private final static String KEY_MAX_BLOOD = "maxBlood";
+
 
     public static IExtendedCreatureVampirism get(EntityCreature mob) {
         return mob.getCapability(CAP, null);
@@ -55,7 +57,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     private boolean markForBloodCalculation = false;
 
     private final EntityCreature entity;
-    private final int maxBlood;
+    private int maxBlood;
     private final boolean canBecomeVampire;
     /**
      * Stores the current blood value.
@@ -162,6 +164,9 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         if (nbt.hasKey(KEY_BLOOD)) {
             setBlood(nbt.getInteger(KEY_BLOOD));
         }
+        if (nbt.hasKey(KEY_MAX_BLOOD)) {
+            setBlood(nbt.getInteger(KEY_MAX_BLOOD));
+        }
     }
 
     @Override
@@ -184,7 +189,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     @Override
     public int onBite(IVampire biter) {
         if (getBlood() <= 0) return 0;
-        int amt = Math.min(blood, (int) (getMaxBlood() / 2F));
+        int amt = Math.min(blood, Math.max(1, (int) (getMaxBlood() / 2F)));
         blood -= amt;
         boolean killed = false;
         boolean converted = false;
@@ -241,7 +246,11 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
             }
         }
         if (markForBloodCalculation) {
-            ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).calculateBloodEntry(entity);
+            BiteableEntry entry = VampirismEntityRegistry.getBiteableEntryManager().calculate(entity);
+            if (entry != null) {
+                setMaxBlood(entry.blood);
+            }
+            markForBloodCalculation = false;
         }
     }
 
@@ -253,17 +262,29 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     @Override
     public void writeFullUpdateToNBT(NBTTagCompound nbt) {
         nbt.setInteger(KEY_BLOOD, getBlood());
+        nbt.setInteger(KEY_MAX_BLOOD, getBlood());
     }
 
     private void loadNBTData(NBTTagCompound compound) {
+        if (compound.hasKey(KEY_MAX_BLOOD)) {
+            setMaxBlood(compound.getInteger(KEY_MAX_BLOOD));
+        }
         if (compound.hasKey(KEY_BLOOD)) {
             setBlood(compound.getInteger(KEY_BLOOD));
         }
+    }
 
+    /**
+     * Set's maximum blood and current blood
+     */
+    private void setMaxBlood(int blood) {
+        maxBlood = blood;
+        this.blood = blood;
     }
 
     private void saveNBTData(NBTTagCompound compound) {
         compound.setInteger(KEY_BLOOD, blood);
+        compound.setInteger(KEY_MAX_BLOOD, maxBlood);
     }
 
     private void sync() {

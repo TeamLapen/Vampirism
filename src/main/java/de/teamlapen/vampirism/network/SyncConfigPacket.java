@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.network;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.Configs;
@@ -44,6 +45,10 @@ public class SyncConfigPacket implements IMessage {
 
     @SideOnly(Side.CLIENT)
     private void applyConfig() {
+        if (UtilLib.isSameInstanceAsServer()) {
+            VampirismMod.log.d("SyncConfigPacket", "Not applying as same instance as server");
+            return;
+        }
         Configs.readFromNBTClient(nbt);
         ((SundamageRegistry) VampirismAPI.sundamageRegistry()).readFromNBTClient(nbt);
     }

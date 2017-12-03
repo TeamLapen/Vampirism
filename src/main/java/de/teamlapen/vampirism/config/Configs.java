@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.config;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.entity.SundamageRegistry;
-import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
@@ -11,12 +10,9 @@ import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
 
 /**
  * Manages configuration
@@ -68,25 +64,6 @@ public class Configs {
 
     public static void init(File configDir, boolean inDev) {
         File mainConfigFile = new File(configDir, REFERENCE.MODID + ".cfg");
-        File bloodConfigFile = new File(configDir, REFERENCE.MODID + "_blood_values.txt");
-
-        try {
-
-            Map<ResourceLocation, Integer> defaultValues = loadBloodValuesFromReader(new InputStreamReader(Configs.class.getResourceAsStream("/blood_values/default_blood_values.txt")), "default_blood_values.txt");
-            VampirismAPI.entityRegistry().addBloodValues(defaultValues);
-        } catch (IOException e) {
-            VampirismMod.log.e(TAG, e, "Could not read default blood values, this should not happen and destroys the mod experience");
-        }
-        if (bloodConfigFile.exists()) {
-            try {
-                Map<ResourceLocation, Integer> override = loadBloodValuesFromReader(new FileReader(bloodConfigFile), bloodConfigFile.getName());
-                VampirismAPI.entityRegistry().overrideBloodValues(override);
-                VampirismMod.log.i(TAG, "Successfully loaded additional blood value file");
-            } catch (IOException e) {
-                VampirismMod.log.e(TAG, "Could not read blood values from config file %s", bloodConfigFile.getName());
-            }
-        }
-
         main_config = new Configuration(mainConfigFile, REFERENCE.VERSION);
         loadConfiguration(false);
         if (updated_vampirism) VampirismMod.log.i(TAG, "Vampirism seems to have been updated");
@@ -151,7 +128,7 @@ public class Configs {
         bat_mode_in_end = main_config.getBoolean("bat_mode_in_end", CATEGORY_GENERAL, false, "If vampires can convert to a bat in the end");
         unlock_all_skills = main_config.getBoolean("unlock_all_skills_at_max", CATEGORY_GENERAL, false, "CHEAT: If enabled, you will be able to unlock all skills at max level");
         sunscreen_beacon_distance = main_config.getInt("sunscreen_beacon_distance", CATEGORY_GENERAL, 32, 1, Integer.MAX_VALUE, "Block radius, the sunscreen beacon affects");
-        autoCalculateEntityBlood = main_config.getBoolean("auto_calculate_entit_blood", CATEGORY_GENERAL, true, "Calculate the blood level for unknown creatures based on their size");
+        autoCalculateEntityBlood = main_config.getBoolean("auto_calculate_entity_blood", CATEGORY_GENERAL, true, "Calculate the blood level for unknown creatures based on their size");
 
         //Village
         village_modify = main_config.getBoolean("village_modify_gen", CATEGORY_VILLAGE, true, "Whether to modify village generation chance or not");
@@ -193,78 +170,7 @@ public class Configs {
         return main_config;
     }
 
-    /**
-     * @param r    Reader the values should be read from
-     * @param file Just for logging of errors
-     * @throws FileNotFoundException
-     * @throws IOException
-     */
-    private static Map<ResourceLocation, Integer> loadBloodValuesFromReader(Reader r, String file) throws IOException {
-        Map<ResourceLocation, Integer> bloodValues = new HashMap<>();
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(r);
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.startsWith("#")) continue;
-                if (StringUtils.isBlank(line)) continue;
-                String[] p = line.split("=");
-                if (p.length != 2) {
-                    VampirismMod.log.w("ReadBlood", "Line %s  in %s is not formatted properly", line, file);
-                    continue;
-                }
-                int val;
-                try {
-                    val = Integer.parseInt(p[1]);
-                } catch (NumberFormatException e) {
-                    VampirismMod.log.w("ReadBlood", "Line %s  in %s is not formatted properly", line, file);
-                    continue;
-                }
-                bloodValues.put(new ResourceLocation(p[0]), val);
-            }
-        } finally {
-            if (br != null) {
-                br.close();
-            }
-            r.close();
-        }
-        return bloodValues;
 
-    }
-
-    /**
-     * Reads blood values for another mod from the Vampirism jar.
-     */
-    public static void loadBloodValuesModCompat(String modid) {
-        try {
-            Map<ResourceLocation, Integer> defaultValues = Configs.loadBloodValuesFromReader(new InputStreamReader(Configs.class.getResourceAsStream("/blood_values/" + modid + ".txt")), modid + ".txt");
-            VampirismAPI.entityRegistry().addBloodValues(defaultValues);
-        } catch (IOException e) {
-            VampirismMod.log.e(TAG, e, "[ModCompat]Could not read default blood values for mod %s, this should not happen", modid);
-        } catch (NullPointerException e) {
-            VampirismMod.log.e(TAG, e, "[ModCompat]Could not find packed (in JAR) blood value file for mod %s", modid);
-        }
-    }
-
-    /**
-     * Reads automatically calculated values from world file
-     */
-    public static void loadBloodValuesFromWorldfile(File f) {
-        try {
-            Map<ResourceLocation, Integer> saved = Configs.loadBloodValuesFromReader(new InputStreamReader(new FileInputStream(f)), f.getName());
-            ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).addSavedBloodValues(saved);
-        } catch (IOException e) {
-            VampirismMod.log.e(TAG, e, "[ModCompat]Could not read saved blood values from world from file  %s", f);
-        }
-    }
-
-
-    /**
-     * Saves blood values to file to be saved in world dir
-     */
-    public static void saveBloodValues(File f) {
-
-    }
 
 
     @SideOnly(Side.CLIENT)

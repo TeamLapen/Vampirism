@@ -98,8 +98,7 @@ public interface IVampirismEntityRegistry {
     BiteableEntry getEntry(ResourceLocation entity_id);
 
     /**
-     * Add blood values that override previously registered values. E.g. used for making the values configurable
-     * Should probably only be used by Vampirism itself
+     * Add blood values that override previously registered values.
      * @param values
      */
     void overrideBloodValues(Map<ResourceLocation, Integer> values);

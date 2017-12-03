@@ -487,6 +487,10 @@ public class UtilLib {
         return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getOppedPlayers().getEntry(player.getGameProfile()) != null;
     }
 
+    public static boolean isSameInstanceAsServer() {
+        return FMLCommonHandler.instance().getMinecraftServerInstance() != null;
+    }
+
     public static String translate(String key) {
         if (I18n.canTranslate(key)) {
             return I18n.translateToLocal(key);

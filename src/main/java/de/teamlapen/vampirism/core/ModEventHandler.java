@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.network.SyncConfigPacket;
 import de.teamlapen.vampirism.util.DaySleepHelper;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -45,8 +46,18 @@ public class ModEventHandler {
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
     public void onClientDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
-        Configs.onDisconnectedFromServer();
+        if (!UtilLib.isSameInstanceAsServer()) {
+            Configs.onDisconnectedFromServer();
+            VampirismEntityRegistry.getBiteableEntryManager().resetDynamic();
+        }
+    }
 
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void onClientConnected(FMLNetworkEvent.ClientConnectedToServerEvent event) {
+        if (!UtilLib.isSameInstanceAsServer()) {
+            VampirismEntityRegistry.getBiteableEntryManager().initDynamic();
+        }
     }
 
     @SubscribeEvent

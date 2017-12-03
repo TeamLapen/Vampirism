@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.BloodValueLoader;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
@@ -177,6 +178,13 @@ public class VampirismMod {
     public void onServerStart(FMLServerStartingEvent event) {
         event.registerServerCommand(new VampirismCommand());
         event.registerServerCommand(new TestCommand());
+        VampirismEntityRegistry.getBiteableEntryManager().initDynamic();
+        BloodValueLoader.onServerStarting(event.getServer());
+    }
+
+    @Mod.EventHandler
+    public void onServerStopping(FMLServerStoppingEvent event) {
+        BloodValueLoader.onServerStopping();
     }
 
     @Mod.EventHandler
@@ -218,6 +226,7 @@ public class VampirismMod {
         setupAPI2();
         Configs.init(new File(event.getModConfigurationDirectory(), REFERENCE.MODID), inDev);
         Balance.init(new File(event.getModConfigurationDirectory(), REFERENCE.MODID), inDev);
+        BloodValueLoader.init(new File(event.getModConfigurationDirectory(), REFERENCE.MODID));
         modCompatLoader.onInitStep(IInitListener.Step.PRE_INIT, event);
         setupAPI3();
 
