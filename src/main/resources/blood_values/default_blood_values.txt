@@ -3,7 +3,9 @@ minecraft:multiplier=10
 
 #Vanilla
 minecraft:cow=10
-minecraft:horse=10
+minecraft:horse=13
+minecraft:mule=13
+minecraft:donkey=13
 minecraft:villager=15
 minecraft:pig=5
 minecraft:sheep=5

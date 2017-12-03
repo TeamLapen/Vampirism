@@ -6,8 +6,10 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
  * Stores max blood as well as information about converting for EntityCreature classes
  */
 public class BiteableEntry {
+
     /**
      * Max blood the creature can have
+     * If 0 the entity is not biteable
      */
     public final int blood;
     /**
@@ -40,5 +42,9 @@ public class BiteableEntry {
         this.blood = blood;
         this.convertible = false;
         this.convertingHandler = null;
+    }
+
+    public BiteableEntry modifyBloodValue(int blood) {
+        return this.convertible ? new BiteableEntry(blood, this.convertingHandler) : new BiteableEntry(blood);
     }
 }

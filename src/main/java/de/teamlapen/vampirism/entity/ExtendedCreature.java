@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
@@ -38,6 +39,8 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     public static final Capability<IExtendedCreatureVampirism> CAP = null;
     private static final String TAG = "ExtendedCreature";
     private final static String KEY_BLOOD = "bloodLevel";
+    private final static String KEY_MAX_BLOOD = "maxBlood";
+
 
     public static IExtendedCreatureVampirism get(EntityCreature mob) {
         return mob.getCapability(CAP, null);
@@ -48,27 +51,34 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         CapabilityManager.INSTANCE.register(IExtendedCreatureVampirism.class, new Storage(), ExtendedCreatureDefaultImpl.class);
     }
 
-    public ExtendedCreature(EntityCreature entity) {
-        this.entity = entity;
-        BiteableEntry entry = VampirismAPI.entityRegistry().getEntry(entity);
-        if (entry != null) {
-            maxBlood = entry.blood;
-            canBecomeVampire = entry.convertible;
-        } else {
-            maxBlood = -1;
-            canBecomeVampire = false;
-        }
-        blood = maxBlood;
-    }
+    /**
+     * If the blood value of this creatures should be calculated
+     */
+    private boolean markForBloodCalculation = false;
 
     private final EntityCreature entity;
-    private final int maxBlood;
+    private int maxBlood;
     private final boolean canBecomeVampire;
     /**
      * Stores the current blood value.
      * If this is -1, this entity never had any blood and this value cannot be changed
      */
     private int blood;
+    public ExtendedCreature(EntityCreature entity) {
+        this.entity = entity;
+        BiteableEntry entry = VampirismAPI.entityRegistry().getEntry(entity);
+        if (entry != null && entry.blood > 0) {
+            maxBlood = entry.blood;
+            canBecomeVampire = entry.convertible;
+        } else {
+            if (entry == null) {
+                markForBloodCalculation = true;
+            }
+            maxBlood = -1;
+            canBecomeVampire = false;
+        }
+        blood = maxBlood;
+    }
 
     @SuppressWarnings("ConstantConditions")
     public static <Q extends EntityCreature> ICapabilityProvider createNewCapability(final Q creature) {
@@ -154,6 +164,9 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         if (nbt.hasKey(KEY_BLOOD)) {
             setBlood(nbt.getInteger(KEY_BLOOD));
         }
+        if (nbt.hasKey(KEY_MAX_BLOOD)) {
+            setBlood(nbt.getInteger(KEY_MAX_BLOOD));
+        }
     }
 
     @Override
@@ -176,7 +189,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     @Override
     public int onBite(IVampire biter) {
         if (getBlood() <= 0) return 0;
-        int amt = Math.min(blood, (int) (getMaxBlood() / 2F));
+        int amt = Math.min(blood, Math.max(1, (int) (getMaxBlood() / 2F)));
         blood -= amt;
         boolean killed = false;
         boolean converted = false;
@@ -232,6 +245,13 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
                 }
             }
         }
+        if (markForBloodCalculation) {
+            BiteableEntry entry = VampirismEntityRegistry.getBiteableEntryManager().calculate(entity);
+            if (entry != null) {
+                setMaxBlood(entry.blood);
+            }
+            markForBloodCalculation = false;
+        }
     }
 
     @Override
@@ -242,17 +262,29 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     @Override
     public void writeFullUpdateToNBT(NBTTagCompound nbt) {
         nbt.setInteger(KEY_BLOOD, getBlood());
+        nbt.setInteger(KEY_MAX_BLOOD, getBlood());
     }
 
     private void loadNBTData(NBTTagCompound compound) {
+        if (compound.hasKey(KEY_MAX_BLOOD)) {
+            setMaxBlood(compound.getInteger(KEY_MAX_BLOOD));
+        }
         if (compound.hasKey(KEY_BLOOD)) {
             setBlood(compound.getInteger(KEY_BLOOD));
         }
+    }
 
+    /**
+     * Set's maximum blood and current blood
+     */
+    private void setMaxBlood(int blood) {
+        maxBlood = blood;
+        this.blood = blood;
     }
 
     private void saveNBTData(NBTTagCompound compound) {
         compound.setInteger(KEY_BLOOD, blood);
+        compound.setInteger(KEY_MAX_BLOOD, maxBlood);
     }
 
     private void sync() {
