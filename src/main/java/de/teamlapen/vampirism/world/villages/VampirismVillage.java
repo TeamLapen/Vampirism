@@ -495,7 +495,6 @@ public class VampirismVillage implements IVampirismVillage {
         EntityBasicHunter hunter = new EntityBasicHunter(village.world);
         boolean flag = UtilLib.spawnEntityInWorld(village.world, getBoundingBox(), hunter, 5);
         if (flag) {
-            hunter.onInitialSpawn(village.world.getDifficultyForLocation(new BlockPos(hunter)), null);
             hunter.makeVillageHunter(this);
         } else {
             hunter.setDead();
@@ -506,9 +505,7 @@ public class VampirismVillage implements IVampirismVillage {
         EntityBasicVampire vampire = new EntityBasicVampire(village.world);
         boolean flag = UtilLib.spawnEntityInWorld(village.world, getBoundingBox(), vampire, 5);
         //TODO make home
-        if (flag) {
-            vampire.onInitialSpawn(village.world.getDifficultyForLocation(new BlockPos(vampire)), null);
-        } else {
+        if (!flag) {
             vampire.setDead();
         }
     }

@@ -74,7 +74,7 @@ public class WorldGenHunterCamp extends WorldGenerator {
      */
     @Override
     public boolean generate(World worldIn, Random rand, BlockPos position) {
-        if (worldIn.getBiomeForCoordsBody(position).getHeightVariation() < 0.3 && rand.nextInt(7) == 0) {
+        if (worldIn.getBiomeForCoordsBody(position).getHeightVariation() < 0.3 && rand.nextInt(6) == 0) {
             int r = rand.nextInt(2);
             int r1 = rand.nextInt(2);
             int r2 = rand.nextInt(2);
@@ -94,9 +94,9 @@ public class WorldGenHunterCamp extends WorldGenerator {
                 placeTent(worldIn, rand, pos3, EnumFacing.NORTH);
                 placeTent(worldIn, rand, pos4, EnumFacing.SOUTH);
                 EntityAdvancedHunter hunter = new EntityAdvancedHunter(worldIn);
-                AxisAlignedBB box = new AxisAlignedBB(center.add(-10, -5, -10), center.add(10, 5, 10));
-                UtilLib.spawnEntityInWorld(worldIn, box, hunter, 5);
-                hunter.setCampArea(box);
+                AxisAlignedBB box = new AxisAlignedBB(center.add(-7, 0, -10), center.add(7, 1, 7));
+                UtilLib.spawnEntityInWorld(worldIn, box, hunter, 8);
+                hunter.setCampArea(box.grow(4, 5, 4));
                 if (VampirismWorldGen.debug)
                     VampirismMod.log.i("HunterCamp", "Generated advanced hunter camp at %s", center);
                 return true;
