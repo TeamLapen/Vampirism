@@ -22,6 +22,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.biome.Biome;
@@ -124,11 +125,30 @@ public class UtilLib {
             e.setPosition(x, y, z);
             if (e.getCanSpawnHere() && e.isNotColliding()) {
                 p.getEntityWorld().spawnEntity(e);
+                onInitialSpawn(e);
                 return e;
             }
         }
         e.setDead();
         return null;
+    }
+
+    /**
+     * Call {@link EntityLiving#onInitialSpawn(DifficultyInstance, IEntityLivingData)} if applicable
+     */
+    private static void onInitialSpawn(Entity e) {
+        if (e instanceof EntityLiving) {
+            ((EntityLiving) e).onInitialSpawn(e.getEntityWorld().getDifficultyForLocation(e.getPosition()), null);
+        }
+    }
+
+    public static BlockPos getPositionBehindEntity(EntityLivingBase p, float distance) {
+        float yaw = p.rotationYawHead;
+        float cosYaw = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
+        float sinYaw = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
+        double x = p.posX + sinYaw * distance;
+        double z = p.posZ + cosYaw * distance;
+        return new BlockPos(x, p.posY, z);
     }
 
     public static boolean spawnEntityInWorld(World world, AxisAlignedBB box, Entity e, int maxTry) {
@@ -145,6 +165,7 @@ public class UtilLib {
         }
         if (flag) {
             world.spawnEntity(e);
+            onInitialSpawn(e);
             return true;
         }
         return false;
