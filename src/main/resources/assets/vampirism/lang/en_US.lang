@@ -120,9 +120,9 @@ entity.vampirism.blinding_bat.name=Bat
 entity.vampirism.dracula.name=Dracula
 entity.vampirism.dead_mob.name=Dead mob
 entity.vampirism.portal_guard.name=Portal Guard
-entity.vampirism.converted_villager.name=Vampire Villager
+entity.vampirism.converted.villager.name=Vampire Villager
 text.vampirism.entity_level=Level
-entity._villager.vampire_hunter=Alchemic Priest
+entity.villager.vampire_hunter=Alchemic Priest
 
 #RITUALS
 text.vampirism.ritual_missing_items=Missing %s of "%s" for this ritual
@@ -320,6 +320,7 @@ enchantment.vampirism.arrow_frugality=Arrow Frugality
 enchantment.vampirism.vampire_slayer=Vampire Slayer
 
 #ETC
+itemGroup.vampirism=Vampirism
 text.vampirism.vampire=Vampire
 text.vampirism.vampires=Vampires
 text.vampirism.all=All

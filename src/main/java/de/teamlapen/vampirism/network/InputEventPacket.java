@@ -49,7 +49,7 @@ public class InputEventPacket implements IMessage {
     public static final String BASICHUNTERLEVELUP = "bl";
     public static final String DRINK_BLOOD_BLOCK = "db";
     private final static String TAG = "InputEventPacket";
-    private final String SPLIT = "-";
+    private final String SPLIT = "&";
     private String param;
     private String action;
 
@@ -142,7 +142,7 @@ public class InputEventPacket implements IMessage {
                     BlockPos pos = new BlockPos(Integer.parseInt(coords[0]), Integer.parseInt(coords[1]), Integer.parseInt(coords[2]));
                     VampirePlayer.get(player).biteBlock(pos);
                 } else {
-                    VampirismMod.log.w(TAG, "Received invalid %s parameter", DRINK_BLOOD_BLOCK);
+                    VampirismMod.log.w(TAG, "Received invalid %s parameter (%s)", DRINK_BLOOD_BLOCK, message.param);
                 }
             } else if (message.action.equals(UNLOCKSKILL)) {
                 if (factionPlayer != null) {
