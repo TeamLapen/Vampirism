@@ -94,9 +94,9 @@ public class WorldGenHunterCamp extends WorldGenerator {
                 placeTent(worldIn, rand, pos3, EnumFacing.NORTH);
                 placeTent(worldIn, rand, pos4, EnumFacing.SOUTH);
                 EntityAdvancedHunter hunter = new EntityAdvancedHunter(worldIn);
-                AxisAlignedBB box = new AxisAlignedBB(center.add(-10, -5, -10), center.add(10, 5, 10));
+                AxisAlignedBB box = new AxisAlignedBB(center.add(-7, 0, -7), center.add(7, 0, 7));
                 UtilLib.spawnEntityInWorld(worldIn, box, hunter, 5);
-                hunter.setCampArea(box);
+                hunter.setCampArea(box.grow(3, 5, 3));
                 if (VampirismWorldGen.debug)
                     VampirismMod.log.i("HunterCamp", "Generated advanced hunter camp at %s", center);
                 return true;
