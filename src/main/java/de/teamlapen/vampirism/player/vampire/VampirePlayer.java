@@ -758,6 +758,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         skillHandler.loadFromNbt(nbt);
     }
 
+    private Method reflectionMethodSetSize = null;
     /**
      * Set's the players entity size via reflection.
      * Attention: This is reset by EntityPlayer every tick
@@ -769,8 +770,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     public boolean setEntitySize(float width, float height) {
 
         try {
-            Method mSetSize = ReflectionHelper.findMethod(Entity.class, "setSize", SRGNAMES.Entity_setSize, float.class, float.class);
-            mSetSize.invoke(player, width, height);
+            if (reflectionMethodSetSize == null) {
+                reflectionMethodSetSize = ReflectionHelper.findMethod(Entity.class, "setSize", SRGNAMES.Entity_setSize, float.class, float.class);
+            }
+            reflectionMethodSetSize.invoke(player, width, height);
             return true;
         } catch (Exception e) {
             VampirismMod.log.e(TAG, e, "Could not change players size! ");
