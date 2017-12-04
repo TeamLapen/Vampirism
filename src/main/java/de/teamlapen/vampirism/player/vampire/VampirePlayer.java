@@ -236,12 +236,14 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             if (tileEntity != null && tileEntity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
                 IFluidHandler handler = tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
                 FluidStack drainable = handler.drain(new FluidStack(ModFluids.blood, need * VReference.FOOD_TO_FLUID_BLOOD), false);
-                if (drainable != null && drainable.amount > VReference.FOOD_TO_FLUID_BLOOD) {
+                if (drainable != null && drainable.amount >= VReference.FOOD_TO_FLUID_BLOOD) {
                     FluidStack drained = handler.drain((drainable.amount / VReference.FOOD_TO_FLUID_BLOOD) * VReference.FOOD_TO_FLUID_BLOOD, true);
-                    blood = drained.amount / VReference.FOOD_TO_FLUID_BLOOD;
+                    if (drained != null) {
+                        blood = drained.amount / VReference.FOOD_TO_FLUID_BLOOD;
 
-                    player.world.notifyBlockUpdate(pos, blockState, blockState, 3);
-                    tileEntity.markDirty();
+                        player.world.notifyBlockUpdate(pos, blockState, blockState, 3);
+                        tileEntity.markDirty();
+                    }
                 }
             }
         }

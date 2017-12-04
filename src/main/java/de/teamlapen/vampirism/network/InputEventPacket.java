@@ -50,7 +50,7 @@ public class InputEventPacket implements IMessage {
     public static final String BASICHUNTERLEVELUP = "bl";
     public static final String DRINK_BLOOD_BLOCK = "db";
     private final static String TAG = "InputEventPacket";
-    private final String SPLIT = "-";
+    private final String SPLIT = "&";
     private String param;
     private String action;
 
