@@ -124,6 +124,10 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         }
     }
 
+    public float getBloodLevelRelative() {
+        return getBlood() / (float) getMaxBlood();
+    }
+
     @Override
     public float getBloodSaturation() {
         return 1.0F;//TODO adjust

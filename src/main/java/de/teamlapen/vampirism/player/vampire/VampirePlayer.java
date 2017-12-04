@@ -325,6 +325,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return bloodStats.getBloodLevel();
     }
 
+    public float getBloodLevelRelative() {
+        return bloodStats.getBloodLevel() / (float) bloodStats.MAXBLOOD;
+    }
+
     @Override
     public float getBloodSaturation() {
         return (float) Balance.vp.PLAYER_BLOOD_SATURATION;
