@@ -33,6 +33,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -129,15 +130,15 @@ public class VampirismHUDOverlay extends ExtendedGui {
             if (player.getLevel() > 0 && !mc.player.isSpectator()) {
                 Entity entity = p.entityHit;
                 IBiteableEntity biteable = null;
-                if (entity instanceof EntityCreature) {
-                    biteable = ExtendedCreature.get((EntityCreature) entity);
-                } else if (entity instanceof IBiteableEntity) {
+                if (entity instanceof IBiteableEntity) {
                     biteable = (IBiteableEntity) entity;
+                } else if (entity instanceof EntityCreature) {
+                    biteable = ExtendedCreature.get((EntityCreature) entity);
                 } else if (entity instanceof EntityPlayer) {
                     biteable = VampirePlayer.get((EntityPlayer) entity);
                 }
                 if (biteable != null && biteable.canBeBitten(player)) {
-                    renderBloodFangs(event.getResolution().getScaledWidth(), event.getResolution().getScaledHeight(), 1);
+                    renderBloodFangs(event.getResolution().getScaledWidth(), event.getResolution().getScaledHeight(), MathHelper.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F));
                     event.setCanceled(true);
                 }
             }
@@ -163,8 +164,11 @@ public class VampirismHUDOverlay extends ExtendedGui {
         int left = width / 2 - 8;
         int top = height / 2 - 4;
         GL11.glEnable(GL11.GL_BLEND);
+        GL11.glColor4f(1F, 1F, 1F, 0.7F);
+        drawTexturedModalRect(left, top, 27, 0, 16, 10);
         GL11.glColor4f(1F, 0F, 0F, 0.8F);
-        drawTexturedModalRect(left, top, 27, 0, 16, 16);
+        int percHeight = (int) (10 * perc);
+        drawTexturedModalRect(left, top + (10 - percHeight), 27, 10 - percHeight, 16, percHeight);
         GL11.glColor4f(1F, 1F, 1F, 1F);
         GL11.glDisable(GL11.GL_BLEND);
 
