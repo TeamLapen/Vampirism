@@ -59,8 +59,8 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     private final EntityAIBase wanderVillage = new EntityAIMoveThroughVillageCustom(this, 0.7F, false, 300);
     private final EntityAIBase defendVillage = new HunterAIDefendVillage(this);
     private final EntityAIBase targetZombies = new EntityAINearestAttackableTarget<>(this, EntityZombie.class, true, true);
-    private final EntityAIAttackMelee attackMelee = new EntityAIAttackMelee(this, 1.0, false);
-    private final EntityAIAttackRangedCrossbow attackRange = new EntityAIAttackRangedCrossbow(this, this, 0.6, 60, 20);
+    private final EntityAIAttackMelee attackMelee;
+    private final EntityAIAttackRangedCrossbow attackRange;
     private boolean villageHunter = false;
     private boolean defendVillageAdded = false;
     /**
@@ -80,7 +80,6 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
 
     public EntityBasicHunter(World world) {
         super(world, true);
-
         saveHome = true;
         ((PathNavigateGround) this.getNavigator()).setEnterDoors(true);
 
@@ -88,6 +87,10 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
 
 
         this.setDontDropEquipment();
+
+        this.attackMelee = new EntityAIAttackMelee(this, 1.0, false);
+        this.attackRange = new EntityAIAttackRangedCrossbow(this, this, 0.6, 60, 20);
+        this.updateCombatTask();
     }
 
     @Override
@@ -348,7 +351,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         super.initEntityAI();
 
         this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
-        //Attack task is added with priority 2
+        //Attack task is added in #updateCombatTasks which is e.g. called at end of constructor
         this.tasks.addTask(3, new HunterAILookAtTrainee(this));
 
         this.tasks.addTask(6, new EntityAIWander(this, 0.7, 50));
