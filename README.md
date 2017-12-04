@@ -97,7 +97,7 @@ The following example instructions will setup IntelliJ (Free community edition o
 8. Select the gradle task `setupDecompWorkspace` in the IntelliJ Gradle window and add the following arguments `-Xmx4g -Xms4g`. Run it.  
 9. Refresh the gradle project  
 10. Run `genIntellijRuns`
-11. Make sure `Settings -> Build, Execution, Deployment -> Compiler -> 'Add runtime assertions for not-null-annotated methods and parameters' is disabled` (Unfortunately required)
+11. Make sure `Settings -> Build, Execution, Deployment -> Compiler -> 'Add runtime assertions for not-null-annotated methods and parameters' is disabled` (Unfortunately required, requires rebuild if the project has been built before)
 12. You might have to modify the projets compiler output path  
 
 

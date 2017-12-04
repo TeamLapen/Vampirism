@@ -169,7 +169,7 @@ public class BloodValueLoader {
 
 
     public static void onServerStarting(MinecraftServer server) {
-        bloodValueWorldFile = new File(new File(server.getWorld(0).getSaveHandler().getWorldDirectory(), REFERENCE.MODID), "vampirism-dynamic-blood");
+        bloodValueWorldFile = new File(new File(server.getWorld(0).getSaveHandler().getWorldDirectory(), REFERENCE.MODID), "dynamic-blood-values.txt");
         if (bloodValueWorldFile.exists()) {
             loadDynamicBloodValues(bloodValueWorldFile);
         }
