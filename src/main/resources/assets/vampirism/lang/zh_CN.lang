@@ -262,13 +262,13 @@ item.vampirism.garlic_beacon_core_improved.name=进阶喷蒜核心
 item.vampirism.pure_salt.name=纯净盐
 
 #KEYS
-keys.vampirism.select_skills=Select Skills
-keys.vampirism.action=Use Actions
-keys.vampirism.blood_potion_crafting=Portable Blood Potion crafting
-keys.vampirism.category=Vampirism
-keys.vampirism.suck=Suck blood
-keys.vampirism.auto=Auto Fill Blood Bottle
-keys.vampirism.vision=Switch vision
+keys.vampirism.select_skills=选择技能
+keys.vampirism.action=使用能力
+keys.vampirism.blood_potion_crafting=便携血酿台
+keys.vampirism.category=血族
+keys.vampirism.suck=吸血
+keys.vampirism.auto=自动装满血瓶
+keys.vampirism.vision=视野能力
 
 
 #ADVANCEMENTS
@@ -299,11 +299,11 @@ advancement.vampirism.ancient_knowledge.desc=找到古老的血族之书
 
 #POTIONS
 effect.vampirism.sunscreen=抗晒
-effect.vampirism.thirst=渴求
-effect.vampirism.saturation=Saturation
-effect.vampirism.sanguinare=Sanguinare Vampiris
+effect.vampirism.thirst=血之渴望
+effect.vampirism.saturation=饱饮
+effect.vampirism.sanguinare=吸血之疾
 effect.vampirism.fire_protection=火焰保护
-effect.vampirism.garlic=Garlic
+effect.vampirism.garlic=蒜熏
 
 #FLUIDS
 fluid.vampirism.vampirismblood吸血鬼之血
@@ -313,8 +313,8 @@ gui.vampirism.hunter_weapon_table=牙狩武器桌
 gui.vampirism.hunter_weapon_table.level=需求牙狩等级: %s
 gui.vampirism.hunter_weapon_table.skill=需求技能: %s
 gui.vampirism.blood_potion_table.create=开始制作
-gui.vampirism.revertback.head=Revert back to normal human
-gui.vampirism.revertback.desc=You will loose all your levels and die
+gui.vampirism.revertback.head=变回人类
+gui.vampirism.revertback.desc=你会失去你的全部等级，就此逝去
 gui.vampirism.reset_skills.title=重置技能
 gui.vampirism.reset_skills.desc=重置技能后你将会降一级. 还要继续吗?
 gui.vampirism.reset_skills.desc_test=真的希望重置技能? (You do not loose a level, because you are using an alpha version of Vampirism)
