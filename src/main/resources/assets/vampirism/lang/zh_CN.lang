@@ -317,17 +317,17 @@ gui.vampirism.revertback.head=变回人类
 gui.vampirism.revertback.desc=你会失去你的全部等级，就此逝去
 gui.vampirism.reset_skills.title=重置技能
 gui.vampirism.reset_skills.desc=重置技能后你将会降一级. 还要继续吗?
-gui.vampirism.reset_skills.desc_test=真的希望重置技能? (You do not loose a level, because you are using an alpha version of Vampirism)
+gui.vampirism.reset_skills.desc_test=真的希望重置技能? (由于你是底层血族，故不降级)
 gui.vampirism.alchemical_cauldron.level=需求牙狩等级: %s
 gui.vampirism.alchemical_cauldron.skill=需求技能: %s
 
 #COMMANDS
-command.vampirism.base.level.faction_not_found=Did not find faction %s
-commands.vampirism.failed_to_execute=Failed to execute command. Internal error.
-command.vampirism.base.reset_balance.success=Successfully reset %s balance category. Please restart MC.
-command.vampirism.base.reset_balance.not_found=Did not find %s balance category.
-command.vampirism.base.level.cant_leave=Cannot leave faction %s
-command.vampirism.base.eye.types=<id> has to be a valid number between 0 and %s
+command.vampirism.base.level.faction_not_found=没有找到族群%s
+commands.vampirism.failed_to_execute=网络错误，命令执行失败.
+command.vampirism.base.reset_balance.success=成功重置相关类%s. 请重启游戏.
+command.vampirism.base.reset_balance.not_found=没有找到相关类%s.
+command.vampirism.base.level.cant_leave=不能退出族群%s
+command.vampirism.base.eye.types=<id> 已在0到%s间获取正式号码
 command.vampirism.base.eye.success=Successfully changed eye type to %s
 command.vampirism.base.glowing_eyes.enabled=Successfully enabled glowing eyes
 command.vampirism.base.glowing_eyes.disabled=Successfully disabled glowing eyes
@@ -345,8 +345,8 @@ command.vampirism.test.gen_debug.true=Enabled Worldgen Debug
 command.vampirism.test.gen_debug.false=Disabled Worldgen Debug
 
 #ENCHANMENTS
-enchantment.vampirism.arrow_frugality=Arrow Frugality
-enchantment.vampirism.vampire_slayer=Vampire Slayer
+enchantment.vampirism.arrow_frugality=节约用箭
+enchantment.vampirism.vampire_slayer=血族杀手
 
 #ETC
 text.vampirism.vampire=Vampire
