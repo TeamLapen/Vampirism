@@ -83,10 +83,7 @@ processResources {
 task renameLanguageFiles(type: Copy){
     mustRunAfter 'crowdin'
     from crowdin.output
-    into 'build/translations_lowercase'
-    rename { String fileName ->
-        fileName.toLowerCase()
-    }
+    into 'build/translations'
 }
 
 jar {
@@ -99,8 +96,8 @@ jar {
     dependsOn 'crowdin'
     dependsOn 'renameLanguageFiles'
     from{
-        fileTree('build/translations_lowercase').matching{
-            exclude "**/en_us.lang"
+        fileTree('build/translations').matching{
+            exclude "**/en_US.lang"
         }
     }
 
