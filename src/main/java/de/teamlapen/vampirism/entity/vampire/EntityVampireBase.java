@@ -158,6 +158,14 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
                 DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(), this.ticksExisted);
             }
         }
+        if (!this.world.isRemote) {
+            if (isEntityAlive() && isInWater()) {
+                setAir(300);
+                if (ticksExisted % 16 == 4) {
+                    addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 80, 0));
+                }
+            }
+        }
         super.onLivingUpdate();
     }
 
