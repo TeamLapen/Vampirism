@@ -83,6 +83,8 @@ text.vampirism.command.usage=/%s <subcommand> <params> | Use /%s help to get all
 action.vampirism.cancel=Cancel
 text.vampirism.action.not_unlocked=This action is not unlocked
 text.vampirism.action.deactivated_by_serveradmin=This action is deactivated by your serveradmin
+text.vampirism.action.not_bound=No action is bound to this key. See %s.
+text.vampirism.action.only_faction=This action can only be used by players of %s faction
 
 
 #VAMPIRE ACTIONS
@@ -269,6 +271,8 @@ keys.vampirism.category=Vampirism
 keys.vampirism.suck=Suck blood
 keys.vampirism.auto=Auto Fill Blood Bottle
 keys.vampirism.vision=Switch vision
+keys.vampirism.action1=Toggle action 1
+keys.vampirism.action2=Toggle action 2
 
 
 #ADVANCEMENTS
@@ -343,6 +347,9 @@ command.vampirism.base.debug.true=Enabled Debug Mode
 command.vampirism.base.debug.false=Disabled Debug Mode
 command.vampirism.test.gen_debug.true=Enabled Worldgen Debug
 command.vampirism.test.gen_debug.false=Disabled Worldgen Debug
+command.vampirism.base.bind_action.not_existing=The given action %s does not exist
+command.vampirism.base.bind_action.help=You can bind custom actions (e.g. bat mode) to the two available action keys (see keybindings). Use tab to see available actions.
+command.vampirism.base.bind_action.success=Successfully bound action %s to action key %s
 
 #ENCHANMENTS
 enchantment.vampirism.arrow_frugality=Arrow Frugality

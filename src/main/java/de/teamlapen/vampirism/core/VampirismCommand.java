@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.ITextComponent;
@@ -28,6 +29,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -364,6 +366,55 @@ public class VampirismCommand extends BasicCommand {
             @Override
             public String getUsage(ICommandSender sender) {
                 return getName();
+            }
+        });
+        addSubcommand(new SubCommand(PERMISSION_LEVEL_ALL) {
+            @Override
+            public String getName() {
+                return "bind-action";
+            }
+
+            @Override
+            public String getUsage(ICommandSender sender) {
+                return getName() + " <1/2> " + " <action-id>";
+            }
+
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+
+                EntityPlayer player = getCommandSenderAsPlayer(sender);
+                if (args.length == 2) {
+
+                    @Nullable ResourceLocation id = new ResourceLocation(args[1]);
+                    if ("null".equals(args[1])) {
+                        id = null;
+                    }
+                    if (id == null || VampirismAPI.actionManager().getRegistry().containsKey(id)) {
+                        if ("1".equals(args[0])) {
+                            FactionPlayerHandler.get(player).setBoundAction1(id, true);
+                        } else if ("2".equals(args[0])) {
+                            FactionPlayerHandler.get(player).setBoundAction2(id, true);
+                        } else {
+                            throw new WrongUsageException("Valid keys: 1 or 2");
+                        }
+                        sender.sendMessage(new TextComponentTranslation("command.vampirism.base.bind_action.success", args[1], args[0]));
+                    } else {
+                        sender.sendMessage(new TextComponentTranslation("command.vampirism.base.bind_action.not_existing", args[1]));
+                    }
+                } else {
+                    sender.sendMessage(new TextComponentTranslation("command.vampirism.base.bind_action.help"));
+                    sender.sendMessage(new TextComponentString("/vampirism " + getUsage(sender)));
+                }
+            }
+
+            @Override
+            public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+                if (args.length == 1) {
+                    return getListOfStringsMatchingLastWord(args, "1", "2");
+                } else if (args.length == 2) {
+                    return getListOfStringsMatchingLastWord(args, VampirismAPI.actionManager().getRegistry().getKeys());
+                }
+                return Collections.emptyList();
             }
         });
 
