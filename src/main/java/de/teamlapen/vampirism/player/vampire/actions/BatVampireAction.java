@@ -134,7 +134,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         if (!player.onGround) {
             player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 20, 100, false, false));
         }
-        player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 2, false, false));
+        //player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 0, false, false));
         setPlayerBat(player, false);
         ((VampirePlayer) vampire).getSpecialAttributes().bat = false;
     }
