@@ -32,7 +32,7 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
     }
 
     protected AxisAlignedBB getBiteBoundingBox() {
-        return vampireEntity.getEntityBoundingBox().grow(1.0, 1.3, 1.0);
+        return vampireEntity.getEntityBoundingBox().grow(0.5, 0.7, 0.5);
     }
 
     @Override
