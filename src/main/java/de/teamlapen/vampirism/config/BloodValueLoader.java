@@ -56,6 +56,8 @@ public class BloodValueLoader {
 
         loadBloodValuesModCompat("animania");
         loadBloodValuesModCompat("ancientwarfarenpc");
+        loadBloodValuesModCompat("twilightforest");
+        loadBloodValuesModCompat("sophisticatedwolves");
     }
 
 
