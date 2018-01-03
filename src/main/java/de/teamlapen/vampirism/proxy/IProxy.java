@@ -10,7 +10,18 @@ public interface IProxy extends IInitListener {
 
     boolean isClientPlayerNull();
 
+    /**
+     * Probably just check {@link EntityPlayer#isUser()}
+     *
+     * @param player
+     * @return
+     */
+    @Deprecated
     boolean isPlayerThePlayer(EntityPlayer player);
 
     void renderScreenFullColor(int ticksOn, int ticksOff, int color);
+
+    default float getRenderPartialTick() {
+        return 1F;
+    }
 }

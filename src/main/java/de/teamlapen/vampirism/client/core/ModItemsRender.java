@@ -116,6 +116,8 @@ public class ModItemsRender {
         registerArmorItemWithTier(ModItems.obsidian_armor_legs, "obsidian_armor");
         registerArmorItemWithTier(ModItems.obsidian_armor_feet, "obsidian_armor");
 
+        registerSimpleItemWithTier(ModItems.heart_seeker);
+
 
         //----------------------
     }

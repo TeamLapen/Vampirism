@@ -28,7 +28,7 @@ public class ItemHunterAxe extends VampirismHunterWeapon implements IItemWithTie
 
 
     public ItemHunterAxe() {
-        super(regName, ToolMaterial.IRON, -2.5F);
+        super(regName, ToolMaterial.IRON, 0.37F);
     }
 
     @SideOnly(Side.CLIENT)
