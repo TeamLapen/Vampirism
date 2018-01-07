@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
+import de.teamlapen.vampirism.modcompat.IntegrationsNotifier;
 import de.teamlapen.vampirism.network.SyncConfigPacket;
 import de.teamlapen.vampirism.util.DaySleepHelper;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -31,6 +32,8 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 /**
  * Handles all events used in central parts of the mod
@@ -84,8 +87,11 @@ public class ModEventHandler {
     public void onPlayerLoggedIn(PlayerEvent.PlayerLoggedInEvent event) {
         VersionChecker.VersionInfo versionInfo = VampirismMod.instance.getVersionInfo();
         if (!versionInfo.isChecked()) VampirismMod.log.w(TAG, "Version check is not finished yet");
+
+        boolean isAdminLikePlayer = !FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer() || UtilLib.isPlayerOp(event.player);
+
         if (!Configs.disable_versionCheck && versionInfo.isNewVersionAvailable()) {
-            if (!FMLCommonHandler.instance().getMinecraftServerInstance().isDedicatedServer() || UtilLib.isPlayerOp(event.player) || event.player.getRNG().nextInt(5) == 0) {
+            if (isAdminLikePlayer || event.player.getRNG().nextInt(5) == 0) {
                 if (event.player.getRNG().nextInt(4) == 0) {
                     VersionChecker.Version newVersion = versionInfo.getNewVersion();
                     //Inspired by @Vazikii's useful message
@@ -95,6 +101,17 @@ public class ModEventHandler {
                     ITextComponent component = ITextComponent.Serializer.jsonToComponent(template);
                     event.player.sendMessage(component);
                 }
+            }
+
+        }
+        if (isAdminLikePlayer) {
+            List<String> mods = IntegrationsNotifier.shouldNotifyAboutIntegrations();
+            if (!mods.isEmpty()) {
+                event.player.sendMessage(new TextComponentTranslation("text.vampirism.integrations_available.first"));
+                event.player.sendMessage(new TextComponentString(TextFormatting.BLUE + TextFormatting.ITALIC.toString() + org.apache.commons.lang3.StringUtils.join(mods, ", ") + TextFormatting.RESET));
+                String template = UtilLib.translate("text.vampirism.integrations_available.second");
+                template = template.replaceAll("@download@", REFERENCE.INTEGRATIONS_LINK);
+                event.player.sendMessage(ITextComponent.Serializer.jsonToComponent(template));
             }
 
         }

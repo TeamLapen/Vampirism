@@ -446,6 +446,8 @@ text.vampirism.poisonous_to_vampires=Poisonous to vampires
 text.vampirism.deals_more_damage_to=Deals %s percent more damage against
 text.vampirism.liquid_container=Any liquid container
 text.vampirism.translators=None
+text.vampirism.integrations_available.first=There is an integrations mod for Vampirism that adds enhanced compatibility for the following installed mods:
+text.vampirism.integrations_available.second=["Please consider downloading this mod for an improved experience [",{"text":"Download","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the mod page","color":"green"}},"clickEvent":{"action":"open_url","value":"@download@"}},"]"]
 
 #MINION COMMANDS
 minioncommand.vampirism.attackhostilenoplayers=Attack hostile

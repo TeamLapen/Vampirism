@@ -19,6 +19,8 @@ public class REFERENCE {
     public static final String SUPPORTER_FILE = "https://maxanier.de/projects/vampirism/supporters.json";
     public static final String CURSEFORGE_LINK = "https://minecraft.curseforge.com/projects/vampirism-become-a-vampire";
     public static final String PATREON_LINK = "https://www.patreon.com/maxanier";
+    public static final String INTEGRATIONS_MODID = "vampirism_integrations";
+    public static final String INTEGRATIONS_LINK = "https://minecraft.curseforge.com/projects/vampirism-integrations";
 
     public static final int EYE_TYPE_COUNT = 14;
     public static final int FANG_TYPE_COUNT = 6;
