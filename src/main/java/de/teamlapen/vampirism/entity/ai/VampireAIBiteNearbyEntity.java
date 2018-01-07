@@ -4,24 +4,30 @@ import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.core.ModSounds;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.math.AxisAlignedBB;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public class VampireAIBiteNearbyEntity extends EntityAIBase {
     private final IVampireMob vampire;
     private final EntityLivingBase vampireEntity;
+    /**
+     * Shouldn't be null, but it isn't guaranteed as IVampireMob currently does not require an EntityLiving
+     */
+    @Nullable
+    private final EntityLiving vampireEntityLiving;
     private IExtendedCreatureVampirism creature;
     private int timer;
 
     public VampireAIBiteNearbyEntity(IVampireMob vampire) {
         this.vampire = vampire;
         this.vampireEntity = vampire.getRepresentingEntity();
+        this.vampireEntityLiving = vampireEntity instanceof EntityLiving ? (EntityLiving) vampireEntity : null;//TODO add getEntityLiving method to IVampireMob
         this.setMutexBits(3);
     }
 
@@ -43,11 +49,11 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
     @Override
     public boolean shouldExecute() {
         if (vampire.wantsBlood()) {
-            List list = vampireEntity.getEntityWorld().getEntitiesWithinAABB(EntityCreature.class, getBiteBoundingBox());
+            List<EntityCreature> list = vampireEntity.getEntityWorld().getEntitiesWithinAABB(EntityCreature.class, getBiteBoundingBox());
             if (list.size() > 1) {
 
                 try {
-                    list.sort((o1, o2) -> vampireEntity.getDistanceSq((Entity) o1) > vampireEntity.getDistanceSq((Entity) o2) ? 1 : -1);
+                    list.sort((o1, o2) -> vampireEntity.getDistanceSq(o1) > vampireEntity.getDistanceSq(o2) ? 1 : -1);
                 } catch (Exception e) {
                     //TODO investigate issue
                     //java.lang.IllegalArgumentException: Comparison method violates its general contract!
@@ -57,8 +63,13 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
 
             }
 
-            for (Object o : list) {
-                creature = ExtendedCreature.get((EntityCreature) o);
+            for (EntityCreature o : list) {
+                if (vampireEntityLiving != null) {
+                    if (!vampireEntityLiving.getEntitySenses().canSee(o)) {
+                        continue;
+                    }
+                }
+                creature = ExtendedCreature.get(o);
                 if (creature.canBeBitten(vampire)) {
                     return true;
                 }
