@@ -22,10 +22,12 @@ curseforge {
 
         mainArtifact(jar) {
             displayName = "Vampirism-${config.minecraft_version}-${project.mod_version}"
-
-
         }
 
+        relations {
+            optionalLibrary 'jei'
+            optionalLibrary 'guide-api'
+        }
 
     }
 
