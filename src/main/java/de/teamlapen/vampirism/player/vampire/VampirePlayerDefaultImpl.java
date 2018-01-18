@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
@@ -85,6 +86,11 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     @Override
     public int getBloodLevel() {
         return 0;
+    }
+
+    @Override
+    public IBloodStats getBloodStats() {
+        return null;
     }
 
     @Override

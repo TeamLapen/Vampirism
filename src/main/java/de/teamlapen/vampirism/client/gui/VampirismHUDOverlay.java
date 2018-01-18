@@ -5,6 +5,7 @@ import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -13,7 +14,6 @@ import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.player.vampire.BloodStats;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.HalloweenSpecial;
@@ -209,7 +209,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             event.setCanceled(true);
 
             if (mc.playerController.gameIsSurvivalOrAdventure()) {
-                BloodStats stats = VampirePlayer.get(mc.player).getBloodStats();
+                IBloodStats stats = VampirePlayer.get(mc.player).getBloodStats();
 
                 GlStateManager.enableBlend();
 
@@ -217,17 +217,23 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 int left = event.getResolution().getScaledWidth() / 2 + 91;
                 int top = event.getResolution().getScaledHeight() - GuiIngameForge.right_height;
                 GuiIngameForge.right_height += 10;
-
+                int blood = stats.getBloodLevel();
+                int maxBlood = stats.getMaxBlood();
+                int blood2 = blood - 20;
+                int maxBlood2 = maxBlood - 20;
                 for (int i = 0; i < 10; ++i) {
                     int idx = i * 2 + 1;
                     int x = left - i * 8 - 9;
 
                     // Draw Background
-                    drawTexturedModalRect(x, top, 0, 0, 9, 9);
+                    drawTexturedModalRect(x, top, 0, idx <= maxBlood2 ? 9 : 0, 9, 9);
 
-                    if (idx < stats.getBloodLevel()) {
-                        drawTexturedModalRect(x, top, 9, 0, 9, 9);
-                    } else if (idx == stats.getBloodLevel()) {
+                    if (idx < blood) {
+                        drawTexturedModalRect(x, top, 9, idx < blood2 ? 9 : 0, 9, 9);
+                        if (idx == blood2) {
+                            drawTexturedModalRect(x, top, 18, 9, 9, 9);
+                        }
+                    } else if (idx == blood) {
                         drawTexturedModalRect(x, top, 18, 0, 9, 9);
                     }
                 }
