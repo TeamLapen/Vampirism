@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.api.entity.player.vampire;
 
-import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -29,7 +28,7 @@ public interface IBloodStats {
 
     /**
      * Adds blood to the stats
-     * Consider using {@link VampirePlayer#drinkBlood(int, float)} instead
+     * Consider using {@link IVampirePlayer#drinkBlood(int, float)} instead
      *
      * @param amount
      * @param saturationModifier
