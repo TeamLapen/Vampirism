@@ -22,6 +22,7 @@ import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
@@ -49,6 +50,7 @@ public class InputEventPacket implements IMessage {
     public static final String OPEN_BLOOD_POTION = "ob";
     public static final String BASICHUNTERLEVELUP = "bl";
     public static final String DRINK_BLOOD_BLOCK = "db";
+    public static final String NAME_ITEM = "ni";
     private final static String TAG = "InputEventPacket";
     private final String SPLIT = "&";
     private String param;
@@ -224,6 +226,12 @@ public class InputEventPacket implements IMessage {
             } else if (message.action.equals(BASICHUNTERLEVELUP)) {
                 if (player.openContainer instanceof HunterBasicContainer) {
                     ((HunterBasicContainer) player.openContainer).onLevelUpClicked();
+                }
+            } else if (message.action.equals(NAME_ITEM)) {
+                String name = message.param;
+                if (!org.apache.commons.lang3.StringUtils.isBlank(name)) {
+                    ItemStack stack = player.getHeldItemMainhand();
+                    stack.setStackDisplayName(name);
                 }
             }
             return null;

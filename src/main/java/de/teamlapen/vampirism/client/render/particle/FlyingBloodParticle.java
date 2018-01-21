@@ -22,9 +22,9 @@ public class FlyingBloodParticle extends Particle {
         this.destX = destX;
         this.destY = destY;
         this.destZ = destZ;
-        this.particleRed = 1.0F;
-        this.particleBlue = this.particleGreen = 0.0F;
-        this.setParticleTextureIndex(65);
+        this.particleRed = 0.95F;
+        this.particleBlue = this.particleGreen = 0.05F;
+        this.setParticleTextureIndex(129);//65
         double wayX = destX - this.posX;
         double wayZ = destZ - this.posZ;
         double wayY = destY - this.posY;

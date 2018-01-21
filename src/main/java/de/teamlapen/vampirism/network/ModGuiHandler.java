@@ -30,6 +30,7 @@ public class ModGuiHandler implements IGuiHandler {
     public final static int ID_HUNTER_BASIC = 8;
     public final static int ID_VAMPIRE_BOOK = 9;
     public final static int ID_ALCHEMICAL_CAULDRON = 10;
+    public final static int ID_NAME_SWORD = 11;
 
     @Override
     public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
@@ -64,6 +65,8 @@ public class ModGuiHandler implements IGuiHandler {
             case ID_ALCHEMICAL_CAULDRON:
                 TileAlchemicalCauldron alchemicalCauldron = (TileAlchemicalCauldron) world.getTileEntity(new BlockPos(x, y, z));
                 return new GuiAlchemicalCauldron(player.inventory, alchemicalCauldron);
+            case ID_NAME_SWORD:
+                return new GuiNameSword(player.getHeldItemMainhand());
             default:
                 return null;
         }

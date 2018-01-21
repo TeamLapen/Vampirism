@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
+import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.player.skills.SkillManager;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.tests.Tests;
@@ -43,6 +44,7 @@ import net.minecraft.profiler.Profiler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
@@ -547,7 +549,62 @@ public class TestCommand extends BasicCommand {
                 }
             }
         });
+        addSubcommand(new SubCommand() {
+            @Override
+            public String getName() {
+                return "setSwordCharged";
+            }
 
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                EntityPlayer player = getCommandSenderAsPlayer(sender);
+                ItemStack held = player.getHeldItemMainhand();
+                if (args.length != 1) {
+                    throw new WrongUsageException("Only one argument (charge) accepted");
+                }
+                float charge;
+                try {
+                    charge = Float.parseFloat(args[0]);
+                } catch (NumberFormatException e) {
+                    throw new WrongUsageException("Argument has to be a float");
+                }
+
+                if (held.getItem() instanceof VampirismVampireSword) {
+                    ((VampirismVampireSword) held.getItem()).setCharged(held, charge);
+                    player.setHeldItem(EnumHand.MAIN_HAND, held);
+                } else {
+                    sender.sendMessage(new TextComponentString("You have to hold a vampire sword in your main hand"));
+                }
+            }
+        });
+        addSubcommand(new SubCommand() {
+            @Override
+            public String getName() {
+                return "setSwordTrained";
+            }
+
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                EntityPlayer player = getCommandSenderAsPlayer(sender);
+                ItemStack held = player.getHeldItemMainhand();
+                if (args.length != 1) {
+                    throw new WrongUsageException("Only one argument (trained) accepted");
+                }
+                float charge;
+                try {
+                    charge = Float.parseFloat(args[0]);
+                } catch (NumberFormatException e) {
+                    throw new WrongUsageException("Argument has to be a float");
+                }
+
+                if (held.getItem() instanceof VampirismVampireSword) {
+                    ((VampirismVampireSword) held.getItem()).setTrained(held, player, charge);
+                    player.setHeldItem(EnumHand.MAIN_HAND, held);
+                } else {
+                    sender.sendMessage(new TextComponentString("You have to hold a vampire sword in your main hand"));
+                }
+            }
+        });
 
         //Add last
         addSubcommand(new CommandTreeHelp(this));

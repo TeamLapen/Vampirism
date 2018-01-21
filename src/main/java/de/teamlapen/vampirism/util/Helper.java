@@ -23,8 +23,10 @@ import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.Biome;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.Method;
 
 
 public class Helper {
@@ -161,4 +163,19 @@ public class Helper {
         if (playerHandler.getCurrentLevel() < reqLevel) return false;
         return !(requiredSkill != null && (playerHandler.getCurrentFactionPlayer() == null || !playerHandler.getCurrentFactionPlayer().getSkillHandler().isSkillEnabled(requiredSkill)));
     }
+
+    private static Method reflectionMethodExperiencePoints;
+
+    public static int getExperiencePoints(EntityLivingBase entity, EntityPlayer player) {
+        try {
+            if (reflectionMethodExperiencePoints == null) {
+                reflectionMethodExperiencePoints = ReflectionHelper.findMethod(EntityLivingBase.class, "getExperiencePoints", SRGNAMES.EntityLivingBase_getExperiencePoints, EntityPlayer.class);
+            }
+            return (int) reflectionMethodExperiencePoints.invoke(entity, player);
+        } catch (Exception e) {
+            VampirismMod.log.e("Helper", e, "Failed to get experience points");
+        }
+        return 0;
+    }
+
 }
