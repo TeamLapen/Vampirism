@@ -33,3 +33,5 @@ notifications:
     on_success: always
     on_failure: always
     skip_join: true
+    template:
+      - "%{repository_slug}#%{build_number} (%{branch} - %{commit}): %{message}"
