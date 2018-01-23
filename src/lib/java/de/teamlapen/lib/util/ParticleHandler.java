@@ -10,7 +10,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.apache.commons.lang3.Validate;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -80,7 +79,7 @@ public abstract class ParticleHandler {
          * @return
          */
         @SideOnly(Side.CLIENT)
-        @Nullable
+        @Nonnull
         Object[] readParticleInfo(NBTTagCompound nbt);
     }
 

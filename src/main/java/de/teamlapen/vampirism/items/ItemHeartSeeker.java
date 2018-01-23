@@ -92,7 +92,7 @@ public class ItemHeartSeeker extends VampirismVampireSword implements IItemWithT
             Vec3d dir = firstPerson ? player.getForward() : Vec3d.fromPitchYawVector(new Vec2f(player.rotationPitch, player.renderYawOffset));
             dir = dir.rotateYaw((float) (-Math.PI / 5f)).scale(0.75f).addVector((player.getRNG().nextFloat() - 0.5f) * 0.1f, (player.getRNG().nextFloat() - 0.3f) * 0.9f, (player.getRNG().nextFloat() - 0.5f) * 0.1f);
             Vec3d pos = dir.addVector(player.posX, player.posY + player.getEyeHeight(), player.posZ);
-            VampLib.proxy.getParticleHandler().spawnParticle(player.getEntityWorld(), ModParticles.FLYING_BLOOD, pos.x, pos.y, pos.z, pos.x + (player.getRNG().nextFloat() - 0.5D) * 0.2D, pos.y + (player.getRNG().nextFloat() - 0.5D) * 0.2D, pos.z + (player.getRNG().nextFloat() - 0.5D) * 0.2D, (int) (4.0F / (player.getRNG().nextFloat() * 0.9F + 0.1F)));
+            VampLib.proxy.getParticleHandler().spawnParticle(player.getEntityWorld(), ModParticles.FLYING_BLOOD, pos.x, pos.y, pos.z, pos.x + (player.getRNG().nextFloat() - 0.5D) * 0.2D, pos.y + (player.getRNG().nextFloat() - 0.5D) * 0.2D, pos.z + (player.getRNG().nextFloat() - 0.5D) * 0.2D, (int) (4.0F / (player.getRNG().nextFloat() * 0.9F + 0.1F)), 177);
         }
     }
 

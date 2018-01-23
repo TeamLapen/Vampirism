@@ -44,8 +44,6 @@ public class TileAltarInspiration extends net.minecraftforge.fluids.capability.T
 
     @Override
     public SPacketUpdateTileEntity getUpdatePacket() {
-        NBTTagCompound nbtTag = new NBTTagCompound();
-        this.writeToNBT(nbtTag);
         return new SPacketUpdateTileEntity(getPos(), 1, getUpdateTag());
     }
 

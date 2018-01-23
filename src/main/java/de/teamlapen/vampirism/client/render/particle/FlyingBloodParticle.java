@@ -15,8 +15,16 @@ public class FlyingBloodParticle extends Particle {
     private final String TAG = "FlyingBloodParticle";
     private final double destX, destY, destZ;
 
+
+    /**
+     * Interesting id ranges:
+     * 65 default
+     * 144-152
+     * 160-168
+     * 176-182
+     */
     public FlyingBloodParticle(World world, double posX, double posY, double posZ, double destX, double destY, double
-            destZ, int maxage) {
+            destZ, int maxage, int particleId) {
         super(world, posX, posY, posZ, 0D, 0D, 0D);
         this.particleMaxAge = maxage;
         this.destX = destX;
@@ -24,7 +32,7 @@ public class FlyingBloodParticle extends Particle {
         this.destZ = destZ;
         this.particleRed = 0.95F;
         this.particleBlue = this.particleGreen = 0.05F;
-        this.setParticleTextureIndex(129);//65
+        this.setParticleTextureIndex(particleId);
         double wayX = destX - this.posX;
         double wayZ = destZ - this.posZ;
         double wayY = destY - this.posY;
@@ -32,6 +40,11 @@ public class FlyingBloodParticle extends Particle {
         this.motionY = (this.world.rand.nextDouble() / 10 - 0.01) + wayY / particleMaxAge;
         this.motionZ = (this.world.rand.nextDouble() / 10 - 0.05) + wayZ / particleMaxAge;
         this.onUpdate();
+    }
+
+    public FlyingBloodParticle(World world, double posX, double posY, double posZ, double destX, double destY, double
+            destZ, int maxage) {
+        this(world, posX, posY, posZ, destX, destY, destZ, maxage, 65);
     }
 
 
