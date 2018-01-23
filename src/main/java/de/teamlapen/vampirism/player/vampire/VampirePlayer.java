@@ -672,7 +672,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
                 if (biteCooldown > 0) biteCooldown--;
                 if (isGettingSundamage()) {
-                    handleSunDamage();
+                    handleSunDamage(false);
                 } else if (ticksInSun > 0) {
                     ticksInSun--;
                 }
@@ -719,7 +719,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             if (level > 0) {
                 actionHandler.updateActions();
                 if (isGettingSundamage()) {
-                    handleSunDamage();
+                    handleSunDamage(true);
                 } else if (ticksInSun > 0) {
                     ticksInSun--;
                 }
@@ -1126,7 +1126,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     /**
      * Handle sun damage
      */
-    private void handleSunDamage() {
+    private void handleSunDamage(boolean isRemote) {
         PotionEffect potionEffect = player.getActivePotionEffect(ModPotions.sunscreen);
         int sunscreen = potionEffect == null ? -1 : potionEffect.getAmplifier();
         if (ticksInSun < 100) {
@@ -1135,7 +1135,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (sunscreen >= 5 && ticksInSun > 50) {
             ticksInSun = 50;
         }
-        if (player.capabilities.isCreativeMode || player.capabilities.disableDamage) return;
+        if (isRemote || player.capabilities.isCreativeMode || player.capabilities.disableDamage) return;
         if (Balance.vp.SUNDAMAGE_NAUSEA && getLevel() >= Balance.vp.SUNDAMAGE_NAUSEA_MINLEVEL && player.ticksExisted % 300 == 1 && ticksInSun > 50 && sunscreen == -1) {
             player.addPotionEffect(new PotionEffect(MobEffects.NAUSEA, 180));
         }

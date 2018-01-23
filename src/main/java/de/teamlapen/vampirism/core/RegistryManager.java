@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.IInitListener;
-import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
@@ -108,7 +107,6 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onRegisterActions(RegistryEvent.Register<IAction> event) {
-        VampirismMod.log.t("Registering Actions");
         VampireActions.registerDefaultActions(event.getRegistry());
         HunterActions.registerDefaultActions(event.getRegistry());
         ObjectHolderRegistry.INSTANCE.applyObjectHolders();
@@ -147,7 +145,6 @@ public class RegistryManager implements IInitListener {
 
     @SubscribeEvent
     public void onRegisterSkills(RegistryEvent.Register<ISkill> event) {
-        VampirismMod.log.t("Registering Skills");
         HunterSkills.registerHunterSkills(event.getRegistry());
         VampireSkills.registerVampireSkills(event.getRegistry());
     }

@@ -24,8 +24,8 @@ text.vampirism.skill.less_garlicdamage=Reduce garlic damage
 text.vampirism.skill.less_sundamage=Reduce sun damage
 text.vampirism.skill.night_vision=Night Vision
 text.vampirism.skill.disguise=Disguise
-text.vampirism.skill.1forestfog=Vista
-text.vampirism.skill.1forestfog.desc=Increase the fog distance in the Vampire Forest
+text.vampirism.skill.vampire_forest_fog=Vista
+text.vampirism.skill.vampire_forest_fog.desc=Increase the fog distance in the Vampire Forest
 text.vampirism.skill.water_resistance=Water Resistance
 text.vampirism.skill.water_resistance.desc=Your body will not be weakened by water anymore
 

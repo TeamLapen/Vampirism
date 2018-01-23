@@ -38,7 +38,7 @@ public class BalanceVampireActions extends BalanceValues {
     @DefaultInt(value = 50, minValue = 1)
     public int TELEPORT_MAX_DISTANCE;
 
-    @DefaultInt(value = 8, minValue = 1)
+    @DefaultInt(value = 10, minValue = 1)
     public int TELEPORT_COOLDOWN;
 
     @DefaultBoolean(value = true, name = "teleport_enabled")
