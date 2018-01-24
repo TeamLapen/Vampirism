@@ -143,12 +143,15 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
 
     @Override
     public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-        if (isSelected && worldIn.isRemote) {
+        //Try to minimize execution time, but tricky since off hand selection is not directly available, but it can only be off hand if itemSlot 0
+        if (worldIn.isRemote && (isSelected || itemSlot == 0)) {
             float charged = getCharged(stack);
             if (charged > 0 && entityIn.ticksExisted % ((int) (8 + 80 * (1f - charged))) == 0 && entityIn instanceof EntityLivingBase) {
-                spawnChargedParticle((EntityLivingBase) entityIn, true);
+                boolean secondHand = !isSelected && ((EntityLivingBase) entityIn).getHeldItem(EnumHand.OFF_HAND).equals(stack);
+                if (isSelected || secondHand) {
+                    spawnChargedParticle((EntityLivingBase) entityIn, isSelected);
+                }
             }
-
         }
     }
 
@@ -180,7 +183,6 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     public void onUsingTick(ItemStack stack, EntityLivingBase player, int count) {
         super.onUsingTick(stack, player, count);
         if (player.getEntityWorld().isRemote) {
-
             if (count % 3 == 0) {
                 spawnChargingParticle(player);
             }

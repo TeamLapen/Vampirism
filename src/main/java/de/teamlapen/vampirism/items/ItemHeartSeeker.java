@@ -56,11 +56,9 @@ public class ItemHeartSeeker extends VampirismVampireSword implements IItemWithT
             int exp = target instanceof EntityPlayer ? 10 : (attacker instanceof EntityPlayer ? (Helper.getExperiencePoints(target, (EntityPlayer) attacker)) : 5);
             trained += exp / 5f * (1.0f - trained) / 15f;
             setTrained(stack, attacker, trained);
-
-
         }
         float charged = getCharged(stack);
-        charged -= Balance.general.HEART_SEEKER_USAGE_FACTOR;
+        charged -= Balance.general.HEART_SEEKER_USAGE_FACTOR * (getTier(stack).ordinal() + 2) / 2f;
         setCharged(stack, charged);
         attacker.setHeldItem(EnumHand.MAIN_HAND, stack);
         return super.hitEntity(stack, target, attacker);
@@ -69,6 +67,6 @@ public class ItemHeartSeeker extends VampirismVampireSword implements IItemWithT
 
     @Override
     protected float getChargingFactor(ItemStack stack) {
-        return (float) Balance.general.HEART_SEEKER_CHARGING_FACTOR;
+        return (float) Balance.general.HEART_SEEKER_CHARGING_FACTOR * (getTier(stack).ordinal() + 2) / 2f;
     }
 }
