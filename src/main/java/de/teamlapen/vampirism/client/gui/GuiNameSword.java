@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiOptionButton;
@@ -70,6 +71,8 @@ public class GuiNameSword extends GuiScreen {
                 sword.setStackDisplayName(name);
                 VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, name));
             }
+        } else if (button.id == 1) {
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.NAME_ITEM, VampirismVampireSword.DO_NOT_NAME_STRING));
         }
         this.mc.displayGuiScreen(null);
     }

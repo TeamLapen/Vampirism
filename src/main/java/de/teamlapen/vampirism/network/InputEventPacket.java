@@ -15,6 +15,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.inventory.BloodPotionTableContainer;
 import de.teamlapen.vampirism.inventory.HunterBasicContainer;
 import de.teamlapen.vampirism.inventory.HunterTrainerContainer;
+import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
@@ -229,7 +230,12 @@ public class InputEventPacket implements IMessage {
                 }
             } else if (message.action.equals(NAME_ITEM)) {
                 String name = message.param;
-                if (!org.apache.commons.lang3.StringUtils.isBlank(name)) {
+                if (VampirismVampireSword.DO_NOT_NAME_STRING.equals(name)) {
+                    ItemStack stack = player.getHeldItemMainhand();
+                    if (stack.getItem() instanceof VampirismVampireSword) {
+                        ((VampirismVampireSword) stack.getItem()).doNotName(stack);
+                    }
+                } else if (!org.apache.commons.lang3.StringUtils.isBlank(name)) {
                     ItemStack stack = player.getHeldItemMainhand();
                     stack.setStackDisplayName(name);
                 }

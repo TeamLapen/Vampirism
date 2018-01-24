@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.tileentity.TilePedestal;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.BlockFaceShape;
@@ -68,15 +69,23 @@ public class BlockPedestal extends VampirismBlockContainer {
         return null;
     }
 
+    private static void takeItemPlayer(EntityPlayer player, EnumHand hand, ItemStack stack) {
+        player.setHeldItem(hand, stack);
+        if (stack.getItem() instanceof VampirismVampireSword) {
+            if (((VampirismVampireSword) stack.getItem()).isFullyCharged(stack)) {
+                ((VampirismVampireSword) stack.getItem()).tryName(stack, player);
+            }
+        }
+    }
+
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
-        if (worldIn.isRemote) return true;
         TilePedestal tile = getTileEntity(worldIn, pos);
         if (tile == null) return false;
         ItemStack stack = playerIn.getHeldItem(hand);
         if (stack.isEmpty() && tile.hasStack()) {
             ItemStack stack2 = tile.removeStack();
-            playerIn.setHeldItem(hand, stack2);
+            takeItemPlayer(playerIn, hand, stack2);
             tile.markDirty();
         } else if (!stack.isEmpty()) {
             ItemStack stack2 = ItemStack.EMPTY;
@@ -85,7 +94,7 @@ public class BlockPedestal extends VampirismBlockContainer {
                 tile.markDirty();
             }
             if (tile.setStack(stack)) {
-                playerIn.setHeldItem(hand, stack2);
+                takeItemPlayer(playerIn, hand, stack2);
                 tile.markDirty();
             } else {
                 tile.setStack(stack2);
