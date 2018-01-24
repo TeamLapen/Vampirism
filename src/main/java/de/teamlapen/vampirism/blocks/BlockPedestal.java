@@ -22,7 +22,9 @@ public class BlockPedestal extends VampirismBlockContainer {
     public final static String regName = "blood_pedestal";
 
     public BlockPedestal() {
-        super(regName, Material.IRON);
+        super(regName, Material.ROCK);
+        this.setHardness(5.0F);
+        this.setHarvestLevel("pickaxe", 2);
     }
 
     @Nullable

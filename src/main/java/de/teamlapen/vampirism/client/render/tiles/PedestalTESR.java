@@ -15,7 +15,7 @@ public class PedestalTESR extends VampirismTESR<TilePedestal> {
         if (!stack.isEmpty()) {
             GlStateManager.pushMatrix();
             GlStateManager.translate(x + 0.5, y + 0.7, z + 0.5);
-            float rotation = (te.getTickForRender() % 256 + partialTicks) / 256f;
+            float rotation = (te.getTickForRender() % 512 + partialTicks) / 512f;
             GlStateManager.rotate(rotation * 360f, 0, 1, 0);
             GlStateManager.pushAttrib();
             RenderHelper.enableStandardItemLighting();

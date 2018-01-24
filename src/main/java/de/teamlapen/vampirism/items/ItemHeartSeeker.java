@@ -67,6 +67,6 @@ public class ItemHeartSeeker extends VampirismVampireSword implements IItemWithT
 
     @Override
     protected float getChargingFactor(ItemStack stack) {
-        return (float) Balance.general.HEART_SEEKER_CHARGING_FACTOR * (getTier(stack).ordinal() + 2) / 2f;
+        return (float) Balance.general.HEART_SEEKER_CHARGING_FACTOR * 2f / (getTier(stack).ordinal() + 2);
     }
 }
