@@ -241,9 +241,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     FluidStack drained = handler.drain((drainable.amount / VReference.FOOD_TO_FLUID_BLOOD) * VReference.FOOD_TO_FLUID_BLOOD, true);
                     if (drained != null) {
                         blood = drained.amount / VReference.FOOD_TO_FLUID_BLOOD;
-
-                        player.world.notifyBlockUpdate(pos, blockState, blockState, 3);
-                        tileEntity.markDirty();
                     }
                 }
             }

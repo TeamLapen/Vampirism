@@ -123,8 +123,6 @@ public class BlockBloodContainer extends VampirismBlockContainer {
                         playerIn.setHeldItem(hand, result.getResult());
                     }
                 }
-                worldIn.notifyBlockUpdate(pos, state, state, 3);
-                bloodContainer.markDirty();
                 return true;
             }
         }

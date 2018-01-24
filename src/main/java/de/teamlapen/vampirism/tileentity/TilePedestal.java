@@ -34,7 +34,7 @@ public class TilePedestal extends TileEntity implements ITickable {
      * If below zero: Check cooldown
      */
     private int chargingTicks;
-    private int bloodStored;
+    private int bloodStored = 0;
     private int chargeRate = 30;
 
     @Nonnull
