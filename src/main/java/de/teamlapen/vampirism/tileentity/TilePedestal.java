@@ -40,9 +40,6 @@ public class TilePedestal extends TileEntity implements ITickable {
     @Nonnull
     private ItemStack stack = ItemStack.EMPTY;
 
-    public TilePedestal() {
-    }
-
     @Override
     public void update() {
         if (!this.world.isRemote) {

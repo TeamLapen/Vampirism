@@ -245,7 +245,7 @@ public class BloodStats implements IBloodStats {
     }
 
     NBTTagCompound writeFullUpdate(NBTTagCompound nbt) {
-        nbt = writeUpdate(nbt);
+        writeUpdate(nbt);
         nbt.setInteger("maxBlood", maxBlood);
         return nbt;
     }
