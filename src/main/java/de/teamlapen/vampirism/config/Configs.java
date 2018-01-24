@@ -71,7 +71,7 @@ public class Configs {
         VampirismMod.log.i(TAG, "Loaded configuration");
     }
 
-    private static void loadConfiguration(boolean saveIfChanged) {
+    private static void loadConfiguration(boolean dontSave) {
         // Categories
         ConfigCategory cat_village = main_config.getCategory(CATEGORY_VILLAGE);
         cat_village.setComment("Here you can configure the village generation");
@@ -157,7 +157,7 @@ public class Configs {
         disable_collectVersionStat = main_config.getBoolean("disable_collect_basic_version_stat", CATEGORY_DISABLE, false, "Disable sending Mod version, MC version and mod count on version check");
         updated_vampirism = !main_config.getDefinedConfigVersion().equals(main_config.getLoadedConfigVersion());
 
-        if (!saveIfChanged && (main_config.hasChanged() || updated_vampirism)) {
+        if (!dontSave && (main_config.hasChanged() || updated_vampirism)) {
             main_config.save();
         }
     }

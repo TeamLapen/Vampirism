@@ -16,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.WorldProviderEnd;
 
@@ -82,17 +83,17 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
     @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.isGettingSundamage() && !vampire.getActionHandler().isActionActive(VampireActions.vampire_rage) && (Configs.bat_mode_in_end || !(vampire.getRepresentingPlayer().getEntityWorld().provider instanceof WorldProviderEnd));
+        return !vampire.isGettingSundamage() && !vampire.getActionHandler().isActionActive(VampireActions.vampire_rage) && !vampire.getRepresentingPlayer().isInWater() && (Configs.bat_mode_in_end || !(vampire.getRepresentingPlayer().getEntityWorld().provider instanceof WorldProviderEnd));
     }
 
     @Override
     public int getCooldown() {
-        return 1;
+        return Balance.vpa.BAT_COOLDOWN * 20 + 1;
     }
 
     @Override
     public int getDuration(int level) {
-        return Integer.MAX_VALUE - 1;
+        return MathHelper.clamp(Balance.vpa.BAT_DURATION, 10, Integer.MAX_VALUE / 20 - 1) * 20;
     }
 
     @Override
@@ -153,6 +154,8 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             return true;
         } else if (!Configs.bat_mode_in_end && vampire.getRepresentingPlayer().getEntityWorld().provider instanceof WorldProviderEnd) {
             vampire.getRepresentingPlayer().sendMessage(new TextComponentTranslation("text.vampirism.cant_fly_end"));
+            return true;
+        } else if (vampire.getRepresentingPlayer().isInWater()) {
             return true;
         }
         return false;

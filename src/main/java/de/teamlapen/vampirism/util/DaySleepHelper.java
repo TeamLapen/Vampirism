@@ -23,7 +23,7 @@ import java.util.Map;
  * {@link DaySleepHelper#updateAllPlayersSleeping(World)} has to be called every time a player leaves/enters a coffin or leaves/enters the world.
  */
 public class DaySleepHelper {
-    private static final Map<Integer, Boolean> allPlayersAsleep = new HashMap<>();
+    private static final Map<Integer, Boolean> enoughPlayersAsleep = new HashMap<>();
 
     /**
      * Updates the all players sleeping flag
@@ -42,19 +42,19 @@ public class DaySleepHelper {
      */
     public static void updateAllPlayersSleeping(World world, int ignorePlayers) {
         if (!world.playerEntities.isEmpty()) {
-            int i = 0;
-            int j = 0;
-
+            int spectators = 0;
+            int sleeping = 0;
+            int all = 0;
             for (EntityPlayer entityplayer : world.playerEntities) {
+                all++;
                 if (entityplayer.isSpectator()) {
-                    ++i;
+                    ++spectators;
                 } else if (VampirePlayer.get(entityplayer).isPlayerSleeping()) {
-                    ++j;
+                    ++sleeping;
                 }
             }
-
-            boolean all = j > 0 && j >= world.playerEntities.size() - i - ignorePlayers;
-            allPlayersAsleep.put(world.provider.getDimension(), all);
+            boolean enough = sleeping > 0 && sleeping / ((float) all - spectators - ignorePlayers) * 100 >= Configs.coffin_sleep_percentage;
+            enoughPlayersAsleep.put(world.provider.getDimension(), enough);
         }
     }
 
@@ -64,7 +64,7 @@ public class DaySleepHelper {
      * @param world
      */
     public static void checkSleepWorld(World world) {
-        if (allPlayersAsleep.get(world.provider.getDimension()) == Boolean.TRUE) {
+        if (enoughPlayersAsleep.get(world.provider.getDimension()) == Boolean.TRUE) {
             int sleeping = 0;
             int total = 0;
             for (EntityPlayer entityplayer : world.playerEntities) {
@@ -91,7 +91,7 @@ public class DaySleepHelper {
      * @param world
      */
     public static void wakeAllPlayers(World world) {
-        allPlayersAsleep.put(world.provider.getDimension(), Boolean.FALSE);
+        enoughPlayersAsleep.put(world.provider.getDimension(), Boolean.FALSE);
 
         for (EntityPlayer entityplayer : world.playerEntities) {
             VampirePlayer vampirePlayer = VampirePlayer.get(entityplayer);

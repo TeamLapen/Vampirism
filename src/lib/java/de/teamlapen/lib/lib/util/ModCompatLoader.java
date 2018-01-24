@@ -26,6 +26,19 @@ public class ModCompatLoader implements IInitListener {
     List<IModCompat> availableModCompats = new LinkedList<>();
     private List<IModCompat> loadedModCompats;
 
+    @Nullable
+    private Configuration config;
+
+    /**
+     * May be null before INIT
+     *
+     * @return The mod compat config file
+     */
+    @Nullable
+    public Configuration getConfig() {
+        return config;
+    }
+
     /**
      * @param configName Name for the config file. Can be a file in a folder
      */
@@ -77,7 +90,7 @@ public class ModCompatLoader implements IInitListener {
             VampLib.log.w(TAG, "Trying to load mod compat twice");
             return;
         }
-        Configuration config = new Configuration(new File(configDir, configName));
+        config = new Configuration(new File(configDir, configName));
 
         List<IModCompat> loaded = new LinkedList<>();
         for (IModCompat modCompat : availableModCompats) {

@@ -38,7 +38,7 @@ public class BalanceVampireActions extends BalanceValues {
     @DefaultInt(value = 50, minValue = 1)
     public int TELEPORT_MAX_DISTANCE;
 
-    @DefaultInt(value = 8, minValue = 1)
+    @DefaultInt(value = 10, minValue = 1)
     public int TELEPORT_COOLDOWN;
 
     @DefaultBoolean(value = true, name = "teleport_enabled")
@@ -62,6 +62,12 @@ public class BalanceVampireActions extends BalanceValues {
 
     @DefaultBoolean(value = true, name = "bat_enabled")
     public boolean BAT_ENABLED;
+
+    @DefaultInt(value = 0, minValue = 0, name = "bat_cooldown")
+    public int BAT_COOLDOWN;
+
+    @DefaultInt(value = Integer.MAX_VALUE, minValue = 10, name = "bat_duration")
+    public int BAT_DURATION;
 
     @DefaultBoolean(value = true, name = "summon_bats_enabled")
     public boolean SUMMON_BAT_ENABLED;
