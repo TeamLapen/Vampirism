@@ -88,6 +88,7 @@ public class ModItems {
     public static final ItemHunterAxe hunter_axe = getNull();
 
     public static final ItemHeartSeeker heart_seeker = getNull();
+    public static final ItemHeartStriker heart_striker = getNull();
 
 
     static void registerCraftingRecipes() {
@@ -242,6 +243,7 @@ public class ModItems {
         registry.register(new ItemObsidianArmor(EntityEquipmentSlot.FEET));
 
         registry.register(new ItemHeartSeeker());
+        registry.register(new ItemHeartStriker());
     }
 
 

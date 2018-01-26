@@ -1,9 +1,9 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "vampirism:item/item/heart_seeker",
+    "model": "vampirism:item/item/heart_striker",
     "textures": {
-      "texture": "vampirism:items/heart_seeker"
+      "texture": "vampirism:items/heart_striker"
     }
   },
   "variants": {
