@@ -2,7 +2,6 @@
   "__comment": "Designed by Maxanier",
   "ambientocclusion": false,
   "textures": {
-    "texture": "items/sword1"
   },
   "elements": [
     {

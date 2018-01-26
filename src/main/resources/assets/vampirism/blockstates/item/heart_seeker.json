@@ -1,18 +1,24 @@
 {
   "forge_marker": 1,
   "defaults": {
-    "model": "vampirism:item/item/heart_seeker",
-    "textures": {
-      "texture": "vampirism:items/heart_seeker"
-    }
+    "model": "vampirism:item/item/heart_seeker"
   },
   "variants": {
     "tier": {
       "normal": {
+        "textures": {
+          "texture": "vampirism:items/heart_seeker"
+        }
       },
       "enhanced": {
+        "textures": {
+          "texture": "vampirism:items/heart_seeker_enhanced"
+        }
       },
       "ultimate": {
+        "textures": {
+          "texture": "vampirism:items/heart_seeker_ultimate"
+        }
       }
     }
   }
