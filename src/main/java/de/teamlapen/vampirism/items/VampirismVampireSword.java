@@ -9,6 +9,7 @@ import de.teamlapen.vampirism.api.items.IBloodChargeable;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -165,8 +166,8 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     }
 
     @SideOnly(Side.CLIENT)
-    private void spawnChargingParticle(EntityLivingBase player) {
-        Vec3d pos = UtilLib.getItemPosition(player, true);
+    private void spawnChargingParticle(EntityLivingBase player, boolean mainHand) {
+        Vec3d pos = UtilLib.getItemPosition(player, mainHand);
         if (player.getSwingProgress(1f) > 0f) return;
         pos = pos.addVector((player.getRNG().nextFloat() - 0.5f) * 0.1f, (player.getRNG().nextFloat() - 0.3f) * 0.9f, (player.getRNG().nextFloat() - 0.5f) * 0.1f);
         Vec3d playerPos = new Vec3d((player).posX, (player).posY + player.getEyeHeight() - 0.2f, (player).posZ);
@@ -181,10 +182,9 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
 
     @Override
     public void onUsingTick(ItemStack stack, EntityLivingBase player, int count) {
-        super.onUsingTick(stack, player, count);
         if (player.getEntityWorld().isRemote) {
             if (count % 3 == 0) {
-                spawnChargingParticle(player);
+                spawnChargingParticle(player, player.getHeldItemMainhand().equals(stack));
             }
         }
     }
@@ -220,7 +220,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         if (vampire.getLevel() == 0) return new ActionResult<>(EnumActionResult.PASS, stack);
 
 
-        if (this.canBeCharged(stack) && (playerIn.isCreative() || vampire.getBloodLevel() >= 2)) {
+        if (this.canBeCharged(stack) && (playerIn.isCreative() || vampire.getBloodLevel() >= 2) && vampire.getSkillHandler().isSkillEnabled(VampireSkills.blood_charge)) {
             playerIn.setActiveHand(handIn);
             return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         }

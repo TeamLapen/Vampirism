@@ -45,6 +45,7 @@ public class VampireSkills {
     public static final ISkill creeper_avoided = UtilLib.getNull();
     public static final ISkill vampire_forest_fog = UtilLib.getNull();
     public static final ISkill teleport = UtilLib.getNull();
+    public static final ISkill blood_charge = UtilLib.getNull();
 
     public static void registerVampireSkills(IForgeRegistry<ISkill> registry) {
         registry.register(new VampirismSkill.SimpleVampireSkill(VReference.VAMPIRE_FACTION.getKey(), 32, 0, false));
@@ -126,6 +127,7 @@ public class VampireSkills {
             }
         };
         registry.register(bite2);
+        registry.register(new VampirismSkill.SimpleVampireSkill("blood_charge", 240, 0, true));
         registry.register(new ActionSkill<>("freeze", VampireActions.freeze));
         registry.register(new ActionSkill<>("sunscreen", VampireActions.sunscreen));
         DefaultSkill<IVampirePlayer> jump = new VampirismSkill.SimpleVampireSkill("vampire_jump", 160, 0, false) {
@@ -240,7 +242,8 @@ public class VampireSkills {
 
 
         SkillNode skill2 = skillManager.createSkillNode(skill1, bite1, bite2);
-        SkillNode skill3 = skillManager.createSkillNode(skill2, freeze);
+        SkillNode skill3 = skillManager.createSkillNode(skill2, blood_charge);
+        SkillNode skill4 = skillManager.createSkillNode(skill3, freeze);
 
         //TODO add lighting or so
 

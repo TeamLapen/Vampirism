@@ -28,6 +28,8 @@ text.vampirism.skill.vampire_forest_fog=Vista
 text.vampirism.skill.vampire_forest_fog.desc=Increase the fog distance in the Vampire Forest
 text.vampirism.skill.water_resistance=Water Resistance
 text.vampirism.skill.water_resistance.desc=Your body will not be weakened by water anymore
+text.vampirism.skill.blood_charge=Blood Charge
+text.vampirism.skill.blood_charge.desc=Charge your blood using tools on the go
 
 #HUNTER SKILLS
 text.vampirism.skill.ihunterplayer=Becoming an hunter
