@@ -1,0 +1,26 @@
+{
+  "result": {
+    "item": "vampirism:blood_pedestal"
+  },
+  "pattern": [
+    "GYG",
+    "YZY",
+    "XXX"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "item": "minecraft:obsidian"
+    },
+    "Y": {
+      "item": "#PLANKS"
+    },
+    "Z": {
+      "item": "vampirism:blood_bottle",
+      "data": 32767
+    },
+    "G": {
+      "item": "#GOLD"
+    }
+  }
+}

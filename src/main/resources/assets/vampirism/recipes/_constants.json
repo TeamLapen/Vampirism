@@ -14,6 +14,13 @@
     }
   },
   {
+    "name": "GOLD",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "ingotGold"
+    }
+  },
+  {
     "name": "STONEBRICK",
     "ingredient": {
       "type": "minecraft:item",
