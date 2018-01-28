@@ -1,0 +1,22 @@
+{
+  "result": {
+    "item": "vampirism:heart_striker",
+    "nbt": {
+      "tier": "NORMAL"
+    }
+  },
+  "pattern": [
+    "XX",
+    "XX",
+    "YY"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "item": "vampirism:blood_infused_iron_ingot"
+    },
+    "Y": {
+      "item": "#STICK"
+    }
+  }
+}

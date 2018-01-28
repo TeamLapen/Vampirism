@@ -35,5 +35,12 @@
       "item": "minecraft:stone",
       "data": 0
     }
+  },
+  {
+    "name": "STICK",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "stickWood"
+    }
   }
 ]
