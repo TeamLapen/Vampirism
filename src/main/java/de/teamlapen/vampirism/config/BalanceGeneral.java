@@ -35,7 +35,7 @@ public class BalanceGeneral extends BalanceValues {
     @DefaultDouble(value = 0.05 / (double) VReference.FOOD_TO_FLUID_BLOOD, minValue = 0, maxValue = 1, comment = "The blood mB to charge percentage of the normal heart seeker vampire sword")
     public double HEART_SEEKER_CHARGING_FACTOR;
 
-    @DefaultDouble(value = 0.01, minValue = 0, maxValue = 100, comment = "The percentage of stored blood used for every hit with the normal heart seeker vampire sword")
+    @DefaultDouble(value = 0.005, minValue = 0, maxValue = 100, comment = "The percentage of stored blood used for every hit with the normal heart seeker vampire sword")
     public double HEART_SEEKER_USAGE_FACTOR;
 
     /**

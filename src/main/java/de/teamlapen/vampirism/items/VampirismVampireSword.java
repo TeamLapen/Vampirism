@@ -85,8 +85,6 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         float trained = getTrained(stack, playerIn);
         tooltip.add(UtilLib.translate("text.vampirism.sword_charged") + " " + ((int) (charged * 100f)) + "%");
         tooltip.add(UtilLib.translate("text.vampirism.sword_trained") + " " + ((int) (trained * 100f)) + "%");
-        tooltip.add(UtilLib.translate("text.vampirism.sword_trained") + " " + ((int) (getTrained(stack) * 100f)) + "%");
-
     }
 
     /**
