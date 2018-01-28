@@ -194,7 +194,7 @@ public class GuideHelper {
         builder.build(entries);
     }
 
-    public static void addItemWithTier(Map<ResourceLocation, EntryAbstract> entries, IItemWithTier item, RECIPE_TYPE recipeType) {
+    public static ItemInfoBuilder addItemWithTier(IItemWithTier item, RECIPE_TYPE recipeType) {
         List<Object> craftable = new ArrayList<>();
         for (IItemWithTier.TIER t : IItemWithTier.TIER.values()) {
             craftable.add(ModItems.createStack(item, t));
@@ -202,7 +202,7 @@ public class GuideHelper {
         }
         ItemInfoBuilder builder = new ItemInfoBuilder(ModItems.createStack(item, IItemWithTier.TIER.NORMAL), false);
         builder.craftableStacks(craftable).ignoreMissingRecipes();
-        builder.build(entries);
+        return builder;
     }
 
     /**
