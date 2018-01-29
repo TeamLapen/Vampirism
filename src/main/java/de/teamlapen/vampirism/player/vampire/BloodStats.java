@@ -13,8 +13,6 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.lang.reflect.Field;
-
 /**
  * Handles VP's blood stats. Very similar to {@link FoodStats}
  */
@@ -28,7 +26,12 @@ public class BloodStats implements IBloodStats {
         return maxBlood;
     }
 
-    @Override
+    /**
+     * Change the maximum storeable amount of blood
+     * Also caps the current blood at this level
+     *
+     * @param maxBlood Should be a even number
+     */
     public void setMaxBlood(int maxBlood) {
         this.maxBlood = Math.max(1, maxBlood);
         if (this.bloodLevel > maxBlood) {
@@ -43,10 +46,7 @@ public class BloodStats implements IBloodStats {
     private int bloodTimer;
     private int prevBloodLevel = 20;
     private boolean changed = false;
-    /**
-     * Caches an accessor to {@link FoodStats#foodExhaustionLevel}
-     */
-    private Field field_foodExhaustionLevel = null;
+
 
     public BloodStats(EntityPlayer player) {
         this.player = player;
@@ -241,13 +241,9 @@ public class BloodStats implements IBloodStats {
 
     NBTTagCompound writeUpdate(NBTTagCompound nbt) {
         nbt.setInteger("bloodLevel", bloodLevel);
-        return nbt;
-    }
-
-    NBTTagCompound writeFullUpdate(NBTTagCompound nbt) {
-        writeUpdate(nbt);
         nbt.setInteger("maxBlood", maxBlood);
         return nbt;
     }
+
 
 }

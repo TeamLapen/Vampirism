@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -112,6 +113,8 @@ public class TileAltarInspiration extends net.minecraftforge.fluids.capability.T
 
                     ritualPlayer.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, targetLevel * 10 * 20));
                     FactionPlayerHandler.get(ritualPlayer).setFactionLevel(VReference.VAMPIRE_FACTION, targetLevel);
+                    IBloodStats stats = VampirePlayer.get(ritualPlayer).getBloodStats();
+                    stats.setBloodLevel(stats.getMaxBlood());
                     markDirty();
                     IBlockState state = world.getBlockState(getPos());
                     this.world.notifyBlockUpdate(pos, state, state, 3);

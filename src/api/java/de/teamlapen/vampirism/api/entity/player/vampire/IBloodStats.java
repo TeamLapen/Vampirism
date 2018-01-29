@@ -16,15 +16,6 @@ public interface IBloodStats {
      */
     int getMaxBlood();
 
-    /**
-     * Change the maximum storeable amount of blood
-     * Also caps the current blood at this level
-     * Probably should not be used
-     *
-     * @param maxBlood Should be a even number
-     */
-    @Deprecated
-    void setMaxBlood(int maxBlood);
 
     /**
      * Adds blood to the stats
