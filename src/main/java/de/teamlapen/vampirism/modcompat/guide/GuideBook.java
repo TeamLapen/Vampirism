@@ -366,6 +366,10 @@ public class GuideBook implements IGuideBook {
         new ItemInfoBuilder(ModItems.vampire_book).build(entries);
         //Vampire
         new ItemInfoBuilder(new ItemStack(ModItems.blood_bottle, 1, ItemBloodBottle.AMOUNT), false).build(entries);
+        new ItemInfoBuilder(ModItems.blood_infused_iron_ingot).craftableStacks(ModItems.blood_infused_iron_ingot, WORKBENCH, ModItems.blood_infused_enhanced_iron_ingot, WORKBENCH).build(entries);
+        addItemWithTier(ModItems.heart_seeker, WORKBENCH).setLinks(new ResourceLocation("guide.vampirism.blocks.blood_pedestal"), new ResourceLocation("guide.vampirism.items.blood_infused_iron_ingot")).build(entries);
+        addItemWithTier(ModItems.heart_striker, WORKBENCH).setLinks(new ResourceLocation("guide.vampirism.blocks.blood_pedestal"), new ResourceLocation("guide.vampirism.items.blood_infused_iron_ingot")).build(entries);
+
         //Hunter
         new ItemInfoBuilder(ModItems.injection).craftableStacks(new ItemStack(ModItems.injection, 1, 0), WORKBENCH, new ItemStack(ModItems.injection, 1, ItemInjection.META_GARLIC), WORKBENCH, new ItemStack(ModItems.injection, 1, ItemInjection.META_SANGUINARE), WORKBENCH).build(entries);
         new ItemInfoBuilder(ModItems.hunter_intel).setLinks(new ResourceLocation("guide.vampirism.blocks.hunter_table")).setFormats(ModBlocks.hunter_table.getLocalizedName()).build(entries);
@@ -382,7 +386,9 @@ public class GuideBook implements IGuideBook {
         addArmorWithTier(entries, "armor_of_swiftness", ModItems.armor_of_swiftness_head, ModItems.armor_of_swiftness_chest, ModItems.armor_of_swiftness_legs, ModItems.armor_of_swiftness_feet, WEAPON_TABLE);
         addArmorWithTier(entries, "hunter_coat", ModItems.hunter_coat_head, ModItems.hunter_coat_chest, ModItems.hunter_coat_legs, ModItems.hunter_coat_feet, WEAPON_TABLE);
         addArmorWithTier(entries, "obsidian_armor", ModItems.obsidian_armor_head, ModItems.obsidian_armor_chest, ModItems.obsidian_armor_legs, ModItems.obsidian_armor_feet, WEAPON_TABLE);
-        addItemWithTier(entries, ModItems.hunter_axe, WEAPON_TABLE);
+        addItemWithTier(ModItems.hunter_axe, WEAPON_TABLE).build(entries);
+
+
         links.putAll(entries);
         return entries;
     }
@@ -408,6 +414,7 @@ public class GuideBook implements IGuideBook {
         int cn = Balance.hps.GARLIC_DIFFUSOR_NORMAL_DISTANCE * 2 + 1;
         int ce = Balance.hps.GARLIC_DIFFUSOR_ENHANCED_DISTANCE * 2 + 1;
         new ItemInfoBuilder(ModBlocks.garlic_beacon).setFormats(cn, cn, ce, ce, ModItems.purified_garlic.getLocalizedName()).setLinks(new ResourceLocation("guide.vampirism.items.item_garlic"), new ResourceLocation("guide.vampirism.items.purified_garlic"), new ResourceLocation("guide.vampirism.items.holy_water_bottle")).craftableStacks(ModBlocks.garlic_beacon, WORKBENCH, new ItemStack(ModBlocks.garlic_beacon, 1, BlockGarlicBeacon.Type.IMPROVED.getId()), WORKBENCH, ModItems.garlic_beacon_core, ALCHEMICAL_CAULDRON, ModItems.garlic_beacon_core_improved, ALCHEMICAL_CAULDRON).build(entries);
+        new ItemInfoBuilder(ModBlocks.blood_pedestal).craftable(WORKBENCH).build(entries);
 
         links.putAll(entries);
         return entries;

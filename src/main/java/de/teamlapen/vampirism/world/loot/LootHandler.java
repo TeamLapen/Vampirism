@@ -41,6 +41,7 @@ public class LootHandler {
         }
         LootFunctionManager.registerFunction(new AddBookNbt.Serializer());
         LootFunctionManager.registerFunction(new SetItemTier.Serializer());
+        LootFunctionManager.registerFunction(new SetItemBloodCharge.Serializer());
     }
 
     public boolean checkAndResetInsertedAll() {

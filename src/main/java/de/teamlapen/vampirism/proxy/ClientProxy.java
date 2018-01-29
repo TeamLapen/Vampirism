@@ -104,4 +104,9 @@ public class ClientProxy extends CommonProxy {
             renderPlayer.addLayer(new LayerVampirePlayerHead(renderPlayer));
         }
     }
+
+    @Override
+    public float getRenderPartialTick() {
+        return Minecraft.getMinecraft().getRenderPartialTicks();
+    }
 }

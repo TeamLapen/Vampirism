@@ -116,6 +116,11 @@ public class ModItemsRender {
         registerArmorItemWithTier(ModItems.obsidian_armor_legs, "obsidian_armor");
         registerArmorItemWithTier(ModItems.obsidian_armor_feet, "obsidian_armor");
 
+        registerSimpleItemWithTier(ModItems.heart_seeker);
+        registerSimpleItemWithTier(ModItems.heart_striker);
+        renderHelper.registerRender(ModItems.blood_infused_iron_ingot, "normal");
+        renderHelper.registerRender(ModItems.blood_infused_enhanced_iron_ingot, "normal");
+
 
         //----------------------
     }

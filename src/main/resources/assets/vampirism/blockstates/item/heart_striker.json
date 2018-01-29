@@ -1,0 +1,25 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "vampirism:item/item/heart_striker"
+  },
+  "variants": {
+    "tier": {
+      "normal": {
+        "textures": {
+          "texture": "vampirism:items/heart_striker"
+        }
+      },
+      "enhanced": {
+        "textures": {
+          "texture": "vampirism:items/heart_striker_enhanced"
+        }
+      },
+      "ultimate": {
+        "textures": {
+          "texture": "vampirism:items/heart_striker_ultimate"
+        }
+      }
+    }
+  }
+}

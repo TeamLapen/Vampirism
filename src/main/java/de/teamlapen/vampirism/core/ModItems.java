@@ -87,6 +87,11 @@ public class ModItems {
 
     public static final ItemHunterAxe hunter_axe = getNull();
 
+    public static final ItemHeartSeeker heart_seeker = getNull();
+    public static final ItemHeartStriker heart_striker = getNull();
+    public static final VampirismItem blood_infused_iron_ingot = getNull();
+    public static final VampirismItem blood_infused_enhanced_iron_ingot = getNull();
+
 
     static void registerCraftingRecipes() {
         //TODO CRAFTING
@@ -238,6 +243,11 @@ public class ModItems {
         registry.register(new ItemObsidianArmor(EntityEquipmentSlot.CHEST));
         registry.register(new ItemObsidianArmor(EntityEquipmentSlot.LEGS));
         registry.register(new ItemObsidianArmor(EntityEquipmentSlot.FEET));
+
+        registry.register(new ItemHeartSeeker());
+        registry.register(new ItemHeartStriker());
+        registry.register(new VampirismItem("blood_infused_iron_ingot"));
+        registry.register(new VampirismItem("blood_infused_enhanced_iron_ingot"));
     }
 
 

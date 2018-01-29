@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -16,10 +17,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.translation.I18n;
@@ -134,6 +132,24 @@ public class UtilLib {
             }
         }
         return i;
+    }
+
+    /**
+     * Returns an approximate absolute (world) position of the held item.
+     * This assumes a ModelBiped like model and a normal item.
+     *
+     * @param entity   Assumes a ModelBiped like creature
+     * @param mainHand If main hand position
+     * @return Absolute position in the world
+     */
+    public static @Nonnull
+    Vec3d getItemPosition(EntityLivingBase entity, boolean mainHand) {
+        boolean left = (mainHand ? entity.getPrimaryHand() : entity.getPrimaryHand().opposite()) == EnumHandSide.LEFT;
+        boolean firstPerson = entity instanceof EntityPlayer && ((EntityPlayer) entity).isUser() && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0;
+        Vec3d dir = firstPerson ? entity.getForward() : Vec3d.fromPitchYawVector(new Vec2f(entity.rotationPitch, entity.renderYawOffset));
+        dir = dir.rotateYaw((float) (Math.PI / 5f) * (left ? 1f : -1f)).scale(0.75f);
+        return dir.addVector(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
+
     }
 
     public static Entity spawnEntityBehindEntity(EntityLivingBase p, ResourceLocation id) {

@@ -24,7 +24,7 @@ public class ItemStake extends VampirismItemWeapon {
     private final static String regName = "stake";
 
     public ItemStake() {
-        super(regName, ToolMaterial.WOOD, -3.5F, 0.5F);
+        super(regName, ToolMaterial.WOOD, 0.12F, 0.5F);
     }
 
 

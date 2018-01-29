@@ -41,6 +41,82 @@
           "weight": 30
         }
       ]
+    },
+    {
+      "name": "equipment",
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "vampirism:heart_seeker",
+          "weight": 30,
+          "functions": [
+            {
+              "function": "vampirism:set_item_tier",
+              "tier": "enhanced"
+            },
+            {
+              "function": "vampirism:set_item_tier",
+              "tier": "ultimate",
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.3
+                }
+              ]
+            },
+            {
+              "function": "set_damage",
+              "damage": {
+                "min": 0.6,
+                "max": 0.99
+              }
+            },
+            {
+              "function": "vampirism:set_item_blood_charge",
+              "min_charge": 500,
+              "max_charge": 2000
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "name": "vampirism:heart_striker",
+          "weight": 30,
+          "functions": [
+            {
+              "function": "vampirism:set_item_tier",
+              "tier": "enhanced"
+            },
+            {
+              "function": "vampirism:set_item_tier",
+              "tier": "ultimate",
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.3
+                }
+              ]
+            },
+            {
+              "function": "set_damage",
+              "damage": {
+                "min": 0.6,
+                "max": 0.99
+              }
+            },
+            {
+              "function": "vampirism:set_item_blood_charge",
+              "min_charge": 500,
+              "max_charge": 2000
+            }
+          ]
+        },
+        {
+          "type": "empty",
+          "weight": 40
+        }
+      ]
     }
   ]
 }

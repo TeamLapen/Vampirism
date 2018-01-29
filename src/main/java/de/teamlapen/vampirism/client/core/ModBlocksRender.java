@@ -4,10 +4,12 @@ import de.teamlapen.lib.lib.util.InventoryRenderHelper;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.client.render.tiles.AltarInfusionTESR;
 import de.teamlapen.vampirism.client.render.tiles.CoffinTESR;
+import de.teamlapen.vampirism.client.render.tiles.PedestalTESR;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.tileentity.TileAlchemicalCauldron;
 import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
 import de.teamlapen.vampirism.tileentity.TileCoffin;
+import de.teamlapen.vampirism.tileentity.TilePedestal;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -75,6 +77,7 @@ public class ModBlocksRender {
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.church_altar), EnumFacing.HORIZONTALS);
         renderHelper.registerRender(Item.getItemFromBlock(ModBlocks.weapon_table), "inventory");
         renderHelper.registerRender(ModBlocks.alchemical_cauldron);
+        renderHelper.registerRender(ModBlocks.blood_pedestal);
 
 
         for (EnumFacing f : EnumFacing.HORIZONTALS) {
@@ -123,6 +126,7 @@ public class ModBlocksRender {
     private static void registerTileRenderer() {
         ClientRegistry.bindTileEntitySpecialRenderer(TileCoffin.class, new CoffinTESR());
         ClientRegistry.bindTileEntitySpecialRenderer(TileAltarInfusion.class, new AltarInfusionTESR());
+        ClientRegistry.bindTileEntitySpecialRenderer(TilePedestal.class, new PedestalTESR());
     }
 
 

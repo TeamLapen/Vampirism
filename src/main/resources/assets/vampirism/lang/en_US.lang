@@ -28,6 +28,8 @@ text.vampirism.skill.vampire_forest_fog=Vista
 text.vampirism.skill.vampire_forest_fog.desc=Increase the fog distance in the Vampire Forest
 text.vampirism.skill.water_resistance=Water Resistance
 text.vampirism.skill.water_resistance.desc=Your body will not be weakened by water anymore
+text.vampirism.skill.blood_charge=Blood Charge
+text.vampirism.skill.blood_charge.desc=Charge your blood using tools on the go
 
 #HUNTER SKILLS
 text.vampirism.skill.ihunterplayer=Becoming an hunter
@@ -185,6 +187,7 @@ tile.vampirism.garlic_beacon.already_fueled=Already fueled
 tile.vampirism.garlic_beacon.successfully_fueled=Successfully fueled
 tile.vampirism.garlic_beacon.tooltip1=Diffuses garlic particles.
 tile.vampirism.garlic_beacon.tooltip2=Affects a %s by %s chunk area.
+tile.vampirism.blood_pedestal.name=Blood Pedestal
 
 #ITEMS
 item.vampirism.hunter_intel.name=Hunter Intel
@@ -262,6 +265,10 @@ item.vampirism.purified_garlic.name=Purified Garlic
 item.vampirism.garlic_beacon_core.name=Garlic Diffusor Core
 item.vampirism.garlic_beacon_core_improved.name=Improved Garlic Diffusor Core
 item.vampirism.pure_salt.name=Pure Salt
+item.vampirism.heart_seeker.name=Heartseeker
+item.vampirism.heart_striker.name=Heartstriker
+item.vampirism.blood_infused_iron_ingot.name=Blood Infused Iron Ingot
+item.vampirism.blood_infused_enhanced_iron_ingot.name=Enhanced Blood Infused Iron Ingot
 
 #KEYS
 keys.vampirism.select_skills=Select Skills
@@ -324,6 +331,8 @@ gui.vampirism.reset_skills.desc=If you reset your skills you will loose one leve
 gui.vampirism.reset_skills.desc_test=Do you want to reset your skills? (You do not loose a level, because you are using an alpha version of Vampirism)
 gui.vampirism.alchemical_cauldron.level=Required Hunter Level: %s
 gui.vampirism.alchemical_cauldron.skill=Required Skill: %s
+gui.vampirism.name_sword.title=Sword Name
+gui.vampirism.name_sword.text=Do you want to give this sword a name?
 
 #COMMANDS
 command.vampirism.base.level.faction_not_found=Did not find faction %s
@@ -446,6 +455,8 @@ text.vampirism.poisonous_to_vampires=Poisonous to vampires
 text.vampirism.deals_more_damage_to=Deals %s percent more damage against
 text.vampirism.liquid_container=Any liquid container
 text.vampirism.translators=None
+text.vampirism.sword_charged=Charged:
+text.vampirism.sword_trained=Trained:
 text.vampirism.integrations_available.first=There is an integrations mod for Vampirism that adds enhanced compatibility for the following installed mods:
 text.vampirism.integrations_available.second=["Please consider downloading this mod for an improved experience [",{"text":"Download","color":"green","hoverEvent":{"action":"show_text","value":{"text":"Click this to go to the mod page","color":"green"}},"clickEvent":{"action":"open_url","value":"@download@"}},"]"]
 

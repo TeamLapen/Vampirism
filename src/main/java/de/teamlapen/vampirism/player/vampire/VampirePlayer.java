@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
@@ -146,7 +147,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         super(player);
         applyEntityAttributes();
         bloodStats = new BloodStats(player);
-        actionHandler = new ActionHandler(this);
+        actionHandler = new ActionHandler<>(this);
         skillHandler = new SkillHandler<>(this);
         garlic_cache = EnumStrength.NONE;
     }
@@ -231,7 +232,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (!bloodStats.needsBlood()) return;
 
         int blood = 0;
-        int need = Math.min(8, bloodStats.MAXBLOOD - bloodStats.getBloodLevel());
+        int need = Math.min(8, bloodStats.getMaxBlood() - bloodStats.getBloodLevel());
         if (ModBlocks.blood_container.equals(blockState.getBlock())) {
             if (tileEntity != null && tileEntity.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
                 IFluidHandler handler = tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
@@ -240,9 +241,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     FluidStack drained = handler.drain((drainable.amount / VReference.FOOD_TO_FLUID_BLOOD) * VReference.FOOD_TO_FLUID_BLOOD, true);
                     if (drained != null) {
                         blood = drained.amount / VReference.FOOD_TO_FLUID_BLOOD;
-
-                        player.world.notifyBlockUpdate(pos, blockState, blockState, 3);
-                        tileEntity.markDirty();
                     }
                 }
             }
@@ -338,7 +336,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public float getBloodLevelRelative() {
-        return bloodStats.getBloodLevel() / (float) bloodStats.MAXBLOOD;
+        return bloodStats.getBloodLevel() / (float) bloodStats.getMaxBlood();
     }
 
     @Override
@@ -346,7 +344,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         return (float) Balance.vp.PLAYER_BLOOD_SATURATION;
     }
 
-    public BloodStats getBloodStats() {
+    @Override
+    public IBloodStats getBloodStats() {
         return bloodStats;
     }
 
@@ -496,7 +495,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         int amt = this.getBloodStats().getBloodLevel();
         int sucked = (int) (amt * perc);
         this.getBloodStats().consumeBlood(amt - sucked);
-        sync(this.getBloodStats().writeUpdate(new NBTTagCompound()), false);
+        sync(this.bloodStats.writeUpdate(new NBTTagCompound()), false);
         return sucked;
     }
 
@@ -543,7 +542,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 }
                 player.addPotionEffect(new PotionEffect(ModPotions.sunscreen, 400, 4, true, false));
                 player.setHealth(player.getMaxHealth());
-                bloodStats.setBloodLevel(bloodStats.MAXBLOOD);
+                bloodStats.setBloodLevel(bloodStats.getMaxBlood());
             }
         }
     }
@@ -557,12 +556,18 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MAX_HEALTH, "Vampire", getLevel(), Balance.vp.HEALTH_LCAP, Balance.vp.HEALTH_MAX_MOD, Balance.vp.HEALTH_TYPE, 0, true);
             if (player.getHealth() > player.getMaxHealth()) player.setHealth(player.getMaxHealth());
             LevelAttributeModifier.applyModifier(player, VReference.bloodExhaustion, "Vampire", getLevel(), getMaxLevel(), Balance.vp.EXAUSTION_MAX_MOD, Balance.vp.EXHAUSTION_TYPE, 2, false);
+            if (newLevel > 13) {
+                bloodStats.setMaxBlood(40);
+            } else if (newLevel > 9) {
+                bloodStats.setMaxBlood(34);
+            } else if (newLevel > 6) {
+                bloodStats.setMaxBlood(20);
+            } else if (newLevel > 3) {
+                bloodStats.setMaxBlood(26);
+            } else {
+                bloodStats.setMaxBlood(20);
+            }
             if (newLevel > 0) {
-                if (player instanceof EntityPlayerMP && ((EntityPlayerMP) player).connection != null) {
-                    //When loading from NBT the playerNetServerHandler is not always initialized, but that's required for achievements. So checking here
-                    //TODO player.addStat(Achievements.becomingAVampire, 1);
-                }
-
                 if (oldLevel == 0) {
                     skillHandler.enableRootSkill();
                 }

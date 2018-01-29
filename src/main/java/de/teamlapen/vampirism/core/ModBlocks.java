@@ -57,6 +57,7 @@ public class ModBlocks {
     public static final BlockStairs castle_stairs_purple = getNull();
     public static final BlockCastleSlab castle_slab = getNull();
     public static final BlockCastleSlab castle_slab_double = getNull();
+    public static final BlockPedestal blood_pedestal = getNull();
     private static final Map<String, String> OLD_TO_NEW_TILE_MAP = Maps.newHashMap();
 
 
@@ -70,6 +71,7 @@ public class ModBlocks {
         registerTileEntity(TileSunscreenBeacon.class, "sunscreen_beacon", "VampirismSunscreenBeacon");
         registerTileEntity(TileAlchemicalCauldron.class, "alchemical_cauldron", "VampirismAlchemicalCauldron");
         registerTileEntity(TileGarlicBeacon.class, "garlic_beacon", "VampirismGarlicBeacon");
+        registerTileEntity(TilePedestal.class, "blood_pedestal");
     }
 
     /**
@@ -138,6 +140,7 @@ public class ModBlocks {
         registry.register(itemBlock(castle_stairs_dark));
         registry.register(itemBlock(castle_stairs_dark_stone));
         registry.register(itemBlock(castle_stairs_purple));
+        registry.register(itemBlock(blood_pedestal));
         registry.register(new ItemSlab(castle_slab, castle_slab, castle_slab_double).setRegistryName(castle_slab.getRegistryName()));
     }
 
@@ -180,6 +183,7 @@ public class ModBlocks {
         registry.register(new BlockCastleStairs(castleBlock, BlockCastleBlock.EnumType.PURPLE_BRICK, "purple"));
         registry.register(new BlockCastleSlab.Single());
         registry.register(new BlockCastleSlab.Double());
+        registry.register(new BlockPedestal());
         registerTiles();
     }
 

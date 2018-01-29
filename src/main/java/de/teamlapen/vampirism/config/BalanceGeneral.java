@@ -5,6 +5,7 @@ import de.teamlapen.lib.lib.config.DefaultBoolean;
 import de.teamlapen.lib.lib.config.DefaultDouble;
 import de.teamlapen.lib.lib.config.DefaultInt;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VReference;
 
 import java.io.File;
 
@@ -30,6 +31,12 @@ public class BalanceGeneral extends BalanceValues {
     public int HOLY_WATER_SPLASH_DAMAGE;
     @DefaultDouble(value = 1.5, minValue = 1, comment = "Holy water damage is multiplied with this value for each tier above normal")
     public double HOLY_WATER_TIER_DAMAGE_INC;
+
+    @DefaultDouble(value = 0.05 / (double) VReference.FOOD_TO_FLUID_BLOOD, minValue = 0, maxValue = 1, comment = "The blood mB to charge percentage of the normal heart seeker vampire sword")
+    public double HEART_SEEKER_CHARGING_FACTOR;
+
+    @DefaultDouble(value = 0.005, minValue = 0, maxValue = 100, comment = "The percentage of stored blood used for every hit with the normal heart seeker vampire sword")
+    public double HEART_SEEKER_USAGE_FACTOR;
 
     /**
      * Creates a configuration for balance values
