@@ -1,0 +1,60 @@
+{
+  "pools": [
+    {
+      "name": "general",
+      "conditions": [
+        {
+          "condition": "killed_by_player"
+        }
+      ],
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "vampirism:vampire_blood_bottle",
+          "weight": 0.5
+        },
+        {
+          "type": "item",
+          "name": "vampirism:blood_bottle",
+          "weight": 0.5,
+          "functions": [
+            {
+              "function": "set_data",
+              "data": {
+                "min": 4,
+                "max": 9
+              }
+            },
+            {
+              "function": "looting_enchant",
+              "count": 1
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "special",
+      "conditions": [
+        {
+          "condition": "random_chance",
+          "chance": 0.05
+        }
+      ],
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "item",
+          "name": "vampirism:vampire_book",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "vampirism:add_book_nbt"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

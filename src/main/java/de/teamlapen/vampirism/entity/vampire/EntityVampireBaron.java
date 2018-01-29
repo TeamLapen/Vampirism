@@ -10,7 +10,6 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampireMinion;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
-import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler;
@@ -18,6 +17,7 @@ import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionSaveable
 import de.teamlapen.vampirism.items.ItemHunterCoat;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -25,19 +25,18 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.UUID;
 
 /**
@@ -173,16 +172,10 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         return this.isEntityAlive();
     }
 
+    @Nullable
     @Override
-    public void onDeath(@Nonnull DamageSource s) {
-        super.onDeath(s);
-        if (this.recentlyHit > 0 && this.world.getGameRules().getBoolean("doMobLoot")) {
-            if (getLevel() >= 0 && getLevel() < 5) {
-                this.entityDropItem(new ItemStack(ModItems.pure_blood, 1, getLevel()), 0.3F);
-            } else if (getLevel() > 5) {
-                this.entityDropItem(new ItemStack(ModItems.pure_blood, 1, 4), 0.3F);
-            }
-        }
+    protected ResourceLocation getLootTable() {
+        return LootHandler.VAMPIRE_BARON;
     }
 
     @Override

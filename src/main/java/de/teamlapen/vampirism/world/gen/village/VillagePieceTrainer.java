@@ -6,7 +6,7 @@ import de.teamlapen.vampirism.blocks.BlockMedChair;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainer;
-import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -14,7 +14,6 @@ import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -152,7 +151,7 @@ public class VillagePieceTrainer extends StructureVillagePieces.Village {
         this.setBlockState(worldIn, ModBlocks.med_chair.getDefaultState().withProperty(BlockMedChair.PART, BlockMedChair.EnumPart.TOP).withProperty(BlockMedChair.FACING, medChairFacing), 7, 1, 3, structureBoundingBoxIn);
         this.setBlockState(worldIn, ModBlocks.med_chair.getDefaultState().withProperty(BlockMedChair.PART, BlockMedChair.EnumPart.BOTTOM).withProperty(BlockMedChair.FACING, medChairFacing), 6, 1, 3, structureBoundingBoxIn);
 
-        this.generateChest(worldIn, structureBoundingBoxIn, randomIn, 7, 1, 2, new ResourceLocation(REFERENCE.MODID, "village_trainer"));
+        this.generateChest(worldIn, structureBoundingBoxIn, randomIn, 7, 1, 2, LootHandler.STRUCTURE_VILLAGE_TRAINER);
 
         this.setBlockState(worldIn, Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.SOUTH), 6, 2, 9, structureBoundingBoxIn);
         this.setBlockState(worldIn, Blocks.TORCH.getDefaultState().withProperty(BlockTorch.FACING, EnumFacing.SOUTH), 4, 2, 9, structureBoundingBoxIn);

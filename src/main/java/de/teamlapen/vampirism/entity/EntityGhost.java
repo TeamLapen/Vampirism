@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.block.Block;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
@@ -10,8 +11,11 @@ import net.minecraft.init.MobEffects;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+
+import javax.annotation.Nullable;
 
 /**
  * Entity Ghost
@@ -52,9 +56,10 @@ public class EntityGhost extends EntityVampirism implements IMob {
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.GHOST_HEALTH);
     }
 
+    @Nullable
     @Override
-    protected void dropFewItems(boolean p_70628_1_, int p_70628_2_) {
-        //TODO drop something
+    protected ResourceLocation getLootTable() {
+        return LootHandler.GHOST;
     }
 
     @Override

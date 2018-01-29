@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.storage.loot.*;
 import net.minecraft.world.storage.loot.conditions.LootCondition;
+import net.minecraft.world.storage.loot.conditions.LootConditionManager;
 import net.minecraft.world.storage.loot.functions.LootFunctionManager;
 import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -21,7 +22,15 @@ public class LootHandler {
 
     private static final List<String> INJECTION_TABLES = ImmutableList.of(
             "inject/abandoned_mineshaft", "inject/jungle_temple", "inject/stronghold_corridor", "inject/desert_pyramid", "inject/stronghold_library");
-    private static final List<String> TABLES = ImmutableList.of("vampire_dungeon", "village_trainer");
+    public static final ResourceLocation STRUCTURE_VAMPIRE_DUNGEON = register("vampire_dungeon");
+    public static final ResourceLocation STRUCTURE_VILLAGE_TRAINER = register("village_trainer");
+    public static final ResourceLocation BASIC_VAMPIRE = register("entities/basic_vampire");
+    public static final ResourceLocation BASIC_HUNTER = register("entities/basic_hunter");
+    public static final ResourceLocation ADVANCED_VAMPIRE = register("entities/advanced_vampire");
+    public static final ResourceLocation ADVANCED_HUNTER = register("entities/advanced_hunter");
+    public static final ResourceLocation VAMPIRE_BARON = register("entities/baron");
+    public static final ResourceLocation GHOST = register("entities/ghost");
+
 
     private static final List<String> STRUCTURE_TABLES = Lists.newArrayList();
     private static final LootHandler instance = new LootHandler();
@@ -36,12 +45,18 @@ public class LootHandler {
         for (String s : INJECTION_TABLES) {
             LootTableList.register(new ResourceLocation(REFERENCE.MODID, s));
         }
-        for (String s : TABLES) {
-            LootTableList.register(new ResourceLocation(REFERENCE.MODID, s));
-        }
+
         LootFunctionManager.registerFunction(new AddBookNbt.Serializer());
         LootFunctionManager.registerFunction(new SetItemTier.Serializer());
         LootFunctionManager.registerFunction(new SetItemBloodCharge.Serializer());
+        LootFunctionManager.registerFunction(new SetMetaBasedOnLevel.Serializer());
+        LootConditionManager.registerCondition(new StakeCondition.Serializer());
+    }
+
+    private static ResourceLocation register(String s) {
+        ResourceLocation loc = new ResourceLocation(REFERENCE.MODID, s);
+        LootTableList.register(loc);
+        return loc;
     }
 
     public boolean checkAndResetInsertedAll() {

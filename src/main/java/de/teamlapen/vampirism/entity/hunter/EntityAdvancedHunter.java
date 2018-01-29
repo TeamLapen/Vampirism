@@ -3,20 +3,17 @@ package de.teamlapen.vampirism.entity.hunter;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
-import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBase;
 import de.teamlapen.vampirism.util.IPlayerFace;
 import de.teamlapen.vampirism.util.SupporterManager;
-import de.teamlapen.vampirism.util.VampireBookManager;
+import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -24,6 +21,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.World;
 
@@ -167,29 +165,10 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
         return isLookingForHome() && super.canDespawn();
     }
 
+    @Nullable
     @Override
-    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier) {
-        switch (getRNG().nextInt(4)) {
-            case 0:
-                this.dropItem(ModItems.vampire_blood_bottle, 1);
-                break;
-            case 1:
-                this.dropItem(ModItems.item_garlic, 1 + getRNG().nextInt(lootingModifier + 1));
-                break;
-            case 2:
-                ItemStack stack = ModItems.holy_water_bottle.setTier(new ItemStack(ModItems.holy_water_bottle), getRNG().nextInt(4) == 0 ? IItemWithTier.TIER.ULTIMATE : IItemWithTier.TIER.ENHANCED);
-                stack = ModItems.holy_water_bottle.setSplash(stack, getRNG().nextBoolean());
-                this.entityDropItem(stack, 0);
-                break;
-            case 3:
-                this.dropItem(ModItems.holy_salt, getRNG().nextInt(4) + 1);
-                break;
-            default:
-                break;
-        }
-        if (getRNG().nextInt(20) == 0) {//TODO think of another way
-            this.entityDropItem(VampireBookManager.getInstance().getRandomBook(getRNG()), 0);
-        }
+    protected ResourceLocation getLootTable() {
+        return LootHandler.ADVANCED_HUNTER;
     }
 
     @Override

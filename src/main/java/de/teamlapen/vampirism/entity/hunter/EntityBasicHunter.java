@@ -18,6 +18,7 @@ import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.world.loot.LootHandler;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
@@ -34,6 +35,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -321,17 +323,6 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         return isLookingForHome() && super.canDespawn();
     }
 
-    @Override
-    protected void dropFewItems(boolean recentlyHit, int lootingLevel) {
-        if (recentlyHit) {
-            if (this.rand.nextInt(3) == 0) {
-                this.dropItem(ModItems.human_heart, 1);
-            }
-            if (this.rand.nextInt(4) == 0) {
-                this.dropItem(ModItems.holy_salt, 1);
-            }
-        }
-    }
 
     @Override
     protected void entityInit() {
@@ -424,6 +415,12 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
             defendVillageAdded = true;
         }
 
+    }
+
+    @Nullable
+    @Override
+    protected ResourceLocation getLootTable() {
+        return LootHandler.BASIC_HUNTER;
     }
 
     protected void updateEntityAttributes() {
