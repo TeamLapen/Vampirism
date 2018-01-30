@@ -86,20 +86,6 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource damageSource, float p_70097_2_) {
-        if (this.isEntityInvulnerable(damageSource)) {
-            return false;
-        } else if (super.attackEntityFrom(damageSource, p_70097_2_)) {
-            Entity entity = damageSource.getTrueSource();
-            if (entity instanceof EntityLivingBase && !this.equals(entity)) {
-                this.setAttackTarget((EntityLivingBase) entity);
-            }
-            return true;
-        }
-        return false;
-    }
-
-    @Override
     public void detachHome() {
         this.home = null;
     }
