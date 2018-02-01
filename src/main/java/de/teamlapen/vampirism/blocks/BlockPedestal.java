@@ -55,9 +55,11 @@ public class BlockPedestal extends VampirismBlockContainer {
 
     @Override
     public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-        TilePedestal tile = getTileEntity(worldIn, pos);
-        if (tile != null && tile.hasStack()) {
-            net.minecraft.inventory.InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.removeStack());
+        if (!worldIn.isRemote) {
+            TilePedestal tile = getTileEntity(worldIn, pos);
+            if (tile != null && tile.hasStack()) {
+                net.minecraft.inventory.InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.removeStack());
+            }
         }
         super.breakBlock(worldIn, pos, state);
     }
@@ -82,24 +84,22 @@ public class BlockPedestal extends VampirismBlockContainer {
 
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if (worldIn.isRemote) return true;
         TilePedestal tile = getTileEntity(worldIn, pos);
         if (tile == null) return false;
         ItemStack stack = playerIn.getHeldItem(hand);
-        if (stack.isEmpty() && tile.hasStack()) {
-            ItemStack stack2 = tile.removeStack();
+        if (stack.isEmpty() && !tile.extractItem(0, 1, true).isEmpty()) {
+            ItemStack stack2 = tile.extractItem(0, 1, false);
             takeItemPlayer(playerIn, hand, stack2);
-            tile.markDirty();
         } else if (!stack.isEmpty()) {
             ItemStack stack2 = ItemStack.EMPTY;
-            if (tile.hasStack()) {
-                stack2 = tile.removeStack();
-                tile.markDirty();
+            if (!tile.extractItem(0, 1, true).isEmpty()) {
+                stack2 = tile.extractItem(0, 1, false);
             }
-            if (tile.setStack(stack)) {
-                takeItemPlayer(playerIn, hand, stack2);
-                tile.markDirty();
+            if (tile.insertItem(0, stack, false).isEmpty()) {
+                if (!stack.isEmpty()) takeItemPlayer(playerIn, hand, stack2);
             } else {
-                tile.setStack(stack2);
+                tile.insertItem(0, stack2, false);
             }
         }
         return true;

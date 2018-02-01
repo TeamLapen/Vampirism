@@ -14,17 +14,20 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Random;
 
-public class TilePedestal extends TileEntity implements ITickable {
+public class TilePedestal extends TileEntity implements ITickable, IItemHandler {
 
     private final Random rand = new Random();
     private int ticksExistedClient;
@@ -38,7 +41,7 @@ public class TilePedestal extends TileEntity implements ITickable {
     private int chargeRate = 30;
 
     @Nonnull
-    private ItemStack stack = ItemStack.EMPTY;
+    private ItemStack internalStack = ItemStack.EMPTY;
 
     @Override
     public void update() {
@@ -46,18 +49,18 @@ public class TilePedestal extends TileEntity implements ITickable {
             if (chargingTicks > 0) {
                 chargingTicks--;
                 if (chargingTicks == 0) {
-                    IBloodChargeable chargeable = getChargeItem(this.stack);
+                    IBloodChargeable chargeable = getChargeItem(this.internalStack);
                     if (chargeable != null) {
                         if (this.bloodStored > 0) {
-                            int charged = chargeable.charge(this.stack, this.bloodStored);
+                            int charged = chargeable.charge(this.internalStack, this.bloodStored);
                             this.bloodStored -= Math.max(0, charged);
                         }
                     }
                     this.markDirtyAndUpdateClient();
                 }
             } else if (chargingTicks == 0) {
-                IBloodChargeable chargeable = getChargeItem(this.stack);
-                if (chargeable != null && chargeable.canBeCharged(stack)) {
+                IBloodChargeable chargeable = getChargeItem(this.internalStack);
+                if (chargeable != null && chargeable.canBeCharged(internalStack)) {
                     if (this.bloodStored < chargeRate) {
                         this.drainBlood();
                     }
@@ -99,7 +102,7 @@ public class TilePedestal extends TileEntity implements ITickable {
 
     @Nonnull
     public ItemStack getStackForRender() {
-        return stack;
+        return internalStack;
     }
 
     /**
@@ -107,23 +110,23 @@ public class TilePedestal extends TileEntity implements ITickable {
      *
      * @return If successful
      */
-    public boolean setStack(@Nonnull ItemStack stack) {
+    private boolean setStack(@Nonnull ItemStack stack) {
         this.chargingTicks=0;
-        if (this.stack.isEmpty()) {
-            this.stack = stack;
+        if (this.internalStack.isEmpty()) {
+            this.internalStack = stack;
             return true;
         }
-        return true;
+        return false;
     }
 
     public boolean hasStack() {
-        return !this.stack.isEmpty();
+        return !this.internalStack.isEmpty();
     }
 
     @Nonnull
     public ItemStack removeStack() {
-        ItemStack stack = this.stack;
-        this.stack = ItemStack.EMPTY;
+        ItemStack stack = this.internalStack;
+        this.internalStack = ItemStack.EMPTY;
         return stack;
     }
 
@@ -139,11 +142,29 @@ public class TilePedestal extends TileEntity implements ITickable {
     }
 
     @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing == null || facing != EnumFacing.DOWN) {
+            return true;
+        }
+        return super.hasCapability(capability, facing);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Nullable
+    @Override
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing == null || facing != EnumFacing.DOWN) {
+            return (T) this;
+        }
+        return super.getCapability(capability, facing);
+    }
+
+    @Override
     public void readFromNBT(NBTTagCompound compound) {
         if (compound.hasKey("item")) {
-            this.stack = new ItemStack(compound.getCompoundTag("item"));
+            this.internalStack = new ItemStack(compound.getCompoundTag("item"));
         } else {
-            this.stack = ItemStack.EMPTY;
+            this.internalStack = ItemStack.EMPTY;
         }
         this.bloodStored = compound.getInteger("blood_stored");
         this.chargingTicks = compound.getInteger("charging_ticks");
@@ -159,7 +180,7 @@ public class TilePedestal extends TileEntity implements ITickable {
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
         if (hasStack()) {
-            compound.setTag("item", this.stack.serializeNBT());
+            compound.setTag("item", this.internalStack.serializeNBT());
         }
         compound.setInteger("blood_stored", bloodStored);
         compound.setInteger("charging_ticks", chargingTicks);
@@ -195,5 +216,50 @@ public class TilePedestal extends TileEntity implements ITickable {
                 }
             }
         }
+    }
+
+    @Override
+    public int getSlots() {
+        return 1;
+    }
+
+    @Nonnull
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        return slot == 0 ? internalStack : ItemStack.EMPTY;
+    }
+
+    @Nonnull
+    @Override
+    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+        if (slot == 0) {
+            if (this.internalStack.isEmpty()) {
+                if (!simulate) {
+                    setStack(stack);
+                    this.markDirtyAndUpdateClient();
+                }
+                return ItemStack.EMPTY;
+            }
+        }
+        return stack;
+    }
+
+    @Nonnull
+    @Override
+    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        ItemStack stack = this.internalStack;
+        if (slot == 0 && !stack.isEmpty()) {
+            if (!simulate) {
+                this.removeStack();
+                this.markDirtyAndUpdateClient();
+            }
+            return simulate ? stack.copy() : stack;
+        }
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public int getSlotLimit(int slot) {
+        return 1;
     }
 }
