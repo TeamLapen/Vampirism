@@ -24,6 +24,8 @@ public class BalanceVampireSkills extends BalanceValues {
     @DefaultDouble(value = 1, comment = "The bite damage is multiplied with (value+1)")
     public double BITE_DAMAGE_MULT;
 
+    @DefaultDouble(value = 0.25, comment = "The maximal health percentage for a sword finisher kill")
+    public double SWORD_FINISHER_MAX_HEALTH_PERC;
 
     @DefaultInt(value = 5, name = "poisonous_bite_duration", minValue = 0, maxValue = 100, comment = "If the players bite is poisonous this specifies the duration (in sec)")
     public int POISONOUS_BITE_DURATION;

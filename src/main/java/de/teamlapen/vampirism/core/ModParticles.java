@@ -4,6 +4,7 @@ package de.teamlapen.vampirism.core;
 import de.teamlapen.lib.util.ParticleHandler;
 import de.teamlapen.vampirism.client.render.particle.FlyingBloodEntityParticle;
 import de.teamlapen.vampirism.client.render.particle.FlyingBloodParticle;
+import de.teamlapen.vampirism.client.render.particle.GenericParticle;
 import de.teamlapen.vampirism.client.render.particle.HalloweenParticle;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
@@ -21,8 +22,36 @@ public class ModParticles {
     public static final ResourceLocation FLYING_BLOOD = new ResourceLocation(REFERENCE.MODID, "flying_blood");
     public static final ResourceLocation FLYING_BLOOD_ENTITY = new ResourceLocation(REFERENCE.MODID, "flying_blood_entity");
     public static final ResourceLocation HALLOWEEN = new ResourceLocation(REFERENCE.MODID, "halloween");
+    public static final ResourceLocation GENERIC_PARTICLE = new ResourceLocation(REFERENCE.MODID, "generic");
 
     public static void init() {
+        ParticleHandler.registerParticle(GENERIC_PARTICLE, new ParticleHandler.ICustomParticleFactory() {
+            @SideOnly(Side.CLIENT)
+            @Override
+            public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
+                return new GenericParticle(world, posX, posY, posZ, (int) param[0], (int) param[1], (int) param[2]);
+            }
+
+            @Nonnull
+            @Override
+            public NBTTagCompound createParticleInfo(Object... param) {
+                NBTTagCompound nbt = new NBTTagCompound();
+                nbt.setInteger("0", (Integer) param[0]);
+                nbt.setInteger("1", (Integer) param[1]);
+                nbt.setInteger("2", (Integer) param[2]);
+                return nbt;
+            }
+
+            @Nonnull
+            @Override
+            public Object[] readParticleInfo(NBTTagCompound nbt) {
+                Object[] data = new Object[4];
+                data[0] = nbt.getInteger("0");
+                data[1] = nbt.getInteger("1");
+                data[2] = nbt.getInteger("2");
+                return data;
+            }
+        });
         ParticleHandler.registerParticle(FLYING_BLOOD, new ParticleHandler.ICustomParticleFactory() {
             @SideOnly(Side.CLIENT)
             @Override

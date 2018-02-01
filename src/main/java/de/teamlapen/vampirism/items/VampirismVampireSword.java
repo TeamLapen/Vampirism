@@ -6,10 +6,13 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.items.IBloodChargeable;
+import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModParticles;
+import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,10 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagByte;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagFloat;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.EnumActionResult;
-import net.minecraft.util.EnumHand;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
@@ -85,6 +85,9 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         float trained = getTrained(stack, playerIn);
         tooltip.add(UtilLib.translate("text.vampirism.sword_charged") + " " + ((int) (charged * 100f)) + "%");
         tooltip.add(UtilLib.translate("text.vampirism.sword_trained") + " " + ((int) (trained * 100f)) + "%");
+        if (playerIn != null && !VReference.VAMPIRE_FACTION.equals(FactionPlayerHandler.get(playerIn).getCurrentFaction())) {
+            tooltip.add(UtilLib.translateFormatted("text.vampirism.can_only_be_used_by", UtilLib.translate(VReference.VAMPIRE_FACTION.getUnlocalizedNamePlural())));
+        }
     }
 
     /**
@@ -251,6 +254,20 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
             }
         }
         return 0.0f;
+    }
+
+    @Override
+    public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
+        if (attacker instanceof EntityPlayer && target.getHealth() <= target.getMaxHealth() * Balance.vps.SWORD_FINISHER_MAX_HEALTH_PERC && !Helper.isVampire(target)) {
+            if (VampirePlayer.get((EntityPlayer) attacker).getSkillHandler().isSkillEnabled(VampireSkills.sword_finisher)) {
+                DamageSource dmg = DamageSource.causePlayerDamage((EntityPlayer) attacker);
+                target.attackEntityFrom(dmg, 10000F);
+                Vec3d center = new Vec3d(target.getPosition());
+                center.addVector(0, target.height / 2d, 0);
+                VampLib.proxy.getParticleHandler().spawnParticles(target.world, ModParticles.GENERIC_PARTICLE, center.x, center.y, center.z, 15, 0.5, target.getRNG(), 132, 12, 0xE02020);
+            }
+        }
+        return super.hitEntity(stack, target, attacker);
     }
 
     public boolean isFullyCharged(ItemStack stack) {

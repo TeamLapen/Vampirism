@@ -35,6 +35,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemMap;
@@ -603,6 +604,22 @@ public class TestCommand extends BasicCommand {
                 } else {
                     sender.sendMessage(new TextComponentString("You have to hold a vampire sword in your main hand"));
                 }
+            }
+        });
+
+        addSubcommand(new SubCommand() {
+            @Override
+            public String getName() {
+                return "spawnTestAnimal";
+            }
+
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                EntityPlayer player = getCommandSenderAsPlayer(sender);
+                EntityCow cow = new EntityCow(player.getEntityWorld());
+                cow.setHealth(cow.getMaxHealth() / 4.2f);
+                cow.copyLocationAndAnglesFrom(player);
+                player.world.spawnEntity(cow);
             }
         });
 
