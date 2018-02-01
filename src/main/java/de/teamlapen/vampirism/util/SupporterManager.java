@@ -13,7 +13,10 @@ import java.util.Arrays;
 import java.util.Random;
 
 /**
- * Handles the download, parsing and access of supporter information
+ * Handles the download, parsing and access of supporter information.
+ *
+ * Can check skins here
+ * http://skins.minecraft.net/MinecraftSkins/%s.png
  */
 public class SupporterManager {
     private final static String TAG = "SupporterManager";
