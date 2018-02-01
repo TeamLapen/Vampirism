@@ -22,6 +22,8 @@ public class TileBloodContainer extends net.minecraftforge.fluids.capability.Til
     public static final int LEVEL_AMOUNT = ItemBloodBottle.AMOUNT * VReference.FOOD_TO_FLUID_BLOOD;
     public static final int CAPACITY = LEVEL_AMOUNT * 14;
 
+    private int lastSyncedAmount = Integer.MIN_VALUE;
+
     public TileBloodContainer() {
         this.tank = new FluidTankWithListener(CAPACITY).setListener(this);
 
@@ -59,8 +61,13 @@ public class TileBloodContainer extends net.minecraftforge.fluids.capability.Til
 
     @Override
     public void onTankContentChanged() {
-        IBlockState state = this.world.getBlockState(this.pos);
-        this.world.notifyBlockUpdate(pos, state, state, 3);
-        this.markDirty();
+        FluidStack fluid = getTankInfo().fluid;
+        if (fluid == null && lastSyncedAmount != Integer.MIN_VALUE || fluid != null && Math.abs(fluid.amount - lastSyncedAmount) >= VReference.FOOD_TO_FLUID_BLOOD) {
+            IBlockState state = this.world.getBlockState(this.pos);
+            this.world.notifyBlockUpdate(pos, state, state, 3);
+            this.markDirty();
+            this.lastSyncedAmount = fluid == null ? Integer.MIN_VALUE : fluid.amount;
+        }
+
     }
 }
