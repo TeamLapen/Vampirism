@@ -1,0 +1,15 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "vampirism:blood_sieve"
+  },
+  "variants": {
+    "normal": [
+      {
+      }
+    ],
+    "inventory": {
+      "transform": "forge:default-block"
+    }
+  }
+}

@@ -78,6 +78,8 @@ public class ModBlocksRender {
         renderHelper.registerRender(Item.getItemFromBlock(ModBlocks.weapon_table), "inventory");
         renderHelper.registerRender(ModBlocks.alchemical_cauldron);
         renderHelper.registerRender(ModBlocks.blood_pedestal);
+        renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.blood_grinder), EnumFacing.HORIZONTALS);
+        renderHelper.registerRender(ModBlocks.blood_sieve);
 
 
         for (EnumFacing f : EnumFacing.HORIZONTALS) {
