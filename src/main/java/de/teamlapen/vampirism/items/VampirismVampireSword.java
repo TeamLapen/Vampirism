@@ -221,12 +221,12 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         if (vampire.getLevel() == 0) return new ActionResult<>(EnumActionResult.PASS, stack);
 
 
-        if (this.canBeCharged(stack) && (playerIn.isCreative() || vampire.getBloodLevel() >= 2) && vampire.getSkillHandler().isSkillEnabled(VampireSkills.blood_charge)) {
+        if (this.canBeCharged(stack) && playerIn.isSneaking() && (playerIn.isCreative() || vampire.getBloodLevel() >= 2) && vampire.getSkillHandler().isSkillEnabled(VampireSkills.blood_charge)) {
             playerIn.setActiveHand(handIn);
             return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         }
 
-        return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+        return new ActionResult<>(EnumActionResult.PASS, stack);
     }
 
 

@@ -29,7 +29,7 @@ text.vampirism.skill.vampire_forest_fog.desc=Increase the fog distance in the Va
 text.vampirism.skill.water_resistance=Water Resistance
 text.vampirism.skill.water_resistance.desc=Your body will not be weakened by water anymore
 text.vampirism.skill.blood_charge=Blood Charge
-text.vampirism.skill.blood_charge.desc=Charge your blood using tools on the go
+text.vampirism.skill.blood_charge.desc=Charge your blood using tools on the go by sneak right clicking.
 text.vampirism.skill.sword_finisher=Finisher
 text.vampirism.skill.sword_finisher.desc=Instantly kill any non vampire that has below %s percent of his max health using a vampire sword
 
