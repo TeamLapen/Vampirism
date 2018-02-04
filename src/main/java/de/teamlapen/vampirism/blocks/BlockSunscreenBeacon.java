@@ -25,10 +25,10 @@ public class BlockSunscreenBeacon extends VampirismBlockContainer {
 
     public BlockSunscreenBeacon() {
         super(regName, Material.IRON);
-        this.setCreativeTab(null);
         if (Configs.sunscreen_beacon_mineable) {
             this.setHardness(50);
         } else {
+            this.setCreativeTab(null);
             this.setBlockUnbreakable();
         }
     }
