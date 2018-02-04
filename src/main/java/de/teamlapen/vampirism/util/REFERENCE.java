@@ -14,9 +14,9 @@ public class REFERENCE {
     public static final int HIGHEST_VAMPIRE_LEVEL = 14;
     public static final int HIGHEST_HUNTER_LEVEL = 14;
     public static final String FORGE_VERSION = "@FVERSION@";
-    public static final String VERSION_UPDATE_FILE_FORGE = "https://maxanier.de/projects/vampirism/versions.json";
-    public static final String VERSION_UPDATE_FILE = "https://maxanier.de/projects/vampirism/versions.php";
-    public static final String SUPPORTER_FILE = "https://maxanier.de/projects/vampirism/supporters.json";
+    public static final String VERSION_UPDATE_FILE_FORGE = "http://maxanier.de/projects/vampirism/versions.json";
+    public static final String VERSION_UPDATE_FILE = "http://maxanier.de/projects/vampirism/versions.php";
+    public static final String SUPPORTER_FILE = "http://maxanier.de/projects/vampirism/supporters.json";
     public static final String CURSEFORGE_LINK = "https://minecraft.curseforge.com/projects/vampirism-become-a-vampire";
     public static final String PATREON_LINK = "https://www.patreon.com/maxanier";
     public static final String INTEGRATIONS_MODID = "vampirism_integrations";
