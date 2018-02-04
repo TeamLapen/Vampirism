@@ -27,7 +27,7 @@ public class WorldGenHunterCamp extends WorldGenerator {
 
 
     public boolean canCampSpawnAt(World world, Biome biome, int chunkX, int chunkZ) {
-        int distance = Balance.general.HUNTER_CAMP_DENSITY;
+        int distance = Math.max(1, Balance.general.HUNTER_CAMP_DENSITY);
         //Check Biome
         if (ModBiomes.vampireForest.getRegistryName().equals(biome.getRegistryName())) {
             return false;
