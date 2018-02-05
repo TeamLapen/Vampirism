@@ -125,12 +125,12 @@ public class BloodStats implements IBloodStats {
                 this.addExhaustion(f, true);
                 this.bloodTimer = 0;
             }
-        } else if (regen && this.bloodLevel >= (maxBlood * 0.9f) && player.shouldHeal()) {
+        } else if (regen && this.bloodLevel >= (18f) && player.shouldHeal()) {
             ++this.bloodTimer;
 
             if (this.bloodTimer >= 80) {
                 player.heal(1.0F);
-                this.addExhaustion(3.0F, true);
+                this.addExhaustion(2.8F, true);
                 this.bloodTimer = 0;
             }
         } else if (this.bloodLevel <= 0) {
