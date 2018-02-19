@@ -14,6 +14,7 @@ import com.google.common.collect.Maps;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.blocks.BlockAltarPillar;
 import de.teamlapen.vampirism.blocks.BlockGarlicBeacon;
 import de.teamlapen.vampirism.client.core.ModKeys;
@@ -379,7 +380,7 @@ public class GuideBook implements IGuideBook {
         new ItemInfoBuilder(ModItems.stake).setFormats(((int) (Balance.hps.INSTANT_KILL_SKILL_1_MAX_HEALTH_PERC * 100)) + "%").craftable(WORKBENCH).build(entries);
         new ItemInfoBuilder(ModItems.basic_crossbow).setFormats(ModItems.crossbow_arrow.getLocalizedName(), ModItems.tech_crossbow_ammo_package.getLocalizedName()).setLinks(new ResourceLocation("guide.vampirism.items.crossbow_arrow")).craftableStacks(ModItems.basic_crossbow, WEAPON_TABLE, ModItems.basic_double_crossbow, WEAPON_TABLE, ModItems.enhanced_crossbow, WEAPON_TABLE, ModItems.enhanced_double_crossbow, WEAPON_TABLE, ModItems.basic_tech_crossbow, WEAPON_TABLE, ModItems.tech_crossbow_ammo_package, WEAPON_TABLE).setName("crossbows").customName().build(entries);
         new ItemInfoBuilder(ModItems.crossbow_arrow).craftableStacks(ModItems.crossbow_arrow.getStack(ItemCrossbowArrow.EnumArrowType.NORMAL), WORKBENCH, ModItems.crossbow_arrow.getStack(ItemCrossbowArrow.EnumArrowType.VAMPIRE_KILLER), WEAPON_TABLE, ModItems.crossbow_arrow.getStack(ItemCrossbowArrow.EnumArrowType.SPITFIRE), WEAPON_TABLE).build(entries);
-        new ItemInfoBuilder(ModItems.holy_water_bottle).setLinks(new ResourceLocation("guide.vampirism.hunter.vamp_slayer"), new ResourceLocation("guide.vampirism.items.holy_salt")).setFormats(ModItems.holy_salt_water.getLocalizedName(), ModItems.holy_salt_water.getLocalizedName(), ModItems.holy_salt.getLocalizedName()).craftableStacks(ModItems.holy_salt_water, WORKBENCH).build(entries);
+        new ItemInfoBuilder(ModItems.holy_water_bottle).setLinks(new ResourceLocation("guide.vampirism.hunter.vamp_slayer"), new ResourceLocation("guide.vampirism.items.holy_salt")).setFormats(ModItems.holy_salt_water.getLocalizedName(), ModItems.holy_salt_water.getLocalizedName(), ModItems.holy_salt.getLocalizedName()).craftableStacks(ModItems.holy_salt_water, WORKBENCH, ModItems.holy_water_bottle.setTier(ModItems.holy_water_bottle.setSplash(new ItemStack(ModItems.holy_water_bottle), true), IItemWithTier.TIER.NORMAL), WORKBENCH, ModItems.holy_water_bottle.setTier(ModItems.holy_water_bottle.setSplash(new ItemStack(ModItems.holy_water_bottle, 5), true), IItemWithTier.TIER.NORMAL), WORKBENCH).build(entries);
         new ItemInfoBuilder(ModItems.holy_salt).setLinks(new ResourceLocation("guide.vampirism.items.holy_water_bottle")).setFormats(ModItems.pure_salt.getLocalizedName(), ModItems.pure_salt.getLocalizedName(), ModBlocks.alchemical_cauldron.getLocalizedName()).craftableStacks(ModItems.pure_salt, ALCHEMICAL_CAULDRON).build(entries);
         new ItemInfoBuilder(ModItems.item_alchemical_fire).setLinks(new ResourceLocation("guide.vampirism.items.crossbow_arrow")).craftable(ALCHEMICAL_CAULDRON).build(entries);
 
