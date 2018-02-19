@@ -42,6 +42,10 @@ public class BalanceVampirePlayer extends BalanceValues {
 //    public double JUMP_TYPE;
     @DefaultDouble(value = 0.7D, name = "blood_exhaustion_basic_modifier", minValue = 0, maxValue = 5, comment = "Blood exhaustion is multiplied with this value")
     public double BLOOD_EXHAUSTION_BASIC_MOD;
+
+    @DefaultInt(value = 18, name = "blood_healing_level", minValue = 1, comment = "Blood level required to allow the player to heal")
+    public int BLOOD_HEALING_LEVEL;
+
     //    @DefaultBoolean(value = true, name = "blood_increase_exhaustion", comment = "Increase exhaustion modifier with higher levels")
 //    public boolean BLOOD_INCREASE_EXHAUSTION;
     @DefaultBoolean(value = false, comment = "If the player should consume blood while in peaceful mode")

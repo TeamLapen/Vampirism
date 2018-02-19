@@ -57,6 +57,8 @@ public class Configs {
     public static boolean disable_config_sync;
     public static boolean disable_screen_overlay;
     public static boolean disable_collectVersionStat;
+    public static boolean disable_fang_infection;
+
     public static @Nonnull
     int[] worldGenDimensions = new int[0];
 
@@ -157,6 +159,9 @@ public class Configs {
         disable_config_sync = main_config.getBoolean("disable_config_sync", CATEGORY_DISABLE, false, "Disable syncing config between server and client. (Note: Only a few settings are synced anyway)");
         disable_screen_overlay = main_config.getBoolean("disable_screen_overlay", CATEGORY_DISABLE, false, "Disable the colored overlay (sunindicator, disguise or rage)  if they cause problems.");
         disable_collectVersionStat = main_config.getBoolean("disable_collect_basic_version_stat", CATEGORY_DISABLE, false, "Disable sending Mod version, MC version and mod count on version check");
+        disable_fang_infection = main_config.getBoolean("disable_fang_infection", CATEGORY_DISABLE, false, "Disable vampire fangs being useable to infect yourself");
+
+
         updated_vampirism = !main_config.getDefinedConfigVersion().equals(main_config.getLoadedConfigVersion());
 
         if (!dontSave && (main_config.hasChanged() || updated_vampirism)) {

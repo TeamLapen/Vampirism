@@ -442,6 +442,8 @@ text.vampirism.lord.portal_disabled=This portal does not lead anywhere
 text.vampirism.lord.level_to_low=You vampire level is too low to be a Vampire Lord
 text.vampirism.guard_stay_away_level_low=Your vampire level is too low to travel to Dracula's castle. Stay away\!
 text.vampirism.coffin.wrong_dimension=You can't sleep in this dimension.
+text.vampirism.deactivated_by_serveradmin=This is deactivated by your serveradmin
+
 
 text.vampirism.castle_fail=Vampirism was not able to find a appropriate position for a Vampire Castle. It is recommend to generate a new world. You can also try "/vampirism checkForVampireBiome", if that does not find a biome, another mod is probably interfering.
 text.vampirism.structure=Structure

@@ -125,7 +125,7 @@ public class BloodStats implements IBloodStats {
                 this.addExhaustion(f, true);
                 this.bloodTimer = 0;
             }
-        } else if (regen && this.bloodLevel >= (18f) && player.shouldHeal()) {
+        } else if (regen && this.bloodLevel >= (Balance.vp.BLOOD_HEALING_LEVEL) && player.shouldHeal()) {
             ++this.bloodTimer;
 
             if (this.bloodTimer >= 80) {
@@ -138,7 +138,7 @@ public class BloodStats implements IBloodStats {
 
             if (this.bloodTimer >= 80) {
                 if (player.getHealth() > 10.0F || enumDifficulty == EnumDifficulty.HARD || player.getHealth() > 1.0F && enumDifficulty == EnumDifficulty.NORMAL) {
-                    player.attackEntityFrom(DamageSource.STARVE, 1.0F);
+                    player.attackEntityFrom(DamageSource.STARVE, 1.5F);
                 }
 
                 this.bloodTimer = 0;
