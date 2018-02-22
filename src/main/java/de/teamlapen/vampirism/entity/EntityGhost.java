@@ -37,7 +37,9 @@ public class EntityGhost extends EntityVampirism implements IMob {
         if (!super.attackEntityFrom(damageSource, par2)) {
             return false;
         } else {
-            addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 20 * 5, 1));
+            if (damageSource.getTrueSource() != null && !this.equals(damageSource.getTrueSource())) {
+                addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 20 * 5, 1));
+            }
         }
         return true;
     }
