@@ -102,6 +102,12 @@ public class ModBlocksRender {
                 return new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "fluids"), "blood");
             }
         });
+        ModelLoader.setCustomStateMapper(ModBlocks.block_impure_blood_fluid, new StateMapperBase() {
+            @Override
+            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+                return new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "fluids"), "impure_blood");
+            }
+        });
         ModelLoader.setCustomStateMapper(ModBlocks.block_coffin, new StateMapperBase() {
             @Override
             protected ModelResourceLocation getModelResourceLocation(IBlockState state) {

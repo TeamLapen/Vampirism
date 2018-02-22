@@ -23,7 +23,10 @@ public class VReference {
      * One blood in the players blood stats represents this amount of mB fluid blood
      */
     public static final int FOOD_TO_FLUID_BLOOD = 100;
+    public static final float BLOOD_IMPURE_TO_PURE = 0.75f;
     public static final String FLUID_BLOOD_NAME = "vampirismblood";
+    public static final String FLUID_IMPURE_BLOOD_NAME = "impure_vampirismblood";
+
     /**
      * Attribute which defines sundamage. Registered for all IVampire mobs as well as the EntityPlayer.
      * Applied every 2 seconds if in sun

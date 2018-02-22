@@ -2,7 +2,9 @@ package de.teamlapen.vampirism.core;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
+import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.inventory.AlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.inventory.HunterWeaponCraftingManager;
@@ -291,5 +293,9 @@ public class ModItems {
             }
         }
         return false;
+    }
+
+    static void registerBloodConversionRates() {
+        BloodConversionRegistry.registerItem(ModItems.human_heart, 20 * VReference.FOOD_TO_FLUID_BLOOD);
     }
 }

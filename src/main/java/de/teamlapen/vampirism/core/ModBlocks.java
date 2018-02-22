@@ -30,6 +30,7 @@ import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 @GameRegistry.ObjectHolder(REFERENCE.MODID)
 public class ModBlocks {
     public static final BlockFluidBlood block_blood_fluid = getNull();
+    public static final BlockFluidBlood block_impure_blood_fluid = getNull();
     public static final BlockCastleBlock castle_block = getNull();
     public static final BlockCursedEarth cursed_earth = getNull();
     public static final VampirismFlower vampirism_flower = getNull();
@@ -161,8 +162,8 @@ public class ModBlocks {
     }
 
     static void registerBlocks(IForgeRegistry<Block> registry) {
-
-        registry.register(new BlockFluidBlood());//TODO maybe remove blood block later
+        registry.register(new BlockFluidBlood(ModFluids.blood, "block_blood_fluid"));
+        registry.register(new BlockFluidBlood(ModFluids.impure_blood, "block_impure_blood_fluid"));
         BlockCastleBlock castleBlock = new BlockCastleBlock();
         registry.register(castleBlock);
         registry.register(new VampirismFlower());

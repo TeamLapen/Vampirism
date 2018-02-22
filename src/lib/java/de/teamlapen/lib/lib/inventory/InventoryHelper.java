@@ -1,9 +1,18 @@
 package de.teamlapen.lib.lib.inventory;
 
 import de.teamlapen.lib.lib.util.ItemStackUtil;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.oredict.OreDictionary;
+
+import javax.annotation.Nullable;
 
 /**
  * Helper method for Inventories respectively {@link InventorySlot.IInventorySlotInventory}
@@ -53,6 +62,21 @@ public class InventoryHelper {
                 }
             }
         }
+    }
+
+
+    @Nullable
+    public static IItemHandler tryGetItemHandler(IBlockAccess world, BlockPos pos, @Nullable EnumFacing side) {
+        IBlockState state = world.getBlockState(pos);
+        if (state.getBlock().hasTileEntity(state)) {
+            TileEntity tile = world.getTileEntity(pos);
+            if (tile != null) {
+                if (tile.hasCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side)) {
+                    return tile.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side);
+                }
+            }
+        }
+        return null;
     }
 
 

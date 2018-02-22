@@ -1,6 +1,167 @@
 package de.teamlapen.vampirism.tileentity;
 
-import net.minecraft.tileentity.TileEntity;
+import de.teamlapen.lib.lib.inventory.InventorySlot;
+import de.teamlapen.lib.lib.tile.InventoryTileEntity;
+import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
+import de.teamlapen.vampirism.core.ModFluids;
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EntitySelectors;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.wrapper.InvWrapper;
 
-public class TileGrinder extends TileEntity {
+import javax.annotation.Nullable;
+import java.util.List;
+
+public class TileGrinder extends InventoryTileEntity implements ITickable {
+
+
+    private int cooldownPull = 0;
+    private int cooldownProcess = 0;
+    private IItemHandler itemHandler = new InvWrapper(this);
+
+    public TileGrinder() {
+        super(new InventorySlot[]{new InventorySlot(TileGrinder::canProcess, 0, 0)});
+    }
+
+    private static boolean canProcess(ItemStack stack) {
+        return true;
+    }
+
+    protected static List<EntityItem> getCaptureItems(World worldIn, BlockPos pos) {
+        int posX = pos.getX();
+        int posY = pos.getY();
+        int posZ = pos.getZ();
+        return worldIn.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(posX - 0.5D, posY, posZ - 0.5D, posX + 0.5D, posY + 1.5D, posZ + 0.5D), EntitySelectors.IS_ALIVE);
+    }
+
+    @Override
+    public String getName() {
+        return "tile.vampirism.grinder.name";
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tagCompound) {
+        super.readFromNBT(tagCompound);
+        cooldownPull = tagCompound.getInteger("cooldownPull");
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        compound.setInteger("cooldownPull", cooldownPull);
+        return super.writeToNBT(compound);
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        return ((facing == null || facing != EnumFacing.DOWN) && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) || super.hasCapability(capability, facing);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Nullable
+    @Override
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        if ((facing == null || facing != EnumFacing.DOWN) && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+            return (T) (itemHandler);
+        }
+        return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public void update() {
+        if (this.world != null && !this.world.isRemote) {
+            --this.cooldownPull;
+            if (cooldownPull <= 0) {
+                cooldownPull = 10;
+                this.updatePull();
+            }
+
+            --this.cooldownProcess;
+            if (cooldownProcess <= 0) {
+                cooldownProcess = 10;
+                this.updateProcess();
+            }
+
+        }
+    }
+
+    protected boolean updatePull() {
+        if (!isFull()) {
+            boolean flag = pullItems();
+            if (flag) {
+                this.cooldownPull = 20;
+            }
+            return flag;
+        }
+        return false;
+    }
+
+    private boolean pullItems() {
+        IItemHandler handler = de.teamlapen.lib.lib.inventory.InventoryHelper.tryGetItemHandler(this.world, this.pos.up(), EnumFacing.DOWN);
+        if (handler != null) {
+            for (int i = 0; i < handler.getSlots(); i++) {
+                ItemStack extracted = handler.extractItem(i, 1, true);
+                if (!extracted.isEmpty()) {
+                    for (int j = 0; j < itemHandler.getSlots(); j++) {
+                        ItemStack simulated = itemHandler.insertItem(j, extracted, true);
+                        if (simulated.isEmpty()) {
+                            extracted = handler.extractItem(i, 1, false);
+                            itemHandler.insertItem(j, extracted, false);
+                            return true;
+                        }
+                    }
+                }
+            }
+
+        }
+        for (EntityItem entityItem : getCaptureItems(this.world, this.pos)) {
+            ItemStack stack = entityItem.getItem();
+            for (int i = 0; i < itemHandler.getSlots(); i++) {
+                ItemStack stack2 = itemHandler.insertItem(i, stack, true);
+                if (stack2.isEmpty()) {
+                    stack2 = itemHandler.insertItem(i, stack, false);
+                    if (stack2.getCount() < stack.getCount()) {
+                        entityItem.setDead();
+                    } else {
+                        entityItem.setItem(stack2);
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+
+    }
+
+    protected void updateProcess() {
+        if (!isEmpty()) {
+            for (int i = 0; i < itemHandler.getSlots(); i++) {
+                ItemStack stack = itemHandler.extractItem(i, 1, true);
+                int blood = BloodConversionRegistry.getImpureBloodValue(stack);
+                if (blood > 0) {
+                    FluidStack fluid = new FluidStack(ModFluids.impure_blood, blood);
+                    IFluidHandler handler = FluidUtil.getFluidHandler(this.getWorld(), this.pos.down(), EnumFacing.UP);
+                    if (handler != null) {
+                        int filled = handler.fill(fluid, false);
+                        if (filled >= 0.9f * blood) {
+                            ItemStack extractedStack = itemHandler.extractItem(i, 1, false);
+                            handler.fill(fluid, true);
+                            this.cooldownProcess = 40;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

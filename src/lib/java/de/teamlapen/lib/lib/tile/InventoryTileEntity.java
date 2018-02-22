@@ -189,4 +189,13 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
     }
 
 
+    protected boolean isFull() {
+        for (InventorySlot s : this.getSlots()) {
+            if (this.slots[0].stack.isEmpty() || this.slots[0].stack.getCount() < this.slots[0].stack.getMaxStackSize()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }

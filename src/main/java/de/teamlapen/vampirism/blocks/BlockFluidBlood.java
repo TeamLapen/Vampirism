@@ -1,18 +1,19 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.material.Material;
 import net.minecraftforge.fluids.BlockFluidFinite;
+import net.minecraftforge.fluids.Fluid;
 
 
 public class BlockFluidBlood extends BlockFluidFinite {
-    private static final String name = "block_blood_fluid";
+    private final String name;
 
-    public BlockFluidBlood() {
-        super(ModFluids.blood, Material.WATER);
-        setUnlocalizedName(ModFluids.blood.getUnlocalizedName());
-        ModFluids.blood.setBlock(this);
+    public BlockFluidBlood(Fluid blood, String name) {
+        super(blood, Material.WATER);
+        this.name = name;
+        blood.setBlock(this);
+        setUnlocalizedName(blood.getUnlocalizedName());
         setRegistryName(REFERENCE.MODID, name);
     }
 
