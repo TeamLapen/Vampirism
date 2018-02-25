@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.event.FactionEvent;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.util.ScoreboardUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTBase;
@@ -315,6 +316,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (!Objects.equals(currentFaction, oldFaction)) {
             onChangedFaction();
         }
+        ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.FACTION_CRITERIA, currentFaction == null ? 0 : currentFaction.getKey().hashCode());
     }
 
     /**
