@@ -51,6 +51,12 @@ public class BloodConversionRegistry {
         return (int) (getFluidBloodConversionFactor(fluid) * amount);
     }
 
+    /**
+     * Return a blood FluidStack with the amount produced by the conversion.
+     * If the given fluid(stack) is not convertible returns null
+     *
+     * @return Null if not convertible
+     */
     @Nullable
     public static FluidStack getFluidBloodEquivalent(FluidStack fluidStack) {
         String name = fluidStack.getFluid().getName();

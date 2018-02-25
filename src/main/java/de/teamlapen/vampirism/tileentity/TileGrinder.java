@@ -36,14 +36,14 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
     }
 
     private static boolean canProcess(ItemStack stack) {
-        return true;
+        return BloodConversionRegistry.getImpureBloodValue(stack) > 0;
     }
 
     protected static List<EntityItem> getCaptureItems(World worldIn, BlockPos pos) {
         int posX = pos.getX();
         int posY = pos.getY();
         int posZ = pos.getZ();
-        return worldIn.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(posX - 0.5D, posY, posZ - 0.5D, posX + 0.5D, posY + 1.5D, posZ + 0.5D), EntitySelectors.IS_ALIVE);
+        return worldIn.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(posX, posY + 0.5D, posZ, posX + 1D, posY + 1.5D, posZ + 1D), EntitySelectors.IS_ALIVE);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
         }
     }
 
-    protected boolean updatePull() {
+    private boolean updatePull() {
         if (!isFull()) {
             boolean flag = pullItems();
             if (flag) {
@@ -144,7 +144,7 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
 
     }
 
-    protected void updateProcess() {
+    private void updateProcess() {
         if (!isEmpty()) {
             for (int i = 0; i < itemHandler.getSlots(); i++) {
                 ItemStack stack = itemHandler.extractItem(i, 1, true);
