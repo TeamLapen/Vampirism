@@ -297,5 +297,8 @@ public class ModItems {
 
     static void registerBloodConversionRates() {
         BloodConversionRegistry.registerItem(ModItems.human_heart, 20 * VReference.FOOD_TO_FLUID_BLOOD);
+        BloodConversionRegistry.registerItem(ModItems.weak_human_heart, 10 * VReference.FOOD_TO_FLUID_BLOOD);
+        BloodConversionRegistry.registerItem(Items.BEEF, 2 * VReference.FOOD_TO_FLUID_BLOOD);
+        BloodConversionRegistry.registerItem(Items.PORKCHOP, VReference.FOOD_TO_FLUID_BLOOD);
     }
 }
