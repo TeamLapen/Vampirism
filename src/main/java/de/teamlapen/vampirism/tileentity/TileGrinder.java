@@ -32,7 +32,7 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
     private IItemHandler itemHandler = new InvWrapper(this);
 
     public TileGrinder() {
-        super(new InventorySlot[]{new InventorySlot(TileGrinder::canProcess, 0, 0)});
+        super(new InventorySlot[]{new InventorySlot(TileGrinder::canProcess, 80, 34)});
     }
 
     private static boolean canProcess(ItemStack stack) {

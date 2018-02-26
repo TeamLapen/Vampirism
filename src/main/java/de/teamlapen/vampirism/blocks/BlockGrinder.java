@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.blocks;
 
+import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.tileentity.TileGrinder;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
@@ -7,6 +9,7 @@ import net.minecraft.block.state.BlockFaceShape;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
@@ -72,6 +75,13 @@ public class BlockGrinder extends VampirismBlockContainer {
     @Override
     public IBlockState getStateFromMeta(int meta) {
         return this.getDefaultState().withProperty(FACING, EnumFacing.getHorizontal(meta));
+    }
+
+    @Override
+    public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
+        if (worldIn.isRemote) return true;
+        playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_BLOOD_GRINDER, worldIn, pos.getX(), pos.getY(), pos.getZ());
+        return true;
     }
 
     @Override
