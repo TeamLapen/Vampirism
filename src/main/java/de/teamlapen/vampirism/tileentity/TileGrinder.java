@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.tile.InventoryTileEntity;
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.general.BloodConversionRegistry;
 import de.teamlapen.vampirism.core.ModFluids;
 import net.minecraft.entity.item.EntityItem;
@@ -12,6 +13,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.fluids.FluidStack;
@@ -29,6 +31,8 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
 
     private int cooldownPull = 0;
     private int cooldownProcess = 0;
+
+    //Used to provide ItemHandler compatibility
     private IItemHandler itemHandler = new InvWrapper(this);
 
     public TileGrinder() {
@@ -54,12 +58,14 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
     @Override
     public void readFromNBT(NBTTagCompound tagCompound) {
         super.readFromNBT(tagCompound);
-        cooldownPull = tagCompound.getInteger("cooldownPull");
+        cooldownPull = tagCompound.getInteger("cooldown_pull");
+        cooldownProcess = tagCompound.getInteger("cooldown_process");
     }
 
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound.setInteger("cooldownPull", cooldownPull);
+        compound.setInteger("cooldown_pull", cooldownPull);
+        compound.setInteger("cooldown_process", cooldownProcess);
         return super.writeToNBT(compound);
     }
 
@@ -157,7 +163,7 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
                         if (filled >= 0.9f * blood) {
                             ItemStack extractedStack = itemHandler.extractItem(i, 1, false);
                             handler.fill(fluid, true);
-                            this.cooldownProcess = 40;
+                            this.cooldownProcess = MathHelper.clamp(20 * filled / VReference.FOOD_TO_FLUID_BLOOD, 20, 100);
                         }
                     }
                 }

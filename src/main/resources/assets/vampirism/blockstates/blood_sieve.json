@@ -4,10 +4,16 @@
     "model": "vampirism:blood_sieve"
   },
   "variants": {
-    "normal": [
-      {
+    "active": {
+      "true": {
+        "textures": {
+          "filter": "vampirism:blocks/blood_sieve_filter_active"
+        }
+      },
+      "false": {
+
       }
-    ],
+    },
     "inventory": {
       "transform": "forge:default-block"
     }

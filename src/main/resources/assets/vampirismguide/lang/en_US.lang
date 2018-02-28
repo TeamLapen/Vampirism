@@ -158,3 +158,6 @@ guide.vampirism.blocks.garlic_beacon.text=Diffuses garlic particles into the air
 guide.vampirism.blocks.altar_inspiration.text=Used to level up as a vampire.
 guide.vampirism.blocks.blood_container.text=Can store a lot of blood. (Sneak-) Rightclick it with a blood bottle to put blood in or take blood out of it.
 guide.vampirism.blocks.blood_pedestal.text=Can be used to charge blood powered items. Place on top of any blood container or tank and insert any appropriate item by right-clicking.
+guide.vampirism.blocks.blood_grinder.text=This advanced machine is able to grind certain items to extract blood. This includes items like %s but also %s and some modded items. However, the extracted blood is impure. Place it on top of a %s to filter the result.\nIt acts like an hopper extracting suitable items from a inventory above and accepting items thrown on top of it.
+guide.vampirism.blocks.blood_sieve.text=This block can be used to clean %s produced by the %s. It might also be used to convert blood fluids from other mods. Place it on top of a blood container and pump some liquid to filter in to it. It can also drain impure blood from a tank above.
+

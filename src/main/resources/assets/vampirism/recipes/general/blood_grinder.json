@@ -1,0 +1,26 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " Z ",
+    "YDY",
+    "YXY"
+  ],
+  "key": {
+    "X": {
+      "item": "#IRON"
+    },
+    "Y": {
+      "item": "#PLANKS"
+    },
+    "Z": {
+      "item": "minecraft:hopper"
+    },
+    "D": {
+      "item": "#DIAMOND"
+    }
+  },
+  "result": {
+    "item": "vampirism:blood_grinder",
+    "count": 1
+  }
+}

@@ -21,6 +21,13 @@
     }
   },
   {
+    "name": "DIAMOND",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "gemDiamond"
+    }
+  },
+  {
     "name": "STONEBRICK",
     "ingredient": {
       "type": "minecraft:item",

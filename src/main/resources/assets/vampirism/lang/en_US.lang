@@ -322,6 +322,7 @@ effect.vampirism.garlic=Garlic
 
 #FLUIDS
 fluid.vampirism.vampirismblood=Blood
+fluid.vampirism.impure_vampirismblood=Impure blood
 
 #GUI
 gui.vampirism.hunter_weapon_table=Hunter Weapon Table

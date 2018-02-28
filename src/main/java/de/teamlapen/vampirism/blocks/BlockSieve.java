@@ -3,25 +3,47 @@ package de.teamlapen.vampirism.blocks;
 import de.teamlapen.vampirism.tileentity.TileSieve;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.state.BlockFaceShape;
+import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.ChunkCache;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraft.world.chunk.Chunk;
 
 import javax.annotation.Nullable;
 
 public class BlockSieve extends VampirismBlockContainer {
 
     private final static String regName = "blood_sieve";
+    public static final PropertyBool PROPERTY_ACTIVE = PropertyBool.create("active");
 
     public BlockSieve() {
         super(regName, Material.WOOD);
         setHardness(2.5F);
         setSoundType(SoundType.WOOD);
+        this.setDefaultState(this.blockState.getBaseState().withProperty(PROPERTY_ACTIVE, false));
+    }
+
+    @Override
+    public IBlockState getActualState(IBlockState state, IBlockAccess world, BlockPos pos) {
+        TileSieve tile = (TileSieve) (world instanceof ChunkCache ? ((ChunkCache) world).getTileEntity(pos, Chunk.EnumCreateEntityType.CHECK) : world.getTileEntity(pos));
+
+        if (tile != null) {
+            return state.withProperty(PROPERTY_ACTIVE, tile.isActive());
+        }
+        return state.withProperty(PROPERTY_ACTIVE, false);
+    }
+
+
+    @Override
+    public int getMetaFromState(IBlockState state) {
+        return 0;
     }
 
     @Nullable
@@ -54,6 +76,12 @@ public class BlockSieve extends VampirismBlockContainer {
     @Override
     public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
         return face == EnumFacing.UP || face == EnumFacing.DOWN ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
+    }
+
+
+    @Override
+    protected BlockStateContainer createBlockState() {
+        return new BlockStateContainer(this, PROPERTY_ACTIVE);
     }
 
 }
