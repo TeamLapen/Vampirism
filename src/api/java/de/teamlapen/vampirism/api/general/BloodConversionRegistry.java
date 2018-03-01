@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.api.general;
 
 import de.teamlapen.vampirism.api.VReference;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -18,8 +18,8 @@ import java.util.function.Function;
  * Liquids -> blood
  */
 public class BloodConversionRegistry {
-    private static final Map<Item, Integer> blood_items = new HashMap<>();
-    private static final Map<Item, Function<ItemStack, Integer>> blood_item_special = new HashMap<>();
+    private static final Map<ResourceLocation, Integer> blood_items = new HashMap<>();
+    private static final Map<ResourceLocation, Function<ItemStack, Integer>> blood_item_special = new HashMap<>();
     private static final Map<String, Float> fluids = new HashMap<>();
 
     /**
@@ -32,10 +32,10 @@ public class BloodConversionRegistry {
      * @return Impure blood amount in mB or 0
      */
     public static int getImpureBloodValue(@Nonnull ItemStack item) {
-        if (blood_item_special.containsKey(item.getItem())) {
-            return blood_item_special.get(item.getItem()).apply(item);
-        } else if (blood_items.containsKey(item.getItem())) {
-            return blood_items.get(item.getItem());
+        if (blood_item_special.containsKey(item.getItem().getRegistryName())) {
+            return blood_item_special.get(item.getItem().getRegistryName()).apply(item);
+        } else if (blood_items.containsKey(item.getItem().getRegistryName())) {
+            return blood_items.get(item.getItem().getRegistryName());
         }
         return 0;
     }
@@ -81,12 +81,12 @@ public class BloodConversionRegistry {
     /**
      * Register the impure blood amount for the given item.
      * This affects any stack of the given item regardless of meta or NBT
-     * For different meta values or advanced items (e.g. NBT) check {@link #registerItem(Item, Function)}
+     * For different meta values or advanced items (e.g. NBT) check {@link #registerItem(ResourceLocation, Function)}
      *
      * @param amount Impure blood amount in mB
      */
-    public static void registerItem(Item item, int amount) {
-        blood_items.put(item, amount);
+    public static void registerItem(ResourceLocation itemId, int amount) {
+        blood_items.put(itemId, amount);
     }
 
     /**
@@ -95,7 +95,7 @@ public class BloodConversionRegistry {
      *
      * @param function Function that returns the appropriate amount of blood. Can return 0
      */
-    public static void registerItem(Item item, Function<ItemStack, Integer> function) {
-        blood_item_special.put(item, function);
+    public static void registerItem(ResourceLocation itemId, Function<ItemStack, Integer> function) {
+        blood_item_special.put(itemId, function);
     }
 }

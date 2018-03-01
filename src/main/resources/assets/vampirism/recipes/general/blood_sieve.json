@@ -16,10 +16,9 @@
       "item": "minecraft:cauldron"
     },
     "Q": {
-      "ingredient": {
-        "type": "forge:ore_dict",
-        "ore": "blockQuartz"
-      }
+      "type": "forge:ore_dict",
+      "ore": "blockQuartz"
+
     }
   },
   "result": {
