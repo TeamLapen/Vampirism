@@ -1,6 +1,7 @@
 package de.teamlapen.lib.lib.config;
 
 import de.teamlapen.lib.VampLib;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 
@@ -68,15 +69,14 @@ public abstract class BalanceValues {
             Class type = f.getType();
             try {
                 if (type == int.class) {
-                    // Possible exception should not be caught so you can't forget a default value
                     DefaultInt a = f.getAnnotation(DefaultInt.class);
                     int value = (alt && a.hasAlternate()) ? a.alternateValue() : a.value();
-                    f.set(this, configuration.get(cat.getQualifiedName(), chooseName(name, a.name()), value, a.comment(), a.minValue(), a.maxValue()).getInt());
+                    f.set(this, MathHelper.clamp(configuration.get(cat.getQualifiedName(), chooseName(name, a.name()), value, a.comment(), a.minValue(), a.maxValue()).getInt(), a.minValue(), a.maxValue()));
                 } else if (type == double.class) {
                     // Possible exception should not be caught so you can't forget a default value
                     DefaultDouble a = f.getAnnotation(DefaultDouble.class);
                     double value = (alt && a.hasAlternate()) ? a.alternateValue() : a.value();
-                    f.set(this, configuration.get(cat.getQualifiedName(), chooseName(name, a.name()), value, a.comment(), a.minValue(), a.maxValue()).getDouble());
+                    f.set(this, MathHelper.clamp(configuration.get(cat.getQualifiedName(), chooseName(name, a.name()), value, a.comment(), a.minValue(), a.maxValue()).getDouble(), a.minValue(), a.maxValue()));
                 } else if (type == boolean.class) {
                     DefaultBoolean a = f.getAnnotation(DefaultBoolean.class);
                     boolean value = (alt && a.hasAlternate()) ? a.alternateValue() : a.value();
