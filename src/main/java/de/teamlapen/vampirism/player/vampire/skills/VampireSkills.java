@@ -47,6 +47,7 @@ public class VampireSkills {
     public static final ISkill teleport = UtilLib.getNull();
     public static final ISkill blood_charge = UtilLib.getNull();
     public static final ISkill sword_finisher = UtilLib.getNull();
+    public static final ISkill dark_blood_projectile = UtilLib.getNull();
 
     public static void registerVampireSkills(IForgeRegistry<ISkill> registry) {
         registry.register(new VampirismSkill.SimpleVampireSkill(VReference.VAMPIRE_FACTION.getKey(), 32, 0, false));
@@ -217,6 +218,7 @@ public class VampireSkills {
                 return UtilLib.translateFormatted("text.vampirism.skill.sword_finisher.desc", (int) (Balance.vps.SWORD_FINISHER_MAX_HEALTH_PERC * 100));
             }
         });
+        registry.register(new ActionSkill<>("dark_blood_projectile", VampireActions.dark_blood_projectile));
 
 
     }
@@ -250,8 +252,9 @@ public class VampireSkills {
 
         SkillNode skill2 = skillManager.createSkillNode(skill1, bite1, bite2);
         SkillNode skill3 = skillManager.createSkillNode(skill2, sword_finisher);
-        SkillNode skill4 = skillManager.createSkillNode(skill3, blood_charge);
-        SkillNode skill5 = skillManager.createSkillNode(skill4, freeze);
+        SkillNode skill4 = skillManager.createSkillNode(skill3, dark_blood_projectile);
+        SkillNode skill5 = skillManager.createSkillNode(skill4, blood_charge);
+        SkillNode skill6 = skillManager.createSkillNode(skill5, freeze);
 
         //TODO add lighting or so
 

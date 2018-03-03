@@ -71,6 +71,7 @@ public class ModEntities {
     public static final String PARTICLE_CLOUD = "particle_cloud";
     public static final String THROWABLE_ITEM = "throwable_item";
     public static final String SPECIAL_DRACULA_HALLOWEEN = "special_dracula_halloween";
+    public static final String DARK_BLOOD_PROJECTILE = "dark_blood_projectile";
 
     /**
      * List of entity names which should be spawnable
@@ -129,6 +130,7 @@ public class ModEntities {
         registry.register(prepareEntityEntry(EntityAreaParticleCloud.class, PARTICLE_CLOUD, "particle_cloud", EntityLiving.SpawnPlacementType.IN_AIR, false).build());
         registry.register(prepareEntityEntry(EntityThrowableItem.class, THROWABLE_ITEM, "throwable_item", EntityLiving.SpawnPlacementType.IN_AIR, false).build());
         registry.register(prepareEntityEntry(EntityDraculaHalloween.class, SPECIAL_DRACULA_HALLOWEEN, null, EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
+        registry.register(prepareEntityEntry(EntityDarkBloodProjectile.class, DARK_BLOOD_PROJECTILE, null, EntityLiving.SpawnPlacementType.IN_AIR, false).build());
     }
 
     static Biome[] getZombieBiomes() {

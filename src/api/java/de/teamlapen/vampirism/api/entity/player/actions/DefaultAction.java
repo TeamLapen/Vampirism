@@ -76,5 +76,10 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends IForgeRegi
         return this.getRegistryName() + " (" + this.getClass().getSimpleName() + ")";
     }
 
+    /**
+     * Called when the action is activated. Only called server side
+     *
+     * @return Whether the action was successfully activated. !Does not give any feedback to the user!
+     */
     protected abstract boolean activate(T player);
 }

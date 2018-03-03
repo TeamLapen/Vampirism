@@ -29,7 +29,11 @@ public class ModParticles {
             @SideOnly(Side.CLIENT)
             @Override
             public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
-                return new GenericParticle(world, posX, posY, posZ, (int) param[0], (int) param[1], (int) param[2]);
+                GenericParticle particle = new GenericParticle(world, posX, posY, posZ, (int) param[0], (int) param[1], (int) param[2]);
+                if (param.length > 3) {
+                    particle.scaleSpeed((Double) param[3]);
+                }
+                return particle;
             }
 
             @Nonnull
@@ -39,16 +43,22 @@ public class ModParticles {
                 nbt.setInteger("0", (Integer) param[0]);
                 nbt.setInteger("1", (Integer) param[1]);
                 nbt.setInteger("2", (Integer) param[2]);
+                if (param.length > 3) {
+                    nbt.setDouble("3", (Double) param[3]);
+                }
                 return nbt;
             }
 
             @Nonnull
             @Override
             public Object[] readParticleInfo(NBTTagCompound nbt) {
-                Object[] data = new Object[4];
+                Object[] data = new Object[nbt.hasKey("3") ? 4 : 3];
                 data[0] = nbt.getInteger("0");
                 data[1] = nbt.getInteger("1");
                 data[2] = nbt.getInteger("2");
+                if (data.length > 3) {
+                    data[3] = nbt.getDouble("3");
+                }
                 return data;
             }
         });

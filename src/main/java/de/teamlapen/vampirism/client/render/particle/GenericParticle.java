@@ -16,4 +16,10 @@ public class GenericParticle extends Particle {
         this.particleBlue = (color & 0xFF) / 256f;
     }
 
+    public void scaleSpeed(double f) {
+        this.motionX *= f;
+        this.motionY *= f;
+        this.motionZ *= f;
+    }
+
 }

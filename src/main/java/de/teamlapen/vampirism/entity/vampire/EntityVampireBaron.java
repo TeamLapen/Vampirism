@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampireMinion;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.entity.ai.EntityAIAttackRangedDarkBlood;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.entity.minions.SaveableMinionHandler;
@@ -294,6 +295,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         super.initEntityAI();
         this.tasks.addTask(4, new VampireAIFleeGarlic(this, 0.9F, false));
         this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.0F, false));
+        this.tasks.addTask(6, new EntityAIAttackRangedDarkBlood(this, 60, 64, 6, 4));
         this.tasks.addTask(6, new EntityAIAvoidEntity<>(this, EntityPlayer.class, input -> input != null && !isLowerLevel(input), 6.0F, 0.6, 0.7F));//TODO Works only partially. Pathfinding somehow does not find escape routes
         this.tasks.addTask(7, new EntityAIWander(this, 0.2));
         this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));

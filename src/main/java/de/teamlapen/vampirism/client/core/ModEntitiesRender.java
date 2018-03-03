@@ -44,5 +44,6 @@ public class ModEntitiesRender {
         RenderingRegistry.registerEntityRenderingHandler(EntityAreaParticleCloud.class, RenderAreaParticleCloud::new);
         RenderingRegistry.registerEntityRenderingHandler(EntityThrowableItem.class, manager -> new RenderThrowableItem(manager, Minecraft.getMinecraft().getRenderItem()));
         RenderingRegistry.registerEntityRenderingHandler(EntityDraculaHalloween.class, RenderSpecialDraculaHalloween::new);
+        RenderingRegistry.registerEntityRenderingHandler(EntityDarkBloodProjectile.class, RenderDarkBloodProjectile::new);
     }
 }
