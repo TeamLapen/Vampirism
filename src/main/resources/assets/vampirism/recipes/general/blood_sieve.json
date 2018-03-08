@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XQX",
+    "YZY",
+    "YXY"
+  ],
+  "key": {
+    "X": {
+      "item": "#IRON"
+    },
+    "Y": {
+      "item": "#PLANKS"
+    },
+    "Z": {
+      "item": "minecraft:cauldron"
+    },
+    "Q": {
+      "type": "forge:ore_dict",
+      "ore": "blockQuartz"
+
+    }
+  },
+  "result": {
+    "item": "vampirism:blood_sieve",
+    "count": 1
+  }
+}

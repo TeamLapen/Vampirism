@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "vampirism:stake"
+    },
+    "title": {
+      "translate": "advancement.vampirism.stake"
+    },
+    "description": {
+      "translate": "advancement.vampirism.stake.desc"
+    },
+    "frame": "challenge"
+  },
+  "reward": {
+    "experience": 100
+  },
+  "parent": "vampirism:hunter/become_hunter",
+  "criteria": {
+    "flower": {
+      "trigger": "vampirism:hunter_action",
+      "conditions": {
+        "action": "stake"
+      }
+    }
+  }
+}

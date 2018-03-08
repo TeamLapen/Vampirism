@@ -62,8 +62,8 @@ public class DamageHandler {
         }
         if (vampire instanceof IVampirePlayer) {
             IActionHandler<IVampirePlayer> actionHandler = ((IVampirePlayer) vampire).getActionHandler();
-            if (actionHandler.isActionActive(VampireActions.disguiseAction)) {
-                actionHandler.toggleAction(VampireActions.disguiseAction);
+            if (actionHandler.isActionActive(VampireActions.disguise_vampire)) {
+                actionHandler.toggleAction(VampireActions.disguise_vampire);
             }
         }
     }
@@ -114,11 +114,11 @@ public class DamageHandler {
         }
         if (vampire && entity instanceof EntityPlayer) {
             IActionHandler<IVampirePlayer> actionHandler = VampirePlayer.get((EntityPlayer) entity).getActionHandler();
-            if (actionHandler.isActionActive(VampireActions.disguiseAction)) {
-                actionHandler.toggleAction(VampireActions.disguiseAction);
+            if (actionHandler.isActionActive(VampireActions.disguise_vampire)) {
+                actionHandler.toggleAction(VampireActions.disguise_vampire);
             }
-            if (actionHandler.isActionActive(VampireActions.invisibilityAction)) {
-                actionHandler.toggleAction(VampireActions.invisibilityAction);
+            if (actionHandler.isActionActive(VampireActions.vampire_invisibility)) {
+                actionHandler.toggleAction(VampireActions.vampire_invisibility);
             }
         }
     }

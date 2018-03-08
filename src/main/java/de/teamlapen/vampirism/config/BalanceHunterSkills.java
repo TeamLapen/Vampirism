@@ -23,7 +23,7 @@ public class BalanceHunterSkills extends BalanceValues {
     @DefaultBoolean(value = false, comment = "First stake skill - If it is required to attack from behind to instant kill low level vampires")
     public boolean INSTANT_KILL_SKILL_1_FROM_BEHIND;
 
-    @DefaultDouble(value = 0.3, minValue = 0, maxValue = 1, comment = "The maximal relative health (actual/max) a entity may have to be instantly killed")
+    @DefaultDouble(value = 0.35, minValue = 0, maxValue = 1, comment = "The maximal relative health (actual/max) a entity may have to be instantly killed")
     public double INSTANT_KILL_SKILL_1_MAX_HEALTH_PERC;
 
     @DefaultInt(value = 200, minValue = 0, comment = "Second stake skill - The max (not the actual) health a entity that can be one hit killed from behind may have")

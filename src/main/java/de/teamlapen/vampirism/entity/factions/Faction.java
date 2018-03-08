@@ -49,7 +49,7 @@ public class Faction<T extends IFactionEntity> implements IFaction<T> {
     }
 
     @Override
-    public Class<T> getEntityInterface() {
+    public Class<T> getFactionEntityInterface() {
         return entityInterface;
     }
 

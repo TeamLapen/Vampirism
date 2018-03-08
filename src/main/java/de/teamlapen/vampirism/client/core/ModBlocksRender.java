@@ -4,10 +4,12 @@ import de.teamlapen.lib.lib.util.InventoryRenderHelper;
 import de.teamlapen.vampirism.blocks.*;
 import de.teamlapen.vampirism.client.render.tiles.AltarInfusionTESR;
 import de.teamlapen.vampirism.client.render.tiles.CoffinTESR;
+import de.teamlapen.vampirism.client.render.tiles.PedestalTESR;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.tileentity.TileAlchemicalCauldron;
 import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
 import de.teamlapen.vampirism.tileentity.TileCoffin;
+import de.teamlapen.vampirism.tileentity.TilePedestal;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -66,11 +68,19 @@ public class ModBlocksRender {
         renderHelper.registerRender(ModBlocks.fire_place);
         renderHelper.registerRender(ModBlocks.blood_potion_table);
         renderHelper.registerRender(ModBlocks.sunscreen_beacon);
+        renderHelper.registerRender(ModBlocks.castle_stairs_dark);
+        renderHelper.registerRender(ModBlocks.castle_stairs_dark_stone);
+        renderHelper.registerRender(ModBlocks.castle_stairs_purple);
+        renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.castle_slab), BlockCastleSlab.EnumType.values());
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.hunter_table), EnumFacing.HORIZONTALS);
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.vampirism_flower), VampirismFlower.EnumFlowerType.values());
         renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.church_altar), EnumFacing.HORIZONTALS);
         renderHelper.registerRender(Item.getItemFromBlock(ModBlocks.weapon_table), "inventory");
         renderHelper.registerRender(ModBlocks.alchemical_cauldron);
+        renderHelper.registerRender(ModBlocks.blood_pedestal);
+        renderHelper.registerRenderAllMeta(Item.getItemFromBlock(ModBlocks.blood_grinder), EnumFacing.HORIZONTALS);
+        renderHelper.registerRender(ModBlocks.blood_sieve);
+
 
         for (EnumFacing f : EnumFacing.HORIZONTALS) {
             for (BlockGarlicBeacon.Type t : BlockGarlicBeacon.Type.values()) {
@@ -90,6 +100,12 @@ public class ModBlocksRender {
             @Override
             protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
                 return new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "fluids"), "blood");
+            }
+        });
+        ModelLoader.setCustomStateMapper(ModBlocks.block_impure_blood_fluid, new StateMapperBase() {
+            @Override
+            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
+                return new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "fluids"), "impure_blood");
             }
         });
         ModelLoader.setCustomStateMapper(ModBlocks.block_coffin, new StateMapperBase() {
@@ -118,6 +134,7 @@ public class ModBlocksRender {
     private static void registerTileRenderer() {
         ClientRegistry.bindTileEntitySpecialRenderer(TileCoffin.class, new CoffinTESR());
         ClientRegistry.bindTileEntitySpecialRenderer(TileAltarInfusion.class, new AltarInfusionTESR());
+        ClientRegistry.bindTileEntitySpecialRenderer(TilePedestal.class, new PedestalTESR());
     }
 
 

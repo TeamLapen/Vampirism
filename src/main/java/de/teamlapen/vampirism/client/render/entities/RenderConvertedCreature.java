@@ -28,7 +28,7 @@ public class RenderConvertedCreature extends Render<EntityConvertedCreature> {
         if (creature != null) {
             creature.isDead = false;
             renderOverlay = true;
-            this.renderManager.doRenderEntity(creature, x, y, z, entityYaw, partialTicks, false);
+            this.renderManager.renderEntity(creature, x, y, z, entityYaw, partialTicks, false);
             renderOverlay = false;
             creature.isDead = true;
         }

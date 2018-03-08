@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.config;
 
 import de.teamlapen.lib.lib.config.BalanceValues;
 import de.teamlapen.lib.lib.config.DefaultBoolean;
+import de.teamlapen.lib.lib.config.DefaultDouble;
 import de.teamlapen.lib.lib.config.DefaultInt;
 import de.teamlapen.vampirism.VampirismMod;
 
@@ -38,7 +39,7 @@ public class BalanceVampireActions extends BalanceValues {
     @DefaultInt(value = 50, minValue = 1)
     public int TELEPORT_MAX_DISTANCE;
 
-    @DefaultInt(value = 8, minValue = 1)
+    @DefaultInt(value = 10, minValue = 1)
     public int TELEPORT_COOLDOWN;
 
     @DefaultBoolean(value = true, name = "teleport_enabled")
@@ -63,6 +64,12 @@ public class BalanceVampireActions extends BalanceValues {
     @DefaultBoolean(value = true, name = "bat_enabled")
     public boolean BAT_ENABLED;
 
+    @DefaultInt(value = 0, minValue = 0, name = "bat_cooldown")
+    public int BAT_COOLDOWN;
+
+    @DefaultInt(value = Integer.MAX_VALUE, minValue = 10, name = "bat_duration")
+    public int BAT_DURATION;
+
     @DefaultBoolean(value = true, name = "summon_bats_enabled")
     public boolean SUMMON_BAT_ENABLED;
 
@@ -79,6 +86,18 @@ public class BalanceVampireActions extends BalanceValues {
     public boolean DISGUISE_ENABLED;
     @DefaultInt(value = 60, minValue = 1, comment = "In seconds")
     public int DISGUISE_COOLDOWN;
+
+    @DefaultBoolean(value = true)
+    public boolean DARK_BLOOD_PROJECTILE_ENABLE;
+
+    @DefaultInt(value = 2, minValue = 1, comment = "In seconds")
+    public int DARK_BLOOD_PROJECTILE_COOLDOWN;
+
+    @DefaultDouble(value = 6, minValue = 0, comment = "Damage of the direct projectile hit")
+    public double DARK_BLOOD_PROJECTILE_DAMAGE;
+
+    @DefaultDouble(value = 3, minValue = 0, comment = "Damage of the indirect projectile hit")
+    public double DARK_BLOOD_PROJECTILE_INDIRECT_DAMAGE;
 
     /**
      * Creates a configuration for balance values

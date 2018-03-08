@@ -18,6 +18,7 @@ import de.teamlapen.vampirism.items.VampirismItemCrossbow;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
+import de.teamlapen.vampirism.world.loot.LootHandler;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
@@ -34,6 +35,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
@@ -59,8 +61,8 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     private final EntityAIBase wanderVillage = new EntityAIMoveThroughVillageCustom(this, 0.7F, false, 300);
     private final EntityAIBase defendVillage = new HunterAIDefendVillage(this);
     private final EntityAIBase targetZombies = new EntityAINearestAttackableTarget<>(this, EntityZombie.class, true, true);
-    private final EntityAIAttackMelee attackMelee = new EntityAIAttackMelee(this, 1.0, false);
-    private final EntityAIAttackRangedCrossbow attackRange = new EntityAIAttackRangedCrossbow(this, this, 0.6, 60, 20);
+    private final EntityAIAttackMelee attackMelee;
+    private final EntityAIAttackRangedCrossbow attackRange;
     private boolean villageHunter = false;
     private boolean defendVillageAdded = false;
     /**
@@ -80,7 +82,6 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
 
     public EntityBasicHunter(World world) {
         super(world, true);
-
         saveHome = true;
         ((PathNavigateGround) this.getNavigator()).setEnterDoors(true);
 
@@ -88,6 +89,10 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
 
 
         this.setDontDropEquipment();
+
+        this.attackMelee = new EntityAIAttackMelee(this, 1.0, false);
+        this.attackRange = new EntityAIAttackRangedCrossbow(this, this, 0.6, 60, 20);
+        this.updateCombatTask();
     }
 
     @Override
@@ -176,7 +181,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     @Override
     public void makeNormalHunter() {
         super.setHome(null);
-        this.setMoveTowardsRestriction(0, false);
+        this.disableMoveTowardsRestriction();
         this.villageHunter = false;
         this.setDefendVillage(false);
     }
@@ -318,17 +323,6 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         return isLookingForHome() && super.canDespawn();
     }
 
-    @Override
-    protected void dropFewItems(boolean recentlyHit, int lootingLevel) {
-        if (recentlyHit) {
-            if (this.rand.nextInt(3) == 0) {
-                this.dropItem(ModItems.human_heart, 1);
-            }
-            if (this.rand.nextInt(4) == 0) {
-                this.dropItem(ModItems.holy_salt, 1);
-            }
-        }
-    }
 
     @Override
     protected void entityInit() {
@@ -348,7 +342,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         super.initEntityAI();
 
         this.tasks.addTask(1, new EntityAIOpenDoor(this, true));
-        //Attack task is added with priority 2
+        //Attack task is added in #updateCombatTasks which is e.g. called at end of constructor
         this.tasks.addTask(3, new HunterAILookAtTrainee(this));
 
         this.tasks.addTask(6, new EntityAIWander(this, 0.7, 50));
@@ -409,20 +403,24 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
      * * @param active If the task should be active or not
      */
     protected void setDefendVillage(boolean active) {
-        if (defendVillageAdded) {
-            if (active) return;
+        if (defendVillageAdded && !active) {
             this.targetTasks.removeTask(defendVillage);
             this.tasks.removeTask(wanderVillage);
             this.targetTasks.removeTask(targetZombies);
             defendVillageAdded = false;
-        }
-        if (active) {
+        } else if (active && !defendVillageAdded) {
             targetTasks.addTask(DEFEND_VILLAGE_PRIO, defendVillage);
             tasks.addTask(WANDER_VILLAGE_PRIO, wanderVillage);
             targetTasks.addTask(ATTACK_ZOMBIE_PRIO, targetZombies);
             defendVillageAdded = true;
         }
 
+    }
+
+    @Nullable
+    @Override
+    protected ResourceLocation getLootTable() {
+        return LootHandler.BASIC_HUNTER;
     }
 
     protected void updateEntityAttributes() {

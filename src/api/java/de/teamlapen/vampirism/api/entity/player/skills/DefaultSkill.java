@@ -1,22 +1,36 @@
 package de.teamlapen.vampirism.api.entity.player.skills;
 
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.registries.IForgeRegistryEntry;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 
 /**
  * Default implementation of ISkill. Handles entity modifiers and actions
  */
-public abstract class DefaultSkill<T extends ISkillPlayer> implements ISkill<T> {
+public abstract class DefaultSkill<T extends IFactionPlayer> extends IForgeRegistryEntry.Impl<ISkill> implements ISkill {
 
     private final Map<IAttribute, AttributeModifier> attributeModifierMap = new HashMap<>();
+    private final IPlayableFaction<T> faction;
     private int renderRow;
     private int renderColumn;
 
+    protected DefaultSkill(IPlayableFaction<T> faction) {
+        this.faction = faction;
+    }
+
+    @Nonnull
+    @Override
+    public IPlayableFaction getFaction() {
+        return faction;
+    }
 
     @Override
     public int getRenderColumn() {
@@ -28,24 +42,33 @@ public abstract class DefaultSkill<T extends ISkillPlayer> implements ISkill<T> 
         return renderRow;
     }
 
-
     @Override
-    public final void onDisable(T player) {
+    public final void onDisable(IFactionPlayer player) {
         removeAttributesModifiersFromEntity(player.getRepresentingPlayer());
         player.getActionHandler().relockActions(getActions());
-        onDisabled(player);
+        if (faction.getFactionPlayerInterface().isInstance(player)) {
+            //noinspection unchecked
+            onDisabled((T) player);
+        } else {
+            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + faction.getFactionPlayerInterface());
+        }
     }
 
     @Override
-    public final void onEnable(T player) {
+    public final void onEnable(IFactionPlayer player) {
         applyAttributesModifiersToEntity(player.getRepresentingPlayer());
 
         player.getActionHandler().unlockActions(getActions());
-        onEnabled(player);
+        if (faction.getFactionPlayerInterface().isInstance(player)) {
+            //noinspection unchecked
+            onEnabled((T) player);
+        } else {
+            throw new IllegalArgumentException("Faction player instance is of wrong class " + player.getClass() + " instead of " + faction.getFactionPlayerInterface());
+        }
     }
 
     public DefaultSkill<T> registerAttributeModifier(IAttribute attribute, String uuid, double amount, int operation) {
-        AttributeModifier attributemodifier = new AttributeModifier(UUID.fromString(uuid), this.getID(), amount, operation);
+        AttributeModifier attributemodifier = new AttributeModifier(UUID.fromString(uuid), this.getRegistryName().toString(), amount, operation);
         this.attributeModifierMap.put(attribute, attributemodifier);
         return this;
     }
@@ -58,13 +81,13 @@ public abstract class DefaultSkill<T extends ISkillPlayer> implements ISkill<T> 
 
     @Override
     public String toString() {
-        return getID() + "(" + getClass().getSimpleName() + ")";
+        return getRegistryName() + "(" + getClass().getSimpleName() + ")";
     }
 
     /**
      * Add actions that should be added to the list
      */
-    protected void getActions(Collection<IAction<T>> list) {
+    protected void getActions(Collection<IAction> list) {
 
     }
 
@@ -87,14 +110,19 @@ public abstract class DefaultSkill<T extends ISkillPlayer> implements ISkill<T> 
             if (iattributeinstance != null) {
                 AttributeModifier attributemodifier = entry.getValue();
                 iattributeinstance.removeModifier(attributemodifier);
-                iattributeinstance.applyModifier(new AttributeModifier(attributemodifier.getID(), this.getID(), attributemodifier.getAmount(), attributemodifier.getOperation()));
+                iattributeinstance.applyModifier(new AttributeModifier(attributemodifier.getID(), this.getRegistryName().toString(), attributemodifier.getAmount(), attributemodifier.getOperation()));
             }
         }
     }
 
-    private Collection<IAction<T>> getActions() {
-        Collection<IAction<T>> collection = new ArrayList<>();
+    private Collection<IAction> getActions() {
+        Collection<IAction> collection = new ArrayList<>();
         getActions(collection);
+        collection.forEach((iAction -> {
+            if (!iAction.getFaction().equals(this.getFaction())) {
+                throw new IllegalArgumentException("Can't register action of faction " + iAction.getFaction() + " for skill of faction" + this.getFaction());
+            }
+        }));
         return collection;
     }
 
@@ -107,4 +135,6 @@ public abstract class DefaultSkill<T extends ISkillPlayer> implements ISkill<T> 
             }
         }
     }
+
+
 }

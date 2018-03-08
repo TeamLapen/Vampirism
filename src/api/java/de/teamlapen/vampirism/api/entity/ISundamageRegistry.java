@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.api.entity;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
 
@@ -59,4 +60,9 @@ public interface ISundamageRegistry {
      * @param sundamage
      */
     void specifySundamageForDim(int dimensionId, boolean sundamage);
+
+    /**
+     * Checks if the given entity could receive sun damage at its current position
+     */
+    boolean isGettingSundamage(EntityLivingBase entity);
 }

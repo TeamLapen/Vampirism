@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
 import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
 import de.teamlapen.vampirism.blocks.BlockWeaponTable;
@@ -48,7 +47,7 @@ public abstract class HunterWeaponRecipeWrapper extends BlankRecipeWrapper {
         }
         if (recipe.getRequiredSkills().length > 0) {
             StringBuilder skills = new StringBuilder();
-            for (ISkill<IHunterPlayer> skill : recipe.getRequiredSkills()) {
+            for (ISkill skill : recipe.getRequiredSkills()) {
                 skills.append(UtilLib.translate(skill.getUnlocalizedName())).append(" ");
 
             }

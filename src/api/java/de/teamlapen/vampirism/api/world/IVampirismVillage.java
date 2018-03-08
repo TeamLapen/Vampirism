@@ -46,4 +46,14 @@ public interface IVampirismVillage {
      * @param vampire The biter or null if unknown
      */
     void onVillagerConverted(@Nullable IVampire vampire);
+
+    /**
+     * @return If the village is overtaken by vampires
+     */
+    boolean isOvertaken();
+
+    /**
+     * Set if the village is overtaken by vampires
+     */
+    void setIsOvertaken(boolean overtaken);
 }

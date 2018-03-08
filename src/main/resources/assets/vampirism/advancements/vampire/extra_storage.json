@@ -1,0 +1,26 @@
+{
+  "display": {
+    "icon": {
+      "item": "vampirism:blood_container"
+    },
+    "title": {
+      "translate": "advancement.vampirism.extra_storage"
+    },
+    "description": {
+      "translate": "advancement.vampirism.extra_storage.desc"
+    }
+  },
+  "parent": "vampirism:vampire/first_blood",
+  "criteria": {
+    "blood_container": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "vampirism:blood_container"
+          }
+        ]
+      }
+    }
+  }
+}

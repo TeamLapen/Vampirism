@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -16,13 +17,11 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
+import net.minecraft.util.*;
 import net.minecraft.util.math.*;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEntitySpawner;
 import net.minecraft.world.biome.Biome;
@@ -135,30 +134,63 @@ public class UtilLib {
         return i;
     }
 
-    public static Entity spawnEntityBehindEntity(EntityLivingBase p, ResourceLocation id) {
-        EntityLiving e = (EntityLiving) EntityList.createEntityByIDFromName(id, p.getEntityWorld());
-        float yaw = p.rotationYawHead;
-        float cosYaw = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
-        float sinYaw = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
-        int distance = 2;
-        double x = p.posX + sinYaw * distance;
-        double z = p.posZ + cosYaw * distance;
+    /**
+     * Returns an approximate absolute (world) position of the held item.
+     * This assumes a ModelBiped like model and a normal item.
+     *
+     * @param entity   Assumes a ModelBiped like creature
+     * @param mainHand If main hand position
+     * @return Absolute position in the world
+     */
+    public static @Nonnull
+    Vec3d getItemPosition(EntityLivingBase entity, boolean mainHand) {
+        boolean left = (mainHand ? entity.getPrimaryHand() : entity.getPrimaryHand().opposite()) == EnumHandSide.LEFT;
+        boolean firstPerson = entity instanceof EntityPlayer && ((EntityPlayer) entity).isUser() && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0;
+        Vec3d dir = firstPerson ? entity.getForward() : Vec3d.fromPitchYawVector(new Vec2f(entity.rotationPitch, entity.renderYawOffset));
+        dir = dir.rotateYaw((float) (Math.PI / 5f) * (left ? 1f : -1f)).scale(0.75f);
+        return dir.addVector(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
 
-        e.setPosition(x, p.posY, z);
+    }
+
+    public static Entity spawnEntityBehindEntity(EntityLivingBase p, ResourceLocation id) {
+
+        BlockPos behind = getPositionBehindEntity(p, 2);
+        EntityLiving e = (EntityLiving) EntityList.createEntityByIDFromName(id, p.getEntityWorld());
+
+        e.setPosition(behind.getX(), p.posY, behind.getZ());
 
         if (e.getCanSpawnHere() && e.isNotColliding()) {
             p.getEntityWorld().spawnEntity(e);
             return e;
         } else {
-            int y = p.getEntityWorld().getHeight(new BlockPos(x, 0, z)).getY();
-            e.setPosition(x, y, z);
+            int y = p.getEntityWorld().getHeight(behind).getY();
+            e.setPosition(behind.getX(), y, behind.getZ());
             if (e.getCanSpawnHere() && e.isNotColliding()) {
                 p.getEntityWorld().spawnEntity(e);
+                onInitialSpawn(e);
                 return e;
             }
         }
         e.setDead();
         return null;
+    }
+
+    /**
+     * Call {@link EntityLiving#onInitialSpawn(DifficultyInstance, IEntityLivingData)} if applicable
+     */
+    private static void onInitialSpawn(Entity e) {
+        if (e instanceof EntityLiving) {
+            ((EntityLiving) e).onInitialSpawn(e.getEntityWorld().getDifficultyForLocation(e.getPosition()), null);
+        }
+    }
+
+    public static BlockPos getPositionBehindEntity(EntityLivingBase p, float distance) {
+        float yaw = p.rotationYawHead;
+        float cosYaw = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
+        float sinYaw = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
+        double x = p.posX + sinYaw * distance;
+        double z = p.posZ + cosYaw * distance;
+        return new BlockPos(x, p.posY, z);
     }
 
     public static boolean spawnEntityInWorld(World world, AxisAlignedBB box, Entity e, int maxTry) {
@@ -175,6 +207,7 @@ public class UtilLib {
         }
         if (flag) {
             world.spawnEntity(e);
+            onInitialSpawn(e);
             return true;
         }
         return false;
@@ -329,12 +362,18 @@ public class UtilLib {
 
         //Check if the vector is left or right of look1
         double alpha = Math.acos(look1.dotProduct(dist));
-        return alpha < Math.PI / 2;
+        return alpha < Math.PI / 1.8;
 
     }
 
     /**
      * Returns null, but makes it look like non null
+     *
+     * If this causes issues when compiling with IntelliJ check the following link and rebuild the entire project afterwards
+     *
+     * https://github.com/TeamLapen/Vampirism#intellij
+     *
+     * Make sure Settings -> Build, Execution, Deployment -> Compiler -> 'Add runtime assertions for not-null-annotated methods and parameters' is disabled (Unfortunately required)
      */
     @SuppressWarnings("ConstantConditions")
     public static @Nonnull
@@ -474,6 +513,10 @@ public class UtilLib {
 
     public static boolean isPlayerOp(EntityPlayer player) {
         return FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().getOppedPlayers().getEntry(player.getGameProfile()) != null;
+    }
+
+    public static boolean isSameInstanceAsServer() {
+        return FMLCommonHandler.instance().getMinecraftServerInstance() != null;
     }
 
     public static String translate(String key) {

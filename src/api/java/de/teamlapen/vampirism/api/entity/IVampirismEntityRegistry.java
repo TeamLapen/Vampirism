@@ -13,6 +13,7 @@ import java.util.function.Function;
 
 /**
  * Registration of blood values and converting handler for {@link EntityCreature}'s
+ * Adding entries is only possible during init.
  */
 public interface IVampirismEntityRegistry {
 
@@ -82,13 +83,22 @@ public interface IVampirismEntityRegistry {
     @Nullable
     <T extends EntityCreature> Function<T, IExtendedCreatureVampirism> getCustomExtendedCreatureConstructor(T entity);
 
+    /**
+     * Check the biteable entry for the given creature.
+     * If it is null, it tries to automatically calculate a blood value depending on size if applicable and not disabled
+     * (and store it for that entity registration)
+     * <p>
+     * Returns null otherwise
+     */
+    @Nullable
     BiteableEntry getEntry(EntityCreature creature);
 
+
+    @Nullable
     BiteableEntry getEntry(ResourceLocation entity_id);
 
     /**
-     * Add blood values that override previously registered values. E.g. used for making the values configurable
-     *
+     * Add blood values that override previously registered values.
      * @param values
      */
     void overrideBloodValues(Map<ResourceLocation, Integer> values);

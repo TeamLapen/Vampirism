@@ -6,27 +6,45 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nullable;
+import java.util.List;
+
 /**
  * Base class for weapons
  */
 public class VampirismItemWeapon extends VampirismItem {
 
+    /**
+     * Value between 0.0 and 1f.
+     * Calculation: Base += Base * -(1-Value) => Base * Value
+     */
     private final float attackDamage;
     private final Item.ToolMaterial material;
+
+    public VampirismItemWeapon(String regName, Item.ToolMaterial material) {
+        this(regName, material, 0.4F);
+    }
+
+    protected float getAttackDamage(ItemStack stack) {
+        return attackDamage;
+    }
+
+
     private final float attackSpeed;
 
     public VampirismItemWeapon(String regName, Item.ToolMaterial material, float attackSpeedModifier) {
-        this(regName, material, attackSpeedModifier, 3F + material.getDamageVsEntity());
+        this(regName, material, attackSpeedModifier, 3F + material.getAttackDamage());
     }
 
-    public VampirismItemWeapon(String regName, Item.ToolMaterial material) {
-        this(regName, material, -2.4F);
+    protected float getAttackSpeed(ItemStack stack) {
+        return attackSpeed;
     }
 
     public VampirismItemWeapon(String regName, Item.ToolMaterial material, float attackSpeedModifier, float attackDamage) {
@@ -43,11 +61,20 @@ public class VampirismItemWeapon extends VampirismItem {
         Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(equipmentSlot, stack);
 
         if (equipmentSlot == EntityEquipmentSlot.MAINHAND) {
-            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", (double) this.attackDamage, 0));
-            multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", this.attackSpeed, 0));
+            multimap.put(SharedMonsterAttributes.ATTACK_DAMAGE.getName(), new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Weapon modifier", (double) this.getAttackDamage(stack), 0));
+            multimap.put(SharedMonsterAttributes.ATTACK_SPEED.getName(), new AttributeModifier(ATTACK_SPEED_MODIFIER, "Weapon modifier", -(1.0f - this.getAttackSpeed(stack)), 1));
         }
 
         return multimap;
+    }
+
+    @Override
+    protected void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+        super.addInformation(stack, playerIn, tooltip, advanced);
+        if (advanced) {
+            tooltip.add("ModDamage: " + getAttackDamage(stack));
+            tooltip.add("ModSpeed: " + getAttackSpeed(stack));
+        }
     }
 
     @Override

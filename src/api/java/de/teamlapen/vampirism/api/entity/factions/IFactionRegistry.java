@@ -34,6 +34,12 @@ public interface IFactionRegistry {
     IPlayableFaction[] getPlayableFactions();
 
     /**
+     * Get a faction by it's name
+     */
+    @Nullable
+    IFaction getFactionByName(String name);
+
+    /**
      * Get a cached or create a predicate which selects all other faction entities
      * For all non EntityLivingBase entities the predicate is always false
      *
@@ -60,7 +66,7 @@ public interface IFactionRegistry {
     Predicate<Entity> getPredicate(IFaction thisFaction, boolean player, boolean mob, boolean neutralPlayer, boolean ignoreDisguise, IFaction otherFaction);
 
     /**
-     * Create and register a non playable faction. Has to be called before post-init
+     * Create and registerAdvancements a non playable faction. Has to be called before post-init
      *
      * @param name            Faction name e.g. for level command
      * @param entityInterface Interface all entities implement
@@ -71,7 +77,7 @@ public interface IFactionRegistry {
     <T extends IFactionEntity> IFaction registerFaction(String name, Class<T> entityInterface, int color);
 
     /**
-     * Create and register a playable faction. Has to be called before post-init
+     * Create and registerAdvancements a playable faction. Has to be called before post-init
      *
      * @param name             Faction name e.g. for level command
      * @param entityInterface  Interface all entities or (the given capability for players) implement

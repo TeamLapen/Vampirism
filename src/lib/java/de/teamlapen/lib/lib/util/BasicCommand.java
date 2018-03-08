@@ -11,6 +11,7 @@ import java.util.List;
  */
 public abstract class BasicCommand extends CommandTreeBase {
 
+    protected final int PERMISSION_LEVEL_ALL = 0;
     protected final int PERMISSION_LEVEL_CHEAT = 2;
     protected final int PERMISSION_LEVEL_ADMIN = 3;
     protected final int PERMISSION_LEVEL_FULL = 4;

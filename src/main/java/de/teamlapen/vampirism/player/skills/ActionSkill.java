@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.player.skills;
 
 import de.teamlapen.lib.lib.util.UtilLib;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
-import de.teamlapen.vampirism.api.entity.player.skills.ISkillPlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -13,20 +13,22 @@ import java.util.Collection;
 /**
  * Simple skill that unlocks one action
  */
-public class ActionSkill<T extends ISkillPlayer> extends VampirismSkill<T> {
+public class ActionSkill<T extends IFactionPlayer> extends VampirismSkill<T> {
     private static final ResourceLocation defaultIcons = new ResourceLocation(REFERENCE.MODID, "textures/gui/actions.png");
-    private final IAction<T> action;
-    private final String id;
+    private final IAction action;
 
-    public ActionSkill(IAction<T> action, String id) {
+    @Deprecated
+    public ActionSkill(String id, IAction action) {
+        this(new ResourceLocation("vampirism", id), action);
+
+    }
+
+    public ActionSkill(ResourceLocation id, IAction action) {
+        super(action.getFaction());
         this.action = action;
-        this.id = id;
+        this.setRegistryName(id);
     }
 
-    @Override
-    public String getID() {
-        return id;
-    }
 
     @SideOnly(Side.CLIENT)
     @Override
@@ -57,7 +59,7 @@ public class ActionSkill<T extends ISkillPlayer> extends VampirismSkill<T> {
     }
 
     @Override
-    protected void getActions(Collection<IAction<T>> list) {
+    protected void getActions(Collection<IAction> list) {
         list.add(action);
     }
 }

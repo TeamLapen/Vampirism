@@ -14,12 +14,14 @@ import com.google.common.collect.Maps;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.blocks.BlockAltarPillar;
 import de.teamlapen.vampirism.blocks.BlockGarlicBeacon;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModEntities;
+import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.ItemBloodBottle;
 import de.teamlapen.vampirism.items.ItemCrossbowArrow;
@@ -259,7 +261,7 @@ public class GuideBook implements IGuideBook {
 
         List<IPage> skillPages = new ArrayList<>();
         skillPages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "skills.intro", Keyboard.getKeyName(ModKeys.getKeyCode(ModKeys.KEY.SKILL)))));
-        String disguise = String.format("§l%s§r\n", UtilLib.translate(HunterActions.disguiseAction.getUnlocalizedName()));
+        String disguise = String.format("§l%s§r\n", UtilLib.translate(HunterActions.disguise_hunter.getUnlocalizedName()));
         disguise += UtilLib.translateFormatted(base + "skills.disguise.text", Keyboard.getKeyName(ModKeys.getKeyCode(ModKeys.KEY.ACTION)));
         skillPages.addAll(GuideHelper.pagesForLongText(disguise));
         String bloodPotion = String.format("§l%s§r\n", ModBlocks.blood_potion_table.getLocalizedName());
@@ -366,6 +368,10 @@ public class GuideBook implements IGuideBook {
         new ItemInfoBuilder(ModItems.vampire_book).build(entries);
         //Vampire
         new ItemInfoBuilder(new ItemStack(ModItems.blood_bottle, 1, ItemBloodBottle.AMOUNT), false).build(entries);
+        new ItemInfoBuilder(ModItems.blood_infused_iron_ingot).craftableStacks(ModItems.blood_infused_iron_ingot, WORKBENCH, ModItems.blood_infused_enhanced_iron_ingot, WORKBENCH).build(entries);
+        addItemWithTier(ModItems.heart_seeker, WORKBENCH).setLinks(new ResourceLocation("guide.vampirism.blocks.blood_pedestal"), new ResourceLocation("guide.vampirism.items.blood_infused_iron_ingot")).build(entries);
+        addItemWithTier(ModItems.heart_striker, WORKBENCH).setLinks(new ResourceLocation("guide.vampirism.blocks.blood_pedestal"), new ResourceLocation("guide.vampirism.items.blood_infused_iron_ingot")).build(entries);
+
         //Hunter
         new ItemInfoBuilder(ModItems.injection).craftableStacks(new ItemStack(ModItems.injection, 1, 0), WORKBENCH, new ItemStack(ModItems.injection, 1, ItemInjection.META_GARLIC), WORKBENCH, new ItemStack(ModItems.injection, 1, ItemInjection.META_SANGUINARE), WORKBENCH).build(entries);
         new ItemInfoBuilder(ModItems.hunter_intel).setLinks(new ResourceLocation("guide.vampirism.blocks.hunter_table")).setFormats(ModBlocks.hunter_table.getLocalizedName()).build(entries);
@@ -375,14 +381,16 @@ public class GuideBook implements IGuideBook {
         new ItemInfoBuilder(ModItems.stake).setFormats(((int) (Balance.hps.INSTANT_KILL_SKILL_1_MAX_HEALTH_PERC * 100)) + "%").craftable(WORKBENCH).build(entries);
         new ItemInfoBuilder(ModItems.basic_crossbow).setFormats(ModItems.crossbow_arrow.getLocalizedName(), ModItems.tech_crossbow_ammo_package.getLocalizedName()).setLinks(new ResourceLocation("guide.vampirism.items.crossbow_arrow")).craftableStacks(ModItems.basic_crossbow, WEAPON_TABLE, ModItems.basic_double_crossbow, WEAPON_TABLE, ModItems.enhanced_crossbow, WEAPON_TABLE, ModItems.enhanced_double_crossbow, WEAPON_TABLE, ModItems.basic_tech_crossbow, WEAPON_TABLE, ModItems.tech_crossbow_ammo_package, WEAPON_TABLE).setName("crossbows").customName().build(entries);
         new ItemInfoBuilder(ModItems.crossbow_arrow).craftableStacks(ModItems.crossbow_arrow.getStack(ItemCrossbowArrow.EnumArrowType.NORMAL), WORKBENCH, ModItems.crossbow_arrow.getStack(ItemCrossbowArrow.EnumArrowType.VAMPIRE_KILLER), WEAPON_TABLE, ModItems.crossbow_arrow.getStack(ItemCrossbowArrow.EnumArrowType.SPITFIRE), WEAPON_TABLE).build(entries);
-        new ItemInfoBuilder(ModItems.holy_water_bottle).setLinks(new ResourceLocation("guide.vampirism.hunter.vamp_slayer"), new ResourceLocation("guide.vampirism.items.holy_salt")).setFormats(ModItems.holy_salt_water.getLocalizedName(), ModItems.holy_salt_water.getLocalizedName(), ModItems.holy_salt.getLocalizedName()).craftableStacks(ModItems.holy_salt_water, WORKBENCH).build(entries);
+        new ItemInfoBuilder(ModItems.holy_water_bottle).setLinks(new ResourceLocation("guide.vampirism.hunter.vamp_slayer"), new ResourceLocation("guide.vampirism.items.holy_salt")).setFormats(ModItems.holy_salt_water.getLocalizedName(), ModItems.holy_salt_water.getLocalizedName(), ModItems.holy_salt.getLocalizedName()).craftableStacks(ModItems.holy_salt_water, WORKBENCH, ModItems.holy_water_bottle.setTier(ModItems.holy_water_bottle.setSplash(new ItemStack(ModItems.holy_water_bottle), true), IItemWithTier.TIER.NORMAL), WORKBENCH, ModItems.holy_water_bottle.setTier(ModItems.holy_water_bottle.setSplash(new ItemStack(ModItems.holy_water_bottle, 5), true), IItemWithTier.TIER.NORMAL), WORKBENCH).build(entries);
         new ItemInfoBuilder(ModItems.holy_salt).setLinks(new ResourceLocation("guide.vampirism.items.holy_water_bottle")).setFormats(ModItems.pure_salt.getLocalizedName(), ModItems.pure_salt.getLocalizedName(), ModBlocks.alchemical_cauldron.getLocalizedName()).craftableStacks(ModItems.pure_salt, ALCHEMICAL_CAULDRON).build(entries);
         new ItemInfoBuilder(ModItems.item_alchemical_fire).setLinks(new ResourceLocation("guide.vampirism.items.crossbow_arrow")).craftable(ALCHEMICAL_CAULDRON).build(entries);
 
         addArmorWithTier(entries, "armor_of_swiftness", ModItems.armor_of_swiftness_head, ModItems.armor_of_swiftness_chest, ModItems.armor_of_swiftness_legs, ModItems.armor_of_swiftness_feet, WEAPON_TABLE);
         addArmorWithTier(entries, "hunter_coat", ModItems.hunter_coat_head, ModItems.hunter_coat_chest, ModItems.hunter_coat_legs, ModItems.hunter_coat_feet, WEAPON_TABLE);
         addArmorWithTier(entries, "obsidian_armor", ModItems.obsidian_armor_head, ModItems.obsidian_armor_chest, ModItems.obsidian_armor_legs, ModItems.obsidian_armor_feet, WEAPON_TABLE);
-        addItemWithTier(entries, ModItems.hunter_axe, WEAPON_TABLE);
+        addItemWithTier(ModItems.hunter_axe, WEAPON_TABLE).build(entries);
+
+
         links.putAll(entries);
         return entries;
     }
@@ -391,7 +399,7 @@ public class GuideBook implements IGuideBook {
         Map<ResourceLocation, EntryAbstract> entries = new LinkedHashMap<>();
         String base = "guide.vampirism.blocks.";
         //General
-        new ItemInfoBuilder(ModBlocks.castle_block).craftableStacks(new ItemStack(ModBlocks.castle_block, 1, 3), WORKBENCH, new ItemStack(ModBlocks.castle_block, 1, 0), WORKBENCH, new ItemStack(ModBlocks.castle_block, 1, 1), WORKBENCH, new ItemStack(ModBlocks.castle_block, 1, 4), WORKBENCH).build(entries);
+        new ItemInfoBuilder(ModBlocks.castle_block).craftableStacks(new ItemStack(ModBlocks.castle_block, 1, 3), WORKBENCH, new ItemStack(ModBlocks.castle_block, 1, 0), WORKBENCH, new ItemStack(ModBlocks.castle_block, 1, 1), WORKBENCH, new ItemStack(ModBlocks.castle_block, 1, 4), WORKBENCH, new ItemStack(ModBlocks.castle_slab, 1, 0), WORKBENCH, new ItemStack(ModBlocks.castle_slab, 1, 1), WORKBENCH, new ItemStack(ModBlocks.castle_slab, 1, 2), WORKBENCH, new ItemStack(ModBlocks.castle_stairs_dark, 1, 0), WORKBENCH, new ItemStack(ModBlocks.castle_stairs_purple, 1, 0), WORKBENCH, new ItemStack(ModBlocks.castle_stairs_dark_stone, 1, 0), WORKBENCH).build(entries);
         new ItemInfoBuilder(ModBlocks.vampirism_flower).build(entries);
         //Vampire
         new ItemInfoBuilder(ModBlocks.blood_container).craftable(WORKBENCH).build(entries);
@@ -408,7 +416,9 @@ public class GuideBook implements IGuideBook {
         int cn = Balance.hps.GARLIC_DIFFUSOR_NORMAL_DISTANCE * 2 + 1;
         int ce = Balance.hps.GARLIC_DIFFUSOR_ENHANCED_DISTANCE * 2 + 1;
         new ItemInfoBuilder(ModBlocks.garlic_beacon).setFormats(cn, cn, ce, ce, ModItems.purified_garlic.getLocalizedName()).setLinks(new ResourceLocation("guide.vampirism.items.item_garlic"), new ResourceLocation("guide.vampirism.items.purified_garlic"), new ResourceLocation("guide.vampirism.items.holy_water_bottle")).craftableStacks(ModBlocks.garlic_beacon, WORKBENCH, new ItemStack(ModBlocks.garlic_beacon, 1, BlockGarlicBeacon.Type.IMPROVED.getId()), WORKBENCH, ModItems.garlic_beacon_core, ALCHEMICAL_CAULDRON, ModItems.garlic_beacon_core_improved, ALCHEMICAL_CAULDRON).build(entries);
-
+        new ItemInfoBuilder(ModBlocks.blood_pedestal).craftable(WORKBENCH).build(entries);
+        new ItemInfoBuilder(ModBlocks.blood_grinder).craftable(WORKBENCH).setFormats(ModItems.human_heart.getLocalizedName(), UtilLib.translate(Items.BEEF.getUnlocalizedName() + ".name"), ModBlocks.blood_sieve.getLocalizedName()).build(entries);
+        new ItemInfoBuilder(ModBlocks.blood_sieve).craftable(WORKBENCH).setFormats(UtilLib.translate(ModFluids.impure_blood.getUnlocalizedName()), ModBlocks.blood_grinder.getLocalizedName()).setLinks(new ResourceLocation("guide.vampirism.blocks.blood_grinder")).build(entries);
         links.putAll(entries);
         return entries;
     }

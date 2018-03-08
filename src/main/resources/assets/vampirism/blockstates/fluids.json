@@ -10,6 +10,13 @@
           "fluid": "vampirismblood"
         }
       }
+    ],
+    "impure_blood": [
+      {
+        "custom": {
+          "fluid": "impure_vampirismblood"
+        }
+      }
     ]
   }
 }

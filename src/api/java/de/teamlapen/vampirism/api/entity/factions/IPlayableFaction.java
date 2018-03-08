@@ -9,6 +9,8 @@ import net.minecraft.util.ResourceLocation;
  * One instance should be used for players and entities at the same time.
  */
 public interface IPlayableFaction<T extends IFactionPlayer> extends IFaction<T> {
+    Class<T> getFactionPlayerInterface();
+
     /**
      * @return Highest reachable level for players
      */

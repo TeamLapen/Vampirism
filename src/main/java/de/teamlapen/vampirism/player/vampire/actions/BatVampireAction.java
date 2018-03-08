@@ -1,18 +1,22 @@
 package de.teamlapen.vampirism.player.vampire.actions;
 
+import de.teamlapen.vampirism.advancements.VampireActionTrigger;
 import de.teamlapen.vampirism.api.entity.player.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.WorldProviderEnd;
 
@@ -59,18 +63,37 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     }
 
     @Override
+    public boolean activate(IVampirePlayer vampire) {
+        EntityPlayer player = vampire.getRepresentingPlayer();
+        float oldMax = player.getMaxHealth();
+        float oldHealth = player.getHealth();
+        setModifier(player, true);
+        float newMax = player.getMaxHealth();
+        float mult = newMax / oldMax;
+        float newHealth = mult * oldHealth;
+        if (newHealth < 1) newHealth = 1;
+        player.setHealth(newHealth);
+        setPlayerBat(player, true);
+        ((VampirePlayer) vampire).getSpecialAttributes().bat = true;
+        if (player instanceof EntityPlayerMP) {
+            ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((EntityPlayerMP) player, VampireActionTrigger.Action.BAT);
+        }
+        return true;
+    }
+
+    @Override
     public boolean canBeUsedBy(IVampirePlayer vampire) {
-        return !vampire.isGettingSundamage() && !vampire.getActionHandler().isActionActive(VampireActions.rageAction) && (Configs.bat_mode_in_end || !(vampire.getRepresentingPlayer().getEntityWorld().provider instanceof WorldProviderEnd));
+        return !vampire.isGettingSundamage() && !vampire.getActionHandler().isActionActive(VampireActions.vampire_rage) && !vampire.getRepresentingPlayer().isInWater() && (Configs.bat_mode_in_end || !(vampire.getRepresentingPlayer().getEntityWorld().provider instanceof WorldProviderEnd));
     }
 
     @Override
     public int getCooldown() {
-        return 1;
+        return Balance.vpa.BAT_COOLDOWN * 20 + 1;
     }
 
     @Override
     public int getDuration(int level) {
-        return Integer.MAX_VALUE - 1;
+        return MathHelper.clamp(Balance.vpa.BAT_DURATION, 10, Integer.MAX_VALUE / 20 - 1) * 20;
     }
 
     @Override
@@ -94,22 +117,6 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     }
 
     @Override
-    public boolean onActivated(IVampirePlayer vampire) {
-        EntityPlayer player = vampire.getRepresentingPlayer();
-        float oldMax = player.getMaxHealth();
-        float oldHealth = player.getHealth();
-        setModifier(player, true);
-        float newMax = player.getMaxHealth();
-        float mult = newMax / oldMax;
-        float newHealth = mult * oldHealth;
-        if (newHealth < 1) newHealth = 1;
-        player.setHealth(newHealth);
-        setPlayerBat(player, true);
-        ((VampirePlayer) vampire).getSpecialAttributes().bat = true;
-        return true;
-    }
-
-    @Override
     public void onActivatedClient(IVampirePlayer vampire) {
         setPlayerBat(vampire.getRepresentingPlayer(), true);
         ((VampirePlayer) vampire).getSpecialAttributes().bat = true;
@@ -128,7 +135,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
         if (!player.onGround) {
             player.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, 20, 100, false, false));
         }
-        player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 2, false, false));
+        //player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 20, 0, false, false));
         setPlayerBat(player, false);
         ((VampirePlayer) vampire).getSpecialAttributes().bat = false;
     }
@@ -147,6 +154,8 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
             return true;
         } else if (!Configs.bat_mode_in_end && vampire.getRepresentingPlayer().getEntityWorld().provider instanceof WorldProviderEnd) {
             vampire.getRepresentingPlayer().sendMessage(new TextComponentTranslation("text.vampirism.cant_fly_end"));
+            return true;
+        } else if (vampire.getRepresentingPlayer().isInWater()) {
             return true;
         }
         return false;

@@ -2,6 +2,8 @@ package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
+import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.biome.Biome;
@@ -148,5 +150,10 @@ public class SundamageRegistry implements ISundamageRegistry {
         sundamage.setTag("biomes", biomes);
         sundamage.setBoolean("default", defaultSundamage);
         nbt.setTag("sundamage", sundamage);
+    }
+
+    @Override
+    public boolean isGettingSundamage(EntityLivingBase entity) {
+        return Helper.gettingSundamge(entity);
     }
 }

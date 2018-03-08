@@ -56,7 +56,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
 
     @Nullable
     @Override
-    public ISkill<IHunterPlayer> getRequiredSkill(@Nonnull ItemStack stack) {
+    public ISkill getRequiredSkill(@Nonnull ItemStack stack) {
         return null;
     }
 
@@ -186,7 +186,7 @@ public abstract class VampirismItemCrossbow extends VampirismItem implements IFa
                     boolean rightHand = player.getPrimaryHand() == EnumHandSide.RIGHT && hand == EnumHand.MAIN_HAND || player.getPrimaryHand() == EnumHandSide.LEFT && hand == EnumHand.OFF_HAND;
                     ItemCrossbowArrow itemarrow = itemstack.getItem() instanceof ItemCrossbowArrow ? (ItemCrossbowArrow) itemstack.getItem() : ModItems.crossbow_arrow;
                     EntityCrossbowArrow entityarrow = itemarrow.createEntity(itemstack, world, player, heightOffset, 0.3F + centerOffset, rightHand);
-                    entityarrow.setAim(player, player.rotationPitch, player.rotationYaw, 0.0F, f * 3.0F, 1.0F);
+                    entityarrow.shoot(player, player.rotationPitch, player.rotationYaw, 0.0F, f * 3.0F, 1.0F);
 
                     if (isCritical(player.getRNG())) {
                         entityarrow.setIsCritical(true);

@@ -8,8 +8,8 @@ import de.teamlapen.vampirism.entity.vampire.EntityAdvancedVampire;
 import de.teamlapen.vampirism.items.BloodBottleFluidHandler;
 import de.teamlapen.vampirism.tileentity.TileAltarInspiration;
 import de.teamlapen.vampirism.tileentity.TileBloodContainer;
-import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.VampirismWorldData;
+import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.block.BlockPlanks;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLiving;
@@ -17,7 +17,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityChest;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldEntitySpawner;
@@ -114,7 +113,7 @@ public class WorldGenVampireDungeon extends WorldGenerator {
                             TileEntity tileentity1 = worldIn.getTileEntity(blockpos2);
 
                             if (tileentity1 instanceof TileEntityChest) {
-                                ((TileEntityChest) tileentity1).setLootTable(new ResourceLocation(REFERENCE.MODID, "vampire_dungeon"), rand.nextLong());
+                                ((TileEntityChest) tileentity1).setLootTable(LootHandler.STRUCTURE_VAMPIRE_DUNGEON, rand.nextLong());
                             } else {
                                 VampirismMod.log.w(TAG, "Failed to generate dungeon chest at (%s)", VampirismWorldGen.debug ? blockpos2 : "hidden");
                             }

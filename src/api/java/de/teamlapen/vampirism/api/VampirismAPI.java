@@ -6,8 +6,8 @@ import de.teamlapen.vampirism.api.entity.ISundamageRegistry;
 import de.teamlapen.vampirism.api.entity.IVampirismEntityRegistry;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IFactionRegistry;
-import de.teamlapen.vampirism.api.entity.player.actions.IActionRegistry;
-import de.teamlapen.vampirism.api.entity.player.skills.ISkillRegistry;
+import de.teamlapen.vampirism.api.entity.player.actions.IActionManager;
+import de.teamlapen.vampirism.api.entity.player.skills.ISkillManager;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVisionRegistry;
 import de.teamlapen.vampirism.api.items.IAlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
@@ -39,16 +39,23 @@ public class VampirismAPI {
     private final static Capability<IVampirismVillage> CAP_VILLAGE = null;
     private static IFactionRegistry factionRegistry;
     private static ISundamageRegistry sundamageRegistry;
-    private static IVampirismEntityRegistry biteableRegistry;
-    private static IActionRegistry actionRegistry;
-    private static ISkillRegistry skillRegistry;
+    private static IVampirismEntityRegistry entityRegistry;
     private static IVampireVisionRegistry vampireVisionRegistry;
     private static IHunterWeaponCraftingManager weaponCraftingManager;
     private static IBloodPotionRegistry bloodPotionRegistry;
     private static IGarlicChunkHandler.Provider garlicHandlerProvider;
     private static IAlchemicalCauldronCraftingManager alchemicalCauldronCraftingManager;
     private static Set<Integer> worldGenDimensions = Sets.newHashSet();
+    private static ISkillManager skillManager;
+    private static IActionManager actionManager;
 
+    public static ISkillManager skillManager() {
+        return skillManager;
+    }
+
+    public static IActionManager actionManager() {
+        return actionManager;
+    }
 
     public static IVampireVisionRegistry vampireVisionRegistry() {
         return vampireVisionRegistry;
@@ -68,25 +75,24 @@ public class VampirismAPI {
         return sundamageRegistry;
     }
 
+
     /**
+     * @return The vampirism entity registry
+     */
+    public static IVampirismEntityRegistry entityRegistry() {
+        return entityRegistry;
+    }
+
+
+    /**
+     * TODO REMOVE
+     * Use {@link #entityRegistry()}
+     *
      * @return The biteable registry
      */
+    @Deprecated
     public static IVampirismEntityRegistry biteableRegistry() {
-        return biteableRegistry;
-    }
-
-    /**
-     * @return The skill registry
-     */
-    public static ISkillRegistry skillRegistry() {
-        return skillRegistry;
-    }
-
-    /**
-     * @return The action registry
-     */
-    public static IActionRegistry actionRegistry() {
-        return actionRegistry;
+        return entityRegistry;
     }
 
     /**
@@ -135,12 +141,12 @@ public class VampirismAPI {
      * Setup the API registries
      * FOR INTERNAL USAGE ONLY
      */
-    public static void setUpRegistries(IFactionRegistry factionReg, ISundamageRegistry sundamageReg, IVampirismEntityRegistry biteableReg, IActionRegistry actionReg, ISkillRegistry skillReg, IVampireVisionRegistry vampireVisionReg, IBloodPotionRegistry bloodPotionReg) {
+    public static void setUpRegistries(IFactionRegistry factionReg, ISundamageRegistry sundamageReg, IVampirismEntityRegistry biteableReg, IActionManager actionMan, ISkillManager skillMan, IVampireVisionRegistry vampireVisionReg, IBloodPotionRegistry bloodPotionReg) {
         factionRegistry = factionReg;
         sundamageRegistry = sundamageReg;
-        biteableRegistry = biteableReg;
-        actionRegistry = actionReg;
-        skillRegistry = skillReg;
+        entityRegistry = biteableReg;
+        actionManager = actionMan;
+        skillManager = skillMan;
         vampireVisionRegistry = vampireVisionReg;
         bloodPotionRegistry = bloodPotionReg;
     }

@@ -10,12 +10,9 @@ import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Nonnull;
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.io.File;
 
 /**
  * Manages configuration
@@ -41,6 +38,8 @@ public class Configs {
     public static boolean bat_mode_in_end;
     public static boolean unlock_all_skills;
     public static int sunscreen_beacon_distance;
+    public static boolean autoCalculateEntityBlood;
+    public static boolean sunscreen_beacon_mineable;
 
     public static int village_size;
     public static int village_density;
@@ -57,6 +56,9 @@ public class Configs {
     public static boolean disable_vampireEyes;
     public static boolean disable_config_sync;
     public static boolean disable_screen_overlay;
+    public static boolean disable_collectVersionStat;
+    public static boolean disable_fang_infection;
+
     public static @Nonnull
     int[] worldGenDimensions = new int[0];
 
@@ -66,32 +68,13 @@ public class Configs {
 
     public static void init(File configDir, boolean inDev) {
         File mainConfigFile = new File(configDir, REFERENCE.MODID + ".cfg");
-        File bloodConfigFile = new File(configDir, REFERENCE.MODID + "_blood_values.txt");
-
-        try {
-
-            Map<ResourceLocation, Integer> defaultValues = loadBloodValuesFromReader(new InputStreamReader(Configs.class.getResourceAsStream("/blood_values/default_blood_values.txt")), "default_blood_values.txt");
-            VampirismAPI.biteableRegistry().addBloodValues(defaultValues);
-        } catch (IOException e) {
-            VampirismMod.log.e(TAG, e, "Could not read default blood values, this should not happen and destroys the mod experience");
-        }
-        if (bloodConfigFile.exists()) {
-            try {
-                Map<ResourceLocation, Integer> override = loadBloodValuesFromReader(new FileReader(bloodConfigFile), bloodConfigFile.getName());
-                VampirismAPI.biteableRegistry().overrideBloodValues(override);
-                VampirismMod.log.i(TAG, "Successfully loaded additional blood value file");
-            } catch (IOException e) {
-                VampirismMod.log.e(TAG, "Could not read blood values from config file %s", bloodConfigFile.getName());
-            }
-        }
-
         main_config = new Configuration(mainConfigFile, REFERENCE.VERSION);
         loadConfiguration(false);
         if (updated_vampirism) VampirismMod.log.i(TAG, "Vampirism seems to have been updated");
         VampirismMod.log.i(TAG, "Loaded configuration");
     }
 
-    private static void loadConfiguration(boolean saveIfChanged) {
+    private static void loadConfiguration(boolean dontSave) {
         // Categories
         ConfigCategory cat_village = main_config.getCategory(CATEGORY_VILLAGE);
         cat_village.setComment("Here you can configure the village generation");
@@ -149,6 +132,8 @@ public class Configs {
         bat_mode_in_end = main_config.getBoolean("bat_mode_in_end", CATEGORY_GENERAL, false, "If vampires can convert to a bat in the end");
         unlock_all_skills = main_config.getBoolean("unlock_all_skills_at_max", CATEGORY_GENERAL, false, "CHEAT: If enabled, you will be able to unlock all skills at max level");
         sunscreen_beacon_distance = main_config.getInt("sunscreen_beacon_distance", CATEGORY_GENERAL, 32, 1, Integer.MAX_VALUE, "Block radius, the sunscreen beacon affects");
+        sunscreen_beacon_mineable = main_config.getBoolean("sunscreen_beacon_mineable", CATEGORY_GENERAL, false, "If the sunscreen beacon can be mined in survival");
+        autoCalculateEntityBlood = main_config.getBoolean("auto_calculate_entity_blood", CATEGORY_GENERAL, true, "Calculate the blood level for unknown creatures based on their size");
 
         //Village
         village_modify = main_config.getBoolean("village_modify_gen", CATEGORY_VILLAGE, true, "Whether to modify village generation chance or not");
@@ -173,10 +158,13 @@ public class Configs {
         disable_vampireEyes = main_config.getBoolean("disable_vampire_player_eyes", CATEGORY_DISABLE, false, "Disables the rendering of vampire eyes");
         disable_config_sync = main_config.getBoolean("disable_config_sync", CATEGORY_DISABLE, false, "Disable syncing config between server and client. (Note: Only a few settings are synced anyway)");
         disable_screen_overlay = main_config.getBoolean("disable_screen_overlay", CATEGORY_DISABLE, false, "Disable the colored overlay (sunindicator, disguise or rage)  if they cause problems.");
+        disable_collectVersionStat = main_config.getBoolean("disable_collect_basic_version_stat", CATEGORY_DISABLE, false, "Disable sending Mod version, MC version and mod count on version check");
+        disable_fang_infection = main_config.getBoolean("disable_fang_infection", CATEGORY_DISABLE, false, "Disable vampire fangs being useable to infect yourself");
+
 
         updated_vampirism = !main_config.getDefinedConfigVersion().equals(main_config.getLoadedConfigVersion());
 
-        if (!saveIfChanged && (main_config.hasChanged() || updated_vampirism)) {
+        if (!dontSave && (main_config.hasChanged() || updated_vampirism)) {
             main_config.save();
         }
     }
@@ -190,58 +178,8 @@ public class Configs {
         return main_config;
     }
 
-    /**
-     * @param r    Reader the values should be read from
-     * @param file Just for logging of errors
-     * @throws FileNotFoundException
-     * @throws IOException
-     */
-    private static Map<ResourceLocation, Integer> loadBloodValuesFromReader(Reader r, String file) throws IOException {
-        Map<ResourceLocation, Integer> bloodValues = new HashMap<>();
-        BufferedReader br = null;
-        try {
-            br = new BufferedReader(r);
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.startsWith("#")) continue;
-                if (StringUtils.isBlank(line)) continue;
-                String[] p = line.split("=");
-                if (p.length != 2) {
-                    VampirismMod.log.w("ReadBlood", "Line %s  in %s is not formatted properly", line, file);
-                    continue;
-                }
-                int val;
-                try {
-                    val = Integer.parseInt(p[1]);
-                } catch (NumberFormatException e) {
-                    VampirismMod.log.w("ReadBlood", "Line %s  in %s is not formatted properly", line, file);
-                    continue;
-                }
-                bloodValues.put(new ResourceLocation(p[0]), val);
-            }
-        } finally {
-            if (br != null) {
-                br.close();
-            }
-            r.close();
-        }
-        return bloodValues;
 
-    }
 
-    /**
-     * Reads blood values for another mod from the Vampirism jar.
-     */
-    public static void loadBloodValuesModCompat(String modid) {
-        try {
-            Map<ResourceLocation, Integer> defaultValues = Configs.loadBloodValuesFromReader(new InputStreamReader(Configs.class.getResourceAsStream("/blood_values/" + modid + ".txt")), modid + ".txt");
-            VampirismAPI.biteableRegistry().addBloodValues(defaultValues);
-        } catch (IOException e) {
-            VampirismMod.log.e(TAG, e, "[ModCompat]Could not read default blood values for mod %s, this should not happen", modid);
-        } catch (NullPointerException e) {
-            VampirismMod.log.e(TAG, e, "[ModCompat]Could not find packed (in JAR) blood value file for mod %s", modid);
-        }
-    }
 
     @SideOnly(Side.CLIENT)
     public static void onDisconnectedFromServer() {

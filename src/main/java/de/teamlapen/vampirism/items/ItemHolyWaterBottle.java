@@ -43,8 +43,8 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
     private static final String regName = "holy_water_bottle";
 
     /**
-     * Registers the splash recipes for the given holywater bottle tier stack.
-     * Should only be used once and after the item has been registed
+     * Registers the splash recipes for the given holy water bottle tier stack.
+     * Should only be used once and after the item has been registered
      *
      * @param item The item
      * @param tier The tier
@@ -55,15 +55,15 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
         Ingredient bottle = new IngredientNBT(base);
         Ingredient g = Ingredient.fromItem(Items.GUNPOWDER);
         ItemStack splash = item.setSplash(base.copy(), true);
-        GameRegistry.addShapelessRecipe(new ResourceLocation("vampirism:holy_water_splash_" + tier + "_"), null, splash.copy(), bottle, g);
+        GameRegistry.addShapedRecipe(new ResourceLocation("vampirism:holy_water_splash_" + tier + "_1"), null, splash.copy(), "XY", 'X', bottle, 'Y', g);
         ItemStackUtil.grow(splash, 1);
-        GameRegistry.addShapelessRecipe(new ResourceLocation("vampirism:holy_water_splash_" + tier + "_"), null, splash.copy(), bottle, bottle, g);
+        GameRegistry.addShapedRecipe(new ResourceLocation("vampirism:holy_water_splash_" + tier + "_2"), null, splash.copy(), "XXY", 'X', bottle, 'Y', g);
         ItemStackUtil.grow(splash, 1);
-        GameRegistry.addShapelessRecipe(new ResourceLocation("vampirism:holy_water_splash_" + tier + "_"), null, splash.copy(), bottle, bottle, bottle, g);
+        GameRegistry.addShapedRecipe(new ResourceLocation("vampirism:holy_water_splash_" + tier + "_3"), null, splash.copy(), "XXX", "Y  ", 'X', bottle, 'Y', g);
         ItemStackUtil.grow(splash, 1);
-        GameRegistry.addShapelessRecipe(new ResourceLocation("vampirism:holy_water_splash_" + tier + "_"), null, splash.copy(), bottle, bottle, bottle, bottle, g);
+        GameRegistry.addShapedRecipe(new ResourceLocation("vampirism:holy_water_splash_" + tier + "_4"), null, splash.copy(), "XXX", "XY ", 'X', bottle, 'Y', g);
         ItemStackUtil.grow(splash, 1);
-        GameRegistry.addShapelessRecipe(new ResourceLocation("vampirism:holy_water_splash_" + tier + "_"), null, splash.copy(), bottle, bottle, bottle, bottle, bottle, g);
+        GameRegistry.addShapedRecipe(new ResourceLocation("vampirism:holy_water_splash_" + tier + "_5"), null, splash.copy(), "XXX", "XXY", 'X', bottle, 'Y', g);
     }
 
     public ItemHolyWaterBottle() {
@@ -84,6 +84,7 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
     public int getItemStackLimit(ItemStack stack) {
         return isSplash(stack) ? 1 : 64;
     }
+
 
     /**
      * @param tier
@@ -159,13 +160,13 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
         if (!remote) {
 
 
-            AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().expand(4.0D, 2.0D, 4.0D);
+            AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().grow(4.0D, 2.0D, 4.0D);
             List<EntityLivingBase> list1 = entity.getEntityWorld().getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
 
 
             if (!list1.isEmpty()) {
                 for (EntityLivingBase entitylivingbase : list1) {
-                    DamageHandler.affectEntityHolyWaterSplash(entitylivingbase, getStrength(tier), entity.getDistanceSqToEntity(entitylivingbase), result.entityHit != null);
+                    DamageHandler.affectEntityHolyWaterSplash(entitylivingbase, getStrength(tier), entity.getDistanceSq(entitylivingbase), result.entityHit != null);
                 }
             }
 
@@ -179,20 +180,23 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
     public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
         ItemStack stack = playerIn.getHeldItem(handIn);
         if (isSplash(stack)) {
-            if (!playerIn.capabilities.isCreativeMode) {
-                ItemStackUtil.decr(stack);
-            }
+
 
             worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SPLASH_POTION_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
             if (!worldIn.isRemote) {
                 EntityThrowableItem entityThrowable = new EntityThrowableItem(worldIn, playerIn);
-                entityThrowable.setItem(stack);
-                entityThrowable.setHeadingFromThrower(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, -20.0F, 0.5F, 1.0F);
+                ItemStack throwStack = stack.copy();
+                throwStack.setCount(1);
+                entityThrowable.setItem(throwStack);
+                entityThrowable.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, -20.0F, 0.5F, 1.0F);
                 worldIn.spawnEntity(entityThrowable);
             }
 
             playerIn.addStat(StatList.getObjectUseStats(this));
+            if (!playerIn.capabilities.isCreativeMode) {
+                ItemStackUtil.decr(stack);
+            }
             return new ActionResult<>(EnumActionResult.SUCCESS, stack);
         }
         return new ActionResult<>(EnumActionResult.PASS, stack);

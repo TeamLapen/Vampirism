@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.inventory.*;
 import de.teamlapen.vampirism.items.ItemVampireBook;
 import de.teamlapen.vampirism.tileentity.TileAlchemicalCauldron;
 import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
+import de.teamlapen.vampirism.tileentity.TileGrinder;
 import net.minecraft.client.gui.GuiScreenBook;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
@@ -30,6 +31,8 @@ public class ModGuiHandler implements IGuiHandler {
     public final static int ID_HUNTER_BASIC = 8;
     public final static int ID_VAMPIRE_BOOK = 9;
     public final static int ID_ALCHEMICAL_CAULDRON = 10;
+    public final static int ID_NAME_SWORD = 11;
+    public final static int ID_BLOOD_GRINDER = 12;
 
     @Override
     public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
@@ -64,6 +67,12 @@ public class ModGuiHandler implements IGuiHandler {
             case ID_ALCHEMICAL_CAULDRON:
                 TileAlchemicalCauldron alchemicalCauldron = (TileAlchemicalCauldron) world.getTileEntity(new BlockPos(x, y, z));
                 return new GuiAlchemicalCauldron(player.inventory, alchemicalCauldron);
+            case ID_NAME_SWORD:
+                return new GuiNameSword(player.getHeldItemMainhand());
+            case ID_BLOOD_GRINDER:
+                TileGrinder tileGrinder = (TileGrinder) world.getTileEntity(new BlockPos(x, y, z));
+                if (tileGrinder != null)
+                    return new GuiBloodGrinder(tileGrinder.getNewInventoryContainer(player.inventory));
             default:
                 return null;
         }
@@ -93,6 +102,10 @@ public class ModGuiHandler implements IGuiHandler {
         if (id == ID_ALCHEMICAL_CAULDRON) {
             TileAlchemicalCauldron alchemicalCauldron = (TileAlchemicalCauldron) world.getTileEntity(new BlockPos(x, y, z));
             return new AlchemicalCauldronContainer(player.inventory, alchemicalCauldron);
+        }
+        if (id == ID_BLOOD_GRINDER) {
+            TileGrinder tileGrinder = (TileGrinder) world.getTileEntity(new BlockPos(x, y, z));
+            if (tileGrinder != null) return tileGrinder.getNewInventoryContainer(player.inventory);
         }
         return null;
     }

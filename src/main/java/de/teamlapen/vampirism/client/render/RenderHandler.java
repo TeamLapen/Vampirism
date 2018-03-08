@@ -87,9 +87,6 @@ public class RenderHandler {
         this.mc = mc;
         this.displayHeight = mc.displayHeight;
         this.displayWidth = mc.displayWidth;
-        if (OpenGlHelper.areShadersSupported()) {
-            VampirismMod.log.w(TAG, "Shaders are not supported, Blood vision won't work");
-        }
     }
 
     @SubscribeEvent
@@ -165,7 +162,7 @@ public class RenderHandler {
 
     @SubscribeEvent
     public void onRenderHand(RenderHandEvent event) {
-        if (VampirePlayer.get(mc.player).getActionHandler().isActionActive(VampireActions.batAction)) {
+        if (VampirePlayer.get(mc.player).getActionHandler().isActionActive(VampireActions.bat)) {
             event.setCanceled(true);
         }
     }
@@ -178,7 +175,7 @@ public class RenderHandler {
             boolean flag = true;
             if (entity instanceof EntityPlayer && ItemHunterCoat.isFullyEquipped((EntityPlayer) entity)) flag = false;
 
-            if (mc.player.getDistanceSqToEntity(entity) > Balance.vps.BLOOD_VISION_DISTANCE_SQUARED) {
+            if (mc.player.getDistanceSq(entity) > Balance.vps.BLOOD_VISION_DISTANCE_SQUARED) {
                 flag = false;
             }
             if (flag) {
@@ -197,7 +194,7 @@ public class RenderHandler {
     public void onRenderLivingSpecialPre(RenderLivingEvent.Specials.Pre event) {
         EntityLivingBase entity = event.getEntity();
         if (entity instanceof EntityPlayer && HunterPlayer.get((EntityPlayer) entity).getSpecialAttributes().isDisguised()) {
-            if (entity.getDistanceSqToEntity(this.mc.player) > 4) {
+            if (entity.getDistanceSq(this.mc.player) > 4) {
                 event.setCanceled(true);
             }
         }
@@ -239,11 +236,11 @@ public class RenderHandler {
             double d3 = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double) parTick;
             double d4 = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double) parTick;
             double d5 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double) parTick;
-            mc.getRenderManager().doRenderEntity(entityBat, d0 - d3, d1 - d4, d2 - d5, f1, event.getPartialRenderTick(), false);
+            mc.getRenderManager().renderEntity(entityBat, d0 - d3, d1 - d4, d2 - d5, f1, event.getPartialRenderTick(), false);
 
         } else if (hunterAttributes.isDisguised()) {
             if (!player.equals(this.mc.player)) {
-                double distSq = player.getDistanceSqToEntity(this.mc.player);
+                double distSq = player.getDistanceSq(this.mc.player);
                 if (distSq > Balance.hpa.DISGUISE_DISTANCE_INVISIBLE_SQ) {
                     event.setCanceled(true);
                 } else {

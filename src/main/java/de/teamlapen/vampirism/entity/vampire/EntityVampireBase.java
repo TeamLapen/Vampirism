@@ -27,6 +27,8 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
+import javax.annotation.Nonnull;
+
 /**
  * Base class for Vampirism's vampire entities
  */
@@ -118,11 +120,8 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
         return super.isCreatureType(type, forSpawnCount);
     }
 
-    @Override
-    public EnumStrength isGettingGarlicDamage() {
-        return isGettingGarlicDamage(false);
-    }
 
+    @Nonnull
     @Override
     public EnumStrength isGettingGarlicDamage(boolean forcerefresh) {
         if (forcerefresh) {
@@ -135,11 +134,6 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     public boolean isGettingSundamage(boolean forceRefresh) {
         if (!forceRefresh) return sundamageCache;
         return (sundamageCache = Helper.gettingSundamge(this));
-    }
-
-    @Override
-    public boolean isGettingSundamage() {
-        return isGettingSundamage(false);
     }
 
     @Override
@@ -162,6 +156,14 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
             }
             if (isGettingGarlicDamage() != EnumStrength.NONE) {
                 DamageHandler.affectVampireGarlicAmbient(this, isGettingGarlicDamage(), this.ticksExisted);
+            }
+        }
+        if (!this.world.isRemote) {
+            if (isEntityAlive() && isInWater()) {
+                setAir(300);
+                if (ticksExisted % 16 == 4) {
+                    addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, 80, 0));
+                }
             }
         }
         super.onLivingUpdate();

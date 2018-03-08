@@ -21,7 +21,7 @@ public class ModBiomes {
     static void registerBiomes(IForgeRegistry<Biome> registry) {
 
         vampireForest = new BiomeGenVampireForest();
-        vampireForest.setRegistryName(REFERENCE.MODID, "vampireForest");
+        vampireForest.setRegistryName(REFERENCE.MODID, "vampireforest");
         registry.register(vampireForest);
         BiomeDictionary.addTypes(vampireForest, BiomeDictionary.Type.FOREST, BiomeDictionary.Type.DENSE, BiomeDictionary.Type.MAGICAL, BiomeDictionary.Type.SPOOKY);
         if (!Configs.disable_vampireForest) {

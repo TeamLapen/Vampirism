@@ -1,18 +1,23 @@
 package de.teamlapen.vampirism.api.entity.player.actions;
 
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.registries.IForgeRegistryEntry;
+
+import javax.annotation.Nonnull;
 
 /**
  * Interface for player actions
  */
-public interface IAction<T extends IActionPlayer> {
+public interface IAction extends IForgeRegistryEntry<IAction> {
     /**
      * Checks if the player can use this action
+     * @param player Must be instance of class that belongs to {@link IAction#getFaction()}
      */
-    PERM canUse(T player);
+    PERM canUse(IFactionPlayer player);
 
     /**
      * @return Cooldown time in ticks until the action can be used again
@@ -23,7 +28,8 @@ public interface IAction<T extends IActionPlayer> {
 
      * @return the faction, which players can use this action
      */
-    IPlayableFaction<? extends IActionPlayer> getFaction();
+    @Nonnull
+    IPlayableFaction getFaction();
 
     /**
      * Should return the location of the icon map where the icon is in
@@ -53,9 +59,10 @@ public interface IAction<T extends IActionPlayer> {
     /**
      * Called when the action is activated. Only called server side
      *
+     * @param player Must be instance of class that belongs to {@link IAction#getFaction()}
      * @return Whether the action was successfully activated. !Does not give any feedback to the user!
      */
-    boolean onActivated(T player);
+    boolean onActivated(IFactionPlayer player);
 
     enum PERM {
         ALLOWED, DISABLED, NOT_UNLOCKED, DISALLOWED, COOLDOWN//Cooldown should not be used by the skill itself, but only by the {@link IActionHandler}

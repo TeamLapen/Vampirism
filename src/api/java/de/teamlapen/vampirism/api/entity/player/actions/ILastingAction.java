@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.api.entity.player.actions;
 /**
  * Action with a duration which is updated every tick
  */
-public interface ILastingAction<T extends IActionPlayer> extends IAction<T> {
+public interface ILastingAction<T extends IActionPlayer> extends IAction {
     /**
      * @param level Player's faction level
      * @return Skill duration in ticks

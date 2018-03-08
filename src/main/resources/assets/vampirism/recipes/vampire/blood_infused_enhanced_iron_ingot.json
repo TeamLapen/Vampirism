@@ -1,0 +1,22 @@
+{
+  "result": {
+    "item": "vampirism:blood_infused_enhanced_iron_ingot",
+    "count": 3
+  },
+  "ingredients": [
+    {
+      "item": "#IRON"
+    },
+    {
+      "item": "#IRON"
+    },
+    {
+      "item": "#IRON"
+    },
+    {
+      "item": "vampirism:pure_blood",
+      "data": 4
+    }
+  ],
+  "type": "minecraft:crafting_shapeless"
+}

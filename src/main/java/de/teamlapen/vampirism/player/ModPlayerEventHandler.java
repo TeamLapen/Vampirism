@@ -39,10 +39,7 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
-import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.living.*;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
@@ -233,6 +230,15 @@ public class ModPlayerEventHandler {
     public void onPlayerVisibilityCheck(PlayerEvent.Visibility event) {
         if (HunterPlayer.get(event.getEntityPlayer()).getSpecialAttributes().isDisguised()) {
             event.modifyVisibility(Balance.hpa.DISGUISE_VISIBILITY_MOD);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onLivingHeal(LivingHealEvent event) {
+        if (event.getEntityLiving() instanceof EntityPlayer) {
+            if (VampirePlayer.get((EntityPlayer) event.getEntityLiving()).getSpecialAttributes().bat) {
+                event.setAmount(event.getAmount() * 0.1F);
+            }
         }
     }
 

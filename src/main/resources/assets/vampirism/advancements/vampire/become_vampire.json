@@ -1,0 +1,24 @@
+{
+  "display": {
+    "icon": {
+      "item": "vampirism:vampire_fang"
+    },
+    "title": {
+      "translate": "advancement.vampirism.become_vampire"
+    },
+    "description": {
+      "translate": "advancement.vampirism.become_vampire.desc"
+    },
+    "announce_to_chat": false
+  },
+  "parent": "vampirism:main/root",
+  "criteria": {
+    "main": {
+      "trigger": "vampirism:faction",
+      "conditions": {
+        "faction": "Vampire",
+        "level": 1
+      }
+    }
+  }
+}

@@ -25,7 +25,12 @@ public class BlockSunscreenBeacon extends VampirismBlockContainer {
 
     public BlockSunscreenBeacon() {
         super(regName, Material.IRON);
-        this.setCreativeTab(null);
+        if (Configs.sunscreen_beacon_mineable) {
+            this.setHardness(50);
+        } else {
+            this.setCreativeTab(null);
+            this.setBlockUnbreakable();
+        }
     }
 
     @SideOnly(Side.CLIENT)
@@ -38,7 +43,7 @@ public class BlockSunscreenBeacon extends VampirismBlockContainer {
 
     @Override
     public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player) {
-        return false;
+        return Configs.sunscreen_beacon_mineable;
     }
 
     @Override

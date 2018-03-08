@@ -1,0 +1,44 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "cube_all",
+    "uvlock": true
+  },
+  "variants": {
+    "variant": {
+      "dark_brick": {
+        "textures": {
+          "all": "vampirism:blocks/castle_block_dark_brick"
+        }
+      },
+      "purple_brick": {
+        "textures": {
+          "particle": "vampirism:blocks/castle_block_purple_brick",
+          "down": "vampirism:blocks/castle_block_purple_slab",
+          "up": "vampirism:blocks/castle_block_purple_slab",
+          "north": "vampirism:blocks/castle_block_purple_brick",
+          "east": "vampirism:blocks/castle_block_purple_brick",
+          "south": "vampirism:blocks/castle_block_purple_brick",
+          "west": "vampirism:blocks/castle_block_purple_brick"
+        }
+      },
+      "dark_stone": {
+        "textures": {
+          "all": "vampirism:blocks/castle_block_dark_slab",
+          "down": "vampirism:blocks/castle_block_dark_slab",
+          "up": "vampirism:blocks/castle_block_dark_slab",
+          "north": "vampirism:blocks/castle_block_dark_stone",
+          "east": "vampirism:blocks/castle_block_dark_stone",
+          "south": "vampirism:blocks/castle_block_dark_stone",
+          "west": "vampirism:blocks/castle_block_dark_stone"
+        }
+      }
+    },
+    "seamless": {
+      "true": {
+      },
+      "false": {
+      }
+    }
+  }
+}

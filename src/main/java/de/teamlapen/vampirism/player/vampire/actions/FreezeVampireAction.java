@@ -23,12 +23,27 @@ public class FreezeVampireAction extends DefaultVampireAction {
         super(null);
     }
 
+    @Override
+    public boolean activate(final IVampirePlayer vampire) {
+        EntityPlayer player = vampire.getRepresentingPlayer();
+        List l = player.getEntityWorld().getEntitiesInAABBexcluding(player, player.getEntityBoundingBox().grow(10, 5, 10), vampire.getNonFriendlySelector(true, false)::test);
+        for (Object o : l) {
+            if (o instanceof EntityBlindingBat) continue;
+            if (!(o instanceof EntityLivingBase)) continue;
+            if (o instanceof EntityPlayer && ItemHunterCoat.isFullyEquipped((EntityPlayer) o)) continue;
+            EntityLivingBase e = (EntityLivingBase) o;
+            e.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, Balance.vpa.FREEZE_DURATION * 20, 10));
+            e.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, Balance.vpa.FREEZE_DURATION * 20, 10));
+            e.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, Balance.vpa.FREEZE_DURATION * 20, 128));
+            Helper.spawnParticlesAroundEntity(e, EnumParticleTypes.SNOW_SHOVEL, 1.5, 40);
+        }
+        return l.size() > 0;
+    }
 
     @Override
     public int getCooldown() {
         return Balance.vpa.FREEZE_COOLDOWN * 20;
     }
-
 
     @Override
     public int getMinU() {
@@ -48,23 +63,6 @@ public class FreezeVampireAction extends DefaultVampireAction {
     @Override
     public boolean isEnabled() {
         return Balance.vpa.FREEZE_ENABLED;
-    }
-
-    @Override
-    public boolean onActivated(final IVampirePlayer vampire) {
-        EntityPlayer player = vampire.getRepresentingPlayer();
-        List l = player.getEntityWorld().getEntitiesInAABBexcluding(player, player.getEntityBoundingBox().expand(10, 5, 10), vampire.getNonFriendlySelector(true, false)::test);
-        for (Object o : l) {
-            if (o instanceof EntityBlindingBat) continue;
-            if (!(o instanceof EntityLivingBase)) continue;
-            if (o instanceof EntityPlayer && ItemHunterCoat.isFullyEquipped((EntityPlayer) o)) continue;
-            EntityLivingBase e = (EntityLivingBase) o;
-            e.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, Balance.vpa.FREEZE_DURATION * 20, 10));
-            e.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, Balance.vpa.FREEZE_DURATION * 20, 10));
-            e.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, Balance.vpa.FREEZE_DURATION * 20, 128));
-            Helper.spawnParticlesAroundEntity(e, EnumParticleTypes.SNOW_SHOVEL, 1.5, 40);
-        }
-        return l.size() > 0;
     }
 
 }

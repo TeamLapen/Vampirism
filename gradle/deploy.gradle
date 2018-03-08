@@ -3,8 +3,6 @@ apply plugin: 'maven'
 curseforge {
     if (project.hasProperty("CURSEFORGE_API")) {
         apiKey = project.CURSEFORGE_API
-    } else if (System.getenv().CI) {
-        apiKey = System.getenv().CURSEFORGE_KEY_SECRET
     } else {
         apiKey = "DUMMY"
     }
@@ -25,10 +23,12 @@ curseforge {
 
         mainArtifact(jar) {
             displayName = "Vampirism-${config.minecraft_version}-${project.mod_version}"
-
-
         }
 
+        relations {
+            optionalLibrary 'jei'
+            optionalLibrary 'guide-api'
+        }
 
     }
 
@@ -95,5 +95,7 @@ uploadArchives {
                 }
             }
         }
+
+
     }
 }

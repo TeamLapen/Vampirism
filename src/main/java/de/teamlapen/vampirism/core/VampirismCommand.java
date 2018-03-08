@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.command.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.text.ITextComponent;
@@ -23,10 +24,12 @@ import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.biome.Biome;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.server.command.CommandTreeHelp;
 import org.apache.commons.lang3.ArrayUtils;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -211,6 +214,41 @@ public class VampirismCommand extends BasicCommand {
             }
         });
 
+        addSubcommand(new SubCommand(0) {
+
+
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+
+                EntityPlayer player = getCommandSenderAsPlayer(sender);
+                if (args.length != 1) {
+                    throw new WrongUsageException(getUsage(sender));
+                }
+                String arg = args[0];
+                if ("true".equals(arg) || "1".equals(arg)) {
+                    VampirePlayer.get(player).setGlowingEyes(true);
+                    notifyCommandListener(sender, this, "command.vampirism.base.glowing_eyes.enabled", true);
+
+                } else if ("false".equals(arg) || "0".equals(arg)) {
+                    VampirePlayer.get(player).setGlowingEyes(false);
+                    notifyCommandListener(sender, this, "command.vampirism.base.glowing_eyes.disabled", false);
+
+                } else {
+                    throw new WrongUsageException(getUsage(sender));
+                }
+            }
+
+            @Override
+            public String getName() {
+                return "glowingEye";
+            }
+
+            @Override
+            public String getUsage(ICommandSender sender) {
+                return getName() + " true/false ";
+            }
+        });
+
         addSubcommand(new SubCommand(PERMISSION_LEVEL_ADMIN) {
 
 
@@ -330,6 +368,59 @@ public class VampirismCommand extends BasicCommand {
                 return getName();
             }
         });
+        addSubcommand(new SubCommand(PERMISSION_LEVEL_ALL) {
+            @Override
+            public String getName() {
+                return "bind-action";
+            }
+
+            @Override
+            public String getUsage(ICommandSender sender) {
+                return getName() + " <1/2> " + " <action-id>";
+            }
+
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+
+                EntityPlayer player = getCommandSenderAsPlayer(sender);
+                if (args.length == 2) {
+
+                    @Nullable ResourceLocation id = new ResourceLocation(args[1]);
+                    if ("null".equals(args[1])) {
+                        id = null;
+                    }
+                    if (id == null || VampirismAPI.actionManager().getRegistry().containsKey(id)) {
+                        if ("1".equals(args[0])) {
+                            FactionPlayerHandler.get(player).setBoundAction1(id, true);
+                        } else if ("2".equals(args[0])) {
+                            FactionPlayerHandler.get(player).setBoundAction2(id, true);
+                        } else {
+                            throw new WrongUsageException("Valid keys: 1 or 2");
+                        }
+                        sender.sendMessage(new TextComponentTranslation("command.vampirism.base.bind_action.success", args[1], args[0]));
+                    } else {
+                        sender.sendMessage(new TextComponentTranslation("command.vampirism.base.bind_action.not_existing", args[1]));
+                    }
+                } else {
+                    sender.sendMessage(new TextComponentTranslation("command.vampirism.base.bind_action.help"));
+                    sender.sendMessage(new TextComponentString("/vampirism " + getUsage(sender)));
+                }
+            }
+
+            @Override
+            public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
+                if (args.length == 1) {
+                    return getListOfStringsMatchingLastWord(args, "1", "2");
+                } else if (args.length == 2) {
+                    return getListOfStringsMatchingLastWord(args, VampirismAPI.actionManager().getRegistry().getKeys());
+                }
+                return Collections.emptyList();
+            }
+        });
+
+
+        //Add last
+        addSubcommand(new CommandTreeHelp(this));
     }
 
 

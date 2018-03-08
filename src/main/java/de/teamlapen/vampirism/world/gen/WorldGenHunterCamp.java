@@ -25,9 +25,9 @@ import java.util.Random;
  */
 public class WorldGenHunterCamp extends WorldGenerator {
 
-    private int distance = Balance.general.HUNTER_CAMP_DENSITY;
 
     public boolean canCampSpawnAt(World world, Biome biome, int chunkX, int chunkZ) {
+        int distance = Math.max(1, Balance.general.HUNTER_CAMP_DENSITY);
         //Check Biome
         if (ModBiomes.vampireForest.getRegistryName().equals(biome.getRegistryName())) {
             return false;
@@ -36,27 +36,27 @@ public class WorldGenHunterCamp extends WorldGenerator {
         //Check temperature
         BlockPos pos = new BlockPos((chunkX << 4), 0, (chunkZ << 4));
         pos = world.getHeight(pos);
-        float t = biome.getFloatTemperature(pos);
+        float t = biome.getTemperature(pos);
         if (t > 1.5F || t < 0.1F) return false;
 
         int i = chunkX;
         int j = chunkZ;
 
         if (chunkX < 0) {
-            chunkX -= this.distance - 1;
+            chunkX -= distance - 1;
         }
 
         if (chunkZ < 0) {
-            chunkZ -= this.distance - 1;
+            chunkZ -= distance - 1;
         }
 
-        int k = chunkX / this.distance;
-        int l = chunkZ / this.distance;
+        int k = chunkX / distance;
+        int l = chunkZ / distance;
         Random random = world.setRandomSeed(k, l, 10387312);
-        k = k * this.distance;
-        l = l * this.distance;
-        k = k + random.nextInt(this.distance - 2);
-        l = l + random.nextInt(this.distance - 2);
+        k = k * distance;
+        l = l * distance;
+        k = k + random.nextInt(distance - 2);
+        l = l + random.nextInt(distance - 2);
 
         if (i == k && j == l) {
             return world.getVillageCollection().getNearestVillage(world.getHeight(new BlockPos(i << 4, 0, j << 4)), 20) == null;
@@ -74,7 +74,7 @@ public class WorldGenHunterCamp extends WorldGenerator {
      */
     @Override
     public boolean generate(World worldIn, Random rand, BlockPos position) {
-        if (worldIn.getBiomeForCoordsBody(position).getHeightVariation() < 0.3 && rand.nextInt(7) == 0) {
+        if (worldIn.getBiomeForCoordsBody(position).getHeightVariation() < 0.3 && rand.nextInt(6) == 0) {
             int r = rand.nextInt(2);
             int r1 = rand.nextInt(2);
             int r2 = rand.nextInt(2);
@@ -94,9 +94,9 @@ public class WorldGenHunterCamp extends WorldGenerator {
                 placeTent(worldIn, rand, pos3, EnumFacing.NORTH);
                 placeTent(worldIn, rand, pos4, EnumFacing.SOUTH);
                 EntityAdvancedHunter hunter = new EntityAdvancedHunter(worldIn);
-                AxisAlignedBB box = new AxisAlignedBB(center.add(-6, 0, -6), center.add(6, 0, 6));
-                UtilLib.spawnEntityInWorld(worldIn, box, hunter, 5);
-                hunter.setCampArea(box);
+                AxisAlignedBB box = new AxisAlignedBB(center.add(-7, 0, -10), center.add(7, 1, 7));
+                UtilLib.spawnEntityInWorld(worldIn, box, hunter, 8);
+                hunter.setCampArea(box.grow(4, 5, 4));
                 if (VampirismWorldGen.debug)
                     VampirismMod.log.i("HunterCamp", "Generated advanced hunter camp at %s", center);
                 return true;

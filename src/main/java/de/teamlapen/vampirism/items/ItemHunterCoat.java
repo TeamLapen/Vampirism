@@ -1,26 +1,20 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.ItemStackUtil;
-import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.items.IItemWithTier;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
 import java.util.List;
 
 
-public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTier {
+public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTierNBTImpl {
 
     private final static String baseRegName = "hunter_coat";
 
@@ -45,10 +39,7 @@ public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTie
     @Override
     public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
         super.addInformation(stack, playerIn, tooltip, advanced);
-        TIER t = getTier(stack);
-        if (t != TIER.NORMAL) {
-            tooltip.add(TextFormatting.AQUA + UtilLib.translate("text.vampirism.item_tier." + t.name().toLowerCase()));
-        }
+        addTierInformation(stack, tooltip);
     }
 
 
@@ -71,28 +62,6 @@ public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTie
         for (TIER t : TIER.values()) {
             subItems.add(setTier(new ItemStack(itemIn), t));
         }
-    }
-
-    @Override
-    public TIER getTier(@Nonnull ItemStack stack) {
-        NBTTagCompound tag = UtilLib.checkNBT(stack);
-        if (tag.hasKey("tier")) {
-            try {
-                return TIER.valueOf(tag.getString("tier"));
-            } catch (IllegalArgumentException e) {
-                VampirismMod.log.e("ArmorOfSwiftness", e, "Unknown item tier %s", tag.getString("tier"));
-            }
-
-        }
-        return TIER.NORMAL;
-    }
-
-    @Nonnull
-    @Override
-    public ItemStack setTier(@Nonnull ItemStack stack, TIER tier) {
-        NBTTagCompound tag = UtilLib.checkNBT(stack);
-        tag.setString("tier", tier.name());
-        return stack;
     }
 
     @Override

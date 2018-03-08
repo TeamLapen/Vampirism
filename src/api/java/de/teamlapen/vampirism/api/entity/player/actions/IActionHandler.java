@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.api.entity.player.actions;
 
 
+import net.minecraft.util.ResourceLocation;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -13,7 +15,7 @@ public interface IActionHandler<T extends IActionPlayer> {
     /**
      * @return A list of actions which currently are available to the player
      */
-    List<IAction<T>> getAvailableActions();
+    List<IAction> getAvailableActions();
 
 
     /**
@@ -23,7 +25,7 @@ public interface IActionHandler<T extends IActionPlayer> {
      * @param action
      * @return
      */
-    float getPercentageForAction(IAction<T> action);
+    float getPercentageForAction(IAction action);
 
     /**
      * Checks if the action is currently activated
@@ -37,9 +39,9 @@ public interface IActionHandler<T extends IActionPlayer> {
      * Checks if the lasting action is currently activated.
      * Prefer {@link IActionHandler#isActionActive(ILastingAction)} over this one
      *
-     * @return
+     * @param id
      */
-    boolean isActionActive(String id);
+    boolean isActionActive(ResourceLocation id);
 
     boolean isActionUnlocked(IAction action);
 
@@ -48,7 +50,7 @@ public interface IActionHandler<T extends IActionPlayer> {
      *
      * @param actions
      */
-    void relockActions(Collection<IAction<T>> actions);
+    void relockActions(Collection<IAction> actions);
 
     /**
      * Set all timers to 0
@@ -68,5 +70,5 @@ public interface IActionHandler<T extends IActionPlayer> {
      *
      * @param actions
      */
-    void unlockActions(Collection<IAction<T>> actions);
+    void unlockActions(Collection<IAction> actions);
 }

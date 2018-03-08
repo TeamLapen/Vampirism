@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.entity.hunter;
 
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.config.Balance;
@@ -9,10 +10,7 @@ import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.EntityVillagerVampirism;
 import de.teamlapen.vampirism.entity.ai.EntityAIMoveThroughVillageCustom;
 import de.teamlapen.vampirism.entity.ai.HunterAIDefendVillage;
-import net.minecraft.entity.EntityCreature;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.IEntityLivingData;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,7 +25,7 @@ import net.minecraft.world.World;
 /**
  * Villager that is equipped with a fork and hunts vampires
  */
-public class EntityHunterVillager extends EntityVillagerVampirism implements IHunterMob, HunterAIDefendVillage.IVillageHunterCreature {
+public class EntityHunterVillager extends EntityVillagerVampirism implements IHunterMob, IAggressiveVillager, HunterAIDefendVillage.IVillageHunterCreature {
     /**
      * Creates a hunter villager as an copy to the given villager
      *
@@ -44,21 +42,6 @@ public class EntityHunterVillager extends EntityVillagerVampirism implements IHu
         return hunter;
     }
 
-    /**
-     * Creates a villager as an copy to the given hunter
-     *
-     * @param hunter Is not modified
-     * @return
-     */
-    public static EntityVillager makeNormal(EntityHunterVillager hunter) {
-        EntityVillager villager = new EntityVillager(hunter.world);
-        NBTTagCompound nbt = new NBTTagCompound();
-        hunter.writeToNBT(nbt);
-        villager.readFromNBT(nbt);
-        villager.setUniqueId(MathHelper.getRandomUUID(villager.getRNG()));
-
-        return villager;
-    }
 
     public EntityHunterVillager(World worldIn) {
         super(worldIn);
@@ -95,9 +78,9 @@ public class EntityHunterVillager extends EntityVillagerVampirism implements IHu
     @Override
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
-        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.VAMPIRE_HUNTER_ATTACK_DAMAGE);
+        this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.HUNTER_VILLAGER_ATTACK_DAMAGE);
         this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(32);
-        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_HUNTER_MAX_HEALTH);
+        this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.HUNTER_VILLAGER_MAX_HEALTH);
     }
 
     @Override
@@ -118,5 +101,15 @@ public class EntityHunterVillager extends EntityVillagerVampirism implements IHu
                 return super.getTargetDistance() / 2;
             }
         });
+    }
+
+    @Override
+    public Entity makeCalm() {
+        EntityVillager villager = new EntityVillager(world);
+        NBTTagCompound nbt = new NBTTagCompound();
+        this.writeToNBT(nbt);
+        villager.readFromNBT(nbt);
+        villager.setUniqueId(MathHelper.getRandomUUID(villager.getRNG()));
+        return villager;
     }
 }

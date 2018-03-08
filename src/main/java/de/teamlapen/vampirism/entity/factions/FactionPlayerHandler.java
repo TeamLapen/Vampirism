@@ -9,8 +9,11 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.event.FactionEvent;
 import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.util.REFERENCE;
+import de.teamlapen.vampirism.util.ScoreboardUtil;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -77,6 +80,32 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     private IPlayableFaction currentFaction = null;
     private int currentLevel = 0;
 
+    @Nullable
+    private ResourceLocation boundAction1;
+    @Nullable
+    private ResourceLocation boundAction2;
+
+    @Nullable
+    public ResourceLocation getBoundAction1() {
+        return boundAction1;
+    }
+
+    public void setBoundAction1(@Nullable ResourceLocation boundAction1, boolean sync) {
+        this.boundAction1 = boundAction1;
+        if (sync) this.sync(false);
+
+    }
+
+    @Nullable
+    public ResourceLocation getBoundAction2() {
+        return boundAction2;
+    }
+
+    public void setBoundAction2(@Nullable ResourceLocation boundAction2, boolean sync) {
+        this.boundAction2 = boundAction2;
+        if (sync) this.sync(false);
+    }
+
     private FactionPlayerHandler(EntityPlayer player) {
         this.player = player;
     }
@@ -100,6 +129,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         FactionPlayerHandler oldP = get(old);
         currentFaction = oldP.currentFaction;
         currentLevel = oldP.currentLevel;
+        this.boundAction1 = oldP.boundAction1;
+        this.boundAction2 = oldP.boundAction2;
         notifyFaction(oldP.currentFaction, oldP.currentLevel);
     }
 
@@ -167,6 +198,12 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
                 currentLevel = nbt.getInteger("level");
             }
         }
+        if (nbt.hasKey("bound1")) {
+            setBoundAction1(new ResourceLocation(nbt.getString("bound1")), false);
+        }
+        if (nbt.hasKey("bound2")) {
+            setBoundAction1(new ResourceLocation(nbt.getString("bound2")), false);
+        }
         notifyFaction(old, oldLevel);
     }
 
@@ -213,7 +250,9 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         else if (currentLevel == 0) currentFaction = null;
         notifyFaction(old, oldLevel);
         sync(!Objects.equals(old, currentFaction));
-
+        if (player instanceof EntityPlayerMP) {
+            ModAdvancements.TRIGGER_FACTION.trigger((EntityPlayerMP) player, currentFaction, currentLevel);
+        }
         return true;
 
     }
@@ -227,6 +266,8 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     public void writeFullUpdateToNBT(NBTTagCompound nbt) {
         nbt.setString("faction", currentFaction == null ? "null" : currentFaction.getKey().toString());
         nbt.setInteger("level", currentLevel);
+        if (getBoundAction1() != null) nbt.setString("bound1", getBoundAction1().toString());
+        if (getBoundAction2() != null) nbt.setString("bound2", getBoundAction2().toString());
     }
 
     private IPlayableFaction getFactionFromKey(ResourceLocation key) {
@@ -239,7 +280,6 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     private void loadNBTData(NBTTagCompound nbt) {
-
         if (nbt.hasKey("faction")) {
             currentFaction = getFactionFromKey(new ResourceLocation(nbt.getString("faction")));
             if (currentFaction == null) {
@@ -248,6 +288,12 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
                 currentLevel = nbt.getInteger("level");
                 notifyFaction(null, 0);
             }
+        }
+        if (nbt.hasKey("bound1")) {
+            setBoundAction1(new ResourceLocation(nbt.getString("bound1")), false);
+        }
+        if (nbt.hasKey("bound2")) {
+            setBoundAction1(new ResourceLocation(nbt.getString("bound2")), false);
         }
     }
 
@@ -270,6 +316,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         if (!Objects.equals(currentFaction, oldFaction)) {
             onChangedFaction();
         }
+        ScoreboardUtil.updateScoreboard(player, ScoreboardUtil.FACTION_CRITERIA, currentFaction == null ? 0 : currentFaction.getKey().hashCode());
     }
 
     /**
@@ -280,10 +327,13 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     }
 
     private void saveNBTData(NBTTagCompound nbt) {
+        //Don't forget to also add things to copyFrom
         if (currentFaction != null) {
             nbt.setString("faction", currentFaction.getKey().toString());
             nbt.setInteger("level", currentLevel);
         }
+        if (getBoundAction1() != null) nbt.setString("bound1", getBoundAction1().toString());
+        if (getBoundAction2() != null) nbt.setString("bound2", getBoundAction2().toString());
     }
 
     private void sync(boolean all) {

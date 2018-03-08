@@ -1,20 +1,25 @@
 package de.teamlapen.vampirism.client.gui;
 
 import de.teamlapen.lib.lib.client.gui.ExtendedGui;
+import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
+import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Configs;
+import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
-import de.teamlapen.vampirism.player.vampire.BloodStats;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
+import de.teamlapen.vampirism.util.HalloweenSpecial;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
@@ -26,11 +31,14 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
@@ -73,14 +81,14 @@ public class VampirismHUDOverlay extends ExtendedGui {
         if (event.phase == TickEvent.Phase.END) return;
         IFactionPlayer player = FactionPlayerHandler.get(mc.player).getCurrentFactionPlayer();
         if (player != null && player instanceof IVampirePlayer) {
-            if (((IVampirePlayer) player).getActionHandler().isActionActive(VampireActions.rageAction)) {
+            if (((IVampirePlayer) player).getActionHandler().isActionActive(VampireActions.vampire_rage)) {
                 screenPercentage = 100;
                 screenColor = 0xfff00000;
                 fullScreen = false;
-            } else if ((screenPercentage = ((IVampirePlayer) player).getTicksInSun()) > 0) {
+            } else if ((screenPercentage = ((IVampirePlayer) player).getTicksInSun() / 2) > 0) {
                 PotionEffect effect = mc.player.getActivePotionEffect(ModPotions.sunscreen);
                 if (effect == null || effect.getAmplifier() < 5) {
-                    screenColor = 0xffffe700;
+                    screenColor = 0xfffff755;
                     fullScreen = false;
                     if (player.getRepresentingPlayer().capabilities.isCreativeMode) {
                         screenPercentage = Math.min(20, screenPercentage);
@@ -122,26 +130,48 @@ public class VampirismHUDOverlay extends ExtendedGui {
             if (player.getLevel() > 0 && !mc.player.isSpectator()) {
                 Entity entity = p.entityHit;
                 IBiteableEntity biteable = null;
-                if (entity instanceof EntityCreature) {
-                    biteable = ExtendedCreature.get((EntityCreature) entity);
-                } else if (entity instanceof IBiteableEntity) {
+                if (entity instanceof IBiteableEntity) {
                     biteable = (IBiteableEntity) entity;
+                } else if (entity instanceof EntityCreature) {
+                    biteable = ExtendedCreature.get((EntityCreature) entity);
                 } else if (entity instanceof EntityPlayer) {
                     biteable = VampirePlayer.get((EntityPlayer) entity);
                 }
                 if (biteable != null && biteable.canBeBitten(player)) {
-                    this.mc.getTextureManager().bindTexture(icons);
-                    int left = event.getResolution().getScaledWidth() / 2 - 8;
-                    int top = event.getResolution().getScaledHeight() / 2 - 4;
-                    GL11.glEnable(GL11.GL_BLEND);
-                    GL11.glColor4f(1F, 0F, 0F, 0.8F);
-                    drawTexturedModalRect(left, top, 27, 0, 16, 16);
-                    GL11.glColor4f(1F, 1F, 1F, 1F);
-                    GL11.glDisable(GL11.GL_BLEND);
+                    renderBloodFangs(event.getResolution().getScaledWidth(), event.getResolution().getScaledHeight(), MathHelper.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F));
                     event.setCanceled(true);
                 }
             }
+        } else if (p != null && p.typeOfHit == RayTraceResult.Type.BLOCK) {
+            IBlockState block = Minecraft.getMinecraft().world.getBlockState(p.getBlockPos());
+            if (ModBlocks.blood_container.equals(block.getBlock())) {
+                IVampirePlayer player = VampirePlayer.get(mc.player);
+                if (player.wantsBlood()) {
+                    TileEntity tile = Minecraft.getMinecraft().world.getTileEntity(p.getBlockPos());
+                    if (tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
+                        if (FluidLib.getFluidAmount(tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), ModFluids.blood) > 0) {
+                            renderBloodFangs(event.getResolution().getScaledWidth(), event.getResolution().getScaledHeight(), 1);
+                            event.setCanceled(true);
+                        }
+                    }
+                }
+            }
         }
+    }
+
+    private void renderBloodFangs(int width, int height, float perc) {
+        this.mc.getTextureManager().bindTexture(icons);
+        int left = width / 2 - 8;
+        int top = height / 2 - 4;
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glColor4f(1F, 1F, 1F, 0.7F);
+        drawTexturedModalRect(left, top, 27, 0, 16, 10);
+        GL11.glColor4f(1F, 0F, 0F, 0.8F);
+        int percHeight = (int) (10 * perc);
+        drawTexturedModalRect(left, top + (10 - percHeight), 27, 10 - percHeight, 16, percHeight);
+        GL11.glColor4f(1F, 1F, 1F, 1F);
+        GL11.glDisable(GL11.GL_BLEND);
+
     }
 
     /**
@@ -179,7 +209,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
             event.setCanceled(true);
 
             if (mc.playerController.gameIsSurvivalOrAdventure()) {
-                BloodStats stats = VampirePlayer.get(mc.player).getBloodStats();
+                IBloodStats stats = VampirePlayer.get(mc.player).getBloodStats();
 
                 GlStateManager.enableBlend();
 
@@ -187,17 +217,23 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 int left = event.getResolution().getScaledWidth() / 2 + 91;
                 int top = event.getResolution().getScaledHeight() - GuiIngameForge.right_height;
                 GuiIngameForge.right_height += 10;
-
+                int blood = stats.getBloodLevel();
+                int maxBlood = stats.getMaxBlood();
+                int blood2 = blood - 20;
+                int maxBlood2 = maxBlood - 20;
                 for (int i = 0; i < 10; ++i) {
                     int idx = i * 2 + 1;
                     int x = left - i * 8 - 9;
 
                     // Draw Background
-                    drawTexturedModalRect(x, top, 0, 0, 9, 9);
+                    drawTexturedModalRect(x, top, 0, idx <= maxBlood2 ? 9 : 0, 9, 9);
 
-                    if (idx < stats.getBloodLevel()) {
-                        drawTexturedModalRect(x, top, 9, 0, 9, 9);
-                    } else if (idx == stats.getBloodLevel()) {
+                    if (idx < blood) {
+                        drawTexturedModalRect(x, top, 9, idx < blood2 ? 9 : 0, 9, 9);
+                        if (idx == blood2) {
+                            drawTexturedModalRect(x, top, 18, 9, 9, 9);
+                        }
+                    } else if (idx == blood) {
                         drawTexturedModalRect(x, top, 18, 0, 9, 9);
                     }
                 }
@@ -270,6 +306,40 @@ public class VampirismHUDOverlay extends ExtendedGui {
             GL11.glEnable(GL11.GL_DEPTH_TEST);
             GlStateManager.popMatrix();
         }
+
+        if (HalloweenSpecial.shouldRenderOverlay()) {
+            renderHalloweenOverlay();
+        }
+    }
+
+    /**
+     * Halloween (temporary) overlay
+     */
+    private void renderHalloweenOverlay() {
+
+        GlStateManager.pushMatrix();
+        //Set the working matrix/layer to a layer directly on the screen/in front of the player
+        ScaledResolution scaledresolution = new ScaledResolution(this.mc);
+        // int factor=scaledresolution.getScaleFactor();
+        int w = (scaledresolution.getScaledWidth());
+        int h = (scaledresolution.getScaledHeight());
+
+        Minecraft.getMinecraft().entityRenderer.setupOverlayRendering();
+
+        Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(REFERENCE.MODID, "textures/gui/special_halloween.png"));
+
+        int width = 507;
+        int height = 102;
+
+        int x = (w - width) / 2;
+        int y = (h - height) / 2;
+
+        GlStateManager.color(1, 1, 1, 1);
+        GlStateManager.enableBlend();
+        drawModalRectWithCustomSizedTexture(x, y, 0, 0, width, height, width, height);
+        GlStateManager.disableBlend();
+
+        GlStateManager.popMatrix();
     }
 
 

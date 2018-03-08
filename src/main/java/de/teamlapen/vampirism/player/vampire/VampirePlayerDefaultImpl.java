@@ -6,6 +6,7 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
@@ -67,6 +68,11 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
+    public boolean wantsBlood() {
+        return false;
+    }
+
+    @Override
     public IActionHandler<IVampirePlayer> getActionHandler() {
         return null;
     }
@@ -80,6 +86,11 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     @Override
     public int getBloodLevel() {
         return 0;
+    }
+
+    @Override
+    public IBloodStats getBloodStats() {
+        return null;
     }
 
     @Override
@@ -167,14 +178,16 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
         return false;
     }
 
+    @Nonnull
     @Override
     public EnumStrength isGettingGarlicDamage() {
-        return null;
+        return EnumStrength.NONE;
     }
 
+    @Nonnull
     @Override
     public EnumStrength isGettingGarlicDamage(boolean forcerefresh) {
-        return null;
+        return EnumStrength.NONE;
     }
 
     @Override
@@ -182,10 +195,6 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
         return false;
     }
 
-    @Override
-    public boolean isGettingSundamage() {
-        return false;
-    }
 
     @Override
     public boolean isIgnoringSundamage() {

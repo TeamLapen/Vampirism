@@ -10,9 +10,11 @@ import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLordWithSaveable;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
 import de.teamlapen.vampirism.blocks.BlockCastleBlock;
+import de.teamlapen.vampirism.blocks.BlockCastleStairs;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.inventory.BloodPotionTableContainer;
+import de.teamlapen.vampirism.items.VampirismVampireSword;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.DifficultyCalculator;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -30,9 +32,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.living.LivingSpawnEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 /**
@@ -71,11 +75,22 @@ public class ModEntityEventHandler {
 
     }
 
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void onLivingEquipmentChange(LivingEquipmentChangeEvent event) {
+        if (event.getTo().getItem() instanceof VampirismVampireSword) {
+            ((VampirismVampireSword) event.getTo().getItem()).updateTrainedCached(event.getTo(), event.getEntityLiving());
+        }
+    }
+
     @SubscribeEvent
     public void onEntityCheckSpawn(LivingSpawnEvent.CheckSpawn event) {
         IBlockState blockState = event.getWorld().getBlockState(new BlockPos(event.getX() - 0.4F, event.getY(), event.getZ() - 0.4F).down());
         if (blockState.getBlock().equals(ModBlocks.castle_block)) {
             if (BlockCastleBlock.EnumType.DARK_STONE.equals(blockState.getValue(BlockCastleBlock.VARIANT)) || !event.getEntity().isCreatureType(VReference.VAMPIRE_CREATURE_TYPE, false)) {
+                event.setResult(Event.Result.DENY);
+            }
+        } else if (blockState.getBlock() instanceof BlockCastleStairs) {
+            if (ModBlocks.castle_stairs_dark_stone.equals(blockState.getBlock()) || !event.getEntity().isCreatureType(VReference.VAMPIRE_CREATURE_TYPE, false)) {
                 event.setResult(Event.Result.DENY);
             }
         }

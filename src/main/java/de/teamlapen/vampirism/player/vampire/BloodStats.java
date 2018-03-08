@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.player.vampire;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.config.Balance;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
@@ -12,18 +13,32 @@ import net.minecraft.world.EnumDifficulty;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import java.lang.reflect.Field;
-
 /**
  * Handles VP's blood stats. Very similar to {@link FoodStats}
- * TODO maybe make a api interface for this
  */
-public class BloodStats {
-    public static final float LOW_SATURATION = 0.3F;
-    public static final float MEDIUM_SATURATION = 0.7F;
-    public static final float HIGH_SATURATION = 1.0F;
+public class BloodStats implements IBloodStats {
     private final static String TAG = "BloodStats";
-    protected final int MAXBLOOD = 20;
+
+    private int maxBlood = 20;
+
+    @Override
+    public int getMaxBlood() {
+        return maxBlood;
+    }
+
+    /**
+     * Change the maximum storeable amount of blood
+     * Also caps the current blood at this level
+     *
+     * @param maxBlood Should be a even number
+     */
+    public void setMaxBlood(int maxBlood) {
+        this.maxBlood = Math.max(1, maxBlood);
+        if (this.bloodLevel > maxBlood) {
+            bloodLevel = maxBlood;
+        }
+        changed = true;
+    }
     private final EntityPlayer player;
     private int bloodLevel = 20;
     private float bloodSaturationLevel = 5.0F;
@@ -31,25 +46,15 @@ public class BloodStats {
     private int bloodTimer;
     private int prevBloodLevel = 20;
     private boolean changed = false;
-    /**
-     * Caches an accessor to {@link FoodStats#foodExhaustionLevel}
-     */
-    private Field field_foodExhaustionLevel = null;
+
 
     public BloodStats(EntityPlayer player) {
         this.player = player;
     }
 
-    /**
-     * Adds blood to the stats
-     * Consider using {@link VampirePlayer#drinkBlood(int, float)} instead
-     *
-     * @param amount
-     * @param saturationModifier
-     * @return The amount which could not be added
-     */
+    @Override
     public int addBlood(int amount, float saturationModifier) {
-        int add = Math.min(amount, MAXBLOOD - bloodLevel);
+        int add = Math.min(amount, maxBlood - bloodLevel);
         bloodLevel += add;
         bloodSaturationLevel = Math.min(this.bloodSaturationLevel + (float) add * saturationModifier * 2.0F, (float) bloodLevel);
         changed = true;
@@ -57,12 +62,7 @@ public class BloodStats {
     }
 
 
-    /**
-     * Removes blood from the vampires blood level
-     *
-     * @param a amount
-     * @return whether the vampire had enough blood or not
-     */
+    @Override
     public boolean consumeBlood(int a) {
         int blood = getBloodLevel();
         int bloodToRemove = Math.min(a, blood);
@@ -72,22 +72,26 @@ public class BloodStats {
         return bloodToRemove <= blood;
     }
 
+    @Override
     public int getBloodLevel() {
         return bloodLevel;
     }
 
+    @Override
     public void setBloodLevel(int amt) {
-        bloodLevel = amt < 0 ? 0 : (amt > 20 ? 20 : amt);
+        bloodLevel = amt < 0 ? 0 : (amt > maxBlood ? maxBlood : amt);
         changed = true;
     }
 
+    @Override
     @SideOnly(Side.CLIENT)
     public int getPrevBloodLevel() {
         return prevBloodLevel;
     }
 
+    @Override
     public boolean needsBlood() {
-        return bloodLevel < MAXBLOOD;
+        return bloodLevel < maxBlood;
     }
 
     /**
@@ -113,7 +117,7 @@ public class BloodStats {
             }
         }
         boolean regen = player.getEntityWorld().getGameRules().getBoolean("naturalRegeneration");
-        if (regen && this.bloodSaturationLevel > 0 && player.shouldHeal() && this.bloodLevel >= 20) {
+        if (regen && this.bloodSaturationLevel > 0 && player.shouldHeal() && this.bloodLevel >= maxBlood) {
             ++this.bloodTimer;
             if (this.bloodTimer >= 10) {
                 float f = Math.min(this.bloodSaturationLevel, 4F);
@@ -121,12 +125,12 @@ public class BloodStats {
                 this.addExhaustion(f, true);
                 this.bloodTimer = 0;
             }
-        } else if (regen && this.bloodLevel >= 18 && player.shouldHeal()) {
+        } else if (regen && this.bloodLevel >= (Balance.vp.BLOOD_HEALING_LEVEL) && player.shouldHeal()) {
             ++this.bloodTimer;
 
             if (this.bloodTimer >= 80) {
                 player.heal(1.0F);
-                this.addExhaustion(3.0F, true);
+                this.addExhaustion(2.8F, true);
                 this.bloodTimer = 0;
             }
         } else if (this.bloodLevel <= 0) {
@@ -134,7 +138,7 @@ public class BloodStats {
 
             if (this.bloodTimer >= 80) {
                 if (player.getHealth() > 10.0F || enumDifficulty == EnumDifficulty.HARD || player.getHealth() > 1.0F && enumDifficulty == EnumDifficulty.NORMAL) {
-                    player.attackEntityFrom(DamageSource.STARVE, 1.0F);
+                    player.attackEntityFrom(DamageSource.STARVE, 1.5F);
                 }
 
                 this.bloodTimer = 0;
@@ -162,6 +166,9 @@ public class BloodStats {
                 bloodSaturationLevel = nbt.getFloat("bloodSaturation");
                 bloodExhaustionLevel = nbt.getFloat("bloodExhaustion");
             }
+            if (nbt.hasKey("maxBlood")) {
+                maxBlood = nbt.getInteger("maxBlood");
+            }
         }
     }
 
@@ -176,6 +183,7 @@ public class BloodStats {
         nbt.setInteger("bloodTimer", bloodTimer);
         nbt.setFloat("bloodSaturation", bloodSaturationLevel);
         nbt.setFloat("bloodExhaustion", bloodExhaustionLevel);
+        nbt.setInteger("maxBlood", maxBlood);
     }
 
     /**
@@ -222,6 +230,9 @@ public class BloodStats {
     }
 
     void loadUpdate(NBTTagCompound nbt) {
+        if (nbt.hasKey("maxBlood")) {
+            setMaxBlood(nbt.getInteger("maxBlood"));
+        }
         if (nbt.hasKey("bloodLevel")) {
             setBloodLevel(nbt.getInteger("bloodLevel"));
         }
@@ -230,7 +241,9 @@ public class BloodStats {
 
     NBTTagCompound writeUpdate(NBTTagCompound nbt) {
         nbt.setInteger("bloodLevel", bloodLevel);
+        nbt.setInteger("maxBlood", maxBlood);
         return nbt;
     }
+
 
 }

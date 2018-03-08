@@ -1,0 +1,22 @@
+{
+  "display": {
+    "icon": {
+      "item": "minecraft:log"
+    },
+    "title": {
+      "translate": "advancement.vampirism.vampire_forest"
+    },
+    "description": {
+      "translate": "advancement.vampirism.vampire_forest.desc"
+    }
+  },
+  "parent": "vampirism:main/root",
+  "criteria": {
+    "main": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "biome": "vampirism:vampireforest"
+      }
+    }
+  }
+}

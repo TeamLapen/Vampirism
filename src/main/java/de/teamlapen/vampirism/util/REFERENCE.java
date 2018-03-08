@@ -10,23 +10,28 @@ public class REFERENCE {
     public static final String NAME = "Vampirism";
     public static final String VERSION = "@VERSION@";
     public static final String MINECRAFT_VERSION = "@MVERSION@";
-    public static final String FORGE_VERSION_MIN = "14.21.1.2387";
+    public static final String FORGE_VERSION_MIN = "14.23.1.2554";
     public static final int HIGHEST_VAMPIRE_LEVEL = 14;
     public static final int HIGHEST_HUNTER_LEVEL = 14;
     public static final String FORGE_VERSION = "@FVERSION@";
-    public static final String VERSION_UPDATE_FILE = "http://maxanier.de/projects/vampirism/versions.json";
-    public static final String SUPPORTER_FILE = "http://maxanier.de/projects/vampirism/supporters.json";//TODO maybe switch back to HTTPS when most java version trust let's encrypt
+    public static final String VERSION_UPDATE_FILE_FORGE = "http://maxanier.de/projects/vampirism/versions.json";
+    public static final String VERSION_UPDATE_FILE = "http://maxanier.de/projects/vampirism/versions.php";
+    public static final String SUPPORTER_FILE = "http://maxanier.de/projects/vampirism/supporters.json";
     public static final String CURSEFORGE_LINK = "https://minecraft.curseforge.com/projects/vampirism-become-a-vampire";
     public static final String PATREON_LINK = "https://www.patreon.com/maxanier";
+    public static final String INTEGRATIONS_MODID = "vampirism_integrations";
+    public static final String INTEGRATIONS_LINK = "https://minecraft.curseforge.com/projects/vampirism-integrations";
 
-    public static final int EYE_TYPE_COUNT = 7;
+    public static final int EYE_TYPE_COUNT = 14;
     public static final int FANG_TYPE_COUNT = 6;
     /**
      * Check for vampire garlic damage every n ticks
+     * Must be higher than 1, due to implementation
      */
     public final static int REFRESH_GARLIC_TICKS = 40;
     /**
-     * Check for vampire sundamage every n ticks
+     * Check for vampire sun damage every n ticks
+     * Must be higher than 2 due to implementation
      */
     public final static int REFRESH_SUNDAMAGE_TICKS = 8;
 

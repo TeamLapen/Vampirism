@@ -1,0 +1,27 @@
+{
+  "display": {
+    "icon": {
+      "item": "vampirism:vampire_fang"
+    },
+    "title": {
+      "translate": "advancement.vampirism.max_level_vampire"
+    },
+    "description": {
+      "translate": "advancement.vampirism.max_level_vampire.desc"
+    },
+    "frame": "goal"
+  },
+  "reward": {
+    "experience": 100
+  },
+  "parent": "vampirism:vampire/bat",
+  "criteria": {
+    "level": {
+      "trigger": "vampirism:faction",
+      "conditions": {
+        "faction": "Vampire",
+        "level": 14
+      }
+    }
+  }
+}

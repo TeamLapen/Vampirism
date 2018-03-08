@@ -43,7 +43,7 @@ public class BloodPotionTableContainer extends Container {
         this.world = world;
         portable = !ModBlocks.blood_potion_table.equals(world.getBlockState(pos).getBlock());
         int crafting_time = portable ? 500 : 250;
-        if (hunterPlayer.getSkillHandler().isSkillEnabled(HunterSkills.bloodPotion_fasterCrafting)) {
+        if (hunterPlayer.getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_faster_crafting)) {
             crafting_time /= 2;
         }
         this.max_crafting_time = crafting_time;
@@ -106,7 +106,7 @@ public class BloodPotionTableContainer extends Container {
     List<String> getLocalizedCraftingHint() {
         ItemStack extra = inventory.getStackInSlot(3);
         if (ItemStackUtil.isEmpty(extra)) return null;
-        if (!hunterPlayer.getSkillHandler().isSkillEnabled(HunterSkills.bloodPotion_categoryHint)) return null;
+        if (!hunterPlayer.getSkillHandler().isSkillEnabled(HunterSkills.blood_potion_category_hint)) return null;
         List<String> hints = BloodPotions.getLocalizedCategoryHint(extra);
         if (hints.isEmpty()) {
             hints.add(UtilLib.translate("text.vampirism.blood_potion.any_effect"));

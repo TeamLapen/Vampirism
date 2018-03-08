@@ -1,5 +1,6 @@
 package de.teamlapen.lib.lib.util;
 
+import com.google.common.collect.ImmutableList;
 import de.teamlapen.lib.VampLib;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Configuration;
@@ -24,6 +25,19 @@ public class ModCompatLoader implements IInitListener {
     @Nullable
     List<IModCompat> availableModCompats = new LinkedList<>();
     private List<IModCompat> loadedModCompats;
+
+    @Nullable
+    private Configuration config;
+
+    /**
+     * May be null before INIT
+     *
+     * @return The mod compat config file
+     */
+    @Nullable
+    public Configuration getConfig() {
+        return config;
+    }
 
     /**
      * @param configName Name for the config file. Can be a file in a folder
@@ -76,7 +90,7 @@ public class ModCompatLoader implements IInitListener {
             VampLib.log.w(TAG, "Trying to load mod compat twice");
             return;
         }
-        Configuration config = new Configuration(new File(configDir, configName));
+        config = new Configuration(new File(configDir, configName));
 
         List<IModCompat> loaded = new LinkedList<>();
         for (IModCompat modCompat : availableModCompats) {
@@ -95,5 +109,9 @@ public class ModCompatLoader implements IInitListener {
         }
         loadedModCompats = loaded;
         availableModCompats = null;
+    }
+
+    public List<IModCompat> getLoadedModCompats() {
+        return ImmutableList.copyOf(loadedModCompats);
     }
 }

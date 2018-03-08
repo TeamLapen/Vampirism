@@ -90,8 +90,9 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
             return minLevel;
         }
 
+
         @Override
-        public float getStrVsBlock(ItemStack stack, IBlockState state) {
+        public float getDestroySpeed(ItemStack stack, IBlockState state) {
             Block block = state.getBlock();
 
             if (block == Blocks.WEB) {

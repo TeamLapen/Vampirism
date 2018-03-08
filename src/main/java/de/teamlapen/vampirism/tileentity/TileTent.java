@@ -105,7 +105,7 @@ public class TileTent extends TileEntity implements ITickable {
     @SideOnly(Side.CLIENT)
     @Override
     public AxisAlignedBB getRenderBoundingBox() {
-        return super.getRenderBoundingBox().expand(1, 0, 1);
+        return super.getRenderBoundingBox().grow(1, 0, 1);
     }
 
     @Nullable

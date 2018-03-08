@@ -8,22 +8,16 @@
       "status": 0
     },
     {
-      "name": "Captain",
-      "texture": "Cptsprinkleface",
-      "type": 0,
-      "status": 1
-    },
-    {
       "name": "Mazdallier",
       "texture": "mazdallier",
       "type": 0,
       "status": 1
     },
     {
-      "name": "eZflaffer the Loquacious",
-      "texture": "ezflaffer",
-      "type": 0,
-      "status": 2
+      "name": "Dangerous Invadertex",
+      "texture": "Invadertex",
+      "status": 2,
+      "type": 4
     }
   ],
   "hunters": [

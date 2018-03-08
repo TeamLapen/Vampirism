@@ -14,6 +14,20 @@
     }
   },
   {
+    "name": "GOLD",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "ingotGold"
+    }
+  },
+  {
+    "name": "DIAMOND",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "gemDiamond"
+    }
+  },
+  {
     "name": "STONEBRICK",
     "ingredient": {
       "type": "minecraft:item",
@@ -27,6 +41,13 @@
       "type": "minecraft:item",
       "item": "minecraft:stone",
       "data": 0
+    }
+  },
+  {
+    "name": "STICK",
+    "ingredient": {
+      "type": "forge:ore_dict",
+      "ore": "stickWood"
     }
   }
 ]

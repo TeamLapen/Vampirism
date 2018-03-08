@@ -16,5 +16,6 @@ public class ModPacketDispatcher extends AbstractPacketDispatcher {
     public void registerPackets() {
         registerMessage(InputEventPacket.Handler.class, InputEventPacket.class, Side.SERVER);
         registerMessage(SyncConfigPacket.Handler.class, SyncConfigPacket.class, Side.CLIENT);
+        //registerMessage(BloodValuePacket.Handler.class, BloodValuePacket.class, Side.CLIENT);
     }
 }

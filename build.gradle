@@ -15,6 +15,13 @@ buildscript {
 plugins {
     id 'com.matthewprenger.cursegradle' version '1.0.9'
 }
+
+
+configurations {
+    optionalRuntime
+    runtime.extendsFrom optionalRuntime // optionalRuntime dependencies are downloaded but not exported to POM
+}
+
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 loadProperties()

@@ -4,23 +4,20 @@ import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.vampire.IAdvancedVampire;
 import de.teamlapen.vampirism.config.Balance;
-import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ai.EntityAIAttackMeleeNoSun;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
 import de.teamlapen.vampirism.entity.ai.VampireAIRestrictSun;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
-import de.teamlapen.vampirism.items.ItemBloodBottle;
 import de.teamlapen.vampirism.util.IPlayerFace;
 import de.teamlapen.vampirism.util.SupporterManager;
-import de.teamlapen.vampirism.util.VampireBookManager;
+import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
@@ -28,6 +25,7 @@ import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigateGround;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 
@@ -184,21 +182,10 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         return (float) (amount * Balance.mobProps.ADVANCED_VAMPIRE_FIRE_VULNERABILITY);
     }
 
+    @Nullable
     @Override
-    protected void dropFewItems(boolean wasRecentlyHit, int lootingModifier) {
-        switch (getRNG().nextInt(2)) {
-            case 0:
-                this.dropItem(ModItems.vampire_blood_bottle, 1);
-                break;
-            case 1:
-                this.entityDropItem(new ItemStack(ModItems.blood_bottle, lootingModifier + 1, getRNG().nextInt(ItemBloodBottle.AMOUNT)), 0);
-                break;
-            default:
-                break;
-        }
-        if (getRNG().nextInt(20) == 0) {//TODO think of another way
-            this.entityDropItem(VampireBookManager.getInstance().getRandomBook(getRNG()), 0);
-        }
+    protected ResourceLocation getLootTable() {
+        return LootHandler.ADVANCED_VAMPIRE;
     }
 
     @Override

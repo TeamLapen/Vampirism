@@ -24,8 +24,8 @@ public class FlyingBloodEntityParticle extends Particle {
 
         Validate.notNull(entity);
         this.entity = entity;
-        this.particleRed = 1.0F;
-        this.particleBlue = this.particleGreen = 0.0F;
+        this.particleRed = 0.95F;
+        this.particleBlue = this.particleGreen = 0.05F;
         if (direct) {
             this.particleMaxAge = MAX_AGE / 2;
         } else {

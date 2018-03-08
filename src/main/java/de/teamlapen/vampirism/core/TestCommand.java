@@ -1,17 +1,21 @@
 package de.teamlapen.vampirism.core;
 
+import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.BasicCommand;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
+import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
-import de.teamlapen.vampirism.entity.hunter.EntityHunterVillager;
-import de.teamlapen.vampirism.player.skills.SkillRegistry;
+import de.teamlapen.vampirism.items.VampirismVampireSword;
+import de.teamlapen.vampirism.player.skills.SkillManager;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.tests.Tests;
 import de.teamlapen.vampirism.tileentity.TileTent;
@@ -19,6 +23,8 @@ import de.teamlapen.vampirism.util.VampireBookManager;
 import de.teamlapen.vampirism.world.GarlicChunkHandler;
 import de.teamlapen.vampirism.world.VampirismWorldData;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
+import de.teamlapen.vampirism.world.gen.structure.StructureManager;
+import de.teamlapen.vampirism.world.gen.structure.VampirismTemplate;
 import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.command.CommandBase;
@@ -29,22 +35,28 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EnumCreatureType;
+import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemMap;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.world.World;
+import net.minecraft.world.gen.structure.template.PlacementSettings;
 import net.minecraft.world.storage.MapData;
 import net.minecraft.world.storage.MapDecoration;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.server.command.CommandTreeHelp;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -78,10 +90,6 @@ public class TestCommand extends BasicCommand {
                 return "info-village";
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
         });
         addSubcommand(new SubCommand() {
             @Override
@@ -99,13 +107,9 @@ public class TestCommand extends BasicCommand {
 
             @Override
             public String getName() {
-                return "info-entity";
+                return "info-entities";
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
         });
         addSubcommand(new SubCommand() {
             @Override
@@ -123,10 +127,6 @@ public class TestCommand extends BasicCommand {
                 return "marker";
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
         });
         addSubcommand(new SubCommand() {
 
@@ -147,10 +147,6 @@ public class TestCommand extends BasicCommand {
                 return "giveTestTargetMap";
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
         });
         addSubcommand(new SubCommand() {
 
@@ -169,10 +165,6 @@ public class TestCommand extends BasicCommand {
                 return "garlic_profiler";
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
 
             private void print(ICommandSender var1, String id) {
                 List<Profiler.Result> l = FMLCommonHandler.instance().getMinecraftServerInstance().profiler.getProfilingData(id);
@@ -194,14 +186,14 @@ public class TestCommand extends BasicCommand {
                     throw new WrongUsageException(getUsage(sender));
                 }
                 if ("list".equals(args[0])) {
-                    ((SkillRegistry) VampirismAPI.skillRegistry()).printSkills(factionPlayer.getFaction(), sender);
+                    ((SkillManager) VampirismAPI.skillManager()).printSkills(factionPlayer.getFaction(), sender);
                     return;
                 }
                 if ("disableall".equals(args[0])) {
                     (factionPlayer.getSkillHandler()).resetSkills();
                     return;
                 }
-                ISkill skill = VampirismAPI.skillRegistry().getSkill(factionPlayer.getFaction(), args[0]);
+                ISkill skill = VampirismRegistries.SKILLS.getValue(new ResourceLocation(args[0]));
                 if (skill == null) {
                     sender.sendMessage(new TextComponentString("Skill with id " + args[0] + " could not be found for faction " + factionPlayer.getFaction().name()));
                     return;
@@ -241,8 +233,10 @@ public class TestCommand extends BasicCommand {
                 list.add("list");
                 list.add("disableall");
 
-                IFactionPlayer factionPlayer = FactionPlayerHandler.get(sender).getCurrentFactionPlayer();
-                ((SkillRegistry) VampirismAPI.skillRegistry()).addSkills(factionPlayer.getFaction(), list);
+                IPlayableFaction faction = FactionPlayerHandler.get(sender).getCurrentFaction();
+                VampirismAPI.skillManager().getSkillsForFaction(faction).forEach(skill -> {
+                    list.add(skill.getRegistryName().toString());
+                });
 
 
                 return list;
@@ -265,10 +259,6 @@ public class TestCommand extends BasicCommand {
                 return "emptyBloodBar";
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
         });
 
         addSubcommand(new SubCommand() {
@@ -277,7 +267,7 @@ public class TestCommand extends BasicCommand {
             @Override
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 EntityPlayer player = getCommandSenderAsPlayer(sender);
-                List l = player.getEntityWorld().getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().expand(3, 2, 3));
+                List l = player.getEntityWorld().getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().grow(3, 2, 3));
                 for (Object o : l) {
                     if (o instanceof EntityCreature) {
 
@@ -304,7 +294,25 @@ public class TestCommand extends BasicCommand {
                 return getName();
             }
         });
+        addSubcommand(new SubCommand() {
+            @Override
+            public String getName() {
+                return "info-entity";
+            }
 
+
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                EntityPlayer player = getCommandSenderAsPlayer(sender);
+                List<Entity> l = player.getEntityWorld().getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().grow(3, 2, 3));
+                for (Entity o : l) {
+                    NBTTagCompound nbt = new NBTTagCompound();
+                    o.writeToNBT(nbt);
+                    VampirismMod.log.i("InfoEntity", "Data %s", nbt);
+                }
+                sender.sendMessage(new TextComponentString("Printed info to log"));
+            }
+        });
         addSubcommand(new SubCommand() {
             @Override
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
@@ -323,10 +331,6 @@ public class TestCommand extends BasicCommand {
                 return 0;
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
         });
         addSubcommand(new SubCommand() {
 
@@ -334,11 +338,11 @@ public class TestCommand extends BasicCommand {
             @Override
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 EntityPlayer player = getCommandSenderAsPlayer(sender);
-                List<EntityVillager> l = player.getEntityWorld().getEntitiesWithinAABB(EntityVillager.class, player.getEntityBoundingBox().expand(3, 2, 3));
+                List<EntityVillager> l = player.getEntityWorld().getEntitiesWithinAABB(EntityVillager.class, player.getEntityBoundingBox().grow(3, 2, 3));
                 for (EntityVillager v : l) {
-                    EntityHunterVillager hunter = EntityHunterVillager.makeHunter(v);
-                    v.setDead();
-                    v.getEntityWorld().spawnEntity(hunter);
+                    if (v instanceof IHunter || v instanceof IVampire) continue;
+                    VampirismVillage.makeAggressive(v, null);
+
                 }
             }
 
@@ -347,10 +351,6 @@ public class TestCommand extends BasicCommand {
                 return "makeVillagerAgressive";
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
         });
         addSubcommand(new SubCommand() {
 
@@ -373,10 +373,6 @@ public class TestCommand extends BasicCommand {
                 return "resetActions";
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
         });
         addSubcommand(new SubCommand() {
 
@@ -401,10 +397,6 @@ public class TestCommand extends BasicCommand {
                 return "tent";
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
         });
         addSubcommand(new SubCommand() {
 
@@ -423,11 +415,6 @@ public class TestCommand extends BasicCommand {
             @Override
             public int getRequiredPermissionLevel() {
                 return PERMISSION_LEVEL_CHEAT;
-            }
-
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
             }
         });
 
@@ -450,10 +437,6 @@ public class TestCommand extends BasicCommand {
                 return "debugGen";
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
         });
 
         addSubcommand(new SubCommand() {
@@ -470,10 +453,6 @@ public class TestCommand extends BasicCommand {
                 return "runTests";
             }
 
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName();
-            }
         });
 
         addSubcommand(new SubCommand() {
@@ -505,6 +484,147 @@ public class TestCommand extends BasicCommand {
                 return getName() + "(print)";
             }
         });
+        addSubcommand(new SubCommand() {
+            @Override
+            public String getName() {
+                return "place";
+            }
+
+            @Override
+            public String getUsage(ICommandSender sender) {
+                return "place <structure>";
+            }
+
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                if (args.length == 0) {
+                    throw new WrongUsageException("Missing structure name");
+                }
+                EntityPlayer p = getCommandSenderAsPlayer(sender);
+                try {
+                    StructureManager.Structure s = StructureManager.Structure.valueOf(args[0]);
+                    VampirismTemplate template = StructureManager.get(s);
+                    if (template == null) {
+                        throw new CommandException("Structure " + s + " was not loaded");
+                    }
+                    template.addBlocksToWorld(p.world, p.getPosition().offset(EnumFacing.NORTH), new PlacementSettings());
+
+                } catch (IllegalArgumentException e) {
+                    throw new CommandException("Structure " + args[0] + " not found.");
+                }
+
+
+            }
+        });
+
+        addSubcommand(new SubCommand() {
+            @Override
+            public String getName() {
+                return "halloween";
+            }
+
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                EntityPlayer p = getCommandSenderAsPlayer(sender);
+                //EntityDraculaHalloween draculaHalloween = (EntityDraculaHalloween) UtilLib.spawnEntityBehindEntity(p, new ResourceLocation(REFERENCE.MODID, ModEntities.SPECIAL_DRACULA_HALLOWEEN));
+                //draculaHalloween.setOwnerId(p.getUniqueID());
+                VampLib.proxy.getParticleHandler().spawnParticle(p.world, ModParticles.HALLOWEEN, p.posX, p.posY, p.posZ);
+            }
+        });
+
+        addSubcommand(new SubCommand() {
+            @Override
+            public String getName() {
+                return "overtakeVillage";
+            }
+
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                EntityPlayer p = getCommandSenderAsPlayer(sender);
+                VampirismVillage v = VampirismVillageHelper.getNearestVillage(p);
+                if (v == null) {
+                    sender.sendMessage(new TextComponentString("Could not find any village near you"));
+                } else {
+                    v.forcefullyOvertake();
+                    sender.sendMessage(new TextComponentString("Forcefully overtook village"));
+                }
+            }
+        });
+        addSubcommand(new SubCommand() {
+            @Override
+            public String getName() {
+                return "setSwordCharged";
+            }
+
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                EntityPlayer player = getCommandSenderAsPlayer(sender);
+                ItemStack held = player.getHeldItemMainhand();
+                if (args.length != 1) {
+                    throw new WrongUsageException("Only one argument (charge) accepted");
+                }
+                float charge;
+                try {
+                    charge = Float.parseFloat(args[0]);
+                } catch (NumberFormatException e) {
+                    throw new WrongUsageException("Argument has to be a float");
+                }
+
+                if (held.getItem() instanceof VampirismVampireSword) {
+                    ((VampirismVampireSword) held.getItem()).setCharged(held, charge);
+                    player.setHeldItem(EnumHand.MAIN_HAND, held);
+                } else {
+                    sender.sendMessage(new TextComponentString("You have to hold a vampire sword in your main hand"));
+                }
+            }
+        });
+        addSubcommand(new SubCommand() {
+            @Override
+            public String getName() {
+                return "setSwordTrained";
+            }
+
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                EntityPlayer player = getCommandSenderAsPlayer(sender);
+                ItemStack held = player.getHeldItemMainhand();
+                if (args.length != 1) {
+                    throw new WrongUsageException("Only one argument (trained) accepted");
+                }
+                float charge;
+                try {
+                    charge = Float.parseFloat(args[0]);
+                } catch (NumberFormatException e) {
+                    throw new WrongUsageException("Argument has to be a float");
+                }
+
+                if (held.getItem() instanceof VampirismVampireSword) {
+                    ((VampirismVampireSword) held.getItem()).setTrained(held, player, charge);
+                    player.setHeldItem(EnumHand.MAIN_HAND, held);
+                } else {
+                    sender.sendMessage(new TextComponentString("You have to hold a vampire sword in your main hand"));
+                }
+            }
+        });
+
+        addSubcommand(new SubCommand() {
+            @Override
+            public String getName() {
+                return "spawnTestAnimal";
+            }
+
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                EntityPlayer player = getCommandSenderAsPlayer(sender);
+                EntityCow cow = new EntityCow(player.getEntityWorld());
+                cow.setHealth(cow.getMaxHealth() / 4.2f);
+                cow.copyLocationAndAnglesFrom(player);
+                player.world.spawnEntity(cow);
+            }
+        });
+
+        //Add last
+        addSubcommand(new CommandTreeHelp(this));
     }
 
     @Override
@@ -521,6 +641,11 @@ public class TestCommand extends BasicCommand {
     public abstract static class SubCommand extends CommandBase {
 
         private SubCommand() {
+        }
+
+        @Override
+        public String getUsage(ICommandSender sender) {
+            return getName();
         }
 
         @Override

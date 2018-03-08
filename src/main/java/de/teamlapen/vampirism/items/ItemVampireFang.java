@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.ItemStackUtil;
+import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.Helper;
@@ -30,17 +31,21 @@ public class ItemVampireFang extends VampirismItem {
 
         ItemStack stack = playerIn.getHeldItem(handIn);
         if (!worldIn.isRemote) {
-            if (Helper.canBecomeVampire(playerIn)) {
-                PotionSanguinare.addRandom(playerIn, true);
-                playerIn.addPotionEffect(new PotionEffect(MobEffects.POISON, 60));
+            if (Configs.disable_fang_infection) {
+                playerIn.sendStatusMessage(new TextComponentTranslation("text.vampirism.deactivated_by_serveradmin"), true);
             } else {
-                if (Helper.isVampire(playerIn)) {
-                    playerIn.sendMessage(new TextComponentTranslation("text.vampirism.already_vampire"));
+                if (Helper.canBecomeVampire(playerIn)) {
+                    PotionSanguinare.addRandom(playerIn, true);
+                    playerIn.addPotionEffect(new PotionEffect(MobEffects.POISON, 60));
                 } else {
-                    playerIn.sendMessage(new TextComponentTranslation("text.vampirism.immune_to_").appendSibling(new TextComponentTranslation(ModPotions.sanguinare.getName())));
+                    if (Helper.isVampire(playerIn)) {
+                        playerIn.sendMessage(new TextComponentTranslation("text.vampirism.already_vampire"));
+                    } else {
+                        playerIn.sendMessage(new TextComponentTranslation("text.vampirism.immune_to").appendSibling(new TextComponentTranslation(ModPotions.sanguinare.getName())));
+                    }
                 }
+                ItemStackUtil.decr(stack);
             }
-            ItemStackUtil.decr(stack);
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
     }

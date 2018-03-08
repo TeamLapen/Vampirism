@@ -1,0 +1,6 @@
+ 
+todo:
+    keyword: "@TODO-issue"
+
+reminders:
+  label: reminder
