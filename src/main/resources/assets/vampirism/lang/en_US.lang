@@ -102,6 +102,7 @@ action.vampirism.vampire.teleport=Teleport
 action.vampirism.vampire.vampire_rage=Vampire Rage
 action.vampirism.vampire.sunscreen=Sunscreen
 action.vampirism.vampire.disguise=Disguise
+action.vampirism.vampire.dark_blood_projectile=Dark Blood Projectile
 
 #HUNTER ACTIONS
 action.vampirism.hunter.disguise=Disguise
@@ -190,7 +191,7 @@ tile.vampirism.garlic_beacon.successfully_fueled=Successfully fueled
 tile.vampirism.garlic_beacon.tooltip1=Diffuses garlic particles.
 tile.vampirism.garlic_beacon.tooltip2=Affects a %s by %s chunk area.
 tile.vampirism.blood_pedestal.name=Blood Pedestal
-tile.vampirism.blood_grinder.name=Blood Grinder
+tile.vampirism.grinder.name=Blood Grinder
 tile.vampirism.blood_sieve.name=Blood Sieve
 
 #ITEMS

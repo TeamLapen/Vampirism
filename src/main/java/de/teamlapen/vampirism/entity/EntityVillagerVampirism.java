@@ -1,16 +1,13 @@
 package de.teamlapen.vampirism.entity;
 
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
-import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.passive.EntityVillager;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
@@ -114,15 +111,6 @@ public class EntityVillagerVampirism extends EntityVillager {
     protected void applyEntityAttributes() {
         super.applyEntityAttributes();
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.ATTACK_DAMAGE);
-    }
-
-    protected void teleportAway() {
-        this.setInvisible(true);
-        Helper.spawnParticlesAroundEntity(this, EnumParticleTypes.PORTAL, 5, 64);
-
-        this.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1, 1);
-
-        this.setDead();
     }
 
     @Override

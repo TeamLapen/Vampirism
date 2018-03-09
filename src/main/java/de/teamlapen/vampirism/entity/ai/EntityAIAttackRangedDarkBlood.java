@@ -4,7 +4,10 @@ import de.teamlapen.vampirism.entity.EntityDarkBloodProjectile;
 import de.teamlapen.vampirism.entity.vampire.EntityVampireBaron;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.init.MobEffects;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.Vec3d;
+
 
 public class EntityAIAttackRangedDarkBlood extends EntityAIBase {
 
@@ -33,7 +36,7 @@ public class EntityAIAttackRangedDarkBlood extends EntityAIBase {
 
     @Override
     public boolean shouldExecute() {
-        return !entity.hasPath() && entity.getAttackTarget() != null;
+        return entity.getAttackTarget() != null;
     }
 
     @Override
@@ -53,15 +56,19 @@ public class EntityAIAttackRangedDarkBlood extends EntityAIBase {
 
                 if (canSee) {
                     ++this.seeTime;
+                    this.entity.faceEntity(target, 19.0F, 10.0F);
+
+
                     this.entity.getLookHelper().setLookPositionWithEntity(target, 30.0F, 30.0F);
                 } else {
                     --this.seeTime;
                 }
 
                 if (d0 <= (double) this.maxAttackDistance && this.seeTime >= 20) {
-                    this.entity.getNavigator().clearPath();
                     attack(target);
                     this.attackTime = attackCooldown;
+                    entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 20));
+
 
                 } else {
                     this.entity.getNavigator().tryMoveToEntityLiving(target, 1.0);
@@ -71,13 +78,20 @@ public class EntityAIAttackRangedDarkBlood extends EntityAIBase {
         }
     }
 
+    /**
+     * Spawns the dark blood entity heading towards the target entity
+     */
     protected void attack(EntityLivingBase target) {
-        Vec3d vec3d = target.getPositionVector().subtract(entity.getPositionEyes(1f)).normalize();
+        Vec3d vec3d = target.getPositionVector().addVector(0, target.height * 0.6f, 0).subtract(entity.getPositionEyes(1f)).normalize();
 
         EntityDarkBloodProjectile projectile = new EntityDarkBloodProjectile(entity.getEntityWorld(), entity.posX + vec3d.x * 0.3f, entity.posY + entity.getEyeHeight() * 0.9f, entity.posZ + vec3d.z * 0.3f, vec3d.x, vec3d.y, vec3d.z);
         projectile.shootingEntity = entity;
         projectile.setDamage(directDamage, indirectDamage);
-        projectile.setMotionFactor(0.6f);
+        if (entity.getDistanceSq(target) > 64) {
+            projectile.setMotionFactor(0.95f);
+        } else {
+            projectile.setMotionFactor(0.75f);
+        }
         projectile.setInitialNoClip();
         projectile.excludeShooter();
 

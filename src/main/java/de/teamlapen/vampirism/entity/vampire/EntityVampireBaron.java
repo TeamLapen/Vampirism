@@ -19,10 +19,7 @@ import de.teamlapen.vampirism.items.ItemHunterCoat;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.loot.LootHandler;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.*;
 import net.minecraft.entity.ai.*;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -31,6 +28,7 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -47,6 +45,16 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     private static final DataParameter<Integer> LEVEL = EntityDataManager.createKey(EntityVampireBaron.class, DataSerializers.VARINT);
     private final SaveableMinionHandler<IVampireMinion.Saveable> minionHandler;
     private final int MAX_LEVEL = 4;
+
+    /**
+     * Used for ranged vs melee attack decision
+     */
+    private int attackDecisionCounter = 0;
+
+    /**
+     * Whether to prefer ranged attack
+     */
+    private boolean rangedAttack = false;
 
     private boolean prevAttacking = false;
 
@@ -78,8 +86,15 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
             }
             ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, (int) (200 * tm), rand.nextInt(mr)));
             ((EntityLivingBase) entity).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, (int) (100 * tm), rand.nextInt(mr)));
+            attackDecisionCounter = 0;
         }
         return flag;
+    }
+
+    @Override
+    public boolean attackEntityFrom(DamageSource damageSource, float amount) {
+        attackDecisionCounter++;
+        return super.attackEntityFrom(damageSource, amount);
     }
 
     @Override
@@ -118,7 +133,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
             this.updateEntityAttributes(false);
             float hp = this.getHealth() / this.getMaxHealth();
             this.setHealth(this.getMaxHealth() * hp);
-
+            VampirismMod.log.t("Lev %s", level);
         }
     }
 
@@ -173,12 +188,6 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         return this.isEntityAlive();
     }
 
-    @Nullable
-    @Override
-    protected ResourceLocation getLootTable() {
-        return LootHandler.VAMPIRE_BARON;
-    }
-
     @Override
     public void onKillEntity(EntityLivingBase entity) {
         super.onKillEntity(entity);
@@ -195,6 +204,8 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         }
         if (prevAttacking && this.getAttackTarget() == null) {
             prevAttacking = false;
+            this.rangedAttack = false;
+            this.attackDecisionCounter = 0;
             updateEntityAttributes(false);
         }
         this.getSaveableMinionHandler().checkMinions();
@@ -229,13 +240,28 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
             this.teleportAway();
 
         }
+        if (!this.world.isRemote && this.getAttackTarget() != null && this.ticksExisted % 128 == 0) {
+            if (rangedAttack) {
+                if (this.rand.nextInt(2) == 0 && this.navigator.getPathToEntityLiving(this.getAttackTarget()) != null) {
+                    rangedAttack = false;
+                }
+            } else {
+                if (attackDecisionCounter > 4 || this.rand.nextInt(6) == 0) {
+                    rangedAttack = true;
+                    attackDecisionCounter = 0;
+                }
+            }
+            if (getLevel() > 3 && this.rand.nextInt(9) == 0) {
+                this.addPotionEffect(new PotionEffect(MobEffects.INVISIBILITY, 60));
+            }
+        }
         super.onLivingUpdate();
     }
 
     @Override
     public void readEntityFromNBT(NBTTagCompound nbt) {
         super.readEntityFromNBT(nbt);
-        setLevel(Math.min(nbt.getInteger("level"), 1));
+        setLevel(MathHelper.clamp(nbt.getInteger("level"), 0, MAX_LEVEL));
         minionHandler.loadMinions(nbt.getTagList("minions", 10));
     }
 
@@ -244,6 +270,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         int avg = Math.round(((d.avgPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
         int max = Math.round(((d.maxPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * MAX_LEVEL);
         int min = Math.round(((d.minPercLevel) / 100F - 5 / 14F) / (1F - 5 / 14F) * (MAX_LEVEL));
+
         switch (rand.nextInt(7)) {
             case 0:
                 return min;
@@ -290,15 +317,21 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         return 20 + 5 * getLevel();
     }
 
+    @Nullable
+    @Override
+    protected ResourceLocation getLootTable() {
+        return LootHandler.VAMPIRE_BARON;
+    }
+
     @Override
     protected void initEntityAI() {
         super.initEntityAI();
         this.tasks.addTask(4, new VampireAIFleeGarlic(this, 0.9F, false));
-        this.tasks.addTask(5, new EntityAIAttackMelee(this, 1.0F, false));
-        this.tasks.addTask(6, new EntityAIAttackRangedDarkBlood(this, 60, 64, 6, 4));
+        this.tasks.addTask(5, new BaronAIAttackMelee(this, 1.0F));
+        this.tasks.addTask(6, new BaronAIAttackRanged(this, 60, 64, 6, 4));
         this.tasks.addTask(6, new EntityAIAvoidEntity<>(this, EntityPlayer.class, input -> input != null && !isLowerLevel(input), 6.0F, 0.6, 0.7F));//TODO Works only partially. Pathfinding somehow does not find escape routes
         this.tasks.addTask(7, new EntityAIWander(this, 0.2));
-        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 8.0F));
+        this.tasks.addTask(9, new EntityAIWatchClosest(this, EntityPlayer.class, 10.0F));
         this.tasks.addTask(10, new EntityAILookIdle(this));
 
         this.targetTasks.addTask(1, new EntityAIHurtByTarget(this, false));
@@ -326,7 +359,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
         if (aggressive) {
             this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(20D);
             this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(
-                    Balance.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow((Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL - 1) / 3 + 1, (getLevel())));
+                    Balance.mobProps.VAMPIRE_BARON_MOVEMENT_SPEED * Math.pow((Balance.mobProps.VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL - 1) / 5 + 1, (getLevel())));
         } else {
             this.getEntityAttribute(SharedMonsterAttributes.FOLLOW_RANGE).setBaseValue(5D);
             this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(
@@ -340,5 +373,34 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     private boolean isLowerLevel(EntityPlayer player) {
         int playerLevel = FactionPlayerHandler.get(player).getCurrentLevel();
         return (playerLevel - 8) / 2F - EntityVampireBaron.this.getLevel() <= 0;
+    }
+
+    private class BaronAIAttackMelee extends EntityAIAttackMelee {
+
+        BaronAIAttackMelee(EntityCreature creature, double speedIn) {
+            super(creature, speedIn, false);
+        }
+
+        @Override
+        public boolean shouldContinueExecuting() {
+            return !EntityVampireBaron.this.rangedAttack && super.shouldContinueExecuting();
+        }
+
+        @Override
+        public boolean shouldExecute() {
+            return !EntityVampireBaron.this.rangedAttack && super.shouldExecute();
+        }
+    }
+
+    private class BaronAIAttackRanged extends EntityAIAttackRangedDarkBlood {
+
+        BaronAIAttackRanged(EntityVampireBaron entity, int cooldown, int maxDistance, float damage, float indirectDamage) {
+            super(entity, cooldown, maxDistance, damage, indirectDamage);
+        }
+
+        @Override
+        public boolean shouldExecute() {
+            return EntityVampireBaron.this.getAttackTarget() != null && (EntityVampireBaron.this.rangedAttack || !EntityVampireBaron.this.hasPath());
+        }
     }
 }

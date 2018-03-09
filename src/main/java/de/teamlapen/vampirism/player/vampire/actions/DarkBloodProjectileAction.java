@@ -15,6 +15,26 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
     }
 
     @Override
+    public int getCooldown() {
+        return Balance.vpa.DARK_BLOOD_PROJECTILE_COOLDOWN * 20;
+    }
+
+    @Override
+    public int getMinU() {
+        return 192;
+    }
+
+    @Override
+    public int getMinV() {
+        return 0;
+    }
+
+    @Override
+    public String getUnlocalizedName() {
+        return "action.vampirism.vampire.dark_blood_projectile";
+    }
+
+    @Override
     public boolean isEnabled() {
         return Balance.vpa.DARK_BLOOD_PROJECTILE_ENABLE;
     }
@@ -31,25 +51,5 @@ public class DarkBloodProjectileAction extends DefaultVampireAction {
 
         shooter.getEntityWorld().spawnEntity(projectile);
         return true;
-    }
-
-    @Override
-    public int getCooldown() {
-        return Balance.vpa.DARK_BLOOD_PROJECTILE_COOLDOWN * 20;
-    }
-
-    @Override
-    public int getMinU() {
-        return 0;
-    }
-
-    @Override
-    public int getMinV() {
-        return 0;
-    }
-
-    @Override
-    public String getUnlocalizedName() {
-        return "action.vampirism.vampire.dark_blood_projectile";
     }
 }

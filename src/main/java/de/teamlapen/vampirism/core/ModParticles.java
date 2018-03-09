@@ -22,6 +22,10 @@ public class ModParticles {
     public static final ResourceLocation FLYING_BLOOD = new ResourceLocation(REFERENCE.MODID, "flying_blood");
     public static final ResourceLocation FLYING_BLOOD_ENTITY = new ResourceLocation(REFERENCE.MODID, "flying_blood_entity");
     public static final ResourceLocation HALLOWEEN = new ResourceLocation(REFERENCE.MODID, "halloween");
+
+    /**
+     * Arguments: Particle ID (Vanilla texture,int), TicksToLive(int), Color(int), [speed modifier (double)]
+     */
     public static final ResourceLocation GENERIC_PARTICLE = new ResourceLocation(REFERENCE.MODID, "generic");
 
     public static void init() {

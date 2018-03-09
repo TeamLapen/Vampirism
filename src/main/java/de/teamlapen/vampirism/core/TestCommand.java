@@ -296,12 +296,6 @@ public class TestCommand extends BasicCommand {
         });
         addSubcommand(new SubCommand() {
             @Override
-            public String getName() {
-                return "info-entity";
-            }
-
-
-            @Override
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 EntityPlayer player = getCommandSenderAsPlayer(sender);
                 List<Entity> l = player.getEntityWorld().getEntitiesWithinAABBExcludingEntity(player, player.getEntityBoundingBox().grow(3, 2, 3));
@@ -311,6 +305,11 @@ public class TestCommand extends BasicCommand {
                     VampirismMod.log.i("InfoEntity", "Data %s", nbt);
                 }
                 sender.sendMessage(new TextComponentString("Printed info to log"));
+            }
+
+            @Override
+            public String getName() {
+                return "info-entity";
             }
         });
         addSubcommand(new SubCommand() {
@@ -486,16 +485,6 @@ public class TestCommand extends BasicCommand {
         });
         addSubcommand(new SubCommand() {
             @Override
-            public String getName() {
-                return "place";
-            }
-
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return "place <structure>";
-            }
-
-            @Override
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 if (args.length == 0) {
                     throw new WrongUsageException("Missing structure name");
@@ -515,14 +504,19 @@ public class TestCommand extends BasicCommand {
 
 
             }
+
+            @Override
+            public String getName() {
+                return "place";
+            }
+
+            @Override
+            public String getUsage(ICommandSender sender) {
+                return "place <structure>";
+            }
         });
 
         addSubcommand(new SubCommand() {
-            @Override
-            public String getName() {
-                return "halloween";
-            }
-
             @Override
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 EntityPlayer p = getCommandSenderAsPlayer(sender);
@@ -530,14 +524,14 @@ public class TestCommand extends BasicCommand {
                 //draculaHalloween.setOwnerId(p.getUniqueID());
                 VampLib.proxy.getParticleHandler().spawnParticle(p.world, ModParticles.HALLOWEEN, p.posX, p.posY, p.posZ);
             }
+
+            @Override
+            public String getName() {
+                return "halloween";
+            }
         });
 
         addSubcommand(new SubCommand() {
-            @Override
-            public String getName() {
-                return "overtakeVillage";
-            }
-
             @Override
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 EntityPlayer p = getCommandSenderAsPlayer(sender);
@@ -549,13 +543,13 @@ public class TestCommand extends BasicCommand {
                     sender.sendMessage(new TextComponentString("Forcefully overtook village"));
                 }
             }
-        });
-        addSubcommand(new SubCommand() {
+
             @Override
             public String getName() {
-                return "setSwordCharged";
+                return "overtakeVillage";
             }
-
+        });
+        addSubcommand(new SubCommand() {
             @Override
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 EntityPlayer player = getCommandSenderAsPlayer(sender);
@@ -577,13 +571,13 @@ public class TestCommand extends BasicCommand {
                     sender.sendMessage(new TextComponentString("You have to hold a vampire sword in your main hand"));
                 }
             }
-        });
-        addSubcommand(new SubCommand() {
+
             @Override
             public String getName() {
-                return "setSwordTrained";
+                return "setSwordCharged";
             }
-
+        });
+        addSubcommand(new SubCommand() {
             @Override
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 EntityPlayer player = getCommandSenderAsPlayer(sender);
@@ -605,14 +599,14 @@ public class TestCommand extends BasicCommand {
                     sender.sendMessage(new TextComponentString("You have to hold a vampire sword in your main hand"));
                 }
             }
+
+            @Override
+            public String getName() {
+                return "setSwordTrained";
+            }
         });
 
         addSubcommand(new SubCommand() {
-            @Override
-            public String getName() {
-                return "spawnTestAnimal";
-            }
-
             @Override
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 EntityPlayer player = getCommandSenderAsPlayer(sender);
@@ -620,6 +614,24 @@ public class TestCommand extends BasicCommand {
                 cow.setHealth(cow.getMaxHealth() / 4.2f);
                 cow.copyLocationAndAnglesFrom(player);
                 player.world.spawnEntity(cow);
+            }
+
+            @Override
+            public String getName() {
+                return "spawnTestAnimal";
+            }
+        });
+
+        addSubcommand(new SubCommand() {
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                EntityPlayer player = getCommandSenderAsPlayer(sender);
+                player.heal(10000);
+            }
+
+            @Override
+            public String getName() {
+                return "heal";
             }
         });
 
@@ -644,11 +656,6 @@ public class TestCommand extends BasicCommand {
         }
 
         @Override
-        public String getUsage(ICommandSender sender) {
-            return getName();
-        }
-
-        @Override
         public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
             return VampirismMod.inDev || sender.canUseCommand(getRequiredPermissionLevel(), "vampirism-test." + getName());
         }
@@ -656,6 +663,11 @@ public class TestCommand extends BasicCommand {
         @Override
         public int getRequiredPermissionLevel() {
             return 3;
+        }
+
+        @Override
+        public String getUsage(ICommandSender sender) {
+            return getName();
         }
     }
 
