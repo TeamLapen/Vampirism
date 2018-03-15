@@ -29,16 +29,6 @@ import java.util.List;
 public class TileGrinder extends InventoryTileEntity implements ITickable {
 
 
-    private int cooldownPull = 0;
-    private int cooldownProcess = 0;
-
-    //Used to provide ItemHandler compatibility
-    private IItemHandler itemHandler = new InvWrapper(this);
-
-    public TileGrinder() {
-        super(new InventorySlot[]{new InventorySlot(TileGrinder::canProcess, 80, 34)});
-    }
-
     private static boolean canProcess(ItemStack stack) {
         return BloodConversionRegistry.getImpureBloodValue(stack) > 0;
     }
@@ -50,28 +40,13 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
         return worldIn.getEntitiesWithinAABB(EntityItem.class, new AxisAlignedBB(posX, posY + 0.5D, posZ, posX + 1D, posY + 1.5D, posZ + 1D), EntitySelectors.IS_ALIVE);
     }
 
-    @Override
-    public String getName() {
-        return "tile.vampirism.grinder.name";
-    }
+    private int cooldownPull = 0;
+    private int cooldownProcess = 0;
+    //Used to provide ItemHandler compatibility
+    private IItemHandler itemHandler = new InvWrapper(this);
 
-    @Override
-    public void readFromNBT(NBTTagCompound tagCompound) {
-        super.readFromNBT(tagCompound);
-        cooldownPull = tagCompound.getInteger("cooldown_pull");
-        cooldownProcess = tagCompound.getInteger("cooldown_process");
-    }
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        compound.setInteger("cooldown_pull", cooldownPull);
-        compound.setInteger("cooldown_process", cooldownProcess);
-        return super.writeToNBT(compound);
-    }
-
-    @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        return ((facing == null || facing != EnumFacing.DOWN) && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) || super.hasCapability(capability, facing);
+    public TileGrinder() {
+        super(new InventorySlot[]{new InventorySlot(TileGrinder::canProcess, 80, 34)});
     }
 
     @SuppressWarnings("unchecked")
@@ -82,6 +57,23 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
             return (T) (itemHandler);
         }
         return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public String getName() {
+        return "tile.vampirism.blood_grinder.name";
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        return ((facing == null || facing != EnumFacing.DOWN) && capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) || super.hasCapability(capability, facing);
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound tagCompound) {
+        super.readFromNBT(tagCompound);
+        cooldownPull = tagCompound.getInteger("cooldown_pull");
+        cooldownProcess = tagCompound.getInteger("cooldown_process");
     }
 
     @Override
@@ -102,15 +94,11 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
         }
     }
 
-    private boolean updatePull() {
-        if (!isFull()) {
-            boolean flag = pullItems();
-            if (flag) {
-                this.cooldownPull = 20;
-            }
-            return flag;
-        }
-        return false;
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        compound.setInteger("cooldown_pull", cooldownPull);
+        compound.setInteger("cooldown_process", cooldownProcess);
+        return super.writeToNBT(compound);
     }
 
     private boolean pullItems() {
@@ -169,5 +157,16 @@ public class TileGrinder extends InventoryTileEntity implements ITickable {
                 }
             }
         }
+    }
+
+    private boolean updatePull() {
+        if (!isFull()) {
+            boolean flag = pullItems();
+            if (flag) {
+                this.cooldownPull = 20;
+            }
+            return flag;
+        }
+        return false;
     }
 }
