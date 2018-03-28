@@ -37,10 +37,6 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
 
     }
 
-    protected AxisAlignedBB getBiteBoundingBox() {
-        return vampireEntity.getEntityBoundingBox().grow(0.5, 0.7, 0.5);
-    }
-
     @Override
     public boolean shouldContinueExecuting() {
         return creature.getEntity().isEntityAlive() && creature.getEntity().getEntityBoundingBox().intersects(getBiteBoundingBox()) && this.timer > 0;
@@ -65,7 +61,7 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
 
             for (EntityCreature o : list) {
                 if (vampireEntityLiving != null) {
-                    if (!vampireEntityLiving.getEntitySenses().canSee(o)) {
+                    if (!vampireEntityLiving.getEntitySenses().canSee(o) || o.hasCustomName()) {
                         continue;
                     }
                 }
@@ -98,5 +94,9 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
             vampireEntity.playSound(ModSounds.player_bite, 1, 1);
             vampire.drinkBlood(amount, creature.getBloodSaturation());
         }
+    }
+
+    protected AxisAlignedBB getBiteBoundingBox() {
+        return vampireEntity.getEntityBoundingBox().grow(0.5, 0.7, 0.5);
     }
 }

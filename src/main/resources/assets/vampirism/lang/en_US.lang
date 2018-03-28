@@ -102,6 +102,7 @@ action.vampirism.vampire.teleport=Teleport
 action.vampirism.vampire.vampire_rage=Vampire Rage
 action.vampirism.vampire.sunscreen=Sunscreen
 action.vampirism.vampire.disguise=Disguise
+action.vampirism.vampire.dark_blood_projectile=Dark Blood Projectile
 
 #HUNTER ACTIONS
 action.vampirism.hunter.disguise=Disguise
@@ -322,7 +323,9 @@ effect.vampirism.garlic=Garlic
 
 #FLUIDS
 fluid.vampirism.vampirismblood=Blood
-fluid.vampirism.impure_vampirismblood=Impure blood
+fluid.vampirism.vampirismblood.vampirism=Vampirim Blood
+fluid.vampirism.impure_vampirismblood=Impure Blood
+fluid.vampirism.impure_vampirismblood.vampirism=Vampirism Impure Blood
 
 #GUI
 gui.vampirism.hunter_weapon_table=Hunter Weapon Table

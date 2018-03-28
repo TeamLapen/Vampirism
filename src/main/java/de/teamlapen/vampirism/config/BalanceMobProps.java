@@ -103,13 +103,13 @@ public class BalanceMobProps extends BalanceValues {
     public double VAMPIRE_MOB_SUN_DAMAGE;
 
 
-    @DefaultDouble(value = 160.0D, minValue = 20.0D, maxValue = 300.0D, comment = "")
+    @DefaultDouble(value = 140.0D, minValue = 20.0D, maxValue = 300.0D, comment = "")
     public double VAMPIRE_BARON_MAX_HEALTH;
-    @DefaultDouble(value = 7.0D, minValue = 1.0D, maxValue = 14.0D, comment = "")
+    @DefaultDouble(value = 6.0D, minValue = 1.0D, maxValue = 14.0D, comment = "")
     public double VAMPIRE_BARON_ATTACK_DAMAGE;
-    @DefaultDouble(value = 0.35D, minValue = 0.1D, maxValue = 0.6D, comment = "")
+    @DefaultDouble(value = 0.34D, minValue = 0.1D, maxValue = 0.6D, comment = "")
     public double VAMPIRE_BARON_MOVEMENT_SPEED;
-    @DefaultDouble(value = 1.27D, minValue = 1.0D, maxValue = 2.0D, comment = "For each higher level the stats are multiplied with this factor")
+    @DefaultDouble(value = 1.20D, minValue = 1.0D, maxValue = 2.0D, comment = "For each higher level the stats are multiplied with this factor")
     public double VAMPIRE_BARON_IMPROVEMENT_PER_LEVEL;
     @DefaultDouble(value = 3, minValue = 0, comment = "Any fire damage that is received by a baron is multiplied by this")
     public double VAMPIRE_BARON_FIRE_VULNERABILITY;

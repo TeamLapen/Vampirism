@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity;
 import com.google.common.base.Predicates;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.core.ModParticles;
+import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionBase;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityFireball;
@@ -18,98 +19,48 @@ import net.minecraft.world.World;
 
 import java.util.List;
 
+/**
+ * Projectile entity.
+ * <p>
+ * Damages directly hit entities but also has a small area of effect damage
+ */
 public class EntityDarkBloodProjectile extends EntityFireball {
 
     protected float directDamage = 4;
     protected float indirecDamage = 2;
     private boolean initialNoClip = false;
-    private float motionFactor = 0.75f;
+    private float motionFactor = 0.9f;
     private boolean excludeShooter = false;
 
     public EntityDarkBloodProjectile(World worldIn) {
         super(worldIn);
     }
 
+    /**
+     * Copies the location from shooter.
+     * Adds a small random to the motion
+     */
     public EntityDarkBloodProjectile(World worldIn, EntityLivingBase shooter, double accelX, double accelY, double accelZ) {
         super(worldIn, shooter, accelX, accelY, accelZ);
     }
 
+    /**
+     * Does not add a small random to the motion
+     */
     public EntityDarkBloodProjectile(World worldIn, double x, double y, double z, double accelX, double accelY, double accelZ) {
         super(worldIn, x, y, z, accelX, accelY, accelZ);
     }
 
-    public void setInitialNoClip() {
-        initialNoClip = true;
-    }
-
-    public void excludeShooter() {
-        this.excludeShooter = true;
-    }
-
-    public void setDamage(float direct, float indirect) {
-        directDamage = direct;
-        indirecDamage = indirect;
-    }
-
     @Override
-    protected void onImpact(RayTraceResult result) {
-        if (!this.world.isRemote) {
-            if (result.typeOfHit == RayTraceResult.Type.BLOCK && initialNoClip && this.ticksExisted < 20) {
-                return;
-            }
-            if (result.entityHit != null) {
-                result.entityHit.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, shootingEntity), directDamage);
-                if (result.entityHit instanceof EntityLivingBase) {
-                    if (this.rand.nextInt(3) == 0) {
-                        ((EntityLivingBase) result.entityHit).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100));
-                        ((EntityLivingBase) result.entityHit).knockBack(this, 1f, this.motionX, this.motionZ);
-                    }
-                }
-
-
-            }
-
-            List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox().grow(2), Predicates.and(EntitySelectors.IS_ALIVE, EntitySelectors.NOT_SPECTATING));
-            for (Entity e : list) {
-                if (excludeShooter && e == shootingEntity) {
-                    continue;
-                }
-                if (e instanceof EntityLivingBase && e.getDistanceSq(this) < 4) {
-                    EntityLivingBase entity = (EntityLivingBase) e;
-                    entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 200, 1));
-                    if (entity != result.entityHit)
-                        entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, shootingEntity), indirecDamage);
-
-                }
-            }
-            Vec3d center = result.hitVec;
-
-            this.setDead();
-        }
-    }
-
-    @Override
-    protected float getMotionFactor() {
-        return motionFactor;
-    }
-
-    public void setMotionFactor(float factor) {
-        this.motionFactor = factor;
-    }
-
-    @Override
-    protected EnumParticleTypes getParticleType() {
-        return EnumParticleTypes.SUSPENDED;
-    }
-
-
-    @Override
-    protected boolean isFireballFiery() {
+    public boolean attackEntityFrom(DamageSource source, float amount) {
         return false;
     }
 
-    protected double getRadius() {
-        return 0.5;
+    /**
+     * Exclude shooter from area of effect damage
+     */
+    public void excludeShooter() {
+        this.excludeShooter = true;
     }
 
     @Override
@@ -136,6 +87,30 @@ public class EntityDarkBloodProjectile extends EntityFireball {
     }
 
     @Override
+    public void readEntityFromNBT(NBTTagCompound compound) {
+        super.readEntityFromNBT(compound);
+        this.directDamage = compound.getFloat("direct_damage");
+        this.indirecDamage = compound.getFloat("indirect_damage");
+    }
+
+    /**
+     * @param direct   Direct hit damage
+     * @param indirect Damage for all other entities close to the impact point
+     */
+    public void setDamage(float direct, float indirect) {
+        directDamage = direct;
+        indirecDamage = indirect;
+    }
+
+    /**
+     * Ignore blocks and minions during the initial 20 ticks
+     * Shooter is always ignored for 20 ticks.
+     */
+    public void setInitialNoClip() {
+        initialNoClip = true;
+    }
+
+    @Override
     public void writeEntityToNBT(NBTTagCompound compound) {
         super.writeEntityToNBT(compound);
         compound.setFloat("direct_damage", directDamage);
@@ -143,14 +118,76 @@ public class EntityDarkBloodProjectile extends EntityFireball {
     }
 
     @Override
-    public void readEntityFromNBT(NBTTagCompound compound) {
-        super.readEntityFromNBT(compound);
-        this.directDamage = compound.getFloat("direct_damage");
-        this.indirecDamage = compound.getFloat("indirect_damage");
+    protected float getMotionFactor() {
+        return motionFactor;
+    }
+
+    /**
+     * Speed factor
+     */
+    public void setMotionFactor(float factor) {
+        this.motionFactor = factor;
     }
 
     @Override
-    public boolean attackEntityFrom(DamageSource source, float amount) {
+    protected EnumParticleTypes getParticleType() {
+        return EnumParticleTypes.SUSPENDED;
+    }
+
+    protected double getRadius() {
+        return 0.5;
+    }
+
+    @Override
+    protected boolean isFireballFiery() {
         return false;
+    }
+
+    @Override
+    protected void onImpact(RayTraceResult result) {
+        if (!this.world.isRemote) {
+            if (initialNoClip && this.ticksExisted > 20) {
+                if (result.typeOfHit == RayTraceResult.Type.BLOCK) {
+                    return;
+                }
+                if (result.typeOfHit == RayTraceResult.Type.ENTITY && result.entityHit instanceof EntityVampireMinionBase && (this.shootingEntity != null && this.shootingEntity.equals(((EntityVampireMinionBase) result.entityHit).getLord()))) {
+                    return;
+                }
+            }
+
+            if (result.entityHit != null) {
+                result.entityHit.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, shootingEntity), directDamage);
+                if (result.entityHit instanceof EntityLivingBase) {
+                    if (this.rand.nextInt(3) == 0) {
+                        ((EntityLivingBase) result.entityHit).addPotionEffect(new PotionEffect(MobEffects.BLINDNESS, 100));
+                        ((EntityLivingBase) result.entityHit).knockBack(this, 1f, -this.motionX, -this.motionZ);
+                        ((EntityLivingBase) result.entityHit).addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 200, 1));
+
+                    }
+                }
+
+
+            }
+
+            List<Entity> list = this.world.getEntitiesInAABBexcluding(this, this.getEntityBoundingBox().grow(2), Predicates.and(EntitySelectors.IS_ALIVE, EntitySelectors.NOT_SPECTATING));
+            for (Entity e : list) {
+                if (excludeShooter && e == shootingEntity) {
+                    continue;
+                }
+                if (e instanceof EntityLivingBase && e.getDistanceSq(this) < 4) {
+                    EntityLivingBase entity = (EntityLivingBase) e;
+                    entity.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 200, 1));
+                    if (entity != result.entityHit)
+                        entity.attackEntityFrom(DamageSource.causeIndirectMagicDamage(this, shootingEntity), indirecDamage);
+
+                }
+            }
+            Vec3d center = result.hitVec;
+            VampLib.proxy.getParticleHandler().spawnParticles(this.world, ModParticles.GENERIC_PARTICLE, center.x, center.y, center.z, 40, 2, this.rand, 145, 7, 0xA01010, 0.2);
+            VampLib.proxy.getParticleHandler().spawnParticles(this.world, ModParticles.GENERIC_PARTICLE, center.x, center.y, center.z, 15, 2, this.rand, 150, 10, 0x700505, 0.0);
+
+
+            this.setDead();
+        }
     }
 }

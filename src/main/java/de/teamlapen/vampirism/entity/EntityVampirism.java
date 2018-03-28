@@ -1,8 +1,9 @@
 package de.teamlapen.vampirism.entity;
 
+import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.api.entity.IEntityWithHome;
 import de.teamlapen.vampirism.api.entity.IVampirismEntity;
-import de.teamlapen.vampirism.util.Helper;
+import de.teamlapen.vampirism.core.ModParticles;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -13,7 +14,6 @@ import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -312,8 +312,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
      */
     protected void teleportAway() {
         this.setInvisible(true);
-        Helper.spawnParticlesAroundEntity(this, EnumParticleTypes.PORTAL, 5, 64);
-
+        VampLib.proxy.getParticleHandler().spawnParticles(this.world, ModParticles.GENERIC_PARTICLE, this.posX, this.posY + this.height / 2, this.posZ, 20, 1, this.rand, 134, 10, 0x0A0A0A, 0.6);
         this.playSound(SoundEvents.ENTITY_ENDERMEN_TELEPORT, 1, 1);
 
         this.setDead();

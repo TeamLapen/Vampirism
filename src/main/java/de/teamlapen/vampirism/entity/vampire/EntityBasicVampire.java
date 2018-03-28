@@ -213,13 +213,6 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         return (float) (amount * protectionMod * Balance.mobProps.VAMPIRE_FIRE_VULNERABILITY) * (getLevel() * 0.5F + 1);
     }
 
-
-    @Nullable
-    @Override
-    protected ResourceLocation getLootTable() {
-        return LootHandler.BASIC_VAMPIRE;
-    }
-
     @Override
     protected void dropLoot(boolean wasRecentlyHit, int lootingModifier, DamageSource source) {
         super.dropLoot(wasRecentlyHit, lootingModifier, source);
@@ -241,6 +234,12 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         return 6 + getLevel();
     }
 
+    @Nullable
+    @Override
+    protected ResourceLocation getLootTable() {
+        return LootHandler.BASIC_VAMPIRE;
+    }
+
     @Override
     protected void initEntityAI() {
         super.initEntityAI();
@@ -259,7 +258,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         this.tasks.addTask(7, new VampireAIMoveToBiteable(this, 0.75));
         this.tasks.addTask(8, new EntityAIMoveThroughVillageCustom(this, 0.6, true, 600));
         this.tasks.addTask(9, new EntityAIWander(this, 0.7));
-        this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityPlayer.class, 20F, 0.9F));
+        this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityPlayer.class, 20F, 0.6F));
         this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityHunterBase.class, 17F));
         this.tasks.addTask(10, new EntityAILookIdle(this));
 

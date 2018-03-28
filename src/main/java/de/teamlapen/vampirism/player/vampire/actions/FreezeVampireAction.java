@@ -1,16 +1,16 @@
 package de.teamlapen.vampirism.player.vampire.actions;
 
+import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.api.entity.player.vampire.DefaultVampireAction;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.items.ItemHunterCoat;
-import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.potion.PotionEffect;
-import net.minecraft.util.EnumParticleTypes;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class FreezeVampireAction extends DefaultVampireAction {
             e.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, Balance.vpa.FREEZE_DURATION * 20, 10));
             e.addPotionEffect(new PotionEffect(MobEffects.RESISTANCE, Balance.vpa.FREEZE_DURATION * 20, 10));
             e.addPotionEffect(new PotionEffect(MobEffects.JUMP_BOOST, Balance.vpa.FREEZE_DURATION * 20, 128));
-            Helper.spawnParticlesAroundEntity(e, EnumParticleTypes.SNOW_SHOVEL, 1.5, 40);
+            VampLib.proxy.getParticleHandler().spawnParticles(player.getEntityWorld(), ModParticles.GENERIC_PARTICLE, e.posX, e.posY + e.height / 2, e.posZ, 20, 1, e.getRNG(), 2, 20, 0xF0F0F0, 0.4);
         }
         return l.size() > 0;
     }

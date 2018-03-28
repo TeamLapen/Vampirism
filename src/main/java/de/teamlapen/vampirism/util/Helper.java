@@ -17,7 +17,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.ChunkPos;
 import net.minecraft.util.math.MathHelper;
@@ -30,9 +29,8 @@ import java.lang.reflect.Method;
 
 
 public class Helper {
-    public static void spawnParticlesAroundEntity(EntityLivingBase e, EnumParticleTypes particle, double maxDistance, int amount) {
-        //TODO implement
-    }
+
+    private static Method reflectionMethodExperiencePoints;
 
     /**
      * Checks if the entity can get sundamage at it's current position.
@@ -163,8 +161,6 @@ public class Helper {
         if (playerHandler.getCurrentLevel() < reqLevel) return false;
         return !(requiredSkill != null && (playerHandler.getCurrentFactionPlayer() == null || !playerHandler.getCurrentFactionPlayer().getSkillHandler().isSkillEnabled(requiredSkill)));
     }
-
-    private static Method reflectionMethodExperiencePoints;
 
     public static int getExperiencePoints(EntityLivingBase entity, EntityPlayer player) {
         try {

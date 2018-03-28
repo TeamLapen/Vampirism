@@ -90,7 +90,7 @@ public class BalanceVampireActions extends BalanceValues {
     @DefaultBoolean(value = true)
     public boolean DARK_BLOOD_PROJECTILE_ENABLE;
 
-    @DefaultInt(value = 2, minValue = 1, comment = "In seconds")
+    @DefaultInt(value = 4, minValue = 1, comment = "In seconds")
     public int DARK_BLOOD_PROJECTILE_COOLDOWN;
 
     @DefaultDouble(value = 6, minValue = 0, comment = "Damage of the direct projectile hit")
