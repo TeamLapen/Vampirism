@@ -6,9 +6,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 import java.util.List;
 
 /**
- * 1.12
- *
- * @author maxanier
+ * Helper for action registry related things.
  */
 public interface IActionManager {
 

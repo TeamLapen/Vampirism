@@ -40,6 +40,8 @@ public class Configs {
     public static int sunscreen_beacon_distance;
     public static boolean autoCalculateEntityBlood;
     public static boolean sunscreen_beacon_mineable;
+    public static boolean playerCanTurnPlayer;
+
 
     public static int village_size;
     public static int village_density;
@@ -51,13 +53,13 @@ public class Configs {
     public static boolean disable_factionDisplayChat;
     public static boolean disable_versionCheck;
     public static boolean disable_advancedMobPlayerFaces;
-    public static boolean playerCanTurnPlayer;
     public static boolean updated_vampirism;
     public static boolean disable_vampireEyes;
     public static boolean disable_config_sync;
     public static boolean disable_screen_overlay;
     public static boolean disable_collectVersionStat;
     public static boolean disable_fang_infection;
+    public static boolean disable_hunter_camps;
 
     public static @Nonnull
     int[] worldGenDimensions = new int[0];
@@ -160,7 +162,7 @@ public class Configs {
         disable_screen_overlay = main_config.getBoolean("disable_screen_overlay", CATEGORY_DISABLE, false, "Disable the colored overlay (sunindicator, disguise or rage)  if they cause problems.");
         disable_collectVersionStat = main_config.getBoolean("disable_collect_basic_version_stat", CATEGORY_DISABLE, false, "Disable sending Mod version, MC version and mod count on version check");
         disable_fang_infection = main_config.getBoolean("disable_fang_infection", CATEGORY_DISABLE, false, "Disable vampire fangs being useable to infect yourself");
-
+        disable_hunter_camps = main_config.getBoolean("disable_hunter_camps", CATEGORY_DISABLE, false, "Disable the generation of hunter camps completely");
 
         updated_vampirism = !main_config.getDefinedConfigVersion().equals(main_config.getLoadedConfigVersion());
 

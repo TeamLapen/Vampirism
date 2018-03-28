@@ -10,11 +10,7 @@ import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.List;
 
-/**
- * 1.12
- *
- * @author maxanier
- */
+
 public class ActionManager implements IActionManager {
 
     @Override
