@@ -85,27 +85,6 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
     @Nullable
     private ResourceLocation boundAction2;
 
-    @Nullable
-    public ResourceLocation getBoundAction1() {
-        return boundAction1;
-    }
-
-    public void setBoundAction1(@Nullable ResourceLocation boundAction1, boolean sync) {
-        this.boundAction1 = boundAction1;
-        if (sync) this.sync(false);
-
-    }
-
-    @Nullable
-    public ResourceLocation getBoundAction2() {
-        return boundAction2;
-    }
-
-    public void setBoundAction2(@Nullable ResourceLocation boundAction2, boolean sync) {
-        this.boundAction2 = boundAction2;
-        if (sync) this.sync(false);
-    }
-
     private FactionPlayerHandler(EntityPlayer player) {
         this.player = player;
     }
@@ -132,6 +111,16 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
         this.boundAction1 = oldP.boundAction1;
         this.boundAction2 = oldP.boundAction2;
         notifyFaction(oldP.currentFaction, oldP.currentLevel);
+    }
+
+    @Nullable
+    public ResourceLocation getBoundAction1() {
+        return boundAction1;
+    }
+
+    @Nullable
+    public ResourceLocation getBoundAction2() {
+        return boundAction2;
     }
 
     @Override
@@ -202,7 +191,7 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             setBoundAction1(new ResourceLocation(nbt.getString("bound1")), false);
         }
         if (nbt.hasKey("bound2")) {
-            setBoundAction1(new ResourceLocation(nbt.getString("bound2")), false);
+            setBoundAction2(new ResourceLocation(nbt.getString("bound2")), false);
         }
         notifyFaction(old, oldLevel);
     }
@@ -218,6 +207,17 @@ public class FactionPlayerHandler implements ISyncable.ISyncableEntityCapability
             }
         }
         return true;
+    }
+
+    public void setBoundAction1(@Nullable ResourceLocation boundAction1, boolean sync) {
+        this.boundAction1 = boundAction1;
+        if (sync) this.sync(false);
+
+    }
+
+    public void setBoundAction2(@Nullable ResourceLocation boundAction2, boolean sync) {
+        this.boundAction2 = boundAction2;
+        if (sync) this.sync(false);
     }
 
     @Override
