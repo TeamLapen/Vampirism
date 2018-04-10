@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.lib.lib.util.ItemStackUtil;
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.util.VampireBookManager;
@@ -61,7 +62,7 @@ public class ItemVampireBook extends VampirismItem {
 
     @Override
     public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        subItems.add(VampireBookManager.getInstance().getRandomBook(new Random()));
+        subItems.add(VampireBookManager.getInstance().getRandomBook(new Random()).setStackDisplayName(UtilLib.translate("item.vampirism.vampire_book.name")));
     }
 
     @SideOnly(Side.CLIENT)
