@@ -20,6 +20,8 @@ import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionUtils;
+import net.minecraftforge.common.brewing.BrewingRecipe;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
@@ -27,6 +29,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -63,6 +66,7 @@ public class ModItems {
     public static final VampirismItem tech_crossbow_ammo_package = getNull();
     public static final ItemVampireBook vampire_book = getNull();
     public static final ItemHolyWaterBottle holy_water_bottle = getNull();
+    public static final ItemHolyWaterSplashBottle holy_water_splash_bottle = getNull();
     public static final VampirismItem holy_salt = getNull();
     public static final VampirismItem holy_salt_water = getNull();
     public static final ItemAlchemicalFire item_alchemical_fire = getNull();
@@ -148,9 +152,9 @@ public class ModItems {
         weaponCraftingManager.addRecipe(createStack(obsidian_armor_legs, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhanced_armor, 5, "XDDX", "XYYX", "XYYX", "XYYX", 'X', Items.IRON_INGOT, 'Y', Blocks.OBSIDIAN, 'D', Items.DIAMOND);
         weaponCraftingManager.addRecipe(createStack(obsidian_armor_feet, IItemWithTier.TIER.ENHANCED), 1, HunterSkills.enhanced_armor, 5, "    ", "XDDX", "XYYX", "XYYX", 'X', Items.IRON_INGOT, 'Y', Blocks.OBSIDIAN, 'D', Items.DIAMOND);
 
-        ItemHolyWaterBottle.registerSplashRecipes(holy_water_bottle, IItemWithTier.TIER.NORMAL);
-        ItemHolyWaterBottle.registerSplashRecipes(holy_water_bottle, IItemWithTier.TIER.ENHANCED);
-        ItemHolyWaterBottle.registerSplashRecipes(holy_water_bottle, IItemWithTier.TIER.ULTIMATE);
+//        ItemHolyWaterBottle.registerSplashRecipes(holy_water_bottle, IItemWithTier.TIER.NORMAL);
+//        ItemHolyWaterBottle.registerSplashRecipes(holy_water_bottle, IItemWithTier.TIER.ENHANCED);
+//        ItemHolyWaterBottle.registerSplashRecipes(holy_water_bottle, IItemWithTier.TIER.ULTIMATE);
         weaponCraftingManager.addShapelessRecipe(ItemCrossbowArrow.setType(new ItemStack(crossbow_arrow, 2), ItemCrossbowArrow.EnumArrowType.SPITFIRE), 1, (ISkill) null, 2, ModItems.crossbow_arrow, ModItems.item_alchemical_fire, ModItems.crossbow_arrow);
 //
         cauldronCraftingManager.registerLiquidColor(ModItems.holy_water_bottle, 0x6666FF);
@@ -160,6 +164,28 @@ public class ModItems {
         cauldronCraftingManager.addRecipe(new ItemStack(ModItems.garlic_beacon_core), ModItems.item_garlic, Blocks.WOOL).setRequirements(1, HunterSkills.garlic_beacon);
         cauldronCraftingManager.addRecipe(ModItems.garlic_beacon_core_improved, ModItems.holy_water_bottle.getStack(IItemWithTier.TIER.ULTIMATE), ModItems.garlic_beacon_core).setRequirements(1, HunterSkills.garlic_beacon_improved).setExperience(2F);
         cauldronCraftingManager.addRecipe(new ItemStack(ModItems.pure_salt, 4), new FluidStack(FluidRegistry.WATER, Fluid.BUCKET_VOLUME), null).setRequirements(1, HunterSkills.basic_alchemy).setCookingTime(20 * 60);
+
+        //Brewing
+        BrewingRecipeRegistry.addRecipe(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.WATER), new ItemStack(holy_salt), new ItemStack(holy_salt_water));
+        //TODO Move tier NBT tag system to seperate item system 1.13
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(holy_water_bottle.setTier(new ItemStack(holy_water_bottle), IItemWithTier.TIER.NORMAL), new ItemStack(Items.GUNPOWDER), holy_water_splash_bottle.setTier(new ItemStack(holy_water_splash_bottle), IItemWithTier.TIER.NORMAL)) {
+            @Override
+            public boolean isInput(@Nonnull ItemStack stack) {
+                return holy_water_bottle.equals(stack.getItem()) && holy_water_bottle.getTier(stack) == IItemWithTier.TIER.NORMAL;
+            }
+        });
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(holy_water_bottle.setTier(new ItemStack(holy_water_bottle), IItemWithTier.TIER.ENHANCED), new ItemStack(Items.GUNPOWDER), holy_water_splash_bottle.setTier(new ItemStack(holy_water_splash_bottle), IItemWithTier.TIER.ENHANCED)) {
+            @Override
+            public boolean isInput(@Nonnull ItemStack stack) {
+                return holy_water_bottle.equals(stack.getItem()) && holy_water_bottle.getTier(stack) == IItemWithTier.TIER.ENHANCED;
+            }
+        });
+        BrewingRecipeRegistry.addRecipe(new BrewingRecipe(holy_water_bottle.setTier(new ItemStack(holy_water_bottle), IItemWithTier.TIER.ULTIMATE), new ItemStack(Items.GUNPOWDER), holy_water_splash_bottle.setTier(new ItemStack(holy_water_splash_bottle), IItemWithTier.TIER.ULTIMATE)) {
+            @Override
+            public boolean isInput(@Nonnull ItemStack stack) {
+                return holy_water_bottle.equals(stack.getItem()) && holy_water_bottle.getTier(stack) == IItemWithTier.TIER.ULTIMATE;
+            }
+        });
     }
 
     public static ItemStack createStack(IItemWithTier item, IItemWithTier.TIER tier) {
@@ -208,7 +234,8 @@ public class ModItems {
             }
         });
         registry.register(new ItemVampireBook());
-        registry.register(new ItemHolyWaterBottle());
+        registry.register(new ItemHolyWaterBottle(ItemHolyWaterBottle.regName));
+        registry.register(new ItemHolyWaterSplashBottle(ItemHolyWaterSplashBottle.regName));
         registry.register(new VampirismItem("holy_salt") {
             @Override
             public boolean hasEffect(ItemStack stack) {
@@ -222,7 +249,7 @@ public class ModItems {
             public boolean hasEffect(ItemStack stack) {
                 return true;
             }
-        });
+        }.setMaxStackSize(1));
         registry.register(new ItemAlchemicalFire());
         registry.register(new VampirismItem("garlic_beacon_core"));
         registry.register(new VampirismItem("garlic_beacon_core_improved"));

@@ -4,7 +4,10 @@ import de.teamlapen.lib.lib.util.InventoryRenderHelper;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.items.*;
+import de.teamlapen.vampirism.items.ItemBloodBottle;
+import de.teamlapen.vampirism.items.ItemCrossbowArrow;
+import de.teamlapen.vampirism.items.ItemInjection;
+import de.teamlapen.vampirism.items.ItemPureBlood;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
@@ -91,13 +94,8 @@ public class ModItemsRender {
         renderHelper.registerRender(ModItems.garlic_beacon_core_improved, "normal");
         renderHelper.registerRender(ModItems.purified_garlic, "normal");
 
-        final ResourceLocation holyWaterSplash = new ResourceLocation(REFERENCE.MODID, "item/" + ModItems.holy_water_bottle.getRegistryName().getResourcePath());
-        ModelLoader.setCustomMeshDefinition(ModItems.holy_water_bottle, stack -> new ModelResourceLocation(holyWaterSplash, "tier=" + ((IItemWithTier) stack.getItem()).getTier(stack) + (((ItemHolyWaterBottle) stack.getItem()).isSplash(stack) ? ",splash" : "")));
-        for (IStringSerializable s : IItemWithTier.TIER.values()) {
-            ModelLoader.registerItemVariants(ModItems.holy_water_bottle, new ModelResourceLocation(holyWaterSplash, "tier=" + s.getName() + ",splash"));
-            ModelLoader.registerItemVariants(ModItems.holy_water_bottle, new ModelResourceLocation(holyWaterSplash, "tier=" + s.getName()));
-
-        }
+        registerSimpleItemWithTier(ModItems.holy_water_bottle);
+        registerSimpleItemWithTier(ModItems.holy_water_splash_bottle);
 
         registerSimpleItemWithTier(ModItems.hunter_axe);
 

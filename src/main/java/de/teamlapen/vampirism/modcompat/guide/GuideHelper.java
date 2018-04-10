@@ -3,10 +3,7 @@ package de.teamlapen.vampirism.modcompat.guide;
 import amerifrance.guideapi.api.IPage;
 import amerifrance.guideapi.api.IRecipeRenderer;
 import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
-import amerifrance.guideapi.page.PageFurnaceRecipe;
-import amerifrance.guideapi.page.PageIRecipe;
-import amerifrance.guideapi.page.PageItemStack;
-import amerifrance.guideapi.page.PageText;
+import amerifrance.guideapi.page.*;
 import com.google.common.collect.Lists;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.ItemStackUtil;
@@ -25,6 +22,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.brewing.BrewingRecipe;
+import net.minecraftforge.common.brewing.BrewingRecipeRegistry;
 import net.minecraftforge.fml.common.registry.ForgeRegistries;
 import org.apache.commons.lang3.StringUtils;
 
@@ -118,6 +117,10 @@ public class GuideHelper {
         return null;
     }
 
+    public static BrewingRecipe getBrewingRecipe(ItemStack stack) {
+        return (BrewingRecipe) BrewingRecipeRegistry.getRecipes().stream().filter(iBrewingRecipe -> iBrewingRecipe instanceof BrewingRecipe && ItemStack.areItemStacksEqual(((BrewingRecipe) iBrewingRecipe).getOutput(), stack)).findFirst().orElse(null);
+    }
+
     private static boolean checkRecipeOutput(IRecipe recipe, ItemStack stack, boolean checkNBT) {
         if (recipe != null) {
             ItemStack resultStack = recipe.getRecipeOutput();
@@ -156,6 +159,9 @@ public class GuideHelper {
                 case FURNACE:
                     ItemStack s = checkNotNull(getFurnaceRecipe(stack));
                     return new PageFurnaceRecipe(s);
+                case BREWING_STAND:
+                    BrewingRecipe b = checkNotNull(getBrewingRecipe(stack));
+                    return new PageBrewingRecipe(b);
                 case WEAPON_TABLE:
                     IHunterWeaponRecipe r2 = checkNotNull(getWeaponTableRecipeForOutput(stack));
                     IRecipeRenderer renderer = null;
@@ -261,7 +267,7 @@ public class GuideHelper {
     }
 
     public enum RECIPE_TYPE {
-        WORKBENCH, FURNACE, WEAPON_TABLE, ALCHEMICAL_CAULDRON
+        WORKBENCH, FURNACE, WEAPON_TABLE, ALCHEMICAL_CAULDRON, BREWING_STAND
     }
 
 

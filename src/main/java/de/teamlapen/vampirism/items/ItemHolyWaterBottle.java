@@ -1,32 +1,16 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
-import de.teamlapen.vampirism.entity.DamageHandler;
-import de.teamlapen.vampirism.entity.EntityThrowableItem;
-import de.teamlapen.vampirism.inventory.crafting.IngredientNBT;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.init.PotionTypes;
-import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.potion.PotionUtils;
-import net.minecraft.stats.StatList;
-import net.minecraft.util.*;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -38,36 +22,13 @@ import java.util.List;
  * HolyWaterBottle
  * Exists in different tiers and as splash versions.
  */
-public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier, EntityThrowableItem.IVampirismThrowableItem {
+public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier {
 
-    private static final String regName = "holy_water_bottle";
+    public static final String regName = "holy_water_bottle";
 
-    /**
-     * Registers the splash recipes for the given holy water bottle tier stack.
-     * Should only be used once and after the item has been registered
-     *
-     * @param item The item
-     * @param tier The tier
-     */
-    @Deprecated
-    public static void registerSplashRecipes(ItemHolyWaterBottle item, TIER tier) {
-        ItemStack base = item.setTier(new ItemStack(item), tier);
-        Ingredient bottle = new IngredientNBT(base);
-        Ingredient g = Ingredient.fromItem(Items.GUNPOWDER);
-        ItemStack splash = item.setSplash(base.copy(), true);
-        GameRegistry.addShapedRecipe(new ResourceLocation("vampirism:holy_water_splash_" + tier + "_1"), null, splash.copy(), "XY", 'X', bottle, 'Y', g);
-        ItemStackUtil.grow(splash, 1);
-        GameRegistry.addShapedRecipe(new ResourceLocation("vampirism:holy_water_splash_" + tier + "_2"), null, splash.copy(), "XXY", 'X', bottle, 'Y', g);
-        ItemStackUtil.grow(splash, 1);
-        GameRegistry.addShapedRecipe(new ResourceLocation("vampirism:holy_water_splash_" + tier + "_3"), null, splash.copy(), "XXX", "Y  ", 'X', bottle, 'Y', g);
-        ItemStackUtil.grow(splash, 1);
-        GameRegistry.addShapedRecipe(new ResourceLocation("vampirism:holy_water_splash_" + tier + "_4"), null, splash.copy(), "XXX", "XY ", 'X', bottle, 'Y', g);
-        ItemStackUtil.grow(splash, 1);
-        GameRegistry.addShapedRecipe(new ResourceLocation("vampirism:holy_water_splash_" + tier + "_5"), null, splash.copy(), "XXX", "XXY", 'X', bottle, 'Y', g);
-    }
-
-    public ItemHolyWaterBottle() {
+    public ItemHolyWaterBottle(String regName) {
         super(regName);
+        this.setMaxStackSize(1);
     }
 
     @SideOnly(Side.CLIENT)
@@ -78,11 +39,6 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
         if (t != TIER.NORMAL) {
             tooltip.add(TextFormatting.AQUA + UtilLib.translate("text.vampirism.item_tier." + t.name().toLowerCase()));
         }
-    }
-
-    @Override
-    public int getItemStackLimit(ItemStack stack) {
-        return isSplash(stack) ? 1 : 64;
     }
 
 
@@ -116,8 +72,6 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
     public void getSubItems(@Nonnull Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         for (TIER t : TIER.values()) {
             subItems.add(setTier(new ItemStack(itemIn), t));
-            subItems.add(setSplash(setTier(new ItemStack(itemIn), t), true));
-
         }
     }
 
@@ -135,83 +89,6 @@ public class ItemHolyWaterBottle extends VampirismItem implements IItemWithTier,
         return TIER.NORMAL;
     }
 
-    @Nonnull
-    @Override
-    public String getUnlocalizedName(ItemStack stack) {
-        String unloc = super.getUnlocalizedName(stack);
-        return isSplash(stack) ? unloc + ".splash" : unloc;
-    }
-
-    /**
-     * @return If the bottle is a splash bottle
-     */
-    public boolean isSplash(ItemStack stack) {
-        NBTTagCompound tag = UtilLib.checkNBT(stack);
-        return tag.hasKey("splash") && tag.getBoolean("splash");
-    }
-
-    @Override
-    public void onImpact(EntityThrowableItem entity, ItemStack stack, RayTraceResult result, boolean remote) {
-        if (!isSplash(stack)) {
-            VampirismMod.log.w("HolyWaterBottle", "Threw non splash bottle");
-            return;
-        }
-        TIER tier = getTier(stack);
-        if (!remote) {
-
-
-            AxisAlignedBB axisalignedbb = entity.getEntityBoundingBox().grow(4.0D, 2.0D, 4.0D);
-            List<EntityLivingBase> list1 = entity.getEntityWorld().getEntitiesWithinAABB(EntityLivingBase.class, axisalignedbb);
-
-
-            if (!list1.isEmpty()) {
-                for (EntityLivingBase entitylivingbase : list1) {
-                    DamageHandler.affectEntityHolyWaterSplash(entitylivingbase, getStrength(tier), entity.getDistanceSq(entitylivingbase), result.entityHit != null);
-                }
-            }
-
-            entity.getEntityWorld().playEvent(2002, new BlockPos(entity), PotionUtils.getPotionColor(PotionTypes.MUNDANE));
-        }
-
-    }
-
-    @Nonnull
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-        ItemStack stack = playerIn.getHeldItem(handIn);
-        if (isSplash(stack)) {
-
-
-            worldIn.playSound(null, playerIn.posX, playerIn.posY, playerIn.posZ, SoundEvents.ENTITY_SPLASH_POTION_THROW, SoundCategory.NEUTRAL, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
-
-            if (!worldIn.isRemote) {
-                EntityThrowableItem entityThrowable = new EntityThrowableItem(worldIn, playerIn);
-                ItemStack throwStack = stack.copy();
-                throwStack.setCount(1);
-                entityThrowable.setItem(throwStack);
-                entityThrowable.shoot(playerIn, playerIn.rotationPitch, playerIn.rotationYaw, -20.0F, 0.5F, 1.0F);
-                worldIn.spawnEntity(entityThrowable);
-            }
-
-            playerIn.addStat(StatList.getObjectUseStats(this));
-            if (!playerIn.capabilities.isCreativeMode) {
-                ItemStackUtil.decr(stack);
-            }
-            return new ActionResult<>(EnumActionResult.SUCCESS, stack);
-        }
-        return new ActionResult<>(EnumActionResult.PASS, stack);
-    }
-
-    /**
-     * Marks the stack as splash bottle
-     *
-     * @return The same stack
-     */
-    public ItemStack setSplash(ItemStack stack, boolean value) {
-        NBTTagCompound tag = UtilLib.checkNBT(stack);
-        tag.setBoolean("splash", value);
-        return stack;
-    }
 
     @Nonnull
     @Override

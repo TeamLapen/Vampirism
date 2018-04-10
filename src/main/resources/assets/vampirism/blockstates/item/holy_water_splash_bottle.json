@@ -8,17 +8,17 @@
     "tier": {
       "normal": {
         "textures": {
-          "layer0": "vampirism:items/holy_water"
+          "layer0": "vampirism:items/holy_water_splash"
         }
       },
       "enhanced": {
         "textures": {
-          "layer0": "vampirism:items/holy_water_enhanced"
+          "layer0": "vampirism:items/holy_water_splash"
         }
       },
       "ultimate": {
         "textures": {
-          "layer0": "vampirism:items/holy_water_ultimate"
+          "layer0": "vampirism:items/holy_water_splash"
         }
       }
     }
