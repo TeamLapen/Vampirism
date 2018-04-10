@@ -12,7 +12,7 @@ import java.io.File;
  * Balance values for vampire players.
  */
 public class BalanceVampirePlayer extends BalanceValues {
-    @DefaultDouble(value = 16D, minValue = 0.5D, maxValue = 2.0D, name = "health_max_modifier", comment = "Maximum amount of extra health")
+    @DefaultDouble(value = 16D, minValue = 0.5D, maxValue = 40D, name = "health_max_modifier", comment = "Maximum amount of extra health")
     public double HEALTH_MAX_MOD;
     @DefaultInt(value = 14, minValue = 10, maxValue = 40, name = "health_level_cap", comment = "Level at which the maximum added health is reached")
     public int HEALTH_LCAP;
