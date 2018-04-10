@@ -38,7 +38,7 @@ public class VampirismWorldGen implements IWorldGenerator {
         boolean mapFeatures = world.getWorldInfo().isMapFeaturesEnabled();
         if (mapFeatures) {
             Biome biome = world.getBiome(new BlockPos((chunkX << 4) + 8, 0, (chunkZ << 4) + 8));
-            if (hunterCamp.canCampSpawnAt(world, biome, chunkX, chunkZ)) {
+            if (!Configs.disable_hunter_camps && hunterCamp.canCampSpawnAt(world, biome, chunkX, chunkZ)) {
                 BlockPos pos = new BlockPos(chunkX << 4, 1, chunkZ << 4);
 
                 int tries = 5;

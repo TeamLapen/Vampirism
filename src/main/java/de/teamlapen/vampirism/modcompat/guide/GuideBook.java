@@ -206,6 +206,7 @@ public class GuideBook implements IGuideBook {
         List<IPage> skillPages = new ArrayList<>();
         skillPages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "skills.text", Keyboard.getKeyName(ModKeys.getKeyCode(ModKeys.KEY.SKILL)))));
         skillPages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "skills.actions", Keyboard.getKeyName(ModKeys.getKeyCode(ModKeys.KEY.ACTION)))));
+        skillPages.addAll(GuideHelper.pagesForLongText(UtilLib.translate("guide.vampirism.skills.bind_action")));
         skillPages.addAll(GuideHelper.pagesForLongText(UtilLib.translate(base + "skills.actions2")));
 
         entries.put(new ResourceLocation(base + "skills"), new EntryText(skillPages, base + "skills"));
