@@ -85,7 +85,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         saveHome = true;
         ((PathNavigateGround) this.getNavigator()).setEnterDoors(true);
 
-        this.setSize(0.6F, 1.8F);
+        this.setSize(0.6F, 1.95F);
 
 
         this.setDontDropEquipment();
@@ -337,6 +337,12 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         return 6 + getLevel();
     }
 
+    @Nullable
+    @Override
+    protected ResourceLocation getLootTable() {
+        return LootHandler.BASIC_HUNTER;
+    }
+
     @Override
     protected void initEntityAI() {
         super.initEntityAI();
@@ -415,12 +421,6 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
             defendVillageAdded = true;
         }
 
-    }
-
-    @Nullable
-    @Override
-    protected ResourceLocation getLootTable() {
-        return LootHandler.BASIC_HUNTER;
     }
 
     protected void updateEntityAttributes() {

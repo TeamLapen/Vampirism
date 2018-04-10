@@ -19,7 +19,11 @@ public abstract class EntityHunterBase extends EntityVampirism implements IHunte
     public EntityHunterBase(World world, boolean countAsMonster) {
         super(world);
         this.countAsMonster = countAsMonster;
+    }
 
+    @Override
+    public float getEyeHeight() {
+        return height * 0.875f;
     }
 
     @Override

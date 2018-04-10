@@ -61,7 +61,7 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
     public EntityVampireBaron(World world) {
         super(world, true);
         minionHandler = new SaveableMinionHandler<>(this);
-        this.setSize(0.6F, 1.8F);
+        this.setSize(0.6F, 1.95F);
 
 
         this.garlicResist = EnumStrength.MEDIUM;

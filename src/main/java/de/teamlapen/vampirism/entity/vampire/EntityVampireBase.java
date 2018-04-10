@@ -105,6 +105,11 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     }
 
     @Override
+    public float getEyeHeight() {
+        return height * 0.875f;
+    }
+
+    @Override
     public IFaction getFaction() {
         return VReference.VAMPIRE_FACTION;
     }

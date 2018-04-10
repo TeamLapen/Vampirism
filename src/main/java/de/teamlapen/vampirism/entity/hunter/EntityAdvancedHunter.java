@@ -44,7 +44,7 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
         saveHome = true;
         ((PathNavigateGround) this.getNavigator()).setEnterDoors(true);
 
-        this.setSize(0.6F, 1.8F);
+        this.setSize(0.6F, 1.95F);
 
 
         this.setDontDropEquipment();
@@ -165,12 +165,6 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
         return isLookingForHome() && super.canDespawn();
     }
 
-    @Nullable
-    @Override
-    protected ResourceLocation getLootTable() {
-        return LootHandler.ADVANCED_HUNTER;
-    }
-
     @Override
     protected void entityInit() {
         super.entityInit();
@@ -182,10 +176,15 @@ public class EntityAdvancedHunter extends EntityHunterBase implements IAdvancedH
 
     }
 
-
     @Override
     protected int getExperiencePoints(EntityPlayer player) {
         return 10 * (1 + getLevel());
+    }
+
+    @Nullable
+    @Override
+    protected ResourceLocation getLootTable() {
+        return LootHandler.ADVANCED_HUNTER;
     }
 
     @Override

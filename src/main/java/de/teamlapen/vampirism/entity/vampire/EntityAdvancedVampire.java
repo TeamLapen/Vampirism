@@ -49,7 +49,7 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
 
     public EntityAdvancedVampire(World world) {
         super(world, true);
-        this.setSize(0.6F, 1.8F);
+        this.setSize(0.6F, 1.95F);
         this.canSuckBloodFromPlayer = true;
         this.restrictedSpawn = true;
         this.setDontDropEquipment();
@@ -182,12 +182,6 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
         return (float) (amount * Balance.mobProps.ADVANCED_VAMPIRE_FIRE_VULNERABILITY);
     }
 
-    @Nullable
-    @Override
-    protected ResourceLocation getLootTable() {
-        return LootHandler.ADVANCED_VAMPIRE;
-    }
-
     @Override
     protected void entityInit() {
         super.entityInit();
@@ -202,6 +196,12 @@ public class EntityAdvancedVampire extends EntityVampireBase implements IAdvance
     @Override
     protected int getExperiencePoints(EntityPlayer player) {
         return 10 * (1 + getLevel());
+    }
+
+    @Nullable
+    @Override
+    protected ResourceLocation getLootTable() {
+        return LootHandler.ADVANCED_VAMPIRE;
     }
 
     @Override
