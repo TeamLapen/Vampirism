@@ -36,12 +36,8 @@ public abstract class AbstractPacketDispatcher {
         dispatcher.sendTo(message, player);
     }
 
-    /**
-     * Send this message to everyone within a certain range of a point.
-     * See {@link SimpleNetworkWrapper#sendToAllAround(IMessage, NetworkRegistry.TargetPoint)}
-     */
-    public final void sendToAllAround(IMessage message, NetworkRegistry.TargetPoint point) {
-        dispatcher.sendToAllAround(message, point);
+    public final void sendToAll(IMessage message) {
+        dispatcher.sendToAll(message);
     }
 
     /**
@@ -56,8 +52,12 @@ public abstract class AbstractPacketDispatcher {
                 range));
     }
 
-    public final void sendToAll(IMessage message) {
-        dispatcher.sendToAll(message);
+    /**
+     * Send this message to everyone within a certain range of a point.
+     * See {@link SimpleNetworkWrapper#sendToAllAround(IMessage, NetworkRegistry.TargetPoint)}
+     */
+    public final void sendToAllAround(IMessage message, NetworkRegistry.TargetPoint point) {
+        dispatcher.sendToAllAround(message, point);
     }
 
     /**
@@ -71,8 +71,32 @@ public abstract class AbstractPacketDispatcher {
 
     public final void sendToAllTrackingPlayers(IMessage message, Entity target) {
         EntityTracker et = ((WorldServer) target.getEntityWorld()).getEntityTracker();
-        // does not send it to the player himself it target is a player et.sendToAllTrackingEntity(target, dispatcher.getPacketFrom(message));
-        et.sendToTrackingAndSelf(target, dispatcher.getPacketFrom(message));
+
+        //Send the message to the target itself if it is a player
+        if (target instanceof EntityPlayerMP) {
+            sendTo(message, (EntityPlayerMP) target);
+        }
+        for (EntityPlayer player : et.getTrackingPlayers(target)) {
+            if (player instanceof EntityPlayerMP) {
+                sendTo(message, (EntityPlayerMP) player);
+            }
+        }
+
+        //This approach creates a separate package for each player, but this is required to some weird netty stuff related to LAN and FMLProxyPackets #268
+        //Vanilla would use, but this does not work
+        /*
+            Packet pkt = dispatcher.getPacketFrom(message);
+            et.sendToTrackingAndSelf(target, pkt);
+        */
+        //Alternative, would need some more testing and improvements
+        /*
+            FMLProxyPacket pkt = dispatcher.getPacketFrom(message);
+            for(EntityPlayerMP player : players){
+                 pkt.payload().retain();
+                player.connection.sendPacket(pkt);
+            }
+            pkt.payload().release();
+         */
     }
 
     /**
