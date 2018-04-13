@@ -9,9 +9,8 @@ import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAIBase;
+import net.minecraft.util.math.AxisAlignedBB;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class VampireAIBiteNearbyEntity extends EntityAIBase {
@@ -28,7 +27,7 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
 
     @Override
     public boolean continueExecuting() {
-        return creature.getEntity().isEntityAlive() && vampireEntity.getDistanceSqToEntity(creature.getEntity()) < 7 && this.timer > 0;
+        return creature.getEntity().isEntityAlive() && creature.getEntity().getEntityBoundingBox().intersectsWith(getBiteBoundingBox()) && this.timer > 0;
     }
 
     @Override
@@ -40,16 +39,11 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
     @Override
     public boolean shouldExecute() {
         if (vampire.wantsBlood()) {
-            List list = vampireEntity.getEntityWorld().getEntitiesWithinAABB(EntityCreature.class, vampireEntity.getEntityBoundingBox().expand(2.1, 1.5, 2.1));
+            List list = vampireEntity.getEntityWorld().getEntitiesWithinAABB(EntityCreature.class, getBiteBoundingBox());
             if (list.size() > 1) {
 
                 try {
-                    Collections.sort(list, new Comparator() {
-                        @Override
-                        public int compare(Object o1, Object o2) {
-                            return vampireEntity.getDistanceSqToEntity((Entity) o1) > vampireEntity.getDistanceSqToEntity((Entity) o2) ? 1 : -1;
-                        }
-                    });
+                    list.sort((o1, o2) -> vampireEntity.getDistanceSqToEntity((Entity) o1) > vampireEntity.getDistanceSqToEntity((Entity) o2) ? 1 : -1);
                 } catch (Exception e) {
                     //TODO investigate issue
                     //java.lang.IllegalArgumentException: Comparison method violates its general contract!
@@ -89,5 +83,9 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
             vampireEntity.playSound(ModSounds.player_bite, 1, 1);
             vampire.drinkBlood(amount, creature.getBloodSaturation());
         }
+    }
+
+    protected AxisAlignedBB getBiteBoundingBox() {
+        return vampireEntity.getEntityBoundingBox().expand(1.0, 1.3, 1.0);
     }
 }
