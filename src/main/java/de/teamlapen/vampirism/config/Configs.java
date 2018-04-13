@@ -56,6 +56,8 @@ public class Configs {
     public static boolean disable_vampireEyes;
     public static boolean disable_config_sync;
     public static boolean disable_screen_overlay;
+    public static boolean disable_hunter_camps;
+
     public static @Nonnull
     int[] worldGenDimensions = new int[0];
 
@@ -172,6 +174,7 @@ public class Configs {
         disable_vampireEyes = main_config.getBoolean("disable_vampire_player_eyes", CATEGORY_DISABLE, false, "Disables the rendering of vampire eyes");
         disable_config_sync = main_config.getBoolean("disable_config_sync", CATEGORY_DISABLE, false, "Disable syncing config between server and client. (Note: Only a few settings are synced anyway)");
         disable_screen_overlay = main_config.getBoolean("disable_screen_overlay", CATEGORY_DISABLE, false, "Disable the colored overlay (sunindicator, disguise or rage)  if they cause problems.");
+        disable_hunter_camps = main_config.getBoolean("disable_hunter_camps", CATEGORY_DISABLE, false, "Disable the generation of hunter camps completely");
 
         updated_vampirism = !main_config.getDefinedConfigVersion().equals(main_config.getLoadedConfigVersion());
 
