@@ -4,15 +4,20 @@ import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import de.teamlapen.lib.VampLib;
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.Loader;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.ConnectException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -33,30 +38,37 @@ public class VersionChecker implements Runnable {
      * @param currentVersion
      * @return a version info object, which is update when the check is finished
      */
-    public static VersionInfo executeVersionCheck(String updateUrl, String currentVersion) {
-        VersionChecker checker = new VersionChecker(updateUrl, currentVersion);
+    public static VersionInfo executeVersionCheck(String updateUrl, String currentVersion, boolean stats) {
+        VersionChecker checker = new VersionChecker(updateUrl, currentVersion, stats);
         new Thread(checker).start();
         return checker.versionInfo;
     }
 
+    private final boolean stats;
     private final String UPDATE_FILE_URL;
     private final VersionInfo versionInfo;
     private final String currentVersion;
 
-    protected VersionChecker(String update_file_url, String currentVersion) {
+    protected VersionChecker(String update_file_url, String currentVersion, boolean stats) {
         UPDATE_FILE_URL = update_file_url;
         this.currentVersion = currentVersion;
         versionInfo = new VersionInfo(currentVersion);
+        if (stats) {
+            this.stats = FMLCommonHandler.instance().getEffectiveSide().isClient() ? Minecraft.getMinecraft().isSnooperEnabled() : FMLCommonHandler.instance().getMinecraftServerInstance().isSnooperEnabled();
+        } else {
+            this.stats = false;
+        }
     }
 
     @Override
     public void run() {
         VampLib.log.i(TAG, "Starting version check at %s", UPDATE_FILE_URL);
+        String fullUrl = stats ? UPDATE_FILE_URL + getStatsString() : UPDATE_FILE_URL;
         try {
-            URL url = new URL(UPDATE_FILE_URL);
+            URL url = new URL(fullUrl);
             check(url);
         } catch (MalformedURLException e) {
-            VampLib.log.e(TAG, e, "Failed to parse update file url (%s)", UPDATE_FILE_URL);
+            VampLib.log.e(TAG, e, "Failed to parse update file url (%s)", fullUrl);
         } catch (IOException e) {
             if (e instanceof ConnectException) {
                 VampLib.log.e(TAG, "Failed to connect to version check url %s", UPDATE_FILE_URL);
@@ -149,6 +161,26 @@ public class VersionChecker implements Runnable {
         }
 
 
+    }
+
+    private String getStatsString() {
+        try {
+            String b = "?" +
+                    "current=" +
+                    URLEncoder.encode(currentVersion.trim(), "UTF-8") +
+                    '&' +
+                    "mc=" +
+                    URLEncoder.encode(Loader.MC_VERSION, "UTF-8") +
+                    '&' +
+                    "count=" +
+                    URLEncoder.encode("" + Loader.instance().getActiveModList().size(), "UTF-8") +
+                    '&' +
+                    "side=" +
+                    (FMLCommonHandler.instance().getEffectiveSide().isClient() ? "client" : "server");
+            return b;
+        } catch (UnsupportedEncodingException e) {
+            return "";
+        }
     }
 
     /**
