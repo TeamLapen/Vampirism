@@ -83,7 +83,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
         saveHome = true;
         ((PathNavigateGround) this.getNavigator()).setEnterDoors(true);
 
-        this.setSize(0.6F, 1.8F);
+        this.setSize(0.6F, 1.95F);
 
 
         this.setDontDropEquipment();
