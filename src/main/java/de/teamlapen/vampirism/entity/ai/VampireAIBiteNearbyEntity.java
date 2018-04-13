@@ -61,7 +61,7 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
 
             for (EntityCreature o : list) {
                 if (vampireEntityLiving != null) {
-                    if (!vampireEntityLiving.getEntitySenses().canSee(o)) {
+                    if (!vampireEntityLiving.getEntitySenses().canSee(o) && !o.hasCustomName()) {
                         continue;
                     }
                 }
