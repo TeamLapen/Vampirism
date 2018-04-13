@@ -33,11 +33,6 @@ public abstract class AbstractCriterionTrigger<T extends ICriterionInstance> imp
     }
 
     @Override
-    public ResourceLocation getId() {
-        return id;
-    }
-
-    @Override
     public void addListener(PlayerAdvancements playerAdvancementsIn, Listener<T> listener) {
         GenericListeners listeners = this.listenersForPlayers.get(playerAdvancementsIn);
         if (listeners == null) {
@@ -45,6 +40,16 @@ public abstract class AbstractCriterionTrigger<T extends ICriterionInstance> imp
             this.listenersForPlayers.put(playerAdvancementsIn, listeners);
         }
         listeners.add(listener);
+    }
+
+    @Override
+    public ResourceLocation getId() {
+        return id;
+    }
+
+    @Override
+    public void removeAllListeners(PlayerAdvancements playerAdvancementsIn) {
+        this.listenersForPlayers.remove(playerAdvancementsIn);
     }
 
     @Override
@@ -58,12 +63,6 @@ public abstract class AbstractCriterionTrigger<T extends ICriterionInstance> imp
         }
     }
 
-    @Override
-    public void removeAllListeners(PlayerAdvancements playerAdvancementsIn) {
-        this.listenersForPlayers.remove(playerAdvancementsIn);
-    }
-
-
     protected abstract static class GenericListeners<T extends ICriterionInstance> {
         protected final PlayerAdvancements playerAdvancements;
         protected final Set<Listener<T>> playerListeners = Sets.newHashSet();
@@ -72,12 +71,12 @@ public abstract class AbstractCriterionTrigger<T extends ICriterionInstance> imp
             this.playerAdvancements = playerAdvancementsIn;
         }
 
-        public boolean isEmpty() {
-            return this.playerListeners.isEmpty();
-        }
-
         public void add(ICriterionTrigger.Listener<T> listener) {
             this.playerListeners.add(listener);
+        }
+
+        public boolean isEmpty() {
+            return this.playerListeners.isEmpty();
         }
 
         public void remove(ICriterionTrigger.Listener<T> listener) {

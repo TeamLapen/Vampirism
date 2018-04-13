@@ -135,6 +135,15 @@ public class ModPlayerEventHandler {
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onLivingHeal(LivingHealEvent event) {
+        if (event.getEntityLiving() instanceof EntityPlayer) {
+            if (VampirePlayer.get((EntityPlayer) event.getEntityLiving()).getSpecialAttributes().bat) {
+                event.setAmount(event.getAmount() * 0.1F);
+            }
+        }
+    }
+
     @SubscribeEvent
     public void onLivingJump(LivingEvent.LivingJumpEvent event) {
         if (event.getEntity() instanceof EntityPlayer) {
@@ -230,15 +239,6 @@ public class ModPlayerEventHandler {
     public void onPlayerVisibilityCheck(PlayerEvent.Visibility event) {
         if (HunterPlayer.get(event.getEntityPlayer()).getSpecialAttributes().isDisguised()) {
             event.modifyVisibility(Balance.hpa.DISGUISE_VISIBILITY_MOD);
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onLivingHeal(LivingHealEvent event) {
-        if (event.getEntityLiving() instanceof EntityPlayer) {
-            if (VampirePlayer.get((EntityPlayer) event.getEntityLiving()).getSpecialAttributes().bat) {
-                event.setAmount(event.getAmount() * 0.1F);
-            }
         }
     }
 

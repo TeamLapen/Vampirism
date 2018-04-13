@@ -27,24 +27,15 @@ public class VampirismItemWeapon extends VampirismItem {
      */
     private final float attackDamage;
     private final Item.ToolMaterial material;
+    private final float attackSpeed;
 
     public VampirismItemWeapon(String regName, Item.ToolMaterial material) {
         this(regName, material, 0.4F);
     }
 
-    protected float getAttackDamage(ItemStack stack) {
-        return attackDamage;
-    }
-
-
-    private final float attackSpeed;
 
     public VampirismItemWeapon(String regName, Item.ToolMaterial material, float attackSpeedModifier) {
         this(regName, material, attackSpeedModifier, 3F + material.getAttackDamage());
-    }
-
-    protected float getAttackSpeed(ItemStack stack) {
-        return attackSpeed;
     }
 
     public VampirismItemWeapon(String regName, Item.ToolMaterial material, float attackSpeedModifier, float attackDamage) {
@@ -66,15 +57,6 @@ public class VampirismItemWeapon extends VampirismItem {
         }
 
         return multimap;
-    }
-
-    @Override
-    protected void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, playerIn, tooltip, advanced);
-        if (advanced) {
-            tooltip.add("ModDamage: " + getAttackDamage(stack));
-            tooltip.add("ModSpeed: " + getAttackSpeed(stack));
-        }
     }
 
     @Override
@@ -108,5 +90,22 @@ public class VampirismItemWeapon extends VampirismItem {
         }
 
         return true;
+    }
+
+    @Override
+    protected void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+        super.addInformation(stack, playerIn, tooltip, advanced);
+        if (advanced) {
+            tooltip.add("ModDamage: " + getAttackDamage(stack));
+            tooltip.add("ModSpeed: " + getAttackSpeed(stack));
+        }
+    }
+
+    protected float getAttackDamage(ItemStack stack) {
+        return attackDamage;
+    }
+
+    protected float getAttackSpeed(ItemStack stack) {
+        return attackSpeed;
     }
 }

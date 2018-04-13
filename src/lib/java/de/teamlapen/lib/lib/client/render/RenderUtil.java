@@ -40,7 +40,7 @@ public class RenderUtil {
         endGlowing(entity.getBrightnessForRender());
     }
 
-    private static void startGlowing(boolean entityInvisible, float brightness){
+    private static void startGlowing(boolean entityInvisible, float brightness) {
         GlStateManager.enableBlend();
         GlStateManager.enableAlpha();
         GlStateManager.blendFunc(GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE);
@@ -57,7 +57,7 @@ public class RenderUtil {
         Minecraft.getMinecraft().entityRenderer.setupFogColor(true);
     }
 
-    private static void endGlowing(int brightnessForRender){
+    private static void endGlowing(int brightnessForRender) {
         Minecraft.getMinecraft().entityRenderer.setupFogColor(false);
         int i = brightnessForRender;
         int j = i % 65536;

@@ -27,13 +27,12 @@ public class LayerGlowingEyes<T extends EntityLivingBase> implements LayerRender
         RenderUtil.renderGlowing(render, RESOURCE_LOCATION, brightness, entitylivingbaseIn, limbSwing, limbSwingAmount, partialTicks, ageInTicks, netHeadYaw, headPitch, scale);
     }
 
-
-    public boolean shouldCombineTextures() {
-        return false;
-    }
-
     public LayerGlowingEyes<T> setBrightness(float brightness) {
         this.brightness = brightness;
         return this;
+    }
+
+    public boolean shouldCombineTextures() {
+        return false;
     }
 }

@@ -59,6 +59,7 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
 
     /**
      * INTERNAL USE ONLY
+     *
      * @return The skill currently mapped to this id. Could be different after a restart
      */
     public IAction getActionFromId(int id) {
@@ -80,8 +81,9 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
 
     /**
      * Throws an exception if action is not registered
-     *
+     * <p>
      * INTERNAL USE ONLY
+     *
      * @param action
      * @return The id currently mapped to this action. Could be different after a restart.
      */
@@ -131,14 +133,14 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
      */
     public void loadFromNbt(NBTTagCompound nbt) {
         NBTTagCompound actions = nbt.getCompoundTag("actions");
-            for (String key : actions.getKeySet()) {
-                IAction action = VampirismRegistries.ACTIONS.getValue(new ResourceLocation(key));
-                if (action == null) {
-                    VampirismMod.log.w(TAG, "Did not find action with key %s", key);
-                } else {
-                    actionTimer[getIdFromAction(action)] = actions.getInteger(key);
-                }
+        for (String key : actions.getKeySet()) {
+            IAction action = VampirismRegistries.ACTIONS.getValue(new ResourceLocation(key));
+            if (action == null) {
+                VampirismMod.log.w(TAG, "Did not find action with key %s", key);
+            } else {
+                actionTimer[getIdFromAction(action)] = actions.getInteger(key);
             }
+        }
 
     }
 

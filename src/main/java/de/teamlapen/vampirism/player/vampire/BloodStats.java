@@ -18,36 +18,14 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  */
 public class BloodStats implements IBloodStats {
     private final static String TAG = "BloodStats";
-
-    private int maxBlood = 20;
-
-    @Override
-    public int getMaxBlood() {
-        return maxBlood;
-    }
-
-    /**
-     * Change the maximum storeable amount of blood
-     * Also caps the current blood at this level
-     *
-     * @param maxBlood Should be a even number
-     */
-    public void setMaxBlood(int maxBlood) {
-        this.maxBlood = Math.max(1, maxBlood);
-        if (this.bloodLevel > maxBlood) {
-            bloodLevel = maxBlood;
-        }
-        changed = true;
-    }
     private final EntityPlayer player;
+    private int maxBlood = 20;
     private int bloodLevel = 20;
     private float bloodSaturationLevel = 5.0F;
     private float bloodExhaustionLevel;
     private int bloodTimer;
     private int prevBloodLevel = 20;
     private boolean changed = false;
-
-
     public BloodStats(EntityPlayer player) {
         this.player = player;
     }
@@ -60,7 +38,6 @@ public class BloodStats implements IBloodStats {
         changed = true;
         return amount - add;
     }
-
 
     @Override
     public boolean consumeBlood(int a) {
@@ -80,6 +57,25 @@ public class BloodStats implements IBloodStats {
     @Override
     public void setBloodLevel(int amt) {
         bloodLevel = amt < 0 ? 0 : (amt > maxBlood ? maxBlood : amt);
+        changed = true;
+    }
+
+    @Override
+    public int getMaxBlood() {
+        return maxBlood;
+    }
+
+    /**
+     * Change the maximum storeable amount of blood
+     * Also caps the current blood at this level
+     *
+     * @param maxBlood Should be a even number
+     */
+    public void setMaxBlood(int maxBlood) {
+        this.maxBlood = Math.max(1, maxBlood);
+        if (this.bloodLevel > maxBlood) {
+            bloodLevel = maxBlood;
+        }
         changed = true;
     }
 

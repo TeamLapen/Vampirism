@@ -65,6 +65,7 @@ public class TileTent extends TileEntity implements ITickable {
             }
         };
     }
+
     private SimpleSpawnerLogic spawnerLogic = new SimpleSpawnerLogic() {
         @Override
         public BlockPos getSpawnerPosition() {

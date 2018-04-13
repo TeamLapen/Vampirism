@@ -43,6 +43,124 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
     @Nonnull
     private ItemStack internalStack = ItemStack.EMPTY;
 
+    @Nonnull
+    @Override
+    public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        ItemStack stack = this.internalStack;
+        if (slot == 0 && !stack.isEmpty()) {
+            if (!simulate) {
+                this.removeStack();
+                this.markDirtyAndUpdateClient();
+            }
+            return simulate ? stack.copy() : stack;
+        }
+        return ItemStack.EMPTY;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Nullable
+    @Override
+    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing == null || facing != EnumFacing.DOWN) {
+            return (T) this;
+        }
+        return super.getCapability(capability, facing);
+    }
+
+    @Override
+    public int getSlotLimit(int slot) {
+        return 1;
+    }
+
+    @Override
+    public int getSlots() {
+        return 1;
+    }
+
+    @Nonnull
+    public ItemStack getStackForRender() {
+        return internalStack;
+    }
+
+    @Nonnull
+    @Override
+    public ItemStack getStackInSlot(int slot) {
+        return slot == 0 ? internalStack : ItemStack.EMPTY;
+    }
+
+    @SideOnly(Side.CLIENT)
+    public int getTickForRender() {
+        return ticksExistedClient;
+    }
+
+    @Nullable
+    @Override
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(getPos(), 1, getUpdateTag());
+    }
+
+    @Nonnull
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        return writeToNBT(new NBTTagCompound());
+    }
+
+    @Override
+    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
+        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing == null || facing != EnumFacing.DOWN) {
+            return true;
+        }
+        return super.hasCapability(capability, facing);
+    }
+
+    public boolean hasStack() {
+        return !this.internalStack.isEmpty();
+    }
+
+    @Nonnull
+    @Override
+    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
+        if (slot == 0) {
+            if (this.internalStack.isEmpty()) {
+                if (!simulate) {
+                    setStack(stack);
+                    this.markDirtyAndUpdateClient();
+                }
+                return ItemStack.EMPTY;
+            }
+        }
+        return stack;
+    }
+
+    public void markDirtyAndUpdateClient() {
+        super.markDirty();
+        IBlockState block = this.world.getBlockState(this.pos);
+        world.notifyBlockUpdate(pos, block, block, 3);
+    }
+
+    @Override
+    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
+        handleUpdateTag(pkt.getNbtCompound());
+    }
+
+    @Override
+    public void readFromNBT(NBTTagCompound compound) {
+        if (compound.hasKey("item")) {
+            this.internalStack = new ItemStack(compound.getCompoundTag("item"));
+        } else {
+            this.internalStack = ItemStack.EMPTY;
+        }
+        this.bloodStored = compound.getInteger("blood_stored");
+        this.chargingTicks = compound.getInteger("charging_ticks");
+    }
+
+    @Nonnull
+    public ItemStack removeStack() {
+        ItemStack stack = this.internalStack;
+        this.internalStack = ItemStack.EMPTY;
+        return stack;
+    }
+
     @Override
     public void update() {
         if (!this.world.isRemote) {
@@ -84,98 +202,6 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
         }
     }
 
-    /**
-     * Tries to retrieve a {@link IBloodChargeable} instance from the given stack
-     *
-     * @return May be null
-     */
-    @Nullable
-    private IBloodChargeable getChargeItem(@Nonnull ItemStack stack) {
-        return stack.isEmpty() ? null : (stack.getItem() instanceof IBloodChargeable ? (IBloodChargeable) stack.getItem() : null);
-    }
-
-    @SideOnly(Side.CLIENT)
-    public int getTickForRender() {
-        return ticksExistedClient;
-    }
-
-
-    @Nonnull
-    public ItemStack getStackForRender() {
-        return internalStack;
-    }
-
-    /**
-     * Set the held stack.
-     *
-     * @return If successful
-     */
-    private boolean setStack(@Nonnull ItemStack stack) {
-        this.chargingTicks=0;
-        if (this.internalStack.isEmpty()) {
-            this.internalStack = stack;
-            return true;
-        }
-        return false;
-    }
-
-    public boolean hasStack() {
-        return !this.internalStack.isEmpty();
-    }
-
-    @Nonnull
-    public ItemStack removeStack() {
-        ItemStack stack = this.internalStack;
-        this.internalStack = ItemStack.EMPTY;
-        return stack;
-    }
-
-
-    @SideOnly(Side.CLIENT)
-    private void spawnChargedParticle() {
-        Vec3d pos = new Vec3d(this.getPos()).addVector(0.5, 0.8, 0.5);
-        VampLib.proxy.getParticleHandler().spawnParticle(this.getWorld(), ModParticles.FLYING_BLOOD, this.pos.getX() + 0.20, this.getPos().getY() + 0.65, this.getPos().getZ() + 0.20, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), 177);
-        VampLib.proxy.getParticleHandler().spawnParticle(this.getWorld(), ModParticles.FLYING_BLOOD, this.pos.getX() + 0.80, this.getPos().getY() + 0.65, this.getPos().getZ() + 0.20, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), 177);
-        VampLib.proxy.getParticleHandler().spawnParticle(this.getWorld(), ModParticles.FLYING_BLOOD, this.pos.getX() + 0.20, this.getPos().getY() + 0.65, this.getPos().getZ() + 0.80, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), 177);
-        VampLib.proxy.getParticleHandler().spawnParticle(this.getWorld(), ModParticles.FLYING_BLOOD, this.pos.getX() + 0.80, this.getPos().getY() + 0.65, this.getPos().getZ() + 0.80, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, (int) (3.0F / (rand.nextFloat() * 0.6F + 0.4F)), 177);
-
-    }
-
-    @Override
-    public boolean hasCapability(Capability<?> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing == null || facing != EnumFacing.DOWN) {
-            return true;
-        }
-        return super.hasCapability(capability, facing);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Nullable
-    @Override
-    public <T> T getCapability(Capability<T> capability, @Nullable EnumFacing facing) {
-        if (capability == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && facing == null || facing != EnumFacing.DOWN) {
-            return (T) this;
-        }
-        return super.getCapability(capability, facing);
-    }
-
-    @Override
-    public void readFromNBT(NBTTagCompound compound) {
-        if (compound.hasKey("item")) {
-            this.internalStack = new ItemStack(compound.getCompoundTag("item"));
-        } else {
-            this.internalStack = ItemStack.EMPTY;
-        }
-        this.bloodStored = compound.getInteger("blood_stored");
-        this.chargingTicks = compound.getInteger("charging_ticks");
-    }
-
-    public void markDirtyAndUpdateClient() {
-        super.markDirty();
-        IBlockState block = this.world.getBlockState(this.pos);
-        world.notifyBlockUpdate(pos, block, block, 3);
-    }
-
     @Nonnull
     @Override
     public NBTTagCompound writeToNBT(NBTTagCompound compound) {
@@ -186,24 +212,6 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
         compound.setInteger("charging_ticks", chargingTicks);
         return super.writeToNBT(compound);
     }
-
-    @Nullable
-    @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(getPos(), 1, getUpdateTag());
-    }
-
-    @Nonnull
-    @Override
-    public NBTTagCompound getUpdateTag() {
-        return writeToNBT(new NBTTagCompound());
-    }
-
-    @Override
-    public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
-        handleUpdateTag(pkt.getNbtCompound());
-    }
-
 
     private void drainBlood() {
         IFluidHandler handler = FluidUtil.getFluidHandler(this.world, this.pos.down(), EnumFacing.UP);
@@ -218,48 +226,37 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
         }
     }
 
-    @Override
-    public int getSlots() {
-        return 1;
+    /**
+     * Tries to retrieve a {@link IBloodChargeable} instance from the given stack
+     *
+     * @return May be null
+     */
+    @Nullable
+    private IBloodChargeable getChargeItem(@Nonnull ItemStack stack) {
+        return stack.isEmpty() ? null : (stack.getItem() instanceof IBloodChargeable ? (IBloodChargeable) stack.getItem() : null);
     }
 
-    @Nonnull
-    @Override
-    public ItemStack getStackInSlot(int slot) {
-        return slot == 0 ? internalStack : ItemStack.EMPTY;
-    }
-
-    @Nonnull
-    @Override
-    public ItemStack insertItem(int slot, @Nonnull ItemStack stack, boolean simulate) {
-        if (slot == 0) {
-            if (this.internalStack.isEmpty()) {
-                if (!simulate) {
-                    setStack(stack);
-                    this.markDirtyAndUpdateClient();
-                }
-                return ItemStack.EMPTY;
-            }
+    /**
+     * Set the held stack.
+     *
+     * @return If successful
+     */
+    private boolean setStack(@Nonnull ItemStack stack) {
+        this.chargingTicks = 0;
+        if (this.internalStack.isEmpty()) {
+            this.internalStack = stack;
+            return true;
         }
-        return stack;
+        return false;
     }
 
-    @Nonnull
-    @Override
-    public ItemStack extractItem(int slot, int amount, boolean simulate) {
-        ItemStack stack = this.internalStack;
-        if (slot == 0 && !stack.isEmpty()) {
-            if (!simulate) {
-                this.removeStack();
-                this.markDirtyAndUpdateClient();
-            }
-            return simulate ? stack.copy() : stack;
-        }
-        return ItemStack.EMPTY;
-    }
+    @SideOnly(Side.CLIENT)
+    private void spawnChargedParticle() {
+        Vec3d pos = new Vec3d(this.getPos()).addVector(0.5, 0.8, 0.5);
+        VampLib.proxy.getParticleHandler().spawnParticle(this.getWorld(), ModParticles.FLYING_BLOOD, this.pos.getX() + 0.20, this.getPos().getY() + 0.65, this.getPos().getZ() + 0.20, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), 177);
+        VampLib.proxy.getParticleHandler().spawnParticle(this.getWorld(), ModParticles.FLYING_BLOOD, this.pos.getX() + 0.80, this.getPos().getY() + 0.65, this.getPos().getZ() + 0.20, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), 177);
+        VampLib.proxy.getParticleHandler().spawnParticle(this.getWorld(), ModParticles.FLYING_BLOOD, this.pos.getX() + 0.20, this.getPos().getY() + 0.65, this.getPos().getZ() + 0.80, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, (int) (4.0F / (rand.nextFloat() * 0.9F + 0.1F)), 177);
+        VampLib.proxy.getParticleHandler().spawnParticle(this.getWorld(), ModParticles.FLYING_BLOOD, this.pos.getX() + 0.80, this.getPos().getY() + 0.65, this.getPos().getZ() + 0.80, pos.x + (1f - rand.nextFloat()) * 0.1, pos.y + (1f - rand.nextFloat()) * 0.2, pos.z + (1f - rand.nextFloat()) * 0.1, (int) (3.0F / (rand.nextFloat() * 0.6F + 0.4F)), 177);
 
-    @Override
-    public int getSlotLimit(int slot) {
-        return 1;
     }
 }

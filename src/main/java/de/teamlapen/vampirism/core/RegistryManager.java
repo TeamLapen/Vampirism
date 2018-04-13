@@ -167,5 +167,4 @@ public class RegistryManager implements IInitListener {
     }
 
 
-
 }

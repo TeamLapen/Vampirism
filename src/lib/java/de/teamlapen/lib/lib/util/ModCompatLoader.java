@@ -30,16 +30,6 @@ public class ModCompatLoader implements IInitListener {
     private Configuration config;
 
     /**
-     * May be null before INIT
-     *
-     * @return The mod compat config file
-     */
-    @Nullable
-    public Configuration getConfig() {
-        return config;
-    }
-
-    /**
      * @param configName Name for the config file. Can be a file in a folder
      */
     public ModCompatLoader(String configName) {
@@ -60,6 +50,20 @@ public class ModCompatLoader implements IInitListener {
 
     public List<IModCompat> getAvailableModCompats() {
         return availableModCompats;
+    }
+
+    /**
+     * May be null before INIT
+     *
+     * @return The mod compat config file
+     */
+    @Nullable
+    public Configuration getConfig() {
+        return config;
+    }
+
+    public List<IModCompat> getLoadedModCompats() {
+        return ImmutableList.copyOf(loadedModCompats);
     }
 
     @Override
@@ -109,9 +113,5 @@ public class ModCompatLoader implements IInitListener {
         }
         loadedModCompats = loaded;
         availableModCompats = null;
-    }
-
-    public List<IModCompat> getLoadedModCompats() {
-        return ImmutableList.copyOf(loadedModCompats);
     }
 }

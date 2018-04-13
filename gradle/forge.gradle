@@ -39,7 +39,7 @@ task crowdin(type: CrowdinDownload) {
 
 dependencies {
     deobfCompile "mezz.jei:jei_" + config.jei_version + ":api"
-    optionalRuntime "mezz.jei:jei_" +  config.jei_version
+    optionalRuntime "mezz.jei:jei_" + config.jei_version
     //deobfCompile 'mcp.mobius.waila:Waila:' + config.waila_version
     //deobfCompile 'Waila:Waila:1.7.1_1.11.2' //Backup Waila on curseforge
     deobfCompile 'info.amerifrance.guideapi:Guide-API:' + config.guide_api_version
@@ -80,7 +80,7 @@ processResources {
     exclude '**/Thumbs.db'
 }
 
-task renameLanguageFiles(type: Copy){
+task renameLanguageFiles(type: Copy) {
     mustRunAfter 'crowdin'
     from crowdin.output
     into 'build/translations'
@@ -95,14 +95,14 @@ jar {
 
     dependsOn 'crowdin'
     dependsOn 'renameLanguageFiles'
-    from{
-        fileTree('build/translations').matching{
+    from {
+        fileTree('build/translations').matching {
             exclude "**/en_US.lang"
         }
     }
 
     manifest {
-      attributes 'FMLAT':'vampirism_at.cfg'
+        attributes 'FMLAT': 'vampirism_at.cfg'
     }
 
 }

@@ -27,7 +27,6 @@ public class SkillNode {
     }
 
     /**
-     *
      * DO NOT USE. Register your factions root skill with the same reg name as the faction and it will be created automatically
      * Creates a root node for the given faction
      */
@@ -40,6 +39,7 @@ public class SkillNode {
     /**
      * DO NOT USE. Use {@link ISkillManager#createSkillNode(SkillNode, ISkill...)} instead
      * Creates a child nodes with one or multiple xor skills.
+     *
      * @param elements One or more xor skills
      */
     @Deprecated

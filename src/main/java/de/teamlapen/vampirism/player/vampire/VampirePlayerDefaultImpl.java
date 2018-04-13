@@ -68,11 +68,6 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
-    public boolean wantsBlood() {
-        return false;
-    }
-
-    @Override
     public IActionHandler<IVampirePlayer> getActionHandler() {
         return null;
     }
@@ -89,13 +84,13 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
-    public IBloodStats getBloodStats() {
-        return null;
+    public float getBloodSaturation() {
+        return 0;
     }
 
     @Override
-    public float getBloodSaturation() {
-        return 0;
+    public IBloodStats getBloodStats() {
+        return null;
     }
 
     @Override
@@ -195,7 +190,6 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
         return false;
     }
 
-
     @Override
     public boolean isIgnoringSundamage() {
         return false;
@@ -244,5 +238,10 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     @Override
     public void wakeUpPlayer(boolean immediately, boolean updateWorldFlag, boolean setSpawn) {
 
+    }
+
+    @Override
+    public boolean wantsBlood() {
+        return false;
     }
 }

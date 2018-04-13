@@ -368,11 +368,11 @@ public class UtilLib {
 
     /**
      * Returns null, but makes it look like non null
-     *
+     * <p>
      * If this causes issues when compiling with IntelliJ check the following link and rebuild the entire project afterwards
-     *
+     * <p>
      * https://github.com/TeamLapen/Vampirism#intellij
-     *
+     * <p>
      * Make sure Settings -> Build, Execution, Deployment -> Compiler -> 'Add runtime assertions for not-null-annotated methods and parameters' is disabled (Unfortunately required)
      */
     @SuppressWarnings("ConstantConditions")

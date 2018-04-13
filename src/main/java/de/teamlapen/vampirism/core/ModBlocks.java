@@ -66,7 +66,6 @@ public class ModBlocks {
     private static final Map<String, String> OLD_TO_NEW_TILE_MAP = Maps.newHashMap();
 
 
-
     private static void registerTiles() {
         registerTileEntity(TileTent.class, "tent", "VampirismTent");
         registerTileEntity(TileCoffin.class, "coffin", "VampirismCoffin");

@@ -17,6 +17,14 @@ import java.util.List;
  */
 public interface IItemWithTierNBTImpl extends IItemWithTier {
 
+    @SideOnly(Side.CLIENT)
+    default void addTierInformation(ItemStack stack, List<String> tooltip) {
+        TIER t = getTier(stack);
+        if (t != TIER.NORMAL) {
+            tooltip.add(TextFormatting.AQUA + UtilLib.translate("text.vampirism.item_tier." + t.name().toLowerCase()));
+        }
+    }
+
     @Override
     default TIER getTier(@Nonnull ItemStack stack) {
         NBTTagCompound tag = UtilLib.checkNBT(stack);
@@ -37,13 +45,5 @@ public interface IItemWithTierNBTImpl extends IItemWithTier {
         NBTTagCompound tag = UtilLib.checkNBT(stack);
         tag.setString("tier", tier.name());
         return stack;
-    }
-
-    @SideOnly(Side.CLIENT)
-    default void addTierInformation(ItemStack stack, List<String> tooltip) {
-        TIER t = getTier(stack);
-        if (t != TIER.NORMAL) {
-            tooltip.add(TextFormatting.AQUA + UtilLib.translate("text.vampirism.item_tier." + t.name().toLowerCase()));
-        }
     }
 }

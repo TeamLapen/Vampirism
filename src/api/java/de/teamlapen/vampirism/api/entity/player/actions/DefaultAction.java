@@ -16,7 +16,7 @@ public abstract class DefaultAction<T extends IFactionPlayer> extends IForgeRegi
 
     /**
      * @param faction
-     * @param icons If null Vampirism's default one will be used
+     * @param icons   If null Vampirism's default one will be used
      */
     public DefaultAction(IPlayableFaction<T> faction, ResourceLocation icons) {
         this.icons = icons;

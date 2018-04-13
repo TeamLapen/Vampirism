@@ -20,15 +20,15 @@ public class RenderSpecialDraculaHalloween extends RenderLiving<EntityDraculaHal
         this.addLayer(new LayerGlowingEyes<>(this, new ResourceLocation(REFERENCE.MODID, "textures/entity/dracula_eyes.png")).setBrightness(160f));
     }
 
+    @Override
+    public void doRender(EntityDraculaHalloween entity, double x, double y, double z, float entityYaw, float partialTicks) {
+        super.doRender(entity, x, y, z, entityYaw, partialTicks);
+    }
+
     @Nullable
     @Override
     protected ResourceLocation getEntityTexture(EntityDraculaHalloween entity) {
         return texture;
-    }
-
-    @Override
-    public void doRender(EntityDraculaHalloween entity, double x, double y, double z, float entityYaw, float partialTicks) {
-        super.doRender(entity, x, y, z, entityYaw, partialTicks);
     }
 
     @Override

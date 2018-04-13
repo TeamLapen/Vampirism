@@ -51,35 +51,6 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         CapabilityManager.INSTANCE.register(IExtendedCreatureVampirism.class, new Storage(), ExtendedCreatureDefaultImpl.class);
     }
 
-    /**
-     * If the blood value of this creatures should be calculated
-     */
-    private boolean markForBloodCalculation = false;
-
-    private final EntityCreature entity;
-    private int maxBlood;
-    private final boolean canBecomeVampire;
-    /**
-     * Stores the current blood value.
-     * If this is -1, this entity never had any blood and this value cannot be changed
-     */
-    private int blood;
-    public ExtendedCreature(EntityCreature entity) {
-        this.entity = entity;
-        BiteableEntry entry = VampirismAPI.entityRegistry().getEntry(entity);
-        if (entry != null && entry.blood > 0) {
-            maxBlood = entry.blood;
-            canBecomeVampire = entry.convertible;
-        } else {
-            if (entry == null) {
-                markForBloodCalculation = true;
-            }
-            maxBlood = -1;
-            canBecomeVampire = false;
-        }
-        blood = maxBlood;
-    }
-
     @SuppressWarnings("ConstantConditions")
     public static <Q extends EntityCreature> ICapabilityProvider createNewCapability(final Q creature) {
         return new ICapabilitySerializable<NBTTagCompound>() {
@@ -108,6 +79,35 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
                 return (NBTTagCompound) CAP.getStorage().writeNBT(CAP, inst, null);
             }
         };
+    }
+
+    private final EntityCreature entity;
+    private final boolean canBecomeVampire;
+    /**
+     * If the blood value of this creatures should be calculated
+     */
+    private boolean markForBloodCalculation = false;
+    private int maxBlood;
+    /**
+     * Stores the current blood value.
+     * If this is -1, this entity never had any blood and this value cannot be changed
+     */
+    private int blood;
+
+    public ExtendedCreature(EntityCreature entity) {
+        this.entity = entity;
+        BiteableEntry entry = VampirismAPI.entityRegistry().getEntry(entity);
+        if (entry != null && entry.blood > 0) {
+            maxBlood = entry.blood;
+            canBecomeVampire = entry.convertible;
+        } else {
+            if (entry == null) {
+                markForBloodCalculation = true;
+            }
+            maxBlood = -1;
+            canBecomeVampire = false;
+        }
+        blood = maxBlood;
     }
 
     @Override
@@ -157,6 +157,14 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     @Override
     public int getMaxBlood() {
         return maxBlood;
+    }
+
+    /**
+     * Set's maximum blood and current blood
+     */
+    private void setMaxBlood(int blood) {
+        maxBlood = blood;
+        this.blood = blood;
     }
 
     @Override
@@ -277,14 +285,6 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         if (compound.hasKey(KEY_BLOOD)) {
             setBlood(compound.getInteger(KEY_BLOOD));
         }
-    }
-
-    /**
-     * Set's maximum blood and current blood
-     */
-    private void setMaxBlood(int blood) {
-        maxBlood = blood;
-        this.blood = blood;
     }
 
     private void saveNBTData(NBTTagCompound compound) {

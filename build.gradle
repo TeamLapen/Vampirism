@@ -52,10 +52,11 @@ sourceSets
         {
             main {
                 java {
-                        srcDirs = ["$projectDir/src/main/java", "$projectDir/src/lib/java"] }
+                    srcDirs = ["$projectDir/src/main/java", "$projectDir/src/lib/java"]
+                }
                 resources {
-                        srcDirs = ["$projectDir/src/main/resources", "$projectDir/src/lib/resources"]
-                    }
+                    srcDirs = ["$projectDir/src/main/resources", "$projectDir/src/lib/resources"]
+                }
             }
             api {
                 java {
@@ -74,4 +75,4 @@ sourceSets
                 }
             }
 
-}
+        }

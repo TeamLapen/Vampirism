@@ -40,17 +40,17 @@ public abstract class VampirismBlockContainer extends BlockContainer {
         this.registeredName = regName;
     }
 
+    @SideOnly(Side.CLIENT)
+    @Override
+    public final void addInformation(ItemStack stack, @Nullable World playerIn, List<String> tooltip, ITooltipFlag advanced) {
+        this.addInformation(stack, Minecraft.getMinecraft().player, tooltip, advanced.isAdvanced());
+    }
+
     /**
      * @return The name this block is registered in the GameRegistry
      */
     public String getRegisteredName() {
         return registeredName;
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    public final void addInformation(ItemStack stack, @Nullable World playerIn, List<String> tooltip, ITooltipFlag advanced) {
-        this.addInformation(stack, Minecraft.getMinecraft().player, tooltip, advanced.isAdvanced());
     }
 
     /**

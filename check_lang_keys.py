@@ -21,67 +21,66 @@
 import os
 import re
 
+
 def readKeys(lines):
     keys = []
     for line in lines:
         if line.startswith('#'):
             continue
-        parts=line.split('=')
-        if parts and len(parts)==2:
+        parts = line.split('=')
+        if parts and len(parts) == 2:
             keys.append(parts[0])
     return keys
 
 
-def checkSourceFile(filename,sourcelines, keys):
+def checkSourceFile(filename, sourcelines, keys):
     missing = []
-    for n,line in enumerate(sourcelines):
+    for n, line in enumerate(sourcelines):
 
-        line = re.sub(res_regex,"",line)
+        line = re.sub(res_regex, "", line)
         matches = re.finditer(lang_key_regex, line)
         for match in matches:
-            key=match.group(1)
+            key = match.group(1)
             if key not in keys:
-                print("Missing '",key,"' for '",filename,"' at line ",n)
+                print("Missing '", key, "' for '", filename, "' at line ", n)
                 missing.append(key)
     return missing
 
+
 def checkKeys(keys):
     for key in keys:
-        if not re.match(lang_key_regex, '"'+key+'"'):
+        if not re.match(lang_key_regex, '"' + key + '"'):
             if re.search(vampirism_regex, key) and key != "itemGroup.vampirism":
-                print("Language key '",key,"' does not match expected format")
+                print("Language key '", key, "' does not match expected format")
     pass
 
 
 print("Checking for language keys without a string")
 
-keys=[]
-lang_key_regex=r'"(\w+\.vampirism\.[a-z\._\d]*[a-z\d])"'  # Capture all language keys style string. They have to end with a word character
-vampirism_regex=r'vampirism'
-res_regex=r'new ResourceLocation\("[a-z\._\d]+"\)'
+keys = []
+lang_key_regex = r'"(\w+\.vampirism\.[a-z\._\d]*[a-z\d])"'  # Capture all language keys style string. They have to end with a word character
+vampirism_regex = r'vampirism'
+res_regex = r'new ResourceLocation\("[a-z\._\d]+"\)'
 
-with open('src/main/resources/assets/vampirism/lang/en_US.lang','r') as langfile:
+with open('src/main/resources/assets/vampirism/lang/en_US.lang', 'r') as langfile:
     keys.extend(readKeys(langfile.readlines()))
 
-with open('src/main/resources/assets/vampirismguide/lang/en_US.lang','r') as langfile:
+with open('src/main/resources/assets/vampirismguide/lang/en_US.lang', 'r') as langfile:
     keys.extend(readKeys(langfile.readlines()))
 
 checkKeys(keys)
 
 missing = []
 
-
 for root, dirs, filenames in os.walk('src'):
     for f in filenames:
         if f.endswith('.java'):
-            with open(os.path.join(root,f), 'r') as sourcefile:
-                missing.extend(checkSourceFile(os.path.join(root,f),sourcefile.readlines(),keys))
+            with open(os.path.join(root, f), 'r') as sourcefile:
+                missing.extend(checkSourceFile(os.path.join(root, f), sourcefile.readlines(), keys))
 
-if len(missing) >0:
+if len(missing) > 0:
     print("WARNING: Missing strings for some language keys")
     exit(1)
 else:
     print("All language keys found have a valid string")
     exit(0)
-
-

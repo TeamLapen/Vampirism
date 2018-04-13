@@ -64,6 +64,16 @@ public class EntityHunterVillager extends EntityVillagerVampirism implements IHu
     }
 
     @Override
+    public Entity makeCalm() {
+        EntityVillager villager = new EntityVillager(world);
+        NBTTagCompound nbt = new NBTTagCompound();
+        this.writeToNBT(nbt);
+        villager.readFromNBT(nbt);
+        villager.setUniqueId(MathHelper.getRandomUUID(villager.getRNG()));
+        return villager;
+    }
+
+    @Override
     public IEntityLivingData onInitialSpawn(DifficultyInstance difficulty, IEntityLivingData livingdata) {
         IEntityLivingData data = super.onInitialSpawn(difficulty, livingdata);
         this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.pitchfork));
@@ -101,15 +111,5 @@ public class EntityHunterVillager extends EntityVillagerVampirism implements IHu
                 return super.getTargetDistance() / 2;
             }
         });
-    }
-
-    @Override
-    public Entity makeCalm() {
-        EntityVillager villager = new EntityVillager(world);
-        NBTTagCompound nbt = new NBTTagCompound();
-        this.writeToNBT(nbt);
-        villager.readFromNBT(nbt);
-        villager.setUniqueId(MathHelper.getRandomUUID(villager.getRNG()));
-        return villager;
     }
 }

@@ -31,23 +31,6 @@ import java.util.Map;
 public class VersionChecker implements Runnable {
     private final static String TAG = "VersionChecker";
 
-    private final boolean stats;
-
-    protected VersionChecker(String update_file_url, String currentVersion, boolean stats) {
-        UPDATE_FILE_URL = update_file_url;
-        this.currentVersion = currentVersion;
-        versionInfo = new VersionInfo(currentVersion);
-        if (stats) {
-            this.stats = FMLCommonHandler.instance().getEffectiveSide().isClient() ? Minecraft.getMinecraft().isSnooperEnabled() : FMLCommonHandler.instance().getMinecraftServerInstance().isSnooperEnabled();
-        } else {
-            this.stats = false;
-        }
-    }
-
-    private final String UPDATE_FILE_URL;
-    private final VersionInfo versionInfo;
-    private final String currentVersion;
-
     /**
      * Use the other one
      */
@@ -63,13 +46,29 @@ public class VersionChecker implements Runnable {
      *
      * @param updateUrl
      * @param currentVersion
-     * @param stats if to send very basic stats
+     * @param stats          if to send very basic stats
      * @return a version info object, which is update when the check is finished
      */
     public static VersionInfo executeVersionCheck(String updateUrl, String currentVersion, boolean stats) {
         VersionChecker checker = new VersionChecker(updateUrl, currentVersion, stats);
         new Thread(checker).start();
         return checker.versionInfo;
+    }
+
+    private final boolean stats;
+    private final String UPDATE_FILE_URL;
+    private final VersionInfo versionInfo;
+    private final String currentVersion;
+
+    protected VersionChecker(String update_file_url, String currentVersion, boolean stats) {
+        UPDATE_FILE_URL = update_file_url;
+        this.currentVersion = currentVersion;
+        versionInfo = new VersionInfo(currentVersion);
+        if (stats) {
+            this.stats = FMLCommonHandler.instance().getEffectiveSide().isClient() ? Minecraft.getMinecraft().isSnooperEnabled() : FMLCommonHandler.instance().getMinecraftServerInstance().isSnooperEnabled();
+        } else {
+            this.stats = false;
+        }
     }
 
     @Override
@@ -91,26 +90,6 @@ public class VersionChecker implements Runnable {
             VampLib.log.e(TAG, e, "Failed to parse update file. It seems not well formatted");
         }
         versionInfo.checked = true;
-    }
-
-    private String getStatsString() {
-        try {
-            String b = "?" +
-                    "current=" +
-                    URLEncoder.encode(currentVersion.trim(), "UTF-8") +
-                    '&' +
-                    "mc=" +
-                    URLEncoder.encode(Loader.MC_VERSION, "UTF-8") +
-                    '&' +
-                    "count=" +
-                    URLEncoder.encode("" + Loader.instance().getActiveModList().size(), "UTF-8") +
-                    '&' +
-                    "side=" +
-                    (FMLCommonHandler.instance().getEffectiveSide().isClient() ? "client" : "server");
-            return b;
-        } catch (UnsupportedEncodingException e) {
-            return "";
-        }
     }
 
     private void check(URL url) throws IOException, JsonSyntaxException {
@@ -193,6 +172,26 @@ public class VersionChecker implements Runnable {
         }
 
 
+    }
+
+    private String getStatsString() {
+        try {
+            String b = "?" +
+                    "current=" +
+                    URLEncoder.encode(currentVersion.trim(), "UTF-8") +
+                    '&' +
+                    "mc=" +
+                    URLEncoder.encode(Loader.MC_VERSION, "UTF-8") +
+                    '&' +
+                    "count=" +
+                    URLEncoder.encode("" + Loader.instance().getActiveModList().size(), "UTF-8") +
+                    '&' +
+                    "side=" +
+                    (FMLCommonHandler.instance().getEffectiveSide().isClient() ? "client" : "server");
+            return b;
+        } catch (UnsupportedEncodingException e) {
+            return "";
+        }
     }
 
     /**

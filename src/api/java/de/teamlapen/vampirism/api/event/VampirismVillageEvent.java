@@ -81,9 +81,9 @@ public abstract class VampirismVillageEvent extends Event {
 
         /**
          * If the villager will be converted to a aggressive version afterwards
-         *
+         * <p>
          * Default: Is true if the village is angry. Can be overriden by {@link #setWillBeAggressive(boolean)}
-         *
+         * <p>
          * If villager becomes vampire this is ignored
          */
         public boolean isWillBeAggressive() {
@@ -109,6 +109,7 @@ public abstract class VampirismVillageEvent extends Event {
             this.willBeVampire = willBeVampire;
         }
     }
+
     /**
      * Fired when a normal villager should be converted to angry villager.
      * You can set a custom replacement and cancel this event to make it take effect.
@@ -124,6 +125,11 @@ public abstract class VampirismVillageEvent extends Event {
         public MakeAggressive(@Nullable IVampirismVillage village, @Nonnull EntityVillager villager) {
             super(village);
             this.oldVillager = villager;
+        }
+
+        @Nullable
+        public IAggressiveVillager getAggressiveVillager() {
+            return aggressiveVillager;
         }
 
         /**
@@ -144,11 +150,6 @@ public abstract class VampirismVillageEvent extends Event {
                 throw new IllegalArgumentException("Aggressive villager must be a instanceof EntityVillager");
             }
             this.aggressiveVillager = aggressiveVillager;
-        }
-
-        @Nullable
-        public IAggressiveVillager getAggressiveVillager() {
-            return aggressiveVillager;
         }
     }
 }

@@ -115,8 +115,8 @@ public class VampirismMod {
         return Configs.realism_mode;
     }
 
-    private final RegistryManager registryManager;
     public final ModCompatLoader modCompatLoader = new ModCompatLoader(REFERENCE.MODID + "/vampirism_mod_compat.cfg");
+    private final RegistryManager registryManager;
     private VersionChecker.VersionInfo versionInfo;
 
     public VampirismMod() {
@@ -175,16 +175,16 @@ public class VampirismMod {
     }
 
     @Mod.EventHandler
+    public void interModComm(FMLInterModComms.IMCEvent event) {
+        IMCHandler.handleInterModMessage(event.getMessages());
+    }
+
+    @Mod.EventHandler
     public void onServerStart(FMLServerStartingEvent event) {
         event.registerServerCommand(new VampirismCommand());
         event.registerServerCommand(new TestCommand());
         VampirismEntityRegistry.getBiteableEntryManager().initDynamic();
         BloodValueLoader.onServerStarting(event.getServer());
-    }
-
-    @Mod.EventHandler
-    public void onServerStopping(FMLServerStoppingEvent event) {
-        BloodValueLoader.onServerStopping();
     }
 
     @Mod.EventHandler
@@ -194,6 +194,11 @@ public class VampirismMod {
             VampirismMod.log.w("LootTables", "Failed to inject all loottables");
             VampirismMod.log.w("LootTables", "-------------------------------");
         }
+    }
+
+    @Mod.EventHandler
+    public void onServerStopping(FMLServerStoppingEvent event) {
+        BloodValueLoader.onServerStopping();
     }
 
     @Mod.EventHandler
@@ -207,11 +212,6 @@ public class VampirismMod {
             Tests.runBackgroundTests();
         }
 
-    }
-
-    @Mod.EventHandler
-    public void interModComm(FMLInterModComms.IMCEvent event) {
-        IMCHandler.handleInterModMessage(event.getMessages());
     }
 
     @Mod.EventHandler

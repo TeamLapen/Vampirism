@@ -38,6 +38,11 @@ class VampirismVillageDefaultImpl implements IVampirismVillage {
     }
 
     @Override
+    public boolean isOvertaken() {
+        return false;
+    }
+
+    @Override
     public void onVillagerBitten(IVampire vampire) {
 
     }
@@ -50,11 +55,6 @@ class VampirismVillageDefaultImpl implements IVampirismVillage {
     @Override
     public void onVillagerConverted(@Nullable IVampire vampire) {
 
-    }
-
-    @Override
-    public boolean isOvertaken() {
-        return false;
     }
 
     @Override

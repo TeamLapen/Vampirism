@@ -64,7 +64,6 @@ public class LayerVampirePlayerHead implements LayerRenderer<AbstractClientPlaye
     }
 
 
-
     private void renderNormalEyes(int eyeType, float scale) {
         this.playerRenderer.bindTexture(eyeOverlays[eyeType]);
         this.playerRenderer.getMainModel().bipedHead.render(scale);

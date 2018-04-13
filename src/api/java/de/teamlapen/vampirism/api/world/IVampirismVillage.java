@@ -25,6 +25,10 @@ public interface IVampirismVillage {
 
     Village getVillage();
 
+    /**
+     * @return If the village is overtaken by vampires
+     */
+    boolean isOvertaken();
 
     /**
      * Call this if a villager in this village has been bitten
@@ -46,11 +50,6 @@ public interface IVampirismVillage {
      * @param vampire The biter or null if unknown
      */
     void onVillagerConverted(@Nullable IVampire vampire);
-
-    /**
-     * @return If the village is overtaken by vampires
-     */
-    boolean isOvertaken();
 
     /**
      * Set if the village is overtaken by vampires

@@ -99,6 +99,7 @@ public interface IVampirismEntityRegistry {
 
     /**
      * Add blood values that override previously registered values.
+     *
      * @param values
      */
     void overrideBloodValues(Map<ResourceLocation, Integer> values);

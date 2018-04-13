@@ -79,6 +79,11 @@ public class SundamageRegistry implements ISundamageRegistry {
         return r == null ? defaultSundamage : r;
     }
 
+    @Override
+    public boolean isGettingSundamage(EntityLivingBase entity) {
+        return Helper.gettingSundamge(entity);
+    }
+
     @SideOnly(Side.CLIENT)
     public void readFromNBTClient(NBTTagCompound nbt) {
         if (nbt.hasKey("sundamage")) {
@@ -150,10 +155,5 @@ public class SundamageRegistry implements ISundamageRegistry {
         sundamage.setTag("biomes", biomes);
         sundamage.setBoolean("default", defaultSundamage);
         nbt.setTag("sundamage", sundamage);
-    }
-
-    @Override
-    public boolean isGettingSundamage(EntityLivingBase entity) {
-        return Helper.gettingSundamge(entity);
     }
 }

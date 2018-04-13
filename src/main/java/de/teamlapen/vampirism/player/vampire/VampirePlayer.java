@@ -125,6 +125,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
         };
     }
+
     private final BloodStats bloodStats;
     private final ActionHandler<IVampirePlayer> actionHandler;
     private final SkillHandler<IVampirePlayer> skillHandler;

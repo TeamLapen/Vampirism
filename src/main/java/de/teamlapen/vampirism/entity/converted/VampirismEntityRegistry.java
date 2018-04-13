@@ -23,6 +23,22 @@ import java.util.function.Function;
 
 public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     /**
+     * Only available after post init
+     * Stores biteable entries
+     */
+    private static @Nullable
+    BiteableEntryManager biteableEntryManager;
+
+    /**
+     * Only available after post init
+     * <p>
+     * Biteable entries are stored here
+     */
+    public static BiteableEntryManager getBiteableEntryManager() {
+        return biteableEntryManager;
+    }
+
+    /**
      * Used to store blood values during init
      */
     private final Map<ResourceLocation, Integer> bloodValues = new HashMap<>();
@@ -30,7 +46,6 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
      * Used to store overriding values during init. Will override entries in {@link #bloodValues} after init
      */
     private final Map<ResourceLocation, Integer> overridingValues = new HashMap<>();
-
     /**
      * Used to store convertible handlers during init
      */
@@ -41,16 +56,8 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
      */
     private final Map<Class<? extends EntityCreature>, Function> extendedCreatureConstructors = new HashMap<>();
     private final String TAG = "VampirismEntityRegistry";
-
     private boolean finished = false;
     private ICreateDefaultConvertingHandler defaultConvertingHandlerCreator;
-
-    /**
-     * Only available after post init
-     * Stores biteable entries
-     */
-    private static @Nullable
-    BiteableEntryManager biteableEntryManager;
 
     @Override
     public void addBloodValue(ResourceLocation entityId, int value) {
@@ -85,15 +92,6 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         extendedCreatureConstructors.put(clazz, constructor);
     }
 
-    /**
-     * Only available after post init
-     *
-     * Biteable entries are stored here
-     */
-    public static BiteableEntryManager getBiteableEntryManager() {
-        return biteableEntryManager;
-    }
-
     @Override
     public
     @Nullable
@@ -105,26 +103,6 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
         }
         VampirismMod.log.w(TAG, "Failed to find convertible entry for %s", entity);
         return null;
-    }
-
-    @Override
-    @SideOnly(Side.CLIENT)
-    public Map<Class<? extends EntityCreature>, String> getConvertibleOverlay() {
-        return convertibleOverlay;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Nullable
-    @Override
-    public <T extends EntityCreature> Function<T, IExtendedCreatureVampirism> getCustomExtendedCreatureConstructor(T entity) {
-        return extendedCreatureConstructors.get(entity.getClass());
-    }
-
-
-    @Nullable
-    @Override
-    public BiteableEntry getEntry(EntityCreature creature) {
-        return getEntry(EntityList.getKey(creature));
     }
 
     /**
@@ -173,6 +151,31 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     }
 
     @Override
+    @SideOnly(Side.CLIENT)
+    public Map<Class<? extends EntityCreature>, String> getConvertibleOverlay() {
+        return convertibleOverlay;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Nullable
+    @Override
+    public <T extends EntityCreature> Function<T, IExtendedCreatureVampirism> getCustomExtendedCreatureConstructor(T entity) {
+        return extendedCreatureConstructors.get(entity.getClass());
+    }
+
+    @Nullable
+    @Override
+    public BiteableEntry getEntry(EntityCreature creature) {
+        return getEntry(EntityList.getKey(creature));
+    }
+
+    @Nullable
+    @Override
+    public BiteableEntry getEntry(ResourceLocation entity_id) {
+        return biteableEntryManager.get(entity_id);
+    }
+
+    @Override
     public void overrideBloodValues(Map<ResourceLocation, Integer> values) {
         overridingValues.putAll(values);
     }
@@ -185,11 +188,5 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
      */
     public void setDefaultConvertingHandlerCreator(ICreateDefaultConvertingHandler creator) {
         defaultConvertingHandlerCreator = creator;
-    }
-
-    @Nullable
-    @Override
-    public BiteableEntry getEntry(ResourceLocation entity_id) {
-        return biteableEntryManager.get(entity_id);
     }
 }

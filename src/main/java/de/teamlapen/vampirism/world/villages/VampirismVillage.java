@@ -86,6 +86,30 @@ public class VampirismVillage implements IVampirismVillage {
         };
     }
 
+    /**
+     * Try to replace the given villager with a aggressive version. Will spawn the replacement in the same world
+     * Posts the relevant event.
+     * If the event is canceled and no aggressive villager is set, nothing happens
+     *
+     * @return The aggressive version, if converted
+     */
+    public static @Nullable
+    IAggressiveVillager makeAggressive(EntityVillager villager, @Nullable VampirismVillage v) {
+        VampirismVillageEvent.MakeAggressive event = new VampirismVillageEvent.MakeAggressive(v, villager);
+        if (MinecraftForge.EVENT_BUS.post(event)) {
+            IAggressiveVillager aggressive = event.getAggressiveVillager();
+            if (aggressive != null) {
+                villager.getEntityWorld().spawnEntity((Entity) aggressive);
+                villager.setDead();
+            }
+            return aggressive;
+        } else {
+            EntityHunterVillager hunter = EntityHunterVillager.makeHunter(villager);
+            villager.getEntityWorld().spawnEntity(hunter);
+            villager.setDead();
+            return hunter;
+        }
+    }
     private final String TAG = "VampirismVillage";
     private final Village village;
     private BlockPos center = new BlockPos(0, 0, 0);
@@ -127,6 +151,21 @@ public class VampirismVillage implements IVampirismVillage {
         return aggressorVampire != null ? aggressorVampire.aggressorVampire : null;
     }
 
+    /**
+     * Forcefully overtake the village.
+     * Calms hunter villagers and kills hunters
+     * <p>
+     * Intended for cheat or debug
+     */
+    public void forcefullyOvertake() {
+        this.setIsOvertaken(true);
+        makeCalm(filterHunterVillagers(getAllVillager()));
+        List<EntityBasicHunter> hunters = getHunters();
+        for (EntityBasicHunter hunter : hunters) {
+            hunter.attackEntityFrom(DamageSource.MAGIC, 1000);
+        }
+    }
+
     @Override
     public AxisAlignedBB getBoundingBox() {
         int r = village.getVillageRadius();
@@ -148,43 +187,9 @@ public class VampirismVillage implements IVampirismVillage {
         return village;
     }
 
-    /**
-     * Try to replace the given villager with a aggressive version. Will spawn the replacement in the same world
-     * Posts the relevant event.
-     * If the event is canceled and no aggressive villager is set, nothing happens
-     *
-     * @return The aggressive version, if converted
-     */
-    public static @Nullable
-    IAggressiveVillager makeAggressive(EntityVillager villager, @Nullable VampirismVillage v) {
-        VampirismVillageEvent.MakeAggressive event = new VampirismVillageEvent.MakeAggressive(v, villager);
-        if (MinecraftForge.EVENT_BUS.post(event)) {
-            IAggressiveVillager aggressive = event.getAggressiveVillager();
-            if (aggressive != null) {
-                villager.getEntityWorld().spawnEntity((Entity) aggressive);
-                villager.setDead();
-            }
-            return aggressive;
-        } else {
-            EntityHunterVillager hunter = EntityHunterVillager.makeHunter(villager);
-            villager.getEntityWorld().spawnEntity(hunter);
-            villager.setDead();
-            return hunter;
-        }
-    }
-
     @Override
-    public void onVillagerBitten(IVampire vampire) {
-        recentlyBitten++;
-        dirty = true;
-        addOrRenewAggressor(vampire);
-    }
-
-    @Override
-    public void onVillagerBittenToDeath(IVampire vampire) {
-        recentlyBittenToDeath++;
-        dirty = true;
-        addOrRenewAggressor(vampire);
+    public boolean isOvertaken() {
+        return overtaken;
     }
 
     public String makeDebugString(BlockPos pos) {
@@ -214,37 +219,26 @@ public class VampirismVillage implements IVampirismVillage {
     }
 
     @Override
+    public void onVillagerBitten(IVampire vampire) {
+        recentlyBitten++;
+        dirty = true;
+        addOrRenewAggressor(vampire);
+    }
+
+    @Override
+    public void onVillagerBittenToDeath(IVampire vampire) {
+        recentlyBittenToDeath++;
+        dirty = true;
+        addOrRenewAggressor(vampire);
+    }
+
+    @Override
     public void onVillagerConverted(@Nullable IVampire vampire) {
         recentlyConverted++;
         dirty = true;
         if (vampire != null) {
             addOrRenewAggressor(vampire);
         }
-    }
-
-    /**
-     * Forcefully overtake the village.
-     * Calms hunter villagers and kills hunters
-     * <p>
-     * Intended for cheat or debug
-     */
-    public void forcefullyOvertake() {
-        this.setIsOvertaken(true);
-        makeCalm(filterHunterVillagers(getAllVillager()));
-        List<EntityBasicHunter> hunters = getHunters();
-        for (EntityBasicHunter hunter : hunters) {
-            hunter.attackEntityFrom(DamageSource.MAGIC, 1000);
-        }
-    }
-
-    @Override
-    public boolean isOvertaken() {
-        return overtaken;
-    }
-
-    @Override
-    public void setIsOvertaken(boolean overtaken) {
-        this.overtaken = overtaken;
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
@@ -254,6 +248,11 @@ public class VampirismVillage implements IVampirismVillage {
         recentlyConverted = nbt.getInteger("CONVERTED");
         recentlyBittenToDeath = nbt.getInteger("KILLED");
         overtaken = nbt.getBoolean("overtaken");
+    }
+
+    @Override
+    public void setIsOvertaken(boolean overtaken) {
+        this.overtaken = overtaken;
     }
 
     /**
@@ -355,6 +354,15 @@ public class VampirismVillage implements IVampirismVillage {
         return false;
     }
 
+    public void writeToNBT(NBTTagCompound nbt) {
+        UtilLib.write(nbt, "center", center);
+        nbt.setBoolean("AGR", agressive);
+        nbt.setInteger("BITTEN", recentlyBitten);
+        nbt.setInteger("CONVERTED", recentlyConverted);
+        nbt.setInteger("KILLED", recentlyBittenToDeath);
+        nbt.setBoolean("overtaken", overtaken);
+    }
+
     /**
      * Adds or updates the aggressor entry for the given vampire
      *
@@ -370,13 +378,11 @@ public class VampirismVillage implements IVampirismVillage {
         this.villageAggressorVampires.add(new VillageAggressorVampire(vampire.getRepresentingEntity(), vampire, this.tickCounter));
     }
 
-    public void writeToNBT(NBTTagCompound nbt) {
-        UtilLib.write(nbt, "center", center);
-        nbt.setBoolean("AGR", agressive);
-        nbt.setInteger("BITTEN", recentlyBitten);
-        nbt.setInteger("CONVERTED", recentlyConverted);
-        nbt.setInteger("KILLED", recentlyBittenToDeath);
-        nbt.setBoolean("overtaken", overtaken);
+    /**
+     * Calculates the aggressive counter values from recently bitten/converted/killed villagers
+     */
+    private int calculateAggressiveCounter() {
+        return overtaken ? 0 : recentlyBitten * Balance.village.BITTEN_AGGRESSIVE_FACTOR + recentlyBittenToDeath * Balance.village.BITTEN_TO_DEATH_AGGRESSIVE_FACTOR + recentlyConverted * Balance.village.CONVERTED_AGGRESSIVE_FACTOR;
     }
 
     /**
@@ -428,13 +434,6 @@ public class VampirismVillage implements IVampirismVillage {
         return village.world.getEntitiesWithinAABB(EntityVillager.class, getBoundingBox());
     }
 
-    /**
-     * Calculates the aggressive counter values from recently bitten/converted/killed villagers
-     */
-    private int calculateAggressiveCounter() {
-        return overtaken ? 0 : recentlyBitten * Balance.village.BITTEN_AGGRESSIVE_FACTOR + recentlyBittenToDeath * Balance.village.BITTEN_TO_DEATH_AGGRESSIVE_FACTOR + recentlyConverted * Balance.village.CONVERTED_AGGRESSIVE_FACTOR;
-    }
-
     private List<EntityBasicHunter> getHunters() {
         return village.world.getEntitiesWithinAABB(EntityBasicHunter.class, getBoundingBox());
     }
@@ -448,7 +447,7 @@ public class VampirismVillage implements IVampirismVillage {
         agressive = true;
         dirty = true;
         for (EntityVillager v : villagers) {
-            makeAggressive(v,this);
+            makeAggressive(v, this);
 
         }
     }

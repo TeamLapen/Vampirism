@@ -15,6 +15,7 @@ public interface ISkillManager {
 
     /**
      * Creates a new child node for the given parent
+     *
      * @param skills One or more xor skills
      * @return The created skill node
      */
@@ -22,6 +23,7 @@ public interface ISkillManager {
 
     /**
      * DO NOT CALL BEFORE INIT IS FINISHED
+     *
      * @param faction
      * @return The root skill node for the given faction
      */
