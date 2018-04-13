@@ -61,7 +61,7 @@ public class VampireAIBiteNearbyEntity extends EntityAIBase {
 
             for (Object o : list) {
                 creature = ExtendedCreature.get((EntityCreature) o);
-                if (creature.canBeBitten(vampire)) {
+                if (creature.canBeBitten(vampire) && !((EntityCreature) o).hasCustomName()) {
                     return true;
                 }
 
