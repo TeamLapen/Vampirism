@@ -70,7 +70,10 @@ public class RegistryManager implements IInitListener {
                 ModEntities.registerCustomExtendedCreatures();
                 break;
             case POST_INIT:
-                ModPotions.checkNightVision();
+                if (ModPotions.checkNightVision()) {
+                    ModPotions.fixNightVisionPotionTypes();
+                }
+                break;
             default:
                 break;
         }
