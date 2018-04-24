@@ -40,10 +40,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 /**
  * TODO make ritual survive load/save
@@ -201,11 +198,11 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         int tick = tagCompound.getInteger("tick");
         if (tick > 0 && player == null) {
             try {
-                this.player = (EntityPlayer) this.getWorld().getEntityByID(tagCompound.getInteger("playerId"));
+                this.player = this.getWorld().getPlayerEntityByUUID(UUID.fromString(tagCompound.getString("playerUUID")));
                 this.runningTick = tick;
                 this.targetLevel = VampirePlayer.get(player).getLevel() + 1;
             } catch (NullPointerException e) {
-                VampirismMod.log.w(TAG, "Failed to find player %d", tagCompound.getInteger("playerId"));
+                VampirismMod.log.w(TAG, "Failed to find player %d", tagCompound.getInteger("playerUUID"));
             }
         }
         if (player == null) {
@@ -244,7 +241,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
 
     @Override
     public void update() {
-        if (runningTick == DURATION_TICK) {
+        if (runningTick == DURATION_TICK && !world.isRemote) {
             VampirismMod.log.d(TAG, "Ritual started");
             consumeItems();
             this.markDirty();
@@ -300,8 +297,8 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
                 this.world.playSound(player.posX, player.posY, player.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F, true);
                 this.world.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);
             }
-            player.addPotionEffect(new PotionEffect(ModPotions.saturation, 400, 2));
 
+            player.addPotionEffect(new PotionEffect(ModPotions.saturation, 400, 2));
             player.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, 400, 2));
             player.addPotionEffect(new PotionEffect(MobEffects.STRENGTH, 400, 2));
         }
@@ -312,7 +309,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         NBTTagCompound nbt = super.writeToNBT(compound);
         nbt.setInteger("tick", runningTick);
         if (player != null) {
-            nbt.setInteger("playerId", player.getEntityId());
+            nbt.setString("playerUUID", player.getUniqueID().toString());
         }
         return nbt;
     }
