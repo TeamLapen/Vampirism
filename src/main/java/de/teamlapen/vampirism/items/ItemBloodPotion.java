@@ -35,7 +35,9 @@ public class ItemBloodPotion extends VampirismItem {
 
     @Override
     public void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        BloodPotions.addTooltip(stack, tooltip, HunterPlayer.get(playerIn));
+        if (playerIn != null) {
+            BloodPotions.addTooltip(stack, tooltip, HunterPlayer.get(playerIn));
+        }
     }
 
     @Override

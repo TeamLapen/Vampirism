@@ -44,7 +44,7 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     /**
      * Don't call before the construction event of the player entity is finished
      */
-    public static HunterPlayer get(EntityPlayer player) {
+    public static HunterPlayer get(@Nonnull EntityPlayer player) {
         return (HunterPlayer) player.getCapability(CAP, null);
     }
 
