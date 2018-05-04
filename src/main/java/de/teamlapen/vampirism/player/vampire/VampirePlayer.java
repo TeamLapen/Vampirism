@@ -458,7 +458,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             int sucked = (int) (amt * perc);
             player.getFoodStats().setFoodLevel(amt - sucked);
             player.addExhaustion(1000F);
-            if (!player.isPotionActive(ModPotions.sanguinare) && (!(biter instanceof IVampirePlayer) || Permissions.canPlayerTurnPlayer(((IVampirePlayer) biter).getRepresentingPlayer())) && Helper.canBecomeVampire(player)) {
+            if (!player.isPotionActive(ModPotions.sanguinare) && Helper.canTurnPlayer(biter, player) && Helper.canBecomeVampire(player)) {
                 PotionSanguinare.addRandom(player, true);
             }
             return sucked;

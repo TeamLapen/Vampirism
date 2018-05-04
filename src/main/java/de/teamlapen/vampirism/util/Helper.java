@@ -8,8 +8,11 @@ import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
+import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
+import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import net.minecraft.block.state.IBlockState;
@@ -25,6 +28,7 @@ import net.minecraft.world.biome.Biome;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 
 
@@ -112,6 +116,14 @@ public class Helper {
 
     public static boolean canBecomeVampire(EntityPlayer player) {
         return FactionPlayerHandler.get(player).canJoin(VReference.VAMPIRE_FACTION);
+    }
+
+    public static boolean canTurnPlayer(IVampire biter, @Nullable EntityPlayer target) {
+        if (biter instanceof IVampirePlayer) {
+            return Permissions.canPlayerTurnPlayer(((IVampirePlayer) biter).getRepresentingPlayer());
+        } else {
+            return !Configs.disable_mob_bite_infection;
+        }
     }
 
     /**
