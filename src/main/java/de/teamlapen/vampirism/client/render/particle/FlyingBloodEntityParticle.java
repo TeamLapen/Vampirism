@@ -52,9 +52,6 @@ public class FlyingBloodEntityParticle extends Particle {
         this.prevPosY = this.posY;
         this.prevPosZ = this.posZ;
 
-        if (this.particleAge++ >= this.particleMaxAge) {
-            this.setExpired();
-        }
         double wayX = entity.posX - this.posX;
         double wayY = entity.posY - this.posY;
         double wayZ = entity.posZ - this.posZ;
@@ -67,6 +64,10 @@ public class FlyingBloodEntityParticle extends Particle {
         }
 
         this.move(this.motionX, this.motionY, this.motionZ);
+
+        if (++this.particleAge >= this.particleMaxAge) {
+            this.setExpired();
+        }
     }
 
 }
