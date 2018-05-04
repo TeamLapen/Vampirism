@@ -87,6 +87,13 @@ public class InventoryContainer extends Container {
         return stack;
     }
 
+    @Override
+    protected boolean mergeItemStack(ItemStack stack, int startIndex, int endIndex, boolean reverseDirection) {
+        boolean result = super.mergeItemStack(stack, startIndex, endIndex, reverseDirection);
+        onInventoryChanged();//Always update inventory status. Dirty workaround. Probably triggering the update way to often.  @TODO-issue Rewrite inventory code
+        return result;
+    }
+
     public static class FilterSlot extends net.minecraft.inventory.Slot {
         InventorySlot.IItemSelector selector;
 

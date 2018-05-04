@@ -34,7 +34,11 @@ public abstract class SimpleInventory implements InventorySlot.IInventorySlotInv
 
     @Override
     public ItemStack decrStackSize(int index, int count) {
-        return ItemStackUtil.decrIInventoryStackSize(this, index, count);
+        ItemStack removed = ItemStackUtil.decrIInventoryStackSize(this, index, count);
+        if (!removed.isEmpty()) {
+            onContentChanged();
+        }
+        return removed;
     }
 
     @Override
@@ -116,6 +120,7 @@ public abstract class SimpleInventory implements InventorySlot.IInventorySlotInv
         if (this.slots[index] != null) {
             ItemStack itemstack = this.slots[index].stack;
             this.slots[index].stack = ItemStackUtil.getEmptyStack();
+            onContentChanged();
             return itemstack;
         } else {
             return ItemStackUtil.getEmptyStack();
