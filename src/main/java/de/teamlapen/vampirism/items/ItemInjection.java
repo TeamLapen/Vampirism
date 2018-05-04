@@ -5,7 +5,10 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
+import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.network.ModGuiHandler;
+import de.teamlapen.vampirism.potion.PotionSanguinare;
+import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
@@ -16,6 +19,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.world.World;
 
 /**
@@ -61,7 +65,17 @@ public class ItemInjection extends VampirismItem {
                 playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_REVERT_BACK, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);
 
             } else {
-                playerIn.addPotionEffect(new PotionEffect(MobEffects.POISON, 100));
+                if (Helper.canBecomeVampire(playerIn)) {
+                    if (Configs.disable_fang_infection) {
+                        playerIn.sendStatusMessage(new TextComponentTranslation("text.vampirism.deactivated_by_serveradmin"), true);
+                    } else {
+                        PotionSanguinare.addRandom(playerIn, true);
+                        playerIn.addPotionEffect(new PotionEffect(MobEffects.POISON, 60));
+                    }
+                } else if (Helper.isVampire(playerIn)) {
+                    playerIn.sendMessage(new TextComponentTranslation("text.vampirism.already_vampire"));
+
+                }
             }
             ItemStackUtil.decr(stack);
             return new ActionResult<>(EnumActionResult.SUCCESS, stack);
