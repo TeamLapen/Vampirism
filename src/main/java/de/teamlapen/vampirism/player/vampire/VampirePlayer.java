@@ -465,8 +465,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
         int amt = this.getBloodStats().getBloodLevel();
         int sucked = (int) (amt * perc);
-        this.getBloodStats().consumeBlood(amt - sucked);
-        sync(this.bloodStats.writeUpdate(new NBTTagCompound()), false);
+        this.getBloodStats().consumeBlood(sucked);
+        sync(this.bloodStats.writeUpdate(new NBTTagCompound()), true);
         return sucked;
     }
 
