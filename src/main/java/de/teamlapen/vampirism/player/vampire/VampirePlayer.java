@@ -939,7 +939,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public boolean wantsBlood() {
-        return bloodStats.needsBlood();
+        return getLevel() > 0 && bloodStats.needsBlood();
     }
 
     /**

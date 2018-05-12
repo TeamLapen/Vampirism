@@ -328,6 +328,7 @@ public class ModItems {
         BloodConversionRegistry.registerItem(ModItems.human_heart.getRegistryName(), 20 * VReference.FOOD_TO_FLUID_BLOOD);
         BloodConversionRegistry.registerItem(ModItems.weak_human_heart.getRegistryName(), 10 * VReference.FOOD_TO_FLUID_BLOOD);
         BloodConversionRegistry.registerItem(Items.BEEF.getRegistryName(), 2 * VReference.FOOD_TO_FLUID_BLOOD);
+        BloodConversionRegistry.registerItem(Items.MUTTON.getRegistryName(), VReference.FOOD_TO_FLUID_BLOOD);
         BloodConversionRegistry.registerItem(Items.PORKCHOP.getRegistryName(), VReference.FOOD_TO_FLUID_BLOOD);
     }
 }
