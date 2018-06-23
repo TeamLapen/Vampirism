@@ -34,6 +34,7 @@ public class BlockChurchAltar extends VampirismBlock {
         super(regName, Material.WOOD);
         this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
         this.setHasFacing();
+        setHardness(0.5F);
     }
 
     @Override

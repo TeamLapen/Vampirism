@@ -36,6 +36,7 @@ public class BlockMedChair extends VampirismBlock {
         super(name, Material.IRON);
         this.blockState.getBaseState().withProperty(PART, EnumPart.TOP).withProperty(FACING, EnumFacing.NORTH);
         this.setHasFacing();
+        setHardness(0.5F);
 
     }
 

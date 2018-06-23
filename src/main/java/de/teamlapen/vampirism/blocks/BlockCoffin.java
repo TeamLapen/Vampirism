@@ -61,6 +61,7 @@ public class BlockCoffin extends VampirismBlockContainer {
         this.setCreativeTab(null);
         this.setDefaultState(this.blockState.getBaseState().withProperty(OCCUPIED, Boolean.TRUE).withProperty(PART, EnumPartType.FOOT));
         this.setHasFacing();
+        setHardness(0.2F);
     }
 
     @Override

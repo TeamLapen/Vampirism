@@ -23,6 +23,7 @@ public class BlockBloodPotionTable extends VampirismBlock {
 
     public BlockBloodPotionTable() {
         super(regName, Material.IRON);
+        setHardness(1.0F);
     }
 
     @Override

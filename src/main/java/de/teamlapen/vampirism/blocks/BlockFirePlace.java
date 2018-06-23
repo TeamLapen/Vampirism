@@ -25,6 +25,7 @@ public class BlockFirePlace extends VampirismBlock {
     public BlockFirePlace() {
         super(regName, Material.WOOD);
         this.setLightLevel(1.0F);
+        setHardness(1.0F);
     }
 
     public boolean canPlaceBlockAt(World worldIn, BlockPos pos) {

@@ -21,16 +21,41 @@ public class BlockPedestal extends VampirismBlockContainer {
 
     public final static String regName = "blood_pedestal";
 
+    private static void takeItemPlayer(EntityPlayer player, EnumHand hand, ItemStack stack) {
+        player.setHeldItem(hand, stack);
+        if (stack.getItem() instanceof VampirismVampireSword) {
+            if (((VampirismVampireSword) stack.getItem()).isFullyCharged(stack)) {
+                ((VampirismVampireSword) stack.getItem()).tryName(stack, player);
+            }
+        }
+    }
+
     public BlockPedestal() {
         super(regName, Material.ROCK);
-        this.setHardness(5.0F);
+        this.setHardness(3.0F);
         this.setHarvestLevel("pickaxe", 2);
+    }
+
+    @Override
+    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
+        if (!worldIn.isRemote) {
+            TilePedestal tile = getTileEntity(worldIn, pos);
+            if (tile != null && tile.hasStack()) {
+                net.minecraft.inventory.InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.removeStack());
+            }
+        }
+        super.breakBlock(worldIn, pos, state);
     }
 
     @Nullable
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
         return new TilePedestal();
+    }
+
+    @Override
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+        return face == EnumFacing.DOWN ? BlockFaceShape.CENTER_BIG : BlockFaceShape.UNDEFINED;
     }
 
     @Override
@@ -46,40 +71,6 @@ public class BlockPedestal extends VampirismBlockContainer {
     @Override
     public boolean isOpaqueCube(IBlockState state) {
         return false;
-    }
-
-    @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
-        return face == EnumFacing.DOWN ? BlockFaceShape.CENTER_BIG : BlockFaceShape.UNDEFINED;
-    }
-
-    @Override
-    public void breakBlock(World worldIn, BlockPos pos, IBlockState state) {
-        if (!worldIn.isRemote) {
-            TilePedestal tile = getTileEntity(worldIn, pos);
-            if (tile != null && tile.hasStack()) {
-                net.minecraft.inventory.InventoryHelper.spawnItemStack(worldIn, pos.getX(), pos.getY(), pos.getZ(), tile.removeStack());
-            }
-        }
-        super.breakBlock(worldIn, pos, state);
-    }
-
-    @Nullable
-    private TilePedestal getTileEntity(IBlockAccess world, BlockPos pos) {
-        TileEntity tile = world.getTileEntity(pos);
-        if (tile instanceof TilePedestal) {
-            return (TilePedestal) tile;
-        }
-        return null;
-    }
-
-    private static void takeItemPlayer(EntityPlayer player, EnumHand hand, ItemStack stack) {
-        player.setHeldItem(hand, stack);
-        if (stack.getItem() instanceof VampirismVampireSword) {
-            if (((VampirismVampireSword) stack.getItem()).isFullyCharged(stack)) {
-                ((VampirismVampireSword) stack.getItem()).tryName(stack, player);
-            }
-        }
     }
 
     @Override
@@ -103,6 +94,15 @@ public class BlockPedestal extends VampirismBlockContainer {
             }
         }
         return true;
+    }
+
+    @Nullable
+    private TilePedestal getTileEntity(IBlockAccess world, BlockPos pos) {
+        TileEntity tile = world.getTileEntity(pos);
+        if (tile instanceof TilePedestal) {
+            return (TilePedestal) tile;
+        }
+        return null;
     }
 
 
