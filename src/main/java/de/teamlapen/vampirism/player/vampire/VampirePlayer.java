@@ -130,7 +130,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private final SkillHandler<IVampirePlayer> skillHandler;
     private final VampirePlayerSpecialAttributes specialAttributes = new VampirePlayerSpecialAttributes();
     private boolean sundamage_cache = false;
-    private EnumStrength garlic_cache;
+    private EnumStrength garlic_cache = EnumStrength.NONE;
     private int biteCooldown = 0;
     private int eyeType = 0;
     private int fangType = 0;
@@ -149,7 +149,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         bloodStats = new BloodStats(player);
         actionHandler = new ActionHandler<>(this);
         skillHandler = new SkillHandler<>(this);
-        garlic_cache = EnumStrength.NONE;
     }
 
     @Override

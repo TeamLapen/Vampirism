@@ -40,7 +40,7 @@ import java.util.Random;
  */
 public class EntityConvertedVillager extends EntityVillagerVampirism implements IConvertedCreature<EntityVillager> {
 
-    private EnumStrength garlicCache;
+    private EnumStrength garlicCache = EnumStrength.NONE;
     private boolean sundamageCache;
     private boolean addedAdditionalRecipes = false;
     private int bloodTimer = 0;
