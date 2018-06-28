@@ -526,7 +526,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "Vampire", getLevel(), Balance.vp.STRENGTH_LCAP, Balance.vp.STRENGTH_MAX_MOD, Balance.vp.STRENGTH_TYPE, 2, false);
             LevelAttributeModifier.applyModifier(player, SharedMonsterAttributes.MAX_HEALTH, "Vampire", getLevel(), Balance.vp.HEALTH_LCAP, Balance.vp.HEALTH_MAX_MOD, Balance.vp.HEALTH_TYPE, 0, true);
             if (player.getHealth() > player.getMaxHealth()) player.setHealth(player.getMaxHealth());
-            LevelAttributeModifier.applyModifier(player, VReference.bloodExhaustion, "Vampire", getLevel(), getMaxLevel(), Balance.vp.EXAUSTION_MAX_MOD, Balance.vp.EXHAUSTION_TYPE, 2, false);
+            LevelAttributeModifier.applyModifier(player, VReference.bloodExhaustion, "Vampire", getLevel(), getMaxLevel(), Balance.vp.EXHAUSTION_MAX_MOD, Balance.vp.EXHAUSTION_TYPE, 2, false);
             if (newLevel > 13) {
                 bloodStats.setMaxBlood(40);
             } else if (newLevel > 9) {

@@ -33,7 +33,7 @@ public class BalanceVampirePlayer extends BalanceValues {
     @DefaultDouble(value = 0.5D, minValue = 0.1D, maxValue = 1.0D, name = "speed_modifier_type", comment = "")
     public double EXHAUSTION_TYPE;
     @DefaultDouble(value = 1D, minValue = 0D, maxValue = 10, name = "exhaustion_modifier_max")
-    public double EXAUSTION_MAX_MOD;
+    public double EXHAUSTION_MAX_MOD;
     //    @DefaultDouble(value = 0.2D, minValue = 0.1D, maxValue = 0.4D, name = "Jump Max Boost", comment = "")
 //    public double JUMP_MAX_BOOST;
 //    @DefaultInt(value = 6, minValue = 3, maxValue = 100, name = "Jump Level Cap", comment = "")
@@ -77,9 +77,9 @@ public class BalanceVampirePlayer extends BalanceValues {
 
     @DefaultInt(value = 14, minValue = 1, comment = "Level as of the fire vulnerability will not be increased")
     public int FIRE_VULNERABILITY_LCAP;
-    @DefaultDouble(value = 0.5, minValue = 0, comment = "Type of value calculation, 0.5 for square root, 1 for linear")
+    @DefaultDouble(value = 0.5, minValue = 0, comment = "Type of value calculation, 0.5 for square root, 1 for linear. Set this to 0 and fire vulnerability_max_mod to 1 to leave fire damage unaffected")
     public double FIRE_VULNERABILITY_TYPE;
-    @DefaultDouble(value = 4, minValue = 0.1, comment = "Max modifier for fire damage. Old value is multiplied with this.")
+    @DefaultDouble(value = 4, minValue = 0.1, comment = "Max modifier for fire damage. Old value is multiplied with this. Set this to 1 and fire vulnerability_type to 0 to leave fire damage unaffected")
     public double FIRE_VULNERABILITY_MAX_MOD;
 
     /**
