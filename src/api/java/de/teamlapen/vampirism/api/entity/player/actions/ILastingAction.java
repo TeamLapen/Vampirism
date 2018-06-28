@@ -5,6 +5,13 @@ package de.teamlapen.vampirism.api.entity.player.actions;
  */
 public interface ILastingAction<T extends IActionPlayer> extends IAction {
     /**
+     * @return Whether the cooldown should be reduced (by the remaining time) if the action is deactivated prematurely. Not reasonable if duration is (much) longer than cooldown.
+     */
+    default boolean allowReducedCooldown() {
+        return getDuration(0) <= getCooldown();
+    }
+
+    /**
      * @param level Player's faction level
      * @return Skill duration in ticks
      */

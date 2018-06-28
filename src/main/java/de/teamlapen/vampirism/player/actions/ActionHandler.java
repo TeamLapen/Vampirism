@@ -220,7 +220,11 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         int id = getIdFromAction(action);
         int t = actionTimer[id];
         if (t > 0) {
-            actionTimer[id] = Math.min((-action.getCooldown()) + t, 0);
+            int cooldown = action.getCooldown();
+            if (((ILastingAction) action).allowReducedCooldown()) {
+                cooldown -= t;
+            }
+            actionTimer[id] = Math.min(-cooldown, 0);
             ((ILastingAction) action).onDeactivated(player);
             dirty = true;
             return IAction.PERM.ALLOWED;
