@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.biome;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.blocks.VampirismFlower;
 import de.teamlapen.vampirism.core.ModBlocks;
+import de.teamlapen.vampirism.config.BalanceGeneral;
 import de.teamlapen.vampirism.entity.EntityBlindingBat;
 import de.teamlapen.vampirism.entity.EntityGhost;
 import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
@@ -27,7 +28,7 @@ import java.util.Random;
 
 public class BiomeGenVampireForest extends Biome {
     public final static String name = "vampireForest";
-    public static final int GEN_WEIGHT = 10;
+    public static final int GEN_WEIGHT = BalanceGeneral.VAMPIRE_FOREST_WEIGHT;
     private WorldGenTrees worldGenTrees;
     private WorldGenVampireOrchid orchidGen = new WorldGenVampireOrchid();
 
