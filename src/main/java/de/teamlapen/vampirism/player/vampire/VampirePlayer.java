@@ -828,10 +828,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 return EntityPlayer.SleepResult.NOT_POSSIBLE_HERE;
             }
 
-            if (!player.world.isDaytime()) {
-                return EntityPlayer.SleepResult.NOT_POSSIBLE_NOW;
-            }
-
             if (Math.abs(player.posX - (double) bedLocation.getX()) > 3.0D || Math.abs(player.posY - (double) bedLocation.getY()) > 2.0D || Math.abs(player.posZ - (double) bedLocation.getZ()) > 3.0D) {
                 return EntityPlayer.SleepResult.TOO_FAR_AWAY;
             }
@@ -842,6 +838,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
             if (!list.isEmpty()) {
                 return EntityPlayer.SleepResult.NOT_SAFE;
+            }
+            if (!player.world.isDaytime()) {
+                player.bedLocation = bedLocation; //Set sleep location even if night time
+                return EntityPlayer.SleepResult.NOT_POSSIBLE_NOW;
             }
         }
 
@@ -885,7 +885,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         sleepTimer = 0;
         sleepingInCoffin = true;
         player.noClip = true;
-        player.bedLocation = bedLocation;
+        player.bedLocation = bedLocation; //Is also set if sleep fails due to night time. See above
         player.motionX = player.motionZ = player.motionY = 0.0D;
 
         if (!player.world.isRemote) {
