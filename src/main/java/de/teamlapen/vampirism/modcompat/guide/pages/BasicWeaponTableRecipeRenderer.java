@@ -93,7 +93,7 @@ public abstract class BasicWeaponTableRecipeRenderer<T extends IHunterWeaponReci
 
             }
             String skillText = UtilLib.translateFormatted("gui.vampirism.hunter_weapon_table.skill", skills.toString());
-            guiBase.drawSplitString(skillText, guiLeft + 40, y, 110, Color.gray.getRGB());
+            fontRendererObj.drawSplitString(skillText, guiLeft + 40, y, 110, Color.gray.getRGB());
         }
     }
 
