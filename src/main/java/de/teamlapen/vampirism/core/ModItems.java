@@ -99,6 +99,7 @@ public class ModItems {
     public static final ItemHeartStriker heart_striker = getNull();
     public static final VampirismItem blood_infused_iron_ingot = getNull();
     public static final VampirismItem blood_infused_enhanced_iron_ingot = getNull();
+    public static final VampirismItem soul_orb_vampire = getNull();
 
 
     static void registerCraftingRecipes() {
@@ -279,6 +280,7 @@ public class ModItems {
         registry.register(new ItemHeartStriker());
         registry.register(new VampirismItem("blood_infused_iron_ingot"));
         registry.register(new VampirismItem("blood_infused_enhanced_iron_ingot"));
+        registry.register(new VampirismItem("soul_orb_vampire"));
     }
 
 

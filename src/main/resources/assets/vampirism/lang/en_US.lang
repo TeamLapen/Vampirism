@@ -274,6 +274,7 @@ item.vampirism.heart_seeker.name=Heartseeker
 item.vampirism.heart_striker.name=Heartstriker
 item.vampirism.blood_infused_iron_ingot.name=Blood Infused Iron Ingot
 item.vampirism.blood_infused_enhanced_iron_ingot.name=Enhanced Blood Infused Iron Ingot
+item.vampirism.soul_orb_vampire.name=Vampire Soul
 
 #KEYS
 keys.vampirism.select_skills=Select Skills

@@ -10,6 +10,7 @@ import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.DamageHandler;
+import de.teamlapen.vampirism.entity.EntitySoulOrb;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
@@ -199,6 +200,20 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     protected void initEntityAI() {
         super.initEntityAI();
         this.tasks.addTask(0, new EntityAISwimming(this));
+    }
+
+    @Override
+    protected void onDeathUpdate() {
+        if (this.deathTime == 19) {
+            if (!this.world.isRemote && (this.recentlyHit > 0 && this.world.getGameRules().getBoolean("doMobLoot"))) {
+                DamageSource lastDamage = this.getLastDamageSource();
+                if (lastDamage != null && lastDamage.getTrueSource() != null && Helper.isHunter(lastDamage.getTrueSource())) {
+                    this.world.spawnEntity(new EntitySoulOrb(this.world, this.posX, this.posY, this.posZ, EntitySoulOrb.TYPE.VAMPIRE));
+                }
+
+            }
+        }
+        super.onDeathUpdate();
     }
 
     /**
