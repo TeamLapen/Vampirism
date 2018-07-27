@@ -23,7 +23,7 @@ public class ModelBasicHunter extends ModelBipedCloaked {
     private float xAngle = 0;
 
     public ModelBasicHunter() {
-        super(0.0F, 0.0F, 64, 64, 0, 28);
+        super(0.0F, 0.0F, 64, 64, 0, 32);
         this.bipedHeadwear.isHidden = true;
 
         hatTop2 = new ModelRenderer(this, 0, 31);
