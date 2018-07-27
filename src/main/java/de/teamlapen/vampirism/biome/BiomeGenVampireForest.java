@@ -27,7 +27,6 @@ import java.util.Random;
 
 public class BiomeGenVampireForest extends Biome {
     public final static String name = "vampireForest";
-    public static final int GEN_WEIGHT = 10;
     private WorldGenTrees worldGenTrees;
     private WorldGenVampireOrchid orchidGen = new WorldGenVampireOrchid();
 
