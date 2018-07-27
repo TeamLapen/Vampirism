@@ -75,13 +75,6 @@ public class ModEntityEventHandler {
 
     }
 
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public void onLivingEquipmentChange(LivingEquipmentChangeEvent event) {
-        if (event.getTo().getItem() instanceof VampirismVampireSword) {
-            ((VampirismVampireSword) event.getTo().getItem()).updateTrainedCached(event.getTo(), event.getEntityLiving());
-        }
-    }
-
     @SubscribeEvent
     public void onEntityCheckSpawn(LivingSpawnEvent.CheckSpawn event) {
         IBlockState blockState = event.getWorld().getBlockState(new BlockPos(event.getX() - 0.4F, event.getY(), event.getZ() - 0.4F).down());
@@ -155,5 +148,12 @@ public class ModEntityEventHandler {
             }
         }
 
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void onLivingEquipmentChange(LivingEquipmentChangeEvent event) {
+        if (event.getTo().getItem() instanceof VampirismVampireSword) {
+            ((VampirismVampireSword) event.getTo().getItem()).updateTrainedCached(event.getTo(), event.getEntityLiving());
+        }
     }
 }

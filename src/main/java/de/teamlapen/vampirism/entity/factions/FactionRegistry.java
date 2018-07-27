@@ -57,16 +57,6 @@ public class FactionRegistry implements IFactionRegistry {
         return null;
     }
 
-    @Override
-    public Faction[] getFactions() {
-        return allFactions;
-    }
-
-    @Override
-    public PlayableFaction[] getPlayableFactions() {
-        return playableFactions;
-    }
-
     @Nullable
     @Override
     public IFaction getFactionByName(String name) {
@@ -79,6 +69,16 @@ public class FactionRegistry implements IFactionRegistry {
             }
         }
         return null;
+    }
+
+    @Override
+    public Faction[] getFactions() {
+        return allFactions;
+    }
+
+    @Override
+    public PlayableFaction[] getPlayableFactions() {
+        return playableFactions;
     }
 
     @Override

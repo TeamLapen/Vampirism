@@ -182,8 +182,6 @@ public class Configs {
     }
 
 
-
-
     @SideOnly(Side.CLIENT)
     public static void onDisconnectedFromServer() {
         if (overriddenByServer) {

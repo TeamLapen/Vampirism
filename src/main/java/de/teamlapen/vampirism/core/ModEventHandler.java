@@ -48,18 +48,18 @@ public class ModEventHandler {
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void onClientDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
+    public void onClientConnected(FMLNetworkEvent.ClientConnectedToServerEvent event) {
         if (!UtilLib.isSameInstanceAsServer()) {
-            Configs.onDisconnectedFromServer();
-            VampirismEntityRegistry.getBiteableEntryManager().resetDynamic();
+            VampirismEntityRegistry.getBiteableEntryManager().initDynamic();
         }
     }
 
     @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void onClientConnected(FMLNetworkEvent.ClientConnectedToServerEvent event) {
+    public void onClientDisconnected(FMLNetworkEvent.ClientDisconnectionFromServerEvent event) {
         if (!UtilLib.isSameInstanceAsServer()) {
-            VampirismEntityRegistry.getBiteableEntryManager().initDynamic();
+            Configs.onDisconnectedFromServer();
+            VampirismEntityRegistry.getBiteableEntryManager().resetDynamic();
         }
     }
 

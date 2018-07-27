@@ -38,6 +38,11 @@ public class ClientProxy extends CommonProxy {
     }
 
     @Override
+    public float getRenderPartialTick() {
+        return Minecraft.getMinecraft().getRenderPartialTicks();
+    }
+
+    @Override
     public boolean isClientPlayerNull() {
         return Minecraft.getMinecraft().player == null;
     }
@@ -103,10 +108,5 @@ public class ClientProxy extends CommonProxy {
         for (RenderPlayer renderPlayer : manager.getSkinMap().values()) {
             renderPlayer.addLayer(new LayerVampirePlayerHead(renderPlayer));
         }
-    }
-
-    @Override
-    public float getRenderPartialTick() {
-        return Minecraft.getMinecraft().getRenderPartialTicks();
     }
 }

@@ -110,6 +110,7 @@ public class VampirismVillage implements IVampirismVillage {
             return hunter;
         }
     }
+
     private final String TAG = "VampirismVillage";
     private final Village village;
     private BlockPos center = new BlockPos(0, 0, 0);
@@ -462,7 +463,7 @@ public class VampirismVillage implements IVampirismVillage {
         agressive = true;
         dirty = true;
         for (EntityVillager v : villagers) {
-            makeAggressive(v,this);
+            makeAggressive(v, this);
 
         }
     }

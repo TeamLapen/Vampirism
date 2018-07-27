@@ -8,6 +8,10 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public interface IProxy extends IInitListener {
 
+    default float getRenderPartialTick() {
+        return 1F;
+    }
+
     boolean isClientPlayerNull();
 
     /**
@@ -20,8 +24,4 @@ public interface IProxy extends IInitListener {
     boolean isPlayerThePlayer(EntityPlayer player);
 
     void renderScreenFullColor(int ticksOn, int ticksOff, int color);
-
-    default float getRenderPartialTick() {
-        return 1F;
-    }
 }

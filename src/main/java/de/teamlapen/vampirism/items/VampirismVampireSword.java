@@ -59,35 +59,17 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     }
 
     @Override
-    protected final float getAttackDamage(ItemStack stack) {
-        return getBaseAttackDamage(stack) * getAttackDamageModifier(stack);
+    public boolean canBeCharged(ItemStack stack) {
+        return getCharged(stack) < 1f;
     }
 
     @Override
-    protected final float getAttackSpeed(ItemStack stack) {
-        return getBaseAttackSpeed(stack) * getAttackSpeedModifier(stack);
-    }
-
-
-    protected float getBaseAttackDamage(ItemStack stack) {
-        return super.getAttackDamage(stack);
-    }
-
-    protected float getBaseAttackSpeed(ItemStack stack) {
-        return super.getAttackSpeed(stack);
-    }
-
-
-    @Override
-    protected void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, playerIn, tooltip, advanced);
-        float charged = getCharged(stack);
-        float trained = getTrained(stack, playerIn);
-        tooltip.add(UtilLib.translate("text.vampirism.sword_charged") + " " + ((int) (charged * 100f)) + "%");
-        tooltip.add(UtilLib.translate("text.vampirism.sword_trained") + " " + ((int) (trained * 100f)) + "%");
-        if (playerIn != null && !VReference.VAMPIRE_FACTION.equals(FactionPlayerHandler.get(playerIn).getCurrentFaction())) {
-            tooltip.add(UtilLib.translateFormatted("text.vampirism.can_only_be_used_by", UtilLib.translate(VReference.VAMPIRE_FACTION.getUnlocalizedNamePlural())));
-        }
+    public int charge(ItemStack stack, int amount) {
+        float factor = getChargingFactor(stack);
+        float charge = getCharged(stack);
+        float actual = Math.min(factor * amount, 1f - charge);
+        this.setCharged(stack, charge + actual);
+        return (int) (actual / factor);
     }
 
     /**
@@ -101,10 +83,177 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         return getCharged(stack) > 0 ? 1f : minStrength;
     }
 
-
     public float getAttackSpeedModifier(ItemStack stack) {
         return minSpeed + (1f - minSpeed) * getTrained(stack);
     }
+
+    @Override
+    public int getMaxItemUseDuration(ItemStack stack) {
+        return 40;
+    }
+
+    @Override
+    public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
+        if (attacker instanceof EntityPlayer && target.getHealth() <= target.getMaxHealth() * Balance.vps.SWORD_FINISHER_MAX_HEALTH_PERC && !Helper.isVampire(target)) {
+            if (VampirePlayer.get((EntityPlayer) attacker).getSkillHandler().isSkillEnabled(VampireSkills.sword_finisher)) {
+                DamageSource dmg = DamageSource.causePlayerDamage((EntityPlayer) attacker);
+                target.attackEntityFrom(dmg, 10000F);
+                Vec3d center = new Vec3d(target.getPosition());
+                center.addVector(0, target.height / 2d, 0);
+                VampLib.proxy.getParticleHandler().spawnParticles(target.world, ModParticles.GENERIC_PARTICLE, center.x, center.y, center.z, 15, 0.5, target.getRNG(), 132, 12, 0xE02020);
+            }
+        }
+        return super.hitEntity(stack, target, attacker);
+    }
+
+    public boolean isFullyCharged(ItemStack stack) {
+        return getCharged(stack) == 1f;
+    }
+
+    @Override
+    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
+        ItemStack stack = playerIn.getHeldItem(handIn);
+        VampirePlayer vampire = VampirePlayer.get(playerIn);
+        if (vampire.getLevel() == 0) return new ActionResult<>(EnumActionResult.PASS, stack);
+
+
+        if (this.canBeCharged(stack) && playerIn.isSneaking() && (playerIn.isCreative() || vampire.getBloodLevel() >= 2) && vampire.getSkillHandler().isSkillEnabled(VampireSkills.blood_charge)) {
+            playerIn.setActiveHand(handIn);
+            return new ActionResult<>(EnumActionResult.SUCCESS, stack);
+        }
+
+        return new ActionResult<>(EnumActionResult.PASS, stack);
+    }
+
+    @Override
+    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
+        if (!(entityLiving instanceof EntityPlayer)) return stack;
+        IVampirePlayer vampire = VReference.VAMPIRE_FACTION.getPlayerCapability((EntityPlayer) entityLiving);
+        if (((EntityPlayer) entityLiving).isCreative() || vampire.getBloodStats().consumeBlood(2)) {
+            this.charge(stack, 2 * VReference.FOOD_TO_FLUID_BLOOD);
+        }
+        if (getCharged(stack) == 1) {
+            tryName(stack, (EntityPlayer) entityLiving);
+        }
+        return stack;
+    }
+
+    @Override
+    public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+        //Try to minimize execution time, but tricky since off hand selection is not directly available, but it can only be off hand if itemSlot 0
+        if (worldIn.isRemote && (isSelected || itemSlot == 0)) {
+            float charged = getCharged(stack);
+            if (charged > 0 && entityIn.ticksExisted % ((int) (8 + 80 * (1f - charged))) == 0 && entityIn instanceof EntityLivingBase) {
+                boolean secondHand = !isSelected && ((EntityLivingBase) entityIn).getHeldItem(EnumHand.OFF_HAND).equals(stack);
+                if (isSelected || secondHand) {
+                    spawnChargedParticle((EntityLivingBase) entityIn, isSelected);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onUsingTick(ItemStack stack, EntityLivingBase player, int count) {
+        if (player.getEntityWorld().isRemote) {
+            if (count % 3 == 0) {
+                spawnChargingParticle(player, player.getHeldItemMainhand().equals(stack));
+            }
+        }
+    }
+
+    /**
+     * Might want to use {@link #charge(ItemStack, int)} instead to charge it with mB of blood
+     *
+     * @param value Is clamped between 0 and 1
+     */
+    public void setCharged(@Nonnull ItemStack stack, float value) {
+        stack.setTagInfo("charged", new NBTTagFloat(MathHelper.clamp(value, 0f, 1f)));
+    }
+
+    /**
+     * Sets the stored trained value for the given player
+     *
+     * @param value Clamped between 0 and 1
+     */
+    public void setTrained(@Nonnull ItemStack stack, @Nonnull EntityLivingBase player, float value) {
+        NBTTagCompound nbt = stack.getOrCreateSubCompound("trained");
+        nbt.setFloat(player.getPersistentID().toString(), MathHelper.clamp(value, 0f, 1f));
+    }
+
+    /**
+     * If the stack is not named and the player hasn't been named before, ask the player to name this stack
+     */
+    public void tryName(ItemStack stack, EntityPlayer player) {
+        if (!stack.hasDisplayName() && (!stack.hasTagCompound() || !stack.getTagCompound().getBoolean("dont_name"))) {
+            (player).openGui(VampirismMod.instance, ModGuiHandler.ID_NAME_SWORD, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
+            (player).world.playSound((player).posX, (player).posY, (player).posZ, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1f, 1f, false);
+        }
+    }
+
+    /**
+     * Updated during {@link net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent}
+     *
+     * @param stack
+     * @param player
+     * @return True if the cached value was updated
+     */
+    public boolean updateTrainedCached(@Nonnull ItemStack stack, @Nonnull EntityLivingBase player) {
+        float cached = getTrained(stack);
+        float trained = getTrained(stack, player);
+        if (cached != trained) {
+            stack.setTagInfo("trained-cache", new NBTTagFloat(trained));
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    protected void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+        super.addInformation(stack, playerIn, tooltip, advanced);
+        float charged = getCharged(stack);
+        float trained = getTrained(stack, playerIn);
+        tooltip.add(UtilLib.translate("text.vampirism.sword_charged") + " " + ((int) (charged * 100f)) + "%");
+        tooltip.add(UtilLib.translate("text.vampirism.sword_trained") + " " + ((int) (trained * 100f)) + "%");
+        if (playerIn != null && !VReference.VAMPIRE_FACTION.equals(FactionPlayerHandler.get(playerIn).getCurrentFaction())) {
+            tooltip.add(UtilLib.translateFormatted("text.vampirism.can_only_be_used_by", UtilLib.translate(VReference.VAMPIRE_FACTION.getUnlocalizedNamePlural())));
+        }
+    }
+
+    @Override
+    protected final float getAttackDamage(ItemStack stack) {
+        return getBaseAttackDamage(stack) * getAttackDamageModifier(stack);
+    }
+
+    @Override
+    protected final float getAttackSpeed(ItemStack stack) {
+        return getBaseAttackSpeed(stack) * getAttackSpeedModifier(stack);
+    }
+
+    protected float getBaseAttackDamage(ItemStack stack) {
+        return super.getAttackDamage(stack);
+    }
+
+    protected float getBaseAttackSpeed(ItemStack stack) {
+        return super.getAttackSpeed(stack);
+    }
+
+    /**
+     * Gets the charged value from the tag compound
+     *
+     * @param stack
+     * @return Value between 0 and 1
+     */
+    protected float getCharged(@Nonnull ItemStack stack) {
+        if (stack.hasTagCompound()) {
+            return stack.getTagCompound().getFloat("charged");
+        }
+        return 0.0f;
+    }
+
+    /**
+     * @return Charging factor multiplied with amount to get charge percentage
+     */
+    protected abstract float getChargingFactor(ItemStack stack);
 
     /**
      * Gets the trained value from the tag compound
@@ -126,35 +275,19 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     }
 
     /**
-     * Updated during {@link net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent}
+     * Gets a cached trained value from the tag compound
      *
      * @param stack
-     * @param player
-     * @return True if the cached value was updated
+     * @return Value between 0 and 1. Defaults to 0
      */
-    public boolean updateTrainedCached(@Nonnull ItemStack stack, @Nonnull EntityLivingBase player) {
-        float cached = getTrained(stack);
-        float trained = getTrained(stack, player);
-        if (cached != trained) {
-            stack.setTagInfo("trained-cache", new NBTTagFloat(trained));
-            return true;
-        }
-        return false;
-    }
-
-
-    @Override
-    public void onUpdate(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
-        //Try to minimize execution time, but tricky since off hand selection is not directly available, but it can only be off hand if itemSlot 0
-        if (worldIn.isRemote && (isSelected || itemSlot == 0)) {
-            float charged = getCharged(stack);
-            if (charged > 0 && entityIn.ticksExisted % ((int) (8 + 80 * (1f - charged))) == 0 && entityIn instanceof EntityLivingBase) {
-                boolean secondHand = !isSelected && ((EntityLivingBase) entityIn).getHeldItem(EnumHand.OFF_HAND).equals(stack);
-                if (isSelected || secondHand) {
-                    spawnChargedParticle((EntityLivingBase) entityIn, isSelected);
-                }
+    protected float getTrained(@Nonnull ItemStack stack) {
+        if (stack.hasTagCompound()) {
+            NBTTagCompound nbt = stack.getTagCompound();
+            if (nbt.hasKey("trained-cache")) {
+                return nbt.getFloat("trained-cache");
             }
         }
+        return 0.0f;
     }
 
     @SideOnly(Side.CLIENT)
@@ -175,141 +308,4 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
         VampLib.proxy.getParticleHandler().spawnParticle(player.getEntityWorld(), ModParticles.FLYING_BLOOD, playerPos.x, playerPos.y, playerPos.z, pos.x, pos.y, pos.z, (int) (4.0F / (player.getRNG().nextFloat() * 0.6F + 0.1F)));
 
     }
-
-    @Override
-    public int getMaxItemUseDuration(ItemStack stack) {
-        return 40;
-    }
-
-    @Override
-    public void onUsingTick(ItemStack stack, EntityLivingBase player, int count) {
-        if (player.getEntityWorld().isRemote) {
-            if (count % 3 == 0) {
-                spawnChargingParticle(player, player.getHeldItemMainhand().equals(stack));
-            }
-        }
-    }
-
-    @Override
-    public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
-        if (!(entityLiving instanceof EntityPlayer)) return stack;
-        IVampirePlayer vampire = VReference.VAMPIRE_FACTION.getPlayerCapability((EntityPlayer) entityLiving);
-        if (((EntityPlayer) entityLiving).isCreative() || vampire.getBloodStats().consumeBlood(2)) {
-            this.charge(stack, 2 * VReference.FOOD_TO_FLUID_BLOOD);
-        }
-        if (getCharged(stack) == 1) {
-            tryName(stack, (EntityPlayer) entityLiving);
-        }
-        return stack;
-    }
-
-
-    /**
-     * If the stack is not named and the player hasn't been named before, ask the player to name this stack
-     */
-    public void tryName(ItemStack stack, EntityPlayer player) {
-        if (!stack.hasDisplayName() && (!stack.hasTagCompound() || !stack.getTagCompound().getBoolean("dont_name"))) {
-            (player).openGui(VampirismMod.instance, ModGuiHandler.ID_NAME_SWORD, player.getEntityWorld(), (int) player.posX, (int) player.posY, (int) player.posZ);
-            (player).world.playSound((player).posX, (player).posY, (player).posZ, SoundEvents.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1f, 1f, false);
-        }
-    }
-
-    @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, EntityPlayer playerIn, EnumHand handIn) {
-        ItemStack stack = playerIn.getHeldItem(handIn);
-        VampirePlayer vampire = VampirePlayer.get(playerIn);
-        if (vampire.getLevel() == 0) return new ActionResult<>(EnumActionResult.PASS, stack);
-
-
-        if (this.canBeCharged(stack) && playerIn.isSneaking() && (playerIn.isCreative() || vampire.getBloodLevel() >= 2) && vampire.getSkillHandler().isSkillEnabled(VampireSkills.blood_charge)) {
-            playerIn.setActiveHand(handIn);
-            return new ActionResult<>(EnumActionResult.SUCCESS, stack);
-        }
-
-        return new ActionResult<>(EnumActionResult.PASS, stack);
-    }
-
-
-    /**
-     * Sets the stored trained value for the given player
-     *
-     * @param value Clamped between 0 and 1
-     */
-    public void setTrained(@Nonnull ItemStack stack, @Nonnull EntityLivingBase player, float value) {
-        NBTTagCompound nbt = stack.getOrCreateSubCompound("trained");
-        nbt.setFloat(player.getPersistentID().toString(), MathHelper.clamp(value, 0f, 1f));
-    }
-
-    /**
-     * Gets a cached trained value from the tag compound
-     *
-     * @param stack
-     * @return Value between 0 and 1. Defaults to 0
-     */
-    protected float getTrained(@Nonnull ItemStack stack) {
-        if (stack.hasTagCompound()) {
-            NBTTagCompound nbt = stack.getTagCompound();
-            if (nbt.hasKey("trained-cache")) {
-                return nbt.getFloat("trained-cache");
-            }
-        }
-        return 0.0f;
-    }
-
-    @Override
-    public boolean hitEntity(ItemStack stack, EntityLivingBase target, EntityLivingBase attacker) {
-        if (attacker instanceof EntityPlayer && target.getHealth() <= target.getMaxHealth() * Balance.vps.SWORD_FINISHER_MAX_HEALTH_PERC && !Helper.isVampire(target)) {
-            if (VampirePlayer.get((EntityPlayer) attacker).getSkillHandler().isSkillEnabled(VampireSkills.sword_finisher)) {
-                DamageSource dmg = DamageSource.causePlayerDamage((EntityPlayer) attacker);
-                target.attackEntityFrom(dmg, 10000F);
-                Vec3d center = new Vec3d(target.getPosition());
-                center.addVector(0, target.height / 2d, 0);
-                VampLib.proxy.getParticleHandler().spawnParticles(target.world, ModParticles.GENERIC_PARTICLE, center.x, center.y, center.z, 15, 0.5, target.getRNG(), 132, 12, 0xE02020);
-            }
-        }
-        return super.hitEntity(stack, target, attacker);
-    }
-
-    public boolean isFullyCharged(ItemStack stack) {
-        return getCharged(stack) == 1f;
-    }
-    /**
-     * Gets the charged value from the tag compound
-     *
-     * @param stack
-     * @return Value between 0 and 1
-     */
-    protected float getCharged(@Nonnull ItemStack stack) {
-        if (stack.hasTagCompound()) {
-            return stack.getTagCompound().getFloat("charged");
-        }
-        return 0.0f;
-    }
-
-    /**
-     * Might want to use {@link #charge(ItemStack, int)} instead to charge it with mB of blood
-     * @param value Is clamped between 0 and 1
-     */
-    public void setCharged(@Nonnull ItemStack stack, float value) {
-        stack.setTagInfo("charged", new NBTTagFloat(MathHelper.clamp(value,0f,1f)));
-    }
-
-    @Override
-    public boolean canBeCharged(ItemStack stack) {
-        return getCharged(stack) < 1f;
-    }
-
-    @Override
-    public int charge(ItemStack stack, int amount) {
-        float factor = getChargingFactor(stack);
-        float charge = getCharged(stack);
-        float actual = Math.min(factor * amount, 1f - charge);
-        this.setCharged(stack, charge + actual);
-        return (int) (actual / factor);
-    }
-
-    /**
-     * @return Charging factor multiplied with amount to get charge percentage
-     */
-    protected abstract float getChargingFactor(ItemStack stack);
 }

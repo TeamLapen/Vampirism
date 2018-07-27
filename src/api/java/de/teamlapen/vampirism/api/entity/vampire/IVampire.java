@@ -25,11 +25,6 @@ public interface IVampire extends IFactionEntity {
     void drinkBlood(int amt, float saturationMod);
 
     /**
-     * @return If the creature wants blood or could use some
-     */
-    boolean wantsBlood();
-
-    /**
      * Checks if the player is being affected by garlic.
      * Result is cached for a few ticks
      * <p>
@@ -42,7 +37,6 @@ public interface IVampire extends IFactionEntity {
         return isGettingGarlicDamage(false);
     }
 
-
     /**
      * Checks if the player is being affected by garlic.
      * The result is cached for several ticks unless you use forcerefresh
@@ -50,8 +44,8 @@ public interface IVampire extends IFactionEntity {
      * <p>
      * For VampirePlayer instances for players with vampire level 0 this returns {@link EnumStrength#NONE}
      *
-     * @return The strength of the garlic or {@link EnumStrength#NONE}
      * @param forceRefresh Don't use cached value
+     * @return The strength of the garlic or {@link EnumStrength#NONE}
      */
     @Nonnull
     EnumStrength isGettingGarlicDamage(boolean forceRefresh);
@@ -80,4 +74,9 @@ public interface IVampire extends IFactionEntity {
      * If the entity currently does not care about being damaged by the sun, because it is e.g. angry or has sunscreen
      */
     boolean isIgnoringSundamage();
+
+    /**
+     * @return If the creature wants blood or could use some
+     */
+    boolean wantsBlood();
 }

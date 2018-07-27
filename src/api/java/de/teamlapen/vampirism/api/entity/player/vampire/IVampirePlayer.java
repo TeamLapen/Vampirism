@@ -57,6 +57,7 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
      * @return The players blood stats (similar to food stats)
      */
     IBloodStats getBloodStats();
+
     /**
      * @return The amount of ticks the player has been in sun. Never higher than 100
      */

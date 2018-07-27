@@ -7,7 +7,6 @@ import net.minecraft.entity.EntityLivingBase;
  */
 public interface IFactionEntity {
     /**
-
      * @return the faction this entity belongs to
      */
     IFaction getFaction();

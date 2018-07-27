@@ -86,12 +86,6 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
         }
 
         @Override
-        public int getMinLevel(@Nonnull ItemStack stack) {
-            return minLevel;
-        }
-
-
-        @Override
         public float getDestroySpeed(ItemStack stack, IBlockState state) {
             Block block = state.getBlock();
 
@@ -101,6 +95,11 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
                 Material material = state.getMaterial();
                 return material != Material.PLANTS && material != Material.VINE && material != Material.CORAL && material != Material.LEAVES && material != Material.GOURD ? 1.0F : 1.5F;
             }
+        }
+
+        @Override
+        public int getMinLevel(@Nonnull ItemStack stack) {
+            return minLevel;
         }
     }
 }

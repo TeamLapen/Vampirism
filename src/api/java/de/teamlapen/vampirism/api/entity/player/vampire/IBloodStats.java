@@ -12,12 +12,6 @@ public interface IBloodStats {
     float HIGH_SATURATION = 1.0F;
 
     /**
-     * @return The maximum amount of blood
-     */
-    int getMaxBlood();
-
-
-    /**
      * Adds blood to the stats
      * Consider using {@link IVampirePlayer#drinkBlood(int, float)} instead
      *
@@ -47,6 +41,11 @@ public interface IBloodStats {
      * @param amt
      */
     void setBloodLevel(int amt);
+
+    /**
+     * @return The maximum amount of blood
+     */
+    int getMaxBlood();
 
     @SideOnly(Side.CLIENT)
     int getPrevBloodLevel();

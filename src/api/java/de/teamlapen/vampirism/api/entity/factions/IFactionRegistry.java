@@ -24,6 +24,12 @@ public interface IFactionRegistry {
     IFaction getFaction(Entity entity);
 
     /**
+     * Get a faction by it's name
+     */
+    @Nullable
+    IFaction getFactionByName(String name);
+
+    /**
      * @return All factions after post init
      */
     IFaction[] getFactions();
@@ -32,12 +38,6 @@ public interface IFactionRegistry {
      * @return All playable factions after post init
      */
     IPlayableFaction[] getPlayableFactions();
-
-    /**
-     * Get a faction by it's name
-     */
-    @Nullable
-    IFaction getFactionByName(String name);
 
     /**
      * Get a cached or create a predicate which selects all other faction entities

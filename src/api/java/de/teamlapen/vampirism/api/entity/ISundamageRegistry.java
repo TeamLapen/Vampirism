@@ -54,15 +54,15 @@ public interface ISundamageRegistry {
     boolean getSundamageInDim(int dim);
 
     /**
+     * Checks if the given entity could receive sun damage at its current position
+     */
+    boolean isGettingSundamage(EntityLivingBase entity);
+
+    /**
      * Specifies if vampires should get sundamage in this dimension
      *
      * @param dimensionId
      * @param sundamage
      */
     void specifySundamageForDim(int dimensionId, boolean sundamage);
-
-    /**
-     * Checks if the given entity could receive sun damage at its current position
-     */
-    boolean isGettingSundamage(EntityLivingBase entity);
 }

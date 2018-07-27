@@ -36,8 +36,6 @@ public class ShapedHunterWeaponRecipe implements IHunterWeaponRecipe {
     }
 
 
-
-
     @Override
     public int getMinHunterLevel() {
         return requiredHunterLevel;
@@ -47,8 +45,6 @@ public class ShapedHunterWeaponRecipe implements IHunterWeaponRecipe {
     public ItemStack getRecipeOutput() {
         return this.recipeOutput;
     }
-
-
 
 
     @Override

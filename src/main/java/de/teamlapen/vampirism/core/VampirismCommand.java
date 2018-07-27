@@ -370,16 +370,6 @@ public class VampirismCommand extends BasicCommand {
         });
         addSubcommand(new SubCommand(PERMISSION_LEVEL_ALL) {
             @Override
-            public String getName() {
-                return "bind-action";
-            }
-
-            @Override
-            public String getUsage(ICommandSender sender) {
-                return getName() + " <1/2> " + " <action-id>";
-            }
-
-            @Override
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 
                 EntityPlayer player = getCommandSenderAsPlayer(sender);
@@ -408,6 +398,11 @@ public class VampirismCommand extends BasicCommand {
             }
 
             @Override
+            public String getName() {
+                return "bind-action";
+            }
+
+            @Override
             public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos targetPos) {
                 if (args.length == 1) {
                     return getListOfStringsMatchingLastWord(args, "1", "2");
@@ -415,6 +410,11 @@ public class VampirismCommand extends BasicCommand {
                     return getListOfStringsMatchingLastWord(args, VampirismAPI.actionManager().getRegistry().getKeys());
                 }
                 return Collections.emptyList();
+            }
+
+            @Override
+            public String getUsage(ICommandSender sender) {
+                return getName() + " <1/2> " + " <action-id>";
             }
         });
 

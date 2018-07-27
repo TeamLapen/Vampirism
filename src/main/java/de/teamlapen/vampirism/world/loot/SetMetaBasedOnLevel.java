@@ -43,15 +43,15 @@ public class SetMetaBasedOnLevel extends LootFunction {
         }
 
         @Override
+        public SetMetaBasedOnLevel deserialize(JsonObject object, JsonDeserializationContext deserializationContext, LootCondition[] conditionsIn) {
+            return new SetMetaBasedOnLevel(conditionsIn, object.has("max") ? JsonUtils.getInt(object, "max") : -1);
+        }
+
+        @Override
         public void serialize(JsonObject object, SetMetaBasedOnLevel functionClazz, JsonSerializationContext serializationContext) {
             if (functionClazz.max != -1) {
                 object.addProperty("max", functionClazz.max);
             }
-        }
-
-        @Override
-        public SetMetaBasedOnLevel deserialize(JsonObject object, JsonDeserializationContext deserializationContext, LootCondition[] conditionsIn) {
-            return new SetMetaBasedOnLevel(conditionsIn, object.has("max") ? JsonUtils.getInt(object, "max") : -1);
         }
     }
 }

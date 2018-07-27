@@ -11,7 +11,6 @@ public class ModFluids {
     public static Fluid impure_blood = new FluidBlood(VReference.FLUID_IMPURE_BLOOD_NAME);
 
 
-
     static void registerFluids() {
         FluidRegistry.registerFluid(blood);
         FluidRegistry.registerFluid(impure_blood);

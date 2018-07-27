@@ -34,13 +34,13 @@ public class StakeCondition implements LootCondition {
         }
 
         @Override
-        public void serialize(JsonObject json, StakeCondition value, JsonSerializationContext context) {
-
+        public StakeCondition deserialize(JsonObject json, JsonDeserializationContext context) {
+            return new StakeCondition();
         }
 
         @Override
-        public StakeCondition deserialize(JsonObject json, JsonDeserializationContext context) {
-            return new StakeCondition();
+        public void serialize(JsonObject json, StakeCondition value, JsonSerializationContext context) {
+
         }
     }
 }

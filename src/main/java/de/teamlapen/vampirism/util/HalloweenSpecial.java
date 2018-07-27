@@ -29,8 +29,6 @@ public class HalloweenSpecial {
 
     private static boolean enabled = false;
     private static int render_overlay;
-    private Map<UUID, EntityDraculaHalloween> draculas = Maps.newHashMap();
-    private int tickTimer = 0;
 
     public static boolean isEnabled() {
         return enabled;
@@ -67,6 +65,23 @@ public class HalloweenSpecial {
         VampLib.proxy.getParticleHandler().spawnParticle(target.getEntityWorld(), ModParticles.HALLOWEEN, target.posX, target.posY, target.posZ);
     }
 
+    private Map<UUID, EntityDraculaHalloween> draculas = Maps.newHashMap();
+    private int tickTimer = 0;
+
+    @SideOnly(Side.CLIENT)
+    @SubscribeEvent
+    public void onClientTick(TickEvent.ClientTickEvent event) {
+        if (event.phase == TickEvent.Phase.END) return;
+        if (render_overlay > 0) {
+            render_overlay--;
+        } else if (Minecraft.getMinecraft().world != null) {
+            int time = (int) Minecraft.getMinecraft().world.getWorldTime();
+            if (time > 13000 && time < 13100) {
+                triggerOverlay(Minecraft.getMinecraft().player);
+            }
+        }
+    }
+
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event) {
         if (event.phase == TickEvent.Phase.END) return;
@@ -94,11 +109,6 @@ public class HalloweenSpecial {
     }
 
     @SubscribeEvent
-    public void onWorldUnload(WorldEvent.Unload event) {
-        draculas.clear();
-    }
-
-    @SubscribeEvent
     public void onSleepInBed(PlayerSleepInBedEvent event) {
         if (enabled) {
             event.setResult(EntityPlayer.SleepResult.NOT_POSSIBLE_NOW);
@@ -106,17 +116,8 @@ public class HalloweenSpecial {
         }
     }
 
-    @SideOnly(Side.CLIENT)
     @SubscribeEvent
-    public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (event.phase == TickEvent.Phase.END) return;
-        if (render_overlay > 0) {
-            render_overlay--;
-        } else if (Minecraft.getMinecraft().world != null) {
-            int time = (int) Minecraft.getMinecraft().world.getWorldTime();
-            if (time > 13000 && time < 13100) {
-                triggerOverlay(Minecraft.getMinecraft().player);
-            }
-        }
+    public void onWorldUnload(WorldEvent.Unload event) {
+        draculas.clear();
     }
 }

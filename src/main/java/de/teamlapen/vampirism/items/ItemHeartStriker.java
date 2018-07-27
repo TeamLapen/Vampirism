@@ -26,27 +26,10 @@ public class ItemHeartStriker extends VampirismVampireSword implements IItemWith
     }
 
     @Override
-    protected float getBaseAttackDamage(ItemStack stack) {
-        return DAMAGE_TIER[getTier(stack).ordinal()];
-    }
-
-    @Override
-    protected float getBaseAttackSpeed(ItemStack stack) {
-        return SPEED_TIER[getTier(stack).ordinal()];
-    }
-
-    @Override
     public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
         for (TIER t : TIER.values()) {
             subItems.add(setTier(new ItemStack(itemIn), t));
         }
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    protected void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, playerIn, tooltip, advanced);
-        addTierInformation(stack, tooltip);
     }
 
     @Override
@@ -64,6 +47,22 @@ public class ItemHeartStriker extends VampirismVampireSword implements IItemWith
         return super.hitEntity(stack, target, attacker);
     }
 
+    @SideOnly(Side.CLIENT)
+    @Override
+    protected void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+        super.addInformation(stack, playerIn, tooltip, advanced);
+        addTierInformation(stack, tooltip);
+    }
+
+    @Override
+    protected float getBaseAttackDamage(ItemStack stack) {
+        return DAMAGE_TIER[getTier(stack).ordinal()];
+    }
+
+    @Override
+    protected float getBaseAttackSpeed(ItemStack stack) {
+        return SPEED_TIER[getTier(stack).ordinal()];
+    }
 
     @Override
     protected float getChargingFactor(ItemStack stack) {

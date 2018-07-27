@@ -20,14 +20,20 @@ import javax.annotation.Nullable;
 
 public class BlockSieve extends VampirismBlockContainer {
 
-    private final static String regName = "blood_sieve";
     public static final PropertyBool PROPERTY_ACTIVE = PropertyBool.create("active");
+    private final static String regName = "blood_sieve";
 
     public BlockSieve() {
         super(regName, Material.WOOD);
         setHardness(2.5F);
         setSoundType(SoundType.WOOD);
         this.setDefaultState(this.blockState.getBaseState().withProperty(PROPERTY_ACTIVE, false));
+    }
+
+    @Nullable
+    @Override
+    public TileEntity createNewTileEntity(World worldIn, int meta) {
+        return new TileSieve();
     }
 
     @Override
@@ -40,16 +46,14 @@ public class BlockSieve extends VampirismBlockContainer {
         return state.withProperty(PROPERTY_ACTIVE, false);
     }
 
+    @Override
+    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
+        return face == EnumFacing.UP || face == EnumFacing.DOWN ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
+    }
 
     @Override
     public int getMetaFromState(IBlockState state) {
         return 0;
-    }
-
-    @Nullable
-    @Override
-    public TileEntity createNewTileEntity(World worldIn, int meta) {
-        return new TileSieve();
     }
 
     @Override
@@ -67,17 +71,10 @@ public class BlockSieve extends VampirismBlockContainer {
         return false;
     }
 
-
     @Override
     public boolean isSideSolid(IBlockState base_state, IBlockAccess world, BlockPos pos, EnumFacing side) {
         return side == EnumFacing.UP || side == EnumFacing.DOWN;
     }
-
-    @Override
-    public BlockFaceShape getBlockFaceShape(IBlockAccess worldIn, IBlockState state, BlockPos pos, EnumFacing face) {
-        return face == EnumFacing.UP || face == EnumFacing.DOWN ? BlockFaceShape.SOLID : BlockFaceShape.UNDEFINED;
-    }
-
 
     @Override
     protected BlockStateContainer createBlockState() {

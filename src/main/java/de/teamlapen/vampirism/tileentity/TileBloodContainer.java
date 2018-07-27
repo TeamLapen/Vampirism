@@ -55,10 +55,6 @@ public class TileBloodContainer extends net.minecraftforge.fluids.capability.Til
         }
     }
 
-    public void setFluidStack(FluidStack stack) {
-        tank.setFluid(stack);
-    }
-
     @Override
     public void onTankContentChanged() {
         FluidStack fluid = getTankInfo().fluid;
@@ -69,5 +65,9 @@ public class TileBloodContainer extends net.minecraftforge.fluids.capability.Til
             this.lastSyncedAmount = fluid == null ? Integer.MIN_VALUE : fluid.amount;
         }
 
+    }
+
+    public void setFluidStack(FluidStack stack) {
+        tank.setFluid(stack);
     }
 }

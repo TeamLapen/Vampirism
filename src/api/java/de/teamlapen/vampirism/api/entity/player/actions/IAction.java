@@ -15,6 +15,7 @@ import javax.annotation.Nonnull;
 public interface IAction extends IForgeRegistryEntry<IAction> {
     /**
      * Checks if the player can use this action
+     *
      * @param player Must be instance of class that belongs to {@link IAction#getFaction()}
      */
     PERM canUse(IFactionPlayer player);
@@ -25,7 +26,6 @@ public interface IAction extends IForgeRegistryEntry<IAction> {
     int getCooldown();
 
     /**
-
      * @return the faction, which players can use this action
      */
     @Nonnull
@@ -41,14 +41,12 @@ public interface IAction extends IForgeRegistryEntry<IAction> {
     ResourceLocation getIconLoc();
 
     /**
-
      * @return the min U texture coordinate within the icon map
      */
     @SideOnly(Side.CLIENT)
     int getMinU();
 
     /**
-
      * @return the min V texture coordinate within the icon map
      */
     @SideOnly(Side.CLIENT)

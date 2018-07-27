@@ -242,7 +242,7 @@ public class TilePedestal extends TileEntity implements ITickable, IItemHandler 
      * @return If successful
      */
     private boolean setStack(@Nonnull ItemStack stack) {
-        this.chargingTicks=0;
+        this.chargingTicks = 0;
         if (this.internalStack.isEmpty()) {
             this.internalStack = stack;
             return true;

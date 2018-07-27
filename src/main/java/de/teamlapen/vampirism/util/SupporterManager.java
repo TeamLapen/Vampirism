@@ -14,7 +14,7 @@ import java.util.Random;
 
 /**
  * Handles the download, parsing and access of supporter information.
- *
+ * <p>
  * Can check skins here
  * http://skins.minecraft.net/MinecraftSkins/%s.png
  */

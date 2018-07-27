@@ -159,21 +159,6 @@ public class VampirismHUDOverlay extends ExtendedGui {
         }
     }
 
-    private void renderBloodFangs(int width, int height, float perc) {
-        this.mc.getTextureManager().bindTexture(icons);
-        int left = width / 2 - 8;
-        int top = height / 2 - 4;
-        GL11.glEnable(GL11.GL_BLEND);
-        GL11.glColor4f(1F, 1F, 1F, 0.7F);
-        drawTexturedModalRect(left, top, 27, 0, 16, 10);
-        GL11.glColor4f(1F, 0F, 0F, 0.8F);
-        int percHeight = (int) (10 * perc);
-        drawTexturedModalRect(left, top + (10 - percHeight), 27, 10 - percHeight, 16, percHeight);
-        GL11.glColor4f(1F, 1F, 1F, 1F);
-        GL11.glDisable(GL11.GL_BLEND);
-
-    }
-
     /**
      * Render Level
      */
@@ -310,6 +295,21 @@ public class VampirismHUDOverlay extends ExtendedGui {
         if (HalloweenSpecial.shouldRenderOverlay()) {
             renderHalloweenOverlay();
         }
+    }
+
+    private void renderBloodFangs(int width, int height, float perc) {
+        this.mc.getTextureManager().bindTexture(icons);
+        int left = width / 2 - 8;
+        int top = height / 2 - 4;
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glColor4f(1F, 1F, 1F, 0.7F);
+        drawTexturedModalRect(left, top, 27, 0, 16, 10);
+        GL11.glColor4f(1F, 0F, 0F, 0.8F);
+        int percHeight = (int) (10 * perc);
+        drawTexturedModalRect(left, top + (10 - percHeight), 27, 10 - percHeight, 16, percHeight);
+        GL11.glColor4f(1F, 1F, 1F, 1F);
+        GL11.glDisable(GL11.GL_BLEND);
+
     }
 
     /**

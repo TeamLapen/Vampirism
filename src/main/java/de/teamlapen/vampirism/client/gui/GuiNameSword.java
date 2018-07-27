@@ -43,6 +43,22 @@ public class GuiNameSword extends GuiScreen {
     }
 
     @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        this.drawDefaultBackground();
+        this.drawCenteredString(this.fontRenderer, this.text1, this.width / 2, 70, 16777215);
+        int i = 90;
+        for (String s : this.listLines) {
+            this.drawCenteredString(this.fontRenderer, s, this.width / 2, i, 16777215);
+            i += this.fontRenderer.FONT_HEIGHT;
+        }
+
+        super.drawScreen(mouseX, mouseY, partialTicks);
+        GlStateManager.disableLighting();
+        GlStateManager.disableBlend();
+        this.nameField.drawTextBox();
+    }
+
+    @Override
     public void initGui() {
         super.initGui();
         this.buttonList.add(new GuiOptionButton(0, this.width / 2 - 155, this.height / 6 + 96, this.yes));
@@ -55,12 +71,6 @@ public class GuiNameSword extends GuiScreen {
         this.listLines.clear();
         this.listLines.addAll(this.fontRenderer.listFormattedStringToWidth(this.text2, this.width - 50));
         this.nameField.setText(sword_names[new Random().nextInt(sword_names.length)]);
-    }
-
-    @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        this.nameField.textboxKeyTyped(typedChar, keyCode);
-        super.keyTyped(typedChar, keyCode);
     }
 
     @Override
@@ -78,24 +88,14 @@ public class GuiNameSword extends GuiScreen {
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
-        this.nameField.mouseClicked(mouseX, mouseY, mouseButton);
+    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+        this.nameField.textboxKeyTyped(typedChar, keyCode);
+        super.keyTyped(typedChar, keyCode);
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        this.drawDefaultBackground();
-        this.drawCenteredString(this.fontRenderer, this.text1, this.width / 2, 70, 16777215);
-        int i = 90;
-        for (String s : this.listLines) {
-            this.drawCenteredString(this.fontRenderer, s, this.width / 2, i, 16777215);
-            i += this.fontRenderer.FONT_HEIGHT;
-        }
-
-        super.drawScreen(mouseX, mouseY, partialTicks);
-        GlStateManager.disableLighting();
-        GlStateManager.disableBlend();
-        this.nameField.drawTextBox();
+    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
+        this.nameField.mouseClicked(mouseX, mouseY, mouseButton);
     }
 }

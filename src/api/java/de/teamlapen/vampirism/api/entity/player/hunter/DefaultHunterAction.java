@@ -16,5 +16,4 @@ public abstract class DefaultHunterAction extends DefaultAction<IHunterPlayer> {
     }
 
 
-
 }

@@ -36,21 +36,30 @@ public class TileSieve extends TileEntity implements ITickable, FluidTankWithLis
         tank.setCanDrain(false);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public void readFromNBT(NBTTagCompound tag) {
-        super.readFromNBT(tag);
-        tank.readFromNBT(tag);
-        cooldownProcess = tag.getInteger("cooldown_process");
-        cooldownPull = tag.getInteger("cooldown_pull");
+    @Nullable
+    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
+        if ((facing == null || facing != EnumFacing.DOWN) && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+            return (T) tank;
+        return super.getCapability(capability, facing);
     }
 
     @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
-        tag = super.writeToNBT(tag);
-        tank.writeToNBT(tag);
-        cooldownProcess = tag.getInteger("cooldown_process");
-        cooldownPull = tag.getInteger("cooldown_pull");
-        return tag;
+    public SPacketUpdateTileEntity getUpdatePacket() {
+        return new SPacketUpdateTileEntity(getPos(), 1, getUpdateTag());
+    }
+
+    @Override
+    public NBTTagCompound getUpdateTag() {
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setBoolean("active", isActive());
+        return nbt;
+    }
+
+    @Override
+    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
+        return ((facing == null || facing != EnumFacing.DOWN) && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) || super.hasCapability(capability, facing);
     }
 
     public boolean isActive() {
@@ -66,16 +75,6 @@ public class TileSieve extends TileEntity implements ITickable, FluidTankWithLis
         }
     }
 
-    @Override
-    public boolean hasCapability(@Nonnull Capability<?> capability, @Nullable EnumFacing facing) {
-        return ((facing == null || facing != EnumFacing.DOWN) && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) || super.hasCapability(capability, facing);
-    }
-
-    @Override
-    public SPacketUpdateTileEntity getUpdatePacket() {
-        return new SPacketUpdateTileEntity(getPos(), 1, getUpdateTag());
-    }
-
     @SideOnly(Side.CLIENT)
     @Override
     public void onDataPacket(NetworkManager net, SPacketUpdateTileEntity pkt) {
@@ -87,19 +86,17 @@ public class TileSieve extends TileEntity implements ITickable, FluidTankWithLis
     }
 
     @Override
-    public NBTTagCompound getUpdateTag() {
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setBoolean("active", isActive());
-        return nbt;
+    public void onTankContentChanged() {
+        this.setActive(true);
+
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    @Nullable
-    public <T> T getCapability(@Nonnull Capability<T> capability, @Nullable EnumFacing facing) {
-        if ((facing == null || facing != EnumFacing.DOWN) && capability == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
-            return (T) tank;
-        return super.getCapability(capability, facing);
+    public void readFromNBT(NBTTagCompound tag) {
+        super.readFromNBT(tag);
+        tank.readFromNBT(tag);
+        cooldownProcess = tag.getInteger("cooldown_process");
+        cooldownPull = tag.getInteger("cooldown_pull");
     }
 
     @Override
@@ -134,9 +131,12 @@ public class TileSieve extends TileEntity implements ITickable, FluidTankWithLis
     }
 
     @Override
-    public void onTankContentChanged() {
-        this.setActive(true);
-
+    public NBTTagCompound writeToNBT(NBTTagCompound tag) {
+        tag = super.writeToNBT(tag);
+        tank.writeToNBT(tag);
+        cooldownProcess = tag.getInteger("cooldown_process");
+        cooldownPull = tag.getInteger("cooldown_pull");
+        return tag;
     }
 
     private class FilteringFluidTank extends FluidTankWithListener {

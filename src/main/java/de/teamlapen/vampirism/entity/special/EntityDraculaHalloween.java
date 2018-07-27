@@ -46,16 +46,39 @@ public class EntityDraculaHalloween extends EntityVampirism {
         return false;
     }
 
-
-    @Override
-    protected void initEntityAI() {
-        super.initEntityAI();
-        this.tasks.addTask(1, new EntityAIWatchClosest(this, EntityPlayer.class, 10, 1));
+    @Nullable
+    public EntityLivingBase getOwner() {
+        try {
+            UUID uuid = this.getOwnerId();
+            return uuid == null ? null : this.world.getPlayerEntityByUUID(uuid);
+        } catch (IllegalArgumentException var2) {
+            return null;
+        }
     }
 
-    @Override
-    protected boolean canDespawn() {
-        return false;
+    @Nullable
+    public UUID getOwnerId() {
+        return (UUID) ((Optional) this.dataManager.get(OWNER_UNIQUE_ID)).orNull();
+    }
+
+    public void setOwnerId(@Nullable UUID p_184754_1_) {
+        this.dataManager.set(OWNER_UNIQUE_ID, Optional.fromNullable(p_184754_1_));
+    }
+
+    public boolean isParticle() {
+        return particle;
+    }
+
+    public void setParticle(boolean particle) {
+        this.particle = particle;
+    }
+
+    public void makeHide(int time) {
+        seen = 0;
+        this.setInvisible(true);
+        BlockPos spawn = world.getSpawnPoint();
+        this.setPosition(spawn.getX(), 3, spawn.getZ());
+        hiding = time;
     }
 
     @Override
@@ -126,12 +149,33 @@ public class EntityDraculaHalloween extends EntityVampirism {
 
     }
 
-    public void makeHide(int time) {
-        seen = 0;
-        this.setInvisible(true);
-        BlockPos spawn = world.getSpawnPoint();
-        this.setPosition(spawn.getX(), 3, spawn.getZ());
-        hiding = time;
+    /**
+     * (abstract) Protected helper method to read subclass entity data from NBT.
+     */
+    public void readEntityFromNBT(NBTTagCompound compound) {
+        super.readEntityFromNBT(compound);
+        this.setDead();
+    }
+
+    @Override
+    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
+        return super.writeToNBT(compound);
+    }
+
+    @Override
+    protected boolean canDespawn() {
+        return false;
+    }
+
+    protected void entityInit() {
+        super.entityInit();
+        this.dataManager.register(OWNER_UNIQUE_ID, Optional.absent());
+    }
+
+    @Override
+    protected void initEntityAI() {
+        super.initEntityAI();
+        this.tasks.addTask(1, new EntityAIWatchClosest(this, EntityPlayer.class, 10, 1));
     }
 
     private void teleportBehind(EntityLivingBase target) {
@@ -142,52 +186,5 @@ public class EntityDraculaHalloween extends EntityVampirism {
             int y = getEntityWorld().getHeight(behind).getY();
             this.setPosition(behind.getX(), y, behind.getZ());
         }
-    }
-
-    @Nullable
-    public UUID getOwnerId() {
-        return (UUID) ((Optional) this.dataManager.get(OWNER_UNIQUE_ID)).orNull();
-    }
-
-    public void setOwnerId(@Nullable UUID p_184754_1_) {
-        this.dataManager.set(OWNER_UNIQUE_ID, Optional.fromNullable(p_184754_1_));
-    }
-
-
-    @Nullable
-    public EntityLivingBase getOwner() {
-        try {
-            UUID uuid = this.getOwnerId();
-            return uuid == null ? null : this.world.getPlayerEntityByUUID(uuid);
-        } catch (IllegalArgumentException var2) {
-            return null;
-        }
-    }
-
-    protected void entityInit() {
-        super.entityInit();
-        this.dataManager.register(OWNER_UNIQUE_ID, Optional.absent());
-    }
-
-
-    @Override
-    public NBTTagCompound writeToNBT(NBTTagCompound compound) {
-        return super.writeToNBT(compound);
-    }
-
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
-    public void readEntityFromNBT(NBTTagCompound compound) {
-        super.readEntityFromNBT(compound);
-        this.setDead();
-    }
-
-    public boolean isParticle() {
-        return particle;
-    }
-
-    public void setParticle(boolean particle) {
-        this.particle = particle;
     }
 }

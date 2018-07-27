@@ -12,8 +12,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
-public class StructureManager
-{
+public class StructureManager {
 
     private final static Map<Structure, VampirismTemplate> templates = Maps.newHashMap();
     private final static String TAG = "StructureManager";

@@ -32,7 +32,6 @@ public interface IFaction<T extends IFactionEntity> {
 
     /**
      * If set returns unlocalized name. Otherwise returns {@link IFaction#name()}
-
      */
     String getUnlocalizedName();
 

@@ -48,20 +48,6 @@ public class BiteableEntryManager {
         init = false;
     }
 
-    public void resetDynamic() {
-        init = false;
-        dynamic.clear();
-    }
-
-    /**
-     * Prepare the dynamic list
-     */
-    public void initDynamic() {
-        dynamic.clear();
-        dynamic.putAll(hardcoded);
-        init = true;
-    }
-
     /**
      * Adds a dynamic value.
      * Respects the convertible status from the hardcoded list
@@ -84,11 +70,6 @@ public class BiteableEntryManager {
         for (Map.Entry<ResourceLocation, Integer> e : map.entrySet()) {
             addDynamic(e.getKey(), e.getValue());
         }
-    }
-
-    public @Nullable
-    BiteableEntry get(ResourceLocation id) {
-        return init ? dynamic.get(id) : hardcoded.get(id);
     }
 
     /**
@@ -131,6 +112,20 @@ public class BiteableEntryManager {
         }
     }
 
+    public @Nullable
+    BiteableEntry get(ResourceLocation id) {
+        return init ? dynamic.get(id) : hardcoded.get(id);
+    }
+
+    public Map<ResourceLocation, Integer> getDynamicAll() {
+        Map<ResourceLocation, Integer> map = Maps.newHashMap();
+
+        for (Map.Entry<ResourceLocation, BiteableEntry> entry : dynamic.entrySet()) {
+            map.put(entry.getKey(), entry.getValue().blood);
+        }
+        return map;
+    }
+
     /**
      * Get all dynamic values which id's are not present in the hardcoded list
      *
@@ -144,6 +139,15 @@ public class BiteableEntryManager {
             }
         }
         return map;
+    }
+
+    /**
+     * Prepare the dynamic list
+     */
+    public void initDynamic() {
+        dynamic.clear();
+        dynamic.putAll(hardcoded);
+        init = true;
     }
 
 //    Not used for now. Values are only used in ExtendedCreatures and we can sync values there
@@ -163,14 +167,9 @@ public class BiteableEntryManager {
 //        VampirismMod.dispatcher.sendTo(packet,player);
 //    }
 
-
-    public Map<ResourceLocation, Integer> getDynamicAll() {
-        Map<ResourceLocation, Integer> map = Maps.newHashMap();
-
-        for (Map.Entry<ResourceLocation, BiteableEntry> entry : dynamic.entrySet()) {
-            map.put(entry.getKey(), entry.getValue().blood);
-        }
-        return map;
+    public void resetDynamic() {
+        init = false;
+        dynamic.clear();
     }
 
 

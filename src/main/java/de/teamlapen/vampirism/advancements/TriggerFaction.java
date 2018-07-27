@@ -24,25 +24,6 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
         super(ID, Listeners::new);
     }
 
-
-
-
-    /**
-     * Trigger this criterion
-     */
-    public void trigger(EntityPlayerMP playerMP, IPlayableFaction faction, int level) {
-        Listeners listeners = (Listeners) this.listenersForPlayers.get(playerMP.getAdvancements());
-        if (listeners != null) {
-            listeners.trigger(faction, level);
-        }
-    }
-
-
-    @Override
-    public void removeAllListeners(PlayerAdvancements playerAdvancementsIn) {
-        this.listenersForPlayers.remove(playerAdvancementsIn);
-    }
-
     @Override
     public Instance deserializeInstance(JsonObject json, JsonDeserializationContext context) {
 
@@ -62,6 +43,20 @@ public class TriggerFaction extends AbstractCriterionTrigger<TriggerFaction.Inst
         return new Instance(faction, level);
     }
 
+    @Override
+    public void removeAllListeners(PlayerAdvancements playerAdvancementsIn) {
+        this.listenersForPlayers.remove(playerAdvancementsIn);
+    }
+
+    /**
+     * Trigger this criterion
+     */
+    public void trigger(EntityPlayerMP playerMP, IPlayableFaction faction, int level) {
+        Listeners listeners = (Listeners) this.listenersForPlayers.get(playerMP.getAdvancements());
+        if (listeners != null) {
+            listeners.trigger(faction, level);
+        }
+    }
 
     static class Instance extends AbstractCriterionInstance {
         @Nullable
