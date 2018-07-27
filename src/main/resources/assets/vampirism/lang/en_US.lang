@@ -135,7 +135,7 @@ entity.vampirism.dead_mob.name=Dead mob
 entity.vampirism.portal_guard.name=Portal Guard
 entity.vampirism.converted_villager.name=Vampire Villager
 text.vampirism.entity_level=Level
-entity.villager.vampire_hunter=Alchemic Priest
+entity.Villager.vampire_hunter=Alchemical Priest
 
 #RITUALS
 text.vampirism.ritual_missing_items=Missing %s of "%s" for this ritual
