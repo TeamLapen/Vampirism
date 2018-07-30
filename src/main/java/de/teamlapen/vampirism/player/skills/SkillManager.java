@@ -166,23 +166,7 @@ public class SkillManager implements ISkillManager {
         ISkill skill = VampirismRegistries.SKILLS.getValue(faction.getKey());
         if (skill == null) {
             VampirismMod.log.bigWarning("SkillManager", "No root skill exists for faction %s", faction.getKey());
-            skill = new VampirismSkill(faction) {
-
-                @Override
-                public int getMinU() {
-                    return 0;
-                }
-
-                @Override
-                public int getMinV() {
-                    return 0;
-                }
-
-                @Override
-                public String getUnlocalizedName() {
-                    return faction.getUnlocalizedName();
-                }
-            };
+            throw new IllegalStateException("You need to register a root skill for your faction " + faction.getKey());
         }
         return skill;
     }
