@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.hunter.IAdvancedHunter;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
+import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModAdvancements;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -20,7 +21,7 @@ import net.minecraft.util.DamageSource;
 /**
  * Does almost no damage, but can one hit kill vampire from behind when used by skilled hunters
  */
-public class ItemStake extends VampirismItemWeapon {
+public class ItemStake extends VampirismItemWeapon implements IVampireFinisher {
     private final static String regName = "stake";
 
     public ItemStake() {

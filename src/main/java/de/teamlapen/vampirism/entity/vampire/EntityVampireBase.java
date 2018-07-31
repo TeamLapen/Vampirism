@@ -5,11 +5,13 @@ import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
+import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBiomes;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.DamageHandler;
+import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
 import de.teamlapen.vampirism.entity.EntitySoulOrb;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -23,6 +25,7 @@ import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.math.BlockPos;
@@ -45,7 +48,11 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     protected boolean vulnerableToFire = true;
     private boolean sundamageCache;
     private EnumStrength garlicCache = EnumStrength.NONE;
-
+    /**
+     * If the vampire should spawn a vampire soul at the end of its death animation.
+     * No need to store this in NBT as it is only set during onDeath() so basically 20 ticks beforehand.
+     */
+    private boolean dropSoul = false;
 
     /**
      * @param countAsMonsterForSpawn If this entity should be counted as vampire and as monster during spawning
@@ -148,6 +155,21 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     }
 
     @Override
+    public void onDeath(DamageSource cause) {
+        super.onDeath(cause);
+        if (cause.getImmediateSource() instanceof EntityCrossbowArrow && Helper.isHunter(cause.getTrueSource())) {
+            dropSoul = true;
+        } else if (cause.getImmediateSource() instanceof EntityPlayer && Helper.isHunter(cause.getImmediateSource())) {
+            ItemStack weapon = ((EntityPlayer) cause.getImmediateSource()).getHeldItemMainhand();
+            if (!weapon.isEmpty() && weapon.getItem() instanceof IVampireFinisher) {
+                dropSoul = true;
+            }
+        } else {
+            dropSoul = false;//In case a previous death has been canceled somehow
+        }
+    }
+
+    @Override
     public void onLivingUpdate() {
         if (this.ticksExisted % REFERENCE.REFRESH_GARLIC_TICKS == 3) {
             isGettingGarlicDamage(true);
@@ -205,12 +227,8 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     @Override
     protected void onDeathUpdate() {
         if (this.deathTime == 19) {
-            if (!this.world.isRemote && (this.recentlyHit > 0 && this.world.getGameRules().getBoolean("doMobLoot"))) {
-                DamageSource lastDamage = this.getLastDamageSource();
-                if (lastDamage != null && lastDamage.getTrueSource() != null && Helper.isHunter(lastDamage.getTrueSource())) {
-                    this.world.spawnEntity(new EntitySoulOrb(this.world, this.posX, this.posY, this.posZ, EntitySoulOrb.TYPE.VAMPIRE));
-                }
-
+            if (!this.world.isRemote && (dropSoul && this.world.getGameRules().getBoolean("doMobLoot"))) {
+                this.world.spawnEntity(new EntitySoulOrb(this.world, this.posX, this.posY, this.posZ, EntitySoulOrb.TYPE.VAMPIRE));
             }
         }
         super.onDeathUpdate();
