@@ -48,7 +48,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Handles general Overlay thingies
+ * Handles general Overlay thingies TODO change batmode color
  */
 @SideOnly(Side.CLIENT)
 public class VampirismHUDOverlay extends ExtendedGui {
@@ -104,7 +104,6 @@ public class VampirismHUDOverlay extends ExtendedGui {
 			}
 
 			float batPercentage = ((IVampirePlayer) player).getActionHandler().getPercentageForAction(VampireActions.bat);
-			System.out.println(batPercentage);
 			if (batPercentage < 1.0F && batPercentage > 0.0F) {
 				screenBottomColor = 0xcc7067f9; // change color
 				screenBottomPercentage = (int) (0.1F - batPercentage * 10);

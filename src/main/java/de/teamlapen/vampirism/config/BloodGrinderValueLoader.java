@@ -64,6 +64,8 @@ public class BloodGrinderValueLoader {
 				VampirismMod.log.e(TAG, "Could not read blood grinder values from config file %s", bloodConfigFile.getName());
 			}
 		}
+
+		loadBloodValuesModCompat("test");
 	}
 
 	/**
@@ -144,7 +146,7 @@ public class BloodGrinderValueLoader {
 		if (!Loader.isModLoaded(modid))
 			return;
 		try {
-			bloodValues.putAll(BloodGrinderValueLoader.loadBloodValuesFromReader(new InputStreamReader(BloodGrinderValueLoader.class.getResourceAsStream("/blood_values/" + modid + ".txt")), modid + ".txt"));
+			bloodValues.putAll(BloodGrinderValueLoader.loadBloodValuesFromReader(new InputStreamReader(BloodGrinderValueLoader.class.getResourceAsStream("/blood_values_grinder/" + modid + ".txt")), modid + ".txt"));
 		}
 		catch (IOException e) {
 			VampirismMod.log.e(TAG, e, "[ModCompat]Could not read default blood values for mod %s, this should not happen", modid);
