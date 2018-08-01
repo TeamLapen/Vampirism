@@ -118,7 +118,6 @@ public class VampirismHUDOverlay extends ExtendedGui {
 			screenColor = 0xff111111;
 			fullScreen = false;
 		} else {
-			System.out.println(screenPercentage);
 			screenPercentage = 0;
 		}
 		if (renderFullTick > 0) {
