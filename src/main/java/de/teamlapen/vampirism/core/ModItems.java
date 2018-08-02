@@ -46,6 +46,7 @@ import de.teamlapen.vampirism.items.ItemTechCrossbow;
 import de.teamlapen.vampirism.items.ItemTent;
 import de.teamlapen.vampirism.items.ItemVampireBloodBottle;
 import de.teamlapen.vampirism.items.ItemVampireBook;
+import de.teamlapen.vampirism.items.ItemVampireCloak;
 import de.teamlapen.vampirism.items.ItemVampireFang;
 import de.teamlapen.vampirism.items.VampirismHunterArmor;
 import de.teamlapen.vampirism.items.VampirismItem;
@@ -136,6 +137,8 @@ public class ModItems {
 	public static final VampirismItem blood_infused_iron_ingot = getNull();
 	public static final VampirismItem blood_infused_enhanced_iron_ingot = getNull();
 	public static final VampirismItem soul_orb_vampire = getNull();
+
+	public static final ItemVampireCloak vampire_cloak = getNull();
 
 	static void registerCraftingRecipes() {
 		// TODO CRAFTING
@@ -319,6 +322,8 @@ public class ModItems {
 		registry.register(new VampirismItem("blood_infused_iron_ingot"));
 		registry.register(new VampirismItem("blood_infused_enhanced_iron_ingot"));
 		registry.register(new VampirismItem("soul_orb_vampire"));
+
+		registry.register(new ItemVampireCloak());
 	}
 
 	/**
@@ -368,10 +373,5 @@ public class ModItems {
 		for (ResourceLocation e : valuesIn.keySet()) {
 			BloodConversionRegistry.registerItem(e, valuesIn.get(e) * VReference.FOOD_TO_FLUID_BLOOD);
 		}
-		BloodConversionRegistry.registerItem(ModItems.human_heart.getRegistryName(), 20 * VReference.FOOD_TO_FLUID_BLOOD);
-		BloodConversionRegistry.registerItem(ModItems.weak_human_heart.getRegistryName(), 10 * VReference.FOOD_TO_FLUID_BLOOD);
-		BloodConversionRegistry.registerItem(Items.BEEF.getRegistryName(), 2 * VReference.FOOD_TO_FLUID_BLOOD);
-		BloodConversionRegistry.registerItem(Items.MUTTON.getRegistryName(), VReference.FOOD_TO_FLUID_BLOOD);
-		BloodConversionRegistry.registerItem(Items.PORKCHOP.getRegistryName(), VReference.FOOD_TO_FLUID_BLOOD);
 	}
 }
