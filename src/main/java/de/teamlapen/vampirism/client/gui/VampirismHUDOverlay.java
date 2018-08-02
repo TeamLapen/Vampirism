@@ -126,7 +126,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
 	private void setColorForBatDuration(IFactionPlayer player) {
 		float batPercentage = ((IVampirePlayer) player).getActionHandler().getPercentageForAction(VampireActions.bat);
-		if (batPercentage < 1.0F && batPercentage > 0.0F) {
+		if (batPercentage < 0.1F && batPercentage > 0.0F) {
 			screenBottomColor = 0xcc7067f9; // change color
 			screenBottomPercentage = (int) (0.1F - batPercentage * 10);
 			fullScreen = false;
