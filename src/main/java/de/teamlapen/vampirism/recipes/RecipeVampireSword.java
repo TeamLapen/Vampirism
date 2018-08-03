@@ -20,13 +20,6 @@ public abstract class RecipeVampireSword extends net.minecraftforge.registries.I
 		this.sword = sword;
 	}
 
-	/**
-	 * checks recipe:
-	 * _X_
-	 * XYX
-	 * 
-	 * X = blood infused iron Y = heart seeker
-	 */
 	@Override
 	public boolean matches(InventoryCrafting inv, World worldIn) {
 
@@ -65,6 +58,9 @@ public abstract class RecipeVampireSword extends net.minecraftforge.registries.I
 		return false;
 	}
 
+	/**
+	 * checks for the other ingredients than vampire sword
+	 */
 	protected boolean check(InventoryCrafting inv, Item item, int i, int j) {
 
 		if (inv.getStackInRowAndColumn(i, j - 1).getItem() == item && inv.getStackInRowAndColumn(i - 1, j).getItem() == item && inv.getStackInRowAndColumn(i + 1, j).getItem() == item) {
