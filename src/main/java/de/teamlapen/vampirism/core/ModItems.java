@@ -141,6 +141,7 @@ public class ModItems {
 	public static final ItemVampireCloak vampire_cloak = getNull();
 
 	static void registerCraftingRecipes() {
+
 		// TODO CRAFTING
 		HunterWeaponCraftingManager weaponCraftingManager = HunterWeaponCraftingManager.getInstance();
 		AlchemicalCauldronCraftingManager cauldronCraftingManager = AlchemicalCauldronCraftingManager.getInstance();
@@ -211,30 +212,38 @@ public class ModItems {
 		BrewingRecipeRegistry.addRecipe(PotionUtils.addPotionToItemStack(new ItemStack(Items.POTIONITEM), PotionTypes.WATER), new ItemStack(holy_salt), new ItemStack(holy_salt_water));
 		// TODO Move tier NBT tag system to seperate item system 1.13
 		BrewingRecipeRegistry.addRecipe(new BrewingRecipe(holy_water_bottle.setTier(new ItemStack(holy_water_bottle), IItemWithTier.TIER.NORMAL), new ItemStack(Items.GUNPOWDER), holy_water_splash_bottle.setTier(new ItemStack(holy_water_splash_bottle), IItemWithTier.TIER.NORMAL)) {
+
 			@Override
 			public boolean isInput(@Nonnull ItemStack stack) {
+
 				return holy_water_bottle.equals(stack.getItem()) && holy_water_bottle.getTier(stack) == IItemWithTier.TIER.NORMAL;
 			}
 		});
 		BrewingRecipeRegistry.addRecipe(new BrewingRecipe(holy_water_bottle.setTier(new ItemStack(holy_water_bottle), IItemWithTier.TIER.ENHANCED), new ItemStack(Items.GUNPOWDER), holy_water_splash_bottle.setTier(new ItemStack(holy_water_splash_bottle), IItemWithTier.TIER.ENHANCED)) {
+
 			@Override
 			public boolean isInput(@Nonnull ItemStack stack) {
+
 				return holy_water_bottle.equals(stack.getItem()) && holy_water_bottle.getTier(stack) == IItemWithTier.TIER.ENHANCED;
 			}
 		});
 		BrewingRecipeRegistry.addRecipe(new BrewingRecipe(holy_water_bottle.setTier(new ItemStack(holy_water_bottle), IItemWithTier.TIER.ULTIMATE), new ItemStack(Items.GUNPOWDER), holy_water_splash_bottle.setTier(new ItemStack(holy_water_splash_bottle), IItemWithTier.TIER.ULTIMATE)) {
+
 			@Override
 			public boolean isInput(@Nonnull ItemStack stack) {
+
 				return holy_water_bottle.equals(stack.getItem()) && holy_water_bottle.getTier(stack) == IItemWithTier.TIER.ULTIMATE;
 			}
 		});
 	}
 
 	public static ItemStack createStack(IItemWithTier item, IItemWithTier.TIER tier) {
+
 		return item.setTier(new ItemStack((Item) item), tier);
 	}
 
 	static void registerItems(IForgeRegistry<Item> registry) {
+
 		registry.register(new ItemVampireFang());
 		registry.register(new ItemHumanHeart());
 		registry.register(new ItemHumanHeartWeak());
@@ -270,8 +279,10 @@ public class ModItems {
 		enhanced_tech_crossbow.setEnchantability(Item.ToolMaterial.DIAMOND);
 		registry.register(enhanced_tech_crossbow);
 		registry.register(new VampirismItem("tech_crossbow_ammo_package") {
+
 			@Override
 			public void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+
 				tooltip.add(UtilLib.translateFormatted("item.vampirism." + regName + ".tooltip", basic_tech_crossbow.getLocalizedName()));
 			}
 		});
@@ -279,16 +290,20 @@ public class ModItems {
 		registry.register(new ItemHolyWaterBottle(ItemHolyWaterBottle.regName));
 		registry.register(new ItemHolyWaterSplashBottle(ItemHolyWaterSplashBottle.regName));
 		registry.register(new VampirismItem("holy_salt") {
+
 			@Override
 			public boolean hasEffect(ItemStack stack) {
+
 				return true;
 			}
 		});
 		registry.register(new VampirismItem("pure_salt"));
 
 		registry.register(new VampirismItem("holy_salt_water") {
+
 			@Override
 			public boolean hasEffect(ItemStack stack) {
+
 				return true;
 			}
 		}.setMaxStackSize(1));
@@ -339,14 +354,13 @@ public class ModItems {
 		// Check for mappings changed for 1.11 CamelCase to lower underscore
 		String old = mapping.key.getResourcePath();
 		boolean r = checkMapping(mapping, old, armor_of_swiftness_feet, armor_of_swiftness_chest, armor_of_swiftness_head, armor_of_swiftness_legs, basic_crossbow, basic_double_crossbow, basic_tech_crossbow, blood_bottle, blood_potion, crossbow_arrow, enhanced_crossbow, enhanced_double_crossbow);
-		if (!r)
-			r = checkMapping(mapping, old, enhanced_tech_crossbow, human_heart, weak_human_heart, hunter_axe, hunter_coat_feet, hunter_coat_chest, hunter_coat_head, hunter_coat_legs, hunter_hat0_head, hunter_hat1_head, hunter_intel, injection, item_alchemical_fire, item_coffin, item_garlic, item_med_chair);
-		if (!r)
-			r = checkMapping(mapping, old, item_tent, obsidian_armor_feet, obsidian_armor_chest, obsidian_armor_head, obsidian_armor_legs, pitchfork, pure_blood, tech_crossbow_ammo_package, vampire_blood_bottle, vampire_book, vampire_fang);
+		if (!r) r = checkMapping(mapping, old, enhanced_tech_crossbow, human_heart, weak_human_heart, hunter_axe, hunter_coat_feet, hunter_coat_chest, hunter_coat_head, hunter_coat_legs, hunter_hat0_head, hunter_hat1_head, hunter_intel, injection, item_alchemical_fire, item_coffin, item_garlic, item_med_chair);
+		if (!r) r = checkMapping(mapping, old, item_tent, obsidian_armor_feet, obsidian_armor_chest, obsidian_armor_head, obsidian_armor_legs, pitchfork, pure_blood, tech_crossbow_ammo_package, vampire_blood_bottle, vampire_book, vampire_fang);
 		return r;
 	}
 
 	private static boolean checkMapping(RegistryEvent.MissingMappings.Mapping<Item> mapping, String name, Item... items) {
+
 		for (Item i : items) {
 			String oldRegisteredName;
 			if (i instanceof VampirismHunterArmor) {
@@ -369,7 +383,8 @@ public class ModItems {
 	}
 
 	static void registerBloodConversionRates() {
-		Map<ResourceLocation, Integer> valuesIn = BloodGrinderValueLoader.bloodValues;
+
+		Map<ResourceLocation, Integer> valuesIn = BloodGrinderValueLoader.getBloodGrinderValues();
 		for (ResourceLocation e : valuesIn.keySet()) {
 			BloodConversionRegistry.registerItem(e, valuesIn.get(e) * VReference.FOOD_TO_FLUID_BLOOD);
 		}
