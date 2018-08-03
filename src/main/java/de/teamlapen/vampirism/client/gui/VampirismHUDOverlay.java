@@ -65,10 +65,12 @@ public class VampirismHUDOverlay extends ExtendedGui {
     private int screenBottomPercentage = 0;
 
     public VampirismHUDOverlay(Minecraft mc) {
+      
         this.mc = mc;
     }
 
     public void makeRenderFullColor(int on, int off, int color) {
+
         this.rederFullOn = on;
         this.renderFullOff = off;
         this.renderFullTick = on + off;
@@ -80,6 +82,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
+
         if (mc.player == null)
             return;
         if (event.phase == TickEvent.Phase.END)
@@ -126,10 +129,11 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     private void setColorForBatDuration(IFactionPlayer player) {
+
         float batPercentage = ((IVampirePlayer) player).getActionHandler().getPercentageForAction(VampireActions.bat);
-        if (batPercentage < 0.1F && batPercentage > 0.0F) {
+        if (batPercentage < 0.2F && batPercentage > 0.0F) {
             screenBottomColor = 0xcc7067f9; // change color
-            screenBottomPercentage = (int) (0.1F - batPercentage * 10);
+            screenBottomPercentage = (int) ((0.2F - batPercentage) * 1000);
             fullScreen = false;
         } else {
             screenBottomColor = 0;
@@ -139,6 +143,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
     @SubscribeEvent
     public void onRenderCrosshair(RenderGameOverlayEvent.Pre event) {
+
         if (event.getType() != RenderGameOverlayEvent.ElementType.CROSSHAIRS) {
             return;
         }
@@ -188,6 +193,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
      */
     @SubscribeEvent
     public void onRenderExperienceBar(RenderGameOverlayEvent.Post event) {
+
         if (event.getType() != RenderGameOverlayEvent.ElementType.EXPERIENCE) {
             return;
         }
@@ -211,6 +217,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
     @SubscribeEvent
     public void onRenderFoodBar(RenderGameOverlayEvent.Pre event) {
+
         if (event.getType() != RenderGameOverlayEvent.ElementType.FOOD) {
             return;
         }
@@ -255,6 +262,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onRenderWorldLast(RenderWorldLastEvent event) {
+
         if ((screenPercentage > 0 || screenBottomPercentage > 0) && !Configs.disable_screen_overlay) {
             // Set the working matrix/layer to a layer directly on the screen/in front of
             // the player
@@ -306,24 +314,28 @@ public class VampirismHUDOverlay extends ExtendedGui {
                  */
 
             } else {
-                // sun border
-                int bw = 0;
-                int bh = 0;
 
-                bh = Math.round(h / (float) 4 * screenPercentage / 100);
-                bw = Math.round(w / (float) 8 * screenPercentage / 100);
+                if (screenPercentage > 0) {
+                    // sun border
+                    int bw = 0;
+                    int bh = 0;
 
-                this.drawGradientRect(0, 0, w, bh, screenColor, 0x000);
-                this.drawGradientRect(0, h - bh, w, h, 0x00000000, screenColor);
-                this.drawGradientRect2(0, 0, bw, h, 0x000000, screenColor);
-                this.drawGradientRect2(w - bw, 0, w, h, screenColor, 0x00);
+                    bh = Math.round(h / (float) 4 * screenPercentage / 100);
+                    bw = Math.round(w / (float) 8 * screenPercentage / 100);
 
-                // batmode border
-                int hh = 0;
+                    this.drawGradientRect(0, 0, w, bh, screenColor, 0x000);
+                    this.drawGradientRect(0, h - bh, w, h, 0x00000000, screenColor);
+                    this.drawGradientRect2(0, 0, bw, h, 0x000000, screenColor);
+                    this.drawGradientRect2(w - bw, 0, w, h, screenColor, 0x00);
+                } else {
 
-                hh = Math.round(h / (float) 4 * screenBottomPercentage / 100);
+                    // batmode border
+                    int hh = 0;
 
-                this.drawGradientRect(0, h - hh, w, h, 0x00000000, screenBottomColor);
+                    hh = Math.round(h / (float) 4 * screenBottomPercentage / 100);
+
+                    this.drawGradientRect(0, h - hh, w, h, 0x00000000, screenBottomColor);
+                }
 
             }
             GL11.glEnable(GL11.GL_DEPTH_TEST);
@@ -336,6 +348,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     private void renderBloodFangs(int width, int height, float perc) {
+
         this.mc.getTextureManager().bindTexture(icons);
         int left = width / 2 - 8;
         int top = height / 2 - 4;
