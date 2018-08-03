@@ -1,15 +1,11 @@
 package de.teamlapen.vampirism.config;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.Writer;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,10 +13,10 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.StringUtils;
 
+import com.google.common.collect.ImmutableMap;
+
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
 
@@ -31,7 +27,7 @@ public class BloodGrinderValueLoader {
 
 	private static final String TAG = "BloodValueGrinderLoader";
 
-	public static Map<ResourceLocation, Integer> bloodValues = new HashMap<>();
+	private static final Map<ResourceLocation, Integer> bloodValues = new HashMap<>();
 	/**
 	 * File to save dynamically calculated values to
 	 */
@@ -44,6 +40,7 @@ public class BloodGrinderValueLoader {
 	 * @param configDir
 	 */
 	public static void init(File configDir) {
+
 		File bloodConfigFile = new File(configDir, REFERENCE.MODID + "_blood_values_grinder.txt");
 
 		try {
@@ -65,7 +62,6 @@ public class BloodGrinderValueLoader {
 			}
 		}
 
-		loadBloodValuesModCompat("test");
 	}
 
 	/**
@@ -75,16 +71,15 @@ public class BloodGrinderValueLoader {
 	 *            Just for logging of errors
 	 */
 	private static Map<ResourceLocation, Integer> loadBloodValuesFromReader(Reader r, String file) throws IOException {
+
 		Map<ResourceLocation, Integer> bloodValues = new HashMap<>();
 		BufferedReader br = null;
 		try {
 			br = new BufferedReader(r);
 			String line;
 			while ((line = br.readLine()) != null) {
-				if (line.startsWith("#"))
-					continue;
-				if (StringUtils.isBlank(line))
-					continue;
+				if (line.startsWith("#")) continue;
+				if (StringUtils.isBlank(line)) continue;
 				String[] p = line.split("=");
 				if (p.length != 2) {
 					VampirismMod.log.w("ReadBlood", "Line %s  in %s is not formatted properly", line, file);
@@ -111,40 +106,12 @@ public class BloodGrinderValueLoader {
 
 	}
 
-	private static boolean writeBloodValues(Writer w, Map<ResourceLocation, Integer> values, String comment) throws IOException {
-		BufferedWriter bw = null;
-		try {
-			bw = new BufferedWriter(w);
-			bw.write('#');
-			bw.write(comment);
-			bw.newLine();
-			for (Map.Entry<ResourceLocation, Integer> entry : values.entrySet()) {
-				bw.write(entry.getKey().toString());
-				bw.write('=');
-				bw.write(String.valueOf(entry.getValue()));
-				bw.newLine();
-			}
-			bw.flush();
-			return true;
-		}
-		catch (IOException e) {
-			VampirismMod.log.e(TAG, e, "Failed to write blood grinder values (%s)", comment);
-		}
-		finally {
-			if (bw != null) {
-				bw.close();
-			}
-			w.close();
-		}
-		return false;
-	}
-
 	/**
 	 * Reads blood values for another mod from the Vampirism jar.
 	 */
 	public static void loadBloodValuesModCompat(String modid) {
-		if (!Loader.isModLoaded(modid))
-			return;
+
+		if (!Loader.isModLoaded(modid)) return;
 		try {
 			bloodValues.putAll(BloodGrinderValueLoader.loadBloodValuesFromReader(new InputStreamReader(BloodGrinderValueLoader.class.getResourceAsStream("/blood_values_grinder/" + modid + ".txt")), modid + ".txt"));
 		}
@@ -156,54 +123,8 @@ public class BloodGrinderValueLoader {
 		}
 	}
 
-	/**
-	 * Reads automatically calculated values from world file
-	 */
-	public static void loadDynamicBloodValues(File f) {
-		try {
-			Map<ResourceLocation, Integer> saved = BloodGrinderValueLoader.loadBloodValuesFromReader(new InputStreamReader(new FileInputStream(f)), f.getName());
-			VampirismEntityRegistry.getBiteableEntryManager().addDynamic(saved);
-		}
-		catch (IOException e) {
-			VampirismMod.log.e(TAG, e, "[ModCompat]Could not read saved blood values from world from file  %s", f);
-		}
-	}
+	public static Map<ResourceLocation, Integer> getBloodGrinderValues() {
 
-	/**
-	 * Saves blood values to file to be saved in world dir
-	 */
-	public static void saveDynamicBloodValues(File f) {
-		Map<ResourceLocation, Integer> values = VampirismEntityRegistry.getBiteableEntryManager().getValuesToSave();
-		if (!f.exists() && values.isEmpty())
-			return; // Don't create a empty file
-		if (!f.exists()) {
-			if (f.getParentFile() != null)
-				f.getParentFile().mkdirs();
-		}
-		try {
-			if (!writeBloodValues(new FileWriter(f), values, "Dynamically calculated blood grinder values - DON'T EDIT")) {
-				VampirismMod.log.w(TAG, "Could not write dynamic values to file");
-			}
-		}
-		catch (IOException e) {
-			VampirismMod.log.e(TAG, e, "Failed to write dynamic values to file");
-		}
-	}
-
-	public static void onServerStarting(MinecraftServer server) {
-		bloodValueGrinderWorldFile = new File(new File(server.getWorld(0).getSaveHandler().getWorldDirectory(), REFERENCE.MODID), "dynamic-blood-grinder-values.txt");
-		if (bloodValueGrinderWorldFile.exists()) {
-			loadDynamicBloodValues(bloodValueGrinderWorldFile);
-		}
-	}
-
-	public static void onServerStopping() {
-		if (bloodValueGrinderWorldFile != null) {
-			saveDynamicBloodValues(bloodValueGrinderWorldFile);
-			VampirismEntityRegistry.getBiteableEntryManager().resetDynamic();
-		} else {
-			VampirismMod.log.w(TAG, "Can't save blood grinder values. File does not exist");
-		}
-
+		return ImmutableMap.copyOf(bloodValues);
 	}
 }
