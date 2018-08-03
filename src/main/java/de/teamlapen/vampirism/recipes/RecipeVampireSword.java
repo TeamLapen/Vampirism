@@ -23,8 +23,8 @@ public abstract class RecipeVampireSword extends net.minecraftforge.registries.I
 	@Override
 	public boolean canFit(int width, int height) {
 
-		return width >= 2 && height >= 2;
-	}
+        return width >= 3 && height >= 3;
+    }
 
 	@Override
 	public ItemStack getCraftingResult(InventoryCrafting inv) {
