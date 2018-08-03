@@ -1,0 +1,24 @@
+{
+  "pattern": [
+    "YZY",
+    "YXY",
+    "YXY"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "Y": {
+      "item": "minecraft:wool",
+      "data": 3
+    },
+    "X": {
+      "item": "minecraft:leather"
+    },
+    "Z": {
+      "item": "minecraft:string"
+    }
+  },
+  "result": {
+    "item": "vampirism:vampire_cloak",
+    "data": 3
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+    "model": "builtin/generated",
+    "transform": "forge:default-item"
+  },
+  "variants": {
+    "color": {
+      "white": {
+        "textures": {
+          "layer0": "vampirism:items/vampire_cloak_white"
+        }
+      },
+      "silver": {
+        "textures": {
+          "layer0": "vampirism:items/vampire_cloak_silver"
+        }
+      },
+      "gray": {
+        "textures": {
+          "layer0": "vampirism:items/vampire_cloak_gray"
+        }
+      },
+      "black": {
+        "textures": {
+          "layer0": "vampirism:items/vampire_cloak_black"
+        }
+      },
+      "brown": {
+        "textures": {
+          "layer0": "vampirism:items/vampire_cloak_brown"
+        }
+      },
+      "red": {
+        "textures": {
+          "layer0": "vampirism:items/vampire_cloak_red"
+        }
+      },
+      "orange": {
+        "textures": {
+          "layer0": "vampirism:items/vampire_cloak_orange"
+        }
+      },
+      "yellow": {
+        "textures": {
+          "layer0": "vampirism:items/vampire_cloak_yellow"
+        }
+      },
+      "lime": {
+        "textures": {
+          "layer0": "vampirism:items/vampire_cloak_lime"
+        }
+      },
+      "green": {
+        "textures": {
+          "layer0": "vampirism:items/vampire_cloak_green"
+        }
+      },
+      "cyan": {
+        "textures": {
+          "layer0": "vampirism:items/vampire_cloak_cyan"
+        }
+      },
+      "light_blue": {
+        "textures": {
+          "layer0": "vampirism:items/vampire_cloak_light_blue"
+        }
+      },
+      "blue": {
+        "textures": {
+          "layer0": "vampirism:items/vampire_cloak_blue"
+        }
+      },
+      "purple": {
+        "textures": {
+          "layer0": "vampirism:items/vampire_cloak_purple"
+        }
+      },
+      "magenta": {
+        "textures": {
+          "layer0": "vampirism:items/vampire_cloak_magenta"
+        }
+      },
+      "pink": {
+        "textures": {
+          "layer0": "vampirism:items/vampire_cloak_pink"
+        }
+      }
+    }
+  }
+}
