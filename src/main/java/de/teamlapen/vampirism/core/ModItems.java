@@ -290,12 +290,10 @@ public class ModItems {
     }
 
     public static ItemStack createStack(IItemWithTier item, IItemWithTier.TIER tier) {
-
         return item.setTier(new ItemStack((Item) item), tier);
     }
 
     static void registerItems(IForgeRegistry<Item> registry) {
-
         registry.register(new ItemVampireFang());
         registry.register(new ItemHumanHeart());
         registry.register(new ItemHumanHeartWeak());

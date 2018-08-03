@@ -15,20 +15,17 @@ public abstract class RecipeVampireSword extends net.minecraftforge.registries.I
     protected Item sword;
 
     public RecipeVampireSword(String regName, Item sword) {
-
         this.setRegistryName(regName);
         this.sword = sword;
     }
 
     @Override
     public boolean canFit(int width, int height) {
-
         return width >= 3 && height >= 3;
     }
 
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inv) {
-
         ItemStack itemstack = inv.getStackInRowAndColumn(1, 1).isEmpty() ? inv.getStackInRowAndColumn(2, 1) : inv.getStackInRowAndColumn(1, 1);
         ItemStack itemstack1 = itemstack.copy();
         itemstack1.setItemDamage(0);
@@ -43,7 +40,6 @@ public abstract class RecipeVampireSword extends net.minecraftforge.registries.I
 
     @Override
     public boolean matches(InventoryCrafting inv, World worldIn) {
-
         resultItem = ItemStack.EMPTY;
         if (inv.getWidth() == 3 && inv.getHeight() == 3) {
             for (int i = 0; i < inv.getWidth(); ++i) {
@@ -83,7 +79,6 @@ public abstract class RecipeVampireSword extends net.minecraftforge.registries.I
      * checks for the other ingredients than vampire sword
      */
     protected boolean check(InventoryCrafting inv, Item item, int i, int j) {
-
         if (inv.getStackInRowAndColumn(i, j - 1).getItem() == item && inv.getStackInRowAndColumn(i - 1, j).getItem() == item && inv.getStackInRowAndColumn(i + 1, j).getItem() == item) {
             resultItem = getCraftingResult(inv);
             return true;

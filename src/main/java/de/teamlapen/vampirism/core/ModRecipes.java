@@ -18,7 +18,7 @@ public class ModRecipes {
      * X = type(blood_iron)
      * Y = HeartSeeker
      */
-    public static final RecipeVampireSword recipeHeartSeeker = new RecipeVampireSword("heartseeker", ModItems.heart_seeker) {
+    private static final RecipeVampireSword recipeHeartSeeker = new RecipeVampireSword("heartseeker", ModItems.heart_seeker) {
     };
 
     /**
@@ -28,7 +28,7 @@ public class ModRecipes {
      * X = type(blood_iron)
      * Y = HeartStriker
      */
-    public static final RecipeVampireSword recipeHeartStriker = new RecipeVampireSword("heartstriker", ModItems.heart_striker) {
+    private static final RecipeVampireSword recipeHeartStriker = new RecipeVampireSword("heartstriker", ModItems.heart_striker) {
 
         protected boolean check(InventoryCrafting inv, Item item, int i, int j) {
 
@@ -40,7 +40,7 @@ public class ModRecipes {
         }
     };
 
-    public static void registerRecipes(IForgeRegistry<IRecipe> registry) {
+    static void registerRecipes(IForgeRegistry<IRecipe> registry) {
 
         registry.register(recipeHeartSeeker);
         registry.register(recipeHeartStriker);
