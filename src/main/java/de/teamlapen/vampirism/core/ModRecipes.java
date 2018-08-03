@@ -6,9 +6,27 @@ import net.minecraft.item.Item;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraftforge.registries.IForgeRegistry;
 
+/**
+ * Handles all recipe registrations and reference.
+ */
 public class ModRecipes {
 
+	/**
+	 * _X_ <br>
+	 * XYX
+	 * <p>
+	 * X = type(blood_iron)
+	 * Y = HeartSeeker
+	 */
 	public static final RecipeVampireSword recipeHeartSeeker = new RecipeVampireSword("heartseeker", ModItems.heart_seeker) {};
+
+	/**
+	 * XXX <br>
+	 * XYX
+	 * <p>
+	 * X = type(blood_iron)
+	 * Y = HeartStriker
+	 */
 	public static final RecipeVampireSword recipeHeartStriker = new RecipeVampireSword("heartstriker", ModItems.heart_striker) {
 
 		protected boolean check(InventoryCrafting inv, Item item, int i, int j) {
