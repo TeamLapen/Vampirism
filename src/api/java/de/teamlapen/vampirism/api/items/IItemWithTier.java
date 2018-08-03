@@ -1,12 +1,9 @@
 package de.teamlapen.vampirism.api.items;
 
-import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.VampirismMod;
 import net.minecraft.client.renderer.ItemMeshDefinition;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
@@ -21,27 +18,6 @@ import javax.annotation.Nonnull;
  * All existent stacks of this item should be of one of the available tiers, if possible
  */
 public interface IItemWithTier {
-
-
-    static TIER getTierStatic(@Nonnull ItemStack stack) {
-        NBTTagCompound tag = UtilLib.checkNBT(stack);
-        if (tag.hasKey("tier")) {
-            try {
-                return TIER.valueOf(tag.getString("tier"));
-            } catch (IllegalArgumentException e) {
-                VampirismMod.log.e(stack.getItem().getRegistryName().toString(), e, "Unknown item tier %s", tag.getString("tier"));
-            }
-
-        }
-        return TIER.NORMAL;
-    }
-
-    @Nonnull
-    static ItemStack setTierStatic(@Nonnull ItemStack stack, TIER tier) {
-        NBTTagCompound tag = UtilLib.checkNBT(stack);
-        tag.setString("tier", tier.name());
-        return stack;
-    }
 
     /**
      * @return The tier of the item stack

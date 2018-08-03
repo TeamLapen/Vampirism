@@ -2,6 +2,7 @@ package de.teamlapen.vampirism.recipes;
 
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModItems;
+import de.teamlapen.vampirism.items.IItemWithTierNBTImpl;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -54,7 +55,7 @@ public abstract class RecipeVampireSword extends net.minecraftforge.registries.I
 
                     if (i == 1 && (j == 1 || j == 2)) {
                         if (item == sword) {
-                            IItemWithTier.TIER tier = IItemWithTier.getTierStatic(itemstack);
+                            IItemWithTier.TIER tier = IItemWithTierNBTImpl.getTierStatic(itemstack);
                             Item item1;
                             switch (tier) {
                                 case NORMAL:
