@@ -12,6 +12,7 @@ import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.Item;
+import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.SoundEvent;
 import net.minecraft.world.biome.Biome;
@@ -24,150 +25,172 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.ObjectHolderRegistry;
 
-
 /**
- * Handles registrations of all registrable things as well as a few additional dependent things
+ * Handles registrations of all registrable things as well as a few additional
+ * dependent things
  */
 public class RegistryManager implements IInitListener {
 
+	/**
+	 * Delegate for some client side registrations
+	 */
+	@SideOnly(Side.CLIENT)
+	private static de.teamlapen.vampirism.client.core.RegistryManagerClient registryManagerClient;
 
-    /**
-     * Delegate for some client side registrations
-     */
-    @SideOnly(Side.CLIENT)
-    private static de.teamlapen.vampirism.client.core.RegistryManagerClient registryManagerClient;
+	@SideOnly(Side.CLIENT)
+	public static void setupClientRegistryManager() {
 
-    @SideOnly(Side.CLIENT)
-    public static void setupClientRegistryManager() {
-        registryManagerClient = new de.teamlapen.vampirism.client.core.RegistryManagerClient();
-        MinecraftForge.EVENT_BUS.register(registryManagerClient);
-    }
+		registryManagerClient = new de.teamlapen.vampirism.client.core.RegistryManagerClient();
+		MinecraftForge.EVENT_BUS.register(registryManagerClient);
+	}
 
-    @SideOnly(Side.CLIENT)
-    public static de.teamlapen.vampirism.client.core.RegistryManagerClient getRegistryManagerClient() {
-        return registryManagerClient;
-    }
+	@SideOnly(Side.CLIENT)
+	public static de.teamlapen.vampirism.client.core.RegistryManagerClient getRegistryManagerClient() {
 
-    @SubscribeEvent
-    public void onBuildRegistries(RegistryEvent.NewRegistry event) {
-        VampirismRegistries.init();
-    }
+		return registryManagerClient;
+	}
 
-    @Override
-    public void onInitStep(Step step, FMLStateEvent event) {
-        switch (step) {
-            case INIT:
-                ModBlocks.registerCraftingRecipes();
-                ModItems.registerCraftingRecipes();
-                ModItems.registerBloodConversionRates();
-                ModVillages.init();
-                ModAdvancements.registerAdvancements();
-                ModParticles.init();
-                break;
-            case PRE_INIT:
-                ModFluids.registerFluids();
-                ModEntities.registerConvertibles();
-                ModEntities.registerCustomExtendedCreatures();
-                break;
-            case POST_INIT:
-                if (ModPotions.checkNightVision()) {
-                    ModPotions.fixNightVisionPotionTypes();
-                }
-                break;
-            default:
-                break;
-        }
-    }
+	@SubscribeEvent
+	public void onBuildRegistries(RegistryEvent.NewRegistry event) {
 
-    @SubscribeEvent
-    public void onMissinMappingsPotion(RegistryEvent.MissingMappings<SoundEvent> event) {
-        for (RegistryEvent.MissingMappings.Mapping<SoundEvent> m : event.getMappings()) {
-            m.ignore();
-        }
-    }
+		VampirismRegistries.init();
+	}
 
-    @SubscribeEvent
-    public void onMissingMappingsBlock(RegistryEvent.MissingMappings<Block> event) {
-        for (RegistryEvent.MissingMappings.Mapping<Block> m : event.getMappings()) {
-            ModBlocks.fixMapping(m);
-        }
-    }
+	@Override
+	public void onInitStep(Step step, FMLStateEvent event) {
 
-    @SubscribeEvent
-    public void onMissingMappingsItem(RegistryEvent.MissingMappings<Item> event) {
-        for (RegistryEvent.MissingMappings.Mapping<Item> m : event.getMappings()) {
-            if (!ModItems.fixMapping(m)) {
-                ModBlocks.fixMappingItemBlock(m);
-            }
-        }
-    }
+		switch (step) {
+			case INIT:
+				ModBlocks.registerCraftingRecipes();
+				ModItems.registerCraftingRecipes();
+				ModItems.registerBloodConversionRates();
+				ModVillages.init();
+				ModAdvancements.registerAdvancements();
+				ModParticles.init();
+				break;
+			case PRE_INIT:
+				ModFluids.registerFluids();
+				ModEntities.registerConvertibles();
+				ModEntities.registerCustomExtendedCreatures();
+				break;
+			case POST_INIT:
+				if (ModPotions.checkNightVision()) {
+					ModPotions.fixNightVisionPotionTypes();
+				}
+				break;
+			default:
+				break;
+		}
+	}
 
-    @SubscribeEvent
-    public void onMissingMappingsPotion(RegistryEvent.MissingMappings<Potion> event) {
-        for (RegistryEvent.MissingMappings.Mapping<Potion> m : event.getMappings()) {
-            ModPotions.fixMapping(m);
-        }
-    }
+	@SubscribeEvent
+	public void onMissinMappingsPotion(RegistryEvent.MissingMappings<SoundEvent> event) {
 
-    @SubscribeEvent
-    public void onRegisterActions(RegistryEvent.Register<IAction> event) {
-        VampireActions.registerDefaultActions(event.getRegistry());
-        HunterActions.registerDefaultActions(event.getRegistry());
-        ObjectHolderRegistry.INSTANCE.applyObjectHolders();
-    }
+		for (RegistryEvent.MissingMappings.Mapping<SoundEvent> m : event.getMappings()) {
+			m.ignore();
+		}
+	}
 
-    @SubscribeEvent
-    public void onRegisterBiomes(RegistryEvent.Register<Biome> event) {
-        ModBiomes.registerBiomes(event.getRegistry());
-    }
+	@SubscribeEvent
+	public void onMissingMappingsBlock(RegistryEvent.MissingMappings<Block> event) {
 
-    @SubscribeEvent
-    public void onRegisterBlocks(RegistryEvent.Register<Block> event) {
-        ModBlocks.registerBlocks(event.getRegistry());
-    }
+		for (RegistryEvent.MissingMappings.Mapping<Block> m : event.getMappings()) {
+			ModBlocks.fixMapping(m);
+		}
+	}
 
-    @SubscribeEvent
-    public void onRegisterEnchantments(RegistryEvent.Register<Enchantment> event) {
-        ModEnchantments.registerEnchantments(event.getRegistry());
-    }
+	@SubscribeEvent
+	public void onMissingMappingsItem(RegistryEvent.MissingMappings<Item> event) {
 
-    @SubscribeEvent
-    public void onRegisterEntities(RegistryEvent.Register<EntityEntry> event) {
-        ModEntities.registerEntities(event.getRegistry());
-    }
+		for (RegistryEvent.MissingMappings.Mapping<Item> m : event.getMappings()) {
+			if (!ModItems.fixMapping(m)) {
+				ModBlocks.fixMappingItemBlock(m);
+			}
+		}
+	}
 
-    @SubscribeEvent
-    public void onRegisterItems(RegistryEvent.Register<Item> event) {
-        ModItems.registerItems(event.getRegistry());
-        ModBlocks.registerItemBlocks(event.getRegistry());
-    }
+	@SubscribeEvent
+	public void onMissingMappingsPotion(RegistryEvent.MissingMappings<Potion> event) {
 
-    @SubscribeEvent
-    public void onRegisterPotions(RegistryEvent.Register<Potion> event) {
-        ModPotions.registerPotions(event.getRegistry());
-    }
+		for (RegistryEvent.MissingMappings.Mapping<Potion> m : event.getMappings()) {
+			ModPotions.fixMapping(m);
+		}
+	}
 
-    @SubscribeEvent
-    public void onRegisterSkills(RegistryEvent.Register<ISkill> event) {
-        HunterSkills.registerHunterSkills(event.getRegistry());
-        VampireSkills.registerVampireSkills(event.getRegistry());
-    }
+	@SubscribeEvent
+	public void onRegisterActions(RegistryEvent.Register<IAction> event) {
 
-    @SubscribeEvent
-    public void onRegisterSounds(RegistryEvent.Register<SoundEvent> event) {
-        ModSounds.registerSounds(event.getRegistry());
-    }
+		VampireActions.registerDefaultActions(event.getRegistry());
+		HunterActions.registerDefaultActions(event.getRegistry());
+		ObjectHolderRegistry.INSTANCE.applyObjectHolders();
+	}
 
-    @SubscribeEvent
-    public void onSkillNodeCreated(SkillEvent.CreatedNode event) {
-        if (event.getNode().isRoot()) {
-            if (event.getNode().getFaction().equals(VReference.HUNTER_FACTION)) {
-                HunterSkills.buildSkillTree(event.getNode());
-            } else if (event.getNode().getFaction().equals(VReference.VAMPIRE_FACTION)) {
-                VampireSkills.buildSkillTree(event.getNode());
-            }
-        }
-    }
+	@SubscribeEvent
+	public void onRegisterBiomes(RegistryEvent.Register<Biome> event) {
 
+		ModBiomes.registerBiomes(event.getRegistry());
+	}
+
+	@SubscribeEvent
+	public void onRegisterBlocks(RegistryEvent.Register<Block> event) {
+
+		ModBlocks.registerBlocks(event.getRegistry());
+	}
+
+	@SubscribeEvent
+	public void onRegisterEnchantments(RegistryEvent.Register<Enchantment> event) {
+
+		ModEnchantments.registerEnchantments(event.getRegistry());
+	}
+
+	@SubscribeEvent
+	public void onRegisterEntities(RegistryEvent.Register<EntityEntry> event) {
+
+		ModEntities.registerEntities(event.getRegistry());
+	}
+
+	@SubscribeEvent
+	public void onRegisterItems(RegistryEvent.Register<Item> event) {
+
+		ModItems.registerItems(event.getRegistry());
+		ModBlocks.registerItemBlocks(event.getRegistry());
+	}
+
+	@SubscribeEvent
+	public void onRegisterPotions(RegistryEvent.Register<Potion> event) {
+
+		ModPotions.registerPotions(event.getRegistry());
+	}
+
+	@SubscribeEvent
+	public void onRegisterSkills(RegistryEvent.Register<ISkill> event) {
+
+		HunterSkills.registerHunterSkills(event.getRegistry());
+		VampireSkills.registerVampireSkills(event.getRegistry());
+	}
+
+	@SubscribeEvent
+	public void onRegisterSounds(RegistryEvent.Register<SoundEvent> event) {
+
+		ModSounds.registerSounds(event.getRegistry());
+	}
+
+	@SubscribeEvent
+	public void onSkillNodeCreated(SkillEvent.CreatedNode event) {
+
+		if (event.getNode().isRoot()) {
+			if (event.getNode().getFaction().equals(VReference.HUNTER_FACTION)) {
+				HunterSkills.buildSkillTree(event.getNode());
+			} else if (event.getNode().getFaction().equals(VReference.VAMPIRE_FACTION)) {
+				VampireSkills.buildSkillTree(event.getNode());
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public void onRegisterRecipe(RegistryEvent.Register<IRecipe> event) {
+
+		ModRecipes.registerRecipes(event.getRegistry());
+	}
 
 }
