@@ -1,13 +1,5 @@
 package de.teamlapen.vampirism.core;
 
-import static de.teamlapen.lib.lib.util.UtilLib.getNull;
-
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
@@ -38,6 +30,13 @@ import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
+import java.util.Map;
+
+import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 /**
  * Handles all item registrations and reference.
@@ -119,7 +118,7 @@ public class ModItems {
         weaponCraftingManager.addRecipe(new ItemStack(enhanced_crossbow), 1, HunterSkills.enhanced_crossbow, 2, "YXXY",
                 " XX ", " XX ", 'X', Items.IRON_INGOT, 'Y', Items.STRING);
         weaponCraftingManager.addRecipe(new ItemStack(enhanced_double_crossbow), 1,
-                new ISkill[] { HunterSkills.double_crossbow, HunterSkills.enhanced_crossbow }, 3, "YXXY", "YXXY",
+                new ISkill[]{HunterSkills.double_crossbow, HunterSkills.enhanced_crossbow}, 3, "YXXY", "YXXY",
                 " XX ", " XX ", 'X', Items.IRON_INGOT, 'Y', Items.STRING);
         weaponCraftingManager.addRecipe(
                 ItemCrossbowArrow.setType(new ItemStack(crossbow_arrow, 2),
@@ -267,7 +266,7 @@ public class ModItems {
         BrewingRecipeRegistry.addRecipe(new BrewingRecipe(
                 holy_water_bottle.setTier(new ItemStack(holy_water_bottle), IItemWithTier.TIER.ENHANCED),
                 new ItemStack(Items.GUNPOWDER), holy_water_splash_bottle
-                        .setTier(new ItemStack(holy_water_splash_bottle), IItemWithTier.TIER.ENHANCED)) {
+                .setTier(new ItemStack(holy_water_splash_bottle), IItemWithTier.TIER.ENHANCED)) {
 
             @Override
             public boolean isInput(@Nonnull ItemStack stack) {
@@ -279,7 +278,7 @@ public class ModItems {
         BrewingRecipeRegistry.addRecipe(new BrewingRecipe(
                 holy_water_bottle.setTier(new ItemStack(holy_water_bottle), IItemWithTier.TIER.ULTIMATE),
                 new ItemStack(Items.GUNPOWDER), holy_water_splash_bottle
-                        .setTier(new ItemStack(holy_water_splash_bottle), IItemWithTier.TIER.ULTIMATE)) {
+                .setTier(new ItemStack(holy_water_splash_bottle), IItemWithTier.TIER.ULTIMATE)) {
 
             @Override
             public boolean isInput(@Nonnull ItemStack stack) {
@@ -335,7 +334,7 @@ public class ModItems {
 
             @Override
             public void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip,
-                    boolean advanced) {
+                                       boolean advanced) {
 
                 tooltip.add(UtilLib.translateFormatted("item.vampirism." + regName + ".tooltip",
                         basic_tech_crossbow.getLocalizedName()));
@@ -425,7 +424,7 @@ public class ModItems {
     }
 
     private static boolean checkMapping(RegistryEvent.MissingMappings.Mapping<Item> mapping, String name,
-            Item... items) {
+                                        Item... items) {
 
         for (Item i : items) {
             String oldRegisteredName;
@@ -434,7 +433,7 @@ public class ModItems {
             } else {
                 String newRegisteredName = i instanceof VampirismItem ? ((VampirismItem) i).getRegisteredName()
                         : (i instanceof VampirismItemBloodFood ? ((VampirismItemBloodFood) i).getRegisteredName()
-                                : null);
+                        : null);
                 if (newRegisteredName == null) {
                     VampirismMod.log.w("ModItems",
                             "Unknown item class. Unable to determine new registered name during mapping fix",

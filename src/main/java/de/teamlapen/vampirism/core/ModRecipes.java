@@ -11,37 +11,38 @@ import net.minecraftforge.registries.IForgeRegistry;
  */
 public class ModRecipes {
 
-	/**
-	 * _X_ <br>
-	 * XYX
-	 * <p>
-	 * X = type(blood_iron)
-	 * Y = HeartSeeker
-	 */
-	public static final RecipeVampireSword recipeHeartSeeker = new RecipeVampireSword("heartseeker", ModItems.heart_seeker) {};
+    /**
+     * _X_ <br>
+     * XYX
+     * <p>
+     * X = type(blood_iron)
+     * Y = HeartSeeker
+     */
+    public static final RecipeVampireSword recipeHeartSeeker = new RecipeVampireSword("heartseeker", ModItems.heart_seeker) {
+    };
 
-	/**
-	 * XXX <br>
-	 * XYX
-	 * <p>
-	 * X = type(blood_iron)
-	 * Y = HeartStriker
-	 */
-	public static final RecipeVampireSword recipeHeartStriker = new RecipeVampireSword("heartstriker", ModItems.heart_striker) {
+    /**
+     * XXX <br>
+     * XYX
+     * <p>
+     * X = type(blood_iron)
+     * Y = HeartStriker
+     */
+    public static final RecipeVampireSword recipeHeartStriker = new RecipeVampireSword("heartstriker", ModItems.heart_striker) {
 
-		protected boolean check(InventoryCrafting inv, Item item, int i, int j) {
+        protected boolean check(InventoryCrafting inv, Item item, int i, int j) {
 
-			if (inv.getStackInRowAndColumn(i, j - 1).getItem() == item && inv.getStackInRowAndColumn(i - 1, j).getItem() == item && inv.getStackInRowAndColumn(i + 1, j).getItem() == item && inv.getStackInRowAndColumn(i - 1, j - 1).getItem() == item && inv.getStackInRowAndColumn(i + 1, j - 1).getItem() == item) {
-				resultItem = getCraftingResult(inv);
-				return true;
-			}
-			return false;
-		}
-	};
+            if (inv.getStackInRowAndColumn(i, j - 1).getItem() == item && inv.getStackInRowAndColumn(i - 1, j).getItem() == item && inv.getStackInRowAndColumn(i + 1, j).getItem() == item && inv.getStackInRowAndColumn(i - 1, j - 1).getItem() == item && inv.getStackInRowAndColumn(i + 1, j - 1).getItem() == item) {
+                resultItem = getCraftingResult(inv);
+                return true;
+            }
+            return false;
+        }
+    };
 
-	public static void registerRecipes(IForgeRegistry<IRecipe> registry) {
+    public static void registerRecipes(IForgeRegistry<IRecipe> registry) {
 
-		registry.register(recipeHeartSeeker);
-		registry.register(recipeHeartStriker);
-	}
+        registry.register(recipeHeartSeeker);
+        registry.register(recipeHeartStriker);
+    }
 }
