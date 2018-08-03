@@ -8,90 +8,95 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 
-public abstract class RecipeVampireSword extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe, IItemWithTierNBTImpl {
+public abstract class RecipeVampireSword extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe>
+        implements IRecipe, IItemWithTierNBTImpl {
 
-	protected ItemStack resultItem = ItemStack.EMPTY;
+    protected ItemStack resultItem = ItemStack.EMPTY;
 
-	protected Item sword;
+    protected Item sword;
 
-	public RecipeVampireSword(String regName, Item sword) {
+    public RecipeVampireSword(String regName, Item sword) {
 
-		this.setRegistryName(regName);
-		this.sword = sword;
-	}
+        this.setRegistryName(regName);
+        this.sword = sword;
+    }
 
-	@Override
-	public boolean matches(InventoryCrafting inv, World worldIn) {
+    @Override
+    public boolean matches(InventoryCrafting inv, World worldIn) {
 
-		resultItem = ItemStack.EMPTY;
-		if (inv.getWidth() == 3 && inv.getHeight() == 3) {
-			for (int i = 0; i < inv.getWidth(); ++i) {
-				for (int j = 0; j < inv.getHeight(); ++j) {
-					ItemStack itemstack = inv.getStackInRowAndColumn(i, j);
+        resultItem = ItemStack.EMPTY;
+        if (inv.getWidth() == 3 && inv.getHeight() == 3) {
+            for (int i = 0; i < inv.getWidth(); ++i) {
+                for (int j = 0; j < inv.getHeight(); ++j) {
+                    ItemStack itemstack = inv.getStackInRowAndColumn(i, j);
 
-					if (itemstack.isEmpty()) {
-						continue;
-					}
+                    if (itemstack.isEmpty()) {
+                        continue;
+                    }
 
-					Item item = itemstack.getItem();
+                    Item item = itemstack.getItem();
 
-					if (i == 1 && (j == 1 || j == 2)) {
-						if (item == sword) {
-							TIER tier = getTier(itemstack);
-							Item item1;
-							switch (tier) {
-								case NORMAL:
-									item1 = ModItems.blood_infused_iron_ingot;
-									break;
-								case ENHANCED:
-									item1 = ModItems.blood_infused_enhanced_iron_ingot;
-									break;
-								default:
-									return false;
-							}
-							if (check(inv, item1, i, j)) return true;
-						}
-					}
-				}
-			}
-		}
-		return false;
-	}
+                    if (i == 1 && (j == 1 || j == 2)) {
+                        if (item == sword) {
+                            TIER tier = getTier(itemstack);
+                            Item item1;
+                            switch (tier) {
+                                case NORMAL:
+                                    item1 = ModItems.blood_infused_iron_ingot;
+                                    break;
+                                case ENHANCED:
+                                    item1 = ModItems.blood_infused_enhanced_iron_ingot;
+                                    break;
+                                default:
+                                    return false;
+                            }
+                            if (check(inv, item1, i, j))
+                                return true;
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
-	/**
-	 * checks for the other ingredients than vampire sword
-	 */
-	protected boolean check(InventoryCrafting inv, Item item, int i, int j) {
+    /**
+     * checks for the other ingredients than vampire sword
+     */
+    protected boolean check(InventoryCrafting inv, Item item, int i, int j) {
 
-		if (inv.getStackInRowAndColumn(i, j - 1).getItem() == item && inv.getStackInRowAndColumn(i - 1, j).getItem() == item && inv.getStackInRowAndColumn(i + 1, j).getItem() == item) {
-			resultItem = getCraftingResult(inv);
-			return true;
-		}
-		return false;
-	}
+        if (inv.getStackInRowAndColumn(i, j - 1).getItem() == item
+                && inv.getStackInRowAndColumn(i - 1, j).getItem() == item
+                && inv.getStackInRowAndColumn(i + 1, j).getItem() == item) {
+            resultItem = getCraftingResult(inv);
+            return true;
+        }
+        return false;
+    }
 
-	@Override
-	public ItemStack getCraftingResult(InventoryCrafting inv) {
+    @Override
+    public ItemStack getCraftingResult(InventoryCrafting inv) {
 
-		ItemStack itemstack = inv.getStackInRowAndColumn(1, 1).isEmpty() ? inv.getStackInRowAndColumn(2, 1) : inv.getStackInRowAndColumn(1, 1);
-		ItemStack itemstack1 = itemstack.copy();
-		itemstack1.setItemDamage(0);
-		return itemstack1;
-	}
+        ItemStack itemstack = inv.getStackInRowAndColumn(1, 1).isEmpty() ? inv.getStackInRowAndColumn(2, 1)
+                : inv.getStackInRowAndColumn(1, 1);
+        ItemStack itemstack1 = itemstack.copy();
+        itemstack1.setItemDamage(0);
+        return itemstack1;
+    }
 
-	@Override
-	public boolean canFit(int width, int height) {
+    @Override
+    public boolean canFit(int width, int height) {
 
-		if (width >= 2 && height >= 2)
-			return true;
-		else
-			return false;
-	}
+        if (width >= 3 && height >= 3)
+            return true;
+        else
+            return false;
+    }
 
-	@Override
-	public ItemStack getRecipeOutput() {
+    @Override
+    public ItemStack getRecipeOutput() {
 
-		return this.resultItem;
-	}
+        return this.resultItem;
+    }
 
 }
