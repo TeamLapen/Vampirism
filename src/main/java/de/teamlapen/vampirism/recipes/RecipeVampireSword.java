@@ -1,14 +1,14 @@
 package de.teamlapen.vampirism.recipes;
 
+import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModItems;
-import de.teamlapen.vampirism.items.IItemWithTierNBTImpl;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 
-public abstract class RecipeVampireSword extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe, IItemWithTierNBTImpl {
+public abstract class RecipeVampireSword extends net.minecraftforge.registries.IForgeRegistryEntry.Impl<IRecipe> implements IRecipe {
 
 	protected ItemStack resultItem = ItemStack.EMPTY;
 
@@ -18,6 +18,27 @@ public abstract class RecipeVampireSword extends net.minecraftforge.registries.I
 
 		this.setRegistryName(regName);
 		this.sword = sword;
+	}
+
+	@Override
+	public boolean canFit(int width, int height) {
+
+		return width >= 2 && height >= 2;
+	}
+
+	@Override
+	public ItemStack getCraftingResult(InventoryCrafting inv) {
+
+		ItemStack itemstack = inv.getStackInRowAndColumn(1, 1).isEmpty() ? inv.getStackInRowAndColumn(2, 1) : inv.getStackInRowAndColumn(1, 1);
+		ItemStack itemstack1 = itemstack.copy();
+		itemstack1.setItemDamage(0);
+		return itemstack1;
+	}
+
+	@Override
+	public ItemStack getRecipeOutput() {
+
+		return this.resultItem;
 	}
 
 	@Override
@@ -37,7 +58,7 @@ public abstract class RecipeVampireSword extends net.minecraftforge.registries.I
 
 					if (i == 1 && (j == 1 || j == 2)) {
 						if (item == sword) {
-							TIER tier = getTier(itemstack);
+							IItemWithTier.TIER tier = IItemWithTier.getTierStatic(itemstack);
 							Item item1;
 							switch (tier) {
 								case NORMAL:
@@ -68,30 +89,6 @@ public abstract class RecipeVampireSword extends net.minecraftforge.registries.I
 			return true;
 		}
 		return false;
-	}
-
-	@Override
-	public ItemStack getCraftingResult(InventoryCrafting inv) {
-
-		ItemStack itemstack = inv.getStackInRowAndColumn(1, 1).isEmpty() ? inv.getStackInRowAndColumn(2, 1) : inv.getStackInRowAndColumn(1, 1);
-		ItemStack itemstack1 = itemstack.copy();
-		itemstack1.setItemDamage(0);
-		return itemstack1;
-	}
-
-	@Override
-	public boolean canFit(int width, int height) {
-
-		if (width >= 2 && height >= 2)
-			return true;
-		else
-			return false;
-	}
-
-	@Override
-	public ItemStack getRecipeOutput() {
-
-		return this.resultItem;
 	}
 
 }
