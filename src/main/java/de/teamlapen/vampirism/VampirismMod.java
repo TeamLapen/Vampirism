@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.BloodGrinderValueLoader;
 import de.teamlapen.vampirism.config.BloodValueLoader;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.*;
@@ -72,8 +73,7 @@ import java.awt.*;
 import java.io.File;
 
 /**
- * Main class for Vampirism
- * TODO readd "required-after:teamlapen-lib;"
+ * Main class for Vampirism TODO readd "required-after:teamlapen-lib;"
  */
 @Mod(modid = REFERENCE.MODID, name = REFERENCE.NAME, version = REFERENCE.VERSION, acceptedMinecraftVersions = "[1.12,)", dependencies = "required-after:forge@[" + REFERENCE.FORGE_VERSION_MIN + ",);after:guideapi", guiFactory = "de.teamlapen.vampirism.client.core.ModGuiFactory", updateJSON = REFERENCE.VERSION_UPDATE_FILE_FORGE)
 public class VampirismMod {
@@ -81,28 +81,29 @@ public class VampirismMod {
     public final static Logger log = new Logger(REFERENCE.MODID, "de.teamlapen.vampirism");
     public static final AbstractPacketDispatcher dispatcher = new ModPacketDispatcher();
     public static final CreativeTabs creativeTab = new CreativeTabs(REFERENCE.MODID) {
+
         @Override
         public ItemStack getTabIconItem() {
+
             return new ItemStack(ModItems.vampire_fang);
         }
     };
     /**
-     * Hunter creatures are of this creature type.
-     * Use the instance in {@link VReference} instead of this one.
-     * This is only here to init it as early as possible
+     * Hunter creatures are of this creature type. Use the instance in
+     * {@link VReference} instead of this one. This is only here to init it as early
+     * as possible
      */
     private final static EnumCreatureType HUNTER_CREATURE_TYPE = EnumHelper.addCreatureType("VAMPIRISM_HUNTER", IHunterMob.class, 25, Material.AIR, false, false);
     /**
-     * Vampire creatures are of this creature type.
-     * Use the instance in {@link VReference} instead of this one.
-     * This is only here to init it as early as possible
+     * Vampire creatures are of this creature type. Use the instance in
+     * {@link VReference} instead of this one. This is only here to init it as early
+     * as possible
      */
     private static final EnumCreatureType VAMPIRE_CREATURE_TYPE = EnumHelper.addCreatureType("VAMPIRISM_VAMPIRE", IVampireMob.class, 30, Material.AIR, false, false);
     /**
-     * Vampire creatures have this attribute
-     * Vampire creatures are of this creature type.
-     * Use the instance in {@link VReference} instead of this one.
-     * This is only here to init it as early as possible
+     * Vampire creatures have this attribute Vampire creatures are of this creature
+     * type. Use the instance in {@link VReference} instead of this one. This is
+     * only here to init it as early as possible
      */
     private static final EnumCreatureAttribute VAMPIRE_CREATURE_ATTRIBUTE = EnumHelper.addCreatureAttribute("VAMPIRISM_VAMPIRE");
     @Mod.Instance(value = REFERENCE.MODID)
@@ -114,11 +115,13 @@ public class VampirismMod {
     public static boolean isRealism() {
         return Configs.realism_mode;
     }
+
     public final ModCompatLoader modCompatLoader = new ModCompatLoader(REFERENCE.MODID + "/vampirism_mod_compat.cfg");
     private final RegistryManager registryManager;
     private VersionChecker.VersionInfo versionInfo;
 
     public VampirismMod() {
+
         addModCompats();
         registryManager = new RegistryManager();
         MinecraftForge.EVENT_BUS.register(registryManager);
@@ -126,11 +129,13 @@ public class VampirismMod {
     }
 
     public VersionChecker.VersionInfo getVersionInfo() {
+
         return versionInfo;
     }
 
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
+
         finishAPI1();
 
         String currentVersion = "@VERSION@".equals(REFERENCE.VERSION) ? "0.0.0-test" : REFERENCE.VERSION;
@@ -149,7 +154,6 @@ public class VampirismMod {
         MinecraftForge.EVENT_BUS.register(new ModEntityEventHandler());
         MinecraftForge.EVENT_BUS.register(LootHandler.getInstance());
 
-
         GameRegistry.registerWorldGenerator(new VampirismWorldGen(), 1000);
         HelperRegistry.registerPlayerEventReceivingCapability(VampirePlayer.CAP, VampirePlayer.class);
         HelperRegistry.registerPlayerEventReceivingCapability(HunterPlayer.CAP, HunterPlayer.class);
@@ -166,7 +170,7 @@ public class VampirismMod {
         proxy.onInitStep(IInitListener.Step.INIT, event);
         modCompatLoader.onInitStep(IInitListener.Step.INIT, event);
 
-        //Check for halloween special
+        // Check for halloween special
         if (HalloweenSpecial.shouldEnable()) {
             HalloweenSpecial.enable();
             MinecraftForge.EVENT_BUS.register(new HalloweenSpecial());
@@ -226,13 +230,13 @@ public class VampirismMod {
         Configs.init(new File(event.getModConfigurationDirectory(), REFERENCE.MODID), inDev);
         Balance.init(new File(event.getModConfigurationDirectory(), REFERENCE.MODID), inDev);
         BloodValueLoader.init(new File(event.getModConfigurationDirectory(), REFERENCE.MODID));
+        BloodGrinderValueLoader.init(new File(event.getModConfigurationDirectory(), REFERENCE.MODID));
         modCompatLoader.onInitStep(IInitListener.Step.PRE_INIT, event);
         setupAPI3();
 
-
-        //Data Fixer
-        ModFixs fixer = FMLCommonHandler.instance().getDataFixer().init(REFERENCE.MODID, 4);//Fixes that should have the id of the ModFix version when added.
-        //If adding new fixes to this, bump ModFix version and use the same one for the fixer
+        // Data Fixer
+        ModFixs fixer = FMLCommonHandler.instance().getDataFixer().init(REFERENCE.MODID, 4);// Fixes that should have the id of the ModFix version when added.
+        // If adding new fixes to this, bump ModFix version and use the same one for the fixer
         fixer.registerFix(FixTypes.ENTITY, ModEntities.getEntityIDFixer());
         fixer.registerFix(FixTypes.BLOCK_ENTITY, ModBlocks.getTileEntityIDFixer());
         fixer.registerFix(FixTypes.BLOCK_ENTITY, TileTent.getTentFixer());
@@ -277,7 +281,6 @@ public class VampirismMod {
     private void finishAPI2() {
         ((VampirismEntityRegistry) VampirismAPI.entityRegistry()).finishRegistration();
     }
-
 
     /**
      * Called during construction

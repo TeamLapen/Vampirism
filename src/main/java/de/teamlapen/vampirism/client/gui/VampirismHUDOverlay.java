@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.client.gui;
 
+import org.lwjgl.opengl.GL11;
+
 import de.teamlapen.lib.lib.client.gui.ExtendedGui;
 import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
@@ -44,10 +46,9 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.opengl.GL11;
 
 /**
- * Handles general Overlay thingies
+ * Handles general Overlay thingies TODO change batmode color
  */
 @SideOnly(Side.CLIENT)
 public class VampirismHUDOverlay extends ExtendedGui {
@@ -60,12 +61,16 @@ public class VampirismHUDOverlay extends ExtendedGui {
     private boolean fullScreen = false;
     private int renderFullTick = 0;
     private int rederFullOn, renderFullOff, renderFullColor;
+    private int screenBottomColor = 0;
+    private int screenBottomPercentage = 0;
 
     public VampirismHUDOverlay(Minecraft mc) {
+      
         this.mc = mc;
     }
 
     public void makeRenderFullColor(int on, int off, int color) {
+
         this.rederFullOn = on;
         this.renderFullOff = off;
         this.renderFullTick = on + off;
@@ -77,8 +82,11 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (mc.player == null) return;
-        if (event.phase == TickEvent.Phase.END) return;
+
+        if (mc.player == null)
+            return;
+        if (event.phase == TickEvent.Phase.END)
+            return;
         IFactionPlayer player = FactionPlayerHandler.get(mc.player).getCurrentFactionPlayer();
         if (player != null && player instanceof IVampirePlayer) {
             if (((IVampirePlayer) player).getActionHandler().isActionActive(VampireActions.vampire_rage)) {
@@ -97,7 +105,10 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     screenPercentage = 0;
                 }
             }
-        } else if (player != null && player instanceof HunterPlayer && ((HunterPlayer) player).getSpecialAttributes().isDisguised()) {
+            setColorForBatDuration(player);
+
+        } else if (player != null && player instanceof HunterPlayer
+                && ((HunterPlayer) player).getSpecialAttributes().isDisguised()) {
             screenPercentage = (int) (100 * ((HunterPlayer) player).getSpecialAttributes().getDisguiseProgress());
             screenColor = 0xff111111;
             fullScreen = false;
@@ -117,8 +128,22 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
     }
 
+    private void setColorForBatDuration(IFactionPlayer player) {
+
+        float batPercentage = ((IVampirePlayer) player).getActionHandler().getPercentageForAction(VampireActions.bat);
+        if (batPercentage < 0.2F && batPercentage > 0.0F) {
+            screenBottomColor = 0xcc7067f9; // change color
+            screenBottomPercentage = (int) ((0.2F - batPercentage) * 1000);
+            fullScreen = false;
+        } else {
+            screenBottomColor = 0;
+            screenBottomPercentage = 0;
+        }
+    }
+
     @SubscribeEvent
     public void onRenderCrosshair(RenderGameOverlayEvent.Pre event) {
+
         if (event.getType() != RenderGameOverlayEvent.ElementType.CROSSHAIRS) {
             return;
         }
@@ -138,7 +163,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     biteable = VampirePlayer.get((EntityPlayer) entity);
                 }
                 if (biteable != null && biteable.canBeBitten(player)) {
-                    renderBloodFangs(event.getResolution().getScaledWidth(), event.getResolution().getScaledHeight(), MathHelper.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F));
+                    renderBloodFangs(event.getResolution().getScaledWidth(), event.getResolution().getScaledHeight(),
+                            MathHelper.clamp(biteable.getBloodLevelRelative(), 0.2F, 1F));
                     event.setCanceled(true);
                 }
             }
@@ -149,8 +175,11 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 if (player.wantsBlood()) {
                     TileEntity tile = Minecraft.getMinecraft().world.getTileEntity(p.getBlockPos());
                     if (tile != null && tile.hasCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null)) {
-                        if (FluidLib.getFluidAmount(tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null), ModFluids.blood) > 0) {
-                            renderBloodFangs(event.getResolution().getScaledWidth(), event.getResolution().getScaledHeight(), 1);
+                        if (FluidLib.getFluidAmount(
+                                tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null),
+                                ModFluids.blood) > 0) {
+                            renderBloodFangs(event.getResolution().getScaledWidth(),
+                                    event.getResolution().getScaledHeight(), 1);
                             event.setCanceled(true);
                         }
                     }
@@ -164,6 +193,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
      */
     @SubscribeEvent
     public void onRenderExperienceBar(RenderGameOverlayEvent.Post event) {
+
         if (event.getType() != RenderGameOverlayEvent.ElementType.EXPERIENCE) {
             return;
         }
@@ -174,7 +204,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
             // boolean flag1 = false;
             int color = faction.getColor();
             String text = "" + FactionPlayerHandler.get(mc.player).getCurrentLevel();
-            int x = (event.getResolution().getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2 + Configs.gui_level_offset_x;
+            int x = (event.getResolution().getScaledWidth() - mc.fontRenderer.getStringWidth(text)) / 2
+                    + Configs.gui_level_offset_x;
             int y = event.getResolution().getScaledHeight() - Configs.gui_level_offset_y;
             mc.fontRenderer.drawString(text, x + 1, y, 0);
             mc.fontRenderer.drawString(text, x - 1, y, 0);
@@ -186,6 +217,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
     @SubscribeEvent
     public void onRenderFoodBar(RenderGameOverlayEvent.Pre event) {
+
         if (event.getType() != RenderGameOverlayEvent.ElementType.FOOD) {
             return;
         }
@@ -230,14 +262,17 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onRenderWorldLast(RenderWorldLastEvent event) {
-        if (screenPercentage > 0 && !Configs.disable_screen_overlay) {
-            //Set the working matrix/layer to a layer directly on the screen/in front of the player
+
+        if ((screenPercentage > 0 || screenBottomPercentage > 0) && !Configs.disable_screen_overlay) {
+            // Set the working matrix/layer to a layer directly on the screen/in front of
+            // the player
             ScaledResolution scaledresolution = new ScaledResolution(this.mc);
             // int factor=scaledresolution.getScaleFactor();
             GlStateManager.clear(GL11.GL_DEPTH_BUFFER_BIT);
             GlStateManager.matrixMode(GL11.GL_PROJECTION);
             GlStateManager.loadIdentity();
-            GlStateManager.ortho(0.0D, scaledresolution.getScaledWidth_double(), scaledresolution.getScaledHeight_double(), 0.0D, 1D, -1D);
+            GlStateManager.ortho(0.0D, scaledresolution.getScaledWidth_double(),
+                    scaledresolution.getScaledHeight_double(), 0.0D, 1D, -1D);
             GlStateManager.matrixMode(GL11.GL_MODELVIEW);
             GlStateManager.loadIdentity();
             GlStateManager.pushMatrix();
@@ -245,8 +280,6 @@ public class VampirismHUDOverlay extends ExtendedGui {
             int w = (scaledresolution.getScaledWidth());
             int h = (scaledresolution.getScaledHeight());
             if (fullScreen) {
-
-
                 // Render a see through colored square over the whole screen
                 float r = (float) (screenColor >> 16 & 255) / 255.0F;
                 float g = (float) (screenColor >> 8 & 255) / 255.0F;
@@ -265,27 +298,44 @@ public class VampirismHUDOverlay extends ExtendedGui {
                 worldrenderer.pos(w, h, (double) this.zLevel).color(r, g, b, a).endVertex();
                 worldrenderer.pos(w, 0, (double) this.zLevel).color(r, g, b, a).endVertex();
                 worldrenderer.pos(0, 0, (double) this.zLevel).color(r, g, b, a).endVertex();
+
                 tessellator.draw();
                 GlStateManager.shadeModel(7424);
                 GlStateManager.disableBlend();
                 GlStateManager.enableAlpha();
                 GlStateManager.enableTexture2D();
 
-				/*
-                 * Try later this.drawGradientRect(0, 0, w,Math.round(h/(2/renderRed)), 0xfff00000, 0x000000); this.drawGradientRect(0, h-Math.round(h/(2/renderRed)), w, h, 0x00000000, 0xfff00000);
-				 * this.drawGradientRect2(0, 0, w/6, h, 0x000000, 0xfff00000); this.drawGradientRect2(w-w/6, 0, w, h, 0xfff00000, 0x000000);
-				 */
+                /*
+                 * Try later this.drawGradientRect(0, 0, w,Math.round(h/(2/renderRed)),
+                 * 0xfff00000, 0x000000); this.drawGradientRect(0,
+                 * h-Math.round(h/(2/renderRed)), w, h, 0x00000000, 0xfff00000);
+                 * this.drawGradientRect2(0, 0, w/6, h, 0x000000, 0xfff00000);
+                 * this.drawGradientRect2(w-w/6, 0, w, h, 0xfff00000, 0x000000);
+                 */
+
             } else {
-                int bw = 0;
-                int bh = 0;
 
-                bh = Math.round(h / (float) 4 * screenPercentage / 100);
-                bw = Math.round(w / (float) 8 * screenPercentage / 100);
+                if (screenPercentage > 0) {
+                    // sun border
+                    int bw = 0;
+                    int bh = 0;
 
-                this.drawGradientRect(0, 0, w, bh, screenColor, 0x000);
-                this.drawGradientRect(0, h - bh, w, h, 0x00000000, screenColor);
-                this.drawGradientRect2(0, 0, bw, h, 0x000000, screenColor);
-                this.drawGradientRect2(w - bw, 0, w, h, screenColor, 0x00);
+                    bh = Math.round(h / (float) 4 * screenPercentage / 100);
+                    bw = Math.round(w / (float) 8 * screenPercentage / 100);
+
+                    this.drawGradientRect(0, 0, w, bh, screenColor, 0x000);
+                    this.drawGradientRect(0, h - bh, w, h, 0x00000000, screenColor);
+                    this.drawGradientRect2(0, 0, bw, h, 0x000000, screenColor);
+                    this.drawGradientRect2(w - bw, 0, w, h, screenColor, 0x00);
+                } else {
+
+                    // batmode border
+                    int hh = 0;
+
+                    hh = Math.round(h / (float) 4 * screenBottomPercentage / 100);
+
+                    this.drawGradientRect(0, h - hh, w, h, 0x00000000, screenBottomColor);
+                }
 
             }
             GL11.glEnable(GL11.GL_DEPTH_TEST);
@@ -298,6 +348,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
     }
 
     private void renderBloodFangs(int width, int height, float perc) {
+
         this.mc.getTextureManager().bindTexture(icons);
         int left = width / 2 - 8;
         int top = height / 2 - 4;
@@ -318,7 +369,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
     private void renderHalloweenOverlay() {
 
         GlStateManager.pushMatrix();
-        //Set the working matrix/layer to a layer directly on the screen/in front of the player
+        // Set the working matrix/layer to a layer directly on the screen/in front of
+        // the player
         ScaledResolution scaledresolution = new ScaledResolution(this.mc);
         // int factor=scaledresolution.getScaleFactor();
         int w = (scaledresolution.getScaledWidth());
@@ -326,7 +378,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
         Minecraft.getMinecraft().entityRenderer.setupOverlayRendering();
 
-        Minecraft.getMinecraft().renderEngine.bindTexture(new ResourceLocation(REFERENCE.MODID, "textures/gui/special_halloween.png"));
+        Minecraft.getMinecraft().renderEngine
+                .bindTexture(new ResourceLocation(REFERENCE.MODID, "textures/gui/special_halloween.png"));
 
         int width = 507;
         int height = 102;
@@ -341,6 +394,5 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
         GlStateManager.popMatrix();
     }
-
 
 }
