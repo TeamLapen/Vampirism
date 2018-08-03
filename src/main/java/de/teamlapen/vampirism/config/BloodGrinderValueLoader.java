@@ -1,19 +1,15 @@
 package de.teamlapen.vampirism.config;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.google.common.collect.ImmutableMap;
-
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.annotation.Nullable;
-
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.Loader;
+import org.apache.commons.lang3.StringUtils;
+
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Handle loading and saving of blood values.
@@ -23,10 +19,6 @@ public class BloodGrinderValueLoader {
     private static final String TAG = "BloodValueGrinderLoader";
 
     private static final Map<ResourceLocation, Integer> bloodValues = new HashMap<>();
-    /**
-     * File to save dynamically calculated values to
-     */
-    private static @Nullable File bloodValueGrinderWorldFile;
 
     /**
      * Load Vampirism's built-in blood values including any values for third party
