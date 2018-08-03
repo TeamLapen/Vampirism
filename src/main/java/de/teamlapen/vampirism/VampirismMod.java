@@ -98,8 +98,10 @@ public class VampirismMod {
 	public final static Logger log = new Logger(REFERENCE.MODID, "de.teamlapen.vampirism");
 	public static final AbstractPacketDispatcher dispatcher = new ModPacketDispatcher();
 	public static final CreativeTabs creativeTab = new CreativeTabs(REFERENCE.MODID) {
+
 		@Override
 		public ItemStack getTabIconItem() {
+
 			return new ItemStack(ModItems.vampire_fang);
 		}
 	};
@@ -128,6 +130,7 @@ public class VampirismMod {
 	public static boolean inDev = false;
 
 	public static boolean isRealism() {
+
 		return Configs.realism_mode;
 	}
 
@@ -136,6 +139,7 @@ public class VampirismMod {
 	private VersionChecker.VersionInfo versionInfo;
 
 	public VampirismMod() {
+
 		addModCompats();
 		registryManager = new RegistryManager();
 		MinecraftForge.EVENT_BUS.register(registryManager);
@@ -143,11 +147,13 @@ public class VampirismMod {
 	}
 
 	public VersionChecker.VersionInfo getVersionInfo() {
+
 		return versionInfo;
 	}
 
 	@Mod.EventHandler
 	public void init(FMLInitializationEvent event) {
+
 		finishAPI1();
 
 		String currentVersion = "@VERSION@".equals(REFERENCE.VERSION) ? "0.0.0-test" : REFERENCE.VERSION;
@@ -191,20 +197,22 @@ public class VampirismMod {
 
 	@Mod.EventHandler
 	public void interModComm(FMLInterModComms.IMCEvent event) {
+
 		IMCHandler.handleInterModMessage(event.getMessages());
 	}
 
 	@Mod.EventHandler
 	public void onServerStart(FMLServerStartingEvent event) {
+
 		event.registerServerCommand(new VampirismCommand());
 		event.registerServerCommand(new TestCommand());
 		VampirismEntityRegistry.getBiteableEntryManager().initDynamic();
 		BloodValueLoader.onServerStarting(event.getServer());
-		// BloodGrinderValueLoader.onServerStarting(event.getServer());
 	}
 
 	@Mod.EventHandler
 	public void onServerStarted(FMLServerStartedEvent event) {
+
 		if (!LootHandler.getInstance().checkAndResetInsertedAll()) {
 			VampirismMod.log.w("LootTables", "-------------------------------");
 			VampirismMod.log.w("LootTables", "Failed to inject all loottables");
@@ -214,12 +222,13 @@ public class VampirismMod {
 
 	@Mod.EventHandler
 	public void onServerStopping(FMLServerStoppingEvent event) {
+
 		BloodValueLoader.onServerStopping();
-		// BloodGrinderValueLoader.onServerStopping();
 	}
 
 	@Mod.EventHandler
 	public void postInit(FMLPostInitializationEvent event) {
+
 		finishAPI2();
 		registryManager.onInitStep(IInitListener.Step.POST_INIT, event);
 		proxy.onInitStep(IInitListener.Step.POST_INIT, event);
@@ -233,6 +242,7 @@ public class VampirismMod {
 
 	@Mod.EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+
 		checkDevEnv();
 		HunterPlayer.registerCapability();
 		VampirePlayer.registerCapability();
@@ -252,8 +262,8 @@ public class VampirismMod {
 		ModFixs fixer = FMLCommonHandler.instance().getDataFixer().init(REFERENCE.MODID, 4);// Fixes that should have
 																							// the id of the ModFix
 																							// version when added.
-		// If adding new fixes to this, bump ModFix version and use the same one for the
-		// fixer
+																							// If adding new fixes to this, bump ModFix version and use the same one for the
+																							// fixer
 		fixer.registerFix(FixTypes.ENTITY, ModEntities.getEntityIDFixer());
 		fixer.registerFix(FixTypes.BLOCK_ENTITY, ModBlocks.getTileEntityIDFixer());
 		fixer.registerFix(FixTypes.BLOCK_ENTITY, TileTent.getTentFixer());
@@ -269,12 +279,14 @@ public class VampirismMod {
 	}
 
 	private void addModCompats() {
+
 		modCompatLoader.addModCompat(new JEIModCompat());
 		modCompatLoader.addModCompat(new SpongeModCompat());
 		modCompatLoader.addModCompat(new GuideAPICompat());
 	}
 
 	private void checkDevEnv() {
+
 		if ((Boolean) Launch.blackboard.get("fml.deobfuscatedEnvironment")) {
 			inDev = true;
 			log.setDebug(true);
@@ -288,6 +300,7 @@ public class VampirismMod {
 	 * Finish during init
 	 */
 	private void finishAPI1() {
+
 		((FactionRegistry) VampirismAPI.factionRegistry()).finish();
 		((SkillManager) VampirismAPI.skillManager()).buildSkillTrees();
 	}
@@ -296,6 +309,7 @@ public class VampirismMod {
 	 * Finish during post-init
 	 */
 	private void finishAPI2() {
+
 		((VampirismEntityRegistry) VampirismAPI.entityRegistry()).finishRegistration();
 	}
 
@@ -303,6 +317,7 @@ public class VampirismMod {
 	 * Called during construction
 	 */
 	private void setupAPI1() {
+
 		FactionRegistry factionRegistry = new FactionRegistry();
 		SundamageRegistry sundamageRegistry = new SundamageRegistry();
 		VampirismEntityRegistry biteableRegistry = new VampirismEntityRegistry();
@@ -320,6 +335,7 @@ public class VampirismMod {
 	 * Setup API during pre-init before configs are loaded
 	 */
 	private void setupAPI2() {
+
 		VReference.VAMPIRE_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction("Vampire", IVampirePlayer.class, 0XFF780DA3, REFERENCE.VAMPIRE_PLAYER_KEY, VampirePlayer.CAP, REFERENCE.HIGHEST_VAMPIRE_LEVEL);
 		VReference.VAMPIRE_FACTION.setChatColor(TextFormatting.DARK_PURPLE).setUnlocalizedName("text.vampirism.vampire", "text.vampirism.vampires");
 		VReference.HUNTER_FACTION = VampirismAPI.factionRegistry().registerPlayableFaction("Hunter", IHunterPlayer.class, Color.BLUE.getRGB(), REFERENCE.HUNTER_PLAYER_KEY, HunterPlayer.CAP, REFERENCE.HIGHEST_HUNTER_LEVEL);
@@ -333,6 +349,7 @@ public class VampirismMod {
 	 * Setup API during pre-init after configs are loaded
 	 */
 	private void setupAPI3() {
+
 		VReference.vision_nightVision = VampirismAPI.vampireVisionRegistry().registerVision("nightVision", new NightVision());
 		VReference.vision_bloodVision = VampirismAPI.vampireVisionRegistry().registerVision("bloodVision", new BloodVision());
 	}

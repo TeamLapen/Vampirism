@@ -65,7 +65,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
     private int screenBottomPercentage = 0;
 
     public VampirismHUDOverlay(Minecraft mc) {
-
+      
         this.mc = mc;
     }
 
@@ -314,6 +314,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                  */
 
             } else {
+
                 if (screenPercentage > 0) {
                     // sun border
                     int bw = 0;
