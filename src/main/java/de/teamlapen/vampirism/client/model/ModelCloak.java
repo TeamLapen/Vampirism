@@ -15,27 +15,20 @@ public class ModelCloak extends ModelBiped {
     public ModelRenderer cloakright;
 
     public ModelCloak() {
-        super();
-        textureHeight = 64;
-        textureWidth = 64;
+        super(0.0F, 0.0F, 64, 64);
 
-        cloakback = new ModelRenderer(this, 0, 33);
+        cloakback = new ModelRenderer(this, 0, 45);
         cloakback.addBox(0F, 0F, 0F, 8, 15, 1);
         cloakback.setRotationPoint(-4F, 0F, 2F);
-        cloakback.setTextureSize(128, 64);
-        cloakback.mirror = true;
         setRotation(cloakback, 0.0872665F, 0F, 0F);
-        cloakleft = new ModelRenderer(this, 0, 33);
+        cloakleft = new ModelRenderer(this, 18, 45);
         cloakleft.addBox(0F, 0F, 0F, 1, 15, 4);
         cloakleft.setRotationPoint(4F, 0.3F, -1F);
-        cloakleft.setTextureSize(128, 64);
-        cloakleft.mirror = true;
         setRotation(cloakleft, 0.0872665F, 0F, 0F);
-        cloakright = new ModelRenderer(this, 0, 33);
+        cloakright = new ModelRenderer(this, 18, 45);
         cloakright.addBox(0F, 0F, 0F, 1, 15, 4);
         cloakright.setRotationPoint(-5F, 0.3F, -1F);
-        cloakright.setTextureSize(128, 64);
-        cloakright.mirror = true;
+        cloakleft.mirror = true;
         setRotation(cloakright, 0.0872665F, 0F, 0F);
     }
 
