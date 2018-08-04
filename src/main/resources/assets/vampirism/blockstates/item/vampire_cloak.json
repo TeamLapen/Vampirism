@@ -6,84 +6,29 @@
   },
   "variants": {
     "color": {
-      "white": {
+      "red_black": {
         "textures": {
-          "layer0": "vampirism:items/vampire_cloak_white"
+          "layer0": "vampirism:items/vampire_cloak_red_black"
         }
       },
-      "silver": {
+      "black_red": {
         "textures": {
-          "layer0": "vampirism:items/vampire_cloak_silver"
+          "layer0": "vampirism:items/vampire_cloak_black_red"
         }
       },
-      "gray": {
+      "black_blue": {
         "textures": {
-          "layer0": "vampirism:items/vampire_cloak_gray"
+          "layer0": "vampirism:items/vampire_cloak_black_blue"
         }
       },
-      "black": {
+      "white_black": {
         "textures": {
-          "layer0": "vampirism:items/vampire_cloak_black"
+          "layer0": "vampirism:items/vampire_cloak_white_black"
         }
       },
-      "brown": {
+      "black_white": {
         "textures": {
-          "layer0": "vampirism:items/vampire_cloak_brown"
-        }
-      },
-      "red": {
-        "textures": {
-          "layer0": "vampirism:items/vampire_cloak_red"
-        }
-      },
-      "orange": {
-        "textures": {
-          "layer0": "vampirism:items/vampire_cloak_orange"
-        }
-      },
-      "yellow": {
-        "textures": {
-          "layer0": "vampirism:items/vampire_cloak_yellow"
-        }
-      },
-      "lime": {
-        "textures": {
-          "layer0": "vampirism:items/vampire_cloak_lime"
-        }
-      },
-      "green": {
-        "textures": {
-          "layer0": "vampirism:items/vampire_cloak_green"
-        }
-      },
-      "cyan": {
-        "textures": {
-          "layer0": "vampirism:items/vampire_cloak_cyan"
-        }
-      },
-      "light_blue": {
-        "textures": {
-          "layer0": "vampirism:items/vampire_cloak_light_blue"
-        }
-      },
-      "blue": {
-        "textures": {
-          "layer0": "vampirism:items/vampire_cloak_blue"
-        }
-      },
-      "purple": {
-        "textures": {
-          "layer0": "vampirism:items/vampire_cloak_purple"
-        }
-      },
-      "magenta": {
-        "textures": {
-          "layer0": "vampirism:items/vampire_cloak_magenta"
-        }
-      },
-      "pink": {
-        "textures": {
-          "layer0": "vampirism:items/vampire_cloak_pink"
+          "layer0": "vampirism:items/vampire_cloak_black_white"
         }
       }
     }
