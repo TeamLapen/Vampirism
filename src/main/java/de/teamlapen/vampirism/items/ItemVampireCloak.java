@@ -1,14 +1,15 @@
 package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.api.EnumColor;
 import de.teamlapen.vampirism.client.model.ModelCloak;
 import de.teamlapen.vampirism.util.REFERENCE;
+
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.NonNullList;
@@ -16,7 +17,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 /**
- * Optioal create new enum type for cloak color
+ * Item Cloak
  *
  * @author cheaterpaul
  */
@@ -40,16 +41,17 @@ public class ItemVampireCloak extends ItemArmor {
     }
 
     public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type) {
-        return String.format(REFERENCE.MODID + ":textures/models/armor/%s/%s_%s", registeredName, registeredName, EnumDyeColor.byMetadata(stack.getMetadata()).getDyeColorName() + ".png");
+        return String.format(REFERENCE.MODID + ":textures/models/armor/%s/%s_%s", registeredName, registeredName,
+                EnumColor.byMetadata(stack.getMetadata()).getDyeColorName() + ".png");
     }
 
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> subItems) {
         if (this.isInCreativeTab(tab))
-            subItems.add(new ItemStack(this, 1, 15));
+            subItems.add(new ItemStack(this, 1, 0));
         if (tab.equals(CreativeTabs.SEARCH)) {
-            for (EnumDyeColor s : EnumDyeColor.values()) {
-                if (s.getMetadata() == 15)
+            for (EnumColor s : EnumColor.values()) {
+                if (s.getMetadata() == 0)
                     continue;
                 subItems.add(new ItemStack(this, 1, s.getMetadata()));
             }
@@ -59,6 +61,6 @@ public class ItemVampireCloak extends ItemArmor {
 
     public String getUnlocalizedName(ItemStack stack) {
         int i = stack.getMetadata();
-        return super.getUnlocalizedName() + "." + EnumDyeColor.byMetadata(i).getUnlocalizedName();
+        return super.getUnlocalizedName() + "." + EnumColor.byMetadata(i).getUnlocalizedName();
     }
 }
