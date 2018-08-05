@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.client.gui;
 
-import org.lwjgl.opengl.GL11;
-
 import de.teamlapen.lib.lib.client.gui.ExtendedGui;
 import de.teamlapen.lib.lib.util.FluidLib;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
@@ -46,6 +44,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 /**
  * Handles general Overlay thingies TODO change batmode color
@@ -65,12 +64,17 @@ public class VampirismHUDOverlay extends ExtendedGui {
     private int screenBottomPercentage = 0;
 
     public VampirismHUDOverlay(Minecraft mc) {
-      
         this.mc = mc;
     }
 
+    /**
+     * Tint the entire screen in a certain color. Blends in and out
+     *
+     * @param on    Blend in duration
+     * @param off   Blend out duration
+     * @param color Color
+     */
     public void makeRenderFullColor(int on, int off, int color) {
-
         this.rederFullOn = on;
         this.renderFullOff = off;
         this.renderFullTick = on + off;
@@ -88,33 +92,16 @@ public class VampirismHUDOverlay extends ExtendedGui {
         if (event.phase == TickEvent.Phase.END)
             return;
         IFactionPlayer player = FactionPlayerHandler.get(mc.player).getCurrentFactionPlayer();
-        if (player != null && player instanceof IVampirePlayer) {
-            if (((IVampirePlayer) player).getActionHandler().isActionActive(VampireActions.vampire_rage)) {
-                screenPercentage = 100;
-                screenColor = 0xfff00000;
-                fullScreen = false;
-            } else if ((screenPercentage = ((IVampirePlayer) player).getTicksInSun() / 2) > 0) {
-                PotionEffect effect = mc.player.getActivePotionEffect(ModPotions.sunscreen);
-                if (effect == null || effect.getAmplifier() < 5) {
-                    screenColor = 0xfffff755;
-                    fullScreen = false;
-                    if (player.getRepresentingPlayer().capabilities.isCreativeMode) {
-                        screenPercentage = Math.min(20, screenPercentage);
-                    }
-                } else {
-                    screenPercentage = 0;
-                }
-            }
-            setColorForBatDuration(player);
-
-        } else if (player != null && player instanceof HunterPlayer
-                && ((HunterPlayer) player).getSpecialAttributes().isDisguised()) {
-            screenPercentage = (int) (100 * ((HunterPlayer) player).getSpecialAttributes().getDisguiseProgress());
-            screenColor = 0xff111111;
-            fullScreen = false;
+        if (player != null && player instanceof VampirePlayer) {
+            handleScreenColorVampire((VampirePlayer) player);
+        } else if (player != null && player instanceof HunterPlayer) {
+            handleScreenColorHunter((HunterPlayer) player);
         } else {
             screenPercentage = 0;
+            screenBottomPercentage =0;
         }
+
+        //If we are supposed to render fullscreen, we overwrite the other values and only render fullscreen
         if (renderFullTick > 0) {
             screenColor = renderFullColor;
             fullScreen = true;
@@ -126,19 +113,6 @@ public class VampirismHUDOverlay extends ExtendedGui {
             renderFullTick--;
         }
 
-    }
-
-    private void setColorForBatDuration(IFactionPlayer player) {
-
-        float batPercentage = ((IVampirePlayer) player).getActionHandler().getPercentageForAction(VampireActions.bat);
-        if (batPercentage < 0.2F && batPercentage > 0.0F) {
-            screenBottomColor = 0xcc7067f9; // change color
-            screenBottomPercentage = (int) ((0.2F - batPercentage) * 1000);
-            fullScreen = false;
-        } else {
-            screenBottomColor = 0;
-            screenBottomPercentage = 0;
-        }
     }
 
     @SubscribeEvent
@@ -327,7 +301,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
                     this.drawGradientRect(0, h - bh, w, h, 0x00000000, screenColor);
                     this.drawGradientRect2(0, 0, bw, h, 0x000000, screenColor);
                     this.drawGradientRect2(w - bw, 0, w, h, screenColor, 0x00);
-                } else {
+                } else { //If here screenBottomPercentage has to be >0
 
                     // batmode border
                     int hh = 0;
@@ -344,6 +318,47 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
         if (HalloweenSpecial.shouldRenderOverlay()) {
             renderHalloweenOverlay();
+        }
+    }
+
+    private void handleScreenColorHunter(HunterPlayer hunter) {
+        if (hunter.getSpecialAttributes().isDisguised()) {
+            screenPercentage = (int) (100 * hunter.getSpecialAttributes().getDisguiseProgress());
+            screenColor = 0xff111111;
+            fullScreen = false;
+        }
+    }
+
+    private void handleScreenColorVampire(VampirePlayer vampire) {
+
+        //Main area/borders
+        if (vampire.getActionHandler().isActionActive(VampireActions.vampire_rage)) {
+            screenPercentage = 100;
+            screenColor = 0xfff00000;
+            fullScreen = false;
+        } else if ((screenPercentage = vampire.getTicksInSun() / 2) > 0) {
+            PotionEffect effect = mc.player.getActivePotionEffect(ModPotions.sunscreen);
+            if (effect == null || effect.getAmplifier() < 5) {
+                screenColor = 0xfffff755;
+                fullScreen = false;
+                if (vampire.getRepresentingPlayer().capabilities.isCreativeMode) {
+                    screenPercentage = Math.min(20, screenPercentage);
+                }
+            } else {
+                screenPercentage = 0;
+            }
+        }
+
+        //Bottom Area
+        if (vampire.getActionHandler().isActionActive(VampireActions.bat)) {
+            float batPercentage = vampire.getActionHandler().getPercentageForAction(VampireActions.bat);
+            if (batPercentage < 0.2F && batPercentage > 0.0F) {
+                screenBottomColor = 0xcc7067f9; // change color
+                screenBottomPercentage = (int) ((0.2F - batPercentage) * 1000);
+                fullScreen = false;
+            } else {
+                screenBottomPercentage = 0;
+            }
         }
     }
 
