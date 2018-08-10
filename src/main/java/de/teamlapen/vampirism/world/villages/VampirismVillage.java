@@ -12,8 +12,8 @@ import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
+import de.teamlapen.vampirism.entity.hunter.EntityAggressiveVillager;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
-import de.teamlapen.vampirism.entity.hunter.EntityHunterVillager;
 import de.teamlapen.vampirism.entity.vampire.EntityBasicVampire;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -104,7 +104,7 @@ public class VampirismVillage implements IVampirismVillage {
             }
             return aggressive;
         } else {
-            EntityHunterVillager hunter = EntityHunterVillager.makeHunter(villager);
+            EntityAggressiveVillager hunter = EntityAggressiveVillager.makeHunter(villager);
             villager.getEntityWorld().spawnEntity(hunter);
             villager.setDead();
             return hunter;

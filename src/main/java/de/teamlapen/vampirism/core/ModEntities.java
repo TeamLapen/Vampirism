@@ -10,10 +10,7 @@ import de.teamlapen.vampirism.entity.*;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedCreature;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedSheep;
 import de.teamlapen.vampirism.entity.converted.EntityConvertedVillager;
-import de.teamlapen.vampirism.entity.hunter.EntityAdvancedHunter;
-import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
-import de.teamlapen.vampirism.entity.hunter.EntityHunterTrainer;
-import de.teamlapen.vampirism.entity.hunter.EntityHunterVillager;
+import de.teamlapen.vampirism.entity.hunter.*;
 import de.teamlapen.vampirism.entity.minions.vampire.EntityVampireMinionSaveable;
 import de.teamlapen.vampirism.entity.special.EntityDraculaHalloween;
 import de.teamlapen.vampirism.entity.vampire.EntityAdvancedVampire;
@@ -61,24 +58,28 @@ public class ModEntities {
     public static final String DUMMY_CREATURE = "dummy_creature";
     public static final String PORTAL_GUARD = "portal_guard";
     public static final String CONVERTED_CREATURE = "converted_creature";
-    public static final String CONVERTED_VILLAGER = "converted_villager";
     public static final String CONVERTED_SHEEP = "converted_sheep";
     public static final String HUNTER_TRAINER = "hunter_trainer";
     public static final String ADVANCED_HUNTER = "advanced_hunter";
     public static final String ADVANCED_VAMPIRE = "advanced_vampire";
-    public static final String HUNTER_VILLAGER = "hunter_villager";
     public static final String CROSSBOW_ARROW = "crossbow_arrow";
     public static final String PARTICLE_CLOUD = "particle_cloud";
     public static final String THROWABLE_ITEM = "throwable_item";
     public static final String SPECIAL_DRACULA_HALLOWEEN = "special_dracula_halloween";
     public static final String DARK_BLOOD_PROJECTILE = "dark_blood_projectile";
     public static final String SOUL_ORB = "soul_orb";
+    public static final String VILLAGER_HUNTER_FACTION = "villager_hunter_faction";
+    public static final String VILLAGER_VAMPIRE_FACTION = "villager_vampire_faction";
+    public static final String VILLAGER_ANGRY = "villager_angry";
+    public static final String VILLAGER_CONVERTED = "villager_converted";
+
 
     /**
      * List of entity names which should be spawnable
      */
     public static final List<String> spawnableEntityNames = new ArrayList<>();
-    private static final Map<String, String> OLD_TO_NEW_MAP = Maps.newHashMap();
+    private static final Map<String, String> OLD_TO_NEW_MAP = Maps.newHashMap(); //If adding something here don't forget to bump the fixer id
+
     private static int modEntityId = 0;
 
 
@@ -125,14 +126,17 @@ public class ModEntities {
         EntityEntryBuilder<EntityAdvancedVampire> advancedVampire = prepareEntityEntry(EntityAdvancedVampire.class, ADVANCED_VAMPIRE, "advanced_vampire", EntityLiving.SpawnPlacementType.ON_GROUND, true);
         addSpawn(advancedVampire, EnumCreatureType.MONSTER, Balance.mobProps.ADVANCED_VAMPIRE_SPAWN_PROBE, 1, 1, biomes);
         registry.register(advancedVampire.build());
-        registry.register(prepareEntityEntry(EntityConvertedVillager.class, CONVERTED_VILLAGER, "converted.villager", EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
-        registry.register(prepareEntityEntry(EntityHunterVillager.class, HUNTER_VILLAGER, "hunter_villager", EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
+        registry.register(prepareEntityEntry(EntityConvertedVillager.class, VILLAGER_CONVERTED, "converted.villager", EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
+        OLD_TO_NEW_MAP.put(new ResourceLocation("vampirism", "converted_villager").toString(), new ResourceLocation("vampirism", VILLAGER_CONVERTED).toString());
+        registry.register(prepareEntityEntry(EntityAggressiveVillager.class, VILLAGER_ANGRY, "hunter_villager", EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
+        OLD_TO_NEW_MAP.put(new ResourceLocation("vampirism", "hunter_villager").toString(), new ResourceLocation("vampirism", VILLAGER_ANGRY).toString());
         registry.register(prepareEntityEntry(EntityCrossbowArrow.class, CROSSBOW_ARROW, "crossbow_arrow", EntityLiving.SpawnPlacementType.IN_AIR, false).build());
         registry.register(prepareEntityEntry(EntityAreaParticleCloud.class, PARTICLE_CLOUD, "particle_cloud", EntityLiving.SpawnPlacementType.IN_AIR, false).build());
         registry.register(prepareEntityEntry(EntityThrowableItem.class, THROWABLE_ITEM, "throwable_item", EntityLiving.SpawnPlacementType.IN_AIR, false).build());
         registry.register(prepareEntityEntry(EntityDraculaHalloween.class, SPECIAL_DRACULA_HALLOWEEN, null, EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
         registry.register(prepareEntityEntry(EntityDarkBloodProjectile.class, DARK_BLOOD_PROJECTILE, null, EntityLiving.SpawnPlacementType.IN_AIR, false).build());
         registry.register(prepareEntityEntry(EntitySoulOrb.class, SOUL_ORB, null, EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
+        registry.register(prepareEntityEntry(EntityHunterFactionVillager.class, VILLAGER_HUNTER_FACTION, null, EntityLiving.SpawnPlacementType.ON_GROUND, false).build());
     }
 
     static Biome[] getZombieBiomes() {
@@ -189,7 +193,7 @@ public class ModEntities {
 
             @Override
             public int getFixVersion() {
-                return 1;
+                return 5;//If bumping this you probably want to bump the ModFix id and then change this value to the ModFix value
             }
         };
     }

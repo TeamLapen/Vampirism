@@ -23,15 +23,15 @@ import net.minecraft.world.World;
 /**
  * Villager that is equipped with a fork and hunts vampires
  */
-public class EntityHunterVillager extends EntityVillagerVampirism implements IHunterMob, IAggressiveVillager, HunterAIDefendVillage.IVillageHunterCreature {
+public class EntityAggressiveVillager extends EntityVillagerVampirism implements IHunterMob, IAggressiveVillager, HunterAIDefendVillage.IVillageHunterCreature {
     /**
      * Creates a hunter villager as an copy to the given villager
      *
      * @param villager Is not modified
      * @return
      */
-    public static EntityHunterVillager makeHunter(EntityVillager villager) {
-        EntityHunterVillager hunter = new EntityHunterVillager(villager.world);
+    public static EntityAggressiveVillager makeHunter(EntityVillager villager) {
+        EntityAggressiveVillager hunter = new EntityAggressiveVillager(villager.world);
         NBTTagCompound nbt = new NBTTagCompound();
         villager.writeToNBT(nbt);
         hunter.readFromNBT(nbt);
@@ -41,7 +41,7 @@ public class EntityHunterVillager extends EntityVillagerVampirism implements IHu
     }
 
 
-    public EntityHunterVillager(World worldIn) {
+    public EntityAggressiveVillager(World worldIn) {
         super(worldIn);
         ((PathNavigateGround) getNavigator()).setEnterDoors(true);
     }
