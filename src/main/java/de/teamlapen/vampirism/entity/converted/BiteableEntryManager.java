@@ -48,20 +48,6 @@ public class BiteableEntryManager {
         init = false;
     }
 
-    public void resetDynamic() {
-        init = false;
-        dynamic.clear();
-    }
-
-    /**
-     * Prepare the dynamic list
-     */
-    public void initDynamic() {
-        dynamic.clear();
-        dynamic.putAll(hardcoded);
-        init = true;
-    }
-
     /**
      * Adds a dynamic value.
      * Respects the convertible status from the hardcoded list
@@ -84,11 +70,6 @@ public class BiteableEntryManager {
         for (Map.Entry<ResourceLocation, Integer> e : map.entrySet()) {
             addDynamic(e.getKey(), e.getValue());
         }
-    }
-
-    public @Nullable
-    BiteableEntry get(ResourceLocation id) {
-        return init ? dynamic.get(id) : hardcoded.get(id);
     }
 
     /**
@@ -122,6 +103,9 @@ public class BiteableEntryManager {
             blood = (int) (v * 10d);
             blood = Math.min(15, blood);//Make sure there are no too crazy values
         }
+        if (creature.getMaxHealth() > 50) {
+            blood = 0;//Make sure very strong creatures cannot be easily killed by sucking their blood
+        }
         VampirismMod.log.d(TAG, "Calculated size %s and blood value %s for entity %s", Math.round(v * 100) / 100F, blood, id);
         if (blood == 0) {
             blacklist.add(id);
@@ -129,6 +113,20 @@ public class BiteableEntryManager {
         } else {
             return addDynamic(id, blood);
         }
+    }
+
+    public @Nullable
+    BiteableEntry get(ResourceLocation id) {
+        return init ? dynamic.get(id) : hardcoded.get(id);
+    }
+
+    public Map<ResourceLocation, Integer> getDynamicAll() {
+        Map<ResourceLocation, Integer> map = Maps.newHashMap();
+
+        for (Map.Entry<ResourceLocation, BiteableEntry> entry : dynamic.entrySet()) {
+            map.put(entry.getKey(), entry.getValue().blood);
+        }
+        return map;
     }
 
     /**
@@ -144,6 +142,15 @@ public class BiteableEntryManager {
             }
         }
         return map;
+    }
+
+    /**
+     * Prepare the dynamic list
+     */
+    public void initDynamic() {
+        dynamic.clear();
+        dynamic.putAll(hardcoded);
+        init = true;
     }
 
 //    Not used for now. Values are only used in ExtendedCreatures and we can sync values there
@@ -163,14 +170,9 @@ public class BiteableEntryManager {
 //        VampirismMod.dispatcher.sendTo(packet,player);
 //    }
 
-
-    public Map<ResourceLocation, Integer> getDynamicAll() {
-        Map<ResourceLocation, Integer> map = Maps.newHashMap();
-
-        for (Map.Entry<ResourceLocation, BiteableEntry> entry : dynamic.entrySet()) {
-            map.put(entry.getKey(), entry.getValue().blood);
-        }
-        return map;
+    public void resetDynamic() {
+        init = false;
+        dynamic.clear();
     }
 
 
