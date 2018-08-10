@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
@@ -328,11 +327,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      */
     public int getEyeType() {
         return eyeType;
-    }
-
-    @Override
-    public IPlayableFaction<IVampirePlayer> getFaction() {
-        return VReference.VAMPIRE_FACTION;
     }
 
     /**

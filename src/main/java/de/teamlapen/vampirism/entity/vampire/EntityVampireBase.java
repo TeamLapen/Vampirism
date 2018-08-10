@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.entity.vampire;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.Balance;
@@ -115,11 +114,6 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     @Override
     public float getEyeHeight() {
         return height * 0.875f;
-    }
-
-    @Override
-    public IFaction getFaction() {
-        return VReference.VAMPIRE_FACTION;
     }
 
     @Override

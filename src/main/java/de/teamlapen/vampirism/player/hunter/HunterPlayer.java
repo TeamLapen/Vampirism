@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.player.hunter;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
@@ -109,11 +108,6 @@ public class HunterPlayer extends VampirismPlayer<IHunterPlayer> implements IHun
     @Override
     public IFaction getDisguisedAs() {
         return player.isPotionActive(ModPotions.disguise_as_vampire) ? VReference.VAMPIRE_FACTION : getFaction();
-    }
-
-    @Override
-    public IPlayableFaction<IHunterPlayer> getFaction() {
-        return VReference.HUNTER_FACTION;
     }
 
     @Override

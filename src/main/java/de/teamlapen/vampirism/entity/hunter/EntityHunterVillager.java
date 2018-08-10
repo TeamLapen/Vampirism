@@ -1,9 +1,7 @@
 package de.teamlapen.vampirism.entity.hunter;
 
-import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IHunterMob;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
@@ -46,11 +44,6 @@ public class EntityHunterVillager extends EntityVillagerVampirism implements IHu
     public EntityHunterVillager(World worldIn) {
         super(worldIn);
         ((PathNavigateGround) getNavigator()).setEnterDoors(true);
-    }
-
-    @Override
-    public IFaction getFaction() {
-        return VReference.HUNTER_FACTION;
     }
 
     @Override

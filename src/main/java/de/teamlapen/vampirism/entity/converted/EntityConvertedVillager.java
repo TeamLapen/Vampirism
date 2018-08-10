@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.EntityVillagerVampirism;
@@ -58,11 +57,6 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
     public void drinkBlood(int amt, float saturationMod) {
         this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, amt * 20));
         bloodTimer = -1200 - rand.nextInt(1200);
-    }
-
-    @Override
-    public IFaction getFaction() {
-        return VReference.VAMPIRE_FACTION;
     }
 
     @Override

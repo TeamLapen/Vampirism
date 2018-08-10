@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.player.vampire;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
@@ -95,11 +94,6 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
 
     @Override
     public IFaction getDisguisedAs() {
-        return null;
-    }
-
-    @Override
-    public IPlayableFaction<IVampirePlayer> getFaction() {
         return null;
     }
 
