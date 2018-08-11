@@ -112,8 +112,8 @@ public class VampirismVillage implements IVampirismVillage {
     }
 
     private final String TAG = "VampirismVillage";
+    @Nonnull
     private final Village village;
-    private BlockPos center = new BlockPos(0, 0, 0);
     private int recentlyBitten;
     private int recentlyConverted;
     private int recentlySpawnedHunters;
@@ -130,7 +130,7 @@ public class VampirismVillage implements IVampirismVillage {
     private int recentlyBittenToDeath;
     private int tickCounter;
 
-    public VampirismVillage(Village village) {
+    public VampirismVillage(@Nonnull Village village) {
         this.village = village;
     }
 
@@ -177,15 +177,13 @@ public class VampirismVillage implements IVampirismVillage {
 
     @Override
     public BlockPos getCenter() {
-        return center;
+        return village.getCenter();
     }
 
-    void setCenter(BlockPos cc) {
-        center = cc;
-    }
 
     @Override
-    public Village getVillage() {
+    public @Nonnull
+    Village getVillage() {
         return village;
     }
 
@@ -244,7 +242,6 @@ public class VampirismVillage implements IVampirismVillage {
     }
 
     public void readFromNBT(NBTTagCompound nbt) {
-        center = UtilLib.readPos(nbt, "center");
         agressive = nbt.getBoolean("AGR");
         recentlyBitten = nbt.getInteger("BITTEN");
         recentlyConverted = nbt.getInteger("CONVERTED");
@@ -339,7 +336,9 @@ public class VampirismVillage implements IVampirismVillage {
                     }
 
                     if (spawn && recentlySpawnedHunters > maxHunterCount + 3) {
-                        VampirismMod.log.w(TAG, "Spawned to many hunters recently. Canceling. Pos %s", getCenter());
+                        if (worldTime % 20 == 0) { //Don't print too many messages
+                            VampirismMod.log.w(TAG, "Spawned to many hunters recently. Canceling. Pos %s", getCenter());
+                        }
                         spawn = false;
                     }
                     if (spawn) {
@@ -370,7 +369,6 @@ public class VampirismVillage implements IVampirismVillage {
     }
 
     public void writeToNBT(NBTTagCompound nbt) {
-        UtilLib.write(nbt, "center", center);
         nbt.setBoolean("AGR", agressive);
         nbt.setInteger("BITTEN", recentlyBitten);
         nbt.setInteger("CONVERTED", recentlyConverted);
