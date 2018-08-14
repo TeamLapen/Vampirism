@@ -2,13 +2,13 @@ package de.teamlapen.vampirism.client.core;
 
 import de.teamlapen.lib.lib.util.InventoryRenderHelper;
 import de.teamlapen.vampirism.VampirismMod;
-import de.teamlapen.vampirism.api.EnumColor;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.ItemBloodBottle;
 import de.teamlapen.vampirism.items.ItemCrossbowArrow;
 import de.teamlapen.vampirism.items.ItemInjection;
 import de.teamlapen.vampirism.items.ItemPureBlood;
+import de.teamlapen.vampirism.items.ItemVampireCloak.EnumCloakColor;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.util.REFERENCE;
 
@@ -121,7 +121,7 @@ public class ModItemsRender {
 		renderHelper.registerRender(ModItems.blood_infused_enhanced_iron_ingot, "normal");
 		renderHelper.registerRender(ModItems.soul_orb_vampire, "normal");
 
-		registerArmorItemWithColor(ModItems.vampire_cloak, "vampire_cloak");
+        registerVampireCloakWithColor(ModItems.vampire_cloak, "vampire_cloak");
 
 		// ----------------------
 	}
@@ -154,11 +154,11 @@ public class ModItemsRender {
 	}
 
 	/**
-     * Register all variants of an Item based on {@link EnumColor} Only works with
-     * items that have variants based on custom dye color
+     * Register all variants of an Item based on {@link EnumCloakColor} Only works
+     * with vampirecloaks
      */
-	private static void registerArmorItemWithColor(Item item, String baseName) {
-        for (EnumColor e : EnumColor.values()) {
+    private static void registerVampireCloakWithColor(Item item, String baseName) {
+        for (EnumCloakColor e : EnumCloakColor.values()) {
 			ModelLoader.setCustomModelResourceLocation(item, e.getMetadata(), new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "item/" + baseName), "color=" + e.getDyeColorName()));
 		}
 	}
