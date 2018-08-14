@@ -5,7 +5,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
 import de.teamlapen.vampirism.api.entity.hunter.IBasicHunter;
-import de.teamlapen.vampirism.api.world.IVampirismVillage;
+import de.teamlapen.vampirism.api.world.IVampirismVillageOLD;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.ai.EntityAIAttackRangedCrossbow;
@@ -74,7 +74,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
      */
     private
     @Nullable
-    IVampirismVillage IVampirismVillage;
+    IVampirismVillageOLD IVampirismVillage;
     /**
      * Stores the x axis angle between when targeting an enemy with the crossbow
      */
@@ -147,7 +147,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
 
     @Nullable
     @Override
-    public IVampirismVillage getVampirismVillage() {
+    public IVampirismVillageOLD getVampirismVillage() {
         return IVampirismVillage;
     }
 
@@ -187,7 +187,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
     }
 
     @Override
-    public void makeVillageHunter(IVampirismVillage village) {
+    public void makeVillageHunter(IVampirismVillageOLD village) {
         super.setHome(village.getBoundingBox());
         this.setMoveTowardsRestriction(MOVE_TO_RESTRICT_PRIO, true);
         this.villageHunter = true;

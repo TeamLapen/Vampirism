@@ -2,7 +2,7 @@ package de.teamlapen.vampirism.entity.ai;
 
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import de.teamlapen.vampirism.api.world.IVampirismVillage;
+import de.teamlapen.vampirism.api.world.IVampirismVillageOLD;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.EntityAITarget;
@@ -29,7 +29,7 @@ public class HunterAIDefendVillage extends EntityAITarget {
 
     @Override
     public boolean shouldExecute() {
-        IVampirismVillage village = hunter.getVampirismVillage();
+        IVampirismVillageOLD village = hunter.getVampirismVillage();
         if (village == null) return false;
 
         IVampire targetVampire = village.findNearestVillageAggressor(hunter.getRepresentingCreature());
@@ -53,6 +53,6 @@ public class HunterAIDefendVillage extends EntityAITarget {
         EntityCreature getRepresentingCreature();
 
         @Nullable
-        IVampirismVillage getVampirismVillage();
+        IVampirismVillageOLD getVampirismVillage();
     }
 }

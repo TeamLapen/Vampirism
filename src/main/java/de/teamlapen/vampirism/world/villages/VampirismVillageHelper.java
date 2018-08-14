@@ -14,10 +14,10 @@ public class VampirismVillageHelper {
      * Finds the nearest village, but only the given coordinates are withing it's bounding box plus the given the distance.
      */
     public static @Nullable
-    VampirismVillage getNearestVillage(World w, BlockPos pos, int r) {
+    VampirismVillageOld getNearestVillage(World w, BlockPos pos, int r) {
         Village v = w.villageCollection.getNearestVillage(pos, r);
         if (v != null) {
-            return VampirismVillage.get(v);
+            return VampirismVillageOld.get(v);
         }
         return null;
     }
@@ -26,7 +26,7 @@ public class VampirismVillageHelper {
      * @return The nearest village the entity is in or next to.
      */
     public static @Nullable
-    VampirismVillage getNearestVillage(Entity e) {
+    VampirismVillageOld getNearestVillage(Entity e) {
         return getNearestVillage(e.getEntityWorld(), e.getPosition(), 10);
     }
 
@@ -35,7 +35,7 @@ public class VampirismVillageHelper {
      */
     public static void tick(World w) {
         for (Village v : w.villageCollection.getVillageList()) {
-            VampirismVillage.get(v).tick(w.getTotalWorldTime());
+            VampirismVillageOld.get(v).tick(w.getTotalWorldTime());
         }
     }
 

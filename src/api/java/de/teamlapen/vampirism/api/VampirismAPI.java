@@ -13,7 +13,7 @@ import de.teamlapen.vampirism.api.items.IAlchemicalCauldronCraftingManager;
 import de.teamlapen.vampirism.api.items.IBloodPotionRegistry;
 import de.teamlapen.vampirism.api.items.IHunterWeaponCraftingManager;
 import de.teamlapen.vampirism.api.world.IGarlicChunkHandler;
-import de.teamlapen.vampirism.api.world.IVampirismVillage;
+import de.teamlapen.vampirism.api.world.IVampirismVillageOLD;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.village.Village;
@@ -35,8 +35,8 @@ public class VampirismAPI {
     private static final Capability<IExtendedCreatureVampirism> CAP_CREATURE = null;
     @CapabilityInject(IFactionPlayerHandler.class)
     private final static Capability<IFactionPlayerHandler> CAP_FACTION_HANDLER_PLAYER = null;
-    @CapabilityInject(IVampirismVillage.class)
-    private final static Capability<IVampirismVillage> CAP_VILLAGE = null;
+    @CapabilityInject(IVampirismVillageOLD.class)
+    private final static Capability<IVampirismVillageOLD> CAP_VILLAGE = null;
     private static IFactionRegistry factionRegistry;
     private static ISundamageRegistry sundamageRegistry;
     private static IVampirismEntityRegistry entityRegistry;
@@ -179,9 +179,9 @@ public class VampirismAPI {
     }
 
     /**
-     * Get the {@link IVampirismVillage} instance for the given village
+     * Get the {@link IVampirismVillageOLD} instance for the given village
      */
-    public static IVampirismVillage getVampirismVillage(Village village) {
+    public static IVampirismVillageOLD getVampirismVillage(Village village) {
         return village.getCapability(CAP_VILLAGE, null);
     }
 

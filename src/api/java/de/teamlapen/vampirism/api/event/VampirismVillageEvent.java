@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.api.event;
 
 import de.teamlapen.vampirism.api.entity.IAggressiveVillager;
-import de.teamlapen.vampirism.api.world.IVampirismVillage;
+import de.teamlapen.vampirism.api.world.IVampirismVillageOLD;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraftforge.fml.common.eventhandler.Cancelable;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -12,14 +12,14 @@ import javax.annotation.Nullable;
 public abstract class VampirismVillageEvent extends Event {
 
     @Nullable
-    private final IVampirismVillage village;
+    private final IVampirismVillageOLD village;
 
-    public VampirismVillageEvent(@Nullable IVampirismVillage village) {
+    public VampirismVillageEvent(@Nullable IVampirismVillageOLD village) {
         this.village = village;
     }
 
     @Nullable
-    public IVampirismVillage getVillage() {
+    public IVampirismVillageOLD getVillage() {
         return village;
     }
 
@@ -48,7 +48,7 @@ public abstract class VampirismVillageEvent extends Event {
         private boolean willBeAggressive;
         private boolean willBeVampire;
 
-        public SpawnNewVillager(@Nonnull IVampirismVillage village, @Nonnull EntityVillager seedVillager, boolean willBeAggressive, boolean willBeVampire) {
+        public SpawnNewVillager(@Nonnull IVampirismVillageOLD village, @Nonnull EntityVillager seedVillager, boolean willBeAggressive, boolean willBeVampire) {
             super(village);
             this.seedVillager = seedVillager;
             this.willBeAggressive = willBeAggressive;
@@ -122,7 +122,7 @@ public abstract class VampirismVillageEvent extends Event {
         private @Nullable
         IAggressiveVillager aggressiveVillager;
 
-        public MakeAggressive(@Nullable IVampirismVillage village, @Nonnull EntityVillager villager) {
+        public MakeAggressive(@Nullable IVampirismVillageOLD village, @Nonnull EntityVillager villager) {
             super(village);
             this.oldVillager = villager;
         }

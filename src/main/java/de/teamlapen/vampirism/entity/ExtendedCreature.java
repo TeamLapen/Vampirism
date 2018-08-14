@@ -8,7 +8,7 @@ import de.teamlapen.vampirism.api.entity.BiteableEntry;
 import de.teamlapen.vampirism.api.entity.IExtendedCreatureVampirism;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
-import de.teamlapen.vampirism.api.world.IVampirismVillage;
+import de.teamlapen.vampirism.api.world.IVampirismVillageOLD;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
@@ -233,7 +233,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
         }
         this.sync();
         if (amt > 0 && entity instanceof EntityVillager) {
-            IVampirismVillage vv = VampirismVillageHelper.getNearestVillage(entity);
+            IVampirismVillageOLD vv = VampirismVillageHelper.getNearestVillage(entity);
             if (vv != null) {
                 vv.onVillagerBitten(biter);
                 if (converted) {

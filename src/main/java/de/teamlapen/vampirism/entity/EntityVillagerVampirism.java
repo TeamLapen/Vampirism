@@ -1,6 +1,6 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.vampirism.api.world.IVampirismVillage;
+import de.teamlapen.vampirism.api.world.IVampirismVillageOLD;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -22,7 +22,7 @@ public class EntityVillagerVampirism extends EntityVillager {
     protected boolean peaceful = false;
     protected
     @Nullable
-    IVampirismVillage IVampirismVillageObj;
+    IVampirismVillageOLD IVampirismVillageObj;
     /**
      * A timer which reaches 0 every 70 to 120 ticks
      */
@@ -88,7 +88,7 @@ public class EntityVillagerVampirism extends EntityVillager {
     }
 
     @Nullable
-    public IVampirismVillage getVampirismVillage() {
+    public IVampirismVillageOLD getVampirismVillage() {
         return IVampirismVillageObj;
     }
 

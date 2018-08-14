@@ -25,8 +25,8 @@ import de.teamlapen.vampirism.world.VampirismWorldData;
 import de.teamlapen.vampirism.world.gen.VampirismWorldGen;
 import de.teamlapen.vampirism.world.gen.structure.StructureManager;
 import de.teamlapen.vampirism.world.gen.structure.VampirismTemplate;
-import de.teamlapen.vampirism.world.villages.VampirismVillage;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
+import de.teamlapen.vampirism.world.villages.VampirismVillageOld;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -76,7 +76,7 @@ public class TestCommand extends BasicCommand {
             @Override
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 EntityPlayer player = getCommandSenderAsPlayer(sender);
-                VampirismVillage v = VampirismVillageHelper.getNearestVillage(player);
+                VampirismVillageOld v = VampirismVillageHelper.getNearestVillage(player);
                 if (v == null) {
                     sender.sendMessage(new TextComponentString("No village found"));
                 } else {
@@ -340,7 +340,7 @@ public class TestCommand extends BasicCommand {
                 List<EntityVillager> l = player.getEntityWorld().getEntitiesWithinAABB(EntityVillager.class, player.getEntityBoundingBox().grow(3, 2, 3));
                 for (EntityVillager v : l) {
                     if (v instanceof IHunter || v instanceof IVampire) continue;
-                    VampirismVillage.makeAggressive(v, null);
+                    VampirismVillageOld.makeAggressive(v, null);
 
                 }
             }
@@ -535,7 +535,7 @@ public class TestCommand extends BasicCommand {
             @Override
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 EntityPlayer p = getCommandSenderAsPlayer(sender);
-                VampirismVillage v = VampirismVillageHelper.getNearestVillage(p);
+                VampirismVillageOld v = VampirismVillageHelper.getNearestVillage(p);
                 if (v == null) {
                     sender.sendMessage(new TextComponentString("Could not find any village near you"));
                 } else {
