@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.items;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.model.ModelCloak;
 import de.teamlapen.vampirism.util.Helper;
@@ -17,9 +18,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.util.List;
 
 /**
  * Item Cloak
@@ -76,6 +80,13 @@ public class ItemVampireCloak extends ItemArmor {
             if (Helper.isHunter(player)) {
                 player.addPotionEffect(new PotionEffect(MobEffects.POISON, 20, 1));
             }
+        }
+    }
+
+    @SideOnly(Side.CLIENT)
+    protected void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+        if (Helper.isHunter(playerIn)) {
+            tooltip.add(TextFormatting.RED + UtilLib.translate("text.vampirism.poisonous_to_hunter"));
         }
     }
 

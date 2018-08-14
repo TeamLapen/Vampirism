@@ -468,6 +468,7 @@ text.vampirism.item_tier.normal=Normal
 text.vampirism.item_tier.enhanced=Enhanced
 text.vampirism.item_tier.ultimate=Special
 text.vampirism.poisonous_to_vampires=Poisonous to vampires
+text.vampirism.poisonous_to_hunter=Poisonous to hunter
 text.vampirism.deals_more_damage_to=Deals %s percent more damage against
 text.vampirism.liquid_container=Any liquid container
 text.vampirism.translators=None
