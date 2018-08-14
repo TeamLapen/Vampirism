@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.api.entity.vampire;
 
 import de.teamlapen.vampirism.api.EnumStrength;
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 
 import javax.annotation.Nonnull;
@@ -23,6 +25,11 @@ public interface IVampire extends IFactionEntity {
      * @param saturationMod
      */
     void drinkBlood(int amt, float saturationMod);
+
+    @Override
+    default IFaction getFaction() {
+        return VReference.VAMPIRE_FACTION;
+    }
 
     /**
      * Checks if the player is being affected by garlic.

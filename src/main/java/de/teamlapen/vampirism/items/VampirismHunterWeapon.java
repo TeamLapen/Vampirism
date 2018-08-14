@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IFactionLevelItem;
 import de.teamlapen.vampirism.api.items.IFactionSlayerItem;
+import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.block.Block;
@@ -26,7 +27,7 @@ import java.util.List;
 /**
  * Basic sword for vampire hunters
  */
-public abstract class VampirismHunterWeapon extends VampirismItemWeapon implements IFactionLevelItem, IFactionSlayerItem {
+public abstract class VampirismHunterWeapon extends VampirismItemWeapon implements IFactionLevelItem, IFactionSlayerItem, IVampireFinisher {
 
     public VampirismHunterWeapon(String regName, ToolMaterial material) {
         super(regName, material);

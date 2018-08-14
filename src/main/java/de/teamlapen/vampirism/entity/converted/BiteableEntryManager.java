@@ -103,6 +103,9 @@ public class BiteableEntryManager {
             blood = (int) (v * 10d);
             blood = Math.min(15, blood);//Make sure there are no too crazy values
         }
+        if (creature.getMaxHealth() > 50) {
+            blood = 0;//Make sure very strong creatures cannot be easily killed by sucking their blood
+        }
         VampirismMod.log.d(TAG, "Calculated size %s and blood value %s for entity %s", Math.round(v * 100) / 100F, blood, id);
         if (blood == 0) {
             blacklist.add(id);

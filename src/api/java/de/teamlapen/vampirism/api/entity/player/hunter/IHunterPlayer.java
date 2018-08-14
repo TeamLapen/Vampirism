@@ -1,5 +1,7 @@
 package de.teamlapen.vampirism.api.entity.player.hunter;
 
+import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
@@ -10,5 +12,9 @@ import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
  */
 public interface IHunterPlayer extends IFactionPlayer<IHunterPlayer>, IHunter, IMinionLord {
 
+    @Override
+    default IPlayableFaction<IHunterPlayer> getFaction() {
+        return VReference.HUNTER_FACTION;
+    }
 
 }

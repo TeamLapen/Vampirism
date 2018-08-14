@@ -1,6 +1,8 @@
 package de.teamlapen.vampirism.api.entity.player.vampire;
 
+import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.IBiteableEntity;
+import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.minions.IMinionLord;
 import de.teamlapen.vampirism.api.entity.player.IFactionPlayer;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
@@ -57,6 +59,11 @@ public interface IVampirePlayer extends IVampire, IFactionPlayer<IVampirePlayer>
      * @return The players blood stats (similar to food stats)
      */
     IBloodStats getBloodStats();
+
+    @Override
+    default IPlayableFaction<IVampirePlayer> getFaction() {
+        return VReference.VAMPIRE_FACTION;
+    }
 
     /**
      * @return The amount of ticks the player has been in sun. Never higher than 100

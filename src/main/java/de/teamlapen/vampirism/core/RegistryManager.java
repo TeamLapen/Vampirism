@@ -21,6 +21,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.registry.EntityEntry;
+import net.minecraftforge.fml.common.registry.VillagerRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.registries.ObjectHolderRegistry;
@@ -160,6 +161,11 @@ public class RegistryManager implements IInitListener {
     public void onRegisterPotions(RegistryEvent.Register<Potion> event) {
 
         ModPotions.registerPotions(event.getRegistry());
+    }
+
+    @SubscribeEvent
+    public void onRegisterProfessions(RegistryEvent.Register<VillagerRegistry.VillagerProfession> event) {
+        ModVillages.registerProfessions(event.getRegistry());
     }
 
     @SubscribeEvent

@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.player.hunter;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
-import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.api.entity.player.actions.IActionHandler;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkillHandler;
@@ -36,11 +35,6 @@ class HunterPlayerDefaultImpl implements IHunterPlayer {
 
     @Override
     public IFaction getDisguisedAs() {
-        return null;
-    }
-
-    @Override
-    public IPlayableFaction<IHunterPlayer> getFaction() {
         return null;
     }
 

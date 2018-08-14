@@ -169,19 +169,19 @@ public class BloodPotionTableContainer extends Container {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
             if (index >= 0 && index < 4) {
-                if (!this.mergeItemStack(itemstack1, 3, 39, true)) {
+                if (!this.mergeItemStack(itemstack1, 4, 40, true)) {
                     return ItemStackUtil.getEmptyStack();
                 }
 
-            } else if (index >= 3 && index < 30) {
-                if (!this.mergeItemStack(itemstack1, 30, 39, false)) {
+            } else if (index >= 3 && index < 31) {
+                if (!this.mergeItemStack(itemstack1, 31, 40, false)) {
                     return ItemStackUtil.getEmptyStack();
                 }
-            } else if (index >= 30 && index < 39) {
-                if (!this.mergeItemStack(itemstack1, 3, 30, false)) {
+            } else if (index >= 31 && index < 40) {
+                if (!this.mergeItemStack(itemstack1, 4, 31, false)) {
                     return ItemStackUtil.getEmptyStack();
                 }
-            } else if (!this.mergeItemStack(itemstack1, 3, 39, false)) {
+            } else if (!this.mergeItemStack(itemstack1, 4, 40, false)) {
                 return ItemStackUtil.getEmptyStack();
             }
 
@@ -218,8 +218,8 @@ public class BloodPotionTableContainer extends Container {
         boolean bottle = false;
         ItemStack bottle1 = inventory.getStackInSlot(0);
         ItemStack bottle2 = inventory.getStackInSlot(1);
-        if (bottle1 != null && bottle1.getItem().equals(ModItems.vampire_blood_bottle)) bottle = true;
-        if (bottle2 != null && bottle2.getItem().equals(ModItems.vampire_blood_bottle)) bottle = true;
+        if (!ItemStackUtil.isEmpty(bottle1) && bottle1.getItem().equals(ModItems.vampire_blood_bottle)) bottle = true;
+        if (!ItemStackUtil.isEmpty(bottle2) && bottle2.getItem().equals(ModItems.vampire_blood_bottle)) bottle = true;
         return bottle;
     }
 

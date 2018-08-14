@@ -235,7 +235,7 @@ public class VampirismMod {
         setupAPI3();
 
         // Data Fixer
-        ModFixs fixer = FMLCommonHandler.instance().getDataFixer().init(REFERENCE.MODID, 4);// Fixes that should have the id of the ModFix version when added.
+        ModFixs fixer = FMLCommonHandler.instance().getDataFixer().init(REFERENCE.MODID, 5);// Fixes that should have the id of the ModFix version when added.
         // If adding new fixes to this, bump ModFix version and use the same one for the fixer
         fixer.registerFix(FixTypes.ENTITY, ModEntities.getEntityIDFixer());
         fixer.registerFix(FixTypes.BLOCK_ENTITY, ModBlocks.getTileEntityIDFixer());

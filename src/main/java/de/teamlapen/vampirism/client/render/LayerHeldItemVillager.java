@@ -3,7 +3,7 @@ package de.teamlapen.vampirism.client.render;
 import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.client.model.ModelVillagerWithArms;
 import de.teamlapen.vampirism.client.render.entities.RenderHunterVillager;
-import de.teamlapen.vampirism.entity.hunter.EntityHunterVillager;
+import de.teamlapen.vampirism.entity.hunter.EntityAggressiveVillager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
@@ -18,7 +18,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
  * Same as {@link LayerHeldItem} but for {@link ModelVillagerWithArms} model
  */
 @SideOnly(Side.CLIENT)
-public class LayerHeldItemVillager implements LayerRenderer<EntityHunterVillager> {
+public class LayerHeldItemVillager implements LayerRenderer<EntityAggressiveVillager> {
 
     private final RenderHunterVillager renderer;
 
@@ -26,7 +26,7 @@ public class LayerHeldItemVillager implements LayerRenderer<EntityHunterVillager
         this.renderer = renderer;
     }
 
-    public void doRenderLayer(EntityHunterVillager entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
+    public void doRenderLayer(EntityAggressiveVillager entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch, float scale) {
         boolean flag = entitylivingbaseIn.getPrimaryHand() == EnumHandSide.RIGHT;
         ItemStack itemstack = flag ? entitylivingbaseIn.getHeldItemOffhand() : entitylivingbaseIn.getHeldItemMainhand();
         ItemStack itemstack1 = flag ? entitylivingbaseIn.getHeldItemMainhand() : entitylivingbaseIn.getHeldItemOffhand();
@@ -51,7 +51,7 @@ public class LayerHeldItemVillager implements LayerRenderer<EntityHunterVillager
         return false;
     }
 
-    private void renderHeldItem(EntityHunterVillager p_188358_1_, ItemStack stack, ItemCameraTransforms.TransformType p_188358_3_, EnumHandSide p_188358_4_) {
+    private void renderHeldItem(EntityAggressiveVillager p_188358_1_, ItemStack stack, ItemCameraTransforms.TransformType p_188358_3_, EnumHandSide p_188358_4_) {
         if (!ItemStackUtil.isEmpty(stack)) {
             GlStateManager.pushMatrix();
             ((ModelVillagerWithArms) this.renderer.getMainModel()).postRenderArm(0.0625F, p_188358_4_);

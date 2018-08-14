@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.entity.hunter;
 
-import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.hunter.IHunter;
 import de.teamlapen.vampirism.entity.EntityVampirism;
 import net.minecraft.entity.EntityLivingBase;
@@ -24,11 +22,6 @@ public abstract class EntityHunterBase extends EntityVampirism implements IHunte
     @Override
     public float getEyeHeight() {
         return height * 0.875f;
-    }
-
-    @Override
-    public IFaction getFaction() {
-        return VReference.HUNTER_FACTION;
     }
 
     @Override

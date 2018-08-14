@@ -103,12 +103,15 @@ The following example instructions will setup IntelliJ (Free community edition o
 
 That's it.
 
-#### Setting up Vampirism in another environment
+#### Eclipse or other IDEs
 If you would like to setup Vampirism in another way or another IDE, you should pay regard to the following points.  
 1. Make sure `src/main/java`, `src/api/java´ and `src/lib/java` are marked as source folders and `src/main/resources` and `src/lib/resources` are marked as resource folders.  
 2. Vampirism might have a few dependencies (e.g. Waila), which are specified in the gradle files and should be automatically downloaded and added when you run `ideaModule` or `eclipse`.  
 3. Vampirism requires at least Java 8 
 
+### Code Style
+The code style used in this project is the IntelliJ default one.  
+For Eclipse you can use the settings created by @Cheaterpaul [FormatFile](https://gist.github.com/Cheaterpaul/1aa0d0014240c8bd854434b5147804df) [ImportOrder](https://gist.github.com/Cheaterpaul/594d16f54358bdca6ea5e549f81b3589)
 
 ## Licence
 This mod is licenced under [LGPLv3](https://raw.githubusercontent.com/TeamLapen/Vampirism/master/LICENCE)
