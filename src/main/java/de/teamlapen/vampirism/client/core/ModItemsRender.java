@@ -8,11 +8,12 @@ import de.teamlapen.vampirism.items.ItemBloodBottle;
 import de.teamlapen.vampirism.items.ItemCrossbowArrow;
 import de.teamlapen.vampirism.items.ItemInjection;
 import de.teamlapen.vampirism.items.ItemPureBlood;
+import de.teamlapen.vampirism.items.ItemVampireCloak.EnumCloakColor;
 import de.teamlapen.vampirism.player.hunter.HunterLevelingConf;
 import de.teamlapen.vampirism.util.REFERENCE;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.util.IStringSerializable;
@@ -120,7 +121,7 @@ public class ModItemsRender {
 		renderHelper.registerRender(ModItems.blood_infused_enhanced_iron_ingot, "normal");
 		renderHelper.registerRender(ModItems.soul_orb_vampire, "normal");
 
-		registerArmorItemWithColor(ModItems.vampire_cloak, "vampire_cloak");
+        registerVampireCloakWithColor(ModItems.vampire_cloak, "vampire_cloak");
 
 		// ----------------------
 	}
@@ -153,11 +154,11 @@ public class ModItemsRender {
 	}
 
 	/**
-	 * Register all variants of an Item based on {@link EnumDyeColor} Only works
-	 * with items that only have variants based on dye color
-	 */
-	private static void registerArmorItemWithColor(Item item, String baseName) {
-		for (EnumDyeColor e : EnumDyeColor.values()) {
+     * Register all variants of an Item based on {@link EnumCloakColor} Only works
+     * with vampirecloaks
+     */
+    private static void registerVampireCloakWithColor(Item item, String baseName) {
+        for (EnumCloakColor e : EnumCloakColor.values()) {
 			ModelLoader.setCustomModelResourceLocation(item, e.getMetadata(), new ModelResourceLocation(new ResourceLocation(REFERENCE.MODID, "item/" + baseName), "color=" + e.getDyeColorName()));
 		}
 	}
