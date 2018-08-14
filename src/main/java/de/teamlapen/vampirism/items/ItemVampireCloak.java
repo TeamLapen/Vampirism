@@ -2,17 +2,22 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.model.ModelCloak;
+import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
 
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -62,6 +67,16 @@ public class ItemVampireCloak extends ItemArmor {
     public String getUnlocalizedName(ItemStack stack) {
         int i = stack.getMetadata();
         return super.getUnlocalizedName() + "." + EnumCloakColor.byMetadata(i).getUnlocalizedName();
+    }
+
+    @Override
+    public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
+        super.onArmorTick(world, player, itemStack);
+        if (player.ticksExisted % 16 == 8) {
+            if (Helper.isHunter(player)) {
+                player.addPotionEffect(new PotionEffect(MobEffects.POISON, 20, 1));
+            }
+        }
     }
 
     public enum EnumCloakColor implements IStringSerializable {
