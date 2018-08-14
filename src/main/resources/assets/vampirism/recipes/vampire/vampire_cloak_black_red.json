@@ -6,7 +6,7 @@
   "pattern": [
     "YZY",
     "XAX",
-    "YBY"
+    "Y Y"
   ],
   "type": "minecraft:crafting_shaped",
   "key": {
@@ -24,12 +24,8 @@
     }
     ,
     "A": {
-      "item": "vampirism:soul_orb_vampire"
-    }
-    ,
-    "B": {
       "item": "vampirism:pure_blood",
-      "data": 4
+      "data": 32767
     }
   }
 }
