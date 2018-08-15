@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.Multimap;
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -83,7 +82,7 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
                 boolean flag = true;
                 int boost = Integer.MAX_VALUE;
                 for (ItemStack stack : player.inventory.armorInventory) {
-                    if (!ItemStackUtil.isEmpty(stack) && stack.getItem() instanceof ItemArmorOfSwiftness) {
+                    if (!stack.isEmpty() && stack.getItem() instanceof ItemArmorOfSwiftness) {
                         int b = getJumpBoost(getTier(stack));
                         if (b < boost) {
                             boost = b;

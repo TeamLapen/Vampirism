@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.inventory;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
 import de.teamlapen.vampirism.blocks.BlockWeaponTable;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
@@ -86,7 +85,7 @@ public class HunterWeaponTableContainer extends Container {
             for (int i = 0; i < this.craftMatrix.getSizeInventory(); ++i) {
                 ItemStack itemstack = this.craftMatrix.removeStackFromSlot(i);
 
-                if (!ItemStackUtil.isEmpty(itemstack)) {
+                if (!itemstack.isEmpty()) {
                     playerIn.dropItem(itemstack, false);
                 }
             }
@@ -105,7 +104,7 @@ public class HunterWeaponTableContainer extends Container {
 
     @Nonnull
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index) {
-        ItemStack itemstack = ItemStackUtil.getEmptyStack();
+        ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack()) {
@@ -113,30 +112,30 @@ public class HunterWeaponTableContainer extends Container {
             itemstack = itemstack1.copy();
             if (index == 0) {
                 if (!this.mergeItemStack(itemstack1, 17, 53, true)) {
-                    return ItemStackUtil.getEmptyStack();
+                    return ItemStack.EMPTY;
                 }
 
                 slot.onSlotChange(itemstack1, itemstack);
             } else if (index >= 17 && index < 44) {
                 if (!this.mergeItemStack(itemstack1, 44, 53, false)) {
-                    return ItemStackUtil.getEmptyStack();
+                    return ItemStack.EMPTY;
                 }
             } else if (index >= 44 && index < 53) {
                 if (!this.mergeItemStack(itemstack1, 17, 44, false)) {
-                    return ItemStackUtil.getEmptyStack();
+                    return ItemStack.EMPTY;
                 }
             } else if (!this.mergeItemStack(itemstack1, 17, 53, false)) {
-                return ItemStackUtil.getEmptyStack();
+                return ItemStack.EMPTY;
             }
 
-            if (ItemStackUtil.isEmpty(itemstack)) {
-                slot.putStack(ItemStackUtil.getEmptyStack());
+            if (itemstack.isEmpty()) {
+                slot.putStack(ItemStack.EMPTY);
             } else {
                 slot.onSlotChanged();
             }
 
-            if (ItemStackUtil.getCount(itemstack) == ItemStackUtil.getCount(itemstack1)) {
-                return ItemStackUtil.getEmptyStack();
+            if (itemstack.getCount() == itemstack1.getCount()) {
+                return ItemStack.EMPTY;
             }
 
             slot.onTake(playerIn, itemstack1);

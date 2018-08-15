@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.Multimap;
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -23,7 +22,7 @@ public class ItemObsidianArmor extends VampirismHunterArmor implements IItemWith
 
     public static boolean isFullyEquipped(EntityPlayer player) {
         for (ItemStack stack : player.inventory.armorInventory) {
-            if (ItemStackUtil.isEmpty(stack) || !(stack.getItem() instanceof ItemObsidianArmor)) {
+            if (stack.isEmpty() || !(stack.getItem() instanceof ItemObsidianArmor)) {
                 return false;
             }
         }

@@ -40,7 +40,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     private int cookingTime = 400;
     private float experience = 0.2F;
     @Nonnull
-    private ItemStack descriptiveStack = ItemStackUtil.getEmptyStack();
+    private ItemStack descriptiveStack = ItemStack.EMPTY;
 
 
     AlchemicalCauldronRecipe(@Nonnull ItemStack output, ItemStack liquid, @Nonnull ItemStack ingredient) {
@@ -50,7 +50,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
             if (stack != null) {
                 VampirismMod.log.d("AlchemicalCauldron", "Replaced %s liquid item with %s fluid stack", liquid, stack);
                 fluidStack = stack;
-                fluidItem = ItemStackUtil.getEmptyStack();
+                fluidItem = ItemStack.EMPTY;
                 descriptiveStack = liquid;
             } else {
                 VampirismMod.log.d("AlchemicalCauldron", "Could not extract fluid from fluid container item %s", liquid);
@@ -62,17 +62,17 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
             fluidStack = null;
         }
         this.ingredient = ingredient;
-        if (ItemStackUtil.isEmpty(output))
-            throw new IllegalArgumentException("AlchemicalCauldron: Output cannot be null/empty (" + liquid + "," + ingredient + ")");
+        if (output.isEmpty())
+            throw new IllegalArgumentException("AlchemicalCauldron: Output cannot be empty (" + liquid + "," + ingredient + ")");
         this.output = output;
     }
 
     AlchemicalCauldronRecipe(@Nonnull ItemStack output, FluidStack fluidStack, @Nonnull ItemStack ingredient) {
         this.fluidStack = fluidStack;
-        this.fluidItem = ItemStackUtil.getEmptyStack();
+        this.fluidItem = ItemStack.EMPTY;
         this.ingredient = ingredient;
-        if (ItemStackUtil.isEmpty(output))
-            throw new IllegalArgumentException("AlchemicalCauldron: Output cannot be null/empty (" + fluidStack + "," + ingredient + ")");
+        if (output.isEmpty())
+            throw new IllegalArgumentException("AlchemicalCauldron: Output cannot be empty (" + fluidStack + "," + ingredient + ")");
         this.output = output;
     }
 
@@ -112,8 +112,8 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
     @Nonnull
     @Override
     public ItemStack getDescriptiveFluidStack() {
-        if (!ItemStackUtil.isEmpty(descriptiveStack)) return descriptiveStack;
-        if (!ItemStackUtil.isEmpty(fluidItem)) return fluidItem;
+        if (!descriptiveStack.isEmpty()) return descriptiveStack;
+        if (!fluidItem.isEmpty()) return fluidItem;
         descriptiveStack = new ItemStack(Items.BUCKET);
         addFluidStackDescription(descriptiveStack, fluidStack);
         return descriptiveStack;
@@ -171,7 +171,7 @@ public class AlchemicalCauldronRecipe implements IAlchemicalCauldronRecipe {
 
     @Override
     public boolean isValidLiquidItem(@Nonnull ItemStack stack) {
-        return !ItemStackUtil.isEmpty(fluidItem) && !ItemStackUtil.isEmpty(stack) && ItemStackUtil.doesStackContain(stack, fluidItem);
+        return !fluidItem.isEmpty() && !stack.isEmpty() && ItemStackUtil.doesStackContain(stack, fluidItem);
     }
 
     @Override

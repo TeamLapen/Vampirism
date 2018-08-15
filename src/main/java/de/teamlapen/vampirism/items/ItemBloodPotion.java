@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
@@ -76,8 +75,8 @@ public class ItemBloodPotion extends VampirismItem {
         }
 
         if (entityplayer == null || !entityplayer.capabilities.isCreativeMode) {
-            ItemStackUtil.decr(stack);
-            if (ItemStackUtil.isEmpty(stack)) {
+            stack.shrink(1);
+            if (stack.isEmpty()) {
                 return new ItemStack(Items.GLASS_BOTTLE);
             }
 

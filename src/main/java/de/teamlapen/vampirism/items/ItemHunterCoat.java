@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,7 +19,7 @@ public class ItemHunterCoat extends VampirismHunterArmor implements IItemWithTie
 
     public static boolean isFullyEquipped(EntityPlayer player) {
         for (ItemStack stack : player.inventory.armorInventory) {
-            if (ItemStackUtil.isEmpty(stack) || !(stack.getItem() instanceof ItemHunterCoat)) {
+            if (stack.isEmpty() || !(stack.getItem() instanceof ItemHunterCoat)) {
                 return false;
             }
         }

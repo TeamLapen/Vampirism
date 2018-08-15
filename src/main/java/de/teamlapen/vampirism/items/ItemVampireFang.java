@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
@@ -44,7 +43,7 @@ public class ItemVampireFang extends VampirismItem {
                         playerIn.sendMessage(new TextComponentTranslation("text.vampirism.immune_to").appendSibling(new TextComponentTranslation(ModPotions.sanguinare.getName())));
                     }
                 }
-                ItemStackUtil.decr(stack);
+                stack.shrink(1);
             }
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);

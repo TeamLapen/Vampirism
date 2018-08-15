@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.ModGuiHandler;
@@ -83,7 +82,7 @@ public class ItemVampireBook extends VampirismItem {
     }
 
     private void resolveContents(ItemStack stack, EntityPlayer player) {
-        if (!ItemStackUtil.isEmpty(stack) && stack.getTagCompound() != null) {
+        if (!stack.isEmpty() && stack.getTagCompound() != null) {
             NBTTagCompound nbttagcompound = stack.getTagCompound();
             if (!nbttagcompound.getBoolean("resolved")) {
                 nbttagcompound.setBoolean("resolved", true);

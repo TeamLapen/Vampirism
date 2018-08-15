@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.hunter;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
@@ -258,7 +257,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
             this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(ModItems.basic_crossbow));
         } else {
             this.setLeftHanded(false);
-            this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, ItemStackUtil.getEmptyStack());
+            this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, ItemStack.EMPTY);
         }
         this.updateCombatTask();
 
@@ -295,7 +294,7 @@ public class EntityBasicHunter extends EntityHunterBase implements IBasicHunter,
             this.tasks.removeTask(attackMelee);
             this.tasks.removeTask(attackRange);
             ItemStack stack = this.getHeldItemMainhand();
-            if (!ItemStackUtil.isEmpty(stack) && stack.getItem() instanceof VampirismItemCrossbow) {
+            if (!stack.isEmpty() && stack.getItem() instanceof VampirismItemCrossbow) {
                 this.tasks.addTask(2, this.attackRange);
             } else {
                 this.tasks.addTask(2, this.attackMelee);

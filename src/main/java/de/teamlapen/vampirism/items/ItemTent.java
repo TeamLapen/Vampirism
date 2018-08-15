@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.blocks.BlockTent;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -108,7 +107,7 @@ public class ItemTent extends VampirismItem {
             }
 
             if (!player.capabilities.isCreativeMode) {
-                ItemStackUtil.decr(stack);
+                stack.shrink(1);
             }
         }
         return flag ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
