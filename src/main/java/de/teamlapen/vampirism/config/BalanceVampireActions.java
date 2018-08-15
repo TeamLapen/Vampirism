@@ -99,6 +99,15 @@ public class BalanceVampireActions extends BalanceValues {
     @DefaultDouble(value = 3, minValue = 0, comment = "Damage of the indirect projectile hit")
     public double DARK_BLOOD_PROJECTILE_INDIRECT_DAMAGE;
 
+    @DefaultBoolean(value = true, name = "invulnerable_enabled")
+    public boolean HALFINVULNERABLE_ENABLE;
+    @DefaultInt(value = 20, minValue = 0, name = "invulnerable_cooldown")
+    public int HALFINVULNERABLE_COOLDOWN;
+    @DefaultInt(value = 30, minValue = 1, name = "invulnerable_duration")
+    public int HALFINVULNERABLE_DURATION;
+    @DefaultDouble(value = 0.5D, minValue = 0.0D, comment = "border for damage stop")
+    public double HALINVULNERABLE_BORDER;
+
     /**
      * Creates a configuration for balance values
      *

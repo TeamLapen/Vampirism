@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.player.skills.VampirismSkill;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.REFERENCE;
+
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -48,6 +49,7 @@ public class VampireSkills {
     public static final ISkill blood_charge = UtilLib.getNull();
     public static final ISkill sword_finisher = UtilLib.getNull();
     public static final ISkill dark_blood_projectile = UtilLib.getNull();
+    public static final ISkill half_invulnerable = UtilLib.getNull();
 
     public static void registerVampireSkills(IForgeRegistry<ISkill> registry) {
         registry.register(new VampirismSkill.SimpleVampireSkill(VReference.VAMPIRE_FACTION.getKey(), 32, 0, false));
@@ -219,6 +221,7 @@ public class VampireSkills {
             }
         });
         registry.register(new ActionSkill<>("dark_blood_projectile", VampireActions.dark_blood_projectile));
+        registry.register(new ActionSkill<>("half_invulnerable", VampireActions.half_invulnerable));
 
 
     }
@@ -271,6 +274,7 @@ public class VampireSkills {
 
         SkillNode skill5 = skillManager.createSkillNode(skill4, vampire_forest_fog);
         SkillNode skill6 = skillManager.createSkillNode(skill5, teleport);
+        SkillNode skill7 = skillManager.createSkillNode(skill6, half_invulnerable);
 
 
     }

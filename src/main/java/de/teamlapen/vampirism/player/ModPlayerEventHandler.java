@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.player;
 
 import com.google.common.base.Throwables;
+
 import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
@@ -24,6 +25,7 @@ import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
@@ -125,6 +127,13 @@ public class ModPlayerEventHandler {
             if (!FactionPlayerHandler.get((EntityPlayer) event.getEntity()).onEntityAttacked(event.getSource(), event.getAmount())) {
                 event.setCanceled(true);
             }
+
+            if (VampirePlayer.get((EntityPlayer) event.getEntity()).getSpecialAttributes().half_invulnerable) {
+                if (event.getAmount() >= event.getEntityLiving().getMaxHealth() * Balance.vpa.HALINVULNERABLE_BORDER
+                        && event.getAmount() < 10000)
+                    event.setCanceled(true);
+            }
+
         }
     }
 
