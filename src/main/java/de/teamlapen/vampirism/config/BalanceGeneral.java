@@ -21,6 +21,9 @@ public class BalanceGeneral extends BalanceValues {
     @DefaultInt(value = 8, minValue = 3, maxValue = 10000, name = "hunter_camp_density", comment = "Minecraft will try to generate 1 camp per NxN chunk area.")
     public int HUNTER_CAMP_DENSITY;
 
+    @DefaultInt(value = 5, minValue = 1, maxValue = 10000, name = "hunter_camp_max_spawn", comment = "Maximum hunter spawns per minecraft day")
+    public int HUNTER_CAMP_MAX_SPAWN;
+
     @DefaultBoolean(value = true, alternateValue = false, hasAlternate = true, comment = "If the sanguinare effect can be canceled by a milk bucket")
     public boolean CAN_CANCEL_SANGUINARE;
 
