@@ -1,0 +1,31 @@
+{
+  "result": {
+    "item": "vampirism:vampire_cloak",
+    "data": 0
+  },
+  "pattern": [
+    "YZY",
+    "XAX",
+    "Y Y"
+  ],
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "X": {
+      "item": "minecraft:wool",
+      "data": 15
+    },
+    "Y": {
+      "item": "minecraft:wool",
+      "data": 14
+    }
+    ,
+    "Z": {
+      "item": "minecraft:diamond"
+    }
+    ,
+    "A": {
+      "item": "vampirism:pure_blood",
+      "data": 32767
+    }
+  }
+}
