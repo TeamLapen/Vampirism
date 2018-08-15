@@ -33,7 +33,7 @@ public abstract class SimpleSpawnerLogic {
     private int spawnRange = 4;
     private int spawnDelay = 20;
     private int spawnedToday = 0;
-    private float spawnedLast = 0;
+    private long spawnedLast = 0L;
     private boolean flag = true;
     private EnumCreatureType limitType;
 
@@ -77,7 +77,7 @@ public abstract class SimpleSpawnerLogic {
         spawnRange = nbt.getInteger("spawn_range");
         spawnCount = nbt.getInteger("spawn_count");
         spawnedToday = nbt.getInteger("spawned_today");
-        spawnedLast = nbt.getFloat("spawned_last");
+        spawnedLast = nbt.getLong("spawned_last");
         flag = nbt.getBoolean("spawner_flag");
     }
 
@@ -134,7 +134,7 @@ public abstract class SimpleSpawnerLogic {
                     return;
                 }
 
-                if ((getSpawnerWorld().getWorldTime()) % 24000 < this.spawnedLast) {
+                if ((getSpawnerWorld().getTotalWorldTime()) % 24000 < this.spawnedLast) {
                     this.spawnedToday = 0;
                     this.flag = true;
                 }
@@ -174,7 +174,7 @@ public abstract class SimpleSpawnerLogic {
                 if (flag1) {
                     this.resetTimer();
                     this.spawnedToday++;
-                    this.spawnedLast = getSpawnerWorld().getWorldTime();
+                    this.spawnedLast = getSpawnerWorld().getTotalWorldTime() % 24000;
                 }
             }
         }
@@ -190,7 +190,7 @@ public abstract class SimpleSpawnerLogic {
         nbt.setInteger("spawn_range", spawnRange);
         nbt.setInteger("spawn_count", spawnCount);
         nbt.setInteger("spawned_today", spawnedToday);
-        nbt.setFloat("spawned_last", spawnedLast);
+        nbt.setLong("spawned_last", spawnedLast);
         nbt.setBoolean("spawner_flag", flag);
     }
 
