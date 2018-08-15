@@ -8,7 +8,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemWritableBook;
 import net.minecraft.nbt.NBTTagCompound;
@@ -59,9 +58,13 @@ public class ItemVampireBook extends VampirismItem {
         return super.getItemStackDisplayName(stack);
     }
 
+
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        subItems.add(VampireBookManager.getInstance().getRandomBook(new Random()).setStackDisplayName(UtilLib.translate("item.vampirism.vampire_book.name")));
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        if (isInCreativeTab(tab)) {
+            items.add(VampireBookManager.getInstance().getRandomBook(new Random()).setStackDisplayName(UtilLib.translate("item.vampirism.vampire_book.name")));
+
+        }
     }
 
     @SideOnly(Side.CLIENT)

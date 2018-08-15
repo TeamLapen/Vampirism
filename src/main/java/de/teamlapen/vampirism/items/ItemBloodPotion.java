@@ -4,6 +4,8 @@ import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.potion.blood.BloodPotions;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
@@ -32,10 +34,12 @@ public class ItemBloodPotion extends VampirismItem {
         this.setCreativeTab(null);
     }
 
+
+    @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        if (playerIn != null) {
-            BloodPotions.addTooltip(stack, tooltip, HunterPlayer.get(playerIn));
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        if (Minecraft.getMinecraft().player != null) {
+            BloodPotions.addTooltip(stack, tooltip, HunterPlayer.get(Minecraft.getMinecraft().player));
         }
     }
 

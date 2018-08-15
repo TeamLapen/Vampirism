@@ -5,15 +5,16 @@ import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.core.ModEnchantments;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -102,8 +103,8 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, playerIn, tooltip, advanced);
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
         int arrows = getArrowsLeft(stack);
         if (arrows == -1) {
             tooltip.add(TextFormatting.DARK_GRAY + UtilLib.translate(Enchantments.INFINITY.getName()));
@@ -114,21 +115,23 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
         }
     }
 
+
     @Nullable
     @Override
     public ISkill getRequiredSkill(@Nonnull ItemStack stack) {
         return HunterSkills.tech_weapons;
     }
 
-    @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        subItems.add(setArrowsLeft(new ItemStack(itemIn), 0));
-        subItems.add(setArrowsLeft(new ItemStack(itemIn), MAX_ARROW_COUNT));
-        //subItems.add(setArrowsLeft(new ItemStack(itemIn), -1));
 
+    @Override
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        items.add(setArrowsLeft(new ItemStack(this), 0));
+        items.add(setArrowsLeft(new ItemStack(this), MAX_ARROW_COUNT));
+        //subItems.add(setArrowsLeft(new ItemStack(itemIn), -1));
     }
 
-    @Nullable
+
+    @Nonnull
     @Override
     protected ItemStack findAmmo(EntityPlayer player, ItemStack bowStack) {
         boolean arrow = reduceArrowCount(bowStack, player.getRNG());

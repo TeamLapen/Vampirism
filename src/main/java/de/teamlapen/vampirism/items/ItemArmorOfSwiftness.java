@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.Multimap;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -8,7 +9,6 @@ import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.NonNullList;
@@ -16,6 +16,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 
@@ -32,8 +33,8 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, playerIn, tooltip, advanced);
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
         addTierInformation(stack, tooltip);
     }
 
@@ -65,11 +66,12 @@ public class ItemArmorOfSwiftness extends VampirismHunterArmor implements IItemW
         return multimap;
     }
 
-
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        for (TIER t : TIER.values()) {
-            subItems.add(setTier(new ItemStack(itemIn), t));
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        if (isInCreativeTab(tab)) {
+            for (TIER t : TIER.values()) {
+                items.add(setTier(new ItemStack(this), t));
+            }
         }
     }
 

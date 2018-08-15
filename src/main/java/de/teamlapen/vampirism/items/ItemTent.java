@@ -5,9 +5,9 @@ import de.teamlapen.vampirism.blocks.BlockTent;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.tileentity.TileTent;
 import net.minecraft.block.Block;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -20,6 +20,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 
@@ -70,22 +71,26 @@ public class ItemTent extends VampirismItem {
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, playerIn, tooltip, advanced);
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
         if (stack.hasTagCompound() && stack.getTagCompound().getBoolean("spawner")) {
             tooltip.add(UtilLib.translate("tile.vampirism.tent.spawner"));
         }
     }
 
+
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        super.getSubItems(itemIn, tab, subItems);
-        ItemStack spawner = new ItemStack(this);
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setBoolean("spawner", true);
-        spawner.setTagCompound(nbt);
-        subItems.add(spawner);
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        super.getSubItems(tab, items);
+        if (isInCreativeTab(tab)) {
+            ItemStack spawner = new ItemStack(this);
+            NBTTagCompound nbt = new NBTTagCompound();
+            nbt.setBoolean("spawner", true);
+            spawner.setTagCompound(nbt);
+            items.add(spawner);
+        }
     }
+
 
     @Override
     public EnumActionResult onItemUse(EntityPlayer player, World world, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {

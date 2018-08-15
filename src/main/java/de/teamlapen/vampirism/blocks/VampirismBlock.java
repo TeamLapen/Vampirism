@@ -6,22 +6,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Mirror;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.Rotation;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-
-import javax.annotation.Nullable;
-import java.util.List;
 
 /**
  * Vampirism default block with set creative tab, registry name and unloc name
@@ -39,12 +26,6 @@ public class VampirismBlock extends Block {
         this.registeredName = regName;
     }
 
-    @SideOnly(Side.CLIENT)
-    @Override
-    public final void addInformation(ItemStack stack, @Nullable World playerIn, List<String> tooltip, ITooltipFlag advanced) {
-        this.addInformation(stack, Minecraft.getMinecraft().player, tooltip, advanced.isAdvanced());
-    }
-
     /**
      * @return The name this block is registered in the GameRegistry
      */
@@ -52,13 +33,6 @@ public class VampirismBlock extends Block {
         return registeredName;
     }
 
-    /**
-     * For compat with 1.11 and below
-     */
-    @Override
-    public final void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> tab) {
-        this.getSubBlocks(Item.getItemFromBlock(this), itemIn, tab);
-    }
 
     @Override
     public IBlockState withMirror(IBlockState state, Mirror mirrorIn) {
@@ -76,21 +50,6 @@ public class VampirismBlock extends Block {
             return state.withProperty(FACING, rot.rotate(state.getValue(FACING)));
         }
         return state;
-    }
-
-    /**
-     * For compat with 1.11 and below
-     */
-    @SideOnly(Side.CLIENT)
-    protected void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-
-    }
-
-    /**
-     * For compat with 1.11 and below
-     */
-    protected void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        subItems.add(new ItemStack(this));
     }
 
     /**

@@ -11,7 +11,6 @@ import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ActionResult;
@@ -37,11 +36,15 @@ public class ItemInjection extends VampirismItem {
     }
 
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        for (int i = 0; i < META_COUNT; i++) {
-            subItems.add(new ItemStack(itemIn, 1, i));
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        if (isInCreativeTab(tab)) {
+            for (int i = 0; i < META_COUNT; i++) {
+                items.add(new ItemStack(this, 1, i));
+            }
         }
+        super.getSubItems(tab, items);
     }
+
 
     @Override
     public String getUnlocalizedName(ItemStack stack) {
