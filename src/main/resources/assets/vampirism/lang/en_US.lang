@@ -32,6 +32,10 @@ text.vampirism.skill.blood_charge=Blood Charge
 text.vampirism.skill.blood_charge.desc=Charge your blood using tools on the go by sneak right clicking.
 text.vampirism.skill.sword_finisher=Finisher
 text.vampirism.skill.sword_finisher.desc=Instantly kill any non vampire that has below %s percent of his max health using a vampire sword
+text.vampirism.skill.half_invulnerable.desc=Action that temporarily blocks high value damages but consumes blood for that
+text.vampirism.skill.freeze.desc=Temporarily freeze all nearby creatures
+text.vampirism.skill.vampire_rage.desc=Action that gives you a speed and damage boost on cost of increased blood usage
+text.vampirism.skill.summon_bats.desc=Summon a lot of bats around you while in bat mode to distract enemies
 
 #HUNTER SKILLS
 text.vampirism.skill.ihunterplayer=Becoming an hunter

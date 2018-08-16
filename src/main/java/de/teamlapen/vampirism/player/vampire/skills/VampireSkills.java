@@ -14,7 +14,6 @@ import de.teamlapen.vampirism.player.skills.VampirismSkill;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.fml.common.registry.GameRegistry;
@@ -74,7 +73,7 @@ public class VampireSkills {
         });
         registry.register(new ActionSkill<>("vampire_regeneration", VampireActions.regen));
         registry.register(new ActionSkill<>("bat", VampireActions.bat));
-        registry.register(new ActionSkill<>("summon_bats", VampireActions.summon_bat));
+        registry.register(new ActionSkill<>("summon_bats", VampireActions.summon_bat, true));
         DefaultSkill<IVampirePlayer> damage = new VampirismSkill.SimpleVampireSkill("less_sundamage", 96, 0, false);
         damage.registerAttributeModifier(VReference.sunDamage, "EB47EDC1-ED4E-4CD8-BDDC-BE40956042A2", Balance.vps.SUNDAMAGE_REDUCTION1, 2);
         registry.register(damage);
@@ -93,7 +92,7 @@ public class VampireSkills {
         registry.register((new VampirismSkill.SimpleVampireSkill("less_blood_thirst", 80, 0, true)).registerAttributeModifier(VReference.bloodExhaustion, "980ad86f-fe76-433b-b26a-c4060e0e6751", Balance.vps.BLOOD_THIRST_REDUCTION1, 2));
         registry.register(new ActionSkill<>("vampire_disguise", VampireActions.disguise_vampire));
         registry.register(new ActionSkill<>("vampire_invisibility", VampireActions.vampire_invisibility));
-        registry.register(new ActionSkill<>("vampire_rage", VampireActions.vampire_rage));
+        registry.register(new ActionSkill<>("vampire_rage", VampireActions.vampire_rage, true));
         DefaultSkill<IVampirePlayer> bite = new VampirismSkill.SimpleVampireSkill("bite1", 128, 0, false) {
 
             @Override
@@ -132,7 +131,7 @@ public class VampireSkills {
         };
         registry.register(bite2);
         registry.register(new VampirismSkill.SimpleVampireSkill("blood_charge", 240, 0, true));
-        registry.register(new ActionSkill<>("freeze", VampireActions.freeze));
+        registry.register(new ActionSkill<>("freeze", VampireActions.freeze, true));
         registry.register(new ActionSkill<>("sunscreen", VampireActions.sunscreen));
         DefaultSkill<IVampirePlayer> jump = new VampirismSkill.SimpleVampireSkill("vampire_jump", 160, 0, false) {
 
@@ -221,7 +220,7 @@ public class VampireSkills {
             }
         });
         registry.register(new ActionSkill<>("dark_blood_projectile", VampireActions.dark_blood_projectile));
-        registry.register(new ActionSkill<>("half_invulnerable", VampireActions.half_invulnerable));
+        registry.register(new ActionSkill<>("half_invulnerable", VampireActions.half_invulnerable, true));
 
 
     }
