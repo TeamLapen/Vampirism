@@ -4,6 +4,7 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.config.Balance;
+
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -46,7 +47,7 @@ public class BloodStats implements IBloodStats {
 
         bloodLevel -= bloodToRemove;
         changed = true;
-        return bloodToRemove <= blood;
+        return a == bloodToRemove;
     }
 
     @Override

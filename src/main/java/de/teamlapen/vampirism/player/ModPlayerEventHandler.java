@@ -127,13 +127,6 @@ public class ModPlayerEventHandler {
             if (!FactionPlayerHandler.get((EntityPlayer) event.getEntity()).onEntityAttacked(event.getSource(), event.getAmount())) {
                 event.setCanceled(true);
             }
-
-            if (VampirePlayer.get((EntityPlayer) event.getEntity()).getSpecialAttributes().half_invulnerable) {
-                if (event.getAmount() >= event.getEntityLiving().getMaxHealth() * Balance.vpa.HALINVULNERABLE_BORDER
-                        && event.getAmount() < 10000)
-                    event.setCanceled(true);
-            }
-
         }
     }
 
