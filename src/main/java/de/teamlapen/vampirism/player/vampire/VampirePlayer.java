@@ -27,6 +27,7 @@ import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.vampire.actions.BatVampireAction;
+import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.VampireNightVisionEffect;
 import de.teamlapen.vampirism.util.*;
@@ -488,6 +489,15 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             } else if (DamageSource.IN_FIRE.equals(src) || DamageSource.LAVA.equals(src)) {
                 player.attackEntityFrom(VReference.VAMPIRE_IN_FIRE, calculateFireDamage(amt));
                 return true;
+            }
+        }
+        if (getSpecialAttributes().half_invulnerable) {
+            if (amt >= getRepresentingEntity().getMaxHealth() * Balance.vpa.HALFINVULNERABLE_THRESHOLD && amt < 10000) { //Make sure "instant kills" are not blocked by this
+                if (this.getBloodStats().consumeBlood(Balance.vpa.HALFINVULNERABLE_BLOOD_COSTS)) {
+                    return true;
+                } else {
+                    this.actionHandler.toggleAction(VampireActions.half_invulnerable);
+                }
             }
         }
 

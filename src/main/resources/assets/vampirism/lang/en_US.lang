@@ -103,6 +103,7 @@ action.vampirism.vampire.vampire_rage=Vampire Rage
 action.vampirism.vampire.sunscreen=Sunscreen
 action.vampirism.vampire.disguise=Disguise
 action.vampirism.vampire.dark_blood_projectile=Dark Blood Projectile
+action.vampirism.vampire.halfinvulnerable_skill=Damage Limiter
 
 #HUNTER ACTIONS
 action.vampirism.hunter.disguise=Disguise
