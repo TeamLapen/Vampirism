@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.player.vampire;
 
-import static de.teamlapen.lib.lib.util.UtilLib.getNull;
-
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
@@ -33,7 +31,6 @@ import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.VampireNightVisionEffect;
 import de.teamlapen.vampirism.util.*;
-
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
@@ -66,14 +63,15 @@ import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Predicate;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
+import static de.teamlapen.lib.lib.util.UtilLib.getNull;
 
 /**
  * Main class for Vampire Players.
@@ -494,12 +492,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
         }
         if (getSpecialAttributes().half_invulnerable) {
-            if (amt >= getRepresentingEntity().getMaxHealth() * Balance.vpa.HALFINVULNERABLE_THRESHOLD && amt < 10000) {
-                boolean omit = ((BloodStats) this.getBloodStats()).consumeBlood(Balance.vpa.HALFINVULNERABLE_BLOOD_COSTS);
-                System.out.println(omit);
-                if (omit) {
+            if (amt >= getRepresentingEntity().getMaxHealth() * Balance.vpa.HALFINVULNERABLE_THRESHOLD && amt < 10000) { //Make sure "instant kills" are not blocked by this
+                if (this.getBloodStats().consumeBlood(Balance.vpa.HALFINVULNERABLE_BLOOD_COSTS)) {
                     return true;
-
                 } else {
                     this.actionHandler.toggleAction(VampireActions.half_invulnerable);
                 }
