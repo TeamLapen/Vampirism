@@ -61,6 +61,17 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     @Override
     public void onDeactivated(IVampirePlayer player) {
         ((VampirePlayer) player).getSpecialAttributes().half_invulnerable = false;
+        /*
+         * We have a difficult situation here.
+         * We want to remove the slowness effect this skill adds if the skill is terminated prematurely, but at the same time we do not want to make this a way to get rid of long lasting slowness effects added by other things.
+         * Since we cannot determine what added what, current solution is to only remove the potion effect if the remaining duration is shorter than the maximum duration of this skill.
+         * It is not ideal because it might seem somewhat inconsistent to the player, but at least it definitively removes the slowness effect added by this skill and at the same time does not allow to cancel long lasting effects.
+         */
+        if (player.getRepresentingPlayer().isPotionActive(MobEffects.SLOWNESS)) {
+            if (player.getRepresentingPlayer().getActivePotionEffect(MobEffects.SLOWNESS).getDuration() < getDuration(player.getLevel())) {
+                player.getRepresentingPlayer().removePotionEffect(MobEffects.SLOWNESS);
+            }
+        }
     }
 
     @Override
@@ -78,7 +89,7 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
     protected boolean activate(IVampirePlayer playerIn) {
         ((VampirePlayer) playerIn).getSpecialAttributes().half_invulnerable = true;
         playerIn.getRepresentingPlayer().addPotionEffect(
-                new PotionEffect(MobEffects.SLOWNESS, getDuration(playerIn.getLevel()), 1, false, false));
+                new PotionEffect(MobEffects.SLOWNESS, getDuration(playerIn.getLevel()) - 1, 1, false, false));
         return true;
     }
 
