@@ -11,36 +11,11 @@ public interface IBloodStats {
     float MEDIUM_SATURATION = 0.7F;
     float HIGH_SATURATION = 1.0F;
 
-    /**
-     * Adds blood to the stats
-     * Consider using {@link IVampirePlayer#drinkBlood(int, float)} instead
-     *
-     * @param amount
-     * @param saturationModifier
-     * @return The amount which could not be added
-     */
-    @Deprecated
-    int addBlood(int amount, float saturationModifier);
-
-    /**
-     * Removes blood from the vampires blood level
-     *
-     * @param a amount
-     * @return whether the vampire had enough blood or not
-     */
-    boolean consumeBlood(int a);
 
     /**
      * @return The current blood level
      */
     int getBloodLevel();
-
-    /**
-     * Set the blood level is clamped between 0 and maxblood
-     *
-     * @param amt
-     */
-    void setBloodLevel(int amt);
 
     /**
      * @return The maximum amount of blood

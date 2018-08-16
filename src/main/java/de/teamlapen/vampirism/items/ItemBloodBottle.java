@@ -105,8 +105,7 @@ public class ItemBloodBottle extends VampirismItem {
             EnumHand activeHand = player.getActiveHand();
             int drink = Math.min(blood, 3 * MULTIPLIER);
             if (BloodHelper.drain(stack, drink, true, true) > 0) {
-                vampire.getBloodStats().addBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.3F);//TODO Saturation
-
+                vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.3F, false);
             }
             player.setHeldItem(activeHand, stack);
 

@@ -144,7 +144,7 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
     public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
         if (!(entityLiving instanceof EntityPlayer)) return stack;
         IVampirePlayer vampire = VReference.VAMPIRE_FACTION.getPlayerCapability((EntityPlayer) entityLiving);
-        if (((EntityPlayer) entityLiving).isCreative() || vampire.getBloodStats().consumeBlood(2)) {
+        if (((EntityPlayer) entityLiving).isCreative() || vampire.useBlood(2, false)) {
             this.charge(stack, 2 * VReference.FOOD_TO_FLUID_BLOOD);
         }
         if (getCharged(stack) == 1) {

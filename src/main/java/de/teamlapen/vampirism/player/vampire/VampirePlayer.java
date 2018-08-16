@@ -273,9 +273,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     @Override
-    public void drinkBlood(int amt, float saturationMod) {
+    public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
         int left = this.bloodStats.addBlood(amt, saturationMod);
-        if (left > 0) {
+        if (useRemaining && left > 0) {
             handleSpareBlood(left);
         }
     }
@@ -460,7 +460,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
         int amt = this.getBloodStats().getBloodLevel();
         int sucked = (int) (amt * perc);
-        this.getBloodStats().consumeBlood(sucked);
+        bloodStats.removeBlood(sucked, true);
         sync(this.bloodStats.writeUpdate(new NBTTagCompound()), true);
         return sucked;
     }
@@ -493,7 +493,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
         if (getSpecialAttributes().half_invulnerable) {
             if (amt >= getRepresentingEntity().getMaxHealth() * Balance.vpa.HALFINVULNERABLE_THRESHOLD && amt < 10000) { //Make sure "instant kills" are not blocked by this
-                if (this.getBloodStats().consumeBlood(Balance.vpa.HALFINVULNERABLE_BLOOD_COSTS)) {
+                if (useBlood(Balance.vpa.HALFINVULNERABLE_BLOOD_COSTS, false)) {
                     return true;
                 } else {
                     this.actionHandler.toggleAction(VampireActions.half_invulnerable);
@@ -924,6 +924,11 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     @Override
+    public boolean useBlood(int amt, boolean allowPartial) {
+        return bloodStats.removeBlood(amt, allowPartial);
+    }
+
+    @Override
     public void wakeUpPlayer(boolean immediately, boolean updateWorldFlag, boolean setSpawn) {
         VampirismMod.log.d(TAG, "Waking up player");
         if (this.isPlayerSleeping() && player instanceof EntityPlayerMP) {
@@ -1055,7 +1060,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
 
         if (blood > 0) {
-            drinkBlood(blood, 0.3F);
+            drinkBlood(blood, IBloodStats.LOW_SATURATION);
 
             NBTTagCompound updatePacket = bloodStats.writeUpdate(new NBTTagCompound());
             sync(updatePacket, true);
@@ -1077,7 +1082,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (getLevel() == 0) return;
         if (biteCooldown > 0) return;
         int blood = 0;
-        float saturationMod = 1.0F;
+        float saturationMod = IBloodStats.HIGH_SATURATION;
         BITE_TYPE type = determineBiteType(entity);
         if (type == BITE_TYPE.SUCK_BLOOD_CREATURE) {
             blood = ExtendedCreature.get((EntityCreature) entity).onBite(this);

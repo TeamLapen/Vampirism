@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.core.ModFluids;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
@@ -100,8 +99,7 @@ public class TileAltarInspiration extends net.minecraftforge.fluids.capability.T
                 case 5:
                     world.addWeatherEffect(new EntityLightningBolt(world, this.pos.getX(), this.pos.getY(), this.pos.getZ(), true));
                     ritualPlayer.setHealth(ritualPlayer.getMaxHealth());
-
-                    VampirePlayer.get(ritualPlayer).getBloodStats().addBlood(100, 0);
+                    VampirePlayer.get(ritualPlayer).drinkBlood(100, 0);
 
                     break;
                 case 1:
@@ -113,8 +111,7 @@ public class TileAltarInspiration extends net.minecraftforge.fluids.capability.T
 
                     ritualPlayer.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, targetLevel * 10 * 20));
                     FactionPlayerHandler.get(ritualPlayer).setFactionLevel(VReference.VAMPIRE_FACTION, targetLevel);
-                    IBloodStats stats = VampirePlayer.get(ritualPlayer).getBloodStats();
-                    stats.setBloodLevel(stats.getMaxBlood());
+                    VampirePlayer.get(ritualPlayer).drinkBlood(Integer.MAX_VALUE, 0, false);
                     markDirty();
                     IBlockState state = world.getBlockState(getPos());
                     this.world.notifyBlockUpdate(pos, state, state, 3);

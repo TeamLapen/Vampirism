@@ -54,7 +54,7 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
     }
 
     @Override
-    public void drinkBlood(int amt, float saturationMod) {
+    public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
         this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, amt * 20));
         bloodTimer = -1200 - rand.nextInt(1200);
     }
@@ -75,7 +75,6 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
         return this;
     }
 
-
     @Nonnull
     @Override
     public EnumStrength isGettingGarlicDamage(boolean forceRefresh) {
@@ -90,7 +89,6 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
         if (!forceRefresh) return sundamageCache;
         return (sundamageCache = Helper.gettingSundamge(this));
     }
-
 
     @Override
     public boolean isIgnoringSundamage() {
@@ -123,6 +121,13 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
         if (compound.hasKey("addedAdditionalRecipes")) {
             addedAdditionalRecipes = compound.getBoolean("addedAdditionalRecipes");
         }
+    }
+
+    @Override
+    public boolean useBlood(int amt, boolean allowPartial) {
+        this.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, amt * 20));
+        bloodTimer = 0;
+        return true;
     }
 
     @Override

@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity.vampire;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.api.items.IVampireFinisher;
 import de.teamlapen.vampirism.config.Balance;
@@ -66,7 +67,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     public boolean attackEntityAsMob(Entity entity) {
         if (canSuckBloodFromPlayer && !world.isRemote && entity instanceof EntityPlayer && !UtilLib.canReallySee((EntityLivingBase) entity, this, true) && rand.nextInt(Balance.mobProps.VAMPIRE_BITE_ATTACK_CHANCE) == 0) {
             int amt = VampirePlayer.get((EntityPlayer) entity).onBite(this);
-            drinkBlood(amt, 1.0F);
+            drinkBlood(amt, IBloodStats.MEDIUM_SATURATION);
             return true;
         }
         return super.attackEntityAsMob(entity);
@@ -90,7 +91,7 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
     }
 
     @Override
-    public void drinkBlood(int amt, float saturationMod) {
+    public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
         this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, amt * 20));
     }
 
@@ -126,7 +127,6 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
         if (forSpawnCount && countAsMonsterForSpawn && type == EnumCreatureType.MONSTER) return true;
         return super.isCreatureType(type, forSpawnCount);
     }
-
 
     @Nonnull
     @Override
@@ -189,6 +189,12 @@ public abstract class EntityVampireBase extends EntityVampirism implements IVamp
             }
         }
         super.onLivingUpdate();
+    }
+
+    @Override
+    public boolean useBlood(int amt, boolean allowPartial) {
+        this.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, amt * 20));
+        return true;
     }
 
     @Override

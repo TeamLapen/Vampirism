@@ -62,7 +62,7 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     }
 
     @Override
-    public void drinkBlood(int amt, float saturationMod) {
+    public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
 
     }
 
@@ -227,6 +227,11 @@ class VampirePlayerDefaultImpl implements IVampirePlayer {
     @Override
     public void unlockVision(@Nonnull IVampireVision vision) {
 
+    }
+
+    @Override
+    public boolean useBlood(int amt, boolean allowPartial) {
+        return false;
     }
 
     @Override
