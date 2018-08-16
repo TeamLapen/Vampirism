@@ -3,7 +3,6 @@ package de.teamlapen.vampirism.inventory;
 import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.inventory.SimpleInventory;
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
 import de.teamlapen.vampirism.core.ModEntities;
@@ -42,7 +41,7 @@ public class HunterBasicContainer extends InventoryContainer {
         HunterLevelingConf conf = HunterLevelingConf.instance();
         if (!conf.isLevelValidForBasicHunter(targetLevel)) return -1;
         int required = conf.getVampireBloodCountForBasicHunter(targetLevel);
-        return (ItemStackUtil.isEmpty(blood) || !blood.getItem().equals(ModItems.vampire_blood_bottle)) ? required : Math.max(0, required - ItemStackUtil.getCount(blood));
+        return (blood.isEmpty() || !blood.getItem().equals(ModItems.vampire_blood_bottle)) ? required : Math.max(0, required - blood.getCount());
     }
 
     @Override
@@ -52,7 +51,7 @@ public class HunterBasicContainer extends InventoryContainer {
             for (int i = 0; i < this.tile.getSizeInventory(); ++i) {
                 ItemStack itemstack = this.tile.removeStackFromSlot(i);
 
-                if (!ItemStackUtil.isEmpty(itemstack)) {
+                if (!itemstack.isEmpty()) {
                     playerIn.dropItem(itemstack, false);
                 }
             }

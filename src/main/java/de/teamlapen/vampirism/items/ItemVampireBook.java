@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.ModGuiHandler;
@@ -9,7 +8,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.inventory.Slot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemWritableBook;
 import net.minecraft.nbt.NBTTagCompound;
@@ -60,9 +58,13 @@ public class ItemVampireBook extends VampirismItem {
         return super.getItemStackDisplayName(stack);
     }
 
+
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        subItems.add(VampireBookManager.getInstance().getRandomBook(new Random()).setStackDisplayName(UtilLib.translate("item.vampirism.vampire_book.name")));
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        if (isInCreativeTab(tab)) {
+            items.add(VampireBookManager.getInstance().getRandomBook(new Random()).setStackDisplayName(UtilLib.translate("item.vampirism.vampire_book.name")));
+
+        }
     }
 
     @SideOnly(Side.CLIENT)
@@ -83,7 +85,7 @@ public class ItemVampireBook extends VampirismItem {
     }
 
     private void resolveContents(ItemStack stack, EntityPlayer player) {
-        if (!ItemStackUtil.isEmpty(stack) && stack.getTagCompound() != null) {
+        if (!stack.isEmpty() && stack.getTagCompound() != null) {
             NBTTagCompound nbttagcompound = stack.getTagCompound();
             if (!nbttagcompound.getBoolean("resolved")) {
                 nbttagcompound.setBoolean("resolved", true);

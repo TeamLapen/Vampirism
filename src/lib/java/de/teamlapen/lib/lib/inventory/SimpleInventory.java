@@ -73,7 +73,7 @@ public abstract class SimpleInventory implements InventorySlot.IInventorySlotInv
 
     @Override
     public ItemStack getStackInSlot(int index) {
-        return index >= getSizeInventory() ? ItemStackUtil.getEmptyStack() : slots[index].stack;
+        return index >= getSizeInventory() ? ItemStack.EMPTY : slots[index].stack;
     }
 
     @Override
@@ -94,7 +94,7 @@ public abstract class SimpleInventory implements InventorySlot.IInventorySlotInv
 
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        if (slots[slot].itemSelector != null && !ItemStackUtil.isEmpty(stack)) {
+        if (slots[slot].itemSelector != null && !stack.isEmpty()) {
             return slots[slot].itemSelector.isItemAllowed(stack);
         }
         return true;
@@ -119,11 +119,11 @@ public abstract class SimpleInventory implements InventorySlot.IInventorySlotInv
     public ItemStack removeStackFromSlot(int index) {
         if (this.slots[index] != null) {
             ItemStack itemstack = this.slots[index].stack;
-            this.slots[index].stack = ItemStackUtil.getEmptyStack();
+            this.slots[index].stack = ItemStack.EMPTY;
             onContentChanged();
             return itemstack;
         } else {
-            return ItemStackUtil.getEmptyStack();
+            return ItemStack.EMPTY;
         }
     }
 
@@ -144,8 +144,8 @@ public abstract class SimpleInventory implements InventorySlot.IInventorySlotInv
     @Override
     public void setInventorySlotContents(int index, ItemStack stack) {
         slots[index].stack = stack;
-        if (ItemStackUtil.getCount(stack) > getInventoryStackLimit()) {
-            ItemStackUtil.setCount(stack, getInventoryStackLimit());
+        if (stack.getCount() > getInventoryStackLimit()) {
+            stack.setCount(getInventoryStackLimit());
         }
         onContentChanged();
     }

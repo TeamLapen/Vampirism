@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.minions.vampire;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.minions.IMinionCommand;
 import de.teamlapen.vampirism.api.entity.minions.ISaveableMinion;
@@ -136,11 +135,11 @@ public abstract class EntityVampireMinionBase extends EntityVampireBase implemen
             List<EntityItem> list = this.world.getEntitiesWithinAABB(EntityItem.class, this.getEntityBoundingBox().grow(1.0D, 0.0D, 1.0D));
 
             for (EntityItem entityitem : list) {
-                if (!entityitem.isDead && !ItemStackUtil.isEmpty(entityitem.getItem())) {
+                if (!entityitem.isDead && !(entityitem.getItem().isEmpty())) {
                     ItemStack itemstack = entityitem.getItem();
                     if (activeCommand.shouldPickupItem(itemstack)) {
                         ItemStack stack1 = this.getItemStackFromSlot(EntityEquipmentSlot.MAINHAND);
-                        if (!ItemStackUtil.isEmpty(stack1)) {
+                        if (!stack1.isEmpty()) {
                             this.entityDropItem(stack1, 0.0F);
                         }
                         this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, itemstack);

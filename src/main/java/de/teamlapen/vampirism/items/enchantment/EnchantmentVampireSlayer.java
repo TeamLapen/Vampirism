@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items.enchantment;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.items.ItemPitchfork;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -34,7 +33,7 @@ public class EnchantmentVampireSlayer extends Enchantment {
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return !ItemStackUtil.isEmpty(stack) && stack.getItem() instanceof ItemPitchfork || super.canApplyAtEnchantingTable(stack);
+        return !stack.isEmpty() && stack.getItem() instanceof ItemPitchfork || super.canApplyAtEnchantingTable(stack);
     }
 
     @Override

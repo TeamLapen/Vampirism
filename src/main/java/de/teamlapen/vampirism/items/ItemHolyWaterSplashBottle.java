@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.EntityThrowableItem;
 import net.minecraft.entity.EntityLivingBase;
@@ -77,7 +76,7 @@ public class ItemHolyWaterSplashBottle extends ItemHolyWaterBottle implements En
 
         playerIn.addStat(StatList.getObjectUseStats(this));
         if (!playerIn.capabilities.isCreativeMode) {
-            ItemStackUtil.decr(stack);
+            stack.shrink(1);
         }
         return new ActionResult<>(EnumActionResult.SUCCESS, stack);
 

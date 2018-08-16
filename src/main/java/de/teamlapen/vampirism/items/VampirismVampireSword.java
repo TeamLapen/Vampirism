@@ -13,6 +13,8 @@ import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.skills.VampireSkills;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -56,6 +58,19 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
 
     public VampirismVampireSword(String regName, ToolMaterial material, float attackSpeedModifier, float attackDamage) {
         super(regName, material, attackSpeedModifier, attackDamage);
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+        float charged = getCharged(stack);
+        float trained = getTrained(stack, Minecraft.getMinecraft().player);
+        tooltip.add(UtilLib.translate("text.vampirism.sword_charged") + " " + ((int) (charged * 100f)) + "%");
+        tooltip.add(UtilLib.translate("text.vampirism.sword_trained") + " " + ((int) (trained * 100f)) + "%");
+        if (Minecraft.getMinecraft().player != null && !VReference.VAMPIRE_FACTION.equals(FactionPlayerHandler.get(Minecraft.getMinecraft().player).getCurrentFaction())) {
+            tooltip.add(UtilLib.translateFormatted("text.vampirism.can_only_be_used_by", UtilLib.translate(VReference.VAMPIRE_FACTION.getUnlocalizedNamePlural())));
+        }
     }
 
     @Override
@@ -205,18 +220,6 @@ public abstract class VampirismVampireSword extends VampirismItemWeapon implemen
             return true;
         }
         return false;
-    }
-
-    @Override
-    protected void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, playerIn, tooltip, advanced);
-        float charged = getCharged(stack);
-        float trained = getTrained(stack, playerIn);
-        tooltip.add(UtilLib.translate("text.vampirism.sword_charged") + " " + ((int) (charged * 100f)) + "%");
-        tooltip.add(UtilLib.translate("text.vampirism.sword_trained") + " " + ((int) (trained * 100f)) + "%");
-        if (playerIn != null && !VReference.VAMPIRE_FACTION.equals(FactionPlayerHandler.get(playerIn).getCurrentFaction())) {
-            tooltip.add(UtilLib.translateFormatted("text.vampirism.can_only_be_used_by", UtilLib.translate(VReference.VAMPIRE_FACTION.getUnlocalizedNamePlural())));
-        }
     }
 
     @Override

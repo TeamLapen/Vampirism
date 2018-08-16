@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.core.ModBlocks;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.player.EntityPlayer;
@@ -44,7 +43,7 @@ public class ItemGarlic extends VampirismItem implements IPlantable {
             return EnumActionResult.FAIL;
         } else if (worldIn.getBlockState(pos).getBlock().canSustainPlant(worldIn.getBlockState(pos), worldIn, pos, EnumFacing.UP, this) && worldIn.isAirBlock(pos.up())) {
             worldIn.setBlockState(pos.up(), getPlant(worldIn, pos));
-            ItemStackUtil.decr(stack);
+            stack.shrink(1);
             return EnumActionResult.SUCCESS;
         } else {
             return EnumActionResult.FAIL;

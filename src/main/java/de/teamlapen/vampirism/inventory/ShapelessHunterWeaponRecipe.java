@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.inventory;
 
 import com.google.common.collect.Lists;
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
 import net.minecraft.inventory.InventoryCrafting;
@@ -24,7 +23,7 @@ public class ShapelessHunterWeaponRecipe implements IHunterWeaponRecipe {
     ItemStack recipeOutput;
 
     public ShapelessHunterWeaponRecipe(List<ItemStack> recipeItems, @Nonnull ItemStack recipeOutput, int requiredHunterLevel, ISkill[] requiredHunterSkills, int requiredLavaUnits) {
-        assert !ItemStackUtil.isEmpty(recipeOutput);
+        assert !recipeOutput.isEmpty();
         this.recipeItems = recipeItems;
         this.requiredHunterLevel = requiredHunterLevel;
         this.requiredHunterSkills = requiredHunterSkills;
@@ -64,7 +63,7 @@ public class ShapelessHunterWeaponRecipe implements IHunterWeaponRecipe {
             for (int j = 0; j < inv.getWidth(); ++j) {
                 ItemStack itemstack = inv.getStackInRowAndColumn(j, i);
 
-                if (!ItemStackUtil.isEmpty(itemstack)) {
+                if (!itemstack.isEmpty()) {
                     boolean flag = false;
 
                     for (ItemStack itemstack1 : list) {

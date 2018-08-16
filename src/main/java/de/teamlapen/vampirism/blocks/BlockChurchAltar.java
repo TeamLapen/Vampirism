@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -70,17 +69,17 @@ public class BlockChurchAltar extends VampirismBlock {
         if (handler.isInFaction(VReference.VAMPIRE_FACTION)) {
             playerIn.openGui(VampirismMod.instance, ModGuiHandler.ID_REVERT_BACK, worldIn, (int) playerIn.posX, (int) playerIn.posY, (int) playerIn.posZ);
             return true;
-        } else if (!ItemStackUtil.isEmpty(heldItem)) {
+        } else if (!heldItem.isEmpty()) {
             if (ModItems.holy_salt_water.equals(heldItem.getItem())) {
                 if (worldIn.isRemote) return true;
                 boolean enhanced = handler.isInFaction(VReference.HUNTER_FACTION) && ((IHunterPlayer) handler.getCurrentFactionPlayer()).getSkillHandler().isSkillEnabled(HunterSkills.holy_water_enhanced);
-                ItemStack newStack = new ItemStack(ModItems.holy_water_bottle, ItemStackUtil.getCount(heldItem));
+                ItemStack newStack = new ItemStack(ModItems.holy_water_bottle, heldItem.getCount());
                 ModItems.holy_water_bottle.setTier(newStack, enhanced ? IItemWithTier.TIER.ENHANCED : IItemWithTier.TIER.NORMAL);
                 playerIn.setHeldItem(hand, newStack);
                 return true;
             } else if (ModItems.pure_salt.equals(heldItem.getItem())) {
                 if (worldIn.isRemote) return true;
-                playerIn.setHeldItem(hand, new ItemStack(ModItems.holy_salt, ItemStackUtil.getCount(heldItem)));
+                playerIn.setHeldItem(hand, new ItemStack(ModItems.holy_salt, heldItem.getCount()));
             }
         }
         return false;

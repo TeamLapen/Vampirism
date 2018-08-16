@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.potion.blood;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.items.IBloodPotionCategory;
 import de.teamlapen.vampirism.api.items.IBloodPotionEffect;
@@ -33,7 +32,7 @@ public class BloodPotionRegistry implements IBloodPotionRegistry {
     @Nonnull
     @Override
     public List<String> getLocCategoryDescForItem(@Nonnull ItemStack item) {
-        assert !ItemStackUtil.isEmpty(item);
+        assert !item.isEmpty();
         List<IBloodPotionCategory> categories = Lists.newLinkedList();
         categories.addAll(categoriesBad);
         categories.addAll(categoriesGood);
@@ -68,7 +67,7 @@ public class BloodPotionRegistry implements IBloodPotionRegistry {
         List<BloodPotionCategory> categories = bad ? categoriesBad : categoriesGood;
 
         for (BloodPotionCategory category : categories) {
-            if (!ItemStackUtil.isEmpty(item) && category.containsItem(item)) {
+            if (!item.isEmpty() && category.containsItem(item)) {
                 for (WeightedEffect effect : category.getEffectsCopy()) {
                     effect.itemWeight *= 5;
                     effects.add(effect);

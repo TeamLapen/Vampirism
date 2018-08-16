@@ -2,13 +2,14 @@ package de.teamlapen.vampirism.items;
 
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.util.Helper;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.NonNullList;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -25,10 +26,20 @@ public class ItemHeartStriker extends VampirismVampireSword implements IItemWith
         super(regName, ToolMaterial.IRON, 0.0f, 0.0f);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        for (TIER t : TIER.values()) {
-            subItems.add(setTier(new ItemStack(itemIn), t));
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+        addTierInformation(stack, tooltip);
+
+    }
+
+    @Override
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        if (isInCreativeTab(tab)) {
+            for (TIER t : TIER.values()) {
+                items.add(setTier(new ItemStack(this), t));
+            }
         }
     }
 
@@ -45,13 +56,6 @@ public class ItemHeartStriker extends VampirismVampireSword implements IItemWith
         setCharged(stack, charged);
         attacker.setHeldItem(EnumHand.MAIN_HAND, stack);
         return super.hitEntity(stack, target, attacker);
-    }
-
-    @SideOnly(Side.CLIENT)
-    @Override
-    protected void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, playerIn, tooltip, advanced);
-        addTierInformation(stack, tooltip);
     }
 
     @Override

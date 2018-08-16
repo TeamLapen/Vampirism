@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.inventory.ShapelessHunterWeaponRecipe;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.item.ItemStack;
@@ -19,8 +18,8 @@ public class ShapelessHunterWeaponRecipeWrapper extends HunterWeaponRecipeWrappe
         for (Object input : this.recipe.recipeItems) {
             if (input instanceof ItemStack) {
                 ItemStack itemStack = (ItemStack) input;
-                if (ItemStackUtil.getCount(itemStack) != 1) {
-                    ItemStackUtil.setCount(itemStack, 1);
+                if (itemStack.getCount() != 1) {
+                    itemStack.setCount(1);
                 }
             }
         }
@@ -31,7 +30,7 @@ public class ShapelessHunterWeaponRecipeWrapper extends HunterWeaponRecipeWrappe
         super.getIngredients(ingredients);
         ingredients.setInputs(ItemStack.class, recipe.recipeItems);
         ItemStack recipeOutput = recipe.getRecipeOutput();
-        if (!ItemStackUtil.isEmpty(recipeOutput)) {
+        if (!recipeOutput.isEmpty()) {
             ingredients.setOutput(ItemStack.class, recipeOutput);
         }
     }

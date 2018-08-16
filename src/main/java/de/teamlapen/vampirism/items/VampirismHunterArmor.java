@@ -2,33 +2,22 @@ package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
-import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
 import net.minecraft.inventory.EntityEquipmentSlot;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ISpecialArmor;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nullable;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -49,14 +38,6 @@ public abstract class VampirismHunterArmor extends ItemArmor implements ISpecial
         oldRegisteredName = baseRegName.replaceAll("_", "") + "_" + equipmentSlotIn.getName();
     }
 
-    /**
-     * For compat with 1.11 and below
-     */
-    @SideOnly(Side.CLIENT)
-    @Override
-    public final void addInformation(ItemStack stack, @Nullable World playerIn, List<String> tooltip, ITooltipFlag advanced) {
-        this.addInformation(stack, Minecraft.getMinecraft().player, tooltip, advanced.isAdvanced());
-    }
 
     @Override
     public void damageArmor(EntityLivingBase entity, ItemStack stack, DamageSource source, int damage, int slot) {
@@ -97,16 +78,6 @@ public abstract class VampirismHunterArmor extends ItemArmor implements ISpecial
         return registeredName;
     }
 
-    /**
-     * For compat with 1.11 and below
-     */
-    @SideOnly(Side.CLIENT)
-    @Override
-    public final void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        if (isInCreativeTab(tab)) {
-            this.getSubItems(this, tab, items);
-        }
-    }
 
     @Override
     public void onArmorTick(World world, EntityPlayer player, ItemStack itemStack) {
@@ -118,15 +89,6 @@ public abstract class VampirismHunterArmor extends ItemArmor implements ISpecial
         }
     }
 
-    /**
-     * For compat with 1.11 and below
-     */
-    @SideOnly(Side.CLIENT)
-    protected void addInformation(ItemStack stack, EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        if (Helper.isVampire(playerIn)) {
-            tooltip.add(TextFormatting.RED + UtilLib.translate("text.vampirism.poisonous_to_vampires"));
-        }
-    }
 
     /**
      * @param stack Armor stack
@@ -134,14 +96,6 @@ public abstract class VampirismHunterArmor extends ItemArmor implements ISpecial
      */
     protected abstract int getDamageReduction(int slot, ItemStack stack);
 
-    /**
-     * Only called if the item is in the given tab
-     * For compat with 1.11 and below
-     */
-    @SideOnly(Side.CLIENT)
-    protected void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-
-    }
 
     protected String getTextureLocation(String name, EntityEquipmentSlot slot, String type) {
         return String.format(REFERENCE.MODID + ":textures/models/armor/%s_layer_%d%s.png", name, slot == EntityEquipmentSlot.LEGS ? 2 : 1, type == null ? "" : "_overlay");

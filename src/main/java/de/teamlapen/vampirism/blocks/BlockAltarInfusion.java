@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.tileentity.TileAltarInfusion;
@@ -67,7 +66,7 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
         //If empty hand and can start -> Start
         if (worldIn.isRemote) return true;
         int result = te.canActivate(playerIn, true);
-        if (ItemStackUtil.isEmpty(heldItem)) {
+        if (heldItem.isEmpty()) {
             VampirismMod.log.d("AltarInfusion", "Trying to activate. Result: %s", result);
             if (result == 1) {
                 te.startRitual(playerIn);
@@ -76,7 +75,7 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
 
         }
         //If non empty hand or missing items -> open GUI
-        else if (!ItemStackUtil.isEmpty(heldItem) || result == -4) {
+        else if (!heldItem.isEmpty() || result == -4) {
             if (te.getCurrentPhase() != TileAltarInfusion.PHASE.NOT_RUNNING) {
                 playerIn.sendMessage(new TextComponentTranslation("text.vampirism.ritual_still_running"));
                 return true;
@@ -99,7 +98,7 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack item = inventory.getStackInSlot(i);
 
-            if (!ItemStackUtil.isEmpty(item)) {
+            if (!item.isEmpty()) {
                 float rx = rand.nextFloat() * 0.8F + 0.1F;
                 float ry = rand.nextFloat() * 0.8F + 0.1F;
                 float rz = rand.nextFloat() * 0.8F + 0.1F;
@@ -115,7 +114,7 @@ public class BlockAltarInfusion extends VampirismBlockContainer {
                 entityItem.motionY = rand.nextGaussian() * factor + 0.2F;
                 entityItem.motionZ = rand.nextGaussian() * factor;
                 world.spawnEntity(entityItem);
-                ItemStackUtil.makeEmpty(item);
+                inventory.setInventorySlotContents(i, ItemStack.EMPTY);
             }
         }
     }

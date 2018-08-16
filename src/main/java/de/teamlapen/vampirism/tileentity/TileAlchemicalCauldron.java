@@ -4,7 +4,6 @@ import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.tile.InventoryTileEntity;
 import de.teamlapen.lib.lib.util.FluidLib;
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.util.ISoundReference;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.player.hunter.IHunterPlayer;
@@ -249,9 +248,9 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         cookingClient = nbt.getBoolean("cooking");
         burningClient = nbt.getBoolean("burning");
         if (nbt.hasKey("liquidItem")) {
-            this.setInventorySlotContents(SLOT_LIQUID, ItemStackUtil.loadFromNBT(nbt.getCompoundTag("liquidItem")));
+            this.setInventorySlotContents(SLOT_LIQUID, new ItemStack(nbt.getCompoundTag("liquidItem")));
         } else {
-            this.setInventorySlotContents(SLOT_LIQUID, ItemStackUtil.getEmptyStack());
+            this.setInventorySlotContents(SLOT_LIQUID, ItemStack.EMPTY);
         }
         username = nbt.getString("username");
         liquidColor = getLiquidColor(getStackInSlot(SLOT_LIQUID));
@@ -334,7 +333,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         if (tagCompound.hasKey("bypass_recipecheck")) {
             ItemStack liquid = getStackInSlot(SLOT_LIQUID);
             ItemStack ingredient = getStackInSlot(SLOT_INGREDIENT);
-            if (!ItemStackUtil.isEmpty(liquid)) {
+            if (!liquid.isEmpty()) {
                 checkedRecipe = AlchemicalCauldronCraftingManager.getInstance().findRecipe(liquid, ingredient);
 
             }
@@ -361,7 +360,6 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
 
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack) {
-        assert ItemStackUtil.isValid(stack);
         super.setInventorySlotContents(slot, stack);
         if (slot == SLOT_LIQUID && world instanceof WorldServer) {
             ((WorldServer) world).getPlayerChunkMap().markBlockForUpdate(pos);
@@ -449,7 +447,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
         if (!canPlayerCook(recipe)) return false;
         if (!isStackInSlot(SLOT_RESULT)) return true;
         if (!getStackInSlot(SLOT_RESULT).isItemEqual(recipe.getOutput())) return false;
-        int size = ItemStackUtil.getCount(getStackInSlot(SLOT_RESULT)) + ItemStackUtil.getCount(recipe.getOutput());
+        int size = getStackInSlot(SLOT_RESULT).getCount() + recipe.getOutput().getCount();
         return size <= getInventoryStackLimit() && size <= getStackInSlot(SLOT_RESULT).getMaxStackSize();
     }
 
@@ -481,7 +479,7 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
             if (!isStackInSlot(SLOT_RESULT)) {
                 setInventorySlotContents(SLOT_RESULT, recipe.getOutput().copy());
             } else if (getStackInSlot(SLOT_RESULT).isItemEqual(recipe.getOutput())) {
-                ItemStackUtil.grow(getStackInSlot(SLOT_RESULT), ItemStackUtil.getCount(recipe.getOutput()));
+                getStackInSlot(SLOT_RESULT).grow(recipe.getOutput().getCount());
             }
             if (recipe.isValidLiquidItem(getStackInSlot(SLOT_LIQUID))) {
                 decrStackSize(SLOT_LIQUID, 1);
@@ -524,6 +522,6 @@ public class TileAlchemicalCauldron extends InventoryTileEntity implements ITick
     }
 
     private boolean isStackInSlot(int slot) {
-        return !ItemStackUtil.isEmpty(getStackInSlot(slot));
+        return !getStackInSlot(slot).isEmpty();
     }
 }

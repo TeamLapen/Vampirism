@@ -7,9 +7,8 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IStringSerializable;
 import net.minecraft.util.NonNullList;
@@ -19,7 +18,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
@@ -36,17 +35,18 @@ public class BlockCastleBlock extends VampirismBlock {
         this.setDefaultState(this.blockState.getBaseState().withProperty(VARIANT, EnumType.DARK_BRICK));
     }
 
+
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+    public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced) {
         super.addInformation(stack, player, tooltip, advanced);
         int meta = stack.getMetadata();
         if (meta < EnumType.META_LOOKUP.length) {
             tooltip.add(UtilLib.translate(getUnlocalizedName() + "." + EnumType.META_LOOKUP[meta].getUnlocalizedName()));
         }
         tooltip.add("§o" + UtilLib.translate(getUnlocalizedName() + (meta == EnumType.DARK_STONE.getMetadata() ? ".no_spawn" : ".vampire_spawn")) + "§r");
-
     }
+
 
     @Override
     public int damageDropped(IBlockState state) {
@@ -63,10 +63,11 @@ public class BlockCastleBlock extends VampirismBlock {
         return this.getDefaultState().withProperty(VARIANT, EnumType.byMetadata(meta));
     }
 
+
     @Override
-    public void getSubBlocks(@Nonnull Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
+    public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
         for (EnumType type : EnumType.values()) {
-            list.add(new ItemStack(itemIn, 1, type.getMetadata()));
+            items.add(new ItemStack(this, 1, type.getMetadata()));
         }
     }
 

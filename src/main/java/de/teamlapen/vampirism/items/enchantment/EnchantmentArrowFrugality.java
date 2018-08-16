@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items.enchantment;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.items.ItemTechCrossbow;
 import de.teamlapen.vampirism.util.REFERENCE;
@@ -21,7 +20,7 @@ public class EnchantmentArrowFrugality extends Enchantment {
 
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack) {
-        return !ItemStackUtil.isEmpty(stack) && stack.getItem() instanceof ItemTechCrossbow;
+        return !stack.isEmpty() && stack.getItem() instanceof ItemTechCrossbow;
     }
 
     @Override

@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.core.ModItems;
@@ -181,7 +180,7 @@ public class BlockCoffin extends VampirismBlockContainer {
             return true;
         } else {
             ItemStack heldItem = playerIn.getHeldItem(hand);
-            if (!ItemStackUtil.isEmpty(heldItem) && heldItem.getItem() instanceof ItemDye) {
+            if (!heldItem.isEmpty() && heldItem.getItem() instanceof ItemDye) {
                 TileCoffin tile = (TileCoffin) worldIn.getTileEntity(pos);
                 TileEntity other = state.getValue(PART) == EnumPartType.HEAD ? worldIn.getTileEntity(pos.offset(state.getValue(FACING).getOpposite())) : worldIn.getTileEntity(pos.offset(state.getValue(FACING)));
                 if (!(other instanceof TileCoffin)) {
@@ -190,7 +189,7 @@ public class BlockCoffin extends VampirismBlockContainer {
                 tile.changeColor(heldItem.getMetadata());
                 ((TileCoffin) other).changeColor(heldItem.getMetadata());
                 if (!playerIn.capabilities.isCreativeMode) {
-                    heldItem = ItemStackUtil.decr(heldItem);
+                    heldItem.shrink(1);
                 }
                 return true;
             }
