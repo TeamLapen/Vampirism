@@ -9,6 +9,9 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 
+import net.minecraft.init.MobEffects;
+import net.minecraft.potion.PotionEffect;
+
 /**
  * @author cheaterpaul
  *
@@ -21,7 +24,7 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
 
     @Override
     public int getCooldown() {
-        return Balance.vpa.HALFINVULNERABLE_COOLDOWN;
+        return 20 * (Balance.vpa.HALFINVULNERABLE_COOLDOWN);
     }
 
     @Override
@@ -49,8 +52,9 @@ public class HalfInvulnerableAction extends DefaultVampireAction implements ILas
 
     @Override
     protected boolean activate(IVampirePlayer playerIn) {
-        VampirePlayer player = VampirePlayer.get(playerIn.getRepresentingPlayer());
-        player.getSpecialAttributes().half_invulnerable = true;
+        ((VampirePlayer) playerIn).getSpecialAttributes().half_invulnerable = true;
+        playerIn.getRepresentingPlayer().addPotionEffect(
+                new PotionEffect(MobEffects.SLOWNESS, getDuration(playerIn.getLevel()), 1, false, false));
         return true;
     }
 

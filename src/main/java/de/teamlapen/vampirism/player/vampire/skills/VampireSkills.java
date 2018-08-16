@@ -245,8 +245,8 @@ public class VampireSkills {
 
         SkillNode skill3 = skillManager.createSkillNode(skill2, less_blood_thirst);
         SkillNode skill4 = skillManager.createSkillNode(skill3, vampire_disguise);
-        //TODO add one more
-        SkillNode skill6 = skillManager.createSkillNode(skill4, vampire_invisibility);
+        SkillNode skill5 = skillManager.createSkillNode(skill4, half_invulnerable);
+        SkillNode skill6 = skillManager.createSkillNode(skill5, vampire_invisibility);
     }
 
     private static void registerOffensiveSkills(ISkillManager skillManager, SkillNode start) {
@@ -274,7 +274,6 @@ public class VampireSkills {
 
         SkillNode skill5 = skillManager.createSkillNode(skill4, vampire_forest_fog);
         SkillNode skill6 = skillManager.createSkillNode(skill5, teleport);
-        SkillNode skill7 = skillManager.createSkillNode(skill6, half_invulnerable);
 
 
     }
