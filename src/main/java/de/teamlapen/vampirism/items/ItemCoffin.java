@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.blocks.BlockCoffin;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -60,7 +59,7 @@ public class ItemCoffin extends VampirismItem {
 
 
                 }
-                ItemStackUtil.decr(stack);
+                stack.shrink(1);
                 return EnumActionResult.SUCCESS;
             }
         }

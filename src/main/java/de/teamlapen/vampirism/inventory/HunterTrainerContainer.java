@@ -4,7 +4,6 @@ import de.teamlapen.lib.lib.inventory.InventoryContainer;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.inventory.SimpleInventory;
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.core.ModItems;
@@ -25,7 +24,7 @@ public class HunterTrainerContainer extends InventoryContainer {
     private final static Item[] items = new Item[]{Items.IRON_INGOT, Items.GOLD_INGOT, ModItems.hunter_intel};
     private final EntityPlayer player;
     private boolean changed = false;
-    private ItemStack missing = ItemStackUtil.getEmptyStack();
+    private ItemStack missing = ItemStack.EMPTY;
 
     public HunterTrainerContainer(EntityPlayer player) {
         super(player.inventory, new HunterTrainerInventory());
@@ -43,7 +42,7 @@ public class HunterTrainerContainer extends InventoryContainer {
         if (!levelingConf.isLevelValidForTrainer(targetLevel)) return false;
         int[] req = levelingConf.getItemRequirementsForTrainer(targetLevel);
         missing = InventoryHelper.checkItems(tile, items, new int[]{req[0], req[1], 1}, new int[]{OreDictionary.WILDCARD_VALUE, OreDictionary.WILDCARD_VALUE, levelingConf.getHunterIntelMetaForLevel(targetLevel) == 0 ? OreDictionary.WILDCARD_VALUE : -levelingConf.getHunterIntelMetaForLevel(targetLevel)});
-        return ItemStackUtil.isEmpty(missing);
+        return missing.isEmpty();
     }
 
     public HunterTrainerInventory getHunterTrainerInventory() {
@@ -75,7 +74,7 @@ public class HunterTrainerContainer extends InventoryContainer {
             for (int i = 0; i < tile.getSizeInventory(); ++i) {
                 ItemStack itemstack = this.tile.removeStackFromSlot(i);
 
-                if (!ItemStackUtil.isEmpty(itemstack)) {
+                if (!itemstack.isEmpty()) {
                     playerIn.dropItem(itemstack, false);
                 }
             }

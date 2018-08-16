@@ -110,7 +110,7 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
 
     @Override
     public boolean isItemValidForSlot(int slot, ItemStack stack) {
-        if (slots[slot].itemSelector != null && !ItemStackUtil.isEmpty(stack)) {
+        if (slots[slot].itemSelector != null && !stack.isEmpty()) {
             return slots[slot].itemSelector.isItemAllowed(stack);
         }
         return true;
@@ -131,14 +131,14 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
     public void readFromNBT(NBTTagCompound tagCompound) {
         super.readFromNBT(tagCompound);
         for (InventorySlot slot1 : slots) {
-            slot1.stack = ItemStackUtil.getEmptyStack();
+            slot1.stack = ItemStack.EMPTY;
         }
         NBTTagList tagList = tagCompound.getTagList("Inventory", 10);
         for (int i = 0; i < tagList.tagCount(); i++) {
             NBTTagCompound tag = tagList.getCompoundTagAt(i);
             byte slot = tag.getByte("Slot");
             if (slot >= 0 && slot < slots.length) {
-                slots[slot].stack = ItemStackUtil.loadFromNBT(tag);
+                slots[slot].stack = new ItemStack(tag);
             }
         }
     }
@@ -147,10 +147,10 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
     public ItemStack removeStackFromSlot(int index) {
         if (this.slots[index] != null) {
             ItemStack itemstack = this.slots[index].stack;
-            this.slots[index].stack = ItemStackUtil.getEmptyStack();
+            this.slots[index].stack = ItemStack.EMPTY;
             return itemstack;
         } else {
-            return ItemStackUtil.getEmptyStack();
+            return ItemStack.EMPTY;
         }
     }
 
@@ -162,8 +162,8 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
     @Override
     public void setInventorySlotContents(int slot, ItemStack stack) {
         slots[slot].stack = stack;
-        if (ItemStackUtil.getCount(stack) > getInventoryStackLimit()) {
-            ItemStackUtil.setCount(stack, getInventoryStackLimit());
+        if (stack.getCount() > getInventoryStackLimit()) {
+            stack.setCount(getInventoryStackLimit());
         }
         this.markDirty();//Not sure
 
@@ -176,7 +176,7 @@ public abstract class InventoryTileEntity extends TileEntity implements IInvento
         NBTTagList itemList = new NBTTagList();
         for (int i = 0; i < slots.length; i++) {
             ItemStack stack = slots[i].stack;
-            if (!ItemStackUtil.isEmpty(stack)) {
+            if (!stack.isEmpty()) {
                 NBTTagCompound tag = new NBTTagCompound();
                 tag.setByte("Slot", (byte) i);
                 stack.writeToNBT(tag);

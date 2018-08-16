@@ -6,7 +6,6 @@ import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
 import amerifrance.guideapi.page.*;
 import com.google.common.collect.Lists;
 import de.teamlapen.lib.VampLib;
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.items.IAlchemicalCauldronRecipe;
@@ -138,7 +137,7 @@ public class GuideHelper {
     }
 
     private static boolean checkOutput(ItemStack resultStack, ItemStack stack, boolean checkNBT) {
-        if (!ItemStackUtil.isEmpty(stack) && !ItemStackUtil.isEmpty(resultStack)) {
+        if (!stack.isEmpty() && !resultStack.isEmpty()) {
             if (resultStack.getItem() == stack.getItem() && resultStack.getItemDamage() == stack.getItemDamage()) {
                 if (!checkNBT || resultStack.getTagCompound() == null && stack.getTagCompound() == null || resultStack.getTagCompound() != null && resultStack.getTagCompound().equals(stack.getTagCompound())) {
                     return true;

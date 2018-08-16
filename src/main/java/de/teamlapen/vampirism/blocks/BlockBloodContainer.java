@@ -2,7 +2,6 @@ package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.block.PropertyStringUnlisted;
 import de.teamlapen.lib.lib.util.FluidLib;
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModFluids;
@@ -15,7 +14,6 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -76,13 +74,14 @@ public class BlockBloodContainer extends VampirismBlockContainer {
         return EnumBlockRenderType.MODEL;
     }
 
+
     @Override
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
-        super.getSubBlocks(itemIn, tab, list);
-        ItemStack stack = new ItemStack(itemIn, 1);
+    public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
+        super.getSubBlocks(itemIn, items);
+        ItemStack stack = new ItemStack(this, 1);
         FluidStack fluid = new FluidStack(ModFluids.blood, TileBloodContainer.CAPACITY);
         stack.setTagInfo("fluid", fluid.writeToNBT(new NBTTagCompound()));
-        list.add(stack);
+        items.add(stack);
     }
 
     @Override
@@ -109,7 +108,7 @@ public class BlockBloodContainer extends VampirismBlockContainer {
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         if (!worldIn.isRemote) {
             ItemStack stack = playerIn.getHeldItem(hand);
-            if (!ItemStackUtil.isEmpty(stack) && FluidLib.hasFluidItemCap(stack)) {
+            if (!stack.isEmpty() && FluidLib.hasFluidItemCap(stack)) {
                 TileBloodContainer bloodContainer = (TileBloodContainer) worldIn.getTileEntity(pos);
                 IFluidHandler source = bloodContainer.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, null);
                 if (playerIn.isSneaking()) {

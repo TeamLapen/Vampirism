@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -58,7 +57,7 @@ public class ModEntityEventHandler {
         //Probably not a very "clean" solution, but the only one I found
         if (!skipAttackDamageOnce && "player".equals(event.getSource().getDamageType()) && event.getSource().getTrueSource() instanceof EntityPlayer) {
             ItemStack stack = ((EntityPlayer) event.getSource().getTrueSource()).getHeldItemMainhand();
-            if (!ItemStackUtil.isEmpty(stack) && stack.getItem() instanceof IFactionSlayerItem) {
+            if (!stack.isEmpty() && stack.getItem() instanceof IFactionSlayerItem) {
                 IFactionSlayerItem item = (IFactionSlayerItem) stack.getItem();
                 IFaction faction = VampirismAPI.factionRegistry().getFaction(event.getEntity());
 

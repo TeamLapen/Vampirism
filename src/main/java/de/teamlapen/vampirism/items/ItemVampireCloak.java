@@ -5,7 +5,6 @@ import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.client.model.ModelCloak;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
-
 import net.minecraft.client.model.ModelBiped;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -95,33 +94,17 @@ public class ItemVampireCloak extends ItemArmor {
                 "white_black"), BLACKBLUE(4, "black_blue");
 
         private static final EnumCloakColor[] META_LOOKUP = new EnumCloakColor[values().length];
-        private final int meta;
-        private final String name;
 
-        private EnumCloakColor(int metaIn, String nameIn) {
-            this.meta = metaIn;
-            this.name = nameIn;
-        }
-
-        /**
-         * @return color index
-         */
-        public int getMetadata() {
-            return this.meta;
-        }
-
-        /**
-         * @return color name
-         */
-        @SideOnly(Side.CLIENT)
-        public String getDyeColorName() {
-            return this.name;
+        static {
+            for (EnumCloakColor enumdyecolor : values()) {
+                META_LOOKUP[enumdyecolor.getMetadata()] = enumdyecolor;
+            }
         }
 
         /**
          * search for color by the given index
-         * 
-         * @param index
+         *
+         * @param meta
          * @return color enumtype
          */
         public static EnumCloakColor byMetadata(int meta) {
@@ -130,6 +113,27 @@ public class ItemVampireCloak extends ItemArmor {
             }
 
             return META_LOOKUP[meta];
+        }
+        private final int meta;
+        private final String name;
+
+        EnumCloakColor(int metaIn, String nameIn) {
+            this.meta = metaIn;
+            this.name = nameIn;
+        }
+
+        /**
+         * @return color name
+         */
+        public String getDyeColorName() {
+            return this.name;
+        }
+
+        /**
+         * @return color index
+         */
+        public int getMetadata() {
+            return this.meta;
         }
 
         /**
@@ -144,12 +148,6 @@ public class ItemVampireCloak extends ItemArmor {
          */
         public String getUnlocalizedName() {
             return this.name;
-        }
-
-        static {
-            for (EnumCloakColor enumdyecolor : values()) {
-                META_LOOKUP[enumdyecolor.getMetadata()] = enumdyecolor;
-            }
         }
 
     }

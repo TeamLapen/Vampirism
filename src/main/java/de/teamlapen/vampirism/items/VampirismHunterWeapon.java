@@ -13,10 +13,12 @@ import de.teamlapen.vampirism.util.Helper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -44,9 +46,9 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         if (getUsingFaction(stack) != null || getMinLevel(stack) > 0 || getRequiredSkill(stack) != null) {
-            TextFormatting color = playerIn != null && Helper.canUseFactionItem(stack, this, FactionPlayerHandler.get(playerIn)) ? TextFormatting.BLUE : TextFormatting.DARK_RED;
+            TextFormatting color = Minecraft.getMinecraft().player != null && Helper.canUseFactionItem(stack, this, FactionPlayerHandler.get(Minecraft.getMinecraft().player)) ? TextFormatting.BLUE : TextFormatting.DARK_RED;
             tooltip.add(color + UtilLib.translateFormatted(getUsingFaction(stack) == null ? "text.vampirism.all" : getUsingFaction(stack).getUnlocalizedNamePlural()) + ": " + getMinLevel(stack) + "+");
             ISkill reqSkill = this.getRequiredSkill(stack);
             if (reqSkill != null) {
@@ -54,6 +56,7 @@ public abstract class VampirismHunterWeapon extends VampirismItemWeapon implemen
             }
         }
     }
+
 
     @Nullable
     @Override

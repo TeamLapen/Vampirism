@@ -1,6 +1,5 @@
 package de.teamlapen.lib.lib.inventory;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -16,7 +15,7 @@ import javax.annotation.Nonnull;
 public class InventorySlot {
     public final IItemSelector itemSelector;
     public final int xDisplay, yDisplay;
-    public ItemStack stack = ItemStackUtil.getEmptyStack();
+    public ItemStack stack = ItemStack.EMPTY;
 
     public InventorySlot(final Class<? extends Item> cls, int xDisplay, int yDisplay) {
         this(item -> cls.isInstance(item.getItem()), xDisplay, yDisplay);

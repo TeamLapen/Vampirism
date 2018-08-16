@@ -1,6 +1,5 @@
 package de.teamlapen.lib.lib.inventory;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -35,12 +34,12 @@ public class InventoryHelper {
         }
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack stack = inventory.getStackInSlot(i);
-            int actual = ItemStackUtil.isEmpty(stack) ? 0 : (!stack.getItem().equals(items[i]) ? 0 : (meta[i] == OreDictionary.WILDCARD_VALUE || stack.getMetadata() == meta[i] || (meta[i] < 0 && stack.getMetadata() >= (-meta[i]))) ? ItemStackUtil.getCount(stack) : 0);
+            int actual = stack.isEmpty() ? 0 : (!stack.getItem().equals(items[i]) ? 0 : (meta[i] == OreDictionary.WILDCARD_VALUE || stack.getMetadata() == meta[i] || (meta[i] < 0 && stack.getMetadata() >= (-meta[i]))) ? stack.getCount() : 0);
             if (actual < amounts[i]) {
                 return new ItemStack(items[i], amounts[i] - actual, meta[i] == OreDictionary.WILDCARD_VALUE ? 0 : meta[i] < 0 ? -meta[i] : meta[i]);
             }
         }
-        return ItemStackUtil.getEmptyStack();
+        return ItemStack.EMPTY;
     }
 
     /**
@@ -55,9 +54,9 @@ public class InventoryHelper {
         }
         for (int i = 0; i < inventory.getSizeInventory(); i++) {
             ItemStack stack = inventory.getStackInSlot(i);
-            if (!ItemStackUtil.isEmpty(stack) && amounts[i] > 0) {
-                stack = ItemStackUtil.grow(stack, -amounts[i]);
-                if (ItemStackUtil.isEmpty(stack)) {
+            if (!stack.isEmpty() && amounts[i] > 0) {
+                stack.grow(-amounts[i]);
+                if (stack.isEmpty()) {
                     inventory.removeStackFromSlot(i);
                 }
             }

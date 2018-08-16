@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.items;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.blocks.BlockAlchemicalFire;
 import de.teamlapen.vampirism.core.ModBlocks;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.ItemStack;
@@ -31,13 +32,15 @@ public class ItemAlchemicalFire extends VampirismItem {
         super(regName);
     }
 
+
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, playerIn, tooltip, advanced);
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
         tooltip.add(UtilLib.translate("item.vampirism.item_alchemical_fire.desc1"));
         tooltip.add(UtilLib.translate("item.vampirism.item_alchemical_fire.desc2"));
     }
+
 
     @Override
     public EnumActionResult onItemUse(EntityPlayer player, World worldIn, BlockPos pos, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {

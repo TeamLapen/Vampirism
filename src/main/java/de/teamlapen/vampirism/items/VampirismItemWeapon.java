@@ -1,17 +1,18 @@
 package de.teamlapen.vampirism.items;
 
 import com.google.common.collect.Multimap;
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.EntityEquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -47,6 +48,16 @@ public class VampirismItemWeapon extends VampirismItem {
         this.attackSpeed = attackSpeedModifier;
     }
 
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
+        if (flagIn.isAdvanced()) {
+            tooltip.add("ModDamage: " + getAttackDamage(stack));
+            tooltip.add("ModSpeed: " + getAttackSpeed(stack));
+        }
+    }
+
     @Override
     public Multimap<String, AttributeModifier> getAttributeModifiers(EntityEquipmentSlot equipmentSlot, ItemStack stack) {
         Multimap<String, AttributeModifier> multimap = super.getAttributeModifiers(equipmentSlot, stack);
@@ -62,7 +73,7 @@ public class VampirismItemWeapon extends VampirismItem {
     @Override
     public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
         ItemStack mat = this.material.getRepairItemStack();
-        if (!ItemStackUtil.isEmpty(mat) && net.minecraftforge.oredict.OreDictionary.itemMatches(mat, repair, false))
+        if (!mat.isEmpty() && net.minecraftforge.oredict.OreDictionary.itemMatches(mat, repair, false))
             return true;
         return super.getIsRepairable(toRepair, repair);
     }
@@ -90,15 +101,6 @@ public class VampirismItemWeapon extends VampirismItem {
         }
 
         return true;
-    }
-
-    @Override
-    protected void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, playerIn, tooltip, advanced);
-        if (advanced) {
-            tooltip.add("ModDamage: " + getAttackDamage(stack));
-            tooltip.add("ModSpeed: " + getAttackSpeed(stack));
-        }
     }
 
     protected float getAttackDamage(ItemStack stack) {

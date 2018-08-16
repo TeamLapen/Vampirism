@@ -372,6 +372,7 @@ public class GuideBook implements IGuideBook {
         new ItemInfoBuilder(ModItems.blood_infused_iron_ingot).craftableStacks(ModItems.blood_infused_iron_ingot, WORKBENCH, ModItems.blood_infused_enhanced_iron_ingot, WORKBENCH).build(entries);
         addItemWithTier(ModItems.heart_seeker, WORKBENCH).setLinks(new ResourceLocation("guide.vampirism.blocks.blood_pedestal"), new ResourceLocation("guide.vampirism.items.blood_infused_iron_ingot")).build(entries);
         addItemWithTier(ModItems.heart_striker, WORKBENCH).setLinks(new ResourceLocation("guide.vampirism.blocks.blood_pedestal"), new ResourceLocation("guide.vampirism.items.blood_infused_iron_ingot")).build(entries);
+        new ItemInfoBuilder(ModItems.vampire_cloak).craftableStacks(new ItemStack(ModItems.vampire_cloak, 1, 0), WORKBENCH, new ItemStack(ModItems.vampire_cloak, 1, 1), WORKBENCH, new ItemStack(ModItems.vampire_cloak, 1, 2), WORKBENCH, new ItemStack(ModItems.vampire_cloak, 1, 3), WORKBENCH, new ItemStack(ModItems.vampire_cloak, 1, 4), WORKBENCH).build(entries);
 
         //Hunter
         new ItemInfoBuilder(ModItems.injection).craftableStacks(new ItemStack(ModItems.injection, 1, 0), WORKBENCH, new ItemStack(ModItems.injection, 1, ItemInjection.META_GARLIC), WORKBENCH, new ItemStack(ModItems.injection, 1, ItemInjection.META_SANGUINARE), WORKBENCH).build(entries);

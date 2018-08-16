@@ -2,60 +2,10 @@ package de.teamlapen.lib.lib.util;
 
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 
 import javax.annotation.Nonnull;
 
-/**
- * 1.11
- *
- * @author maxanier
- */
 public class ItemStackUtil {
-
-    /**
-     * Increase the stack size by the given amount
-     */
-    public static @Nonnull
-    ItemStack grow(@Nonnull ItemStack stack, int amount) {
-        stack.grow(amount);
-        return stack;
-    }
-
-    public static @Nonnull
-    ItemStack decr(@Nonnull ItemStack stack) {
-        return grow(stack, -1);
-    }
-
-    public static int getCount(@Nonnull ItemStack stack) {
-        return stack.getCount();
-    }
-
-    public static @Nonnull
-    ItemStack setCount(@Nonnull ItemStack stack, int count) {
-        stack.setCount(count);
-        return stack;
-    }
-
-    public static boolean isEmpty(@Nonnull ItemStack stack) {
-        return stack.isEmpty();
-    }
-
-    public static @Nonnull
-    ItemStack makeEmpty(@Nonnull ItemStack stack) {
-        stack.setCount(0);
-        return ItemStack.EMPTY;
-    }
-
-    public static @Nonnull
-    ItemStack getEmptyStack() {
-        return ItemStack.EMPTY;
-    }
-
-    public static @Nonnull
-    ItemStack loadFromNBT(@Nonnull NBTTagCompound nbt) {
-        return new ItemStack(nbt);
-    }
 
     /**
      * Can be used in {@link IInventory#decrStackSize(int, int)}
@@ -63,25 +13,18 @@ public class ItemStackUtil {
     public static @Nonnull
     ItemStack decrIInventoryStackSize(IInventory inv, int slot, int amt) {
         ItemStack stack = inv.getStackInSlot(slot);
-        if (!ItemStackUtil.isEmpty(stack)) {
-            if (ItemStackUtil.getCount(stack) <= amt) {
-                inv.setInventorySlotContents(slot, ItemStackUtil.getEmptyStack());
+        if (!stack.isEmpty()) {
+            if (stack.getCount() <= amt) {
+                inv.setInventorySlotContents(slot, ItemStack.EMPTY);
             } else {
                 stack = stack.splitStack(amt);
-                if (ItemStackUtil.isEmpty(stack)) {
-                    inv.setInventorySlotContents(slot, ItemStackUtil.getEmptyStack());
+                if (stack.isEmpty()) {
+                    inv.setInventorySlotContents(slot, ItemStack.EMPTY);
                 }
             }
             return stack;
         }
-        return ItemStackUtil.getEmptyStack();
-    }
-
-    /**
-     * On 1.11 checks if stack is not null
-     */
-    public static boolean isValid(ItemStack stack) {
-        return stack != null;
+        return ItemStack.EMPTY;
     }
 
     /**

@@ -1,7 +1,9 @@
 package de.teamlapen.lib.lib.util;
 
 import de.teamlapen.vampirism.util.REFERENCE;
+
 import jline.internal.Nullable;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -30,6 +32,9 @@ public abstract class SimpleSpawnerLogic {
     private int maxNearbyEntities = 4;
     private int spawnRange = 4;
     private int spawnDelay = 20;
+    private int spawnedToday = 0;
+    private long spawnedLast = 0L;
+    private boolean flag = true;
     private EnumCreatureType limitType;
 
     @Nullable
@@ -71,6 +76,9 @@ public abstract class SimpleSpawnerLogic {
         activateRange = nbt.getInteger("activate_range");
         spawnRange = nbt.getInteger("spawn_range");
         spawnCount = nbt.getInteger("spawn_count");
+        spawnedToday = nbt.getInteger("spawned_today");
+        spawnedLast = nbt.getLong("spawned_last");
+        flag = nbt.getBoolean("spawner_flag");
     }
 
     public void setActivateRange(int activateRange) {
@@ -126,7 +134,14 @@ public abstract class SimpleSpawnerLogic {
                     return;
                 }
 
-                boolean flag = false;
+                if ((getSpawnerWorld().getTotalWorldTime()) % 24000 < this.spawnedLast) {
+                    this.spawnedToday = 0;
+                    this.flag = true;
+                }
+                if (!this.flag)
+                    return;
+
+                boolean flag1 = false;
 
                 for (int i = 0; i < this.spawnCount; ++i) {
                     Entity entity = EntityList.createEntityByIDFromName(this.getEntityName(), this.getSpawnerWorld());
@@ -153,11 +168,13 @@ public abstract class SimpleSpawnerLogic {
 
                     if (UtilLib.spawnEntityInWorld(getSpawnerWorld(), getSpawningBox(), entity, 1)) {
                         onSpawned(entity);
-                        flag = true;
+                        flag1 = true;
                     }
                 }
-                if (flag) {
+                if (flag1) {
                     this.resetTimer();
+                    this.spawnedToday++;
+                    this.spawnedLast = getSpawnerWorld().getTotalWorldTime() % 24000;
                 }
             }
         }
@@ -172,6 +189,9 @@ public abstract class SimpleSpawnerLogic {
         nbt.setInteger("activate_range", activateRange);
         nbt.setInteger("spawn_range", spawnRange);
         nbt.setInteger("spawn_count", spawnCount);
+        nbt.setInteger("spawned_today", spawnedToday);
+        nbt.setLong("spawned_last", spawnedLast);
+        nbt.setBoolean("spawner_flag", flag);
     }
 
     protected AxisAlignedBB getSpawningBox() {
@@ -196,5 +216,13 @@ public abstract class SimpleSpawnerLogic {
             this.spawnDelay = this.minSpawnDelay + this.getSpawnerWorld().rand.nextInt(i);
         }
         onReset();
+    }
+
+    public int getSpawnedToday() {
+        return spawnedToday;
+    }
+
+    public void setSpawn(boolean spawn) {
+        this.flag = spawn;
     }
 }

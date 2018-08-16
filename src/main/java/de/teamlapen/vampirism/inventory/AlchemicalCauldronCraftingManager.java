@@ -50,7 +50,7 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
         } else if (liquid instanceof Block) {
             liquid = new ItemStack((Block) liquid);
         }
-        if (liquid instanceof ItemStack && !ItemStackUtil.isEmpty((ItemStack) liquid)) {
+        if (liquid instanceof ItemStack && !((ItemStack) liquid).isEmpty()) {
             recipe = new AlchemicalCauldronRecipe(getItemStackCopy(output), ((ItemStack) liquid).copy(), getItemStackCopy(ingredient));
         } else if (liquid instanceof FluidStack) {
             recipe = new AlchemicalCauldronRecipe(getItemStackCopy(output), ((FluidStack) liquid).copy(), getItemStackCopy(ingredient));
@@ -71,7 +71,7 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
     @Nullable
     @Override
     public IAlchemicalCauldronRecipe findRecipe(@Nonnull ItemStack liquid, @Nonnull ItemStack ingredient) {
-        assert !ItemStackUtil.isEmpty(liquid);
+        assert !liquid.isEmpty();
         for (IAlchemicalCauldronRecipe r : recipes) {
             if (r.isValidLiquidItem(liquid) || r.isValidFluidItem(liquid) != null) {
                 if (ItemStackUtil.doesStackContain(ingredient, r.getIngredient())) {
@@ -98,7 +98,7 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
 
     @Override
     public int getLiquidColor(@Nonnull ItemStack stack) {
-        if (!ItemStackUtil.isEmpty(stack)) {
+        if (!stack.isEmpty()) {
             if (liquidColors.containsKey(stack)) {
                 return liquidColors.get(stack);
             }
@@ -115,7 +115,7 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
 
     @Override
     public void registerLiquidColor(@Nonnull ItemStack stack, int color) {
-        assert !ItemStackUtil.isEmpty(stack);
+        assert !stack.isEmpty();
         liquidColors.put(stack, color);
     }
 
@@ -126,7 +126,7 @@ public class AlchemicalCauldronCraftingManager implements IAlchemicalCauldronCra
 
     private @Nonnull
     ItemStack getItemStackCopy(@Nullable Object o) {
-        if (o == null) return ItemStackUtil.getEmptyStack();
+        if (o == null) return ItemStack.EMPTY;
         if (o instanceof ItemStack) return ((ItemStack) o).copy();
         if (o instanceof Item) return new ItemStack((Item) o);
         if (o instanceof Block) return new ItemStack((Block) o);

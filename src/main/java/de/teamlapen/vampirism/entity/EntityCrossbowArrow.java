@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.items.ItemCrossbowArrow;
 import net.minecraft.entity.EntityLivingBase;
@@ -58,7 +57,7 @@ public class EntityCrossbowArrow extends EntityArrow {
         this(worldIn);
         this.setPosition(x, y, z);
         this.arrowStack = arrow.copy();
-        ItemStackUtil.setCount(arrowStack, 1);
+        arrowStack.setCount(1);
     }
 
     public Random getRNG() {

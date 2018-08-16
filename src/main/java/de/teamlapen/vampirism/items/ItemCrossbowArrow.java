@@ -7,17 +7,19 @@ import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.entity.EntityCrossbowArrow;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -68,13 +70,15 @@ public class ItemCrossbowArrow extends VampirismItem {
         super(regName);
     }
 
+    @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
         EnumArrowType type = getType(stack);
         if (type != EnumArrowType.NORMAL) {
             tooltip.add(UtilLib.translate("item.vampirism." + regName + "." + type.name + ".tooltip"));
         }
     }
+
 
     /**
      * @param stack        Is copied by {@link EntityCrossbowArrow}
@@ -108,10 +112,13 @@ public class ItemCrossbowArrow extends VampirismItem {
         return setType(new ItemStack(this), type);
     }
 
+
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        for (EnumArrowType type : EnumArrowType.values()) {
-            subItems.add(setType(new ItemStack(itemIn), type));
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        if (isInCreativeTab(tab)) {
+            for (EnumArrowType type : EnumArrowType.values()) {
+                items.add(setType(new ItemStack(this), type));
+            }
         }
     }
 
