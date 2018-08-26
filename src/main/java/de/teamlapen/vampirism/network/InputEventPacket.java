@@ -21,10 +21,12 @@ import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.potion.PotionFeeding;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -103,7 +105,10 @@ public class InputEventPacket implements IMessage {
                     VampirismMod.log.e(TAG, e, "Receiving invalid param for %s", message.action);
                 }
                 if (id != 0) {
-                    VampirePlayer.get(player).biteEntity(id);
+//                    VampirePlayer.get(player).biteEntity(id);'
+                    PotionEffect effect = new PotionEffect(new PotionFeeding("Feeding", false, Integer.parseInt("FF0000", 16), id), 500);
+                    player.addPotionEffect(effect);
+
                 }
             } else if (message.action.equals(TOGGLEACTION)) {
                 int id = -1;

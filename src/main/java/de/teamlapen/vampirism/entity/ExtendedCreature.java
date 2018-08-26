@@ -202,7 +202,9 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     @Override
     public int onBite(IVampire biter) {
         if (getBlood() <= 0) return 0;
-        int amt = Math.min(blood, Math.max(1, (int) (getMaxBlood() / 2F)));
+        int divided = getMaxBlood() / 6;
+        int max = Math.max(1, divided);
+        int amt = Math.min(blood, max);
         blood -= amt;
         boolean killed = false;
         boolean converted = false;
