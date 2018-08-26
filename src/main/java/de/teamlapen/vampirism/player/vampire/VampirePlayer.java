@@ -232,6 +232,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     public void toggleBiting(int entityId) {
+        if(entityId == -1) endBiting();
         if(!isBiting) {
             biteTask = new TimerTask() {
                 @Override
@@ -258,7 +259,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     public void endBiting() {
-        biteTask.cancel();
+        if(biteTask != null) biteTask.cancel();
         biteTimer.purge();
         isBiting = false;
         player.removePotionEffect(PotionFeeding.POTION);

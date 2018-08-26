@@ -118,6 +118,8 @@ public class ModKeys {
                 } else if (mouseOver.typeOfHit == RayTraceResult.Type.BLOCK) {
                     BlockPos pos = mouseOver.getBlockPos();
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.DRINK_BLOOD_BLOCK, "" + pos.getX() + ":" + pos.getY() + ":" + pos.getZ()));
+                } else {
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + -1));
                 }
             }
         } else if (keyPressed == KEY.ACTION) {
