@@ -28,6 +28,7 @@ import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.vampire.actions.BatVampireAction;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
+import de.teamlapen.vampirism.potion.PotionFeeding;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.VampireNightVisionEffect;
 import de.teamlapen.vampirism.util.*;
@@ -48,6 +49,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketAnimation;
 import net.minecraft.network.play.server.SPacketUseBed;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -69,6 +71,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.TimerTask;
 import java.util.function.Predicate;
 
 import static de.teamlapen.lib.lib.util.UtilLib.getNull;
@@ -144,6 +147,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private IVampireVision activatedVision = null;
     private Method reflectionMethodSetSize = null;
 
+    private java.util.Timer biteTimer = new java.util.Timer("BiteTimer");
+    private  boolean isBiting = false;
+    private TimerTask biteTask;
     public VampirePlayer(EntityPlayer player) {
         super(player);
         applyEntityAttributes();
@@ -223,6 +229,39 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 VampirismMod.log.w(TAG, "Entity sent by client is not in reach " + entityId);
             }
         }
+    }
+
+    public void toggleBiting(int entityId) {
+        if(!isBiting) {
+            biteTask = new TimerTask() {
+                @Override
+                public void run() {
+                    Entity e = player.getEntityWorld().getEntityByID(entityId);
+                    if (e == null || !(e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1)) {
+                        this.cancel();
+                        endBiting();
+                        return;
+                    }
+                    PotionEffect effect = new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 40, 7);
+                    if (e instanceof EntityLivingBase) ((EntityLivingBase) e).addPotionEffect(effect);
+
+                    PotionEffect feedingEffect = new PotionEffect(PotionFeeding.POTION, 30);
+                    player.addPotionEffect(feedingEffect);
+                    biteEntity(entityId);
+                    isBiting = true;
+                }
+            };
+            biteTimer.scheduleAtFixedRate(biteTask, 0, 1000);
+        } else {
+            endBiting();
+        }
+    }
+
+    public void endBiting() {
+        biteTask.cancel();
+        biteTimer.purge();
+        isBiting = false;
+        player.removePotionEffect(PotionFeeding.POTION);
     }
 
     @Override
