@@ -486,7 +486,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public int onBite(IVampire biter) {
-        float perc = biter instanceof IVampirePlayer ? 1F : 0.4F;
+        float perc = biter instanceof IVampirePlayer ? 0.2F : 0.08F;
         if (getLevel() == 0) {
             int amt = player.getFoodStats().getFoodLevel();
             int sucked = (int) (amt * perc);
