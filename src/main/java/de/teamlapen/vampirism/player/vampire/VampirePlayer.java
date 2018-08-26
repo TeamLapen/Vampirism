@@ -242,7 +242,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                         endBiting();
                         return;
                     }
-                    PotionEffect effect = new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 40, 7);
+                    PotionEffect effect = new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 20, 7);
                     if (e instanceof EntityLivingBase) ((EntityLivingBase) e).addPotionEffect(effect);
 
                     PotionEffect feedingEffect = new PotionEffect(PotionFeeding.POTION, 30);
@@ -539,7 +539,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 }
             }
         }
-
+        endBiting();
         return false;
     }
 
