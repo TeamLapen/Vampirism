@@ -125,9 +125,12 @@ public class ItemTechCrossbow extends ItemSimpleCrossbow {
 
     @Override
     public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
-        items.add(setArrowsLeft(new ItemStack(this), 0));
-        items.add(setArrowsLeft(new ItemStack(this), MAX_ARROW_COUNT));
-        //subItems.add(setArrowsLeft(new ItemStack(itemIn), -1));
+        if (isInCreativeTab(tab)) {
+            items.add(setArrowsLeft(new ItemStack(this), 0));
+            items.add(setArrowsLeft(new ItemStack(this), MAX_ARROW_COUNT));
+            //subItems.add(setArrowsLeft(new ItemStack(itemIn), -1));
+        }
+
     }
 
 
