@@ -103,7 +103,7 @@ public class InputEventPacket implements IMessage {
                     VampirismMod.log.e(TAG, e, "Receiving invalid param for %s", message.action);
                 }
                 if (id != 0) {
-                    VampirePlayer.get(player).toggleBiting(id);
+                    VampirePlayer.get(player).biteEntity(id);
 
                 }
             } else if (message.action.equals(TOGGLEACTION)) {

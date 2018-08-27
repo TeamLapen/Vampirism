@@ -147,9 +147,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private IVampireVision activatedVision = null;
     private Method reflectionMethodSetSize = null;
 
-    private java.util.Timer biteTimer = new java.util.Timer("BiteTimer");
-    private  boolean isBiting = false;
-    private TimerTask biteTask;
+    private EntityLivingBase victim;
+    private int tickCounter = 0;
+
     public VampirePlayer(EntityPlayer player) {
         super(player);
         applyEntityAttributes();
@@ -222,46 +222,30 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             return;
         }
         if (e != null && e instanceof EntityLivingBase) {
-
             if (e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) {
-                biteEntity((EntityLivingBase) e);
+                victim = (EntityLivingBase) e;
             } else {
                 VampirismMod.log.w(TAG, "Entity sent by client is not in reach " + entityId);
             }
         }
     }
 
-    public void toggleBiting(int entityId) {
-        if(entityId == -1) endBiting();
-        if(!isBiting) {
-            biteTask = new TimerTask() {
-                @Override
-                public void run() {
-                    Entity e = player.getEntityWorld().getEntityByID(entityId);
-                    if (e == null || !(e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1)) {
-                        this.cancel();
-                        endBiting();
-                        return;
-                    }
-                    PotionEffect effect = new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 20, 7);
-                    if (e instanceof EntityLivingBase) ((EntityLivingBase) e).addPotionEffect(effect);
-
-                    PotionEffect feedingEffect = new PotionEffect(PotionFeeding.POTION, 30);
-                    player.addPotionEffect(feedingEffect);
-                    biteEntity(entityId);
-                    isBiting = true;
-                }
-            };
-            biteTimer.scheduleAtFixedRate(biteTask, 0, 1000);
-        } else {
+    public void biteVictim() {
+        if (victim == null || !(victim.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) || victim.isDead) {
             endBiting();
+            return;
         }
+        PotionEffect effect = new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 20, 7);
+        victim.addPotionEffect(effect);
+
+        PotionEffect feedingEffect = new PotionEffect(PotionFeeding.POTION, 25);
+        player.addPotionEffect(feedingEffect);
+
+        biteEntity(victim);
     }
 
     public void endBiting() {
-        if(biteTask != null) biteTask.cancel();
-        biteTimer.purge();
-        isBiting = false;
+        victim = null;
         player.removePotionEffect(PotionFeeding.POTION);
     }
 
@@ -731,11 +715,14 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     sync(syncPacket, syncToAll);
                 }
             } else {
-
                 ticksInSun = 0;
             }
 
-
+            if (tickCounter == 20) {
+                biteVictim();
+                tickCounter = 0;
+            }
+            tickCounter++;
         } else {
             if (level > 0) {
                 actionHandler.updateActions();

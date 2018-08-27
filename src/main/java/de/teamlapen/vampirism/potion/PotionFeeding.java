@@ -1,12 +1,7 @@
 package de.teamlapen.vampirism.potion;
 
-import de.teamlapen.vampirism.player.vampire.VampirePlayer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
+
 
 public class PotionFeeding extends VampirismPotion {
     public static PotionFeeding POTION = new PotionFeeding("Feeding", false, Integer.parseInt("FF0000", 16));
