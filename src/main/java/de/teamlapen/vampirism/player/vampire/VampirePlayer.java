@@ -14,6 +14,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
+import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.DamageHandler;
@@ -234,7 +235,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     public void biteVictim() {
         Entity e = Minecraft.getMinecraft().objectMouseOver.entityHit;
-        if(e == null || e.getEntityId() != victim.getEntityId()) endBiting();
+        if (e == null || e.getEntityId() != victim.getEntityId() || !ModKeys.isKeyDown(ModKeys.getKeyCode(ModKeys.KEY.SUCK))) {
+            endBiting();
+            return;
+        }
         PotionEffect effect = new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 20, 7);
         victim.addPotionEffect(effect);
 
@@ -242,7 +246,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         player.addPotionEffect(feedingEffect);
 
         biteEntity(victim);
-        if(victim == null || !(victim.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) || victim.isDead) endBiting();
+        if (victim == null || !(victim.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) || victim.isDead)
+            endBiting();
     }
 
     public void endBiting() {
