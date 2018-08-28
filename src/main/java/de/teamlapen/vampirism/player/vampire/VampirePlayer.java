@@ -605,7 +605,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public void onPlayerLoggedOut() {
-
+        endBiting();
     }
 
     /**
