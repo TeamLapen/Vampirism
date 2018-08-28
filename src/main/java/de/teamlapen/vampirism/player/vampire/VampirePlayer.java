@@ -32,6 +32,7 @@ import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import de.teamlapen.vampirism.potion.PotionFeeding;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.VampireNightVisionEffect;
+import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.util.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -233,7 +234,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     public void biteVictim() {
-        Entity e = Minecraft.getMinecraft().objectMouseOver.entityHit;
+        Entity e =  VampirismMod.proxy.getMouseOverEntity(player);
         if (e == null || e.getEntityId() != victim.getEntityId()) {
             endBiting();
             return;
