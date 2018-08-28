@@ -224,6 +224,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (e != null && e instanceof EntityLivingBase) {
             if (e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) {
                 victim = (EntityLivingBase) e;
+                biteVictim();
             } else {
                 VampirismMod.log.w(TAG, "Entity sent by client is not in reach " + entityId);
             }
@@ -231,10 +232,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     public void biteVictim() {
-        if (victim == null || !(victim.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) || victim.isDead) {
-            endBiting();
-            return;
-        }
         PotionEffect effect = new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 20, 7);
         victim.addPotionEffect(effect);
 
@@ -242,6 +239,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         player.addPotionEffect(feedingEffect);
 
         biteEntity(victim);
+        if(victim == null || !(victim.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) || victim.isDead) endBiting();
     }
 
     public void endBiting() {
@@ -719,7 +717,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             }
 
             if (tickCounter == 20) {
-                biteVictim();
+                if (victim != null) {
+                    biteVictim();
+                }
                 tickCounter = 0;
             }
             tickCounter++;
@@ -1137,6 +1137,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             if (specialAttributes.poisonous_bite) {
                 entity.addPotionEffect(new PotionEffect(MobEffects.POISON, (int) (Balance.vps.POISONOUS_BITE_DURATION * 20 * (getSpecialAttributes().bat ? 0.2F : 1F)), 1));
             }
+            victim = null;
         } else if (type == BITE_TYPE.NONE) {
             return;
         }
