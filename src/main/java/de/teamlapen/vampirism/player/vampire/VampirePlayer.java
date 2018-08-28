@@ -233,6 +233,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     public void biteVictim() {
+        Entity e = Minecraft.getMinecraft().objectMouseOver.entityHit;
+        if(e == null || e.getEntityId() != victim.getEntityId()) endBiting();
         PotionEffect effect = new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 20, 7);
         victim.addPotionEffect(effect);
 
@@ -240,8 +242,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         player.addPotionEffect(feedingEffect);
 
         biteEntity(victim);
-        Entity e = Minecraft.getMinecraft().objectMouseOver.entityHit;
-        if(e == null || e.getEntityId() != victim.getEntityId()) endBiting();
         if(victim == null || !(victim.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) || victim.isDead) endBiting();
     }
 
