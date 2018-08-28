@@ -226,7 +226,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (e != null && e instanceof EntityLivingBase) {
             if (e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) {
                 victim = (EntityLivingBase) e;
-                biteVictim();
             } else {
                 VampirismMod.log.w(TAG, "Entity sent by client is not in reach " + entityId);
             }
