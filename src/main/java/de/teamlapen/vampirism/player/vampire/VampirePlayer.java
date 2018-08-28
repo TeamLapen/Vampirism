@@ -723,12 +723,15 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             } else {
                 ticksInSun = 0;
             }
-
-            if (tickCounter == 20) {
-                if (victim != null) {
+            if (victim != null) {
+                if (tickCounter >= 20) {
                     biteVictim();
+                    tickCounter = 0;
+                } else if (tickCounter % 5 == 0) {
+                    NBTTagCompound updatePacket = bloodStats.writeUpdate(new NBTTagCompound());
+                    updatePacket.setInteger(KEY_SPAWN_BITE_PARTICLE, victim.getEntityId());
+                    sync(updatePacket, true);
                 }
-                tickCounter = 0;
             }
             tickCounter++;
         } else {
