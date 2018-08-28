@@ -33,6 +33,7 @@ import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.VampireNightVisionEffect;
 import de.teamlapen.vampirism.util.*;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -239,6 +240,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         player.addPotionEffect(feedingEffect);
 
         biteEntity(victim);
+        Entity e = Minecraft.getMinecraft().objectMouseOver.entityHit;
+        if(e == null || e.getEntityId() != victim.getEntityId()) endBiting();
         if(victim == null || !(victim.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) || victim.isDead) endBiting();
     }
 
