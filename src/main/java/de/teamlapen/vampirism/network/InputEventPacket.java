@@ -40,6 +40,7 @@ public class InputEventPacket implements IMessage {
 
 
     public static final String SUCKBLOOD = "sb";
+    public static final String ENDSUCKBLOOD = "esb";
     public static final String TOGGLEACTION = "ta";
     public static final String UNLOCKSKILL = "us";
     public static final String RESETSKILL = "rs";
@@ -106,6 +107,8 @@ public class InputEventPacket implements IMessage {
                     VampirePlayer.get(player).biteEntity(id);
 
                 }
+            } else if (message.action.equals(ENDSUCKBLOOD)) {
+                    VampirePlayer.get(player).endBiting();
             } else if (message.action.equals(TOGGLEACTION)) {
                 int id = -1;
                 try {

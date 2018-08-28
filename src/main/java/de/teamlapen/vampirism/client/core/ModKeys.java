@@ -142,6 +142,8 @@ public class ModKeys {
         } else if (keyPressed == KEY.ACTION2) {
             FactionPlayerHandler factionHandler = FactionPlayerHandler.get(Minecraft.getMinecraft().player);
             toggleBoundAction(factionHandler.getCurrentFactionPlayer(), factionHandler.getBoundAction2());
+        } else if (!isKeyDown(getKeyCode(KEY.SUCK))) {
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));
         }
     }
 

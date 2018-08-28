@@ -234,7 +234,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     public void biteVictim() {
         Entity e = Minecraft.getMinecraft().objectMouseOver.entityHit;
-        if (e == null || e.getEntityId() != victim.getEntityId() || !ModKeys.isKeyDown(ModKeys.getKeyCode(ModKeys.KEY.SUCK))) {
+        if (e == null || e.getEntityId() != victim.getEntityId()) {
             endBiting();
             return;
         }
