@@ -244,24 +244,22 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     public void biteVictim() {
-        if (!isRemote()) {
-            EntityLivingBase e = ((EntityLivingBase) player.world.getEntityByID(victim));
-            if (e == null) {
-                endBiting();
-                return;
-            }
-            PotionEffect effect = new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 20, 7);
-            e.addPotionEffect(effect);
-
-            PotionEffect feedingEffect = new PotionEffect(PotionFeeding.POTION, 25);
-            player.addPotionEffect(feedingEffect);
-
-            biteEntity(e);
-            if (!(e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) || e.isDead)
-                endBiting();
+        EntityLivingBase e = ((EntityLivingBase) player.world.getEntityByID(victim));
+        if (e == null) {
+            endBiting();
+            return;
         }
+        PotionEffect effect = new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 20, 7);
+        e.addPotionEffect(effect);
 
+        PotionEffect feedingEffect = new PotionEffect(PotionFeeding.POTION, 25);
+        player.addPotionEffect(feedingEffect);
+
+        biteEntity(e);
+        if (!(e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) || e.isDead)
+            endBiting();
     }
+
 
     public void endBiting() {
         if (victim != -1)
@@ -742,11 +740,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             } else {
                 ticksInSun = 0;
             }
-            if (victim != -1) {
-                if (player.ticksExisted % 20 == 0) {
-                    biteVictim();
-                }
+            if (victim != -1 && player.ticksExisted % 20 == 0) {
+                biteVictim();
             }
+
         } else {
             if (level > 0) {
                 actionHandler.updateActions();
