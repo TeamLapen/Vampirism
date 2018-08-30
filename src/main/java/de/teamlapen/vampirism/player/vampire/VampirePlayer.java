@@ -23,6 +23,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.items.ItemHunterCoat;
 import de.teamlapen.vampirism.modcompat.SpongeModCompat;
+import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.actions.ActionHandler;
@@ -92,6 +93,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private final static String KEY_GLOWING_EYES = "glowing_eyes";
     private final static String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
     private final static String KEY_VISION = "vision";
+    private final static String KEY_VICTIM_ID = "victim";
 
     /**
      * Don't call before the construction event of the player entity is finished
@@ -150,7 +152,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private IVampireVision activatedVision = null;
     private Method reflectionMethodSetSize = null;
 
-    private EntityLivingBase victim;
+    private int victim = -1;
     private int tickCounter = 0;
 
     public VampirePlayer(EntityPlayer player) {
@@ -226,7 +228,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
         if (e != null && e instanceof EntityLivingBase) {
             if (e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) {
-                victim = (EntityLivingBase) e;
+                victim = e.getEntityId();
             } else {
                 VampirismMod.log.w(TAG, "Entity sent by client is not in reach " + entityId);
             }
@@ -234,24 +236,30 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     public void biteVictim() {
-        Entity e =  VampirismMod.proxy.getMouseOverEntity(player);
-        if (e == null || e.getEntityId() != victim.getEntityId()) {
-            endBiting();
-            return;
+        if (!isRemote()) {
+            if (victim == -1 || victim == 0) {
+                endBiting();
+                return;
+            }
+            NBTTagCompound nbt = new NBTTagCompound();
+            nbt.setInteger(KEY_VICTIM_ID, victim);
+            sync(nbt, true);
+            PotionEffect effect = new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 20, 7);
+            ((EntityLivingBase) player.world.getEntityByID(victim)).addPotionEffect(effect);
+
+            PotionEffect feedingEffect = new PotionEffect(PotionFeeding.POTION, 25);
+            player.addPotionEffect(feedingEffect);
+
+            biteEntity(((EntityLivingBase) player.world.getEntityByID(victim)));
+            if (victim == -1 || !(((EntityLivingBase) player.world.getEntityByID(victim)).getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) || ((EntityLivingBase) player.world.getEntityByID(victim)).isDead)
+                endBiting();
         }
-        PotionEffect effect = new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 20, 7);
-        victim.addPotionEffect(effect);
 
-        PotionEffect feedingEffect = new PotionEffect(PotionFeeding.POTION, 25);
-        player.addPotionEffect(feedingEffect);
-
-        biteEntity(victim);
-        if (victim == null || !(victim.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) || victim.isDead)
-            endBiting();
     }
 
     public void endBiting() {
-        victim = null;
+        if(victim != -1)
+            victim = -1;
         player.removePotionEffect(PotionFeeding.POTION);
     }
 
@@ -471,6 +479,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         eyeType = nbt.getInteger(KEY_EYE);
         fangType = nbt.getInteger(KEY_FANGS);
         glowingEyes = !nbt.hasKey(KEY_GLOWING_EYES) || nbt.getBoolean(KEY_GLOWING_EYES);
+        victim = nbt.getInteger(KEY_VICTIM_ID);
         actionHandler.loadFromNbt(nbt);
         skillHandler.loadFromNbt(nbt);
     }
@@ -723,14 +732,15 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             } else {
                 ticksInSun = 0;
             }
-            if (victim != null) {
+            if (victim != -1) {
                 if (tickCounter >= 20) {
                     biteVictim();
                     tickCounter = 0;
                 } else if (tickCounter % 5 == 0) {
-                    NBTTagCompound updatePacket = bloodStats.writeUpdate(new NBTTagCompound());
-                    updatePacket.setInteger(KEY_SPAWN_BITE_PARTICLE, victim.getEntityId());
-                    sync(updatePacket, true);
+//                    NBTTagCompound updatePacket = bloodStats.writeUpdate(new NBTTagCompound());
+//                    updatePacket.setInteger(KEY_SPAWN_BITE_PARTICLE, victim.getEntityId());
+//                    sync(updatePacket, true);
+
                 }
             }
             tickCounter++;
@@ -745,6 +755,16 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             } else {
                 ticksInSun = 0;
             }
+            if (tickCounter % 5 == 0 && victim != -1) {
+                spawnBiteParticle(victim);
+                Entity e = VampirismMod.proxy.getMouseOverEntity(player);
+                if (e == null || e.getEntityId() != victim) {
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));
+                    return;
+                }
+                tickCounter = 0;
+            }
+            tickCounter++;
 
         }
         player.world.profiler.endSection();
@@ -1031,6 +1051,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (nbt.hasKey(KEY_GLOWING_EYES)) {
             setGlowingEyes(nbt.getBoolean(KEY_GLOWING_EYES));
         }
+        if (nbt.hasKey(KEY_VICTIM_ID)) {
+//            victim = nbt.getInteger(KEY_VICTIM_ID);
+        }
         bloodStats.loadUpdate(nbt);
         actionHandler.readUpdateFromServer(nbt);
         skillHandler.readUpdateFromServer(nbt);
@@ -1056,6 +1079,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         nbt.setInteger(KEY_EYE, getEyeType());
         nbt.setInteger(KEY_FANGS, getFangType());
         nbt.setBoolean(KEY_GLOWING_EYES, getGlowingEyes());
+        nbt.setInteger(KEY_VICTIM_ID, victim);
         bloodStats.writeUpdate(nbt);
         actionHandler.writeUpdateForClient(nbt);
         skillHandler.writeUpdateForClient(nbt);
@@ -1148,7 +1172,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             if (specialAttributes.poisonous_bite) {
                 entity.addPotionEffect(new PotionEffect(MobEffects.POISON, (int) (Balance.vps.POISONOUS_BITE_DURATION * 20 * (getSpecialAttributes().bat ? 0.2F : 1F)), 1));
             }
-            victim = null;
+            victim = -1;
         } else if (type == BITE_TYPE.NONE) {
             return;
         }
