@@ -153,7 +153,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private Method reflectionMethodSetSize = null;
 
     private int victim = -1;
-    private int tickCounter = 0;
 
     public VampirePlayer(EntityPlayer player) {
         super(player);
@@ -735,12 +734,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 ticksInSun = 0;
             }
             if (victim != -1) {
-                if (tickCounter >= 20) {
+                if (player.ticksExisted % 20 == 0) {
                     biteVictim();
-                    tickCounter = 0;
                 }
             }
-            tickCounter++;
         } else {
             if (level > 0) {
                 actionHandler.updateActions();
@@ -759,9 +756,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));
                     return;
                 }
-                tickCounter = 0;
             }
-            tickCounter++;
 
         }
         player.world.profiler.endSection();
