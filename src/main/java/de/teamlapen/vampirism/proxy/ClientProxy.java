@@ -79,7 +79,7 @@ public class ClientProxy extends CommonProxy {
 
     @Nullable
     @Override
-    public Entity getMouseOverEntity(EntityPlayer player) {
+    public Entity getMouseOverEntity() {
         return Minecraft.getMinecraft().objectMouseOver.entityHit;
     }
 

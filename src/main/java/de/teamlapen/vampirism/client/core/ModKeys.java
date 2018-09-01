@@ -53,6 +53,8 @@ public class ModKeys {
     private static KeyBinding ACTION1 = new KeyBinding(ACTIVATE_ACTION1, KeyConflictContext.IN_GAME, KeyModifier.ALT, Keyboard.KEY_1, CATEGORY);
     private static KeyBinding ACTION2 = new KeyBinding(ACTIVATE_ACTION2, KeyConflictContext.IN_GAME, KeyModifier.ALT, Keyboard.KEY_2, CATEGORY);
 
+    private boolean SUCK_KEY_DOWN = false;
+
     /**
      * @param key
      * @return the key code which is currently bound to the given KEY_Action
@@ -112,6 +114,7 @@ public class ModKeys {
         // get value here!
         if (keyPressed == KEY.SUCK) {
             RayTraceResult mouseOver = Minecraft.getMinecraft().objectMouseOver;
+            SUCK_KEY_DOWN = true;
             if (mouseOver != null && !Minecraft.getMinecraft().player.isSpectator()) {
                 if (mouseOver.entityHit != null) {
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + mouseOver.entityHit.getEntityId()));
@@ -142,7 +145,8 @@ public class ModKeys {
         } else if (keyPressed == KEY.ACTION2) {
             FactionPlayerHandler factionHandler = FactionPlayerHandler.get(Minecraft.getMinecraft().player);
             toggleBoundAction(factionHandler.getCurrentFactionPlayer(), factionHandler.getBoundAction2());
-        } else if (!isKeyDown(getKeyCode(KEY.SUCK))) {
+        } else if (SUCK_KEY_DOWN == true && !isKeyDown(getKeyCode(KEY.SUCK))) {
+            SUCK_KEY_DOWN = false;
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));
         }
     }

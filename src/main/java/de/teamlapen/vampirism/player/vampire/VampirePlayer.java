@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.player.vampire;
 
+import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
@@ -16,6 +17,7 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampireVision;
 import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.config.Balance;
+import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.*;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.ExtendedCreature;
@@ -30,6 +32,7 @@ import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.vampire.actions.BatVampireAction;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
+import de.teamlapen.vampirism.potion.PotionBloodLoss;
 import de.teamlapen.vampirism.potion.PotionFeeding;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.VampireNightVisionEffect;
@@ -37,6 +40,12 @@ import de.teamlapen.vampirism.proxy.ClientProxy;
 import de.teamlapen.vampirism.util.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.renderer.vertex.VertexBuffer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
@@ -60,14 +69,22 @@ import net.minecraft.util.*;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.capabilities.*;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -153,6 +170,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private Method reflectionMethodSetSize = null;
 
     private int victim = -1;
+    public int feedCounter = 0;
+    private int biteTickCounter = 0;
 
     public VampirePlayer(EntityPlayer player) {
         super(player);
@@ -231,11 +250,16 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     biteEntity(((EntityLivingBase) e));
                 } else {
                     victim = e.getEntityId();
-                    PotionEffect effect = new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 20, 7);
+                    PotionEffect effect = new PotionEffect(PotionBloodLoss.POTION, 20, 7);
                     ((EntityLivingBase) e).addPotionEffect(effect);
 
                     PotionEffect feedingEffect = new PotionEffect(PotionFeeding.POTION, 25);
                     player.addPotionEffect(feedingEffect);
+
+                    NBTTagCompound nbt = new NBTTagCompound();
+                    nbt.setInteger(KEY_VICTIM_ID, victim);
+                    sync(nbt, true);
+
                 }
             } else {
                 VampirismMod.log.w(TAG, "Entity sent by client is not in reach " + entityId);
@@ -249,11 +273,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             endBiting();
             return;
         }
-        PotionEffect effect = new PotionEffect(Potion.getPotionFromResourceLocation("slowness"), 20, 7);
-        e.addPotionEffect(effect);
+        PotionEffect effect = new PotionEffect(PotionBloodLoss.POTION, 20, 7);
+        ((EntityLivingBase) e).addPotionEffect(effect);
 
         PotionEffect feedingEffect = new PotionEffect(PotionFeeding.POTION, 25);
         player.addPotionEffect(feedingEffect);
+
+        VampLib.proxy.getParticleHandler().spawnParticles(player.world, ModParticles.FLYING_BLOOD_ENTITY, e.posX + 0.5, e.posY + 0.5, e.posZ + 0.5, 40, 0.1F, player.getRNG(), player, false);
 
         biteEntity(e);
         if (!(e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) || e.isDead)
@@ -504,6 +530,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         int sucked = (int) (amt * perc);
         bloodStats.removeBlood(sucked, true);
         sync(this.bloodStats.writeUpdate(new NBTTagCompound()), true);
+        feedCounter = 30;
         return sucked;
     }
 
@@ -719,11 +746,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     player.addPotionEffect(new PotionEffect(ModPotions.thirst, hunterEffect.getDuration(), hunterEffect.getAmplifier()));
                     player.removePotionEffect(MobEffects.HUNGER);
                 }
-                if (player.ticksExisted % 10 == 0) {
-                    NBTTagCompound nbt = new NBTTagCompound();
-                    nbt.setInteger(KEY_VICTIM_ID, victim);
-                    sync(nbt, true);
-                }
                 if (actionHandler.updateActions()) {
                     sync = true;
                     syncToAll = true;
@@ -737,12 +759,17 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 if (sync) {
                     sync(syncPacket, syncToAll);
                 }
+
+                if (victim != -1 && biteTickCounter >= 20) {
+                    biteVictim();
+                    biteTickCounter = 0;
+                }
+                biteTickCounter++;
+
             } else {
                 ticksInSun = 0;
             }
-            if (victim != -1 && player.ticksExisted % 20 == 0) {
-                biteVictim();
-            }
+
 
         } else {
             if (level > 0) {
@@ -755,14 +782,16 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             } else {
                 ticksInSun = 0;
             }
-            if (player.ticksExisted % 5 == 0 && victim != -1) {
-                spawnBiteParticle(victim);
-                Entity e = VampirismMod.proxy.getMouseOverEntity(player);
+
+            if (biteTickCounter >= 5 && victim != -1) {
+                Entity e = VampirismMod.proxy.getMouseOverEntity();
                 if (e == null || e.getEntityId() != victim) {
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));
                     return;
                 }
+                biteTickCounter = 0;
             }
+            biteTickCounter++;
 
         }
         player.world.profiler.endSection();
@@ -1077,7 +1106,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         nbt.setInteger(KEY_EYE, getEyeType());
         nbt.setInteger(KEY_FANGS, getFangType());
         nbt.setBoolean(KEY_GLOWING_EYES, getGlowingEyes());
-//        nbt.setInteger(KEY_VICTIM_ID, victim);
+        nbt.setInteger(KEY_VICTIM_ID, victim);
         bloodStats.writeUpdate(nbt);
         actionHandler.writeUpdateForClient(nbt);
         skillHandler.writeUpdateForClient(nbt);

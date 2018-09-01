@@ -29,5 +29,5 @@ public interface IProxy extends IInitListener {
     void renderScreenFullColor(int ticksOn, int ticksOff, int color);
 
     @Nullable
-    Entity getMouseOverEntity(EntityPlayer player);
+    Entity getMouseOverEntity();
 }

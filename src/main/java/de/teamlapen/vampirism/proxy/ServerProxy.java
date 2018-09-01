@@ -29,7 +29,7 @@ public class ServerProxy extends CommonProxy {
 
     @Nullable
     @Override
-    public Entity getMouseOverEntity(EntityPlayer player) {
+    public Entity getMouseOverEntity() {
         return null;
     }
 }
