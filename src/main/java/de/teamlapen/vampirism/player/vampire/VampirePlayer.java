@@ -249,13 +249,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 if (determineBiteType(((EntityLivingBase) e)) == BITE_TYPE.ATTACK) {
                     biteEntity(((EntityLivingBase) e));
                 } else {
-                    biteTickCounter = 0;
+                    if (victim == -1) biteTickCounter = 0;
 
                     victim = e.getEntityId();
-                    PotionEffect effect = new PotionEffect(PotionBloodLoss.POTION, 20, 7);
+                    PotionEffect effect = new PotionEffect(PotionBloodLoss.POTION, 20, 7, false, false);
                     ((EntityLivingBase) e).addPotionEffect(effect);
 
-                    PotionEffect feedingEffect = new PotionEffect(PotionFeeding.POTION, 25);
+                    PotionEffect feedingEffect = new PotionEffect(PotionFeeding.POTION, 25, 1, false, false);
                     player.addPotionEffect(feedingEffect);
 
                     NBTTagCompound nbt = new NBTTagCompound();
@@ -293,6 +293,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (victim != -1)
             victim = -1;
         player.removePotionEffect(PotionFeeding.POTION);
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setInteger(KEY_VICTIM_ID, victim);
+        sync(nbt, true);
     }
 
     @Override
@@ -761,7 +764,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 if (sync) {
                     sync(syncPacket, syncToAll);
                 }
-
+                
                 if (victim != -1 && biteTickCounter >= 20) {
                     biteVictim();
                     biteTickCounter = 0;
