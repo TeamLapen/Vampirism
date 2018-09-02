@@ -249,6 +249,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 if (determineBiteType(((EntityLivingBase) e)) == BITE_TYPE.ATTACK) {
                     biteEntity(((EntityLivingBase) e));
                 } else {
+                    biteTickCounter = 0;
+
                     victim = e.getEntityId();
                     PotionEffect effect = new PotionEffect(PotionBloodLoss.POTION, 20, 7);
                     ((EntityLivingBase) e).addPotionEffect(effect);
@@ -269,17 +271,17 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     public void biteVictim() {
         EntityLivingBase e = ((EntityLivingBase) player.world.getEntityByID(victim));
-        if (e == null) {
+        if (e == null || e.getHealth() == 0f) {
             endBiting();
             return;
         }
-        PotionEffect effect = new PotionEffect(PotionBloodLoss.POTION, 20, 7);
+        PotionEffect effect = new PotionEffect(PotionBloodLoss.POTION, 20, 7, false, false);
         ((EntityLivingBase) e).addPotionEffect(effect);
 
-        PotionEffect feedingEffect = new PotionEffect(PotionFeeding.POTION, 25);
+        PotionEffect feedingEffect = new PotionEffect(PotionFeeding.POTION, 25, 1, false, false);
         player.addPotionEffect(feedingEffect);
 
-        VampLib.proxy.getParticleHandler().spawnParticles(player.world, ModParticles.FLYING_BLOOD_ENTITY, e.posX + 0.5, e.posY + 0.5, e.posZ + 0.5, 40, 0.1F, player.getRNG(), player, false);
+        VampLib.proxy.getParticleHandler().spawnParticles(player.world, ModParticles.FLYING_BLOOD_ENTITY, e.posX + 0.5, e.posY + 0.5, e.posZ + 0.5, 10, 0.1F, player.getRNG(), player, true);
 
         biteEntity(e);
         if (!(e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) || e.isDead)
