@@ -232,63 +232,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
     }
 
-    /**
-     * Bite the entity with the given id.
-     * Checks reach distance
-     *
-     * @param entityId
-     */
-    public void biteEntity(int entityId) {
-        Entity e = player.getEntityWorld().getEntityByID(entityId);
-        if (player.isSpectator()) {
-            VampirismMod.log.w(TAG, "Player can't bite in spectator mode");
-            return;
-        }
-        if (e != null && e instanceof EntityLivingBase) {
-            if (e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) {
-                if (determineBiteType(((EntityLivingBase) e)) == BITE_TYPE.ATTACK) {
-                    biteEntity(((EntityLivingBase) e));
-                } else {
-                    if (victim == -1) biteTickCounter = 0;
-
-                    victim = e.getEntityId();
-                    PotionEffect effect = new PotionEffect(PotionBloodLoss.POTION, 20, 7, false, false);
-                    ((EntityLivingBase) e).addPotionEffect(effect);
-
-                    PotionEffect feedingEffect = new PotionEffect(PotionFeeding.POTION, 25, 1, false, false);
-                    player.addPotionEffect(feedingEffect);
-
-                    NBTTagCompound nbt = new NBTTagCompound();
-                    nbt.setInteger(KEY_VICTIM_ID, victim);
-                    sync(nbt, true);
-
-                }
-            } else {
-                VampirismMod.log.w(TAG, "Entity sent by client is not in reach " + entityId);
-            }
-        }
-    }
-
-    public void biteVictim() {
-        EntityLivingBase e = ((EntityLivingBase) player.world.getEntityByID(victim));
-        if (e == null || e.getHealth() == 0f) {
-            endBiting();
-            return;
-        }
-        PotionEffect effect = new PotionEffect(PotionBloodLoss.POTION, 20, 7, false, false);
-        ((EntityLivingBase) e).addPotionEffect(effect);
-
-        PotionEffect feedingEffect = new PotionEffect(PotionFeeding.POTION, 25, 1, false, false);
-        player.addPotionEffect(feedingEffect);
-
-        VampLib.proxy.getParticleHandler().spawnParticles(player.world, ModParticles.FLYING_BLOOD_ENTITY, e.posX + 0.5, e.posY + 0.5, e.posZ + 0.5, 10, 0.1F, player.getRNG(), player, true);
-
-        biteEntity(e);
-        if (!(e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) || e.isDead)
-            endBiting();
-    }
-
-
     public void endBiting() {
         if (victim != -1)
             victim = -1;
@@ -523,7 +466,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         float perc = biter instanceof IVampirePlayer ? 0.2F : 0.08F;
         if (getLevel() == 0) {
             int amt = player.getFoodStats().getFoodLevel();
-            int sucked = (int) (amt * perc);
+            int sucked = (int) Math.ceil((amt * perc));
             player.getFoodStats().setFoodLevel(amt - sucked);
             player.addExhaustion(1000F);
             if (!player.isPotionActive(ModPotions.sanguinare) && Helper.canTurnPlayer(biter, player) && Helper.canBecomeVampire(player)) {
@@ -535,7 +478,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         int sucked = (int) (amt * perc);
         bloodStats.removeBlood(sucked, true);
         sync(this.bloodStats.writeUpdate(new NBTTagCompound()), true);
-        feedCounter = 30;
         return sucked;
     }
 
@@ -1166,6 +1108,62 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     }
 
     /**
+     * Bite the entity with the given id.
+     * Checks reach distance
+     *
+     * @param entityId
+     */
+    public void biteEntity(int entityId) {
+        Entity e = player.getEntityWorld().getEntityByID(entityId);
+        if (player.isSpectator()) {
+            VampirismMod.log.w(TAG, "Player can't bite in spectator mode");
+            return;
+        }
+        if (e != null && e instanceof EntityLivingBase) {
+            if (e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) {
+                if (determineBiteType(((EntityLivingBase) e)) == BITE_TYPE.ATTACK) {
+                    biteEntity(((EntityLivingBase) e));
+                } else {
+                    if (victim == -1) biteTickCounter = 0;
+
+                    victim = e.getEntityId();
+                    PotionEffect effect = new PotionEffect(PotionBloodLoss.POTION, 20, 7, false, false);
+                    ((EntityLivingBase) e).addPotionEffect(effect);
+
+                    PotionEffect feedingEffect = new PotionEffect(PotionFeeding.POTION, 25, 1, false, false);
+                    player.addPotionEffect(feedingEffect);
+
+                    NBTTagCompound nbt = new NBTTagCompound();
+                    nbt.setInteger(KEY_VICTIM_ID, victim);
+                    sync(nbt, true);
+
+                }
+            } else {
+                VampirismMod.log.w(TAG, "Entity sent by client is not in reach " + entityId);
+            }
+        }
+    }
+
+    public void biteVictim() {
+        EntityLivingBase e = ((EntityLivingBase) player.world.getEntityByID(victim));
+        if (e == null || e.getHealth() == 0f) {
+            endBiting();
+            return;
+        }
+        PotionEffect effect = new PotionEffect(PotionBloodLoss.POTION, 20, 7, false, false);
+        ((EntityLivingBase) e).addPotionEffect(effect);
+
+        PotionEffect feedingEffect = new PotionEffect(PotionFeeding.POTION, 25, 1, false, false);
+        player.addPotionEffect(feedingEffect);
+
+        VampLib.proxy.getParticleHandler().spawnParticles(player.world, ModParticles.FLYING_BLOOD_ENTITY, e.posX + 0.5, e.posY + 0.5, e.posZ + 0.5, 10, 0.1F, player.getRNG(), player, true);
+
+        biteEntity(e);
+        if (!(e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) || e.getHealth() == 0f)
+            endBiting();
+    }
+
+    /**
      * Bite the given entity.
      * Does NOT check reach distance
      *
@@ -1221,6 +1219,14 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((EntityPlayerMP) player, VampireActionTrigger.Action.SUCK_BLOOD);
             }
         }
+    }
+
+    private void biteFeed(EntityLivingBase entity) {
+
+    }
+
+    private void biteAttack(EntityLivingBase entity) {
+
     }
 
     /**
