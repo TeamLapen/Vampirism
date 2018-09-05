@@ -1111,7 +1111,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * Bite the entity with the given id.
      * Checks reach distance
      *
-     * @param entityId
+     * @param entityId The id of the entity to start biting
      */
     public void biteEntity(int entityId) {
         Entity e = player.getEntityWorld().getEntityByID(entityId);
@@ -1173,7 +1173,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
      * Bite the given entity.
      * Does NOT check reach distance
      *
-     * @param entity
+     * @param entity the entity to feed on
      */
     private void biteFeed(EntityLivingBase entity) {
         if (isRemote()) return;
@@ -1212,8 +1212,8 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     /**
      * Executes attack logic if the bite is used against a hostile mob or a hunter
      *
-     * @param entity
-     * @param hunter
+     * @param entity The entity to attack
+     * @param hunter Is the entity a hunter?
      */
     private void biteAttack(EntityLivingBase entity, boolean hunter) {
         checkAttributes(VReference.biteDamage);
