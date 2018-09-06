@@ -112,7 +112,7 @@ public class ModKeys {
     public void handleInputEvent(InputEvent event) {
         KEY keyPressed = getPressedKeyBinding(); // Only call isPressed once, so
         // get value here!
-        if (keyPressed == KEY.SUCK) {
+        if (!SUCK_KEY_DOWN && keyPressed == KEY.SUCK) {
             RayTraceResult mouseOver = Minecraft.getMinecraft().objectMouseOver;
             SUCK_KEY_DOWN = true;
             if (mouseOver != null && !Minecraft.getMinecraft().player.isSpectator()) {
@@ -145,7 +145,8 @@ public class ModKeys {
         } else if (keyPressed == KEY.ACTION2) {
             FactionPlayerHandler factionHandler = FactionPlayerHandler.get(Minecraft.getMinecraft().player);
             toggleBoundAction(factionHandler.getCurrentFactionPlayer(), factionHandler.getBoundAction2());
-        } else if (SUCK_KEY_DOWN == true && !isKeyDown(getKeyCode(KEY.SUCK))) {
+        }
+        if (SUCK_KEY_DOWN == true && !isKeyDown(getKeyCode(KEY.SUCK))) {
             SUCK_KEY_DOWN = false;
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));
         }

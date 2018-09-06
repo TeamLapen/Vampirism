@@ -696,11 +696,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     sync(syncPacket, syncToAll);
                 }
 
-                if (victim != -1 && biteTickCounter >= 20) {
+                if (victim != -1 && biteTickCounter++ >= 20) {
                     biteVictim();
                     biteTickCounter = 0;
                 }
-                biteTickCounter++;
 
             } else {
                 ticksInSun = 0;
@@ -719,7 +718,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 ticksInSun = 0;
             }
 
-            if (biteTickCounter >= 5 && victim != -1) {
+            if (victim != -1 && biteTickCounter++ >= 5) {
                 Entity e = VampirismMod.proxy.getMouseOverEntity();
                 if (e == null || e.getEntityId() != victim) {
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));
@@ -727,8 +726,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 }
                 biteTickCounter = 0;
             }
-            biteTickCounter++;
-
         }
         player.world.profiler.endSection();
     }
@@ -1121,13 +1118,15 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
         if (e != null && e instanceof EntityLivingBase) {
             if (e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) {
-                if (determineBiteType(((EntityLivingBase) e)) == BITE_TYPE.ATTACK || victim_bite_type == BITE_TYPE.ATTACK_HUNTER) {
+                victim_bite_type = determineBiteType((EntityLivingBase) e);
+                if (victim_bite_type == BITE_TYPE.ATTACK || victim_bite_type == BITE_TYPE.ATTACK_HUNTER) {
                     biteAttack((EntityLivingBase) e, victim_bite_type == BITE_TYPE.ATTACK_HUNTER);
+                } else if (victim_bite_type == BITE_TYPE.NONE) {
+                    return;
                 } else {
                     if (victim == -1) biteTickCounter = 0;
 
                     victim = e.getEntityId();
-                    victim_bite_type = determineBiteType((EntityLivingBase) e);
                     PotionEffect effect = new PotionEffect(PotionBloodLoss.POTION, 20, 7, false, false);
                     ((EntityLivingBase) e).addPotionEffect(effect);
 
@@ -1192,8 +1191,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         } else if (victim_bite_type == BITE_TYPE.SUCK_BLOOD) {
             blood = ((IBiteableEntity) entity).onBite(this);
             saturationMod = ((IBiteableEntity) entity).getBloodSaturation();
-        } else if (victim_bite_type == BITE_TYPE.NONE) {
-            return;
         }
         if (blood > 0) {
             drinkBlood(blood, saturationMod);
@@ -1201,8 +1198,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             NBTTagCompound updatePacket = bloodStats.writeUpdate(new NBTTagCompound());
             updatePacket.setInteger(KEY_SPAWN_BITE_PARTICLE, entity.getEntityId());
             sync(updatePacket, true);
-        }
-        if (victim_bite_type == BITE_TYPE.SUCK_BLOOD || victim_bite_type == BITE_TYPE.SUCK_BLOOD_CREATURE || victim_bite_type == BITE_TYPE.SUCK_BLOOD_PLAYER) {
             if (player instanceof EntityPlayerMP) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((EntityPlayerMP) player, VampireActionTrigger.Action.SUCK_BLOOD);
             }
