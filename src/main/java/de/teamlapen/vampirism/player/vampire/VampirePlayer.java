@@ -298,6 +298,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public float getBloodLevelRelative() {
+        if (getLevel() == 0) {
+            return player.getFoodStats().getFoodLevel() / 20f; //Foodstats not synced to other clients so this is incorrect on client side
+        }
         return bloodStats.getBloodLevel() / (float) bloodStats.getMaxBlood();
     }
 
