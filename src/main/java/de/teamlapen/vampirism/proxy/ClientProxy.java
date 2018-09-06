@@ -18,6 +18,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -80,7 +81,9 @@ public class ClientProxy extends CommonProxy {
     @Nullable
     @Override
     public Entity getMouseOverEntity() {
-        return Minecraft.getMinecraft().objectMouseOver.entityHit;
+        RayTraceResult r = Minecraft.getMinecraft().objectMouseOver;
+        if (r == null) return null;
+        return r.entityHit;
     }
 
     private void registerSubscriptions() {
