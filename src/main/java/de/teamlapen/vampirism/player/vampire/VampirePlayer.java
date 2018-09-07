@@ -30,8 +30,6 @@ import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
 import de.teamlapen.vampirism.player.vampire.actions.BatVampireAction;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
-import de.teamlapen.vampirism.potion.PotionBloodLoss;
-import de.teamlapen.vampirism.potion.PotionFeeding;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.potion.VampireNightVisionEffect;
 import de.teamlapen.vampirism.util.*;
@@ -52,6 +50,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketAnimation;
 import net.minecraft.network.play.server.SPacketUseBed;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -1047,7 +1046,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (feed_victim != -1)
             feed_victim = -1;
         feed_victim_bite_type = null;
-        player.removePotionEffect(PotionFeeding.POTION);
+        player.removePotionEffect(Potion.getPotionById(2));
         NBTTagCompound nbt = new NBTTagCompound();
         nbt.setInteger(KEY_VICTIM_ID, feed_victim);
         sync(nbt, true);
@@ -1107,10 +1106,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                     if (feed_victim == -1) feedBiteTickCounter = 0;
 
                     feed_victim = e.getEntityId();
-                    PotionEffect effect = new PotionEffect(PotionBloodLoss.POTION, 20, 7, false, false);
+                    PotionEffect effect = new PotionEffect(Potion.getPotionById(2), 20, 7, false, false);
                     ((EntityLivingBase) e).addPotionEffect(effect);
 
-                    PotionEffect feedingEffect = new PotionEffect(PotionFeeding.POTION, 25, 1, false, false);
+                    PotionEffect feedingEffect = new PotionEffect(Potion.getPotionById(2), 25, 1, false, false);
                     player.addPotionEffect(feedingEffect);
 
                     NBTTagCompound nbt = new NBTTagCompound();
@@ -1136,10 +1135,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             endFeeding();
             return;
         }
-        PotionEffect effect = new PotionEffect(PotionBloodLoss.POTION, 20, 7, false, false);
+        PotionEffect effect = new PotionEffect(Potion.getPotionById(2), 20, 7, false, false);
         ((EntityLivingBase) e).addPotionEffect(effect);
 
-        PotionEffect feedingEffect = new PotionEffect(PotionFeeding.POTION, 25, 1, false, false);
+        PotionEffect feedingEffect = new PotionEffect(Potion.getPotionById(2), 25, 4, false, false);
         player.addPotionEffect(feedingEffect);
 
         VampLib.proxy.getParticleHandler().spawnParticles(player.world, ModParticles.FLYING_BLOOD_ENTITY, e.posX + 0.5, e.posY + 0.5, e.posZ + 0.5, 10, 0.1F, player.getRNG(), player, true);
