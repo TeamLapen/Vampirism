@@ -14,14 +14,17 @@ import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderLivingBase;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLStateEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 
 /**
@@ -75,6 +78,14 @@ public class ClientProxy extends CommonProxy {
         if (overlay != null) overlay.makeRenderFullColor(ticksOn, ticksOff, color);
     }
 
+    @Nullable
+    @Override
+    public Entity getMouseOverEntity() {
+        RayTraceResult r = Minecraft.getMinecraft().objectMouseOver;
+        if (r == null) return null;
+        return r.entityHit;
+    }
+
     private void registerSubscriptions() {
         overlay = new VampirismHUDOverlay(Minecraft.getMinecraft());
         MinecraftForge.EVENT_BUS.register(overlay);
@@ -109,4 +120,5 @@ public class ClientProxy extends CommonProxy {
             renderPlayer.addLayer(new LayerVampirePlayerHead(renderPlayer));
         }
     }
+
 }

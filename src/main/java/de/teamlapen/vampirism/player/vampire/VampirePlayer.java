@@ -1,5 +1,6 @@
 package de.teamlapen.vampirism.player.vampire;
 
+import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.advancements.VampireActionTrigger;
@@ -22,6 +23,7 @@ import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.fluids.BloodHelper;
 import de.teamlapen.vampirism.items.ItemHunterCoat;
 import de.teamlapen.vampirism.modcompat.SpongeModCompat;
+import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.player.LevelAttributeModifier;
 import de.teamlapen.vampirism.player.VampirismPlayer;
 import de.teamlapen.vampirism.player.actions.ActionHandler;
@@ -48,6 +50,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.SPacketAnimation;
 import net.minecraft.network.play.server.SPacketUseBed;
+import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -86,6 +89,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private final static String KEY_GLOWING_EYES = "glowing_eyes";
     private final static String KEY_SPAWN_BITE_PARTICLE = "bite_particle";
     private final static String KEY_VISION = "vision";
+    private final static String KEY_VICTIM_ID = "feed_victim";
 
     /**
      * Don't call before the construction event of the player entity is finished
@@ -132,7 +136,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private final VampirePlayerSpecialAttributes specialAttributes = new VampirePlayerSpecialAttributes();
     private boolean sundamage_cache = false;
     private EnumStrength garlic_cache = EnumStrength.NONE;
-    private int biteCooldown = 0;
     private int eyeType = 0;
     private int fangType = 0;
     private boolean glowingEyes = true;
@@ -143,6 +146,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     private List<IVampireVision> unlockedVisions = new ArrayList<>();
     private IVampireVision activatedVision = null;
     private Method reflectionMethodSetSize = null;
+
+    private int feed_victim = -1;
+    private BITE_TYPE feed_victim_bite_type;
+    private int feedBiteTickCounter = 0;
 
     public VampirePlayer(EntityPlayer player) {
         super(player);
@@ -200,28 +207,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             VampirismMod.log.w(TAG, "Block sent by client is not in reach" + pos);
         } else {
             biteBlock(pos, player.world.getBlockState(pos), player.world.getTileEntity(pos));
-        }
-    }
-
-    /**
-     * Bite the entity with the given id.
-     * Checks reach distance
-     *
-     * @param entityId
-     */
-    public void biteEntity(int entityId) {
-        Entity e = player.getEntityWorld().getEntityByID(entityId);
-        if (player.isSpectator()) {
-            VampirismMod.log.w(TAG, "Player can't bite in spectator mode");
-            return;
-        }
-        if (e != null && e instanceof EntityLivingBase) {
-
-            if (e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) {
-                biteEntity((EntityLivingBase) e);
-            } else {
-                VampirismMod.log.w(TAG, "Entity sent by client is not in reach " + entityId);
-            }
         }
     }
 
@@ -450,10 +435,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public int onBite(IVampire biter) {
-        float perc = biter instanceof IVampirePlayer ? 1F : 0.4F;
+        float perc = biter instanceof IVampirePlayer ? 0.2F : 0.08F;
         if (getLevel() == 0) {
             int amt = player.getFoodStats().getFoodLevel();
-            int sucked = (int) (amt * perc);
+            int sucked = (int) Math.ceil((amt * perc));
             player.getFoodStats().setFoodLevel(amt - sucked);
             player.addExhaustion(1000F);
             if (!player.isPotionActive(ModPotions.sanguinare) && Helper.canTurnPlayer(biter, player) && Helper.canBecomeVampire(player)) {
@@ -462,7 +447,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             return sucked;
         }
         int amt = this.getBloodStats().getBloodLevel();
-        int sucked = (int) (amt * perc);
+        int sucked = (int) Math.ceil((amt * perc));
         bloodStats.removeBlood(sucked, true);
         sync(this.bloodStats.writeUpdate(new NBTTagCompound()), true);
         return sucked;
@@ -503,7 +488,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 }
             }
         }
-
+        endFeeding();
         return false;
     }
 
@@ -578,7 +563,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public void onPlayerLoggedOut() {
-
+        endFeeding();
     }
 
     /**
@@ -654,7 +639,6 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 boolean syncToAll = false;
                 NBTTagCompound syncPacket = new NBTTagCompound();
 
-                if (biteCooldown > 0) biteCooldown--;
                 if (isGettingSundamage()) {
                     handleSunDamage(false);
                 } else if (ticksInSun > 0) {
@@ -693,8 +677,13 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 if (sync) {
                     sync(syncPacket, syncToAll);
                 }
-            } else {
 
+                if (feed_victim != -1 && feedBiteTickCounter++ >= 20) {
+                    updateFeeding();
+                    feedBiteTickCounter = 0;
+                }
+
+            } else {
                 ticksInSun = 0;
             }
 
@@ -711,6 +700,14 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 ticksInSun = 0;
             }
 
+            if (feed_victim != -1 && feedBiteTickCounter++ >= 5) {
+                Entity e = VampirismMod.proxy.getMouseOverEntity();
+                if (e == null || e.getEntityId() != feed_victim) {
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));
+                    return;
+                }
+                feedBiteTickCounter = 0;
+            }
         }
         player.world.profiler.endSection();
     }
@@ -996,6 +993,9 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (nbt.hasKey(KEY_GLOWING_EYES)) {
             setGlowingEyes(nbt.getBoolean(KEY_GLOWING_EYES));
         }
+        if (nbt.hasKey(KEY_VICTIM_ID)) {
+            feed_victim = nbt.getInteger(KEY_VICTIM_ID);
+        }
         bloodStats.loadUpdate(nbt);
         actionHandler.readUpdateFromServer(nbt);
         skillHandler.readUpdateFromServer(nbt);
@@ -1021,6 +1021,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         nbt.setInteger(KEY_EYE, getEyeType());
         nbt.setInteger(KEY_FANGS, getFangType());
         nbt.setBoolean(KEY_GLOWING_EYES, getGlowingEyes());
+        nbt.setInteger(KEY_VICTIM_ID, feed_victim);
         bloodStats.writeUpdate(nbt);
         actionHandler.writeUpdateForClient(nbt);
         skillHandler.writeUpdateForClient(nbt);
@@ -1041,10 +1042,22 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         }
     }
 
+    /**
+     * Cleanly ends biting process
+     */
+    public void endFeeding() {
+        if (feed_victim != -1)
+            feed_victim = -1;
+        feed_victim_bite_type = null;
+        player.removePotionEffect(Potion.getPotionById(2));
+        NBTTagCompound nbt = new NBTTagCompound();
+        nbt.setInteger(KEY_VICTIM_ID, feed_victim);
+        sync(nbt, true);
+    }
+
     private void biteBlock(@Nonnull BlockPos pos, @Nonnull IBlockState blockState, @Nullable TileEntity tileEntity) {
         if (isRemote()) return;
         if (getLevel() == 0) return;
-        if (biteCooldown > 0) return;
         if (!bloodStats.needsBlood()) return;
 
         int blood = 0;
@@ -1068,67 +1081,134 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             NBTTagCompound updatePacket = bloodStats.writeUpdate(new NBTTagCompound());
             sync(updatePacket, true);
 
-            biteCooldown = Balance.vp.BITE_COOLDOWN;
 
         }
 
     }
 
     /**
+     * Bite the entity with the given id.
+     * Checks reach distance
+     *
+     * @param entityId The id of the entity to start biting
+     */
+    public void biteEntity(int entityId) {
+        Entity e = player.getEntityWorld().getEntityByID(entityId);
+        if (player.isSpectator()) {
+            VampirismMod.log.w(TAG, "Player can't bite in spectator mode");
+            return;
+        }
+        if (e != null && e instanceof EntityLivingBase) {
+            if (e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) {
+                feed_victim_bite_type = determineBiteType((EntityLivingBase) e);
+                if (feed_victim_bite_type == BITE_TYPE.ATTACK || feed_victim_bite_type == BITE_TYPE.ATTACK_HUNTER) {
+                    biteAttack((EntityLivingBase) e, feed_victim_bite_type == BITE_TYPE.ATTACK_HUNTER);
+                } else if (feed_victim_bite_type == BITE_TYPE.NONE) {
+                    return;
+                } else {
+                    if (feed_victim == -1) feedBiteTickCounter = 0;
+
+                    feed_victim = e.getEntityId();
+                    PotionEffect effect = new PotionEffect(Potion.getPotionById(2), 20, 7, false, false);
+                    ((EntityLivingBase) e).addPotionEffect(effect);
+
+                    PotionEffect feedingEffect = new PotionEffect(Potion.getPotionById(2), 25, 1, false, false);
+                    player.addPotionEffect(feedingEffect);
+
+                    NBTTagCompound nbt = new NBTTagCompound();
+                    nbt.setInteger(KEY_VICTIM_ID, feed_victim);
+                    sync(nbt, true);
+
+                }
+            } else {
+                VampirismMod.log.w(TAG, "Entity sent by client is not in reach " + entityId);
+            }
+        }
+    }
+
+
+    /**
+     * This is called every 20 ticks in onUpdate() to run the continuous feeding effect
+     */
+    public void updateFeeding() {
+        Entity entity = player.world.getEntityByID(feed_victim);
+        if(!(entity instanceof EntityLivingBase)) return;
+        EntityLivingBase e = (EntityLivingBase) entity;
+        if (e == null || e.getHealth() == 0f) {
+            endFeeding();
+            return;
+        }
+        PotionEffect effect = new PotionEffect(Potion.getPotionById(2), 20, 7, false, false);
+        ((EntityLivingBase) e).addPotionEffect(effect);
+
+        PotionEffect feedingEffect = new PotionEffect(Potion.getPotionById(2), 25, 4, false, false);
+        player.addPotionEffect(feedingEffect);
+
+        VampLib.proxy.getParticleHandler().spawnParticles(player.world, ModParticles.FLYING_BLOOD_ENTITY, e.posX + 0.5, e.posY + 0.5, e.posZ + 0.5, 10, 0.1F, player.getRNG(), player, true);
+
+        biteFeed(e);
+
+        if (!(e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) || e.getHealth() == 0f)
+            endFeeding();
+    }
+
+    /**
      * Bite the given entity.
      * Does NOT check reach distance
      *
-     * @param entity
+     * @param entity the entity to feed on
      */
-    private void biteEntity(EntityLivingBase entity) {
+    private void biteFeed(EntityLivingBase entity) {
         if (isRemote()) return;
         if (getLevel() == 0) return;
-        if (biteCooldown > 0) return;
         int blood = 0;
         float saturationMod = IBloodStats.HIGH_SATURATION;
-        BITE_TYPE type = determineBiteType(entity);
-        if (type == BITE_TYPE.SUCK_BLOOD_CREATURE) {
+        if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_CREATURE) {
             blood = ExtendedCreature.get((EntityCreature) entity).onBite(this);
             saturationMod = ExtendedCreature.get((EntityCreature) entity).getBloodSaturation();
-        } else if (type == BITE_TYPE.SUCK_BLOOD_PLAYER || type == BITE_TYPE.SUCK_BLOOD_HUNTER_PLAYER) {
+        } else if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_PLAYER || feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_HUNTER_PLAYER) {
             blood = VampirePlayer.get((EntityPlayer) entity).onBite(this);
             saturationMod = VampirePlayer.get((EntityPlayer) entity).getBloodSaturation();
-            if (type == BITE_TYPE.SUCK_BLOOD_HUNTER_PLAYER) {
+            if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD_HUNTER_PLAYER) {
                 player.addPotionEffect(new PotionEffect(MobEffects.POISON, 15, 2));
             }
-        } else if (type == BITE_TYPE.SUCK_BLOOD) {
+        } else if (feed_victim_bite_type == BITE_TYPE.SUCK_BLOOD) {
             blood = ((IBiteableEntity) entity).onBite(this);
             saturationMod = ((IBiteableEntity) entity).getBloodSaturation();
-        } else if (type == BITE_TYPE.ATTACK || type == BITE_TYPE.ATTACK_HUNTER) {
-            checkAttributes(VReference.biteDamage);
-            float damage = getSpecialAttributes().bat ? 0.1F : (float) player.getEntityAttribute(VReference.biteDamage).getAttributeValue();
-            entity.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
-            if (entity.isEntityUndead() && player.getRNG().nextInt(4) == 0) {
-                player.addPotionEffect(new PotionEffect(MobEffects.POISON, 60));
-            } else if (type == BITE_TYPE.ATTACK_HUNTER) {
-                if (entity instanceof EntityPlayer && ItemHunterCoat.isFullyEquipped((EntityPlayer) entity)) {
-                    player.attackEntityFrom(DamageSource.causeThornsDamage(entity), damage);
-                }
-            }
-            if (specialAttributes.poisonous_bite) {
-                entity.addPotionEffect(new PotionEffect(MobEffects.POISON, (int) (Balance.vps.POISONOUS_BITE_DURATION * 20 * (getSpecialAttributes().bat ? 0.2F : 1F)), 1));
-            }
-        } else if (type == BITE_TYPE.NONE) {
-            return;
         }
-        biteCooldown = Balance.vp.BITE_COOLDOWN;
         if (blood > 0) {
             drinkBlood(blood, saturationMod);
             //TODO player.addStat(Achievements.suckingBlood, 1);
             NBTTagCompound updatePacket = bloodStats.writeUpdate(new NBTTagCompound());
             updatePacket.setInteger(KEY_SPAWN_BITE_PARTICLE, entity.getEntityId());
             sync(updatePacket, true);
-        }
-        if (type == BITE_TYPE.SUCK_BLOOD || type == BITE_TYPE.SUCK_BLOOD_CREATURE || type == BITE_TYPE.SUCK_BLOOD_PLAYER) {
             if (player instanceof EntityPlayerMP) {
                 ModAdvancements.TRIGGER_VAMPIRE_ACTION.trigger((EntityPlayerMP) player, VampireActionTrigger.Action.SUCK_BLOOD);
             }
         }
+    }
+
+    /**
+     * Executes attack logic if the bite is used against a hostile mob or a hunter
+     *
+     * @param entity The entity to attack
+     * @param hunter Is the entity a hunter?
+     */
+    private void biteAttack(EntityLivingBase entity, boolean hunter) {
+        checkAttributes(VReference.biteDamage);
+        float damage = getSpecialAttributes().bat ? 0.1F : (float) player.getEntityAttribute(VReference.biteDamage).getAttributeValue();
+        entity.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
+        if (entity.isEntityUndead() && player.getRNG().nextInt(4) == 0) {
+            player.addPotionEffect(new PotionEffect(MobEffects.POISON, 60));
+        } else if (hunter) {
+            if (entity instanceof EntityPlayer && ItemHunterCoat.isFullyEquipped((EntityPlayer) entity)) {
+                player.attackEntityFrom(DamageSource.causeThornsDamage(entity), damage);
+            }
+        }
+        if (specialAttributes.poisonous_bite) {
+            entity.addPotionEffect(new PotionEffect(MobEffects.POISON, (int) (Balance.vps.POISONOUS_BITE_DURATION * 20 * (getSpecialAttributes().bat ? 0.2F : 1F)), 1));
+        }
+
     }
 
     /**

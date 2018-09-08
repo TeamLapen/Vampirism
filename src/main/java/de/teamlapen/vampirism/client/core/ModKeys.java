@@ -53,6 +53,8 @@ public class ModKeys {
     private static KeyBinding ACTION1 = new KeyBinding(ACTIVATE_ACTION1, KeyConflictContext.IN_GAME, KeyModifier.ALT, Keyboard.KEY_1, CATEGORY);
     private static KeyBinding ACTION2 = new KeyBinding(ACTIVATE_ACTION2, KeyConflictContext.IN_GAME, KeyModifier.ALT, Keyboard.KEY_2, CATEGORY);
 
+    private boolean suckKeyDown = false;
+
     /**
      * @param key
      * @return the key code which is currently bound to the given KEY_Action
@@ -110,14 +112,17 @@ public class ModKeys {
     public void handleInputEvent(InputEvent event) {
         KEY keyPressed = getPressedKeyBinding(); // Only call isPressed once, so
         // get value here!
-        if (keyPressed == KEY.SUCK) {
+        if (!suckKeyDown && keyPressed == KEY.SUCK) {
             RayTraceResult mouseOver = Minecraft.getMinecraft().objectMouseOver;
+            suckKeyDown = true;
             if (mouseOver != null && !Minecraft.getMinecraft().player.isSpectator()) {
                 if (mouseOver.entityHit != null) {
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + mouseOver.entityHit.getEntityId()));
                 } else if (mouseOver.typeOfHit == RayTraceResult.Type.BLOCK) {
                     BlockPos pos = mouseOver.getBlockPos();
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.DRINK_BLOOD_BLOCK, "" + pos.getX() + ":" + pos.getY() + ":" + pos.getZ()));
+                } else {
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + -1));
                 }
             }
         } else if (keyPressed == KEY.ACTION) {
@@ -140,6 +145,10 @@ public class ModKeys {
         } else if (keyPressed == KEY.ACTION2) {
             FactionPlayerHandler factionHandler = FactionPlayerHandler.get(Minecraft.getMinecraft().player);
             toggleBoundAction(factionHandler.getCurrentFactionPlayer(), factionHandler.getBoundAction2());
+        }
+        if (suckKeyDown == true && !isKeyDown(getKeyCode(KEY.SUCK))) {
+            suckKeyDown = false;
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));
         }
     }
 
