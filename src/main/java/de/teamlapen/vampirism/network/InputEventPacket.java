@@ -107,7 +107,7 @@ public class InputEventPacket implements IMessage {
                     VampirePlayer.get(player).biteEntity(id);
                 }
             } else if (message.action.equals(ENDSUCKBLOOD)) {
-                    VampirePlayer.get(player).endFeeding();
+                VampirePlayer.get(player).endFeeding(true);
             } else if (message.action.equals(TOGGLEACTION)) {
                 int id = -1;
                 try {

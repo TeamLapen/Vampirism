@@ -305,14 +305,16 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
     /**
      * Cleanly ends biting process
      */
-    public void endFeeding() {
+    public void endFeeding(boolean sync) {
         if (feed_victim != -1)
             feed_victim = -1;
         feed_victim_bite_type = null;
         player.removePotionEffect(MobEffects.SLOWNESS);
-        NBTTagCompound nbt = new NBTTagCompound();
-        nbt.setInteger(KEY_VICTIM_ID, feed_victim);
-        sync(nbt, true);
+        if (sync) {
+            NBTTagCompound nbt = new NBTTagCompound();
+            nbt.setInteger(KEY_VICTIM_ID, feed_victim);
+            sync(nbt, true);
+        }
     }
 
     @Override
@@ -537,7 +539,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
                 }
             }
         }
-        endFeeding();
+        endFeeding(true);
         return false;
     }
 
@@ -612,7 +614,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
 
     @Override
     public void onPlayerLoggedOut() {
-        endFeeding();
+        endFeeding(false);
     }
 
     /**
@@ -1249,7 +1251,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         if (!(entity instanceof EntityLivingBase)) return;
         EntityLivingBase e = (EntityLivingBase) entity;
         if (e.getHealth() == 0f) {
-            endFeeding();
+            endFeeding(true);
             return;
         }
         e.addPotionEffect(new PotionEffect(MobEffects.SLOWNESS, 20, 7, false, false));
@@ -1261,7 +1263,7 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
         biteFeed(e);
 
         if (!(e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) || e.getHealth() == 0f)
-            endFeeding();
+            endFeeding(true);
     }
 
     private static class Storage implements Capability.IStorage<IVampirePlayer> {
