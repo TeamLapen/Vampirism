@@ -29,7 +29,15 @@ public interface IConvertingHandler<T extends EntityCreature> {
          * @param converted The IConvertedCreature
          * @param entity The original (dead) entity (not added to the world)
          */
-        void dropConvertedItems(EntityCreature converted, Q entity, boolean recentlyHit, int looting);
+        default void dropConvertedItems(EntityCreature converted, Q entity, boolean recentlyHit, int looting) {
+            dropConvertedItems(entity, recentlyHit, looting);
+        }
+
+        /**
+         * Use {@link #dropConvertedItems(EntityCreature, EntityCreature, boolean, int)} instead
+         */
+        @Deprecated
+        void dropConvertedItems(Q entity, boolean recentlyHit, int looting);
 
         double getConvertedDMG(Q entity);
 

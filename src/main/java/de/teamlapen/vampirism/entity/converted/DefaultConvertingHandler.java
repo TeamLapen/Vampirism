@@ -64,6 +64,11 @@ public class DefaultConvertingHandler<T extends EntityCreature> implements IConv
 
         }
 
+        @Override
+        public void dropConvertedItems(EntityCreature entity, boolean recentlyHit, int looting) {
+            dropConvertedItems(entity, entity, recentlyHit, looting); //Only required for backwards compatibility
+        }
+
 
         @Override
         public double getConvertedDMG(EntityCreature entity) {
