@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.api.entity.convertible;
 
 import net.minecraft.entity.EntityCreature;
+import net.minecraft.item.Item;
 import net.minecraft.util.DamageSource;
 
 /**
@@ -23,8 +24,12 @@ public interface IConvertingHandler<T extends EntityCreature> {
         /**
          * Drop items on entity's death.
          * Is called in {@link EntityCreature#onDeath(DamageSource)}
+         * Items should be dropped using {@link EntityCreature#dropItem(Item, int)} on the converted entity
+         *
+         * @param converted The IConvertedCreature
+         * @param entity The original (dead) entity (not added to the world)
          */
-        void dropConvertedItems(Q entity, boolean recentlyHit, int looting);
+        void dropConvertedItems(EntityCreature converted, Q entity, boolean recentlyHit, int looting);
 
         double getConvertedDMG(Q entity);
 
