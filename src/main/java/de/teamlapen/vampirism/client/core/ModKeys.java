@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.ModGuiHandler;
-import de.teamlapen.vampirism.player.actions.ActionHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
@@ -53,8 +52,6 @@ public class ModKeys {
     private static KeyBinding ACTION1 = new KeyBinding(ACTIVATE_ACTION1, KeyConflictContext.IN_GAME, KeyModifier.ALT, Keyboard.KEY_1, CATEGORY);
     private static KeyBinding ACTION2 = new KeyBinding(ACTIVATE_ACTION2, KeyConflictContext.IN_GAME, KeyModifier.ALT, Keyboard.KEY_2, CATEGORY);
 
-    private boolean suckKeyDown = false;
-
     /**
      * @param key
      * @return the key code which is currently bound to the given KEY_Action
@@ -92,7 +89,6 @@ public class ModKeys {
         }
     }
 
-
     public static void register() {
         MinecraftForge.EVENT_BUS.register(new ModKeys());
         ClientRegistry.registerKeyBinding(ACTION);
@@ -103,6 +99,8 @@ public class ModKeys {
         ClientRegistry.registerKeyBinding(ACTION1);
         ClientRegistry.registerKeyBinding(ACTION2);
     }
+
+    private boolean suckKeyDown = false;
 
     private ModKeys() {
 
@@ -190,7 +188,7 @@ public class ModKeys {
                 } else if (!action.getFaction().equals(player.getFaction())) {
                     player.getRepresentingPlayer().sendStatusMessage(new TextComponentTranslation("text.vampirism.action.only_faction", UtilLib.translate(action.getFaction().getUnlocalizedName())), true);
                 } else {
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + ((ActionHandler) player.getActionHandler()).getIdFromAction(action)));
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + key));
                 }
             }
         }

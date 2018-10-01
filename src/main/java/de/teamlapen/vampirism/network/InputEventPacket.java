@@ -16,7 +16,6 @@ import de.teamlapen.vampirism.inventory.BloodPotionTableContainer;
 import de.teamlapen.vampirism.inventory.HunterBasicContainer;
 import de.teamlapen.vampirism.inventory.HunterTrainerContainer;
 import de.teamlapen.vampirism.items.VampirismVampireSword;
-import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.hunter.skills.HunterSkills;
 import de.teamlapen.vampirism.player.skills.SkillHandler;
@@ -109,16 +108,10 @@ public class InputEventPacket implements IMessage {
             } else if (message.action.equals(ENDSUCKBLOOD)) {
                 VampirePlayer.get(player).endFeeding(true);
             } else if (message.action.equals(TOGGLEACTION)) {
-                int id = -1;
-                try {
-                    id = Integer.parseInt(message.param);
-                } catch (NumberFormatException e) {
-                    VampirismMod.log.e(TAG, e, "Receiving invalid param for %s", message.action);
-                }
-                if (id != -1) {
-                    if (factionPlayer != null) {
+                ResourceLocation id = new ResourceLocation(message.param);
+                if (factionPlayer != null) {
                         IActionHandler actionHandler = factionPlayer.getActionHandler();
-                        IAction action = ((ActionHandler) actionHandler).getActionFromId(id);
+                    IAction action = VampirismRegistries.ACTIONS.getValue(id);
                         if (action != null) {
                             IAction.PERM r = actionHandler.toggleAction(action);
                             switch (r) {
@@ -140,8 +133,6 @@ public class InputEventPacket implements IMessage {
                         VampirismMod.log.e(TAG, "Player %s is in no faction, so he cannot use action %d", player, id);
                     }
 
-
-                }
 
             } else if (message.action.equals(DRINK_BLOOD_BLOCK)) {
                 String[] coords = message.param.split(":");

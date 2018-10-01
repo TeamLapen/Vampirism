@@ -31,6 +31,9 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
     private final int[] actionTimer;
     private final T player;
 
+    /**
+     * Action ids might differ between client and server
+     */
     private final ImmutableBiMap<Integer, IAction> actionIdMap;
     private final List<IAction> unlockedActions = new ArrayList<>();
     private boolean dirty = false;
@@ -57,16 +60,6 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         }
     }
 
-    /**
-     * INTERNAL USE ONLY
-     *
-     * @return The skill currently mapped to this id. Could be different after a restart
-     */
-    public IAction getActionFromId(int id) {
-        return actionIdMap.get(id);
-    }
-
-
     @Override
     public List<IAction> getAvailableActions() {
         ArrayList<IAction> actions = new ArrayList<>();
@@ -77,22 +70,6 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
         }
 
         return actions;
-    }
-
-    /**
-     * Throws an exception if action is not registered
-     * <p>
-     * INTERNAL USE ONLY
-     *
-     * @param action
-     * @return The id currently mapped to this action. Could be different after a restart.
-     */
-    public int getIdFromAction(IAction action) {
-        Integer i = actionIdMap.inverse().get(action);
-        if (i == null) {
-            throw new ActionNotRegisteredException(action);
-        }
-        return i;
     }
 
     @Override
@@ -165,16 +142,22 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
      */
     public void readUpdateFromServer(NBTTagCompound nbt) {
         if (nbt.hasKey("action_timers")) {
-            int[] updated = nbt.getIntArray("action_timers");
-            for (int i = 0; i < actionTimer.length; i++) {
-                int old = actionTimer[i];
-                actionTimer[i] = updated[i];
-                if (updated[i] > 0 && old <= 0) {
-                    ((ILastingAction) getActionFromId(i)).onActivatedClient(player);
-                } else if (updated[i] <= 0 && old > 0) {
-                    ((ILastingAction) getActionFromId(i)).onDeactivated(player);//Called here if the skill is deactivated
-                }
+            NBTTagCompound actions = nbt.getCompoundTag("action_timers");
 
+            for (IAction action : unlockedActions) {
+                String regname = action.getRegistryName().toString();
+                int id = getIdFromAction(action);
+                int oldValue = actionTimer[id];
+                int newValue = 0;
+                if (actions.hasKey(regname)) {
+                    newValue = actions.getInteger(regname);
+                }
+                actionTimer[id] = newValue;
+                if (newValue > 0 && oldValue <= 0) {
+                    ((ILastingAction) getActionFromId(id)).onActivatedClient(player);
+                } else if (newValue <= 0 && oldValue > 0) {
+                    ((ILastingAction) getActionFromId(id)).onDeactivated(player);//Called here if the skill is deactivated
+                }
             }
         }
     }
@@ -300,7 +283,38 @@ public class ActionHandler<T extends IFactionPlayer> implements IActionHandler<T
      * @param nbt
      */
     public void writeUpdateForClient(NBTTagCompound nbt) {
-        nbt.setIntArray("action_timers", actionTimer);
+        NBTTagCompound actions = new NBTTagCompound();
+        for (int i = 0; i < actionTimer.length; i++) {
+            if (actionTimer[i] != 0) {
+                actions.setInteger(getActionFromId(i).getRegistryName().toString(), actionTimer[i]);
+            }
+        }
+        nbt.setTag("action_timers", actions);
+    }
+
+    /**
+     * INTERNAL USE ONLY
+     *
+     * @return The skill currently mapped to this id. Could be different after a restart
+     */
+    private IAction getActionFromId(int id) {
+        return actionIdMap.get(id);
+    }
+
+    /**
+     * Throws an exception if action is not registered
+     * <p>
+     * INTERNAL USE ONLY
+     *
+     * @param action
+     * @return The id currently mapped to this action. Could be different after a restart.
+     */
+    private int getIdFromAction(IAction action) {
+        Integer i = actionIdMap.inverse().get(action);
+        if (i == null) {
+            throw new ActionNotRegisteredException(action);
+        }
+        return i;
     }
 
     /**
