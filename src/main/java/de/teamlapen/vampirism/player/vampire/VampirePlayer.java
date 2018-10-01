@@ -221,6 +221,10 @@ public class VampirePlayer extends VampirismPlayer<IVampirePlayer> implements IV
             VampirismMod.log.w(TAG, "Player can't bite in spectator mode");
             return;
         }
+        if (getActionHandler().isActionActive(VampireActions.bat)) {
+            VampirismMod.log.w(TAG, "Cannot bite in bat mode");
+            return;
+        }
         if (e != null && e instanceof EntityLivingBase) {
             if (e.getDistance(player) <= player.getEntityAttribute(EntityPlayer.REACH_DISTANCE).getAttributeValue() + 1) {
                 feed_victim_bite_type = determineBiteType((EntityLivingBase) e);

@@ -8,6 +8,8 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.ModGuiHandler;
+import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
@@ -113,7 +115,7 @@ public class ModKeys {
         if (!suckKeyDown && keyPressed == KEY.SUCK) {
             RayTraceResult mouseOver = Minecraft.getMinecraft().objectMouseOver;
             suckKeyDown = true;
-            if (mouseOver != null && !Minecraft.getMinecraft().player.isSpectator()) {
+            if (mouseOver != null && !Minecraft.getMinecraft().player.isSpectator() && !VampirePlayer.get(Minecraft.getMinecraft().player).getActionHandler().isActionActive(VampireActions.bat)) {
                 if (mouseOver.entityHit != null) {
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + mouseOver.entityHit.getEntityId()));
                 } else if (mouseOver.typeOfHit == RayTraceResult.Type.BLOCK) {
