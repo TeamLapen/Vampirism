@@ -133,7 +133,6 @@ public class EntityVampireBaron extends EntityVampireBase implements IVampireBar
             this.updateEntityAttributes(false);
             float hp = this.getHealth() / this.getMaxHealth();
             this.setHealth(this.getMaxHealth() * hp);
-            VampirismMod.log.t("Lev %s", level);
         }
     }
 
