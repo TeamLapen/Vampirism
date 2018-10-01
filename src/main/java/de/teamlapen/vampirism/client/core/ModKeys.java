@@ -8,7 +8,6 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.ModGuiHandler;
-import de.teamlapen.vampirism.player.actions.ActionHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
@@ -144,28 +143,6 @@ public class ModKeys {
     }
 
     /**
-     * Try to toggle the given action
-     *
-     * @param player if null nothing happens
-     */
-    private void toggleBoundAction(@Nullable IFactionPlayer player, @Nullable ResourceLocation key) {
-        if (player != null) {
-            if (key == null) {
-                player.getRepresentingPlayer().sendStatusMessage(new TextComponentTranslation("text.vampirism.action.not_bound", "/vampirism bind-action"), true);
-            } else {
-                IAction action = VampirismAPI.actionManager().getRegistry().getValue(key);
-                if (action == null) {
-                    VampirismMod.log.i("ModKeys", "Bound action %s not found", key);
-                } else if (!action.getFaction().equals(player.getFaction())) {
-                    player.getRepresentingPlayer().sendStatusMessage(new TextComponentTranslation("text.vampirism.action.only_faction", UtilLib.translate(action.getFaction().getUnlocalizedName())), true);
-                } else {
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + ((ActionHandler) player.getActionHandler()).getIdFromAction(action)));
-                }
-            }
-        }
-    }
-
-    /**
      * @return the KeyBinding that is currently pressed
      */
     private KEY getPressedKeyBinding() {
@@ -185,6 +162,28 @@ public class ModKeys {
             return KEY.ACTION2;
         }
         return KEY.UNKNOWN;
+    }
+
+    /**
+     * Try to toggle the given action
+     *
+     * @param player if null nothing happens
+     */
+    private void toggleBoundAction(@Nullable IFactionPlayer player, @Nullable ResourceLocation key) {
+        if (player != null) {
+            if (key == null) {
+                player.getRepresentingPlayer().sendStatusMessage(new TextComponentTranslation("text.vampirism.action.not_bound", "/vampirism bind-action"), true);
+            } else {
+                IAction action = VampirismAPI.actionManager().getRegistry().getValue(key);
+                if (action == null) {
+                    VampirismMod.log.i("ModKeys", "Bound action %s not found", key);
+                } else if (!action.getFaction().equals(player.getFaction())) {
+                    player.getRepresentingPlayer().sendStatusMessage(new TextComponentTranslation("text.vampirism.action.only_faction", UtilLib.translate(action.getFaction().getUnlocalizedName())), true);
+                } else {
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + key));
+                }
+            }
+        }
     }
 
     public enum KEY {
