@@ -35,8 +35,10 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
@@ -451,9 +453,7 @@ public class GuideBook implements IGuideBook {
 
     @Override
     public void handlePost(ItemStack bookStack) {
-        //TODO CRAFTING
-//        GameRegistry.addShapelessRecipe(bookStack, new ItemStack(Items.BOOK), new ItemStack(ModItems.vampireFang));
-//        GameRegistry.addShapelessRecipe(bookStack, new ItemStack(Items.BOOK), new ItemStack(ModItems.humanHeart));
+        GameRegistry.addShapelessRecipe(new ResourceLocation(REFERENCE.MODID, "guide_book"), null, bookStack, Ingredient.fromItem(Items.BOOK), Ingredient.fromItems(ModItems.vampire_fang, ModItems.human_heart));
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
             GuideBook.buildCategories();
