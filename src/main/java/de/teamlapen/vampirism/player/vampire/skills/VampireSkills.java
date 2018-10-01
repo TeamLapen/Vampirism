@@ -132,7 +132,7 @@ public class VampireSkills {
         registry.register(bite2);
         registry.register(new VampirismSkill.SimpleVampireSkill("blood_charge", 240, 0, true));
         registry.register(new ActionSkill<>("freeze", VampireActions.freeze, true));
-        registry.register(new ActionSkill<>("sunscreen", VampireActions.sunscreen));
+        registry.register(new ActionSkill<>("sunscreen", VampireActions.sunscreen, true));
         DefaultSkill<IVampirePlayer> jump = new VampirismSkill.SimpleVampireSkill("vampire_jump", 160, 0, false) {
 
             @Override
