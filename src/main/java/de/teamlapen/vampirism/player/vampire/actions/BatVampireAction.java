@@ -162,11 +162,10 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
     }
 
     /**
-     * Only call client side
+     * Set's flightspeed capability
      */
-    @SuppressWarnings("MethodCallSideOnly")
     private void setFlightSpeed(EntityPlayer player, float speed) {
-        player.capabilities.setFlySpeed(0.05F);
+        player.capabilities.flySpeed = speed;
     }
 
     private void setModifier(EntityPlayer player, boolean enabled) {
@@ -179,7 +178,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
 
             player.capabilities.allowFlying = true;
             player.capabilities.isFlying = true;
-            if (player.getEntityWorld().isRemote) setFlightSpeed(player, 0.025F);
+            setFlightSpeed(player, (float) Balance.vpa.BAT_FLIGHT_SPEED);
             player.sendPlayerAbilities();
         } else {
 
@@ -194,7 +193,7 @@ public class BatVampireAction extends DefaultVampireAction implements ILastingAc
                 player.capabilities.allowFlying = false;
             }
             player.capabilities.isFlying = false;
-            if (player.getEntityWorld().isRemote) setFlightSpeed(player, 0.05F);
+            setFlightSpeed(player, 0.05F);
             player.sendPlayerAbilities();
         }
 
