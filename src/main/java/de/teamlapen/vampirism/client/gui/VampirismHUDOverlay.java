@@ -347,6 +347,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
             } else {
                 screenPercentage = 0;
             }
+        } else {
+            screenPercentage = 0;
         }
 
         //Bottom Area
@@ -359,6 +361,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
             } else {
                 screenBottomPercentage = 0;
             }
+        } else {
+            screenBottomPercentage = 0;
         }
     }
 
