@@ -135,7 +135,7 @@ public class Configs {
         pvp_only_between_factions = main_config.getBoolean("pvp_only_between_factions", CATEGORY_GENERAL, false, "If PVP should only be allowed between factions. PVP has to be enabled in the server properties for this. Not guaranteed to always protect player from teammates");
         bat_mode_in_end = main_config.getBoolean("bat_mode_in_end", CATEGORY_GENERAL, false, "If vampires can convert to a bat in the end");
         unlock_all_skills = main_config.getBoolean("unlock_all_skills_at_max", CATEGORY_GENERAL, false, "CHEAT: If enabled, you will be able to unlock all skills at max level");
-        sunscreen_beacon_distance = main_config.getInt("sunscreen_beacon_distance", CATEGORY_GENERAL, 32, 1, Integer.MAX_VALUE, "Block radius, the sunscreen beacon affects");
+        sunscreen_beacon_distance = main_config.getInt("sunscreen_beacon_distance", CATEGORY_GENERAL, 32, 1, 40000, "Block radius, the sunscreen beacon affects");
         sunscreen_beacon_mineable = main_config.getBoolean("sunscreen_beacon_mineable", CATEGORY_GENERAL, false, "If the sunscreen beacon can be mined in survival");
         autoCalculateEntityBlood = main_config.getBoolean("auto_calculate_entity_blood", CATEGORY_GENERAL, true, "Calculate the blood level for unknown creatures based on their size");
 
