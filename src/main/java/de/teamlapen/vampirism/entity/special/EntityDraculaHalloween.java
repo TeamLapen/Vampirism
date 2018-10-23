@@ -133,7 +133,11 @@ public class EntityDraculaHalloween extends EntityVampirism {
                 if (this.getRNG().nextInt(3) == 0) {
                     teleportBehind(owner);
                 } else {
-                    makeHide(this.getRNG().nextInt(3000));
+                    if (this.getRNG().nextInt(3) == 0) {
+                        this.setDead();
+                    } else {
+                        makeHide(this.getRNG().nextInt(3000));
+                    }
                 }
                 this.seen = 0;
             }
