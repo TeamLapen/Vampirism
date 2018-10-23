@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.util;
 import com.google.common.collect.Maps;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.special.EntityDraculaHalloween;
 import net.minecraft.client.Minecraft;
@@ -35,9 +36,12 @@ public class HalloweenSpecial {
     }
 
     public static boolean shouldEnable() {
+        if (Configs.disable_halloween_special) {
+            return false;
+        }
         int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
         int month = Calendar.getInstance().get(Calendar.MONTH);
-        return day == 22 && month == 9;
+        return day == 31 && month == 9;
     }
 
     public static void enable() {

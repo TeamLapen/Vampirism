@@ -62,6 +62,7 @@ public class Configs {
     public static boolean disable_mob_bite_infection;
     public static boolean disable_hunter_camps;
     public static boolean disable_all_worldgen;
+    public static boolean disable_halloween_special;
 
     public static @Nonnull
     int[] worldGenDimensions = new int[0];
@@ -167,6 +168,7 @@ public class Configs {
         disable_mob_bite_infection = main_config.getBoolean("disable_mob_bite_infection", CATEGORY_DISABLE, false, "Prevent vampire mobs from infecting players when attacking");
         disable_hunter_camps = main_config.getBoolean("disable_hunter_camps", CATEGORY_DISABLE, false, "Disable the generation of hunter camps completely");
         disable_all_worldgen = main_config.getBoolean("disable_all_worldgen", CATEGORY_DISABLE, false, "Disable all world gen. Does not affect vampire Forest");
+        disable_halloween_special = main_config.getBoolean("disable_halloween_special", CATEGORY_DISABLE, false, "Disable halloween special event");
 
         updated_vampirism = !main_config.getDefinedConfigVersion().equals(main_config.getLoadedConfigVersion());
 
