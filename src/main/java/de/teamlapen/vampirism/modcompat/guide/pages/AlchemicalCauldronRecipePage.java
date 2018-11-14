@@ -120,7 +120,7 @@ public class AlchemicalCauldronRecipePage extends Page {
 
             }
             String skillText = UtilLib.translateFormatted("gui.vampirism.hunter_weapon_table.skill", skills.toString());
-            guiBase.drawSplitString(skillText, guiLeft + 50, y, 100, Color.gray.getRGB());
+            fontRendererObj.drawSplitString(skillText, guiLeft + 50, y, 100, Color.gray.getRGB());
         }
     }
 

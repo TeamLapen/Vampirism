@@ -91,7 +91,7 @@ public class RenderHandler {
 
     @SubscribeEvent
     public void onClientTick(TickEvent.ClientTickEvent event) {
-        if (mc.world == null) return;
+        if (mc.world == null || mc.player == null) return;
         if (event.phase == TickEvent.Phase.END) return;
         lastBloodVisionTicks = bloodVisionTicks;
 
