@@ -198,7 +198,7 @@ public class UtilLib {
         int i = 0;
         while (!flag && i++ < maxTry) {
             BlockPos c = getRandomPosInBox(world, box);
-            if (WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementForEntity(e.getClass()), world, c)) {
+            if (world.isAreaLoaded(c, 5) && WorldEntitySpawner.canCreatureTypeSpawnAtLocation(EntitySpawnPlacementRegistry.getPlacementForEntity(e.getClass()), world, c)) {
                 e.setPosition(c.getX(), c.getY(), c.getZ());
                 if (!(e instanceof EntityLiving) || (((EntityLiving) e).getCanSpawnHere() && ((EntityLiving) e).isNotColliding())) {
                     flag = true;
