@@ -25,45 +25,12 @@ import java.util.Random;
  */
 public class WorldGenHunterCamp extends WorldGenerator {
 
+    private IBlockState campfire_blockstate;
 
-    public boolean canCampSpawnAt(World world, Biome biome, int chunkX, int chunkZ) {
-        int distance = Math.max(1, Balance.general.HUNTER_CAMP_DENSITY);
-        //Check Biome
-        if (ModBiomes.vampireForest.getRegistryName().equals(biome.getRegistryName())) {
-            return false;
-        }
 
-        //Check temperature
-        BlockPos pos = new BlockPos((chunkX << 4), 0, (chunkZ << 4));
-        pos = world.getHeight(pos);
-        float t = biome.getTemperature(pos);
-        if (t > 1.5F || t < 0.1F) return false;
-
-        int i = chunkX;
-        int j = chunkZ;
-
-        if (chunkX < 0) {
-            chunkX -= distance - 1;
-        }
-
-        if (chunkZ < 0) {
-            chunkZ -= distance - 1;
-        }
-
-        int k = chunkX / distance;
-        int l = chunkZ / distance;
-        Random random = world.setRandomSeed(k, l, 10387312);
-        k = k * distance;
-        l = l * distance;
-        k = k + random.nextInt(distance - 2);
-        l = l + random.nextInt(distance - 2);
-
-        if (i == k && j == l) {
-            return world.getVillageCollection().getNearestVillage(world.getHeight(new BlockPos(i << 4, 0, j << 4)), 20) == null;
-
-        }
-
-        return false;
+    WorldGenHunterCamp() {
+        super();
+        campfire_blockstate = ModBlocks.fire_place.getDefaultState();
     }
 
     /**
@@ -111,6 +78,50 @@ public class WorldGenHunterCamp extends WorldGenerator {
         }
     }
 
+    public void setCampfireBlockstate(IBlockState state) {
+        this.campfire_blockstate = state;
+    }
+
+    boolean canCampSpawnAt(World world, Biome biome, int chunkX, int chunkZ) {
+        int distance = Math.max(1, Balance.general.HUNTER_CAMP_DENSITY);
+        //Check Biome
+        if (ModBiomes.vampireForest.getRegistryName().equals(biome.getRegistryName())) {
+            return false;
+        }
+
+        //Check temperature
+        BlockPos pos = new BlockPos((chunkX << 4), 0, (chunkZ << 4));
+        pos = world.getHeight(pos);
+        float t = biome.getTemperature(pos);
+        if (t > 1.5F || t < 0.1F) return false;
+
+        int i = chunkX;
+        int j = chunkZ;
+
+        if (chunkX < 0) {
+            chunkX -= distance - 1;
+        }
+
+        if (chunkZ < 0) {
+            chunkZ -= distance - 1;
+        }
+
+        int k = chunkX / distance;
+        int l = chunkZ / distance;
+        Random random = world.setRandomSeed(k, l, 10387312);
+        k = k * distance;
+        l = l * distance;
+        k = k + random.nextInt(distance - 2);
+        l = l + random.nextInt(distance - 2);
+
+        if (i == k && j == l) {
+            return world.getVillageCollection().getNearestVillage(world.getHeight(new BlockPos(i << 4, 0, j << 4)), 20) == null;
+
+        }
+
+        return false;
+    }
+
     private boolean checkGroundAndPos(World worldIn, BlockPos position, IBlockState ground) {
         if (worldIn.getBlockState(position).getMaterial().isLiquid()) return false;
         IBlockState b = worldIn.getBlockState(position.down());
@@ -134,7 +145,7 @@ public class WorldGenHunterCamp extends WorldGenerator {
 
     private boolean placeFire(World worldIn, BlockPos position) {
         if (checkGroundAndPos(worldIn, position, null)) {
-            setBlockAndNotifyAdequately(worldIn, position, ModBlocks.fire_place.getDefaultState());
+            setBlockAndNotifyAdequately(worldIn, position, campfire_blockstate);
             return true;
         }
         return false;

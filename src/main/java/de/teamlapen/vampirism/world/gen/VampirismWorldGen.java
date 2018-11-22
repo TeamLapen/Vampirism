@@ -18,8 +18,8 @@ import java.util.Random;
  */
 public class VampirismWorldGen implements IWorldGenerator {
     public static boolean debug = false;
-    private final WorldGenHunterCamp hunterCamp;
-    private final WorldGenVampireDungeon vampireDungeon;
+    public final WorldGenHunterCamp hunterCamp;
+    public final WorldGenVampireDungeon vampireDungeon;
 
     public VampirismWorldGen() {
         this.hunterCamp = new WorldGenHunterCamp();
