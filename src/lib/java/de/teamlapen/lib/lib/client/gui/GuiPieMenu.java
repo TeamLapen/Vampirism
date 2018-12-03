@@ -344,12 +344,14 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
         GL11.glPopMatrix();
     }
 
+    //TODO migrate keybinding propagation chain from integer key id to KeyBinding instance and use {@link GameSettings#isKeyDown(KeyBinding)}
     private boolean isKeyDown(int key) {
-        if (key >= 0) {
-            return Keyboard.isKeyDown(key);
+        if (key != 0 && key < 256) {
+            return key < 0 ? Mouse.isButtonDown(key + 100) : Keyboard.isKeyDown(key);
         } else {
-            return Mouse.isButtonDown(key + 100);
+            return false;
         }
+
     }
 
     /**
