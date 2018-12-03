@@ -242,7 +242,7 @@ public class GuiSkills extends GuiScreen implements GuiYesNoCallback {
 
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        if (ModKeys.getKeyCode(ModKeys.KEY.SKILL) == keyCode) {
+        if (ModKeys.getKeyBinding(ModKeys.KEY.SKILL).getKeyCode() == keyCode) {
             this.mc.displayGuiScreen(null);
             this.mc.setIngameFocus();
         } else {

@@ -39,7 +39,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import org.lwjgl.input.Keyboard;
 
 import javax.annotation.Nullable;
 import java.awt.*;
@@ -145,7 +144,7 @@ public class GuideBook implements IGuideBook {
         List<IPage> gettingStarted = new ArrayList<>();
         gettingStarted.addAll(GuideHelper.pagesForLongText(UtilLib.translate(base + "getting_started.become")));
         gettingStarted.addAll(GuideHelper.pagesForLongText(UtilLib.translate(base + "getting_started.as_vampire")));
-        gettingStarted.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "getting_started.blood", Keyboard.getKeyName(ModKeys.getKeyCode(ModKeys.KEY.SUCK)))));
+        gettingStarted.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "getting_started.blood", ModKeys.getKeyBinding(ModKeys.KEY.SUCK).getDisplayName())));
         gettingStarted.addAll(GuideHelper.pagesForLongText(UtilLib.translate(base + "getting_started.level") + "\n" + UtilLib.translate(base + "getting_started.level2")));
 
         entries.put(new ResourceLocation(base + "getting_started"), new EntryText(gettingStarted, UtilLib.translate(base + "getting_started")));
@@ -204,8 +203,8 @@ public class GuideBook implements IGuideBook {
 
 
         List<IPage> skillPages = new ArrayList<>();
-        skillPages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "skills.text", Keyboard.getKeyName(ModKeys.getKeyCode(ModKeys.KEY.SKILL)))));
-        skillPages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "skills.actions", Keyboard.getKeyName(ModKeys.getKeyCode(ModKeys.KEY.ACTION)))));
+        skillPages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "skills.text", ModKeys.getKeyBinding(ModKeys.KEY.SKILL).getDisplayName())));
+        skillPages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "skills.actions", ModKeys.getKeyBinding(ModKeys.KEY.ACTION).getDisplayName())));
         skillPages.addAll(GuideHelper.pagesForLongText(UtilLib.translate("guide.vampirism.skills.bind_action")));
         skillPages.addAll(GuideHelper.pagesForLongText(UtilLib.translate(base + "skills.actions2")));
 
@@ -261,12 +260,12 @@ public class GuideBook implements IGuideBook {
         entries.put(new ResourceLocation(base + "leveling"), new EntryText(levelingPages, base + "leveling"));
 
         List<IPage> skillPages = new ArrayList<>();
-        skillPages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "skills.intro", Keyboard.getKeyName(ModKeys.getKeyCode(ModKeys.KEY.SKILL)))));
+        skillPages.addAll(GuideHelper.pagesForLongText(UtilLib.translateFormatted(base + "skills.intro", ModKeys.getKeyBinding(ModKeys.KEY.SKILL).getDisplayName())));
         String disguise = String.format("§l%s§r\n", UtilLib.translate(HunterActions.disguise_hunter.getUnlocalizedName()));
-        disguise += UtilLib.translateFormatted(base + "skills.disguise.text", Keyboard.getKeyName(ModKeys.getKeyCode(ModKeys.KEY.ACTION)));
+        disguise += UtilLib.translateFormatted(base + "skills.disguise.text", ModKeys.getKeyBinding(ModKeys.KEY.ACTION).getDisplayName());
         skillPages.addAll(GuideHelper.pagesForLongText(disguise));
         String bloodPotion = String.format("§l%s§r\n", ModBlocks.blood_potion_table.getLocalizedName());
-        bloodPotion += UtilLib.translateFormatted(base + "skills.blood_potion.text", Keyboard.getKeyName(ModKeys.getKeyCode(ModKeys.KEY.BLOOD_POTION)));
+        bloodPotion += UtilLib.translateFormatted(base + "skills.blood_potion.text", ModKeys.getKeyBinding(ModKeys.KEY.BLOOD_POTION).getDisplayName());
         skillPages.addAll(GuideHelper.addLinks(GuideHelper.pagesForLongText(bloodPotion), new ResourceLocation("guide.vampirism.blocks.blood_potion_table")));
         String weaponTable = String.format("§l%s§r\n", ModBlocks.weapon_table.getLocalizedName());
         weaponTable += UtilLib.translate(base + "skills.weapon_table.text");
