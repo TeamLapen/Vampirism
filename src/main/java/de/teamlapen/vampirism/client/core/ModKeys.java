@@ -24,8 +24,8 @@ import net.minecraftforge.fml.common.gameevent.InputEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 /**
@@ -52,43 +52,30 @@ public class ModKeys {
     private static KeyBinding ACTION1 = new KeyBinding(ACTIVATE_ACTION1, KeyConflictContext.IN_GAME, KeyModifier.ALT, Keyboard.KEY_1, CATEGORY);
     private static KeyBinding ACTION2 = new KeyBinding(ACTIVATE_ACTION2, KeyConflictContext.IN_GAME, KeyModifier.ALT, Keyboard.KEY_2, CATEGORY);
 
-    /**
-     * @param key
-     * @return the key code which is currently bound to the given KEY_Action
-     */
-    public static int getKeyCode(KEY key) {
+
+    @Nonnull
+    public static KeyBinding getKeyBinding(@Nonnull KEY key) {
+        assert key != null;
         switch (key) {
             case SUCK:
-                return SUCK.getKeyCode();
+                return SUCK;
             case ACTION:
-                return ACTION.getKeyCode();
+                return ACTION;
             case SKILL:
-                return SKILL.getKeyCode();
+                return SKILL;
             case VISION:
-                return VISION.getKeyCode();
+                return VISION;
             case BLOOD_POTION:
-                return BLOOD_POTION.getKeyCode();
+                return BLOOD_POTION;
             case ACTION1:
-                return ACTION1.getKeyCode();
+                return ACTION1;
             case ACTION2:
-                return ACTION2.getKeyCode();
+                return ACTION2;
             default:
-                return 0;
+                VampirismMod.log.e("ModKeys", "Keybinding %s does not exist", key);
+                return ACTION;
         }
     }
-
-    /**
-     * @param k if the number is negative it is interpreted as mousekey and 100 is added
-     * @return Whether the key is down or not
-     */
-    public static boolean isKeyDown(int k) {
-        if (k >= 0) {
-            return Keyboard.isKeyDown(k);
-        } else {
-            return Mouse.isButtonDown(k + 100);
-        }
-    }
-
 
     public static void register() {
         MinecraftForge.EVENT_BUS.register(new ModKeys());

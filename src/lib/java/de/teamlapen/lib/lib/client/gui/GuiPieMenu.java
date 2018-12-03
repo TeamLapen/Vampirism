@@ -5,6 +5,8 @@ import de.teamlapen.lib.LIBREFERENCE;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.util.UtilLib;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.settings.GameSettings;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.fml.relauncher.Side;
@@ -12,7 +14,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.LWJGLException;
 import org.lwjgl.input.Cursor;
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
@@ -168,7 +169,7 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
     public void updateScreen() {
         super.updateScreen();
         this.mc.player.movementInput.updatePlayerMoveState();
-        if (!isKeyDown(getMenuKeyCode())) {
+        if (!GameSettings.isKeyDown(getMenuKeyBinding())) {
             if (selectedElement >= 0) {
                 this.onElementSelected(elements.get(selectedElement));
             }
@@ -215,13 +216,9 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
     protected abstract ResourceLocation getIconLoc(T item);
 
     /**
-     * Should return the menu key.
-     * For mouse buttons the value should be negative. When checking the mouse key 100 is added to this key code to access the button.
-     * Take a look at {@link GuiPieMenu#isKeyDown(int)}
-     *
-     * @return
+     * @return the menu key binding set in the game settings
      */
-    protected abstract int getMenuKeyCode();
+    protected abstract KeyBinding getMenuKeyBinding();
 
     /**
      * @param item
@@ -344,13 +341,6 @@ public abstract class GuiPieMenu<T> extends GuiScreen {
         GL11.glPopMatrix();
     }
 
-    private boolean isKeyDown(int key) {
-        if (key >= 0) {
-            return Keyboard.isKeyDown(key);
-        } else {
-            return Mouse.isButtonDown(key + 100);
-        }
-    }
 
     /**
      * Calculates the absolute mouse coordinates from the scaled ones and sets the cursor accordingly
