@@ -154,7 +154,7 @@ public class VampirismMod {
         MinecraftForge.EVENT_BUS.register(new ModEntityEventHandler());
         MinecraftForge.EVENT_BUS.register(LootHandler.getInstance());
 
-        GameRegistry.registerWorldGenerator(new VampirismWorldGen(), 1000);
+        GameRegistry.registerWorldGenerator(VampirismWorldGen.getInstance(), 1000);
         HelperRegistry.registerPlayerEventReceivingCapability(VampirePlayer.CAP, VampirePlayer.class);
         HelperRegistry.registerPlayerEventReceivingCapability(HunterPlayer.CAP, HunterPlayer.class);
         HelperRegistry.registerSyncableEntityCapability(ExtendedCreature.CAP, REFERENCE.EXTENDED_CREATURE_KEY, ExtendedCreature.class);
