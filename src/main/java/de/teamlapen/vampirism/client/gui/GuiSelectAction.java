@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -87,8 +88,8 @@ public class GuiSelectAction extends GuiPieMenu<IAction> {
     }
 
     @Override
-    protected int getMenuKeyCode() {
-        return ModKeys.getKeyCode(ModKeys.KEY.ACTION);
+    protected KeyBinding getMenuKeyBinding() {
+        return ModKeys.getKeyBinding(ModKeys.KEY.ACTION);
     }
 
     @Override
