@@ -48,7 +48,7 @@ public class AltarInfusionTESR extends VampirismTESR<TileAltarInfusion> {
                     EntityPlayer p = te.getPlayer();
                     if (p != null) {
                         double rX = 0, rZ = 0;
-                        double rY = -0.3;
+                        double rY = 1D;//-0.3;
                         double playerY = p.posY;
                         /*
                          * Work around for other players seeing the ritual
@@ -56,11 +56,12 @@ public class AltarInfusionTESR extends VampirismTESR<TileAltarInfusion> {
                         if (!p.equals(Minecraft.getMinecraft().player)) {
                             Entity e = Minecraft.getMinecraft().player;
                             rX += p.posX - e.posX;
-                            rY += p.posY - e.posY + 1.5D;
+                            rY += p.posY - e.posY;
                             rZ += p.posZ - e.posZ;
                             playerY += 1.5D;
+                            cY += 1.6;
                         }
-                        this.renderBeam(rX, rY, rZ, p.posX, playerY, p.posZ, cX, cY + 0.2, cZ, -(te.getRunningTick() + partialTicks), true);
+                        this.renderBeam(rX, rY, rZ, p.posX, playerY, p.posZ, cX, cY - 1.2d, cZ, -(te.getRunningTick() + partialTicks), true);
                     }
                 }
             } catch (NullPointerException e) {
