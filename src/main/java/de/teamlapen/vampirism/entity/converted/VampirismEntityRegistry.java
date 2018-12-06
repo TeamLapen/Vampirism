@@ -172,7 +172,7 @@ public class VampirismEntityRegistry implements IVampirismEntityRegistry {
     @Nullable
     @Override
     public BiteableEntry getEntry(ResourceLocation entity_id) {
-        return biteableEntryManager.get(entity_id);
+        return biteableEntryManager == null ? null : biteableEntryManager.get(entity_id);
     }
 
     @Override
