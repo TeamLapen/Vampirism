@@ -13,6 +13,7 @@ import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextComponentTranslation;
 
 /**
  * Container for interacting with basic hunters to level up as a hunter
@@ -63,6 +64,8 @@ public class HunterBasicContainer extends InventoryContainer {
         int target = player.getLevel() + 1;
         this.tile.decrStackSize(0, HunterLevelingConf.instance().getVampireBloodCountForBasicHunter(target));
         FactionPlayerHandler.get(player.getRepresentingPlayer()).setFactionLevel(VReference.HUNTER_FACTION, target);
+        player.getRepresentingPlayer().sendMessage(new TextComponentTranslation("text.vampirism.basic_hunter.levelup"));
+        player.getRepresentingPlayer().closeScreen();
 
     }
 
