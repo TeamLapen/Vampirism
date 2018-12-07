@@ -53,7 +53,7 @@ public class FlyingBloodEntityParticle extends Particle {
         this.prevPosZ = this.posZ;
 
         double wayX = entity.posX - this.posX;
-        double wayY = entity.posY - this.posY;
+        double wayY = entity.posY + entity.getEyeHeight() - this.posY;
         double wayZ = entity.posZ - this.posZ;
 
         int tleft = this.particleMaxAge - this.particleAge;

@@ -1,8 +1,8 @@
 package de.teamlapen.vampirism.util;
 
-import com.google.common.collect.Maps;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.VampirismMod;
+import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModParticles;
 import de.teamlapen.vampirism.entity.special.EntityDraculaHalloween;
 import net.minecraft.client.Minecraft;
@@ -17,8 +17,9 @@ import net.minecraftforge.fml.common.gameevent.TickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
 
 /**
@@ -35,9 +36,12 @@ public class HalloweenSpecial {
     }
 
     public static boolean shouldEnable() {
+        if (Configs.disable_halloween_special) {
+            return false;
+        }
         int day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
         int month = Calendar.getInstance().get(Calendar.MONTH);
-        return day == 22 && month == 9;
+        return day == 31 && month == 9;
     }
 
     public static void enable() {
@@ -65,7 +69,7 @@ public class HalloweenSpecial {
         VampLib.proxy.getParticleHandler().spawnParticle(target.getEntityWorld(), ModParticles.HALLOWEEN, target.posX, target.posY, target.posZ);
     }
 
-    private Map<UUID, EntityDraculaHalloween> draculas = Maps.newHashMap();
+    private List<UUID> blacklist = new ArrayList<>();
     private int tickTimer = 0;
 
     @SideOnly(Side.CLIENT)
@@ -86,18 +90,17 @@ public class HalloweenSpecial {
     public void onServerTick(TickEvent.ServerTickEvent event) {
         if (event.phase == TickEvent.Phase.END) return;
 
-        draculas.values().removeIf(entityDraculaHalloween -> entityDraculaHalloween.isDead);
         if (enabled) {
             tickTimer++;
             if (tickTimer % 200 == 99) {
                 for (EntityPlayerMP p : FMLCommonHandler.instance().getMinecraftServerInstance().getServer().getPlayerList().getPlayers()) {
                     UUID u = p.getUniqueID();
-                    if (!draculas.containsKey(u)) {
+                    if (!blacklist.contains(u)) {
                         EntityDraculaHalloween draculaHalloween = new EntityDraculaHalloween(p.getEntityWorld());
                         draculaHalloween.setOwnerId(u);
                         draculaHalloween.makeHide(200 + p.getRNG().nextInt(1000));
                         p.getEntityWorld().spawnEntity(draculaHalloween);
-                        draculas.put(u, draculaHalloween);
+                        blacklist.add(u);
                     }
                 }
                 tickTimer = 0;
@@ -118,6 +121,6 @@ public class HalloweenSpecial {
 
     @SubscribeEvent
     public void onWorldUnload(WorldEvent.Unload event) {
-        draculas.clear();
+        blacklist.clear();
     }
 }

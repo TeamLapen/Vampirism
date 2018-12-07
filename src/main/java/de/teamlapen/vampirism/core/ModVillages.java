@@ -41,8 +41,10 @@ public class ModVillages {
     }
 
     private static void registerCreationHandlers() {
-        VillagerRegistry.instance().registerVillageCreationHandler(new VillagePieceTrainer.CreationHandler());
-        VillagerRegistry.instance().registerVillageCreationHandler(new VillagePieceModChurch.CreationHandler());
+        if (!Configs.disable_all_worldgen) {
+            VillagerRegistry.instance().registerVillageCreationHandler(new VillagePieceTrainer.CreationHandler());
+            VillagerRegistry.instance().registerVillageCreationHandler(new VillagePieceModChurch.CreationHandler());
+        }
     }
 
     public static void modifyVillageSize(MapGenBase mapGenVillage) {

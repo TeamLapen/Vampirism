@@ -54,6 +54,9 @@ public class BalanceVampireActions extends BalanceValues {
     @DefaultBoolean(value = true, name = "rage_enabled")
     public boolean RAGE_ENABLED;
 
+    @DefaultDouble(value = 0.03, minValue = 0.01, maxValue = 0.05, comment = "Bat mode flying speed. Value for creative mode: 0.05")
+    public double BAT_FLIGHT_SPEED;
+
     @DefaultInt(value = 1200, minValue = 0, comment = "Sunscreen action cooldown duration")
     public int SUNSCREEN_COOLDOWN;
     @DefaultInt(value = 30, minValue = 1, comment = "Sunscreen action duration")
@@ -69,6 +72,7 @@ public class BalanceVampireActions extends BalanceValues {
 
     @DefaultInt(value = Integer.MAX_VALUE, minValue = 10, name = "bat_duration")
     public int BAT_DURATION;
+
 
     @DefaultBoolean(value = true, name = "summon_bats_enabled")
     public boolean SUMMON_BAT_ENABLED;

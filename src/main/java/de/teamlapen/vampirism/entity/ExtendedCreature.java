@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.api.entity.vampire.IVampire;
 import de.teamlapen.vampirism.api.world.IVampirismVillage;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.converted.VampirismEntityRegistry;
+import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.potion.PotionSanguinare;
 import de.teamlapen.vampirism.util.REFERENCE;
 import de.teamlapen.vampirism.world.villages.VampirismVillageHelper;
@@ -202,7 +203,7 @@ public class ExtendedCreature implements ISyncable.ISyncableEntityCapabilityInst
     @Override
     public int onBite(IVampire biter) {
         if (getBlood() <= 0) return 0;
-        int amt = Math.min(blood, Math.max(1, (int) (getMaxBlood() / 2F)));
+        int amt = Math.min(blood, Math.max(1, (getMaxBlood() / (biter instanceof VampirePlayer ? 6 : 2))));
         blood -= amt;
         boolean killed = false;
         boolean converted = false;
