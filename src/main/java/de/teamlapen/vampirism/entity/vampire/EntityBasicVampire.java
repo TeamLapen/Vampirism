@@ -7,12 +7,26 @@ import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.core.ModSounds;
-import de.teamlapen.vampirism.entity.ai.*;
+import de.teamlapen.vampirism.entity.ai.EntityAIAttackMeleeNoSun;
+import de.teamlapen.vampirism.entity.ai.EntityAIMoveThroughVillageCustom;
+import de.teamlapen.vampirism.entity.ai.EntityAIUseAction;
+import de.teamlapen.vampirism.entity.ai.VampireAIBiteNearbyEntity;
+import de.teamlapen.vampirism.entity.ai.VampireAIFleeGarlic;
+import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
+import de.teamlapen.vampirism.entity.ai.VampireAIFollowAdvanced;
+import de.teamlapen.vampirism.entity.ai.VampireAIMoveToBiteable;
+import de.teamlapen.vampirism.entity.ai.VampireAIRestrictSun;
 import de.teamlapen.vampirism.entity.hunter.EntityHunterBase;
 import de.teamlapen.vampirism.world.loot.LootHandler;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.ai.*;
+import net.minecraft.entity.ai.EntityAIAvoidEntity;
+import net.minecraft.entity.ai.EntityAIBreakDoor;
+import net.minecraft.entity.ai.EntityAIHurtByTarget;
+import net.minecraft.entity.ai.EntityAILookIdle;
+import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
+import net.minecraft.entity.ai.EntityAIWander;
+import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
@@ -30,7 +44,6 @@ import net.minecraft.util.SoundEvent;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
-
 import javax.annotation.Nullable;
 
 /**
@@ -260,6 +273,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityPlayer.class, 20F, 0.6F));
         this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityHunterBase.class, 17F));
         this.tasks.addTask(10, new EntityAILookIdle(this));
+        this.tasks.addTask(10, new EntityAIUseAction(this));
 
         this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, false));
         this.targetTasks.addTask(4, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
