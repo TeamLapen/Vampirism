@@ -8,11 +8,7 @@ public interface ILastingAction<T extends IFactionEntity> extends IEntityAction 
 
     int getCooldown(int level);
 
-    void onActivatedClient(T entity);
-
-    void onDeactivated(T entity);
-
-    void onReActivated(T entity);
+    void deactivate(T entity);
 
     boolean onUpdate(T entity);
 }

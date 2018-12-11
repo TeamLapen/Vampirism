@@ -70,7 +70,7 @@ public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdj
 
     @Override
     public boolean isInterruptible() {
-        return true;
+        return false;
     }
 
     private void updateAction() {
@@ -78,18 +78,17 @@ public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdj
             ILastingAction action = (ILastingAction) this.action;
             action.onUpdate(entity);
             if (cooldown == 1) {
-                action.onDeactivated(entity);
+                action.deactivate(entity);
                 cooldown = -action.getCooldown(entity.getLevel());
             }
         } else if (action instanceof IInstantAction) {
-            ((IInstantAction) action).onActivated(entity);
+            ((IInstantAction) action).activate(entity);
             this.action = UtilLib.getNull();
         }
     }
 
     private DefaultEntityAction newAction() {
-        System.out.println("newaction");
-        if (rand.nextInt(1) == 0) { // FIXME
+        if (rand.nextInt(1) == 0) { // TODO
             DefaultEntityAction a = (DefaultEntityAction) availableActions.get(rand.nextInt(availableActions.size()));
             System.out.println(a.getClass().getName());
             return a;

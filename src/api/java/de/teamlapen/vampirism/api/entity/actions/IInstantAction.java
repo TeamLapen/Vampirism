@@ -6,5 +6,5 @@ public interface IInstantAction<T extends IFactionEntity> extends IEntityAction 
 
     int getCooldown(int level);
 
-    boolean onActivated(T entity);
+    boolean activate(T entity);
 }
