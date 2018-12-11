@@ -22,6 +22,7 @@ public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdj
     private T entity;
     private IFaction faction;
     private List availableActions;
+    private boolean attackPlayer = false;
 
     /**
      * Saves timers for action ids Values: 0 - next action <0 - cooldown for next action >0 - active action
@@ -39,8 +40,14 @@ public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdj
     @Override
     public boolean shouldExecute() {
         if (entity.getAttackTarget() instanceof EntityPlayer) {
+            this.attackPlayer = true;
             return true;
         }
+        if (this.attackPlayer) {
+            action.forceDeactivation(entity);
+            this.attackPlayer = false;
+        }
+
         return false;
     }
 

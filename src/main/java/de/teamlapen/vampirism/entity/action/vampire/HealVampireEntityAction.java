@@ -1,6 +1,7 @@
 package de.teamlapen.vampirism.entity.action.vampire;
 
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.api.entity.IVampirismEntity;
 import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.IInstantAction;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -24,5 +25,11 @@ public class HealVampireEntityAction extends DefaultEntityAction implements IIns
     @Override
     public IFaction getFaction() {
         return VReference.VAMPIRE_FACTION;
+    }
+
+    @Override
+    public void forceDeactivation(IVampirismEntity entity) {
+        // TODO Auto-generated method stub
+
     }
 }
