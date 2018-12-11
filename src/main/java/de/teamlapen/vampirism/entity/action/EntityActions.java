@@ -2,8 +2,8 @@ package de.teamlapen.vampirism.entity.action;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
-import de.teamlapen.vampirism.entity.vampire.actions.HealVampireEntityAction;
-import de.teamlapen.vampirism.entity.vampire.actions.InvisibleVampireEntityAction;
+import de.teamlapen.vampirism.entity.action.vampire.HealVampireEntityAction;
+import de.teamlapen.vampirism.entity.action.vampire.InvisibleVampireEntityAction;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
