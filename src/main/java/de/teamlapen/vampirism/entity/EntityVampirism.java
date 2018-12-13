@@ -11,6 +11,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.ai.EntityAIMoveTowardsRestriction;
+import net.minecraft.entity.ai.EntityAITasks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -22,7 +23,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
-
 import javax.annotation.Nullable;
 
 /**
@@ -33,6 +33,8 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     private final EntityAIBase moveTowardsRestriction;
     protected boolean hasArms = true;
     protected boolean peaceful = false;
+    /** Active AI tasks for entity actions */
+    public final EntityAITasks actionTasks;
     /**
      * Whether the home should be saved to nbt or not
      */
@@ -48,6 +50,10 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     public EntityVampirism(World world) {
         super(world);
         moveTowardsRestriction = new EntityAIMoveTowardsRestriction(this, 1.0F);
+        this.actionTasks = new EntityAITasks(world != null && world.profiler != null ? world.profiler : null);
+        if (world != null && !world.isRemote) {
+            this.initEntityAI1();
+        }
     }
 
     public boolean attackEntityAsMob(Entity entity) {
@@ -325,5 +331,9 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
             this.randomTickDivider = 70 + rand.nextInt(50);
             onRandomTick();
         }
+        this.actionTasks.onUpdateTasks();
+    }
+
+    protected void initEntityAI1() {
     }
 }

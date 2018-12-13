@@ -65,7 +65,6 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         hasArms = true;
         this.restrictedSpawn = true;
         this.setSize(0.6F, 1.95F);
-
     }
 
     @Override
@@ -273,12 +272,17 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityPlayer.class, 20F, 0.6F));
         this.tasks.addTask(10, new EntityAIWatchClosest(this, EntityHunterBase.class, 17F));
         this.tasks.addTask(10, new EntityAILookIdle(this));
-        this.tasks.addTask(10, new EntityAIUseAction(this));
 
         this.targetTasks.addTask(3, new EntityAIHurtByTarget(this, false));
         this.targetTasks.addTask(4, new EntityAINearestAttackableTarget<>(this, EntityPlayer.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), true, false, true, false, null)));
         this.targetTasks.addTask(5, new EntityAINearestAttackableTarget<>(this, EntityCreature.class, 5, true, false, VampirismAPI.factionRegistry().getPredicate(getFaction(), false, true, false, false, null)));//TODO maybe make them not attack hunters, although it looks interesting
 
+    }
+
+    @Override
+    protected void initEntityAI1() {
+        super.initEntityAI1();
+        this.actionTasks.addTask(0, new EntityAIUseAction<EntityBasicVampire>(this));
     }
 
 
