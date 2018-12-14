@@ -1,12 +1,13 @@
 package de.teamlapen.vampirism.entity.action.vampire;
 
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.IVampirismEntity;
 import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.IInstantAction;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
 import de.teamlapen.vampirism.api.entity.vampire.IVampireMob;
 import de.teamlapen.vampirism.config.Balance;
+import net.minecraft.init.MobEffects;
+import net.minecraft.potion.PotionEffect;
 
 public class HealVampireEntityAction extends DefaultEntityAction implements IInstantAction<IVampireMob> {
 
@@ -17,8 +18,7 @@ public class HealVampireEntityAction extends DefaultEntityAction implements IIns
 
     @Override
     public boolean activate(IVampireMob entity) {
-        float healamount = entity.getRepresentingEntity().getMaxHealth() * Balance.ea.VAMPIRE_HEAL_AMOUNT / 100;
-        entity.getRepresentingEntity().heal(healamount);
+        entity.getRepresentingEntity().addPotionEffect(new PotionEffect(MobEffects.REGENERATION, Balance.ea.VAMPIRE_HEAL_AMOUNT, 0));
         return true;
     }
 
@@ -27,9 +27,4 @@ public class HealVampireEntityAction extends DefaultEntityAction implements IIns
         return VReference.VAMPIRE_FACTION;
     }
 
-    @Override
-    public void forceDeactivation(IVampirismEntity entity) {
-        // TODO Auto-generated method stub
-
-    }
 }

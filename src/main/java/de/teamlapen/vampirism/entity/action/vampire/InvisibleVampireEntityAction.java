@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.entity.action.vampire;
 
 import de.teamlapen.vampirism.api.VReference;
-import de.teamlapen.vampirism.api.entity.IVampirismEntity;
 import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -46,10 +45,5 @@ public class InvisibleVampireEntityAction extends DefaultEntityAction implements
         return VReference.VAMPIRE_FACTION;
     }
 
-    @Override
-    public void forceDeactivation(IVampirismEntity entity) {
-        deactivate((IVampireMob) entity);
-
-    }
 
 }
