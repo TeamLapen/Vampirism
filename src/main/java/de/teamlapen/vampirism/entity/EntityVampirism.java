@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.entity;
 import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.api.entity.IEntityWithHome;
 import de.teamlapen.vampirism.api.entity.IVampirismEntity;
+import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
 import de.teamlapen.vampirism.core.ModParticles;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.Entity;
@@ -23,6 +24,8 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.EnumSkyBlock;
 import net.minecraft.world.World;
+import java.util.ArrayList;
+import java.util.List;
 import javax.annotation.Nullable;
 
 /**
@@ -35,6 +38,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
     protected boolean peaceful = false;
     /** Active AI tasks for entity actions */
     public final EntityAITasks actionTasks;
+    public List<DefaultEntityAction> availableActions;
     /**
      * Whether the home should be saved to nbt or not
      */
@@ -51,6 +55,7 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
         super(world);
         moveTowardsRestriction = new EntityAIMoveTowardsRestriction(this, 1.0F);
         this.actionTasks = new EntityAITasks(world != null && world.profiler != null ? world.profiler : null);
+        setAvailableActions();
         if (world != null && !world.isRemote) {
             this.initEntityAI1();
         }
@@ -332,6 +337,10 @@ public abstract class EntityVampirism extends EntityCreature implements IEntityW
             onRandomTick();
         }
         this.actionTasks.onUpdateTasks();
+    }
+
+    protected void setAvailableActions() {
+        this.availableActions = new ArrayList<DefaultEntityAction>();
     }
 
     protected void initEntityAI1() {
