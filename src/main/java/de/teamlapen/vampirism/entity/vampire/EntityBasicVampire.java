@@ -7,6 +7,7 @@ import de.teamlapen.vampirism.api.entity.vampire.IBasicVampire;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModPotions;
 import de.teamlapen.vampirism.core.ModSounds;
+import de.teamlapen.vampirism.entity.action.EntityActions;
 import de.teamlapen.vampirism.entity.ai.EntityAIAttackMeleeNoSun;
 import de.teamlapen.vampirism.entity.ai.EntityAIMoveThroughVillageCustom;
 import de.teamlapen.vampirism.entity.ai.EntityAIUseAction;
@@ -282,7 +283,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     @Override
     protected void initEntityAI1() {
         super.initEntityAI1();
-        this.actionTasks.addTask(0, new EntityAIUseAction<EntityBasicVampire>(this));
+        this.actionTasks.addTask(0, new EntityAIUseAction<EntityBasicVampire>(this, this.availableActions));
     }
 
 
@@ -291,6 +292,13 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
         this.getEntityAttribute(SharedMonsterAttributes.MAX_HEALTH).setBaseValue(Balance.mobProps.VAMPIRE_MAX_HEALTH + Balance.mobProps.VAMPIRE_MAX_HEALTH_PL * l);
         this.getEntityAttribute(SharedMonsterAttributes.ATTACK_DAMAGE).setBaseValue(Balance.mobProps.VAMPIRE_ATTACK_DAMAGE + Balance.mobProps.VAMPIRE_ATTACK_DAMAGE_PL * l);
         this.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).setBaseValue(Balance.mobProps.VAMPIRE_SPEED);
+    }
+
+    @Override
+    protected void setAvailableActions() {
+        super.setAvailableActions();
+        this.availableActions.add(EntityActions.vampire_invisible);
+        // this.availableActions.add(EntityActions.vampire_heal);
     }
 
 }

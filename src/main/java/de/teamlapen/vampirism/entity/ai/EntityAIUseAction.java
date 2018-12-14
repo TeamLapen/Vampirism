@@ -1,7 +1,5 @@
 package de.teamlapen.vampirism.entity.ai;
 
-import de.teamlapen.lib.lib.util.UtilLib;
-import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.IInstantAction;
@@ -20,10 +18,7 @@ import java.util.Random;
 public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends EntityAIBase {
 
     private T entity;
-    private IFaction faction;
-    private List availableActions;
-    private boolean attackPlayer = false;
-
+    private List<DefaultEntityAction> availableActions;
     /**
      * Saves timers for action ids Values: 0 - next action <0 - cooldown for next action >0 - active action
      */
@@ -31,31 +26,25 @@ public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdj
     private DefaultEntityAction action;
     private Random rand = new Random();
 
-    public EntityAIUseAction(T entityIn) {
+    public EntityAIUseAction(T entityIn, List<DefaultEntityAction> actions) {
         this.entity = entityIn;
-        this.faction = entityIn.getFaction();
-        this.availableActions = VampirismAPI.entityActionManager().getEntityActionForFaction(faction);
+        this.availableActions = actions;
     }
 
     @Override
     public boolean shouldExecute() {
         if (entity.getAttackTarget() instanceof EntityPlayer) {
-            this.attackPlayer = true;
             return true;
         }
-        if (this.attackPlayer) {
-            action.forceDeactivation(entity);
-            this.attackPlayer = false;
-        }
-
         return false;
     }
 
     @Override
     public void startExecuting() {
-        action = UtilLib.getNull();
+        action = null;
         cooldown = -100;
     }
+
 
     @Override
     public void updateTask() {
@@ -65,7 +54,7 @@ public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdj
         } else if (cooldown < 0) {
             cooldown++;
         } else {
-            action = newAction();
+            newAction();
             if (action instanceof ILastingAction)
                 cooldown = ((ILastingAction) action).getDuration(entity.getLevel());
             else if (action instanceof IInstantAction)
@@ -80,6 +69,13 @@ public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdj
         return false;
     }
 
+    @Override
+    public void resetTask() {
+        if (action instanceof ILastingAction) {
+            ((ILastingAction) action).deactivate(entity);
+        }
+    }
+
     private void updateAction() {
         if (action instanceof ILastingAction) { // TODO if no lasting action, but another -> activate -> -cooldown
             ILastingAction action = (ILastingAction) this.action;
@@ -90,16 +86,25 @@ public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdj
             }
         } else if (action instanceof IInstantAction) {
             ((IInstantAction) action).activate(entity);
-            this.action = UtilLib.getNull();
+            this.action = null;
         }
     }
 
-    private DefaultEntityAction newAction() {
-        if (rand.nextInt(1) == 0) { // TODO
-            DefaultEntityAction a = (DefaultEntityAction) availableActions.get(rand.nextInt(availableActions.size()));
-            System.out.println(a.getClass().getName());
-            return a;
+    private void newAction() {
+        if (rand.nextInt(1) == 0) { // TODO usable balance
+            try {
+                action = (DefaultEntityAction) availableActions.get(rand.nextInt(availableActions.size()));
+                System.out.println(action.getClass().getName()); // TODO remove
+            } catch (NullPointerException e) {
+                action = new DefaultEntityAction() {
+
+                    @Override
+                    public IFaction getFaction() {
+                        // TODO Auto-generated method stub
+                        return null;
+                    }
+                };
+            }
         }
-        return UtilLib.getNull();
     }
 }
