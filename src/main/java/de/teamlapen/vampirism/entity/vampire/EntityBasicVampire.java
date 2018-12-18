@@ -297,8 +297,10 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
     @Override
     protected void setAvailableActions() {
         super.setAvailableActions();
-        this.availableActions.add(EntityActions.vampire_invisible);
-        // this.availableActions.add(EntityActions.vampire_heal);
+        this.availableActions.add(EntityActions.entity_invisible); // TODO edit
+        this.availableActions.add(EntityActions.entity_heal);
+        this.availableActions.add(EntityActions.entity_regeneration);
+        this.availableActions.add(EntityActions.entity_speed);
     }
 
 }
