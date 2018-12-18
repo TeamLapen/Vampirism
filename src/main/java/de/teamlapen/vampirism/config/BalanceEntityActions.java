@@ -7,17 +7,39 @@ import java.io.File;
 
 public class BalanceEntityActions extends BalanceValues {
 
-    @DefaultInt(value = 5, minValue = 1, name = "Vampire Invisible Cooldown", comment = "In seconds")
-    public int VAMPIRE_INVISIBLE_COOLDOWN;
+    /* Invisible Action */
+    @DefaultInt(value = 5, minValue = 1, name = "Invisible Cooldown", comment = "In seconds")
+    public int INVISIBLE_COOLDOWN;
 
-    @DefaultInt(value = 30, minValue = 1, name = "Vampire Invisible Duration", comment = "In Minecraft Ticks, 20 Ticks = 1 sec")
-    public int VAMPIRE_INVISIBLE_DURATION;
+    @DefaultInt(value = 30, minValue = 1, name = "Invisible Duration", comment = "In Minecraft Ticks, 20 Ticks = 1 sec")
+    public int INVISIBLE_DURATION;
 
-    @DefaultInt(value = 5, minValue = 1, name = "Vampire Invisible Cooldown", comment = "In seconds")
-    public int VAMPIRE_HEAL_COOLDOWN;
+    /* Heal Action */
+    @DefaultInt(value = 5, minValue = 1, name = "Invisible Cooldown", comment = "In seconds")
+    public int HEAL_COOLDOWN;
 
-    @DefaultInt(value = 20, minValue = 0, maxValue = 100, name = "Vampire Heal Amount", comment = "In Percent")
-    public int VAMPIRE_HEAL_AMOUNT;
+    @DefaultInt(value = 20, minValue = 0, maxValue = 100, name = "Heal Amount", comment = "In Percent")
+    public int HEAL_AMOUNT;
+
+    /* Regeneration Action */
+    @DefaultInt(value = 10, minValue = 0, name = "Regeneration Duration", comment = "In seconds")
+    public int REGENERATION_DURATION;
+
+    @DefaultInt(value = 5, minValue = 1, name = "Regeneration Cooldown", comment = "In seconds")
+    public int REGENERATION_COOLDOWN;
+
+    @DefaultInt(value = 20, minValue = 0, maxValue = 100, name = "Regeneration Amount", comment = "In Percent")
+    public int REGENERATION_AMOUNT;
+
+    /* Speed Action */
+    @DefaultInt(value = 10, minValue = 0, name = "Speed Duration", comment = "In seconds")
+    public int SPEED_DURATION;
+
+    @DefaultInt(value = 5, minValue = 1, name = "Speed Cooldown", comment = "In seconds")
+    public int SPEED_COOLDOWN;
+
+    @DefaultInt(value = 20, minValue = 0, maxValue = 100, name = "Speed Amount", comment = "In Percent")
+    public int SPEED_AMOUNT;
 
 
     /**
