@@ -18,24 +18,23 @@ public class SpeedEntityAction<T extends EntityVampirism & IFactionEntity & IAdj
 
     @Override
     public int getDuration(int level) {
-        return Balance.ea.SPEED_DURATION;
+        return Balance.ea.SPEED_DURATION * 20;
     }
 
     @Override
     public int getCooldown(int level) {
-        return Balance.ea.SPEED_COOLDOWN;
+        return Balance.ea.SPEED_COOLDOWN * 20;
     }
 
     @Override
     public void deactivate(T entity) {
-        System.out.println("deactivate"); // TODO remove
-        entity.getRepresentingEntity().getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(new AttributeModifier(uuid, "speedaction", 2, 1));
+        entity.getRepresentingEntity().getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).removeModifier(uuid);
     }
 
     @Override
     public boolean onUpdate(T entity) {
-        if (!entity.getRepresentingEntity().getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(new AttributeModifier(uuid, "speedaction", 2, 1))) {
-            entity.getRepresentingEntity().getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(new AttributeModifier(uuid, "speedaction", 2, 1));
+        if (!entity.getRepresentingEntity().getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(new AttributeModifier(uuid, "speedaction", Balance.ea.SPEED_AMOUNT, 2))) {
+            entity.getRepresentingEntity().getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(new AttributeModifier(uuid, "speedaction", Balance.ea.SPEED_AMOUNT, 2));
         }
         return true;
     }

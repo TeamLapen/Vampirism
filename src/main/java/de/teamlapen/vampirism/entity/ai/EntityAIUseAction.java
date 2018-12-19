@@ -84,7 +84,6 @@ public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdj
                 action = availableActions.get(rand.nextInt(availableActions.size()));
                 System.out.println(action.getClass().getName()); // TODO remove
             } catch (NullPointerException e) {
-                System.out.println("broken");
                 action = new DefaultEntityAction() {
                     @Override
                     public int getCooldown(int level) {

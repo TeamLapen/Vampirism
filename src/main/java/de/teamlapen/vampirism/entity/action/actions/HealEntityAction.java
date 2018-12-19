@@ -11,14 +11,12 @@ public class HealEntityAction<T extends EntityVampirism & IFactionEntity & IAdju
 
     @Override
     public int getCooldown(int level) {
-        return Balance.ea.HEAL_COOLDOWN * 20; // seconds into ticks
+        return Balance.ea.HEAL_COOLDOWN * 20;
     }
 
     @Override
     public boolean activate(T entity) {
-        System.out.println(entity.getRepresentingEntity().getHealth() + " - "); // TODO remove
-        entity.getRepresentingEntity().heal(entity.getMaxHealth() / Balance.ea.HEAL_AMOUNT);
-        System.out.print(entity.getRepresentingEntity().getHealth());// TODO remove
+        entity.getRepresentingEntity().heal(entity.getMaxHealth() / 100 * Balance.ea.HEAL_AMOUNT);
         return true;
     }
 
