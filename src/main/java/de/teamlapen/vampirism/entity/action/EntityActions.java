@@ -2,8 +2,10 @@ package de.teamlapen.vampirism.entity.action;
 
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.actions.IEntityAction;
-import de.teamlapen.vampirism.entity.action.vampire.HealVampireEntityAction;
-import de.teamlapen.vampirism.entity.action.vampire.InvisibleVampireEntityAction;
+import de.teamlapen.vampirism.entity.action.actions.HealEntityAction;
+import de.teamlapen.vampirism.entity.action.actions.InvisibleEntityAction;
+import de.teamlapen.vampirism.entity.action.actions.RegenerationEntityAction;
+import de.teamlapen.vampirism.entity.action.actions.SpeedEntityAction;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
@@ -13,15 +15,15 @@ import net.minecraftforge.registries.IForgeRegistry;
  */
 @GameRegistry.ObjectHolder(REFERENCE.MODID)
 public class EntityActions {
-    // vampire actions
-    public static final InvisibleVampireEntityAction vampire_invisible = UtilLib.getNull();
-    public static final HealVampireEntityAction vampire_heal = UtilLib.getNull();
-    // hunter actions
+    public static final InvisibleEntityAction entity_invisible = UtilLib.getNull();
+    public static final HealEntityAction entity_heal = UtilLib.getNull();
+    public static final RegenerationEntityAction entity_regeneration = UtilLib.getNull();
+    public static final SpeedEntityAction entity_speed = UtilLib.getNull();
 
     public static void registerDefaultActions(IForgeRegistry<IEntityAction> registry) {
-        // vampire actions
-        registry.register(new InvisibleVampireEntityAction().setRegistryName("vampirism", "vampire_invisible"));
-        registry.register(new HealVampireEntityAction().setRegistryName("vampirism", "vampire_heal"));
-        // hunter actions
+        registry.register(new InvisibleEntityAction<>().setRegistryName("vampirism", "entity_invisible"));
+        registry.register(new HealEntityAction<>().setRegistryName("vampirism", "entity_heal"));
+        registry.register(new RegenerationEntityAction<>().setRegistryName("vampirism", "entity_regeneration"));
+        registry.register(new SpeedEntityAction<>().setRegistryName("vampirism", "entity_speed"));
     }
 }
