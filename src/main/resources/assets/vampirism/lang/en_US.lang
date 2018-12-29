@@ -392,6 +392,14 @@ command.vampirism.base.levelup.max=Player is already on the highest level
 enchantment.vampirism.arrow_frugality=Arrow Frugality
 enchantment.vampirism.vampire_slayer=Vampire Slayer
 
+#Village
+text.vampirism.village.faction_capturing_progress=%s are capturing this village (%s)%%
+text.vampirism.village.faction_controlling=%s are controlling this village
+text.vampirism.village.neutral=Neutral village
+text.vampirism.village.totem_destroy.fail_other_capturing=Cannot destroy totem while another faction is capturing it
+text.vampirism.village.totem_destroy.fail_capture_in_progress=Cannot destroy totem while someone is capturing it
+text.vampirism.village.totem_destroy.fail_other_faction=Cannot destroy a totem of another faction
+
 #ETC
 text.vampirism.vampire=Vampire
 text.vampirism.vampires=Vampires

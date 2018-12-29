@@ -570,4 +570,11 @@ public class UtilLib {
         }
         return stack.getTagCompound();
     }
+
+    public static float[] getColorComponents(int color) {
+        int i = (color & 16711680) >> 16;
+        int j = (color & 65280) >> 8;
+        int k = (color & 255);
+        return new float[]{(float) i / 255.0F, (float) j / 255.0F, (float) k / 255.0F};
+    }
 }

@@ -61,6 +61,8 @@ public class ModBlocks {
     public static final BlockPedestal blood_pedestal = getNull();
     public static final BlockGrinder blood_grinder = getNull();
     public static final BlockSieve blood_sieve = getNull();
+    public static final BlockTotemTop totem_top = getNull();
+    public static final VampirismBlock totem_base = getNull();
 
 
     private static final Map<String, String> OLD_TO_NEW_TILE_MAP = Maps.newHashMap();
@@ -78,6 +80,7 @@ public class ModBlocks {
         registerTileEntity(TilePedestal.class, "blood_pedestal");
         registerTileEntity(TileGrinder.class, "grinder");
         registerTileEntity(TileSieve.class, "sieve");
+        registerTileEntity(TileTotem.class, "totem");
     }
 
     /**
@@ -149,6 +152,8 @@ public class ModBlocks {
         registry.register(itemBlock(blood_pedestal));
         registry.register(itemBlock(blood_grinder));
         registry.register(itemBlock(blood_sieve));
+        registry.register(itemBlock(totem_base));
+        registry.register(itemBlock(totem_top));
         registry.register(new ItemSlab(castle_slab, castle_slab, castle_slab_double).setRegistryName(castle_slab.getRegistryName()));
     }
 
@@ -194,6 +199,8 @@ public class ModBlocks {
         registry.register(new BlockPedestal());
         registry.register(new BlockGrinder());
         registry.register(new BlockSieve());
+        registry.register(new BlockTotemTop());
+        registry.register(new BlockTotemBase());
         registerTiles();
     }
 

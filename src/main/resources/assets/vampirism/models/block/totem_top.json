@@ -1,0 +1,834 @@
+{
+  "__comment": "Designed by Maxanier with Cubik Studio - https://cubik.studio",
+  "textures": {
+    "particle": "blocks/obsidian",
+    "core": "vampirism:blocks/totem_core",
+    "iron": "blocks/iron_block",
+    "obsidian": "blocks/obsidian"
+  },
+  "elements": [
+    {
+      "__comment": "core",
+      "from": [
+        4,
+        2,
+        4
+      ],
+      "to": [
+        12,
+        8,
+        12
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            8,
+            6
+          ],
+          "texture": "#core",
+          "tintindex": 255
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            8,
+            6
+          ],
+          "texture": "#core",
+          "tintindex": 255
+        },
+        "west": {
+          "uv": [
+            0,
+            0,
+            8,
+            6
+          ],
+          "texture": "#core",
+          "tintindex": 255
+        },
+        "east": {
+          "uv": [
+            0,
+            0,
+            8,
+            6
+          ],
+          "texture": "#core",
+          "tintindex": 255
+        }
+      }
+    },
+    {
+      "__comment": "base",
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        1,
+        13
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            3,
+            3,
+            13,
+            13
+          ],
+          "texture": "#iron",
+          "cullface": "down"
+        },
+        "north": {
+          "uv": [
+            3,
+            15,
+            13,
+            16
+          ],
+          "texture": "#iron"
+        },
+        "south": {
+          "uv": [
+            3,
+            15,
+            13,
+            16
+          ],
+          "texture": "#iron"
+        },
+        "west": {
+          "uv": [
+            3,
+            15,
+            13,
+            16
+          ],
+          "texture": "#iron"
+        },
+        "east": {
+          "uv": [
+            3,
+            15,
+            13,
+            16
+          ],
+          "texture": "#iron"
+        }
+      }
+    },
+    {
+      "__comment": "cage_base",
+      "from": [
+        1,
+        1,
+        1
+      ],
+      "to": [
+        15,
+        2,
+        15
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": "#obsidian"
+        },
+        "up": {
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": "#obsidian"
+        },
+        "north": {
+          "uv": [
+            1,
+            14,
+            15,
+            15
+          ],
+          "texture": "#obsidian"
+        },
+        "south": {
+          "uv": [
+            1,
+            14,
+            15,
+            15
+          ],
+          "texture": "#obsidian"
+        },
+        "west": {
+          "uv": [
+            1,
+            14,
+            15,
+            15
+          ],
+          "texture": "#obsidian"
+        },
+        "east": {
+          "uv": [
+            1,
+            14,
+            15,
+            15
+          ],
+          "texture": "#obsidian"
+        }
+      }
+    },
+    {
+      "__comment": "cage_side7",
+      "from": [
+        1,
+        2,
+        1
+      ],
+      "to": [
+        2,
+        8,
+        2
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            14,
+            8,
+            15,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "south": {
+          "uv": [
+            1,
+            8,
+            2,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "west": {
+          "uv": [
+            1,
+            8,
+            2,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "east": {
+          "uv": [
+            14,
+            8,
+            15,
+            14
+          ],
+          "texture": "#obsidian"
+        }
+      }
+    },
+    {
+      "__comment": "cage_side6",
+      "from": [
+        14,
+        2,
+        14
+      ],
+      "to": [
+        15,
+        8,
+        15
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            14,
+            8,
+            15,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "south": {
+          "uv": [
+            1,
+            8,
+            2,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "west": {
+          "uv": [
+            1,
+            8,
+            2,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "east": {
+          "uv": [
+            14,
+            8,
+            15,
+            14
+          ],
+          "texture": "#obsidian"
+        }
+      }
+    },
+    {
+      "__comment": "cage_side5",
+      "from": [
+        14,
+        2,
+        1
+      ],
+      "to": [
+        15,
+        8,
+        2
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            14,
+            8,
+            15,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "south": {
+          "uv": [
+            1,
+            8,
+            2,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "west": {
+          "uv": [
+            1,
+            8,
+            2,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "east": {
+          "uv": [
+            14,
+            8,
+            15,
+            14
+          ],
+          "texture": "#obsidian"
+        }
+      }
+    },
+    {
+      "__comment": "cage_side4",
+      "from": [
+        1,
+        2,
+        14
+      ],
+      "to": [
+        2,
+        8,
+        15
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            14,
+            8,
+            15,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "south": {
+          "uv": [
+            1,
+            8,
+            2,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "west": {
+          "uv": [
+            1,
+            8,
+            2,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "east": {
+          "uv": [
+            14,
+            8,
+            15,
+            14
+          ],
+          "texture": "#obsidian"
+        }
+      }
+    },
+    {
+      "__comment": "cage_top",
+      "from": [
+        1,
+        8,
+        1
+      ],
+      "to": [
+        15,
+        9,
+        15
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": "#obsidian"
+        },
+        "up": {
+          "uv": [
+            1,
+            1,
+            15,
+            15
+          ],
+          "texture": "#obsidian"
+        },
+        "north": {
+          "uv": [
+            1,
+            14,
+            15,
+            15
+          ],
+          "texture": "#obsidian"
+        },
+        "south": {
+          "uv": [
+            1,
+            14,
+            15,
+            15
+          ],
+          "texture": "#obsidian"
+        },
+        "west": {
+          "uv": [
+            1,
+            14,
+            15,
+            15
+          ],
+          "texture": "#obsidian"
+        },
+        "east": {
+          "uv": [
+            1,
+            14,
+            15,
+            15
+          ],
+          "texture": "#obsidian"
+        }
+      }
+    },
+    {
+      "__comment": "top",
+      "from": [
+        3,
+        9,
+        3
+      ],
+      "to": [
+        13,
+        10,
+        13
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            3,
+            2,
+            13,
+            14
+          ],
+          "texture": "#iron"
+        },
+        "north": {
+          "uv": [
+            3,
+            15,
+            13,
+            16
+          ],
+          "texture": "#iron"
+        },
+        "south": {
+          "uv": [
+            3,
+            15,
+            13,
+            16
+          ],
+          "texture": "#iron"
+        },
+        "west": {
+          "uv": [
+            2,
+            15,
+            14,
+            16
+          ],
+          "texture": "#iron"
+        },
+        "east": {
+          "uv": [
+            2,
+            15,
+            14,
+            16
+          ],
+          "texture": "#iron"
+        }
+      }
+    },
+    {
+      "__comment": "cage_side3",
+      "from": [
+        7,
+        2,
+        1
+      ],
+      "to": [
+        9,
+        8,
+        2
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            14,
+            8,
+            15,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "south": {
+          "uv": [
+            1,
+            8,
+            2,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "west": {
+          "uv": [
+            1,
+            8,
+            2,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "east": {
+          "uv": [
+            14,
+            8,
+            15,
+            14
+          ],
+          "texture": "#obsidian"
+        }
+      }
+    },
+    {
+      "__comment": "cage_side2",
+      "from": [
+        7,
+        2,
+        14
+      ],
+      "to": [
+        9,
+        8,
+        15
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            14,
+            8,
+            15,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "south": {
+          "uv": [
+            1,
+            8,
+            2,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "west": {
+          "uv": [
+            1,
+            8,
+            2,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "east": {
+          "uv": [
+            14,
+            8,
+            15,
+            14
+          ],
+          "texture": "#obsidian"
+        }
+      }
+    },
+    {
+      "__comment": "cage_side",
+      "from": [
+        1,
+        2,
+        7
+      ],
+      "to": [
+        2,
+        8,
+        9
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            14,
+            8,
+            15,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "south": {
+          "uv": [
+            1,
+            8,
+            2,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "west": {
+          "uv": [
+            1,
+            8,
+            2,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "east": {
+          "uv": [
+            14,
+            8,
+            15,
+            14
+          ],
+          "texture": "#obsidian"
+        }
+      }
+    },
+    {
+      "__comment": "cage_side1",
+      "from": [
+        14,
+        2,
+        7
+      ],
+      "to": [
+        15,
+        8,
+        9
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            14,
+            8,
+            15,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "south": {
+          "uv": [
+            1,
+            8,
+            2,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "west": {
+          "uv": [
+            1,
+            8,
+            2,
+            14
+          ],
+          "texture": "#obsidian"
+        },
+        "east": {
+          "uv": [
+            14,
+            8,
+            15,
+            14
+          ],
+          "texture": "#obsidian"
+        }
+      }
+    }
+  ],
+  "display": {
+    "thirdperson_righthand": {
+      "rotation": [
+        75,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        2.5,
+        0
+      ],
+      "scale": [
+        0.375,
+        0.375,
+        0.375
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        75,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        2.5,
+        0
+      ],
+      "scale": [
+        0.375,
+        0.375,
+        0.375
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        1.3913,
+        0
+      ],
+      "scale": [
+        0.4,
+        0.4,
+        0.4
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        45,
+        0
+      ],
+      "translation": [
+        0,
+        1.3913,
+        0
+      ],
+      "scale": [
+        0.4,
+        0.4,
+        0.4
+      ]
+    },
+    "gui": {
+      "rotation": [
+        30,
+        225,
+        0
+      ],
+      "scale": [
+        0.625,
+        0.625,
+        0.625
+      ]
+    },
+    "ground": {
+      "translation": [
+        0,
+        3,
+        0
+      ],
+      "scale": [
+        0.25,
+        0.25,
+        0.25
+      ]
+    },
+    "fixed": {
+      "scale": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    }
+  }
+}
