@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.SoundEvents;
@@ -50,9 +49,13 @@ public class BlockFirePlace extends VampirismBlock {
         return false;
     }
 
-    public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock) {
-        if (!worldIn.getBlockState(pos.down()).isSideSolid(worldIn, pos, EnumFacing.UP)) {
-            worldIn.destroyBlock(pos, true);
+
+    @Override
+    public void onNeighborChange(IBlockAccess world, BlockPos pos, BlockPos neighbor) {
+        if (!world.getBlockState(pos.down()).isSideSolid(world, pos, EnumFacing.UP)) {
+            if (world instanceof World) {
+                ((World) world).destroyBlock(pos, true);
+            }
         }
     }
 

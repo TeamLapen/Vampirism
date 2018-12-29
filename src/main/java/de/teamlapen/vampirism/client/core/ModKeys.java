@@ -11,6 +11,7 @@ import de.teamlapen.vampirism.network.ModGuiHandler;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
@@ -134,7 +135,7 @@ public class ModKeys {
             FactionPlayerHandler factionHandler = FactionPlayerHandler.get(Minecraft.getMinecraft().player);
             toggleBoundAction(factionHandler.getCurrentFactionPlayer(), factionHandler.getBoundAction2());
         }
-        if (suckKeyDown == true && !isKeyDown(getKeyCode(KEY.SUCK))) {
+        if (suckKeyDown == true && !GameSettings.isKeyDown(SUCK)) {
             suckKeyDown = false;
             VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));
         }
