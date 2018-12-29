@@ -1,7 +1,6 @@
 package de.teamlapen.vampirism.blocks;
 
 import de.teamlapen.lib.lib.util.FluidLib;
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.tileentity.TileAltarInspiration;
 import de.teamlapen.vampirism.world.VampirismWorldData;
 import net.minecraft.block.material.Material;
@@ -96,7 +95,7 @@ public class BlockAltarInspiration extends VampirismBlockContainer {
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ) {
         ItemStack stack = playerIn.getHeldItem(hand);
-        if (!ItemStackUtil.isEmpty(stack) && !worldIn.isRemote) {
+        if (!stack.isEmpty() && !worldIn.isRemote) {
             if (FluidLib.hasFluidItemCap(stack)) {
                 TileAltarInspiration tileEntity = (TileAltarInspiration) worldIn.getTileEntity(pos);
                 if (!playerIn.isSneaking()) {
@@ -110,7 +109,7 @@ public class BlockAltarInspiration extends VampirismBlockContainer {
                 return true;
             }
         }
-        if (ItemStackUtil.isEmpty(stack)) {
+        if (stack.isEmpty()) {
             TileAltarInspiration tileEntity = (TileAltarInspiration) worldIn.getTileEntity(pos);
             tileEntity.startRitual(playerIn);
         }

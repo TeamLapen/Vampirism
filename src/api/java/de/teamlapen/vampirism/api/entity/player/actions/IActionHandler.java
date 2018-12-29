@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.api.entity.player.actions;
 
 import net.minecraft.util.ResourceLocation;
 
+import javax.annotation.Nonnull;
 import java.util.Collection;
 import java.util.List;
 
@@ -10,6 +11,10 @@ import java.util.List;
  * Interface for player's faction's action handler
  */
 public interface IActionHandler<T extends IActionPlayer> {
+
+    /**
+     * Deactivate any active action and start cooldown timer
+     */
     void deactivateAllActions();
 
     /**
@@ -25,7 +30,7 @@ public interface IActionHandler<T extends IActionPlayer> {
      * @param action
      * @return
      */
-    float getPercentageForAction(IAction action);
+    float getPercentageForAction(@Nonnull IAction action);
 
     /**
      * Checks if the action is currently activated
@@ -33,7 +38,7 @@ public interface IActionHandler<T extends IActionPlayer> {
      * @param action
      * @return
      */
-    boolean isActionActive(ILastingAction action);
+    boolean isActionActive(@Nonnull ILastingAction action);
 
     /**
      * Checks if the lasting action is currently activated.

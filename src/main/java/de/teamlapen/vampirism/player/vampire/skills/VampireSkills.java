@@ -48,6 +48,7 @@ public class VampireSkills {
     public static final ISkill blood_charge = UtilLib.getNull();
     public static final ISkill sword_finisher = UtilLib.getNull();
     public static final ISkill dark_blood_projectile = UtilLib.getNull();
+    public static final ISkill half_invulnerable = UtilLib.getNull();
 
     public static void registerVampireSkills(IForgeRegistry<ISkill> registry) {
         registry.register(new VampirismSkill.SimpleVampireSkill(VReference.VAMPIRE_FACTION.getKey(), 32, 0, false));
@@ -72,7 +73,7 @@ public class VampireSkills {
         });
         registry.register(new ActionSkill<>("vampire_regeneration", VampireActions.regen));
         registry.register(new ActionSkill<>("bat", VampireActions.bat));
-        registry.register(new ActionSkill<>("summon_bats", VampireActions.summon_bat));
+        registry.register(new ActionSkill<>("summon_bats", VampireActions.summon_bat, true));
         DefaultSkill<IVampirePlayer> damage = new VampirismSkill.SimpleVampireSkill("less_sundamage", 96, 0, false);
         damage.registerAttributeModifier(VReference.sunDamage, "EB47EDC1-ED4E-4CD8-BDDC-BE40956042A2", Balance.vps.SUNDAMAGE_REDUCTION1, 2);
         registry.register(damage);
@@ -91,7 +92,7 @@ public class VampireSkills {
         registry.register((new VampirismSkill.SimpleVampireSkill("less_blood_thirst", 80, 0, true)).registerAttributeModifier(VReference.bloodExhaustion, "980ad86f-fe76-433b-b26a-c4060e0e6751", Balance.vps.BLOOD_THIRST_REDUCTION1, 2));
         registry.register(new ActionSkill<>("vampire_disguise", VampireActions.disguise_vampire));
         registry.register(new ActionSkill<>("vampire_invisibility", VampireActions.vampire_invisibility));
-        registry.register(new ActionSkill<>("vampire_rage", VampireActions.vampire_rage));
+        registry.register(new ActionSkill<>("vampire_rage", VampireActions.vampire_rage, true));
         DefaultSkill<IVampirePlayer> bite = new VampirismSkill.SimpleVampireSkill("bite1", 128, 0, false) {
 
             @Override
@@ -130,8 +131,8 @@ public class VampireSkills {
         };
         registry.register(bite2);
         registry.register(new VampirismSkill.SimpleVampireSkill("blood_charge", 240, 0, true));
-        registry.register(new ActionSkill<>("freeze", VampireActions.freeze));
-        registry.register(new ActionSkill<>("sunscreen", VampireActions.sunscreen));
+        registry.register(new ActionSkill<>("freeze", VampireActions.freeze, true));
+        registry.register(new ActionSkill<>("sunscreen", VampireActions.sunscreen, true));
         DefaultSkill<IVampirePlayer> jump = new VampirismSkill.SimpleVampireSkill("vampire_jump", 160, 0, false) {
 
             @Override
@@ -219,6 +220,7 @@ public class VampireSkills {
             }
         });
         registry.register(new ActionSkill<>("dark_blood_projectile", VampireActions.dark_blood_projectile));
+        registry.register(new ActionSkill<>("half_invulnerable", VampireActions.half_invulnerable, true));
 
 
     }
@@ -242,8 +244,8 @@ public class VampireSkills {
 
         SkillNode skill3 = skillManager.createSkillNode(skill2, less_blood_thirst);
         SkillNode skill4 = skillManager.createSkillNode(skill3, vampire_disguise);
-        //TODO add one more
-        SkillNode skill6 = skillManager.createSkillNode(skill4, vampire_invisibility);
+        SkillNode skill5 = skillManager.createSkillNode(skill4, half_invulnerable);
+        SkillNode skill6 = skillManager.createSkillNode(skill5, vampire_invisibility);
     }
 
     private static void registerOffensiveSkills(ISkillManager skillManager, SkillNode start) {

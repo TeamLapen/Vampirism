@@ -5,6 +5,7 @@ import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.tileentity.TileSunscreenBeacon;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
@@ -16,6 +17,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 
@@ -33,13 +35,15 @@ public class BlockSunscreenBeacon extends VampirismBlockContainer {
         }
     }
 
+
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+    public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced) {
         super.addInformation(stack, player, tooltip, advanced);
         tooltip.add(UtilLib.translate(getUnlocalizedName() + ".tooltip1"));
         tooltip.add(UtilLib.translateFormatted(getUnlocalizedName() + ".tooltip2", Configs.sunscreen_beacon_distance));
     }
+
 
     @Override
     public boolean canHarvestBlock(IBlockAccess world, BlockPos pos, EntityPlayer player) {

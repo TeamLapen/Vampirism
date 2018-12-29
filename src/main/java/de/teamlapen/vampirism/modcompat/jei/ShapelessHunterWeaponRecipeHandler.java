@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.modcompat.jei;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.inventory.ShapelessHunterWeaponRecipe;
 import mezz.jei.api.recipe.IRecipeHandler;
@@ -34,7 +33,7 @@ public class ShapelessHunterWeaponRecipeHandler implements IRecipeHandler<Shapel
     public boolean isRecipeValid(@Nonnull ShapelessHunterWeaponRecipe recipe) {
         int inputCount = 0;
         for (Object input : recipe.recipeItems) {
-            if (input instanceof ItemStack && !ItemStackUtil.isEmpty((ItemStack) input)) {
+            if (input instanceof ItemStack && !((ItemStack) input).isEmpty()) {
                 inputCount++;
             } else {
                 VampirismMod.log.w("JeiCompat", "Recipe has an input that is not an ItemStack. {Output:%s,Inputs:%s}", recipe.getRecipeOutput(), recipe.recipeItems);

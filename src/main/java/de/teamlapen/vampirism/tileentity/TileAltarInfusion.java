@@ -4,12 +4,10 @@ import de.teamlapen.lib.VampLib;
 import de.teamlapen.lib.lib.inventory.InventoryHelper;
 import de.teamlapen.lib.lib.inventory.InventorySlot;
 import de.teamlapen.lib.lib.tile.InventoryTileEntity;
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.ValuedObject;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
-import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
 import de.teamlapen.vampirism.blocks.BlockAltarPillar;
 import de.teamlapen.vampirism.core.ModBlocks;
 import de.teamlapen.vampirism.core.ModItems;
@@ -291,8 +289,7 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
                     return;
                 }
                 handler.setFactionLevel(VReference.VAMPIRE_FACTION, handler.getCurrentLevel(VReference.VAMPIRE_FACTION) + 1);
-                IBloodStats stats = VampirePlayer.get(player).getBloodStats();
-                stats.setBloodLevel(stats.getMaxBlood());
+                VampirePlayer.get(player).drinkBlood(Integer.MAX_VALUE, 0, false);
             } else {
                 this.world.playSound(player.posX, player.posY, player.posZ, SoundEvents.ENTITY_GENERIC_EXPLODE, SoundCategory.BLOCKS, 4.0F, (1.0F + (this.world.rand.nextFloat() - this.world.rand.nextFloat()) * 0.2F) * 0.7F, true);
                 this.world.spawnParticle(EnumParticleTypes.EXPLOSION_HUGE, player.posX, player.posY, player.posZ, 1.0D, 0.0D, 0.0D);
@@ -323,10 +320,10 @@ public class TileAltarInfusion extends InventoryTileEntity implements ITickable 
         int newLevel = targetLevel;
         VampireLevelingConf.AltarInfusionRequirements requirements = VampireLevelingConf.getInstance().getAltarInfusionRequirements(newLevel);
         ItemStack missing = InventoryHelper.checkItems(this, items, new int[]{requirements.blood, requirements.heart, requirements.vampireBook}, new int[]{requirements.getBloodMetaForCheck(), OreDictionary.WILDCARD_VALUE, OreDictionary.WILDCARD_VALUE});
-        if (!ItemStackUtil.isEmpty(missing)) {
+        if (!missing.isEmpty()) {
             if (messagePlayer) {
                 ITextComponent item = missing.getItem().equals(ModItems.pure_blood) ? ModItems.pure_blood.getDisplayName(missing) : new TextComponentTranslation(missing.getUnlocalizedName() + ".name");
-                ITextComponent main = new TextComponentTranslation("text.vampirism.ritual_missing_items", ItemStackUtil.getCount(missing), item);
+                ITextComponent main = new TextComponentTranslation("text.vampirism.ritual_missing_items", missing.getCount(), item);
                 player.sendMessage(main);
             }
 

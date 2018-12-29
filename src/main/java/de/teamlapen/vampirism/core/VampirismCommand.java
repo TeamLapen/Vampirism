@@ -5,6 +5,7 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.lib.lib.util.VersionChecker;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VampirismAPI;
+import de.teamlapen.vampirism.api.entity.factions.IFactionPlayerHandler;
 import de.teamlapen.vampirism.api.entity.factions.IPlayableFaction;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.config.Configs;
@@ -151,6 +152,51 @@ public class VampirismCommand extends BasicCommand {
                 return getName() + " " + ArrayUtils.toString(pfaction_names) + " <level> [<player>]";
             }
         });
+
+        addSubcommand(new SubCommand(PERMISSION_LEVEL_CHEAT) {
+
+            @Override
+            public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+                if (args.length > 1) {
+                    throw new WrongUsageException(getUsage(sender));
+                }
+                EntityPlayer player = args.length == 1 ? getPlayer(server, sender, args[0]) : getCommandSenderAsPlayer(sender);
+
+                IFactionPlayerHandler handler = VampirismAPI.getFactionPlayerHandler(player);
+                int currentLevel = handler.getCurrentLevel();
+                if (currentLevel == 0) {
+                    throw new CommandException("command.vampirism.base.levelup.nofaction");
+                } else if (currentLevel == handler.getCurrentFaction().getHighestReachableLevel()) {
+                    sender.sendMessage(new TextComponentTranslation("command.vampirism.base.levelup.max"));
+                } else {
+                    if (handler.setFactionLevel(handler.getCurrentFaction(), currentLevel + 1)) {
+                        ITextComponent msg = player.getDisplayName().appendSibling(new TextComponentString(" is now a " + handler.getCurrentFaction().name() + " level " + (currentLevel + 1)));
+                        FMLCommonHandler.instance().getMinecraftServerInstance().getPlayerList().sendMessage(msg);
+                    } else {
+                        throw new CommandException("commands.vampirism.failed_to_execute");
+                    }
+                }
+
+            }
+
+            @Override
+            public String getName() {
+                return "levelup";
+            }
+
+            @Override
+            public List<String> getTabCompletions(MinecraftServer server, ICommandSender sender, String[] args, @Nullable BlockPos pos) {
+                return args.length == 1 ? getListOfStringsMatchingLastWord(args, server.getOnlinePlayerNames()) : Collections.emptyList();
+            }
+
+            @Override
+            public String getUsage(ICommandSender sender) {
+
+                return getName() + " [<player>]";
+            }
+        });
+
+
         addSubcommand(new SubCommand(0) {
 
 

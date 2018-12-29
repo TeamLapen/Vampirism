@@ -26,27 +26,9 @@ public class BloodStats implements IBloodStats {
     private int bloodTimer;
     private int prevBloodLevel = 20;
     private boolean changed = false;
-    public BloodStats(EntityPlayer player) {
+
+    BloodStats(EntityPlayer player) {
         this.player = player;
-    }
-
-    @Override
-    public int addBlood(int amount, float saturationModifier) {
-        int add = Math.min(amount, maxBlood - bloodLevel);
-        bloodLevel += add;
-        bloodSaturationLevel = Math.min(this.bloodSaturationLevel + (float) add * saturationModifier * 2.0F, (float) bloodLevel);
-        changed = true;
-        return amount - add;
-    }
-
-    @Override
-    public boolean consumeBlood(int a) {
-        int blood = getBloodLevel();
-        int bloodToRemove = Math.min(a, blood);
-
-        bloodLevel -= bloodToRemove;
-        changed = true;
-        return bloodToRemove <= blood;
     }
 
     @Override
@@ -54,8 +36,7 @@ public class BloodStats implements IBloodStats {
         return bloodLevel;
     }
 
-    @Override
-    public void setBloodLevel(int amt) {
+    void setBloodLevel(int amt) {
         bloodLevel = amt < 0 ? 0 : (amt > maxBlood ? maxBlood : amt);
         changed = true;
     }
@@ -71,7 +52,7 @@ public class BloodStats implements IBloodStats {
      *
      * @param maxBlood Should be a even number
      */
-    public void setMaxBlood(int maxBlood) {
+    void setMaxBlood(int maxBlood) {
         this.maxBlood = Math.max(1, maxBlood);
         if (this.bloodLevel > maxBlood) {
             bloodLevel = maxBlood;
@@ -168,27 +149,12 @@ public class BloodStats implements IBloodStats {
         }
     }
 
-
-    /**
-     * Write all relevant data to nbt
-     *
-     * @param nbt
-     */
-    public void writeNBT(NBTTagCompound nbt) {
-        writeNBTBlood(nbt);
-        nbt.setInteger("bloodTimer", bloodTimer);
-        nbt.setFloat("bloodSaturation", bloodSaturationLevel);
-        nbt.setFloat("bloodExhaustion", bloodExhaustionLevel);
-        nbt.setInteger("maxBlood", maxBlood);
-    }
-
-    /**
-     * Write only the blood level to nbt
-     *
-     * @param nbt
-     */
-    public void writeNBTBlood(NBTTagCompound nbt) {
-        nbt.setInteger("bloodLevel", bloodLevel);
+    int addBlood(int amount, float saturationModifier) {
+        int add = Math.min(amount, maxBlood - bloodLevel);
+        bloodLevel += add;
+        bloodSaturationLevel = Math.min(this.bloodSaturationLevel + (float) add * saturationModifier * 2.0F, (float) bloodLevel);
+        changed = true;
+        return amount - add;
     }
 
     /**
@@ -196,7 +162,7 @@ public class BloodStats implements IBloodStats {
      *
      * @param amount
      */
-    protected void addExhaustion(float amount) {
+    void addExhaustion(float amount) {
         this.addExhaustion(amount, false);
     }
 
@@ -206,7 +172,7 @@ public class BloodStats implements IBloodStats {
      * @param amount
      * @param ignoreModifier If the entity exhaustion attribute {@link VReference#bloodExhaustion} should be ignored
      */
-    protected void addExhaustion(float amount, boolean ignoreModifier) {
+    void addExhaustion(float amount, boolean ignoreModifier) {
         VampirePlayer.get(player).checkAttributes(VReference.bloodExhaustion);
         IAttributeInstance attribute = player.getEntityAttribute(VReference.bloodExhaustion);
         float mult;
@@ -234,6 +200,38 @@ public class BloodStats implements IBloodStats {
         }
     }
 
+    boolean removeBlood(int a, boolean allowPartial) {
+        if (bloodLevel >= a) {
+            bloodLevel -= a;
+            changed = true;
+            return true;
+        } else if (allowPartial) {
+            bloodLevel = 0; //a is larger than the blood level, so use up as much as possible
+        }
+        return false;
+    }
+
+    /**
+     * Write all relevant data to nbt
+     *
+     * @param nbt
+     */
+    void writeNBT(NBTTagCompound nbt) {
+        writeNBTBlood(nbt);
+        nbt.setInteger("bloodTimer", bloodTimer);
+        nbt.setFloat("bloodSaturation", bloodSaturationLevel);
+        nbt.setFloat("bloodExhaustion", bloodExhaustionLevel);
+        nbt.setInteger("maxBlood", maxBlood);
+    }
+
+    /**
+     * Write only the blood level to nbt
+     *
+     * @param nbt
+     */
+    void writeNBTBlood(NBTTagCompound nbt) {
+        nbt.setInteger("bloodLevel", bloodLevel);
+    }
 
     NBTTagCompound writeUpdate(NBTTagCompound nbt) {
         nbt.setInteger("bloodLevel", bloodLevel);

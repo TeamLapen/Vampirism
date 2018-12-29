@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
@@ -83,7 +82,7 @@ public class BlockMedChair extends VampirismBlock {
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing side, float hitX, float hitY, float hitZ) {
 
         ItemStack stack = playerIn.getHeldItem(hand);
-        if (!ItemStackUtil.isEmpty(stack) && stack.getItem().equals(ModItems.injection) && stack.getMetadata() == ItemInjection.META_GARLIC) {
+        if (!stack.isEmpty() && stack.getItem().equals(ModItems.injection) && stack.getMetadata() == ItemInjection.META_GARLIC) {
             IFactionPlayerHandler handler = VampirismAPI.getFactionPlayerHandler(playerIn);
             IPlayableFaction faction = handler.getCurrentFaction();
             if (handler.canJoin(faction)) {
@@ -93,8 +92,8 @@ public class BlockMedChair extends VampirismBlock {
                     handler.joinFaction(VReference.HUNTER_FACTION);
                     playerIn.addPotionEffect(new PotionEffect(MobEffects.POISON, 200, 1));
                 }
-                ItemStackUtil.decr(stack);
-                if (ItemStackUtil.isEmpty(stack)) {
+                stack.shrink(1);
+                if (stack.isEmpty()) {
                     playerIn.inventory.deleteStack(stack);
                 }
             } else if (faction != null) {

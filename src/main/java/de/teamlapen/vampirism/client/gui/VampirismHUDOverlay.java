@@ -126,7 +126,7 @@ public class VampirismHUDOverlay extends ExtendedGui {
 
         if (p != null && p.typeOfHit == RayTraceResult.Type.ENTITY && p.entityHit != null) {
             IVampirePlayer player = VampirePlayer.get(mc.player);
-            if (player.getLevel() > 0 && !mc.player.isSpectator()) {
+            if (player.getLevel() > 0 && !mc.player.isSpectator() && !player.getActionHandler().isActionActive(VampireActions.bat)) {
                 Entity entity = p.entityHit;
                 IBiteableEntity biteable = null;
                 if (entity instanceof IBiteableEntity) {
@@ -347,6 +347,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
             } else {
                 screenPercentage = 0;
             }
+        } else {
+            screenPercentage = 0;
         }
 
         //Bottom Area
@@ -359,6 +361,8 @@ public class VampirismHUDOverlay extends ExtendedGui {
             } else {
                 screenBottomPercentage = 0;
             }
+        } else {
+            screenBottomPercentage = 0;
         }
     }
 

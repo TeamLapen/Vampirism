@@ -3,6 +3,7 @@ package de.teamlapen.vampirism.player.vampire.actions;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.util.REFERENCE;
+
 import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
 
@@ -21,6 +22,7 @@ public class VampireActions {
     public static final DisguiseVampireAction disguise_vampire = UtilLib.getNull();
     public static final SunscreenVampireAction sunscreen = UtilLib.getNull();
     public static final DarkBloodProjectileAction dark_blood_projectile = UtilLib.getNull();
+    public static final HalfInvulnerableAction half_invulnerable = UtilLib.getNull();
 
     public static void registerDefaultActions(IForgeRegistry<IAction> registry) {
         registry.register(new FreezeVampireAction().setRegistryName("vampirism", "freeze"));
@@ -33,5 +35,6 @@ public class VampireActions {
         registry.register(new SummonBatVampireAction().setRegistryName("vampirism", "summon_bat"));
         registry.register(new SunscreenVampireAction().setRegistryName("vampirism", "sunscreen"));
         registry.register(new DarkBloodProjectileAction().setRegistryName("vampirism", "dark_blood_projectile"));
+        registry.register(new HalfInvulnerableAction().setRegistryName("vampirism", "half_invulnerable"));
     }
 }

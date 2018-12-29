@@ -8,7 +8,8 @@ import de.teamlapen.vampirism.api.entity.player.actions.IAction;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
 import de.teamlapen.vampirism.network.ModGuiHandler;
-import de.teamlapen.vampirism.player.actions.ActionHandler;
+import de.teamlapen.vampirism.player.vampire.VampirePlayer;
+import de.teamlapen.vampirism.player.vampire.actions.VampireActions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
@@ -78,7 +79,6 @@ public class ModKeys {
         }
     }
 
-
     public static void register() {
         MinecraftForge.EVENT_BUS.register(new ModKeys());
         ClientRegistry.registerKeyBinding(ACTION);
@@ -90,6 +90,8 @@ public class ModKeys {
         ClientRegistry.registerKeyBinding(ACTION2);
     }
 
+    private boolean suckKeyDown = false;
+
     private ModKeys() {
 
     }
@@ -98,14 +100,17 @@ public class ModKeys {
     public void handleInputEvent(InputEvent event) {
         KEY keyPressed = getPressedKeyBinding(); // Only call isPressed once, so
         // get value here!
-        if (keyPressed == KEY.SUCK) {
+        if (!suckKeyDown && keyPressed == KEY.SUCK) {
             RayTraceResult mouseOver = Minecraft.getMinecraft().objectMouseOver;
-            if (mouseOver != null && !Minecraft.getMinecraft().player.isSpectator()) {
+            suckKeyDown = true;
+            if (mouseOver != null && !Minecraft.getMinecraft().player.isSpectator() && !VampirePlayer.get(Minecraft.getMinecraft().player).getActionHandler().isActionActive(VampireActions.bat)) {
                 if (mouseOver.entityHit != null) {
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + mouseOver.entityHit.getEntityId()));
                 } else if (mouseOver.typeOfHit == RayTraceResult.Type.BLOCK) {
                     BlockPos pos = mouseOver.getBlockPos();
                     VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.DRINK_BLOOD_BLOCK, "" + pos.getX() + ":" + pos.getY() + ":" + pos.getZ()));
+                } else {
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.SUCKBLOOD, "" + -1));
                 }
             }
         } else if (keyPressed == KEY.ACTION) {
@@ -128,6 +133,10 @@ public class ModKeys {
         } else if (keyPressed == KEY.ACTION2) {
             FactionPlayerHandler factionHandler = FactionPlayerHandler.get(Minecraft.getMinecraft().player);
             toggleBoundAction(factionHandler.getCurrentFactionPlayer(), factionHandler.getBoundAction2());
+        }
+        if (suckKeyDown == true && !isKeyDown(getKeyCode(KEY.SUCK))) {
+            suckKeyDown = false;
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.ENDSUCKBLOOD, ""));
         }
     }
 
@@ -169,7 +178,7 @@ public class ModKeys {
                 } else if (!action.getFaction().equals(player.getFaction())) {
                     player.getRepresentingPlayer().sendStatusMessage(new TextComponentTranslation("text.vampirism.action.only_faction", UtilLib.translate(action.getFaction().getUnlocalizedName())), true);
                 } else {
-                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + ((ActionHandler) player.getActionHandler()).getIdFromAction(action)));
+                    VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + key));
                 }
             }
         }

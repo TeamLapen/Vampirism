@@ -250,7 +250,7 @@ public class TestCommand extends BasicCommand {
             public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
                 VampirePlayer player = VampirePlayer.get(getCommandSenderAsPlayer(sender));
                 if (player.getLevel() > 0) {
-                    player.getBloodStats().setBloodLevel(0);
+                    player.useBlood(Integer.MAX_VALUE, true);
                 }
             }
 

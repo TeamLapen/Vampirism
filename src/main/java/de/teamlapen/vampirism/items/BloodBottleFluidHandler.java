@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.config.Configs;
 import de.teamlapen.vampirism.core.ModFluids;
@@ -49,7 +48,7 @@ public class BloodBottleFluidHandler implements IFluidHandlerItem, ICapabilityPr
     @Nullable
     @Override
     public FluidStack drain(FluidStack resource, boolean doDrain) {
-        if (ItemStackUtil.getCount(container) != 1 || resource == null || resource.amount <= 0 || !ModFluids.blood.equals(resource.getFluid())) {
+        if (container.getCount() != 1 || resource == null || resource.amount <= 0 || !ModFluids.blood.equals(resource.getFluid())) {
             return null;
         }
         return drain(resource.amount, doDrain);

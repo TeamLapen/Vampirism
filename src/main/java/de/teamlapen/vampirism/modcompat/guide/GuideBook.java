@@ -35,8 +35,10 @@ import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -371,6 +373,7 @@ public class GuideBook implements IGuideBook {
         new ItemInfoBuilder(ModItems.blood_infused_iron_ingot).craftableStacks(ModItems.blood_infused_iron_ingot, WORKBENCH, ModItems.blood_infused_enhanced_iron_ingot, WORKBENCH).build(entries);
         addItemWithTier(ModItems.heart_seeker, WORKBENCH).setLinks(new ResourceLocation("guide.vampirism.blocks.blood_pedestal"), new ResourceLocation("guide.vampirism.items.blood_infused_iron_ingot")).build(entries);
         addItemWithTier(ModItems.heart_striker, WORKBENCH).setLinks(new ResourceLocation("guide.vampirism.blocks.blood_pedestal"), new ResourceLocation("guide.vampirism.items.blood_infused_iron_ingot")).build(entries);
+        new ItemInfoBuilder(ModItems.vampire_cloak).craftableStacks(new ItemStack(ModItems.vampire_cloak, 1, 0), WORKBENCH, new ItemStack(ModItems.vampire_cloak, 1, 1), WORKBENCH, new ItemStack(ModItems.vampire_cloak, 1, 2), WORKBENCH, new ItemStack(ModItems.vampire_cloak, 1, 3), WORKBENCH, new ItemStack(ModItems.vampire_cloak, 1, 4), WORKBENCH).build(entries);
 
         //Hunter
         new ItemInfoBuilder(ModItems.injection).craftableStacks(new ItemStack(ModItems.injection, 1, 0), WORKBENCH, new ItemStack(ModItems.injection, 1, ItemInjection.META_GARLIC), WORKBENCH, new ItemStack(ModItems.injection, 1, ItemInjection.META_SANGUINARE), WORKBENCH).build(entries);
@@ -449,9 +452,7 @@ public class GuideBook implements IGuideBook {
 
     @Override
     public void handlePost(ItemStack bookStack) {
-        //TODO CRAFTING
-//        GameRegistry.addShapelessRecipe(bookStack, new ItemStack(Items.BOOK), new ItemStack(ModItems.vampireFang));
-//        GameRegistry.addShapelessRecipe(bookStack, new ItemStack(Items.BOOK), new ItemStack(ModItems.humanHeart));
+        GameRegistry.addShapelessRecipe(new ResourceLocation(REFERENCE.MODID, "guide_book"), null, bookStack, Ingredient.fromItem(Items.BOOK), Ingredient.fromItems(ModItems.vampire_fang, ModItems.human_heart));
 
         if (FMLCommonHandler.instance().getSide() == Side.CLIENT) {
             GuideBook.buildCategories();

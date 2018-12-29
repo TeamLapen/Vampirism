@@ -1,6 +1,5 @@
 package de.teamlapen.lib.lib.inventory;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -55,32 +54,32 @@ public class InventoryContainer extends Container {
     @Nonnull
     @Override
     public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
-        ItemStack stack = ItemStackUtil.getEmptyStack();
+        ItemStack stack = ItemStack.EMPTY;
         net.minecraft.inventory.Slot slotObject = inventorySlots.get(slot);
 
         // null checks and checks if the item can be stacked (maxStackSize > 1)
         ItemStack stackInSlot;
-        if (slotObject != null && !ItemStackUtil.isEmpty(stackInSlot = slotObject.getStack())) {
+        if (slotObject != null && !(stackInSlot = slotObject.getStack()).isEmpty()) {
             stack = stackInSlot.copy();
             // merges the item into player inventory since its in the tileEntity
             if (slot < tile.getSlots().length) {
                 if (!this.mergeItemStack(stackInSlot, tile.getSlots().length, tile.getSlots().length + 36, true)) {
-                    return ItemStackUtil.getEmptyStack();
+                    return ItemStack.EMPTY;
                 }
             }
             // places it into the tileEntity is possible since its in the player inventory
             else if (!this.mergeItemStack(stackInSlot, 0, tile.getSlots().length, false)) {
-                return ItemStackUtil.getEmptyStack();
+                return ItemStack.EMPTY;
             }
 
-            if (ItemStackUtil.getCount(stack) == 0) {
-                slotObject.putStack(ItemStackUtil.getEmptyStack());
+            if (stack.getCount() == 0) {
+                slotObject.putStack(ItemStack.EMPTY);
             } else {
                 slotObject.onSlotChanged();
             }
 
-            if (ItemStackUtil.getCount(stackInSlot) == ItemStackUtil.getCount(stack)) {
-                return ItemStackUtil.getEmptyStack();
+            if (stackInSlot.getCount() == stack.getCount()) {
+                return ItemStack.EMPTY;
             }
             slotObject.onTake(player, stackInSlot);
         }

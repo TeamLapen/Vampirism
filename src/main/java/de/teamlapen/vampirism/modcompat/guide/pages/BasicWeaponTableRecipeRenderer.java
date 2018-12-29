@@ -7,7 +7,6 @@ import amerifrance.guideapi.api.impl.abstraction.EntryAbstract;
 import amerifrance.guideapi.api.util.GuiHelper;
 import amerifrance.guideapi.gui.GuiBase;
 import com.google.common.collect.Lists;
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.entity.player.skills.ISkill;
 import de.teamlapen.vampirism.api.items.IHunterWeaponRecipe;
@@ -65,7 +64,7 @@ public abstract class BasicWeaponTableRecipeRenderer<T extends IHunterWeaponReci
 
         ItemStack stack = recipe.getRecipeOutput();
 
-        if (!ItemStackUtil.isEmpty(stack) && stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
+        if (!stack.isEmpty() && stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
             NonNullList<ItemStack> subItems = NonNullList.create();
             stack.getItem().getSubItems(stack.getItem().getCreativeTab(), subItems);
             stack = subItems.get(getRandomizedCycle(0, subItems.size()));
@@ -111,7 +110,7 @@ public abstract class BasicWeaponTableRecipeRenderer<T extends IHunterWeaponReci
      */
     @SideOnly(Side.CLIENT)
     protected void drawStack(ItemStack stack, int index, int stackX, int stackY, int mouseX, int mouseY) {
-        if (!ItemStackUtil.isEmpty(stack)) {
+        if (!stack.isEmpty()) {
             if (stack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
                 NonNullList<ItemStack> subItems = NonNullList.create();
                 stack.getItem().getSubItems(stack.getItem().getCreativeTab(), subItems);

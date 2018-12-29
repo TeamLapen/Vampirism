@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.items;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
@@ -42,7 +41,7 @@ public class VampirismItemBloodFood extends ItemFood {
 
     @Override
     public ItemStack onItemUseFinish(ItemStack stack, World worldIn, EntityLivingBase entityLiving) {
-        ItemStackUtil.decr(stack);
+        stack.shrink(1);
         if (entityLiving instanceof EntityPlayer) {
             EntityPlayer player = (EntityPlayer) entityLiving;
             VampirePlayer.get(player).drinkBlood(bloodAmount, saturation);

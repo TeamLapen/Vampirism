@@ -1,7 +1,7 @@
 package de.teamlapen.vampirism.player;
 
 import com.google.common.base.Throwables;
-import de.teamlapen.lib.lib.util.ItemStackUtil;
+
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.entity.factions.IFaction;
@@ -24,6 +24,7 @@ import de.teamlapen.vampirism.player.hunter.HunterPlayer;
 import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
@@ -166,7 +167,7 @@ public class ModPlayerEventHandler {
         //DoesSneakByPassUse on the blood bottle is not enough, since the item in the offhand can still block
         if (event.getWorld().getWorldBorder().contains(event.getPos())) {
             ItemStack heldStack = event.getItemStack();
-            if (!ItemStackUtil.isEmpty(heldStack) && ItemStackUtil.getCount(heldStack) == 1) {
+            if (!heldStack.isEmpty() && heldStack.getCount() == 1) {
                 boolean glasBottle = Items.GLASS_BOTTLE.equals(heldStack.getItem());
                 boolean bloodBottle = ModItems.blood_bottle.equals(heldStack.getItem());
                 if (bloodBottle || (glasBottle && Configs.autoConvertGlasBottles)) {
@@ -250,7 +251,7 @@ public class ModPlayerEventHandler {
     private boolean checkItemUsePerm(ItemStack stack, EntityPlayer player) {
 
         boolean message = !player.getEntityWorld().isRemote;
-        if (!ItemStackUtil.isEmpty(stack) && stack.getItem() instanceof IFactionLevelItem) {
+        if (!stack.isEmpty() && stack.getItem() instanceof IFactionLevelItem) {
             IFactionLevelItem item = (IFactionLevelItem) stack.getItem();
             FactionPlayerHandler handler = FactionPlayerHandler.get(player);
             IPlayableFaction usingFaction = item.getUsingFaction(stack);

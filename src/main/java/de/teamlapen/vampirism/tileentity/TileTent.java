@@ -2,9 +2,11 @@ package de.teamlapen.vampirism.tileentity;
 
 import de.teamlapen.lib.lib.util.SimpleSpawnerLogic;
 import de.teamlapen.vampirism.api.VReference;
+import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModEntities;
 import de.teamlapen.vampirism.entity.hunter.EntityBasicHunter;
 import de.teamlapen.vampirism.util.REFERENCE;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.play.server.SPacketUpdateTileEntity;
@@ -149,6 +151,9 @@ public class TileTent extends TileEntity implements ITickable {
 
     @Override
     public void update() {
+        if (spawnerLogic.getSpawnedToday() >= Balance.general.HUNTER_CAMP_MAX_SPAWN) {
+            spawnerLogic.setSpawn(false);
+        }
         if (spawn) {
             spawnerLogic.updateSpawner();
         }

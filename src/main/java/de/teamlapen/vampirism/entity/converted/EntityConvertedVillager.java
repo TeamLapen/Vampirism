@@ -1,10 +1,13 @@
 package de.teamlapen.vampirism.entity.converted;
 
+import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.api.EnumStrength;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertedCreature;
 import de.teamlapen.vampirism.api.entity.convertible.IConvertingHandler;
+import de.teamlapen.vampirism.api.entity.player.vampire.IBloodStats;
+import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModItems;
 import de.teamlapen.vampirism.entity.DamageHandler;
 import de.teamlapen.vampirism.entity.EntityVillagerVampirism;
@@ -13,8 +16,10 @@ import de.teamlapen.vampirism.entity.ai.VampireAIBiteNearbyEntity;
 import de.teamlapen.vampirism.entity.ai.VampireAIFleeSun;
 import de.teamlapen.vampirism.entity.ai.VampireAIMoveToBiteable;
 import de.teamlapen.vampirism.items.ItemBloodBottle;
+import de.teamlapen.vampirism.player.vampire.VampirePlayer;
 import de.teamlapen.vampirism.util.Helper;
 import de.teamlapen.vampirism.util.REFERENCE;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.ai.*;
@@ -49,12 +54,22 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
     }
 
     @Override
+    public boolean attackEntityAsMob(Entity entity) {
+        if (!world.isRemote && entity instanceof EntityPlayer && !UtilLib.canReallySee((EntityLivingBase) entity, this, true) && rand.nextInt(Balance.mobProps.VAMPIRE_BITE_ATTACK_CHANCE) == 0) {
+            int amt = VampirePlayer.get((EntityPlayer) entity).onBite(this);
+            drinkBlood(amt, IBloodStats.MEDIUM_SATURATION);
+            return true;
+        }
+        return super.attackEntityAsMob(entity);
+    }
+
+    @Override
     public boolean doesResistGarlic(EnumStrength strength) {
         return false;
     }
 
     @Override
-    public void drinkBlood(int amt, float saturationMod) {
+    public void drinkBlood(int amt, float saturationMod, boolean useRemaining) {
         this.addPotionEffect(new PotionEffect(MobEffects.REGENERATION, amt * 20));
         bloodTimer = -1200 - rand.nextInt(1200);
     }
@@ -75,7 +90,6 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
         return this;
     }
 
-
     @Nonnull
     @Override
     public EnumStrength isGettingGarlicDamage(boolean forceRefresh) {
@@ -90,7 +104,6 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
         if (!forceRefresh) return sundamageCache;
         return (sundamageCache = Helper.gettingSundamge(this));
     }
-
 
     @Override
     public boolean isIgnoringSundamage() {
@@ -123,6 +136,13 @@ public class EntityConvertedVillager extends EntityVillagerVampirism implements 
         if (compound.hasKey("addedAdditionalRecipes")) {
             addedAdditionalRecipes = compound.getBoolean("addedAdditionalRecipes");
         }
+    }
+
+    @Override
+    public boolean useBlood(int amt, boolean allowPartial) {
+        this.addPotionEffect(new PotionEffect(MobEffects.WEAKNESS, amt * 20));
+        bloodTimer = 0;
+        return true;
     }
 
     @Override

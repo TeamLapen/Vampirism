@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.blocks;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.core.ModBlocks;
@@ -11,11 +10,11 @@ import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.PropertyEnum;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
@@ -26,6 +25,8 @@ import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -57,9 +58,9 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
         addCollisionBoxToList(pos, entityBox, collidingBoxes, COLLISION_BOX_2);
     }
 
-
+    @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, EntityPlayer player, List<String> tooltip, boolean advanced) {
+    public void addInformation(ItemStack stack, @Nullable World player, List<String> tooltip, ITooltipFlag advanced) {
         if ((stack.getMetadata()) > 0) {
             tooltip.add(TextFormatting.AQUA + UtilLib.translate(getUnlocalizedName() + "." + Type.fromId(stack.getMetadata()).getName()));
         }
@@ -67,6 +68,7 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
         int c = 1 + 2 * (stack.getMetadata() == Type.IMPROVED.getId() ? Balance.hps.GARLIC_DIFFUSOR_ENHANCED_DISTANCE : (stack.getMetadata() == Type.WEAK.getId() ? Balance.hps.GARLIC_DIFFUSOR_WEAK_DISTANCE : Balance.hps.GARLIC_DIFFUSOR_NORMAL_DISTANCE));
         tooltip.add(UtilLib.translateFormatted(getUnlocalizedName() + ".tooltip2", c, c));
     }
+
 
     @Override
     public TileEntity createNewTileEntity(World worldIn, int meta) {
@@ -119,10 +121,9 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
     }
 
     @Override
-    public void getSubBlocks(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> list) {
+    public void getSubBlocks(CreativeTabs itemIn, NonNullList<ItemStack> items) {
         for (Type t : Type.values()) {
-            list.add(new ItemStack(itemIn, 1, t.id));
-
+            items.add(new ItemStack(this, 1, t.id));
         }
     }
 
@@ -147,7 +148,7 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
     @Override
     public boolean onBlockActivated(World worldIn, BlockPos pos, IBlockState state, EntityPlayer playerIn, EnumHand hand, EnumFacing faing, float hitX, float hitY, float hitZ) {
         ItemStack heldItem = playerIn.getHeldItem(hand);
-        if (!ItemStackUtil.isEmpty(heldItem) && ModItems.purified_garlic.equals(heldItem.getItem())) {
+        if (!heldItem.isEmpty() && ModItems.purified_garlic.equals(heldItem.getItem())) {
             if (!worldIn.isRemote) {
                 TileGarlicBeacon t = getTile(worldIn, pos);
                 if (t != null) {
@@ -155,7 +156,7 @@ public class BlockGarlicBeacon extends VampirismBlockContainer {
                         playerIn.sendMessage(new TextComponentTranslation("tile.vampirism.garlic_beacon.already_fueled"));
                     } else {
                         t.onFueled();
-                        if (!playerIn.capabilities.isCreativeMode) ItemStackUtil.decr(heldItem);
+                        if (!playerIn.capabilities.isCreativeMode) heldItem.shrink(1);
                         playerIn.sendMessage(new TextComponentTranslation("tile.vampirism.garlic_beacon.successfully_fueled"));
                     }
 

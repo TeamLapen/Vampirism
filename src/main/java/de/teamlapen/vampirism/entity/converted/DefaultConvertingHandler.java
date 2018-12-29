@@ -28,37 +28,36 @@ public class DefaultConvertingHandler<T extends EntityCreature> implements IConv
 
 
         @Override
-        public void dropConvertedItems(EntityCreature entity, boolean recentlyHit, int looting) {
+        public void dropConvertedItems(EntityCreature converted, EntityCreature entity, boolean recentlyHit, int looting) {
             if (entity instanceof EntityCow) {
-                int j = entity.getRNG().nextInt(3) + entity.getRNG().nextInt(1 + looting);
+                int j = converted.getRNG().nextInt(3) + converted.getRNG().nextInt(1 + looting);
 
                 for (int k = 0; k < j; ++k) {
-                    entity.dropItem(Items.LEATHER, 1);
+                    converted.dropItem(Items.LEATHER, 1);
                 }
-
-                j = entity.getRNG().nextInt(3) + entity.getRNG().nextInt(1 + looting);
+                j = converted.getRNG().nextInt(3) + converted.getRNG().nextInt(1 + looting);
 
                 for (int k = 0; k < j; ++k) {
-                    entity.dropItem(Items.ROTTEN_FLESH, 1);
+                    converted.dropItem(Items.ROTTEN_FLESH, 1);
                 }
 
             } else if (entity instanceof EntityPig || entity instanceof EntityHorse) {
-                int j = entity.getRNG().nextInt(2) + entity.getRNG().nextInt(1 + looting);
+                int j = converted.getRNG().nextInt(2) + converted.getRNG().nextInt(1 + looting);
 
                 for (int k = 0; k < j; ++k) {
-                    entity.dropItem(Items.ROTTEN_FLESH, 1);
+                    converted.dropItem(Items.ROTTEN_FLESH, 1);
                 }
             } else if (entity instanceof EntityLlama) {
-                int j = entity.getRNG().nextInt(3);
-                if (j > 0) entity.dropItem(Items.LEATHER, j);
+                int j = converted.getRNG().nextInt(3);
+                if (j > 0) converted.dropItem(Items.LEATHER, j);
             } else if (entity instanceof EntityPolarBear) {
-                int j = entity.getRNG().nextInt(3);
-                if (j > 0) entity.dropItem(Items.FISH, j);
-                int k = entity.getRNG().nextInt(2);
-                if (k > 0) entity.dropItem(Items.ROTTEN_FLESH, k);
+                int j = converted.getRNG().nextInt(3);
+                if (j > 0) converted.dropItem(Items.FISH, j);
+                int k = converted.getRNG().nextInt(2);
+                if (k > 0) converted.dropItem(Items.ROTTEN_FLESH, k);
             } else if (entity instanceof EntityRabbit) {
-                int j = entity.getRNG().nextInt(2);
-                if (j > 0) entity.dropItem(Items.RABBIT_HIDE, j);
+                int j = converted.getRNG().nextInt(2);
+                if (j > 0) converted.dropItem(Items.RABBIT_HIDE, j);
             } else {
                 //TODO maybe call dropFewItems via reflection
             }

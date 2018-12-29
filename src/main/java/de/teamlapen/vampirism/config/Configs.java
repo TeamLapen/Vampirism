@@ -61,6 +61,8 @@ public class Configs {
     public static boolean disable_fang_infection;
     public static boolean disable_mob_bite_infection;
     public static boolean disable_hunter_camps;
+    public static boolean disable_all_worldgen;
+    public static boolean disable_halloween_special;
 
     public static @Nonnull
     int[] worldGenDimensions = new int[0];
@@ -134,7 +136,7 @@ public class Configs {
         pvp_only_between_factions = main_config.getBoolean("pvp_only_between_factions", CATEGORY_GENERAL, false, "If PVP should only be allowed between factions. PVP has to be enabled in the server properties for this. Not guaranteed to always protect player from teammates");
         bat_mode_in_end = main_config.getBoolean("bat_mode_in_end", CATEGORY_GENERAL, false, "If vampires can convert to a bat in the end");
         unlock_all_skills = main_config.getBoolean("unlock_all_skills_at_max", CATEGORY_GENERAL, false, "CHEAT: If enabled, you will be able to unlock all skills at max level");
-        sunscreen_beacon_distance = main_config.getInt("sunscreen_beacon_distance", CATEGORY_GENERAL, 32, 1, Integer.MAX_VALUE, "Block radius, the sunscreen beacon affects");
+        sunscreen_beacon_distance = main_config.getInt("sunscreen_beacon_distance", CATEGORY_GENERAL, 32, 1, 40000, "Block radius, the sunscreen beacon affects");
         sunscreen_beacon_mineable = main_config.getBoolean("sunscreen_beacon_mineable", CATEGORY_GENERAL, false, "If the sunscreen beacon can be mined in survival");
         autoCalculateEntityBlood = main_config.getBoolean("auto_calculate_entity_blood", CATEGORY_GENERAL, true, "Calculate the blood level for unknown creatures based on their size");
 
@@ -165,6 +167,9 @@ public class Configs {
         disable_fang_infection = main_config.getBoolean("disable_fang_infection", CATEGORY_DISABLE, false, "Disable vampire fangs being useable to infect yourself");
         disable_mob_bite_infection = main_config.getBoolean("disable_mob_bite_infection", CATEGORY_DISABLE, false, "Prevent vampire mobs from infecting players when attacking");
         disable_hunter_camps = main_config.getBoolean("disable_hunter_camps", CATEGORY_DISABLE, false, "Disable the generation of hunter camps completely");
+        disable_all_worldgen = main_config.getBoolean("disable_all_worldgen", CATEGORY_DISABLE, false, "Disable all world gen. Does not affect vampire Forest");
+        disable_halloween_special = main_config.getBoolean("disable_halloween_special", CATEGORY_DISABLE, false, "Disable halloween special event");
+
         updated_vampirism = !main_config.getDefinedConfigVersion().equals(main_config.getLoadedConfigVersion());
 
         if (!dontSave && (main_config.hasChanged() || updated_vampirism)) {

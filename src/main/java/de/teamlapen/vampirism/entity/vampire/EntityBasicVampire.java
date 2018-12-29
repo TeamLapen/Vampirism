@@ -1,6 +1,5 @@
 package de.teamlapen.vampirism.entity.vampire;
 
-import de.teamlapen.lib.lib.util.ItemStackUtil;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.VampirismAPI;
 import de.teamlapen.vampirism.api.difficulty.Difficulty;
@@ -105,7 +104,7 @@ public class EntityBasicVampire extends EntityVampireBase implements IBasicVampi
             if (level == 1) {
                 this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, new ItemStack(Items.IRON_SWORD));
             } else {
-                this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, ItemStackUtil.getEmptyStack());
+                this.setItemStackToSlot(EntityEquipmentSlot.MAINHAND, ItemStack.EMPTY);
             }
 
         }

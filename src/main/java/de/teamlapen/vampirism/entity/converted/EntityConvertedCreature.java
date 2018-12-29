@@ -191,7 +191,7 @@ public class EntityConvertedCreature<T extends EntityCreature> extends EntityVam
 
     @Override
     protected void dropFewItems(boolean p_70628_1_, int p_70628_2_) {
-        getConvertedHelper().dropConvertedItems(entityCreature, p_70628_1_, p_70628_2_);
+        getConvertedHelper().dropConvertedItems(this, entityCreature, p_70628_1_, p_70628_2_);
     }
 
     /**

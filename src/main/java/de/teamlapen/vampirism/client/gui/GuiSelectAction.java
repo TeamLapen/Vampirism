@@ -10,7 +10,6 @@ import de.teamlapen.vampirism.api.entity.player.vampire.IVampirePlayer;
 import de.teamlapen.vampirism.client.core.ModKeys;
 import de.teamlapen.vampirism.entity.factions.FactionPlayerHandler;
 import de.teamlapen.vampirism.network.InputEventPacket;
-import de.teamlapen.vampirism.player.actions.ActionHandler;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.util.ResourceLocation;
@@ -111,7 +110,7 @@ public class GuiSelectAction extends GuiPieMenu<IAction> {
     @Override
     protected void onElementSelected(IAction action) {
         if (action != fakeAction) {
-            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + ((ActionHandler) actionHandler).getIdFromAction(action)));
+            VampirismMod.dispatcher.sendToServer(new InputEventPacket(InputEventPacket.TOGGLEACTION, "" + action.getRegistryName().toString()));
         }
     }
 

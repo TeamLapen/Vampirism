@@ -18,19 +18,29 @@ import java.util.Random;
  */
 public class VampirismWorldGen implements IWorldGenerator {
     public static boolean debug = false;
-    private final WorldGenHunterCamp hunterCamp;
-    private final WorldGenVampireDungeon vampireDungeon;
+    private static VampirismWorldGen instance;
 
-    public VampirismWorldGen() {
+    public static VampirismWorldGen getInstance() {
+        if (instance == null) {
+            instance = new VampirismWorldGen();
+        }
+        return instance;
+    }
+    public final WorldGenHunterCamp hunterCamp;
+    public final WorldGenVampireDungeon vampireDungeon;
+
+    private VampirismWorldGen() {
         this.hunterCamp = new WorldGenHunterCamp();
         this.vampireDungeon = new WorldGenVampireDungeon();
     }
 
     @Override
     public void generate(Random random, int chunkX, int chunkZ, World world, IChunkGenerator chunkGenerator, IChunkProvider chunkProvider) {
-        int dim = world.provider.getDimension();
-        if (dim == 0 || dim != -1 && dim != 1 && (contains(Configs.worldGenDimensions, dim) || VampirismAPI.isWorldGenEnabledFor(dim))) {
-            generateOverworld(random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
+        if (!Configs.disable_all_worldgen) {
+            int dim = world.provider.getDimension();
+            if (dim == 0 || dim != -1 && dim != 1 && (contains(Configs.worldGenDimensions, dim) || VampirismAPI.isWorldGenEnabledFor(dim))) {
+                generateOverworld(random, chunkX, chunkZ, world, chunkGenerator, chunkProvider);
+            }
         }
     }
 

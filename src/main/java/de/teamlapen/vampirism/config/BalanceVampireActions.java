@@ -54,6 +54,9 @@ public class BalanceVampireActions extends BalanceValues {
     @DefaultBoolean(value = true, name = "rage_enabled")
     public boolean RAGE_ENABLED;
 
+    @DefaultDouble(value = 0.03, minValue = 0.01, maxValue = 0.05, comment = "Bat mode flying speed. Value for creative mode: 0.05")
+    public double BAT_FLIGHT_SPEED;
+
     @DefaultInt(value = 1200, minValue = 0, comment = "Sunscreen action cooldown duration")
     public int SUNSCREEN_COOLDOWN;
     @DefaultInt(value = 30, minValue = 1, comment = "Sunscreen action duration")
@@ -69,6 +72,7 @@ public class BalanceVampireActions extends BalanceValues {
 
     @DefaultInt(value = Integer.MAX_VALUE, minValue = 10, name = "bat_duration")
     public int BAT_DURATION;
+
 
     @DefaultBoolean(value = true, name = "summon_bats_enabled")
     public boolean SUMMON_BAT_ENABLED;
@@ -98,6 +102,17 @@ public class BalanceVampireActions extends BalanceValues {
 
     @DefaultDouble(value = 3, minValue = 0, comment = "Damage of the indirect projectile hit")
     public double DARK_BLOOD_PROJECTILE_INDIRECT_DAMAGE;
+
+    @DefaultBoolean(value = true, name = "halfinvulnerable_enabled")
+    public boolean HALFINVULNERABLE_ENABLE;
+    @DefaultInt(value = 60, minValue = 0, name = "halfinvulnerable_cooldown")
+    public int HALFINVULNERABLE_COOLDOWN;
+    @DefaultInt(value = 30, minValue = 1, name = "halfinvulnerable_duration")
+    public int HALFINVULNERABLE_DURATION;
+    @DefaultDouble(value = 0.4D, minValue = 0.0D, comment = "damage threshold of max health for damage omitting")
+    public double HALFINVULNERABLE_THRESHOLD;
+    @DefaultInt(value = 4, minValue = 0, name = "halfinvulnerable_blood_costs")
+    public int HALFINVULNERABLE_BLOOD_COSTS;
 
     /**
      * Creates a configuration for balance values

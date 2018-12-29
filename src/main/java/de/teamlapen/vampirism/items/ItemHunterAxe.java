@@ -4,16 +4,16 @@ import de.teamlapen.lib.lib.util.UtilLib;
 import de.teamlapen.vampirism.VampirismMod;
 import de.teamlapen.vampirism.api.VReference;
 import de.teamlapen.vampirism.api.items.IItemWithTier;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Enchantments;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -33,8 +33,8 @@ public class ItemHunterAxe extends VampirismHunterWeapon implements IItemWithTie
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack stack, @Nullable EntityPlayer playerIn, List<String> tooltip, boolean advanced) {
-        super.addInformation(stack, playerIn, tooltip, advanced);
+    public void addInformation(ItemStack stack, @Nullable World worldIn, List<String> tooltip, ITooltipFlag flagIn) {
+        super.addInformation(stack, worldIn, tooltip, flagIn);
         TIER tier = getTier(stack);
         if (tier != TIER.NORMAL) {
             tooltip.add(TextFormatting.AQUA + UtilLib.translate("text.vampirism.item_tier." + tier.name().toLowerCase()));
@@ -42,6 +42,7 @@ public class ItemHunterAxe extends VampirismHunterWeapon implements IItemWithTie
         }
         tooltip.add(UtilLib.translateFormatted("text.vampirism.deals_more_damage_to", Math.round((getVampireMult(tier) - 1) * 100)) + " " + UtilLib.translate(VReference.VAMPIRE_FACTION.getUnlocalizedNamePlural()));
     }
+
 
     @Override
     public float getDamageMultiplierForFaction(@Nonnull ItemStack stack) {
@@ -53,12 +54,16 @@ public class ItemHunterAxe extends VampirismHunterWeapon implements IItemWithTie
         return getMinLevel(getTier(stack));
     }
 
+
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        for (TIER t : TIER.values()) {
-            subItems.add(setTier(new ItemStack(itemIn), t));
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        if (isInCreativeTab(tab)) {
+            for (TIER t : TIER.values()) {
+                items.add(setTier(new ItemStack(this), t));
+            }
         }
     }
+
 
     @Override
     public TIER getTier(@Nonnull ItemStack stack) {

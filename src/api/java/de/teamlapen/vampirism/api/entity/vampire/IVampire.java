@@ -19,12 +19,25 @@ public interface IVampire extends IFactionEntity {
     boolean doesResistGarlic(EnumStrength strength);
 
     /**
-     * Consume blood
+     *
+     * Adds blood to the vampires blood stats
+     * Consume blood. Any remaining blood might be filled into blood bottles or used otherwise
      *
      * @param amt           In blood food unit, not mB. See {@link de.teamlapen.vampirism.api.VReference#FOOD_TO_FLUID_BLOOD} for conversion
-     * @param saturationMod
+     * @param saturationMod Similar to the food saturation modifier
      */
-    void drinkBlood(int amt, float saturationMod);
+    default void drinkBlood(int amt, float saturationMod) {
+        drinkBlood(amt, saturationMod, true);
+    }
+
+    /**
+     * Adds blood to the vampires blood stats.
+     * If useRemaining is true, any remaining blood might be used otherwise. For example it might be put into blood bottles
+     *
+     * @param amt           In blood food unit, not mB. See {@link de.teamlapen.vampirism.api.VReference#FOOD_TO_FLUID_BLOOD} for conversion
+     * @param saturationMod Similar to the food saturation modifier
+     */
+    void drinkBlood(int amt, float saturationMod, boolean useRemaining);
 
     @Override
     default IFaction getFaction() {
@@ -81,6 +94,16 @@ public interface IVampire extends IFactionEntity {
      * If the entity currently does not care about being damaged by the sun, because it is e.g. angry or has sunscreen
      */
     boolean isIgnoringSundamage();
+
+    /**
+     * Consumes blood (removes).
+     * Unless allowPartial is true, blood is only consumed if enough is available
+     *
+     * @param amt          In blood food unit, not mB. See {@link de.teamlapen.vampirism.api.VReference#FOOD_TO_FLUID_BLOOD} for conversion
+     * @param allowPartial If true, the method removes as much blood as available up to the given limit
+     * @return If amt was removed
+     */
+    boolean useBlood(int amt, boolean allowPartial);
 
     /**
      * @return If the creature wants blood or could use some

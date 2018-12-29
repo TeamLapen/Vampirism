@@ -8,7 +8,6 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ActionResult;
@@ -59,10 +58,13 @@ public class ItemBloodBottle extends VampirismItem {
         return 15;
     }
 
+
     @Override
-    public void getSubItems(Item itemIn, CreativeTabs tab, NonNullList<ItemStack> subItems) {
-        subItems.add(new ItemStack(itemIn, 1));
-        subItems.add(new ItemStack(itemIn, 1, AMOUNT));
+    public void getSubItems(CreativeTabs tab, NonNullList<ItemStack> items) {
+        if (isInCreativeTab(tab)) {
+            items.add(new ItemStack(this, 1));
+            items.add(new ItemStack(this, 1, AMOUNT));
+        }
     }
 
     @Override
@@ -103,8 +105,7 @@ public class ItemBloodBottle extends VampirismItem {
             EnumHand activeHand = player.getActiveHand();
             int drink = Math.min(blood, 3 * MULTIPLIER);
             if (BloodHelper.drain(stack, drink, true, true) > 0) {
-                vampire.getBloodStats().addBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.3F);//TODO Saturation
-
+                vampire.drinkBlood(Math.round(((float) drink) / VReference.FOOD_TO_FLUID_BLOOD), 0.3F, false);
             }
             player.setHeldItem(activeHand, stack);
 
