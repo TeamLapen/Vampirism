@@ -1,6 +1,0 @@
-{
-  "parent": "vampirism:item/item/tech_crossbow",
-  "textures": {
-    "extra": "vampirism:items/tech_crossbow_extra_enhanced"
-  }
-}

@@ -1,7 +1,0 @@
-#Blood values for creatures from Twilight Forest
-#List compiled by iamtpage
-
-twilightforest:bighorn_sheep=5
-twilightforest:wild_boar=5
-twilightforest:deer=5
-twilightforest:bunny=2

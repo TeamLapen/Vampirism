@@ -1,8 +1,0 @@
-#Default blood values
-
-#Vanilla
-minecraft:beef=2
-minecraft:mutton=1
-minecraft:porkchop=1
-vampirism:human_heart=20
-vampirism:weak_human_heart=10
