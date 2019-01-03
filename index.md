@@ -1,6 +1,6 @@
- 
 ---
 layout: default
+title: Vampirism - An overview
 ---
 
 ![Branching](https://teamlapen.github.io/Vampirism/img/vampirism-title2.png)
