@@ -32,7 +32,7 @@ public class SpeedEntityAction<T extends EntityVampirism & IFactionEntity & IAdj
     }
 
     @Override
-    public boolean onUpdate(T entity) {
+    public boolean onUpdate(T entity, int duration) {
         if (!entity.getRepresentingEntity().getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).hasModifier(new AttributeModifier(uuid, "speedaction", Balance.ea.SPEED_AMOUNT, 2))) {
             entity.getRepresentingEntity().getAttributeMap().getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED).applyModifier(new AttributeModifier(uuid, "speedaction", Balance.ea.SPEED_AMOUNT, 2));
         }

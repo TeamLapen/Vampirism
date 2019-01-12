@@ -71,7 +71,7 @@ public class EntityAIUseAction<T extends EntityVampirism & IFactionEntity & IAdj
 
     private void updateAction() {
         if (action instanceof ILastingAction) {
-            ((ILastingAction) action).onUpdate(entity);
+            ((ILastingAction) action).onUpdate(entity, duration);
         } else if (action instanceof IInstantAction) {
             ((IInstantAction) action).activate(entity);
             this.action = null;

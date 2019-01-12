@@ -6,27 +6,31 @@ import de.teamlapen.vampirism.client.render.particle.FlyingBloodEntityParticle;
 import de.teamlapen.vampirism.client.render.particle.FlyingBloodParticle;
 import de.teamlapen.vampirism.client.render.particle.GenericParticle;
 import de.teamlapen.vampirism.client.render.particle.HalloweenParticle;
+import de.teamlapen.vampirism.client.render.particle.HealingParticle;
 import de.teamlapen.vampirism.util.REFERENCE;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-
 import javax.annotation.Nonnull;
 
 public class ModParticles {
     public static final ResourceLocation FLYING_BLOOD = new ResourceLocation(REFERENCE.MODID, "flying_blood");
     public static final ResourceLocation FLYING_BLOOD_ENTITY = new ResourceLocation(REFERENCE.MODID, "flying_blood_entity");
     public static final ResourceLocation HALLOWEEN = new ResourceLocation(REFERENCE.MODID, "halloween");
+    public static final ResourceLocation HEAL = new ResourceLocation(REFERENCE.MODID, "heal");
 
     /**
      * Arguments: Particle ID (Vanilla texture,int), TicksToLive(int), Color(int), [speed modifier (double)]
      */
     public static final ResourceLocation GENERIC_PARTICLE = new ResourceLocation(REFERENCE.MODID, "generic");
+
+    public static TextureAtlasSprite modParticleAtlas;
 
     public static void init() {
         ParticleHandler.registerParticle(GENERIC_PARTICLE, new ParticleHandler.ICustomParticleFactory() {
@@ -157,5 +161,39 @@ public class ModParticles {
                 return new Object[0];
             }
         });
+
+        ParticleHandler.registerParticle(HEAL, new ParticleHandler.ICustomParticleFactory() {
+            @SideOnly(Side.CLIENT)
+            @Override
+            public Object[] readParticleInfo(NBTTagCompound nbt) {
+                int i = nbt.getInteger("0");
+                World world = Minecraft.getMinecraft().world;
+                if (world == null)
+                    return null;
+                Entity e = world.getEntityByID(i);
+                if (e == null)
+                    return null;
+                Object[] data = new Object[1];
+                data[0] = e;
+                return data;
+            }
+
+            @Override
+            public NBTTagCompound createParticleInfo(Object... param) {
+                NBTTagCompound nbt = new NBTTagCompound();
+                nbt.setInteger("0", ((Entity) param[0]).getEntityId());
+                return nbt;
+            }
+
+            @SideOnly(Side.CLIENT)
+            @Override
+            public Particle createParticle(World world, double posX, double posY, double posZ, Object... param) {
+                return new HealingParticle(world, posX, posY, posZ, posZ, posZ, posZ, (Entity) param[0]);
+            }
+        });
+    }
+
+    public static void setParticleTextureAtlas(TextureAtlasSprite atlas) {
+        modParticleAtlas = atlas;
     }
 }

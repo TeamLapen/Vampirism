@@ -1,23 +1,28 @@
 package de.teamlapen.vampirism.entity.action.actions;
 
+import de.teamlapen.lib.VampLib;
 import de.teamlapen.vampirism.api.difficulty.IAdjustableLevel;
 import de.teamlapen.vampirism.api.entity.actions.DefaultEntityAction;
 import de.teamlapen.vampirism.api.entity.actions.ILastingAction;
 import de.teamlapen.vampirism.api.entity.factions.IFactionEntity;
 import de.teamlapen.vampirism.config.Balance;
 import de.teamlapen.vampirism.entity.EntityVampirism;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class RegenerationEntityAction<T extends EntityVampirism & IFactionEntity & IAdjustableLevel> extends DefaultEntityAction implements ILastingAction<T> {
 
 
     @Override
     public int getDuration(int level) {
-        return Balance.ea.REGENERATION_DURATION;
+        return Balance.ea.REGENERATION_DURATION * 20;
     }
 
     @Override
     public int getCooldown(int level) {
-        return Balance.ea.REGENERATION_COOLDOWN;
+        return Balance.ea.REGENERATION_COOLDOWN * 20;
     }
 
     @Override
@@ -25,11 +30,16 @@ public class RegenerationEntityAction<T extends EntityVampirism & IFactionEntity
     }
 
     @Override
-    public boolean onUpdate(T entity) {
-        System.out.println(entity.getRepresentingEntity().getHealth() + " - "); // TODO remove
-        entity.getRepresentingEntity().heal(Balance.ea.REGENERATION_AMOUNT / (getDuration(entity.getLevel()) * 20)); // seconds in ticks
-        System.out.print(entity.getRepresentingEntity().getHealth());// TODO remove
+    public boolean onUpdate(T entity, int duration) {
+        entity.getRepresentingEntity().heal(entity.getMaxHealth() / 100 * Balance.ea.REGENERATION_AMOUNT / (getDuration(entity.getLevel()) * 20)); // seconds in ticks
+        effects(entity, duration);
         return true;
     }
 
+    @SideOnly(Side.CLIENT)
+    public void effects(T entity, int duration) {
+        if (duration % 20 == 0) {
+            VampLib.proxy.getParticleHandler().spawnParticle(Minecraft.getMinecraft().world, new ResourceLocation("vampirism", "heal"), entity.posX, entity.posY, entity.posZ, entity);
+        }
+    }
 }

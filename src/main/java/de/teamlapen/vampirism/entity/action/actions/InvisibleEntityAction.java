@@ -26,7 +26,7 @@ public class InvisibleEntityAction<T extends EntityVampirism & IFactionEntity & 
     }
 
     @Override
-    public boolean onUpdate(T entity) {
+    public boolean onUpdate(T entity, int duration) {
         if (!entity.getRepresentingEntity().isInvisible()) {
             entity.getRepresentingEntity().setInvisible(true);
         }
